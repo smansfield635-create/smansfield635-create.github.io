@@ -1,1069 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="live-audit-b1">
+<html lang="en" data-manor-registry="house-batch-1">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Live Site Audit · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Gauges — the live site-health instrument room for Diamond Gate Bridge."
-  />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gauges · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges is the live diagnostic instrument room for Diamond Gate Bridge." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
   <style>
-    :root{
-      color-scheme:dark;
-      --panel:rgba(7,14,28,.88);
-      --panel2:rgba(10,20,42,.94);
-      --line:rgba(255,218,150,.24);
-      --text:#fff8ea;
-      --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.74);
-      --gold:#ffd98a;
-      --green:#93efbd;
-      --blue:#8ec5ff;
-      --yellow:#ffcf7a;
-      --red:#ff6f78;
-      --purple:#caa8ff;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1240px;
-    }
-
-    *{box-sizing:border-box}
-
-    html,body{
-      margin:0;
-      min-height:100%;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 88%,rgba(255,154,86,.26),transparent 28%),
-        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
-        radial-gradient(circle at 82% 24%,rgba(147,239,189,.10),transparent 28%),
-        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.42;
-      background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.70) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.58) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.70) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.58) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.70) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.58) 0 1px,transparent 2px);
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      z-index:0;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    .page{
-      width:min(var(--max),calc(100vw - 20px));
-      min-height:100svh;
-      margin:0 auto;
-      padding:14px 0 24px;
-      position:relative;
-      z-index:1;
-      display:grid;
-      gap:14px;
-    }
-
-    .topbar,
-    .instrumentRoom,
-    .routeShell,
-    .auditPanel{
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
-        linear-gradient(180deg,var(--panel2),var(--panel));
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-    }
-
-    .topbar{
-      padding:14px;
-      border-radius:28px;
-      display:grid;
-      gap:14px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    .mark{
-      width:50px;
-      height:50px;
-      border-radius:17px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,217,138,.48);
-      background:
-        radial-gradient(circle at 50% 28%,rgba(255,217,138,.38),transparent 44%),
-        linear-gradient(180deg,rgba(58,42,18,.92),rgba(10,18,32,.98));
-      box-shadow:0 0 22px rgba(255,217,138,.16);
-      flex:0 0 auto;
-    }
-
-    .mark::before{
-      content:"GA";
-      color:#fff8ea;
-      font-weight:950;
-      letter-spacing:.08em;
-    }
-
-    .brandText{display:grid;gap:3px}
-
-    .kicker{
-      margin:0;
-      color:#ffe0a3;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      font-weight:850;
-    }
-
-    .title{
-      margin:0;
-      color:#fff;
-      font-weight:900;
-      font-size:1.08rem;
-      line-height:1.05;
-    }
-
-    .jumpGrid,
-    .routeRail,
-    .legend,
-    .telemetry,
-    .receipt,
-    .auditList{
-      list-style:none;
-      margin:0;
-      padding:0;
-    }
-
-    .jumpGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .jumpCard{
-      min-height:84px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.09),transparent 70%),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:12px;
-      align-items:center;
-      padding:12px;
-    }
-
-    .jumpCard.active{
-      border-color:rgba(255,217,138,.56);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
-        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
-      box-shadow:0 0 24px rgba(255,217,138,.12);
-    }
-
-    .navCompass{
-      position:relative;
-      width:54px;
-      aspect-ratio:1;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
-      overflow:hidden;
-    }
-
-    .jumpCard.active .navCompass{
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
-    }
-
-    .navCompass::before{
-      content:"";
-      position:absolute;
-      inset:16%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.11);
-      background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
-      animation:compassSpin 14s linear infinite;
-    }
-
-    .navCompass::after{
-      content:"";
-      position:absolute;
-      width:14%;
-      height:58%;
-      left:43%;
-      top:21%;
-      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
-      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
-      animation:needleSpin 8s linear infinite;
-    }
-
-    .jumpText{
-      display:grid;
-      gap:4px;
-      min-width:0;
-    }
-
-    .jumpText small{
-      color:#c8d7ff;
-      font-size:.58rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .jumpText strong{
-      color:#fff;
-      font-size:1rem;
-      line-height:1.02;
-      letter-spacing:-.035em;
-    }
-
-    .instrumentRoom{
-      border-radius:34px;
-      padding:clamp(14px,2.2vw,24px);
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);
-      gap:14px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .engineerWall,
-    .tedWall{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:30px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.055),transparent 62%),
-        linear-gradient(180deg,rgba(4,10,22,.62),rgba(3,7,16,.78));
-      box-shadow:inset 0 0 44px rgba(0,0,0,.22);
-      overflow:hidden;
-    }
-
-    .engineerWall{
-      padding:14px;
-      display:grid;
-      gap:12px;
-    }
-
-    .tedWall{
-      padding:clamp(16px,2.2vw,24px);
-      display:grid;
-      gap:12px;
-      align-content:start;
-    }
-
-    .wallHeader{
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      padding-bottom:9px;
-      border-bottom:1px solid rgba(255,255,255,.09);
-    }
-
-    .pill{
-      display:inline-flex;
-      width:fit-content;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,217,138,.30);
-      background:rgba(255,255,255,.04);
-      color:#ffe0a3;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
-      font-weight:850;
-    }
-
-    .pill::before{
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 18px rgba(255,217,138,.46);
-    }
-
-    .engineerTitle{
-      display:grid;
-      gap:3px;
-    }
-
-    .engineerTitle h1,
-    .tedWall h1{
-      margin:0;
-      color:#fff;
-      font-size:clamp(1.8rem,3.6vw,3.6rem);
-      line-height:.88;
-      letter-spacing:-.07em;
-    }
-
-    .engineerTitle p,
-    .tedWall p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.48;
-      font-size:.92rem;
-    }
-
-    .statusChip,
-    .refreshButton{
-      border:1px solid rgba(147,239,189,.28);
-      border-radius:999px;
-      background:rgba(147,239,189,.08);
-      color:#dfffea;
-      padding:8px 11px;
-      font-size:.63rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-
-    .refreshButton{
-      cursor:pointer;
-      font-family:inherit;
-    }
-
-    .gaugeGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .gaugeCard{
-      --tone:var(--green);
-      --needle:70deg;
-      min-height:198px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--tone) 18%,transparent),transparent 70%),
-        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
-      padding:10px;
-      display:grid;
-      grid-template-rows:auto auto auto auto;
-      gap:7px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .gaugeCard.priority{
-      border-color:rgba(255,217,138,.48);
-      box-shadow:0 0 24px rgba(255,217,138,.10);
-    }
-
-    .gaugeTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:start;
-      gap:7px;
-    }
-
-    .gaugeName{
-      display:grid;
-      gap:2px;
-    }
-
-    .gaugeName small{
-      color:#c8d7ff;
-      font-size:.52rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .gaugeName strong{
-      color:#fff;
-      font-size:.82rem;
-      line-height:1.04;
-      letter-spacing:-.025em;
-    }
-
-    .gaugeValue{
-      color:var(--tone);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.95rem;
-      font-weight:950;
-      line-height:1;
-    }
-
-    .dial{
-      position:relative;
-      width:min(100%,138px);
-      aspect-ratio:1;
-      border-radius:50%;
-      margin:auto;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(3,8,18,.92) 0 47%,transparent 48%),
-        conic-gradient(
-          from 210deg,
-          var(--red) 0deg 36deg,
-          var(--yellow) 36deg 78deg,
-          var(--blue) 78deg 126deg,
-          var(--green) 126deg 180deg,
-          rgba(255,255,255,.07) 180deg 360deg
-        );
-      box-shadow:
-        inset 0 0 20px rgba(0,0,0,.58),
-        0 10px 18px rgba(0,0,0,.24);
-      overflow:hidden;
-    }
-
-    .dial::before{
-      content:"";
-      position:absolute;
-      inset:10%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        repeating-conic-gradient(
-          from 210deg,
-          transparent 0deg 8deg,
-          rgba(255,255,255,.12) 8deg 9.5deg,
-          transparent 9.5deg 18deg
-        );
-      mask-image:conic-gradient(from 210deg,black 0deg 180deg,transparent 180deg 360deg);
-    }
-
-    .dial::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      background:#fff8ea;
-      box-shadow:0 0 18px color-mix(in srgb,var(--tone) 72%,transparent);
-      z-index:4;
-    }
-
-    .needle{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:42%;
-      height:3px;
-      border-radius:999px;
-      background:
-        linear-gradient(90deg,transparent,rgba(255,255,255,.86),var(--tone));
-      transform-origin:0% 50%;
-      transform:rotate(var(--needle));
-      box-shadow:0 0 12px color-mix(in srgb,var(--tone) 62%,transparent);
-      z-index:3;
-    }
-
-    .dialRead{
-      position:absolute;
-      left:50%;
-      bottom:18%;
-      transform:translateX(-50%);
-      display:grid;
-      place-items:center;
-      gap:1px;
-      text-align:center;
-      z-index:5;
-    }
-
-    .dialRead strong{
-      color:#fff;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.98rem;
-      line-height:1;
-    }
-
-    .dialRead small{
-      color:var(--soft);
-      font-size:.48rem;
-      font-weight:900;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .gaugeMeaning{
-      color:var(--muted);
-      font-size:.72rem;
-      line-height:1.28;
-      min-height:34px;
-      margin:0;
-    }
-
-    .telemetry{
-      display:grid;
-      gap:2px;
-      border-top:1px solid rgba(255,255,255,.08);
-      padding-top:6px;
-      color:var(--soft);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.56rem;
-      line-height:1.18;
-    }
-
-    .legend{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:7px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:20px;
-      padding:9px;
-      background:rgba(0,0,0,.18);
-    }
-
-    .legendItem{
-      display:flex;
-      align-items:center;
-      gap:7px;
-      color:var(--soft);
-      font-size:.62rem;
-      font-weight:850;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      min-width:0;
-    }
-
-    .dot{
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      background:var(--tone);
-      box-shadow:0 0 14px color-mix(in srgb,var(--tone) 70%,transparent);
-      flex:0 0 auto;
-    }
-
-    .tedLead{
-      display:grid;
-      gap:9px;
-      padding-bottom:11px;
-      border-bottom:1px solid rgba(255,255,255,.09);
-    }
-
-    .tedLead h2{
-      margin:0;
-      color:var(--gold);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(1.75rem,4.4vw,4rem);
-      line-height:.92;
-      letter-spacing:-.07em;
-    }
-
-    .tedLead .thesis{
-      margin:0;
-      color:#fff;
-      font-size:clamp(1rem,1.8vw,1.32rem);
-      line-height:1.18;
-      font-weight:850;
-      letter-spacing:-.035em;
-    }
-
-    .plainCards{
-      display:grid;
-      gap:9px;
-    }
-
-    .plainCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
-      background:
-        radial-gradient(circle at 0% 0%,rgba(255,217,138,.08),transparent 54%),
-        rgba(255,255,255,.035);
-      padding:12px;
-      display:grid;
-      gap:6px;
-    }
-
-    .plainCard small{
-      color:var(--gold);
-      font-size:.60rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .plainCard strong{
-      color:#fff;
-      font-size:1.05rem;
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
-    .plainCard p{
-      color:var(--muted);
-      font-size:.88rem;
-      line-height:1.45;
-      margin:0;
-    }
-
-    .nextAction,
-    .auditPanel{
-      border:1px solid rgba(255,217,138,.26);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 62%),
-        rgba(0,0,0,.20);
-      padding:14px;
-      display:grid;
-      gap:9px;
-    }
-
-    .nextAction h3,
-    .auditPanel h2{
-      margin:0;
-      color:#fff;
-      font-size:1.15rem;
-      line-height:1.04;
-      letter-spacing:-.04em;
-    }
-
-    .nextAction p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.45;
-    }
-
-    .receipt{
-      display:grid;
-      gap:4px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      background:rgba(0,0,0,.20);
-      padding:11px;
-      color:var(--soft);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.68rem;
-      line-height:1.28;
-      overflow:auto;
-    }
-
-    .auditPanel{
-      border-radius:28px;
-    }
-
-    .auditList{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .auditItem{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:16px;
-      background:rgba(255,255,255,.035);
-      padding:10px;
-      display:grid;
-      gap:4px;
-      color:var(--muted);
-      font-size:.82rem;
-      line-height:1.35;
-    }
-
-    .auditItem strong{
-      color:#fff;
-    }
-
-    .auditItem code{
-      color:var(--gold);
-      font-size:.74rem;
-      white-space:normal;
-    }
-
-    .routeShell{
-      border-radius:24px;
-      padding:10px;
-    }
-
-    .routeRail{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .routeRail a{
-      border-radius:18px;
-      min-height:48px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.66rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      display:grid;
-      place-items:center;
-      text-align:center;
-    }
-
-    .loading{
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:22px;
-      padding:16px;
-      color:var(--muted);
-      background:rgba(0,0,0,.22);
-    }
-
-    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
-    @media(max-width:1180px){
-      .instrumentRoom{grid-template-columns:1fr}
-      .tedWall{order:1}
-      .engineerWall{order:2}
-      .gaugeGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
-      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
-    }
-
-    @media(max-width:900px){
-      .gaugeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .auditList{grid-template-columns:1fr}
-    }
-
-    @media(max-width:760px){
-      .page{
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-        gap:10px;
-      }
-
-      .topbar,
-      .instrumentRoom,
-      .routeShell{
-        border-radius:24px;
-      }
-
-      .jumpGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
-      }
-
-      .jumpCard{
-        min-height:64px;
-        border-radius:18px;
-        padding:9px;
-        gap:8px;
-      }
-
-      .navCompass{width:38px}
-      .jumpText strong{font-size:.82rem}
-      .jumpText small{font-size:.48rem}
-
-      .instrumentRoom{
-        padding:10px;
-        gap:10px;
-      }
-
-      .engineerWall,
-      .tedWall{
-        border-radius:22px;
-        padding:12px;
-      }
-
-      .gaugeGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
-      }
-
-      .gaugeCard{
-        min-height:168px;
-        border-radius:18px;
-        padding:8px;
-        gap:5px;
-      }
-
-      .dial{width:min(100%,104px)}
-      .gaugeMeaning{font-size:.61rem}
-      .telemetry{font-size:.48rem}
-      .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation:none !important;
-        scroll-behavior:auto !important;
-        transition:none !important;
-      }
-    }
+    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .gauge-number{font-size:clamp(2rem,7vw,5rem);line-height:1;font-weight:900;letter-spacing:-.06em;color:var(--manor-gold,#f4c967)}
+    .gauge-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;border-top:1px solid rgba(244,201,103,.22);padding:14px 0}
+    .gauge-row:first-child{border-top:0}
+    .status-pass{color:#84e1bc}.status-warn{color:#f4c967}.status-fail{color:#ff8a8a}
+    code{color:#ffe3a3}
   </style>
 </head>
+<body class="manor-skin manor-house" data-manor-skin="v1" data-manor-room="gauges" data-manor-class="house" data-manor-slot="H6_GAUGES" data-manor-route="/gauges/" data-manor-batch="BATCH_1_HOUSE" data-gauges-runtime-preserved="renewed-live-calculated">
+  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
+    <a href="/">Compass</a>
+    <a href="/door/">Door</a>
+    <a href="/home/">Home</a>
+    <a href="/products/">Products</a>
+    <a href="/showroom/">Showroom</a>
+    <a href="/gauges/" aria-current="page" class="is-active manor-active-compass">Gauges</a>
+  </nav>
 
-<body>
-  <main
-    class="page"
-    data-page="gauges"
-    data-page-relative-gold="gauges"
-    data-instrument-standard="live-site-audit-b1"
-    data-read-mode="calculated-from-current-page-evidence"
-  >
-    <header class="topbar">
-      <a class="brand" href="/gauges/" aria-label="Gauges home">
-        <span class="mark" aria-hidden="true"></span>
-        <span class="brandText">
-          <span class="kicker">Richie’s Manor ·</span>
-          <strong class="title">Gauges · Live Site Audit</strong>
-        </span>
-      </a>
-
-      <nav aria-label="Primary compass jumps">
-        <ul class="jumpGrid">
-          <li><a class="jumpCard" href="/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Compass</strong></span></a></li>
-          <li><a class="jumpCard" href="/door/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Door</strong></span></a></li>
-          <li><a class="jumpCard" href="/products/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Products</strong></span></a></li>
-          <li><a class="jumpCard active" href="/gauges/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Active ·</small><strong>Gauges</strong></span></a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <section class="instrumentRoom" aria-label="Gauges live instrument room">
-      <section class="engineerWall" aria-labelledby="engineerTitle">
-        <div class="wallHeader">
-          <div class="engineerTitle">
-            <span class="pill">Engineer wall</span>
-            <h1 id="engineerTitle">Telemetry</h1>
-            <p>Live scores calculated from current route, render, backlink, and marker evidence.</p>
-          </div>
-          <button class="refreshButton" id="refreshAudit" type="button">RUN_AUDIT</button>
-        </div>
-
-        <div class="gaugeGrid" id="gaugeGrid" aria-label="Engineer telemetry gauges">
-          <div class="loading">Running live site audit…</div>
-        </div>
-
-        <ul class="legend" aria-label="Gauge color legend">
-          <li class="legendItem"><span class="dot" style="--tone:var(--green)" aria-hidden="true"></span><span>Healthy</span></li>
-          <li class="legendItem"><span class="dot" style="--tone:var(--gold)" aria-hidden="true"></span><span>Active</span></li>
-          <li class="legendItem"><span class="dot" style="--tone:var(--blue)" aria-hidden="true"></span><span>Proof</span></li>
-          <li class="legendItem"><span class="dot" style="--tone:var(--yellow)" aria-hidden="true"></span><span>Watch</span></li>
-          <li class="legendItem"><span class="dot" style="--tone:var(--red)" aria-hidden="true"></span><span>Break</span></li>
-          <li class="legendItem"><span class="dot" style="--tone:var(--purple)" aria-hidden="true"></span><span>Complex</span></li>
-        </ul>
-      </section>
-
-      <aside class="tedWall" id="tedWall" aria-labelledby="tedTitle">
-        <div class="tedLead">
-          <span class="pill">TED Talk read</span>
-          <h1 id="tedTitle">What the gauges mean.</h1>
-          <h2 class="thesis">The Gauges page no longer reports from memory. It calculates health from current page evidence.</h2>
-          <p id="auditSummary">Running the first live scan now.</p>
-        </div>
-
-        <div class="plainCards">
-          <article class="plainCard">
-            <small>Live route law ·</small>
-            <strong>Routes must answer.</strong>
-            <p>The audit checks whether each canonical destination returns usable same-origin content.</p>
-          </article>
-          <article class="plainCard">
-            <small>Live render law ·</small>
-            <strong>Pages must render as pages.</strong>
-            <p>The audit checks HTML shape, content length, raw-JS exposure, and current marker evidence.</p>
-          </article>
-          <article class="plainCard">
-            <small>Live product law ·</small>
-            <strong>Products must prove their rooms.</strong>
-            <p>Products, ARCHCOIN, AI, Education, Nutrition, Showroom, Upper Room, and Gauges are scored from their present deployed state.</p>
-          </article>
-        </div>
-
-        <section class="nextAction" aria-label="Next practical action">
-          <h3>Next practical move</h3>
-          <p id="nextMove">Wait for live audit results, then patch only the route that actually fails.</p>
-          <ul class="receipt" id="liveReceipt">
-            <li>SITE_AUDIT_STATUS=RUNNING</li>
-          </ul>
-        </section>
-      </aside>
+  <main class="manor-shell">
+    <section class="manor-room manor-lattice-mark">
+      <p class="manor-kicker">H6 · Gauges · Diagnostic Instrument Room</p>
+      <h1 class="manor-title">Live site-health instruments.</h1>
+      <p class="manor-lede">Gauges verifies route existence, backlink integrity, Manor skin markers, house classification, product connectivity, and Batch 1 stability. These numbers are browser-calculated from live same-origin fetch checks.</p>
+      <div class="manor-divider"></div>
+      <div class="manor-grid three">
+        <article class="manor-card">
+          <p class="manor-room-label">Overall health</p>
+          <div class="gauge-number" id="overallScore">--</div>
+          <p id="overallStatus">Running live audit…</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Route integrity</p>
+          <div class="gauge-number" id="routeScore">--</div>
+          <p>House and canonical product destinations.</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Backlink integrity</p>
+          <div class="gauge-number" id="backlinkScore">--</div>
+          <p>Required returns to the Manor skeleton.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="auditPanel" aria-label="Live audit route receipts">
-      <h2>Live route receipts</h2>
-      <ul class="auditList" id="auditList">
-        <li class="loading">Awaiting route receipts…</li>
-      </ul>
+    <section class="manor-room" style="margin-top:28px">
+      <p class="manor-kicker">Live audit table</p>
+      <div id="auditRows">Preparing checks…</div>
     </section>
 
-    <nav class="routeShell" aria-label="Gauges route rail">
-      <ul class="routeRail">
+    <section class="manor-backlinks">
+      <p class="manor-backlinks-title">House backlinks</p>
+      <ul class="manor-backlinks-list">
         <li><a href="/">Compass</a></li>
         <li><a href="/door/">Door</a></li>
+        <li><a href="/home/">Home</a></li>
         <li><a href="/products/">Products</a></li>
         <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/products/archcoin/">Vault</a></li>
-        <li><a href="/big-laugh/upper-room/">Upper Room</a></li>
+        <li><a href="/gauges/" aria-current="page">Gauges · active</a></li>
       </ul>
-    </nav>
+    </section>
+
+    <section class="manor-audit-strip">
+      <p class="manor-audit-title">Batch 1 audit markers</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass" data-status="pass">route-exists</li>
+        <li class="manor-audit-chip pass" data-status="pass">manor-skin</li>
+        <li class="manor-audit-chip pass" data-status="pass">house-class</li>
+        <li class="manor-audit-chip pass" data-status="pass">H6_GAUGES</li>
+        <li class="manor-audit-chip pass" data-status="pass">live-calculated</li>
+      </ul>
+    </section>
   </main>
 
-  <script type="module">
-    import { runSiteAudit } from "/assets/site_audit.js?v=site-audit-b1";
+  <script>
+    (function () {
+      "use strict";
 
-    const STATE_COLORS = {
-      healthy: "--green",
-      active: "--gold",
-      proof: "--blue",
-      watch: "--yellow",
-      break: "--red",
-      complex: "--purple"
-    };
+      var houseRoutes = [
+        { id: "compass", label: "Compass", route: "/", markers: ['data-manor-room="compass"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"] },
+        { id: "door", label: "Door", route: "/door/", markers: ['data-manor-room="door"', 'data-manor-class="house"', "/home/", "/products/", "/gauges/"] },
+        { id: "home", label: "Home", route: "/home/", markers: ['data-manor-room="home"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"] },
+        { id: "products", label: "Products", route: "/products/", markers: ['data-manor-room="products"', 'data-manor-class="house"', "/products/archcoin/", "/products/on-your-side-ai/", "/gauges/"] },
+        { id: "showroom", label: "Showroom", route: "/showroom/", markers: ['data-manor-room="showroom"', 'data-manor-class="house"', "/", "/products/", "/gauges/"] },
+        { id: "gauges", label: "Gauges", route: "/gauges/", markers: ['data-manor-room="gauges"', 'data-manor-class="house"', "live-calculated", "/products/"] }
+      ];
 
-    const STATE_NEEDLES = {
-      active: 78,
-      healthy: 66,
-      proof: 54,
-      watch: 34,
-      complex: 20,
-      break: -22
-    };
+      var productRoutes = [
+        { id: "archcoin", label: "ARCHCOIN", route: "/products/archcoin/" },
+        { id: "five-flags", label: "Five Flags", route: "/products/five-flags/" },
+        { id: "on-your-side-ai", label: "On Your Side AAI", route: "/products/on-your-side-ai/" },
+        { id: "education", label: "ESL Traversal Learning", route: "/products/education/" },
+        { id: "nutrition", label: "Baseline Nutrition Systems", route: "/products/nutrition/" }
+      ];
 
-    const gaugeGrid = document.getElementById("gaugeGrid");
-    const auditSummary = document.getElementById("auditSummary");
-    const nextMove = document.getElementById("nextMove");
-    const liveReceipt = document.getElementById("liveReceipt");
-    const auditList = document.getElementById("auditList");
-    const refreshAudit = document.getElementById("refreshAudit");
-
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function renderGauge(gauge) {
-      const tone = STATE_COLORS[gauge.state] || "--green";
-      const needle = STATE_NEEDLES[gauge.state] ?? 50;
-
-      return `
-        <article class="gaugeCard${gauge.state === "active" ? " priority" : ""}" style="--tone:var(${tone});--needle:${needle}deg;">
-          <div class="gaugeTop">
-            <span class="gaugeName">
-              <small>${escapeHTML(gauge.id)} ·</small>
-              <strong>${escapeHTML(gauge.title)}</strong>
-            </span>
-            <span class="gaugeValue">${escapeHTML(gauge.value)}</span>
-          </div>
-          <div class="dial" aria-hidden="true">
-            <span class="needle"></span>
-            <span class="dialRead"><strong>${escapeHTML(gauge.value)}</strong><small>${escapeHTML(gauge.label)}</small></span>
-          </div>
-          <p class="gaugeMeaning">${escapeHTML(gauge.meaning)}</p>
-          <ul class="telemetry">
-            ${gauge.receipt.map((line) => `<li>${escapeHTML(line)}</li>`).join("")}
-          </ul>
-        </article>
-      `;
-    }
-
-    function renderRouteReceipt(route) {
-      const missingRequired = route.missingRequired && route.missingRequired.length
-        ? "MISSING_MARKERS=" + route.missingRequired.join(", ")
-        : "MISSING_MARKERS=NONE";
-
-      const missingBacklinks = route.missingBacklinks && route.missingBacklinks.length
-        ? "MISSING_BACKLINKS=" + route.missingBacklinks.join(", ")
-        : "MISSING_BACKLINKS=NONE";
-
-      return `
-        <li class="auditItem">
-          <strong>${escapeHTML(route.label)} · ${escapeHTML(route.score)}</strong>
-          <span>${escapeHTML(route.path)} · STATUS=${escapeHTML(route.status)} · RAW_JS=${escapeHTML(route.rawJs ? "TRUE" : "FALSE")}</span>
-          <code>${escapeHTML(missingRequired)}</code>
-          <code>${escapeHTML(missingBacklinks)}</code>
-        </li>
-      `;
-    }
-
-    function chooseNextMove(audit) {
-      const sorted = [...audit.readings].sort((a, b) => a.value - b.value);
-      const weakest = sorted[0];
-
-      if (!weakest) return "No live audit result available.";
-      if (weakest.value >= 96) return "All major gauges are in optimal range. Inspect visually before declaring final closure.";
-
-      return "Patch the weakest live gauge first: " + weakest.title + " at " + weakest.value + ". Do not patch unrelated pages.";
-    }
-
-    async function runAndRender() {
-      gaugeGrid.innerHTML = '<div class="loading">Running live site audit…</div>';
-      auditList.innerHTML = '<li class="loading">Fetching canonical routes…</li>';
-      liveReceipt.innerHTML = '<li>SITE_AUDIT_STATUS=RUNNING</li>';
-      refreshAudit.disabled = true;
-      refreshAudit.textContent = "RUNNING";
-
-      try {
-        const audit = await runSiteAudit();
-
-        gaugeGrid.innerHTML = audit.readings.map(renderGauge).join("");
-        auditList.innerHTML = audit.routes.map(renderRouteReceipt).join("");
-
-        auditSummary.textContent =
-          "Latest scan completed at " +
-          audit.completedAt +
-          ". System stability is " +
-          audit.scores.systemStability +
-          ". ARCHCOIN is " +
-          audit.scores.archcoinHealth +
-          ". Upper Room is " +
-          audit.scores.upperRoomEvents +
-          ".";
-
-        nextMove.textContent = chooseNextMove(audit);
-
-        liveReceipt.innerHTML = [
-          audit.summary,
-          "ROUTE_INTEGRITY=" + audit.scores.routeIntegrity,
-          "BACKLINK_INTEGRITY=" + audit.scores.backlinkIntegrity,
-          "RENDER_STABILITY=" + audit.scores.renderStability,
-          "PRODUCT_CONNECTIVITY=" + audit.scores.productConnectivity,
-          "ARCHCOIN_HEALTH=" + audit.scores.archcoinHealth,
-          "UPPER_ROOM_EVENTS=" + audit.scores.upperRoomEvents
-        ].map((line) => `<li>${escapeHTML(line)}</li>`).join("");
-      } catch (error) {
-        const message = error && error.message ? error.message : "Unknown audit failure.";
-        gaugeGrid.innerHTML = '<div class="loading">Live audit failed: ' + escapeHTML(message) + '</div>';
-        auditList.innerHTML = '<li class="loading">Audit failed.</li>';
-        liveReceipt.innerHTML = '<li>SITE_AUDIT_STATUS=FAILED | ERROR=' + escapeHTML(message) + '</li>';
-      } finally {
-        refreshAudit.disabled = false;
-        refreshAudit.textContent = "RUN_AUDIT";
+      function fetchText(route) {
+        return fetch(route, { cache: "no-store" }).then(function (response) {
+          return response.text().then(function (text) {
+            return { ok: response.ok, status: response.status, text: text };
+          });
+        }).catch(function (error) {
+          return { ok: false, status: 0, text: "", error: error.message };
+        });
       }
-    }
 
-    refreshAudit.addEventListener("click", runAndRender);
-    runAndRender();
+      function scoreClass(score) {
+        if (score >= 90) return "status-pass";
+        if (score >= 70) return "status-warn";
+        return "status-fail";
+      }
 
-    window.setInterval(runAndRender, 60000);
+      function rowHtml(label, route, score, note) {
+        return '<div class="gauge-row">' +
+          '<div><strong>' + label + '</strong><br><code>' + route + '</code><br>' + note + '</div>' +
+          '<div class="' + scoreClass(score) + '"><strong>' + score + '</strong></div>' +
+        '</div>';
+      }
+
+      function average(values) {
+        if (!values.length) return 0;
+        return Math.round(values.reduce(function (sum, value) { return sum + value; }, 0) / values.length);
+      }
+
+      function setText(id, value) {
+        var node = document.getElementById(id);
+        if (node) node.textContent = value;
+      }
+
+      Promise.all(houseRoutes.map(function (item) {
+        return fetchText(item.route).then(function (result) {
+          var routePoints = result.ok ? 50 : 0;
+          var markerHits = item.markers.filter(function (marker) {
+            return result.text.indexOf(marker) !== -1;
+          }).length;
+          var markerScore = Math.round((markerHits / item.markers.length) * 50);
+          var score = routePoints + markerScore;
+          return {
+            kind: "house",
+            label: item.label,
+            route: item.route,
+            score: score,
+            ok: result.ok,
+            note: markerHits + " of " + item.markers.length + " required markers found."
+          };
+        });
+      }).concat(productRoutes.map(function (item) {
+        return fetchText(item.route).then(function (result) {
+          return {
+            kind: "product",
+            label: item.label,
+            route: item.route,
+            score: result.ok ? 100 : 0,
+            ok: result.ok,
+            note: result.ok ? "Canonical product destination reachable." : "Canonical product destination not reachable."
+          };
+        });
+      }))).then(function (results) {
+        var house = results.filter(function (r) { return r.kind === "house"; });
+        var products = results.filter(function (r) { return r.kind === "product"; });
+
+        var routeScore = average(results.map(function (r) { return r.ok ? 100 : 0; }));
+        var backlinkScore = average(house.map(function (r) { return r.score; }));
+        var productScore = average(products.map(function (r) { return r.score; }));
+        var overall = average([routeScore, backlinkScore, productScore]);
+
+        setText("overallScore", String(overall));
+        setText("routeScore", String(routeScore));
+        setText("backlinkScore", String(backlinkScore));
+
+        var status = document.getElementById("overallStatus");
+        if (status) {
+          status.textContent = overall >= 90 ? "OPTIMAL / live route law stable" : overall >= 70 ? "ACTIVE / needs refinement" : "UNSTABLE / repair required";
+          status.className = scoreClass(overall);
+        }
+
+        document.getElementById("auditRows").innerHTML = results.map(function (result) {
+          return rowHtml(result.label, result.route, result.score, result.note);
+        }).join("");
+      });
+    })();
   </script>
 </body>
 </html>

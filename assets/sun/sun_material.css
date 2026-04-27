@@ -1,74 +1,180 @@
 /* TNT RENEWAL — /assets/sun/sun_material.css
-   DGB SUN MATERIAL · SATELLITE OBSERVATIONAL SUPPORT B7
-   PURPOSE:
-     - Support canvas-mounted satellite sun.
-     - No CSS symbolic wheel.
-     - No decorative graphic box.
+   SUN ASSET SPINE · MATERIAL B7 · STELLAR PLASMA SUPPORT
+
+   CONTRACT:
+     - Material CSS supports the Sun canvas.
+     - CSS does not pretend to be the Sun.
+     - No flat orange CSS planet.
+     - No hard ring.
+     - No decorative rays.
+     - Canvas owns the stellar body.
 */
 
-:root {
-  --dgb-sun-size: min(112vw, 760px);
-  --dgb-space: #02040b;
-  --dgb-sun-glow: rgba(255, 185, 76, 0.28);
-  --dgb-sun-hot-glow: rgba(255, 105, 28, 0.18);
+:root{
+  --dgb-sun-ink:rgba(255,255,255,.96);
+  --dgb-sun-text:rgba(255,239,209,.78);
+  --dgb-sun-gold:rgba(255,220,128,.98);
+  --dgb-sun-line:rgba(255,227,168,.16);
+  --dgb-sun-panel:rgba(10,6,3,.54);
 }
 
-[data-dgb-sun-mount] {
-  width: var(--dgb-sun-size);
-  max-width: 100%;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  position: relative;
-  isolation: isolate;
-  overflow: visible;
-}
-
-[data-dgb-sun-mount]::before {
-  content: "";
-  position: absolute;
-  inset: -16%;
-  border-radius: 999px;
-  pointer-events: none;
+[data-dgb-sun-preview]{
+  min-height:100svh;
+  margin:0;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 224, 134, 0.14), transparent 30%),
-    radial-gradient(circle at 50% 50%, rgba(255, 119, 36, 0.085), transparent 58%),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.028), transparent 78%);
-  filter: blur(20px);
-  opacity: 0.76;
+    radial-gradient(circle at 18% 12%,rgba(255,200,88,.10),transparent 24rem),
+    radial-gradient(circle at 74% 18%,rgba(255,142,44,.08),transparent 20rem),
+    linear-gradient(180deg,#08050b 0%,#05030a 44%,#010104 100%);
+  color:var(--dgb-sun-ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-.dgb-sun-canvas,
-.dgb-sun-svg,
-[data-satellite-sun-canvas] {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: var(--dgb-sun-size);
-  max-width: 100%;
-  aspect-ratio: 1;
-  border-radius: 999px;
+.dgb-sun-preview-page{
+  width:min(100% - 28px,980px);
+  min-height:100svh;
+  margin:0 auto;
+  padding:18px 0 28px;
+  display:grid;
+  gap:16px;
+  align-content:start;
 }
 
-.dgb-sun-canvas,
-[data-satellite-sun-canvas] {
-  filter:
-    drop-shadow(0 0 28px var(--dgb-sun-glow))
-    drop-shadow(0 0 96px var(--dgb-sun-hot-glow));
+.dgb-sun-preview-header,
+.dgb-sun-preview-panel{
+  border:1px solid var(--dgb-sun-line);
+  border-radius:28px;
+  background:var(--dgb-sun-panel);
+  box-shadow:0 30px 110px rgba(0,0,0,.54);
+  backdrop-filter:blur(10px);
 }
 
-.dgb-sun-svg {
-  filter:
-    drop-shadow(0 0 24px rgba(255, 205, 91, 0.18))
-    drop-shadow(0 0 72px rgba(255, 95, 23, 0.12));
+.dgb-sun-preview-header{
+  padding:clamp(20px,5vw,44px);
+  display:grid;
+  gap:14px;
 }
 
-[data-sun-fallback] {
-  opacity: 0;
-  visibility: hidden;
+.dgb-sun-preview-kicker{
+  margin:0;
+  color:var(--dgb-sun-gold);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:950;
+  letter-spacing:3px;
+  text-transform:uppercase;
 }
 
-/* Deliberate spine rule:
-   The root sun must be mounted by canvas runtime authority.
-   No .dgb-sun-css / .dgb-sun-core symbolic fallback is defined here.
-*/
+.dgb-sun-preview-title{
+  margin:0;
+  font-size:clamp(3.2rem,10vw,7rem);
+  line-height:.86;
+  letter-spacing:-.08em;
+}
+
+.dgb-sun-preview-copy{
+  margin:0;
+  max-width:760px;
+  color:var(--dgb-sun-text);
+  font-size:clamp(1.05rem,2.4vw,1.35rem);
+  line-height:1.55;
+}
+
+.dgb-sun-preview-panel{
+  position:relative;
+  padding:clamp(14px,3vw,24px);
+  overflow:hidden;
+}
+
+[data-dgb-sun-mount]{
+  position:relative;
+  z-index:1;
+  width:min(100%,760px);
+  margin:0 auto;
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  background:transparent;
+  border:0;
+  outline:0;
+  box-shadow:none;
+  user-select:none;
+}
+
+[data-dgb-sun-canvas]{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+}
+
+.dgb-sun-control-panel{
+  position:relative;
+  z-index:2;
+  width:min(100%,760px);
+  margin:14px auto 0;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+
+.dgb-sun-control-button,
+.dgb-sun-control-readout{
+  min-height:42px;
+  border-radius:999px;
+  border:1px solid var(--dgb-sun-line);
+  background:rgba(0,0,0,.28);
+  color:var(--dgb-sun-ink);
+  font:inherit;
+  font-weight:900;
+  padding:10px 14px;
+}
+
+.dgb-sun-control-button{
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.dgb-sun-control-button:hover,
+.dgb-sun-control-button:focus-visible{
+  border-color:rgba(255,220,128,.52);
+  box-shadow:0 0 22px rgba(255,145,43,.16);
+  outline:none;
+}
+
+.dgb-sun-control-readout{
+  color:rgba(255,239,209,.72);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+.dgb-sun-caption{
+  position:relative;
+  z-index:2;
+  margin:10px auto 4px;
+  color:rgba(255,247,220,.92);
+  font-size:clamp(.78rem,2vw,1rem);
+  font-weight:950;
+  letter-spacing:1.7px;
+  text-align:center;
+  text-transform:uppercase;
+  text-shadow:0 3px 18px rgba(0,0,0,.8);
+}
+
+@media(max-width:760px){
+  .dgb-sun-preview-page{
+    width:min(100% - 20px,980px);
+  }
+
+  [data-dgb-sun-mount],
+  .dgb-sun-control-panel{
+    width:min(100%,620px);
+  }
+
+  .dgb-sun-control-button,
+  .dgb-sun-control-readout{
+    flex:1 1 calc(50% - 10px);
+    text-align:center;
+  }
+}

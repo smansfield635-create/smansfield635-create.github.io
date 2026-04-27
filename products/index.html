@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-products-generation="source-waterfall-b3">
+<html lang="en" data-products-generation="source-waterfall-product-jump-b4">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Products: the parent source chamber where the waterfall flows into Vault Chamber, Upper Room, Nine Summits, and Showroom."
+    content="Diamond Gate Bridge Products: the parent source chamber where the waterfall flows into Vault Chamber, Upper Room, Nine Summits, Showroom, and active product jump paths."
   />
 
   <style>
@@ -70,7 +70,7 @@
     .hero,
     .panel,
     .product-card,
-    .status-strip {
+    .product-jump-card {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
@@ -659,7 +659,8 @@
         inset 0 0 26px rgba(255,255,255,.04);
     }
 
-    .product-card small {
+    .product-card small,
+    .product-jump-card small {
       color:#91a6cf;
       text-transform:uppercase;
       letter-spacing:.12em;
@@ -667,14 +668,16 @@
       font-weight:900;
     }
 
-    .product-card strong {
+    .product-card strong,
+    .product-jump-card strong {
       color:#fff;
       font-size:clamp(1.08rem,2.2vw,1.42rem);
       line-height:1.03;
       letter-spacing:-.045em;
     }
 
-    .product-card span {
+    .product-card span,
+    .product-jump-card span {
       color:var(--muted);
       line-height:1.42;
       font-size:.88rem;
@@ -738,21 +741,66 @@
       pointer-events:none;
     }
 
-    .status-strip {
+    .product-jump-grid {
       display:grid;
-      gap:8px;
-      padding:16px;
-      border-radius:20px;
-      overflow:hidden;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
     }
 
-    .status-strip code {
-      display:block;
-      white-space:pre-wrap;
-      word-break:break-word;
-      color:#dfe8ff;
-      font-size:.84rem;
-      line-height:1.55;
+    .product-jump-card {
+      position:relative;
+      min-height:168px;
+      border-radius:24px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(126,203,255,.08),transparent 68%),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.024));
+      box-shadow:0 18px 46px rgba(0,0,0,.26);
+      display:grid;
+      align-content:end;
+      gap:9px;
+      overflow:hidden;
+      transition:transform 220ms ease,border-color 220ms ease,filter 220ms ease;
+    }
+
+    .product-jump-card::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.20);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.14),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.70;
+      z-index:0;
+    }
+
+    .product-jump-card > * {
+      position:relative;
+      z-index:1;
+    }
+
+    .product-jump-card:hover,
+    .product-jump-card:focus-visible {
+      transform:translateY(-4px);
+      border-color:rgba(147,239,189,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .product-jump-card.featured {
+      border-color:rgba(239,210,154,.44);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(239,210,154,.13),transparent 68%),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
+    }
+
+    .product-jump-card.featured::before {
+      border-color:rgba(239,210,154,.54);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.30),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
     }
 
     .footer {
@@ -864,6 +912,10 @@
         width:100%;
         margin-top:2px;
       }
+
+      .product-jump-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
 
     @media (max-width:640px) {
@@ -912,6 +964,10 @@
       .small-link {
         width:100%;
       }
+
+      .product-jump-grid {
+        grid-template-columns:1fr;
+      }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -930,8 +986,8 @@
   <main
     class="page"
     data-page="products"
-    data-baseline="source-waterfall-product-chamber"
-    data-pass="products-source-waterfall-b3"
+    data-baseline="source-waterfall-product-jump"
+    data-pass="products-source-waterfall-b4"
     data-source-role="parent-product-chamber"
     data-vault-route="/products/archcoin/"
     data-upper-room-route="/big-laugh/upper-room/"
@@ -968,7 +1024,7 @@
         <div class="hero-actions">
           <a class="small-link featured" href="#source-chamber">Open Source Chamber</a>
           <a class="small-link" href="/products/archcoin/">Enter Vault Chamber</a>
-          <a class="small-link" href="/showroom/">Return to Showroom</a>
+          <a class="small-link" href="#product-jump">Product Jump</a>
         </div>
       </div>
 
@@ -1031,27 +1087,46 @@
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="statusTitle">
+    <section id="product-jump" class="panel" aria-labelledby="jumpTitle" data-section="product-jump">
       <div class="panel-head">
-        <span class="pill">Status</span>
-        <h2 id="statusTitle">Products source chamber active.</h2>
+        <span class="pill">Product jump</span>
+        <h2 id="jumpTitle">Jump straight to the product room.</h2>
         <p>
-          The old many-option layout has been compressed into four product rooms.
-          The source waterfall now originates on Products and feeds the Vault Chamber route.
+          These are active product paths that need direct access without restoring the old many-option layout.
+          Nine Summits is already carried in the source chamber above, so it is not repeated here.
         </p>
       </div>
 
-      <div class="status-strip">
-        <code>PRODUCTS_SOURCE_WATERFALL=ACTIVE
-PAGE=/products/index.html
-SOURCE_ROLE=PARENT_PRODUCT_CHAMBER
-PRIMARY_ROUTE_COUNT=4
-NORTH_VAULT_CHAMBER=/products/archcoin/
-EAST_UPPER_ROOM=/big-laugh/upper-room/
-SOUTH_NINE_SUMMITS=/nine-summits/
-WEST_SHOWROOM=/showroom/
-OPTION_OVERLOAD=REDUCED
-WATERFALL_ORIGIN=PRODUCTS</code>
+      <div class="product-jump-grid" aria-label="Product jump section">
+        <a class="product-jump-card featured" href="/products/archcoin/">
+          <small>Vault / Financial Template</small>
+          <strong>ARCHCOIN</strong>
+          <span>A four-coin financial transaction template for contract authority, inbound value, outbound obligation, and growth allocation.</span>
+        </a>
+
+        <a class="product-jump-card" href="/five-lives/">
+          <small>Game / Human Choice</small>
+          <strong>Five Lives</strong>
+          <span>A product path for choice, consequence, reset, and the lives people move through.</span>
+        </a>
+
+        <a class="product-jump-card" href="/whats-my-scene/">
+          <small>Game / Social Read</small>
+          <strong>What’s My Scene?</strong>
+          <span>A scene-reading product path for people, rooms, roles, context, and live interaction.</span>
+        </a>
+
+        <a class="product-jump-card" href="/artificial-agent-intelligence/">
+          <small>AAI / System Intelligence</small>
+          <strong>Artificial Agent Intelligence</strong>
+          <span>The artificial agent intelligence lane for structured assistance, traversal, and execution support.</span>
+        </a>
+
+        <a class="product-jump-card" href="/esl-traversal-program/">
+          <small>Education / Language</small>
+          <strong>ESL Traversal Program</strong>
+          <span>A language-learning traversal path for movement through English, context, confidence, and real use.</span>
+        </a>
       </div>
     </section>
 

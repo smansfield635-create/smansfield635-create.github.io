@@ -1,420 +1,592 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-product-generation="esl-traversal-learning-russian-doll-full-expression-b6">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>ESL Traversal Learning | Products</title>
+  <title>ESL Traversal Learning · Products</title>
   <meta
     name="description"
-    content="ESL Traversal Learning — a traversal-based language learning product path inside the Diamond Gate Bridge products chamber."
+    content="ESL Traversal Learning — an English-by-movement product path for real-life scenes, comprehension, speech, confidence, and practical use."
   />
+
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#041124;
-      --bg1:#07203d;
-      --bg2:#0b2f58;
-      --ink:rgba(255,255,255,.97);
-      --mut:rgba(255,255,255,.84);
-      --soft:rgba(255,255,255,.66);
-      --ice:rgba(215,228,255,.96);
-      --line:rgba(255,255,255,.12);
-      --lineStrong:rgba(215,228,255,.26);
-      --panel:rgba(8,14,24,.78);
-      --panelStrong:rgba(8,14,24,.90);
-      --crimson:rgba(120,0,22,.22);
-      --opalV:rgba(90,40,120,.16);
-      --blueField:rgba(18,58,140,.14);
-      --iceField:rgba(215,228,255,.08);
-      --shadow:0 18px 54px rgba(0,0,0,.42);
-      --shadowStrong:0 24px 76px rgba(0,0,0,.48);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+      --panel:rgba(7,14,28,.88);
+      --panel2:rgba(10,20,42,.94);
+      --line:rgba(255,218,150,.22);
+      --iceLine:rgba(215,228,255,.32);
+      --text:#fff8ea;
+      --muted:#c9d2ea;
+      --soft:rgba(201,210,234,.74);
+      --gold:#ffd98a;
+      --ice:#d7e4ff;
+      --blue:#8ec5ff;
+      --mint:#93efbd;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1120px;
     }
 
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
-      width:100%;
       min-height:100%;
-      background:var(--bg0);
-      color:var(--ink);
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    }
-    body{
-      min-height:100vh;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 82%,rgba(255,154,86,.32),transparent 28%),
+        radial-gradient(circle at 72% 72%,rgba(255,216,138,.24),transparent 24%),
+        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
+        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
       overflow-x:hidden;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(125,180,255,.08), transparent 26%),
-        radial-gradient(circle at 50% 82%, rgba(125,180,255,.05), transparent 30%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
     }
-    a{color:inherit;text-decoration:none}
-    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
-    .env{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-    .env::before{
+
+    body::before{
       content:"";
-      position:absolute;
-      inset:-10%;
-      background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,.92) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 18% 50%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 36% 16%, rgba(255,255,255,.82) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 58% 18%, rgba(255,255,255,.86) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 74% 22%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 20% 78%, rgba(255,255,255,.72) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 50% 82%, rgba(255,255,255,.76) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 86% 80%, rgba(255,255,255,.78) 0 1px, transparent 1.8px);
-      opacity:.42;
-      animation:starDrift 32s linear infinite;
-    }
-    .env::after{
-      content:"";
-      position:absolute;
+      position:fixed;
       inset:0;
+      pointer-events:none;
+      opacity:.66;
       background:
-        radial-gradient(circle at 12% 22%, var(--crimson), transparent 34%),
-        radial-gradient(circle at 82% 24%, var(--opalV), transparent 38%),
-        radial-gradient(circle at 60% 26%, var(--blueField), transparent 34%),
-        radial-gradient(circle at 50% 30%, var(--iceField), transparent 24%),
-        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.01) 50%, transparent 100%);
-      filter:blur(5px);
-      opacity:.42;
+        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
+        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
+      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
+      animation:snowFall 22s linear infinite;
+      z-index:0;
     }
-    .wrap{
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
+        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
+        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
+        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+      z-index:0;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .page{
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
-      width:min(1180px,calc(100vw - 32px));
-      margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(40px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
+      display:grid;
+      gap:14px;
     }
+
+    .topbar,.hero,.stage,.panel,.card,.route-card{
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.12),transparent 42%),
+        linear-gradient(180deg,var(--panel2),var(--panel));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
     .topbar{
+      padding:14px;
+      border-radius:28px;
       display:flex;
-      justify-content:space-between;
       align-items:center;
-      gap:12px;
-      margin-bottom:30px;
+      justify-content:space-between;
+      gap:14px;
       flex-wrap:wrap;
     }
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .nav a{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(215,228,255,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.62), rgba(4,6,10,.78));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      display:inline-flex;
+
+    .brand{
+      display:flex;
       align-items:center;
-      justify-content:center;
-      position:relative;
-      overflow:hidden;
+      gap:12px;
+      min-width:0;
     }
-    .nav a::after,
-    .statusPill::after,
-    .actionBtn::after{
-      content:"";
-      position:absolute;
-      left:10px;
-      right:10px;
-      bottom:-12px;
-      height:28px;
-      background:radial-gradient(circle at 50% 0%, rgba(215,228,255,.30), transparent 72%);
-      opacity:.50;
-      pointer-events:none;
-    }
-    .statusStack{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .statusPill{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(215,228,255,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.50), rgba(4,6,10,.66));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      white-space:nowrap;
-      position:relative;
-      overflow:hidden;
-    }
-    .statusPill--strong{
-      border-color:var(--lineStrong);
-      color:#f4f8ff;
-      box-shadow:var(--shadow),0 0 0 1px rgba(215,228,255,.08),0 0 18px rgba(215,228,255,.10);
-    }
-    .hero{
+
+    .mark{
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
-      grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
-      gap:22px;
-      align-items:stretch;
-      margin-bottom:22px;
-    }
-    .heroMain,.heroSide,.section,.quickCard,.card,.faqItem{
-      border:1px solid var(--line);
-      border-radius:28px;
+      place-items:center;
+      border:1px solid rgba(215,228,255,.46);
       background:
-        radial-gradient(circle at 14% 18%, rgba(215,228,255,.08), transparent 58%),
-        radial-gradient(circle at 84% 24%, rgba(90,40,120,.14), transparent 66%),
-        radial-gradient(circle at 64% 24%, rgba(18,58,140,.10), transparent 68%),
-        linear-gradient(180deg, var(--panel) 0%, var(--panelStrong) 100%);
-      box-shadow:var(--shadowStrong);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      position:relative;
-      overflow:hidden;
+        radial-gradient(circle at 50% 28%,rgba(215,228,255,.38),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#eef4ff;
+      font-weight:950;
+      letter-spacing:.08em;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(215,228,255,.16);
     }
-    .heroMain::before,
-    .heroSide::before,
-    .section::before,
-    .quickCard::before,
-    .card::before,
-    .faqItem::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px rgba(215,228,255,.12);
-      opacity:.55;
-      border-radius:inherit;
+
+    .brandText{display:grid;gap:3px}
+
+    .kicker{
+      display:block;
+      margin:0;
+      color:#dce7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
     }
-    .heroMain{padding:30px 28px 26px}
-    .heroMain::after{
-      content:"";
-      position:absolute;
-      right:-34px;
-      top:-24px;
-      width:170px;
-      height:170px;
-      border-radius:22px;
-      transform:rotate(45deg);
-      border:1px solid rgba(215,228,255,.10);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,0)),
-        radial-gradient(circle at 50% 50%, rgba(215,228,255,.05), transparent 64%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .eyebrow{
-      margin:0 0 12px;
-      color:var(--ice);
-      font-size:12px;
+
+    .title{
+      display:block;
+      margin:0;
+      color:#fff;
       font-weight:900;
-      letter-spacing:.18em;
+      font-size:1.08rem;
+      line-height:1.05;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
+    }
+
+    .nav a,.button{
+      min-height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 13px;
+      border-radius:999px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.08em;
       text-transform:uppercase;
     }
+
+    .nav a.featured,.button.primary{
+      border-color:rgba(215,228,255,.48);
+      background:rgba(215,228,255,.10);
+      color:#eef4ff;
+      box-shadow:0 0 22px rgba(215,228,255,.12);
+    }
+
+    .hero{
+      border-radius:34px;
+      padding:clamp(24px,5vw,56px);
+      min-height:calc(100svh - 150px);
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(280px,.98fr);
+      gap:28px;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:min(760px,92vw);
+      height:min(760px,92vw);
+      left:72%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.16),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
+      filter:blur(5px);
+      z-index:-3;
+    }
+
+    .heroCopy{
+      display:grid;
+      gap:14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .pill{
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(215,228,255,.28);
+      background:rgba(255,255,255,.04);
+      color:#dce7ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--ice);
+      box-shadow:0 0 18px rgba(215,228,255,.42);
+    }
+
     h1{
       margin:0;
-      font-size:clamp(40px,6.5vw,74px);
-      line-height:.94;
-      letter-spacing:.05em;
-      font-weight:950;
-      text-shadow:0 10px 38px rgba(0,0,0,.58);
-    }
-    .heroIdentity{
-      margin:16px 0 0;
-      font-size:clamp(18px,2vw,23px);
-      line-height:1.38;
-      font-weight:800;
-      color:rgba(255,255,255,.94);
-    }
-    .heroBoundary{
-      margin:14px 0 0;
-      color:var(--ice);
-      font-size:15px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-    .heroSub{
-      margin:14px 0 0;
-      max-width:760px;
-      color:var(--mut);
-      font-size:clamp(15px,1.8vw,19px);
-      line-height:1.58;
-    }
-    .heroActions{
-      margin-top:22px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-    .actionBtn{
-      min-height:48px;
-      padding:0 18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(215,228,255,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
       color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
+      font-size:clamp(3rem,9vw,6.4rem);
+      line-height:.86;
+      letter-spacing:-.07em;
       text-transform:uppercase;
-      box-shadow:var(--shadow);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
-      position:relative;
-      overflow:hidden;
     }
-    .actionBtn:hover{transform:scale(1.02)}
-    .actionBtn:active{transform:scale(.98)}
-    .actionBtn--primary{
-      border-color:var(--lineStrong);
-      color:#f4f8ff;
-      box-shadow:var(--shadow),0 0 0 1px rgba(215,228,255,.08),0 0 18px rgba(215,228,255,.10);
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.6vw,2.9rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
-    .heroFacts{
-      margin-top:18px;
+
+    p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.62;
+      font-size:1rem;
+    }
+
+    .thesis{
+      color:#fff;
+      font-size:clamp(1.16rem,2.7vw,1.7rem);
+      line-height:1.18;
+      font-weight:850;
+      letter-spacing:-.04em;
+      max-width:820px;
+    }
+
+    .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
+      margin-top:4px;
     }
-    .heroSide{
-      padding:24px 22px;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      justify-content:space-between;
-    }
-    .heroSide h2,.sectionTitle{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--ice);
-    }
-    .heroSide p{
-      margin:8px 0 0;
-      color:var(--mut);
-      line-height:1.58;
-      font-size:15px;
-    }
-    .diagnosticCard{
-      border:1px dashed rgba(215,228,255,.22);
-      border-radius:22px;
-      min-height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:22px;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(215,228,255,.08), transparent 58%),
-        radial-gradient(circle at 82% 24%, rgba(90,40,120,.14), transparent 66%),
-        radial-gradient(circle at 62% 24%, rgba(18,58,140,.10), transparent 68%),
-        linear-gradient(180deg, rgba(10,16,30,.74) 0%, rgba(8,14,26,.90) 100%);
-    }
-    .diagnosticCard strong{
-      display:block;
-      font-size:14px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:#f4f8ff;
-    }
-    .diagnosticCard span{
-      display:block;
-      margin-top:10px;
-      color:var(--soft);
-      font-size:13px;
-      line-height:1.5;
-      text-transform:uppercase;
-      letter-spacing:.05em;
-    }
-    .quickRow{
+
+    .learningOrb{
+      position:relative;
+      width:min(100%,360px);
+      aspect-ratio:1;
+      margin:auto;
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin:22px 0;
+      place-items:center;
+      filter:drop-shadow(0 24px 48px rgba(0,0,0,.38));
     }
-    .quickCard{padding:18px 18px 16px;min-width:0}
-    .quickCard h3{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--ice);
+
+    .learningOrb::before{
+      content:"";
+      position:absolute;
+      inset:3%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.13);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.18),transparent 28%),
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 3deg,transparent 3deg 18deg);
+      box-shadow:
+        inset 0 0 54px rgba(0,0,0,.34),
+        0 0 50px rgba(215,228,255,.12);
+      animation:slowSpin 26s linear infinite;
     }
-    .quickCard p{
-      margin:10px 0 0;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.55;
+
+    .learningCore{
+      position:relative;
+      width:46%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.22);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.38),rgba(142,197,255,.16) 48%,rgba(0,0,0,.24) 100%);
+      box-shadow:
+        inset 0 0 42px rgba(215,228,255,.18),
+        0 0 88px rgba(215,228,255,.18);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      overflow:hidden;
+      z-index:3;
     }
-    .section{padding:24px;margin-top:18px}
-    .sectionHeader{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
+
+    .learningCore::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        repeating-conic-gradient(from 0deg,transparent 0deg 16deg,rgba(255,255,255,.08) 16deg 19deg,transparent 19deg 34deg);
+      animation:slowSpin 16s linear infinite reverse;
     }
-    .sectionIntro{
-      color:var(--mut);
-      line-height:1.55;
-      font-size:16px;
-      max-width:760px;
-    }
-    .grid2,.grid4{display:grid;gap:14px}
-    .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .card{padding:18px;min-width:0}
-    .card h4{
-      margin:0;
-      font-size:16px;
+
+    .learningCore span{
+      position:relative;
+      z-index:2;
+      color:#eef4ff;
+      font-weight:950;
+      font-size:.80rem;
+      letter-spacing:.10em;
       line-height:1.2;
-      letter-spacing:.03em;
-      font-weight:900;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
-    .card p{
-      margin:10px 0 0;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.58;
+
+    .learningLine{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:36%;
+      height:7px;
+      transform-origin:left center;
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(215,228,255,.46),transparent);
+      opacity:.70;
+      z-index:1;
+      overflow:hidden;
+      filter:drop-shadow(0 0 12px rgba(215,228,255,.26));
     }
-    .miniList{
-      list-style:none;
-      padding:0;
-      margin:12px 0 0;
+
+    .learningLine::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.42) 18px 24px,transparent 24px 42px);
+      animation:signalRun 1.7s linear infinite;
+    }
+
+    .learningLine.north{transform:rotate(-90deg)}
+    .learningLine.east{transform:rotate(0deg)}
+    .learningLine.south{transform:rotate(90deg)}
+    .learningLine.west{transform:rotate(180deg)}
+
+    .stage{
+      border-radius:34px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+      gap:16px;
+      overflow:hidden;
+    }
+
+    .talk{
+      display:grid;
+      gap:12px;
+      align-content:center;
+    }
+
+    .dollControls{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .dollControl{
+      min-height:58px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
+      color:var(--text);
+      font-weight:850;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-size:.82rem;
+      letter-spacing:.04em;
+      padding:8px;
+    }
+
+    .dollControl[data-active="true"]{
+      border-color:rgba(215,228,255,.38);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.14),transparent 70%),
+        rgba(215,228,255,.07);
+      box-shadow:0 0 24px rgba(215,228,255,.10);
+    }
+
+    .talkCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(215,228,255,.08),transparent 62%),
+        rgba(255,255,255,.035);
+      padding:18px;
+      display:grid;
+      gap:10px;
+    }
+
+    .talkCard h2{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    .receipt{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .receiptTitle{
+      margin:0;
+      color:var(--ice);
+      font-size:11px;
+      font-weight:850;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      padding-bottom:8px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .rows{
       display:grid;
       gap:8px;
     }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .rk{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.42;
+    }
+
+    .rv{
+      color:var(--text);
+      font-size:12px;
+      line-height:1.42;
+      text-align:right;
+      word-break:break-word;
+    }
+
+    .learningBoard{
+      display:grid;
+      gap:12px;
+      align-content:center;
+    }
+
+    .learningGrid,.grid3,.grid4,.routeGrid{
+      display:grid;
+      gap:12px;
+    }
+
+    .learningGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .grid3{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .grid4,.routeGrid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .panel{
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      gap:16px;
+    }
+
+    .panelHead{
+      display:grid;
+      gap:8px;
+      max-width:860px;
+    }
+
+    .card,.route-card{
+      border-radius:24px;
+      padding:18px;
+      min-height:150px;
+      display:grid;
+      align-content:end;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before,.route-card::before{
+      content:"";
+      position:absolute;
+      inset:18px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(215,228,255,.18);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.14),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.62;
+      z-index:0;
+    }
+
+    .card > *,.route-card > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .card small,.route-card small{
+      color:#dce7ff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.62rem;
+      font-weight:900;
+    }
+
+    .card strong,.route-card strong{
+      color:#fff;
+      font-size:clamp(1.05rem,2.1vw,1.35rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .card span,.route-card span{
+      color:var(--muted);
+      line-height:1.44;
+      font-size:.9rem;
+    }
+
+    .miniList{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:8px;
+    }
+
     .miniList li{
       position:relative;
       padding-left:16px;
-      color:var(--mut);
-      font-size:14px;
-      line-height:1.5;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.48;
     }
+
     .miniList li::before{
       content:"";
       position:absolute;
@@ -423,284 +595,494 @@
       width:6px;
       height:6px;
       border-radius:999px;
-      background:rgba(215,228,255,.86);
-      box-shadow:0 0 8px rgba(215,228,255,.10);
+      background:var(--ice);
+      box-shadow:0 0 8px rgba(215,228,255,.22);
     }
-    .faqList{display:grid;gap:12px;margin-top:10px}
-    .faqToggle{
-      width:100%;
-      border:0;
-      background:transparent;
-      color:var(--ink);
-      padding:18px 18px 16px;
-      text-align:left;
+
+    .route-card.featured{
+      border-color:rgba(215,228,255,.44);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.13),transparent 68%),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
+    }
+
+    .footer{
       display:flex;
-      align-items:center;
+      flex-wrap:wrap;
       justify-content:space-between;
-      gap:14px;
-      font-size:14px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      cursor:pointer;
+      gap:10px;
+      padding:0 4px;
+      color:#d5dff7;
+      font-size:.86rem;
     }
-    .faqToggle span:last-child{
-      color:var(--ice);
-      font-size:18px;
-      line-height:1;
-      min-width:18px;
-      text-align:center;
-      transition:transform 160ms ease;
+
+    .footer a{color:#fff0d0}
+
+    @keyframes snowFall{
+      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
+      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
     }
-    .faqBody{
-      padding:0 18px 18px;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.6;
-      display:none;
-      border-top:1px solid rgba(255,255,255,.08);
+
+    @keyframes slowSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
     }
-    .faqItem.isOpen .faqBody{display:block}
-    .faqItem.isOpen .faqToggle span:last-child{transform:rotate(45deg)}
-    .footnote{
-      margin-top:12px;
-      color:var(--soft);
-      font-size:12px;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+
+    @keyframes signalRun{
+      from{transform:translateX(-42px)}
+      to{transform:translateX(42px)}
     }
-    @keyframes starDrift{
-      from{transform:translate3d(-1.2%,-.8%,0)}
-      to{transform:translate3d(1.2%,.8%,0)}
+
+    @media(max-width:1080px){
+      .hero,.stage{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
+      .dollControls,
+      .learningGrid,
+      .grid3,
+      .grid4,
+      .routeGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
-    @media (max-width:1080px){
-      .hero{grid-template-columns:minmax(0,1fr)}
-      .quickRow{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    @media(max-width:640px){
+      .page{
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,.hero,.stage,.panel{
+        border-radius:24px;
+      }
+
+      .topbar{padding:12px}
+      .brand{gap:10px}
+
+      .mark{
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav{
+        width:100%;
+        justify-content:stretch;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .nav a{width:100%}
+      .hero{padding:22px}
+
+      .actions,
+      .dollControls,
+      .learningGrid,
+      .grid3,
+      .grid4,
+      .routeGrid{
+        grid-template-columns:1fr;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
+      }
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
+      .rv{
+        text-align:left;
+      }
     }
-    @media (max-width:800px){
-      .grid2,.grid4{grid-template-columns:minmax(0,1fr)}
-    }
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1180px)}
-      .heroMain,.heroSide,.section{padding:20px;border-radius:24px}
-      .topbar{align-items:flex-start}
-      .nav{width:100%}
-      .quickRow{grid-template-columns:minmax(0,1fr)}
-    }
-    @media (prefers-reduced-motion:reduce){
-      .actionBtn,
-      .faqToggle span:last-child{transition:none !important}
-      .env::before{animation:none !important}
+
+    @media(prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="env" aria-hidden="true"></div>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-product="esl-traversal-learning"
+    data-self-path="/products/education/"
+    data-bridge-path="/products/esl-traversal-learning/"
+    data-products-backlink="/products/"
+    data-aai-backlink="/products/on-your-side-ai/"
+    data-five-flags-backlink="/products/five-flags/"
+    data-nutrition-backlink="/products/nutrition/"
+  >
+    <header class="topbar">
+      <a class="brand" href="/products/" aria-label="Products home">
+        <span class="mark" aria-hidden="true">ESL</span>
+        <span class="brandText">
+          <span class="kicker">Products · Education</span>
+          <strong class="title">ESL Traversal Learning</strong>
+        </span>
+      </a>
 
-    <div class="wrap">
-      <div class="topbar">
-        <nav class="nav" aria-label="Page navigation">
-          <a href="/products/">Back</a>
-          <a href="/products/">Products</a>
-          <a href="/index.html">Compass</a>
-          <a href="/explore/">Explore</a>
-        </nav>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a class="featured" href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+      </nav>
+    </header>
 
-        <div class="statusStack" aria-label="Education status">
-          <div class="statusPill statusPill--strong">Traversal Learning</div>
-          <div class="statusPill">Comprehension First</div>
-          <div class="statusPill">Progression Ready</div>
+    <section class="hero" aria-labelledby="productTitle">
+      <div class="heroCopy">
+        <span class="pill">Education product surface</span>
+        <h1 id="productTitle">ESL Traversal Learning</h1>
+        <h2>English by movement, not overload.</h2>
+        <p class="thesis">
+          The goal is not memorizing English in the abstract. The goal is moving through real life with enough language to understand, respond, and keep going.
+        </p>
+        <p>
+          ESL Traversal Learning teaches English through scenes, listening, meaning, speaking, and real-world use. The page stays simple on the outside and opens into deeper learning layers only when the learner is ready.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="/products/">Back to Products</a>
+          <a class="button" href="#learning-doll">Open Russian Doll</a>
+          <a class="button" href="#real-life">Real-Life English</a>
+          <a class="button" href="#learning-law">Learning Law</a>
         </div>
       </div>
 
-      <header class="hero" aria-label="Education hero">
-        <section class="heroMain">
-          <p class="eyebrow">Products / Education</p>
-          <h1>ESL TRAVERSAL LEARNING</h1>
-          <p class="heroIdentity">A traversal-based English learning product path designed around movement, comprehension, and structured progression.</p>
-          <p class="heroBoundary">It teaches through movement rather than static overload.</p>
-          <p class="heroSub">This page presents ESL Traversal Learning as a product-first learning surface. The goal is cleaner progression, clearer comprehension, and a lawful traversal structure that can deepen later without compromising the first-pass read.</p>
+      <div class="learningOrb" aria-hidden="true">
+        <div class="learningLine north"></div>
+        <div class="learningLine east"></div>
+        <div class="learningLine south"></div>
+        <div class="learningLine west"></div>
+        <div class="learningCore"><span>ESL<br>Traversal<br>Learning</span></div>
+      </div>
+    </section>
 
-          <div class="heroActions">
-            <a class="actionBtn actionBtn--primary" href="#learning-structure">See learning structure</a>
-            <a class="actionBtn" href="#faq">Read FAQ</a>
-          </div>
+    <section id="learning-doll" class="stage" aria-label="ESL Russian doll learning chamber">
+      <div class="talk">
+        <span class="pill">Russian-doll learning chamber</span>
+        <h2>Language opens one layer at a time.</h2>
+        <p>
+          The learner should not be buried under grammar, vocabulary, and pressure all at once. The path starts with the scene, then moves inward.
+        </p>
 
-          <div class="heroFacts" aria-label="Education summary">
-            <div class="statusPill statusPill--strong">Traversal Learning</div>
-            <div class="statusPill">Comprehension First</div>
-            <div class="statusPill">Step Structure</div>
-            <div class="statusPill">Expansion Ready</div>
-          </div>
+        <div class="dollControls" aria-label="ESL layer controls">
+          <button class="dollControl" type="button" data-layer="scene" data-active="true">Scene</button>
+          <button class="dollControl" type="button" data-layer="listen" data-active="false">Listen</button>
+          <button class="dollControl" type="button" data-layer="meaning" data-active="false">Meaning</button>
+          <button class="dollControl" type="button" data-layer="speak" data-active="false">Speak</button>
+          <button class="dollControl" type="button" data-layer="use" data-active="false">Use</button>
+        </div>
+
+        <section class="talkCard">
+          <h2 id="talkTitle">Start with the scene.</h2>
+          <p id="talkCopy">
+            Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.
+          </p>
         </section>
 
-        <aside class="heroSide" aria-label="Education position">
-          <div>
-            <h2>Primary Read</h2>
-            <div class="diagnosticCard" aria-label="Education card">
-              <div>
-                <strong>Learn By Moving</strong>
-                <span>Progression over stagnation. Structure over confusion. Traversal over flat exposure.</span>
-              </div>
-            </div>
+        <section class="receipt">
+          <h3 class="receiptTitle">Learning Receipt</h3>
+          <div class="rows" id="receiptRows">
+            <div class="row"><div class="rk">Layer</div><div class="rv">Scene</div></div>
+            <div class="row"><div class="rk">Question</div><div class="rv">Where is the learner using English?</div></div>
+            <div class="row"><div class="rk">Output</div><div class="rv">The lesson becomes real.</div></div>
           </div>
+        </section>
+      </div>
 
-          <div>
-            <h2>Long-Range Goal</h2>
-            <p>The strongest outcome is a cleaner learning journey that moves the user through increasingly deeper language structure without overwhelming the opening page.</p>
-          </div>
-        </aside>
-      </header>
+      <div class="learningBoard">
+        <span class="pill">Core learning lanes</span>
 
-      <section class="quickRow" aria-label="Quick education truths">
-        <article class="quickCard">
-          <h3>What It Is</h3>
-          <p>A traversal-based language learning path.</p>
+        <div class="learningGrid" aria-label="ESL learning lanes">
+          <article class="card">
+            <small>Listening</small>
+            <strong>Catch the situation first.</strong>
+            <span>The learner does not need every word before they can understand what is happening.</span>
+          </article>
+
+          <article class="card">
+            <small>Speaking</small>
+            <strong>Use clear phrases.</strong>
+            <span>Build phrases that let the learner answer, ask, clarify, and keep moving.</span>
+          </article>
+
+          <article class="card">
+            <small>Confidence</small>
+            <strong>Reduce the fear of mistakes.</strong>
+            <span>The path should make practice safe enough to repeat.</span>
+          </article>
+
+          <article class="card">
+            <small>Real Life</small>
+            <strong>Practice where English is needed.</strong>
+            <span>Work, family, errands, school, appointments, service, and everyday pressure.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="real-life" class="panel" aria-labelledby="realLifeTitle">
+      <div class="panelHead">
+        <span class="pill">Real-life English</span>
+        <h2 id="realLifeTitle">The lesson should leave the page.</h2>
+        <p>
+          ESL Traversal Learning is strongest when it helps someone speak to a person, complete a task, ask a question, understand a room, or recover from confusion without freezing.
+        </p>
+      </div>
+
+      <div class="grid4">
+        <article class="card">
+          <small>Work</small>
+          <strong>Clock in, ask, answer, follow up.</strong>
+          <span>Useful language for schedules, instructions, managers, coworkers, and customers.</span>
         </article>
-        <article class="quickCard">
-          <h3>What It Supports</h3>
-          <p>Comprehension, movement, and structured progression.</p>
+
+        <article class="card">
+          <small>Family</small>
+          <strong>Explain needs clearly.</strong>
+          <span>Practical language for school, home, appointments, errands, and everyday support.</span>
         </article>
-        <article class="quickCard">
-          <h3>What It Preserves</h3>
-          <p>A clean first pass before deeper nesting expands.</p>
+
+        <article class="card">
+          <small>Public Life</small>
+          <strong>Move through the day.</strong>
+          <span>Shopping, transportation, restaurants, service counters, and basic problem solving.</span>
         </article>
-        <article class="quickCard">
-          <h3>What It Avoids</h3>
-          <p>Flat exposure without progression structure.</p>
+
+        <article class="card">
+          <small>Confidence</small>
+          <strong>Recover when stuck.</strong>
+          <span>Teach phrases for repeating, slowing down, asking again, and confirming meaning.</span>
         </article>
-      </section>
+      </div>
+    </section>
 
-      <section class="section" id="learning-structure" aria-label="Education learning structure">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">Learning Structure</h2>
-            <p class="sectionIntro">The opening layer establishes the progression model clearly. It gives the user a clean read now and prepares the page for deeper traversal later.</p>
-          </div>
-        </div>
+    <section class="panel" aria-labelledby="structureTitle">
+      <div class="panelHead">
+        <span class="pill">Traversal structure</span>
+        <h2 id="structureTitle">Each lesson moves through a clean path.</h2>
+        <p>
+          A traversal lesson should not dump content. It should move the learner through a usable sequence.
+        </p>
+      </div>
 
-        <div class="grid4">
-          <article class="card">
-            <h4>Movement</h4>
-            <p>Learning is treated as traversal through structured steps rather than one undifferentiated block.</p>
-          </article>
-          <article class="card">
-            <h4>Comprehension</h4>
-            <p>The first pass emphasizes understanding before multiplying categories and complexity.</p>
-          </article>
-          <article class="card">
-            <h4>Progression</h4>
-            <p>The surface should make the next layer feel reachable and lawful instead of abrupt.</p>
-          </article>
-          <article class="card">
-            <h4>Nested Readiness</h4>
-            <p>The page remains ready for future Russian-doll learning layers without front-loading them now.</p>
-          </article>
-        </div>
-      </section>
+      <div class="grid3">
+        <article class="card">
+          <small>Before</small>
+          <strong>Recognize the scene.</strong>
+          <span>What is happening, who is speaking, and what does the learner need to do?</span>
+        </article>
 
-      <section class="section" aria-label="Education product law">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">Product Law</h2>
-            <p class="sectionIntro">This section protects the learning path from becoming noisy, flat, or prematurely overcomplicated.</p>
-          </div>
-        </div>
+        <article class="card">
+          <small>During</small>
+          <strong>Practice the response.</strong>
+          <span>Listen, repeat, choose, answer, clarify, and move through the scene.</span>
+        </article>
 
-        <div class="grid2">
-          <article class="card">
-            <h4>Always Preserved</h4>
-            <ul class="miniList">
-              <li>Stepwise movement</li>
-              <li>Comprehension priority</li>
-              <li>Clean progression</li>
-              <li>Expandable learning layers</li>
-            </ul>
-          </article>
+        <article class="card">
+          <small>After</small>
+          <strong>Carry it into life.</strong>
+          <span>The learner leaves with a phrase, pattern, or action they can use again.</span>
+        </article>
+      </div>
+    </section>
 
-          <article class="card">
-            <h4>Never Reduced To</h4>
-            <ul class="miniList">
-              <li>Flat content dumping</li>
-              <li>Progressionless exposure</li>
-              <li>Premature overload</li>
-              <li>Unstructured teaching sprawl</li>
-            </ul>
-          </article>
-        </div>
-      </section>
+    <section id="learning-law" class="panel" aria-labelledby="lawTitle">
+      <div class="panelHead">
+        <span class="pill">Learning law</span>
+        <h2 id="lawTitle">Comprehension first. Progression always.</h2>
+        <p>
+          This product should never become a flat dump of vocabulary. English is treated as movement through life, not a pile of disconnected lessons.
+        </p>
+      </div>
 
-      <section class="section" id="faq" aria-label="Education FAQ">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">FAQ</h2>
-            <p class="sectionIntro">These answers keep the ESL Traversal Learning page clear, product-first, and ready for deeper learning layers later.</p>
-          </div>
-        </div>
+      <div class="grid3">
+        <article class="card">
+          <small>Always Preserved</small>
+          <strong>Stepwise movement.</strong>
+          <ul class="miniList">
+            <li>Scene before abstraction</li>
+            <li>Listening before pressure</li>
+            <li>Meaning before grammar overload</li>
+            <li>Practice before performance</li>
+          </ul>
+        </article>
 
-        <div class="faqList">
-          <article class="faqItem isOpen">
-            <button class="faqToggle" type="button" aria-expanded="true">
-              <span>Why traversal-based learning?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              Because movement through clear steps creates a more stable learning path than throwing all language content at the user at once.
-            </div>
-          </article>
+        <article class="card">
+          <small>Never Reduced To</small>
+          <strong>Flat exposure.</strong>
+          <ul class="miniList">
+            <li>Vocabulary dumping</li>
+            <li>Grammar without context</li>
+            <li>Pressure without repetition</li>
+            <li>Lessons that never leave the page</li>
+          </ul>
+        </article>
 
-          <article class="faqItem">
-            <button class="faqToggle" type="button" aria-expanded="false">
-              <span>Is this already the full education system?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              No. This is the opening extension surface. It establishes the learning structure cleanly before deeper nested sections are added.
-            </div>
-          </article>
+        <article class="card">
+          <small>Long Range</small>
+          <strong>Real confidence.</strong>
+          <span>The strongest outcome is not perfect English on day one. It is enough clarity and confidence to keep moving.</span>
+        </article>
+      </div>
+    </section>
 
-          <article class="faqItem">
-            <button class="faqToggle" type="button" aria-expanded="false">
-              <span>What is the strongest first-pass read?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              The user should leave with a clear sense that this path teaches through structured movement and comprehension-first progression.
-            </div>
-          </article>
-        </div>
+    <section class="panel" aria-labelledby="backlinksTitle">
+      <div class="panelHead">
+        <span class="pill">Backlinks</span>
+        <h2 id="backlinksTitle">One destination. Many jump-off points.</h2>
+        <p>
+          This is the canonical destination for ESL Traversal Learning. The older /products/esl-traversal-learning/ path should bridge here.
+        </p>
+      </div>
 
-        <div class="footnote">ESL Traversal Learning remains progression-first and nested-readiness safe.</div>
-      </section>
-    </div>
-  </div>
+      <div class="routeGrid">
+        <a class="route-card featured" href="/products/">
+          <small>Parent chamber</small>
+          <strong>Products</strong>
+          <span>Return to the source-waterfall Products page.</span>
+        </a>
+
+        <a class="route-card" href="/products/on-your-side-ai/">
+          <small>Related product</small>
+          <strong>On Your Side AI</strong>
+          <span>Artificial Agent Intelligence for structured assistance and decision support.</span>
+        </a>
+
+        <a class="route-card" href="/products/five-flags/">
+          <small>Related product</small>
+          <strong>Five Flags · What’s My Scene?</strong>
+          <span>Scene reading, social context, flags, people, rooms, and live interaction.</span>
+        </a>
+
+        <a class="route-card" href="/products/nutrition/">
+          <small>Related product</small>
+          <strong>Baseline Nutrition Systems</strong>
+          <span>Food, energy, discipline, daily structure, and practical human stability.</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>ESL Traversal Learning · Canonical Product Destination</span>
+      <span>
+        <a href="/products/">Products</a> ·
+        <a href="/products/on-your-side-ai/">On Your Side AI</a> ·
+        <a href="/products/five-flags/">Five Flags</a> ·
+        <a href="/products/nutrition/">Nutrition</a>
+      </span>
+    </footer>
+  </main>
 
   <script>
     (() => {
       "use strict";
-      const faqToggles = Array.from(document.querySelectorAll(".faqToggle"));
-      function closeFaq(item, toggle) {
-        item.classList.remove("isOpen");
-        toggle.setAttribute("aria-expanded", "false");
+
+      const layers = {
+        scene: {
+          title: "Start with the scene.",
+          copy: "Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.",
+          rows: [
+            ["Layer", "Scene"],
+            ["Question", "Where is the learner using English?"],
+            ["Output", "The lesson becomes real."]
+          ]
+        },
+        listen: {
+          title: "Train the ear before the pressure rises.",
+          copy: "Listening starts with catching the situation. Who is talking, what do they want, and what kind of answer is expected?",
+          rows: [
+            ["Layer", "Listen"],
+            ["Question", "What is being asked or said?"],
+            ["Output", "The learner catches the signal."]
+          ]
+        },
+        meaning: {
+          title: "Find the meaning underneath the words.",
+          copy: "Meaning connects words to people, place, tone, timing, and purpose. The learner should understand the scene before getting buried in grammar.",
+          rows: [
+            ["Layer", "Meaning"],
+            ["Question", "What does this mean in context?"],
+            ["Output", "The words become usable."]
+          ]
+        },
+        speak: {
+          title: "Answer with a usable phrase.",
+          copy: "Speaking begins with simple, repeatable lines: I understand. Can you repeat that? I need help with this. What do I do next? Let me confirm.",
+          rows: [
+            ["Layer", "Speak"],
+            ["Question", "What can the learner say now?"],
+            ["Output", "The learner can respond."]
+          ]
+        },
+        use: {
+          title: "Carry it into real life.",
+          copy: "The final layer is use. The learner should leave with English that can be used at work, at home, in public, at school, or during ordinary pressure.",
+          rows: [
+            ["Layer", "Use"],
+            ["Question", "Where can this be used again?"],
+            ["Output", "The lesson becomes movement."]
+          ]
+        }
+      };
+
+      const controls = Array.from(document.querySelectorAll(".dollControl"));
+      const title = document.getElementById("talkTitle");
+      const copy = document.getElementById("talkCopy");
+      const receipt = document.getElementById("receiptRows");
+
+      function writeRows(rows) {
+        if (!receipt) return;
+        receipt.replaceChildren();
+
+        rows.forEach(([key, value]) => {
+          const row = document.createElement("div");
+          const rk = document.createElement("div");
+          const rv = document.createElement("div");
+
+          row.className = "row";
+          rk.className = "rk";
+          rv.className = "rv";
+
+          rk.textContent = key;
+          rv.textContent = value;
+
+          row.append(rk, rv);
+          receipt.appendChild(row);
+        });
       }
-      function openFaq(item, toggle) {
-        item.classList.add("isOpen");
-        toggle.setAttribute("aria-expanded", "true");
+
+      function setLayer(key) {
+        const layer = layers[key] || layers.scene;
+
+        controls.forEach((control) => {
+          control.dataset.active = control.dataset.layer === key ? "true" : "false";
+        });
+
+        if (title) title.textContent = layer.title;
+        if (copy) copy.textContent = layer.copy;
+        writeRows(layer.rows);
       }
-      faqToggles.forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          const item = toggle.closest(".faqItem");
-          if (!item) return;
-          const isOpen = item.classList.contains("isOpen");
-          faqToggles.forEach((otherToggle) => {
-            const otherItem = otherToggle.closest(".faqItem");
-            if (!otherItem || otherItem === item) return;
-            closeFaq(otherItem, otherToggle);
-          });
-          if (isOpen) closeFaq(item, toggle);
-          else openFaq(item, toggle);
+
+      controls.forEach((control) => {
+        control.addEventListener("click", () => {
+          setLayer(control.dataset.layer || "scene");
         });
       });
     })();

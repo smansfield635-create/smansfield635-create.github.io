@@ -1,11 +1,12 @@
 /* TNT RENEWAL — /assets/earth/earth_material.css
-   EARTH ASSET SPINE · MATERIAL B14 · NO LEGACY RINGS
+   EARTH ASSET SPINE · MATERIAL B15 · NO RINGS
 
    CONTRACT:
-     - Keep Earth mount, canvas, atmosphere, controls, caption.
+     - Keep Earth mount, canvas, controls, caption.
      - Remove visible axis line.
      - Remove axis endpoint circles.
-     - Remove legacy ring feel from shell styling.
+     - Remove visible atmosphere ring shell.
+     - Remove shell-level outer ring styling.
      - Preserve renderer/runtime compatibility.
 */
 
@@ -94,7 +95,7 @@
   inset:0;
   pointer-events:none;
   background:
-    linear-gradient(90deg,rgba(255,255,255,.018),transparent 48%,rgba(255,255,255,.025));
+    linear-gradient(90deg,rgba(255,255,255,.014),transparent 48%,rgba(255,255,255,.02));
 }
 
 [data-dgb-earth-mount]{
@@ -114,9 +115,18 @@
   cursor:grabbing;
 }
 
+.dgb-earth-stage{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+}
+
 .dgb-earth-axis,
 .dgb-earth-axis::before,
-.dgb-earth-axis::after{
+.dgb-earth-axis::after,
+.dgb-earth-atmosphere{
   display:none !important;
   content:none !important;
   opacity:0 !important;
@@ -139,10 +149,10 @@
   overflow:hidden;
   background:#061432;
   box-shadow:
-    inset -62px -22px 88px rgba(0,0,0,.62),
-    inset 18px 10px 38px rgba(255,255,255,.10),
-    0 0 34px rgba(147,197,253,.16),
-    0 0 90px rgba(59,130,246,.10);
+    inset -52px -20px 80px rgba(0,0,0,.58),
+    inset 16px 10px 32px rgba(255,255,255,.08),
+    0 0 28px rgba(147,197,253,.12),
+    0 0 72px rgba(59,130,246,.08);
 }
 
 [data-dgb-earth-canvas]{
@@ -152,17 +162,6 @@
   height:100%;
   display:block;
   border-radius:999px;
-}
-
-.dgb-earth-atmosphere{
-  position:absolute;
-  inset:0;
-  border-radius:999px;
-  pointer-events:none;
-  box-shadow:
-    inset 0 0 18px rgba(219,234,254,.16),
-    inset 0 0 34px rgba(147,197,253,.10),
-    0 0 20px rgba(147,197,253,.18);
 }
 
 .dgb-earth-fallback{

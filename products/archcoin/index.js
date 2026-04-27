@@ -1,13 +1,13 @@
 /* TNT RENEWAL — /products/archcoin/index.js
-   ARCHCOIN · RECEIVING VAULT FROM PRODUCTS SOURCE · B6
+   ARCHCOIN · TED TALK RUSSIAN DOLL VAULT · B7
 
    RESULT:
-     - Corrects ARCHCOIN after Products became the source-waterfall chamber.
-     - ARCHCOIN no longer claims to originate the full product waterfall.
-     - ARCHCOIN receives the protected-value stream from /products/.
-     - Builds a physical Vault Chamber with one receiving waterfall core.
-     - Splits the received stream into four garden chambers.
-     - Keeps ARCHCOIN as the four-coin financial transaction template.
+     - Makes ARCHCOIN less like a scroll page.
+     - Converts the page into a TED Talk-style Russian-doll chamber.
+     - Keeps Products as the source waterfall.
+     - Makes ARCHCOIN the receiving Vault Chamber.
+     - Keeps the four-garden transaction template.
+     - Uses one primary stage instead of many long stacked panels.
      - Keeps Vault / Products / Upper Room / Showroom / Compass backlinks.
      - No external runtime dependency.
 */
@@ -31,7 +31,7 @@ const GARDENS = Object.freeze([
     role: "Contract Authority",
     position: "north",
     read: "Contracts, permissions, signatures, terms, authority, and the binding frame for the transaction.",
-    water: "The protected stream reaches North as agreement: value cannot move cleanly unless the contract is named."
+    water: "The stream reaches North as agreement. Value cannot move cleanly until the contract is named."
   },
   {
     key: "East",
@@ -41,7 +41,7 @@ const GARDENS = Object.freeze([
     role: "Inbound Value",
     position: "east",
     read: "Accounts receivable, incoming value, receipts, deposits, counterparty inflow, and value received.",
-    water: "The protected stream reaches East as arrival: value enters the chamber and becomes visible."
+    water: "The stream reaches East as arrival. Value enters the chamber and becomes visible."
   },
   {
     key: "South",
@@ -51,7 +51,7 @@ const GARDENS = Object.freeze([
     role: "Outbound Obligation",
     position: "south",
     read: "Accounts payable, outgoing value, settlement duty, obligations, and pressure owed.",
-    water: "The protected stream reaches South as responsibility: every transaction carries an obligation to settle."
+    water: "The stream reaches South as responsibility. Every transaction carries an obligation to settle."
   },
   {
     key: "West",
@@ -61,7 +61,61 @@ const GARDENS = Object.freeze([
     role: "Growth / Allocation",
     position: "west",
     read: "Growth allocation, marketing flow, GYP value flow, reinvestment, and expansion pressure.",
-    water: "The protected stream reaches West as expansion: value can be routed toward growth without losing the bond frame."
+    water: "The stream reaches West as expansion. Value can grow without leaving the bond frame."
+  }
+]);
+
+const LAYERS = Object.freeze([
+  {
+    key: "source",
+    label: "Source",
+    title: "The water starts in Products.",
+    copy:
+      "Products is the parent chamber. ARCHCOIN does not create the whole river. It receives the protected-value stream from Products and gives that stream a vault structure.",
+    receipt: [
+      ["Layer", "Source"],
+      ["Origin", "Products Chamber"],
+      ["Movement", "Source stream enters the Vault"]
+    ]
+  },
+  {
+    key: "vault",
+    label: "Vault",
+    title: "ARCHCOIN is the receiving room.",
+    copy:
+      "ARCHCOIN is not a regular coin sitting on a shelf. It is a protected room inside Richie’s Manor where value movement is organized before it travels any farther.",
+    receipt: [
+      ["Layer", "Vault"],
+      ["Public label", "Vault Chamber"],
+      ["Product label", "ARCHCOIN"]
+    ]
+  },
+  {
+    key: "gardens",
+    label: "Gardens",
+    title: "The Vault opens into four gardens.",
+    copy:
+      "Every transaction has four parts: a contract, a receiving side, an obligation side, and an allocation pressure. The gardens make those four parts visible.",
+    receipt: [
+      ["Layer", "Four Gardens"],
+      ["North", "Contract Authority"],
+      ["East", "Inbound Value"],
+      ["South", "Outbound Obligation"],
+      ["West", "Growth / Allocation"]
+    ]
+  },
+  {
+    key: "boundary",
+    label: "Boundary",
+    title: "The map is not the bridge.",
+    copy:
+      "ARCHCOIN can classify, route, bind, and account for value movement. It does not magically merge every blockchain. Real interoperability still requires adapters, bridges, wrappers, systems, or oracles.",
+    receipt: [
+      ["Layer", "Boundary"],
+      ["Ordinary coin read", "False"],
+      ["Automatic chain merger", "False"],
+      ["Template read", "True"]
+    ]
   }
 ]);
 
@@ -92,51 +146,27 @@ function button(label, href, strong = false) {
   return a;
 }
 
-function statCard(k, v) {
-  const card = el("div", "stat-card");
-  card.append(el("div", "stat-label", k), el("div", "stat-value", v));
-  return card;
-}
-
 function infoRow(k, v) {
   const row = el("div", "row");
   row.append(el("div", "rk", k), el("div", "rv", v));
   return row;
 }
 
-function featureCard(title, copy) {
-  const card = el("article", "feature-card");
-  card.append(el("h3", "", title), el("p", "", copy));
-  return card;
-}
-
-function gardenCard(garden) {
-  const card = el("article", "coin-card");
-  card.append(
-    el("small", "", garden.short + " · " + garden.coin),
-    el("strong", "", garden.role),
-    el("span", "", garden.read)
-  );
-  return card;
-}
-
-function routeCard(title, copy, href, strong = false) {
-  const card = document.createElement("a");
-  card.className = "route-card" + (strong ? " strong" : "");
-  card.href = href;
-  card.append(el("strong", "", title), el("span", "", copy));
-  return card;
-}
-
 function injectStyles() {
-  if (document.getElementById("archcoin-receiving-vault-style")) return;
+  if (document.getElementById("archcoin-ted-russian-doll-style")) return;
 
   const style = document.createElement("style");
-  style.id = "archcoin-receiving-vault-style";
+  style.id = "archcoin-ted-russian-doll-style";
   style.textContent = `
-    .vault-shell{display:grid;gap:16px}
+    .vault-shell{
+      min-height:calc(100svh - 40px);
+      display:grid;
+      gap:16px;
+    }
 
-    .topbar,.vault-hero,.machine-panel,.panel,.route-panel{
+    .topbar,
+    .ted-stage,
+    .route-strip{
       border:1px solid var(--line);
       border-radius:26px;
       background:
@@ -157,7 +187,11 @@ function injectStyles() {
       border-radius:999px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
     .brand-mark{
       width:42px;
@@ -175,7 +209,7 @@ function injectStyles() {
     .brand-title{
       margin:0 0 3px;
       font-size:.96rem;
-      font-weight:800;
+      font-weight:850;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
@@ -186,119 +220,11 @@ function injectStyles() {
       font-size:.82rem;
     }
 
-    .vault-hero,.machine-panel,.panel,.route-panel{padding:22px}
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    .hero-title{
-      margin:0 0 14px;
-      font-size:clamp(36px,6vw,82px);
-      line-height:.93;
-      letter-spacing:-.06em;
-      max-width:12ch;
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    .hero-text,.panel-text{
-      margin:0;
-      max-width:78ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.75;
-    }
-
-    .stat-grid,.coin-grid,.feature-grid,.route-grid{
-      display:grid;
-      gap:12px;
-      margin-top:18px;
-    }
-
-    .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .coin-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-
-    .stat-card,.coin-card,.feature-card,.route-card{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .stat-card{min-height:100px}
-
-    .stat-label{
-      font-size:11px;
-      color:var(--muted2);
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      margin-bottom:10px;
-    }
-
-    .stat-value{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.2;
-    }
-
-    .coin-card{
-      min-height:190px;
-      display:grid;
-      gap:8px;
-      align-content:start;
-    }
-
-    .coin-card small{
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-weight:800;
-    }
-
-    .coin-card strong{
-      color:var(--text);
-      font-size:1.1rem;
-      line-height:1.16;
-    }
-
-    .coin-card span{
-      color:var(--muted);
-      line-height:1.5;
-      font-size:.93rem;
-    }
-
-    .feature-card h3{
-      margin:0 0 8px;
-      font-size:1rem;
-      line-height:1.2;
-    }
-
-    .feature-card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:.94rem;
-    }
-
     .action-row{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:18px;
+      margin:0;
     }
 
     .action{
@@ -312,7 +238,7 @@ function injectStyles() {
       background:rgba(255,255,255,.05);
       color:var(--text);
       font-size:12px;
-      font-weight:700;
+      font-weight:750;
       letter-spacing:.05em;
       text-transform:uppercase;
       text-decoration:none;
@@ -323,59 +249,227 @@ function injectStyles() {
       background:rgba(127,255,212,.10);
     }
 
-    .lower-grid{
+    .ted-stage{
+      position:relative;
+      overflow:hidden;
+      min-height:calc(100svh - 158px);
+      padding:clamp(18px,3vw,28px);
       display:grid;
-      grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
-      gap:16px;
+      grid-template-columns:minmax(0,.86fr) minmax(360px,1.14fr);
+      gap:20px;
+      align-items:stretch;
     }
 
-    .panel-title{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
+    .ted-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 68% 48%,rgba(127,255,212,.08),transparent 28rem),
+        radial-gradient(circle at 28% 14%,rgba(241,210,141,.06),transparent 22rem),
+        linear-gradient(115deg,rgba(255,255,255,.025),transparent 42%,rgba(126,203,255,.035));
+    }
+
+    .talk-column,
+    .room-column{
+      position:relative;
+      z-index:1;
+    }
+
+    .talk-column{
+      display:grid;
+      gap:14px;
+      align-content:center;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--accent);
+      font-size:11px;
       letter-spacing:.12em;
       text-transform:uppercase;
+    }
+
+    .hero-title{
+      margin:0;
+      font-size:clamp(42px,6.8vw,86px);
+      line-height:.88;
+      letter-spacing:-.065em;
+      font-family:Georgia,"Times New Roman",serif;
+      max-width:11ch;
+    }
+
+    .hero-line{
+      margin:0;
+      color:var(--text);
+      font-size:clamp(1.22rem,2.4vw,2rem);
+      line-height:1.1;
+      font-weight:850;
+      letter-spacing:-.04em;
+      max-width:17ch;
+    }
+
+    .hero-text{
+      margin:0;
+      max-width:58ch;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.68;
+    }
+
+    .doll-controls{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      margin-top:4px;
+    }
+
+    .doll-control{
+      min-height:58px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
+      color:var(--text);
+      font-weight:850;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-size:.82rem;
+      letter-spacing:.04em;
+    }
+
+    .doll-control[data-active="true"]{
+      border-color:rgba(127,255,212,.30);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(127,255,212,.12),transparent 70%),
+        rgba(127,255,212,.06);
+      box-shadow:0 0 24px rgba(127,255,212,.08);
+    }
+
+    .talk-card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(241,210,141,.07),transparent 62%),
+        rgba(255,255,255,.035);
+      padding:18px;
+      display:grid;
+      gap:10px;
+    }
+
+    .talk-card h2{
+      margin:0;
+      color:var(--gold);
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(1.55rem,3.4vw,2.9rem);
+      line-height:.96;
+      letter-spacing:-.055em;
+    }
+
+    .talk-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.62;
+      font-size:1rem;
+    }
+
+    .receipt{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .receipt-title{
+      margin:0;
       color:var(--accent);
-      padding-bottom:10px;
+      font-size:11px;
+      font-weight:850;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      padding-bottom:8px;
       border-bottom:1px solid var(--line);
     }
 
-    .machine-stage{
+    .rows{
+      display:grid;
+      gap:8px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .rk{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.42;
+    }
+
+    .rv{
+      color:var(--text);
+      font-size:12px;
+      line-height:1.42;
+      text-align:right;
+      word-break:break-word;
+    }
+
+    .room-column{
+      display:grid;
+      align-items:center;
+    }
+
+    .vault-stage{
       position:relative;
-      min-height:760px;
-      margin-top:18px;
-      border:1px solid rgba(255,255,255,.08);
+      min-height:640px;
+      border:1px solid rgba(255,255,255,.09);
       border-radius:30px;
       overflow:hidden;
       background:
-        radial-gradient(ellipse at 50% 12%,rgba(126,203,255,.08),transparent 24%),
+        radial-gradient(ellipse at 50% 10%,rgba(126,203,255,.08),transparent 22%),
         radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.045) 30%,rgba(0,0,0,0) 58%),
         radial-gradient(circle at 50% 58%,rgba(241,210,141,.055),transparent 72%),
-        linear-gradient(180deg,rgba(2,6,14,.58),rgba(2,4,10,.92));
-      perspective:1400px;
+        linear-gradient(180deg,rgba(2,6,14,.58),rgba(2,4,10,.94));
       isolation:isolate;
     }
 
-    .products-inlet{
+    .source-inlet{
       position:absolute;
       left:50%;
-      top:18px;
+      top:16px;
       transform:translateX(-50%);
-      min-width:min(86%,420px);
+      width:min(88%,420px);
       border:1px solid rgba(127,255,212,.20);
       border-radius:999px;
-      padding:10px 14px;
+      padding:9px 13px;
       background:
         radial-gradient(circle at 50% 0%,rgba(127,255,212,.12),transparent 62%),
-        rgba(3,9,18,.74);
+        rgba(3,9,18,.78);
       color:var(--muted);
       text-align:center;
       z-index:12;
-      font-size:.82rem;
-      line-height:1.35;
+      font-size:.80rem;
+      line-height:1.34;
     }
 
-    .products-inlet strong{
+    .source-inlet strong{
       color:var(--text);
       font-weight:900;
     }
@@ -383,22 +477,22 @@ function injectStyles() {
     .inlet-fall{
       position:absolute;
       left:50%;
-      top:58px;
+      top:54px;
       width:18px;
-      height:130px;
+      height:116px;
       transform:translateX(-50%);
       border-radius:999px;
       background:
         linear-gradient(
           180deg,
-          rgba(255,255,255,.74),
-          rgba(126,203,255,.46),
-          rgba(127,255,212,.18),
+          rgba(255,255,255,.78),
+          rgba(126,203,255,.48),
+          rgba(127,255,212,.20),
           rgba(126,203,255,.42),
           transparent
         );
-      opacity:.78;
-      filter:drop-shadow(0 0 18px rgba(126,203,255,.28));
+      opacity:.82;
+      filter:drop-shadow(0 0 18px rgba(126,203,255,.30));
       z-index:7;
       overflow:hidden;
     }
@@ -411,7 +505,7 @@ function injectStyles() {
         repeating-linear-gradient(
           180deg,
           transparent 0 16px,
-          rgba(255,255,255,.48) 16px 22px,
+          rgba(255,255,255,.50) 16px 22px,
           transparent 22px 38px
         );
       animation:inletDrop 1.8s linear infinite;
@@ -421,7 +515,7 @@ function injectStyles() {
       position:absolute;
       left:50%;
       top:54%;
-      width:min(92%,680px);
+      width:min(92%,610px);
       aspect-ratio:1;
       transform:translate(-50%,-50%);
       border-radius:50%;
@@ -478,41 +572,6 @@ function injectStyles() {
       pointer-events:none;
     }
 
-    .vault-door{
-      position:absolute;
-      width:23%;
-      height:20%;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:999px 999px 22px 22px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 32%),
-        linear-gradient(180deg,rgba(15,28,48,.92),rgba(5,10,20,.96));
-      box-shadow:
-        inset 0 0 26px rgba(255,255,255,.035),
-        0 16px 28px rgba(0,0,0,.28);
-      z-index:3;
-    }
-
-    .vault-door::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:42%;
-      aspect-ratio:1;
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(127,255,212,.24);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(127,255,212,.12),transparent 62%),
-        rgba(255,255,255,.025);
-      box-shadow:0 0 20px rgba(127,255,212,.08);
-    }
-
-    .vault-door.north{left:50%;top:1.6%;transform:translateX(-50%)}
-    .vault-door.east{right:1.6%;top:50%;transform:translateY(-50%) rotate(90deg)}
-    .vault-door.south{left:50%;bottom:1.6%;transform:translateX(-50%) rotate(180deg)}
-    .vault-door.west{left:1.6%;top:50%;transform:translateY(-50%) rotate(-90deg)}
-
     .vault-floor{
       position:absolute;
       left:50%;
@@ -536,103 +595,18 @@ function injectStyles() {
       pointer-events:none;
     }
 
-    .garden-alcove{
-      position:absolute;
-      width:24%;
-      min-height:92px;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 12%,rgba(127,255,212,.12),transparent 36%),
-        linear-gradient(180deg,rgba(5,13,23,.82),rgba(7,11,19,.94));
-      box-shadow:
-        inset 0 0 26px rgba(255,255,255,.035),
-        0 20px 34px rgba(0,0,0,.30);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:11px;
-      cursor:pointer;
-      z-index:6;
-    }
-
-    .garden-alcove::before{
-      content:"";
-      position:absolute;
-      inset:10px;
-      border-radius:18px;
-      border:1px solid rgba(127,255,212,.12);
-      background:
-        radial-gradient(circle at 50% 100%,rgba(127,255,212,.14),transparent 60%),
-        linear-gradient(180deg,transparent,rgba(127,255,212,.035));
-      pointer-events:none;
-    }
-
-    .garden-alcove:hover,
-    .garden-alcove:focus-visible{
-      outline:none;
-      border-color:rgba(127,255,212,.34);
-      box-shadow:
-        inset 0 0 26px rgba(255,255,255,.04),
-        0 20px 34px rgba(0,0,0,.30),
-        0 0 30px rgba(127,255,212,.10);
-    }
-
-    .garden-alcove[data-active="true"]{
-      border-color:rgba(241,210,141,.48);
-      background:
-        radial-gradient(circle at 50% 12%,rgba(241,210,141,.18),transparent 36%),
-        linear-gradient(180deg,rgba(12,17,25,.90),rgba(7,11,19,.96));
-      box-shadow:
-        inset 0 0 26px rgba(255,255,255,.04),
-        0 20px 34px rgba(0,0,0,.30),
-        0 0 38px rgba(241,210,141,.13);
-    }
-
-    .garden-alcove.north{left:50%;top:11%;transform:translateX(-50%)}
-    .garden-alcove.east{right:10%;top:50%;transform:translateY(-50%)}
-    .garden-alcove.south{left:50%;bottom:11%;transform:translateX(-50%)}
-    .garden-alcove.west{left:10%;top:50%;transform:translateY(-50%)}
-
-    .garden-plaque{
-      position:relative;
-      z-index:2;
-      display:grid;
-      gap:4px;
-    }
-
-    .garden-plaque small{
-      color:var(--accent);
-      font-size:10px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-weight:900;
-    }
-
-    .garden-plaque strong{
-      color:var(--text);
-      font-size:.96rem;
-      line-height:1.08;
-    }
-
-    .garden-plaque span{
-      color:var(--muted);
-      font-size:.76rem;
-      line-height:1.25;
-    }
-
     .waterfall-core{
       position:absolute;
       left:50%;
       top:50%;
-      width:178px;
-      height:178px;
+      width:158px;
+      height:158px;
       transform:translate(-50%,-50%);
       border-radius:50%;
       border:1px solid rgba(255,255,255,.18);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.42),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.36),rgba(127,255,212,.13) 48%,rgba(0,0,0,.20) 100%);
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.38),rgba(127,255,212,.14) 48%,rgba(0,0,0,.21) 100%);
       box-shadow:
         0 24px 42px rgba(0,0,0,.34),
         inset 0 0 44px rgba(126,203,255,.18),
@@ -657,13 +631,13 @@ function injectStyles() {
       background:
         linear-gradient(
           180deg,
-          rgba(255,255,255,.82),
-          rgba(126,203,255,.42) 26%,
-          rgba(127,255,212,.20) 50%,
-          rgba(126,203,255,.45) 74%,
-          rgba(255,255,255,.62)
+          rgba(255,255,255,.84),
+          rgba(126,203,255,.44) 26%,
+          rgba(127,255,212,.21) 50%,
+          rgba(126,203,255,.46) 74%,
+          rgba(255,255,255,.64)
         );
-      opacity:.78;
+      opacity:.82;
       filter:blur(.7px);
       animation:waterfallDrop 2.8s linear infinite;
     }
@@ -671,7 +645,7 @@ function injectStyles() {
     .waterfall-core::after{
       content:"";
       position:absolute;
-      inset:14px;
+      inset:13px;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.17);
       background:
@@ -689,7 +663,7 @@ function injectStyles() {
       position:relative;
       z-index:3;
       color:var(--text);
-      font-size:15px;
+      font-size:13px;
       line-height:1.18;
       letter-spacing:.08em;
       text-transform:uppercase;
@@ -702,7 +676,7 @@ function injectStyles() {
       left:50%;
       top:50%;
       width:28%;
-      height:9px;
+      height:8px;
       transform-origin:left center;
       border-radius:999px;
       background:
@@ -713,7 +687,7 @@ function injectStyles() {
           rgba(127,255,212,.15),
           transparent
         );
-      opacity:.72;
+      opacity:.74;
       z-index:4;
       filter:drop-shadow(0 0 12px rgba(126,203,255,.24));
       overflow:hidden;
@@ -739,85 +713,107 @@ function injectStyles() {
     .water-channel.south{transform:rotate(90deg)}
     .water-channel.west{transform:rotate(180deg)}
 
+    .garden-alcove{
+      position:absolute;
+      width:23%;
+      min-height:86px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 12%,rgba(127,255,212,.12),transparent 36%),
+        linear-gradient(180deg,rgba(5,13,23,.84),rgba(7,11,19,.94));
+      box-shadow:
+        inset 0 0 26px rgba(255,255,255,.035),
+        0 20px 34px rgba(0,0,0,.30);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:9px;
+      cursor:pointer;
+      z-index:6;
+    }
+
+    .garden-alcove[data-active="true"]{
+      border-color:rgba(241,210,141,.50);
+      background:
+        radial-gradient(circle at 50% 12%,rgba(241,210,141,.18),transparent 36%),
+        linear-gradient(180deg,rgba(12,17,25,.90),rgba(7,11,19,.96));
+      box-shadow:
+        inset 0 0 26px rgba(255,255,255,.04),
+        0 20px 34px rgba(0,0,0,.30),
+        0 0 38px rgba(241,210,141,.13);
+    }
+
+    .garden-alcove.north{left:50%;top:11%;transform:translateX(-50%)}
+    .garden-alcove.east{right:10%;top:50%;transform:translateY(-50%)}
+    .garden-alcove.south{left:50%;bottom:11%;transform:translateX(-50%)}
+    .garden-alcove.west{left:10%;top:50%;transform:translateY(-50%)}
+
+    .garden-plaque{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:4px;
+    }
+
+    .garden-plaque small{
+      color:var(--accent);
+      font-size:9px;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+      font-weight:900;
+    }
+
+    .garden-plaque strong{
+      color:var(--text);
+      font-size:.86rem;
+      line-height:1.08;
+    }
+
+    .garden-plaque span{
+      color:var(--muted);
+      font-size:.70rem;
+      line-height:1.22;
+    }
+
     .vault-caption{
       position:absolute;
       left:50%;
-      bottom:16px;
+      bottom:14px;
       transform:translateX(-50%);
       width:min(92%,700px);
       color:var(--muted2);
       text-align:center;
-      font-size:.84rem;
-      line-height:1.45;
+      font-size:.82rem;
+      line-height:1.42;
       z-index:10;
       pointer-events:none;
     }
 
-    .chamber-controls{display:none}
-
-    .rows{display:grid;gap:10px}
-
-    .row{
+    .route-strip{
+      padding:12px;
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      align-items:start;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
     }
 
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.45;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .boundary{
-      border:1px solid rgba(241,210,141,.22);
+    .route-strip a{
+      min-height:52px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
-      background:rgba(241,210,141,.045);
-      padding:14px;
-      margin-top:14px;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:.94rem;
-    }
-
-    .route-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-    .route-card{
-      min-height:118px;
+      background:rgba(255,255,255,.04);
       color:var(--text);
+      font-size:.78rem;
+      font-weight:850;
       text-decoration:none;
-      display:grid;
-      gap:8px;
-      align-content:start;
     }
 
-    .route-card.strong{
-      border-color:rgba(127,255,212,.28);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(127,255,212,.10),transparent 70%),
-        rgba(255,255,255,.04);
-    }
-
-    .route-card strong{
-      display:block;
-      font-size:1rem;
-      line-height:1.2;
-    }
-
-    .route-card span{
-      display:block;
-      color:var(--muted);
-      font-size:.88rem;
-      line-height:1.46;
+    .route-strip a.strong{
+      border-color:rgba(127,255,212,.26);
+      background:rgba(127,255,212,.08);
     }
 
     @keyframes inletDrop{
@@ -840,35 +836,58 @@ function injectStyles() {
       to{transform:translateX(42px)}
     }
 
-    @media (max-width:1080px){
-      .stat-grid,.coin-grid,.feature-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .lower-grid{grid-template-columns:1fr}
+    @media(max-width:1080px){
+      .ted-stage{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
+      .vault-stage{
+        min-height:620px;
+      }
     }
 
-    @media (max-width:760px){
-      .topbar{border-radius:24px}
-      .stat-grid,.coin-grid,.feature-grid,.route-grid{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .rv{text-align:left}
+    @media(max-width:760px){
+      .topbar{
+        border-radius:24px;
+      }
 
-      .machine-stage{
+      .ted-stage{
+        border-radius:24px;
+        padding:16px;
+      }
+
+      .doll-controls{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
+      .rv{
+        text-align:left;
+      }
+
+      .vault-stage{
         min-height:auto;
         display:grid;
         gap:14px;
         padding:14px;
       }
 
-      .products-inlet{
+      .source-inlet{
         position:relative;
         left:auto;
         top:auto;
         transform:none;
-        min-width:0;
         width:100%;
         order:1;
       }
 
-      .inlet-fall{display:none}
+      .inlet-fall{
+        display:none;
+      }
 
       .vault-room{
         position:relative;
@@ -880,16 +899,22 @@ function injectStyles() {
         order:2;
       }
 
-      .vault-door{opacity:.72}
-      .garden-alcove{display:none}
-
-      .waterfall-core{
-        width:128px;
-        height:128px;
+      .garden-alcove{
+        display:none;
       }
 
-      .waterfall-label{font-size:12px}
-      .water-channel{width:24%}
+      .waterfall-core{
+        width:126px;
+        height:126px;
+      }
+
+      .waterfall-label{
+        font-size:11px;
+      }
+
+      .water-channel{
+        width:24%;
+      }
 
       .vault-caption{
         position:relative;
@@ -897,59 +922,15 @@ function injectStyles() {
         bottom:auto;
         transform:none;
         width:100%;
-        margin:0;
         order:3;
       }
 
-      .chamber-controls{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:10px;
-        order:4;
-      }
-
-      .chamber-control{
-        border:1px solid rgba(255,255,255,.12);
-        border-radius:18px;
-        padding:13px;
-        background:
-          linear-gradient(180deg,rgba(8,12,19,.84),rgba(12,18,30,.90)),
-          radial-gradient(circle at 92% 12%,rgba(127,255,212,.08),transparent 28%);
-        color:var(--text);
-        text-align:left;
-      }
-
-      .chamber-control[data-active="true"]{
-        border-color:rgba(241,210,141,.42);
-        box-shadow:0 0 24px rgba(241,210,141,.10);
-      }
-
-      .chamber-control small{
-        display:block;
-        color:var(--accent);
-        font-size:10px;
-        letter-spacing:.12em;
-        text-transform:uppercase;
-        font-weight:900;
-        margin-bottom:5px;
-      }
-
-      .chamber-control strong{
-        display:block;
-        font-size:1rem;
-        line-height:1.12;
-        margin-bottom:4px;
-      }
-
-      .chamber-control span{
-        display:block;
-        color:var(--muted);
-        line-height:1.35;
-        font-size:.86rem;
+      .route-strip{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (prefers-reduced-motion:reduce){
+    @media(prefers-reduced-motion:reduce){
       .inlet-fall::after,
       .waterfall-core::before,
       .waterfall-core::after,
@@ -970,7 +951,7 @@ function buildTopbar() {
 
   copy.append(
     el("p", "brand-title", "Richie’s Manor · Vault Chamber"),
-    el("p", "brand-subtitle", "ARCHCOIN / Products-fed Transaction Vault")
+    el("p", "brand-subtitle", "ARCHCOIN / TED Talk Russian Doll")
   );
 
   brand.append(mark, copy);
@@ -978,96 +959,51 @@ function buildTopbar() {
   const actions = el("nav", "action-row");
   actions.append(
     button("Products Source", ROUTES.products, true),
-    button("Vault Chamber", ROUTES.vault),
+    button("Vault", ROUTES.vault),
     button("Upper Room", ROUTES.upperRoom),
-    button("Showroom", ROUTES.showroom),
-    button("Compass", ROUTES.compass)
+    button("Showroom", ROUTES.showroom)
   );
 
   topbar.append(brand, actions);
   return topbar;
 }
 
-function buildHero() {
-  const hero = el("section", "vault-hero");
-  const eyebrow = el("div", "eyebrow", "ARCHCOIN · PRODUCTS-FED VAULT CHAMBER");
-  const title = el("h1", "hero-title", "The Vault receives the stream.");
-  const text = el(
-    "p",
-    "hero-text",
-    "Products is the parent source chamber. ARCHCOIN is the protected Vault Chamber that receives the source stream and routes it through four financial gardens: contract authority, inbound value, outbound obligation, and growth allocation."
-  );
+function buildDollControls() {
+  const controls = el("div", "doll-controls");
 
-  const statGrid = el("div", "stat-grid");
-  statGrid.append(
-    statCard("Source", "Products"),
-    statCard("Receiver", "ARCHCOIN Vault"),
-    statCard("Core", "Receiving Waterfall"),
-    statCard("Garden Chambers", "4")
-  );
+  LAYERS.forEach((layer) => {
+    const node = el("button", "doll-control", layer.label);
+    node.type = "button";
+    node.dataset.layer = layer.key;
+    node.dataset.active = layer.key === "source" ? "true" : "false";
+    controls.appendChild(node);
+  });
 
-  const controls = el("div", "action-row");
-  controls.append(
-    button("Back to Products", ROUTES.products, true),
-    button("Vault Chamber", ROUTES.vault),
-    button("Upper Room", ROUTES.upperRoom),
-    button("Showroom", ROUTES.showroom)
-  );
-
-  hero.append(eyebrow, title, text, statGrid, controls);
-  return hero;
+  return controls;
 }
 
-function buildTemplatePanel() {
-  const panel = el("section", "panel");
+function buildTalkCard() {
+  const card = el("section", "talk-card");
+  card.id = "talkCard";
 
-  panel.append(
-    el("h2", "panel-title", "Four Gardens / Four Coins"),
-    el(
-      "p",
-      "panel-text",
-      "Every transaction enters the Vault as a protected stream and circulates through four chambers: contract authority, inbound value, outbound obligation, and growth or allocation pressure."
-    )
+  card.append(
+    el("h2", "talkTitle", LAYERS[0].title),
+    el("p", "talkCopy", LAYERS[0].copy)
   );
 
-  const grid = el("div", "coin-grid");
-  GARDENS.forEach((garden) => grid.appendChild(gardenCard(garden)));
-  panel.appendChild(grid);
-
-  return panel;
+  return card;
 }
 
-function buildFunctionPanel() {
-  const panel = el("section", "panel");
+function buildReceipt() {
+  const receipt = el("section", "receipt");
+  const title = el("h2", "receipt-title", "Vault Receipt");
+  const rows = el("div", "rows");
+  rows.id = "receiptRows";
 
-  panel.append(
-    el("h2", "panel-title", "ARCHCOIN Function"),
-    el(
-      "p",
-      "panel-text",
-      "ARCHCOIN provides the transaction template and bonding logic. Products supplies the source stream; the Vault protects and organizes that stream through the four-garden transaction frame."
-    )
-  );
+  LAYERS[0].receipt.forEach(([k, v]) => rows.appendChild(infoRow(k, v)));
 
-  const grid = el("div", "feature-grid");
-
-  grid.append(
-    featureCard("Classify Transaction", "Identify which garden controls the transaction read: contract, inbound value, obligation, or allocation."),
-    featureCard("Route Value", "Map incoming and outgoing value movement without reducing everything to one ordinary coin."),
-    featureCard("Bind Obligation", "Tie responsibility, payment pressure, settlement, and counterparty duty back to the transaction frame."),
-    featureCard("Track Counterparty Flow", "Read who owes, who receives, who routes, and where the pressure moves next."),
-    featureCard("Unify Asset Movement", "Let BTC, ETH, SOL, stablecoins, or other tokens be referenced, wrapped, routed, or accounted for inside one map."),
-    featureCard("Preserve Boundary", "Do not claim automatic chain merger. Real interoperability still needs adapters, bridges, wrappers, systems, or oracles.")
-  );
-
-  panel.appendChild(grid);
-
-  const boundary = el("div", "boundary");
-  boundary.textContent =
-    "Boundary: ARCHCOIN is not financial advice, not a brokerage, not an exchange, and not automatic chain interoperability. It is the template and bonding logic for reading transaction movement.";
-  panel.appendChild(boundary);
-
-  return panel;
+  receipt.append(title, rows);
+  return receipt;
 }
 
 function buildAlcove(garden) {
@@ -1086,46 +1022,21 @@ function buildAlcove(garden) {
   return node;
 }
 
-function buildMobileControl(garden) {
-  const node = el("button", "chamber-control");
-  node.type = "button";
-  node.dataset.key = garden.key;
-  node.dataset.active = garden.key === "North" ? "true" : "false";
-  node.innerHTML =
-    `<small>${garden.short} · ${garden.coin}</small>` +
-    `<strong>${garden.name} · ${garden.role}</strong>` +
-    `<span>${garden.read}</span>`;
-  return node;
-}
+function buildVaultRoom() {
+  const stage = el("section", "vault-stage");
 
-function buildMachinePanel() {
-  const machine = el("section", "machine-panel");
-  const machineTitle = el("h2", "panel-title", "Receiving Vault Room");
-  const machineText = el(
-    "p",
-    "panel-text",
-    "The waterfall starts in Products. ARCHCOIN receives that stream inside the Vault, then circulates it through four garden chambers built into the wall."
-  );
-
-  const stage = el("div", "machine-stage");
-  stage.id = "machineStage";
-
-  const inlet = el("div", "products-inlet");
-  inlet.innerHTML = `<strong>Products Source Chamber</strong> sends the protected-value stream into the ARCHCOIN Vault.`;
+  const inlet = el("div", "source-inlet");
+  inlet.innerHTML = `<strong>Products Source Chamber</strong> feeds the protected-value stream into ARCHCOIN.`;
 
   const inletFall = el("div", "inlet-fall");
 
   const room = el("div", "vault-room");
-  const floor = el("div", "vault-floor");
 
+  const floor = el("div", "vault-floor");
   const waterfall = el("div", "waterfall-core");
   waterfall.innerHTML = `<span class="waterfall-label">RECEIVING<br>VAULT<br>CORE</span>`;
 
   room.append(
-    el("div", "vault-door north"),
-    el("div", "vault-door east"),
-    el("div", "vault-door south"),
-    el("div", "vault-door west"),
     floor,
     el("div", "water-channel north"),
     el("div", "water-channel east"),
@@ -1139,74 +1050,126 @@ function buildMachinePanel() {
   const caption = el(
     "p",
     "vault-caption",
-    "Products is the source. ARCHCOIN is the receiving Vault. The stream enters the core, then circulates through contract authority, inbound value, outbound obligation, and growth allocation."
+    "The Russian doll opens inward: Products sends the stream, the Vault receives it, the waterfall circulates it, and the four gardens explain the transaction."
   );
 
-  const controls = el("div", "chamber-controls");
-  GARDENS.forEach((garden) => controls.appendChild(buildMobileControl(garden)));
-
-  stage.append(inlet, inletFall, room, caption, controls);
-  machine.append(machineTitle, machineText, stage);
-
-  return machine;
+  stage.append(inlet, inletFall, room, caption);
+  return stage;
 }
 
-function buildReceiptPanel() {
-  const receipt = el("section", "panel");
-  const receiptTitle = el("h2", "panel-title", "Vault Receipt");
-  const receiptRows = el("div", "rows");
+function buildTedStage() {
+  const stage = el("main", "ted-stage");
 
-  receiptRows.append(
-    infoRow("Source chamber", "Products"),
-    infoRow("Selected chamber", "North Garden"),
-    infoRow("Coin position", "North Coin"),
-    infoRow("Transaction role", "Contract Authority"),
-    infoRow("Garden read", "Contracts, permissions, signatures, terms, authority, and the binding frame for the transaction."),
-    infoRow("Water circulation", "The protected stream reaches North as agreement: value cannot move cleanly unless the contract is named.")
+  const talk = el("section", "talk-column");
+  talk.append(
+    el("div", "eyebrow", "ARCHCOIN · TED Talk Chamber"),
+    el("h1", "hero-title", "The Vault receives the stream."),
+    el("p", "hero-line", "This is not a coin pitch. It is a map for how value moves."),
+    el(
+      "p",
+      "hero-text",
+      "Products is the source chamber. ARCHCOIN is the receiving Vault. The four gardens show the four parts of a transaction without turning the page into a dashboard."
+    ),
+    buildDollControls(),
+    buildTalkCard(),
+    buildReceipt()
   );
 
-  receipt.append(receiptTitle, receiptRows);
-  return receipt;
+  const room = el("section", "room-column");
+  room.appendChild(buildVaultRoom());
+
+  stage.append(talk, room);
+  return stage;
 }
 
-function buildRoutesPanel() {
-  const routes = el("section", "route-panel");
-  const routeTitle = el("h2", "panel-title", "Manor Backlinks");
-  const routeText = el(
-    "p",
-    "panel-text",
-    "Products is the source chamber. ARCHCOIN is the receiving Vault Chamber. The route remains connected to the rest of Richie’s Manor."
-  );
+function buildRouteStrip() {
+  const strip = el("nav", "route-strip");
+  strip.setAttribute("aria-label", "ARCHCOIN route strip");
 
-  const routeGrid = el("div", "route-grid");
+  const links = [
+    ["Products Source", ROUTES.products, true],
+    ["Vault Chamber", ROUTES.vault, false],
+    ["Upper Room", ROUTES.upperRoom, false],
+    ["Showroom", ROUTES.showroom, false],
+    ["Compass", ROUTES.compass, false]
+  ];
 
-  routeGrid.append(
-    routeCard("Products Source", "Return to the parent waterfall chamber.", ROUTES.products, true),
-    routeCard("Vault Chamber", "ARCHCOIN four-garden transaction vault.", ROUTES.vault),
-    routeCard("Upper Room", "Attic event chamber and public live-room route.", ROUTES.upperRoom),
-    routeCard("Showroom", "Lobby proof surface for the estate.", ROUTES.showroom)
-  );
+  links.forEach(([label, href, strong]) => {
+    const a = el("a", strong ? "strong" : "", label);
+    a.href = href;
+    strip.appendChild(a);
+  });
 
-  routes.append(routeTitle, routeText, routeGrid);
-  return routes;
+  return strip;
 }
 
 function buildShell() {
-  const shell = el("main", "vault-shell");
-
-  const lower = el("section", "lower-grid");
-  lower.append(buildMachinePanel(), buildReceiptPanel());
-
-  shell.append(
-    buildTopbar(),
-    buildHero(),
-    buildTemplatePanel(),
-    lower,
-    buildFunctionPanel(),
-    buildRoutesPanel()
-  );
-
+  const shell = el("div", "vault-shell");
+  shell.append(buildTopbar(), buildTedStage(), buildRouteStrip());
   return shell;
+}
+
+function setReceipt(rows) {
+  const receiptRows = document.getElementById("receiptRows");
+  if (!receiptRows) return;
+
+  receiptRows.replaceChildren();
+  rows.forEach(([k, v]) => receiptRows.appendChild(infoRow(k, v)));
+}
+
+function setLayer(key) {
+  const layer = LAYERS.find((item) => item.key === key) || LAYERS[0];
+
+  document.querySelectorAll(".doll-control").forEach((node) => {
+    node.dataset.active = node.dataset.layer === layer.key ? "true" : "false";
+  });
+
+  const title = document.querySelector(".talkTitle");
+  const copy = document.querySelector(".talkCopy");
+
+  if (title) title.textContent = layer.title;
+  if (copy) copy.textContent = layer.copy;
+
+  setReceipt(layer.receipt);
+}
+
+function setGarden(key) {
+  const garden = GARDENS.find((item) => item.key === key) || GARDENS[0];
+
+  document.querySelectorAll(".garden-alcove").forEach((node) => {
+    node.dataset.active = node.dataset.key === garden.key ? "true" : "false";
+  });
+
+  document.querySelectorAll(".doll-control").forEach((node) => {
+    node.dataset.active = "false";
+  });
+
+  const title = document.querySelector(".talkTitle");
+  const copy = document.querySelector(".talkCopy");
+
+  if (title) title.textContent = garden.name + " · " + garden.role;
+  if (copy) copy.textContent = garden.read + " " + garden.water;
+
+  setReceipt([
+    ["Selected chamber", garden.name],
+    ["Coin position", garden.coin],
+    ["Transaction role", garden.role],
+    ["Water route", garden.water]
+  ]);
+}
+
+function bindInteractions() {
+  document.querySelectorAll(".doll-control").forEach((node) => {
+    node.addEventListener("click", () => {
+      setLayer(node.dataset.layer || "source");
+    });
+  });
+
+  document.querySelectorAll(".garden-alcove").forEach((node) => {
+    node.addEventListener("click", () => {
+      setGarden(node.dataset.key || "North");
+    });
+  });
 }
 
 function resizeCanvas() {
@@ -1231,13 +1194,13 @@ function resizeCanvas() {
 }
 
 function buildStars() {
-  const count = Math.min(180, Math.max(120, Math.floor((field.width * field.height) / 14000)));
+  const count = Math.min(160, Math.max(90, Math.floor((field.width * field.height) / 16000)));
 
   field.stars = Array.from({ length: count }, () => ({
     x: Math.random() * field.width,
     y: Math.random() * field.height,
     z: 0.25 + Math.random() * 0.75,
-    size: 0.6 + Math.random() * 2.2,
+    size: 0.6 + Math.random() * 2.1,
     drift: (Math.random() - 0.5) * 0.08,
     pulse: Math.random() * Math.PI * 2
   }));
@@ -1251,8 +1214,8 @@ function drawField() {
 
   ctx.clearRect(0, 0, field.width, field.height);
 
-  const gx = (pointer.x - 0.5) * 36;
-  const gy = (pointer.y - 0.5) * 36;
+  const gx = (pointer.x - 0.5) * 32;
+  const gy = (pointer.y - 0.5) * 32;
 
   for (const star of field.stars) {
     star.pulse += 0.01 * star.z;
@@ -1263,7 +1226,7 @@ function drawField() {
 
     const px = star.x + gx * star.z;
     const py = star.y + gy * star.z;
-    const alpha = 0.18 + (Math.sin(star.pulse) * 0.5 + 0.5) * 0.42 * star.z;
+    const alpha = 0.18 + (Math.sin(star.pulse) * 0.5 + 0.5) * 0.38 * star.z;
 
     ctx.beginPath();
     ctx.fillStyle = `rgba(190,225,255,${alpha.toFixed(3)})`;
@@ -1288,43 +1251,13 @@ function drawField() {
   ctx.fillRect(0, 0, field.width, field.height);
 }
 
-function setActiveGarden(key) {
-  const garden = GARDENS.find((item) => item.key === key) || GARDENS[0];
-  const rows = APP.querySelector(".rows");
-
-  document.querySelectorAll(".garden-alcove, .chamber-control").forEach((node) => {
-    node.dataset.active = node.dataset.key === garden.key ? "true" : "false";
-  });
-
-  if (!rows) return;
-
-  rows.replaceChildren(
-    infoRow("Source chamber", "Products"),
-    infoRow("Selected chamber", garden.name),
-    infoRow("Coin position", garden.coin),
-    infoRow("Transaction role", garden.role),
-    infoRow("Garden read", garden.read),
-    infoRow("Water circulation", garden.water)
-  );
-}
-
-function bindGardenActions() {
-  const nodes = Array.from(document.querySelectorAll(".garden-alcove, .chamber-control"));
-
-  nodes.forEach((node) => {
-    node.addEventListener("click", () => {
-      setActiveGarden(node.dataset.key || "North");
-    });
-  });
-}
-
 function boot() {
   if (!APP) return;
 
   injectStyles();
   APP.className = "page";
   APP.replaceChildren(buildShell());
-  bindGardenActions();
+  bindInteractions();
   resizeCanvas();
 
   function frame() {

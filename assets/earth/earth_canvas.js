@@ -1,13 +1,13 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B18 · DIMENSIONAL GLOBE RENDERER
+   EARTH ASSET SPINE · CANVAS B19 · DIMENSIONAL GLOBE / STABLE LIMB
 
    CONTRACT:
-     - Render Earth as a dimensional globe first.
-     - Map the local satellite Earth JPG onto the sphere second.
-     - Use inverse orthographic sphere sampling instead of vertical slice wrapping.
-     - Remove lower-left pinch / fold distortion.
+     - Render Earth as a globe-first dimensional object.
+     - Use inverse orthographic sphere sampling.
+     - Force square internal render surface to prevent canvas deformation.
+     - Remove lower-left pinch / fold behavior.
      - Remove detached crescent artifacts.
-     - Remove outer circular stroke / atmosphere ring.
+     - Remove outer circular stroke / rim / atmosphere ring.
      - Preserve local B5 JPG paths.
      - Preserve runtime API.
      - Preserve zoom, drag, spin, reset, pause.
@@ -20,7 +20,7 @@
   var TAU = Math.PI * 2;
 
   var DEFAULTS = {
-    assetId: "earth-asset-b5-dimensional-globe",
+    assetId: "earth-asset-b5-dimensional-globe-b19",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
@@ -33,7 +33,7 @@
     mobileDprCap: 1.35,
     desktopDprCap: 1.75,
     mobileRenderCap: 620,
-    desktopRenderCap: 860,
+    desktopRenderCap: 820,
 
     defaultRotation: 0.35,
     defaultVelocity: 0.006,
@@ -43,7 +43,8 @@
     maxZoom: 1.38,
     zoomStep: 0.08,
 
-    cloudAlpha: 0
+    cloudAlpha: 0,
+    edgeFeatherPx: 1.35
   };
 
   function clamp(value, min, max) {
@@ -54,6 +55,11 @@
   function wrap01(value) {
     value = value % 1;
     return value < 0 ? value + 1 : value;
+  }
+
+  function smoothstep(edge0, edge1, value) {
+    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function normalize3(x, y, z) {
@@ -105,7 +111,7 @@
         });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b18-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b19-" + Date.now();
     });
   }
 
@@ -205,8 +211,7 @@
     var cloudReady = false;
 
     var imageData = null;
-    var lastCanvasWidth = 0;
-    var lastCanvasHeight = 0;
+    var renderSize = 0;
 
     var dragging = false;
     var paused = false;
@@ -228,8 +233,8 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b18-dimensional-globe");
-      mount.setAttribute("data-earth-projection", "inverse-orthographic-sphere");
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b19-dimensional-globe");
+      mount.setAttribute("data-earth-projection", "inverse-orthographic-square-surface");
       mount.setAttribute("data-earth-lattice-scope", "256");
       mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
     }
@@ -239,47 +244,45 @@
       var dpr;
       var cap;
       var renderCap;
-      var desiredWidth;
-      var desiredHeight;
-      var maxSide;
-      var ratio;
+      var cssSide;
+      var desiredSide;
 
       if (!canvas || !ctx) return;
 
       rect = canvas.getBoundingClientRect();
+
+      cssSide = Math.max(1, Math.min(rect.width || 1, rect.height || 1));
       cap = window.innerWidth <= 760 ? config.mobileDprCap : config.desktopDprCap;
       renderCap = window.innerWidth <= 760 ? config.mobileRenderCap : config.desktopRenderCap;
       dpr = Math.min(cap, window.devicePixelRatio || 1);
 
-      desiredWidth = Math.max(1, Math.floor(rect.width * dpr));
-      desiredHeight = Math.max(1, Math.floor(rect.height * dpr));
+      desiredSide = Math.max(1, Math.floor(cssSide * dpr));
+      desiredSide = Math.min(renderCap, desiredSide);
 
-      maxSide = Math.max(desiredWidth, desiredHeight);
-      ratio = maxSide > renderCap ? renderCap / maxSide : 1;
+      canvas.width = desiredSide;
+      canvas.height = desiredSide;
 
-      canvas.width = Math.max(1, Math.floor(desiredWidth * ratio));
-      canvas.height = Math.max(1, Math.floor(desiredHeight * ratio));
-
-      if (canvas.width !== lastCanvasWidth || canvas.height !== lastCanvasHeight) {
-        imageData = ctx.createImageData(canvas.width, canvas.height);
-        lastCanvasWidth = canvas.width;
-        lastCanvasHeight = canvas.height;
+      if (desiredSide !== renderSize) {
+        renderSize = desiredSide;
+        imageData = ctx.createImageData(renderSize, renderSize);
       }
+
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
     }
 
     function geometry() {
-      var width = canvas.width;
-      var height = canvas.height;
-      var cx = width * 0.5;
-      var cy = height * 0.5;
-      var r = Math.min(width, height) * 0.492 * zoom;
+      var side = renderSize || Math.min(canvas.width, canvas.height) || 1;
+      var cx = side * 0.5;
+      var cy = side * 0.5;
+      var r = side * 0.492 * zoom;
 
       return {
-        width: width,
-        height: height,
+        width: side,
+        height: side,
         cx: cx,
         cy: cy,
         r: r
@@ -300,7 +303,7 @@
       var nx;
       var ny;
       var d2;
-      var z;
+      var nz;
       var i;
       var shade;
 
@@ -313,8 +316,8 @@
 
           if (d2 > 1) continue;
 
-          z = Math.sqrt(Math.max(0, 1 - d2));
-          shade = 0.45 + 0.45 * z;
+          nz = Math.sqrt(Math.max(0, 1 - d2));
+          shade = 0.48 + 0.42 * nz;
 
           i = (y * geo.width + x) * 4;
           data[i] = 15 * shade;
@@ -333,12 +336,22 @@
       var minY;
       var maxY;
       var light;
+      var theta;
+      var sinT;
+      var cosT;
       var x;
       var y;
       var nx;
       var ny;
+      var d;
       var d2;
       var nz;
+      var sx;
+      var sy;
+      var sz;
+      var gx;
+      var gy;
+      var gz;
       var lon;
       var lat;
       var u;
@@ -349,7 +362,7 @@
       var diffuse;
       var limb;
       var shade;
-      var edgeFeather;
+      var edgePx;
       var alpha;
       var r;
       var g;
@@ -367,7 +380,11 @@
         return;
       }
 
-      light = normalize3(-0.38, 0.32, 0.86);
+      light = normalize3(-0.36, 0.30, 0.88);
+
+      theta = rotation * TAU;
+      sinT = Math.sin(theta);
+      cosT = Math.cos(theta);
 
       minX = Math.max(0, Math.floor(geo.cx - geo.r - 2));
       maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
@@ -381,19 +398,21 @@
           nx = (x - geo.cx) / geo.r;
           d2 = nx * nx + ny * ny;
 
-          if (d2 > 1.0008) continue;
+          if (d2 > 1) continue;
 
-          if (d2 > 1) {
-            edgeFeather = Math.max(0, 1 - (d2 - 1) / 0.0008);
-            d2 = 1;
-          } else {
-            edgeFeather = 1;
-          }
-
+          d = Math.sqrt(d2);
           nz = Math.sqrt(Math.max(0, 1 - d2));
 
-          lon = Math.atan2(nx, nz) + rotation * TAU;
-          lat = Math.asin(clamp(ny, -1, 1));
+          sx = nx;
+          sy = ny;
+          sz = nz;
+
+          gx = sx * cosT + sz * sinT;
+          gy = sy;
+          gz = -sx * sinT + sz * cosT;
+
+          lon = Math.atan2(gx, gz);
+          lat = Math.asin(clamp(gy, -1, 1));
 
           u = wrap01(0.5 + lon / TAU);
           v = clamp(0.5 - lat / Math.PI, 0, 1);
@@ -411,17 +430,18 @@
             b = b * (1 - config.cloudAlpha) + cloud.b * config.cloudAlpha;
           }
 
-          diffuse = clamp(nx * light.x + ny * light.y + nz * light.z, 0, 1);
+          diffuse = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
           limb = clamp(nz, 0, 1);
 
-          shade = 0.40 + diffuse * 0.58;
-          shade *= 0.72 + limb * 0.28;
+          shade = 0.46 + diffuse * 0.48;
+          shade *= 0.80 + limb * 0.20;
 
-          r = clamp(r * shade + 4, 0, 255);
-          g = clamp(g * shade + 4, 0, 255);
-          b = clamp(b * shade + 6, 0, 255);
+          r = clamp(r * shade + 3, 0, 255);
+          g = clamp(g * shade + 3, 0, 255);
+          b = clamp(b * shade + 5, 0, 255);
 
-          alpha = Math.round(255 * edgeFeather);
+          edgePx = (1 - d) * geo.r;
+          alpha = Math.round(255 * smoothstep(0, config.edgeFeatherPx, edgePx));
 
           i = (y * geo.width + x) * 4;
           data[i] = r;
@@ -481,7 +501,7 @@
         surfaceReady: surfaceReady,
         cloudReady: cloudReady,
         cloudOverlayAlpha: config.cloudAlpha,
-        projection: "inverse-orthographic-sphere",
+        projection: "inverse-orthographic-square-surface",
         latticeScope: 256,
         rotation: rotation,
         velocity: velocity,
@@ -613,7 +633,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b18-dimensional-globe",
+    version: "earth-canvas-b19-dimensional-globe",
     create: createEarthRenderer
   };
 })();

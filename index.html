@@ -1,21 +1,21 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS · SHOWROOM DIAMOND LINK B1
+     ROOT INDEX · GENERATION 2 COMPASS · DIAMOND ROUTE COMPASS FAMILY B2
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
-     COCKPIT_VERSION=root-compass-cockpit-b1
-     SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
+     COCKPIT_VERSION=root-compass-cockpit-b2
+     SOURCE_MARKER=ROOT_COMPASS_COCKPIT_DIAMOND_ROUTE_COMPASS_FAMILY_B2
 
      PURPOSE:
        - Preserve the current passing Compass baseline.
-       - Add a top-page Showroom route.
-       - Represent Showroom as a spinning compass / diamond lattice.
+       - Keep satellite sun background intact.
+       - Keep three-filter Compass surface intact.
        - No graphics box.
        - No generated image.
        - No external image.
        - No new runtime.
-       - Keep satellite sun background intact.
-       - Keep three-filter Compass surface intact.
+       - Give every primary route a diamond-esque spinning compass symbol.
+       - Keep Showroom as the gold/shinier premium compass route.
 -->
 
 <html lang="en">
@@ -50,6 +50,10 @@
       --txt:rgba(255,255,255,.84);
       --mut:rgba(255,255,255,.66);
       --gold:rgba(255,217,138,.94);
+      --goldCore:rgba(255,222,151,.96);
+      --blueCore:rgba(147,197,253,.62);
+      --routeGlow:rgba(147,197,253,.16);
+      --showroomGlow:rgba(255,197,80,.42);
       --shadow:0 24px 90px rgba(0,0,0,.48);
     }
 
@@ -113,9 +117,12 @@
         radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),
         radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
       border:1px solid rgba(255,255,255,.18);
+      box-shadow:
+        inset 0 0 16px rgba(255,255,255,.12),
+        0 0 18px rgba(255,181,74,.16);
     }
 
-    .btn,.routeRail a,.worldFilter button{
+    .btn,.routeRail a,.worldFilter button,.showroomTopLink{
       min-height:42px;
       padding:10px 14px;
       border-radius:999px;
@@ -127,6 +134,15 @@
       -webkit-tap-highlight-color:transparent;
     }
 
+    .btn,.routeRail a,.showroomTopLink{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      position:relative;
+      overflow:hidden;
+    }
+
     .btn.red,.worldFilter button[aria-pressed="true"]{
       border-color:rgba(255,217,138,.48);
       box-shadow:0 0 20px rgba(201,162,74,.14);
@@ -136,77 +152,132 @@
     }
 
     .showroomTopLink{
-      position:relative;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
       min-height:46px;
-      padding:8px 13px 8px 9px;
-      border-radius:999px;
-      border:1px solid rgba(255,217,138,.34);
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
-      overflow:hidden;
+      padding:8px 15px 8px 10px;
+      border-color:rgba(255,217,138,.46);
+      background:
+        radial-gradient(circle at 18% 24%,rgba(255,255,255,.11),transparent 34%),
+        radial-gradient(circle at 56% 50%,rgba(255,217,138,.17),transparent 62%),
+        rgba(0,0,0,.25);
+      box-shadow:
+        inset 0 0 22px rgba(255,255,255,.035),
+        0 0 24px rgba(255,198,79,.13);
     }
 
     .showroomTopLink::before{
       content:"";
       position:absolute;
       inset:-80%;
-      background:conic-gradient(from 0deg,transparent,rgba(255,217,138,.15),transparent,rgba(147,197,253,.11),transparent);
+      background:
+        conic-gradient(from 0deg,
+          transparent,
+          rgba(255,217,138,.22),
+          rgba(255,255,255,.10),
+          transparent,
+          rgba(255,169,56,.20),
+          transparent);
       animation:showroomAuraSpin 7s linear infinite;
-      opacity:.72;
+      opacity:.86;
     }
 
-    .showroomTopLink span{
+    .showroomTopLink::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.16) 48%,transparent 62%);
+      transform:translateX(-110%);
+      animation:showroomButtonGlint 4.6s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .btn span,.showroomTopLink span,.routeRail a span{
       position:relative;
       z-index:2;
     }
 
-    .diamondCompass{
+    .routeCompass{
       position:relative;
       z-index:2;
-      width:30px;
-      height:30px;
+      flex:0 0 auto;
+      width:24px;
+      height:24px;
       display:grid;
       place-items:center;
       transform-style:preserve-3d;
-      animation:diamondTopSpin 3.8s linear infinite;
+      animation:routeCompassSpin 5.4s linear infinite;
+      opacity:.92;
+      filter:
+        drop-shadow(0 0 7px rgba(147,197,253,.14))
+        drop-shadow(0 0 12px rgba(255,255,255,.06));
     }
 
-    .diamondCompass::before{
+    .routeCompass::before{
       content:"";
       position:absolute;
+      width:17px;
+      height:17px;
+      transform:rotate(45deg);
+      border:1px solid rgba(185,212,255,.56);
+      background:
+        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.34) 50%,transparent calc(50% + .5px)),
+        linear-gradient(0deg,transparent calc(50% - .5px),rgba(147,197,253,.24) 50%,transparent calc(50% + .5px)),
+        radial-gradient(circle at 50% 50%,rgba(147,197,253,.13),rgba(255,255,255,.035) 62%,transparent 70%);
+      box-shadow:
+        0 0 11px rgba(147,197,253,.15),
+        inset 0 0 10px rgba(147,197,253,.09);
+    }
+
+    .routeCompass::after{
+      content:"";
+      position:absolute;
+      width:5px;
+      height:5px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.50);
+      background:rgba(147,197,253,.17);
+      box-shadow:0 0 8px rgba(147,197,253,.15);
+    }
+
+    .routeCompass.gold{
+      width:30px;
+      height:30px;
+      animation-duration:3.6s;
+      opacity:1;
+      filter:
+        drop-shadow(0 0 8px rgba(255,217,138,.38))
+        drop-shadow(0 0 22px rgba(255,170,50,.22));
+    }
+
+    .routeCompass.gold::before{
       width:22px;
       height:22px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,217,138,.82);
+      border-color:rgba(255,217,138,.88);
       background:
-        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.55) 50%,transparent calc(50% + .5px)),
-        linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.38) 50%,transparent calc(50% + .5px)),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.22),rgba(147,197,253,.06) 64%,transparent 68%);
+        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.72) 50%,transparent calc(50% + .5px)),
+        linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.48) 50%,transparent calc(50% + .5px)),
+        radial-gradient(circle at 36% 28%,rgba(255,255,255,.68),transparent 18%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.34),rgba(147,197,253,.07) 64%,transparent 70%);
       box-shadow:
-        0 0 16px rgba(255,217,138,.26),
-        inset 0 0 14px rgba(147,197,253,.10);
+        0 0 18px rgba(255,217,138,.34),
+        0 0 34px rgba(255,156,48,.15),
+        inset 0 0 16px rgba(255,255,255,.16);
     }
 
-    .diamondCompass::after{
-      content:"";
-      position:absolute;
+    .routeCompass.gold::after{
       width:8px;
       height:8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.60);
-      background:rgba(255,217,138,.26);
-      box-shadow:0 0 10px rgba(255,217,138,.24);
+      border-color:rgba(255,255,255,.70);
+      background:rgba(255,217,138,.34);
+      box-shadow:
+        0 0 10px rgba(255,217,138,.34),
+        0 0 22px rgba(255,155,46,.18);
     }
 
     .latticeRing{
       position:absolute;
       inset:2px;
       border-radius:999px;
-      border:1px solid rgba(147,197,253,.22);
+      border:1px solid rgba(147,197,253,.18);
       transform:rotateX(64deg);
     }
 
@@ -218,13 +289,56 @@
       transform:rotateX(64deg) rotateZ(120deg);
     }
 
-    @keyframes diamondTopSpin{
+    .routeCompass.gold .latticeRing{
+      border-color:rgba(255,217,138,.33);
+      box-shadow:0 0 10px rgba(255,217,138,.12);
+    }
+
+    .railCompass{
+      width:19px;
+      height:19px;
+      animation-duration:6.8s;
+    }
+
+    .railCompass::before{
+      width:13px;
+      height:13px;
+    }
+
+    .railCompass::after{
+      width:4px;
+      height:4px;
+    }
+
+    .railCompass.gold{
+      width:22px;
+      height:22px;
+      animation-duration:4.2s;
+    }
+
+    .railCompass.gold::before{
+      width:16px;
+      height:16px;
+    }
+
+    .railCompass.gold::after{
+      width:5px;
+      height:5px;
+    }
+
+    @keyframes routeCompassSpin{
       0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
       100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
     }
 
     @keyframes showroomAuraSpin{
       to{transform:rotate(360deg)}
+    }
+
+    @keyframes showroomButtonGlint{
+      0%,55%,100%{transform:translateX(-110%);opacity:0}
+      68%{opacity:.8}
+      82%{transform:translateX(110%);opacity:0}
     }
 
     .hero{
@@ -461,7 +575,7 @@
     }
 
     @media(prefers-reduced-motion:reduce){
-      .diamondCompass,.showroomTopLink::before{
+      .routeCompass,.showroomTopLink::before,.showroomTopLink::after{
         animation:none;
       }
     }
@@ -491,16 +605,17 @@
     data-sun-asset-mount-contract="sun asset mount"
     data-background-contract="sun-background-simple-filter"
     data-background-profile="near-solar-deep-space-sky-b2"
-    data-compass-cockpit="root-compass-cockpit-b1"
-    data-compass-cockpit-render="simple-world-filter-showroom-diamond-b1"
+    data-compass-cockpit="root-compass-cockpit-b2"
+    data-compass-cockpit-render="simple-world-filter-route-diamond-compass-family-b2"
     data-compass-cockpit-runtime-queue="quarantined-not-loaded"
     data-compass-cockpit-control-panel="simple-world-filter-static"
     data-compass-cockpit-instrument-panel="held-pending"
     data-world-filter="flat"
     data-sun-satellite-profile="satellite-observational-solar-disc-b8"
-    data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
+    data-source-marker="ROOT_COMPASS_COCKPIT_DIAMOND_ROUTE_COMPASS_FAMILY_B2"
     data-cockpit-view="cinematic"
-    data-showroom-link="diamond-compass-lattice-b1"
+    data-route-symbol-system="diamond-compass-family-b2"
+    data-showroom-link="gold-premium-diamond-compass-b2"
   >
     <section class="siteTop" aria-label="Root navigation">
       <div class="navRow">
@@ -510,21 +625,77 @@
         </a>
 
         <nav class="navLinks" aria-label="Primary navigation">
-          <a class="btn red" href="/">Compass</a>
+          <a class="btn red" href="/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Compass</span>
+          </a>
+
           <a class="showroomTopLink" href="/showroom/" aria-label="Open the Showroom universe page">
-            <span class="diamondCompass" aria-hidden="true">
+            <span class="routeCompass gold" aria-hidden="true">
               <i class="latticeRing"></i>
               <i class="latticeRing two"></i>
               <i class="latticeRing three"></i>
             </span>
             <span>Showroom</span>
           </a>
-          <a class="btn" href="/home/">Home</a>
-          <a class="btn" href="/prelude/">Prelude</a>
-          <a class="btn" href="/door/">Door</a>
-          <a class="btn" href="/products/">Products</a>
-          <a class="btn" href="/governance/">Governance</a>
-          <a class="btn" href="/gauges/">Gauges</a>
+
+          <a class="btn" href="/home/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Home</span>
+          </a>
+
+          <a class="btn" href="/prelude/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Prelude</span>
+          </a>
+
+          <a class="btn" href="/door/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Door</span>
+          </a>
+
+          <a class="btn" href="/products/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Products</span>
+          </a>
+
+          <a class="btn" href="/governance/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Governance</span>
+          </a>
+
+          <a class="btn" href="/gauges/">
+            <span class="routeCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Gauges</span>
+          </a>
         </nav>
       </div>
     </section>
@@ -611,7 +782,7 @@
           </div>
 
           <p class="hiddenCompatibility" data-cockpit-status>
-            Compass Cockpit B1 · cinematic posture · fixed galaxy truth · visible sun fallback required
+            Compass Cockpit B2 · route diamond compass family · cinematic posture · fixed galaxy truth · visible sun fallback required
           </p>
           <span class="hiddenCompatibility" data-cockpit-view-label>cinematic</span>
           <span class="hiddenCompatibility" data-cockpit-narrative>The field stays steady while the filter changes.</span>
@@ -621,14 +792,77 @@
     </section>
 
     <nav class="routeRail" aria-label="Root route rail">
-      <a href="/showroom/">Showroom</a>
-      <a href="/home/">Home</a>
-      <a href="/prelude/">Prelude</a>
-      <a href="/door/">Door</a>
-      <a href="/products/">Products</a>
-      <a href="/laws/">Laws</a>
-      <a href="/governance/">Governance</a>
-      <a href="/gauges/">Gauges</a>
+      <a href="/showroom/">
+        <span class="routeCompass railCompass gold" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Showroom</span>
+      </a>
+
+      <a href="/home/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Home</span>
+      </a>
+
+      <a href="/prelude/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Prelude</span>
+      </a>
+
+      <a href="/door/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Door</span>
+      </a>
+
+      <a href="/products/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Products</span>
+      </a>
+
+      <a href="/laws/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Laws</span>
+      </a>
+
+      <a href="/governance/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Governance</span>
+      </a>
+
+      <a href="/gauges/">
+        <span class="routeCompass railCompass" aria-hidden="true">
+          <i class="latticeRing"></i>
+          <i class="latticeRing two"></i>
+          <i class="latticeRing three"></i>
+        </span>
+        <span>Gauges</span>
+      </a>
     </nav>
   </main>
 

@@ -1,16 +1,19 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B16 · CLEAN EARTH STAGE / NO RINGS
+     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B17 · QUAD CONTRACT / CLEAN EARTH STAGE
 
      CONTRACT:
-       - Rebuild showroom as a clean Earth stage.
-       - Earth is the only dominant circular object in the center field.
-       - Remove Earth-panel rings, radial glow circles, instrument-field framing, orbit arcs, overlay sheen, and axis guide.
-       - Preserve Earth Asset B5 renderer path.
+       - Showroom owns layout only.
+       - Earth is the object.
+       - No showroom-level Earth rings.
+       - No circular instrument field.
+       - No orbit trajectory.
+       - No radial Earth-panel frame.
+       - No axis guide.
+       - Preserve Earth Asset B5 path.
        - Preserve runtime zoom controls.
-       - Preserve manual drag, spin, reset, pause.
-       - Preserve distant CSS sun as background support only.
-       - Preserve bottom diamond navigation.
+       - Preserve drag, spin, reset, pause.
+       - Preserve navigation.
        - No graphics box.
        - No active Sun runtime on showroom.
 -->
@@ -22,7 +25,7 @@
   <title>Diamond Gate Bridge — Showroom</title>
   <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b5-clean-stage-b16"/>
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-quad-no-rings-b17"/>
 
   <style>
     *{box-sizing:border-box}
@@ -56,11 +59,9 @@
       z-index:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 12% 18%,rgba(255,255,255,.30) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(177,205,255,.20) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.18) 0 1px,transparent 2px),
-        radial-gradient(circle at 92% 60%,rgba(255,255,255,.18) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 18% 12%,rgba(67,95,180,.20),transparent 34rem),
+        radial-gradient(circle at 12% 18%,rgba(255,255,255,.26) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.18) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.16) 0 1px,transparent 2px),
         linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
@@ -92,8 +93,7 @@
       padding:clamp(22px,5vw,42px);
       display:grid;
       gap:24px;
-      background:
-        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+      background:linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
     }
 
     .distanceField{
@@ -111,46 +111,13 @@
       width:min(36vw,270px);
       aspect-ratio:1;
       border-radius:999px;
-      opacity:.28;
+      opacity:.22;
       filter:
-        drop-shadow(0 0 26px rgba(255,178,54,.14))
-        drop-shadow(0 0 90px rgba(255,122,28,.10));
+        drop-shadow(0 0 26px rgba(255,178,54,.12))
+        drop-shadow(0 0 90px rgba(255,122,28,.08));
       background:
-        radial-gradient(circle at 38% 34%,rgba(255,252,210,.54),transparent 11%),
-        radial-gradient(circle at 48% 47%,rgba(255,210,72,.78) 0 20%,rgba(237,101,25,.78) 46%,rgba(110,28,10,.84) 76%,rgba(20,4,2,.92) 100%);
-    }
-
-    .distantPlanet{
-      position:absolute;
-      border-radius:999px;
-      aspect-ratio:1;
-      opacity:.26;
-      box-shadow:0 0 14px rgba(147,197,253,.14);
-    }
-
-    .distantPlanet.one{
-      left:14%;
-      top:22%;
-      width:10px;
-      background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#d8c3a5,#765d42);
-    }
-
-    .distantPlanet.two{
-      right:23%;
-      top:40%;
-      width:14px;
-      background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#ffd98a,#af6f2d);
-    }
-
-    .distantPlanet.three{
-      left:26%;
-      bottom:18%;
-      width:12px;
-      background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#fca5a5,#b45309);
-    }
-
-    .trajectory{
-      display:none !important;
+        radial-gradient(circle at 38% 34%,rgba(255,252,210,.50),transparent 11%),
+        radial-gradient(circle at 48% 47%,rgba(255,210,72,.70) 0 20%,rgba(237,101,25,.70) 46%,rgba(110,28,10,.78) 76%,rgba(20,4,2,.90) 100%);
     }
 
     .copy{
@@ -169,14 +136,14 @@
     }
 
     .brandMark{
-      width:44px;
-      height:44px;
-      border-radius:999px;
+      width:34px;
+      height:34px;
+      transform:rotate(45deg);
       background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),
-        radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
+        linear-gradient(135deg,rgba(255,217,138,.80),rgba(147,197,253,.10)),
+        rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 0 24px rgba(255,217,138,.16);
+      box-shadow:0 0 18px rgba(255,217,138,.12);
       flex:0 0 auto;
     }
 
@@ -241,9 +208,6 @@
     .earthPanel::after{
       display:none !important;
       content:none !important;
-      opacity:0 !important;
-      visibility:hidden !important;
-      pointer-events:none !important;
     }
 
     .earthPanel [data-dgb-earth-mount]{
@@ -257,14 +221,16 @@
       overflow:visible;
       background:transparent !important;
       border:0 !important;
+      outline:0 !important;
       box-shadow:none !important;
     }
 
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-stage{
-      width:100%;
-      height:100%;
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-stage,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-tilt,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-sphere{
       background:transparent !important;
       border:0 !important;
+      outline:0 !important;
       box-shadow:none !important;
     }
 
@@ -277,26 +243,6 @@
       opacity:0 !important;
       visibility:hidden !important;
       pointer-events:none !important;
-    }
-
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-tilt{
-      width:100%;
-      height:100%;
-      transform:rotate(var(--dgb-earth-axis));
-      transform-origin:center center;
-      background:transparent !important;
-      border:0 !important;
-      box-shadow:none !important;
-    }
-
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-sphere{
-      inset:0;
-      transform:translateZ(0);
-      margin:auto;
-      border:0 !important;
-      outline:0 !important;
-      box-shadow:none !important;
-      background:transparent !important;
     }
 
     .earthPanel [data-dgb-earth-canvas]{
@@ -384,92 +330,17 @@
       padding:12px;
     }
 
-    .diamondRoute{
-      min-height:78px;
-      padding:10px;
-      border-radius:22px;
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(0,0,0,.22);
       color:var(--ink);
       font-weight:950;
       display:grid;
       place-items:center;
-      gap:8px;
       text-align:center;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .diamondRoute::before{
-      content:"";
-      position:absolute;
-      inset:-90%;
-      opacity:.50;
-      background:conic-gradient(from 0deg,transparent,rgba(255,217,138,.12),transparent,rgba(147,197,253,.10),transparent);
-      animation:routeAuraSpin 8s linear infinite;
-    }
-
-    .routeDiamond{
-      position:relative;
-      z-index:2;
-      width:32px;
-      height:32px;
-      display:grid;
-      place-items:center;
-      transform-style:preserve-3d;
-      animation:diamondTopSpin 4.2s linear infinite;
-    }
-
-    .routeDiamond::before{
-      content:"";
-      position:absolute;
-      width:23px;
-      height:23px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,217,138,.82);
-      background:
-        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.50) 50%,transparent calc(50% + .5px)),
-        linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.35) 50%,transparent calc(50% + .5px)),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.20),rgba(147,197,253,.06) 64%,transparent 68%);
-      box-shadow:
-        0 0 16px rgba(255,217,138,.24),
-        inset 0 0 14px rgba(147,197,253,.10);
-    }
-
-    .routeDiamond::after{
-      content:"";
-      position:absolute;
-      width:7px;
-      height:7px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.60);
-      background:rgba(255,217,138,.28);
-    }
-
-    .latticeRing{
-      position:absolute;
-      inset:2px;
-      border-radius:999px;
-      border:1px solid rgba(147,197,253,.22);
-      transform:rotateX(64deg);
-    }
-
-    .latticeRing.two{transform:rotateX(64deg) rotateZ(60deg)}
-    .latticeRing.three{transform:rotateX(64deg) rotateZ(120deg)}
-
-    .routeLabel{
-      position:relative;
-      z-index:2;
-      font-size:.95rem;
-    }
-
-    @keyframes diamondTopSpin{
-      0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
-      100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
-    }
-
-    @keyframes routeAuraSpin{
-      to{transform:rotate(360deg)}
     }
 
     @media(max-width:760px){
@@ -517,13 +388,6 @@
         width:min(100%,520px);
       }
     }
-
-    @media(prefers-reduced-motion:reduce){
-      .routeDiamond,
-      .diamondRoute::before{
-        animation:none;
-      }
-    }
   </style>
 </head>
 
@@ -531,24 +395,20 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-spine-consumer-b16-clean-earth-stage"
+    data-showroom-version="generation-2-earth-spine-consumer-b17-quad-clean-earth-stage"
     data-earth-center="true"
-    data-earth-renderer="earth-asset-b5-orbital-earth-clean-stage"
+    data-earth-renderer="earth-asset-b5-quad-no-rings"
     data-earth-clouds="earth-asset-b5-real-cloud-map"
     data-earth-controls="runtime-zoom-panel"
-    data-earth-fit-contract="clean-earth-stage-no-rings"
+    data-earth-fit-contract="earth-only-no-external-rings"
     data-sun-role="distant-css-support-only"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="earth-spine-b5-clean-earth-stage"
+    data-brain-route="quad-earth-contract-b17"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
         <div class="distantSun" data-sun-role="distant-css-support-only"></div>
-        <span class="distantPlanet one"></span>
-        <span class="distantPlanet two"></span>
-        <span class="distantPlanet three"></span>
-        <span class="trajectory"></span>
       </div>
 
       <div class="copy">
@@ -561,7 +421,7 @@
         <h1>The Earth Room</h1>
         <p class="expression">Orbital Earth.</p>
         <p class="lede">
-          Earth is the center of the showroom. The showroom stage no longer draws a circular frame around the planet.
+          Earth is the center of the showroom. The stage does not draw a circular frame around the planet.
         </p>
       </div>
 
@@ -579,49 +439,18 @@
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
-      <a class="diamondRoute" href="/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Compass</span>
-      </a>
-
-      <a class="diamondRoute" href="/home/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Home</span>
-      </a>
-
-      <a class="diamondRoute" href="/prelude/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Prelude</span>
-      </a>
-
-      <a class="diamondRoute" href="/door/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Door</span>
-      </a>
-
-      <a class="diamondRoute" href="/products/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Products</span>
-      </a>
-
-      <a class="diamondRoute" href="/laws/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Laws</span>
-      </a>
-
-      <a class="diamondRoute" href="/governance/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Governance</span>
-      </a>
-
-      <a class="diamondRoute" href="/gauges/">
-        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
-        <span class="routeLabel">Gauges</span>
-      </a>
+      <a class="routeLink" href="/">Compass</a>
+      <a class="routeLink" href="/home/">Home</a>
+      <a class="routeLink" href="/prelude/">Prelude</a>
+      <a class="routeLink" href="/door/">Door</a>
+      <a class="routeLink" href="/products/">Products</a>
+      <a class="routeLink" href="/laws/">Laws</a>
+      <a class="routeLink" href="/governance/">Governance</a>
+      <a class="routeLink" href="/gauges/">Gauges</a>
     </nav>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b5-clean-stage-b16" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b5-clean-stage-b16" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=earth-quad-no-rings-b17" defer></script>
+  <script src="/runtime/earth_asset_runtime.js?v=earth-quad-no-rings-b17" defer></script>
 </body>
 </html>

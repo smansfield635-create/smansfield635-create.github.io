@@ -1,0 +1,758 @@
+<!doctype html>
+<!-- TNT RENEWAL — /nine-summits-of-love/index.html
+     THE NINE SUMMITS OF LOVE · METAVERSE EXTENSION · IMAGE-ASSET B2
+
+     CONTRACT:
+       - Keep this as the TED Talk / Russian-doll entry chamber.
+       - Extend the existing Nine Summits Universe / Metaverse path.
+       - Include user-provided Nine Summits of Love graphics as static assets.
+       - Do not replace /nine-summits/.
+       - Do not replace /metaverse/.
+       - Do not use generated graphics or graphics boxes.
+       - Keep the page compact, public-facing, and visually premium.
+-->
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>The Nine Summits of Love — Diamond Gate Bridge</title>
+  <meta name="description" content="The Nine Summits of Love · 256 Carats of Human Potential, a human-development path inside Consider the Energy and an extension of the Nine Summits Universe."/>
+
+  <style>
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --soft:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.76);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 14% 18%,rgba(255,255,255,.24) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.17) 0 1px,transparent 2px),
+        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.11),transparent 34rem),
+        radial-gradient(ellipse at 84% 32%,rgba(147,197,253,.065),transparent 30rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(100% - 28px,1180px);
+      min-height:100svh;
+      margin:0 auto;
+      padding:18px 0 28px;
+      display:grid;
+      gap:14px;
+    }
+
+    .hero,
+    .visualStage,
+    .talkStage,
+    .routeRail{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero{
+      min-height:calc(100svh - 190px);
+      padding:clamp(24px,5vw,56px);
+      display:grid;
+      grid-template-columns:1.02fr .78fr;
+      gap:clamp(20px,4vw,44px);
+      align-items:center;
+      overflow:hidden;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.08),transparent 30rem),
+        radial-gradient(ellipse at 90% 42%,rgba(255,148,78,.075),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+    }
+
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brandMark{
+      width:34px;
+      height:34px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.72);
+      background:
+        linear-gradient(135deg,rgba(255,217,138,.34),rgba(147,197,253,.07)),
+        rgba(255,255,255,.05);
+      box-shadow:0 0 18px rgba(255,217,138,.14);
+      flex:0 0 auto;
+    }
+
+    .brandName{
+      color:var(--ink);
+      font-size:clamp(1.2rem,4vw,2rem);
+      font-weight:950;
+      letter-spacing:-.04em;
+    }
+
+    .copy{
+      display:grid;
+      gap:16px;
+      align-content:center;
+    }
+
+    .kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      max-width:1040px;
+      font-size:clamp(3.1rem,9vw,7rem);
+      line-height:.84;
+      letter-spacing:-.085em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
+    }
+
+    .thesis{
+      margin:0;
+      max-width:1000px;
+      color:rgba(255,255,255,.93);
+      font-size:clamp(1.42rem,3.2vw,2.35rem);
+      line-height:1.1;
+      font-weight:950;
+      letter-spacing:-.052em;
+    }
+
+    .lead{
+      margin:0;
+      max-width:900px;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.2vw,1.28rem);
+      line-height:1.58;
+    }
+
+    .heroActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .heroButton{
+      min-height:48px;
+      display:inline-grid;
+      place-items:center;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .heroButton:hover,
+    .heroButton:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.52);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .coverHero{
+      position:relative;
+      display:grid;
+      gap:12px;
+      justify-items:center;
+      align-content:center;
+    }
+
+    .coverHero img{
+      display:block;
+      width:min(100%,430px);
+      max-height:72svh;
+      object-fit:contain;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:
+        0 24px 90px rgba(0,0,0,.58),
+        0 0 50px rgba(255,217,138,.10);
+      background:rgba(0,0,0,.20);
+    }
+
+    .imageNote{
+      margin:0;
+      color:var(--soft);
+      font-size:.86rem;
+      line-height:1.35;
+      text-align:center;
+    }
+
+    .visualStage{
+      padding:clamp(20px,4vw,38px);
+      display:grid;
+      gap:18px;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
+        radial-gradient(ellipse at 86% 22%,rgba(255,120,60,.05),transparent 24rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+    }
+
+    .stageHeader{
+      display:grid;
+      gap:10px;
+      max-width:940px;
+    }
+
+    .stageTitle{
+      margin:0;
+      font-size:clamp(2rem,5.8vw,4.2rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:.78fr 1.22fr;
+      gap:14px;
+      align-items:stretch;
+    }
+
+    .galleryCard{
+      min-height:100%;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:rgba(0,0,0,.22);
+      display:grid;
+      gap:10px;
+      align-content:start;
+    }
+
+    .galleryCard.feature{
+      grid-row:span 2;
+    }
+
+    .galleryCard img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.11);
+      box-shadow:0 18px 60px rgba(0,0,0,.36);
+      background:rgba(0,0,0,.18);
+    }
+
+    .galleryCard.feature img{
+      height:100%;
+      max-height:760px;
+      object-fit:cover;
+      object-position:center;
+    }
+
+    .galleryText{
+      display:grid;
+      gap:5px;
+      padding:3px 2px 0;
+    }
+
+    .galleryText strong{
+      color:var(--ink);
+      font-size:1rem;
+      line-height:1.12;
+    }
+
+    .galleryText small{
+      color:var(--soft);
+      line-height:1.35;
+      font-weight:750;
+    }
+
+    .talkStage{
+      padding:clamp(20px,4vw,38px);
+      display:grid;
+      gap:18px;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+    }
+
+    .dollGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      align-items:start;
+    }
+
+    .doll{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:rgba(0,0,0,.20);
+      overflow:hidden;
+      min-height:100%;
+    }
+
+    .doll[open]{
+      background:
+        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.07),transparent 18rem),
+        rgba(0,0,0,.24);
+      border-color:rgba(255,217,138,.38);
+    }
+
+    .doll summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:172px;
+      padding:16px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .doll summary::-webkit-details-marker{display:none}
+
+    .dollTag{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dollTitle{
+      color:var(--ink);
+      font-size:clamp(1.06rem,2.2vw,1.4rem);
+      line-height:1.06;
+      font-weight:950;
+      letter-spacing:-.035em;
+    }
+
+    .dollHint{
+      margin:0;
+      color:var(--soft);
+      line-height:1.42;
+      font-size:.96rem;
+    }
+
+    .dollBody{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+
+    .dollBody p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .speechLine{
+      margin:0;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.12rem,2.4vw,1.45rem);
+      line-height:1.2;
+      font-weight:950;
+      letter-spacing:-.038em;
+    }
+
+    .summitMiniGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .summitMini{
+      min-height:72px;
+      display:grid;
+      gap:4px;
+      align-content:start;
+      padding:10px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(0,0,0,.20);
+    }
+
+    .summitMini small{
+      color:var(--gold);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .summitMini strong{
+      color:var(--ink);
+      font-size:.92rem;
+      line-height:1.1;
+    }
+
+    .continueLink{
+      display:grid;
+      gap:7px;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .continueLink:hover,
+    .continueLink:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.50);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .continueLink small{
+      color:var(--soft);
+      font-size:.86rem;
+      line-height:1.35;
+      font-weight:750;
+    }
+
+    .routeRail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:12px;
+    }
+
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    @media(max-width:980px){
+      .hero{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
+      .coverHero img{
+        max-height:none;
+      }
+
+      .gallery{
+        grid-template-columns:1fr;
+      }
+
+      .galleryCard.feature{
+        grid-row:auto;
+      }
+
+      .galleryCard.feature img{
+        height:auto;
+        max-height:none;
+        object-fit:contain;
+      }
+
+      .dollGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .summitMiniGrid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:680px){
+      .page{
+        width:min(100% - 20px,1180px);
+        padding-top:10px;
+      }
+
+      .hero,
+      .visualStage,
+      .talkStage,
+      .routeRail{
+        border-radius:24px;
+      }
+
+      .dollGrid{
+        grid-template-columns:1fr;
+      }
+
+      .doll summary{
+        min-height:auto;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main
+    class="page"
+    data-backlink-root="nine-summits-of-love"
+    data-backlink-version="metaverse-extension-image-asset-b2"
+    data-existing-full-route="/nine-summits/"
+    data-product-route="/products/nine-summits/"
+    data-showroom-route="/showroom/"
+    data-metaverse-extension-route="/nine-summits-universe/"
+    data-parent-brand="consider-the-energy"
+    data-value-spine="nine-summits-of-love"
+    data-static-image-assets="true"
+  >
+    <section class="hero" aria-label="The Nine Summits of Love">
+      <div class="copy">
+        <div class="brandRow">
+          <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+          <a class="brandName" href="/">Diamond Gate Bridge</a>
+        </div>
+
+        <p class="kicker">TED Talk Backlink · Consider the Energy · Door Two</p>
+        <h1>The Nine Summits of Love</h1>
+        <p class="thesis">256 Carats of Human Potential.</p>
+        <p class="lead">
+          The Nine Summits of Love is the human-development path inside Consider the Energy and a visual extension of the Nine Summits Universe.
+        </p>
+
+        <div class="heroActions" aria-label="Primary actions">
+          <a class="heroButton" href="#summit-gallery">View the Graphics</a>
+          <a class="heroButton" href="#summit-dolls">Open the Russian Doll</a>
+          <a class="heroButton" href="/nine-summits/">Go to Value Spine</a>
+          <a class="heroButton" href="/showroom/">Return to Showroom</a>
+        </div>
+      </div>
+
+      <figure class="coverHero">
+        <img
+          src="/assets/nine-summits/nine-summits-love-front-cover.jpg"
+          alt="The Nine Summits of Love cover with diamond hearts, chains, locks, and celestial mountain landscape."
+          loading="eager"
+          decoding="async"
+        />
+        <figcaption class="imageNote">Static book-cover asset · The Nine Summits of Love</figcaption>
+      </figure>
+    </section>
+
+    <section id="summit-gallery" class="visualStage" aria-label="Nine Summits of Love visual assets">
+      <div class="stageHeader">
+        <p class="kicker">Visual Extension</p>
+        <h2 class="stageTitle">The book cover becomes the door.</h2>
+        <p class="lead">
+          These assets let the Nine Summits of Love page connect back to the Nine Summits Universe without turning the page into an encyclopedia.
+        </p>
+      </div>
+
+      <div class="gallery">
+        <article class="galleryCard feature">
+          <img
+            src="/assets/nine-summits/nine-summits-love-heart-poster.jpg"
+            alt="The Nine Summits of Love heart poster with a glowing faceted diamond heart over a fiery celestial landscape."
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="galleryText">
+            <strong>Human potential poster</strong>
+            <small>Character — Structure — Balance — Stability — Peace — Joy.</small>
+          </div>
+        </article>
+
+        <article class="galleryCard">
+          <img
+            src="/assets/nine-summits/nine-summits-love-front-cover.jpg"
+            alt="Front cover for The Nine Summits of Love, 256 Carats of Human Potential."
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="galleryText">
+            <strong>Front cover</strong>
+            <small>The public-facing entry image for the book and doctrine path.</small>
+          </div>
+        </article>
+
+        <article class="galleryCard">
+          <img
+            src="/assets/nine-summits/nine-summits-love-wrap-cover.jpg"
+            alt="Full wraparound cover for The Nine Summits of Love with back cover text and front cover art."
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="galleryText">
+            <strong>Full wrap cover</strong>
+            <small>The expanded book-cover surface tying love, structure, character, and choice together.</small>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="summit-dolls" class="talkStage" aria-label="Nine Summits Russian doll chambers">
+      <div class="stageHeader">
+        <p class="kicker">Open the summit pattern</p>
+        <h2 class="stageTitle">Short enough to enter. Deep enough to climb.</h2>
+        <p class="lead">
+          Each chamber opens one layer of the path. The existing Nine Summits page carries the full value spine.
+        </p>
+      </div>
+
+      <div class="dollGrid">
+        <details id="brand" class="doll" open>
+          <summary>
+            <span class="dollTag">Layer One</span>
+            <span class="dollTitle">Consider the Energy is the brand chamber.</span>
+            <p class="dollHint">The Nine Summits live inside the brand, not outside it.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Consider the Energy is the door. The Nine Summits of Love is one of the paths beyond it.
+            </p>
+            <p>
+              This page extends the Nine Summits Universe visually, then sends the visitor into the full value spine when they are ready.
+            </p>
+          </div>
+        </details>
+
+        <details id="path" class="doll">
+          <summary>
+            <span class="dollTag">Layer Two</span>
+            <span class="dollTitle">Love is not only a feeling.</span>
+            <p class="dollHint">Love can be framed as structure, choice, and practiced character.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Learn to Live to Love.
+            </p>
+            <p>
+              The summit path begins with orientation and ends with love in motion. It gives the visitor a clean threshold into the deeper human potential map.
+            </p>
+          </div>
+        </details>
+
+        <details id="summits" class="doll">
+          <summary>
+            <span class="dollTag">Layer Three</span>
+            <span class="dollTitle">Nine clean thresholds.</span>
+            <p class="dollHint">The full map stays readable before it gets deep.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Each summit is a threshold, not a wall.
+            </p>
+            <div class="summitMiniGrid" aria-label="Nine Summits preview">
+              <span class="summitMini"><small>01</small><strong>Orientation</strong></span>
+              <span class="summitMini"><small>02</small><strong>Attention</strong></span>
+              <span class="summitMini"><small>03</small><strong>Responsibility</strong></span>
+              <span class="summitMini"><small>04</small><strong>Discipline</strong></span>
+              <span class="summitMini"><small>05</small><strong>Repair</strong></span>
+              <span class="summitMini"><small>06</small><strong>Growth</strong></span>
+              <span class="summitMini"><small>07</small><strong>Service</strong></span>
+              <span class="summitMini"><small>08</small><strong>Integration</strong></span>
+              <span class="summitMini"><small>09</small><strong>Love in Motion</strong></span>
+            </div>
+          </div>
+        </details>
+
+        <details id="continue" class="doll">
+          <summary>
+            <span class="dollTag">Layer Four</span>
+            <span class="dollTitle">Continue through the right door.</span>
+            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
+          </summary>
+          <div class="dollBody">
+            <a class="continueLink" href="/nine-summits/">
+              Continue to Nine Summits of Love
+              <small>The existing full value-spine chamber.</small>
+            </a>
+
+            <a class="continueLink" href="/products/nine-summits/">
+              Continue to the Product-Side Nine Summits
+              <small>The product chamber for the Nine Summits value spine.</small>
+            </a>
+
+            <a class="continueLink" href="/nine-summits-universe/">
+              Continue to Nine Summits Universe
+              <small>The Metaverse extension path connected to this visual world.</small>
+            </a>
+
+            <a class="continueLink" href="/showroom/">
+              Return to the Showroom
+              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
+            </a>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <nav class="routeRail" aria-label="Route rail">
+      <a class="routeLink" href="/showroom/">Showroom</a>
+      <a class="routeLink" href="/nine-summits/">Value Spine</a>
+      <a class="routeLink" href="/nine-summits-universe/">Universe</a>
+      <a class="routeLink" href="/products/nine-summits/">Product Chamber</a>
+    </nav>
+  </main>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var VERSION = "nine-summits-of-love-b2-metaverse-image-extension";
+      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+      document.documentElement.setAttribute("data-nine-summits-love-controller", VERSION);
+
+      dolls.forEach(function(doll){
+        doll.addEventListener("toggle", function(){
+          if (!doll.open) return;
+
+          dolls.forEach(function(other){
+            if (other !== doll) other.removeAttribute("open");
+          });
+
+          document.documentElement.setAttribute("data-nine-summits-love-open-layer", doll.id || "");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,14 +1,14 @@
 <!doctype html>
 <!-- TNT RENEWAL — /gauges/index.html
-     GAUGES · GENERATION 2 · EARTH DIAGNOSTIC CONSOLE B2
+     GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC CONSOLE B3
 
      PURPOSE:
-       - Replace question-style gauges with diagnostic output.
-       - Identify the current Earth showroom blocker.
-       - Report asset availability, renderer ownership, canvas capability, local asset gaps,
-         external asset risk, runtime budget, and next repair path.
+       - Stop judging showroom as an inline renderer.
+       - Judge showroom as an Earth Asset Spine consumer.
+       - Judge /assets/earth/earth_canvas.js as renderer owner.
+       - Judge /runtime/earth_asset_runtime.js as control owner.
+       - Judge the two local JPG files directly.
        - No graphics box.
-       - No generated image.
 -->
 
 <html lang="en">
@@ -16,7 +16,6 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Diamond Gate Bridge — Gauges</title>
-  <meta name="description" content="Diamond Gate Bridge diagnostic gauges"/>
 
   <style>
     *{box-sizing:border-box}
@@ -91,7 +90,7 @@
       font-size:20px;
     }
 
-    .links{
+    .links,.routeRail{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -201,7 +200,6 @@
       width:max-content;
       max-width:100%;
       align-items:center;
-      gap:8px;
       border:1px solid var(--line);
       border-radius:999px;
       padding:8px 12px;
@@ -244,10 +242,7 @@
 
     .routeRail{
       padding:12px;
-      display:flex;
-      flex-wrap:wrap;
       justify-content:center;
-      gap:10px;
     }
 
     iframe{
@@ -271,7 +266,7 @@
 </head>
 
 <body>
-  <main class="page" data-gauges-root data-gauges-version="earth-diagnostic-console-b2">
+  <main class="page" data-gauges-root data-gauges-version="earth-spine-diagnostic-console-b3">
     <nav class="nav" aria-label="Primary navigation">
       <a class="brand" href="/">Diamond Gate Bridge</a>
       <div class="links">
@@ -288,14 +283,14 @@
     </nav>
 
     <section class="hero">
-      <p class="kicker">Generation 2 · Earth Diagnostic Console · B2</p>
+      <p class="kicker">Generation 2 · Earth Spine Diagnostic Console · B3</p>
       <h1>Gauges</h1>
-      <p class="headline" id="statusHeadline">Running direct Earth diagnostics.</p>
+      <p class="headline" id="statusHeadline">Running Earth Spine diagnostics.</p>
       <p class="lede">
-        This page now produces a diagnostic, not a checklist. It identifies whether the showroom problem is caused by missing assets, external-image limits, flat projection, renderer ownership, budget pressure, or visual-calibration drift.
+        Showroom is now tested as a consumer. Earth Canvas is tested as renderer owner. Earth Runtime is tested as control owner. The two local JPG assets are tested directly.
       </p>
 
-      <div class="summaryGrid" aria-label="Diagnostic summary">
+      <div class="summaryGrid">
         <div class="score">
           <span>Verdict</span>
           <strong id="verdictScore">—</strong>
@@ -307,14 +302,14 @@
           <small id="assetNote">Scanning</small>
         </div>
         <div class="score">
-          <span>Renderer</span>
-          <strong id="rendererScore">—</strong>
-          <small id="rendererNote">Scanning</small>
+          <span>Consumer</span>
+          <strong id="consumerScore">—</strong>
+          <small id="consumerNote">Scanning</small>
         </div>
         <div class="score">
-          <span>Budget</span>
-          <strong id="budgetScore">—</strong>
-          <small id="budgetNote">Scanning</small>
+          <span>Spine</span>
+          <strong id="spineScore">—</strong>
+          <small id="spineNote">Scanning</small>
         </div>
         <div class="score">
           <span>Drift</span>
@@ -331,23 +326,23 @@
     </section>
 
     <section class="panel">
-      <h2>Asset capability and asset gaps</h2>
+      <h2>Asset control</h2>
       <div class="list" id="assetLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>Renderer ownership and capability</h2>
-      <div class="list" id="rendererLedger"></div>
+      <h2>Showroom consumer contract</h2>
+      <div class="list" id="consumerLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>Budget and runtime pressure</h2>
-      <div class="list" id="budgetLedger"></div>
+      <h2>Earth renderer spine</h2>
+      <div class="list" id="spineLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>Visual target gap</h2>
-      <div class="list" id="visualLedger"></div>
+      <h2>Runtime control ownership</h2>
+      <div class="list" id="controlLedger"></div>
     </section>
 
     <section class="panel">
@@ -355,7 +350,7 @@
       <div class="list" id="todoList"></div>
     </section>
 
-    <nav class="routeRail" aria-label="Route rail">
+    <nav class="routeRail">
       <a href="/">Compass</a>
       <a href="/home/">Home</a>
       <a href="/prelude/">Prelude</a>
@@ -367,8 +362,8 @@
     </nav>
   </main>
 
-  <iframe id="showroomProbe" src="/showroom/?dgb_gauge_probe=earth_diagnostic_console_b2" title="Showroom diagnostic probe"></iframe>
+  <iframe id="showroomProbe" src="/showroom/?dgb_probe=earth_spine_b3" title="Showroom diagnostic probe"></iframe>
 
-  <script src="/gauges/gauges_health_runtime.js?v=earth-diagnostic-console-b2" defer></script>
+  <script src="/gauges/gauges_health_runtime.js?v=earth-spine-diagnostic-console-b3" defer></script>
 </body>
 </html>

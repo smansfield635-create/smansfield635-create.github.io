@@ -1,27 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<!-- TNT RENEWAL — /products/archcoin/index.html
+     ARCHCOIN · FOUR-COIN VAULT TEMPLATE SHELL · B3
+
+     RESULT:
+       - Makes ARCHCOIN read as the Vault Chamber financial-template page.
+       - Removes ordinary single-coin framing.
+       - Provides the shell expected by /products/archcoin/index.js.
+       - Adds four-coin transaction-template fallback copy.
+       - Preserves canvas field and local safe boot.
+       - No generated image.
+       - No external image.
+       - No graphic box.
+-->
+
+<html lang="en" data-page="archcoin-vault-chamber" data-generation="archcoin-four-coin-template-b3">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>ARCHCOIN | Products</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>ARCHCOIN · Four-Coin Vault Template · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="ARCHCOIN — a flagship financial-intelligence asset inside the Diamond Gate Bridge products chamber."
+    content="ARCHCOIN — the Vault Chamber four-coin financial transaction template inside Richie's Manor."
   />
+
   <style>
     :root{
       color-scheme:dark;
       --bg0:#020612;
       --bg1:#071427;
+      --panel:rgba(9,18,40,.82);
+      --panel2:rgba(10,20,46,.56);
       --line:rgba(173,212,255,.14);
-      --lineStrong:rgba(241,210,141,.22);
+      --line2:rgba(241,210,141,.22);
       --text:#edf5ff;
       --muted:#9fb2d2;
+      --muted2:rgba(159,178,210,.70);
+      --accent:#7fffd4;
       --gold:#f1d28d;
       --shadow:0 24px 60px rgba(0,0,0,.42);
+      --shadow2:0 24px 70px rgba(0,0,0,.46);
       --radiusXl:30px;
-      --radiusLg:24px;
-      --radiusMd:18px;
       --max:1180px;
     }
 
@@ -30,54 +48,26 @@
     html,body{
       margin:0;
       min-height:100%;
+      width:100%;
       background:
-        radial-gradient(circle at 16% 0%, rgba(58,103,188,.16), transparent 26%),
-        radial-gradient(circle at 84% 4%, rgba(241,210,141,.08), transparent 18%),
+        radial-gradient(circle at 16% 0%,rgba(58,103,188,.16),transparent 26%),
+        radial-gradient(circle at 84% 4%,rgba(241,210,141,.08),transparent 18%),
         linear-gradient(180deg,var(--bg1),var(--bg0));
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
     }
 
-    body{overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
 
-    .stars,.stars::before,.stars::after{
+    #fieldCanvas{
       position:fixed;
       inset:0;
-      pointer-events:none;
-      content:"";
-      display:block;
-      opacity:.88;
-      background-repeat:repeat;
+      width:100vw;
+      height:100vh;
       z-index:0;
+      pointer-events:none;
     }
-
-    .stars{
-      background-image:
-        radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.94) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 26% 72%, rgba(255,255,255,.78) 45%, transparent 55%),
-        radial-gradient(2px 2px at 68% 26%, rgba(255,255,255,.86) 45%, transparent 55%);
-      animation:starsA 28s linear infinite;
-    }
-
-    .stars::before{
-      background-image:
-        radial-gradient(1.5px 1.5px at 18% 40%, rgba(255,255,255,.72) 45%, transparent 55%),
-        radial-gradient(2px 2px at 42% 14%, rgba(255,255,255,.86) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,.68) 45%, transparent 55%);
-      animation:starsB 40s linear infinite;
-    }
-
-    .stars::after{
-      background-image:
-        radial-gradient(2px 2px at 16% 84%, rgba(255,255,255,.76) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 52% 56%, rgba(255,255,255,.84) 45%, transparent 55%),
-        radial-gradient(2px 2px at 78% 82%, rgba(255,255,255,.68) 45%, transparent 55%);
-      animation:starsC 46s linear infinite;
-    }
-
-    @keyframes starsA{from{transform:translate3d(0,0,0)}to{transform:translate3d(-16px,10px,0)}}
-    @keyframes starsB{from{transform:translate3d(0,0,0)}to{transform:translate3d(20px,-12px,0)}}
-    @keyframes starsC{from{transform:translate3d(0,0,0)}to{transform:translate3d(-10px,-16px,0)}}
 
     .page{
       position:relative;
@@ -87,281 +77,124 @@
       padding:20px 18px 56px;
     }
 
-    .topbar,.hero,.section{
+    .safe-fallback{
       position:relative;
-      overflow:hidden;
+      z-index:1;
       border:1px solid var(--line);
       border-radius:var(--radiusXl);
-      background:linear-gradient(180deg,rgba(9,18,40,.84),rgba(10,20,46,.56));
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
       box-shadow:var(--shadow);
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 18px;
-      margin-bottom:16px;
-      border-radius:999px;
-      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.48));
-      backdrop-filter:blur(10px);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brandMark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid rgba(241,210,141,.24);
-      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      box-shadow:0 12px 28px rgba(0,0,0,.24);
-      flex:0 0 auto;
-    }
-
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .brandSubtitle{
-      margin:0;
-      color:var(--muted);
-      font-size:.82rem;
-    }
-
-    .backLink{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      border:1px solid rgba(241,210,141,.26);
-      border-radius:999px;
-      padding:11px 16px;
-      background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84));
-      color:var(--text);
-      font-size:.82rem;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-
-    .hero{
-      padding:30px 24px 24px;
-      margin-bottom:16px;
-    }
-
-    .hero::before,.section::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
-        radial-gradient(circle at 84% 0%, rgba(255,240,193,.05), transparent 18%);
-    }
-
-    .eyebrow{
-      position:relative;
-      z-index:1;
-      margin:0 0 10px;
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:800;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .heroGrid{
-      position:relative;
-      z-index:1;
+      padding:24px;
       display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);
-      gap:20px;
-      align-items:center;
+      gap:16px;
     }
 
-    .heroTitle{
-      margin:0 0 12px;
+    .safe-fallback h1{
+      margin:0;
       font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(2.5rem,7vw,5rem);
       line-height:.92;
     }
 
-    .heroCopy{
+    .safe-fallback p{
       margin:0;
-      max-width:720px;
       color:var(--muted);
-      font-size:1rem;
-      line-height:1.72;
-    }
-
-    .coinWrap{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:260px;
-    }
-
-    .coin{
-      position:relative;
-      width:200px;
-      height:200px;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),
-        linear-gradient(145deg,#f7e3a8,#d5a84f 56%,#9e6f1d);
-      border:1px solid rgba(255,232,170,.40);
-      box-shadow:0 24px 60px rgba(0,0,0,.42), inset 0 0 34px rgba(255,255,255,.16);
-      display:grid;
-      place-items:center;
-    }
-
-    .coin::before{
-      content:"";
-      position:absolute;
-      inset:16px;
-      border-radius:999px;
-      border:1px solid rgba(255,247,220,.34);
-    }
-
-    .coin span{
-      position:relative;
-      z-index:1;
-      color:#1e1505;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.48rem;
-      font-weight:700;
-      line-height:.96;
-      text-align:center;
-      letter-spacing:.05em;
-    }
-
-    .section{
-      padding:22px;
-      margin-bottom:16px;
-    }
-
-    .sectionTitle{
-      position:relative;
-      z-index:1;
-      margin:0 0 12px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(1.6rem,4vw,2.4rem);
-      line-height:1.02;
-    }
-
-    .sectionCopy{
-      position:relative;
-      z-index:1;
-      margin:0 0 16px;
-      color:var(--muted);
-      font-size:.96rem;
       line-height:1.7;
-      max-width:760px;
+      max-width:820px;
     }
 
-    .grid{
-      position:relative;
-      z-index:1;
+    .fallback-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
     }
 
-    .card{
-      border:1px solid rgba(173,212,255,.10);
-      border-radius:20px;
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-      padding:18px;
+    .fallback-card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.035);
     }
 
-    .cardTitle{
-      margin:0 0 8px;
-      font-size:1rem;
-      font-weight:800;
-      line-height:1.22;
+    .fallback-card strong{
+      display:block;
+      color:var(--gold);
+      margin-bottom:8px;
     }
 
-    .cardCopy{
-      margin:0;
+    .fallback-card span{
+      display:block;
       color:var(--muted);
+      line-height:1.45;
       font-size:.92rem;
-      line-height:1.62;
     }
 
-    @media (max-width:960px){
-      .heroGrid,.grid{grid-template-columns:1fr}
-      .topbar{flex-direction:column;align-items:flex-start;border-radius:26px}
-      .coin{width:170px;height:170px}
+    @media(max-width:900px){
+      .fallback-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (prefers-reduced-motion:reduce){
-      .stars,.stars::before,.stars::after{animation:none}
+    @media(max-width:620px){
+      .fallback-grid{grid-template-columns:1fr}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      #fieldCanvas{display:none}
     }
   </style>
 </head>
-<body>
-  <div class="stars" aria-hidden="true"></div>
 
-  <main class="page">
-    <header class="topbar" aria-label="ARCHCOIN page header">
-      <div class="brand">
-        <div class="brandMark" aria-hidden="true"></div>
-        <div>
-          <p class="brandTitle">Diamond Gate Bridge</p>
-          <p class="brandSubtitle">Products / ARCHCOIN</p>
-        </div>
-      </div>
-      <a class="backLink" href="/products/">Back to Products</a>
-    </header>
+<body
+  data-location-frame="richies-manor-and-estate"
+  data-house-layer="vault"
+  data-vault-chamber="archcoin"
+  data-product-route="/products/archcoin/"
+  data-archcoin-read="four-coin-financial-transaction-template"
+>
+  <canvas id="fieldCanvas" aria-hidden="true"></canvas>
 
-    <section class="hero" aria-label="ARCHCOIN hero">
-      <p class="eyebrow">Flagship product</p>
-      <div class="heroGrid">
-        <div>
-          <h1 class="heroTitle">ARCHCOIN</h1>
-          <p class="heroCopy">
-            A premium financial-intelligence asset built to hold identity, scarcity, and ownership with a sharper public presence.
-          </p>
-        </div>
-        <div class="coinWrap" aria-hidden="true">
-          <div class="coin"><span>ARCH<br>COIN</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-label="ARCHCOIN opening extensions">
-      <p class="eyebrow">Initial extension blocks</p>
-      <h2 class="sectionTitle">Asset. Identity. Ownership.</h2>
-      <p class="sectionCopy">
-        This is the first extension surface for ARCHCOIN under the products chamber. It establishes the clean premium read now and leaves room for deeper Russian-doll expansion later.
+  <div id="app" class="page">
+    <main class="safe-fallback">
+      <h1>ARCHCOIN · Vault Chamber</h1>
+      <p>
+        ARCHCOIN is not a normal single coin. It is a four-coin financial transaction template for reading, routing, and binding value movement.
       </p>
-      <div class="grid">
-        <article class="card">
-          <h3 class="cardTitle">Value surface</h3>
-          <p class="cardCopy">ARCHCOIN should feel substantial on arrival, not like a hidden feature inside a larger stack.</p>
-        </article>
-        <article class="card">
-          <h3 class="cardTitle">Ownership signal</h3>
-          <p class="cardCopy">The product must present private ownership, scarcity, and identity with immediate clarity.</p>
-        </article>
-        <article class="card">
-          <h3 class="cardTitle">Brand anchor</h3>
-          <p class="cardCopy">ARCHCOIN remains one of the first visible truths in the products chamber and beyond it.</p>
-        </article>
+
+      <div class="fallback-grid" aria-label="ARCHCOIN four-coin template">
+        <div class="fallback-card">
+          <strong>North Coin</strong>
+          <span>Contract authority.</span>
+        </div>
+        <div class="fallback-card">
+          <strong>East Coin</strong>
+          <span>Inbound value / accounts receivable.</span>
+        </div>
+        <div class="fallback-card">
+          <strong>South Coin</strong>
+          <span>Outbound obligation / accounts payable.</span>
+        </div>
+        <div class="fallback-card">
+          <strong>West Coin</strong>
+          <span>Growth, marketing allocation, or GYP value flow.</span>
+        </div>
       </div>
-    </section>
-  </main>
+
+      <p>
+        The full local vault interface is loading.
+      </p>
+    </main>
+  </div>
+
+  <noscript>
+    <main class="page">
+      <section class="safe-fallback">
+        <h1>ARCHCOIN · Four-Coin Vault Template</h1>
+        <p>
+          JavaScript is off. ARCHCOIN remains the Vault Chamber route at /products/archcoin/.
+        </p>
+      </section>
+    </main>
+  </noscript>
+
+  <script src="/products/archcoin/index.js" defer></script>
 </body>
 </html>

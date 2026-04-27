@@ -1,20 +1,17 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B20 · CAMERA THE EARTH
+   EARTH ASSET SPINE · CANVAS B21 · FULL GLOBE / INTERNAL SHADOW
 
    CONTRACT:
-     - Render Earth as a large orbital body viewed from space.
-     - Do not force the full classroom globe into view.
-     - Earth may exceed the visible frame.
-     - Use inverse orthographic sphere sampling.
+     - Render Earth as a complete dimensional globe.
+     - Preserve the orbital/satellite surface read.
+     - Restore full visible globe silhouette.
+     - Add internal planetary shadow and limb depth.
+     - Do not reintroduce external rings, atmosphere shells, strokes, or halos.
      - Preserve local B5 JPG paths.
      - Preserve runtime API.
      - Preserve zoom, drag, spin, reset, pause.
      - Preserve targetFrameMs frame-budget marker.
      - Preserve 256-lattice status marker.
-     - No outer ring.
-     - No atmosphere shell.
-     - No final circular stroke.
-     - No detached crescent overlay.
 */
 
 (function () {
@@ -23,7 +20,7 @@
   var TAU = Math.PI * 2;
 
   var DEFAULTS = {
-    assetId: "earth-asset-b5-camera-earth-b20",
+    assetId: "earth-asset-b5-full-globe-shadow-b21",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
@@ -46,12 +43,17 @@
     maxZoom: 1.38,
     zoomStep: 0.08,
 
-    cameraRadius: 0.64,
-    cameraOffsetX: -0.07,
-    cameraOffsetY: 0.07,
+    cameraRadius: 0.472,
+    cameraOffsetX: 0,
+    cameraOffsetY: 0.015,
 
     cloudAlpha: 0,
-    edgeFeatherPx: 1.2
+    edgeFeatherPx: 0.9,
+
+    ambientLight: 0.28,
+    diffuseLight: 0.86,
+    limbShadow: 0.32,
+    nightShadow: 0.38
   };
 
   function clamp(value, min, max) {
@@ -118,7 +120,7 @@
         });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b20-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b21-" + Date.now();
     });
   }
 
@@ -240,10 +242,11 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b20-camera-earth");
-      mount.setAttribute("data-earth-projection", "camera-framed-inverse-orthographic");
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b21-full-globe-shadow");
+      mount.setAttribute("data-earth-projection", "full-globe-inverse-orthographic");
       mount.setAttribute("data-earth-lattice-scope", "256");
-      mount.setAttribute("data-earth-camera-mode", "orbital-crop");
+      mount.setAttribute("data-earth-camera-mode", "full-globe-orbital");
+      mount.setAttribute("data-earth-shadow-mode", "internal-planetary-shadow");
       mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
     }
 
@@ -303,14 +306,17 @@
       var maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
       var minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
       var maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
+      var light = normalize3(-0.58, 0.34, 0.74);
       var x;
       var y;
       var nx;
       var ny;
       var d2;
       var nz;
-      var i;
+      var diffuse;
+      var limb;
       var shade;
+      var i;
 
       for (y = minY; y <= maxY; y += 1) {
         ny = (geo.cy - y) / geo.r;
@@ -322,7 +328,10 @@
           if (d2 > 1) continue;
 
           nz = Math.sqrt(Math.max(0, 1 - d2));
-          shade = 0.48 + 0.42 * nz;
+          diffuse = clamp(nx * light.x + ny * light.y + nz * light.z, 0, 1);
+          limb = clamp(nz, 0, 1);
+          shade = 0.28 + diffuse * 0.70;
+          shade *= 0.72 + limb * 0.28;
 
           i = (y * geo.width + x) * 4;
           data[i] = 15 * shade;
@@ -366,6 +375,9 @@
       var i;
       var diffuse;
       var limb;
+      var terminator;
+      var sideShadow;
+      var bottomShadow;
       var shade;
       var edgePx;
       var alpha;
@@ -385,7 +397,7 @@
         return;
       }
 
-      light = normalize3(-0.36, 0.30, 0.88);
+      light = normalize3(-0.58, 0.34, 0.74);
 
       theta = rotation * TAU;
       sinT = Math.sin(theta);
@@ -438,12 +450,20 @@
           diffuse = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
           limb = clamp(nz, 0, 1);
 
-          shade = 0.48 + diffuse * 0.46;
-          shade *= 0.82 + limb * 0.18;
+          terminator = smoothstep(0.04, 0.82, diffuse);
+          sideShadow = smoothstep(0.18, 0.92, d) * (1 - limb);
+          bottomShadow = smoothstep(0.08, 0.88, -sy);
 
-          r = clamp(r * shade + 3, 0, 255);
-          g = clamp(g * shade + 3, 0, 255);
-          b = clamp(b * shade + 5, 0, 255);
+          shade = config.ambientLight + config.diffuseLight * terminator;
+          shade *= 1 - config.limbShadow * sideShadow;
+          shade *= 1 - config.nightShadow * smoothstep(0.02, 0.72, 1 - diffuse);
+          shade *= 1 - 0.10 * bottomShadow;
+
+          shade = clamp(shade, 0.14, 1.12);
+
+          r = clamp(r * shade + 2, 0, 255);
+          g = clamp(g * shade + 2, 0, 255);
+          b = clamp(b * shade + 4, 0, 255);
 
           edgePx = (1 - d) * geo.r;
           alpha = Math.round(255 * smoothstep(0, config.edgeFeatherPx, edgePx));
@@ -506,8 +526,9 @@
         surfaceReady: surfaceReady,
         cloudReady: cloudReady,
         cloudOverlayAlpha: config.cloudAlpha,
-        projection: "camera-framed-inverse-orthographic",
-        cameraMode: "orbital-crop",
+        projection: "full-globe-inverse-orthographic",
+        cameraMode: "full-globe-orbital",
+        shadowMode: "internal-planetary-shadow",
         latticeScope: 256,
         rotation: rotation,
         velocity: velocity,
@@ -639,7 +660,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b20-camera-earth",
+    version: "earth-canvas-b21-full-globe-shadow",
     create: createEarthRenderer
   };
 })();

@@ -1,310 +1,1286 @@
+
 <!DOCTYPE html>
-<html lang="en" data-build="index-generation-3-full-tnt-v1">
+<html lang="en" data-page="compass" data-generation="index-generation-3-round-world-tree-of-life">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Compass</title>
+  <title>Compass · Rich Manor and Estate</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: the Generation 3 first public reveal of Rich Manor and Estate, with Flat World locked as the verified 2D baseline."
+    content="Diamond Gate Bridge Compass for Rich Manor and Estate: Flat World route map, Round World Tree of Life estate view, and later Globe / Meta view."
   />
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <script src="/assets/page_registry.js" defer></script>
+
+  <style>
+    :root {
+      --bg: #05070d;
+      --bg-2: #08101a;
+      --panel: rgba(255,255,255,.075);
+      --panel-2: rgba(255,255,255,.105);
+      --line: rgba(255,255,255,.18);
+      --line-2: rgba(255,255,255,.32);
+      --text: #f6f0df;
+      --muted: rgba(246,240,223,.72);
+      --soft: rgba(246,240,223,.52);
+      --gold: #e9c86f;
+      --green: #8ccf9f;
+      --blue: #9cc8ff;
+      --earth: #b99268;
+      --deep: #101a15;
+      --danger: #ffb3a3;
+      --radius: 24px;
+      --shadow: 0 24px 80px rgba(0,0,0,.42);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(232,191,102,.20), transparent 28%),
+        radial-gradient(circle at 18% 24%, rgba(91,142,197,.14), transparent 24%),
+        radial-gradient(circle at 78% 28%, rgba(98,151,110,.12), transparent 26%),
+        linear-gradient(180deg, #05070d 0%, #07101a 48%, #06080e 100%);
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .62;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.50) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(255,255,255,.28) 0 1px, transparent 1.6px);
+      background-size: 96px 96px, 154px 154px;
+      background-position: 0 0, 33px 51px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.88), rgba(0,0,0,.18));
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus,
+    button:focus {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(5,7,13,.74);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 3px;
+      min-width: 210px;
+    }
+
+    .brand strong {
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      font-size: .82rem;
+      color: var(--gold);
+    }
+
+    .brand span {
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.045);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    nav a:hover {
+      border-color: var(--line-2);
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+    }
+
+    .hero {
+      position: relative;
+      padding: 78px 0 32px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .control-card,
+    .panel,
+    .estate-card,
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.045));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: clamp(28px, 5vw, 56px);
+      min-height: 440px;
+      display: grid;
+      align-content: center;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-size: .82rem;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.7rem, 8vw, 6.8rem);
+      line-height: .86;
+      letter-spacing: -.055em;
+    }
+
+    .lead {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2vw, 1.32rem);
+      line-height: 1.58;
+      max-width: 720px;
+    }
+
+    .control-card {
+      padding: 24px;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+    }
+
+    .mode-tabs {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mode-button {
+      width: 100%;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.055);
+      color: var(--text);
+      padding: 15px 16px;
+      text-align: left;
+      display: grid;
+      gap: 4px;
+      font: inherit;
+    }
+
+    .mode-button strong {
+      font-size: 1rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .mode-button span {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    body[data-active-mode="flat"] .mode-button[data-mode="flat"],
+    body[data-active-mode="round"] .mode-button[data-mode="round"],
+    body[data-active-mode="globe"] .mode-button[data-mode="globe"] {
+      border-color: rgba(233,200,111,.82);
+      background: linear-gradient(135deg, rgba(233,200,111,.22), rgba(255,255,255,.08));
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .status-chip {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,.15);
+    }
+
+    .status-chip b {
+      display: block;
+      color: var(--gold);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .status-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 5px;
+    }
+
+    .mode-panel {
+      display: none;
+      padding: 30px 0 74px;
+    }
+
+    body[data-active-mode="flat"] .mode-panel[data-view-mode="flat"],
+    body[data-active-mode="round"] .mode-panel[data-view-mode="round"],
+    body[data-active-mode="globe"] .mode-panel[data-view-mode="globe"] {
+      display: block;
+    }
+
+    .section-head {
+      margin: 0 0 22px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 850px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.85rem, 4vw, 3.5rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.16rem;
+      letter-spacing: .02em;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .flat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .route-card {
+      min-height: 150px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,.055);
+      display: grid;
+      align-content: space-between;
+      gap: 16px;
+    }
+
+    .route-card:hover {
+      border-color: var(--line-2);
+      background: rgba(255,255,255,.085);
+    }
+
+    .route-card small {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .72rem;
+    }
+
+    .route-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.42;
+    }
+
+    .flat-note,
+    .proof-note {
+      margin-top: 16px;
+      border: 1px solid rgba(140,207,159,.3);
+      border-radius: 20px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(140,207,159,.075);
+      line-height: 1.5;
+    }
+
+    .round-stage {
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(233,200,111,.17), transparent 23%),
+        radial-gradient(circle at 50% 50%, rgba(84,134,88,.18), transparent 36%),
+        linear-gradient(180deg, rgba(9,17,17,.96), rgba(9,10,13,.96));
+      box-shadow: var(--shadow);
+    }
+
+    .estate-sky {
+      padding: 26px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+    }
+
+    .estate-sky strong {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .82rem;
+    }
+
+    .estate-sky span {
+      color: var(--muted);
+    }
+
+    .estate-map {
+      position: relative;
+      min-height: 680px;
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    .estate-boundary {
+      position: absolute;
+      inset: 28px;
+      border: 2px solid rgba(233,200,111,.38);
+      border-radius: 42px;
+      background:
+        linear-gradient(90deg, rgba(110,88,50,.10), transparent 24%, transparent 76%, rgba(110,88,50,.10)),
+        radial-gradient(circle at 20% 70%, rgba(112,151,92,.20), transparent 20%),
+        radial-gradient(circle at 80% 73%, rgba(155,122,73,.18), transparent 22%);
+    }
+
+    .land-zone {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 24px;
+      padding: 14px;
+      background: rgba(255,255,255,.055);
+      color: var(--muted);
+      width: min(230px, 28vw);
+      z-index: 3;
+    }
+
+    .land-zone b {
+      display: block;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .land-zone small {
+      color: var(--soft);
+      line-height: 1.35;
+      display: block;
+    }
+
+    .farmland { left: 58px; bottom: 70px; }
+    .ranchland { right: 58px; bottom: 70px; }
+    .gardenland { left: 50%; bottom: 54px; transform: translateX(-50%); }
+
+    .uroad {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      width: min(640px, 78vw);
+      height: 360px;
+      transform: translate(-50%, -50%);
+      border-left: 24px solid rgba(205,180,132,.52);
+      border-right: 24px solid rgba(205,180,132,.52);
+      border-bottom: 24px solid rgba(205,180,132,.52);
+      border-top: 0;
+      border-radius: 0 0 280px 280px;
+      z-index: 2;
+      filter: drop-shadow(0 18px 24px rgba(0,0,0,.25));
+    }
+
+    .uroad::before,
+    .uroad::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      width: 8px;
+      height: 290px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+    }
+
+    .uroad::before { left: -16px; }
+    .uroad::after { right: -16px; }
+
+    .manor {
+      position: absolute;
+      left: 50%;
+      top: 68px;
+      transform: translateX(-50%);
+      width: min(420px, 72vw);
+      min-height: 150px;
+      z-index: 4;
+      display: grid;
+      justify-items: center;
+      align-content: end;
+    }
+
+    .manor-roof {
+      width: 68%;
+      height: 58px;
+      background: linear-gradient(135deg, rgba(233,200,111,.34), rgba(255,255,255,.08));
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      border: 1px solid rgba(233,200,111,.28);
+    }
+
+    .manor-body {
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid rgba(233,200,111,.34);
+      border-radius: 18px 18px 24px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.055));
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .manor-body b {
+      color: var(--gold);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .82rem;
+    }
+
+    .manor-body span {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: .92rem;
+    }
+
+    .oak {
+      position: absolute;
+      left: 50%;
+      top: 47%;
+      width: min(430px, 62vw);
+      height: min(430px, 62vw);
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      display: grid;
+      place-items: center;
+    }
+
+    .canopy {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 30%, rgba(166,209,129,.28), transparent 20%),
+        radial-gradient(circle at 70% 38%, rgba(137,188,122,.26), transparent 22%),
+        radial-gradient(circle at 47% 70%, rgba(91,143,88,.28), transparent 24%),
+        radial-gradient(circle at 50% 50%, rgba(62,102,69,.78), rgba(25,52,38,.82) 62%, rgba(10,24,20,.15) 72%);
+      border: 1px solid rgba(172,221,141,.20);
+      box-shadow: 0 30px 110px rgba(49,91,56,.42);
+    }
+
+    .trunk {
+      position: absolute;
+      bottom: 24px;
+      width: 74px;
+      height: 215px;
+      border-radius: 34px 34px 16px 16px;
+      background: linear-gradient(90deg, #5b3524, #9a6741, #4a2c1e);
+      border: 1px solid rgba(255,255,255,.12);
+      z-index: 2;
+    }
+
+    .roots {
+      position: absolute;
+      bottom: 20px;
+      width: 210px;
+      height: 52px;
+      border-bottom: 8px solid rgba(154,103,65,.86);
+      border-radius: 0 0 80px 80px;
+      z-index: 1;
+    }
+
+    .oak-label {
+      position: relative;
+      z-index: 3;
+      width: min(270px, 70%);
+      padding: 16px;
+      border: 1px solid rgba(233,200,111,.45);
+      border-radius: 22px;
+      background: rgba(4,8,6,.76);
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0,0,0,.35);
+    }
+
+    .oak-label b {
+      display: block;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .78rem;
+    }
+
+    .oak-label span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .ecosystem-rings {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 7;
+    }
+
+    .eco-dot {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(5,7,13,.76);
+      color: var(--muted);
+      font-size: .78rem;
+      white-space: nowrap;
+    }
+
+    .eco-root { left: 50%; top: 72%; transform: translateX(-50%); }
+    .eco-soil { left: 34%; top: 80%; }
+    .eco-bark { left: 58%; top: 58%; }
+    .eco-hollow { left: 32%; top: 45%; }
+    .eco-branch { left: 61%; top: 33%; }
+    .eco-canopy { left: 47%; top: 17%; }
+    .eco-garden { left: 25%; top: 62%; }
+    .eco-verge { left: 70%; top: 70%; }
+    .eco-clearing { left: 48%; top: 28%; }
+
+    .round-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .estate-card {
+      padding: 20px;
+      min-height: 170px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .estate-card small {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .72rem;
+    }
+
+    .estate-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .relationship-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      min-height: 126px;
+      box-shadow: none;
+      background: rgba(255,255,255,.055);
+    }
+
+    .mini-card b {
+      display: block;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      line-height: 1.38;
+      font-size: .93rem;
+    }
+
+    .proof-row {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .proof-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      color: var(--text);
+    }
+
+    .action.primary {
+      border-color: rgba(233,200,111,.62);
+      background: rgba(233,200,111,.16);
+    }
+
+    .globe-hold {
+      min-height: 380px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(156,200,255,.18), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+      padding: 34px;
+    }
+
+    .globe-hold div {
+      max-width: 760px;
+    }
+
+    .globe-hold p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 16px 0 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 40px;
+      color: var(--muted);
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .proof-row {
+        grid-template-columns: 1fr;
+      }
+
+      .flat-grid,
+      .round-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .relationship-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .status-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .estate-map {
+        min-height: 760px;
+      }
+
+      .land-zone {
+        width: 210px;
+      }
+
+      .farmland {
+        left: 42px;
+        bottom: 118px;
+      }
+
+      .ranchland {
+        right: 42px;
+        bottom: 118px;
+      }
+
+      .gardenland {
+        bottom: 38px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        align-items: flex-start;
+        padding: 14px 0;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .flat-grid,
+      .round-grid,
+      .relationship-grid,
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .estate-map {
+        min-height: 860px;
+        padding: 18px;
+      }
+
+      .estate-boundary {
+        inset: 18px;
+        border-radius: 28px;
+      }
+
+      .uroad {
+        width: 86vw;
+        height: 300px;
+        border-left-width: 16px;
+        border-right-width: 16px;
+        border-bottom-width: 16px;
+      }
+
+      .manor {
+        top: 44px;
+        width: 78vw;
+      }
+
+      .oak {
+        width: 330px;
+        height: 330px;
+        max-width: 78vw;
+        max-height: 78vw;
+        top: 45%;
+      }
+
+      .eco-dot {
+        font-size: .68rem;
+        padding: 6px 8px;
+      }
+
+      .land-zone {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        top: auto;
+        transform: none;
+        width: auto;
+        margin-top: 10px;
+      }
+
+      .estate-map .land-zone {
+        position: absolute;
+        width: calc(100% - 56px);
+      }
+
+      .farmland { left: 28px; bottom: 208px; }
+      .ranchland { left: 28px; bottom: 118px; }
+      .gardenland { left: 28px; bottom: 28px; transform: none; }
+    }
+  </style>
 </head>
 
 <body
-  class="manor-skin manor-house"
-  data-manor-skin="v1"
-  data-manor-room="compass"
-  data-manor-class="house"
-  data-manor-slot="H1_COMPASS"
-  data-manor-route="/"
-  data-manor-batch="BATCH_1_HOUSE"
-  data-page-id="compass"
-  data-route="/"
-  data-class-type="house_structure"
-  data-construct-code="H1_COMPASS"
-  data-house-anchor="compass"
-  data-skin-family="manor_house"
-  data-audit-priority="critical"
-  data-view-modes="flat round meta return"
-  data-registry-version="1.0.0"
-  data-view-mode="flat"
+  data-active-mode="flat"
   data-flat-world-baseline="locked"
-  data-generation="3"
+  data-round-world="tree-of-life"
+  data-round-scope="256-acre-estate"
+  data-round-primary-object="256-year-oak"
+  data-round-road-logic="u-road"
+  data-round-ecosystem="active"
 >
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/" aria-current="page">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Rich Manor and Estate Compass">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate · Compass</span>
+      </a>
 
-  <main class="manor-shell">
-    <section class="manor-room" aria-label="Generation 3 Compass">
-      <p class="manor-kicker">H1 · Compass · Generation 3 First Reveal</p>
+      <nav aria-label="Primary house routes">
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </div>
+  </header>
 
-      <h1 class="manor-title">Diamond Gate Bridge</h1>
+  <main>
+    <section class="hero" aria-labelledby="H1_COMPASS">
+      <div class="wrap hero-grid">
+        <article class="hero-card">
+          <p class="eyebrow">Compass · View selector</p>
+          <h1 id="H1_COMPASS">Rich Manor and Estate</h1>
+          <p class="lead">
+            Choose how to enter the estate. Flat World remains the verified 2D route map.
+            Round World now reveals the 256-acre estate as a living place centered on the
+            256-year-old sequoia-scale oak in front of the Manor. Globe / Meta remains later.
+          </p>
+        </article>
 
-      <p class="manor-lede">
-        Welcome to Rich Manor and Estate. The house is the subject. The universe is the environment.
-        The Compass controls how you see the house and where you enter next.
-      </p>
+        <aside class="control-card" aria-label="World view controls">
+          <div class="mode-tabs" role="tablist" aria-label="World view modes">
+            <button class="mode-button" type="button" data-mode="flat" role="tab" aria-selected="true">
+              <strong>World is flat</strong>
+              <span>Verified 2D public route map. Default frozen baseline.</span>
+            </button>
 
-      <div class="manor-divider"></div>
+            <button class="mode-button" type="button" data-mode="round" role="tab" aria-selected="false">
+              <strong>World is round</strong>
+              <span>Tree of Life / A Bug’s Life relational estate version.</span>
+            </button>
 
-      <section class="manor-stage" aria-label="View selector">
-        <p class="manor-kicker">Choose how you want to see the house.</p>
-
-        <h2 id="viewTitle">Flat World · verified 2D estate baseline</h2>
-
-        <p id="viewCopy" class="manor-lede">
-          Flat World is the current verified public website: six house parts, five product chambers,
-          nine planetary constructs, and Gauges live at 100.
-        </p>
-
-        <div class="manor-view-selector manor-grid" role="group" aria-label="Flat Round Meta view options">
-          <button class="manor-card" type="button" data-mode="flat">
-            <p class="manor-kicker">Active Baseline</p>
-            <h2>Flat</h2>
-            <p class="manor-lede">
-              See the house clearly. This is the verified 2D public route map.
-            </p>
-          </button>
-
-          <button class="manor-card" type="button" data-mode="round">
-            <p class="manor-kicker">Future Expansion</p>
-            <h2>Round</h2>
-            <p class="manor-lede">
-              Tree of Life / A Bug’s Life relational version. Available only as a controlled future expansion.
-            </p>
-          </button>
-
-          <button class="manor-card" type="button" data-mode="meta">
-            <p class="manor-kicker">Future Expansion</p>
-            <h2>Meta</h2>
-            <p class="manor-lede">
-              Globe / metaverse version. Available only as a controlled future expansion.
-            </p>
-          </button>
-        </div>
-
-        <section class="manor-proof-strip" aria-label="Flat World baseline proof" style="margin-top:18px">
-          <div class="manor-proof-item">
-            <strong>100</strong>
-            <span>House</span>
+            <button class="mode-button" type="button" data-mode="globe" role="tab" aria-selected="false">
+              <strong>World is a globe</strong>
+              <span>Meta version later. Not implemented in this pass.</span>
+            </button>
           </div>
-          <div class="manor-proof-item">
-            <strong>100</strong>
-            <span>Products</span>
+
+          <div class="status-strip" aria-label="Bound baseline status">
+            <div class="status-chip">
+              <b>Flat</b>
+              <span>Default</span>
+            </div>
+            <div class="status-chip">
+              <b>Round</b>
+              <span>Active build</span>
+            </div>
+            <div class="status-chip">
+              <b>Meta</b>
+              <span>Later</span>
+            </div>
+            <div class="status-chip">
+              <b>Gauges</b>
+              <span>Live authority</span>
+            </div>
           </div>
-          <div class="manor-proof-item">
-            <strong>100</strong>
-            <span>Planets</span>
-          </div>
-          <div class="manor-proof-item">
-            <strong>Live</strong>
-            <span>Gauges</span>
-          </div>
-        </section>
-
-        <p class="batch-note">
-          These numbers reflect the locked Flat World baseline. Use Gauges for the live served-site verification.
-        </p>
-      </section>
-
-      <section class="manor-stage" aria-label="Estate entry routes" style="margin-top:24px">
-        <p class="manor-kicker">Enter the estate</p>
-        <h2>The first public object is the house.</h2>
-        <p class="manor-lede">
-          The Compass is the first reveal. Door enters, Home receives, Products distributes,
-          Showroom proves, and Gauges verifies.
-        </p>
-
-        <div class="manor-grid">
-          <a class="manor-card" href="/door/">
-            <p class="manor-kicker">Entry</p>
-            <h2>Door</h2>
-            <p class="manor-lede">
-              Cross the gate and move from orientation into arrival.
-            </p>
-          </a>
-
-          <a class="manor-card" href="/home/">
-            <p class="manor-kicker">Arrival</p>
-            <h2>Home</h2>
-            <p class="manor-lede">
-              Enter the receiving hall and stabilize inside the Manor.
-            </p>
-          </a>
-
-          <a class="manor-card" href="/products/">
-            <p class="manor-kicker">Utility</p>
-            <h2>Products</h2>
-            <p class="manor-lede">
-              Move into the source-waterfall chamber and product wing.
-            </p>
-          </a>
-
-          <a class="manor-card" href="/showroom/">
-            <p class="manor-kicker">Proof</p>
-            <h2>Showroom</h2>
-            <p class="manor-lede">
-              See the public proof room and presentation layer.
-            </p>
-          </a>
-
-          <a class="manor-card" href="/gauges/">
-            <p class="manor-kicker">Verification</p>
-            <h2>Gauges</h2>
-            <p class="manor-lede">
-              Verify route health, product reachability, and planetary reachability.
-            </p>
-          </a>
-
-          <a class="manor-card" href="/nine-summits-of-love/">
-            <p class="manor-kicker">Summit</p>
-            <h2>Nine Summits of Love</h2>
-            <p class="manor-lede">
-              Visit the human-potential summit: 256 diamonds, 256 carats, written by this underdog.
-            </p>
-          </a>
-        </div>
-      </section>
-
-      <section class="manor-stage" aria-label="Flat World baseline" style="margin-top:24px">
-        <p class="manor-kicker">Flat World baseline locked</p>
-        <h2>World is flat means the verified 2D public website.</h2>
-        <p class="manor-lede">
-          When a visitor chooses Flat, this is the world they receive: the current estate map with
-          clear routes, canonical product chambers, hosted Frontier in Explore, hosted Upper Room in Big Laugh,
-          Nine Summits attached to the Manor, and Gauges as the live verification surface.
-        </p>
-
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">House</p>
-            <h2>Six house parts</h2>
-            <p class="manor-lede">Compass, Door, Home, Products, Showroom, and Gauges.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Products</p>
-            <h2>Five chambers</h2>
-            <p class="manor-lede">ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Planets</p>
-            <h2>Nine constructs</h2>
-            <p class="manor-lede">Prelude, Explore, Frontier, Laws, Governance, Upper Room, About, and the two Nine Summits surfaces.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="manor-stage" aria-label="Future worlds" style="margin-top:24px">
-        <p class="manor-kicker">Future controlled expansions</p>
-        <h2>Round and Meta are next worlds, not false live claims.</h2>
-        <p class="manor-lede">
-          Round belongs if and only if it preserves the Flat World baseline while adding the Tree of Life /
-          A Bug’s Life relational layer. Meta belongs if and only if it preserves the Manor as the subject
-          while placing the house inside the globe-scale universe.
-        </p>
-
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">Round</p>
-            <h2>Tree Version</h2>
-            <p class="manor-lede">
-              Future organic relationship map. It grows from the verified Flat World baseline.
-            </p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Meta</p>
-            <h2>Globe Version</h2>
-            <p class="manor-lede">
-              Future metaverse-scale view. The universe frames the Manor; it does not replace it.
-            </p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Return</p>
-            <h2>Verification</h2>
-            <p class="manor-lede">
-              Every future expansion must return to Gauges, backlinks, and the locked route law.
-            </p>
-          </article>
-        </div>
-      </section>
+        </aside>
+      </div>
     </section>
 
-    <section class="manor-backlinks" aria-label="House backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-      <ul class="manor-backlinks-list">
-        <li><a href="/door/">Door</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+    <section class="mode-panel" data-view-mode="flat" aria-label="Flat World verified route map">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Flat World · Verified route map</h2>
+          <p>
+            Flat World remains the locked 2D baseline. It preserves public route clarity,
+            house structure, product reachability, planetary attachment, and return to live Gauges.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="flat-grid">
+            <a class="route-card" href="/door/">
+              <small>Entry</small>
+              <h3>Door</h3>
+              <p>The threshold into Rich Manor and Estate.</p>
+            </a>
+
+            <a class="route-card" href="/home/">
+              <small>Receiving hall</small>
+              <h3>Home</h3>
+              <p>The stabilizing house anchor behind every view.</p>
+            </a>
+
+            <a class="route-card" href="/products/">
+              <small>Distribution</small>
+              <h3>Products</h3>
+              <p>The product wing remains under one controlled root.</p>
+            </a>
+
+            <a class="route-card" href="/showroom/">
+              <small>Proof</small>
+              <h3>Showroom</h3>
+              <p>The public proof surface and demonstration lobby.</p>
+            </a>
+
+            <a class="route-card" href="/gauges/">
+              <small>Verification</small>
+              <h3>Gauges</h3>
+              <p>Live site-health authority. No fake health claims here.</p>
+            </a>
+
+            <a class="route-card" href="#round-mode-summary" data-mode-jump="round">
+              <small>Living view</small>
+              <h3>Round World</h3>
+              <p>Switch to the living 256-acre estate view without changing routes.</p>
+            </a>
+          </div>
+
+          <div class="flat-note">
+            Flat World is preserved as the fallback. If Round mode fails to preserve Manor centrality,
+            route law, or Gauges truth, the page returns to this baseline expression.
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section class="manor-audit-strip" aria-label="Compass audit receipt">
-      <p class="manor-audit-title">Compass Generation 3 receipt</p>
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">house-class</li>
-        <li class="manor-audit-chip pass">H1_COMPASS</li>
-        <li class="manor-audit-chip pass">flat-world-baseline</li>
-        <li class="manor-audit-chip pass">generation-3</li>
-      </ul>
-      <p class="batch-note">
-        Index Generation 3 belongs if and only if it preserves the locked Flat World baseline and clarifies Compass as the first public reveal.
-      </p>
+    <section
+      class="mode-panel"
+      data-view-mode="round"
+      data-round-world="tree-of-life"
+      data-round-scope="256-acre-estate"
+      data-round-primary-object="256-year-oak"
+      data-round-road-logic="u-road"
+      data-round-ecosystem="active"
+      aria-label="Round World Tree of Life estate view"
+    >
+      <div class="wrap">
+        <div class="section-head" id="round-mode-summary">
+          <h2>World is round · The 256-acre estate as a living place</h2>
+          <p>
+            A 256-year-old sequoia-scale oak stands in front of the Manor. Two estate roads
+            curve around it in a U-shape. The land stretches into farms, ranch ground, gardens,
+            roads, and living ecosystem zones around the tree.
+          </p>
+        </div>
+
+        <div class="round-stage" aria-label="Round World estate model">
+          <div class="estate-sky">
+            <div>
+              <strong>Scope</strong>
+              <span>256-acre estate only · not the whole universe</span>
+            </div>
+            <div>
+              <strong>Authority</strong>
+              <span>Manor central · oak foreground · road motion</span>
+            </div>
+            <div>
+              <strong>Proof</strong>
+              <span>Return to live Gauges after upload</span>
+            </div>
+          </div>
+
+          <div class="estate-map">
+            <div class="estate-boundary" aria-hidden="true"></div>
+
+            <div class="manor" aria-label="Manor behind the oak">
+              <div class="manor-roof"></div>
+              <div class="manor-body">
+                <b>Rich Manor</b>
+                <span>Central architectural authority behind the oak.</span>
+              </div>
+            </div>
+
+            <div class="uroad" aria-label="U-shaped road around the oak"></div>
+
+            <div class="oak" aria-label="256-year-old sequoia-scale oak">
+              <div class="canopy"></div>
+              <div class="trunk"></div>
+              <div class="roots"></div>
+              <div class="oak-label">
+                <b>256-Year Oak</b>
+                <span>Sequoia-scale oak in front of the Manor. Structural foreground, not decoration.</span>
+              </div>
+            </div>
+
+            <div class="ecosystem-rings" aria-label="Oak ecosystem zones">
+              <span class="eco-dot eco-root">Roots</span>
+              <span class="eco-dot eco-soil">Soil</span>
+              <span class="eco-dot eco-bark">Bark</span>
+              <span class="eco-dot eco-hollow">Hollows</span>
+              <span class="eco-dot eco-branch">Branches</span>
+              <span class="eco-dot eco-canopy">Canopy</span>
+              <span class="eco-dot eco-garden">Garden bed</span>
+              <span class="eco-dot eco-verge">Road verge</span>
+              <span class="eco-dot eco-clearing">Manor clearing</span>
+            </div>
+
+            <div class="land-zone farmland">
+              <b>Farmland</b>
+              <small>Ordinary working estate land. Grounded scale, cultivation, and support.</small>
+            </div>
+
+            <div class="land-zone ranchland">
+              <b>Ranch land</b>
+              <small>Ordinary estate breadth. Utility, movement, animals, and open land.</small>
+            </div>
+
+            <div class="land-zone gardenland">
+              <b>Garden</b>
+              <small>Cultivated transition between Manor, oak, ecosystem, and visitor approach.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="round-grid">
+          <article class="estate-card">
+            <small>Estate boundary</small>
+            <h3>256 acres only</h3>
+            <p>Round World maps the estate, not the whole universe. The universe remains environmental context only.</p>
+          </article>
+
+          <article class="estate-card">
+            <small>Manor</small>
+            <h3>Central authority</h3>
+            <p>The oak mediates approach. It does not replace the house. Every view returns to the Manor.</p>
+          </article>
+
+          <article class="estate-card">
+            <small>Oak</small>
+            <h3>Living foreground</h3>
+            <p>The 256-year-old oak carries route, ecosystem, product, planet, summit, and proof relationships.</p>
+          </article>
+
+          <article class="estate-card">
+            <small>U-road</small>
+            <h3>Motion logic</h3>
+            <p>The two roads create approach, choice, circulation, and return around the oak.</p>
+          </article>
+
+          <article class="estate-card">
+            <small>Ecosystem</small>
+            <h3>Living proof</h3>
+            <p>Animals, plants, insects, roots, soil, bark, hollows, branches, canopy, garden bed, verge, and clearing.</p>
+          </article>
+
+          <article class="estate-card">
+            <small>Fallback</small>
+            <h3>Flat remains default</h3>
+            <p>If Round cannot preserve clarity, route law, and Gauges truth, return to Flat World baseline.</p>
+          </article>
+        </div>
+
+        <div class="panel" style="margin-top:14px;">
+          <div class="section-head">
+            <h2>House, product, planet, and summit relationships</h2>
+            <p>
+              Round World expresses existing relationships through the estate model.
+              It does not create new routes, split product roots, or detach planetary constructs from the Manor.
+            </p>
+          </div>
+
+          <div class="relationship-grid">
+            <article class="mini-card">
+              <b>Compass</b>
+              <span>Mode selector: Flat route map, Round living estate, Globe later.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Door</b>
+              <span>Threshold sequence: road curve, oak encounter, clearing, Manor entry.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Home</b>
+              <span>The Manor receives and stabilizes behind the oak.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Products</b>
+              <span>Product chambers remain under Products; Round shows roots, branches, soil, and flow.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>ARCHCOIN</b>
+              <span>Root contract and value-flow relation. No product root split.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Five Flags</b>
+              <span>Estate markers and identity branch signals.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>On Your Side AAI</b>
+              <span>Guide path and practical helper signal along the approach.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Education</b>
+              <span>Branch progression and nested learning paths through the estate.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Nutrition</b>
+              <span>Soil, roots, nourishment, and support-not-shame baseline.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Planetary constructs</b>
+              <span>Canopy and outer estate relations attached to the Manor.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Nine Summits Universe</b>
+              <span>Macro canopy relationship. Larger summit field remains attached.</span>
+            </article>
+
+            <article class="mini-card">
+              <b>Nine Summits of Love</b>
+              <span>256 diamonds / 256 carats of human potential, written by this underdog.</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="proof-row">
+          <article class="panel">
+            <h3>Gauges return / proof</h3>
+            <p class="proof-note">
+              This Index can show Round mode as a living estate structure. It does not claim final health by itself.
+              After upload, live Gauges remain the authority for route health, house skeleton, product reachability,
+              planetary reachability, and overall site stability.
+            </p>
+            <div class="proof-actions">
+              <a class="action primary" href="/gauges/">Open Gauges</a>
+              <a class="action" href="/products/">Open Products</a>
+              <a class="action" href="/showroom/">Open Showroom</a>
+            </div>
+          </article>
+
+          <article class="panel">
+            <h3>Round build condition</h3>
+            <p class="proof-note">
+              Round belongs if and only if it preserves Flat as default, maps only the 256-acre estate,
+              keeps the Manor central, makes the oak structural, makes the U-road motion logic,
+              includes ordinary estate land, and preserves Gauges truth.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="mode-panel" data-view-mode="globe" aria-label="Globe Meta later state">
+      <div class="wrap">
+        <div class="globe-hold">
+          <div>
+            <p class="eyebrow">Globe / Meta · Later state</p>
+            <h2>Meta version is not implemented in this pass.</h2>
+            <p>
+              The Globe view remains reserved for the later full metaverse version.
+              This file does not create a fake renderer, fake route health, fake 3D engine,
+              or universe-scope map. Current active build is Round World on the 256-acre estate only.
+            </p>
+            <div class="proof-actions" style="justify-content:center;">
+              <a class="action primary" href="#H1_COMPASS" data-mode-jump="flat">Return to Flat</a>
+              <a class="action" href="#round-mode-summary" data-mode-jump="round">View Round Estate</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
+  <footer>
+    <div class="wrap">
+      <span>Flat World baseline locked. Round World Tree of Life active on Index only.</span>
+      <span>Current room identity: Website Building and Implementation.</span>
+    </div>
+  </footer>
+
   <script>
     (function () {
-      "use strict";
-
-      var body = document.body;
-      var title = document.getElementById("viewTitle");
-      var copy = document.getElementById("viewCopy");
-
-      var modes = {
-        flat: {
-          title: "Flat World · verified 2D estate baseline",
-          copy: "Flat World is the current verified public website: six house parts, five product chambers, nine planetary constructs, and Gauges live at 100."
-        },
-        round: {
-          title: "Round World · future Tree of Life expansion",
-          copy: "Round World is the future Tree of Life / A Bug’s Life relational version. It belongs only when it preserves the verified Flat World baseline."
-        },
-        meta: {
-          title: "Meta World · future globe-scale expansion",
-          copy: "Meta World is the future globe / metaverse version. It belongs only when the Manor remains central and the universe stays environmental."
-        }
-      };
+      const allowedModes = new Set(["flat", "round", "globe"]);
+      const buttons = Array.from(document.querySelectorAll("[data-mode]"));
+      const jumpers = Array.from(document.querySelectorAll("[data-mode-jump]"));
 
       function setMode(mode) {
-        var next = modes[mode] ? mode : "flat";
-        body.setAttribute("data-view-mode", next);
-        title.textContent = modes[next].title;
-        copy.textContent = modes[next].copy;
+        if (!allowedModes.has(mode)) mode = "flat";
+        document.body.dataset.activeMode = mode;
+
+        buttons.forEach((button) => {
+          const selected = button.dataset.mode === mode;
+          button.setAttribute("aria-selected", selected ? "true" : "false");
+        });
+
+        try {
+          window.localStorage.setItem("dgb_compass_mode", mode);
+        } catch (error) {
+          /* Local storage is optional. Flat fallback remains available. */
+        }
       }
 
-      document.querySelectorAll("[data-mode]").forEach(function (button) {
-        button.addEventListener("click", function () {
-          setMode(button.getAttribute("data-mode"));
-        });
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => setMode(button.dataset.mode));
       });
 
-      setMode("flat");
+      jumpers.forEach((link) => {
+        link.addEventListener("click", () => setMode(link.dataset.modeJump));
+      });
+
+      let savedMode = "flat";
+      try {
+        savedMode = window.localStorage.getItem("dgb_compass_mode") || "flat";
+      } catch (error) {
+        savedMode = "flat";
+      }
+
+      setMode(allowedModes.has(savedMode) ? savedMode : "flat");
     })();
   </script>
 </body>

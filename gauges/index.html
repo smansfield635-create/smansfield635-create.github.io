@@ -1,504 +1,88 @@
-<!DOCTYPE html>
-<html lang="en" data-manor-registry="house-batch-1" data-gauges-mode="product-chamber-deep-audit">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges is the live diagnostic instrument room for Diamond Gate Bridge, including Batch 1 house audit and Batch 2 product-chamber deep audit." />
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <script src="/assets/page_registry.js" defer></script>
-  <style>
-    body {
-      margin: 0;
-      background: #020713;
-      color: #eef3ff;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+Compass
+Door
+Home
+Products
+Showroom
+Gauges
+H6 · Gauges · Diagnostic Instrument Room
+Live site-health instruments.
+Gauges now verifies two layers: Batch 1 house structure and Batch 2 product-chamber depth. Product pages must prove internal chamber markers, not route existence alone.
 
-    .gauge-number {
-      font-size: clamp(2rem, 7vw, 5rem);
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      color: var(--manor-gold, #f4c967);
-    }
+Overall health
+100
+OPTIMAL / live route law stable
 
-    .gauge-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      border-top: 1px solid rgba(244, 201, 103, 0.22);
-      padding: 14px 0;
-    }
+Route integrity
+100
+House routes and canonical product destinations.
 
-    .gauge-row:first-child {
-      border-top: 0;
-    }
+Product chamber depth
+100
+Batch 2 markers, parent binding, and product identity.
 
-    .gauge-group {
-      margin-top: 24px;
-    }
+Live audit table
+Batch 1 · House skeleton
 
-    .gauge-group-title {
-      margin: 0 0 8px;
-      color: var(--manor-gold-soft, #ffe3a3);
-      font-size: 0.88rem;
-      font-weight: 850;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
+Compass
+/
+5 of 5 required markers found.
+100
+Door
+/door/
+5 of 5 required markers found.
+100
+Home
+/home/
+5 of 5 required markers found.
+100
+Products
+/products/
+5 of 5 required markers found.
+100
+Showroom
+/showroom/
+5 of 5 required markers found.
+100
+Gauges
+/gauges/
+4 of 4 required markers found.
+100
+Batch 2 · Product chamber deep audit
 
-    .status-pass {
-      color: #84e1bc;
-    }
+ARCHCOIN
+/products/archcoin/
+6 of 6 required markers found.
+100
+Five Flags
+/products/five-flags/
+6 of 6 required markers found.
+100
+On Your Side AAI
+/products/on-your-side-ai/
+6 of 6 required markers found.
+100
+ESL Traversal Learning
+/products/education/
+6 of 6 required markers found.
+100
+Baseline Nutrition Systems
+/products/nutrition/
+6 of 6 required markers found.
+100
+House backlinks
 
-    .status-warn {
-      color: #f4c967;
-    }
+Compass
+Door
+Home
+Products
+Showroom
+Gauges · active
+Batch 2B audit markers
 
-    .status-fail {
-      color: #ff8a8a;
-    }
-
-    code {
-      color: #ffe3a3;
-      word-break: break-word;
-    }
-
-    .marker-list {
-      margin: 6px 0 0;
-      padding: 0;
-      list-style: none;
-      color: #b8c2d8;
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .marker-list li::before {
-      content: "• ";
-      color: #f4c967;
-    }
-
-    .gauge-small {
-      color: #b8c2d8;
-      font-size: 0.94rem;
-      line-height: 1.6;
-    }
-  </style>
-</head>
-
-<body
-  class="manor-skin manor-house"
-  data-manor-skin="v1"
-  data-manor-room="gauges"
-  data-manor-class="house"
-  data-manor-slot="H6_GAUGES"
-  data-manor-route="/gauges/"
-  data-manor-batch="BATCH_1_HOUSE"
-  data-gauges-runtime-preserved="renewed-live-calculated"
-  data-gauges-deep-audit="BATCH_2B_PRODUCT_CHAMBER_DEEP_AUDIT"
->
-  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/" aria-current="page" class="is-active manor-active-compass">Gauges</a>
-  </nav>
-
-  <main class="manor-shell">
-    <section class="manor-room manor-lattice-mark">
-      <p class="manor-kicker">H6 · Gauges · Diagnostic Instrument Room</p>
-      <h1 class="manor-title">Live site-health instruments.</h1>
-      <p class="manor-lede">
-        Gauges now verifies two layers: Batch 1 house structure and Batch 2 product-chamber depth.
-        Product pages must prove internal chamber markers, not route existence alone.
-      </p>
-
-      <div class="manor-divider"></div>
-
-      <div class="manor-grid three">
-        <article class="manor-card">
-          <p class="manor-room-label">Overall health</p>
-          <div class="gauge-number" id="overallScore">--</div>
-          <p id="overallStatus">Running live audit…</p>
-        </article>
-
-        <article class="manor-card">
-          <p class="manor-room-label">Route integrity</p>
-          <div class="gauge-number" id="routeScore">--</div>
-          <p>House routes and canonical product destinations.</p>
-        </article>
-
-        <article class="manor-card">
-          <p class="manor-room-label">Product chamber depth</p>
-          <div class="gauge-number" id="productScore">--</div>
-          <p>Batch 2 markers, parent binding, and product identity.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="manor-room" style="margin-top:28px">
-      <p class="manor-kicker">Live audit table</p>
-      <div id="auditRows">Preparing checks…</div>
-    </section>
-
-    <section class="manor-backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-      <ul class="manor-backlinks-list">
-        <li><a href="/">Compass</a></li>
-        <li><a href="/door/">Door</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/gauges/" aria-current="page">Gauges · active</a></li>
-      </ul>
-    </section>
-
-    <section class="manor-audit-strip">
-      <p class="manor-audit-title">Batch 2B audit markers</p>
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass" data-status="pass">route-exists</li>
-        <li class="manor-audit-chip pass" data-status="pass">manor-skin</li>
-        <li class="manor-audit-chip pass" data-status="pass">house-class</li>
-        <li class="manor-audit-chip pass" data-status="pass">H6_GAUGES</li>
-        <li class="manor-audit-chip pass" data-status="pass">live-calculated</li>
-        <li class="manor-audit-chip pass" data-status="pass">product-chamber-deep-audit</li>
-      </ul>
-      <p class="gauge-small">
-        Batch 2B rule: a product destination must be reachable and must prove product-chamber markers.
-        Reachability alone no longer counts as full product stability.
-      </p>
-    </section>
-  </main>
-
-  <script>
-    (function () {
-      "use strict";
-
-      var houseChecks = [
-        {
-          kind: "house",
-          id: "compass",
-          label: "Compass",
-          route: "/",
-          markers: [
-            'data-manor-room="compass"',
-            'data-manor-class="house"',
-            "/door/",
-            "/products/",
-            "/gauges/"
-          ]
-        },
-        {
-          kind: "house",
-          id: "door",
-          label: "Door",
-          route: "/door/",
-          markers: [
-            'data-manor-room="door"',
-            'data-manor-class="house"',
-            "/home/",
-            "/products/",
-            "/gauges/"
-          ]
-        },
-        {
-          kind: "house",
-          id: "home",
-          label: "Home",
-          route: "/home/",
-          markers: [
-            'data-manor-room="home"',
-            'data-manor-class="house"',
-            "/door/",
-            "/products/",
-            "/gauges/"
-          ]
-        },
-        {
-          kind: "house",
-          id: "products",
-          label: "Products",
-          route: "/products/",
-          markers: [
-            'data-manor-room="products"',
-            'data-manor-class="house"',
-            "/products/archcoin/",
-            "/products/on-your-side-ai/",
-            "/gauges/"
-          ]
-        },
-        {
-          kind: "house",
-          id: "showroom",
-          label: "Showroom",
-          route: "/showroom/",
-          markers: [
-            'data-manor-room="showroom"',
-            'data-manor-class="house"',
-            "/",
-            "/products/",
-            "/gauges/"
-          ]
-        },
-        {
-          kind: "house",
-          id: "gauges",
-          label: "Gauges",
-          route: "/gauges/",
-          markers: [
-            'data-manor-room="gauges"',
-            'data-manor-class="house"',
-            "live-calculated",
-            "product-chamber-deep-audit"
-          ]
-        }
-      ];
-
-      var productChecks = [
-        {
-          kind: "product",
-          id: "archcoin",
-          label: "ARCHCOIN",
-          route: "/products/archcoin/",
-          markers: [
-            'data-manor-class="product-chamber"',
-            'data-product-id="archcoin"',
-            'data-product-parent="/products/"',
-            'data-manor-batch="BATCH_2_PRODUCTS"',
-            "archcoin-not-planet",
-            "four-coin-template"
-          ]
-        },
-        {
-          kind: "product",
-          id: "five-flags",
-          label: "Five Flags",
-          route: "/products/five-flags/",
-          markers: [
-            'data-manor-class="product-chamber"',
-            'data-product-id="five-flags"',
-            'data-product-parent="/products/"',
-            'data-manor-batch="BATCH_2_PRODUCTS"',
-            "five-flags",
-            "canonical-destination"
-          ]
-        },
-        {
-          kind: "product",
-          id: "on-your-side-ai",
-          label: "On Your Side AAI",
-          route: "/products/on-your-side-ai/",
-          markers: [
-            'data-manor-class="product-chamber"',
-            'data-product-id="on-your-side-ai"',
-            'data-product-parent="/products/"',
-            'data-manor-batch="BATCH_2_PRODUCTS"',
-            "on-your-side-aai",
-            "bounded-assistance"
-          ]
-        },
-        {
-          kind: "product",
-          id: "education",
-          label: "ESL Traversal Learning",
-          route: "/products/education/",
-          markers: [
-            'data-manor-class="product-chamber"',
-            'data-product-id="education"',
-            'data-product-parent="/products/"',
-            'data-manor-batch="BATCH_2_PRODUCTS"',
-            "education",
-            "traversal-learning"
-          ]
-        },
-        {
-          kind: "product",
-          id: "nutrition",
-          label: "Baseline Nutrition Systems",
-          route: "/products/nutrition/",
-          markers: [
-            'data-manor-class="product-chamber"',
-            'data-product-id="nutrition"',
-            'data-product-parent="/products/"',
-            'data-manor-batch="BATCH_2_PRODUCTS"',
-            "nutrition",
-            "support-not-shame"
-          ]
-        }
-      ];
-
-      function setText(id, value) {
-        var node = document.getElementById(id);
-        if (node) node.textContent = String(value);
-      }
-
-      function average(values) {
-        if (!values.length) return 0;
-        return Math.round(values.reduce(function (sum, value) {
-          return sum + value;
-        }, 0) / values.length);
-      }
-
-      function statusClass(score) {
-        if (score >= 90) return "status-pass";
-        if (score >= 70) return "status-warn";
-        return "status-fail";
-      }
-
-      function statusLabel(score) {
-        if (score >= 90) return "OPTIMAL / live route law stable";
-        if (score >= 70) return "ACTIVE / refinement required";
-        return "UNSTABLE / repair required";
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      function fetchText(route) {
-        return fetch(route, { cache: "no-store" })
-          .then(function (response) {
-            return response.text().then(function (text) {
-              return {
-                ok: response.ok,
-                status: response.status,
-                text: text
-              };
-            });
-          })
-          .catch(function (error) {
-            return {
-              ok: false,
-              status: 0,
-              text: "",
-              error: error && error.message ? error.message : "fetch-failed"
-            };
-          });
-      }
-
-      function runCheck(definition) {
-        return fetchText(definition.route).then(function (result) {
-          var hits = definition.markers.filter(function (marker) {
-            return result.text.indexOf(marker) !== -1;
-          });
-
-          var missing = definition.markers.filter(function (marker) {
-            return result.text.indexOf(marker) === -1;
-          });
-
-          var routePoints = result.ok ? 40 : 0;
-          var markerPoints = Math.round((hits.length / definition.markers.length) * 60);
-          var score = routePoints + markerPoints;
-
-          return {
-            kind: definition.kind,
-            id: definition.id,
-            label: definition.label,
-            route: definition.route,
-            ok: result.ok,
-            status: result.status,
-            score: score,
-            hitCount: hits.length,
-            requiredCount: definition.markers.length,
-            hits: hits,
-            missing: missing
-          };
-        });
-      }
-
-      function renderRows(title, results) {
-        var rows = results.map(function (result) {
-          var markerNote = result.hitCount + " of " + result.requiredCount + " required markers found.";
-          var missingHtml = "";
-
-          if (result.missing.length) {
-            missingHtml =
-              '<ul class="marker-list">' +
-              result.missing.map(function (marker) {
-                return "<li>missing: <code>" + escapeHtml(marker) + "</code></li>";
-              }).join("") +
-              "</ul>";
-          }
-
-          return (
-            '<div class="gauge-row">' +
-              "<div>" +
-                "<strong>" + escapeHtml(result.label) + "</strong><br>" +
-                "<code>" + escapeHtml(result.route) + "</code><br>" +
-                '<span class="gauge-small">' + escapeHtml(markerNote) + "</span>" +
-                missingHtml +
-              "</div>" +
-              '<div class="' + statusClass(result.score) + '"><strong>' + result.score + "</strong></div>" +
-            "</div>"
-          );
-        }).join("");
-
-        return (
-          '<div class="gauge-group">' +
-            '<p class="gauge-group-title">' + escapeHtml(title) + "</p>" +
-            rows +
-          "</div>"
-        );
-      }
-
-      Promise.all(houseChecks.concat(productChecks).map(runCheck)).then(function (results) {
-        var houseResults = results.filter(function (result) {
-          return result.kind === "house";
-        });
-
-        var productResults = results.filter(function (result) {
-          return result.kind === "product";
-        });
-
-        var allReachability = results.map(function (result) {
-          return result.ok ? 100 : 0;
-        });
-
-        var houseMarkerScores = houseResults.map(function (result) {
-          return result.score;
-        });
-
-        var productMarkerScores = productResults.map(function (result) {
-          return result.score;
-        });
-
-        var routeScore = average(allReachability);
-        var houseScore = average(houseMarkerScores);
-        var productScore = average(productMarkerScores);
-        var overallScore = average([routeScore, houseScore, productScore]);
-
-        setText("overallScore", overallScore);
-        setText("routeScore", routeScore);
-        setText("productScore", productScore);
-
-        var overallStatus = document.getElementById("overallStatus");
-        if (overallStatus) {
-          overallStatus.textContent = statusLabel(overallScore);
-          overallStatus.className = statusClass(overallScore);
-        }
-
-        var auditRows = document.getElementById("auditRows");
-        if (auditRows) {
-          auditRows.innerHTML =
-            renderRows("Batch 1 · House skeleton", houseResults) +
-            renderRows("Batch 2 · Product chamber deep audit", productResults);
-        }
-
-        document.documentElement.setAttribute("data-gauges-route-score", String(routeScore));
-        document.documentElement.setAttribute("data-gauges-house-score", String(houseScore));
-        document.documentElement.setAttribute("data-gauges-product-score", String(productScore));
-        document.documentElement.setAttribute("data-gauges-overall-score", String(overallScore));
-      });
-    })();
-  </script>
-</body>
-</html>
+route-exists
+manor-skin
+house-class
+H6_GAUGES
+live-calculated
+product-chamber-deep-audit
+Batch 2B rule: a product destination must be reachable and must prove product-chamber markers. Reachability alone no longer counts as full product stability.

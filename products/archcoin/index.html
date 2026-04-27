@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-product-generation="archcoin-b10-vault-chamber-upgrade">
+<html lang="en" data-product-generation="archcoin-b11-manor-vault-color-alignment">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -12,19 +12,22 @@
   <style>
     :root{
       color-scheme:dark;
-      --bg:#020713;
-      --panel:rgba(7,15,31,.82);
-      --panel2:rgba(5,10,22,.94);
-      --line:rgba(255,255,255,.13);
-      --line2:rgba(127,255,212,.24);
-      --text:#f4f8ff;
-      --muted:#aebdd8;
-      --soft:rgba(174,189,216,.74);
-      --gold:#f1d28d;
-      --accent:#7fffd4;
-      --blue:#7ecbff;
-      --red:#ff7582;
-      --shadow:0 24px 86px rgba(0,0,0,.52);
+      --bg:#050915;
+      --bg2:#09172c;
+      --panel:rgba(12,18,32,.86);
+      --panel2:rgba(8,12,22,.96);
+      --line:rgba(255,218,150,.22);
+      --line2:rgba(255,218,150,.34);
+      --text:#fff8ea;
+      --muted:#c9d2ea;
+      --soft:rgba(201,210,234,.74);
+      --gold:#ffd98a;
+      --gold2:#f1c46d;
+      --amber:#d78b42;
+      --copper:#9b5632;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --shadow:0 24px 86px rgba(0,0,0,.54);
       --max:1240px;
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
@@ -38,10 +41,10 @@
       margin:0;
       min-height:100%;
       background:
-        radial-gradient(circle at 50% 8%,rgba(126,203,255,.16),transparent 30%),
-        radial-gradient(circle at 14% 26%,rgba(127,255,212,.10),transparent 34%),
-        radial-gradient(circle at 86% 18%,rgba(241,210,141,.10),transparent 30%),
-        linear-gradient(180deg,#020713 0%,#07162d 48%,#02040c 100%);
+        radial-gradient(circle at 50% 88%,rgba(215,139,66,.24),transparent 30%),
+        radial-gradient(circle at 18% 18%,rgba(91,132,205,.22),transparent 34%),
+        radial-gradient(circle at 82% 20%,rgba(255,218,150,.10),transparent 30%),
+        linear-gradient(180deg,#050915 0%,#09172c 46%,#201019 78%,#3a1b12 100%);
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
       overflow-x:hidden;
@@ -61,7 +64,8 @@
       height:100vh;
       pointer-events:none;
       z-index:0;
-      opacity:.9;
+      opacity:.58;
+      mix-blend-mode:screen;
     }
 
     .page{
@@ -84,7 +88,7 @@
     .routeStrip{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(127,255,212,.10),transparent 44%),
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.12),transparent 42%),
         linear-gradient(180deg,var(--panel),var(--panel2));
       box-shadow:var(--shadow);
       backdrop-filter:blur(12px);
@@ -113,11 +117,11 @@
       height:44px;
       border-radius:14px;
       transform:rotate(45deg);
-      border:1px solid rgba(241,210,141,.30);
+      border:1px solid rgba(255,218,150,.36);
       background:
-        radial-gradient(circle at 50% 50%,rgba(127,255,212,.16),transparent 45%),
-        linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      box-shadow:0 12px 28px rgba(0,0,0,.24),0 0 28px rgba(127,255,212,.08);
+        radial-gradient(circle at 50% 50%,rgba(255,218,150,.28),transparent 45%),
+        linear-gradient(180deg,rgba(48,34,18,.96),rgba(10,18,32,.92));
+      box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 28px rgba(255,218,150,.10);
       flex:0 0 auto;
     }
 
@@ -150,9 +154,11 @@
       justify-content:center;
       min-height:40px;
       padding:10px 14px;
-      border:1px solid rgba(255,255,255,.11);
+      border:1px solid rgba(255,218,150,.18);
       border-radius:999px;
-      background:rgba(255,255,255,.05);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.08),transparent 70%),
+        rgba(255,255,255,.035);
       color:var(--text);
       font-size:12px;
       font-weight:850;
@@ -163,9 +169,12 @@
 
     .action.primary,
     .routeCard.primary{
-      border-color:rgba(127,255,212,.30);
-      background:rgba(127,255,212,.10);
-      color:#ecfff9;
+      border-color:rgba(255,218,150,.42);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.18),transparent 70%),
+        rgba(255,218,150,.07);
+      color:#fff4dd;
+      box-shadow:0 0 22px rgba(255,218,150,.10);
     }
 
     .stage{
@@ -185,9 +194,9 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 73% 50%,rgba(127,255,212,.09),transparent 30rem),
-        radial-gradient(circle at 26% 14%,rgba(241,210,141,.07),transparent 22rem),
-        linear-gradient(115deg,rgba(255,255,255,.026),transparent 42%,rgba(126,203,255,.036));
+        radial-gradient(circle at 72% 50%,rgba(255,218,150,.08),transparent 30rem),
+        radial-gradient(circle at 26% 14%,rgba(215,139,66,.10),transparent 22rem),
+        linear-gradient(115deg,rgba(255,255,255,.026),transparent 42%,rgba(142,197,255,.028));
     }
 
     .copy,
@@ -212,8 +221,8 @@
       padding:8px 12px;
       border:1px solid var(--line2);
       border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--accent);
+      background:rgba(255,255,255,.035);
+      color:var(--gold);
       font-size:11px;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -226,8 +235,8 @@
       height:8px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--accent);
-      box-shadow:0 0 18px rgba(127,255,212,.42);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(255,218,150,.42);
     }
 
     h1{
@@ -266,9 +275,11 @@
 
     .control{
       min-height:54px;
-      border:1px solid rgba(255,255,255,.11);
+      border:1px solid rgba(255,218,150,.16);
       border-radius:18px;
-      background:rgba(255,255,255,.05);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.055),transparent 70%),
+        rgba(255,255,255,.035);
       color:var(--text);
       font-weight:950;
       letter-spacing:.04em;
@@ -280,22 +291,24 @@
     .control:focus-visible{
       transform:translateY(-2px);
       outline:none;
-      border-color:rgba(127,255,212,.30);
+      border-color:rgba(255,218,150,.38);
     }
 
     .control[data-active="true"]{
-      border-color:rgba(127,255,212,.38);
+      border-color:rgba(255,218,150,.48);
       background:
-        radial-gradient(circle at 50% 0%,rgba(127,255,212,.14),transparent 70%),
-        rgba(127,255,212,.06);
-      color:#ecfff9;
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.18),transparent 70%),
+        rgba(255,218,150,.06);
+      color:#fff4dd;
     }
 
     .talkCard,
     .receipt{
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,218,150,.16);
       border-radius:22px;
-      background:rgba(0,0,0,.18);
+      background:
+        radial-gradient(circle at 0% 0%,rgba(215,139,66,.08),transparent 54%),
+        rgba(0,0,0,.18);
       padding:14px;
       display:grid;
       gap:10px;
@@ -318,7 +331,7 @@
 
     .receiptTitle{
       margin:0;
-      color:var(--accent);
+      color:var(--gold);
       font-size:.70rem;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -353,32 +366,32 @@
 
     .vaultRoom{
       min-height:620px;
-      border:1px solid rgba(255,255,255,.09);
+      border:1px solid rgba(255,218,150,.15);
       border-radius:30px;
       overflow:hidden;
       display:grid;
       place-items:center;
       background:
-        radial-gradient(ellipse at 50% 10%,rgba(126,203,255,.08),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.045) 30%,rgba(0,0,0,0) 58%),
-        radial-gradient(circle at 50% 58%,rgba(241,210,141,.055),transparent 72%),
-        linear-gradient(180deg,rgba(2,6,14,.58),rgba(2,4,10,.94));
+        radial-gradient(ellipse at 50% 8%,rgba(255,218,150,.08),transparent 24%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.08),rgba(255,218,150,.045) 35%,rgba(0,0,0,0) 62%),
+        radial-gradient(circle at 50% 62%,rgba(215,139,66,.08),transparent 72%),
+        linear-gradient(180deg,rgba(3,7,16,.68),rgba(2,4,10,.96));
     }
 
     .vault{
       width:min(78vw,530px);
       aspect-ratio:1;
       border-radius:50%;
-      border:18px solid rgba(145,173,205,.13);
+      border:18px solid rgba(255,218,150,.12);
       background:
-        radial-gradient(circle at 50% 50%,rgba(127,255,212,.10),transparent 27%),
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.052) 0deg 4deg,transparent 4deg 16deg),
-        conic-gradient(from 45deg,rgba(127,255,212,.09),rgba(126,203,255,.04),rgba(241,210,141,.08),rgba(126,203,255,.04),rgba(127,255,212,.09));
+        radial-gradient(circle at 50% 50%,rgba(255,218,150,.11),transparent 27%),
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 4deg,transparent 4deg 16deg),
+        conic-gradient(from 45deg,rgba(255,218,150,.10),rgba(142,197,255,.035),rgba(215,139,66,.08),rgba(142,197,255,.035),rgba(255,218,150,.10));
       box-shadow:
-        inset 0 0 48px rgba(0,0,0,.36),
-        inset 0 0 96px rgba(255,255,255,.045),
-        0 30px 70px rgba(0,0,0,.44),
-        0 0 80px rgba(127,255,212,.08);
+        inset 0 0 48px rgba(0,0,0,.40),
+        inset 0 0 96px rgba(255,218,150,.04),
+        0 30px 70px rgba(0,0,0,.46),
+        0 0 80px rgba(255,218,150,.07);
       display:grid;
       place-items:center;
       position:relative;
@@ -391,12 +404,12 @@
       height:150px;
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.38),rgba(127,255,212,.14) 48%,rgba(0,0,0,.21) 100%);
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.40),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,218,150,.28),rgba(142,197,255,.10) 48%,rgba(0,0,0,.26) 100%);
       box-shadow:
-        0 24px 42px rgba(0,0,0,.34),
-        inset 0 0 44px rgba(126,203,255,.18),
-        0 0 96px rgba(127,255,212,.18);
+        0 24px 42px rgba(0,0,0,.36),
+        inset 0 0 44px rgba(255,218,150,.14),
+        0 0 86px rgba(255,218,150,.13);
     }
 
     .vault::after{
@@ -404,9 +417,9 @@
       position:absolute;
       inset:17%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,218,150,.10);
       background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 20deg,rgba(255,255,255,.08) 20deg 22deg,transparent 22deg 40deg);
+        repeating-conic-gradient(from 0deg,transparent 0deg 20deg,rgba(255,218,150,.075) 20deg 22deg,transparent 22deg 40deg);
       opacity:.74;
       animation:vaultTurn 32s linear infinite;
     }
@@ -421,7 +434,7 @@
       text-transform:uppercase;
       font-weight:950;
       text-align:center;
-      text-shadow:0 2px 12px rgba(0,0,0,.68);
+      text-shadow:0 2px 12px rgba(0,0,0,.72);
     }
 
     .gardens{
@@ -434,9 +447,11 @@
       position:absolute;
       width:130px;
       min-height:60px;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(255,218,150,.16);
       border-radius:18px;
-      background:rgba(3,9,18,.72);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.07),transparent 70%),
+        rgba(6,10,18,.78);
       display:grid;
       place-items:center;
       text-align:center;
@@ -454,15 +469,16 @@
     .garden:hover,
     .garden:focus-visible{
       outline:none;
-      border-color:rgba(241,210,141,.44);
+      border-color:rgba(255,218,150,.44);
     }
 
     .garden[data-active="true"]{
-      border-color:rgba(241,210,141,.52);
+      border-color:rgba(255,218,150,.58);
       background:
-        radial-gradient(circle at 50% 0%,rgba(241,210,141,.18),transparent 70%),
-        rgba(3,9,18,.84);
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.18),transparent 70%),
+        rgba(16,12,8,.88);
       color:#fff3d2;
+      box-shadow:0 0 20px rgba(255,218,150,.10);
     }
 
     .garden strong{
@@ -579,7 +595,7 @@
 <body>
   <canvas id="fieldCanvas" aria-hidden="true"></canvas>
 
-  <main class="page" data-product="archcoin" data-runtime="archcoin-b10-visible-first">
+  <main class="page" data-product="archcoin" data-runtime="archcoin-b11-manor-vault-color-alignment">
     <header class="topbar">
       <a class="brand" href="/products/archcoin/" aria-label="ARCHCOIN Vault Chamber">
         <span class="brandMark" aria-hidden="true"></span>
@@ -653,7 +669,7 @@
     </nav>
 
     <div class="runtimeNote">
-      ARCHCOIN_B10=VISIBLE_FIRST · RUNTIME_ENHANCEMENT=/products/archcoin/index.js · CANONICAL_DESTINATION=/products/archcoin/
+      ARCHCOIN_B11=MANOR_VAULT_COLOR_ALIGNMENT · RUNTIME_ENHANCEMENT=/products/archcoin/index.js · CANONICAL_DESTINATION=/products/archcoin/
     </div>
   </main>
 

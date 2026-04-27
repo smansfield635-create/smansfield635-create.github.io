@@ -1,284 +1,332 @@
 /*
-  MANOR_SKIN_CONTRACT_TNT_B1
-  FILE: /assets/manor.css
-  PURPOSE: Shared Manor skin contract for the 15 center expression rooms.
-  SCOPE: Safe standalone CSS. Does not rewrite page bodies. Does not touch Gauges runtime.
+  Diamond Gate Bridge / Rich Manor and Estate
+  /assets/manor.css
+  Shared Manor visual law only.
+
+  Role:
+  - global tokens
+  - shared primitives
+  - route rails
+  - backlinks
+  - house/product/planet/event/audit/foundation/vault skins
+  - Flat/Round/Meta/Return support
+  - mobile subject-first rules
+  - Gauges-compatible styling
+
+  Non-role:
+  - no render logic
+  - no route changes
+  - no live-health truth
+  - no page content
+  - no Index rebuild
+  - no JavaScript
 */
 
 :root {
-  --manor-ink: #eef3ff;
-  --manor-muted: #b8c2d8;
-  --manor-soft: #d9e3f7;
+  --manor-void: #01030a;
+  --manor-deep: #020713;
+  --manor-navy: #061126;
+  --manor-navy-2: #091832;
+  --manor-panel: rgba(8, 19, 42, 0.82);
+  --manor-panel-strong: rgba(5, 12, 29, 0.94);
+  --manor-glass: rgba(255, 255, 255, 0.065);
 
-  --manor-navy-950: #020713;
-  --manor-navy-900: #061126;
-  --manor-navy-850: #091832;
-  --manor-navy-800: #0d2142;
-  --manor-navy-700: #132f5c;
+  --manor-ink: #eef3ff;
+  --manor-soft: #d9e3f7;
+  --manor-muted: #b8c2d8;
+  --manor-dim: #78839a;
 
   --manor-gold: #f4c967;
   --manor-gold-soft: #ffe3a3;
   --manor-amber: #d98a35;
   --manor-copper: #aa6231;
+  --manor-blue: #76c8ff;
+  --manor-green: #84e1bc;
+  --manor-warn: #f3b64b;
+  --manor-fail: #ff6b6b;
+  --manor-vault: #6f638f;
 
-  --manor-glass: rgba(8, 19, 42, 0.72);
-  --manor-glass-strong: rgba(9, 22, 48, 0.88);
-  --manor-glass-light: rgba(255, 255, 255, 0.075);
+  --manor-line: rgba(244, 201, 103, 0.32);
+  --manor-line-strong: rgba(244, 201, 103, 0.62);
+  --manor-line-soft: rgba(255, 255, 255, 0.11);
 
-  --manor-border: rgba(244, 201, 103, 0.32);
-  --manor-border-strong: rgba(244, 201, 103, 0.62);
-  --manor-shadow: 0 24px 80px rgba(0, 0, 0, 0.46);
-  --manor-gold-shadow: 0 0 32px rgba(244, 201, 103, 0.26);
+  --manor-radius-sm: 12px;
+  --manor-radius-md: 18px;
+  --manor-radius-lg: 26px;
+  --manor-radius-xl: 34px;
+  --manor-radius-pill: 999px;
 
-  --manor-radius-lg: 28px;
-  --manor-radius-md: 20px;
-  --manor-radius-sm: 14px;
+  --manor-shadow-soft: 0 16px 44px rgba(0, 0, 0, 0.34);
+  --manor-shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
+  --manor-shadow-deep: 0 34px 120px rgba(0, 0, 0, 0.62);
+  --manor-glow-gold: 0 0 42px rgba(244, 201, 103, 0.26);
+  --manor-glow-blue: 0 0 54px rgba(118, 200, 255, 0.18);
+  --manor-glow-green: 0 0 36px rgba(132, 225, 188, 0.18);
 
-  --manor-page-max: 1180px;
-  --manor-rail-max: 980px;
-  --manor-pad: clamp(18px, 3vw, 42px);
+  --manor-gap-xs: 8px;
+  --manor-gap-sm: 12px;
+  --manor-gap-md: 18px;
+  --manor-gap-lg: 28px;
+  --manor-gap-xl: 44px;
 
-  --manor-planet-accent: var(--manor-gold);
-  --manor-planet-glow: rgba(244, 201, 103, 0.24);
+  --manor-shell-max: 1180px;
+  --manor-readable-max: 780px;
+
+  --manor-z-bg: -3;
+  --manor-z-atmosphere: -2;
+  --manor-z-content: 1;
+  --manor-z-rail: 20;
 }
 
-html[data-manor-skin="v1"],
-body[data-manor-skin="v1"],
-body.manor-skin,
-.manor-skin {
+/* ---------- Baseline ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
   min-height: 100%;
+  background: var(--manor-void);
+  scroll-behavior: smooth;
+}
+
+body.manor-skin {
+  min-height: 100vh;
+  margin: 0;
   color: var(--manor-ink);
   background:
-    radial-gradient(circle at 50% -15%, rgba(244, 201, 103, 0.18), transparent 34%),
-    radial-gradient(circle at 18% 18%, rgba(34, 91, 164, 0.36), transparent 34%),
-    radial-gradient(circle at 84% 28%, rgba(217, 138, 53, 0.14), transparent 32%),
-    linear-gradient(180deg, var(--manor-navy-950), var(--manor-navy-900) 44%, #030816 100%);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+    radial-gradient(circle at 50% -12%, rgba(244, 201, 103, 0.18), transparent 32%),
+    radial-gradient(circle at 14% 18%, rgba(118, 200, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 86% 20%, rgba(217, 138, 53, 0.12), transparent 30%),
+    linear-gradient(180deg, var(--manor-void) 0%, var(--manor-deep) 42%, var(--manor-navy) 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
-body.manor-skin::before,
-.manor-skin.manor-page::before {
+body.manor-skin::before {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: var(--manor-z-bg);
   pointer-events: none;
-  z-index: -2;
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.65) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(244, 201, 103, 0.55) 0 1px, transparent 1.5px);
-  background-size: 92px 92px, 137px 137px;
-  background-position: 0 0, 34px 51px;
-  opacity: 0.18;
+    radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(244, 201, 103, 0.44) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(118, 200, 255, 0.34) 0 1px, transparent 1.4px);
+  background-size: 92px 92px, 151px 151px, 223px 223px;
+  background-position: 0 0, 37px 51px, 89px 126px;
+  opacity: 0.16;
 }
 
-body.manor-skin::after,
-.manor-skin.manor-page::after {
+body.manor-skin::after {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -20%;
+  z-index: var(--manor-z-atmosphere);
   pointer-events: none;
-  z-index: -1;
   background:
-    linear-gradient(90deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px);
-  background-size: 6.25vw 6.25vw;
-  mask-image: radial-gradient(circle at center, black 0, black 42%, transparent 76%);
-  opacity: 0.44;
+    radial-gradient(circle at 50% 50%, transparent 0 32%, rgba(244, 201, 103, 0.045) 42%, transparent 62%),
+    conic-gradient(from 24deg at 50% 50%, transparent, rgba(118, 200, 255, 0.06), transparent, rgba(244, 201, 103, 0.07), transparent);
+  opacity: 0.68;
 }
 
-.manor-page,
-.manor-shell {
-  width: min(var(--manor-page-max), calc(100% - 32px));
-  margin-inline: auto;
+body.manor-skin a {
+  color: inherit;
 }
 
+body.manor-skin img,
+body.manor-skin svg,
+body.manor-skin canvas {
+  max-width: 100%;
+}
+
+body.manor-skin :focus-visible {
+  outline: 2px solid var(--manor-gold-soft);
+  outline-offset: 3px;
+}
+
+/* ---------- Shared primitives ---------- */
+
 .manor-shell {
-  padding: var(--manor-pad) 0;
+  width: min(var(--manor-shell-max), calc(100% - 24px));
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 54px) 0 56px;
 }
 
 .manor-room,
-.manor-panel,
 .manor-card,
-.manor-route-rail,
+.manor-backlinks,
 .manor-audit-strip,
-.manor-backlinks {
-  border: 1px solid var(--manor-border);
+.manor-proof-strip,
+.manor-stage,
+.manor-return-rail {
+  border: 1px solid var(--manor-line);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
-    var(--manor-glass);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), transparent 42%),
+    var(--manor-panel);
   box-shadow: var(--manor-shadow);
   backdrop-filter: blur(18px);
 }
 
-.manor-room {
-  border-radius: var(--manor-radius-lg);
-  padding: clamp(22px, 4vw, 56px);
+.manor-room,
+.manor-stage {
+  border-radius: var(--manor-radius-xl);
+  padding: clamp(20px, 4vw, 46px);
+  position: relative;
+  overflow: hidden;
 }
 
-.manor-panel,
+.manor-room::after,
+.manor-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px);
+  background-size: 8.333% 8.333%;
+  opacity: 0.32;
+  mask-image: radial-gradient(circle at center, black, transparent 76%);
+}
+
+.manor-room > *,
+.manor-stage > * {
+  position: relative;
+  z-index: var(--manor-z-content);
+}
+
 .manor-card {
   border-radius: var(--manor-radius-md);
-  padding: clamp(18px, 2.4vw, 32px);
+  padding: clamp(18px, 2.2vw, 28px);
+  text-decoration: none;
+  color: inherit;
+  min-height: 150px;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.manor-card {
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background-color 180ms ease;
-}
-
-.manor-card:hover {
+a.manor-card:hover,
+button.manor-card:hover {
   transform: translateY(-2px);
-  border-color: var(--manor-border-strong);
-  box-shadow: var(--manor-shadow), var(--manor-gold-shadow);
+  border-color: var(--manor-line-strong);
+  box-shadow: var(--manor-shadow), var(--manor-glow-gold);
+}
+
+.manor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.manor-divider {
+  height: 1px;
+  width: 100%;
+  margin: clamp(18px, 3vw, 30px) 0;
+  background: linear-gradient(90deg, transparent, var(--manor-line-strong), transparent);
 }
 
 .manor-kicker,
-.manor-room-label {
+.manor-room-label,
+.manor-audit-title,
+.manor-backlinks-title {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   color: var(--manor-gold-soft);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.74rem;
+  font-weight: 950;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .manor-kicker::before,
-.manor-room-label::before {
+.manor-room-label::before,
+.manor-audit-title::before,
+.manor-backlinks-title::before {
   content: "";
   width: 9px;
   height: 9px;
   border: 1px solid var(--manor-gold);
   transform: rotate(45deg);
-  box-shadow: 0 0 18px rgba(244, 201, 103, 0.55);
+  box-shadow: 0 0 18px rgba(244, 201, 103, 0.5);
+  flex: 0 0 auto;
 }
 
 .manor-title {
   margin: 0;
-  color: var(--manor-ink);
-  font-size: clamp(2.2rem, 6vw, 5.6rem);
-  line-height: 0.92;
-  letter-spacing: -0.065em;
+  font-size: clamp(3rem, 8vw, 7.4rem);
+  line-height: 0.86;
+  letter-spacing: -0.09em;
 }
 
-.manor-subtitle,
 .manor-lede {
-  max-width: 780px;
   color: var(--manor-muted);
-  font-size: clamp(1.02rem, 1.8vw, 1.26rem);
-  line-height: 1.72;
+  font-size: clamp(1.02rem, 1.55vw, 1.2rem);
+  line-height: 1.65;
+  max-width: var(--manor-readable-max);
 }
 
-.manor-gold {
-  color: var(--manor-gold);
+.manor-lattice-mark {
+  position: relative;
 }
 
-.manor-copper {
-  color: var(--manor-amber);
-}
-
-.manor-divider {
-  width: 100%;
-  height: 1px;
-  margin: clamp(22px, 4vw, 42px) 0;
-  background: linear-gradient(90deg, transparent, var(--manor-border-strong), transparent);
-}
-
-.manor-grid {
-  display: grid;
-  gap: clamp(16px, 2vw, 24px);
-}
-
-.manor-grid.two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.manor-grid.three {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
+/* ---------- Route rails and returns ---------- */
 
 .manor-route-rail {
-  width: min(var(--manor-rail-max), calc(100% - 32px));
-  margin: clamp(18px, 3vw, 34px) auto;
-  padding: 12px;
-  border-radius: 999px;
+  width: min(980px, calc(100% - 24px));
+  margin: 12px auto 0;
+  padding: 8px;
+  border: 1px solid rgba(244, 201, 103, 0.26);
+  border-radius: var(--manor-radius-pill);
+  background: rgba(8, 19, 42, 0.72);
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  box-shadow: var(--manor-shadow-soft);
+  backdrop-filter: blur(18px);
+  position: relative;
+  z-index: var(--manor-z-rail);
+}
+
+.manor-route-rail::-webkit-scrollbar {
+  display: none;
 }
 
 .manor-route-rail a,
-.manor-route-link,
-.manor-button {
+.manor-backlinks-list a,
+.manor-audit-chip,
+.manor-return-rail a {
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid rgba(244, 201, 103, 0.22);
-  border-radius: 999px;
-  color: var(--manor-soft);
+  padding: 0 13px;
+  border: 1px solid rgba(244, 201, 103, 0.24);
+  border-radius: var(--manor-radius-pill);
   background: rgba(255, 255, 255, 0.055);
+  color: var(--manor-soft);
   text-decoration: none;
-  font-weight: 750;
-  letter-spacing: 0.01em;
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.manor-route-rail a:hover,
-.manor-route-link:hover,
-.manor-button:hover {
-  transform: translateY(-1px);
-  color: #ffffff;
-  border-color: var(--manor-border-strong);
-  background: rgba(244, 201, 103, 0.11);
-  box-shadow: var(--manor-gold-shadow);
+  font-weight: 850;
+  white-space: nowrap;
 }
 
 .manor-route-rail a[aria-current="page"],
 .manor-route-rail a.is-active,
-.manor-route-link[aria-current="page"],
-.manor-route-link.is-active,
 .manor-active-compass {
   color: #111827;
   border-color: var(--manor-gold);
   background: linear-gradient(180deg, var(--manor-gold-soft), var(--manor-gold));
-  box-shadow: var(--manor-gold-shadow);
+  box-shadow: var(--manor-glow-gold);
 }
 
 .manor-backlinks,
-.manor-audit-strip {
-  margin-top: clamp(24px, 4vw, 48px);
+.manor-return-rail {
+  margin-top: clamp(22px, 4vw, 42px);
   border-radius: var(--manor-radius-md);
-  padding: clamp(16px, 2.2vw, 26px);
-}
-
-.manor-backlinks-title,
-.manor-audit-title {
-  margin: 0 0 12px;
-  color: var(--manor-gold-soft);
-  font-size: 0.88rem;
-  font-weight: 850;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  padding: clamp(16px, 2.2vw, 24px);
 }
 
 .manor-backlinks-list,
@@ -291,208 +339,302 @@ body.manor-skin::after,
   list-style: none;
 }
 
-.manor-backlinks-list a,
-.manor-audit-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 0 12px;
-  border: 1px solid rgba(244, 201, 103, 0.24);
-  border-radius: 999px;
-  color: var(--manor-muted);
-  background: rgba(255, 255, 255, 0.045);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 700;
+/* ---------- Audit and proof ---------- */
+
+.manor-audit-strip {
+  margin-top: clamp(22px, 4vw, 42px);
+  border-radius: var(--manor-radius-md);
+  padding: clamp(16px, 2.2vw, 24px);
+  opacity: 0.88;
 }
 
-.manor-audit-chip[data-status="pass"],
-.manor-audit-chip.pass {
+.manor-audit-chip {
+  color: var(--manor-soft);
+}
+
+.manor-audit-chip.pass,
+.manor-audit-chip[data-status="pass"] {
   color: #eafff2;
   border-color: rgba(132, 225, 188, 0.48);
+  background: rgba(132, 225, 188, 0.07);
 }
 
-.manor-audit-chip[data-status="warn"],
-.manor-audit-chip.warn {
-  color: #fff4cf;
-  border-color: rgba(244, 201, 103, 0.58);
+.manor-audit-chip.warn,
+.manor-audit-chip[data-status="warn"] {
+  color: #fff4d8;
+  border-color: rgba(243, 182, 75, 0.5);
+  background: rgba(243, 182, 75, 0.08);
 }
 
-.manor-audit-chip[data-status="fail"],
-.manor-audit-chip.fail {
-  color: #ffe5e5;
-  border-color: rgba(255, 119, 119, 0.58);
+.manor-audit-chip.fail,
+.manor-audit-chip[data-status="fail"] {
+  color: #ffe4e4;
+  border-color: rgba(255, 107, 107, 0.55);
+  background: rgba(255, 107, 107, 0.08);
 }
 
-.manor-lattice-mark {
-  position: relative;
-  overflow: hidden;
-}
-
-.manor-lattice-mark::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px);
-  background-size: 6.25% 6.25%;
-  opacity: 0.5;
-  mask-image: radial-gradient(circle at center, black, transparent 72%);
-}
-
-[data-manor-class="house"] .manor-room,
-.manor-house .manor-room,
-.manor-house.manor-room {
-  border-color: rgba(244, 201, 103, 0.42);
-}
-
-[data-manor-class="planet"] .manor-room,
-.manor-planet .manor-room,
-.manor-planet.manor-room {
-  border-color: color-mix(in srgb, var(--manor-planet-accent) 55%, transparent);
-  box-shadow: var(--manor-shadow), 0 0 46px var(--manor-planet-glow);
-}
-
-[data-manor-room="compass"] {
-  --manor-planet-accent: #f4c967;
-  --manor-planet-glow: rgba(244, 201, 103, 0.26);
-}
-
-[data-manor-room="door"] {
-  --manor-planet-accent: #d98a35;
-  --manor-planet-glow: rgba(217, 138, 53, 0.24);
-}
-
-[data-manor-room="home"] {
-  --manor-planet-accent: #ffe3a3;
-  --manor-planet-glow: rgba(255, 227, 163, 0.2);
-}
-
-[data-manor-room="products"] {
-  --manor-planet-accent: #76c8ff;
-  --manor-planet-glow: rgba(118, 200, 255, 0.22);
-}
-
-[data-manor-room="showroom"] {
-  --manor-planet-accent: #f4c967;
-  --manor-planet-glow: rgba(244, 201, 103, 0.3);
-}
-
-[data-manor-room="gauges"] {
-  --manor-planet-accent: #84e1bc;
-  --manor-planet-glow: rgba(132, 225, 188, 0.2);
-}
-
-[data-manor-room="prelude"] {
-  --manor-planet-accent: #d9b8ff;
-  --manor-planet-glow: rgba(217, 184, 255, 0.2);
-}
-
-[data-manor-room="explore"] {
-  --manor-planet-accent: #8fd4ff;
-  --manor-planet-glow: rgba(143, 212, 255, 0.22);
-}
-
-[data-manor-room="frontier"] {
-  --manor-planet-accent: #ff9d6c;
-  --manor-planet-glow: rgba(255, 157, 108, 0.22);
-}
-
-[data-manor-room="laws"] {
-  --manor-planet-accent: #f4c967;
-  --manor-planet-glow: rgba(244, 201, 103, 0.22);
-}
-
-[data-manor-room="governance"] {
-  --manor-planet-accent: #a9c7ff;
-  --manor-planet-glow: rgba(169, 199, 255, 0.2);
-}
-
-[data-manor-room="upper-room"] {
-  --manor-planet-accent: #ffca7a;
-  --manor-planet-glow: rgba(255, 202, 122, 0.26);
-}
-
-[data-manor-room="about-this-underdog"] {
-  --manor-planet-accent: #ffc4a3;
-  --manor-planet-glow: rgba(255, 196, 163, 0.2);
-}
-
-[data-manor-room="nine-summits-universe"] {
-  --manor-planet-accent: #c9b6ff;
-  --manor-planet-glow: rgba(201, 182, 255, 0.24);
-}
-
-[data-manor-room="nine-summits-of-love"] {
-  --manor-planet-accent: #ffe3a3;
-  --manor-planet-glow: rgba(255, 227, 163, 0.3);
-}
-
-.manor-diamond {
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--manor-planet-accent);
-  transform: rotate(45deg);
-  box-shadow: 0 0 22px var(--manor-planet-glow);
-}
-
-.manor-waterfall {
-  position: relative;
-}
-
-.manor-waterfall::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--manor-gold), var(--manor-amber), transparent);
-  opacity: 0.8;
-}
-
-.manor-status-line {
-  display: flex;
-  flex-wrap: wrap;
+.manor-proof-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-  color: var(--manor-muted);
-  font-size: 0.94rem;
+  border-radius: var(--manor-radius-md);
+  padding: 12px;
 }
 
-.manor-status-line strong {
+.manor-proof-item {
+  border: 1px solid rgba(132, 225, 188, 0.28);
+  border-radius: var(--manor-radius-md);
+  padding: 12px;
+  background: rgba(132, 225, 188, 0.06);
+}
+
+.manor-proof-item strong {
+  display: block;
+  color: var(--manor-green);
+  font-size: 1.28rem;
+  line-height: 1;
+}
+
+.manor-proof-item span {
+  color: var(--manor-muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.batch-note {
+  color: var(--manor-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Skin families ---------- */
+
+.manor-house .manor-room,
+.manor_house .manor-room {
+  border-color: rgba(244, 201, 103, 0.34);
+}
+
+.manor-product .manor-room,
+.manor_product .manor-room,
+[data-skin-family="manor_product"] .manor-room {
+  border-color: rgba(244, 201, 103, 0.38);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 201, 103, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
+    rgba(8, 19, 42, 0.84);
+}
+
+.manor-planet .manor-room,
+.manor_planet .manor-room,
+[data-skin-family="manor_planet"] .manor-room {
+  border-color: rgba(118, 200, 255, 0.32);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(118, 200, 255, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 42%),
+    rgba(8, 19, 42, 0.8);
+}
+
+.manor-event .manor-room,
+.manor_event .manor-room,
+[data-skin-family="manor_event"] .manor-room {
+  border-color: rgba(217, 138, 53, 0.44);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 138, 53, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
+    rgba(9, 18, 38, 0.84);
+}
+
+.manor-audit .manor-room,
+.manor_audit .manor-room,
+[data-skin-family="manor_audit"] .manor-room {
+  border-color: rgba(132, 225, 188, 0.34);
+  background:
+    linear-gradient(180deg, rgba(132, 225, 188, 0.075), transparent 42%),
+    rgba(5, 14, 31, 0.9);
+}
+
+.manor-foundation .manor-room,
+.manor_foundation .manor-room,
+[data-skin-family="manor_foundation"] .manor-room {
+  border-color: rgba(120, 131, 154, 0.34);
+  background:
+    linear-gradient(180deg, rgba(120, 131, 154, 0.08), transparent 42%),
+    rgba(3, 8, 18, 0.92);
+}
+
+.manor-vault .manor-room,
+.manor_vault .manor-room,
+[data-skin-family="manor_vault"] .manor-room {
+  border-color: rgba(111, 99, 143, 0.58);
+  background:
+    linear-gradient(180deg, rgba(111, 99, 143, 0.16), transparent 42%),
+    rgba(3, 6, 16, 0.95);
+}
+
+/* ---------- View modes ---------- */
+
+body[data-view-mode="flat"] .manor-view-selector [data-mode="flat"],
+body[data-view-mode="round"] .manor-view-selector [data-mode="round"],
+body[data-view-mode="meta"] .manor-view-selector [data-mode="meta"],
+body[data-view-mode="return"] .manor-view-selector [data-mode="return"] {
+  color: #111827;
+  border-color: var(--manor-gold);
+  background: linear-gradient(180deg, var(--manor-gold-soft), var(--manor-gold));
+  box-shadow: var(--manor-glow-gold);
+}
+
+body[data-view-mode="flat"] .manor-stage {
+  background:
+    linear-gradient(90deg, rgba(244, 201, 103, 0.075) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 201, 103, 0.075) 1px, transparent 1px),
+    rgba(8, 19, 42, 0.82);
+  background-size: 42px 42px;
+}
+
+body[data-view-mode="round"] .manor-stage {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(132, 225, 188, 0.14), transparent 32%),
+    rgba(8, 19, 42, 0.82);
+}
+
+body[data-view-mode="meta"] .manor-stage {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(118, 200, 255, 0.14), transparent 36%),
+    radial-gradient(circle at 50% 50%, transparent 0 45%, rgba(244, 201, 103, 0.05) 46%, transparent 48%),
+    rgba(8, 19, 42, 0.82);
+}
+
+body[data-view-mode="return"] .manor-stage {
+  border-color: rgba(132, 225, 188, 0.42);
+  background:
+    linear-gradient(180deg, rgba(132, 225, 188, 0.09), transparent 42%),
+    rgba(8, 19, 42, 0.86);
+}
+
+/* ---------- Utility helpers ---------- */
+
+.manor-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.manor-muted {
+  color: var(--manor-muted);
+}
+
+.manor-gold {
   color: var(--manor-gold-soft);
 }
 
-@media (max-width: 860px) {
-  .manor-grid.two,
-  .manor-grid.three {
-    grid-template-columns: 1fr;
+.manor-live {
+  color: var(--manor-green);
+}
+
+.manor-warning {
+  color: var(--manor-warn);
+}
+
+.manor-failure {
+  color: var(--manor-fail);
+}
+
+/* ---------- Mobile subject-first rules ---------- */
+
+@media (max-width: 900px) {
+  .manor-shell {
+    width: min(100% - 20px, var(--manor-shell-max));
+    padding-top: 16px;
   }
 
   .manor-route-rail {
+    justify-content: flex-start;
+    width: min(100% - 20px, 980px);
     border-radius: var(--manor-radius-md);
   }
 
-  .manor-route-rail a,
-  .manor-route-link,
-  .manor-button {
+  .manor-route-rail a {
+    font-size: 0.86rem;
+    min-height: 34px;
+    padding: 0 12px;
+  }
+
+  .manor-room,
+  .manor-stage {
+    padding: 18px;
+    border-radius: var(--manor-radius-lg);
+  }
+
+  .manor-grid,
+  .manor-proof-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .manor-title {
+    font-size: clamp(3rem, 14vw, 5.5rem);
+  }
+
+  .manor-lede {
+    font-size: 1rem;
+  }
+
+  .manor-backlinks-list,
+  .manor-audit-list {
+    align-items: stretch;
+  }
+
+  .manor-backlinks-list li,
+  .manor-audit-list li {
     width: 100%;
+  }
+
+  .manor-backlinks-list a,
+  .manor-audit-chip {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+    text-align: left;
+    min-height: 42px;
   }
 }
 
+@media (max-width: 430px) {
+  .manor-shell {
+    width: min(100% - 16px, var(--manor-shell-max));
+  }
+
+  .manor-room,
+  .manor-stage {
+    padding: 16px;
+  }
+
+  .manor-kicker,
+  .manor-room-label,
+  .manor-audit-title,
+  .manor-backlinks-title {
+    font-size: 0.68rem;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .manor-card,
-  .manor-route-rail a,
-  .manor-route-link,
-  .manor-button {
+  a.manor-card,
+  button.manor-card {
     transition: none;
   }
 
-  .manor-card:hover,
-  .manor-route-rail a:hover,
-  .manor-route-link:hover,
-  .manor-button:hover {
+  a.manor-card:hover,
+  button.manor-card:hover {
     transform: none;
   }
 }

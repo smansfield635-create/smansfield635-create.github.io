@@ -128,6 +128,7 @@ const CANVAS = document.getElementById("fieldCanvas");
 const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const pointer = { x: 0.5, y: 0.5 };
+
 const field = {
   stars: [],
   width: 0,

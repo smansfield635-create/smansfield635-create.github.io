@@ -1,9 +1,9 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B3
+   EARTH ASSET SPINE · CANVAS B4
 
    Owns Earth rendering only:
-   - real surface texture
-   - real cloud texture
+   - local surface JPG
+   - local cloud JPG
    - spherical wrap
    - limb compression
    - atmosphere/terminator
@@ -17,9 +17,9 @@
   "use strict";
 
   var DEFAULTS = {
-    assetId: "earth-asset-b1",
+    assetId: "earth-asset-b3",
     surface: "/assets/earth/earth_surface_2048.jpg",
-    clouds: "/assets/earth/earth_clouds_2048.png",
+    clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
     targetFrameMs: 42,
     sliceCount: 220,
@@ -31,7 +31,7 @@
     minZoom: 0.72,
     maxZoom: 1.38,
     zoomStep: 0.08,
-    cloudAlpha: 0.34
+    cloudAlpha: 0.62
   };
 
   function clamp(value, min, max) {
@@ -64,7 +64,7 @@
         finish({ ok: false, src: src, image: null, reason: "load-error" });
       };
 
-      image.src = src;
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-asset-b4-" + Date.now();
     });
   }
 
@@ -96,6 +96,7 @@
       mount.setAttribute("data-earth-asset-id", config.assetId);
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
+      mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
     }
 
     function resizeCanvas() {
@@ -138,7 +139,7 @@
       };
     }
 
-    function drawWrappedLayer(image, rot, alpha, filterValue, sliceCount) {
+    function drawWrappedLayer(image, rot, alpha, filterValue, sliceCount, compositeMode) {
       var geo;
       var step;
       var x;
@@ -160,6 +161,7 @@
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.filter = filterValue || "none";
+      ctx.globalCompositeOperation = compositeMode || "source-over";
 
       ctx.beginPath();
       ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
@@ -230,7 +232,14 @@
       drawFallbackSphere();
 
       if (surfaceReady) {
-        drawWrappedLayer(surfaceImage, rotation, 1, "saturate(1.16) contrast(1.08) brightness(.98)", config.sliceCount);
+        drawWrappedLayer(
+          surfaceImage,
+          rotation,
+          1,
+          "saturate(1.16) contrast(1.08) brightness(.98)",
+          config.sliceCount,
+          "source-over"
+        );
       }
 
       if (cloudReady) {
@@ -238,12 +247,14 @@
           cloudImage,
           rotation * 0.82 + 0.11,
           config.cloudAlpha,
-          "brightness(1.25) contrast(1.04)",
-          Math.max(150, config.sliceCount - 30)
+          "brightness(1.18) contrast(1.08)",
+          Math.max(150, config.sliceCount - 30),
+          "screen"
         );
       }
 
       ctx.save();
+      ctx.globalCompositeOperation = "source-over";
       ctx.beginPath();
       ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
       ctx.clip();
@@ -331,6 +342,7 @@
         velocity: velocity,
         zoom: zoom,
         paused: paused,
+        targetFrameMs: config.targetFrameMs,
         runtimeStatus: mount.getAttribute("data-earth-runtime-status")
       };
     }
@@ -448,7 +460,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b3",
+    version: "earth-canvas-b4",
     create: createEarthRenderer
   };
 })();

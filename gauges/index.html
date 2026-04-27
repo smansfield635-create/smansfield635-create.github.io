@@ -1,279 +1,1284 @@
 <!DOCTYPE html>
-<html lang="en" data-build="six-house-parts-full-tnt-v1">
+<html
+  lang="en"
+  data-page-id="gauges"
+  data-page="gauges"
+  data-generation="gauges-generation-2-ceiling-calibration"
+  data-gauges-generation="ceiling-calibration-g2"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-manor-class="house"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges: live diagnostic instrument room for Rich Manor and Estate." />
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <script src="/assets/page_registry.js" defer></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Gauges · Ceiling Calibration · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate."
+  />
+  <link rel="stylesheet" href="/assets/manor.css?v=estate-unity-charge-v1" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #03060b;
+      --panel: rgba(7, 14, 28, .88);
+      --panel2: rgba(10, 20, 42, .94);
+      --line: rgba(255, 218, 150, .24);
+      --line2: rgba(255, 218, 150, .42);
+      --text: #fff8ea;
+      --muted: #c9d2ea;
+      --soft: rgba(201, 210, 234, .74);
+      --gold: #ffd98a;
+      --green: #93efbd;
+      --blue: #8ec5ff;
+      --yellow: #ffcf7a;
+      --red: #ff6f78;
+      --purple: #caa8ff;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .50);
+      --max: 1240px;
+      --radius: 26px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% 88%, rgba(255, 154, 86, .24), transparent 28%),
+        radial-gradient(circle at 50% 0%, rgba(255, 217, 138, .13), transparent 34%),
+        radial-gradient(circle at 20% 18%, rgba(142, 197, 255, .12), transparent 27%),
+        linear-gradient(180deg, #03060b 0%, #071021 58%, #03060b 100%);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .68;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.55) 0 1px, transparent 1.3px),
+        radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.5px);
+      background-size: 96px 96px, 154px 154px;
+      background-position: 0 0, 34px 51px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.88), rgba(0,0,0,.20));
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(3, 6, 11, .76);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: grid;
+      gap: 3px;
+    }
+
+    .brand strong {
+      color: var(--gold);
+      font-size: .82rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .nav a,
+    .pill,
+    .refresh {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .nav a:hover,
+    .pill:hover,
+    .refresh:hover {
+      color: var(--text);
+      border-color: var(--line2);
+      background: rgba(255,217,138,.12);
+    }
+
+    .refresh {
+      cursor: pointer;
+    }
+
+    .hero {
+      padding: 44px 0 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 360px;
+      display: grid;
+      align-content: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 13px;
+      color: var(--gold);
+      font-size: .78rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(2.7rem, 7.2vw, 6.8rem);
+      line-height: .86;
+      letter-spacing: -.06em;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 4vw, 3.35rem);
+      line-height: .95;
+      letter-spacing: -.04em;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.04rem;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 780px;
+      font-size: clamp(1rem, 1.6vw, 1.22rem);
+      line-height: 1.56;
+    }
+
+    .method-card {
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .method-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .method-list li {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      color: var(--muted);
+      background: rgba(0,0,0,.18);
+    }
+
+    .method-list b {
+      color: var(--gold);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 18px 0;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(5, 10, 20, .72);
+      box-shadow: 0 18px 60px rgba(0,0,0,.24);
+    }
+
+    .stat small {
+      display: block;
+      color: var(--muted);
+      font-size: .78rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: .9;
+      letter-spacing: -.045em;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--soft);
+      margin-top: 8px;
+      font-size: .9rem;
+      line-height: 1.35;
+    }
+
+    .section {
+      padding: 14px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.5;
+    }
+
+    .gauge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .gauge-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 32%),
+        rgba(5, 10, 20, .74);
+      box-shadow: 0 18px 60px rgba(0,0,0,.24);
+    }
+
+    .gauge-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+      background: radial-gradient(circle at 50% 50%, var(--tone), transparent 50%);
+      pointer-events: none;
+    }
+
+    .gauge-card.priority {
+      border-color: rgba(255,217,138,.58);
+    }
+
+    .gauge-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .gauge-name small {
+      display: block;
+      color: var(--muted);
+      font-size: .74rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .gauge-name strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .gauge-value {
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 1.15rem;
+      white-space: nowrap;
+    }
+
+    .dial {
+      position: relative;
+      z-index: 1;
+      width: 170px;
+      height: 92px;
+      margin: 22px auto 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      border-bottom: 0;
+      border-radius: 170px 170px 0 0;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(0,0,0,.5), transparent 42%),
+        conic-gradient(from 270deg at 50% 100%, var(--red), var(--yellow), var(--green), var(--blue));
+    }
+
+    .dial::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -54px;
+      width: 118px;
+      height: 118px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #071021;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .needle {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 4px;
+      height: 75px;
+      transform-origin: 50% 100%;
+      transform: translateX(-50%) rotate(var(--needle));
+      border-radius: 999px;
+      background: var(--text);
+      z-index: 2;
+      box-shadow: 0 0 20px rgba(255,255,255,.25);
+    }
+
+    .dial-read {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      z-index: 3;
+      transform: translateX(-50%);
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .dial-read strong {
+      color: var(--text);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .dial-read small {
+      color: var(--muted);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .meaning {
+      position: relative;
+      z-index: 1;
+      color: var(--muted);
+      line-height: 1.45;
+      min-height: 62px;
+    }
+
+    .telemetry {
+      position: relative;
+      z-index: 1;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+    }
+
+    .telemetry li {
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 12px;
+      padding: 8px 9px;
+      color: var(--soft);
+      font-size: .82rem;
+      background: rgba(0,0,0,.16);
+    }
+
+    .audit-layout {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+
+    .audit-table,
+    .receipt-card {
+      padding: 18px;
+    }
+
+    .audit-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .audit-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 13px;
+      background: rgba(0,0,0,.18);
+      display: grid;
+      gap: 8px;
+    }
+
+    .audit-item strong {
+      color: var(--text);
+    }
+
+    .audit-item span,
+    .audit-item code {
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .audit-item code {
+      font-size: .78rem;
+    }
+
+    .audit-item.pass {
+      border-color: rgba(147,239,189,.36);
+    }
+
+    .audit-item.warn {
+      border-color: rgba(255,207,122,.42);
+    }
+
+    .audit-item.fail {
+      border-color: rgba(255,111,120,.45);
+    }
+
+    .receipt {
+      margin: 0;
+      white-space: pre-wrap;
+      color: var(--muted);
+      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .next-move {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,217,138,.08);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 24px;
+      padding: 26px 0 38px;
+      color: var(--muted);
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1000px) {
+      .hero-grid,
+      .audit-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .gauge-grid,
+      .status-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .gauge-grid,
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body
-  class="manor-skin manor-audit"
-  data-manor-skin="v1"
-  data-manor-room="gauges"
-  data-manor-class="house"
-  data-manor-slot="H6_GAUGES"
-  data-manor-route="/gauges/"
-  data-manor-batch="BATCH_1_HOUSE"
+  class="manor-skin house-class"
   data-page-id="gauges"
-  data-route="/gauges/"
-  data-class-type="house_structure"
-  data-construct-code="H6_GAUGES"
-  data-house-anchor="gauges"
-  data-skin-family="manor_audit"
-  data-audit-priority="critical"
-  data-view-modes="return"
-  data-registry-version="1.0.0"
+  data-page="gauges"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-manor-class="house"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
 >
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/" aria-current="page">Gauges</a>
-  </nav>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate · Gauges</span>
+      </a>
 
-  <main class="manor-shell">
-    <section class="manor-room" aria-label="Gauges">
-      <p class="manor-kicker">H6 · Gauges · Diagnostic Instrument Room</p>
-      <h1 class="manor-title">Gauges</h1>
-      <p class="manor-lede">
-        Gauges verifies the estate. These checks are browser-calculated from live same-origin fetches and visible marker reads.
-      </p>
+      <nav class="nav" aria-label="Primary estate routes">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </div>
+  </header>
 
-      <div class="manor-divider"></div>
+  <main
+    class="page manor-skin house-class"
+    id="gauges-root"
+    data-page="gauges"
+    data-page-id="gauges"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-manor-class="house"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="house"
+    data-house-part="gauges"
+  >
+    <section class="hero" aria-labelledby="H6_GAUGES">
+      <div class="wrap hero-grid">
+        <article class="panel hero-card">
+          <p class="eyebrow">H6 · Gauges · Ceiling calibration room</p>
+          <h1 id="H6_GAUGES">Gauges</h1>
+          <p class="lead">
+            Gauges are the estate’s ceiling and jump calibration instrument. They measure
+            collective jump height, independent page height, shared ceiling, renewal lift,
+            and alignment drag. They do not fake evidence.
+          </p>
+        </article>
 
-      <section class="manor-stage" aria-label="Live site health">
-        <p class="manor-kicker">Live site-health instruments</p>
-        <div class="manor-proof-strip" aria-label="Health summary">
-          <div class="manor-proof-item">
-            <strong id="overallScore">--</strong>
-            <span>Overall health</span>
+        <aside class="panel method-card" aria-label="Gauges operating method">
+          <p class="eyebrow">Gauge · Renew · Measure · Raise · Repeat</p>
+          <ul class="method-list">
+            <li><b>Gauge first:</b> read the current measured ceiling.</li>
+            <li><b>Renew narrowly:</b> target the limiter, not the whole estate blindly.</li>
+            <li><b>Measure again:</b> compare before and after.</li>
+            <li><b>Raise ceiling:</b> lock only what improves or clarifies the next jump.</li>
+            <li><b>Repeat:</b> continue by calibration, not fishing.</li>
+          </ul>
+          <div class="controls">
+            <button class="refresh" id="refreshAudit" type="button">Run live calibration</button>
+            <a class="pill" href="/">Return to Compass</a>
           </div>
-          <div class="manor-proof-item">
-            <strong id="houseScore">--</strong>
-            <span>House skeleton</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="wrap status-strip" aria-label="Live site-health instruments">
+      <article class="stat">
+        <small>Overall health</small>
+        <strong id="overallScore">--</strong>
+        <span id="overallNote">live-calculated · awaiting route checks</span>
+      </article>
+
+      <article class="stat">
+        <small>House skeleton</small>
+        <strong id="houseScore">--</strong>
+        <span id="houseNote">live-calculated · awaiting route checks</span>
+      </article>
+
+      <article class="stat">
+        <small>Products</small>
+        <strong id="productsScore">--</strong>
+        <span id="productsNote">live-calculated · awaiting route checks</span>
+      </article>
+
+      <article class="stat">
+        <small>Planets</small>
+        <strong id="planetsScore">--</strong>
+        <span id="planetsNote">live-calculated · awaiting route checks</span>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Live calibration dials</p>
+            <h2>Measured jump field</h2>
           </div>
-          <div class="manor-proof-item">
-            <strong id="productScore">--</strong>
-            <span>Products</span>
-          </div>
-          <div class="manor-proof-item">
-            <strong id="planetScore">--</strong>
-            <span>Planets</span>
-          </div>
+          <p>
+            These dials are calculated from same-origin fetches and source-marker reads.
+            A page can look better and still fail if it lowers the verified ceiling.
+          </p>
         </div>
-        <p id="overallLabel" class="manor-lede">live-calculated · awaiting route checks</p>
-      </section>
+
+        <div class="gauge-grid" id="gaugeGrid" aria-label="Calibration gauges"></div>
+      </div>
     </section>
 
-    <section class="manor-room" style="margin-top:28px" aria-label="Live audit table">
-      <p class="manor-kicker">Live audit table</p>
-      <div id="auditTable" class="manor-grid" aria-live="polite"></div>
-    </section>
+    <section class="section">
+      <div class="wrap audit-layout">
+        <article class="panel audit-table">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Live audit table</p>
+              <h2>Route evidence</h2>
+            </div>
+          </div>
 
-    <section class="manor-backlinks" aria-label="House backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-      <ul class="manor-backlinks-list">
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-      </ul>
-    </section>
+          <ul class="audit-list" id="auditList" aria-label="Route audit evidence"></ul>
+        </article>
 
-    <section class="manor-audit-strip" aria-label="Gauges audit receipt">
-      <p class="manor-audit-title">Gauges receipt</p>
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">house-class</li>
-        <li class="manor-audit-chip pass">H6_GAUGES</li>
-        <li class="manor-audit-chip pass">live-calculated</li>
-      </ul>
-      <p class="batch-note">
-        Batch rule: Gauges may style evidence, but Gauges may not fake evidence. Registry defines expectations. This page checks what is actually served.
-      </p>
+        <aside class="panel receipt-card">
+          <p class="eyebrow">Calibration receipt</p>
+          <h2>Before / after discipline</h2>
+          <pre class="receipt" id="liveReceipt">SCANNING=false
+Run live calibration to read current jump height.</pre>
+
+          <div class="next-move" id="nextMove">
+            Next move: run Gauges first, renew narrowly, measure again, raise ceiling, repeat.
+          </div>
+        </aside>
+      </div>
     </section>
   </main>
 
+  <footer>
+    <div class="wrap">
+      <span>GAUGES_GENERATION_2_CEILING_CALIBRATION_FULL_TNT_v1</span>
+      <span>Gauges may style evidence, but Gauges may not fake evidence.</span>
+    </div>
+  </footer>
+
   <script>
     (function () {
-      "use strict";
+      const REQUIRED = {
+        commonEstate: [
+          'data-estate="rich-manor-and-estate"',
+          'data-manor-skin="active"',
+          'data-house-field="true"',
+          'data-gauges-truth="live-authority"'
+        ],
+        house: [
+          'data-construct-class="house"',
+          'data-manor-class="house"',
+          'data-house-part=',
+          'manor-skin',
+          'house-class'
+        ],
+        product: [
+          'data-construct-class="product"',
+          'data-product-wing="true"',
+          'data-parent-route="/products/"'
+        ],
+        planetary: [
+          'data-construct-class="planetary"',
+          'data-manor-attached="true"'
+        ],
+        hosted: [
+          'data-hosted-construct="true"',
+          'data-parent-route=',
+          'data-manor-attached="true"'
+        ]
+      };
 
-      var groups = [
+      const ROUTES = [
         {
-          id: "house",
-          label: "Batch 1 · House skeleton",
-          items: [
-            {
-              name: "Compass",
-              route: "/",
-              required: ["H1_COMPASS", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"compass\""]
-            },
-            {
-              name: "Door",
-              route: "/door/",
-              required: ["H2_DOOR", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"door\""]
-            },
-            {
-              name: "Home",
-              route: "/home/",
-              required: ["H3_HOME", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"home\""]
-            },
-            {
-              name: "Products",
-              route: "/products/",
-              required: ["H4_PRODUCTS", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"products\""]
-            },
-            {
-              name: "Showroom",
-              route: "/showroom/",
-              required: ["H5_SHOWROOM", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"showroom\""]
-            },
-            {
-              name: "Gauges",
-              route: "/gauges/",
-              required: ["H6_GAUGES", "manor-skin", "house-class", "data-manor-class=\"house\"", "live-calculated"]
-            }
-          ]
+          group: "house",
+          id: "H1_COMPASS",
+          label: "Compass",
+          path: "/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house, "H1_COMPASS"],
+          backlinks: ["/door/", "/home/", "/products/", "/showroom/", "/gauges/"]
         },
         {
-          id: "products",
-          label: "Batch 2 · Product chamber reachability",
-          items: [
-            { name: "ARCHCOIN", route: "/products/archcoin/", any: [["ARCHCOIN", "Archcoin"]] },
-            { name: "Five Flags", route: "/products/five-flags/", any: [["Five Flags"]] },
-            { name: "On Your Side AAI", route: "/products/on-your-side-ai/", any: [["On Your Side", "AAI", "AI"]] },
-            { name: "Education", route: "/products/education/", any: [["Education", "ESL Traversal Learning", "Learning"]] },
-            { name: "Nutrition", route: "/products/nutrition/", any: [["Nutrition", "Baseline Nutrition Systems"]] }
-          ]
+          group: "house",
+          id: "H2_DOOR",
+          label: "Door",
+          path: "/door/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
+          backlinks: ["/", "/home/", "/gauges/"]
         },
         {
-          id: "planets",
-          label: "Batch 3 · Planetary construct reachability",
-          items: [
-            { name: "Prelude", route: "/prelude/", any: [["Prelude"]] },
-            { name: "Explore", route: "/explore/", any: [["Explore"]] },
-            { name: "Frontier · hosted in Explore", route: "/explore/", any: [["Frontier", "frontier"]] },
-            { name: "Laws", route: "/laws/", any: [["Laws"]] },
-            { name: "Governance", route: "/governance/", any: [["Governance"]] },
-            { name: "Upper Room · hosted in Big Laugh", route: "/big-laugh/upper-room/", any: [["Upper Room", "fill your cup", "comedy"]] },
-            { name: "About This Underdog", route: "/about-this-underdog/", any: [["Underdog", "About"]] },
-            { name: "Nine Summits Universe", route: "/nine-summits/", any: [["Nine Summits"]] },
-            { name: "Nine Summits of Love", route: "/nine-summits-of-love/", any: [["Nine Summits of Love", "256", "human potential"]] }
-          ]
+          group: "house",
+          id: "H3_HOME",
+          label: "Home",
+          path: "/home/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
+          backlinks: ["/", "/door/", "/gauges/"]
+        },
+        {
+          group: "house",
+          id: "H4_PRODUCTS",
+          label: "Products",
+          path: "/products/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
+          backlinks: ["/", "/showroom/", "/gauges/"]
+        },
+        {
+          group: "house",
+          id: "H5_SHOWROOM",
+          label: "Showroom",
+          path: "/showroom/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
+          backlinks: ["/", "/products/", "/gauges/"]
+        },
+        {
+          group: "house",
+          id: "H6_GAUGES",
+          label: "Gauges",
+          path: "/gauges/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.house, "H6_GAUGES"],
+          backlinks: ["/", "/home/", "/products/", "/showroom/"]
+        },
+        {
+          group: "products",
+          id: "P_ARCHCOIN",
+          label: "ARCHCOIN",
+          path: "/products/archcoin/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
+          backlinks: ["/products/", "/gauges/"]
+        },
+        {
+          group: "products",
+          id: "P_FIVE_FLAGS",
+          label: "Five Flags",
+          path: "/products/five-flags/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
+          backlinks: ["/products/", "/gauges/"]
+        },
+        {
+          group: "products",
+          id: "P_ON_YOUR_SIDE_AAI",
+          label: "On Your Side AAI",
+          path: "/products/on-your-side-ai/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
+          backlinks: ["/products/", "/gauges/"]
+        },
+        {
+          group: "products",
+          id: "P_EDUCATION",
+          label: "Education",
+          path: "/products/education/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
+          backlinks: ["/products/", "/gauges/"]
+        },
+        {
+          group: "products",
+          id: "P_NUTRITION",
+          label: "Nutrition",
+          path: "/products/nutrition/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
+          backlinks: ["/products/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_PRELUDE",
+          label: "Prelude",
+          path: "/prelude/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_EXPLORE",
+          label: "Explore",
+          path: "/explore/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_LAWS",
+          label: "Laws",
+          path: "/laws/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_GOVERNANCE",
+          label: "Governance",
+          path: "/governance/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_UPPER_ROOM",
+          label: "Upper Room",
+          path: "/big-laugh/upper-room/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.hosted],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_UNDERDOG",
+          label: "About This Underdog",
+          path: "/about-this-underdog/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_NINE_SUMMITS",
+          label: "Nine Summits Universe",
+          path: "/nine-summits/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
+        },
+        {
+          group: "planets",
+          id: "PL_NINE_SUMMITS_LOVE",
+          label: "Nine Summits of Love",
+          path: "/nine-summits-of-love/",
+          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
+          backlinks: ["/", "/gauges/"]
         }
       ];
 
-      var table = document.getElementById("auditTable");
-      var overallScore = document.getElementById("overallScore");
-      var houseScore = document.getElementById("houseScore");
-      var productScore = document.getElementById("productScore");
-      var planetScore = document.getElementById("planetScore");
-      var overallLabel = document.getElementById("overallLabel");
+      const STATE_COLORS = {
+        healthy: "--green",
+        active: "--gold",
+        proof: "--blue",
+        watch: "--yellow",
+        break: "--red",
+        complex: "--purple"
+      };
 
-      function hasAny(text, options) {
-        return options.some(function (value) {
-          return text.indexOf(value) !== -1;
-        });
+      const STATE_NEEDLES = {
+        healthy: 66,
+        proof: 54,
+        active: 42,
+        watch: 18,
+        complex: -8,
+        break: -38
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      const gaugeGrid = $("gaugeGrid");
+      const auditList = $("auditList");
+      const liveReceipt = $("liveReceipt");
+      const nextMove = $("nextMove");
+      const refreshAudit = $("refreshAudit");
+
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
       }
 
-      function checkItem(text, item) {
-        var checks = [];
+      function normalizeHTML(value) {
+        return String(value || "").replace(/\s+/g, " ").trim();
+      }
 
-        if (item.required) {
-          item.required.forEach(function (needle) {
-            checks.push({ label: needle, pass: text.indexOf(needle) !== -1 });
+      function containsMarker(html, marker) {
+        const normalized = normalizeHTML(html);
+        return normalized.includes(marker);
+      }
+
+      function containsPath(html, path) {
+        const normalized = normalizeHTML(html);
+        const forms = new Set([
+          `href="${path}"`,
+          `href='${path}'`,
+          `href=${path}`,
+          path
+        ]);
+
+        return Array.from(forms).some((form) => normalized.includes(form));
+      }
+
+      async function fetchRoute(route) {
+        try {
+          const response = await fetch(route.path, {
+            cache: "no-store",
+            credentials: "same-origin"
           });
+
+          const html = await response.text();
+
+          if (!response.ok) {
+            return {
+              ...route,
+              ok: false,
+              statusCode: response.status,
+              html,
+              missingRequired: route.required,
+              missingBacklinks: route.backlinks,
+              score: 0,
+              status: "BREAK"
+            };
+          }
+
+          const missingRequired = route.required.filter((marker) => !containsMarker(html, marker));
+          const missingBacklinks = route.backlinks.filter((path) => !containsPath(html, path));
+          const requiredScore = route.required.length
+            ? Math.round(((route.required.length - missingRequired.length) / route.required.length) * 70)
+            : 70;
+          const backlinkScore = route.backlinks.length
+            ? Math.round(((route.backlinks.length - missingBacklinks.length) / route.backlinks.length) * 30)
+            : 30;
+          const score = Math.max(0, Math.min(100, requiredScore + backlinkScore));
+
+          return {
+            ...route,
+            ok: true,
+            statusCode: response.status,
+            html,
+            missingRequired,
+            missingBacklinks,
+            score,
+            status: score >= 100 ? "PASS" : score >= 70 ? "WATCH" : "BREAK"
+          };
+        } catch (error) {
+          return {
+            ...route,
+            ok: false,
+            statusCode: "FETCH_ERROR",
+            html: "",
+            missingRequired: route.required,
+            missingBacklinks: route.backlinks,
+            score: 0,
+            status: "BREAK",
+            error: error && error.message ? error.message : String(error)
+          };
+        }
+      }
+
+      function averageScore(items) {
+        if (!items.length) return 0;
+        return Math.round(items.reduce((sum, item) => sum + item.score, 0) / items.length);
+      }
+
+      function scoreState(score) {
+        if (score >= 100) return "healthy";
+        if (score >= 90) return "proof";
+        if (score >= 75) return "active";
+        if (score >= 55) return "watch";
+        if (score > 0) return "complex";
+        return "break";
+      }
+
+      function writeStat(id, score, note) {
+        $(id + "Score").textContent = score;
+        $(id + "Note").textContent = note;
+      }
+
+      function renderGauge(gauge) {
+        const tone = STATE_COLORS[gauge.state] || "--green";
+        const needle = STATE_NEEDLES[gauge.state] ?? 0;
+
+        return `
+          <article class="gauge-card${gauge.priority ? " priority" : ""}" style="--tone:var(${tone});--needle:${needle}deg;">
+            <div class="gauge-top">
+              <span class="gauge-name">
+                <small>${escapeHTML(gauge.id)} · ${escapeHTML(gauge.kind)}</small>
+                <strong>${escapeHTML(gauge.title)}</strong>
+              </span>
+              <span class="gauge-value">${escapeHTML(gauge.value)}</span>
+            </div>
+
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dial-read">
+                <strong>${escapeHTML(gauge.value)}</strong>
+                <small>${escapeHTML(gauge.label)}</small>
+              </span>
+            </div>
+
+            <p class="meaning">${escapeHTML(gauge.meaning)}</p>
+
+            <ul class="telemetry">
+              ${gauge.receipt.map((line) => `<li>${escapeHTML(line)}</li>`).join("")}
+            </ul>
+          </article>
+        `;
+      }
+
+      function renderRouteReceipt(route) {
+        const missingRequired = route.missingRequired.length
+          ? "MISSING_MARKERS=" + route.missingRequired.join(", ")
+          : "MISSING_MARKERS=NONE";
+        const missingBacklinks = route.missingBacklinks.length
+          ? "MISSING_BACKLINKS=" + route.missingBacklinks.join(", ")
+          : "MISSING_BACKLINKS=NONE";
+        const className = route.score >= 100 ? "pass" : route.score >= 70 ? "warn" : "fail";
+
+        return `
+          <li class="audit-item ${className}">
+            <strong>${escapeHTML(route.id)} · ${escapeHTML(route.label)} · ${escapeHTML(route.score)}</strong>
+            <span>${escapeHTML(route.path)} · STATUS=${escapeHTML(route.status)} · HTTP=${escapeHTML(route.statusCode)}</span>
+            <code>${escapeHTML(missingRequired)}</code>
+            <code>${escapeHTML(missingBacklinks)}</code>
+          </li>
+        `;
+      }
+
+      function limiterFromResults(results) {
+        const sorted = [...results].sort((a, b) => a.score - b.score);
+        return sorted[0] || null;
+      }
+
+      function nextMoveFromScores(scores, limiter) {
+        if (!limiter) {
+          return "Next move: no route evidence returned. Inspect fetch/access conditions.";
         }
 
-        if (item.any) {
-          item.any.forEach(function (options) {
-            checks.push({ label: options.join(" OR "), pass: hasAny(text, options) });
-          });
+        if (scores.overall >= 100 && scores.house >= 100 && scores.products >= 100 && scores.planets >= 100) {
+          return "Next move: ceiling currently reads 100. Generation Two visual renewal may resume only with before/after receipt discipline.";
         }
 
-        if (!checks.length) {
-          checks.push({ label: "route reachable", pass: true });
+        if (limiter.group === "house") {
+          return `Next move: renew narrowly at ${limiter.label} (${limiter.path}). House skeleton is the current ceiling limiter.`;
         }
 
-        var passed = checks.filter(function (check) { return check.pass; }).length;
-        var score = Math.round((passed / checks.length) * 100);
+        if (limiter.group === "products") {
+          return `Next move: inspect product chamber ${limiter.label} without touching working house or planet routes.`;
+        }
 
-        return {
-          score: score,
-          passed: passed,
-          total: checks.length,
-          checks: checks
+        if (limiter.group === "planets") {
+          return `Next move: inspect planetary/hosted construct ${limiter.label} without changing route law.`;
+        }
+
+        return `Next move: inspect ${limiter.label} (${limiter.path}) as current alignment drag.`;
+      }
+
+      async function runAudit() {
+        refreshAudit.disabled = true;
+        refreshAudit.textContent = "Scanning...";
+
+        liveReceipt.textContent = [
+          "SCANNING=true",
+          "METHOD=Gauge first. Renew narrowly. Measure again. Raise ceiling. Repeat.",
+          "STATUS=fetching same-origin routes"
+        ].join("\n");
+
+        const results = await Promise.all(ROUTES.map(fetchRoute));
+        const house = results.filter((route) => route.group === "house");
+        const products = results.filter((route) => route.group === "products");
+        const planets = results.filter((route) => route.group === "planets");
+
+        const scores = {
+          house: averageScore(house),
+          products: averageScore(products),
+          planets: averageScore(planets)
         };
+
+        scores.overall = Math.round((scores.house + scores.products + scores.planets) / 3);
+
+        const limiter = limiterFromResults(results);
+        const state = {
+          overall: scoreState(scores.overall),
+          house: scoreState(scores.house),
+          products: scoreState(scores.products),
+          planets: scoreState(scores.planets)
+        };
+
+        writeStat("overall", scores.overall, `${state.overall.toUpperCase()} · shared ceiling read`);
+        writeStat("house", scores.house, `${state.house.toUpperCase()} · house skeleton`);
+        writeStat("products", scores.products, `${state.products.toUpperCase()} · product wing reachability`);
+        writeStat("planets", scores.planets, `${state.planets.toUpperCase()} · planetary attachment`);
+
+        const gauges = [
+          {
+            id: "G0",
+            kind: "collective",
+            title: "Overall ceiling",
+            value: scores.overall,
+            label: "shared",
+            state: state.overall,
+            priority: state.overall !== "healthy",
+            meaning: "Current verified height the estate can hold together.",
+            receipt: [
+              `HOUSE=${scores.house}`,
+              `PRODUCTS=${scores.products}`,
+              `PLANETS=${scores.planets}`
+            ]
+          },
+          {
+            id: "G1",
+            kind: "house",
+            title: "House skeleton",
+            value: scores.house,
+            label: "house",
+            state: state.house,
+            priority: state.house !== "healthy",
+            meaning: "Compass, Door, Home, Products, Showroom, and Gauges as one house field.",
+            receipt: house.map((route) => `${route.label}=${route.score}`)
+          },
+          {
+            id: "G2",
+            kind: "products",
+            title: "Products",
+            value: scores.products,
+            label: "wing",
+            state: state.products,
+            priority: state.products !== "healthy",
+            meaning: "Product chambers remain attached to Products without becoming house or planet roots.",
+            receipt: products.map((route) => `${route.label}=${route.score}`)
+          },
+          {
+            id: "G3",
+            kind: "planets",
+            title: "Planets",
+            value: scores.planets,
+            label: "orbit",
+            state: state.planets,
+            priority: state.planets !== "healthy",
+            meaning: "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
+            receipt: planets.map((route) => `${route.label}=${route.score}`)
+          }
+        ];
+
+        gaugeGrid.innerHTML = gauges.map(renderGauge).join("");
+        auditList.innerHTML = results.map(renderRouteReceipt).join("");
+
+        const nextMove = nextMoveFromScores(scores, limiter);
+        $("nextMove").textContent = nextMove;
+
+        liveReceipt.textContent = [
+          "BEFORE=",
+          "  source=live same-origin fetch",
+          "",
+          "ACTION=",
+          "  target=measured estate field",
+          "  scope=read-only calibration",
+          "  gauges_logic_touched=FALSE",
+          "  fake_health_claim=FALSE",
+          "",
+          "AFTER=",
+          `  Overall=${scores.overall}`,
+          `  House=${scores.house}`,
+          `  Products=${scores.products}`,
+          `  Planets=${scores.planets}`,
+          `  WeakPage=${limiter ? limiter.label + " " + limiter.path + " " + limiter.score : "NONE"}`,
+          "",
+          "CEILING_RESULT=",
+          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_LIMITER=" + (limiter ? limiter.label : "UNKNOWN"),
+          "",
+          "NEXT_MOVE=",
+          "  " + nextMove
+        ].join("\n");
+
+        refreshAudit.disabled = false;
+        refreshAudit.textContent = "Run live calibration";
       }
 
-      function card(group, item, result, error) {
-        var node = document.createElement("article");
-        node.className = "manor-card";
-
-        var status = error ? "fail" : result.score === 100 ? "pass" : result.score >= 70 ? "warn" : "fail";
-        var missing = error ? ["fetch failed"] : result.checks.filter(function (check) { return !check.pass; }).map(function (check) { return check.label; });
-
-        node.innerHTML =
-          "<p class=\"manor-kicker\">" + group.label + "</p>" +
-          "<h2>" + item.name + "</h2>" +
-          "<p class=\"manor-lede\"><code>" + item.route + "</code></p>" +
-          "<p><span class=\"manor-audit-chip " + status + "\">" + (error ? "0" : result.score) + "</span></p>" +
-          "<p class=\"batch-note\">" + (error ? "Route check failed." : result.passed + " of " + result.total + " required checks found.") + "</p>" +
-          (missing.length ? "<p class=\"batch-note\">missing: " + missing.join(", ") + "</p>" : "");
-
-        return node;
-      }
-
-      function fetchText(route) {
-        return fetch(route, { cache: "no-store" }).then(function (response) {
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          return response.text();
-        });
-      }
-
-      Promise.all(groups.map(function (group) {
-        return Promise.all(group.items.map(function (item) {
-          return fetchText(item.route)
-            .then(function (text) {
-              var result = checkItem(text, item);
-              table.appendChild(card(group, item, result, null));
-              return result.score;
-            })
-            .catch(function (error) {
-              table.appendChild(card(group, item, { score: 0, passed: 0, total: 1, checks: [] }, error));
-              return 0;
-            });
-        })).then(function (scores) {
-          var average = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
-          return { id: group.id, score: average };
-        });
-      })).then(function (groupScores) {
-        var map = {};
-        groupScores.forEach(function (item) { map[item.id] = item.score; });
-
-        var overall = Math.round(groupScores.reduce(function (a, b) { return a + b.score; }, 0) / groupScores.length);
-
-        houseScore.textContent = String(map.house);
-        productScore.textContent = String(map.products);
-        planetScore.textContent = String(map.planets);
-        overallScore.textContent = String(overall);
-
-        if (overall === 100) {
-          overallLabel.textContent = "OPTIMAL / live route law stable";
-        } else if (overall >= 90) {
-          overallLabel.textContent = "PASS / minor refinement only";
-        } else if (overall >= 70) {
-          overallLabel.textContent = "WARN / repair exact failed checks";
-        } else {
-          overallLabel.textContent = "FAIL / repair route, marker, backlink, or render issue";
-        }
-      });
+      refreshAudit.addEventListener("click", runAudit);
+      runAudit();
     })();
   </script>
 </body>

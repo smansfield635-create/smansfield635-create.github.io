@@ -1,548 +1,1089 @@
-/*
-  PAGE_REGISTRY_TNT_B2
-  FILE: /assets/page_registry.js
-  PURPOSE: 15-center-room metadata contract for the Manor / planetary lattice.
-  SCOPE: Safe standalone registry. No page body rewrites. No live Gauges override.
-*/
-
-(function attachManorPageRegistry(global) {
+(function () {
   "use strict";
 
-  const VERSION = "PAGE_REGISTRY_TNT_B2";
-  const SKIN_VERSION = "manor-skin-v1";
-  const GEOMETRY = Object.freeze({
-    lattice: "16x16",
-    cells: 256,
-    quadrants: 4,
-    cellsPerQuadrant: 64,
-    rule: "House first. Planets second. No isolated expressive island."
+  const PAGE_REGISTRY = Object.freeze({
+    registry_version: "1.0.0",
+    project: "DIAMOND_GATE_BRIDGE / RICH_MANOR_AND_ESTATE",
+    controller: "FULL_ESTATE_ARCHITECTURAL_BLUEPRINT_RECEIVER_RETURN_v1",
+    field_plan: "PAGE_REGISTRY_FIELD_PLAN_RECEIVER_RETURN_v1",
+    role: "metadata_only_canonical_map",
+    non_roles: [
+      "not_render_logic",
+      "not_gauges_truth",
+      "not_fake_live_health",
+      "not_sitemap",
+      "not_css_rewrite",
+      "not_page_rewrite",
+      "not_index_rebuild"
+    ],
+
+    governing_law: Object.freeze({
+      primary_object: "Rich Manor and Estate / Diamond Gate Bridge",
+      environment: "Universe",
+      compass: "controls_view",
+      door: "controls_entry",
+      home: "receives_and_stabilizes",
+      products: "distributes",
+      showroom: "proves",
+      gauges: "verifies",
+      house_first: true,
+      universe_second: true
+    }),
+
+    enums: Object.freeze({
+      route_type: ["canonical", "hosted", "bridge", "redirect", "external", "protected", "future"],
+      class_type: [
+        "house_structure",
+        "product_chamber",
+        "planetary_construct",
+        "foundation",
+        "protected_vault",
+        "bridge_route",
+        "event_surface",
+        "audit_surface"
+      ],
+      house_anchor: ["compass", "door", "home", "products", "showroom", "gauges", "multiple"],
+      quadrant: [
+        "center_cross",
+        "Q1_NORTHWEST",
+        "Q2_NORTHEAST",
+        "Q3_SOUTHEAST",
+        "Q4_SOUTHWEST",
+        "seam_Q1_Q2",
+        "seam_Q2_Q3",
+        "seam_Q3_Q4",
+        "seam_Q4_Q1",
+        "multi_quadrant"
+      ],
+      view_modes_supported: ["flat", "round", "meta", "return", "all", "none"],
+      skin_family: [
+        "manor_house",
+        "manor_product",
+        "manor_planet",
+        "manor_event",
+        "manor_audit",
+        "manor_foundation",
+        "manor_vault",
+        "custom_bridge"
+      ],
+      audit_priority: ["critical", "high", "medium", "low", "deferred"],
+      canonical_destination_status: ["canonical", "not_canonical", "bridge_only", "hosted", "future_candidate", "retired"],
+      host_status: ["standalone", "hosted", "bridge", "not_applicable"],
+      build_priority: [
+        "1_critical_foundation",
+        "2_house_first",
+        "3_product_wing",
+        "4_planetary_alignment",
+        "5_visual_upgrade",
+        "6_later_refinement"
+      ],
+      public_visibility: ["public", "semi_public", "protected", "internal", "future"],
+      protection_level: ["none", "low", "medium", "high", "vault"]
+    }),
+
+    view_modes: Object.freeze({
+      flat: Object.freeze({
+        id: "flat",
+        public_phrase: "See the house clearly.",
+        role: "2D public route map and fastest visitor understanding.",
+        visual_identity: "clean architectural estate map",
+        failure_risk: "Flat becomes a plain menu instead of an estate map."
+      }),
+      round: Object.freeze({
+        id: "round",
+        public_phrase: "See how the house grows.",
+        role: "Tree of Life / A Bug’s Life relationship view.",
+        visual_identity: "roots, branches, chambers, and living scale",
+        failure_risk: "Round becomes mythology without build consequence."
+      }),
+      meta: Object.freeze({
+        id: "meta",
+        public_phrase: "See the house inside the full universe.",
+        role: "Full universe-scale estate view with Manor still central.",
+        visual_identity: "Manor inside surrounding universe field",
+        failure_risk: "Meta makes the universe the subject."
+      }),
+      return: Object.freeze({
+        id: "return",
+        public_phrase: "See how every path returns to the Manor.",
+        role: "Proof, Gauges, backlinks, route stability, and audit receipts.",
+        visual_identity: "return paths, proof rails, and diagnostic markers",
+        failure_risk: "Return becomes footer clutter or fake proof."
+      })
+    }),
+
+    house_parts: Object.freeze([
+      Object.freeze({
+        id: "compass",
+        title: "Compass",
+        route: "/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H1_COMPASS",
+        house_anchor: "compass",
+        quadrant: "center_cross",
+        lattice_region: "center cross",
+        public_phrase: "Choose how you want to see the house.",
+        short_description: "The Compass is the first public reveal and the view-control surface for the estate.",
+        visual_identity: "Compass over Manor and estate",
+        allowed_atmosphere: "cinematic estate arrival inside universe environment",
+        forbidden_inversion: "Universe replaces the house or Index becomes a generic landing page.",
+        required_backlinks: ["/door/", "/home/", "/products/", "/showroom/", "/gauges/"],
+        return_routes: ["/"],
+        related_routes: ["/door/", "/home/", "/products/", "/showroom/", "/gauges/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show the house as a clean 2D estate map.",
+        round_behavior: "Show the house as an organic Tree of Life relationship structure.",
+        meta_behavior: "Show the house inside the full universe without making the universe the subject.",
+        return_behavior: "Show proof, route stability, backlinks, and Gauges access.",
+        skin_family: "manor_house",
+        required_skin_markers: ["manor-skin", "house-class", "H1_COMPASS", "flat-round-meta"],
+        audit_priority: "critical",
+        gauges_dependency: "verify root route, house class, Compass identity, view markers, and required backlinks",
+        required_marker_keys: ["data-manor-room=compass", "data-manor-class=house", "H1_COMPASS"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "universe_replaces_house",
+        build_priority: "1_critical_foundation",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "door",
+        title: "Door",
+        route: "/door/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H2_DOOR",
+        house_anchor: "door",
+        quadrant: "seam_Q1_Q2",
+        lattice_region: "outer threshold band",
+        public_phrase: "Enter the estate.",
+        short_description: "The Door controls entry and threshold crossing into the Manor.",
+        visual_identity: "gate, bridge, threshold, and permission point",
+        allowed_atmosphere: "threshold, arrival, gate, and crossing",
+        forbidden_inversion: "Door duplicates Compass instead of performing entry.",
+        required_backlinks: ["/", "/home/"],
+        return_routes: ["/", "/home/"],
+        related_routes: ["/", "/home/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show the entry route clearly.",
+        round_behavior: "Show the threshold as the root crossing into the living house.",
+        meta_behavior: "Show the Door as the estate threshold inside the larger universe.",
+        return_behavior: "Return to Compass or Home.",
+        skin_family: "manor_house",
+        required_skin_markers: ["manor-skin", "house-class", "H2_DOOR"],
+        audit_priority: "high",
+        gauges_dependency: "verify Door route and return path",
+        required_marker_keys: ["data-manor-room=door", "data-manor-class=house", "H2_DOOR"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "door_duplicates_compass",
+        build_priority: "2_house_first",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "home",
+        title: "Home",
+        route: "/home/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H3_HOME",
+        house_anchor: "home",
+        quadrant: "multi_quadrant",
+        lattice_region: "inner body band",
+        public_phrase: "You are inside the Manor.",
+        short_description: "Home receives and stabilizes the visitor inside the house.",
+        visual_identity: "central receiving room and inhabited Manor body",
+        allowed_atmosphere: "warm, stable, inhabited, central",
+        forbidden_inversion: "Home becomes a generic about page or abstract system lecture.",
+        required_backlinks: ["/", "/door/", "/products/", "/showroom/", "/gauges/"],
+        return_routes: ["/", "/door/"],
+        related_routes: ["/products/", "/showroom/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show Home as the central receiving room.",
+        round_behavior: "Show Home as the trunk or central living body.",
+        meta_behavior: "Show Home as the stable center inside the estate field.",
+        return_behavior: "Return to Compass or Door.",
+        skin_family: "manor_house",
+        required_skin_markers: ["manor-skin", "house-class", "H3_HOME"],
+        audit_priority: "high",
+        gauges_dependency: "verify Home route, house identity, and backlinks",
+        required_marker_keys: ["data-manor-room=home", "data-manor-class=house", "H3_HOME"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "page_becomes_generic_menu",
+        build_priority: "2_house_first",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "products",
+        title: "Products",
+        route: "/products/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H4_PRODUCTS",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "source-waterfall corridor",
+        public_phrase: "Explore the product chambers.",
+        short_description: "Products distributes the canonical product chambers from one source-waterfall wing.",
+        visual_identity: "source chamber and waterfall corridor",
+        allowed_atmosphere: "organized utility, product source, clear routing",
+        forbidden_inversion: "Products becomes a loose catalog or product chambers become detached roots.",
+        required_backlinks: ["/", "/home/", "/showroom/", "/gauges/"],
+        return_routes: ["/", "/home/", "/showroom/"],
+        related_routes: [
+          "/products/archcoin/",
+          "/products/five-flags/",
+          "/products/on-your-side-ai/",
+          "/products/education/",
+          "/products/nutrition/"
+        ],
+        view_modes_supported: "all",
+        flat_behavior: "Show clear product paths.",
+        round_behavior: "Show products as branches from the Products wing.",
+        meta_behavior: "Show product chambers attached to the Manor.",
+        return_behavior: "Verify canonical product destinations.",
+        skin_family: "manor_house",
+        required_skin_markers: ["manor-skin", "house-class", "H4_PRODUCTS"],
+        audit_priority: "critical",
+        gauges_dependency: "verify Products route, parent status, product destinations, and return paths",
+        required_marker_keys: ["data-manor-room=products", "data-manor-class=house", "H4_PRODUCTS"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "products_become_loose_catalog",
+        build_priority: "2_house_first",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "showroom",
+        title: "Showroom",
+        route: "/showroom/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H5_SHOWROOM",
+        house_anchor: "showroom",
+        quadrant: "seam_Q3_Q4",
+        lattice_region: "public proof window",
+        public_phrase: "See the proof.",
+        short_description: "Showroom proves the estate through public demonstration and visible receipts.",
+        visual_identity: "glass proof room, public display room, proof lobby",
+        allowed_atmosphere: "public proof, demonstration, display, receipts",
+        forbidden_inversion: "Showroom replaces Compass or becomes only a product grid.",
+        required_backlinks: ["/", "/home/", "/products/", "/gauges/"],
+        return_routes: ["/", "/home/", "/products/"],
+        related_routes: ["/products/", "/gauges/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show proof rooms clearly.",
+        round_behavior: "Show proof as a visible branch connected to house identity.",
+        meta_behavior: "Show proof as public-facing estate evidence in the wider field.",
+        return_behavior: "Return to Compass, Products, or Gauges.",
+        skin_family: "manor_house",
+        required_skin_markers: ["manor-skin", "house-class", "H5_SHOWROOM"],
+        audit_priority: "high",
+        gauges_dependency: "verify Showroom route, proof role, and required backlinks",
+        required_marker_keys: ["data-manor-room=showroom", "data-manor-class=house", "H5_SHOWROOM"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "showroom_replaces_compass",
+        build_priority: "2_house_first",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "gauges",
+        title: "Gauges",
+        route: "/gauges/",
+        route_type: "canonical",
+        class_type: "house_structure",
+        construct_code: "H6_GAUGES",
+        house_anchor: "gauges",
+        quadrant: "seam_Q1_Q3",
+        lattice_region: "diagnostic instrument room",
+        public_phrase: "Check the health of the estate.",
+        short_description: "Gauges verifies route health, backlinks, product connectivity, page markers, and stability.",
+        visual_identity: "live diagnostic instrument room",
+        allowed_atmosphere: "instrument room, diagnostic clarity, live verification",
+        forbidden_inversion: "Gauges becomes decorative or claims fake live health.",
+        required_backlinks: ["/", "/home/", "/products/", "/showroom/"],
+        return_routes: ["/", "/home/"],
+        related_routes: ["/products/", "/showroom/"],
+        view_modes_supported: "return",
+        flat_behavior: "Not primary.",
+        round_behavior: "Not primary.",
+        meta_behavior: "Not primary.",
+        return_behavior: "Verify proof, health, backlinks, hosted routes, and canonical product destinations.",
+        skin_family: "manor_audit",
+        required_skin_markers: ["manor-skin", "house-class", "H6_GAUGES", "live-calculated"],
+        audit_priority: "critical",
+        gauges_dependency: "self-verification must remain truthful and live where implemented",
+        required_marker_keys: ["data-manor-room=gauges", "data-manor-class=house", "H6_GAUGES"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "gauges_becomes_decorative",
+        build_priority: "2_house_first",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      })
+    ]),
+
+    product_chambers: Object.freeze([
+      Object.freeze({
+        id: "archcoin",
+        title: "ARCHCOIN",
+        route: "/products/archcoin/",
+        route_type: "canonical",
+        class_type: "product_chamber",
+        construct_code: "PC1_ARCHCOIN",
+        parent_construct: "products",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "product wing chamber",
+        public_phrase: "Structured financial product engine.",
+        short_description: "ARCHCOIN remains a canonical product chamber under Products.",
+        visual_identity: "structured financial engine chamber",
+        allowed_atmosphere: "precise, structural, product-first",
+        forbidden_inversion: "ARCHCOIN becomes detached from Products or splits into competing roots.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/products/"],
+        view_modes_supported: "all",
+        skin_family: "manor_product",
+        required_skin_markers: ["product-chamber", "archcoin", "products-parent"],
+        audit_priority: "critical",
+        gauges_dependency: "verify canonical product route and backlink to Products",
+        required_marker_keys: ["data-product-id=archcoin", "data-product-parent=/products/"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        product_dependency: "products_parent_required",
+        proof_dependency: "showroom",
+        host_status: "standalone",
+        failure_risk: "archcoin_splits_into_competing_roots",
+        build_priority: "3_product_wing",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "five-flags",
+        title: "Five Flags",
+        route: "/products/five-flags/",
+        route_type: "canonical",
+        class_type: "product_chamber",
+        construct_code: "PC2_FIVE_FLAGS",
+        parent_construct: "products",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "product wing chamber",
+        public_phrase: "Identity and civic product chamber.",
+        short_description: "Five Flags remains a canonical product chamber under Products.",
+        visual_identity: "identity and civic product chamber",
+        allowed_atmosphere: "civic, structured, grounded",
+        forbidden_inversion: "Five Flags becomes a detached civic island.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/products/"],
+        view_modes_supported: "all",
+        skin_family: "manor_product",
+        required_skin_markers: ["product-chamber", "five-flags", "products-parent"],
+        audit_priority: "high",
+        gauges_dependency: "verify canonical product route and backlink to Products",
+        required_marker_keys: ["data-product-id=five-flags", "data-product-parent=/products/"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        product_dependency: "products_parent_required",
+        proof_dependency: "showroom",
+        host_status: "standalone",
+        failure_risk: "product_page_becomes_detached_identity_page",
+        build_priority: "3_product_wing",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "on-your-side-aai",
+        title: "On Your Side AAI",
+        route: "/products/on-your-side-ai/",
+        route_type: "canonical",
+        class_type: "product_chamber",
+        construct_code: "PC3_ON_YOUR_SIDE_AAI",
+        parent_construct: "products",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "product wing chamber",
+        public_phrase: "Practical AAI support.",
+        short_description: "On Your Side AAI remains a canonical product chamber under Products.",
+        visual_identity: "bounded practical assistance chamber",
+        allowed_atmosphere: "useful, bounded, protective, practical",
+        forbidden_inversion: "On Your Side loses AAI terminology or becomes generic AI.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/products/"],
+        view_modes_supported: "all",
+        skin_family: "manor_product",
+        required_skin_markers: ["product-chamber", "on-your-side-aai", "products-parent"],
+        audit_priority: "high",
+        gauges_dependency: "verify route, backlink, and AAI terminology marker",
+        required_marker_keys: ["data-product-id=on-your-side-ai", "data-product-parent=/products/"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        product_dependency: "products_parent_required",
+        proof_dependency: "showroom",
+        host_status: "standalone",
+        failure_risk: "aai_terminology_collapses_into_generic_ai",
+        build_priority: "3_product_wing",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "education",
+        title: "Education",
+        route: "/products/education/",
+        route_type: "canonical",
+        class_type: "product_chamber",
+        construct_code: "PC4_EDUCATION",
+        parent_construct: "products",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "product wing chamber",
+        public_phrase: "Structured learning through guided progression.",
+        short_description: "Education remains a canonical product chamber under Products.",
+        visual_identity: "guided learning chamber",
+        allowed_atmosphere: "clear, supportive, progressive",
+        forbidden_inversion: "Education becomes too abstract or exposes unnecessary internal language.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/products/"],
+        view_modes_supported: "all",
+        skin_family: "manor_product",
+        required_skin_markers: ["product-chamber", "education", "products-parent"],
+        audit_priority: "high",
+        gauges_dependency: "verify canonical route and Products return",
+        required_marker_keys: ["data-product-id=education", "data-product-parent=/products/"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        product_dependency: "products_parent_required",
+        proof_dependency: "showroom",
+        host_status: "standalone",
+        failure_risk: "education_becomes_too_abstract",
+        build_priority: "3_product_wing",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "nutrition",
+        title: "Nutrition",
+        route: "/products/nutrition/",
+        route_type: "canonical",
+        class_type: "product_chamber",
+        construct_code: "PC5_NUTRITION",
+        parent_construct: "products",
+        house_anchor: "products",
+        quadrant: "Q3_SOUTHEAST",
+        lattice_region: "product wing chamber",
+        public_phrase: "Practical nutritional baseline support.",
+        short_description: "Nutrition remains a canonical product chamber under Products.",
+        visual_identity: "baseline support chamber",
+        allowed_atmosphere: "supportive, practical, non-shaming",
+        forbidden_inversion: "Nutrition becomes shame-based instead of supportive.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/products/"],
+        view_modes_supported: "all",
+        skin_family: "manor_product",
+        required_skin_markers: ["product-chamber", "nutrition", "products-parent"],
+        audit_priority: "high",
+        gauges_dependency: "verify canonical route and Products return",
+        required_marker_keys: ["data-product-id=nutrition", "data-product-parent=/products/"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        product_dependency: "products_parent_required",
+        proof_dependency: "showroom",
+        host_status: "standalone",
+        failure_risk: "nutrition_becomes_shame_based",
+        build_priority: "3_product_wing",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      })
+    ]),
+
+    planetary_constructs: Object.freeze([
+      Object.freeze({
+        id: "prelude",
+        title: "Prelude",
+        route: "/prelude/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P1_PRELUDE",
+        house_anchor: "multiple",
+        parent_construct: "door",
+        child_constructs: [],
+        quadrant: "Q4_SOUTHWEST",
+        lattice_region: "outer entry atmosphere",
+        public_phrase: "Begin at the threshold.",
+        short_description: "Prelude sets the first atmospheric tone before deeper estate movement.",
+        visual_identity: "soft entry atmosphere",
+        allowed_atmosphere: "introductory, atmospheric, soft threshold",
+        forbidden_inversion: "Prelude becomes decorative mood without route consequence.",
+        required_backlinks: ["/door/", "/", "/home/"],
+        return_routes: ["/door/", "/", "/home/"],
+        related_routes: ["/door/", "/home/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show as an entry note.",
+        round_behavior: "Show as a seed or root before growth.",
+        meta_behavior: "Show as a small orbit near entry.",
+        return_behavior: "Return to Door, Compass, or Home.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P1_PRELUDE", "manor-orbit"],
+        audit_priority: "medium",
+        gauges_dependency: "verify route or host and return links",
+        required_marker_keys: ["data-planet-id=prelude", "P1_PRELUDE"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "explore",
+        title: "Explore",
+        route: "/explore/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P2_EXPLORE",
+        house_anchor: "multiple",
+        parent_construct: "compass",
+        child_constructs: ["frontier"],
+        quadrant: "Q2_NORTHEAST",
+        lattice_region: "discovery traversal band",
+        public_phrase: "Explore without losing your way.",
+        short_description: "Explore guides outward discovery while remaining anchored to the Manor.",
+        visual_identity: "guided traversal path",
+        allowed_atmosphere: "movement, discovery, guided expansion",
+        forbidden_inversion: "Explore becomes wandering without orientation.",
+        required_backlinks: ["/", "/home/", "/gauges/"],
+        return_routes: ["/", "/home/"],
+        related_routes: ["/explore/#frontier"],
+        view_modes_supported: "all",
+        flat_behavior: "Show as a route map.",
+        round_behavior: "Show as a branch path.",
+        meta_behavior: "Show as an orbital discovery surface.",
+        return_behavior: "Return to Compass or Home.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P2_EXPLORE", "manor-orbit"],
+        audit_priority: "medium",
+        gauges_dependency: "verify route and return path",
+        required_marker_keys: ["data-planet-id=explore", "P2_EXPLORE"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "frontier",
+        title: "Frontier",
+        route: "/explore/#frontier",
+        route_type: "hosted",
+        host_route: "/explore/",
+        class_type: "planetary_construct",
+        construct_code: "P3_FRONTIER",
+        house_anchor: "multiple",
+        parent_construct: "explore",
+        child_constructs: [],
+        quadrant: "Q2_NORTHEAST",
+        lattice_region: "outer expansion edge",
+        public_phrase: "Reach the edge of what is known.",
+        short_description: "Frontier is the hosted expansion edge inside Explore.",
+        visual_identity: "frontier horizon",
+        allowed_atmosphere: "unknown edge, future pressure, research frontier",
+        forbidden_inversion: "Frontier becomes a fake standalone root.",
+        required_backlinks: ["/explore/", "/", "/gauges/"],
+        return_routes: ["/explore/", "/"],
+        related_routes: ["/explore/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show as an edge label inside Explore.",
+        round_behavior: "Show as a far branch.",
+        meta_behavior: "Show as an outer orbit attached to Explore.",
+        return_behavior: "Return to Explore or Compass.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P3_FRONTIER", "hosted-route"],
+        audit_priority: "medium",
+        gauges_dependency: "verify Frontier as hosted through Explore, not a fake standalone root",
+        required_marker_keys: ["data-planet-id=frontier", "P3_FRONTIER"],
+        live_check_required: true,
+        canonical_destination_status: "hosted",
+        host_status: "hosted",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "laws",
+        title: "Laws",
+        route: "/laws/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P4_LAWS",
+        house_anchor: "multiple",
+        parent_construct: "compass",
+        child_constructs: ["governance"],
+        quadrant: "Q1_NORTHWEST",
+        lattice_region: "north boundary layer",
+        public_phrase: "See the rules that hold the estate together.",
+        short_description: "Laws states the boundary layer and non-negotiable rules of the estate.",
+        visual_identity: "law pillar and boundary wall",
+        allowed_atmosphere: "authority, clarity, boundary",
+        forbidden_inversion: "Laws becomes inaccessible internal doctrine.",
+        required_backlinks: ["/", "/governance/", "/gauges/"],
+        return_routes: ["/", "/governance/", "/gauges/"],
+        related_routes: ["/governance/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show rules clearly.",
+        round_behavior: "Show laws as roots and boundaries.",
+        meta_behavior: "Show laws as authority orbit.",
+        return_behavior: "Return to Compass, Governance, or Gauges.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P4_LAWS", "manor-orbit"],
+        audit_priority: "high",
+        gauges_dependency: "verify law page identity, return links, and governance link",
+        required_marker_keys: ["data-planet-id=laws", "P4_LAWS"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "public_page_exposes_packet_language",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "governance",
+        title: "Governance",
+        route: "/governance/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P5_GOVERNANCE",
+        house_anchor: "multiple",
+        parent_construct: "laws",
+        child_constructs: [],
+        quadrant: "seam_Q1_Q3",
+        lattice_region: "law-to-execution bridge",
+        public_phrase: "See how decisions stay accountable.",
+        short_description: "Governance converts law into accountability, policy, and decision structure.",
+        visual_identity: "institutional decision chamber",
+        allowed_atmosphere: "ordered, accountable, institutional",
+        forbidden_inversion: "Governance becomes policy jargon without route consequence.",
+        required_backlinks: ["/laws/", "/", "/gauges/"],
+        return_routes: ["/laws/", "/", "/gauges/"],
+        related_routes: ["/laws/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show governance pillars.",
+        round_behavior: "Show governance as a law branch.",
+        meta_behavior: "Show governance as an institutional orbit.",
+        return_behavior: "Return to Laws, Compass, or Gauges.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P5_GOVERNANCE", "manor-orbit"],
+        audit_priority: "high",
+        gauges_dependency: "verify route, governance identity, and return links",
+        required_marker_keys: ["data-planet-id=governance", "P5_GOVERNANCE"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "public_page_exposes_packet_language",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "upper-room",
+        title: "Upper Room",
+        route: "/big-laugh/upper-room/",
+        route_type: "hosted",
+        host_route: "/big-laugh/upper-room/",
+        class_type: "planetary_construct",
+        construct_code: "P6_UPPER_ROOM",
+        house_anchor: "multiple",
+        parent_construct: "showroom",
+        child_constructs: [],
+        quadrant: "Q4_SOUTHWEST",
+        lattice_region: "event and public gathering band",
+        public_phrase: "Come fill your cup.",
+        short_description: "Upper Room is the live event and gathering planet hosted under Big Laugh.",
+        visual_identity: "upper-floor live event chamber",
+        allowed_atmosphere: "warm, live, concrete, human gathering",
+        forbidden_inversion: "Upper Room becomes a detached event flyer.",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        related_routes: ["/big-laugh/upper-room/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show as an event path.",
+        round_behavior: "Show as a gathering branch.",
+        meta_behavior: "Show as an event orbit attached to the Manor.",
+        return_behavior: "Return to Products, Showroom, or Compass.",
+        skin_family: "manor_event",
+        required_skin_markers: ["planet-class", "P6_UPPER_ROOM", "hosted-route"],
+        audit_priority: "medium",
+        gauges_dependency: "verify hosted route under Big Laugh and return links",
+        required_marker_keys: ["data-planet-id=upper-room", "P6_UPPER_ROOM"],
+        live_check_required: true,
+        canonical_destination_status: "hosted",
+        host_status: "hosted",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "about-this-underdog",
+        title: "About This Underdog",
+        route: "/about-this-underdog/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P7_ABOUT_THIS_UNDERDOG",
+        house_anchor: "multiple",
+        parent_construct: "home",
+        child_constructs: [],
+        quadrant: "Q4_SOUTHWEST",
+        lattice_region: "origin-story human witness band",
+        public_phrase: "See why the Manor exists.",
+        short_description: "About This Underdog is the grounded human-origin witness band.",
+        visual_identity: "weathered human origin path",
+        allowed_atmosphere: "concrete, human, weathered, grounded",
+        forbidden_inversion: "Author story becomes ego-centered site takeover.",
+        required_backlinks: ["/home/", "/", "/showroom/"],
+        return_routes: ["/home/", "/", "/showroom/"],
+        related_routes: ["/home/", "/showroom/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show as an origin note.",
+        round_behavior: "Show as root story.",
+        meta_behavior: "Show as human signal in the estate field.",
+        return_behavior: "Return to Home, Compass, or Showroom.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P7_ABOUT_THIS_UNDERDOG", "manor-orbit"],
+        audit_priority: "medium",
+        gauges_dependency: "verify route identity, backlinks, and public-language restraint",
+        required_marker_keys: ["data-planet-id=about-this-underdog", "P7_ABOUT_THIS_UNDERDOG"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "public_page_exposes_packet_language",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "nine-summits-universe",
+        title: "Nine Summits Universe",
+        route: "/nine-summits/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P8_NINE_SUMMITS_UNIVERSE",
+        house_anchor: "multiple",
+        parent_construct: "explore",
+        child_constructs: ["nine-summits-of-love"],
+        quadrant: "multi_quadrant",
+        lattice_region: "macro-orbit field",
+        public_phrase: "See the larger summit world.",
+        short_description: "Nine Summits Universe is the macro-world construct attached to the Manor.",
+        visual_identity: "summit-scale macro field",
+        allowed_atmosphere: "macro, dimensional, summit-scale",
+        forbidden_inversion: "Nine Summits Universe makes the universe replace the Manor.",
+        required_backlinks: ["/", "/explore/", "/gauges/"],
+        return_routes: ["/", "/explore/", "/gauges/"],
+        related_routes: ["/nine-summits-of-love/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show a map of summits.",
+        round_behavior: "Show summit growth branches.",
+        meta_behavior: "Show full orbit while keeping Manor central.",
+        return_behavior: "Return to Compass, Explore, or Gauges.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P8_NINE_SUMMITS_UNIVERSE", "manor-orbit"],
+        audit_priority: "medium",
+        gauges_dependency: "verify route, parent relationship, and return links",
+        required_marker_keys: ["data-planet-id=nine-summits-universe", "P8_NINE_SUMMITS_UNIVERSE"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "universe_replaces_house",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      }),
+
+      Object.freeze({
+        id: "nine-summits-of-love",
+        title: "Nine Summits of Love",
+        route: "/nine-summits-of-love/",
+        route_type: "canonical",
+        host_route: null,
+        class_type: "planetary_construct",
+        construct_code: "P9_NINE_SUMMITS_OF_LOVE",
+        house_anchor: "multiple",
+        parent_construct: "nine-summits-universe",
+        child_constructs: [],
+        quadrant: "seam_Q3_Q4",
+        lattice_region: "highest human-potential summit field",
+        public_phrase: "256 diamonds / 256 carats of human potential, written by this underdog.",
+        short_description: "Nine Summits of Love is the human-potential summit construct attached to the larger Nine Summits world.",
+        visual_identity: "diamond human-potential summit field",
+        allowed_atmosphere: "human potential, diamond transformation, summit-love expression",
+        forbidden_inversion: "Nine Summits of Love becomes isolated inspirational island.",
+        required_backlinks: ["/nine-summits/", "/home/", "/", "/showroom/"],
+        return_routes: ["/nine-summits/", "/home/", "/", "/showroom/"],
+        related_routes: ["/nine-summits/"],
+        view_modes_supported: "all",
+        flat_behavior: "Show a human-potential map.",
+        round_behavior: "Show growth facets.",
+        meta_behavior: "Show summit orbit attached to the estate.",
+        return_behavior: "Return to Nine Summits Universe, Home, Compass, or Showroom.",
+        skin_family: "manor_planet",
+        required_skin_markers: ["planet-class", "P9_NINE_SUMMITS_OF_LOVE", "manor-orbit"],
+        audit_priority: "medium",
+        gauges_dependency: "verify route, parent relation, and return links",
+        required_marker_keys: ["data-planet-id=nine-summits-of-love", "P9_NINE_SUMMITS_OF_LOVE"],
+        live_check_required: true,
+        canonical_destination_status: "canonical",
+        host_status: "standalone",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        protection_level: "none",
+        registry_version: "1.0.0"
+      })
+    ]),
+
+    hosted_routes: Object.freeze([
+      Object.freeze({
+        id: "frontier-hosted-through-explore",
+        title: "Frontier hosted through Explore",
+        route: "/explore/#frontier",
+        route_type: "hosted",
+        host_route: "/explore/",
+        target_construct: "frontier",
+        canonical_destination_status: "hosted",
+        host_status: "hosted",
+        required_return: ["/explore/", "/", "/gauges/"],
+        forbidden_route_assumption: "/frontier/ is not canonical unless later authorized",
+        gauges_dependency: "verify Frontier markers inside Explore"
+      }),
+      Object.freeze({
+        id: "upper-room-hosted-through-big-laugh",
+        title: "Upper Room hosted through Big Laugh",
+        route: "/big-laugh/upper-room/",
+        route_type: "hosted",
+        host_route: "/big-laugh/upper-room/",
+        target_construct: "upper-room",
+        canonical_destination_status: "hosted",
+        host_status: "hosted",
+        required_return: ["/products/", "/showroom/", "/"],
+        forbidden_route_assumption: "/upper-room/ is not canonical unless later authorized as bridge or redirect",
+        gauges_dependency: "verify Upper Room markers at Big Laugh host route"
+      })
+    ]),
+
+    bridge_routes: Object.freeze([
+      Object.freeze({
+        id: "upper-room-bridge",
+        title: "Upper Room bridge",
+        route: "/upper-room/",
+        route_type: "bridge",
+        target_route: "/big-laugh/upper-room/",
+        class_type: "bridge_route",
+        house_anchor: "multiple",
+        parent_construct: "upper-room",
+        canonical_destination_status: "bridge_only",
+        host_status: "bridge",
+        required_backlinks: ["/products/", "/showroom/", "/"],
+        return_routes: ["/products/", "/showroom/", "/"],
+        gauges_dependency: "bridge route may point inward; must not become duplicate canonical root",
+        failure_risk: "planet_becomes_detached_island",
+        build_priority: "4_planetary_alignment",
+        public_visibility: "public",
+        registry_version: "1.0.0"
+      })
+    ]),
+
+    protected_foundation_zones: Object.freeze([
+      Object.freeze({
+        id: "basement",
+        title: "Basement",
+        route: null,
+        route_type: "protected",
+        class_type: "foundation",
+        construct_code: "FOUNDATION_BASEMENT",
+        house_anchor: "home",
+        quadrant: "multi_quadrant",
+        lattice_region: "foundational depth",
+        public_phrase: "Under-hood foundation.",
+        short_description: "Basement holds route law, registry logic, audit mechanics, and technical foundation.",
+        visual_identity: "under-hood foundation layer",
+        required_backlinks: [],
+        return_routes: [],
+        view_modes_supported: "none",
+        skin_family: "manor_foundation",
+        audit_priority: "deferred",
+        gauges_dependency: "internal only unless surfaced later",
+        required_marker_keys: [],
+        live_check_required: false,
+        canonical_destination_status: "not_canonical",
+        host_status: "not_applicable",
+        failure_risk: "public_page_exposes_packet_language",
+        build_priority: "6_later_refinement",
+        public_visibility: "internal",
+        protection_level: "medium",
+        registry_version: "1.0.0"
+      }),
+      Object.freeze({
+        id: "vault",
+        title: "Vault",
+        route: null,
+        route_type: "protected",
+        class_type: "protected_vault",
+        construct_code: "PROTECTED_VAULT",
+        house_anchor: "home",
+        quadrant: "multi_quadrant",
+        lattice_region: "protected deeper content",
+        public_phrase: "Protected deeper content.",
+        short_description: "Vault protects secured meaning and high-value internal development.",
+        visual_identity: "protected vault layer",
+        required_backlinks: [],
+        return_routes: [],
+        view_modes_supported: "none",
+        skin_family: "manor_vault",
+        audit_priority: "deferred",
+        gauges_dependency: "protected only unless surfaced later",
+        required_marker_keys: [],
+        live_check_required: false,
+        canonical_destination_status: "not_canonical",
+        host_status: "not_applicable",
+        failure_risk: "vault_becomes_public_hallway",
+        build_priority: "6_later_refinement",
+        public_visibility: "protected",
+        protection_level: "vault",
+        registry_version: "1.0.0"
+      })
+    ]),
+
+    audit_groups: Object.freeze({
+      house_skeleton: Object.freeze({
+        id: "house_skeleton",
+        label: "Six house parts",
+        entries: ["compass", "door", "home", "products", "showroom", "gauges"],
+        checks: ["route", "page_class", "construct_code", "required_backlinks", "skin_family"]
+      }),
+      product_wing: Object.freeze({
+        id: "product_wing",
+        label: "Five product chambers",
+        entries: ["archcoin", "five-flags", "on-your-side-aai", "education", "nutrition"],
+        checks: ["route", "parent_construct", "canonical_destination_status", "required_backlinks", "product_dependency"]
+      }),
+      planetary_constructs: Object.freeze({
+        id: "planetary_constructs",
+        label: "Nine planetary constructs",
+        entries: [
+          "prelude",
+          "explore",
+          "frontier",
+          "laws",
+          "governance",
+          "upper-room",
+          "about-this-underdog",
+          "nine-summits-universe",
+          "nine-summits-of-love"
+        ],
+        checks: ["route_or_host", "house_anchor", "return_routes", "skin_family", "host_status"]
+      }),
+      return_paths: Object.freeze({
+        id: "return_paths",
+        label: "Return path integrity",
+        entries: "all_public_entries",
+        checks: ["required_backlinks", "return_routes", "house_anchor"]
+      })
+    }),
+
+    failure_risks: Object.freeze([
+      "universe_replaces_house",
+      "page_becomes_generic_menu",
+      "products_become_loose_catalog",
+      "archcoin_splits_into_competing_roots",
+      "planet_becomes_detached_island",
+      "gauges_becomes_decorative",
+      "vault_becomes_public_hallway",
+      "public_page_exposes_packet_language",
+      "manor_skin_makes_pages_identical",
+      "lattice_becomes_decoration",
+      "door_duplicates_compass",
+      "showroom_replaces_compass",
+      "index_visual_rebuild_happens_too_early",
+      "registry_becomes_render_engine",
+      "return_paths_become_footer_clutter"
+    ]),
+
+    build_phases: Object.freeze([
+      "architecture",
+      "page_registry_field_plan",
+      "manor_css_refinement",
+      "six_house_parts",
+      "gauges_verification",
+      "product_wing_alignment",
+      "planetary_construct_alignment",
+      "index_visual_rebuild"
+    ])
   });
 
-  const QUADRANTS = Object.freeze({
-    Q1_NORTHWEST: Object.freeze({
-      label: "Orientation / Law / Authority",
-      cellRange: "001-064"
-    }),
-    Q2_NORTHEAST: Object.freeze({
-      label: "Discovery / Signal / Expansion",
-      cellRange: "065-128"
-    }),
-    Q3_SOUTHEAST: Object.freeze({
-      label: "Product / Execution / Public Utility",
-      cellRange: "129-192"
-    }),
-    Q4_SOUTHWEST: Object.freeze({
-      label: "Continuity / Events / Human Story",
-      cellRange: "193-256"
-    })
-  });
-
-  const HOUSE_BACKLINKS = Object.freeze([
-    "/",
-    "/door/",
-    "/products/",
-    "/showroom/",
-    "/gauges/"
-  ]);
-
-  const PLANET_BACKLINKS = Object.freeze([
-    "/",
-    "/products/",
-    "/showroom/",
-    "/gauges/"
-  ]);
-
-  const PRODUCT_DESTINATIONS = Object.freeze([
-    Object.freeze({
-      id: "archcoin",
-      title: "ARCHCOIN",
-      route: "/products/archcoin/",
-      rule: "Four-coin financial transaction template. Product chamber, not center-room planet."
-    }),
-    Object.freeze({
-      id: "five-flags",
-      title: "Five Flags",
-      route: "/products/five-flags/",
-      rule: "Canonical product destination."
-    }),
-    Object.freeze({
-      id: "on-your-side-ai",
-      title: "On Your Side AAI",
-      route: "/products/on-your-side-ai/",
-      rule: "Canonical AAI destination."
-    }),
-    Object.freeze({
-      id: "education",
-      title: "ESL Traversal Learning",
-      route: "/products/education/",
-      rule: "Canonical education destination."
-    }),
-    Object.freeze({
-      id: "nutrition",
-      title: "Baseline Nutrition Systems",
-      route: "/products/nutrition/",
-      rule: "Canonical nutrition destination."
-    })
-  ]);
-
-  const PAGES = Object.freeze([
-    Object.freeze({
-      id: "compass",
-      title: "Compass",
-      class: "house",
-      houseSlot: "H1_COMPASS",
-      canonicalRoute: "/",
-      aliases: Object.freeze(["/index.html"]),
-      quadrant: "Q1_NORTHWEST",
-      latticeRegion: "Center-cross",
-      visualIdentity: "Root orientation, active-page gold compass, estate spatial meaning.",
-      publicPurpose: "Orientation core. Shows where the visitor is and where they can go.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "active-compass", "manor-skin", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      nextDiagnosticDependency: "Confirm all center-room routes remain reachable from Compass."
-    }),
-    Object.freeze({
-      id: "door",
-      title: "Door",
-      class: "house",
-      houseSlot: "H2_DOOR",
-      canonicalRoute: "/door/",
-      aliases: Object.freeze([]),
-      quadrant: "Q1_NORTHWEST",
-      latticeRegion: "Outer threshold band",
-      visualIdentity: "Entry threshold, warm gold permission surface, clear onward rail.",
-      publicPurpose: "Arrival and transition into the Manor.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "entry-threshold", "manor-skin", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      nextDiagnosticDependency: "Confirm Door routes inward rather than becoming a detached landing page."
-    }),
-    Object.freeze({
-      id: "home",
-      title: "Home",
-      class: "house",
-      houseSlot: "H3_HOME",
-      canonicalRoute: "/home/",
-      aliases: Object.freeze([]),
-      quadrant: "Q4_SOUTHWEST",
-      latticeRegion: "Inner body band",
-      visualIdentity: "Central Manor body, inhabited identity, stable public center.",
-      publicPurpose: "The inhabited center and public identity of the house.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "central-body", "manor-skin", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      nextDiagnosticDependency: "Confirm Home stabilizes the estate and does not replace Compass."
-    }),
-    Object.freeze({
-      id: "products",
-      title: "Products",
-      class: "house",
-      houseSlot: "H4_PRODUCTS",
-      canonicalRoute: "/products/",
-      aliases: Object.freeze([]),
-      quadrant: "Q3_SOUTHEAST",
-      latticeRegion: "Source-waterfall corridor",
-      visualIdentity: "Source chamber, product waterfall, many jump-off points / one destination law.",
-      publicPurpose: "Product routing, product family logic, and canonical destination control.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "product-waterfall", "canonical-destinations", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      productDestinations: PRODUCT_DESTINATIONS,
-      nextDiagnosticDependency: "Confirm product chambers remain beneath Products and do not become competing center rooms."
-    }),
-    Object.freeze({
-      id: "showroom",
-      title: "Showroom",
-      class: "house",
-      houseSlot: "H5_SHOWROOM",
-      canonicalRoute: "/showroom/",
-      aliases: Object.freeze([]),
-      quadrant: "Q3_SOUTHEAST",
-      latticeRegion: "Public proof window",
-      visualIdentity: "Public proof room, demonstration surface, legitimacy window.",
-      publicPurpose: "Visible proof, external-facing legitimacy, and estate presentation.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "proof-window", "manor-skin", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      nextDiagnosticDependency: "Confirm Showroom demonstrates without becoming the source chamber."
-    }),
-    Object.freeze({
-      id: "gauges",
-      title: "Gauges",
-      class: "house",
-      houseSlot: "H6_GAUGES",
-      canonicalRoute: "/gauges/",
-      aliases: Object.freeze([]),
-      quadrant: "Q1_NORTHWEST",
-      latticeRegion: "Diagnostic instrument room",
-      visualIdentity: "Live site-health instrument surface, clear status rail, no static fake pass.",
-      publicPurpose: "Live site health, route integrity, backlink integrity, render stability, and product connectivity.",
-      backlinkObligations: HOUSE_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "live-calculated", "diagnostic-room", "house-class"]),
-      batch: "BATCH_1_HOUSE",
-      liveCalculated: true,
-      nextDiagnosticDependency: "Do not replace live Gauges with static output. Registry can inform Gauges; it must not fake Gauges."
-    }),
-    Object.freeze({
-      id: "prelude",
-      title: "Prelude",
-      class: "planet",
-      planetSlot: "P1_PRELUDE",
-      canonicalRoute: "/prelude/",
-      aliases: Object.freeze([]),
-      quadrant: "Q4_SOUTHWEST",
-      latticeRegion: "Outer entry atmosphere near Door",
-      visualIdentity: "Opening atmosphere, symbolic first meaning layer, soft threshold glow.",
-      publicPurpose: "Prepares the visitor for symbolic reading.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "manor-orbit", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Prelude routes back to Door or Compass and does not float."
-    }),
-    Object.freeze({
-      id: "explore",
-      title: "Explore",
-      class: "planet",
-      planetSlot: "P2_EXPLORE",
-      canonicalRoute: "/explore/",
-      aliases: Object.freeze([]),
-      quadrant: "Q2_NORTHEAST",
-      latticeRegion: "Traversal band between Compass and Frontier",
-      visualIdentity: "Discovery surface, outward movement, signal path.",
-      publicPurpose: "Lets the visitor move outward without losing orientation.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "manor-orbit", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Explore keeps orientation visible while widening the field."
-    }),
-    Object.freeze({
-      id: "frontier",
-      title: "Frontier",
-      class: "planet",
-      planetSlot: "P3_FRONTIER",
-      canonicalRoute: "/frontier/",
-      aliases: Object.freeze([]),
-      quadrant: "Q2_NORTHEAST",
-      latticeRegion: "Outer expansion band",
-      visualIdentity: "Expansion edge, future-facing pressure, unknown-field atmosphere.",
-      publicPurpose: "Carries edge-of-known research, future-facing systems, and frontier energy.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "manor-orbit", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Frontier expands without breaking return paths."
-    }),
-    Object.freeze({
-      id: "laws",
-      title: "Laws",
-      class: "planet",
-      planetSlot: "P4_LAWS",
-      canonicalRoute: "/laws/",
-      aliases: Object.freeze([]),
-      quadrant: "Q1_NORTHWEST",
-      latticeRegion: "North boundary layer",
-      visualIdentity: "Doctrine, boundary, bright law line, non-negotiable structure.",
-      publicPurpose: "States law, limits, and non-negotiable rules.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "law-boundary", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Laws informs Governance without becoming the institutional execution page."
-    }),
-    Object.freeze({
-      id: "governance",
-      title: "Governance",
-      class: "planet",
-      planetSlot: "P5_GOVERNANCE",
-      canonicalRoute: "/governance/",
-      aliases: Object.freeze([]),
-      quadrant: "Q1_NORTHWEST",
-      latticeRegion: "Law-to-execution bridge",
-      visualIdentity: "Institutional execution, policy bridge, compliance pressure.",
-      publicPurpose: "Turns law into policy, compliance, decision systems, public accountability, and enforcement shape.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "governance-bridge", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Governance routes back to Laws and Compass."
-    }),
-    Object.freeze({
-      id: "upper-room",
-      title: "Upper Room",
-      class: "planet",
-      planetSlot: "P6_UPPER_ROOM",
-      canonicalRoute: "/upper-room/",
-      aliases: Object.freeze(["/big-laugh/upper-room/"]),
-      quadrant: "Q4_SOUTHWEST",
-      latticeRegion: "Event and public gathering band",
-      visualIdentity: "Upper-floor event chamber, live room, comedy, raffles, human gathering.",
-      publicPurpose: "Public events, comedy, raffles, interaction, and human gathering.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "event-room", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Upper Room keeps the live event surface connected to the Manor."
-    }),
-    Object.freeze({
-      id: "about-this-underdog",
-      title: "About This Underdog",
-      class: "planet",
-      planetSlot: "P7_ABOUT_THIS_UNDERDOG",
-      canonicalRoute: "/about-this-underdog/",
-      aliases: Object.freeze(["/about/"]),
-      quadrant: "Q4_SOUTHWEST",
-      latticeRegion: "Origin-story human witness band",
-      visualIdentity: "Human origin frame, grounded witness, no ego-center collapse.",
-      publicPurpose: "Explains the underdog frame without making the whole site ego-centered.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "origin-story", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm About remains a witness band, not the whole estate center."
-    }),
-    Object.freeze({
-      id: "nine-summits-universe",
-      title: "Nine Summits Universe",
-      class: "planet",
-      planetSlot: "P8_NINE_SUMMITS_UNIVERSE",
-      canonicalRoute: "/nine-summits/",
-      aliases: Object.freeze(["/nine-summits-universe/"]),
-      quadrant: "Q2_NORTHEAST",
-      latticeRegion: "Macro-orbit field",
-      visualIdentity: "Metaverse-scale orbit, summit system, macro traversal field.",
-      publicPurpose: "Metaverse-scale traversal of the larger summit system.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "macro-orbit", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm Nine Summits Universe remains macro-world construct, not house skeleton."
-    }),
-    Object.freeze({
-      id: "nine-summits-of-love",
-      title: "Nine Summits of Love",
-      class: "planet",
-      planetSlot: "P9_NINE_SUMMITS_OF_LOVE",
-      canonicalRoute: "/nine-summits-of-love/",
-      aliases: Object.freeze([]),
-      quadrant: "Q4_SOUTHWEST",
-      latticeRegion: "Highest human-potential summit field",
-      visualIdentity: "256 diamonds / carats of human potential, summit-scale transformation.",
-      publicPurpose: "256 carats of human potential; summit-scale expression of transformation.",
-      backlinkObligations: PLANET_BACKLINKS,
-      auditMarkers: Object.freeze(["route-exists", "planet-class", "human-potential", "backlinks"]),
-      batch: "BATCH_3_PLANETS",
-      nextDiagnosticDependency: "Confirm the page extends Nine Summits without detaching from the Manor."
-    })
-  ]);
-
-  function normalizeRoute(route) {
-    if (!route || typeof route !== "string") return "/";
-    let clean = route.trim();
-
-    try {
-      const parsed = new URL(clean, global.location ? global.location.origin : "https://diamondgatebridge.com");
-      clean = parsed.pathname;
-    } catch (error) {
-      clean = clean.split("?")[0].split("#")[0];
-    }
-
-    if (!clean.startsWith("/")) clean = "/" + clean;
-    if (clean !== "/" && clean.endsWith("/index.html")) {
-      clean = clean.slice(0, -"index.html".length);
-    }
-    if (clean !== "/" && !clean.endsWith("/")) clean += "/";
-    return clean;
-  }
-
-  function createRouteMap(pages) {
-    const map = Object.create(null);
-
-    pages.forEach(function registerPage(page) {
-      map[normalizeRoute(page.canonicalRoute)] = page;
-
-      page.aliases.forEach(function registerAlias(alias) {
-        map[normalizeRoute(alias)] = page;
-      });
-    });
-
-    return Object.freeze(map);
-  }
-
-  const ROUTE_MAP = createRouteMap(PAGES);
-
-  function getById(id) {
-    return PAGES.find(function findPage(page) {
-      return page.id === id;
-    }) || null;
-  }
-
-  function getByRoute(route) {
-    return ROUTE_MAP[normalizeRoute(route)] || null;
-  }
-
-  function listByClass(pageClass) {
-    return PAGES.filter(function filterByClass(page) {
-      return page.class === pageClass;
-    });
-  }
-
-  function listByBatch(batchName) {
-    return PAGES.filter(function filterByBatch(page) {
-      return page.batch === batchName;
-    });
-  }
-
-  function getCurrentPage() {
-    const path = global.location && global.location.pathname ? global.location.pathname : "/";
-    return getByRoute(path);
-  }
-
-  function createPageDataset(pageOrId) {
-    const page = typeof pageOrId === "string" ? getById(pageOrId) : pageOrId;
-    if (!page) return null;
-
-    return Object.freeze({
-      manorSkin: "v1",
-      manorRegistryVersion: VERSION,
-      manorRoom: page.id,
-      manorClass: page.class,
-      manorSlot: page.houseSlot || page.planetSlot || "",
-      manorRoute: page.canonicalRoute,
-      manorQuadrant: page.quadrant,
-      manorBatch: page.batch
-    });
-  }
-
-  function requiredBacklinksFor(pageOrId) {
-    const page = typeof pageOrId === "string" ? getById(pageOrId) : pageOrId;
-    if (!page) return Object.freeze([]);
-    return page.backlinkObligations;
-  }
-
-  function validatePageElement(rootElement, pageOrId) {
-    const page = typeof pageOrId === "string" ? getById(pageOrId) : pageOrId;
-    const root = rootElement || (global.document && global.document.body);
-
-    if (!page || !root) {
-      return Object.freeze({
-        pass: false,
-        errors: Object.freeze(["missing-page-or-root"]),
-        warnings: Object.freeze([])
-      });
-    }
-
-    const errors = [];
-    const warnings = [];
-
-    const roomValue = root.getAttribute("data-manor-room");
-    const classValue = root.getAttribute("data-manor-class");
-    const skinValue = root.getAttribute("data-manor-skin");
-
-    if (roomValue && roomValue !== page.id) errors.push("wrong-manor-room");
-    if (classValue && classValue !== page.class) errors.push("wrong-manor-class");
-    if (skinValue && skinValue !== "v1") warnings.push("unexpected-manor-skin-version");
-    if (!roomValue) warnings.push("missing-data-manor-room");
-    if (!classValue) warnings.push("missing-data-manor-class");
-    if (!skinValue) warnings.push("missing-data-manor-skin");
-
-    return Object.freeze({
-      pass: errors.length === 0,
-      errors: Object.freeze(errors),
-      warnings: Object.freeze(warnings)
-    });
-  }
-
-  function auditDocument() {
-    if (!global.document) {
-      return Object.freeze({
-        pass: false,
-        errors: Object.freeze(["document-unavailable"]),
-        warnings: Object.freeze([])
-      });
-    }
-
-    const page = getCurrentPage();
-
-    if (!page) {
-      return Object.freeze({
-        pass: false,
-        errors: Object.freeze(["route-not-in-registry"]),
-        warnings: Object.freeze([])
-      });
-    }
-
-    return validatePageElement(global.document.body, page);
-  }
-
-  function applyDatasetToBody(pageOrId) {
-    if (!global.document || !global.document.body) return null;
-
-    const dataset = createPageDataset(pageOrId || getCurrentPage());
-    if (!dataset) return null;
-
-    Object.keys(dataset).forEach(function applyDatasetKey(key) {
-      global.document.body.dataset[key] = dataset[key];
-    });
-
-    global.document.body.classList.add("manor-skin");
-
-    if (dataset.manorClass === "house") {
-      global.document.body.classList.add("manor-house");
-      global.document.body.classList.remove("manor-planet");
-    }
-
-    if (dataset.manorClass === "planet") {
-      global.document.body.classList.add("manor-planet");
-      global.document.body.classList.remove("manor-house");
-    }
-
-    return dataset;
-  }
-
-  const registry = Object.freeze({
-    version: VERSION,
-    skinVersion: SKIN_VERSION,
-    geometry: GEOMETRY,
-    quadrants: QUADRANTS,
-    counts: Object.freeze({
-      centerExpressionRooms: 15,
-      houseParts: 6,
-      planetaryConstructs: 9,
-      latticeCells: 256
-    }),
-    rules: Object.freeze({
-      primary: "House first. Planets second.",
-      noDetachedPlanet: "No planet floats without a house anchor.",
-      noHousePlanetCollapse: "No house part becomes a detached planet unless explicitly reassigned.",
-      routeLaw: "Many jump-off points, one destination.",
-      gaugesLaw: "Gauges must remain live-calculated, not static."
-    }),
-    pages: PAGES,
-    productDestinations: PRODUCT_DESTINATIONS,
-    routeMap: ROUTE_MAP,
-    normalizeRoute: normalizeRoute,
-    getById: getById,
-    getByRoute: getByRoute,
-    listByClass: listByClass,
-    listByBatch: listByBatch,
-    listHouseParts: function listHouseParts() {
-      return listByClass("house");
-    },
-    listPlanetaryConstructs: function listPlanetaryConstructs() {
-      return listByClass("planet");
-    },
-    getCurrentPage: getCurrentPage,
-    createPageDataset: createPageDataset,
-    requiredBacklinksFor: requiredBacklinksFor,
-    validatePageElement: validatePageElement,
-    auditDocument: auditDocument,
-    applyDatasetToBody: applyDatasetToBody
-  });
-
-  global.ManorPageRegistry = registry;
-
-  if (global.document) {
-    global.document.documentElement.setAttribute("data-manor-registry", VERSION);
-
-    const event = new CustomEvent("manor:registry-ready", {
-      detail: registry
-    });
-
-    global.document.dispatchEvent(event);
-  }
-})(typeof window !== "undefined" ? window : globalThis);
+  window.DGB_PAGE_REGISTRY = PAGE_REGISTRY;
+})();

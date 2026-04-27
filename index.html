@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-compass-generation="G3_HOUSE_OBJECT_ASCENSION">
+<html lang="en" data-compass-generation="G3_OBJECT_REFINEMENT">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: house-first Generation 3 public root, universe-backed estate entrance, and Flat/Round/Meta view selector."
+    content="Diamond Gate Bridge Compass: Generation 3 house-first public root, diamond-gate manor object, universe-backed estate entrance, and Flat/Round/Meta view selector."
   />
 
   <style>
@@ -14,8 +14,8 @@
       --void: #01030a;
       --deep: #020713;
       --navy: #061126;
-      --panel: rgba(7, 17, 39, 0.82);
-      --panel-strong: rgba(5, 12, 29, 0.94);
+      --panel: rgba(7, 17, 39, 0.84);
+      --panel-strong: rgba(5, 12, 29, 0.95);
       --ink: #eef3ff;
       --muted: #b8c2d8;
       --soft: #d9e3f7;
@@ -157,7 +157,7 @@
     .hero {
       min-height: calc(100vh - 62px);
       display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(340px, 1.06fr);
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
       gap: clamp(18px, 4vw, 48px);
       align-items: center;
       padding: clamp(18px, 4vw, 54px) 0 clamp(30px, 6vw, 76px);
@@ -188,7 +188,7 @@
     .hero::after {
       content: "";
       position: absolute;
-      width: min(620px, 70vw);
+      width: min(660px, 72vw);
       aspect-ratio: 1;
       left: 50%;
       top: 48%;
@@ -315,12 +315,12 @@
     }
 
     .house-stage {
-      min-height: clamp(420px, 64vh, 620px);
-      border: 1px solid rgba(244, 201, 103, 0.3);
+      min-height: clamp(460px, 66vh, 680px);
+      border: 1px solid rgba(244, 201, 103, 0.32);
       border-radius: 34px;
       background:
-        radial-gradient(circle at 50% 44%, rgba(244,201,103,0.16), transparent 30%),
-        radial-gradient(circle at 50% 62%, rgba(118,200,255,0.08), transparent 36%),
+        radial-gradient(circle at 50% 43%, rgba(244,201,103,0.18), transparent 30%),
+        radial-gradient(circle at 50% 64%, rgba(118,200,255,0.09), transparent 36%),
         rgba(0,0,0,0.18);
       position: relative;
       overflow: hidden;
@@ -332,7 +332,7 @@
     .house-stage::before {
       content: "";
       position: absolute;
-      inset: 9%;
+      inset: 8%;
       border-radius: 50%;
       border: 1px solid rgba(244,201,103,0.18);
       box-shadow: inset 0 0 50px rgba(244,201,103,0.06);
@@ -343,7 +343,7 @@
       position: absolute;
       left: 50%;
       top: 54%;
-      width: min(310px, 68%);
+      width: min(340px, 70%);
       aspect-ratio: 1;
       transform: translate(-50%, -50%) rotate(45deg);
       border: 1px solid rgba(244,201,103,0.28);
@@ -351,80 +351,20 @@
       opacity: 0.78;
     }
 
-    .manor-object {
+    .caption {
       position: absolute;
-      left: 50%;
-      top: 52%;
-      width: min(380px, 78%);
-      height: min(330px, 58%);
-      transform: translate(-50%, -50%);
-      z-index: 3;
-    }
-
-    .manor-roof {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 76%;
-      height: 36%;
-      transform: translateX(-50%);
-      clip-path: polygon(50% 0, 100% 100%, 0 100%);
-      border: 1px solid rgba(244,201,103,0.4);
-      background:
-        linear-gradient(135deg, rgba(255,227,163,0.2), rgba(244,201,103,0.08)),
-        rgba(8, 19, 42, 0.78);
-      box-shadow: 0 0 34px rgba(244,201,103,0.18);
-    }
-
-    .manor-body {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 84%;
-      height: 70%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(244,201,103,0.42);
-      border-radius: 22px 22px 30px 30px;
-      background:
-        linear-gradient(90deg, transparent 0 18%, rgba(244,201,103,0.1) 19% 20%, transparent 21% 79%, rgba(244,201,103,0.1) 80% 81%, transparent 82%),
-        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(7,17,39,0.92));
-      box-shadow:
-        inset 0 0 42px rgba(118,200,255,0.08),
-        0 0 52px rgba(244,201,103,0.13);
-    }
-
-    .manor-door {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 28%;
-      height: 48%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(255,227,163,0.56);
-      border-radius: 999px 999px 0 0;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(244,201,103,0.34), transparent 12%),
-        linear-gradient(180deg, rgba(244,201,103,0.12), rgba(2,7,19,0.94));
-      box-shadow: inset 0 0 30px rgba(244,201,103,0.12), 0 0 30px rgba(244,201,103,0.12);
-    }
-
-    .manor-window {
-      position: absolute;
-      top: 34%;
-      width: 14%;
-      aspect-ratio: 1;
-      border: 1px solid rgba(255,227,163,0.48);
-      border-radius: 50%;
-      background: rgba(244,201,103,0.12);
-      box-shadow: 0 0 20px rgba(244,201,103,0.12);
-    }
-
-    .manor-window.left {
-      left: 22%;
-    }
-
-    .manor-window.right {
-      right: 22%;
+      left: 18px;
+      right: 18px;
+      top: 18px;
+      z-index: 6;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--gold-soft);
+      font-size: clamp(0.68rem, 1.8vw, 0.86rem);
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     .mode-layer {
@@ -450,7 +390,7 @@
     }
 
     .flat-layer::after {
-      content: "FLAT · HOUSE MAP";
+      content: "FLAT · DIAMOND GATE MAP";
       position: absolute;
       left: 50%;
       bottom: 24px;
@@ -467,8 +407,8 @@
       position: absolute;
       left: 50%;
       bottom: 18%;
-      width: 11px;
-      height: 52%;
+      width: 12px;
+      height: 54%;
       border-radius: 999px;
       transform: translateX(-50%);
       background: linear-gradient(180deg, var(--gold), var(--copper));
@@ -480,8 +420,8 @@
       position: absolute;
       left: 50%;
       top: 8%;
-      width: min(260px, 68%);
-      height: 42%;
+      width: min(300px, 72%);
+      height: 43%;
       border: 1px solid rgba(132,225,188,0.44);
       border-radius: 48% 52% 45% 55%;
       background:
@@ -499,7 +439,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      width: min(390px, 86%);
+      width: min(430px, 88%);
       aspect-ratio: 1;
       border-radius: 50%;
       border: 1px solid rgba(118,200,255,0.5);
@@ -518,27 +458,182 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      width: min(460px, 96%);
+      width: min(500px, 98%);
       aspect-ratio: 1;
       border-radius: 50%;
       border: 1px dashed rgba(244,201,103,0.44);
       transform: translate(-50%, -50%) rotate(-16deg);
     }
 
-    .caption {
+    .estate-object {
       position: absolute;
-      left: 18px;
-      right: 18px;
-      top: 18px;
+      left: 50%;
+      top: 53%;
+      width: min(430px, 82%);
+      height: min(380px, 62%);
+      transform: translate(-50%, -50%);
       z-index: 4;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
+    }
+
+    .bridge-span {
+      position: absolute;
+      left: 50%;
+      bottom: 2%;
+      width: 98%;
+      height: 20%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(244,201,103,0.42);
+      border-radius: 999px 999px 26px 26px;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 12%, rgba(244,201,103,0.14) 13% 14%, transparent 15%),
+        linear-gradient(180deg, rgba(255,227,163,0.12), rgba(7,17,39,0.86));
+      box-shadow:
+        inset 0 0 28px rgba(244,201,103,0.08),
+        0 0 30px rgba(244,201,103,0.1);
+    }
+
+    .gate-left,
+    .gate-right {
+      position: absolute;
+      bottom: 18%;
+      width: 18%;
+      height: 58%;
+      border: 1px solid rgba(244,201,103,0.5);
+      border-radius: 18px 18px 10px 10px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.09), rgba(7,17,39,0.93)),
+        repeating-linear-gradient(180deg, transparent 0 18%, rgba(244,201,103,0.08) 19% 20%, transparent 21%);
+      box-shadow:
+        inset 0 0 30px rgba(118,200,255,0.08),
+        0 0 34px rgba(244,201,103,0.12);
+    }
+
+    .gate-left {
+      left: 5%;
+    }
+
+    .gate-right {
+      right: 5%;
+    }
+
+    .manor-roof {
+      position: absolute;
+      left: 50%;
+      top: 1%;
+      width: 64%;
+      height: 32%;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      border: 1px solid rgba(244,201,103,0.4);
+      background:
+        linear-gradient(135deg, rgba(255,227,163,0.2), rgba(244,201,103,0.08)),
+        rgba(8, 19, 42, 0.78);
+      box-shadow: 0 0 34px rgba(244,201,103,0.18);
+    }
+
+    .manor-body {
+      position: absolute;
+      left: 50%;
+      bottom: 16%;
+      width: 66%;
+      height: 60%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(244,201,103,0.45);
+      border-radius: 22px 22px 30px 30px;
+      background:
+        linear-gradient(90deg, transparent 0 18%, rgba(244,201,103,0.1) 19% 20%, transparent 21% 79%, rgba(244,201,103,0.1) 80% 81%, transparent 82%),
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(7,17,39,0.92));
+      box-shadow:
+        inset 0 0 42px rgba(118,200,255,0.08),
+        0 0 52px rgba(244,201,103,0.13);
+    }
+
+    .manor-door {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 30%;
+      height: 52%;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,227,163,0.58);
+      border-radius: 999px 999px 0 0;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(244,201,103,0.38), transparent 12%),
+        linear-gradient(180deg, rgba(244,201,103,0.12), rgba(2,7,19,0.94));
+      box-shadow: inset 0 0 30px rgba(244,201,103,0.12), 0 0 34px rgba(244,201,103,0.14);
+    }
+
+    .manor-window {
+      position: absolute;
+      top: 34%;
+      width: 14%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(255,227,163,0.48);
+      border-radius: 50%;
+      background: rgba(244,201,103,0.12);
+      box-shadow: 0 0 20px rgba(244,201,103,0.12);
+    }
+
+    .manor-window.left {
+      left: 22%;
+    }
+
+    .manor-window.right {
+      right: 22%;
+    }
+
+    .diamond-keystone {
+      position: absolute;
+      left: 50%;
+      bottom: 26%;
+      width: 14%;
+      aspect-ratio: 1;
+      transform: translateX(-50%) rotate(45deg);
+      border: 1px solid rgba(255,227,163,0.72);
+      background:
+        radial-gradient(circle, rgba(255,227,163,0.38), rgba(244,201,103,0.1) 46%, rgba(8,19,42,0.78));
+      box-shadow:
+        inset 0 0 24px rgba(255,227,163,0.18),
+        0 0 34px rgba(244,201,103,0.28);
+    }
+
+    .estate-label {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 112%);
       color: var(--gold-soft);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 950;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
+      text-align: center;
       text-transform: uppercase;
+      width: 100%;
+    }
+
+    .orbit-point {
+      position: absolute;
+      z-index: 5;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,227,163,0.64);
+      background: rgba(244,201,103,0.16);
+      box-shadow: 0 0 18px rgba(244,201,103,0.24);
+    }
+
+    .orbit-point.one { left: 20%; top: 28%; }
+    .orbit-point.two { right: 18%; top: 33%; }
+    .orbit-point.three { right: 24%; bottom: 24%; }
+    .orbit-point.four { left: 26%; bottom: 21%; }
+
+    body[data-view-mode="flat"] .orbit-point,
+    body[data-view-mode="round"] .orbit-point {
+      opacity: 0.22;
+    }
+
+    body[data-view-mode="meta"] .orbit-point {
+      opacity: 1;
     }
 
     .modes {
@@ -678,6 +773,10 @@
       padding: clamp(16px, 2.2vw, 26px);
     }
 
+    .audit-strip {
+      opacity: 0.86;
+    }
+
     .chip-list {
       display: flex;
       flex-wrap: wrap;
@@ -732,11 +831,36 @@
       }
 
       .house-stage {
-        min-height: 430px;
+        min-height: 500px;
+      }
+
+      .estate-object {
+        width: min(390px, 82%);
+        height: min(360px, 60%);
       }
 
       h1 {
         font-size: clamp(3rem, 14vw, 5.7rem);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .caption {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .house-stage {
+        min-height: 470px;
+      }
+
+      .estate-object {
+        width: 88%;
+        height: 58%;
+      }
+
+      .estate-label {
+        font-size: 0.62rem;
       }
     }
 
@@ -764,7 +888,7 @@
   data-manor-slot="H1_COMPASS"
   data-manor-route="/"
   data-manor-batch="BATCH_1_HOUSE"
-  data-compass-role="generation-3-house-object-public-root"
+  data-compass-role="generation-3-diamond-gate-manor-public-root"
   data-view-mode="flat"
 >
   <nav class="rail" aria-label="Richie’s Manor house routes">
@@ -779,7 +903,7 @@
   <main class="shell">
     <section class="hero" aria-label="Diamond Gate Bridge house-first public root">
       <article class="panel copy-panel">
-        <p class="kicker">H1 · Compass · House in the Universe</p>
+        <p class="kicker">H1 · Compass · Diamond Gate Manor</p>
         <h1>Diamond Gate Bridge</h1>
         <p class="lede">
           You are arriving at the house. The universe is the environment around it.
@@ -790,8 +914,8 @@
 
         <h2>Choose how you want to see the house.</h2>
         <p class="lede">
-          <span class="gold">Flat</span> shows the clean 2D public map.
-          <span class="gold">Round</span> shows the Tree of Life / A Bug’s Life version.
+          <span class="gold">Flat</span> shows the diamond-gate route map.
+          <span class="gold">Round</span> shows the living Tree of Life manor.
           <span class="gold">Meta</span> shows the house inside the full universe.
         </p>
 
@@ -803,9 +927,9 @@
 
         <div class="readout">
           <p class="label">Current view</p>
-          <h2 id="modeTitle">Flat · 2D house map</h2>
+          <h2 id="modeTitle">Flat · diamond-gate map</h2>
           <p id="modeText">
-            See the house clearly. This is the fastest route into Products, Showroom, Gauges, and the main public rooms.
+            See the house clearly. This view gives the fastest route into Products, Showroom, Gauges, and the main public rooms.
           </p>
         </div>
 
@@ -818,7 +942,8 @@
 
       <article class="panel visual-panel">
         <p class="kicker">First public object</p>
-        <div class="house-stage" aria-label="Rich Manor and Estate inside the universe">
+
+        <div class="house-stage" aria-label="Diamond Gate Manor inside the universe">
           <div class="caption">
             <span>Rich Manor and Estate</span>
             <span id="modeCaption">Flat View</span>
@@ -828,13 +953,23 @@
           <div class="mode-layer round-layer" aria-hidden="true"></div>
           <div class="mode-layer meta-layer" aria-hidden="true"></div>
 
-          <div class="manor-object" aria-hidden="true">
+          <span class="orbit-point one" aria-hidden="true"></span>
+          <span class="orbit-point two" aria-hidden="true"></span>
+          <span class="orbit-point three" aria-hidden="true"></span>
+          <span class="orbit-point four" aria-hidden="true"></span>
+
+          <div class="estate-object" aria-hidden="true">
+            <div class="bridge-span"></div>
+            <div class="gate-left"></div>
+            <div class="gate-right"></div>
             <div class="manor-roof"></div>
             <div class="manor-body">
               <span class="manor-window left"></span>
               <span class="manor-window right"></span>
               <span class="manor-door"></span>
+              <span class="diamond-keystone"></span>
             </div>
+            <div class="estate-label">Diamond Gate Bridge</div>
           </div>
         </div>
 
@@ -958,12 +1093,12 @@
         <li class="chip pass">house-class</li>
         <li class="chip pass">H1_COMPASS</li>
         <li class="chip pass">active-compass</li>
-        <li class="chip pass">generation-3-house-object</li>
+        <li class="chip pass">generation-3-diamond-gate-manor</li>
         <li class="chip pass">flat-round-meta</li>
         <li class="chip pass">256-state-lattice</li>
       </ul>
       <p class="lede">
-        Compass rule: Index is the initial public reveal of the house inside the universe, but it remains the audited orientation core.
+        Compass rule: Index is the initial public reveal of the Diamond Gate Manor inside the universe, but it remains the audited orientation core.
       </p>
     </section>
   </main>
@@ -974,24 +1109,24 @@
 
       var copy = {
         flat: {
-          title: "Flat · 2D house map",
-          text: "See the house clearly. This is the fastest route into Products, Showroom, Gauges, and the main public rooms.",
+          title: "Flat · diamond-gate map",
+          text: "See the house clearly. This view gives the fastest route into Products, Showroom, Gauges, and the main public rooms.",
           caption: "Flat View"
         },
         round: {
-          title: "Round · Tree of Life house",
+          title: "Round · Tree of Life manor",
           text: "See how the house grows. This view reads the estate as roots, branches, chambers, and living relationships.",
           caption: "Round View"
         },
         meta: {
-          title: "Meta · house inside the universe",
+          title: "Meta · manor inside the universe",
           text: "See the full estate field. This view places the house inside the universe with products, planets, and traversal routes around it.",
           caption: "Meta View"
         }
       };
 
       var body = document.body;
-      var storageKey = "dgb_compass_g3_house_view";
+      var storageKey = "dgb_compass_g3_diamond_gate_view";
       var title = document.getElementById("modeTitle");
       var text = document.getElementById("modeText");
       var caption = document.getElementById("modeCaption");

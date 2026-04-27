@@ -1,19 +1,20 @@
-/* TNT CREATE — /showroom/index.js
-   SHOWROOM PAGE CONTROLLER · B25
+/* TNT RENEWAL — /showroom/index.js
+   SHOWROOM PAGE CONTROLLER · B27 · RUSSIAN DOLL CONTROLLER
 
    CONTRACT:
-     - Controls TED Talk showroom behavior only.
+     - Controls Russian-doll showroom behavior only.
      - Does not load Earth renderer.
      - Does not load Earth runtime.
      - Does not touch Earth canvas projection.
      - Does not touch Earth controls.
-     - Handles portal navigation, locked Energy behavior, and section state.
+     - Opens compact chambers from portal cards.
+     - Maintains Earth consumer contract markers.
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "showroom-index-b25-platform-controller";
+  var VERSION = "showroom-index-b27-russian-doll-controller";
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -27,79 +28,6 @@
     document.documentElement.setAttribute("data-showroom-controller", VERSION);
   }
 
-  function bindLockedLinks() {
-    var lockedLinks = Array.prototype.slice.call(document.querySelectorAll("[data-locked-link]"));
-
-    lockedLinks.forEach(function (link) {
-      link.addEventListener("click", function (event) {
-        event.preventDefault();
-
-        document.documentElement.setAttribute("data-showroom-locked-selection", link.getAttribute("data-locked-link") || "locked");
-
-        var energy = document.getElementById("energy");
-        if (energy && typeof energy.scrollIntoView === "function") {
-          energy.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-      });
-    });
-  }
-
-  function bindPortalState() {
-    var portals = Array.prototype.slice.call(document.querySelectorAll(".portal[href^='#']"));
-    var sections = portals
-      .map(function (portal) {
-        var id = portal.getAttribute("href").slice(1);
-        var section = document.getElementById(id);
-
-        return {
-          portal: portal,
-          id: id,
-          section: section
-        };
-      })
-      .filter(function (item) {
-        return item.section;
-      });
-
-    function setActive(id) {
-      sections.forEach(function (item) {
-        if (item.id === id) {
-          item.portal.setAttribute("data-active", "true");
-        } else {
-          item.portal.removeAttribute("data-active");
-        }
-      });
-
-      document.documentElement.setAttribute("data-showroom-section", id);
-    }
-
-    if ("IntersectionObserver" in window) {
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
-        });
-      }, {
-        root: null,
-        threshold: 0.42
-      });
-
-      sections.forEach(function (item) {
-        observer.observe(item.section);
-      });
-    }
-
-    sections.forEach(function (item) {
-      item.portal.addEventListener("click", function () {
-        setActive(item.id);
-      });
-    });
-  }
-
   function protectEarthConsumerContract() {
     var earthMount = document.querySelector("[data-dgb-earth-mount]");
     var earthCanvasScript = document.querySelector('script[src="/assets/earth/earth_canvas.js"]');
@@ -110,10 +38,95 @@
     document.documentElement.setAttribute("data-showroom-earth-runtime-script-present", earthRuntimeScript ? "true" : "false");
   }
 
+  function setActivePortal(targetId) {
+    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
+
+    portals.forEach(function (portal) {
+      if (portal.getAttribute("data-doll-open") === targetId) {
+        portal.setAttribute("data-active", "true");
+      } else {
+        portal.removeAttribute("data-active");
+      }
+    });
+
+    document.documentElement.setAttribute("data-showroom-doll", targetId || "");
+  }
+
+  function openDoll(targetId, scroll) {
+    var target = document.getElementById(targetId);
+    var allDolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+    if (!target) return;
+
+    allDolls.forEach(function (doll) {
+      if (doll === target) {
+        doll.setAttribute("open", "");
+      } else {
+        doll.removeAttribute("open");
+      }
+    });
+
+    setActivePortal(targetId);
+
+    if (scroll && typeof target.scrollIntoView === "function") {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  }
+
+  function bindPortalOpeners() {
+    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
+
+    portals.forEach(function (portal) {
+      portal.addEventListener("click", function (event) {
+        var targetId = portal.getAttribute("data-doll-open");
+
+        if (!targetId) return;
+
+        event.preventDefault();
+        openDoll(targetId, true);
+
+        if (history && history.replaceState) {
+          history.replaceState(null, "", "#" + targetId);
+        }
+      });
+    });
+  }
+
+  function bindDollState() {
+    var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+    dolls.forEach(function (doll) {
+      doll.addEventListener("toggle", function () {
+        if (!doll.open) return;
+
+        dolls.forEach(function (other) {
+          if (other !== doll) other.removeAttribute("open");
+        });
+
+        setActivePortal(doll.id);
+      });
+    });
+  }
+
+  function openFromHash() {
+    var id = (window.location.hash || "").replace("#", "");
+
+    if (id && document.getElementById(id) && document.getElementById(id).classList.contains("doll")) {
+      openDoll(id, false);
+      return;
+    }
+
+    openDoll("doll-consider-energy", false);
+  }
+
   ready(function () {
     markControllerReady();
-    bindLockedLinks();
-    bindPortalState();
     protectEarthConsumerContract();
+    bindPortalOpeners();
+    bindDollState();
+    openFromHash();
   });
 })();

@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-contract="GAUGES_CONTRACT_RENEWAL_BATCH_3B_V4">
+<html lang="en" data-gauges-contract="GAUGES_ROUTE_CORRECTED_BATCH_4_V1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Live diagnostic Gauges for Diamond Gate Bridge: house, product, and planetary construct deep audit."
-  />
+  <meta name="description" content="Live diagnostic Gauges for Diamond Gate Bridge: house, product, and planetary construct deep audit with corrected hosted routes." />
 
   <style>
     :root {
@@ -15,10 +12,8 @@
       --muted: #b8c2d8;
       --navy-950: #020713;
       --navy-900: #061126;
-      --navy-850: #091832;
       --gold: #f4c967;
       --gold-soft: #ffe3a3;
-      --amber: #d98a35;
       --green: #84e1bc;
       --red: #ff8a8a;
       --glass: rgba(8, 19, 42, 0.78);
@@ -30,9 +25,7 @@
       --page-max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -46,7 +39,6 @@
       background:
         radial-gradient(circle at 50% -12%, rgba(244, 201, 103, 0.2), transparent 34%),
         radial-gradient(circle at 16% 18%, rgba(34, 91, 164, 0.34), transparent 36%),
-        radial-gradient(circle at 86% 22%, rgba(217, 138, 53, 0.14), transparent 32%),
         linear-gradient(180deg, var(--navy-950), var(--navy-900) 46%, #030816 100%);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -65,23 +57,7 @@
       opacity: 0.18;
     }
 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px);
-      background-size: 6.25vw 6.25vw;
-      mask-image: radial-gradient(circle at center, black 0, black 44%, transparent 78%);
-      opacity: 0.46;
-    }
-
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .route-rail {
       width: min(980px, calc(100% - 32px));
@@ -111,7 +87,6 @@
       color: #d9e3f7;
       text-decoration: none;
       font-weight: 800;
-      letter-spacing: 0.01em;
     }
 
     .route-rail a[aria-current="page"] {
@@ -140,28 +115,13 @@
     }
 
     .room {
-      position: relative;
-      overflow: hidden;
       border-radius: var(--radius-lg);
       padding: clamp(22px, 4vw, 56px);
     }
 
-    .room::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px);
-      background-size: 6.25% 6.25%;
-      opacity: 0.48;
-      mask-image: radial-gradient(circle at center, black, transparent 72%);
-    }
-
-    .room > * {
-      position: relative;
-      z-index: 1;
+    .card {
+      border-radius: var(--radius-md);
+      padding: clamp(18px, 2.4vw, 32px);
     }
 
     .kicker,
@@ -194,14 +154,7 @@
       letter-spacing: -0.065em;
     }
 
-    h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.2rem, 2.2vw, 1.8rem);
-    }
-
-    p {
-      line-height: 1.68;
-    }
+    p { line-height: 1.68; }
 
     .lede {
       max-width: 820px;
@@ -221,18 +174,8 @@
       gap: clamp(16px, 2vw, 24px);
     }
 
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card {
-      border-radius: var(--radius-md);
-      padding: clamp(18px, 2.4vw, 32px);
-    }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .score {
       font-size: clamp(2rem, 7vw, 5rem);
@@ -247,25 +190,13 @@
       font-size: 0.94rem;
     }
 
-    .status-pass {
-      color: var(--green);
-    }
+    .status-pass { color: var(--green); }
+    .status-warn { color: var(--gold); }
+    .status-fail { color: var(--red); }
 
-    .status-warn {
-      color: var(--gold);
-    }
+    .audit-table { margin-top: 28px; }
 
-    .status-fail {
-      color: var(--red);
-    }
-
-    .audit-table {
-      margin-top: 28px;
-    }
-
-    .group {
-      margin-top: 26px;
-    }
+    .group { margin-top: 26px; }
 
     .group-title {
       margin: 0 0 8px;
@@ -285,9 +216,7 @@
       padding: 14px 0;
     }
 
-    .row:first-of-type {
-      border-top: 0;
-    }
+    .row:first-of-type { border-top: 0; }
 
     code {
       color: var(--gold-soft);
@@ -331,21 +260,11 @@
 
     @media (max-width: 900px) {
       .grid.three,
-      .grid.four {
-        grid-template-columns: 1fr;
-      }
+      .grid.four { grid-template-columns: 1fr; }
 
-      .route-rail {
-        border-radius: var(--radius-md);
-      }
-
-      .route-rail a {
-        width: 100%;
-      }
-
-      .row {
-        grid-template-columns: 1fr;
-      }
+      .route-rail { border-radius: var(--radius-md); }
+      .route-rail a { width: 100%; }
+      .row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -358,7 +277,7 @@
   data-manor-route="/gauges/"
   data-manor-batch="BATCH_1_HOUSE"
   data-gauges-runtime-preserved="renewed-live-calculated"
-  data-gauges-deep-audit="BATCH_3B_PLANETARY_CONSTRUCT_DEEP_AUDIT"
+  data-gauges-deep-audit="BATCH_4_ROUTE_CORRECTED_PLANETARY_AUDIT"
 >
   <nav class="route-rail" aria-label="Richie’s Manor house routes">
     <a href="/">Compass</a>
@@ -371,12 +290,11 @@
 
   <main class="shell">
     <section class="room">
-      <p class="kicker">H6 · Gauges · Contract Renewed</p>
+      <p class="kicker">H6 · Gauges · Route Contract Corrected</p>
       <h1>Live site-health instruments.</h1>
       <p class="lede">
-        Gauges now verifies three layers: Batch 1 house structure, Batch 2 product-chamber depth,
-        and Batch 3 planetary construct orbit integrity. This file is self-contained so the
-        instrument room does not fail if shared styling fails.
+        Gauges now verifies three layers using the real file map: Frontier is audited inside Explore,
+        and Upper Room is audited inside Big Laugh. No fake standalone planet routes are required.
       </p>
 
       <div class="divider"></div>
@@ -391,7 +309,7 @@
         <article class="card">
           <p class="label">Route integrity</p>
           <div class="score" id="routeScore">--</div>
-          <p>House, product, and planetary reachability.</p>
+          <p>House, product, and corrected planetary reachability.</p>
         </article>
 
         <article class="card">
@@ -403,7 +321,7 @@
         <article class="card">
           <p class="label">Planetary depth</p>
           <div class="score" id="planetScore">--</div>
-          <p>Nine planetary constructs.</p>
+          <p>Nine planetary constructs with corrected hosted routes.</p>
         </article>
       </div>
 
@@ -422,8 +340,8 @@
 
         <article class="card">
           <p class="label">Contract</p>
-          <div class="score">3B</div>
-          <p>Renewed three-layer live audit.</p>
+          <div class="score">4</div>
+          <p>Route-corrected live audit.</p>
         </article>
       </div>
     </section>
@@ -446,7 +364,7 @@
     </section>
 
     <section class="audit-strip">
-      <p class="label">Batch 3B audit markers</p>
+      <p class="label">Batch 4 route-corrected audit markers</p>
       <ul class="chip-list">
         <li class="chip pass">route-exists</li>
         <li class="chip pass">manor-skin</li>
@@ -455,11 +373,8 @@
         <li class="chip pass">live-calculated</li>
         <li class="chip pass">product-chamber-deep-audit</li>
         <li class="chip pass">planetary-deep-audit</li>
+        <li class="chip pass">route-contract-corrected</li>
       </ul>
-      <p class="small">
-        Renewed contract rule: Gauges must visibly prove the three-layer audit. If this page says
-        “two layers,” the old file is still serving.
-      </p>
     </section>
   </main>
 
@@ -468,166 +383,32 @@
       "use strict";
 
       var houseChecks = [
-        ["house", "Compass", "/", [
-          'data-manor-room="compass"',
-          'data-manor-class="house"',
-          "/door/",
-          "/products/",
-          "/gauges/"
-        ]],
-        ["house", "Door", "/door/", [
-          'data-manor-room="door"',
-          'data-manor-class="house"',
-          "/home/",
-          "/products/",
-          "/gauges/"
-        ]],
-        ["house", "Home", "/home/", [
-          'data-manor-room="home"',
-          'data-manor-class="house"',
-          "/door/",
-          "/products/",
-          "/gauges/"
-        ]],
-        ["house", "Products", "/products/", [
-          'data-manor-room="products"',
-          'data-manor-class="house"',
-          "/products/archcoin/",
-          "/products/on-your-side-ai/",
-          "/gauges/"
-        ]],
-        ["house", "Showroom", "/showroom/", [
-          'data-manor-room="showroom"',
-          'data-manor-class="house"',
-          "/",
-          "/products/",
-          "/gauges/"
-        ]],
-        ["house", "Gauges", "/gauges/", [
-          'data-manor-room="gauges"',
-          'data-manor-class="house"',
-          "live-calculated",
-          "product-chamber-deep-audit",
-          "planetary-deep-audit"
-        ]]
+        ["house", "Compass", "/", ['data-manor-room="compass"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"]],
+        ["house", "Door", "/door/", ['data-manor-room="door"', 'data-manor-class="house"', "/home/", "/products/", "/gauges/"]],
+        ["house", "Home", "/home/", ['data-manor-room="home"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"]],
+        ["house", "Products", "/products/", ['data-manor-room="products"', 'data-manor-class="house"', "/products/archcoin/", "/products/on-your-side-ai/", "/gauges/"]],
+        ["house", "Showroom", "/showroom/", ['data-manor-room="showroom"', 'data-manor-class="house"', "/", "/products/", "/gauges/"]],
+        ["house", "Gauges", "/gauges/", ['data-manor-room="gauges"', 'data-manor-class="house"', "live-calculated", "product-chamber-deep-audit", "planetary-deep-audit"]]
       ];
 
       var productChecks = [
-        ["product", "ARCHCOIN", "/products/archcoin/", [
-          'data-manor-class="product-chamber"',
-          'data-product-id="archcoin"',
-          'data-product-parent="/products/"',
-          'data-manor-batch="BATCH_2_PRODUCTS"',
-          "archcoin-not-planet",
-          "four-coin-template"
-        ]],
-        ["product", "Five Flags", "/products/five-flags/", [
-          'data-manor-class="product-chamber"',
-          'data-product-id="five-flags"',
-          'data-product-parent="/products/"',
-          'data-manor-batch="BATCH_2_PRODUCTS"',
-          "five-flags",
-          "canonical-destination"
-        ]],
-        ["product", "On Your Side AAI", "/products/on-your-side-ai/", [
-          'data-manor-class="product-chamber"',
-          'data-product-id="on-your-side-ai"',
-          'data-product-parent="/products/"',
-          'data-manor-batch="BATCH_2_PRODUCTS"',
-          "on-your-side-aai",
-          "bounded-assistance"
-        ]],
-        ["product", "ESL Traversal Learning", "/products/education/", [
-          'data-manor-class="product-chamber"',
-          'data-product-id="education"',
-          'data-product-parent="/products/"',
-          'data-manor-batch="BATCH_2_PRODUCTS"',
-          "education",
-          "traversal-learning"
-        ]],
-        ["product", "Baseline Nutrition Systems", "/products/nutrition/", [
-          'data-manor-class="product-chamber"',
-          'data-product-id="nutrition"',
-          'data-product-parent="/products/"',
-          'data-manor-batch="BATCH_2_PRODUCTS"',
-          "nutrition",
-          "support-not-shame"
-        ]]
+        ["product", "ARCHCOIN", "/products/archcoin/", ['data-manor-class="product-chamber"', 'data-product-id="archcoin"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "archcoin-not-planet", "four-coin-template"]],
+        ["product", "Five Flags", "/products/five-flags/", ['data-manor-class="product-chamber"', 'data-product-id="five-flags"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "five-flags", "canonical-destination"]],
+        ["product", "On Your Side AAI", "/products/on-your-side-ai/", ['data-manor-class="product-chamber"', 'data-product-id="on-your-side-ai"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "on-your-side-aai", "bounded-assistance"]],
+        ["product", "ESL Traversal Learning", "/products/education/", ['data-manor-class="product-chamber"', 'data-product-id="education"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "education", "traversal-learning"]],
+        ["product", "Baseline Nutrition Systems", "/products/nutrition/", ['data-manor-class="product-chamber"', 'data-product-id="nutrition"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "nutrition", "support-not-shame"]]
       ];
 
       var planetChecks = [
-        ["planet", "Prelude", "/prelude/", [
-          'data-manor-class="planet"',
-          'data-planet-id="prelude"',
-          'data-planet-slot="P1_PRELUDE"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "opening-atmosphere"
-        ]],
-        ["planet", "Explore", "/explore/", [
-          'data-manor-class="planet"',
-          'data-planet-id="explore"',
-          'data-planet-slot="P2_EXPLORE"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "discovery-traversal"
-        ]],
-        ["planet", "Frontier", "/frontier/", [
-          'data-manor-class="planet"',
-          'data-planet-id="frontier"',
-          'data-planet-slot="P3_FRONTIER"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "expansion-edge"
-        ]],
-        ["planet", "Laws", "/laws/", [
-          'data-manor-class="planet"',
-          'data-planet-id="laws"',
-          'data-planet-slot="P4_LAWS"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "law-boundary"
-        ]],
-        ["planet", "Governance", "/governance/", [
-          'data-manor-class="planet"',
-          'data-planet-id="governance"',
-          'data-planet-slot="P5_GOVERNANCE"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "governance-bridge"
-        ]],
-        ["planet", "Upper Room", "/upper-room/", [
-          'data-manor-class="planet"',
-          'data-planet-id="upper-room"',
-          'data-planet-slot="P6_UPPER_ROOM"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "event-gathering-band"
-        ]],
-        ["planet", "About This Underdog", "/about-this-underdog/", [
-          'data-manor-class="planet"',
-          'data-planet-id="about-this-underdog"',
-          'data-planet-slot="P7_ABOUT_THIS_UNDERDOG"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "origin-story-witness"
-        ]],
-        ["planet", "Nine Summits Universe", "/nine-summits/", [
-          'data-manor-class="planet"',
-          'data-planet-id="nine-summits-universe"',
-          'data-planet-slot="P8_NINE_SUMMITS_UNIVERSE"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "macro-orbit-field"
-        ]],
-        ["planet", "Nine Summits of Love", "/nine-summits-of-love/", [
-          'data-manor-class="planet"',
-          'data-planet-id="nine-summits-of-love"',
-          'data-planet-slot="P9_NINE_SUMMITS_OF_LOVE"',
-          'data-planet-orbit="manor"',
-          'data-manor-batch="BATCH_3_PLANETS"',
-          "256-diamonds-human-potential"
-        ]]
+        ["planet", "Prelude", "/prelude/", ['data-manor-class="planet"', 'data-planet-id="prelude"', 'data-planet-slot="P1_PRELUDE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "opening-atmosphere"]],
+        ["planet", "Explore", "/explore/", ['data-manor-class="planet"', 'data-planet-id="explore"', 'data-planet-slot="P2_EXPLORE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "discovery-traversal"]],
+        ["planet", "Frontier · hosted in Explore", "/explore/", ['data-manor-class="planet"', 'data-planet-id="frontier"', 'data-planet-slot="P3_FRONTIER"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "expansion-edge"]],
+        ["planet", "Laws", "/laws/", ['data-manor-class="planet"', 'data-planet-id="laws"', 'data-planet-slot="P4_LAWS"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "law-boundary"]],
+        ["planet", "Governance", "/governance/", ['data-manor-class="planet"', 'data-planet-id="governance"', 'data-planet-slot="P5_GOVERNANCE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "governance-bridge"]],
+        ["planet", "Upper Room · hosted in Big Laugh", "/big-laugh/upper-room/", ['data-manor-class="planet"', 'data-planet-id="upper-room"', 'data-planet-slot="P6_UPPER_ROOM"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "event-gathering-band"]],
+        ["planet", "About This Underdog", "/about-this-underdog/", ['data-manor-class="planet"', 'data-planet-id="about-this-underdog"', 'data-planet-slot="P7_ABOUT_THIS_UNDERDOG"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "origin-story-witness"]],
+        ["planet", "Nine Summits Universe", "/nine-summits/", ['data-manor-class="planet"', 'data-planet-id="nine-summits-universe"', 'data-planet-slot="P8_NINE_SUMMITS_UNIVERSE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "macro-orbit-field"]],
+        ["planet", "Nine Summits of Love", "/nine-summits-of-love/", ['data-manor-class="planet"', 'data-planet-id="nine-summits-of-love"', 'data-planet-slot="P9_NINE_SUMMITS_OF_LOVE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "256-diamonds-human-potential"]]
       ];
 
       function byId(id) {
@@ -653,7 +434,7 @@
       }
 
       function statusLabel(score) {
-        if (score >= 95) return "OPTIMAL / house, products, and planets stable";
+        if (score >= 95) return "OPTIMAL / corrected route contract stable";
         if (score >= 90) return "PASS / minor refinement only";
         if (score >= 70) return "ACTIVE / refinement required";
         return "UNSTABLE / repair required";
@@ -673,20 +454,11 @@
         return fetch(route + cacheBust + Date.now(), { cache: "no-store" })
           .then(function (response) {
             return response.text().then(function (text) {
-              return {
-                ok: response.ok,
-                status: response.status,
-                text: text
-              };
+              return { ok: response.ok, status: response.status, text: text };
             });
           })
           .catch(function (error) {
-            return {
-              ok: false,
-              status: 0,
-              text: "",
-              error: error && error.message ? error.message : "fetch-failed"
-            };
+            return { ok: false, status: 0, text: "", error: error && error.message ? error.message : "fetch-failed" };
           });
       }
 
@@ -707,7 +479,6 @@
 
           var routePoints = result.ok ? 40 : 0;
           var markerPoints = Math.round((hits.length / markers.length) * 60);
-          var score = routePoints + markerPoints;
 
           return {
             kind: kind,
@@ -715,7 +486,7 @@
             route: route,
             ok: result.ok,
             status: result.status,
-            score: score,
+            score: routePoints + markerPoints,
             hitCount: hits.length,
             requiredCount: markers.length,
             missing: missing
@@ -761,34 +532,14 @@
 
       Promise.all(houseChecks.concat(productChecks).concat(planetChecks).map(runCheck))
         .then(function (results) {
-          var houseResults = results.filter(function (result) {
-            return result.kind === "house";
-          });
+          var houseResults = results.filter(function (result) { return result.kind === "house"; });
+          var productResults = results.filter(function (result) { return result.kind === "product"; });
+          var planetResults = results.filter(function (result) { return result.kind === "planet"; });
 
-          var productResults = results.filter(function (result) {
-            return result.kind === "product";
-          });
-
-          var planetResults = results.filter(function (result) {
-            return result.kind === "planet";
-          });
-
-          var routeScore = average(results.map(function (result) {
-            return result.ok ? 100 : 0;
-          }));
-
-          var houseScore = average(houseResults.map(function (result) {
-            return result.score;
-          }));
-
-          var productScore = average(productResults.map(function (result) {
-            return result.score;
-          }));
-
-          var planetScore = average(planetResults.map(function (result) {
-            return result.score;
-          }));
-
+          var routeScore = average(results.map(function (result) { return result.ok ? 100 : 0; }));
+          var houseScore = average(houseResults.map(function (result) { return result.score; }));
+          var productScore = average(productResults.map(function (result) { return result.score; }));
+          var planetScore = average(planetResults.map(function (result) { return result.score; }));
           var overallScore = average([routeScore, houseScore, productScore, planetScore]);
 
           setText("overallScore", overallScore);
@@ -809,7 +560,7 @@
             auditRows.innerHTML =
               renderRows("Batch 1 · House skeleton", houseResults) +
               renderRows("Batch 2 · Product chamber deep audit", productResults) +
-              renderRows("Batch 3 · Planetary construct deep audit", planetResults);
+              renderRows("Batch 3 · Planetary construct deep audit · corrected routes", planetResults);
           }
 
           document.documentElement.setAttribute("data-gauges-route-score", String(routeScore));

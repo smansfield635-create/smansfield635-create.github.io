@@ -1,19 +1,25 @@
 <!doctype html>
 <!-- TNT RENEWAL — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · SUNRISE SNOW RUSSIAN DOLL · B5
+     ABOUT THIS UNDERDOG · SUNRISE HEAVY SNOW REAL LIFE RUSSIAN DOLL · B6
 
      RESULT:
-       - Keeps the sunrise-facing About This Underdog page.
-       - Adds CSS/JS snow, clouds, and morning light.
-       - No generated graphic.
-       - No external image.
+       - Keeps sunrise-facing About This Underdog page.
+       - Makes snow heavier.
+       - Darkens the upper sky/cloud zone while preserving sunrise light below.
+       - Adds clouds, snow, and sunrise light in code only.
+       - Grounds the underdog idea in real life: work, bills, family, health, school, rejection, starting over, and being underestimated.
        - Keeps Russian-doll chamber format.
        - Keeps deeper route at /big-laugh/about-this-underdog/.
        - Keeps Products and Showroom routes.
        - Showroom remains the shinier gold room.
+       - No graphic box.
+       - No generated image.
+       - No external image.
+       - No trauma dump.
+       - No encyclopedia layout.
 -->
 
-<html lang="en" data-page="about-this-underdog" data-generation="about-sunrise-snow-russian-doll-b5">
+<html lang="en" data-page="about-this-underdog" data-generation="about-sunrise-heavy-snow-real-life-russian-doll-b6">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
@@ -38,7 +44,7 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
       background:
-        linear-gradient(180deg,#5baeff 0%,#91d3ff 26%,#ffe0a3 58%,#ff9965 100%);
+        linear-gradient(180deg,#18365f 0%,#2f6ea8 18%,#7cc8ff 36%,#ffe0a3 64%,#ff9965 100%);
     }
 
     body::before{
@@ -50,9 +56,9 @@
       background:
         radial-gradient(circle at 50% 93%,rgba(255,253,218,.98) 0 6rem,rgba(255,215,111,.62) 8rem,rgba(255,143,87,.34) 18rem,transparent 34rem),
         radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.74),transparent 26rem),
-        radial-gradient(ellipse at 18% 16%,rgba(255,255,255,.36),transparent 24rem),
-        radial-gradient(ellipse at 84% 24%,rgba(120,190,255,.25),transparent 26rem),
-        linear-gradient(180deg,rgba(255,255,255,.22),transparent 36%,rgba(255,120,60,.18));
+        radial-gradient(ellipse at 18% 16%,rgba(255,255,255,.22),transparent 24rem),
+        radial-gradient(ellipse at 84% 20%,rgba(120,190,255,.16),transparent 26rem),
+        linear-gradient(180deg,rgba(8,28,62,.42),rgba(255,255,255,.08) 38%,rgba(255,120,60,.18));
     }
 
     body::after{
@@ -62,7 +68,7 @@
       z-index:-4;
       pointer-events:none;
       background:
-        linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.03) 40%,rgba(255,170,95,.12)),
+        linear-gradient(180deg,rgba(5,17,38,.32),rgba(255,255,255,.04) 42%,rgba(255,170,95,.13)),
         radial-gradient(circle at 50% 88%,rgba(255,255,255,.45),transparent 16rem);
     }
 
@@ -73,10 +79,10 @@
       --soft:rgba(37,21,6,.60);
       --cream:#fff8e8;
       --white:rgba(255,255,255,.92);
-      --panel:rgba(255,255,255,.70);
-      --panel2:rgba(255,248,232,.78);
+      --panel:rgba(255,255,255,.72);
+      --panel2:rgba(255,248,232,.80);
       --line:rgba(122,73,19,.18);
-      --line2:rgba(255,255,255,.68);
+      --line2:rgba(255,255,255,.70);
       --gold:#f2b84b;
       --gold2:#ffdf86;
       --rose:#ff8f72;
@@ -92,20 +98,20 @@
     }
 
     @keyframes cloudDriftSlow{
-      from{transform:translate3d(-12vw,0,0)}
-      to{transform:translate3d(112vw,0,0)}
+      from{transform:translate3d(-16vw,0,0)}
+      to{transform:translate3d(114vw,0,0)}
     }
 
     @keyframes cloudDriftReverse{
-      from{transform:translate3d(108vw,0,0)}
-      to{transform:translate3d(-18vw,0,0)}
+      from{transform:translate3d(110vw,0,0)}
+      to{transform:translate3d(-22vw,0,0)}
     }
 
     @keyframes snowFall{
-      0%{transform:translate3d(var(--x-start),-12vh,0) rotate(0deg);opacity:0}
-      8%{opacity:var(--snow-opacity)}
-      92%{opacity:var(--snow-opacity)}
-      100%{transform:translate3d(var(--x-end),112vh,0) rotate(360deg);opacity:0}
+      0%{transform:translate3d(var(--x-start),-14vh,0) rotate(0deg);opacity:0}
+      6%{opacity:var(--snow-opacity)}
+      94%{opacity:var(--snow-opacity)}
+      100%{transform:translate3d(var(--x-end),114vh,0) rotate(360deg);opacity:0}
     }
 
     @keyframes compassSpin{
@@ -160,53 +166,73 @@
 
     .cloud{
       position:absolute;
-      width:clamp(220px,36vw,520px);
-      height:clamp(70px,12vw,150px);
+      width:clamp(240px,40vw,560px);
+      height:clamp(82px,14vw,170px);
       border-radius:999px;
-      opacity:.58;
-      filter:blur(1px);
+      opacity:.64;
+      filter:blur(1.2px);
       background:
-        radial-gradient(circle at 18% 62%,rgba(255,255,255,.88) 0 22%,transparent 23%),
-        radial-gradient(circle at 34% 42%,rgba(255,255,255,.92) 0 30%,transparent 31%),
-        radial-gradient(circle at 54% 48%,rgba(255,255,255,.82) 0 26%,transparent 27%),
-        radial-gradient(circle at 74% 62%,rgba(255,255,255,.78) 0 24%,transparent 25%),
-        linear-gradient(180deg,rgba(255,255,255,.74),rgba(255,255,255,.22));
+        radial-gradient(circle at 18% 62%,rgba(255,255,255,.82) 0 22%,transparent 23%),
+        radial-gradient(circle at 34% 42%,rgba(255,255,255,.88) 0 30%,transparent 31%),
+        radial-gradient(circle at 54% 48%,rgba(236,245,255,.76) 0 26%,transparent 27%),
+        radial-gradient(circle at 74% 62%,rgba(220,234,248,.72) 0 24%,transparent 25%),
+        linear-gradient(180deg,rgba(255,255,255,.74),rgba(91,118,151,.26) 82%,rgba(42,63,92,.18));
       box-shadow:
-        0 12px 44px rgba(255,255,255,.18),
-        inset 0 -20px 40px rgba(125,169,214,.10);
+        0 12px 44px rgba(255,255,255,.14),
+        0 22px 70px rgba(31,59,96,.20),
+        inset 0 -24px 46px rgba(67,91,125,.20);
+    }
+
+    .cloud::after{
+      content:"";
+      position:absolute;
+      inset:58% 8% 8%;
+      border-radius:999px;
+      background:linear-gradient(180deg,rgba(69,91,121,.18),rgba(21,43,77,.22));
+      filter:blur(8px);
+      opacity:.68;
     }
 
     .cloudOne{
-      top:8vh;
-      left:-18vw;
-      animation:cloudDriftSlow 72s linear infinite;
+      top:7vh;
+      left:-20vw;
+      animation:cloudDriftSlow 76s linear infinite;
     }
 
     .cloudTwo{
-      top:22vh;
+      top:20vh;
       left:20vw;
-      width:clamp(180px,30vw,420px);
-      opacity:.42;
-      animation:cloudDriftSlow 96s linear infinite;
+      width:clamp(200px,34vw,450px);
+      opacity:.50;
+      animation:cloudDriftSlow 98s linear infinite;
       animation-delay:-34s;
     }
 
     .cloudThree{
-      top:38vh;
+      top:34vh;
       left:70vw;
-      width:clamp(200px,34vw,480px);
-      opacity:.34;
-      animation:cloudDriftReverse 88s linear infinite;
+      width:clamp(220px,38vw,510px);
+      opacity:.40;
+      animation:cloudDriftReverse 90s linear infinite;
       animation-delay:-22s;
     }
 
     .cloudFour{
-      top:2vh;
+      top:1vh;
       left:58vw;
-      width:clamp(160px,28vw,360px);
-      opacity:.34;
-      animation:cloudDriftReverse 108s linear infinite;
+      width:clamp(180px,30vw,390px);
+      opacity:.42;
+      animation:cloudDriftReverse 110s linear infinite;
       animation-delay:-46s;
+    }
+
+    .cloudFive{
+      top:13vh;
+      left:45vw;
+      width:clamp(220px,36vw,500px);
+      opacity:.38;
+      animation:cloudDriftSlow 120s linear infinite;
+      animation-delay:-68s;
     }
 
     .skySparkle{
@@ -216,11 +242,11 @@
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.86) 0 1px,transparent 1.8px),
-        radial-gradient(circle,rgba(255,245,188,.62) 0 1px,transparent 2px),
-        radial-gradient(circle,rgba(94,160,255,.28) 0 1px,transparent 2.2px);
+        radial-gradient(circle,rgba(255,245,188,.54) 0 1px,transparent 2px),
+        radial-gradient(circle,rgba(94,160,255,.20) 0 1px,transparent 2.2px);
       background-size:112px 112px,168px 168px,236px 236px;
       background-position:0 0,34px 42px,71px 91px;
-      opacity:.22;
+      opacity:.18;
       animation:skyDrift 88s linear infinite;
     }
 
@@ -239,18 +265,24 @@
       width:var(--snow-size);
       height:var(--snow-size);
       border-radius:50%;
-      background:rgba(255,255,255,.94);
+      background:rgba(255,255,255,.96);
       box-shadow:
-        0 0 8px rgba(255,255,255,.58),
-        0 0 16px rgba(210,235,255,.20);
+        0 0 8px rgba(255,255,255,.66),
+        0 0 18px rgba(210,235,255,.28);
       opacity:0;
       animation:snowFall var(--snow-duration) linear infinite;
       animation-delay:var(--snow-delay);
     }
 
     .snowflake.soft{
-      background:rgba(255,255,255,.70);
-      filter:blur(.8px);
+      background:rgba(255,255,255,.76);
+      filter:blur(.85px);
+    }
+
+    .snowflake.heavy{
+      box-shadow:
+        0 0 10px rgba(255,255,255,.78),
+        0 0 22px rgba(210,235,255,.34);
     }
 
     .page{
@@ -270,7 +302,7 @@
       border:1px solid var(--line2);
       border-radius:30px;
       background:
-        linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,248,232,.62)),
+        linear-gradient(135deg,rgba(255,255,255,.80),rgba(255,248,232,.64)),
         var(--panel);
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
@@ -376,6 +408,15 @@
       line-height:1.58;
     }
 
+    .realLifeLine{
+      margin:18px 0 0;
+      max-width:880px;
+      color:rgba(37,21,6,.86);
+      font-size:clamp(1rem,2.1vw,1.18rem);
+      line-height:1.58;
+      font-weight:760;
+    }
+
     .heroActions{
       display:flex;
       flex-wrap:wrap;
@@ -391,7 +432,7 @@
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(122,73,19,.18);
-      background:rgba(255,255,255,.56);
+      background:rgba(255,255,255,.58);
       color:var(--ink);
       font-weight:950;
       box-shadow:0 10px 28px rgba(120,72,18,.08);
@@ -404,7 +445,7 @@
     .routeLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(242,184,75,.62);
-      background:rgba(255,248,232,.80);
+      background:rgba(255,248,232,.82);
       outline:none;
     }
 
@@ -412,7 +453,7 @@
       border-color:rgba(242,184,75,.60);
       background:
         radial-gradient(circle at 50% 50%,rgba(255,223,134,.36),transparent 64%),
-        rgba(255,255,255,.74);
+        rgba(255,255,255,.76);
       box-shadow:0 0 28px rgba(255,184,75,.22);
     }
 
@@ -427,7 +468,7 @@
     .sunCompass .ring{
       position:absolute;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.68);
+      border:1px solid rgba(255,255,255,.70);
     }
 
     .sunCompass .ring.one{
@@ -569,14 +610,14 @@
       display:grid;
       gap:18px;
       background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.42),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.76),rgba(255,248,232,.66));
+        radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.44),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,248,232,.68));
     }
 
     .stageHeader{
       display:grid;
       gap:10px;
-      max-width:920px;
+      max-width:940px;
       position:relative;
       z-index:2;
     }
@@ -602,7 +643,7 @@
     .doll{
       border:1px solid rgba(122,73,19,.18);
       border-radius:22px;
-      background:rgba(255,255,255,.48);
+      background:rgba(255,255,255,.50);
       overflow:hidden;
       min-height:100%;
       box-shadow:0 12px 34px rgba(120,72,18,.08);
@@ -610,8 +651,8 @@
 
     .doll[open]{
       background:
-        radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.26),transparent 18rem),
-        rgba(255,255,255,.68);
+        radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.28),transparent 18rem),
+        rgba(255,255,255,.70);
       border-color:rgba(242,184,75,.48);
       box-shadow:0 18px 48px rgba(255,143,87,.12);
     }
@@ -659,7 +700,7 @@
       padding:16px;
       display:grid;
       gap:12px;
-      background:rgba(255,248,232,.40);
+      background:rgba(255,248,232,.42);
     }
 
     .dollBody p{
@@ -677,13 +718,24 @@
       letter-spacing:-.038em;
     }
 
+    .realExamples{
+      margin:0;
+      padding-left:18px;
+      color:var(--txt);
+      line-height:1.58;
+    }
+
+    .realExamples li{
+      margin:7px 0;
+    }
+
     .continueLink{
       display:grid;
       gap:7px;
       padding:13px 14px;
       border:1px solid rgba(122,73,19,.16);
       border-radius:18px;
-      background:rgba(255,255,255,.56);
+      background:rgba(255,255,255,.58);
       color:var(--ink);
       font-weight:950;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
@@ -694,7 +746,7 @@
     .continueLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(242,184,75,.58);
-      background:rgba(255,248,232,.80);
+      background:rgba(255,248,232,.82);
       outline:none;
     }
 
@@ -721,8 +773,8 @@
     .routeLink.gold{
       border-color:rgba(242,184,75,.68);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,223,134,.40),transparent 62%),
-        rgba(255,255,255,.76);
+        radial-gradient(circle at 50% 50%,rgba(255,223,134,.42),transparent 62%),
+        rgba(255,255,255,.78);
       box-shadow:
         0 0 26px rgba(255,184,75,.30),
         inset 0 0 18px rgba(255,255,255,.22);
@@ -785,7 +837,7 @@
       }
 
       .cloud{
-        opacity:.36;
+        opacity:.48;
       }
     }
 
@@ -813,6 +865,7 @@
     <div class="cloud cloudTwo"></div>
     <div class="cloud cloudThree"></div>
     <div class="cloud cloudFour"></div>
+    <div class="cloud cloudFive"></div>
   </div>
 
   <div class="skySparkle" aria-hidden="true"></div>
@@ -821,11 +874,12 @@
   <main
     class="page"
     data-backlink-root="about-this-underdog"
-    data-backlink-version="sunrise-snow-russian-doll-b5"
+    data-backlink-version="sunrise-heavy-snow-real-life-russian-doll-b6"
     data-existing-full-route="/big-laugh/about-this-underdog/"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
-    data-visual-tone="sunrise-snow"
+    data-visual-tone="sunrise-heavy-snow"
+    data-context-grounding="real-life-underdog"
   >
     <section class="hero" aria-label="About This Underdog">
       <article class="heroCopy">
@@ -838,17 +892,21 @@
         <h1>About This Underdog</h1>
 
         <p class="thesis">
-          Some people get stepped on more than most.
+          The underdog is not rare. The underdog is in all of us.
         </p>
 
         <p class="lead">
-          This is not a complaint page. It is the sunrise side of the underdog story: pressure without equal protection,
-          expectation without equal help, and the decision to build anyway.
+          It shows up when the rent is due, the job is heavy, the family needs more than you have,
+          the phone keeps ringing, the plan falls apart, or you are trying to rebuild while everyone else only sees the last mistake.
         </p>
 
         <p class="lead">
-          The point is not to stay under the weight. The point is to name the weight, stand up with clearer eyes,
-          and move toward the morning with something useful in your hands.
+          This is the sunrise side of that story: pressure without equal protection, expectation without equal help,
+          and the decision to stand up anyway.
+        </p>
+
+        <p class="realLifeLine">
+          The snow is the pressure. The clouds are the season. The sunrise is the decision to keep moving with clearer eyes.
         </p>
 
         <div class="heroActions" aria-label="Primary actions">
@@ -885,7 +943,7 @@
         </div>
 
         <p class="symbolCaption">
-          This chamber now carries snow, clouds, and sunrise light together: cold pressure outside, morning direction ahead.
+          Snow, clouds, and sunrise now work together: cold pressure overhead, morning light ahead.
         </p>
       </aside>
     </section>
@@ -894,7 +952,7 @@
       <div class="stageContent">
         <div class="stageHeader">
           <p class="kicker">Open the underdog pattern</p>
-          <h2 class="stageTitle">Short enough to hear. Bright enough to move.</h2>
+          <h2 class="stageTitle">Real life first. Meaning second.</h2>
           <p class="lead">
             Each chamber opens one layer of the story. The full route carries the deeper room.
           </p>
@@ -909,10 +967,11 @@
             </summary>
             <div class="dollBody">
               <p class="speechLine">
-                An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+                An underdog is anyone carrying more pressure than support while still being expected to perform, recover, prove themselves, and keep moving.
               </p>
               <p>
-                That definition can fit a kid, a parent, a founder, a performer, a worker, a veteran, an athlete, a student, or anyone who had to stand back up while the weight was heavier than the help.
+                That is not just a movie story. That is a worker trying to hold a job together. A parent trying to stay patient.
+                A student trying to catch up. A founder trying to build after being doubted. A person trying to be better after a bad season.
               </p>
             </div>
           </details>
@@ -921,15 +980,23 @@
             <summary>
               <span class="dollTag">Layer Two</span>
               <span class="dollTitle">Everyone has been underneath something.</span>
-              <p class="dollHint">The definition is universal without flattening severity.</p>
+              <p class="dollHint">The definition is universal without pretending everyone had the same weight.</p>
             </summary>
             <div class="dollBody">
               <p class="speechLine">
                 Not everyone has been stepped on the same amount.
               </p>
               <p>
-                But everyone knows what it feels like to be underneath a label, a mistake, a debt, a family story, a bad season, or a room that did not fully see them.
+                But everyone knows what it feels like to be underneath something that feels bigger than them.
               </p>
+              <ul class="realExamples">
+                <li>Underneath bills.</li>
+                <li>Underneath expectations.</li>
+                <li>Underneath a family story.</li>
+                <li>Underneath rejection.</li>
+                <li>Underneath grief, health pressure, or starting over.</li>
+                <li>Underneath the feeling that people only see the version of you that fell.</li>
+              </ul>
             </div>
           </details>
 
@@ -944,8 +1011,11 @@
                 The underdog does not win by pretending the pressure was fair.
               </p>
               <p>
-                The turn happens when being stepped on stops becoming the identity and starts becoming the baseline:
-                body, mind, speech, rhythm, and mission brought back into order. That is where the morning starts.
+                The turn happens when the pressure becomes the place you stand from instead of the name you answer to.
+                You still have work to do. You still have snow falling. But now there is direction.
+              </p>
+              <p>
+                Real life does not always give you a clean morning. Sometimes the sunrise arrives while it is still snowing.
               </p>
             </div>
           </details>
@@ -957,6 +1027,10 @@
               <p class="dollHint">This page is the sunrise entry. The backlinks carry the rooms.</p>
             </summary>
             <div class="dollBody">
+              <p class="speechLine">
+                This page names the underdog in ordinary life. The deeper room carries the full chamber.
+              </p>
+
               <a class="continueLink" href="/big-laugh/about-this-underdog/">
                 Continue to the full underdog chamber
                 <small>The deeper existing route for the full backstory.</small>
@@ -989,7 +1063,7 @@
     (function(){
       "use strict";
 
-      var VERSION = "about-this-underdog-b5-sunrise-snow-russian-doll";
+      var VERSION = "about-this-underdog-b6-sunrise-heavy-snow-real-life-russian-doll";
       var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
       var snowField = document.getElementById("snow-field");
       var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1022,23 +1096,23 @@
 
         if (!snowField || prefersReduced) return;
 
-        count = window.innerWidth < 700 ? 46 : 86;
+        count = window.innerWidth < 700 ? 82 : 148;
 
         snowField.textContent = "";
 
         for (i = 0; i < count; i += 1) {
           flake = document.createElement("span");
-          size = random(2.2, 6.8);
-          start = random(-8, 108);
-          drift = start + random(-18, 18);
+          size = random(2.8, 8.8);
+          start = random(-10, 110);
+          drift = start + random(-22, 22);
 
-          flake.className = "snowflake" + (i % 3 === 0 ? " soft" : "");
+          flake.className = "snowflake" + (i % 3 === 0 ? " soft" : "") + (i % 5 === 0 ? " heavy" : "");
           flake.style.setProperty("--snow-size", size.toFixed(2) + "px");
           flake.style.setProperty("--x-start", start.toFixed(2) + "vw");
           flake.style.setProperty("--x-end", drift.toFixed(2) + "vw");
-          flake.style.setProperty("--snow-duration", random(8, 22).toFixed(2) + "s");
-          flake.style.setProperty("--snow-delay", (-random(0, 22)).toFixed(2) + "s");
-          flake.style.setProperty("--snow-opacity", random(0.34, 0.86).toFixed(2));
+          flake.style.setProperty("--snow-duration", random(7, 18).toFixed(2) + "s");
+          flake.style.setProperty("--snow-delay", (-random(0, 18)).toFixed(2) + "s");
+          flake.style.setProperty("--snow-opacity", random(0.48, 0.95).toFixed(2));
 
           snowField.appendChild(flake);
         }

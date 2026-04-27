@@ -1,30 +1,26 @@
 <!doctype html>
 <!-- TNT RENEWAL — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · SUNRISE RUSSIAN DOLL · B4
+     ABOUT THIS UNDERDOG · SUNRISE SNOW RUSSIAN DOLL · B5
 
-     CONTRACT:
-       - Page should feel like a public speech, not a dark scroll.
-       - Use Russian-doll chambers instead of long stacked sections.
-       - Represent sunrise: brighter colors, morning light, gold, peach, blue, and visible lift.
-       - Keep the underdog definition clear and definitive.
-       - Keep the deeper route at /big-laugh/about-this-underdog/.
-       - Keep Products as the system/product continuation route.
-       - Keep Showroom as the lobby return route.
-       - Keep shared diamond-compass language.
+     RESULT:
+       - Keeps the sunrise-facing About This Underdog page.
+       - Adds CSS/JS snow, clouds, and morning light.
+       - No generated graphic.
+       - No external image.
+       - Keeps Russian-doll chamber format.
+       - Keeps deeper route at /big-laugh/about-this-underdog/.
+       - Keeps Products and Showroom routes.
        - Showroom remains the shinier gold room.
-       - No graphics box.
-       - No trauma dump.
-       - No encyclopedia layout.
 -->
 
-<html lang="en" data-page="about-this-underdog" data-generation="about-sunrise-russian-doll-b4">
+<html lang="en" data-page="about-this-underdog" data-generation="about-sunrise-snow-russian-doll-b5">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>About This Underdog — Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="About This Underdog: a sunrise-facing Russian-doll entry chamber for the underdog story inside Diamond Gate Bridge."
+    content="About This Underdog: a sunrise-and-snow Russian-doll entry chamber for the underdog story inside Diamond Gate Bridge."
   />
 
   <style>
@@ -42,37 +38,32 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
       background:
-        linear-gradient(180deg,#6fb7ff 0%,#9fd5ff 26%,#ffd28a 58%,#ff8f57 100%);
+        linear-gradient(180deg,#5baeff 0%,#91d3ff 26%,#ffe0a3 58%,#ff9965 100%);
     }
 
     body::before{
       content:"";
       position:fixed;
       inset:0;
-      z-index:-3;
+      z-index:-5;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 91%,rgba(255,252,210,.95) 0 6rem,rgba(255,211,104,.56) 8rem,rgba(255,143,87,.30) 18rem,transparent 34rem),
-        radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.72),transparent 26rem),
-        radial-gradient(ellipse at 18% 18%,rgba(255,255,255,.32),transparent 24rem),
-        radial-gradient(ellipse at 84% 24%,rgba(120,190,255,.22),transparent 26rem),
-        linear-gradient(180deg,rgba(255,255,255,.20),transparent 36%,rgba(255,120,60,.18));
+        radial-gradient(circle at 50% 93%,rgba(255,253,218,.98) 0 6rem,rgba(255,215,111,.62) 8rem,rgba(255,143,87,.34) 18rem,transparent 34rem),
+        radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.74),transparent 26rem),
+        radial-gradient(ellipse at 18% 16%,rgba(255,255,255,.36),transparent 24rem),
+        radial-gradient(ellipse at 84% 24%,rgba(120,190,255,.25),transparent 26rem),
+        linear-gradient(180deg,rgba(255,255,255,.22),transparent 36%,rgba(255,120,60,.18));
     }
 
     body::after{
       content:"";
       position:fixed;
       inset:0;
-      z-index:-2;
+      z-index:-4;
       pointer-events:none;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.86) 0 1px,transparent 1.8px),
-        radial-gradient(circle,rgba(255,245,188,.62) 0 1px,transparent 2px),
-        radial-gradient(circle,rgba(94,160,255,.28) 0 1px,transparent 2.2px);
-      background-size:112px 112px,168px 168px,236px 236px;
-      background-position:0 0,34px 42px,71px 91px;
-      opacity:.32;
-      animation:skyDrift 88s linear infinite;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.03) 40%,rgba(255,170,95,.12)),
+        radial-gradient(circle at 50% 88%,rgba(255,255,255,.45),transparent 16rem);
     }
 
     :root{
@@ -82,10 +73,10 @@
       --soft:rgba(37,21,6,.60);
       --cream:#fff8e8;
       --white:rgba(255,255,255,.92);
-      --panel:rgba(255,255,255,.68);
-      --panel2:rgba(255,248,232,.74);
+      --panel:rgba(255,255,255,.70);
+      --panel2:rgba(255,248,232,.78);
       --line:rgba(122,73,19,.18);
-      --line2:rgba(255,255,255,.62);
+      --line2:rgba(255,255,255,.68);
       --gold:#f2b84b;
       --gold2:#ffdf86;
       --rose:#ff8f72;
@@ -98,6 +89,23 @@
     @keyframes skyDrift{
       from{transform:translate3d(0,0,0)}
       to{transform:translate3d(-112px,72px,0)}
+    }
+
+    @keyframes cloudDriftSlow{
+      from{transform:translate3d(-12vw,0,0)}
+      to{transform:translate3d(112vw,0,0)}
+    }
+
+    @keyframes cloudDriftReverse{
+      from{transform:translate3d(108vw,0,0)}
+      to{transform:translate3d(-18vw,0,0)}
+    }
+
+    @keyframes snowFall{
+      0%{transform:translate3d(var(--x-start),-12vh,0) rotate(0deg);opacity:0}
+      8%{opacity:var(--snow-opacity)}
+      92%{opacity:var(--snow-opacity)}
+      100%{transform:translate3d(var(--x-end),112vh,0) rotate(360deg);opacity:0}
     }
 
     @keyframes compassSpin{
@@ -142,9 +150,112 @@
       text-decoration:none;
     }
 
+    .weatherLayer{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .cloud{
+      position:absolute;
+      width:clamp(220px,36vw,520px);
+      height:clamp(70px,12vw,150px);
+      border-radius:999px;
+      opacity:.58;
+      filter:blur(1px);
+      background:
+        radial-gradient(circle at 18% 62%,rgba(255,255,255,.88) 0 22%,transparent 23%),
+        radial-gradient(circle at 34% 42%,rgba(255,255,255,.92) 0 30%,transparent 31%),
+        radial-gradient(circle at 54% 48%,rgba(255,255,255,.82) 0 26%,transparent 27%),
+        radial-gradient(circle at 74% 62%,rgba(255,255,255,.78) 0 24%,transparent 25%),
+        linear-gradient(180deg,rgba(255,255,255,.74),rgba(255,255,255,.22));
+      box-shadow:
+        0 12px 44px rgba(255,255,255,.18),
+        inset 0 -20px 40px rgba(125,169,214,.10);
+    }
+
+    .cloudOne{
+      top:8vh;
+      left:-18vw;
+      animation:cloudDriftSlow 72s linear infinite;
+    }
+
+    .cloudTwo{
+      top:22vh;
+      left:20vw;
+      width:clamp(180px,30vw,420px);
+      opacity:.42;
+      animation:cloudDriftSlow 96s linear infinite;
+      animation-delay:-34s;
+    }
+
+    .cloudThree{
+      top:38vh;
+      left:70vw;
+      width:clamp(200px,34vw,480px);
+      opacity:.34;
+      animation:cloudDriftReverse 88s linear infinite;
+      animation-delay:-22s;
+    }
+
+    .cloudFour{
+      top:2vh;
+      left:58vw;
+      width:clamp(160px,28vw,360px);
+      opacity:.34;
+      animation:cloudDriftReverse 108s linear infinite;
+      animation-delay:-46s;
+    }
+
+    .skySparkle{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.86) 0 1px,transparent 1.8px),
+        radial-gradient(circle,rgba(255,245,188,.62) 0 1px,transparent 2px),
+        radial-gradient(circle,rgba(94,160,255,.28) 0 1px,transparent 2.2px);
+      background-size:112px 112px,168px 168px,236px 236px;
+      background-position:0 0,34px 42px,71px 91px;
+      opacity:.22;
+      animation:skyDrift 88s linear infinite;
+    }
+
+    .snowField{
+      position:fixed;
+      inset:0;
+      z-index:4;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .snowflake{
+      position:absolute;
+      top:0;
+      left:0;
+      width:var(--snow-size);
+      height:var(--snow-size);
+      border-radius:50%;
+      background:rgba(255,255,255,.94);
+      box-shadow:
+        0 0 8px rgba(255,255,255,.58),
+        0 0 16px rgba(210,235,255,.20);
+      opacity:0;
+      animation:snowFall var(--snow-duration) linear infinite;
+      animation-delay:var(--snow-delay);
+    }
+
+    .snowflake.soft{
+      background:rgba(255,255,255,.70);
+      filter:blur(.8px);
+    }
+
     .page{
       position:relative;
-      z-index:1;
+      z-index:2;
       width:min(100% - 28px,1120px);
       min-height:100svh;
       margin:0 auto;
@@ -159,7 +270,7 @@
       border:1px solid var(--line2);
       border-radius:30px;
       background:
-        linear-gradient(135deg,rgba(255,255,255,.76),rgba(255,248,232,.58)),
+        linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,248,232,.62)),
         var(--panel);
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
@@ -175,9 +286,10 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 82% 12%,rgba(255,255,255,.48),transparent 18rem),
-        radial-gradient(circle at 10% 100%,rgba(255,143,87,.20),transparent 22rem),
-        linear-gradient(135deg,rgba(255,255,255,.10),transparent 48%,rgba(255,223,134,.08));
+        radial-gradient(circle at 82% 12%,rgba(255,255,255,.56),transparent 18rem),
+        radial-gradient(circle at 10% 100%,rgba(255,143,87,.22),transparent 22rem),
+        radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.20),transparent 24rem),
+        linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(255,223,134,.09));
     }
 
     .hero{
@@ -279,7 +391,7 @@
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(122,73,19,.18);
-      background:rgba(255,255,255,.50);
+      background:rgba(255,255,255,.56);
       color:var(--ink);
       font-weight:950;
       box-shadow:0 10px 28px rgba(120,72,18,.08);
@@ -292,15 +404,15 @@
     .routeLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(242,184,75,.62);
-      background:rgba(255,248,232,.74);
+      background:rgba(255,248,232,.80);
       outline:none;
     }
 
     .heroButton.primary{
       border-color:rgba(242,184,75,.60);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,223,134,.34),transparent 64%),
-        rgba(255,255,255,.68);
+        radial-gradient(circle at 50% 50%,rgba(255,223,134,.36),transparent 64%),
+        rgba(255,255,255,.74);
       box-shadow:0 0 28px rgba(255,184,75,.22);
     }
 
@@ -315,7 +427,7 @@
     .sunCompass .ring{
       position:absolute;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.62);
+      border:1px solid rgba(255,255,255,.68);
     }
 
     .sunCompass .ring.one{
@@ -326,13 +438,13 @@
     .sunCompass .ring.two{
       inset:17%;
       border-style:dashed;
-      opacity:.78;
+      opacity:.80;
       animation:reverseTurn 18s linear infinite;
     }
 
     .sunCompass .ring.three{
       inset:27%;
-      opacity:.44;
+      opacity:.48;
       animation:slowTurn 13s linear infinite;
     }
 
@@ -348,13 +460,13 @@
     .sunCompass .axisX{
       width:76%;
       height:1px;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,.88),transparent);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.92),transparent);
     }
 
     .sunCompass .axisY{
       width:1px;
       height:76%;
-      background:linear-gradient(180deg,transparent,rgba(255,255,255,.88),transparent);
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.92),transparent);
     }
 
     .sunRay{
@@ -376,8 +488,8 @@
       transform:translateX(-50%);
       clip-path:polygon(50% 0%,100% 100%,50% 82%,0% 100%);
       background:
-        linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,223,134,.70) 54%,rgba(255,143,87,.24) 100%);
-      box-shadow:inset 0 0 18px rgba(255,255,255,.34);
+        linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,223,134,.74) 54%,rgba(255,143,87,.26) 100%);
+      box-shadow:inset 0 0 18px rgba(255,255,255,.38);
       opacity:.96;
     }
 
@@ -395,7 +507,7 @@
     .sunRay.sw::before,
     .sunRay.nw::before{
       width:38%;
-      opacity:.72;
+      opacity:.74;
     }
 
     .sunCore{
@@ -457,8 +569,8 @@
       display:grid;
       gap:18px;
       background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.38),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,248,232,.62));
+        radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.42),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.76),rgba(255,248,232,.66));
     }
 
     .stageHeader{
@@ -490,7 +602,7 @@
     .doll{
       border:1px solid rgba(122,73,19,.18);
       border-radius:22px;
-      background:rgba(255,255,255,.42);
+      background:rgba(255,255,255,.48);
       overflow:hidden;
       min-height:100%;
       box-shadow:0 12px 34px rgba(120,72,18,.08);
@@ -498,8 +610,8 @@
 
     .doll[open]{
       background:
-        radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.24),transparent 18rem),
-        rgba(255,255,255,.62);
+        radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.26),transparent 18rem),
+        rgba(255,255,255,.68);
       border-color:rgba(242,184,75,.48);
       box-shadow:0 18px 48px rgba(255,143,87,.12);
     }
@@ -547,7 +659,7 @@
       padding:16px;
       display:grid;
       gap:12px;
-      background:rgba(255,248,232,.36);
+      background:rgba(255,248,232,.40);
     }
 
     .dollBody p{
@@ -571,7 +683,7 @@
       padding:13px 14px;
       border:1px solid rgba(122,73,19,.16);
       border-radius:18px;
-      background:rgba(255,255,255,.50);
+      background:rgba(255,255,255,.56);
       color:var(--ink);
       font-weight:950;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
@@ -582,7 +694,7 @@
     .continueLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(242,184,75,.58);
-      background:rgba(255,248,232,.74);
+      background:rgba(255,248,232,.80);
       outline:none;
     }
 
@@ -609,8 +721,8 @@
     .routeLink.gold{
       border-color:rgba(242,184,75,.68);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,223,134,.38),transparent 62%),
-        rgba(255,255,255,.70);
+        radial-gradient(circle at 50% 50%,rgba(255,223,134,.40),transparent 62%),
+        rgba(255,255,255,.76);
       box-shadow:
         0 0 26px rgba(255,184,75,.30),
         inset 0 0 18px rgba(255,255,255,.22);
@@ -671,29 +783,49 @@
         display:grid;
         grid-template-columns:1fr;
       }
+
+      .cloud{
+        opacity:.36;
+      }
     }
 
     @media(prefers-reduced-motion:reduce){
-      body::after,
+      .skySparkle,
+      .cloud,
+      .snowflake,
       .sunCompass .ring,
       .sunCore,
       .spark,
       .routeLink.gold::after{
         animation:none;
       }
+
+      .snowflake{
+        display:none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="weatherLayer" aria-hidden="true">
+    <div class="cloud cloudOne"></div>
+    <div class="cloud cloudTwo"></div>
+    <div class="cloud cloudThree"></div>
+    <div class="cloud cloudFour"></div>
+  </div>
+
+  <div class="skySparkle" aria-hidden="true"></div>
+  <div class="snowField" id="snow-field" aria-hidden="true"></div>
+
   <main
     class="page"
     data-backlink-root="about-this-underdog"
-    data-backlink-version="sunrise-russian-doll-b4"
+    data-backlink-version="sunrise-snow-russian-doll-b5"
     data-existing-full-route="/big-laugh/about-this-underdog/"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
-    data-visual-tone="sunrise"
+    data-visual-tone="sunrise-snow"
   >
     <section class="hero" aria-label="About This Underdog">
       <article class="heroCopy">
@@ -726,7 +858,7 @@
         </div>
       </article>
 
-      <aside class="heroSymbol" aria-label="Sunrise diamond compass">
+      <aside class="heroSymbol" aria-label="Sunrise snow diamond compass">
         <div class="sunCompass" aria-hidden="true">
           <div class="ring one"></div>
           <div class="ring two"></div>
@@ -753,7 +885,7 @@
         </div>
 
         <p class="symbolCaption">
-          This chamber points toward sunrise: the pressure is real, but the page now moves toward light, recovery, and forward motion.
+          This chamber now carries snow, clouds, and sunrise light together: cold pressure outside, morning direction ahead.
         </p>
       </aside>
     </section>
@@ -857,8 +989,10 @@
     (function(){
       "use strict";
 
-      var VERSION = "about-this-underdog-b4-sunrise-russian-doll";
+      var VERSION = "about-this-underdog-b5-sunrise-snow-russian-doll";
       var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+      var snowField = document.getElementById("snow-field");
+      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       document.documentElement.setAttribute("data-underdog-controller", VERSION);
 
@@ -872,6 +1006,49 @@
 
           document.documentElement.setAttribute("data-underdog-open-layer", doll.id || "");
         });
+      });
+
+      function random(min,max){
+        return min + Math.random() * (max - min);
+      }
+
+      function buildSnow(){
+        var count;
+        var i;
+        var flake;
+        var size;
+        var start;
+        var drift;
+
+        if (!snowField || prefersReduced) return;
+
+        count = window.innerWidth < 700 ? 46 : 86;
+
+        snowField.textContent = "";
+
+        for (i = 0; i < count; i += 1) {
+          flake = document.createElement("span");
+          size = random(2.2, 6.8);
+          start = random(-8, 108);
+          drift = start + random(-18, 18);
+
+          flake.className = "snowflake" + (i % 3 === 0 ? " soft" : "");
+          flake.style.setProperty("--snow-size", size.toFixed(2) + "px");
+          flake.style.setProperty("--x-start", start.toFixed(2) + "vw");
+          flake.style.setProperty("--x-end", drift.toFixed(2) + "vw");
+          flake.style.setProperty("--snow-duration", random(8, 22).toFixed(2) + "s");
+          flake.style.setProperty("--snow-delay", (-random(0, 22)).toFixed(2) + "s");
+          flake.style.setProperty("--snow-opacity", random(0.34, 0.86).toFixed(2));
+
+          snowField.appendChild(flake);
+        }
+      }
+
+      buildSnow();
+
+      window.addEventListener("resize", function(){
+        window.clearTimeout(window.__dgbSnowResizeTimer);
+        window.__dgbSnowResizeTimer = window.setTimeout(buildSnow, 180);
       });
     })();
   </script>

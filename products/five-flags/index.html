@@ -1,480 +1,408 @@
-<!DOCTYPE html>
-<html lang="en" data-product-generation="second-generation-renewal">
+<!doctype html>
+<!-- TNT CREATE — /five-flags-whats-my-scene/index.html
+     5 FLAGS · WHAT'S MY SCENE? · TED TALK RUSSIAN DOLL · B1
+
+     CONTRACT:
+       - Create the root backlink landing page used by the Showroom.
+       - Do not replace the existing product page at /products/five-flags/.
+       - Page is the TED Talk-style public entry chamber for 5 Flags · What's My Scene?
+       - Existing /products/five-flags/ remains the full product/game chamber.
+       - /products/ remains the parent product route.
+       - /showroom/ remains the Russian-doll lobby return route.
+       - Keep family-friendly standard.
+       - No encyclopedia layout.
+       - No adult-stage layer.
+       - No graphics box.
+-->
+
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Five Flags: What’s My Scene? · Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Five Flags: What’s My Scene? is a family-friendly classification game where the room figures out what something is, then figures out what comes next."
-  />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>5 Flags · What’s My Scene? — Diamond Gate Bridge</title>
+  <meta name="description" content="A TED Talk-style Russian-doll entry chamber for 5 Flags · What’s My Scene?, the family-friendly classification game."/>
 
   <style>
-    :root {
-      --bg:#020610;
-      --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
-      --line:rgba(170,198,255,.18);
-      --text:#eef4ff;
-      --muted:#aab8d8;
-      --gold:#efd29a;
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --soft:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.76);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
       --blue:#8ec5ff;
       --green:#93efbd;
       --yellow:#f2df8a;
       --orange:#f1a45b;
       --red:#ff7a7a;
       --purple:#c89cff;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
     }
 
-    * {
-      box-sizing:border-box;
-    }
-
-    html,
-    body {
-      margin:0;
-      min-height:100%;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 6%,rgba(147,239,189,.16),transparent 25%),
-        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(142,197,255,.10),transparent 28%),
-        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
-      overflow-x:hidden;
-    }
-
-    body::before {
+    body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
-      opacity:.20;
       background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+        radial-gradient(circle at 14% 18%,rgba(147,239,189,.22) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(142,197,255,.17) 0 1px,transparent 2px),
+        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.09),transparent 34rem),
+        radial-gradient(ellipse at 86% 26%,rgba(147,197,253,.065),transparent 28rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .page {
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
+    .page{
       position:relative;
       z-index:1;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .card,
-    .flag,
-    .route-panel,
-    .example {
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
-      box-shadow:var(--shadow);
-    }
-
-    .topbar {
-      min-height:76px;
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:28px;
+      width:min(100% - 28px,1120px);
+      min-height:100svh;
+      margin:0 auto;
+      padding:18px 0 28px;
       display:grid;
-      gap:12px;
+      gap:14px;
     }
 
-    .brand {
+    .hero,
+    .talkStage,
+    .routeRail{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero{
+      min-height:calc(100svh - 190px);
+      padding:clamp(24px,5vw,56px);
+      display:grid;
+      gap:18px;
+      align-content:center;
+      overflow:hidden;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(147,239,189,.075),transparent 30rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+    }
+
+    .brandRow{
       display:flex;
       align-items:center;
       gap:12px;
     }
 
-    .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 28%,rgba(147,239,189,.25),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-
-    .kicker {
-      display:block;
-      margin:0 0 4px;
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    .title {
-      display:block;
-      margin:0;
-      font-weight:850;
-      font-size:1.05rem;
-    }
-
-    .nav,
-    .actions,
-    .route-grid,
-    .grid,
-    .flag-grid,
-    .steps,
-    .color-grid {
-      display:grid;
-      gap:10px;
-    }
-
-    .nav a,
-    .button,
-    .route-card {
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
-      text-align:center;
-    }
-
-    .nav a:focus-visible,
-    .button:focus-visible,
-    .route-card:focus-visible {
-      outline:2px solid rgba(239,210,154,.62);
-      outline-offset:3px;
-    }
-
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .hero {
-      border-radius:34px;
-      padding:clamp(20px,3.5vw,38px);
-      margin-bottom:14px;
-      display:grid;
-      gap:18px;
-      overflow:hidden;
-    }
-
-    .pill {
-      display:inline-flex;
-      width:fit-content;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
-      font-weight:850;
-    }
-
-    .pill::before {
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
+    .brandMark{
+      width:34px;
+      height:34px;
       transform:rotate(45deg);
-      background:var(--green);
-      box-shadow:0 0 18px rgba(147,239,189,.50);
+      border:1px solid rgba(255,217,138,.72);
+      background:
+        linear-gradient(135deg,rgba(147,239,189,.26),rgba(147,197,253,.07)),
+        rgba(255,255,255,.05);
+      box-shadow:0 0 18px rgba(147,239,189,.14);
+      flex:0 0 auto;
     }
 
-    h1 {
-      margin:0;
-      color:#fff;
-      font-size:clamp(2.8rem,10vw,6rem);
-      line-height:.9;
-      letter-spacing:-.07em;
-    }
-
-    h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.8vw,2.8rem);
-      line-height:1;
+    .brandName{
+      color:var(--ink);
+      font-size:clamp(1.2rem,4vw,2rem);
+      font-weight:950;
       letter-spacing:-.04em;
     }
 
-    h3 {
+    .kicker{
       margin:0;
-      color:#fff;
-      font-size:1.08rem;
-      line-height:1.12;
-    }
-
-    p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:1rem;
-    }
-
-    .hero p {
-      max-width:74ch;
-      margin-top:14px;
-    }
-
-    .actions {
-      margin-top:18px;
-    }
-
-    .panel,
-    .route-panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
-      display:grid;
-      gap:16px;
-    }
-
-    .panel-head {
-      display:grid;
-      gap:8px;
-    }
-
-    .card,
-    .flag,
-    .route-card,
-    .example {
-      border-radius:22px;
-      padding:16px;
-      min-height:120px;
-    }
-
-    .card small,
-    .flag small,
-    .route-card small,
-    .example small {
-      display:block;
-      margin-bottom:8px;
-      color:#91a6cf;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
       text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
-      font-weight:850;
     }
 
-    .card strong,
-    .flag strong,
-    .route-card strong,
-    .example strong {
-      display:block;
-      color:#fff;
-      font-size:1.06rem;
-      line-height:1.12;
-    }
-
-    .card p,
-    .flag p,
-    .example p {
-      margin-top:8px;
-      font-size:.92rem;
-      line-height:1.42;
-    }
-
-    .step-list {
-      display:grid;
-      gap:8px;
+    h1{
       margin:0;
-      padding:0;
-      list-style:none;
+      max-width:980px;
+      font-size:clamp(3.4rem,10vw,7.4rem);
+      line-height:.84;
+      letter-spacing:-.085em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
     }
 
-    .step-list li {
-      display:grid;
-      grid-template-columns:auto 1fr;
+    .thesis{
+      margin:0;
+      max-width:980px;
+      color:rgba(255,255,255,.93);
+      font-size:clamp(1.42rem,3.4vw,2.45rem);
+      line-height:1.1;
+      font-weight:950;
+      letter-spacing:-.052em;
+    }
+
+    .lead{
+      margin:0;
+      max-width:880px;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.35vw,1.32rem);
+      line-height:1.58;
+    }
+
+    .heroActions{
+      display:flex;
+      flex-wrap:wrap;
       gap:10px;
-      align-items:start;
-      padding:12px;
-      border:1px solid rgba(170,198,255,.15);
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-      color:var(--muted);
-      line-height:1.42;
+      margin-top:4px;
     }
 
-    .step-list b {
-      min-width:34px;
-      height:34px;
+    .heroButton{
+      min-height:48px;
+      display:inline-grid;
+      place-items:center;
+      padding:12px 16px;
       border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .heroButton:hover,
+    .heroButton:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.52);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .talkStage{
+      padding:clamp(20px,4vw,38px);
+      display:grid;
+      gap:18px;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(147,239,189,.055),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+    }
+
+    .stageHeader{
+      display:grid;
+      gap:10px;
+      max-width:920px;
+    }
+
+    .stageTitle{
+      margin:0;
+      font-size:clamp(2rem,5.8vw,4.2rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .dollGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      align-items:start;
+    }
+
+    .doll{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:rgba(0,0,0,.20);
+      overflow:hidden;
+      min-height:100%;
+    }
+
+    .doll[open]{
+      background:
+        radial-gradient(ellipse at 18% 10%,rgba(147,239,189,.07),transparent 18rem),
+        rgba(0,0,0,.24);
+      border-color:rgba(147,239,189,.38);
+    }
+
+    .doll summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:172px;
+      padding:16px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .doll summary::-webkit-details-marker{display:none}
+
+    .dollTag{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dollTitle{
+      color:var(--ink);
+      font-size:clamp(1.06rem,2.2vw,1.4rem);
+      line-height:1.06;
+      font-weight:950;
+      letter-spacing:-.035em;
+    }
+
+    .dollHint{
+      margin:0;
+      color:var(--soft);
+      line-height:1.42;
+      font-size:.96rem;
+    }
+
+    .dollBody{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+
+    .dollBody p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .speechLine{
+      margin:0;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.12rem,2.4vw,1.45rem);
+      line-height:1.2;
+      font-weight:950;
+      letter-spacing:-.038em;
+    }
+
+    .flagStrip{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:7px;
+    }
+
+    .flagPill{
+      min-height:42px;
       display:grid;
       place-items:center;
-      color:#fff;
-      border:1px solid rgba(239,210,154,.30);
-      background:rgba(239,210,154,.08);
-      font-size:.82rem;
-    }
-
-    .flag:nth-child(1) { border-color:rgba(239,210,154,.28); }
-    .flag:nth-child(2) { border-color:rgba(147,239,189,.25); }
-    .flag:nth-child(3) { border-color:rgba(142,197,255,.25); }
-    .flag:nth-child(4) { border-color:rgba(241,164,91,.25); }
-    .flag:nth-child(5) { border-color:rgba(255,122,122,.25); }
-
-    .color-card {
-      min-height:96px;
-      padding:14px;
-      border:1px solid rgba(170,198,255,.16);
-      border-radius:20px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .color-card small {
-      display:block;
-      margin-bottom:7px;
-      text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.62rem;
-      font-weight:900;
-    }
-
-    .color-card strong {
-      display:block;
-      color:#fff;
-      font-size:.98rem;
-      line-height:1.1;
-    }
-
-    .color-card p {
-      margin-top:6px;
-      font-size:.84rem;
-      line-height:1.34;
-    }
-
-    .color-card.blue small { color:var(--blue); }
-    .color-card.green small { color:var(--green); }
-    .color-card.yellow small { color:var(--yellow); }
-    .color-card.orange small { color:var(--orange); }
-    .color-card.red small { color:var(--red); }
-    .color-card.purple small { color:var(--purple); }
-
-    .example-path {
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .example-path span {
-      display:inline-flex;
-      align-items:center;
-      min-height:34px;
-      padding:0 11px;
-      border:1px solid rgba(170,198,255,.16);
+      border:1px solid rgba(255,255,255,.12);
       border-radius:999px;
-      color:#e8f0ff;
-      background:rgba(255,255,255,.035);
-      font-weight:800;
-      font-size:.82rem;
+      background:rgba(0,0,0,.20);
+      font-size:.78rem;
+      font-weight:950;
+      text-align:center;
+      padding:7px;
     }
 
-    .route-card {
-      min-height:112px;
-      flex-direction:column;
-      align-items:flex-start;
-      text-align:left;
+    .flagPill:nth-child(1){color:var(--blue)}
+    .flagPill:nth-child(2){color:var(--green)}
+    .flagPill:nth-child(3){color:var(--yellow)}
+    .flagPill:nth-child(4){color:var(--orange)}
+    .flagPill:nth-child(5){color:var(--red)}
+
+    .continueLink{
+      display:grid;
+      gap:7px;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .footer {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:14px 4px 0;
-      color:#9db0d4;
+    .continueLink:hover,
+    .continueLink:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.50);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .continueLink small{
+      color:var(--soft);
       font-size:.86rem;
+      line-height:1.35;
+      font-weight:750;
     }
 
-    .footer a {
-      color:#d6e2ff;
+    .routeRail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:12px;
     }
 
-    @media (min-width:820px) {
-      .topbar {
-        grid-template-columns:1fr auto;
-        align-items:center;
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    @media(max-width:980px){
+      .dollGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .nav {
-        grid-template-columns:repeat(5,auto);
-      }
-
-      .actions {
-        grid-template-columns:repeat(4,auto);
-        justify-content:start;
-      }
-
-      .grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-
-      .flag-grid {
-        grid-template-columns:repeat(5,minmax(0,1fr));
-      }
-
-      .steps {
-        grid-template-columns:1fr 1fr;
-      }
-
-      .color-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-
-      .route-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
+      .flagStrip{
+        grid-template-columns:1fr;
       }
     }
 
-    @media (max-width:640px) {
-      .page {
-        width:min(100vw - 12px,var(--max));
+    @media(max-width:680px){
+      .page{
+        width:min(100% - 20px,1120px);
         padding-top:10px;
       }
 
-      .topbar,
+      .hero{
+        min-height:auto;
+      }
+
       .hero,
-      .panel,
-      .route-panel {
+      .talkStage,
+      .routeRail{
         border-radius:24px;
       }
 
-      .nav,
-      .actions,
-      .grid,
-      .flag-grid,
-      .steps,
-      .color-grid,
-      .route-grid {
+      .dollGrid{
         grid-template-columns:1fr;
+      }
+
+      .doll summary{
+        min-height:auto;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
   </style>
@@ -483,346 +411,156 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
-    data-product="five-flags-whats-my-scene"
-    data-product-class="family-friendly-classification-game"
+    data-backlink-root="five-flags-whats-my-scene"
+    data-backlink-version="ted-talk-russian-doll-b1"
+    data-existing-full-route="/products/five-flags/"
+    data-products-route="/products/"
+    data-showroom-route="/showroom/"
+    data-family-friendly="true"
     data-adult-stage-layer="excluded"
   >
-    <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Products home">
-        <span class="mark" aria-hidden="true">FF</span>
-        <span>
-          <span class="kicker">Products · Generation 2</span>
-          <strong class="title">Five Flags: What’s My Scene?</strong>
-        </span>
-      </a>
+    <section class="hero" aria-label="5 Flags What's My Scene">
+      <div class="brandRow">
+        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+        <a class="brandName" href="/">Diamond Gate Bridge</a>
+      </div>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
-        <a href="/metaverse/">Metaverse</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/laws/">Laws</a>
-      </nav>
-    </header>
+      <p class="kicker">TED Talk Backlink · 5 Flags · What’s My Scene?</p>
+      <h1>What’s My Scene?</h1>
+      <p class="thesis">
+        Read the scene before the scene reads you.
+      </p>
+      <p class="lead">
+        5 Flags is the family-friendly game lane. The room figures out what something is, then figures out what comes next.
+      </p>
 
-    <section class="hero" aria-labelledby="productTitle">
-      <div>
-        <span class="pill">Family-friendly game</span>
-        <h1 id="productTitle">Five Flags: What’s My Scene?</h1>
-        <h2>Find the category. Find what comes next.</h2>
-        <p>
-          Five Flags: What’s My Scene? is a family-friendly classification game.
-          The room figures out what something is, then figures out what comes next.
-          Players raise possible flags, the host narrows the field, and the best
-          answer lands clearly.
-        </p>
-
-        <div class="actions">
-          <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="#howToPlay">How to Play</a>
-          <a class="button" href="#scoring">Scoring</a>
-          <a class="button" href="/metaverse/">Metaverse</a>
-        </div>
+      <div class="heroActions" aria-label="Primary actions">
+        <a class="heroButton" href="#five-flags-dolls">Open the Russian Doll</a>
+        <a class="heroButton" href="/products/five-flags/">Go to Game Chamber</a>
+        <a class="heroButton" href="/showroom/">Return to Showroom</a>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="premiseTitle">
-      <div class="panel-head">
-        <span class="pill">Premise</span>
-        <h2 id="premiseTitle">A playful classification game.</h2>
-        <p>
-          A player, host, or performer presents a person, object, idea, or situation.
-          The group raises possible categories until the strongest fit appears.
-          Then the group asks what comes next.
+    <section id="five-flags-dolls" class="talkStage" aria-label="5 Flags Russian doll chambers">
+      <div class="stageHeader">
+        <p class="kicker">Open the game pattern</p>
+        <h2 class="stageTitle">Simple enough to play. Structured enough to teach.</h2>
+        <p class="lead">
+          Each chamber opens one layer of the game. The product chamber carries the full rules, modes, colors, and examples.
         </p>
       </div>
 
-      <div class="grid">
-        <article class="card">
-          <small>Question one</small>
-          <strong>What’s My Scene?</strong>
-          <p>Find the best category, lane, or scene for the object.</p>
-        </article>
+      <div class="dollGrid">
+        <details id="scene" class="doll" open>
+          <summary>
+            <span class="dollTag">Layer One</span>
+            <span class="dollTitle">Find the scene.</span>
+            <p class="dollHint">A person, object, idea, or situation enters the room.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              The first question is: what is this?
+            </p>
+            <p>
+              The game starts by asking players to classify what they are seeing. It can be a person, object, story, joke, situation, choice, or social moment.
+            </p>
+          </div>
+        </details>
 
-        <article class="card">
-          <small>Question two</small>
-          <strong>What’s Next?</strong>
-          <p>Once the scene is clear, find the next form, step, or position.</p>
-        </article>
+        <details id="flags" class="doll">
+          <summary>
+            <span class="dollTag">Layer Two</span>
+            <span class="dollTitle">Raise the flags.</span>
+            <p class="dollHint">Flags are guesses. The scene is the match.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              The room raises possible categories until the strongest fit appears.
+            </p>
+            <p>
+              The flags help the room test possibilities without turning the game into an argument. A weak fit falls away. A clearer fit survives.
+            </p>
+            <div class="flagStrip" aria-label="Five flags">
+              <span class="flagPill">High / Ideal</span>
+              <span class="flagPill">Solid</span>
+              <span class="flagPill">General</span>
+              <span class="flagPill">Practical</span>
+              <span class="flagPill">True Fit</span>
+            </div>
+          </div>
+        </details>
 
-        <article class="card">
-          <small>Game law</small>
-          <strong>Funny without being harsh</strong>
-          <p>The game stays clean, inclusive, specific, and easy to understand.</p>
-        </article>
+        <details id="next" class="doll">
+          <summary>
+            <span class="dollTag">Layer Three</span>
+            <span class="dollTitle">Then ask what comes next.</span>
+            <p class="dollHint">Once the scene is clear, the room can move.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Find the category. Find what comes next.
+            </p>
+            <p>
+              The best answer does not just label the scene. It gives the room a next step, a next form, or a sharper picture of where the moment belongs.
+            </p>
+          </div>
+        </details>
+
+        <details id="continue" class="doll">
+          <summary>
+            <span class="dollTag">Layer Four</span>
+            <span class="dollTitle">Continue through the right door.</span>
+            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
+          </summary>
+          <div class="dollBody">
+            <a class="continueLink" href="/products/five-flags/">
+              Continue to 5 Flags · What’s My Scene?
+              <small>The existing full game and product chamber.</small>
+            </a>
+
+            <a class="continueLink" href="/products/">
+              Continue to Products
+              <small>The parent product-routing surface.</small>
+            </a>
+
+            <a class="continueLink" href="/showroom/">
+              Return to the Showroom
+              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
+            </a>
+          </div>
+        </details>
       </div>
     </section>
 
-    <section id="howToPlay" class="panel" aria-labelledby="howTitle">
-      <div class="panel-head">
-        <span class="pill">How to play</span>
-        <h2 id="howTitle">Present, classify, narrow, land, advance.</h2>
-      </div>
-
-      <ol class="step-list">
-        <li><b>1</b><span><strong>Present the object.</strong> A player gives the room something to classify.</span></li>
-        <li><b>2</b><span><strong>Ask the first question.</strong> The room answers: What’s my scene?</span></li>
-        <li><b>3</b><span><strong>Raise flags.</strong> Players offer possible categories.</span></li>
-        <li><b>4</b><span><strong>Narrow.</strong> The host rejects weak fits and rewards closer fits.</span></li>
-        <li><b>5</b><span><strong>Find the scene.</strong> One category becomes the strongest match.</span></li>
-        <li><b>6</b><span><strong>Ask what’s next.</strong> Players move the scene forward one step.</span></li>
-        <li><b>7</b><span><strong>Advance.</strong> The round lands on a clear, specific, satisfying answer.</span></li>
-      </ol>
-    </section>
-
-    <section class="panel" aria-labelledby="flagsTitle">
-      <div class="panel-head">
-        <span class="pill">Five Flags model</span>
-        <h2 id="flagsTitle">Flags are guesses. Scene is the match.</h2>
-      </div>
-
-      <div class="flag-grid">
-        <article class="flag">
-          <small>Flag 1</small>
-          <strong>High / Ideal</strong>
-          <p>The impressive or flattering guess.</p>
-        </article>
-
-        <article class="flag">
-          <small>Flag 2</small>
-          <strong>Respectable / Solid</strong>
-          <p>A good but less glamorous guess.</p>
-        </article>
-
-        <article class="flag">
-          <small>Flag 3</small>
-          <strong>General Category</strong>
-          <p>A broader, more neutral classification.</p>
-        </article>
-
-        <article class="flag">
-          <small>Flag 4</small>
-          <strong>Practical / Ordinary</strong>
-          <p>A common, everyday fit.</p>
-        </article>
-
-        <article class="flag">
-          <small>Flag 5</small>
-          <strong>True Fit</strong>
-          <p>The most accurate and specific answer.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="jobsTitle">
-      <div class="panel-head">
-        <span class="pill">Room jobs</span>
-        <h2 id="jobsTitle">The room guesses. The host steers.</h2>
-      </div>
-
-      <div class="steps">
-        <article class="card">
-          <small>Host job</small>
-          <strong>Guide and referee</strong>
-          <p>
-            Present a clear object, keep the room inside the category, reject answers
-            that do not fit, reward closer answers, and land the strongest final answer.
-          </p>
-        </article>
-
-        <article class="card">
-          <small>Player job</small>
-          <strong>Guess clearly and specifically</strong>
-          <p>
-            Suggest possible scenes, suggest what comes next, and keep every answer
-            connected to the original object.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="scoring" class="panel" aria-labelledby="scoringTitle">
-      <div class="panel-head">
-        <span class="pill">Scoring</span>
-        <h2 id="scoringTitle">Clarity, fit, specificity, lift.</h2>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <small>1 point</small>
-          <strong>Clear answer</strong>
-          <p>The answer makes sense and can be understood by the room.</p>
-        </article>
-
-        <article class="card">
-          <small>2 points</small>
-          <strong>Category-true answer</strong>
-          <p>The answer clearly belongs to the object’s scene.</p>
-        </article>
-
-        <article class="card">
-          <small>3 points</small>
-          <strong>Specific answer</strong>
-          <p>The answer improves the round and gives the room a sharper picture.</p>
-        </article>
-
-        <article class="card">
-          <small>4 points</small>
-          <strong>Best-in-round answer</strong>
-          <p>The answer feels exact, satisfying, and easy to build on.</p>
-        </article>
-
-        <article class="card">
-          <small>Bonus</small>
-          <strong>Host builds on it</strong>
-          <p>The host immediately turns the answer into a stronger moment.</p>
-        </article>
-
-        <article class="card">
-          <small>Win condition</small>
-          <strong>The best answer feels right</strong>
-          <p>A round wins when the final answer is specific, easy to picture, clearly connected, and satisfying.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="colorTitle">
-      <div class="panel-head">
-        <span class="pill">Color engine</span>
-        <h2 id="colorTitle">Color organizes the rhythm.</h2>
-        <p>
-          In the family-friendly version, “diamond” means strongest payoff, not harshest hit.
-        </p>
-      </div>
-
-      <div class="color-grid">
-        <article class="color-card blue">
-          <small>Blue</small>
-          <strong>Context</strong>
-          <p>Where we are.</p>
-        </article>
-
-        <article class="color-card green">
-          <small>Green</small>
-          <strong>Platform</strong>
-          <p>What we are building.</p>
-        </article>
-
-        <article class="color-card yellow">
-          <small>Yellow</small>
-          <strong>Transition</strong>
-          <p>Where we are moving.</p>
-        </article>
-
-        <article class="color-card orange">
-          <small>Orange</small>
-          <strong>Turn</strong>
-          <p>What changed.</p>
-        </article>
-
-        <article class="color-card red">
-          <small>Red</small>
-          <strong>Diamond</strong>
-          <p>What lands.</p>
-        </article>
-
-        <article class="color-card purple">
-          <small>Purple</small>
-          <strong>Side Diamond</strong>
-          <p>What expands.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="exampleTitle">
-      <div class="panel-head">
-        <span class="pill">Example round</span>
-        <h2 id="exampleTitle">Specific, visual, connected.</h2>
-      </div>
-
-      <article class="example">
-        <small>Object</small>
-        <strong>“I’m not a diamond, but I’m not coal either.”</strong>
-        <p>
-          The room raises flags, narrows the category, finds a scene, then advances it.
-        </p>
-
-        <div class="example-path" aria-label="Example path">
-          <span>Gem</span>
-          <span>Stone</span>
-          <span>Rock</span>
-          <span>Pebble</span>
-          <span>Gravel</span>
-          <span>Driveway</span>
-        </div>
-      </article>
-    </section>
-
-    <section class="panel" aria-labelledby="modesTitle">
-      <div class="panel-head">
-        <span class="pill">Play modes</span>
-        <h2 id="modesTitle">Same kernel. Different setting.</h2>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <small>Mode 1</small>
-          <strong>Stage / Hosted Room</strong>
-          <p>One person leads and the audience answers.</p>
-        </article>
-
-        <article class="card">
-          <small>Mode 2</small>
-          <strong>Party Game</strong>
-          <p>Players take turns presenting their object.</p>
-        </article>
-
-        <article class="card">
-          <small>Mode 3</small>
-          <strong>Classroom / Family Table</strong>
-          <p>The game uses cleaner objects and simpler categories.</p>
-        </article>
-
-        <article class="card">
-          <small>Mode 4</small>
-          <strong>Team Mode</strong>
-          <p>Two teams compete to find the best scene and best next step.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="route-panel" aria-labelledby="backlinksTitle">
-      <span class="pill">Second-generation backlinks</span>
-      <h2 id="backlinksTitle">Product route stays connected.</h2>
-
-      <div class="route-grid">
-        <a class="route-card" href="/products/">
-          <small>Parent</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <small>Related</small>
-          <strong>AI On Your Side</strong>
-        </a>
-
-        <a class="route-card" href="/products/nutrition/">
-          <small>Related</small>
-          <strong>Baseline Nutrition Systems</strong>
-        </a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>Five Flags: What’s My Scene? · Family-Friendly Game · Generation 2 Product Surface</span>
-      <span><a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a> · <a href="/">Door</a></span>
-    </footer>
+    <nav class="routeRail" aria-label="Route rail">
+      <a class="routeLink" href="/showroom/">Showroom</a>
+      <a class="routeLink" href="/products/five-flags/">Game Chamber</a>
+      <a class="routeLink" href="/products/">Products</a>
+      <a class="routeLink" href="/">Compass</a>
+    </nav>
   </main>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var VERSION = "five-flags-whats-my-scene-b1-russian-doll";
+      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+      document.documentElement.setAttribute("data-five-flags-controller", VERSION);
+
+      dolls.forEach(function(doll){
+        doll.addEventListener("toggle", function(){
+          if (!doll.open) return;
+
+          dolls.forEach(function(other){
+            if (other !== doll) other.removeAttribute("open");
+          });
+
+          document.documentElement.setAttribute("data-five-flags-open-layer", doll.id || "");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

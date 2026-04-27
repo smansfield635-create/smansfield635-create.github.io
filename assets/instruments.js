@@ -1,18 +1,26 @@
 /* ==========================================================================
    Diamond Gate Bridge · Instruments Asset Layer
-   GAUGES_B7_CONTRACT_RENEWAL
+   GAUGES_B8_FINAL_CONTRACT_SYNC
    PATH: /assets/instruments.js
 
    PURPOSE:
-   - Renew the old G1 instruments asset into the active shared instruments contract.
-   - Preserve the page-neutral instrument receipt API.
-   - Add reusable Gauges dashboard data, color states, routes, TED read, and render helpers.
-   - Keep this file asset-level only: no DOM mutation, no page layout ownership.
+   - Replace stale G1 instruments with the active shared B8 instruments contract.
+   - Preserve page-neutral instrument receipt API.
+   - Provide one reusable Gauges source for readings, routes, legend, TED copy,
+     receipts, semantic separators, and render helpers.
+   - Prevent B4/B5/B6 residue by using one active B8 version marker.
+
+   BOUNDARY:
+   - Asset-level only.
+   - No DOM mutation.
+   - No page layout ownership.
+   - No GraphicBox.
+   - No generated images.
 ========================================================================== */
 
 const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G2_GAUGES_B7_CONTRACT_RENEWAL",
+  version: "G2_GAUGES_B8_FINAL_CONTRACT_SYNC",
   contract: "INSTRUMENT_CONTRACT_G2",
   role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
@@ -25,7 +33,7 @@ const INSTRUMENT_META = deepFreeze({
 
 export const GAUGES_META = deepFreeze({
   name: "gauges",
-  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B7",
+  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B8",
   role: "site_health_instrument_contract",
   readMode: "compact_engineer_dashboard_plus_ted_talk",
   activePageGoldRule: true,
@@ -222,7 +230,7 @@ export const GAUGE_TED_READ = deepFreeze({
     copy:
       "Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.",
     receipt: [
-      "GAUGES_TRUE_INSTRUMENT_ROOM_B7=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
+      "GAUGES_TRUE_INSTRUMENT_ROOM_B8=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
     ]
   }
 });
@@ -693,6 +701,41 @@ export function buildGaugeDashboardPacket(options = {}) {
   });
 }
 
+export function renderGaugeJumpHTML(label, href, active = false) {
+  const semantic = active ? "Active page: " + label : "Jump to " + label;
+
+  return [
+    '<li class="jumpItem">',
+    '<a class="jumpCard' + (active ? " active" : "") + '" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(semantic) + '">',
+    '<span class="navCompass" aria-hidden="true"></span>',
+    '<span class="jumpText">',
+    '<small>' + escapeHtml(active ? "Active" : "Jump") + ' ·</small>',
+    '<strong>' + escapeHtml(label) + '</strong>',
+    '</span>',
+    '</a>',
+    '</li>'
+  ].join("");
+}
+
+export function renderGaugeRouteRailHTML(routes = GAUGE_ROUTES) {
+  const safeRoutes = normalizeObject(routes);
+
+  const links = [
+    ["Compass", safeRoutes.compass || "/"],
+    ["Door", safeRoutes.door || "/door/"],
+    ["Products", safeRoutes.products || "/products/"],
+    ["Showroom", safeRoutes.showroom || "/showroom/"],
+    ["Vault", safeRoutes.vault || "/products/archcoin/"],
+    ["Upper Room", safeRoutes.upperRoom || "/big-laugh/upper-room/"]
+  ];
+
+  return links
+    .map(([label, href]) => {
+      return '<li><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + '</a></li>';
+    })
+    .join("\n");
+}
+
 export function renderGaugeCardHTML(reading) {
   const gauge = normalizeGaugeReading(reading);
   const color = GAUGE_COLOR_STATES[gauge.state] || GAUGE_COLOR_STATES.healthy;
@@ -703,7 +746,7 @@ export function renderGaugeCardHTML(reading) {
     ' aria-label="' + escapeHtml(gauge.semanticText + " | " + gauge.receiptText) + '">',
     '<div class="gaugeTop">',
     '<span class="gaugeName">',
-    '<small>' + escapeHtml(gauge.id) + '</small>',
+    '<small>' + escapeHtml(gauge.id) + ' ·</small>',
     '<strong>' + escapeHtml(gauge.title) + '</strong>',
     '</span>',
     '<span class="gaugeValue" aria-label="Value ' + escapeHtml(String(gauge.value)) + '">' + escapeHtml(gauge.value) + '</span>',
@@ -722,12 +765,15 @@ export function renderGaugeCardHTML(reading) {
 
 export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
   const states = normalizeObject(colorStates);
+  const keys = ["healthy", "active", "proof", "watch", "break", "complex"];
 
-  return Object.keys(states)
+  return keys
+    .filter((key) => states[key])
     .map((key) => {
       const item = states[key];
+
       return (
-        '<span class="legendItem" aria-label="' +
+        '<li class="legendItem" aria-label="' +
         escapeHtml(item.semanticLabel || item.label) +
         '">' +
         '<span class="dot" style="--tone:var(' +
@@ -735,8 +781,8 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
         ')" aria-hidden="true"></span>' +
         '<span>' +
         escapeHtml(item.label) +
-        "</span>" +
-        "</span>"
+        '</span>' +
+        '</li>'
       );
     })
     .join("\n");
@@ -767,7 +813,7 @@ export function renderGaugeTedHTML(tedRead = GAUGE_TED_READ) {
           '">' +
           '<small>' +
           escapeHtml(normalizeString(safeCard.eyebrow)) +
-          '</small>' +
+          ' ·</small>' +
           '<strong>' +
           escapeHtml(normalizeString(safeCard.title)) +
           '</strong>' +
@@ -808,6 +854,10 @@ export function renderGaugePlainText(packet = buildGaugeDashboardPacket()) {
     lines.push("MEANING=" + gauge.meaning);
     gauge.receipt.forEach((receiptLine) => lines.push(receiptLine));
   });
+
+  lines.push("");
+  lines.push("LEGEND=" + normalizeObject(safePacket.semantic).legendText);
+  lines.push("ROUTES=" + normalizeObject(safePacket.semantic).routeText);
 
   return lines.join("\n");
 }
@@ -854,6 +904,8 @@ export function createInstruments() {
       },
 
       buildGaugeDashboardPacket,
+      renderGaugeJumpHTML,
+      renderGaugeRouteRailHTML,
       renderGaugeCardHTML,
       renderGaugeLegendHTML,
       renderGaugeTedHTML,

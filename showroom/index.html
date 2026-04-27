@@ -1,16 +1,15 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B14 · CENTERED EARTH / NO LEGACY RINGS
+     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B15 · CENTERED EARTH / NO RINGS
 
      CONTRACT:
        - Bind showroom to Earth Asset B5.
        - Remove legacy outer ring / orbit / circular instrument frame.
+       - Remove circle-fit language.
        - Center Earth itself as the visual object.
-       - Keep real satellite-view Earth assets.
-       - Showroom owns layout/framing only.
-       - Earth renderer lives in /assets/earth/earth_canvas.js.
-       - Earth runtime lives in /runtime/earth_asset_runtime.js.
-       - Runtime owns zoom controls.
+       - Keep real satellite Earth asset path.
+       - Keep runtime zoom controls.
+       - Keep manual drag, spin, reset, pause.
        - Distant sun is CSS-only support.
        - Bottom diamond navigation remains.
        - No graphics box.
@@ -24,7 +23,7 @@
   <title>Diamond Gate Bridge — Showroom</title>
   <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b5-centered-no-rings-b14"/>
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b5-no-rings-b15"/>
 
   <style>
     *{box-sizing:border-box}
@@ -49,7 +48,6 @@
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
       --dgb-earth-axis:-23.44deg;
-      --dgb-earth-fit-scale:1.04;
     }
 
     body::before{
@@ -231,16 +229,16 @@
       z-index:2;
       width:min(100%,880px);
       margin:8px auto 0;
-      border:1px solid rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.12);
       border-radius:30px;
       background:
-        radial-gradient(circle at 50% 42%,rgba(147,197,253,.10),transparent 48%),
+        radial-gradient(circle at 50% 42%,rgba(147,197,253,.09),transparent 48%),
         rgba(3,8,18,.64);
       box-shadow:
-        inset 0 0 70px rgba(147,197,253,.06),
+        inset 0 0 52px rgba(147,197,253,.05),
         0 24px 90px rgba(0,0,0,.38);
       overflow:hidden;
-      padding:clamp(10px,2.4vw,18px);
+      padding:clamp(12px,2.7vw,22px);
     }
 
     .earthPanel::before{
@@ -254,33 +252,40 @@
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(90deg,rgba(255,255,255,.018),transparent 48%,rgba(255,255,255,.025));
+        linear-gradient(90deg,rgba(255,255,255,.014),transparent 48%,rgba(255,255,255,.02));
     }
 
     .earthPanel [data-dgb-earth-mount]{
       position:relative;
       z-index:2;
-      width:min(100%,620px);
+      width:min(100%,590px);
       aspect-ratio:1;
       margin:0 auto;
       display:grid;
       place-items:center;
       overflow:visible;
-      --dgb-earth-fit-scale:1.04;
+    }
+
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-stage{
+      width:100%;
+      height:100%;
     }
 
     .earthPanel [data-dgb-earth-mount] .dgb-earth-axis,
     .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::before,
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::after{
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::after,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-atmosphere{
       display:none !important;
       content:none !important;
       opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
     }
 
     .earthPanel [data-dgb-earth-mount] .dgb-earth-tilt{
       width:100%;
       height:100%;
-      transform:rotate(var(--dgb-earth-axis)) scale(var(--dgb-earth-fit-scale));
+      transform:rotate(var(--dgb-earth-axis));
       transform-origin:center center;
     }
 
@@ -463,8 +468,7 @@
       }
 
       .earthPanel [data-dgb-earth-mount]{
-        width:min(100%,560px);
-        --dgb-earth-fit-scale:1.045;
+        width:min(100%,540px);
       }
 
       .earthPanel .dgb-earth-control-panel{
@@ -490,8 +494,7 @@
 
     @media(max-width:430px){
       .earthPanel [data-dgb-earth-mount]{
-        width:min(100%,540px);
-        --dgb-earth-fit-scale:1.05;
+        width:min(100%,520px);
       }
     }
 
@@ -508,16 +511,16 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-spine-consumer-b14-centered-no-legacy-rings"
+    data-showroom-version="generation-2-earth-spine-consumer-b15-centered-no-rings"
     data-earth-center="true"
-    data-earth-renderer="earth-asset-b5-orbital-earth-centered"
+    data-earth-renderer="earth-asset-b5-orbital-earth-no-rings"
     data-earth-clouds="earth-asset-b5-real-cloud-map"
     data-earth-controls="runtime-zoom-panel"
-    data-earth-fit-contract="center-earth-no-legacy-rings"
+    data-earth-fit-contract="center-earth-no-rings"
     data-sun-role="distant-css-support-only"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="earth-spine-b5-centered-no-legacy-rings"
+    data-brain-route="earth-spine-b5-centered-no-rings"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
@@ -538,7 +541,7 @@
         <h1>The Earth Room</h1>
         <p class="expression">Orbital Earth.</p>
         <p class="lede">
-          Earth is the center of the showroom. The legacy framing rings are removed so the planet itself becomes the visual anchor while runtime zoom, reset, pause, spin, and manual drag remain active.
+          Earth is the center of the showroom. The legacy rings are removed so the planet itself becomes the visual anchor while runtime zoom, reset, pause, spin, and manual drag remain active.
         </p>
       </div>
 
@@ -550,7 +553,7 @@
       <div class="readout" aria-live="polite">
         <strong>Earth controls</strong>
         <p>
-          The showroom removes the legacy framing rings. The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.
+          The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.
         </p>
       </div>
     </section>
@@ -598,7 +601,7 @@
     </nav>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b5-centered-no-rings-b14" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b5-centered-no-rings-b14" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b5-no-rings-b15" defer></script>
+  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b5-no-rings-b15" defer></script>
 </body>
 </html>

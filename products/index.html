@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-products-generation="source-waterfall-product-jump-sunset-snow-b6">
+<html lang="en" data-products-generation="source-waterfall-product-jump-route-realignment-b7">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -764,7 +764,7 @@
 
     .product-jump-grid {
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
     }
 
@@ -871,6 +871,12 @@
       100% { transform:rotate(360deg) scale(.96); }
     }
 
+    @media (max-width:1080px) {
+      .product-jump-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
     @media (max-width:980px) {
       .hero {
         grid-template-columns:1fr;
@@ -937,10 +943,6 @@
         transform:none;
         width:100%;
         margin-top:2px;
-      }
-
-      .product-jump-grid {
-        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
@@ -1013,14 +1015,15 @@
     class="page"
     data-page="products"
     data-baseline="source-waterfall-product-jump-sunset-snow"
-    data-pass="products-source-waterfall-b6"
+    data-pass="products-source-waterfall-b7"
     data-source-role="parent-product-chamber"
     data-vault-route="/archcoin/"
     data-upper-room-route="/big-laugh/upper-room/"
     data-nine-summits-route="/nine-summits/"
     data-showroom-route="/showroom/"
     data-five-flags-route="/products/five-flags/"
-    data-aai-route="/on-your-side-ai/"
+    data-aai-route="/products/on-your-side-ai/"
+    data-esl-route="/products/esl-traversal-learning/"
     data-nutrition-route="/nutrition/"
   >
     <header class="topbar">
@@ -1121,8 +1124,7 @@
         <span class="pill">Product jump</span>
         <h2 id="jumpTitle">Jump straight to the product room.</h2>
         <p>
-          These are active product paths that need direct access without restoring the old many-option layout.
-          Nine Summits is already carried in the source chamber above, so it is not repeated here.
+          These active product paths connect to their real backlink pages. Nine Summits is already carried in the source chamber above, so it is not repeated here.
         </p>
       </div>
 
@@ -1139,10 +1141,16 @@
           <span>A live scene-reading product path for people, rooms, roles, choices, flags, and social context.</span>
         </a>
 
-        <a class="product-jump-card" href="/on-your-side-ai/">
+        <a class="product-jump-card" href="/products/on-your-side-ai/">
           <small>AAI / On Your Side AI</small>
           <strong>On Your Side AI · Artificial Agent Intelligence</strong>
-          <span>The artificial agent intelligence lane for structured assistance, traversal, and execution support.</span>
+          <span>Bounded support for signal clarity, traversal, decision movement, and user-side agency.</span>
+        </a>
+
+        <a class="product-jump-card" href="/products/esl-traversal-learning/">
+          <small>Education / Language</small>
+          <strong>ESL Traversal Learning</strong>
+          <span>English by movement, scene, context, confidence, and practical real-life use.</span>
         </a>
 
         <a class="product-jump-card" href="/nutrition/">

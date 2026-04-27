@@ -3,8 +3,8 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-generation-2-ceiling-calibration"
-  data-gauges-generation="ceiling-calibration-g2"
+  data-generation="gauges-generation-2-core-phase-calibration"
+  data-gauges-generation="core-phase-calibration-g2"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,12 +16,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Ceiling Calibration · Diamond Gate Bridge</title>
+  <title>Gauges · Core Phase Calibration · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate."
+    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate, with core-house-first recommendation logic."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=estate-unity-charge-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=estate-core-phase-calibration-v1" />
 
   <style>
     :root {
@@ -256,6 +256,19 @@
     }
 
     .method-list b {
+      color: var(--gold);
+    }
+
+    .phase-callout {
+      border: 1px solid rgba(255, 217, 138, .42);
+      border-radius: 18px;
+      padding: 13px;
+      background: rgba(255,217,138,.08);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .phase-callout b {
       color: var(--gold);
     }
 
@@ -538,6 +551,10 @@
       border-color: rgba(255,111,120,.45);
     }
 
+    .audit-item.phase-target {
+      box-shadow: inset 0 0 0 1px rgba(255,217,138,.42), 0 0 34px rgba(255,217,138,.08);
+    }
+
     .receipt {
       margin: 0;
       white-space: pre-wrap;
@@ -655,12 +672,11 @@
     <section class="hero" aria-labelledby="H6_GAUGES">
       <div class="wrap hero-grid">
         <article class="panel hero-card">
-          <p class="eyebrow">H6 · Gauges · Ceiling calibration room</p>
+          <p class="eyebrow">H6 · Gauges · Core phase calibration room</p>
           <h1 id="H6_GAUGES">Gauges</h1>
           <p class="lead">
-            Gauges are the estate’s ceiling and jump calibration instrument. They measure
-            collective jump height, independent page height, shared ceiling, renewal lift,
-            and alignment drag. They do not fake evidence.
+            Gauges measure the estate’s ceiling and jump height. Recommendation priority now follows the current build phase:
+            core house first, product wing second, planetary attachment third.
           </p>
         </article>
 
@@ -668,11 +684,16 @@
           <p class="eyebrow">Gauge · Renew · Measure · Raise · Repeat</p>
           <ul class="method-list">
             <li><b>Gauge first:</b> read the current measured ceiling.</li>
-            <li><b>Renew narrowly:</b> target the limiter, not the whole estate blindly.</li>
+            <li><b>Renew narrowly:</b> target the active phase limiter, not the lowest downstream score.</li>
             <li><b>Measure again:</b> compare before and after.</li>
             <li><b>Raise ceiling:</b> lock only what improves or clarifies the next jump.</li>
             <li><b>Repeat:</b> continue by calibration, not fishing.</li>
           </ul>
+
+          <div class="phase-callout">
+            <b>Core phase rule:</b> if the House Skeleton is below 100, Gauges recommends Door, Home, Products house page, Showroom, Compass, or Gauges before any product chamber or planet.
+          </div>
+
           <div class="controls">
             <button class="refresh" id="refreshAudit" type="button">Run live calibration</button>
             <a class="pill" href="/">Return to Compass</a>
@@ -715,8 +736,7 @@
             <h2>Measured jump field</h2>
           </div>
           <p>
-            These dials are calculated from same-origin fetches and source-marker reads.
-            A page can look better and still fail if it lowers the verified ceiling.
+            Gauges still measures house, product, and planetary fields. The next-move recommendation now respects build phase priority so downstream work does not outrun the core.
           </p>
         </div>
 
@@ -744,7 +764,7 @@
 Run live calibration to read current jump height.</pre>
 
           <div class="next-move" id="nextMove">
-            Next move: run Gauges first, renew narrowly, measure again, raise ceiling, repeat.
+            Next move: run Gauges first, renew narrowly by active phase, measure again, raise ceiling, repeat.
           </div>
         </aside>
       </div>
@@ -753,13 +773,25 @@ Run live calibration to read current jump height.</pre>
 
   <footer>
     <div class="wrap">
-      <span>GAUGES_GENERATION_2_CEILING_CALIBRATION_FULL_TNT_v1</span>
+      <span>GAUGES_CORE_PHASE_ALIGNMENT_FULL_TNT_v1</span>
       <span>Gauges may style evidence, but Gauges may not fake evidence.</span>
     </div>
   </footer>
 
   <script>
     (function () {
+      const HOUSE_THRESHOLD = 100;
+      const PRODUCT_THRESHOLD = 100;
+
+      const CORE_PHASE_ORDER = [
+        "H2_DOOR",
+        "H3_HOME",
+        "H4_PRODUCTS",
+        "H5_SHOWROOM",
+        "H1_COMPASS",
+        "H6_GAUGES"
+      ];
+
       const REQUIRED = {
         commonEstate: [
           'data-estate="rich-manor-and-estate"',
@@ -1019,7 +1051,8 @@ Run live calibration to read current jump height.</pre>
               missingRequired: route.required,
               missingBacklinks: route.backlinks,
               score: 0,
-              status: "BREAK"
+              status: "BREAK",
+              phaseTarget: false
             };
           }
 
@@ -1041,7 +1074,8 @@ Run live calibration to read current jump height.</pre>
             missingRequired,
             missingBacklinks,
             score,
-            status: score >= 100 ? "PASS" : score >= 70 ? "WATCH" : "BREAK"
+            status: score >= 100 ? "PASS" : score >= 70 ? "WATCH" : "BREAK",
+            phaseTarget: false
           };
         } catch (error) {
           return {
@@ -1053,7 +1087,8 @@ Run live calibration to read current jump height.</pre>
             missingBacklinks: route.backlinks,
             score: 0,
             status: "BREAK",
-            error: error && error.message ? error.message : String(error)
+            error: error && error.message ? error.message : String(error),
+            phaseTarget: false
           };
         }
       }
@@ -1115,11 +1150,14 @@ Run live calibration to read current jump height.</pre>
         const missingBacklinks = route.missingBacklinks.length
           ? "MISSING_BACKLINKS=" + route.missingBacklinks.join(", ")
           : "MISSING_BACKLINKS=NONE";
-        const className = route.score >= 100 ? "pass" : route.score >= 70 ? "warn" : "fail";
+        const className = [
+          route.score >= 100 ? "pass" : route.score >= 70 ? "warn" : "fail",
+          route.phaseTarget ? "phase-target" : ""
+        ].filter(Boolean).join(" ");
 
         return `
           <li class="audit-item ${className}">
-            <strong>${escapeHTML(route.id)} · ${escapeHTML(route.label)} · ${escapeHTML(route.score)}</strong>
+            <strong>${escapeHTML(route.id)} · ${escapeHTML(route.label)} · ${escapeHTML(route.score)}${route.phaseTarget ? " · ACTIVE PHASE TARGET" : ""}</strong>
             <span>${escapeHTML(route.path)} · STATUS=${escapeHTML(route.status)} · HTTP=${escapeHTML(route.statusCode)}</span>
             <code>${escapeHTML(missingRequired)}</code>
             <code>${escapeHTML(missingBacklinks)}</code>
@@ -1127,33 +1165,62 @@ Run live calibration to read current jump height.</pre>
         `;
       }
 
-      function limiterFromResults(results) {
+      function globalLimiter(results) {
         const sorted = [...results].sort((a, b) => a.score - b.score);
         return sorted[0] || null;
       }
 
-      function nextMoveFromScores(scores, limiter) {
-        if (!limiter) {
-          return "Next move: no route evidence returned. Inspect fetch/access conditions.";
+      function coreHouseLimiter(houseRoutes) {
+        for (const id of CORE_PHASE_ORDER) {
+          const route = houseRoutes.find((item) => item.id === id);
+          if (route && route.score < HOUSE_THRESHOLD) return route;
+        }
+        return houseRoutes.find((item) => item.score < HOUSE_THRESHOLD) || null;
+      }
+
+      function productLimiter(productRoutes) {
+        return productRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
+      }
+
+      function phaseRecommendation(scores, houseRoutes, productRoutes, planetRoutes, allRoutes) {
+        const coreLimiter = coreHouseLimiter(houseRoutes);
+        const productLimit = productLimiter(productRoutes);
+        const globalLimit = globalLimiter(allRoutes);
+
+        if (scores.house < HOUSE_THRESHOLD && coreLimiter) {
+          return {
+            phase: "CORE_HOUSE_ALIGNMENT",
+            target: coreLimiter,
+            held: "PRODUCT_CHAMBERS_AND_PLANETS",
+            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so downstream product and planet targets are held.`
+          };
         }
 
-        if (scores.overall >= 100 && scores.house >= 100 && scores.products >= 100 && scores.planets >= 100) {
-          return "Next move: ceiling currently reads 100. Generation Two visual renewal may resume only with before/after receipt discipline.";
+        if (scores.products < PRODUCT_THRESHOLD && productLimit) {
+          return {
+            phase: "PRODUCT_WING_ALIGNMENT",
+            target: productLimit,
+            held: "PLANETS",
+            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Core house field is stable enough to continue Product Wing calibration.`
+          };
         }
 
-        if (limiter.group === "house") {
-          return `Next move: renew narrowly at ${limiter.label} (${limiter.path}). House skeleton is the current ceiling limiter.`;
+        if (scores.planets < PRODUCT_THRESHOLD && globalLimit) {
+          const planetLimit = planetRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || globalLimit;
+          return {
+            phase: "PLANETARY_ATTACHMENT_ALIGNMENT",
+            target: planetLimit,
+            held: "VISUAL_GENERATION",
+            text: `Next move: renew planetary or hosted construct ${planetLimit.label} (${planetLimit.path}). Core and Products are stable enough to continue planetary attachment calibration.`
+          };
         }
 
-        if (limiter.group === "products") {
-          return `Next move: inspect product chamber ${limiter.label} without touching working house or planet routes.`;
-        }
-
-        if (limiter.group === "planets") {
-          return `Next move: inspect planetary/hosted construct ${limiter.label} without changing route law.`;
-        }
-
-        return `Next move: inspect ${limiter.label} (${limiter.path}) as current alignment drag.`;
+        return {
+          phase: "FULL_CURRENT_CEILING",
+          target: null,
+          held: "NONE",
+          text: "Next move: ceiling currently reads 100. Generation Two visual renewal may resume only with before/after receipt discipline."
+        };
       }
 
       async function runAudit() {
@@ -1163,6 +1230,7 @@ Run live calibration to read current jump height.</pre>
         liveReceipt.textContent = [
           "SCANNING=true",
           "METHOD=Gauge first. Renew narrowly. Measure again. Raise ceiling. Repeat.",
+          "PHASE_PRIORITY=Core house first. Product wing second. Planets third.",
           "STATUS=fetching same-origin routes"
         ].join("\n");
 
@@ -1179,7 +1247,6 @@ Run live calibration to read current jump height.</pre>
 
         scores.overall = Math.round((scores.house + scores.products + scores.planets) / 3);
 
-        const limiter = limiterFromResults(results);
         const state = {
           overall: scoreState(scores.overall),
           house: scoreState(scores.house),
@@ -1187,10 +1254,16 @@ Run live calibration to read current jump height.</pre>
           planets: scoreState(scores.planets)
         };
 
+        const recommendation = phaseRecommendation(scores, house, products, planets, results);
+
+        results.forEach((route) => {
+          route.phaseTarget = recommendation.target && route.id === recommendation.target.id;
+        });
+
         writeStat("overall", scores.overall, `${state.overall.toUpperCase()} · shared ceiling read`);
-        writeStat("house", scores.house, `${state.house.toUpperCase()} · house skeleton`);
-        writeStat("products", scores.products, `${state.products.toUpperCase()} · product wing reachability`);
-        writeStat("planets", scores.planets, `${state.planets.toUpperCase()} · planetary attachment`);
+        writeStat("house", scores.house, `${state.house.toUpperCase()} · core phase priority`);
+        writeStat("products", scores.products, `${state.products.toUpperCase()} · held until core is stable`);
+        writeStat("planets", scores.planets, `${state.planets.toUpperCase()} · held until upstream is stable`);
 
         const gauges = [
           {
@@ -1213,11 +1286,11 @@ Run live calibration to read current jump height.</pre>
             kind: "house",
             title: "House skeleton",
             value: scores.house,
-            label: "house",
+            label: "core",
             state: state.house,
-            priority: state.house !== "healthy",
-            meaning: "Compass, Door, Home, Products, Showroom, and Gauges as one house field.",
-            receipt: house.map((route) => `${route.label}=${route.score}`)
+            priority: scores.house < HOUSE_THRESHOLD,
+            meaning: "Active priority while below 100. Door, Home, Products house page, and Showroom must align before downstream recommendations lead.",
+            receipt: house.map((route) => `${route.label}=${route.score}${recommendation.target && recommendation.target.id === route.id ? " <- NEXT" : ""}`)
           },
           {
             id: "G2",
@@ -1226,8 +1299,10 @@ Run live calibration to read current jump height.</pre>
             value: scores.products,
             label: "wing",
             state: state.products,
-            priority: state.products !== "healthy",
-            meaning: "Product chambers remain attached to Products without becoming house or planet roots.",
+            priority: scores.house >= HOUSE_THRESHOLD && state.products !== "healthy",
+            meaning: scores.house < HOUSE_THRESHOLD
+              ? "Measured, but held. Product chamber recommendations do not lead while the core house field is incomplete."
+              : "Product chambers remain attached to Products without becoming house or planet roots.",
             receipt: products.map((route) => `${route.label}=${route.score}`)
           },
           {
@@ -1237,17 +1312,17 @@ Run live calibration to read current jump height.</pre>
             value: scores.planets,
             label: "orbit",
             state: state.planets,
-            priority: state.planets !== "healthy",
-            meaning: "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
+            priority: scores.house >= HOUSE_THRESHOLD && scores.products >= PRODUCT_THRESHOLD && state.planets !== "healthy",
+            meaning: scores.house < HOUSE_THRESHOLD || scores.products < PRODUCT_THRESHOLD
+              ? "Measured, but held. Planetary attachment does not lead until upstream fields stabilize."
+              : "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
             receipt: planets.map((route) => `${route.label}=${route.score}`)
           }
         ];
 
         gaugeGrid.innerHTML = gauges.map(renderGauge).join("");
         auditList.innerHTML = results.map(renderRouteReceipt).join("");
-
-        const nextMove = nextMoveFromScores(scores, limiter);
-        $("nextMove").textContent = nextMove;
+        nextMove.textContent = recommendation.text;
 
         liveReceipt.textContent = [
           "BEFORE=",
@@ -1256,7 +1331,8 @@ Run live calibration to read current jump height.</pre>
           "ACTION=",
           "  target=measured estate field",
           "  scope=read-only calibration",
-          "  gauges_logic_touched=FALSE",
+          "  recommendation_logic=core_phase_priority",
+          "  gauges_logic_touched=FALSE_FOR_SCORING",
           "  fake_health_claim=FALSE",
           "",
           "AFTER=",
@@ -1264,13 +1340,15 @@ Run live calibration to read current jump height.</pre>
           `  House=${scores.house}`,
           `  Products=${scores.products}`,
           `  Planets=${scores.planets}`,
-          `  WeakPage=${limiter ? limiter.label + " " + limiter.path + " " + limiter.score : "NONE"}`,
+          `  ActivePhase=${recommendation.phase}`,
+          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "NONE"}`,
+          `  HeldDownstream=${recommendation.held}`,
           "",
           "CEILING_RESULT=",
-          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_LIMITER=" + (limiter ? limiter.label : "UNKNOWN"),
+          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_PHASE_LIMITER=" + (recommendation.target ? recommendation.target.label : "UNKNOWN"),
           "",
           "NEXT_MOVE=",
-          "  " + nextMove
+          "  " + recommendation.text
         ].join("\n");
 
         refreshAudit.disabled = false;

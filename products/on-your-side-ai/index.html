@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" data-product-generation="on-your-side-ai-russian-doll-full-expression-b6">
+<html lang="en" data-product-generation="richie-manor-study-on-your-side-ai-b9">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>On Your Side AI · Artificial Agent Intelligence · Products</title>
   <meta
     name="description"
-    content="On Your Side AI · Artificial Agent Intelligence — a bounded support product for clarity, signal reading, traversal, decision support, and execution without override."
+    content="On Your Side AI — the study and advisor-desk product inside Richie’s Manor for bounded intelligence, clarity, decision support, and user-side agency."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --panel:rgba(7,14,28,.88);
-      --panel2:rgba(10,20,42,.94);
-      --line:rgba(255,218,150,.22);
+      --panel:rgba(18,14,10,.86);
+      --panel2:rgba(36,26,16,.92);
+      --line:rgba(255,218,150,.24);
       --blueLine:rgba(142,197,255,.34);
-      --mintLine:rgba(143,240,197,.28);
-      --text:#fff8ea;
-      --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.74);
-      --gold:#ffd98a;
+      --mintLine:rgba(147,239,189,.32);
+      --brass:#ffd98a;
       --blue:#8ec5ff;
       --mint:#93efbd;
+      --text:#fff8ea;
+      --muted:#d5c7aa;
+      --soft:rgba(213,199,170,.74);
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -35,10 +35,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 82%,rgba(255,154,86,.32),transparent 28%),
-        radial-gradient(circle at 74% 70%,rgba(255,216,138,.24),transparent 24%),
-        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
-        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
+        radial-gradient(circle at 50% 92%,rgba(142,197,255,.17),transparent 24%),
+        radial-gradient(circle at 16% 20%,rgba(255,217,138,.15),transparent 26%),
+        radial-gradient(circle at 84% 18%,rgba(147,239,189,.11),transparent 26%),
+        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
       overflow-x:hidden;
     }
 
@@ -47,48 +47,34 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.62;
+      opacity:.38;
       background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:snowFall 22s linear infinite;
-      z-index:0;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+        linear-gradient(90deg,rgba(255,218,150,.05) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.15),transparent 30%);
+      background-size:56px 56px,56px 56px,100% 100%;
+      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
       z-index:0;
     }
 
     a{color:inherit;text-decoration:none}
 
     .page{
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
       position:relative;
       z-index:1;
+      width:min(var(--max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
       display:grid;
+      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .topbar,.hero,.stage,.panel,.card,.route-card{
+    .topbar,.study,.routeRail{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.12),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
         linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
@@ -96,13 +82,10 @@
     }
 
     .topbar{
-      padding:14px;
       border-radius:28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding:14px;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
     }
 
     .brand{
@@ -126,7 +109,7 @@
       font-weight:950;
       letter-spacing:.08em;
       flex:0 0 auto;
-      box-shadow:0 0 22px rgba(142,197,255,.18);
+      box-shadow:0 0 22px rgba(142,197,255,.16);
     }
 
     .brandText{display:grid;gap:3px}
@@ -134,7 +117,7 @@
     .kicker{
       display:block;
       margin:0;
-      color:#c8d7ff;
+      color:#d8e9ff;
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
@@ -150,72 +133,119 @@
       line-height:1.05;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
-    }
-
-    .nav a,.button{
-      min-height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .nav a.featured,.button.primary{
-      border-color:rgba(142,197,255,.48);
-      background:rgba(142,197,255,.11);
-      color:#eef4ff;
-      box-shadow:0 0 22px rgba(142,197,255,.13);
-    }
-
-    .hero{
-      border-radius:34px;
-      padding:clamp(24px,5vw,56px);
-      min-height:calc(100svh - 150px);
+    .jumpGrid{
       display:grid;
-      grid-template-columns:minmax(0,1.02fr) minmax(280px,.98fr);
-      gap:28px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .jumpCard{
+      min-height:88px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
       align-items:center;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .jumpCard:hover,.jumpCard:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(142,197,255,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jumpCard.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .navCompass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jumpCard.active .navCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+    }
+
+    .navCompass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .navCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jumpCard.active .navCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jumpText{display:grid;gap:4px;min-width:0}
+    .jumpText small{color:#c8d7ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .jumpText strong{color:#fff;font-size:1rem;line-height:1.02;letter-spacing:-.035em}
+
+    .study{
+      border-radius:34px;
+      padding:clamp(18px,3vw,30px);
+      display:grid;
+      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
+      gap:20px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .hero::before{
+    .study::before{
       content:"";
       position:absolute;
-      width:min(760px,92vw);
-      height:min(760px,92vw);
-      left:72%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(143,240,197,.12),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
-      filter:blur(5px);
-      z-index:-3;
+      left:50%;
+      top:0;
+      width:min(720px,92vw);
+      height:180px;
+      transform:translateX(-50%);
+      background:radial-gradient(ellipse at 50% 0%,rgba(142,197,255,.15),transparent 68%);
+      z-index:-1;
     }
 
-    .heroCopy{
+    .copy{
       display:grid;
       gap:14px;
-      position:relative;
-      z-index:2;
+      align-content:center;
+      min-width:0;
     }
 
     .pill{
@@ -225,7 +255,7 @@
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(142,197,255,.28);
+      border:1px solid rgba(142,197,255,.30);
       background:rgba(255,255,255,.04);
       color:#d8e9ff;
       text-transform:uppercase;
@@ -241,21 +271,22 @@
       border-radius:2px;
       transform:rotate(45deg);
       background:var(--blue);
-      box-shadow:0 0 18px rgba(142,197,255,.50);
+      box-shadow:0 0 18px rgba(142,197,255,.42);
     }
 
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3.2rem,10vw,7rem);
-      line-height:.84;
-      letter-spacing:-.085em;
+      font-size:clamp(3rem,8.8vw,6.4rem);
+      line-height:.86;
+      letter-spacing:-.07em;
+      text-transform:uppercase;
     }
 
     h2{
       margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.6vw,2.9rem);
+      color:var(--brass);
+      font-size:clamp(1.38rem,4.4vw,2.8rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -263,82 +294,105 @@
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.62;
+      line-height:1.58;
       font-size:1rem;
     }
 
     .thesis{
       color:#fff;
-      font-size:clamp(1.16rem,2.7vw,1.7rem);
+      font-size:clamp(1.1rem,2.25vw,1.5rem);
       line-height:1.18;
       font-weight:850;
-      letter-spacing:-.04em;
-      max-width:820px;
+      letter-spacing:-.035em;
+      max-width:780px;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
+    .ruleGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:10px;
-      margin-top:4px;
     }
 
-    .signalOrb{
+    .ruleCell{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      padding:12px;
+      display:grid;
+      gap:4px;
+    }
+
+    .ruleCell small{
+      color:var(--soft);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:900;
+    }
+
+    .ruleCell strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .deskMap{
       position:relative;
-      width:min(100%,360px);
-      aspect-ratio:1;
-      margin:auto;
+      min-height:620px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.12),rgba(147,239,189,.045) 32%,rgba(0,0,0,0) 62%),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
+      overflow:hidden;
       display:grid;
       place-items:center;
-      filter:drop-shadow(0 24px 48px rgba(0,0,0,.38));
     }
 
-    .signalOrb::before{
-      content:"";
+    .deskRing{
       position:absolute;
-      inset:3%;
+      left:50%;
+      top:50%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.13);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 28%),
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 3deg,transparent 3deg 18deg);
-      box-shadow:
-        inset 0 0 54px rgba(0,0,0,.34),
-        0 0 50px rgba(142,197,255,.12);
-      animation:slowSpin 26s linear infinite;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      border:1px solid rgba(142,197,255,.12);
+      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
     }
 
-    .signalCore{
+    .deskRing.r1{width:min(92%,590px);aspect-ratio:1;animation:wallSpin 54s linear infinite}
+    .deskRing.r2{width:min(74%,470px);aspect-ratio:1;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);animation:wallSpin 42s linear infinite reverse}
+    .deskRing.r3{width:min(54%,330px);aspect-ratio:1;background:radial-gradient(circle at 50% 50%,rgba(142,197,255,.06),transparent 52%);animation:wallSpin 28s linear infinite}
+
+    .advisorCore{
       position:relative;
-      width:46%;
+      z-index:6;
+      width:min(36%,210px);
       aspect-ratio:1;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.40),rgba(143,240,197,.16) 48%,rgba(0,0,0,.24) 100%);
-      box-shadow:
-        inset 0 0 42px rgba(142,197,255,.18),
-        0 0 88px rgba(142,197,255,.18);
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.46),transparent 12%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.34),rgba(147,239,189,.14) 46%,rgba(0,0,0,.22) 100%);
+      box-shadow:inset 0 0 42px rgba(142,197,255,.18),0 0 92px rgba(142,197,255,.20);
+      overflow:hidden;
       display:grid;
       place-items:center;
       text-align:center;
-      overflow:hidden;
-      z-index:3;
+      padding:20px;
     }
 
-    .signalCore::before{
+    .advisorCore::before{
       content:"";
       position:absolute;
-      inset:14px;
+      inset:13%;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.16);
-      background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 16deg,rgba(255,255,255,.08) 16deg 19deg,transparent 19deg 34deg);
-      animation:slowSpin 16s linear infinite reverse;
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 14deg,rgba(255,255,255,.085) 14deg 17deg,transparent 17deg 32deg);
+      animation:compassSpin 16s linear infinite reverse;
     }
 
-    .signalCore span{
+    .advisorCore span{
       position:relative;
       z-index:2;
       color:#eef4ff;
@@ -350,420 +404,158 @@
       text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
 
-    .signalLine{
+    .supportNode{
       position:absolute;
-      left:50%;
-      top:50%;
-      width:36%;
-      height:7px;
-      transform-origin:left center;
-      border-radius:999px;
-      background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(142,197,255,.46),transparent);
-      opacity:.70;
-      z-index:1;
-      overflow:hidden;
-      filter:drop-shadow(0 0 12px rgba(142,197,255,.26));
+      z-index:7;
+      width:152px;
+      min-height:122px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 70%),
+        linear-gradient(180deg,rgba(24,18,12,.86),rgba(10,20,42,.92));
+      box-shadow:0 18px 38px rgba(0,0,0,.34);
+      display:grid;
+      align-content:end;
+      gap:7px;
+      padding:14px;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .signalLine::after{
-      content:"";
+    .supportNode:hover,.supportNode:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(142,197,255,.44);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .supportNode[data-active="true"]{
+      border-color:rgba(255,217,138,.54);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
+        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
+    }
+
+    .supportNode small{color:#d8e9ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .supportNode strong{color:#fff;font-size:1.04rem;line-height:1.02;letter-spacing:-.035em}
+
+    .supportNode.intake{left:50%;top:18px;transform:translateX(-50%)}
+    .supportNode.signal{right:18px;top:50%;transform:translateY(-50%)}
+    .supportNode.route{left:50%;bottom:18px;transform:translateX(-50%)}
+    .supportNode.output{left:18px;top:50%;transform:translateY(-50%)}
+    .supportNode.boundary{right:60px;bottom:88px}
+
+    .supportNode.intake:hover,.supportNode.intake:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .supportNode.signal:hover,.supportNode.signal:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .supportNode.route:hover,.supportNode.route:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .supportNode.output:hover,.supportNode.output:focus-visible{transform:translateY(calc(-50% - 4px))}
+
+    .readout{
       position:absolute;
-      inset:0;
-      background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.42) 18px 24px,transparent 24px 42px);
-      animation:signalRun 1.7s linear infinite;
-    }
-
-    .signalLine.north{transform:rotate(-90deg)}
-    .signalLine.east{transform:rotate(0deg)}
-    .signalLine.south{transform:rotate(90deg)}
-    .signalLine.west{transform:rotate(180deg)}
-
-    .stage{
-      border-radius:34px;
-      padding:clamp(16px,2.6vw,26px);
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:9;
       display:grid;
-      grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
-      gap:16px;
-      overflow:hidden;
-    }
-
-    .talk{
-      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
       gap:12px;
-      align-content:center;
+      pointer-events:none;
     }
 
-    .dollControls{
+    .readCard{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:rgba(3,8,18,.72);
+      box-shadow:0 18px 38px rgba(0,0,0,.30);
+      padding:14px;
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:7px;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .readCard h3{margin:0;color:#fff;font-size:clamp(1.1rem,2.1vw,1.45rem);line-height:1.05;letter-spacing:-.04em}
+    .readCard p{font-size:.92rem;line-height:1.44}
+
+    .receipt{
+      display:grid;
+      gap:6px;
+      color:var(--soft);
+      font-size:.78rem;
+      line-height:1.32;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .routeRail{
+      border-radius:24px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
     }
 
-    .dollControl{
-      min-height:58px;
-      border:1px solid rgba(255,255,255,.10);
+    .routeRail a{
+      min-height:48px;
       border-radius:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
-      color:var(--text);
-      font-weight:850;
-      cursor:pointer;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       display:grid;
       place-items:center;
       text-align:center;
-      font-size:.82rem;
-      letter-spacing:.04em;
-      padding:8px;
     }
 
-    .dollControl[data-active="true"]{
-      border-color:rgba(142,197,255,.36);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.14),transparent 70%),
-        rgba(142,197,255,.07);
-      box-shadow:0 0 24px rgba(142,197,255,.10);
+    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes wallSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+    @media(max-width:1120px){
+      .study{grid-template-columns:1fr}
+      .deskMap{min-height:680px}
+      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
-    .talkCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(142,197,255,.08),transparent 62%),
-        rgba(255,255,255,.035);
-      padding:18px;
-      display:grid;
-      gap:10px;
-    }
-
-    .talkCard h2{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    .receipt{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:22px;
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:grid;
-      gap:10px;
-    }
-
-    .receiptTitle{
-      margin:0;
-      color:var(--blue);
-      font-size:11px;
-      font-weight:850;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      padding-bottom:8px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .rows{
-      display:grid;
-      gap:8px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.42;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.42;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .supportBoard{
-      display:grid;
-      gap:12px;
-      align-content:center;
-    }
-
-    .supportGrid,.grid3,.grid4,.routeGrid{
-      display:grid;
-      gap:12px;
-    }
-
-    .supportGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .grid3{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
-
-    .grid4,.routeGrid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .panel{
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      display:grid;
-      gap:16px;
-    }
-
-    .panelHead{
-      display:grid;
-      gap:8px;
-      max-width:860px;
-    }
-
-    .card,.route-card{
-      border-radius:24px;
-      padding:18px;
-      min-height:150px;
-      display:grid;
-      align-content:end;
-      gap:8px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .card::before,.route-card::before{
-      content:"";
-      position:absolute;
-      inset:18px;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(142,197,255,.18);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-      opacity:.62;
-      z-index:0;
-    }
-
-    .card.mint::before{
-      border-color:rgba(143,240,197,.20);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(143,240,197,.14),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-    }
-
-    .card > *,.route-card > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .card small,.route-card small{
-      color:#c8d7ff;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:900;
-    }
-
-    .card strong,.route-card strong{
-      color:#fff;
-      font-size:clamp(1.05rem,2.1vw,1.35rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .card span,.route-card span{
-      color:var(--muted);
-      line-height:1.44;
-      font-size:.9rem;
-    }
-
-    .miniList{
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:grid;
-      gap:8px;
-    }
-
-    .miniList li{
-      position:relative;
-      padding-left:16px;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.48;
-    }
-
-    .miniList li::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:.56em;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:var(--mint);
-      box-shadow:0 0 8px rgba(143,240,197,.22);
-    }
-
-    .faqList{
-      display:grid;
-      gap:12px;
-    }
-
-    .faqItem{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:rgba(0,0,0,.18);
-      overflow:hidden;
-    }
-
-    .faqToggle{
-      width:100%;
-      border:0;
-      background:transparent;
-      color:var(--text);
-      padding:18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      text-align:left;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      cursor:pointer;
-    }
-
-    .faqToggle span:last-child{
-      color:var(--mint);
-      font-size:18px;
-      line-height:1;
-      transition:transform 160ms ease;
-    }
-
-    .faqBody{
-      display:none;
-      padding:0 18px 18px;
-      color:var(--muted);
-      line-height:1.6;
-      border-top:1px solid rgba(255,255,255,.08);
-    }
-
-    .faqItem.is-open .faqBody{display:block}
-    .faqItem.is-open .faqToggle span:last-child{transform:rotate(45deg)}
-
-    .route-card.featured{
-      border-color:rgba(142,197,255,.44);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.13),transparent 68%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
-    }
-
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:0 4px;
-      color:#d5dff7;
-      font-size:.86rem;
-    }
-
-    .footer a{color:#fff0d0}
-
-    @keyframes snowFall{
-      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
-      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
-    }
-
-    @keyframes slowSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    @keyframes signalRun{
-      from{transform:translateX(-42px)}
-      to{transform:translateX(42px)}
-    }
-
-    @media(max-width:1080px){
-      .hero,.stage{
-        grid-template-columns:1fr;
-        min-height:auto;
-      }
-
-      .dollControls,
-      .supportGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:640px){
-      .page{
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,.hero,.stage,.panel{
-        border-radius:24px;
-      }
-
+    @media(max-width:740px){
+      .page{width:min(100vw - 12px,var(--max));padding-top:10px}
+      .topbar,.study,.routeRail{border-radius:24px}
       .topbar{padding:12px}
       .brand{gap:10px}
-
-      .mark{
-        width:44px;
-        height:44px;
-        border-radius:14px;
-      }
-
-      .nav{
+      .mark{width:44px;height:44px;border-radius:14px}
+      .jumpGrid,.ruleGrid,.routeRail{grid-template-columns:1fr}
+      .jumpCard{min-height:76px}
+      .study{padding:18px}
+      .deskMap{min-height:auto;display:grid;gap:10px;padding:14px}
+      .deskRing{display:none}
+      .advisorCore{position:relative;width:160px;margin:0 auto}
+      .supportNode,.supportNode.intake,.supportNode.signal,.supportNode.route,.supportNode.output,.supportNode.boundary{
+        position:relative;
+        left:auto;
+        right:auto;
+        top:auto;
+        bottom:auto;
+        transform:none;
         width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        min-height:92px;
       }
-
-      .nav a{width:100%}
-      .hero{padding:22px}
-
-      .actions,
-      .dollControls,
-      .supportGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
+      .supportNode:hover,.supportNode:focus-visible,.supportNode.intake:hover,.supportNode.intake:focus-visible,.supportNode.signal:hover,.supportNode.signal:focus-visible,.supportNode.route:hover,.supportNode.route:focus-visible,.supportNode.output:hover,.supportNode.output:focus-visible{
+        transform:translateY(-4px);
+      }
+      .readout{
+        position:relative;
+        left:auto;
+        right:auto;
+        bottom:auto;
         grid-template-columns:1fr;
-      }
-
-      .actions{
-        display:grid;
-      }
-
-      .button{
-        width:100%;
-      }
-
-      .row{
-        grid-template-columns:1fr;
-      }
-
-      .rv{
-        text-align:left;
       }
     }
 
     @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation:none !important;
-        scroll-behavior:auto !important;
-        transition:none !important;
-      }
+      *,*::before,*::after{animation:none !important;scroll-behavior:auto !important;transition:none !important}
     }
   </style>
 </head>
@@ -771,319 +563,97 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
-    data-product="on-your-side-ai"
-    data-aai-role="artificial-agent-intelligence"
+    data-page="on-your-side-ai"
+    data-room-location="richie-manor-study-advisor-desk"
     data-self-path="/products/on-your-side-ai/"
     data-bridge-path="/products/aai/"
     data-products-backlink="/products/"
-    data-five-flags-backlink="/products/five-flags/"
-    data-esl-backlink="/products/education/"
-    data-nutrition-backlink="/products/nutrition/"
   >
     <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Products home">
+      <a class="brand" href="/products/on-your-side-ai/" aria-label="On Your Side AI">
         <span class="mark" aria-hidden="true">AAI</span>
         <span class="brandText">
-          <span class="kicker">Products · Flagship Intelligence</span>
+          <span class="kicker">Richie’s Manor · Study / Advisor Desk</span>
           <strong class="title">On Your Side AI · Artificial Agent Intelligence</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a class="featured" href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
+      <nav class="jumpGrid" aria-label="Primary compass jumps">
+        <a class="jumpCard" href="/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Compass</strong></span>
+        </a>
+        <a class="jumpCard" href="/door/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Door</strong></span>
+        </a>
+        <a class="jumpCard active" href="/products/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Parent</small><strong>Products</strong></span>
+        </a>
+        <a class="jumpCard" href="/gauges/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Gauges</strong></span>
+        </a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="productTitle">
-      <div class="heroCopy">
-        <span class="pill">Official product surface</span>
+    <section class="study" aria-labelledby="productTitle">
+      <div class="copy">
+        <span class="pill">Study and advisor-desk chamber</span>
         <h1 id="productTitle">On Your Side AI</h1>
-        <h2>Artificial Agent Intelligence with the user still in charge.</h2>
+        <h2>Intelligence without override.</h2>
         <p class="thesis">
-          Intelligence without override. Support without replacement. Clean reads over noise.
+          The study does not replace the person at the desk. It clarifies the paper, the signal, the route, and the next move while the user remains in charge.
         </p>
         <p>
-          On Your Side AI is the public product face of Artificial Agent Intelligence. It helps organize signals, clarify decisions, route next steps, and return cleaner movement without replacing the user’s judgment, agency, authorship, or control.
+          On Your Side AI is the public product face of Artificial Agent Intelligence. It supports decisions, messages, documents, and plans without taking authorship, identity, judgment, or final approval away from the user.
         </p>
 
-        <div class="actions">
-          <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="#support-chamber">Open Russian Doll</a>
-          <a class="button" href="#capabilities">Capabilities</a>
-          <a class="button" href="#product-law">Product Law</a>
+        <div class="ruleGrid">
+          <div class="ruleCell"><small>Start</small><strong>Name the object.</strong></div>
+          <div class="ruleCell"><small>Method</small><strong>Clarify the route.</strong></div>
+          <div class="ruleCell"><small>Boundary</small><strong>User stays central.</strong></div>
         </div>
       </div>
 
-      <div class="signalOrb" aria-hidden="true">
-        <div class="signalLine north"></div>
-        <div class="signalLine east"></div>
-        <div class="signalLine south"></div>
-        <div class="signalLine west"></div>
-        <div class="signalCore"><span>On Your<br>Side<br>AAI</span></div>
-      </div>
-    </section>
+      <div class="deskMap" aria-label="On Your Side AI study desk map">
+        <div class="deskRing r1" aria-hidden="true"></div>
+        <div class="deskRing r2" aria-hidden="true"></div>
+        <div class="deskRing r3" aria-hidden="true"></div>
 
-    <section id="support-chamber" class="stage" aria-label="AAI Russian doll support chamber">
-      <div class="talk">
-        <span class="pill">Russian-doll support chamber</span>
-        <h2>Support opens one layer at a time.</h2>
-        <p>
-          The outside promise is simple: the user stays in charge. Each layer inside the doll shows how the product turns pressure into a usable next step.
-        </p>
-
-        <div class="dollControls" aria-label="AAI layer controls">
-          <button class="dollControl" type="button" data-layer="intake" data-active="true">Intake</button>
-          <button class="dollControl" type="button" data-layer="clarity" data-active="false">Clarity</button>
-          <button class="dollControl" type="button" data-layer="traversal" data-active="false">Traversal</button>
-          <button class="dollControl" type="button" data-layer="output" data-active="false">Output</button>
-          <button class="dollControl" type="button" data-layer="boundary" data-active="false">Boundary</button>
+        <div class="advisorCore" aria-hidden="true">
+          <span>User<br>Still<br>In Charge</span>
         </div>
 
-        <section class="talkCard">
-          <h2 id="talkTitle">Name the object.</h2>
-          <p id="talkCopy">
-            The first layer is intake. What is the user actually bringing in: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, a product, or a problem?
-          </p>
-        </section>
+        <button class="supportNode intake" type="button" data-layer="intake" data-active="true"><small>Outer</small><strong>Intake</strong></button>
+        <button class="supportNode signal" type="button" data-layer="signal" data-active="false"><small>Second</small><strong>Signal</strong></button>
+        <button class="supportNode route" type="button" data-layer="route" data-active="false"><small>Middle</small><strong>Route</strong></button>
+        <button class="supportNode output" type="button" data-layer="output" data-active="false"><small>Inner</small><strong>Output</strong></button>
+        <button class="supportNode boundary" type="button" data-layer="boundary" data-active="false"><small>Core Law</small><strong>Boundary</strong></button>
 
-        <section class="receipt">
-          <h3 class="receiptTitle">Support Receipt</h3>
-          <div class="rows" id="receiptRows">
-            <div class="row"><div class="rk">Layer</div><div class="rv">Intake</div></div>
-            <div class="row"><div class="rk">Question</div><div class="rv">What object is being handled?</div></div>
-            <div class="row"><div class="rk">Output</div><div class="rv">The task stops being vague.</div></div>
-          </div>
-        </section>
-      </div>
-
-      <div class="supportBoard">
-        <span class="pill">Real support lanes</span>
-
-        <div class="supportGrid" aria-label="AAI support lanes">
-          <article class="card">
-            <small>Messages</small>
-            <strong>Write the reply.</strong>
-            <span>Clarify what needs to be said without escalating the situation.</span>
+        <div class="readout" aria-live="polite">
+          <article class="readCard">
+            <h3 id="readTitle">Name the object.</h3>
+            <p id="readCopy">The first layer is intake. What is the user bringing to the desk: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, or a problem?</p>
           </article>
-
-          <article class="card">
-            <small>Decisions</small>
-            <strong>Compare the move.</strong>
-            <span>Show the options, risks, tradeoffs, and next clean step.</span>
-          </article>
-
-          <article class="card">
-            <small>Documents</small>
-            <strong>Read the surface.</strong>
-            <span>Extract what matters from contracts, notices, pages, and instructions.</span>
-          </article>
-
-          <article class="card">
-            <small>Execution</small>
-            <strong>Return usable output.</strong>
-            <span>Move from scattered input to something the user can act on.</span>
+          <article class="readCard receipt" id="readReceipt">
+            <span>LAYER=Intake</span>
+            <span>QUESTION=What object is being handled?</span>
+            <span>OUTPUT=The task stops being vague.</span>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="capabilities" class="panel" aria-labelledby="capabilitiesTitle">
-      <div class="panelHead">
-        <span class="pill">Capabilities</span>
-        <h2 id="capabilitiesTitle">Flagship intelligence, product-first.</h2>
-        <p>
-          The product reads the user’s pressure without taking command. It creates cleaner intake, clearer interpretation, better sequencing, and more usable return.
-        </p>
-      </div>
-
-      <div class="grid4">
-        <article class="card mint">
-          <small>Signal Reading</small>
-          <strong>Surface what matters.</strong>
-          <span>Relevant signals become easier to see instead of leaving the user buried in noise.</span>
-        </article>
-
-        <article class="card mint">
-          <small>Interpretive Clarity</small>
-          <strong>Organize the observable.</strong>
-          <span>Turn visible information into a clearer read that supports better decisions.</span>
-        </article>
-
-        <article class="card mint">
-          <small>Agency Support</small>
-          <strong>Keep the user central.</strong>
-          <span>Improve clarity and confidence while preserving authorship and final approval.</span>
-        </article>
-
-        <article class="card mint">
-          <small>Execution Guidance</small>
-          <strong>Move after the read.</strong>
-          <span>Support more reliable action once the decision surface becomes easier to understand.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="useTitle">
-      <div class="panelHead">
-        <span class="pill">Product use</span>
-        <h2 id="useTitle">Built for ordinary pressure.</h2>
-        <p>
-          This product becomes useful when life is moving fast and the user needs the next step made clearer.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card">
-          <small>Daily Life</small>
-          <strong>Bills, messages, appointments.</strong>
-          <span>Help the user understand what is due, what matters, and what should happen next.</span>
-        </article>
-
-        <article class="card">
-          <small>Work</small>
-          <strong>Tasks, emails, planning, follow-up.</strong>
-          <span>Convert scattered work pressure into a clearer sequence of action.</span>
-        </article>
-
-        <article class="card">
-          <small>Learning</small>
-          <strong>Questions, notes, practice, review.</strong>
-          <span>Support comprehension without replacing the learner’s effort or ownership.</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="product-law" class="panel" aria-labelledby="lawTitle">
-      <div class="panelHead">
-        <span class="pill">Product law</span>
-        <h2 id="lawTitle">The boundary is part of the product.</h2>
-        <p>
-          On Your Side AI must never imply false control, false authorship, identity replacement, or dependency as the goal.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card mint">
-          <small>Always Preserved</small>
-          <strong>User agency.</strong>
-          <ul class="miniList">
-            <li>User authorship</li>
-            <li>User identity</li>
-            <li>User control</li>
-            <li>User final approval</li>
-          </ul>
-        </article>
-
-        <article class="card mint">
-          <small>Never Claimed</small>
-          <strong>Override authority.</strong>
-          <ul class="miniList">
-            <li>Identity replacement</li>
-            <li>Command ownership</li>
-            <li>Hidden substitution</li>
-            <li>Dependency as the goal</li>
-          </ul>
-        </article>
-
-        <article class="card mint">
-          <small>Long Range</small>
-          <strong>Less dependence over time.</strong>
-          <span>The strongest outcome is cleaner alignment, better balance, and more reliable execution with less need for external support.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="faqTitle">
-      <div class="panelHead">
-        <span class="pill">FAQ</span>
-        <h2 id="faqTitle">Bounded answers for a bounded product.</h2>
-        <p>
-          These answers keep the product readable, agency-safe, and product-first.
-        </p>
-      </div>
-
-      <div class="faqList">
-        <article class="faqItem is-open">
-          <button class="faqToggle" type="button" aria-expanded="true">
-            <span>Is AAI in control?</span>
-            <span>+</span>
-          </button>
-          <div class="faqBody">
-            No. On Your Side AI supports the user without replacing the user. It has no override authority.
-          </div>
-        </article>
-
-        <article class="faqItem">
-          <button class="faqToggle" type="button" aria-expanded="false">
-            <span>What makes it a product?</span>
-            <span>+</span>
-          </button>
-          <div class="faqBody">
-            It has a clear identity, a bounded promise, and a direct user-facing value proposition: cleaner support, better clarity, and preserved agency.
-          </div>
-        </article>
-
-        <article class="faqItem">
-          <button class="faqToggle" type="button" aria-expanded="false">
-            <span>What is the long-range goal?</span>
-            <span>+</span>
-          </button>
-          <div class="faqBody">
-            Better alignment, better balance, and more reliable execution with less need for external support over time.
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panelHead">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">One destination. Many jump-off points.</h2>
-        <p>
-          This is the canonical destination for On Your Side AI · Artificial Agent Intelligence. The older /products/aai/ path should bridge here.
-        </p>
-      </div>
-
-      <div class="routeGrid">
-        <a class="route-card featured" href="/products/">
-          <small>Parent chamber</small>
-          <strong>Products</strong>
-          <span>Return to the source-waterfall Products page.</span>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Related product</small>
-          <strong>Five Flags · What’s My Scene?</strong>
-          <span>Scene reading, social context, flags, people, rooms, and live interaction.</span>
-        </a>
-
-        <a class="route-card" href="/products/education/">
-          <small>Related product</small>
-          <strong>ESL Traversal Learning</strong>
-          <span>English by movement, scene, context, confidence, and real-life use.</span>
-        </a>
-
-        <a class="route-card" href="/products/nutrition/">
-          <small>Related product</small>
-          <strong>Baseline Nutrition Systems</strong>
-          <span>Food, energy, discipline, daily structure, and practical human stability.</span>
-        </a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>On Your Side AI · Artificial Agent Intelligence · Canonical Product Destination</span>
-      <span>
-        <a href="/products/">Products</a> ·
-        <a href="/products/five-flags/">Five Flags</a> ·
-        <a href="/products/education/">Education</a> ·
-        <a href="/products/nutrition/">Nutrition</a>
-      </span>
-    </footer>
+    <nav class="routeRail" aria-label="Product route rail">
+      <a href="/products/">Products</a>
+      <a href="/products/five-flags/">Five Flags</a>
+      <a href="/products/education/">Education</a>
+      <a href="/products/nutrition/">Nutrition</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
   </main>
 
   <script>
@@ -1093,124 +663,52 @@
       const layers = {
         intake: {
           title: "Name the object.",
-          copy: "The first layer is intake. What is the user actually bringing in: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, a product, or a problem?",
-          rows: [
-            ["Layer", "Intake"],
-            ["Question", "What object is being handled?"],
-            ["Output", "The task stops being vague."]
-          ]
+          copy: "The first layer is intake. What is the user bringing to the desk: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, or a problem?",
+          receipt: ["LAYER=Intake","QUESTION=What object is being handled?","OUTPUT=The task stops being vague."]
         },
-        clarity: {
-          title: "Clarify the signal.",
-          copy: "The second layer separates signal from noise. What matters, what is urgent, what is missing, and what does the user need to see before moving?",
-          rows: [
-            ["Layer", "Clarity"],
-            ["Question", "What signal matters most?"],
-            ["Output", "The decision surface becomes readable."]
-          ]
+        signal: {
+          title: "Separate signal from noise.",
+          copy: "The second layer clarifies what matters, what is urgent, what is missing, and what should not be treated as the main issue.",
+          receipt: ["LAYER=Signal","QUESTION=What matters most?","OUTPUT=The decision surface becomes readable."]
         },
-        traversal: {
-          title: "Map the path.",
-          copy: "The third layer chooses the route. Reply, compare, summarize, draft, decide, wait, ask, verify, schedule, build, or stop. The path should fit the object.",
-          rows: [
-            ["Layer", "Traversal"],
-            ["Question", "What path should the task move through?"],
-            ["Output", "The next step becomes ordered."]
-          ]
+        route: {
+          title: "Map the route.",
+          copy: "The third layer chooses the path: reply, compare, summarize, draft, decide, wait, ask, verify, schedule, build, or stop.",
+          receipt: ["LAYER=Route","QUESTION=What path fits the object?","OUTPUT=The next step becomes ordered."]
         },
         output: {
           title: "Return usable output.",
-          copy: "The fourth layer returns something the user can use: a message, a plan, a summary, a route, a checklist, a draft, or a decision surface.",
-          rows: [
-            ["Layer", "Output"],
-            ["Question", "What can the user act on now?"],
-            ["Output", "Support becomes practical."]
-          ]
+          copy: "The fourth layer returns something practical: a message, a plan, a summary, a checklist, a draft, or a clean decision surface.",
+          receipt: ["LAYER=Output","QUESTION=What can the user act on now?","OUTPUT=Support becomes useful."]
         },
         boundary: {
           title: "Keep the user in charge.",
-          copy: "The deepest layer is the boundary. The product may clarify, structure, and support. It may not replace judgment, identity, authorship, or final approval.",
-          rows: [
-            ["Layer", "Boundary"],
-            ["Question", "Who owns the final decision?"],
-            ["Output", "The user remains central."]
-          ]
+          copy: "The deepest rule is the boundary. The product may clarify, structure, and support. It may not replace judgment, identity, authorship, or final approval.",
+          receipt: ["LAYER=Boundary","QUESTION=Who owns the final decision?","OUTPUT=The user remains central."]
         }
       };
 
-      const controls = Array.from(document.querySelectorAll(".dollControl"));
-      const title = document.getElementById("talkTitle");
-      const copy = document.getElementById("talkCopy");
-      const receipt = document.getElementById("receiptRows");
+      const nodes = Array.from(document.querySelectorAll(".supportNode"));
+      const readTitle = document.getElementById("readTitle");
+      const readCopy = document.getElementById("readCopy");
+      const readReceipt = document.getElementById("readReceipt");
 
-      function writeRows(rows) {
-        if (!receipt) return;
-        receipt.replaceChildren();
-
-        rows.forEach(([key, value]) => {
-          const row = document.createElement("div");
-          const rk = document.createElement("div");
-          const rv = document.createElement("div");
-
-          row.className = "row";
-          rk.className = "rk";
-          rv.className = "rv";
-
-          rk.textContent = key;
-          rv.textContent = value;
-
-          row.append(rk, rv);
-          receipt.appendChild(row);
-        });
-      }
-
-      function setLayer(key) {
+      function setLayer(key){
         const layer = layers[key] || layers.intake;
-
-        controls.forEach((control) => {
-          control.dataset.active = control.dataset.layer === key ? "true" : "false";
-        });
-
-        if (title) title.textContent = layer.title;
-        if (copy) copy.textContent = layer.copy;
-        writeRows(layer.rows);
-      }
-
-      controls.forEach((control) => {
-        control.addEventListener("click", () => {
-          setLayer(control.dataset.layer || "intake");
-        });
-      });
-
-      const faqToggles = Array.from(document.querySelectorAll(".faqToggle"));
-
-      function closeFaq(item, toggle) {
-        item.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-
-      function openFaq(item, toggle) {
-        item.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-
-      faqToggles.forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          const item = toggle.closest(".faqItem");
-          if (!item) return;
-
-          const isOpen = item.classList.contains("is-open");
-
-          faqToggles.forEach((otherToggle) => {
-            const otherItem = otherToggle.closest(".faqItem");
-            if (!otherItem || otherItem === item) return;
-            closeFaq(otherItem, otherToggle);
+        nodes.forEach((node) => node.dataset.active = node.dataset.layer === key ? "true" : "false");
+        if (readTitle) readTitle.textContent = layer.title;
+        if (readCopy) readCopy.textContent = layer.copy;
+        if (readReceipt) {
+          readReceipt.replaceChildren();
+          layer.receipt.forEach((line) => {
+            const span = document.createElement("span");
+            span.textContent = line;
+            readReceipt.appendChild(span);
           });
+        }
+      }
 
-          if (isOpen) closeFaq(item, toggle);
-          else openFaq(item, toggle);
-        });
-      });
+      nodes.forEach((node) => node.addEventListener("click", () => setLayer(node.dataset.layer || "intake")));
     })();
   </script>
 </body>

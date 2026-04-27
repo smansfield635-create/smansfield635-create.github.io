@@ -1,14 +1,235 @@
-const INSTRUMENT_META = Object.freeze({
+/* ==========================================================================
+   Diamond Gate Bridge · Instruments Asset Layer
+   GAUGES_B5_ASSET_LAYER_SPLIT
+   PATH: /assets/instruments.js
+
+   PURPOSE:
+   - Preserve the existing page-neutral instrument receipt API.
+   - Add reusable Gauges dashboard data, semantics, colors, routes, and render helpers.
+   - Move Gauges toward an asset/instrument source instead of page-local duplication.
+   - Improve semantic spacing for screen readers, copied text, and future page consumers.
+
+   BOUNDARY:
+   - This file does not mutate DOM.
+   - This file does not own page layout.
+   - This file does not use GraphicBox.
+   - This file does not use generated images.
+   - This file exposes data and render helpers only.
+========================================================================== */
+
+const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G1_EXTERNAL_EXPRESSION",
-  contract: "INSTRUMENT_CONTRACT_G1",
-  role: "diagnostic_shaping_only",
+  version: "G2_GAUGES_B5_ASSET_LAYER_SPLIT",
+  contract: "INSTRUMENT_CONTRACT_G2",
+  role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
   sourceOfTruth: false,
   mutatesState: false,
   mutatesDOM: false,
   platformOwned: true,
   pageNeutral: true
+});
+
+export const GAUGES_META = deepFreeze({
+  name: "gauges",
+  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B5",
+  role: "site_health_instrument_contract",
+  readMode: "compact_engineer_dashboard_plus_ted_talk",
+  activePageGoldRule: true,
+  pageRelativeGold: "gauges",
+  operatingRule: "speed_efficiency_optimum_nature"
+});
+
+export const GAUGE_ROUTES = deepFreeze({
+  compass: "/",
+  door: "/door/",
+  products: "/products/",
+  gauges: "/gauges/",
+  showroom: "/showroom/",
+  vault: "/products/archcoin/",
+  upperRoom: "/big-laugh/upper-room/"
+});
+
+export const GAUGE_COLOR_STATES = deepFreeze({
+  healthy: {
+    label: "Healthy",
+    cssVar: "--green",
+    tone: "#93efbd",
+    meaning: "Working cleanly."
+  },
+  active: {
+    label: "Active",
+    cssVar: "--gold",
+    tone: "#ffd98a",
+    meaning: "Current page or priority instrument."
+  },
+  proof: {
+    label: "Proof",
+    cssVar: "--blue",
+    tone: "#8ec5ff",
+    meaning: "Stable signal requiring live confirmation."
+  },
+  watch: {
+    label: "Watch",
+    cssVar: "--yellow",
+    tone: "#ffcf7a",
+    meaning: "Strong concept, needs inspection."
+  },
+  break: {
+    label: "Break",
+    cssVar: "--red",
+    tone: "#ff6f78",
+    meaning: "Urgent failure or broken path."
+  },
+  complex: {
+    label: "Complex",
+    cssVar: "--purple",
+    tone: "#caa8ff",
+    meaning: "Valid but interpretation-heavy."
+  }
+});
+
+export const GAUGE_READINGS = deepFreeze([
+  {
+    id: "G01",
+    key: "routeIntegrity",
+    title: "Route Integrity",
+    value: 96,
+    state: "active",
+    label: "Optimal",
+    needle: 78,
+    meaning: "Primary route movement is clean and fast.",
+    receipt: ["ROUTE_INTEGRITY=96", "STATUS=ACTIVE_PRIORITY"]
+  },
+  {
+    id: "G02",
+    key: "backlinkIntegrity",
+    title: "Backlink Integrity",
+    value: 91,
+    state: "healthy",
+    label: "Healthy",
+    needle: 66,
+    meaning: "Canonical product destinations are mostly unified.",
+    receipt: ["BACKLINK_CANONICALITY=91", "RULE=ONE_DESTINATION"]
+  },
+  {
+    id: "G03",
+    key: "renderStability",
+    title: "Render Stability",
+    value: 88,
+    state: "proof",
+    label: "Proof",
+    needle: 58,
+    meaning: "Page surfaces are coherent; screenshots still matter.",
+    receipt: ["RENDER_STABILITY=88", "NEXT=LIVE_RENDER_INSPECTION"]
+  },
+  {
+    id: "G04",
+    key: "productConnectivity",
+    title: "Product Connectivity",
+    value: 94,
+    state: "healthy",
+    label: "Locked",
+    needle: 70,
+    meaning: "Products source chamber coordinates the product rooms.",
+    receipt: ["PRODUCT_DESTINATION_LOCK=94", "ROOM=SOURCE_CHAMBER"]
+  },
+  {
+    id: "G05",
+    key: "archcoinVaultHealth",
+    title: "Vault / ARCHCOIN",
+    value: 82,
+    state: "watch",
+    label: "Watch",
+    needle: 42,
+    meaning: "Vault is strong; final live render needs confirmation.",
+    receipt: ["ARCHCOIN_VAULT_HEALTH=82", "WATCH=JS_RUNTIME_RENDER"]
+  },
+  {
+    id: "G06",
+    key: "showroomHealth",
+    title: "Showroom Health",
+    value: 86,
+    state: "proof",
+    label: "Proof",
+    needle: 52,
+    meaning: "Showroom remains the public proof window.",
+    receipt: ["SHOWROOM_HEALTH=86", "ROLE=PROOF_WINDOW"]
+  },
+  {
+    id: "G07",
+    key: "upperRoomEvents",
+    title: "Upper Room Events",
+    value: 77,
+    state: "complex",
+    label: "Complex",
+    needle: 32,
+    meaning: "Event logic is rich; public pathway should stay simple.",
+    receipt: ["EVENT_HEALTH=77", "INTERPRETATION_REQUIRED=TRUE"]
+  },
+  {
+    id: "G08",
+    key: "systemStability",
+    title: "System Stability",
+    value: 90,
+    state: "healthy",
+    label: "Stable",
+    needle: 62,
+    meaning: "Room identities, route law, and products are aligned.",
+    receipt: ["SYSTEM_STABILITY=90", "STATE=COHERENT"]
+  }
+]);
+
+export const GAUGE_TED_READ = deepFreeze({
+  eyebrow: "TED Talk read",
+  title: "What the gauges mean.",
+  thesis:
+    "The Manor is healthy when each room has one clear destination, each backlink returns correctly, each product opens into its proper chamber, and each public surface tells the visitor where they are standing.",
+  support:
+    "The engineer wall gives the readings. This side translates those readings into the next practical move.",
+  cards: [
+    {
+      state: "healthy",
+      eyebrow: "Healthy",
+      title: "The route law is working.",
+      copy:
+        "Products is behaving like a source chamber. The main product paths are no longer scattered across competing bodies."
+    },
+    {
+      state: "proof",
+      eyebrow: "Proof",
+      title: "The public rooms are becoming places.",
+      copy:
+        "Showroom, Compass, Products, AAI, ESL, Nutrition, and ARCHCOIN now carry stronger physical identities inside the Manor."
+    },
+    {
+      state: "active",
+      eyebrow: "Priority",
+      title: "Gauges is useful, not decorative.",
+      copy:
+        "This page shows what is connected, what is stable, what needs inspection, and what should be patched next."
+    },
+    {
+      state: "complex",
+      eyebrow: "Complex",
+      title: "Some rooms need interpretation.",
+      copy:
+        "Upper Room and ARCHCOIN contain more moving parts. They should be judged by live render, not by concept alone."
+    }
+  ],
+  nextAction: {
+    title: "Next practical move",
+    copy:
+      "Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.",
+    receipt: [
+      "GAUGES_TRUE_INSTRUMENT_ROOM_B5=ACTIVE",
+      "ROUTE_INTEGRITY=96",
+      "BACKLINK_CANONICALITY=91",
+      "RENDER_STABILITY=88",
+      "PRODUCT_DESTINATION_LOCK=94",
+      "NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
+    ]
+  }
 });
 
 function deepFreeze(value) {
@@ -41,17 +262,22 @@ function stringifyValue(value) {
   if (value === null || value === undefined) return "—";
   if (typeof value === "boolean") return value ? "true" : "false";
   if (typeof value === "number") return Number.isFinite(value) ? String(value) : "—";
-  if (typeof value === "string") return value.trim().length ? value : "—";
+  if (typeof value === "string") return value.trim().length ? value.trim() : "—";
   return "—";
 }
 
 function escapeHtml(value) {
   return String(value ?? "—")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function clampNumber(value, min, max, fallback) {
+  const number = Number.isFinite(value) ? value : fallback;
+  return Math.min(max, Math.max(min, number));
 }
 
 function pickProjectionObject(render) {
@@ -93,6 +319,7 @@ function classifyState(runtime, render) {
     normalizeObject(normalizeObject(runtime).traversalStatus).action,
     "idle"
   ).toUpperCase();
+
   const boundary = normalizeBoundary(runtime);
   const runtimeProjection = normalizeRuntimeProjection(runtime);
   const renderProjection = normalizeRenderProjection(render);
@@ -106,6 +333,7 @@ function classifyState(runtime, render) {
 
 function normalizeForceVector(runtime) {
   const source = normalizeObject(runtime).forces;
+
   return {
     N: Number.isFinite(source.N) ? source.N : 0,
     E: Number.isFinite(source.E) ? source.E : 0,
@@ -127,15 +355,9 @@ function computeSignalMetrics(runtime, render) {
   const B = forceVector.B;
 
   const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
-  const fragmentWeight = Math.min(
-    1,
-    (Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B)) / 20
-  );
+  const fragmentWeight = Math.min(1, (Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B)) / 20);
   const directionalWeight = Math.min(1, (Math.abs(E - W) + Math.abs(N - S) + Math.abs(B)) / 10);
-  const directionalContrast = Math.min(
-    1,
-    Math.max(Math.abs(E - W), Math.abs(N - S), Math.abs(B)) / 10
-  );
+  const directionalContrast = Math.min(1, Math.max(Math.abs(E - W), Math.abs(N - S), Math.abs(B)) / 10);
 
   return deepFreeze({
     magnitude: stableRound(magnitude, 6),
@@ -260,11 +482,46 @@ function buildLifecycle(options = {}) {
   });
 }
 
+function normalizeGaugeReading(reading) {
+  const safeReading = normalizeObject(reading);
+  const state = normalizeString(safeReading.state, "healthy").toLowerCase();
+  const colorState = GAUGE_COLOR_STATES[state] ? state : "healthy";
+
+  return deepFreeze({
+    id: normalizeString(safeReading.id, "G00"),
+    key: normalizeString(safeReading.key, "unknown"),
+    title: normalizeString(safeReading.title, "Unnamed Gauge"),
+    value: clampNumber(Number(safeReading.value), 0, 100, 0),
+    state: colorState,
+    label: normalizeString(safeReading.label, GAUGE_COLOR_STATES[colorState].label),
+    needle: clampNumber(Number(safeReading.needle), -48, 86, 0),
+    meaning: normalizeString(safeReading.meaning, "No gauge meaning supplied."),
+    receipt: Array.isArray(safeReading.receipt)
+      ? deepFreeze(safeReading.receipt.map((line) => normalizeString(line)))
+      : deepFreeze([])
+  });
+}
+
+function mergeGaugeReadings(overrides = {}) {
+  const safeOverrides = normalizeObject(overrides);
+
+  return deepFreeze(
+    GAUGE_READINGS.map((reading) => {
+      const override = normalizeObject(safeOverrides[reading.key]);
+
+      return normalizeGaugeReading({
+        ...reading,
+        ...override,
+        receipt: Array.isArray(override.receipt) ? override.receipt : reading.receipt
+      });
+    })
+  );
+}
+
 export function buildInstrumentReceipt(options = {}) {
   const safeOptions = normalizeObject(options);
   const runtime = normalizeObject(safeOptions.runtimeState);
   const render = normalizeObject(safeOptions.renderState);
-
   const classifiedState = classifyState(runtime, render);
   const summary = buildSummary(runtime, render, classifiedState);
   const diagnostics = buildDiagnostics(runtime, render);
@@ -283,9 +540,12 @@ export function buildInstrumentReceipt(options = {}) {
         "TERRAIN=" + stringifyValue(diagnostics.terrain) + " | BIOME=" + stringifyValue(diagnostics.biome),
         "TRAVERSAL=" + stringifyValue(diagnostics.traversal) + " | RECEIPT=" + stringifyValue(diagnostics.receipt),
         "SIGNAL=(" +
-          stringifyValue(diagnostics.signal.fragmentWeight) + "," +
-          stringifyValue(diagnostics.signal.directionalWeight) + "," +
-          stringifyValue(diagnostics.signal.directionalContrast) + ")"
+          stringifyValue(diagnostics.signal.fragmentWeight) +
+          "," +
+          stringifyValue(diagnostics.signal.directionalWeight) +
+          "," +
+          stringifyValue(diagnostics.signal.directionalContrast) +
+          ")"
       ])
     },
     diagnosticsPayload: diagnostics,
@@ -315,20 +575,38 @@ export function renderPanelHTML(packet) {
     ["Receipt", stringifyValue(diagnostics.receipt)],
     ["Kernel", "(" + stringifyValue(runtimeMeta.i) + ", " + stringifyValue(runtimeMeta.j) + ")"],
     ["Dense", "(" + stringifyValue(runtimeMeta.x) + ", " + stringifyValue(runtimeMeta.y) + ")"],
-    ["Signal", "(" + stringifyValue(signal.fragmentWeight) + ", " + stringifyValue(signal.directionalWeight) + ", " + stringifyValue(signal.directionalContrast) + ")"]
+    [
+      "Signal",
+      "(" +
+        stringifyValue(signal.fragmentWeight) +
+        ", " +
+        stringifyValue(signal.directionalWeight) +
+        ", " +
+        stringifyValue(signal.directionalContrast) +
+        ")"
+    ]
   ];
 
   return [
-    '<section class="instrument-panel">',
-    '<header class="instrument-panel__head">',
-    '<div class="instrument-panel__eyebrow">Instruments</div>',
+    '<section class="instrument-panel" aria-label="Instrument receipt">',
+    '<p class="instrument-panel__eyebrow">Instruments</p>',
     '<h2 class="instrument-panel__title">' + escapeHtml(stringifyValue(instrument.classifiedState)) + "</h2>",
-    "</header>",
-    '<div class="instrument-panel__rows">',
-    rows.map(function (pair) {
-      return '<div class="instrument-row"><div class="instrument-row__k">' + escapeHtml(pair[0]) + '</div><div class="instrument-row__v">' + escapeHtml(pair[1]) + "</div></div>";
-    }).join(""),
-    "</div>",
+    '<dl class="instrument-panel__rows">',
+    rows
+      .map(function (pair) {
+        return (
+          '<div class="instrument-panel__row">' +
+          "<dt>" +
+          escapeHtml(pair[0]) +
+          "</dt>" +
+          "<dd>" +
+          escapeHtml(pair[1]) +
+          "</dd>" +
+          "</div>"
+        );
+      })
+      .join(""),
+    "</dl>",
     "</section>"
   ].join("");
 }
@@ -356,8 +634,163 @@ export function renderPanelText(packet) {
   ].join("\n");
 }
 
+export function buildGaugeDashboardPacket(options = {}) {
+  const safeOptions = normalizeObject(options);
+  const readings = mergeGaugeReadings(safeOptions.overrides);
+  const activePage = normalizeString(safeOptions.activePage, "gauges").toLowerCase();
+
+  const average = stableRound(
+    readings.reduce((sum, item) => sum + item.value, 0) / Math.max(readings.length, 1),
+    2
+  );
+
+  const watchItems = readings.filter((item) => item.state === "watch" || item.state === "complex" || item.state === "break");
+
+  return deepFreeze({
+    meta: GAUGES_META,
+    routes: GAUGE_ROUTES,
+    colorStates: GAUGE_COLOR_STATES,
+    activePage,
+    readings,
+    tedRead: GAUGE_TED_READ,
+    summary: {
+      average,
+      watchCount: watchItems.length,
+      watchKeys: deepFreeze(watchItems.map((item) => item.key)),
+      line:
+        "GAUGES_AVERAGE=" +
+        stringifyValue(average) +
+        " | WATCH_COUNT=" +
+        stringifyValue(watchItems.length) +
+        " | ACTIVE_PAGE=" +
+        activePage
+    }
+  });
+}
+
+export function renderGaugeCardHTML(reading) {
+  const gauge = normalizeGaugeReading(reading);
+  const color = GAUGE_COLOR_STATES[gauge.state] || GAUGE_COLOR_STATES.healthy;
+  const receiptLines = gauge.receipt.map((line) => '<span>' + escapeHtml(line) + "</span>").join("\n");
+
+  return [
+    '<article class="gaugeCard' + (gauge.state === "active" ? " priority" : "") + '"',
+    ' style="--tone:' + escapeHtml(color.cssVar) + ';--needle:' + escapeHtml(String(gauge.needle)) + 'deg;"',
+    ' aria-label="' + escapeHtml(gauge.id + " " + gauge.title + " " + gauge.value + " " + gauge.label) + '">',
+    '<div class="gaugeTop">',
+    '<span class="gaugeName">',
+    '<small>' + escapeHtml(gauge.id) + '</small>',
+    '<strong>' + escapeHtml(gauge.title) + '</strong>',
+    '</span>',
+    '<span class="gaugeValue" aria-label="Value ' + escapeHtml(String(gauge.value)) + '">' + escapeHtml(gauge.value) + '</span>',
+    '</div>',
+    '<div class="dial" aria-hidden="true">',
+    '<span class="needle"></span>',
+    '<span class="dialRead"><strong>' + escapeHtml(gauge.value) + '</strong><small>' + escapeHtml(gauge.label) + '</small></span>',
+    '</div>',
+    '<p class="gaugeMeaning">' + escapeHtml(gauge.meaning) + '</p>',
+    '<div class="telemetry" aria-label="' + escapeHtml(gauge.title + " telemetry") + '">',
+    receiptLines,
+    '</div>',
+    '</article>'
+  ].join("\n");
+}
+
+export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
+  const states = normalizeObject(colorStates);
+
+  return Object.keys(states)
+    .map((key) => {
+      const item = states[key];
+      return (
+        '<span class="legendItem">' +
+        '<span class="dot" style="--tone:' +
+        escapeHtml(item.cssVar) +
+        '" aria-hidden="true"></span>' +
+        '<span>' +
+        escapeHtml(item.label) +
+        "</span>" +
+        "</span>"
+      );
+    })
+    .join("\n");
+}
+
+export function renderGaugeTedHTML(tedRead = GAUGE_TED_READ) {
+  const safeTed = normalizeObject(tedRead);
+  const cards = Array.isArray(safeTed.cards) ? safeTed.cards : [];
+  const nextAction = normalizeObject(safeTed.nextAction);
+
+  return [
+    '<div class="tedLead">',
+    '<span class="pill">' + escapeHtml(normalizeString(safeTed.eyebrow, "TED Talk read")) + '</span>',
+    '<h1 id="tedTitle">' + escapeHtml(normalizeString(safeTed.title, "What the gauges mean.")) + '</h1>',
+    '<h2 class="thesis">' + escapeHtml(normalizeString(safeTed.thesis)) + '</h2>',
+    '<p>' + escapeHtml(normalizeString(safeTed.support)) + '</p>',
+    '</div>',
+    '<div class="plainCards">',
+    cards
+      .map((card) => {
+        const safeCard = normalizeObject(card);
+        const state = normalizeString(safeCard.state, "").toLowerCase();
+        const className = state ? "plainCard " + escapeHtml(state) : "plainCard";
+
+        return (
+          '<article class="' +
+          className +
+          '">' +
+          '<small>' +
+          escapeHtml(normalizeString(safeCard.eyebrow)) +
+          '</small>' +
+          '<strong>' +
+          escapeHtml(normalizeString(safeCard.title)) +
+          '</strong>' +
+          '<p>' +
+          escapeHtml(normalizeString(safeCard.copy)) +
+          '</p>' +
+          '</article>'
+        );
+      })
+      .join("\n"),
+    '</div>',
+    '<section class="nextAction" aria-label="Next practical action">',
+    '<h3>' + escapeHtml(normalizeString(nextAction.title, "Next practical move")) + '</h3>',
+    '<p>' + escapeHtml(normalizeString(nextAction.copy)) + '</p>',
+    '<div class="receipt">',
+    (Array.isArray(nextAction.receipt) ? nextAction.receipt : [])
+      .map((line) => '<span>' + escapeHtml(line) + '</span>')
+      .join("\n"),
+    '</div>',
+    '</section>'
+  ].join("\n");
+}
+
+export function renderGaugePlainText(packet = buildGaugeDashboardPacket()) {
+  const safePacket = normalizeObject(packet);
+  const readings = Array.isArray(safePacket.readings) ? safePacket.readings : [];
+
+  const lines = [
+    "GAUGES=" + normalizeString(normalizeObject(safePacket.meta).version, "UNKNOWN"),
+    normalizeString(normalizeObject(safePacket.summary).line, "NO_SUMMARY")
+  ];
+
+  readings.forEach((reading) => {
+    const gauge = normalizeGaugeReading(reading);
+    lines.push("");
+    lines.push(gauge.id + " " + gauge.title);
+    lines.push("VALUE=" + gauge.value);
+    lines.push("STATE=" + gauge.state.toUpperCase());
+    lines.push("LABEL=" + gauge.label.toUpperCase());
+    lines.push("MEANING=" + gauge.meaning);
+    gauge.receipt.forEach((receiptLine) => lines.push(receiptLine));
+  });
+
+  return lines.join("\n");
+}
+
 export function createInstruments() {
   let last = null;
+  let lastGaugeDashboard = null;
 
   const api = {
     meta: INSTRUMENT_META,
@@ -373,11 +806,35 @@ export function createInstruments() {
 
     dispose() {
       last = null;
+      lastGaugeDashboard = null;
     },
 
     buildInstrumentReceipt,
     renderPanelHTML,
-    renderPanelText
+    renderPanelText,
+
+    gauges: {
+      meta: GAUGES_META,
+      routes: GAUGE_ROUTES,
+      colorStates: GAUGE_COLOR_STATES,
+      readings: GAUGE_READINGS,
+      tedRead: GAUGE_TED_READ,
+
+      update(options) {
+        lastGaugeDashboard = buildGaugeDashboardPacket(options || {});
+        return lastGaugeDashboard;
+      },
+
+      read() {
+        return lastGaugeDashboard;
+      },
+
+      buildGaugeDashboardPacket,
+      renderGaugeCardHTML,
+      renderGaugeLegendHTML,
+      renderGaugeTedHTML,
+      renderGaugePlainText
+    }
   };
 
   return Object.freeze(api);

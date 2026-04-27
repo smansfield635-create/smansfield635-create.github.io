@@ -1,20 +1,16 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B17 · QUAD CONTRACT / CLEAN EARTH STAGE
+     SHOWROOM · GENERATION 2 · EARTH/SUN DISPOSITION B23
 
      CONTRACT:
-       - Showroom owns layout only.
-       - Earth is the object.
-       - No showroom-level Earth rings.
-       - No circular instrument field.
-       - No orbit trajectory.
-       - No radial Earth-panel frame.
-       - No axis guide.
-       - Preserve Earth Asset B5 path.
-       - Preserve runtime zoom controls.
-       - Preserve drag, spin, reset, pause.
-       - Preserve navigation.
+       - Preserve Earth clean-stage success.
+       - Preserve Earth Asset B5 renderer/runtime path.
+       - Preserve Earth as the visual center.
+       - Move distant Sun to the Earth-light side.
+       - Sun becomes dispositionally coherent with Earth shadow.
+       - Sun stays background/support only.
        - No graphics box.
+       - No ring frame.
        - No active Sun runtime on showroom.
 -->
 
@@ -25,7 +21,7 @@
   <title>Diamond Gate Bridge — Showroom</title>
   <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-quad-no-rings-b17"/>
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-sun-disposition-b23"/>
 
   <style>
     *{box-sizing:border-box}
@@ -93,7 +89,9 @@
       padding:clamp(22px,5vw,42px);
       display:grid;
       gap:24px;
-      background:linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+      background:
+        radial-gradient(ellipse at 12% 28%,rgba(255,204,116,.055),transparent 30rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
     }
 
     .distanceField{
@@ -106,18 +104,33 @@
 
     .distantSun{
       position:absolute;
-      right:-9%;
-      top:10%;
-      width:min(36vw,270px);
+      left:-18%;
+      top:24%;
+      right:auto;
+      width:min(34vw,245px);
       aspect-ratio:1;
       border-radius:999px;
-      opacity:.22;
+      opacity:.18;
       filter:
-        drop-shadow(0 0 26px rgba(255,178,54,.12))
-        drop-shadow(0 0 90px rgba(255,122,28,.08));
+        drop-shadow(0 0 28px rgba(255,178,54,.13))
+        drop-shadow(0 0 110px rgba(255,122,28,.09));
       background:
-        radial-gradient(circle at 38% 34%,rgba(255,252,210,.50),transparent 11%),
-        radial-gradient(circle at 48% 47%,rgba(255,210,72,.70) 0 20%,rgba(237,101,25,.70) 46%,rgba(110,28,10,.78) 76%,rgba(20,4,2,.90) 100%);
+        radial-gradient(circle at 38% 34%,rgba(255,252,210,.52),transparent 11%),
+        radial-gradient(circle at 48% 47%,rgba(255,210,72,.76) 0 20%,rgba(237,101,25,.74) 46%,rgba(110,28,10,.82) 76%,rgba(20,4,2,.92) 100%);
+    }
+
+    .distanceField::after{
+      content:"";
+      position:absolute;
+      left:-22%;
+      top:12%;
+      width:min(62vw,520px);
+      aspect-ratio:1;
+      border-radius:999px;
+      opacity:.20;
+      background:
+        radial-gradient(circle,rgba(255,206,118,.12),transparent 62%);
+      filter:blur(20px);
     }
 
     .copy{
@@ -377,9 +390,17 @@
       }
 
       .distantSun{
-        width:min(44vw,220px);
-        right:-16%;
-        top:20%;
+        left:-30%;
+        top:30%;
+        width:min(56vw,230px);
+        opacity:.16;
+      }
+
+      .distanceField::after{
+        left:-38%;
+        top:18%;
+        width:min(86vw,420px);
+        opacity:.18;
       }
     }
 
@@ -395,20 +416,21 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-spine-consumer-b17-quad-clean-earth-stage"
+    data-showroom-version="generation-2-earth-sun-disposition-b23"
     data-earth-center="true"
-    data-earth-renderer="earth-asset-b5-quad-no-rings"
+    data-earth-renderer="earth-asset-b5-orbital-shadow"
     data-earth-clouds="earth-asset-b5-real-cloud-map"
     data-earth-controls="runtime-zoom-panel"
     data-earth-fit-contract="earth-only-no-external-rings"
-    data-sun-role="distant-css-support-only"
+    data-sun-role="distant-css-light-source-only"
+    data-sun-disposition="upper-left-shadow-coherent"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="quad-earth-contract-b17"
+    data-brain-route="earth-sun-disposition-b23"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
-        <div class="distantSun" data-sun-role="distant-css-support-only"></div>
+        <div class="distantSun" data-sun-role="distant-css-light-source-only"></div>
       </div>
 
       <div class="copy">
@@ -421,7 +443,7 @@
         <h1>The Earth Room</h1>
         <p class="expression">Orbital Earth.</p>
         <p class="lede">
-          Earth is the center of the showroom. The stage does not draw a circular frame around the planet.
+          Earth is the center of the showroom. The distant Sun now sits on the light-source side so the planet’s shadow and the showroom universe agree.
         </p>
       </div>
 
@@ -450,7 +472,7 @@
     </nav>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-quad-no-rings-b17" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-quad-no-rings-b17" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=earth-sun-disposition-b23" defer></script>
+  <script src="/runtime/earth_asset_runtime.js?v=earth-sun-disposition-b23" defer></script>
 </body>
 </html>

@@ -1,36 +1,37 @@
 {
-  "asset_id": "earth-asset-b1",
+  "asset_id": "earth-asset-b3",
   "asset_name": "Diamond Gate Bridge Earth Asset Spine",
   "generation": "Generation 2",
   "contract": "real-opaque-outer-space-earth",
   "status": "active",
   "visual_target": {
     "profile": "real-opaque-outer-space-earth",
-    "description": "A realistic Earth instrument surface viewed from space, using real surface texture, real cloud map, spherical wrap, axial tilt, atmosphere rim, and controlled spin.",
+    "description": "Earth is rendered from local same-origin JPG assets through a single canvas spherical-wrap renderer with runtime-owned zoom controls.",
     "required": [
-      "real Earth surface texture",
-      "real cloud map",
-      "spherical wrap",
+      "local Earth surface JPG",
+      "local Earth cloud JPG",
+      "single canvas orthographic spherical wrap",
       "limb compression",
       "23.44 degree axis",
       "auto spin",
       "manual drag spin",
+      "runtime zoom controls",
       "atmospheric rim",
       "terminator shading",
       "Americas-facing default orientation"
     ],
     "forbidden": [
+      "missing local cloud JPG",
+      "remote asset dependency as primary source",
       "flat pasted country texture",
-      "procedural cartoon clouds",
-      "symbolic metaverse globe",
-      "CSS-only final Earth",
-      "generated-image dependency",
-      "active Sun runtime ownership"
+      "procedural final Earth",
+      "old showroom view bubbles",
+      "active Sun runtime ownership on showroom"
     ]
   },
   "paths": {
     "surface": "/assets/earth/earth_surface_2048.jpg",
-    "clouds": "/assets/earth/earth_clouds_2048.png",
+    "clouds": "/assets/earth/earth_clouds_2048.jpg",
     "fallback_svg": "/assets/earth/earth.svg",
     "material_css": "/assets/earth/earth_material.css",
     "canvas_js": "/assets/earth/earth_canvas.js",
@@ -47,18 +48,27 @@
       "desktop_dpr_cap": 2,
       "slice_count": 220
     },
+    "zoom": {
+      "default_zoom": 1,
+      "min_zoom": 0.72,
+      "max_zoom": 1.38,
+      "zoom_step": 0.08
+    },
     "controls": {
       "auto_spin": true,
       "manual_drag": true,
+      "runtime_zoom_panel": true,
       "touch_action": "none"
     }
   },
   "diagnostics": {
     "required_mount": "[data-dgb-earth-mount]",
     "runtime_global": "window.DGBEarthAsset",
+    "canvas_global": "window.DGBEarthCanvas",
     "canvas_selector": "[data-dgb-earth-canvas]",
+    "control_selector": "[data-dgb-earth-controls]",
     "status_attribute": "data-earth-runtime-status",
     "version_attribute": "data-earth-asset-id"
   },
-  "cache_version": "earth-asset-b1"
+  "cache_version": "earth-asset-b3"
 }

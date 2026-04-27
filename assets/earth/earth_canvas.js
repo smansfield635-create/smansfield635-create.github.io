@@ -1,12 +1,17 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B21 · FULL GLOBE / INTERNAL SHADOW
+   EARTH ASSET SPINE · CANVAS B22 · PHOTOGRAPHIC ORBITAL SHADOW
 
    CONTRACT:
-     - Render Earth as a complete dimensional globe.
-     - Preserve the orbital/satellite surface read.
-     - Restore full visible globe silhouette.
-     - Add internal planetary shadow and limb depth.
-     - Do not reintroduce external rings, atmosphere shells, strokes, or halos.
+     - Preserve dimensional land wrapping from the current renderer.
+     - Restore legacy-style photographic orbital shadow.
+     - Treat the old “ring” insight correctly: natural limb glow is allowed only when it behaves like light.
+     - No external rings.
+     - No CSS atmosphere shell.
+     - No final circular stroke.
+     - No detached crescent overlay.
+     - No full outline glow.
+     - Shadow where there is shadow.
+     - Light where there is light.
      - Preserve local B5 JPG paths.
      - Preserve runtime API.
      - Preserve zoom, drag, spin, reset, pause.
@@ -20,7 +25,7 @@
   var TAU = Math.PI * 2;
 
   var DEFAULTS = {
-    assetId: "earth-asset-b5-full-globe-shadow-b21",
+    assetId: "earth-asset-b5-orbital-shadow-b22",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
@@ -50,10 +55,13 @@
     cloudAlpha: 0,
     edgeFeatherPx: 0.9,
 
-    ambientLight: 0.28,
-    diffuseLight: 0.86,
-    limbShadow: 0.32,
-    nightShadow: 0.38
+    ambientLight: 0.16,
+    diffuseLight: 0.98,
+    nightShadow: 0.68,
+    limbShadow: 0.42,
+    bottomShadow: 0.12,
+    litLimbGlow: 0.16,
+    oceanDepth: 0.08
   };
 
   function clamp(value, min, max) {
@@ -120,7 +128,7 @@
         });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b21-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b22-" + Date.now();
     });
   }
 
@@ -242,11 +250,12 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b21-full-globe-shadow");
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b22-photographic-orbital-shadow");
       mount.setAttribute("data-earth-projection", "full-globe-inverse-orthographic");
       mount.setAttribute("data-earth-lattice-scope", "256");
       mount.setAttribute("data-earth-camera-mode", "full-globe-orbital");
-      mount.setAttribute("data-earth-shadow-mode", "internal-planetary-shadow");
+      mount.setAttribute("data-earth-shadow-mode", "photographic-orbital-shadow");
+      mount.setAttribute("data-earth-glow-mode", "natural-lit-limb-only");
       mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
     }
 
@@ -306,7 +315,7 @@
       var maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
       var minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
       var maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
-      var light = normalize3(-0.58, 0.34, 0.74);
+      var light = normalize3(-0.60, 0.36, 0.72);
       var x;
       var y;
       var nx;
@@ -330,8 +339,8 @@
           nz = Math.sqrt(Math.max(0, 1 - d2));
           diffuse = clamp(nx * light.x + ny * light.y + nz * light.z, 0, 1);
           limb = clamp(nz, 0, 1);
-          shade = 0.28 + diffuse * 0.70;
-          shade *= 0.72 + limb * 0.28;
+          shade = 0.18 + Math.pow(diffuse, 0.92) * 0.86;
+          shade *= 0.70 + limb * 0.30;
 
           i = (y * geo.width + x) * 4;
           data[i] = 15 * shade;
@@ -374,10 +383,13 @@
       var cloud;
       var i;
       var diffuse;
+      var lit;
       var limb;
-      var terminator;
-      var sideShadow;
-      var bottomShadow;
+      var terminatorDark;
+      var limbDark;
+      var lowerDark;
+      var oceanDark;
+      var naturalGlow;
       var shade;
       var edgePx;
       var alpha;
@@ -397,7 +409,7 @@
         return;
       }
 
-      light = normalize3(-0.58, 0.34, 0.74);
+      light = normalize3(-0.60, 0.36, 0.72);
 
       theta = rotation * TAU;
       sinT = Math.sin(theta);
@@ -448,22 +460,35 @@
           }
 
           diffuse = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
+          lit = smoothstep(0.03, 0.82, diffuse);
           limb = clamp(nz, 0, 1);
 
-          terminator = smoothstep(0.04, 0.82, diffuse);
-          sideShadow = smoothstep(0.18, 0.92, d) * (1 - limb);
-          bottomShadow = smoothstep(0.08, 0.88, -sy);
+          terminatorDark = 1 - lit;
+          limbDark = smoothstep(0.58, 1.0, d) * (1 - smoothstep(0.18, 0.92, diffuse));
+          lowerDark = smoothstep(0.08, 0.92, -sy) * 0.55;
 
-          shade = config.ambientLight + config.diffuseLight * terminator;
-          shade *= 1 - config.limbShadow * sideShadow;
-          shade *= 1 - config.nightShadow * smoothstep(0.02, 0.72, 1 - diffuse);
-          shade *= 1 - 0.10 * bottomShadow;
+          oceanDark = 0;
+          if (b > r * 1.08 && b > g * 1.02) {
+            oceanDark = config.oceanDepth;
+          }
 
-          shade = clamp(shade, 0.14, 1.12);
+          shade = config.ambientLight + Math.pow(diffuse, 0.86) * config.diffuseLight;
+          shade *= 1 - config.nightShadow * terminatorDark;
+          shade *= 1 - config.limbShadow * limbDark;
+          shade *= 1 - config.bottomShadow * lowerDark;
+          shade -= oceanDark;
 
-          r = clamp(r * shade + 2, 0, 255);
-          g = clamp(g * shade + 2, 0, 255);
-          b = clamp(b * shade + 4, 0, 255);
+          shade = clamp(shade, 0.10, 1.10);
+
+          naturalGlow =
+            config.litLimbGlow *
+            smoothstep(0.82, 0.995, d) *
+            smoothstep(0.18, 0.88, diffuse) *
+            smoothstep(0.02, 0.55, limb);
+
+          r = clamp(r * shade + naturalGlow * 34 + 2, 0, 255);
+          g = clamp(g * shade + naturalGlow * 52 + 2, 0, 255);
+          b = clamp(b * shade + naturalGlow * 76 + 4, 0, 255);
 
           edgePx = (1 - d) * geo.r;
           alpha = Math.round(255 * smoothstep(0, config.edgeFeatherPx, edgePx));
@@ -528,7 +553,8 @@
         cloudOverlayAlpha: config.cloudAlpha,
         projection: "full-globe-inverse-orthographic",
         cameraMode: "full-globe-orbital",
-        shadowMode: "internal-planetary-shadow",
+        shadowMode: "photographic-orbital-shadow",
+        glowMode: "natural-lit-limb-only",
         latticeScope: 256,
         rotation: rotation,
         velocity: velocity,
@@ -660,7 +686,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b21-full-globe-shadow",
+    version: "earth-canvas-b22-photographic-orbital-shadow",
     create: createEarthRenderer
   };
 })();

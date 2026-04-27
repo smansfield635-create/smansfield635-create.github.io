@@ -1,17 +1,17 @@
-/* TNT RENEWAL — /runtime/sun_asset_runtime.js
-   SUN ASSET RUNTIME · B7 · STELLAR PLASMA MOUNT
-
-   CONTRACT:
-     - Runtime mounts the Sun canvas.
-     - Runtime does not draw the Sun through CSS.
-     - Canvas owns stellar plasma rendering.
-     - Runtime optionally creates controls only when requested.
+/* DGB SUN ASSET RUNTIME — SATELLITE OBSERVATIONAL B9
+   FILE: /runtime/sun_asset_runtime.js
+   PURPOSE:
+   - Boot /assets/sun/sun_canvas.js into every [data-dgb-sun-mount].
+   - Bind satellite-observational-solar-disc-b9.
+   - Avoid old stellar-plasma labels.
+   - Keep controls optional and off by default.
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "sun-asset-runtime-b7-stellar-plasma";
+  var VERSION = "sun-asset-runtime-b9-satellite-observational-disc";
+  var PROFILE = "satellite-observational-solar-disc-b9";
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -23,7 +23,6 @@
 
   function make(tag, className, attrs) {
     var node = document.createElement(tag);
-
     if (className) node.className = className;
 
     Object.keys(attrs || {}).forEach(function (key) {
@@ -40,10 +39,8 @@
 
   function boolAttr(node, name, fallback) {
     var value = node.getAttribute(name);
-
     if (value === "true") return true;
     if (value === "false") return false;
-
     return fallback;
   }
 
@@ -56,14 +53,26 @@
     mount.textContent = "";
     mount.setAttribute("data-sun-runtime-version", VERSION);
     mount.setAttribute("data-sun-runtime-status", "booting");
+    mount.setAttribute("data-sun-profile", PROFILE);
+    mount.setAttribute("data-sun-asset-id", "sun-asset-spine-b9-satellite-observational-disc");
+    mount.setAttribute("data-cheesecake-slices", "false");
+    mount.setAttribute("data-conic-wedges", "false");
 
     canvas = make("canvas", "", {
       "data-dgb-sun-canvas": "true",
-      "aria-label": "Rendered Sun"
+      "data-satellite-sun-canvas": "true",
+      "aria-label": "Satellite-style rendered solar disc"
     });
 
     mount.appendChild(canvas);
     return canvas;
+  }
+
+  function removeControls(mount) {
+    var existing = mount.parentNode && mount.parentNode.querySelector("[data-dgb-sun-controls]");
+    if (existing && existing.parentNode) {
+      existing.parentNode.removeChild(existing);
+    }
   }
 
   function makeButton(label, action) {
@@ -77,7 +86,6 @@
   }
 
   function createControls(mount, instance, config) {
-    var existing = mount.parentNode && mount.parentNode.querySelector("[data-dgb-sun-controls]");
     var panel;
     var pause;
     var lower;
@@ -86,7 +94,7 @@
     var readout;
     var intensity = config.intensity;
 
-    if (existing) existing.parentNode.removeChild(existing);
+    removeControls(mount);
 
     panel = make("div", "dgb-sun-control-panel", {
       "data-dgb-sun-controls": "true"
@@ -96,7 +104,6 @@
     lower = makeButton("Lower Heat", "lower");
     raise = makeButton("Raise Heat", "raise");
     reset = makeButton("Reset Sun", "reset");
-
     readout = make("div", "dgb-sun-control-readout", {
       "data-dgb-sun-readout": "true",
       role: "status",
@@ -105,9 +112,10 @@
 
     function refresh() {
       var state = instance && instance.getState ? instance.getState() : {};
-      readout.textContent = "Heat " + Math.round((state.intensity || intensity) * 100) + "%";
+      readout.textContent = "Satellite Sun · Heat " + Math.round((state.intensity || intensity) * 100) + "%";
       pause.textContent = state.animate === false ? "Resume Sun" : "Pause Sun";
       mount.setAttribute("data-sun-intensity", String(state.intensity || intensity));
+      mount.setAttribute("data-sun-profile", PROFILE);
     }
 
     pause.addEventListener("click", function () {
@@ -153,10 +161,7 @@
 
     refresh();
 
-    return {
-      panel: panel,
-      refresh: refresh
-    };
+    return { panel: panel, refresh: refresh };
   }
 
   function bootMount(mount) {
@@ -172,6 +177,11 @@
 
     mount.setAttribute("data-sun-runtime-bound", VERSION);
     mount.setAttribute("data-sun-runtime-status", "initializing");
+    mount.setAttribute("data-sun-profile", PROFILE);
+    mount.setAttribute("data-sun-asset-id", "sun-asset-spine-b9-satellite-observational-disc");
+    mount.setAttribute("data-visual-target", "satellite observational solar disc");
+    mount.setAttribute("data-cheesecake-slices", "false");
+    mount.setAttribute("data-conic-wedges", "false");
 
     canvas = createCanvas(mount);
 
@@ -186,21 +196,27 @@
       return null;
     }
 
-    cssSize = numberAttr(mount, "data-sun-size", Math.min(700, Math.max(330, mount.clientWidth || 520)));
+    cssSize = numberAttr(
+      mount,
+      "data-sun-size",
+      Math.min(720, Math.max(340, mount.clientWidth || 560))
+    );
 
     config = {
       seed: Math.floor(numberAttr(mount, "data-sun-seed", 4217)),
       size: cssSize,
       animate: boolAttr(mount, "data-sun-animate", true),
-      intensity: Math.max(0.55, Math.min(1, numberAttr(mount, "data-sun-intensity", 0.96))),
-      frameRate: Math.max(6, Math.min(14, numberAttr(mount, "data-sun-frame-rate", 10)))
+      intensity: Math.max(0.55, Math.min(1, numberAttr(mount, "data-sun-intensity", 0.9))),
+      frameRate: Math.max(4, Math.min(12, numberAttr(mount, "data-sun-frame-rate", 8)))
     };
 
     instance = window.DGBSunCanvas.createCanvasSun(canvas, config);
 
     mount.setAttribute("data-sun-runtime-status", "strong");
-    mount.setAttribute("data-sun-asset-id", "sun-asset-spine-b7-stellar-plasma");
-    mount.setAttribute("data-sun-profile", "stellar-plasma-b7");
+    mount.setAttribute("data-sun-renderer-version", window.DGBSunCanvas.version || "unknown");
+    mount.setAttribute("data-sun-profile", PROFILE);
+
+    removeControls(mount);
 
     if (mount.getAttribute("data-dgb-sun-controls") === "true") {
       controls = createControls(mount, instance, config);
@@ -210,7 +226,9 @@
       mount: mount,
       canvas: canvas,
       instance: instance,
-      controls: controls || null
+      controls: controls || null,
+      profile: PROFILE,
+      version: VERSION
     };
   }
 
@@ -219,11 +237,14 @@
     var instances = mounts.map(bootMount).filter(Boolean);
 
     window.DGBSunAsset.instances = instances;
+    window.DGBSunAsset.profile = PROFILE;
+
     return instances;
   }
 
   window.DGBSunAsset = {
     version: VERSION,
+    profile: PROFILE,
     boot: bootAll,
     bootMount: bootMount,
     instances: []

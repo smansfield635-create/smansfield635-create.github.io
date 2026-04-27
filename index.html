@@ -1,52 +1,376 @@
 <!DOCTYPE html>
-<html lang="en" data-manor-registry="compass-initial-public-view">
+<html lang="en" data-compass-generation="G2_UNIVERSE_SHOWROOM_256_LATTICE">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: the first public view and orientation core for Richie’s Manor and Estate."
+    content="Diamond Gate Bridge Compass: Generation 2 universe showroom, three-world selector, and orientation core for Richie’s Manor and Estate."
   />
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <script src="/assets/page_registry.js" defer></script>
 
   <style>
+    :root {
+      --ink: #eef3ff;
+      --muted: #b8c2d8;
+      --dim: #78839a;
+      --void: #01040d;
+      --navy-950: #020713;
+      --navy-900: #061126;
+      --navy-850: #091832;
+      --navy-800: #0d2142;
+      --gold: #f4c967;
+      --gold-soft: #ffe3a3;
+      --amber: #d98a35;
+      --copper: #aa6231;
+      --blue: #75c7ff;
+      --violet: #c9b6ff;
+      --green: #84e1bc;
+      --glass: rgba(8, 19, 42, 0.76);
+      --glass-strong: rgba(7, 16, 36, 0.91);
+      --border: rgba(244, 201, 103, 0.34);
+      --border-strong: rgba(244, 201, 103, 0.62);
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
+      --gold-glow: 0 0 42px rgba(244, 201, 103, 0.28);
+      --radius-xl: 34px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --page-max: 1240px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--void);
+      scroll-behavior: smooth;
+    }
+
     body {
+      min-height: 100vh;
       margin: 0;
-      background: #020713;
-      color: #eef3ff;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% -18%, rgba(244, 201, 103, 0.24), transparent 30%),
+        radial-gradient(circle at 18% 18%, rgba(74, 139, 255, 0.28), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(201, 182, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 70% 72%, rgba(217, 138, 53, 0.13), transparent 36%),
+        linear-gradient(180deg, #01040d 0%, #020713 36%, #061126 68%, #030816 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(244, 201, 103, 0.56) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(117, 199, 255, 0.42) 0 1px, transparent 1.4px);
+      background-size: 91px 91px, 137px 137px, 213px 213px;
+      background-position: 0 0, 37px 52px, 81px 119px;
+      opacity: 0.2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -18%;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        conic-gradient(from 20deg at 50% 50%, transparent, rgba(244, 201, 103, 0.08), transparent, rgba(117, 199, 255, 0.07), transparent, rgba(201, 182, 255, 0.08), transparent),
+        radial-gradient(circle at 50% 50%, transparent 0 25%, rgba(244, 201, 103, 0.055) 38%, transparent 55%);
+      opacity: 0.72;
+      animation: universeDrift 42s linear infinite;
+    }
+
+    @keyframes universeDrift {
+      from { transform: rotate(0deg) scale(1); }
+      to { transform: rotate(360deg) scale(1.04); }
     }
 
     a {
       color: inherit;
     }
 
-    .first-view-stage {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-      gap: clamp(18px, 3vw, 34px);
-      align-items: stretch;
+    .route-rail {
+      width: min(1000px, calc(100% - 32px));
+      margin: clamp(18px, 3vw, 34px) auto;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(8, 19, 42, 0.76);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(18px);
+      position: relative;
+      z-index: 10;
     }
 
-    .compass-proof-stack {
-      display: grid;
-      gap: 16px;
+    .route-rail a,
+    .chip,
+    .mode-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(244, 201, 103, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: #d9e3f7;
+      text-decoration: none;
+      font-weight: 850;
+      letter-spacing: 0.01em;
     }
 
-    .compass-proof-card {
-      border: 1px solid rgba(244, 201, 103, 0.28);
+    .route-rail a[aria-current="page"],
+    .mode-button[aria-pressed="true"] {
+      color: #111827;
+      border-color: var(--gold);
+      background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+      box-shadow: var(--gold-glow);
+    }
+
+    .shell {
+      width: min(var(--page-max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 56px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: calc(100vh - 118px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: clamp(22px, 4vw, 48px);
+      align-items: center;
+      padding: clamp(18px, 4vw, 50px) 0 clamp(28px, 5vw, 70px);
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      width: min(720px, 76vw);
+      aspect-ratio: 1;
+      border: 1px solid rgba(244, 201, 103, 0.18);
+      border-radius: 50%;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle, rgba(244, 201, 103, 0.12) 0 2%, transparent 3%),
+        radial-gradient(circle, transparent 0 43%, rgba(244, 201, 103, 0.06) 44%, transparent 45%),
+        radial-gradient(circle, transparent 0 62%, rgba(117, 199, 255, 0.055) 63%, transparent 64%);
+      box-shadow:
+        inset 0 0 90px rgba(117, 199, 255, 0.08),
+        0 0 96px rgba(244, 201, 103, 0.12);
+      z-index: -1;
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      width: min(520px, 62vw);
+      aspect-ratio: 1;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 1px solid rgba(244, 201, 103, 0.22);
+      box-shadow:
+        inset 0 0 42px rgba(244, 201, 103, 0.08),
+        0 0 58px rgba(244, 201, 103, 0.1);
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    .hero-panel,
+    .control-panel,
+    .room,
+    .card,
+    .audit-strip,
+    .backlinks {
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.085), transparent 42%),
+        var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-panel,
+    .control-panel,
+    .room {
+      border-radius: var(--radius-xl);
+      padding: clamp(24px, 4vw, 56px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after,
+    .control-panel::after,
+    .room::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px);
+      background-size: 6.25% 6.25%;
+      opacity: 0.42;
+      mask-image: radial-gradient(circle at center, black, transparent 74%);
+    }
+
+    .hero-panel > *,
+    .control-panel > *,
+    .room > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .kicker,
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--gold-soft);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before,
+    .label::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 18px rgba(244, 201, 103, 0.55);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3.1rem, 8vw, 7.6rem);
+      line-height: 0.86;
+      letter-spacing: -0.085em;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.5rem, 3vw, 2.6rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    p {
+      line-height: 1.68;
+    }
+
+    .lede {
+      max-width: 780px;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.7vw, 1.28rem);
+    }
+
+    .hero-line {
+      width: 100%;
+      height: 1px;
+      margin: clamp(22px, 4vw, 40px) 0;
+      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .proof {
+      border: 1px solid rgba(132, 225, 188, 0.28);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(132, 225, 188, 0.06);
+    }
+
+    .proof strong {
+      display: block;
+      color: var(--green);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .proof span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mode-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mode-button {
+      width: 100%;
+      min-height: unset;
+      padding: 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      text-align: left;
+      justify-content: flex-start;
+      display: grid;
+      gap: 6px;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .mode-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+      box-shadow: var(--gold-glow);
+    }
+
+    .mode-button b {
+      font-size: 1.24rem;
+    }
+
+    .mode-button small {
+      color: inherit;
+      opacity: 0.8;
+      line-height: 1.5;
+      font-weight: 750;
+    }
+
+    .mode-readout {
+      margin-top: 18px;
+      border: 1px solid rgba(244, 201, 103, 0.24);
       border-radius: 22px;
       padding: 18px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 44%),
-        rgba(8, 19, 42, 0.72);
-      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
+      background: rgba(0, 0, 0, 0.18);
     }
 
-    .compass-proof-card strong {
-      color: #ffe3a3;
+    .mode-readout strong {
+      color: var(--gold-soft);
     }
 
     .entry-grid {
@@ -55,87 +379,223 @@
       gap: clamp(14px, 2vw, 22px);
     }
 
-    .entry-card {
-      min-height: 190px;
+    .card {
+      border-radius: var(--radius-md);
+      padding: clamp(18px, 2.2vw, 30px);
+      text-decoration: none;
+      min-height: 188px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      text-decoration: none;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
 
-    .entry-card span {
-      color: #b8c2d8;
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow), var(--gold-glow);
+    }
+
+    .card span {
+      color: var(--muted);
       line-height: 1.6;
     }
 
-    .entry-card strong {
-      color: #eef3ff;
-      font-size: 1.2rem;
+    .lattice-panel {
+      margin-top: 28px;
     }
 
-    .compass-mini-map {
+    .lattice-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(16, minmax(0, 1fr));
+      gap: 5px;
       margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(244, 201, 103, 0.22);
+      border-radius: 26px;
+      background: rgba(0, 0, 0, 0.14);
     }
 
-    .compass-mini-map a {
-      min-height: 74px;
+    .cell {
+      aspect-ratio: 1;
+      border: 1px solid rgba(244, 201, 103, 0.18);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    body[data-view-mode="flat"] .cell:nth-child(-n+64) {
+      background: rgba(244, 201, 103, 0.16);
+      border-color: rgba(244, 201, 103, 0.46);
+    }
+
+    body[data-view-mode="round"] .cell:nth-child(n+65):nth-child(-n+128) {
+      background: rgba(132, 225, 188, 0.15);
+      border-color: rgba(132, 225, 188, 0.44);
+      border-radius: 50%;
+    }
+
+    body[data-view-mode="meta"] .cell:nth-child(n+129):nth-child(-n+192) {
+      background: rgba(117, 199, 255, 0.15);
+      border-color: rgba(117, 199, 255, 0.44);
+      transform: rotate(45deg);
+    }
+
+    .cell:nth-child(n+193) {
+      background: rgba(201, 182, 255, 0.08);
+    }
+
+    .view-art {
+      min-height: 280px;
       border: 1px solid rgba(244, 201, 103, 0.24);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.045);
-      color: #d9e3f7;
-      text-decoration: none;
-      font-weight: 800;
+      border-radius: 28px;
+      margin-top: 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(244, 201, 103, 0.14), transparent 28%),
+        rgba(255, 255, 255, 0.035);
     }
 
-    .compass-mini-map a.primary {
-      color: #111827;
-      background: linear-gradient(180deg, #ffe3a3, #f4c967);
-      border-color: #f4c967;
-      box-shadow: 0 0 32px rgba(244, 201, 103, 0.24);
+    .flat-map,
+    .round-tree,
+    .meta-globe {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 240ms ease;
     }
 
-    .status-ribbon {
+    body[data-view-mode="flat"] .flat-map,
+    body[data-view-mode="round"] .round-tree,
+    body[data-view-mode="meta"] .meta-globe {
+      opacity: 1;
+    }
+
+    .flat-map {
+      background:
+        linear-gradient(90deg, rgba(244, 201, 103, 0.12) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244, 201, 103, 0.12) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    .round-tree::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      width: 12px;
+      height: 160px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold), var(--copper));
+      transform: translateX(-50%);
+      box-shadow: 0 0 28px rgba(244, 201, 103, 0.28);
+    }
+
+    .round-tree::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 34px;
+      width: 220px;
+      height: 180px;
+      border: 1px solid rgba(132, 225, 188, 0.38);
+      border-radius: 44% 56% 48% 52%;
+      background:
+        radial-gradient(circle at 40% 34%, rgba(132, 225, 188, 0.18), transparent 22%),
+        radial-gradient(circle at 65% 48%, rgba(244, 201, 103, 0.13), transparent 24%);
+      transform: translateX(-50%);
+      box-shadow: inset 0 0 42px rgba(132, 225, 188, 0.08), 0 0 34px rgba(132, 225, 188, 0.12);
+    }
+
+    .meta-globe::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(260px, 70%);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(117, 199, 255, 0.42);
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle at 38% 32%, rgba(244, 201, 103, 0.2), transparent 18%),
+        radial-gradient(circle at 62% 58%, rgba(117, 199, 255, 0.16), transparent 20%),
+        repeating-linear-gradient(90deg, transparent 0 22px, rgba(117, 199, 255, 0.09) 23px 24px);
+      box-shadow:
+        inset 0 0 50px rgba(117, 199, 255, 0.15),
+        0 0 56px rgba(117, 199, 255, 0.18);
+    }
+
+    .meta-globe::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(340px, 86%);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px dashed rgba(244, 201, 103, 0.36);
+      transform: translate(-50%, -50%) rotate(-16deg);
+    }
+
+    .backlinks,
+    .audit-strip {
+      margin-top: clamp(24px, 4vw, 48px);
+      border-radius: var(--radius-md);
+      padding: clamp(16px, 2.2vw, 26px);
+    }
+
+    .chip-list {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .status-ribbon span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0 12px;
-      border: 1px solid rgba(132, 225, 188, 0.38);
-      border-radius: 999px;
+    .chip.pass {
       color: #eafff2;
-      background: rgba(132, 225, 188, 0.07);
-      font-weight: 800;
-      font-size: 0.9rem;
+      border-color: rgba(132, 225, 188, 0.48);
     }
 
-    .compass-callout {
-      border-left: 3px solid #f4c967;
-      padding-left: 18px;
-      color: #b8c2d8;
-    }
-
-    @media (max-width: 920px) {
-      .first-view-stage,
-      .entry-grid {
+    @media (max-width: 980px) {
+      .stage,
+      .entry-grid,
+      .proof-strip {
         grid-template-columns: 1fr;
       }
 
-      .compass-mini-map {
-        grid-template-columns: 1fr;
+      .route-rail {
+        border-radius: var(--radius-md);
+      }
+
+      .route-rail a {
+        width: 100%;
+      }
+
+      .lattice-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+      }
+
+      h1 {
+        font-size: clamp(3rem, 14vw, 5.4rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::after {
+        animation: none;
+      }
+
+      .card,
+      .mode-button {
+        transition: none;
+      }
+
+      .card:hover,
+      .mode-button:hover {
+        transform: none;
       }
     }
   </style>
@@ -149,10 +609,11 @@
   data-manor-slot="H1_COMPASS"
   data-manor-route="/"
   data-manor-batch="BATCH_1_HOUSE"
-  data-compass-role="initial-public-view"
+  data-compass-role="g2-universe-initial-showroom"
+  data-view-mode="flat"
 >
-  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
-    <a href="/" aria-current="page" class="is-active manor-active-compass">Compass</a>
+  <nav class="route-rail" aria-label="Richie’s Manor house routes">
+    <a href="/" aria-current="page">Compass</a>
     <a href="/door/">Door</a>
     <a href="/home/">Home</a>
     <a href="/products/">Products</a>
@@ -160,158 +621,259 @@
     <a href="/gauges/">Gauges</a>
   </nav>
 
-  <main class="manor-shell">
-    <section class="manor-room manor-lattice-mark">
-      <div class="first-view-stage">
-        <div>
-          <p class="manor-kicker">H1 · Compass · First Public View</p>
-          <h1 class="manor-title">Diamond Gate Bridge</h1>
-          <p class="manor-lede">
-            Learn to Live to Love. This is the first view of Richie’s Manor and Estate:
-            a guided entry point, a proof surface, and the orientation core for everything built inside the house.
-          </p>
+  <main class="shell">
+    <section class="stage" aria-label="Diamond Gate Bridge initial universe showroom">
+      <article class="hero-panel">
+        <p class="kicker">H1 · Compass · Generation 2 Universe Showroom</p>
+        <h1>Diamond Gate Bridge</h1>
+        <p class="lede">
+          Choose how you want to see the world. Start flat for clarity, round for the Tree of Life
+          view, or enter Meta for the full universe.
+        </p>
 
-          <div class="status-ribbon">
-            <span>House stable</span>
-            <span>Products stable</span>
-            <span>Planets stable</span>
-            <span>Gauges live</span>
-          </div>
+        <div class="hero-line"></div>
 
-          <div class="manor-divider"></div>
-
-          <p class="compass-callout">
-            Start here if you are new. The Compass does not ask you to understand the whole estate at once.
-            It gives you the first clean route.
-          </p>
+        <div class="proof-strip" aria-label="Live structure proof">
+          <div class="proof"><strong>100</strong><span>House</span></div>
+          <div class="proof"><strong>100</strong><span>Products</span></div>
+          <div class="proof"><strong>100</strong><span>Planets</span></div>
+          <div class="proof"><strong>Live</strong><span>Gauges</span></div>
         </div>
 
-        <aside class="compass-proof-stack" aria-label="First-view proof stack">
-          <article class="compass-proof-card">
-            <p class="manor-room-label">What is this?</p>
-            <strong>A structured public estate.</strong>
-            <p>The house gives visitors a stable way to move through products, laws, events, and larger worlds.</p>
-          </article>
+        <div class="view-art" aria-label="Selected world view preview">
+          <div class="flat-map" aria-hidden="true"></div>
+          <div class="round-tree" aria-hidden="true"></div>
+          <div class="meta-globe" aria-hidden="true"></div>
+        </div>
+      </article>
 
-          <article class="compass-proof-card">
-            <p class="manor-room-label">What works now?</p>
-            <strong>Live structure is measured.</strong>
-            <p>Gauges verifies the house skeleton, product chambers, and planetary constructs from the public site.</p>
-          </article>
+      <aside class="control-panel">
+        <p class="kicker">Three ways to enter</p>
 
-          <article class="compass-proof-card">
-            <p class="manor-room-label">Where should I go?</p>
-            <strong>Choose the next chamber.</strong>
-            <p>Products for utility, Showroom for proof, Upper Room for live events, and Gauges for health.</p>
-          </article>
-        </aside>
-      </div>
+        <div class="mode-stack" role="group" aria-label="World view selector">
+          <button class="mode-button" type="button" data-mode="flat" aria-pressed="true">
+            <b>Flat</b>
+            <small>World is flat: 2D public version. Clean routes, fast understanding, simplest entry.</small>
+          </button>
+
+          <button class="mode-button" type="button" data-mode="round" aria-pressed="false">
+            <b>Round</b>
+            <small>World is round: Tree of Life / A Bug’s Life version. Roots, branches, living relationships.</small>
+          </button>
+
+          <button class="mode-button" type="button" data-mode="meta" aria-pressed="false">
+            <b>Meta</b>
+            <small>World is a globe: full metaverse version. The complete estate, planets, products, and traversal field.</small>
+          </button>
+        </div>
+
+        <div class="mode-readout">
+          <p class="label">Current view</p>
+          <h2 id="modeTitle">Flat · 2D public version</h2>
+          <p id="modeText">
+            See the site clearly. Use this view if you want the fastest route into Products, Showroom, Gauges, and the main public rooms.
+          </p>
+        </div>
+      </aside>
     </section>
 
-    <section class="manor-room" style="margin-top:28px">
-      <p class="manor-kicker">Start here</p>
-      <h2>Choose your first route.</h2>
-      <p class="manor-lede">
-        The first page should not be a maze. It should let the visitor enter through the correct door.
+    <section class="room">
+      <p class="kicker">Initial showroom routes</p>
+      <h2>Choose the first object on the floor.</h2>
+      <p class="lede">
+        The Compass is the first public view. It shows the estate without forcing the visitor to decode the entire system at once.
       </p>
 
       <div class="entry-grid">
-        <a class="manor-card entry-card" href="/products/">
+        <a class="card" href="/products/">
           <div>
-            <p class="manor-room-label">Utility</p>
-            <strong>Products</strong>
+            <p class="label">Utility</p>
+            <h3>Products</h3>
           </div>
-          <span>See the product waterfall: ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition.</span>
+          <span>Enter the source chamber and product waterfall: ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition.</span>
         </a>
 
-        <a class="manor-card entry-card" href="/showroom/">
+        <a class="card" href="/showroom/">
           <div>
-            <p class="manor-room-label">Proof</p>
-            <strong>Public Proof Room</strong>
+            <p class="label">Proof</p>
+            <h3>Showroom</h3>
           </div>
-          <span>View the external-facing demonstration surface and estate presentation.</span>
+          <span>Move from the initial showroom into the dedicated public proof room.</span>
         </a>
 
-        <a class="manor-card entry-card" href="/gauges/">
+        <a class="card" href="/gauges/">
           <div>
-            <p class="manor-room-label">Health</p>
-            <strong>Live Gauges</strong>
+            <p class="label">Health</p>
+            <h3>Gauges</h3>
           </div>
-          <span>Check the live diagnostic instrument room and verify the site structure.</span>
+          <span>Verify the house, products, and planetary constructs through the live diagnostic instrument.</span>
         </a>
 
-        <a class="manor-card entry-card" href="/big-laugh/upper-room/">
+        <a class="card" href="/big-laugh/upper-room/">
           <div>
-            <p class="manor-room-label">Event</p>
-            <strong>The Upper Room</strong>
+            <p class="label">Event</p>
+            <h3>Upper Room</h3>
           </div>
-          <span>Enter the live gathering surface for comedy, raffles, and public interaction.</span>
+          <span>Visit the live gathering planet hosted inside Big Laugh.</span>
         </a>
 
-        <a class="manor-card entry-card" href="/nine-summits-of-love/">
+        <a class="card" href="/nine-summits-of-love/">
           <div>
-            <p class="manor-room-label">Potential</p>
-            <strong>Nine Summits of Love</strong>
+            <p class="label">Potential</p>
+            <h3>Nine Summits of Love</h3>
           </div>
           <span>See the 256 diamonds of human potential as the summit-scale transformation surface.</span>
         </a>
 
-        <a class="manor-card entry-card" href="/explore/">
+        <a class="card" href="/explore/">
           <div>
-            <p class="manor-room-label">Discovery</p>
-            <strong>Explore</strong>
+            <p class="label">Discovery</p>
+            <h3>Explore / Frontier</h3>
           </div>
-          <span>Move outward into discovery and the Frontier without losing the Manor anchor.</span>
+          <span>Move outward into discovery and expansion without losing the Manor anchor.</span>
         </a>
       </div>
     </section>
 
-    <section class="manor-room" style="margin-top:28px">
-      <p class="manor-kicker">Estate map</p>
-      <h2>One house. Multiple worlds. Clear return path.</h2>
-      <p class="manor-lede">
-        The Compass keeps the structure readable: six house parts, five product chambers, and nine planetary constructs.
+    <section class="room lattice-panel">
+      <p class="kicker">256-state lattice</p>
+      <h2>The showroom is governed by the lattice.</h2>
+      <p class="lede">
+        The page expresses the 256-state geometry as a public control surface: Flat, Round, Meta, and Return.
       </p>
 
-      <div class="compass-mini-map" aria-label="Compass estate map">
-        <a class="primary" href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/laws/">Laws</a>
-        <a href="/governance/">Governance</a>
-        <a href="/nine-summits/">Nine Summits</a>
+      <div class="entry-grid">
+        <article class="card">
+          <div>
+            <p class="label">001–064</p>
+            <h3>Flat</h3>
+          </div>
+          <span>2D clarity, public routes, simplest first contact.</span>
+        </article>
+
+        <article class="card">
+          <div>
+            <p class="label">065–128</p>
+            <h3>Round</h3>
+          </div>
+          <span>Tree of Life relationships, organic growth, close-up living structure.</span>
+        </article>
+
+        <article class="card">
+          <div>
+            <p class="label">129–192</p>
+            <h3>Meta</h3>
+          </div>
+          <span>Globe/metaverse traversal, full estate and planetary map.</span>
+        </article>
+
+        <article class="card">
+          <div>
+            <p class="label">193–256</p>
+            <h3>Return</h3>
+          </div>
+          <span>Gauges, backlinks, audit markers, route stability.</span>
+        </article>
       </div>
+
+      <div class="lattice-grid" id="latticeGrid" aria-label="256-state lattice visualization"></div>
     </section>
 
-    <section class="manor-backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-      <ul class="manor-backlinks-list">
-        <li><a href="/" aria-current="page">Compass · active</a></li>
-        <li><a href="/door/">Door</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
+    <section class="backlinks">
+      <p class="label">House backlinks</p>
+      <ul class="chip-list">
+        <li><a class="chip" href="/" aria-current="page">Compass · active</a></li>
+        <li><a class="chip" href="/door/">Door</a></li>
+        <li><a class="chip" href="/home/">Home</a></li>
+        <li><a class="chip" href="/products/">Products</a></li>
+        <li><a class="chip" href="/showroom/">Showroom</a></li>
+        <li><a class="chip" href="/gauges/">Gauges</a></li>
       </ul>
     </section>
 
-    <section class="manor-audit-strip">
-      <p class="manor-audit-title">Compass optimization markers</p>
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass" data-status="pass">route-exists</li>
-        <li class="manor-audit-chip pass" data-status="pass">manor-skin</li>
-        <li class="manor-audit-chip pass" data-status="pass">house-class</li>
-        <li class="manor-audit-chip pass" data-status="pass">H1_COMPASS</li>
-        <li class="manor-audit-chip pass" data-status="pass">active-compass</li>
-        <li class="manor-audit-chip pass" data-status="pass">initial-public-view</li>
+    <section class="audit-strip">
+      <p class="label">Compass G2 audit markers</p>
+      <ul class="chip-list">
+        <li class="chip pass">route-exists</li>
+        <li class="chip pass">manor-skin</li>
+        <li class="chip pass">house-class</li>
+        <li class="chip pass">H1_COMPASS</li>
+        <li class="chip pass">active-compass</li>
+        <li class="chip pass">g2-universe-showroom</li>
+        <li class="chip pass">flat-round-meta</li>
+        <li class="chip pass">256-state-lattice</li>
       </ul>
-      <p class="batch-note">
-        Compass rule: this page is the first public view, but it remains the orientation core.
+      <p class="lede">
+        Compass rule: this page is the initial public showroom, but it remains the orientation core.
       </p>
     </section>
   </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var copy = {
+        flat: {
+          title: "Flat · 2D public version",
+          text: "See the site clearly. Use this view if you want the fastest route into Products, Showroom, Gauges, and the main public rooms."
+        },
+        round: {
+          title: "Round · Tree of Life version",
+          text: "See how everything grows together. This view treats the estate as roots, branches, leaves, and living relationships."
+        },
+        meta: {
+          title: "Meta · Full universe version",
+          text: "Enter the full metaverse view. This is the globe-level estate map with house, products, planets, and traversal routes."
+        }
+      };
+
+      var storageKey = "diamond_gate_bridge_compass_view_mode";
+      var body = document.body;
+      var title = document.getElementById("modeTitle");
+      var text = document.getElementById("modeText");
+      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-mode]"));
+      var lattice = document.getElementById("latticeGrid");
+
+      function safeMode(value) {
+        return copy[value] ? value : "flat";
+      }
+
+      function applyMode(mode) {
+        var next = safeMode(mode);
+        body.setAttribute("data-view-mode", next);
+        localStorage.setItem(storageKey, next);
+
+        if (title) title.textContent = copy[next].title;
+        if (text) text.textContent = copy[next].text;
+
+        buttons.forEach(function (button) {
+          var active = button.getAttribute("data-mode") === next;
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          applyMode(button.getAttribute("data-mode"));
+        });
+      });
+
+      if (lattice && !lattice.children.length) {
+        for (var i = 1; i <= 256; i += 1) {
+          var cell = document.createElement("span");
+          cell.className = "cell";
+          cell.setAttribute("aria-label", "State " + i);
+          lattice.appendChild(cell);
+        }
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var incoming = params.get("view");
+      var stored = localStorage.getItem(storageKey);
+
+      applyMode(safeMode(incoming || stored || "flat"));
+    })();
+  </script>
 </body>
 </html>

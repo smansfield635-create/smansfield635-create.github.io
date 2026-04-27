@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Earth fallback mark">
+  <defs>
+    <radialGradient id="ocean" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#3f74b8"/>
+      <stop offset="45%" stop-color="#153b7a"/>
+      <stop offset="75%" stop-color="#071842"/>
+      <stop offset="100%" stop-color="#010612"/>
+    </radialGradient>
+    <radialGradient id="shade" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".20"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity=".04"/>
+      <stop offset="78%" stop-color="#000000" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity=".78"/>
+    </radialGradient>
+    <radialGradient id="rim" cx="50%" cy="50%" r="52%">
+      <stop offset="76%" stop-color="#93c5fd" stop-opacity="0"/>
+      <stop offset="93%" stop-color="#93c5fd" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#dbeafe" stop-opacity=".48"/>
+    </radialGradient>
+    <clipPath id="clip">
+      <circle cx="500" cy="500" r="430"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="500" cy="500" r="455" fill="rgba(147,197,253,.13)"/>
+  <circle cx="500" cy="500" r="430" fill="url(#ocean)"/>
+
+  <g clip-path="url(#clip)">
+    <path d="M150 300 C220 235 330 210 430 250 C490 275 500 335 455 385 C405 440 300 430 250 505 C210 560 170 525 158 465 C145 405 110 350 150 300Z" fill="#5f7f43" opacity=".88"/>
+    <path d="M340 500 C420 480 490 520 525 590 C570 670 500 760 415 795 C350 820 310 760 325 685 C335 625 292 552 340 500Z" fill="#4f7a3a" opacity=".84"/>
+    <path d="M600 260 C690 255 790 318 830 405 C860 470 840 545 795 595 C748 525 690 500 642 458 C595 415 552 335 600 260Z" fill="#8a774a" opacity=".50"/>
+
+    <path d="M108 612 C226 546 365 580 473 622 C595 668 699 644 862 706" fill="none" stroke="#ffffff" stroke-opacity=".42" stroke-width="18" stroke-linecap="round"/>
+    <path d="M112 366 C250 303 392 342 533 384 C675 427 756 405 887 350" fill="none" stroke="#ffffff" stroke-opacity=".30" stroke-width="15" stroke-linecap="round"/>
+
+    <circle cx="500" cy="500" r="430" fill="url(#shade)"/>
+  </g>
+
+  <circle cx="500" cy="500" r="430" fill="url(#rim)"/>
+  <circle cx="500" cy="500" r="430" fill="none" stroke="rgba(219,234,254,.36)" stroke-width="4"/>
+</svg>

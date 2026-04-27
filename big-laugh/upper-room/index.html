@@ -1,753 +1,427 @@
-<!DOCTYPE html>
-<html lang="en" data-upper-room-generation="second-generation-renewal">
+<!doctype html>
+<!-- TNT CREATE — /upper-room/index.html
+     EVENTS & ATTRACTIONS · THE UPPER ROOM · TED TALK RUSSIAN DOLL · B1
+
+     CONTRACT:
+       - Create the root backlink landing page used by the Showroom.
+       - Do not replace the existing show chamber at /big-laugh/upper-room/.
+       - Page is the TED Talk-style public entry chamber for Events & Attractions / The Upper Room.
+       - Existing /big-laugh/upper-room/ remains the full show chamber.
+       - /products/ remains the parent product/system route for later marriage.
+       - /showroom/ remains the Russian-doll lobby return route.
+       - Coming Soon belongs here.
+       - No encyclopedia layout.
+       - No route dump.
+       - No graphics box.
+-->
+
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>The Upper Room · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="The Upper Room: a self-contained Generation 2 upcoming show surface for Diamond Gate Bridge with V9 compact rotating diamond controls, readable event context, and an About This Underdog preface route."
-  />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>The Upper Room · Events & Attractions — Diamond Gate Bridge</title>
+  <meta name="description" content="A TED Talk-style Russian-doll entry chamber for The Upper Room, Events & Attractions, shows, signings, appearances, and public activation."/>
 
   <style>
-    :root {
-      --bg:#020610;
-      --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
-      --line:rgba(170,198,255,.18);
-      --line-strong:rgba(239,210,154,.36);
-      --text:#eef4ff;
-      --muted:#aab8d8;
-      --gold:#efd29a;
-      --blue:#8ec5ff;
-      --green:#93efbd;
-      --purple:#c89cff;
-      --rose:#ff9ab8;
-      --orange:#f1a45b;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1180px;
-      --diamond-spin:18s;
-      --diamond-float:7s;
-      --diamond-breathe:5.8s;
-    }
+    *{box-sizing:border-box}
 
-    * {
-      box-sizing:border-box;
-    }
+    html{scroll-behavior:smooth}
 
-    html,
-    body {
+    html,body{
       margin:0;
       min-height:100%;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 4%,rgba(239,210,154,.18),transparent 22%),
-        radial-gradient(circle at 18% 28%,rgba(255,154,184,.12),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(142,197,255,.10),transparent 28%),
-        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       overflow-x:hidden;
     }
 
-    body::before {
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --soft:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.76);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
+      --rose:rgba(255,154,184,.92);
+      --blue:rgba(142,197,255,.96);
+    }
+
+    body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
-      opacity:.22;
       background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+        radial-gradient(circle at 14% 18%,rgba(255,217,138,.24) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(255,154,184,.17) 0 1px,transparent 2px),
+        radial-gradient(circle at 78% 16%,rgba(142,197,255,.14) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.11),transparent 34rem),
+        radial-gradient(ellipse at 84% 32%,rgba(255,154,184,.07),transparent 30rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .page {
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
+    .page{
       position:relative;
       z-index:1;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .read-card,
-    .route-card,
-    .show-card,
-    .signal-card,
-    .status-strip {
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(239,210,154,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
-      box-shadow:var(--shadow);
-    }
-
-    .topbar {
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:28px;
+      width:min(100% - 28px,1120px);
+      min-height:100svh;
+      margin:0 auto;
+      padding:18px 0 28px;
       display:grid;
       gap:14px;
     }
 
-    .brand {
+    .hero,
+    .talkStage,
+    .routeRail{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero{
+      min-height:calc(100svh - 190px);
+      padding:clamp(24px,5vw,56px);
+      display:grid;
+      gap:18px;
+      align-content:center;
+      overflow:hidden;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.08),transparent 30rem),
+        radial-gradient(ellipse at 88% 34%,rgba(255,154,184,.07),transparent 30rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+    }
+
+    .brandRow{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:0;
     }
 
-    .mark {
-      width:50px;
-      height:50px;
-      border-radius:17px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line-strong);
+    .brandMark{
+      width:34px;
+      height:34px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.72);
       background:
-        radial-gradient(circle at 50% 28%,rgba(239,210,154,.36),transparent 44%),
-        linear-gradient(180deg,rgba(42,34,20,.92),rgba(10,18,32,.98));
-      color:#fff8ea;
-      font-weight:950;
-      letter-spacing:.08em;
+        linear-gradient(135deg,rgba(255,217,138,.34),rgba(255,154,184,.10)),
+        rgba(255,255,255,.05);
+      box-shadow:0 0 18px rgba(255,217,138,.14);
       flex:0 0 auto;
-      box-shadow:0 0 22px rgba(239,210,154,.16);
     }
 
-    .brand-text {
-      display:grid;
-      gap:3px;
+    .brandName{
+      color:var(--ink);
+      font-size:clamp(1.2rem,4vw,2rem);
+      font-weight:950;
+      letter-spacing:-.04em;
     }
 
-    .kicker {
-      display:block;
+    .kicker{
       margin:0;
-      color:#c8d7ff;
-      font-size:.72rem;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
       text-transform:uppercase;
-      letter-spacing:.16em;
-      font-weight:850;
     }
 
-    .title {
-      display:block;
+    h1{
       margin:0;
-      color:#fff;
-      font-weight:900;
-      font-size:1.08rem;
-      line-height:1.05;
+      max-width:1040px;
+      font-size:clamp(3.1rem,10vw,7.2rem);
+      line-height:.84;
+      letter-spacing:-.085em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
     }
 
-    .nav,
-    .route-grid,
-    .read-grid,
-    .signal-grid,
-    .show-grid {
-      display:grid;
-      gap:10px;
+    .thesis{
+      margin:0;
+      max-width:1000px;
+      color:rgba(255,255,255,.93);
+      font-size:clamp(1.42rem,3.4vw,2.45rem);
+      line-height:1.1;
+      font-weight:950;
+      letter-spacing:-.052em;
     }
 
-    .nav,
-    .route-grid {
-      perspective:1000px;
+    .lead{
+      margin:0;
+      max-width:900px;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.35vw,1.32rem);
+      line-height:1.58;
+    }
+
+    .statusPill{
+      display:inline-flex;
+      width:max-content;
       align-items:center;
-      justify-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,217,138,.24);
+      background:rgba(255,217,138,.055);
+      color:rgba(255,247,220,.94);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .nav a,
-    .route-card {
-      position:relative;
-      isolation:isolate;
-      width:min(100%,94px);
-      aspect-ratio:1 / 1;
-      display:grid;
+    .heroActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .heroButton{
+      min-height:48px;
+      display:inline-grid;
       place-items:center;
-      padding:0;
-      color:#e7eeff;
-      font-size:.70rem;
-      line-height:1.02;
-      font-weight:900;
-      text-align:center;
-      transform-style:preserve-3d;
-      transition:transform 420ms ease, filter 420ms ease;
-      will-change:transform,filter;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .route-card {
-      width:min(100%,150px);
-      font-size:.80rem;
-    }
-
-    .nav a::before,
-    .route-card::before {
-      content:"";
-      position:absolute;
-      inset:10%;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(170,198,255,.24);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.28),transparent 34%),
-        radial-gradient(circle at 50% 72%,rgba(255,154,184,.14),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
-        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
-      box-shadow:
-        0 0 30px rgba(239,210,154,.18),
-        inset 0 0 26px rgba(255,255,255,.035);
-      z-index:-1;
-      transform-origin:50% 50%;
-      animation:
-        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
-        diamondPulse var(--diamond-breathe) ease-in-out infinite;
-    }
-
-    .nav a::after,
-    .route-card::after {
-      content:"";
-      position:absolute;
-      inset:25%;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(255,255,255,.08);
-      background:
-        radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
-        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
-      opacity:.72;
-      z-index:-1;
-      transform-origin:50% 50%;
-      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
-    }
-
-    .nav a.featured,
-    .route-card.featured {
-      color:#fff8ea;
-    }
-
-    .nav a.featured::before,
-    .route-card.featured::before {
-      border-color:rgba(239,210,154,.48);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.36),transparent 34%),
-        radial-gradient(circle at 50% 72%,rgba(255,154,184,.16),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
-        linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
-      box-shadow:
-        0 0 40px rgba(239,210,154,.26),
-        inset 0 0 30px rgba(255,255,255,.04);
-    }
-
-    .nav a.underdog,
-    .route-card.underdog {
-      color:#fff1c7;
-    }
-
-    .nav a.underdog::before,
-    .route-card.underdog::before {
-      border-color:rgba(255,154,184,.44);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,154,184,.26),transparent 34%),
-        radial-gradient(circle at 50% 72%,rgba(239,210,154,.18),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
-        linear-gradient(180deg,rgba(42,20,32,.96),rgba(10,18,32,.92));
-      box-shadow:
-        0 0 40px rgba(255,154,184,.22),
-        inset 0 0 30px rgba(255,255,255,.04);
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible,
-    .route-card:hover,
-    .route-card:focus-visible {
-      transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);
-      filter:brightness(1.16) saturate(1.08);
+    .heroButton:hover,
+    .heroButton:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.52);
+      background:rgba(255,217,138,.055);
       outline:none;
     }
 
-    .hero {
-      border-radius:34px;
-      padding:clamp(24px,5vw,52px);
-      margin-bottom:14px;
-      min-height:clamp(400px,54vw,640px);
+    .talkStage{
+      padding:clamp(20px,4vw,38px);
       display:grid;
-      align-items:center;
-      overflow:hidden;
-      position:relative;
-      isolation:isolate;
-    }
-
-    .hero::before {
-      content:"";
-      position:absolute;
-      width:min(800px,94vw);
-      height:min(800px,94vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
+      gap:18px;
       background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(255,154,184,.14),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.09),transparent 70%);
-      filter:blur(5px);
-      z-index:-3;
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
     }
 
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(920px,98vw);
-      height:min(440px,52vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(9deg);
-      border:1px solid rgba(239,210,154,.24);
-      border-radius:50%;
-      z-index:-2;
-      box-shadow:
-        0 0 38px rgba(239,210,154,.08),
-        inset 0 0 38px rgba(255,154,184,.06);
-    }
-
-    .stage-diamond {
-      position:absolute;
-      right:clamp(20px,6vw,90px);
-      top:50%;
-      width:min(280px,33vw);
-      height:min(280px,33vw);
-      transform:translateY(-50%) rotate(45deg);
-      border:1px solid rgba(239,210,154,.36);
-      border-radius:40px;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.22),transparent 38%),
-        radial-gradient(circle at 50% 72%,rgba(255,154,184,.14),transparent 34%),
-        linear-gradient(180deg,rgba(42,34,20,.58),rgba(2,6,14,.88));
-      box-shadow:
-        inset 0 0 46px rgba(239,210,154,.07),
-        0 0 78px rgba(255,154,184,.10);
-      opacity:.84;
-      z-index:-1;
-      animation:slowTurn 34s linear infinite;
-    }
-
-    .stage-diamond::before {
-      content:"";
-      position:absolute;
-      inset:18px;
-      border:1px solid rgba(170,198,255,.18);
-      border-radius:28px;
-    }
-
-    .stage-diamond::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      background:var(--gold);
-      box-shadow:0 0 22px rgba(239,210,154,.70);
-    }
-
-    .hero-copy {
+    .stageHeader{
       display:grid;
-      gap:14px;
-      max-width:760px;
-      position:relative;
-      z-index:2;
-    }
-
-    .pill {
-      display:inline-flex;
-      width:fit-content;
-      align-items:center;
       gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
-      font-weight:850;
+      max-width:940px;
     }
 
-    .pill::before {
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 18px rgba(239,210,154,.50);
-    }
-
-    h1 {
+    .stageTitle{
       margin:0;
-      color:#fff;
-      font-size:clamp(3.2rem,11vw,7.4rem);
-      line-height:.84;
-      letter-spacing:-.085em;
+      font-size:clamp(2rem,5.8vw,4.2rem);
+      line-height:.92;
+      letter-spacing:-.065em;
     }
 
-    h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:1rem;
-    }
-
-    .hero p {
-      max-width:66ch;
-      margin-top:6px;
-      font-size:clamp(1.04rem,1.9vw,1.22rem);
-    }
-
-    .panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
+    .dollGrid{
       display:grid;
-      gap:16px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      align-items:start;
     }
 
-    .panel-head {
-      display:grid;
-      gap:8px;
-    }
-
-    .read-card,
-    .signal-card,
-    .show-card {
-      position:relative;
-      isolation:isolate;
-      border-radius:18px;
-      padding:14px;
-      color:inherit;
+    .doll{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:rgba(0,0,0,.20);
       overflow:hidden;
+      min-height:100%;
     }
 
-    .show-card {
-      min-height:168px;
-    }
-
-    .show-card::before {
-      content:"";
-      position:absolute;
-      right:-40px;
-      top:-40px;
-      width:110px;
-      height:110px;
-      transform:rotate(45deg);
-      border:1px solid rgba(239,210,154,.18);
-      border-radius:26px;
+    .doll[open]{
       background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.10),transparent 45%),
-        rgba(255,255,255,.02);
-      z-index:-1;
-      animation:smallStageTurn 28s linear infinite;
+        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.07),transparent 18rem),
+        rgba(0,0,0,.24);
+      border-color:rgba(255,217,138,.38);
     }
 
-    .show-card.underdog-card::before {
-      border-color:rgba(255,154,184,.20);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,154,184,.12),transparent 45%),
-        rgba(255,255,255,.02);
-    }
-
-    .read-card small,
-    .signal-card small,
-    .show-card small,
-    .route-card small {
-      display:block;
-      margin-bottom:6px;
-      color:#91a6cf;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.58rem;
-      font-weight:850;
-    }
-
-    .read-card strong,
-    .signal-card strong,
-    .show-card strong,
-    .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1rem;
-      line-height:1.1;
-    }
-
-    .read-card p,
-    .signal-card p,
-    .show-card p {
-      margin-top:8px;
-      color:var(--muted);
-      font-size:.88rem;
-      line-height:1.42;
-    }
-
-    .route-card small,
-    .route-card strong {
-      position:relative;
-      z-index:3;
-      max-width:72%;
-      margin-left:auto;
-      margin-right:auto;
-      text-align:center;
-      text-wrap:balance;
-    }
-
-    .route-card small {
-      font-size:.48rem;
-    }
-
-    .route-card strong {
-      font-size:.76rem;
-    }
-
-    .show-tag {
-      display:inline-flex;
-      width:fit-content;
-      margin-top:12px;
-      padding:6px 9px;
-      border:1px solid rgba(239,210,154,.22);
-      border-radius:999px;
-      background:rgba(239,210,154,.055);
-      color:#fff1c7;
-      font-size:.62rem;
-      font-weight:900;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .show-tag.underdog-tag {
-      border-color:rgba(255,154,184,.24);
-      background:rgba(255,154,184,.060);
-      color:#ffdbe6;
-    }
-
-    .status-strip {
-      display:grid;
-      gap:8px;
+    .doll summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:172px;
       padding:16px;
-      border-radius:20px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      -webkit-tap-highlight-color:transparent;
     }
 
-    .status-strip code {
-      display:block;
-      white-space:pre-wrap;
-      word-break:break-word;
-      color:#dfe8ff;
-      font-size:.84rem;
+    .doll summary::-webkit-details-marker{display:none}
+
+    .dollTag{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dollTitle{
+      color:var(--ink);
+      font-size:clamp(1.06rem,2.2vw,1.4rem);
+      line-height:1.06;
+      font-weight:950;
+      letter-spacing:-.035em;
+    }
+
+    .dollHint{
+      margin:0;
+      color:var(--soft);
+      line-height:1.42;
+      font-size:.96rem;
+    }
+
+    .dollBody{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+
+    .dollBody p{
+      margin:0;
+      color:var(--txt);
       line-height:1.55;
     }
 
-    .footer {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:14px 4px 0;
-      color:#9db0d4;
+    .speechLine{
+      margin:0;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.12rem,2.4vw,1.45rem);
+      line-height:1.2;
+      font-weight:950;
+      letter-spacing:-.038em;
+    }
+
+    .showMiniGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .showMini{
+      min-height:76px;
+      display:grid;
+      gap:4px;
+      align-content:start;
+      padding:10px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(0,0,0,.20);
+    }
+
+    .showMini small{
+      color:var(--rose);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .showMini strong{
+      color:var(--ink);
+      font-size:.92rem;
+      line-height:1.1;
+    }
+
+    .continueLink{
+      display:grid;
+      gap:7px;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .continueLink:hover,
+    .continueLink:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.50);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .continueLink small{
+      color:var(--soft);
       font-size:.86rem;
+      line-height:1.35;
+      font-weight:750;
     }
 
-    .footer a {
-      color:#d6e2ff;
+    .routeRail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:12px;
     }
 
-    @keyframes diamondBodyWobble {
-      0%,100% {
-        transform:translateY(0) rotate(0deg) scale(1);
-      }
-
-      25% {
-        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
-      }
-
-      50% {
-        transform:translateY(-4px) rotate(0deg) scale(1.025);
-      }
-
-      75% {
-        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
-      }
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      text-align:center;
     }
 
-    @keyframes diamondPulse {
-      0%,100% {
-        opacity:.82;
-        filter:brightness(1);
-      }
-
-      50% {
-        opacity:1;
-        filter:brightness(1.18);
-      }
-    }
-
-    @keyframes innerDiamondSpin {
-      0% {
-        transform:rotate(0deg) scale(.96);
-      }
-
-      100% {
-        transform:rotate(360deg) scale(.96);
-      }
-    }
-
-    @keyframes slowTurn {
-      0% {
-        transform:translateY(-50%) rotate(45deg);
-      }
-
-      100% {
-        transform:translateY(-50%) rotate(405deg);
-      }
-    }
-
-    @keyframes smallStageTurn {
-      0% {
-        transform:rotate(45deg);
-      }
-
-      100% {
-        transform:rotate(405deg);
-      }
-    }
-
-    @media (min-width:820px) {
-      .topbar {
-        grid-template-columns:1fr auto;
-        align-items:center;
-      }
-
-      .nav {
-        grid-template-columns:repeat(9,minmax(74px,90px));
-        justify-content:end;
-      }
-
-      .read-grid,
-      .signal-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-
-      .show-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .route-grid {
-        grid-template-columns:repeat(5,minmax(118px,1fr));
-      }
-    }
-
-    @media (max-width:640px) {
-      .page {
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,
-      .hero,
-      .panel {
-        border-radius:24px;
-      }
-
-      .topbar {
-        padding:12px;
-      }
-
-      .brand {
-        gap:10px;
-      }
-
-      .mark {
-        width:44px;
-        height:44px;
-        border-radius:14px;
-      }
-
-      .nav {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:6px;
-      }
-
-      .nav a {
-        width:min(100%,70px);
-        font-size:.50rem;
-      }
-
-      .hero {
-        min-height:420px;
-        padding:22px;
-      }
-
-      .stage-diamond {
-        right:18px;
-        top:auto;
-        bottom:18px;
-        width:118px;
-        height:118px;
-        transform:rotate(45deg);
-        opacity:.42;
-      }
-
-      .route-grid {
+    @media(max-width:980px){
+      .dollGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .route-card {
-        width:min(100%,132px);
-      }
-
-      .route-card small {
-        font-size:.40rem;
-      }
-
-      .route-card strong {
-        font-size:.66rem;
-      }
-
-      .show-card {
-        min-height:138px;
+      .showMiniGrid{
+        grid-template-columns:1fr;
       }
     }
 
-    @media (max-width:360px) {
-      .nav a {
-        width:min(100%,62px);
-        font-size:.45rem;
+    @media(max-width:680px){
+      .page{
+        width:min(100% - 20px,1120px);
+        padding-top:10px;
       }
 
-      .route-card {
-        width:min(100%,122px);
+      .hero{
+        min-height:auto;
       }
-    }
 
-    @media (prefers-reduced-motion:reduce) {
-      *,
-      *::before,
-      *::after {
-        animation:none !important;
-        scroll-behavior:auto !important;
-        transition:none !important;
+      .hero,
+      .talkStage,
+      .routeRail{
+        border-radius:24px;
+      }
+
+      .dollGrid{
+        grid-template-columns:1fr;
+      }
+
+      .doll summary{
+        min-height:auto;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
   </style>
@@ -756,263 +430,152 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
-    data-page="upper-room"
-    data-surface="generation-2-self-contained-upper-room"
-    data-underdog-preface-route="/big-laugh/about-this-underdog/"
+    data-backlink-root="upper-room"
+    data-backlink-version="ted-talk-russian-doll-b1"
+    data-existing-full-route="/big-laugh/upper-room/"
+    data-products-route="/products/"
+    data-showroom-route="/showroom/"
+    data-coming-soon-owner="events-and-attractions"
   >
-    <header class="topbar">
-      <a class="brand" href="/big-laugh/upper-room/" aria-label="The Upper Room">
-        <span class="mark" aria-hidden="true">UR</span>
-        <span class="brand-text">
-          <span class="kicker">Big Laugh · Diamond Gate Bridge</span>
-          <strong class="title">The Upper Room · V9</strong>
-        </span>
-      </a>
+    <section class="hero" aria-label="The Upper Room">
+      <div class="brandRow">
+        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+        <a class="brandName" href="/">Diamond Gate Bridge</a>
+      </div>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/prelude/">Prelude</a>
-        <a href="/explore/">Explore</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-        <a class="underdog" href="/big-laugh/about-this-underdog/">Underdog</a>
-        <a class="featured" href="/about/">About</a>
-      </nav>
-    </header>
+      <p class="kicker">TED Talk Backlink · Events & Attractions</p>
+      <h1>The Upper Room</h1>
+      <p class="thesis">
+        This is where the bridge leaves the screen.
+      </p>
+      <p class="lead">
+        The Upper Room is the public activation lane for shows, events, attractions, signings, appearances, demonstrations, and future pop-up experiences.
+      </p>
+      <span class="statusPill">Coming soon</span>
 
-    <section class="hero" aria-labelledby="upperRoomTitle">
-      <div class="stage-diamond" aria-hidden="true"></div>
-
-      <div class="hero-copy">
-        <span class="pill">Upcoming show surface</span>
-        <h1 id="upperRoomTitle">The Upper Room</h1>
-        <h2>The public show chamber.</h2>
-        <p>
-          The Upper Room is the upcoming-show surface. It gives visitors a clean
-          place to understand the event, the tone, and where to go next without
-          crowding the rest of the site.
-        </p>
+      <div class="heroActions" aria-label="Primary actions">
+        <a class="heroButton" href="#upper-room-dolls">Open the Russian Doll</a>
+        <a class="heroButton" href="/big-laugh/upper-room/">Go to Show Chamber</a>
+        <a class="heroButton" href="/showroom/">Return to Showroom</a>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="contextTitle">
-      <div class="panel-head">
-        <span class="pill">Generation 2 baseline</span>
-        <h2 id="contextTitle">The show page should be immediate.</h2>
-        <p>
-          V9 keeps The Upper Room self-contained, compact, and readable. The page
-          puts show context first, then routes visitors to the rest of the system.
+    <section id="upper-room-dolls" class="talkStage" aria-label="Upper Room Russian doll chambers">
+      <div class="stageHeader">
+        <p class="kicker">Open the public activation pattern</p>
+        <h2 class="stageTitle">Short enough to enter. Public enough to gather.</h2>
+        <p class="lead">
+          Each chamber opens one layer of the events lane. The existing Upper Room route carries the fuller show chamber.
         </p>
       </div>
 
-      <div class="read-grid">
-        <article class="read-card">
-          <small>Event</small>
-          <strong>Make the show visible.</strong>
-          <p>The page names the performance surface without burying it under system language.</p>
-        </article>
+      <div class="dollGrid">
+        <details id="public-surface" class="doll" open>
+          <summary>
+            <span class="dollTag">Layer One</span>
+            <span class="dollTitle">A showroom eventually needs a room people can enter.</span>
+            <p class="dollHint">The bridge cannot stay only on the screen.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              The Upper Room is the public show chamber.
+            </p>
+            <p>
+              The showroom proves the system. The Upper Room gives the public a place to meet it through shows, events, attractions, appearances, and signings.
+            </p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Context</small>
-          <strong>Give the visitor a clean read.</strong>
-          <p>The page explains what this chamber is before routing to other pages.</p>
-        </article>
+        <details id="coming-soon" class="doll">
+          <summary>
+            <span class="dollTag">Layer Two</span>
+            <span class="dollTitle">Coming soon belongs here.</span>
+            <p class="dollHint">Events and attractions are the future activation lane.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Consider the Energy is not coming soon. Events & Attractions are.
+            </p>
+            <p>
+              This lane holds the schedule, appearances, attractions, live shows, book signings, merch signings, demonstrations, and future public experiences.
+            </p>
+            <span class="statusPill">Schedule coming soon</span>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Route</small>
-          <strong>Send traffic cleanly.</strong>
-          <p>Visitors can move to Products, Gauges, Explore, Frontier, About, or About This Underdog from here.</p>
-        </article>
+        <details id="show-paths" class="doll">
+          <summary>
+            <span class="dollTag">Layer Three</span>
+            <span class="dollTitle">The public lane has multiple forms.</span>
+            <p class="dollHint">Shows, signings, attractions, appearances, and demonstrations.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              The page should name the event surface without burying it under system language.
+            </p>
+            <div class="showMiniGrid" aria-label="Upper Room public forms">
+              <span class="showMini"><small>Shows</small><strong>Live public performance surface.</strong></span>
+              <span class="showMini"><small>Signings</small><strong>Books, merch, and audience contact.</strong></span>
+              <span class="showMini"><small>Attractions</small><strong>Future pop-up and experience lane.</strong></span>
+            </div>
+          </div>
+        </details>
+
+        <details id="continue" class="doll">
+          <summary>
+            <span class="dollTag">Layer Four</span>
+            <span class="dollTitle">Continue through the right door.</span>
+            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
+          </summary>
+          <div class="dollBody">
+            <a class="continueLink" href="/big-laugh/upper-room/">
+              Continue to The Upper Room
+              <small>The existing full show chamber and upcoming-show surface.</small>
+            </a>
+
+            <a class="continueLink" href="/products/">
+              Continue to Products
+              <small>The parent product/system route for later marriage.</small>
+            </a>
+
+            <a class="continueLink" href="/showroom/">
+              Return to the Showroom
+              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
+            </a>
+          </div>
+        </details>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="showTitle">
-      <div class="panel-head">
-        <span class="pill">Show chamber</span>
-        <h2 id="showTitle">Public-facing performance surface.</h2>
-      </div>
-
-      <div class="show-grid">
-        <article class="show-card">
-          <small>Room role</small>
-          <strong>Upcoming show hub.</strong>
-          <p>This page functions as the visible destination for show-related traffic.</p>
-          <span class="show-tag">Upcoming show</span>
-        </article>
-
-        <article class="show-card">
-          <small>Audience read</small>
-          <strong>Simple first impression.</strong>
-          <p>The visitor should understand the show surface before seeing deeper routes.</p>
-          <span class="show-tag">Public surface</span>
-        </article>
-
-        <article class="show-card">
-          <small>System link</small>
-          <strong>Connected, not crowded.</strong>
-          <p>The show remains connected to Diamond Gate Bridge without becoming the full system.</p>
-          <span class="show-tag">Connected chamber</span>
-        </article>
-
-        <article class="show-card underdog-card">
-          <small>Preface route</small>
-          <strong>About This Underdog.</strong>
-          <p>This new route prepares the personal/comedy identity layer before the destination page is built.</p>
-          <span class="show-tag underdog-tag">Preface active</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="underdogTitle">
-      <div class="panel-head">
-        <span class="pill">New preface</span>
-        <h2 id="underdogTitle">About This Underdog now has a forward route.</h2>
-        <p>
-          This is the preface step only. The Upper Room now points to the future
-          About This Underdog page. The destination page and backlink can be created
-          next without disturbing the V9 baseline.
-        </p>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card featured underdog" href="/big-laugh/about-this-underdog/">
-          <small>Preface</small>
-          <strong>About This Underdog</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Show hub</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/about/">
-          <small>Identity</small>
-          <strong>About</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="routesTitle">
-      <div class="panel-head">
-        <span class="pill">Upper Room routes</span>
-        <h2 id="routesTitle">Move from the show to the right surface.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/door/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Route map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/frontier/">
-          <small>Edge</small>
-          <strong>Frontier</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card featured underdog" href="/big-laugh/about-this-underdog/">
-          <small>Identity</small>
-          <strong>About This Underdog</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/about/">
-          <small>Site identity</small>
-          <strong>About</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="signalsTitle">
-      <div class="panel-head">
-        <span class="pill">Upper Room read</span>
-        <h2 id="signalsTitle">What this page confirms.</h2>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card">
-          <small>Density</small>
-          <strong>Controls are compact.</strong>
-          <p>The old oversized bubbles are replaced with rotating diamond controls.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Function</small>
-          <strong>The page is a show chamber.</strong>
-          <p>The Upper Room has a clear public event role and now includes the Underdog preface route.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Baseline</small>
-          <strong>Upper Room V9 remains self-contained.</strong>
-          <p>The added route does not depend on shared asset loading and does not break the V9 baseline.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="statusTitle">
-      <div class="panel-head">
-        <span class="pill">Status receipt</span>
-        <h2 id="statusTitle">Generation 2 Upper Room baseline is active.</h2>
-      </div>
-
-      <div class="status-strip">
-        <code>UPPER_ROOM_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
-PAGE=/big-laugh/upper-room/index.html
-ROUTE=/big-laugh/upper-room/
-NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
-SHOW_CHAMBER_ROLE=ACTIVE
-UPCOMING_SHOW_SURFACE=VISIBLE
-ABOUT_THIS_UNDERDOG_PREFACE=ACTIVE
-ABOUT_THIS_UNDERDOG_ROUTE=/big-laugh/about-this-underdog/
-BACKLINK_STATUS=NEXT_FILE_NOT_CREATED_YET
-CONTEXT=READABLE_FIRST
-LEGACY_LONG_BUBBLES=REMOVED
-ASSET_DEPENDENCY=REMOVED_FOR_UPPER_ROOM_PAGE
-NEXT_ACTION=CREATE_/big-laugh/about-this-underdog/index.html_WITH_BACKLINK_TO_UPPER_ROOM</code>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>Diamond Gate Bridge · The Upper Room · Self-Contained Generation 2 Baseline</span>
-      <span>
-        <a href="/door/">Door</a> ·
-        <a href="/home/">Home</a> ·
-        <a href="/big-laugh/about-this-underdog/">About This Underdog</a> ·
-        <a href="/products/">Products</a>
-      </span>
-    </footer>
+    <nav class="routeRail" aria-label="Route rail">
+      <a class="routeLink" href="/showroom/">Showroom</a>
+      <a class="routeLink" href="/big-laugh/upper-room/">Show Chamber</a>
+      <a class="routeLink" href="/products/">Products</a>
+      <a class="routeLink" href="/">Compass</a>
+    </nav>
   </main>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var VERSION = "upper-room-b1-russian-doll";
+      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+      document.documentElement.setAttribute("data-upper-room-controller", VERSION);
+
+      dolls.forEach(function(doll){
+        doll.addEventListener("toggle", function(){
+          if (!doll.open) return;
+
+          dolls.forEach(function(other){
+            if (other !== doll) other.removeAttribute("open");
+          });
+
+          document.documentElement.setAttribute("data-upper-room-open-layer", doll.id || "");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

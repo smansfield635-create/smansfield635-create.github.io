@@ -1,14 +1,15 @@
 <!doctype html>
-<!-- TNT CREATE — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · BACKLINK LANDING · B1
+<!-- TNT RENEWAL — /about-this-underdog/index.html
+     ABOUT THIS UNDERDOG · TED TALK BACKLINK LANDING · B2
 
      CONTRACT:
-       - Create the root backlink landing page used by the Showroom.
-       - Do not replace the existing full page at /big-laugh/about-this-underdog/.
-       - Add additional public-facing context.
-       - Then route the visitor into the existing full chamber.
-       - Preserve Russian-doll logic: landing page first layer, full route second layer.
-       - Include Products chamber backlink for future product marriage.
+       - Renew /about-this-underdog/ under TED Talk showroom terms.
+       - Page is the public speech layer.
+       - Existing /big-laugh/about-this-underdog/ remains the deeper chamber.
+       - /products/ remains the product/system continuation route.
+       - No encyclopedia dump.
+       - No trauma dump.
+       - No pity posture.
        - No graphics box.
 -->
 
@@ -17,10 +18,14 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>About This Underdog — Diamond Gate Bridge</title>
-  <meta name="description" content="A public-facing entry page for the underdog backstory, routing into the full Diamond Gate Bridge underdog chamber."/>
+  <meta name="description" content="A TED Talk-style public entry chamber for the underdog story inside Diamond Gate Bridge."/>
 
   <style>
     *{box-sizing:border-box}
+
+    html{
+      scroll-behavior:smooth;
+    }
 
     html,body{
       margin:0;
@@ -29,6 +34,7 @@
       background:#02040b;
       color:#fff;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
     }
 
     a{color:inherit;text-decoration:none}
@@ -53,7 +59,8 @@
         radial-gradient(circle at 14% 18%,rgba(255,255,255,.24) 0 1px,transparent 2px),
         radial-gradient(circle at 42% 22%,rgba(177,205,255,.17) 0 1px,transparent 2px),
         radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 16% 12%,rgba(255,217,138,.08),transparent 34rem),
+        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.09),transparent 34rem),
+        radial-gradient(ellipse at 86% 26%,rgba(147,197,253,.055),transparent 28rem),
         linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
@@ -79,12 +86,12 @@
     }
 
     .hero{
-      padding:clamp(24px,5vw,54px);
+      padding:clamp(24px,5vw,56px);
       display:grid;
       gap:18px;
       overflow:hidden;
       background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.065),transparent 30rem),
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.07),transparent 30rem),
         linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
     }
 
@@ -132,22 +139,31 @@
       text-shadow:0 20px 90px rgba(0,0,0,.55);
     }
 
-    .lead{
+    h2{
       margin:0;
-      max-width:900px;
-      color:var(--txt);
-      font-size:clamp(1.08rem,2.5vw,1.45rem);
-      line-height:1.55;
+      max-width:980px;
+      font-size:clamp(2.1rem,6vw,4.25rem);
+      line-height:.92;
+      letter-spacing:-.065em;
     }
 
     .thesis{
       margin:0;
-      max-width:960px;
+      max-width:980px;
       color:rgba(255,255,255,.93);
       font-size:clamp(1.36rem,3.2vw,2.3rem);
       line-height:1.12;
       font-weight:950;
       letter-spacing:-.052em;
+    }
+
+    .lead,
+    .panel p{
+      margin:0;
+      max-width:920px;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.35vw,1.32rem);
+      line-height:1.58;
     }
 
     .panel{
@@ -159,11 +175,22 @@
         linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
     }
 
-    .panelTitle{
-      margin:0;
-      font-size:clamp(2rem,5vw,4rem);
-      line-height:.94;
-      letter-spacing:-.065em;
+    .definitionBox{
+      padding:clamp(18px,3vw,28px);
+      border:1px solid rgba(255,217,138,.24);
+      border-radius:24px;
+      background:
+        radial-gradient(ellipse at 14% 18%,rgba(255,217,138,.09),transparent 22rem),
+        rgba(0,0,0,.22);
+      display:grid;
+      gap:10px;
+    }
+
+    .definitionBox strong{
+      color:var(--ink);
+      font-size:clamp(1.26rem,3vw,2rem);
+      line-height:1.12;
+      letter-spacing:-.04em;
     }
 
     .grid{
@@ -173,7 +200,7 @@
     }
 
     .card{
-      min-height:150px;
+      min-height:154px;
       padding:16px;
       border:1px solid rgba(255,255,255,.12);
       border-radius:20px;
@@ -190,22 +217,31 @@
     }
 
     .card p{
-      margin:0;
       color:var(--soft);
       line-height:1.48;
       font-size:.98rem;
     }
 
+    .speechLine{
+      margin:0;
+      max-width:980px;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.25rem,3vw,2.05rem);
+      line-height:1.16;
+      font-weight:950;
+      letter-spacing:-.048em;
+    }
+
     .ctaGrid{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
     }
 
     .cta{
       display:grid;
       gap:8px;
-      min-height:130px;
+      min-height:138px;
       padding:18px;
       border-radius:22px;
       border:1px solid rgba(255,255,255,.13);
@@ -231,7 +267,7 @@
 
     .cta strong{
       color:var(--ink);
-      font-size:clamp(1.16rem,2.6vw,1.6rem);
+      font-size:clamp(1.12rem,2.3vw,1.45rem);
       line-height:1.08;
       letter-spacing:-.04em;
     }
@@ -263,7 +299,7 @@
       text-align:center;
     }
 
-    @media(max-width:820px){
+    @media(max-width:900px){
       .grid,
       .ctaGrid{
         grid-template-columns:1fr;
@@ -281,7 +317,8 @@
       }
 
       .hero,
-      .panel{
+      .panel,
+      .routeRail{
         border-radius:24px;
       }
     }
@@ -292,9 +329,10 @@
   <main
     class="page"
     data-backlink-root="about-this-underdog"
-    data-backlink-version="b1"
+    data-backlink-version="ted-talk-b2"
     data-existing-full-route="/big-laugh/about-this-underdog/"
     data-products-route="/products/"
+    data-showroom-route="/showroom/"
   >
     <section class="hero" aria-label="About This Underdog">
       <div class="brandRow">
@@ -302,59 +340,110 @@
         <a class="brandName" href="/">Diamond Gate Bridge</a>
       </div>
 
-      <p class="kicker">Backlink Landing · About This Underdog</p>
+      <p class="kicker">TED Talk Backlink · About This Underdog</p>
       <h1>About This Underdog</h1>
       <p class="thesis">
-        Some people get stepped on more than most. The point is not to compete over suffering. The point is to decide what gets built from it.
+        Some people get stepped on more than most.
       </p>
       <p class="lead">
-        This page is the first layer. It gives the public-facing definition, then routes into the existing full underdog chamber for the deeper story.
+        This is not a complaint page. It is the public speech layer for the underdog pattern: pressure without equal protection, expectation without equal help, and the choice to build anyway.
       </p>
     </section>
 
     <section class="panel" aria-label="Underdog definition">
       <p class="kicker">Definition</p>
-      <h2 class="panelTitle">Pressure without equal protection.</h2>
-      <p class="lead">
-        An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+      <h2>What makes someone an underdog?</h2>
+
+      <div class="definitionBox">
+        <strong>
+          An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+        </strong>
+        <p>
+          That definition can fit a kid, a parent, a founder, a performer, a worker, a veteran, an athlete, a student, or anyone who has had to stand back up while the weight on them was heavier than the help around them.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Universal bridge">
+      <p class="kicker">Universal Bridge</p>
+      <h2>Everyone has been underneath something.</h2>
+      <p class="speechLine">
+        Not everyone has been stepped on the same amount. But everyone knows what it feels like to be underneath a label, a mistake, a season, a debt, a room, a family story, or a system that did not fully see them.
+      </p>
+      <p>
+        The point is not to compete over suffering. The point is to recognize the pattern clearly enough that it stops owning the room.
       </p>
 
       <div class="grid">
         <div class="card">
-          <strong>Not a pity identity</strong>
-          <p>The underdog is not a final label. It is a pressure condition before the next build.</p>
+          <strong>Pressure without protection</strong>
+          <p>The underdog is often judged by the fall while no one counts the weight that pushed them down.</p>
         </div>
 
         <div class="card">
-          <strong>Not one hero</strong>
-          <p>Everybody has been underneath something: a label, a mistake, a room, a season, or a system.</p>
+          <strong>Expectation without help</strong>
+          <p>They are expected to recover, explain, adapt, and perform even when support was never equal to the demand.</p>
         </div>
 
         <div class="card">
-          <strong>Back to baseline</strong>
-          <p>The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.</p>
+          <strong>Context without excuses</strong>
+          <p>Seeing the pressure does not remove responsibility. It makes responsibility more honest.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Turning point">
+      <p class="kicker">Turning Point</p>
+      <h2>The underdog does not win by pretending the pressure was fair.</h2>
+      <p class="speechLine">
+        The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.
+      </p>
+      <p>
+        That is where the story changes. The underdog does not need pity to become dangerous in the right way. The underdog needs a clean baseline, a disciplined frame, and a reason to convert pressure into structure.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Baseline</strong>
+          <p>Return to the first layer: body, mind, speech, rhythm, and mission.</p>
+        </div>
+
+        <div class="card">
+          <strong>Expression</strong>
+          <p>Turn pressure into language that moves people instead of noise that burns the room down.</p>
+        </div>
+
+        <div class="card">
+          <strong>Bridge</strong>
+          <p>Build something that lets other people cross what you had to crawl through.</p>
         </div>
       </div>
     </section>
 
     <section class="panel" aria-label="Continuation routes">
       <p class="kicker">Continue</p>
-      <h2 class="panelTitle">Open the full chamber.</h2>
-      <p class="lead">
-        The showroom introduced the Russian doll. This page is the second layer. The existing route carries the full chamber, while the products chamber remains the larger place where public-facing systems are organized.
+      <h2>Open the next chamber.</h2>
+      <p>
+        This page is the public speech layer. The deeper backstory lives in the existing full chamber. The product/system path lives in Products. The showroom remains the lobby where the Russian doll opened.
       </p>
 
       <div class="ctaGrid">
         <a class="cta" href="/big-laugh/about-this-underdog/">
-          <span>Full route</span>
-          <strong>Continue to the existing About This Underdog chamber</strong>
-          <small>The current full underdog page and backstory chamber.</small>
+          <span>Full chamber</span>
+          <strong>Continue to the existing About This Underdog route</strong>
+          <small>The deeper underdog page and backstory chamber.</small>
         </a>
 
         <a class="cta" href="/products/">
-          <span>Product chamber</span>
+          <span>System route</span>
           <strong>Continue to Products</strong>
-          <small>The larger product-routing surface where the public lanes can be married later.</small>
+          <small>The product-routing surface where the lanes can be married later.</small>
+        </a>
+
+        <a class="cta" href="/showroom/">
+          <span>Return</span>
+          <strong>Return to the Showroom</strong>
+          <small>The Russian-doll lobby and Earth/Sun proof room.</small>
         </a>
       </div>
     </section>

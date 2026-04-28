@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-orbital-earth-standard-v1"
+  data-generation="showroom-actual-earth-controller-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -11,13 +11,12 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-showroom-role="universe-delivery-surface"
+  data-showroom-role="orbital-earth-showroom"
   data-demo-universe="globe-only"
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
-  data-render-downstream="true"
-  data-render-engine="/render/globe.engine.js"
-  data-render-template="/render/globe.template.js"
+  data-render-controller="/showroom/globe/index.js"
+  data-required-earth-asset="/assets/earth/showroom-earth.png"
 >
 <head>
   <meta charset="utf-8" />
@@ -27,11 +26,11 @@
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. Earth is the centered orbital showroom globe. Demo Universe remains globe-only; Mirror / Nine Summits Universe remains the buildable world context for Rich Manor and Estate."
+    content="Showroom for Diamond Gate Bridge. Orbital Earth is the centered visual standard. The Demo Earth remains globe-only; the Mirror / Nine Summits Universe remains the buildable world context for Rich Manor and Estate."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-orbital-earth-standard-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-orbital-earth-standard-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-actual-earth-controller-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-actual-earth-controller-v1" />
 </head>
 
 <body
@@ -45,12 +44,12 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-showroom-role="universe-delivery-surface"
+  data-showroom-role="orbital-earth-showroom"
   data-demo-universe="globe-only"
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
-  data-active-universe="demo"
-  data-render-downstream="true"
+  data-render-controller="/showroom/globe/index.js"
+  data-required-earth-asset="/assets/earth/showroom-earth.png"
 >
   <header class="site-topbar">
     <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -80,15 +79,16 @@
     data-gauges-truth="live-authority"
     data-construct-class="house"
     data-house-part="showroom"
-    data-showroom-role="universe-delivery-surface"
+    data-showroom-role="orbital-earth-showroom"
     data-demo-universe="globe-only"
     data-mirror-universe="buildable-world-container"
     data-estate-land-placement="mirror-universe-only"
-    data-render-downstream="true"
+    data-render-controller="/showroom/globe/index.js"
+    data-required-earth-asset="/assets/earth/showroom-earth.png"
   >
     <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
       <article class="showroom-copy">
-        <p class="kicker">H5 · Showroom · Universe delivery surface</p>
+        <p class="kicker">H5 · Showroom · Orbital Earth</p>
         <h1 id="H5_SHOWROOM">Orbital Earth.</h1>
         <p>
           Earth is the center of the showroom. The stage does not draw a circular frame around the planet.
@@ -101,10 +101,11 @@
         aria-live="polite"
         data-render-root="showroom-globe"
         data-render-status="waiting"
-        data-render-engine="/render/globe.engine.js"
-        data-render-template="/render/globe.template.js"
-        data-downstream-mount="showroom"
-        data-active-universe="demo"
+        data-render-controller="/showroom/globe/index.js"
+        data-required-earth-asset="/assets/earth/showroom-earth.png"
+        data-earth-standard="actual-earth-texture-required"
+        data-demo-universe="globe-only"
+        data-estate-land-placement="mirror-universe-only"
       >
         <noscript>
           <article class="fallback-card">
@@ -114,19 +115,6 @@
           </article>
         </noscript>
       </div>
-
-      <section class="showroom-proof" aria-label="Showroom universe rules">
-        <article>
-          <span>Earth Standard</span>
-          <strong>Orbital Earth</strong>
-          <p>Centered visual surface. Auto and manual spin.</p>
-        </article>
-        <article>
-          <span>Boundary</span>
-          <strong>Demo globe-only</strong>
-          <p>No estate land is built on the Demo Earth globe.</p>
-        </article>
-      </section>
     </section>
 
     <section class="audit-source" aria-label="Showroom audit source">
@@ -146,18 +134,16 @@
       <span>construct-class=house</span>
       <span>house-part=showroom</span>
       <span>H5_SHOWROOM</span>
-      <span>showroom-role=universe-delivery-surface</span>
+      <span>showroom-role=orbital-earth-showroom</span>
       <span>demo-universe=globe-only</span>
       <span>mirror-universe=buildable-world-container</span>
       <span>estate-land-placement=mirror-universe-only</span>
-      <span>render-downstream=true</span>
-      <span>render-engine=/render/globe.engine.js</span>
-      <span>render-template=/render/globe.template.js</span>
+      <span>render-controller=/showroom/globe/index.js</span>
+      <span>required-earth-asset=/assets/earth/showroom-earth.png</span>
+      <span>earth-standard=actual-earth-texture-required</span>
     </section>
   </main>
 
-  <script src="/render/globe.template.js?v=showroom-orbital-earth-standard-v1" defer></script>
-  <script src="/render/globe.engine.js?v=showroom-orbital-earth-standard-v1" defer></script>
-  <script src="/showroom/showroom.render.js?v=showroom-orbital-earth-standard-v1" defer></script>
+  <script src="/showroom/globe/index.js?v=actual-earth-controller-v1" defer></script>
 </body>
 </html>

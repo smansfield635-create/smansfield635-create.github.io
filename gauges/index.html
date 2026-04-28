@@ -3,8 +3,8 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-generation-2-core-phase-calibration"
-  data-gauges-generation="core-phase-calibration-g2"
+  data-generation="gauges-core-experience-gate-v1"
+  data-gauges-generation="core-experience-gate-g2"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,12 +16,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Core Phase Calibration · Diamond Gate Bridge</title>
+  <title>Gauges · Core Experience Gate · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate, with core-house-first recommendation logic."
+    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate, with core-house-first and core-experience-hold recommendation logic."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=estate-core-phase-calibration-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=estate-core-experience-gate-v1" />
 
   <style>
     :root {
@@ -45,9 +45,7 @@
       --radius: 26px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -62,9 +60,7 @@
         linear-gradient(180deg, #03060b 0%, #071021 58%, #03060b 100%);
     }
 
-    body {
-      overflow-x: hidden;
-    }
+    body { overflow-x: hidden; }
 
     body::before {
       content: "";
@@ -81,14 +77,8 @@
       mask-image: linear-gradient(to bottom, rgba(0,0,0,.88), rgba(0,0,0,.20));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
 
     a:focus-visible,
     button:focus-visible {
@@ -162,9 +152,7 @@
       background: rgba(255,217,138,.12);
     }
 
-    .refresh {
-      cursor: pointer;
-    }
+    .refresh { cursor: pointer; }
 
     .hero {
       padding: 44px 0 18px;
@@ -202,9 +190,7 @@
     h1,
     h2,
     h3,
-    p {
-      margin-top: 0;
-    }
+    p { margin-top: 0; }
 
     h1 {
       margin-bottom: 18px;
@@ -255,9 +241,7 @@
       background: rgba(0,0,0,.18);
     }
 
-    .method-list b {
-      color: var(--gold);
-    }
+    .method-list b { color: var(--gold); }
 
     .phase-callout {
       border: 1px solid rgba(255, 217, 138, .42);
@@ -268,9 +252,7 @@
       line-height: 1.45;
     }
 
-    .phase-callout b {
-      color: var(--gold);
-    }
+    .phase-callout b { color: var(--gold); }
 
     .controls {
       display: flex;
@@ -283,7 +265,7 @@
 
     .status-strip {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
       padding: 18px 0;
     }
@@ -321,9 +303,7 @@
       line-height: 1.35;
     }
 
-    .section {
-      padding: 14px 0;
-    }
+    .section { padding: 14px 0; }
 
     .section-head {
       display: flex;
@@ -343,7 +323,7 @@
 
     .gauge-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -504,9 +484,7 @@
     }
 
     .audit-table,
-    .receipt-card {
-      padding: 18px;
-    }
+    .receipt-card { padding: 18px; }
 
     .audit-list {
       margin: 0;
@@ -525,9 +503,7 @@
       gap: 8px;
     }
 
-    .audit-item strong {
-      color: var(--text);
-    }
+    .audit-item strong { color: var(--text); }
 
     .audit-item span,
     .audit-item code {
@@ -535,21 +511,11 @@
       overflow-wrap: anywhere;
     }
 
-    .audit-item code {
-      font-size: .78rem;
-    }
+    .audit-item code { font-size: .78rem; }
 
-    .audit-item.pass {
-      border-color: rgba(147,239,189,.36);
-    }
-
-    .audit-item.warn {
-      border-color: rgba(255,207,122,.42);
-    }
-
-    .audit-item.fail {
-      border-color: rgba(255,111,120,.45);
-    }
+    .audit-item.pass { border-color: rgba(147,239,189,.36); }
+    .audit-item.warn { border-color: rgba(255,207,122,.42); }
+    .audit-item.fail { border-color: rgba(255,111,120,.45); }
 
     .audit-item.phase-target {
       box-shadow: inset 0 0 0 1px rgba(255,217,138,.42), 0 0 34px rgba(255,217,138,.08);
@@ -586,15 +552,17 @@
       flex-wrap: wrap;
     }
 
+    @media (max-width: 1100px) {
+      .gauge-grid,
+      .status-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 1000px) {
       .hero-grid,
       .audit-layout {
         grid-template-columns: 1fr;
-      }
-
-      .gauge-grid,
-      .status-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -605,13 +573,9 @@
         padding: 14px 0;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
 
-      .hero {
-        padding-top: 28px;
-      }
+      .hero { padding-top: 28px; }
 
       .gauge-grid,
       .status-strip {
@@ -672,11 +636,11 @@
     <section class="hero" aria-labelledby="H6_GAUGES">
       <div class="wrap hero-grid">
         <article class="panel hero-card">
-          <p class="eyebrow">H6 · Gauges · Core phase calibration room</p>
+          <p class="eyebrow">H6 · Gauges · Core experience gate</p>
           <h1 id="H6_GAUGES">Gauges</h1>
           <p class="lead">
-            Gauges measure the estate’s ceiling and jump height. Recommendation priority now follows the current build phase:
-            core house first, product wing second, planetary attachment third.
+            Gauges measure the estate’s ceiling and jump height. Recommendation priority now follows:
+            core house first, core Index experience second, product wing third, planetary attachment fourth.
           </p>
         </article>
 
@@ -691,7 +655,8 @@
           </ul>
 
           <div class="phase-callout">
-            <b>Core phase rule:</b> if the House Skeleton is below 100, Gauges recommends Door, Home, Products house page, Showroom, Compass, or Gauges before any product chamber or planet.
+            <b>Core experience rule:</b> if Compass declares <code>data-core-experience-hold="true"</code>,
+            Gauges recommends Index compression/control-panel work before Product Wing or Planets, even when House Skeleton is 100.
           </div>
 
           <div class="controls">
@@ -716,6 +681,12 @@
       </article>
 
       <article class="stat">
+        <small>Core experience</small>
+        <strong id="experienceScore">--</strong>
+        <span id="experienceNote">live-calculated · awaiting Compass hold read</span>
+      </article>
+
+      <article class="stat">
         <small>Products</small>
         <strong id="productsScore">--</strong>
         <span id="productsNote">live-calculated · awaiting route checks</span>
@@ -736,7 +707,7 @@
             <h2>Measured jump field</h2>
           </div>
           <p>
-            Gauges still measures house, product, and planetary fields. The next-move recommendation now respects build phase priority so downstream work does not outrun the core.
+            Gauges still measures house, product, and planetary fields. The new Core Experience Gate prevents downstream work from outrunning a crowded Index/Compass surface.
           </p>
         </div>
 
@@ -773,7 +744,7 @@ Run live calibration to read current jump height.</pre>
 
   <footer>
     <div class="wrap">
-      <span>GAUGES_CORE_PHASE_ALIGNMENT_FULL_TNT_v1</span>
+      <span>GAUGES_CORE_EXPERIENCE_GATE_FULL_TNT_v1</span>
       <span>Gauges may style evidence, but Gauges may not fake evidence.</span>
     </div>
   </footer>
@@ -1017,8 +988,7 @@ Run live calibration to read current jump height.</pre>
       }
 
       function containsMarker(html, marker) {
-        const normalized = normalizeHTML(html);
-        return normalized.includes(marker);
+        return normalizeHTML(html).includes(marker);
       }
 
       function containsPath(html, path) {
@@ -1031,6 +1001,43 @@ Run live calibration to read current jump height.</pre>
         ]);
 
         return Array.from(forms).some((form) => normalized.includes(form));
+      }
+
+      function coreExperienceStatus(compassRoute) {
+        const html = compassRoute && compassRoute.html ? normalizeHTML(compassRoute.html) : "";
+        const explicitHold = html.includes('data-core-experience-hold="true"');
+        const explicitAccepted = html.includes('data-core-experience-hold="false"');
+
+        if (explicitHold) {
+          return {
+            score: 0,
+            status: "HOLD",
+            held: true,
+            accepted: false,
+            marker: 'data-core-experience-hold="true"',
+            note: "Index core experience hold is active. Compress Index / control panel before downstream work."
+          };
+        }
+
+        if (explicitAccepted) {
+          return {
+            score: 100,
+            status: "ACCEPTED",
+            held: false,
+            accepted: true,
+            marker: 'data-core-experience-hold="false"',
+            note: "Index core experience is accepted. Downstream phase may proceed by measured priority."
+          };
+        }
+
+        return {
+          score: 50,
+          status: "UNDECLARED",
+          held: true,
+          accepted: false,
+          marker: "MISSING_CORE_EXPERIENCE_MARKER",
+          note: "Index core experience marker is missing. Treat as hold until explicitly accepted or held."
+        };
       }
 
       async function fetchRoute(route) {
@@ -1182,7 +1189,7 @@ Run live calibration to read current jump height.</pre>
         return productRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
       }
 
-      function phaseRecommendation(scores, houseRoutes, productRoutes, planetRoutes, allRoutes) {
+      function phaseRecommendation(scores, experience, houseRoutes, productRoutes, planetRoutes, allRoutes) {
         const coreLimiter = coreHouseLimiter(houseRoutes);
         const productLimit = productLimiter(productRoutes);
         const globalLimit = globalLimiter(allRoutes);
@@ -1191,8 +1198,18 @@ Run live calibration to read current jump height.</pre>
           return {
             phase: "CORE_HOUSE_ALIGNMENT",
             target: coreLimiter,
+            held: "CORE_EXPERIENCE_PRODUCT_CHAMBERS_AND_PLANETS",
+            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so Index experience, products, and planets are held.`
+          };
+        }
+
+        if (experience.held) {
+          const compass = houseRoutes.find((item) => item.id === "H1_COMPASS") || null;
+          return {
+            phase: "CORE_INDEX_EXPERIENCE_HOLD",
+            target: compass,
             held: "PRODUCT_CHAMBERS_AND_PLANETS",
-            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so downstream product and planet targets are held.`
+            text: `Next move: compress Index with Russian-doll CSS and separate control panel. Core Experience is ${experience.status}, so Product Wing and Planets remain held.`
           };
         }
 
@@ -1201,7 +1218,7 @@ Run live calibration to read current jump height.</pre>
             phase: "PRODUCT_WING_ALIGNMENT",
             target: productLimit,
             held: "PLANETS",
-            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Core house field is stable enough to continue Product Wing calibration.`
+            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Core house and Index experience are stable enough to continue Product Wing calibration.`
           };
         }
 
@@ -1210,8 +1227,8 @@ Run live calibration to read current jump height.</pre>
           return {
             phase: "PLANETARY_ATTACHMENT_ALIGNMENT",
             target: planetLimit,
-            held: "VISUAL_GENERATION",
-            text: `Next move: renew planetary or hosted construct ${planetLimit.label} (${planetLimit.path}). Core and Products are stable enough to continue planetary attachment calibration.`
+            held: "VISUAL_GENERATION_EXPANSION",
+            text: `Next move: renew planetary or hosted construct ${planetLimit.label} (${planetLimit.path}). Core, Index, and Products are stable enough to continue planetary attachment calibration.`
           };
         }
 
@@ -1230,7 +1247,7 @@ Run live calibration to read current jump height.</pre>
         liveReceipt.textContent = [
           "SCANNING=true",
           "METHOD=Gauge first. Renew narrowly. Measure again. Raise ceiling. Repeat.",
-          "PHASE_PRIORITY=Core house first. Product wing second. Planets third.",
+          "PHASE_PRIORITY=Core house first. Core Index experience second. Product wing third. Planets fourth.",
           "STATUS=fetching same-origin routes"
         ].join("\n");
 
@@ -1238,32 +1255,37 @@ Run live calibration to read current jump height.</pre>
         const house = results.filter((route) => route.group === "house");
         const products = results.filter((route) => route.group === "products");
         const planets = results.filter((route) => route.group === "planets");
+        const compass = house.find((route) => route.id === "H1_COMPASS");
+        const experience = coreExperienceStatus(compass);
 
         const scores = {
           house: averageScore(house),
           products: averageScore(products),
-          planets: averageScore(planets)
+          planets: averageScore(planets),
+          experience: experience.score
         };
 
-        scores.overall = Math.round((scores.house + scores.products + scores.planets) / 3);
+        scores.overall = Math.round((scores.house + scores.experience + scores.products + scores.planets) / 4);
 
         const state = {
           overall: scoreState(scores.overall),
           house: scoreState(scores.house),
+          experience: experience.held ? "complex" : scoreState(scores.experience),
           products: scoreState(scores.products),
           planets: scoreState(scores.planets)
         };
 
-        const recommendation = phaseRecommendation(scores, house, products, planets, results);
+        const recommendation = phaseRecommendation(scores, experience, house, products, planets, results);
 
         results.forEach((route) => {
           route.phaseTarget = recommendation.target && route.id === recommendation.target.id;
         });
 
         writeStat("overall", scores.overall, `${state.overall.toUpperCase()} · shared ceiling read`);
-        writeStat("house", scores.house, `${state.house.toUpperCase()} · core phase priority`);
-        writeStat("products", scores.products, `${state.products.toUpperCase()} · held until core is stable`);
-        writeStat("planets", scores.planets, `${state.planets.toUpperCase()} · held until upstream is stable`);
+        writeStat("house", scores.house, `${state.house.toUpperCase()} · core house field`);
+        writeStat("experience", scores.experience, `${experience.status} · core Index experience`);
+        writeStat("products", scores.products, recommendation.phase === "PRODUCT_WING_ALIGNMENT" ? `${state.products.toUpperCase()} · active product phase` : `${state.products.toUpperCase()} · held until upstream is stable`);
+        writeStat("planets", scores.planets, recommendation.phase === "PLANETARY_ATTACHMENT_ALIGNMENT" ? `${state.planets.toUpperCase()} · active planet phase` : `${state.planets.toUpperCase()} · held until upstream is stable`);
 
         const gauges = [
           {
@@ -1274,9 +1296,10 @@ Run live calibration to read current jump height.</pre>
             label: "shared",
             state: state.overall,
             priority: state.overall !== "healthy",
-            meaning: "Current verified height the estate can hold together.",
+            meaning: "Current verified height the estate can hold together across House, Index experience, Product Wing, and Planets.",
             receipt: [
               `HOUSE=${scores.house}`,
+              `CORE_EXPERIENCE=${scores.experience} ${experience.status}`,
               `PRODUCTS=${scores.products}`,
               `PLANETS=${scores.planets}`
             ]
@@ -1289,31 +1312,46 @@ Run live calibration to read current jump height.</pre>
             label: "core",
             state: state.house,
             priority: scores.house < HOUSE_THRESHOLD,
-            meaning: "Active priority while below 100. Door, Home, Products house page, and Showroom must align before downstream recommendations lead.",
-            receipt: house.map((route) => `${route.label}=${route.score}${recommendation.target && recommendation.target.id === route.id ? " <- NEXT" : ""}`)
+            meaning: "House pages align before Index experience, products, or planets lead.",
+            receipt: house.map((route) => `${route.label}=${route.score}${recommendation.target && recommendation.target.id === route.id && recommendation.phase === "CORE_HOUSE_ALIGNMENT" ? " <- NEXT" : ""}`)
           },
           {
             id: "G2",
+            kind: "experience",
+            title: "Core experience",
+            value: scores.experience,
+            label: "index",
+            state: state.experience,
+            priority: scores.house >= HOUSE_THRESHOLD && experience.held,
+            meaning: "If Index declares a core-experience hold, Gauges recommends compression/control-panel work before downstream product or planet work.",
+            receipt: [
+              `Compass marker=${experience.marker}`,
+              `Status=${experience.status}`,
+              `Held=${experience.held ? "TRUE" : "FALSE"}`
+            ]
+          },
+          {
+            id: "G3",
             kind: "products",
             title: "Products",
             value: scores.products,
             label: "wing",
             state: state.products,
-            priority: scores.house >= HOUSE_THRESHOLD && state.products !== "healthy",
-            meaning: scores.house < HOUSE_THRESHOLD
-              ? "Measured, but held. Product chamber recommendations do not lead while the core house field is incomplete."
+            priority: scores.house >= HOUSE_THRESHOLD && !experience.held && state.products !== "healthy",
+            meaning: scores.house < HOUSE_THRESHOLD || experience.held
+              ? "Measured, but held. Product chamber recommendations do not lead while core house or Index experience is incomplete."
               : "Product chambers remain attached to Products without becoming house or planet roots.",
             receipt: products.map((route) => `${route.label}=${route.score}`)
           },
           {
-            id: "G3",
+            id: "G4",
             kind: "planets",
             title: "Planets",
             value: scores.planets,
             label: "orbit",
             state: state.planets,
-            priority: scores.house >= HOUSE_THRESHOLD && scores.products >= PRODUCT_THRESHOLD && state.planets !== "healthy",
-            meaning: scores.house < HOUSE_THRESHOLD || scores.products < PRODUCT_THRESHOLD
+            priority: scores.house >= HOUSE_THRESHOLD && !experience.held && scores.products >= PRODUCT_THRESHOLD && state.planets !== "healthy",
+            meaning: scores.house < HOUSE_THRESHOLD || experience.held || scores.products < PRODUCT_THRESHOLD
               ? "Measured, but held. Planetary attachment does not lead until upstream fields stabilize."
               : "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
             receipt: planets.map((route) => `${route.label}=${route.score}`)
@@ -1331,21 +1369,23 @@ Run live calibration to read current jump height.</pre>
           "ACTION=",
           "  target=measured estate field",
           "  scope=read-only calibration",
-          "  recommendation_logic=core_phase_priority",
-          "  gauges_logic_touched=FALSE_FOR_SCORING",
+          "  recommendation_logic=core_house_then_core_experience_then_products_then_planets",
+          "  gauges_score_rewrite=FALSE",
           "  fake_health_claim=FALSE",
           "",
           "AFTER=",
           `  Overall=${scores.overall}`,
           `  House=${scores.house}`,
+          `  CoreExperience=${scores.experience}`,
           `  Products=${scores.products}`,
           `  Planets=${scores.planets}`,
           `  ActivePhase=${recommendation.phase}`,
-          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "NONE"}`,
+          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "INDEX_CONTROL_PANEL_COMPRESSION"}`,
           `  HeldDownstream=${recommendation.held}`,
+          `  CoreExperienceMarker=${experience.marker}`,
           "",
           "CEILING_RESULT=",
-          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_PHASE_LIMITER=" + (recommendation.target ? recommendation.target.label : "UNKNOWN"),
+          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_PHASE_LIMITER=" + (recommendation.target ? recommendation.target.label : "Index Core Experience"),
           "",
           "NEXT_MOVE=",
           "  " + recommendation.text

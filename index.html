@@ -3,12 +3,11 @@
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="index-one-render-filter-v1"
+  data-generation="index-three-view-fruit-navigation-v1"
   data-generation-readiness="GEN_1_3D_BASELINE"
   data-core-experience-hold="true"
-  data-control-tabs="active"
-  data-active-tab="overview"
-  data-control-panel-state="collapsed"
+  data-three-view-system="active"
+  data-active-view="gate"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -22,7 +21,7 @@
   data-tree-canopies="16"
   data-tree-branch-seats="64"
   data-tree-terminal-nodes="256"
-  data-tree-fruit-system="active"
+  data-tree-fruit-system="navigation"
   data-butterfly-system="available"
   data-butterfly-role="pollination"
   data-render-filter="single-authority"
@@ -36,23 +35,18 @@
 
   <meta
     name="description"
-    content="Compass for Rich Manor and Estate. Generation 1 · 3D baseline held while Index moves toward Generation 3 through a single render filter, tabbed control panel, Russian-doll structure, 256 Tree of Life architecture, fruit, wildlife, butterflies, snow, grass, branches, and detailed leaves."
+    content="Compass for Rich Manor and Estate. Generation 1 · 3D baseline held while Index moves toward Generation 3 through a three-view Tree of Life interface where fruit becomes navigation."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=index-one-render-filter-v1" />
-  <link rel="stylesheet" href="/index.css?v=index-one-render-filter-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=index-three-view-fruit-navigation-v1" />
+  <link rel="stylesheet" href="/index.css?v=index-three-view-fruit-navigation-v1" />
 </head>
 
 <body
   class="manor-skin house-class"
   data-page-id="compass"
   data-page="compass"
-  data-active-mode="flat"
-  data-control-panel-state="collapsed"
-  data-active-tab="overview"
-  data-active-doll-layer="DOLL_1_COMPASS"
-  data-active-butterfly-option="none"
-  data-butterfly-visibility="hidden"
+  data-active-view="gate"
   data-generation-readiness="GEN_1_3D_BASELINE"
   data-core-experience-hold="true"
   data-runtime-status="waiting"
@@ -72,7 +66,7 @@
   data-tree-canopies="16"
   data-tree-branch-seats="64"
   data-tree-terminal-nodes="256"
-  data-tree-fruit-system="active"
+  data-tree-fruit-system="navigation"
   data-butterfly-system="available"
   data-butterfly-role="pollination"
   data-render-filter="single-authority"
@@ -108,15 +102,15 @@
     data-house-part="compass"
     data-core-experience-hold="true"
     data-generation-readiness="GEN_1_3D_BASELINE"
-    data-control-tabs="active"
-    data-active-tab="overview"
+    data-three-view-system="active"
+    data-active-view="gate"
     data-tree-structure="256"
     data-tree-trunk="1"
     data-tree-primary-limbs="4"
     data-tree-canopies="16"
     data-tree-branch-seats="64"
     data-tree-terminal-nodes="256"
-    data-tree-fruit-system="active"
+    data-tree-fruit-system="navigation"
     data-butterfly-system="available"
     data-butterfly-role="pollination"
     data-render-filter="single-authority"
@@ -142,26 +136,22 @@
         </noscript>
       </div>
 
-      <button
-        id="controlPanelToggle"
-        class="panel-toggle"
-        type="button"
-        aria-controls="index-control-panel"
-        aria-expanded="false"
-      >
-        Open Control Panel
-      </button>
-
-      <aside
-        id="index-control-panel"
-        class="control-panel"
-        aria-label="Index tabbed control panel"
-        data-control-panel="tree-256-tabs"
-      ></aside>
+      <nav class="view-switcher" aria-label="Tree view selector">
+        <button class="view-button is-active" type="button" data-view="gate" aria-pressed="true">
+          Gate
+        </button>
+        <button class="view-button" type="button" data-view="tree" aria-pressed="false">
+          Tree
+        </button>
+        <button class="view-button" type="button" data-view="inspect" aria-pressed="false">
+          Inspect
+        </button>
+      </nav>
 
       <div class="scene-proof-rail" aria-label="Proof and generation status">
         <span>Generation: <b>GEN_1_3D_BASELINE</b></span>
         <span>Core Experience: <b>HOLD</b></span>
+        <span>Interface: <b>Fruit Navigation</b></span>
         <a href="/gauges/">Run Gauges</a>
       </div>
     </section>
@@ -184,7 +174,8 @@
       <span>house-part=compass</span>
       <span>H1_COMPASS</span>
       <span>tree-structure=256</span>
-      <span>control-tabs=active</span>
+      <span>three-view-system=active</span>
+      <span>fruit-navigation=active</span>
       <span>butterfly-system=available</span>
       <span>render-filter=single-authority</span>
       <span>core-experience-hold=true</span>
@@ -192,7 +183,7 @@
   </main>
 
   <script src="/index.tree.js?v=tree-of-life-256-structure-v1" defer></script>
-  <script src="/index.render.js?v=index-one-render-filter-v1" defer></script>
-  <script src="/index.runtime.js?v=index-tabbed-control-panel-tree-256-v1" defer></script>
+  <script src="/index.render.js?v=index-three-view-fruit-navigation-v1" defer></script>
+  <script src="/index.runtime.js?v=index-three-view-fruit-navigation-v1" defer></script>
 </body>
 </html>

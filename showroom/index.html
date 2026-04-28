@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-downstream-globe-mount-v1"
+  data-generation="showroom-orbital-earth-standard-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,20 +16,22 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-render-downstream="true"
+  data-render-engine="/render/globe.engine.js"
+  data-render-template="/render/globe.template.js"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Showroom · Universe Delivery Surface · Diamond Gate Bridge</title>
+  <title>Orbital Earth · Showroom · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. The globe returns as a downstream render mount. Demo Universe remains globe-only; Mirror / Nine Summits Universe is the buildable context for Rich Manor and Estate."
+    content="Showroom for Diamond Gate Bridge. Earth is the centered orbital showroom globe. Demo Universe remains globe-only; Mirror / Nine Summits Universe remains the buildable world context for Rich Manor and Estate."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-downstream-globe-mount-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-downstream-globe-mount-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-orbital-earth-standard-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-orbital-earth-standard-v1" />
 </head>
 
 <body
@@ -85,22 +87,13 @@
     data-render-downstream="true"
   >
     <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
-      <div class="showroom-copy">
+      <article class="showroom-copy">
         <p class="kicker">H5 · Showroom · Universe delivery surface</p>
-        <h1 id="H5_SHOWROOM">Showroom</h1>
+        <h1 id="H5_SHOWROOM">Orbital Earth.</h1>
         <p>
-          The globe returns here as a downstream render mount. The Demo Universe remains globe-only. The Mirror / Nine Summits Universe is the buildable world context where Rich Manor and Estate belongs.
+          Earth is the center of the showroom. The stage does not draw a circular frame around the planet.
         </p>
-
-        <div class="universe-switcher" aria-label="Universe selector">
-          <button class="universe-button is-active" type="button" data-universe="demo" aria-pressed="true">
-            Demo Globe
-          </button>
-          <button class="universe-button" type="button" data-universe="mirror" aria-pressed="false">
-            Mirror / Nine Summits
-          </button>
-        </div>
-      </div>
+      </article>
 
       <div
         id="showroom-globe-mount"
@@ -116,24 +109,24 @@
         <noscript>
           <article class="fallback-card">
             <p class="kicker">Showroom fallback</p>
-            <h2>Universe Delivery Surface</h2>
-            <p>JavaScript is required for the animated globe. The route links remain available above.</p>
+            <h2>Orbital Earth</h2>
+            <p>JavaScript is required for the orbital Earth showroom.</p>
           </article>
         </noscript>
       </div>
 
-      <aside class="showroom-proof" aria-label="Showroom universe rules">
+      <section class="showroom-proof" aria-label="Showroom universe rules">
         <article>
-          <span>Demo Universe</span>
-          <strong>Globe-only</strong>
+          <span>Earth Standard</span>
+          <strong>Orbital Earth</strong>
+          <p>Centered visual surface. Auto and manual spin.</p>
+        </article>
+        <article>
+          <span>Boundary</span>
+          <strong>Demo globe-only</strong>
           <p>No estate land is built on the Demo Earth globe.</p>
         </article>
-        <article>
-          <span>Mirror / Nine Summits Universe</span>
-          <strong>Buildable world</strong>
-          <p>The Manor, 256-acre estate, tree system, roads, wildlife, and land belong here.</p>
-        </article>
-      </aside>
+      </section>
     </section>
 
     <section class="audit-source" aria-label="Showroom audit source">
@@ -163,8 +156,8 @@
     </section>
   </main>
 
-  <script src="/render/globe.template.js?v=showroom-downstream-globe-mount-v1" defer></script>
-  <script src="/render/globe.engine.js?v=showroom-downstream-globe-mount-v1" defer></script>
-  <script src="/showroom/showroom.render.js?v=showroom-downstream-globe-mount-v1" defer></script>
+  <script src="/render/globe.template.js?v=showroom-orbital-earth-standard-v1" defer></script>
+  <script src="/render/globe.engine.js?v=showroom-orbital-earth-standard-v1" defer></script>
+  <script src="/showroom/showroom.render.js?v=showroom-orbital-earth-standard-v1" defer></script>
 </body>
 </html>

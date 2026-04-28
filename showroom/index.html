@@ -1,176 +1,302 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-page-id="showroom"
-  data-page="showroom"
-  data-generation="showroom-earth-canvas-bottom-layout-v1"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="showroom"
-  data-showroom-role="orbital-earth-showroom"
-  data-demo-universe="globe-only"
-  data-mirror-universe="buildable-world-container"
-  data-estate-land-placement="mirror-universe-only"
-  data-render-controller="/showroom/globe/index.js"
-  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-  data-earth-material="/assets/earth/earth_material.css"
-  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="centered-satellite-earth-no-external-rings"
-  data-showroom-globe-placement="bottom-layout-authority"
->
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+/* TNT RENEWAL — /showroom/index.js
+   SHOWROOM PAGE CONTROLLER · B29 · RUSSIAN DOLL + INSPECT GLOBE CONTROLLER
 
-  <title>Orbital Earth · Showroom · Diamond Gate Bridge</title>
+   CONTRACT:
+     - Controls Russian-doll showroom behavior only.
+     - Controls Showroom page-state inspection toggle.
+     - Does not load Earth renderer.
+     - Does not initialize Earth renderer.
+     - Does not touch Earth canvas projection.
+     - Does not touch Earth controls.
+     - Opens compact chambers from portal cards.
+     - Observes Earth consumer contract markers without owning them.
+     - Adds Inspect Globe / Return to Showroom state toggle.
+     - Supports cache-busted script/link URLs.
+*/
 
-  <meta
-    name="description"
-    content="Showroom for Diamond Gate Bridge. The Showroom mounts the existing Earth canvas spine from /assets/earth/ with centered satellite Earth, no external rings, and no procedural placeholder as final visual."
-  />
+(function () {
+  "use strict";
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-earth-canvas-bottom-layout-v1" />
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=showroom-earth-canvas-bottom-layout-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-earth-canvas-bottom-layout-v1" />
-</head>
+  var VERSION = "showroom-index-b29-inspect-globe-controller";
+  var DEFAULT_DOLL_ID = "doll-consider-energy";
+  var OBSERVER_TIMEOUT_MS = 9000;
 
-<body
-  class="manor-skin house-class showroom-page"
-  data-page-id="showroom"
-  data-page="showroom"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="showroom"
-  data-showroom-role="orbital-earth-showroom"
-  data-demo-universe="globe-only"
-  data-mirror-universe="buildable-world-container"
-  data-estate-land-placement="mirror-universe-only"
-  data-render-controller="/showroom/globe/index.js"
-  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-  data-earth-material="/assets/earth/earth_material.css"
-  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="centered-satellite-earth-no-external-rings"
-  data-showroom-globe-placement="bottom-layout-authority"
->
-  <header class="site-topbar">
-    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
-      <strong>Diamond Gate Bridge</strong>
-      <span>Rich Manor and Estate · Showroom</span>
-    </a>
+  function ready(fn) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn, { once: true });
+    } else {
+      fn();
+    }
+  }
 
-    <nav class="site-nav" aria-label="Primary house routes">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/" aria-current="page">Showroom</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
+  function markControllerReady() {
+    document.documentElement.setAttribute("data-showroom-controller", VERSION);
+    document.documentElement.setAttribute("data-showroom-controller-role", "russian-doll-plus-inspect-toggle");
+    document.documentElement.setAttribute("data-showroom-earth-ownership", "consumer-observer-only");
 
-  <main
-    id="showroom-root"
-    class="showroom-shell manor-skin house-class"
-    data-page-id="showroom"
-    data-page="showroom"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-manor-class="house"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="house"
-    data-house-part="showroom"
-    data-showroom-role="orbital-earth-showroom"
-    data-demo-universe="globe-only"
-    data-mirror-universe="buildable-world-container"
-    data-estate-land-placement="mirror-universe-only"
-    data-render-controller="/showroom/globe/index.js"
-    data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-    data-earth-material="/assets/earth/earth_material.css"
-    data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-    data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-    data-earth-standard="centered-satellite-earth-no-external-rings"
-    data-showroom-globe-placement="bottom-layout-authority"
-  >
-    <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
-      <article class="showroom-copy">
-        <p class="kicker">H5 · Showroom · Orbital Earth</p>
-        <h1 id="H5_SHOWROOM">Orbital Earth.</h1>
-        <p>
-          Earth is the center of the showroom. The page mounts the existing Earth canvas spine from the local asset package.
-        </p>
-      </article>
+    document.body.setAttribute("data-showroom-controller", VERSION);
+    document.body.setAttribute("data-showroom-earth-ownership", "consumer-observer-only");
+  }
 
-      <div
-        id="showroom-globe-mount"
-        class="showroom-globe-mount showroom-globe-bottom-layout"
-        aria-live="polite"
-        data-render-root="showroom-globe"
-        data-render-status="waiting"
-        data-render-controller="/showroom/globe/index.js"
-        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-        data-earth-material="/assets/earth/earth_material.css"
-        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-        data-earth-standard="centered-satellite-earth-no-external-rings"
-        data-demo-universe="globe-only"
-        data-estate-land-placement="mirror-universe-only"
-        data-showroom-globe-placement="bottom-layout-authority"
-      >
-        <noscript>
-          <article class="fallback-card">
-            <p class="kicker">Showroom fallback</p>
-            <h2>Orbital Earth</h2>
-            <p>JavaScript is required for the Earth canvas showroom.</p>
-          </article>
-        </noscript>
-      </div>
-    </section>
+  function getPathFromUrl(value) {
+    if (!value) return "";
 
-    <section class="audit-source" aria-label="Showroom audit source">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/gauges/">Gauges</a>
+    try {
+      return new URL(value, window.location.origin).pathname;
+    } catch (error) {
+      return String(value).split("?")[0].split("#")[0];
+    }
+  }
 
-      <span>route-exists</span>
-      <span>manor-skin</span>
-      <span>house-class</span>
-      <span>estate=rich-manor-and-estate</span>
-      <span>house-field=true</span>
-      <span>gauges-truth=live-authority</span>
-      <span>construct-class=house</span>
-      <span>house-part=showroom</span>
-      <span>H5_SHOWROOM</span>
-      <span>showroom-role=orbital-earth-showroom</span>
-      <span>demo-universe=globe-only</span>
-      <span>mirror-universe=buildable-world-container</span>
-      <span>estate-land-placement=mirror-universe-only</span>
-      <span>render-controller=/showroom/globe/index.js</span>
-      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
-      <span>earth-material=/assets/earth/earth_material.css</span>
-      <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
-      <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
-      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
-      <span>showroom-globe-placement=bottom-layout-authority</span>
-      <span>SHOWROOM_INDEX_LAYOUT_AUTHORITY_TNT_v1</span>
-    </section>
-  </main>
+  function findScriptByPath(pathname) {
+    var scripts = Array.prototype.slice.call(document.scripts || []);
 
-  <script src="/assets/earth/earth_canvas.js?v=showroom-earth-canvas-bottom-layout-v1" defer></script>
-  <script src="/showroom/globe/index.js?v=showroom-earth-canvas-bottom-layout-v1" defer></script>
-  <script src="/showroom/index.js?v=showroom-russian-doll-controller-b28" defer></script>
-</body>
-</html>
+    return scripts.find(function (script) {
+      return getPathFromUrl(script.getAttribute("src")) === pathname;
+    }) || null;
+  }
+
+  function findStylesheetByPath(pathname) {
+    var links = Array.prototype.slice.call(document.querySelectorAll('link[rel~="stylesheet"]'));
+
+    return links.find(function (link) {
+      return getPathFromUrl(link.getAttribute("href")) === pathname;
+    }) || null;
+  }
+
+  function boolString(value) {
+    return value ? "true" : "false";
+  }
+
+  function protectEarthConsumerContract() {
+    var earthMount = document.querySelector("[data-dgb-earth-mount]");
+    var earthCanvas = document.querySelector("[data-dgb-earth-canvas]");
+    var showroomMount = document.getElementById("showroom-globe-mount");
+
+    var earthCanvasScript = findScriptByPath("/assets/earth/earth_canvas.js");
+    var showroomGlobeScript = findScriptByPath("/showroom/globe/index.js");
+    var earthMaterialLink = findStylesheetByPath("/assets/earth/earth_material.css");
+    var earthRuntimeScript = findScriptByPath("/runtime/earth_asset_runtime.js");
+
+    document.documentElement.setAttribute("data-showroom-earth-mount-present", boolString(earthMount));
+    document.documentElement.setAttribute("data-showroom-earth-canvas-node-present", boolString(earthCanvas));
+    document.documentElement.setAttribute("data-showroom-globe-mount-present", boolString(showroomMount));
+    document.documentElement.setAttribute("data-showroom-earth-canvas-script-present", boolString(earthCanvasScript));
+    document.documentElement.setAttribute("data-showroom-globe-controller-script-present", boolString(showroomGlobeScript));
+    document.documentElement.setAttribute("data-showroom-earth-material-link-present", boolString(earthMaterialLink));
+    document.documentElement.setAttribute("data-showroom-earth-runtime-script-present", boolString(earthRuntimeScript));
+
+    if (showroomMount) {
+      document.documentElement.setAttribute(
+        "data-showroom-globe-render-status",
+        showroomMount.getAttribute("data-render-status") || "unreported"
+      );
+
+      document.documentElement.setAttribute(
+        "data-showroom-globe-earth-standard",
+        showroomMount.getAttribute("data-earth-standard") || "unreported"
+      );
+    }
+
+    if (earthMount && earthCanvas && earthCanvasScript && showroomGlobeScript && earthMaterialLink) {
+      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "ready");
+    } else if (earthCanvasScript && showroomGlobeScript && earthMaterialLink) {
+      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "waiting-for-mount");
+    } else {
+      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "incomplete");
+    }
+  }
+
+  function observeEarthConsumerContract() {
+    var stopAt = Date.now() + OBSERVER_TIMEOUT_MS;
+
+    protectEarthConsumerContract();
+
+    var observer = new MutationObserver(function () {
+      protectEarthConsumerContract();
+
+      if (Date.now() > stopAt) {
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: [
+        "data-render-status",
+        "data-earth-standard",
+        "data-earth-canvas-spine",
+        "data-earth-surface",
+        "data-earth-clouds",
+        "data-showroom-inspect"
+      ]
+    });
+
+    window.setTimeout(protectEarthConsumerContract, 250);
+    window.setTimeout(protectEarthConsumerContract, 900);
+    window.setTimeout(protectEarthConsumerContract, 1800);
+    window.setTimeout(function () {
+      protectEarthConsumerContract();
+      observer.disconnect();
+    }, OBSERVER_TIMEOUT_MS);
+  }
+
+  function setActivePortal(targetId) {
+    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
+
+    portals.forEach(function (portal) {
+      if (portal.getAttribute("data-doll-open") === targetId) {
+        portal.setAttribute("data-active", "true");
+      } else {
+        portal.removeAttribute("data-active");
+      }
+    });
+
+    document.documentElement.setAttribute("data-showroom-doll", targetId || "");
+  }
+
+  function openDoll(targetId, scroll) {
+    var target = document.getElementById(targetId);
+    var allDolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+    if (!target || !target.classList.contains("doll")) return false;
+
+    allDolls.forEach(function (doll) {
+      if (doll === target) {
+        doll.setAttribute("open", "");
+      } else {
+        doll.removeAttribute("open");
+      }
+    });
+
+    setActivePortal(targetId);
+
+    if (scroll && typeof target.scrollIntoView === "function") {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    return true;
+  }
+
+  function bindPortalOpeners() {
+    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
+
+    portals.forEach(function (portal) {
+      portal.addEventListener("click", function (event) {
+        var targetId = portal.getAttribute("data-doll-open");
+
+        if (!targetId) return;
+
+        event.preventDefault();
+
+        if (openDoll(targetId, true) && window.history && window.history.replaceState) {
+          window.history.replaceState(null, "", "#" + targetId);
+        }
+      });
+    });
+  }
+
+  function bindDollState() {
+    var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+    dolls.forEach(function (doll) {
+      doll.addEventListener("toggle", function () {
+        if (!doll.open) return;
+
+        dolls.forEach(function (other) {
+          if (other !== doll) other.removeAttribute("open");
+        });
+
+        setActivePortal(doll.id);
+      });
+    });
+  }
+
+  function openFromHash() {
+    var id = (window.location.hash || "").replace("#", "");
+
+    if (id && openDoll(id, false)) return;
+
+    if (document.getElementById(DEFAULT_DOLL_ID)) {
+      openDoll(DEFAULT_DOLL_ID, false);
+      return;
+    }
+
+    var firstDoll = document.querySelector(".doll");
+
+    if (firstDoll && firstDoll.id) {
+      openDoll(firstDoll.id, false);
+    }
+  }
+
+  function ensureInspectGlobeToggle() {
+    var existing = document.querySelector(".inspect-globe-toggle");
+    var stage = document.querySelector(".showroom-stage") || document.getElementById("showroom-root") || document.body;
+
+    if (existing) return existing;
+
+    var button = document.createElement("button");
+    button.className = "inspect-globe-toggle";
+    button.type = "button";
+    button.textContent = "Inspect Globe";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("data-showroom-inspect-toggle", "true");
+
+    stage.appendChild(button);
+
+    return button;
+  }
+
+  function setInspectMode(mode) {
+    var normalized = mode === "globe" ? "globe" : "normal";
+    var button = document.querySelector(".inspect-globe-toggle");
+
+    document.documentElement.setAttribute("data-showroom-inspect", normalized);
+    document.body.setAttribute("data-showroom-inspect", normalized);
+
+    document.documentElement.setAttribute("data-showroom-inspect-controller", VERSION);
+    document.body.setAttribute("data-showroom-inspect-controller", VERSION);
+
+    if (button) {
+      if (normalized === "globe") {
+        button.textContent = "Return to Showroom";
+        button.setAttribute("aria-expanded", "true");
+      } else {
+        button.textContent = "Inspect Globe";
+        button.setAttribute("aria-expanded", "false");
+      }
+    }
+  }
+
+  function bindInspectGlobeToggle() {
+    var button = ensureInspectGlobeToggle();
+
+    setInspectMode("normal");
+
+    button.addEventListener("click", function () {
+      var current = document.body.getAttribute("data-showroom-inspect") || "normal";
+      setInspectMode(current === "globe" ? "normal" : "globe");
+      protectEarthConsumerContract();
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && document.body.getAttribute("data-showroom-inspect") === "globe") {
+        setInspectMode("normal");
+      }
+    });
+  }
+
+  ready(function () {
+    markControllerReady();
+    observeEarthConsumerContract();
+    bindPortalOpeners();
+    bindDollState();
+    openFromHash();
+    bindInspectGlobeToggle();
+  });
+})();

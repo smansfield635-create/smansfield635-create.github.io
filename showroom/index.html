@@ -3,26 +3,16 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-runtime-shell-v1"
+  data-generation="showroom-visible-render-repair-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
-  data-manor-class="house"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-showroom-role="orbital-earth-showroom"
+  data-showroom-visual-shell="active"
+  data-current-route="/showroom/"
   data-demo-universe="globe-only"
-  data-mirror-universe="buildable-world-container"
-  data-estate-land-placement="mirror-universe-only"
-  data-render-controller="/showroom/globe/index.js"
-  data-showroom-runtime="/showroom/runtime.js"
-  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-  data-earth-material="/assets/earth/earth_material.css"
-  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="centered-satellite-earth-no-external-rings"
-  data-showroom-inspect-route="/showroom/globe/"
 >
 <head>
   <meta charset="utf-8" />
@@ -32,120 +22,72 @@
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. The Showroom mounts the Earth canvas spine and links to the dedicated Inspect Universe room."
+    content="The Showroom is the Orbital Earth parent chamber for Diamond Gate Bridge and Rich Manor and Estate, with a styled handoff to the Demo Universe inspection route."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-runtime-shell-v1" />
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=showroom-runtime-shell-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-runtime-shell-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-visible-render-repair-v1" />
 </head>
 
 <body
-  class="manor-skin house-class showroom-page"
+  class="showroom"
   data-page-id="showroom"
   data-page="showroom"
+  data-generation="showroom-visible-render-repair-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
-  data-manor-class="house"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-showroom-role="orbital-earth-showroom"
+  data-showroom-visual-shell="active"
+  data-current-route="/showroom/"
   data-demo-universe="globe-only"
-  data-mirror-universe="buildable-world-container"
-  data-estate-land-placement="mirror-universe-only"
-  data-render-controller="/showroom/globe/index.js"
-  data-showroom-runtime="/showroom/runtime.js"
-  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-  data-earth-material="/assets/earth/earth_material.css"
-  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="centered-satellite-earth-no-external-rings"
-  data-showroom-inspect-route="/showroom/globe/"
 >
-  <header class="site-topbar">
-    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
-      <strong>Diamond Gate Bridge</strong>
-      <span>Rich Manor and Estate · Showroom</span>
-    </a>
-
-    <nav class="site-nav" aria-label="Primary house routes">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/" aria-current="page">Showroom</a>
-      <a href="/showroom/globe/">Inspect Universe</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
-
   <main
-    id="showroom-root"
-    class="showroom-shell manor-skin house-class"
-    data-page-id="showroom"
-    data-page="showroom"
+    class="showroom-shell"
+    data-showroom-visual-shell="active"
     data-estate="rich-manor-and-estate"
     data-manor-skin="active"
-    data-manor-class="house"
     data-house-field="true"
     data-gauges-truth="live-authority"
     data-construct-class="house"
     data-house-part="showroom"
-    data-showroom-role="orbital-earth-showroom"
-    data-demo-universe="globe-only"
-    data-mirror-universe="buildable-world-container"
-    data-estate-land-placement="mirror-universe-only"
-    data-render-controller="/showroom/globe/index.js"
-    data-showroom-runtime="/showroom/runtime.js"
-    data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-    data-earth-material="/assets/earth/earth_material.css"
-    data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-    data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-    data-earth-standard="centered-satellite-earth-no-external-rings"
-    data-showroom-inspect-route="/showroom/globe/"
   >
-    <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
-      <article class="showroom-copy">
-        <p class="kicker">H5 · Showroom · Orbital Earth</p>
-        <h1 id="H5_SHOWROOM">Orbital Earth.</h1>
-        <p>
-          Earth is the center of the showroom. The page mounts the existing Earth canvas spine from the local asset package.
-        </p>
+    <header class="site-topbar">
+      <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate · Showroom</span>
+      </a>
 
-        <p>
-          <a href="/showroom/globe/" aria-label="Open Inspect Universe page">
-            Inspect Universe
-          </a>
-        </p>
-      </article>
+      <nav class="site-nav" aria-label="Primary routes">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Inspect Universe</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <div
-        id="showroom-globe-mount"
-        class="showroom-globe-mount showroom-globe-bottom-layout"
-        aria-live="polite"
-        data-render-root="showroom-globe"
-        data-render-status="waiting"
-        data-render-controller="/showroom/globe/index.js"
-        data-showroom-runtime="/showroom/runtime.js"
-        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-        data-earth-material="/assets/earth/earth_material.css"
-        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-        data-earth-standard="centered-satellite-earth-no-external-rings"
-        data-demo-universe="globe-only"
-        data-estate-land-placement="mirror-universe-only"
-        data-showroom-globe-placement="bottom-layout-authority"
-      >
-        <noscript>
-          <article class="fallback-card">
-            <p class="kicker">Showroom fallback</p>
-            <h2>Orbital Earth</h2>
-            <p>JavaScript is required for the Earth canvas showroom.</p>
-          </article>
-        </noscript>
+    <section class="showroom-stage" aria-labelledby="SHOWROOM_ORBITAL_EARTH">
+      <div class="showroom-globe" aria-label="Orbital Earth preview">
+        <div class="showroom-globe-halo"></div>
+        <div class="showroom-globe-earth" role="img" aria-label="Earth globe preview"></div>
       </div>
+
+      <article class="showroom-card">
+        <p class="kicker">H5 · Showroom · Orbital Earth</p>
+        <h1 id="SHOWROOM_ORBITAL_EARTH">Orbital Earth.</h1>
+        <p>
+          Earth is the center of the showroom. The page mounts the Demo Universe handoff from the local Earth asset package and keeps the full inspection route clear.
+        </p>
+
+        <div class="showroom-actions">
+          <a class="showroom-button primary" href="/showroom/globe/">Inspect Universe</a>
+          <a class="showroom-button" href="/gauges/">Read Gauges</a>
+        </div>
+      </article>
     </section>
 
     <section class="audit-source" aria-label="Showroom audit source">
@@ -166,25 +108,14 @@
       <span>construct-class=house</span>
       <span>house-part=showroom</span>
       <span>H5_SHOWROOM</span>
+      <span>data-showroom-visual-shell="active"</span>
       <span>showroom-role=orbital-earth-showroom</span>
       <span>demo-universe=globe-only</span>
-      <span>mirror-universe=buildable-world-container</span>
-      <span>estate-land-placement=mirror-universe-only</span>
-      <span>render-controller=/showroom/globe/index.js</span>
-      <span>showroom-runtime=/showroom/runtime.js</span>
-      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
-      <span>earth-material=/assets/earth/earth_material.css</span>
+      <span>showroom-inspect-route=/showroom/globe/</span>
       <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
       <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
-      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
-      <span>showroom-globe-placement=bottom-layout-authority</span>
-      <span>showroom-inspect-route=/showroom/globe/</span>
-      <span>SHOWROOM_RUNTIME_SHELL_TNT_v1</span>
+      <span>SHOWROOM_VISIBLE_RENDER_REPAIR_TNT_v1</span>
     </section>
   </main>
-
-  <script src="/assets/earth/earth_canvas.js?v=showroom-runtime-shell-v1" defer></script>
-  <script src="/showroom/globe/index.js?v=showroom-runtime-shell-v1" defer></script>
-  <script src="/showroom/runtime.js?v=showroom-runtime-shell-v1" defer></script>
 </body>
 </html>

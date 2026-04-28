@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="inspect-demo-universe"
   data-page="inspect-demo-universe"
-  data-generation="demo-universe-earth-axis-restoration-v1"
+  data-generation="demo-universe-earth-sun-shadow-v2"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -18,6 +18,8 @@
   data-earth-standard="demo-universe-restored-earth"
   data-earth-axis="23.5deg"
   data-controls="removed"
+  data-sun-shadow="active"
+  data-shadow-accepted="pending"
 >
 <head>
   <meta charset="utf-8" />
@@ -27,7 +29,7 @@
 
   <meta
     name="description"
-    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe on its axis with no faded zoom controls."
+    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe on its axis with visible background Sun lighting and natural day-to-night shadow."
   />
 
   <style>
@@ -61,8 +63,8 @@
 
     body {
       background:
-        radial-gradient(ellipse at 52% 48%, rgba(66, 112, 194, .17), transparent 36%),
-        radial-gradient(ellipse at 76% 19%, rgba(242, 199, 111, .06), transparent 24%),
+        radial-gradient(ellipse at 86% 12%, rgba(242, 199, 111, .15), transparent 26%),
+        radial-gradient(ellipse at 52% 48%, rgba(66, 112, 194, .16), transparent 36%),
         radial-gradient(ellipse at 19% 78%, rgba(93, 151, 238, .08), transparent 27%),
         linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
     }
@@ -101,6 +103,7 @@
       inset: 0;
       z-index: 1;
       background:
+        radial-gradient(ellipse at 84% 13%, rgba(242, 199, 111, .10), transparent 24%),
         radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.028), transparent 28%),
         radial-gradient(ellipse at 48% 52%, transparent 0 38%, rgba(0,0,0,.40) 79%, rgba(0,0,0,.82) 100%),
         linear-gradient(90deg, rgba(0,0,0,.20), transparent 22%, transparent 78%, rgba(0,0,0,.24));
@@ -209,10 +212,43 @@
       display: grid;
       place-items: center;
       padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
+      isolation: isolate;
+    }
+
+    .universe-stage::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: clamp(42px, 8vh, 78px);
+      right: clamp(-110px, -6vw, -36px);
+      width: min(35vmin, 370px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: .72;
+      background:
+        radial-gradient(circle at 40% 38%, rgba(255, 252, 220, .96) 0 7%, rgba(255, 225, 126, .78) 18%, rgba(242, 149, 48, .38) 42%, rgba(242, 199, 111, .14) 64%, transparent 76%),
+        radial-gradient(circle, rgba(242, 199, 111, .16), transparent 72%);
+      filter:
+        drop-shadow(0 0 38px rgba(242, 199, 111, .30))
+        drop-shadow(0 0 128px rgba(242, 199, 111, .18));
+    }
+
+    .universe-stage::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .12), transparent 32%),
+        linear-gradient(125deg, transparent 0 40%, rgba(0, 0, 0, .10) 62%, rgba(0, 0, 0, .26) 100%);
+      opacity: .82;
     }
 
     .earth-subject {
       position: relative;
+      z-index: 4;
       width: var(--earth-size);
       max-width: 96vw;
       aspect-ratio: 1;
@@ -250,7 +286,7 @@
           transparent
         );
       box-shadow: 0 0 20px rgba(242, 199, 111, .12);
-      opacity: .50;
+      opacity: .42;
     }
 
     .earth-core {
@@ -271,7 +307,10 @@
 
     .earth-texture,
     .earth-clouds,
-    .earth-shade,
+    .earth-daylight,
+    .earth-terminator,
+    .earth-night,
+    .earth-atmosphere,
     .earth-rim {
       position: absolute;
       inset: 0;
@@ -301,21 +340,50 @@
       filter: contrast(1.05);
     }
 
-    .earth-shade {
+    .earth-daylight {
       z-index: 3;
       background:
-        radial-gradient(circle at 34% 24%, rgba(255,255,255,.28), transparent 16%),
-        radial-gradient(circle at 38% 35%, rgba(255,255,255,.08), transparent 30%),
-        radial-gradient(circle at 72% 58%, rgba(0,0,0,.12), transparent 32%),
-        radial-gradient(circle at 50% 50%, transparent 0 54%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.74) 100%);
+        radial-gradient(circle at 76% 24%, rgba(255,255,255,.34) 0 5%, rgba(255,246,202,.20) 12%, transparent 29%),
+        radial-gradient(ellipse at 82% 38%, rgba(242,199,111,.16) 0 18%, transparent 40%),
+        radial-gradient(ellipse at 74% 52%, rgba(105, 170, 255, .12), transparent 46%);
+      mix-blend-mode: screen;
+      opacity: .86;
+    }
+
+    .earth-terminator {
+      z-index: 4;
+      background:
+        radial-gradient(ellipse at 82% 30%, transparent 0 28%, rgba(8, 16, 34, .16) 42%, rgba(1, 4, 12, .58) 68%, rgba(0, 0, 0, .88) 100%),
+        linear-gradient(128deg, transparent 0 32%, rgba(4, 10, 24, .14) 47%, rgba(0, 0, 0, .48) 71%, rgba(0, 0, 0, .76) 100%);
+      opacity: .82;
+    }
+
+    .earth-night {
+      z-index: 5;
+      background:
+        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.66) 0 12%, rgba(0,0,0,.44) 34%, transparent 62%),
+        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(0,0,0,.18) 66%, rgba(0,0,0,.64) 100%);
+      opacity: .74;
+    }
+
+    .earth-atmosphere {
+      z-index: 6;
+      background:
+        radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .24), transparent 34%),
+        radial-gradient(circle at 50% 50%, transparent 0 58%, rgba(115, 177, 255, .12) 71%, rgba(115, 177, 255, .22) 78%, transparent 86%);
+      mix-blend-mode: screen;
+      opacity: .70;
     }
 
     .earth-rim {
-      z-index: 4;
+      z-index: 7;
       border: 1px solid rgba(255,255,255,.14);
       box-shadow:
-        inset 0 0 24px rgba(255,255,255,.08),
-        0 0 56px rgba(97,153,236,.20);
+        inset -28px 20px 50px rgba(0,0,0,.44),
+        inset 20px -10px 28px rgba(133,188,255,.11),
+        10px -8px 38px rgba(111, 169, 255, .20),
+        -16px 18px 46px rgba(0,0,0,.34),
+        0 0 58px rgba(97,153,236,.18);
     }
 
     @keyframes earthTextureSpin {
@@ -365,6 +433,13 @@
       .universe-stage {
         padding-bottom: 18px;
       }
+
+      .universe-stage::before {
+        top: 9vh;
+        right: -18vw;
+        width: min(38vmin, 300px);
+        opacity: .58;
+      }
     }
   </style>
 </head>
@@ -401,12 +476,17 @@
         data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
         data-earth-standard="demo-universe-restored-earth"
         data-earth-axis="23.5deg"
+        data-sun-shadow="active"
+        data-shadow-accepted="pending"
       >
-        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis">
+        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with natural sunlight shadow">
           <div class="earth-core">
             <div class="earth-texture"></div>
             <div class="earth-clouds"></div>
-            <div class="earth-shade"></div>
+            <div class="earth-daylight"></div>
+            <div class="earth-terminator"></div>
+            <div class="earth-night"></div>
+            <div class="earth-atmosphere"></div>
             <div class="earth-rim"></div>
           </div>
         </div>
@@ -434,7 +514,10 @@
       <span>earth-standard=demo-universe-restored-earth</span>
       <span>earth-axis=23.5deg</span>
       <span>controls=removed</span>
+      <span>sun-shadow=active</span>
+      <span>shadow-accepted=pending</span>
       <span>DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1</span>
+      <span>DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1</span>
     </section>
   </main>
 </body>

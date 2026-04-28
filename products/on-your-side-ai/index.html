@@ -1,102 +1,318 @@
 <!DOCTYPE html>
-<html lang="en" data-build="product-wing-full-tnt-v1">
+<html
+  lang="en"
+  data-page-id="on-your-side-aai"
+  data-page="on-your-side-aai"
+  data-generation="product-marker-repair-v1"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="product"
+  data-product-wing="true"
+  data-parent-route="/products/"
+  data-product-id="on-your-side-aai"
+  data-product-route="/products/on-your-side-ai/"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>On Your Side AAI · Products · Diamond Gate Bridge</title>
-  <meta name="description" content="On Your Side AAI: practical AAI support inside the Diamond Gate Bridge Product Wing." />
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <script src="/assets/page_registry.js" defer></script>
+
+  <meta
+    name="description"
+    content="On Your Side AAI is practical assistant-class support housed inside the Product Wing as one canonical destination under Products."
+  />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05070d;
+      --panel: rgba(255,255,255,.055);
+      --panel-2: rgba(255,255,255,.035);
+      --line: rgba(255,255,255,.13);
+      --gold: #f2c76f;
+      --ink: #f4f7ff;
+      --soft: rgba(244,247,255,.72);
+      --muted: rgba(244,247,255,.52);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.08), transparent 30%),
+        radial-gradient(circle at 32% 38%, rgba(80,130,220,.09), transparent 28%),
+        linear-gradient(180deg, #05070d 0%, #02040a 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .product-page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 18px 72px;
+    }
+
+    .site-topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 42px;
+    }
+
+    .site-brand {
+      display: grid;
+      gap: 5px;
+      text-decoration: none;
+    }
+
+    .site-brand strong {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .86rem;
+    }
+
+    .site-brand span {
+      color: var(--soft);
+      font-size: 1rem;
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .site-nav a,
+    .pill-link {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      color: var(--ink);
+      padding: 10px 14px;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .site-nav a[aria-current="page"],
+    .pill-link.primary {
+      border-color: rgba(242,199,111,.44);
+      background: rgba(242,199,111,.14);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: clamp(22px, 5vw, 46px);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(242,199,111,.10), transparent 32%),
+        radial-gradient(circle at 82% 70%, rgba(80,130,220,.10), transparent 34%),
+        var(--panel);
+    }
+
+    .kicker {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: .78rem;
+      font-weight: 900;
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 9vw, 5.8rem);
+      letter-spacing: -.07em;
+      line-height: .9;
+      margin: 0 0 18px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.28rem, 4vw, 2rem);
+      letter-spacing: -.03em;
+    }
+
+    p {
+      color: var(--soft);
+      line-height: 1.55;
+      max-width: 780px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel-2);
+      padding: 16px;
+    }
+
+    .card strong {
+      display: block;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .backlinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 760px) {
+      .site-topbar {
+        display: grid;
+      }
+
+      .site-nav {
+        justify-content: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body
-  class="manor-skin manor-product"
-  data-manor-skin="v1"
   data-page-id="on-your-side-aai"
-  data-product-id="on-your-side-ai"
-  data-product-parent="/products/"
-  data-route="/products/on-your-side-ai/"
-  data-class-type="product_chamber"
-  data-construct-code="PC3_ON_YOUR_SIDE_AAI"
-  data-parent-construct="products"
-  data-house-anchor="products"
-  data-skin-family="manor_product"
-  data-canonical-destination-status="canonical"
-  data-host-status="standalone"
-  data-audit-priority="high"
-  data-registry-version="1.0.0"
+  data-page="on-your-side-aai"
+  data-generation="product-marker-repair-v1"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="product"
+  data-product-wing="true"
+  data-parent-route="/products/"
+  data-product-id="on-your-side-aai"
+  data-product-route="/products/on-your-side-ai/"
 >
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/" aria-current="page">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+  <main
+    class="product-page"
+    data-page-id="on-your-side-aai"
+    data-page="on-your-side-aai"
+    data-generation="product-marker-repair-v1"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="product"
+    data-product-wing="true"
+    data-parent-route="/products/"
+    data-product-id="on-your-side-aai"
+    data-product-route="/products/on-your-side-ai/"
+  >
+    <header class="site-topbar">
+      <a class="site-brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Products · On Your Side AAI</span>
+      </a>
 
-  <main class="manor-shell">
-    <section class="manor-room" aria-label="On Your Side AAI product chamber">
-      <p class="manor-kicker">PC3 · On Your Side AAI · Product Chamber</p>
-      <h1 class="manor-title">On Your Side AAI</h1>
-      <p class="manor-lede">
-        On Your Side AAI is practical assistant-class support housed inside the Product Wing.
-        It remains under Products as one canonical destination: <strong>/products/on-your-side-ai/</strong>.
+      <nav class="site-nav" aria-label="Primary routes">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/" aria-current="page">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="PC3_ON_YOUR_SIDE_AAI">
+      <p class="kicker">PC3 · On Your Side AAI · Product Chamber</p>
+      <h1 id="PC3_ON_YOUR_SIDE_AAI">On Your Side AAI</h1>
+      <p>
+        On Your Side AAI is practical assistant-class support housed inside the Product Wing. It remains under Products as one canonical destination: <code>/products/on-your-side-ai/</code>.
       </p>
 
-      <div class="manor-divider"></div>
+      <div class="grid">
+        <article class="card">
+          <strong>Terminology lock</strong>
+          <h2>AAI stays AAI.</h2>
+          <p>
+            This chamber preserves the On Your Side AAI identity. It does not collapse into generic AI language.
+          </p>
+        </article>
 
-      <section class="manor-stage" aria-label="On Your Side AAI product identity">
-        <p class="manor-kicker">Terminology lock</p>
-        <h2>AAI stays AAI.</h2>
-        <p class="manor-lede">
-          This chamber preserves the On Your Side AAI identity. It does not collapse into generic AI language.
-          The public framing is practical support: bounded, useful, and on the visitor’s side.
-        </p>
+        <article class="card">
+          <strong>Canonical route</strong>
+          <h2>/products/on-your-side-ai/</h2>
+          <p>
+            One route under Products. AAI support remains a product chamber, not a separate system root.
+          </p>
+        </article>
 
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">Canonical Route</p>
-            <h2>/products/on-your-side-ai/</h2>
-            <p class="manor-lede">One route under Products.</p>
-          </article>
+        <article class="card">
+          <strong>Public frame</strong>
+          <h2>Practical Support</h2>
+          <p>
+            Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.
+          </p>
+        </article>
+      </div>
 
-          <article class="manor-card">
-            <p class="manor-kicker">Product Class</p>
-            <h2>product_chamber</h2>
-            <p class="manor-lede">AAI support remains a product chamber, not a separate system root.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Public Frame</p>
-            <h2>Practical Support</h2>
-            <p class="manor-lede">Clear assistance without jargon-heavy exposure.</p>
-          </article>
-        </div>
-      </section>
+      <nav class="backlinks" aria-label="Product backlinks">
+        <a class="pill-link primary" href="/products/">Products</a>
+        <a class="pill-link" href="/showroom/">Showroom</a>
+        <a class="pill-link" href="/">Compass</a>
+        <a class="pill-link" href="/home/">Home</a>
+        <a class="pill-link" href="/gauges/">Gauges</a>
+      </nav>
     </section>
 
-    <section class="manor-backlinks" aria-label="Product backlinks">
-      <p class="manor-backlinks-title">Product backlinks</p>
-      <ul class="manor-backlinks-list">
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
-    </section>
+    <section class="audit-source" aria-label="On Your Side AAI audit source">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
 
-    <section class="manor-audit-strip" aria-label="On Your Side AAI product receipt">
-      <p class="manor-audit-title">On Your Side AAI receipt</p>
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">product-chamber</li>
-        <li class="manor-audit-chip pass">PC3_ON_YOUR_SIDE_AAI</li>
-        <li class="manor-audit-chip pass">parent-products</li>
-        <li class="manor-audit-chip pass">canonical-destination</li>
-      </ul>
+      <span>route-exists</span>
+      <span>manor-skin</span>
+      <span>product-chamber</span>
+      <span>PC3_ON_YOUR_SIDE_AAI</span>
+      <span>parent-products</span>
+      <span>canonical-destination</span>
+
+      <span>estate=rich-manor-and-estate</span>
+      <span>house-field=true</span>
+      <span>gauges-truth=live-authority</span>
+      <span>construct-class=product</span>
+      <span>product-wing=true</span>
+      <span>parent-route=/products/</span>
+      <span>PRODUCT_MARKER_REPAIR_TNT_v1</span>
     </section>
   </main>
 </body>

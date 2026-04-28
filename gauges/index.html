@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="dexter-lab-measurement-key-v1"
+  data-generation="dexter-lab-visible-render-contract-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -12,6 +12,7 @@
   data-house-part="gauges"
   data-render-health-lane="active"
   data-demo-universe-earth-render-health="measured"
+  data-showroom-visible-render-health="measured"
   data-dexter-lab="instrumentation"
   data-measurement-key="active"
   data-cadillac-key-authority="master"
@@ -20,11 +21,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Dexter Lab Gauges · Measurement Key · Diamond Gate Bridge</title>
+  <title>Dexter Lab Gauges · Visible Render Contract · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Dexter Lab Gauges for Diamond Gate Bridge. Measures route health, render health, visual truth, pressure, acid/base balance, barometric pressure, seismic shock, axis, 256-state completion, and universe-build readiness."
+    content="Dexter Lab Gauges for Diamond Gate Bridge. Measures route health, render health, visible render integrity, visual truth, pressure, acid/base balance, barometric pressure, seismic shock, axis, 256-state completion, and universe-build readiness."
   />
 
   <style>
@@ -44,8 +45,6 @@
       --warn: #f2c76f;
       --ok: #9dffca;
       --blue: #8bb8ff;
-      --acid: #ff9d9d;
-      --base: #9dffca;
     }
 
     * {
@@ -325,12 +324,6 @@
       font-size: .92rem;
     }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
-    }
-
     .receipt {
       margin-top: 28px;
     }
@@ -371,7 +364,7 @@
 <body
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="dexter-lab-measurement-key-v1"
+  data-generation="dexter-lab-visible-render-contract-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -380,6 +373,7 @@
   data-house-part="gauges"
   data-render-health-lane="active"
   data-demo-universe-earth-render-health="measured"
+  data-showroom-visible-render-health="measured"
   data-dexter-lab="instrumentation"
   data-measurement-key="active"
   data-cadillac-key-authority="master"
@@ -407,13 +401,15 @@
       <h1>Measurement Key.</h1>
       <p>
         The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
-        This lab measures route health, render health, visual truth, pressure, acid/base balance,
-        barometric pressure, seismic shock, axis/orientation, 256-state completion, and universe-build readiness.
+        This lab now measures visible Showroom render integrity in addition to route health, render health,
+        visual truth, pressure, acid/base balance, barometric pressure, seismic shock, axis/orientation,
+        256-state completion, and universe-build readiness.
       </p>
 
       <div class="action-row">
         <button type="button" data-run-gauges>Run live calibration</button>
         <a href="/">Return to Compass</a>
+        <a href="/showroom/">Inspect Showroom</a>
         <a href="/showroom/globe/">Inspect Demo Universe</a>
       </div>
     </section>
@@ -442,10 +438,11 @@
       <span>H6_GAUGES</span>
       <span>render-health-lane=active</span>
       <span>demo-universe-earth-render-health=measured</span>
+      <span>showroom-visible-render-health=measured</span>
       <span>dexter-lab=instrumentation</span>
       <span>measurement-key=active</span>
       <span>cadillac-key-authority=master</span>
-      <span>DEXTER_LAB_MEASUREMENT_KEY_GAUGES_TNT_v1</span>
+      <span>DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1</span>
     </section>
   </main>
 
@@ -453,7 +450,7 @@
     (function () {
       "use strict";
 
-      var VERSION = "DEXTER_LAB_MEASUREMENT_KEY_GAUGES_TNT_v1";
+      var VERSION = "DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1";
       var cache = Object.create(null);
 
       var HOUSE_ROUTES = [
@@ -596,7 +593,7 @@
           id: "SR_PARENT",
           title: "Showroom parent handoff",
           url: "/showroom/",
-          weight: 18,
+          weight: 16,
           tokens: [
             'data-estate="rich-manor-and-estate"',
             'data-house-part="showroom"',
@@ -607,7 +604,7 @@
           id: "SR_DEMO_UNIVERSE",
           title: "Demo Universe Earth route",
           url: "/showroom/globe/",
-          weight: 24,
+          weight: 22,
           tokens: [
             'data-demo-universe="globe-only"',
             'data-earth-standard="demo-universe-restored-earth"',
@@ -619,28 +616,28 @@
           id: "SR_EARTH_SURFACE",
           title: "Earth surface asset",
           url: "/assets/earth/earth_surface_2048.jpg",
-          weight: 18,
+          weight: 16,
           assetOnly: true
         },
         {
           id: "SR_EARTH_CLOUDS",
           title: "Earth cloud asset",
           url: "/assets/earth/earth_clouds_2048.jpg",
-          weight: 14,
+          weight: 12,
           assetOnly: true
         },
         {
           id: "SR_BACKLINKS",
           title: "Demo Universe backlinks",
           url: "/showroom/globe/",
-          weight: 12,
+          weight: 10,
           tokens: ['href="/"', 'href="/showroom/"', 'href="/gauges/"']
         },
         {
           id: "SR_SHADOW_CONTRACT",
           title: "Light / shadow technical contract",
           url: "/showroom/globe/",
-          weight: 14,
+          weight: 12,
           tokens: [
             'data-sun-shadow="active"',
             'sun-shadow=active',
@@ -650,6 +647,13 @@
             'data-shadow-accepted="true"',
             "SHADOW_VISUAL_ACCEPTED"
           ]
+        },
+        {
+          id: "SR_SHOWROOM_VISIBLE",
+          title: "Showroom visible render contract",
+          url: "/showroom/",
+          weight: 12,
+          delegated: true
         }
       ];
 
@@ -694,6 +698,11 @@
         if (!httpOk) return 0;
         if (!total || missing.length === 0) return 100;
         return Math.max(50, Math.round(((total - missing.length) / total) * 100));
+      }
+
+      function scoreFromBooleans(values) {
+        if (!values.length) return 0;
+        return Math.round(values.filter(Boolean).length / values.length * 100);
       }
 
       async function fetchResource(url) {
@@ -746,7 +755,226 @@
         };
       }
 
-      async function auditRenderComponent(config) {
+      function groupPass(text, groups) {
+        return groups.map(function (group) {
+          return {
+            label: group.label,
+            pass: tokenPresent(text, group.tokens),
+            tokens: group.tokens
+          };
+        });
+      }
+
+      function visibleTextPresent(text) {
+        return tokenPresent(text, ["Diamond Gate Bridge"]) &&
+          tokenPresent(text, ["Orbital Earth"]) &&
+          tokenPresent(text, ["Inspect Universe", "Inspect Globe"]);
+      }
+
+      async function auditShowroomIframe() {
+        return new Promise(function (resolve) {
+          var iframe = document.createElement("iframe");
+          var done = false;
+
+          function finish(result) {
+            if (done) return;
+            done = true;
+            try {
+              iframe.remove();
+            } catch (error) {}
+            resolve(result);
+          }
+
+          iframe.style.position = "fixed";
+          iframe.style.left = "-9999px";
+          iframe.style.top = "-9999px";
+          iframe.style.width = "390px";
+          iframe.style.height = "760px";
+          iframe.style.opacity = "0";
+          iframe.style.pointerEvents = "none";
+          iframe.setAttribute("aria-hidden", "true");
+
+          iframe.addEventListener("load", function () {
+            try {
+              var doc = iframe.contentDocument;
+              var win = iframe.contentWindow;
+              var body = doc.body;
+              var bodyStyle = win.getComputedStyle(body);
+
+              var background = bodyStyle.backgroundColor || "";
+              var bodyStyled = background !== "rgba(0, 0, 0, 0)" && background !== "rgb(255, 255, 255)";
+
+              var visualShell = Boolean(doc.querySelector(
+                ".showroom-stage, .showroom-card, .showroom-hero, .showroom-shell, [data-showroom-visual-shell='active']"
+              ));
+
+              var globeStage = Boolean(doc.querySelector(
+                ".showroom-globe, .showroom-globe-mount, #showroom-globe-mount, [data-showroom-globe], [data-dgb-earth-mount], canvas"
+              ));
+
+              var navLinks = Array.prototype.slice.call(doc.querySelectorAll("nav a, header a, .site-nav a"));
+              var styledNav = navLinks.some(function (link) {
+                var style = win.getComputedStyle(link);
+                var radius = parseFloat(style.borderTopLeftRadius || "0");
+                var borderWidth = parseFloat(style.borderTopWidth || "0");
+                var display = style.display;
+                return radius >= 12 || borderWidth >= 1 || display === "inline-flex" || display === "flex" || link.className;
+              });
+
+              var rawText = visibleTextPresent(doc.documentElement.outerHTML);
+              var rawFallback = rawText && (!visualShell || !styledNav || !globeStage);
+
+              finish({
+                status: "iframe-loaded",
+                score: scoreFromBooleans([bodyStyled, visualShell, globeStage, styledNav, !rawFallback]),
+                checks: [
+                  { label: "body styled", pass: bodyStyled },
+                  { label: "visual shell exists", pass: visualShell },
+                  { label: "globe/stage exists", pass: globeStage },
+                  { label: "navigation styled", pass: styledNav },
+                  { label: "not raw fallback", pass: !rawFallback }
+                ]
+              });
+            } catch (error) {
+              finish({
+                status: "iframe-error",
+                score: 0,
+                checks: [
+                  { label: "iframe same-origin inspection", pass: false }
+                ],
+                error: error && error.message ? error.message : "iframe inspection failed"
+              });
+            }
+          });
+
+          window.setTimeout(function () {
+            finish({
+              status: "iframe-timeout",
+              score: 0,
+              checks: [
+                { label: "iframe loaded before timeout", pass: false }
+              ]
+            });
+          }, 3500);
+
+          iframe.src = "/showroom/?visible_audit=" + Date.now();
+          document.body.appendChild(iframe);
+        });
+      }
+
+      async function auditShowroomVisibleRender() {
+        var source = await fetchResource("/showroom/");
+        var css = await fetchResource("/showroom/showroom.css");
+
+        var htmlGroups = groupPass(source.text, [
+          { label: "estate marker", tokens: ['data-estate="rich-manor-and-estate"'] },
+          { label: "showroom house marker", tokens: ['data-house-part="showroom"'] },
+          { label: "house construct marker", tokens: ['data-construct-class="house"'] },
+          { label: "globe handoff", tokens: ['href="/showroom/globe/"', 'href="/showroom/globe/index.html"'] },
+          { label: "orbital earth text", tokens: ["Orbital Earth"] },
+          { label: "inspect universe handoff", tokens: ["Inspect Universe", "Inspect Globe"] }
+        ]);
+
+        var shellGroups = groupPass(source.text, [
+          { label: "showroom stage", tokens: ["showroom-stage", "showroom-shell", "showroom-hero"] },
+          { label: "showroom card", tokens: ["showroom-card", "showroom-panel", "showroom-copy"] },
+          { label: "navigation skin", tokens: ["site-nav", "pill", "nav-pill", "showroom-nav"] },
+          { label: "globe/stage mount", tokens: ["showroom-globe", "showroom-globe-mount", "data-showroom-globe", "data-dgb-earth-mount", "earth-canvas"] },
+          { label: "visual shell marker", tokens: ['data-showroom-visual-shell="active"', "SHOWROOM_VISIBLE_RENDER"] }
+        ]);
+
+        var cssGroups = groupPass(css.text, [
+          { label: "showroom selector", tokens: [".showroom", ".showroom-page", ".showroom-shell"] },
+          { label: "stage selector", tokens: [".showroom-stage", ".showroom-hero"] },
+          { label: "card selector", tokens: [".showroom-card", ".showroom-panel"] },
+          { label: "globe selector", tokens: [".showroom-globe", ".showroom-globe-mount"] },
+          { label: "nav selector", tokens: [".site-nav", ".pill", ".nav-pill"] },
+          { label: "visual styling", tokens: ["border-radius", "background", "display"] }
+        ]);
+
+        var linkedCss = tokenPresent(source.text, [
+          'href="/showroom/showroom.css"',
+          "href='\/showroom\/showroom.css'",
+          "showroom.css"
+        ]);
+
+        var rawText = visibleTextPresent(source.text);
+        var visualTokensPresent = shellGroups.filter(function (check) { return check.pass; }).length >= 3;
+        var rawFallback = rawText && !visualTokensPresent;
+
+        var htmlScore = scoreFromBooleans(htmlGroups.map(function (check) { return check.pass; }));
+        var cssScore = css.ok ? scoreFromBooleans(cssGroups.map(function (check) { return check.pass; }).concat([linkedCss])) : 0;
+        var shellScore = scoreFromBooleans(shellGroups.map(function (check) { return check.pass; }));
+        var rawFallbackScore = rawFallback ? 0 : 100;
+        var iframeResult = await auditShowroomIframe();
+
+        var componentScores = [
+          htmlScore,
+          cssScore,
+          shellScore,
+          rawFallbackScore,
+          iframeResult.score
+        ];
+
+        var score = average(componentScores);
+
+        var missing = [];
+
+        htmlGroups.forEach(function (check) {
+          if (!check.pass) missing.push("HTML: " + check.label);
+        });
+
+        if (!linkedCss) missing.push("CSS: /showroom/showroom.css linked from /showroom/");
+
+        cssGroups.forEach(function (check) {
+          if (!check.pass) missing.push("CSS: " + check.label);
+        });
+
+        shellGroups.forEach(function (check) {
+          if (!check.pass) missing.push("SHELL: " + check.label);
+        });
+
+        if (rawFallback) missing.push("RAW FALLBACK: content present but visual shell not present");
+
+        iframeResult.checks.forEach(function (check) {
+          if (!check.pass) missing.push("IFRAME: " + check.label);
+        });
+
+        return {
+          id: "G11_SHOWROOM_VISIBLE_RENDER",
+          title: "Showroom Visible Render Meter",
+          url: "/showroom/",
+          status: source.status,
+          ok: source.ok,
+          score: score,
+          htmlScore: htmlScore,
+          cssScore: cssScore,
+          shellScore: shellScore,
+          rawFallbackScore: rawFallbackScore,
+          iframeScore: iframeResult.score,
+          iframeStatus: iframeResult.status,
+          missing: missing,
+          missingTotal: missing.length,
+          rawFallback: rawFallback,
+          componentScores: componentScores
+        };
+      }
+
+      async function auditRenderComponent(config, showroomVisible) {
+        if (config.delegated) {
+          return {
+            id: "SR_SHOWROOM_VISIBLE",
+            title: "Showroom visible render contract",
+            url: "/showroom/",
+            weight: config.weight,
+            status: showroomVisible.status,
+            ok: showroomVisible.ok,
+            score: showroomVisible.score,
+            missing: showroomVisible.missing,
+            accepted: showroomVisible.score >= 95
+          };
+        }
+
         var result = await fetchResource(config.url);
 
         if (config.assetOnly) {
@@ -844,7 +1072,7 @@
       }
 
       function buildInstruments(data) {
-        var allGroups = [data.house, data.products, data.planets, data.render];
+        var allGroups = [data.house, data.products, data.planets, data.render, [data.showroomVisible]];
         var missingCount = countMissing(allGroups);
         var breakCount = countBreaks(allGroups);
         var routeCount = data.house.length + data.products.length + data.planets.length;
@@ -853,21 +1081,42 @@
         var completedSeats = Math.round((data.overall / 100) * 256);
         var missingSeats = 256 - completedSeats;
 
-        var acid = clamp(Math.round((missingCount * 2.6) + (breakCount * 5.2) + ((100 - data.renderScore) * .32)), 0, 100);
-        var base = clamp(Math.round((data.houseScore + data.renderScore + data.productScore + data.planetScore) / 4), 0, 100);
+        var shadow = data.render.filter(function (item) {
+          return item.id === "SR_SHADOW_CONTRACT";
+        })[0];
+
+        var shadowAcceptedScore = shadow && shadow.accepted ? 100 : 50;
+        var visualTruthScore = average([
+          data.renderScore,
+          data.showroomVisible.score,
+          shadow ? shadow.score : 0,
+          shadowAcceptedScore
+        ]);
+
+        var acid = clamp(Math.round(
+          (missingCount * 2.4) +
+          (breakCount * 5.0) +
+          ((100 - data.renderScore) * .25) +
+          ((100 - data.showroomVisible.score) * .35) +
+          ((100 - visualTruthScore) * .25)
+        ), 0, 100);
+
+        var base = clamp(Math.round((data.houseScore + data.renderScore + data.productScore + data.planetScore + data.showroomVisible.score) / 5), 0, 100);
         var ph = clamp(7 + ((base - acid) / 100) * 7, 0, 14);
 
         var pressure = clamp(Math.round(
-          ((100 - data.overall) * .45) +
-          ((100 - data.planetScore) * .22) +
-          ((100 - data.generationScore) * .16) +
-          ((100 - data.coreScore) * .10) +
-          (breakCount * 1.2)
+          ((100 - data.overall) * .38) +
+          ((100 - data.showroomVisible.score) * .26) +
+          ((100 - data.planetScore) * .18) +
+          ((100 - data.generationScore) * .12) +
+          ((100 - data.coreScore) * .08) +
+          (breakCount * 1.1)
         ), 0, 100);
 
         var parametric = {
           routePressure: clamp(100 - data.houseScore, 0, 100),
           renderPressure: clamp(100 - data.renderScore, 0, 100),
+          visibleRenderPressure: clamp(100 - data.showroomVisible.score, 0, 100),
           productPressure: clamp(100 - data.productScore, 0, 100),
           planetPressure: clamp(100 - data.planetScore, 0, 100),
           corePressure: clamp(100 - data.coreScore, 0, 100),
@@ -882,23 +1131,19 @@
         }
 
         var delta = previous ? data.overall - Number(previous.overall || 0) : 0;
-        var shock = clamp(Math.round(Math.abs(delta) * 1.6 + breakCount * 2.4 + missingCount * .7), 0, 100);
+        var shock = clamp(Math.round(Math.abs(delta) * 1.6 + breakCount * 2.4 + missingCount * .55), 0, 100);
 
         try {
           localStorage.setItem("DGB_DEXTER_LAB_LAST_AUDIT", JSON.stringify({
             overall: data.overall,
             renderScore: data.renderScore,
+            showroomVisibleScore: data.showroomVisible.score,
             planetScore: data.planetScore,
             productScore: data.productScore,
             time: Date.now()
           }));
         } catch (error) {}
 
-        var shadow = data.render.filter(function (item) {
-          return item.id === "SR_SHADOW_CONTRACT";
-        })[0];
-
-        var gyroscopeScore = 0;
         var demoRoute = cache["/showroom/globe/"] ? cache["/showroom/globe/"].text : "";
         var gyroTokens = [
           'data-earth-axis="23.5deg"',
@@ -907,7 +1152,7 @@
           "DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1"
         ];
         var gyroMissing = tokenMissing(demoRoute, gyroTokens);
-        gyroscopeScore = scoreFromMissing(Boolean(cache["/showroom/globe/"] && cache["/showroom/globe/"].ok), gyroMissing, gyroTokens.length);
+        var gyroscopeScore = scoreFromMissing(Boolean(cache["/showroom/globe/"] && cache["/showroom/globe/"].ok), gyroMissing, gyroTokens.length);
 
         return {
           abacus: {
@@ -945,9 +1190,15 @@
             accepted: shadow ? shadow.accepted : false,
             missing: shadow ? shadow.missing : ["shadow component missing"]
           },
+          visibleRender: {
+            score: data.showroomVisible.score,
+            rawFallback: data.showroomVisible.rawFallback,
+            missing: data.showroomVisible.missing
+          },
           visualTruth: {
-            score: shadow && shadow.accepted ? Math.round((data.renderScore + shadow.score) / 2) : Math.round((data.renderScore + (shadow ? shadow.score : 0)) / 2),
-            accepted: shadow ? shadow.accepted : false
+            score: visualTruthScore,
+            shadowAccepted: Boolean(shadow && shadow.accepted),
+            visibleAccepted: data.showroomVisible.score >= 95
           }
         };
       }
@@ -958,7 +1209,10 @@
         var house = await Promise.all(HOUSE_ROUTES.map(auditRoute));
         var products = await Promise.all(PRODUCT_ROUTES.map(auditRoute));
         var planets = await Promise.all(PLANET_ROUTES.map(auditRoute));
-        var render = await Promise.all(RENDER_CHECKS.map(auditRenderComponent));
+        var showroomVisible = await auditShowroomVisibleRender();
+        var render = await Promise.all(RENDER_CHECKS.map(function (config) {
+          return auditRenderComponent(config, showroomVisible);
+        }));
         var core = await measureCoreExperience();
         var generation = await measureGenerationReadiness();
 
@@ -968,17 +1222,28 @@
         var renderScore = weightedAverage(render);
         var coreScore = core.score;
         var generationScore = generation.score;
-        var overall = average([houseScore, coreScore, generationScore, renderScore, productScore, planetScore]);
+
+        var overall = average([
+          houseScore,
+          coreScore,
+          generationScore,
+          renderScore,
+          productScore,
+          planetScore,
+          showroomVisible.score
+        ]);
 
         var data = {
           house: house,
           products: products,
           planets: planets,
           render: render,
+          showroomVisible: showroomVisible,
           houseScore: houseScore,
           productScore: productScore,
           planetScore: planetScore,
           renderScore: renderScore,
+          showroomVisibleScore: showroomVisible.score,
           coreScore: coreScore,
           generationScore: generationScore,
           overall: overall,
@@ -1052,8 +1317,15 @@
             "Barometer",
             instruments.barometer.pressure,
             instruments.barometer.label,
-            "Measures whole-system pressure across route, render, product, planet, core, and generation lanes.",
+            "Measures whole-system pressure across route, render, visible Showroom expression, product, planet, core, and generation lanes.",
             instruments.barometer.score
+          ),
+          renderInstrument(
+            "Showroom Visible Render",
+            instruments.visibleRender.score,
+            instruments.visibleRender.rawFallback ? "raw fallback detected" : "visible render meter",
+            instruments.visibleRender.rawFallback ? "The page content exists, but the accepted visual shell is not rendering." : "Measures whether /showroom/ is visually mounted, styled, and user-facing.",
+            instruments.visibleRender.score
           ),
           renderInstrument(
             "Gyroscope",
@@ -1072,8 +1344,8 @@
           renderInstrument(
             "Visual Truth Meter",
             instruments.visualTruth.score,
-            instruments.visualTruth.accepted ? "accepted target" : "target pending",
-            "Measures whether render health and visual truth agree instead of merely passing a technical token.",
+            instruments.visualTruth.visibleAccepted ? "visible target measured" : "visible target failing/pending",
+            "Combines render health, visible Showroom integrity, shadow technical truth, and manual visual acceptance.",
             instruments.visualTruth.score
           ),
           "</section>",
@@ -1081,7 +1353,8 @@
           "<h2>Parametric Pressure</h2>",
           '<section class="lab-grid">',
           renderInstrument("Route Pressure", instruments.parametric.routePressure, "house lane", "Pressure from house route health.", 100 - instruments.parametric.routePressure),
-          renderInstrument("Render Pressure", instruments.parametric.renderPressure, "render lane", "Pressure from render contract health.", 100 - instruments.parametric.renderPressure),
+          renderInstrument("Render Pressure", instruments.parametric.renderPressure, "render lane", "Pressure from Demo Universe render contract health.", 100 - instruments.parametric.renderPressure),
+          renderInstrument("Visible Render Pressure", instruments.parametric.visibleRenderPressure, "Showroom lane", "Pressure from visible Showroom render integrity.", 100 - instruments.parametric.visibleRenderPressure),
           renderInstrument("Product Pressure", instruments.parametric.productPressure, "product lane", "Pressure from product attachment health.", 100 - instruments.parametric.productPressure),
           renderInstrument("Planet Pressure", instruments.parametric.planetPressure, "planet lane", "Pressure from planetary attachment health.", 100 - instruments.parametric.planetPressure),
           renderInstrument("Core Pressure", instruments.parametric.corePressure, "core lane", "Pressure from Compass/core experience readiness.", 100 - instruments.parametric.corePressure),
@@ -1143,6 +1416,28 @@
         ].join("");
       }
 
+      function renderShowroomVisibleEvidence(item) {
+        var state = item.score >= 95 ? "PASS" : "BREAK";
+
+        return [
+          "<h2>G11 · Showroom Visible Render Evidence</h2>",
+          '<article class="audit-row ' + scoreClass(item.score) + '">',
+          "<h3>" + escapeHtml(item.id + " · " + item.title + " · " + item.score) + "</h3>",
+          '<p class="meta"><strong>' + state + "</strong> · HTTP=" + escapeHtml(item.status) + " · <code>" + escapeHtml(item.url) + "</code></p>",
+          "<p>Component scores:</p>",
+          "<ul>",
+          "<li>HTML source contract: <code>" + escapeHtml(String(item.htmlScore)) + "</code></li>",
+          "<li>CSS contract: <code>" + escapeHtml(String(item.cssScore)) + "</code></li>",
+          "<li>Visual shell contract: <code>" + escapeHtml(String(item.shellScore)) + "</code></li>",
+          "<li>Raw fallback detector: <code>" + escapeHtml(String(item.rawFallbackScore)) + "</code></li>",
+          "<li>Hidden iframe computed render: <code>" + escapeHtml(String(item.iframeScore)) + "</code> / " + escapeHtml(item.iframeStatus) + "</li>",
+          "</ul>",
+          "<p>Missing visible render evidence:</p>",
+          "<ul>" + missingList(item.missing) + "</ul>",
+          "</article>"
+        ].join("");
+      }
+
       function renderResult(data) {
         var output = document.getElementById("gauge-output");
 
@@ -1153,6 +1448,7 @@
           renderDial("Core experience", data.coreScore, data.core.held ? "held" : "not held"),
           renderDial("Generation readiness", data.generationScore, "GEN baseline"),
           renderDial("Render health", data.renderScore, "Demo Universe Earth"),
+          renderDial("Showroom visible", data.showroomVisibleScore, "visible render"),
           renderDial("Products", data.productScore, "product route health"),
           renderDial("Planets", data.planetScore, "planet route health"),
           "</section>",
@@ -1162,10 +1458,11 @@
           '<section class="lab-panel">',
           "<h2>Measurement Key Read</h2>",
           "<p>The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.</p>",
-          "<p>Current shadow rule: the Light / Shadow Meter can detect the technical contract, but visual truth is not accepted until a manual acceptance token is present: <code>data-shadow-accepted=&quot;true&quot;</code> or <code>SHADOW_VISUAL_ACCEPTED</code>.</p>",
-          '<div class="mini-links"><a class="primary" href="/showroom/globe/">Inspect Demo Universe</a><a href="/showroom/">Showroom</a><a href="/">Compass</a></div>',
+          "<p>New G11 rule: <code>/showroom/</code> must not merely return HTTP 200 or carry markers. It must visibly mount the accepted Showroom expression: styled navigation, visual shell, card/stage structure, globe/stage presence, and no raw fallback.</p>",
+          '<div class="mini-links"><a class="primary" href="/showroom/">Inspect Showroom</a><a href="/showroom/globe/">Inspect Demo Universe</a><a href="/">Compass</a></div>',
           "</section>",
 
+          renderShowroomVisibleEvidence(data.showroomVisible),
           renderRenderEvidence(data.render),
           renderRouteEvidence("House route evidence", data.house),
           renderRouteEvidence("Product evidence", data.products),
@@ -1176,7 +1473,7 @@
           "<p><strong>VERSION:</strong> " + escapeHtml(VERSION) + "</p>",
           "<p><strong>CADILLAC KEY:</strong> master authority key.</p>",
           "<p><strong>MEASUREMENT KEY:</strong> operating proof key.</p>",
-          "<p><strong>DEXTER LAB:</strong> instrument console for route, render, pressure, pH, barometer, seismograph, gyroscope, visual truth, 256-state completion, and universe-build readiness.</p>",
+          "<p><strong>NEW CONTRACT:</strong> G11 · Showroom Visible Render Meter catches raw text, missing CSS, missing visual shell, missing globe/stage, and unstyled visible failure even when route markers pass.</p>",
           "</section>"
         ].join("");
       }

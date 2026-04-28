@@ -3,20 +3,21 @@
   lang="en"
   data-page-id="inspect-universe"
   data-page="inspect-universe"
-  data-generation="inspect-universe-earth-sun-toggle-v1"
+  data-generation="inspect-universe-inline-earth-sun-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="inspection"
+  data-origin-route="/"
   data-parent-route="/showroom/"
-  data-inspection-subjects="earth,sun"
+  data-current-route="/showroom/globe/"
   data-state-map="256"
-  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+  data-inspection-subjects="earth,sun"
   data-earth-surface="/assets/earth/earth_surface_2048.jpg"
   data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="centered-satellite-earth-no-external-rings"
-  data-sun-mode="css-solar-reference"
+  data-earth-standard="inline-inspectable-earth"
+  data-sun-mode="inline-solar-reference"
 >
 <head>
   <meta charset="utf-8" />
@@ -26,23 +27,22 @@
 
   <meta
     name="description"
-    content="Inspect Universe room for Diamond Gate Bridge. Toggle between Earth and Sun in a living universe field without Showroom cards or bubbles covering the inspection subject."
+    content="Inspect Universe room for Diamond Gate Bridge. Toggle between Earth and Sun without Showroom cards, bubbles, or text covering the subject."
   />
-
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=inspect-universe-earth-sun-toggle-v1" />
 
   <style>
     :root {
       color-scheme: dark;
       --ink: #f4f7ff;
-      --soft: rgba(244, 247, 255, .72);
+      --soft: rgba(244, 247, 255, .74);
       --muted: rgba(244, 247, 255, .46);
       --gold: #f2c76f;
+      --gold-soft: rgba(242, 199, 111, .16);
       --line: rgba(244, 247, 255, .14);
       --line-gold: rgba(242, 199, 111, .42);
       --black: #02050a;
       --panel: rgba(2, 5, 10, .62);
-      --sun-scale: 1;
+      --subject-scale: 1;
     }
 
     * {
@@ -62,7 +62,7 @@
 
     body {
       background:
-        radial-gradient(circle at 50% 50%, rgba(67, 115, 198, .16), transparent 35%),
+        radial-gradient(circle at 50% 48%, rgba(67, 115, 198, .16), transparent 35%),
         radial-gradient(circle at 72% 20%, rgba(242, 199, 111, .10), transparent 25%),
         radial-gradient(circle at 22% 82%, rgba(92, 151, 238, .10), transparent 27%),
         linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
@@ -152,7 +152,7 @@
       display: grid;
       gap: 3px;
       pointer-events: auto;
-      opacity: .50;
+      opacity: .42;
       transition: opacity .16s ease;
     }
 
@@ -195,7 +195,7 @@
         inset 0 0 0 1px rgba(255,255,255,.04);
       font-size: clamp(.82rem, 2.4vw, 1rem);
       font-weight: 800;
-      opacity: .62;
+      opacity: .66;
       transition: opacity .16s ease, background .16s ease, border-color .16s ease;
       white-space: nowrap;
       cursor: pointer;
@@ -206,7 +206,7 @@
     .subject-toggle[aria-selected="true"] {
       opacity: 1;
       border-color: var(--line-gold);
-      background: rgba(242, 199, 111, .16);
+      background: var(--gold-soft);
     }
 
     .universe-stage {
@@ -216,7 +216,7 @@
       min-height: 0;
       display: grid;
       place-items: center;
-      padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
+      padding: 0 clamp(10px, 3vw, 32px) clamp(96px, 14vh, 138px);
     }
 
     .subject-panel {
@@ -237,63 +237,53 @@
       transform: scale(1);
     }
 
-    #earth-inspect-mount {
-      width: 100%;
-      height: 100%;
-      min-height: 0;
+    .earth-subject {
+      width: min(84vmin, 940px);
+      max-width: 94vw;
+      aspect-ratio: 1;
+      transform: scale(var(--subject-scale));
+      transition: transform .18s ease;
       display: grid;
       place-items: center;
-      padding: clamp(8px, 2vh, 18px) 0 clamp(84px, 13vh, 130px);
-    }
-
-    .inspect-earth-shell {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-    }
-
-    [data-dgb-earth-mount] {
-      width: min(84vmin, 940px) !important;
-      max-width: 94vw !important;
-      min-height: auto !important;
-      height: auto !important;
-      margin: 0 auto !important;
-      display: grid !important;
-      place-items: center !important;
-      isolation: isolate !important;
-    }
-
-    .dgb-earth-stage {
-      width: min(84vmin, 940px) !important;
-      max-width: 94vw !important;
-      min-height: auto !important;
-      height: auto !important;
-      display: grid !important;
-      place-items: center !important;
-      margin: 0 auto !important;
-      transform: none !important;
-    }
-
-    .dgb-earth-tilt,
-    .dgb-earth-sphere {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 auto !important;
-      transform: none !important;
-    }
-
-    .dgb-earth-sphere {
       filter:
         drop-shadow(0 0 34px rgba(97, 153, 236, .34))
         drop-shadow(0 0 92px rgba(242, 199, 111, .10));
     }
 
-    [data-dgb-earth-canvas] {
-      display: block !important;
-      width: 100% !important;
-      height: auto !important;
-      max-width: 100% !important;
+    .earth-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .earth-fallback {
+      position: absolute;
+      width: min(84vmin, 940px);
+      max-width: 94vw;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: none;
+      background:
+        radial-gradient(circle at 34% 26%, rgba(255,255,255,.42), transparent 12%),
+        radial-gradient(circle at 36% 42%, rgba(66, 168, 91, .88) 0 7%, transparent 8%),
+        radial-gradient(circle at 60% 30%, rgba(58, 154, 87, .78) 0 6%, transparent 7%),
+        radial-gradient(circle at 58% 62%, rgba(197, 143, 83, .82) 0 9%, transparent 10%),
+        radial-gradient(circle at 44% 70%, rgba(65, 151, 81, .74) 0 7%, transparent 8%),
+        radial-gradient(circle at 50% 45%, #1a5fb8 0 35%, #0b2f68 70%, #020713 100%);
+      box-shadow:
+        inset -42px -28px 76px rgba(0,0,0,.62),
+        inset 20px 14px 38px rgba(255,255,255,.16),
+        0 0 38px rgba(97,153,236,.32);
+      overflow: hidden;
+    }
+
+    body[data-earth-fallback="true"] .earth-canvas {
+      display: none;
+    }
+
+    body[data-earth-fallback="true"] .earth-fallback {
+      display: block;
     }
 
     .sun-field {
@@ -301,16 +291,16 @@
       height: 100%;
       display: grid;
       place-items: center;
-      padding: clamp(8px, 2vh, 18px) 0 clamp(84px, 13vh, 130px);
     }
 
     .sun-orbit-shell {
       position: relative;
       width: min(78vmin, 880px);
+      max-width: 94vw;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
-      transform: scale(var(--sun-scale));
+      transform: scale(var(--subject-scale));
       transition: transform .18s ease;
     }
 
@@ -485,8 +475,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      opacity: .18;
-      filter: grayscale(.72);
+      opacity: .22;
+      filter: grayscale(.62);
       transition: opacity .18s ease, filter .18s ease, transform .18s ease;
     }
 
@@ -531,7 +521,7 @@
     .status-line {
       position: fixed;
       left: 50%;
-      bottom: clamp(16px, 4vh, 32px);
+      bottom: clamp(108px, 16vh, 154px);
       transform: translateX(-50%);
       z-index: 5;
       color: var(--muted);
@@ -540,42 +530,6 @@
       text-align: center;
       text-transform: uppercase;
       pointer-events: none;
-    }
-
-    .error-card {
-      position: relative;
-      z-index: 20;
-      width: min(720px, calc(100vw - 34px));
-      border: 1px solid rgba(255, 140, 140, .44);
-      border-radius: 28px;
-      padding: 24px;
-      background: rgba(18, 4, 6, .78);
-      box-shadow: 0 28px 90px rgba(0,0,0,.44);
-    }
-
-    .error-card .kicker {
-      margin: 0 0 10px;
-      color: #ff9d9d;
-      font-size: .74rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .error-card h1 {
-      margin: 0 0 12px;
-      font-size: clamp(1.8rem, 5vw, 3.4rem);
-      letter-spacing: -.05em;
-    }
-
-    .error-card p {
-      margin: 0;
-      color: var(--soft);
-      line-height: 1.45;
-    }
-
-    .error-card code {
-      color: var(--gold);
-      overflow-wrap: anywhere;
     }
 
     .audit-source,
@@ -613,9 +567,8 @@
         font-size: .82rem;
       }
 
-      [data-dgb-earth-mount],
-      .dgb-earth-stage {
-        width: min(78vmin, 92vw) !important;
+      .earth-subject {
+        width: min(78vmin, 92vw);
       }
 
       .sun-orbit-shell {
@@ -625,11 +578,15 @@
       .universe-controls {
         width: min(440px, 86vw);
       }
+
+      .status-line {
+        bottom: 106px;
+      }
     }
   </style>
 </head>
 
-<body data-active-subject="earth" data-motion="running">
+<body data-active-subject="earth" data-motion="running" data-earth-fallback="false">
   <main
     class="inspect-universe-page"
     data-page-id="inspect-universe"
@@ -639,11 +596,13 @@
     data-house-field="true"
     data-gauges-truth="live-authority"
     data-construct-class="inspection"
+    data-origin-route="/"
     data-parent-route="/showroom/"
+    data-current-route="/showroom/globe/"
     data-state-map="256"
   >
     <header class="universe-topbar">
-      <a class="universe-brand" href="/showroom/" aria-label="Return to Showroom">
+      <a class="universe-brand" href="/" aria-label="Compass Origin">
         <strong>Diamond Gate Bridge</strong>
         <span>Inspect Universe · Earth / Sun</span>
       </a>
@@ -657,14 +616,9 @@
 
     <section class="universe-stage" aria-label="Inspect Universe field">
       <section class="subject-panel" data-subject-panel="earth" aria-label="Earth inspection subject">
-        <div
-          id="earth-inspect-mount"
-          data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-          data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-          data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-          data-earth-standard="centered-satellite-earth-no-external-rings"
-        >
-          <p class="status-line" data-status-line>Loading Earth</p>
+        <div class="earth-subject" data-earth-subject>
+          <canvas class="earth-canvas" data-earth-canvas aria-label="Inspectable Earth"></canvas>
+          <div class="earth-fallback" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -681,6 +635,8 @@
         </div>
       </section>
 
+      <p class="status-line" data-status-line>Loading Earth</p>
+
       <div class="universe-controls" aria-label="Subject inspection controls">
         <button type="button" data-action="zoom-out">Zoom Out</button>
         <button type="button" data-action="zoom-in">Zoom In</button>
@@ -691,8 +647,9 @@
     </section>
 
     <section class="audit-source" aria-label="Inspect Universe audit source">
+      <a href="/">Compass Origin</a>
       <a href="/showroom/">Showroom</a>
-      <a href="/">Compass</a>
+      <a href="/showroom/globe/">Inspect Universe</a>
       <a href="/gauges/">Gauges</a>
 
       <span>route-exists</span>
@@ -701,21 +658,20 @@
       <span>house-field=true</span>
       <span>gauges-truth=live-authority</span>
       <span>construct-class=inspection</span>
+      <span>origin-route=/</span>
       <span>parent-route=/showroom/</span>
+      <span>current-route=/showroom/globe/</span>
       <span>state-map=256</span>
       <span>inspect-universe=true</span>
       <span>subject-earth=true</span>
       <span>subject-sun=true</span>
-      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
       <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
       <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
-      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
-      <span>sun-mode=css-solar-reference</span>
-      <span>INSPECT_UNIVERSE_EARTH_SUN_TOGGLE_TNT_v1</span>
+      <span>earth-standard=inline-inspectable-earth</span>
+      <span>sun-mode=inline-solar-reference</span>
+      <span>INSPECT_UNIVERSE_INLINE_EARTH_SUN_TNT_v1</span>
     </section>
   </main>
-
-  <script src="/assets/earth/earth_canvas.js?v=inspect-universe-earth-sun-toggle-v1" defer></script>
 
   <script>
     (function () {
@@ -724,168 +680,206 @@
       var SURFACE = "/assets/earth/earth_surface_2048.jpg";
       var CLOUDS = "/assets/earth/earth_clouds_2048.jpg";
 
-      var earthMount = null;
-      var earthApi = null;
-      var earthAttempts = 0;
-      var maxEarthAttempts = 40;
+      var canvas = null;
+      var ctx = null;
+      var surface = null;
+      var clouds = null;
+      var surfaceReady = false;
+      var cloudsReady = false;
+      var earthFallback = false;
 
       var activeSubject = "earth";
-      var sunZoom = 1;
+      var zoom = 1;
+      var rotation = 0;
       var motionPaused = false;
+      var lastTime = 0;
+      var frameId = null;
 
-      function create(tag, attrs, children) {
-        var node = document.createElement(tag);
-
-        Object.keys(attrs || {}).forEach(function (key) {
-          var value = attrs[key];
-          if (value === null || value === undefined || value === false) return;
-
-          if (key === "className") node.className = value;
-          else if (key === "text") node.textContent = value;
-          else node.setAttribute(key, String(value));
-        });
-
-        (children || []).forEach(function (child) {
-          if (typeof child === "string") node.appendChild(document.createTextNode(child));
-          else if (child) node.appendChild(child);
-        });
-
-        return node;
+      function qs(selector) {
+        return document.querySelector(selector);
       }
 
       function setStatus(text) {
-        var status = document.querySelector("[data-status-line]");
-        if (status) status.textContent = text || "";
+        var node = qs("[data-status-line]");
+        if (node) node.textContent = text || "";
       }
 
       function setReadout(text) {
-        var readout = document.querySelector("[data-universe-readout]");
-        if (readout) readout.textContent = text;
+        var node = qs("[data-universe-readout]");
+        if (node) node.textContent = text;
       }
 
-      function renderEarthError(title, messageNode) {
-        if (!earthMount) return;
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
 
-        earthMount.replaceChildren(
-          create("article", { className: "error-card" }, [
-            create("p", { className: "kicker", text: "Earth inspection failure" }),
-            create("h1", { text: title }),
-            create("p", {}, [messageNode])
-          ])
+      function setScale(value) {
+        zoom = clamp(value, 0.62, 1.7);
+        document.documentElement.style.setProperty("--subject-scale", String(zoom));
+        updateReadout();
+      }
+
+      function loadImage(src, onload, onerror) {
+        var image = new Image();
+        image.onload = function () { onload(image); };
+        image.onerror = onerror;
+        image.src = src + "?v=inspect-universe-inline-earth-sun-v1";
+        return image;
+      }
+
+      function resizeCanvas() {
+        if (!canvas) return;
+
+        var box = canvas.getBoundingClientRect();
+        var size = Math.max(240, Math.floor(Math.min(box.width || 500, box.height || box.width || 500)));
+        var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+        canvas.width = Math.floor(size * dpr);
+        canvas.height = Math.floor(size * dpr);
+
+        ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function drawFallbackEarth(size, center, radius) {
+        var grd = ctx.createRadialGradient(center - radius * .24, center - radius * .24, radius * .08, center, center, radius);
+        grd.addColorStop(0, "#dcecff");
+        grd.addColorStop(.18, "#2a77d0");
+        grd.addColorStop(.58, "#0b3b80");
+        grd.addColorStop(1, "#020713");
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.fillStyle = grd;
+        ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
+
+        ctx.fillStyle = "rgba(70, 165, 88, .88)";
+        ctx.beginPath();
+        ctx.ellipse(center - radius * .35, center - radius * .08, radius * .16, radius * .24, -.45, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(center + radius * .25, center - radius * .28, radius * .14, radius * .18, .6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "rgba(199, 142, 82, .78)";
+        ctx.beginPath();
+        ctx.ellipse(center + radius * .22, center + radius * .35, radius * .24, radius * .14, .25, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      function drawMappedGlobe(image, alpha, phase, radius, center) {
+        if (!image) return;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        var imgW = image.naturalWidth || image.width;
+        var imgH = image.naturalHeight || image.height;
+        var step = 2;
+
+        for (var x = -radius; x <= radius; x += step) {
+          var normalized = x / radius;
+          var span = Math.sqrt(Math.max(0, 1 - normalized * normalized)) * radius;
+          var longitude = Math.asin(normalized) / Math.PI;
+          var u = (longitude + 0.5 + phase) % 1;
+          if (u < 0) u += 1;
+
+          var sx = Math.floor(u * imgW);
+          ctx.drawImage(
+            image,
+            sx,
+            0,
+            1,
+            imgH,
+            center + x,
+            center - span,
+            step + 1,
+            span * 2
+          );
+        }
+
+        ctx.restore();
+        ctx.globalAlpha = 1;
+      }
+
+      function drawEarth() {
+        if (!canvas || !ctx) return;
+
+        var cssSize = Math.min(canvas.clientWidth || 500, canvas.clientHeight || canvas.clientWidth || 500);
+        var center = cssSize / 2;
+        var radius = cssSize * .485;
+
+        ctx.clearRect(0, 0, cssSize, cssSize);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        if (surfaceReady) {
+          drawMappedGlobe(surface, 1, rotation, radius, center);
+          if (cloudsReady) drawMappedGlobe(clouds, .34, rotation * 1.08 + .03, radius, center);
+        } else {
+          drawFallbackEarth(cssSize, center, radius);
+        }
+
+        var shade = ctx.createRadialGradient(
+          center - radius * .34,
+          center - radius * .26,
+          radius * .08,
+          center + radius * .24,
+          center + radius * .14,
+          radius * 1.16
         );
+        shade.addColorStop(0, "rgba(255,255,255,.22)");
+        shade.addColorStop(.32, "rgba(255,255,255,.03)");
+        shade.addColorStop(.68, "rgba(0,0,0,.24)");
+        shade.addColorStop(1, "rgba(0,0,0,.72)");
+        ctx.fillStyle = shade;
+        ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
-        earthMount.dataset.renderStatus = "error";
-        document.documentElement.dataset.earthInspectStatus = "error";
-      }
+        ctx.restore();
 
-      function updateEarthReadout() {
-        if (!earthApi || typeof earthApi.getStatus !== "function") {
-          setReadout("Earth · Loading");
-          return;
-        }
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255,255,255,.12)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
 
-        var status = earthApi.getStatus();
-        var zoom = Math.round(Number(status.zoom || 1) * 100);
-
-        setReadout("Earth · Zoom " + zoom + "%");
-
-        if (earthMount) {
-          earthMount.dataset.renderStatus = status.runtimeStatus || "mounted";
-          earthMount.dataset.earthProjection = status.projection || "full-globe-inverse-orthographic";
-          earthMount.dataset.earthCameraMode = status.cameraMode || "full-globe-orbital";
-        }
-
-        document.documentElement.dataset.earthInspectStatus = "mounted";
-      }
-
-      function updateSunReadout() {
-        setReadout("Sun · Zoom " + Math.round(sunZoom * 100) + "%");
+        var glow = ctx.createRadialGradient(center, center, radius * .88, center, center, radius * 1.3);
+        glow.addColorStop(0, "rgba(97,153,236,0)");
+        glow.addColorStop(.62, "rgba(97,153,236,.08)");
+        glow.addColorStop(1, "rgba(97,153,236,0)");
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, cssSize, cssSize);
       }
 
       function updateReadout() {
-        if (activeSubject === "earth") updateEarthReadout();
-        else updateSunReadout();
+        var label = activeSubject === "earth" ? "Earth" : "Sun";
+        setReadout(label + " · Zoom " + Math.round(zoom * 100) + "%");
       }
 
-      function buildEarth() {
-        earthMount = document.getElementById("earth-inspect-mount");
-        if (!earthMount) return;
+      function tick(time) {
+        if (!lastTime) lastTime = time;
 
-        if (earthApi) {
-          updateEarthReadout();
-          return;
+        var delta = Math.min(48, time - lastTime);
+        lastTime = time;
+
+        if (!motionPaused && activeSubject === "earth") {
+          rotation = (rotation + delta * 0.000018) % 1;
         }
 
-        if (!window.DGBEarthCanvas || typeof window.DGBEarthCanvas.create !== "function") {
-          earthAttempts += 1;
+        drawEarth();
 
-          if (earthAttempts < maxEarthAttempts) {
-            window.setTimeout(buildEarth, 100);
-            return;
-          }
-
-          renderEarthError(
-            "Earth canvas is unavailable.",
-            create("span", {}, [
-              "Expected ",
-              create("code", { text: "window.DGBEarthCanvas.create" }),
-              " from ",
-              create("code", { text: "/assets/earth/earth_canvas.js" }),
-              "."
-            ])
-          );
-
-          return;
-        }
-
-        var canvas = create("canvas", {
-          "data-dgb-earth-canvas": "true",
-          "aria-label": "Inspectable Earth canvas"
-        });
-
-        var mount = create("section", {
-          "data-dgb-earth-mount": "true",
-          "data-earth-canvas-spine": "/assets/earth/earth_canvas.js",
-          "data-earth-surface": SURFACE,
-          "data-earth-clouds": CLOUDS,
-          "data-earth-standard": "centered-satellite-earth-no-external-rings",
-          "aria-label": "Centered inspectable Earth"
-        }, [
-          create("div", { className: "dgb-earth-stage" }, [
-            create("div", { className: "dgb-earth-tilt" }, [
-              create("div", { className: "dgb-earth-sphere" }, [canvas])
-            ])
-          ])
-        ]);
-
-        var shell = create("section", { className: "inspect-earth-shell" }, [mount]);
-
-        earthMount.replaceChildren(shell);
-        earthMount.dataset.renderStatus = "mounting";
-        document.documentElement.dataset.earthInspectStatus = "mounting";
-
-        earthApi = window.DGBEarthCanvas.create({
-          mount: mount,
-          canvas: canvas,
-          surface: SURFACE,
-          clouds: CLOUDS
-        });
-
-        if (!earthApi) {
-          renderEarthError(
-            "Earth canvas did not initialize.",
-            create("span", { text: "The Earth renderer returned no API object." })
-          );
-          return;
-        }
-
-        updateEarthReadout();
-        window.setTimeout(updateEarthReadout, 300);
-        window.setTimeout(updateEarthReadout, 1200);
-
-        earthMount.dataset.renderStatus = "complete";
-        document.documentElement.dataset.earthInspectStatus = "complete";
-        setStatus("");
+        frameId = window.requestAnimationFrame(tick);
       }
 
       function setSubject(subject) {
@@ -899,55 +893,22 @@
           button.setAttribute("aria-selected", selected ? "true" : "false");
         });
 
-        if (activeSubject === "earth") buildEarth();
-
+        setStatus("");
         updateReadout();
-      }
-
-      function zoomSun(delta) {
-        sunZoom = Math.max(.62, Math.min(1.7, sunZoom + delta));
-        document.documentElement.style.setProperty("--sun-scale", String(sunZoom));
-        updateSunReadout();
-      }
-
-      function resetSun() {
-        sunZoom = 1;
-        document.documentElement.style.setProperty("--sun-scale", "1");
-        updateSunReadout();
       }
 
       function toggleMotion() {
         motionPaused = !motionPaused;
         document.body.dataset.motion = motionPaused ? "paused" : "running";
 
-        var pause = document.querySelector("[data-action='pause']");
-        if (pause) pause.textContent = motionPaused ? "Resume Motion" : "Pause Motion";
-
-        if (activeSubject === "earth" && earthApi && typeof earthApi.toggleSpin === "function") {
-          earthApi.toggleSpin();
-          updateEarthReadout();
-        }
+        var button = qs("[data-action='pause']");
+        if (button) button.textContent = motionPaused ? "Resume Motion" : "Pause Motion";
       }
 
       function handleAction(action) {
-        if (activeSubject === "earth") {
-          if (!earthApi) {
-            buildEarth();
-            return;
-          }
-
-          if (action === "zoom-in" && typeof earthApi.zoomIn === "function") earthApi.zoomIn();
-          if (action === "zoom-out" && typeof earthApi.zoomOut === "function") earthApi.zoomOut();
-          if (action === "reset" && typeof earthApi.resetView === "function") earthApi.resetView();
-          if (action === "pause") toggleMotion();
-
-          updateEarthReadout();
-          return;
-        }
-
-        if (action === "zoom-in") zoomSun(.08);
-        if (action === "zoom-out") zoomSun(-.08);
-        if (action === "reset") resetSun();
+        if (action === "zoom-in") setScale(zoom + .08);
+        if (action === "zoom-out") setScale(zoom - .08);
+        if (action === "reset") setScale(1);
         if (action === "pause") toggleMotion();
       }
 
@@ -963,12 +924,54 @@
             handleAction(button.getAttribute("data-action"));
           });
         });
+
+        window.addEventListener("resize", function () {
+          resizeCanvas();
+          drawEarth();
+        });
       }
 
       function init() {
+        canvas = qs("[data-earth-canvas]");
+        if (!canvas) return;
+
+        resizeCanvas();
         bind();
         setSubject("earth");
-        buildEarth();
+        setStatus("Loading Earth texture");
+
+        surface = loadImage(
+          SURFACE,
+          function (image) {
+            surface = image;
+            surfaceReady = true;
+            earthFallback = false;
+            document.body.dataset.earthFallback = "false";
+            setStatus("");
+            drawEarth();
+          },
+          function () {
+            surfaceReady = false;
+            earthFallback = true;
+            document.body.dataset.earthFallback = "true";
+            setStatus("Earth texture fallback active");
+            drawEarth();
+          }
+        );
+
+        clouds = loadImage(
+          CLOUDS,
+          function (image) {
+            clouds = image;
+            cloudsReady = true;
+          },
+          function () {
+            cloudsReady = false;
+          }
+        );
+
+        updateReadout();
+        frameId = window.requestAnimationFrame(tick);
       }
 
       if (document.readyState === "loading") {

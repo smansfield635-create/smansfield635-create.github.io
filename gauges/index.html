@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-downstream-render-health-v1"
+  data-generation="gauges-actual-earth-render-contract-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -12,17 +12,17 @@
   data-construct-class="house"
   data-house-part="gauges"
   data-render-health-lane="active"
-  data-downstream-render-health="measured"
+  data-actual-earth-render-health="measured"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Generation + Render Health · Diamond Gate Bridge</title>
+  <title>Gauges · Generation + Actual Earth Render Health · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Gauges for Diamond Gate Bridge. Measures marker health, core experience, generation readiness, product wing, planetary attachment, and downstream render health without faking evidence."
+    content="Gauges for Diamond Gate Bridge. Measures marker health, core experience, generation readiness, product wing, planetary attachment, and Showroom actual-Earth render health without faking evidence."
   />
 
   <style>
@@ -38,7 +38,6 @@
       --line: rgba(255,247,228,.18);
       --line-strong: rgba(242,199,111,.48);
       --panel: rgba(3,7,12,.72);
-      --panel-strong: rgba(3,7,12,.88);
       --black: #02050a;
       --max: 1380px;
       --topbar: 72px;
@@ -392,7 +391,7 @@
   data-construct-class="house"
   data-house-part="gauges"
   data-render-health-lane="active"
-  data-downstream-render-health="measured"
+  data-actual-earth-render-health="measured"
 >
   <header class="site-topbar">
     <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -423,21 +422,21 @@
     data-construct-class="house"
     data-house-part="gauges"
     data-render-health-lane="active"
-    data-downstream-render-health="measured"
+    data-actual-earth-render-health="measured"
   >
     <section class="hero" aria-labelledby="H6_GAUGES">
-      <p class="kicker">H6 · Gauges · Generation + downstream render health</p>
+      <p class="kicker">H6 · Gauges · Generation + actual-Earth render health</p>
       <h1 id="H6_GAUGES">Gauges</h1>
       <p>
-        Gauges separates marker health from generation health and now separates downstream render health from route health.
-        A page can pass route markers while its CSS or render engine fails. Gauges may style evidence, but Gauges may not fake evidence.
+        Gauges separates marker health from generation health and now measures the Showroom actual-Earth render contract.
+        A page can pass route markers while its required Earth image or render controller fails. Gauges may style evidence, but Gauges may not fake evidence.
       </p>
 
       <ul class="rule-list">
         <li><strong>Marker health:</strong> route, schema, required markers, and backlinks.</li>
         <li><strong>Core experience:</strong> Index crowding, control state, and generation gate readiness.</li>
         <li><strong>Generation readiness:</strong> current generation state versus accepted target state.</li>
-        <li><strong>Downstream render health:</strong> render assets, templates, engines, and mount source proof.</li>
+        <li><strong>Actual-Earth render health:</strong> Showroom source contract, CSS, controller, and required Earth asset.</li>
       </ul>
 
       <div class="actions">
@@ -470,7 +469,7 @@
       <article id="scoreRender" class="score-card status-hold">
         <span>Render health</span>
         <strong>--</strong>
-        <p>downstream render lane</p>
+        <p>actual-Earth lane</p>
       </article>
       <article id="scoreProducts" class="score-card status-hold">
         <span>Products</span>
@@ -483,7 +482,7 @@
       <p class="kicker">Live calibration dials</p>
       <h2>Marker health is not render health.</h2>
       <p>
-        Showroom can show marker health 100 while its downstream render files fail. The new render lane measures that separately.
+        Showroom can show marker health 100 while its required Earth asset or actual-Earth controller fails. G6 measures that separately.
       </p>
       <div id="dialGrid" class="dial-grid"></div>
     </section>
@@ -519,8 +518,8 @@ Run live calibration to read current jump height.</pre>
       <span>house-part=gauges</span>
       <span>H6_GAUGES</span>
       <span>render-health-lane=active</span>
-      <span>downstream-render-health=measured</span>
-      <span>GAUGES_DOWNSTREAM_RENDER_HEALTH_FULL_TNT_v1</span>
+      <span>actual-earth-render-health=measured</span>
+      <span>GAUGES_ACTUAL_EARTH_RENDER_CONTRACT_TNT_v1</span>
     </section>
   </main>
 
@@ -557,16 +556,30 @@ Run live calibration to read current jump height.</pre>
       ];
 
       const SHOWROOM_RENDER_ASSETS = [
-        { id: "SR_CSS", label: "Showroom CSS", route: "/showroom/showroom.css" },
-        { id: "SR_MOUNT", label: "Showroom downstream mount", route: "/showroom/showroom.render.js" },
-        { id: "SR_TEMPLATE", label: "Globe template", route: "/render/globe.template.js" },
-        { id: "SR_ENGINE", label: "Globe engine", route: "/render/globe.engine.js" }
+        {
+          id: "SR_CSS",
+          label: "Showroom CSS",
+          route: "/showroom/showroom.css",
+          kind: "css"
+        },
+        {
+          id: "SR_CONTROLLER",
+          label: "Showroom actual-Earth controller",
+          route: "/showroom/globe/index.js",
+          kind: "controller"
+        },
+        {
+          id: "SR_EARTH_ASSET",
+          label: "Required Earth asset",
+          route: "/assets/earth/showroom-earth.png",
+          kind: "asset"
+        }
       ];
 
       const SHOWROOM_SOURCE_TOKENS = [
-        'data-render-downstream="true"',
-        'data-render-engine="/render/globe.engine.js"',
-        'data-render-template="/render/globe.template.js"',
+        'data-render-controller="/showroom/globe/index.js"',
+        'data-required-earth-asset="/assets/earth/showroom-earth.png"',
+        'data-earth-standard="actual-earth-texture-required"',
         'id="showroom-globe-mount"'
       ];
 
@@ -574,22 +587,14 @@ Run live calibration to read current jump height.</pre>
         ".audit-source",
         ".showroom-stage",
         ".showroom-globe-mount",
-        ".universe-svg"
+        ".showroom-copy"
       ];
 
-      const MOUNT_TOKENS = [
-        "DGBShowroomMount",
-        "DGBGlobeEngine.mountGlobe"
-      ];
-
-      const ENGINE_TOKENS = [
-        "DGBGlobeEngine",
-        "mountGlobe"
-      ];
-
-      const TEMPLATE_TOKENS = [
-        "DGBGlobeTemplate",
-        "createScene"
+      const CONTROLLER_TOKENS = [
+        "DGBShowroomGlobe",
+        "requiredEarthAsset",
+        "/assets/earth/showroom-earth.png",
+        "actual-earth-texture-required"
       ];
 
       function qs(selector, root) {
@@ -614,6 +619,7 @@ Run live calibration to read current jump height.</pre>
         try {
           const response = await fetch(route, { cache: "no-store" });
           const text = await response.text();
+
           return {
             route,
             ok: response.ok,
@@ -629,10 +635,6 @@ Run live calibration to read current jump height.</pre>
             error: error && error.message ? error.message : "fetch failed"
           };
         }
-      }
-
-      function hasAny(text, tokens) {
-        return tokens.some((token) => text.includes(token));
       }
 
       function requiredHouseMarkers(part) {
@@ -742,6 +744,14 @@ Run live calibration to read current jump height.</pre>
         return div;
       }
 
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
       function renderRouteCard(result) {
         const card = document.createElement("article");
         card.className = "route-card " + (result.pass ? "status-pass" : "status-fail");
@@ -790,26 +800,29 @@ Run live calibration to read current jump height.</pre>
         return card;
       }
 
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;");
-      }
-
       async function checkShowroomRenderHealth(showroomSource) {
         const fetched = await Promise.all(SHOWROOM_RENDER_ASSETS.map((asset) => fetchText(asset.route)));
         const byRoute = Object.fromEntries(fetched.map((item) => [item.route, item]));
 
         const assetChecks = SHOWROOM_RENDER_ASSETS.map((asset) => {
           const source = byRoute[asset.route] || { ok: false, status: 0, text: "" };
+
+          if (asset.kind === "asset") {
+            return {
+              id: asset.id,
+              label: asset.label,
+              route: asset.route,
+              http: source.status,
+              pass: source.ok,
+              score: source.ok ? 100 : 0,
+              missingTokens: source.ok ? [] : ["HTTP 200 for required Earth asset"]
+            };
+          }
+
           let tokens = [];
 
-          if (asset.route.endsWith("showroom.css")) tokens = CSS_TOKENS;
-          if (asset.route.endsWith("showroom.render.js")) tokens = MOUNT_TOKENS;
-          if (asset.route.endsWith("globe.engine.js")) tokens = ENGINE_TOKENS;
-          if (asset.route.endsWith("globe.template.js")) tokens = TEMPLATE_TOKENS;
+          if (asset.kind === "css") tokens = CSS_TOKENS;
+          if (asset.kind === "controller") tokens = CONTROLLER_TOKENS;
 
           const missingTokens = tokens.filter((token) => !source.text.includes(token));
           const tokenPass = missingTokens.length === 0;
@@ -834,7 +847,7 @@ Run live calibration to read current jump height.</pre>
 
         const sourceResult = {
           id: "SR_SOURCE",
-          label: "Showroom source mount contract",
+          label: "Showroom actual-Earth source contract",
           route: "/showroom/",
           http: showroomSource.status,
           pass: showroomSource.ok && sourceMissing.length === 0,
@@ -854,7 +867,7 @@ Run live calibration to read current jump height.</pre>
         const dialGrid = qs("#dialGrid");
 
         if (receipt) {
-          receipt.textContent = "SCANNING=true\nsource=live same-origin fetch\nACTION=read route, marker, generation, and downstream render health";
+          receipt.textContent = "SCANNING=true\nsource=live same-origin fetch\nACTION=read route, marker, generation, and actual-Earth render health";
         }
 
         if (routeGrid) routeGrid.replaceChildren();
@@ -899,7 +912,7 @@ Run live calibration to read current jump height.</pre>
         setScore("#scoreHouse", houseScore, houseScore === 100 ? "marker health" : "marker gaps", statusFor(houseScore));
         setScore("#scoreCore", coreScore, coreHold ? "HOLD · core Index experience" : "measured", statusFor(coreScore));
         setScore("#scoreGeneration", generationScore, gen3Accepted ? "GEN_3 accepted" : treeG2 ? "TREE_G2 visual target" : "GEN_1 baseline", statusFor(generationScore));
-        setScore("#scoreRender", renderScore, renderScore === 100 ? "downstream render PASS" : "downstream render HOLD", statusFor(renderScore));
+        setScore("#scoreRender", renderScore, renderScore === 100 ? "actual-Earth render PASS" : "actual-Earth render HOLD", statusFor(renderScore));
         setScore("#scoreProducts", productScore, productScore === 100 ? "product wing" : "product gaps", statusFor(productScore));
 
         if (dialGrid) {
@@ -929,7 +942,7 @@ Run live calibration to read current jump height.</pre>
 
           dialGrid.appendChild(renderDial("G5", "Planets", planetScore, "Planetary and hosted construct attachment health.", planetResults.map((item) => `${item.label}=${item.score}`)));
 
-          dialGrid.appendChild(renderDial("G6", "Downstream render health", renderScore, "Showroom CSS, mount, template, engine, and mount contract.", renderHealth.assets.map((item) => `${item.label}=${item.score}`)));
+          dialGrid.appendChild(renderDial("G6", "Showroom actual-Earth render health", renderScore, "Showroom source, CSS, actual-Earth controller, and required Earth asset.", renderHealth.assets.map((item) => `${item.label}=${item.score}`)));
         }
 
         if (routeGrid) {
@@ -946,7 +959,7 @@ Run live calibration to read current jump height.</pre>
           receipt.textContent =
 `BEFORE=
   source=live same-origin fetch
-  action=route_marker_generation_render_health
+  action=route_marker_generation_actual_earth_render_health
   gauges_score_faking=FALSE
   fake_generation_health=FALSE
   fake_render_health=FALSE
@@ -958,20 +971,20 @@ AFTER=
   GenerationReadiness=${generationScore}
   Products=${productScore}
   Planets=${planetScore}
-  DownstreamRender=${renderScore}
+  ActualEarthRender=${renderScore}
 
 SHOWROOM=
   MarkerHealth=${showroomMarker ? showroomMarker.score : 0}
-  DownstreamRenderHealth=${renderScore}
+  ActualEarthRenderHealth=${renderScore}
   Composite=${showroomComposite}
 
 ACTIVE_PHASE=
-  ${coreHold ? "CORE_INDEX_EXPERIENCE_HOLD" : renderScore < 100 ? "DOWNSTREAM_RENDER_HEALTH_HOLD" : "READY_FOR_NEXT_MEASURE"}
+  ${renderScore < 100 ? "ACTUAL_EARTH_RENDER_HEALTH_HOLD" : coreHold ? "CORE_INDEX_EXPERIENCE_HOLD" : "READY_FOR_NEXT_MEASURE"}
 
 NEXT_MOVE=
-  ${renderScore < 100 ? "Fix failed Showroom render asset or downstream mount proof." : coreHold ? "Return to Index core experience after Showroom render health passes." : "Proceed by accepted generation gate."}
+  ${renderScore < 100 ? "Fix failed Showroom actual-Earth controller or required Earth asset." : coreHold ? "Return to Index core experience after Showroom actual-Earth render health passes." : "Proceed by accepted generation gate."}
 
-GAUGES_DOWNSTREAM_RENDER_HEALTH_FULL_TNT_v1
+GAUGES_ACTUAL_EARTH_RENDER_CONTRACT_TNT_v1
 Gauges may style evidence, but Gauges may not fake generation readiness or render health.`;
         }
       }

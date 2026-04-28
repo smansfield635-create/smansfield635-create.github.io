@@ -1,16 +1,17 @@
 :root {
   color-scheme: dark;
-  --ink: #fff7e4;
-  --muted: rgba(255, 247, 228, .72);
+  --ink: #f4f7ff;
+  --soft: rgba(244, 247, 255, .74);
+  --muted: rgba(244, 247, 255, .58);
   --gold: #f2c76f;
-  --gold-soft: rgba(242, 199, 111, .16);
-  --line: rgba(255, 247, 228, .16);
-  --line-strong: rgba(242, 199, 111, .48);
+  --gold-soft: rgba(242, 199, 111, .15);
+  --line: rgba(244, 247, 255, .14);
+  --line-gold: rgba(242, 199, 111, .42);
   --black: #02050a;
-  --panel: rgba(3, 7, 12, .62);
-  --panel-strong: rgba(3, 7, 12, .84);
+  --panel: rgba(3, 8, 15, .74);
+  --panel-heavy: rgba(2, 5, 10, .88);
   --max: 1380px;
-  --topbar: 72px;
+  --topbar: 132px;
 }
 
 * {
@@ -26,12 +27,14 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+body.compass-page,
 body {
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% -10%, rgba(242, 199, 111, .13), transparent 28%),
-    radial-gradient(circle at 18% 18%, rgba(95, 145, 215, .10), transparent 34%),
-    linear-gradient(180deg, #02050a 0%, #07111f 54%, #02050a 100%);
+    radial-gradient(circle at 82% 5%, rgba(242, 199, 111, .12), transparent 24%),
+    radial-gradient(circle at 22% 22%, rgba(78, 136, 220, .14), transparent 30%),
+    radial-gradient(circle at 50% 72%, rgba(48, 88, 138, .18), transparent 38%),
+    linear-gradient(180deg, #02050a 0%, #07111e 48%, #02050a 100%);
 }
 
 body::before {
@@ -40,13 +43,13 @@ body::before {
   inset: 0;
   z-index: -3;
   pointer-events: none;
-  opacity: .48;
+  opacity: .38;
   background-image:
     radial-gradient(circle, rgba(255,255,255,.62) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(255,255,255,.18) 0 1px, transparent 1.7px);
-  background-size: 94px 94px, 162px 162px;
-  background-position: 0 0, 38px 59px;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.96), rgba(0,0,0,.38) 78%, transparent);
+    radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.8px);
+  background-size: 92px 92px, 168px 168px;
+  background-position: 0 0, 42px 66px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.36) 76%, transparent);
 }
 
 a {
@@ -67,106 +70,138 @@ summary:focus-visible {
 
 .audit-source,
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: -1px !important;
 }
 
+/* Header */
 .site-topbar {
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 100;
   min-height: var(--topbar);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px max(18px, calc((100vw - var(--max)) / 2));
+  padding: 18px max(22px, calc((100vw - var(--max)) / 2));
   border-bottom: 1px solid var(--line);
-  background: rgba(2, 5, 10, .84);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(242, 199, 111, .08), transparent 30%),
+    rgba(2, 5, 10, .88);
   backdrop-filter: blur(18px);
 }
 
 .site-brand {
   display: grid;
-  gap: 3px;
+  gap: 4px;
+  min-width: 220px;
 }
 
 .site-brand strong {
   color: var(--gold);
-  font-size: .78rem;
-  letter-spacing: .16em;
+  font-size: clamp(.92rem, 2.4vw, 1.16rem);
+  line-height: 1.1;
+  letter-spacing: .18em;
   text-transform: uppercase;
 }
 
 .site-brand span {
-  color: var(--muted);
-  font-size: .86rem;
+  color: var(--soft);
+  font-size: clamp(.92rem, 2.5vw, 1.2rem);
+  line-height: 1.25;
 }
 
 .site-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 10px;
+  max-width: 760px;
 }
 
-.site-nav a,
-.scene-proof-rail a {
+.site-nav a {
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 8px 11px;
+  padding: 10px 16px;
   background: rgba(255,255,255,.045);
-  color: var(--muted);
-  font-size: .86rem;
+  color: var(--ink);
+  font-size: clamp(.88rem, 2.4vw, 1.06rem);
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.025);
 }
 
 .site-nav a:hover,
-.site-nav a[aria-current="page"],
-.scene-proof-rail a:hover {
-  border-color: var(--line-strong);
-  color: var(--ink);
+.site-nav a[aria-current="page"] {
+  border-color: var(--line-gold);
   background: var(--gold-soft);
+  color: var(--ink);
 }
 
+/* Compass shell */
 .index-shell {
-  min-height: calc(100vh - var(--topbar));
+  width: 100%;
+  min-height: calc(100svh - var(--topbar));
+  padding: 18px 0 0;
 }
 
-.compass-stage {
+.compass-stage,
+.scene-shell {
   position: relative;
   width: min(var(--max), calc(100vw - 24px));
   min-height: calc(100svh - var(--topbar) - 24px);
-  margin: 12px auto 28px;
+  height: calc(100svh - var(--topbar) - 24px);
+  margin: 0 auto 28px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 32px;
   background:
-    radial-gradient(circle at 50% 12%, rgba(242,199,111,.10), transparent 24%),
-    radial-gradient(circle at 50% 62%, rgba(80,140,215,.10), transparent 34%),
-    linear-gradient(180deg, rgba(8, 18, 32, .96) 0%, rgba(8, 18, 25, .96) 49%, rgba(3, 6, 10, .99) 100%);
+    radial-gradient(circle at 50% 18%, rgba(242,199,111,.10), transparent 24%),
+    radial-gradient(circle at 50% 62%, rgba(88,151,236,.20), transparent 40%),
+    radial-gradient(circle at 50% 96%, rgba(14, 31, 52, .86), transparent 34%),
+    linear-gradient(180deg, rgba(7, 16, 29, .98) 0%, rgba(6, 14, 24, .98) 55%, rgba(2, 5, 10, .99) 100%);
   box-shadow: 0 32px 110px rgba(0,0,0,.60);
   isolation: isolate;
 }
 
-.compass-stage::before {
+.compass-stage::before,
+.scene-shell::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.025), transparent 32%),
-    radial-gradient(circle at 50% 95%, rgba(255,255,255,.06), transparent 24%);
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 35%),
+    radial-gradient(circle at 50% 78%, rgba(92,145,230,.12), transparent 28%);
+}
+
+.compass-stage::after,
+.scene-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(242,199,111,.08),
+    inset 0 0 60px rgba(0,0,0,.34);
 }
 
 .scene-mount {
   position: absolute;
   inset: 0;
   z-index: 2;
+  transition: filter .22s ease, opacity .22s ease, transform .22s ease;
 }
 
 .tree-scene,
@@ -185,93 +220,168 @@ summary:focus-visible {
   display: block;
 }
 
-.compass-badge {
+/* Small controls that may remain visible without covering the render */
+.mode-switcher,
+.view-switcher {
   position: absolute;
-  left: clamp(14px, 2vw, 24px);
-  top: clamp(14px, 2vw, 24px);
-  z-index: 52;
-  width: min(360px, calc(100% - 28px));
-  border: 1px solid rgba(242,199,111,.28);
-  border-radius: 22px;
-  padding: 13px 15px;
-  background: rgba(3,7,12,.54);
-  backdrop-filter: blur(10px);
+  left: 50%;
+  top: clamp(14px, 2.4vh, 24px);
+  z-index: 60;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid rgba(242,199,111,.24);
+  border-radius: 999px;
+  background: rgba(3,7,12,.48);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 42px rgba(0,0,0,.28);
 }
 
-.kicker {
-  margin: 0 0 7px;
+.mode-button,
+.view-button {
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 999px;
+  padding: 8px 13px;
+  color: var(--soft);
+  background: rgba(255,255,255,.038);
+}
+
+.mode-button.is-active,
+.mode-button[aria-selected="true"],
+.mode-button:hover,
+.view-button.is-active,
+.view-button[aria-selected="true"],
+.view-button:hover {
+  border-color: var(--line-gold);
+  color: var(--ink);
+  background: var(--gold-soft);
+}
+
+/* Inspect Globe bubble */
+.inspect-globe-toggle {
+  position: absolute;
+  left: clamp(14px, 2.2vw, 28px);
+  bottom: clamp(14px, 2.2vh, 28px);
+  z-index: 86;
+  cursor: pointer;
+  border: 1px solid var(--line-gold);
+  border-radius: 999px;
+  padding: 12px 18px;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(242,199,111,.18), transparent 48%),
+    rgba(3, 7, 12, .72);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 16px 48px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(255,255,255,.045);
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.inspect-globe-toggle:hover,
+body[data-inspect-globe="open"] .inspect-globe-toggle {
+  background: rgba(242,199,111,.18);
+}
+
+/* Default state: keep the render/globe visually dominant. */
+.compass-badge,
+.compass-doll-panel,
+.russian-doll-panel,
+.scene-proof-rail {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(.98);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+/* Open state: bring inspection forward only when requested. */
+body[data-inspect-globe="open"] .scene-mount {
+  opacity: .74;
+  filter: saturate(.84) brightness(.68);
+  transform: scale(.985);
+}
+
+body[data-inspect-globe="open"] .compass-badge,
+body[data-inspect-globe="open"] .compass-doll-panel,
+body[data-inspect-globe="open"] .russian-doll-panel,
+body[data-inspect-globe="open"] .scene-proof-rail {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Inspection cards */
+.compass-badge {
+  position: absolute;
+  left: clamp(22px, 3vw, 46px);
+  top: clamp(68px, 11vh, 118px);
+  z-index: 78;
+  width: min(520px, calc(100% - 44px));
+  border: 1px solid rgba(242,199,111,.26);
+  border-radius: 28px;
+  padding: clamp(18px, 3vw, 28px);
+  background:
+    radial-gradient(circle at 16% 72%, rgba(242,199,111,.10), transparent 30%),
+    rgba(3, 7, 12, .78);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 24px 82px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(255,255,255,.035);
+}
+
+.kicker,
+.compass-badge .kicker {
+  margin: 0 0 8px;
   color: var(--gold);
-  font-size: .72rem;
-  letter-spacing: .14em;
+  font-size: clamp(.76rem, 2.2vw, .98rem);
+  letter-spacing: .20em;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
 .compass-badge strong {
   display: block;
-  margin-bottom: 5px;
-  font-size: 1.05rem;
-  letter-spacing: -.02em;
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: clamp(2rem, 6.8vw, 4.2rem);
+  line-height: .92;
+  letter-spacing: -.07em;
 }
 
 .compass-badge span {
   display: block;
-  color: var(--muted);
-  font-size: .86rem;
-  line-height: 1.35;
+  max-width: 860px;
+  margin: 0;
+  color: var(--soft);
+  font-size: clamp(1.04rem, 3.1vw, 1.42rem);
+  line-height: 1.38;
 }
 
-.mode-switcher {
+.compass-doll-panel,
+.russian-doll-panel {
   position: absolute;
-  left: 50%;
-  top: 16px;
-  z-index: 70;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-  border: 1px solid rgba(242,199,111,.32);
-  border-radius: 999px;
-  background: rgba(3,7,12,.70);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 54px rgba(0,0,0,.35);
-}
-
-.mode-button {
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 999px;
-  padding: 9px 14px;
-  color: var(--muted);
-  background: rgba(255,255,255,.045);
-}
-
-.mode-button.is-active,
-.mode-button[aria-selected="true"],
-.mode-button:hover {
-  border-color: var(--line-strong);
-  color: var(--ink);
-  background: rgba(242,199,111,.16);
-}
-
-.compass-doll-panel {
-  position: absolute;
-  right: clamp(14px, 2vw, 24px);
-  top: clamp(14px, 2vw, 24px);
-  z-index: 52;
-  width: min(340px, calc(100% - 28px));
+  right: clamp(22px, 3vw, 46px);
+  top: clamp(68px, 11vh, 118px);
+  z-index: 79;
+  width: min(360px, calc(100% - 44px));
   display: grid;
   gap: 8px;
 }
 
-.compass-doll-panel details {
+.compass-doll-panel details,
+.russian-doll-panel details {
   border: 1px solid rgba(255,247,228,.13);
   border-radius: 18px;
-  background: rgba(3,7,12,.52);
+  background: rgba(3,7,12,.74);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
 
-.compass-doll-panel summary {
+.compass-doll-panel summary,
+.russian-doll-panel summary {
   cursor: pointer;
   list-style: none;
   padding: 11px 13px;
@@ -281,34 +391,38 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
-.compass-doll-panel summary::-webkit-details-marker {
+.compass-doll-panel summary::-webkit-details-marker,
+.russian-doll-panel summary::-webkit-details-marker {
   display: none;
 }
 
-.compass-doll-panel summary::after {
+.compass-doll-panel summary::after,
+.russian-doll-panel summary::after {
   content: "+";
   float: right;
   color: var(--muted);
 }
 
-.compass-doll-panel details[open] summary::after {
+.compass-doll-panel details[open] summary::after,
+.russian-doll-panel details[open] summary::after {
   content: "–";
 }
 
-.compass-doll-panel p {
+.compass-doll-panel p,
+.russian-doll-panel p {
   margin: 0;
   padding: 0 13px 13px;
-  color: var(--muted);
+  color: var(--soft);
   font-size: .86rem;
   line-height: 1.38;
 }
 
 .scene-proof-rail {
   position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
-  z-index: 62;
+  left: clamp(14px, 2.2vw, 28px);
+  right: clamp(14px, 2.2vw, 28px);
+  bottom: clamp(70px, 10vh, 106px);
+  z-index: 80;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -316,13 +430,14 @@ summary:focus-visible {
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 10px;
-  background: rgba(3,7,12,.68);
+  background: rgba(3,7,12,.72);
   backdrop-filter: blur(12px);
   color: var(--muted);
   font-size: .86rem;
 }
 
-.scene-proof-rail span {
+.scene-proof-rail span,
+.scene-proof-rail a {
   border: 1px solid rgba(255,255,255,.10);
   border-radius: 999px;
   padding: 8px 10px;
@@ -333,22 +448,39 @@ summary:focus-visible {
   color: var(--gold);
 }
 
+.scene-proof-rail a:hover {
+  border-color: var(--line-gold);
+  background: var(--gold-soft);
+  color: var(--ink);
+}
+
+/* Fallback */
 .fallback-card {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(520px, calc(100% - 32px));
+  width: min(720px, calc(100vw - 34px));
   transform: translate(-50%, -50%);
-  border: 1px solid var(--line);
-  border-radius: 26px;
+  border: 1px solid var(--line-gold);
+  border-radius: 28px;
   padding: 24px;
-  background: var(--panel-strong);
+  background: var(--panel-heavy);
+  box-shadow: 0 28px 90px rgba(0,0,0,.44);
+  z-index: 30;
 }
 
-.scene-copy-card {
-  display: none !important;
+.fallback-card h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  letter-spacing: -.05em;
 }
 
+.fallback-card p {
+  color: var(--soft);
+  line-height: 1.45;
+}
+
+/* Render labels */
 .structure-label,
 .fruit-label,
 .fruit-route-label,
@@ -374,72 +506,104 @@ summary:focus-visible {
   vector-effect: non-scaling-stroke;
 }
 
-@media (max-width: 1040px) {
-  .compass-stage {
-    min-height: 860px;
-  }
-
-  .compass-badge {
-    top: 76px;
-  }
-
-  .compass-doll-panel {
-    top: auto;
-    right: 14px;
-    bottom: 132px;
-    width: min(360px, calc(100% - 28px));
-  }
-
-  .compass-doll-panel details:not([open]) {
-    max-height: 42px;
-  }
+.scene-copy-card {
+  display: none !important;
 }
 
+/* Mobile */
 @media (max-width: 760px) {
+  :root {
+    --topbar: 232px;
+  }
+
   .site-topbar {
+    min-height: var(--topbar);
     align-items: flex-start;
     flex-direction: column;
+    padding: 18px 22px 20px;
   }
 
   .site-nav {
     justify-content: flex-start;
+    gap: 10px;
   }
 
-  .compass-stage {
-    width: min(100vw - 16px, var(--max));
-    min-height: 880px;
-    border-radius: 22px;
+  .site-nav a {
+    padding: 10px 16px;
+    font-size: 1.08rem;
   }
 
-  .mode-switcher {
-    left: 12px;
-    right: 12px;
+  .index-shell {
+    padding-top: 0;
+  }
+
+  .compass-stage,
+  .scene-shell {
+    width: 100vw;
+    min-height: calc(100svh - var(--topbar));
+    height: calc(100svh - var(--topbar));
+    margin: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .mode-switcher,
+  .view-switcher {
+    left: 50%;
+    right: auto;
     top: 12px;
-    transform: none;
-    justify-content: center;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 20px);
   }
 
-  .mode-button {
-    flex: 1;
-    padding: 8px 6px;
-    font-size: .88rem;
+  .mode-button,
+  .view-button {
+    padding: 8px 10px;
+    font-size: .9rem;
+  }
+
+  .inspect-globe-toggle {
+    left: 12px;
+    bottom: 12px;
+    padding: 11px 15px;
   }
 
   .compass-badge {
-    left: 12px;
-    right: 12px;
-    top: 68px;
+    left: 14px;
+    right: 14px;
+    top: 64px;
+    width: auto;
+    border-radius: 24px;
+    padding: 18px 20px;
+  }
+
+  .compass-badge strong {
+    font-size: clamp(2.2rem, 11vw, 4rem);
+  }
+
+  .compass-badge span {
+    font-size: clamp(1rem, 4.4vw, 1.28rem);
+  }
+
+  .compass-doll-panel,
+  .russian-doll-panel {
+    left: 14px;
+    right: 14px;
+    top: auto;
+    bottom: 124px;
     width: auto;
   }
 
-  .compass-doll-panel {
-    left: 12px;
-    right: 12px;
-    bottom: 150px;
-    width: auto;
+  .compass-doll-panel details:not([open]),
+  .russian-doll-panel details:not([open]) {
+    max-height: 42px;
   }
 
   .scene-proof-rail {
+    left: 10px;
+    right: 10px;
+    bottom: 62px;
     align-items: flex-start;
     flex-direction: column;
   }
@@ -447,5 +611,22 @@ summary:focus-visible {
   .scene-proof-rail span,
   .scene-proof-rail a {
     width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --topbar: 232px;
+  }
+
+  .compass-badge {
+    left: 12px;
+    right: 12px;
+  }
+
+  .compass-doll-panel,
+  .russian-doll-panel {
+    left: 12px;
+    right: 12px;
   }
 }

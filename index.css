@@ -228,10 +228,15 @@ button:focus-visible {
   font-size: .88rem;
 }
 
+.tree-g2-caption {
+  border-color: rgba(242,199,111,.36);
+  box-shadow: 0 16px 42px rgba(0,0,0,.28);
+}
+
 body[data-active-view="tree"] .scene-mini-caption,
 body[data-active-view="inspect"] .scene-mini-caption {
   opacity: .82;
-  max-width: 320px;
+  max-width: 340px;
 }
 
 .scene-proof-rail {
@@ -295,6 +300,45 @@ body[data-active-view="inspect"] .scene-mini-caption {
   pointer-events: none;
 }
 
+.seasonal-detail-leaf,
+.seasonal-structural-leaf {
+  transition: opacity .18s ease, filter .18s ease;
+}
+
+.leaf-snow-touch,
+.leaf-frost-crystal {
+  pointer-events: none;
+}
+
+.leaf-decay-speck {
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.fallen-leaf-field {
+  pointer-events: none;
+}
+
+.fallen-leaf {
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.18));
+}
+
+.new-growth-tip {
+  filter: drop-shadow(0 0 3px rgba(155,207,104,.22));
+}
+
+.old-bark-knot {
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.22));
+}
+
+.bark-scar {
+  filter: drop-shadow(0 0 2px rgba(242,199,111,.13));
+}
+
+.bare-seasonal-twig {
+  opacity: .78;
+}
+
 .fruit-navigation-layer {
   pointer-events: auto;
 }
@@ -350,6 +394,11 @@ body[data-active-view="inspect"] .product-fruit-label {
   opacity: 1;
 }
 
+.fruit-frost-touch,
+.fruit-age-speck {
+  pointer-events: none;
+}
+
 .inspect-insect {
   opacity: .86;
   filter: drop-shadow(0 2px 2px rgba(0,0,0,.35));
@@ -364,11 +413,11 @@ body[data-active-view="gate"] .detail-leaf {
 }
 
 body[data-active-view="tree"] .detail-leaf {
-  opacity: .88;
+  opacity: .90;
 }
 
 body[data-active-view="inspect"] .detail-leaf {
-  opacity: .96;
+  opacity: .98;
 }
 
 body[data-active-view="gate"] .fruit-route-label {
@@ -378,6 +427,15 @@ body[data-active-view="gate"] .fruit-route-label {
 body[data-active-view="tree"] .fruit-route-label,
 body[data-active-view="inspect"] .fruit-route-label {
   opacity: 1;
+}
+
+body[data-active-view="gate"] .fallen-leaf {
+  opacity: .52;
+}
+
+body[data-active-view="tree"] .fallen-leaf,
+body[data-active-view="inspect"] .fallen-leaf {
+  opacity: .74;
 }
 
 @media (max-width: 980px) {

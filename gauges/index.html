@@ -3,8 +3,8 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-core-experience-gate-v1"
-  data-gauges-generation="core-experience-gate-g2"
+  data-generation="gauges-generation-3-readiness-gate-v1"
+  data-gauges-generation="generation-3-readiness-gate"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,19 +16,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Core Experience Gate · Diamond Gate Bridge</title>
+  <title>Gauges · Generation Readiness Gate · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the ceiling and jump calibration instrument room for Diamond Gate Bridge and Rich Manor and Estate, with core-house-first and core-experience-hold recommendation logic."
+    content="Gauges for Diamond Gate Bridge and Rich Manor and Estate. Measures marker health, core experience, and Generation 3 readiness separately."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=estate-core-experience-gate-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=generation-3-readiness-gate-v1" />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #03060b;
       --panel: rgba(7, 14, 28, .88);
-      --panel2: rgba(10, 20, 42, .94);
       --line: rgba(255, 218, 150, .24);
       --line2: rgba(255, 218, 150, .42);
       --text: #fff8ea;
@@ -154,13 +153,11 @@
 
     .refresh { cursor: pointer; }
 
-    .hero {
-      padding: 44px 0 18px;
-    }
+    .hero { padding: 44px 0 18px; }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.08fr .92fr;
+      grid-template-columns: 1.05fr .95fr;
       gap: 16px;
       align-items: stretch;
     }
@@ -187,10 +184,7 @@
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3,
-    p { margin-top: 0; }
+    h1, h2, h3, p { margin-top: 0; }
 
     h1 {
       margin-bottom: 18px;
@@ -241,7 +235,8 @@
       background: rgba(0,0,0,.18);
     }
 
-    .method-list b { color: var(--gold); }
+    .method-list b,
+    .phase-callout b { color: var(--gold); }
 
     .phase-callout {
       border: 1px solid rgba(255, 217, 138, .42);
@@ -251,8 +246,6 @@
       color: var(--muted);
       line-height: 1.45;
     }
-
-    .phase-callout b { color: var(--gold); }
 
     .controls {
       display: flex;
@@ -265,7 +258,7 @@
 
     .status-strip {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
       padding: 18px 0;
     }
@@ -290,7 +283,7 @@
     .stat strong {
       display: block;
       color: var(--gold);
-      font-size: clamp(2rem, 5vw, 4rem);
+      font-size: clamp(1.8rem, 4.2vw, 3.5rem);
       line-height: .9;
       letter-spacing: -.045em;
     }
@@ -299,7 +292,7 @@
       display: block;
       color: var(--soft);
       margin-top: 8px;
-      font-size: .9rem;
+      font-size: .88rem;
       line-height: 1.35;
     }
 
@@ -323,7 +316,7 @@
 
     .gauge-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -552,10 +545,10 @@
       flex-wrap: wrap;
     }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 1180px) {
       .gauge-grid,
       .status-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -566,7 +559,7 @@
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 680px) {
       .topbar-inner {
         align-items: flex-start;
         flex-direction: column;
@@ -574,7 +567,6 @@
       }
 
       .nav { justify-content: flex-start; }
-
       .hero { padding-top: 28px; }
 
       .gauge-grid,
@@ -636,27 +628,26 @@
     <section class="hero" aria-labelledby="H6_GAUGES">
       <div class="wrap hero-grid">
         <article class="panel hero-card">
-          <p class="eyebrow">H6 · Gauges · Core experience gate</p>
+          <p class="eyebrow">H6 · Gauges · Generation Readiness Gate</p>
           <h1 id="H6_GAUGES">Gauges</h1>
           <p class="lead">
-            Gauges measure the estate’s ceiling and jump height. Recommendation priority now follows:
-            core house first, core Index experience second, product wing third, planetary attachment fourth.
+            Gauges now separates marker health from generation health. The estate may be
+            healthy enough as a Generation 1 · 3D baseline, but it is not Generation 3
+            until Generation 3 is implemented and accepted.
           </p>
         </article>
 
         <aside class="panel method-card" aria-label="Gauges operating method">
           <p class="eyebrow">Gauge · Renew · Measure · Raise · Repeat</p>
           <ul class="method-list">
-            <li><b>Gauge first:</b> read the current measured ceiling.</li>
-            <li><b>Renew narrowly:</b> target the active phase limiter, not the lowest downstream score.</li>
-            <li><b>Measure again:</b> compare before and after.</li>
-            <li><b>Raise ceiling:</b> lock only what improves or clarifies the next jump.</li>
-            <li><b>Repeat:</b> continue by calibration, not fishing.</li>
+            <li><b>Marker health:</b> route and schema pass/fail.</li>
+            <li><b>Core experience:</b> Index crowding, control-panel readiness, and Russian-doll compression.</li>
+            <li><b>Generation readiness:</b> current generation state versus target generation state.</li>
+            <li><b>Downstream work:</b> held until the active generation gate releases it.</li>
           </ul>
 
           <div class="phase-callout">
-            <b>Core experience rule:</b> if Compass declares <code>data-core-experience-hold="true"</code>,
-            Gauges recommends Index compression/control-panel work before Product Wing or Planets, even when House Skeleton is 100.
+            <b>Generation rule:</b> House Skeleton may equal 100, but Product Wing and Planets stay held while Generation Readiness is below <code>GEN_3_ACCEPTED_ROUND_WORLD</code>.
           </div>
 
           <div class="controls">
@@ -669,7 +660,7 @@
 
     <section class="wrap status-strip" aria-label="Live site-health instruments">
       <article class="stat">
-        <small>Overall health</small>
+        <small>Overall ceiling</small>
         <strong id="overallScore">--</strong>
         <span id="overallNote">live-calculated · awaiting route checks</span>
       </article>
@@ -683,7 +674,13 @@
       <article class="stat">
         <small>Core experience</small>
         <strong id="experienceScore">--</strong>
-        <span id="experienceNote">live-calculated · awaiting Compass hold read</span>
+        <span id="experienceNote">live-calculated · awaiting Compass read</span>
+      </article>
+
+      <article class="stat">
+        <small>Generation readiness</small>
+        <strong id="generationScore">--</strong>
+        <span id="generationNote">live-calculated · awaiting generation read</span>
       </article>
 
       <article class="stat">
@@ -704,10 +701,10 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">Live calibration dials</p>
-            <h2>Measured jump field</h2>
+            <h2>Marker health is not generation health.</h2>
           </div>
           <p>
-            Gauges still measures house, product, and planetary fields. The new Core Experience Gate prevents downstream work from outrunning a crowded Index/Compass surface.
+            Gauges still measures all fields. The recommendation engine now holds downstream work until the Index core experience and Generation 3 readiness gate are accepted.
           </p>
         </div>
 
@@ -735,7 +732,7 @@
 Run live calibration to read current jump height.</pre>
 
           <div class="next-move" id="nextMove">
-            Next move: run Gauges first, renew narrowly by active phase, measure again, raise ceiling, repeat.
+            Next move: run Gauges first, renew narrowly by active generation gate, measure again, raise ceiling, repeat.
           </div>
         </aside>
       </div>
@@ -744,8 +741,8 @@ Run live calibration to read current jump height.</pre>
 
   <footer>
     <div class="wrap">
-      <span>GAUGES_CORE_EXPERIENCE_GATE_FULL_TNT_v1</span>
-      <span>Gauges may style evidence, but Gauges may not fake evidence.</span>
+      <span>GAUGES_GENERATION_3_READINESS_GATE_FULL_TNT_v1</span>
+      <span>Gauges may style evidence, but Gauges may not fake generation readiness.</span>
     </div>
   </footer>
 
@@ -753,6 +750,7 @@ Run live calibration to read current jump height.</pre>
     (function () {
       const HOUSE_THRESHOLD = 100;
       const PRODUCT_THRESHOLD = 100;
+      const GENERATION_TARGET = "GEN_3_ACCEPTED_ROUND_WORLD";
 
       const CORE_PHASE_ORDER = [
         "H2_DOOR",
@@ -1003,7 +1001,7 @@ Run live calibration to read current jump height.</pre>
         return Array.from(forms).some((form) => normalized.includes(form));
       }
 
-      function coreExperienceStatus(compassRoute) {
+      function readCoreExperience(compassRoute) {
         const html = compassRoute && compassRoute.html ? normalizeHTML(compassRoute.html) : "";
         const explicitHold = html.includes('data-core-experience-hold="true"');
         const explicitAccepted = html.includes('data-core-experience-hold="false"');
@@ -1013,9 +1011,8 @@ Run live calibration to read current jump height.</pre>
             score: 0,
             status: "HOLD",
             held: true,
-            accepted: false,
             marker: 'data-core-experience-hold="true"',
-            note: "Index core experience hold is active. Compress Index / control panel before downstream work."
+            note: "Index core experience hold is active."
           };
         }
 
@@ -1024,9 +1021,8 @@ Run live calibration to read current jump height.</pre>
             score: 100,
             status: "ACCEPTED",
             held: false,
-            accepted: true,
             marker: 'data-core-experience-hold="false"',
-            note: "Index core experience is accepted. Downstream phase may proceed by measured priority."
+            note: "Index core experience accepted."
           };
         }
 
@@ -1034,9 +1030,59 @@ Run live calibration to read current jump height.</pre>
           score: 50,
           status: "UNDECLARED",
           held: true,
-          accepted: false,
           marker: "MISSING_CORE_EXPERIENCE_MARKER",
-          note: "Index core experience marker is missing. Treat as hold until explicitly accepted or held."
+          note: "Index core experience marker is missing. Treat as hold."
+        };
+      }
+
+      function readGenerationReadiness(compassRoute, coreExperience) {
+        const html = compassRoute && compassRoute.html ? normalizeHTML(compassRoute.html) : "";
+
+        const markers = [
+          {
+            value: "GEN_3_ACCEPTED_ROUND_WORLD",
+            score: 100,
+            accepted: true,
+            needles: ["GEN_3_ACCEPTED_ROUND_WORLD", 'data-generation-readiness="gen-3-accepted-round-world"', 'data-generation-readiness="GEN_3_ACCEPTED_ROUND_WORLD"']
+          },
+          {
+            value: "GEN_2_CONTROL_PANEL_COMPRESSION",
+            score: 66,
+            accepted: false,
+            needles: ["GEN_2_CONTROL_PANEL_COMPRESSION", 'data-generation-readiness="gen-2-control-panel-compression"', 'data-generation-readiness="GEN_2_CONTROL_PANEL_COMPRESSION"']
+          },
+          {
+            value: "GEN_1_3D_BASELINE",
+            score: 33,
+            accepted: false,
+            needles: ["GEN_1_3D_BASELINE", 'data-generation-readiness="gen-1-3d-baseline"', 'data-generation-readiness="GEN_1_3D_BASELINE"', "index-tree-wildlife-zoom-triad-v1", "index-render-runtime-css-triad-v1"]
+          },
+          {
+            value: "GEN_0_FLAT",
+            score: 0,
+            accepted: false,
+            needles: ["GEN_0_FLAT", 'data-generation-readiness="gen-0-flat"', 'data-generation-readiness="GEN_0_FLAT"']
+          }
+        ];
+
+        for (const marker of markers) {
+          if (marker.needles.some((needle) => html.includes(needle))) {
+            return {
+              label: marker.value,
+              score: marker.score,
+              accepted: marker.accepted && !coreExperience.held,
+              held: !(marker.accepted && !coreExperience.held),
+              marker: marker.needles[0]
+            };
+          }
+        }
+
+        return {
+          label: "GEN_1_3D_BASELINE",
+          score: 33,
+          accepted: false,
+          held: true,
+          marker: "INFERRED_GEN_1_3D_BASELINE"
         };
       }
 
@@ -1172,11 +1218,6 @@ Run live calibration to read current jump height.</pre>
         `;
       }
 
-      function globalLimiter(results) {
-        const sorted = [...results].sort((a, b) => a.score - b.score);
-        return sorted[0] || null;
-      }
-
       function coreHouseLimiter(houseRoutes) {
         for (const id of CORE_PHASE_ORDER) {
           const route = houseRoutes.find((item) => item.id === id);
@@ -1189,27 +1230,36 @@ Run live calibration to read current jump height.</pre>
         return productRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
       }
 
-      function phaseRecommendation(scores, experience, houseRoutes, productRoutes, planetRoutes, allRoutes) {
+      function phaseRecommendation(scores, coreExperience, generation, houseRoutes, productRoutes, planetRoutes) {
         const coreLimiter = coreHouseLimiter(houseRoutes);
         const productLimit = productLimiter(productRoutes);
-        const globalLimit = globalLimiter(allRoutes);
 
         if (scores.house < HOUSE_THRESHOLD && coreLimiter) {
           return {
             phase: "CORE_HOUSE_ALIGNMENT",
             target: coreLimiter,
-            held: "CORE_EXPERIENCE_PRODUCT_CHAMBERS_AND_PLANETS",
-            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so Index experience, products, and planets are held.`
+            held: "CORE_EXPERIENCE_GENERATION_PRODUCTS_PLANETS",
+            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so generation work and downstream work are held.`
           };
         }
 
-        if (experience.held) {
+        if (coreExperience.held) {
           const compass = houseRoutes.find((item) => item.id === "H1_COMPASS") || null;
           return {
             phase: "CORE_INDEX_EXPERIENCE_HOLD",
             target: compass,
+            held: "GENERATION_3_PRODUCTS_PLANETS",
+            text: "Next move: compress Index with Russian-doll CSS and separate control panel. Core Experience is held, so Product Wing and Planets remain held."
+          };
+        }
+
+        if (generation.held) {
+          const compass = houseRoutes.find((item) => item.id === "H1_COMPASS") || null;
+          return {
+            phase: "GENERATION_3_READINESS_HOLD",
+            target: compass,
             held: "PRODUCT_CHAMBERS_AND_PLANETS",
-            text: `Next move: compress Index with Russian-doll CSS and separate control panel. Core Experience is ${experience.status}, so Product Wing and Planets remain held.`
+            text: `Next move: continue Index Generation 3 path. Current read is ${generation.label}, not ${GENERATION_TARGET}. Product Wing and Planets remain held.`
           };
         }
 
@@ -1218,17 +1268,17 @@ Run live calibration to read current jump height.</pre>
             phase: "PRODUCT_WING_ALIGNMENT",
             target: productLimit,
             held: "PLANETS",
-            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Core house and Index experience are stable enough to continue Product Wing calibration.`
+            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Generation 3 readiness is accepted, so Product Wing calibration may continue.`
           };
         }
 
-        if (scores.planets < PRODUCT_THRESHOLD && globalLimit) {
-          const planetLimit = planetRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || globalLimit;
+        if (scores.planets < PRODUCT_THRESHOLD) {
+          const planetLimit = planetRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
           return {
             phase: "PLANETARY_ATTACHMENT_ALIGNMENT",
             target: planetLimit,
             held: "VISUAL_GENERATION_EXPANSION",
-            text: `Next move: renew planetary or hosted construct ${planetLimit.label} (${planetLimit.path}). Core, Index, and Products are stable enough to continue planetary attachment calibration.`
+            text: `Next move: renew planetary or hosted construct ${planetLimit ? planetLimit.label + " (" + planetLimit.path + ")" : "next planet"}. Upstream generation and products are stable enough to continue planetary attachment calibration.`
           };
         }
 
@@ -1236,7 +1286,7 @@ Run live calibration to read current jump height.</pre>
           phase: "FULL_CURRENT_CEILING",
           target: null,
           held: "NONE",
-          text: "Next move: ceiling currently reads 100. Generation Two visual renewal may resume only with before/after receipt discipline."
+          text: "Next move: current measured ceiling reads 100. Further generation movement requires explicit user acceptance."
         };
       }
 
@@ -1247,7 +1297,7 @@ Run live calibration to read current jump height.</pre>
         liveReceipt.textContent = [
           "SCANNING=true",
           "METHOD=Gauge first. Renew narrowly. Measure again. Raise ceiling. Repeat.",
-          "PHASE_PRIORITY=Core house first. Core Index experience second. Product wing third. Planets fourth.",
+          "PHASE_PRIORITY=House markers -> Core Index experience -> Generation readiness -> Product Wing -> Planets.",
           "STATUS=fetching same-origin routes"
         ].join("\n");
 
@@ -1256,36 +1306,41 @@ Run live calibration to read current jump height.</pre>
         const products = results.filter((route) => route.group === "products");
         const planets = results.filter((route) => route.group === "planets");
         const compass = house.find((route) => route.id === "H1_COMPASS");
-        const experience = coreExperienceStatus(compass);
+
+        const coreExperience = readCoreExperience(compass);
+        const generation = readGenerationReadiness(compass, coreExperience);
 
         const scores = {
           house: averageScore(house),
+          experience: coreExperience.score,
+          generation: generation.score,
           products: averageScore(products),
-          planets: averageScore(planets),
-          experience: experience.score
+          planets: averageScore(planets)
         };
 
-        scores.overall = Math.round((scores.house + scores.experience + scores.products + scores.planets) / 4);
+        scores.overall = Math.round((scores.house + scores.experience + scores.generation + scores.products + scores.planets) / 5);
 
-        const state = {
-          overall: scoreState(scores.overall),
-          house: scoreState(scores.house),
-          experience: experience.held ? "complex" : scoreState(scores.experience),
-          products: scoreState(scores.products),
-          planets: scoreState(scores.planets)
-        };
-
-        const recommendation = phaseRecommendation(scores, experience, house, products, planets, results);
+        const recommendation = phaseRecommendation(scores, coreExperience, generation, house, products, planets);
 
         results.forEach((route) => {
           route.phaseTarget = recommendation.target && route.id === recommendation.target.id;
         });
 
-        writeStat("overall", scores.overall, `${state.overall.toUpperCase()} · shared ceiling read`);
-        writeStat("house", scores.house, `${state.house.toUpperCase()} · core house field`);
-        writeStat("experience", scores.experience, `${experience.status} · core Index experience`);
-        writeStat("products", scores.products, recommendation.phase === "PRODUCT_WING_ALIGNMENT" ? `${state.products.toUpperCase()} · active product phase` : `${state.products.toUpperCase()} · held until upstream is stable`);
-        writeStat("planets", scores.planets, recommendation.phase === "PLANETARY_ATTACHMENT_ALIGNMENT" ? `${state.planets.toUpperCase()} · active planet phase` : `${state.planets.toUpperCase()} · held until upstream is stable`);
+        const states = {
+          overall: scoreState(scores.overall),
+          house: scoreState(scores.house),
+          experience: coreExperience.held ? "complex" : scoreState(scores.experience),
+          generation: generation.held ? "complex" : scoreState(scores.generation),
+          products: scoreState(scores.products),
+          planets: scoreState(scores.planets)
+        };
+
+        writeStat("overall", scores.overall, `${states.overall.toUpperCase()} · shared ceiling read`);
+        writeStat("house", scores.house, `${states.house.toUpperCase()} · marker health`);
+        writeStat("experience", scores.experience, `${coreExperience.status} · core Index experience`);
+        writeStat("generation", scores.generation, `${generation.label} · target ${GENERATION_TARGET}`);
+        writeStat("products", scores.products, recommendation.phase === "PRODUCT_WING_ALIGNMENT" ? `${states.products.toUpperCase()} · active product phase` : `${states.products.toUpperCase()} · held until generation readiness`);
+        writeStat("planets", scores.planets, recommendation.phase === "PLANETARY_ATTACHMENT_ALIGNMENT" ? `${states.planets.toUpperCase()} · active planet phase` : `${states.planets.toUpperCase()} · held until upstream is stable`);
 
         const gauges = [
           {
@@ -1294,25 +1349,26 @@ Run live calibration to read current jump height.</pre>
             title: "Overall ceiling",
             value: scores.overall,
             label: "shared",
-            state: state.overall,
-            priority: state.overall !== "healthy",
-            meaning: "Current verified height the estate can hold together across House, Index experience, Product Wing, and Planets.",
+            state: states.overall,
+            priority: states.overall !== "healthy",
+            meaning: "Current verified height across marker health, core experience, generation readiness, Product Wing, and Planets.",
             receipt: [
               `HOUSE=${scores.house}`,
-              `CORE_EXPERIENCE=${scores.experience} ${experience.status}`,
+              `CORE_EXPERIENCE=${scores.experience} ${coreExperience.status}`,
+              `GENERATION=${scores.generation} ${generation.label}`,
               `PRODUCTS=${scores.products}`,
               `PLANETS=${scores.planets}`
             ]
           },
           {
             id: "G1",
-            kind: "house",
+            kind: "markers",
             title: "House skeleton",
             value: scores.house,
-            label: "core",
-            state: state.house,
+            label: "house",
+            state: states.house,
             priority: scores.house < HOUSE_THRESHOLD,
-            meaning: "House pages align before Index experience, products, or planets lead.",
+            meaning: "Route and marker health. This can be 100 without making the estate Generation 3.",
             receipt: house.map((route) => `${route.label}=${route.score}${recommendation.target && recommendation.target.id === route.id && recommendation.phase === "CORE_HOUSE_ALIGNMENT" ? " <- NEXT" : ""}`)
           },
           {
@@ -1321,37 +1377,52 @@ Run live calibration to read current jump height.</pre>
             title: "Core experience",
             value: scores.experience,
             label: "index",
-            state: state.experience,
-            priority: scores.house >= HOUSE_THRESHOLD && experience.held,
-            meaning: "If Index declares a core-experience hold, Gauges recommends compression/control-panel work before downstream product or planet work.",
+            state: states.experience,
+            priority: scores.house >= HOUSE_THRESHOLD && coreExperience.held,
+            meaning: "Index crowding, control-panel readiness, and Russian-doll compression must be accepted before downstream work leads.",
             receipt: [
-              `Compass marker=${experience.marker}`,
-              `Status=${experience.status}`,
-              `Held=${experience.held ? "TRUE" : "FALSE"}`
+              `Status=${coreExperience.status}`,
+              `Marker=${coreExperience.marker}`,
+              `Held=${coreExperience.held ? "TRUE" : "FALSE"}`
             ]
           },
           {
             id: "G3",
+            kind: "generation",
+            title: "Generation readiness",
+            value: scores.generation,
+            label: "gen",
+            state: states.generation,
+            priority: scores.house >= HOUSE_THRESHOLD && !coreExperience.held && generation.held,
+            meaning: "Healthy enough is not Generation 3. Current generation must be reported separately from route/marker health.",
+            receipt: [
+              `Current=${generation.label}`,
+              `Target=${GENERATION_TARGET}`,
+              `Accepted=${generation.accepted ? "TRUE" : "FALSE"}`
+            ]
+          },
+          {
+            id: "G4",
             kind: "products",
             title: "Products",
             value: scores.products,
             label: "wing",
-            state: state.products,
-            priority: scores.house >= HOUSE_THRESHOLD && !experience.held && state.products !== "healthy",
-            meaning: scores.house < HOUSE_THRESHOLD || experience.held
-              ? "Measured, but held. Product chamber recommendations do not lead while core house or Index experience is incomplete."
+            state: states.products,
+            priority: !coreExperience.held && !generation.held && states.products !== "healthy",
+            meaning: coreExperience.held || generation.held
+              ? "Measured, but held. Product Wing does not lead until Index and Generation 3 readiness release it."
               : "Product chambers remain attached to Products without becoming house or planet roots.",
             receipt: products.map((route) => `${route.label}=${route.score}`)
           },
           {
-            id: "G4",
+            id: "G5",
             kind: "planets",
             title: "Planets",
             value: scores.planets,
             label: "orbit",
-            state: state.planets,
-            priority: scores.house >= HOUSE_THRESHOLD && !experience.held && scores.products >= PRODUCT_THRESHOLD && state.planets !== "healthy",
-            meaning: scores.house < HOUSE_THRESHOLD || experience.held || scores.products < PRODUCT_THRESHOLD
+            state: states.planets,
+            priority: !coreExperience.held && !generation.held && scores.products >= PRODUCT_THRESHOLD && states.planets !== "healthy",
+            meaning: coreExperience.held || generation.held || scores.products < PRODUCT_THRESHOLD
               ? "Measured, but held. Planetary attachment does not lead until upstream fields stabilize."
               : "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
             receipt: planets.map((route) => `${route.label}=${route.score}`)
@@ -1369,23 +1440,27 @@ Run live calibration to read current jump height.</pre>
           "ACTION=",
           "  target=measured estate field",
           "  scope=read-only calibration",
-          "  recommendation_logic=core_house_then_core_experience_then_products_then_planets",
-          "  gauges_score_rewrite=FALSE",
-          "  fake_health_claim=FALSE",
+          "  recommendation_logic=house_then_core_experience_then_generation_readiness_then_products_then_planets",
+          "  gauges_score_faking=FALSE",
+          "  fake_generation_health=FALSE",
           "",
           "AFTER=",
           `  Overall=${scores.overall}`,
           `  House=${scores.house}`,
           `  CoreExperience=${scores.experience}`,
+          `  GenerationReadiness=${scores.generation}`,
           `  Products=${scores.products}`,
           `  Planets=${scores.planets}`,
+          `  CurrentGeneration=${generation.label}`,
+          `  TargetGeneration=${GENERATION_TARGET}`,
           `  ActivePhase=${recommendation.phase}`,
-          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "INDEX_CONTROL_PANEL_COMPRESSION"}`,
+          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "INDEX_GENERATION_3_PATH"}`,
           `  HeldDownstream=${recommendation.held}`,
-          `  CoreExperienceMarker=${experience.marker}`,
           "",
           "CEILING_RESULT=",
-          scores.overall >= 100 ? "  FULL_CURRENT_CEILING=100" : "  CURRENT_PHASE_LIMITER=" + (recommendation.target ? recommendation.target.label : "Index Core Experience"),
+          scores.overall >= 100
+            ? "  FULL_CURRENT_CEILING=100"
+            : "  CURRENT_PHASE_LIMITER=" + recommendation.phase,
           "",
           "NEXT_MOVE=",
           "  " + recommendation.text

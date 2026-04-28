@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="inspect-demo-universe"
   data-page="inspect-demo-universe"
-  data-generation="demo-universe-earth-sun-shadow-v2"
+  data-generation="demo-universe-earth-morning-edge-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -19,6 +19,8 @@
   data-earth-axis="23.5deg"
   data-controls="removed"
   data-sun-shadow="active"
+  data-morning-edge="active"
+  data-breakfast-cloud-crowd="active"
   data-shadow-accepted="pending"
 >
 <head>
@@ -29,7 +31,7 @@
 
   <meta
     name="description"
-    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe on its axis with visible background Sun lighting and natural day-to-night shadow."
+    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe on its axis with a darker night side, morning edge, and cloud crowd along the daybreak terminator."
   />
 
   <style>
@@ -64,8 +66,8 @@
     body {
       background:
         radial-gradient(ellipse at 86% 12%, rgba(242, 199, 111, .15), transparent 26%),
-        radial-gradient(ellipse at 52% 48%, rgba(66, 112, 194, .16), transparent 36%),
-        radial-gradient(ellipse at 19% 78%, rgba(93, 151, 238, .08), transparent 27%),
+        radial-gradient(ellipse at 52% 48%, rgba(66, 112, 194, .13), transparent 34%),
+        radial-gradient(ellipse at 19% 78%, rgba(93, 151, 238, .06), transparent 27%),
         linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
     }
 
@@ -79,22 +81,22 @@
     body::before {
       inset: -8%;
       z-index: 0;
-      opacity: .70;
+      opacity: .62;
       background:
-        radial-gradient(circle at 7% 14%, rgba(255,255,255,.60) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 13% 66%, rgba(255,255,255,.24) 0 .8px, transparent 1.5px),
-        radial-gradient(circle at 18% 31%, rgba(255,255,255,.46) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 23% 87%, rgba(242,199,111,.20) 0 1px, transparent 1.9px),
-        radial-gradient(circle at 34% 57%, rgba(255,255,255,.36) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 39% 8%, rgba(255,255,255,.66) 0 1.3px, transparent 2.2px),
-        radial-gradient(circle at 44% 73%, rgba(170,202,255,.26) 0 1px, transparent 1.9px),
-        radial-gradient(circle at 53% 91%, rgba(255,255,255,.48) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 63% 12%, rgba(242,199,111,.26) 0 1px, transparent 2px),
-        radial-gradient(circle at 69% 68%, rgba(255,255,255,.42) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 79% 83%, rgba(255,255,255,.62) 0 1.25px, transparent 2.2px),
-        radial-gradient(circle at 89% 54%, rgba(255,255,255,.52) 0 1.2px, transparent 2.1px),
-        radial-gradient(ellipse at 31% 42%, rgba(76, 112, 184, .09), transparent 17%),
-        radial-gradient(ellipse at 68% 59%, rgba(98, 70, 152, .075), transparent 21%);
+        radial-gradient(circle at 7% 14%, rgba(255,255,255,.54) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 13% 66%, rgba(255,255,255,.20) 0 .8px, transparent 1.5px),
+        radial-gradient(circle at 18% 31%, rgba(255,255,255,.40) 0 1.2px, transparent 2px),
+        radial-gradient(circle at 23% 87%, rgba(242,199,111,.17) 0 1px, transparent 1.9px),
+        radial-gradient(circle at 34% 57%, rgba(255,255,255,.31) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 39% 8%, rgba(255,255,255,.58) 0 1.3px, transparent 2.2px),
+        radial-gradient(circle at 44% 73%, rgba(170,202,255,.23) 0 1px, transparent 1.9px),
+        radial-gradient(circle at 53% 91%, rgba(255,255,255,.42) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 63% 12%, rgba(242,199,111,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 69% 68%, rgba(255,255,255,.36) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 79% 83%, rgba(255,255,255,.52) 0 1.25px, transparent 2.2px),
+        radial-gradient(circle at 89% 54%, rgba(255,255,255,.44) 0 1.2px, transparent 2.1px),
+        radial-gradient(ellipse at 31% 42%, rgba(76, 112, 184, .075), transparent 17%),
+        radial-gradient(ellipse at 68% 59%, rgba(98, 70, 152, .06), transparent 21%);
       background-repeat: no-repeat;
       animation: naturalStarDrift 96s linear infinite;
     }
@@ -104,9 +106,9 @@
       z-index: 1;
       background:
         radial-gradient(ellipse at 84% 13%, rgba(242, 199, 111, .10), transparent 24%),
-        radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.028), transparent 28%),
-        radial-gradient(ellipse at 48% 52%, transparent 0 38%, rgba(0,0,0,.40) 79%, rgba(0,0,0,.82) 100%),
-        linear-gradient(90deg, rgba(0,0,0,.20), transparent 22%, transparent 78%, rgba(0,0,0,.24));
+        radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.018), transparent 26%),
+        radial-gradient(ellipse at 48% 52%, transparent 0 36%, rgba(0,0,0,.46) 78%, rgba(0,0,0,.86) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.28), transparent 22%, transparent 78%, rgba(0,0,0,.30));
     }
 
     @keyframes naturalStarDrift {
@@ -117,7 +119,8 @@
 
     body[data-motion="paused"]::before,
     body[data-motion="paused"] .earth-texture,
-    body[data-motion="paused"] .earth-clouds {
+    body[data-motion="paused"] .earth-clouds,
+    body[data-motion="paused"] .earth-breakfast-clouds {
       animation-play-state: paused;
     }
 
@@ -242,7 +245,7 @@
       pointer-events: none;
       background:
         radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .12), transparent 32%),
-        linear-gradient(125deg, transparent 0 40%, rgba(0, 0, 0, .10) 62%, rgba(0, 0, 0, .26) 100%);
+        linear-gradient(125deg, transparent 0 38%, rgba(0, 0, 0, .12) 58%, rgba(0, 0, 0, .34) 100%);
       opacity: .82;
     }
 
@@ -256,8 +259,8 @@
       place-items: center;
       isolation: isolate;
       filter:
-        drop-shadow(0 0 34px rgba(97, 153, 236, .34))
-        drop-shadow(0 0 92px rgba(242, 199, 111, .10));
+        drop-shadow(0 0 30px rgba(97, 153, 236, .28))
+        drop-shadow(0 0 76px rgba(242, 199, 111, .08));
     }
 
     .earth-axis-shell {
@@ -280,13 +283,13 @@
         linear-gradient(
           180deg,
           transparent,
-          rgba(242, 199, 111, .08) 10%,
-          rgba(242, 199, 111, .28) 50%,
-          rgba(242, 199, 111, .08) 90%,
+          rgba(242, 199, 111, .07) 10%,
+          rgba(242, 199, 111, .22) 50%,
+          rgba(242, 199, 111, .07) 90%,
           transparent
         );
-      box-shadow: 0 0 20px rgba(242, 199, 111, .12);
-      opacity: .42;
+      box-shadow: 0 0 18px rgba(242, 199, 111, .10);
+      opacity: .36;
     }
 
     .earth-core {
@@ -297,17 +300,20 @@
       border-radius: 50%;
       overflow: hidden;
       background:
-        radial-gradient(circle at 32% 24%, rgba(255,255,255,.28), transparent 18%),
-        radial-gradient(circle at 50% 50%, #0b3b80 0%, #061f4b 72%, #020713 100%);
+        radial-gradient(circle at 38% 28%, rgba(255,255,255,.18), transparent 17%),
+        radial-gradient(circle at 50% 50%, #0a2c61 0%, #03132e 70%, #00030b 100%);
       box-shadow:
-        inset -52px -32px 88px rgba(0,0,0,.70),
-        inset 22px 16px 42px rgba(255,255,255,.16),
-        0 0 42px rgba(97,153,236,.34);
+        inset -88px 44px 132px rgba(0,0,0,.88),
+        inset -26px -34px 70px rgba(0,0,0,.78),
+        inset 18px 12px 28px rgba(255,255,255,.08),
+        0 0 34px rgba(97,153,236,.25);
     }
 
     .earth-texture,
     .earth-clouds,
     .earth-daylight,
+    .earth-morning-edge,
+    .earth-breakfast-clouds,
     .earth-terminator,
     .earth-night,
     .earth-atmosphere,
@@ -325,7 +331,7 @@
       background-position: 0% 50%;
       background-repeat: repeat-x;
       animation: earthTextureSpin 42s linear infinite;
-      filter: saturate(1.12) contrast(1.05);
+      filter: saturate(1.04) contrast(1.10) brightness(.66);
     }
 
     .earth-clouds {
@@ -335,55 +341,92 @@
       background-position: 0% 50%;
       background-repeat: repeat-x;
       animation: earthCloudSpin 64s linear infinite;
-      opacity: .42;
+      opacity: .30;
       mix-blend-mode: screen;
-      filter: contrast(1.05);
+      filter: contrast(1.12) brightness(.84);
     }
 
     .earth-daylight {
       z-index: 3;
       background:
-        radial-gradient(circle at 76% 24%, rgba(255,255,255,.34) 0 5%, rgba(255,246,202,.20) 12%, transparent 29%),
-        radial-gradient(ellipse at 82% 38%, rgba(242,199,111,.16) 0 18%, transparent 40%),
-        radial-gradient(ellipse at 74% 52%, rgba(105, 170, 255, .12), transparent 46%);
+        radial-gradient(circle at 79% 24%, rgba(255,255,255,.30) 0 4%, rgba(255,246,202,.20) 12%, transparent 28%),
+        radial-gradient(ellipse at 82% 39%, rgba(242,199,111,.16) 0 18%, transparent 39%),
+        radial-gradient(ellipse at 75% 52%, rgba(105, 170, 255, .10), transparent 42%);
       mix-blend-mode: screen;
-      opacity: .86;
+      opacity: .76;
+    }
+
+    .earth-morning-edge {
+      z-index: 4;
+      background:
+        linear-gradient(124deg, transparent 0 47%, rgba(255, 228, 154, .18) 52%, rgba(123, 184, 255, .16) 58%, transparent 66%),
+        radial-gradient(ellipse at 70% 41%, rgba(255, 231, 165, .14), transparent 28%),
+        radial-gradient(ellipse at 78% 32%, rgba(119, 187, 255, .18), transparent 36%);
+      mix-blend-mode: screen;
+      opacity: .88;
+    }
+
+    .earth-breakfast-clouds {
+      z-index: 5;
+      background-image:
+        linear-gradient(124deg, transparent 0 46%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.30) 54%, rgba(255,255,255,.12) 61%, transparent 68%),
+        url("/assets/earth/earth_clouds_2048.jpg");
+      background-size:
+        100% 100%,
+        210% 100%;
+      background-position:
+        center,
+        -18% 50%;
+      background-repeat:
+        no-repeat,
+        repeat-x;
+      animation: earthCloudCrowdSpin 74s linear infinite;
+      opacity: .52;
+      mix-blend-mode: screen;
+      filter: brightness(1.08) contrast(1.32);
+      mask-image:
+        linear-gradient(124deg, transparent 0 43%, #000 48%, #000 61%, transparent 70%),
+        radial-gradient(circle at 50% 50%, #000 0 75%, transparent 79%);
+      -webkit-mask-image:
+        linear-gradient(124deg, transparent 0 43%, #000 48%, #000 61%, transparent 70%),
+        radial-gradient(circle at 50% 50%, #000 0 75%, transparent 79%);
     }
 
     .earth-terminator {
-      z-index: 4;
+      z-index: 6;
       background:
-        radial-gradient(ellipse at 82% 30%, transparent 0 28%, rgba(8, 16, 34, .16) 42%, rgba(1, 4, 12, .58) 68%, rgba(0, 0, 0, .88) 100%),
-        linear-gradient(128deg, transparent 0 32%, rgba(4, 10, 24, .14) 47%, rgba(0, 0, 0, .48) 71%, rgba(0, 0, 0, .76) 100%);
-      opacity: .82;
+        radial-gradient(ellipse at 84% 30%, transparent 0 24%, rgba(4, 9, 22, .18) 36%, rgba(0, 2, 8, .72) 62%, rgba(0, 0, 0, .96) 100%),
+        linear-gradient(127deg, transparent 0 34%, rgba(4, 10, 24, .16) 44%, rgba(0, 0, 0, .62) 64%, rgba(0, 0, 0, .90) 100%);
+      opacity: .90;
     }
 
     .earth-night {
-      z-index: 5;
+      z-index: 7;
       background:
-        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.66) 0 12%, rgba(0,0,0,.44) 34%, transparent 62%),
-        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(0,0,0,.18) 66%, rgba(0,0,0,.64) 100%);
-      opacity: .74;
+        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.92) 0 18%, rgba(0,0,0,.72) 39%, transparent 65%),
+        radial-gradient(ellipse at 28% 48%, rgba(0,0,0,.78) 0 14%, rgba(0,0,0,.46) 38%, transparent 64%),
+        radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(0,0,0,.28) 63%, rgba(0,0,0,.78) 100%);
+      opacity: .88;
     }
 
     .earth-atmosphere {
-      z-index: 6;
+      z-index: 8;
       background:
-        radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .24), transparent 34%),
-        radial-gradient(circle at 50% 50%, transparent 0 58%, rgba(115, 177, 255, .12) 71%, rgba(115, 177, 255, .22) 78%, transparent 86%);
+        radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .22), transparent 32%),
+        radial-gradient(circle at 50% 50%, transparent 0 59%, rgba(115, 177, 255, .10) 71%, rgba(115, 177, 255, .20) 78%, transparent 86%);
       mix-blend-mode: screen;
-      opacity: .70;
+      opacity: .56;
     }
 
     .earth-rim {
-      z-index: 7;
-      border: 1px solid rgba(255,255,255,.14);
+      z-index: 9;
+      border: 1px solid rgba(255,255,255,.11);
       box-shadow:
-        inset -28px 20px 50px rgba(0,0,0,.44),
-        inset 20px -10px 28px rgba(133,188,255,.11),
-        10px -8px 38px rgba(111, 169, 255, .20),
-        -16px 18px 46px rgba(0,0,0,.34),
-        0 0 58px rgba(97,153,236,.18);
+        inset -48px 26px 76px rgba(0,0,0,.64),
+        inset 16px -8px 22px rgba(133,188,255,.08),
+        10px -8px 32px rgba(111, 169, 255, .16),
+        -20px 22px 58px rgba(0,0,0,.52),
+        0 0 50px rgba(97,153,236,.14);
     }
 
     @keyframes earthTextureSpin {
@@ -394,6 +437,20 @@
     @keyframes earthCloudSpin {
       from { background-position: 0% 50%; }
       to { background-position: -210% 50%; }
+    }
+
+    @keyframes earthCloudCrowdSpin {
+      from {
+        background-position:
+          center,
+          -18% 50%;
+      }
+
+      to {
+        background-position:
+          center,
+          -228% 50%;
+      }
     }
 
     .audit-source,
@@ -477,13 +534,17 @@
         data-earth-standard="demo-universe-restored-earth"
         data-earth-axis="23.5deg"
         data-sun-shadow="active"
+        data-morning-edge="active"
+        data-breakfast-cloud-crowd="active"
         data-shadow-accepted="pending"
       >
-        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with natural sunlight shadow">
+        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with darker night side and morning edge">
           <div class="earth-core">
             <div class="earth-texture"></div>
             <div class="earth-clouds"></div>
             <div class="earth-daylight"></div>
+            <div class="earth-morning-edge"></div>
+            <div class="earth-breakfast-clouds"></div>
             <div class="earth-terminator"></div>
             <div class="earth-night"></div>
             <div class="earth-atmosphere"></div>
@@ -515,9 +576,12 @@
       <span>earth-axis=23.5deg</span>
       <span>controls=removed</span>
       <span>sun-shadow=active</span>
+      <span>morning-edge=active</span>
+      <span>breakfast-cloud-crowd=active</span>
       <span>shadow-accepted=pending</span>
       <span>DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1</span>
+      <span>DEMO_UNIVERSE_EARTH_MORNING_EDGE_TNT_v1</span>
     </section>
   </main>
 </body>

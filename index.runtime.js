@@ -76,9 +76,56 @@
     };
   }
 
+  function ensureInspectGlobeToggle(stage) {
+    let button = document.querySelector(".inspect-globe-toggle");
+
+    if (button) return button;
+
+    button = document.createElement("button");
+    button.className = "inspect-globe-toggle";
+    button.type = "button";
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("data-inspect-globe-toggle", "true");
+    button.textContent = "Inspect Globe";
+
+    stage.appendChild(button);
+
+    return button;
+  }
+
+  function setInspectGlobe(open) {
+    const isOpen = Boolean(open);
+    const button = document.querySelector(".inspect-globe-toggle");
+
+    document.documentElement.dataset.inspectGlobe = isOpen ? "open" : "closed";
+    document.body.dataset.inspectGlobe = isOpen ? "open" : "closed";
+
+    if (button) {
+      button.textContent = isOpen ? "Close Inspect" : "Inspect Globe";
+      button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+  }
+
+  function bindInspectGlobeToggle() {
+    const stage = document.querySelector(".compass-stage") || document.querySelector(".scene-shell");
+
+    if (!stage) return;
+
+    const button = ensureInspectGlobeToggle(stage);
+
+    setInspectGlobe(false);
+
+    button.addEventListener("click", () => {
+      const nextOpen = document.body.dataset.inspectGlobe !== "open";
+      setInspectGlobe(nextOpen);
+    });
+  }
+
   function init() {
     const root = document.getElementById("index-render-root");
     const buttons = Array.from(document.querySelectorAll("[data-mode]"));
+
+    bindInspectGlobeToggle();
 
     if (!root) {
       document.body.dataset.runtimeStatus = "failed-no-render-root";

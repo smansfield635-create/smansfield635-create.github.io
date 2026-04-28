@@ -12,12 +12,12 @@
     DOLL_2_ESTATE: [
       "Estate",
       "Tree before Manor.",
-      "Snow, road, grass, roots, branches, leaves, fruit, blossoms, and habitat details now build the scene."
+      "Snow, road, grass, roots, limbs, and foliage now render through separated layers."
     ],
     DOLL_3_TRUNK_AND_PRIMARY_LIMBS: [
       "Tree structure",
       "One trunk. Four primary limbs.",
-      "The tree opens from trunk authority into branch-supported foliage."
+      "The render file composes the scene. The foliage file renders leaves, fruit, blossoms, habitat, and butterflies."
     ],
     DOLL_4_CANOPIES: [
       "Canopy layer",
@@ -27,7 +27,7 @@
     DOLL_5_BRANCH_SEATS: [
       "Branch seats",
       "Sixty-four branch seats.",
-      "Each branch seat carries four terminal expressions from the 256 structure."
+      "Branch seats and terminal foliage now come from the foliage render layer."
     ],
     DOLL_6_TERMINAL_NODES: [
       "Terminal layer",
@@ -145,107 +145,8 @@
     return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${end.x} ${end.y}`;
   }
 
-  function sourceTree() {
-    const api = window.DGBTreeOfLife256;
-
-    if (api && api.flat && Array.isArray(api.flat.branchSeats) && Array.isArray(api.flat.terminalNodes)) {
-      return {
-        branchSeats: api.flat.branchSeats,
-        terminalNodes: api.flat.terminalNodes
-      };
-    }
-
-    const branchSeats = [];
-    const terminalNodes = [];
-    const terminalTypes = ["leaf", "fruit", "blossom", "habitat"];
-
-    for (let canopy = 1; canopy <= 16; canopy += 1) {
-      for (let localBranch = 1; localBranch <= 4; localBranch += 1) {
-        const branchIndex = ((canopy - 1) * 4) + localBranch;
-
-        branchSeats.push({
-          id: `BRANCH_SEAT_${String(branchIndex).padStart(2, "0")}`,
-          index: branchIndex,
-          localIndex: localBranch,
-          canopyCluster: canopy
-        });
-
-        for (let localNode = 1; localNode <= 4; localNode += 1) {
-          const nodeIndex = ((branchIndex - 1) * 4) + localNode;
-          terminalNodes.push({
-            id: `TERMINAL_${String(nodeIndex).padStart(3, "0")}`,
-            index: nodeIndex,
-            localIndex: localNode,
-            branchSeat: branchIndex,
-            canopyCluster: canopy,
-            terminalType: terminalTypes[(nodeIndex - 1) % terminalTypes.length],
-            fruit: { active: terminalTypes[(nodeIndex - 1) % terminalTypes.length] === "fruit" }
-          });
-        }
-      }
-    }
-
-    return { branchSeats, terminalNodes };
-  }
-
-  function canopyPosition(index) {
-    const ring = index <= 8 ? 1 : 2;
-    const local = index <= 8 ? index - 1 : index - 9;
-    const angle = ring === 1 ? -137 + local * (274 / 7) : -154 + local * (308 / 7);
-    const radiusX = ring === 1 ? 315 : 445;
-    const radiusY = ring === 1 ? 188 : 268;
-
-    return {
-      x: 800 + Math.cos(angle * Math.PI / 180) * radiusX,
-      y: 326 + Math.sin(angle * Math.PI / 180) * radiusY,
-      angle
-    };
-  }
-
-  function branchSeatPosition(canopyIndex, branchLocal) {
-    const c = canopyPosition(canopyIndex);
-
-    const offsets = [
-      { x: -108, y: -62 },
-      { x: 98, y: -58 },
-      { x: -92, y: 70 },
-      { x: 104, y: 72 }
-    ];
-
-    const offset = offsets[branchLocal - 1];
-
-    return {
-      x: c.x + offset.x,
-      y: c.y + offset.y
-    };
-  }
-
-  function terminalPosition(node) {
-    const branchLocal = ((node.branchSeat - 1) % 4) + 1;
-    const branch = branchSeatPosition(node.canopyCluster, branchLocal);
-    const terminalLocal = ((node.localIndex - 1) % 4) + 1;
-
-    const spreads = [
-      { x: -58, y: -40 },
-      { x: 54, y: -43 },
-      { x: -48, y: 46 },
-      { x: 61, y: 41 }
-    ];
-
-    const base = spreads[terminalLocal - 1];
-    const jitterX = ((node.index * 31) % 37) - 18;
-    const jitterY = ((node.index * 43) % 31) - 15;
-
-    return {
-      x: branch.x + base.x + jitterX,
-      y: branch.y + base.y + jitterY,
-      angle: ((node.index * 41) % 148) - 74,
-      scale: 0.82 + ((node.index % 7) * 0.055)
-    };
-  }
-
   function drawSkyGround(svg) {
-    const layer = s("g", { class: "svg-layer layer-estate", "data-scene-layer": "estate-ground" });
+    const layer = s("g", { class: "svg-layer layer-estate", "data-render-layer": "scene-base" });
 
     layer.appendChild(s("rect", { x: 0, y: 0, width: 1600, height: 900, fill: "url(#skyGradient)" }));
 
@@ -334,10 +235,27 @@
   }
 
   function drawManor(svg) {
-    const manor = s("g", { class: "svg-layer layer-estate", "data-object": "manor" });
+    const manor = s("g", { class: "svg-layer layer-estate", "data-render-layer": "manor-background" });
 
-    manor.appendChild(s("polygon", { class: "manor-roof-svg", points: "585,338 800,205 1015,338", fill: "url(#manorRoof)" }));
-    manor.appendChild(s("rect", { class: "manor-body-svg", x: 565, y: 338, width: 470, height: 155, rx: 18, fill: "url(#manorBody)" }));
+    manor.appendChild(s("polygon", {
+      class: "manor-roof-svg",
+      points: "585,338 800,205 1015,338",
+      fill: "url(#manorRoof)",
+      stroke: "rgba(242,199,111,.35)",
+      "stroke-width": 2
+    }));
+
+    manor.appendChild(s("rect", {
+      class: "manor-body-svg",
+      x: 565,
+      y: 338,
+      width: 470,
+      height: 155,
+      rx: 18,
+      fill: "url(#manorBody)",
+      stroke: "rgba(242,199,111,.28)",
+      "stroke-width": 2
+    }));
 
     [615, 715, 841, 941].forEach((x, index) => {
       manor.appendChild(s("rect", {
@@ -367,188 +285,8 @@
     svg.appendChild(manor);
   }
 
-  function drawButterflies(layer, state) {
-    const enabled =
-      state.activeTab === "butterflies" ||
-      state.activeTab === "wildlife" ||
-      state.butterflyVisibility === "visible";
-
-    if (!enabled) return;
-
-    const option = state.activeButterflyOption || "monarch";
-    if (option === "none") return;
-
-    const positions = [
-      { x: 545, y: 365, scale: 1.1 },
-      { x: 1022, y: 292, scale: .9 },
-      { x: 1120, y: 535, scale: .75 },
-      { x: 672, y: 590, scale: .62 },
-      { x: 928, y: 420, scale: .68 }
-    ];
-
-    positions.forEach((p) => {
-      const g = s("g", {
-        class: "butterfly",
-        transform: `translate(${p.x} ${p.y}) scale(${p.scale})`,
-        "data-butterfly-option": option,
-        "data-butterfly-role": "pollination"
-      });
-
-      const wingFill =
-        option === "blue_morpho_style" ? "#3d91ff" :
-        option === "estate_gold_variant" ? "#f2c76f" :
-        "#e86d1f";
-
-      g.appendChild(s("ellipse", { cx: -8, cy: -2, rx: 10, ry: 16, transform: "rotate(-28 -8 -2)", fill: wingFill, stroke: "rgba(2,5,10,.72)" }));
-      g.appendChild(s("ellipse", { cx: 8, cy: -2, rx: 10, ry: 16, transform: "rotate(28 8 -2)", fill: wingFill, stroke: "rgba(2,5,10,.72)" }));
-      g.appendChild(s("path", { d: "M 0 -11 L 0 12", stroke: "rgba(20,12,8,.86)", "stroke-width": 2, "stroke-linecap": "round" }));
-
-      layer.appendChild(g);
-    });
-  }
-
-  function leafColor(node) {
-    const palette = [
-      "rgba(28,78,31,.96)",
-      "rgba(42,100,39,.94)",
-      "rgba(57,120,48,.92)",
-      "rgba(76,135,58,.90)",
-      "rgba(34,91,36,.94)",
-      "rgba(87,142,67,.88)"
-    ];
-
-    if (node.terminalType === "habitat") return "rgba(151,126,82,.90)";
-    return palette[node.index % palette.length];
-  }
-
-  function makeLeaf(node, pos) {
-    const leaf = s("path", {
-      class: "terminal-node terminal-leaf individual-leaf",
-      d: "M 0 -17 C 10 -15 17 -7 17 2 C 17 15 4 22 0 29 C -4 22 -17 15 -17 2 C -17 -7 -10 -15 0 -17 Z",
-      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
-      fill: leafColor(node),
-      stroke: "rgba(224,244,208,.24)",
-      "stroke-width": 1,
-      filter: "url(#leafShadow)",
-      "data-terminal-id": node.id,
-      "data-terminal-index": node.index,
-      "data-terminal-type": node.terminalType,
-      "data-canopy": node.canopyCluster,
-      "data-branch-seat": node.branchSeat
-    });
-
-    const midrib = s("path", {
-      class: "leaf-vein",
-      d: "M 0 -12 C 1 -3 0 9 0 20",
-      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
-      fill: "none",
-      stroke: "rgba(235,248,220,.34)",
-      "stroke-width": .95,
-      "stroke-linecap": "round"
-    });
-
-    const sideA = s("path", {
-      class: "leaf-side-vein",
-      d: "M 0 -2 L 8 -7 M 0 4 L 10 0 M 0 10 L 8 8 M 0 15 L 6 15",
-      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
-      fill: "none",
-      stroke: "rgba(235,248,220,.18)",
-      "stroke-width": .65,
-      "stroke-linecap": "round"
-    });
-
-    const sideB = s("path", {
-      class: "leaf-side-vein",
-      d: "M 0 -2 L -8 -7 M 0 4 L -10 0 M 0 10 L -8 8 M 0 15 L -6 15",
-      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
-      fill: "none",
-      stroke: "rgba(235,248,220,.18)",
-      "stroke-width": .65,
-      "stroke-linecap": "round"
-    });
-
-    return [leaf, midrib, sideA, sideB];
-  }
-
-  function makeFruit(node, pos) {
-    const group = s("g", {
-      class: "terminal-fruit-node",
-      transform: `translate(${pos.x} ${pos.y})`,
-      "data-terminal-id": node.id,
-      "data-terminal-index": node.index,
-      "data-terminal-type": "fruit",
-      "data-canopy": node.canopyCluster,
-      "data-branch-seat": node.branchSeat
-    });
-
-    group.appendChild(s("circle", {
-      class: "terminal-node terminal-fruit",
-      cx: 0,
-      cy: 0,
-      r: 6.4 * pos.scale,
-      fill: "url(#fruitGradient)",
-      filter: "url(#fruitGlow)"
-    }));
-
-    group.appendChild(s("circle", {
-      cx: -2.1 * pos.scale,
-      cy: -2.4 * pos.scale,
-      r: 1.4 * pos.scale,
-      fill: "rgba(255,230,210,.78)"
-    }));
-
-    return [group];
-  }
-
-  function makeBlossom(node, pos) {
-    const group = s("g", {
-      class: "terminal-blossom-node",
-      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
-      "data-terminal-id": node.id,
-      "data-terminal-index": node.index,
-      "data-terminal-type": "blossom",
-      "data-canopy": node.canopyCluster,
-      "data-branch-seat": node.branchSeat
-    });
-
-    for (let i = 0; i < 5; i += 1) {
-      group.appendChild(s("ellipse", {
-        class: "terminal-node terminal-blossom",
-        cx: Math.cos((i * 72) * Math.PI / 180) * 4.2,
-        cy: Math.sin((i * 72) * Math.PI / 180) * 4.2,
-        rx: 3.1,
-        ry: 5.5,
-        transform: `rotate(${i * 72})`,
-        fill: "rgba(247,214,222,.90)",
-        stroke: "rgba(255,255,255,.25)",
-        "stroke-width": .7
-      }));
-    }
-
-    group.appendChild(s("circle", { cx: 0, cy: 0, r: 2, fill: "rgba(242,199,111,.90)" }));
-
-    return [group];
-  }
-
-  function makeTerminalNode(node) {
-    const pos = terminalPosition(node);
-    const baseLeaf = makeLeaf(node, pos);
-
-    if (node.terminalType === "fruit") return baseLeaf.concat(makeFruit(node, { ...pos, scale: pos.scale * 0.72 }));
-    if (node.terminalType === "blossom") return baseLeaf.concat(makeBlossom(node, { ...pos, scale: pos.scale * 0.68 }));
-
-    return baseLeaf;
-  }
-
-  function drawTree(svg, state) {
-    const data = sourceTree();
-    const branchSeats = data.branchSeats;
-    const terminalNodes = data.terminalNodes;
-
-    const trunkLayer = s("g", { class: "svg-layer layer-limbs", "data-tree-layer": "trunk-primary-limbs" });
-    const branchLayer = s("g", { class: "svg-layer layer-branches", "data-tree-layer": "branch-network" });
-    const terminalLayer = s("g", { class: "svg-layer layer-terminals", "data-tree-layer": "256-visible-independent-leaves" });
-    const detailLayer = s("g", { class: "svg-layer layer-details", "data-tree-layer": "fruit-wildlife-butterflies" });
+  function drawTrunkAndPrimaryLimbs(svg) {
+    const trunkLayer = s("g", { class: "svg-layer layer-limbs", "data-render-layer": "trunk-primary-limbs" });
 
     trunkLayer.appendChild(s("path", {
       class: "tree-trunk",
@@ -625,79 +363,7 @@
       }));
     });
 
-    for (let canopyIndex = 1; canopyIndex <= 16; canopyIndex += 1) {
-      const c = canopyPosition(canopyIndex);
-
-      branchLayer.appendChild(s("path", {
-        class: "canopy-support-branch",
-        d: `M ${shoulder.x} ${shoulder.y} C ${(shoulder.x + c.x) / 2} ${shoulder.y - 62}, ${(shoulder.x + c.x) / 2} ${c.y + 48}, ${c.x} ${c.y}`,
-        fill: "none",
-        stroke: "rgba(91,54,32,.46)",
-        "stroke-width": 7,
-        "stroke-linecap": "round",
-        "data-canopy": canopyIndex
-      }));
-    }
-
-    branchSeats.forEach((branch) => {
-      const branchLocal = ((branch.localIndex - 1) % 4) + 1;
-      const p = branchSeatPosition(branch.canopyCluster, branchLocal);
-      const c = canopyPosition(branch.canopyCluster);
-
-      branchLayer.appendChild(s("path", {
-        class: "secondary-branch",
-        d: `M ${c.x} ${c.y} C ${(c.x + p.x) / 2} ${c.y + 18}, ${(c.x + p.x) / 2} ${p.y - 18}, ${p.x} ${p.y}`,
-        fill: "none",
-        stroke: "rgba(82,48,28,.80)",
-        "stroke-width": 9,
-        "stroke-linecap": "round",
-        "data-branch-seat": branch.id,
-        "data-canopy": branch.canopyCluster
-      }));
-
-      terminalNodes
-        .filter((node) => node.branchSeat === branch.index)
-        .forEach((node) => {
-          const t = terminalPosition(node);
-
-          branchLayer.appendChild(s("path", {
-            class: "terminal-twig",
-            d: `M ${p.x} ${p.y} C ${(p.x + t.x) / 2} ${p.y - 9}, ${(p.x + t.x) / 2} ${t.y + 9}, ${t.x} ${t.y}`,
-            fill: "none",
-            stroke: "rgba(91,54,32,.62)",
-            "stroke-width": 3.4,
-            "stroke-linecap": "round",
-            "data-terminal-id": node.id
-          }));
-        });
-    });
-
-    terminalNodes.forEach((node) => {
-      makeTerminalNode(node).forEach((shape) => terminalLayer.appendChild(shape));
-    });
-
-    const selectedNode = terminalNodes.find((node) => node.index === state.terminalIndex);
-
-    if (selectedNode && state.dollLayer === "DOLL_7_FRUIT_AND_WILDLIFE_DETAIL") {
-      const label = s("text", {
-        class: "structure-label",
-        x: 800,
-        y: 850,
-        "text-anchor": "middle",
-        fill: "rgba(255,247,228,.78)",
-        "font-size": 18,
-        "paint-order": "stroke",
-        stroke: "rgba(2,5,10,.72)",
-        "stroke-width": 4
-      });
-
-      label.textContent = `${selectedNode.id} · ${selectedNode.terminalType}${selectedNode.fruit && selectedNode.fruit.active ? " · fruit active" : ""}`;
-      detailLayer.appendChild(label);
-    }
-
-    drawButterflies(detailLayer, state);
-
-    [trunkLayer, branchLayer, terminalLayer, detailLayer].forEach((layer) => svg.appendChild(layer));
+    svg.appendChild(trunkLayer);
   }
 
   function renderSceneCopy(root, state) {
@@ -731,7 +397,7 @@
     const scene = h("section", { className: "tree-scene flat-tree-scene", "aria-label": "Flat World route map" });
     const svg = baseSvg("Flat World verified route map for Rich Manor and Estate");
 
-    const mapLayer = s("g", { class: "svg-layer layer-estate" });
+    const mapLayer = s("g", { class: "svg-layer layer-estate", "data-render-layer": "flat-map" });
 
     [
       { x: 800, y: 300, label: "Compass" },
@@ -808,13 +474,34 @@
   function renderRound(root, state) {
     const scene = h("section", {
       className: "tree-scene round-tree-scene",
-      "aria-label": "Round World Tree of Life with visible independent leaves",
+      "aria-label": "Round World Tree of Life with expanded foliage render layer",
       "data-tree-structure": "256",
-      "data-doll-layer": state.dollLayer
+      "data-doll-layer": state.dollLayer,
+      "data-render-layer-expansion": "active",
+      "data-foliage-layer": "active"
     });
 
-    const svg = baseSvg("Tree of Life scene with visible independent leaves, fruit, blossoms, habitat nodes, branches, and grass");
-    drawTree(svg, state);
+    const svg = baseSvg("Tree of Life scene with compositor render layer and independent foliage layer");
+
+    drawTrunkAndPrimaryLimbs(svg);
+
+    if (window.DGBIndexFoliage && typeof window.DGBIndexFoliage.drawFoliageLayer === "function") {
+      window.DGBIndexFoliage.drawFoliageLayer(svg, state);
+    } else {
+      const warning = s("text", {
+        x: 800,
+        y: 850,
+        "text-anchor": "middle",
+        fill: "rgba(255,247,228,.82)",
+        "font-size": 18,
+        "paint-order": "stroke",
+        stroke: "rgba(2,5,10,.72)",
+        "stroke-width": 4
+      });
+
+      warning.textContent = "Foliage layer unavailable: /index.foliage.js not loaded";
+      svg.appendChild(warning);
+    }
 
     scene.appendChild(svg);
     root.appendChild(scene);
@@ -848,6 +535,8 @@
     root.dataset.terminalIndex = String(next.terminalIndex);
     root.dataset.activeButterflyOption = next.activeButterflyOption;
     root.dataset.butterflyVisibility = next.butterflyVisibility;
+    root.dataset.renderLayerExpansion = "active";
+    root.dataset.foliageLayer = "active";
 
     if (next.mode === "round") renderRound(root, next);
     else if (next.mode === "globe") renderGlobe(root, next);

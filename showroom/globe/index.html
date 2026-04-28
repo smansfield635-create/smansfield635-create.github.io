@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-page-id="inspect-globe"
+  data-page="inspect-globe"
+  data-generation="inspect-globe-route-file-v1"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="inspection"
+  data-parent-route="/showroom/"
+  data-render-controller="/showroom/globe/index.js"
+  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+  data-earth-material="/assets/earth/earth_material.css"
+  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+  data-earth-standard="centered-satellite-earth-no-external-rings"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Inspect Globe · Diamond Gate Bridge</title>
+
+  <meta
+    name="description"
+    content="Dedicated Inspect Globe page for Diamond Gate Bridge. The globe is shown without Showroom text cards or bubbles covering it."
+  />
+
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=inspect-globe-route-file-v1" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4f7ff;
+      --soft: rgba(244, 247, 255, .72);
+      --muted: rgba(244, 247, 255, .46);
+      --gold: #f2c76f;
+      --line: rgba(244, 247, 255, .14);
+      --line-gold: rgba(242, 199, 111, .42);
+      --black: #02050a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: var(--black);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 50% 48%, rgba(67, 115, 198, .18), transparent 34%),
+        radial-gradient(circle at 78% 18%, rgba(242, 199, 111, .08), transparent 24%),
+        radial-gradient(circle at 22% 82%, rgba(92, 151, 238, .10), transparent 26%),
+        linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .78;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.82) 0 1px, transparent 1.35px),
+        radial-gradient(circle, rgba(255,255,255,.30) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(242,199,111,.24) 0 1px, transparent 1.7px);
+      background-size: 84px 84px, 156px 156px, 238px 238px;
+      background-position: 0 0, 42px 66px, 88px 130px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255,255,255,.035), transparent 30%),
+        radial-gradient(circle at 50% 48%, transparent 0 38%, rgba(0,0,0,.38) 78%, rgba(0,0,0,.80) 100%);
+    }
+
+    a,
+    button {
+      font: inherit;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .inspect-page {
+      position: relative;
+      z-index: 2;
+      width: 100vw;
+      height: 100svh;
+      min-height: 100svh;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .inspect-topbar {
+      position: relative;
+      z-index: 60;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: clamp(12px, 2.8vh, 24px) clamp(12px, 3vw, 26px);
+      pointer-events: none;
+    }
+
+    .inspect-brand {
+      display: grid;
+      gap: 3px;
+      pointer-events: auto;
+      opacity: .50;
+      transition: opacity .16s ease;
+    }
+
+    .inspect-brand:hover,
+    .inspect-brand:focus-visible {
+      opacity: 1;
+    }
+
+    .inspect-brand strong {
+      color: var(--gold);
+      font-size: clamp(.78rem, 2.6vw, 1rem);
+      letter-spacing: .20em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .inspect-brand span {
+      color: var(--soft);
+      font-size: clamp(.82rem, 2.6vw, 1.06rem);
+    }
+
+    .return-link {
+      pointer-events: auto;
+      border: 1px solid var(--line-gold);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(3, 7, 12, .56);
+      color: var(--ink);
+      backdrop-filter: blur(12px);
+      box-shadow:
+        0 14px 46px rgba(0,0,0,.34),
+        inset 0 0 0 1px rgba(255,255,255,.04);
+      font-size: clamp(.82rem, 2.4vw, 1rem);
+      font-weight: 800;
+      opacity: .58;
+      transition: opacity .16s ease, background .16s ease;
+      white-space: nowrap;
+    }
+
+    .return-link:hover,
+    .return-link:focus-visible {
+      opacity: 1;
+      background: rgba(242, 199, 111, .16);
+    }
+
+    .inspect-stage {
+      position: relative;
+      z-index: 10;
+      width: 100vw;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
+    }
+
+    #showroom-globe-mount {
+      position: relative !important;
+      z-index: 20 !important;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      display: grid !important;
+      place-items: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      transform: none !important;
+    }
+
+    #showroom-globe-mount .showroom-earth-clearance {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    #showroom-globe-mount .showroom-earth-canvas-shell,
+    #showroom-globe-mount .showroom-earth-visual-stack {
+      width: 100% !important;
+      height: 100% !important;
+      display: grid !important;
+      grid-template-rows: 1fr auto auto !important;
+      align-items: center !important;
+      justify-items: center !important;
+      gap: clamp(10px, 2vh, 18px) !important;
+      padding: 0 0 clamp(8px, 2vh, 18px) !important;
+      margin: 0 !important;
+      transform: none !important;
+    }
+
+    #showroom-globe-mount [data-dgb-earth-mount],
+    #showroom-globe-mount .dgb-earth-stage {
+      width: min(84vmin, 940px) !important;
+      max-width: 94vw !important;
+      min-height: auto !important;
+      height: auto !important;
+      margin: 0 auto !important;
+      display: grid !important;
+      place-items: center !important;
+      transform: none !important;
+      isolation: isolate !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-tilt,
+    #showroom-globe-mount .dgb-earth-sphere {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
+      transform: none !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-sphere {
+      filter:
+        drop-shadow(0 0 34px rgba(97, 153, 236, .34))
+        drop-shadow(0 0 92px rgba(242, 199, 111, .10));
+    }
+
+    #showroom-globe-mount [data-dgb-earth-canvas] {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      max-width: 100% !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-control-panel {
+      z-index: 30;
+      width: min(560px, 88vw) !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      margin: 0 auto !important;
+      opacity: .18;
+      filter: grayscale(.72);
+      transform: scale(.94);
+      transition: opacity .18s ease, filter .18s ease, transform .18s ease;
+    }
+
+    #showroom-globe-mount .dgb-earth-control-panel:hover,
+    #showroom-globe-mount .dgb-earth-control-panel:focus-within {
+      opacity: .92;
+      filter: none;
+      transform: scale(1);
+    }
+
+    #showroom-globe-mount .dgb-earth-control-button,
+    #showroom-globe-mount .dgb-earth-control-readout {
+      min-height: clamp(42px, 6.8vh, 62px) !important;
+      border: 1px solid rgba(255,255,255,.13) !important;
+      border-radius: 999px !important;
+      display: grid !important;
+      place-items: center !important;
+      background: rgba(0, 3, 9, .68) !important;
+      color: rgba(255,255,255,.94) !important;
+      font-size: clamp(.9rem, 3.2vw, 1.18rem) !important;
+      font-weight: 850 !important;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.035),
+        0 10px 32px rgba(0,0,0,.24) !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-control-button {
+      cursor: pointer;
+    }
+
+    #showroom-globe-mount .dgb-earth-control-button:hover {
+      border-color: var(--line-gold) !important;
+      background: rgba(242,199,111,.16) !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-control-readout {
+      grid-column: 1 / -1 !important;
+      color: rgba(211, 215, 238, .82) !important;
+      letter-spacing: .03em !important;
+    }
+
+    #showroom-globe-mount .dgb-earth-caption {
+      width: min(760px, 90vw) !important;
+      margin: 0 auto !important;
+      color: rgba(255,255,255,.66) !important;
+      font-size: clamp(.62rem, 2.5vw, .9rem) !important;
+      font-weight: 900 !important;
+      letter-spacing: .14em !important;
+      line-height: 1.35 !important;
+      text-align: center !important;
+      text-transform: uppercase !important;
+      opacity: .42;
+    }
+
+    .fallback-card {
+      width: min(720px, calc(100vw - 34px));
+      border: 1px solid var(--line-gold);
+      border-radius: 28px;
+      padding: 24px;
+      background: rgba(2, 5, 10, .72);
+      box-shadow: 0 28px 90px rgba(0,0,0,.44);
+    }
+
+    .fallback-card h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 5vw, 3.4rem);
+      letter-spacing: -.05em;
+    }
+
+    .fallback-card p,
+    .fallback-card .kicker {
+      color: var(--soft);
+      line-height: 1.45;
+    }
+
+    .audit-source,
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 760px) {
+      .inspect-topbar {
+        padding: 14px 16px;
+      }
+
+      .inspect-brand span {
+        display: none;
+      }
+
+      .return-link {
+        padding: 9px 12px;
+        font-size: .86rem;
+      }
+
+      .inspect-stage {
+        padding-bottom: 14px;
+      }
+
+      #showroom-globe-mount [data-dgb-earth-mount],
+      #showroom-globe-mount .dgb-earth-stage {
+        width: min(78vmin, 92vw) !important;
+      }
+
+      #showroom-globe-mount .dgb-earth-control-panel {
+        width: min(440px, 86vw) !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main
+    class="inspect-page"
+    data-page-id="inspect-globe"
+    data-page="inspect-globe"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="inspection"
+    data-parent-route="/showroom/"
+  >
+    <header class="inspect-topbar">
+      <a class="inspect-brand" href="/showroom/" aria-label="Return to Showroom">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Inspect Globe · Empty Universe Field</span>
+      </a>
+
+      <a class="return-link" href="/showroom/">Return to Showroom</a>
+    </header>
+
+    <section class="inspect-stage" aria-label="Dedicated globe inspection room">
+      <div
+        id="showroom-globe-mount"
+        class="showroom-globe-mount showroom-globe-inspection-mount"
+        aria-live="polite"
+        data-render-root="showroom-globe"
+        data-render-status="waiting"
+        data-render-controller="/showroom/globe/index.js"
+        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+        data-earth-material="/assets/earth/earth_material.css"
+        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+        data-earth-standard="centered-satellite-earth-no-external-rings"
+        data-demo-universe="globe-only"
+        data-estate-land-placement="mirror-universe-only"
+        data-showroom-globe-placement="dedicated-inspection-route"
+      >
+        <noscript>
+          <article class="fallback-card">
+            <p class="kicker">Inspect Globe fallback</p>
+            <h2>Orbital Earth</h2>
+            <p>JavaScript is required for the Earth canvas inspection route.</p>
+          </article>
+        </noscript>
+      </div>
+    </section>
+
+    <section class="audit-source" aria-label="Inspect Globe audit source">
+      <a href="/showroom/">Showroom</a>
+      <a href="/">Compass</a>
+      <a href="/gauges/">Gauges</a>
+
+      <span>route-exists</span>
+      <span>estate=rich-manor-and-estate</span>
+      <span>manor-skin=active</span>
+      <span>house-field=true</span>
+      <span>gauges-truth=live-authority</span>
+      <span>construct-class=inspection</span>
+      <span>parent-route=/showroom/</span>
+      <span>render-controller=/showroom/globe/index.js</span>
+      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
+      <span>earth-material=/assets/earth/earth_material.css</span>
+      <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
+      <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
+      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
+      <span>INSPECT_GLOBE_ROUTE_FILE_TNT_v1</span>
+    </section>
+  </main>
+
+  <script src="/assets/earth/earth_canvas.js?v=inspect-globe-route-file-v1" defer></script>
+  <script src="/showroom/globe/index.js?v=inspect-globe-route-file-v1" defer></script>
+</body>
+</html>

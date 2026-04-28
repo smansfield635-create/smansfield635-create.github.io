@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-demo-universe-earth-contract-v1"
+  data-generation="dexter-lab-measurement-key-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -12,31 +12,40 @@
   data-house-part="gauges"
   data-render-health-lane="active"
   data-demo-universe-earth-render-health="measured"
+  data-dexter-lab="instrumentation"
+  data-measurement-key="active"
+  data-cadillac-key-authority="master"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Demo Universe Earth Render Health</title>
+  <title>Dexter Lab Gauges · Measurement Key · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Live gauges for Diamond Gate Bridge. Measures route markers, generation readiness, products, planets, and the current Demo Universe Earth render contract."
+    content="Dexter Lab Gauges for Diamond Gate Bridge. Measures route health, render health, visual truth, pressure, acid/base balance, barometric pressure, seismic shock, axis, 256-state completion, and universe-build readiness."
   />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #05070d;
-      --panel: rgba(255,255,255,.055);
-      --panel-2: rgba(255,255,255,.035);
+      --bg2: #02040a;
+      --panel: rgba(255,255,255,.058);
+      --panel2: rgba(255,255,255,.034);
       --line: rgba(255,255,255,.13);
+      --line2: rgba(242,199,111,.34);
       --gold: #f2c76f;
       --ink: #f4f7ff;
       --soft: rgba(244,247,255,.72);
-      --muted: rgba(244,247,255,.52);
+      --muted: rgba(244,247,255,.50);
       --bad: #ff9d9d;
+      --warn: #f2c76f;
       --ok: #9dffca;
+      --blue: #8bb8ff;
+      --acid: #ff9d9d;
+      --base: #9dffca;
     }
 
     * {
@@ -48,9 +57,10 @@
       margin: 0;
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.08), transparent 30%),
-        radial-gradient(circle at 30% 35%, rgba(80,130,220,.09), transparent 28%),
-        linear-gradient(180deg, #05070d 0%, #02040a 100%);
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.095), transparent 30%),
+        radial-gradient(circle at 24% 32%, rgba(80,130,220,.105), transparent 28%),
+        radial-gradient(circle at 80% 18%, rgba(157,255,202,.05), transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -59,10 +69,15 @@
       color: inherit;
     }
 
-    .gauges-page {
-      max-width: 1120px;
+    code {
+      color: var(--gold);
+      overflow-wrap: anywhere;
+    }
+
+    .lab-page {
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 28px 18px 72px;
+      padding: 28px 18px 86px;
     }
 
     .site-topbar {
@@ -91,7 +106,9 @@
       font-size: 1rem;
     }
 
-    .site-nav {
+    .site-nav,
+    .action-row,
+    .mini-links {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -99,7 +116,9 @@
     }
 
     .site-nav a,
-    .action-row button {
+    .action-row button,
+    .action-row a,
+    .mini-links a {
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255,255,255,.055);
@@ -110,9 +129,23 @@
       cursor: pointer;
     }
 
-    .site-nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,.44);
+    .site-nav a[aria-current="page"],
+    .action-row button,
+    .mini-links a.primary {
+      border-color: var(--line2);
       background: rgba(242,199,111,.14);
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: clamp(22px, 5vw, 48px);
+      background:
+        radial-gradient(circle at 16% 14%, rgba(242,199,111,.10), transparent 30%),
+        radial-gradient(circle at 88% 18%, rgba(157,255,202,.055), transparent 24%),
+        radial-gradient(circle at 74% 78%, rgba(80,130,220,.10), transparent 34%),
+        var(--panel);
+      box-shadow: 0 26px 90px rgba(0,0,0,.30);
     }
 
     .kicker {
@@ -125,60 +158,68 @@
     }
 
     h1 {
-      font-size: clamp(2.2rem, 8vw, 5.4rem);
-      letter-spacing: -.07em;
-      line-height: .9;
+      font-size: clamp(2.4rem, 8vw, 6rem);
+      letter-spacing: -.075em;
+      line-height: .88;
       margin: 0 0 16px;
     }
 
     h2 {
-      margin-top: 32px;
+      font-size: clamp(1.35rem, 4vw, 2.15rem);
+      letter-spacing: -.04em;
+      margin: 34px 0 12px;
     }
 
-    p {
+    h3 {
+      margin: .1em 0 .45em;
+      font-size: 1rem;
+    }
+
+    p,
+    li {
       color: var(--soft);
-      line-height: 1.5;
+      line-height: 1.52;
     }
 
-    code {
-      color: var(--gold);
-      overflow-wrap: anywhere;
+    .hero p {
+      max-width: 920px;
     }
 
-    .action-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 18px 0;
-    }
-
-    .dial-grid {
+    .status-strip {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
       gap: 12px;
-      margin: 22px 0;
+      margin: 22px 0 0;
     }
 
-    .gauge-card {
+    .gauge-card,
+    .instrument-card,
+    .audit-row,
+    .receipt,
+    .lab-panel {
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: var(--panel);
+      background: var(--panel2);
       padding: 16px;
     }
 
-    .gauge-card strong {
+    .gauge-card strong,
+    .instrument-card strong {
       display: block;
-      font-size: 2.4rem;
+      font-size: 2.35rem;
       line-height: 1;
+      letter-spacing: -.04em;
     }
 
-    .gauge-card span {
+    .gauge-card span,
+    .instrument-card span {
       display: block;
       font-weight: 900;
       margin-top: 8px;
     }
 
-    .gauge-card small {
+    .gauge-card small,
+    .instrument-card small {
       display: block;
       color: var(--soft);
       margin-top: 4px;
@@ -196,17 +237,82 @@
       border-color: rgba(255,157,157,.36);
     }
 
-    .audit-row {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--panel-2);
-      padding: 14px;
-      margin: 12px 0;
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .audit-row h3 {
-      margin: .1em 0 .4em;
-      font-size: 1rem;
+    .instrument-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .instrument-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 88% 12%, rgba(242,199,111,.11), transparent 28%),
+        linear-gradient(135deg, transparent, rgba(255,255,255,.035));
+    }
+
+    .instrument-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .meter {
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: var(--value, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(255,157,157,.82), rgba(242,199,111,.82), rgba(157,255,202,.82));
+    }
+
+    .split-meter {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .split-meter .acid,
+    .split-meter .base {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .split-meter .acid i {
+      display: block;
+      height: 100%;
+      width: var(--acid-value, 0%);
+      background: linear-gradient(90deg, rgba(255,157,157,.25), rgba(255,157,157,.95));
+    }
+
+    .split-meter .base i {
+      display: block;
+      height: 100%;
+      width: var(--base-value, 0%);
+      background: linear-gradient(90deg, rgba(157,255,202,.25), rgba(157,255,202,.95));
+    }
+
+    .audit-row {
+      margin: 12px 0;
     }
 
     .audit-row ul {
@@ -214,15 +320,23 @@
       color: var(--soft);
     }
 
-    .receipt {
-      margin-top: 26px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 14px;
-      background: var(--panel-2);
+    .audit-row .meta {
+      color: var(--muted);
+      font-size: .92rem;
     }
 
-    .audit-source {
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .receipt {
+      margin-top: 28px;
+    }
+
+    .audit-source,
+    .sr-only {
       position: absolute !important;
       width: 1px !important;
       height: 1px !important;
@@ -240,8 +354,15 @@
         display: grid;
       }
 
-      .site-nav {
+      .site-nav,
+      .action-row,
+      .mini-links {
         justify-content: flex-start;
+      }
+
+      .gauge-card strong,
+      .instrument-card strong {
+        font-size: 2rem;
       }
     }
   </style>
@@ -250,6 +371,7 @@
 <body
   data-page-id="gauges"
   data-page="gauges"
+  data-generation="dexter-lab-measurement-key-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -258,12 +380,15 @@
   data-house-part="gauges"
   data-render-health-lane="active"
   data-demo-universe-earth-render-health="measured"
+  data-dexter-lab="instrumentation"
+  data-measurement-key="active"
+  data-cadillac-key-authority="master"
 >
-  <main class="gauges-page">
+  <main class="lab-page">
     <header class="site-topbar">
       <a class="site-brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Rich Manor and Estate · Gauges</span>
+        <span>Dexter Lab · Measurement Key</span>
       </a>
 
       <nav class="site-nav" aria-label="Primary house routes">
@@ -272,28 +397,32 @@
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Demo Universe Earth</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <section>
-      <p class="kicker">H6 · Gauges · Demo Universe Earth render health</p>
-      <h1>Gauges</h1>
+    <section class="hero">
+      <p class="kicker">H6 · Gauges · Dexter Lab Instrument Console</p>
+      <h1>Measurement Key.</h1>
       <p>
-        Gauges separates marker health from generation health and now measures the accepted Demo Universe Earth contract. The retired <code>/assets/earth/showroom-earth.png</code> requirement is no longer part of G6.
+        The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
+        This lab measures route health, render health, visual truth, pressure, acid/base balance,
+        barometric pressure, seismic shock, axis/orientation, 256-state completion, and universe-build readiness.
       </p>
 
       <div class="action-row">
         <button type="button" data-run-gauges>Run live calibration</button>
         <a href="/">Return to Compass</a>
+        <a href="/showroom/globe/">Inspect Demo Universe</a>
       </div>
     </section>
 
     <section id="gauge-output" aria-live="polite">
-      <p>Running live calibration…</p>
+      <p>Running live Dexter Lab calibration…</p>
     </section>
 
-    <section class="audit-source" aria-label="Gauges audit source">
+    <section class="audit-source" aria-label="Dexter Lab Gauges audit source">
       <a href="/">Compass</a>
       <a href="/door/">Door</a>
       <a href="/home/">Home</a>
@@ -313,7 +442,10 @@
       <span>H6_GAUGES</span>
       <span>render-health-lane=active</span>
       <span>demo-universe-earth-render-health=measured</span>
-      <span>GAUGES_DEMO_UNIVERSE_EARTH_RENDER_CONTRACT_TNT_v1</span>
+      <span>dexter-lab=instrumentation</span>
+      <span>measurement-key=active</span>
+      <span>cadillac-key-authority=master</span>
+      <span>DEXTER_LAB_MEASUREMENT_KEY_GAUGES_TNT_v1</span>
     </section>
   </main>
 
@@ -321,7 +453,8 @@
     (function () {
       "use strict";
 
-      var VERSION = "GAUGES_DEMO_UNIVERSE_EARTH_RENDER_CONTRACT_TNT_v1";
+      var VERSION = "DEXTER_LAB_MEASUREMENT_KEY_GAUGES_TNT_v1";
+      var cache = Object.create(null);
 
       var HOUSE_ROUTES = [
         {
@@ -411,37 +544,27 @@
       ];
 
       var PRODUCT_ROUTES = [
-        {
-          id: "P_ARCHCOIN",
-          title: "ARCHCOIN",
-          url: "/products/archcoin/",
-          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
-        },
-        {
-          id: "P_FIVE_FLAGS",
-          title: "Five Flags",
-          url: "/products/five-flags/",
-          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
-        },
-        {
-          id: "P_ON_YOUR_SIDE_AAI",
-          title: "On Your Side AAI",
-          url: "/products/on-your-side-ai/",
-          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
-        },
-        {
-          id: "P_EDUCATION",
-          title: "Education",
-          url: "/products/education/",
-          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
-        },
-        {
-          id: "P_NUTRITION",
-          title: "Nutrition",
-          url: "/products/nutrition/",
-          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
-        }
-      ];
+        ["/products/archcoin/", "ARCHCOIN"],
+        ["/products/five-flags/", "Five Flags"],
+        ["/products/on-your-side-ai/", "On Your Side AAI"],
+        ["/products/education/", "Education"],
+        ["/products/nutrition/", "Nutrition"]
+      ].map(function (entry, index) {
+        return {
+          id: "P_" + String(index + 1),
+          title: entry[1],
+          url: entry[0],
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="product"',
+            'data-product-wing="true"',
+            'data-parent-route="/products/"'
+          ]
+        };
+      });
 
       var PLANET_ROUTES = [
         ["/prelude/", "Prelude", false],
@@ -473,7 +596,7 @@
           id: "SR_PARENT",
           title: "Showroom parent handoff",
           url: "/showroom/",
-          weight: 20,
+          weight: 18,
           tokens: [
             'data-estate="rich-manor-and-estate"',
             'data-house-part="showroom"',
@@ -484,7 +607,7 @@
           id: "SR_DEMO_UNIVERSE",
           title: "Demo Universe Earth route",
           url: "/showroom/globe/",
-          weight: 30,
+          weight: 24,
           tokens: [
             'data-demo-universe="globe-only"',
             'data-earth-standard="demo-universe-restored-earth"',
@@ -496,22 +619,37 @@
           id: "SR_EARTH_SURFACE",
           title: "Earth surface asset",
           url: "/assets/earth/earth_surface_2048.jpg",
-          weight: 20,
+          weight: 18,
           assetOnly: true
         },
         {
           id: "SR_EARTH_CLOUDS",
           title: "Earth cloud asset",
           url: "/assets/earth/earth_clouds_2048.jpg",
-          weight: 15,
+          weight: 14,
           assetOnly: true
         },
         {
           id: "SR_BACKLINKS",
           title: "Demo Universe backlinks",
           url: "/showroom/globe/",
-          weight: 15,
+          weight: 12,
           tokens: ['href="/"', 'href="/showroom/"', 'href="/gauges/"']
+        },
+        {
+          id: "SR_SHADOW_CONTRACT",
+          title: "Light / shadow technical contract",
+          url: "/showroom/globe/",
+          weight: 14,
+          tokens: [
+            'data-sun-shadow="active"',
+            'sun-shadow=active',
+            "DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1"
+          ],
+          acceptedTokens: [
+            'data-shadow-accepted="true"',
+            "SHADOW_VISUAL_ACCEPTED"
+          ]
         }
       ];
 
@@ -521,6 +659,10 @@
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
       }
 
       function average(values) {
@@ -542,6 +684,12 @@
         });
       }
 
+      function tokenPresent(text, tokens) {
+        return (tokens || []).some(function (token) {
+          return text.indexOf(token) !== -1;
+        });
+      }
+
       function scoreFromMissing(httpOk, missing, total) {
         if (!httpOk) return 0;
         if (!total || missing.length === 0) return 100;
@@ -549,6 +697,8 @@
       }
 
       async function fetchResource(url) {
+        if (cache[url]) return cache[url];
+
         try {
           var response = await fetch(url + "?audit=" + Date.now(), { cache: "no-store" });
           var text = "";
@@ -557,14 +707,14 @@
             text = await response.text();
           }
 
-          return {
+          cache[url] = {
             url: url,
             ok: response.ok,
             status: response.status,
             text: text
           };
         } catch (error) {
-          return {
+          cache[url] = {
             url: url,
             ok: false,
             status: 0,
@@ -572,6 +722,8 @@
             error: error && error.message ? error.message : "fetch failed"
           };
         }
+
+        return cache[url];
       }
 
       async function auditRoute(config) {
@@ -589,7 +741,8 @@
           ok: result.ok,
           score: scoreFromMissing(result.ok, missing, total),
           markerMissing: markerMissing,
-          backlinkMissing: backlinkMissing
+          backlinkMissing: backlinkMissing,
+          missingTotal: missing.length
         };
       }
 
@@ -605,11 +758,18 @@
             status: result.status,
             ok: result.ok,
             score: result.ok ? 100 : 0,
-            missing: result.ok ? [] : ["HTTP 200 for required asset"]
+            missing: result.ok ? [] : ["HTTP 200 for required asset"],
+            accepted: true
           };
         }
 
         var missing = tokenMissing(result.text, config.tokens || []);
+        var score = scoreFromMissing(result.ok, missing, (config.tokens || []).length);
+        var accepted = true;
+
+        if (config.acceptedTokens) {
+          accepted = tokenPresent(result.text, config.acceptedTokens);
+        }
 
         return {
           id: config.id,
@@ -618,27 +778,199 @@
           weight: config.weight,
           status: result.status,
           ok: result.ok,
-          score: scoreFromMissing(result.ok, missing, (config.tokens || []).length),
-          missing: missing
+          score: score,
+          missing: missing,
+          accepted: accepted,
+          acceptedTokens: config.acceptedTokens || []
+        };
+      }
+
+      async function measureCoreExperience() {
+        var result = await fetchResource("/");
+        var held = tokenPresent(result.text, [
+          'data-core-experience="held"',
+          "CORE_EXPERIENCE_HOLD",
+          "INDEX_CORE_EXPERIENCE_ACCEPTED"
+        ]);
+
+        return {
+          score: held ? 100 : 50,
+          held: held
+        };
+      }
+
+      async function measureGenerationReadiness() {
+        var result = await fetchResource("/");
+        var gen1 = tokenPresent(result.text, ['data-generation-baseline="GEN_1"', "GEN_1_ACCEPTED", "TREE_G1"]);
+        var treeG2 = tokenPresent(result.text, ["TREE_G2", 'data-tree-generation="G2"']);
+        var gen3 = tokenPresent(result.text, ["GEN_3_ACCEPTED", 'data-generation="GEN_3"']);
+
+        var score = 20;
+        if (gen1) score = 50;
+        if (gen1 && treeG2) score = 70;
+        if (gen3) score = 100;
+
+        return {
+          score: score,
+          gen1: gen1,
+          treeG2: treeG2,
+          gen3: gen3
+        };
+      }
+
+      function countMissing(groups) {
+        var total = 0;
+
+        groups.forEach(function (group) {
+          group.forEach(function (item) {
+            total += item.missingTotal || 0;
+            total += (item.missing || []).length;
+          });
+        });
+
+        return total;
+      }
+
+      function countBreaks(groups) {
+        var total = 0;
+
+        groups.forEach(function (group) {
+          group.forEach(function (item) {
+            if (item.score < 95) total += 1;
+          });
+        });
+
+        return total;
+      }
+
+      function buildInstruments(data) {
+        var allGroups = [data.house, data.products, data.planets, data.render];
+        var missingCount = countMissing(allGroups);
+        var breakCount = countBreaks(allGroups);
+        var routeCount = data.house.length + data.products.length + data.planets.length;
+        var renderCount = data.render.length;
+
+        var completedSeats = Math.round((data.overall / 100) * 256);
+        var missingSeats = 256 - completedSeats;
+
+        var acid = clamp(Math.round((missingCount * 2.6) + (breakCount * 5.2) + ((100 - data.renderScore) * .32)), 0, 100);
+        var base = clamp(Math.round((data.houseScore + data.renderScore + data.productScore + data.planetScore) / 4), 0, 100);
+        var ph = clamp(7 + ((base - acid) / 100) * 7, 0, 14);
+
+        var pressure = clamp(Math.round(
+          ((100 - data.overall) * .45) +
+          ((100 - data.planetScore) * .22) +
+          ((100 - data.generationScore) * .16) +
+          ((100 - data.coreScore) * .10) +
+          (breakCount * 1.2)
+        ), 0, 100);
+
+        var parametric = {
+          routePressure: clamp(100 - data.houseScore, 0, 100),
+          renderPressure: clamp(100 - data.renderScore, 0, 100),
+          productPressure: clamp(100 - data.productScore, 0, 100),
+          planetPressure: clamp(100 - data.planetScore, 0, 100),
+          corePressure: clamp(100 - data.coreScore, 0, 100),
+          generationPressure: clamp(100 - data.generationScore, 0, 100)
+        };
+
+        var previous = null;
+        try {
+          previous = JSON.parse(localStorage.getItem("DGB_DEXTER_LAB_LAST_AUDIT") || "null");
+        } catch (error) {
+          previous = null;
+        }
+
+        var delta = previous ? data.overall - Number(previous.overall || 0) : 0;
+        var shock = clamp(Math.round(Math.abs(delta) * 1.6 + breakCount * 2.4 + missingCount * .7), 0, 100);
+
+        try {
+          localStorage.setItem("DGB_DEXTER_LAB_LAST_AUDIT", JSON.stringify({
+            overall: data.overall,
+            renderScore: data.renderScore,
+            planetScore: data.planetScore,
+            productScore: data.productScore,
+            time: Date.now()
+          }));
+        } catch (error) {}
+
+        var shadow = data.render.filter(function (item) {
+          return item.id === "SR_SHADOW_CONTRACT";
+        })[0];
+
+        var gyroscopeScore = 0;
+        var demoRoute = cache["/showroom/globe/"] ? cache["/showroom/globe/"].text : "";
+        var gyroTokens = [
+          'data-earth-axis="23.5deg"',
+          'data-demo-universe="globe-only"',
+          'data-earth-standard="demo-universe-restored-earth"',
+          "DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1"
+        ];
+        var gyroMissing = tokenMissing(demoRoute, gyroTokens);
+        gyroscopeScore = scoreFromMissing(Boolean(cache["/showroom/globe/"] && cache["/showroom/globe/"].ok), gyroMissing, gyroTokens.length);
+
+        return {
+          abacus: {
+            score: data.overall,
+            completedSeats: completedSeats,
+            missingSeats: missingSeats,
+            routeCount: routeCount,
+            renderCount: renderCount
+          },
+          seismograph: {
+            score: 100 - shock,
+            shock: shock,
+            delta: delta,
+            breakCount: breakCount,
+            missingCount: missingCount
+          },
+          barometer: {
+            score: 100 - pressure,
+            pressure: pressure,
+            label: pressure >= 70 ? "storm pressure" : pressure >= 40 ? "active pressure" : "stable pressure"
+          },
+          parametric: parametric,
+          acidBase: {
+            score: clamp(Math.round((base + (100 - acid)) / 2), 0, 100),
+            acid: acid,
+            base: base,
+            ph: ph
+          },
+          gyroscope: {
+            score: gyroscopeScore,
+            missing: gyroMissing
+          },
+          lightShadow: {
+            score: shadow ? shadow.score : 0,
+            accepted: shadow ? shadow.accepted : false,
+            missing: shadow ? shadow.missing : ["shadow component missing"]
+          },
+          visualTruth: {
+            score: shadow && shadow.accepted ? Math.round((data.renderScore + shadow.score) / 2) : Math.round((data.renderScore + (shadow ? shadow.score : 0)) / 2),
+            accepted: shadow ? shadow.accepted : false
+          }
         };
       }
 
       async function runAudit() {
+        cache = Object.create(null);
+
         var house = await Promise.all(HOUSE_ROUTES.map(auditRoute));
         var products = await Promise.all(PRODUCT_ROUTES.map(auditRoute));
         var planets = await Promise.all(PLANET_ROUTES.map(auditRoute));
         var render = await Promise.all(RENDER_CHECKS.map(auditRenderComponent));
+        var core = await measureCoreExperience();
+        var generation = await measureGenerationReadiness();
 
         var houseScore = average(house.map(function (item) { return item.score; }));
         var productScore = average(products.map(function (item) { return item.score; }));
         var planetScore = average(planets.map(function (item) { return item.score; }));
         var renderScore = weightedAverage(render);
-
-        var coreScore = 50;
-        var generationScore = 20;
+        var coreScore = core.score;
+        var generationScore = generation.score;
         var overall = average([houseScore, coreScore, generationScore, renderScore, productScore, planetScore]);
 
-        return {
+        var data = {
           house: house,
           products: products,
           planets: planets,
@@ -649,8 +981,14 @@
           renderScore: renderScore,
           coreScore: coreScore,
           generationScore: generationScore,
-          overall: overall
+          overall: overall,
+          core: core,
+          generation: generation
         };
+
+        data.instruments = buildInstruments(data);
+
+        return data;
       }
 
       function scoreClass(score) {
@@ -676,6 +1014,95 @@
         ].join("");
       }
 
+      function renderMeter(value) {
+        return '<div class="meter" style="--value:' + clamp(value, 0, 100) + '%"><i></i></div>';
+      }
+
+      function renderInstrument(title, value, label, note, score) {
+        return [
+          '<article class="instrument-card ' + scoreClass(score) + '">',
+          '<strong>' + escapeHtml(String(value)) + '</strong>',
+          '<span>' + escapeHtml(title) + '</span>',
+          '<small>' + escapeHtml(label) + '</small>',
+          renderMeter(score),
+          '<p>' + escapeHtml(note) + '</p>',
+          "</article>"
+        ].join("");
+      }
+
+      function renderInstrumentPanel(instruments) {
+        return [
+          "<h2>Dexter Lab Instruments</h2>",
+          '<section class="lab-grid">',
+          renderInstrument(
+            "Abacus",
+            instruments.abacus.completedSeats + "/256",
+            "state accounting",
+            instruments.abacus.missingSeats + " seats remain unconfirmed across the measured build field.",
+            instruments.abacus.score
+          ),
+          renderInstrument(
+            "Seismograph",
+            instruments.seismograph.shock,
+            "shock index",
+            "Delta since last local run: " + instruments.seismograph.delta + ". Break count: " + instruments.seismograph.breakCount + ". Missing tokens: " + instruments.seismograph.missingCount + ".",
+            instruments.seismograph.score
+          ),
+          renderInstrument(
+            "Barometer",
+            instruments.barometer.pressure,
+            instruments.barometer.label,
+            "Measures whole-system pressure across route, render, product, planet, core, and generation lanes.",
+            instruments.barometer.score
+          ),
+          renderInstrument(
+            "Gyroscope",
+            instruments.gyroscope.score,
+            "axis / orientation",
+            instruments.gyroscope.missing.length ? "Missing axis tokens remain." : "Earth axis and Demo Universe orientation tokens are present.",
+            instruments.gyroscope.score
+          ),
+          renderInstrument(
+            "Light / Shadow Meter",
+            instruments.lightShadow.score,
+            instruments.lightShadow.accepted ? "visual accepted" : "visual acceptance pending",
+            instruments.lightShadow.accepted ? "Shadow contract is technically present and visually accepted." : "Shadow contract is measured, but visual acceptance is not yet recorded.",
+            instruments.lightShadow.accepted ? instruments.lightShadow.score : Math.min(instruments.lightShadow.score, 74)
+          ),
+          renderInstrument(
+            "Visual Truth Meter",
+            instruments.visualTruth.score,
+            instruments.visualTruth.accepted ? "accepted target" : "target pending",
+            "Measures whether render health and visual truth agree instead of merely passing a technical token.",
+            instruments.visualTruth.score
+          ),
+          "</section>",
+
+          "<h2>Parametric Pressure</h2>",
+          '<section class="lab-grid">',
+          renderInstrument("Route Pressure", instruments.parametric.routePressure, "house lane", "Pressure from house route health.", 100 - instruments.parametric.routePressure),
+          renderInstrument("Render Pressure", instruments.parametric.renderPressure, "render lane", "Pressure from render contract health.", 100 - instruments.parametric.renderPressure),
+          renderInstrument("Product Pressure", instruments.parametric.productPressure, "product lane", "Pressure from product attachment health.", 100 - instruments.parametric.productPressure),
+          renderInstrument("Planet Pressure", instruments.parametric.planetPressure, "planet lane", "Pressure from planetary attachment health.", 100 - instruments.parametric.planetPressure),
+          renderInstrument("Core Pressure", instruments.parametric.corePressure, "core lane", "Pressure from Compass/core experience readiness.", 100 - instruments.parametric.corePressure),
+          renderInstrument("Generation Pressure", instruments.parametric.generationPressure, "generation lane", "Pressure from generation acceptance state.", 100 - instruments.parametric.generationPressure),
+          "</section>",
+
+          "<h2>Acid / Base Balance</h2>",
+          '<section class="lab-grid">',
+          [
+            '<article class="instrument-card ' + scoreClass(instruments.acidBase.score) + '">',
+            '<strong>pH ' + escapeHtml(instruments.acidBase.ph.toFixed(1)) + '</strong>',
+            '<span>Acid/Base Meter</span>',
+            '<small>acid=' + escapeHtml(String(instruments.acidBase.acid)) + ' · base=' + escapeHtml(String(instruments.acidBase.base)) + '</small>',
+            '<div class="split-meter" style="--acid-value:' + instruments.acidBase.acid + '%;--base-value:' + instruments.acidBase.base + '%"><div class="acid"><i></i></div><div class="base"><i></i></div></div>',
+            '<p>Acid marks corrosive instability. Base marks stabilizing structure. The target is controlled balance, not denial of pressure.</p>',
+            "</article>"
+          ].join(""),
+          "</section>"
+        ].join("");
+      }
+
       function renderRouteEvidence(title, items) {
         return [
           "<h2>" + escapeHtml(title) + "</h2>",
@@ -684,8 +1111,7 @@
             return [
               '<article class="audit-row ' + scoreClass(item.score) + '">',
               "<h3>" + escapeHtml(item.id + " · " + item.title + " · " + item.score) + "</h3>",
-              "<p><strong>" + state + "</strong> · HTTP=" + escapeHtml(item.status) + "</p>",
-              "<p><code>" + escapeHtml(item.url) + "</code></p>",
+              '<p class="meta"><strong>' + state + "</strong> · HTTP=" + escapeHtml(item.status) + " · <code>" + escapeHtml(item.url) + "</code></p>",
               "<p>Missing markers:</p>",
               "<ul>" + missingList(item.markerMissing) + "</ul>",
               item.backlinkMissing ? "<p>Missing backlinks:</p><ul>" + missingList(item.backlinkMissing) + "</ul>" : "",
@@ -697,14 +1123,18 @@
 
       function renderRenderEvidence(items) {
         return [
-          "<h2>Demo Universe Earth render evidence</h2>",
+          "<h2>Render / Visual Truth Evidence</h2>",
           items.map(function (item) {
             var state = item.score >= 95 ? "PASS" : "BREAK";
+            var acceptedLine = item.acceptedTokens && item.acceptedTokens.length
+              ? "<p>Visual acceptance: <strong>" + (item.accepted ? "ACCEPTED" : "PENDING") + "</strong></p>"
+              : "";
+
             return [
               '<article class="audit-row ' + scoreClass(item.score) + '">',
               "<h3>" + escapeHtml(item.id + " · " + item.title + " · " + item.score) + "</h3>",
-              "<p><strong>" + state + "</strong> · HTTP=" + escapeHtml(item.status) + "</p>",
-              "<p><code>" + escapeHtml(item.url) + "</code></p>",
+              '<p class="meta"><strong>' + state + "</strong> · HTTP=" + escapeHtml(item.status) + " · <code>" + escapeHtml(item.url) + "</code></p>",
+              acceptedLine,
               "<p>Missing render tokens:</p>",
               "<ul>" + missingList(item.missing) + "</ul>",
               "</article>"
@@ -717,18 +1147,24 @@
         var output = document.getElementById("gauge-output");
 
         output.innerHTML = [
-          '<section class="dial-grid">',
+          '<section class="status-strip">',
           renderDial("Overall ceiling", data.overall, "composite"),
           renderDial("House skeleton", data.houseScore, "marker health"),
-          renderDial("Core experience", data.coreScore, "measured"),
-          renderDial("Generation readiness", data.generationScore, "GEN baseline hold"),
+          renderDial("Core experience", data.coreScore, data.core.held ? "held" : "not held"),
+          renderDial("Generation readiness", data.generationScore, "GEN baseline"),
           renderDial("Render health", data.renderScore, "Demo Universe Earth"),
           renderDial("Products", data.productScore, "product route health"),
           renderDial("Planets", data.planetScore, "planet route health"),
           "</section>",
 
-          "<h2>Marker health is not render health.</h2>",
-          "<p>Showroom can pass route markers while Demo Universe Earth render health is measured separately through <code>/showroom/globe/</code> and the local Earth texture assets.</p>",
+          renderInstrumentPanel(data.instruments),
+
+          '<section class="lab-panel">',
+          "<h2>Measurement Key Read</h2>",
+          "<p>The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.</p>",
+          "<p>Current shadow rule: the Light / Shadow Meter can detect the technical contract, but visual truth is not accepted until a manual acceptance token is present: <code>data-shadow-accepted=&quot;true&quot;</code> or <code>SHADOW_VISUAL_ACCEPTED</code>.</p>",
+          '<div class="mini-links"><a class="primary" href="/showroom/globe/">Inspect Demo Universe</a><a href="/showroom/">Showroom</a><a href="/">Compass</a></div>',
+          "</section>",
 
           renderRenderEvidence(data.render),
           renderRouteEvidence("House route evidence", data.house),
@@ -737,20 +1173,21 @@
 
           '<section class="receipt">',
           "<h2>Calibration receipt</h2>",
-          "<p><strong>BEFORE:</strong> retired actual-Earth asset contract required <code>/assets/earth/showroom-earth.png</code>.</p>",
-          "<p><strong>AFTER:</strong> current Demo Universe Earth contract requires <code>/showroom/globe/</code>, <code>earth_surface_2048.jpg</code>, and <code>earth_clouds_2048.jpg</code>.</p>",
           "<p><strong>VERSION:</strong> " + escapeHtml(VERSION) + "</p>",
+          "<p><strong>CADILLAC KEY:</strong> master authority key.</p>",
+          "<p><strong>MEASUREMENT KEY:</strong> operating proof key.</p>",
+          "<p><strong>DEXTER LAB:</strong> instrument console for route, render, pressure, pH, barometer, seismograph, gyroscope, visual truth, 256-state completion, and universe-build readiness.</p>",
           "</section>"
         ].join("");
       }
 
       async function execute() {
         var output = document.getElementById("gauge-output");
-        if (output) output.innerHTML = "<p>Running live calibration…</p>";
+        if (output) output.innerHTML = "<p>Running live Dexter Lab calibration…</p>";
 
         var data = await runAudit();
 
-        window.DGBGaugeAudit = Object.freeze({
+        window.DGBDexterLabGauges = Object.freeze({
           version: VERSION,
           result: data
         });
@@ -761,7 +1198,6 @@
       function bind() {
         var button = document.querySelector("[data-run-gauges]");
         if (!button) return;
-
         button.addEventListener("click", execute);
       }
 

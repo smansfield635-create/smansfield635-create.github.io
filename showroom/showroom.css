@@ -1,3 +1,4 @@
+
 :root {
   color-scheme: dark;
   --ink: #fff7e4;
@@ -140,79 +141,25 @@ button:focus-visible {
   border: 1px solid var(--line);
   border-radius: 32px;
   background:
-    radial-gradient(circle at 50% 20%, rgba(76, 142, 255, .14), transparent 26%),
-    radial-gradient(circle at 50% 48%, rgba(242, 199, 111, .12), transparent 28%),
+    radial-gradient(circle at 50% 45%, rgba(76, 142, 255, .22), transparent 34%),
+    radial-gradient(circle at 50% 52%, rgba(242, 199, 111, .16), transparent 30%),
     linear-gradient(180deg, rgba(5, 11, 22, .98), rgba(2, 5, 10, .99));
   box-shadow: 0 34px 120px rgba(0,0,0,.62);
   isolation: isolate;
 }
 
-.showroom-copy {
-  position: absolute;
-  left: clamp(18px, 3vw, 44px);
-  top: clamp(18px, 3vw, 44px);
-  z-index: 30;
-  width: min(470px, calc(100% - 36px));
-  border: 1px solid rgba(242,199,111,.28);
-  border-radius: 26px;
-  padding: 20px;
-  background: rgba(3,7,12,.62);
-  backdrop-filter: blur(12px);
-}
-
-.kicker {
-  margin: 0 0 10px;
-  color: var(--gold);
-  font-size: .74rem;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-}
-
-.showroom-copy h1 {
-  margin: 0 0 10px;
-  font-size: clamp(3rem, 7vw, 6.8rem);
-  line-height: .86;
-  letter-spacing: -.06em;
-}
-
-.showroom-copy p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.46;
-}
-
-.universe-switcher {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.universe-button {
-  cursor: pointer;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 9px 12px;
-  color: var(--muted);
-  background: rgba(255,255,255,.045);
-}
-
-.universe-button.is-active,
-.universe-button:hover {
-  border-color: var(--line-strong);
-  color: var(--ink);
-  background: rgba(242,199,111,.15);
-}
-
 .showroom-globe-mount {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 12;
+  display: block;
+  min-height: 100%;
 }
 
 .universe-scene {
   position: absolute;
   inset: 0;
+  display: block;
 }
 
 .universe-svg {
@@ -221,8 +168,13 @@ button:focus-visible {
   display: block;
 }
 
+.globe-group {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 .globe-core {
-  filter: drop-shadow(0 0 42px rgba(76, 142, 255, .28));
+  filter: drop-shadow(0 0 54px rgba(76, 142, 255, .42));
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -231,6 +183,11 @@ button:focus-visible {
 .globe-cloud,
 .globe-mirror-land,
 .globe-grid {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.orbit-ring {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -277,23 +234,80 @@ button:focus-visible {
   stroke-width: 4px;
 }
 
+.showroom-copy {
+  position: absolute;
+  left: clamp(18px, 3vw, 44px);
+  top: clamp(18px, 3vw, 44px);
+  z-index: 32;
+  width: min(430px, calc(100% - 36px));
+  border: 1px solid rgba(242,199,111,.26);
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(3,7,12,.48);
+  backdrop-filter: blur(10px);
+}
+
+.kicker {
+  margin: 0 0 10px;
+  color: var(--gold);
+  font-size: .74rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.showroom-copy h1 {
+  margin: 0 0 10px;
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+  line-height: .86;
+  letter-spacing: -.06em;
+}
+
+.showroom-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.46;
+}
+
+.universe-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.universe-button {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 12px;
+  color: var(--muted);
+  background: rgba(255,255,255,.045);
+}
+
+.universe-button.is-active,
+.universe-button:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+  background: rgba(242,199,111,.15);
+}
+
 .showroom-proof {
   position: absolute;
   right: clamp(18px, 3vw, 44px);
   bottom: clamp(18px, 3vw, 44px);
-  z-index: 30;
-  width: min(520px, calc(100% - 36px));
+  z-index: 32;
+  width: min(500px, calc(100% - 36px));
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
 .showroom-proof article {
-  border: 1px solid rgba(255,247,228,.16);
-  border-radius: 22px;
-  padding: 14px;
-  background: rgba(3,7,12,.64);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,247,228,.14);
+  border-radius: 20px;
+  padding: 13px;
+  background: rgba(3,7,12,.50);
+  backdrop-filter: blur(10px);
 }
 
 .showroom-proof span {
@@ -308,14 +322,14 @@ button:focus-visible {
 .showroom-proof strong {
   display: block;
   margin-bottom: 7px;
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .showroom-proof p {
   margin: 0;
   color: var(--muted);
-  font-size: .88rem;
-  line-height: 1.36;
+  font-size: .86rem;
+  line-height: 1.34;
 }
 
 .fallback-card {
@@ -370,7 +384,7 @@ button:focus-visible {
   }
 
   .showroom-copy h1 {
-    font-size: 3.2rem;
+    font-size: 3rem;
   }
 
   .site-nav a {

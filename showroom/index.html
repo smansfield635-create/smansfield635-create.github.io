@@ -1,25 +1,20 @@
 /* TNT RENEWAL — /showroom/index.js
-   SHOWROOM PAGE CONTROLLER · B29 · RUSSIAN DOLL + INSPECT GLOBE CONTROLLER
+   SHOWROOM PAGE CONTROLLER · SAFE INSPECT GLOBE MODE
 
    CONTRACT:
-     - Controls Russian-doll showroom behavior only.
-     - Controls Showroom page-state inspection toggle.
-     - Does not load Earth renderer.
-     - Does not initialize Earth renderer.
-     - Does not touch Earth canvas projection.
-     - Does not touch Earth controls.
-     - Opens compact chambers from portal cards.
-     - Observes Earth consumer contract markers without owning them.
-     - Adds Inspect Globe / Return to Showroom state toggle.
-     - Supports cache-busted script/link URLs.
+   - Does not load Earth.
+   - Does not initialize Earth.
+   - Does not change Earth projection.
+   - Does not change Earth assets.
+   - Adds Inspect Globe / Return to Showroom page-state toggle.
+   - Preserves Russian-doll behavior if those elements exist.
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "showroom-index-b29-inspect-globe-controller";
+  var VERSION = "showroom-index-safe-inspect-globe-v1";
   var DEFAULT_DOLL_ID = "doll-consider-energy";
-  var OBSERVER_TIMEOUT_MS = 9000;
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -27,15 +22,6 @@
     } else {
       fn();
     }
-  }
-
-  function markControllerReady() {
-    document.documentElement.setAttribute("data-showroom-controller", VERSION);
-    document.documentElement.setAttribute("data-showroom-controller-role", "russian-doll-plus-inspect-toggle");
-    document.documentElement.setAttribute("data-showroom-earth-ownership", "consumer-observer-only");
-
-    document.body.setAttribute("data-showroom-controller", VERSION);
-    document.body.setAttribute("data-showroom-earth-ownership", "consumer-observer-only");
   }
 
   function getPathFromUrl(value) {
@@ -49,23 +35,30 @@
   }
 
   function findScriptByPath(pathname) {
-    var scripts = Array.prototype.slice.call(document.scripts || []);
-
-    return scripts.find(function (script) {
+    return Array.from(document.scripts || []).find(function (script) {
       return getPathFromUrl(script.getAttribute("src")) === pathname;
     }) || null;
   }
 
   function findStylesheetByPath(pathname) {
-    var links = Array.prototype.slice.call(document.querySelectorAll('link[rel~="stylesheet"]'));
-
-    return links.find(function (link) {
+    return Array.from(document.querySelectorAll('link[rel~="stylesheet"]')).find(function (link) {
       return getPathFromUrl(link.getAttribute("href")) === pathname;
     }) || null;
   }
 
-  function boolString(value) {
+  function bool(value) {
     return value ? "true" : "false";
+  }
+
+  function markControllerReady() {
+    document.documentElement.dataset.showroomController = VERSION;
+    document.documentElement.dataset.showroomControllerRole = "page-state-toggle-only";
+    document.documentElement.dataset.showroomEarthOwnership = "consumer-observer-only";
+
+    if (document.body) {
+      document.body.dataset.showroomController = VERSION;
+      document.body.dataset.showroomEarthOwnership = "consumer-observer-only";
+    }
   }
 
   function protectEarthConsumerContract() {
@@ -76,77 +69,33 @@
     var earthCanvasScript = findScriptByPath("/assets/earth/earth_canvas.js");
     var showroomGlobeScript = findScriptByPath("/showroom/globe/index.js");
     var earthMaterialLink = findStylesheetByPath("/assets/earth/earth_material.css");
-    var earthRuntimeScript = findScriptByPath("/runtime/earth_asset_runtime.js");
 
-    document.documentElement.setAttribute("data-showroom-earth-mount-present", boolString(earthMount));
-    document.documentElement.setAttribute("data-showroom-earth-canvas-node-present", boolString(earthCanvas));
-    document.documentElement.setAttribute("data-showroom-globe-mount-present", boolString(showroomMount));
-    document.documentElement.setAttribute("data-showroom-earth-canvas-script-present", boolString(earthCanvasScript));
-    document.documentElement.setAttribute("data-showroom-globe-controller-script-present", boolString(showroomGlobeScript));
-    document.documentElement.setAttribute("data-showroom-earth-material-link-present", boolString(earthMaterialLink));
-    document.documentElement.setAttribute("data-showroom-earth-runtime-script-present", boolString(earthRuntimeScript));
+    document.documentElement.dataset.showroomEarthMountPresent = bool(earthMount);
+    document.documentElement.dataset.showroomEarthCanvasNodePresent = bool(earthCanvas);
+    document.documentElement.dataset.showroomGlobeMountPresent = bool(showroomMount);
+    document.documentElement.dataset.showroomEarthCanvasScriptPresent = bool(earthCanvasScript);
+    document.documentElement.dataset.showroomGlobeControllerScriptPresent = bool(showroomGlobeScript);
+    document.documentElement.dataset.showroomEarthMaterialLinkPresent = bool(earthMaterialLink);
 
     if (showroomMount) {
-      document.documentElement.setAttribute(
-        "data-showroom-globe-render-status",
-        showroomMount.getAttribute("data-render-status") || "unreported"
-      );
+      document.documentElement.dataset.showroomGlobeRenderStatus =
+        showroomMount.getAttribute("data-render-status") || "unreported";
 
-      document.documentElement.setAttribute(
-        "data-showroom-globe-earth-standard",
-        showroomMount.getAttribute("data-earth-standard") || "unreported"
-      );
+      document.documentElement.dataset.showroomGlobeEarthStandard =
+        showroomMount.getAttribute("data-earth-standard") || "unreported";
     }
 
     if (earthMount && earthCanvas && earthCanvasScript && showroomGlobeScript && earthMaterialLink) {
-      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "ready");
+      document.documentElement.dataset.showroomEarthConsumerContract = "ready";
     } else if (earthCanvasScript && showroomGlobeScript && earthMaterialLink) {
-      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "waiting-for-mount");
+      document.documentElement.dataset.showroomEarthConsumerContract = "waiting-for-mount";
     } else {
-      document.documentElement.setAttribute("data-showroom-earth-consumer-contract", "incomplete");
+      document.documentElement.dataset.showroomEarthConsumerContract = "incomplete";
     }
   }
 
-  function observeEarthConsumerContract() {
-    var stopAt = Date.now() + OBSERVER_TIMEOUT_MS;
-
-    protectEarthConsumerContract();
-
-    var observer = new MutationObserver(function () {
-      protectEarthConsumerContract();
-
-      if (Date.now() > stopAt) {
-        observer.disconnect();
-      }
-    });
-
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: [
-        "data-render-status",
-        "data-earth-standard",
-        "data-earth-canvas-spine",
-        "data-earth-surface",
-        "data-earth-clouds",
-        "data-showroom-inspect"
-      ]
-    });
-
-    window.setTimeout(protectEarthConsumerContract, 250);
-    window.setTimeout(protectEarthConsumerContract, 900);
-    window.setTimeout(protectEarthConsumerContract, 1800);
-    window.setTimeout(function () {
-      protectEarthConsumerContract();
-      observer.disconnect();
-    }, OBSERVER_TIMEOUT_MS);
-  }
-
   function setActivePortal(targetId) {
-    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
-
-    portals.forEach(function (portal) {
+    Array.from(document.querySelectorAll("[data-doll-open]")).forEach(function (portal) {
       if (portal.getAttribute("data-doll-open") === targetId) {
         portal.setAttribute("data-active", "true");
       } else {
@@ -154,16 +103,16 @@
       }
     });
 
-    document.documentElement.setAttribute("data-showroom-doll", targetId || "");
+    document.documentElement.dataset.showroomDoll = targetId || "";
   }
 
   function openDoll(targetId, scroll) {
     var target = document.getElementById(targetId);
-    var allDolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+    var dolls = Array.from(document.querySelectorAll(".doll"));
 
     if (!target || !target.classList.contains("doll")) return false;
 
-    allDolls.forEach(function (doll) {
+    dolls.forEach(function (doll) {
       if (doll === target) {
         doll.setAttribute("open", "");
       } else {
@@ -174,19 +123,14 @@
     setActivePortal(targetId);
 
     if (scroll && typeof target.scrollIntoView === "function") {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     return true;
   }
 
-  function bindPortalOpeners() {
-    var portals = Array.prototype.slice.call(document.querySelectorAll("[data-doll-open]"));
-
-    portals.forEach(function (portal) {
+  function bindDolls() {
+    Array.from(document.querySelectorAll("[data-doll-open]")).forEach(function (portal) {
       portal.addEventListener("click", function (event) {
         var targetId = portal.getAttribute("data-doll-open");
 
@@ -199,53 +143,41 @@
         }
       });
     });
-  }
 
-  function bindDollState() {
-    var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
-
-    dolls.forEach(function (doll) {
+    Array.from(document.querySelectorAll(".doll")).forEach(function (doll) {
       doll.addEventListener("toggle", function () {
         if (!doll.open) return;
 
-        dolls.forEach(function (other) {
+        Array.from(document.querySelectorAll(".doll")).forEach(function (other) {
           if (other !== doll) other.removeAttribute("open");
         });
 
         setActivePortal(doll.id);
       });
     });
-  }
 
-  function openFromHash() {
-    var id = (window.location.hash || "").replace("#", "");
+    var hashId = (window.location.hash || "").replace("#", "");
 
-    if (id && openDoll(id, false)) return;
+    if (hashId && openDoll(hashId, false)) return;
 
     if (document.getElementById(DEFAULT_DOLL_ID)) {
       openDoll(DEFAULT_DOLL_ID, false);
-      return;
-    }
-
-    var firstDoll = document.querySelector(".doll");
-
-    if (firstDoll && firstDoll.id) {
-      openDoll(firstDoll.id, false);
     }
   }
 
-  function ensureInspectGlobeToggle() {
+  function ensureInspectButton() {
     var existing = document.querySelector(".inspect-globe-toggle");
     var stage = document.querySelector(".showroom-stage") || document.getElementById("showroom-root") || document.body;
 
     if (existing) return existing;
+    if (!stage) return null;
 
     var button = document.createElement("button");
-    button.className = "inspect-globe-toggle";
     button.type = "button";
-    button.textContent = "Inspect Globe";
+    button.className = "inspect-globe-toggle";
+    button.dataset.showroomInspectToggle = "true";
     button.setAttribute("aria-expanded", "false");
-    button.setAttribute("data-showroom-inspect-toggle", "true");
+    button.textContent = "Inspect Globe";
 
     stage.appendChild(button);
 
@@ -256,36 +188,34 @@
     var normalized = mode === "globe" ? "globe" : "normal";
     var button = document.querySelector(".inspect-globe-toggle");
 
-    document.documentElement.setAttribute("data-showroom-inspect", normalized);
-    document.body.setAttribute("data-showroom-inspect", normalized);
+    document.documentElement.dataset.showroomInspect = normalized;
 
-    document.documentElement.setAttribute("data-showroom-inspect-controller", VERSION);
-    document.body.setAttribute("data-showroom-inspect-controller", VERSION);
+    if (document.body) {
+      document.body.dataset.showroomInspect = normalized;
+    }
 
     if (button) {
-      if (normalized === "globe") {
-        button.textContent = "Return to Showroom";
-        button.setAttribute("aria-expanded", "true");
-      } else {
-        button.textContent = "Inspect Globe";
-        button.setAttribute("aria-expanded", "false");
-      }
+      button.textContent = normalized === "globe" ? "Return to Showroom" : "Inspect Globe";
+      button.setAttribute("aria-expanded", normalized === "globe" ? "true" : "false");
     }
+
+    protectEarthConsumerContract();
   }
 
-  function bindInspectGlobeToggle() {
-    var button = ensureInspectGlobeToggle();
+  function bindInspectMode() {
+    var button = ensureInspectButton();
 
     setInspectMode("normal");
 
+    if (!button) return;
+
     button.addEventListener("click", function () {
-      var current = document.body.getAttribute("data-showroom-inspect") || "normal";
+      var current = document.body.dataset.showroomInspect || "normal";
       setInspectMode(current === "globe" ? "normal" : "globe");
-      protectEarthConsumerContract();
     });
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && document.body.getAttribute("data-showroom-inspect") === "globe") {
+      if (event.key === "Escape" && document.body.dataset.showroomInspect === "globe") {
         setInspectMode("normal");
       }
     });
@@ -293,10 +223,11 @@
 
   ready(function () {
     markControllerReady();
-    observeEarthConsumerContract();
-    bindPortalOpeners();
-    bindDollState();
-    openFromHash();
-    bindInspectGlobeToggle();
+    protectEarthConsumerContract();
+    bindDolls();
+    bindInspectMode();
+
+    window.setTimeout(protectEarthConsumerContract, 300);
+    window.setTimeout(protectEarthConsumerContract, 1200);
   });
 })();

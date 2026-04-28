@@ -4,44 +4,44 @@
   const SVG_NS = "http://www.w3.org/2000/svg";
 
   const dollCopy = {
-    DOLL_1_COMPASS: {
-      kicker: "Compass · outer shell",
-      title: "Rich Manor and Estate",
-      body: "Flat stays default. Round opens the Tree of Life. Globe remains later. Gauges hold Generation 3 readiness until this Index experience is accepted."
-    },
-    DOLL_2_ESTATE: {
-      kicker: "Estate arrival",
-      title: "The tree stands before the Manor.",
-      body: "Snow covers the ground. Grass breaks through the crust. The U-road bends around the Tree of Life before the visitor reaches the house."
-    },
-    DOLL_3_TRUNK_AND_PRIMARY_LIMBS: {
-      kicker: "Tree structure",
-      title: "One trunk. Four primary limbs.",
-      body: "The tree is now structural: one trunk authority opens into four directional limbs before the 16 canopies appear."
-    },
-    DOLL_4_CANOPIES: {
-      kicker: "Canopy layer",
-      title: "Sixteen canopy clusters.",
-      body: "The 16 canopy clusters are generated from the 256 tree structure. They are not labels pretending to be branches."
-    },
-    DOLL_5_BRANCH_SEATS: {
-      kicker: "Branch-seat layer",
-      title: "Sixty-four branch seats.",
-      body: "Each canopy holds four branch seats. The tree can now be navigated without showing every terminal at once."
-    },
-    DOLL_6_TERMINAL_NODES: {
-      kicker: "Terminal layer",
-      title: "Two hundred fifty-six terminal nodes.",
-      body: "Leaves, fruit, blossoms, and habitats live at terminal-node level. The 256 exists as source structure."
-    },
-    DOLL_7_FRUIT_AND_WILDLIFE_DETAIL: {
-      kicker: "Fruit and wildlife detail",
-      title: "Fruit belongs to the living terminal layer.",
-      body: "Fruit is active without changing the tree species. Oak remains bound; fruit is a Tree of Life terminal expression."
-    }
+    DOLL_1_COMPASS: [
+      "Compass · outer shell",
+      "Rich Manor and Estate",
+      "Flat stays default. Round opens the Tree of Life. Globe remains later. Gauges hold Generation 3 readiness until this Index experience is accepted."
+    ],
+    DOLL_2_ESTATE: [
+      "Estate arrival",
+      "The tree stands before the Manor.",
+      "Snow covers the ground. Grass breaks through the crust. The U-road bends around the Tree of Life before the visitor reaches the house."
+    ],
+    DOLL_3_TRUNK_AND_PRIMARY_LIMBS: [
+      "Tree structure",
+      "One trunk. Four primary limbs.",
+      "The structure opens from one trunk authority into four directional limbs."
+    ],
+    DOLL_4_CANOPIES: [
+      "Canopy layer",
+      "Sixteen living canopy fields.",
+      "No canopy blobs. Each canopy is implied by independent leaves, twigs, fruit, blossoms, and habitat terminals."
+    ],
+    DOLL_5_BRANCH_SEATS: [
+      "Branch-seat layer",
+      "Sixty-four branch seats.",
+      "Each branch seat carries four terminal expressions. The tree opens from limb to branch to leaf."
+    ],
+    DOLL_6_TERMINAL_NODES: [
+      "Terminal layer",
+      "Two hundred fifty-six independent terminals.",
+      "Leaves, fruit, blossoms, and habitats are rendered as separate source-backed objects."
+    ],
+    DOLL_7_FRUIT_AND_WILDLIFE_DETAIL: [
+      "Fruit and wildlife detail",
+      "Fruit, butterflies, and habitat are controlled detail layers.",
+      "Fruit is active without changing species. Butterflies appear through pollination state, not as stickers."
+    ]
   };
 
-  function createSvgElement(tag, attrs) {
+  function s(tag, attrs) {
     const node = document.createElementNS(SVG_NS, tag);
     Object.entries(attrs || {}).forEach(([key, value]) => {
       if (value !== null && value !== undefined) node.setAttribute(key, String(value));
@@ -49,17 +49,13 @@
     return node;
   }
 
-  function createElement(tag, attrs, children) {
+  function h(tag, attrs, children) {
     const node = document.createElement(tag);
     Object.entries(attrs || {}).forEach(([key, value]) => {
       if (value === null || value === undefined || value === false) return;
-      if (key === "className") {
-        node.className = value;
-      } else if (key === "text") {
-        node.textContent = value;
-      } else {
-        node.setAttribute(key, String(value));
-      }
+      if (key === "className") node.className = value;
+      else if (key === "text") node.textContent = value;
+      else node.setAttribute(key, String(value));
     });
 
     (children || []).forEach((child) => {
@@ -70,25 +66,8 @@
     return node;
   }
 
-  function append(parent, children) {
-    children.forEach((child) => parent.appendChild(child));
-    return parent;
-  }
-
-  function polar(cx, cy, radius, angleDeg) {
-    const angle = (angleDeg - 90) * Math.PI / 180;
-    return {
-      x: cx + radius * Math.cos(angle),
-      y: cy + radius * Math.sin(angle)
-    };
-  }
-
-  function pathCubic(start, c1, c2, end) {
-    return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${end.x} ${end.y}`;
-  }
-
   function addDefs(svg) {
-    const defs = createSvgElement("defs");
+    const defs = s("defs");
 
     defs.innerHTML = `
       <linearGradient id="skyGradient" x1="0" x2="0" y1="0" y2="1">
@@ -110,12 +89,6 @@
         <stop offset="72%" stop-color="#4b2815"/>
         <stop offset="100%" stop-color="#1b0c05"/>
       </linearGradient>
-
-      <radialGradient id="leafGradient" cx="50%" cy="42%" r="70%">
-        <stop offset="0%" stop-color="#eef7e5" stop-opacity=".28"/>
-        <stop offset="32%" stop-color="#47763c"/>
-        <stop offset="100%" stop-color="#142a1a"/>
-      </radialGradient>
 
       <radialGradient id="fruitGradient" cx="32%" cy="25%" r="70%">
         <stop offset="0%" stop-color="#f7a0a6"/>
@@ -145,8 +118,8 @@
         <feDropShadow dx="0" dy="14" stdDeviation="11" flood-color="#000000" flood-opacity=".40"/>
       </filter>
 
-      <filter id="canopyShadow">
-        <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity=".30"/>
+      <filter id="leafShadow">
+        <feDropShadow dx="0" dy="5" stdDeviation="3" flood-color="#000000" flood-opacity=".30"/>
       </filter>
 
       <filter id="roadShadow">
@@ -161,40 +134,119 @@
     svg.appendChild(defs);
   }
 
+  function pathCubic(start, c1, c2, end) {
+    return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${end.x} ${end.y}`;
+  }
+
+  function canopyPosition(index) {
+    const ring = index <= 8 ? 1 : 2;
+    const local = index <= 8 ? index - 1 : index - 9;
+    const angle = ring === 1 ? -135 + local * (270 / 7) : -150 + local * (300 / 7);
+    const radiusX = ring === 1 ? 310 : 435;
+    const radiusY = ring === 1 ? 188 : 265;
+
+    return {
+      x: 800 + Math.cos(angle * Math.PI / 180) * radiusX,
+      y: 330 + Math.sin(angle * Math.PI / 180) * radiusY,
+      angle
+    };
+  }
+
+  function branchSeatPosition(canopyIndex, branchLocal) {
+    const c = canopyPosition(canopyIndex);
+
+    const offsets = [
+      { x: -98, y: -58 },
+      { x: 94, y: -52 },
+      { x: -86, y: 64 },
+      { x: 92, y: 70 }
+    ];
+
+    const offset = offsets[branchLocal - 1];
+
+    return {
+      x: c.x + offset.x,
+      y: c.y + offset.y
+    };
+  }
+
+  function terminalPosition(node) {
+    const branchLocal = ((node.branchSeat - 1) % 4) + 1;
+    const branch = branchSeatPosition(node.canopyCluster, branchLocal);
+    const terminalLocal = ((node.localIndex - 1) % 4) + 1;
+
+    const spreads = [
+      { x: -44, y: -31 },
+      { x: 42, y: -35 },
+      { x: -38, y: 36 },
+      { x: 47, y: 32 }
+    ];
+
+    const base = spreads[terminalLocal - 1];
+    const jitterX = ((node.index * 17) % 29) - 14;
+    const jitterY = ((node.index * 23) % 27) - 13;
+
+    return {
+      x: branch.x + base.x + jitterX,
+      y: branch.y + base.y + jitterY,
+      angle: ((node.index * 37) % 140) - 70,
+      scale: 0.58 + ((node.index % 9) * 0.045)
+    };
+  }
+
   function drawSkyGround(svg) {
-    const layer = createSvgElement("g", { class: "svg-layer layer-estate", "data-scene-layer": "estate-ground" });
+    const layer = s("g", { class: "svg-layer layer-estate", "data-scene-layer": "estate-ground" });
 
-    append(layer, [
-      createSvgElement("rect", { x: 0, y: 0, width: 1600, height: 900, fill: "url(#skyGradient)" }),
-      createSvgElement("path", { d: "M 0 395 C 240 340, 420 382, 600 350 C 860 300, 1060 350, 1600 310 L 1600 900 L 0 900 Z", fill: "rgba(34,70,48,.58)" }),
-      createSvgElement("path", { d: "M 0 452 C 260 430, 480 470, 760 420 C 1050 365, 1250 442, 1600 392 L 1600 900 L 0 900 Z", fill: "url(#snowGradient)" }),
-      createSvgElement("path", { class: "tree-road", d: "M 360 900 C 420 740, 520 660, 684 644 C 770 636, 838 636, 916 644 C 1080 660, 1180 740, 1240 900" }),
-      createSvgElement("path", { class: "tree-road-snow", d: "M 360 900 C 420 740, 520 660, 684 644 C 770 636, 838 636, 916 644 C 1080 660, 1180 740, 1240 900" })
-    ]);
+    layer.appendChild(s("rect", { x: 0, y: 0, width: 1600, height: 900, fill: "url(#skyGradient)" }));
 
-    const grass = createSvgElement("g", { "data-detail-layer": "grass" });
-    for (let i = 0; i < 190; i += 1) {
-      const x = 90 + ((i * 73) % 1410);
-      const y = 725 + ((i * 41) % 155);
-      const h = 10 + ((i * 17) % 38);
+    layer.appendChild(s("path", {
+      d: "M 0 395 C 240 340, 420 382, 600 350 C 860 300, 1060 350, 1600 310 L 1600 900 L 0 900 Z",
+      fill: "rgba(34,70,48,.58)"
+    }));
+
+    layer.appendChild(s("path", {
+      d: "M 0 452 C 260 430, 480 470, 760 420 C 1050 365, 1250 442, 1600 392 L 1600 900 L 0 900 Z",
+      fill: "url(#snowGradient)"
+    }));
+
+    layer.appendChild(s("path", {
+      class: "tree-road",
+      d: "M 360 900 C 420 740, 520 660, 684 644 C 770 636, 838 636, 916 644 C 1080 660, 1180 740, 1240 900"
+    }));
+
+    layer.appendChild(s("path", {
+      class: "tree-road-snow",
+      d: "M 360 900 C 420 740, 520 660, 684 644 C 770 636, 838 636, 916 644 C 1080 660, 1180 740, 1240 900"
+    }));
+
+    const grass = s("g", { "data-detail-layer": "grass" });
+
+    for (let i = 0; i < 260; i += 1) {
+      const x = 80 + ((i * 73) % 1440);
+      const y = 720 + ((i * 41) % 160);
+      const height = 10 + ((i * 17) % 38);
       const lean = ((i % 7) - 3) * 2.5;
-      grass.appendChild(createSvgElement("path", {
+
+      grass.appendChild(s("path", {
         class: "grass-blade-svg",
-        d: `M ${x} ${y} C ${x + lean} ${y - h * .35}, ${x + lean * .4} ${y - h * .68}, ${x + lean} ${y - h}`
+        d: `M ${x} ${y} C ${x + lean} ${y - height * .35}, ${x + lean * .4} ${y - height * .68}, ${x + lean} ${y - height}`
       }));
+
       if (i % 5 === 0) {
-        grass.appendChild(createSvgElement("path", {
+        grass.appendChild(s("path", {
           class: "grass-snow-tip",
-          d: `M ${x + lean - 1} ${y - h} L ${x + lean + 3} ${y - h - 2}`
+          d: `M ${x + lean - 1} ${y - height} L ${x + lean + 3} ${y - height - 2}`
         }));
       }
     }
 
-    const tracks = createSvgElement("g", { class: "svg-layer layer-details", "data-detail-layer": "tracks" });
+    const tracks = s("g", { class: "svg-layer layer-details", "data-detail-layer": "tracks" });
+
     for (let i = 0; i < 22; i += 1) {
       const x = 530 + (i * 23);
       const y = 784 - (i % 7) * 10;
-      tracks.appendChild(createSvgElement("ellipse", {
+
+      tracks.appendChild(s("ellipse", {
         class: "track-mark",
         cx: x,
         cy: y,
@@ -210,271 +262,332 @@
   }
 
   function drawManor(svg) {
-    const manor = createSvgElement("g", { class: "svg-layer layer-estate", "data-object": "manor" });
+    const manor = s("g", { class: "svg-layer layer-estate", "data-object": "manor" });
 
-    append(manor, [
-      createSvgElement("polygon", { class: "manor-roof-svg", points: "585,338 800,205 1015,338" }),
-      createSvgElement("rect", { class: "manor-body-svg", x: 565, y: 338, width: 470, height: 155, rx: 18 }),
-      createSvgElement("rect", { x: 615, y: 382, width: 44, height: 72, rx: 6, fill: "rgba(242,199,111,.33)" }),
-      createSvgElement("rect", { x: 715, y: 382, width: 44, height: 72, rx: 6, fill: "rgba(242,199,111,.25)" }),
-      createSvgElement("rect", { x: 841, y: 382, width: 44, height: 72, rx: 6, fill: "rgba(242,199,111,.25)" }),
-      createSvgElement("rect", { x: 941, y: 382, width: 44, height: 72, rx: 6, fill: "rgba(242,199,111,.33)" }),
-      createSvgElement("text", { class: "structure-label", x: 800, y: 475, "text-anchor": "middle" })
-    ]);
+    manor.appendChild(s("polygon", { class: "manor-roof-svg", points: "585,338 800,205 1015,338" }));
+    manor.appendChild(s("rect", { class: "manor-body-svg", x: 565, y: 338, width: 470, height: 155, rx: 18 }));
 
-    manor.lastChild.textContent = "Rich Manor";
+    [615, 715, 841, 941].forEach((x, index) => {
+      manor.appendChild(s("rect", {
+        x,
+        y: 382,
+        width: 44,
+        height: 72,
+        rx: 6,
+        fill: index === 0 || index === 3 ? "rgba(242,199,111,.33)" : "rgba(242,199,111,.25)"
+      }));
+    });
+
+    const label = s("text", { class: "structure-label", x: 800, y: 475, "text-anchor": "middle" });
+    label.textContent = "Rich Manor";
+    manor.appendChild(label);
+
     svg.appendChild(manor);
   }
 
-  function canopyPosition(index) {
-    const ring = index <= 8 ? 1 : 2;
-    const local = index <= 8 ? index - 1 : index - 9;
-    const angle = ring === 1 ? -135 + local * (270 / 7) : -150 + local * (300 / 7);
-    const radiusX = ring === 1 ? 300 : 410;
-    const radiusY = ring === 1 ? 190 : 260;
-    const center = { x: 800, y: 330 };
+  function drawButterflies(layer, state) {
+    const enabled =
+      state.activeTab === "butterflies" ||
+      state.activeTab === "wildlife" ||
+      state.butterflyVisibility === "visible";
 
-    return {
-      x: center.x + Math.cos(angle * Math.PI / 180) * radiusX,
-      y: center.y + Math.sin(angle * Math.PI / 180) * radiusY,
-      angle
-    };
+    if (!enabled) return;
+
+    const option = state.activeButterflyOption || "monarch";
+    if (option === "none") return;
+
+    const positions = [
+      { x: 545, y: 365, scale: 1.1 },
+      { x: 1022, y: 292, scale: .9 },
+      { x: 1120, y: 535, scale: .75 },
+      { x: 672, y: 590, scale: .62 },
+      { x: 928, y: 420, scale: .68 }
+    ];
+
+    positions.forEach((p) => {
+      const g = s("g", {
+        class: "butterfly",
+        transform: `translate(${p.x} ${p.y}) scale(${p.scale})`,
+        "data-butterfly-option": option,
+        "data-butterfly-role": "pollination"
+      });
+
+      const wingClass =
+        option === "blue_morpho_style" ? "butterfly-wing-b" :
+        option === "estate_gold_variant" ? "butterfly-wing-gold" :
+        "butterfly-wing-a";
+
+      g.appendChild(s("ellipse", { class: wingClass, cx: -8, cy: -2, rx: 10, ry: 16, transform: "rotate(-28 -8 -2)" }));
+      g.appendChild(s("ellipse", { class: wingClass, cx: 8, cy: -2, rx: 10, ry: 16, transform: "rotate(28 8 -2)" }));
+      g.appendChild(s("path", { class: "butterfly-body", d: "M 0 -11 L 0 12" }));
+
+      layer.appendChild(g);
+    });
   }
 
-  function branchSeatPosition(canopyIndex, branchLocal) {
-    const c = canopyPosition(canopyIndex);
-    const offset = [
-      { x: -42, y: -20 },
-      { x: 42, y: -18 },
-      { x: -36, y: 28 },
-      { x: 38, y: 30 }
-    ][branchLocal - 1];
+  function leafColor(node) {
+    const palette = [
+      "rgba(34,82,34,.92)",
+      "rgba(50,107,45,.90)",
+      "rgba(69,127,55,.88)",
+      "rgba(91,138,65,.86)",
+      "rgba(43,91,42,.90)"
+    ];
 
-    return {
-      x: c.x + offset.x,
-      y: c.y + offset.y
-    };
+    if (node.terminalType === "habitat") return "rgba(157,128,82,.86)";
+    return palette[node.index % palette.length];
+  }
+
+  function makeLeaf(node, pos) {
+    const leaf = s("path", {
+      class: "terminal-node terminal-leaf individual-leaf",
+      d: "M 0 -14 C 7 -12 13 -6 13 1 C 13 11 3 17 0 22 C -3 17 -13 11 -13 1 C -13 -6 -7 -12 0 -14 Z",
+      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
+      fill: leafColor(node),
+      stroke: "rgba(224,244,208,.20)",
+      "stroke-width": 1,
+      filter: "url(#leafShadow)",
+      "data-terminal-id": node.id,
+      "data-terminal-index": node.index,
+      "data-terminal-type": node.terminalType,
+      "data-canopy": node.canopyCluster,
+      "data-branch-seat": node.branchSeat
+    });
+
+    const vein = s("path", {
+      class: "leaf-vein",
+      d: "M 0 -10 C 1 -2 0 8 0 16",
+      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
+      stroke: "rgba(235,248,220,.30)",
+      "stroke-width": .85
+    });
+
+    const sideA = s("path", {
+      class: "leaf-side-vein",
+      d: "M 0 1 L 7 -4 M 0 6 L 8 2 M 0 10 L 7 8",
+      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
+      stroke: "rgba(235,248,220,.16)",
+      "stroke-width": .65
+    });
+
+    const sideB = s("path", {
+      class: "leaf-side-vein",
+      d: "M 0 1 L -7 -4 M 0 6 L -8 2 M 0 10 L -7 8",
+      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
+      stroke: "rgba(235,248,220,.16)",
+      "stroke-width": .65
+    });
+
+    return [leaf, vein, sideA, sideB];
+  }
+
+  function makeFruit(node, pos) {
+    const group = s("g", {
+      class: "terminal-fruit-node",
+      transform: `translate(${pos.x} ${pos.y})`,
+      "data-terminal-id": node.id,
+      "data-terminal-index": node.index,
+      "data-terminal-type": "fruit",
+      "data-canopy": node.canopyCluster,
+      "data-branch-seat": node.branchSeat
+    });
+
+    group.appendChild(s("circle", {
+      class: "terminal-node terminal-fruit",
+      cx: 0,
+      cy: 0,
+      r: 5.6 * pos.scale,
+      fill: "url(#fruitGradient)",
+      filter: "url(#fruitGlow)"
+    }));
+
+    group.appendChild(s("circle", {
+      cx: -1.9 * pos.scale,
+      cy: -2.3 * pos.scale,
+      r: 1.2 * pos.scale,
+      fill: "rgba(255,230,210,.72)"
+    }));
+
+    return [group];
+  }
+
+  function makeBlossom(node, pos) {
+    const group = s("g", {
+      class: "terminal-blossom-node",
+      transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
+      "data-terminal-id": node.id,
+      "data-terminal-index": node.index,
+      "data-terminal-type": "blossom",
+      "data-canopy": node.canopyCluster,
+      "data-branch-seat": node.branchSeat
+    });
+
+    for (let i = 0; i < 5; i += 1) {
+      group.appendChild(s("ellipse", {
+        class: "terminal-node terminal-blossom",
+        cx: Math.cos((i * 72) * Math.PI / 180) * 4.2,
+        cy: Math.sin((i * 72) * Math.PI / 180) * 4.2,
+        rx: 3.1,
+        ry: 5.5,
+        transform: `rotate(${i * 72})`,
+        fill: "rgba(247,214,222,.86)",
+        stroke: "rgba(255,255,255,.22)",
+        "stroke-width": .7
+      }));
+    }
+
+    group.appendChild(s("circle", { cx: 0, cy: 0, r: 2, fill: "rgba(242,199,111,.88)" }));
+
+    return [group];
+  }
+
+  function makeTerminalNode(node) {
+    const pos = terminalPosition(node);
+
+    if (node.terminalType === "fruit") return makeFruit(node, pos);
+    if (node.terminalType === "blossom") return makeBlossom(node, pos);
+
+    return makeLeaf(node, pos);
   }
 
   function drawTree(svg, state) {
     const treeApi = window.DGBTreeOfLife256;
     const flat = treeApi && treeApi.flat ? treeApi.flat : null;
 
-    const trunkLayer = createSvgElement("g", { class: "svg-layer layer-limbs", "data-tree-layer": "trunk-primary-limbs" });
-    const canopyLayer = createSvgElement("g", { class: "svg-layer layer-canopies", "data-tree-layer": "16-canopies" });
-    const branchLayer = createSvgElement("g", { class: "svg-layer layer-branches", "data-tree-layer": "64-branch-seats" });
-    const terminalLayer = createSvgElement("g", { class: "svg-layer layer-terminals", "data-tree-layer": "256-terminal-nodes" });
-    const detailLayer = createSvgElement("g", { class: "svg-layer layer-details", "data-tree-layer": "fruit-wildlife-details" });
+    const trunkLayer = s("g", { class: "svg-layer layer-limbs", "data-tree-layer": "trunk-primary-limbs" });
+    const branchLayer = s("g", { class: "svg-layer layer-branches", "data-tree-layer": "64-branch-seats" });
+    const terminalLayer = s("g", { class: "svg-layer layer-terminals", "data-tree-layer": "256-independent-terminal-nodes" });
+    const detailLayer = s("g", { class: "svg-layer layer-details", "data-tree-layer": "fruit-wildlife-butterflies" });
 
-    const base = { x: 800, y: 770 };
-    const shoulder = { x: 800, y: 455 };
+    trunkLayer.appendChild(s("path", {
+      class: "tree-trunk",
+      d: "M 720 790 C 748 675, 748 555, 782 435 C 793 398, 812 398, 824 435 C 858 555, 852 675, 884 790 Z"
+    }));
 
-    append(trunkLayer, [
-      createSvgElement("path", { class: "tree-trunk", d: "M 720 790 C 748 675, 748 555, 782 435 C 793 398, 812 398, 824 435 C 858 555, 852 675, 884 790 Z" }),
-      createSvgElement("path", { class: "root-structure", d: "M 800 760 C 725 782, 650 818, 560 850" }),
-      createSvgElement("path", { class: "root-structure", d: "M 805 762 C 890 788, 984 822, 1060 858" }),
-      createSvgElement("path", { class: "root-structure", d: "M 785 748 C 740 790, 700 840, 690 895" }),
-      createSvgElement("path", { class: "root-structure", d: "M 820 748 C 865 790, 900 842, 910 895" }),
-      createSvgElement("path", { class: "root-snow", d: "M 720 790 C 670 810, 620 832, 560 850" }),
-      createSvgElement("path", { class: "root-snow", d: "M 878 792 C 935 814, 996 838, 1060 858" })
-    ]);
+    trunkLayer.appendChild(s("path", { class: "root-structure", d: "M 800 760 C 725 782, 650 818, 560 850" }));
+    trunkLayer.appendChild(s("path", { class: "root-structure", d: "M 805 762 C 890 788, 984 822, 1060 858" }));
+    trunkLayer.appendChild(s("path", { class: "root-structure", d: "M 785 748 C 740 790, 700 840, 690 895" }));
+    trunkLayer.appendChild(s("path", { class: "root-structure", d: "M 820 748 C 865 790, 900 842, 910 895" }));
+    trunkLayer.appendChild(s("path", { class: "root-snow", d: "M 720 790 C 670 810, 620 832, 560 850" }));
+    trunkLayer.appendChild(s("path", { class: "root-snow", d: "M 878 792 C 935 814, 996 838, 1060 858" }));
 
-    for (let i = 0; i < 56; i += 1) {
+    for (let i = 0; i < 76; i += 1) {
       const x = 746 + (i * 13) % 106;
       const y1 = 444 + (i * 29) % 292;
       const y2 = y1 + 34 + (i % 5) * 12;
-      trunkLayer.appendChild(createSvgElement("path", {
+
+      trunkLayer.appendChild(s("path", {
         class: i % 3 === 0 ? "bark-highlight" : "bark-fissure",
         d: `M ${x} ${y1} C ${x - 12 + i % 9} ${y1 + 22}, ${x + 9 - i % 8} ${y2 - 16}, ${x + 2} ${y2}`
       }));
     }
 
-    const limbTargets = [
-      { x: 360, y: 245, c1: { x: 720, y: 410 }, c2: { x: 560, y: 282 } },
-      { x: 610, y: 135, c1: { x: 770, y: 380 }, c2: { x: 700, y: 185 } },
-      { x: 990, y: 135, c1: { x: 830, y: 380 }, c2: { x: 900, y: 185 } },
-      { x: 1240, y: 245, c1: { x: 880, y: 410 }, c2: { x: 1040, y: 282 } }
-    ];
+    const shoulder = { x: 800, y: 455 };
 
-    limbTargets.forEach((target, index) => {
-      trunkLayer.appendChild(createSvgElement("path", {
+    [
+      { x: 350, y: 238, c1: { x: 720, y: 410 }, c2: { x: 540, y: 276 } },
+      { x: 605, y: 118, c1: { x: 770, y: 380 }, c2: { x: 690, y: 178 } },
+      { x: 995, y: 118, c1: { x: 830, y: 380 }, c2: { x: 910, y: 178 } },
+      { x: 1250, y: 238, c1: { x: 880, y: 410 }, c2: { x: 1060, y: 276 } }
+    ].forEach((target, index) => {
+      trunkLayer.appendChild(s("path", {
         class: "primary-limb",
         d: pathCubic(shoulder, target.c1, target.c2, { x: target.x, y: target.y }),
         "data-primary-limb": index + 1
       }));
     });
 
-    const canopyNodes = flat ? flat.canopyClusters : [];
-    canopyNodes.forEach((canopy) => {
-      const p = canopyPosition(canopy.index);
-      const rx = 118 + (canopy.index % 4) * 10;
-      const ry = 76 + (canopy.index % 3) * 12;
-
-      const canopyCell = createSvgElement("ellipse", {
-        class: "canopy-cell",
-        cx: p.x,
-        cy: p.y,
-        rx,
-        ry,
-        "data-canopy-id": canopy.id,
-        "data-canopy-index": canopy.index,
-        "data-canopy-role": canopy.role
-      });
-
-      canopyLayer.appendChild(canopyCell);
-
-      if (canopy.index % 2 === 0) {
-        canopyLayer.appendChild(createSvgElement("ellipse", {
-          class: "canopy-frost",
-          cx: p.x - rx * .28,
-          cy: p.y - ry * .36,
-          rx: rx * .32,
-          ry: ry * .12
-        }));
-      }
-
-      if (canopy.index === state.canopyIndex) {
-        const text = createSvgElement("text", {
-          class: "structure-label",
-          x: p.x,
-          y: p.y + ry + 34,
-          "text-anchor": "middle"
-        });
-        text.textContent = `C${String(canopy.index).padStart(2, "0")} · ${canopy.role}`;
-        canopyLayer.appendChild(text);
-      }
-    });
-
     const branchSeats = flat ? flat.branchSeats : [];
-    branchSeats.forEach((branch) => {
-      const canopyIndex = branch.canopyCluster;
-      const branchLocal = ((branch.localIndex - 1) % 4) + 1;
-      const p = branchSeatPosition(canopyIndex, branchLocal);
-      const c = canopyPosition(canopyIndex);
-
-      branchLayer.appendChild(createSvgElement("path", {
-        class: "secondary-branch",
-        d: `M ${c.x} ${c.y} C ${(c.x + p.x) / 2} ${c.y + 20}, ${(c.x + p.x) / 2} ${p.y - 20}, ${p.x} ${p.y}`,
-        "data-branch-seat": branch.id
-      }));
-
-      if (canopyIndex === state.canopyIndex || branch.index === state.branchSeatIndex) {
-        branchLayer.appendChild(createSvgElement("circle", {
-          cx: p.x,
-          cy: p.y,
-          r: branch.index === state.branchSeatIndex ? 13 : 8,
-          fill: branch.index === state.branchSeatIndex ? "rgba(242,199,111,.88)" : "rgba(255,247,228,.35)",
-          stroke: "rgba(2,5,10,.72)",
-          "stroke-width": 2
-        }));
-      }
-    });
-
     const terminalNodes = flat ? flat.terminalNodes : [];
-    terminalNodes.forEach((node) => {
-      const branchIndex = node.branchSeat;
-      const branchLocal = ((branchIndex - 1) % 4) + 1;
-      const branchP = branchSeatPosition(node.canopyCluster, branchLocal);
-      const terminalLocal = ((node.localIndex - 1) % 4) + 1;
-      const offsets = [
-        { x: -18, y: -13 },
-        { x: 18, y: -13 },
-        { x: -18, y: 14 },
-        { x: 18, y: 14 }
-      ];
-      const pos = offsets[terminalLocal - 1];
 
-      const activeGroup =
-        node.canopyCluster === state.canopyIndex ||
-        node.branchSeat === state.branchSeatIndex ||
-        node.index === state.terminalIndex ||
-        state.dollLayer === "DOLL_6_TERMINAL_NODES" ||
-        state.dollLayer === "DOLL_7_FRUIT_AND_WILDLIFE_DETAIL";
+    branchSeats.forEach((branch) => {
+      const branchLocal = ((branch.localIndex - 1) % 4) + 1;
+      const p = branchSeatPosition(branch.canopyCluster, branchLocal);
+      const c = canopyPosition(branch.canopyCluster);
 
-      if (!activeGroup) return;
-
-      const className =
-        node.terminalType === "fruit" ? "terminal-node terminal-fruit" :
-        node.terminalType === "blossom" ? "terminal-node terminal-blossom" :
-        node.terminalType === "habitat" ? "terminal-node terminal-habitat" :
-        "terminal-node terminal-leaf";
-
-      const r = node.index === state.terminalIndex ? 7 : node.terminalType === "fruit" ? 5 : 4;
-
-      terminalLayer.appendChild(createSvgElement("circle", {
-        class: className,
-        cx: branchP.x + pos.x,
-        cy: branchP.y + pos.y,
-        r,
-        "data-terminal-id": node.id,
-        "data-terminal-index": node.index,
-        "data-terminal-type": node.terminalType
+      branchLayer.appendChild(s("path", {
+        class: "secondary-branch",
+        d: `M ${c.x} ${c.y} C ${(c.x + p.x) / 2} ${c.y + 16}, ${(c.x + p.x) / 2} ${p.y - 16}, ${p.x} ${p.y}`,
+        "data-branch-seat": branch.id,
+        "data-canopy": branch.canopyCluster
       }));
 
-      if (node.terminalType === "fruit" && state.dollLayer === "DOLL_7_FRUIT_AND_WILDLIFE_DETAIL") {
-        detailLayer.appendChild(createSvgElement("circle", {
-          class: "terminal-fruit",
-          cx: branchP.x + pos.x + 4,
-          cy: branchP.y + pos.y - 4,
-          r: 2.2
-        }));
-      }
+      terminalNodes
+        .filter((node) => node.branchSeat === branch.index)
+        .forEach((node) => {
+          const t = terminalPosition(node);
+
+          branchLayer.appendChild(s("path", {
+            class: "terminal-twig",
+            d: `M ${p.x} ${p.y} C ${(p.x + t.x) / 2} ${p.y - 8}, ${(p.x + t.x) / 2} ${t.y + 8}, ${t.x} ${t.y}`,
+            "data-terminal-id": node.id
+          }));
+        });
     });
 
-    const selectedNode = flat ? flat.terminalNodes.find((node) => node.index === state.terminalIndex) : null;
+    terminalNodes.forEach((node) => {
+      makeTerminalNode(node).forEach((shape) => terminalLayer.appendChild(shape));
+    });
+
+    const selectedNode = terminalNodes.find((node) => node.index === state.terminalIndex);
+
     if (selectedNode && state.dollLayer === "DOLL_7_FRUIT_AND_WILDLIFE_DETAIL") {
-      const text = createSvgElement("text", {
-        class: "fruit-label",
+      const label = s("text", {
+        class: "structure-label",
         x: 800,
         y: 850,
         "text-anchor": "middle"
       });
-      text.textContent = `${selectedNode.id} · ${selectedNode.terminalType}${selectedNode.fruit.active ? " · fruit active" : ""}`;
-      detailLayer.appendChild(text);
+
+      label.textContent = `${selectedNode.id} · ${selectedNode.terminalType}${selectedNode.fruit && selectedNode.fruit.active ? " · fruit active" : ""}`;
+      detailLayer.appendChild(label);
     }
 
-    [trunkLayer, canopyLayer, branchLayer, terminalLayer, detailLayer].forEach((layer) => svg.appendChild(layer));
+    drawButterflies(detailLayer, state);
+
+    [trunkLayer, branchLayer, terminalLayer, detailLayer].forEach((layer) => svg.appendChild(layer));
   }
 
   function renderSceneCopy(root, state) {
     const copy = dollCopy[state.dollLayer] || dollCopy.DOLL_1_COMPASS;
 
-    root.appendChild(createElement("article", { className: "scene-copy-card" }, [
-      createElement("p", { className: "kicker", text: copy.kicker }),
-      createElement("h2", { text: copy.title }),
-      createElement("p", { text: copy.body })
+    root.appendChild(h("article", { className: "scene-copy-card" }, [
+      h("p", { className: "kicker", text: copy[0] }),
+      h("h2", { text: copy[1] }),
+      h("p", { text: copy[2] })
     ]));
   }
 
-  function renderFlat(root, state) {
-    const scene = createElement("section", {
-      className: "tree-scene flat-tree-scene",
-      "aria-label": "Flat World route map"
-    });
-
-    const svg = createSvgElement("svg", {
+  function baseSvg(label) {
+    const svg = s("svg", {
       class: "tree-svg",
       viewBox: "0 0 1600 900",
       role: "img",
-      "aria-label": "Flat World verified route map for Rich Manor and Estate"
+      "aria-label": label
     });
 
     addDefs(svg);
     drawSkyGround(svg);
     drawManor(svg);
 
-    const links = [
+    return svg;
+  }
+
+  function renderFlat(root, state) {
+    const scene = h("section", { className: "tree-scene flat-tree-scene", "aria-label": "Flat World route map" });
+    const svg = baseSvg("Flat World verified route map for Rich Manor and Estate");
+
+    const mapLayer = s("g", { class: "svg-layer layer-estate" });
+
+    [
       { x: 800, y: 300, label: "Compass" },
       { x: 520, y: 470, label: "Door" },
       { x: 800, y: 500, label: "Home" },
       { x: 1080, y: 470, label: "Products" },
       { x: 640, y: 665, label: "Showroom" },
       { x: 960, y: 665, label: "Gauges" }
-    ];
-
-    const mapLayer = createSvgElement("g", { class: "svg-layer layer-estate" });
-    links.forEach((item) => {
-      mapLayer.appendChild(createSvgElement("circle", {
+    ].forEach((item) => {
+      mapLayer.appendChild(s("circle", {
         cx: item.x,
         cy: item.y,
         r: 54,
@@ -482,12 +595,8 @@
         stroke: "rgba(242,199,111,.46)",
         "stroke-width": 2
       }));
-      const text = createSvgElement("text", {
-        class: "structure-label",
-        x: item.x,
-        y: item.y + 7,
-        "text-anchor": "middle"
-      });
+
+      const text = s("text", { class: "structure-label", x: item.x, y: item.y + 7, "text-anchor": "middle" });
       text.textContent = item.label;
       mapLayer.appendChild(text);
     });
@@ -499,63 +608,36 @@
   }
 
   function renderGlobe(root, state) {
-    const scene = createElement("section", {
-      className: "tree-scene globe-hold-scene",
-      "aria-label": "Globe view locked later"
-    });
+    const scene = h("section", { className: "tree-scene globe-hold-scene", "aria-label": "Globe view locked later" });
+    const svg = baseSvg("Globe view locked later");
 
-    const svg = createSvgElement("svg", {
-      class: "tree-svg",
-      viewBox: "0 0 1600 900",
-      role: "img",
-      "aria-label": "Globe view locked later"
-    });
-
-    addDefs(svg);
-    drawSkyGround(svg);
-
-    const orb = createSvgElement("circle", {
+    svg.appendChild(s("circle", {
       cx: 800,
       cy: 455,
       r: 190,
       fill: "rgba(98,145,180,.24)",
       stroke: "rgba(242,199,111,.40)",
       "stroke-width": 3
-    });
+    }));
 
-    const label = createSvgElement("text", {
-      class: "structure-label",
-      x: 800,
-      y: 462,
-      "text-anchor": "middle"
-    });
+    const label = s("text", { class: "structure-label", x: 800, y: 462, "text-anchor": "middle" });
     label.textContent = "GLOBE / META LOCKED LATER";
-
-    svg.appendChild(orb);
     svg.appendChild(label);
+
     scene.appendChild(svg);
     root.appendChild(scene);
     renderSceneCopy(root, state);
   }
 
   function renderRound(root, state) {
-    const scene = createElement("section", {
+    const scene = h("section", {
       className: "tree-scene round-tree-scene",
-      "aria-label": "Round World Tree of Life 256 structure",
+      "aria-label": "Round World Tree of Life with independent leaves and terminal nodes",
       "data-tree-structure": "256",
       "data-doll-layer": state.dollLayer
     });
 
-    const svg = createSvgElement("svg", {
-      class: "tree-svg",
-      viewBox: "0 0 1600 900",
-      role: "img",
-      "aria-label": "Tree of Life scene with one trunk, four primary limbs, sixteen canopies, sixty-four branch seats, and two hundred fifty-six terminal nodes"
-    });
-
-    addDefs(svg);
-    drawSkyGround(svg);
-    drawManor(svg);
+    const svg = baseSvg("Tree of Life scene with independent leaves, fruit, blossoms, and habitat nodes");
     drawTree(svg, state);
 
     scene.appendChild(svg);
@@ -567,9 +649,12 @@
     return Object.assign({
       mode: "flat",
       dollLayer: "DOLL_1_COMPASS",
+      activeTab: "overview",
       canopyIndex: 1,
       branchSeatIndex: 1,
-      terminalIndex: 1
+      terminalIndex: 1,
+      activeButterflyOption: "none",
+      butterflyVisibility: "hidden"
     }, state || {});
   }
 
@@ -578,20 +663,20 @@
 
     const next = normalizeState(state);
     root.replaceChildren();
+
     root.dataset.renderStatus = "rendering";
     root.dataset.activeMode = next.mode;
     root.dataset.dollLayer = next.dollLayer;
+    root.dataset.activeTab = next.activeTab;
     root.dataset.canopyIndex = String(next.canopyIndex);
     root.dataset.branchSeatIndex = String(next.branchSeatIndex);
     root.dataset.terminalIndex = String(next.terminalIndex);
+    root.dataset.activeButterflyOption = next.activeButterflyOption;
+    root.dataset.butterflyVisibility = next.butterflyVisibility;
 
-    if (next.mode === "round") {
-      renderRound(root, next);
-    } else if (next.mode === "globe") {
-      renderGlobe(root, next);
-    } else {
-      renderFlat(root, next);
-    }
+    if (next.mode === "round") renderRound(root, next);
+    else if (next.mode === "globe") renderGlobe(root, next);
+    else renderFlat(root, next);
 
     root.dataset.renderStatus = "complete";
   }

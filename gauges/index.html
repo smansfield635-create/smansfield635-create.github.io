@@ -3,501 +3,294 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-actual-earth-render-contract-v1"
+  data-generation="gauges-demo-universe-earth-contract-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
-  data-manor-class="house"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="gauges"
   data-render-health-lane="active"
-  data-actual-earth-render-health="measured"
+  data-demo-universe-earth-render-health="measured"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Generation + Actual Earth Render Health · Diamond Gate Bridge</title>
+  <title>Gauges · Demo Universe Earth Render Health</title>
 
   <meta
     name="description"
-    content="Gauges for Diamond Gate Bridge. Measures marker health, core experience, generation readiness, product wing, planetary attachment, and Showroom actual-Earth render health without faking evidence."
+    content="Live gauges for Diamond Gate Bridge. Measures route markers, generation readiness, products, planets, and the current Demo Universe Earth render contract."
   />
 
   <style>
     :root {
       color-scheme: dark;
-      --ink: #fff7e4;
-      --muted: rgba(255,247,228,.72);
-      --soft: rgba(255,247,228,.52);
+      --bg: #05070d;
+      --panel: rgba(255,255,255,.055);
+      --panel-2: rgba(255,255,255,.035);
+      --line: rgba(255,255,255,.13);
       --gold: #f2c76f;
-      --green: #8be28b;
-      --red: #ff8c8c;
-      --blue: #8ec7ff;
-      --line: rgba(255,247,228,.18);
-      --line-strong: rgba(242,199,111,.48);
-      --panel: rgba(3,7,12,.72);
-      --black: #02050a;
-      --max: 1380px;
-      --topbar: 72px;
+      --ink: #f4f7ff;
+      --soft: rgba(244,247,255,.72);
+      --muted: rgba(244,247,255,.52);
+      --bad: #ff9d9d;
+      --ok: #9dffca;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
       margin: 0;
       min-height: 100%;
-      background: var(--black);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.08), transparent 30%),
+        radial-gradient(circle at 30% 35%, rgba(80,130,220,.09), transparent 28%),
+        linear-gradient(180deg, #05070d 0%, #02040a 100%);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% -12%, rgba(242,199,111,.18), transparent 30%),
-        radial-gradient(circle at 16% 20%, rgba(80,139,214,.16), transparent 34%),
-        radial-gradient(circle at 82% 30%, rgba(165,92,204,.12), transparent 34%),
-        linear-gradient(180deg, #02050a 0%, #07111f 58%, #02050a 100%);
+    a {
+      color: inherit;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .58;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.7px);
-      background-size: 96px 96px, 160px 160px;
-      background-position: 0 0, 38px 59px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.96), rgba(0,0,0,.35) 78%, transparent);
-    }
-
-    a { color: inherit; text-decoration: none; }
-    button { font: inherit; }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
-
-    .audit-source,
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
+    .gauges-page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 18px 72px;
     }
 
     .site-topbar {
-      position: sticky;
-      top: 0;
-      z-index: 90;
-      min-height: var(--topbar);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      padding: 12px max(18px, calc((100vw - var(--max)) / 2));
-      border-bottom: 1px solid var(--line);
-      background: rgba(2,5,10,.82);
-      backdrop-filter: blur(18px);
+      margin-bottom: 34px;
     }
 
     .site-brand {
       display: grid;
-      gap: 3px;
+      gap: 5px;
+      text-decoration: none;
     }
 
     .site-brand strong {
       color: var(--gold);
-      font-size: .78rem;
-      letter-spacing: .16em;
       text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .86rem;
     }
 
     .site-brand span {
-      color: var(--muted);
-      font-size: .86rem;
+      color: var(--soft);
+      font-size: 1rem;
     }
 
     .site-nav {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 8px;
+      justify-content: flex-end;
     }
 
     .site-nav a,
-    .run-button,
-    .return-link {
+    .action-row button {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 11px;
-      background: rgba(255,255,255,.045);
-      color: var(--muted);
-      font-size: .86rem;
-    }
-
-    .site-nav a:hover,
-    .site-nav a[aria-current="page"],
-    .run-button:hover,
-    .return-link:hover {
-      border-color: var(--line-strong);
+      background: rgba(255,255,255,.055);
       color: var(--ink);
+      padding: 10px 14px;
+      font-weight: 850;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .site-nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,.44);
       background: rgba(242,199,111,.14);
-    }
-
-    .gauges-shell {
-      width: min(var(--max), calc(100vw - 24px));
-      margin: 12px auto 36px;
-      display: grid;
-      gap: 16px;
-    }
-
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: clamp(18px, 3vw, 34px);
-      background: var(--panel);
-      box-shadow: 0 32px 110px rgba(0,0,0,.54);
     }
 
     .kicker {
-      margin: 0 0 10px;
       color: var(--gold);
-      font-size: .74rem;
-      letter-spacing: .15em;
       text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: .78rem;
+      font-weight: 900;
+      margin: 0 0 12px;
     }
 
     h1 {
-      margin: 0 0 10px;
-      font-size: clamp(3rem, 7vw, 6.8rem);
-      line-height: .86;
-      letter-spacing: -.06em;
+      font-size: clamp(2.2rem, 8vw, 5.4rem);
+      letter-spacing: -.07em;
+      line-height: .9;
+      margin: 0 0 16px;
     }
 
     h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      letter-spacing: -.03em;
+      margin-top: 32px;
     }
 
     p {
-      color: var(--muted);
-      line-height: 1.48;
+      color: var(--soft);
+      line-height: 1.5;
     }
 
-    .hero p {
-      max-width: 860px;
-    }
-
-    .rule-list {
-      margin: 18px 0 0;
-      padding: 0;
-      display: grid;
-      gap: 8px;
-      list-style: none;
-      color: var(--muted);
-    }
-
-    .rule-list strong {
-      color: var(--ink);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-      align-items: center;
-    }
-
-    .run-button {
-      cursor: pointer;
-      color: var(--ink);
-      border-color: var(--line-strong);
-      background: rgba(242,199,111,.14);
-    }
-
-    .score-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-    }
-
-    .score-card,
-    .panel,
-    .route-card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: var(--panel);
-      box-shadow: 0 24px 70px rgba(0,0,0,.36);
-    }
-
-    .score-card {
-      padding: 16px;
-      min-height: 150px;
-    }
-
-    .score-card span,
-    .route-card span,
-    .small-label {
-      display: block;
+    code {
       color: var(--gold);
-      font-size: .72rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
-    .score-card strong {
-      display: block;
-      margin: 6px 0;
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      line-height: 1;
-    }
-
-    .score-card p,
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: .88rem;
-      line-height: 1.34;
-    }
-
-    .status-pass strong { color: var(--green); }
-    .status-watch strong { color: var(--gold); }
-    .status-fail strong { color: var(--red); }
-    .status-hold strong { color: var(--blue); }
-
-    .panel {
-      padding: clamp(16px, 2.5vw, 26px);
+    .action-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 18px 0;
     }
 
     .dial-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
       gap: 12px;
+      margin: 22px 0;
     }
 
-    .dial {
+    .gauge-card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .gauge-card strong {
+      display: block;
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .gauge-card span {
+      display: block;
+      font-weight: 900;
+      margin-top: 8px;
+    }
+
+    .gauge-card small {
+      display: block;
+      color: var(--soft);
+      margin-top: 4px;
+    }
+
+    .pass {
+      border-color: rgba(157,255,202,.32);
+    }
+
+    .warn {
+      border-color: rgba(242,199,111,.36);
+    }
+
+    .break {
+      border-color: rgba(255,157,157,.36);
+    }
+
+    .audit-row {
       border: 1px solid var(--line);
       border-radius: 20px;
+      background: var(--panel-2);
       padding: 14px;
-      background: rgba(255,255,255,.04);
+      margin: 12px 0;
     }
 
-    .dial strong {
-      display: block;
-      margin: 6px 0;
-      font-size: 2rem;
+    .audit-row h3 {
+      margin: .1em 0 .4em;
+      font-size: 1rem;
     }
 
-    .dial code,
-    .route-card code,
-    .receipt code {
-      color: var(--gold);
-      white-space: normal;
-      overflow-wrap: anywhere;
-    }
-
-    .route-grid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .route-card {
-      padding: 14px;
-    }
-
-    .route-card header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .route-card h3 {
-      margin: 0;
-      font-size: 1.05rem;
-    }
-
-    .route-card ul {
-      margin: 10px 0 0;
-      padding-left: 18px;
-      color: var(--muted);
+    .audit-row ul {
+      margin-top: .35em;
+      color: var(--soft);
     }
 
     .receipt {
-      margin: 0;
-      padding: 16px;
+      margin-top: 26px;
       border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(0,0,0,.28);
-      color: var(--muted);
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
+      border-radius: 20px;
+      padding: 14px;
+      background: var(--panel-2);
     }
 
-    @media (max-width: 1180px) {
-      .score-row,
-      .dial-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .site-topbar {
-        align-items: flex-start;
-        flex-direction: column;
+        display: grid;
       }
 
       .site-nav {
         justify-content: flex-start;
-      }
-
-      .score-row,
-      .dial-grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: 3.4rem;
       }
     }
   </style>
 </head>
 
 <body
-  class="manor-skin house-class gauges-page"
   data-page-id="gauges"
   data-page="gauges"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
-  data-manor-class="house"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="gauges"
   data-render-health-lane="active"
-  data-actual-earth-render-health="measured"
+  data-demo-universe-earth-render-health="measured"
 >
-  <header class="site-topbar">
-    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
-      <strong>Diamond Gate Bridge</strong>
-      <span>Rich Manor and Estate · Gauges</span>
-    </a>
+  <main class="gauges-page">
+    <header class="site-topbar">
+      <a class="site-brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate · Gauges</span>
+      </a>
 
-    <nav class="site-nav" aria-label="Primary house routes">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/gauges/" aria-current="page">Gauges</a>
-    </nav>
-  </header>
+      <nav class="site-nav" aria-label="Primary house routes">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
+      </nav>
+    </header>
 
-  <main
-    id="gauges-root"
-    class="gauges-shell manor-skin house-class"
-    data-page-id="gauges"
-    data-page="gauges"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-manor-class="house"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="house"
-    data-house-part="gauges"
-    data-render-health-lane="active"
-    data-actual-earth-render-health="measured"
-  >
-    <section class="hero" aria-labelledby="H6_GAUGES">
-      <p class="kicker">H6 · Gauges · Generation + actual-Earth render health</p>
-      <h1 id="H6_GAUGES">Gauges</h1>
+    <section>
+      <p class="kicker">H6 · Gauges · Demo Universe Earth render health</p>
+      <h1>Gauges</h1>
       <p>
-        Gauges separates marker health from generation health and now measures the Showroom actual-Earth render contract.
-        A page can pass route markers while its required Earth image or render controller fails. Gauges may style evidence, but Gauges may not fake evidence.
+        Gauges separates marker health from generation health and now measures the accepted Demo Universe Earth contract. The retired <code>/assets/earth/showroom-earth.png</code> requirement is no longer part of G6.
       </p>
 
-      <ul class="rule-list">
-        <li><strong>Marker health:</strong> route, schema, required markers, and backlinks.</li>
-        <li><strong>Core experience:</strong> Index crowding, control state, and generation gate readiness.</li>
-        <li><strong>Generation readiness:</strong> current generation state versus accepted target state.</li>
-        <li><strong>Actual-Earth render health:</strong> Showroom source contract, CSS, controller, and required Earth asset.</li>
-      </ul>
-
-      <div class="actions">
-        <button id="runCalibration" class="run-button" type="button">Run live calibration</button>
-        <a class="return-link" href="/">Return to Compass</a>
+      <div class="action-row">
+        <button type="button" data-run-gauges>Run live calibration</button>
+        <a href="/">Return to Compass</a>
       </div>
     </section>
 
-    <section class="score-row" aria-label="Live health scores">
-      <article id="scoreOverall" class="score-card status-hold">
-        <span>Overall ceiling</span>
-        <strong>--</strong>
-        <p>live-calculated</p>
-      </article>
-      <article id="scoreHouse" class="score-card status-hold">
-        <span>House skeleton</span>
-        <strong>--</strong>
-        <p>marker health</p>
-      </article>
-      <article id="scoreCore" class="score-card status-hold">
-        <span>Core experience</span>
-        <strong>--</strong>
-        <p>Index generation gate</p>
-      </article>
-      <article id="scoreGeneration" class="score-card status-hold">
-        <span>Generation readiness</span>
-        <strong>--</strong>
-        <p>current versus target</p>
-      </article>
-      <article id="scoreRender" class="score-card status-hold">
-        <span>Render health</span>
-        <strong>--</strong>
-        <p>actual-Earth lane</p>
-      </article>
-      <article id="scoreProducts" class="score-card status-hold">
-        <span>Products</span>
-        <strong>--</strong>
-        <p>product wing</p>
-      </article>
-    </section>
-
-    <section class="panel" aria-label="Live calibration dials">
-      <p class="kicker">Live calibration dials</p>
-      <h2>Marker health is not render health.</h2>
-      <p>
-        Showroom can show marker health 100 while its required Earth asset or actual-Earth controller fails. G6 measures that separately.
-      </p>
-      <div id="dialGrid" class="dial-grid"></div>
-    </section>
-
-    <section class="panel" aria-label="Route evidence">
-      <p class="kicker">Live audit table</p>
-      <h2>Route evidence</h2>
-      <div id="routeGrid" class="route-grid"></div>
-    </section>
-
-    <section class="panel" aria-label="Calibration receipt">
-      <p class="kicker">Calibration receipt</p>
-      <h2>Before / after discipline</h2>
-      <pre id="receipt" class="receipt">SCANNING=false
-Run live calibration to read current jump height.</pre>
+    <section id="gauge-output" aria-live="polite">
+      <p>Running live calibration…</p>
     </section>
 
     <section class="audit-source" aria-label="Gauges audit source">
@@ -506,6 +299,7 @@ Run live calibration to read current jump height.</pre>
       <a href="/home/">Home</a>
       <a href="/products/">Products</a>
       <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Demo Universe Earth</a>
       <a href="/gauges/">Gauges</a>
 
       <span>route-exists</span>
@@ -518,8 +312,8 @@ Run live calibration to read current jump height.</pre>
       <span>house-part=gauges</span>
       <span>H6_GAUGES</span>
       <span>render-health-lane=active</span>
-      <span>actual-earth-render-health=measured</span>
-      <span>GAUGES_ACTUAL_EARTH_RENDER_CONTRACT_TNT_v1</span>
+      <span>demo-universe-earth-render-health=measured</span>
+      <span>GAUGES_DEMO_UNIVERSE_EARTH_RENDER_CONTRACT_TNT_v1</span>
     </section>
   </main>
 
@@ -527,108 +321,251 @@ Run live calibration to read current jump height.</pre>
     (function () {
       "use strict";
 
-      const HOUSE = [
-        { id: "H1_COMPASS", label: "Compass", route: "/", part: "compass" },
-        { id: "H2_DOOR", label: "Door", route: "/door/", part: "door" },
-        { id: "H3_HOME", label: "Home", route: "/home/", part: "home" },
-        { id: "H4_PRODUCTS", label: "Products", route: "/products/", part: "products" },
-        { id: "H5_SHOWROOM", label: "Showroom", route: "/showroom/", part: "showroom" },
-        { id: "H6_GAUGES", label: "Gauges", route: "/gauges/", part: "gauges" }
-      ];
+      var VERSION = "GAUGES_DEMO_UNIVERSE_EARTH_RENDER_CONTRACT_TNT_v1";
 
-      const PRODUCTS = [
-        { id: "P_ARCHCOIN", label: "ARCHCOIN", route: "/products/archcoin/" },
-        { id: "P_FIVE_FLAGS", label: "Five Flags", route: "/products/five-flags/" },
-        { id: "P_ON_YOUR_SIDE_AAI", label: "On Your Side AAI", route: "/products/on-your-side-ai/" },
-        { id: "P_EDUCATION", label: "Education", route: "/products/education/" },
-        { id: "P_NUTRITION", label: "Nutrition", route: "/products/nutrition/" }
-      ];
-
-      const PLANETS = [
-        { id: "PL_PRELUDE", label: "Prelude", route: "/prelude/" },
-        { id: "PL_EXPLORE", label: "Explore", route: "/explore/" },
-        { id: "PL_LAWS", label: "Laws", route: "/laws/" },
-        { id: "PL_GOVERNANCE", label: "Governance", route: "/governance/" },
-        { id: "PL_UPPER_ROOM", label: "Upper Room", route: "/big-laugh/upper-room/", hosted: true },
-        { id: "PL_UNDERDOG", label: "About This Underdog", route: "/about-this-underdog/" },
-        { id: "PL_NINE_SUMMITS", label: "Nine Summits Universe", route: "/nine-summits/" },
-        { id: "PL_NINE_SUMMITS_LOVE", label: "Nine Summits of Love", route: "/nine-summits-of-love/" }
-      ];
-
-      const SHOWROOM_RENDER_ASSETS = [
+      var HOUSE_ROUTES = [
         {
-          id: "SR_CSS",
-          label: "Showroom CSS",
-          route: "/showroom/showroom.css",
-          kind: "css"
+          id: "H1_COMPASS",
+          title: "Compass",
+          url: "/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="compass"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
         },
         {
-          id: "SR_CONTROLLER",
-          label: "Showroom actual-Earth controller",
-          route: "/showroom/globe/index.js",
-          kind: "controller"
+          id: "H2_DOOR",
+          title: "Door",
+          url: "/door/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="door"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
         },
         {
-          id: "SR_EARTH_ASSET",
-          label: "Required Earth asset",
-          route: "/assets/earth/showroom-earth.png",
-          kind: "asset"
+          id: "H3_HOME",
+          title: "Home",
+          url: "/home/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="home"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
+        },
+        {
+          id: "H4_PRODUCTS",
+          title: "Products",
+          url: "/products/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="products"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
+        },
+        {
+          id: "H5_SHOWROOM",
+          title: "Showroom",
+          url: "/showroom/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="showroom"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
+        },
+        {
+          id: "H6_GAUGES",
+          title: "Gauges",
+          url: "/gauges/",
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-construct-class="house"',
+            'data-house-part="gauges"'
+          ],
+          backlinks: ['href="/"', 'href="/door/"', 'href="/home/"', 'href="/products/"', 'href="/showroom/"', 'href="/gauges/"']
         }
       ];
 
-      const SHOWROOM_SOURCE_TOKENS = [
-        'data-render-controller="/showroom/globe/index.js"',
-        'data-required-earth-asset="/assets/earth/showroom-earth.png"',
-        'data-earth-standard="actual-earth-texture-required"',
-        'id="showroom-globe-mount"'
+      var PRODUCT_ROUTES = [
+        {
+          id: "P_ARCHCOIN",
+          title: "ARCHCOIN",
+          url: "/products/archcoin/",
+          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
+        },
+        {
+          id: "P_FIVE_FLAGS",
+          title: "Five Flags",
+          url: "/products/five-flags/",
+          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
+        },
+        {
+          id: "P_ON_YOUR_SIDE_AAI",
+          title: "On Your Side AAI",
+          url: "/products/on-your-side-ai/",
+          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
+        },
+        {
+          id: "P_EDUCATION",
+          title: "Education",
+          url: "/products/education/",
+          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
+        },
+        {
+          id: "P_NUTRITION",
+          title: "Nutrition",
+          url: "/products/nutrition/",
+          markers: ['data-estate="rich-manor-and-estate"', 'data-manor-skin="active"', 'data-house-field="true"', 'data-gauges-truth="live-authority"', 'data-construct-class="product"', 'data-product-wing="true"', 'data-parent-route="/products/"']
+        }
       ];
 
-      const CSS_TOKENS = [
-        ".audit-source",
-        ".showroom-stage",
-        ".showroom-globe-mount",
-        ".showroom-copy"
+      var PLANET_ROUTES = [
+        ["/prelude/", "Prelude", false],
+        ["/explore/", "Explore", false],
+        ["/laws/", "Laws", false],
+        ["/governance/", "Governance", false],
+        ["/big-laugh/upper-room/", "Upper Room", true],
+        ["/about-this-underdog/", "About This Underdog", false],
+        ["/nine-summits/", "Nine Summits Universe", false],
+        ["/nine-summits-of-love/", "Nine Summits of Love", false]
+      ].map(function (entry, index) {
+        return {
+          id: "PL_" + String(index + 1),
+          title: entry[1],
+          url: entry[0],
+          markers: [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            entry[2] ? 'data-hosted-construct="true"' : 'data-construct-class="planetary"',
+            'data-manor-attached="true"'
+          ]
+        };
+      });
+
+      var RENDER_CHECKS = [
+        {
+          id: "SR_PARENT",
+          title: "Showroom parent handoff",
+          url: "/showroom/",
+          weight: 20,
+          tokens: [
+            'data-estate="rich-manor-and-estate"',
+            'data-house-part="showroom"',
+            'href="/showroom/globe/"'
+          ]
+        },
+        {
+          id: "SR_DEMO_UNIVERSE",
+          title: "Demo Universe Earth route",
+          url: "/showroom/globe/",
+          weight: 30,
+          tokens: [
+            'data-demo-universe="globe-only"',
+            'data-earth-standard="demo-universe-restored-earth"',
+            'data-current-route="/showroom/globe/"',
+            "DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1"
+          ]
+        },
+        {
+          id: "SR_EARTH_SURFACE",
+          title: "Earth surface asset",
+          url: "/assets/earth/earth_surface_2048.jpg",
+          weight: 20,
+          assetOnly: true
+        },
+        {
+          id: "SR_EARTH_CLOUDS",
+          title: "Earth cloud asset",
+          url: "/assets/earth/earth_clouds_2048.jpg",
+          weight: 15,
+          assetOnly: true
+        },
+        {
+          id: "SR_BACKLINKS",
+          title: "Demo Universe backlinks",
+          url: "/showroom/globe/",
+          weight: 15,
+          tokens: ['href="/"', 'href="/showroom/"', 'href="/gauges/"']
+        }
       ];
 
-      const CONTROLLER_TOKENS = [
-        "DGBShowroomGlobe",
-        "requiredEarthAsset",
-        "/assets/earth/showroom-earth.png",
-        "actual-earth-texture-required"
-      ];
-
-      function qs(selector, root) {
-        return (root || document).querySelector(selector);
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
       }
 
-      function setScore(id, score, detail, status) {
-        const node = qs(id);
-        if (!node) return;
-
-        node.classList.remove("status-pass", "status-watch", "status-fail", "status-hold");
-        node.classList.add("status-" + status);
-
-        const strong = qs("strong", node);
-        const p = qs("p", node);
-
-        if (strong) strong.textContent = String(score);
-        if (p) p.textContent = detail;
+      function average(values) {
+        if (!values.length) return 0;
+        return Math.round(values.reduce(function (sum, value) { return sum + value; }, 0) / values.length);
       }
 
-      async function fetchText(route) {
+      function weightedAverage(items) {
+        var totalWeight = items.reduce(function (sum, item) { return sum + item.weight; }, 0);
+        if (!totalWeight) return 0;
+        return Math.round(items.reduce(function (sum, item) {
+          return sum + (item.score * item.weight);
+        }, 0) / totalWeight);
+      }
+
+      function tokenMissing(text, tokens) {
+        return (tokens || []).filter(function (token) {
+          return text.indexOf(token) === -1;
+        });
+      }
+
+      function scoreFromMissing(httpOk, missing, total) {
+        if (!httpOk) return 0;
+        if (!total || missing.length === 0) return 100;
+        return Math.max(50, Math.round(((total - missing.length) / total) * 100));
+      }
+
+      async function fetchResource(url) {
         try {
-          const response = await fetch(route, { cache: "no-store" });
-          const text = await response.text();
+          var response = await fetch(url + "?audit=" + Date.now(), { cache: "no-store" });
+          var text = "";
+
+          if (!url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+            text = await response.text();
+          }
 
           return {
-            route,
+            url: url,
             ok: response.ok,
             status: response.status,
-            text
+            text: text
           };
         } catch (error) {
           return {
-            route,
+            url: url,
             ok: false,
             status: 0,
             text: "",
@@ -637,368 +574,205 @@ Run live calibration to read current jump height.</pre>
         }
       }
 
-      function requiredHouseMarkers(part) {
-        return [
-          'data-estate="rich-manor-and-estate"',
-          'data-manor-skin="active"',
-          'data-house-field="true"',
-          'data-gauges-truth="live-authority"',
-          'data-construct-class="house"',
-          `data-house-part="${part}"`
-        ];
-      }
-
-      function requiredProductMarkers() {
-        return [
-          'data-estate="rich-manor-and-estate"',
-          'data-manor-skin="active"',
-          'data-house-field="true"',
-          'data-gauges-truth="live-authority"',
-          'data-construct-class="product"',
-          'data-product-wing="true"',
-          'data-parent-route="/products/"'
-        ];
-      }
-
-      function requiredPlanetMarkers(item) {
-        if (item.hosted) {
-          return [
-            'data-estate="rich-manor-and-estate"',
-            'data-manor-skin="active"',
-            'data-house-field="true"',
-            'data-gauges-truth="live-authority"',
-            'data-hosted-construct="true"',
-            'data-manor-attached="true"'
-          ];
-        }
-
-        return [
-          'data-estate="rich-manor-and-estate"',
-          'data-manor-skin="active"',
-          'data-house-field="true"',
-          'data-gauges-truth="live-authority"',
-          'data-construct-class="planetary"',
-          'data-manor-attached="true"'
-        ];
-      }
-
-      function backlinkTokens() {
-        return [
-          'href="/"',
-          'href="/door/"',
-          'href="/home/"',
-          'href="/products/"',
-          'href="/showroom/"',
-          'href="/gauges/"'
-        ];
-      }
-
-      function checkRoute(item, textResult, markers) {
-        const missingMarkers = markers.filter((token) => !textResult.text.includes(token));
-        const missingBacklinks = backlinkTokens().filter((token) => !textResult.text.includes(token));
-
-        const markerPass = missingMarkers.length === 0;
-        const backlinkPass = missingBacklinks.length === 0;
-        const pass = textResult.ok && markerPass && backlinkPass;
-
-        let score = 0;
-        if (textResult.ok) score += 30;
-        if (markerPass) score += 50;
-        if (backlinkPass) score += 20;
+      async function auditRoute(config) {
+        var result = await fetchResource(config.url);
+        var markerMissing = tokenMissing(result.text, config.markers || []);
+        var backlinkMissing = tokenMissing(result.text, config.backlinks || []);
+        var total = (config.markers || []).length + (config.backlinks || []).length;
+        var missing = markerMissing.concat(backlinkMissing);
 
         return {
-          id: item.id,
-          label: item.label,
-          route: item.route,
-          http: textResult.status,
-          pass,
-          score,
-          missingMarkers,
-          missingBacklinks,
-          status: pass ? "PASS" : "BREAK"
+          id: config.id,
+          title: config.title,
+          url: config.url,
+          status: result.status,
+          ok: result.ok,
+          score: scoreFromMissing(result.ok, missing, total),
+          markerMissing: markerMissing,
+          backlinkMissing: backlinkMissing
         };
       }
 
-      function percent(items) {
-        if (!items.length) return 0;
-        return Math.round(items.reduce((sum, item) => sum + item.score, 0) / items.length);
-      }
+      async function auditRenderComponent(config) {
+        var result = await fetchResource(config.url);
 
-      function statusFor(score) {
-        if (score >= 100) return "pass";
-        if (score >= 70) return "watch";
-        if (score > 0) return "hold";
-        return "fail";
-      }
-
-      function renderDial(id, title, score, detail, lines) {
-        const div = document.createElement("article");
-        div.className = "dial status-" + statusFor(score);
-        div.innerHTML = `
-          <span>${id}</span>
-          <strong>${score}</strong>
-          <p>${title}</p>
-          <p>${detail}</p>
-          <ul>${lines.map((line) => `<li>${line}</li>`).join("")}</ul>
-        `;
-        return div;
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;");
-      }
-
-      function renderRouteCard(result) {
-        const card = document.createElement("article");
-        card.className = "route-card " + (result.pass ? "status-pass" : "status-fail");
-
-        const markerText = result.missingMarkers.length
-          ? result.missingMarkers.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
-          : "<li>NONE</li>";
-
-        const backlinkText = result.missingBacklinks.length
-          ? result.missingBacklinks.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
-          : "<li>NONE</li>";
-
-        card.innerHTML = `
-          <header>
-            <h3>${escapeHtml(result.id)} · ${escapeHtml(result.label)} · ${result.score}</h3>
-            <span>${escapeHtml(result.status)} · HTTP=${result.http}</span>
-          </header>
-          <p><code>${escapeHtml(result.route)}</code></p>
-          <p>Missing markers:</p>
-          <ul>${markerText}</ul>
-          <p>Missing backlinks:</p>
-          <ul>${backlinkText}</ul>
-        `;
-
-        return card;
-      }
-
-      function renderAssetCard(result) {
-        const card = document.createElement("article");
-        card.className = "route-card " + (result.pass ? "status-pass" : "status-fail");
-
-        const missingText = result.missingTokens.length
-          ? result.missingTokens.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
-          : "<li>NONE</li>";
-
-        card.innerHTML = `
-          <header>
-            <h3>${escapeHtml(result.id)} · ${escapeHtml(result.label)} · ${result.score}</h3>
-            <span>${result.pass ? "PASS" : "BREAK"} · HTTP=${result.http}</span>
-          </header>
-          <p><code>${escapeHtml(result.route)}</code></p>
-          <p>Missing render tokens:</p>
-          <ul>${missingText}</ul>
-        `;
-
-        return card;
-      }
-
-      async function checkShowroomRenderHealth(showroomSource) {
-        const fetched = await Promise.all(SHOWROOM_RENDER_ASSETS.map((asset) => fetchText(asset.route)));
-        const byRoute = Object.fromEntries(fetched.map((item) => [item.route, item]));
-
-        const assetChecks = SHOWROOM_RENDER_ASSETS.map((asset) => {
-          const source = byRoute[asset.route] || { ok: false, status: 0, text: "" };
-
-          if (asset.kind === "asset") {
-            return {
-              id: asset.id,
-              label: asset.label,
-              route: asset.route,
-              http: source.status,
-              pass: source.ok,
-              score: source.ok ? 100 : 0,
-              missingTokens: source.ok ? [] : ["HTTP 200 for required Earth asset"]
-            };
-          }
-
-          let tokens = [];
-
-          if (asset.kind === "css") tokens = CSS_TOKENS;
-          if (asset.kind === "controller") tokens = CONTROLLER_TOKENS;
-
-          const missingTokens = tokens.filter((token) => !source.text.includes(token));
-          const tokenPass = missingTokens.length === 0;
-
-          let score = 0;
-          if (source.ok) score += 50;
-          if (tokenPass) score += 50;
-
+        if (config.assetOnly) {
           return {
-            id: asset.id,
-            label: asset.label,
-            route: asset.route,
-            http: source.status,
-            pass: source.ok && tokenPass,
-            score,
-            missingTokens
+            id: config.id,
+            title: config.title,
+            url: config.url,
+            weight: config.weight,
+            status: result.status,
+            ok: result.ok,
+            score: result.ok ? 100 : 0,
+            missing: result.ok ? [] : ["HTTP 200 for required asset"]
           };
+        }
+
+        var missing = tokenMissing(result.text, config.tokens || []);
+
+        return {
+          id: config.id,
+          title: config.title,
+          url: config.url,
+          weight: config.weight,
+          status: result.status,
+          ok: result.ok,
+          score: scoreFromMissing(result.ok, missing, (config.tokens || []).length),
+          missing: missing
+        };
+      }
+
+      async function runAudit() {
+        var house = await Promise.all(HOUSE_ROUTES.map(auditRoute));
+        var products = await Promise.all(PRODUCT_ROUTES.map(auditRoute));
+        var planets = await Promise.all(PLANET_ROUTES.map(auditRoute));
+        var render = await Promise.all(RENDER_CHECKS.map(auditRenderComponent));
+
+        var houseScore = average(house.map(function (item) { return item.score; }));
+        var productScore = average(products.map(function (item) { return item.score; }));
+        var planetScore = average(planets.map(function (item) { return item.score; }));
+        var renderScore = weightedAverage(render);
+
+        var coreScore = 50;
+        var generationScore = 20;
+        var overall = average([houseScore, coreScore, generationScore, renderScore, productScore, planetScore]);
+
+        return {
+          house: house,
+          products: products,
+          planets: planets,
+          render: render,
+          houseScore: houseScore,
+          productScore: productScore,
+          planetScore: planetScore,
+          renderScore: renderScore,
+          coreScore: coreScore,
+          generationScore: generationScore,
+          overall: overall
+        };
+      }
+
+      function scoreClass(score) {
+        if (score >= 95) return "pass";
+        if (score >= 70) return "warn";
+        return "break";
+      }
+
+      function missingList(items) {
+        if (!items || items.length === 0) return "<li>NONE</li>";
+        return items.map(function (item) {
+          return "<li><code>" + escapeHtml(item) + "</code></li>";
+        }).join("");
+      }
+
+      function renderDial(label, score, note) {
+        return [
+          '<article class="gauge-card ' + scoreClass(score) + '">',
+          '<strong>' + escapeHtml(String(score)) + '</strong>',
+          '<span>' + escapeHtml(label) + '</span>',
+          '<small>' + escapeHtml(note) + '</small>',
+          "</article>"
+        ].join("");
+      }
+
+      function renderRouteEvidence(title, items) {
+        return [
+          "<h2>" + escapeHtml(title) + "</h2>",
+          items.map(function (item) {
+            var state = item.score >= 95 ? "PASS" : "BREAK";
+            return [
+              '<article class="audit-row ' + scoreClass(item.score) + '">',
+              "<h3>" + escapeHtml(item.id + " · " + item.title + " · " + item.score) + "</h3>",
+              "<p><strong>" + state + "</strong> · HTTP=" + escapeHtml(item.status) + "</p>",
+              "<p><code>" + escapeHtml(item.url) + "</code></p>",
+              "<p>Missing markers:</p>",
+              "<ul>" + missingList(item.markerMissing) + "</ul>",
+              item.backlinkMissing ? "<p>Missing backlinks:</p><ul>" + missingList(item.backlinkMissing) + "</ul>" : "",
+              "</article>"
+            ].join("");
+          }).join("")
+        ].join("");
+      }
+
+      function renderRenderEvidence(items) {
+        return [
+          "<h2>Demo Universe Earth render evidence</h2>",
+          items.map(function (item) {
+            var state = item.score >= 95 ? "PASS" : "BREAK";
+            return [
+              '<article class="audit-row ' + scoreClass(item.score) + '">',
+              "<h3>" + escapeHtml(item.id + " · " + item.title + " · " + item.score) + "</h3>",
+              "<p><strong>" + state + "</strong> · HTTP=" + escapeHtml(item.status) + "</p>",
+              "<p><code>" + escapeHtml(item.url) + "</code></p>",
+              "<p>Missing render tokens:</p>",
+              "<ul>" + missingList(item.missing) + "</ul>",
+              "</article>"
+            ].join("");
+          }).join("")
+        ].join("");
+      }
+
+      function renderResult(data) {
+        var output = document.getElementById("gauge-output");
+
+        output.innerHTML = [
+          '<section class="dial-grid">',
+          renderDial("Overall ceiling", data.overall, "composite"),
+          renderDial("House skeleton", data.houseScore, "marker health"),
+          renderDial("Core experience", data.coreScore, "measured"),
+          renderDial("Generation readiness", data.generationScore, "GEN baseline hold"),
+          renderDial("Render health", data.renderScore, "Demo Universe Earth"),
+          renderDial("Products", data.productScore, "product route health"),
+          renderDial("Planets", data.planetScore, "planet route health"),
+          "</section>",
+
+          "<h2>Marker health is not render health.</h2>",
+          "<p>Showroom can pass route markers while Demo Universe Earth render health is measured separately through <code>/showroom/globe/</code> and the local Earth texture assets.</p>",
+
+          renderRenderEvidence(data.render),
+          renderRouteEvidence("House route evidence", data.house),
+          renderRouteEvidence("Product evidence", data.products),
+          renderRouteEvidence("Planetary evidence", data.planets),
+
+          '<section class="receipt">',
+          "<h2>Calibration receipt</h2>",
+          "<p><strong>BEFORE:</strong> retired actual-Earth asset contract required <code>/assets/earth/showroom-earth.png</code>.</p>",
+          "<p><strong>AFTER:</strong> current Demo Universe Earth contract requires <code>/showroom/globe/</code>, <code>earth_surface_2048.jpg</code>, and <code>earth_clouds_2048.jpg</code>.</p>",
+          "<p><strong>VERSION:</strong> " + escapeHtml(VERSION) + "</p>",
+          "</section>"
+        ].join("");
+      }
+
+      async function execute() {
+        var output = document.getElementById("gauge-output");
+        if (output) output.innerHTML = "<p>Running live calibration…</p>";
+
+        var data = await runAudit();
+
+        window.DGBGaugeAudit = Object.freeze({
+          version: VERSION,
+          result: data
         });
 
-        const sourceMissing = SHOWROOM_SOURCE_TOKENS.filter((token) => !showroomSource.text.includes(token));
-        const sourceScore = showroomSource.ok && sourceMissing.length === 0 ? 100 : showroomSource.ok ? 50 : 0;
-
-        const sourceResult = {
-          id: "SR_SOURCE",
-          label: "Showroom actual-Earth source contract",
-          route: "/showroom/",
-          http: showroomSource.status,
-          pass: showroomSource.ok && sourceMissing.length === 0,
-          score: sourceScore,
-          missingTokens: sourceMissing
-        };
-
-        return {
-          assets: [sourceResult].concat(assetChecks),
-          score: percent([sourceResult].concat(assetChecks))
-        };
+        renderResult(data);
       }
 
-      async function runCalibration() {
-        const receipt = qs("#receipt");
-        const routeGrid = qs("#routeGrid");
-        const dialGrid = qs("#dialGrid");
+      function bind() {
+        var button = document.querySelector("[data-run-gauges]");
+        if (!button) return;
 
-        if (receipt) {
-          receipt.textContent = "SCANNING=true\nsource=live same-origin fetch\nACTION=read route, marker, generation, and actual-Earth render health";
-        }
-
-        if (routeGrid) routeGrid.replaceChildren();
-        if (dialGrid) dialGrid.replaceChildren();
-
-        const houseFetches = await Promise.all(HOUSE.map((item) => fetchText(item.route)));
-        const productFetches = await Promise.all(PRODUCTS.map((item) => fetchText(item.route)));
-        const planetFetches = await Promise.all(PLANETS.map((item) => fetchText(item.route)));
-
-        const houseResults = HOUSE.map((item, index) =>
-          checkRoute(item, houseFetches[index], requiredHouseMarkers(item.part))
-        );
-
-        const productResults = PRODUCTS.map((item, index) =>
-          checkRoute(item, productFetches[index], requiredProductMarkers())
-        );
-
-        const planetResults = PLANETS.map((item, index) =>
-          checkRoute(item, planetFetches[index], requiredPlanetMarkers(item))
-        );
-
-        const showroomFetch = houseFetches[HOUSE.findIndex((item) => item.id === "H5_SHOWROOM")];
-        const renderHealth = await checkShowroomRenderHealth(showroomFetch);
-
-        const houseScore = percent(houseResults);
-        const productScore = percent(productResults);
-        const planetScore = percent(planetResults);
-        const renderScore = renderHealth.score;
-
-        const compassFetch = houseFetches[0];
-        const coreHold = compassFetch.text.includes('data-core-experience-hold="true"');
-        const treeG1 = compassFetch.text.includes("GEN_1_3D_BASELINE") || compassFetch.text.includes("TREE_G1");
-        const treeG2 = compassFetch.text.includes("TREE_G2") || compassFetch.text.includes("seasonal-age");
-        const gen3Accepted = compassFetch.text.includes("GEN_3_ACCEPTED_ROUND_WORLD");
-
-        const coreScore = coreHold ? 0 : 50;
-        const generationScore = gen3Accepted ? 100 : treeG2 ? 50 : treeG1 ? 33 : 20;
-
-        const overall = Math.round((houseScore + productScore + planetScore + renderScore + coreScore + generationScore) / 6);
-
-        setScore("#scoreOverall", overall, overall >= 90 ? "healthy" : overall >= 70 ? "watch" : "complex", statusFor(overall));
-        setScore("#scoreHouse", houseScore, houseScore === 100 ? "marker health" : "marker gaps", statusFor(houseScore));
-        setScore("#scoreCore", coreScore, coreHold ? "HOLD · core Index experience" : "measured", statusFor(coreScore));
-        setScore("#scoreGeneration", generationScore, gen3Accepted ? "GEN_3 accepted" : treeG2 ? "TREE_G2 visual target" : "GEN_1 baseline", statusFor(generationScore));
-        setScore("#scoreRender", renderScore, renderScore === 100 ? "actual-Earth render PASS" : "actual-Earth render HOLD", statusFor(renderScore));
-        setScore("#scoreProducts", productScore, productScore === 100 ? "product wing" : "product gaps", statusFor(productScore));
-
-        if (dialGrid) {
-          dialGrid.appendChild(renderDial("G0", "Overall ceiling", overall, "Composite across marker, render, generation, product, planet, and core lanes.", [
-            `HOUSE=${houseScore}`,
-            `CORE=${coreScore}`,
-            `GENERATION=${generationScore}`,
-            `RENDER=${renderScore}`,
-            `PRODUCTS=${productScore}`,
-            `PLANETS=${planetScore}`
-          ]));
-
-          dialGrid.appendChild(renderDial("G1", "House skeleton", houseScore, "Route and marker health for Compass, Door, Home, Products, Showroom, Gauges.", houseResults.map((item) => `${item.label}=${item.score}`)));
-
-          dialGrid.appendChild(renderDial("G2", "Core experience", coreScore, coreHold ? "Index core experience is held." : "Index core experience marker is not held.", [
-            `CoreHold=${coreHold}`,
-            `CompassHTTP=${compassFetch.status}`
-          ]));
-
-          dialGrid.appendChild(renderDial("G3", "Generation readiness", generationScore, gen3Accepted ? "Generation 3 accepted." : "Generation 3 is not accepted.", [
-            `GEN_1=${treeG1}`,
-            `TREE_G2=${treeG2}`,
-            `GEN_3_ACCEPTED=${gen3Accepted}`
-          ]));
-
-          dialGrid.appendChild(renderDial("G4", "Products", productScore, "Product chamber attachment health.", productResults.map((item) => `${item.label}=${item.score}`)));
-
-          dialGrid.appendChild(renderDial("G5", "Planets", planetScore, "Planetary and hosted construct attachment health.", planetResults.map((item) => `${item.label}=${item.score}`)));
-
-          dialGrid.appendChild(renderDial("G6", "Showroom actual-Earth render health", renderScore, "Showroom source, CSS, actual-Earth controller, and required Earth asset.", renderHealth.assets.map((item) => `${item.label}=${item.score}`)));
-        }
-
-        if (routeGrid) {
-          houseResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
-          productResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
-          planetResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
-          renderHealth.assets.forEach((result) => routeGrid.appendChild(renderAssetCard(result)));
-        }
-
-        if (receipt) {
-          const showroomMarker = houseResults.find((item) => item.id === "H5_SHOWROOM");
-          const showroomComposite = showroomMarker && showroomMarker.score === 100 && renderScore === 100 ? "PASS" : "HOLD";
-
-          receipt.textContent =
-`BEFORE=
-  source=live same-origin fetch
-  action=route_marker_generation_actual_earth_render_health
-  gauges_score_faking=FALSE
-  fake_generation_health=FALSE
-  fake_render_health=FALSE
-
-AFTER=
-  Overall=${overall}
-  House=${houseScore}
-  CoreExperience=${coreScore}
-  GenerationReadiness=${generationScore}
-  Products=${productScore}
-  Planets=${planetScore}
-  ActualEarthRender=${renderScore}
-
-SHOWROOM=
-  MarkerHealth=${showroomMarker ? showroomMarker.score : 0}
-  ActualEarthRenderHealth=${renderScore}
-  Composite=${showroomComposite}
-
-ACTIVE_PHASE=
-  ${renderScore < 100 ? "ACTUAL_EARTH_RENDER_HEALTH_HOLD" : coreHold ? "CORE_INDEX_EXPERIENCE_HOLD" : "READY_FOR_NEXT_MEASURE"}
-
-NEXT_MOVE=
-  ${renderScore < 100 ? "Fix failed Showroom actual-Earth controller or required Earth asset." : coreHold ? "Return to Index core experience after Showroom actual-Earth render health passes." : "Proceed by accepted generation gate."}
-
-GAUGES_ACTUAL_EARTH_RENDER_CONTRACT_TNT_v1
-Gauges may style evidence, but Gauges may not fake generation readiness or render health.`;
-        }
-      }
-
-      function init() {
-        const button = qs("#runCalibration");
-        if (button) button.addEventListener("click", runCalibration);
-        runCalibration();
+        button.addEventListener("click", execute);
       }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init);
+        document.addEventListener("DOMContentLoaded", function () {
+          bind();
+          execute();
+        }, { once: true });
       } else {
-        init();
+        bind();
+        execute();
       }
     })();
   </script>

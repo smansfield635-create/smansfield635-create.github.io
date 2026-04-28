@@ -29,9 +29,8 @@ body {
 body {
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% -10%, rgba(242, 199, 111, .16), transparent 28%),
-    radial-gradient(circle at 18% 18%, rgba(95, 145, 215, .13), transparent 34%),
-    radial-gradient(circle at 82% 32%, rgba(67, 121, 84, .12), transparent 32%),
+    radial-gradient(circle at 50% -10%, rgba(242, 199, 111, .13), transparent 28%),
+    radial-gradient(circle at 18% 18%, rgba(95, 145, 215, .10), transparent 34%),
     linear-gradient(180deg, #02050a 0%, #07111f 54%, #02050a 100%);
 }
 
@@ -41,10 +40,10 @@ body::before {
   inset: 0;
   z-index: -3;
   pointer-events: none;
-  opacity: .56;
+  opacity: .48;
   background-image:
-    radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.7px);
+    radial-gradient(circle, rgba(255,255,255,.62) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(255,255,255,.18) 0 1px, transparent 1.7px);
   background-size: 94px 94px, 162px 162px;
   background-position: 0 0, 38px 59px;
   mask-image: linear-gradient(to bottom, rgba(0,0,0,.96), rgba(0,0,0,.38) 78%, transparent);
@@ -146,8 +145,8 @@ summary:focus-visible {
   border: 1px solid var(--line);
   border-radius: 32px;
   background:
-    radial-gradient(circle at 50% 10%, rgba(242,199,111,.12), transparent 24%),
-    radial-gradient(circle at 50% 58%, rgba(80,140,215,.12), transparent 34%),
+    radial-gradient(circle at 50% 12%, rgba(242,199,111,.10), transparent 24%),
+    radial-gradient(circle at 50% 62%, rgba(80,140,215,.10), transparent 34%),
     linear-gradient(180deg, rgba(8, 18, 32, .96) 0%, rgba(8, 18, 25, .96) 49%, rgba(3, 6, 10, .99) 100%);
   box-shadow: 0 32px 110px rgba(0,0,0,.60);
   isolation: isolate;
@@ -160,8 +159,8 @@ summary:focus-visible {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.03), transparent 32%),
-    radial-gradient(circle at 50% 95%, rgba(255,255,255,.07), transparent 24%);
+    linear-gradient(180deg, rgba(255,255,255,.025), transparent 32%),
+    radial-gradient(circle at 50% 95%, rgba(255,255,255,.06), transparent 24%);
 }
 
 .scene-mount {
@@ -191,11 +190,11 @@ summary:focus-visible {
   left: clamp(14px, 2vw, 24px);
   top: clamp(14px, 2vw, 24px);
   z-index: 52;
-  width: min(340px, calc(100% - 28px));
+  width: min(360px, calc(100% - 28px));
   border: 1px solid rgba(242,199,111,.28);
   border-radius: 22px;
   padding: 13px 15px;
-  background: rgba(3,7,12,.48);
+  background: rgba(3,7,12,.54);
   backdrop-filter: blur(10px);
 }
 
@@ -232,7 +231,7 @@ summary:focus-visible {
   padding: 8px;
   border: 1px solid rgba(242,199,111,.32);
   border-radius: 999px;
-  background: rgba(3,7,12,.68);
+  background: rgba(3,7,12,.70);
   backdrop-filter: blur(14px);
   box-shadow: 0 18px 54px rgba(0,0,0,.35);
 }
@@ -259,7 +258,7 @@ summary:focus-visible {
   right: clamp(14px, 2vw, 24px);
   top: clamp(14px, 2vw, 24px);
   z-index: 52;
-  width: min(330px, calc(100% - 28px));
+  width: min(340px, calc(100% - 28px));
   display: grid;
   gap: 8px;
 }
@@ -267,7 +266,7 @@ summary:focus-visible {
 .compass-doll-panel details {
   border: 1px solid rgba(255,247,228,.13);
   border-radius: 18px;
-  background: rgba(3,7,12,.46);
+  background: rgba(3,7,12,.52);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
@@ -317,7 +316,7 @@ summary:focus-visible {
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 10px;
-  background: rgba(3,7,12,.66);
+  background: rgba(3,7,12,.68);
   backdrop-filter: blur(12px);
   color: var(--muted);
   font-size: .86rem;
@@ -347,33 +346,17 @@ summary:focus-visible {
 }
 
 .scene-copy-card {
-  position: absolute;
-  left: clamp(14px, 2vw, 24px);
-  bottom: 86px;
-  z-index: 56;
-  width: min(420px, calc(100% - 28px));
-  border: 1px solid rgba(242,199,111,.24);
-  border-radius: 20px;
-  padding: 13px 15px;
-  background: rgba(3,7,12,.50);
-  backdrop-filter: blur(10px);
+  display: none !important;
 }
 
-.scene-copy-card h2 {
-  margin: 0 0 6px;
-  font-size: clamp(1.2rem, 2vw, 1.7rem);
-  letter-spacing: -.03em;
-}
-
-.scene-copy-card p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.35;
-  font-size: .88rem;
-}
-
-.scene-copy-card .kicker {
-  margin-bottom: 5px;
+.structure-label,
+.fruit-label,
+.fruit-route-label,
+.product-fruit-label {
+  paint-order: stroke;
+  stroke: rgba(2,5,10,.82);
+  stroke-width: 5px;
+  fill: rgba(255,247,228,.92);
 }
 
 .tree-road,
@@ -389,24 +372,6 @@ summary:focus-visible {
 .grass-snow-tip,
 .track-mark {
   vector-effect: non-scaling-stroke;
-}
-
-.fruit-route,
-.product-fruit-route,
-.terminal-leaf-cluster,
-.terminal-node {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.structure-label,
-.fruit-label,
-.fruit-route-label,
-.product-fruit-label {
-  paint-order: stroke;
-  stroke: rgba(2,5,10,.82);
-  stroke-width: 5px;
-  fill: rgba(255,247,228,.92);
 }
 
 @media (max-width: 1040px) {
@@ -427,11 +392,6 @@ summary:focus-visible {
 
   .compass-doll-panel details:not([open]) {
     max-height: 42px;
-  }
-
-  .scene-copy-card {
-    bottom: 92px;
-    opacity: .82;
   }
 }
 
@@ -476,13 +436,6 @@ summary:focus-visible {
     left: 12px;
     right: 12px;
     bottom: 150px;
-    width: auto;
-  }
-
-  .scene-copy-card {
-    left: 12px;
-    right: 12px;
-    bottom: 96px;
     width: auto;
   }
 

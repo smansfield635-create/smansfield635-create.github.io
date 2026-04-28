@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 <html
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="index-shell-compression-tree-g2-v1"
+  data-generation="compass-index-shell-renewal-v1"
   data-generation-readiness="TREE_G2_SEASONAL_AGE_RENDER"
   data-core-experience-state="released"
+  data-current-view-mode="round"
   data-tree-g1="TREE_G1_ACCEPTED_BASELINE"
   data-tree-g2="TREE_G2_SEASONAL_AGE_RENDER"
   data-seasonal-age="active"
-  data-three-view-system="active"
-  data-active-view="gate"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -29,7 +27,6 @@
   data-butterfly-system="available"
   data-butterfly-role="pollination"
   data-render-filter="single-authority"
-  data-russian-doll-shell="active"
   data-generation-3-accepted="false"
 >
 <head>
@@ -43,15 +40,16 @@
     content="Compass entry for Rich Manor and Estate. Tree G1 is accepted; Tree G2 seasonal-age render is active; Generation 3 is not yet accepted."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=index-shell-compression-tree-g2-v1" />
-  <link rel="stylesheet" href="/assets/compass.css?v=index-shell-compression-tree-g2-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=compass-index-shell-renewal-v1" />
+  <link rel="stylesheet" href="/assets/compass.css?v=compass-index-shell-renewal-v1" />
 </head>
 
 <body
   class="manor-skin house-class compass-page"
   data-page-id="compass"
   data-page="compass"
-  data-active-view="gate"
+  data-active-mode="round"
+  data-current-view-mode="round"
   data-generation-readiness="TREE_G2_SEASONAL_AGE_RENDER"
   data-core-experience-state="released"
   data-runtime-status="waiting"
@@ -78,7 +76,6 @@
   data-butterfly-system="available"
   data-butterfly-role="pollination"
   data-render-filter="single-authority"
-  data-russian-doll-shell="active"
   data-generation-3-accepted="false"
 >
   <header class="site-topbar">
@@ -111,11 +108,10 @@
     data-house-part="compass"
     data-core-experience-state="released"
     data-generation-readiness="TREE_G2_SEASONAL_AGE_RENDER"
+    data-current-view-mode="round"
     data-tree-g1="TREE_G1_ACCEPTED_BASELINE"
     data-tree-g2="TREE_G2_SEASONAL_AGE_RENDER"
     data-seasonal-age="active"
-    data-three-view-system="active"
-    data-active-view="gate"
     data-tree-structure="256"
     data-tree-trunk="1"
     data-tree-primary-limbs="4"
@@ -126,10 +122,9 @@
     data-butterfly-system="available"
     data-butterfly-role="pollination"
     data-render-filter="single-authority"
-    data-russian-doll-shell="active"
     data-generation-3-accepted="false"
   >
-    <section class="scene-shell" aria-labelledby="H1_COMPASS">
+    <section class="compass-stage" aria-labelledby="H1_COMPASS">
       <h1 id="H1_COMPASS" class="sr-only">Compass</h1>
 
       <article class="compass-badge" aria-label="Compass state">
@@ -138,6 +133,18 @@
         <span>Tree G2 active · Generation 3 not accepted</span>
       </article>
 
+      <nav class="mode-switcher" aria-label="Compass mode selector">
+        <button class="mode-button" type="button" data-mode="flat" aria-selected="false">
+          Flat
+        </button>
+        <button class="mode-button is-active" type="button" data-mode="round" aria-selected="true">
+          Tree
+        </button>
+        <button class="mode-button" type="button" data-mode="globe" aria-selected="false">
+          Globe
+        </button>
+      </nav>
+
       <div
         id="index-render-root"
         class="scene-mount"
@@ -145,28 +152,22 @@
         data-render-root="index"
         data-render-status="waiting"
         data-render-filter="single-authority"
+        data-active-mode="round"
         data-tree-g1="TREE_G1_ACCEPTED_BASELINE"
         data-tree-g2="TREE_G2_SEASONAL_AGE_RENDER"
         data-seasonal-age="active"
-        data-russian-doll-shell="active"
       >
         <noscript>
           <article class="fallback-card">
             <p class="kicker">Compass fallback</p>
             <h2>Rich Manor and Estate</h2>
-            <p>JavaScript is required for the rendered Tree of Life scene. The house routes remain available above.</p>
+            <p>JavaScript is required for the rendered Compass scene. The house routes remain available above.</p>
           </article>
         </noscript>
       </div>
 
-      <nav class="view-switcher" aria-label="Tree view selector">
-        <button class="view-button is-active" type="button" data-view="gate" aria-pressed="true">Gate</button>
-        <button class="view-button" type="button" data-view="tree" aria-pressed="false">Tree</button>
-        <button class="view-button" type="button" data-view="inspect" aria-pressed="false">Inspect</button>
-      </nav>
-
-      <aside class="russian-doll-panel" aria-label="Compressed estate details">
-        <details>
+      <aside class="compass-doll-panel" aria-label="Compressed Compass details">
+        <details open>
           <summary>State</summary>
           <p>G1 accepted. G2 seasonal-age render active. Generation 3 still requires acceptance.</p>
         </details>
@@ -212,22 +213,20 @@
       <span>tree-canopies=16</span>
       <span>tree-branch-seats=64</span>
       <span>tree-terminal-nodes=256</span>
-      <span>three-view-system=active</span>
       <span>fruit-navigation=active</span>
       <span>butterfly-system=available</span>
       <span>render-filter=single-authority</span>
-      <span>russian-doll-shell=active</span>
       <span>TREE_G1_ACCEPTED_BASELINE</span>
       <span>TREE_G2_SEASONAL_AGE_RENDER</span>
       <span>seasonal-age=active</span>
       <span>core-experience-state=released</span>
       <span>generation-3-accepted=false</span>
-      <span>INDEX_SHELL_COMPRESSION_TREE_G2_TNT_v1</span>
+      <span>COMPASS_INDEX_SHELL_RENEWAL_TNT_v1</span>
     </section>
   </main>
 
   <script src="/index.tree.js?v=tree-of-life-256-structure-v1" defer></script>
-  <script src="/index.render.js?v=index-shell-compression-tree-g2-v1" defer></script>
-  <script src="/index.runtime.js?v=index-shell-compression-tree-g2-v1" defer></script>
+  <script src="/index.render.js?v=compass-index-shell-renewal-v1" defer></script>
+  <script src="/index.runtime.js?v=compass-index-shell-renewal-v1" defer></script>
 </body>
 </html>

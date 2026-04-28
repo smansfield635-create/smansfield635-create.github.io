@@ -2,12 +2,10 @@
   color-scheme: dark;
   --ink: #fff7e4;
   --muted: rgba(255, 247, 228, .72);
-  --soft: rgba(255, 247, 228, .52);
   --gold: #f2c76f;
   --line: rgba(255, 247, 228, .18);
   --line-strong: rgba(242, 199, 111, .50);
   --black: #02050a;
-  --panel: rgba(3, 7, 12, .72);
   --max: 1380px;
   --topbar: 72px;
 }
@@ -329,7 +327,7 @@ button:focus-visible {
   border: 1px solid var(--line);
   border-radius: 26px;
   padding: 24px;
-  background: var(--panel);
+  background: rgba(3,7,12,.72);
 }
 
 @media (max-width: 980px) {

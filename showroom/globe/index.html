@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="inspect-demo-universe"
   data-page="inspect-demo-universe"
-  data-generation="demo-universe-artificial-moonlight-shim-v1"
+  data-generation="demo-universe-moon-diagnostic-safe-migration-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -21,10 +21,15 @@
   data-sun-shadow="active"
   data-morning-edge="active"
   data-breakfast-cloud-crowd="active"
-  data-artificial-moonlight="active"
-  data-temporary-showroom-light="active"
-  data-real-moon-developed="false"
-  data-removable-light-shim="true"
+  data-moon-construct="diagnostic"
+  data-moon-disposition="behind-earth-reflective-satellite"
+  data-moon-confines="bounded-secondary-demo-universe"
+  data-moon-confounds="active-diagnostic"
+  data-reflected-moonlight="active"
+  data-artificial-moonlight="superseded"
+  data-real-moon-developed="diagnostic-first-pass"
+  data-moon-iff-standard="active"
+  data-progressive-diagnostic-gates="active"
   data-shadow-accepted="pending"
 >
 <head>
@@ -35,7 +40,7 @@
 
   <meta
     name="description"
-    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe with darker night side, morning edge, breakfast cloud crowd, and temporary artificial moonlight showroom shim."
+    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe with darker night side, morning edge, breakfast cloud crowd, and a diagnostic Moon construct behind Earth."
   />
 
   <style>
@@ -110,6 +115,7 @@
       z-index: 1;
       background:
         radial-gradient(ellipse at 84% 13%, rgba(242, 199, 111, .10), transparent 24%),
+        radial-gradient(ellipse at 28% 54%, rgba(190, 214, 255, .07), transparent 30%),
         radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.018), transparent 26%),
         radial-gradient(ellipse at 48% 52%, transparent 0 36%, rgba(0,0,0,.46) 78%, rgba(0,0,0,.86) 100%),
         linear-gradient(90deg, rgba(0,0,0,.28), transparent 22%, transparent 78%, rgba(0,0,0,.30));
@@ -249,7 +255,7 @@
       pointer-events: none;
       background:
         radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .10), transparent 32%),
-        radial-gradient(ellipse at 34% 56%, rgba(190, 214, 255, .07), transparent 32%),
+        radial-gradient(ellipse at 24% 58%, rgba(190, 214, 255, .08), transparent 32%),
         linear-gradient(125deg, transparent 0 38%, rgba(0, 0, 0, .12) 58%, rgba(0, 0, 0, .34) 100%);
       opacity: .86;
     }
@@ -268,50 +274,50 @@
         drop-shadow(0 0 76px rgba(242, 199, 111, .08));
     }
 
-    .earth-artificial-moon-signal {
+    .moon-diagnostic-construct {
       position: absolute;
       z-index: 1;
       left: -4%;
       top: 48%;
-      width: 32%;
+      width: 30%;
       aspect-ratio: 1;
       border-radius: 50%;
-      opacity: .86;
+      opacity: .88;
       transform: translateY(-50%);
       pointer-events: none;
       background:
-        radial-gradient(circle at 38% 34%, rgba(255,255,255,.78) 0 4%, transparent 8%),
-        radial-gradient(circle at 58% 42%, rgba(255,255,255,.26) 0 6%, transparent 11%),
-        radial-gradient(circle at 42% 68%, rgba(0,0,0,.22) 0 8%, transparent 14%),
-        radial-gradient(circle at 70% 64%, rgba(0,0,0,.26) 0 8%, transparent 13%),
-        radial-gradient(circle at 40% 40%, rgba(238, 244, 255, .96) 0%, rgba(178, 194, 214, .82) 42%, rgba(78, 88, 104, .60) 70%, rgba(12, 16, 24, .20) 100%);
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,.56) 0 4%, transparent 8%),
+        radial-gradient(circle at 57% 43%, rgba(255,255,255,.22) 0 5%, transparent 10%),
+        radial-gradient(circle at 43% 66%, rgba(0,0,0,.24) 0 8%, transparent 14%),
+        radial-gradient(circle at 70% 62%, rgba(0,0,0,.28) 0 7%, transparent 12%),
+        radial-gradient(circle at 44% 40%, #d7d8d4 0%, #9da2a4 42%, #4d5660 70%, #121722 100%);
       box-shadow:
-        inset -18px -10px 34px rgba(0,0,0,.54),
-        inset 9px 6px 18px rgba(255,255,255,.18),
-        0 0 24px rgba(190, 214, 255, .36),
-        0 0 74px rgba(190, 214, 255, .24),
-        0 0 140px rgba(190, 214, 255, .12);
+        inset -18px -10px 34px rgba(0,0,0,.58),
+        inset 9px 6px 18px rgba(255,255,255,.16),
+        0 0 18px rgba(190, 214, 255, .24),
+        0 0 58px rgba(190, 214, 255, .14),
+        0 0 110px rgba(190, 214, 255, .07);
     }
 
-    .earth-artificial-moon-signal::before {
+    .moon-diagnostic-construct::before {
       content: "";
       position: absolute;
-      inset: -48%;
+      inset: -42%;
       border-radius: inherit;
       background:
-        radial-gradient(circle, rgba(190, 214, 255, .30) 0 18%, rgba(190, 214, 255, .12) 42%, transparent 70%);
+        radial-gradient(circle, rgba(190, 214, 255, .22) 0 17%, rgba(190, 214, 255, .095) 42%, transparent 72%);
       filter: blur(8px);
       z-index: -1;
     }
 
-    .earth-artificial-moon-signal::after {
+    .moon-diagnostic-construct::after {
       content: "";
       position: absolute;
-      inset: -10%;
+      inset: -4%;
       border-radius: inherit;
       background:
-        linear-gradient(90deg, rgba(0,0,0,.44), transparent 44%, rgba(255,255,255,.10));
-      opacity: .55;
+        linear-gradient(88deg, rgba(0,0,0,.34), transparent 42%, rgba(255,255,255,.08));
+      opacity: .54;
     }
 
     .earth-axis-shell {
@@ -368,7 +374,7 @@
     .earth-breakfast-clouds,
     .earth-terminator,
     .earth-night,
-    .earth-artificial-moonlight,
+    .earth-reflected-moonlight,
     .earth-atmosphere,
     .earth-rim {
       position: absolute;
@@ -437,12 +443,6 @@
       opacity: .52;
       mix-blend-mode: screen;
       filter: brightness(1.08) contrast(1.32);
-      mask-image:
-        linear-gradient(124deg, transparent 0 43%, #000 48%, #000 61%, transparent 70%),
-        radial-gradient(circle at 50% 50%, #000 0 75%, transparent 79%);
-      -webkit-mask-image:
-        linear-gradient(124deg, transparent 0 43%, #000 48%, #000 61%, transparent 70%),
-        radial-gradient(circle at 50% 50%, #000 0 75%, transparent 79%);
     }
 
     .earth-terminator {
@@ -462,30 +462,24 @@
       opacity: .88;
     }
 
-    .earth-artificial-moonlight {
+    .earth-reflected-moonlight {
       z-index: 8;
       background:
-        radial-gradient(ellipse at 16% 48%, rgba(205, 224, 255, .28) 0 8%, rgba(190, 214, 255, .18) 18%, transparent 44%),
-        radial-gradient(ellipse at 24% 62%, rgba(190, 214, 255, .14), transparent 36%),
-        linear-gradient(92deg, rgba(190, 214, 255, .18) 0%, rgba(190, 214, 255, .11) 18%, transparent 44%, transparent 100%);
+        radial-gradient(ellipse at 12% 48%, rgba(205, 224, 255, .20) 0 7%, rgba(190, 214, 255, .12) 19%, transparent 43%),
+        radial-gradient(ellipse at 20% 63%, rgba(190, 214, 255, .08), transparent 36%),
+        linear-gradient(92deg, rgba(190, 214, 255, .13) 0%, rgba(190, 214, 255, .075) 17%, transparent 42%, transparent 100%);
       mix-blend-mode: screen;
-      opacity: .90;
-      mask-image:
-        radial-gradient(circle at 50% 50%, #000 0 76%, transparent 81%),
-        linear-gradient(90deg, #000 0 46%, transparent 76%);
-      -webkit-mask-image:
-        radial-gradient(circle at 50% 50%, #000 0 76%, transparent 81%),
-        linear-gradient(90deg, #000 0 46%, transparent 76%);
+      opacity: .66;
     }
 
     .earth-atmosphere {
       z-index: 9;
       background:
         radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .22), transparent 32%),
-        radial-gradient(ellipse at 16% 52%, rgba(205, 224, 255, .20), transparent 25%),
+        radial-gradient(ellipse at 15% 52%, rgba(205, 224, 255, .16), transparent 24%),
         radial-gradient(circle at 50% 50%, transparent 0 59%, rgba(115, 177, 255, .10) 71%, rgba(115, 177, 255, .20) 78%, transparent 86%);
       mix-blend-mode: screen;
-      opacity: .66;
+      opacity: .62;
     }
 
     .earth-rim {
@@ -494,9 +488,9 @@
       box-shadow:
         inset -48px 26px 76px rgba(0,0,0,.64),
         inset 16px -8px 22px rgba(133,188,255,.08),
-        inset 34px 0 48px rgba(190,214,255,.10),
+        inset 26px 0 42px rgba(190,214,255,.08),
         10px -8px 32px rgba(111, 169, 255, .16),
-        -24px 18px 78px rgba(190,214,255,.20),
+        -20px 18px 64px rgba(190,214,255,.16),
         -20px 22px 58px rgba(0,0,0,.52),
         0 0 50px rgba(97,153,236,.14);
     }
@@ -570,10 +564,10 @@
         opacity: .58;
       }
 
-      .earth-artificial-moon-signal {
+      .moon-diagnostic-construct {
         left: -8%;
-        top: 50%;
-        width: 36%;
+        top: 49%;
+        width: 34%;
       }
     }
   </style>
@@ -593,10 +587,15 @@
     data-parent-route="/showroom/"
     data-current-route="/showroom/globe/"
     data-demo-universe="globe-only"
-    data-artificial-moonlight="active"
-    data-temporary-showroom-light="active"
-    data-real-moon-developed="false"
-    data-removable-light-shim="true"
+    data-moon-construct="diagnostic"
+    data-moon-disposition="behind-earth-reflective-satellite"
+    data-moon-confines="bounded-secondary-demo-universe"
+    data-moon-confounds="active-diagnostic"
+    data-reflected-moonlight="active"
+    data-artificial-moonlight="superseded"
+    data-real-moon-developed="diagnostic-first-pass"
+    data-moon-iff-standard="active"
+    data-progressive-diagnostic-gates="active"
   >
     <header class="universe-topbar">
       <a class="universe-brand" href="/" aria-label="Compass Origin">
@@ -618,15 +617,20 @@
         data-sun-shadow="active"
         data-morning-edge="active"
         data-breakfast-cloud-crowd="active"
-        data-artificial-moonlight="active"
-        data-temporary-showroom-light="active"
-        data-real-moon-developed="false"
-        data-removable-light-shim="true"
+        data-moon-construct="diagnostic"
+        data-moon-disposition="behind-earth-reflective-satellite"
+        data-moon-confines="bounded-secondary-demo-universe"
+        data-moon-confounds="active-diagnostic"
+        data-reflected-moonlight="active"
+        data-artificial-moonlight="superseded"
+        data-real-moon-developed="diagnostic-first-pass"
+        data-moon-iff-standard="active"
+        data-progressive-diagnostic-gates="active"
         data-shadow-accepted="pending"
       >
-        <div class="earth-artificial-moon-signal" aria-hidden="true"></div>
+        <div class="moon-diagnostic-construct" aria-hidden="true"></div>
 
-        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with darker night side, morning edge, and temporary artificial moonlight shim">
+        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with darker night side, morning edge, breakfast cloud crowd, and diagnostic Moon construct">
           <div class="earth-core">
             <div class="earth-texture"></div>
             <div class="earth-clouds"></div>
@@ -635,7 +639,7 @@
             <div class="earth-breakfast-clouds"></div>
             <div class="earth-terminator"></div>
             <div class="earth-night"></div>
-            <div class="earth-artificial-moonlight"></div>
+            <div class="earth-reflected-moonlight"></div>
             <div class="earth-atmosphere"></div>
             <div class="earth-rim"></div>
           </div>
@@ -667,15 +671,20 @@
       <span>sun-shadow=active</span>
       <span>morning-edge=active</span>
       <span>breakfast-cloud-crowd=active</span>
-      <span>artificial-moonlight=active</span>
-      <span>temporary-showroom-light=active</span>
-      <span>real-moon-developed=false</span>
-      <span>removable-light-shim=true</span>
+      <span>moon-construct=diagnostic</span>
+      <span>moon-disposition=behind-earth-reflective-satellite</span>
+      <span>moon-confines=bounded-secondary-demo-universe</span>
+      <span>moon-confounds=active-diagnostic</span>
+      <span>reflected-moonlight=active</span>
+      <span>artificial-moonlight=superseded</span>
+      <span>real-moon-developed=diagnostic-first-pass</span>
+      <span>moon-iff-standard=active</span>
+      <span>progressive-diagnostic-gates=active</span>
       <span>shadow-accepted=pending</span>
       <span>DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_MORNING_EDGE_TNT_v1</span>
-      <span>DEMO_UNIVERSE_ARTIFICIAL_MOONLIGHT_SHIM_TNT_v1</span>
+      <span>DEMO_UNIVERSE_MOON_DIAGNOSTIC_SAFE_MIGRATION_TNT_v1</span>
     </section>
   </main>
 </body>

@@ -3,9 +3,12 @@
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="index-generation-3-control-panel-tree-256-v1"
+  data-generation="index-tabbed-control-panel-tree-256-v1"
   data-generation-readiness="GEN_1_3D_BASELINE"
   data-core-experience-hold="true"
+  data-control-tabs="active"
+  data-active-tab="overview"
+  data-control-panel-state="collapsed"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -20,6 +23,8 @@
   data-tree-branch-seats="64"
   data-tree-terminal-nodes="256"
   data-tree-fruit-system="active"
+  data-butterfly-system="available"
+  data-butterfly-role="pollination"
   data-tree-species-status="oak-bound-fruit-layer-active"
 >
 <head>
@@ -30,11 +35,11 @@
 
   <meta
     name="description"
-    content="Compass for Rich Manor and Estate. Generation 1 · 3D baseline held while the Index moves toward Generation 3 Tree of Life readiness through control-panel separation, Russian-doll compression, and a 1-4-16-64-256 tree structure."
+    content="Compass for Rich Manor and Estate. Generation 1 · 3D baseline held while Index moves toward Generation 3 through a tabbed control panel, Russian-doll structure, 256 Tree of Life architecture, fruit, wildlife, and butterfly pollination options."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=index-gen3-tree-256-control-panel-v1" />
-  <link rel="stylesheet" href="/index.css?v=index-gen3-tree-256-control-panel-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=index-tabbed-control-panel-tree-256-v1" />
+  <link rel="stylesheet" href="/index.css?v=index-tabbed-control-panel-tree-256-v1" />
 </head>
 
 <body
@@ -43,10 +48,10 @@
   data-page="compass"
   data-active-mode="flat"
   data-control-panel-state="collapsed"
+  data-active-tab="overview"
   data-active-doll-layer="DOLL_1_COMPASS"
-  data-zoom-level="estate"
-  data-tree-zone="roots"
-  data-wildlife-focus="none"
+  data-active-butterfly-option="none"
+  data-butterfly-visibility="hidden"
   data-generation-readiness="GEN_1_3D_BASELINE"
   data-core-experience-hold="true"
   data-runtime-status="waiting"
@@ -67,6 +72,8 @@
   data-tree-branch-seats="64"
   data-tree-terminal-nodes="256"
   data-tree-fruit-system="active"
+  data-butterfly-system="available"
+  data-butterfly-role="pollination"
   data-tree-species-status="oak-bound-fruit-layer-active"
 >
   <header class="site-topbar">
@@ -99,6 +106,8 @@
     data-house-part="compass"
     data-core-experience-hold="true"
     data-generation-readiness="GEN_1_3D_BASELINE"
+    data-control-tabs="active"
+    data-active-tab="overview"
     data-tree-structure="256"
     data-tree-trunk="1"
     data-tree-primary-limbs="4"
@@ -106,6 +115,8 @@
     data-tree-branch-seats="64"
     data-tree-terminal-nodes="256"
     data-tree-fruit-system="active"
+    data-butterfly-system="available"
+    data-butterfly-role="pollination"
     data-tree-species-status="oak-bound-fruit-layer-active"
   >
     <section class="scene-shell" aria-labelledby="H1_COMPASS">
@@ -122,9 +133,7 @@
           <article class="fallback-card">
             <p class="kicker">Compass fallback</p>
             <h2>Rich Manor and Estate</h2>
-            <p>
-              JavaScript is required for the rendered Tree of Life scene. The house routes remain available above.
-            </p>
+            <p>JavaScript is required for the rendered Tree of Life scene. The house routes remain available above.</p>
           </article>
         </noscript>
       </div>
@@ -142,18 +151,18 @@
       <aside
         id="index-control-panel"
         class="control-panel"
-        aria-label="Index control panel"
-        data-control-panel="tree-256"
+        aria-label="Index tabbed control panel"
+        data-control-panel="tree-256-tabs"
       ></aside>
 
-      <div class="scene-proof-rail" aria-label="Proof and return rail">
-        <span>Generation Readiness: <b>GEN_1_3D_BASELINE</b></span>
+      <div class="scene-proof-rail" aria-label="Proof and generation status">
+        <span>Generation: <b>GEN_1_3D_BASELINE</b></span>
         <span>Core Experience: <b>HOLD</b></span>
         <a href="/gauges/">Run Gauges</a>
       </div>
     </section>
 
-    <section class="route-proof-strip" aria-label="House backlinks and audit markers">
+    <section class="audit-source" aria-label="Compass audit source">
       <a href="/">Compass</a>
       <a href="/door/">Door</a>
       <a href="/home/">Home</a>
@@ -161,22 +170,24 @@
       <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
 
-      <span class="audit-chip">route-exists</span>
-      <span class="audit-chip">manor-skin</span>
-      <span class="audit-chip">house-class</span>
-      <span class="audit-chip">estate=rich-manor-and-estate</span>
-      <span class="audit-chip">house-field=true</span>
-      <span class="audit-chip">gauges-truth=live-authority</span>
-      <span class="audit-chip">construct-class=house</span>
-      <span class="audit-chip">house-part=compass</span>
-      <span class="audit-chip">H1_COMPASS</span>
-      <span class="audit-chip">tree-structure=256</span>
-      <span class="audit-chip">core-experience-hold=true</span>
+      <span>route-exists</span>
+      <span>manor-skin</span>
+      <span>house-class</span>
+      <span>estate=rich-manor-and-estate</span>
+      <span>house-field=true</span>
+      <span>gauges-truth=live-authority</span>
+      <span>construct-class=house</span>
+      <span>house-part=compass</span>
+      <span>H1_COMPASS</span>
+      <span>tree-structure=256</span>
+      <span>control-tabs=active</span>
+      <span>butterfly-system=available</span>
+      <span>core-experience-hold=true</span>
     </section>
   </main>
 
   <script src="/index.tree.js?v=tree-of-life-256-structure-v1" defer></script>
-  <script src="/index.render.js?v=index-gen3-tree-256-control-panel-v1" defer></script>
-  <script src="/index.runtime.js?v=index-gen3-tree-256-control-panel-v1" defer></script>
+  <script src="/index.render.js?v=index-tabbed-control-panel-tree-256-v1" defer></script>
+  <script src="/index.runtime.js?v=index-tabbed-control-panel-tree-256-v1" defer></script>
 </body>
 </html>

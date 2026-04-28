@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-globe-return-v1"
+  data-generation="showroom-downstream-globe-mount-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -15,6 +15,7 @@
   data-demo-universe="globe-only"
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
+  data-render-downstream="true"
 >
 <head>
   <meta charset="utf-8" />
@@ -24,11 +25,11 @@
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. The globe returns as the universe delivery surface. Demo Universe remains globe-only; Mirror / Nine Summits Universe is the buildable context for Rich Manor and Estate."
+    content="Showroom for Diamond Gate Bridge. The globe returns as a downstream render mount. Demo Universe remains globe-only; Mirror / Nine Summits Universe is the buildable context for Rich Manor and Estate."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-globe-return-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-globe-return-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-downstream-globe-mount-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-downstream-globe-mount-v1" />
 </head>
 
 <body
@@ -47,6 +48,7 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-active-universe="demo"
+  data-render-downstream="true"
 >
   <header class="site-topbar">
     <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -80,13 +82,14 @@
     data-demo-universe="globe-only"
     data-mirror-universe="buildable-world-container"
     data-estate-land-placement="mirror-universe-only"
+    data-render-downstream="true"
   >
     <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
       <div class="showroom-copy">
         <p class="kicker">H5 · Showroom · Universe delivery surface</p>
         <h1 id="H5_SHOWROOM">Showroom</h1>
         <p>
-          The globe returns here. The Demo Universe remains globe-only. The Mirror / Nine Summits Universe is the buildable world context where Rich Manor and Estate belongs.
+          The globe returns here as a downstream render mount. The Demo Universe remains globe-only. The Mirror / Nine Summits Universe is the buildable world context where Rich Manor and Estate belongs.
         </p>
 
         <div class="universe-switcher" aria-label="Universe selector">
@@ -105,6 +108,9 @@
         aria-live="polite"
         data-render-root="showroom-globe"
         data-render-status="waiting"
+        data-render-engine="/render/globe.engine.js"
+        data-render-template="/render/globe.template.js"
+        data-downstream-mount="showroom"
         data-active-universe="demo"
       >
         <noscript>
@@ -151,9 +157,14 @@
       <span>demo-universe=globe-only</span>
       <span>mirror-universe=buildable-world-container</span>
       <span>estate-land-placement=mirror-universe-only</span>
+      <span>render-downstream=true</span>
+      <span>render-engine=/render/globe.engine.js</span>
+      <span>render-template=/render/globe.template.js</span>
     </section>
   </main>
 
-  <script src="/showroom/showroom.render.js?v=showroom-globe-return-v1" defer></script>
+  <script src="/render/globe.template.js?v=showroom-downstream-globe-mount-v1" defer></script>
+  <script src="/render/globe.engine.js?v=showroom-downstream-globe-mount-v1" defer></script>
+  <script src="/showroom/showroom.render.js?v=showroom-downstream-globe-mount-v1" defer></script>
 </body>
 </html>

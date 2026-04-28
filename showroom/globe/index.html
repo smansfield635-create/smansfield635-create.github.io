@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html
   lang="en"
-  data-page-id="inspect-globe"
-  data-page="inspect-globe"
-  data-generation="inspect-globe-route-file-v1"
+  data-page-id="inspect-universe"
+  data-page="inspect-universe"
+  data-generation="inspect-universe-earth-sun-toggle-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="inspection"
   data-parent-route="/showroom/"
-  data-render-controller="/showroom/globe/index.js"
+  data-inspection-subjects="earth,sun"
+  data-state-map="256"
   data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-  data-earth-material="/assets/earth/earth_material.css"
   data-earth-surface="/assets/earth/earth_surface_2048.jpg"
   data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
   data-earth-standard="centered-satellite-earth-no-external-rings"
+  data-sun-mode="css-solar-reference"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Inspect Globe · Diamond Gate Bridge</title>
+  <title>Inspect Universe · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Dedicated Inspect Globe page for Diamond Gate Bridge. The globe is shown without Showroom text cards or bubbles covering it."
+    content="Inspect Universe room for Diamond Gate Bridge. Toggle between Earth and Sun in a living universe field without Showroom cards or bubbles covering the inspection subject."
   />
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=inspect-globe-route-file-v1" />
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=inspect-universe-earth-sun-toggle-v1" />
 
   <style>
     :root {
@@ -40,6 +41,8 @@
       --line: rgba(244, 247, 255, .14);
       --line-gold: rgba(242, 199, 111, .42);
       --black: #02050a;
+      --panel: rgba(2, 5, 10, .62);
+      --sun-scale: 1;
     }
 
     * {
@@ -59,18 +62,22 @@
 
     body {
       background:
-        radial-gradient(circle at 50% 48%, rgba(67, 115, 198, .18), transparent 34%),
-        radial-gradient(circle at 78% 18%, rgba(242, 199, 111, .08), transparent 24%),
-        radial-gradient(circle at 22% 82%, rgba(92, 151, 238, .10), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(67, 115, 198, .16), transparent 35%),
+        radial-gradient(circle at 72% 20%, rgba(242, 199, 111, .10), transparent 25%),
+        radial-gradient(circle at 22% 82%, rgba(92, 151, 238, .10), transparent 27%),
         linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
     }
 
-    body::before {
+    body::before,
+    body::after {
       content: "";
       position: fixed;
-      inset: 0;
-      z-index: 0;
+      inset: -20%;
       pointer-events: none;
+    }
+
+    body::before {
+      z-index: 0;
       opacity: .78;
       background-image:
         radial-gradient(circle, rgba(255,255,255,.82) 0 1px, transparent 1.35px),
@@ -78,17 +85,28 @@
         radial-gradient(circle, rgba(242,199,111,.24) 0 1px, transparent 1.7px);
       background-size: 84px 84px, 156px 156px, 238px 238px;
       background-position: 0 0, 42px 66px, 88px 130px;
+      animation: starDrift 52s linear infinite;
     }
 
     body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
       z-index: 1;
-      pointer-events: none;
       background:
-        radial-gradient(circle at 50% 48%, rgba(255,255,255,.035), transparent 30%),
-        radial-gradient(circle at 50% 48%, transparent 0 38%, rgba(0,0,0,.38) 78%, rgba(0,0,0,.80) 100%);
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.035), transparent 30%),
+        radial-gradient(circle at 50% 50%, transparent 0 38%, rgba(0,0,0,.38) 78%, rgba(0,0,0,.82) 100%);
+    }
+
+    body[data-motion="paused"]::before {
+      animation-play-state: paused;
+    }
+
+    @keyframes starDrift {
+      from {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+      }
+
+      to {
+        transform: translate3d(-84px, 42px, 0) rotate(.35deg);
+      }
     }
 
     a,
@@ -108,7 +126,7 @@
       outline-offset: 4px;
     }
 
-    .inspect-page {
+    .inspect-universe-page {
       position: relative;
       z-index: 2;
       width: 100vw;
@@ -119,9 +137,9 @@
       grid-template-rows: auto 1fr;
     }
 
-    .inspect-topbar {
+    .universe-topbar {
       position: relative;
-      z-index: 60;
+      z-index: 70;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -130,7 +148,7 @@
       pointer-events: none;
     }
 
-    .inspect-brand {
+    .universe-brand {
       display: grid;
       gap: 3px;
       pointer-events: auto;
@@ -138,12 +156,12 @@
       transition: opacity .16s ease;
     }
 
-    .inspect-brand:hover,
-    .inspect-brand:focus-visible {
+    .universe-brand:hover,
+    .universe-brand:focus-visible {
       opacity: 1;
     }
 
-    .inspect-brand strong {
+    .universe-brand strong {
       color: var(--gold);
       font-size: clamp(.78rem, 2.6vw, 1rem);
       letter-spacing: .20em;
@@ -151,14 +169,22 @@
       text-transform: uppercase;
     }
 
-    .inspect-brand span {
+    .universe-brand span {
       color: var(--soft);
       font-size: clamp(.82rem, 2.6vw, 1.06rem);
     }
 
-    .return-link {
+    .universe-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
       pointer-events: auto;
-      border: 1px solid var(--line-gold);
+    }
+
+    .return-link,
+    .subject-toggle {
+      border: 1px solid var(--line);
       border-radius: 999px;
       padding: 10px 14px;
       background: rgba(3, 7, 12, .56);
@@ -169,18 +195,21 @@
         inset 0 0 0 1px rgba(255,255,255,.04);
       font-size: clamp(.82rem, 2.4vw, 1rem);
       font-weight: 800;
-      opacity: .58;
-      transition: opacity .16s ease, background .16s ease;
+      opacity: .62;
+      transition: opacity .16s ease, background .16s ease, border-color .16s ease;
       white-space: nowrap;
+      cursor: pointer;
     }
 
     .return-link:hover,
-    .return-link:focus-visible {
+    .subject-toggle:hover,
+    .subject-toggle[aria-selected="true"] {
       opacity: 1;
+      border-color: var(--line-gold);
       background: rgba(242, 199, 111, .16);
     }
 
-    .inspect-stage {
+    .universe-stage {
       position: relative;
       z-index: 10;
       width: 100vw;
@@ -190,44 +219,41 @@
       padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
     }
 
-    #showroom-globe-mount {
-      position: relative !important;
-      z-index: 20 !important;
-      width: 100% !important;
-      height: 100% !important;
-      min-height: 0 !important;
-      display: grid !important;
-      place-items: center !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      transform: none !important;
+    .subject-panel {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(.985);
+      transition: opacity .24s ease, transform .24s ease, filter .24s ease;
     }
 
-    #showroom-globe-mount .showroom-earth-clearance {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      min-height: 0 !important;
-      padding: 0 !important;
-      margin: 0 !important;
+    body[data-active-subject="earth"] [data-subject-panel="earth"],
+    body[data-active-subject="sun"] [data-subject-panel="sun"] {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
     }
 
-    #showroom-globe-mount .showroom-earth-canvas-shell,
-    #showroom-globe-mount .showroom-earth-visual-stack {
-      width: 100% !important;
-      height: 100% !important;
-      display: grid !important;
-      grid-template-rows: 1fr auto auto !important;
-      align-items: center !important;
-      justify-items: center !important;
-      gap: clamp(10px, 2vh, 18px) !important;
-      padding: 0 0 clamp(8px, 2vh, 18px) !important;
-      margin: 0 !important;
-      transform: none !important;
+    #earth-inspect-mount {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(8px, 2vh, 18px) 0 clamp(84px, 13vh, 130px);
     }
 
-    #showroom-globe-mount [data-dgb-earth-mount],
-    #showroom-globe-mount .dgb-earth-stage {
+    .inspect-earth-shell {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    [data-dgb-earth-mount] {
       width: min(84vmin, 940px) !important;
       max-width: 94vw !important;
       min-height: auto !important;
@@ -235,114 +261,321 @@
       margin: 0 auto !important;
       display: grid !important;
       place-items: center !important;
-      transform: none !important;
       isolation: isolate !important;
     }
 
-    #showroom-globe-mount .dgb-earth-tilt,
-    #showroom-globe-mount .dgb-earth-sphere {
+    .dgb-earth-stage {
+      width: min(84vmin, 940px) !important;
+      max-width: 94vw !important;
+      min-height: auto !important;
+      height: auto !important;
+      display: grid !important;
+      place-items: center !important;
+      margin: 0 auto !important;
+      transform: none !important;
+    }
+
+    .dgb-earth-tilt,
+    .dgb-earth-sphere {
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 auto !important;
       transform: none !important;
     }
 
-    #showroom-globe-mount .dgb-earth-sphere {
+    .dgb-earth-sphere {
       filter:
         drop-shadow(0 0 34px rgba(97, 153, 236, .34))
         drop-shadow(0 0 92px rgba(242, 199, 111, .10));
     }
 
-    #showroom-globe-mount [data-dgb-earth-canvas] {
+    [data-dgb-earth-canvas] {
       display: block !important;
       width: 100% !important;
       height: auto !important;
       max-width: 100% !important;
     }
 
-    #showroom-globe-mount .dgb-earth-control-panel {
-      z-index: 30;
-      width: min(560px, 88vw) !important;
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 10px !important;
-      margin: 0 auto !important;
+    .sun-field {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: clamp(8px, 2vh, 18px) 0 clamp(84px, 13vh, 130px);
+    }
+
+    .sun-orbit-shell {
+      position: relative;
+      width: min(78vmin, 880px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform: scale(var(--sun-scale));
+      transition: transform .18s ease;
+    }
+
+    .sun-orbit-shell::before,
+    .sun-orbit-shell::after {
+      content: "";
+      position: absolute;
+      inset: 9%;
+      border: 1px solid rgba(242, 199, 111, .09);
+      border-radius: 50%;
+      animation: orbitBreath 9s ease-in-out infinite;
+    }
+
+    .sun-orbit-shell::after {
+      inset: 1%;
+      border-color: rgba(244, 247, 255, .055);
+      animation-duration: 13s;
+      animation-direction: reverse;
+    }
+
+    body[data-motion="paused"] .sun-orbit-shell::before,
+    body[data-motion="paused"] .sun-orbit-shell::after,
+    body[data-motion="paused"] .sun-core,
+    body[data-motion="paused"] .solar-corona,
+    body[data-motion="paused"] .solar-spot {
+      animation-play-state: paused;
+    }
+
+    @keyframes orbitBreath {
+      0%, 100% {
+        transform: scale(.985);
+        opacity: .42;
+      }
+
+      50% {
+        transform: scale(1.015);
+        opacity: .78;
+      }
+    }
+
+    .solar-corona {
+      position: absolute;
+      width: 84%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(242,199,111,.32) 0 36%, rgba(242,199,111,.18) 48%, rgba(242,199,111,.07) 63%, transparent 74%),
+        conic-gradient(from 0deg, rgba(242,199,111,.04), rgba(255,255,255,.12), rgba(242,199,111,.05), rgba(255,160,80,.14), rgba(242,199,111,.04));
+      filter: blur(12px);
+      animation: solarCorona 18s linear infinite;
+    }
+
+    @keyframes solarCorona {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .sun-core {
+      position: relative;
+      width: 58%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 36% 28%, #fff7c9 0 6%, transparent 21%),
+        radial-gradient(circle at 48% 44%, #fff1a6 0 17%, #f7c64f 34%, #e38122 58%, #9d320d 82%, #3d0d04 100%);
+      box-shadow:
+        0 0 34px rgba(255, 239, 150, .58),
+        0 0 96px rgba(242, 199, 111, .38),
+        0 0 180px rgba(227, 90, 34, .18),
+        inset -24px -34px 70px rgba(65, 11, 4, .42),
+        inset 18px 16px 40px rgba(255, 255, 220, .22);
+      animation: sunPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% {
+        filter: saturate(1.03) brightness(1);
+      }
+
+      50% {
+        filter: saturate(1.18) brightness(1.08);
+      }
+    }
+
+    .sun-core::before,
+    .sun-core::after {
+      content: "";
+      position: absolute;
+      inset: -15%;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          from 32deg,
+          rgba(255,255,255,.16),
+          rgba(255,218,88,.08),
+          rgba(161,38,8,.20),
+          rgba(255,255,255,.08),
+          rgba(242,199,111,.18),
+          rgba(255,142,43,.12),
+          rgba(255,255,255,.16)
+        );
+      mix-blend-mode: soft-light;
+      animation: sunSurface 22s linear infinite;
+    }
+
+    .sun-core::after {
+      inset: -8%;
+      opacity: .45;
+      animation-duration: 31s;
+      animation-direction: reverse;
+    }
+
+    @keyframes sunSurface {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .solar-spot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(74, 15, 4, .34);
+      filter: blur(.8px);
+      box-shadow: inset 0 0 14px rgba(0,0,0,.34);
+      animation: spotDrift 14s ease-in-out infinite;
+    }
+
+    .spot-one {
+      width: 12%;
+      height: 8%;
+      left: 32%;
+      top: 38%;
+    }
+
+    .spot-two {
+      width: 9%;
+      height: 6%;
+      left: 58%;
+      top: 56%;
+      animation-delay: -4s;
+    }
+
+    .spot-three {
+      width: 7%;
+      height: 5%;
+      left: 49%;
+      top: 28%;
+      animation-delay: -8s;
+    }
+
+    @keyframes spotDrift {
+      0%, 100% {
+        transform: translate3d(-2%, 1%, 0) scale(.98);
+        opacity: .48;
+      }
+
+      50% {
+        transform: translate3d(4%, -2%, 0) scale(1.08);
+        opacity: .72;
+      }
+    }
+
+    .universe-controls {
+      position: fixed;
+      left: 50%;
+      bottom: clamp(12px, 3vh, 28px);
+      z-index: 80;
+      width: min(560px, 88vw);
+      transform: translateX(-50%) scale(.94);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
       opacity: .18;
       filter: grayscale(.72);
-      transform: scale(.94);
       transition: opacity .18s ease, filter .18s ease, transform .18s ease;
     }
 
-    #showroom-globe-mount .dgb-earth-control-panel:hover,
-    #showroom-globe-mount .dgb-earth-control-panel:focus-within {
-      opacity: .92;
+    .universe-controls:hover,
+    .universe-controls:focus-within {
+      opacity: .96;
       filter: none;
-      transform: scale(1);
+      transform: translateX(-50%) scale(1);
     }
 
-    #showroom-globe-mount .dgb-earth-control-button,
-    #showroom-globe-mount .dgb-earth-control-readout {
-      min-height: clamp(42px, 6.8vh, 62px) !important;
-      border: 1px solid rgba(255,255,255,.13) !important;
-      border-radius: 999px !important;
-      display: grid !important;
-      place-items: center !important;
-      background: rgba(0, 3, 9, .68) !important;
-      color: rgba(255,255,255,.94) !important;
-      font-size: clamp(.9rem, 3.2vw, 1.18rem) !important;
-      font-weight: 850 !important;
+    .universe-controls button,
+    .universe-readout {
+      min-height: clamp(42px, 6.8vh, 62px);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 3, 9, .68);
+      color: rgba(255,255,255,.94);
+      font-size: clamp(.9rem, 3.2vw, 1.18rem);
+      font-weight: 850;
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.035),
-        0 10px 32px rgba(0,0,0,.24) !important;
+        0 10px 32px rgba(0,0,0,.24);
     }
 
-    #showroom-globe-mount .dgb-earth-control-button {
+    .universe-controls button {
       cursor: pointer;
     }
 
-    #showroom-globe-mount .dgb-earth-control-button:hover {
-      border-color: var(--line-gold) !important;
-      background: rgba(242,199,111,.16) !important;
+    .universe-controls button:hover {
+      border-color: var(--line-gold);
+      background: rgba(242,199,111,.16);
     }
 
-    #showroom-globe-mount .dgb-earth-control-readout {
-      grid-column: 1 / -1 !important;
-      color: rgba(211, 215, 238, .82) !important;
-      letter-spacing: .03em !important;
+    .universe-readout {
+      grid-column: 1 / -1;
+      color: rgba(211, 215, 238, .82);
+      letter-spacing: .03em;
     }
 
-    #showroom-globe-mount .dgb-earth-caption {
-      width: min(760px, 90vw) !important;
-      margin: 0 auto !important;
-      color: rgba(255,255,255,.66) !important;
-      font-size: clamp(.62rem, 2.5vw, .9rem) !important;
-      font-weight: 900 !important;
-      letter-spacing: .14em !important;
-      line-height: 1.35 !important;
-      text-align: center !important;
-      text-transform: uppercase !important;
-      opacity: .42;
+    .status-line {
+      position: fixed;
+      left: 50%;
+      bottom: clamp(16px, 4vh, 32px);
+      transform: translateX(-50%);
+      z-index: 5;
+      color: var(--muted);
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-align: center;
+      text-transform: uppercase;
+      pointer-events: none;
     }
 
-    .fallback-card {
+    .error-card {
+      position: relative;
+      z-index: 20;
       width: min(720px, calc(100vw - 34px));
-      border: 1px solid var(--line-gold);
+      border: 1px solid rgba(255, 140, 140, .44);
       border-radius: 28px;
       padding: 24px;
-      background: rgba(2, 5, 10, .72);
+      background: rgba(18, 4, 6, .78);
       box-shadow: 0 28px 90px rgba(0,0,0,.44);
     }
 
-    .fallback-card h2 {
+    .error-card .kicker {
+      margin: 0 0 10px;
+      color: #ff9d9d;
+      font-size: .74rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .error-card h1 {
       margin: 0 0 12px;
       font-size: clamp(1.8rem, 5vw, 3.4rem);
       letter-spacing: -.05em;
     }
 
-    .fallback-card p,
-    .fallback-card .kicker {
+    .error-card p {
+      margin: 0;
       color: var(--soft);
       line-height: 1.45;
+    }
+
+    .error-card code {
+      color: var(--gold);
+      overflow-wrap: anywhere;
     }
 
     .audit-source,
@@ -360,84 +593,104 @@
     }
 
     @media (max-width: 760px) {
-      .inspect-topbar {
+      .universe-topbar {
+        align-items: flex-start;
+        gap: 10px;
         padding: 14px 16px;
       }
 
-      .inspect-brand span {
+      .universe-brand span {
         display: none;
       }
 
-      .return-link {
-        padding: 9px 12px;
-        font-size: .86rem;
+      .universe-actions {
+        gap: 6px;
       }
 
-      .inspect-stage {
-        padding-bottom: 14px;
+      .return-link,
+      .subject-toggle {
+        padding: 9px 10px;
+        font-size: .82rem;
       }
 
-      #showroom-globe-mount [data-dgb-earth-mount],
-      #showroom-globe-mount .dgb-earth-stage {
+      [data-dgb-earth-mount],
+      .dgb-earth-stage {
         width: min(78vmin, 92vw) !important;
       }
 
-      #showroom-globe-mount .dgb-earth-control-panel {
-        width: min(440px, 86vw) !important;
+      .sun-orbit-shell {
+        width: min(76vmin, 92vw);
+      }
+
+      .universe-controls {
+        width: min(440px, 86vw);
       }
     }
   </style>
 </head>
 
-<body>
+<body data-active-subject="earth" data-motion="running">
   <main
-    class="inspect-page"
-    data-page-id="inspect-globe"
-    data-page="inspect-globe"
+    class="inspect-universe-page"
+    data-page-id="inspect-universe"
+    data-page="inspect-universe"
     data-estate="rich-manor-and-estate"
     data-manor-skin="active"
     data-house-field="true"
     data-gauges-truth="live-authority"
     data-construct-class="inspection"
     data-parent-route="/showroom/"
+    data-state-map="256"
   >
-    <header class="inspect-topbar">
-      <a class="inspect-brand" href="/showroom/" aria-label="Return to Showroom">
+    <header class="universe-topbar">
+      <a class="universe-brand" href="/showroom/" aria-label="Return to Showroom">
         <strong>Diamond Gate Bridge</strong>
-        <span>Inspect Globe · Empty Universe Field</span>
+        <span>Inspect Universe · Earth / Sun</span>
       </a>
 
-      <a class="return-link" href="/showroom/">Return to Showroom</a>
+      <nav class="universe-actions" aria-label="Inspect Universe controls">
+        <a class="return-link" href="/showroom/">Return</a>
+        <button class="subject-toggle" type="button" data-subject-toggle="earth" aria-selected="true">Earth</button>
+        <button class="subject-toggle" type="button" data-subject-toggle="sun" aria-selected="false">Sun</button>
+      </nav>
     </header>
 
-    <section class="inspect-stage" aria-label="Dedicated globe inspection room">
-      <div
-        id="showroom-globe-mount"
-        class="showroom-globe-mount showroom-globe-inspection-mount"
-        aria-live="polite"
-        data-render-root="showroom-globe"
-        data-render-status="waiting"
-        data-render-controller="/showroom/globe/index.js"
-        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-        data-earth-material="/assets/earth/earth_material.css"
-        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-        data-earth-standard="centered-satellite-earth-no-external-rings"
-        data-demo-universe="globe-only"
-        data-estate-land-placement="mirror-universe-only"
-        data-showroom-globe-placement="dedicated-inspection-route"
-      >
-        <noscript>
-          <article class="fallback-card">
-            <p class="kicker">Inspect Globe fallback</p>
-            <h2>Orbital Earth</h2>
-            <p>JavaScript is required for the Earth canvas inspection route.</p>
-          </article>
-        </noscript>
+    <section class="universe-stage" aria-label="Inspect Universe field">
+      <section class="subject-panel" data-subject-panel="earth" aria-label="Earth inspection subject">
+        <div
+          id="earth-inspect-mount"
+          data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+          data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+          data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+          data-earth-standard="centered-satellite-earth-no-external-rings"
+        >
+          <p class="status-line" data-status-line>Loading Earth</p>
+        </div>
+      </section>
+
+      <section class="subject-panel" data-subject-panel="sun" aria-label="Sun inspection subject">
+        <div class="sun-field" data-sun-field>
+          <div class="sun-orbit-shell" aria-label="Solar inspection body">
+            <div class="solar-corona" aria-hidden="true"></div>
+            <div class="sun-core" aria-hidden="true">
+              <span class="solar-spot spot-one"></span>
+              <span class="solar-spot spot-two"></span>
+              <span class="solar-spot spot-three"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="universe-controls" aria-label="Subject inspection controls">
+        <button type="button" data-action="zoom-out">Zoom Out</button>
+        <button type="button" data-action="zoom-in">Zoom In</button>
+        <button type="button" data-action="reset">Reset</button>
+        <button type="button" data-action="pause">Pause Motion</button>
+        <div class="universe-readout" data-universe-readout>Earth · Zoom 100%</div>
       </div>
     </section>
 
-    <section class="audit-source" aria-label="Inspect Globe audit source">
+    <section class="audit-source" aria-label="Inspect Universe audit source">
       <a href="/showroom/">Showroom</a>
       <a href="/">Compass</a>
       <a href="/gauges/">Gauges</a>
@@ -449,17 +702,281 @@
       <span>gauges-truth=live-authority</span>
       <span>construct-class=inspection</span>
       <span>parent-route=/showroom/</span>
-      <span>render-controller=/showroom/globe/index.js</span>
+      <span>state-map=256</span>
+      <span>inspect-universe=true</span>
+      <span>subject-earth=true</span>
+      <span>subject-sun=true</span>
       <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
-      <span>earth-material=/assets/earth/earth_material.css</span>
       <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
       <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
       <span>earth-standard=centered-satellite-earth-no-external-rings</span>
-      <span>INSPECT_GLOBE_ROUTE_FILE_TNT_v1</span>
+      <span>sun-mode=css-solar-reference</span>
+      <span>INSPECT_UNIVERSE_EARTH_SUN_TOGGLE_TNT_v1</span>
     </section>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=inspect-globe-route-file-v1" defer></script>
-  <script src="/showroom/globe/index.js?v=inspect-globe-route-file-v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=inspect-universe-earth-sun-toggle-v1" defer></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var SURFACE = "/assets/earth/earth_surface_2048.jpg";
+      var CLOUDS = "/assets/earth/earth_clouds_2048.jpg";
+
+      var earthMount = null;
+      var earthApi = null;
+      var earthAttempts = 0;
+      var maxEarthAttempts = 40;
+
+      var activeSubject = "earth";
+      var sunZoom = 1;
+      var motionPaused = false;
+
+      function create(tag, attrs, children) {
+        var node = document.createElement(tag);
+
+        Object.keys(attrs || {}).forEach(function (key) {
+          var value = attrs[key];
+          if (value === null || value === undefined || value === false) return;
+
+          if (key === "className") node.className = value;
+          else if (key === "text") node.textContent = value;
+          else node.setAttribute(key, String(value));
+        });
+
+        (children || []).forEach(function (child) {
+          if (typeof child === "string") node.appendChild(document.createTextNode(child));
+          else if (child) node.appendChild(child);
+        });
+
+        return node;
+      }
+
+      function setStatus(text) {
+        var status = document.querySelector("[data-status-line]");
+        if (status) status.textContent = text || "";
+      }
+
+      function setReadout(text) {
+        var readout = document.querySelector("[data-universe-readout]");
+        if (readout) readout.textContent = text;
+      }
+
+      function renderEarthError(title, messageNode) {
+        if (!earthMount) return;
+
+        earthMount.replaceChildren(
+          create("article", { className: "error-card" }, [
+            create("p", { className: "kicker", text: "Earth inspection failure" }),
+            create("h1", { text: title }),
+            create("p", {}, [messageNode])
+          ])
+        );
+
+        earthMount.dataset.renderStatus = "error";
+        document.documentElement.dataset.earthInspectStatus = "error";
+      }
+
+      function updateEarthReadout() {
+        if (!earthApi || typeof earthApi.getStatus !== "function") {
+          setReadout("Earth · Loading");
+          return;
+        }
+
+        var status = earthApi.getStatus();
+        var zoom = Math.round(Number(status.zoom || 1) * 100);
+
+        setReadout("Earth · Zoom " + zoom + "%");
+
+        if (earthMount) {
+          earthMount.dataset.renderStatus = status.runtimeStatus || "mounted";
+          earthMount.dataset.earthProjection = status.projection || "full-globe-inverse-orthographic";
+          earthMount.dataset.earthCameraMode = status.cameraMode || "full-globe-orbital";
+        }
+
+        document.documentElement.dataset.earthInspectStatus = "mounted";
+      }
+
+      function updateSunReadout() {
+        setReadout("Sun · Zoom " + Math.round(sunZoom * 100) + "%");
+      }
+
+      function updateReadout() {
+        if (activeSubject === "earth") updateEarthReadout();
+        else updateSunReadout();
+      }
+
+      function buildEarth() {
+        earthMount = document.getElementById("earth-inspect-mount");
+        if (!earthMount) return;
+
+        if (earthApi) {
+          updateEarthReadout();
+          return;
+        }
+
+        if (!window.DGBEarthCanvas || typeof window.DGBEarthCanvas.create !== "function") {
+          earthAttempts += 1;
+
+          if (earthAttempts < maxEarthAttempts) {
+            window.setTimeout(buildEarth, 100);
+            return;
+          }
+
+          renderEarthError(
+            "Earth canvas is unavailable.",
+            create("span", {}, [
+              "Expected ",
+              create("code", { text: "window.DGBEarthCanvas.create" }),
+              " from ",
+              create("code", { text: "/assets/earth/earth_canvas.js" }),
+              "."
+            ])
+          );
+
+          return;
+        }
+
+        var canvas = create("canvas", {
+          "data-dgb-earth-canvas": "true",
+          "aria-label": "Inspectable Earth canvas"
+        });
+
+        var mount = create("section", {
+          "data-dgb-earth-mount": "true",
+          "data-earth-canvas-spine": "/assets/earth/earth_canvas.js",
+          "data-earth-surface": SURFACE,
+          "data-earth-clouds": CLOUDS,
+          "data-earth-standard": "centered-satellite-earth-no-external-rings",
+          "aria-label": "Centered inspectable Earth"
+        }, [
+          create("div", { className: "dgb-earth-stage" }, [
+            create("div", { className: "dgb-earth-tilt" }, [
+              create("div", { className: "dgb-earth-sphere" }, [canvas])
+            ])
+          ])
+        ]);
+
+        var shell = create("section", { className: "inspect-earth-shell" }, [mount]);
+
+        earthMount.replaceChildren(shell);
+        earthMount.dataset.renderStatus = "mounting";
+        document.documentElement.dataset.earthInspectStatus = "mounting";
+
+        earthApi = window.DGBEarthCanvas.create({
+          mount: mount,
+          canvas: canvas,
+          surface: SURFACE,
+          clouds: CLOUDS
+        });
+
+        if (!earthApi) {
+          renderEarthError(
+            "Earth canvas did not initialize.",
+            create("span", { text: "The Earth renderer returned no API object." })
+          );
+          return;
+        }
+
+        updateEarthReadout();
+        window.setTimeout(updateEarthReadout, 300);
+        window.setTimeout(updateEarthReadout, 1200);
+
+        earthMount.dataset.renderStatus = "complete";
+        document.documentElement.dataset.earthInspectStatus = "complete";
+        setStatus("");
+      }
+
+      function setSubject(subject) {
+        activeSubject = subject === "sun" ? "sun" : "earth";
+
+        document.body.dataset.activeSubject = activeSubject;
+        document.documentElement.dataset.activeSubject = activeSubject;
+
+        document.querySelectorAll("[data-subject-toggle]").forEach(function (button) {
+          var selected = button.getAttribute("data-subject-toggle") === activeSubject;
+          button.setAttribute("aria-selected", selected ? "true" : "false");
+        });
+
+        if (activeSubject === "earth") buildEarth();
+
+        updateReadout();
+      }
+
+      function zoomSun(delta) {
+        sunZoom = Math.max(.62, Math.min(1.7, sunZoom + delta));
+        document.documentElement.style.setProperty("--sun-scale", String(sunZoom));
+        updateSunReadout();
+      }
+
+      function resetSun() {
+        sunZoom = 1;
+        document.documentElement.style.setProperty("--sun-scale", "1");
+        updateSunReadout();
+      }
+
+      function toggleMotion() {
+        motionPaused = !motionPaused;
+        document.body.dataset.motion = motionPaused ? "paused" : "running";
+
+        var pause = document.querySelector("[data-action='pause']");
+        if (pause) pause.textContent = motionPaused ? "Resume Motion" : "Pause Motion";
+
+        if (activeSubject === "earth" && earthApi && typeof earthApi.toggleSpin === "function") {
+          earthApi.toggleSpin();
+          updateEarthReadout();
+        }
+      }
+
+      function handleAction(action) {
+        if (activeSubject === "earth") {
+          if (!earthApi) {
+            buildEarth();
+            return;
+          }
+
+          if (action === "zoom-in" && typeof earthApi.zoomIn === "function") earthApi.zoomIn();
+          if (action === "zoom-out" && typeof earthApi.zoomOut === "function") earthApi.zoomOut();
+          if (action === "reset" && typeof earthApi.resetView === "function") earthApi.resetView();
+          if (action === "pause") toggleMotion();
+
+          updateEarthReadout();
+          return;
+        }
+
+        if (action === "zoom-in") zoomSun(.08);
+        if (action === "zoom-out") zoomSun(-.08);
+        if (action === "reset") resetSun();
+        if (action === "pause") toggleMotion();
+      }
+
+      function bind() {
+        document.querySelectorAll("[data-subject-toggle]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            setSubject(button.getAttribute("data-subject-toggle"));
+          });
+        });
+
+        document.querySelectorAll("[data-action]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            handleAction(button.getAttribute("data-action"));
+          });
+        });
+      }
+
+      function init() {
+        bind();
+        setSubject("earth");
+        buildEarth();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
 </html>

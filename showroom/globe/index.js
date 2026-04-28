@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html
   lang="en"
-  data-page-id="showroom-globe-inspect"
-  data-page="showroom-globe-inspect"
-  data-generation="single-file-globe-inspection-v1"
+  data-page-id="inspect-globe"
+  data-page="inspect-globe"
+  data-generation="inspect-globe-facility-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -19,14 +19,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Inspect Globe · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Dedicated globe inspection page for Diamond Gate Bridge. Loads the existing Earth canvas asset spine without Showroom cards, text blocks, or bubbles covering the globe."
+    content="A dedicated Inspect Globe room for Diamond Gate Bridge. The globe is shown without Showroom text cards or bubbles covering it."
   />
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=single-file-globe-inspection-v1" />
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=inspect-globe-facility-v1" />
 
   <style>
     :root {
@@ -39,6 +40,7 @@
       --line-gold: rgba(242, 199, 111, .42);
       --black: #02050a;
       --panel: rgba(2, 5, 10, .72);
+      --danger: #ff9d9d;
     }
 
     * {
@@ -49,12 +51,11 @@
     body {
       margin: 0;
       width: 100%;
-      height: 100%;
       min-height: 100%;
-      overflow: hidden;
       background: var(--black);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
     }
 
     body {
@@ -108,7 +109,7 @@
       outline-offset: 4px;
     }
 
-    .inspect-page {
+    .inspect-globe-page {
       position: relative;
       z-index: 2;
       width: 100vw;
@@ -116,14 +117,47 @@
       min-height: 100svh;
       overflow: hidden;
       display: grid;
-      place-items: center;
+      grid-template-rows: auto 1fr;
+    }
+
+    .inspect-globe-topbar {
+      position: relative;
+      z-index: 50;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: clamp(12px, 2.8vh, 24px) clamp(12px, 3vw, 26px);
+      pointer-events: none;
+    }
+
+    .inspect-globe-brand {
+      display: grid;
+      gap: 3px;
+      pointer-events: auto;
+      opacity: .62;
+      transition: opacity .16s ease;
+    }
+
+    .inspect-globe-brand:hover {
+      opacity: 1;
+    }
+
+    .inspect-globe-brand strong {
+      color: var(--gold);
+      font-size: clamp(.78rem, 2.6vw, 1rem);
+      letter-spacing: .20em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .inspect-globe-brand span {
+      color: var(--soft);
+      font-size: clamp(.82rem, 2.6vw, 1.06rem);
     }
 
     .return-link {
-      position: fixed;
-      top: clamp(12px, 2.5vh, 24px);
-      left: clamp(12px, 2.5vw, 24px);
-      z-index: 50;
+      pointer-events: auto;
       border: 1px solid var(--line-gold);
       border-radius: 999px;
       padding: 10px 14px;
@@ -135,8 +169,9 @@
         inset 0 0 0 1px rgba(255,255,255,.04);
       font-size: clamp(.82rem, 2.4vw, 1rem);
       font-weight: 800;
-      opacity: .56;
+      opacity: .62;
       transition: opacity .16s ease, background .16s ease;
+      white-space: nowrap;
     }
 
     .return-link:hover,
@@ -145,15 +180,38 @@
       background: rgba(242, 199, 111, .16);
     }
 
-    #globe-inspect-mount {
+    .inspect-globe-stage {
       position: relative;
       z-index: 10;
       width: 100vw;
-      height: 100svh;
-      min-height: 100svh;
+      min-height: 0;
       display: grid;
       place-items: center;
-      padding: clamp(42px, 8vh, 78px) clamp(10px, 3vw, 32px) clamp(24px, 5vh, 46px);
+      padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
+    }
+
+    #inspect-globe-mount {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .inspect-globe-status {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(18px, 4vh, 34px);
+      transform: translateX(-50%);
+      z-index: 5;
+      color: var(--muted);
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-align: center;
     }
 
     .inspect-earth-shell {
@@ -167,7 +225,7 @@
     }
 
     [data-dgb-earth-mount] {
-      width: min(82vmin, 920px) !important;
+      width: min(84vmin, 940px) !important;
       max-width: 94vw !important;
       min-height: auto !important;
       height: auto !important;
@@ -178,7 +236,7 @@
     }
 
     .dgb-earth-stage {
-      width: min(82vmin, 920px) !important;
+      width: min(84vmin, 940px) !important;
       max-width: 94vw !important;
       min-height: auto !important;
       height: auto !important;
@@ -259,19 +317,6 @@
       letter-spacing: .03em;
     }
 
-    .load-state {
-      position: fixed;
-      left: 50%;
-      bottom: clamp(16px, 4vh, 32px);
-      z-index: 5;
-      transform: translateX(-50%);
-      color: var(--muted);
-      font-size: .74rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      pointer-events: none;
-    }
-
     .error-card {
       position: relative;
       z-index: 20;
@@ -285,7 +330,7 @@
 
     .error-card .kicker {
       margin: 0 0 10px;
-      color: #ff9d9d;
+      color: var(--danger);
       font-size: .74rem;
       letter-spacing: .15em;
       text-transform: uppercase;
@@ -323,9 +368,21 @@
     }
 
     @media (max-width: 760px) {
-      #globe-inspect-mount {
-        padding-top: 54px;
-        padding-bottom: 18px;
+      .inspect-globe-topbar {
+        padding: 14px 16px;
+      }
+
+      .inspect-globe-brand span {
+        display: none;
+      }
+
+      .return-link {
+        padding: 9px 12px;
+        font-size: .86rem;
+      }
+
+      .inspect-globe-stage {
+        padding-bottom: 14px;
       }
 
       [data-dgb-earth-mount],
@@ -336,20 +393,15 @@
       .inspect-controls {
         width: min(440px, 86vw);
       }
-
-      .return-link {
-        font-size: .86rem;
-        padding: 9px 12px;
-      }
     }
   </style>
 </head>
 
 <body>
   <main
-    class="inspect-page"
-    data-page-id="showroom-globe-inspect"
-    data-page="showroom-globe-inspect"
+    class="inspect-globe-page"
+    data-page-id="inspect-globe"
+    data-page="inspect-globe"
     data-estate="rich-manor-and-estate"
     data-manor-skin="active"
     data-house-field="true"
@@ -357,20 +409,31 @@
     data-construct-class="inspection"
     data-parent-route="/showroom/"
   >
-    <a class="return-link" href="/showroom/">Return to Showroom</a>
+    <header class="inspect-globe-topbar">
+      <a class="inspect-globe-brand" href="/showroom/" aria-label="Return to Showroom">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Inspect Globe · Empty Universe Field</span>
+      </a>
+
+      <a class="return-link" href="/showroom/">Return to Showroom</a>
+    </header>
 
     <section
-      id="globe-inspect-mount"
-      aria-label="Dedicated globe inspection field"
-      data-earth-canvas-spine="/assets/earth/earth_canvas.js"
-      data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-      data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-      data-earth-standard="centered-satellite-earth-no-external-rings"
+      class="inspect-globe-stage"
+      aria-label="Dedicated globe inspection room"
     >
-      <p class="load-state">Loading Earth inspection field</p>
+      <div
+        id="inspect-globe-mount"
+        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+        data-earth-standard="centered-satellite-earth-no-external-rings"
+      >
+        <p class="inspect-globe-status" data-inspect-globe-status>Loading Earth inspection field</p>
+      </div>
     </section>
 
-    <section class="audit-source" aria-label="Globe inspection audit source">
+    <section class="audit-source" aria-label="Inspect Globe audit source">
       <a href="/showroom/">Showroom</a>
       <a href="/">Compass</a>
       <a href="/gauges/">Gauges</a>
@@ -385,11 +448,11 @@
       <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
       <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
       <span>earth-standard=centered-satellite-earth-no-external-rings</span>
-      <span>SHOWROOM_GLOBE_SINGLE_FILE_INSPECTION_TNT_v1</span>
+      <span>INSPECT_GLOBE_FACILITY_TNT_v1</span>
     </section>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=single-file-globe-inspection-v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=inspect-globe-facility-v1" defer></script>
 
   <script>
     (function () {
@@ -422,18 +485,24 @@
         return node;
       }
 
-      function renderError(title, message) {
+      function setStatus(text) {
+        var status = document.querySelector("[data-inspect-globe-status]");
+        if (status) status.textContent = text;
+      }
+
+      function renderError(title, messageNode) {
         if (!mount) return;
 
         mount.replaceChildren(
           create("article", { className: "error-card" }, [
-            create("p", { className: "kicker", text: "Globe inspection failure" }),
+            create("p", { className: "kicker", text: "Inspect Globe failure" }),
             create("h1", { text: title }),
-            create("p", {}, [message])
+            create("p", {}, [messageNode])
           ])
         );
 
         mount.dataset.renderStatus = "error";
+        document.documentElement.dataset.inspectGlobeStatus = "error";
       }
 
       function updateReadout() {
@@ -452,9 +521,13 @@
           pause.textContent = status.paused ? "Resume Spin" : "Pause Spin";
         }
 
-        mount.dataset.renderStatus = status.runtimeStatus || "mounted";
-        mount.dataset.earthProjection = status.projection || "full-globe-inverse-orthographic";
-        mount.dataset.earthCameraMode = status.cameraMode || "full-globe-orbital";
+        if (mount) {
+          mount.dataset.renderStatus = status.runtimeStatus || "mounted";
+          mount.dataset.earthProjection = status.projection || "full-globe-inverse-orthographic";
+          mount.dataset.earthCameraMode = status.cameraMode || "full-globe-orbital";
+        }
+
+        document.documentElement.dataset.inspectGlobeStatus = "mounted";
       }
 
       function bindControls(shell) {
@@ -475,7 +548,7 @@
       }
 
       function build() {
-        mount = document.getElementById("globe-inspect-mount");
+        mount = document.getElementById("inspect-globe-mount");
         if (!mount) return;
 
         if (!window.DGBEarthCanvas || typeof window.DGBEarthCanvas.create !== "function") {
@@ -496,6 +569,7 @@
               "."
             ])
           );
+
           return;
         }
 
@@ -534,6 +608,7 @@
 
         mount.replaceChildren(shell);
         mount.dataset.renderStatus = "mounting";
+        document.documentElement.dataset.inspectGlobeStatus = "mounting";
 
         api = window.DGBEarthCanvas.create({
           mount: earthMount,
@@ -543,7 +618,7 @@
         });
 
         if (!api) {
-          renderError("Earth canvas did not initialize.", "The Earth renderer returned no API object.");
+          renderError("Earth canvas did not initialize.", create("span", { text: "The Earth renderer returned no API object." }));
           return;
         }
 
@@ -554,6 +629,8 @@
         window.setTimeout(updateReadout, 1200);
 
         mount.dataset.renderStatus = "complete";
+        document.documentElement.dataset.inspectGlobeStatus = "complete";
+        setStatus("");
       }
 
       if (document.readyState === "loading") {

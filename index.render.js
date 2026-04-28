@@ -2,22 +2,23 @@
   "use strict";
 
   const SVG_NS = "http://www.w3.org/2000/svg";
+  const TREE_GENERATION = "TREE_G2_SEASONAL_AGE_RENDER";
 
   const routeFruit = [
-    { label: "Compass", href: "/", kind: "gold-apple", x: 706, y: 332, r: 12 },
-    { label: "Door", href: "/door/", kind: "pear", x: 552, y: 438, r: 11 },
-    { label: "Home", href: "/home/", kind: "apple", x: 800, y: 284, r: 13 },
-    { label: "Products", href: "/products/", kind: "cherry", x: 970, y: 372, r: 14 },
-    { label: "Showroom", href: "/showroom/", kind: "plum", x: 640, y: 514, r: 12 },
-    { label: "Gauges", href: "/gauges/", kind: "gold-plum", x: 1050, y: 504, r: 12 }
+    { label: "Compass", href: "/", kind: "gold-apple", ripeness: "golden", x: 706, y: 332, r: 12 },
+    { label: "Door", href: "/door/", kind: "pear", ripeness: "young", x: 552, y: 438, r: 11 },
+    { label: "Home", href: "/home/", kind: "apple", ripeness: "ripe", x: 800, y: 284, r: 13 },
+    { label: "Products", href: "/products/", kind: "cherry", ripeness: "ripe", x: 970, y: 372, r: 14 },
+    { label: "Showroom", href: "/showroom/", kind: "plum", ripeness: "deep", x: 640, y: 514, r: 12 },
+    { label: "Gauges", href: "/gauges/", kind: "gold-plum", ripeness: "frosted", x: 1050, y: 504, r: 12 }
   ];
 
   const productFruit = [
-    { label: "ARCHCOIN", href: "/products/archcoin/", kind: "cherry", x: 930, y: 330, r: 7 },
-    { label: "Five Flags", href: "/products/five-flags/", kind: "apple", x: 996, y: 332, r: 7 },
-    { label: "On Your Side AAI", href: "/products/on-your-side-ai/", kind: "pear", x: 1038, y: 380, r: 7 },
-    { label: "Education", href: "/products/education/", kind: "plum", x: 990, y: 426, r: 7 },
-    { label: "Nutrition", href: "/products/nutrition/", kind: "gold-apple", x: 924, y: 416, r: 7 }
+    { label: "ARCHCOIN", href: "/products/archcoin/", kind: "cherry", ripeness: "ripe", x: 930, y: 330, r: 7 },
+    { label: "Five Flags", href: "/products/five-flags/", kind: "apple", ripeness: "yellowing", x: 996, y: 332, r: 7 },
+    { label: "On Your Side AAI", href: "/products/on-your-side-ai/", kind: "pear", ripeness: "young", x: 1038, y: 380, r: 7 },
+    { label: "Education", href: "/products/education/", kind: "plum", ripeness: "deep", x: 990, y: 426, r: 7 },
+    { label: "Nutrition", href: "/products/nutrition/", kind: "gold-apple", ripeness: "golden", x: 924, y: 416, r: 7 }
   ];
 
   function s(tag, attrs) {
@@ -79,6 +80,12 @@
         <stop offset="46%" stop-color="#8f5b39"/>
         <stop offset="70%" stop-color="#4a2411"/>
         <stop offset="100%" stop-color="#160802"/>
+      </linearGradient>
+
+      <linearGradient id="oldBarkGrain" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="rgba(235,205,150,.28)"/>
+        <stop offset="50%" stop-color="rgba(34,14,7,.72)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,.10)"/>
       </linearGradient>
 
       <linearGradient id="roadGrain" x1="0" x2="1" y1="0" y2="1">
@@ -149,6 +156,10 @@
 
       <filter id="fruitGlow">
         <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#f2c76f" flood-opacity=".24"/>
+      </filter>
+
+      <filter id="frostGlow">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.8" flood-color="#e8fbff" flood-opacity=".28"/>
       </filter>
     `;
     svg.appendChild(defs);
@@ -264,25 +275,47 @@
     return "M 0 -19 C 11 -17 18 -9 18 1 C 18 13 7 23 0 31 C -7 23 -18 13 -18 1 C -18 -9 -11 -17 0 -19 Z";
   }
 
-  function leafFill(seed, type) {
+  function lifeStage(seed, type) {
+    if (type === "habitat") return "habitat";
+
+    const stages = [
+      "new-growth",
+      "spring-green",
+      "mature-green",
+      "deep-mature",
+      "yellowing",
+      "copper-aging",
+      "frost-touch",
+      "snow-touch",
+      "late-cycle"
+    ];
+
+    return stages[Math.floor(seededUnit(seed * 29) * stages.length)];
+  }
+
+  function leafFill(seed, type, stage) {
     if (type === "habitat") return "rgba(146,122,80,.90)";
 
-    const palette = [
-      "rgba(48,110,56,.94)",
-      "rgba(67,130,70,.93)",
-      "rgba(56,120,62,.95)",
-      "rgba(80,142,76,.91)",
-      "rgba(41,97,49,.95)",
-      "rgba(92,151,86,.89)",
-      "rgba(58,114,57,.94)",
-      "rgba(38,92,48,.96)",
-      "rgba(71,122,64,.92)"
-    ];
+    const palette = {
+      "new-growth": ["rgba(132,176,89,.92)", "rgba(111,164,78,.92)", "rgba(151,190,101,.90)"],
+      "spring-green": ["rgba(85,151,76,.94)", "rgba(76,142,70,.94)", "rgba(92,162,84,.92)"],
+      "mature-green": ["rgba(48,110,56,.95)", "rgba(56,120,62,.95)", "rgba(67,130,70,.93)"],
+      "deep-mature": ["rgba(31,78,38,.96)", "rgba(38,92,48,.96)", "rgba(41,97,49,.95)"],
+      "yellowing": ["rgba(164,149,70,.91)", "rgba(181,158,74,.90)", "rgba(137,130,65,.91)"],
+      "copper-aging": ["rgba(139,96,55,.90)", "rgba(155,108,61,.88)", "rgba(116,83,51,.91)"],
+      "frost-touch": ["rgba(74,126,91,.86)", "rgba(83,135,101,.84)", "rgba(93,141,108,.82)"],
+      "snow-touch": ["rgba(79,117,86,.82)", "rgba(91,130,96,.80)", "rgba(72,105,80,.82)"],
+      "late-cycle": ["rgba(88,81,50,.88)", "rgba(106,91,54,.86)", "rgba(75,78,48,.88)"]
+    }[stage] || ["rgba(56,120,62,.95)"];
 
     return palette[Math.abs(seed) % palette.length];
   }
 
-  function leafEdge(seed) {
+  function leafEdge(seed, stage) {
+    if (stage === "frost-touch" || stage === "snow-touch") return "rgba(232,251,255,.44)";
+    if (stage === "yellowing") return "rgba(244,221,137,.28)";
+    if (stage === "copper-aging" || stage === "late-cycle") return "rgba(214,155,91,.24)";
+
     const palette = [
       "rgba(214,236,198,.22)",
       "rgba(225,244,214,.18)",
@@ -337,7 +370,7 @@
     }));
 
     const grass = s("g", { "data-detail-layer": "grass" });
-    for (let i = 0; i < 310; i += 1) {
+    for (let i = 0; i < 330; i += 1) {
       const x = 70 + ((i * 73) % 1460);
       const y = 720 + ((i * 41) % 160);
       const height = 10 + ((i * 17) % 42);
@@ -363,7 +396,34 @@
     }
 
     layer.appendChild(grass);
+    drawFallenLeaves(layer);
     svg.appendChild(layer);
+  }
+
+  function drawFallenLeaves(layer) {
+    const fallen = s("g", {
+      class: "fallen-leaf-field",
+      "data-seasonal-age-layer": "fallen-leaves"
+    });
+
+    for (let i = 0; i < 96; i += 1) {
+      const x = 360 + seededRange(i * 31, -210, 940);
+      const y = 690 + seededRange(i * 37, 0, 150);
+      const stage = i % 4 === 0 ? "copper-aging" : i % 4 === 1 ? "yellowing" : i % 4 === 2 ? "late-cycle" : "snow-touch";
+      const color = leafFill(i + 4000, "leaf", stage);
+
+      fallen.appendChild(s("path", {
+        class: `fallen-leaf fallen-${stage}`,
+        d: leafPath((i % 4) + 1),
+        transform: `translate(${x} ${y}) rotate(${seededRange(i * 41, -88, 88)}) scale(${seededRange(i * 43, .12, .23)})`,
+        fill: color,
+        stroke: leafEdge(i, stage),
+        "stroke-width": .7,
+        opacity: seededRange(i * 47, .34, .74)
+      }));
+    }
+
+    layer.appendChild(fallen);
   }
 
   function drawManor(svg) {
@@ -454,17 +514,37 @@
       }));
     });
 
-    for (let i = 0; i < 92; i += 1) {
-      const x = 745 + (i * 13) % 110;
-      const y1 = 432 + (i * 29) % 308;
-      const y2 = y1 + 34 + (i % 5) * 12;
+    for (let i = 0; i < 128; i += 1) {
+      const x = 742 + (i * 13) % 118;
+      const y1 = 418 + (i * 29) % 324;
+      const y2 = y1 + 28 + (i % 7) * 12;
+      const isHighlight = i % 4 === 0;
+      const isScar = i % 11 === 0;
 
       trunkLayer.appendChild(s("path", {
+        class: isScar ? "bark-scar" : isHighlight ? "bark-highlight" : "bark-fissure",
         d: `M ${x} ${y1} C ${x - 12 + i % 9} ${y1 + 22}, ${x + 9 - i % 8} ${y2 - 16}, ${x + 2} ${y2}`,
         fill: "none",
-        stroke: i % 3 === 0 ? "rgba(235,205,150,.24)" : "rgba(28,14,7,.72)",
-        "stroke-width": i % 3 === 0 ? 2 : 3,
+        stroke: isScar ? "rgba(242,199,111,.30)" : isHighlight ? "rgba(235,205,150,.24)" : "rgba(28,14,7,.72)",
+        "stroke-width": isScar ? 4 : isHighlight ? 2 : 3,
         "stroke-linecap": "round"
+      }));
+    }
+
+    for (let i = 0; i < 24; i += 1) {
+      const x = 748 + seededRange(i * 53, 0, 104);
+      const y = 430 + seededRange(i * 59, 0, 300);
+
+      trunkLayer.appendChild(s("ellipse", {
+        class: "old-bark-knot",
+        cx: x,
+        cy: y,
+        rx: seededRange(i * 61, 3, 8),
+        ry: seededRange(i * 67, 5, 14),
+        fill: "rgba(28,13,7,.55)",
+        stroke: "rgba(224,183,121,.18)",
+        "stroke-width": 1.2,
+        transform: `rotate(${seededRange(i * 71, -28, 28)} ${x} ${y})`
       }));
     }
 
@@ -498,7 +578,9 @@
       fill: attrs.fill,
       stroke: attrs.stroke,
       "stroke-width": attrs.strokeWidth || 0.85,
-      filter: "url(#leafShadow)",
+      filter: attrs.frosted ? "url(#frostGlow)" : "url(#leafShadow)",
+      opacity: attrs.opacity || 1,
+      "data-life-stage": attrs.stage,
       "data-leaf-role": attrs.role,
       "data-structural-terminal": attrs.structuralTerminal ? "true" : "false",
       "data-parent-terminal": attrs.parentTerminal,
@@ -512,11 +594,48 @@
       fill: "none",
       stroke: attrs.midrib || "rgba(235,248,220,.25)",
       "stroke-width": attrs.structuralTerminal ? 0.95 : 0.62,
-      "stroke-linecap": "round"
+      "stroke-linecap": "round",
+      opacity: attrs.veinOpacity || 1
     }));
+
+    if (attrs.stage === "snow-touch") {
+      group.appendChild(s("path", {
+        class: "leaf-snow-touch",
+        d: "M -8 -15 C -3 -18, 5 -18, 11 -14",
+        transform: `translate(${attrs.x} ${attrs.y}) rotate(${attrs.angle}) scale(${attrs.scale})`,
+        fill: "none",
+        stroke: "rgba(241,252,255,.72)",
+        "stroke-width": 1.2,
+        "stroke-linecap": "round"
+      }));
+    }
+
+    if (attrs.stage === "frost-touch") {
+      group.appendChild(s("path", {
+        class: "leaf-frost-crystal",
+        d: "M -7 -8 L 7 8 M 7 -8 L -7 8 M 0 -12 L 0 12",
+        transform: `translate(${attrs.x} ${attrs.y}) rotate(${attrs.angle}) scale(${attrs.scale * .55})`,
+        fill: "none",
+        stroke: "rgba(232,251,255,.42)",
+        "stroke-width": .7,
+        "stroke-linecap": "round"
+      }));
+    }
+
+    if (attrs.stage === "late-cycle" || attrs.stage === "copper-aging") {
+      group.appendChild(s("circle", {
+        class: "leaf-decay-speck",
+        cx: attrs.x + seededRange(attrs.seed * 73, -4, 4),
+        cy: attrs.y + seededRange(attrs.seed * 79, -2, 6),
+        r: seededRange(attrs.seed * 83, .8, 1.7),
+        fill: "rgba(49,31,16,.42)"
+      }));
+    }
   }
 
   function makeLeafCluster(node, pos) {
+    const structuralStage = lifeStage(node.index, node.terminalType);
+
     const cluster = s("g", {
       class: "terminal-node-group terminal-leaf-cluster",
       transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
@@ -525,9 +644,11 @@
       "data-terminal-type": node.terminalType,
       "data-canopy": node.canopyCluster,
       "data-branch-seat": node.branchSeat,
-      "data-leaf-cluster": "expanded",
+      "data-leaf-cluster": "seasonal-age-expanded",
+      "data-tree-generation": TREE_GENERATION,
       "data-structural-terminal-count": "1",
-      "data-detail-leaf-count": "5"
+      "data-detail-leaf-count": "5",
+      "data-primary-life-stage": structuralStage
     });
 
     cluster.appendChild(s("path", {
@@ -546,32 +667,39 @@
       { x: 0, y: -23, angle: 0, scale: 0.52 }
     ].forEach((leaf, index) => {
       const seed = node.index * 10 + index;
+      const stage = lifeStage(seed, node.terminalType);
+
       appendLeafShape(cluster, {
-        className: "terminal-node terminal-leaf detail-leaf",
+        className: "terminal-node terminal-leaf detail-leaf seasonal-detail-leaf",
         x: leaf.x + seededRange(seed * 31, -3, 3),
         y: leaf.y + seededRange(seed * 37, -3, 3),
         angle: leaf.angle + seededRange(seed * 41, -9, 9),
         scale: leaf.scale + seededRange(seed * 43, -0.04, 0.05),
-        fill: leafFill(seed, node.terminalType),
-        stroke: leafEdge(seed),
+        fill: leafFill(seed, node.terminalType, stage),
+        stroke: leafEdge(seed, stage),
         variant: (seed % 4) + 1,
         role: "detail-leaf",
         structuralTerminal: false,
         parentTerminal: node.id,
         parentBranchSeat: node.branchSeat,
         canopy: node.canopyCluster,
-        midrib: "rgba(235,248,220,.18)"
+        midrib: stage === "snow-touch" || stage === "frost-touch" ? "rgba(232,251,255,.30)" : "rgba(235,248,220,.18)",
+        opacity: stage === "late-cycle" ? .82 : 1,
+        veinOpacity: stage === "deep-mature" ? .78 : 1,
+        stage,
+        seed,
+        frosted: stage === "frost-touch" || stage === "snow-touch"
       });
     });
 
     appendLeafShape(cluster, {
-      className: "terminal-node terminal-leaf individual-leaf structural-terminal-leaf",
+      className: "terminal-node terminal-leaf individual-leaf structural-terminal-leaf seasonal-structural-leaf",
       x: 0,
       y: 0,
       angle: 0,
       scale: 1,
-      fill: leafFill(node.index, node.terminalType),
-      stroke: leafEdge(node.index),
+      fill: leafFill(node.index, node.terminalType, structuralStage),
+      stroke: leafEdge(node.index, structuralStage),
       strokeWidth: 1.05,
       variant: (node.index % 4) + 1,
       role: "structural-terminal-leaf",
@@ -579,8 +707,23 @@
       parentTerminal: node.id,
       parentBranchSeat: node.branchSeat,
       canopy: node.canopyCluster,
-      midrib: "rgba(235,248,220,.32)"
+      midrib: structuralStage === "snow-touch" || structuralStage === "frost-touch" ? "rgba(232,251,255,.34)" : "rgba(235,248,220,.32)",
+      opacity: structuralStage === "late-cycle" ? .86 : 1,
+      stage: structuralStage,
+      seed: node.index,
+      frosted: structuralStage === "frost-touch" || structuralStage === "snow-touch"
     });
+
+    if (node.index % 9 === 0) {
+      cluster.appendChild(s("path", {
+        class: "new-growth-tip",
+        d: "M -5 -30 C -2 -37, 4 -38, 8 -31",
+        fill: "none",
+        stroke: "rgba(154,207,104,.78)",
+        "stroke-width": 2.1,
+        "stroke-linecap": "round"
+      }));
+    }
 
     return cluster;
   }
@@ -602,9 +745,11 @@
     const leafLayer = s("g", {
       class: "svg-layer layer-terminals",
       "data-render-pass": "PASS_4_5_TERMINAL_AND_DENSITY_FILTER",
+      "data-tree-generation": TREE_GENERATION,
       "data-structural-terminals": "256",
       "data-detail-leaves": "1280",
-      "data-total-visible-leaves": "1536"
+      "data-total-visible-leaves": "1536",
+      "data-seasonal-cycle": "mixed"
     });
 
     const seatNodeMap = new Map();
@@ -627,6 +772,17 @@
         "data-canopy": branch.canopyCluster,
         "data-branch-seat": branch.id
       }));
+
+      if (branch.index % 7 === 0) {
+        branchLayer.appendChild(s("path", {
+          class: "bare-seasonal-twig",
+          d: `M ${seat.x} ${seat.y} C ${seat.x + seededRange(branch.index * 13, -24, 24)} ${seat.y - seededRange(branch.index * 17, 14, 36)}, ${seat.x + seededRange(branch.index * 19, -46, 46)} ${seat.y - seededRange(branch.index * 23, 28, 64)}, ${seat.x + seededRange(branch.index * 29, -58, 58)} ${seat.y - seededRange(branch.index * 31, 44, 76)}`,
+          fill: "none",
+          stroke: "rgba(76,47,29,.58)",
+          "stroke-width": 2.1,
+          "stroke-linecap": "round"
+        }));
+      }
 
       const nodes = seatNodeMap.get(branch.index) || [];
       const positioned = nodes.map((node) => ({ node, pos: terminalPosition(node) }));
@@ -676,16 +832,17 @@
     group.appendChild(stem);
 
     if (fruit.kind === "cherry") {
-      group.appendChild(s("circle", { cx: fruit.x - fruit.r * .35, cy: fruit.y, r: fruit.r * .68, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)" }));
-      group.appendChild(s("circle", { cx: fruit.x + fruit.r * .38, cy: fruit.y + fruit.r * .08, r: fruit.r * .68, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)" }));
+      group.appendChild(s("circle", { cx: fruit.x - fruit.r * .35, cy: fruit.y, r: fruit.r * .68, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)", "data-ripeness": fruit.ripeness }));
+      group.appendChild(s("circle", { cx: fruit.x + fruit.r * .38, cy: fruit.y + fruit.r * .08, r: fruit.r * .68, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)", "data-ripeness": fruit.ripeness }));
     } else if (fruit.kind === "pear") {
       group.appendChild(s("path", {
         d: `M ${fruit.x} ${fruit.y - fruit.r} C ${fruit.x + fruit.r} ${fruit.y - fruit.r * .3}, ${fruit.x + fruit.r * .9} ${fruit.y + fruit.r}, ${fruit.x} ${fruit.y + fruit.r * 1.2} C ${fruit.x - fruit.r * .9} ${fruit.y + fruit.r}, ${fruit.x - fruit.r} ${fruit.y - fruit.r * .3}, ${fruit.x} ${fruit.y - fruit.r} Z`,
         fill: fruitFill(fruit.kind),
-        filter: "url(#fruitGlow)"
+        filter: "url(#fruitGlow)",
+        "data-ripeness": fruit.ripeness
       }));
     } else {
-      group.appendChild(s("circle", { cx: fruit.x, cy: fruit.y, r: fruit.r, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)" }));
+      group.appendChild(s("circle", { cx: fruit.x, cy: fruit.y, r: fruit.r, fill: fruitFill(fruit.kind), filter: "url(#fruitGlow)", "data-ripeness": fruit.ripeness }));
     }
 
     group.appendChild(s("circle", {
@@ -694,25 +851,46 @@
       r: Math.max(1.4, fruit.r * .13),
       fill: "rgba(255,245,221,.72)"
     }));
+
+    if (fruit.ripeness === "frosted") {
+      group.appendChild(s("path", {
+        class: "fruit-frost-touch",
+        d: `M ${fruit.x - fruit.r * .62} ${fruit.y - fruit.r * .2} C ${fruit.x - fruit.r * .2} ${fruit.y - fruit.r * .62}, ${fruit.x + fruit.r * .38} ${fruit.y - fruit.r * .54}, ${fruit.x + fruit.r * .68} ${fruit.y - fruit.r * .1}`,
+        fill: "none",
+        stroke: "rgba(235,252,255,.68)",
+        "stroke-width": 1.4,
+        "stroke-linecap": "round"
+      }));
+    }
+
+    if (fruit.ripeness === "yellowing" || fruit.ripeness === "deep") {
+      group.appendChild(s("circle", {
+        class: "fruit-age-speck",
+        cx: fruit.x + fruit.r * .36,
+        cy: fruit.y + fruit.r * .28,
+        r: Math.max(1.1, fruit.r * .12),
+        fill: "rgba(45,24,12,.36)"
+      }));
+    }
   }
 
-  function drawNavigationFruit(svg, state) {
+  function drawNavigationFruit(svg) {
     const fruitLayer = s("g", {
       class: "svg-layer fruit-navigation-layer",
       "data-render-pass": "PASS_7_FRUIT_NAVIGATION",
-      "data-fruit-navigation": "active"
+      "data-fruit-navigation": "active",
+      "data-fruit-cycle": "mixed-ripeness"
     });
 
-    const mainFruit = routeFruit.slice();
-
-    mainFruit.forEach((fruit) => {
+    routeFruit.forEach((fruit) => {
       const link = s("a", {
         class: "fruit-route-link",
         href: fruit.href,
         "aria-label": `${fruit.label} fruit route`,
         "data-fruit-route": fruit.href,
         "data-fruit-label": fruit.label,
-        "data-fruit-kind": fruit.kind
+        "data-fruit-kind": fruit.kind,
+        "data-ripeness": fruit.ripeness
       });
 
       const group = s("g", { class: "fruit-route", tabindex: "0" });
@@ -738,7 +916,8 @@
         "aria-label": `${fruit.label} product fruit route`,
         "data-fruit-route": fruit.href,
         "data-fruit-label": fruit.label,
-        "data-fruit-kind": fruit.kind
+        "data-fruit-kind": fruit.kind,
+        "data-ripeness": fruit.ripeness
       });
 
       const group = s("g", { class: "product-fruit-route", tabindex: "0" });
@@ -803,9 +982,14 @@
     const receipt = s("g", { class: "svg-layer layer-details", "data-render-pass": "PASS_8_RECEIPT_MARKERS" });
     receipt.appendChild(s("metadata", {
       "data-render-filter": "single-authority",
+      "data-tree-generation": TREE_GENERATION,
+      "data-tree-g1": "accepted-baseline",
+      "data-tree-g2": "seasonal-age-render",
       "data-structural-terminals": "256",
       "data-detail-leaves": "1280",
       "data-total-visible-leaves": "1536",
+      "data-seasonal-cycle": "mixed",
+      "data-leaf-age-variation": "active",
       "data-fruit-navigation": "active",
       "data-three-view-system": "active",
       "data-generation-readiness": "GEN_1_3D_BASELINE",
@@ -816,12 +1000,12 @@
 
   function drawSceneCaption(root, state) {
     const copy = {
-      gate: ["Gate View", "From the edge of the gate, the visitor sees the Manor, the road, the snow, and the Tree of Life as the living entry point."],
-      tree: ["Tree View", "Standing before the tree, fruit becomes the first navigational surface. The Manor remains behind it."],
-      inspect: ["Inspect View", "Zoomed into the living tree, fruit, insects, blossoms, habitat marks, and leaves become inspectable."]
+      gate: ["Gate View · Tree G2", "From the gate, the Manor and tree now carry age: mixed leaves, frost touches, fallen leaves, older bark, and fruit in different ripeness stages."],
+      tree: ["Tree View · Seasonal Age", "The tree is no longer instant-green. Leaves sit at different points in the cycle while fruit remains the navigational surface."],
+      inspect: ["Inspect View · Living Detail", "Zoom into mixed-cycle leaves, insects, frost, age marks, fruit, and branch texture."]
     }[state.view];
 
-    root.appendChild(h("article", { className: "scene-mini-caption" }, [
+    root.appendChild(h("article", { className: "scene-mini-caption tree-g2-caption" }, [
       h("p", { className: "kicker", text: copy[0] }),
       h("p", { text: copy[1] })
     ]));
@@ -832,9 +1016,10 @@
       class: "tree-svg",
       viewBox: viewBoxFor(state.view),
       role: "img",
-      "aria-label": "Rich Manor and Estate Tree of Life fruit navigation scene",
+      "aria-label": "Rich Manor and Estate Tree of Life fruit navigation scene with Tree G2 seasonal age rendering",
       "data-active-view": state.view,
-      "data-render-filter": "single-authority"
+      "data-render-filter": "single-authority",
+      "data-tree-generation": TREE_GENERATION
     });
 
     addDefs(svg);
@@ -864,16 +1049,22 @@
     root.dataset.renderStatus = "rendering";
     root.dataset.activeView = next.view;
     root.dataset.renderFilter = "single-authority";
+    root.dataset.treeGeneration = TREE_GENERATION;
+    root.dataset.treeG1 = "accepted-baseline";
+    root.dataset.treeG2 = "seasonal-age-render";
     root.dataset.structuralTerminals = "256";
     root.dataset.detailLeaves = "1280";
     root.dataset.totalVisibleLeaves = "1536";
+    root.dataset.seasonalCycle = "mixed";
+    root.dataset.leafAgeVariation = "active";
     root.dataset.fruitNavigation = "active";
 
     const scene = h("section", {
       className: `tree-scene tree-view-${next.view}`,
       "aria-label": `${next.view} view`,
       "data-active-view": next.view,
-      "data-render-filter": "single-authority"
+      "data-render-filter": "single-authority",
+      "data-tree-generation": TREE_GENERATION
     });
 
     scene.appendChild(baseSvg(next));

@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-back-page-with-inspect-globe-v1"
+  data-generation="showroom-runtime-shell-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,6 +16,7 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-render-controller="/showroom/globe/index.js"
+  data-showroom-runtime="/showroom/runtime.js"
   data-earth-canvas-spine="/assets/earth/earth_canvas.js"
   data-earth-material="/assets/earth/earth_material.css"
   data-earth-surface="/assets/earth/earth_surface_2048.jpg"
@@ -31,12 +32,12 @@
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. The Showroom mounts the existing Earth canvas spine and links to a dedicated Inspect Globe page."
+    content="Showroom for Diamond Gate Bridge. The Showroom mounts the Earth canvas spine and links to the dedicated Inspect Universe room."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-back-page-with-inspect-globe-v1" />
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=showroom-back-page-with-inspect-globe-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-back-page-with-inspect-globe-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-runtime-shell-v1" />
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=showroom-runtime-shell-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-runtime-shell-v1" />
 </head>
 
 <body
@@ -55,6 +56,7 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-render-controller="/showroom/globe/index.js"
+  data-showroom-runtime="/showroom/runtime.js"
   data-earth-canvas-spine="/assets/earth/earth_canvas.js"
   data-earth-material="/assets/earth/earth_material.css"
   data-earth-surface="/assets/earth/earth_surface_2048.jpg"
@@ -74,7 +76,7 @@
       <a href="/home/">Home</a>
       <a href="/products/">Products</a>
       <a href="/showroom/" aria-current="page">Showroom</a>
-      <a href="/showroom/globe/">Inspect Globe</a>
+      <a href="/showroom/globe/">Inspect Universe</a>
       <a href="/gauges/">Gauges</a>
     </nav>
   </header>
@@ -96,6 +98,7 @@
     data-mirror-universe="buildable-world-container"
     data-estate-land-placement="mirror-universe-only"
     data-render-controller="/showroom/globe/index.js"
+    data-showroom-runtime="/showroom/runtime.js"
     data-earth-canvas-spine="/assets/earth/earth_canvas.js"
     data-earth-material="/assets/earth/earth_material.css"
     data-earth-surface="/assets/earth/earth_surface_2048.jpg"
@@ -112,8 +115,8 @@
         </p>
 
         <p>
-          <a href="/showroom/globe/" aria-label="Open Inspect Globe page">
-            Inspect Globe
+          <a href="/showroom/globe/" aria-label="Open Inspect Universe page">
+            Inspect Universe
           </a>
         </p>
       </article>
@@ -125,6 +128,7 @@
         data-render-root="showroom-globe"
         data-render-status="waiting"
         data-render-controller="/showroom/globe/index.js"
+        data-showroom-runtime="/showroom/runtime.js"
         data-earth-canvas-spine="/assets/earth/earth_canvas.js"
         data-earth-material="/assets/earth/earth_material.css"
         data-earth-surface="/assets/earth/earth_surface_2048.jpg"
@@ -150,7 +154,7 @@
       <a href="/home/">Home</a>
       <a href="/products/">Products</a>
       <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Inspect Globe</a>
+      <a href="/showroom/globe/">Inspect Universe</a>
       <a href="/gauges/">Gauges</a>
 
       <span>route-exists</span>
@@ -167,6 +171,7 @@
       <span>mirror-universe=buildable-world-container</span>
       <span>estate-land-placement=mirror-universe-only</span>
       <span>render-controller=/showroom/globe/index.js</span>
+      <span>showroom-runtime=/showroom/runtime.js</span>
       <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
       <span>earth-material=/assets/earth/earth_material.css</span>
       <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
@@ -174,12 +179,12 @@
       <span>earth-standard=centered-satellite-earth-no-external-rings</span>
       <span>showroom-globe-placement=bottom-layout-authority</span>
       <span>showroom-inspect-route=/showroom/globe/</span>
-      <span>SHOWROOM_BACK_PAGE_WITH_INSPECT_GLOBE_TNT_v1</span>
+      <span>SHOWROOM_RUNTIME_SHELL_TNT_v1</span>
     </section>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=showroom-back-page-with-inspect-globe-v1" defer></script>
-  <script src="/showroom/globe/index.js?v=showroom-back-page-with-inspect-globe-v1" defer></script>
-  <script src="/showroom/index.js?v=showroom-back-page-with-inspect-globe-v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=showroom-runtime-shell-v1" defer></script>
+  <script src="/showroom/globe/index.js?v=showroom-runtime-shell-v1" defer></script>
+  <script src="/showroom/runtime.js?v=showroom-runtime-shell-v1" defer></script>
 </body>
 </html>

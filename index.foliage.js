@@ -38,14 +38,16 @@
 
         for (let terminalLocal = 1; terminalLocal <= 4; terminalLocal += 1) {
           const nodeIndex = ((branchIndex - 1) * 4) + terminalLocal;
+          const terminalType = terminalTypes[(nodeIndex - 1) % terminalTypes.length];
+
           terminalNodes.push({
             id: `TERMINAL_${String(nodeIndex).padStart(3, "0")}`,
             index: nodeIndex,
             localIndex: terminalLocal,
             branchSeat: branchIndex,
             canopyCluster: canopy,
-            terminalType: terminalTypes[(nodeIndex - 1) % terminalTypes.length],
-            fruit: { active: terminalTypes[(nodeIndex - 1) % terminalTypes.length] === "fruit" }
+            terminalType,
+            fruit: { active: terminalType === "fruit" }
           });
         }
       }
@@ -127,7 +129,9 @@
     return "M 0 -19 C 11 -17 18 -9 18 1 C 18 13 7 23 0 31 C -7 23 -18 13 -18 1 C -18 -9 -11 -17 0 -19 Z";
   }
 
-  function leafFill(node) {
+  function leafFill(seed, type) {
+    if (type === "habitat") return "rgba(146,122,80,.90)";
+
     const palette = [
       "rgba(48,110,56,.94)",
       "rgba(67,130,70,.93)",
@@ -135,35 +139,71 @@
       "rgba(80,142,76,.91)",
       "rgba(41,97,49,.95)",
       "rgba(92,151,86,.89)",
-      "rgba(58,114,57,.94)"
+      "rgba(58,114,57,.94)",
+      "rgba(38,92,48,.96)",
+      "rgba(71,122,64,.92)"
     ];
 
-    return palette[node.index % palette.length];
+    return palette[Math.abs(seed) % palette.length];
   }
 
-  function leafEdge(node) {
+  function leafEdge(seed) {
     const palette = [
       "rgba(214,236,198,.22)",
       "rgba(225,244,214,.18)",
-      "rgba(193,221,177,.24)"
+      "rgba(193,221,177,.24)",
+      "rgba(238,248,222,.16)"
     ];
 
-    return palette[node.index % palette.length];
+    return palette[Math.abs(seed) % palette.length];
   }
 
-  function makeLeafGroup(node, pos) {
-    const variant = (node.index % 4) + 1;
-    const group = s("g", {
-      class: "terminal-node-group terminal-leaf-group",
+  function appendLeafShape(group, attrs) {
+    const variant = attrs.variant || 1;
+
+    group.appendChild(s("path", {
+      class: attrs.className,
+      d: leafPath(variant),
+      transform: `translate(${attrs.x} ${attrs.y}) rotate(${attrs.angle}) scale(${attrs.scale})`,
+      fill: attrs.fill,
+      stroke: attrs.stroke,
+      "stroke-width": attrs.strokeWidth || 0.85,
+      filter: "url(#leafShadow)",
+      "data-leaf-role": attrs.role,
+      "data-structural-terminal": attrs.structuralTerminal ? "true" : "false",
+      "data-parent-terminal": attrs.parentTerminal,
+      "data-parent-branch-seat": attrs.parentBranchSeat,
+      "data-canopy": attrs.canopy
+    }));
+
+    group.appendChild(s("path", {
+      class: "leaf-midrib",
+      d: "M 0 -13 C 1 -4 0 8 0 22",
+      transform: `translate(${attrs.x} ${attrs.y}) rotate(${attrs.angle}) scale(${attrs.scale})`,
+      fill: "none",
+      stroke: attrs.midrib || "rgba(235,248,220,.25)",
+      "stroke-width": attrs.structuralTerminal ? 0.95 : 0.62,
+      "stroke-linecap": "round",
+      "data-leaf-role": attrs.role,
+      "data-structural-terminal": "false"
+    }));
+  }
+
+  function makeLeafCluster(node, pos) {
+    const cluster = s("g", {
+      class: "terminal-node-group terminal-leaf-cluster",
       transform: `translate(${pos.x} ${pos.y}) rotate(${pos.angle}) scale(${pos.scale})`,
       "data-terminal-id": node.id,
       "data-terminal-index": node.index,
       "data-terminal-type": node.terminalType,
       "data-canopy": node.canopyCluster,
-      "data-branch-seat": node.branchSeat
+      "data-branch-seat": node.branchSeat,
+      "data-leaf-cluster": "expanded",
+      "data-structural-terminal-count": "1",
+      "data-detail-leaf-count": "5"
     });
 
-    group.appendChild(s("path", {
+    cluster.appendChild(s("path", {
       class: "leaf-petiole",
       d: "M 0 28 C 0 23, 0 18, 0 14",
       fill: "none",
@@ -172,35 +212,63 @@
       "stroke-linecap": "round"
     }));
 
-    group.appendChild(s("path", {
-      class: "terminal-node terminal-leaf individual-leaf",
-      d: leafPath(variant),
-      fill: leafFill(node),
-      stroke: leafEdge(node),
-      "stroke-width": 1.0,
-      filter: "url(#leafShadow)"
-    }));
+    const detailLeaves = [
+      { x: -17, y: -8, angle: -34, scale: 0.62 },
+      { x: 16, y: -10, angle: 31, scale: 0.66 },
+      { x: -20, y: 10, angle: -58, scale: 0.56 },
+      { x: 21, y: 11, angle: 54, scale: 0.58 },
+      { x: 0, y: -23, angle: 0, scale: 0.52 }
+    ];
 
-    group.appendChild(s("path", {
-      class: "leaf-midrib",
-      d: "M 0 -13 C 0 -4, 0 6, 0 20",
-      fill: "none",
-      stroke: "rgba(235,248,220,.30)",
-      "stroke-width": 1.15,
-      "stroke-linecap": "round"
-    }));
+    detailLeaves.forEach((leaf, index) => {
+      const seed = node.index * 10 + index;
+      appendLeafShape(cluster, {
+        className: "terminal-node terminal-leaf detail-leaf",
+        x: leaf.x + seededRange(seed * 31, -3, 3),
+        y: leaf.y + seededRange(seed * 37, -3, 3),
+        angle: leaf.angle + seededRange(seed * 41, -9, 9),
+        scale: leaf.scale + seededRange(seed * 43, -0.04, 0.05),
+        fill: leafFill(seed, node.terminalType),
+        stroke: leafEdge(seed),
+        variant: (seed % 4) + 1,
+        role: "detail-leaf",
+        structuralTerminal: false,
+        parentTerminal: node.id,
+        parentBranchSeat: node.branchSeat,
+        canopy: node.canopyCluster,
+        midrib: "rgba(235,248,220,.18)"
+      });
+    });
 
-    group.appendChild(s("path", {
+    appendLeafShape(cluster, {
+      className: "terminal-node terminal-leaf individual-leaf structural-terminal-leaf",
+      x: 0,
+      y: 0,
+      angle: 0,
+      scale: 1,
+      fill: leafFill(node.index, node.terminalType),
+      stroke: leafEdge(node.index),
+      strokeWidth: 1.05,
+      variant: (node.index % 4) + 1,
+      role: "structural-terminal-leaf",
+      structuralTerminal: true,
+      parentTerminal: node.id,
+      parentBranchSeat: node.branchSeat,
+      canopy: node.canopyCluster,
+      midrib: "rgba(235,248,220,.32)"
+    });
+
+    cluster.appendChild(s("path", {
       class: "leaf-side-veins",
       d: "M 0 -8 L 8 -12 M 0 -1 L 10 -3 M 0 7 L 9 8 M 0 -8 L -8 -12 M 0 -1 L -10 -3 M 0 7 L -9 8",
       fill: "none",
-      stroke: "rgba(235,248,220,.16)",
-      "stroke-width": 0.75,
+      stroke: "rgba(235,248,220,.15)",
+      "stroke-width": 0.72,
       "stroke-linecap": "round"
     }));
 
     if (node.terminalType === "fruit") {
-      group.appendChild(s("path", {
+      cluster.appendChild(s("path", {
         d: "M 1 2 C 4 -5, 8 -9, 12 -12",
         fill: "none",
         stroke: "rgba(83,56,34,.82)",
@@ -208,7 +276,7 @@
         "stroke-linecap": "round"
       }));
 
-      group.appendChild(s("circle", {
+      cluster.appendChild(s("circle", {
         class: "terminal-fruit",
         cx: 14,
         cy: -13,
@@ -217,7 +285,7 @@
         filter: "url(#fruitGlow)"
       }));
 
-      group.appendChild(s("circle", {
+      cluster.appendChild(s("circle", {
         cx: 12.7,
         cy: -14.5,
         r: 1.2,
@@ -251,11 +319,11 @@
         fill: "rgba(242,199,111,.92)"
       }));
 
-      group.appendChild(blossom);
+      cluster.appendChild(blossom);
     }
 
     if (node.terminalType === "habitat") {
-      group.appendChild(s("ellipse", {
+      cluster.appendChild(s("ellipse", {
         class: "terminal-habitat-mark",
         cx: -10,
         cy: -5,
@@ -266,14 +334,14 @@
         "stroke-width": 0.9
       }));
 
-      group.appendChild(s("circle", {
+      cluster.appendChild(s("circle", {
         cx: -12,
         cy: -5,
         r: 1.1,
         fill: "rgba(20,10,4,.85)"
       }));
 
-      group.appendChild(s("circle", {
+      cluster.appendChild(s("circle", {
         cx: -8,
         cy: -5,
         r: 1.1,
@@ -281,7 +349,7 @@
       }));
     }
 
-    return group;
+    return cluster;
   }
 
   function twigAnchor(pos) {
@@ -464,8 +532,10 @@
 
     const leafLayer = s("g", {
       class: "svg-layer layer-terminals",
-      "data-render-layer": "foliage-independent-leaves",
-      "data-leaf-count": "256"
+      "data-render-layer": "foliage-dense-leaves",
+      "data-structural-terminal-count": "256",
+      "data-detail-leaf-count": "1280",
+      "data-total-visible-leaves": "1536"
     });
 
     const detailLayer = s("g", {
@@ -502,7 +572,7 @@
     });
 
     allNodePositions.forEach(({ node, pos }) => {
-      leafLayer.appendChild(makeLeafGroup(node, pos));
+      leafLayer.appendChild(makeLeafCluster(node, pos));
     });
 
     if (state.activeTab === "wildlife") {

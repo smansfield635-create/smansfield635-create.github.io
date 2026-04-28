@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html
   lang="en"
-  data-build="six-house-parts-full-tnt-v1"
-  data-generation="showroom-core-house-alignment-renewal-v1"
   data-page-id="showroom"
   data-page="showroom"
+  data-generation="showroom-globe-return-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -12,24 +11,28 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
+  data-showroom-role="universe-delivery-surface"
+  data-demo-universe="globe-only"
+  data-mirror-universe="buildable-world-container"
+  data-estate-land-placement="mirror-universe-only"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Showroom · Diamond Gate Bridge</title>
+  <title>Showroom · Universe Delivery Surface · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Showroom: the public proof room of Rich Manor and Estate."
+    content="Showroom for Diamond Gate Bridge. The globe returns as the universe delivery surface. Demo Universe remains globe-only; Mirror / Nine Summits Universe is the buildable context for Rich Manor and Estate."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-core-house-alignment-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-globe-return-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-globe-return-v1" />
 </head>
 
 <body
-  class="manor-skin manor-house house-class"
+  class="manor-skin house-class showroom-page"
   data-page-id="showroom"
   data-page="showroom"
   data-estate="rich-manor-and-estate"
@@ -39,30 +42,31 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-manor-room="showroom"
-  data-manor-slot="H5_SHOWROOM"
-  data-manor-route="/showroom/"
-  data-manor-batch="BATCH_1_HOUSE"
-  data-route="/showroom/"
-  data-class-type="house_structure"
-  data-construct-code="H5_SHOWROOM"
-  data-house-anchor="showroom"
-  data-skin-family="manor_house"
-  data-audit-priority="high"
-  data-view-modes="flat round meta return"
-  data-registry-version="1.0.0"
+  data-showroom-role="universe-delivery-surface"
+  data-demo-universe="globe-only"
+  data-mirror-universe="buildable-world-container"
+  data-estate-land-placement="mirror-universe-only"
+  data-active-universe="demo"
 >
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/showroom/" aria-current="page">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+  <header class="site-topbar">
+    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
+      <strong>Diamond Gate Bridge</strong>
+      <span>Rich Manor and Estate · Showroom</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary house routes">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/" aria-current="page">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </header>
 
   <main
-    class="manor-shell manor-skin house-class"
+    id="showroom-root"
+    class="showroom-shell manor-skin house-class"
     data-page-id="showroom"
     data-page="showroom"
     data-estate="rich-manor-and-estate"
@@ -72,86 +76,84 @@
     data-gauges-truth="live-authority"
     data-construct-class="house"
     data-house-part="showroom"
-    data-manor-room="showroom"
-    data-manor-slot="H5_SHOWROOM"
-    data-manor-route="/showroom/"
-    data-route="/showroom/"
-    data-class-type="house_structure"
-    data-construct-code="H5_SHOWROOM"
-    data-house-anchor="showroom"
+    data-showroom-role="universe-delivery-surface"
+    data-demo-universe="globe-only"
+    data-mirror-universe="buildable-world-container"
+    data-estate-land-placement="mirror-universe-only"
   >
-    <section class="manor-room" aria-label="Showroom">
-      <p class="manor-kicker">H5 · Showroom · Public Proof Room</p>
-
-      <h1 class="manor-title">Showroom</h1>
-
-      <p class="manor-lede">
-        Showroom proves. It presents public demonstration, receipts, and visible legitimacy
-        without taking over the Compass role.
-      </p>
-
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="Showroom public proof">
-        <p class="manor-kicker">Proof without drift</p>
-
-        <h2>The Showroom displays the estate. It does not control it.</h2>
-
-        <p class="manor-lede">
-          The Compass orients. The Door admits. Home receives. Products distributes.
-          Showroom gives the public proof layer. Gauges remains the live verification authority.
+    <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
+      <div class="showroom-copy">
+        <p class="kicker">H5 · Showroom · Universe delivery surface</p>
+        <h1 id="H5_SHOWROOM">Showroom</h1>
+        <p>
+          The globe returns here. The Demo Universe remains globe-only. The Mirror / Nine Summits Universe is the buildable world context where Rich Manor and Estate belongs.
         </p>
 
-        <div class="manor-grid">
-          <a class="manor-card" href="/products/">
-            <p class="manor-kicker">Product Proof</p>
-            <h2>Products</h2>
-            <p class="manor-lede">Move to the source-waterfall chamber.</p>
-          </a>
-
-          <a class="manor-card" href="/gauges/">
-            <p class="manor-kicker">Live Health</p>
-            <h2>Gauges</h2>
-            <p class="manor-lede">Verify route and system health.</p>
-          </a>
-
-          <a class="manor-card" href="/">
-            <p class="manor-kicker">Orientation</p>
-            <h2>Compass</h2>
-            <p class="manor-lede">Return to the estate control surface.</p>
-          </a>
+        <div class="universe-switcher" aria-label="Universe selector">
+          <button class="universe-button is-active" type="button" data-universe="demo" aria-pressed="true">
+            Demo Globe
+          </button>
+          <button class="universe-button" type="button" data-universe="mirror" aria-pressed="false">
+            Mirror / Nine Summits
+          </button>
         </div>
-      </section>
+      </div>
+
+      <div
+        id="showroom-globe-mount"
+        class="showroom-globe-mount"
+        aria-live="polite"
+        data-render-root="showroom-globe"
+        data-render-status="waiting"
+        data-active-universe="demo"
+      >
+        <noscript>
+          <article class="fallback-card">
+            <p class="kicker">Showroom fallback</p>
+            <h2>Universe Delivery Surface</h2>
+            <p>JavaScript is required for the animated globe. The route links remain available above.</p>
+          </article>
+        </noscript>
+      </div>
+
+      <aside class="showroom-proof" aria-label="Showroom universe rules">
+        <article>
+          <span>Demo Universe</span>
+          <strong>Globe-only</strong>
+          <p>No estate land is built on the Demo Earth globe.</p>
+        </article>
+        <article>
+          <span>Mirror / Nine Summits Universe</span>
+          <strong>Buildable world</strong>
+          <p>The Manor, 256-acre estate, tree system, roads, wildlife, and land belong here.</p>
+        </article>
+      </aside>
     </section>
 
-    <section class="manor-backlinks" aria-label="House backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
+    <section class="audit-source" aria-label="Showroom audit source">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
 
-      <ul class="manor-backlinks-list">
-        <li><a href="/">Compass</a></li>
-        <li><a href="/door/">Door</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
-    </section>
-
-    <section class="manor-audit-strip" aria-label="Showroom audit receipt">
-      <p class="manor-audit-title">Showroom receipt</p>
-
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">house-class</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=house</li>
-        <li class="manor-audit-chip pass">house-part=showroom</li>
-        <li class="manor-audit-chip pass">H5_SHOWROOM</li>
-        <li class="manor-audit-chip pass">public-proof-room</li>
-      </ul>
+      <span>route-exists</span>
+      <span>manor-skin</span>
+      <span>house-class</span>
+      <span>estate=rich-manor-and-estate</span>
+      <span>house-field=true</span>
+      <span>gauges-truth=live-authority</span>
+      <span>construct-class=house</span>
+      <span>house-part=showroom</span>
+      <span>H5_SHOWROOM</span>
+      <span>showroom-role=universe-delivery-surface</span>
+      <span>demo-universe=globe-only</span>
+      <span>mirror-universe=buildable-world-container</span>
+      <span>estate-land-placement=mirror-universe-only</span>
     </section>
   </main>
+
+  <script src="/showroom/showroom.render.js?v=showroom-globe-return-v1" defer></script>
 </body>
 </html>

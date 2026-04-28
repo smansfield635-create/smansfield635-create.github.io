@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="showroom"
   data-page="showroom"
-  data-generation="showroom-actual-earth-controller-v1"
+  data-generation="showroom-earth-canvas-spine-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -16,7 +16,11 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-render-controller="/showroom/globe/index.js"
-  data-required-earth-asset="/assets/earth/showroom-earth.png"
+  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+  data-earth-material="/assets/earth/earth_material.css"
+  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+  data-earth-standard="centered-satellite-earth-no-external-rings"
 >
 <head>
   <meta charset="utf-8" />
@@ -26,11 +30,12 @@
 
   <meta
     name="description"
-    content="Showroom for Diamond Gate Bridge. Orbital Earth is the centered visual standard. The Demo Earth remains globe-only; the Mirror / Nine Summits Universe remains the buildable world context for Rich Manor and Estate."
+    content="Showroom for Diamond Gate Bridge. The Showroom mounts the existing Earth canvas spine from /assets/earth/ with centered satellite Earth, no external rings, and no procedural placeholder as final visual."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=showroom-actual-earth-controller-v1" />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-actual-earth-controller-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=showroom-earth-canvas-spine-v1" />
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=showroom-earth-canvas-spine-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-earth-canvas-spine-v1" />
 </head>
 
 <body
@@ -49,7 +54,11 @@
   data-mirror-universe="buildable-world-container"
   data-estate-land-placement="mirror-universe-only"
   data-render-controller="/showroom/globe/index.js"
-  data-required-earth-asset="/assets/earth/showroom-earth.png"
+  data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+  data-earth-material="/assets/earth/earth_material.css"
+  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+  data-earth-standard="centered-satellite-earth-no-external-rings"
 >
   <header class="site-topbar">
     <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -84,14 +93,18 @@
     data-mirror-universe="buildable-world-container"
     data-estate-land-placement="mirror-universe-only"
     data-render-controller="/showroom/globe/index.js"
-    data-required-earth-asset="/assets/earth/showroom-earth.png"
+    data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+    data-earth-material="/assets/earth/earth_material.css"
+    data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+    data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+    data-earth-standard="centered-satellite-earth-no-external-rings"
   >
     <section class="showroom-stage" aria-labelledby="H5_SHOWROOM">
       <article class="showroom-copy">
         <p class="kicker">H5 · Showroom · Orbital Earth</p>
         <h1 id="H5_SHOWROOM">Orbital Earth.</h1>
         <p>
-          Earth is the center of the showroom. The stage does not draw a circular frame around the planet.
+          Earth is the center of the showroom. The page mounts the existing Earth canvas spine from the local asset package.
         </p>
       </article>
 
@@ -102,8 +115,11 @@
         data-render-root="showroom-globe"
         data-render-status="waiting"
         data-render-controller="/showroom/globe/index.js"
-        data-required-earth-asset="/assets/earth/showroom-earth.png"
-        data-earth-standard="actual-earth-texture-required"
+        data-earth-canvas-spine="/assets/earth/earth_canvas.js"
+        data-earth-material="/assets/earth/earth_material.css"
+        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+        data-earth-standard="centered-satellite-earth-no-external-rings"
         data-demo-universe="globe-only"
         data-estate-land-placement="mirror-universe-only"
       >
@@ -111,7 +127,7 @@
           <article class="fallback-card">
             <p class="kicker">Showroom fallback</p>
             <h2>Orbital Earth</h2>
-            <p>JavaScript is required for the orbital Earth showroom.</p>
+            <p>JavaScript is required for the Earth canvas showroom.</p>
           </article>
         </noscript>
       </div>
@@ -139,11 +155,16 @@
       <span>mirror-universe=buildable-world-container</span>
       <span>estate-land-placement=mirror-universe-only</span>
       <span>render-controller=/showroom/globe/index.js</span>
-      <span>required-earth-asset=/assets/earth/showroom-earth.png</span>
-      <span>earth-standard=actual-earth-texture-required</span>
+      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
+      <span>earth-material=/assets/earth/earth_material.css</span>
+      <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
+      <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
+      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
+      <span>SHOWROOM_EARTH_CANVAS_SPINE_TNT_v1</span>
     </section>
   </main>
 
-  <script src="/showroom/globe/index.js?v=actual-earth-controller-v1" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=showroom-earth-canvas-spine-v1" defer></script>
+  <script src="/showroom/globe/index.js?v=showroom-earth-canvas-spine-v1" defer></script>
 </body>
 </html>

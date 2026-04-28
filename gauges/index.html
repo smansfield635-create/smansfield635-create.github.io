@@ -3,8 +3,7 @@
   lang="en"
   data-page-id="gauges"
   data-page="gauges"
-  data-generation="gauges-generation-3-readiness-gate-v1"
-  data-gauges-generation="generation-3-readiness-gate"
+  data-generation="gauges-downstream-render-health-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -12,36 +11,37 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="gauges"
+  data-render-health-lane="active"
+  data-downstream-render-health="measured"
 >
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Generation Readiness Gate · Diamond Gate Bridge</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Gauges · Generation + Render Health · Diamond Gate Bridge</title>
+
   <meta
     name="description"
-    content="Gauges for Diamond Gate Bridge and Rich Manor and Estate. Measures marker health, core experience, and Generation 3 readiness separately."
+    content="Gauges for Diamond Gate Bridge. Measures marker health, core experience, generation readiness, product wing, planetary attachment, and downstream render health without faking evidence."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=generation-3-readiness-gate-v1" />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #03060b;
-      --panel: rgba(7, 14, 28, .88);
-      --line: rgba(255, 218, 150, .24);
-      --line2: rgba(255, 218, 150, .42);
-      --text: #fff8ea;
-      --muted: #c9d2ea;
-      --soft: rgba(201, 210, 234, .74);
-      --gold: #ffd98a;
-      --green: #93efbd;
-      --blue: #8ec5ff;
-      --yellow: #ffcf7a;
-      --red: #ff6f78;
-      --purple: #caa8ff;
-      --shadow: 0 24px 80px rgba(0, 0, 0, .50);
-      --max: 1240px;
-      --radius: 26px;
+      --ink: #fff7e4;
+      --muted: rgba(255,247,228,.72);
+      --soft: rgba(255,247,228,.52);
+      --gold: #f2c76f;
+      --green: #8be28b;
+      --red: #ff8c8c;
+      --blue: #8ec7ff;
+      --line: rgba(255,247,228,.18);
+      --line-strong: rgba(242,199,111,.48);
+      --panel: rgba(3,7,12,.72);
+      --panel-strong: rgba(3,7,12,.88);
+      --black: #02050a;
+      --max: 1380px;
+      --topbar: 72px;
     }
 
     * { box-sizing: border-box; }
@@ -50,30 +50,33 @@
     body {
       margin: 0;
       min-height: 100%;
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 50% 88%, rgba(255, 154, 86, .24), transparent 28%),
-        radial-gradient(circle at 50% 0%, rgba(255, 217, 138, .13), transparent 34%),
-        radial-gradient(circle at 20% 18%, rgba(142, 197, 255, .12), transparent 27%),
-        linear-gradient(180deg, #03060b 0%, #071021 58%, #03060b 100%);
+      background: var(--black);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { overflow-x: hidden; }
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(242,199,111,.18), transparent 30%),
+        radial-gradient(circle at 16% 20%, rgba(80,139,214,.16), transparent 34%),
+        radial-gradient(circle at 82% 30%, rgba(165,92,204,.12), transparent 34%),
+        linear-gradient(180deg, #02050a 0%, #07111f 58%, #02050a 100%);
+    }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
+      z-index: -2;
       pointer-events: none;
-      opacity: .68;
+      opacity: .58;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,.55) 0 1px, transparent 1.3px),
-        radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.5px);
-      background-size: 96px 96px, 154px 154px;
-      background-position: 0 0, 34px 51px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.88), rgba(0,0,0,.20));
+        radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.7px);
+      background-size: 96px 96px, 160px 160px;
+      background-position: 0 0, 38px 59px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.96), rgba(0,0,0,.35) 78%, transparent);
     }
 
     a { color: inherit; text-decoration: none; }
@@ -82,508 +85,303 @@
     a:focus-visible,
     button:focus-visible {
       outline: 2px solid var(--gold);
-      outline-offset: 4px;
+      outline-offset: 3px;
     }
 
-    .wrap {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
+    .audit-source,
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
 
-    .topbar {
+    .site-topbar {
       position: sticky;
       top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--line);
-      background: rgba(3, 6, 11, .76);
-      backdrop-filter: blur(18px);
-    }
-
-    .topbar-inner {
-      min-height: 70px;
+      z-index: 90;
+      min-height: var(--topbar);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      flex-wrap: wrap;
+      padding: 12px max(18px, calc((100vw - var(--max)) / 2));
+      border-bottom: 1px solid var(--line);
+      background: rgba(2,5,10,.82);
+      backdrop-filter: blur(18px);
     }
 
-    .brand {
+    .site-brand {
       display: grid;
       gap: 3px;
     }
 
-    .brand strong {
-      color: var(--gold);
-      font-size: .82rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: .86rem;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    .nav a,
-    .pill,
-    .refresh {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 12px;
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: .88rem;
-    }
-
-    .nav a:hover,
-    .pill:hover,
-    .refresh:hover {
-      color: var(--text);
-      border-color: var(--line2);
-      background: rgba(255,217,138,.12);
-    }
-
-    .refresh { cursor: pointer; }
-
-    .hero { padding: 44px 0 18px; }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 16px;
-      align-items: stretch;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
-      box-shadow: var(--shadow);
-    }
-
-    .hero-card {
-      padding: clamp(24px, 5vw, 52px);
-      min-height: 360px;
-      display: grid;
-      align-content: center;
-    }
-
-    .eyebrow {
-      margin: 0 0 13px;
+    .site-brand strong {
       color: var(--gold);
       font-size: .78rem;
       letter-spacing: .16em;
       text-transform: uppercase;
     }
 
-    h1, h2, h3, p { margin-top: 0; }
+    .site-brand span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .site-nav a,
+    .run-button,
+    .return-link {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(255,255,255,.045);
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"],
+    .run-button:hover,
+    .return-link:hover {
+      border-color: var(--line-strong);
+      color: var(--ink);
+      background: rgba(242,199,111,.14);
+    }
+
+    .gauges-shell {
+      width: min(var(--max), calc(100vw - 24px));
+      margin: 12px auto 36px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: clamp(18px, 3vw, 34px);
+      background: var(--panel);
+      box-shadow: 0 32px 110px rgba(0,0,0,.54);
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: .74rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
 
     h1 {
-      margin-bottom: 18px;
-      font-size: clamp(2.7rem, 7.2vw, 6.8rem);
+      margin: 0 0 10px;
+      font-size: clamp(3rem, 7vw, 6.8rem);
       line-height: .86;
       letter-spacing: -.06em;
     }
 
     h2 {
-      margin-bottom: 10px;
-      font-size: clamp(1.8rem, 4vw, 3.35rem);
-      line-height: .95;
-      letter-spacing: -.04em;
+      margin: 0 0 10px;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      letter-spacing: -.03em;
     }
 
-    h3 {
-      margin-bottom: 8px;
-      font-size: 1.04rem;
-    }
-
-    .lead {
-      margin: 0;
+    p {
       color: var(--muted);
-      max-width: 780px;
-      font-size: clamp(1rem, 1.6vw, 1.22rem);
-      line-height: 1.56;
+      line-height: 1.48;
     }
 
-    .method-card {
-      padding: 22px;
-      display: grid;
-      gap: 12px;
+    .hero p {
+      max-width: 860px;
     }
 
-    .method-list {
+    .rule-list {
+      margin: 18px 0 0;
+      padding: 0;
       display: grid;
       gap: 8px;
-      margin: 0;
-      padding: 0;
       list-style: none;
-    }
-
-    .method-list li {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px;
       color: var(--muted);
-      background: rgba(0,0,0,.18);
     }
 
-    .method-list b,
-    .phase-callout b { color: var(--gold); }
-
-    .phase-callout {
-      border: 1px solid rgba(255, 217, 138, .42);
-      border-radius: 18px;
-      padding: 13px;
-      background: rgba(255,217,138,.08);
-      color: var(--muted);
-      line-height: 1.45;
+    .rule-list strong {
+      color: var(--ink);
     }
 
-    .controls {
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 18px;
       align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
     }
 
-    .status-strip {
+    .run-button {
+      cursor: pointer;
+      color: var(--ink);
+      border-color: var(--line-strong);
+      background: rgba(242,199,111,.14);
+    }
+
+    .score-row {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(6, 1fr);
       gap: 12px;
-      padding: 18px 0;
     }
 
-    .stat {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(5, 10, 20, .72);
-      box-shadow: 0 18px 60px rgba(0,0,0,.24);
-    }
-
-    .stat small {
-      display: block;
-      color: var(--muted);
-      font-size: .78rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .stat strong {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 4.2vw, 3.5rem);
-      line-height: .9;
-      letter-spacing: -.045em;
-    }
-
-    .stat span {
-      display: block;
-      color: var(--soft);
-      margin-top: 8px;
-      font-size: .88rem;
-      line-height: 1.35;
-    }
-
-    .section { padding: 14px 0; }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-      line-height: 1.5;
-    }
-
-    .gauge-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .gauge-card {
-      position: relative;
-      overflow: hidden;
+    .score-card,
+    .panel,
+    .route-card {
       border: 1px solid var(--line);
       border-radius: 24px;
-      padding: 18px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 32%),
-        rgba(5, 10, 20, .74);
-      box-shadow: 0 18px 60px rgba(0,0,0,.24);
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(0,0,0,.36);
     }
 
-    .gauge-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .18;
-      background: radial-gradient(circle at 50% 50%, var(--tone), transparent 50%);
-      pointer-events: none;
+    .score-card {
+      padding: 16px;
+      min-height: 150px;
     }
 
-    .gauge-card.priority {
-      border-color: rgba(255,217,138,.58);
-    }
-
-    .gauge-top {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .gauge-name small {
+    .score-card span,
+    .route-card span,
+    .small-label {
       display: block;
-      color: var(--muted);
-      font-size: .74rem;
+      color: var(--gold);
+      font-size: .72rem;
       letter-spacing: .12em;
       text-transform: uppercase;
-      margin-bottom: 4px;
     }
 
-    .gauge-name strong {
+    .score-card strong {
       display: block;
-      color: var(--text);
-      font-size: 1.02rem;
-      line-height: 1.2;
-    }
-
-    .gauge-value {
-      color: var(--gold);
-      font-weight: 800;
-      font-size: 1.15rem;
-      white-space: nowrap;
-    }
-
-    .dial {
-      position: relative;
-      z-index: 1;
-      width: 170px;
-      height: 92px;
-      margin: 22px auto 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.16);
-      border-bottom: 0;
-      border-radius: 170px 170px 0 0;
-      background:
-        radial-gradient(circle at 50% 100%, rgba(0,0,0,.5), transparent 42%),
-        conic-gradient(from 270deg at 50% 100%, var(--red), var(--yellow), var(--green), var(--blue));
-    }
-
-    .dial::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -54px;
-      width: 118px;
-      height: 118px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: #071021;
-      border: 1px solid rgba(255,255,255,.14);
-    }
-
-    .needle {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 4px;
-      height: 75px;
-      transform-origin: 50% 100%;
-      transform: translateX(-50%) rotate(var(--needle));
-      border-radius: 999px;
-      background: var(--text);
-      z-index: 2;
-      box-shadow: 0 0 20px rgba(255,255,255,.25);
-    }
-
-    .dial-read {
-      position: absolute;
-      left: 50%;
-      bottom: 8px;
-      z-index: 3;
-      transform: translateX(-50%);
-      display: grid;
-      place-items: center;
-      text-align: center;
-    }
-
-    .dial-read strong {
-      color: var(--text);
-      font-size: 1.25rem;
+      margin: 6px 0;
+      font-size: clamp(2.2rem, 5vw, 4rem);
       line-height: 1;
     }
 
-    .dial-read small {
-      color: var(--muted);
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-    }
-
-    .meaning {
-      position: relative;
-      z-index: 1;
-      color: var(--muted);
-      line-height: 1.45;
-      min-height: 62px;
-    }
-
-    .telemetry {
-      position: relative;
-      z-index: 1;
-      margin: 12px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 6px;
-    }
-
-    .telemetry li {
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 12px;
-      padding: 8px 9px;
-      color: var(--soft);
-      font-size: .82rem;
-      background: rgba(0,0,0,.16);
-    }
-
-    .audit-layout {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-    }
-
-    .audit-table,
-    .receipt-card { padding: 18px; }
-
-    .audit-list {
+    .score-card p,
+    .route-card p {
       margin: 0;
-      padding: 0;
-      list-style: none;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.34;
+    }
+
+    .status-pass strong { color: var(--green); }
+    .status-watch strong { color: var(--gold); }
+    .status-fail strong { color: var(--red); }
+    .status-hold strong { color: var(--blue); }
+
+    .panel {
+      padding: clamp(16px, 2.5vw, 26px);
+    }
+
+    .dial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .dial {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .dial strong {
+      display: block;
+      margin: 6px 0;
+      font-size: 2rem;
+    }
+
+    .dial code,
+    .route-card code,
+    .receipt code {
+      color: var(--gold);
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .route-grid {
       display: grid;
       gap: 10px;
     }
 
-    .audit-item {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 13px;
-      background: rgba(0,0,0,.18);
-      display: grid;
+    .route-card {
+      padding: 14px;
+    }
+
+    .route-card header {
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
     }
 
-    .audit-item strong { color: var(--text); }
+    .route-card h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
 
-    .audit-item span,
-    .audit-item code {
+    .route-card ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
       color: var(--muted);
-      overflow-wrap: anywhere;
-    }
-
-    .audit-item code { font-size: .78rem; }
-
-    .audit-item.pass { border-color: rgba(147,239,189,.36); }
-    .audit-item.warn { border-color: rgba(255,207,122,.42); }
-    .audit-item.fail { border-color: rgba(255,111,120,.45); }
-
-    .audit-item.phase-target {
-      box-shadow: inset 0 0 0 1px rgba(255,217,138,.42), 0 0 34px rgba(255,217,138,.08);
     }
 
     .receipt {
       margin: 0;
-      white-space: pre-wrap;
-      color: var(--muted);
-      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    }
-
-    .next-move {
-      margin-top: 14px;
+      padding: 16px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,217,138,.08);
+      border-radius: 22px;
+      background: rgba(0,0,0,.28);
       color: var(--muted);
-      line-height: 1.45;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      margin-top: 24px;
-      padding: 26px 0 38px;
-      color: var(--muted);
-    }
-
-    footer .wrap {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
     @media (max-width: 1180px) {
-      .gauge-grid,
-      .status-strip {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+      .score-row,
+      .dial-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 1000px) {
-      .hero-grid,
-      .audit-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .topbar-inner {
+    @media (max-width: 720px) {
+      .site-topbar {
         align-items: flex-start;
         flex-direction: column;
-        padding: 14px 0;
       }
 
-      .nav { justify-content: flex-start; }
-      .hero { padding-top: 28px; }
+      .site-nav {
+        justify-content: flex-start;
+      }
 
-      .gauge-grid,
-      .status-strip {
+      .score-row,
+      .dial-grid {
         grid-template-columns: 1fr;
       }
 
-      .controls {
-        align-items: flex-start;
-        flex-direction: column;
+      h1 {
+        font-size: 3.4rem;
       }
     }
   </style>
 </head>
 
 <body
-  class="manor-skin house-class"
+  class="manor-skin house-class gauges-page"
   data-page-id="gauges"
   data-page="gauges"
   data-estate="rich-manor-and-estate"
@@ -593,30 +391,30 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="gauges"
+  data-render-health-lane="active"
+  data-downstream-render-health="measured"
 >
-  <header class="topbar">
-    <div class="wrap topbar-inner">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Rich Manor and Estate · Gauges</span>
-      </a>
+  <header class="site-topbar">
+    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
+      <strong>Diamond Gate Bridge</strong>
+      <span>Rich Manor and Estate · Gauges</span>
+    </a>
 
-      <nav class="nav" aria-label="Primary estate routes">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </div>
+    <nav class="site-nav" aria-label="Primary house routes">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/" aria-current="page">Gauges</a>
+    </nav>
   </header>
 
   <main
-    class="page manor-skin house-class"
     id="gauges-root"
-    data-page="gauges"
+    class="gauges-shell manor-skin house-class"
     data-page-id="gauges"
+    data-page="gauges"
     data-estate="rich-manor-and-estate"
     data-manor-skin="active"
     data-manor-class="house"
@@ -624,854 +422,571 @@
     data-gauges-truth="live-authority"
     data-construct-class="house"
     data-house-part="gauges"
+    data-render-health-lane="active"
+    data-downstream-render-health="measured"
   >
     <section class="hero" aria-labelledby="H6_GAUGES">
-      <div class="wrap hero-grid">
-        <article class="panel hero-card">
-          <p class="eyebrow">H6 · Gauges · Generation Readiness Gate</p>
-          <h1 id="H6_GAUGES">Gauges</h1>
-          <p class="lead">
-            Gauges now separates marker health from generation health. The estate may be
-            healthy enough as a Generation 1 · 3D baseline, but it is not Generation 3
-            until Generation 3 is implemented and accepted.
-          </p>
-        </article>
+      <p class="kicker">H6 · Gauges · Generation + downstream render health</p>
+      <h1 id="H6_GAUGES">Gauges</h1>
+      <p>
+        Gauges separates marker health from generation health and now separates downstream render health from route health.
+        A page can pass route markers while its CSS or render engine fails. Gauges may style evidence, but Gauges may not fake evidence.
+      </p>
 
-        <aside class="panel method-card" aria-label="Gauges operating method">
-          <p class="eyebrow">Gauge · Renew · Measure · Raise · Repeat</p>
-          <ul class="method-list">
-            <li><b>Marker health:</b> route and schema pass/fail.</li>
-            <li><b>Core experience:</b> Index crowding, control-panel readiness, and Russian-doll compression.</li>
-            <li><b>Generation readiness:</b> current generation state versus target generation state.</li>
-            <li><b>Downstream work:</b> held until the active generation gate releases it.</li>
-          </ul>
+      <ul class="rule-list">
+        <li><strong>Marker health:</strong> route, schema, required markers, and backlinks.</li>
+        <li><strong>Core experience:</strong> Index crowding, control state, and generation gate readiness.</li>
+        <li><strong>Generation readiness:</strong> current generation state versus accepted target state.</li>
+        <li><strong>Downstream render health:</strong> render assets, templates, engines, and mount source proof.</li>
+      </ul>
 
-          <div class="phase-callout">
-            <b>Generation rule:</b> House Skeleton may equal 100, but Product Wing and Planets stay held while Generation Readiness is below <code>GEN_3_ACCEPTED_ROUND_WORLD</code>.
-          </div>
-
-          <div class="controls">
-            <button class="refresh" id="refreshAudit" type="button">Run live calibration</button>
-            <a class="pill" href="/">Return to Compass</a>
-          </div>
-        </aside>
+      <div class="actions">
+        <button id="runCalibration" class="run-button" type="button">Run live calibration</button>
+        <a class="return-link" href="/">Return to Compass</a>
       </div>
     </section>
 
-    <section class="wrap status-strip" aria-label="Live site-health instruments">
-      <article class="stat">
-        <small>Overall ceiling</small>
-        <strong id="overallScore">--</strong>
-        <span id="overallNote">live-calculated · awaiting route checks</span>
+    <section class="score-row" aria-label="Live health scores">
+      <article id="scoreOverall" class="score-card status-hold">
+        <span>Overall ceiling</span>
+        <strong>--</strong>
+        <p>live-calculated</p>
       </article>
-
-      <article class="stat">
-        <small>House skeleton</small>
-        <strong id="houseScore">--</strong>
-        <span id="houseNote">live-calculated · awaiting route checks</span>
+      <article id="scoreHouse" class="score-card status-hold">
+        <span>House skeleton</span>
+        <strong>--</strong>
+        <p>marker health</p>
       </article>
-
-      <article class="stat">
-        <small>Core experience</small>
-        <strong id="experienceScore">--</strong>
-        <span id="experienceNote">live-calculated · awaiting Compass read</span>
+      <article id="scoreCore" class="score-card status-hold">
+        <span>Core experience</span>
+        <strong>--</strong>
+        <p>Index generation gate</p>
       </article>
-
-      <article class="stat">
-        <small>Generation readiness</small>
-        <strong id="generationScore">--</strong>
-        <span id="generationNote">live-calculated · awaiting generation read</span>
+      <article id="scoreGeneration" class="score-card status-hold">
+        <span>Generation readiness</span>
+        <strong>--</strong>
+        <p>current versus target</p>
       </article>
-
-      <article class="stat">
-        <small>Products</small>
-        <strong id="productsScore">--</strong>
-        <span id="productsNote">live-calculated · awaiting route checks</span>
+      <article id="scoreRender" class="score-card status-hold">
+        <span>Render health</span>
+        <strong>--</strong>
+        <p>downstream render lane</p>
       </article>
-
-      <article class="stat">
-        <small>Planets</small>
-        <strong id="planetsScore">--</strong>
-        <span id="planetsNote">live-calculated · awaiting route checks</span>
+      <article id="scoreProducts" class="score-card status-hold">
+        <span>Products</span>
+        <strong>--</strong>
+        <p>product wing</p>
       </article>
     </section>
 
-    <section class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Live calibration dials</p>
-            <h2>Marker health is not generation health.</h2>
-          </div>
-          <p>
-            Gauges still measures all fields. The recommendation engine now holds downstream work until the Index core experience and Generation 3 readiness gate are accepted.
-          </p>
-        </div>
-
-        <div class="gauge-grid" id="gaugeGrid" aria-label="Calibration gauges"></div>
-      </div>
+    <section class="panel" aria-label="Live calibration dials">
+      <p class="kicker">Live calibration dials</p>
+      <h2>Marker health is not render health.</h2>
+      <p>
+        Showroom can show marker health 100 while its downstream render files fail. The new render lane measures that separately.
+      </p>
+      <div id="dialGrid" class="dial-grid"></div>
     </section>
 
-    <section class="section">
-      <div class="wrap audit-layout">
-        <article class="panel audit-table">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">Live audit table</p>
-              <h2>Route evidence</h2>
-            </div>
-          </div>
+    <section class="panel" aria-label="Route evidence">
+      <p class="kicker">Live audit table</p>
+      <h2>Route evidence</h2>
+      <div id="routeGrid" class="route-grid"></div>
+    </section>
 
-          <ul class="audit-list" id="auditList" aria-label="Route audit evidence"></ul>
-        </article>
-
-        <aside class="panel receipt-card">
-          <p class="eyebrow">Calibration receipt</p>
-          <h2>Before / after discipline</h2>
-          <pre class="receipt" id="liveReceipt">SCANNING=false
+    <section class="panel" aria-label="Calibration receipt">
+      <p class="kicker">Calibration receipt</p>
+      <h2>Before / after discipline</h2>
+      <pre id="receipt" class="receipt">SCANNING=false
 Run live calibration to read current jump height.</pre>
+    </section>
 
-          <div class="next-move" id="nextMove">
-            Next move: run Gauges first, renew narrowly by active generation gate, measure again, raise ceiling, repeat.
-          </div>
-        </aside>
-      </div>
+    <section class="audit-source" aria-label="Gauges audit source">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+
+      <span>route-exists</span>
+      <span>manor-skin</span>
+      <span>house-class</span>
+      <span>estate=rich-manor-and-estate</span>
+      <span>house-field=true</span>
+      <span>gauges-truth=live-authority</span>
+      <span>construct-class=house</span>
+      <span>house-part=gauges</span>
+      <span>H6_GAUGES</span>
+      <span>render-health-lane=active</span>
+      <span>downstream-render-health=measured</span>
+      <span>GAUGES_DOWNSTREAM_RENDER_HEALTH_FULL_TNT_v1</span>
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <span>GAUGES_GENERATION_3_READINESS_GATE_FULL_TNT_v1</span>
-      <span>Gauges may style evidence, but Gauges may not fake generation readiness.</span>
-    </div>
-  </footer>
-
   <script>
     (function () {
-      const HOUSE_THRESHOLD = 100;
-      const PRODUCT_THRESHOLD = 100;
-      const GENERATION_TARGET = "GEN_3_ACCEPTED_ROUND_WORLD";
+      "use strict";
 
-      const CORE_PHASE_ORDER = [
-        "H2_DOOR",
-        "H3_HOME",
-        "H4_PRODUCTS",
-        "H5_SHOWROOM",
-        "H1_COMPASS",
-        "H6_GAUGES"
+      const HOUSE = [
+        { id: "H1_COMPASS", label: "Compass", route: "/", part: "compass" },
+        { id: "H2_DOOR", label: "Door", route: "/door/", part: "door" },
+        { id: "H3_HOME", label: "Home", route: "/home/", part: "home" },
+        { id: "H4_PRODUCTS", label: "Products", route: "/products/", part: "products" },
+        { id: "H5_SHOWROOM", label: "Showroom", route: "/showroom/", part: "showroom" },
+        { id: "H6_GAUGES", label: "Gauges", route: "/gauges/", part: "gauges" }
       ];
 
-      const REQUIRED = {
-        commonEstate: [
-          'data-estate="rich-manor-and-estate"',
-          'data-manor-skin="active"',
-          'data-house-field="true"',
-          'data-gauges-truth="live-authority"'
-        ],
-        house: [
-          'data-construct-class="house"',
-          'data-manor-class="house"',
-          'data-house-part=',
-          'manor-skin',
-          'house-class'
-        ],
-        product: [
-          'data-construct-class="product"',
-          'data-product-wing="true"',
-          'data-parent-route="/products/"'
-        ],
-        planetary: [
-          'data-construct-class="planetary"',
-          'data-manor-attached="true"'
-        ],
-        hosted: [
-          'data-hosted-construct="true"',
-          'data-parent-route=',
-          'data-manor-attached="true"'
-        ]
-      };
-
-      const ROUTES = [
-        {
-          group: "house",
-          id: "H1_COMPASS",
-          label: "Compass",
-          path: "/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house, "H1_COMPASS"],
-          backlinks: ["/door/", "/home/", "/products/", "/showroom/", "/gauges/"]
-        },
-        {
-          group: "house",
-          id: "H2_DOOR",
-          label: "Door",
-          path: "/door/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
-          backlinks: ["/", "/home/", "/gauges/"]
-        },
-        {
-          group: "house",
-          id: "H3_HOME",
-          label: "Home",
-          path: "/home/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
-          backlinks: ["/", "/door/", "/gauges/"]
-        },
-        {
-          group: "house",
-          id: "H4_PRODUCTS",
-          label: "Products",
-          path: "/products/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
-          backlinks: ["/", "/showroom/", "/gauges/"]
-        },
-        {
-          group: "house",
-          id: "H5_SHOWROOM",
-          label: "Showroom",
-          path: "/showroom/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house],
-          backlinks: ["/", "/products/", "/gauges/"]
-        },
-        {
-          group: "house",
-          id: "H6_GAUGES",
-          label: "Gauges",
-          path: "/gauges/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.house, "H6_GAUGES"],
-          backlinks: ["/", "/home/", "/products/", "/showroom/"]
-        },
-        {
-          group: "products",
-          id: "P_ARCHCOIN",
-          label: "ARCHCOIN",
-          path: "/products/archcoin/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
-          backlinks: ["/products/", "/gauges/"]
-        },
-        {
-          group: "products",
-          id: "P_FIVE_FLAGS",
-          label: "Five Flags",
-          path: "/products/five-flags/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
-          backlinks: ["/products/", "/gauges/"]
-        },
-        {
-          group: "products",
-          id: "P_ON_YOUR_SIDE_AAI",
-          label: "On Your Side AAI",
-          path: "/products/on-your-side-ai/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
-          backlinks: ["/products/", "/gauges/"]
-        },
-        {
-          group: "products",
-          id: "P_EDUCATION",
-          label: "Education",
-          path: "/products/education/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
-          backlinks: ["/products/", "/gauges/"]
-        },
-        {
-          group: "products",
-          id: "P_NUTRITION",
-          label: "Nutrition",
-          path: "/products/nutrition/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.product],
-          backlinks: ["/products/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_PRELUDE",
-          label: "Prelude",
-          path: "/prelude/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_EXPLORE",
-          label: "Explore",
-          path: "/explore/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_LAWS",
-          label: "Laws",
-          path: "/laws/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_GOVERNANCE",
-          label: "Governance",
-          path: "/governance/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_UPPER_ROOM",
-          label: "Upper Room",
-          path: "/big-laugh/upper-room/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.hosted],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_UNDERDOG",
-          label: "About This Underdog",
-          path: "/about-this-underdog/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_NINE_SUMMITS",
-          label: "Nine Summits Universe",
-          path: "/nine-summits/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        },
-        {
-          group: "planets",
-          id: "PL_NINE_SUMMITS_LOVE",
-          label: "Nine Summits of Love",
-          path: "/nine-summits-of-love/",
-          required: [...REQUIRED.commonEstate, ...REQUIRED.planetary],
-          backlinks: ["/", "/gauges/"]
-        }
+      const PRODUCTS = [
+        { id: "P_ARCHCOIN", label: "ARCHCOIN", route: "/products/archcoin/" },
+        { id: "P_FIVE_FLAGS", label: "Five Flags", route: "/products/five-flags/" },
+        { id: "P_ON_YOUR_SIDE_AAI", label: "On Your Side AAI", route: "/products/on-your-side-ai/" },
+        { id: "P_EDUCATION", label: "Education", route: "/products/education/" },
+        { id: "P_NUTRITION", label: "Nutrition", route: "/products/nutrition/" }
       ];
 
-      const STATE_COLORS = {
-        healthy: "--green",
-        active: "--gold",
-        proof: "--blue",
-        watch: "--yellow",
-        break: "--red",
-        complex: "--purple"
-      };
+      const PLANETS = [
+        { id: "PL_PRELUDE", label: "Prelude", route: "/prelude/" },
+        { id: "PL_EXPLORE", label: "Explore", route: "/explore/" },
+        { id: "PL_LAWS", label: "Laws", route: "/laws/" },
+        { id: "PL_GOVERNANCE", label: "Governance", route: "/governance/" },
+        { id: "PL_UPPER_ROOM", label: "Upper Room", route: "/big-laugh/upper-room/", hosted: true },
+        { id: "PL_UNDERDOG", label: "About This Underdog", route: "/about-this-underdog/" },
+        { id: "PL_NINE_SUMMITS", label: "Nine Summits Universe", route: "/nine-summits/" },
+        { id: "PL_NINE_SUMMITS_LOVE", label: "Nine Summits of Love", route: "/nine-summits-of-love/" }
+      ];
 
-      const STATE_NEEDLES = {
-        healthy: 66,
-        proof: 54,
-        active: 42,
-        watch: 18,
-        complex: -8,
-        break: -38
-      };
+      const SHOWROOM_RENDER_ASSETS = [
+        { id: "SR_CSS", label: "Showroom CSS", route: "/showroom/showroom.css" },
+        { id: "SR_MOUNT", label: "Showroom downstream mount", route: "/showroom/showroom.render.js" },
+        { id: "SR_TEMPLATE", label: "Globe template", route: "/render/globe.template.js" },
+        { id: "SR_ENGINE", label: "Globe engine", route: "/render/globe.engine.js" }
+      ];
 
-      const $ = (id) => document.getElementById(id);
+      const SHOWROOM_SOURCE_TOKENS = [
+        'data-render-downstream="true"',
+        'data-render-engine="/render/globe.engine.js"',
+        'data-render-template="/render/globe.template.js"',
+        'id="showroom-globe-mount"'
+      ];
 
-      const gaugeGrid = $("gaugeGrid");
-      const auditList = $("auditList");
-      const liveReceipt = $("liveReceipt");
-      const nextMove = $("nextMove");
-      const refreshAudit = $("refreshAudit");
+      const CSS_TOKENS = [
+        ".audit-source",
+        ".showroom-stage",
+        ".showroom-globe-mount",
+        ".universe-svg"
+      ];
 
-      function escapeHTML(value) {
-        return String(value ?? "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
+      const MOUNT_TOKENS = [
+        "DGBShowroomMount",
+        "DGBGlobeEngine.mountGlobe"
+      ];
+
+      const ENGINE_TOKENS = [
+        "DGBGlobeEngine",
+        "mountGlobe"
+      ];
+
+      const TEMPLATE_TOKENS = [
+        "DGBGlobeTemplate",
+        "createScene"
+      ];
+
+      function qs(selector, root) {
+        return (root || document).querySelector(selector);
       }
 
-      function normalizeHTML(value) {
-        return String(value || "").replace(/\s+/g, " ").trim();
+      function setScore(id, score, detail, status) {
+        const node = qs(id);
+        if (!node) return;
+
+        node.classList.remove("status-pass", "status-watch", "status-fail", "status-hold");
+        node.classList.add("status-" + status);
+
+        const strong = qs("strong", node);
+        const p = qs("p", node);
+
+        if (strong) strong.textContent = String(score);
+        if (p) p.textContent = detail;
       }
 
-      function containsMarker(html, marker) {
-        return normalizeHTML(html).includes(marker);
-      }
-
-      function containsPath(html, path) {
-        const normalized = normalizeHTML(html);
-        const forms = new Set([
-          `href="${path}"`,
-          `href='${path}'`,
-          `href=${path}`,
-          path
-        ]);
-
-        return Array.from(forms).some((form) => normalized.includes(form));
-      }
-
-      function readCoreExperience(compassRoute) {
-        const html = compassRoute && compassRoute.html ? normalizeHTML(compassRoute.html) : "";
-        const explicitHold = html.includes('data-core-experience-hold="true"');
-        const explicitAccepted = html.includes('data-core-experience-hold="false"');
-
-        if (explicitHold) {
-          return {
-            score: 0,
-            status: "HOLD",
-            held: true,
-            marker: 'data-core-experience-hold="true"',
-            note: "Index core experience hold is active."
-          };
-        }
-
-        if (explicitAccepted) {
-          return {
-            score: 100,
-            status: "ACCEPTED",
-            held: false,
-            marker: 'data-core-experience-hold="false"',
-            note: "Index core experience accepted."
-          };
-        }
-
-        return {
-          score: 50,
-          status: "UNDECLARED",
-          held: true,
-          marker: "MISSING_CORE_EXPERIENCE_MARKER",
-          note: "Index core experience marker is missing. Treat as hold."
-        };
-      }
-
-      function readGenerationReadiness(compassRoute, coreExperience) {
-        const html = compassRoute && compassRoute.html ? normalizeHTML(compassRoute.html) : "";
-
-        const markers = [
-          {
-            value: "GEN_3_ACCEPTED_ROUND_WORLD",
-            score: 100,
-            accepted: true,
-            needles: ["GEN_3_ACCEPTED_ROUND_WORLD", 'data-generation-readiness="gen-3-accepted-round-world"', 'data-generation-readiness="GEN_3_ACCEPTED_ROUND_WORLD"']
-          },
-          {
-            value: "GEN_2_CONTROL_PANEL_COMPRESSION",
-            score: 66,
-            accepted: false,
-            needles: ["GEN_2_CONTROL_PANEL_COMPRESSION", 'data-generation-readiness="gen-2-control-panel-compression"', 'data-generation-readiness="GEN_2_CONTROL_PANEL_COMPRESSION"']
-          },
-          {
-            value: "GEN_1_3D_BASELINE",
-            score: 33,
-            accepted: false,
-            needles: ["GEN_1_3D_BASELINE", 'data-generation-readiness="gen-1-3d-baseline"', 'data-generation-readiness="GEN_1_3D_BASELINE"', "index-tree-wildlife-zoom-triad-v1", "index-render-runtime-css-triad-v1"]
-          },
-          {
-            value: "GEN_0_FLAT",
-            score: 0,
-            accepted: false,
-            needles: ["GEN_0_FLAT", 'data-generation-readiness="gen-0-flat"', 'data-generation-readiness="GEN_0_FLAT"']
-          }
-        ];
-
-        for (const marker of markers) {
-          if (marker.needles.some((needle) => html.includes(needle))) {
-            return {
-              label: marker.value,
-              score: marker.score,
-              accepted: marker.accepted && !coreExperience.held,
-              held: !(marker.accepted && !coreExperience.held),
-              marker: marker.needles[0]
-            };
-          }
-        }
-
-        return {
-          label: "GEN_1_3D_BASELINE",
-          score: 33,
-          accepted: false,
-          held: true,
-          marker: "INFERRED_GEN_1_3D_BASELINE"
-        };
-      }
-
-      async function fetchRoute(route) {
+      async function fetchText(route) {
         try {
-          const response = await fetch(route.path, {
-            cache: "no-store",
-            credentials: "same-origin"
-          });
-
-          const html = await response.text();
-
-          if (!response.ok) {
-            return {
-              ...route,
-              ok: false,
-              statusCode: response.status,
-              html,
-              missingRequired: route.required,
-              missingBacklinks: route.backlinks,
-              score: 0,
-              status: "BREAK",
-              phaseTarget: false
-            };
-          }
-
-          const missingRequired = route.required.filter((marker) => !containsMarker(html, marker));
-          const missingBacklinks = route.backlinks.filter((path) => !containsPath(html, path));
-          const requiredScore = route.required.length
-            ? Math.round(((route.required.length - missingRequired.length) / route.required.length) * 70)
-            : 70;
-          const backlinkScore = route.backlinks.length
-            ? Math.round(((route.backlinks.length - missingBacklinks.length) / route.backlinks.length) * 30)
-            : 30;
-          const score = Math.max(0, Math.min(100, requiredScore + backlinkScore));
-
+          const response = await fetch(route, { cache: "no-store" });
+          const text = await response.text();
           return {
-            ...route,
-            ok: true,
-            statusCode: response.status,
-            html,
-            missingRequired,
-            missingBacklinks,
-            score,
-            status: score >= 100 ? "PASS" : score >= 70 ? "WATCH" : "BREAK",
-            phaseTarget: false
+            route,
+            ok: response.ok,
+            status: response.status,
+            text
           };
         } catch (error) {
           return {
-            ...route,
+            route,
             ok: false,
-            statusCode: "FETCH_ERROR",
-            html: "",
-            missingRequired: route.required,
-            missingBacklinks: route.backlinks,
-            score: 0,
-            status: "BREAK",
-            error: error && error.message ? error.message : String(error),
-            phaseTarget: false
+            status: 0,
+            text: "",
+            error: error && error.message ? error.message : "fetch failed"
           };
         }
       }
 
-      function averageScore(items) {
+      function hasAny(text, tokens) {
+        return tokens.some((token) => text.includes(token));
+      }
+
+      function requiredHouseMarkers(part) {
+        return [
+          'data-estate="rich-manor-and-estate"',
+          'data-manor-skin="active"',
+          'data-house-field="true"',
+          'data-gauges-truth="live-authority"',
+          'data-construct-class="house"',
+          `data-house-part="${part}"`
+        ];
+      }
+
+      function requiredProductMarkers() {
+        return [
+          'data-estate="rich-manor-and-estate"',
+          'data-manor-skin="active"',
+          'data-house-field="true"',
+          'data-gauges-truth="live-authority"',
+          'data-construct-class="product"',
+          'data-product-wing="true"',
+          'data-parent-route="/products/"'
+        ];
+      }
+
+      function requiredPlanetMarkers(item) {
+        if (item.hosted) {
+          return [
+            'data-estate="rich-manor-and-estate"',
+            'data-manor-skin="active"',
+            'data-house-field="true"',
+            'data-gauges-truth="live-authority"',
+            'data-hosted-construct="true"',
+            'data-manor-attached="true"'
+          ];
+        }
+
+        return [
+          'data-estate="rich-manor-and-estate"',
+          'data-manor-skin="active"',
+          'data-house-field="true"',
+          'data-gauges-truth="live-authority"',
+          'data-construct-class="planetary"',
+          'data-manor-attached="true"'
+        ];
+      }
+
+      function backlinkTokens() {
+        return [
+          'href="/"',
+          'href="/door/"',
+          'href="/home/"',
+          'href="/products/"',
+          'href="/showroom/"',
+          'href="/gauges/"'
+        ];
+      }
+
+      function checkRoute(item, textResult, markers) {
+        const missingMarkers = markers.filter((token) => !textResult.text.includes(token));
+        const missingBacklinks = backlinkTokens().filter((token) => !textResult.text.includes(token));
+
+        const markerPass = missingMarkers.length === 0;
+        const backlinkPass = missingBacklinks.length === 0;
+        const pass = textResult.ok && markerPass && backlinkPass;
+
+        let score = 0;
+        if (textResult.ok) score += 30;
+        if (markerPass) score += 50;
+        if (backlinkPass) score += 20;
+
+        return {
+          id: item.id,
+          label: item.label,
+          route: item.route,
+          http: textResult.status,
+          pass,
+          score,
+          missingMarkers,
+          missingBacklinks,
+          status: pass ? "PASS" : "BREAK"
+        };
+      }
+
+      function percent(items) {
         if (!items.length) return 0;
         return Math.round(items.reduce((sum, item) => sum + item.score, 0) / items.length);
       }
 
-      function scoreState(score) {
-        if (score >= 100) return "healthy";
-        if (score >= 90) return "proof";
-        if (score >= 75) return "active";
-        if (score >= 55) return "watch";
-        if (score > 0) return "complex";
-        return "break";
+      function statusFor(score) {
+        if (score >= 100) return "pass";
+        if (score >= 70) return "watch";
+        if (score > 0) return "hold";
+        return "fail";
       }
 
-      function writeStat(id, score, note) {
-        $(id + "Score").textContent = score;
-        $(id + "Note").textContent = note;
-      }
-
-      function renderGauge(gauge) {
-        const tone = STATE_COLORS[gauge.state] || "--green";
-        const needle = STATE_NEEDLES[gauge.state] ?? 0;
-
-        return `
-          <article class="gauge-card${gauge.priority ? " priority" : ""}" style="--tone:var(${tone});--needle:${needle}deg;">
-            <div class="gauge-top">
-              <span class="gauge-name">
-                <small>${escapeHTML(gauge.id)} · ${escapeHTML(gauge.kind)}</small>
-                <strong>${escapeHTML(gauge.title)}</strong>
-              </span>
-              <span class="gauge-value">${escapeHTML(gauge.value)}</span>
-            </div>
-
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dial-read">
-                <strong>${escapeHTML(gauge.value)}</strong>
-                <small>${escapeHTML(gauge.label)}</small>
-              </span>
-            </div>
-
-            <p class="meaning">${escapeHTML(gauge.meaning)}</p>
-
-            <ul class="telemetry">
-              ${gauge.receipt.map((line) => `<li>${escapeHTML(line)}</li>`).join("")}
-            </ul>
-          </article>
+      function renderDial(id, title, score, detail, lines) {
+        const div = document.createElement("article");
+        div.className = "dial status-" + statusFor(score);
+        div.innerHTML = `
+          <span>${id}</span>
+          <strong>${score}</strong>
+          <p>${title}</p>
+          <p>${detail}</p>
+          <ul>${lines.map((line) => `<li>${line}</li>`).join("")}</ul>
         `;
+        return div;
       }
 
-      function renderRouteReceipt(route) {
-        const missingRequired = route.missingRequired.length
-          ? "MISSING_MARKERS=" + route.missingRequired.join(", ")
-          : "MISSING_MARKERS=NONE";
-        const missingBacklinks = route.missingBacklinks.length
-          ? "MISSING_BACKLINKS=" + route.missingBacklinks.join(", ")
-          : "MISSING_BACKLINKS=NONE";
-        const className = [
-          route.score >= 100 ? "pass" : route.score >= 70 ? "warn" : "fail",
-          route.phaseTarget ? "phase-target" : ""
-        ].filter(Boolean).join(" ");
+      function renderRouteCard(result) {
+        const card = document.createElement("article");
+        card.className = "route-card " + (result.pass ? "status-pass" : "status-fail");
 
-        return `
-          <li class="audit-item ${className}">
-            <strong>${escapeHTML(route.id)} · ${escapeHTML(route.label)} · ${escapeHTML(route.score)}${route.phaseTarget ? " · ACTIVE PHASE TARGET" : ""}</strong>
-            <span>${escapeHTML(route.path)} · STATUS=${escapeHTML(route.status)} · HTTP=${escapeHTML(route.statusCode)}</span>
-            <code>${escapeHTML(missingRequired)}</code>
-            <code>${escapeHTML(missingBacklinks)}</code>
-          </li>
+        const markerText = result.missingMarkers.length
+          ? result.missingMarkers.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
+          : "<li>NONE</li>";
+
+        const backlinkText = result.missingBacklinks.length
+          ? result.missingBacklinks.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
+          : "<li>NONE</li>";
+
+        card.innerHTML = `
+          <header>
+            <h3>${escapeHtml(result.id)} · ${escapeHtml(result.label)} · ${result.score}</h3>
+            <span>${escapeHtml(result.status)} · HTTP=${result.http}</span>
+          </header>
+          <p><code>${escapeHtml(result.route)}</code></p>
+          <p>Missing markers:</p>
+          <ul>${markerText}</ul>
+          <p>Missing backlinks:</p>
+          <ul>${backlinkText}</ul>
         `;
+
+        return card;
       }
 
-      function coreHouseLimiter(houseRoutes) {
-        for (const id of CORE_PHASE_ORDER) {
-          const route = houseRoutes.find((item) => item.id === id);
-          if (route && route.score < HOUSE_THRESHOLD) return route;
-        }
-        return houseRoutes.find((item) => item.score < HOUSE_THRESHOLD) || null;
+      function renderAssetCard(result) {
+        const card = document.createElement("article");
+        card.className = "route-card " + (result.pass ? "status-pass" : "status-fail");
+
+        const missingText = result.missingTokens.length
+          ? result.missingTokens.map((token) => `<li><code>${escapeHtml(token)}</code></li>`).join("")
+          : "<li>NONE</li>";
+
+        card.innerHTML = `
+          <header>
+            <h3>${escapeHtml(result.id)} · ${escapeHtml(result.label)} · ${result.score}</h3>
+            <span>${result.pass ? "PASS" : "BREAK"} · HTTP=${result.http}</span>
+          </header>
+          <p><code>${escapeHtml(result.route)}</code></p>
+          <p>Missing render tokens:</p>
+          <ul>${missingText}</ul>
+        `;
+
+        return card;
       }
 
-      function productLimiter(productRoutes) {
-        return productRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
       }
 
-      function phaseRecommendation(scores, coreExperience, generation, houseRoutes, productRoutes, planetRoutes) {
-        const coreLimiter = coreHouseLimiter(houseRoutes);
-        const productLimit = productLimiter(productRoutes);
+      async function checkShowroomRenderHealth(showroomSource) {
+        const fetched = await Promise.all(SHOWROOM_RENDER_ASSETS.map((asset) => fetchText(asset.route)));
+        const byRoute = Object.fromEntries(fetched.map((item) => [item.route, item]));
 
-        if (scores.house < HOUSE_THRESHOLD && coreLimiter) {
+        const assetChecks = SHOWROOM_RENDER_ASSETS.map((asset) => {
+          const source = byRoute[asset.route] || { ok: false, status: 0, text: "" };
+          let tokens = [];
+
+          if (asset.route.endsWith("showroom.css")) tokens = CSS_TOKENS;
+          if (asset.route.endsWith("showroom.render.js")) tokens = MOUNT_TOKENS;
+          if (asset.route.endsWith("globe.engine.js")) tokens = ENGINE_TOKENS;
+          if (asset.route.endsWith("globe.template.js")) tokens = TEMPLATE_TOKENS;
+
+          const missingTokens = tokens.filter((token) => !source.text.includes(token));
+          const tokenPass = missingTokens.length === 0;
+
+          let score = 0;
+          if (source.ok) score += 50;
+          if (tokenPass) score += 50;
+
           return {
-            phase: "CORE_HOUSE_ALIGNMENT",
-            target: coreLimiter,
-            held: "CORE_EXPERIENCE_GENERATION_PRODUCTS_PLANETS",
-            text: `Next move: renew core house page ${coreLimiter.label} (${coreLimiter.path}). House Skeleton is ${scores.house}, so generation work and downstream work are held.`
+            id: asset.id,
+            label: asset.label,
+            route: asset.route,
+            http: source.status,
+            pass: source.ok && tokenPass,
+            score,
+            missingTokens
           };
-        }
-
-        if (coreExperience.held) {
-          const compass = houseRoutes.find((item) => item.id === "H1_COMPASS") || null;
-          return {
-            phase: "CORE_INDEX_EXPERIENCE_HOLD",
-            target: compass,
-            held: "GENERATION_3_PRODUCTS_PLANETS",
-            text: "Next move: compress Index with Russian-doll CSS and separate control panel. Core Experience is held, so Product Wing and Planets remain held."
-          };
-        }
-
-        if (generation.held) {
-          const compass = houseRoutes.find((item) => item.id === "H1_COMPASS") || null;
-          return {
-            phase: "GENERATION_3_READINESS_HOLD",
-            target: compass,
-            held: "PRODUCT_CHAMBERS_AND_PLANETS",
-            text: `Next move: continue Index Generation 3 path. Current read is ${generation.label}, not ${GENERATION_TARGET}. Product Wing and Planets remain held.`
-          };
-        }
-
-        if (scores.products < PRODUCT_THRESHOLD && productLimit) {
-          return {
-            phase: "PRODUCT_WING_ALIGNMENT",
-            target: productLimit,
-            held: "PLANETS",
-            text: `Next move: renew product chamber ${productLimit.label} (${productLimit.path}). Generation 3 readiness is accepted, so Product Wing calibration may continue.`
-          };
-        }
-
-        if (scores.planets < PRODUCT_THRESHOLD) {
-          const planetLimit = planetRoutes.find((item) => item.score < PRODUCT_THRESHOLD) || null;
-          return {
-            phase: "PLANETARY_ATTACHMENT_ALIGNMENT",
-            target: planetLimit,
-            held: "VISUAL_GENERATION_EXPANSION",
-            text: `Next move: renew planetary or hosted construct ${planetLimit ? planetLimit.label + " (" + planetLimit.path + ")" : "next planet"}. Upstream generation and products are stable enough to continue planetary attachment calibration.`
-          };
-        }
-
-        return {
-          phase: "FULL_CURRENT_CEILING",
-          target: null,
-          held: "NONE",
-          text: "Next move: current measured ceiling reads 100. Further generation movement requires explicit user acceptance."
-        };
-      }
-
-      async function runAudit() {
-        refreshAudit.disabled = true;
-        refreshAudit.textContent = "Scanning...";
-
-        liveReceipt.textContent = [
-          "SCANNING=true",
-          "METHOD=Gauge first. Renew narrowly. Measure again. Raise ceiling. Repeat.",
-          "PHASE_PRIORITY=House markers -> Core Index experience -> Generation readiness -> Product Wing -> Planets.",
-          "STATUS=fetching same-origin routes"
-        ].join("\n");
-
-        const results = await Promise.all(ROUTES.map(fetchRoute));
-        const house = results.filter((route) => route.group === "house");
-        const products = results.filter((route) => route.group === "products");
-        const planets = results.filter((route) => route.group === "planets");
-        const compass = house.find((route) => route.id === "H1_COMPASS");
-
-        const coreExperience = readCoreExperience(compass);
-        const generation = readGenerationReadiness(compass, coreExperience);
-
-        const scores = {
-          house: averageScore(house),
-          experience: coreExperience.score,
-          generation: generation.score,
-          products: averageScore(products),
-          planets: averageScore(planets)
-        };
-
-        scores.overall = Math.round((scores.house + scores.experience + scores.generation + scores.products + scores.planets) / 5);
-
-        const recommendation = phaseRecommendation(scores, coreExperience, generation, house, products, planets);
-
-        results.forEach((route) => {
-          route.phaseTarget = recommendation.target && route.id === recommendation.target.id;
         });
 
-        const states = {
-          overall: scoreState(scores.overall),
-          house: scoreState(scores.house),
-          experience: coreExperience.held ? "complex" : scoreState(scores.experience),
-          generation: generation.held ? "complex" : scoreState(scores.generation),
-          products: scoreState(scores.products),
-          planets: scoreState(scores.planets)
+        const sourceMissing = SHOWROOM_SOURCE_TOKENS.filter((token) => !showroomSource.text.includes(token));
+        const sourceScore = showroomSource.ok && sourceMissing.length === 0 ? 100 : showroomSource.ok ? 50 : 0;
+
+        const sourceResult = {
+          id: "SR_SOURCE",
+          label: "Showroom source mount contract",
+          route: "/showroom/",
+          http: showroomSource.status,
+          pass: showroomSource.ok && sourceMissing.length === 0,
+          score: sourceScore,
+          missingTokens: sourceMissing
         };
 
-        writeStat("overall", scores.overall, `${states.overall.toUpperCase()} · shared ceiling read`);
-        writeStat("house", scores.house, `${states.house.toUpperCase()} · marker health`);
-        writeStat("experience", scores.experience, `${coreExperience.status} · core Index experience`);
-        writeStat("generation", scores.generation, `${generation.label} · target ${GENERATION_TARGET}`);
-        writeStat("products", scores.products, recommendation.phase === "PRODUCT_WING_ALIGNMENT" ? `${states.products.toUpperCase()} · active product phase` : `${states.products.toUpperCase()} · held until generation readiness`);
-        writeStat("planets", scores.planets, recommendation.phase === "PLANETARY_ATTACHMENT_ALIGNMENT" ? `${states.planets.toUpperCase()} · active planet phase` : `${states.planets.toUpperCase()} · held until upstream is stable`);
-
-        const gauges = [
-          {
-            id: "G0",
-            kind: "collective",
-            title: "Overall ceiling",
-            value: scores.overall,
-            label: "shared",
-            state: states.overall,
-            priority: states.overall !== "healthy",
-            meaning: "Current verified height across marker health, core experience, generation readiness, Product Wing, and Planets.",
-            receipt: [
-              `HOUSE=${scores.house}`,
-              `CORE_EXPERIENCE=${scores.experience} ${coreExperience.status}`,
-              `GENERATION=${scores.generation} ${generation.label}`,
-              `PRODUCTS=${scores.products}`,
-              `PLANETS=${scores.planets}`
-            ]
-          },
-          {
-            id: "G1",
-            kind: "markers",
-            title: "House skeleton",
-            value: scores.house,
-            label: "house",
-            state: states.house,
-            priority: scores.house < HOUSE_THRESHOLD,
-            meaning: "Route and marker health. This can be 100 without making the estate Generation 3.",
-            receipt: house.map((route) => `${route.label}=${route.score}${recommendation.target && recommendation.target.id === route.id && recommendation.phase === "CORE_HOUSE_ALIGNMENT" ? " <- NEXT" : ""}`)
-          },
-          {
-            id: "G2",
-            kind: "experience",
-            title: "Core experience",
-            value: scores.experience,
-            label: "index",
-            state: states.experience,
-            priority: scores.house >= HOUSE_THRESHOLD && coreExperience.held,
-            meaning: "Index crowding, control-panel readiness, and Russian-doll compression must be accepted before downstream work leads.",
-            receipt: [
-              `Status=${coreExperience.status}`,
-              `Marker=${coreExperience.marker}`,
-              `Held=${coreExperience.held ? "TRUE" : "FALSE"}`
-            ]
-          },
-          {
-            id: "G3",
-            kind: "generation",
-            title: "Generation readiness",
-            value: scores.generation,
-            label: "gen",
-            state: states.generation,
-            priority: scores.house >= HOUSE_THRESHOLD && !coreExperience.held && generation.held,
-            meaning: "Healthy enough is not Generation 3. Current generation must be reported separately from route/marker health.",
-            receipt: [
-              `Current=${generation.label}`,
-              `Target=${GENERATION_TARGET}`,
-              `Accepted=${generation.accepted ? "TRUE" : "FALSE"}`
-            ]
-          },
-          {
-            id: "G4",
-            kind: "products",
-            title: "Products",
-            value: scores.products,
-            label: "wing",
-            state: states.products,
-            priority: !coreExperience.held && !generation.held && states.products !== "healthy",
-            meaning: coreExperience.held || generation.held
-              ? "Measured, but held. Product Wing does not lead until Index and Generation 3 readiness release it."
-              : "Product chambers remain attached to Products without becoming house or planet roots.",
-            receipt: products.map((route) => `${route.label}=${route.score}`)
-          },
-          {
-            id: "G5",
-            kind: "planets",
-            title: "Planets",
-            value: scores.planets,
-            label: "orbit",
-            state: states.planets,
-            priority: !coreExperience.held && !generation.held && scores.products >= PRODUCT_THRESHOLD && states.planets !== "healthy",
-            meaning: coreExperience.held || generation.held || scores.products < PRODUCT_THRESHOLD
-              ? "Measured, but held. Planetary attachment does not lead until upstream fields stabilize."
-              : "Planetary and hosted constructs remain attached to the Manor without route sprawl.",
-            receipt: planets.map((route) => `${route.label}=${route.score}`)
-          }
-        ];
-
-        gaugeGrid.innerHTML = gauges.map(renderGauge).join("");
-        auditList.innerHTML = results.map(renderRouteReceipt).join("");
-        nextMove.textContent = recommendation.text;
-
-        liveReceipt.textContent = [
-          "BEFORE=",
-          "  source=live same-origin fetch",
-          "",
-          "ACTION=",
-          "  target=measured estate field",
-          "  scope=read-only calibration",
-          "  recommendation_logic=house_then_core_experience_then_generation_readiness_then_products_then_planets",
-          "  gauges_score_faking=FALSE",
-          "  fake_generation_health=FALSE",
-          "",
-          "AFTER=",
-          `  Overall=${scores.overall}`,
-          `  House=${scores.house}`,
-          `  CoreExperience=${scores.experience}`,
-          `  GenerationReadiness=${scores.generation}`,
-          `  Products=${scores.products}`,
-          `  Planets=${scores.planets}`,
-          `  CurrentGeneration=${generation.label}`,
-          `  TargetGeneration=${GENERATION_TARGET}`,
-          `  ActivePhase=${recommendation.phase}`,
-          `  ActiveTarget=${recommendation.target ? recommendation.target.label + " " + recommendation.target.path + " " + recommendation.target.score : "INDEX_GENERATION_3_PATH"}`,
-          `  HeldDownstream=${recommendation.held}`,
-          "",
-          "CEILING_RESULT=",
-          scores.overall >= 100
-            ? "  FULL_CURRENT_CEILING=100"
-            : "  CURRENT_PHASE_LIMITER=" + recommendation.phase,
-          "",
-          "NEXT_MOVE=",
-          "  " + recommendation.text
-        ].join("\n");
-
-        refreshAudit.disabled = false;
-        refreshAudit.textContent = "Run live calibration";
+        return {
+          assets: [sourceResult].concat(assetChecks),
+          score: percent([sourceResult].concat(assetChecks))
+        };
       }
 
-      refreshAudit.addEventListener("click", runAudit);
-      runAudit();
+      async function runCalibration() {
+        const receipt = qs("#receipt");
+        const routeGrid = qs("#routeGrid");
+        const dialGrid = qs("#dialGrid");
+
+        if (receipt) {
+          receipt.textContent = "SCANNING=true\nsource=live same-origin fetch\nACTION=read route, marker, generation, and downstream render health";
+        }
+
+        if (routeGrid) routeGrid.replaceChildren();
+        if (dialGrid) dialGrid.replaceChildren();
+
+        const houseFetches = await Promise.all(HOUSE.map((item) => fetchText(item.route)));
+        const productFetches = await Promise.all(PRODUCTS.map((item) => fetchText(item.route)));
+        const planetFetches = await Promise.all(PLANETS.map((item) => fetchText(item.route)));
+
+        const houseResults = HOUSE.map((item, index) =>
+          checkRoute(item, houseFetches[index], requiredHouseMarkers(item.part))
+        );
+
+        const productResults = PRODUCTS.map((item, index) =>
+          checkRoute(item, productFetches[index], requiredProductMarkers())
+        );
+
+        const planetResults = PLANETS.map((item, index) =>
+          checkRoute(item, planetFetches[index], requiredPlanetMarkers(item))
+        );
+
+        const showroomFetch = houseFetches[HOUSE.findIndex((item) => item.id === "H5_SHOWROOM")];
+        const renderHealth = await checkShowroomRenderHealth(showroomFetch);
+
+        const houseScore = percent(houseResults);
+        const productScore = percent(productResults);
+        const planetScore = percent(planetResults);
+        const renderScore = renderHealth.score;
+
+        const compassFetch = houseFetches[0];
+        const coreHold = compassFetch.text.includes('data-core-experience-hold="true"');
+        const treeG1 = compassFetch.text.includes("GEN_1_3D_BASELINE") || compassFetch.text.includes("TREE_G1");
+        const treeG2 = compassFetch.text.includes("TREE_G2") || compassFetch.text.includes("seasonal-age");
+        const gen3Accepted = compassFetch.text.includes("GEN_3_ACCEPTED_ROUND_WORLD");
+
+        const coreScore = coreHold ? 0 : 50;
+        const generationScore = gen3Accepted ? 100 : treeG2 ? 50 : treeG1 ? 33 : 20;
+
+        const overall = Math.round((houseScore + productScore + planetScore + renderScore + coreScore + generationScore) / 6);
+
+        setScore("#scoreOverall", overall, overall >= 90 ? "healthy" : overall >= 70 ? "watch" : "complex", statusFor(overall));
+        setScore("#scoreHouse", houseScore, houseScore === 100 ? "marker health" : "marker gaps", statusFor(houseScore));
+        setScore("#scoreCore", coreScore, coreHold ? "HOLD · core Index experience" : "measured", statusFor(coreScore));
+        setScore("#scoreGeneration", generationScore, gen3Accepted ? "GEN_3 accepted" : treeG2 ? "TREE_G2 visual target" : "GEN_1 baseline", statusFor(generationScore));
+        setScore("#scoreRender", renderScore, renderScore === 100 ? "downstream render PASS" : "downstream render HOLD", statusFor(renderScore));
+        setScore("#scoreProducts", productScore, productScore === 100 ? "product wing" : "product gaps", statusFor(productScore));
+
+        if (dialGrid) {
+          dialGrid.appendChild(renderDial("G0", "Overall ceiling", overall, "Composite across marker, render, generation, product, planet, and core lanes.", [
+            `HOUSE=${houseScore}`,
+            `CORE=${coreScore}`,
+            `GENERATION=${generationScore}`,
+            `RENDER=${renderScore}`,
+            `PRODUCTS=${productScore}`,
+            `PLANETS=${planetScore}`
+          ]));
+
+          dialGrid.appendChild(renderDial("G1", "House skeleton", houseScore, "Route and marker health for Compass, Door, Home, Products, Showroom, Gauges.", houseResults.map((item) => `${item.label}=${item.score}`)));
+
+          dialGrid.appendChild(renderDial("G2", "Core experience", coreScore, coreHold ? "Index core experience is held." : "Index core experience marker is not held.", [
+            `CoreHold=${coreHold}`,
+            `CompassHTTP=${compassFetch.status}`
+          ]));
+
+          dialGrid.appendChild(renderDial("G3", "Generation readiness", generationScore, gen3Accepted ? "Generation 3 accepted." : "Generation 3 is not accepted.", [
+            `GEN_1=${treeG1}`,
+            `TREE_G2=${treeG2}`,
+            `GEN_3_ACCEPTED=${gen3Accepted}`
+          ]));
+
+          dialGrid.appendChild(renderDial("G4", "Products", productScore, "Product chamber attachment health.", productResults.map((item) => `${item.label}=${item.score}`)));
+
+          dialGrid.appendChild(renderDial("G5", "Planets", planetScore, "Planetary and hosted construct attachment health.", planetResults.map((item) => `${item.label}=${item.score}`)));
+
+          dialGrid.appendChild(renderDial("G6", "Downstream render health", renderScore, "Showroom CSS, mount, template, engine, and mount contract.", renderHealth.assets.map((item) => `${item.label}=${item.score}`)));
+        }
+
+        if (routeGrid) {
+          houseResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
+          productResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
+          planetResults.forEach((result) => routeGrid.appendChild(renderRouteCard(result)));
+          renderHealth.assets.forEach((result) => routeGrid.appendChild(renderAssetCard(result)));
+        }
+
+        if (receipt) {
+          const showroomMarker = houseResults.find((item) => item.id === "H5_SHOWROOM");
+          const showroomComposite = showroomMarker && showroomMarker.score === 100 && renderScore === 100 ? "PASS" : "HOLD";
+
+          receipt.textContent =
+`BEFORE=
+  source=live same-origin fetch
+  action=route_marker_generation_render_health
+  gauges_score_faking=FALSE
+  fake_generation_health=FALSE
+  fake_render_health=FALSE
+
+AFTER=
+  Overall=${overall}
+  House=${houseScore}
+  CoreExperience=${coreScore}
+  GenerationReadiness=${generationScore}
+  Products=${productScore}
+  Planets=${planetScore}
+  DownstreamRender=${renderScore}
+
+SHOWROOM=
+  MarkerHealth=${showroomMarker ? showroomMarker.score : 0}
+  DownstreamRenderHealth=${renderScore}
+  Composite=${showroomComposite}
+
+ACTIVE_PHASE=
+  ${coreHold ? "CORE_INDEX_EXPERIENCE_HOLD" : renderScore < 100 ? "DOWNSTREAM_RENDER_HEALTH_HOLD" : "READY_FOR_NEXT_MEASURE"}
+
+NEXT_MOVE=
+  ${renderScore < 100 ? "Fix failed Showroom render asset or downstream mount proof." : coreHold ? "Return to Index core experience after Showroom render health passes." : "Proceed by accepted generation gate."}
+
+GAUGES_DOWNSTREAM_RENDER_HEALTH_FULL_TNT_v1
+Gauges may style evidence, but Gauges may not fake generation readiness or render health.`;
+        }
+      }
+
+      function init() {
+        const button = qs("#runCalibration");
+        if (button) button.addEventListener("click", runCalibration);
+        runCalibration();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
     })();
   </script>
 </body>

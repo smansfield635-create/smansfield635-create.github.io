@@ -14,6 +14,7 @@
   data-showroom-card-globe-handoff="active"
   data-showroom-card-visual-truth="pending"
   data-demo-universe-card-preview="active"
+  data-showroom-mobile-layout-hardened="true"
 >
 <head>
   <meta charset="utf-8" />
@@ -178,7 +179,8 @@
     }
 
     .showroom-copy,
-    .showroom-card {
+    .showroom-card,
+    .showroom-fallback {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
@@ -195,6 +197,7 @@
       min-height: 520px;
       display: grid;
       align-content: center;
+      min-width: 0;
     }
 
     .kicker {
@@ -236,6 +239,7 @@
       display: grid;
       grid-template-rows: auto 1fr auto;
       isolation: isolate;
+      min-width: 0;
     }
 
     .showroom-card::before,
@@ -330,7 +334,6 @@
     }
 
     .showroom-globe::before,
-    .showroom-globe::after,
     .showroom-earth-color,
     .showroom-earth-clouds,
     .showroom-earth-terminator,
@@ -461,10 +464,7 @@
 
     .showroom-fallback {
       margin-top: 22px;
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 28px;
       padding: clamp(18px, 3vw, 28px);
-      background: rgba(3, 8, 15, .64);
       color: var(--soft);
     }
 
@@ -473,6 +473,10 @@
       font-size: clamp(1.6rem, 4vw, 2.4rem);
       letter-spacing: -.04em;
       color: var(--ink);
+    }
+
+    .showroom-fallback p {
+      line-height: 1.5;
     }
 
     .audit-source,
@@ -490,9 +494,9 @@
     }
 
     @media (max-width: 920px) {
-      .site-nav,
-      .showroom-stage {
+      .site-nav {
         display: grid;
+        gap: 22px;
       }
 
       .brand {
@@ -503,20 +507,48 @@
         justify-content: flex-start;
       }
 
-      .showroom-copy {
+      .showroom-stage {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .showroom-copy,
+      .showroom-card {
+        width: 100%;
+        min-width: 0;
         min-height: auto;
+        grid-column: 1 / -1;
+      }
+
+      .showroom-copy {
+        order: 1;
+        display: block;
       }
 
       .showroom-card {
-        min-height: auto;
+        order: 2;
+        overflow: hidden;
+        grid-template-rows: auto auto auto;
       }
 
       .showroom-card-header {
         display: grid;
+        gap: 12px;
       }
 
       .status-pill {
         width: fit-content;
+      }
+
+      .showroom-globe-wrap {
+        min-height: auto;
+        padding: 26px 0;
+      }
+
+      .showroom-globe {
+        width: min(64vw, 340px);
       }
     }
 
@@ -549,16 +581,22 @@
       }
 
       .showroom-stage {
+        grid-template-columns: 1fr;
         gap: 14px;
       }
 
       .showroom-copy,
-      .showroom-card {
+      .showroom-card,
+      .showroom-fallback {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
         border-radius: 28px;
       }
 
       .showroom-copy {
         padding: 24px 18px;
+        display: block;
       }
 
       .showroom-copy h1 {
@@ -572,15 +610,48 @@
 
       .showroom-card {
         padding: 18px;
+        display: grid;
+        grid-template-rows: auto auto auto;
+        overflow: hidden;
+      }
+
+      .showroom-card-header {
+        display: grid;
+        gap: 12px;
       }
 
       .showroom-globe-wrap {
-        min-height: 320px;
+        min-height: auto;
         padding: 22px 0;
       }
 
       .showroom-globe {
-        width: min(76vw, 320px);
+        width: min(68vw, 300px);
+      }
+
+      .showroom-card-footer {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .showroom-globe {
+        width: min(64vw, 260px);
+      }
+
+      .nav-links {
+        gap: 7px;
+      }
+
+      .nav-links a,
+      .action-link {
+        padding: 9px 10px;
+        font-size: .94rem;
+      }
+
+      .showroom-copy,
+      .showroom-card {
+        padding: 16px;
       }
     }
 
@@ -612,6 +683,7 @@
     data-showroom-card-globe-handoff="active"
     data-showroom-card-visual-truth="pending"
     data-demo-universe-card-preview="active"
+    data-showroom-mobile-layout-hardened="true"
   >
     <header class="site-nav">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
@@ -653,6 +725,7 @@
         data-showroom-card-earth-color="synced"
         data-showroom-card-globe-handoff="active"
         data-demo-universe-card-preview="active"
+        data-showroom-mobile-layout-hardened="true"
         aria-label="Color-synced Demo Universe Earth card"
       >
         <header class="showroom-card-header">
@@ -750,9 +823,11 @@
       <span>showroom-card-globe-handoff=active</span>
       <span>showroom-card-visual-truth=pending</span>
       <span>demo-universe-card-preview=active</span>
+      <span>showroom-mobile-layout-hardened=true</span>
       <span>SHOWROOM_BACK_PAGE_WITH_INSPECT_GLOBE_TNT_v1</span>
       <span>LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1</span>
+      <span>LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1</span>
     </section>
   </main>
 </body>
-</html>
+</html>q

@@ -1,23 +1,21 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GENERATION_4_TWO_AXIS_SPHERICAL_CONTROL_TNT_v1
+  SHOWROOM_GENERATION_4_AXIS_FRICTION_VERTICAL_REFINEMENT_TNT_v1
 
   Purpose:
-  - Preserve Generation 4 realm separation.
-  - Preserve cleared redundancy.
-  - Replace horizontal-only disk behavior with two-axis spherical control.
-  - Horizontal drag controls longitude.
-  - Vertical drag controls latitude / observer disposition.
-  - Zoom controls distance.
-  - Sun/Moon toggle controls light anchor.
-  - The globe shell remains stable; surface/cloud layers move inside the clipped sphere.
+  - Preserve the Generation 4 realm-separated globe system.
+  - Preserve redundancy removal.
+  - Refine three remaining Generation 4 motion issues:
+    1. vertical drag must visibly affect latitude / observer disposition,
+    2. horizontal drag and auto-motion need friction,
+    3. the globe must read on a 23.5° axis without returning to disk spin.
 
   Owns:
   - shared globe render object
   - two-axis interaction model
   - spherical surface/cloud phase
-  - zoom control
-  - sun/moon light anchor toggle
+  - axis disposition styling
+  - zoom and light-anchor controls
   - interaction receipts
 
   Does not own:
@@ -31,7 +29,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-4-two-axis-spherical-control-v1";
+  const VERSION = "showroom-generation-4-axis-friction-vertical-refinement-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -54,17 +52,22 @@
     generation1: "ring-scaffold-removed",
     generation2: "receipt-only",
     generation3: "realm-separated-control-authorized-globe",
-    generation4: "two-axis-spherical-control-closeout"
+    generation4: "axis-friction-vertical-refinement"
   });
 
   const MOTION = Object.freeze({
     axisTiltDegrees: 23.5,
-    longitudeStep: 0.095,
-    cloudLongitudeStep: 0.041,
+
+    longitudeAutoStep: 0.026,
+    cloudAutoStep: 0.012,
+
+    dragLongitudeFactor: 0.105,
+    dragCloudFactor: 0.052,
+    dragLatitudeFactor: 0.34,
+
     latitudeMin: 18,
     latitudeMax: 82,
-    dragLongitudeFactor: 0.34,
-    dragLatitudeFactor: 0.22
+    latitudeReturnFriction: 0.018
   });
 
   const FORBIDDEN_VISUAL_CLASSES = Object.freeze([
@@ -174,22 +177,22 @@
     removeForbiddenScaffoldNodes(root);
   }
 
-  function ensureTwoAxisStyles() {
-    if (document.getElementById("showroom-generation-4-two-axis-style")) return;
+  function ensureRefinementStyles() {
+    if (document.getElementById("showroom-generation-4-axis-friction-vertical-style")) return;
 
     const style = create("style", {
-      id: "showroom-generation-4-two-axis-style",
+      id: "showroom-generation-4-axis-friction-vertical-style",
       text:
         ".showroom-generation-3-shell{position:relative;display:grid;justify-items:center;gap:.75rem;width:min(760px,100%);margin:0 auto;isolation:isolate}" +
 
-        ".showroom-generation-3-active-globe{position:relative;width:min(340px,72vw);aspect-ratio:1/1;border-radius:50%;overflow:hidden;isolation:isolate;cursor:grab;touch-action:none;transform:scale(var(--showroom-control-scale,1))!important;animation:none!important;background:#07111f;border:1px solid rgba(245,199,107,.18);box-shadow:inset -34px 0 54px rgba(0,0,0,.48),inset 24px 0 38px rgba(116,184,255,.16),0 24px 70px rgba(0,0,0,.48),0 0 52px rgba(116,184,255,.18)}" +
+        ".showroom-generation-3-active-globe{position:relative;width:min(340px,72vw);aspect-ratio:1/1;border-radius:50%;overflow:hidden;isolation:isolate;cursor:grab;touch-action:none;transform:scale(var(--showroom-control-scale,1))!important;animation:none!important;background:#07111f;border:1px solid rgba(245,199,107,.18);box-shadow:inset -36px 0 58px rgba(0,0,0,.52),inset 24px 0 38px rgba(116,184,255,.16),0 24px 70px rgba(0,0,0,.48),0 0 52px rgba(116,184,255,.18)}" +
         ".showroom-generation-3-active-globe[data-control-dragging='true']{cursor:grabbing}" +
 
-        ".showroom-generation-4-surface-track,.showroom-generation-4-cloud-track{position:absolute;inset:-1px;border-radius:50%;background-repeat:repeat-x;background-position:50% 50%;background-size:auto 118%;transform:none!important;animation:none!important;will-change:background-position;pointer-events:none}" +
-        ".showroom-generation-4-surface-track{z-index:2;opacity:1;filter:saturate(1.08) contrast(1.04)}" +
-        ".showroom-generation-4-cloud-track{z-index:4;opacity:.46;mix-blend-mode:screen;filter:brightness(1.14) contrast(1.04)}" +
+        ".showroom-generation-4-surface-track,.showroom-generation-4-cloud-track{position:absolute;inset:-14%;border-radius:50%;background-repeat:repeat-x;background-position:50% 50%;background-size:auto 128%;animation:none!important;will-change:background-position,transform;pointer-events:none}" +
+        ".showroom-generation-4-surface-track{z-index:2;opacity:1;filter:saturate(1.08) contrast(1.05);transform:translateY(var(--showroom-latitude-offset,0%)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.12)!important;transform-origin:50% 50%}" +
+        ".showroom-generation-4-cloud-track{z-index:4;opacity:.46;mix-blend-mode:screen;filter:brightness(1.14) contrast(1.04);transform:translateY(calc(var(--showroom-latitude-offset,0%) * .62)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.14)!important;transform-origin:50% 50%}" +
 
-        ".showroom-generation-4-latitude-shade{position:absolute;inset:0;border-radius:50%;z-index:6;background:linear-gradient(180deg,rgba(255,255,255,.10),transparent var(--showroom-latitude-light-stop,36%),rgba(0,0,0,.22));opacity:.72;pointer-events:none}" +
+        ".showroom-generation-4-latitude-shade{position:absolute;inset:0;border-radius:50%;z-index:6;background:linear-gradient(180deg,rgba(255,255,255,.13),transparent var(--showroom-latitude-light-stop,36%),rgba(0,0,0,.24));opacity:.78;pointer-events:none}" +
         ".showroom-generation-4-center-origin{position:absolute;left:50%;top:50%;z-index:20;width:.45rem;height:.45rem;border:1px solid rgba(245,199,107,.55);border-radius:50%;transform:translate(-50%,-50%);background:rgba(245,199,107,.18);box-shadow:0 0 18px rgba(245,199,107,.32);pointer-events:none}" +
 
         ".showroom-generation-3-ocean-land-color{position:absolute;inset:0;border-radius:50%;z-index:3;background:radial-gradient(circle at 38% var(--showroom-light-y,32%),rgba(116,184,255,.16),transparent 28%),radial-gradient(circle at 62% 58%,rgba(245,199,107,.10),transparent 34%);mix-blend-mode:overlay;pointer-events:none}" +
@@ -198,13 +201,13 @@
         ".showroom-generation-3-terminator{position:absolute;inset:-1px;border-radius:50%;z-index:9;background:linear-gradient(90deg,transparent 0%,transparent var(--showroom-terminator-start,45%),rgba(0,0,0,.18) 58%,rgba(0,0,0,var(--showroom-night-opacity,.54)) 100%);pointer-events:none}" +
         ".showroom-generation-3-night-depth{position:absolute;inset:0;border-radius:50%;z-index:10;background:radial-gradient(circle at var(--showroom-night-x,76%) var(--showroom-light-y,50%),rgba(0,0,0,.46),transparent 48%);pointer-events:none}" +
         ".showroom-generation-3-moon-reflection{position:absolute;inset:0;border-radius:50%;z-index:11;background:radial-gradient(circle at var(--showroom-moon-x,72%) var(--showroom-moon-y,24%),rgba(245,199,107,var(--showroom-moon-opacity,.12)),transparent 15%);mix-blend-mode:screen;pointer-events:none}" +
-        ".showroom-generation-3-atmosphere{position:absolute;inset:-2px;border-radius:50%;z-index:12;box-shadow:inset 0 0 28px rgba(116,184,255,.28),0 0 34px rgba(116,184,255,.22);pointer-events:none}" +
+        ".showroom-generation-3-atmosphere{position:absolute;inset:-2px;border-radius:50%;z-index:12;box-shadow:inset 0 0 28px rgba(116,184,255,.30),0 0 34px rgba(116,184,255,.22);pointer-events:none}" +
         ".showroom-generation-3-rim{position:absolute;inset:0;border-radius:50%;z-index:13;background:radial-gradient(circle at 50% 50%,transparent 55%,rgba(116,184,255,.18) 72%,rgba(245,199,107,.20) 100%);pointer-events:none}" +
 
-        ".showroom-generation-3-axis-line{position:absolute;left:50%;top:50%;z-index:18;width:1px;height:calc(min(340px,72vw) * 1.22);background:linear-gradient(180deg,transparent,rgba(245,199,107,.72),transparent);transform:translate(-50%,-50%) rotate(var(--showroom-axis-tilt,23.5deg));pointer-events:none}" +
+        ".showroom-generation-3-axis-line{position:absolute;left:50%;top:50%;z-index:18;width:1px;height:calc(min(340px,72vw) * 1.28);background:linear-gradient(180deg,transparent,rgba(245,199,107,.78),transparent);transform:translate(-50%,-50%) rotate(var(--showroom-axis-tilt,23.5deg));pointer-events:none}" +
         ".showroom-generation-3-axis-node{position:absolute;left:50%;z-index:19;width:.42rem;height:.42rem;border-radius:50%;background:#f5c76b;box-shadow:0 0 20px rgba(245,199,107,.6);pointer-events:none}" +
-        ".showroom-generation-3-axis-node-north{top:calc(50% - min(340px,72vw) * .61);transform:translateX(-50%)}" +
-        ".showroom-generation-3-axis-node-south{top:calc(50% + min(340px,72vw) * .61);transform:translateX(-50%)}" +
+        ".showroom-generation-3-axis-node-north{top:calc(50% - min(340px,72vw) * .64);transform:translateX(-50%)}" +
+        ".showroom-generation-3-axis-node-south{top:calc(50% + min(340px,72vw) * .64);transform:translateX(-50%)}" +
 
         ".showroom-generation-3-caption{margin:.4rem 0 0;color:#f5c76b;font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase}" +
         ".showroom-generation-3-telemetry{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;margin:.2rem auto 0;max-width:760px}" +
@@ -217,7 +220,7 @@
         ".showroom-generation-3-control-readout{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;width:min(760px,100%);margin:.15rem auto 0;position:relative;z-index:80}" +
         ".showroom-generation-3-control-readout span{border:1px solid rgba(116,184,255,.22);border-radius:999px;padding:.28rem .48rem;color:rgba(226,238,255,.78);background:rgba(4,12,24,.48);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.68rem;font-weight:800}" +
 
-        ".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds{animation:none!important;transform:none!important}"
+        ".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds{animation:none!important}"
     });
 
     document.head.appendChild(style);
@@ -246,12 +249,13 @@
       generation3ControlPanel: "active",
 
       generation4: GENERATIONS.generation4,
-      generation4Closure: "two-axis-spherical-control-active",
+      generation4Closure: "axis-friction-vertical-refinement-active",
       generation4MotionModel: "longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalControl: "longitude",
-      generation4VerticalControl: "latitude-disposition",
+      generation4HorizontalFriction: "active",
+      generation4VerticalControl: "visible-latitude-disposition",
+      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
       generation4CenterOrigin: "active",
       generation4SunMoonToggle: "active",
       generation4ZoomControl: "active",
@@ -285,7 +289,7 @@
         parentRouteAvailable: ASSETS.parentRoute,
         parentRoleAvailable: "navigation-only",
         contextReceiptMode: "demo-realm-isolated",
-        contextCaption: "GENERATION 4 · DEMO REALM · TWO-AXIS CONTROL ACTIVE"
+        contextCaption: "GENERATION 4 · DEMO REALM · AXIS CONTROL ACTIVE"
       });
     }
 
@@ -297,7 +301,7 @@
       demoRouteAvailable: ASSETS.globeRoute,
       demoRoleAvailable: "navigation-only",
       contextReceiptMode: "parent-realm-isolated",
-      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · TWO-AXIS CONTROL ACTIVE"
+      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · AXIS CONTROL ACTIVE"
     });
   }
 
@@ -357,13 +361,12 @@
       generation1RingScaffold: "removed",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
-      generation4Closure: "two-axis-spherical-control-active",
+      generation4Closure: "axis-friction-vertical-refinement-active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalControl: "longitude",
-      generation4VerticalControl: "latitude-disposition",
-      generation4CenterOrigin: "active",
-      generation4SunMoonToggle: "active",
+      generation4HorizontalFriction: "active",
+      generation4VerticalControl: "visible-latitude-disposition",
+      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
       ringScaffoldStatus: "removed",
       controlPanelActive: "true"
     });
@@ -419,16 +422,16 @@
       "div",
       {
         className: "showroom-generation-3-telemetry",
-        "data-generation-4-two-axis-control": "active",
-        "aria-label": "Generation 4 two-axis spherical control telemetry receipt"
+        "data-generation-4-axis-friction-vertical": "active",
+        "aria-label": "Generation 4 axis friction vertical refinement telemetry receipt"
       },
       [
         create("span", { text: "GEN 4" }),
-        create("span", { text: "sphere=active" }),
-        create("span", { text: "disk=removed" }),
-        create("span", { text: "x=longitude" }),
-        create("span", { text: "y=latitude" }),
+        create("span", { text: "axis=23.5°" }),
+        create("span", { text: "x=friction" }),
+        create("span", { text: "y=visible" }),
         create("span", { text: "z=zoom" }),
+        create("span", { text: "disk=removed" }),
         create("span", { text: "origin=center" }),
         create("span", { text: "light=sun/moon" }),
         create("span", { text: "realm=separated" }),
@@ -441,8 +444,8 @@
     if (override) return override;
 
     return normalizeContext(context) === CONTEXTS.standalone
-      ? "GENERATION 4 · DEMO REALM · TWO-AXIS CONTROL ACTIVE"
-      : "GENERATION 4 · SHOWROOM PROOF REALM · TWO-AXIS CONTROL ACTIVE";
+      ? "GENERATION 4 · DEMO REALM · AXIS CONTROL ACTIVE"
+      : "GENERATION 4 · SHOWROOM PROOF REALM · AXIS CONTROL ACTIVE";
   }
 
   function linkForContext(context) {
@@ -461,9 +464,9 @@
     const shell = create(
       "section",
       {
-        className: "showroom-generation-3-shell showroom-generation-4-two-axis-shell",
+        className: "showroom-generation-3-shell showroom-generation-4-refinement-shell",
         "data-active-realm": realm,
-        "data-generation-4-two-axis-control": "active",
+        "data-generation-4-axis-friction-vertical": "active",
         "data-generation-4-disk-rotation": "removed",
         "data-generation-4-center-origin": "active",
         "data-shared-instrument-role": "rendering-and-control-service-only",
@@ -494,12 +497,12 @@
             className: "showroom-generation-3-active-globe showroom-generation-4-spherical-globe",
             role: "img",
             "data-generation-3-active-globe": "true",
-            "data-generation-4-two-axis-control": "active",
+            "data-generation-4-axis-friction-vertical": "active",
             "data-generation-4-disk-rotation": "removed",
             "aria-label":
               context === CONTEXTS.standalone
-                ? "Demo Universe Earth two-axis spherical Generation 4 globe"
-                : "Showroom two-axis spherical Generation 4 globe"
+                ? "Demo Universe Earth Generation 4 axis-controlled globe"
+                : "Showroom Generation 4 axis-controlled globe"
           },
           [
             create("div", {
@@ -594,10 +597,15 @@
       globe.style.setProperty("--showroom-moon-opacity", ".12");
     }
 
-    const lightY = clamp(28 + (state.latitude - 50) * 0.22, 20, 64);
+    const lightY = clamp(30 + (state.latitude - 50) * 0.36, 18, 68);
+    const latitudeStop = clamp(36 + state.observerTilt * 0.54, 20, 66);
+    const latOffset = clamp((state.latitude - 50) * -0.58, -18, 18);
+
     globe.style.setProperty("--showroom-light-y", lightY.toFixed(1) + "%");
-    globe.style.setProperty("--showroom-moon-y", clamp(lightY - 4, 16, 60).toFixed(1) + "%");
-    globe.style.setProperty("--showroom-latitude-light-stop", clamp(36 + state.observerTilt * 0.35, 24, 58).toFixed(1) + "%");
+    globe.style.setProperty("--showroom-moon-y", clamp(lightY - 4, 16, 62).toFixed(1) + "%");
+    globe.style.setProperty("--showroom-latitude-light-stop", latitudeStop.toFixed(1) + "%");
+    globe.style.setProperty("--showroom-latitude-offset", latOffset.toFixed(2) + "%");
+    globe.style.setProperty("--showroom-axis-tilt", MOTION.axisTiltDegrees + "deg");
   }
 
   function applyMotionState(mount, shell, globe, surface, clouds, readout, state) {
@@ -605,7 +613,7 @@
     const longitude = mod(state.longitude, 200);
     const cloudLongitude = mod(state.cloudLongitude, 200);
     const latitude = clamp(state.latitude, MOTION.latitudeMin, MOTION.latitudeMax);
-    const observerTilt = clamp((latitude - 50) * 0.9, -28, 28);
+    const observerTilt = clamp((latitude - 50) * 1.1, -34, 34);
 
     state.longitude = longitude;
     state.cloudLongitude = cloudLongitude;
@@ -621,13 +629,14 @@
 
     if (surface) {
       surface.style.backgroundImage = "url('" + ASSETS.earthSurface + "')";
-      surface.style.backgroundPosition = longitude.toFixed(2) + "% " + latitude.toFixed(2) + "%";
+      surface.style.backgroundPosition =
+        longitude.toFixed(2) + "% " + latitude.toFixed(2) + "%";
     }
 
     if (clouds) {
       clouds.style.backgroundImage = "url('" + ASSETS.earthClouds + "')";
       clouds.style.backgroundPosition =
-        cloudLongitude.toFixed(2) + "% " + clamp(latitude - 3, 14, 86).toFixed(2) + "%";
+        cloudLongitude.toFixed(2) + "% " + clamp(latitude - 4, 12, 88).toFixed(2) + "%";
     }
 
     setDataset(mount, {
@@ -645,8 +654,9 @@
       generation4MotionModel: "longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalControl: "longitude",
-      generation4VerticalControl: "latitude-disposition",
+      generation4HorizontalFriction: "active",
+      generation4VerticalControl: "visible-latitude-disposition",
+      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
       generation4CenterOrigin: "active"
     });
 
@@ -659,7 +669,10 @@
       controlLightAnchor: state.lightAnchor,
       controlAutoRotationPaused: state.paused ? "true" : "false",
       generation4DiskRotation: "removed",
-      generation4SphericalRead: "active"
+      generation4SphericalRead: "active",
+      generation4HorizontalFriction: "active",
+      generation4VerticalControl: "visible-latitude-disposition",
+      generation4AxisDisposition: "23.5-degree-static-sphere-axis"
     });
 
     if (readout) {
@@ -683,12 +696,16 @@
     function loop(time) {
       if (!state.lastTime) state.lastTime = time;
 
-      const delta = Math.min(48, time - state.lastTime);
+      const delta = Math.min(40, time - state.lastTime);
       state.lastTime = time;
 
       if (!state.paused && !state.dragging) {
-        state.longitude = mod(state.longitude - MOTION.longitudeStep * delta, 200);
-        state.cloudLongitude = mod(state.cloudLongitude - MOTION.cloudLongitudeStep * delta, 200);
+        state.longitude = mod(state.longitude - MOTION.longitudeAutoStep * delta, 200);
+        state.cloudLongitude = mod(state.cloudLongitude - MOTION.cloudAutoStep * delta, 200);
+
+        if (Math.abs(state.latitude - 50) > 0.08) {
+          state.latitude += (50 - state.latitude) * MOTION.latitudeReturnFriction;
+        }
       }
 
       applyMotionState(mount, shell, globe, surface, clouds, readout, state);
@@ -787,7 +804,7 @@
         state.lastY = event.clientY;
 
         state.longitude = mod(state.longitude + deltaX * MOTION.dragLongitudeFactor, 200);
-        state.cloudLongitude = mod(state.cloudLongitude + deltaX * 0.16, 200);
+        state.cloudLongitude = mod(state.cloudLongitude + deltaX * MOTION.dragCloudFactor, 200);
         state.latitude = clamp(
           state.latitude + deltaY * MOTION.dragLatitudeFactor,
           MOTION.latitudeMin,
@@ -824,11 +841,11 @@
     const runtime = window.DGBShowroomRuntime;
 
     if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
-      runtime.setGeneration3MotionStatus(status || "generation-4-two-axis-spherical-control-active");
+      runtime.setGeneration3MotionStatus(status || "generation-4-axis-friction-vertical-refinement-active");
     }
 
     if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
-      runtime.setActiveGlobeStatus(status || "generation-4-two-axis-spherical-control-active");
+      runtime.setActiveGlobeStatus(status || "generation-4-axis-friction-vertical-refinement-active");
     }
   }
 
@@ -837,7 +854,7 @@
       throw new Error("Showroom globe instrument requires a mount node.");
     }
 
-    ensureTwoAxisStyles();
+    ensureRefinementStyles();
 
     const config = options || {};
     const context = normalizeContext(config.context);
@@ -846,14 +863,14 @@
     mount.replaceChildren(shell);
 
     setDataset(mount, getContextReceipts(context));
-    mount.dataset.renderStatus = "generation-4-two-axis-spherical-control-mounted";
-    mount.dataset.showroomGlobePlacement = "generation-4-two-axis-spherical-control";
-    mount.dataset.generation4Closure = "two-axis-spherical-control-active";
+    mount.dataset.renderStatus = "generation-4-axis-friction-vertical-refinement-mounted";
+    mount.dataset.showroomGlobePlacement = "generation-4-axis-friction-vertical-refinement";
+    mount.dataset.generation4Closure = "axis-friction-vertical-refinement-active";
 
     enforceRealmSeparation(mount, context);
     installRealmGuard(mount, context);
     ensureControlPanel(mount, shell, context);
-    notifyRuntime("generation-4-two-axis-spherical-control-mounted");
+    notifyRuntime("generation-4-axis-friction-vertical-refinement-mounted");
 
     return mount;
   }
@@ -882,8 +899,9 @@
       generation4MotionModel: "longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalControl: "longitude",
-      generation4VerticalControl: "latitude-disposition",
+      generation4HorizontalFriction: "active",
+      generation4VerticalControl: "visible-latitude-disposition",
+      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
       generation4CenterOrigin: "active",
       generation4SunMoonToggle: "active",
       generation4ZoomControl: "active",

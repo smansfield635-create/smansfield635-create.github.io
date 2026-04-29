@@ -9,7 +9,6 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="showroom"
-  data-showroom-visual-shell="active"
   data-showroom-card-earth-sync="active"
   data-showroom-card-earth-color="synced"
   data-showroom-card-globe-handoff="active"
@@ -27,8 +26,18 @@
 
   <meta
     name="description"
-    content="Rich Manor and Estate Showroom: Orbital Earth preview surface with color-synced Demo Universe handoff, mobile-hardened card layout, and audit-only fallback demotion."
+    content="Diamond Gate Bridge Showroom: a Generation 2 visual handoff surface for Demo Universe Earth, preserving the Inspect Globe route while syncing the Showroom Earth card with the full globe direction."
   />
+
+  <style id="white-page-guard">
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #02050a !important;
+      color: #f5f7ff !important;
+    }
+  </style>
 
   <style>
     :root {
@@ -36,16 +45,15 @@
       --bg: #02050a;
       --ink: #f5f7ff;
       --soft: rgba(245, 247, 255, .72);
-      --muted: rgba(245, 247, 255, .50);
-      --gold: #f0c46f;
-      --gold-soft: rgba(240, 196, 111, .22);
-      --blue: #77b7ff;
-      --blue-soft: rgba(119, 183, 255, .18);
-      --green: #99f2bd;
-      --line: rgba(245, 247, 255, .14);
-      --line-gold: rgba(240, 196, 111, .38);
-      --panel: rgba(3, 8, 15, .82);
-      --max: 1120px;
+      --muted: rgba(245, 247, 255, .52);
+      --gold: #f2c76f;
+      --blue: #8ebcff;
+      --green: #7ed9a2;
+      --line: rgba(245, 247, 255, .13);
+      --line-gold: rgba(242, 199, 111, .36);
+      --panel: rgba(4, 9, 17, .78);
+      --max: 1180px;
+      --radius: 34px;
     }
 
     * {
@@ -56,40 +64,46 @@
     body {
       margin: 0;
       min-height: 100%;
-      background:
-        radial-gradient(ellipse at 83% 10%, rgba(240, 196, 111, .12), transparent 28%),
-        radial-gradient(ellipse at 18% 45%, rgba(61, 132, 232, .12), transparent 34%),
-        radial-gradient(ellipse at 50% 100%, rgba(119, 183, 255, .08), transparent 38%),
-        linear-gradient(180deg, #02050a 0%, #06101b 48%, #02050a 100%);
+      background: var(--bg);
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: .34;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.48) 0 1px, transparent 1.8px),
-        radial-gradient(circle, rgba(240,196,111,.22) 0 1px, transparent 1.8px);
-      background-size: 118px 118px, 211px 211px;
-      background-position: 0 0, 74px 90px;
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 82% 8%, rgba(242,199,111,.14), transparent 30%),
+        radial-gradient(ellipse at 28% 42%, rgba(67,121,207,.15), transparent 39%),
+        radial-gradient(ellipse at 50% 110%, rgba(20,94,150,.13), transparent 36%),
+        linear-gradient(180deg, #03060b 0%, #06101d 48%, #01040a 100%);
     }
 
+    body::before,
     body::after {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
+    }
+
+    body::before {
+      z-index: 0;
+      opacity: .42;
       background:
-        linear-gradient(90deg, transparent 0 49.85%, rgba(119, 183, 255, .08) 50%, transparent 50.15%),
-        radial-gradient(circle at 50% 42%, transparent 0 18%, rgba(119, 183, 255, .08) 18.2% 18.5%, transparent 18.7%),
-        radial-gradient(circle at 50% 42%, transparent 0 31%, rgba(240, 196, 111, .08) 31.2% 31.55%, transparent 31.8%);
-      opacity: .72;
+        radial-gradient(circle at 8% 15%, rgba(255,255,255,.42) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 18% 72%, rgba(255,255,255,.24) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 32% 36%, rgba(242,199,111,.24) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 47% 9%, rgba(255,255,255,.35) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 63% 74%, rgba(142,188,255,.28) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 76% 21%, rgba(242,199,111,.21) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 91% 62%, rgba(255,255,255,.36) 0 1px, transparent 1.8px);
+    }
+
+    body::after {
+      z-index: 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.36), transparent 24%, transparent 76%, rgba(0,0,0,.36)),
+        radial-gradient(ellipse at 50% 42%, transparent 0 46%, rgba(0,0,0,.38) 82%, rgba(0,0,0,.72) 100%);
     }
 
     a {
@@ -103,261 +117,361 @@
       outline-offset: 4px;
     }
 
-    .showroom-shell {
+    .showroom {
       position: relative;
       z-index: 1;
       width: min(var(--max), calc(100vw - 28px));
       margin: 0 auto;
-      padding: 24px 0 48px;
+      padding: 26px 0 44px;
     }
 
-    .site-header {
-      display: grid;
-      gap: 26px;
-      margin-bottom: 26px;
+    .site-nav {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
     }
 
     .brand {
       display: grid;
       gap: 5px;
+      min-width: 220px;
     }
 
     .brand strong {
       color: var(--gold);
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      font-weight: 900;
-      letter-spacing: .20em;
+      font-size: clamp(.96rem, 2.5vw, 1.15rem);
+      letter-spacing: .22em;
+      line-height: 1.12;
       text-transform: uppercase;
     }
 
     .brand span {
       color: var(--soft);
-      font-size: clamp(1rem, 2.5vw, 1.12rem);
+      font-size: clamp(.96rem, 2.6vw, 1.14rem);
     }
 
-    .site-nav,
     .nav-links {
       display: flex;
       flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 10px;
-      align-items: center;
     }
 
-    .site-nav a,
     .nav-links a,
-    .showroom-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
+    .action-link {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 10px 17px;
+      padding: 11px 16px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.035));
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
       color: var(--ink);
-      font-weight: 900;
+      font-weight: 850;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 10px 28px rgba(0,0,0,.28);
+        inset 0 0 0 1px rgba(255,255,255,.026),
+        0 12px 36px rgba(0,0,0,.23);
     }
 
-    .site-nav a[aria-current="page"],
-    .site-nav a:hover,
-    .showroom-action.primary {
+    .nav-links a:hover,
+    .nav-links a[aria-current="page"],
+    .action-link.primary,
+    .action-link:hover {
       border-color: var(--line-gold);
       background:
-        radial-gradient(ellipse at 50% 0%, rgba(240,196,111,.28), transparent 70%),
-        rgba(240,196,111,.14);
+        radial-gradient(ellipse at 30% 20%, rgba(242,199,111,.19), transparent 70%),
+        linear-gradient(180deg, rgba(242,199,111,.15), rgba(255,255,255,.035));
     }
 
     .showroom-stage {
       display: grid;
-      grid-template-columns: minmax(0, .95fr) minmax(300px, 1.05fr);
+      grid-template-columns: minmax(0, .88fr) minmax(310px, 1.12fr);
       gap: 22px;
       align-items: stretch;
     }
 
-    .showroom-panel,
-    .showroom-card {
-      position: relative;
+    .showroom-copy,
+    .showroom-card,
+    .showroom-fallback {
       border: 1px solid var(--line);
-      border-radius: 34px;
+      border-radius: var(--radius);
       background:
-        linear-gradient(135deg, rgba(12, 26, 42, .84), rgba(3, 7, 12, .88) 46%, rgba(23, 20, 12, .70)),
-        rgba(3, 8, 15, .82);
+        radial-gradient(ellipse at 14% 20%, rgba(142,188,255,.11), transparent 38%),
+        radial-gradient(ellipse at 90% 4%, rgba(242,199,111,.12), transparent 34%),
+        rgba(3, 8, 15, .78);
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.025),
-        0 30px 90px rgba(0,0,0,.38);
-      overflow: hidden;
-    }
-
-    .showroom-panel::before,
-    .showroom-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 15% 18%, rgba(119,183,255,.18), transparent 34%),
-        radial-gradient(ellipse at 85% 12%, rgba(240,196,111,.14), transparent 28%),
-        linear-gradient(90deg, transparent 0 49.85%, rgba(119,183,255,.08) 50%, transparent 50.15%);
+        0 24px 84px rgba(0,0,0,.34);
     }
 
     .showroom-copy {
-      position: relative;
-      z-index: 1;
-      padding: clamp(26px, 4vw, 52px);
-      width: 100%;
+      padding: clamp(24px, 5vw, 48px);
+      min-height: 520px;
+      display: grid;
+      align-content: center;
+      min-width: 0;
     }
 
-    .eyebrow,
-    .card-kicker {
-      margin: 0 0 14px;
-      color: rgba(245,247,255,.74);
-      font-size: clamp(.86rem, 2.6vw, 1.05rem);
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: .18em;
+      letter-spacing: .19em;
       text-transform: uppercase;
     }
 
     h1 {
-      margin: 0 0 20px;
-      font-size: clamp(4.05rem, 10vw, 6.6rem);
-      line-height: .86;
-      letter-spacing: -.082em;
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7.1rem);
+      line-height: .85;
+      letter-spacing: -.085em;
     }
 
-    .showroom-copy p,
-    .showroom-card p {
-      margin: 0;
+    .showroom-copy p {
+      max-width: 680px;
+      margin: 20px 0 0;
       color: var(--soft);
-      font-size: clamp(1.08rem, 2.9vw, 1.45rem);
-      line-height: 1.45;
+      font-size: clamp(1.05rem, 2.7vw, 1.34rem);
+      line-height: 1.5;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .showroom-action {
-      min-width: 160px;
-      font-size: clamp(.95rem, 2.6vw, 1.08rem);
+      gap: 10px;
+      margin-top: 26px;
     }
 
     .showroom-card {
-      padding: clamp(24px, 4vw, 48px);
-      min-height: 680px;
-      display: grid;
-      align-content: start;
-    }
-
-    .showroom-card-header {
       position: relative;
-      z-index: 2;
+      min-height: 640px;
+      overflow: hidden;
+      padding: clamp(20px, 4vw, 32px);
       display: grid;
-      gap: 14px;
-      margin-bottom: 26px;
+      grid-template-rows: auto 1fr auto;
+      isolation: isolate;
+      min-width: 0;
     }
 
-    .sync-pill {
-      width: max-content;
-      border: 1px solid rgba(153, 242, 189, .34);
-      border-radius: 999px;
-      padding: 8px 14px;
-      background: rgba(153, 242, 189, .11);
-      color: var(--green);
-      font-weight: 950;
+    .showroom-card::before,
+    .showroom-card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
     }
 
+    .showroom-card::before {
+      inset: -18%;
+      background:
+        conic-gradient(from 45deg, transparent 0 10%, rgba(242,199,111,.08) 11% 12%, transparent 13% 35%, rgba(142,188,255,.09) 36% 37%, transparent 38% 60%, rgba(242,199,111,.08) 61% 62%, transparent 63% 85%, rgba(142,188,255,.09) 86% 87%, transparent 88% 100%);
+      opacity: .48;
+      animation: showroomSlowTurn 82s linear infinite;
+    }
+
+    .showroom-card::after {
+      inset: 7%;
+      border: 1px solid rgba(242,199,111,.15);
+      border-radius: 30px;
+      background:
+        linear-gradient(90deg, transparent 49.8%, rgba(242,199,111,.10) 50%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(142,188,255,.09) 50%, transparent 50.2%),
+        radial-gradient(circle at 50% 50%, transparent 0 33%, rgba(242,199,111,.10) 33.2% 33.6%, transparent 34% 47%, rgba(142,188,255,.10) 47.2% 47.6%, transparent 48%);
+      opacity: .62;
+    }
+
+    @keyframes showroomSlowTurn {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .showroom-card-header,
+    .showroom-card-footer,
     .showroom-globe-wrap {
       position: relative;
       z-index: 1;
+    }
+
+    .showroom-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .showroom-card-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 36rem;
+    }
+
+    .status-pill {
+      white-space: nowrap;
+      border: 1px solid rgba(126,217,162,.28);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(126,217,162,.08);
+      color: var(--green);
+      font-size: .86rem;
+      font-weight: 850;
+    }
+
+    .showroom-globe-wrap {
       display: grid;
       place-items: center;
-      width: 100%;
-      min-height: 360px;
-      overflow: hidden;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(119,183,255,.10), transparent 44%),
-        radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(240,196,111,.14) 48.3% 48.8%, transparent 49.2%),
-        radial-gradient(circle at 50% 50%, transparent 0 62%, rgba(119,183,255,.12) 62.4% 62.8%, transparent 63.1%);
+      min-height: 390px;
+      padding: 28px 0;
     }
 
     .showroom-globe {
       position: relative;
-      width: min(74vw, 430px);
+      width: min(70vw, 410px);
       aspect-ratio: 1;
       border-radius: 50%;
       overflow: hidden;
-      border: 1px solid rgba(245,247,255,.20);
+      isolation: isolate;
       background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,.28), transparent 9%),
-        linear-gradient(90deg, rgba(255,255,255,.12), transparent 24%, rgba(0,0,0,.22) 78%, rgba(0,0,0,.36)),
-        url("/assets/earth/earth_surface_2048.jpg") center / cover no-repeat;
+        radial-gradient(circle at 38% 28%, rgba(255,255,255,.23), transparent 18%),
+        radial-gradient(circle at 34% 58%, rgba(38, 132, 92, .28), transparent 35%),
+        radial-gradient(circle at 63% 44%, rgba(24, 104, 196, .38), transparent 38%),
+        radial-gradient(circle at 50% 50%, #0b4d9a 0%, #06224b 70%, #00030b 100%);
       box-shadow:
-        inset -48px -34px 80px rgba(0,0,0,.34),
-        inset 24px 12px 48px rgba(255,255,255,.08),
-        0 0 54px rgba(119,183,255,.22),
-        0 0 110px rgba(119,183,255,.12);
+        inset -42px 22px 84px rgba(0,0,0,.69),
+        inset -18px -18px 44px rgba(0,0,0,.60),
+        inset 18px 12px 32px rgba(255,255,255,.11),
+        0 0 40px rgba(97,153,236,.25),
+        0 0 100px rgba(142,188,255,.09);
     }
 
+    .showroom-globe::before,
     .showroom-earth-color,
     .showroom-earth-clouds,
-    .showroom-earth-atmosphere {
+    .showroom-earth-terminator,
+    .showroom-earth-atmosphere,
+    .showroom-earth-rim {
+      content: "";
       position: absolute;
       inset: 0;
-      border-radius: 50%;
+      border-radius: inherit;
       pointer-events: none;
     }
 
+    .showroom-globe::before {
+      z-index: 1;
+      background-image: url("/assets/earth/earth_surface_2048.jpg");
+      background-size: 210% 100%;
+      background-position: 10% 50%;
+      background-repeat: repeat-x;
+      filter: saturate(1.34) contrast(1.17) brightness(.88);
+      opacity: .92;
+    }
+
     .showroom-earth-color {
+      z-index: 2;
       background:
-        radial-gradient(circle at 42% 33%, rgba(255,255,255,.08), transparent 23%),
-        linear-gradient(115deg, rgba(63,104,255,.18), transparent 42%, rgba(15,45,90,.18));
-      mix-blend-mode: screen;
-      opacity: .58;
+        radial-gradient(ellipse at 62% 43%, rgba(25, 111, 203, .18), transparent 39%),
+        radial-gradient(ellipse at 45% 34%, rgba(59, 137, 82, .15), transparent 28%),
+        radial-gradient(ellipse at 40% 62%, rgba(134, 96, 53, .13), transparent 32%),
+        radial-gradient(ellipse at 25% 50%, rgba(31, 118, 176, .13), transparent 38%);
+      mix-blend-mode: soft-light;
+      opacity: .74;
     }
 
     .showroom-earth-clouds {
-      background:
-        url("/assets/earth/earth_clouds_2048.jpg") center / cover no-repeat;
-      opacity: .38;
+      z-index: 3;
+      background-image: url("/assets/earth/earth_clouds_2048.jpg");
+      background-size: 210% 100%;
+      background-position: -16% 50%;
+      background-repeat: repeat-x;
+      opacity: .31;
       mix-blend-mode: screen;
+      filter: saturate(1.03) contrast(1.14) brightness(1.07);
+    }
+
+    .showroom-earth-terminator {
+      z-index: 4;
+      background:
+        radial-gradient(ellipse at 84% 31%, transparent 0 25%, rgba(4, 9, 22, .13) 37%, rgba(0, 2, 8, .49) 62%, rgba(0, 0, 0, .73) 100%),
+        linear-gradient(127deg, transparent 0 34%, rgba(4, 10, 24, .11) 44%, rgba(0, 0, 0, .42) 64%, rgba(0, 0, 0, .66) 100%);
+      opacity: .68;
     }
 
     .showroom-earth-atmosphere {
+      z-index: 5;
+      background:
+        radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .23), transparent 32%),
+        radial-gradient(ellipse at 15% 52%, rgba(205, 224, 255, .16), transparent 24%),
+        radial-gradient(circle at 50% 50%, transparent 0 59%, rgba(115, 177, 255, .11) 71%, rgba(115, 177, 255, .22) 78%, transparent 86%);
+      mix-blend-mode: screen;
+      opacity: .65;
+    }
+
+    .showroom-earth-rim {
+      z-index: 6;
+      border: 1px solid rgba(255,255,255,.12);
       box-shadow:
-        inset -36px -28px 72px rgba(0,0,0,.28),
-        inset 18px 12px 38px rgba(255,255,255,.06),
-        0 0 42px rgba(119,183,255,.18);
+        inset -32px 18px 54px rgba(0,0,0,.52),
+        inset 18px -8px 24px rgba(133,188,255,.08),
+        inset 26px 0 42px rgba(190,214,255,.09),
+        10px -8px 32px rgba(111, 169, 255, .16),
+        -20px 18px 64px rgba(190,214,255,.18);
+    }
+
+    .showroom-orbit {
+      position: absolute;
+      z-index: -1;
+      inset: -16%;
+      border-radius: 50%;
+      border: 1px solid rgba(242,199,111,.18);
+      transform: rotate(-18deg) scaleY(.78);
+      box-shadow:
+        0 0 42px rgba(242,199,111,.08),
+        inset 0 0 42px rgba(142,188,255,.06);
+    }
+
+    .showroom-orbit::before {
+      content: "";
+      position: absolute;
+      right: 9%;
+      top: 8%;
+      width: 11%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 37% 31%, rgba(255,255,255,.66), transparent 18%),
+        radial-gradient(circle, rgba(214,218,218,.86), rgba(94,104,116,.82) 61%, rgba(18,23,34,.88));
+      box-shadow:
+        0 0 28px rgba(190,214,255,.22),
+        0 0 82px rgba(190,214,255,.10);
     }
 
     .showroom-card-footer {
-      position: relative;
-      z-index: 2;
       display: grid;
-      gap: 20px;
-      margin-top: 28px;
+      gap: 14px;
+    }
+
+    .showroom-card-footer p {
+      margin: 0;
+      color: var(--soft);
+      line-height: 1.5;
     }
 
     .showroom-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
     }
 
     .showroom-tags span {
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.11);
       border-radius: 999px;
-      padding: 8px 13px;
+      padding: 7px 10px;
       color: var(--muted);
       background: rgba(255,255,255,.035);
-      font-weight: 900;
+      font-size: .86rem;
+      font-weight: 750;
     }
 
     .showroom-fallback,
@@ -366,7 +480,8 @@
       display: none !important;
     }
 
-    .audit-source {
+    .audit-source,
+    .sr-only {
       position: absolute !important;
       width: 1px !important;
       height: 1px !important;
@@ -380,78 +495,205 @@
     }
 
     @media (max-width: 920px) {
-      .showroom-stage {
-        grid-template-columns: 1fr;
-      }
-
-      .showroom-copy {
-        width: 100%;
-      }
-
-      .showroom-card {
-        width: 100%;
-        min-height: auto;
-        overflow: hidden;
-      }
-
-      .showroom-globe-wrap {
-        min-height: auto;
-        padding: 18px 0;
-      }
-
-      .showroom-globe {
-        width: min(74vw, 360px);
-      }
-    }
-
-    @media (max-width: 560px) {
-      .showroom-shell {
-        width: min(100vw - 20px, var(--max));
-        padding-top: 20px;
-      }
-
-      .site-header {
+      .site-nav {
+        display: grid;
         gap: 22px;
       }
 
-      .site-nav,
-      .nav-links,
-      .actions {
-        gap: 9px;
+      .brand {
+        min-width: 0;
       }
 
-      .site-nav a,
-      .nav-links a,
-      .showroom-action {
-        padding: 9px 14px;
+      .nav-links {
+        justify-content: flex-start;
       }
 
-      .showroom-panel,
-      .showroom-card {
-        border-radius: 28px;
+      .showroom-stage {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        align-items: stretch;
       }
 
       .showroom-copy,
       .showroom-card {
-        padding: 24px;
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        grid-column: 1 / -1;
       }
 
-      h1 {
-        font-size: clamp(3.5rem, 15vw, 4.65rem);
+      .showroom-copy {
+        order: 1;
+        display: block;
+      }
+
+      .showroom-card {
+        order: 2;
+        overflow: hidden;
+        grid-template-rows: auto auto auto;
+      }
+
+      .showroom-card-header {
+        display: grid;
+        gap: 12px;
+      }
+
+      .status-pill {
+        width: fit-content;
+      }
+
+      .showroom-globe-wrap {
+        min-height: auto;
+        padding: 26px 0;
+      }
+
+      .showroom-globe {
+        width: min(64vw, 340px);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .showroom {
+        width: min(100vw - 20px, var(--max));
+        padding-top: 22px;
+      }
+
+      .site-nav {
+        margin-bottom: 22px;
+      }
+
+      .brand strong {
+        font-size: .96rem;
+        letter-spacing: .18em;
+      }
+
+      .brand span {
+        font-size: 1rem;
+      }
+
+      .nav-links {
+        gap: 8px;
+      }
+
+      .nav-links a,
+      .action-link {
+        padding: 10px 12px;
+      }
+
+      .showroom-stage {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .showroom-copy,
+      .showroom-card {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        border-radius: 28px;
+      }
+
+      .showroom-copy {
+        padding: 24px 18px;
+        display: block;
+      }
+
+      .showroom-copy h1 {
+        font-size: clamp(3rem, 17vw, 4.9rem);
+      }
+
+      .showroom-copy p {
+        font-size: 1.02rem;
+        line-height: 1.48;
+      }
+
+      .showroom-card {
+        padding: 18px;
+        display: grid;
+        grid-template-rows: auto auto auto;
+        overflow: hidden;
+      }
+
+      .showroom-card-header {
+        display: grid;
+        gap: 12px;
+      }
+
+      .showroom-globe-wrap {
+        min-height: auto;
+        padding: 22px 0;
+      }
+
+      .showroom-globe {
+        width: min(68vw, 300px);
+      }
+
+      .showroom-card-footer {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .showroom-globe {
+        width: min(64vw, 260px);
+      }
+
+      .nav-links {
+        gap: 7px;
+      }
+
+      .nav-links a,
+      .action-link {
+        padding: 9px 10px;
+        font-size: .94rem;
+      }
+
+      .showroom-copy,
+      .showroom-card {
+        padding: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="showroom-shell">
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass Origin">
+  <main
+    class="showroom"
+    data-page-id="showroom"
+    data-page="showroom"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="house"
+    data-house-part="showroom"
+    data-showroom-card-earth-sync="active"
+    data-showroom-card-earth-color="synced"
+    data-showroom-card-globe-handoff="active"
+    data-showroom-card-visual-truth="pending"
+    data-demo-universe-card-preview="active"
+    data-showroom-mobile-layout-hardened="true"
+    data-showroom-fallback-demoted="true"
+    data-showroom-fallback-mode="audit-only"
+  >
+    <header class="site-nav">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
         <strong>Diamond Gate Bridge</strong>
         <span>Rich Manor and Estate · Showroom</span>
       </a>
 
-      <nav class="site-nav nav-links" aria-label="Primary navigation">
+      <nav class="nav-links" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -462,50 +704,69 @@
       </nav>
     </header>
 
-    <section class="showroom-stage" aria-label="Orbital Earth Showroom">
-      <article class="showroom-panel">
-        <div class="showroom-copy">
-          <p class="eyebrow">H5 · Showroom · Orbital Earth</p>
-          <h1>Orbital Earth.</h1>
-          <p>
-            Earth is the center of the showroom. This parent surface now carries a color-synced
-            card preview so the handoff to the Demo Universe inspection route matches the full
-            globe direction.
-          </p>
+    <section class="showroom-stage" aria-label="Showroom orbital Earth handoff">
+      <article class="showroom-copy">
+        <p class="kicker">H5 · Showroom · Orbital Earth</p>
+        <h1>Orbital Earth.</h1>
+        <p>
+          Earth is the center of the showroom. This parent surface now carries a color-synced card preview
+          so the handoff to the Demo Universe inspection route matches the full globe direction.
+        </p>
 
-          <div class="actions">
-            <a class="showroom-action primary" href="/showroom/globe/">Inspect Globe</a>
-            <a class="showroom-action" href="/gauges/">Read Gauges</a>
-            <a class="showroom-action" href="/">Return to Compass</a>
-          </div>
+        <div class="actions">
+          <a class="action-link primary" href="/showroom/globe/">Inspect Globe</a>
+          <a class="action-link" href="/gauges/">Read Gauges</a>
+          <a class="action-link" href="/">Return to Compass</a>
         </div>
       </article>
 
-      <article class="showroom-card" aria-label="Demo Universe Earth preview card">
-        <div class="showroom-card-header">
-          <p class="card-kicker">Demo Universe Earth</p>
-          <p>
-            Preview card: dark orbital mood, blue ocean signal, land tone separation,
-            white-silver cloud signal, and direct inspection handoff.
-          </p>
-          <span class="sync-pill">card sync active</span>
-        </div>
+      <article
+        class="showroom-card"
+        data-showroom-card
+        data-showroom-card-earth-sync="active"
+        data-showroom-card-earth-color="synced"
+        data-showroom-card-globe-handoff="active"
+        data-demo-universe-card-preview="active"
+        data-showroom-mobile-layout-hardened="true"
+        aria-label="Color-synced Demo Universe Earth card"
+      >
+        <header class="showroom-card-header">
+          <div>
+            <p class="kicker">Demo Universe Earth</p>
+            <p>
+              Preview card: dark orbital mood, blue ocean signal, land tone separation,
+              white-silver cloud signal, and direct inspection handoff.
+            </p>
+          </div>
+          <span class="status-pill">card sync active</span>
+        </header>
 
         <div class="showroom-globe-wrap">
-          <div class="showroom-globe" aria-label="Color-synced Earth preview">
-            <span class="showroom-earth-color"></span>
-            <span class="showroom-earth-clouds"></span>
-            <span class="showroom-earth-atmosphere"></span>
+          <div
+            class="showroom-globe"
+            data-showroom-globe
+            data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+            data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+            data-showroom-card-earth-color="synced"
+            data-showroom-card-visual-truth="pending"
+            aria-hidden="true"
+          >
+            <div class="showroom-orbit"></div>
+            <div class="showroom-earth-color"></div>
+            <div class="showroom-earth-clouds"></div>
+            <div class="showroom-earth-terminator"></div>
+            <div class="showroom-earth-atmosphere"></div>
+            <div class="showroom-earth-rim"></div>
           </div>
         </div>
 
-        <div class="showroom-card-footer">
+        <footer class="showroom-card-footer">
           <p>
-            This card is a preview, not the full inspection route. The full visual judgment
-            remains inside the Demo Universe Earth route.
+            This card is a preview, not the full inspection route. The full visual judgment remains
+            inside the Demo Universe Earth route.
           </p>
 
-          <div class="showroom-tags" aria-label="Showroom card signals">
+          <div class="showroom-tags">
             <span>blue ocean signal</span>
             <span>land tone signal</span>
             <span>cloud signal</span>
@@ -513,10 +774,10 @@
           </div>
 
           <div class="actions">
-            <a class="showroom-action primary" href="/showroom/globe/">Inspect Globe</a>
-            <a class="showroom-action" href="/gauges/">Read Gauges</a>
+            <a class="action-link primary" href="/showroom/globe/">Inspect Globe</a>
+            <a class="action-link" href="/gauges/">Read Gauges</a>
           </div>
-        </div>
+        </footer>
       </article>
     </section>
 
@@ -552,34 +813,31 @@
       <span>construct-class=house</span>
       <span>house-part=showroom</span>
       <span>H5_SHOWROOM</span>
-
-      <span>data-showroom-card-earth-sync="active"</span>
-      <span>data-showroom-card-earth-color="synced"</span>
-      <span>data-showroom-card-globe-handoff="active"</span>
-      <span>data-showroom-card-visual-truth="pending"</span>
-      <span>data-demo-universe-card-preview="active"</span>
-      <span>data-showroom-mobile-layout-hardened="true"</span>
-      <span>data-showroom-fallback-demoted="true"</span>
-      <span>data-showroom-fallback-mode="audit-only"</span>
-
-      <span>showroom-stage</span>
-      <span>showroom-copy</span>
-      <span>showroom-card</span>
-      <span>showroom-globe</span>
-      <span>showroom-earth-color</span>
-      <span>showroom-earth-clouds</span>
-      <span>showroom-earth-atmosphere</span>
-      <span>showroom-fallback</span>
-      <span>site-nav</span>
-      <span>nav-links</span>
-
-      <span>href="/"</span>
-      <span>href="/showroom/globe/"</span>
-      <span>href="/gauges/"</span>
-
+      <span>showroom-role=orbital-earth-showroom</span>
+      <span>demo-universe=globe-only</span>
+      <span>mirror-universe=buildable-world-container</span>
+      <span>estate-land-placement=mirror-universe-only</span>
+      <span>render-controller=/showroom/globe/index.js</span>
+      <span>earth-canvas-spine=/assets/earth/earth_canvas.js</span>
+      <span>earth-material=/assets/earth/earth_material.css</span>
+      <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
+      <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
+      <span>earth-standard=centered-satellite-earth-no-external-rings</span>
+      <span>showroom-globe-placement=bottom-layout-authority</span>
+      <span>showroom-inspect-route=/showroom/globe/</span>
+      <span>showroom-card-earth-sync=active</span>
+      <span>showroom-card-earth-color=synced</span>
+      <span>showroom-card-globe-handoff=active</span>
+      <span>showroom-card-visual-truth=pending</span>
+      <span>demo-universe-card-preview=active</span>
+      <span>showroom-mobile-layout-hardened=true</span>
+      <span>showroom-fallback-demoted=true</span>
+      <span>showroom-fallback-mode=audit-only</span>
+      <span>SHOWROOM_BACK_PAGE_WITH_INSPECT_GLOBE_TNT_v1</span>
       <span>LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1</span>
       <span>LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1</span>
       <span>SHOWROOM_FALLBACK_DEMOTION_TNT_v1</span>
+      <span>SHOWROOM_WHITE_PAGE_GUARD_FALLBACK_DEMOTION_TNT_v1</span>
     </section>
   </main>
 </body>

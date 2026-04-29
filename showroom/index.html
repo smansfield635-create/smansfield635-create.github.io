@@ -10,7 +10,7 @@
   data-house-part="showroom"
   data-chamber="H5_SHOWROOM"
   data-lattice-chamber="05_SHOWROOM"
-  data-generation="showroom-seven-file-asset-instrument-structural-rewrite-v1"
+  data-generation="showroom-generation-3-load-path-alignment-v1"
 >
 <head>
   <meta charset="utf-8" />
@@ -18,9 +18,9 @@
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom is the H5 public proof room for Diamond Gate Bridge with Generation 1 layout established and Generation 2 active globe rendered through the canonical asset instrument."
+    content="The Showroom is the H5 public proof room for Diamond Gate Bridge with Generation 2 active globe preserved and Generation 3 full expression loaded through the canonical asset instrument."
   />
-  <link rel="stylesheet" href="/showroom/showroom.css" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-3-full-expression-v1" />
 </head>
 
 <body
@@ -39,8 +39,8 @@
     data-proof-marker="SHOWROOM_CHAMBER=HOUSE_PART_05"
     data-chamber="H5_SHOWROOM"
     data-generation-1-layout-established="true"
-    data-generation-2-active-globe="target"
-    data-generation-3-blocked-until-g2-pass="true"
+    data-generation-2-active-globe="visible"
+    data-generation-3-full-expression="load-path-aligned"
     data-showroom-card-earth-sync="active"
     data-showroom-card-earth-color="synced"
     data-showroom-card-globe-handoff="active"
@@ -52,8 +52,8 @@
       <p class="eyebrow">H5 · Showroom · Public Proof Room</p>
       <h1>Showroom</h1>
       <p class="showroom-lede">
-        Generation 1 establishes the layout. Generation 2 restores the active globe.
-        Generation 3 is shadows, detail, color, moon/reflection, and terminator refinement after the globe passes.
+        Generation 1 establishes the layout. Generation 2 preserves the active globe.
+        Generation 3 loads full expression through the canonical asset instrument.
       </p>
 
       <nav class="site-nav nav-links route-rail" aria-label="Showroom route rail">
@@ -72,8 +72,8 @@
       id="showroom-main"
       class="showroom-main"
       data-generation-1-layout-established="true"
-      data-generation-2-active-globe="target"
-      data-generation-3-blocked-until-g2-pass="true"
+      data-generation-2-active-globe="visible"
+      data-generation-3-full-expression="target"
     >
       <section
         class="showroom-stage proof-stage"
@@ -82,7 +82,7 @@
       >
         <div
           class="visual-panel showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
-          aria-label="Showroom Generation 2 active Earth globe surface"
+          aria-label="Showroom Generation 3 full expression Earth globe surface"
           data-showroom-globe="active"
           data-showroom-earth-color="synced"
           data-showroom-earth-clouds="active"
@@ -95,33 +95,31 @@
             id="showroom-globe-mount"
             class="showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
             data-showroom-globe-mount="true"
-            data-showroom-globe-placement="generation-2-active-globe"
+            data-showroom-globe-placement="generation-3-full-expression"
             data-showroom-card-globe-handoff="active"
             data-showroom-card-earth-color="synced"
             data-demo-universe-card-preview="active"
             data-earth-surface="/assets/earth/earth_surface_2048.jpg"
             data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-            data-generation-2-active-globe="mount-ready"
-            aria-label="Showroom Generation 2 active Earth globe"
+            data-generation-2-active-globe="visible"
+            data-generation-3-full-expression="mount-ready"
+            aria-label="Showroom Generation 3 full expression Earth globe"
           ></div>
         </div>
 
-        <div
-          class="content-panel showroom-copy"
-          data-showroom-copy="active"
-        >
+        <div class="content-panel showroom-copy" data-showroom-copy="active">
           <p class="room-code">ROOM 05 / 16 · H5_SHOWROOM</p>
           <h2 id="proof-stage-title">Earth-centered public proof surface</h2>
           <p>
             The Showroom receives the active globe from the canonical asset instrument.
-            The parent page owns structure, the render spine owns placement, and the asset instrument owns the globe primitive.
+            The parent page owns structure, the render bridge owns placement, and the asset instrument owns the globe primitive and expression layers.
           </p>
 
           <div class="proof-grid" aria-label="Showroom proof markers">
             <article class="showroom-card" data-showroom-card="render-proof">
               <h3>Render proof</h3>
               <p>
-                The active globe is mounted through the shared asset instrument and parent render spine.
+                Generation 2 remains preserved while Generation 3 expression layers load through the updated asset instrument.
               </p>
             </article>
 
@@ -130,9 +128,7 @@
               <p>
                 Compass, Products, ARCHCOIN, Demo Universe Earth, Gauges, and Upper Room remain available.
               </p>
-              <p>
-                <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
-              </p>
+              <p><a href="/showroom/globe/">Inspect Demo Universe Earth</a></p>
             </article>
 
             <article class="showroom-card" data-showroom-card="audit-proof">
@@ -153,10 +149,10 @@
           <li>ROUTE=/showroom/</li>
           <li>GLOBE_ROUTE=/showroom/globe/</li>
           <li>GENERATION_1_LAYOUT_ESTABLISHED</li>
-          <li>GENERATION_2_ACTIVE_GLOBE_TARGET</li>
-          <li>GENERATION_3_BLOCKED_UNTIL_G2_PASS</li>
-          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js</li>
-          <li>SHOWROOM_SEVEN_FILE_ASSET_INSTRUMENT_STRUCTURAL_REWRITE_TNT_v1</li>
+          <li>GENERATION_2_ACTIVE_GLOBE_PRESERVED</li>
+          <li>GENERATION_3_LOAD_PATH_ALIGNED</li>
+          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-full-expression-v1</li>
+          <li>SHOWROOM_GENERATION_3_LOAD_PATH_ALIGNMENT_TNT_v1</li>
         </ul>
       </section>
 
@@ -166,15 +162,13 @@
           <p>
             JavaScript is unavailable. The route rail, receipts, and Demo Universe Earth route remain visible.
           </p>
-          <p>
-            <a href="/showroom/globe/">Open Demo Universe Earth</a>
-          </p>
+          <p><a href="/showroom/globe/">Open Demo Universe Earth</a></p>
         </section>
       </noscript>
     </main>
   </div>
 
-  <script src="/assets/showroom.globe.instrument.js" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-3-full-expression-v1" defer></script>
   <script src="/showroom/runtime.js" defer></script>
   <script src="/showroom/showroom.render.js" defer></script>
   <script src="/showroom/index.js" defer></script>

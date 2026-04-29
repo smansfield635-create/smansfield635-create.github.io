@@ -1,33 +1,35 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GLOBE_INSTRUMENT_CONTROL_PANEL_TAKEOVER_TNT_v1
+  SHOWROOM_GLOBE_INSTRUMENT_REALM_SEPARATION_FINALIZATION_TNT_v1
+
+  Final primary duty:
+  - Separate the parent Showroom realm from the Demo Universe realm.
+  - Preserve shared globe rendering as a service layer only.
+  - Preserve cross-links as navigation only.
+  - Prevent shared active realm identity.
 
   Renewal duties:
   1. Emit Generation 3 visual classes only.
-  2. Split parent-context receipts from standalone-context receipts.
-  3. Keep the orbital/ring scaffold removed.
-  4. Add the control panel as the final accountable interaction layer.
+  2. Keep ring/orbital scaffold removed.
+  3. Keep control panel active.
+  4. Split parent realm receipts from demo realm receipts.
+  5. Keep shared instrument as rendering/control utility, not realm identity authority.
 
-  Control panel owns:
-  - zoom in / zoom out
-  - reset view
-  - pause / resume
-  - manual drag rotation
-  - orientation receipts
-  - interaction state receipts
-
-  Control panel does not own:
-  - page layout
-  - route rail
-  - Gauges logic
-  - raw Earth assets
-  - global Manor skin
+  Preserved:
+  - window.DGBShowroomGlobeInstrument
+  - renderGlobe(mount, options)
+  - writeReceipts(node, context, extra)
+  - verifyAssets()
+  - parent Showroom compatibility
+  - standalone Demo Universe Earth compatibility
+  - Earth surface / cloud assets
+  - axis, rotation, shadow, depth, terminator, atmosphere, telemetry
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-3-control-panel-takeover-instrument-v1";
+  const VERSION = "showroom-generation-3-realm-separated-control-instrument-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -41,10 +43,15 @@
     standalone: "standalone"
   });
 
+  const REALMS = Object.freeze({
+    parent: "showroom-parent-proof-realm",
+    standalone: "demo-universe-earth-demo-realm"
+  });
+
   const GENERATIONS = Object.freeze({
     generation1: "no-graphic-baseline-preserved-ring-scaffold-removed",
     generation2: "baseline-graphics-preserved-as-receipt-only",
-    generation3: "context-isolated-control-panel-authorized-globe"
+    generation3: "realm-separated-control-authorized-globe"
   });
 
   const MOTION = Object.freeze({
@@ -81,6 +88,10 @@
     return context === CONTEXTS.standalone ? CONTEXTS.standalone : CONTEXTS.parent;
   }
 
+  function realmForContext(context) {
+    return normalizeContext(context) === CONTEXTS.standalone ? REALMS.standalone : REALMS.parent;
+  }
+
   function create(tag, attrs, children) {
     const node = document.createElement(tag);
 
@@ -90,13 +101,9 @@
 
       if (value === null || value === undefined || value === false) return;
 
-      if (key === "className") {
-        node.className = value;
-      } else if (key === "text") {
-        node.textContent = value;
-      } else {
-        node.setAttribute(key, String(value));
-      }
+      if (key === "className") node.className = value;
+      else if (key === "text") node.textContent = value;
+      else node.setAttribute(key, String(value));
     });
 
     (children || []).forEach(function (child) {
@@ -172,12 +179,17 @@
 
   function getContextReceipts(context) {
     const normalized = normalizeContext(context);
+    const realm = realmForContext(normalized);
 
     const base = {
       showroomGlobeInstrument: VERSION,
       worldKernelCompatible: "true",
       worldPlanetEngineCompatible: "true",
       assetInstrument: "showroom-globe",
+
+      sharedInstrumentRole: "rendering-and-control-service-only",
+      sharedActiveRealmIdentity: "false",
+      crossRealmLinkType: "navigation-only",
 
       generation1NoGraphicBaseline: "preserved",
       generation1RingScaffold: "removed",
@@ -190,6 +202,7 @@
       generation3FullExpression: "axis-rotation-depth-refinement-active",
       generation3ObjectPurification: "active",
       generation3ContextIsolation: "active",
+      generation3RealmSeparation: "active",
       generation3ControlPanel: "active",
       generation3VisualTruth: "pending-user-visual-confirmation",
       generation3Axis: "active",
@@ -212,20 +225,24 @@
       legacyScaffoldStatus: "removed",
       ringScaffoldStatus: "removed",
       contextIsolationStatus: "active",
+      realmSeparationStatus: "active",
       controlPanelActive: "true",
       controlPanelAuthority: "globe-interaction-layer",
       earthSurface: ASSETS.earthSurface,
       earthClouds: ASSETS.earthClouds,
-      renderContext: normalized
+      renderContext: normalized,
+      activeRealm: realm
     };
 
     if (normalized === CONTEXTS.standalone) {
       return Object.assign(base, {
         activeRouteRole: "demo-universe-earth",
         standaloneRole: "demo-universe-earth",
+        demoRealm: REALMS.standalone,
         showroomGlobeRoute: ASSETS.globeRoute,
         parentRouteAvailable: ASSETS.parentRoute,
-        contextReceiptMode: "standalone-isolated",
+        parentRoleAvailable: "navigation-only",
+        contextReceiptMode: "demo-realm-isolated",
         contextCaption: "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
       });
     }
@@ -233,14 +250,16 @@
     return Object.assign(base, {
       activeRouteRole: "showroom-proof-surface",
       parentRole: "showroom-proof-surface",
+      parentRealm: REALMS.parent,
       showroomParentRoute: ASSETS.parentRoute,
-      globeRouteAvailable: ASSETS.globeRoute,
-      contextReceiptMode: "parent-isolated",
+      demoRouteAvailable: ASSETS.globeRoute,
+      demoRoleAvailable: "navigation-only",
+      contextReceiptMode: "parent-realm-isolated",
       contextCaption: "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE"
     });
   }
 
-  function enforceContextIsolation(node, context) {
+  function enforceRealmSeparation(node, context) {
     const normalized = normalizeContext(context);
 
     if (!node) return;
@@ -249,53 +268,69 @@
 
     if (normalized === CONTEXTS.parent) {
       removeDatasetKeys(node, [
-        "showroomGlobeRoute",
         "standaloneRole",
         "demoUniverseEarthBoot",
-        "generation2StandaloneGlobe"
+        "generation2StandaloneGlobe",
+        "showroomGlobeRoute",
+        "demoRealm"
       ]);
 
       setDataset(node, {
         renderContext: "parent",
+        activeRealm: REALMS.parent,
+        parentRealm: REALMS.parent,
         parentRole: "showroom-proof-surface",
+        activeRouteRole: "showroom-proof-surface",
         showroomParentRoute: ASSETS.parentRoute,
-        globeRouteAvailable: ASSETS.globeRoute,
-        contextReceiptMode: "parent-isolated"
+        demoRouteAvailable: ASSETS.globeRoute,
+        demoRoleAvailable: "navigation-only",
+        crossRealmLinkType: "navigation-only",
+        contextReceiptMode: "parent-realm-isolated"
       });
     } else {
       removeDatasetKeys(node, [
-        "showroomParentRoute",
         "parentRole",
         "showroomParentBoot",
-        "showroomParentRenderBridge"
+        "showroomParentRenderBridge",
+        "showroomParentRoute",
+        "parentRealm"
       ]);
 
       setDataset(node, {
         renderContext: "standalone",
+        activeRealm: REALMS.standalone,
+        demoRealm: REALMS.standalone,
         standaloneRole: "demo-universe-earth",
+        activeRouteRole: "demo-universe-earth",
         showroomGlobeRoute: ASSETS.globeRoute,
         parentRouteAvailable: ASSETS.parentRoute,
-        contextReceiptMode: "standalone-isolated"
+        parentRoleAvailable: "navigation-only",
+        crossRealmLinkType: "navigation-only",
+        contextReceiptMode: "demo-realm-isolated"
       });
     }
 
     setDataset(node, {
+      sharedInstrumentRole: "rendering-and-control-service-only",
+      sharedActiveRealmIdentity: "false",
       generation1RingScaffold: "removed",
       generation2VisualClassEmission: "removed",
       generation3RingScaffold: "removed",
+      generation3RealmSeparation: "active",
+      realmSeparationStatus: "active",
       ringScaffoldStatus: "removed",
       controlPanelActive: "true"
     });
   }
 
-  function installContextGuard(mount, context) {
+  function installRealmGuard(mount, context) {
     const normalized = normalizeContext(context);
 
-    enforceContextIsolation(mount, normalized);
+    enforceRealmSeparation(mount, normalized);
 
-    if (!mount || mount.dataset.contextGuardInstalled === VERSION + ":" + normalized) return;
+    if (!mount || mount.dataset.realmGuardInstalled === VERSION + ":" + normalized) return;
 
-    mount.dataset.contextGuardInstalled = VERSION + ":" + normalized;
+    mount.dataset.realmGuardInstalled = VERSION + ":" + normalized;
 
     let locked = false;
 
@@ -304,7 +339,7 @@
       locked = true;
 
       window.requestAnimationFrame(function () {
-        enforceContextIsolation(mount, normalized);
+        enforceRealmSeparation(mount, normalized);
         locked = false;
       });
     };
@@ -321,7 +356,9 @@
         "data-showroom-parent-route",
         "data-generation-3-orbit",
         "data-orbital-scaffold",
-        "data-ring-scaffold"
+        "data-ring-scaffold",
+        "data-active-realm",
+        "data-active-route-role"
       ]
     });
 
@@ -341,6 +378,7 @@
         "data-generation-3-telemetry": "active",
         "data-generation-3-object-purification": "active",
         "data-generation-3-context-isolation": "active",
+        "data-generation-3-realm-separation": "active",
         "data-generation-3-control-panel": "active",
         "aria-label": "Generation 3 telemetry receipt"
       },
@@ -353,7 +391,7 @@
         create("span", { text: "terminator=active" }),
         create("span", { text: "atmosphere=active" }),
         create("span", { text: "ring=removed" }),
-        create("span", { text: "control=active" }),
+        create("span", { text: "realm=separated" }),
         create("span", { text: "context=" + normalized })
       ]
     );
@@ -363,8 +401,8 @@
     if (override) return override;
 
     return normalizeContext(context) === CONTEXTS.standalone
-      ? "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
-      : "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE";
+      ? "GENERATION 3 · DEMO UNIVERSE EARTH · DEMO REALM ACTIVE"
+      : "GENERATION 3 · SHOWROOM PROOF REALM · SHADOW DEPTH ACTIVE";
   }
 
   function linkForContext(context) {
@@ -376,6 +414,7 @@
   function createControlState(context) {
     return {
       context: normalizeContext(context),
+      realm: realmForContext(context),
       zoom: 1,
       minZoom: 0.72,
       maxZoom: 1.42,
@@ -387,9 +426,7 @@
   }
 
   function createReadoutSpan(label, value) {
-    return create("span", {
-      text: label + "=" + value
-    });
+    return create("span", { text: label + "=" + value });
   }
 
   function applyControlState(mount, shell, globe, readout, state) {
@@ -416,14 +453,17 @@
       controlManualRotationDegrees: String(Math.round(rotation)),
       controlAutoRotationPaused: paused,
       controlContext: state.context,
-      interactionAuthority: "globe-control-panel"
+      controlRealm: state.realm,
+      interactionAuthority: "globe-control-panel",
+      sharedInstrumentRole: "rendering-and-control-service-only"
     });
 
     setDataset(shell, {
       controlPanelActive: "true",
       controlZoomLevel: scale,
       controlManualRotationDegrees: String(Math.round(rotation)),
-      controlAutoRotationPaused: paused
+      controlAutoRotationPaused: paused,
+      controlRealm: state.realm
     });
 
     if (readout) {
@@ -431,7 +471,7 @@
         createReadoutSpan("zoom", scale),
         createReadoutSpan("manual", Math.round(rotation) + "°"),
         createReadoutSpan("pause", paused),
-        createReadoutSpan("context", state.context)
+        createReadoutSpan("realm", state.context)
       );
     }
 
@@ -470,6 +510,16 @@
       return btn;
     }
 
+    function setAnimationState(value) {
+      Array.from(
+        shell.querySelectorAll(
+          ".showroom-generation-3-active-globe,.showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere"
+        )
+      ).forEach(function (node) {
+        node.style.animationPlayState = value;
+      });
+    }
+
     controls.append(
       button("Zoom +", function () {
         state.zoom = Math.min(state.maxZoom, Number((state.zoom + 0.08).toFixed(2)));
@@ -481,20 +531,12 @@
       }),
       button("Pause", function () {
         state.paused = true;
-        shell.dataset.controlAutoRotationPaused = "true";
-        if (globe) globe.style.animationPlayState = "paused";
-        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
-          node.style.animationPlayState = "paused";
-        });
+        setAnimationState("paused");
         applyControlState(mount, shell, globe, readout, state);
       }),
       button("Resume", function () {
         state.paused = false;
-        shell.dataset.controlAutoRotationPaused = "false";
-        if (globe) globe.style.animationPlayState = "running";
-        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
-          node.style.animationPlayState = "running";
-        });
+        setAnimationState("running");
         applyControlState(mount, shell, globe, readout, state);
       }),
       button("Reset", function () {
@@ -502,10 +544,7 @@
         state.manualRotation = 0;
         state.paused = false;
         state.dragging = false;
-        if (globe) globe.style.animationPlayState = "running";
-        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
-          node.style.animationPlayState = "running";
-        });
+        setAnimationState("running");
         applyControlState(mount, shell, globe, readout, state);
       })
     );
@@ -550,6 +589,7 @@
   function createGlobeNode(options) {
     const config = options || {};
     const context = normalizeContext(config.context);
+    const realm = realmForContext(context);
     const caption = captionForContext(context, config.caption);
     const link = linkForContext(context);
 
@@ -558,6 +598,10 @@
       {
         className: "showroom-generation-3-shell",
         "data-showroom-generation-3-shell": "true",
+        "data-active-realm": realm,
+        "data-shared-instrument-role": "rendering-and-control-service-only",
+        "data-shared-active-realm-identity": "false",
+        "data-cross-realm-link-type": "navigation-only",
         "data-generation-1-no-graphic-baseline": "preserved",
         "data-generation-1-ring-scaffold": "removed",
         "data-generation-2-baseline-graphics": "preserved",
@@ -567,6 +611,7 @@
         "data-generation-3-full-expression": "axis-rotation-depth-refinement-active",
         "data-generation-3-object-purification": "active",
         "data-generation-3-context-isolation": "active",
+        "data-generation-3-realm-separation": "active",
         "data-generation-3-control-panel": "active",
         "data-generation-3-ring-scaffold": "removed",
         "data-generation-3-axis": "active",
@@ -574,7 +619,7 @@
         "data-generation-3-runtime-motion": "active",
         "data-axis-tilt-degrees": String(MOTION.axisTiltDegrees),
         "data-render-context": context,
-        "data-context-receipt-mode": context + "-isolated"
+        "data-context-receipt-mode": context === CONTEXTS.standalone ? "demo-realm-isolated" : "parent-realm-isolated"
       },
       [
         create("span", {
@@ -601,10 +646,11 @@
             "data-generation-3-active-globe": "true",
             "data-generation-3-object-purification": "active",
             "data-generation-3-context-isolation": "active",
+            "data-generation-3-realm-separation": "active",
             "aria-label":
               context === CONTEXTS.standalone
-                ? "Demo Universe Earth Generation 3 axis rotation globe"
-                : "Showroom Generation 3 axis rotation Earth globe"
+                ? "Demo Universe Earth Generation 3 demo realm globe"
+                : "Showroom Generation 3 proof realm globe"
           },
           [
             create("img", {
@@ -641,7 +687,7 @@
         create("p", {
           className: "showroom-generation-3-caption",
           "data-generation-3-caption": "active",
-          "data-generation-3-context-isolation": "active",
+          "data-generation-3-realm-separation": "active",
           text: caption
         }),
 
@@ -650,6 +696,7 @@
         create("a", {
           className: "showroom-generation-3-link",
           href: link.href,
+          "data-cross-realm-link-type": "navigation-only",
           text: link.text
         })
       ]
@@ -665,11 +712,11 @@
     const runtime = window.DGBShowroomRuntime;
 
     if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
-      runtime.setGeneration3MotionStatus(status || "generation-3-control-panel-active");
+      runtime.setGeneration3MotionStatus(status || "generation-3-realm-separated-control-active");
     }
 
     if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
-      runtime.setActiveGlobeStatus(status || "generation-3-control-panel-active");
+      runtime.setActiveGlobeStatus(status || "generation-3-realm-separated-control-active");
     }
   }
 
@@ -691,12 +738,12 @@
 
       if (surfaceLoaded) {
         setDataset(mount, getContextReceipts(normalized));
-        mount.dataset.renderStatus = "generation-3-control-panel-active";
-        mount.dataset.showroomGlobePlacement = "generation-3-control-panel-takeover";
-        notifyRuntime("generation-3-control-panel-active");
+        mount.dataset.renderStatus = "generation-3-realm-separated-control-active";
+        mount.dataset.showroomGlobePlacement = "generation-3-realm-separated-control";
+        notifyRuntime("generation-3-realm-separated-control-active");
       }
 
-      enforceContextIsolation(mount, normalized);
+      enforceRealmSeparation(mount, normalized);
     }
 
     if (surface) {
@@ -726,14 +773,14 @@
     mount.replaceChildren(shell);
 
     setDataset(mount, getContextReceipts(context));
-    mount.dataset.renderStatus = "generation-3-control-panel-mounted";
-    mount.dataset.showroomGlobePlacement = "generation-3-control-panel-takeover";
+    mount.dataset.renderStatus = "generation-3-realm-separated-control-mounted";
+    mount.dataset.showroomGlobePlacement = "generation-3-realm-separated-control";
 
     installControlPanel(mount, shell, context);
-    enforceContextIsolation(mount, context);
-    installContextGuard(mount, context);
+    enforceRealmSeparation(mount, context);
+    installRealmGuard(mount, context);
     monitorAssetLoad(mount, context);
-    notifyRuntime("generation-3-control-panel-mounted");
+    notifyRuntime("generation-3-realm-separated-control-mounted");
 
     return mount;
   }
@@ -742,7 +789,7 @@
     const normalized = normalizeContext(context);
 
     setDataset(node, Object.assign({}, getContextReceipts(normalized), extra || {}));
-    enforceContextIsolation(node, normalized);
+    enforceRealmSeparation(node, normalized);
   }
 
   async function verifyAssets() {
@@ -766,6 +813,7 @@
       generation3Rotation: "active",
       generation3ObjectPurification: "active",
       generation3ContextIsolation: "active",
+      generation3RealmSeparation: "active",
       generation3RingScaffold: "removed",
       generation3ControlPanel: "active",
       generation3VisualTruth: "pending-user-visual-confirmation"
@@ -777,6 +825,7 @@
     assets: ASSETS,
     generations: GENERATIONS,
     contexts: CONTEXTS,
+    realms: REALMS,
     motion: MOTION,
     create: create,
     setDataset: setDataset,
@@ -784,7 +833,7 @@
     stripForbiddenVisualClasses: stripForbiddenVisualClasses,
     removeForbiddenScaffoldNodes: removeForbiddenScaffoldNodes,
     getContextReceipts: getContextReceipts,
-    enforceContextIsolation: enforceContextIsolation,
+    enforceRealmSeparation: enforceRealmSeparation,
     createGlobeNode: createGlobeNode,
     renderGlobe: renderGlobe,
     writeReceipts: writeReceipts,

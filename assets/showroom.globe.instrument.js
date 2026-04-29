@@ -1,25 +1,21 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GENERATION_4_FIXED_POSITION_MOTION_ONLY_CONTROL_TNT_v1
+  SHOWROOM_GENERATION_4_HOME_ANCHOR_FIXED_POSITION_CONTROL_TNT_v1
 
   Purpose:
-  - Preserve Generation 4 speed-authority calibration.
-  - Preserve current route consumption and Gauges compatibility.
-  - Preserve inertial release spin.
-  - Lock globe placement in outer space.
-  - Allow user control over motion only: longitude, latitude, release spin, zoom, light anchor, pause/resume/reset.
-  - Prevent drag from moving the globe container, mount, shell, axis frame, visual panel, or center point.
-
-  Important:
-  - VERSION intentionally remains showroom-generation-4-speed-authority-calibration-v1
-    so current route consumers and Gauges do not falsely regress.
+  - Preserve the current Generation 4 speed-authority contract.
+  - Preserve route and Gauges compatibility by keeping the public VERSION stable.
+  - Add a canonical HOME_STATE.
+  - Stop idle auto-drift from pulling the globe away from the correct starting point.
+  - Keep the globe fixed in outer space.
+  - Allow only internal motion: longitude, latitude, release spin, zoom, light anchor, pause/resume/reset.
 */
 
 (function () {
   "use strict";
 
   const VERSION = "showroom-generation-4-speed-authority-calibration-v1";
-  const REFINEMENT_VERSION = "showroom-generation-4-fixed-position-motion-only-control-v1";
+  const REFINEMENT_VERSION = "showroom-generation-4-home-anchor-fixed-position-control-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -38,19 +34,14 @@
     standalone: "demo-universe-earth-demo-realm"
   });
 
-  const GENERATIONS = Object.freeze({
-    generation1: "ring-scaffold-removed",
-    generation2: "receipt-only",
-    generation3: "realm-separated-control-authorized-globe",
-    generation4: "speed-authority-calibrated-two-axis-globe"
-  });
-
-  const SPEED_AUTHORITY = Object.freeze({
-    file: "/assets/showroom.globe.instrument.js",
-    runtimeSpeedAuthority: false,
-    cssAnimationAuthority: false,
-    renderBridgeSpeedAuthority: false,
-    instrumentSpeedAuthority: true
+  const HOME_STATE = Object.freeze({
+    longitude: 50,
+    cloudLongitude: 88,
+    latitude: 50,
+    zoom: 1,
+    lightAnchor: "sun",
+    paused: false,
+    autoDriftEnabled: false
   });
 
   const MOTION = Object.freeze({
@@ -77,15 +68,21 @@
     releaseVelocitySampleMs: 64
   });
 
+  const SPEED_AUTHORITY = Object.freeze({
+    file: "/assets/showroom.globe.instrument.js",
+    instrumentSpeedAuthority: true,
+    runtimeSpeedAuthority: false,
+    cssAnimationAuthority: false,
+    renderBridgeSpeedAuthority: false
+  });
+
   const PLACEMENT = Object.freeze({
     placementAuthority: "layout-only",
     motionAuthority: "/assets/showroom.globe.instrument.js",
-    outerShellFixed: true,
-    axisFrameFixed: true,
-    mountCenterLocked: true,
-    visualPanelPositionLocked: true,
+    placementFixed: true,
+    motionOnlyControl: true,
+    centerLocked: true,
     dragTranslatesContainer: false,
-    dragUpdatesMotionState: true,
     wheelZoomScalesFromCenter: true,
     releaseSpinInternal: true
   });
@@ -208,11 +205,11 @@
     removeForbiddenScaffoldNodes(root);
   }
 
-  function ensureCalibrationStyles() {
-    if (document.getElementById("showroom-generation-4-speed-authority-style")) return;
+  function ensureStyles() {
+    if (document.getElementById("showroom-generation-4-home-anchor-style")) return;
 
     const style = create("style", {
-      id: "showroom-generation-4-speed-authority-style",
+      id: "showroom-generation-4-home-anchor-style",
       text:
         ".showroom-generation-3-shell{position:relative;display:grid;justify-items:center;gap:.75rem;width:min(760px,100%);margin:0 auto;isolation:isolate;contain:layout paint style;touch-action:none;user-select:none;-webkit-user-select:none;transform:none!important;translate:none!important;left:auto!important;top:auto!important}" +
 
@@ -266,18 +263,21 @@
     const base = {
       showroomGlobeInstrument: VERSION,
       showroomGlobeRefinement: REFINEMENT_VERSION,
-      worldKernelCompatible: "true",
-      worldPlanetEngineCompatible: "true",
-      assetInstrument: "showroom-globe",
-      sharedInstrumentRole: "rendering-and-control-service-only",
-      sharedActiveRealmIdentity: "false",
-      crossRealmLinkType: "navigation-only",
 
       speedAuthority: SPEED_AUTHORITY.file,
       instrumentSpeedAuthority: String(SPEED_AUTHORITY.instrumentSpeedAuthority),
       runtimeSpeedAuthority: String(SPEED_AUTHORITY.runtimeSpeedAuthority),
       cssAnimationAuthority: String(SPEED_AUTHORITY.cssAnimationAuthority),
       renderBridgeSpeedAuthority: String(SPEED_AUTHORITY.renderBridgeSpeedAuthority),
+
+      homeStateLongitude: String(HOME_STATE.longitude),
+      homeStateCloudLongitude: String(HOME_STATE.cloudLongitude),
+      homeStateLatitude: String(HOME_STATE.latitude),
+      homeStateZoom: String(HOME_STATE.zoom),
+      homeStateLightAnchor: HOME_STATE.lightAnchor,
+      homeAnchor: "active",
+      idleAutoDrift: "locked",
+
       longitudeAutoStep: String(MOTION.longitudeAutoStep),
       cloudAutoStep: String(MOTION.cloudAutoStep),
       dragLongitudeFactor: String(MOTION.dragLongitudeFactor),
@@ -289,29 +289,25 @@
 
       placementAuthority: PLACEMENT.placementAuthority,
       motionAuthority: PLACEMENT.motionAuthority,
-      placementFixed: "true",
-      motionOnlyControl: "true",
-      outerShellFixed: String(PLACEMENT.outerShellFixed),
-      axisFrameFixed: String(PLACEMENT.axisFrameFixed),
-      mountCenterLocked: String(PLACEMENT.mountCenterLocked),
-      visualPanelPositionLocked: String(PLACEMENT.visualPanelPositionLocked),
+      placementFixed: String(PLACEMENT.placementFixed),
+      motionOnlyControl: String(PLACEMENT.motionOnlyControl),
+      centerLocked: String(PLACEMENT.centerLocked),
       dragTranslatesContainer: String(PLACEMENT.dragTranslatesContainer),
-      dragUpdatesMotionState: String(PLACEMENT.dragUpdatesMotionState),
       wheelZoomScalesFromCenter: String(PLACEMENT.wheelZoomScalesFromCenter),
       releaseSpinInternal: String(PLACEMENT.releaseSpinInternal),
 
-      generation1NoGraphicBaseline: "preserved",
+      sharedInstrumentRole: "rendering-and-control-service-only",
+      sharedActiveRealmIdentity: "false",
+      crossRealmLinkType: "navigation-only",
+
       generation1RingScaffold: "removed",
       generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
-
-      generation3: GENERATIONS.generation3,
       generation3RealmSeparation: "active",
-      generation3ControlPanel: "active",
 
-      generation4: GENERATIONS.generation4,
-      generation4Closure: "fixed-position-motion-only-control-active",
-      generation4MotionModel: "fixed-placement-internal-longitude-latitude-zoom-light-anchor",
+      generation4: "speed-authority-calibrated-two-axis-globe",
+      generation4Closure: "home-anchor-fixed-position-control-active",
+      generation4MotionModel: "home-anchored-fixed-placement-internal-motion",
       generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
@@ -319,23 +315,9 @@
       generation4VerticalControl: "visible-latitude-disposition",
       generation4AxisDisposition: "23.5-degree-axis-frame",
       generation4CenterOrigin: "locked",
-      generation4SunMoonToggle: "active",
       generation4ZoomControl: "center-scale-only",
       generation4DragControl: "motion-only-two-axis",
 
-      generation3AxisTiltDegrees: String(MOTION.axisTiltDegrees),
-      generation3RotationDirection: "east-west-plus-north-south",
-      generation3Shadows: "active",
-      generation3Depth: "active",
-      generation3Terminator: "active",
-      generation3Atmosphere: "active",
-      generation3Telemetry: "active",
-
-      ringScaffoldStatus: "removed",
-      contextIsolationStatus: "active",
-      realmSeparationStatus: "active",
-      controlPanelActive: "true",
-      controlPanelAuthority: "globe-interaction-layer",
       earthSurface: ASSETS.earthSurface,
       earthClouds: ASSETS.earthClouds,
       renderContext: normalized,
@@ -351,7 +333,7 @@
         parentRouteAvailable: ASSETS.parentRoute,
         parentRoleAvailable: "navigation-only",
         contextReceiptMode: "demo-realm-isolated",
-        contextCaption: "GENERATION 4 · DEMO REALM · SPEED CALIBRATED"
+        contextCaption: "GENERATION 4 · DEMO REALM · HOME ANCHORED"
       });
     }
 
@@ -363,7 +345,7 @@
       demoRouteAvailable: ASSETS.globeRoute,
       demoRoleAvailable: "navigation-only",
       contextReceiptMode: "parent-realm-isolated",
-      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · SPEED CALIBRATED"
+      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · HOME ANCHORED"
     });
   }
 
@@ -417,32 +399,27 @@
     }
 
     setDataset(node, {
-      sharedInstrumentRole: "rendering-and-control-service-only",
-      sharedActiveRealmIdentity: "false",
-      crossRealmLinkType: "navigation-only",
       speedAuthority: SPEED_AUTHORITY.file,
       instrumentSpeedAuthority: "true",
       runtimeSpeedAuthority: "false",
       cssAnimationAuthority: "false",
-      placementAuthority: "layout-only",
-      motionAuthority: SPEED_AUTHORITY.file,
       placementFixed: "true",
       motionOnlyControl: "true",
-      mountCenterLocked: "true",
+      centerLocked: "true",
       dragTranslatesContainer: "false",
+      homeAnchor: "active",
+      idleAutoDrift: "locked",
       generation1RingScaffold: "removed",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
-      generation4Closure: "fixed-position-motion-only-control-active",
+      generation4Closure: "home-anchor-fixed-position-control-active",
       generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
       generation4AxisDisposition: "23.5-degree-axis-frame",
-      generation4CenterOrigin: "locked",
-      ringScaffoldStatus: "removed",
-      controlPanelActive: "true"
+      generation4CenterOrigin: "locked"
     });
   }
 
@@ -451,9 +428,9 @@
 
     enforceRealmSeparation(mount, normalized);
 
-    if (!mount || mount.dataset.realmGuardInstalled === VERSION + ":" + normalized) return;
+    if (!mount || mount.dataset.realmGuardInstalled === VERSION + ":" + REFINEMENT_VERSION + ":" + normalized) return;
 
-    mount.dataset.realmGuardInstalled = VERSION + ":" + normalized;
+    mount.dataset.realmGuardInstalled = VERSION + ":" + REFINEMENT_VERSION + ":" + normalized;
 
     let locked = false;
 
@@ -490,6 +467,20 @@
     window.setTimeout(guard, 2200);
   }
 
+  function captionForContext(context, override) {
+    if (override) return override;
+
+    return normalizeContext(context) === CONTEXTS.standalone
+      ? "GENERATION 4 · DEMO REALM · HOME ANCHORED"
+      : "GENERATION 4 · SHOWROOM PROOF REALM · HOME ANCHORED";
+  }
+
+  function linkForContext(context) {
+    return normalizeContext(context) === CONTEXTS.standalone
+      ? { href: ASSETS.parentRoute, text: "Return to Showroom" }
+      : { href: ASSETS.globeRoute, text: "Open Demo Universe Earth" };
+  }
+
   function createTelemetryNode(context) {
     const normalized = normalizeContext(context);
 
@@ -497,37 +488,22 @@
       "div",
       {
         className: "showroom-generation-3-telemetry",
-        "data-generation-4-speed-authority": "active",
-        "aria-label": "Generation 4 fixed-position motion-only telemetry receipt"
+        "data-generation-4-home-anchor": "active",
+        "aria-label": "Generation 4 home anchor fixed-position telemetry receipt"
       },
       [
         create("span", { text: "GEN 4" }),
-        create("span", { text: "speed=instrument" }),
+        create("span", { text: "home=anchored" }),
+        create("span", { text: "idle=locked" }),
         create("span", { text: "placement=fixed" }),
         create("span", { text: "motion=internal" }),
         create("span", { text: "center=locked" }),
         create("span", { text: "drag=motion-only" }),
-        create("span", { text: "zoom=center-scale" }),
         create("span", { text: "spin=release" }),
         create("span", { text: "axis=23.5°" }),
-        create("span", { text: "disk=removed" }),
         create("span", { text: "context=" + normalized })
       ]
     );
-  }
-
-  function captionForContext(context, override) {
-    if (override) return override;
-
-    return normalizeContext(context) === CONTEXTS.standalone
-      ? "GENERATION 4 · DEMO REALM · SPEED CALIBRATED"
-      : "GENERATION 4 · SHOWROOM PROOF REALM · SPEED CALIBRATED";
-  }
-
-  function linkForContext(context) {
-    return normalizeContext(context) === CONTEXTS.standalone
-      ? { href: ASSETS.parentRoute, text: "Return to Showroom" }
-      : { href: ASSETS.globeRoute, text: "Open Demo Universe Earth" };
   }
 
   function createGlobeNode(options) {
@@ -567,7 +543,7 @@
           {
             className: "showroom-generation-3-active-globe showroom-generation-4-spherical-globe",
             role: "img",
-            "data-generation-3-active-globe": "true",
+            "data-generation-4-home-anchor": "active",
             "data-generation-4-speed-authority": "active",
             "data-generation-4-inertial-release-spin": "active",
             "data-generation-4-disk-rotation": "removed",
@@ -576,8 +552,8 @@
             "data-center-locked": "true",
             "aria-label":
               context === CONTEXTS.standalone
-                ? "Demo Universe Earth Generation 4 fixed-position motion-only globe"
-                : "Showroom Generation 4 fixed-position motion-only globe"
+                ? "Demo Universe Earth Generation 4 home-anchored fixed-position globe"
+                : "Showroom Generation 4 home-anchored fixed-position globe"
           },
           [
             create("div", {
@@ -610,8 +586,9 @@
     const shell = create(
       "section",
       {
-        className: "showroom-generation-3-shell showroom-generation-4-speed-calibration-shell",
+        className: "showroom-generation-3-shell showroom-generation-4-home-anchor-shell",
         "data-active-realm": realm,
+        "data-generation-4-home-anchor": "active",
         "data-generation-4-speed-authority": "active",
         "data-generation-4-inertial-release-spin": "active",
         "data-generation-4-disk-rotation": "removed",
@@ -654,15 +631,16 @@
     return {
       context: normalizeContext(context),
       realm: realmForContext(context),
-      zoom: 1,
+      zoom: HOME_STATE.zoom,
       minZoom: 0.72,
       maxZoom: 1.62,
-      longitude: 50,
-      cloudLongitude: 88,
-      latitude: 50,
+      longitude: HOME_STATE.longitude,
+      cloudLongitude: HOME_STATE.cloudLongitude,
+      latitude: HOME_STATE.latitude,
       observerTilt: 0,
-      lightAnchor: "sun",
-      paused: false,
+      lightAnchor: HOME_STATE.lightAnchor,
+      paused: HOME_STATE.paused,
+      autoDriftEnabled: HOME_STATE.autoDriftEnabled,
       dragging: false,
       lastX: 0,
       lastY: 0,
@@ -678,6 +656,24 @@
 
   function createReadoutSpan(label, value) {
     return create("span", { text: label + "=" + value });
+  }
+
+  function resetToHome(state) {
+    state.zoom = HOME_STATE.zoom;
+    state.longitude = HOME_STATE.longitude;
+    state.cloudLongitude = HOME_STATE.cloudLongitude;
+    state.latitude = HOME_STATE.latitude;
+    state.observerTilt = 0;
+    state.lightAnchor = HOME_STATE.lightAnchor;
+    state.paused = HOME_STATE.paused;
+    state.autoDriftEnabled = HOME_STATE.autoDriftEnabled;
+    state.dragging = false;
+    state.velocityLongitude = 0;
+    state.velocityCloud = 0;
+    state.velocityLatitude = 0;
+    state.inertialSpinActive = false;
+    state.lastMoveTime = 0;
+    state.lastTime = 0;
   }
 
   function setLightAnchor(globe, state) {
@@ -741,79 +737,38 @@
         cloudLongitude.toFixed(2) + "% " + clamp(latitude - 4, 10, 90).toFixed(2) + "%";
     }
 
-    setDataset(mount, {
-      controlPanelActive: "true",
-      controlPanelAuthority: "globe-interaction-layer",
+    const receipt = {
+      placementFixed: "true",
+      motionOnlyControl: "true",
+      centerLocked: "true",
+      homeAnchor: "active",
+      idleAutoDrift: state.autoDriftEnabled ? "enabled" : "locked",
       controlZoomLevel: scale,
       controlLongitude: longitude.toFixed(2),
       controlLatitude: latitude.toFixed(2),
       controlObserverTilt: observerTilt.toFixed(2),
       controlLightAnchor: state.lightAnchor,
-      controlAutoRotationPaused: state.paused ? "true" : "false",
-      controlContext: state.context,
-      controlRealm: state.realm,
-      interactionAuthority: "globe-control-panel",
-      speedAuthority: SPEED_AUTHORITY.file,
-      placementAuthority: "layout-only",
-      motionAuthority: SPEED_AUTHORITY.file,
-      placementFixed: "true",
-      motionOnlyControl: "true",
-      mountCenterLocked: "true",
-      dragTranslatesContainer: "false",
-      dragUpdatesMotionState: "true",
-      wheelZoomScalesFromCenter: "true",
-      longitudeAutoStep: String(MOTION.longitudeAutoStep),
-      cloudAutoStep: String(MOTION.cloudAutoStep),
-      dragLongitudeFactor: String(MOTION.dragLongitudeFactor),
-      dragCloudFactor: String(MOTION.dragCloudFactor),
-      dragLatitudeFactor: String(MOTION.dragLatitudeFactor),
-      latitudeReturnFriction: String(MOTION.latitudeReturnFriction),
-      releaseSpinEnabled: String(MOTION.releaseSpinEnabled),
       releaseSpinActive: state.inertialSpinActive ? "true" : "false",
       releaseVelocityLongitude: state.velocityLongitude.toFixed(4),
       releaseVelocityLatitude: state.velocityLatitude.toFixed(4),
-      generation4MotionModel: "fixed-placement-internal-longitude-latitude-zoom-light-anchor",
-      generation4InertialReleaseSpin: "active",
-      generation4DiskRotation: "removed",
-      generation4SphericalRead: "active",
-      generation4HorizontalFriction: "calibrated",
-      generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-axis-frame",
-      generation4CenterOrigin: "locked"
-    });
-
-    setDataset(shell, {
-      controlPanelActive: "true",
-      controlZoomLevel: scale,
-      controlLongitude: longitude.toFixed(2),
-      controlLatitude: latitude.toFixed(2),
-      controlObserverTilt: observerTilt.toFixed(2),
-      controlLightAnchor: state.lightAnchor,
-      controlAutoRotationPaused: state.paused ? "true" : "false",
       speedAuthority: SPEED_AUTHORITY.file,
-      placementAuthority: "layout-only",
-      motionAuthority: SPEED_AUTHORITY.file,
-      placementFixed: "true",
-      motionOnlyControl: "true",
-      releaseSpinEnabled: String(MOTION.releaseSpinEnabled),
-      releaseSpinActive: state.inertialSpinActive ? "true" : "false",
-      generation4InertialReleaseSpin: "active",
-      generation4DiskRotation: "removed",
-      generation4SphericalRead: "active",
-      generation4HorizontalFriction: "calibrated",
-      generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-axis-frame",
-      generation4CenterOrigin: "locked"
-    });
+      generation4Closure: "home-anchor-fixed-position-control-active",
+      generation4MotionModel: "home-anchored-fixed-placement-internal-motion"
+    };
+
+    setDataset(mount, receipt);
+    setDataset(shell, receipt);
 
     if (readout) {
       readout.replaceChildren(
+        createReadoutSpan("home", "anchored"),
+        createReadoutSpan("idle", state.autoDriftEnabled ? "auto" : "locked"),
         createReadoutSpan("placement", "fixed"),
         createReadoutSpan("motion", "internal"),
         createReadoutSpan("spin", state.inertialSpinActive ? "release" : "ready"),
+        createReadoutSpan("lon", Math.round(longitude) + "%"),
         createReadoutSpan("lat", Math.round(latitude) + "%"),
-        createReadoutSpan("zoom", scale),
-        createReadoutSpan("light", state.lightAnchor)
+        createReadoutSpan("zoom", scale)
       );
     }
   }
@@ -849,9 +804,6 @@
       state.lastTime = time;
 
       if (!state.paused && !state.dragging) {
-        state.longitude = mod(state.longitude - MOTION.longitudeAutoStep * delta, 200);
-        state.cloudLongitude = mod(state.cloudLongitude - MOTION.cloudAutoStep * delta, 200);
-
         if (MOTION.releaseSpinEnabled && state.inertialSpinActive) {
           state.longitude = mod(state.longitude + state.velocityLongitude * delta, 200);
           state.cloudLongitude = mod(state.cloudLongitude + state.velocityCloud * delta, 200);
@@ -866,8 +818,9 @@
           state.velocityLatitude = dampVelocity(state.velocityLatitude, delta);
 
           updateInertialActivity(state);
-        } else if (Math.abs(state.latitude - 50) > 0.08) {
-          state.latitude += (50 - state.latitude) * MOTION.latitudeReturnFriction;
+        } else if (state.autoDriftEnabled) {
+          state.longitude = mod(state.longitude - MOTION.longitudeAutoStep * delta, 200);
+          state.cloudLongitude = mod(state.cloudLongitude - MOTION.cloudAutoStep * delta, 200);
         }
       }
 
@@ -935,24 +888,16 @@
       }),
       button("Resume", function () {
         state.paused = false;
+        state.autoDriftEnabled = false;
         state.lastTime = 0;
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       }),
+      button("Home", function () {
+        resetToHome(state);
+        applyMotionState(mount, shell, globe, surface, clouds, readout, state);
+      }),
       button("Reset", function () {
-        state.zoom = 1;
-        state.longitude = 50;
-        state.cloudLongitude = 88;
-        state.latitude = 50;
-        state.observerTilt = 0;
-        state.lightAnchor = "sun";
-        state.paused = false;
-        state.dragging = false;
-        state.velocityLongitude = 0;
-        state.velocityCloud = 0;
-        state.velocityLatitude = 0;
-        state.lastMoveTime = 0;
-        state.lastTime = 0;
-        updateInertialActivity(state);
+        resetToHome(state);
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       })
     );
@@ -1064,11 +1009,11 @@
     const runtime = window.DGBShowroomRuntime;
 
     if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
-      runtime.setGeneration3MotionStatus(status || "generation-4-fixed-position-motion-only-control-active");
+      runtime.setGeneration3MotionStatus(status || "generation-4-home-anchor-fixed-position-control-active");
     }
 
     if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
-      runtime.setActiveGlobeStatus(status || "generation-4-fixed-position-motion-only-control-active");
+      runtime.setActiveGlobeStatus(status || "generation-4-home-anchor-fixed-position-control-active");
     }
   }
 
@@ -1077,7 +1022,7 @@
       throw new Error("Showroom globe instrument requires a mount node.");
     }
 
-    ensureCalibrationStyles();
+    ensureStyles();
 
     const config = options || {};
     const context = normalizeContext(config.context);
@@ -1086,19 +1031,19 @@
     mount.replaceChildren(shell);
 
     setDataset(mount, getContextReceipts(context));
-    mount.dataset.renderStatus = "generation-4-fixed-position-motion-only-control-mounted";
-    mount.dataset.showroomGlobePlacement = "fixed-position-motion-only-control";
-    mount.dataset.generation4Closure = "fixed-position-motion-only-control-active";
-    mount.dataset.generation4InertialReleaseSpin = "active";
+    mount.dataset.renderStatus = "generation-4-home-anchor-fixed-position-control-mounted";
+    mount.dataset.showroomGlobePlacement = "home-anchor-fixed-position-control";
+    mount.dataset.generation4Closure = "home-anchor-fixed-position-control-active";
+    mount.dataset.homeAnchor = "active";
+    mount.dataset.idleAutoDrift = "locked";
     mount.dataset.placementFixed = "true";
     mount.dataset.motionOnlyControl = "true";
-    mount.dataset.mountCenterLocked = "true";
-    mount.dataset.dragTranslatesContainer = "false";
+    mount.dataset.centerLocked = "true";
 
     enforceRealmSeparation(mount, context);
     installRealmGuard(mount, context);
     ensureControlPanel(mount, shell, context);
-    notifyRuntime("generation-4-fixed-position-motion-only-control-mounted");
+    notifyRuntime("generation-4-home-anchor-fixed-position-control-mounted");
 
     return mount;
   }
@@ -1119,10 +1064,15 @@
       surfaceStatus: surface.status,
       cloudsOk: clouds.ok,
       cloudsStatus: clouds.status,
+      version: VERSION,
+      refinementVersion: REFINEMENT_VERSION,
       speedAuthority: SPEED_AUTHORITY.file,
       instrumentSpeedAuthority: true,
       runtimeSpeedAuthority: false,
       cssAnimationAuthority: false,
+      homeState: HOME_STATE,
+      homeAnchor: "active",
+      idleAutoDrift: "locked",
       longitudeAutoStep: MOTION.longitudeAutoStep,
       cloudAutoStep: MOTION.cloudAutoStep,
       dragLongitudeFactor: MOTION.dragLongitudeFactor,
@@ -1135,21 +1085,16 @@
       motionAuthority: PLACEMENT.motionAuthority,
       placementFixed: true,
       motionOnlyControl: true,
-      outerShellFixed: true,
-      axisFrameFixed: true,
-      mountCenterLocked: true,
-      visualPanelPositionLocked: true,
+      centerLocked: true,
       dragTranslatesContainer: false,
-      dragUpdatesMotionState: true,
       wheelZoomScalesFromCenter: true,
       releaseSpinInternal: true,
       generation1RingScaffold: "removed",
       generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
-      generation4: GENERATIONS.generation4,
       generation4Refinement: REFINEMENT_VERSION,
-      generation4MotionModel: "fixed-placement-internal-longitude-latitude-zoom-light-anchor",
+      generation4MotionModel: "home-anchored-fixed-placement-internal-motion",
       generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
@@ -1157,7 +1102,6 @@
       generation4VerticalControl: "visible-latitude-disposition",
       generation4AxisDisposition: "23.5-degree-axis-frame",
       generation4CenterOrigin: "locked",
-      generation4SunMoonToggle: "active",
       generation4ZoomControl: "center-scale-only",
       generation4DragControl: "motion-only-two-axis"
     };
@@ -1167,9 +1111,9 @@
     version: VERSION,
     refinementVersion: REFINEMENT_VERSION,
     assets: ASSETS,
-    generations: GENERATIONS,
     contexts: CONTEXTS,
     realms: REALMS,
+    homeState: HOME_STATE,
     motion: MOTION,
     placement: PLACEMENT,
     speedAuthority: SPEED_AUTHORITY,

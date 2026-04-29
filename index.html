@@ -3,186 +3,830 @@
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="compass-b1-baseline-generation-v1"
-  data-baseline-generation="B1"
-  data-compass-generation="B1_BASELINE"
-  data-compass-visual-state="baseline"
-  data-compass-readiness="baseline-hold"
-  data-generation-readiness="B1_BASELINE_HOLD"
-  data-generation-accepted="false"
-  data-generation-2-accepted="false"
-  data-generation-3-accepted="false"
-  data-core-experience-state="baseline-measured"
-  data-current-view-mode="flat"
-  data-tree-detail-state="held"
-  data-tree-visual-quality="not-accepted"
-  data-tree-architecture="256-scaffold-held"
-  data-tree-asset-spine="future-held"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
-  data-manor-class="house"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="compass"
-  data-render-filter="single-authority"
+  data-compass-generation="generation-2"
+  data-compass-control-surface="active"
+  data-flat-world-baseline="preserved"
+  data-tree-mode="available"
+  data-globe-mode="available"
+  data-globe-handoff="showroom-demo-universe"
+  data-visual-control-surface="active"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Compass · B1 Baseline · Rich Manor and Estate</title>
+  <title>Compass · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Compass entry for Rich Manor and Estate. Baseline Generation B1 is active. Higher generation claims are held."
+    content="Diamond Gate Bridge Compass: the Generation 2 visual control surface for Rich Manor and Estate, preserving the Flat World baseline while offering Tree and Globe handoffs."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css?v=compass-b1-baseline-generation-v1" />
-  <link rel="stylesheet" href="/assets/compass.css?v=compass-b1-baseline-generation-v1" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #02050a;
+      --bg2: #06101c;
+      --ink: #f5f7ff;
+      --soft: rgba(245, 247, 255, .72);
+      --muted: rgba(245, 247, 255, .52);
+      --faint: rgba(245, 247, 255, .28);
+      --gold: #f2c76f;
+      --gold2: #a98236;
+      --blue: #8ebcff;
+      --blue2: #1d5fa8;
+      --green: #7ed9a2;
+      --line: rgba(245, 247, 255, .13);
+      --line2: rgba(242, 199, 111, .34);
+      --panel: rgba(4, 9, 17, .78);
+      --panel2: rgba(7, 14, 25, .92);
+      --max: 1180px;
+      --radius: 34px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 75% 8%, rgba(242,199,111,.13), transparent 30%),
+        radial-gradient(ellipse at 30% 42%, rgba(67,121,207,.14), transparent 39%),
+        radial-gradient(ellipse at 50% 105%, rgba(20,94,150,.12), transparent 36%),
+        linear-gradient(180deg, #03060b 0%, #06101d 48%, #01040a 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      z-index: 0;
+      opacity: .44;
+      background:
+        radial-gradient(circle at 8% 15%, rgba(255,255,255,.44) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 18% 72%, rgba(255,255,255,.25) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 32% 36%, rgba(242,199,111,.25) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 47% 9%, rgba(255,255,255,.36) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 63% 74%, rgba(142,188,255,.28) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 76% 21%, rgba(242,199,111,.21) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 91% 62%, rgba(255,255,255,.38) 0 1px, transparent 1.8px);
+    }
+
+    body::after {
+      z-index: 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.36), transparent 24%, transparent 76%, rgba(0,0,0,.36)),
+        radial-gradient(ellipse at 50% 42%, transparent 0 46%, rgba(0,0,0,.38) 82%, rgba(0,0,0,.72) 100%);
+    }
+
+    a,
+    button {
+      color: inherit;
+      font: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 26px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 5px;
+      min-width: 220px;
+    }
+
+    .brand strong {
+      color: var(--gold);
+      font-size: clamp(.96rem, 2.5vw, 1.15rem);
+      letter-spacing: .22em;
+      line-height: 1.12;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--soft);
+      font-size: clamp(.96rem, 2.6vw, 1.14rem);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .nav a,
+    .mode-button,
+    .action-link {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 11px 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+      color: var(--ink);
+      font-weight: 850;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.026),
+        0 12px 36px rgba(0,0,0,.23);
+    }
+
+    .nav a:hover,
+    .nav a[aria-current="page"],
+    .mode-button[aria-pressed="true"],
+    .action-link.primary,
+    .action-link:hover {
+      border-color: var(--line2);
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(242,199,111,.19), transparent 70%),
+        linear-gradient(180deg, rgba(242,199,111,.15), rgba(255,255,255,.035));
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 440px);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .hero-copy,
+    .status-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(ellipse at 14% 20%, rgba(142,188,255,.11), transparent 38%),
+        radial-gradient(ellipse at 90% 4%, rgba(242,199,111,.12), transparent 34%),
+        rgba(3, 8, 15, .78);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.025),
+        0 24px 84px rgba(0,0,0,.34);
+    }
+
+    .hero-copy {
+      padding: clamp(24px, 5vw, 48px);
+      min-height: 330px;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7.4rem);
+      line-height: .85;
+      letter-spacing: -.085em;
+    }
+
+    .hero-copy p {
+      max-width: 680px;
+      margin: 20px 0 0;
+      color: var(--soft);
+      font-size: clamp(1.05rem, 2.7vw, 1.34rem);
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .status-card {
+      padding: 22px;
+      display: grid;
+      align-content: space-between;
+      min-height: 330px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .status-card::before {
+      content: "";
+      position: absolute;
+      inset: -28%;
+      opacity: .55;
+      background:
+        conic-gradient(from 0deg, transparent 0 9%, rgba(242,199,111,.10) 10% 12%, transparent 13% 24%, rgba(142,188,255,.10) 25% 27%, transparent 28% 49%, rgba(242,199,111,.10) 50% 52%, transparent 53% 74%, rgba(142,188,255,.10) 75% 77%, transparent 78% 100%);
+      animation: slowTurn 52s linear infinite;
+    }
+
+    .status-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .readout div {
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding: 14px;
+      background: rgba(0,0,0,.22);
+    }
+
+    .readout strong {
+      display: block;
+      font-size: clamp(1.65rem, 4vw, 2.55rem);
+      line-height: 1;
+      letter-spacing: -.05em;
+    }
+
+    .readout span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .status-card p {
+      margin: 18px 0 0;
+      color: var(--soft);
+      line-height: 1.5;
+    }
+
+    .control-surface {
+      position: relative;
+      border: 1px solid rgba(142,188,255,.16);
+      border-radius: 38px;
+      min-height: 620px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 58%, rgba(36, 122, 202, .18), transparent 26%),
+        radial-gradient(ellipse at 50% 50%, rgba(142,188,255,.08), transparent 46%),
+        linear-gradient(180deg, rgba(4,9,17,.92), rgba(2,6,12,.96));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.03),
+        inset 0 0 84px rgba(49,123,198,.12),
+        0 28px 100px rgba(0,0,0,.36);
+    }
+
+    .control-surface::before,
+    .control-surface::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .control-surface::before {
+      inset: 5%;
+      border: 1px solid rgba(242,199,111,.17);
+      border-radius: 34px;
+      background:
+        linear-gradient(90deg, transparent 49.8%, rgba(242,199,111,.12) 50%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(142,188,255,.10) 50%, transparent 50.2%),
+        radial-gradient(circle at 50% 50%, transparent 0 26%, rgba(242,199,111,.11) 26.2% 26.6%, transparent 27% 39%, rgba(142,188,255,.11) 39.2% 39.6%, transparent 40%);
+      opacity: .68;
+    }
+
+    .control-surface::after {
+      inset: -18%;
+      background:
+        conic-gradient(from 45deg, transparent 0 10%, rgba(242,199,111,.09) 11% 12%, transparent 13% 35%, rgba(142,188,255,.09) 36% 37%, transparent 38% 60%, rgba(242,199,111,.09) 61% 62%, transparent 63% 85%, rgba(142,188,255,.09) 86% 87%, transparent 88% 100%);
+      opacity: .48;
+      animation: slowTurnReverse 78s linear infinite;
+    }
+
+    @keyframes slowTurn {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slowTurnReverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    .mode-controls {
+      position: relative;
+      z-index: 3;
+      width: fit-content;
+      max-width: calc(100% - 24px);
+      margin: 26px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid rgba(242,199,111,.24);
+      border-radius: 999px;
+      background: rgba(2, 6, 12, .64);
+      backdrop-filter: blur(14px);
+    }
+
+    .mode-button {
+      color: var(--soft);
+    }
+
+    .mode-button[aria-pressed="true"] {
+      color: var(--ink);
+    }
+
+    .surface-grid {
+      position: relative;
+      z-index: 2;
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      padding: 34px clamp(18px, 4vw, 44px) 44px;
+    }
+
+    .mode-panel {
+      display: none;
+      width: min(900px, 100%);
+      min-height: 410px;
+      align-items: center;
+      gap: clamp(20px, 4vw, 42px);
+      grid-template-columns: minmax(240px, 380px) minmax(0, 1fr);
+    }
+
+    .mode-panel[data-active="true"] {
+      display: grid;
+    }
+
+    .compass-orb {
+      position: relative;
+      width: min(72vw, 360px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,.12) 0 7%, transparent 8%),
+        radial-gradient(circle at 50% 50%, rgba(142,188,255,.10), transparent 44%),
+        radial-gradient(circle, rgba(0,0,0,.35), rgba(0,0,0,.02) 55%, rgba(0,0,0,.38));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.07),
+        inset 0 0 72px rgba(142,188,255,.10),
+        0 0 60px rgba(79,141,224,.16);
+      isolation: isolate;
+    }
+
+    .compass-orb::before,
+    .compass-orb::after {
+      content: "";
+      position: absolute;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .compass-orb::before {
+      inset: 8%;
+      border: 1px solid rgba(242,199,111,.26);
+      background:
+        conic-gradient(from 0deg, rgba(242,199,111,.35) 0 1deg, transparent 2deg 89deg, rgba(142,188,255,.22) 90deg 91deg, transparent 92deg 179deg, rgba(242,199,111,.35) 180deg 181deg, transparent 182deg 269deg, rgba(142,188,255,.22) 270deg 271deg, transparent 272deg 360deg);
+      opacity: .75;
+    }
+
+    .compass-orb::after {
+      inset: 21%;
+      border: 1px solid rgba(142,188,255,.22);
+      box-shadow:
+        0 0 42px rgba(142,188,255,.18),
+        inset 0 0 34px rgba(242,199,111,.06);
+    }
+
+    .diamond-core {
+      position: relative;
+      z-index: 1;
+      width: 34%;
+      aspect-ratio: 1;
+      transform: rotate(45deg);
+      border: 1px solid rgba(242,199,111,.50);
+      background:
+        linear-gradient(135deg, rgba(242,199,111,.18), rgba(142,188,255,.10)),
+        rgba(2,6,12,.55);
+      box-shadow:
+        inset 0 0 24px rgba(255,255,255,.06),
+        0 0 40px rgba(242,199,111,.14);
+    }
+
+    .diamond-core span {
+      position: absolute;
+      inset: 20%;
+      border: 1px solid rgba(142,188,255,.36);
+      display: block;
+    }
+
+    .globe-orb .diamond-core {
+      border-radius: 50%;
+      transform: none;
+      width: 48%;
+      background:
+        radial-gradient(circle at 36% 32%, rgba(255,255,255,.36), transparent 15%),
+        radial-gradient(circle at 55% 48%, rgba(23,96,178,.36), transparent 42%),
+        radial-gradient(circle at 42% 62%, rgba(48,126,82,.28), transparent 32%),
+        radial-gradient(circle, #0b2d59, #06111f 70%, #02050a);
+      box-shadow:
+        inset -18px 8px 38px rgba(0,0,0,.55),
+        0 0 46px rgba(92,156,232,.18);
+    }
+
+    .tree-orb .diamond-core {
+      width: 42%;
+      background:
+        linear-gradient(135deg, rgba(126,217,162,.14), rgba(242,199,111,.12)),
+        rgba(2,6,12,.60);
+    }
+
+    .tree-orb .diamond-core::before,
+    .tree-orb .diamond-core::after {
+      content: "";
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 150%;
+      height: 1px;
+      background: rgba(126,217,162,.34);
+      transform-origin: left center;
+    }
+
+    .tree-orb .diamond-core::before {
+      transform: rotate(-45deg) translateX(-50%);
+    }
+
+    .tree-orb .diamond-core::after {
+      transform: rotate(45deg) translateX(-50%);
+    }
+
+    .panel-copy {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 28px;
+      padding: clamp(20px, 4vw, 32px);
+      background: rgba(0,0,0,.25);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.025);
+    }
+
+    .panel-copy h2 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 4.6rem);
+      line-height: .9;
+      letter-spacing: -.07em;
+    }
+
+    .panel-copy p {
+      margin: 16px 0 0;
+      color: var(--soft);
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+      line-height: 1.52;
+    }
+
+    .panel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .panel-tags span {
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--muted);
+      background: rgba(255,255,255,.035);
+      font-size: .86rem;
+      font-weight: 750;
+    }
+
+    .panel-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .house-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .house-strip a {
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px;
+      padding: 13px;
+      background: rgba(0,0,0,.22);
+      min-height: 88px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .house-strip strong {
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .house-strip span {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.25;
+    }
+
+    .audit-source,
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 920px) {
+      .topbar,
+      .hero {
+        display: grid;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .mode-panel {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: left;
+      }
+
+      .panel-copy {
+        width: 100%;
+      }
+
+      .house-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100vw - 20px, var(--max));
+        padding-top: 22px;
+      }
+
+      .nav a,
+      .mode-button,
+      .action-link {
+        padding: 10px 12px;
+      }
+
+      .hero-copy,
+      .status-card {
+        border-radius: 28px;
+      }
+
+      .control-surface {
+        min-height: 610px;
+        border-radius: 30px;
+      }
+
+      .surface-grid {
+        min-height: 510px;
+        padding: 24px 16px 34px;
+      }
+
+      .mode-controls {
+        margin-top: 18px;
+      }
+
+      .compass-orb {
+        width: min(76vw, 300px);
+      }
+
+      .house-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin house-class compass-page"
-  data-page-id="compass"
-  data-page="compass"
-  data-active-mode="flat"
-  data-current-view-mode="flat"
-  data-baseline-generation="B1"
-  data-compass-generation="B1_BASELINE"
-  data-compass-visual-state="baseline"
-  data-compass-readiness="baseline-hold"
-  data-generation-readiness="B1_BASELINE_HOLD"
-  data-generation-accepted="false"
-  data-generation-2-accepted="false"
-  data-generation-3-accepted="false"
-  data-core-experience-state="baseline-measured"
-  data-runtime-status="waiting"
-  data-routes-changed="false"
-  data-gauges-logic-touched="false"
-  data-fake-health-claim="false"
-  data-tree-detail-state="held"
-  data-tree-visual-quality="not-accepted"
-  data-tree-architecture="256-scaffold-held"
-  data-tree-asset-spine="future-held"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="compass"
-  data-render-filter="single-authority"
->
-  <header class="site-topbar">
-    <a class="site-brand" href="/" aria-label="Diamond Gate Bridge Compass">
-      <strong>Diamond Gate Bridge</strong>
-      <span>Rich Manor and Estate · Compass</span>
-    </a>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate · Compass</span>
+      </a>
 
-    <nav class="site-nav" aria-label="Primary house routes">
-      <a href="/" aria-current="page">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
-
-  <main
-    id="compass-root"
-    class="index-shell manor-skin house-class"
-    data-page-id="compass"
-    data-page="compass"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-manor-class="house"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="house"
-    data-house-part="compass"
-    data-baseline-generation="B1"
-    data-compass-generation="B1_BASELINE"
-    data-compass-visual-state="baseline"
-    data-compass-readiness="baseline-hold"
-    data-generation-readiness="B1_BASELINE_HOLD"
-    data-generation-accepted="false"
-    data-generation-2-accepted="false"
-    data-generation-3-accepted="false"
-    data-core-experience-state="baseline-measured"
-    data-current-view-mode="flat"
-    data-tree-detail-state="held"
-    data-tree-visual-quality="not-accepted"
-    data-tree-architecture="256-scaffold-held"
-    data-tree-asset-spine="future-held"
-    data-render-filter="single-authority"
-  >
-    <section class="compass-stage" aria-labelledby="H1_COMPASS">
-      <h1 id="H1_COMPASS" class="sr-only">Compass</h1>
-
-      <article class="compass-badge" aria-label="Compass baseline state">
-        <p class="kicker">H1 · Compass · B1</p>
-        <strong>Baseline Generation</strong>
-        <span>Marker health may pass. Visual generation is held at B1 baseline.</span>
-      </article>
-
-      <nav class="mode-switcher" aria-label="Compass mode selector">
-        <button class="mode-button is-active" type="button" data-mode="flat" aria-selected="true">
-          Flat
-        </button>
-        <button class="mode-button" type="button" data-mode="round" aria-selected="false">
-          Tree
-        </button>
-        <button class="mode-button" type="button" data-mode="globe" aria-selected="false">
-          Globe
-        </button>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/" aria-current="page">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
+    </header>
 
-      <div
-        id="index-render-root"
-        class="scene-mount"
-        aria-live="polite"
-        data-render-root="index"
-        data-render-status="waiting"
-        data-render-filter="single-authority"
-        data-active-mode="flat"
-        data-baseline-generation="B1"
-        data-compass-generation="B1_BASELINE"
-        data-tree-detail-state="held"
-        data-tree-visual-quality="not-accepted"
-        data-tree-asset-spine="future-held"
-      >
-        <noscript>
-          <article class="fallback-card">
-            <p class="kicker">Compass fallback</p>
-            <h2>B1 Baseline</h2>
-            <p>JavaScript is required for the rendered Compass scene. The house routes remain available above.</p>
-          </article>
-        </noscript>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker">H1 · Compass · Generation 2 Control Surface</p>
+        <h1>Compass.</h1>
+        <p>
+          The Compass is the public control surface for Rich Manor and Estate. It preserves the stable Flat World map,
+          opens the Tree expansion lane, and hands the Globe lane to the Showroom’s Demo Universe inspection route.
+        </p>
+
+        <div class="hero-actions">
+          <a class="action-link primary" href="/showroom/globe/">Inspect Globe</a>
+          <a class="action-link" href="/showroom/">Enter Showroom</a>
+          <a class="action-link" href="/gauges/">Read Gauges</a>
+        </div>
       </div>
 
-      <aside class="compass-doll-panel" aria-label="Compressed Compass details">
-        <details open>
-          <summary>B1 State</summary>
-          <p>Compass is reset to Baseline Generation B1. Higher generation claims are held.</p>
-        </details>
-        <details>
-          <summary>Tree Detail</summary>
-          <p>Tree detail is held. Future tree graphics belong in a separate asset package, not the Compass shell.</p>
-        </details>
-        <details>
-          <summary>Rules</summary>
-          <p>Route health is not visual generation health. Generation acceptance requires explicit acceptance later.</p>
-        </details>
+      <aside class="status-card" aria-label="Compass status">
+        <p class="kicker">Live orientation</p>
+        <div class="readout">
+          <div>
+            <strong>Flat</strong>
+            <span>baseline preserved</span>
+          </div>
+          <div>
+            <strong>Tree</strong>
+            <span>available</span>
+          </div>
+          <div>
+            <strong>Globe</strong>
+            <span>handoff ready</span>
+          </div>
+          <div>
+            <strong>G2</strong>
+            <span>visual surface</span>
+          </div>
+        </div>
+        <p>
+          This page is a control room, not a finished meta-globe. Generation 2 makes the surface visible,
+          navigable, and appreciable without claiming Generation 3 completion.
+        </p>
       </aside>
+    </section>
 
-      <div class="scene-proof-rail" aria-label="Baseline proof and status">
-        <span>B1 <b>Baseline</b></span>
-        <span>Generation <b>Held</b></span>
-        <span>Tree detail <b>Held</b></span>
-        <span>Accepted <b>False</b></span>
-        <a href="/gauges/">Run Gauges</a>
+    <section class="control-surface" aria-label="Compass control surface">
+      <div class="mode-controls" role="group" aria-label="Compass mode selector">
+        <button class="mode-button" type="button" data-mode-button="flat" aria-pressed="true">Flat</button>
+        <button class="mode-button" type="button" data-mode-button="tree" aria-pressed="false">Tree</button>
+        <button class="mode-button" type="button" data-mode-button="globe" aria-pressed="false">Globe</button>
+      </div>
+
+      <div class="surface-grid">
+        <article class="mode-panel" data-mode-panel="flat" data-active="true">
+          <div class="compass-orb flat-orb" aria-hidden="true">
+            <div class="diamond-core"><span></span></div>
+          </div>
+
+          <div class="panel-copy">
+            <p class="kicker">Flat World · verified map</p>
+            <h2>Stable estate map.</h2>
+            <p>
+              Flat mode is the current verified website baseline: clear house routes, product chambers,
+              planetary constructs, Showroom access, and Gauges verification.
+            </p>
+
+            <div class="panel-tags">
+              <span>route map</span>
+              <span>house skeleton</span>
+              <span>products</span>
+              <span>planets</span>
+            </div>
+
+            <div class="house-strip" aria-label="House route cards">
+              <a href="/"><strong>Compass</strong><span>orientation</span></a>
+              <a href="/door/"><strong>Door</strong><span>entry</span></a>
+              <a href="/home/"><strong>Home</strong><span>residence</span></a>
+              <a href="/products/"><strong>Products</strong><span>source wing</span></a>
+              <a href="/showroom/"><strong>Showroom</strong><span>display</span></a>
+              <a href="/gauges/"><strong>Gauges</strong><span>measurement</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="mode-panel" data-mode-panel="tree" data-active="false">
+          <div class="compass-orb tree-orb" aria-hidden="true">
+            <div class="diamond-core"><span></span></div>
+          </div>
+
+          <div class="panel-copy">
+            <p class="kicker">Tree · 256-state expansion</p>
+            <h2>Structure before spectacle.</h2>
+            <p>
+              Tree mode is the controlled expansion lane. It points toward the 256-state living structure
+              without replacing the stable Flat World baseline.
+            </p>
+
+            <div class="panel-tags">
+              <span>256 lattice</span>
+              <span>canopies</span>
+              <span>branches</span>
+              <span>leaves</span>
+            </div>
+
+            <div class="panel-actions">
+              <a class="action-link primary" href="/home/">Return Home</a>
+              <a class="action-link" href="/gauges/">Check readiness</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="mode-panel" data-mode-panel="globe" data-active="false">
+          <div class="compass-orb globe-orb" aria-hidden="true">
+            <div class="diamond-core"><span></span></div>
+          </div>
+
+          <div class="panel-copy">
+            <p class="kicker">Globe · Showroom handoff</p>
+            <h2>Inspect the universe.</h2>
+            <p>
+              Globe mode is a handoff surface. The full visual truth lives in the Showroom inspection route,
+              where Earth, Sun, Moon, shadow, readability, and color can be judged directly.
+            </p>
+
+            <div class="panel-tags">
+              <span>Demo Universe</span>
+              <span>Orbital Earth</span>
+              <span>inspection route</span>
+              <span>Gauges-linked</span>
+            </div>
+
+            <div class="panel-actions">
+              <a class="action-link primary" href="/showroom/globe/">Inspect Globe</a>
+              <a class="action-link" href="/showroom/">Showroom</a>
+              <a class="action-link" href="/gauges/">Read Gauges</a>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -192,36 +836,53 @@
       <a href="/home/">Home</a>
       <a href="/products/">Products</a>
       <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Demo Universe Earth</a>
       <a href="/gauges/">Gauges</a>
 
       <span>route-exists</span>
-      <span>manor-skin</span>
-      <span>house-class</span>
       <span>estate=rich-manor-and-estate</span>
+      <span>manor-skin=active</span>
       <span>house-field=true</span>
       <span>gauges-truth=live-authority</span>
       <span>construct-class=house</span>
       <span>house-part=compass</span>
       <span>H1_COMPASS</span>
-      <span>baseline-generation=B1</span>
-      <span>compass-generation=B1_BASELINE</span>
-      <span>compass-visual-state=baseline</span>
-      <span>compass-readiness=baseline-hold</span>
-      <span>generation-readiness=B1_BASELINE_HOLD</span>
-      <span>generation-accepted=false</span>
-      <span>generation-2-accepted=false</span>
-      <span>generation-3-accepted=false</span>
-      <span>tree-detail-state=held</span>
-      <span>tree-visual-quality=not-accepted</span>
-      <span>tree-architecture=256-scaffold-held</span>
-      <span>tree-asset-spine=future-held</span>
-      <span>render-filter=single-authority</span>
-      <span>COMPASS_B1_BASELINE_GENERATION_REWRITE_TNT_v1</span>
+      <span>compass-generation=generation-2</span>
+      <span>compass-control-surface=active</span>
+      <span>flat-world-baseline=preserved</span>
+      <span>tree-mode=available</span>
+      <span>globe-mode=available</span>
+      <span>globe-handoff=showroom-demo-universe</span>
+      <span>visual-control-surface=active</span>
+      <span>COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1</span>
     </section>
   </main>
 
-  <script src="/index.tree.js?v=tree-of-life-256-structure-v1" defer></script>
-  <script src="/index.render.js?v=compass-b1-baseline-generation-v1" defer></script>
-  <script src="/index.runtime.js?v=compass-b1-baseline-generation-v1" defer></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-mode-button]"));
+      var panels = Array.prototype.slice.call(document.querySelectorAll("[data-mode-panel]"));
+
+      function setMode(mode) {
+        buttons.forEach(function (button) {
+          var active = button.getAttribute("data-mode-button") === mode;
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        panels.forEach(function (panel) {
+          var active = panel.getAttribute("data-mode-panel") === mode;
+          panel.setAttribute("data-active", active ? "true" : "false");
+        });
+      }
+
+      buttons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          setMode(button.getAttribute("data-mode-button"));
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

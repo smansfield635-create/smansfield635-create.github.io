@@ -6,86 +6,183 @@
   data-manor-skin="active"
   data-construct-class="standalone-globe"
   data-route="/showroom/globe/"
-  data-generation="demo-universe-earth-generation-3-standalone-consumer-congruence-v1"
+  data-generation="demo-universe-earth-demo-realm-generation-4-closure-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Universe Earth · Showroom · Diamond Gate Bridge</title>
+  <title>Demo Universe Earth · Demo Realm · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Standalone Demo Universe Earth route consuming the canonical Generation 3 Showroom globe asset instrument with axis rotation, runtime motion, shadow depth, and visual clarity refinement active."
+    content="Demo Universe Earth is the standalone demo realm for the Showroom globe. It uses the shared globe rendering service without inheriting the parent Showroom proof identity."
   />
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-3-visual-clarity-minimum-refinement-v1" />
+
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-4-route-alignment-v1" />
 </head>
 
-<body class="showroom-globe-route">
+<body
+  class="showroom-globe-route"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-active-realm="demo-universe-earth-demo-realm"
+  data-active-route-role="demo-universe-earth"
+  data-cross-realm-link-type="navigation-only"
+>
   <a class="skip-link" href="#globe-main">Skip to Demo Universe Earth</a>
 
   <div
     id="showroom-root"
     class="showroom-shell"
     data-globe-route="standalone"
-    data-generation-2-active-globe="preserved"
-    data-generation-3-axis-rotation-depth="active"
-    data-generation-3-runtime-motion="active"
-    data-generation-3-visual-clarity-refinement="active"
-    data-generation-3-visual-truth="pending-user-confirmation"
+    data-active-realm="demo-universe-earth-demo-realm"
+    data-demo-realm="demo-universe-earth-demo-realm"
+    data-active-route-role="demo-universe-earth"
+    data-shared-instrument-role="rendering-and-control-service-only"
+    data-shared-active-realm-identity="false"
+    data-cross-realm-link-type="navigation-only"
+    data-parent-route-available="/showroom/"
+    data-parent-role-available="navigation-only"
+    data-context-receipt-mode="demo-realm-isolated"
+    data-generation-1-ring-scaffold="removed"
+    data-generation-2-receipt-only="true"
+    data-generation-2-visual-class-emission="removed"
+    data-generation-3-realm-separation="active"
+    data-generation-4-closure="route-html-aligned"
+    data-generation-4-motion-read="pending-consumer-and-sphere-closeout"
   >
     <header class="showroom-header">
-      <p class="eyebrow">Demo Universe Earth · Standalone Globe Route</p>
+      <p class="eyebrow">Demo Universe Earth · Demo Realm</p>
       <h1>Demo Universe Earth</h1>
       <p class="showroom-lede">
-        This route owns the standalone Earth globe surface. It consumes the same
-        Generation 3 asset instrument as the parent Showroom page while preserving
-        axis rotation, runtime motion, shadow depth, and visual clarity refinement.
+        This route is the demo-only standalone realm. It uses the shared globe rendering and control
+        service without carrying the parent Showroom proof identity as an active role.
       </p>
 
       <nav class="site-nav nav-links route-rail" aria-label="Demo Universe route rail">
-        <a href="/showroom/">Return to Showroom</a>
+        <a href="/showroom/" data-cross-realm-link-type="navigation-only">Return to Showroom</a>
         <a href="/">Compass</a>
         <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="globe-main" class="showroom-main">
-      <section class="visual-panel" aria-label="Demo Universe Earth Generation 3 axis rotation active globe">
-        <canvas id="showroom-canvas" aria-hidden="true"></canvas>
+    <main id="globe-main" class="showroom-main" data-active-realm="demo-universe-earth-demo-realm">
+      <section class="visual-panel" aria-label="Demo Universe Earth Generation 4 globe demo surface">
         <div
           id="showroom-globe-mount"
           class="showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
           data-showroom-globe-mount="true"
           data-render-context="standalone"
-          data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-          data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-          data-generation-2-active-globe="preserved"
-          data-generation-3-axis-rotation-depth="mount-ready"
-          data-generation-3-runtime-motion="mount-ready"
-          data-generation-3-visual-clarity-refinement="active"
-          data-generation-3-visual-truth="pending-user-confirmation"
-          aria-label="Demo Universe Earth Generation 3 axis rotation and shadow depth globe"
-        ></div>
+          data-active-realm="demo-universe-earth-demo-realm"
+          data-demo-realm="demo-universe-earth-demo-realm"
+          data-active-route-role="demo-universe-earth"
+          data-shared-instrument-role="rendering-and-control-service-only"
+          data-shared-active-realm-identity="false"
+          data-cross-realm-link-type="navigation-only"
+          data-parent-route-available="/showroom/"
+          data-parent-role-available="navigation-only"
+          data-context-receipt-mode="demo-realm-isolated"
+          data-generation-4-closure="route-html-aligned"
+        >
+          <noscript>Demo Universe Earth requires JavaScript.</noscript>
+        </div>
       </section>
 
-      <section class="showroom-receipts">
+      <section class="showroom-receipts" aria-label="Demo Universe Earth receipts">
         <h2>Receipts</h2>
         <ul>
           <li>ROUTE=/showroom/globe/</li>
-          <li>PARENT_ROUTE=/showroom/</li>
-          <li>GENERATION_2_STANDALONE_GLOBE_PRESERVED</li>
-          <li>GENERATION_3_AXIS_ROTATION_DEPTH_ACTIVE</li>
-          <li>GENERATION_3_RUNTIME_MOTION_ACTIVE</li>
-          <li>GENERATION_3_VISUAL_CLARITY_REFINEMENT_ACTIVE</li>
-          <li>GENERATION_3_VISUAL_TRUTH_PENDING_USER_CONFIRMATION</li>
-          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-axis-rotation-depth-v1</li>
-          <li>SHOWROOM_GENERATION_3_PARENT_AND_STANDALONE_CONSUMER_CONGRUENCE_TNT_v1</li>
+          <li>ACTIVE_REALM=demo-universe-earth-demo-realm</li>
+          <li>ACTIVE_ROUTE_ROLE=demo-universe-earth</li>
+          <li>PARENT_ROUTE_AVAILABLE=/showroom/</li>
+          <li>PARENT_ROLE_AVAILABLE=navigation-only</li>
+          <li>CROSS_REALM_LINK_TYPE=navigation-only</li>
+          <li>SHARED_INSTRUMENT_ROLE=rendering-and-control-service-only</li>
+          <li>SHARED_ACTIVE_REALM_IDENTITY=false</li>
+          <li>GENERATION_1_RING_SCAFFOLD_REMOVED</li>
+          <li>GENERATION_2_RECEIPT_ONLY</li>
+          <li>GENERATION_2_VISUAL_CLASS_EMISSION_REMOVED</li>
+          <li>GENERATION_3_REALM_SEPARATION_ACTIVE</li>
+          <li>GENERATION_4_ROUTE_HTML_ALIGNED</li>
+          <li>GENERATION_4_MOTION_READ_PENDING_SPHERE_CLOSEOUT</li>
+          <li>CSS=/showroom/showroom.css?v=showroom-generation-4-route-alignment-v1</li>
+          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-realm-separated-control-instrument-v1</li>
+          <li>RUNTIME=/showroom/runtime.js?v=showroom-generation-3-runtime-status-contract-cleanup-v1</li>
+          <li>DEMO_UNIVERSE_EARTH_DEMO_REALM_ROUTE_HTML_ALIGNMENT_TNT_v1</li>
         </ul>
       </section>
     </main>
   </div>
 
-  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-3-axis-rotation-depth-v1" defer></script>
-  <script src="/showroom/globe/index.js?v=showroom-generation-3-standalone-consumer-congruence-v1" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-3-realm-separated-control-instrument-v1" defer></script>
+  <script src="/showroom/runtime.js?v=showroom-generation-3-runtime-status-contract-cleanup-v1" defer></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const VERSION = "demo-universe-earth-demo-realm-route-html-alignment-v1";
+      const MOUNT_ID = "showroom-globe-mount";
+
+      function writeDataset(node, values) {
+        if (!node) return;
+
+        Object.entries(values || {}).forEach(function (entry) {
+          node.dataset[entry[0]] = String(entry[1]);
+        });
+      }
+
+      function demoRealmReceipts() {
+        return {
+          demoUniverseRouteHtml: VERSION,
+          activeRealm: "demo-universe-earth-demo-realm",
+          demoRealm: "demo-universe-earth-demo-realm",
+          activeRouteRole: "demo-universe-earth",
+          sharedInstrumentRole: "rendering-and-control-service-only",
+          sharedActiveRealmIdentity: "false",
+          crossRealmLinkType: "navigation-only",
+          parentRouteAvailable: "/showroom/",
+          parentRoleAvailable: "navigation-only",
+          contextReceiptMode: "demo-realm-isolated",
+          generation1RingScaffold: "removed",
+          generation2ReceiptOnly: "true",
+          generation2VisualClassEmission: "removed",
+          generation3RealmSeparation: "active",
+          generation4Closure: "route-html-aligned",
+          generation4MotionRead: "pending-consumer-and-sphere-closeout"
+        };
+      }
+
+      function renderDemoGlobe() {
+        const mount = document.getElementById(MOUNT_ID);
+        const instrument = window.DGBShowroomGlobeInstrument;
+
+        [
+          document.getElementById("showroom-root"),
+          document.getElementById("globe-main"),
+          mount
+        ].forEach(function (node) {
+          writeDataset(node, demoRealmReceipts());
+        });
+
+        if (mount && instrument && typeof instrument.renderGlobe === "function") {
+          instrument.renderGlobe(mount, {
+            context: "standalone",
+            caption: "GENERATION 4 · DEMO REALM · EARTH CONTROL ACTIVE"
+          });
+        }
+
+        if (window.DGBShowroomRuntime && typeof window.DGBShowroomRuntime.start === "function") {
+          window.DGBShowroomRuntime.start();
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", renderDemoGlobe, { once: true });
+      } else {
+        renderDemoGlobe();
+      }
+    })();
+  </script>
 </body>
 </html>

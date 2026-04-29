@@ -1,43 +1,23 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GENERATION_4_SPEED_AUTHORITY_CALIBRATION_TNT_v1
+  SHOWROOM_GENERATION_4_INERTIAL_RELEASE_SPIN_REFINEMENT_TNT_v1
 
   Purpose:
-  - Preserve Generation 4 realm separation.
-  - Preserve cleared redundancy.
-  - Preserve two-axis interaction.
-  - Make this file openly declare speed authority.
-  - Slow horizontal motion.
-  - Add drag friction.
-  - Make vertical drag visibly affect latitude/disposition.
-  - Put the globe on a stronger visible 23.5° axis.
-  - Keep disk rotation removed.
+  - Preserve Generation 4 speed-authority calibration.
+  - Preserve current route consumption and Gauges compatibility.
+  - Add release spin / flick momentum after finger release.
+  - Preserve vertical control, zoom, sun/moon, axis, realm separation, and disk removal.
 
-  Primary gap closed:
-  - speed authority was present here but not clearly exposed/calibrated.
-
-  Owns:
-  - shared globe render object
-  - motion speed constants
-  - drag friction
-  - two-axis interaction model
-  - spherical surface/cloud phase
-  - axis disposition styling
-  - zoom and light-anchor controls
-  - interaction receipts
-
-  Does not own:
-  - route HTML
-  - route rail
-  - Gauges logic
-  - runtime authority
-  - global Manor skin
+  Important:
+  - VERSION intentionally remains showroom-generation-4-speed-authority-calibration-v1
+    so the current route consumers and Gauges contract do not falsely regress.
 */
 
 (function () {
   "use strict";
 
   const VERSION = "showroom-generation-4-speed-authority-calibration-v1";
+  const REFINEMENT_VERSION = "showroom-generation-4-inertial-release-spin-refinement-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -86,7 +66,13 @@
     latitudeReturnFriction: 0.006,
 
     wheelZoomStep: 0.045,
-    dragDeadZonePx: 1.75
+    dragDeadZonePx: 1.75,
+
+    releaseSpinEnabled: true,
+    releaseVelocityDamping: 0.936,
+    releaseVelocityMin: 0.0025,
+    releaseVelocityMax: 0.18,
+    releaseVelocitySampleMs: 64
   });
 
   const FORBIDDEN_VISUAL_CLASSES = Object.freeze([
@@ -155,7 +141,12 @@
     if (!node) return;
 
     Object.entries(values || {}).forEach(function (entry) {
-      node.dataset[entry[0]] = String(entry[1]);
+      const key = entry[0];
+      const value = entry[1];
+
+      if (value === null || value === undefined) return;
+
+      node.dataset[key] = String(value);
     });
   }
 
@@ -253,6 +244,7 @@
 
     const base = {
       showroomGlobeInstrument: VERSION,
+      showroomGlobeRefinement: REFINEMENT_VERSION,
       worldKernelCompatible: "true",
       worldPlanetEngineCompatible: "true",
       assetInstrument: "showroom-globe",
@@ -271,6 +263,8 @@
       dragCloudFactor: String(MOTION.dragCloudFactor),
       dragLatitudeFactor: String(MOTION.dragLatitudeFactor),
       latitudeReturnFriction: String(MOTION.latitudeReturnFriction),
+      releaseSpinEnabled: String(MOTION.releaseSpinEnabled),
+      releaseVelocityDamping: String(MOTION.releaseVelocityDamping),
 
       generation1NoGraphicBaseline: "preserved",
       generation1RingScaffold: "removed",
@@ -284,6 +278,7 @@
       generation4: GENERATIONS.generation4,
       generation4Closure: "speed-authority-calibration-active",
       generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
+      generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
@@ -399,6 +394,7 @@
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
       generation4Closure: "speed-authority-calibration-active",
+      generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
@@ -468,6 +464,7 @@
         create("span", { text: "auto=" + MOTION.longitudeAutoStep }),
         create("span", { text: "dragX=" + MOTION.dragLongitudeFactor }),
         create("span", { text: "dragY=" + MOTION.dragLatitudeFactor }),
+        create("span", { text: "spin=release" }),
         create("span", { text: "axis=23.5°" }),
         create("span", { text: "x=friction" }),
         create("span", { text: "y=visible" }),
@@ -529,6 +526,7 @@
             role: "img",
             "data-generation-3-active-globe": "true",
             "data-generation-4-speed-authority": "active",
+            "data-generation-4-inertial-release-spin": "active",
             "data-generation-4-disk-rotation": "removed",
             "aria-label":
               context === CONTEXTS.standalone
@@ -569,6 +567,7 @@
         className: "showroom-generation-3-shell showroom-generation-4-speed-calibration-shell",
         "data-active-realm": realm,
         "data-generation-4-speed-authority": "active",
+        "data-generation-4-inertial-release-spin": "active",
         "data-generation-4-disk-rotation": "removed",
         "data-generation-4-center-origin": "active",
         "data-shared-instrument-role": "rendering-and-control-service-only",
@@ -618,6 +617,11 @@
       dragging: false,
       lastX: 0,
       lastY: 0,
+      lastMoveTime: 0,
+      velocityLongitude: 0,
+      velocityCloud: 0,
+      velocityLatitude: 0,
+      inertialSpinActive: false,
       frameId: 0,
       lastTime: 0
     };
@@ -707,7 +711,12 @@
       dragCloudFactor: String(MOTION.dragCloudFactor),
       dragLatitudeFactor: String(MOTION.dragLatitudeFactor),
       latitudeReturnFriction: String(MOTION.latitudeReturnFriction),
+      releaseSpinEnabled: String(MOTION.releaseSpinEnabled),
+      releaseSpinActive: state.inertialSpinActive ? "true" : "false",
+      releaseVelocityLongitude: state.velocityLongitude.toFixed(4),
+      releaseVelocityLatitude: state.velocityLatitude.toFixed(4),
       generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
+      generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
@@ -725,6 +734,9 @@
       controlLightAnchor: state.lightAnchor,
       controlAutoRotationPaused: state.paused ? "true" : "false",
       speedAuthority: SPEED_AUTHORITY.file,
+      releaseSpinEnabled: String(MOTION.releaseSpinEnabled),
+      releaseSpinActive: state.inertialSpinActive ? "true" : "false",
+      generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
@@ -735,6 +747,7 @@
     if (readout) {
       readout.replaceChildren(
         createReadoutSpan("speed", "instrument"),
+        createReadoutSpan("spin", state.inertialSpinActive ? "release" : "ready"),
         createReadoutSpan("auto", MOTION.longitudeAutoStep),
         createReadoutSpan("dragX", MOTION.dragLongitudeFactor),
         createReadoutSpan("dragY", MOTION.dragLatitudeFactor),
@@ -743,6 +756,24 @@
         createReadoutSpan("light", state.lightAnchor)
       );
     }
+  }
+
+  function dampVelocity(value, delta) {
+    const damping = Math.pow(MOTION.releaseVelocityDamping, delta / 16.67);
+    const next = value * damping;
+
+    return Math.abs(next) < MOTION.releaseVelocityMin ? 0 : next;
+  }
+
+  function capVelocity(value) {
+    return clamp(value, -MOTION.releaseVelocityMax, MOTION.releaseVelocityMax);
+  }
+
+  function updateInertialActivity(state) {
+    state.inertialSpinActive =
+      Math.abs(state.velocityLongitude) >= MOTION.releaseVelocityMin ||
+      Math.abs(state.velocityCloud) >= MOTION.releaseVelocityMin ||
+      Math.abs(state.velocityLatitude) >= MOTION.releaseVelocityMin;
   }
 
   function startSphericalLoop(mount, shell, globe, surface, clouds, readout, state) {
@@ -761,7 +792,21 @@
         state.longitude = mod(state.longitude - MOTION.longitudeAutoStep * delta, 200);
         state.cloudLongitude = mod(state.cloudLongitude - MOTION.cloudAutoStep * delta, 200);
 
-        if (Math.abs(state.latitude - 50) > 0.08) {
+        if (MOTION.releaseSpinEnabled && state.inertialSpinActive) {
+          state.longitude = mod(state.longitude + state.velocityLongitude * delta, 200);
+          state.cloudLongitude = mod(state.cloudLongitude + state.velocityCloud * delta, 200);
+          state.latitude = clamp(
+            state.latitude + state.velocityLatitude * delta,
+            MOTION.latitudeMin,
+            MOTION.latitudeMax
+          );
+
+          state.velocityLongitude = dampVelocity(state.velocityLongitude, delta);
+          state.velocityCloud = dampVelocity(state.velocityCloud, delta);
+          state.velocityLatitude = dampVelocity(state.velocityLatitude, delta);
+
+          updateInertialActivity(state);
+        } else if (Math.abs(state.latitude - 50) > 0.08) {
           state.latitude += (50 - state.latitude) * MOTION.latitudeReturnFriction;
         }
       }
@@ -822,6 +867,10 @@
       }),
       button("Pause", function () {
         state.paused = true;
+        state.velocityLongitude = 0;
+        state.velocityCloud = 0;
+        state.velocityLatitude = 0;
+        updateInertialActivity(state);
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       }),
       button("Resume", function () {
@@ -838,7 +887,12 @@
         state.lightAnchor = "sun";
         state.paused = false;
         state.dragging = false;
+        state.velocityLongitude = 0;
+        state.velocityCloud = 0;
+        state.velocityLatitude = 0;
+        state.lastMoveTime = 0;
         state.lastTime = 0;
+        updateInertialActivity(state);
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       })
     );
@@ -848,6 +902,11 @@
         state.dragging = true;
         state.lastX = event.clientX;
         state.lastY = event.clientY;
+        state.lastMoveTime = performance.now();
+        state.velocityLongitude = 0;
+        state.velocityCloud = 0;
+        state.velocityLatitude = 0;
+        updateInertialActivity(state);
         globe.setPointerCapture(event.pointerId);
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       });
@@ -855,6 +914,8 @@
       globe.addEventListener("pointermove", function (event) {
         if (!state.dragging) return;
 
+        const now = performance.now();
+        const elapsed = Math.max(8, Math.min(MOTION.releaseVelocitySampleMs, now - state.lastMoveTime));
         const deltaX = event.clientX - state.lastX;
         const deltaY = event.clientY - state.lastY;
 
@@ -862,32 +923,45 @@
           return;
         }
 
+        const moveLongitude = deltaX * MOTION.dragLongitudeFactor;
+        const moveCloud = deltaX * MOTION.dragCloudFactor;
+        const moveLatitude = deltaY * MOTION.dragLatitudeFactor;
+
         state.lastX = event.clientX;
         state.lastY = event.clientY;
+        state.lastMoveTime = now;
 
-        state.longitude = mod(state.longitude + deltaX * MOTION.dragLongitudeFactor, 200);
-        state.cloudLongitude = mod(state.cloudLongitude + deltaX * MOTION.dragCloudFactor, 200);
+        state.longitude = mod(state.longitude + moveLongitude, 200);
+        state.cloudLongitude = mod(state.cloudLongitude + moveCloud, 200);
         state.latitude = clamp(
-          state.latitude + deltaY * MOTION.dragLatitudeFactor,
+          state.latitude + moveLatitude,
           MOTION.latitudeMin,
           MOTION.latitudeMax
         );
+
+        state.velocityLongitude = capVelocity(moveLongitude / elapsed);
+        state.velocityCloud = capVelocity(moveCloud / elapsed);
+        state.velocityLatitude = capVelocity(moveLatitude / elapsed);
 
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       });
 
       globe.addEventListener("pointerup", function (event) {
         state.dragging = false;
+        updateInertialActivity(state);
+
         try {
           globe.releasePointerCapture(event.pointerId);
         } catch (error) {
           /* no-op */
         }
+
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       });
 
       globe.addEventListener("pointercancel", function () {
         state.dragging = false;
+        updateInertialActivity(state);
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       });
 
@@ -941,6 +1015,7 @@
     mount.dataset.renderStatus = "generation-4-speed-authority-calibration-mounted";
     mount.dataset.showroomGlobePlacement = "generation-4-speed-authority-calibration";
     mount.dataset.generation4Closure = "speed-authority-calibration-active";
+    mount.dataset.generation4InertialReleaseSpin = "active";
 
     enforceRealmSeparation(mount, context);
     installRealmGuard(mount, context);
@@ -976,12 +1051,16 @@
       dragCloudFactor: MOTION.dragCloudFactor,
       dragLatitudeFactor: MOTION.dragLatitudeFactor,
       latitudeReturnFriction: MOTION.latitudeReturnFriction,
+      releaseSpinEnabled: MOTION.releaseSpinEnabled,
+      releaseVelocityDamping: MOTION.releaseVelocityDamping,
       generation1RingScaffold: "removed",
       generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
       generation4: GENERATIONS.generation4,
+      generation4Refinement: REFINEMENT_VERSION,
       generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
+      generation4InertialReleaseSpin: "active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
       generation4HorizontalFriction: "calibrated",
@@ -996,6 +1075,7 @@
 
   window.DGBShowroomGlobeInstrument = Object.freeze({
     version: VERSION,
+    refinementVersion: REFINEMENT_VERSION,
     assets: ASSETS,
     generations: GENERATIONS,
     contexts: CONTEXTS,

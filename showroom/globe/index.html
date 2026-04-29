@@ -1,110 +1,71 @@
-<!-- /showroom/index.html -->
+<!-- /showroom/globe/index.html -->
 <!DOCTYPE html>
-<html lang="en" data-chamber="showroom" data-lattice-chamber="05_SHOWROOM" data-generation="showroom-generation-3-surface-standard">
+<html
+  lang="en"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-construct-class="standalone-globe"
+  data-route="/showroom/globe/"
+  data-generation="demo-universe-earth-asset-instrument-route-v1"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Showroom · Diamond Gate Bridge</title>
+  <title>Demo Universe Earth · Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom is the public proof room for Diamond Gate Bridge, presenting stable visual direction, route proof, Earth-centered visual continuity, and audit-ready chamber markers."
+    content="Standalone Demo Universe Earth route consuming the canonical Showroom globe asset instrument."
   />
   <link rel="stylesheet" href="/showroom/showroom.css" />
 </head>
 
-<body>
-  <a class="skip-link" href="#showroom-main">Skip to Showroom content</a>
+<body class="showroom-globe-route">
+  <a class="skip-link" href="#globe-main">Skip to Demo Universe Earth</a>
 
-  <div id="showroom-root" class="showroom-shell" data-proof-marker="SHOWROOM_CHAMBER=HOUSE_PART_05">
-    <header class="showroom-header" aria-label="Showroom chamber header">
-      <p class="eyebrow">H5 · Showroom · Public Proof Room</p>
-      <h1>Showroom</h1>
+  <div id="showroom-root" class="showroom-shell" data-globe-route="standalone">
+    <header class="showroom-header">
+      <p class="eyebrow">Demo Universe Earth · Standalone Globe Route</p>
+      <h1>Demo Universe Earth</h1>
       <p class="showroom-lede">
-        The public proof surface for the estate’s visual and functional direction.
+        This route owns the standalone Earth globe surface. It consumes the same canonical asset instrument as the parent Showroom page.
       </p>
 
-      <nav class="route-rail" aria-label="Showroom route rail">
+      <nav class="site-nav nav-links route-rail" aria-label="Demo Universe route rail">
+        <a href="/showroom/">Return to Showroom</a>
         <a href="/">Compass</a>
         <a href="/products/">Products</a>
-        <a href="/products/archcoin/">ARCHCOIN</a>
         <a href="/gauges/">Gauges</a>
-        <a href="/big-laugh/upper-room/">Upper Room</a>
       </nav>
     </header>
 
-    <main id="showroom-main" class="showroom-main">
-      <section class="proof-stage" aria-labelledby="proof-stage-title">
-        <div class="visual-panel" aria-label="Showroom Earth-centered proof surface">
-          <canvas id="showroom-canvas" aria-hidden="true"></canvas>
-
-          <div
-            id="showroom-globe-mount"
-            class="showroom-globe-mount"
-            data-showroom-globe-mount="true"
-            data-showroom-globe-placement="generation-3-centered-lift"
-            aria-label="Showroom Earth canvas mount"
-          ></div>
-        </div>
-
-        <div class="content-panel">
-          <p class="room-code">ROOM 05 / 16</p>
-          <h2 id="proof-stage-title">Earth-centered public proof surface</h2>
-          <p>
-            This chamber holds the visible proof layer. It keeps the route rail live,
-            the content readable, and the visual system subordinate to source truth.
-          </p>
-
-          <div class="proof-grid" aria-label="Showroom proof markers">
-            <article>
-              <h3>Render proof</h3>
-              <p>
-                The visible surface mounts through the preserved Showroom globe subsystem
-                without exposing raw code or breaking the route rail.
-              </p>
-            </article>
-
-            <article>
-              <h3>Route proof</h3>
-              <p>
-                Compass, Products, ARCHCOIN, Gauges, and Upper Room remain available from
-                this chamber.
-              </p>
-            </article>
-
-            <article>
-              <h3>Audit proof</h3>
-              <p>
-                Stable markers identify this file as the Showroom chamber inside the
-                16-chamber lattice.
-              </p>
-            </article>
-          </div>
-        </div>
+    <main id="globe-main" class="showroom-main">
+      <section class="visual-panel" aria-label="Demo Universe Earth active globe">
+        <canvas id="showroom-canvas" aria-hidden="true"></canvas>
+        <div
+          id="showroom-globe-mount"
+          class="showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
+          data-showroom-globe-mount="true"
+          data-render-context="standalone"
+          data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+          data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+          aria-label="Demo Universe Earth active globe"
+        ></div>
       </section>
 
-      <section class="showroom-receipts" aria-label="Showroom receipts">
+      <section class="showroom-receipts">
         <h2>Receipts</h2>
         <ul>
-          <li data-receipt="SHOWROOM_CHAMBER=HOUSE_PART_05">SHOWROOM_CHAMBER=HOUSE_PART_05</li>
-          <li data-receipt="ROUTE=/showroom/">ROUTE=/showroom/</li>
-          <li data-receipt="VISUAL_PROOF=EARTH_CENTERED_SHOWROOM">VISUAL_PROOF=EARTH_CENTERED_SHOWROOM</li>
-          <li data-receipt="CODE_MODE=GENERATION_3_SURFACE_REFINEMENT">CODE_MODE=GENERATION_3_SURFACE_REFINEMENT</li>
-          <li data-receipt="GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN">GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN</li>
+          <li>ROUTE=/showroom/globe/</li>
+          <li>PARENT_ROUTE=/showroom/</li>
+          <li>GENERATION_2_STANDALONE_GLOBE_ACTIVE_TARGET</li>
+          <li>GENERATION_3_DETAIL_TARGET_BLOCKED_UNTIL_G2_PASS</li>
+          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js</li>
         </ul>
       </section>
-
-      <noscript>
-        <section class="noscript-proof">
-          <h2>Showroom static fallback</h2>
-          <p>
-            JavaScript is unavailable, but the Showroom route rail, proof markers,
-            and chamber content remain visible.
-          </p>
-        </section>
-      </noscript>
     </main>
   </div>
 
-  <script type="module" src="/showroom/index.js"></script>
+  <script src="/assets/showroom.globe.instrument.js" defer></script>
+  <script src="/showroom/globe/index.js" defer></script>
 </body>
 </html>

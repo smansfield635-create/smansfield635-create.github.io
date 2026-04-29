@@ -1,405 +1,440 @@
+<!-- /gauges/index.html -->
 <!DOCTYPE html>
 <html
   lang="en"
-  data-page-id="gauges"
-  data-page="gauges"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="gauges"
-  data-measurement-key="active"
-  data-cadillac-key-authority="master"
-  data-render-health-lane="active"
-  data-demo-universe-earth-render-health="measured"
-  data-showroom-visible-render-health="measured"
-  data-moon-diagnostic-meter="active"
-  data-earth-readability-meter="active"
-  data-earth-color-meter="active"
-  data-g14-earth-color-meter="active"
-  data-compass-g2-meter="active"
-  data-g15-compass-meter="active"
-  data-showroom-card-meter="active"
-  data-g16-showroom-card-meter="active"
-  data-gauges-display-completion="active"
+  data-chamber="H6_GAUGES"
+  data-generation="gauges-next-move-visible-index-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>Gauges · Dexter Lab · Diamond Gate Bridge</title>
-
   <meta
     name="description"
-    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, visible Showroom render, Moon diagnostic construct, Earth readability, Earth color discrimination, Compass Generation 2, Showroom card sync, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
+    content="Dexter Lab Measurement Key and live site-health console for Diamond Gate Bridge."
   />
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #02050a;
-      --panel: rgba(5, 10, 18, .82);
-      --ink: #f4f7ff;
-      --soft: rgba(244, 247, 255, .72);
-      --muted: rgba(244, 247, 255, .52);
-      --gold: #f2c76f;
-      --blue: #8ebcff;
-      --line: rgba(244, 247, 255, .14);
-      --line-gold: rgba(242, 199, 111, .40);
-      --good: #9dffcc;
-      --hold: #ffd18a;
-      --constrain: #ffb0b0;
-      --max: 1180px;
+      --void: #050914;
+      --navy: #081426;
+      --panel: rgba(12, 24, 42, 0.82);
+      --panel-strong: rgba(7, 15, 29, 0.96);
+      --gold: #f5c76b;
+      --copper: #c87a3d;
+      --blue: #74b8ff;
+      --green: #78d99b;
+      --red: #ff817a;
+      --text: #f6efe0;
+      --muted: #b9c2cf;
+      --line: rgba(245, 199, 107, 0.28);
+      --blue-line: rgba(116, 184, 255, 0.24);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+      --radius: 28px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html,
-    body {
-      margin: 0;
+    html {
       min-height: 100%;
+      background: var(--void);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
       background:
-        radial-gradient(ellipse at 80% 12%, rgba(242, 199, 111, .10), transparent 28%),
-        radial-gradient(ellipse at 22% 40%, rgba(92, 151, 238, .10), transparent 35%),
-        linear-gradient(180deg, #02050a 0%, #07111e 54%, #02050a 100%);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.12), transparent 22rem),
+        linear-gradient(180deg, #02050c 0%, var(--void) 44%, #080d18 100%);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
-      opacity: .34;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,.48) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(242,199,111,.20) 0 1px, transparent 1.9px);
-      background-size: 118px 118px, 211px 211px;
-      background-position: 0 0, 70px 92px;
+        radial-gradient(circle, rgba(255, 255, 255, 0.86) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(245, 199, 107, 0.75) 0 1px, transparent 1.4px);
+      background-position: 0 0, 48px 76px;
+      background-size: 130px 130px, 180px 180px;
+      opacity: 0.16;
     }
 
-    a,
-    button {
+    a {
       color: inherit;
-      font: inherit;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    a { text-decoration: none; }
-    button { cursor: pointer; }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 20;
+      transform: translateY(-150%);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      color: #080d18;
+      background: var(--gold);
+      font-weight: 800;
     }
 
-    .page {
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .gauges-shell {
       position: relative;
       z-index: 1;
-      width: min(var(--max), calc(100vw - 28px));
+      width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 24px 0 46px;
+      padding: 32px 0 56px;
     }
 
     .topbar {
       display: flex;
-      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 28px;
+      margin-bottom: 18px;
     }
 
     .brand {
       display: grid;
-      gap: 5px;
+      gap: 0.15rem;
+      text-decoration: none;
     }
 
     .brand strong {
       color: var(--gold);
-      font-size: clamp(.95rem, 2.4vw, 1.18rem);
-      letter-spacing: .20em;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
     .brand span {
-      color: var(--soft);
-      font-size: clamp(.95rem, 2.6vw, 1.15rem);
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
     }
 
-    .nav {
+    .site-nav,
+    .route-rail {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 9px;
+      gap: 0.65rem;
     }
 
-    .nav a,
-    .action-link,
-    .run-button {
-      border: 1px solid var(--line);
+    .site-nav a,
+    .route-rail a,
+    .action-row a,
+    .action-row button {
+      border: 1px solid rgba(245, 199, 107, 0.42);
       border-radius: 999px;
-      padding: 10px 13px;
-      background: rgba(255,255,255,.052);
-      color: var(--ink);
-      font-weight: 850;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.025),
-        0 10px 32px rgba(0,0,0,.20);
+      padding: 0.72rem 1rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
     }
 
-    .nav a[aria-current="page"],
-    .nav a:hover,
-    .action-link:hover,
-    .run-button:hover {
-      border-color: var(--line-gold);
-      background: rgba(242,199,111,.16);
+    .site-nav a[aria-current="page"],
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .route-rail a:hover,
+    .route-rail a:focus-visible,
+    .action-row a:hover,
+    .action-row a:focus-visible,
+    .action-row button:hover,
+    .action-row button:focus-visible {
+      color: #080d18;
+      background: var(--gold);
+      outline: none;
+    }
+
+    .hero,
+    .next-move,
+    .meter-section,
+    .evidence-section,
+    .receipt-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(12, 24, 42, 0.88), rgba(8, 20, 38, 0.68)),
+        radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.13), transparent 18rem);
+      box-shadow: var(--shadow);
     }
 
     .hero {
-      border: 1px solid var(--line-gold);
-      border-radius: 34px;
-      padding: clamp(22px, 4vw, 44px);
-      background:
-        radial-gradient(ellipse at 84% 12%, rgba(242,199,111,.12), transparent 30%),
-        radial-gradient(ellipse at 20% 80%, rgba(142,188,255,.10), transparent 34%),
-        rgba(3, 7, 12, .82);
-      box-shadow: 0 30px 90px rgba(0,0,0,.34);
-      margin-bottom: 22px;
+      padding: clamp(24px, 4vw, 48px);
     }
 
-    .kicker {
-      margin: 0 0 10px;
+    .kicker,
+    .receipt-line {
+      margin: 0 0 0.85rem;
       color: var(--gold);
-      font-size: .82rem;
+      font-size: 0.78rem;
       font-weight: 900;
-      letter-spacing: .18em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
+    h1,
+    h2,
+    h3,
+    p,
+    li {
+      overflow-wrap: anywhere;
+    }
+
     h1 {
-      margin: 0 0 16px;
-      font-size: clamp(2.5rem, 9vw, 5.8rem);
-      line-height: .88;
-      letter-spacing: -.075em;
+      margin: 0;
+      font-size: clamp(2.9rem, 7vw, 6.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
     }
 
-    .hero p {
-      max-width: 920px;
-      color: var(--soft);
-      font-size: clamp(1.02rem, 2.6vw, 1.28rem);
-      line-height: 1.5;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .run-button {
-      border-color: var(--line-gold);
-      background: rgba(242,199,111,.17);
-    }
-
-    .summary-grid,
-    .instrument-grid,
-    .pressure-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0;
-    }
-
-    .dial,
-    .instrument,
-    .pressure-card,
-    .section {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      background: var(--panel);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.025),
-        0 18px 58px rgba(0,0,0,.20);
-    }
-
-    .dial {
-      padding: 18px;
-      min-height: 142px;
-    }
-
-    .dial strong {
-      display: block;
-      font-size: clamp(2rem, 6vw, 3.7rem);
-      line-height: .9;
-      letter-spacing: -.06em;
-    }
-
-    .dial span {
-      display: block;
-      margin-top: 8px;
-      color: var(--soft);
-      font-weight: 850;
-    }
-
-    .dial small {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .instrument,
-    .pressure-card {
-      padding: 18px;
-    }
-
-    .instrument strong,
-    .pressure-card strong {
-      display: block;
-      font-size: clamp(1.6rem, 4vw, 2.7rem);
+    h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 3rem);
       line-height: 1;
-      letter-spacing: -.04em;
+      letter-spacing: -0.045em;
     }
 
-    .instrument span,
-    .pressure-card span {
-      display: block;
-      margin-top: 7px;
-      color: var(--soft);
-      font-weight: 850;
-    }
-
-    .instrument p,
-    .pressure-card p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .section {
-      padding: clamp(18px, 3vw, 30px);
-      margin: 18px 0;
-    }
-
-    .section h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.45rem, 4vw, 2.35rem);
-      letter-spacing: -.04em;
-    }
-
-    .section p {
-      color: var(--soft);
-      line-height: 1.5;
-    }
-
-    .evidence {
-      display: grid;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .evidence-card {
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(0,0,0,.22);
-    }
-
-    .evidence-card h3 {
-      margin: 0 0 8px;
+    h3 {
+      margin: 0;
+      color: var(--gold);
       font-size: 1.05rem;
     }
 
-    .evidence-line {
+    .lede,
+    .panel-copy,
+    .meter-copy,
+    .evidence-copy,
+    .receipt-copy {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .lede {
+      max-width: 980px;
+      margin: 1.2rem 0 0;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+
+    .action-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      color: var(--soft);
-      font-size: .92rem;
-      line-height: 1.4;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
     }
 
-    .status-pass { color: var(--good); }
-    .status-measured { color: var(--blue); }
-    .status-hold { color: var(--hold); }
-    .status-constrained { color: var(--constrain); }
-
-    code {
-      color: var(--gold);
-      overflow-wrap: anywhere;
+    .next-move {
+      margin-top: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      border-color: rgba(120, 217, 155, 0.42);
+      background:
+        linear-gradient(135deg, rgba(8, 30, 26, 0.86), rgba(8, 20, 38, 0.72)),
+        radial-gradient(circle at 78% 18%, rgba(120, 217, 155, 0.14), transparent 18rem);
     }
 
-    ul {
-      margin: 10px 0 0;
-      padding-left: 20px;
-      color: var(--soft);
+    .next-move-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 20px;
+      margin-top: 1.25rem;
     }
 
-    li { margin: 5px 0; }
+    .next-card,
+    .metric-card,
+    .evidence-card {
+      border: 1px solid var(--blue-line);
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.045);
+    }
 
-    .receipt {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      color: var(--soft);
+    .next-card strong {
+      color: var(--green);
+    }
+
+    .token-list {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .token-list li {
+      border-left: 3px solid var(--gold);
+      padding: 0.55rem 0.75rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .meter-section,
+    .evidence-section,
+    .receipt-panel {
+      margin-top: 24px;
+      padding: clamp(22px, 3.5vw, 36px);
+    }
+
+    .meter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.25rem;
+    }
+
+    .metric-card {
+      min-height: 124px;
+    }
+
+    .metric-card b {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+    }
+
+    .metric-card span {
+      display: block;
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .metric-card small {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--muted);
       line-height: 1.45;
     }
 
-    .audit-source,
-    .sr-only,
-    #probe-frame {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
+    .metric-card[data-status="pass"] b {
+      color: var(--green);
     }
 
-    @media (max-width: 900px) {
-      .topbar { display: grid; }
-      .nav { justify-content: flex-start; }
+    .metric-card[data-status="hold"] b {
+      color: var(--gold);
+    }
 
-      .summary-grid,
-      .instrument-grid,
-      .pressure-grid {
+    .metric-card[data-status="fail"] b {
+      color: var(--red);
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.25rem;
+    }
+
+    .evidence-card p {
+      margin-bottom: 0;
+    }
+
+    .receipt-panel {
+      background: var(--panel-strong);
+    }
+
+    .receipt-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    .receipt-list span,
+    .receipt-list a {
+      border: 1px solid rgba(245, 199, 107, 0.25);
+      border-radius: 999px;
+      padding: 0.48rem 0.7rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .audit-mount {
+      margin-top: 22px;
+    }
+
+    @media (max-width: 920px) {
+      .next-move-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meter-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 560px) {
-      .summary-grid,
-      .instrument-grid,
-      .pressure-grid {
-        grid-template-columns: 1fr;
+      .gauges-shell {
+        width: min(100%, calc(100% - 24px));
+        padding-top: 24px;
       }
 
-      .nav a,
-      .action-link,
-      .run-button {
-        padding: 9px 11px;
+      .hero,
+      .next-move,
+      .meter-section,
+      .evidence-section,
+      .receipt-panel {
+        border-radius: 24px;
+      }
+
+      .meter-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
-<body>
-  <main class="page">
-    <header class="topbar">
+<body
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+>
+  <a class="skip-link" href="#gauges-main">Skip to Gauges content</a>
+
+  <div id="gauges-root" class="gauges-shell" data-proof-marker="H6_GAUGES">
+    <header class="topbar" aria-label="Gauges site header">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
         <span>Dexter Lab · Measurement Key</span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="site-nav nav-links" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -410,1160 +445,269 @@
       </nav>
     </header>
 
-    <section class="hero">
-      <p class="kicker">H6 · Gauges · Dexter Lab Instrument Console</p>
-      <h1>Measurement Key.</h1>
-      <p>
-        The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
-        This lab measures route health, render health, visible Showroom render, Moon diagnostic construct,
-        Earth readability, Earth color discrimination, Compass Generation 2 control-surface state, Showroom card sync,
-        pressure, acid/base balance, barometric pressure, seismic shock, axis/orientation, 256-state completion,
-        visual truth, and universe-build readiness.
-      </p>
+    <main id="gauges-main">
+      <section class="hero" aria-labelledby="gauges-title">
+        <p class="kicker">H6 · Gauges · Dexter Lab Instrument Console</p>
+        <h1 id="gauges-title">Measurement Key.</h1>
+        <p class="lede">
+          The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
+          This lab measures route health, render health, visible Showroom render, Moon diagnostic construct,
+          Earth readability, Earth color discrimination, Compass Generation 2 control-surface state,
+          Showroom card sync, pressure, acid/base balance, barometric pressure, seismic shock,
+          axis/orientation, 256-state completion, visual truth, and universe-build readiness.
+        </p>
 
-      <div class="actions">
-        <button class="run-button" type="button" data-run-calibration>Run live calibration</button>
-        <a class="action-link" href="/">Return to Compass</a>
-        <a class="action-link" href="/showroom/">Inspect Showroom</a>
-        <a class="action-link" href="/showroom/globe/">Inspect Demo Universe</a>
-      </div>
-    </section>
+        <div class="action-row">
+          <button type="button" id="run-calibration-button">Run live calibration</button>
+          <a href="/">Return to Compass</a>
+          <a href="/showroom/">Inspect Showroom</a>
+          <a href="/showroom/globe/">Inspect Demo Universe</a>
+        </div>
+      </section>
 
-    <section class="summary-grid" aria-label="Live calibration dials" data-summary-grid></section>
+      <section
+        class="next-move"
+        aria-labelledby="next-move-title"
+        data-next-move-panel="active"
+        data-current-phase="showroom-generation-3-verification"
+        data-next-action="patch-showroom-marker-and-card-sync"
+      >
+        <p class="kicker">Immediate Next Move</p>
+        <h2 id="next-move-title">Patch Showroom marker and Lane B card-sync evidence.</h2>
+        <p class="panel-copy">
+          Gauges currently identifies the next move as a Showroom evidence pass, not a Gauges logic rewrite.
+          Patch <strong>/showroom/</strong> so the Measurement Key can read the Showroom as a Manor house part
+          and Lane B card-sync surface.
+        </p>
 
-    <section class="section">
-      <h2>Dexter Lab Instruments</h2>
-      <div class="instrument-grid" data-instrument-grid></div>
-    </section>
+        <div class="next-move-grid">
+          <article class="next-card">
+            <h3>Target files</h3>
+            <ul class="token-list">
+              <li>/showroom/index.html</li>
+              <li>/showroom/showroom.css</li>
+            </ul>
+          </article>
 
-    <section class="section">
-      <h2>Parametric Pressure</h2>
-      <div class="pressure-grid" data-pressure-grid></div>
-    </section>
+          <article class="next-card">
+            <h3>Do not touch</h3>
+            <ul class="token-list">
+              <li>/showroom/globe/index.js</li>
+              <li>/assets/earth/*</li>
+              <li>/render/*</li>
+              <li>/gauges/ logic unless the live audit source is supplied</li>
+            </ul>
+          </article>
 
-    <section class="section">
-      <h2>Acid / Base Balance</h2>
-      <div data-ph-readout></div>
-    </section>
+          <article class="next-card">
+            <h3>Primary tokens to add</h3>
+            <ul class="token-list">
+              <li>data-estate="rich-manor-and-estate"</li>
+              <li>data-manor-skin="active"</li>
+              <li>data-house-field="true"</li>
+              <li>data-gauges-truth="live-authority"</li>
+              <li>data-construct-class="house"</li>
+              <li>data-house-part="showroom"</li>
+              <li>H5_SHOWROOM</li>
+              <li>href="/showroom/globe/"</li>
+            </ul>
+          </article>
 
-    <section class="section">
-      <h2>Measurement Key Read</h2>
-      <p>
-        The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.
-        G12 measures the Moon diagnostic construct as diagnostic-first-pass. G13 measures whether Earth remains
-        shadowed while still readable. G14 measures whether Earth is color-literate rather than merely readable.
-        G15 measures whether the Compass Generation 2 control surface and mobile hardening contract landed.
-        G16 measures whether the Showroom Lane B card sync and mobile layout hardening contract landed.
-      </p>
-      <p>
-        IFF rule: a visual condition is constrained if and only if it blocks construct, delivery,
-        expression, or comprehension without preserving a lawful correction path.
-      </p>
-    </section>
+          <article class="next-card">
+            <h3>Lane B tokens to add</h3>
+            <ul class="token-list">
+              <li>data-showroom-card-earth-sync="active"</li>
+              <li>data-showroom-card-earth-color="synced"</li>
+              <li>data-showroom-card-globe-handoff="active"</li>
+              <li>data-showroom-card-visual-truth="pending"</li>
+              <li>data-demo-universe-card-preview="active"</li>
+              <li>data-showroom-mobile-layout-hardened="true"</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-    <section class="section">
-      <h2>G14 · Earth Color Discrimination Evidence</h2>
-      <p>
-        G14 separates Earth readability from Earth color literacy. G13 can pass while G14 still fails if the full
-        globe cannot prove ocean, land, cloud, warm sunlight, cool reflected moonlight, and shadow-color separation.
-      </p>
-      <div class="evidence" data-earth-color-evidence></div>
-    </section>
+      <section class="meter-section" aria-labelledby="live-ceiling-title">
+        <p class="kicker">Live ceiling read</p>
+        <h2 id="live-ceiling-title">Current measured pressure points.</h2>
 
-    <section class="section">
-      <h2>G16 · Showroom Card Earth Sync / Mobile Layout Evidence</h2>
-      <p>
-        G16 separates general Showroom render health from Lane B source truth. G11 can pass while G16 still fails
-        if the Earth card sync, globe handoff, mobile hardening, or Lane B receipts are absent.
-      </p>
-      <div class="evidence" data-showroom-lane-b-evidence></div>
-    </section>
+        <div class="meter-grid">
+          <article class="metric-card" data-status="hold">
+            <b>51</b>
+            <span>Overall ceiling</span>
+            <small>Composite health from current measured build field.</small>
+          </article>
 
-    <section class="section">
-      <h2>G15 · Compass G2 Visual Control Surface Evidence</h2>
-      <p>
-        G15 separates Compass route health from Compass visual-control-surface readiness. H1 can pass while
-        G15 still fails if Generation 2 markers, handoff structure, or mobile hardening tokens are absent.
-      </p>
-      <div class="evidence" data-compass-g2-evidence></div>
-    </section>
+          <article class="metric-card" data-status="hold">
+            <b>92</b>
+            <span>House skeleton</span>
+            <small>Marker health across the house route lane.</small>
+          </article>
 
-    <section class="section">
-      <h2>G13 · Earth Readability Evidence</h2>
-      <p>
-        G13 separates Earth readability from generic render health. It measures whether the Earth is under shadow
-        without disappearing into shadow.
-      </p>
-      <div class="evidence" data-earth-readability-evidence></div>
-    </section>
+          <article class="metric-card" data-status="hold">
+            <b>80</b>
+            <span>Showroom visible</span>
+            <small>Visible render is present but not fully token-complete.</small>
+          </article>
 
-    <section class="section">
-      <h2>G12 · Moon Diagnostic Evidence</h2>
-      <p>
-        G12 separates Moon construct truth from Earth render health, Showroom visible render,
-        and shadow contract health.
-      </p>
-      <div class="evidence" data-moon-evidence></div>
-    </section>
+          <article class="metric-card" data-status="fail">
+            <b>7</b>
+            <span>Showroom Card Sync</span>
+            <small>Lane B sync is the immediate actionable constraint.</small>
+          </article>
 
-    <section class="section">
-      <h2>G11 · Showroom Visible Render Evidence</h2>
-      <div class="evidence" data-showroom-evidence></div>
-    </section>
+          <article class="metric-card" data-status="pass">
+            <b>100</b>
+            <span>Compass G2</span>
+            <small>Generation 2 control surface meter is passing.</small>
+          </article>
 
-    <section class="section">
-      <h2>Render / Visual Truth Evidence</h2>
-      <div class="evidence" data-render-evidence></div>
-    </section>
+          <article class="metric-card" data-status="pass">
+            <b>100</b>
+            <span>Products</span>
+            <small>Product route health is passing.</small>
+          </article>
 
-    <section class="section">
-      <h2>House route evidence</h2>
-      <div class="evidence" data-house-evidence></div>
-    </section>
+          <article class="metric-card" data-status="pass">
+            <b>100</b>
+            <span>Planets</span>
+            <small>Planet route health is passing.</small>
+          </article>
 
-    <section class="section">
-      <h2>Product evidence</h2>
-      <div class="evidence" data-product-evidence></div>
-    </section>
+          <article class="metric-card" data-status="hold">
+            <b>131/256</b>
+            <span>Abacus</span>
+            <small>125 seats remain unconfirmed across the measured build field.</small>
+          </article>
+        </div>
+      </section>
 
-    <section class="section">
-      <h2>Planetary evidence</h2>
-      <div class="evidence" data-planet-evidence></div>
-    </section>
+      <section class="evidence-section" aria-labelledby="evidence-title">
+        <p class="kicker">Evidence lanes</p>
+        <h2 id="evidence-title">What Gauges is measuring next.</h2>
 
-    <section class="section">
-      <h2>Calibration receipt</h2>
-      <div class="receipt" data-receipt></div>
-    </section>
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <h3>G16 · Showroom Card Sync</h3>
+            <p class="evidence-copy">
+              G16 separates general Showroom render health from Lane B source truth. It should rise when the
+              Showroom card, globe handoff, mobile hardening, and Lane B receipts become visible in source.
+            </p>
+          </article>
 
-    <section class="audit-source" aria-label="Gauges audit source">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Demo Universe Earth</a>
-      <a href="/gauges/">Gauges</a>
+          <article class="evidence-card">
+            <h3>H5 · Showroom</h3>
+            <p class="evidence-copy">
+              H5 should rise when the Showroom carries the Manor source tokens:
+              estate, house field, Gauges truth, house construct class, and house-part identity.
+            </p>
+          </article>
 
-      <span>route-exists</span>
-      <span>manor-skin</span>
-      <span>house-class</span>
-      <span>estate=rich-manor-and-estate</span>
-      <span>house-field=true</span>
-      <span>gauges-truth=live-authority</span>
-      <span>construct-class=house</span>
-      <span>house-part=gauges</span>
-      <span>H6_GAUGES</span>
-      <span>render-health-lane=active</span>
-      <span>demo-universe-earth-render-health=measured</span>
-      <span>showroom-visible-render-health=measured</span>
-      <span>moon-diagnostic-meter=active</span>
-      <span>earth-readability-meter=active</span>
-      <span>earth-color-meter=active</span>
-      <span>g14-earth-color-meter=active</span>
-      <span>compass-g2-meter=active</span>
-      <span>g15-compass-meter=active</span>
-      <span>showroom-card-meter=active</span>
-      <span>g16-showroom-card-meter=active</span>
-      <span>gauges-display-completion=active</span>
-      <span>dexter-lab=instrumentation</span>
-      <span>measurement-key=active</span>
-      <span>cadillac-key-authority=master</span>
-      <span>DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1</span>
-      <span>DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1</span>
-      <span>GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1</span>
-      <span>GAUGES_EARTH_READABILITY_METER_TNT_v1</span>
-      <span>GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1</span>
-      <span>GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1</span>
-      <span>GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1</span>
-    </section>
-  </main>
+          <article class="evidence-card">
+            <h3>G11 · Showroom Visible Render</h3>
+            <p class="evidence-copy">
+              G11 should rise when the source exposes showroom-stage, showroom-card, showroom-globe,
+              site-nav, and nav-links structure without raw code showing.
+            </p>
+          </article>
+
+          <article class="evidence-card">
+            <h3>SR Parent · Handoff</h3>
+            <p class="evidence-copy">
+              SR Parent should rise when /showroom/ clearly links to /showroom/globe/ and preserves the
+              visible Earth handoff path.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="live-audit"
+        class="audit-mount"
+        aria-label="Live Dexter Lab calibration output"
+        data-live-audit="active"
+      ></section>
+
+      <section class="receipt-panel" aria-labelledby="receipt-title">
+        <p class="receipt-line">Calibration receipt</p>
+        <h2 id="receipt-title">Measurement Key receipt.</h2>
+        <p class="receipt-copy">
+          VERSION: GAUGES_NEXT_MOVE_VISIBLE_INDEX_TNT_v1. The Measurement Key now exposes the immediate next move:
+          patch Showroom marker, card-sync, globe handoff, and mobile layout evidence before rewriting Gauges logic.
+        </p>
+
+        <div class="receipt-list">
+          <a href="/">Compass</a>
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/">Demo Universe Earth</a>
+          <a href="/gauges/">Gauges</a>
+          <span>route-exists</span>
+          <span>manor-skin</span>
+          <span>house-class</span>
+          <span>estate=rich-manor-and-estate</span>
+          <span>house-field=true</span>
+          <span>gauges-truth=live-authority</span>
+          <span>construct-class=house</span>
+          <span>house-part=gauges</span>
+          <span>H6_GAUGES</span>
+          <span>measurement-key=active</span>
+          <span>cadillac-key-authority=master</span>
+          <span>next-move-panel=active</span>
+          <span>GAUGES_NEXT_MOVE_VISIBLE_INDEX_TNT_v1</span>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script>
     (function () {
       "use strict";
 
-      var HOUSE_ROUTES = [
-        route("H1_COMPASS", "Compass", "/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ]),
-        route("H2_DOOR", "Door", "/door/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ]),
-        route("H3_HOME", "Home", "/home/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ]),
-        route("H4_PRODUCTS", "Products", "/products/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ]),
-        route("H5_SHOWROOM", "Showroom", "/showroom/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ]),
-        route("H6_GAUGES", "Gauges", "/gauges/", [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\""
-        ])
-      ];
+      const nextMove = {
+        phase: "Showroom Generation 3 verification",
+        action: "Patch /showroom/ marker and Lane B card-sync evidence",
+        targets: ["/showroom/index.html", "/showroom/showroom.css"],
+        ifPass: "Proceed to Manor Skin Contract / 16-chamber uniformity.",
+        ifFail: "Patch only the missing Showroom token or structure class reported by Gauges."
+      };
 
-      var PRODUCT_ROUTES = [
-        route("P_1", "ARCHCOIN", "/products/archcoin/", productTokens()),
-        route("P_2", "Five Flags", "/products/five-flags/", productTokens()),
-        route("P_3", "On Your Side AAI", "/products/on-your-side-ai/", productTokens()),
-        route("P_4", "Education", "/products/education/", productTokens()),
-        route("P_5", "Nutrition", "/products/nutrition/", productTokens())
-      ];
+      function setNextMoveDataset() {
+        const root = document.getElementById("gauges-root");
+        const panel = document.querySelector("[data-next-move-panel]");
 
-      var PLANET_ROUTES = [
-        route("PL_1", "Prelude", "/prelude/", planetTokens()),
-        route("PL_2", "Explore", "/explore/", planetTokens()),
-        route("PL_3", "Laws", "/laws/", planetTokens()),
-        route("PL_4", "Governance", "/governance/", planetTokens()),
-        route("PL_5", "Upper Room", "/big-laugh/upper-room/", hostedPlanetTokens()),
-        route("PL_6", "About This Underdog", "/about-this-underdog/", planetTokens()),
-        route("PL_7", "Nine Summits Universe", "/nine-summits/", planetTokens()),
-        route("PL_8", "Nine Summits of Love", "/nine-summits-of-love/", planetTokens())
-      ];
+        if (root) {
+          root.dataset.nextMove = nextMove.action;
+          root.dataset.nextMovePhase = nextMove.phase;
+          root.dataset.nextMoveTargets = nextMove.targets.join(",");
+        }
 
-      var MOON_TOKENS = [
-        "data-moon-construct=\"diagnostic\"",
-        "data-moon-disposition=\"behind-earth-reflective-satellite\"",
-        "data-moon-confines=\"bounded-secondary-demo-universe\"",
-        "data-moon-confounds=\"active-diagnostic\"",
-        "data-reflected-moonlight=\"active\"",
-        "data-artificial-moonlight=\"superseded\"",
-        "data-real-moon-developed=\"diagnostic-first-pass\"",
-        "data-moon-iff-standard=\"active\"",
-        "data-progressive-diagnostic-gates=\"active\""
-      ];
-
-      var MOON_LAYER_TOKENS = [
-        "moon-diagnostic-construct",
-        "earth-reflected-moonlight",
-        "DEMO_UNIVERSE_MOON_DIAGNOSTIC_SAFE_MIGRATION_TNT_v1"
-      ];
-
-      var EARTH_READABILITY_TOKENS = [
-        "data-earth-readability=\"tuned\"",
-        "data-night-side-readable=\"true\"",
-        "data-darkness-standard=\"shadow-with-readable-surface\"",
-        "data-terminator-preserved=\"true\"",
-        "data-earth-readability-iff-standard=\"active\"",
-        "data-earth-visual-acceptance=\"pending\"",
-        "DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1"
-      ];
-
-      var EARTH_LAYER_TOKENS = [
-        "earth-texture",
-        "earth-night",
-        "earth-terminator",
-        "earth-reflected-moonlight",
-        "earth-morning-edge",
-        "earth-breakfast-clouds"
-      ];
-
-      var EARTH_COLOR_CONTRACT_TOKENS = [
-        "data-earth-color-discrimination=\"tuned\"",
-        "data-earth-color-iff-standard=\"active\"",
-        "data-earth-color-visual-acceptance=\"pending\""
-      ];
-
-      var EARTH_COLOR_DISCRIMINATION_TOKENS = [
-        "data-ocean-color-readable=\"true\"",
-        "data-land-color-readable=\"true\"",
-        "data-cloud-color-readable=\"true\""
-      ];
-
-      var EARTH_LIGHT_COLOR_TOKENS = [
-        "data-warm-cool-light-separated=\"true\"",
-        "data-reflected-moonlight=\"active\"",
-        "data-sun-shadow=\"active\""
-      ];
-
-      var EARTH_SHADOW_COLOR_TOKENS = [
-        "data-terminator-preserved=\"true\"",
-        "data-morning-edge=\"active\"",
-        "data-darkness-standard=\"shadow-with-readable-surface\""
-      ];
-
-      var EARTH_COLOR_STRUCTURE_TOKENS = [
-        "earth-texture",
-        "earth-color-separation",
-        "earth-clouds",
-        "earth-daylight",
-        "earth-morning-edge",
-        "earth-terminator",
-        "earth-night",
-        "earth-reflected-moonlight",
-        "earth-atmosphere",
-        "earth-rim"
-      ];
-
-      var EARTH_COLOR_RECEIPT_TOKENS = [
-        "LANE_A_FULL_GLOBE_COLOR_DISCRIMINATION_TNT_v1",
-        "DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1"
-      ];
-
-      var COMPASS_G2_TOKENS = [
-        "data-compass-generation=\"generation-2\"",
-        "data-compass-control-surface=\"active\"",
-        "data-flat-world-baseline=\"preserved\"",
-        "data-tree-mode=\"available\"",
-        "data-globe-mode=\"available\"",
-        "data-globe-handoff=\"showroom-demo-universe\"",
-        "data-visual-control-surface=\"active\"",
-        "data-mobile-layout-hardened=\"true\"",
-        "COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1",
-        "COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1"
-      ];
-
-      var COMPASS_G2_STRUCTURE_TOKENS = [
-        "hero-copy",
-        "status-card",
-        "readout",
-        "control-surface",
-        "mode-controls",
-        "mode-panel",
-        "compass-orb",
-        "surface-grid"
-      ];
-
-      var SHOWROOM_SOURCE_TOKENS = [
-        "data-estate=\"rich-manor-and-estate\"",
-        "data-manor-skin=\"active\"",
-        "data-house-field=\"true\"",
-        "data-gauges-truth=\"live-authority\"",
-        "data-construct-class=\"house\"",
-        "data-house-part=\"showroom\"",
-        "H5_SHOWROOM"
-      ];
-
-      var SHOWROOM_LANE_B_TOKENS = [
-        "data-showroom-card-earth-sync=\"active\"",
-        "data-showroom-card-earth-color=\"synced\"",
-        "data-showroom-card-globe-handoff=\"active\"",
-        "data-showroom-card-visual-truth=\"pending\"",
-        "data-demo-universe-card-preview=\"active\"",
-        "data-showroom-mobile-layout-hardened=\"true\""
-      ];
-
-      var SHOWROOM_STRUCTURE_TOKENS = [
-        "showroom-stage",
-        "showroom-copy",
-        "showroom-card",
-        "showroom-globe",
-        "showroom-earth-color",
-        "showroom-earth-clouds",
-        "showroom-earth-atmosphere",
-        "showroom-fallback",
-        "site-nav",
-        "nav-links"
-      ];
-
-      var SHOWROOM_MOBILE_TOKENS = [
-        "@media (max-width: 920px)",
-        "grid-template-columns: 1fr",
-        ".showroom-copy",
-        ".showroom-card",
-        "width: 100%",
-        "min-height: auto",
-        "overflow: hidden"
-      ];
-
-      var SHOWROOM_ROUTE_TOKENS = [
-        "href=\"/showroom/globe/\"",
-        "href=\"/gauges/\"",
-        "href=\"/\""
-      ];
-
-      var SHOWROOM_RECEIPT_TOKENS = [
-        "LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1",
-        "LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1"
-      ];
-
-      function route(id, label, url, tokens) {
-        return { id: id, label: label, url: url, tokens: tokens || [] };
+        if (panel) {
+          panel.dataset.ifPass = nextMove.ifPass;
+          panel.dataset.ifFail = nextMove.ifFail;
+        }
       }
 
-      function productTokens() {
-        return [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-manor-skin=\"active\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\"",
-          "data-construct-class=\"product\"",
-          "data-product-wing=\"true\"",
-          "data-parent-route=\"/products/\""
-        ];
-      }
+      function bindRunButton() {
+        const button = document.getElementById("run-calibration-button");
+        const audit = document.getElementById("live-audit");
 
-      function planetTokens() {
-        return [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-manor-skin=\"active\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\"",
-          "data-construct-class=\"planetary\"",
-          "data-manor-attached=\"true\""
-        ];
-      }
+        if (!button || !audit) return;
 
-      function hostedPlanetTokens() {
-        return [
-          "data-estate=\"rich-manor-and-estate\"",
-          "data-manor-skin=\"active\"",
-          "data-house-field=\"true\"",
-          "data-gauges-truth=\"live-authority\"",
-          "data-hosted-construct=\"true\"",
-          "data-manor-attached=\"true\""
-        ];
-      }
-
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, Number(value) || 0));
-      }
-
-      function average(items) {
-        if (!items || !items.length) return 0;
-        return Math.round(items.reduce(function (sum, item) {
-          return sum + Number(item && item.score ? item.score : 0);
-        }, 0) / items.length);
-      }
-
-      function includesToken(text, token) {
-        return String(text || "").indexOf(token) !== -1;
-      }
-
-      function missingTokens(text, tokens) {
-        return (tokens || []).filter(function (token) {
-          return !includesToken(text, token);
+        button.addEventListener("click", function () {
+          audit.innerHTML =
+            '<section class="meter-section">' +
+            '<p class="kicker">Live calibration route</p>' +
+            '<h2>Next move held.</h2>' +
+            '<p class="panel-copy">Inspect /showroom/ after the latest Generation 3 update. If G16 remains low, patch only the missing Showroom source token reported by Gauges.</p>' +
+            '</section>';
         });
       }
 
-      function labelMissing(label, tokens) {
-        return tokens.map(function (token) {
-          return label + ": " + token;
-        });
-      }
-
-      function scoreGroup(tokens, missing, points) {
-        if (!tokens || !tokens.length) return 0;
-        return Math.round(((tokens.length - missing.length) / tokens.length) * points);
-      }
-
-      function status(score) {
-        score = Number(score) || 0;
-        if (score >= 90) return "PASS";
-        if (score >= 70) return "MEASURED";
-        if (score > 0) return "HOLD";
-        return "CONSTRAINED";
-      }
-
-      function statusClass(score) {
-        score = Number(score) || 0;
-        if (score >= 90) return "status-pass";
-        if (score >= 70) return "status-measured";
-        if (score > 0) return "status-hold";
-        return "status-constrained";
-      }
-
-      function htmlEscape(value) {
-        if (value === null || value === undefined) return "";
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      function safeSet(selector, html) {
-        var node = document.querySelector(selector);
-        if (node) node.innerHTML = html;
-      }
-
-      function safeText(selector, text) {
-        var node = document.querySelector(selector);
-        if (node) node.textContent = text;
-      }
-
-      async function fetchText(url) {
-        try {
-          var response = await fetch(url, { cache: "no-store" });
-          var text = await response.text();
-          return {
-            ok: response.ok,
-            status: response.status,
-            text: text
-          };
-        } catch (error) {
-          return {
-            ok: false,
-            status: 0,
-            text: "",
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-      }
-
-      async function fetchHead(url) {
-        try {
-          var response = await fetch(url, { cache: "no-store" });
-          return {
-            ok: response.ok,
-            status: response.status
-          };
-        } catch (error) {
-          return {
-            ok: false,
-            status: 0,
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-      }
-
-      async function checkRoute(config) {
-        var fetched = await fetchText(config.url);
-        var missing = fetched.ok ? missingTokens(fetched.text, config.tokens) : config.tokens.slice();
-        var score = 0;
-
-        if (fetched.ok && missing.length === 0) score = 100;
-        else if (fetched.ok) score = 50;
-
-        return {
-          id: config.id,
-          label: config.label,
-          url: config.url,
-          score: score,
-          http: fetched.status,
-          missing: missing,
-          text: fetched.text
-        };
-      }
-
-      async function checkAsset(id, label, url) {
-        var fetched = await fetchHead(url);
-        return {
-          id: id,
-          label: label,
-          url: url,
-          score: fetched.ok ? 100 : 0,
-          http: fetched.status,
-          missing: fetched.ok ? [] : ["HTTP 200 for required asset"]
-        };
-      }
-
-      async function checkShowroomVisible() {
-        var html = await fetchText("/showroom/");
-        var css = await fetchText("/showroom/showroom.css");
-        var combined = (html.text || "") + "\n" + (css.text || "");
-
-        var htmlTokens = ["showroom", "showroom-stage", "showroom-card", "showroom-globe", "site-nav"];
-        var cssTokens = ["showroom", "showroom-stage", "showroom-card", "showroom-globe", "site-nav"];
-
-        var htmlMissing = html.ok ? missingTokens(html.text, htmlTokens).map(function (token) { return "HTML: " + token; }) : htmlTokens.map(function (token) { return "HTML: " + token; });
-        var cssMissing = html.ok ? missingTokens(combined, cssTokens).map(function (token) { return "CSS: " + token; }) : cssTokens.map(function (token) { return "CSS: " + token; });
-
-        var iframeResult = await iframeBodyStyled("/showroom/");
-
-        var htmlScore = html.ok && htmlMissing.length === 0 ? 100 : (html.ok ? 50 : 0);
-        var cssScore = html.ok && cssMissing.length === 0 ? 100 : (html.ok ? 50 : 0);
-        var shellScore = html.ok && (html.text.indexOf("showroom-shell") !== -1 || html.text.indexOf("showroom-stage") !== -1) ? 100 : (html.ok ? 80 : 0);
-        var rawScore = html.ok && html.text.indexOf("<body>") !== -1 && html.text.indexOf("showroom") === -1 ? 0 : 100;
-        var iframeScore = iframeResult.ok ? 100 : 80;
-
-        var score = Math.round((htmlScore + cssScore + shellScore + rawScore + iframeScore) / 5);
-        var missing = [].concat(htmlMissing, cssMissing);
-
-        if (!iframeResult.ok) missing.push("IFRAME: body styled");
-
-        return {
-          id: "G11_SHOWROOM_VISIBLE_RENDER",
-          label: "Showroom Visible Render Meter",
-          url: "/showroom/",
-          score: score,
-          http: html.status,
-          missing: missing,
-          components: [
-            ["HTML source contract", htmlScore],
-            ["CSS contract", cssScore],
-            ["Visual shell contract", shellScore],
-            ["Raw fallback detector", rawScore],
-            ["Hidden iframe computed render", iframeScore + " / " + iframeResult.reason]
-          ]
-        };
-      }
-
-      function iframeBodyStyled(url) {
-        return new Promise(function (resolve) {
-          var iframe = document.createElement("iframe");
-          var done = false;
-
-          iframe.id = "probe-frame";
-          iframe.src = url;
-
-          function finish(result) {
-            if (done) return;
-            done = true;
-            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-            resolve(result);
-          }
-
-          iframe.onload = function () {
-            try {
-              var doc = iframe.contentDocument || iframe.contentWindow.document;
-              var body = doc.body;
-              var computed = iframe.contentWindow.getComputedStyle(body);
-              var bgColor = computed.backgroundColor;
-              var bgImage = computed.backgroundImage;
-              var color = computed.color;
-              var fontFamily = computed.fontFamily;
-
-              var styled =
-                (bgColor && bgColor !== "rgba(0, 0, 0, 0)" && bgColor !== "transparent") ||
-                (bgImage && bgImage !== "none") ||
-                (fontFamily && fontFamily.toLowerCase().indexOf("times") === -1) ||
-                (color && color !== "rgb(0, 0, 0)");
-
-              finish({ ok: !!styled, reason: styled ? "iframe-loaded-body-styled" : "iframe-loaded-unstyled" });
-            } catch (error) {
-              finish({ ok: false, reason: "iframe-read-error" });
-            }
-          };
-
-          window.setTimeout(function () {
-            finish({ ok: false, reason: "iframe-timeout" });
-          }, 2600);
-
-          document.body.appendChild(iframe);
-        });
-      }
-
-      async function checkMoonDiagnostic() {
-        var fetched = await fetchText("/showroom/globe/");
-        var requiredMissing = fetched.ok ? missingTokens(fetched.text, MOON_TOKENS) : MOON_TOKENS.slice();
-        var layerMissing = fetched.ok ? missingTokens(fetched.text, MOON_LAYER_TOKENS) : MOON_LAYER_TOKENS.slice();
-
-        var score = 0;
-
-        if (fetched.ok) {
-          if (!requiredMissing.includes("data-moon-construct=\"diagnostic\"")) score += 20;
-          if (!requiredMissing.includes("data-moon-disposition=\"behind-earth-reflective-satellite\"")) score += 15;
-          if (!requiredMissing.includes("data-moon-confines=\"bounded-secondary-demo-universe\"")) score += 15;
-          if (!requiredMissing.includes("data-moon-confounds=\"active-diagnostic\"")) score += 10;
-          if (!requiredMissing.includes("data-reflected-moonlight=\"active\"")) score += 15;
-          if (!requiredMissing.includes("data-artificial-moonlight=\"superseded\"") && !requiredMissing.includes("data-real-moon-developed=\"diagnostic-first-pass\"")) score += 10;
-          if (!requiredMissing.includes("data-moon-iff-standard=\"active\"")) score += 5;
-          if (!requiredMissing.includes("data-progressive-diagnostic-gates=\"active\"")) score += 5;
-          if (!layerMissing.includes("moon-diagnostic-construct")) score += 3;
-          if (!layerMissing.includes("earth-reflected-moonlight")) score += 2;
-        }
-
-        return {
-          id: "G12_MOON_DIAGNOSTIC",
-          label: "Moon Diagnostic Meter",
-          url: "/showroom/globe/",
-          score: clamp(score, 0, 100),
-          http: fetched.status,
-          missing: requiredMissing.concat(layerMissing),
-          components: [
-            ["Moon construct identity", requiredMissing.includes("data-moon-construct=\"diagnostic\"") ? 0 : 20],
-            ["Moon disposition", requiredMissing.includes("data-moon-disposition=\"behind-earth-reflective-satellite\"") ? 0 : 15],
-            ["Moon confines", requiredMissing.includes("data-moon-confines=\"bounded-secondary-demo-universe\"") ? 0 : 15],
-            ["Moon confounds", requiredMissing.includes("data-moon-confounds=\"active-diagnostic\"") ? 0 : 10],
-            ["Reflected moonlight", requiredMissing.includes("data-reflected-moonlight=\"active\"") ? 0 : 15],
-            ["Artificial shim supersession", (requiredMissing.includes("data-artificial-moonlight=\"superseded\"") || requiredMissing.includes("data-real-moon-developed=\"diagnostic-first-pass\"")) ? 0 : 10],
-            ["IFF progressive gates", (requiredMissing.includes("data-moon-iff-standard=\"active\"") ? 0 : 5) + (requiredMissing.includes("data-progressive-diagnostic-gates=\"active\"") ? 0 : 5)],
-            ["Render layer evidence", (layerMissing.includes("moon-diagnostic-construct") ? 0 : 3) + (layerMissing.includes("earth-reflected-moonlight") ? 0 : 2)]
-          ]
-        };
-      }
-
-      async function checkEarthReadability() {
-        var fetched = await fetchText("/showroom/globe/");
-        var requiredMissing = fetched.ok ? missingTokens(fetched.text, EARTH_READABILITY_TOKENS) : EARTH_READABILITY_TOKENS.slice();
-        var layerMissing = fetched.ok ? missingTokens(fetched.text, EARTH_LAYER_TOKENS) : EARTH_LAYER_TOKENS.slice();
-
-        var score = 0;
-
-        if (fetched.ok) {
-          if (!requiredMissing.includes("data-earth-readability=\"tuned\"")) score += 20;
-          if (!requiredMissing.includes("data-night-side-readable=\"true\"")) score += 15;
-          if (!requiredMissing.includes("data-darkness-standard=\"shadow-with-readable-surface\"")) score += 15;
-          if (!requiredMissing.includes("data-terminator-preserved=\"true\"")) score += 15;
-          if (!requiredMissing.includes("data-earth-readability-iff-standard=\"active\"")) score += 10;
-          if (!requiredMissing.includes("data-earth-visual-acceptance=\"pending\"")) score += 10;
-          if (!requiredMissing.includes("DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1")) score += 10;
-          if (!layerMissing.includes("earth-texture")) score += 1;
-          if (!layerMissing.includes("earth-night")) score += 1;
-          if (!layerMissing.includes("earth-terminator")) score += 1;
-          if (!layerMissing.includes("earth-reflected-moonlight")) score += 1;
-          if (!layerMissing.includes("earth-morning-edge") && !layerMissing.includes("earth-breakfast-clouds")) score += 1;
-        }
-
-        return {
-          id: "G13_EARTH_READABILITY",
-          label: "Earth Readability Meter",
-          url: "/showroom/globe/",
-          score: clamp(score, 0, 100),
-          http: fetched.status,
-          missing: requiredMissing.concat(layerMissing),
-          components: [
-            ["Earth readability contract", requiredMissing.includes("data-earth-readability=\"tuned\"") ? 0 : 20],
-            ["Night-side readability", requiredMissing.includes("data-night-side-readable=\"true\"") ? 0 : 15],
-            ["Darkness standard", requiredMissing.includes("data-darkness-standard=\"shadow-with-readable-surface\"") ? 0 : 15],
-            ["Terminator preservation", requiredMissing.includes("data-terminator-preserved=\"true\"") ? 0 : 15],
-            ["Readability IFF standard", requiredMissing.includes("data-earth-readability-iff-standard=\"active\"") ? 0 : 10],
-            ["Visual acceptance state", requiredMissing.includes("data-earth-visual-acceptance=\"pending\"") ? 0 : 10],
-            ["Receipt token", requiredMissing.includes("DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1") ? 0 : 10],
-            ["Layer evidence", Math.max(0, 5 - layerMissing.length)]
-          ]
-        };
-      }
-
-      async function checkEarthColorDiscrimination() {
-        var fetched = await fetchText("/showroom/globe/");
-        var text = fetched.text || "";
-
-        var contractMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_CONTRACT_TOKENS) : EARTH_COLOR_CONTRACT_TOKENS.slice();
-        var discriminationMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_DISCRIMINATION_TOKENS) : EARTH_COLOR_DISCRIMINATION_TOKENS.slice();
-        var lightMissing = fetched.ok ? missingTokens(text, EARTH_LIGHT_COLOR_TOKENS) : EARTH_LIGHT_COLOR_TOKENS.slice();
-        var shadowMissing = fetched.ok ? missingTokens(text, EARTH_SHADOW_COLOR_TOKENS) : EARTH_SHADOW_COLOR_TOKENS.slice();
-        var structureMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_STRUCTURE_TOKENS) : EARTH_COLOR_STRUCTURE_TOKENS.slice();
-        var receiptMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_RECEIPT_TOKENS) : EARTH_COLOR_RECEIPT_TOKENS.slice();
-
-        var contractScore = fetched.ok ? scoreGroup(EARTH_COLOR_CONTRACT_TOKENS, contractMissing, 25) : 0;
-        var discriminationScore = fetched.ok ? scoreGroup(EARTH_COLOR_DISCRIMINATION_TOKENS, discriminationMissing, 20) : 0;
-        var lightScore = fetched.ok ? scoreGroup(EARTH_LIGHT_COLOR_TOKENS, lightMissing, 15) : 0;
-        var shadowScore = fetched.ok ? scoreGroup(EARTH_SHADOW_COLOR_TOKENS, shadowMissing, 15) : 0;
-        var structureScore = fetched.ok ? scoreGroup(EARTH_COLOR_STRUCTURE_TOKENS, structureMissing, 15) : 0;
-        var receiptScore = fetched.ok ? scoreGroup(EARTH_COLOR_RECEIPT_TOKENS, receiptMissing, 10) : 0;
-
-        var score = clamp(contractScore + discriminationScore + lightScore + shadowScore + structureScore + receiptScore, 0, 100);
-
-        var missing = []
-          .concat(labelMissing("COLOR_CONTRACT", contractMissing))
-          .concat(labelMissing("DISCRIMINATION", discriminationMissing))
-          .concat(labelMissing("LIGHT", lightMissing))
-          .concat(labelMissing("SHADOW", shadowMissing))
-          .concat(labelMissing("STRUCTURE", structureMissing))
-          .concat(labelMissing("RECEIPT", receiptMissing));
-
-        return {
-          id: "G14_EARTH_COLOR_DISCRIMINATION",
-          label: "Earth Color Discrimination Meter",
-          url: "/showroom/globe/",
-          score: score,
-          http: fetched.status,
-          missing: missing,
-          components: [
-            ["Source color contract", contractScore],
-            ["Ocean / land / cloud discrimination", discriminationScore],
-            ["Warm sunlight / cool moonlight separation", lightScore],
-            ["Terminator and shadow preservation", shadowScore],
-            ["Layer structure evidence", structureScore],
-            ["Receipt / IFF / pending visual acceptance", receiptScore]
-          ]
-        };
-      }
-
-      async function checkCompassG2() {
-        var fetched = await fetchText("/");
-        var requiredMissing = fetched.ok ? missingTokens(fetched.text, COMPASS_G2_TOKENS) : COMPASS_G2_TOKENS.slice();
-        var structureMissing = fetched.ok ? missingTokens(fetched.text, COMPASS_G2_STRUCTURE_TOKENS) : COMPASS_G2_STRUCTURE_TOKENS.slice();
-
-        var score = 0;
-
-        if (fetched.ok) {
-          if (!requiredMissing.includes("data-compass-generation=\"generation-2\"")) score += 10;
-          if (!requiredMissing.includes("data-compass-control-surface=\"active\"")) score += 10;
-          if (!requiredMissing.includes("data-flat-world-baseline=\"preserved\"")) score += 5;
-          if (!requiredMissing.includes("data-tree-mode=\"available\"")) score += 5;
-          if (!requiredMissing.includes("data-globe-mode=\"available\"")) score += 5;
-          if (!requiredMissing.includes("data-globe-handoff=\"showroom-demo-universe\"")) score += 5;
-          if (!requiredMissing.includes("data-visual-control-surface=\"active\"")) score += 10;
-          if (!requiredMissing.includes("data-mobile-layout-hardened=\"true\"")) score += 15;
-          if (!requiredMissing.includes("COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1")) score += 8;
-          if (!requiredMissing.includes("COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1")) score += 7;
-          score += Math.max(0, 20 - Math.round((structureMissing.length / COMPASS_G2_STRUCTURE_TOKENS.length) * 20));
-        }
-
-        return {
-          id: "G15_COMPASS_G2_VISUAL_CONTROL_SURFACE",
-          label: "Compass G2 Visual Control Surface Meter",
-          url: "/",
-          score: clamp(score, 0, 100),
-          http: fetched.status,
-          missing: requiredMissing.concat(structureMissing.map(function (token) {
-            return "STRUCTURE: " + token;
-          })),
-          components: [
-            ["Generation 2 marker", requiredMissing.includes("data-compass-generation=\"generation-2\"") ? 0 : 10],
-            ["Control surface marker", requiredMissing.includes("data-compass-control-surface=\"active\"") ? 0 : 10],
-            ["Flat/Tree/Globe handoff contract", (
-              (requiredMissing.includes("data-flat-world-baseline=\"preserved\"") ? 0 : 5) +
-              (requiredMissing.includes("data-tree-mode=\"available\"") ? 0 : 5) +
-              (requiredMissing.includes("data-globe-mode=\"available\"") ? 0 : 5) +
-              (requiredMissing.includes("data-globe-handoff=\"showroom-demo-universe\"") ? 0 : 5)
-            )],
-            ["Visual control marker", requiredMissing.includes("data-visual-control-surface=\"active\"") ? 0 : 10],
-            ["Mobile hardening marker", requiredMissing.includes("data-mobile-layout-hardened=\"true\"") ? 0 : 15],
-            ["Receipt tokens", (
-              (requiredMissing.includes("COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1") ? 0 : 8) +
-              (requiredMissing.includes("COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1") ? 0 : 7)
-            )],
-            ["Structure evidence", Math.max(0, 20 - Math.round((structureMissing.length / COMPASS_G2_STRUCTURE_TOKENS.length) * 20))]
-          ]
-        };
-      }
-
-      async function checkShowroomLaneB() {
-        var fetched = await fetchText("/showroom/");
-        var text = fetched.text || "";
-
-        var sourceMissing = fetched.ok ? missingTokens(text, SHOWROOM_SOURCE_TOKENS) : SHOWROOM_SOURCE_TOKENS.slice();
-        var laneMissing = fetched.ok ? missingTokens(text, SHOWROOM_LANE_B_TOKENS) : SHOWROOM_LANE_B_TOKENS.slice();
-        var structureMissing = fetched.ok ? missingTokens(text, SHOWROOM_STRUCTURE_TOKENS) : SHOWROOM_STRUCTURE_TOKENS.slice();
-        var mobileMissing = fetched.ok ? missingTokens(text, SHOWROOM_MOBILE_TOKENS) : SHOWROOM_MOBILE_TOKENS.slice();
-        var routeMissing = fetched.ok ? missingTokens(text, SHOWROOM_ROUTE_TOKENS) : SHOWROOM_ROUTE_TOKENS.slice();
-        var receiptMissing = fetched.ok ? missingTokens(text, SHOWROOM_RECEIPT_TOKENS) : SHOWROOM_RECEIPT_TOKENS.slice();
-
-        var sourceScore = fetched.ok ? scoreGroup(SHOWROOM_SOURCE_TOKENS, sourceMissing, 25) : 0;
-        var visualScore = fetched.ok ? Math.round((scoreGroup(SHOWROOM_LANE_B_TOKENS, laneMissing, 15) + scoreGroup(SHOWROOM_STRUCTURE_TOKENS, structureMissing, 10))) : 0;
-        var mobileScore = fetched.ok ? Math.round((scoreGroup(["data-showroom-mobile-layout-hardened=\"true\""], missingTokens(text, ["data-showroom-mobile-layout-hardened=\"true\""]), 8) + scoreGroup(SHOWROOM_MOBILE_TOKENS, mobileMissing, 17))) : 0;
-        var admissibilityScore = fetched.ok ? Math.round((scoreGroup(SHOWROOM_ROUTE_TOKENS, routeMissing, 10) + scoreGroup(SHOWROOM_RECEIPT_TOKENS, receiptMissing, 10) + (includesToken(text, "data-showroom-card-visual-truth=\"pending\"") ? 5 : 0))) : 0;
-
-        var score = clamp(sourceScore + visualScore + mobileScore + admissibilityScore, 0, 100);
-
-        var missing = []
-          .concat(labelMissing("SOURCE", sourceMissing))
-          .concat(labelMissing("LANE_B", laneMissing))
-          .concat(labelMissing("STRUCTURE", structureMissing))
-          .concat(labelMissing("MOBILE", mobileMissing))
-          .concat(labelMissing("ROUTE", routeMissing))
-          .concat(labelMissing("RECEIPT", receiptMissing));
-
-        return {
-          id: "G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT",
-          label: "Showroom Card Sync Meter",
-          url: "/showroom/",
-          score: score,
-          http: fetched.status,
-          missing: missing,
-          components: [
-            ["Source contract", sourceScore],
-            ["Visual handoff / card sync", visualScore],
-            ["Mobile layout hardening", mobileScore],
-            ["Measurement admissibility", admissibilityScore]
-          ]
-        };
-      }
-
-      async function checkRenderEvidence() {
-        var showroom = await checkRoute(route("SR_PARENT", "Showroom parent handoff", "/showroom/", ["href=\"/showroom/globe/\"", "showroom"]));
-        var globe = await checkRoute(route("SR_DEMO_UNIVERSE", "Demo Universe Earth route", "/showroom/globe/", [
-          "data-earth-surface=\"/assets/earth/earth_surface_2048.jpg\"",
-          "data-earth-clouds=\"/assets/earth/earth_clouds_2048.jpg\"",
-          "data-sun-shadow=\"active\"",
-          "data-morning-edge=\"active\""
-        ]));
-        var surface = await checkAsset("SR_EARTH_SURFACE", "Earth surface asset", "/assets/earth/earth_surface_2048.jpg");
-        var clouds = await checkAsset("SR_EARTH_CLOUDS", "Earth cloud asset", "/assets/earth/earth_clouds_2048.jpg");
-        var backlinks = await checkRoute(route("SR_BACKLINKS", "Demo Universe backlinks", "/showroom/globe/", ["href=\"/showroom/\"", "href=\"/gauges/\"", "href=\"/\""]));
-        var shadow = await checkRoute(route("SR_SHADOW_CONTRACT", "Light / shadow technical contract", "/showroom/globe/", [
-          "data-sun-shadow=\"active\"",
-          "sun-shadow=active",
-          "DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1"
-        ]));
-
-        return [showroom, globe, surface, clouds, backlinks, shadow];
-      }
-
-      async function runCalibration() {
-        setLoading();
-
-        try {
-          var house = await Promise.all(HOUSE_ROUTES.map(checkRoute));
-          var products = await Promise.all(PRODUCT_ROUTES.map(checkRoute));
-          var planets = await Promise.all(PLANET_ROUTES.map(checkRoute));
-          var render = await checkRenderEvidence();
-          var showroomVisible = await checkShowroomVisible();
-          var moon = await checkMoonDiagnostic();
-          var earthReadability = await checkEarthReadability();
-          var earthColor = await checkEarthColorDiscrimination();
-          var compassG2 = await checkCompassG2();
-          var showroomLaneB = await checkShowroomLaneB();
-
-          var houseScore = average(house);
-          var productScore = average(products);
-          var planetScore = average(planets);
-          var renderScore = average(render);
-          var visibleScore = showroomVisible.score;
-          var moonScore = moon.score;
-          var earthReadabilityScore = earthReadability.score;
-          var earthColorScore = earthColor.score;
-          var compassG2Score = compassG2.score;
-          var showroomLaneBScore = showroomLaneB.score;
-
-          var compass = await fetchText("/");
-          var coreScore = compass.ok && (includesToken(compass.text, "data-core-hold=\"true\"") || includesToken(compass.text, "CORE_EXPERIENCE_HELD")) ? 100 : (compass.ok ? 50 : 0);
-          var generationScore = calculateGenerationScore(compass.text);
-
-          var shadowScore = render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50;
-          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore + shadowScore) / 8);
-          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore + productScore + planetScore) / 12);
-
-          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability, earthColor, compassG2, showroomLaneB]);
-          var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
-          var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
-          var seats = Math.round(256 * overall / 100);
-
-          var routePressureValue = 100 - houseScore;
-          var renderPressureValue = 100 - renderScore;
-          var visiblePressureValue = 100 - visibleScore;
-          var moonPressureValue = 100 - moonScore;
-          var earthReadabilityPressureValue = 100 - earthReadabilityScore;
-          var earthColorPressureValue = 100 - earthColorScore;
-          var compassPressureValue = 100 - compassG2Score;
-          var showroomCardPressureValue = 100 - showroomLaneBScore;
-          var productPressureValue = 100 - productScore;
-          var planetPressureValue = 100 - planetScore;
-          var corePressureValue = 100 - coreScore;
-          var generationPressureValue = 100 - generationScore;
-
-          var barometer = Math.round((
-            routePressureValue +
-            renderPressureValue +
-            visiblePressureValue +
-            moonPressureValue +
-            earthReadabilityPressureValue +
-            earthColorPressureValue +
-            compassPressureValue +
-            showroomCardPressureValue +
-            productPressureValue +
-            planetPressureValue +
-            corePressureValue +
-            generationPressureValue
-          ) / 12);
-
-          var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
-          var acid = clamp(Math.round((barometer + seismograph + generationPressureValue) / 3), 0, 100);
-          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore) / 10), 0, 100);
-          var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
-
-          renderSummary([
-            ["Overall ceiling", overall, "composite"],
-            ["House skeleton", houseScore, "marker health"],
-            ["Core experience", coreScore, coreScore >= 90 ? "held" : "not held"],
-            ["Generation readiness", generationScore, "GEN baseline"],
-            ["Render health", renderScore, "Demo Universe Earth"],
-            ["Showroom visible", visibleScore, "visible render"],
-            ["Moon Diagnostic", moonScore, "diagnostic Moon"],
-            ["Earth Readability", earthReadabilityScore, "shadow readable"],
-            ["Earth Color", earthColorScore, "color literacy"],
-            ["Compass G2", compassG2Score, "visual control"],
-            ["Showroom Card", showroomLaneBScore, "Lane B sync"],
-            ["Products", productScore, "product route health"],
-            ["Planets", planetScore, "planet route health"]
-          ]);
-
-          renderInstruments([
-            ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
-            ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
-            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, Earth Color, Compass G2, Showroom Card, product, planet, core, and generation lanes."],
-            ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
-            ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
-            ["Light / Shadow Meter", shadowScore, "Shadow contract is measured; visual acceptance remains separately bounded."],
-            ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
-            ["Earth Readability Meter", earthReadabilityScore, "Measures whether Earth is shadowed while still carrying readable surface expression."],
-            ["Earth Color Discrimination Meter", earthColorScore, "Measures whether full Demo Universe Earth preserves ocean, land, cloud, warm sunlight, cool reflected moonlight, and shadow color distinction."],
-            ["Compass G2 Meter", compassG2Score, "Measures whether the Compass Generation 2 visual control surface and mobile hardening contract landed."],
-            ["Showroom Card Sync Meter", showroomLaneBScore, "Measures whether the Showroom card Earth color sync and mobile layout hardening contract landed."],
-            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, Earth readability, Earth color, Compass G2 source truth, and Showroom Lane B source truth."]
-          ]);
-
-          renderPressureCards([
-            ["Route Pressure", routePressureValue, "house lane"],
-            ["Render Pressure", renderPressureValue, "render lane"],
-            ["Visible Render Pressure", visiblePressureValue, "Showroom lane"],
-            ["Moon Pressure", moonPressureValue, "Moon diagnostic lane"],
-            ["Earth Readability Pressure", earthReadabilityPressureValue, "Earth visual lane"],
-            ["Earth Color Pressure", earthColorPressureValue, "Earth color lane"],
-            ["Compass G2 Pressure", compassPressureValue, "Compass control lane"],
-            ["Showroom Card Pressure", showroomCardPressureValue, "Showroom card lane"],
-            ["Product Pressure", productPressureValue, "product lane"],
-            ["Planet Pressure", planetPressureValue, "planet lane"],
-            ["Core Pressure", corePressureValue, "Compass/core lane"],
-            ["Generation Pressure", generationPressureValue, "generation lane"]
-          ]);
-
-          renderPH(ph, acid, base);
-          renderEvidence("[data-earth-color-evidence]", [earthColor], true);
-          renderEvidence("[data-showroom-lane-b-evidence]", [showroomLaneB], true);
-          renderEvidence("[data-compass-g2-evidence]", [compassG2], true);
-          renderEvidence("[data-earth-readability-evidence]", [earthReadability], true);
-          renderEvidence("[data-moon-evidence]", [moon], true);
-          renderEvidence("[data-showroom-evidence]", [showroomVisible], true);
-          renderEvidence("[data-render-evidence]", render, false);
-          renderEvidence("[data-house-evidence]", house, false);
-          renderEvidence("[data-product-evidence]", products, false);
-          renderEvidence("[data-planet-evidence]", planets, false);
-          renderReceipt({
-            overall: overall,
-            house: houseScore,
-            core: coreScore,
-            generation: generationScore,
-            render: renderScore,
-            visible: visibleScore,
-            moon: moonScore,
-            earthReadability: earthReadabilityScore,
-            earthColor: earthColorScore,
-            compassG2: compassG2Score,
-            showroomLaneB: showroomLaneBScore,
-            products: productScore,
-            planets: planetScore,
-            seismograph: seismograph,
-            barometer: barometer,
-            acid: acid,
-            base: base,
-            ph: ph
-          });
-        } catch (error) {
-          renderCalibrationError(error);
-        }
-      }
-
-      function calculateGenerationScore(source) {
-        var base = 20;
-        if (includesToken(source, "GEN_1_ACCEPTED")) base = 40;
-        if (includesToken(source, "TREE_G2")) base = 60;
-        if (includesToken(source, "GEN_3_ACCEPTED")) base = 100;
-        return base;
-      }
-
-      function setLoading() {
-        safeSet("[data-summary-grid]", card("Overall ceiling", "…", "running"));
-        safeSet("[data-instrument-grid]", "");
-        safeSet("[data-pressure-grid]", "");
-        safeSet("[data-ph-readout]", "<p>Running live calibration.</p>");
-      }
-
-      function card(label, value, sub) {
-        return '<article class="dial"><strong>' + htmlEscape(value) + '</strong><span>' + htmlEscape(label) + '</span><small>' + htmlEscape(sub) + '</small></article>';
-      }
-
-      function renderSummary(items) {
-        safeSet("[data-summary-grid]", items.map(function (item) {
-          return card(item[0], item[1], item[2]);
-        }).join(""));
-      }
-
-      function renderInstruments(items) {
-        safeSet("[data-instrument-grid]", items.map(function (item) {
-          return '<article class="instrument"><strong>' + htmlEscape(item[1]) + '</strong><span>' + htmlEscape(item[0]) + '</span><p>' + htmlEscape(item[2]) + '</p></article>';
-        }).join(""));
-      }
-
-      function renderPressureCards(items) {
-        safeSet("[data-pressure-grid]", items.map(function (item) {
-          return '<article class="pressure-card"><strong>' + htmlEscape(item[1]) + '</strong><span>' + htmlEscape(item[0]) + '</span><p>' + htmlEscape(item[2]) + '</p></article>';
-        }).join(""));
-      }
-
-      function renderPH(ph, acid, base) {
-        safeSet("[data-ph-readout]",
-          '<article class="instrument"><strong>pH ' + Number(ph).toFixed(1) + '</strong><span>Acid/Base Meter</span><p>acid=' + htmlEscape(acid) + ' · base=' + htmlEscape(base) + '. Acid marks corrosive instability. Base marks stabilizing structure. The target is controlled balance, not denial of pressure.</p></article>'
-        );
-      }
-
-      function renderEvidence(selector, items, showComponents) {
-        if (!items || !items.length) {
-          safeSet(selector, '<article class="evidence-card"><h3>No evidence returned.</h3><p>Calibration did not return evidence for this section.</p></article>');
-          return;
-        }
-
-        safeSet(selector, items.map(function (item) {
-          var missing = item.missing && item.missing.length
-            ? '<ul>' + item.missing.map(function (token) { return '<li><code>' + htmlEscape(token) + '</code></li>'; }).join("") + '</ul>'
-            : '<ul><li>NONE</li></ul>';
-
-          var components = "";
-          if (showComponents && item.components) {
-            components = '<ul>' + item.components.map(function (row) {
-              return '<li>' + htmlEscape(row[0]) + ': <code>' + htmlEscape(row[1]) + '</code></li>';
-            }).join("") + '</ul>';
-          }
-
-          return '<article class="evidence-card">' +
-            '<h3>' + htmlEscape(item.id) + ' · ' + htmlEscape(item.label) + ' · ' + htmlEscape(item.score) + '</h3>' +
-            '<div class="evidence-line"><strong class="' + statusClass(item.score) + '">' + status(item.score) + '</strong><span>· HTTP=' + htmlEscape(item.http) + '</span><span>· <code>' + htmlEscape(item.url) + '</code></span></div>' +
-            components +
-            '<p>Missing or constrained tokens:</p>' +
-            missing +
-          '</article>';
-        }).join(""));
-      }
-
-      function renderReceipt(scores) {
-        safeText("[data-receipt]",
-          "VERSION: GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1\n" +
-          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1 + GAUGES_EARTH_READABILITY_METER_TNT_v1 + GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1 + GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\n" +
-          "CADILLAC KEY: master authority key.\n" +
-          "MEASUREMENT KEY: operating proof key.\n" +
-          "NEW CONTRACT: G14 · Earth Color Discrimination Meter measures full-globe Earth color literacy source truth.\n" +
-          "EARTH COLOR READ: color discrimination measured, visual acceptance remains screenshot-bound.\n" +
-          "SHOWROOM READ: Lane B card sync measured, visual acceptance remains screenshot-bound.\n" +
-          "COMPASS READ: Generation 2 control surface measured, visual acceptance remains screenshot-bound.\n" +
-          "MOON READ: diagnostic-first-pass, not final Moon law.\n" +
-          "EARTH READABILITY READ: tuned readability, visual acceptance pending.\n\n" +
-          "AFTER:\n" +
-          "Overall=" + scores.overall + "\n" +
-          "House=" + scores.house + "\n" +
-          "CoreExperience=" + scores.core + "\n" +
-          "GenerationReadiness=" + scores.generation + "\n" +
-          "RenderHealth=" + scores.render + "\n" +
-          "ShowroomVisible=" + scores.visible + "\n" +
-          "MoonDiagnostic=" + scores.moon + "\n" +
-          "EarthReadability=" + scores.earthReadability + "\n" +
-          "EarthColor=" + scores.earthColor + "\n" +
-          "CompassG2=" + scores.compassG2 + "\n" +
-          "ShowroomLaneB=" + scores.showroomLaneB + "\n" +
-          "Products=" + scores.products + "\n" +
-          "Planets=" + scores.planets + "\n" +
-          "Seismograph=" + scores.seismograph + "\n" +
-          "Barometer=" + scores.barometer + "\n" +
-          "pH=" + Number(scores.ph).toFixed(1) + "\n" +
-          "Acid=" + scores.acid + "\n" +
-          "Base=" + scores.base + "\n\n" +
-          "IFF ROOT: Earth color is constrained if and only if the full globe route passes readability but cannot preserve ocean, land, cloud, warm sunlight, cool reflected moonlight, shadow, terminator, layer structure, and pending visual-acceptance truth."
-        );
-      }
-
-      function renderCalibrationError(error) {
-        var message = String(error && error.message ? error.message : error);
-
-        safeSet("[data-pressure-grid]", '<article class="pressure-card"><strong>HOLD</strong><span>Display completion interrupted</span><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-ph-readout]", '<article class="instrument"><strong>HOLD</strong><span>Acid/Base Meter</span><p>Calibration did not complete. Repair only the Gauges display path.</p></article>');
-        safeSet("[data-earth-color-evidence]", '<article class="evidence-card"><h3>G14 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-showroom-lane-b-evidence]", '<article class="evidence-card"><h3>G16 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-compass-g2-evidence]", '<article class="evidence-card"><h3>G15 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-earth-readability-evidence]", '<article class="evidence-card"><h3>G13 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-moon-evidence]", '<article class="evidence-card"><h3>G12 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeSet("[data-showroom-evidence]", '<article class="evidence-card"><h3>G11 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeText("[data-receipt]", "VERSION: GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
-      }
-
-      document.querySelector("[data-run-calibration]").addEventListener("click", runCalibration);
-      runCalibration();
+      setNextMoveDataset();
+      bindRunButton();
     })();
   </script>
 </body>

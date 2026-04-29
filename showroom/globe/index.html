@@ -1,760 +1,110 @@
+<!-- /showroom/index.html -->
 <!DOCTYPE html>
-<html
-  lang="en"
-  data-page-id="inspect-demo-universe"
-  data-page="inspect-demo-universe"
-  data-generation="lane-a-full-globe-color-discrimination-v1"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="inspection"
-  data-origin-route="/"
-  data-parent-route="/showroom/"
-  data-current-route="/showroom/globe/"
-  data-demo-universe="globe-only"
-  data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-  data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-  data-earth-standard="demo-universe-restored-earth"
-  data-earth-axis="23.5deg"
-  data-controls="removed"
-  data-sun-shadow="active"
-  data-morning-edge="active"
-  data-breakfast-cloud-crowd="active"
-  data-moon-construct="diagnostic"
-  data-moon-disposition="behind-earth-reflective-satellite"
-  data-moon-confines="bounded-secondary-demo-universe"
-  data-moon-confounds="active-diagnostic"
-  data-reflected-moonlight="active"
-  data-artificial-moonlight="superseded"
-  data-real-moon-developed="diagnostic-first-pass"
-  data-moon-iff-standard="active"
-  data-progressive-diagnostic-gates="active"
-  data-earth-readability="tuned"
-  data-night-side-readable="true"
-  data-darkness-standard="shadow-with-readable-surface"
-  data-terminator-preserved="true"
-  data-earth-readability-iff-standard="active"
-  data-earth-visual-acceptance="pending"
-  data-earth-color-discrimination="tuned"
-  data-ocean-color-readable="true"
-  data-land-color-readable="true"
-  data-cloud-color-readable="true"
-  data-warm-cool-light-separated="true"
-  data-earth-color-iff-standard="active"
-  data-earth-color-visual-acceptance="pending"
-  data-shadow-accepted="pending"
->
+<html lang="en" data-chamber="showroom" data-lattice-chamber="05_SHOWROOM" data-generation="showroom-generation-3-surface-standard">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>Inspect Earth · Demo Universe · Diamond Gate Bridge</title>
-
+  <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe with color-discriminating oceans, land, clouds, warm sunlight, cool reflected moonlight, readable shadow, morning edge, and diagnostic Moon construct."
+    content="The Showroom is the public proof room for Diamond Gate Bridge, presenting stable visual direction, route proof, Earth-centered visual continuity, and audit-ready chamber markers."
   />
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --ink: #f4f7ff;
-      --soft: rgba(244, 247, 255, .72);
-      --gold: #f2c76f;
-      --gold-soft: rgba(242, 199, 111, .16);
-      --line: rgba(244, 247, 255, .14);
-      --line-gold: rgba(242, 199, 111, .42);
-      --black: #02050a;
-      --axis-tilt: -23.5deg;
-      --earth-size: min(82vmin, 920px);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      min-height: 100%;
-      overflow: hidden;
-      background: var(--black);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      background:
-        radial-gradient(ellipse at 86% 12%, rgba(242, 199, 111, .15), transparent 26%),
-        radial-gradient(ellipse at 52% 48%, rgba(66, 112, 194, .13), transparent 34%),
-        radial-gradient(ellipse at 19% 78%, rgba(93, 151, 238, .06), transparent 27%),
-        linear-gradient(180deg, #000209 0%, #020713 56%, #000107 100%);
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      pointer-events: none;
-    }
-
-    body::before {
-      inset: -8%;
-      z-index: 0;
-      opacity: .62;
-      background:
-        radial-gradient(circle at 7% 14%, rgba(255,255,255,.54) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 13% 66%, rgba(255,255,255,.20) 0 .8px, transparent 1.5px),
-        radial-gradient(circle at 18% 31%, rgba(255,255,255,.40) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 23% 87%, rgba(242,199,111,.17) 0 1px, transparent 1.9px),
-        radial-gradient(circle at 34% 57%, rgba(255,255,255,.31) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 39% 8%, rgba(255,255,255,.58) 0 1.3px, transparent 2.2px),
-        radial-gradient(circle at 44% 73%, rgba(170,202,255,.23) 0 1px, transparent 1.9px),
-        radial-gradient(circle at 53% 91%, rgba(255,255,255,.42) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 63% 12%, rgba(242,199,111,.22) 0 1px, transparent 2px),
-        radial-gradient(circle at 69% 68%, rgba(255,255,255,.36) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 79% 83%, rgba(255,255,255,.52) 0 1.25px, transparent 2.2px),
-        radial-gradient(circle at 89% 54%, rgba(255,255,255,.44) 0 1.2px, transparent 2.1px),
-        radial-gradient(ellipse at 31% 42%, rgba(76, 112, 184, .075), transparent 17%),
-        radial-gradient(ellipse at 68% 59%, rgba(98, 70, 152, .06), transparent 21%);
-      background-repeat: no-repeat;
-      animation: naturalStarDrift 96s linear infinite;
-    }
-
-    body::after {
-      inset: 0;
-      z-index: 1;
-      background:
-        radial-gradient(ellipse at 84% 13%, rgba(242, 199, 111, .10), transparent 24%),
-        radial-gradient(ellipse at 28% 54%, rgba(190, 214, 255, .07), transparent 30%),
-        radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.018), transparent 26%),
-        radial-gradient(ellipse at 48% 52%, transparent 0 36%, rgba(0,0,0,.38) 78%, rgba(0,0,0,.76) 100%),
-        linear-gradient(90deg, rgba(0,0,0,.22), transparent 22%, transparent 78%, rgba(0,0,0,.27));
-    }
-
-    @keyframes naturalStarDrift {
-      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-      50% { transform: translate3d(-1.4vw, .9vh, 0) rotate(.16deg); }
-      100% { transform: translate3d(-2.8vw, 1.8vh, 0) rotate(.32deg); }
-    }
-
-    body[data-motion="paused"]::before,
-    body[data-motion="paused"] .earth-texture,
-    body[data-motion="paused"] .earth-clouds,
-    body[data-motion="paused"] .earth-breakfast-clouds {
-      animation-play-state: paused;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    a:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
-    }
-
-    .demo-universe-page {
-      position: relative;
-      z-index: 2;
-      width: 100vw;
-      height: 100svh;
-      min-height: 100svh;
-      overflow: hidden;
-      display: grid;
-      grid-template-rows: auto 1fr;
-    }
-
-    .universe-topbar {
-      position: relative;
-      z-index: 70;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-      padding: clamp(12px, 2.8vh, 24px) clamp(12px, 3vw, 26px);
-      pointer-events: none;
-    }
-
-    .universe-brand {
-      display: grid;
-      gap: 3px;
-      pointer-events: auto;
-      opacity: .42;
-      transition: opacity .16s ease;
-    }
-
-    .universe-brand:hover,
-    .universe-brand:focus-visible {
-      opacity: 1;
-    }
-
-    .universe-brand strong {
-      color: var(--gold);
-      font-size: clamp(.78rem, 2.6vw, 1rem);
-      letter-spacing: .20em;
-      line-height: 1.1;
-      text-transform: uppercase;
-    }
-
-    .universe-brand span {
-      color: var(--soft);
-      font-size: clamp(.82rem, 2.6vw, 1.06rem);
-    }
-
-    .return-link {
-      pointer-events: auto;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: rgba(3, 7, 12, .56);
-      color: var(--ink);
-      backdrop-filter: blur(12px);
-      box-shadow:
-        0 14px 46px rgba(0,0,0,.34),
-        inset 0 0 0 1px rgba(255,255,255,.04);
-      font-size: clamp(.82rem, 2.4vw, 1rem);
-      font-weight: 800;
-      opacity: .72;
-      transition: opacity .16s ease, background .16s ease, border-color .16s ease;
-      white-space: nowrap;
-    }
-
-    .return-link:hover {
-      opacity: 1;
-      border-color: var(--line-gold);
-      background: var(--gold-soft);
-    }
-
-    .universe-stage {
-      position: relative;
-      z-index: 10;
-      width: 100vw;
-      min-height: 0;
-      display: grid;
-      place-items: center;
-      padding: 0 clamp(10px, 3vw, 32px) clamp(18px, 5vh, 46px);
-      isolation: isolate;
-    }
-
-    .universe-stage::before {
-      content: "";
-      position: absolute;
-      z-index: 0;
-      top: clamp(42px, 8vh, 78px);
-      right: clamp(-110px, -6vw, -36px);
-      width: min(35vmin, 370px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      pointer-events: none;
-      opacity: .66;
-      background:
-        radial-gradient(circle at 40% 38%, rgba(255, 252, 220, .94) 0 7%, rgba(255, 225, 126, .72) 18%, rgba(242, 149, 48, .30) 42%, rgba(242, 199, 111, .12) 64%, transparent 76%),
-        radial-gradient(circle, rgba(242, 199, 111, .13), transparent 72%);
-      filter:
-        drop-shadow(0 0 34px rgba(242, 199, 111, .23))
-        drop-shadow(0 0 112px rgba(242, 199, 111, .13));
-    }
-
-    .universe-stage::after {
-      content: "";
-      position: absolute;
-      z-index: 1;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .09), transparent 32%),
-        radial-gradient(ellipse at 24% 58%, rgba(190, 214, 255, .08), transparent 32%),
-        linear-gradient(125deg, transparent 0 38%, rgba(0, 0, 0, .09) 58%, rgba(0, 0, 0, .28) 100%);
-      opacity: .80;
-    }
-
-    .earth-subject {
-      position: relative;
-      z-index: 4;
-      width: var(--earth-size);
-      max-width: 96vw;
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-      filter:
-        drop-shadow(0 0 30px rgba(97, 153, 236, .28))
-        drop-shadow(0 0 76px rgba(242, 199, 111, .08));
-    }
-
-    .moon-diagnostic-construct {
-      position: absolute;
-      z-index: 1;
-      left: -4%;
-      top: 48%;
-      width: 30%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      opacity: .88;
-      transform: translateY(-50%);
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 36% 30%, rgba(255,255,255,.56) 0 4%, transparent 8%),
-        radial-gradient(circle at 57% 43%, rgba(255,255,255,.22) 0 5%, transparent 10%),
-        radial-gradient(circle at 43% 66%, rgba(0,0,0,.24) 0 8%, transparent 14%),
-        radial-gradient(circle at 70% 62%, rgba(0,0,0,.28) 0 7%, transparent 12%),
-        radial-gradient(circle at 44% 40%, #d7d8d4 0%, #9da2a4 42%, #4d5660 70%, #121722 100%);
-      box-shadow:
-        inset -18px -10px 34px rgba(0,0,0,.58),
-        inset 9px 6px 18px rgba(255,255,255,.16),
-        0 0 18px rgba(190, 214, 255, .24),
-        0 0 58px rgba(190, 214, 255, .14),
-        0 0 110px rgba(190, 214, 255, .07);
-    }
-
-    .moon-diagnostic-construct::before {
-      content: "";
-      position: absolute;
-      inset: -42%;
-      border-radius: inherit;
-      background:
-        radial-gradient(circle, rgba(190, 214, 255, .22) 0 17%, rgba(190, 214, 255, .095) 42%, transparent 72%);
-      filter: blur(8px);
-      z-index: -1;
-    }
-
-    .moon-diagnostic-construct::after {
-      content: "";
-      position: absolute;
-      inset: -4%;
-      border-radius: inherit;
-      background:
-        linear-gradient(88deg, rgba(0,0,0,.34), transparent 42%, rgba(255,255,255,.08));
-      opacity: .54;
-    }
-
-    .earth-axis-shell {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      transform: rotate(var(--axis-tilt));
-    }
-
-    .earth-axis-shell::before {
-      content: "";
-      position: absolute;
-      z-index: 0;
-      width: 2px;
-      height: 116%;
-      border-radius: 999px;
-      background:
-        linear-gradient(
-          180deg,
-          transparent,
-          rgba(242, 199, 111, .07) 10%,
-          rgba(242, 199, 111, .22) 50%,
-          rgba(242, 199, 111, .07) 90%,
-          transparent
-        );
-      box-shadow: 0 0 18px rgba(242, 199, 111, .10);
-      opacity: .34;
-    }
-
-    .earth-core {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 36% 26%, rgba(255,255,255,.23), transparent 17%),
-        radial-gradient(circle at 35% 58%, rgba(42, 128, 91, .28), transparent 34%),
-        radial-gradient(circle at 62% 43%, rgba(24, 101, 185, .36), transparent 35%),
-        radial-gradient(circle at 50% 50%, #0c4f9d 0%, #06234e 70%, #00030b 100%);
-      box-shadow:
-        inset -58px 30px 98px rgba(0,0,0,.69),
-        inset -18px -24px 50px rgba(0,0,0,.60),
-        inset 24px 15px 36px rgba(255,255,255,.11),
-        0 0 34px rgba(97,153,236,.25);
-    }
-
-    .earth-texture,
-    .earth-clouds,
-    .earth-color-separation,
-    .earth-daylight,
-    .earth-morning-edge,
-    .earth-breakfast-clouds,
-    .earth-terminator,
-    .earth-night,
-    .earth-reflected-moonlight,
-    .earth-atmosphere,
-    .earth-rim {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .earth-texture {
-      z-index: 1;
-      background-image: url("/assets/earth/earth_surface_2048.jpg");
-      background-size: 210% 100%;
-      background-position: 0% 50%;
-      background-repeat: repeat-x;
-      animation: earthTextureSpin 42s linear infinite;
-      filter: saturate(1.42) contrast(1.20) brightness(.92);
-    }
-
-    .earth-color-separation {
-      z-index: 2;
-      background:
-        radial-gradient(ellipse at 63% 43%, rgba(24, 107, 196, .16), transparent 39%),
-        radial-gradient(ellipse at 45% 33%, rgba(57, 134, 79, .13), transparent 28%),
-        radial-gradient(ellipse at 42% 61%, rgba(129, 94, 54, .12), transparent 32%),
-        radial-gradient(ellipse at 27% 50%, rgba(31, 116, 174, .12), transparent 38%);
-      mix-blend-mode: soft-light;
-      opacity: .72;
-    }
-
-    .earth-clouds {
-      z-index: 3;
-      background-image: url("/assets/earth/earth_clouds_2048.jpg");
-      background-size: 210% 100%;
-      background-position: 0% 50%;
-      background-repeat: repeat-x;
-      animation: earthCloudSpin 64s linear infinite;
-      opacity: .29;
-      mix-blend-mode: screen;
-      filter: saturate(1.02) contrast(1.13) brightness(1.04);
-    }
-
-    .earth-daylight {
-      z-index: 4;
-      background:
-        radial-gradient(circle at 79% 24%, rgba(255,255,255,.28) 0 4%, rgba(255,246,202,.19) 12%, transparent 28%),
-        radial-gradient(ellipse at 82% 39%, rgba(242,199,111,.15) 0 18%, transparent 39%),
-        radial-gradient(ellipse at 75% 52%, rgba(105, 170, 255, .11), transparent 42%);
-      mix-blend-mode: screen;
-      opacity: .72;
-    }
-
-    .earth-morning-edge {
-      z-index: 5;
-      background:
-        linear-gradient(124deg, transparent 0 47%, rgba(255, 228, 154, .17) 52%, rgba(123, 184, 255, .17) 58%, transparent 66%),
-        radial-gradient(ellipse at 70% 41%, rgba(255, 231, 165, .13), transparent 28%),
-        radial-gradient(ellipse at 78% 32%, rgba(119, 187, 255, .19), transparent 36%);
-      mix-blend-mode: screen;
-      opacity: .86;
-    }
-
-    .earth-breakfast-clouds {
-      z-index: 6;
-      background-image:
-        linear-gradient(124deg, transparent 0 46%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.30) 54%, rgba(255,255,255,.12) 61%, transparent 68%),
-        url("/assets/earth/earth_clouds_2048.jpg");
-      background-size:
-        100% 100%,
-        210% 100%;
-      background-position:
-        center,
-        -18% 50%;
-      background-repeat:
-        no-repeat,
-        repeat-x;
-      animation: earthCloudCrowdSpin 74s linear infinite;
-      opacity: .50;
-      mix-blend-mode: screen;
-      filter: saturate(1.02) brightness(1.12) contrast(1.28);
-    }
-
-    .earth-terminator {
-      z-index: 7;
-      background:
-        radial-gradient(ellipse at 84% 30%, transparent 0 24%, rgba(4, 9, 22, .13) 36%, rgba(0, 2, 8, .48) 62%, rgba(0, 0, 0, .72) 100%),
-        linear-gradient(127deg, transparent 0 34%, rgba(4, 10, 24, .11) 44%, rgba(0, 0, 0, .41) 64%, rgba(0, 0, 0, .66) 100%);
-      opacity: .69;
-    }
-
-    .earth-night {
-      z-index: 8;
-      background:
-        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.64) 0 18%, rgba(0,0,0,.48) 39%, transparent 65%),
-        radial-gradient(ellipse at 28% 48%, rgba(0,0,0,.51) 0 14%, rgba(0,0,0,.27) 38%, transparent 64%),
-        radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(0,0,0,.16) 63%, rgba(0,0,0,.52) 100%);
-      opacity: .68;
-    }
-
-    .earth-reflected-moonlight {
-      z-index: 9;
-      background:
-        radial-gradient(ellipse at 12% 48%, rgba(205, 224, 255, .24) 0 7%, rgba(190, 214, 255, .15) 19%, transparent 43%),
-        radial-gradient(ellipse at 20% 63%, rgba(190, 214, 255, .09), transparent 36%),
-        linear-gradient(92deg, rgba(190, 214, 255, .13) 0%, rgba(190, 214, 255, .075) 17%, transparent 42%, transparent 100%);
-      mix-blend-mode: screen;
-      opacity: .70;
-    }
-
-    .earth-atmosphere {
-      z-index: 10;
-      background:
-        radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .22), transparent 32%),
-        radial-gradient(ellipse at 15% 52%, rgba(205, 224, 255, .16), transparent 24%),
-        radial-gradient(circle at 50% 50%, transparent 0 59%, rgba(115, 177, 255, .10) 71%, rgba(115, 177, 255, .20) 78%, transparent 86%);
-      mix-blend-mode: screen;
-      opacity: .63;
-    }
-
-    .earth-rim {
-      z-index: 11;
-      border: 1px solid rgba(255,255,255,.11);
-      box-shadow:
-        inset -34px 18px 54px rgba(0,0,0,.50),
-        inset 16px -8px 22px rgba(133,188,255,.08),
-        inset 26px 0 42px rgba(190,214,255,.09),
-        10px -8px 32px rgba(111, 169, 255, .16),
-        -20px 18px 64px rgba(190,214,255,.18),
-        -20px 22px 58px rgba(0,0,0,.46),
-        0 0 50px rgba(97,153,236,.14);
-    }
-
-    @keyframes earthTextureSpin {
-      from { background-position: 0% 50%; }
-      to { background-position: -210% 50%; }
-    }
-
-    @keyframes earthCloudSpin {
-      from { background-position: 0% 50%; }
-      to { background-position: -210% 50%; }
-    }
-
-    @keyframes earthCloudCrowdSpin {
-      from {
-        background-position:
-          center,
-          -18% 50%;
-      }
-
-      to {
-        background-position:
-          center,
-          -228% 50%;
-      }
-    }
-
-    .audit-source,
-    .sr-only {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
-    }
-
-    @media (max-width: 760px) {
-      :root {
-        --earth-size: min(84vmin, 96vw);
-      }
-
-      .universe-topbar {
-        align-items: flex-start;
-        gap: 10px;
-        padding: 14px 16px;
-      }
-
-      .universe-brand span {
-        display: none;
-      }
-
-      .return-link {
-        padding: 9px 10px;
-        font-size: .82rem;
-      }
-
-      .universe-stage {
-        padding-bottom: 18px;
-      }
-
-      .universe-stage::before {
-        top: 9vh;
-        right: -18vw;
-        width: min(38vmin, 300px);
-        opacity: .58;
-      }
-
-      .moon-diagnostic-construct {
-        left: -8%;
-        top: 49%;
-        width: 34%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/showroom/showroom.css" />
 </head>
 
-<body data-motion="running">
-  <main
-    class="demo-universe-page"
-    data-page-id="inspect-demo-universe"
-    data-page="inspect-demo-universe"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="inspection"
-    data-origin-route="/"
-    data-parent-route="/showroom/"
-    data-current-route="/showroom/globe/"
-    data-demo-universe="globe-only"
-    data-moon-construct="diagnostic"
-    data-moon-disposition="behind-earth-reflective-satellite"
-    data-moon-confines="bounded-secondary-demo-universe"
-    data-moon-confounds="active-diagnostic"
-    data-reflected-moonlight="active"
-    data-artificial-moonlight="superseded"
-    data-real-moon-developed="diagnostic-first-pass"
-    data-moon-iff-standard="active"
-    data-progressive-diagnostic-gates="active"
-    data-earth-readability="tuned"
-    data-night-side-readable="true"
-    data-darkness-standard="shadow-with-readable-surface"
-    data-terminator-preserved="true"
-    data-earth-readability-iff-standard="active"
-    data-earth-visual-acceptance="pending"
-    data-earth-color-discrimination="tuned"
-    data-ocean-color-readable="true"
-    data-land-color-readable="true"
-    data-cloud-color-readable="true"
-    data-warm-cool-light-separated="true"
-    data-earth-color-iff-standard="active"
-    data-earth-color-visual-acceptance="pending"
-  >
-    <header class="universe-topbar">
-      <a class="universe-brand" href="/" aria-label="Compass Origin">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Demo Universe · Earth Globe</span>
-      </a>
+<body>
+  <a class="skip-link" href="#showroom-main">Skip to Showroom content</a>
 
-      <a class="return-link" href="/showroom/">Return</a>
+  <div id="showroom-root" class="showroom-shell" data-proof-marker="SHOWROOM_CHAMBER=HOUSE_PART_05">
+    <header class="showroom-header" aria-label="Showroom chamber header">
+      <p class="eyebrow">H5 · Showroom · Public Proof Room</p>
+      <h1>Showroom</h1>
+      <p class="showroom-lede">
+        The public proof surface for the estate’s visual and functional direction.
+      </p>
+
+      <nav class="route-rail" aria-label="Showroom route rail">
+        <a href="/">Compass</a>
+        <a href="/products/">Products</a>
+        <a href="/products/archcoin/">ARCHCOIN</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/big-laugh/upper-room/">Upper Room</a>
+      </nav>
     </header>
 
-    <section class="universe-stage" aria-label="Demo Universe Earth inspection field">
-      <div
-        class="earth-subject"
-        data-earth-subject
-        data-earth-surface="/assets/earth/earth_surface_2048.jpg"
-        data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-        data-earth-standard="demo-universe-restored-earth"
-        data-earth-axis="23.5deg"
-        data-sun-shadow="active"
-        data-morning-edge="active"
-        data-breakfast-cloud-crowd="active"
-        data-moon-construct="diagnostic"
-        data-moon-disposition="behind-earth-reflective-satellite"
-        data-moon-confines="bounded-secondary-demo-universe"
-        data-moon-confounds="active-diagnostic"
-        data-reflected-moonlight="active"
-        data-artificial-moonlight="superseded"
-        data-real-moon-developed="diagnostic-first-pass"
-        data-moon-iff-standard="active"
-        data-progressive-diagnostic-gates="active"
-        data-earth-readability="tuned"
-        data-night-side-readable="true"
-        data-darkness-standard="shadow-with-readable-surface"
-        data-terminator-preserved="true"
-        data-earth-readability-iff-standard="active"
-        data-earth-visual-acceptance="pending"
-        data-earth-color-discrimination="tuned"
-        data-ocean-color-readable="true"
-        data-land-color-readable="true"
-        data-cloud-color-readable="true"
-        data-warm-cool-light-separated="true"
-        data-earth-color-iff-standard="active"
-        data-earth-color-visual-acceptance="pending"
-        data-shadow-accepted="pending"
-      >
-        <div class="moon-diagnostic-construct" aria-hidden="true"></div>
+    <main id="showroom-main" class="showroom-main">
+      <section class="proof-stage" aria-labelledby="proof-stage-title">
+        <div class="visual-panel" aria-label="Showroom Earth-centered proof surface">
+          <canvas id="showroom-canvas" aria-hidden="true"></canvas>
 
-        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with color-discriminating oceans, land, clouds, shadow, morning edge, and diagnostic Moon construct">
-          <div class="earth-core">
-            <div class="earth-texture"></div>
-            <div class="earth-color-separation"></div>
-            <div class="earth-clouds"></div>
-            <div class="earth-daylight"></div>
-            <div class="earth-morning-edge"></div>
-            <div class="earth-breakfast-clouds"></div>
-            <div class="earth-terminator"></div>
-            <div class="earth-night"></div>
-            <div class="earth-reflected-moonlight"></div>
-            <div class="earth-atmosphere"></div>
-            <div class="earth-rim"></div>
+          <div
+            id="showroom-globe-mount"
+            class="showroom-globe-mount"
+            data-showroom-globe-mount="true"
+            data-showroom-globe-placement="generation-3-centered-lift"
+            aria-label="Showroom Earth canvas mount"
+          ></div>
+        </div>
+
+        <div class="content-panel">
+          <p class="room-code">ROOM 05 / 16</p>
+          <h2 id="proof-stage-title">Earth-centered public proof surface</h2>
+          <p>
+            This chamber holds the visible proof layer. It keeps the route rail live,
+            the content readable, and the visual system subordinate to source truth.
+          </p>
+
+          <div class="proof-grid" aria-label="Showroom proof markers">
+            <article>
+              <h3>Render proof</h3>
+              <p>
+                The visible surface mounts through the preserved Showroom globe subsystem
+                without exposing raw code or breaking the route rail.
+              </p>
+            </article>
+
+            <article>
+              <h3>Route proof</h3>
+              <p>
+                Compass, Products, ARCHCOIN, Gauges, and Upper Room remain available from
+                this chamber.
+              </p>
+            </article>
+
+            <article>
+              <h3>Audit proof</h3>
+              <p>
+                Stable markers identify this file as the Showroom chamber inside the
+                16-chamber lattice.
+              </p>
+            </article>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="audit-source" aria-label="Demo Universe audit source">
-      <a href="/">Compass Origin</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Demo Universe Earth</a>
-      <a href="/gauges/">Gauges</a>
+      <section class="showroom-receipts" aria-label="Showroom receipts">
+        <h2>Receipts</h2>
+        <ul>
+          <li data-receipt="SHOWROOM_CHAMBER=HOUSE_PART_05">SHOWROOM_CHAMBER=HOUSE_PART_05</li>
+          <li data-receipt="ROUTE=/showroom/">ROUTE=/showroom/</li>
+          <li data-receipt="VISUAL_PROOF=EARTH_CENTERED_SHOWROOM">VISUAL_PROOF=EARTH_CENTERED_SHOWROOM</li>
+          <li data-receipt="CODE_MODE=GENERATION_3_SURFACE_REFINEMENT">CODE_MODE=GENERATION_3_SURFACE_REFINEMENT</li>
+          <li data-receipt="GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN">GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN</li>
+        </ul>
+      </section>
 
-      <span>route-exists</span>
-      <span>estate=rich-manor-and-estate</span>
-      <span>manor-skin=active</span>
-      <span>house-field=true</span>
-      <span>gauges-truth=live-authority</span>
-      <span>construct-class=inspection</span>
-      <span>origin-route=/</span>
-      <span>parent-route=/showroom/</span>
-      <span>current-route=/showroom/globe/</span>
-      <span>demo-universe=globe-only</span>
-      <span>earth-surface=/assets/earth/earth_surface_2048.jpg</span>
-      <span>earth-clouds=/assets/earth/earth_clouds_2048.jpg</span>
-      <span>earth-standard=demo-universe-restored-earth</span>
-      <span>earth-axis=23.5deg</span>
-      <span>controls=removed</span>
-      <span>sun-shadow=active</span>
-      <span>morning-edge=active</span>
-      <span>breakfast-cloud-crowd=active</span>
-      <span>moon-construct=diagnostic</span>
-      <span>moon-disposition=behind-earth-reflective-satellite</span>
-      <span>moon-confines=bounded-secondary-demo-universe</span>
-      <span>moon-confounds=active-diagnostic</span>
-      <span>reflected-moonlight=active</span>
-      <span>artificial-moonlight=superseded</span>
-      <span>real-moon-developed=diagnostic-first-pass</span>
-      <span>moon-iff-standard=active</span>
-      <span>progressive-diagnostic-gates=active</span>
-      <span>earth-readability=tuned</span>
-      <span>night-side-readable=true</span>
-      <span>darkness-standard=shadow-with-readable-surface</span>
-      <span>terminator-preserved=true</span>
-      <span>earth-readability-iff-standard=active</span>
-      <span>earth-visual-acceptance=pending</span>
-      <span>earth-color-discrimination=tuned</span>
-      <span>ocean-color-readable=true</span>
-      <span>land-color-readable=true</span>
-      <span>cloud-color-readable=true</span>
-      <span>warm-cool-light-separated=true</span>
-      <span>earth-color-iff-standard=active</span>
-      <span>earth-color-visual-acceptance=pending</span>
-      <span>shadow-accepted=pending</span>
-      <span>DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1</span>
-      <span>DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1</span>
-      <span>DEMO_UNIVERSE_EARTH_MORNING_EDGE_TNT_v1</span>
-      <span>DEMO_UNIVERSE_MOON_DIAGNOSTIC_SAFE_MIGRATION_TNT_v1</span>
-      <span>DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1</span>
-      <span>LANE_A_FULL_GLOBE_COLOR_DISCRIMINATION_TNT_v1</span>
-    </section>
-  </main>
+      <noscript>
+        <section class="noscript-proof">
+          <h2>Showroom static fallback</h2>
+          <p>
+            JavaScript is unavailable, but the Showroom route rail, proof markers,
+            and chamber content remain visible.
+          </p>
+        </section>
+      </noscript>
+    </main>
+  </div>
+
+  <script type="module" src="/showroom/index.js"></script>
 </body>
 </html>

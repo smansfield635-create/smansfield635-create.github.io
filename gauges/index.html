@@ -8,15 +8,15 @@
   data-construct-class="house"
   data-house-part="gauges"
   data-chamber="H6_GAUGES"
-  data-generation="gauges-generation-3-full-expression-read-v1"
+  data-generation="gauges-showroom-functional-troubleshoot-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Generation 3 Read · Diamond Gate Bridge</title>
+  <title>Gauges · Functional Showroom Troubleshoot · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Measurement Key for Showroom Generation 2 preservation and Generation 3 full-expression evidence."
+    content="Functional troubleshooting console for the Showroom and Demo Universe Earth routes."
   />
 
   <style>
@@ -62,7 +62,7 @@
         radial-gradient(circle, rgba(245, 199, 107, 0.75) 0 1px, transparent 1.4px);
       background-position: 0 0, 48px 76px;
       background-size: 130px 130px, 180px 180px;
-      opacity: 0.16;
+      opacity: 0.15;
     }
 
     a { color: inherit; }
@@ -163,9 +163,7 @@
       box-shadow: var(--shadow);
     }
 
-    .hero {
-      padding: clamp(24px, 4vw, 48px);
-    }
+    .hero { padding: clamp(24px, 4vw, 48px); }
 
     .panel,
     .receipt-panel {
@@ -173,9 +171,7 @@
       padding: clamp(22px, 3.5vw, 36px);
     }
 
-    .receipt-panel {
-      background: var(--panel-strong);
-    }
+    .receipt-panel { background: var(--panel-strong); }
 
     .kicker,
     .receipt-line {
@@ -191,7 +187,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2.9rem, 7vw, 6.2rem);
+      font-size: clamp(2.7rem, 7vw, 6.2rem);
       line-height: 0.92;
       letter-spacing: -0.07em;
     }
@@ -234,9 +230,7 @@
       margin-top: 1.25rem;
     }
 
-    .score-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    .score-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .score-card,
     .check-card,
@@ -277,7 +271,7 @@
 
     .check-card pre {
       overflow: auto;
-      max-height: 160px;
+      max-height: 180px;
       border-radius: 14px;
       padding: 0.85rem;
       color: var(--muted);
@@ -369,7 +363,7 @@
     <header class="topbar" aria-label="Gauges site header">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Dexter Lab · Measurement Key</span>
+        <span>Dexter Lab · Functional Troubleshoot</span>
       </a>
 
       <nav class="site-nav nav-links" aria-label="Primary navigation">
@@ -385,68 +379,69 @@
 
     <main id="gauges-main">
       <section class="hero" aria-labelledby="gauges-title">
-        <p class="kicker">H6 · Gauges · Generation 3 Read</p>
+        <p class="kicker">H6 · Gauges · Functional Scenario Troubleshoot</p>
         <h1 id="gauges-title">Measurement Key.</h1>
         <p class="lede">
-          This console measures what Generation 3 accomplished and what remains missing,
-          while preserving the confirmed Generation 2 active-globe baseline.
+          This console measures the current scenario: the Showroom is not collapsing,
+          but the expected changes are not fully expressing. It separates source state,
+          load-path state, runtime state, DOM state, motion state, caption state,
+          and visual clarity state.
         </p>
 
         <div class="action-row">
-          <button type="button" id="run-diagnostic-button">Run Generation 3 diagnostic</button>
+          <button type="button" id="run-diagnostic-button">Run functional troubleshoot</button>
           <a href="/showroom/">Inspect Showroom</a>
           <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
-          <a href="/assets/showroom.globe.instrument.js">Inspect asset instrument</a>
-          <a href="/showroom/showroom.css">Inspect Showroom CSS</a>
+          <a href="/showroom/index.js">Parent JS</a>
+          <a href="/showroom/globe/index.js">Globe JS</a>
+          <a href="/showroom/showroom.css">Showroom CSS</a>
         </div>
       </section>
 
       <section class="panel" aria-labelledby="score-title">
         <p class="kicker">Live Ceiling Read</p>
-        <h2 id="score-title">Generation score.</h2>
+        <h2 id="score-title">Functional score.</h2>
         <p id="diagnostic-summary" class="panel-copy">Waiting to run diagnostic.</p>
 
         <div class="score-grid">
           <article class="score-card">
-            <strong id="score-gen2">--</strong>
-            <span>Gen 2 preservation</span>
+            <strong id="score-liveness">--</strong>
+            <span>Route liveness</span>
           </article>
           <article class="score-card">
-            <strong id="score-gen3">--</strong>
-            <span>Gen 3 expression</span>
+            <strong id="score-congruence">--</strong>
+            <span>Status congruence</span>
           </article>
           <article class="score-card">
-            <strong id="score-parent">--</strong>
-            <span>Parent Showroom</span>
+            <strong id="score-motion">--</strong>
+            <span>Motion proof</span>
           </article>
           <article class="score-card">
-            <strong id="score-globe">--</strong>
-            <span>Globe route</span>
+            <strong id="score-clarity">--</strong>
+            <span>Visual clarity</span>
           </article>
         </div>
       </section>
 
       <section class="panel" aria-labelledby="diagnostic-title">
-        <p class="kicker">Live Diagnostic</p>
-        <h2 id="diagnostic-title">Evidence lanes.</h2>
+        <p class="kicker">Evidence</p>
+        <h2 id="diagnostic-title">Troubleshooting lanes.</h2>
         <div id="diagnostic-results" class="result-grid" aria-live="polite"></div>
       </section>
 
       <section class="panel" aria-labelledby="break-title">
         <p class="kicker">Next Move</p>
-        <h2 id="break-title">Clean read.</h2>
+        <h2 id="break-title">First controlling break.</h2>
         <p id="first-break" class="panel-copy">Not measured yet.</p>
         <div id="repair-action" class="diagnostic-grid"></div>
       </section>
 
       <section class="receipt-panel" aria-labelledby="receipt-title">
         <p class="receipt-line">Calibration receipt</p>
-        <h2 id="receipt-title">Generation 3 diagnostic receipt.</h2>
+        <h2 id="receipt-title">Functional troubleshoot receipt.</h2>
         <p class="receipt-copy">
-          VERSION: GAUGES_GENERATION_3_FULL_EXPRESSION_READ_TNT_v1.
-          Generation 2 is the preserved active globe baseline. Generation 3 measures
-          full expression: shadows, depth, color discrimination, moon/reflection,
-          terminator, atmosphere, telemetry, detail, and visible truth.
+          VERSION: GAUGES_SHOWROOM_FUNCTIONAL_TROUBLESHOOT_INDEX_TNT_v1.
+          This read is for functional systems that are not collapsing but are not expressing the expected changes.
         </p>
 
         <div class="receipt-list">
@@ -466,9 +461,8 @@
           <span>construct-class=house</span>
           <span>house-part=gauges</span>
           <span>H6_GAUGES</span>
-          <span>generation-2-preservation-meter=active</span>
-          <span>generation-3-expression-meter=active</span>
-          <span>GAUGES_GENERATION_3_FULL_EXPRESSION_READ_TNT_v1</span>
+          <span>functional-troubleshoot=active</span>
+          <span>GAUGES_SHOWROOM_FUNCTIONAL_TROUBLESHOOT_INDEX_TNT_v1</span>
         </div>
       </section>
 
@@ -492,13 +486,17 @@
     (function () {
       "use strict";
 
-      const VERSION = "GAUGES_GENERATION_3_FULL_EXPRESSION_READ_TNT_v1";
+      const VERSION = "GAUGES_SHOWROOM_FUNCTIONAL_TROUBLESHOOT_INDEX_TNT_v1";
 
       const TARGETS = {
-        showroom: "/showroom/",
-        globe: "/showroom/globe/",
+        parentHtml: "/showroom/",
+        parentJs: "/showroom/index.js",
+        parentRender: "/showroom/showroom.render.js",
+        parentCss: "/showroom/showroom.css",
+        runtime: "/showroom/runtime.js",
+        globeHtml: "/showroom/globe/",
+        globeJs: "/showroom/globe/index.js",
         instrument: "/assets/showroom.globe.instrument.js",
-        css: "/showroom/showroom.css",
         earthSurface: "/assets/earth/earth_surface_2048.jpg",
         earthClouds: "/assets/earth/earth_clouds_2048.jpg"
       };
@@ -506,10 +504,10 @@
       const state = {
         checks: [],
         scores: {
-          gen2: 0,
-          gen3: 0,
-          parent: 0,
-          globe: 0
+          liveness: 0,
+          congruence: 0,
+          motion: 0,
+          clarity: 0
         }
       };
 
@@ -549,7 +547,6 @@
 
       function setFirstBreak(text) {
         setText("first-break", text);
-
         const root = el("gauges-root");
         if (root) root.dataset.firstControllingBreak = text;
       }
@@ -594,17 +591,17 @@
             create("article", { className: "check-card", "data-status": check.status }, [
               create("b", { text: check.status.toUpperCase() + " · " + check.name }),
               create("p", { className: "small-copy", text: check.detail }),
-              check.evidence ? create("pre", { text: check.evidence.slice(0, 1300) }) : null
+              check.evidence ? create("pre", { text: check.evidence.slice(0, 1500) }) : null
             ])
           );
         });
       }
 
       function updateScores() {
-        setText("score-gen2", state.scores.gen2);
-        setText("score-gen3", state.scores.gen3);
-        setText("score-parent", state.scores.parent);
-        setText("score-globe", state.scores.globe);
+        setText("score-liveness", state.scores.liveness);
+        setText("score-congruence", state.scores.congruence);
+        setText("score-motion", state.scores.motion);
+        setText("score-clarity", state.scores.clarity);
       }
 
       async function fetchText(url) {
@@ -631,81 +628,218 @@
         };
       }
 
-      function hasAll(source, tokens) {
-        return tokens.every(function (token) {
+      function count(source, tokens) {
+        return tokens.reduce(function (sum, token) {
+          return sum + (source.indexOf(token) !== -1 ? 1 : 0);
+        }, 0);
+      }
+
+      function includesAny(source, tokens) {
+        return tokens.some(function (token) {
           return source.indexOf(token) !== -1;
         });
       }
 
-      function countTokens(source, tokens) {
-        return tokens.reduce(function (count, token) {
-          return count + (source.indexOf(token) !== -1 ? 1 : 0);
-        }, 0);
-      }
+      function inspectSources(sources) {
+        const htmlText = sources.parentHtml.text || "";
+        const parentJsText = sources.parentJs.text || "";
+        const parentRenderText = sources.parentRender.text || "";
+        const cssText = sources.parentCss.text || "";
+        const runtimeText = sources.runtime.text || "";
+        const globeHtmlText = sources.globeHtml.text || "";
+        const globeJsText = sources.globeJs.text || "";
+        const instrumentText = sources.instrument.text || "";
 
-      function inspectSource(showroom, globe, instrument, css) {
-        const gen2Tokens = [
-          "GENERATION 2",
-          "ACTIVE GLOBE",
-          "earth_surface_2048.jpg",
-          "earth_clouds_2048.jpg",
-          "showroom-generation-2-active-globe",
-          "showroom-generation-2-earth-surface"
+        const currentTokens = [
+          "generation-3-axis-rotation-depth",
+          "generation3AxisRotationDepth",
+          "generation3RuntimeMotion",
+          "generation3VisualClarityRefinement",
+          "pending-user-confirmation",
+          "showroom-generation-3-axis-rotation-depth",
+          "showroom-generation-3-visual-clarity-minimum-refinement"
         ];
 
-        const gen3InstrumentTokens = [
-          "generation3FullExpression",
-          "generation3Shadows",
-          "generation3Depth",
-          "generation3ColorDiscrimination",
-          "generation3Terminator",
-          "generation3Atmosphere",
-          "generation3Telemetry",
-          "generation3Detail"
+        const staleTokens = [
+          "shadow-detail-blocked-until-generation-2-pass",
+          "GENERATION 2 · ACTIVE GLOBE",
+          "GENERATION 2 · DEMO UNIVERSE EARTH · ACTIVE GLOBE",
+          "showroom-seven-file-asset-instrument-structural-rewrite-v1",
+          "showroom-globe-asset-instrument-v1"
         ];
 
-        const gen3CssTokens = [
-          "showroom-generation-3-active-globe",
-          "showroom-generation-3-terminator",
-          "showroom-generation-3-atmosphere",
-          "showroom-generation-3-night-depth",
-          "showroom-generation-3-moon-reflection",
-          "showroom-generation-3-telemetry",
-          "showroom-generation-3-ocean-land-color",
-          "showroom-generation-3-cloud-depth"
+        const loadPathTokens = [
+          "/assets/showroom.globe.instrument.js?v=showroom-generation-3-axis-rotation-depth-v1",
+          "/showroom/runtime.js?v=showroom-generation-3-axis-rotation-depth-v1",
+          "/showroom/showroom.css?v=showroom-generation-3-visual-clarity-minimum-refinement-v1"
         ];
 
-        const showroomText = showroom.text || "";
-        const globeText = globe.text || "";
-        const instrumentText = instrument.text || "";
-        const cssText = css.text || "";
+        const animationTokens = [
+          "showroomClaritySurfaceRotation",
+          "showroomClarityCloudRotation",
+          "showroomClarityAtmospherePulse",
+          "showroomClarityOrbitDrift"
+        ];
 
-        const gen2SourceCount =
-          countTokens(showroomText, gen2Tokens) +
-          countTokens(globeText, gen2Tokens) +
-          countTokens(instrumentText, gen2Tokens);
-
-        const gen3InstrumentCount = countTokens(instrumentText, gen3InstrumentTokens);
-        const gen3CssCount = countTokens(cssText, gen3CssTokens);
+        const joinedConsumer = [
+          htmlText,
+          parentJsText,
+          parentRenderText,
+          globeHtmlText,
+          globeJsText
+        ].join("\n");
 
         return {
-          gen2SourceCount: gen2SourceCount,
-          gen2SourceTotal: gen2Tokens.length * 3,
-          gen3InstrumentCount: gen3InstrumentCount,
-          gen3InstrumentTotal: gen3InstrumentTokens.length,
-          gen3CssCount: gen3CssCount,
-          gen3CssTotal: gen3CssTokens.length,
-          instrumentHasFullExpression: hasAll(instrumentText, [
-            "generation3FullExpression",
-            "generation3VisualTruth",
-            "generation3Terminator",
-            "generation3Atmosphere"
-          ]),
-          cssHasFullExpression: hasAll(cssText, [
-            "showroom-generation-3-terminator",
-            "showroom-generation-3-atmosphere",
-            "showroom-generation-3-telemetry"
-          ])
+          parentHtmlCurrent: count(htmlText, currentTokens),
+          parentJsCurrent: count(parentJsText, currentTokens),
+          parentRenderCurrent: count(parentRenderText, currentTokens),
+          globeHtmlCurrent: count(globeHtmlText, currentTokens),
+          globeJsCurrent: count(globeJsText, currentTokens),
+          consumerCurrentTotal: count(joinedConsumer, currentTokens),
+          consumerHasStale: includesAny(joinedConsumer, staleTokens),
+          staleCount: count(joinedConsumer, staleTokens),
+          loadPathCount: count(htmlText + "\n" + globeHtmlText, loadPathTokens),
+          cssAnimationCount: count(cssText, animationTokens),
+          runtimeCurrent: count(runtimeText, currentTokens),
+          instrumentCurrent: count(instrumentText, currentTokens),
+          cssHasClarity: includesAny(cssText, animationTokens),
+          staleTokens: staleTokens.filter(function (token) {
+            return joinedConsumer.indexOf(token) !== -1;
+          })
+        };
+      }
+
+      function wait(ms) {
+        return new Promise(function (resolve) {
+          window.setTimeout(resolve, ms);
+        });
+      }
+
+      function readFrameNow(frame) {
+        const doc = frame.contentDocument;
+        const win = frame.contentWindow;
+
+        if (!doc || !win) {
+          return { ok: false, error: "Unable to access same-origin iframe document." };
+        }
+
+        const mount = doc.getElementById("showroom-globe-mount");
+        const root = doc.getElementById("showroom-root");
+        const main = doc.getElementById("showroom-main");
+
+        const activeGlobe =
+          doc.querySelector(".showroom-generation-3-active-globe") ||
+          doc.querySelector(".showroom-generation-2-active-globe");
+
+        const surface =
+          doc.querySelector(".showroom-generation-3-earth-surface") ||
+          doc.querySelector(".showroom-generation-2-earth-surface");
+
+        const clouds =
+          doc.querySelector(".showroom-generation-3-earth-clouds") ||
+          doc.querySelector(".showroom-generation-2-earth-clouds");
+
+        const caption =
+          doc.querySelector(".showroom-generation-3-caption") ||
+          doc.querySelector(".showroom-generation-2-caption");
+
+        const terminator = doc.querySelector(".showroom-generation-3-terminator");
+        const atmosphere = doc.querySelector(".showroom-generation-3-atmosphere");
+        const telemetry = doc.querySelector(".showroom-generation-3-telemetry");
+        const axis = doc.querySelector(".showroom-generation-3-axis-line");
+
+        let mountVisible = false;
+        let computedMount = "";
+        let surfaceStyle = {};
+        let cloudStyle = {};
+        let globeStyle = {};
+        let terminatorStyle = {};
+        let atmosphereStyle = {};
+
+        if (mount) {
+          const style = win.getComputedStyle(mount);
+          const rect = mount.getBoundingClientRect();
+
+          mountVisible =
+            style.display !== "none" &&
+            style.visibility !== "hidden" &&
+            Number(style.opacity || 1) !== 0 &&
+            rect.width > 20 &&
+            rect.height > 20;
+
+          computedMount =
+            "display=" + style.display +
+            " visibility=" + style.visibility +
+            " opacity=" + style.opacity +
+            " width=" + Math.round(rect.width) +
+            " height=" + Math.round(rect.height);
+        }
+
+        function styleRead(node) {
+          if (!node) return {};
+          const style = win.getComputedStyle(node);
+
+          return {
+            transform: style.transform,
+            animationName: style.animationName,
+            animationDuration: style.animationDuration,
+            opacity: style.opacity,
+            filter: style.filter,
+            mixBlendMode: style.mixBlendMode,
+            backgroundImage: style.backgroundImage ? style.backgroundImage.slice(0, 220) : ""
+          };
+        }
+
+        surfaceStyle = styleRead(surface);
+        cloudStyle = styleRead(clouds);
+        globeStyle = styleRead(activeGlobe);
+        terminatorStyle = styleRead(terminator);
+        atmosphereStyle = styleRead(atmosphere);
+
+        const runtime =
+          win.DGBShowroomRuntime &&
+          typeof win.DGBShowroomRuntime.getState === "function"
+            ? win.DGBShowroomRuntime.getState()
+            : null;
+
+        const instrumentVersion =
+          win.DGBShowroomGlobeInstrument && win.DGBShowroomGlobeInstrument.version
+            ? win.DGBShowroomGlobeInstrument.version
+            : "";
+
+        const mountDataset = mount ? Object.assign({}, mount.dataset) : {};
+        const rootDataset = root ? Object.assign({}, root.dataset) : {};
+        const mainDataset = main ? Object.assign({}, main.dataset) : {};
+
+        const surfaceLoaded = Boolean(surface && surface.complete && surface.naturalWidth > 0);
+        const cloudLoaded = Boolean(clouds && clouds.complete && clouds.naturalWidth > 0);
+
+        return {
+          ok: true,
+          hasMount: Boolean(mount),
+          mountVisible: mountVisible,
+          hasActiveGlobe: Boolean(activeGlobe),
+          hasSurface: Boolean(surface),
+          hasClouds: Boolean(clouds),
+          surfaceLoaded: surfaceLoaded,
+          cloudLoaded: cloudLoaded,
+          globeVisible: Boolean(mountVisible && activeGlobe && surface && surfaceLoaded),
+          hasTerminator: Boolean(terminator),
+          hasAtmosphere: Boolean(atmosphere),
+          hasTelemetry: Boolean(telemetry),
+          hasAxis: Boolean(axis),
+          captionText: caption ? caption.textContent.trim() : "",
+          computedMount: computedMount,
+          surfaceStyle: surfaceStyle,
+          cloudStyle: cloudStyle,
+          globeStyle: globeStyle,
+          terminatorStyle: terminatorStyle,
+          atmosphereStyle: atmosphereStyle,
+          runtime: runtime,
+          instrumentVersion: instrumentVersion,
+          mountDataset: mountDataset,
+          rootDataset: rootDataset,
+          mainDataset: mainDataset
         };
       }
 
@@ -725,343 +859,348 @@
             resolve(result);
           }
 
-          frame.onload = function () {
-            window.setTimeout(function () {
-              try {
-                const doc = frame.contentDocument;
-                const win = frame.contentWindow;
+          frame.onload = async function () {
+            await wait(2500);
 
-                if (!doc || !win) {
-                  finish({ ok: false, error: "Unable to access same-origin iframe document." });
-                  return;
-                }
+            try {
+              const first = readFrameNow(frame);
+              await wait(1600);
+              const second = readFrameNow(frame);
 
-                const mount = doc.getElementById("showroom-globe-mount");
-                const root = doc.getElementById("showroom-root");
-
-                const activeGlobe =
-                  doc.querySelector(".showroom-generation-3-active-globe") ||
-                  doc.querySelector(".showroom-generation-2-active-globe");
-
-                const surfaceImg =
-                  doc.querySelector(".showroom-generation-3-earth-surface") ||
-                  doc.querySelector(".showroom-generation-2-earth-surface");
-
-                const cloudImg =
-                  doc.querySelector(".showroom-generation-3-earth-clouds") ||
-                  doc.querySelector(".showroom-generation-2-earth-clouds");
-
-                const gen3 = {
-                  shell: Boolean(doc.querySelector(".showroom-generation-3-shell")),
-                  activeGlobe: Boolean(doc.querySelector(".showroom-generation-3-active-globe")),
-                  terminator: Boolean(doc.querySelector(".showroom-generation-3-terminator")),
-                  atmosphere: Boolean(doc.querySelector(".showroom-generation-3-atmosphere")),
-                  nightDepth: Boolean(doc.querySelector(".showroom-generation-3-night-depth")),
-                  moonReflection: Boolean(doc.querySelector(".showroom-generation-3-moon-reflection")),
-                  telemetry: Boolean(doc.querySelector(".showroom-generation-3-telemetry")),
-                  oceanLandColor: Boolean(doc.querySelector(".showroom-generation-3-ocean-land-color")),
-                  cloudDepth: Boolean(doc.querySelector(".showroom-generation-3-cloud-depth"))
-                };
-
-                let mountVisible = false;
-                let imageLoaded = false;
-                let globeVisible = false;
-                let computed = "";
-
-                if (mount) {
-                  const style = win.getComputedStyle(mount);
-                  const rect = mount.getBoundingClientRect();
-
-                  mountVisible =
-                    style.display !== "none" &&
-                    style.visibility !== "hidden" &&
-                    Number(style.opacity || 1) !== 0 &&
-                    rect.width > 20 &&
-                    rect.height > 20;
-
-                  computed =
-                    "display=" + style.display +
-                    " visibility=" + style.visibility +
-                    " opacity=" + style.opacity +
-                    " width=" + Math.round(rect.width) +
-                    " height=" + Math.round(rect.height);
-                }
-
-                if (surfaceImg) {
-                  imageLoaded = surfaceImg.complete === true && surfaceImg.naturalWidth > 0;
-                }
-
-                globeVisible = Boolean(activeGlobe && surfaceImg && imageLoaded && mountVisible);
-
-                finish({
-                  ok: true,
-                  url: url,
-                  rootDataset: root ? JSON.stringify(root.dataset) : "",
-                  mountDataset: mount ? JSON.stringify(mount.dataset) : "",
-                  hasMount: Boolean(mount),
-                  mountVisible: mountVisible,
-                  computed: computed,
-                  hasActiveGlobe: Boolean(activeGlobe),
-                  hasSurfaceImg: Boolean(surfaceImg),
-                  hasCloudImg: Boolean(cloudImg),
-                  surfaceImgLoaded: imageLoaded,
-                  globeVisible: globeVisible,
-                  gen3: gen3
-                });
-              } catch (error) {
-                finish({
-                  ok: false,
-                  error: error && error.message ? error.message : String(error)
-                });
+              if (!first.ok || !second.ok) {
+                finish({ ok: false, error: first.error || second.error || "Frame read failed." });
+                return;
               }
-            }, 2600);
+
+              const surfaceMotion =
+                first.surfaceStyle.transform !== second.surfaceStyle.transform ||
+                first.surfaceStyle.animationName !== "none";
+
+              const cloudMotion =
+                first.cloudStyle.transform !== second.cloudStyle.transform ||
+                first.cloudStyle.animationName !== "none";
+
+              const runtimeTickChanged =
+                first.runtime &&
+                second.runtime &&
+                String(first.runtime.motionTick) !== String(second.runtime.motionTick);
+
+              finish({
+                ok: true,
+                url: url,
+                first: first,
+                second: second,
+                surfaceMotion: Boolean(surfaceMotion),
+                cloudMotion: Boolean(cloudMotion),
+                runtimeTickChanged: Boolean(runtimeTickChanged),
+                runtimeMotion: Boolean(surfaceMotion || cloudMotion || runtimeTickChanged)
+              });
+            } catch (error) {
+              finish({
+                ok: false,
+                error: error && error.message ? error.message : String(error)
+              });
+            }
           };
 
           frame.src = url + "?diagnostic=" + Date.now();
 
           window.setTimeout(function () {
             finish({ ok: false, error: "Timed out waiting for " + url + "." });
-          }, 7000);
+          }, 8500);
         });
       }
 
-      function scoreFrame(frameResult) {
-        if (!frameResult || !frameResult.ok) return { gen2: 0, gen3: 0 };
+      function scoreFrame(frameRead) {
+        if (!frameRead || !frameRead.ok) {
+          return {
+            liveness: 0,
+            motion: 0,
+            clarity: 0,
+            congruence: 0
+          };
+        }
 
-        let gen2 = 0;
-        if (frameResult.hasMount) gen2 += 15;
-        if (frameResult.mountVisible) gen2 += 20;
-        if (frameResult.hasActiveGlobe) gen2 += 20;
-        if (frameResult.hasSurfaceImg) gen2 += 15;
-        if (frameResult.hasCloudImg) gen2 += 10;
-        if (frameResult.surfaceImgLoaded) gen2 += 10;
-        if (frameResult.globeVisible) gen2 += 10;
+        const second = frameRead.second;
 
-        let gen3 = 0;
-        if (frameResult.gen3.shell) gen3 += 10;
-        if (frameResult.gen3.activeGlobe) gen3 += 10;
-        if (frameResult.gen3.terminator) gen3 += 15;
-        if (frameResult.gen3.atmosphere) gen3 += 15;
-        if (frameResult.gen3.nightDepth) gen3 += 10;
-        if (frameResult.gen3.moonReflection) gen3 += 10;
-        if (frameResult.gen3.telemetry) gen3 += 10;
-        if (frameResult.gen3.oceanLandColor) gen3 += 10;
-        if (frameResult.gen3.cloudDepth) gen3 += 10;
+        let liveness = 0;
+        if (second.hasMount) liveness += 15;
+        if (second.mountVisible) liveness += 15;
+        if (second.hasActiveGlobe) liveness += 15;
+        if (second.hasSurface) liveness += 15;
+        if (second.surfaceLoaded) liveness += 15;
+        if (second.globeVisible) liveness += 25;
+
+        let motion = 0;
+        if (frameRead.surfaceMotion) motion += 25;
+        if (frameRead.cloudMotion) motion += 25;
+        if (frameRead.runtimeTickChanged) motion += 25;
+        if (second.hasAxis) motion += 15;
+        if (second.runtime && second.runtime.generation3MotionStatus) motion += 10;
+
+        let clarity = 0;
+        if (second.surfaceStyle.filter && second.surfaceStyle.filter !== "none") clarity += 15;
+        if (second.cloudStyle.opacity && Number(second.cloudStyle.opacity) <= 0.35) clarity += 20;
+        if (second.hasTerminator) clarity += 15;
+        if (second.hasAtmosphere) clarity += 15;
+        if (second.hasAxis) clarity += 10;
+        if (second.captionText.indexOf("GENERATION 3") !== -1) clarity += 10;
+        if (second.globeVisible) clarity += 15;
+
+        let congruence = 0;
+        if (second.instrumentVersion.indexOf("generation-3") !== -1) congruence += 20;
+        if (JSON.stringify(second.mountDataset).indexOf("axis") !== -1) congruence += 20;
+        if (JSON.stringify(second.mountDataset).indexOf("visualClarity") !== -1) congruence += 20;
+        if (second.captionText.indexOf("GENERATION 3") !== -1) congruence += 20;
+        if (second.runtime && String(second.runtime.generation3).indexOf("axis") !== -1) congruence += 20;
 
         return {
-          gen2: Math.min(100, gen2),
-          gen3: Math.min(100, gen3)
+          liveness: Math.min(100, liveness),
+          motion: Math.min(100, motion),
+          clarity: Math.min(100, clarity),
+          congruence: Math.min(100, congruence)
         };
       }
 
-      function makeFrameDetail(frameResult) {
-        if (!frameResult || !frameResult.ok) {
-          return frameResult && frameResult.error ? frameResult.error : "Frame inspection failed.";
-        }
-
+      function sourceStatusDetail(sourceRead) {
         return [
-          "mount=" + frameResult.hasMount,
-          "mountVisible=" + frameResult.mountVisible,
-          "activeGlobe=" + frameResult.hasActiveGlobe,
-          "surfaceImg=" + frameResult.hasSurfaceImg,
-          "cloudImg=" + frameResult.hasCloudImg,
-          "imageLoaded=" + frameResult.surfaceImgLoaded,
-          "globeVisible=" + frameResult.globeVisible,
-          "gen3Terminator=" + frameResult.gen3.terminator,
-          "gen3Atmosphere=" + frameResult.gen3.atmosphere,
-          "gen3Telemetry=" + frameResult.gen3.telemetry,
-          frameResult.computed
+          "consumerCurrentTotal=" + sourceRead.consumerCurrentTotal,
+          "staleCount=" + sourceRead.staleCount,
+          "loadPathCount=" + sourceRead.loadPathCount,
+          "cssAnimationCount=" + sourceRead.cssAnimationCount,
+          "runtimeCurrent=" + sourceRead.runtimeCurrent,
+          "instrumentCurrent=" + sourceRead.instrumentCurrent
         ].join(" · ");
       }
 
-      function chooseNextMove(parentFrame, globeFrame, sourceRead, assetsOk) {
-        if (!assetsOk.surfaceOk || !assetsOk.cloudsOk) {
-          return {
-            text: "RESULT_D: Earth raw assets are not both fetchable.",
-            actions: [
-              "Confirm earth_surface_2048.jpg and earth_clouds_2048.jpg deploy state.",
-              "Do not rewrite Showroom until raw asset availability is proven."
-            ]
-          };
-        }
+      function frameDetail(frameRead) {
+        if (!frameRead || !frameRead.ok) return frameRead && frameRead.error ? frameRead.error : "Frame failed.";
 
-        if (!parentFrame.ok || !parentFrame.globeVisible) {
-          return {
-            text: "RESULT_C: Parent Showroom did not preserve Generation 2 visible globe.",
-            actions: [
-              "Fix parent render consumption before further Generation 3 work.",
-              "Target /assets/showroom.globe.instrument.js and /showroom/showroom.css first.",
-              "Do not proceed to telemetry/detail claims."
-            ]
-          };
-        }
+        const second = frameRead.second;
 
-        if (!globeFrame.ok || !globeFrame.globeVisible) {
-          return {
-            text: "RESULT_C: Standalone globe route did not preserve the visible globe.",
-            actions: [
-              "Fix /showroom/globe/ consumption of the shared asset instrument.",
-              "Do not change parent Showroom if parent is passing."
-            ]
-          };
-        }
+        return [
+          "mount=" + second.hasMount,
+          "mountVisible=" + second.mountVisible,
+          "globeVisible=" + second.globeVisible,
+          "surfaceLoaded=" + second.surfaceLoaded,
+          "caption=" + second.captionText,
+          "instrument=" + second.instrumentVersion,
+          "surfaceAnim=" + second.surfaceStyle.animationName,
+          "cloudAnim=" + second.cloudStyle.animationName,
+          "surfaceMotion=" + frameRead.surfaceMotion,
+          "cloudMotion=" + frameRead.cloudMotion,
+          "runtimeTickChanged=" + frameRead.runtimeTickChanged,
+          second.computedMount
+        ].join(" · ");
+      }
 
-        if (!sourceRead.instrumentHasFullExpression || !sourceRead.cssHasFullExpression) {
-          return {
-            text: "RESULT_G3_HOLD: Generation 2 is preserved, but Generation 3 source evidence is incomplete.",
-            actions: [
-              "Patch the missing source lane only.",
-              "Instrument must expose Generation 3 receipts.",
-              "CSS must expose terminator, atmosphere, telemetry, and depth classes."
-            ]
-          };
-        }
-
+      function chooseBreak(sourceRead, parentFrame, globeFrame, assetsOk) {
         const parentScore = scoreFrame(parentFrame);
         const globeScore = scoreFrame(globeFrame);
 
-        if (parentScore.gen3 < 100 || globeScore.gen3 < 100) {
+        if (!assetsOk.surfaceOk || !assetsOk.cloudsOk) {
           return {
-            text: "RESULT_G3_PARTIAL: Generation 2 is preserved, but one or more Generation 3 visual layers are missing.",
+            text: "RESULT_D: Raw Earth assets are not both fetchable.",
             actions: [
-              "Missing layer is shown in C7/C8 frame evidence.",
-              "Patch only the missing Generation 3 layer.",
-              "Do not rewrite Generation 2 structure."
+              "Confirm /assets/earth/earth_surface_2048.jpg and /assets/earth/earth_clouds_2048.jpg.",
+              "Do not rewrite Showroom files until raw assets are available."
+            ]
+          };
+        }
+
+        if (!parentFrame.ok || parentScore.liveness < 90) {
+          return {
+            text: "RESULT_PARENT_LIVENESS: Parent Showroom is alive enough to load, but the active globe liveness path is constrained.",
+            actions: [
+              "Target /showroom/index.html and /showroom/index.js only.",
+              "Confirm the parent loads the current instrument, runtime, render bridge, and CSS.",
+              "Do not touch runtime or assets unless parent source proves those paths are stale."
+            ]
+          };
+        }
+
+        if (!globeFrame.ok || globeScore.liveness < 90) {
+          return {
+            text: "RESULT_GLOBE_LIVENESS: Standalone globe route is constrained while parent may remain alive.",
+            actions: [
+              "Target /showroom/globe/index.html and /showroom/globe/index.js only.",
+              "Do not change parent Showroom if parent liveness is passing."
+            ]
+          };
+        }
+
+        if (sourceRead.consumerHasStale) {
+          return {
+            text: "RESULT_CONSUMER_STALE: The system is functional, but consumer-owned source still contains stale generation language or old runtime status.",
+            actions: [
+              "Patch only the file that contains the stale token shown in C2.",
+              "Likely target: /showroom/index.js, /showroom/globe/index.js, or the corresponding HTML route file.",
+              "Do not touch CSS, runtime, or asset instrument first."
+            ]
+          };
+        }
+
+        if (parentScore.congruence < 80 || globeScore.congruence < 80) {
+          return {
+            text: "RESULT_CONGRUENCE: The globe is alive, but DOM receipts/captions are not congruent with the current Gen 3 state.",
+            actions: [
+              "Patch the consumer JS that writes the stale DOM dataset or caption.",
+              "Parent target: /showroom/index.js.",
+              "Standalone target: /showroom/globe/index.js."
+            ]
+          };
+        }
+
+        if (parentScore.motion < 70 || globeScore.motion < 70) {
+          return {
+            text: "RESULT_MOTION_PROOF: The system is not collapsed, but motion is not sufficiently proven in DOM/runtime/computed animation.",
+            actions: [
+              "First verify reduced-motion is not pausing animation.",
+              "If selectors are missing, patch /showroom/showroom.css.",
+              "If runtime tick is missing, patch /showroom/runtime.js only after confirming CSS animation is present."
+            ]
+          };
+        }
+
+        if (parentScore.clarity < 75 || globeScore.clarity < 75) {
+          return {
+            text: "RESULT_VISUAL_CLARITY: The system is functional, but visual clarity remains underpowered.",
+            actions: [
+              "Target /showroom/showroom.css only.",
+              "Reduce haze, cloud opacity, overlay strength, and excessive softness.",
+              "Preserve motion and route liveness."
             ]
           };
         }
 
         return {
-          text: "PASS: Generation 3 full-expression evidence is present while Generation 2 remains preserved.",
+          text: "PASS_FUNCTIONAL: The system is alive, congruent, moving, and clear enough for the current measured standard.",
           actions: [
-            "Visually inspect /showroom/ and /showroom/globe/.",
-            "If screenshots confirm, bind Generation 3 as achieved.",
-            "Then update Gauges from diagnostic mode to pass receipt."
+            "Use screenshots for final visual acceptance.",
+            "Only bind full Generation 3 if user visual read accepts rotation, axis, shadow, and clarity.",
+            "Otherwise refine the one failing lane reported above."
           ]
         };
       }
 
       async function runDiagnostic() {
         state.checks = [];
-        state.scores = { gen2: 0, gen3: 0, parent: 0, globe: 0 };
+        state.scores = { liveness: 0, congruence: 0, motion: 0, clarity: 0 };
         renderChecks();
         updateScores();
 
-        setSummary("Running Generation 3 diagnostic...");
+        setSummary("Running functional Showroom troubleshoot...");
         setFirstBreak("Measuring...");
         setRepairAction("Pending", ["Diagnostic running."]);
 
-        let showroom = { ok: false, status: 0, text: "" };
-        let globe = { ok: false, status: 0, text: "" };
-        let instrument = { ok: false, status: 0, text: "" };
-        let css = { ok: false, status: 0, text: "" };
+        const sources = {};
         let earthSurface = { ok: false, status: 0 };
         let earthClouds = { ok: false, status: 0 };
 
-        try {
-          showroom = await fetchText(TARGETS.showroom);
-          addCheck(
-            "C1 Parent Showroom source",
-            showroom.ok ? "pass" : "fail",
-            "HTTP " + showroom.status + ". Checks parent route source for Gen 2/Gen 3 hooks.",
-            showroom.text.slice(0, 900)
-          );
-        } catch (error) {
-          addCheck("C1 Parent Showroom source", "fail", String(error.message || error), "");
-        }
+        const sourceTargets = [
+          ["parentHtml", TARGETS.parentHtml, "C1 Parent HTML source"],
+          ["parentJs", TARGETS.parentJs, "C2 Parent JS source"],
+          ["parentRender", TARGETS.parentRender, "C3 Parent render bridge source"],
+          ["parentCss", TARGETS.parentCss, "C4 Showroom CSS source"],
+          ["runtime", TARGETS.runtime, "C5 Runtime source"],
+          ["globeHtml", TARGETS.globeHtml, "C6 Globe HTML source"],
+          ["globeJs", TARGETS.globeJs, "C7 Globe JS source"],
+          ["instrument", TARGETS.instrument, "C8 Asset instrument source"]
+        ];
 
-        try {
-          globe = await fetchText(TARGETS.globe);
-          addCheck(
-            "C2 Standalone globe source",
-            globe.ok ? "pass" : "fail",
-            "HTTP " + globe.status + ". Checks /showroom/globe/ source.",
-            globe.text.slice(0, 900)
-          );
-        } catch (error) {
-          addCheck("C2 Standalone globe source", "fail", String(error.message || error), "");
-        }
+        for (const item of sourceTargets) {
+          const key = item[0];
+          const url = item[1];
+          const label = item[2];
 
-        try {
-          instrument = await fetchText(TARGETS.instrument);
-          addCheck(
-            "C3 Asset instrument source",
-            instrument.ok ? "pass" : "fail",
-            "HTTP " + instrument.status + ". Checks Generation 3 instrument receipts and layer factory.",
-            instrument.text.slice(0, 900)
-          );
-        } catch (error) {
-          addCheck("C3 Asset instrument source", "fail", String(error.message || error), "");
-        }
-
-        try {
-          css = await fetchText(TARGETS.css);
-          addCheck(
-            "C4 Showroom CSS source",
-            css.ok ? "pass" : "fail",
-            "HTTP " + css.status + ". Checks Generation 3 visual classes.",
-            css.text.slice(0, 900)
-          );
-        } catch (error) {
-          addCheck("C4 Showroom CSS source", "fail", String(error.message || error), "");
+          try {
+            sources[key] = await fetchText(url);
+            addCheck(
+              label,
+              sources[key].ok ? "pass" : "fail",
+              "HTTP " + sources[key].status + " · " + url,
+              sources[key].text.slice(0, 900)
+            );
+          } catch (error) {
+            sources[key] = { ok: false, status: 0, text: "" };
+            addCheck(label, "fail", String(error.message || error), "");
+          }
         }
 
         try {
           earthSurface = await fetchAsset(TARGETS.earthSurface);
           earthClouds = await fetchAsset(TARGETS.earthClouds);
           addCheck(
-            "C5 Earth assets",
+            "C9 Earth assets",
             earthSurface.ok && earthClouds.ok ? "pass" : "fail",
             "surface HTTP=" + earthSurface.status + " · clouds HTTP=" + earthClouds.status,
             TARGETS.earthSurface + "\n" + TARGETS.earthClouds
           );
         } catch (error) {
-          addCheck("C5 Earth assets", "fail", String(error.message || error), "");
+          addCheck("C9 Earth assets", "fail", String(error.message || error), "");
         }
 
-        const sourceRead = inspectSource(showroom, globe, instrument, css);
+        const sourceRead = inspectSources(sources);
 
         addCheck(
-          "C6 Source generation evidence",
-          sourceRead.instrumentHasFullExpression && sourceRead.cssHasFullExpression ? "pass" : "hold",
-          "Gen2 token count=" + sourceRead.gen2SourceCount +
-            ". Instrument Gen3=" + sourceRead.gen3InstrumentCount + "/" + sourceRead.gen3InstrumentTotal +
-            ". CSS Gen3=" + sourceRead.gen3CssCount + "/" + sourceRead.gen3CssTotal + ".",
+          "C10 Source congruence summary",
+          sourceRead.consumerHasStale ? "hold" : "pass",
+          sourceStatusDetail(sourceRead),
           JSON.stringify(sourceRead, null, 2)
         );
 
-        const parentFrame = await loadFrame("showroom-diagnostic-frame", TARGETS.showroom);
-        const globeFrame = await loadFrame("globe-diagnostic-frame", TARGETS.globe);
+        const parentFrame = await loadFrame("showroom-diagnostic-frame", TARGETS.parentHtml);
+        const globeFrame = await loadFrame("globe-diagnostic-frame", TARGETS.globeHtml);
 
         const parentScore = scoreFrame(parentFrame);
         const globeScore = scoreFrame(globeFrame);
 
         addCheck(
-          "C7 Parent DOM paint",
-          parentFrame.ok && parentFrame.globeVisible ? "pass" : parentFrame.ok ? "fail" : "hold",
-          makeFrameDetail(parentFrame),
-          parentFrame.mountDataset || parentFrame.rootDataset || ""
+          "C11 Parent iframe functional DOM",
+          parentFrame.ok && parentScore.liveness >= 90 ? "pass" : parentFrame.ok ? "hold" : "fail",
+          frameDetail(parentFrame),
+          parentFrame.ok ? JSON.stringify({
+            mountDataset: parentFrame.second.mountDataset,
+            rootDataset: parentFrame.second.rootDataset,
+            runtime: parentFrame.second.runtime,
+            styles: {
+              surface: parentFrame.second.surfaceStyle,
+              clouds: parentFrame.second.cloudStyle,
+              terminator: parentFrame.second.terminatorStyle,
+              atmosphere: parentFrame.second.atmosphereStyle
+            }
+          }, null, 2) : ""
         );
 
         addCheck(
-          "C8 Standalone globe DOM paint",
-          globeFrame.ok && globeFrame.globeVisible ? "pass" : globeFrame.ok ? "fail" : "hold",
-          makeFrameDetail(globeFrame),
-          globeFrame.mountDataset || globeFrame.rootDataset || ""
+          "C12 Standalone iframe functional DOM",
+          globeFrame.ok && globeScore.liveness >= 90 ? "pass" : globeFrame.ok ? "hold" : "fail",
+          frameDetail(globeFrame),
+          globeFrame.ok ? JSON.stringify({
+            mountDataset: globeFrame.second.mountDataset,
+            rootDataset: globeFrame.second.rootDataset,
+            runtime: globeFrame.second.runtime,
+            styles: {
+              surface: globeFrame.second.surfaceStyle,
+              clouds: globeFrame.second.cloudStyle,
+              terminator: globeFrame.second.terminatorStyle,
+              atmosphere: globeFrame.second.atmosphereStyle
+            }
+          }, null, 2) : ""
         );
 
-        state.scores.parent = parentScore.gen2;
-        state.scores.globe = globeScore.gen2;
-        state.scores.gen2 = Math.round((parentScore.gen2 + globeScore.gen2) / 2);
-        state.scores.gen3 = Math.round((parentScore.gen3 + globeScore.gen3) / 2);
+        state.scores.liveness = Math.round((parentScore.liveness + globeScore.liveness) / 2);
+        state.scores.congruence = Math.round((parentScore.congruence + globeScore.congruence) / 2);
+        state.scores.motion = Math.round((parentScore.motion + globeScore.motion) / 2);
+        state.scores.clarity = Math.round((parentScore.clarity + globeScore.clarity) / 2);
         updateScores();
 
-        const selected = chooseNextMove(parentFrame, globeFrame, sourceRead, {
+        const selected = chooseBreak(sourceRead, parentFrame, globeFrame, {
           surfaceOk: earthSurface.ok,
           cloudsOk: earthClouds.ok
         });
 
-        setSummary("Diagnostic complete. Clean read selected below.");
+        setSummary("Diagnostic complete. First controlling break selected below.");
         setFirstBreak(selected.text);
         setRepairAction("Next repair action", selected.actions);
 
@@ -1069,8 +1208,10 @@
         if (root) {
           root.dataset.diagnosticVersion = VERSION;
           root.dataset.diagnosticComplete = "true";
-          root.dataset.generation2PreservationScore = String(state.scores.gen2);
-          root.dataset.generation3ExpressionScore = String(state.scores.gen3);
+          root.dataset.routeLivenessScore = String(state.scores.liveness);
+          root.dataset.statusCongruenceScore = String(state.scores.congruence);
+          root.dataset.motionProofScore = String(state.scores.motion);
+          root.dataset.visualClarityScore = String(state.scores.clarity);
           root.dataset.firstBreak = selected.text;
         }
       }
@@ -1087,7 +1228,7 @@
         bind();
       }
 
-      window.DGBGaugesGeneration3Read = Object.freeze({
+      window.DGBGaugesShowroomFunctionalTroubleshoot = Object.freeze({
         version: VERSION,
         runDiagnostic: runDiagnostic,
         state: state

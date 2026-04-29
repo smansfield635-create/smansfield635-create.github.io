@@ -1,31 +1,79 @@
 /*
   /showroom/runtime.js
-  SHOWROOM_GENERATION_3_RUNTIME_MOTION_STATE_TNT_v1
+  SHOWROOM_RUNTIME_STATUS_CONTRACT_CLEANUP_TNT_v1
 
-  Runtime owns state and receipts only.
-  No DOM replacement.
-  No page layout.
+  Purpose:
+  - Keep runtime as state/receipt authority only.
+  - Remove old active-looking Gen 1 / Gen 2 runtime language.
+  - Align runtime receipts to the current no-orbital-scaffold Gen 3 object.
+  - Preserve motionTick, rotationPhase, axis tilt, and CSS variables.
+  - Preserve public API used by parent Showroom boot.
+
+  Owns:
+  - runtime state
+  - runtime receipts
+  - motion tick
+  - rotation phase
+  - CSS runtime variables
+
+  Does not own:
+  - DOM replacement
+  - page layout
+  - globe rendering
+  - orbit/ring/scaffold emission
+  - Earth image assets
+  - Showroom copy
+  - Gauges logic
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-3-runtime-motion-state-v1";
+  const VERSION = "showroom-generation-3-runtime-status-contract-cleanup-v1";
+
+  const AXIS_TILT_DEGREES = 23.5;
+  const ROTATION_STEP_DEGREES = 6;
+  const TICK_MS = 1000;
 
   const state = {
-    generation1: "no-graphic-baseline-preserved",
-    generation2: "baseline-graphics-preserved",
-    generation3: "axis-rotation-depth-refinement-active",
+    generation1: "receipt-only-no-orbital-scaffold",
+    generation2: "receipt-only-baseline-graphics",
+    generation3: "context-isolated-no-orbital-scaffold-runtime",
     activeGlobeStatus: "pending",
     generation3MotionStatus: "pending",
     reducedMotion: false,
     started: false,
-    axisTiltDegrees: 23.5,
+    axisTiltDegrees: AXIS_TILT_DEGREES,
     rotationDirection: "east-west",
     motionTick: 0,
     rotationPhase: 0,
     intervalId: null
   };
+
+  function detectReducedMotion() {
+    state.reducedMotion =
+      Boolean(window.matchMedia) &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    return state.reducedMotion;
+  }
+
+  function normalizeStatus(status, fallback) {
+    const value = String(status || fallback || "active");
+
+    if (
+      value.indexOf("axis-rotation-depth") !== -1 ||
+      value.indexOf("generation-2") !== -1 ||
+      value.indexOf("active-globe-visible") !== -1
+    ) {
+      return "generation-3-no-orbital-scaffold-active";
+    }
+
+    if (value.indexOf("context-isolated") !== -1) return value;
+    if (value.indexOf("no-orbital-scaffold") !== -1) return value;
+
+    return value;
+  }
 
   function nodes() {
     return [
@@ -35,80 +83,156 @@
     ].filter(Boolean);
   }
 
-  function detectReducedMotion() {
-    state.reducedMotion =
-      Boolean(window.matchMedia) &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches === true;
-  }
+  function setDataset(node, values) {
+    if (!node) return;
 
-  function writeReceipts(status) {
-    state.activeGlobeStatus = status || state.activeGlobeStatus;
-
-    nodes().forEach(function (node) {
-      node.dataset.showroomRuntime = VERSION;
-      node.dataset.generation1NoGraphicBaseline = "preserved";
-      node.dataset.generation2BaselineGraphics = "preserved";
-      node.dataset.generation2ActiveGlobe = state.activeGlobeStatus;
-      node.dataset.generation3 = state.generation3;
-      node.dataset.generation3RuntimeMotion = state.generation3MotionStatus;
-      node.dataset.generation3AxisRotation = state.reducedMotion ? "paused-reduced-motion" : "active";
-      node.dataset.generation3AxisTiltDegrees = String(state.axisTiltDegrees);
-      node.dataset.generation3RotationDirection = state.rotationDirection;
-      node.dataset.generation3MotionTick = String(state.motionTick);
-      node.dataset.generation3RotationPhase = String(state.rotationPhase);
-      node.dataset.reducedMotion = state.reducedMotion ? "true" : "false";
-
-      node.style.setProperty("--showroom-runtime-phase", String(state.rotationPhase));
-      node.style.setProperty("--showroom-axis-tilt", state.axisTiltDegrees + "deg");
+    Object.entries(values || {}).forEach(function (entry) {
+      node.dataset[entry[0]] = String(entry[1]);
     });
   }
 
-  function stepMotion() {
-    if (state.reducedMotion) {
-      state.generation3MotionStatus = "paused-reduced-motion";
-      writeReceipts(state.activeGlobeStatus);
-      return;
+  function writeRuntimeDataset(node) {
+    setDataset(node, {
+      showroomRuntime: VERSION,
+      runtimeOwns: "state-and-receipts-only",
+      runtimeDomReplacement: "false",
+      runtimePageLayout: "false",
+      runtimeVisualScaffold: "false",
+      runtimeRingScaffold: "false",
+
+      generation1NoGraphicBaseline: "receipt-only",
+      generation1RingScaffold: "removed",
+      generation1OrbitalScaffold: "removed",
+
+      generation2BaselineGraphics: "receipt-only",
+      generation2ActiveGlobe: "receipt-only",
+      generation2ReceiptOnly: "true",
+      generation2VisualClassEmission: "not-owned-by-runtime",
+
+      generation3: state.generation3,
+      generation3RuntimeMotion: state.generation3MotionStatus,
+      generation3AxisRotation: "active",
+      generation3AxisTiltDegrees: String(state.axisTiltDegrees),
+      generation3RotationDirection: state.rotationDirection,
+      generation3MotionTick: String(state.motionTick),
+      generation3RotationPhase: String(state.rotationPhase),
+      generation3RingScaffold: "removed",
+      generation3OrbitalScaffold: "removed",
+      generation3ContextIsolation: "active",
+
+      activeGlobeStatus: state.activeGlobeStatus,
+      reducedMotion: String(state.reducedMotion),
+      runtimeStatusContract: "cleaned",
+      runtimeCompatibility: "parent-showroom"
+    });
+  }
+
+  function writeCssVariables() {
+    const root = document.documentElement;
+    if (!root || !root.style) return;
+
+    root.style.setProperty("--showroom-runtime-phase", String(state.rotationPhase));
+    root.style.setProperty("--showroom-axis-tilt", String(state.axisTiltDegrees) + "deg");
+  }
+
+  function writeAll() {
+    detectReducedMotion();
+
+    nodes().forEach(writeRuntimeDataset);
+    writeCssVariables();
+  }
+
+  function tick() {
+    state.motionTick += 1;
+
+    if (!state.reducedMotion) {
+      state.rotationPhase = (state.rotationPhase + ROTATION_STEP_DEGREES) % 360;
     }
 
-    state.motionTick += 1;
-    state.rotationPhase = (state.rotationPhase + 6) % 360;
-    state.generation3MotionStatus = "axis-rotation-active";
-    writeReceipts(state.activeGlobeStatus || "visible-target-mounted");
-  }
-
-  function startMotionLoop() {
-    if (state.intervalId || state.reducedMotion) return;
-
-    state.intervalId = window.setInterval(stepMotion, 1000);
-    stepMotion();
-  }
-
-  function stopMotionLoop() {
-    if (!state.intervalId) return;
-
-    window.clearInterval(state.intervalId);
-    state.intervalId = null;
+    writeAll();
   }
 
   function start() {
+    if (state.started) {
+      writeAll();
+      return getState();
+    }
+
     detectReducedMotion();
+
     state.started = true;
-    state.generation3MotionStatus = state.reducedMotion ? "paused-reduced-motion" : "runtime-started";
-    writeReceipts("runtime-started");
-    startMotionLoop();
+    state.activeGlobeStatus = normalizeStatus(
+      state.activeGlobeStatus,
+      "generation-3-no-orbital-scaffold-mounted"
+    );
+    state.generation3MotionStatus = normalizeStatus(
+      state.generation3MotionStatus,
+      "generation-3-no-orbital-scaffold-motion-active"
+    );
+
+    writeAll();
+
+    if (state.intervalId) {
+      window.clearInterval(state.intervalId);
+    }
+
+    state.intervalId = window.setInterval(tick, TICK_MS);
+
+    return getState();
+  }
+
+  function stop() {
+    if (state.intervalId) {
+      window.clearInterval(state.intervalId);
+      state.intervalId = null;
+    }
+
+    state.started = false;
+    writeAll();
 
     return getState();
   }
 
   function setActiveGlobeStatus(status) {
-    writeReceipts(status || "visible-target-mounted");
+    state.activeGlobeStatus = normalizeStatus(
+      status,
+      "generation-3-no-orbital-scaffold-mounted"
+    );
+
+    writeAll();
+
     return getState();
   }
 
   function setGeneration3MotionStatus(status) {
-    state.generation3MotionStatus = status || "axis-rotation-depth-mounted";
-    writeReceipts(state.activeGlobeStatus || "visible-target-mounted");
-    startMotionLoop();
+    state.generation3MotionStatus = normalizeStatus(
+      status,
+      "generation-3-no-orbital-scaffold-motion-active"
+    );
+
+    writeAll();
+
+    return getState();
+  }
+
+  function setRotationPhase(phase) {
+    const parsed = Number(phase);
+
+    if (Number.isFinite(parsed)) {
+      state.rotationPhase = ((parsed % 360) + 360) % 360;
+      writeAll();
+    }
+
+    return getState();
+  }
+
+  function resetRuntimeView() {
+    state.motionTick = 0;
+    state.rotationPhase = 0;
+    state.activeGlobeStatus = "generation-3-no-orbital-scaffold-mounted";
+    state.generation3MotionStatus = "generation-3-no-orbital-scaffold-motion-active";
+
+    writeAll();
 
     return getState();
   }
@@ -126,17 +250,30 @@
       axisTiltDegrees: state.axisTiltDegrees,
       rotationDirection: state.rotationDirection,
       motionTick: state.motionTick,
-      rotationPhase: state.rotationPhase
+      rotationPhase: state.rotationPhase,
+      ownsDomReplacement: false,
+      ownsPageLayout: false,
+      ownsVisualScaffold: false,
+      ringScaffoldStatus: "removed",
+      statusContract: "cleaned"
     };
   }
 
-  window.addEventListener("pagehide", stopMotionLoop);
-
   window.DGBShowroomRuntime = Object.freeze({
     version: VERSION,
-    start,
-    setActiveGlobeStatus,
-    setGeneration3MotionStatus,
-    getState
+    start: start,
+    stop: stop,
+    getState: getState,
+    setActiveGlobeStatus: setActiveGlobeStatus,
+    setGeneration3MotionStatus: setGeneration3MotionStatus,
+    setRotationPhase: setRotationPhase,
+    resetRuntimeView: resetRuntimeView,
+    writeAll: writeAll
   });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();

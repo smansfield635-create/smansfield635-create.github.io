@@ -1,31 +1,764 @@
-Skip to Demo Universe Earth
-Demo Universe Earth · Standalone Globe Route
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+  data-chamber="H6_GAUGES"
+  data-generation="gauges-h6-safe-mode-uncrash-v1"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gauges · Safe Diagnostic Room · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Safe-mode Gauges diagnostic room for Diamond Gate Bridge. Restores H6 without iframe inspection or heavy runtime probing."
+  />
 
-Demo Universe Earth
-This route owns the standalone Earth globe surface. It consumes the same Generation 3 asset instrument as the parent Showroom page while preserving axis rotation, runtime motion, shadow depth, and visual clarity refinement.
+  <style>
+    :root {
+      --void: #050914;
+      --black: #02050c;
+      --panel: rgba(12, 24, 42, 0.86);
+      --panel-strong: rgba(7, 15, 29, 0.96);
+      --gold: #f5c76b;
+      --blue: #74b8ff;
+      --green: #78d99b;
+      --red: #ff817a;
+      --amber: #ffc857;
+      --text: #f6efe0;
+      --muted: #b9c2cf;
+      --line: rgba(245, 199, 107, 0.28);
+      --blue-line: rgba(116, 184, 255, 0.24);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+      --radius: 28px;
+    }
 
-Return to Showroom
-Compass
-Products
-Gauges
-GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE
+    * { box-sizing: border-box; }
 
-GEN 3
-axis=23.5°
-rotation=active
-shadow=active
-depth=active
-terminator=active
-atmosphere=active
-context=standalone
-Return to Showroom
-Receipts
-ROUTE=/showroom/globe/
-PARENT_ROUTE=/showroom/
-GENERATION_2_STANDALONE_GLOBE_PRESERVED
-GENERATION_3_AXIS_ROTATION_DEPTH_ACTIVE
-GENERATION_3_RUNTIME_MOTION_ACTIVE
-GENERATION_3_VISUAL_CLARITY_REFINEMENT_ACTIVE
-GENERATION_3_VISUAL_TRUTH_PENDING_USER_CONFIRMATION
-ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-axis-rotation-depth-v1
-SHOWROOM_GENERATION_3_PARENT_AND_STANDALONE_CONSUMER_CONGRUENCE_TNT_v1
+    html { min-height: 100%; background: var(--void); }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.14), transparent 28rem),
+        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.10), transparent 22rem),
+        linear-gradient(180deg, #02050c 0%, var(--void) 48%, #080d18 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 100;
+      transform: translateY(-150%);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      color: #080d18;
+      background: var(--gold);
+      font-weight: 900;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 0.15rem;
+      text-decoration: none;
+    }
+
+    .brand strong {
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .nav,
+    .actions,
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .nav a,
+    .actions a,
+    .actions button {
+      border: 1px solid rgba(245, 199, 107, 0.42);
+      border-radius: 999px;
+      padding: 0.72rem 1rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .nav a[aria-current="page"],
+    .nav a:hover,
+    .nav a:focus-visible,
+    .actions a:hover,
+    .actions a:focus-visible,
+    .actions button:hover,
+    .actions button:focus-visible {
+      color: #080d18;
+      background: var(--gold);
+      outline: none;
+    }
+
+    .hero,
+    .panel,
+    .receipt {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(12, 24, 42, 0.88), rgba(8, 20, 38, 0.70)),
+        radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.12), transparent 18rem);
+      box-shadow: var(--shadow);
+    }
+
+    .hero { padding: clamp(24px, 4vw, 48px); }
+
+    .panel,
+    .receipt {
+      margin-top: 24px;
+      padding: clamp(22px, 3.5vw, 36px);
+    }
+
+    .receipt { background: var(--panel-strong); }
+
+    .kicker,
+    .receipt-line {
+      margin: 0 0 0.85rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    li { overflow-wrap: anywhere; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 6vw, 5.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.065em;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 1.05rem;
+    }
+
+    .lede,
+    .copy,
+    .small {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .lede {
+      max-width: 980px;
+      margin: 1.2rem 0 0;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+
+    .actions { margin-top: 1.5rem; }
+
+    .score-grid,
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.25rem;
+    }
+
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .score-card,
+    .card {
+      border: 1px solid var(--blue-line);
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .score-card strong {
+      display: block;
+      font-size: clamp(1.85rem, 5vw, 3.1rem);
+      line-height: 0.95;
+      color: var(--gold);
+    }
+
+    .score-card span {
+      display: block;
+      margin-top: 0.3rem;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .card[data-status="pass"] { border-color: rgba(120, 217, 155, 0.44); }
+    .card[data-status="fail"] { border-color: rgba(255, 129, 122, 0.44); }
+    .card[data-status="hold"] { border-color: rgba(245, 199, 107, 0.44); }
+
+    .card[data-status="pass"] b { color: var(--green); }
+    .card[data-status="fail"] b { color: var(--red); }
+    .card[data-status="hold"] b { color: var(--amber); }
+
+    .card b {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
+    }
+
+    pre {
+      overflow: auto;
+      max-height: 240px;
+      border-radius: 14px;
+      padding: 0.85rem;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.26);
+      white-space: pre-wrap;
+      font-size: 0.82rem;
+    }
+
+    .chips {
+      margin-top: 1rem;
+    }
+
+    .chips span,
+    .chips a {
+      border: 1px solid rgba(245, 199, 107, 0.25);
+      border-radius: 999px;
+      padding: 0.48rem 0.7rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    @media (max-width: 920px) {
+      .score-grid,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shell {
+        width: min(100%, calc(100% - 24px));
+      }
+    }
+  </style>
+</head>
+
+<body
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+>
+  <a class="skip-link" href="#gauges-main">Skip to Gauges content</a>
+
+  <div
+    id="gauges-root"
+    class="shell"
+    data-proof-marker="H6_GAUGES"
+    data-gauges-role="safe-mode-diagnostic-room"
+    data-safe-mode="true"
+  >
+    <header class="topbar">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Gauges · Safe Diagnostic Room</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Demo Universe Earth</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="gauges-main">
+      <section class="hero">
+        <p class="kicker">H6 · Gauges · Safe Mode</p>
+        <h1>Gauges Diagnostic Instrument Room</h1>
+        <p class="lede">
+          Gauges is restored in safe mode. This page uses fetch-only diagnostics and does not
+          inspect iframe DOM, mutate Showroom, mutate Demo Universe, or touch asset/runtime files.
+        </p>
+
+        <div class="actions">
+          <button id="run" type="button">Run safe diagnostic</button>
+          <a href="/showroom/">Inspect Showroom</a>
+          <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
+          <a href="/assets/showroom.globe.instrument.js">Asset instrument</a>
+          <a href="/showroom/runtime.js">Runtime</a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Safe Ceiling Read</p>
+        <h2>Current source field.</h2>
+        <p id="summary" class="copy">Safe mode loaded. Diagnostic has not run yet.</p>
+
+        <div class="score-grid">
+          <article class="score-card">
+            <strong id="score-total">--</strong>
+            <span>Total / 100</span>
+          </article>
+          <article class="score-card">
+            <strong id="score-route">--</strong>
+            <span>Route liveness</span>
+          </article>
+          <article class="score-card">
+            <strong id="score-source">--</strong>
+            <span>Source alignment</span>
+          </article>
+          <article class="score-card">
+            <strong id="score-next">--</strong>
+            <span>Next target</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Minimum Lawful Target</p>
+        <h2 id="target-title">Waiting for diagnostic.</h2>
+        <p id="target-copy" class="copy">No file selected yet.</p>
+        <div id="target-chips" class="chips"></div>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Evidence</p>
+        <h2>Fetch-only lanes.</h2>
+        <div id="evidence" class="grid"></div>
+      </section>
+
+      <section class="receipt">
+        <p class="receipt-line">Calibration receipt</p>
+        <h2>H6 Gauges safe-mode uncrash receipt.</h2>
+        <p class="copy">
+          VERSION: GAUGES_H6_SAFE_MODE_UNCRASH_TNT_v1.
+          This file restores Gauges without iframe DOM inspection, heavy nested runtime probing,
+          or automatic page mutation outside Gauges.
+        </p>
+
+        <div class="chips">
+          <a href="/">Compass</a>
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/">Demo Universe Earth</a>
+          <a href="/gauges/">Gauges</a>
+          <span>H6_GAUGES</span>
+          <span>gauges-truth=live-authority</span>
+          <span>safe-mode=true</span>
+          <span>GAUGES_H6_SAFE_MODE_UNCRASH_TNT_v1</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const VERSION = "GAUGES_H6_SAFE_MODE_UNCRASH_TNT_v1";
+
+      const EXPECTED = Object.freeze({
+        instrument: "showroom-generation-3-realm-separated-control-instrument-v1",
+        runtime: "showroom-generation-3-runtime-status-contract-cleanup-v1"
+      });
+
+      const PATHS = Object.freeze({
+        showroom: "/showroom/",
+        demo: "/showroom/globe/",
+        instrument: "/assets/showroom.globe.instrument.js",
+        runtime: "/showroom/runtime.js",
+        parentBoot: "/showroom/index.js",
+        parentRender: "/showroom/showroom.render.js",
+        demoBoot: "/showroom/globe/index.js",
+        css: "/showroom/showroom.css"
+      });
+
+      const OLD_TOKENS = [
+        "showroom-generation-3-axis-rotation-depth-instrument-v1",
+        "showroom-generation-3-context-isolated-instrument-v1",
+        "showroom-generation-3-control-panel-takeover-instrument-v1",
+        "showroom-generation-3-no-orbital-scaffold-instrument-v1",
+        "showroom-generation-3-orbit",
+        "showroom-generation-2-shell",
+        "showroom-generation-2-orbit",
+        "showroom-generation-2-active-globe",
+        "showroom-parent-cache-bust-no-behavior-change-v1",
+        "showroom-generation-3-axis-rotation-depth-v1",
+        "GENERATION_2_STANDALONE_GLOBE_PRESERVED",
+        "GENERATION_2_ACTIVE_GLOBE_PRESERVED"
+      ];
+
+      const state = {
+        results: {},
+        evidence: [],
+        scores: {
+          total: 0,
+          route: 0,
+          source: 0
+        },
+        decision: {
+          target: [],
+          title: "Waiting for diagnostic.",
+          copy: "No file selected yet."
+        }
+      };
+
+      function el(id) {
+        return document.getElementById(id);
+      }
+
+      function create(tag, attrs, children) {
+        const node = document.createElement(tag);
+
+        Object.entries(attrs || {}).forEach(function (entry) {
+          const key = entry[0];
+          const value = entry[1];
+          if (value === null || value === undefined || value === false) return;
+          if (key === "className") node.className = value;
+          else if (key === "text") node.textContent = value;
+          else node.setAttribute(key, String(value));
+        });
+
+        (children || []).forEach(function (child) {
+          if (typeof child === "string") node.appendChild(document.createTextNode(child));
+          else if (child) node.appendChild(child);
+        });
+
+        return node;
+      }
+
+      function setText(id, value) {
+        const node = el(id);
+        if (node) node.textContent = String(value);
+      }
+
+      function has(text, token) {
+        return String(text || "").indexOf(token) !== -1;
+      }
+
+      function foundTokens(text, tokens) {
+        return tokens.filter(function (token) {
+          return has(text, token);
+        });
+      }
+
+      async function fetchText(path) {
+        const response = await fetch(path + "?gauges-safe=" + Date.now(), { cache: "no-store" });
+        const text = await response.text();
+
+        return {
+          path: path,
+          ok: response.ok,
+          status: response.status,
+          type: response.headers.get("content-type") || "",
+          text: text
+        };
+      }
+
+      function addEvidence(name, status, detail, raw) {
+        state.evidence.push({
+          name: name,
+          status: status,
+          detail: detail,
+          raw: raw || ""
+        });
+      }
+
+      function renderEvidence() {
+        const root = el("evidence");
+        if (!root) return;
+
+        root.replaceChildren();
+
+        state.evidence.forEach(function (item) {
+          root.appendChild(
+            create("article", { className: "card", "data-status": item.status }, [
+              create("b", { text: item.status.toUpperCase() + " · " + item.name }),
+              create("p", { className: "small", text: item.detail }),
+              item.raw ? create("pre", { text: String(item.raw).slice(0, 1800) }) : null
+            ])
+          );
+        });
+      }
+
+      function updateScores() {
+        setText("score-total", state.scores.total);
+        setText("score-route", state.scores.route);
+        setText("score-source", state.scores.source);
+        setText("score-next", state.decision.target.length ? state.decision.target.length : "HOLD");
+      }
+
+      function renderDecision() {
+        setText("target-title", state.decision.title);
+        setText("target-copy", state.decision.copy);
+
+        const chips = el("target-chips");
+        if (!chips) return;
+
+        chips.replaceChildren();
+
+        if (!state.decision.target.length) {
+          chips.appendChild(create("span", { text: "NO_WRITE_SELECTED" }));
+          return;
+        }
+
+        state.decision.target.forEach(function (target) {
+          chips.appendChild(create("span", { text: target }));
+        });
+      }
+
+      function scoreRoutes() {
+        let score = 0;
+
+        if (state.results.showroom && state.results.showroom.ok) score += 25;
+        if (state.results.demo && state.results.demo.ok) score += 25;
+        if (state.results.instrument && state.results.instrument.ok) score += 25;
+        if (state.results.runtime && state.results.runtime.ok) score += 25;
+
+        return score;
+      }
+
+      function scoreSource() {
+        const instrument = state.results.instrument ? state.results.instrument.text : "";
+        const runtime = state.results.runtime ? state.results.runtime.text : "";
+        const showroom = state.results.showroom ? state.results.showroom.text : "";
+        const demo = state.results.demo ? state.results.demo.text : "";
+
+        let score = 0;
+
+        if (has(instrument, EXPECTED.instrument)) score += 30;
+        if (has(runtime, EXPECTED.runtime)) score += 20;
+
+        if (!has(instrument, "showroom-generation-3-orbit")) score += 10;
+        if (!has(instrument, "showroom-generation-2-shell")) score += 10;
+        if (!has(instrument, "showroom-generation-2-active-globe")) score += 10;
+
+        if (has(showroom, "showroom-generation-3-realm-separated-control-instrument-v1")) score += 10;
+        if (has(demo, "showroom-generation-3-realm-separated-control-instrument-v1")) score += 10;
+
+        return Math.min(100, score);
+      }
+
+      function chooseDecision() {
+        const instrument = state.results.instrument ? state.results.instrument.text : "";
+        const runtime = state.results.runtime ? state.results.runtime.text : "";
+        const showroom = state.results.showroom ? state.results.showroom.text : "";
+        const demo = state.results.demo ? state.results.demo.text : "";
+
+        const instrumentCurrent = has(instrument, EXPECTED.instrument);
+        const runtimeCurrent = has(runtime, EXPECTED.runtime);
+
+        const instrumentOld = foundTokens(instrument, OLD_TOKENS);
+        const showroomOld = foundTokens(showroom, OLD_TOKENS);
+        const demoOld = foundTokens(demo, OLD_TOKENS);
+
+        if (!instrumentCurrent || instrumentOld.length > 0) {
+          return {
+            target: ["/assets/showroom.globe.instrument.js"],
+            title: "ASSET INSTRUMENT STILL CONTROLS THE BREAK",
+            copy:
+              "The shared asset instrument is not yet clean/current by safe source read. Re-apply or confirm the final realm-separated control instrument before touching route consumers."
+          };
+        }
+
+        if (!runtimeCurrent) {
+          return {
+            target: ["/showroom/runtime.js"],
+            title: "RUNTIME STATUS CONTRACT IS STALE",
+            copy:
+              "The asset instrument appears current, but runtime is not aligned to the current no-scaffold realm-separated contract."
+          };
+        }
+
+        if (showroomOld.length > 0 || demoOld.length > 0) {
+          const targets = [];
+          if (showroomOld.length > 0) targets.push("/showroom/index.html");
+          if (demoOld.length > 0) targets.push("/showroom/globe/index.html");
+
+          return {
+            target: targets,
+            title: "ROUTE RECEIPTS / LOAD PATHS ARE STALE",
+            copy:
+              "The shared instrument and runtime may be current, but parent/demo route copy or load-path receipts still carry older contract language."
+          };
+        }
+
+        return {
+          target: [],
+          title: "SAFE HOLD",
+          copy:
+            "Safe diagnostic did not select a rewrite. Remaining work is visual inspection, owner acceptance, or a narrower source audit."
+        };
+      }
+
+      async function run() {
+        state.results = {};
+        state.evidence = [];
+
+        setText("summary", "Running safe fetch-only diagnostic.");
+
+        const entries = [
+          ["showroom", PATHS.showroom],
+          ["demo", PATHS.demo],
+          ["instrument", PATHS.instrument],
+          ["runtime", PATHS.runtime],
+          ["parentBoot", PATHS.parentBoot],
+          ["parentRender", PATHS.parentRender],
+          ["demoBoot", PATHS.demoBoot],
+          ["css", PATHS.css]
+        ];
+
+        for (const entry of entries) {
+          const key = entry[0];
+          const path = entry[1];
+
+          try {
+            state.results[key] = await fetchText(path);
+            addEvidence(
+              key,
+              state.results[key].ok ? "pass" : "fail",
+              path + " · HTTP " + state.results[key].status,
+              state.results[key].text
+            );
+          } catch (error) {
+            state.results[key] = {
+              path: path,
+              ok: false,
+              status: 0,
+              text: "",
+              error: error && error.message ? error.message : String(error)
+            };
+
+            addEvidence(key, "fail", path + " · fetch error", state.results[key].error);
+          }
+        }
+
+        const instrument = state.results.instrument ? state.results.instrument.text : "";
+        const runtime = state.results.runtime ? state.results.runtime.text : "";
+        const showroom = state.results.showroom ? state.results.showroom.text : "";
+        const demo = state.results.demo ? state.results.demo.text : "";
+
+        addEvidence(
+          "token summary",
+          "hold",
+          "Safe token read only. No iframe DOM inspection.",
+          JSON.stringify({
+            expectedInstrument: EXPECTED.instrument,
+            expectedRuntime: EXPECTED.runtime,
+            instrumentCurrent: has(instrument, EXPECTED.instrument),
+            runtimeCurrent: has(runtime, EXPECTED.runtime),
+            instrumentOldTokens: foundTokens(instrument, OLD_TOKENS),
+            showroomOldTokens: foundTokens(showroom, OLD_TOKENS),
+            demoOldTokens: foundTokens(demo, OLD_TOKENS)
+          }, null, 2)
+        );
+
+        state.scores.route = scoreRoutes();
+        state.scores.source = scoreSource();
+        state.scores.total = Math.round((state.scores.route + state.scores.source) / 2);
+        state.decision = chooseDecision();
+
+        renderEvidence();
+        renderDecision();
+        updateScores();
+
+        setText(
+          "summary",
+          "Safe diagnostic complete. Selected target: " +
+            (state.decision.target.length ? state.decision.target.join(", ") : "HOLD")
+        );
+
+        const root = el("gauges-root");
+        if (root) {
+          root.dataset.diagnosticVersion = VERSION;
+          root.dataset.diagnosticComplete = "true";
+          root.dataset.safeMode = "true";
+          root.dataset.minimumTarget = state.decision.target.join(",");
+          root.dataset.totalScore = String(state.scores.total);
+        }
+      }
+
+      function bind() {
+        const button = el("run");
+        if (button) button.addEventListener("click", run);
+        window.setTimeout(run, 250);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bind, { once: true });
+      } else {
+        bind();
+      }
+
+      window.DGBGaugesSafeMode = Object.freeze({
+        version: VERSION,
+        run: run,
+        state: state
+      });
+    })();
+  </script>
+</body>
+</html>

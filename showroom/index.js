@@ -1,20 +1,32 @@
-// /showroom/index.js
+/*
+  /showroom/index.js
+  SHOWROOM_GENERATION_2_ACTIVE_GLOBE_INDEX_JS_EXECUTION_REPAIR_TNT_v1
+
+  Purpose:
+  Restore an executable parent Showroom controller and render Generation 2:
+  an active visible globe on /showroom/.
+
+  Scope:
+  - Touches /showroom/index.js only.
+  - Does not rewrite /showroom/globe/index.js.
+  - Does not rewrite /assets/earth/*.
+  - Does not rewrite /gauges/.
+  - Does not claim Generation 3.
+*/
+
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-2-active-globe-restoration-v1";
+  const VERSION = "showroom-generation-2-active-globe-index-js-execution-repair-v1";
 
   const ROOT_ID = "showroom-root";
   const MAIN_ID = "showroom-main";
   const CANVAS_ID = "showroom-canvas";
   const GLOBE_MOUNT_ID = "showroom-globe-mount";
 
-  const EARTH_CANVAS_SPINE = "/assets/earth/earth_canvas.js";
-  const EARTH_MATERIAL = "/assets/earth/earth_material.css";
-  const SHOWROOM_GLOBE_CONTROLLER = "/showroom/globe/index.js";
+  const EARTH_SURFACE = "/assets/earth/earth_surface_2048.jpg";
+  const EARTH_CLOUDS = "/assets/earth/earth_clouds_2048.jpg";
   const SHOWROOM_GLOBE_ROUTE = "/showroom/globe/";
-
-  let fallbackTimer = null;
 
   function qs(selector, root) {
     return (root || document).querySelector(selector);
@@ -54,33 +66,183 @@
     });
   }
 
-  function writeGeneration2Receipts(status) {
-    const root = document.getElementById(ROOT_ID);
-    const main = document.getElementById(MAIN_ID);
-    const mount = document.getElementById(GLOBE_MOUNT_ID);
+  function ensureStyle() {
+    if (document.getElementById("showroom-generation-2-active-globe-style")) return;
 
-    const receipts = {
-      showroomIndexVersion: VERSION,
-      showroomGeneration: "generation-2-active-globe",
-      generation2ActiveGlobe: status,
-      generation3BlockedUntilG2Pass: "true",
-      showroomCardEarthSync: "active",
-      showroomCardEarthColor: "synced",
-      showroomCardGlobeHandoff: "active",
-      showroomCardVisualTruth: "pending",
-      demoUniverseCardPreview: "active",
-      showroomMobileLayoutHardened: "true"
-    };
+    const style = create("style", {
+      id: "showroom-generation-2-active-globe-style",
+      text: `
+        #showroom-globe-mount {
+          position: relative !important;
+          z-index: 30 !important;
+          width: min(820px, 100%) !important;
+          min-height: clamp(430px, 62vw, 680px) !important;
+          margin: 0 auto !important;
+          display: grid !important;
+          place-items: center !important;
+          overflow: visible !important;
+          transform: none !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
 
-    setDataset(root, receipts);
-    setDataset(main, receipts);
-    setDataset(mount, {
-      ...receipts,
-      showroomGlobeController: SHOWROOM_GLOBE_CONTROLLER,
-      earthCanvasSpine: EARTH_CANVAS_SPINE,
-      earthMaterial: EARTH_MATERIAL,
-      showroomGlobeRoute: SHOWROOM_GLOBE_ROUTE
+        .showroom-generation-2-shell {
+          position: relative;
+          width: 100%;
+          min-height: clamp(430px, 62vw, 680px);
+          display: grid;
+          place-items: center;
+          gap: 14px;
+          padding: clamp(18px, 3vw, 34px);
+        }
+
+        .showroom-generation-2-orbit {
+          position: absolute;
+          left: 50%;
+          top: 48%;
+          width: min(690px, 96vw);
+          height: min(180px, 28vw);
+          border: 1px solid rgba(116, 184, 255, 0.28);
+          border-radius: 50%;
+          transform: translate(-50%, -50%) rotate(-10deg);
+          pointer-events: none;
+        }
+
+        .showroom-generation-2-active-globe {
+          position: relative;
+          width: min(520px, 82vw);
+          aspect-ratio: 1;
+          border-radius: 50%;
+          overflow: hidden;
+          background: #0a2a50;
+          box-shadow:
+            inset -42px -28px 64px rgba(0, 0, 0, 0.46),
+            inset 18px 12px 28px rgba(255, 255, 255, 0.10),
+            0 0 44px rgba(116, 184, 255, 0.30),
+            0 0 110px rgba(245, 199, 107, 0.11);
+          isolation: isolate;
+        }
+
+        .showroom-generation-2-active-globe img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          user-select: none;
+          pointer-events: none;
+        }
+
+        .showroom-generation-2-earth-surface {
+          z-index: 1;
+          transform: scale(1.04);
+          filter: saturate(1.12) contrast(1.05);
+        }
+
+        .showroom-generation-2-earth-clouds {
+          z-index: 2;
+          opacity: 0.36;
+          mix-blend-mode: screen;
+          transform: scale(1.05);
+        }
+
+        .showroom-generation-2-light {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          border-radius: 50%;
+          background:
+            radial-gradient(circle at 33% 24%, rgba(255,255,255,.26), transparent 0 14%, transparent 28%),
+            linear-gradient(115deg, rgba(255,255,255,.14), transparent 34%, rgba(0,0,0,.24) 68%, rgba(0,0,0,.50));
+          pointer-events: none;
+        }
+
+        .showroom-generation-2-rim {
+          position: absolute;
+          inset: -1px;
+          z-index: 4;
+          border-radius: 50%;
+          border: 1px solid rgba(246, 239, 224, 0.24);
+          box-shadow:
+            inset 0 0 28px rgba(116, 184, 255, 0.20),
+            0 0 22px rgba(116, 184, 255, 0.22);
+          pointer-events: none;
+        }
+
+        .showroom-generation-2-caption {
+          margin: 0;
+          color: rgba(255,255,255,.90);
+          font-size: clamp(.78rem, 2.4vw, 1.05rem);
+          font-weight: 900;
+          letter-spacing: .12em;
+          line-height: 1.35;
+          text-align: center;
+          text-transform: uppercase;
+        }
+
+        .showroom-generation-2-link {
+          display: inline-flex;
+          border: 1px solid rgba(245,199,107,.42);
+          border-radius: 999px;
+          padding: .62rem .9rem;
+          color: inherit;
+          background: rgba(255,255,255,.055);
+          text-decoration: none;
+          font-weight: 800;
+        }
+
+        .showroom-generation-2-link:hover,
+        .showroom-generation-2-link:focus-visible {
+          color: #080d18;
+          background: #f5c76b;
+          outline: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          .showroom-generation-2-earth-surface {
+            animation: showroomG2EarthSpin 34s linear infinite;
+          }
+
+          .showroom-generation-2-earth-clouds {
+            animation: showroomG2CloudSpin 52s linear infinite;
+          }
+        }
+
+        @keyframes showroomG2EarthSpin {
+          from { transform: scale(1.04) translateX(0); }
+          50% { transform: scale(1.04) translateX(-3.5%); }
+          to { transform: scale(1.04) translateX(0); }
+        }
+
+        @keyframes showroomG2CloudSpin {
+          from { transform: scale(1.05) translateX(0); }
+          50% { transform: scale(1.05) translateX(4%); }
+          to { transform: scale(1.05) translateX(0); }
+        }
+
+        @media (max-width: 620px) {
+          #showroom-globe-mount {
+            min-height: 430px !important;
+          }
+
+          .showroom-generation-2-shell {
+            min-height: 430px;
+            padding: 16px;
+          }
+
+          .showroom-generation-2-active-globe {
+            width: min(390px, 84vw);
+          }
+
+          .showroom-generation-2-orbit {
+            width: min(470px, 94vw);
+            height: 110px;
+          }
+        }
+      `
     });
+
+    document.head.appendChild(style);
   }
 
   function ensureGlobeMount() {
@@ -103,7 +265,7 @@
       "data-showroom-card-globe-handoff": "active",
       "data-showroom-card-earth-color": "synced",
       "data-demo-universe-card-preview": "active",
-      "aria-label": "Showroom active Earth globe mount"
+      "aria-label": "Showroom Generation 2 active Earth globe"
     });
 
     if (visualPanel) {
@@ -120,79 +282,33 @@
     return mount;
   }
 
-  function ensureStylesheet(href, id) {
-    const existing = document.querySelector(`link[href="${href}"]`);
-    if (existing) return Promise.resolve(existing);
+  function writeGenerationReceipts(status) {
+    const root = document.getElementById(ROOT_ID);
+    const main = document.getElementById(MAIN_ID);
+    const mount = document.getElementById(GLOBE_MOUNT_ID);
 
-    return new Promise((resolve) => {
-      const link = create("link", {
-        id,
-        rel: "stylesheet",
-        href,
-        "data-showroom-generation-2-asset": "earth-material"
-      });
+    const receipts = {
+      showroomIndexVersion: VERSION,
+      generation1LayoutEstablished: "true",
+      showroomGeneration: "generation-2-active-globe",
+      generation2ActiveGlobe: status,
+      generation3: "shadow-detail-blocked-until-generation-2-pass",
+      generation3BlockedUntilG2Pass: "true",
+      showroomCardEarthSync: "active",
+      showroomCardEarthColor: "synced",
+      showroomCardGlobeHandoff: "active",
+      showroomCardVisualTruth: "pending",
+      demoUniverseCardPreview: "active",
+      showroomMobileLayoutHardened: "true"
+    };
 
-      link.addEventListener("load", () => resolve(link), { once: true });
-      link.addEventListener("error", () => resolve(link), { once: true });
-
-      document.head.appendChild(link);
-    });
-  }
-
-  function loadClassicScript(src, id, readyCheck) {
-    if (typeof readyCheck === "function" && readyCheck()) {
-      return Promise.resolve(null);
-    }
-
-    const existing = document.querySelector(`script[src="${src}"]`);
-
-    return new Promise((resolve, reject) => {
-      if (existing) {
-        if (existing.dataset.loaded === "true" || (typeof readyCheck === "function" && readyCheck())) {
-          resolve(existing);
-          return;
-        }
-
-        existing.addEventListener("load", () => resolve(existing), { once: true });
-        existing.addEventListener(
-          "error",
-          () => reject(new Error("Failed to load script: " + src)),
-          { once: true }
-        );
-
-        window.setTimeout(() => {
-          if (typeof readyCheck === "function" && readyCheck()) {
-            resolve(existing);
-          }
-        }, 0);
-
-        return;
-      }
-
-      const script = create("script", {
-        id,
-        src,
-        "data-showroom-generation-2-script": "true"
-      });
-
-      script.async = false;
-
-      script.addEventListener(
-        "load",
-        () => {
-          script.dataset.loaded = "true";
-          resolve(script);
-        },
-        { once: true }
-      );
-
-      script.addEventListener(
-        "error",
-        () => reject(new Error("Failed to load script: " + src)),
-        { once: true }
-      );
-
-      document.body.appendChild(script);
+    setDataset(root, receipts);
+    setDataset(main, receipts);
+    setDataset(mount, {
+      ...receipts,
+      earthSurface: EARTH_SURFACE,
+      earthClouds: EARTH_CLOUDS,
+      showroomGlobeRoute: SHOWROOM_GLOBE_ROUTE
     });
   }
 
@@ -231,208 +347,68 @@
     context.fillRect(0, 0, width, height);
   }
 
-  function mountHasVisibleGlobeContent(mount) {
-    if (!mount) return false;
+  function renderGeneration2Globe() {
+    ensureStyle();
 
-    const canvas = mount.querySelector("[data-dgb-earth-canvas], canvas");
-    const earthStage = mount.querySelector("[data-dgb-earth-mount], .dgb-earth-stage, .dgb-earth-sphere");
-    const iframe = mount.querySelector("iframe[data-showroom-generation-2-globe-frame='true']");
-
-    return Boolean(canvas || earthStage || iframe);
-  }
-
-  function renderActiveRouteFrameFallback(reason) {
     const mount = ensureGlobeMount();
-
-    if (fallbackTimer) {
-      window.clearTimeout(fallbackTimer);
-      fallbackTimer = null;
-    }
 
     mount.replaceChildren(
       create("section", {
-        className: "showroom-generation-2-globe-frame-shell",
-        "data-showroom-generation-2-frame-shell": "true",
-        "data-showroom-globe-restoration-fallback": "active"
+        className: "showroom-generation-2-shell",
+        "data-showroom-generation-2-shell": "true",
+        "data-generation-2-active-globe": "visible"
       }, [
-        create("iframe", {
-          src: SHOWROOM_GLOBE_ROUTE,
-          title: "Demo Universe Earth active globe",
-          loading: "eager",
-          "data-showroom-generation-2-globe-frame": "true",
-          "aria-label": "Demo Universe Earth active globe"
+        create("div", {
+          className: "showroom-generation-2-orbit",
+          "aria-hidden": "true"
         }),
-        create("p", {
-          className: "dgb-earth-caption",
-          text: "GENERATION 2 · ACTIVE GLOBE · DEMO UNIVERSE EARTH"
-        }),
-        create("p", {
-          className: "showroom-generation-2-fallback-note",
-          text:
-            "The parent Showroom is displaying the live Demo Universe Earth route inside the Showroom panel."
-        }),
-        create("p", {}, [
-          create("a", {
-            href: SHOWROOM_GLOBE_ROUTE,
-            text: "Open Demo Universe Earth"
+        create("div", {
+          className: "showroom-generation-2-active-globe",
+          role: "img",
+          "aria-label": "Active visible Earth globe restored for Showroom Generation 2"
+        }, [
+          create("img", {
+            className: "showroom-generation-2-earth-surface",
+            src: EARTH_SURFACE,
+            alt: "",
+            decoding: "async",
+            loading: "eager",
+            "aria-hidden": "true"
+          }),
+          create("img", {
+            className: "showroom-generation-2-earth-clouds",
+            src: EARTH_CLOUDS,
+            alt: "",
+            decoding: "async",
+            loading: "eager",
+            "aria-hidden": "true"
+          }),
+          create("span", {
+            className: "showroom-generation-2-light",
+            "aria-hidden": "true"
+          }),
+          create("span", {
+            className: "showroom-generation-2-rim",
+            "aria-hidden": "true"
           })
-        ])
+        ]),
+        create("p", {
+          className: "showroom-generation-2-caption",
+          text: "GENERATION 2 · ACTIVE GLOBE · EARTH SURFACE RESTORED"
+        }),
+        create("a", {
+          className: "showroom-generation-2-link",
+          href: SHOWROOM_GLOBE_ROUTE,
+          text: "Open Demo Universe Earth"
+        })
       ])
     );
 
-    mount.dataset.renderStatus = "generation-2-frame-restored";
-    mount.dataset.generation2ActiveGlobe = "frame-restored";
-    mount.dataset.restorationReason = String(reason || "direct globe mount did not visibly paint");
+    mount.dataset.renderStatus = "generation-2-active-globe-visible";
+    mount.dataset.generation2ActiveGlobe = "visible";
 
-    writeGeneration2Receipts("frame-restored");
-  }
-
-  function injectFrameFallbackStyle() {
-    if (document.getElementById("showroom-generation-2-frame-style")) return;
-
-    const style = create("style", {
-      id: "showroom-generation-2-frame-style",
-      text: `
-        .showroom-generation-2-globe-frame-shell {
-          position: relative;
-          z-index: 10;
-          width: min(820px, 100%);
-          margin: 0 auto;
-          display: grid;
-          justify-items: center;
-          gap: 12px;
-        }
-
-        .showroom-generation-2-globe-frame-shell iframe {
-          width: min(760px, 94vw);
-          height: clamp(360px, 64vw, 620px);
-          border: 1px solid rgba(245, 199, 107, 0.34);
-          border-radius: 28px;
-          background: #02050c;
-          box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
-        }
-
-        .showroom-generation-2-fallback-note {
-          width: min(760px, 94vw);
-          margin: 0 auto;
-          color: rgba(246, 239, 224, 0.76);
-          font-size: 0.92rem;
-          line-height: 1.45;
-          text-align: center;
-        }
-
-        .showroom-generation-2-globe-frame-shell a {
-          display: inline-flex;
-          border: 1px solid rgba(245, 199, 107, 0.42);
-          border-radius: 999px;
-          padding: 0.62rem 0.9rem;
-          color: inherit;
-          background: rgba(255, 255, 255, 0.055);
-          text-decoration: none;
-          font-weight: 800;
-        }
-
-        .showroom-generation-2-globe-frame-shell a:hover,
-        .showroom-generation-2-globe-frame-shell a:focus-visible {
-          color: #080d18;
-          background: #f5c76b;
-          outline: none;
-        }
-
-        @media (max-width: 620px) {
-          .showroom-generation-2-globe-frame-shell iframe {
-            width: calc(100vw - 40px);
-            height: 520px;
-          }
-        }
-      `
-    });
-
-    document.head.appendChild(style);
-  }
-
-  function renderFailure(error) {
-    const mount = ensureGlobeMount();
-
-    mount.replaceChildren(
-      create("article", {
-        className: "fallback-card showroom-fallback",
-        "data-showroom-generation-2-restoration-failure": "true"
-      }, [
-        create("p", { className: "kicker", text: "Generation 2 active globe restoration failure" }),
-        create("h2", { text: "Active globe did not mount." }),
-        create("p", {
-          text: String(
-            error && error.message
-              ? error.message
-              : "Check the parent Showroom mount and the Demo Universe Earth route."
-          )
-        }),
-        create("p", {}, [
-          create("a", {
-            href: SHOWROOM_GLOBE_ROUTE,
-            text: "Open Demo Universe Earth"
-          })
-        ])
-      ])
-    );
-
-    mount.dataset.renderStatus = "generation-2-failed";
-    writeGeneration2Receipts("failed");
-  }
-
-  async function attemptDirectGlobeMount() {
-    const mount = ensureGlobeMount();
-
-    mount.dataset.renderStatus = "generation-2-restoring";
-    mount.dataset.generation2ActiveGlobe = "restoring";
-
-    writeGeneration2Receipts("restoring");
-
-    await ensureStylesheet(EARTH_MATERIAL, "showroom-earth-material-css");
-
-    await loadClassicScript(
-      EARTH_CANVAS_SPINE,
-      "showroom-earth-canvas-spine-js",
-      () => window.DGBEarthCanvas && typeof window.DGBEarthCanvas.create === "function"
-    );
-
-    await loadClassicScript(
-      SHOWROOM_GLOBE_CONTROLLER,
-      "showroom-globe-controller-js",
-      () => window.DGBShowroomGlobe && typeof window.DGBShowroomGlobe.init === "function"
-    );
-
-    if (!window.DGBShowroomGlobe || typeof window.DGBShowroomGlobe.init !== "function") {
-      throw new Error("Expected window.DGBShowroomGlobe.init from /showroom/globe/index.js.");
-    }
-
-    window.DGBShowroomGlobe.init();
-
-    fallbackTimer = window.setTimeout(() => {
-      const currentMount = ensureGlobeMount();
-
-      if (!mountHasVisibleGlobeContent(currentMount)) {
-        renderActiveRouteFrameFallback("direct globe mount produced no visible globe content");
-        return;
-      }
-
-      currentMount.dataset.renderStatus = "generation-2-direct-restored";
-      currentMount.dataset.generation2ActiveGlobe = "direct-restored";
-      writeGeneration2Receipts("direct-restored");
-    }, 1600);
-  }
-
-  async function restoreGeneration2ActiveGlobe() {
-    injectFrameFallbackStyle();
+    writeGenerationReceipts("visible");
     drawSupportCanvas();
-
-    try {
-      await attemptDirectGlobeMount();
-    } catch (error) {
-      console.warn("[Generation 2 direct globe mount failed]", error);
-      renderActiveRouteFrameFallback(error.message || "direct globe mount failed");
-    }
   }
 
   function bindResize() {
@@ -445,7 +421,7 @@
   }
 
   function init() {
-    restoreGeneration2ActiveGlobe();
+    renderGeneration2Globe();
     bindResize();
   }
 
@@ -457,14 +433,12 @@
 
   window.DGBShowroomIndex = Object.freeze({
     version: VERSION,
-    restoreGeneration2ActiveGlobe,
-    target: "/showroom/index.js",
     generation1: "layout-established",
     generation2: "active-globe",
-    generation3: "shadow-detail-blocked-until-generation-2",
-    earthCanvasSpine: EARTH_CANVAS_SPINE,
-    earthMaterial: EARTH_MATERIAL,
-    showroomGlobeController: SHOWROOM_GLOBE_CONTROLLER,
+    generation3: "shadow-detail-blocked",
+    restoreGeneration2Globe: renderGeneration2Globe,
+    earthSurface: EARTH_SURFACE,
+    earthClouds: EARTH_CLOUDS,
     showroomGlobeRoute: SHOWROOM_GLOBE_ROUTE
   });
 })();

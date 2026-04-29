@@ -6,7 +6,7 @@
   data-manor-skin="active"
   data-construct-class="standalone-globe"
   data-route="/showroom/globe/"
-  data-generation="demo-universe-earth-asset-instrument-route-v1"
+  data-generation="demo-universe-earth-generation-3-load-path-alignment-v1"
 >
 <head>
   <meta charset="utf-8" />
@@ -14,20 +14,26 @@
   <title>Demo Universe Earth · Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Standalone Demo Universe Earth route consuming the canonical Showroom globe asset instrument."
+    content="Standalone Demo Universe Earth route consuming the canonical Generation 3 Showroom globe asset instrument."
   />
-  <link rel="stylesheet" href="/showroom/showroom.css" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-3-full-expression-v1" />
 </head>
 
 <body class="showroom-globe-route">
   <a class="skip-link" href="#globe-main">Skip to Demo Universe Earth</a>
 
-  <div id="showroom-root" class="showroom-shell" data-globe-route="standalone">
+  <div
+    id="showroom-root"
+    class="showroom-shell"
+    data-globe-route="standalone"
+    data-generation-2-active-globe="visible"
+    data-generation-3-full-expression="load-path-aligned"
+  >
     <header class="showroom-header">
       <p class="eyebrow">Demo Universe Earth · Standalone Globe Route</p>
       <h1>Demo Universe Earth</h1>
       <p class="showroom-lede">
-        This route owns the standalone Earth globe surface. It consumes the same canonical asset instrument as the parent Showroom page.
+        This route owns the standalone Earth globe surface. It consumes the same canonical Generation 3 asset instrument as the parent Showroom page.
       </p>
 
       <nav class="site-nav nav-links route-rail" aria-label="Demo Universe route rail">
@@ -39,7 +45,7 @@
     </header>
 
     <main id="globe-main" class="showroom-main">
-      <section class="visual-panel" aria-label="Demo Universe Earth active globe">
+      <section class="visual-panel" aria-label="Demo Universe Earth Generation 3 active globe">
         <canvas id="showroom-canvas" aria-hidden="true"></canvas>
         <div
           id="showroom-globe-mount"
@@ -48,7 +54,9 @@
           data-render-context="standalone"
           data-earth-surface="/assets/earth/earth_surface_2048.jpg"
           data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
-          aria-label="Demo Universe Earth active globe"
+          data-generation-2-active-globe="visible"
+          data-generation-3-full-expression="mount-ready"
+          aria-label="Demo Universe Earth Generation 3 full expression globe"
         ></div>
       </section>
 
@@ -57,15 +65,16 @@
         <ul>
           <li>ROUTE=/showroom/globe/</li>
           <li>PARENT_ROUTE=/showroom/</li>
-          <li>GENERATION_2_STANDALONE_GLOBE_ACTIVE_TARGET</li>
-          <li>GENERATION_3_DETAIL_TARGET_BLOCKED_UNTIL_G2_PASS</li>
-          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js</li>
+          <li>GENERATION_2_STANDALONE_GLOBE_PRESERVED</li>
+          <li>GENERATION_3_LOAD_PATH_ALIGNED</li>
+          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-full-expression-v1</li>
+          <li>SHOWROOM_GENERATION_3_LOAD_PATH_ALIGNMENT_TNT_v1</li>
         </ul>
       </section>
     </main>
   </div>
 
-  <script src="/assets/showroom.globe.instrument.js" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-3-full-expression-v1" defer></script>
   <script src="/showroom/globe/index.js" defer></script>
 </body>
 </html>

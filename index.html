@@ -16,6 +16,7 @@
   data-globe-mode="available"
   data-globe-handoff="showroom-demo-universe"
   data-visual-control-surface="active"
+  data-mobile-layout-hardened="true"
 >
 <head>
   <meta charset="utf-8" />
@@ -32,20 +33,14 @@
     :root {
       color-scheme: dark;
       --bg: #02050a;
-      --bg2: #06101c;
       --ink: #f5f7ff;
       --soft: rgba(245, 247, 255, .72);
       --muted: rgba(245, 247, 255, .52);
-      --faint: rgba(245, 247, 255, .28);
       --gold: #f2c76f;
-      --gold2: #a98236;
       --blue: #8ebcff;
-      --blue2: #1d5fa8;
       --green: #7ed9a2;
       --line: rgba(245, 247, 255, .13);
       --line2: rgba(242, 199, 111, .34);
-      --panel: rgba(4, 9, 17, .78);
-      --panel2: rgba(7, 14, 25, .92);
       --max: 1180px;
       --radius: 34px;
     }
@@ -597,19 +592,44 @@
     }
 
     @media (max-width: 920px) {
-      .topbar,
-      .hero {
+      .page {
+        width: min(100vw - 24px, var(--max));
+      }
+
+      .topbar {
         display: grid;
+        gap: 22px;
+      }
+
+      .brand {
+        min-width: 0;
       }
 
       .nav {
         justify-content: flex-start;
       }
 
+      .hero {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .hero-copy,
+      .status-card {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+      }
+
+      .status-card {
+        align-content: start;
+      }
+
       .mode-panel {
         grid-template-columns: 1fr;
         justify-items: center;
         text-align: left;
+        min-height: auto;
       }
 
       .panel-copy {
@@ -627,10 +647,32 @@
         padding-top: 22px;
       }
 
+      .topbar {
+        margin-bottom: 22px;
+      }
+
+      .brand strong {
+        font-size: .96rem;
+        letter-spacing: .18em;
+      }
+
+      .brand span {
+        font-size: 1rem;
+      }
+
+      .nav {
+        gap: 8px;
+      }
+
       .nav a,
       .mode-button,
       .action-link {
         padding: 10px 12px;
+      }
+
+      .hero {
+        gap: 14px;
+        margin-bottom: 18px;
       }
 
       .hero-copy,
@@ -638,13 +680,56 @@
         border-radius: 28px;
       }
 
+      .hero-copy {
+        padding: 24px 18px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(3rem, 17vw, 4.9rem);
+      }
+
+      .hero-copy p {
+        font-size: 1.02rem;
+        line-height: 1.48;
+      }
+
+      .hero-actions {
+        margin-top: 22px;
+      }
+
+      .status-card {
+        padding: 18px;
+      }
+
+      .readout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .readout div {
+        padding: 13px;
+        border-radius: 20px;
+      }
+
+      .readout strong {
+        font-size: 1.65rem;
+      }
+
+      .readout span {
+        font-size: .9rem;
+      }
+
+      .status-card p {
+        font-size: .98rem;
+      }
+
       .control-surface {
-        min-height: 610px;
+        min-height: auto;
         border-radius: 30px;
       }
 
       .surface-grid {
-        min-height: 510px;
+        min-height: auto;
         padding: 24px 16px 34px;
       }
 
@@ -656,8 +741,29 @@
         width: min(76vw, 300px);
       }
 
+      .panel-copy {
+        padding: 20px 16px;
+      }
+
+      .panel-copy h2 {
+        font-size: clamp(2.2rem, 13vw, 3.7rem);
+      }
+
       .house-strip {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .readout {
+        grid-template-columns: 1fr;
+      }
+
+      .nav a,
+      .mode-button,
+      .action-link {
+        padding: 9px 10px;
+        font-size: .95rem;
       }
     }
 
@@ -854,7 +960,9 @@
       <span>globe-mode=available</span>
       <span>globe-handoff=showroom-demo-universe</span>
       <span>visual-control-surface=active</span>
+      <span>mobile-layout-hardened=true</span>
       <span>COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1</span>
+      <span>COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1</span>
     </section>
   </main>
 

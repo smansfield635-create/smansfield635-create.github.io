@@ -18,6 +18,8 @@
   data-earth-readability-meter="active"
   data-compass-g2-meter="active"
   data-g15-compass-meter="active"
+  data-showroom-card-meter="active"
+  data-g16-showroom-card-meter="active"
   data-gauges-display-completion="active"
 >
 <head>
@@ -28,7 +30,7 @@
 
   <meta
     name="description"
-    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, Showroom visible render, Moon diagnostic construct, Earth readability, Compass Generation 2, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
+    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, Showroom visible render, Moon diagnostic construct, Earth readability, Compass Generation 2, Showroom card sync, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
   />
 
   <style>
@@ -412,8 +414,9 @@
       <p>
         The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
         This lab measures route health, render health, visible Showroom render, Moon diagnostic construct,
-        Earth readability, Compass Generation 2 control-surface state, pressure, acid/base balance,
-        barometric pressure, seismic shock, axis/orientation, 256-state completion, visual truth, and universe-build readiness.
+        Earth readability, Compass Generation 2 control-surface state, Showroom card sync, pressure,
+        acid/base balance, barometric pressure, seismic shock, axis/orientation, 256-state completion,
+        visual truth, and universe-build readiness.
       </p>
 
       <div class="actions">
@@ -447,12 +450,22 @@
         The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.
         G12 measures the Moon diagnostic construct as diagnostic-first-pass. G13 measures whether Earth remains
         shadowed while still readable. G15 measures whether the Compass Generation 2 control surface and mobile
-        hardening contract landed.
+        hardening contract landed. G16 measures whether the Showroom Lane B card sync and mobile layout hardening
+        contract landed.
       </p>
       <p>
         IFF rule: a visual condition is constrained if and only if it blocks construct, delivery,
         expression, or comprehension without preserving a lawful correction path.
       </p>
+    </section>
+
+    <section class="section">
+      <h2>G16 · Showroom Card Earth Sync / Mobile Layout Evidence</h2>
+      <p>
+        G16 separates general Showroom render health from Lane B source truth. G11 can pass while G16 still fails
+        if the Earth card sync, globe handoff, mobile hardening, or Lane B receipts are absent.
+      </p>
+      <div class="evidence" data-showroom-lane-b-evidence></div>
     </section>
 
     <section class="section">
@@ -537,6 +550,8 @@
       <span>earth-readability-meter=active</span>
       <span>compass-g2-meter=active</span>
       <span>g15-compass-meter=active</span>
+      <span>showroom-card-meter=active</span>
+      <span>g16-showroom-card-meter=active</span>
       <span>gauges-display-completion=active</span>
       <span>dexter-lab=instrumentation</span>
       <span>measurement-key=active</span>
@@ -546,6 +561,7 @@
       <span>GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1</span>
       <span>GAUGES_EARTH_READABILITY_METER_TNT_v1</span>
       <span>GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1</span>
+      <span>GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1</span>
     </section>
   </main>
 
@@ -666,6 +682,59 @@
         "surface-grid"
       ];
 
+      var SHOWROOM_SOURCE_TOKENS = [
+        "data-estate=\"rich-manor-and-estate\"",
+        "data-manor-skin=\"active\"",
+        "data-house-field=\"true\"",
+        "data-gauges-truth=\"live-authority\"",
+        "data-construct-class=\"house\"",
+        "data-house-part=\"showroom\"",
+        "H5_SHOWROOM"
+      ];
+
+      var SHOWROOM_LANE_B_TOKENS = [
+        "data-showroom-card-earth-sync=\"active\"",
+        "data-showroom-card-earth-color=\"synced\"",
+        "data-showroom-card-globe-handoff=\"active\"",
+        "data-showroom-card-visual-truth=\"pending\"",
+        "data-demo-universe-card-preview=\"active\"",
+        "data-showroom-mobile-layout-hardened=\"true\""
+      ];
+
+      var SHOWROOM_STRUCTURE_TOKENS = [
+        "showroom-stage",
+        "showroom-copy",
+        "showroom-card",
+        "showroom-globe",
+        "showroom-earth-color",
+        "showroom-earth-clouds",
+        "showroom-earth-atmosphere",
+        "showroom-fallback",
+        "site-nav",
+        "nav-links"
+      ];
+
+      var SHOWROOM_MOBILE_TOKENS = [
+        "@media (max-width: 920px)",
+        "grid-template-columns: 1fr",
+        ".showroom-copy",
+        ".showroom-card",
+        "width: 100%",
+        "min-height: auto",
+        "overflow: hidden"
+      ];
+
+      var SHOWROOM_ROUTE_TOKENS = [
+        "href=\"/showroom/globe/\"",
+        "href=\"/gauges/\"",
+        "href=\"/\""
+      ];
+
+      var SHOWROOM_RECEIPT_TOKENS = [
+        "LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1",
+        "LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1"
+      ];
+
       function route(id, label, url, tokens) {
         return { id: id, label: label, url: url, tokens: tokens || [] };
       }
@@ -723,6 +792,17 @@
         return (tokens || []).filter(function (token) {
           return !includesToken(text, token);
         });
+      }
+
+      function labelMissing(label, tokens) {
+        return tokens.map(function (token) {
+          return label + ": " + token;
+        });
+      }
+
+      function scoreGroup(tokens, missing, points) {
+        if (!tokens || !tokens.length) return 0;
+        return Math.round(((tokens.length - missing.length) / tokens.length) * points);
       }
 
       function status(score) {
@@ -1044,6 +1124,48 @@
         };
       }
 
+      async function checkShowroomLaneB() {
+        var fetched = await fetchText("/showroom/");
+        var text = fetched.text || "";
+
+        var sourceMissing = fetched.ok ? missingTokens(text, SHOWROOM_SOURCE_TOKENS) : SHOWROOM_SOURCE_TOKENS.slice();
+        var laneMissing = fetched.ok ? missingTokens(text, SHOWROOM_LANE_B_TOKENS) : SHOWROOM_LANE_B_TOKENS.slice();
+        var structureMissing = fetched.ok ? missingTokens(text, SHOWROOM_STRUCTURE_TOKENS) : SHOWROOM_STRUCTURE_TOKENS.slice();
+        var mobileMissing = fetched.ok ? missingTokens(text, SHOWROOM_MOBILE_TOKENS) : SHOWROOM_MOBILE_TOKENS.slice();
+        var routeMissing = fetched.ok ? missingTokens(text, SHOWROOM_ROUTE_TOKENS) : SHOWROOM_ROUTE_TOKENS.slice();
+        var receiptMissing = fetched.ok ? missingTokens(text, SHOWROOM_RECEIPT_TOKENS) : SHOWROOM_RECEIPT_TOKENS.slice();
+
+        var sourceScore = fetched.ok ? scoreGroup(SHOWROOM_SOURCE_TOKENS, sourceMissing, 25) : 0;
+        var visualScore = fetched.ok ? Math.round((scoreGroup(SHOWROOM_LANE_B_TOKENS, laneMissing, 15) + scoreGroup(SHOWROOM_STRUCTURE_TOKENS, structureMissing, 10))) : 0;
+        var mobileScore = fetched.ok ? Math.round((scoreGroup(["data-showroom-mobile-layout-hardened=\"true\""], missingTokens(text, ["data-showroom-mobile-layout-hardened=\"true\""]), 8) + scoreGroup(SHOWROOM_MOBILE_TOKENS, mobileMissing, 17))) : 0;
+        var admissibilityScore = fetched.ok ? Math.round((scoreGroup(SHOWROOM_ROUTE_TOKENS, routeMissing, 10) + scoreGroup(SHOWROOM_RECEIPT_TOKENS, receiptMissing, 10) + (includesToken(text, "data-showroom-card-visual-truth=\"pending\"") ? 5 : 0))) : 0;
+
+        var score = clamp(sourceScore + visualScore + mobileScore + admissibilityScore, 0, 100);
+
+        var missing = []
+          .concat(labelMissing("SOURCE", sourceMissing))
+          .concat(labelMissing("LANE_B", laneMissing))
+          .concat(labelMissing("STRUCTURE", structureMissing))
+          .concat(labelMissing("MOBILE", mobileMissing))
+          .concat(labelMissing("ROUTE", routeMissing))
+          .concat(labelMissing("RECEIPT", receiptMissing));
+
+        return {
+          id: "G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT",
+          label: "Showroom Card Sync Meter",
+          url: "/showroom/",
+          score: score,
+          http: fetched.status,
+          missing: missing,
+          components: [
+            ["Source contract", sourceScore],
+            ["Visual handoff / card sync", visualScore],
+            ["Mobile layout hardening", mobileScore],
+            ["Measurement admissibility", admissibilityScore]
+          ]
+        };
+      }
+
       async function checkRenderEvidence() {
         var showroom = await checkRoute(route("SR_PARENT", "Showroom parent handoff", "/showroom/", ["href=\"/showroom/globe/\"", "showroom"]));
         var globe = await checkRoute(route("SR_DEMO_UNIVERSE", "Demo Universe Earth route", "/showroom/globe/", [
@@ -1076,6 +1198,7 @@
           var moon = await checkMoonDiagnostic();
           var earthReadability = await checkEarthReadability();
           var compassG2 = await checkCompassG2();
+          var showroomLaneB = await checkShowroomLaneB();
 
           var houseScore = average(house);
           var productScore = average(products);
@@ -1085,16 +1208,17 @@
           var moonScore = moon.score;
           var earthReadabilityScore = earthReadability.score;
           var compassG2Score = compassG2.score;
+          var showroomLaneBScore = showroomLaneB.score;
 
           var compass = await fetchText("/");
           var coreScore = compass.ok && (includesToken(compass.text, "data-core-hold=\"true\"") || includesToken(compass.text, "CORE_EXPERIENCE_HELD")) ? 100 : (compass.ok ? 50 : 0);
           var generationScore = calculateGenerationScore(compass.text);
 
           var shadowScore = render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50;
-          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + shadowScore) / 6);
-          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + productScore + planetScore) / 10);
+          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore + shadowScore) / 7);
+          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore + productScore + planetScore) / 11);
 
-          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability, compassG2]);
+          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability, compassG2, showroomLaneB]);
           var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
           var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
           var seats = Math.round(256 * overall / 100);
@@ -1105,6 +1229,7 @@
           var moonPressureValue = 100 - moonScore;
           var earthReadabilityPressureValue = 100 - earthReadabilityScore;
           var compassPressureValue = 100 - compassG2Score;
+          var showroomCardPressureValue = 100 - showroomLaneBScore;
           var productPressureValue = 100 - productScore;
           var planetPressureValue = 100 - planetScore;
           var corePressureValue = 100 - coreScore;
@@ -1117,15 +1242,16 @@
             moonPressureValue +
             earthReadabilityPressureValue +
             compassPressureValue +
+            showroomCardPressureValue +
             productPressureValue +
             planetPressureValue +
             corePressureValue +
             generationPressureValue
-          ) / 10);
+          ) / 11);
 
           var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
           var acid = clamp(Math.round((barometer + seismograph + generationPressureValue) / 3), 0, 100);
-          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score) / 8), 0, 100);
+          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore) / 9), 0, 100);
           var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
 
           renderSummary([
@@ -1138,6 +1264,7 @@
             ["Moon Diagnostic", moonScore, "diagnostic Moon"],
             ["Earth Readability", earthReadabilityScore, "shadow readable"],
             ["Compass G2", compassG2Score, "visual control"],
+            ["Showroom Card", showroomLaneBScore, "Lane B sync"],
             ["Products", productScore, "product route health"],
             ["Planets", planetScore, "planet route health"]
           ]);
@@ -1145,14 +1272,15 @@
           renderInstruments([
             ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
             ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
-            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, Compass G2, product, planet, core, and generation lanes."],
+            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, Compass G2, Showroom Card, product, planet, core, and generation lanes."],
             ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
             ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
             ["Light / Shadow Meter", shadowScore, "Shadow contract is measured; visual acceptance remains separately bounded."],
             ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
             ["Earth Readability Meter", earthReadabilityScore, "Measures whether Earth is shadowed while still carrying readable surface expression."],
             ["Compass G2 Meter", compassG2Score, "Measures whether the Compass Generation 2 visual control surface and mobile hardening contract landed."],
-            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, Earth readability, and Compass G2 source truth."]
+            ["Showroom Card Sync Meter", showroomLaneBScore, "Measures whether the Showroom card Earth color sync and mobile layout hardening contract landed."],
+            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, Earth readability, Compass G2 source truth, and Showroom Lane B source truth."]
           ]);
 
           renderPressureCards([
@@ -1162,6 +1290,7 @@
             ["Moon Pressure", moonPressureValue, "Moon diagnostic lane"],
             ["Earth Readability Pressure", earthReadabilityPressureValue, "Earth visual lane"],
             ["Compass G2 Pressure", compassPressureValue, "Compass control lane"],
+            ["Showroom Card Pressure", showroomCardPressureValue, "Showroom card lane"],
             ["Product Pressure", productPressureValue, "product lane"],
             ["Planet Pressure", planetPressureValue, "planet lane"],
             ["Core Pressure", corePressureValue, "Compass/core lane"],
@@ -1169,6 +1298,7 @@
           ]);
 
           renderPH(ph, acid, base);
+          renderEvidence("[data-showroom-lane-b-evidence]", [showroomLaneB], true);
           renderEvidence("[data-compass-g2-evidence]", [compassG2], true);
           renderEvidence("[data-earth-readability-evidence]", [earthReadability], true);
           renderEvidence("[data-moon-evidence]", [moon], true);
@@ -1187,6 +1317,7 @@
             moon: moonScore,
             earthReadability: earthReadabilityScore,
             compassG2: compassG2Score,
+            showroomLaneB: showroomLaneBScore,
             products: productScore,
             planets: planetScore,
             seismograph: seismograph,
@@ -1273,11 +1404,12 @@
 
       function renderReceipt(scores) {
         safeText("[data-receipt]",
-          "VERSION: GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1\n" +
-          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1 + GAUGES_EARTH_READABILITY_METER_TNT_v1\n" +
+          "VERSION: GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\n" +
+          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1 + GAUGES_EARTH_READABILITY_METER_TNT_v1 + GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1\n" +
           "CADILLAC KEY: master authority key.\n" +
           "MEASUREMENT KEY: operating proof key.\n" +
-          "NEW CONTRACT: G15 · Compass G2 Visual Control Surface Meter measures Generation 2 Compass source truth and mobile hardening delivery.\n" +
+          "NEW CONTRACT: G16 · Showroom Card Earth Sync and Mobile Layout Meter measures Lane B source truth and delivery.\n" +
+          "SHOWROOM READ: Lane B card sync measured, visual acceptance remains screenshot-bound.\n" +
           "COMPASS READ: Generation 2 control surface measured, visual acceptance remains screenshot-bound.\n" +
           "MOON READ: diagnostic-first-pass, not final Moon law.\n" +
           "EARTH READ: tuned readability, visual acceptance pending.\n\n" +
@@ -1291,6 +1423,7 @@
           "MoonDiagnostic=" + scores.moon + "\n" +
           "EarthReadability=" + scores.earthReadability + "\n" +
           "CompassG2=" + scores.compassG2 + "\n" +
+          "ShowroomLaneB=" + scores.showroomLaneB + "\n" +
           "Products=" + scores.products + "\n" +
           "Planets=" + scores.planets + "\n" +
           "Seismograph=" + scores.seismograph + "\n" +
@@ -1298,7 +1431,7 @@
           "pH=" + Number(scores.ph).toFixed(1) + "\n" +
           "Acid=" + scores.acid + "\n" +
           "Base=" + scores.base + "\n\n" +
-          "IFF ROOT: Compass G2 is constrained if and only if the route passes but the source does not preserve Generation 2 control-surface, Flat/Tree/Globe handoff, or mobile hardening delivery truth."
+          "IFF ROOT: Showroom Lane B is constrained if and only if the Showroom route passes but the source does not preserve Earth card sync, globe handoff, mobile layout hardening, route preservation, or Lane B receipt truth."
         );
       }
 
@@ -1307,11 +1440,12 @@
 
         safeSet("[data-pressure-grid]", '<article class="pressure-card"><strong>HOLD</strong><span>Display completion interrupted</span><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-ph-readout]", '<article class="instrument"><strong>HOLD</strong><span>Acid/Base Meter</span><p>Calibration did not complete. Repair only the Gauges display path.</p></article>');
+        safeSet("[data-showroom-lane-b-evidence]", '<article class="evidence-card"><h3>G16 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-compass-g2-evidence]", '<article class="evidence-card"><h3>G15 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-earth-readability-evidence]", '<article class="evidence-card"><h3>G13 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-moon-evidence]", '<article class="evidence-card"><h3>G12 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-showroom-evidence]", '<article class="evidence-card"><h3>G11 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeText("[data-receipt]", "VERSION: GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
+        safeText("[data-receipt]", "VERSION: GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
       }
 
       document.querySelector("[data-run-calibration]").addEventListener("click", runCalibration);

@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="inspect-demo-universe"
   data-page="inspect-demo-universe"
-  data-generation="demo-universe-earth-readability-tuning-v1"
+  data-generation="lane-a-full-globe-color-discrimination-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -36,6 +36,13 @@
   data-terminator-preserved="true"
   data-earth-readability-iff-standard="active"
   data-earth-visual-acceptance="pending"
+  data-earth-color-discrimination="tuned"
+  data-ocean-color-readable="true"
+  data-land-color-readable="true"
+  data-cloud-color-readable="true"
+  data-warm-cool-light-separated="true"
+  data-earth-color-iff-standard="active"
+  data-earth-color-visual-acceptance="pending"
   data-shadow-accepted="pending"
 >
 <head>
@@ -46,7 +53,7 @@
 
   <meta
     name="description"
-    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe with Sun relation, readable dark-side shadow, morning edge, breakfast cloud crowd, and a diagnostic Moon construct behind Earth."
+    content="Demo Universe inspection room for Diamond Gate Bridge. Restored Earth globe with color-discriminating oceans, land, clouds, warm sunlight, cool reflected moonlight, readable shadow, morning edge, and diagnostic Moon construct."
   />
 
   <style>
@@ -123,8 +130,8 @@
         radial-gradient(ellipse at 84% 13%, rgba(242, 199, 111, .10), transparent 24%),
         radial-gradient(ellipse at 28% 54%, rgba(190, 214, 255, .07), transparent 30%),
         radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.018), transparent 26%),
-        radial-gradient(ellipse at 48% 52%, transparent 0 36%, rgba(0,0,0,.40) 78%, rgba(0,0,0,.78) 100%),
-        linear-gradient(90deg, rgba(0,0,0,.24), transparent 22%, transparent 78%, rgba(0,0,0,.28));
+        radial-gradient(ellipse at 48% 52%, transparent 0 36%, rgba(0,0,0,.38) 78%, rgba(0,0,0,.76) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.22), transparent 22%, transparent 78%, rgba(0,0,0,.27));
     }
 
     @keyframes naturalStarDrift {
@@ -244,13 +251,13 @@
       aspect-ratio: 1;
       border-radius: 50%;
       pointer-events: none;
-      opacity: .68;
+      opacity: .66;
       background:
-        radial-gradient(circle at 40% 38%, rgba(255, 252, 220, .94) 0 7%, rgba(255, 225, 126, .72) 18%, rgba(242, 149, 48, .32) 42%, rgba(242, 199, 111, .12) 64%, transparent 76%),
+        radial-gradient(circle at 40% 38%, rgba(255, 252, 220, .94) 0 7%, rgba(255, 225, 126, .72) 18%, rgba(242, 149, 48, .30) 42%, rgba(242, 199, 111, .12) 64%, transparent 76%),
         radial-gradient(circle, rgba(242, 199, 111, .13), transparent 72%);
       filter:
-        drop-shadow(0 0 34px rgba(242, 199, 111, .24))
-        drop-shadow(0 0 112px rgba(242, 199, 111, .14));
+        drop-shadow(0 0 34px rgba(242, 199, 111, .23))
+        drop-shadow(0 0 112px rgba(242, 199, 111, .13));
     }
 
     .universe-stage::after {
@@ -260,10 +267,10 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .10), transparent 32%),
+        radial-gradient(ellipse at 78% 26%, rgba(242, 199, 111, .09), transparent 32%),
         radial-gradient(ellipse at 24% 58%, rgba(190, 214, 255, .08), transparent 32%),
-        linear-gradient(125deg, transparent 0 38%, rgba(0, 0, 0, .10) 58%, rgba(0, 0, 0, .30) 100%);
-      opacity: .82;
+        linear-gradient(125deg, transparent 0 38%, rgba(0, 0, 0, .09) 58%, rgba(0, 0, 0, .28) 100%);
+      opacity: .80;
     }
 
     .earth-subject {
@@ -353,7 +360,7 @@
           transparent
         );
       box-shadow: 0 0 18px rgba(242, 199, 111, .10);
-      opacity: .36;
+      opacity: .34;
     }
 
     .earth-core {
@@ -364,17 +371,20 @@
       border-radius: 50%;
       overflow: hidden;
       background:
-        radial-gradient(circle at 38% 28%, rgba(255,255,255,.20), transparent 17%),
-        radial-gradient(circle at 50% 50%, #0d3973 0%, #061936 70%, #00030b 100%);
+        radial-gradient(circle at 36% 26%, rgba(255,255,255,.23), transparent 17%),
+        radial-gradient(circle at 35% 58%, rgba(42, 128, 91, .28), transparent 34%),
+        radial-gradient(circle at 62% 43%, rgba(24, 101, 185, .36), transparent 35%),
+        radial-gradient(circle at 50% 50%, #0c4f9d 0%, #06234e 70%, #00030b 100%);
       box-shadow:
-        inset -68px 36px 112px rgba(0,0,0,.78),
-        inset -22px -28px 58px rgba(0,0,0,.66),
-        inset 20px 13px 31px rgba(255,255,255,.10),
+        inset -58px 30px 98px rgba(0,0,0,.69),
+        inset -18px -24px 50px rgba(0,0,0,.60),
+        inset 24px 15px 36px rgba(255,255,255,.11),
         0 0 34px rgba(97,153,236,.25);
     }
 
     .earth-texture,
     .earth-clouds,
+    .earth-color-separation,
     .earth-daylight,
     .earth-morning-edge,
     .earth-breakfast-clouds,
@@ -396,43 +406,54 @@
       background-position: 0% 50%;
       background-repeat: repeat-x;
       animation: earthTextureSpin 42s linear infinite;
-      filter: saturate(1.08) contrast(1.08) brightness(.76);
+      filter: saturate(1.42) contrast(1.20) brightness(.92);
+    }
+
+    .earth-color-separation {
+      z-index: 2;
+      background:
+        radial-gradient(ellipse at 63% 43%, rgba(24, 107, 196, .16), transparent 39%),
+        radial-gradient(ellipse at 45% 33%, rgba(57, 134, 79, .13), transparent 28%),
+        radial-gradient(ellipse at 42% 61%, rgba(129, 94, 54, .12), transparent 32%),
+        radial-gradient(ellipse at 27% 50%, rgba(31, 116, 174, .12), transparent 38%);
+      mix-blend-mode: soft-light;
+      opacity: .72;
     }
 
     .earth-clouds {
-      z-index: 2;
+      z-index: 3;
       background-image: url("/assets/earth/earth_clouds_2048.jpg");
       background-size: 210% 100%;
       background-position: 0% 50%;
       background-repeat: repeat-x;
       animation: earthCloudSpin 64s linear infinite;
-      opacity: .33;
+      opacity: .29;
       mix-blend-mode: screen;
-      filter: contrast(1.08) brightness(.92);
+      filter: saturate(1.02) contrast(1.13) brightness(1.04);
     }
 
     .earth-daylight {
-      z-index: 3;
+      z-index: 4;
       background:
-        radial-gradient(circle at 79% 24%, rgba(255,255,255,.30) 0 4%, rgba(255,246,202,.20) 12%, transparent 28%),
-        radial-gradient(ellipse at 82% 39%, rgba(242,199,111,.16) 0 18%, transparent 39%),
-        radial-gradient(ellipse at 75% 52%, rgba(105, 170, 255, .10), transparent 42%);
+        radial-gradient(circle at 79% 24%, rgba(255,255,255,.28) 0 4%, rgba(255,246,202,.19) 12%, transparent 28%),
+        radial-gradient(ellipse at 82% 39%, rgba(242,199,111,.15) 0 18%, transparent 39%),
+        radial-gradient(ellipse at 75% 52%, rgba(105, 170, 255, .11), transparent 42%);
       mix-blend-mode: screen;
-      opacity: .76;
+      opacity: .72;
     }
 
     .earth-morning-edge {
-      z-index: 4;
+      z-index: 5;
       background:
-        linear-gradient(124deg, transparent 0 47%, rgba(255, 228, 154, .18) 52%, rgba(123, 184, 255, .16) 58%, transparent 66%),
-        radial-gradient(ellipse at 70% 41%, rgba(255, 231, 165, .14), transparent 28%),
-        radial-gradient(ellipse at 78% 32%, rgba(119, 187, 255, .18), transparent 36%);
+        linear-gradient(124deg, transparent 0 47%, rgba(255, 228, 154, .17) 52%, rgba(123, 184, 255, .17) 58%, transparent 66%),
+        radial-gradient(ellipse at 70% 41%, rgba(255, 231, 165, .13), transparent 28%),
+        radial-gradient(ellipse at 78% 32%, rgba(119, 187, 255, .19), transparent 36%);
       mix-blend-mode: screen;
-      opacity: .88;
+      opacity: .86;
     }
 
     .earth-breakfast-clouds {
-      z-index: 5;
+      z-index: 6;
       background-image:
         linear-gradient(124deg, transparent 0 46%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.30) 54%, rgba(255,255,255,.12) 61%, transparent 68%),
         url("/assets/earth/earth_clouds_2048.jpg");
@@ -446,58 +467,58 @@
         no-repeat,
         repeat-x;
       animation: earthCloudCrowdSpin 74s linear infinite;
-      opacity: .53;
+      opacity: .50;
       mix-blend-mode: screen;
-      filter: brightness(1.10) contrast(1.28);
+      filter: saturate(1.02) brightness(1.12) contrast(1.28);
     }
 
     .earth-terminator {
-      z-index: 6;
+      z-index: 7;
       background:
-        radial-gradient(ellipse at 84% 30%, transparent 0 24%, rgba(4, 9, 22, .16) 36%, rgba(0, 2, 8, .58) 62%, rgba(0, 0, 0, .84) 100%),
-        linear-gradient(127deg, transparent 0 34%, rgba(4, 10, 24, .14) 44%, rgba(0, 0, 0, .50) 64%, rgba(0, 0, 0, .76) 100%);
-      opacity: .78;
+        radial-gradient(ellipse at 84% 30%, transparent 0 24%, rgba(4, 9, 22, .13) 36%, rgba(0, 2, 8, .48) 62%, rgba(0, 0, 0, .72) 100%),
+        linear-gradient(127deg, transparent 0 34%, rgba(4, 10, 24, .11) 44%, rgba(0, 0, 0, .41) 64%, rgba(0, 0, 0, .66) 100%);
+      opacity: .69;
     }
 
     .earth-night {
-      z-index: 7;
+      z-index: 8;
       background:
-        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.76) 0 18%, rgba(0,0,0,.58) 39%, transparent 65%),
-        radial-gradient(ellipse at 28% 48%, rgba(0,0,0,.62) 0 14%, rgba(0,0,0,.34) 38%, transparent 64%),
-        radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(0,0,0,.20) 63%, rgba(0,0,0,.62) 100%);
-      opacity: .76;
+        radial-gradient(ellipse at 18% 72%, rgba(0,0,0,.64) 0 18%, rgba(0,0,0,.48) 39%, transparent 65%),
+        radial-gradient(ellipse at 28% 48%, rgba(0,0,0,.51) 0 14%, rgba(0,0,0,.27) 38%, transparent 64%),
+        radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(0,0,0,.16) 63%, rgba(0,0,0,.52) 100%);
+      opacity: .68;
     }
 
     .earth-reflected-moonlight {
-      z-index: 8;
+      z-index: 9;
       background:
-        radial-gradient(ellipse at 12% 48%, rgba(205, 224, 255, .24) 0 7%, rgba(190, 214, 255, .16) 19%, transparent 43%),
-        radial-gradient(ellipse at 20% 63%, rgba(190, 214, 255, .11), transparent 36%),
-        linear-gradient(92deg, rgba(190, 214, 255, .16) 0%, rgba(190, 214, 255, .09) 17%, transparent 42%, transparent 100%);
+        radial-gradient(ellipse at 12% 48%, rgba(205, 224, 255, .24) 0 7%, rgba(190, 214, 255, .15) 19%, transparent 43%),
+        radial-gradient(ellipse at 20% 63%, rgba(190, 214, 255, .09), transparent 36%),
+        linear-gradient(92deg, rgba(190, 214, 255, .13) 0%, rgba(190, 214, 255, .075) 17%, transparent 42%, transparent 100%);
       mix-blend-mode: screen;
-      opacity: .78;
+      opacity: .70;
     }
 
     .earth-atmosphere {
-      z-index: 9;
+      z-index: 10;
       background:
         radial-gradient(ellipse at 86% 34%, rgba(130, 190, 255, .22), transparent 32%),
-        radial-gradient(ellipse at 15% 52%, rgba(205, 224, 255, .18), transparent 24%),
+        radial-gradient(ellipse at 15% 52%, rgba(205, 224, 255, .16), transparent 24%),
         radial-gradient(circle at 50% 50%, transparent 0 59%, rgba(115, 177, 255, .10) 71%, rgba(115, 177, 255, .20) 78%, transparent 86%);
       mix-blend-mode: screen;
-      opacity: .64;
+      opacity: .63;
     }
 
     .earth-rim {
-      z-index: 10;
+      z-index: 11;
       border: 1px solid rgba(255,255,255,.11);
       box-shadow:
-        inset -40px 22px 64px rgba(0,0,0,.56),
+        inset -34px 18px 54px rgba(0,0,0,.50),
         inset 16px -8px 22px rgba(133,188,255,.08),
         inset 26px 0 42px rgba(190,214,255,.09),
         10px -8px 32px rgba(111, 169, 255, .16),
         -20px 18px 64px rgba(190,214,255,.18),
-        -20px 22px 58px rgba(0,0,0,.48),
+        -20px 22px 58px rgba(0,0,0,.46),
         0 0 50px rgba(97,153,236,.14);
     }
 
@@ -608,6 +629,13 @@
     data-terminator-preserved="true"
     data-earth-readability-iff-standard="active"
     data-earth-visual-acceptance="pending"
+    data-earth-color-discrimination="tuned"
+    data-ocean-color-readable="true"
+    data-land-color-readable="true"
+    data-cloud-color-readable="true"
+    data-warm-cool-light-separated="true"
+    data-earth-color-iff-standard="active"
+    data-earth-color-visual-acceptance="pending"
   >
     <header class="universe-topbar">
       <a class="universe-brand" href="/" aria-label="Compass Origin">
@@ -644,13 +672,21 @@
         data-terminator-preserved="true"
         data-earth-readability-iff-standard="active"
         data-earth-visual-acceptance="pending"
+        data-earth-color-discrimination="tuned"
+        data-ocean-color-readable="true"
+        data-land-color-readable="true"
+        data-cloud-color-readable="true"
+        data-warm-cool-light-separated="true"
+        data-earth-color-iff-standard="active"
+        data-earth-color-visual-acceptance="pending"
         data-shadow-accepted="pending"
       >
         <div class="moon-diagnostic-construct" aria-hidden="true"></div>
 
-        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with readable dark-side shadow, morning edge, breakfast cloud crowd, and diagnostic Moon construct">
+        <div class="earth-axis-shell" aria-label="Restored Earth globe on its axis with color-discriminating oceans, land, clouds, shadow, morning edge, and diagnostic Moon construct">
           <div class="earth-core">
             <div class="earth-texture"></div>
+            <div class="earth-color-separation"></div>
             <div class="earth-clouds"></div>
             <div class="earth-daylight"></div>
             <div class="earth-morning-edge"></div>
@@ -704,12 +740,20 @@
       <span>terminator-preserved=true</span>
       <span>earth-readability-iff-standard=active</span>
       <span>earth-visual-acceptance=pending</span>
+      <span>earth-color-discrimination=tuned</span>
+      <span>ocean-color-readable=true</span>
+      <span>land-color-readable=true</span>
+      <span>cloud-color-readable=true</span>
+      <span>warm-cool-light-separated=true</span>
+      <span>earth-color-iff-standard=active</span>
+      <span>earth-color-visual-acceptance=pending</span>
       <span>shadow-accepted=pending</span>
       <span>DEMO_UNIVERSE_EARTH_AXIS_RESTORATION_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_SUN_SHADOW_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_MORNING_EDGE_TNT_v1</span>
       <span>DEMO_UNIVERSE_MOON_DIAGNOSTIC_SAFE_MIGRATION_TNT_v1</span>
       <span>DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1</span>
+      <span>LANE_A_FULL_GLOBE_COLOR_DISCRIMINATION_TNT_v1</span>
     </section>
   </main>
 </body>

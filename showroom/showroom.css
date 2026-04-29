@@ -1,5 +1,5 @@
 /* /showroom/showroom.css */
-/* SHOWROOM_GENERATION_3_VISUAL_CLARITY_MINIMUM_REFINEMENT_TNT_v1 */
+/* SHOWROOM_GENERATION_3_BACKGROUND_ROLE_ISOLATION_CSS_TNT_v1 */
 
 :root {
   --showroom-void: #050914;
@@ -32,9 +32,9 @@ body {
   margin: 0;
   color: var(--showroom-text);
   background:
-    radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.16), transparent 28rem),
-    radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.10), transparent 22rem),
-    linear-gradient(180deg, #02050c 0%, var(--showroom-void) 44%, #080d18 100%);
+    radial-gradient(circle at 50% 10%, rgba(116, 184, 255, 0.10), transparent 32rem),
+    radial-gradient(circle at 80% 22%, rgba(245, 199, 107, 0.06), transparent 24rem),
+    linear-gradient(180deg, #02050c 0%, #050914 48%, #070d18 100%);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -44,11 +44,11 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.78) 0 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(245, 199, 107, 0.64) 0 1px, transparent 1.4px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(245, 199, 107, 0.46) 0 1px, transparent 1.4px);
   background-position: 0 0, 48px 76px;
-  background-size: 130px 130px, 180px 180px;
-  opacity: 0.14;
+  background-size: 150px 150px, 210px 210px;
+  opacity: 0.09;
 }
 
 a {
@@ -98,7 +98,7 @@ a {
   padding: clamp(24px, 4vw, 48px);
   background:
     linear-gradient(135deg, rgba(12, 24, 42, 0.88), rgba(8, 20, 38, 0.68)),
-    radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.14), transparent 18rem);
+    radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.12), transparent 18rem);
 }
 
 .eyebrow,
@@ -173,8 +173,8 @@ h1 {
 .showroom-fallback a:hover,
 .showroom-fallback a:focus-visible,
 .showroom-generation-2-link:hover,
-.showroom-generation-2-link:focus-visible,
 .showroom-generation-3-link:hover,
+.showroom-generation-2-link:focus-visible,
 .showroom-generation-3-link:focus-visible {
   color: #080d18;
   background: var(--showroom-gold);
@@ -202,31 +202,46 @@ h1 {
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 50% 42%, rgba(116, 184, 255, 0.14), transparent 15rem),
-    radial-gradient(circle at 50% 62%, rgba(245, 199, 107, 0.06), transparent 18rem),
-    linear-gradient(180deg, rgba(4, 9, 19, 0.82), rgba(4, 9, 19, 0.96));
+    radial-gradient(circle at 50% 46%, rgba(116, 184, 255, 0.13), transparent 17rem),
+    radial-gradient(circle at 50% 58%, rgba(245, 199, 107, 0.045), transparent 20rem),
+    linear-gradient(180deg, rgba(4, 9, 19, 0.88), rgba(4, 9, 19, 0.985));
+}
+
+.visual-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(116, 184, 255, 0.115), transparent 19rem),
+    radial-gradient(circle at 50% 52%, rgba(0, 0, 0, 0.20), transparent 26rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 34%, rgba(0, 0, 0, 0.18));
+  opacity: 0.88;
 }
 
 .visual-panel::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.055), transparent 2px),
-    radial-gradient(circle at 76% 32%, rgba(245, 199, 107, 0.06), transparent 2px),
-    radial-gradient(circle at 58% 76%, rgba(116, 184, 255, 0.055), transparent 2px);
-  opacity: 0.46;
+    radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.038), transparent 2px),
+    radial-gradient(circle at 76% 32%, rgba(245, 199, 107, 0.038), transparent 2px),
+    radial-gradient(circle at 58% 76%, rgba(116, 184, 255, 0.038), transparent 2px);
+  opacity: 0.28;
 }
 
 #showroom-canvas {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: block;
   width: 100%;
   height: 100%;
   min-height: 100%;
-  opacity: 0.34;
+  opacity: 0.18;
   pointer-events: none;
 }
 
@@ -266,15 +281,17 @@ h1 {
   position: absolute;
   left: 50%;
   top: 48%;
+  z-index: 56;
   width: min(690px, 96vw);
   height: min(180px, 28vw);
-  border: 1px solid rgba(116, 184, 255, 0.28);
+  border: 1px solid rgba(116, 184, 255, 0.13);
   border-radius: 50%;
   transform: translate(-50%, -50%) rotate(-10deg);
   pointer-events: none;
+  opacity: 0.22;
   box-shadow:
-    0 0 18px rgba(116, 184, 255, 0.12),
-    inset 0 0 16px rgba(245, 199, 107, 0.055);
+    0 0 12px rgba(116, 184, 255, 0.07),
+    inset 0 0 12px rgba(245, 199, 107, 0.03);
 }
 
 .showroom-generation-3-axis-line {
@@ -282,7 +299,7 @@ h1 {
   left: 50%;
   top: 50%;
   z-index: 58;
-  width: 3px;
+  width: 2px;
   height: min(660px, 86vw);
   transform: translate(-50%, -50%) rotate(calc(-1 * var(--showroom-axis-tilt)));
   border-radius: 999px;
@@ -290,14 +307,14 @@ h1 {
     linear-gradient(
       180deg,
       transparent 0%,
-      rgba(116, 184, 255, 0.08) 18%,
-      rgba(245, 199, 107, 0.28) 50%,
-      rgba(116, 184, 255, 0.08) 82%,
+      rgba(116, 184, 255, 0.05) 18%,
+      rgba(245, 199, 107, 0.22) 50%,
+      rgba(116, 184, 255, 0.05) 82%,
       transparent 100%
     );
   box-shadow:
-    0 0 14px rgba(116, 184, 255, 0.18),
-    0 0 26px rgba(245, 199, 107, 0.08);
+    0 0 10px rgba(116, 184, 255, 0.12),
+    0 0 22px rgba(245, 199, 107, 0.06);
   pointer-events: none;
 }
 
@@ -305,12 +322,12 @@ h1 {
   position: absolute;
   left: 50%;
   z-index: 59;
-  width: 10px;
-  height: 10px;
-  border: 1px solid rgba(245, 199, 107, 0.68);
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(245, 199, 107, 0.52);
   border-radius: 50%;
-  background: rgba(116, 184, 255, 0.26);
-  box-shadow: 0 0 16px rgba(116, 184, 255, 0.34);
+  background: rgba(116, 184, 255, 0.18);
+  box-shadow: 0 0 12px rgba(116, 184, 255, 0.24);
   pointer-events: none;
 }
 
@@ -402,7 +419,7 @@ h1 {
   opacity: 0.22;
   mix-blend-mode: screen;
   transform: scale(1.045);
-  filter: contrast(1.0) brightness(1.0);
+  filter: contrast(1) brightness(1);
 }
 
 .showroom-generation-3-ocean-land-color {
@@ -640,7 +657,7 @@ h1 {
   }
 
   .showroom-generation-3-orbit {
-    animation: showroomClarityOrbitDrift 18s linear infinite;
+    animation: showroomClarityOrbitDrift 24s linear infinite;
   }
 }
 
@@ -675,11 +692,11 @@ h1 {
 @keyframes showroomClarityAtmospherePulse {
   0%,
   100% {
-    opacity: 0.66;
+    opacity: 0.64;
   }
 
   50% {
-    opacity: 0.86;
+    opacity: 0.82;
   }
 }
 

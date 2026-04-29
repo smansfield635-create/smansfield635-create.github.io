@@ -16,7 +16,7 @@
   data-showroom-card-visual-truth="pending"
   data-demo-universe-card-preview="active"
   data-showroom-mobile-layout-hardened="true"
-  data-generation="showroom-h5-g16-source-truth-v1"
+  data-generation="showroom-generation-2-active-globe-html-js-alignment-v1"
 >
 <head>
   <meta charset="utf-8" />
@@ -24,7 +24,7 @@
   <title>Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Showroom is the H5 public proof room for Diamond Gate Bridge, carrying Manor source truth, Lane B Earth card sync, globe handoff, and audit-ready chamber markers."
+    content="The Showroom is the H5 public proof room for Diamond Gate Bridge, carrying Manor source truth, Lane B Earth card sync, globe handoff, and Generation 2 active globe visibility."
   />
   <link rel="stylesheet" href="/showroom/showroom.css" />
 </head>
@@ -56,6 +56,9 @@
     data-construct-class="house"
     data-house-part="showroom"
     data-chamber="H5_SHOWROOM"
+    data-generation-1-layout-established="true"
+    data-generation-2-active-globe="html-static-seeded"
+    data-generation-3-blocked-until-g2-pass="true"
     data-showroom-card-earth-sync="active"
     data-showroom-card-earth-color="synced"
     data-showroom-card-globe-handoff="active"
@@ -85,6 +88,9 @@
     <main
       id="showroom-main"
       class="showroom-main"
+      data-generation-1-layout-established="true"
+      data-generation-2-active-globe="target"
+      data-generation-3-blocked-until-g2-pass="true"
       data-showroom-card-earth-sync="active"
       data-showroom-card-earth-color="synced"
       data-showroom-card-globe-handoff="active"
@@ -101,7 +107,7 @@
       >
         <div
           class="visual-panel showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
-          aria-label="Showroom Earth-centered proof surface"
+          aria-label="Showroom Generation 2 active Earth globe surface"
           data-showroom-globe="active"
           data-showroom-earth-color="synced"
           data-showroom-earth-clouds="active"
@@ -114,12 +120,56 @@
             id="showroom-globe-mount"
             class="showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
             data-showroom-globe-mount="true"
-            data-showroom-globe-placement="generation-3-centered-lift"
+            data-showroom-globe-placement="generation-2-active-globe"
             data-showroom-card-globe-handoff="active"
             data-showroom-card-earth-color="synced"
             data-demo-universe-card-preview="active"
-            aria-label="Showroom Earth canvas mount"
-          ></div>
+            data-earth-surface="/assets/earth/earth_surface_2048.jpg"
+            data-earth-clouds="/assets/earth/earth_clouds_2048.jpg"
+            data-generation-2-active-globe="static-seeded"
+            aria-label="Showroom Generation 2 active Earth globe"
+          >
+            <section
+              class="showroom-generation-2-shell"
+              data-showroom-generation-2-shell="true"
+              data-generation-2-active-globe="visible"
+            >
+              <div class="showroom-generation-2-orbit" aria-hidden="true"></div>
+
+              <div
+                class="showroom-generation-2-active-globe"
+                role="img"
+                aria-label="Active visible Earth globe restored for Showroom Generation 2"
+              >
+                <img
+                  class="showroom-generation-2-earth-surface"
+                  src="/assets/earth/earth_surface_2048.jpg"
+                  alt=""
+                  decoding="async"
+                  loading="eager"
+                  aria-hidden="true"
+                />
+                <img
+                  class="showroom-generation-2-earth-clouds"
+                  src="/assets/earth/earth_clouds_2048.jpg"
+                  alt=""
+                  decoding="async"
+                  loading="eager"
+                  aria-hidden="true"
+                />
+                <span class="showroom-generation-2-light" aria-hidden="true"></span>
+                <span class="showroom-generation-2-rim" aria-hidden="true"></span>
+              </div>
+
+              <p class="showroom-generation-2-caption">
+                GENERATION 2 · ACTIVE GLOBE · EARTH SURFACE RESTORED
+              </p>
+
+              <a class="showroom-generation-2-link" href="/showroom/globe/">
+                Open Demo Universe Earth
+              </a>
+            </section>
+          </div>
         </div>
 
         <div
@@ -144,8 +194,9 @@
             >
               <h3>Render proof</h3>
               <p>
-                The visible surface mounts through the preserved Showroom globe subsystem
-                without exposing raw code or breaking the route rail.
+                Generation 1 establishes the layout. Generation 2 restores the active
+                parent globe on this Showroom page. Generation 3 remains blocked until
+                the globe is visibly confirmed.
               </p>
             </article>
 
@@ -195,8 +246,12 @@
           <li data-receipt="H5_SHOWROOM">H5_SHOWROOM</li>
           <li data-receipt="ROUTE=/showroom/">ROUTE=/showroom/</li>
           <li data-receipt="GLOBE_ROUTE=/showroom/globe/">GLOBE_ROUTE=/showroom/globe/</li>
+          <li data-receipt="GENERATION_1_LAYOUT_ESTABLISHED">GENERATION_1_LAYOUT_ESTABLISHED</li>
+          <li data-receipt="GENERATION_2_ACTIVE_GLOBE_STATIC_SEEDED">GENERATION_2_ACTIVE_GLOBE_STATIC_SEEDED</li>
+          <li data-receipt="GENERATION_3_BLOCKED_UNTIL_G2_PASS">GENERATION_3_BLOCKED_UNTIL_G2_PASS</li>
           <li data-receipt="VISUAL_PROOF=EARTH_CENTERED_SHOWROOM">VISUAL_PROOF=EARTH_CENTERED_SHOWROOM</li>
           <li data-receipt="GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN">GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN</li>
+          <li data-receipt="SHOWROOM_GENERATION_2_HTML_JS_ALIGNMENT_TNT_v1">SHOWROOM_GENERATION_2_HTML_JS_ALIGNMENT_TNT_v1</li>
           <li data-receipt="LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1">LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1</li>
           <li data-receipt="LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1">LANE_B_SHOWROOM_MOBILE_LAYOUT_HARDENING_TNT_v1</li>
         </ul>
@@ -207,7 +262,7 @@
           <h2>Showroom static fallback</h2>
           <p>
             JavaScript is unavailable, but the Showroom route rail, proof markers,
-            Demo Universe Earth route, and chamber content remain visible.
+            Demo Universe Earth route, Generation 2 static globe seed, and chamber content remain visible.
           </p>
           <p>
             <a href="/showroom/globe/">Open Demo Universe Earth</a>
@@ -217,6 +272,6 @@
     </main>
   </div>
 
-  <script type="module" src="/showroom/index.js"></script>
+  <script src="/showroom/index.js" defer></script>
 </body>
 </html>

@@ -15,6 +15,7 @@
   data-demo-universe-earth-render-health="measured"
   data-showroom-visible-render-health="measured"
   data-moon-diagnostic-meter="active"
+  data-gauges-display-completion="active"
 >
 <head>
   <meta charset="utf-8" />
@@ -529,11 +530,13 @@
       <span>demo-universe-earth-render-health=measured</span>
       <span>showroom-visible-render-health=measured</span>
       <span>moon-diagnostic-meter=active</span>
+      <span>gauges-display-completion=active</span>
       <span>dexter-lab=instrumentation</span>
       <span>measurement-key=active</span>
       <span>cadillac-key-authority=master</span>
       <span>DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1</span>
       <span>DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1</span>
+      <span>GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1</span>
     </section>
   </main>
 
@@ -626,12 +629,14 @@
       }
 
       function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
+        return Math.max(min, Math.min(max, Number(value) || 0));
       }
 
       function average(items) {
-        if (!items.length) return 0;
-        return Math.round(items.reduce(function (sum, item) { return sum + Number(item.score || 0); }, 0) / items.length);
+        if (!items || !items.length) return 0;
+        return Math.round(items.reduce(function (sum, item) {
+          return sum + Number(item && item.score ? item.score : 0);
+        }, 0) / items.length);
       }
 
       function includesToken(text, token) {
@@ -639,10 +644,13 @@
       }
 
       function missingTokens(text, tokens) {
-        return tokens.filter(function (token) { return !includesToken(text, token); });
+        return (tokens || []).filter(function (token) {
+          return !includesToken(text, token);
+        });
       }
 
       function status(score) {
+        score = Number(score) || 0;
         if (score >= 90) return "PASS";
         if (score >= 70) return "MEASURED";
         if (score > 0) return "HOLD";
@@ -650,6 +658,7 @@
       }
 
       function statusClass(score) {
+        score = Number(score) || 0;
         if (score >= 90) return "status-pass";
         if (score >= 70) return "status-measured";
         if (score > 0) return "status-hold";
@@ -657,11 +666,22 @@
       }
 
       function htmlEscape(value) {
-        return String(value || "")
+        if (value === null || value === undefined) return "";
+        return String(value)
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
+      }
+
+      function safeSet(selector, html) {
+        var node = document.querySelector(selector);
+        if (node) node.innerHTML = html;
+      }
+
+      function safeText(selector, text) {
+        var node = document.querySelector(selector);
+        if (node) node.textContent = text;
       }
 
       async function fetchText(url) {
@@ -882,113 +902,133 @@
       async function runCalibration() {
         setLoading();
 
-        var house = await Promise.all(HOUSE_ROUTES.map(checkRoute));
-        var products = await Promise.all(PRODUCT_ROUTES.map(checkRoute));
-        var planets = await Promise.all(PLANET_ROUTES.map(checkRoute));
-        var render = await checkRenderEvidence();
-        var showroomVisible = await checkShowroomVisible();
-        var moon = await checkMoonDiagnostic();
+        try {
+          var house = await Promise.all(HOUSE_ROUTES.map(checkRoute));
+          var products = await Promise.all(PRODUCT_ROUTES.map(checkRoute));
+          var planets = await Promise.all(PLANET_ROUTES.map(checkRoute));
+          var render = await checkRenderEvidence();
+          var showroomVisible = await checkShowroomVisible();
+          var moon = await checkMoonDiagnostic();
 
-        var houseScore = average(house);
-        var productScore = average(products);
-        var planetScore = average(planets);
-        var renderScore = average(render);
-        var visibleScore = showroomVisible.score;
-        var moonScore = moon.score;
+          var houseScore = average(house);
+          var productScore = average(products);
+          var planetScore = average(planets);
+          var renderScore = average(render);
+          var visibleScore = showroomVisible.score;
+          var moonScore = moon.score;
 
-        var compass = await fetchText("/");
-        var coreScore = compass.ok && (includesToken(compass.text, "data-core-hold=\"true\"") || includesToken(compass.text, "CORE_EXPERIENCE_HELD")) ? 100 : (compass.ok ? 50 : 0);
-        var generationScore = calculateGenerationScore(compass.text, moonScore);
+          var compass = await fetchText("/");
+          var coreScore = compass.ok && (includesToken(compass.text, "data-core-hold=\"true\"") || includesToken(compass.text, "CORE_EXPERIENCE_HELD")) ? 100 : (compass.ok ? 50 : 0);
+          var generationScore = calculateGenerationScore(compass.text);
 
-        var visualTruth = Math.round((renderScore + visibleScore + moonScore + 100) / 4);
-        var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + productScore + planetScore) / 8);
+          var visualTruth = Math.round((renderScore + visibleScore + moonScore + 100) / 4);
+          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + productScore + planetScore) / 8);
 
-        var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon]);
-        var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
-        var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
-        var seats = Math.round(256 * overall / 100);
-        var routePressure = 100 - houseScore;
-        var renderPressure = 100 - renderScore;
-        var visiblePressure = 100 - visibleScore;
-        var moonPressure = 100 - moonScore;
-        var productPressure = 100 - productScore;
-        var planetPressure = 100 - planetScore;
-        var corePressure = 100 - coreScore;
-        var generationPressure = 100 - generationScore;
-        var barometer = Math.round((routePressure + renderPressure + visiblePressure + moonPressure + productPressure + planetPressure + corePressure + generationPressure) / 8);
-        var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
-        var acid = clamp(Math.round((barometer + seismograph + generationPressure) / 3), 0, 100);
-        var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore) / 6), 0, 100);
-        var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
+          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon]);
+          var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
+          var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
+          var seats = Math.round(256 * overall / 100);
 
-        renderSummary([
-          ["Overall ceiling", overall, "composite"],
-          ["House skeleton", houseScore, "marker health"],
-          ["Core experience", coreScore, coreScore >= 90 ? "held" : "not held"],
-          ["Generation readiness", generationScore, "GEN baseline"],
-          ["Render health", renderScore, "Demo Universe Earth"],
-          ["Showroom visible", visibleScore, "visible render"],
-          ["Moon Diagnostic", moonScore, "diagnostic Moon"],
-          ["Products", productScore, "product route health"],
-          ["Planets", planetScore, "planet route health"]
-        ]);
+          var routePressureValue = 100 - houseScore;
+          var renderPressureValue = 100 - renderScore;
+          var visiblePressureValue = 100 - visibleScore;
+          var moonPressureValue = 100 - moonScore;
+          var productPressureValue = 100 - productScore;
+          var planetPressureValue = 100 - planetScore;
+          var corePressureValue = 100 - coreScore;
+          var generationPressureValue = 100 - generationScore;
 
-        renderInstruments([
-          ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
-          ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
-          ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, product, planet, core, and generation lanes."],
-          ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
-          ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
-          ["Light / Shadow Meter", render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50, "Shadow contract is measured; visual acceptance remains separately bounded."],
-          ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
-          ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, and manual visual acceptance."]
-        ]);
+          var barometer = Math.round((
+            routePressureValue +
+            renderPressureValue +
+            visiblePressureValue +
+            moonPressureValue +
+            productPressureValue +
+            planetPressureValue +
+            corePressureValue +
+            generationPressureValue
+          ) / 8);
 
-        renderPressure([
-          ["Route Pressure", routePressure, "house lane"],
-          ["Render Pressure", renderPressure, "render lane"],
-          ["Visible Render Pressure", visiblePressure, "Showroom lane"],
-          ["Moon Pressure", moonPressure, "Moon diagnostic lane"],
-          ["Product Pressure", productPressure, "product lane"],
-          ["Planet Pressure", planetPressure, "planet lane"],
-          ["Core Pressure", corePressure, "Compass/core lane"],
-          ["Generation Pressure", generationPressure, "generation lane"]
-        ]);
+          var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
+          var acid = clamp(Math.round((barometer + seismograph + generationPressureValue) / 3), 0, 100);
+          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore) / 6), 0, 100);
+          var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
 
-        renderPH(ph, acid, base);
-        renderEvidence("[data-moon-evidence]", [moon], true);
-        renderEvidence("[data-showroom-evidence]", [showroomVisible], true);
-        renderEvidence("[data-render-evidence]", render, false);
-        renderEvidence("[data-house-evidence]", house, false);
-        renderEvidence("[data-product-evidence]", products, false);
-        renderEvidence("[data-planet-evidence]", planets, false);
-        renderReceipt({
-          overall: overall,
-          house: houseScore,
-          core: coreScore,
-          generation: generationScore,
-          render: renderScore,
-          visible: visibleScore,
-          moon: moonScore,
-          products: productScore,
-          planets: planetScore
-        });
+          renderSummary([
+            ["Overall ceiling", overall, "composite"],
+            ["House skeleton", houseScore, "marker health"],
+            ["Core experience", coreScore, coreScore >= 90 ? "held" : "not held"],
+            ["Generation readiness", generationScore, "GEN baseline"],
+            ["Render health", renderScore, "Demo Universe Earth"],
+            ["Showroom visible", visibleScore, "visible render"],
+            ["Moon Diagnostic", moonScore, "diagnostic Moon"],
+            ["Products", productScore, "product route health"],
+            ["Planets", planetScore, "planet route health"]
+          ]);
+
+          renderInstruments([
+            ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
+            ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
+            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, product, planet, core, and generation lanes."],
+            ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
+            ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
+            ["Light / Shadow Meter", render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50, "Shadow contract is measured; visual acceptance remains separately bounded."],
+            ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
+            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, and manual visual acceptance."]
+          ]);
+
+          renderPressureCards([
+            ["Route Pressure", routePressureValue, "house lane"],
+            ["Render Pressure", renderPressureValue, "render lane"],
+            ["Visible Render Pressure", visiblePressureValue, "Showroom lane"],
+            ["Moon Pressure", moonPressureValue, "Moon diagnostic lane"],
+            ["Product Pressure", productPressureValue, "product lane"],
+            ["Planet Pressure", planetPressureValue, "planet lane"],
+            ["Core Pressure", corePressureValue, "Compass/core lane"],
+            ["Generation Pressure", generationPressureValue, "generation lane"]
+          ]);
+
+          renderPH(ph, acid, base);
+          renderEvidence("[data-moon-evidence]", [moon], true);
+          renderEvidence("[data-showroom-evidence]", [showroomVisible], true);
+          renderEvidence("[data-render-evidence]", render, false);
+          renderEvidence("[data-house-evidence]", house, false);
+          renderEvidence("[data-product-evidence]", products, false);
+          renderEvidence("[data-planet-evidence]", planets, false);
+          renderReceipt({
+            overall: overall,
+            house: houseScore,
+            core: coreScore,
+            generation: generationScore,
+            render: renderScore,
+            visible: visibleScore,
+            moon: moonScore,
+            products: productScore,
+            planets: planetScore,
+            seismograph: seismograph,
+            barometer: barometer,
+            acid: acid,
+            base: base,
+            ph: ph
+          });
+        } catch (error) {
+          renderCalibrationError(error);
+        }
       }
 
-      function calculateGenerationScore(source, moonScore) {
+      function calculateGenerationScore(source) {
         var base = 20;
         if (includesToken(source, "GEN_1_ACCEPTED")) base = 40;
         if (includesToken(source, "TREE_G2")) base = 60;
         if (includesToken(source, "GEN_3_ACCEPTED")) base = 100;
-        if (moonScore >= 90 && base < 30) base = 30;
         return base;
       }
 
       function setLoading() {
-        document.querySelector("[data-summary-grid]").innerHTML = card("Overall ceiling", "…", "running");
-        document.querySelector("[data-instrument-grid]").innerHTML = "";
-        document.querySelector("[data-pressure-grid]").innerHTML = "";
-        document.querySelector("[data-ph-readout]").innerHTML = "<p>Running live calibration.</p>";
+        safeSet("[data-summary-grid]", card("Overall ceiling", "…", "running"));
+        safeSet("[data-instrument-grid]", "");
+        safeSet("[data-pressure-grid]", "");
+        safeSet("[data-ph-readout]", "<p>Running live calibration.</p>");
       }
 
       function card(label, value, sub) {
@@ -996,31 +1036,37 @@
       }
 
       function renderSummary(items) {
-        document.querySelector("[data-summary-grid]").innerHTML = items.map(function (item) {
+        safeSet("[data-summary-grid]", items.map(function (item) {
           return card(item[0], item[1], item[2]);
-        }).join("");
+        }).join(""));
       }
 
       function renderInstruments(items) {
-        document.querySelector("[data-instrument-grid]").innerHTML = items.map(function (item) {
+        safeSet("[data-instrument-grid]", items.map(function (item) {
           return '<article class="instrument"><strong>' + htmlEscape(item[1]) + '</strong><span>' + htmlEscape(item[0]) + '</span><p>' + htmlEscape(item[2]) + '</p></article>';
-        }).join("");
+        }).join(""));
       }
 
-      function renderPressure(items) {
-        document.querySelector("[data-pressure-grid]").innerHTML = items.map(function (item) {
+      function renderPressureCards(items) {
+        safeSet("[data-pressure-grid]", items.map(function (item) {
           return '<article class="pressure-card"><strong>' + htmlEscape(item[1]) + '</strong><span>' + htmlEscape(item[0]) + '</span><p>' + htmlEscape(item[2]) + '</p></article>';
-        }).join("");
+        }).join(""));
       }
 
       function renderPH(ph, acid, base) {
-        document.querySelector("[data-ph-readout]").innerHTML =
-          '<article class="instrument"><strong>pH ' + ph.toFixed(1) + '</strong><span>Acid/Base Meter</span><p>acid=' + acid + ' · base=' + base + '. Acid marks corrosive instability. Base marks stabilizing structure. The target is controlled balance, not denial of pressure.</p></article>';
+        safeSet("[data-ph-readout]",
+          '<article class="instrument"><strong>pH ' + Number(ph).toFixed(1) + '</strong><span>Acid/Base Meter</span><p>acid=' + htmlEscape(acid) + ' · base=' + htmlEscape(base) + '. Acid marks corrosive instability. Base marks stabilizing structure. The target is controlled balance, not denial of pressure.</p></article>'
+        );
       }
 
       function renderEvidence(selector, items, showComponents) {
-        document.querySelector(selector).innerHTML = items.map(function (item) {
-          var missing = item.missing.length
+        if (!items || !items.length) {
+          safeSet(selector, '<article class="evidence-card"><h3>No evidence returned.</h3><p>Calibration did not return evidence for this section.</p></article>');
+          return;
+        }
+
+        safeSet(selector, items.map(function (item) {
+          var missing = item.missing && item.missing.length
             ? '<ul>' + item.missing.map(function (token) { return '<li><code>' + htmlEscape(token) + '</code></li>'; }).join("") + '</ul>'
             : '<ul><li>NONE</li></ul>';
 
@@ -1038,15 +1084,16 @@
             '<p>Missing or constrained tokens:</p>' +
             missing +
           '</article>';
-        }).join("");
+        }).join(""));
       }
 
       function renderReceipt(scores) {
-        document.querySelector("[data-receipt]").textContent =
-          "VERSION: DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1\n" +
+        safeText("[data-receipt]",
+          "VERSION: GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1\n" +
+          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1\n" +
           "CADILLAC KEY: master authority key.\n" +
           "MEASUREMENT KEY: operating proof key.\n" +
-          "NEW CONTRACT: G12 · Moon Diagnostic Meter measures the Demo Universe Moon as diagnostic-first-pass construct.\n" +
+          "NEW PATCH: Gauges display completion patch fixes zero-value rendering and lower-section completion.\n" +
           "MOON READ: diagnostic-first-pass, not final Moon law.\n" +
           "ARTIFICIAL MOONLIGHT READ: superseded scaffold, not active authority.\n\n" +
           "AFTER:\n" +
@@ -1058,8 +1105,24 @@
           "ShowroomVisible=" + scores.visible + "\n" +
           "MoonDiagnostic=" + scores.moon + "\n" +
           "Products=" + scores.products + "\n" +
-          "Planets=" + scores.planets + "\n\n" +
-          "IFF ROOT: Every Moon gap becomes a bounded correction path unless it blocks construct, delivery, expression, or comprehension without lawful progression.";
+          "Planets=" + scores.planets + "\n" +
+          "Seismograph=" + scores.seismograph + "\n" +
+          "Barometer=" + scores.barometer + "\n" +
+          "pH=" + Number(scores.ph).toFixed(1) + "\n" +
+          "Acid=" + scores.acid + "\n" +
+          "Base=" + scores.base + "\n\n" +
+          "IFF ROOT: Every Moon gap becomes a bounded correction path unless it blocks construct, delivery, expression, or comprehension without lawful progression."
+        );
+      }
+
+      function renderCalibrationError(error) {
+        var message = String(error && error.message ? error.message : error);
+
+        safeSet("[data-pressure-grid]", '<article class="pressure-card"><strong>HOLD</strong><span>Display completion interrupted</span><p>' + htmlEscape(message) + '</p></article>');
+        safeSet("[data-ph-readout]", '<article class="instrument"><strong>HOLD</strong><span>Acid/Base Meter</span><p>Calibration did not complete. Repair only the Gauges display path.</p></article>');
+        safeSet("[data-moon-evidence]", '<article class="evidence-card"><h3>G12 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
+        safeSet("[data-showroom-evidence]", '<article class="evidence-card"><h3>G11 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
+        safeText("[data-receipt]", "VERSION: GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
       }
 
       document.querySelector("[data-run-calibration]").addEventListener("click", runCalibration);

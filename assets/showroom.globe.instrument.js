@@ -1,25 +1,18 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GENERATION_3_FULL_EXPRESSION_ASSET_INSTRUMENT_TNT_v1
+  SHOWROOM_GENERATION_3_AXIS_ROTATION_DEPTH_INSTRUMENT_TNT_v1
 
-  Owns:
-  - canonical Earth asset paths
-  - Generation 2 active globe primitive
-  - Generation 3 expression layers
-  - shared parent + standalone globe receipts
-  - asset load monitoring
-
-  Does not own:
-  - page layout
-  - route rail
-  - Showroom copy
-  - Gauges logic
+  Minimum optimal expression:
+  - Preserve Generation 2 active globe.
+  - Preserve Generation 3 telemetry activation.
+  - Add axis, rotation, stronger shadow/depth/terminator/atmosphere receipts.
+  - Do not own page layout, route rail, copy, Gauges, or raw media.
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-3-full-expression-asset-instrument-v1";
+  const VERSION = "showroom-generation-3-axis-rotation-depth-instrument-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -31,10 +24,21 @@
   const GENERATIONS = Object.freeze({
     generation1: "no-graphic-baseline",
     generation2: "baseline-graphics-active-globe",
-    generation3: "full-expression"
+    generation3: "axis-rotation-depth-refinement"
+  });
+
+  const MOTION = Object.freeze({
+    axisTiltDegrees: 23.5,
+    rotationDirection: "east-west",
+    surfaceRotationPeriodSeconds: 18,
+    cloudRotationPeriodSeconds: 31,
+    reducedMotionMode: "static-axis-shadow-preserved"
   });
 
   const GEN3 = Object.freeze({
+    axis: "active",
+    rotation: "active",
+    runtimeMotion: "active",
     shadows: "active",
     depth: "active",
     colorDiscrimination: "active",
@@ -43,7 +47,7 @@
     atmosphere: "active",
     telemetry: "active",
     detail: "active",
-    visualTruth: "pending-visual-confirmation"
+    visualTruth: "pending-user-visual-confirmation"
   });
 
   function create(tag, attrs, children) {
@@ -84,8 +88,16 @@
       generation1NoGraphicBaseline: "true",
       generation2BaselineGraphics: "achieved",
       generation2ActiveGlobe: "visible",
-      generation3FullExpression: "active",
+      generation3: GENERATIONS.generation3,
+      generation3FullExpression: "axis-rotation-depth-refinement-active",
       generation3VisualTruth: GEN3.visualTruth,
+      generation3Axis: GEN3.axis,
+      generation3AxisTiltDegrees: String(MOTION.axisTiltDegrees),
+      generation3Rotation: GEN3.rotation,
+      generation3RuntimeMotion: GEN3.runtimeMotion,
+      generation3RotationDirection: MOTION.rotationDirection,
+      generation3SurfaceRotationPeriodSeconds: String(MOTION.surfaceRotationPeriodSeconds),
+      generation3CloudRotationPeriodSeconds: String(MOTION.cloudRotationPeriodSeconds),
       generation3Shadows: GEN3.shadows,
       generation3Depth: GEN3.depth,
       generation3ColorDiscrimination: GEN3.colorDiscrimination,
@@ -109,6 +121,8 @@
       "aria-label": "Generation 3 telemetry receipt"
     }, [
       create("span", { text: "GEN 3" }),
+      create("span", { text: "axis=23.5°" }),
+      create("span", { text: "rotation=active" }),
       create("span", { text: "shadow=active" }),
       create("span", { text: "depth=active" }),
       create("span", { text: "terminator=active" }),
@@ -123,15 +137,19 @@
     const caption =
       config.caption ||
       (context === "standalone"
-        ? "GENERATION 3 · DEMO UNIVERSE EARTH · FULL EXPRESSION"
-        : "GENERATION 3 · FULL EXPRESSION · EARTH SHADOW DEPTH ACTIVE");
+        ? "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
+        : "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE");
 
     return create("section", {
       className: "showroom-generation-2-shell showroom-generation-3-shell",
       "data-showroom-generation-2-shell": "true",
       "data-showroom-generation-3-shell": "true",
       "data-generation-2-active-globe": "visible",
-      "data-generation-3-full-expression": "active",
+      "data-generation-3-full-expression": "axis-rotation-depth-refinement-active",
+      "data-generation-3-axis": "active",
+      "data-generation-3-rotation": "active",
+      "data-generation-3-runtime-motion": "active",
+      "data-axis-tilt-degrees": String(MOTION.axisTiltDegrees),
       "data-render-context": context
     }, [
       create("div", {
@@ -139,12 +157,27 @@
         "aria-hidden": "true"
       }),
 
+      create("span", {
+        className: "showroom-generation-3-axis-line",
+        "aria-hidden": "true"
+      }),
+
+      create("span", {
+        className: "showroom-generation-3-axis-node showroom-generation-3-axis-node-north",
+        "aria-hidden": "true"
+      }),
+
+      create("span", {
+        className: "showroom-generation-3-axis-node showroom-generation-3-axis-node-south",
+        "aria-hidden": "true"
+      }),
+
       create("div", {
         className: "showroom-generation-2-active-globe showroom-generation-3-active-globe",
         role: "img",
         "aria-label": context === "standalone"
-          ? "Demo Universe Earth Generation 3 full expression globe"
-          : "Showroom Generation 3 full expression Earth globe"
+          ? "Demo Universe Earth Generation 3 axis rotation globe"
+          : "Showroom Generation 3 axis rotation Earth globe"
       }, [
         create("img", {
           className: "showroom-generation-2-earth-surface showroom-generation-3-earth-surface",
@@ -211,6 +244,15 @@
     ]);
   }
 
+  function notifyRuntime(status) {
+    if (
+      window.DGBShowroomRuntime &&
+      typeof window.DGBShowroomRuntime.setGeneration3MotionStatus === "function"
+    ) {
+      window.DGBShowroomRuntime.setGeneration3MotionStatus(status || "axis-rotation-depth-mounted");
+    }
+  }
+
   function monitorAssetLoad(mount) {
     if (!mount) return;
 
@@ -228,8 +270,10 @@
 
       if (surfaceLoaded) {
         mount.dataset.generation2ActiveGlobe = "visible";
-        mount.dataset.generation3FullExpression = "active";
-        mount.dataset.renderStatus = "generation-3-full-expression-visible";
+        mount.dataset.generation3FullExpression = "axis-rotation-depth-refinement-active";
+        mount.dataset.generation3RuntimeMotion = "active";
+        mount.dataset.renderStatus = "generation-3-axis-rotation-depth-visible";
+        notifyRuntime("axis-rotation-depth-visible");
       }
     }
 
@@ -255,12 +299,14 @@
     const context = config.context || "parent";
 
     mount.replaceChildren(createGlobeNode(config));
-    mount.dataset.renderStatus = "generation-3-full-expression-mounted";
+    mount.dataset.renderStatus = "generation-3-axis-rotation-depth-mounted";
     mount.dataset.generation2ActiveGlobe = "visible";
-    mount.dataset.generation3FullExpression = "active";
+    mount.dataset.generation3FullExpression = "axis-rotation-depth-refinement-active";
+    mount.dataset.generation3RuntimeMotion = "active";
 
     setDataset(mount, getReceipts(context));
     monitorAssetLoad(mount);
+    notifyRuntime("axis-rotation-depth-mounted");
 
     return mount;
   }
@@ -279,7 +325,9 @@
       cloudsOk: clouds.ok,
       cloudsStatus: clouds.status,
       generation2BaselineGraphics: "achieved",
-      generation3FullExpression: "active",
+      generation3RuntimeMotion: GEN3.runtimeMotion,
+      generation3Axis: GEN3.axis,
+      generation3Rotation: GEN3.rotation,
       generation3VisualTruth: GEN3.visualTruth
     };
   }
@@ -289,6 +337,7 @@
     assets: ASSETS,
     generations: GENERATIONS,
     generation3: GEN3,
+    motion: MOTION,
     create,
     setDataset,
     createGlobeNode,

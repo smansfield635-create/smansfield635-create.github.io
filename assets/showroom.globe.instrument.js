@@ -1,30 +1,33 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GLOBE_INSTRUMENT_CONTEXT_ISOLATED_GEN3_OBJECT_TNT_v1
+  SHOWROOM_GLOBE_INSTRUMENT_CONTROL_PANEL_TAKEOVER_TNT_v1
 
   Renewal duties:
   1. Emit Generation 3 visual classes only.
   2. Split parent-context receipts from standalone-context receipts.
+  3. Keep the orbital/ring scaffold removed.
+  4. Add the control panel as the final accountable interaction layer.
 
-  Preserved:
-  - window.DGBShowroomGlobeInstrument
-  - renderGlobe(mount, options)
-  - writeReceipts(node, context, extra)
-  - parent Showroom compatibility
-  - standalone Demo Universe Earth compatibility
-  - Earth surface / cloud assets
-  - axis, rotation, shadow, depth, terminator, atmosphere, telemetry
+  Control panel owns:
+  - zoom in / zoom out
+  - reset view
+  - pause / resume
+  - manual drag rotation
+  - orientation receipts
+  - interaction state receipts
 
-  Removed from active visual emission:
-  - showroom-generation-2-* DOM classes
-
-  Generation 2 remains as receipt data only.
+  Control panel does not own:
+  - page layout
+  - route rail
+  - Gauges logic
+  - raw Earth assets
+  - global Manor skin
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-3-context-isolated-instrument-v1";
+  const VERSION = "showroom-generation-3-control-panel-takeover-instrument-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -33,15 +36,15 @@
     globeRoute: "/showroom/globe/"
   });
 
-  const GENERATIONS = Object.freeze({
-    generation1: "no-graphic-baseline-preserved",
-    generation2: "baseline-graphics-preserved-as-receipt-only",
-    generation3: "context-isolated-shared-globe-object"
-  });
-
   const CONTEXTS = Object.freeze({
     parent: "parent",
     standalone: "standalone"
+  });
+
+  const GENERATIONS = Object.freeze({
+    generation1: "no-graphic-baseline-preserved-ring-scaffold-removed",
+    generation2: "baseline-graphics-preserved-as-receipt-only",
+    generation3: "context-isolated-control-panel-authorized-globe"
   });
 
   const MOTION = Object.freeze({
@@ -52,25 +55,7 @@
     reducedMotionMode: "static-axis-shadow-preserved"
   });
 
-  const GEN3 = Object.freeze({
-    axis: "active",
-    rotation: "active",
-    runtimeMotion: "active",
-    shadows: "active",
-    depth: "active",
-    colorDiscrimination: "active",
-    moonReflection: "prepared",
-    terminator: "active",
-    atmosphere: "active",
-    telemetry: "active",
-    detail: "active",
-    visualTruth: "pending-user-visual-confirmation",
-    objectPurification: "active",
-    contextIsolation: "active",
-    legacyVisualClassEmission: "removed"
-  });
-
-  const LEGACY_VISUAL_CLASSES = Object.freeze([
+  const FORBIDDEN_VISUAL_CLASSES = Object.freeze([
     "showroom-generation-2-shell",
     "showroom-generation-2-orbit",
     "showroom-generation-2-active-globe",
@@ -79,7 +64,17 @@
     "showroom-generation-2-light",
     "showroom-generation-2-rim",
     "showroom-generation-2-caption",
-    "showroom-generation-2-link"
+    "showroom-generation-2-link",
+    "showroom-generation-3-orbit"
+  ]);
+
+  const FORBIDDEN_NODE_SELECTORS = Object.freeze([
+    ".showroom-generation-2-orbit",
+    ".showroom-generation-3-orbit",
+    "[data-generation-3-orbit]",
+    "[data-generation-1-orbital-scaffold]",
+    "[data-orbital-scaffold]",
+    "[data-ring-scaffold]"
   ]);
 
   function normalizeContext(context) {
@@ -105,11 +100,8 @@
     });
 
     (children || []).forEach(function (child) {
-      if (typeof child === "string") {
-        node.appendChild(document.createTextNode(child));
-      } else if (child) {
-        node.appendChild(child);
-      }
+      if (typeof child === "string") node.appendChild(document.createTextNode(child));
+      else if (child) node.appendChild(child);
     });
 
     return node;
@@ -133,18 +125,49 @@
     });
   }
 
-  function stripLegacyVisualClasses(root) {
+  function stripForbiddenVisualClasses(root) {
     if (!root) return;
 
-    const nodes = [root].concat(Array.from(root.querySelectorAll("*")));
-
-    nodes.forEach(function (node) {
+    [root].concat(Array.from(root.querySelectorAll("*"))).forEach(function (node) {
       if (!node.classList) return;
 
-      LEGACY_VISUAL_CLASSES.forEach(function (className) {
+      FORBIDDEN_VISUAL_CLASSES.forEach(function (className) {
         node.classList.remove(className);
       });
     });
+  }
+
+  function removeForbiddenScaffoldNodes(root) {
+    if (!root) return;
+
+    FORBIDDEN_NODE_SELECTORS.forEach(function (selector) {
+      Array.from(root.querySelectorAll(selector)).forEach(function (node) {
+        node.remove();
+      });
+    });
+  }
+
+  function purifyVisualObject(root) {
+    stripForbiddenVisualClasses(root);
+    removeForbiddenScaffoldNodes(root);
+  }
+
+  function ensureControlStyles() {
+    if (document.getElementById("showroom-globe-control-panel-style")) return;
+
+    const style = create("style", {
+      id: "showroom-globe-control-panel-style",
+      text:
+        ".showroom-generation-3-control-panel{display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem;width:min(760px,100%);margin:.35rem auto 0;position:relative;z-index:80}" +
+        ".showroom-generation-3-control-panel button{border:1px solid rgba(245,199,107,.36);border-radius:999px;padding:.42rem .68rem;color:#f6efe0;background:rgba(4,12,24,.68);font:inherit;font-size:.72rem;font-weight:900;letter-spacing:.04em;cursor:pointer}" +
+        ".showroom-generation-3-control-panel button:hover,.showroom-generation-3-control-panel button:focus-visible{color:#07111f;background:#f5c76b;outline:none}" +
+        ".showroom-generation-3-control-readout{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;width:min(760px,100%);margin:.15rem auto 0;position:relative;z-index:80}" +
+        ".showroom-generation-3-control-readout span{border:1px solid rgba(116,184,255,.22);border-radius:999px;padding:.28rem .48rem;color:rgba(226,238,255,.78);background:rgba(4,12,24,.48);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.68rem;font-weight:800}" +
+        ".showroom-generation-3-active-globe[data-control-dragging='true']{cursor:grabbing}" +
+        ".showroom-generation-3-active-globe{cursor:grab;touch-action:none}"
+    });
+
+    document.head.appendChild(style);
   }
 
   function getContextReceipts(context) {
@@ -157,6 +180,7 @@
       assetInstrument: "showroom-globe",
 
       generation1NoGraphicBaseline: "preserved",
+      generation1RingScaffold: "removed",
       generation2BaselineGraphics: "preserved",
       generation2ActiveGlobe: "preserved",
       generation2ReceiptOnly: "true",
@@ -164,27 +188,32 @@
 
       generation3: GENERATIONS.generation3,
       generation3FullExpression: "axis-rotation-depth-refinement-active",
-      generation3ObjectPurification: GEN3.objectPurification,
-      generation3ContextIsolation: GEN3.contextIsolation,
-      generation3VisualTruth: GEN3.visualTruth,
-      generation3Axis: GEN3.axis,
+      generation3ObjectPurification: "active",
+      generation3ContextIsolation: "active",
+      generation3ControlPanel: "active",
+      generation3VisualTruth: "pending-user-visual-confirmation",
+      generation3Axis: "active",
       generation3AxisTiltDegrees: String(MOTION.axisTiltDegrees),
-      generation3Rotation: GEN3.rotation,
-      generation3RuntimeMotion: GEN3.runtimeMotion,
+      generation3Rotation: "active",
+      generation3RuntimeMotion: "active",
       generation3RotationDirection: MOTION.rotationDirection,
       generation3SurfaceRotationPeriodSeconds: String(MOTION.surfaceRotationPeriodSeconds),
       generation3CloudRotationPeriodSeconds: String(MOTION.cloudRotationPeriodSeconds),
-      generation3Shadows: GEN3.shadows,
-      generation3Depth: GEN3.depth,
-      generation3ColorDiscrimination: GEN3.colorDiscrimination,
-      generation3MoonReflection: GEN3.moonReflection,
-      generation3Terminator: GEN3.terminator,
-      generation3Atmosphere: GEN3.atmosphere,
-      generation3Telemetry: GEN3.telemetry,
-      generation3Detail: GEN3.detail,
+      generation3Shadows: "active",
+      generation3Depth: "active",
+      generation3ColorDiscrimination: "active",
+      generation3MoonReflection: "prepared",
+      generation3Terminator: "active",
+      generation3Atmosphere: "active",
+      generation3Telemetry: "active",
+      generation3Detail: "active",
+      generation3RingScaffold: "removed",
 
-      legacyScaffoldStatus: "visual-class-emission-removed",
+      legacyScaffoldStatus: "removed",
+      ringScaffoldStatus: "removed",
       contextIsolationStatus: "active",
+      controlPanelActive: "true",
+      controlPanelAuthority: "globe-interaction-layer",
       earthSurface: ASSETS.earthSurface,
       earthClouds: ASSETS.earthClouds,
       renderContext: normalized
@@ -216,7 +245,7 @@
 
     if (!node) return;
 
-    stripLegacyVisualClasses(node);
+    purifyVisualObject(node);
 
     if (normalized === CONTEXTS.parent) {
       removeDatasetKeys(node, [
@@ -249,6 +278,14 @@
         contextReceiptMode: "standalone-isolated"
       });
     }
+
+    setDataset(node, {
+      generation1RingScaffold: "removed",
+      generation2VisualClassEmission: "removed",
+      generation3RingScaffold: "removed",
+      ringScaffoldStatus: "removed",
+      controlPanelActive: "true"
+    });
   }
 
   function installContextGuard(mount, context) {
@@ -278,12 +315,20 @@
       attributes: true,
       childList: true,
       subtree: true,
-      attributeFilter: ["class", "data-showroom-globe-route", "data-showroom-parent-route"]
+      attributeFilter: [
+        "class",
+        "data-showroom-globe-route",
+        "data-showroom-parent-route",
+        "data-generation-3-orbit",
+        "data-orbital-scaffold",
+        "data-ring-scaffold"
+      ]
     });
 
-    window.setTimeout(guard, 200);
-    window.setTimeout(guard, 900);
-    window.setTimeout(guard, 1800);
+    window.setTimeout(guard, 100);
+    window.setTimeout(guard, 400);
+    window.setTimeout(guard, 1100);
+    window.setTimeout(guard, 2200);
   }
 
   function createTelemetryNode(context) {
@@ -296,6 +341,7 @@
         "data-generation-3-telemetry": "active",
         "data-generation-3-object-purification": "active",
         "data-generation-3-context-isolation": "active",
+        "data-generation-3-control-panel": "active",
         "aria-label": "Generation 3 telemetry receipt"
       },
       [
@@ -306,7 +352,8 @@
         create("span", { text: "depth=active" }),
         create("span", { text: "terminator=active" }),
         create("span", { text: "atmosphere=active" }),
-        create("span", { text: "object=purified" }),
+        create("span", { text: "ring=removed" }),
+        create("span", { text: "control=active" }),
         create("span", { text: "context=" + normalized })
       ]
     );
@@ -322,14 +369,182 @@
 
   function linkForContext(context) {
     return normalizeContext(context) === CONTEXTS.standalone
-      ? {
-          href: ASSETS.parentRoute,
-          text: "Return to Showroom"
+      ? { href: ASSETS.parentRoute, text: "Return to Showroom" }
+      : { href: ASSETS.globeRoute, text: "Open Demo Universe Earth" };
+  }
+
+  function createControlState(context) {
+    return {
+      context: normalizeContext(context),
+      zoom: 1,
+      minZoom: 0.72,
+      maxZoom: 1.42,
+      manualRotation: 0,
+      paused: false,
+      dragging: false,
+      lastX: 0
+    };
+  }
+
+  function createReadoutSpan(label, value) {
+    return create("span", {
+      text: label + "=" + value
+    });
+  }
+
+  function applyControlState(mount, shell, globe, readout, state) {
+    const rotation = state.manualRotation;
+    const scale = state.zoom.toFixed(2);
+    const paused = state.paused ? "true" : "false";
+
+    if (globe) {
+      globe.style.setProperty("--showroom-control-scale", scale);
+      globe.style.setProperty("--showroom-control-rotation", rotation + "deg");
+      globe.style.transform =
+        "rotate(calc(-1 * var(--showroom-axis-tilt))) rotate(" +
+        rotation +
+        "deg) scale(" +
+        scale +
+        ")";
+      globe.dataset.controlDragging = state.dragging ? "true" : "false";
+    }
+
+    setDataset(mount, {
+      controlPanelActive: "true",
+      controlPanelAuthority: "globe-interaction-layer",
+      controlZoomLevel: scale,
+      controlManualRotationDegrees: String(Math.round(rotation)),
+      controlAutoRotationPaused: paused,
+      controlContext: state.context,
+      interactionAuthority: "globe-control-panel"
+    });
+
+    setDataset(shell, {
+      controlPanelActive: "true",
+      controlZoomLevel: scale,
+      controlManualRotationDegrees: String(Math.round(rotation)),
+      controlAutoRotationPaused: paused
+    });
+
+    if (readout) {
+      readout.replaceChildren(
+        createReadoutSpan("zoom", scale),
+        createReadoutSpan("manual", Math.round(rotation) + "°"),
+        createReadoutSpan("pause", paused),
+        createReadoutSpan("context", state.context)
+      );
+    }
+
+    const runtime = window.DGBShowroomRuntime;
+    if (runtime && typeof runtime.setRotationPhase === "function") {
+      runtime.setRotationPhase(rotation);
+    }
+  }
+
+  function installControlPanel(mount, shell, context) {
+    ensureControlStyles();
+
+    const state = createControlState(context);
+    const globe = shell.querySelector(".showroom-generation-3-active-globe");
+
+    const controls = create(
+      "div",
+      {
+        className: "showroom-generation-3-control-panel",
+        "data-generation-3-control-panel": "active",
+        role: "group",
+        "aria-label": "Globe control panel"
+      },
+      []
+    );
+
+    const readout = create("div", {
+      className: "showroom-generation-3-control-readout",
+      "data-generation-3-control-readout": "active",
+      "aria-label": "Globe control readout"
+    });
+
+    function button(label, action) {
+      const btn = create("button", { type: "button", text: label });
+      btn.addEventListener("click", action);
+      return btn;
+    }
+
+    controls.append(
+      button("Zoom +", function () {
+        state.zoom = Math.min(state.maxZoom, Number((state.zoom + 0.08).toFixed(2)));
+        applyControlState(mount, shell, globe, readout, state);
+      }),
+      button("Zoom −", function () {
+        state.zoom = Math.max(state.minZoom, Number((state.zoom - 0.08).toFixed(2)));
+        applyControlState(mount, shell, globe, readout, state);
+      }),
+      button("Pause", function () {
+        state.paused = true;
+        shell.dataset.controlAutoRotationPaused = "true";
+        if (globe) globe.style.animationPlayState = "paused";
+        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
+          node.style.animationPlayState = "paused";
+        });
+        applyControlState(mount, shell, globe, readout, state);
+      }),
+      button("Resume", function () {
+        state.paused = false;
+        shell.dataset.controlAutoRotationPaused = "false";
+        if (globe) globe.style.animationPlayState = "running";
+        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
+          node.style.animationPlayState = "running";
+        });
+        applyControlState(mount, shell, globe, readout, state);
+      }),
+      button("Reset", function () {
+        state.zoom = 1;
+        state.manualRotation = 0;
+        state.paused = false;
+        state.dragging = false;
+        if (globe) globe.style.animationPlayState = "running";
+        Array.from(shell.querySelectorAll(".showroom-generation-3-earth-surface,.showroom-generation-3-earth-clouds,.showroom-generation-3-atmosphere")).forEach(function (node) {
+          node.style.animationPlayState = "running";
+        });
+        applyControlState(mount, shell, globe, readout, state);
+      })
+    );
+
+    if (globe) {
+      globe.addEventListener("pointerdown", function (event) {
+        state.dragging = true;
+        state.lastX = event.clientX;
+        globe.setPointerCapture(event.pointerId);
+        applyControlState(mount, shell, globe, readout, state);
+      });
+
+      globe.addEventListener("pointermove", function (event) {
+        if (!state.dragging) return;
+        const delta = event.clientX - state.lastX;
+        state.lastX = event.clientX;
+        state.manualRotation = (state.manualRotation + delta * 0.45) % 360;
+        applyControlState(mount, shell, globe, readout, state);
+      });
+
+      globe.addEventListener("pointerup", function (event) {
+        state.dragging = false;
+        try {
+          globe.releasePointerCapture(event.pointerId);
+        } catch (error) {
+          /* no-op */
         }
-      : {
-          href: ASSETS.globeRoute,
-          text: "Open Demo Universe Earth"
-        };
+        applyControlState(mount, shell, globe, readout, state);
+      });
+
+      globe.addEventListener("pointercancel", function () {
+        state.dragging = false;
+        applyControlState(mount, shell, globe, readout, state);
+      });
+    }
+
+    shell.appendChild(controls);
+    shell.appendChild(readout);
+    applyControlState(mount, shell, globe, readout, state);
   }
 
   function createGlobeNode(options) {
@@ -344,6 +559,7 @@
         className: "showroom-generation-3-shell",
         "data-showroom-generation-3-shell": "true",
         "data-generation-1-no-graphic-baseline": "preserved",
+        "data-generation-1-ring-scaffold": "removed",
         "data-generation-2-baseline-graphics": "preserved",
         "data-generation-2-active-globe": "preserved",
         "data-generation-2-receipt-only": "true",
@@ -351,6 +567,8 @@
         "data-generation-3-full-expression": "axis-rotation-depth-refinement-active",
         "data-generation-3-object-purification": "active",
         "data-generation-3-context-isolation": "active",
+        "data-generation-3-control-panel": "active",
+        "data-generation-3-ring-scaffold": "removed",
         "data-generation-3-axis": "active",
         "data-generation-3-rotation": "active",
         "data-generation-3-runtime-motion": "active",
@@ -359,12 +577,6 @@
         "data-context-receipt-mode": context + "-isolated"
       },
       [
-        create("div", {
-          className: "showroom-generation-3-orbit",
-          "data-generation-3-orbit": "subordinate-support",
-          "aria-hidden": "true"
-        }),
-
         create("span", {
           className: "showroom-generation-3-axis-line",
           "data-generation-3-axis-line": "active",
@@ -415,45 +627,14 @@
               "aria-hidden": "true"
             }),
 
-            create("span", {
-              className: "showroom-generation-3-ocean-land-color",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-cloud-depth",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-light",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-terminator",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-night-depth",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-moon-reflection",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-atmosphere",
-              "aria-hidden": "true"
-            }),
-
-            create("span", {
-              className: "showroom-generation-3-rim",
-              "aria-hidden": "true"
-            })
+            create("span", { className: "showroom-generation-3-ocean-land-color", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-cloud-depth", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-light", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-terminator", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-night-depth", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-moon-reflection", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-atmosphere", "aria-hidden": "true" }),
+            create("span", { className: "showroom-generation-3-rim", "aria-hidden": "true" })
           ]
         ),
 
@@ -475,7 +656,7 @@
     );
 
     setDataset(shell, getContextReceipts(context));
-    stripLegacyVisualClasses(shell);
+    purifyVisualObject(shell);
 
     return shell;
   }
@@ -484,11 +665,11 @@
     const runtime = window.DGBShowroomRuntime;
 
     if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
-      runtime.setGeneration3MotionStatus(status || "generation-3-context-isolated-mounted");
+      runtime.setGeneration3MotionStatus(status || "generation-3-control-panel-active");
     }
 
     if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
-      runtime.setActiveGlobeStatus(status || "generation-3-context-isolated-mounted");
+      runtime.setActiveGlobeStatus(status || "generation-3-control-panel-active");
     }
   }
 
@@ -510,9 +691,9 @@
 
       if (surfaceLoaded) {
         setDataset(mount, getContextReceipts(normalized));
-        mount.dataset.renderStatus = "generation-3-context-isolated-visible";
-        mount.dataset.showroomGlobePlacement = "generation-3-context-isolated";
-        notifyRuntime("generation-3-context-isolated-visible");
+        mount.dataset.renderStatus = "generation-3-control-panel-active";
+        mount.dataset.showroomGlobePlacement = "generation-3-control-panel-takeover";
+        notifyRuntime("generation-3-control-panel-active");
       }
 
       enforceContextIsolation(mount, normalized);
@@ -540,17 +721,19 @@
 
     const config = options || {};
     const context = normalizeContext(config.context);
+    const shell = createGlobeNode(config);
 
-    mount.replaceChildren(createGlobeNode(config));
+    mount.replaceChildren(shell);
 
     setDataset(mount, getContextReceipts(context));
-    mount.dataset.renderStatus = "generation-3-context-isolated-mounted";
-    mount.dataset.showroomGlobePlacement = "generation-3-context-isolated";
+    mount.dataset.renderStatus = "generation-3-control-panel-mounted";
+    mount.dataset.showroomGlobePlacement = "generation-3-control-panel-takeover";
 
+    installControlPanel(mount, shell, context);
     enforceContextIsolation(mount, context);
     installContextGuard(mount, context);
     monitorAssetLoad(mount, context);
-    notifyRuntime("generation-3-context-isolated-mounted");
+    notifyRuntime("generation-3-control-panel-mounted");
 
     return mount;
   }
@@ -572,17 +755,20 @@
       cloudsOk: clouds.ok,
       cloudsStatus: clouds.status,
       generation1NoGraphicBaseline: "preserved",
+      generation1RingScaffold: "removed",
       generation2BaselineGraphics: "preserved",
       generation2ActiveGlobe: "preserved",
       generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
       generation3: GENERATIONS.generation3,
-      generation3RuntimeMotion: GEN3.runtimeMotion,
-      generation3Axis: GEN3.axis,
-      generation3Rotation: GEN3.rotation,
-      generation3ObjectPurification: GEN3.objectPurification,
-      generation3ContextIsolation: GEN3.contextIsolation,
-      generation3VisualTruth: GEN3.visualTruth
+      generation3RuntimeMotion: "active",
+      generation3Axis: "active",
+      generation3Rotation: "active",
+      generation3ObjectPurification: "active",
+      generation3ContextIsolation: "active",
+      generation3RingScaffold: "removed",
+      generation3ControlPanel: "active",
+      generation3VisualTruth: "pending-user-visual-confirmation"
     };
   }
 
@@ -591,11 +777,12 @@
     assets: ASSETS,
     generations: GENERATIONS,
     contexts: CONTEXTS,
-    generation3: GEN3,
     motion: MOTION,
     create: create,
     setDataset: setDataset,
-    stripLegacyVisualClasses: stripLegacyVisualClasses,
+    purifyVisualObject: purifyVisualObject,
+    stripForbiddenVisualClasses: stripForbiddenVisualClasses,
+    removeForbiddenScaffoldNodes: removeForbiddenScaffoldNodes,
     getContextReceipts: getContextReceipts,
     enforceContextIsolation: enforceContextIsolation,
     createGlobeNode: createGlobeNode,

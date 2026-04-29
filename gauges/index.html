@@ -1,31 +1,1124 @@
-Skip to Showroom content
-H5 · Showroom · Public Proof Room
+Replace /gauges/index.html only.
 
-Showroom
-The public proof surface for the estate’s visual and functional direction.
+This version turns Gauges into a live Showroom globe diagnostic console. It checks /showroom/, /showroom/index.js, Earth assets, iframe-rendered parent state, mount existence, image/canvas presence, and likely next fix.
 
-Compass
-Products
-ARCHCOIN
-Gauges
-Upper Room
-ROOM 05 / 16
+<!-- /gauges/index.html -->
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+  data-chamber="H6_GAUGES"
+  data-generation="gauges-showroom-globe-diagnostic-v1"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gauges · Showroom Globe Diagnostic · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Dexter Lab Measurement Key diagnostic console for Showroom Generation 2 active globe restoration."
+  />
 
-Earth-centered public proof surface
-This chamber holds the visible proof layer. It keeps the route rail live, the content readable, and the visual system subordinate to source truth.
+  <style>
+    :root {
+      --void: #050914;
+      --navy: #081426;
+      --panel: rgba(12, 24, 42, 0.82);
+      --panel-strong: rgba(7, 15, 29, 0.96);
+      --gold: #f5c76b;
+      --blue: #74b8ff;
+      --green: #78d99b;
+      --red: #ff817a;
+      --text: #f6efe0;
+      --muted: #b9c2cf;
+      --line: rgba(245, 199, 107, 0.28);
+      --blue-line: rgba(116, 184, 255, 0.24);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+      --radius: 28px;
+    }
 
-Render proof
-The visible surface mounts through the preserved Showroom globe subsystem without exposing raw code or breaking the route rail.
+    * {
+      box-sizing: border-box;
+    }
 
-Route proof
-Compass, Products, ARCHCOIN, Gauges, and Upper Room remain available from this chamber.
+    html {
+      min-height: 100%;
+      background: var(--void);
+    }
 
-Audit proof
-Stable markers identify this file as the Showroom chamber inside the 16-chamber lattice.
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.12), transparent 22rem),
+        linear-gradient(180deg, #02050c 0%, var(--void) 44%, #080d18 100%);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
 
-Receipts
-SHOWROOM_CHAMBER=HOUSE_PART_05
-ROUTE=/showroom/
-VISUAL_PROOF=EARTH_CENTERED_SHOWROOM
-CODE_MODE=GENERATION_3_SURFACE_REFINEMENT
-GLOBE_SUBSYSTEM=PRESERVED_NOT_REWRITTEN
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.86) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(245, 199, 107, 0.75) 0 1px, transparent 1.4px);
+      background-position: 0 0, 48px 76px;
+      background-size: 130px 130px, 180px 180px;
+      opacity: 0.16;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 20;
+      transform: translateY(-150%);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      color: #080d18;
+      background: var(--gold);
+      font-weight: 800;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .gauges-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 0.15rem;
+      text-decoration: none;
+    }
+
+    .brand strong {
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .site-nav,
+    .route-rail,
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .site-nav a,
+    .route-rail a,
+    .action-row a,
+    .action-row button {
+      border: 1px solid rgba(245, 199, 107, 0.42);
+      border-radius: 999px;
+      padding: 0.72rem 1rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .site-nav a[aria-current="page"],
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .route-rail a:hover,
+    .route-rail a:focus-visible,
+    .action-row a:hover,
+    .action-row a:focus-visible,
+    .action-row button:hover,
+    .action-row button:focus-visible {
+      color: #080d18;
+      background: var(--gold);
+      outline: none;
+    }
+
+    .hero,
+    .diagnostic-panel,
+    .result-panel,
+    .next-panel,
+    .receipt-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(12, 24, 42, 0.88), rgba(8, 20, 38, 0.68)),
+        radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.13), transparent 18rem);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: clamp(24px, 4vw, 48px);
+    }
+
+    .kicker,
+    .receipt-line {
+      margin: 0 0 0.85rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    li {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.9rem, 7vw, 6.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 1.05rem;
+    }
+
+    .lede,
+    .panel-copy,
+    .receipt-copy,
+    .small-copy {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .lede {
+      max-width: 980px;
+      margin: 1.2rem 0 0;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+
+    .action-row {
+      margin-top: 1.5rem;
+    }
+
+    .diagnostic-panel,
+    .result-panel,
+    .next-panel,
+    .receipt-panel {
+      margin-top: 24px;
+      padding: clamp(22px, 3.5vw, 36px);
+    }
+
+    .diagnostic-grid,
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 1.25rem;
+    }
+
+    .check-card,
+    .next-card {
+      border: 1px solid var(--blue-line);
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .check-card[data-status="pass"] {
+      border-color: rgba(120, 217, 155, 0.44);
+    }
+
+    .check-card[data-status="fail"] {
+      border-color: rgba(255, 129, 122, 0.44);
+    }
+
+    .check-card[data-status="hold"] {
+      border-color: rgba(245, 199, 107, 0.44);
+    }
+
+    .check-card b {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
+    }
+
+    .check-card[data-status="pass"] b {
+      color: var(--green);
+    }
+
+    .check-card[data-status="fail"] b {
+      color: var(--red);
+    }
+
+    .check-card[data-status="hold"] b {
+      color: var(--gold);
+    }
+
+    .check-card code,
+    .next-card code,
+    .receipt-list span {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .check-card pre {
+      overflow: auto;
+      max-height: 160px;
+      border-radius: 14px;
+      padding: 0.85rem;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.26);
+      white-space: pre-wrap;
+    }
+
+    .token-list {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .token-list li {
+      border-left: 3px solid var(--gold);
+      padding: 0.55rem 0.75rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .next-panel {
+      border-color: rgba(120, 217, 155, 0.42);
+      background:
+        linear-gradient(135deg, rgba(8, 30, 26, 0.86), rgba(8, 20, 38, 0.72)),
+        radial-gradient(circle at 78% 18%, rgba(120, 217, 155, 0.14), transparent 18rem);
+    }
+
+    .next-card strong {
+      color: var(--green);
+    }
+
+    .diagnostic-frame {
+      width: 1px;
+      height: 1px;
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .receipt-panel {
+      background: var(--panel-strong);
+    }
+
+    .receipt-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    .receipt-list span,
+    .receipt-list a {
+      border: 1px solid rgba(245, 199, 107, 0.25);
+      border-radius: 999px;
+      padding: 0.48rem 0.7rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (max-width: 920px) {
+      .diagnostic-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .gauges-shell {
+        width: min(100%, calc(100% - 24px));
+        padding-top: 24px;
+      }
+
+      .hero,
+      .diagnostic-panel,
+      .result-panel,
+      .next-panel,
+      .receipt-panel {
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="gauges"
+>
+  <a class="skip-link" href="#gauges-main">Skip to Gauges content</a>
+
+  <div id="gauges-root" class="gauges-shell" data-proof-marker="H6_GAUGES">
+    <header class="topbar" aria-label="Gauges site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Dexter Lab · Measurement Key</span>
+      </a>
+
+      <nav class="site-nav nav-links" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Demo Universe Earth</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="gauges-main">
+      <section class="hero" aria-labelledby="gauges-title">
+        <p class="kicker">H6 · Gauges · Showroom Globe Diagnostic</p>
+        <h1 id="gauges-title">Measurement Key.</h1>
+        <p class="lede">
+          This console now focuses on the active failure: Showroom Generation 1 layout is established,
+          but Generation 2 active globe is not visible on the parent Showroom page.
+        </p>
+
+        <div class="action-row">
+          <button type="button" id="run-diagnostic-button">Run Showroom globe diagnostic</button>
+          <a href="/showroom/">Inspect Showroom</a>
+          <a href="/showroom/index.js">Inspect served index.js</a>
+          <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
+        </div>
+      </section>
+
+      <section class="next-panel" aria-labelledby="next-title">
+        <p class="kicker">Immediate Diagnostic Target</p>
+        <h2 id="next-title">Find why `/showroom/index.js` is not producing a visible parent globe.</h2>
+        <p class="panel-copy">
+          Gauges will now check the served Showroom HTML, served parent controller, Earth assets,
+          parent iframe DOM, mount visibility, image presence, and likely first break.
+        </p>
+
+        <div class="diagnostic-grid">
+          <article class="next-card">
+            <h3>Active target</h3>
+            <ul class="token-list">
+              <li>/showroom/index.js</li>
+              <li>/showroom/ parent DOM</li>
+              <li>/assets/earth/earth_surface_2048.jpg</li>
+              <li>/assets/earth/earth_clouds_2048.jpg</li>
+            </ul>
+          </article>
+
+          <article class="next-card">
+            <h3>Protected paths</h3>
+            <ul class="token-list">
+              <li>/showroom/globe/index.js</li>
+              <li>/assets/earth/* write operations</li>
+              <li>/render/*</li>
+              <li>/products/</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="diagnostic-panel" aria-labelledby="diagnostic-title">
+        <p class="kicker">Live Diagnostic</p>
+        <h2 id="diagnostic-title">Showroom active globe check.</h2>
+        <p id="diagnostic-summary" class="panel-copy">
+          Waiting to run diagnostic.
+        </p>
+
+        <div id="diagnostic-results" class="result-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="result-panel" aria-labelledby="break-title">
+        <p class="kicker">First Controlling Break</p>
+        <h2 id="break-title">Current result.</h2>
+        <p id="first-break" class="panel-copy">
+          Not measured yet.
+        </p>
+
+        <div id="repair-action" class="diagnostic-grid"></div>
+      </section>
+
+      <section class="receipt-panel" aria-labelledby="receipt-title">
+        <p class="receipt-line">Calibration receipt</p>
+        <h2 id="receipt-title">Showroom globe diagnostic receipt.</h2>
+        <p class="receipt-copy">
+          VERSION: GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1. Generation 1 layout is established.
+          Generation 2 is active parent globe visibility. Generation 3 remains blocked until Generation 2 passes.
+        </p>
+
+        <div class="receipt-list">
+          <a href="/">Compass</a>
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/">Demo Universe Earth</a>
+          <a href="/gauges/">Gauges</a>
+          <span>route-exists</span>
+          <span>manor-skin</span>
+          <span>house-class</span>
+          <span>estate=rich-manor-and-estate</span>
+          <span>house-field=true</span>
+          <span>gauges-truth=live-authority</span>
+          <span>construct-class=house</span>
+          <span>house-part=gauges</span>
+          <span>H6_GAUGES</span>
+          <span>generation-1-layout-established</span>
+          <span>generation-2-active-globe-target</span>
+          <span>generation-3-blocked</span>
+          <span>GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1</span>
+        </div>
+      </section>
+
+      <iframe
+        id="showroom-diagnostic-frame"
+        class="diagnostic-frame"
+        src="about:blank"
+        title="Showroom diagnostic frame"
+      ></iframe>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const VERSION = "GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1";
+
+      const TARGETS = {
+        showroom: "/showroom/",
+        indexJs: "/showroom/index.js",
+        earthSurface: "/assets/earth/earth_surface_2048.jpg",
+        earthClouds: "/assets/earth/earth_clouds_2048.jpg"
+      };
+
+      const state = {
+        checks: [],
+        firstBreak: "Not measured yet."
+      };
+
+      function el(id) {
+        return document.getElementById(id);
+      }
+
+      function create(tag, attrs, children) {
+        const node = document.createElement(tag);
+
+        Object.entries(attrs || {}).forEach(function ([key, value]) {
+          if (value === null || value === undefined || value === false) return;
+          if (key === "className") node.className = value;
+          else if (key === "text") node.textContent = value;
+          else node.setAttribute(key, String(value));
+        });
+
+        (children || []).forEach(function (child) {
+          if (typeof child === "string") node.appendChild(document.createTextNode(child));
+          else if (child) node.appendChild(child);
+        });
+
+        return node;
+      }
+
+      function addCheck(name, status, detail, evidence) {
+        state.checks.push({
+          name: name,
+          status: status,
+          detail: detail,
+          evidence: evidence || ""
+        });
+
+        renderChecks();
+      }
+
+      function renderChecks() {
+        const results = el("diagnostic-results");
+        if (!results) return;
+
+        results.replaceChildren();
+
+        state.checks.forEach(function (check) {
+          results.appendChild(
+            create("article", { className: "check-card", "data-status": check.status }, [
+              create("b", { text: check.status.toUpperCase() + " · " + check.name }),
+              create("p", { className: "small-copy", text: check.detail }),
+              check.evidence
+                ? create("pre", { text: check.evidence.slice(0, 1200) })
+                : null
+            ])
+          );
+        });
+      }
+
+      function setSummary(text) {
+        const node = el("diagnostic-summary");
+        if (node) node.textContent = text;
+      }
+
+      function setFirstBreak(text) {
+        state.firstBreak = text;
+
+        const node = el("first-break");
+        if (node) node.textContent = text;
+
+        const root = el("gauges-root");
+        if (root) root.dataset.firstControllingBreak = text;
+      }
+
+      function setRepairAction(title, items) {
+        const node = el("repair-action");
+        if (!node) return;
+
+        node.replaceChildren(
+          create("article", { className: "next-card" }, [
+            create("h3", { text: title }),
+            create(
+              "ul",
+              { className: "token-list" },
+              items.map(function (item) {
+                return create("li", { text: item });
+              })
+            )
+          ])
+        );
+      }
+
+      async function fetchText(url) {
+        const response = await fetch(url + "?v=" + Date.now(), {
+          cache: "no-store"
+        });
+
+        const text = await response.text();
+
+        return {
+          ok: response.ok,
+          status: response.status,
+          text: text,
+          url: url
+        };
+      }
+
+      async function fetchAsset(url) {
+        const response = await fetch(url + "?v=" + Date.now(), {
+          cache: "no-store"
+        });
+
+        return {
+          ok: response.ok,
+          status: response.status,
+          contentType: response.headers.get("content-type") || "",
+          url: url
+        };
+      }
+
+      function testJsParse(source) {
+        try {
+          new Function(source);
+          return {
+            ok: true,
+            error: ""
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            error: error && error.message ? error.message : String(error)
+          };
+        }
+      }
+
+      function detectLineCommentInertRisk(source) {
+        const firstLine = String(source || "").split(/\r?\n/)[0] || "";
+        const trimmed = firstLine.trim();
+
+        return (
+          trimmed.startsWith("//") &&
+          (
+            trimmed.includes("(function") ||
+            trimmed.includes("const VERSION") ||
+            trimmed.includes("function qs") ||
+            trimmed.includes("renderGeneration2Globe")
+          )
+        );
+      }
+
+      function inspectShowroomHtml(source) {
+        return {
+          hasIndexScript:
+            source.includes('src="/showroom/index.js"') ||
+            source.includes("src='/showroom/index.js'") ||
+            source.includes("src=/showroom/index.js"),
+          hasMount: source.includes('id="showroom-globe-mount"') || source.includes("id='showroom-globe-mount'"),
+          hasH5: source.includes("H5_SHOWROOM"),
+          hasGlobeRoute: source.includes('href="/showroom/globe/"') || source.includes("href='/showroom/globe/'"),
+          hasReceipts: source.includes("LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1")
+        };
+      }
+
+      function inspectIndexJs(source) {
+        return {
+          inertRisk: detectLineCommentInertRisk(source),
+          parse: testJsParse(source),
+          hasIife: source.includes("(function ()") || source.includes("(function()"),
+          hasGeneration2: source.includes("generation-2") || source.includes("Generation 2"),
+          hasSurfaceAsset: source.includes("earth_surface_2048.jpg"),
+          hasCloudAsset: source.includes("earth_clouds_2048.jpg"),
+          hasMountId: source.includes("showroom-globe-mount"),
+          hasRenderFunction:
+            source.includes("renderGeneration2Globe") ||
+            source.includes("renderVisibleGlobe") ||
+            source.includes("restoreGeneration2")
+        };
+      }
+
+      function loadShowroomFrame() {
+        return new Promise(function (resolve) {
+          const frame = el("showroom-diagnostic-frame");
+          if (!frame) {
+            resolve({ ok: false, error: "Diagnostic iframe missing." });
+            return;
+          }
+
+          let finished = false;
+
+          function finish(result) {
+            if (finished) return;
+            finished = true;
+            resolve(result);
+          }
+
+          frame.onload = function () {
+            window.setTimeout(function () {
+              try {
+                const doc = frame.contentDocument;
+                if (!doc) {
+                  finish({ ok: false, error: "Unable to access same-origin iframe document." });
+                  return;
+                }
+
+                const mount = doc.getElementById("showroom-globe-mount");
+                const root = doc.getElementById("showroom-root");
+
+                const surfaceImg = doc.querySelector(".showroom-generation-2-earth-surface");
+                const cloudImg = doc.querySelector(".showroom-generation-2-earth-clouds");
+                const activeGlobe = doc.querySelector(".showroom-generation-2-active-globe");
+                const canvas = mount ? mount.querySelector("canvas, [data-dgb-earth-canvas]") : null;
+                const iframe = mount ? mount.querySelector("iframe") : null;
+
+                let mountVisible = false;
+                let globeVisible = false;
+                let imageLoaded = false;
+                let computed = "";
+
+                if (mount) {
+                  const style = frame.contentWindow.getComputedStyle(mount);
+                  const rect = mount.getBoundingClientRect();
+
+                  mountVisible =
+                    style.display !== "none" &&
+                    style.visibility !== "hidden" &&
+                    Number(style.opacity || 1) !== 0 &&
+                    rect.width > 20 &&
+                    rect.height > 20;
+
+                  computed =
+                    "display=" + style.display +
+                    " visibility=" + style.visibility +
+                    " opacity=" + style.opacity +
+                    " width=" + Math.round(rect.width) +
+                    " height=" + Math.round(rect.height);
+                }
+
+                if (surfaceImg) {
+                  imageLoaded = surfaceImg.complete === true && surfaceImg.naturalWidth > 0;
+                }
+
+                globeVisible = Boolean(
+                  (activeGlobe && mountVisible) ||
+                  (surfaceImg && imageLoaded && mountVisible) ||
+                  (canvas && mountVisible) ||
+                  (iframe && mountVisible)
+                );
+
+                finish({
+                  ok: true,
+                  rootDataset: root ? JSON.stringify(root.dataset) : "",
+                  hasMount: Boolean(mount),
+                  mountVisible: mountVisible,
+                  computed: computed,
+                  hasActiveGlobe: Boolean(activeGlobe),
+                  hasSurfaceImg: Boolean(surfaceImg),
+                  hasCloudImg: Boolean(cloudImg),
+                  surfaceImgLoaded: imageLoaded,
+                  hasCanvas: Boolean(canvas),
+                  hasIframe: Boolean(iframe),
+                  globeVisible: globeVisible
+                });
+              } catch (error) {
+                finish({
+                  ok: false,
+                  error: error && error.message ? error.message : String(error)
+                });
+              }
+            }, 2600);
+          };
+
+          frame.src = TARGETS.showroom + "?diagnostic=" + Date.now();
+
+          window.setTimeout(function () {
+            finish({ ok: false, error: "Timed out waiting for Showroom diagnostic iframe." });
+          }, 6500);
+        });
+      }
+
+      function chooseFirstBreak(showroomHtml, indexJs, earthSurface, earthClouds, frameResult) {
+        if (!showroomHtml.ok) {
+          return {
+            breakText: "RESULT_A: /showroom/ is not fetchable. Restore parent route before JS work.",
+            action: [
+              "Target /showroom/index.html route availability.",
+              "Do not touch globe assets first."
+            ]
+          };
+        }
+
+        const html = inspectShowroomHtml(showroomHtml.text);
+
+        if (!html.hasIndexScript) {
+          return {
+            breakText: "RESULT_C: /showroom/ does not load /showroom/index.js. Add or correct the parent controller script tag.",
+            action: [
+              "Patch /showroom/index.html only.",
+              "Add <script src=\"/showroom/index.js\" defer></script> or the correct module/classic script form.",
+              "Then reload /showroom/."
+            ]
+          };
+        }
+
+        if (!indexJs.ok) {
+          return {
+            breakText: "RESULT_A: /showroom/index.js is not fetchable. Deploy or rename the served parent controller.",
+            action: [
+              "Target /showroom/index.js path/deploy.",
+              "Confirm GitHub path and live served path match.",
+              "Do not touch /showroom/globe/."
+            ]
+          };
+        }
+
+        const js = inspectIndexJs(indexJs.text);
+
+        if (js.inertRisk) {
+          return {
+            breakText: "RESULT_B: /showroom/index.js is likely execution-inert from a leading // single-line comment consuming the controller body.",
+            action: [
+              "Replace /showroom/index.js only.",
+              "Use a block comment header or no header.",
+              "Ensure the executable IIFE starts on its own executable line.",
+              "Then reload /showroom/."
+            ]
+          };
+        }
+
+        if (!js.parse.ok) {
+          return {
+            breakText: "RESULT_B: /showroom/index.js has a JavaScript parse error: " + js.parse.error,
+            action: [
+              "Replace /showroom/index.js only.",
+              "Fix the parse error before changing layout or assets.",
+              "Then reload /showroom/."
+            ]
+          };
+        }
+
+        if (!js.hasMountId || !js.hasRenderFunction) {
+          return {
+            breakText: "RESULT_C: /showroom/index.js parses but lacks required mount/render restoration logic.",
+            action: [
+              "Patch /showroom/index.js only.",
+              "Ensure it finds or creates #showroom-globe-mount.",
+              "Ensure it renders visible Generation 2 globe content."
+            ]
+          };
+        }
+
+        if (!earthSurface.ok || !earthClouds.ok) {
+          return {
+            breakText: "RESULT_D: Earth asset load is failing.",
+            action: [
+              "Confirm /assets/earth/earth_surface_2048.jpg and /assets/earth/earth_clouds_2048.jpg are deployed.",
+              "Do not rewrite /showroom/globe/index.js.",
+              "Do not generate replacement images."
+            ]
+          };
+        }
+
+        if (!frameResult.ok) {
+          return {
+            breakText: "RESULT_C: Parent iframe inspection failed, so browser-side console or DOM inspection is required: " + frameResult.error,
+            action: [
+              "Open /showroom/ in browser devtools.",
+              "Check Console for /showroom/index.js errors.",
+              "Check Elements for #showroom-globe-mount."
+            ]
+          };
+        }
+
+        if (!frameResult.hasMount) {
+          return {
+            breakText: "RESULT_C: Parent DOM does not contain #showroom-globe-mount after load.",
+            action: [
+              "Patch /showroom/index.js only if it should create the mount.",
+              "Patch /showroom/index.html only if the mount must be static.",
+              "Do not touch Gauges."
+            ]
+          };
+        }
+
+        if (!frameResult.mountVisible) {
+          return {
+            breakText: "RESULT_C: #showroom-globe-mount exists but is not visible. CSS is suppressing the mount.",
+            action: [
+              "Patch /showroom/showroom.css only.",
+              "Remove hiding, zero height, opacity, clipping, or offscreen transform affecting #showroom-globe-mount.",
+              "Do not change /showroom/index.js."
+            ]
+          };
+        }
+
+        if (!frameResult.globeVisible) {
+          return {
+            breakText: "RESULT_C: #showroom-globe-mount is visible, but no active globe image/canvas/iframe is present or loaded. Parent render logic is not inserting visible globe content.",
+            action: [
+              "Patch /showroom/index.js only.",
+              "Render a visible Generation 2 globe from existing Earth assets.",
+              "Do not work on Generation 3 shadows yet."
+            ]
+          };
+        }
+
+        return {
+          breakText: "PASS: Generation 2 active globe appears visible in the diagnostic frame.",
+          action: [
+            "Open /showroom/ manually and verify visually.",
+            "If visible, proceed to Generation 3 shadow/detail contract.",
+            "Then update Gauges from diagnostic mode to G2 pass receipt."
+          ]
+        };
+      }
+
+      async function runDiagnostic() {
+        state.checks = [];
+        renderChecks();
+        setSummary("Running Showroom globe diagnostic...");
+        setFirstBreak("Measuring...");
+        setRepairAction("Pending", ["Diagnostic running."]);
+
+        let showroomHtml = { ok: false, status: 0, text: "" };
+        let indexJs = { ok: false, status: 0, text: "" };
+        let earthSurface = { ok: false, status: 0, contentType: "" };
+        let earthClouds = { ok: false, status: 0, contentType: "" };
+        let frameResult = { ok: false, error: "Not run." };
+
+        try {
+          showroomHtml = await fetchText(TARGETS.showroom);
+          const html = inspectShowroomHtml(showroomHtml.text);
+
+          addCheck(
+            "C1 /showroom/ served HTML",
+            showroomHtml.ok ? "pass" : "fail",
+            "HTTP " + showroomHtml.status + ". Script=" + html.hasIndexScript + ", mount=" + html.hasMount + ", H5=" + html.hasH5 + ", globe route=" + html.hasGlobeRoute + ".",
+            showroomHtml.text.slice(0, 900)
+          );
+        } catch (error) {
+          addCheck("C1 /showroom/ served HTML", "fail", String(error.message || error), "");
+        }
+
+        try {
+          indexJs = await fetchText(TARGETS.indexJs);
+          const js = inspectIndexJs(indexJs.text);
+
+          addCheck(
+            "C2 /showroom/index.js served body",
+            indexJs.ok ? "pass" : "fail",
+            "HTTP " + indexJs.status + ". IIFE=" + js.hasIife + ", G2=" + js.hasGeneration2 + ", mountId=" + js.hasMountId + ", renderFn=" + js.hasRenderFunction + ".",
+            indexJs.text.slice(0, 900)
+          );
+
+          addCheck(
+            "C3 /showroom/index.js parse/execution risk",
+            js.inertRisk || !js.parse.ok ? "fail" : "pass",
+            js.inertRisk
+              ? "Leading // inert-risk detected on executable controller line."
+              : js.parse.ok
+                ? "No parse error detected by Function parser."
+                : "Parse error: " + js.parse.error,
+            js.parse.error || ""
+          );
+        } catch (error) {
+          addCheck("C2/C3 /showroom/index.js", "fail", String(error.message || error), "");
+        }
+
+        try {
+          earthSurface = await fetchAsset(TARGETS.earthSurface);
+          addCheck(
+            "C4 Earth surface asset",
+            earthSurface.ok ? "pass" : "fail",
+            "HTTP " + earthSurface.status + ". Type=" + earthSurface.contentType + ".",
+            TARGETS.earthSurface
+          );
+        } catch (error) {
+          addCheck("C4 Earth surface asset", "fail", String(error.message || error), TARGETS.earthSurface);
+        }
+
+        try {
+          earthClouds = await fetchAsset(TARGETS.earthClouds);
+          addCheck(
+            "C5 Earth clouds asset",
+            earthClouds.ok ? "pass" : "fail",
+            "HTTP " + earthClouds.status + ". Type=" + earthClouds.contentType + ".",
+            TARGETS.earthClouds
+          );
+        } catch (error) {
+          addCheck("C5 Earth clouds asset", "fail", String(error.message || error), TARGETS.earthClouds);
+        }
+
+        frameResult = await loadShowroomFrame();
+
+        addCheck(
+          "C6 Parent iframe DOM paint",
+          frameResult.ok && frameResult.globeVisible ? "pass" : frameResult.ok ? "fail" : "hold",
+          frameResult.ok
+            ? "mount=" + frameResult.hasMount +
+              ", mountVisible=" + frameResult.mountVisible +
+              ", activeGlobe=" + frameResult.hasActiveGlobe +
+              ", surfaceImg=" + frameResult.hasSurfaceImg +
+              ", imageLoaded=" + frameResult.surfaceImgLoaded +
+              ", canvas=" + frameResult.hasCanvas +
+              ", iframe=" + frameResult.hasIframe +
+              ". " + frameResult.computed
+            : frameResult.error,
+          frameResult.rootDataset || ""
+        );
+
+        const selected = chooseFirstBreak(showroomHtml, indexJs, earthSurface, earthClouds, frameResult);
+
+        setSummary("Diagnostic complete. First controlling break selected below.");
+        setFirstBreak(selected.breakText);
+        setRepairAction("Next repair action", selected.action);
+
+        const root = el("gauges-root");
+        if (root) {
+          root.dataset.diagnosticVersion = VERSION;
+          root.dataset.diagnosticComplete = "true";
+          root.dataset.firstBreak = selected.breakText;
+        }
+      }
+
+      function bind() {
+        const button = el("run-diagnostic-button");
+        if (button) {
+          button.addEventListener("click", runDiagnostic);
+        }
+
+        window.setTimeout(runDiagnostic, 250);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bind, { once: true });
+      } else {
+        bind();
+      }
+
+      window.DGBGaugesShowroomGlobeDiagnostic = Object.freeze({
+        version: VERSION,
+        runDiagnostic: runDiagnostic,
+        state: state
+      });
+    })();
+  </script>
+</body>
+</html>
+
+Post-write check:
+
+UPDATED_FILE=/gauges/index.html
+
+EXPECTED_RESULT=[
+Gauges now runs a live diagnostic against /showroom/,
+Gauges checks served /showroom/index.js,
+Gauges detects leading // inert controller risk,
+Gauges detects JS parse failure if present,
+Gauges checks Earth asset availability,
+Gauges inspects parent iframe DOM for #showroom-globe-mount,
+Gauges reports whether the mount exists, is visible, and contains image/canvas/iframe content,
+Gauges selects RESULT_A_B_C_OR_D with the exact next repair action
+]
+
+DO_NOT_TOUCH=[
+/showroom/globe/index.js,
+/assets/earth/*,
+/render/*,
+/products/*
+]

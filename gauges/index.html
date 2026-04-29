@@ -16,6 +16,8 @@
   data-showroom-visible-render-health="measured"
   data-moon-diagnostic-meter="active"
   data-earth-readability-meter="active"
+  data-earth-color-meter="active"
+  data-g14-earth-color-meter="active"
   data-compass-g2-meter="active"
   data-g15-compass-meter="active"
   data-showroom-card-meter="active"
@@ -30,7 +32,7 @@
 
   <meta
     name="description"
-    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, Showroom visible render, Moon diagnostic construct, Earth readability, Compass Generation 2, Showroom card sync, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
+    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, visible Showroom render, Moon diagnostic construct, Earth readability, Earth color discrimination, Compass Generation 2, Showroom card sync, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
   />
 
   <style>
@@ -414,8 +416,8 @@
       <p>
         The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
         This lab measures route health, render health, visible Showroom render, Moon diagnostic construct,
-        Earth readability, Compass Generation 2 control-surface state, Showroom card sync, pressure,
-        acid/base balance, barometric pressure, seismic shock, axis/orientation, 256-state completion,
+        Earth readability, Earth color discrimination, Compass Generation 2 control-surface state, Showroom card sync,
+        pressure, acid/base balance, barometric pressure, seismic shock, axis/orientation, 256-state completion,
         visual truth, and universe-build readiness.
       </p>
 
@@ -449,14 +451,23 @@
       <p>
         The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.
         G12 measures the Moon diagnostic construct as diagnostic-first-pass. G13 measures whether Earth remains
-        shadowed while still readable. G15 measures whether the Compass Generation 2 control surface and mobile
-        hardening contract landed. G16 measures whether the Showroom Lane B card sync and mobile layout hardening
-        contract landed.
+        shadowed while still readable. G14 measures whether Earth is color-literate rather than merely readable.
+        G15 measures whether the Compass Generation 2 control surface and mobile hardening contract landed.
+        G16 measures whether the Showroom Lane B card sync and mobile layout hardening contract landed.
       </p>
       <p>
         IFF rule: a visual condition is constrained if and only if it blocks construct, delivery,
         expression, or comprehension without preserving a lawful correction path.
       </p>
+    </section>
+
+    <section class="section">
+      <h2>G14 · Earth Color Discrimination Evidence</h2>
+      <p>
+        G14 separates Earth readability from Earth color literacy. G13 can pass while G14 still fails if the full
+        globe cannot prove ocean, land, cloud, warm sunlight, cool reflected moonlight, and shadow-color separation.
+      </p>
+      <div class="evidence" data-earth-color-evidence></div>
     </section>
 
     <section class="section">
@@ -548,6 +559,8 @@
       <span>showroom-visible-render-health=measured</span>
       <span>moon-diagnostic-meter=active</span>
       <span>earth-readability-meter=active</span>
+      <span>earth-color-meter=active</span>
+      <span>g14-earth-color-meter=active</span>
       <span>compass-g2-meter=active</span>
       <span>g15-compass-meter=active</span>
       <span>showroom-card-meter=active</span>
@@ -560,6 +573,7 @@
       <span>DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1</span>
       <span>GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1</span>
       <span>GAUGES_EARTH_READABILITY_METER_TNT_v1</span>
+      <span>GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1</span>
       <span>GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1</span>
       <span>GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1</span>
     </section>
@@ -656,6 +670,48 @@
         "earth-reflected-moonlight",
         "earth-morning-edge",
         "earth-breakfast-clouds"
+      ];
+
+      var EARTH_COLOR_CONTRACT_TOKENS = [
+        "data-earth-color-discrimination=\"tuned\"",
+        "data-earth-color-iff-standard=\"active\"",
+        "data-earth-color-visual-acceptance=\"pending\""
+      ];
+
+      var EARTH_COLOR_DISCRIMINATION_TOKENS = [
+        "data-ocean-color-readable=\"true\"",
+        "data-land-color-readable=\"true\"",
+        "data-cloud-color-readable=\"true\""
+      ];
+
+      var EARTH_LIGHT_COLOR_TOKENS = [
+        "data-warm-cool-light-separated=\"true\"",
+        "data-reflected-moonlight=\"active\"",
+        "data-sun-shadow=\"active\""
+      ];
+
+      var EARTH_SHADOW_COLOR_TOKENS = [
+        "data-terminator-preserved=\"true\"",
+        "data-morning-edge=\"active\"",
+        "data-darkness-standard=\"shadow-with-readable-surface\""
+      ];
+
+      var EARTH_COLOR_STRUCTURE_TOKENS = [
+        "earth-texture",
+        "earth-color-separation",
+        "earth-clouds",
+        "earth-daylight",
+        "earth-morning-edge",
+        "earth-terminator",
+        "earth-night",
+        "earth-reflected-moonlight",
+        "earth-atmosphere",
+        "earth-rim"
+      ];
+
+      var EARTH_COLOR_RECEIPT_TOKENS = [
+        "LANE_A_FULL_GLOBE_COLOR_DISCRIMINATION_TNT_v1",
+        "DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1"
       ];
 
       var COMPASS_G2_TOKENS = [
@@ -1074,6 +1130,52 @@
         };
       }
 
+      async function checkEarthColorDiscrimination() {
+        var fetched = await fetchText("/showroom/globe/");
+        var text = fetched.text || "";
+
+        var contractMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_CONTRACT_TOKENS) : EARTH_COLOR_CONTRACT_TOKENS.slice();
+        var discriminationMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_DISCRIMINATION_TOKENS) : EARTH_COLOR_DISCRIMINATION_TOKENS.slice();
+        var lightMissing = fetched.ok ? missingTokens(text, EARTH_LIGHT_COLOR_TOKENS) : EARTH_LIGHT_COLOR_TOKENS.slice();
+        var shadowMissing = fetched.ok ? missingTokens(text, EARTH_SHADOW_COLOR_TOKENS) : EARTH_SHADOW_COLOR_TOKENS.slice();
+        var structureMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_STRUCTURE_TOKENS) : EARTH_COLOR_STRUCTURE_TOKENS.slice();
+        var receiptMissing = fetched.ok ? missingTokens(text, EARTH_COLOR_RECEIPT_TOKENS) : EARTH_COLOR_RECEIPT_TOKENS.slice();
+
+        var contractScore = fetched.ok ? scoreGroup(EARTH_COLOR_CONTRACT_TOKENS, contractMissing, 25) : 0;
+        var discriminationScore = fetched.ok ? scoreGroup(EARTH_COLOR_DISCRIMINATION_TOKENS, discriminationMissing, 20) : 0;
+        var lightScore = fetched.ok ? scoreGroup(EARTH_LIGHT_COLOR_TOKENS, lightMissing, 15) : 0;
+        var shadowScore = fetched.ok ? scoreGroup(EARTH_SHADOW_COLOR_TOKENS, shadowMissing, 15) : 0;
+        var structureScore = fetched.ok ? scoreGroup(EARTH_COLOR_STRUCTURE_TOKENS, structureMissing, 15) : 0;
+        var receiptScore = fetched.ok ? scoreGroup(EARTH_COLOR_RECEIPT_TOKENS, receiptMissing, 10) : 0;
+
+        var score = clamp(contractScore + discriminationScore + lightScore + shadowScore + structureScore + receiptScore, 0, 100);
+
+        var missing = []
+          .concat(labelMissing("COLOR_CONTRACT", contractMissing))
+          .concat(labelMissing("DISCRIMINATION", discriminationMissing))
+          .concat(labelMissing("LIGHT", lightMissing))
+          .concat(labelMissing("SHADOW", shadowMissing))
+          .concat(labelMissing("STRUCTURE", structureMissing))
+          .concat(labelMissing("RECEIPT", receiptMissing));
+
+        return {
+          id: "G14_EARTH_COLOR_DISCRIMINATION",
+          label: "Earth Color Discrimination Meter",
+          url: "/showroom/globe/",
+          score: score,
+          http: fetched.status,
+          missing: missing,
+          components: [
+            ["Source color contract", contractScore],
+            ["Ocean / land / cloud discrimination", discriminationScore],
+            ["Warm sunlight / cool moonlight separation", lightScore],
+            ["Terminator and shadow preservation", shadowScore],
+            ["Layer structure evidence", structureScore],
+            ["Receipt / IFF / pending visual acceptance", receiptScore]
+          ]
+        };
+      }
+
       async function checkCompassG2() {
         var fetched = await fetchText("/");
         var requiredMissing = fetched.ok ? missingTokens(fetched.text, COMPASS_G2_TOKENS) : COMPASS_G2_TOKENS.slice();
@@ -1197,6 +1299,7 @@
           var showroomVisible = await checkShowroomVisible();
           var moon = await checkMoonDiagnostic();
           var earthReadability = await checkEarthReadability();
+          var earthColor = await checkEarthColorDiscrimination();
           var compassG2 = await checkCompassG2();
           var showroomLaneB = await checkShowroomLaneB();
 
@@ -1207,6 +1310,7 @@
           var visibleScore = showroomVisible.score;
           var moonScore = moon.score;
           var earthReadabilityScore = earthReadability.score;
+          var earthColorScore = earthColor.score;
           var compassG2Score = compassG2.score;
           var showroomLaneBScore = showroomLaneB.score;
 
@@ -1215,10 +1319,10 @@
           var generationScore = calculateGenerationScore(compass.text);
 
           var shadowScore = render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50;
-          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore + shadowScore) / 7);
-          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore + productScore + planetScore) / 11);
+          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore + shadowScore) / 8);
+          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore + productScore + planetScore) / 12);
 
-          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability, compassG2, showroomLaneB]);
+          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability, earthColor, compassG2, showroomLaneB]);
           var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
           var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
           var seats = Math.round(256 * overall / 100);
@@ -1228,6 +1332,7 @@
           var visiblePressureValue = 100 - visibleScore;
           var moonPressureValue = 100 - moonScore;
           var earthReadabilityPressureValue = 100 - earthReadabilityScore;
+          var earthColorPressureValue = 100 - earthColorScore;
           var compassPressureValue = 100 - compassG2Score;
           var showroomCardPressureValue = 100 - showroomLaneBScore;
           var productPressureValue = 100 - productScore;
@@ -1241,17 +1346,18 @@
             visiblePressureValue +
             moonPressureValue +
             earthReadabilityPressureValue +
+            earthColorPressureValue +
             compassPressureValue +
             showroomCardPressureValue +
             productPressureValue +
             planetPressureValue +
             corePressureValue +
             generationPressureValue
-          ) / 11);
+          ) / 12);
 
           var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
           var acid = clamp(Math.round((barometer + seismograph + generationPressureValue) / 3), 0, 100);
-          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore + compassG2Score + showroomLaneBScore) / 9), 0, 100);
+          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore + earthColorScore + compassG2Score + showroomLaneBScore) / 10), 0, 100);
           var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
 
           renderSummary([
@@ -1263,6 +1369,7 @@
             ["Showroom visible", visibleScore, "visible render"],
             ["Moon Diagnostic", moonScore, "diagnostic Moon"],
             ["Earth Readability", earthReadabilityScore, "shadow readable"],
+            ["Earth Color", earthColorScore, "color literacy"],
             ["Compass G2", compassG2Score, "visual control"],
             ["Showroom Card", showroomLaneBScore, "Lane B sync"],
             ["Products", productScore, "product route health"],
@@ -1272,15 +1379,16 @@
           renderInstruments([
             ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
             ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
-            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, Compass G2, Showroom Card, product, planet, core, and generation lanes."],
+            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, Earth Color, Compass G2, Showroom Card, product, planet, core, and generation lanes."],
             ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
             ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
             ["Light / Shadow Meter", shadowScore, "Shadow contract is measured; visual acceptance remains separately bounded."],
             ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
             ["Earth Readability Meter", earthReadabilityScore, "Measures whether Earth is shadowed while still carrying readable surface expression."],
+            ["Earth Color Discrimination Meter", earthColorScore, "Measures whether full Demo Universe Earth preserves ocean, land, cloud, warm sunlight, cool reflected moonlight, and shadow color distinction."],
             ["Compass G2 Meter", compassG2Score, "Measures whether the Compass Generation 2 visual control surface and mobile hardening contract landed."],
             ["Showroom Card Sync Meter", showroomLaneBScore, "Measures whether the Showroom card Earth color sync and mobile layout hardening contract landed."],
-            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, Earth readability, Compass G2 source truth, and Showroom Lane B source truth."]
+            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, Earth readability, Earth color, Compass G2 source truth, and Showroom Lane B source truth."]
           ]);
 
           renderPressureCards([
@@ -1289,6 +1397,7 @@
             ["Visible Render Pressure", visiblePressureValue, "Showroom lane"],
             ["Moon Pressure", moonPressureValue, "Moon diagnostic lane"],
             ["Earth Readability Pressure", earthReadabilityPressureValue, "Earth visual lane"],
+            ["Earth Color Pressure", earthColorPressureValue, "Earth color lane"],
             ["Compass G2 Pressure", compassPressureValue, "Compass control lane"],
             ["Showroom Card Pressure", showroomCardPressureValue, "Showroom card lane"],
             ["Product Pressure", productPressureValue, "product lane"],
@@ -1298,6 +1407,7 @@
           ]);
 
           renderPH(ph, acid, base);
+          renderEvidence("[data-earth-color-evidence]", [earthColor], true);
           renderEvidence("[data-showroom-lane-b-evidence]", [showroomLaneB], true);
           renderEvidence("[data-compass-g2-evidence]", [compassG2], true);
           renderEvidence("[data-earth-readability-evidence]", [earthReadability], true);
@@ -1316,6 +1426,7 @@
             visible: visibleScore,
             moon: moonScore,
             earthReadability: earthReadabilityScore,
+            earthColor: earthColorScore,
             compassG2: compassG2Score,
             showroomLaneB: showroomLaneBScore,
             products: productScore,
@@ -1404,15 +1515,16 @@
 
       function renderReceipt(scores) {
         safeText("[data-receipt]",
-          "VERSION: GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\n" +
-          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1 + GAUGES_EARTH_READABILITY_METER_TNT_v1 + GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1\n" +
+          "VERSION: GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1\n" +
+          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1 + GAUGES_EARTH_READABILITY_METER_TNT_v1 + GAUGES_G15_COMPASS_G2_VISUAL_CONTROL_SURFACE_METER_TNT_v1 + GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\n" +
           "CADILLAC KEY: master authority key.\n" +
           "MEASUREMENT KEY: operating proof key.\n" +
-          "NEW CONTRACT: G16 · Showroom Card Earth Sync and Mobile Layout Meter measures Lane B source truth and delivery.\n" +
+          "NEW CONTRACT: G14 · Earth Color Discrimination Meter measures full-globe Earth color literacy source truth.\n" +
+          "EARTH COLOR READ: color discrimination measured, visual acceptance remains screenshot-bound.\n" +
           "SHOWROOM READ: Lane B card sync measured, visual acceptance remains screenshot-bound.\n" +
           "COMPASS READ: Generation 2 control surface measured, visual acceptance remains screenshot-bound.\n" +
           "MOON READ: diagnostic-first-pass, not final Moon law.\n" +
-          "EARTH READ: tuned readability, visual acceptance pending.\n\n" +
+          "EARTH READABILITY READ: tuned readability, visual acceptance pending.\n\n" +
           "AFTER:\n" +
           "Overall=" + scores.overall + "\n" +
           "House=" + scores.house + "\n" +
@@ -1422,6 +1534,7 @@
           "ShowroomVisible=" + scores.visible + "\n" +
           "MoonDiagnostic=" + scores.moon + "\n" +
           "EarthReadability=" + scores.earthReadability + "\n" +
+          "EarthColor=" + scores.earthColor + "\n" +
           "CompassG2=" + scores.compassG2 + "\n" +
           "ShowroomLaneB=" + scores.showroomLaneB + "\n" +
           "Products=" + scores.products + "\n" +
@@ -1431,7 +1544,7 @@
           "pH=" + Number(scores.ph).toFixed(1) + "\n" +
           "Acid=" + scores.acid + "\n" +
           "Base=" + scores.base + "\n\n" +
-          "IFF ROOT: Showroom Lane B is constrained if and only if the Showroom route passes but the source does not preserve Earth card sync, globe handoff, mobile layout hardening, route preservation, or Lane B receipt truth."
+          "IFF ROOT: Earth color is constrained if and only if the full globe route passes readability but cannot preserve ocean, land, cloud, warm sunlight, cool reflected moonlight, shadow, terminator, layer structure, and pending visual-acceptance truth."
         );
       }
 
@@ -1440,12 +1553,13 @@
 
         safeSet("[data-pressure-grid]", '<article class="pressure-card"><strong>HOLD</strong><span>Display completion interrupted</span><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-ph-readout]", '<article class="instrument"><strong>HOLD</strong><span>Acid/Base Meter</span><p>Calibration did not complete. Repair only the Gauges display path.</p></article>');
+        safeSet("[data-earth-color-evidence]", '<article class="evidence-card"><h3>G14 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-showroom-lane-b-evidence]", '<article class="evidence-card"><h3>G16 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-compass-g2-evidence]", '<article class="evidence-card"><h3>G15 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-earth-readability-evidence]", '<article class="evidence-card"><h3>G13 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-moon-evidence]", '<article class="evidence-card"><h3>G12 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-showroom-evidence]", '<article class="evidence-card"><h3>G11 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeText("[data-receipt]", "VERSION: GAUGES_G16_SHOWROOM_CARD_EARTH_SYNC_AND_MOBILE_LAYOUT_METER_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
+        safeText("[data-receipt]", "VERSION: GAUGES_G14_EARTH_COLOR_DISCRIMINATION_METER_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
       }
 
       document.querySelector("[data-run-calibration]").addEventListener("click", runCalibration);

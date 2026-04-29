@@ -1,32 +1,30 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GLOBE_INSTRUMENT_GEN3_OBJECT_PURIFICATION_TNT_v1
+  SHOWROOM_GLOBE_INSTRUMENT_CONTEXT_ISOLATED_GEN3_OBJECT_TNT_v1
 
-  Purpose:
-  - Emit one clean Generation 3 shared globe object.
-  - Preserve Generation 2 as data/receipt baseline only.
-  - Remove Generation 2 visual class emission from the active DOM object.
-  - Preserve parent Showroom and standalone Demo Universe compatibility.
-  - Preserve public API used by Showroom, runtime, render bridge, standalone route, and Gauges.
+  Renewal duties:
+  1. Emit Generation 3 visual classes only.
+  2. Split parent-context receipts from standalone-context receipts.
 
-  Owns:
-  - shared globe object factory
-  - Earth surface/cloud image placement
-  - Gen 3 axis, shadow, depth, terminator, atmosphere, telemetry, and receipts
+  Preserved:
+  - window.DGBShowroomGlobeInstrument
+  - renderGlobe(mount, options)
+  - writeReceipts(node, context, extra)
+  - parent Showroom compatibility
+  - standalone Demo Universe Earth compatibility
+  - Earth surface / cloud assets
+  - axis, rotation, shadow, depth, terminator, atmosphere, telemetry
 
-  Does not own:
-  - page layout
-  - route rail
-  - Showroom copy
-  - Gauges logic
-  - global Manor CSS
-  - raw Earth media files
+  Removed from active visual emission:
+  - showroom-generation-2-* DOM classes
+
+  Generation 2 remains as receipt data only.
 */
 
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-3-object-purified-instrument-v1";
+  const VERSION = "showroom-generation-3-context-isolated-instrument-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -38,7 +36,12 @@
   const GENERATIONS = Object.freeze({
     generation1: "no-graphic-baseline-preserved",
     generation2: "baseline-graphics-preserved-as-receipt-only",
-    generation3: "shared-globe-object-purified"
+    generation3: "context-isolated-shared-globe-object"
+  });
+
+  const CONTEXTS = Object.freeze({
+    parent: "parent",
+    standalone: "standalone"
   });
 
   const MOTION = Object.freeze({
@@ -63,8 +66,25 @@
     detail: "active",
     visualTruth: "pending-user-visual-confirmation",
     objectPurification: "active",
+    contextIsolation: "active",
     legacyVisualClassEmission: "removed"
   });
+
+  const LEGACY_VISUAL_CLASSES = Object.freeze([
+    "showroom-generation-2-shell",
+    "showroom-generation-2-orbit",
+    "showroom-generation-2-active-globe",
+    "showroom-generation-2-earth-surface",
+    "showroom-generation-2-earth-clouds",
+    "showroom-generation-2-light",
+    "showroom-generation-2-rim",
+    "showroom-generation-2-caption",
+    "showroom-generation-2-link"
+  ]);
+
+  function normalizeContext(context) {
+    return context === CONTEXTS.standalone ? CONTEXTS.standalone : CONTEXTS.parent;
+  }
 
   function create(tag, attrs, children) {
     const node = document.createElement(tag);
@@ -103,8 +123,34 @@
     });
   }
 
-  function getReceipts(context) {
-    return {
+  function removeDatasetKeys(node, keys) {
+    if (!node) return;
+
+    keys.forEach(function (key) {
+      if (Object.prototype.hasOwnProperty.call(node.dataset, key)) {
+        delete node.dataset[key];
+      }
+    });
+  }
+
+  function stripLegacyVisualClasses(root) {
+    if (!root) return;
+
+    const nodes = [root].concat(Array.from(root.querySelectorAll("*")));
+
+    nodes.forEach(function (node) {
+      if (!node.classList) return;
+
+      LEGACY_VISUAL_CLASSES.forEach(function (className) {
+        node.classList.remove(className);
+      });
+    });
+  }
+
+  function getContextReceipts(context) {
+    const normalized = normalizeContext(context);
+
+    const base = {
       showroomGlobeInstrument: VERSION,
       worldKernelCompatible: "true",
       worldPlanetEngineCompatible: "true",
@@ -113,12 +159,13 @@
       generation1NoGraphicBaseline: "preserved",
       generation2BaselineGraphics: "preserved",
       generation2ActiveGlobe: "preserved",
-      generation2VisualClassEmission: "removed",
       generation2ReceiptOnly: "true",
+      generation2VisualClassEmission: "removed",
 
       generation3: GENERATIONS.generation3,
       generation3FullExpression: "axis-rotation-depth-refinement-active",
       generation3ObjectPurification: GEN3.objectPurification,
+      generation3ContextIsolation: GEN3.contextIsolation,
       generation3VisualTruth: GEN3.visualTruth,
       generation3Axis: GEN3.axis,
       generation3AxisTiltDegrees: String(MOTION.axisTiltDegrees),
@@ -137,21 +184,118 @@
       generation3Detail: GEN3.detail,
 
       legacyScaffoldStatus: "visual-class-emission-removed",
+      contextIsolationStatus: "active",
       earthSurface: ASSETS.earthSurface,
       earthClouds: ASSETS.earthClouds,
-      showroomParentRoute: ASSETS.parentRoute,
-      showroomGlobeRoute: ASSETS.globeRoute,
-      renderContext: context || "unassigned"
+      renderContext: normalized
     };
+
+    if (normalized === CONTEXTS.standalone) {
+      return Object.assign(base, {
+        activeRouteRole: "demo-universe-earth",
+        standaloneRole: "demo-universe-earth",
+        showroomGlobeRoute: ASSETS.globeRoute,
+        parentRouteAvailable: ASSETS.parentRoute,
+        contextReceiptMode: "standalone-isolated",
+        contextCaption: "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
+      });
+    }
+
+    return Object.assign(base, {
+      activeRouteRole: "showroom-proof-surface",
+      parentRole: "showroom-proof-surface",
+      showroomParentRoute: ASSETS.parentRoute,
+      globeRouteAvailable: ASSETS.globeRoute,
+      contextReceiptMode: "parent-isolated",
+      contextCaption: "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE"
+    });
+  }
+
+  function enforceContextIsolation(node, context) {
+    const normalized = normalizeContext(context);
+
+    if (!node) return;
+
+    stripLegacyVisualClasses(node);
+
+    if (normalized === CONTEXTS.parent) {
+      removeDatasetKeys(node, [
+        "showroomGlobeRoute",
+        "standaloneRole",
+        "demoUniverseEarthBoot",
+        "generation2StandaloneGlobe"
+      ]);
+
+      setDataset(node, {
+        renderContext: "parent",
+        parentRole: "showroom-proof-surface",
+        showroomParentRoute: ASSETS.parentRoute,
+        globeRouteAvailable: ASSETS.globeRoute,
+        contextReceiptMode: "parent-isolated"
+      });
+    } else {
+      removeDatasetKeys(node, [
+        "showroomParentRoute",
+        "parentRole",
+        "showroomParentBoot",
+        "showroomParentRenderBridge"
+      ]);
+
+      setDataset(node, {
+        renderContext: "standalone",
+        standaloneRole: "demo-universe-earth",
+        showroomGlobeRoute: ASSETS.globeRoute,
+        parentRouteAvailable: ASSETS.parentRoute,
+        contextReceiptMode: "standalone-isolated"
+      });
+    }
+  }
+
+  function installContextGuard(mount, context) {
+    const normalized = normalizeContext(context);
+
+    enforceContextIsolation(mount, normalized);
+
+    if (!mount || mount.dataset.contextGuardInstalled === VERSION + ":" + normalized) return;
+
+    mount.dataset.contextGuardInstalled = VERSION + ":" + normalized;
+
+    let locked = false;
+
+    const guard = function () {
+      if (locked) return;
+      locked = true;
+
+      window.requestAnimationFrame(function () {
+        enforceContextIsolation(mount, normalized);
+        locked = false;
+      });
+    };
+
+    const observer = new MutationObserver(guard);
+
+    observer.observe(mount, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      attributeFilter: ["class", "data-showroom-globe-route", "data-showroom-parent-route"]
+    });
+
+    window.setTimeout(guard, 200);
+    window.setTimeout(guard, 900);
+    window.setTimeout(guard, 1800);
   }
 
   function createTelemetryNode(context) {
+    const normalized = normalizeContext(context);
+
     return create(
       "div",
       {
         className: "showroom-generation-3-telemetry",
         "data-generation-3-telemetry": "active",
         "data-generation-3-object-purification": "active",
+        "data-generation-3-context-isolation": "active",
         "aria-label": "Generation 3 telemetry receipt"
       },
       [
@@ -163,21 +307,38 @@
         create("span", { text: "terminator=active" }),
         create("span", { text: "atmosphere=active" }),
         create("span", { text: "object=purified" }),
-        create("span", { text: "context=" + (context || "parent") })
+        create("span", { text: "context=" + normalized })
       ]
     );
   }
 
+  function captionForContext(context, override) {
+    if (override) return override;
+
+    return normalizeContext(context) === CONTEXTS.standalone
+      ? "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
+      : "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE";
+  }
+
+  function linkForContext(context) {
+    return normalizeContext(context) === CONTEXTS.standalone
+      ? {
+          href: ASSETS.parentRoute,
+          text: "Return to Showroom"
+        }
+      : {
+          href: ASSETS.globeRoute,
+          text: "Open Demo Universe Earth"
+        };
+  }
+
   function createGlobeNode(options) {
     const config = options || {};
-    const context = config.context || "parent";
-    const caption =
-      config.caption ||
-      (context === "standalone"
-        ? "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE"
-        : "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE");
+    const context = normalizeContext(config.context);
+    const caption = captionForContext(context, config.caption);
+    const link = linkForContext(context);
 
-    return create(
+    const shell = create(
       "section",
       {
         className: "showroom-generation-3-shell",
@@ -185,14 +346,17 @@
         "data-generation-1-no-graphic-baseline": "preserved",
         "data-generation-2-baseline-graphics": "preserved",
         "data-generation-2-active-globe": "preserved",
+        "data-generation-2-receipt-only": "true",
         "data-generation-2-visual-class-emission": "removed",
         "data-generation-3-full-expression": "axis-rotation-depth-refinement-active",
         "data-generation-3-object-purification": "active",
+        "data-generation-3-context-isolation": "active",
         "data-generation-3-axis": "active",
         "data-generation-3-rotation": "active",
         "data-generation-3-runtime-motion": "active",
         "data-axis-tilt-degrees": String(MOTION.axisTiltDegrees),
-        "data-render-context": context
+        "data-render-context": context,
+        "data-context-receipt-mode": context + "-isolated"
       },
       [
         create("div", {
@@ -224,8 +388,9 @@
             role: "img",
             "data-generation-3-active-globe": "true",
             "data-generation-3-object-purification": "active",
+            "data-generation-3-context-isolation": "active",
             "aria-label":
-              context === "standalone"
+              context === CONTEXTS.standalone
                 ? "Demo Universe Earth Generation 3 axis rotation globe"
                 : "Showroom Generation 3 axis rotation Earth globe"
           },
@@ -295,6 +460,7 @@
         create("p", {
           className: "showroom-generation-3-caption",
           "data-generation-3-caption": "active",
+          "data-generation-3-context-isolation": "active",
           text: caption
         }),
 
@@ -302,36 +468,34 @@
 
         create("a", {
           className: "showroom-generation-3-link",
-          href: context === "standalone" ? ASSETS.parentRoute : ASSETS.globeRoute,
-          text: context === "standalone" ? "Return to Showroom" : "Open Demo Universe Earth"
+          href: link.href,
+          text: link.text
         })
       ]
     );
+
+    setDataset(shell, getContextReceipts(context));
+    stripLegacyVisualClasses(shell);
+
+    return shell;
   }
 
   function notifyRuntime(status) {
-    if (
-      window.DGBShowroomRuntime &&
-      typeof window.DGBShowroomRuntime.setGeneration3MotionStatus === "function"
-    ) {
-      window.DGBShowroomRuntime.setGeneration3MotionStatus(
-        status || "generation-3-object-purified-mounted"
-      );
+    const runtime = window.DGBShowroomRuntime;
+
+    if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
+      runtime.setGeneration3MotionStatus(status || "generation-3-context-isolated-mounted");
     }
 
-    if (
-      window.DGBShowroomRuntime &&
-      typeof window.DGBShowroomRuntime.setActiveGlobeStatus === "function"
-    ) {
-      window.DGBShowroomRuntime.setActiveGlobeStatus(
-        status || "generation-3-object-purified-mounted"
-      );
+    if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
+      runtime.setActiveGlobeStatus(status || "generation-3-context-isolated-mounted");
     }
   }
 
-  function monitorAssetLoad(mount) {
+  function monitorAssetLoad(mount, context) {
     if (!mount) return;
 
+    const normalized = normalizeContext(context);
     const surface = mount.querySelector(".showroom-generation-3-earth-surface");
     const clouds = mount.querySelector(".showroom-generation-3-earth-clouds");
 
@@ -345,17 +509,13 @@
       mount.dataset.cloudImgLoaded = cloudsLoaded ? "true" : "false";
 
       if (surfaceLoaded) {
-        mount.dataset.generation1NoGraphicBaseline = "preserved";
-        mount.dataset.generation2BaselineGraphics = "preserved";
-        mount.dataset.generation2ActiveGlobe = "preserved";
-        mount.dataset.generation2VisualClassEmission = "removed";
-        mount.dataset.generation3 = GENERATIONS.generation3;
-        mount.dataset.generation3FullExpression = "axis-rotation-depth-refinement-active";
-        mount.dataset.generation3ObjectPurification = "active";
-        mount.dataset.generation3RuntimeMotion = "active";
-        mount.dataset.renderStatus = "generation-3-object-purified-visible";
-        notifyRuntime("generation-3-object-purified-visible");
+        setDataset(mount, getContextReceipts(normalized));
+        mount.dataset.renderStatus = "generation-3-context-isolated-visible";
+        mount.dataset.showroomGlobePlacement = "generation-3-context-isolated";
+        notifyRuntime("generation-3-context-isolated-visible");
       }
+
+      enforceContextIsolation(mount, normalized);
     }
 
     if (surface) {
@@ -379,30 +539,27 @@
     }
 
     const config = options || {};
-    const context = config.context || "parent";
+    const context = normalizeContext(config.context);
 
     mount.replaceChildren(createGlobeNode(config));
 
-    mount.dataset.renderStatus = "generation-3-object-purified-mounted";
-    mount.dataset.generation1NoGraphicBaseline = "preserved";
-    mount.dataset.generation2BaselineGraphics = "preserved";
-    mount.dataset.generation2ActiveGlobe = "preserved";
-    mount.dataset.generation2VisualClassEmission = "removed";
-    mount.dataset.generation3 = GENERATIONS.generation3;
-    mount.dataset.generation3FullExpression = "axis-rotation-depth-refinement-active";
-    mount.dataset.generation3ObjectPurification = "active";
-    mount.dataset.generation3RuntimeMotion = "active";
-    mount.dataset.showroomGlobePlacement = "generation-3-object-purified";
+    setDataset(mount, getContextReceipts(context));
+    mount.dataset.renderStatus = "generation-3-context-isolated-mounted";
+    mount.dataset.showroomGlobePlacement = "generation-3-context-isolated";
 
-    setDataset(mount, getReceipts(context));
-    monitorAssetLoad(mount);
-    notifyRuntime("generation-3-object-purified-mounted");
+    enforceContextIsolation(mount, context);
+    installContextGuard(mount, context);
+    monitorAssetLoad(mount, context);
+    notifyRuntime("generation-3-context-isolated-mounted");
 
     return mount;
   }
 
   function writeReceipts(node, context, extra) {
-    setDataset(node, Object.assign({}, getReceipts(context), extra || {}));
+    const normalized = normalizeContext(context);
+
+    setDataset(node, Object.assign({}, getContextReceipts(normalized), extra || {}));
+    enforceContextIsolation(node, normalized);
   }
 
   async function verifyAssets() {
@@ -417,12 +574,14 @@
       generation1NoGraphicBaseline: "preserved",
       generation2BaselineGraphics: "preserved",
       generation2ActiveGlobe: "preserved",
+      generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
       generation3: GENERATIONS.generation3,
       generation3RuntimeMotion: GEN3.runtimeMotion,
       generation3Axis: GEN3.axis,
       generation3Rotation: GEN3.rotation,
       generation3ObjectPurification: GEN3.objectPurification,
+      generation3ContextIsolation: GEN3.contextIsolation,
       generation3VisualTruth: GEN3.visualTruth
     };
   }
@@ -431,10 +590,14 @@
     version: VERSION,
     assets: ASSETS,
     generations: GENERATIONS,
+    contexts: CONTEXTS,
     generation3: GEN3,
     motion: MOTION,
     create: create,
     setDataset: setDataset,
+    stripLegacyVisualClasses: stripLegacyVisualClasses,
+    getContextReceipts: getContextReceipts,
+    enforceContextIsolation: enforceContextIsolation,
     createGlobeNode: createGlobeNode,
     renderGlobe: renderGlobe,
     writeReceipts: writeReceipts,

@@ -8,15 +8,15 @@
   data-construct-class="house"
   data-house-part="gauges"
   data-chamber="H6_GAUGES"
-  data-generation="gauges-h6-source-classifier-update-v1"
+  data-generation="gauges-h6-generation-4-speed-authority-drift-readiness-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Source Classifier · Diamond Gate Bridge</title>
+  <title>Gauges · Generation 4 Drift Readiness · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Safe Gauges source-classifier update for Showroom, Demo Universe, realm separation, asset instrument, runtime, route receipts, and consumer receipt writers."
+    content="Gauges reads Generation 4 speed authority, route consumption, consumer drift, and drift-calculation readiness for the Showroom globe system."
   />
 
   <style>
@@ -173,7 +173,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2.4rem, 6vw, 5.6rem);
+      font-size: clamp(2.4rem, 6vw, 5.4rem);
       line-height: 0.94;
       letter-spacing: -0.065em;
     }
@@ -183,12 +183,6 @@
       font-size: clamp(1.55rem, 4vw, 3rem);
       line-height: 1;
       letter-spacing: -0.045em;
-    }
-
-    h3 {
-      margin: 0;
-      color: var(--gold);
-      font-size: 1.05rem;
     }
 
     .lede,
@@ -254,7 +248,7 @@
 
     pre {
       overflow: auto;
-      max-height: 260px;
+      max-height: 320px;
       border-radius: 14px;
       padding: 0.85rem;
       color: var(--muted);
@@ -300,13 +294,13 @@
     id="gauges-root"
     class="shell"
     data-proof-marker="H6_GAUGES"
-    data-gauges-role="source-classifier-diagnostic-room"
+    data-gauges-role="generation-4-speed-authority-drift-readiness"
     data-safe-mode="true"
   >
     <header class="topbar">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Gauges · Source Classifier</span>
+        <span>Gauges · Gen 4 Drift Readiness</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -322,16 +316,16 @@
 
     <main id="gauges-main">
       <section class="hero">
-        <p class="kicker">H6 · Gauges · Source Classifier Update</p>
+        <p class="kicker">H6 · Gauges · Generation 4 Drift Readiness</p>
         <h1>Gauges Diagnostic Instrument Room</h1>
         <p class="lede">
-          Gauges now separates active emission from safety-list mentions. It reads source files only,
-          identifies stale route receipts, stale consumer writers, current instrument status, current
-          runtime status, and the minimum lawful renewal target.
+          Gauges now reads the Generation 4 speed-authority contract, route consumption,
+          consumer-writer drift, and readiness for final drift calculation. It does not inspect iframe DOM
+          and does not mutate Showroom, Demo Universe, runtime, assets, or routes.
         </p>
 
         <div class="actions">
-          <button id="run" type="button">Run classifier diagnostic</button>
+          <button id="run" type="button">Run Gen 4 diagnostic</button>
           <a href="/showroom/">Inspect Showroom</a>
           <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
           <a href="/assets/showroom.globe.instrument.js">Asset instrument</a>
@@ -340,9 +334,9 @@
       </section>
 
       <section class="panel">
-        <p class="kicker">Classifier Ceiling Read</p>
+        <p class="kicker">Gen 4 Ceiling Read</p>
         <h2>Current source field.</h2>
-        <p id="summary" class="copy">Classifier loaded. Diagnostic has not run yet.</p>
+        <p id="summary" class="copy">Gen 4 diagnostic loaded. Diagnostic has not run yet.</p>
 
         <div class="score-grid">
           <article class="score-card">
@@ -350,16 +344,16 @@
             <span>Total / 100</span>
           </article>
           <article class="score-card">
-            <strong id="score-route">--</strong>
-            <span>Route liveness</span>
+            <strong id="score-speed">--</strong>
+            <span>Speed authority</span>
           </article>
           <article class="score-card">
-            <strong id="score-source">--</strong>
-            <span>Source alignment</span>
+            <strong id="score-consumer">--</strong>
+            <span>Consumer alignment</span>
           </article>
           <article class="score-card">
-            <strong id="score-next">--</strong>
-            <span>Next target count</span>
+            <strong id="score-drift">--</strong>
+            <span>Drift readiness</span>
           </article>
         </div>
       </section>
@@ -373,17 +367,17 @@
 
       <section class="panel">
         <p class="kicker">Evidence</p>
-        <h2>Fetch-only source lanes.</h2>
+        <h2>Safe source lanes.</h2>
         <div id="evidence" class="grid"></div>
       </section>
 
       <section class="receipt">
         <p class="receipt-line">Calibration receipt</p>
-        <h2>H6 Gauges source-classifier receipt.</h2>
+        <h2>H6 Gauges Gen 4 drift-readiness receipt.</h2>
         <p class="copy">
-          VERSION: GAUGES_H6_SOURCE_CLASSIFIER_UPDATE_TNT_v1.
-          This update does not inspect iframe DOM, mutate Showroom, mutate Demo Universe,
-          or write any file outside Gauges.
+          VERSION: GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1.
+          This update replaces the older source-classifier expectation with the current Generation 4
+          speed-authority contract.
         </p>
 
         <div class="chips">
@@ -397,8 +391,9 @@
           <span>H6_GAUGES</span>
           <span>gauges-truth=live-authority</span>
           <span>safe-mode=true</span>
-          <span>classifier=active</span>
-          <span>GAUGES_H6_SOURCE_CLASSIFIER_UPDATE_TNT_v1</span>
+          <span>gen4-speed-authority=active</span>
+          <span>drift-readiness=active</span>
+          <span>GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1</span>
         </div>
       </section>
     </main>
@@ -408,11 +403,24 @@
     (function () {
       "use strict";
 
-      const VERSION = "GAUGES_H6_SOURCE_CLASSIFIER_UPDATE_TNT_v1";
+      const VERSION = "GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1";
 
       const EXPECTED = Object.freeze({
-        instrument: "showroom-generation-3-realm-separated-control-instrument-v1",
-        runtime: "showroom-generation-3-runtime-status-contract-cleanup-v1"
+        instrument: "showroom-generation-4-speed-authority-calibration-v1",
+        runtime: "showroom-generation-3-runtime-status-contract-cleanup-v1",
+        parentRoute: "showroom-parent-proof-realm-generation-4-speed-authority-route-consumer-v1",
+        demoRoute: "demo-universe-earth-demo-realm-generation-4-speed-authority-route-consumer-v1",
+        speedAuthority: "/assets/showroom.globe.instrument.js"
+      });
+
+      const EXPECTED_MOTION = Object.freeze({
+        longitudeAutoStep: "0.009",
+        cloudAutoStep: "0.004",
+        dragLongitudeFactor: "0.038",
+        dragCloudFactor: "0.018",
+        dragLatitudeFactor: "0.62",
+        latitudeReturnFriction: "0.006",
+        axisTiltDegrees: "23.5"
       });
 
       const PATHS = Object.freeze({
@@ -425,25 +433,6 @@
         demoBoot: "/showroom/globe/index.js",
         css: "/showroom/showroom.css"
       });
-
-      const FORBIDDEN_VISUAL_TOKENS = [
-        "showroom-generation-3-orbit",
-        "showroom-generation-2-shell",
-        "showroom-generation-2-orbit",
-        "showroom-generation-2-active-globe",
-        "showroom-generation-2-earth-surface",
-        "showroom-generation-2-earth-clouds",
-        "showroom-generation-2-caption"
-      ];
-
-      const ROUTE_STALE_TOKENS = [
-        "showroom-parent-cache-bust-no-behavior-change-v1",
-        "showroom-generation-3-axis-rotation-depth-v1",
-        "GENERATION_2_STANDALONE_GLOBE_PRESERVED",
-        "GENERATION_2_ACTIVE_GLOBE_PRESERVED",
-        "Generation 2 remains preserved",
-        "axis rotation, runtime motion, shadow depth, terminator, atmosphere, and visual clarity refinement are active"
-      ];
 
       const CONSUMER_STALE_TOKENS = [
         "axis-rotation-depth-refinement-active",
@@ -458,10 +447,19 @@
         "demo-universe-earth-generation-3-standalone-consumer-congruence-v1"
       ];
 
+      const FORBIDDEN_ACTIVE_TOKENS = [
+        "showroom-generation-2-shell",
+        "showroom-generation-2-orbit",
+        "showroom-generation-2-active-globe",
+        "showroom-generation-2-earth-surface",
+        "showroom-generation-2-earth-clouds",
+        "showroom-generation-3-orbit"
+      ];
+
       const state = {
         results: {},
         evidence: [],
-        scores: { total: 0, route: 0, source: 0 },
+        scores: { total: 0, speed: 0, consumer: 0, drift: 0 },
         decision: {
           target: [],
           title: "Waiting for diagnostic.",
@@ -510,12 +508,31 @@
         });
       }
 
-      function escapeRegExp(text) {
-        return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      function extractConstVersion(text) {
+        return (String(text).match(/const VERSION\s*=\s*"([^"]+)"/) || [])[1] || "";
+      }
+
+      function extractMotionValue(text, key) {
+        const expression = new RegExp(key + "\\s*:\\s*([^,\\n}]+)");
+        const match = String(text).match(expression);
+        return match ? String(match[1]).trim().replace(/["']/g, "") : "";
+      }
+
+      function isActiveEmission(text, token) {
+        const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const patterns = [
+          "className\\s*:\\s*[\"'][^\"']*" + escaped,
+          "setAttribute\\(\\s*[\"']class[\"']\\s*,\\s*[\"'][^\"']*" + escaped,
+          "classList\\.add\\([\\s\\S]{0,180}" + escaped
+        ];
+
+        return patterns.some(function (pattern) {
+          return new RegExp(pattern).test(String(text || ""));
+        });
       }
 
       async function fetchText(path) {
-        const response = await fetch(path + "?gauges-classifier=" + Date.now(), { cache: "no-store" });
+        const response = await fetch(path + "?gauges-gen4=" + Date.now(), { cache: "no-store" });
         const text = await response.text();
 
         return {
@@ -542,7 +559,7 @@
             create("article", { className: "card", "data-status": item.status }, [
               create("b", { text: item.status.toUpperCase() + " · " + item.name }),
               create("p", { className: "small", text: item.detail }),
-              item.raw ? create("pre", { text: String(item.raw).slice(0, 2100) }) : null
+              item.raw ? create("pre", { text: String(item.raw).slice(0, 2600) }) : null
             ])
           );
         });
@@ -550,9 +567,9 @@
 
       function updateScores() {
         setText("score-total", state.scores.total);
-        setText("score-route", state.scores.route);
-        setText("score-source", state.scores.source);
-        setText("score-next", state.decision.target.length ? state.decision.target.length : "HOLD");
+        setText("score-speed", state.scores.speed);
+        setText("score-consumer", state.scores.consumer);
+        setText("score-drift", state.scores.drift);
       }
 
       function renderDecision() {
@@ -565,7 +582,7 @@
         chips.replaceChildren();
 
         if (!state.decision.target.length) {
-          chips.appendChild(create("span", { text: "NO_WRITE_SELECTED" }));
+          chips.appendChild(create("span", { text: "DRIFT_READY_OR_HOLD" }));
           return;
         }
 
@@ -574,185 +591,191 @@
         });
       }
 
-      function isGuardOnlyMention(text, token) {
-        const escaped = escapeRegExp(token);
-
-        const guardPatterns = [
-          "FORBIDDEN_VISUAL_CLASSES[\\s\\S]{0,900}" + escaped,
-          "FORBIDDEN_NODE_SELECTORS[\\s\\S]{0,900}" + escaped,
-          "OLD_TOKENS[\\s\\S]{0,900}" + escaped,
-          "stripForbiddenVisualClasses[\\s\\S]{0,900}" + escaped,
-          "removeForbiddenScaffoldNodes[\\s\\S]{0,900}" + escaped,
-          "purifyVisualObject[\\s\\S]{0,900}" + escaped,
-          "classList\\.remove[\\s\\S]{0,250}" + escaped,
-          "querySelectorAll\\([\\s\\S]{0,250}" + escaped
-        ];
-
-        return guardPatterns.some(function (pattern) {
-          return new RegExp(pattern).test(text);
-        });
-      }
-
-      function isActiveClassEmission(text, token) {
-        const escaped = escapeRegExp(token);
-
-        const activePatterns = [
-          "className\\s*:\\s*[\"'][^\"']*" + escaped,
-          "setAttribute\\(\\s*[\"']class[\"']\\s*,\\s*[\"'][^\"']*" + escaped,
-          "classList\\.add\\([\\s\\S]{0,180}" + escaped,
-          "create\\([\\s\\S]{0,180}className[\\s\\S]{0,180}" + escaped
-        ];
-
-        return activePatterns.some(function (pattern) {
-          return new RegExp(pattern).test(text);
-        });
-      }
-
       function classifyInstrument(text) {
-        const activeEmission = [];
-        const guardOnly = [];
-        const ambiguous = [];
+        const motion = {
+          longitudeAutoStep: extractMotionValue(text, "longitudeAutoStep"),
+          cloudAutoStep: extractMotionValue(text, "cloudAutoStep"),
+          dragLongitudeFactor: extractMotionValue(text, "dragLongitudeFactor"),
+          dragCloudFactor: extractMotionValue(text, "dragCloudFactor"),
+          dragLatitudeFactor: extractMotionValue(text, "dragLatitudeFactor"),
+          latitudeReturnFriction: extractMotionValue(text, "latitudeReturnFriction"),
+          axisTiltDegrees: extractMotionValue(text, "axisTiltDegrees")
+        };
 
-        FORBIDDEN_VISUAL_TOKENS.forEach(function (token) {
-          if (!has(text, token)) return;
-
-          if (isActiveClassEmission(text, token)) {
-            activeEmission.push(token);
-            return;
-          }
-
-          if (isGuardOnlyMention(text, token)) {
-            guardOnly.push(token);
-            return;
-          }
-
-          ambiguous.push(token);
+        const activeEmission = FORBIDDEN_ACTIVE_TOKENS.filter(function (token) {
+          return isActiveEmission(text, token);
         });
 
         return {
+          version: extractConstVersion(text),
           current: has(text, EXPECTED.instrument),
-          activeEmission: activeEmission,
-          guardOnly: guardOnly,
-          ambiguous: ambiguous,
-          version: (String(text).match(/const VERSION = "([^"]+)"/) || [])[1] || ""
+          speedAuthorityObject: has(text, "const SPEED_AUTHORITY"),
+          speedAuthorityFile: has(text, EXPECTED.speedAuthority),
+          instrumentSpeedAuthority: has(text, "instrumentSpeedAuthority: true"),
+          runtimeSpeedAuthorityFalse: has(text, "runtimeSpeedAuthority: false"),
+          cssAnimationAuthorityFalse: has(text, "cssAnimationAuthority: false"),
+          renderBridgeSpeedAuthorityFalse: has(text, "renderBridgeSpeedAuthority: false"),
+          motion: motion,
+          motionMatchesExpected: Object.keys(EXPECTED_MOTION).every(function (key) {
+            return String(motion[key]) === String(EXPECTED_MOTION[key]);
+          }),
+          activeEmission: activeEmission
         };
       }
 
       function classifyRuntime(text) {
         return {
+          version: extractConstVersion(text),
           current: has(text, EXPECTED.runtime),
-          version: (String(text).match(/const VERSION = "([^"]+)"/) || [])[1] || "",
-          staleStatusTokens: foundTokens(text, [
-            "axis-rotation-depth-refinement-active",
+          ownsStatusOnly: has(text, "Does not own:") && has(text, "globe rendering"),
+          staleLanguageStillPresentButNormalized: foundTokens(text, [
             "generation-2",
             "active-globe-visible",
-            "showroom-generation-3-axis-rotation-depth"
+            "axis-rotation-depth"
           ])
         };
       }
 
-      function classifyRouteHtml(text) {
+      function classifyRoute(text, expectedGeneration) {
         return {
-          staleTokens: foundTokens(text, ROUTE_STALE_TOKENS),
-          realmSeparatedReceipt: has(text, EXPECTED.instrument),
-          assetReceipt: (String(text).match(/ASSET_INSTRUMENT=([^\n<]+)/) || [])[1] || ""
+          generationCurrent: has(text, expectedGeneration),
+          speedAuthorityReceipt: has(text, "data-speed-authority=\"/assets/showroom.globe.instrument.js\"") ||
+            has(text, "SPEED_AUTHORITY=/assets/showroom.globe.instrument.js"),
+          instrumentAuthorityTrue: has(text, "data-instrument-speed-authority=\"true\"") ||
+            has(text, "INSTRUMENT_SPEED_AUTHORITY=true"),
+          runtimeAuthorityFalse: has(text, "data-runtime-speed-authority=\"false\"") ||
+            has(text, "RUNTIME_SPEED_AUTHORITY=false"),
+          cssAuthorityFalse: has(text, "data-css-animation-authority=\"false\"") ||
+            has(text, "CSS_ANIMATION_AUTHORITY=false"),
+          assetQueryCurrent: has(text, "/assets/showroom.globe.instrument.js?v=showroom-generation-4-speed-authority-calibration-v1"),
+          diskRemoved: has(text, "GENERATION_4_DISK_ROTATION_REMOVED") ||
+            has(text, "data-generation-4-disk-rotation=\"removed\""),
+          axisReceipt: has(text, "23.5-degree-axis-frame"),
+          staleRouteTokens: foundTokens(text, [
+            "showroom-parent-cache-bust-no-behavior-change-v1",
+            "showroom-generation-3-axis-rotation-depth-v1",
+            "GENERATION_2_ACTIVE_GLOBE_PRESERVED",
+            "GENERATION_2_STANDALONE_GLOBE_PRESERVED"
+          ])
         };
       }
 
       function classifyConsumer(text) {
         return {
+          version: extractConstVersion(text),
           staleTokens: foundTokens(text, CONSUMER_STALE_TOKENS),
-          realmSeparatedTokens: foundTokens(text, [
-            "showroom-parent-proof-realm",
-            "demo-universe-earth-demo-realm",
-            "realm-separated",
-            "generation-3-realm-separated-control"
-          ]),
-          version: (String(text).match(/const VERSION = "([^"]+)"/) || [])[1] || ""
+          speedAuthorityTokens: foundTokens(text, [
+            "showroom-generation-4-speed-authority-calibration-v1",
+            "speedAuthority",
+            "SPEED_AUTHORITY",
+            "dragLongitudeFactor",
+            "dragLatitudeFactor",
+            "23.5-degree-axis-frame"
+          ])
         };
       }
 
-      function scoreRoutes() {
-        let score = 0;
-
-        if (state.results.showroom && state.results.showroom.ok) score += 25;
-        if (state.results.demo && state.results.demo.ok) score += 25;
-        if (state.results.instrument && state.results.instrument.ok) score += 25;
-        if (state.results.runtime && state.results.runtime.ok) score += 25;
-
-        return score;
+      function classifyCss(text) {
+        return {
+          loaded: Boolean(text),
+          generation3BackgroundIsolation: has(text, "SHOWROOM_GENERATION_3_BACKGROUND_ROLE_ISOLATION_CSS_TNT_v1"),
+          keyframesPresent: has(text, "@keyframes"),
+          oldAnimationLanguage: foundTokens(text, [
+            "showroom-generation-2",
+            "showroom-generation-3-orbit",
+            "orbit"
+          ])
+        };
       }
 
-      function scoreSource(classified) {
+      function scoreSpeed(classified) {
         let score = 0;
 
-        if (classified.instrument.current) score += 25;
-        if (classified.instrument.activeEmission.length === 0) score += 20;
-        if (classified.runtime.current) score += 20;
-        if (classified.showroom.staleTokens.length === 0) score += 10;
-        if (classified.demo.staleTokens.length === 0) score += 10;
-        if (classified.parentBoot.staleTokens.length === 0) score += 5;
-        if (classified.parentRender.staleTokens.length === 0) score += 5;
-        if (classified.demoBoot.staleTokens.length === 0) score += 5;
+        if (classified.instrument.current) score += 18;
+        if (classified.instrument.speedAuthorityObject) score += 12;
+        if (classified.instrument.speedAuthorityFile) score += 10;
+        if (classified.instrument.instrumentSpeedAuthority) score += 10;
+        if (classified.instrument.runtimeSpeedAuthorityFalse) score += 8;
+        if (classified.instrument.cssAnimationAuthorityFalse) score += 8;
+        if (classified.instrument.renderBridgeSpeedAuthorityFalse) score += 8;
+        if (classified.instrument.motionMatchesExpected) score += 16;
+        if (classified.instrument.activeEmission.length === 0) score += 10;
+
+        return Math.min(100, score);
+      }
+
+      function scoreConsumer(classified) {
+        const consumers = [
+          classified.parentBoot,
+          classified.parentRender,
+          classified.demoBoot
+        ];
+
+        const staleCount = consumers.reduce(function (sum, item) {
+          return sum + (item.staleTokens.length > 0 ? 1 : 0);
+        }, 0);
+
+        return Math.max(0, 100 - staleCount * 34);
+      }
+
+      function scoreDrift(classified, speedScore, consumerScore) {
+        let score = 0;
+
+        if (speedScore >= 90) score += 30;
+        if (classified.showroom.generationCurrent && classified.demo.generationCurrent) score += 20;
+        if (classified.showroom.assetQueryCurrent && classified.demo.assetQueryCurrent) score += 15;
+        if (classified.showroom.speedAuthorityReceipt && classified.demo.speedAuthorityReceipt) score += 15;
+        if (consumerScore >= 90) score += 15;
+        if (classified.instrument.activeEmission.length === 0) score += 5;
 
         return Math.min(100, score);
       }
 
       function chooseDecision(classified) {
-        if (!classified.instrument.current || classified.instrument.activeEmission.length > 0) {
+        if (!classified.instrument.current || !classified.instrument.motionMatchesExpected) {
           return {
             target: ["/assets/showroom.globe.instrument.js"],
-            title: "ASSET INSTRUMENT ACTIVE EMISSION BREAK",
+            title: "ASSET INSTRUMENT SPEED CONTRACT NOT CURRENT",
             copy:
-              "The shared instrument is either not the final realm-separated version or it still actively emits forbidden visual classes. This is an asset-instrument target."
+              "The Gen 4 speed-authority instrument is not current or the expected motion constants are not present."
           };
         }
 
-        if (!classified.runtime.current) {
+        if (
+          !classified.showroom.generationCurrent ||
+          !classified.demo.generationCurrent ||
+          !classified.showroom.assetQueryCurrent ||
+          !classified.demo.assetQueryCurrent ||
+          !classified.showroom.speedAuthorityReceipt ||
+          !classified.demo.speedAuthorityReceipt
+        ) {
           return {
-            target: ["/showroom/runtime.js"],
-            title: "RUNTIME STATUS CONTRACT STALE",
+            target: ["/showroom/index.html", "/showroom/globe/index.html"],
+            title: "ROUTE SPEED-AUTHORITY CONSUMPTION NOT CURRENT",
             copy:
-              "The shared instrument is current and not actively emitting forbidden visual classes, but runtime is not aligned to the current status contract."
+              "The speed-authority instrument is current, but one or both route HTML consumers are not aligned to the Gen 4 speed contract."
           };
         }
 
-        const staleHtmlTargets = [];
-        if (classified.showroom.staleTokens.length > 0 || !classified.showroom.realmSeparatedReceipt) {
-          staleHtmlTargets.push("/showroom/index.html");
-        }
-        if (classified.demo.staleTokens.length > 0 || !classified.demo.realmSeparatedReceipt) {
-          staleHtmlTargets.push("/showroom/globe/index.html");
-        }
+        const consumerTargets = [];
+        if (classified.parentBoot.staleTokens.length > 0) consumerTargets.push("/showroom/index.js");
+        if (classified.parentRender.staleTokens.length > 0) consumerTargets.push("/showroom/showroom.render.js");
+        if (classified.demoBoot.staleTokens.length > 0) consumerTargets.push("/showroom/globe/index.js");
 
-        if (staleHtmlTargets.length > 0) {
+        if (consumerTargets.length > 0) {
           return {
-            target: staleHtmlTargets,
-            title: "ROUTE RECEIPTS / LOAD PATHS ARE STALE",
+            target: consumerTargets,
+            title: "CONSUMER WRITER DRIFT REMAINS",
             copy:
-              "The instrument and runtime are current. The visible parent/demo route HTML still carries old receipt or load-path language. Renew route receipts before touching consumers."
-          };
-        }
-
-        const staleConsumerTargets = [];
-        if (classified.parentBoot.staleTokens.length > 0) staleConsumerTargets.push("/showroom/index.js");
-        if (classified.parentRender.staleTokens.length > 0) staleConsumerTargets.push("/showroom/showroom.render.js");
-        if (classified.demoBoot.staleTokens.length > 0) staleConsumerTargets.push("/showroom/globe/index.js");
-
-        if (staleConsumerTargets.length > 0) {
-          return {
-            target: staleConsumerTargets,
-            title: "CONSUMER RECEIPT WRITERS ARE STALE",
-            copy:
-              "Route HTML has been cleared or is secondary; consumer boot/render files still write older Gen2 or axis-rotation-depth receipt language."
+              "The instrument and route consumers are current. The remaining Gen 4 source drift is in consumer writers still carrying Gen 3 / axis-depth / Gen 2 receipt language."
           };
         }
 
         return {
           target: [],
-          title: "SOURCE CLASSIFIER HOLD",
+          title: "DRIFT CALCULATION READY",
           copy:
-            "No controlling source break selected. Remaining work is visual inspection, owner acceptance, or a narrower CSS/DOM audit."
+            "The speed-authority contract, route consumption, and consumer writers are aligned enough for final Gen 4 drift calculation and owner visual acceptance."
         };
       }
 
@@ -760,7 +783,7 @@
         state.results = {};
         state.evidence = [];
 
-        setText("summary", "Running source-classifier diagnostic.");
+        setText("summary", "Running Gen 4 speed-authority and drift-readiness diagnostic.");
 
         const entries = [
           ["showroom", PATHS.showroom],
@@ -779,12 +802,6 @@
 
           try {
             state.results[key] = await fetchText(path);
-            addEvidence(
-              key,
-              state.results[key].ok ? "pass" : "fail",
-              path + " · HTTP " + state.results[key].status,
-              state.results[key].text
-            );
           } catch (error) {
             state.results[key] = {
               path: path,
@@ -793,32 +810,53 @@
               text: "",
               error: error && error.message ? error.message : String(error)
             };
-
-            addEvidence(key, "fail", path + " · fetch error", state.results[key].error);
           }
         }
 
         const classified = {
-          instrument: classifyInstrument(state.results.instrument ? state.results.instrument.text : ""),
-          runtime: classifyRuntime(state.results.runtime ? state.results.runtime.text : ""),
-          showroom: classifyRouteHtml(state.results.showroom ? state.results.showroom.text : ""),
-          demo: classifyRouteHtml(state.results.demo ? state.results.demo.text : ""),
-          parentBoot: classifyConsumer(state.results.parentBoot ? state.results.parentBoot.text : ""),
-          parentRender: classifyConsumer(state.results.parentRender ? state.results.parentRender.text : ""),
-          demoBoot: classifyConsumer(state.results.demoBoot ? state.results.demoBoot.text : "")
+          instrument: classifyInstrument(state.results.instrument.text || ""),
+          runtime: classifyRuntime(state.results.runtime.text || ""),
+          showroom: classifyRoute(state.results.showroom.text || "", EXPECTED.parentRoute),
+          demo: classifyRoute(state.results.demo.text || "", EXPECTED.demoRoute),
+          parentBoot: classifyConsumer(state.results.parentBoot.text || ""),
+          parentRender: classifyConsumer(state.results.parentRender.text || ""),
+          demoBoot: classifyConsumer(state.results.demoBoot.text || ""),
+          css: classifyCss(state.results.css.text || "")
         };
 
+        state.scores.speed = scoreSpeed(classified);
+        state.scores.consumer = scoreConsumer(classified);
+        state.scores.drift = scoreDrift(classified, state.scores.speed, state.scores.consumer);
+        state.scores.total = Math.round((state.scores.speed + state.scores.consumer + state.scores.drift) / 3);
+        state.decision = chooseDecision(classified);
+
         addEvidence(
-          "classifier summary",
+          "Gen 4 classifier summary",
           "hold",
-          "Separates active emission from guard-only token references.",
+          "Current Generation 4 speed-authority and drift-readiness classification.",
           JSON.stringify(classified, null, 2)
         );
 
-        state.scores.route = scoreRoutes();
-        state.scores.source = scoreSource(classified);
-        state.scores.total = Math.round((state.scores.route + state.scores.source) / 2);
-        state.decision = chooseDecision(classified);
+        addEvidence(
+          "Route liveness",
+          Object.keys(state.results).every(function (key) { return state.results[key].ok; }) ? "pass" : "fail",
+          "Fetch-only same-origin source read.",
+          JSON.stringify(Object.keys(state.results).reduce(function (acc, key) {
+            acc[key] = {
+              path: state.results[key].path,
+              ok: state.results[key].ok,
+              status: state.results[key].status
+            };
+            return acc;
+          }, {}), null, 2)
+        );
+
+        addEvidence(
+          "Minimum target decision",
+          state.decision.target.length ? "hold" : "pass",
+          state.decision.title,
+          JSON.stringify(state.decision, null, 2)
+        );
 
         renderEvidence();
         renderDecision();
@@ -826,19 +864,20 @@
 
         setText(
           "summary",
-          "Classifier complete. Selected target: " +
-            (state.decision.target.length ? state.decision.target.join(", ") : "HOLD")
+          "Gen 4 diagnostic complete. Selected target: " +
+            (state.decision.target.length ? state.decision.target.join(", ") : "DRIFT_READY_OR_HOLD")
         );
 
         const root = el("gauges-root");
         if (root) {
           root.dataset.diagnosticVersion = VERSION;
           root.dataset.diagnosticComplete = "true";
-          root.dataset.safeMode = "true";
           root.dataset.minimumTarget = state.decision.target.join(",");
           root.dataset.totalScore = String(state.scores.total);
-          root.dataset.instrumentActiveEmissionCount = String(classified.instrument.activeEmission.length);
-          root.dataset.instrumentGuardOnlyCount = String(classified.instrument.guardOnly.length);
+          root.dataset.speedScore = String(state.scores.speed);
+          root.dataset.consumerScore = String(state.scores.consumer);
+          root.dataset.driftScore = String(state.scores.drift);
+          root.dataset.speedAuthority = EXPECTED.speedAuthority;
         }
       }
 
@@ -854,7 +893,7 @@
         bind();
       }
 
-      window.DGBGaugesSourceClassifier = Object.freeze({
+      window.DGBGaugesGen4DriftReadiness = Object.freeze({
         version: VERSION,
         run: run,
         state: state

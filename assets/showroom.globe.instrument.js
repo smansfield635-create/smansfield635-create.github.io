@@ -1,17 +1,25 @@
 /*
   /assets/showroom.globe.instrument.js
-  SHOWROOM_GENERATION_4_AXIS_FRICTION_VERTICAL_REFINEMENT_TNT_v1
+  SHOWROOM_GENERATION_4_SPEED_AUTHORITY_CALIBRATION_TNT_v1
 
   Purpose:
-  - Preserve the Generation 4 realm-separated globe system.
-  - Preserve redundancy removal.
-  - Refine three remaining Generation 4 motion issues:
-    1. vertical drag must visibly affect latitude / observer disposition,
-    2. horizontal drag and auto-motion need friction,
-    3. the globe must read on a 23.5° axis without returning to disk spin.
+  - Preserve Generation 4 realm separation.
+  - Preserve cleared redundancy.
+  - Preserve two-axis interaction.
+  - Make this file openly declare speed authority.
+  - Slow horizontal motion.
+  - Add drag friction.
+  - Make vertical drag visibly affect latitude/disposition.
+  - Put the globe on a stronger visible 23.5° axis.
+  - Keep disk rotation removed.
+
+  Primary gap closed:
+  - speed authority was present here but not clearly exposed/calibrated.
 
   Owns:
   - shared globe render object
+  - motion speed constants
+  - drag friction
   - two-axis interaction model
   - spherical surface/cloud phase
   - axis disposition styling
@@ -29,7 +37,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "showroom-generation-4-axis-friction-vertical-refinement-v1";
+  const VERSION = "showroom-generation-4-speed-authority-calibration-v1";
 
   const ASSETS = Object.freeze({
     earthSurface: "/assets/earth/earth_surface_2048.jpg",
@@ -52,22 +60,33 @@
     generation1: "ring-scaffold-removed",
     generation2: "receipt-only",
     generation3: "realm-separated-control-authorized-globe",
-    generation4: "axis-friction-vertical-refinement"
+    generation4: "speed-authority-calibrated-two-axis-globe"
+  });
+
+  const SPEED_AUTHORITY = Object.freeze({
+    file: "/assets/showroom.globe.instrument.js",
+    runtimeSpeedAuthority: false,
+    cssAnimationAuthority: false,
+    renderBridgeSpeedAuthority: false,
+    instrumentSpeedAuthority: true
   });
 
   const MOTION = Object.freeze({
     axisTiltDegrees: 23.5,
 
-    longitudeAutoStep: 0.026,
-    cloudAutoStep: 0.012,
+    longitudeAutoStep: 0.009,
+    cloudAutoStep: 0.004,
 
-    dragLongitudeFactor: 0.105,
-    dragCloudFactor: 0.052,
-    dragLatitudeFactor: 0.34,
+    dragLongitudeFactor: 0.038,
+    dragCloudFactor: 0.018,
+    dragLatitudeFactor: 0.62,
 
-    latitudeMin: 18,
-    latitudeMax: 82,
-    latitudeReturnFriction: 0.018
+    latitudeMin: 14,
+    latitudeMax: 86,
+    latitudeReturnFriction: 0.006,
+
+    wheelZoomStep: 0.045,
+    dragDeadZonePx: 1.75
   });
 
   const FORBIDDEN_VISUAL_CLASSES = Object.freeze([
@@ -177,37 +196,39 @@
     removeForbiddenScaffoldNodes(root);
   }
 
-  function ensureRefinementStyles() {
-    if (document.getElementById("showroom-generation-4-axis-friction-vertical-style")) return;
+  function ensureCalibrationStyles() {
+    if (document.getElementById("showroom-generation-4-speed-authority-style")) return;
 
     const style = create("style", {
-      id: "showroom-generation-4-axis-friction-vertical-style",
+      id: "showroom-generation-4-speed-authority-style",
       text:
         ".showroom-generation-3-shell{position:relative;display:grid;justify-items:center;gap:.75rem;width:min(760px,100%);margin:0 auto;isolation:isolate}" +
 
-        ".showroom-generation-3-active-globe{position:relative;width:min(340px,72vw);aspect-ratio:1/1;border-radius:50%;overflow:hidden;isolation:isolate;cursor:grab;touch-action:none;transform:scale(var(--showroom-control-scale,1))!important;animation:none!important;background:#07111f;border:1px solid rgba(245,199,107,.18);box-shadow:inset -36px 0 58px rgba(0,0,0,.52),inset 24px 0 38px rgba(116,184,255,.16),0 24px 70px rgba(0,0,0,.48),0 0 52px rgba(116,184,255,.18)}" +
+        ".showroom-generation-4-axis-frame{position:relative;display:grid;place-items:center;width:min(390px,78vw);aspect-ratio:1/1;transform:rotate(var(--showroom-axis-tilt,23.5deg));transform-origin:50% 50%;isolation:isolate}" +
+
+        ".showroom-generation-3-active-globe{position:relative;width:min(340px,72vw);aspect-ratio:1/1;border-radius:50%;overflow:hidden;isolation:isolate;cursor:grab;touch-action:none;transform:scale(var(--showroom-control-scale,1))!important;animation:none!important;background:#07111f;border:1px solid rgba(245,199,107,.18);box-shadow:inset -38px 0 60px rgba(0,0,0,.54),inset 24px 0 40px rgba(116,184,255,.17),0 24px 70px rgba(0,0,0,.48),0 0 52px rgba(116,184,255,.18)}" +
         ".showroom-generation-3-active-globe[data-control-dragging='true']{cursor:grabbing}" +
 
-        ".showroom-generation-4-surface-track,.showroom-generation-4-cloud-track{position:absolute;inset:-14%;border-radius:50%;background-repeat:repeat-x;background-position:50% 50%;background-size:auto 128%;animation:none!important;will-change:background-position,transform;pointer-events:none}" +
-        ".showroom-generation-4-surface-track{z-index:2;opacity:1;filter:saturate(1.08) contrast(1.05);transform:translateY(var(--showroom-latitude-offset,0%)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.12)!important;transform-origin:50% 50%}" +
-        ".showroom-generation-4-cloud-track{z-index:4;opacity:.46;mix-blend-mode:screen;filter:brightness(1.14) contrast(1.04);transform:translateY(calc(var(--showroom-latitude-offset,0%) * .62)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.14)!important;transform-origin:50% 50%}" +
+        ".showroom-generation-4-surface-track,.showroom-generation-4-cloud-track{position:absolute;inset:-18%;border-radius:50%;background-repeat:repeat-x;background-position:50% 50%;background-size:auto 132%;animation:none!important;will-change:background-position,transform;pointer-events:none}" +
+        ".showroom-generation-4-surface-track{z-index:2;opacity:1;filter:saturate(1.08) contrast(1.05);transform:translateY(var(--showroom-latitude-offset,0%)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.16)!important;transform-origin:50% 50%}" +
+        ".showroom-generation-4-cloud-track{z-index:4;opacity:.46;mix-blend-mode:screen;filter:brightness(1.14) contrast(1.04);transform:translateY(calc(var(--showroom-latitude-offset,0%) * .68)) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg))) scale(1.18)!important;transform-origin:50% 50%}" +
 
-        ".showroom-generation-4-latitude-shade{position:absolute;inset:0;border-radius:50%;z-index:6;background:linear-gradient(180deg,rgba(255,255,255,.13),transparent var(--showroom-latitude-light-stop,36%),rgba(0,0,0,.24));opacity:.78;pointer-events:none}" +
-        ".showroom-generation-4-center-origin{position:absolute;left:50%;top:50%;z-index:20;width:.45rem;height:.45rem;border:1px solid rgba(245,199,107,.55);border-radius:50%;transform:translate(-50%,-50%);background:rgba(245,199,107,.18);box-shadow:0 0 18px rgba(245,199,107,.32);pointer-events:none}" +
+        ".showroom-generation-4-latitude-shade{position:absolute;inset:0;border-radius:50%;z-index:6;background:linear-gradient(180deg,rgba(255,255,255,.15),transparent var(--showroom-latitude-light-stop,36%),rgba(0,0,0,.27));opacity:.82;pointer-events:none}" +
+        ".showroom-generation-4-center-origin{position:absolute;left:50%;top:50%;z-index:21;width:.45rem;height:.45rem;border:1px solid rgba(245,199,107,.60);border-radius:50%;transform:translate(-50%,-50%) rotate(calc(-1 * var(--showroom-axis-tilt,23.5deg)));background:rgba(245,199,107,.20);box-shadow:0 0 18px rgba(245,199,107,.36);pointer-events:none}" +
 
         ".showroom-generation-3-ocean-land-color{position:absolute;inset:0;border-radius:50%;z-index:3;background:radial-gradient(circle at 38% var(--showroom-light-y,32%),rgba(116,184,255,.16),transparent 28%),radial-gradient(circle at 62% 58%,rgba(245,199,107,.10),transparent 34%);mix-blend-mode:overlay;pointer-events:none}" +
         ".showroom-generation-3-cloud-depth{position:absolute;inset:0;border-radius:50%;z-index:5;background:radial-gradient(circle at 42% var(--showroom-light-y,28%),rgba(255,255,255,.12),transparent 26%),radial-gradient(circle at 68% 62%,rgba(255,255,255,.05),transparent 38%);pointer-events:none}" +
         ".showroom-generation-3-light{position:absolute;inset:0;border-radius:50%;z-index:8;background:radial-gradient(circle at var(--showroom-light-x,34%) var(--showroom-light-y,30%),rgba(255,255,255,var(--showroom-light-strength,.30)),transparent 30%),linear-gradient(90deg,rgba(255,255,255,.08),transparent 45%);mix-blend-mode:screen;pointer-events:none}" +
-        ".showroom-generation-3-terminator{position:absolute;inset:-1px;border-radius:50%;z-index:9;background:linear-gradient(90deg,transparent 0%,transparent var(--showroom-terminator-start,45%),rgba(0,0,0,.18) 58%,rgba(0,0,0,var(--showroom-night-opacity,.54)) 100%);pointer-events:none}" +
-        ".showroom-generation-3-night-depth{position:absolute;inset:0;border-radius:50%;z-index:10;background:radial-gradient(circle at var(--showroom-night-x,76%) var(--showroom-light-y,50%),rgba(0,0,0,.46),transparent 48%);pointer-events:none}" +
+        ".showroom-generation-3-terminator{position:absolute;inset:-1px;border-radius:50%;z-index:9;background:linear-gradient(90deg,transparent 0%,transparent var(--showroom-terminator-start,45%),rgba(0,0,0,.20) 58%,rgba(0,0,0,var(--showroom-night-opacity,.56)) 100%);pointer-events:none}" +
+        ".showroom-generation-3-night-depth{position:absolute;inset:0;border-radius:50%;z-index:10;background:radial-gradient(circle at var(--showroom-night-x,76%) var(--showroom-light-y,50%),rgba(0,0,0,.48),transparent 48%);pointer-events:none}" +
         ".showroom-generation-3-moon-reflection{position:absolute;inset:0;border-radius:50%;z-index:11;background:radial-gradient(circle at var(--showroom-moon-x,72%) var(--showroom-moon-y,24%),rgba(245,199,107,var(--showroom-moon-opacity,.12)),transparent 15%);mix-blend-mode:screen;pointer-events:none}" +
-        ".showroom-generation-3-atmosphere{position:absolute;inset:-2px;border-radius:50%;z-index:12;box-shadow:inset 0 0 28px rgba(116,184,255,.30),0 0 34px rgba(116,184,255,.22);pointer-events:none}" +
-        ".showroom-generation-3-rim{position:absolute;inset:0;border-radius:50%;z-index:13;background:radial-gradient(circle at 50% 50%,transparent 55%,rgba(116,184,255,.18) 72%,rgba(245,199,107,.20) 100%);pointer-events:none}" +
+        ".showroom-generation-3-atmosphere{position:absolute;inset:-2px;border-radius:50%;z-index:12;box-shadow:inset 0 0 28px rgba(116,184,255,.31),0 0 34px rgba(116,184,255,.22);pointer-events:none}" +
+        ".showroom-generation-3-rim{position:absolute;inset:0;border-radius:50%;z-index:13;background:radial-gradient(circle at 50% 50%,transparent 55%,rgba(116,184,255,.20) 72%,rgba(245,199,107,.22) 100%);pointer-events:none}" +
 
-        ".showroom-generation-3-axis-line{position:absolute;left:50%;top:50%;z-index:18;width:1px;height:calc(min(340px,72vw) * 1.28);background:linear-gradient(180deg,transparent,rgba(245,199,107,.78),transparent);transform:translate(-50%,-50%) rotate(var(--showroom-axis-tilt,23.5deg));pointer-events:none}" +
-        ".showroom-generation-3-axis-node{position:absolute;left:50%;z-index:19;width:.42rem;height:.42rem;border-radius:50%;background:#f5c76b;box-shadow:0 0 20px rgba(245,199,107,.6);pointer-events:none}" +
-        ".showroom-generation-3-axis-node-north{top:calc(50% - min(340px,72vw) * .64);transform:translateX(-50%)}" +
-        ".showroom-generation-3-axis-node-south{top:calc(50% + min(340px,72vw) * .64);transform:translateX(-50%)}" +
+        ".showroom-generation-3-axis-line{position:absolute;left:50%;top:50%;z-index:30;width:1px;height:calc(min(340px,72vw) * 1.34);background:linear-gradient(180deg,transparent,rgba(245,199,107,.86),transparent);transform:translate(-50%,-50%);pointer-events:none}" +
+        ".showroom-generation-3-axis-node{position:absolute;left:50%;z-index:31;width:.46rem;height:.46rem;border-radius:50%;background:#f5c76b;box-shadow:0 0 22px rgba(245,199,107,.68);pointer-events:none}" +
+        ".showroom-generation-3-axis-node-north{top:calc(50% - min(340px,72vw) * .67);transform:translateX(-50%)}" +
+        ".showroom-generation-3-axis-node-south{top:calc(50% + min(340px,72vw) * .67);transform:translateX(-50%)}" +
 
         ".showroom-generation-3-caption{margin:.4rem 0 0;color:#f5c76b;font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase}" +
         ".showroom-generation-3-telemetry{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;margin:.2rem auto 0;max-width:760px}" +
@@ -239,6 +260,18 @@
       sharedActiveRealmIdentity: "false",
       crossRealmLinkType: "navigation-only",
 
+      speedAuthority: SPEED_AUTHORITY.file,
+      instrumentSpeedAuthority: String(SPEED_AUTHORITY.instrumentSpeedAuthority),
+      runtimeSpeedAuthority: String(SPEED_AUTHORITY.runtimeSpeedAuthority),
+      cssAnimationAuthority: String(SPEED_AUTHORITY.cssAnimationAuthority),
+      renderBridgeSpeedAuthority: String(SPEED_AUTHORITY.renderBridgeSpeedAuthority),
+      longitudeAutoStep: String(MOTION.longitudeAutoStep),
+      cloudAutoStep: String(MOTION.cloudAutoStep),
+      dragLongitudeFactor: String(MOTION.dragLongitudeFactor),
+      dragCloudFactor: String(MOTION.dragCloudFactor),
+      dragLatitudeFactor: String(MOTION.dragLatitudeFactor),
+      latitudeReturnFriction: String(MOTION.latitudeReturnFriction),
+
       generation1NoGraphicBaseline: "preserved",
       generation1RingScaffold: "removed",
       generation2ReceiptOnly: "true",
@@ -249,13 +282,13 @@
       generation3ControlPanel: "active",
 
       generation4: GENERATIONS.generation4,
-      generation4Closure: "axis-friction-vertical-refinement-active",
-      generation4MotionModel: "longitude-latitude-zoom-light-anchor",
+      generation4Closure: "speed-authority-calibration-active",
+      generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalFriction: "active",
+      generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
+      generation4AxisDisposition: "23.5-degree-axis-frame",
       generation4CenterOrigin: "active",
       generation4SunMoonToggle: "active",
       generation4ZoomControl: "active",
@@ -289,7 +322,7 @@
         parentRouteAvailable: ASSETS.parentRoute,
         parentRoleAvailable: "navigation-only",
         contextReceiptMode: "demo-realm-isolated",
-        contextCaption: "GENERATION 4 · DEMO REALM · AXIS CONTROL ACTIVE"
+        contextCaption: "GENERATION 4 · DEMO REALM · SPEED CALIBRATED"
       });
     }
 
@@ -301,7 +334,7 @@
       demoRouteAvailable: ASSETS.globeRoute,
       demoRoleAvailable: "navigation-only",
       contextReceiptMode: "parent-realm-isolated",
-      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · AXIS CONTROL ACTIVE"
+      contextCaption: "GENERATION 4 · SHOWROOM PROOF REALM · SPEED CALIBRATED"
     });
   }
 
@@ -358,15 +391,19 @@
       sharedInstrumentRole: "rendering-and-control-service-only",
       sharedActiveRealmIdentity: "false",
       crossRealmLinkType: "navigation-only",
+      speedAuthority: SPEED_AUTHORITY.file,
+      instrumentSpeedAuthority: "true",
+      runtimeSpeedAuthority: "false",
+      cssAnimationAuthority: "false",
       generation1RingScaffold: "removed",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
-      generation4Closure: "axis-friction-vertical-refinement-active",
+      generation4Closure: "speed-authority-calibration-active",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalFriction: "active",
+      generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
+      generation4AxisDisposition: "23.5-degree-axis-frame",
       ringScaffoldStatus: "removed",
       controlPanelActive: "true"
     });
@@ -422,19 +459,20 @@
       "div",
       {
         className: "showroom-generation-3-telemetry",
-        "data-generation-4-axis-friction-vertical": "active",
-        "aria-label": "Generation 4 axis friction vertical refinement telemetry receipt"
+        "data-generation-4-speed-authority": "active",
+        "aria-label": "Generation 4 speed authority calibration telemetry receipt"
       },
       [
         create("span", { text: "GEN 4" }),
+        create("span", { text: "speed=instrument" }),
+        create("span", { text: "auto=" + MOTION.longitudeAutoStep }),
+        create("span", { text: "dragX=" + MOTION.dragLongitudeFactor }),
+        create("span", { text: "dragY=" + MOTION.dragLatitudeFactor }),
         create("span", { text: "axis=23.5°" }),
         create("span", { text: "x=friction" }),
         create("span", { text: "y=visible" }),
         create("span", { text: "z=zoom" }),
         create("span", { text: "disk=removed" }),
-        create("span", { text: "origin=center" }),
-        create("span", { text: "light=sun/moon" }),
-        create("span", { text: "realm=separated" }),
         create("span", { text: "context=" + normalized })
       ]
     );
@@ -444,8 +482,8 @@
     if (override) return override;
 
     return normalizeContext(context) === CONTEXTS.standalone
-      ? "GENERATION 4 · DEMO REALM · AXIS CONTROL ACTIVE"
-      : "GENERATION 4 · SHOWROOM PROOF REALM · AXIS CONTROL ACTIVE";
+      ? "GENERATION 4 · DEMO REALM · SPEED CALIBRATED"
+      : "GENERATION 4 · SHOWROOM PROOF REALM · SPEED CALIBRATED";
   }
 
   function linkForContext(context) {
@@ -461,18 +499,11 @@
     const caption = captionForContext(context, config.caption);
     const link = linkForContext(context);
 
-    const shell = create(
-      "section",
+    const axisFrame = create(
+      "div",
       {
-        className: "showroom-generation-3-shell showroom-generation-4-refinement-shell",
-        "data-active-realm": realm,
-        "data-generation-4-axis-friction-vertical": "active",
-        "data-generation-4-disk-rotation": "removed",
-        "data-generation-4-center-origin": "active",
-        "data-shared-instrument-role": "rendering-and-control-service-only",
-        "data-shared-active-realm-identity": "false",
-        "data-cross-realm-link-type": "navigation-only",
-        "data-render-context": context
+        className: "showroom-generation-4-axis-frame",
+        "data-generation-4-axis-frame": "23.5"
       },
       [
         create("span", {
@@ -497,12 +528,12 @@
             className: "showroom-generation-3-active-globe showroom-generation-4-spherical-globe",
             role: "img",
             "data-generation-3-active-globe": "true",
-            "data-generation-4-axis-friction-vertical": "active",
+            "data-generation-4-speed-authority": "active",
             "data-generation-4-disk-rotation": "removed",
             "aria-label":
               context === CONTEXTS.standalone
-                ? "Demo Universe Earth Generation 4 axis-controlled globe"
-                : "Showroom Generation 4 axis-controlled globe"
+                ? "Demo Universe Earth Generation 4 speed calibrated globe"
+                : "Showroom Generation 4 speed calibrated globe"
           },
           [
             create("div", {
@@ -528,7 +559,25 @@
             create("span", { className: "showroom-generation-3-rim", "aria-hidden": "true" }),
             create("span", { className: "showroom-generation-4-center-origin", "aria-hidden": "true" })
           ]
-        ),
+        )
+      ]
+    );
+
+    const shell = create(
+      "section",
+      {
+        className: "showroom-generation-3-shell showroom-generation-4-speed-calibration-shell",
+        "data-active-realm": realm,
+        "data-generation-4-speed-authority": "active",
+        "data-generation-4-disk-rotation": "removed",
+        "data-generation-4-center-origin": "active",
+        "data-shared-instrument-role": "rendering-and-control-service-only",
+        "data-shared-active-realm-identity": "false",
+        "data-cross-realm-link-type": "navigation-only",
+        "data-render-context": context
+      },
+      [
+        axisFrame,
 
         create("p", {
           className: "showroom-generation-3-caption",
@@ -593,16 +642,16 @@
       globe.style.setProperty("--showroom-night-x", "76%");
       globe.style.setProperty("--showroom-moon-x", "72%");
       globe.style.setProperty("--showroom-light-strength", ".30");
-      globe.style.setProperty("--showroom-night-opacity", ".54");
+      globe.style.setProperty("--showroom-night-opacity", ".56");
       globe.style.setProperty("--showroom-moon-opacity", ".12");
     }
 
-    const lightY = clamp(30 + (state.latitude - 50) * 0.36, 18, 68);
-    const latitudeStop = clamp(36 + state.observerTilt * 0.54, 20, 66);
-    const latOffset = clamp((state.latitude - 50) * -0.58, -18, 18);
+    const lightY = clamp(30 + (state.latitude - 50) * 0.42, 16, 70);
+    const latitudeStop = clamp(36 + state.observerTilt * 0.62, 18, 68);
+    const latOffset = clamp((state.latitude - 50) * -0.95, -30, 30);
 
     globe.style.setProperty("--showroom-light-y", lightY.toFixed(1) + "%");
-    globe.style.setProperty("--showroom-moon-y", clamp(lightY - 4, 16, 62).toFixed(1) + "%");
+    globe.style.setProperty("--showroom-moon-y", clamp(lightY - 4, 14, 64).toFixed(1) + "%");
     globe.style.setProperty("--showroom-latitude-light-stop", latitudeStop.toFixed(1) + "%");
     globe.style.setProperty("--showroom-latitude-offset", latOffset.toFixed(2) + "%");
     globe.style.setProperty("--showroom-axis-tilt", MOTION.axisTiltDegrees + "deg");
@@ -613,7 +662,7 @@
     const longitude = mod(state.longitude, 200);
     const cloudLongitude = mod(state.cloudLongitude, 200);
     const latitude = clamp(state.latitude, MOTION.latitudeMin, MOTION.latitudeMax);
-    const observerTilt = clamp((latitude - 50) * 1.1, -34, 34);
+    const observerTilt = clamp((latitude - 50) * 1.22, -38, 38);
 
     state.longitude = longitude;
     state.cloudLongitude = cloudLongitude;
@@ -636,7 +685,7 @@
     if (clouds) {
       clouds.style.backgroundImage = "url('" + ASSETS.earthClouds + "')";
       clouds.style.backgroundPosition =
-        cloudLongitude.toFixed(2) + "% " + clamp(latitude - 4, 12, 88).toFixed(2) + "%";
+        cloudLongitude.toFixed(2) + "% " + clamp(latitude - 4, 10, 90).toFixed(2) + "%";
     }
 
     setDataset(mount, {
@@ -651,12 +700,19 @@
       controlContext: state.context,
       controlRealm: state.realm,
       interactionAuthority: "globe-control-panel",
-      generation4MotionModel: "longitude-latitude-zoom-light-anchor",
+      speedAuthority: SPEED_AUTHORITY.file,
+      longitudeAutoStep: String(MOTION.longitudeAutoStep),
+      cloudAutoStep: String(MOTION.cloudAutoStep),
+      dragLongitudeFactor: String(MOTION.dragLongitudeFactor),
+      dragCloudFactor: String(MOTION.dragCloudFactor),
+      dragLatitudeFactor: String(MOTION.dragLatitudeFactor),
+      latitudeReturnFriction: String(MOTION.latitudeReturnFriction),
+      generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalFriction: "active",
+      generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
+      generation4AxisDisposition: "23.5-degree-axis-frame",
       generation4CenterOrigin: "active"
     });
 
@@ -668,21 +724,23 @@
       controlObserverTilt: observerTilt.toFixed(2),
       controlLightAnchor: state.lightAnchor,
       controlAutoRotationPaused: state.paused ? "true" : "false",
+      speedAuthority: SPEED_AUTHORITY.file,
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalFriction: "active",
+      generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-static-sphere-axis"
+      generation4AxisDisposition: "23.5-degree-axis-frame"
     });
 
     if (readout) {
       readout.replaceChildren(
-        createReadoutSpan("zoom", scale),
-        createReadoutSpan("lon", Math.round(longitude) + "%"),
+        createReadoutSpan("speed", "instrument"),
+        createReadoutSpan("auto", MOTION.longitudeAutoStep),
+        createReadoutSpan("dragX", MOTION.dragLongitudeFactor),
+        createReadoutSpan("dragY", MOTION.dragLatitudeFactor),
         createReadoutSpan("lat", Math.round(latitude) + "%"),
-        createReadoutSpan("tilt", Math.round(observerTilt) + "°"),
-        createReadoutSpan("light", state.lightAnchor),
-        createReadoutSpan("pause", state.paused ? "true" : "false")
+        createReadoutSpan("zoom", scale),
+        createReadoutSpan("light", state.lightAnchor)
       );
     }
   }
@@ -696,7 +754,7 @@
     function loop(time) {
       if (!state.lastTime) state.lastTime = time;
 
-      const delta = Math.min(40, time - state.lastTime);
+      const delta = Math.min(34, time - state.lastTime);
       state.lastTime = time;
 
       if (!state.paused && !state.dragging) {
@@ -800,6 +858,10 @@
         const deltaX = event.clientX - state.lastX;
         const deltaY = event.clientY - state.lastY;
 
+        if (Math.abs(deltaX) < MOTION.dragDeadZonePx && Math.abs(deltaY) < MOTION.dragDeadZonePx) {
+          return;
+        }
+
         state.lastX = event.clientX;
         state.lastY = event.clientY;
 
@@ -828,6 +890,19 @@
         state.dragging = false;
         applyMotionState(mount, shell, globe, surface, clouds, readout, state);
       });
+
+      globe.addEventListener("wheel", function (event) {
+        event.preventDefault();
+
+        const direction = event.deltaY < 0 ? 1 : -1;
+        state.zoom = clamp(
+          Number((state.zoom + direction * MOTION.wheelZoomStep).toFixed(2)),
+          state.minZoom,
+          state.maxZoom
+        );
+
+        applyMotionState(mount, shell, globe, surface, clouds, readout, state);
+      }, { passive: false });
     }
 
     shell.appendChild(controls);
@@ -841,11 +916,11 @@
     const runtime = window.DGBShowroomRuntime;
 
     if (runtime && typeof runtime.setGeneration3MotionStatus === "function") {
-      runtime.setGeneration3MotionStatus(status || "generation-4-axis-friction-vertical-refinement-active");
+      runtime.setGeneration3MotionStatus(status || "generation-4-speed-authority-calibration-active");
     }
 
     if (runtime && typeof runtime.setActiveGlobeStatus === "function") {
-      runtime.setActiveGlobeStatus(status || "generation-4-axis-friction-vertical-refinement-active");
+      runtime.setActiveGlobeStatus(status || "generation-4-speed-authority-calibration-active");
     }
   }
 
@@ -854,7 +929,7 @@
       throw new Error("Showroom globe instrument requires a mount node.");
     }
 
-    ensureRefinementStyles();
+    ensureCalibrationStyles();
 
     const config = options || {};
     const context = normalizeContext(config.context);
@@ -863,14 +938,14 @@
     mount.replaceChildren(shell);
 
     setDataset(mount, getContextReceipts(context));
-    mount.dataset.renderStatus = "generation-4-axis-friction-vertical-refinement-mounted";
-    mount.dataset.showroomGlobePlacement = "generation-4-axis-friction-vertical-refinement";
-    mount.dataset.generation4Closure = "axis-friction-vertical-refinement-active";
+    mount.dataset.renderStatus = "generation-4-speed-authority-calibration-mounted";
+    mount.dataset.showroomGlobePlacement = "generation-4-speed-authority-calibration";
+    mount.dataset.generation4Closure = "speed-authority-calibration-active";
 
     enforceRealmSeparation(mount, context);
     installRealmGuard(mount, context);
     ensureControlPanel(mount, shell, context);
-    notifyRuntime("generation-4-axis-friction-vertical-refinement-mounted");
+    notifyRuntime("generation-4-speed-authority-calibration-mounted");
 
     return mount;
   }
@@ -891,17 +966,27 @@
       surfaceStatus: surface.status,
       cloudsOk: clouds.ok,
       cloudsStatus: clouds.status,
+      speedAuthority: SPEED_AUTHORITY.file,
+      instrumentSpeedAuthority: true,
+      runtimeSpeedAuthority: false,
+      cssAnimationAuthority: false,
+      longitudeAutoStep: MOTION.longitudeAutoStep,
+      cloudAutoStep: MOTION.cloudAutoStep,
+      dragLongitudeFactor: MOTION.dragLongitudeFactor,
+      dragCloudFactor: MOTION.dragCloudFactor,
+      dragLatitudeFactor: MOTION.dragLatitudeFactor,
+      latitudeReturnFriction: MOTION.latitudeReturnFriction,
       generation1RingScaffold: "removed",
       generation2ReceiptOnly: "true",
       generation2VisualClassEmission: "removed",
       generation3RealmSeparation: "active",
       generation4: GENERATIONS.generation4,
-      generation4MotionModel: "longitude-latitude-zoom-light-anchor",
+      generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
       generation4DiskRotation: "removed",
       generation4SphericalRead: "active",
-      generation4HorizontalFriction: "active",
+      generation4HorizontalFriction: "calibrated",
       generation4VerticalControl: "visible-latitude-disposition",
-      generation4AxisDisposition: "23.5-degree-static-sphere-axis",
+      generation4AxisDisposition: "23.5-degree-axis-frame",
       generation4CenterOrigin: "active",
       generation4SunMoonToggle: "active",
       generation4ZoomControl: "active",
@@ -916,6 +1001,7 @@
     contexts: CONTEXTS,
     realms: REALMS,
     motion: MOTION,
+    speedAuthority: SPEED_AUTHORITY,
     create: create,
     setDataset: setDataset,
     purifyVisualObject: purifyVisualObject,

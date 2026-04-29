@@ -8,15 +8,15 @@
   data-construct-class="house"
   data-house-part="gauges"
   data-chamber="H6_GAUGES"
-  data-generation="showroom-minimum-rebuild-selector-v1"
+  data-generation="gauges-h6-estate-diagnostic-instrument-room-role-alignment-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Showroom Minimum Rebuild Selector · Diamond Gate Bridge</title>
+  <title>Gauges · Diagnostic Instrument Room · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges measures the Showroom field, maps it into a 256 lattice, and selects the fewest-file rebuild path before any further Showroom code is written."
+    content="Gauges is the H6 estate diagnostic instrument room for Diamond Gate Bridge. It measures house skeleton, products, planetary constructs, Showroom diagnostics, evidence, and receipts."
   />
 
   <style>
@@ -52,8 +52,8 @@
       margin: 0;
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.18), transparent 28rem),
-        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.12), transparent 22rem),
+        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.16), transparent 28rem),
+        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.10), transparent 22rem),
         linear-gradient(180deg, #02050c 0%, var(--void) 44%, #080d18 100%);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -64,11 +64,11 @@
       inset: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.82) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(245, 199, 107, 0.68) 0 1px, transparent 1.4px);
+        radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(245, 199, 107, 0.48) 0 1px, transparent 1.4px);
       background-position: 0 0, 48px 76px;
-      background-size: 130px 130px, 180px 180px;
-      opacity: 0.14;
+      background-size: 150px 150px, 210px 210px;
+      opacity: 0.10;
     }
 
     a {
@@ -130,7 +130,8 @@
     }
 
     .site-nav,
-    .action-row {
+    .action-row,
+    .mini-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.65rem;
@@ -138,7 +139,9 @@
 
     .site-nav a,
     .action-row a,
-    .action-row button {
+    .action-row button,
+    .mini-actions a,
+    .mini-actions button {
       border: 1px solid rgba(245, 199, 107, 0.42);
       border-radius: 999px;
       padding: 0.72rem 1rem;
@@ -156,7 +159,11 @@
     .action-row a:hover,
     .action-row a:focus-visible,
     .action-row button:hover,
-    .action-row button:focus-visible {
+    .action-row button:focus-visible,
+    .mini-actions a:hover,
+    .mini-actions a:focus-visible,
+    .mini-actions button:hover,
+    .mini-actions button:focus-visible {
       color: #080d18;
       background: var(--gold);
       outline: none;
@@ -214,7 +221,7 @@
 
     h2 {
       margin: 0;
-      font-size: clamp(1.7rem, 4vw, 3rem);
+      font-size: clamp(1.65rem, 4vw, 3rem);
       line-height: 1;
       letter-spacing: -0.045em;
     }
@@ -239,14 +246,16 @@
       font-size: clamp(1rem, 2vw, 1.22rem);
     }
 
-    .action-row {
+    .action-row,
+    .mini-actions {
       margin-top: 1.5rem;
     }
 
     .score-grid,
     .diagnostic-grid,
     .result-grid,
-    .decision-grid {
+    .decision-grid,
+    .route-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
@@ -261,7 +270,8 @@
     .check-card,
     .next-card,
     .decision-card,
-    .option-card {
+    .route-card,
+    .summary-card {
       border: 1px solid var(--blue-line);
       border-radius: 22px;
       padding: 1rem;
@@ -270,7 +280,7 @@
 
     .score-card strong {
       display: block;
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-size: clamp(2rem, 5vw, 3.3rem);
       line-height: 0.95;
       color: var(--gold);
     }
@@ -282,40 +292,48 @@
       font-weight: 800;
     }
 
-    .check-card[data-status="pass"] {
+    .check-card[data-status="pass"],
+    .route-card[data-status="pass"] {
       border-color: rgba(120, 217, 155, 0.44);
     }
 
-    .check-card[data-status="fail"] {
+    .check-card[data-status="fail"],
+    .route-card[data-status="fail"] {
       border-color: rgba(255, 129, 122, 0.44);
     }
 
-    .check-card[data-status="hold"] {
+    .check-card[data-status="hold"],
+    .route-card[data-status="hold"] {
       border-color: rgba(245, 199, 107, 0.44);
     }
 
-    .check-card b {
+    .check-card b,
+    .route-card b {
       display: block;
       margin-bottom: 0.35rem;
       font-size: 1rem;
     }
 
-    .check-card[data-status="pass"] b {
+    .check-card[data-status="pass"] b,
+    .route-card[data-status="pass"] b {
       color: var(--green);
     }
 
-    .check-card[data-status="fail"] b {
+    .check-card[data-status="fail"] b,
+    .route-card[data-status="fail"] b {
       color: var(--red);
     }
 
-    .check-card[data-status="hold"] b {
+    .check-card[data-status="hold"] b,
+    .route-card[data-status="hold"] b {
       color: var(--amber);
     }
 
     .check-card pre,
-    .decision-card pre {
+    .decision-card pre,
+    .summary-card pre {
       overflow: auto;
-      max-height: 220px;
+      max-height: 240px;
       border-radius: 14px;
       padding: 0.85rem;
       color: var(--muted);
@@ -338,23 +356,6 @@
       background: rgba(255, 255, 255, 0.04);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.88rem;
-    }
-
-    .option-ladder {
-      display: grid;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-    }
-
-    .option-card[data-selected="true"] {
-      border-color: rgba(120, 217, 155, 0.6);
-      background: rgba(120, 217, 155, 0.08);
-    }
-
-    .option-card strong {
-      display: block;
-      margin-bottom: 0.35rem;
-      color: var(--gold);
     }
 
     .diagnostic-frame {
@@ -391,7 +392,8 @@
       .score-grid,
       .diagnostic-grid,
       .result-grid,
-      .decision-grid {
+      .decision-grid,
+      .route-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -421,11 +423,17 @@
 >
   <a class="skip-link" href="#gauges-main">Skip to Gauges content</a>
 
-  <div id="gauges-root" class="gauges-shell" data-proof-marker="H6_GAUGES">
+  <div
+    id="gauges-root"
+    class="gauges-shell"
+    data-proof-marker="H6_GAUGES"
+    data-gauges-role="estate-diagnostic-instrument-room"
+    data-showroom-selector-role="internal-panel"
+  >
     <header class="topbar" aria-label="Gauges site header">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Dexter Lab · Showroom Minimum Rebuild Selector</span>
+        <span>Dexter Lab · Measurement Key</span>
       </a>
 
       <nav class="site-nav nav-links" aria-label="Primary navigation">
@@ -441,93 +449,134 @@
 
     <main id="gauges-main">
       <section class="hero" aria-labelledby="gauges-title">
-        <p class="kicker">H6 · Gauges · Showroom Minimum Rebuild Selector</p>
-        <h1 id="gauges-title">Measurement Key.</h1>
+        <p class="kicker">H6 · Gauges · Diagnostic Instrument Room</p>
+        <h1 id="gauges-title">Gauges Diagnostic Instrument Room</h1>
         <p class="lede">
-          This console measures the Showroom field only. It maps the current
-          functional state into a 256 lattice, identifies the first controlling break,
-          and returns the fewest-file solution before any further Showroom code is written.
+          Gauges is the H6 estate diagnostic instrument room. It reads the estate-wide field,
+          verifies house skeleton routes, product routes, planetary constructs, Showroom health,
+          evidence lanes, and receipts. The Showroom Minimum Rebuild Selector remains available
+          as an internal panel, not the page identity.
         </p>
 
         <div class="action-row">
-          <button type="button" id="run-diagnostic-button">Run minimum rebuild selector</button>
-          <a href="/showroom/">Inspect Showroom</a>
-          <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
-          <a href="/showroom/showroom.render.js">Render bridge</a>
-          <a href="/showroom/index.js">Parent boot</a>
-          <a href="/showroom/globe/index.js">Standalone boot</a>
+          <button type="button" id="run-estate-diagnostic">Run estate diagnostic</button>
+          <button type="button" id="run-showroom-selector">Run Showroom selector</button>
+          <a href="/">Compass</a>
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/">Demo Universe Earth</a>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="score-title">
-        <p class="kicker">256 Lattice Read</p>
-        <h2 id="score-title">Current Showroom field.</h2>
-        <p id="diagnostic-summary" class="panel-copy">Waiting to run selector.</p>
+      <section class="panel" aria-labelledby="estate-summary-title">
+        <p class="kicker">Estate Health Summary</p>
+        <h2 id="estate-summary-title">Live estate field.</h2>
+        <p id="estate-summary-copy" class="panel-copy">Waiting to run estate diagnostic.</p>
 
         <div class="score-grid">
           <article class="score-card">
-            <strong id="score-route">--</strong>
-            <span>Q1 Route liveness</span>
+            <strong id="score-overall">--</strong>
+            <span>Overall health</span>
           </article>
           <article class="score-card">
-            <strong id="score-source">--</strong>
-            <span>Q2 Source congruence</span>
+            <strong id="score-house">--</strong>
+            <span>House skeleton</span>
           </article>
           <article class="score-card">
-            <strong id="score-motion">--</strong>
-            <span>Q3 Render motion</span>
+            <strong id="score-products">--</strong>
+            <span>Products</span>
           </article>
           <article class="score-card">
-            <strong id="score-visual">--</strong>
-            <span>Q4 Visual acceptance</span>
+            <strong id="score-planets">--</strong>
+            <span>Planetary constructs</span>
           </article>
         </div>
+      </section>
+
+      <section class="panel" aria-labelledby="house-panel-title">
+        <p class="kicker">House Skeleton Panel</p>
+        <h2 id="house-panel-title">H-route structure.</h2>
+        <p class="panel-copy">
+          Measures the core estate routes and checks for live route response, house markers,
+          chamber markers, and navigable route continuity.
+        </p>
+        <div id="house-results" class="route-grid"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="products-panel-title">
+        <p class="kicker">Products Panel</p>
+        <h2 id="products-panel-title">Product wing diagnostics.</h2>
+        <p class="panel-copy">
+          Measures product wing availability without rewriting or touching product files.
+        </p>
+        <div id="products-results" class="route-grid"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="planetary-panel-title">
+        <p class="kicker">Planetary Constructs Panel</p>
+        <h2 id="planetary-panel-title">Construct route diagnostics.</h2>
+        <p class="panel-copy">
+          Measures the known planetary construct routes as route-health evidence only.
+        </p>
+        <div id="planetary-results" class="route-grid"></div>
+      </section>
+
+      <section
+        class="panel"
+        id="showroom-selector-panel"
+        aria-labelledby="showroom-selector-title"
+        data-internal-panel="showroom-minimum-rebuild-selector"
+      >
+        <p class="kicker">Internal Panel · Showroom Minimum Rebuild Selector</p>
+        <h2 id="showroom-selector-title">Showroom selector.</h2>
+        <p class="panel-copy">
+          This internal panel measures the Showroom field and returns the smallest lawful file-set
+          recommendation when a Showroom-specific break exists. It does not control the primary
+          Gauges page identity.
+        </p>
 
         <div class="score-grid">
           <article class="score-card">
-            <strong id="score-total">--</strong>
-            <span>Total / 256</span>
+            <strong id="score-showroom-route">--</strong>
+            <span>Route liveness</span>
           </article>
           <article class="score-card">
-            <strong id="score-missing">--</strong>
-            <span>Missing seats</span>
+            <strong id="score-showroom-source">--</strong>
+            <span>Source congruence</span>
           </article>
           <article class="score-card">
-            <strong id="score-option">--</strong>
-            <span>Selected option</span>
+            <strong id="score-showroom-motion">--</strong>
+            <span>Render motion</span>
           </article>
           <article class="score-card">
-            <strong id="score-class">--</strong>
-            <span>System class</span>
+            <strong id="score-showroom-visual">--</strong>
+            <span>Visual acceptance</span>
           </article>
         </div>
-      </section>
 
-      <section class="panel" aria-labelledby="decision-title">
-        <p class="kicker">Selector Output</p>
-        <h2 id="decision-title">Minimum lawful file set.</h2>
-        <div id="selector-decision" class="decision-grid" aria-live="polite"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="ladder-title">
-        <p class="kicker">Option Ladder</p>
-        <h2 id="ladder-title">A to E rebuild boundaries.</h2>
-        <div id="option-ladder" class="option-ladder"></div>
+        <div id="showroom-decision" class="decision-grid"></div>
       </section>
 
       <section class="panel" aria-labelledby="evidence-title">
-        <p class="kicker">Evidence</p>
-        <h2 id="evidence-title">Measured Showroom lanes.</h2>
-        <div id="diagnostic-results" class="result-grid" aria-live="polite"></div>
+        <p class="kicker">Evidence and Receipt Panel</p>
+        <h2 id="evidence-title">Live evidence lanes.</h2>
+        <p class="panel-copy">
+          Evidence is measurement. Owner visual truth remains owner-confirmed and is not claimed
+          by telemetry alone.
+        </p>
+        <div id="evidence-results" class="result-grid" aria-live="polite"></div>
       </section>
 
       <section class="receipt-panel" aria-labelledby="receipt-title">
         <p class="receipt-line">Calibration receipt</p>
-        <h2 id="receipt-title">Showroom minimum rebuild selector receipt.</h2>
+        <h2 id="receipt-title">H6 Gauges role alignment receipt.</h2>
         <p class="receipt-copy">
-          VERSION: SHOWROOM_MINIMUM_REBUILD_DIAGNOSTIC_GAUGES_TNT_v1.
-          Gauges measures first, the 256 lattice locates the smallest missing seat cluster,
-          and Showroom code remains held until the minimum file set is bound.
+          VERSION: GAUGES_H6_ROLE_ALIGNMENT_LAB_TNT_v1.
+          Gauges is restored as the H6 estate diagnostic instrument room. The Showroom Minimum
+          Rebuild Selector is preserved as an internal panel only. No Showroom files, asset files,
+          product files, planetary files, or route files are touched by this page.
         </p>
 
         <div class="receipt-list">
@@ -547,23 +596,24 @@
           <span>construct-class=house</span>
           <span>house-part=gauges</span>
           <span>H6_GAUGES</span>
-          <span>minimum-rebuild-selector=active</span>
-          <span>SHOWROOM_MINIMUM_REBUILD_DIAGNOSTIC_GAUGES_TNT_v1</span>
+          <span>diagnostic-instrument-room=active</span>
+          <span>showroom-selector=internal-panel</span>
+          <span>GAUGES_H6_ROLE_ALIGNMENT_LAB_TNT_v1</span>
         </div>
       </section>
 
       <iframe
-        id="parent-diagnostic-frame"
+        id="showroom-parent-frame"
         class="diagnostic-frame"
         src="about:blank"
-        title="Parent Showroom diagnostic frame"
+        title="Showroom parent diagnostic frame"
       ></iframe>
 
       <iframe
-        id="standalone-diagnostic-frame"
+        id="showroom-standalone-frame"
         class="diagnostic-frame"
         src="about:blank"
-        title="Standalone Demo Universe diagnostic frame"
+        title="Demo Universe Earth diagnostic frame"
       ></iframe>
     </main>
   </div>
@@ -572,94 +622,61 @@
     (function () {
       "use strict";
 
-      const VERSION = "SHOWROOM_MINIMUM_REBUILD_DIAGNOSTIC_GAUGES_TNT_v1";
+      const VERSION = "GAUGES_H6_ROLE_ALIGNMENT_LAB_TNT_v1";
 
-      const TARGETS = {
+      const houseRoutes = [
+        { name: "Compass", path: "/", markers: ["Diamond Gate Bridge"] },
+        { name: "Door", path: "/door/", markers: ["door", "house"] },
+        { name: "Home", path: "/home/", markers: ["home", "house"] },
+        { name: "Products", path: "/products/", markers: ["products"] },
+        { name: "Showroom", path: "/showroom/", markers: ["H5_SHOWROOM", "SHOWROOM_CHAMBER", "showroom"] },
+        { name: "Gauges", path: "/gauges/", markers: ["H6_GAUGES", "gauges-truth", "Diagnostic Instrument Room"] }
+      ];
+
+      const productRoutes = [
+        { name: "Products index", path: "/products/", markers: ["products"] },
+        { name: "ARCHCOIN", path: "/products/archcoin/", markers: ["ARCHCOIN", "archcoin"] }
+      ];
+
+      const planetaryRoutes = [
+        { name: "Prelude", path: "/prelude/", markers: ["prelude"] },
+        { name: "Explore", path: "/explore/", markers: ["explore"] },
+        { name: "Frontier", path: "/explore/frontier/", markers: ["frontier"] },
+        { name: "Laws", path: "/laws/", markers: ["laws"] },
+        { name: "Governance", path: "/governance/", markers: ["governance"] },
+        { name: "Upper Room", path: "/big-laugh/upper-room/", markers: ["upper room", "upper-room"] },
+        { name: "About This Underdog", path: "/about-this-underdog/", markers: ["underdog"] },
+        { name: "Nine Summits Universe", path: "/nine-summits-universe/", markers: ["summits", "universe"] },
+        { name: "Nine Summits of Love", path: "/nine-summits-of-love/", markers: ["summits", "love"] }
+      ];
+
+      const showroomTargets = {
         parentRoute: "/showroom/",
-        parentHtml: "/showroom/",
-        parentJs: "/showroom/index.js",
+        standaloneRoute: "/showroom/globe/",
+        parentBoot: "/showroom/index.js",
         parentRender: "/showroom/showroom.render.js",
         runtime: "/showroom/runtime.js",
         css: "/showroom/showroom.css",
-        standaloneRoute: "/showroom/globe/",
-        standaloneHtml: "/showroom/globe/",
-        standaloneJs: "/showroom/globe/index.js",
-        instrument: "/assets/showroom.globe.instrument.js",
+        standaloneBoot: "/showroom/globe/index.js",
+        assetInstrument: "/assets/showroom.globe.instrument.js",
         earthSurface: "/assets/earth/earth_surface_2048.jpg",
         earthClouds: "/assets/earth/earth_clouds_2048.jpg"
       };
 
-      const OPTIONS = {
-        A: {
-          label: "Option A · one file",
-          files: ["/showroom/showroom.render.js"],
-          use: [
-            "Only parent render bridge is stale.",
-            "Parent route is alive.",
-            "Standalone route is passing.",
-            "Runtime, CSS, and asset instrument are current."
-          ]
-        },
-        B: {
-          label: "Option B · two files",
-          files: ["/showroom/showroom.render.js", "/showroom/index.js"],
-          use: [
-            "Parent render bridge and parent boot both write stale state.",
-            "Standalone route is passing.",
-            "HTML load paths are current."
-          ]
-        },
-        C: {
-          label: "Option C · three files",
-          files: ["/showroom/showroom.render.js", "/showroom/index.js", "/showroom/globe/index.js"],
-          use: [
-            "Parent and standalone boot state diverge.",
-            "Both routes are alive.",
-            "HTML load paths are current.",
-            "Runtime, CSS, and asset instrument are current."
-          ]
-        },
-        D: {
-          label: "Option D · four files",
-          files: ["/showroom/index.html", "/showroom/index.js", "/showroom/globe/index.html", "/showroom/globe/index.js"],
-          use: [
-            "HTML load path or script versioning is the first break.",
-            "Parent and standalone consumer files require alignment.",
-            "Render, runtime, CSS, and asset instrument are current."
-          ]
-        },
-        E: {
-          label: "Option E · full Showroom rebuild",
-          files: [
-            "/showroom/index.html",
-            "/showroom/index.js",
-            "/showroom/showroom.render.js",
-            "/showroom/runtime.js",
-            "/showroom/showroom.css",
-            "/showroom/globe/index.html",
-            "/showroom/globe/index.js",
-            "/assets/showroom.globe.instrument.js"
-          ],
-          use: [
-            "Collapse is measured.",
-            "Raw code leak is measured.",
-            "Active globe disappears.",
-            "Multiple responsibility contracts fail at once."
-          ]
-        }
-      };
-
       const state = {
-        checks: [],
+        evidence: [],
         scores: {
-          route: 0,
-          source: 0,
-          motion: 0,
-          visual: 0,
-          total: 0,
-          missing: 256
-        },
-        decision: null
+          house: 0,
+          products: 0,
+          planets: 0,
+          overall: 0,
+          showroom: {
+            route: 0,
+            source: 0,
+            motion: 0,
+            visual: 0
+          }
+        }
       };
 
       function el(id) {
@@ -692,149 +709,146 @@
         if (node) node.textContent = String(value);
       }
 
-      function setSummary(text) {
-        setText("diagnostic-summary", text);
-      }
-
-      function addCheck(name, status, detail, evidence) {
-        state.checks.push({
+      function addEvidence(name, status, detail, evidence) {
+        state.evidence.push({
           name: name,
           status: status,
           detail: detail,
           evidence: evidence || ""
         });
 
-        renderChecks();
+        renderEvidence();
       }
 
-      function renderChecks() {
-        const root = el("diagnostic-results");
+      function renderEvidence() {
+        const root = el("evidence-results");
         if (!root) return;
 
         root.replaceChildren();
 
-        state.checks.forEach(function (check) {
+        state.evidence.forEach(function (item) {
           root.appendChild(
-            create("article", { className: "check-card", "data-status": check.status }, [
-              create("b", { text: check.status.toUpperCase() + " · " + check.name }),
-              create("p", { className: "small-copy", text: check.detail }),
-              check.evidence ? create("pre", { text: check.evidence.slice(0, 1600) }) : null
+            create("article", { className: "check-card", "data-status": item.status }, [
+              create("b", { text: item.status.toUpperCase() + " · " + item.name }),
+              create("p", { className: "small-copy", text: item.detail }),
+              item.evidence ? create("pre", { text: item.evidence.slice(0, 1600) }) : null
             ])
           );
         });
-      }
-
-      function renderOptionLadder(selected) {
-        const root = el("option-ladder");
-        if (!root) return;
-
-        root.replaceChildren();
-
-        Object.keys(OPTIONS).forEach(function (key) {
-          const option = OPTIONS[key];
-
-          root.appendChild(
-            create("article", { className: "option-card", "data-selected": selected === key ? "true" : "false" }, [
-              create("strong", { text: option.label }),
-              create("p", { className: "small-copy", text: "Files: " + option.files.join(", ") }),
-              create(
-                "ul",
-                { className: "token-list" },
-                option.use.map(function (item) {
-                  return create("li", { text: item });
-                })
-              )
-            ])
-          );
-        });
-      }
-
-      function renderDecision(decision) {
-        const root = el("selector-decision");
-        if (!root) return;
-
-        root.replaceChildren();
-
-        const fields = [
-          ["System class", decision.systemClass],
-          ["Current 256 lattice score", String(decision.latticeScore) + "/256"],
-          ["Missing seats by quadrant", JSON.stringify(decision.missingByQuadrant, null, 2)],
-          ["First controlling break", decision.firstBreak],
-          ["Selected option", decision.selectedOption],
-          ["Selected files", decision.selectedFiles.join("\n")],
-          ["Why this set", decision.whyThisSet.join("\n")],
-          ["Why smaller set is insufficient", decision.whySmallerInsufficient.join("\n")],
-          ["Why larger set is held", decision.whyLargerHeld.join("\n")],
-          ["Expected result", decision.expectedResult.join("\n")],
-          ["Do not touch", decision.doNotTouch.join("\n")],
-          ["Escalate only if", decision.escalateOnlyIf.join("\n")],
-          ["Authorization status", decision.authorizationStatus]
-        ];
-
-        fields.forEach(function (field) {
-          root.appendChild(
-            create("article", { className: "decision-card" }, [
-              create("h3", { text: field[0] }),
-              create("pre", { text: field[1] })
-            ])
-          );
-        });
-
-        const rootNode = el("gauges-root");
-        if (rootNode) {
-          rootNode.dataset.systemClass = decision.systemClass;
-          rootNode.dataset.latticeScore = String(decision.latticeScore);
-          rootNode.dataset.firstBreak = decision.firstBreak;
-          rootNode.dataset.selectedOption = decision.selectedOption;
-          rootNode.dataset.selectedFiles = decision.selectedFiles.join(",");
-        }
       }
 
       function updateScores() {
-        setText("score-route", state.scores.route + "/64");
-        setText("score-source", state.scores.source + "/64");
-        setText("score-motion", state.scores.motion + "/64");
-        setText("score-visual", state.scores.visual + "/64");
-        setText("score-total", state.scores.total);
-        setText("score-missing", state.scores.missing);
-        setText("score-option", state.decision ? state.decision.selectedOption : "--");
-        setText("score-class", state.decision ? state.decision.systemClass : "--");
+        setText("score-house", state.scores.house);
+        setText("score-products", state.scores.products);
+        setText("score-planets", state.scores.planets);
+        setText("score-overall", state.scores.overall);
+
+        setText("score-showroom-route", state.scores.showroom.route + "/64");
+        setText("score-showroom-source", state.scores.showroom.source + "/64");
+        setText("score-showroom-motion", state.scores.showroom.motion + "/64");
+        setText("score-showroom-visual", state.scores.showroom.visual + "/64");
       }
 
-      async function fetchText(url) {
-        const response = await fetch(url + "?v=" + Date.now(), { cache: "no-store" });
+      async function fetchText(path) {
+        const response = await fetch(path + "?gauges-h6=" + Date.now(), { cache: "no-store" });
         const text = await response.text();
 
         return {
+          path: path,
           ok: response.ok,
           status: response.status,
           text: text,
-          url: url,
-          contentType: response.headers.get("content-type") || ""
+          type: response.headers.get("content-type") || ""
         };
       }
 
-      async function fetchAsset(url) {
-        const response = await fetch(url + "?v=" + Date.now(), { cache: "no-store" });
+      async function fetchAsset(path) {
+        const response = await fetch(path + "?gauges-h6=" + Date.now(), { cache: "no-store" });
 
         return {
+          path: path,
           ok: response.ok,
           status: response.status,
-          url: url,
-          contentType: response.headers.get("content-type") || ""
+          type: response.headers.get("content-type") || ""
         };
       }
 
-      function count(source, tokens) {
-        return tokens.reduce(function (sum, token) {
-          return sum + (String(source).indexOf(token) !== -1 ? 1 : 0);
-        }, 0);
+      function markerScore(text, markers) {
+        if (!markers || !markers.length) return 0;
+
+        const lower = String(text || "").toLowerCase();
+        const hits = markers.filter(function (marker) {
+          return lower.indexOf(String(marker).toLowerCase()) !== -1;
+        }).length;
+
+        return Math.round((hits / markers.length) * 40);
       }
 
-      function findTokens(source, tokens) {
-        return tokens.filter(function (token) {
-          return String(source).indexOf(token) !== -1;
-        });
+      function scoreRoute(result, markers) {
+        if (!result.ok) return 0;
+
+        let score = 60;
+        score += markerScore(result.text, markers);
+
+        return Math.min(100, score);
+      }
+
+      function statusFromScore(score) {
+        if (score >= 80) return "pass";
+        if (score >= 45) return "hold";
+        return "fail";
+      }
+
+      async function runRouteGroup(title, routes, rootId) {
+        const root = el(rootId);
+        if (!root) return 0;
+
+        root.replaceChildren();
+
+        let total = 0;
+
+        for (const route of routes) {
+          let result;
+
+          try {
+            result = await fetchText(route.path);
+          } catch (error) {
+            result = {
+              path: route.path,
+              ok: false,
+              status: 0,
+              text: "",
+              error: error && error.message ? error.message : String(error)
+            };
+          }
+
+          const score = scoreRoute(result, route.markers);
+          total += score;
+
+          root.appendChild(
+            create("article", { className: "route-card", "data-status": statusFromScore(score) }, [
+              create("b", { text: route.name + " · " + score }),
+              create("p", {
+                className: "small-copy",
+                text: route.path + " · HTTP " + (result.status || 0)
+              }),
+              create("pre", {
+                text: result.ok
+                  ? String(result.text || "").slice(0, 700)
+                  : String(result.error || "Fetch failed.")
+              })
+            ])
+          );
+
+          addEvidence(
+            title + " · " + route.name,
+            statusFromScore(score),
+            route.path + " · HTTP " + (result.status || 0) + " · score=" + score,
+            result.ok ? String(result.text || "").slice(0, 700) : String(result.error || "Fetch failed.")
+          );
+        }
+
+        return routes.length ? Math.round(total / routes.length) : 0;
       }
 
       function wait(ms) {
@@ -843,38 +857,40 @@
         });
       }
 
-      function readFrameNow(frame) {
+      function readFrame(frame) {
         const doc = frame.contentDocument;
         const win = frame.contentWindow;
 
-        if (!doc || !win) {
-          return { ok: false, error: "Unable to access same-origin iframe document." };
-        }
+        if (!doc || !win) return { ok: false, error: "Frame not readable." };
 
         const mount = doc.getElementById("showroom-globe-mount");
-        const root = doc.getElementById("showroom-root");
-        const main = doc.getElementById("showroom-main");
-
         const activeGlobe =
           doc.querySelector(".showroom-generation-3-active-globe") ||
           doc.querySelector(".showroom-generation-2-active-globe");
-
         const surface =
           doc.querySelector(".showroom-generation-3-earth-surface") ||
           doc.querySelector(".showroom-generation-2-earth-surface");
-
         const clouds =
           doc.querySelector(".showroom-generation-3-earth-clouds") ||
           doc.querySelector(".showroom-generation-2-earth-clouds");
-
         const caption =
           doc.querySelector(".showroom-generation-3-caption") ||
           doc.querySelector(".showroom-generation-2-caption");
-
+        const axis = doc.querySelector(".showroom-generation-3-axis-line");
         const terminator = doc.querySelector(".showroom-generation-3-terminator");
         const atmosphere = doc.querySelector(".showroom-generation-3-atmosphere");
-        const axis = doc.querySelector(".showroom-generation-3-axis-line");
-        const telemetry = doc.querySelector(".showroom-generation-3-telemetry");
+
+        function styleRead(node) {
+          if (!node) return {};
+          const style = win.getComputedStyle(node);
+
+          return {
+            transform: style.transform,
+            animationName: style.animationName,
+            opacity: style.opacity,
+            filter: style.filter
+          };
+        }
 
         let mountVisible = false;
         let computedMount = "";
@@ -898,89 +914,63 @@
             " height=" + Math.round(rect.height);
         }
 
-        function styleRead(node) {
-          if (!node) return {};
-          const style = win.getComputedStyle(node);
-
-          return {
-            transform: style.transform,
-            animationName: style.animationName,
-            animationDuration: style.animationDuration,
-            opacity: style.opacity,
-            filter: style.filter,
-            mixBlendMode: style.mixBlendMode
-          };
-        }
-
         const runtime =
           win.DGBShowroomRuntime &&
           typeof win.DGBShowroomRuntime.getState === "function"
             ? win.DGBShowroomRuntime.getState()
             : null;
 
-        const instrumentVersion =
-          win.DGBShowroomGlobeInstrument && win.DGBShowroomGlobeInstrument.version
-            ? win.DGBShowroomGlobeInstrument.version
-            : "";
-
-        const renderVersion =
-          win.DGBShowroomRender && win.DGBShowroomRender.version
-            ? win.DGBShowroomRender.version
-            : "";
-
-        const surfaceLoaded = Boolean(surface && surface.complete && surface.naturalWidth > 0);
-        const cloudLoaded = Boolean(clouds && clouds.complete && clouds.naturalWidth > 0);
-
         return {
           ok: true,
-          hasMount: Boolean(mount),
+          mount: Boolean(mount),
           mountVisible: mountVisible,
-          hasActiveGlobe: Boolean(activeGlobe),
-          hasSurface: Boolean(surface),
-          hasClouds: Boolean(clouds),
-          surfaceLoaded: surfaceLoaded,
-          cloudLoaded: cloudLoaded,
-          globeVisible: Boolean(mountVisible && activeGlobe && surface && surfaceLoaded),
-          hasTerminator: Boolean(terminator),
-          hasAtmosphere: Boolean(atmosphere),
-          hasAxis: Boolean(axis),
-          hasTelemetry: Boolean(telemetry),
-          captionText: caption ? caption.textContent.trim() : "",
-          computedMount: computedMount,
-          mountDataset: mount ? Object.assign({}, mount.dataset) : {},
-          rootDataset: root ? Object.assign({}, root.dataset) : {},
-          mainDataset: main ? Object.assign({}, main.dataset) : {},
+          activeGlobe: Boolean(activeGlobe),
+          surface: Boolean(surface),
+          clouds: Boolean(clouds),
+          globeVisible: Boolean(mountVisible && activeGlobe && surface),
+          caption: caption ? caption.textContent.trim() : "",
+          axis: Boolean(axis),
+          terminator: Boolean(terminator),
+          atmosphere: Boolean(atmosphere),
           surfaceStyle: styleRead(surface),
           cloudStyle: styleRead(clouds),
-          globeStyle: styleRead(activeGlobe),
+          mountDataset: mount ? Object.assign({}, mount.dataset) : {},
           runtime: runtime,
-          instrumentVersion: instrumentVersion,
-          renderVersion: renderVersion
+          instrumentVersion:
+            win.DGBShowroomGlobeInstrument && win.DGBShowroomGlobeInstrument.version
+              ? win.DGBShowroomGlobeInstrument.version
+              : "",
+          renderVersion:
+            win.DGBShowroomRender && win.DGBShowroomRender.version
+              ? win.DGBShowroomRender.version
+              : "",
+          computedMount: computedMount
         };
       }
 
-      function loadFrame(frameId, url) {
+      function loadFrame(frameId, path) {
         return new Promise(function (resolve) {
           const frame = el(frameId);
+
           if (!frame) {
-            resolve({ ok: false, error: "Diagnostic iframe missing." });
+            resolve({ ok: false, error: "Missing iframe." });
             return;
           }
 
-          let finished = false;
+          let complete = false;
 
-          function finish(result) {
-            if (finished) return;
-            finished = true;
-            resolve(result);
+          function finish(value) {
+            if (complete) return;
+            complete = true;
+            resolve(value);
           }
 
           frame.onload = async function () {
             try {
               await wait(2200);
-              const first = readFrameNow(frame);
+              const first = readFrame(frame);
               await wait(1600);
-              const second = readFrameNow(frame);
+              const second = readFrame(frame);
 
               if (!first.ok || !second.ok) {
                 finish({ ok: false, error: first.error || second.error || "Frame read failed." });
@@ -995,20 +985,18 @@
                 first.cloudStyle.transform !== second.cloudStyle.transform ||
                 second.cloudStyle.animationName !== "none";
 
-              const runtimeTickChanged =
+              const runtimeTick =
                 first.runtime &&
                 second.runtime &&
                 String(first.runtime.motionTick) !== String(second.runtime.motionTick);
 
               finish({
                 ok: true,
-                url: url,
                 first: first,
                 second: second,
                 surfaceMotion: Boolean(surfaceMotion),
                 cloudMotion: Boolean(cloudMotion),
-                runtimeTickChanged: Boolean(runtimeTickChanged),
-                runtimeMotion: Boolean(surfaceMotion || cloudMotion || runtimeTickChanged)
+                runtimeTick: Boolean(runtimeTick)
               });
             } catch (error) {
               finish({
@@ -1018,568 +1006,331 @@
             }
           };
 
-          frame.src = url + "?selector=" + Date.now();
+          frame.src = path + "?gauges-h6-frame=" + Date.now();
 
           window.setTimeout(function () {
-            finish({ ok: false, error: "Timed out waiting for " + url + "." });
+            finish({ ok: false, error: "Timed out reading " + path + "." });
           }, 8500);
         });
       }
 
-      function inspectSources(sources) {
-        const parentHtml = sources.parentHtml.text || "";
-        const parentJs = sources.parentJs.text || "";
-        const parentRender = sources.parentRender.text || "";
-        const runtime = sources.runtime.text || "";
-        const css = sources.css.text || "";
-        const standaloneHtml = sources.standaloneHtml.text || "";
-        const standaloneJs = sources.standaloneJs.text || "";
-        const instrument = sources.instrument.text || "";
+      function sourceTokenRead(sources) {
+        const joined = [
+          sources.parentRoute && sources.parentRoute.text,
+          sources.parentBoot && sources.parentBoot.text,
+          sources.parentRender && sources.parentRender.text,
+          sources.runtime && sources.runtime.text,
+          sources.css && sources.css.text,
+          sources.standaloneRoute && sources.standaloneRoute.text,
+          sources.standaloneBoot && sources.standaloneBoot.text,
+          sources.assetInstrument && sources.assetInstrument.text
+        ].join("\n");
 
         const currentTokens = [
-          "generation-3-axis-rotation-depth",
-          "generation3AxisRotationDepth",
-          "generation3RuntimeMotion",
-          "generation3VisualClarityRefinement",
-          "showroom-generation-3-axis-rotation-depth",
-          "pending-user-confirmation"
+          "generation-3",
+          "axis-rotation",
+          "shadow",
+          "terminator",
+          "atmosphere",
+          "showroom-parent-render-bridge-gen3-caption-congruence",
+          "showroom-generation-3-runtime-motion-state",
+          "showroom-generation-3-axis-rotation-depth-instrument"
         ];
 
         const staleTokens = [
           "SHOWROOM_PARENT_RENDER_SPINE_v1",
           "GENERATION 2 · ACTIVE GLOBE",
-          "GENERATION 2 · DEMO UNIVERSE EARTH · ACTIVE GLOBE",
           "shadow-detail-blocked-until-generation-2-pass",
-          "showroom-seven-file-asset-instrument-structural-rewrite-v1",
           "showroom-globe-asset-instrument-v1"
         ];
 
-        const loadPathTokens = [
-          "/assets/showroom.globe.instrument.js?v=showroom-generation-3-axis-rotation-depth-v1",
-          "/showroom/runtime.js?v=showroom-generation-3-axis-rotation-depth-v1",
-          "/showroom/showroom.css?v=showroom-generation-3-visual-clarity-minimum-refinement-v1"
-        ];
-
-        const cssMotionTokens = [
-          "showroomClaritySurfaceRotation",
-          "showroomClarityCloudRotation",
-          "showroomClarityAtmospherePulse",
-          "showroomClarityOrbitDrift"
-        ];
-
-        const parentConsumerJoined = [parentHtml, parentJs, parentRender].join("\n");
-        const standaloneConsumerJoined = [standaloneHtml, standaloneJs].join("\n");
-        const consumerJoined = [parentConsumerJoined, standaloneConsumerJoined].join("\n");
-
-        return {
-          parentHtmlCurrent: count(parentHtml, currentTokens),
-          parentJsCurrent: count(parentJs, currentTokens),
-          parentRenderCurrent: count(parentRender, currentTokens),
-          runtimeCurrent: count(runtime, currentTokens),
-          cssMotionCount: count(css, cssMotionTokens),
-          standaloneHtmlCurrent: count(standaloneHtml, currentTokens),
-          standaloneJsCurrent: count(standaloneJs, currentTokens),
-          instrumentCurrent: count(instrument, currentTokens),
-          loadPathCount: count(parentHtml + "\n" + standaloneHtml, loadPathTokens),
-          staleTokensAll: findTokens(consumerJoined, staleTokens),
-          parentStaleTokens: findTokens(parentConsumerJoined, staleTokens),
-          parentRenderStaleTokens: findTokens(parentRender, staleTokens),
-          parentJsStaleTokens: findTokens(parentJs, staleTokens),
-          standaloneStaleTokens: findTokens(standaloneConsumerJoined, staleTokens),
-          cssHasMotion: count(css, cssMotionTokens) >= 2,
-          parentRenderVersionCurrent: parentRender.indexOf("showroom-parent-render-bridge-gen3-caption-congruence") !== -1,
-          parentRenderOld: parentRender.indexOf("SHOWROOM_PARENT_RENDER_SPINE_v1") !== -1,
-          parentBootCurrent: parentJs.indexOf("showroom-generation-3-parent-consumer-congruence") !== -1,
-          standaloneBootCurrent: standaloneJs.indexOf("demo-universe-earth-generation-3-standalone-consumer-congruence") !== -1,
-          runtimeCurrentVersion: runtime.indexOf("showroom-generation-3-runtime-motion-state-v1") !== -1,
-          instrumentCurrentVersion: instrument.indexOf("showroom-generation-3-axis-rotation-depth-instrument-v1") !== -1
-        };
-      }
-
-      function frameSummary(frameResult) {
-        if (!frameResult || !frameResult.ok) {
-          return frameResult && frameResult.error ? frameResult.error : "Frame failed.";
+        function count(tokens) {
+          const lower = joined.toLowerCase();
+          return tokens.filter(function (token) {
+            return lower.indexOf(token.toLowerCase()) !== -1;
+          }).length;
         }
 
-        const second = frameResult.second;
-
-        return [
-          "mount=" + second.hasMount,
-          "mountVisible=" + second.mountVisible,
-          "globeVisible=" + second.globeVisible,
-          "caption=" + second.captionText,
-          "instrument=" + second.instrumentVersion,
-          "renderBridge=" + second.renderVersion,
-          "surfaceAnim=" + second.surfaceStyle.animationName,
-          "cloudAnim=" + second.cloudStyle.animationName,
-          "surfaceMotion=" + frameResult.surfaceMotion,
-          "cloudMotion=" + frameResult.cloudMotion,
-          "runtimeTickChanged=" + frameResult.runtimeTickChanged,
-          second.computedMount
-        ].join(" · ");
-      }
-
-      function computeScores(sources, sourceRead, parentFrame, standaloneFrame, assets) {
-        let q1 = 0;
-        if (sources.parentHtml.ok) q1 += 10;
-        if (sources.standaloneHtml.ok) q1 += 10;
-        if (assets.surface.ok) q1 += 8;
-        if (assets.clouds.ok) q1 += 8;
-        if (parentFrame.ok && parentFrame.second.globeVisible) q1 += 14;
-        if (standaloneFrame.ok && standaloneFrame.second.globeVisible) q1 += 14;
-
-        let q2 = 0;
-        if (sourceRead.loadPathCount >= 3) q2 += 14;
-        if (sourceRead.instrumentCurrentVersion) q2 += 10;
-        if (sourceRead.runtimeCurrentVersion) q2 += 8;
-        if (sourceRead.parentBootCurrent) q2 += 8;
-        if (sourceRead.standaloneBootCurrent) q2 += 8;
-        if (!sourceRead.staleTokensAll.length) q2 += 16;
-        else if (sourceRead.staleTokensAll.length === 1) q2 += 8;
-
-        let q3 = 0;
-        if (parentFrame.ok && parentFrame.second.hasActiveGlobe) q3 += 8;
-        if (standaloneFrame.ok && standaloneFrame.second.hasActiveGlobe) q3 += 8;
-        if (parentFrame.ok && parentFrame.runtimeMotion) q3 += 12;
-        if (standaloneFrame.ok && standaloneFrame.runtimeMotion) q3 += 12;
-        if (parentFrame.ok && parentFrame.second.hasAxis) q3 += 6;
-        if (standaloneFrame.ok && standaloneFrame.second.hasAxis) q3 += 6;
-        if (parentFrame.ok && String(parentFrame.second.instrumentVersion).indexOf("generation-3") !== -1) q3 += 6;
-        if (standaloneFrame.ok && String(standaloneFrame.second.instrumentVersion).indexOf("generation-3") !== -1) q3 += 6;
-
-        let q4 = 0;
-        if (parentFrame.ok && parentFrame.second.captionText.indexOf("GENERATION 3") !== -1) q4 += 10;
-        if (standaloneFrame.ok && standaloneFrame.second.captionText.indexOf("GENERATION 3") !== -1) q4 += 10;
-        if (parentFrame.ok && parentFrame.second.hasTerminator) q4 += 8;
-        if (standaloneFrame.ok && standaloneFrame.second.hasTerminator) q4 += 8;
-        if (parentFrame.ok && parentFrame.second.hasAtmosphere) q4 += 8;
-        if (standaloneFrame.ok && standaloneFrame.second.hasAtmosphere) q4 += 8;
-        if (parentFrame.ok && parentFrame.second.hasAxis) q4 += 5;
-        if (standaloneFrame.ok && standaloneFrame.second.hasAxis) q4 += 5;
-        if (sourceRead.cssHasMotion) q4 += 2;
+        function found(tokens) {
+          const lower = joined.toLowerCase();
+          return tokens.filter(function (token) {
+            return lower.indexOf(token.toLowerCase()) !== -1;
+          });
+        }
 
         return {
-          route: Math.min(64, q1),
-          source: Math.min(64, q2),
-          motion: Math.min(64, q3),
-          visual: Math.min(64, q4)
+          currentCount: count(currentTokens),
+          staleCount: count(staleTokens),
+          staleTokens: found(staleTokens),
+          hasCurrentRender:
+            String(sources.parentRender && sources.parentRender.text).indexOf("showroom-parent-render-bridge-gen3-caption-congruence") !== -1,
+          hasCurrentRuntime:
+            String(sources.runtime && sources.runtime.text).indexOf("showroom-generation-3-runtime-motion-state") !== -1,
+          hasCurrentInstrument:
+            String(sources.assetInstrument && sources.assetInstrument.text).indexOf("showroom-generation-3-axis-rotation-depth-instrument") !== -1,
+          hasCssMotion:
+            String(sources.css && sources.css.text).indexOf("showroomClaritySurfaceRotation") !== -1
         };
       }
 
-      function missingByQuadrant(scores) {
+      function computeShowroomScores(sources, sourceRead, parentFrame, standaloneFrame, assets) {
+        let route = 0;
+        if (sources.parentRoute && sources.parentRoute.ok) route += 12;
+        if (sources.standaloneRoute && sources.standaloneRoute.ok) route += 12;
+        if (assets.surface && assets.surface.ok) route += 8;
+        if (assets.clouds && assets.clouds.ok) route += 8;
+        if (parentFrame.ok && parentFrame.second.globeVisible) route += 12;
+        if (standaloneFrame.ok && standaloneFrame.second.globeVisible) route += 12;
+
+        let source = 0;
+        if (sourceRead.hasCurrentRender) source += 12;
+        if (sourceRead.hasCurrentRuntime) source += 12;
+        if (sourceRead.hasCurrentInstrument) source += 12;
+        if (sourceRead.hasCssMotion) source += 10;
+        if (sourceRead.staleCount === 0) source += 18;
+
+        let motion = 0;
+        if (parentFrame.ok && parentFrame.surfaceMotion) motion += 12;
+        if (parentFrame.ok && parentFrame.cloudMotion) motion += 10;
+        if (parentFrame.ok && parentFrame.runtimeTick) motion += 12;
+        if (standaloneFrame.ok && standaloneFrame.surfaceMotion) motion += 10;
+        if (standaloneFrame.ok && standaloneFrame.cloudMotion) motion += 8;
+        if (parentFrame.ok && parentFrame.second.axis) motion += 6;
+        if (standaloneFrame.ok && standaloneFrame.second.axis) motion += 6;
+
+        let visual = 0;
+        if (parentFrame.ok && parentFrame.second.caption.indexOf("GENERATION 3") !== -1) visual += 10;
+        if (standaloneFrame.ok && standaloneFrame.second.caption.indexOf("GENERATION 3") !== -1) visual += 10;
+        if (parentFrame.ok && parentFrame.second.axis) visual += 7;
+        if (standaloneFrame.ok && standaloneFrame.second.axis) visual += 7;
+        if (parentFrame.ok && parentFrame.second.terminator) visual += 8;
+        if (standaloneFrame.ok && standaloneFrame.second.terminator) visual += 8;
+        if (parentFrame.ok && parentFrame.second.atmosphere) visual += 7;
+        if (standaloneFrame.ok && standaloneFrame.second.atmosphere) visual += 7;
+
         return {
-          Q1_ROUTE_LIVENESS: 64 - scores.route,
-          Q2_SOURCE_AND_LOAD_PATH_CONGRUENCE: 64 - scores.source,
-          Q3_RENDER_RUNTIME_MOTION: 64 - scores.motion,
-          Q4_VISUAL_CLARITY_AND_ACCEPTANCE: 64 - scores.visual
+          route: Math.min(64, route),
+          source: Math.min(64, source),
+          motion: Math.min(64, motion),
+          visual: Math.min(64, visual)
         };
       }
 
-      function classifyAndSelect(sources, sourceRead, parentFrame, standaloneFrame, assets, scores) {
-        const parentCaption = parentFrame.ok ? parentFrame.second.captionText : "";
-        const standaloneCaption = standaloneFrame.ok ? standaloneFrame.second.captionText : "";
+      function renderShowroomDecision(decision) {
+        const root = el("showroom-decision");
+        if (!root) return;
+
+        root.replaceChildren();
+
+        const rows = [
+          ["System class", decision.systemClass],
+          ["Current 256 lattice score", decision.latticeScore + "/256"],
+          ["First controlling break", decision.firstBreak],
+          ["Recommended minimum file set", decision.selectedFiles.join("\n") || "NONE"],
+          ["Why this set", decision.why.join("\n")],
+          ["Do not touch", decision.doNotTouch.join("\n")],
+          ["Authorization status", decision.authorizationStatus]
+        ];
+
+        rows.forEach(function (row) {
+          root.appendChild(
+            create("article", { className: "decision-card" }, [
+              create("h3", { text: row[0] }),
+              create("pre", { text: row[1] })
+            ])
+          );
+        });
+      }
+
+      function chooseShowroomDecision(scores, sourceRead, parentFrame, standaloneFrame) {
+        const total = scores.route + scores.source + scores.motion + scores.visual;
+
+        const parentCaption = parentFrame.ok ? parentFrame.second.caption : "";
+        const standaloneCaption = standaloneFrame.ok ? standaloneFrame.second.caption : "";
 
         const collapse =
-          !sources.parentHtml.ok ||
-          !sources.standaloneHtml.ok ||
-          !assets.surface.ok ||
-          !assets.clouds.ok ||
+          scores.route < 48 ||
           !parentFrame.ok ||
           !standaloneFrame.ok ||
-          (parentFrame.ok && !parentFrame.second.globeVisible) ||
-          (standaloneFrame.ok && !standaloneFrame.second.globeVisible);
+          (parentFrame.ok && !parentFrame.second.globeVisible);
 
-        const loadPathBreak =
-          sourceRead.loadPathCount < 3 ||
-          !sourceRead.instrumentCurrentVersion ||
-          !sourceRead.runtimeCurrentVersion;
-
-        const parentRenderBreak =
-          sourceRead.parentRenderOld ||
-          sourceRead.parentRenderCurrent === 0 ||
-          (parentCaption.indexOf("GENERATION 2 · ACTIVE GLOBE") !== -1 &&
-            standaloneCaption.indexOf("GENERATION 3") !== -1);
-
-        const parentBootBreak =
-          sourceRead.parentJsStaleTokens.length > 0 ||
-          (parentFrame.ok &&
-            JSON.stringify(parentFrame.second.mountDataset).indexOf("showroom-parent-boot-v1") !== -1);
-
-        const standaloneBootBreak =
-          sourceRead.standaloneStaleTokens.length > 0 ||
-          (standaloneFrame.ok &&
-            standaloneCaption.indexOf("GENERATION 2 · DEMO UNIVERSE") !== -1);
-
-        const runtimeBreak =
-          scores.motion < 42 &&
-          (!parentFrame.ok || !parentFrame.runtimeMotion || !standaloneFrame.runtimeMotion);
-
-        const visualBreak =
-          scores.visual < 48 &&
-          scores.route >= 56 &&
-          scores.motion >= 42;
+        const staleParent =
+          sourceRead.staleCount > 0 ||
+          parentCaption.indexOf("GENERATION 2 · ACTIVE GLOBE") !== -1;
 
         if (collapse) {
           return {
             systemClass: "COLLAPSE_REPAIR",
-            selectedOption: "E",
-            selectedFiles: OPTIONS.E.files,
-            firstBreak: "Collapse or route/globe liveness failure is measured.",
-            whyThisSet: OPTIONS.E.use,
-            whySmallerInsufficient: [
-              "A smaller set is insufficient because liveness or active globe presence failed.",
-              "The selector cannot localize to a single consumer file when collapse evidence is present."
+            latticeScore: total,
+            firstBreak: "Showroom liveness or parent globe visibility is constrained.",
+            selectedFiles: [
+              "/showroom/index.html",
+              "/showroom/index.js",
+              "/showroom/showroom.render.js",
+              "/showroom/runtime.js",
+              "/showroom/showroom.css",
+              "/showroom/globe/index.html",
+              "/showroom/globe/index.js",
+              "/assets/showroom.globe.instrument.js"
             ],
-            whyLargerHeld: ["No larger option exists inside the Showroom selector."],
-            expectedResult: [
-              "Restore route liveness.",
-              "Restore active globe visibility.",
-              "Restore the asset-runtime-render-CSS contract."
-            ],
-            doNotTouch: ["/products/*", "/world/*", "/index.html", "/assets/earth/* unless asset failure is the measured break"],
-            escalateOnlyIf: ["Assets fail after route repair.", "Raw code leak appears.", "Multiple parse failures appear."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
+            why: ["Collapse evidence exists. Full Showroom rebuild may be required only after owner authorization."],
+            doNotTouch: ["/products/*", "/planets/*", "/assets/earth/*"],
+            authorizationStatus: "AWAITING_OWNER_AUTHORIZATION"
           };
         }
 
-        if (loadPathBreak) {
+        if (staleParent && standaloneCaption.indexOf("GENERATION 3") !== -1) {
           return {
-            systemClass: "LOAD_PATH_BREAK",
-            selectedOption: "D",
-            selectedFiles: OPTIONS.D.files,
-            firstBreak: "HTML load path or versioning is stale.",
-            whyThisSet: OPTIONS.D.use,
-            whySmallerInsufficient: [
-              "A JS-only repair is insufficient if the HTML is still loading old versions.",
-              "Both parent and standalone load paths must be aligned before downstream files can express correctly."
-            ],
-            whyLargerHeld: [
-              "Runtime, CSS, render, and asset instrument are not selected unless their own source or runtime reads fail."
-            ],
-            expectedResult: [
-              "Current versioned scripts and CSS load on both routes.",
-              "Parent and standalone consumer routes express the current state."
-            ],
-            doNotTouch: ["/showroom/runtime.js", "/showroom/showroom.css", "/assets/showroom.globe.instrument.js", "/gauges/index.html", "/assets/earth/*"],
-            escalateOnlyIf: ["Versioned files still do not load after HTML correction.", "A parse error appears in a loaded script."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
+            systemClass: "RENDER_OR_PARENT_CONSUMER_CONGRUENCE_BREAK",
+            latticeScore: total,
+            firstBreak: "Parent caption or source token is stale while standalone is current.",
+            selectedFiles: ["/showroom/showroom.render.js", "/showroom/index.js"],
+            why: ["Parent render/boot congruence is the smallest Showroom-specific target if stale parent evidence returns."],
+            doNotTouch: ["/showroom/runtime.js", "/showroom/showroom.css", "/showroom/globe/index.html", "/showroom/globe/index.js", "/assets/showroom.globe.instrument.js"],
+            authorizationStatus: "AWAITING_OWNER_AUTHORIZATION"
           };
         }
 
-        if (parentRenderBreak && !parentBootBreak && !standaloneBootBreak) {
+        if (scores.visual < 54) {
           return {
-            systemClass: "RENDER_BRIDGE_BREAK",
-            selectedOption: "A",
-            selectedFiles: OPTIONS.A.files,
-            firstBreak: "Parent render bridge is stale while parent route, standalone route, runtime, CSS, and asset instrument are passing.",
-            whyThisSet: OPTIONS.A.use,
-            whySmallerInsufficient: [
-              "No smaller set exists because the measured stale writer is /showroom/showroom.render.js."
-            ],
-            whyLargerHeld: [
-              "Parent boot is current enough.",
-              "Standalone route is passing.",
-              "Runtime, CSS, and asset instrument are passing.",
-              "A broader set would add regression risk without measured need."
-            ],
-            expectedResult: [
-              "Parent caption aligns to Generation 3.",
-              "Parent render bridge source becomes current.",
-              "Status congruence rises.",
-              "Standalone route remains unchanged."
-            ],
-            doNotTouch: ["/showroom/index.html", "/showroom/index.js", "/showroom/globe/index.html", "/showroom/globe/index.js", "/showroom/runtime.js", "/showroom/showroom.css", "/assets/showroom.globe.instrument.js", "/assets/earth/*"],
-            escalateOnlyIf: ["C11 caption remains stale after render bridge replacement.", "Parent boot overwrites render bridge receipts after the render bridge is current."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
-          };
-        }
-
-        if (parentRenderBreak && parentBootBreak && !standaloneBootBreak) {
-          return {
-            systemClass: "CONSUMER_CONGRUENCE_BREAK",
-            selectedOption: "B",
-            selectedFiles: OPTIONS.B.files,
-            firstBreak: "Parent render bridge and parent boot both write stale or conflicting state.",
-            whyThisSet: OPTIONS.B.use,
-            whySmallerInsufficient: [
-              "One file is insufficient because the parent boot also writes stale or conflicting state."
-            ],
-            whyLargerHeld: [
-              "Standalone route is passing.",
-              "HTML load paths are current.",
-              "Runtime, CSS, and asset instrument are passing."
-            ],
-            expectedResult: [
-              "Parent render and parent boot agree on current Generation 3 state.",
-              "Standalone remains unchanged."
-            ],
-            doNotTouch: ["/showroom/globe/index.html", "/showroom/globe/index.js", "/showroom/runtime.js", "/showroom/showroom.css", "/assets/showroom.globe.instrument.js", "/assets/earth/*"],
-            escalateOnlyIf: ["Standalone route diverges after parent correction.", "HTML load paths are proven stale."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
-          };
-        }
-
-        if ((parentRenderBreak || parentBootBreak) && standaloneBootBreak) {
-          return {
-            systemClass: "CONSUMER_CONGRUENCE_BREAK",
-            selectedOption: "C",
-            selectedFiles: OPTIONS.C.files,
-            firstBreak: "Parent and standalone JS consumers diverge while HTML load paths remain current.",
-            whyThisSet: OPTIONS.C.use,
-            whySmallerInsufficient: [
-              "Two files are insufficient because both parent and standalone boot state require alignment."
-            ],
-            whyLargerHeld: [
-              "HTML load paths are current.",
-              "Runtime, CSS, and asset instrument are passing."
-            ],
-            expectedResult: [
-              "Parent and standalone JS consumers align to the current Generation 3 state."
-            ],
-            doNotTouch: ["/showroom/index.html", "/showroom/globe/index.html", "/showroom/runtime.js", "/showroom/showroom.css", "/assets/showroom.globe.instrument.js", "/assets/earth/*"],
-            escalateOnlyIf: ["HTML load-path mismatch appears after JS congruence.", "Render or runtime contract fails."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
-          };
-        }
-
-        if (runtimeBreak) {
-          return {
-            systemClass: "RUNTIME_MOTION_BREAK",
-            selectedOption: "MEASURED_RUNTIME_EXCEPTION",
-            selectedFiles: ["/showroom/runtime.js"],
-            firstBreak: "Runtime motion is not sufficiently proven.",
-            whyThisSet: [
-              "Runtime is selected only because motion proof is low while routes and sources remain alive."
-            ],
-            whySmallerInsufficient: ["No smaller file can own runtime tick state."],
-            whyLargerHeld: [
-              "HTML, render, CSS, and asset instrument remain held unless they also fail."
-            ],
-            expectedResult: [
-              "Runtime motion receipts and tick state become measurable.",
-              "Route liveness remains preserved."
-            ],
-            doNotTouch: ["/showroom/index.html", "/showroom/index.js", "/showroom/showroom.render.js", "/showroom/globe/index.html", "/showroom/globe/index.js", "/showroom/showroom.css", "/assets/showroom.globe.instrument.js", "/assets/earth/*"],
-            escalateOnlyIf: ["CSS animation selectors are also missing.", "Runtime cannot find the active mount."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
-          };
-        }
-
-        if (visualBreak) {
-          return {
-            systemClass: "VISUAL_CLARITY_BREAK",
-            selectedOption: "MEASURED_CSS_REFINEMENT",
-            selectedFiles: ["/showroom/showroom.css"],
-            firstBreak: "Visual clarity remains underpowered while the functional system is alive.",
-            whyThisSet: [
-              "CSS owns visible blur, cloud haze, shadow balance, terminator readability, and atmosphere intensity."
-            ],
-            whySmallerInsufficient: ["No smaller file can own visual clarity."],
-            whyLargerHeld: [
-              "Render, runtime, HTML, and asset instrument are held because liveness and motion are passing."
-            ],
-            expectedResult: [
-              "Surface readability improves.",
-              "Motion, route liveness, and current instrument remain preserved."
-            ],
-            doNotTouch: ["/showroom/index.html", "/showroom/index.js", "/showroom/showroom.render.js", "/showroom/globe/index.html", "/showroom/globe/index.js", "/showroom/runtime.js", "/assets/showroom.globe.instrument.js", "/assets/earth/*"],
-            escalateOnlyIf: ["Visual clarity remains unacceptable after CSS-only pass.", "Gauges shows render or runtime regression."],
-            authorizationStatus: "AWAITING_USER_AUTHORIZATION"
+            systemClass: "VISUAL_REFINEMENT_OR_OWNER_ACCEPTANCE_HOLD",
+            latticeScore: total,
+            firstBreak: "Visual score is lower than the functional lanes. Owner visual read controls final truth.",
+            selectedFiles: [],
+            why: ["No Showroom code is selected until the visual concern is translated to a source-auditable target."],
+            doNotTouch: ["/showroom/*", "/assets/*"],
+            authorizationStatus: "HELD_FOR_OWNER_VISUAL_READ"
           };
         }
 
         return {
-          systemClass: "FUNCTIONAL_REFINEMENT",
-          selectedOption: "HOLD",
+          systemClass: "FUNCTIONAL_REFINEMENT_HOLD",
+          latticeScore: total,
+          firstBreak: "No Showroom file rewrite is selected by current measurement.",
           selectedFiles: [],
-          firstBreak: "No Showroom file rewrite is currently authorized by the measured selector.",
-          whyThisSet: [
-            "The selector did not find a file-level first break that justifies a rewrite."
-          ],
-          whySmallerInsufficient: [
-            "No file set is selected because the current evidence does not require code."
-          ],
-          whyLargerHeld: [
-            "All larger options remain held because collapse and first-break evidence are absent."
-          ],
-          expectedResult: [
-            "Use visual inspection and screenshots to decide whether full visual truth remains pending."
-          ],
-          doNotTouch: ["All Showroom files remain held until a first break appears."],
-          escalateOnlyIf: ["User visual read identifies a specific missing behavior.", "A future Gauges run exposes a file-level break."],
-          authorizationStatus: "HELD_FOR_MORE_MEASUREMENT"
+          why: ["The selector is internal evidence only. Gauges page identity remains estate-wide."],
+          doNotTouch: ["/showroom/*", "/assets/*"],
+          authorizationStatus: "HOLD"
         };
       }
 
-      async function runDiagnostic() {
-        state.checks = [];
-        state.decision = null;
-        state.scores = { route: 0, source: 0, motion: 0, visual: 0, total: 0, missing: 256 };
-        renderChecks();
-        renderDecision({
-          systemClass: "MEASURING",
-          latticeScore: 0,
-          missingByQuadrant: {},
-          firstBreak: "Measuring.",
-          selectedOption: "--",
-          selectedFiles: [],
-          whyThisSet: ["Measurement running."],
-          whySmallerInsufficient: ["Measurement running."],
-          whyLargerHeld: ["Measurement running."],
-          expectedResult: ["Measurement running."],
-          doNotTouch: ["All Showroom files held during measurement."],
-          escalateOnlyIf: ["Measurement fails."],
-          authorizationStatus: "HELD_FOR_MORE_MEASUREMENT"
-        });
-        renderOptionLadder(null);
-        updateScores();
-        setSummary("Running Showroom minimum rebuild selector...");
+      async function runShowroomSelector() {
+        addEvidence("Showroom selector", "hold", "Running internal Showroom selector.", "");
 
         const sources = {};
-        const sourceTargets = [
-          ["parentHtml", TARGETS.parentHtml, "C1 Parent route HTML"],
-          ["parentJs", TARGETS.parentJs, "C2 Parent boot JS"],
-          ["parentRender", TARGETS.parentRender, "C3 Parent render bridge"],
-          ["runtime", TARGETS.runtime, "C4 Runtime motion"],
-          ["css", TARGETS.css, "C5 CSS expression"],
-          ["standaloneHtml", TARGETS.standaloneHtml, "C6 Standalone route HTML"],
-          ["standaloneJs", TARGETS.standaloneJs, "C7 Standalone boot JS"],
-          ["instrument", TARGETS.instrument, "C8 Asset instrument"]
-        ];
 
-        for (const item of sourceTargets) {
+        for (const entry of [
+          ["parentRoute", showroomTargets.parentRoute],
+          ["standaloneRoute", showroomTargets.standaloneRoute],
+          ["parentBoot", showroomTargets.parentBoot],
+          ["parentRender", showroomTargets.parentRender],
+          ["runtime", showroomTargets.runtime],
+          ["css", showroomTargets.css],
+          ["standaloneBoot", showroomTargets.standaloneBoot],
+          ["assetInstrument", showroomTargets.assetInstrument]
+        ]) {
           try {
-            const result = await fetchText(item[1]);
-            sources[item[0]] = result;
-            addCheck(
-              item[2],
-              result.ok ? "pass" : "fail",
-              "HTTP " + result.status + " · " + item[1],
-              result.text.slice(0, 1000)
-            );
+            sources[entry[0]] = await fetchText(entry[1]);
           } catch (error) {
-            sources[item[0]] = { ok: false, status: 0, text: "" };
-            addCheck(item[2], "fail", String(error.message || error), "");
+            sources[entry[0]] = {
+              ok: false,
+              status: 0,
+              text: "",
+              error: error && error.message ? error.message : String(error)
+            };
           }
         }
 
-        let surfaceAsset = { ok: false, status: 0 };
-        let cloudAsset = { ok: false, status: 0 };
+        const assets = {};
 
         try {
-          surfaceAsset = await fetchAsset(TARGETS.earthSurface);
-          cloudAsset = await fetchAsset(TARGETS.earthClouds);
-
-          addCheck(
-            "C9 Earth assets",
-            surfaceAsset.ok && cloudAsset.ok ? "pass" : "fail",
-            "surface HTTP=" + surfaceAsset.status + " · clouds HTTP=" + cloudAsset.status,
-            TARGETS.earthSurface + "\n" + TARGETS.earthClouds
-          );
+          assets.surface = await fetchAsset(showroomTargets.earthSurface);
+          assets.clouds = await fetchAsset(showroomTargets.earthClouds);
         } catch (error) {
-          addCheck("C9 Earth assets", "fail", String(error.message || error), "");
+          assets.surface = { ok: false, status: 0 };
+          assets.clouds = { ok: false, status: 0 };
         }
 
-        const sourceRead = inspectSources(sources);
+        const sourceRead = sourceTokenRead(sources);
+        const parentFrame = await loadFrame("showroom-parent-frame", showroomTargets.parentRoute);
+        const standaloneFrame = await loadFrame("showroom-standalone-frame", showroomTargets.standaloneRoute);
 
-        addCheck(
-          "C10 Source token and load-path read",
-          sourceRead.staleTokensAll.length ? "hold" : "pass",
-          [
-            "loadPathCount=" + sourceRead.loadPathCount,
-            "parentRenderCurrent=" + sourceRead.parentRenderCurrent,
-            "parentRenderOld=" + sourceRead.parentRenderOld,
-            "parentBootCurrent=" + sourceRead.parentBootCurrent,
-            "standaloneBootCurrent=" + sourceRead.standaloneBootCurrent,
-            "staleTokens=" + sourceRead.staleTokensAll.length
-          ].join(" · "),
-          JSON.stringify(sourceRead, null, 2)
-        );
+        const scores = computeShowroomScores(sources, sourceRead, parentFrame, standaloneFrame, assets);
+        state.scores.showroom = scores;
 
-        const parentFrame = await loadFrame("parent-diagnostic-frame", TARGETS.parentRoute);
-        const standaloneFrame = await loadFrame("standalone-diagnostic-frame", TARGETS.standaloneRoute);
+        const decision = chooseShowroomDecision(scores, sourceRead, parentFrame, standaloneFrame);
 
-        addCheck(
-          "C11 Parent iframe DOM",
-          parentFrame.ok && parentFrame.second && parentFrame.second.globeVisible ? "pass" : parentFrame.ok ? "hold" : "fail",
-          frameSummary(parentFrame),
-          parentFrame.ok ? JSON.stringify({
-            caption: parentFrame.second.captionText,
-            mountDataset: parentFrame.second.mountDataset,
-            rootDataset: parentFrame.second.rootDataset,
-            runtime: parentFrame.second.runtime,
-            instrumentVersion: parentFrame.second.instrumentVersion,
-            renderVersion: parentFrame.second.renderVersion
-          }, null, 2) : ""
-        );
-
-        addCheck(
-          "C12 Standalone iframe DOM",
-          standaloneFrame.ok && standaloneFrame.second && standaloneFrame.second.globeVisible ? "pass" : standaloneFrame.ok ? "hold" : "fail",
-          frameSummary(standaloneFrame),
-          standaloneFrame.ok ? JSON.stringify({
-            caption: standaloneFrame.second.captionText,
-            mountDataset: standaloneFrame.second.mountDataset,
-            rootDataset: standaloneFrame.second.rootDataset,
-            runtime: standaloneFrame.second.runtime,
-            instrumentVersion: standaloneFrame.second.instrumentVersion,
-            renderVersion: standaloneFrame.second.renderVersion
-          }, null, 2) : ""
-        );
-
-        const scores = computeScores(
-          sources,
-          sourceRead,
-          parentFrame,
-          standaloneFrame,
-          { surface: surfaceAsset, clouds: cloudAsset }
-        );
-
-        state.scores.route = scores.route;
-        state.scores.source = scores.source;
-        state.scores.motion = scores.motion;
-        state.scores.visual = scores.visual;
-        state.scores.total = scores.route + scores.source + scores.motion + scores.visual;
-        state.scores.missing = 256 - state.scores.total;
-
-        const selected = classifyAndSelect(
-          sources,
-          sourceRead,
-          parentFrame,
-          standaloneFrame,
-          { surface: surfaceAsset, clouds: cloudAsset },
-          scores
-        );
-
-        selected.latticeScore = state.scores.total;
-        selected.missingByQuadrant = missingByQuadrant(scores);
-
-        state.decision = selected;
-
-        renderDecision(selected);
-        renderOptionLadder(selected.selectedOption && OPTIONS[selected.selectedOption] ? selected.selectedOption : null);
+        renderShowroomDecision(decision);
         updateScores();
 
-        setSummary("Selector complete. Minimum file set returned below.");
+        addEvidence(
+          "Showroom internal selector",
+          decision.selectedFiles.length ? "hold" : "pass",
+          decision.systemClass + " · lattice=" + decision.latticeScore + "/256",
+          JSON.stringify({
+            scores: scores,
+            sourceRead: sourceRead,
+            parentCaption: parentFrame.ok ? parentFrame.second.caption : "",
+            standaloneCaption: standaloneFrame.ok ? standaloneFrame.second.caption : "",
+            parentRenderVersion: parentFrame.ok ? parentFrame.second.renderVersion : "",
+            parentInstrumentVersion: parentFrame.ok ? parentFrame.second.instrumentVersion : "",
+            decision: decision
+          }, null, 2)
+        );
+
+        const root = el("gauges-root");
+        if (root) {
+          root.dataset.showroomSelectorSystemClass = decision.systemClass;
+          root.dataset.showroomSelectorLatticeScore = String(decision.latticeScore);
+          root.dataset.showroomSelectorAuthorizationStatus = decision.authorizationStatus;
+          root.dataset.showroomSelectorRole = "internal-panel";
+        }
+      }
+
+      async function runEstateDiagnostic() {
+        state.evidence = [];
+        renderEvidence();
+
+        setText("estate-summary-copy", "Running estate-wide diagnostic.");
+
+        const houseScore = await runRouteGroup("House skeleton", houseRoutes, "house-results");
+        const productScore = await runRouteGroup("Products", productRoutes, "products-results");
+        const planetScore = await runRouteGroup("Planetary constructs", planetaryRoutes, "planetary-results");
+
+        state.scores.house = houseScore;
+        state.scores.products = productScore;
+        state.scores.planets = planetScore;
+        state.scores.overall = Math.round((houseScore + productScore + planetScore) / 3);
+
+        await runShowroomSelector();
+
+        updateScores();
+
+        setText(
+          "estate-summary-copy",
+          "Diagnostic complete. Gauges is operating as the H6 estate diagnostic instrument room. The Showroom selector is preserved as an internal panel."
+        );
 
         const root = el("gauges-root");
         if (root) {
           root.dataset.diagnosticVersion = VERSION;
           root.dataset.diagnosticComplete = "true";
-          root.dataset.latticeScore = String(state.scores.total);
-          root.dataset.missingSeats = String(state.scores.missing);
-          root.dataset.systemClass = selected.systemClass;
-          root.dataset.firstBreak = selected.firstBreak;
-          root.dataset.selectedOption = selected.selectedOption;
-          root.dataset.selectedFiles = selected.selectedFiles.join(",");
-          root.dataset.authorizationStatus = selected.authorizationStatus;
+          root.dataset.overallHealth = String(state.scores.overall);
+          root.dataset.houseSkeletonHealth = String(state.scores.house);
+          root.dataset.productsHealth = String(state.scores.products);
+          root.dataset.planetaryConstructsHealth = String(state.scores.planets);
+          root.dataset.gaugesPrimaryRole = "estate-diagnostic-instrument-room";
         }
       }
 
       function bind() {
-        const button = el("run-diagnostic-button");
-        if (button) button.addEventListener("click", runDiagnostic);
-        window.setTimeout(runDiagnostic, 250);
+        const runEstate = el("run-estate-diagnostic");
+        const runShowroom = el("run-showroom-selector");
+
+        if (runEstate) runEstate.addEventListener("click", runEstateDiagnostic);
+        if (runShowroom) runShowroom.addEventListener("click", runShowroomSelector);
+
+        window.setTimeout(runEstateDiagnostic, 250);
       }
 
       if (document.readyState === "loading") {
@@ -1588,9 +1339,10 @@
         bind();
       }
 
-      window.DGBShowroomMinimumRebuildSelector = Object.freeze({
+      window.DGBGaugesH6DiagnosticInstrumentRoom = Object.freeze({
         version: VERSION,
-        runDiagnostic: runDiagnostic,
+        runEstateDiagnostic: runEstateDiagnostic,
+        runShowroomSelector: runShowroomSelector,
         state: state
       });
     })();

@@ -2,16 +2,19 @@
 (function () {
   "use strict";
 
-  const VERSION = "showroom-index-globe-restoration-v1";
-
-  const EARTH_CANVAS_SPINE = "/assets/earth/earth_canvas.js";
-  const EARTH_MATERIAL = "/assets/earth/earth_material.css";
-  const SHOWROOM_GLOBE_CONTROLLER = "/showroom/globe/index.js";
+  const VERSION = "showroom-generation-2-active-globe-restoration-v1";
 
   const ROOT_ID = "showroom-root";
   const MAIN_ID = "showroom-main";
   const CANVAS_ID = "showroom-canvas";
   const GLOBE_MOUNT_ID = "showroom-globe-mount";
+
+  const EARTH_CANVAS_SPINE = "/assets/earth/earth_canvas.js";
+  const EARTH_MATERIAL = "/assets/earth/earth_material.css";
+  const SHOWROOM_GLOBE_CONTROLLER = "/showroom/globe/index.js";
+  const SHOWROOM_GLOBE_ROUTE = "/showroom/globe/";
+
+  let fallbackTimer = null;
 
   function qs(selector, root) {
     return (root || document).querySelector(selector);
@@ -43,46 +46,64 @@
     return node;
   }
 
-  function writeReceipts(status) {
+  function setDataset(node, values) {
+    if (!node) return;
+
+    Object.entries(values).forEach(([key, value]) => {
+      node.dataset[key] = String(value);
+    });
+  }
+
+  function writeGeneration2Receipts(status) {
     const root = document.getElementById(ROOT_ID);
+    const main = document.getElementById(MAIN_ID);
     const mount = document.getElementById(GLOBE_MOUNT_ID);
 
-    if (root) {
-      root.dataset.showroomIndexVersion = VERSION;
-      root.dataset.showroomGlobeRestoration = status;
-      root.dataset.showroomCardGlobeHandoff = "active";
-      root.dataset.demoUniverseCardPreview = "active";
-      root.dataset.showroomCardEarthSync = "active";
-      root.dataset.showroomCardEarthColor = "synced";
-      root.dataset.showroomCardVisualTruth = "pending";
-    }
+    const receipts = {
+      showroomIndexVersion: VERSION,
+      showroomGeneration: "generation-2-active-globe",
+      generation2ActiveGlobe: status,
+      generation3BlockedUntilG2Pass: "true",
+      showroomCardEarthSync: "active",
+      showroomCardEarthColor: "synced",
+      showroomCardGlobeHandoff: "active",
+      showroomCardVisualTruth: "pending",
+      demoUniverseCardPreview: "active",
+      showroomMobileLayoutHardened: "true"
+    };
 
-    if (mount) {
-      mount.dataset.showroomIndexVersion = VERSION;
-      mount.dataset.showroomGlobeRestoration = status;
-      mount.dataset.showroomGlobeController = SHOWROOM_GLOBE_CONTROLLER;
-      mount.dataset.earthCanvasSpine = EARTH_CANVAS_SPINE;
-      mount.dataset.earthMaterial = EARTH_MATERIAL;
-      mount.dataset.showroomCardGlobeHandoff = "active";
-    }
+    setDataset(root, receipts);
+    setDataset(main, receipts);
+    setDataset(mount, {
+      ...receipts,
+      showroomGlobeController: SHOWROOM_GLOBE_CONTROLLER,
+      earthCanvasSpine: EARTH_CANVAS_SPINE,
+      earthMaterial: EARTH_MATERIAL,
+      showroomGlobeRoute: SHOWROOM_GLOBE_ROUTE
+    });
   }
 
   function ensureGlobeMount() {
     const existing = document.getElementById(GLOBE_MOUNT_ID);
     if (existing) return existing;
 
-    const visualPanel = qs(".visual-panel") || qs(".showroom-globe");
+    const visualPanel =
+      qs(".visual-panel") ||
+      qs(".showroom-globe") ||
+      qs("[data-showroom-globe='active']");
+
     const main = document.getElementById(MAIN_ID);
 
     const mount = create("div", {
       id: GLOBE_MOUNT_ID,
-      className: "showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere",
+      className:
+        "showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere",
       "data-showroom-globe-mount": "true",
-      "data-showroom-globe-placement": "generation-3-centered-lift",
+      "data-showroom-globe-placement": "generation-2-active-globe",
       "data-showroom-card-globe-handoff": "active",
       "data-showroom-card-earth-color": "synced",
       "data-demo-universe-card-preview": "active",
-      "aria-label": "Showroom Earth canvas mount"
+      "aria-label": "Showroom active Earth globe mount"
     });
 
     if (visualPanel) {
@@ -108,7 +129,7 @@
         id,
         rel: "stylesheet",
         href,
-        "data-showroom-restoration-asset": "earth-material"
+        "data-showroom-generation-2-asset": "earth-material"
       });
 
       link.addEventListener("load", () => resolve(link), { once: true });
@@ -118,8 +139,8 @@
     });
   }
 
-  function loadClassicScript(src, id, globalReadyCheck) {
-    if (typeof globalReadyCheck === "function" && globalReadyCheck()) {
+  function loadClassicScript(src, id, readyCheck) {
+    if (typeof readyCheck === "function" && readyCheck()) {
       return Promise.resolve(null);
     }
 
@@ -127,7 +148,7 @@
 
     return new Promise((resolve, reject) => {
       if (existing) {
-        if (existing.dataset.loaded === "true" || (typeof globalReadyCheck === "function" && globalReadyCheck())) {
+        if (existing.dataset.loaded === "true" || (typeof readyCheck === "function" && readyCheck())) {
           resolve(existing);
           return;
         }
@@ -140,7 +161,7 @@
         );
 
         window.setTimeout(() => {
-          if (typeof globalReadyCheck === "function" && globalReadyCheck()) {
+          if (typeof readyCheck === "function" && readyCheck()) {
             resolve(existing);
           }
         }, 0);
@@ -151,7 +172,7 @@
       const script = create("script", {
         id,
         src,
-        "data-showroom-restoration-script": "true"
+        "data-showroom-generation-2-script": "true"
       });
 
       script.async = false;
@@ -175,37 +196,7 @@
     });
   }
 
-  function renderRestorationFailure(error) {
-    const mount = ensureGlobeMount();
-
-    mount.replaceChildren(
-      create("article", {
-        className: "fallback-card showroom-fallback",
-        "data-showroom-globe-restoration-failure": "true"
-      }, [
-        create("p", { className: "kicker", text: "Showroom globe restoration failure" }),
-        create("h2", { text: "Existing globe subsystem did not mount." }),
-        create("p", {
-          text: String(
-            error && error.message
-              ? error.message
-              : "Check /assets/earth/earth_canvas.js and /showroom/globe/index.js."
-          )
-        }),
-        create("p", {}, [
-          create("a", {
-            href: "/showroom/globe/",
-            text: "Open Demo Universe Earth"
-          })
-        ])
-      ])
-    );
-
-    mount.dataset.renderStatus = "error";
-    writeReceipts("failed");
-  }
-
-  function drawBackgroundCanvas() {
+  function drawSupportCanvas() {
     const canvas = document.getElementById(CANVAS_ID);
     if (!canvas) return;
 
@@ -219,71 +210,243 @@
 
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
+
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
     context.clearRect(0, 0, width, height);
 
     const gradient = context.createRadialGradient(
       width * 0.5,
-      height * 0.5,
+      height * 0.48,
       width * 0.1,
       width * 0.5,
-      height * 0.5,
-      width * 0.7
+      height * 0.48,
+      width * 0.72
     );
 
     gradient.addColorStop(0, "rgba(116, 184, 255, 0.16)");
-    gradient.addColorStop(0.48, "rgba(8, 20, 38, 0.34)");
+    gradient.addColorStop(0.5, "rgba(8, 20, 38, 0.34)");
     gradient.addColorStop(1, "rgba(2, 5, 12, 0.98)");
 
     context.fillStyle = gradient;
     context.fillRect(0, 0, width, height);
   }
 
-  async function restoreGlobe() {
-    try {
-      const mount = ensureGlobeMount();
+  function mountHasVisibleGlobeContent(mount) {
+    if (!mount) return false;
 
-      mount.dataset.renderStatus = "restoring";
-      mount.dataset.showroomGlobeRestoration = "active";
-      mount.dataset.showroomGlobeController = SHOWROOM_GLOBE_CONTROLLER;
+    const canvas = mount.querySelector("[data-dgb-earth-canvas], canvas");
+    const earthStage = mount.querySelector("[data-dgb-earth-mount], .dgb-earth-stage, .dgb-earth-sphere");
+    const iframe = mount.querySelector("iframe[data-showroom-generation-2-globe-frame='true']");
 
-      writeReceipts("restoring");
-      drawBackgroundCanvas();
+    return Boolean(canvas || earthStage || iframe);
+  }
 
-      await ensureStylesheet(EARTH_MATERIAL, "showroom-earth-material-css");
+  function renderActiveRouteFrameFallback(reason) {
+    const mount = ensureGlobeMount();
 
-      await loadClassicScript(
-        EARTH_CANVAS_SPINE,
-        "showroom-earth-canvas-spine-js",
-        () => window.DGBEarthCanvas && typeof window.DGBEarthCanvas.create === "function"
-      );
+    if (fallbackTimer) {
+      window.clearTimeout(fallbackTimer);
+      fallbackTimer = null;
+    }
 
-      await loadClassicScript(
-        SHOWROOM_GLOBE_CONTROLLER,
-        "showroom-globe-controller-js",
-        () => window.DGBShowroomGlobe && typeof window.DGBShowroomGlobe.init === "function"
-      );
+    mount.replaceChildren(
+      create("section", {
+        className: "showroom-generation-2-globe-frame-shell",
+        "data-showroom-generation-2-frame-shell": "true",
+        "data-showroom-globe-restoration-fallback": "active"
+      }, [
+        create("iframe", {
+          src: SHOWROOM_GLOBE_ROUTE,
+          title: "Demo Universe Earth active globe",
+          loading: "eager",
+          "data-showroom-generation-2-globe-frame": "true",
+          "aria-label": "Demo Universe Earth active globe"
+        }),
+        create("p", {
+          className: "dgb-earth-caption",
+          text: "GENERATION 2 · ACTIVE GLOBE · DEMO UNIVERSE EARTH"
+        }),
+        create("p", {
+          className: "showroom-generation-2-fallback-note",
+          text:
+            "The parent Showroom is displaying the live Demo Universe Earth route inside the Showroom panel."
+        }),
+        create("p", {}, [
+          create("a", {
+            href: SHOWROOM_GLOBE_ROUTE,
+            text: "Open Demo Universe Earth"
+          })
+        ])
+      ])
+    );
 
-      if (!window.DGBShowroomGlobe || typeof window.DGBShowroomGlobe.init !== "function") {
-        throw new Error("Expected window.DGBShowroomGlobe.init from /showroom/globe/index.js.");
+    mount.dataset.renderStatus = "generation-2-frame-restored";
+    mount.dataset.generation2ActiveGlobe = "frame-restored";
+    mount.dataset.restorationReason = String(reason || "direct globe mount did not visibly paint");
+
+    writeGeneration2Receipts("frame-restored");
+  }
+
+  function injectFrameFallbackStyle() {
+    if (document.getElementById("showroom-generation-2-frame-style")) return;
+
+    const style = create("style", {
+      id: "showroom-generation-2-frame-style",
+      text: `
+        .showroom-generation-2-globe-frame-shell {
+          position: relative;
+          z-index: 10;
+          width: min(820px, 100%);
+          margin: 0 auto;
+          display: grid;
+          justify-items: center;
+          gap: 12px;
+        }
+
+        .showroom-generation-2-globe-frame-shell iframe {
+          width: min(760px, 94vw);
+          height: clamp(360px, 64vw, 620px);
+          border: 1px solid rgba(245, 199, 107, 0.34);
+          border-radius: 28px;
+          background: #02050c;
+          box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+        }
+
+        .showroom-generation-2-fallback-note {
+          width: min(760px, 94vw);
+          margin: 0 auto;
+          color: rgba(246, 239, 224, 0.76);
+          font-size: 0.92rem;
+          line-height: 1.45;
+          text-align: center;
+        }
+
+        .showroom-generation-2-globe-frame-shell a {
+          display: inline-flex;
+          border: 1px solid rgba(245, 199, 107, 0.42);
+          border-radius: 999px;
+          padding: 0.62rem 0.9rem;
+          color: inherit;
+          background: rgba(255, 255, 255, 0.055);
+          text-decoration: none;
+          font-weight: 800;
+        }
+
+        .showroom-generation-2-globe-frame-shell a:hover,
+        .showroom-generation-2-globe-frame-shell a:focus-visible {
+          color: #080d18;
+          background: #f5c76b;
+          outline: none;
+        }
+
+        @media (max-width: 620px) {
+          .showroom-generation-2-globe-frame-shell iframe {
+            width: calc(100vw - 40px);
+            height: 520px;
+          }
+        }
+      `
+    });
+
+    document.head.appendChild(style);
+  }
+
+  function renderFailure(error) {
+    const mount = ensureGlobeMount();
+
+    mount.replaceChildren(
+      create("article", {
+        className: "fallback-card showroom-fallback",
+        "data-showroom-generation-2-restoration-failure": "true"
+      }, [
+        create("p", { className: "kicker", text: "Generation 2 active globe restoration failure" }),
+        create("h2", { text: "Active globe did not mount." }),
+        create("p", {
+          text: String(
+            error && error.message
+              ? error.message
+              : "Check the parent Showroom mount and the Demo Universe Earth route."
+          )
+        }),
+        create("p", {}, [
+          create("a", {
+            href: SHOWROOM_GLOBE_ROUTE,
+            text: "Open Demo Universe Earth"
+          })
+        ])
+      ])
+    );
+
+    mount.dataset.renderStatus = "generation-2-failed";
+    writeGeneration2Receipts("failed");
+  }
+
+  async function attemptDirectGlobeMount() {
+    const mount = ensureGlobeMount();
+
+    mount.dataset.renderStatus = "generation-2-restoring";
+    mount.dataset.generation2ActiveGlobe = "restoring";
+
+    writeGeneration2Receipts("restoring");
+
+    await ensureStylesheet(EARTH_MATERIAL, "showroom-earth-material-css");
+
+    await loadClassicScript(
+      EARTH_CANVAS_SPINE,
+      "showroom-earth-canvas-spine-js",
+      () => window.DGBEarthCanvas && typeof window.DGBEarthCanvas.create === "function"
+    );
+
+    await loadClassicScript(
+      SHOWROOM_GLOBE_CONTROLLER,
+      "showroom-globe-controller-js",
+      () => window.DGBShowroomGlobe && typeof window.DGBShowroomGlobe.init === "function"
+    );
+
+    if (!window.DGBShowroomGlobe || typeof window.DGBShowroomGlobe.init !== "function") {
+      throw new Error("Expected window.DGBShowroomGlobe.init from /showroom/globe/index.js.");
+    }
+
+    window.DGBShowroomGlobe.init();
+
+    fallbackTimer = window.setTimeout(() => {
+      const currentMount = ensureGlobeMount();
+
+      if (!mountHasVisibleGlobeContent(currentMount)) {
+        renderActiveRouteFrameFallback("direct globe mount produced no visible globe content");
+        return;
       }
 
-      window.DGBShowroomGlobe.init();
+      currentMount.dataset.renderStatus = "generation-2-direct-restored";
+      currentMount.dataset.generation2ActiveGlobe = "direct-restored";
+      writeGeneration2Receipts("direct-restored");
+    }, 1600);
+  }
 
-      mount.dataset.renderStatus = "restored";
-      writeReceipts("restored");
+  async function restoreGeneration2ActiveGlobe() {
+    injectFrameFallbackStyle();
+    drawSupportCanvas();
+
+    try {
+      await attemptDirectGlobeMount();
     } catch (error) {
-      console.error("[Showroom globe restoration failure]", error);
-      renderRestorationFailure(error);
+      console.warn("[Generation 2 direct globe mount failed]", error);
+      renderActiveRouteFrameFallback(error.message || "direct globe mount failed");
     }
   }
 
-  function init() {
-    restoreGlobe();
+  function bindResize() {
+    let resizeFrame = 0;
 
     window.addEventListener("resize", () => {
-      window.requestAnimationFrame(drawBackgroundCanvas);
+      window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(drawSupportCanvas);
     });
+  }
+
+  function init() {
+    restoreGeneration2ActiveGlobe();
+    bindResize();
   }
 
   if (document.readyState === "loading") {
@@ -294,9 +457,14 @@
 
   window.DGBShowroomIndex = Object.freeze({
     version: VERSION,
-    restoreGlobe,
+    restoreGeneration2ActiveGlobe,
+    target: "/showroom/index.js",
+    generation1: "layout-established",
+    generation2: "active-globe",
+    generation3: "shadow-detail-blocked-until-generation-2",
     earthCanvasSpine: EARTH_CANVAS_SPINE,
     earthMaterial: EARTH_MATERIAL,
-    showroomGlobeController: SHOWROOM_GLOBE_CONTROLLER
+    showroomGlobeController: SHOWROOM_GLOBE_CONTROLLER,
+    showroomGlobeRoute: SHOWROOM_GLOBE_ROUTE
   });
 })();

@@ -1,8 +1,3 @@
-Replace /gauges/index.html only.
-
-This version turns Gauges into a live Showroom globe diagnostic console. It checks /showroom/, /showroom/index.js, Earth assets, iframe-rendered parent state, mount existence, image/canvas presence, and likely next fix.
-
-<!-- /gauges/index.html -->
 <!DOCTYPE html>
 <html
   lang="en"
@@ -13,22 +8,17 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
   data-construct-class="house"
   data-house-part="gauges"
   data-chamber="H6_GAUGES"
-  data-generation="gauges-showroom-globe-diagnostic-v1"
+  data-generation="gauges-showroom-globe-diagnostic-v2"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Showroom Globe Diagnostic · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Dexter Lab Measurement Key diagnostic console for Showroom Generation 2 active globe restoration."
-  />
 
   <style>
     :root {
       --void: #050914;
-      --navy: #081426;
-      --panel: rgba(12, 24, 42, 0.82);
+      --panel: rgba(12, 24, 42, 0.84);
       --panel-strong: rgba(7, 15, 29, 0.96);
       --gold: #f5c76b;
       --blue: #74b8ff;
@@ -42,14 +32,9 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       --radius: 28px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      min-height: 100%;
-      background: var(--void);
-    }
+    html { min-height: 100%; background: var(--void); }
 
     body {
       min-height: 100%;
@@ -59,14 +44,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
         radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.18), transparent 28rem),
         radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.12), transparent 22rem),
         linear-gradient(180deg, #02050c 0%, var(--void) 44%, #080d18 100%);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body::before {
@@ -82,9 +60,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       opacity: 0.16;
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip-link {
       position: absolute;
@@ -100,9 +76,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       font-weight: 800;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
-    }
+    .skip-link:focus { transform: translateY(0); }
 
     .gauges-shell {
       position: relative;
@@ -141,7 +115,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
     }
 
     .site-nav,
-    .route-rail,
     .action-row {
       display: flex;
       flex-wrap: wrap;
@@ -149,7 +122,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
     }
 
     .site-nav a,
-    .route-rail a,
     .action-row a,
     .action-row button {
       border: 1px solid rgba(245, 199, 107, 0.42);
@@ -166,8 +138,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
     .site-nav a[aria-current="page"],
     .site-nav a:hover,
     .site-nav a:focus-visible,
-    .route-rail a:hover,
-    .route-rail a:focus-visible,
     .action-row a:hover,
     .action-row a:focus-visible,
     .action-row button:hover,
@@ -179,7 +149,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
     .hero,
     .diagnostic-panel,
-    .result-panel,
     .next-panel,
     .receipt-panel {
       border: 1px solid var(--line);
@@ -194,6 +163,24 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       padding: clamp(24px, 4vw, 48px);
     }
 
+    .diagnostic-panel,
+    .next-panel,
+    .receipt-panel {
+      margin-top: 24px;
+      padding: clamp(22px, 3.5vw, 36px);
+    }
+
+    .next-panel {
+      border-color: rgba(120, 217, 155, 0.42);
+      background:
+        linear-gradient(135deg, rgba(8, 30, 26, 0.86), rgba(8, 20, 38, 0.72)),
+        radial-gradient(circle at 78% 18%, rgba(120, 217, 155, 0.14), transparent 18rem);
+    }
+
+    .receipt-panel {
+      background: var(--panel-strong);
+    }
+
     .kicker,
     .receipt-line {
       margin: 0 0 0.85rem;
@@ -204,11 +191,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3,
-    p,
-    li {
+    h1, h2, h3, p, li {
       overflow-wrap: anywhere;
     }
 
@@ -234,8 +217,8 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
     .lede,
     .panel-copy,
-    .receipt-copy,
-    .small-copy {
+    .small-copy,
+    .receipt-copy {
       color: var(--muted);
       line-height: 1.65;
     }
@@ -246,17 +229,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       font-size: clamp(1rem, 2vw, 1.22rem);
     }
 
-    .action-row {
-      margin-top: 1.5rem;
-    }
-
-    .diagnostic-panel,
-    .result-panel,
-    .next-panel,
-    .receipt-panel {
-      margin-top: 24px;
-      padding: clamp(22px, 3.5vw, 36px);
-    }
+    .action-row { margin-top: 1.5rem; }
 
     .diagnostic-grid,
     .result-grid {
@@ -274,17 +247,9 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       background: rgba(255, 255, 255, 0.045);
     }
 
-    .check-card[data-status="pass"] {
-      border-color: rgba(120, 217, 155, 0.44);
-    }
-
-    .check-card[data-status="fail"] {
-      border-color: rgba(255, 129, 122, 0.44);
-    }
-
-    .check-card[data-status="hold"] {
-      border-color: rgba(245, 199, 107, 0.44);
-    }
+    .check-card[data-status="pass"] { border-color: rgba(120, 217, 155, 0.44); }
+    .check-card[data-status="fail"] { border-color: rgba(255, 129, 122, 0.44); }
+    .check-card[data-status="hold"] { border-color: rgba(245, 199, 107, 0.44); }
 
     .check-card b {
       display: block;
@@ -292,23 +257,9 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       font-size: 1rem;
     }
 
-    .check-card[data-status="pass"] b {
-      color: var(--green);
-    }
-
-    .check-card[data-status="fail"] b {
-      color: var(--red);
-    }
-
-    .check-card[data-status="hold"] b {
-      color: var(--gold);
-    }
-
-    .check-card code,
-    .next-card code,
-    .receipt-list span {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
+    .check-card[data-status="pass"] b { color: var(--green); }
+    .check-card[data-status="fail"] b { color: var(--red); }
+    .check-card[data-status="hold"] b { color: var(--gold); }
 
     .check-card pre {
       overflow: auto;
@@ -337,17 +288,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       font-size: 0.88rem;
     }
 
-    .next-panel {
-      border-color: rgba(120, 217, 155, 0.42);
-      background:
-        linear-gradient(135deg, rgba(8, 30, 26, 0.86), rgba(8, 20, 38, 0.72)),
-        radial-gradient(circle at 78% 18%, rgba(120, 217, 155, 0.14), transparent 18rem);
-    }
-
-    .next-card strong {
-      color: var(--green);
-    }
-
     .diagnostic-frame {
       width: 1px;
       height: 1px;
@@ -356,10 +296,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       top: -9999px;
       opacity: 0;
       pointer-events: none;
-    }
-
-    .receipt-panel {
-      background: var(--panel-strong);
     }
 
     .receipt-list {
@@ -379,6 +315,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       font-size: 0.82rem;
       font-weight: 800;
       text-decoration: none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     @media (max-width: 920px) {
@@ -396,7 +333,6 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
       .hero,
       .diagnostic-panel,
-      .result-panel,
       .next-panel,
       .receipt-panel {
         border-radius: 24px;
@@ -438,7 +374,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
         <p class="kicker">H6 · Gauges · Showroom Globe Diagnostic</p>
         <h1 id="gauges-title">Measurement Key.</h1>
         <p class="lede">
-          This console now focuses on the active failure: Showroom Generation 1 layout is established,
+          This console focuses on the current failure: Generation 1 layout is established,
           but Generation 2 active globe is not visible on the parent Showroom page.
         </p>
 
@@ -452,10 +388,10 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
       <section class="next-panel" aria-labelledby="next-title">
         <p class="kicker">Immediate Diagnostic Target</p>
-        <h2 id="next-title">Find why `/showroom/index.js` is not producing a visible parent globe.</h2>
+        <h2 id="next-title">Find why /showroom/index.js is not producing a visible parent globe.</h2>
         <p class="panel-copy">
-          Gauges will now check the served Showroom HTML, served parent controller, Earth assets,
-          parent iframe DOM, mount visibility, image presence, and likely first break.
+          Gauges checks the served Showroom HTML, served parent controller, Earth assets,
+          parent iframe DOM, mount visibility, image presence, and the likely first break.
         </p>
 
         <div class="diagnostic-grid">
@@ -484,20 +420,14 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       <section class="diagnostic-panel" aria-labelledby="diagnostic-title">
         <p class="kicker">Live Diagnostic</p>
         <h2 id="diagnostic-title">Showroom active globe check.</h2>
-        <p id="diagnostic-summary" class="panel-copy">
-          Waiting to run diagnostic.
-        </p>
-
+        <p id="diagnostic-summary" class="panel-copy">Waiting to run diagnostic.</p>
         <div id="diagnostic-results" class="result-grid" aria-live="polite"></div>
       </section>
 
-      <section class="result-panel" aria-labelledby="break-title">
+      <section class="diagnostic-panel" aria-labelledby="break-title">
         <p class="kicker">First Controlling Break</p>
         <h2 id="break-title">Current result.</h2>
-        <p id="first-break" class="panel-copy">
-          Not measured yet.
-        </p>
-
+        <p id="first-break" class="panel-copy">Not measured yet.</p>
         <div id="repair-action" class="diagnostic-grid"></div>
       </section>
 
@@ -505,8 +435,9 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
         <p class="receipt-line">Calibration receipt</p>
         <h2 id="receipt-title">Showroom globe diagnostic receipt.</h2>
         <p class="receipt-copy">
-          VERSION: GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1. Generation 1 layout is established.
+          VERSION: GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v2. Generation 1 layout is established.
           Generation 2 is active parent globe visibility. Generation 3 remains blocked until Generation 2 passes.
+          The prior raw JavaScript leak caused by a literal closing script tag inside an inline script string is removed.
         </p>
 
         <div class="receipt-list">
@@ -529,7 +460,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
           <span>generation-1-layout-established</span>
           <span>generation-2-active-globe-target</span>
           <span>generation-3-blocked</span>
-          <span>GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1</span>
+          <span>GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v2</span>
         </div>
       </section>
 
@@ -546,7 +477,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
     (function () {
       "use strict";
 
-      const VERSION = "GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v1";
+      const VERSION = "GAUGES_SHOWROOM_GLOBE_DIAGNOSTIC_INDEX_TNT_v2";
 
       const TARGETS = {
         showroom: "/showroom/",
@@ -567,7 +498,10 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       function create(tag, attrs, children) {
         const node = document.createElement(tag);
 
-        Object.entries(attrs || {}).forEach(function ([key, value]) {
+        Object.entries(attrs || {}).forEach(function (entry) {
+          const key = entry[0];
+          const value = entry[1];
+
           if (value === null || value === undefined || value === false) return;
           if (key === "className") node.className = value;
           else if (key === "text") node.textContent = value;
@@ -604,9 +538,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
             create("article", { className: "check-card", "data-status": check.status }, [
               create("b", { text: check.status.toUpperCase() + " · " + check.name }),
               create("p", { className: "small-copy", text: check.detail }),
-              check.evidence
-                ? create("pre", { text: check.evidence.slice(0, 1200) })
-                : null
+              check.evidence ? create("pre", { text: check.evidence.slice(0, 1200) }) : null
             ])
           );
         });
@@ -646,10 +578,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       }
 
       async function fetchText(url) {
-        const response = await fetch(url + "?v=" + Date.now(), {
-          cache: "no-store"
-        });
-
+        const response = await fetch(url + "?v=" + Date.now(), { cache: "no-store" });
         const text = await response.text();
 
         return {
@@ -661,9 +590,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       }
 
       async function fetchAsset(url) {
-        const response = await fetch(url + "?v=" + Date.now(), {
-          cache: "no-store"
-        });
+        const response = await fetch(url + "?v=" + Date.now(), { cache: "no-store" });
 
         return {
           ok: response.ok,
@@ -676,10 +603,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       function testJsParse(source) {
         try {
           new Function(source);
-          return {
-            ok: true,
-            error: ""
-          };
+          return { ok: true, error: "" };
         } catch (error) {
           return {
             ok: false,
@@ -706,12 +630,16 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
       function inspectShowroomHtml(source) {
         return {
           hasIndexScript:
-            source.includes('src="/showroom/index.js"') ||
+            source.includes("src=\"/showroom/index.js\"") ||
             source.includes("src='/showroom/index.js'") ||
             source.includes("src=/showroom/index.js"),
-          hasMount: source.includes('id="showroom-globe-mount"') || source.includes("id='showroom-globe-mount'"),
+          hasMount:
+            source.includes("id=\"showroom-globe-mount\"") ||
+            source.includes("id='showroom-globe-mount'"),
           hasH5: source.includes("H5_SHOWROOM"),
-          hasGlobeRoute: source.includes('href="/showroom/globe/"') || source.includes("href='/showroom/globe/'"),
+          hasGlobeRoute:
+            source.includes("href=\"/showroom/globe/\"") ||
+            source.includes("href='/showroom/globe/'"),
           hasReceipts: source.includes("LANE_B_SHOWROOM_CARD_EARTH_COLOR_SYNC_TNT_v1")
         };
       }
@@ -728,7 +656,8 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
           hasRenderFunction:
             source.includes("renderGeneration2Globe") ||
             source.includes("renderVisibleGlobe") ||
-            source.includes("restoreGeneration2")
+            source.includes("restoreGeneration2") ||
+            source.includes("renderGeneration2Globe")
         };
       }
 
@@ -752,7 +681,9 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
             window.setTimeout(function () {
               try {
                 const doc = frame.contentDocument;
-                if (!doc) {
+                const win = frame.contentWindow;
+
+                if (!doc || !win) {
                   finish({ ok: false, error: "Unable to access same-origin iframe document." });
                   return;
                 }
@@ -760,11 +691,11 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
                 const mount = doc.getElementById("showroom-globe-mount");
                 const root = doc.getElementById("showroom-root");
 
+                const activeGlobe = doc.querySelector(".showroom-generation-2-active-globe");
                 const surfaceImg = doc.querySelector(".showroom-generation-2-earth-surface");
                 const cloudImg = doc.querySelector(".showroom-generation-2-earth-clouds");
-                const activeGlobe = doc.querySelector(".showroom-generation-2-active-globe");
                 const canvas = mount ? mount.querySelector("canvas, [data-dgb-earth-canvas]") : null;
-                const iframe = mount ? mount.querySelector("iframe") : null;
+                const nestedFrame = mount ? mount.querySelector("iframe") : null;
 
                 let mountVisible = false;
                 let globeVisible = false;
@@ -772,7 +703,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
                 let computed = "";
 
                 if (mount) {
-                  const style = frame.contentWindow.getComputedStyle(mount);
+                  const style = win.getComputedStyle(mount);
                   const rect = mount.getBoundingClientRect();
 
                   mountVisible =
@@ -798,7 +729,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
                   (activeGlobe && mountVisible) ||
                   (surfaceImg && imageLoaded && mountVisible) ||
                   (canvas && mountVisible) ||
-                  (iframe && mountVisible)
+                  (nestedFrame && mountVisible)
                 );
 
                 finish({
@@ -812,7 +743,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
                   hasCloudImg: Boolean(cloudImg),
                   surfaceImgLoaded: imageLoaded,
                   hasCanvas: Boolean(canvas),
-                  hasIframe: Boolean(iframe),
+                  hasIframe: Boolean(nestedFrame),
                   globeVisible: globeVisible
                 });
               } catch (error) {
@@ -850,7 +781,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
             breakText: "RESULT_C: /showroom/ does not load /showroom/index.js. Add or correct the parent controller script tag.",
             action: [
               "Patch /showroom/index.html only.",
-              "Add <script src=\"/showroom/index.js\" defer></script> or the correct module/classic script form.",
+              "Add the /showroom/index.js script tag using a module or classic script form.",
               "Then reload /showroom/."
             ]
           };
@@ -860,8 +791,8 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
           return {
             breakText: "RESULT_A: /showroom/index.js is not fetchable. Deploy or rename the served parent controller.",
             action: [
-              "Target /showroom/index.js path/deploy.",
-              "Confirm GitHub path and live served path match.",
+              "Target /showroom/index.js path or deploy state.",
+              "Confirm repository path and live served path match.",
               "Do not touch /showroom/globe/."
             ]
           };
@@ -871,7 +802,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
         if (js.inertRisk) {
           return {
-            breakText: "RESULT_B: /showroom/index.js is likely execution-inert from a leading // single-line comment consuming the controller body.",
+            breakText: "RESULT_B: /showroom/index.js is likely execution-inert from a leading single-line comment consuming the controller body.",
             action: [
               "Replace /showroom/index.js only.",
               "Use a block comment header or no header.",
@@ -907,7 +838,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
           return {
             breakText: "RESULT_D: Earth asset load is failing.",
             action: [
-              "Confirm /assets/earth/earth_surface_2048.jpg and /assets/earth/earth_clouds_2048.jpg are deployed.",
+              "Confirm Earth surface and cloud assets are deployed.",
               "Do not rewrite /showroom/globe/index.js.",
               "Do not generate replacement images."
             ]
@@ -916,7 +847,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
         if (!frameResult.ok) {
           return {
-            breakText: "RESULT_C: Parent iframe inspection failed, so browser-side console or DOM inspection is required: " + frameResult.error,
+            breakText: "RESULT_C: Parent iframe inspection failed: " + frameResult.error,
             action: [
               "Open /showroom/ in browser devtools.",
               "Check Console for /showroom/index.js errors.",
@@ -929,7 +860,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
           return {
             breakText: "RESULT_C: Parent DOM does not contain #showroom-globe-mount after load.",
             action: [
-              "Patch /showroom/index.js only if it should create the mount.",
+              "Patch /showroom/index.js if it should create the mount.",
               "Patch /showroom/index.html only if the mount must be static.",
               "Do not touch Gauges."
             ]
@@ -1010,7 +941,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
             "C3 /showroom/index.js parse/execution risk",
             js.inertRisk || !js.parse.ok ? "fail" : "pass",
             js.inertRisk
-              ? "Leading // inert-risk detected on executable controller line."
+              ? "Leading single-line inert-risk detected on executable controller line."
               : js.parse.ok
                 ? "No parse error detected by Function parser."
                 : "Parse error: " + js.parse.error,
@@ -1078,10 +1009,7 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
 
       function bind() {
         const button = el("run-diagnostic-button");
-        if (button) {
-          button.addEventListener("click", runDiagnostic);
-        }
-
+        if (button) button.addEventListener("click", runDiagnostic);
         window.setTimeout(runDiagnostic, 250);
       }
 
@@ -1100,25 +1028,3 @@ This version turns Gauges into a live Showroom globe diagnostic console. It chec
   </script>
 </body>
 </html>
-
-Post-write check:
-
-UPDATED_FILE=/gauges/index.html
-
-EXPECTED_RESULT=[
-Gauges now runs a live diagnostic against /showroom/,
-Gauges checks served /showroom/index.js,
-Gauges detects leading // inert controller risk,
-Gauges detects JS parse failure if present,
-Gauges checks Earth asset availability,
-Gauges inspects parent iframe DOM for #showroom-globe-mount,
-Gauges reports whether the mount exists, is visible, and contains image/canvas/iframe content,
-Gauges selects RESULT_A_B_C_OR_D with the exact next repair action
-]
-
-DO_NOT_TOUCH=[
-/showroom/globe/index.js,
-/assets/earth/*,
-/render/*,
-/products/*
-]

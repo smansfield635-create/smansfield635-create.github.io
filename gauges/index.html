@@ -15,6 +15,7 @@
   data-demo-universe-earth-render-health="measured"
   data-showroom-visible-render-health="measured"
   data-moon-diagnostic-meter="active"
+  data-earth-readability-meter="active"
   data-gauges-display-completion="active"
 >
 <head>
@@ -25,7 +26,7 @@
 
   <meta
     name="description"
-    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, Showroom visible render, Moon diagnostic construct, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
+    content="Dexter Lab Measurement Key for Diamond Gate Bridge. Gauges measures route health, render health, Showroom visible render, Moon diagnostic construct, Earth readability, pressure, pH, barometer, seismograph, gyroscope, visual truth, and universe-build readiness."
   />
 
   <style>
@@ -47,9 +48,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -84,13 +83,9 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    a {
-      text-decoration: none;
-    }
+    a { text-decoration: none; }
 
-    button {
-      cursor: pointer;
-    }
+    button { cursor: pointer; }
 
     .page {
       position: relative;
@@ -319,21 +314,10 @@
       line-height: 1.4;
     }
 
-    .status-pass {
-      color: var(--good);
-    }
-
-    .status-measured {
-      color: var(--blue);
-    }
-
-    .status-hold {
-      color: var(--hold);
-    }
-
-    .status-constrained {
-      color: var(--constrain);
-    }
+    .status-pass { color: var(--good); }
+    .status-measured { color: var(--blue); }
+    .status-hold { color: var(--hold); }
+    .status-constrained { color: var(--constrain); }
 
     code {
       color: var(--gold);
@@ -346,9 +330,7 @@
       color: var(--soft);
     }
 
-    li {
-      margin: 5px 0;
-    }
+    li { margin: 5px 0; }
 
     .receipt {
       white-space: pre-wrap;
@@ -373,13 +355,8 @@
     }
 
     @media (max-width: 900px) {
-      .topbar {
-        display: grid;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
+      .topbar { display: grid; }
+      .nav { justify-content: flex-start; }
 
       .summary-grid,
       .instrument-grid,
@@ -429,7 +406,7 @@
       <p>
         The Cadillac key is the master authority key. The Measurement Key is the operating proof key.
         This lab measures route health, render health, visible Showroom render, Moon diagnostic construct,
-        pressure, acid/base balance, barometric pressure, seismic shock, axis/orientation,
+        Earth readability, pressure, acid/base balance, barometric pressure, seismic shock, axis/orientation,
         256-state completion, visual truth, and universe-build readiness.
       </p>
 
@@ -463,11 +440,21 @@
       <p>
         The Cadillac key authorizes the key system. The Measurement Key proves which key can lawfully turn next.
         G12 measures the Moon diagnostic construct as diagnostic-first-pass, not final Moon law.
+        G13 measures whether Earth remains shadowed while still readable.
       </p>
       <p>
-        IFF rule: a Moon condition is constrained if and only if it blocks construct, delivery,
+        IFF rule: a visual condition is constrained if and only if it blocks construct, delivery,
         expression, or comprehension without preserving a lawful correction path.
       </p>
+    </section>
+
+    <section class="section">
+      <h2>G13 · Earth Readability Evidence</h2>
+      <p>
+        G13 separates Earth readability from generic render health. It measures whether the Earth is under shadow
+        without disappearing into shadow.
+      </p>
+      <div class="evidence" data-earth-readability-evidence></div>
     </section>
 
     <section class="section">
@@ -530,6 +517,7 @@
       <span>demo-universe-earth-render-health=measured</span>
       <span>showroom-visible-render-health=measured</span>
       <span>moon-diagnostic-meter=active</span>
+      <span>earth-readability-meter=active</span>
       <span>gauges-display-completion=active</span>
       <span>dexter-lab=instrumentation</span>
       <span>measurement-key=active</span>
@@ -537,6 +525,7 @@
       <span>DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1</span>
       <span>DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1</span>
       <span>GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1</span>
+      <span>GAUGES_EARTH_READABILITY_METER_TNT_v1</span>
     </section>
   </main>
 
@@ -588,6 +577,25 @@
         "moon-diagnostic-construct",
         "earth-reflected-moonlight",
         "DEMO_UNIVERSE_MOON_DIAGNOSTIC_SAFE_MIGRATION_TNT_v1"
+      ];
+
+      var EARTH_READABILITY_TOKENS = [
+        "data-earth-readability=\"tuned\"",
+        "data-night-side-readable=\"true\"",
+        "data-darkness-standard=\"shadow-with-readable-surface\"",
+        "data-terminator-preserved=\"true\"",
+        "data-earth-readability-iff-standard=\"active\"",
+        "data-earth-visual-acceptance=\"pending\"",
+        "DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1"
+      ];
+
+      var EARTH_LAYER_TOKENS = [
+        "earth-texture",
+        "earth-night",
+        "earth-terminator",
+        "earth-reflected-moonlight",
+        "earth-morning-edge",
+        "earth-breakfast-clouds"
       ];
 
       function route(id, label, url, tokens) {
@@ -738,21 +746,8 @@
         var html = await fetchText("/showroom/");
         var css = await fetchText("/showroom/showroom.css");
 
-        var htmlTokens = [
-          "showroom",
-          "showroom-stage",
-          "showroom-card",
-          "showroom-globe",
-          "site-nav"
-        ];
-
-        var cssTokens = [
-          ".showroom",
-          ".showroom-stage",
-          ".showroom-card",
-          ".showroom-globe",
-          ".site-nav"
-        ];
+        var htmlTokens = ["showroom", "showroom-stage", "showroom-card", "showroom-globe", "site-nav"];
+        var cssTokens = [".showroom", ".showroom-stage", ".showroom-card", ".showroom-globe", ".site-nav"];
 
         var htmlMissing = html.ok ? missingTokens(html.text, htmlTokens).map(function (token) { return "HTML: " + token; }) : htmlTokens.map(function (token) { return "HTML: " + token; });
         var cssMissing = css.ok ? missingTokens(css.text, cssTokens).map(function (token) { return "CSS: " + token; }) : cssTokens.map(function (token) { return "CSS: " + token; });
@@ -768,9 +763,7 @@
         var score = Math.round((htmlScore + cssScore + shellScore + rawScore + iframeScore) / 5);
         var missing = [].concat(htmlMissing, cssMissing);
 
-        if (!iframeResult.ok) {
-          missing.push("IFRAME: body styled");
-        }
+        if (!iframeResult.ok) missing.push("IFRAME: body styled");
 
         return {
           id: "G11_SHOWROOM_VISIBLE_RENDER",
@@ -847,12 +840,7 @@
           if (!requiredMissing.includes("data-moon-confines=\"bounded-secondary-demo-universe\"")) score += 15;
           if (!requiredMissing.includes("data-moon-confounds=\"active-diagnostic\"")) score += 10;
           if (!requiredMissing.includes("data-reflected-moonlight=\"active\"")) score += 15;
-          if (
-            !requiredMissing.includes("data-artificial-moonlight=\"superseded\"") &&
-            !requiredMissing.includes("data-real-moon-developed=\"diagnostic-first-pass\"")
-          ) {
-            score += 10;
-          }
+          if (!requiredMissing.includes("data-artificial-moonlight=\"superseded\"") && !requiredMissing.includes("data-real-moon-developed=\"diagnostic-first-pass\"")) score += 10;
           if (!requiredMissing.includes("data-moon-iff-standard=\"active\"")) score += 5;
           if (!requiredMissing.includes("data-progressive-diagnostic-gates=\"active\"")) score += 5;
           if (!layerMissing.includes("moon-diagnostic-construct")) score += 3;
@@ -875,6 +863,48 @@
             ["Artificial shim supersession", (requiredMissing.includes("data-artificial-moonlight=\"superseded\"") || requiredMissing.includes("data-real-moon-developed=\"diagnostic-first-pass\"")) ? 0 : 10],
             ["IFF progressive gates", (requiredMissing.includes("data-moon-iff-standard=\"active\"") ? 0 : 5) + (requiredMissing.includes("data-progressive-diagnostic-gates=\"active\"") ? 0 : 5)],
             ["Render layer evidence", (layerMissing.includes("moon-diagnostic-construct") ? 0 : 3) + (layerMissing.includes("earth-reflected-moonlight") ? 0 : 2)]
+          ]
+        };
+      }
+
+      async function checkEarthReadability() {
+        var fetched = await fetchText("/showroom/globe/");
+        var requiredMissing = fetched.ok ? missingTokens(fetched.text, EARTH_READABILITY_TOKENS) : EARTH_READABILITY_TOKENS.slice();
+        var layerMissing = fetched.ok ? missingTokens(fetched.text, EARTH_LAYER_TOKENS) : EARTH_LAYER_TOKENS.slice();
+
+        var score = 0;
+
+        if (fetched.ok) {
+          if (!requiredMissing.includes("data-earth-readability=\"tuned\"")) score += 20;
+          if (!requiredMissing.includes("data-night-side-readable=\"true\"")) score += 15;
+          if (!requiredMissing.includes("data-darkness-standard=\"shadow-with-readable-surface\"")) score += 15;
+          if (!requiredMissing.includes("data-terminator-preserved=\"true\"")) score += 15;
+          if (!requiredMissing.includes("data-earth-readability-iff-standard=\"active\"")) score += 10;
+          if (!requiredMissing.includes("data-earth-visual-acceptance=\"pending\"")) score += 10;
+          if (!requiredMissing.includes("DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1")) score += 10;
+          if (!layerMissing.includes("earth-texture")) score += 1;
+          if (!layerMissing.includes("earth-night")) score += 1;
+          if (!layerMissing.includes("earth-terminator")) score += 1;
+          if (!layerMissing.includes("earth-reflected-moonlight")) score += 1;
+          if (!layerMissing.includes("earth-morning-edge") && !layerMissing.includes("earth-breakfast-clouds")) score += 1;
+        }
+
+        return {
+          id: "G13_EARTH_READABILITY",
+          label: "Earth Readability Meter",
+          url: "/showroom/globe/",
+          score: clamp(score, 0, 100),
+          http: fetched.status,
+          missing: requiredMissing.concat(layerMissing),
+          components: [
+            ["Earth readability contract", requiredMissing.includes("data-earth-readability=\"tuned\"") ? 0 : 20],
+            ["Night-side readability", requiredMissing.includes("data-night-side-readable=\"true\"") ? 0 : 15],
+            ["Darkness standard", requiredMissing.includes("data-darkness-standard=\"shadow-with-readable-surface\"") ? 0 : 15],
+            ["Terminator preservation", requiredMissing.includes("data-terminator-preserved=\"true\"") ? 0 : 15],
+            ["Readability IFF standard", requiredMissing.includes("data-earth-readability-iff-standard=\"active\"") ? 0 : 10],
+            ["Visual acceptance state", requiredMissing.includes("data-earth-visual-acceptance=\"pending\"") ? 0 : 10],
+            ["Receipt token", requiredMissing.includes("DEMO_UNIVERSE_EARTH_READABILITY_TUNING_TNT_v1") ? 0 : 10],
+            ["Layer evidence", Math.max(0, 5 - layerMissing.length)]
           ]
         };
       }
@@ -909,6 +939,7 @@
           var render = await checkRenderEvidence();
           var showroomVisible = await checkShowroomVisible();
           var moon = await checkMoonDiagnostic();
+          var earthReadability = await checkEarthReadability();
 
           var houseScore = average(house);
           var productScore = average(products);
@@ -916,15 +947,17 @@
           var renderScore = average(render);
           var visibleScore = showroomVisible.score;
           var moonScore = moon.score;
+          var earthReadabilityScore = earthReadability.score;
 
           var compass = await fetchText("/");
           var coreScore = compass.ok && (includesToken(compass.text, "data-core-hold=\"true\"") || includesToken(compass.text, "CORE_EXPERIENCE_HELD")) ? 100 : (compass.ok ? 50 : 0);
           var generationScore = calculateGenerationScore(compass.text);
 
-          var visualTruth = Math.round((renderScore + visibleScore + moonScore + 100) / 4);
-          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + productScore + planetScore) / 8);
+          var shadowScore = render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50;
+          var visualTruth = Math.round((renderScore + visibleScore + moonScore + earthReadabilityScore + shadowScore) / 5);
+          var overall = Math.round((houseScore + coreScore + generationScore + renderScore + visibleScore + moonScore + earthReadabilityScore + productScore + planetScore) / 9);
 
-          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon]);
+          var allEvidence = [].concat(house, products, planets, render, [showroomVisible, moon, earthReadability]);
           var missingCount = allEvidence.reduce(function (sum, item) { return sum + item.missing.length; }, 0);
           var constrainedCount = allEvidence.filter(function (item) { return item.score < 70; }).length;
           var seats = Math.round(256 * overall / 100);
@@ -933,6 +966,7 @@
           var renderPressureValue = 100 - renderScore;
           var visiblePressureValue = 100 - visibleScore;
           var moonPressureValue = 100 - moonScore;
+          var earthReadabilityPressureValue = 100 - earthReadabilityScore;
           var productPressureValue = 100 - productScore;
           var planetPressureValue = 100 - planetScore;
           var corePressureValue = 100 - coreScore;
@@ -943,15 +977,16 @@
             renderPressureValue +
             visiblePressureValue +
             moonPressureValue +
+            earthReadabilityPressureValue +
             productPressureValue +
             planetPressureValue +
             corePressureValue +
             generationPressureValue
-          ) / 8);
+          ) / 9);
 
           var seismograph = clamp(Math.round((constrainedCount * 7) + (missingCount * .34)), 0, 100);
           var acid = clamp(Math.round((barometer + seismograph + generationPressureValue) / 3), 0, 100);
-          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore) / 6), 0, 100);
+          var base = clamp(Math.round((houseScore + productScore + planetScore + renderScore + visibleScore + moonScore + earthReadabilityScore) / 7), 0, 100);
           var ph = clamp((7 + ((base - acid) / 18)), 0, 14);
 
           renderSummary([
@@ -962,6 +997,7 @@
             ["Render health", renderScore, "Demo Universe Earth"],
             ["Showroom visible", visibleScore, "visible render"],
             ["Moon Diagnostic", moonScore, "diagnostic Moon"],
+            ["Earth Readability", earthReadabilityScore, "shadow readable"],
             ["Products", productScore, "product route health"],
             ["Planets", planetScore, "planet route health"]
           ]);
@@ -969,12 +1005,13 @@
           renderInstruments([
             ["Abacus", seats + "/256", (256 - seats) + " seats remain unconfirmed across the measured build field."],
             ["Seismograph", seismograph, "Constrained count: " + constrainedCount + ". Missing tokens: " + missingCount + "."],
-            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, product, planet, core, and generation lanes."],
+            ["Barometer", barometer, "Measures system pressure across route, render, visible Showroom, Moon, Earth readability, product, planet, core, and generation lanes."],
             ["Showroom Visible Render", visibleScore, "Measures whether /showroom/ is visibly mounted, styled, and user-facing."],
             ["Gyroscope", render.some(function (item) { return item.id === "SR_DEMO_UNIVERSE" && item.score >= 90; }) ? 100 : 50, "Earth axis and Demo Universe orientation tokens are measured."],
-            ["Light / Shadow Meter", render.some(function (item) { return item.id === "SR_SHADOW_CONTRACT" && item.score >= 90; }) ? 100 : 50, "Shadow contract is measured; visual acceptance remains separately bounded."],
+            ["Light / Shadow Meter", shadowScore, "Shadow contract is measured; visual acceptance remains separately bounded."],
             ["Moon Diagnostic Meter", moonScore, "Measures diagnostic Moon construct, reflected-light relation, supersession, and progressive IFF gates."],
-            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, and manual visual acceptance."]
+            ["Earth Readability Meter", earthReadabilityScore, "Measures whether Earth is shadowed while still carrying readable surface expression."],
+            ["Visual Truth Meter", visualTruth, "Combines render health, visible Showroom integrity, shadow technical truth, Moon diagnostic truth, and Earth readability."]
           ]);
 
           renderPressureCards([
@@ -982,6 +1019,7 @@
             ["Render Pressure", renderPressureValue, "render lane"],
             ["Visible Render Pressure", visiblePressureValue, "Showroom lane"],
             ["Moon Pressure", moonPressureValue, "Moon diagnostic lane"],
+            ["Earth Readability Pressure", earthReadabilityPressureValue, "Earth visual lane"],
             ["Product Pressure", productPressureValue, "product lane"],
             ["Planet Pressure", planetPressureValue, "planet lane"],
             ["Core Pressure", corePressureValue, "Compass/core lane"],
@@ -989,6 +1027,7 @@
           ]);
 
           renderPH(ph, acid, base);
+          renderEvidence("[data-earth-readability-evidence]", [earthReadability], true);
           renderEvidence("[data-moon-evidence]", [moon], true);
           renderEvidence("[data-showroom-evidence]", [showroomVisible], true);
           renderEvidence("[data-render-evidence]", render, false);
@@ -1003,6 +1042,7 @@
             render: renderScore,
             visible: visibleScore,
             moon: moonScore,
+            earthReadability: earthReadabilityScore,
             products: productScore,
             planets: planetScore,
             seismograph: seismograph,
@@ -1089,13 +1129,13 @@
 
       function renderReceipt(scores) {
         safeText("[data-receipt]",
-          "VERSION: GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1\n" +
-          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1\n" +
+          "VERSION: DEMO_UNIVERSE_EARTH_READABILITY_AND_GAUGES_MASS_TNT_v1\n" +
+          "PRIOR CONTRACTS: DEXTER_LAB_VISIBLE_RENDER_CONTRACT_TNT_v1 + DEXTER_LAB_MOON_DIAGNOSTIC_METER_TNT_v1 + GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1\n" +
           "CADILLAC KEY: master authority key.\n" +
           "MEASUREMENT KEY: operating proof key.\n" +
-          "NEW PATCH: Gauges display completion patch fixes zero-value rendering and lower-section completion.\n" +
+          "NEW CONTRACT: G13 · Earth Readability Meter measures shadow-with-readable-surface.\n" +
           "MOON READ: diagnostic-first-pass, not final Moon law.\n" +
-          "ARTIFICIAL MOONLIGHT READ: superseded scaffold, not active authority.\n\n" +
+          "EARTH READ: tuned readability, visual acceptance pending.\n\n" +
           "AFTER:\n" +
           "Overall=" + scores.overall + "\n" +
           "House=" + scores.house + "\n" +
@@ -1104,6 +1144,7 @@
           "RenderHealth=" + scores.render + "\n" +
           "ShowroomVisible=" + scores.visible + "\n" +
           "MoonDiagnostic=" + scores.moon + "\n" +
+          "EarthReadability=" + scores.earthReadability + "\n" +
           "Products=" + scores.products + "\n" +
           "Planets=" + scores.planets + "\n" +
           "Seismograph=" + scores.seismograph + "\n" +
@@ -1111,7 +1152,7 @@
           "pH=" + Number(scores.ph).toFixed(1) + "\n" +
           "Acid=" + scores.acid + "\n" +
           "Base=" + scores.base + "\n\n" +
-          "IFF ROOT: Every Moon gap becomes a bounded correction path unless it blocks construct, delivery, expression, or comprehension without lawful progression."
+          "IFF ROOT: Earth darkness is constrained if and only if surface readability collapses; Earth brightness is constrained if and only if shadow truth collapses."
         );
       }
 
@@ -1120,9 +1161,10 @@
 
         safeSet("[data-pressure-grid]", '<article class="pressure-card"><strong>HOLD</strong><span>Display completion interrupted</span><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-ph-readout]", '<article class="instrument"><strong>HOLD</strong><span>Acid/Base Meter</span><p>Calibration did not complete. Repair only the Gauges display path.</p></article>');
+        safeSet("[data-earth-readability-evidence]", '<article class="evidence-card"><h3>G13 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-moon-evidence]", '<article class="evidence-card"><h3>G12 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
         safeSet("[data-showroom-evidence]", '<article class="evidence-card"><h3>G11 display constrained.</h3><p>' + htmlEscape(message) + '</p></article>');
-        safeText("[data-receipt]", "VERSION: GAUGES_DISPLAY_COMPLETION_PATCH_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
+        safeText("[data-receipt]", "VERSION: DEMO_UNIVERSE_EARTH_READABILITY_AND_GAUGES_MASS_TNT_v1\nDISPLAY COMPLETION CONSTRAINED:\n" + message);
       }
 
       document.querySelector("[data-run-calibration]").addEventListener("click", runCalibration);

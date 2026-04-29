@@ -6,18 +6,18 @@
   data-manor-skin="active"
   data-construct-class="standalone-globe"
   data-route="/showroom/globe/"
-  data-generation="demo-universe-earth-demo-realm-generation-4-closure-v1"
+  data-generation="demo-universe-earth-demo-realm-generation-4-speed-authority-route-consumer-v1"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Universe Earth · Demo Realm · Diamond Gate Bridge</title>
+  <title>Demo Universe Earth · Generation 4 Speed Authority · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Demo Universe Earth is the standalone demo realm for the Showroom globe. It uses the shared globe rendering service without inheriting the parent Showroom proof identity."
+    content="Demo Universe Earth is the standalone demo realm for the Showroom globe. It consumes the Generation 4 speed-authority globe instrument as a rendering and control service without inheriting parent proof identity."
   />
 
-  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-4-route-alignment-v1" />
+  <link rel="stylesheet" href="/showroom/showroom.css?v=showroom-generation-4-speed-authority-route-consumer-v1" />
 </head>
 
 <body
@@ -27,6 +27,10 @@
   data-active-realm="demo-universe-earth-demo-realm"
   data-active-route-role="demo-universe-earth"
   data-cross-realm-link-type="navigation-only"
+  data-speed-authority="/assets/showroom.globe.instrument.js"
+  data-instrument-speed-authority="true"
+  data-runtime-speed-authority="false"
+  data-css-animation-authority="false"
 >
   <a class="skip-link" href="#globe-main">Skip to Demo Universe Earth</a>
 
@@ -43,19 +47,30 @@
     data-parent-route-available="/showroom/"
     data-parent-role-available="navigation-only"
     data-context-receipt-mode="demo-realm-isolated"
+    data-speed-authority="/assets/showroom.globe.instrument.js"
+    data-instrument-speed-authority="true"
+    data-runtime-speed-authority="false"
+    data-css-animation-authority="false"
+    data-render-bridge-speed-authority="false"
     data-generation-1-ring-scaffold="removed"
     data-generation-2-receipt-only="true"
     data-generation-2-visual-class-emission="removed"
     data-generation-3-realm-separation="active"
-    data-generation-4-closure="route-html-aligned"
-    data-generation-4-motion-read="pending-consumer-and-sphere-closeout"
+    data-generation-4-closure="speed-authority-route-consumer-aligned"
+    data-generation-4-motion-model="calibrated-longitude-latitude-zoom-light-anchor"
+    data-generation-4-disk-rotation="removed"
+    data-generation-4-spherical-read="active"
+    data-generation-4-horizontal-friction="calibrated"
+    data-generation-4-vertical-control="visible-latitude-disposition"
+    data-generation-4-axis-disposition="23.5-degree-axis-frame"
   >
     <header class="showroom-header">
       <p class="eyebrow">Demo Universe Earth · Demo Realm</p>
       <h1>Demo Universe Earth</h1>
       <p class="showroom-lede">
-        This route is the demo-only standalone realm. It uses the shared globe rendering and control
-        service without carrying the parent Showroom proof identity as an active role.
+        Demo Universe Earth is the demo-only standalone realm. It consumes the current
+        speed-authority globe instrument as a rendering and control service without inheriting the
+        parent Showroom proof identity.
       </p>
 
       <nav class="site-nav nav-links route-rail" aria-label="Demo Universe route rail">
@@ -66,8 +81,13 @@
       </nav>
     </header>
 
-    <main id="globe-main" class="showroom-main" data-active-realm="demo-universe-earth-demo-realm">
-      <section class="visual-panel" aria-label="Demo Universe Earth Generation 4 globe demo surface">
+    <main
+      id="globe-main"
+      class="showroom-main"
+      data-active-realm="demo-universe-earth-demo-realm"
+      data-speed-authority="/assets/showroom.globe.instrument.js"
+    >
+      <section class="visual-panel" aria-label="Demo Universe Earth Generation 4 speed-authority globe surface">
         <div
           id="showroom-globe-mount"
           class="showroom-globe-mount showroom-globe showroom-earth-color showroom-earth-clouds showroom-earth-atmosphere"
@@ -82,7 +102,11 @@
           data-parent-route-available="/showroom/"
           data-parent-role-available="navigation-only"
           data-context-receipt-mode="demo-realm-isolated"
-          data-generation-4-closure="route-html-aligned"
+          data-speed-authority="/assets/showroom.globe.instrument.js"
+          data-instrument-speed-authority="true"
+          data-runtime-speed-authority="false"
+          data-css-animation-authority="false"
+          data-generation-4-closure="speed-authority-route-consumer-aligned"
         >
           <noscript>Demo Universe Earth requires JavaScript.</noscript>
         </div>
@@ -99,29 +123,36 @@
           <li>CROSS_REALM_LINK_TYPE=navigation-only</li>
           <li>SHARED_INSTRUMENT_ROLE=rendering-and-control-service-only</li>
           <li>SHARED_ACTIVE_REALM_IDENTITY=false</li>
+          <li>SPEED_AUTHORITY=/assets/showroom.globe.instrument.js</li>
+          <li>INSTRUMENT_SPEED_AUTHORITY=true</li>
+          <li>RUNTIME_SPEED_AUTHORITY=false</li>
+          <li>CSS_ANIMATION_AUTHORITY=false</li>
+          <li>RENDER_BRIDGE_SPEED_AUTHORITY=false</li>
           <li>GENERATION_1_RING_SCAFFOLD_REMOVED</li>
           <li>GENERATION_2_RECEIPT_ONLY</li>
           <li>GENERATION_2_VISUAL_CLASS_EMISSION_REMOVED</li>
           <li>GENERATION_3_REALM_SEPARATION_ACTIVE</li>
-          <li>GENERATION_4_ROUTE_HTML_ALIGNED</li>
-          <li>GENERATION_4_MOTION_READ_PENDING_SPHERE_CLOSEOUT</li>
-          <li>CSS=/showroom/showroom.css?v=showroom-generation-4-route-alignment-v1</li>
-          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-3-realm-separated-control-instrument-v1</li>
+          <li>GENERATION_4_SPEED_AUTHORITY_ROUTE_CONSUMER_ALIGNED</li>
+          <li>GENERATION_4_MOTION_MODEL=calibrated-longitude-latitude-zoom-light-anchor</li>
+          <li>GENERATION_4_DISK_ROTATION_REMOVED</li>
+          <li>GENERATION_4_AXIS_DISPOSITION=23.5-degree-axis-frame</li>
+          <li>CSS=/showroom/showroom.css?v=showroom-generation-4-speed-authority-route-consumer-v1</li>
+          <li>ASSET_INSTRUMENT=/assets/showroom.globe.instrument.js?v=showroom-generation-4-speed-authority-calibration-v1</li>
           <li>RUNTIME=/showroom/runtime.js?v=showroom-generation-3-runtime-status-contract-cleanup-v1</li>
-          <li>DEMO_UNIVERSE_EARTH_DEMO_REALM_ROUTE_HTML_ALIGNMENT_TNT_v1</li>
+          <li>DEMO_UNIVERSE_EARTH_SPEED_AUTHORITY_ROUTE_CONSUMER_TNT_v1</li>
         </ul>
       </section>
     </main>
   </div>
 
-  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-3-realm-separated-control-instrument-v1" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=showroom-generation-4-speed-authority-calibration-v1" defer></script>
   <script src="/showroom/runtime.js?v=showroom-generation-3-runtime-status-contract-cleanup-v1" defer></script>
 
   <script>
     (function () {
       "use strict";
 
-      const VERSION = "demo-universe-earth-demo-realm-route-html-alignment-v1";
+      const VERSION = "demo-universe-earth-speed-authority-route-consumer-v1";
       const MOUNT_ID = "showroom-globe-mount";
 
       function writeDataset(node, values) {
@@ -132,7 +163,7 @@
         });
       }
 
-      function demoRealmReceipts() {
+      function demoReceipts(instrumentVersion) {
         return {
           demoUniverseRouteHtml: VERSION,
           activeRealm: "demo-universe-earth-demo-realm",
@@ -144,31 +175,43 @@
           parentRouteAvailable: "/showroom/",
           parentRoleAvailable: "navigation-only",
           contextReceiptMode: "demo-realm-isolated",
+          speedAuthority: "/assets/showroom.globe.instrument.js",
+          instrumentSpeedAuthority: "true",
+          runtimeSpeedAuthority: "false",
+          cssAnimationAuthority: "false",
+          renderBridgeSpeedAuthority: "false",
+          consumedInstrumentVersion: instrumentVersion || "pending",
           generation1RingScaffold: "removed",
           generation2ReceiptOnly: "true",
           generation2VisualClassEmission: "removed",
           generation3RealmSeparation: "active",
-          generation4Closure: "route-html-aligned",
-          generation4MotionRead: "pending-consumer-and-sphere-closeout"
+          generation4Closure: "speed-authority-route-consumer-aligned",
+          generation4MotionModel: "calibrated-longitude-latitude-zoom-light-anchor",
+          generation4DiskRotation: "removed",
+          generation4SphericalRead: "active",
+          generation4HorizontalFriction: "calibrated",
+          generation4VerticalControl: "visible-latitude-disposition",
+          generation4AxisDisposition: "23.5-degree-axis-frame"
         };
       }
 
       function renderDemoGlobe() {
         const mount = document.getElementById(MOUNT_ID);
         const instrument = window.DGBShowroomGlobeInstrument;
+        const instrumentVersion = instrument && instrument.version ? instrument.version : "missing";
 
         [
           document.getElementById("showroom-root"),
           document.getElementById("globe-main"),
           mount
         ].forEach(function (node) {
-          writeDataset(node, demoRealmReceipts());
+          writeDataset(node, demoReceipts(instrumentVersion));
         });
 
         if (mount && instrument && typeof instrument.renderGlobe === "function") {
           instrument.renderGlobe(mount, {
             context: "standalone",
-            caption: "GENERATION 4 · DEMO REALM · EARTH CONTROL ACTIVE"
+            caption: "GENERATION 4 · DEMO REALM · SPEED CALIBRATED"
           });
         }
 
@@ -177,10 +220,30 @@
         }
       }
 
+      function waitForInstrument(attempt) {
+        const count = attempt || 0;
+
+        if (
+          window.DGBShowroomGlobeInstrument &&
+          typeof window.DGBShowroomGlobeInstrument.renderGlobe === "function"
+        ) {
+          renderDemoGlobe();
+          return;
+        }
+
+        if (count < 40) {
+          window.setTimeout(function () {
+            waitForInstrument(count + 1);
+          }, 50);
+        }
+      }
+
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", renderDemoGlobe, { once: true });
+        document.addEventListener("DOMContentLoaded", function () {
+          waitForInstrument(0);
+        }, { once: true });
       } else {
-        renderDemoGlobe();
+        waitForInstrument(0);
       }
     })();
   </script>

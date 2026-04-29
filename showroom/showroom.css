@@ -1,14 +1,12 @@
 /* /showroom/showroom.css */
-/* SHOWROOM_SEVEN_FILE_ASSET_INSTRUMENT_STYLE_v1 */
+/* SHOWROOM_GENERATION_3_FULL_EXPRESSION_STYLE_TNT_v1 */
 
 :root {
   --showroom-void: #050914;
   --showroom-black: #02050c;
-  --showroom-navy: #081426;
   --showroom-panel: rgba(12, 24, 42, 0.78);
   --showroom-panel-strong: rgba(7, 15, 29, 0.94);
   --showroom-gold: #f5c76b;
-  --showroom-copper: #c87a3d;
   --showroom-blue: #74b8ff;
   --showroom-text: #f6efe0;
   --showroom-muted: #b9c2cf;
@@ -149,7 +147,9 @@ h1 {
 .route-rail a,
 .showroom-card a,
 .showroom-fallback a,
-.showroom-generation-2-link {
+.showroom-generation-2-link,
+.showroom-generation-3-link {
+  display: inline-flex;
   border: 1px solid rgba(245, 199, 107, 0.42);
   border-radius: 999px;
   padding: 0.72rem 1rem;
@@ -171,7 +171,9 @@ h1 {
 .showroom-fallback a:hover,
 .showroom-fallback a:focus-visible,
 .showroom-generation-2-link:hover,
-.showroom-generation-2-link:focus-visible {
+.showroom-generation-2-link:focus-visible,
+.showroom-generation-3-link:hover,
+.showroom-generation-3-link:focus-visible {
   color: #080d18;
   background: var(--showroom-gold);
   outline: none;
@@ -245,7 +247,8 @@ h1 {
   contain: none !important;
 }
 
-.showroom-generation-2-shell {
+.showroom-generation-2-shell,
+.showroom-generation-3-shell {
   position: relative !important;
   z-index: 55 !important;
   width: min(820px, 100%) !important;
@@ -255,7 +258,8 @@ h1 {
   gap: 14px !important;
 }
 
-.showroom-generation-2-orbit {
+.showroom-generation-2-orbit,
+.showroom-generation-3-orbit {
   position: absolute;
   left: 50%;
   top: 48%;
@@ -265,9 +269,13 @@ h1 {
   border-radius: 50%;
   transform: translate(-50%, -50%) rotate(-10deg);
   pointer-events: none;
+  box-shadow:
+    0 0 24px rgba(116, 184, 255, 0.10),
+    inset 0 0 20px rgba(245, 199, 107, 0.05);
 }
 
-.showroom-generation-2-active-globe {
+.showroom-generation-2-active-globe,
+.showroom-generation-3-active-globe {
   display: block !important;
   position: relative !important;
   z-index: 60 !important;
@@ -278,18 +286,24 @@ h1 {
   overflow: hidden !important;
   opacity: 1 !important;
   visibility: visible !important;
-  background: #0a2a50;
+  background:
+    radial-gradient(circle at 34% 27%, rgba(255, 255, 255, 0.20), transparent 0 12%, transparent 24%),
+    #0a2a50;
   box-shadow:
-    inset -42px -28px 64px rgba(0, 0, 0, 0.46),
-    inset 18px 12px 28px rgba(255, 255, 255, 0.10),
-    0 0 44px rgba(116, 184, 255, 0.30),
-    0 0 110px rgba(245, 199, 107, 0.11);
+    inset -62px -34px 78px rgba(0, 0, 0, 0.56),
+    inset 20px 14px 30px rgba(255, 255, 255, 0.12),
+    inset -10px 0 34px rgba(8, 17, 33, 0.48),
+    0 0 36px rgba(116, 184, 255, 0.30),
+    0 0 96px rgba(116, 184, 255, 0.14),
+    0 0 140px rgba(245, 199, 107, 0.10);
   isolation: isolate;
 }
 
 .showroom-generation-2-active-globe img,
 .showroom-generation-2-earth-surface,
-.showroom-generation-2-earth-clouds {
+.showroom-generation-2-earth-clouds,
+.showroom-generation-3-earth-surface,
+.showroom-generation-3-earth-clouds {
   display: block !important;
   position: absolute;
   inset: 0;
@@ -302,51 +316,155 @@ h1 {
   pointer-events: none;
 }
 
-.showroom-generation-2-earth-surface {
+.showroom-generation-2-earth-surface,
+.showroom-generation-3-earth-surface {
   z-index: 1;
-  transform: scale(1.04);
-  filter: saturate(1.12) contrast(1.05);
+  transform: scale(1.045);
+  filter: saturate(1.28) contrast(1.12) brightness(1.03);
 }
 
-.showroom-generation-2-earth-clouds {
-  z-index: 2;
-  opacity: 0.36;
+.showroom-generation-2-earth-clouds,
+.showroom-generation-3-earth-clouds {
+  z-index: 4;
+  opacity: 0.42;
   mix-blend-mode: screen;
-  transform: scale(1.05);
+  transform: scale(1.055);
+  filter: contrast(1.08) brightness(1.10);
 }
 
-.showroom-generation-2-light {
+.showroom-generation-3-ocean-land-color {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 2;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 33% 24%, rgba(255, 255, 255, 0.26), transparent 0 14%, transparent 28%),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.14), transparent 34%, rgba(0, 0, 0, 0.24) 68%, rgba(0, 0, 0, 0.50));
+    radial-gradient(circle at 36% 35%, rgba(93, 177, 255, 0.16), transparent 0 36%),
+    radial-gradient(circle at 58% 52%, rgba(88, 181, 114, 0.11), transparent 0 28%),
+    radial-gradient(circle at 42% 64%, rgba(216, 162, 79, 0.10), transparent 0 25%);
+  mix-blend-mode: overlay;
   pointer-events: none;
 }
 
-.showroom-generation-2-rim {
+.showroom-generation-3-cloud-depth {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 30%, rgba(255, 255, 255, 0.18), transparent 0 8%, transparent 20%),
+    radial-gradient(circle at 61% 58%, rgba(255, 255, 255, 0.10), transparent 0 10%, transparent 24%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.showroom-generation-2-light,
+.showroom-generation-3-light {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 31% 23%, rgba(255, 244, 208, 0.34), transparent 0 13%, transparent 26%),
+    linear-gradient(115deg, rgba(255, 235, 180, 0.18), transparent 34%, rgba(0, 0, 0, 0.24) 66%, rgba(0, 0, 0, 0.50));
+  pointer-events: none;
+}
+
+.showroom-generation-3-terminator {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  border-radius: 50%;
+  background:
+    linear-gradient(112deg,
+      rgba(255, 221, 155, 0.20) 0%,
+      rgba(255, 221, 155, 0.08) 25%,
+      rgba(20, 40, 70, 0.06) 46%,
+      rgba(4, 8, 18, 0.46) 68%,
+      rgba(0, 0, 0, 0.70) 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.showroom-generation-3-night-depth {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 72% 58%, rgba(0, 0, 0, 0.58), transparent 0 38%),
+    radial-gradient(circle at 84% 82%, rgba(0, 0, 0, 0.74), transparent 0 45%);
+  pointer-events: none;
+}
+
+.showroom-generation-3-moon-reflection {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 74% 38%, rgba(145, 187, 255, 0.14), transparent 0 10%, transparent 22%),
+    linear-gradient(90deg, transparent 52%, rgba(145, 187, 255, 0.08), transparent 80%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.showroom-generation-3-atmosphere {
+  position: absolute;
+  inset: -2px;
+  z-index: 11;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 61%, rgba(116, 184, 255, 0.18) 68%, rgba(116, 184, 255, 0.08) 74%, transparent 78%);
+  box-shadow:
+    0 0 22px rgba(116, 184, 255, 0.32),
+    0 0 54px rgba(116, 184, 255, 0.17);
+  pointer-events: none;
+}
+
+.showroom-generation-2-rim,
+.showroom-generation-3-rim {
   position: absolute;
   inset: -1px;
-  z-index: 4;
+  z-index: 12;
   border-radius: 50%;
-  border: 1px solid rgba(246, 239, 224, 0.24);
+  border: 1px solid rgba(246, 239, 224, 0.28);
   box-shadow:
     inset 0 0 28px rgba(116, 184, 255, 0.20),
-    0 0 22px rgba(116, 184, 255, 0.22);
+    0 0 22px rgba(116, 184, 255, 0.22),
+    0 0 82px rgba(116, 184, 255, 0.12);
   pointer-events: none;
 }
 
-.showroom-generation-2-caption {
+.showroom-generation-2-caption,
+.showroom-generation-3-caption {
   margin: 0;
-  color: rgba(255, 255, 255, 0.90);
+  color: rgba(255, 255, 255, 0.92);
   font-size: clamp(0.78rem, 2.4vw, 1.05rem);
   font-weight: 900;
   letter-spacing: 0.12em;
   line-height: 1.35;
   text-align: center;
   text-transform: uppercase;
+}
+
+.showroom-generation-3-telemetry {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.42rem;
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.showroom-generation-3-telemetry span {
+  border: 1px solid rgba(116, 184, 255, 0.28);
+  border-radius: 999px;
+  padding: 0.34rem 0.55rem;
+  color: rgba(226, 238, 255, 0.84);
+  background: rgba(4, 12, 24, 0.62);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .content-panel,
@@ -432,25 +550,36 @@ h1 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .showroom-generation-2-earth-surface {
-    animation: showroomG2EarthSpin 34s linear infinite;
+  .showroom-generation-2-earth-surface,
+  .showroom-generation-3-earth-surface {
+    animation: showroomG3EarthSpin 34s linear infinite;
   }
 
-  .showroom-generation-2-earth-clouds {
-    animation: showroomG2CloudSpin 52s linear infinite;
+  .showroom-generation-2-earth-clouds,
+  .showroom-generation-3-earth-clouds {
+    animation: showroomG3CloudSpin 52s linear infinite;
+  }
+
+  .showroom-generation-3-atmosphere {
+    animation: showroomG3AtmospherePulse 7s ease-in-out infinite;
   }
 }
 
-@keyframes showroomG2EarthSpin {
-  from { transform: scale(1.04) translateX(0); }
-  50% { transform: scale(1.04) translateX(-3.5%); }
-  to { transform: scale(1.04) translateX(0); }
+@keyframes showroomG3EarthSpin {
+  from { transform: scale(1.045) translateX(0); }
+  50% { transform: scale(1.045) translateX(-3.5%); }
+  to { transform: scale(1.045) translateX(0); }
 }
 
-@keyframes showroomG2CloudSpin {
-  from { transform: scale(1.05) translateX(0); }
-  50% { transform: scale(1.05) translateX(4%); }
-  to { transform: scale(1.05) translateX(0); }
+@keyframes showroomG3CloudSpin {
+  from { transform: scale(1.055) translateX(0); }
+  50% { transform: scale(1.055) translateX(4%); }
+  to { transform: scale(1.055) translateX(0); }
+}
+
+@keyframes showroomG3AtmospherePulse {
+  0%, 100% { opacity: 0.74; }
+  50% { opacity: 1; }
 }
 
 @media (max-width: 920px) {
@@ -477,16 +606,19 @@ h1 {
     padding: 16px !important;
   }
 
-  .showroom-generation-2-shell {
+  .showroom-generation-2-shell,
+  .showroom-generation-3-shell {
     min-height: 430px !important;
   }
 
-  .showroom-generation-2-active-globe {
+  .showroom-generation-2-active-globe,
+  .showroom-generation-3-active-globe {
     width: min(390px, 84vw) !important;
     min-height: 280px !important;
   }
 
-  .showroom-generation-2-orbit {
+  .showroom-generation-2-orbit,
+  .showroom-generation-3-orbit {
     width: min(470px, 94vw);
     height: 110px;
   }
@@ -519,7 +651,8 @@ h1 {
     min-height: 500px;
   }
 
-  .showroom-generation-2-active-globe {
+  .showroom-generation-2-active-globe,
+  .showroom-generation-3-active-globe {
     width: min(360px, 84vw) !important;
   }
 }

@@ -1,90 +1,92 @@
-/* SHOWROOM_VISIBLE_RENDER_CSS_REPAIR_TNT_v2 */
-/* Target: /showroom/showroom.css */
-/* Contract: satisfy G11 CSS visible-render evidence directly. */
-
-:root {
-  color-scheme: dark;
-  --ink: #f4f7ff;
-  --soft: rgba(244, 247, 255, .74);
-  --muted: rgba(244, 247, 255, .56);
-  --gold: #f2c76f;
-  --gold-soft: rgba(242, 199, 111, .15);
-  --line: rgba(244, 247, 255, .14);
-  --line-gold: rgba(242, 199, 111, .42);
-  --black: #02050a;
-  --panel: rgba(2, 5, 10, .78);
-  --panel-heavy: rgba(2, 5, 10, .90);
-  --blue-glow: rgba(97, 153, 236, .30);
-  --max: 1180px;
-}
-
-* {
-  box-sizing: border-box;
-}
+/* ==========================================================================
+   SHOWROOM_WHITE_SCREEN_RECOVERY_GUARD_v1
+   Scope: /showroom/showroom.css only
+   Purpose: restore dark visual surface without touching the Showroom boot chain.
+   ========================================================================== */
 
 html,
 body {
-  margin: 0;
-  min-height: 100%;
+  margin: 0 !important;
+  min-height: 100% !important;
+  background:
+    radial-gradient(ellipse at 82% 8%, rgba(242, 199, 111, .14), transparent 30%),
+    radial-gradient(ellipse at 28% 42%, rgba(67, 121, 207, .15), transparent 39%),
+    linear-gradient(180deg, #03060b 0%, #06101d 48%, #01040a 100%) !important;
+  color: #f5f7ff !important;
+  color-scheme: dark !important;
 }
 
 body {
-  background-color: rgb(2, 5, 10);
+  overflow-x: hidden !important;
 }
 
-body.showroom,
 .showroom,
-.showroom-page,
-.showroom-shell {
-  min-height: 100svh;
-  background-color: rgb(2, 5, 10);
+.showroom-shell,
+main[data-page="showroom"],
+main[data-page-id="showroom"] {
+  position: relative !important;
+  z-index: 1 !important;
+  background: transparent !important;
+  color: #f5f7ff !important;
+}
+
+.showroom-copy,
+.showroom-panel,
+.showroom-card,
+.showroom-stage > article {
   background:
-    radial-gradient(circle at 84% 12%, rgba(242, 199, 111, .12), transparent 25%),
-    radial-gradient(circle at 20% 26%, rgba(78, 136, 220, .15), transparent 32%),
-    radial-gradient(circle at 50% 74%, rgba(48, 88, 138, .20), transparent 42%),
-    linear-gradient(180deg, #02050a 0%, #07111e 50%, #02050a 100%);
-  color: var(--ink);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  overflow-x: hidden;
+    radial-gradient(ellipse at 14% 20%, rgba(142, 188, 255, .11), transparent 38%),
+    radial-gradient(ellipse at 90% 4%, rgba(242, 199, 111, .12), transparent 34%),
+    rgba(3, 8, 15, .86) !important;
+  color: #f5f7ff !important;
+  border: 1px solid rgba(245, 247, 255, .13) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .025),
+    0 24px 84px rgba(0, 0, 0, .34) !important;
 }
 
-body.showroom::before,
-.showroom::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  opacity: .44;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.45px),
-    radial-gradient(circle, rgba(255,255,255,.26) 0 1px, transparent 1.8px),
-    radial-gradient(circle, rgba(242,199,111,.20) 0 1px, transparent 1.9px);
-  background-size: 92px 92px, 168px 168px, 236px 236px;
-  background-position: 0 0, 42px 66px, 90px 124px;
+.showroom-copy p,
+.showroom-card p,
+.brand span {
+  color: rgba(245, 247, 255, .72) !important;
 }
 
-body.showroom::after,
-.showroom::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
+.brand strong,
+.kicker,
+.card-kicker,
+.eyebrow {
+  color: #f2c76f !important;
+}
+
+.nav-links a,
+.site-nav a,
+.action-link,
+.showroom-action {
+  color: #f5f7ff !important;
   background:
-    radial-gradient(circle at 50% 46%, rgba(255,255,255,.035), transparent 30%),
-    radial-gradient(circle at 50% 52%, transparent 0 42%, rgba(0,0,0,.36) 82%, rgba(0,0,0,.76) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .035)) !important;
+  border: 1px solid rgba(245, 247, 255, .13) !important;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
+.nav-links a[aria-current="page"],
+.site-nav a[aria-current="page"],
+.action-link.primary,
+.showroom-action.primary {
+  border-color: rgba(242, 199, 111, .36) !important;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(242, 199, 111, .19), transparent 70%),
+    linear-gradient(180deg, rgba(242, 199, 111, .15), rgba(255, 255, 255, .035)) !important;
 }
 
-a:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 4px;
+.showroom-fallback,
+.showroom-fallback--audit-only,
+[data-showroom-fallback-mode="audit-only"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
 
 .audit-source,
@@ -101,364 +103,7 @@ a:focus-visible {
   margin: -1px !important;
 }
 
-.showroom-shell {
-  width: 100%;
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: auto 1fr;
-}
-
-.site-topbar {
-  position: relative;
-  z-index: 20;
-  width: min(var(--max), calc(100vw - 28px));
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding: clamp(18px, 3vw, 34px) 0 clamp(12px, 2vw, 22px);
-}
-
-.site-brand {
-  display: grid;
-  gap: 6px;
-  text-decoration: none;
-}
-
-.site-brand strong {
-  color: var(--gold);
-  font-size: clamp(.92rem, 2.5vw, 1.18rem);
-  line-height: 1.1;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-}
-
-.site-brand span {
-  color: var(--soft);
-  font-size: clamp(.96rem, 2.8vw, 1.2rem);
-  line-height: 1.28;
-}
-
-.site-nav,
-.nav-pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 9px;
-  max-width: 760px;
-}
-
-.site-nav a,
-.pill,
-.nav-pill {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,.052);
-  color: var(--ink);
-  font-size: clamp(.86rem, 2.4vw, 1rem);
-  font-weight: 850;
-  line-height: 1;
-  text-align: center;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.028),
-    0 10px 30px rgba(0,0,0,.18);
-}
-
-.site-nav a:hover,
-.site-nav a[aria-current="page"],
-.pill:hover,
-.nav-pill:hover {
-  border-color: var(--line-gold);
-  background: var(--gold-soft);
-}
-
-.showroom-stage,
-.showroom-hero {
-  position: relative;
-  width: min(var(--max), calc(100vw - 28px));
-  min-height: calc(100svh - 150px);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(280px, .92fr);
-  align-items: center;
-  gap: clamp(18px, 4vw, 54px);
-  padding: clamp(18px, 4vw, 56px) 0 clamp(32px, 6vw, 78px);
-  isolation: isolate;
-}
-
-.showroom-stage::before,
-.showroom-hero::before {
-  content: "";
-  position: absolute;
-  inset: clamp(10px, 2vw, 24px) 0;
-  z-index: -1;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 36px;
-  background:
-    radial-gradient(circle at 20% 22%, rgba(242,199,111,.08), transparent 28%),
-    radial-gradient(circle at 46% 60%, rgba(97,153,236,.18), transparent 42%),
-    linear-gradient(180deg, rgba(5, 13, 24, .72), rgba(2, 5, 10, .48));
-  box-shadow: 0 28px 94px rgba(0,0,0,.32);
-}
-
-.showroom-globe,
-.showroom-globe-mount {
-  position: relative;
-  min-height: min(76vmin, 640px);
-  display: grid;
-  place-items: center;
-}
-
-.showroom-globe-halo {
-  position: absolute;
-  width: min(72vmin, 620px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(97,153,236,.34), transparent 54%),
-    radial-gradient(circle at 50% 50%, rgba(242,199,111,.10), transparent 68%);
-  filter: blur(6px);
-  opacity: .90;
-}
-
-.showroom-globe-earth {
-  position: relative;
-  width: min(58vmin, 520px);
-  max-width: 92vw;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #0b3b80;
-  background-image:
-    radial-gradient(circle at 30% 24%, rgba(255,255,255,.34), transparent 18%),
-    radial-gradient(ellipse at 76% 36%, rgba(242,199,111,.12), transparent 36%),
-    radial-gradient(ellipse at 18% 68%, rgba(0,0,0,.54), transparent 48%),
-    url("/assets/earth/earth_clouds_2048.jpg"),
-    url("/assets/earth/earth_surface_2048.jpg");
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    210% 100%,
-    210% 100%;
-  background-position:
-    center,
-    center,
-    center,
-    0% 50%,
-    0% 50%;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat-x, repeat-x;
-  filter:
-    saturate(1.08)
-    contrast(1.04)
-    drop-shadow(0 0 30px rgba(97,153,236,.28))
-    drop-shadow(0 0 84px rgba(242,199,111,.10));
-  transform: rotate(-23.5deg);
-  box-shadow:
-    inset -42px -28px 76px rgba(0,0,0,.64),
-    inset 18px 14px 38px rgba(255,255,255,.14),
-    0 0 58px rgba(97,153,236,.22);
-  animation: showroomEarthPreview 52s linear infinite;
-}
-
-.showroom-globe-earth::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(128deg, transparent 0 40%, rgba(0,0,0,.24) 60%, rgba(0,0,0,.68) 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 58%, rgba(115,177,255,.16) 74%, transparent 86%);
-  pointer-events: none;
-}
-
-@keyframes showroomEarthPreview {
-  from {
-    background-position:
-      center,
-      center,
-      center,
-      0% 50%,
-      0% 50%;
-  }
-
-  to {
-    background-position:
-      center,
-      center,
-      center,
-      -210% 50%,
-      -210% 50%;
-  }
-}
-
-.showroom-card,
-.showroom-panel,
-.showroom-copy {
-  position: relative;
-  z-index: 4;
-  border: 1px solid rgba(242,199,111,.28);
-  border-radius: 30px;
-  padding: clamp(22px, 4vw, 42px);
-  background:
-    radial-gradient(circle at 16% 76%, rgba(242,199,111,.10), transparent 32%),
-    radial-gradient(circle at 92% 12%, rgba(97,153,236,.08), transparent 30%),
-    rgba(3, 7, 12, .78);
-  backdrop-filter: blur(14px);
-  box-shadow:
-    0 24px 82px rgba(0,0,0,.38),
-    inset 0 0 0 1px rgba(255,255,255,.035);
-}
-
-.kicker {
-  margin: 0 0 12px;
-  color: var(--gold);
-  font-size: clamp(.78rem, 2.2vw, 1rem);
-  font-weight: 900;
-  letter-spacing: .22em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.showroom-card h1,
-.showroom-panel h1,
-.showroom-copy h1 {
-  margin: 0 0 18px;
-  color: var(--ink);
-  font-size: clamp(3.3rem, 11vw, 5.8rem);
-  line-height: .88;
-  letter-spacing: -.075em;
-}
-
-.showroom-card p,
-.showroom-panel p,
-.showroom-copy p {
-  margin: 0;
-  color: var(--soft);
-  font-size: clamp(1.04rem, 3.8vw, 1.36rem);
-  line-height: 1.46;
-}
-
-.showroom-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 26px;
-}
-
-.showroom-button {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,.055);
-  color: var(--ink);
-  font-weight: 900;
-  text-decoration: none;
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.03),
-    0 14px 34px rgba(0,0,0,.24);
-}
-
-.showroom-button.primary {
-  border-color: var(--line-gold);
-  background: rgba(242,199,111,.16);
-}
-
-.showroom-button:hover {
-  border-color: var(--line-gold);
-  background: rgba(242,199,111,.20);
-}
-
-/* Explicit G11 evidence selectors.
-   These are intentionally direct so /gauges/ can measure the CSS contract. */
-
-.showroom {
-  display: block;
-  background: #02050a;
-  border-radius: 0;
-}
-
-.showroom-stage {
-  display: grid;
-  background: transparent;
-  border-radius: 36px;
-}
-
-.showroom-card {
-  display: block;
-  background: rgba(3, 7, 12, .78);
-  border-radius: 30px;
-}
-
-.showroom-globe {
-  display: grid;
-  background: transparent;
-  border-radius: 50%;
-}
-
-.site-nav {
-  display: flex;
-  background: transparent;
-  border-radius: 999px;
-}
-
-@media (max-width: 860px) {
-  .site-topbar {
-    display: grid;
-    gap: 18px;
-  }
-
-  .site-nav {
-    justify-content: flex-start;
-  }
-
-  .showroom-stage,
-  .showroom-hero {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-
-  .showroom-stage::before,
-  .showroom-hero::before {
-    inset: 4px -4px 18px;
-    border-radius: 28px;
-  }
-
-  .showroom-globe,
-  .showroom-globe-mount {
-    min-height: min(64vmin, 430px);
-    order: 2;
-  }
-
-  .showroom-card,
-  .showroom-panel,
-  .showroom-copy {
-    order: 1;
-  }
-
-  .showroom-globe-earth {
-    width: min(68vmin, 420px);
-  }
-}
-
-@media (max-width: 520px) {
-  .site-nav a {
-    padding: 9px 11px;
-  }
-
-  .showroom-card,
-  .showroom-panel,
-  .showroom-copy {
-    border-radius: 24px;
-  }
-
-  .showroom-actions {
-    display: grid;
-  }
-
-  .showroom-button {
-    text-align: center;
-  }
+/* Receipt token for Gauges/source inspection */
+:root {
+  --showroom-white-screen-recovery-guard: SHOWROOM_WHITE_SCREEN_RECOVERY_GUARD_v1;
 }

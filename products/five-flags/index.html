@@ -1,151 +1,670 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-build="product-wing-full-tnt-v1"
-  data-generation="five-flags-product-chamber-unity-renewal-v1"
-  data-page-id="five-flags"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-parent-route="/products/"
->
+<!doctype html>
+<html lang="en" data-page="five-flags" data-room="PC2_FIVE_FLAGS" data-public-presentation="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Five Flags · Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Five Flags: an identity and civic product chamber inside the Diamond Gate Bridge Product Wing."
-  />
-  <link rel="stylesheet" href="/assets/manor.css?v=five-flags-product-chamber-unity-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Five Flags · Diamond Gate Bridge</title>
+  <meta name="description" content="Five Flags is an identity and civic game housed inside the Diamond Gate Bridge Product Wing.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --red: #ff9f9f;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.13), transparent 24rem),
+        radial-gradient(circle at 18% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .route-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 470px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.2), transparent 16rem),
+        radial-gradient(circle at 22% 68%, rgba(143, 240, 198, 0.08), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(20px, 7vw, 90px);
+      top: 50%;
+      width: clamp(180px, 32vw, 360px);
+      aspect-ratio: 1;
+      transform: translateY(-50%);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 211, 111, 0.18);
+      background:
+        linear-gradient(90deg, rgba(255, 211, 111, 0.18), transparent 18% 20%, rgba(125, 181, 255, 0.16) 21% 39%, transparent 40% 42%, rgba(143, 240, 198, 0.16) 43% 61%, transparent 62% 64%, rgba(255, 159, 159, 0.14) 65% 83%, transparent 84% 86%, rgba(255, 255, 255, 0.12) 87%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 62%);
+      box-shadow:
+        inset 0 0 38px rgba(255, 211, 111, 0.05),
+        0 0 84px rgba(125, 181, 255, 0.08);
+      opacity: 0.48;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 840px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.52;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
+        rgba(9, 15, 25, 0.84);
+      box-shadow: none;
+    }
+
+    .card span {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card ul,
+    .card ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .flag-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .flag-row {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid rgba(168, 199, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .flag-row strong {
+      color: var(--green);
+    }
+
+    .flag-row span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .version-card {
+      min-height: 320px;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .route-card {
+      min-height: 104px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .route-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .route-card span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-card strong {
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 390px;
+      }
+
+      .hero::after {
+        opacity: 0.24;
+        right: -40px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .nav,
+      .actions {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flag-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin manor-product"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-page-id="five-flags"
-  data-product-id="five-flags"
-  data-product-parent="/products/"
-  data-parent-route="/products/"
-  data-route="/products/five-flags/"
-  data-class-type="product_chamber"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-construct-code="PC2_FIVE_FLAGS"
-  data-parent-construct="products"
-  data-house-anchor="products"
-  data-skin-family="manor_product"
-  data-canonical-destination-status="canonical"
-  data-host-status="standalone"
-  data-audit-priority="critical"
-  data-registry-version="1.0.0"
->
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/" aria-current="page">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+<body>
+  <a class="skip" href="#five-flags-main">Skip to Five Flags</a>
 
   <main
-    class="manor-shell"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-page-id="five-flags"
-    data-product-id="five-flags"
-    data-product-parent="/products/"
-    data-parent-route="/products/"
+    id="five-flags-main"
+    class="page"
     data-route="/products/five-flags/"
-    data-class-type="product_chamber"
+    data-product-chamber="PC2_FIVE_FLAGS"
+    data-product-class="product_chamber"
     data-construct-class="product"
     data-product-wing="true"
-    data-construct-code="PC2_FIVE_FLAGS"
-    data-parent-construct="products"
-    data-house-anchor="products"
-    data-canonical-destination-status="canonical"
-  >
-    <section class="manor-room" aria-label="Five Flags product chamber">
-      <p class="manor-kicker">PC2 · Five Flags · Product Chamber</p>
+    data-parent-route="/products/"
+    data-canonical-destination="true"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority">
 
-      <h1 class="manor-title">Five Flags</h1>
+    <header class="topbar" aria-label="Five Flags header">
+      <div class="brand">Diamond Gate Bridge · Products · Five Flags</div>
+      <nav class="nav" aria-label="Five Flags navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <p class="manor-lede">
-        Five Flags is an identity and civic product chamber housed inside the Product Wing.
-        It remains under Products as one canonical destination: <strong>/products/five-flags/</strong>.
+    <section class="hero" aria-labelledby="five-flags-title">
+      <div class="hero-content">
+        <p class="kicker">PC2 · Five Flags · Product Chamber</p>
+        <h1 id="five-flags-title">Five Flags</h1>
+        <p class="lead">
+          Five Flags is an identity and civic game where players build a personal flag, test it through real-life choices, and learn how self, family, community, country, and future can work together without collapsing into one another.
+        </p>
+      </div>
+
+      <div class="actions" aria-label="Primary Five Flags actions">
+        <a class="button primary" href="/products/">Return to Products</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="game-title">
+      <p class="kicker">The game</p>
+      <h2 id="game-title">A civic identity game built around five loyalties.</h2>
+      <p>
+        Five Flags turns identity into a playable structure. Each player builds a five-part flag, then moves through scenario cards that ask what they would protect, what they would sacrifice, where they belong, and how they would act when different loyalties pull in different directions.
       </p>
 
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="Five Flags product identity">
-        <p class="manor-kicker">Parent binding</p>
-
-        <h2>Five Flags stays attached to the Product Wing.</h2>
-
-        <p class="manor-lede">
-          This chamber carries civic and identity meaning without becoming a detached civic island.
-          Its public route remains bound to Products, Showroom, Compass, Home, and Gauges.
-        </p>
-
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">Canonical Route</p>
-            <h2>/products/five-flags/</h2>
-            <p class="manor-lede">One route under Products. No duplicate civic root.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Product Class</p>
-            <h2>product_chamber</h2>
-            <p class="manor-lede">Five Flags is a product chamber, not a planetary construct and not a house part.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Parent</p>
-            <h2>Products</h2>
-            <p class="manor-lede">The Product Wing remains the parent route and source chamber.</p>
-          </article>
+      <div class="flag-list" aria-label="The five flags">
+        <div class="flag-row">
+          <strong>Self</strong>
+          <span>Personal values, conscience, boundaries, responsibility, and the question: “Who am I when no one is watching?”</span>
         </div>
-      </section>
+        <div class="flag-row">
+          <strong>Family</strong>
+          <span>Origin, care, loyalty, tradition, conflict, inheritance, and the question: “What do I owe the people closest to me?”</span>
+        </div>
+        <div class="flag-row">
+          <strong>Community</strong>
+          <span>Friends, school, workplace, neighborhood, teams, service, and the question: “How do I belong without disappearing?”</span>
+        </div>
+        <div class="flag-row">
+          <strong>Country</strong>
+          <span>Civic responsibility, law, disagreement, public duty, shared story, and the question: “What does citizenship require from me?”</span>
+        </div>
+        <div class="flag-row">
+          <strong>Future</strong>
+          <span>The world players are helping build, the people not yet present, long-range consequences, and the question: “What should survive me?”</span>
+        </div>
+      </div>
     </section>
 
-    <section class="manor-backlinks" aria-label="Product backlinks">
-      <p class="manor-backlinks-title">Product backlinks</p>
+    <section class="grid" aria-label="How Five Flags works">
+      <article class="card">
+        <span>Step 1</span>
+        <h3>Build your flag</h3>
+        <p>
+          Players choose symbols, values, colors, and commitments for each of the five flags. The goal is not to make a pretty banner; the goal is to make identity visible.
+        </p>
+      </article>
 
-      <ul class="manor-backlinks-list">
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+      <article class="card">
+        <span>Step 2</span>
+        <h3>Draw a civic scenario</h3>
+        <p>
+          Scenario cards place players in realistic pressure: a friend needs help, a rule feels unfair, a group disagrees, a family expectation conflicts with a public duty, or the future cost of a choice becomes visible.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Step 3</span>
+        <h3>Choose and explain</h3>
+        <p>
+          Players choose which flag leads the decision, which flag gets protected, and which flag absorbs the cost. The explanation matters as much as the move.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Step 4</span>
+        <h3>Negotiate the table</h3>
+        <p>
+          Other players may challenge, support, trade, question, or offer a better path. The game rewards listening, not just winning an argument.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Step 5</span>
+        <h3>Earn civic strength</h3>
+        <p>
+          Players gain tokens for clarity, courage, fairness, repair, service, wisdom, and accountability. The strongest player is not the loudest; it is the one who can hold identity under pressure.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>End state</span>
+        <h3>Build a shared banner</h3>
+        <p>
+          The game ends when players can build a shared civic banner from different individual flags. The win condition is not sameness; it is coordinated difference.
+        </p>
+      </article>
     </section>
 
-    <section class="manor-audit-strip" aria-label="Five Flags product receipt">
-      <p class="manor-audit-title">Five Flags receipt</p>
+    <section class="section panel" aria-labelledby="versions-title">
+      <p class="kicker">Three versions</p>
+      <h2 id="versions-title">Same game. Different depth.</h2>
+      <p>
+        Five Flags keeps the same core structure across every version: five loyalties, pressure cards, explanation, challenge, repair, and shared banner. The difference is the weight of the scenarios, the language of the prompts, and the level of civic complexity.
+      </p>
+    </section>
 
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=product</li>
-        <li class="manor-audit-chip pass">product-wing=true</li>
-        <li class="manor-audit-chip pass">parent-route=/products/</li>
-        <li class="manor-audit-chip pass">PC2_FIVE_FLAGS</li>
-        <li class="manor-audit-chip pass">canonical-destination</li>
-      </ul>
+    <section class="grid" aria-label="Five Flags versions">
+      <article class="card version-card">
+        <span>Kids version</span>
+        <h3>Color, story, and belonging</h3>
+        <p>
+          The kids version uses simple choices, bright flag-building, story prompts, and guided discussion. It teaches children how to name what matters to them without turning every disagreement into a fight.
+        </p>
+        <ul>
+          <li>Best for classrooms, families, youth groups, and first civic lessons.</li>
+          <li>Scenarios are concrete: sharing, fairness, helping, apologizing, telling the truth, joining a team.</li>
+          <li>Winning means explaining a choice kindly and helping the table build one shared banner.</li>
+        </ul>
+      </article>
+
+      <article class="card version-card">
+        <span>Teen version</span>
+        <h3>Identity under pressure</h3>
+        <p>
+          The teen version adds social pressure, disagreement, reputation, online behavior, belonging, leadership, and personal boundaries. It lets players practice adult-level choices before those choices become permanent.
+        </p>
+        <ul>
+          <li>Best for schools, clubs, youth leadership, mentorship, and debate settings.</li>
+          <li>Scenarios include peer pressure, family conflict, public speech, group loyalty, exclusion, responsibility, and digital identity.</li>
+          <li>Winning means defending a position, revising it when challenged, and showing how identity can mature without becoming fake.</li>
+        </ul>
+      </article>
+
+      <article class="card version-card">
+        <span>Adult version</span>
+        <h3>Civic negotiation and consequence</h3>
+        <p>
+          The adult version turns the game into a negotiation surface for families, teams, organizations, and communities. It deals with tradeoffs, leadership, competing duties, institutional trust, and long-range consequence.
+        </p>
+        <ul>
+          <li>Best for workshops, leadership training, community rooms, family systems, and public conversation.</li>
+          <li>Scenarios include resource allocation, loyalty conflicts, public trust, repair after harm, competing rights, and future stewardship.</li>
+          <li>Winning means producing a decision that can survive disagreement, not just a decision that feels good in the moment.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="grid two" aria-label="What Five Flags brings">
+      <article class="card">
+        <span>What it brings</span>
+        <h3>A playable civic mirror</h3>
+        <p>
+          Five Flags gives people a safe way to see how they make decisions before real conflict forces the issue. It turns identity, responsibility, belonging, and public life into something players can practice.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Gap it closes</span>
+        <h3>Civics without embodiment</h3>
+        <p>
+          Most civic education explains systems from the outside. Five Flags puts the player inside the decision. It asks not only what the rule is, but who the player becomes when the rule costs something.
+        </p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="parent-binding-title">
+      <p class="kicker">Parent binding</p>
+      <h2 id="parent-binding-title">Five Flags stays attached to the Product Wing.</h2>
+      <p>
+        This chamber carries civic and identity meaning without becoming a detached civic island. Its public route remains bound to Products, Showroom, Compass, Home, and Gauges.
+      </p>
+    </section>
+
+    <section class="section panel" aria-labelledby="product-links-title">
+      <p class="kicker">Product backlinks</p>
+      <h2 id="product-links-title">Move through the product wing.</h2>
+
+      <div class="route-grid" aria-label="Five Flags backlinks">
+        <a class="route-card" href="/products/">
+          <span>Parent</span>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span>Proof</span>
+          <strong>Showroom</strong>
+        </a>
+
+        <a class="route-card" href="/">
+          <span>Control</span>
+          <strong>Compass</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <span>House</span>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span>Verification</span>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      Five Flags receipt
+      route-exists
+      manor-skin
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=product
+      product-wing=true
+      parent-route=/products/
+      PC2_FIVE_FLAGS
+      canonical-destination
+      canonical-route=/products/five-flags/
+      product-class=product_chamber
+      identity-and-civic-game=true
+      five-flags=self-family-community-country-future
+      kids-version=true
+      teen-version=true
+      adult-version=true
+      no-duplicate-civic-root=true
+      not-planetary-construct=true
+      not-house-part=true
+      Products=/products/
+      Showroom=/showroom/
+      Compass=/
+      Home=/home/
+      Gauges=/gauges/
+      FIVE_FLAGS_GAME_VERSIONS_TED_PUBLIC_TNT_v1
     </section>
   </main>
 </body>

@@ -3,7 +3,8 @@
   lang="en"
   data-page="compass"
   data-route="/"
-  data-contract="COMPASS_READER_FIRST_ROOT_COPY_TNT_v1"
+  data-contract="COMPASS_READER_FIRST_3D_NESTED_ROOT_TNT_v2"
+  data-root-standard="reader-first-floating-compass-diamond"
 >
 <head>
   <meta charset="utf-8">
@@ -11,23 +12,43 @@
   <title>Diamond Gate Bridge · Start Here</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge start page for Nine Summits, This Underdog, Products, Showroom, and Gauges."
+    content="Start here for Diamond Gate Bridge: Nine Summits, Nine Summits Universe, This Underdog, Products, Showroom, and Gauges."
   >
+
   <style>
     :root {
       color-scheme: dark;
+
       --bg: #02050b;
-      --panel: rgba(9, 15, 25, 0.86);
+      --bg-2: #06101d;
+      --panel: rgba(8, 14, 24, 0.88);
       --panel-2: rgba(13, 21, 34, 0.76);
+      --panel-3: rgba(255, 255, 255, 0.045);
+
       --line: rgba(160, 177, 214, 0.22);
+      --line-strong: rgba(242, 199, 111, 0.42);
+
       --gold: #f2c76f;
-      --gold-soft: rgba(242, 199, 111, 0.24);
-      --green: rgba(116, 220, 179, 0.42);
+      --gold-soft: rgba(242, 199, 111, 0.22);
+      --blue: #8db8ff;
+      --blue-soft: rgba(141, 184, 255, 0.18);
+      --green: #7fe0ba;
+      --green-soft: rgba(127, 224, 186, 0.18);
+      --rose: #e8a0c8;
+      --rose-soft: rgba(232, 160, 200, 0.16);
+      --violet: #b9a2ff;
+      --violet-soft: rgba(185, 162, 255, 0.16);
+      --copper: #d39a66;
+      --copper-soft: rgba(211, 154, 102, 0.16);
+
       --text: #f5f7fb;
       --muted: rgba(228, 234, 246, 0.76);
       --soft: rgba(228, 234, 246, 0.58);
-      --blue: #8db8ff;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
+
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.56);
+      --radius-xl: clamp(26px, 5vw, 46px);
+      --radius-lg: 28px;
+
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -45,10 +66,37 @@
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 22rem),
-        radial-gradient(circle at 18% 22%, rgba(141, 184, 255, 0.10), transparent 24rem),
-        radial-gradient(circle at 82% 72%, rgba(120, 240, 195, 0.05), transparent 22rem),
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 25rem),
+        radial-gradient(circle at 16% 18%, rgba(141, 184, 255, 0.14), transparent 26rem),
+        radial-gradient(circle at 84% 36%, rgba(127, 224, 186, 0.10), transparent 25rem),
+        radial-gradient(circle at 70% 82%, rgba(185, 162, 255, 0.09), transparent 24rem),
         linear-gradient(180deg, #02050b 0%, #06101d 46%, #02050b 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(242,199,111,0.16) 0 1px, transparent 1.8px);
+      background-size: 120px 120px, 190px 190px;
+      background-position: 10px 20px, 80px 70px;
+      opacity: 0.18;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.035), transparent 14%, transparent 86%, rgba(255,255,255,0.035)),
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.32));
+      z-index: -1;
     }
 
     a {
@@ -56,9 +104,8 @@
       text-decoration: none;
     }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid rgba(242, 199, 111, 0.70);
+    a:focus-visible {
+      outline: 3px solid rgba(242, 199, 111, 0.72);
       outline-offset: 4px;
     }
 
@@ -83,7 +130,7 @@
     .shell {
       width: min(1180px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 26px 0 44px;
+      padding: 26px 0 46px;
     }
 
     header.site {
@@ -95,19 +142,20 @@
     .brand {
       display: grid;
       gap: 4px;
+      width: fit-content;
     }
 
     .brand strong {
       color: var(--gold);
-      font-size: clamp(1.12rem, 4vw, 1.68rem);
+      font-size: clamp(1.08rem, 4vw, 1.62rem);
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     .brand span {
       color: var(--muted);
-      font-size: clamp(0.78rem, 2.7vw, 1rem);
-      font-weight: 750;
+      font-size: clamp(0.76rem, 2.7vw, 0.98rem);
+      font-weight: 760;
       letter-spacing: 0.16em;
       text-transform: uppercase;
     }
@@ -119,7 +167,9 @@
     }
 
     nav a,
-    .actions a {
+    .actions a,
+    .path a,
+    .card a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -127,21 +177,41 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 10px 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
       color: var(--text);
       font-weight: 880;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    nav a:hover,
+    .actions a:hover,
+    .path a:hover,
+    .card a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(242, 199, 111, 0.44);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.035));
     }
 
     nav a[aria-current="page"],
     .actions .primary {
-      border-color: rgba(242, 199, 111, 0.58);
-      background: linear-gradient(180deg, rgba(242,199,111,0.18), rgba(242,199,111,0.055));
+      border-color: rgba(242, 199, 111, 0.62);
+      background:
+        linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
     }
 
     .actions .green {
-      border-color: var(--green);
-      background: linear-gradient(180deg, rgba(116,220,179,0.18), rgba(116,220,179,0.055));
+      border-color: rgba(127, 224, 186, 0.48);
+      background:
+        linear-gradient(180deg, rgba(127,224,186,0.18), rgba(127,224,186,0.055));
+    }
+
+    .actions .blue {
+      border-color: rgba(141, 184, 255, 0.48);
+      background:
+        linear-gradient(180deg, rgba(141,184,255,0.18), rgba(141,184,255,0.055));
     }
 
     main {
@@ -152,16 +222,40 @@
     .hero,
     .panel {
       border: 1px solid var(--line);
-      border-radius: clamp(24px, 5vw, 42px);
+      border-radius: var(--radius-xl);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015)),
+        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
         var(--panel);
       box-shadow: var(--shadow);
     }
 
     .hero {
-      padding: clamp(28px, 7vw, 58px);
+      position: relative;
       overflow: hidden;
+      min-height: min(880px, calc(100vh - 120px));
+      padding: clamp(28px, 7vw, 62px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: clamp(22px, 5vw, 54px);
+      align-items: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, transparent, rgba(242,199,111,0.09), transparent 42%),
+        radial-gradient(circle at 82% 18%, rgba(141,184,255,0.18), transparent 18rem),
+        radial-gradient(circle at 76% 72%, rgba(127,224,186,0.12), transparent 20rem);
+      opacity: 0.8;
+    }
+
+    .hero-copy,
+    .hero-visual {
+      position: relative;
+      z-index: 2;
     }
 
     .eyebrow {
@@ -176,36 +270,36 @@
     h2,
     h3 {
       margin: 0;
-      letter-spacing: -0.055em;
+      letter-spacing: -0.058em;
       line-height: 0.98;
     }
 
     h1 {
-      max-width: 980px;
+      max-width: 760px;
       margin-top: 22px;
-      font-size: clamp(3.35rem, 14vw, 7.7rem);
+      font-size: clamp(3.45rem, 12.8vw, 7.35rem);
     }
 
     h2 {
-      font-size: clamp(1.8rem, 6vw, 3.8rem);
+      font-size: clamp(1.85rem, 6vw, 3.8rem);
     }
 
     h3 {
-      font-size: clamp(1.22rem, 3.4vw, 1.75rem);
+      font-size: clamp(1.22rem, 3.2vw, 1.75rem);
     }
 
     p {
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.8vw, 1.28rem);
+      font-size: clamp(1rem, 2.8vw, 1.25rem);
       line-height: 1.55;
     }
 
     .hero p {
-      max-width: 900px;
+      max-width: 720px;
       margin-top: 26px;
-      font-size: clamp(1.18rem, 4.6vw, 2rem);
-      line-height: 1.45;
+      font-size: clamp(1.18rem, 4.3vw, 1.82rem);
+      line-height: 1.42;
     }
 
     .actions {
@@ -215,25 +309,241 @@
       margin-top: 30px;
     }
 
+    .hero-visual {
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      perspective: 1200px;
+    }
+
+    .nested-compass {
+      position: relative;
+      width: min(520px, 88vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+    }
+
+    .orbit,
+    .diamond,
+    .inner-orb,
+    .axis-line,
+    .small-node {
+      position: absolute;
+      transform-style: preserve-3d;
+    }
+
+    .orbit {
+      inset: 7%;
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.035), transparent 48%),
+        radial-gradient(circle at 50% 10%, rgba(141,184,255,0.12), transparent 32%);
+      box-shadow:
+        inset 0 0 60px rgba(141,184,255,0.08),
+        0 0 70px rgba(242,199,111,0.06);
+      animation: slowSpin 34s linear infinite;
+    }
+
+    .orbit.two {
+      inset: 17%;
+      border-color: rgba(141,184,255,0.26);
+      transform: rotateX(62deg) rotateZ(18deg);
+      animation-duration: 28s;
+      animation-direction: reverse;
+    }
+
+    .orbit.three {
+      inset: 28%;
+      border-color: rgba(127,224,186,0.25);
+      transform: rotateY(58deg) rotateZ(-28deg);
+      animation-duration: 24s;
+    }
+
+    .diamond {
+      width: 54%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(242,199,111,0.34);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(242,199,111,0.20), transparent 42%),
+        linear-gradient(315deg, rgba(141,184,255,0.20), transparent 46%),
+        rgba(8, 14, 24, 0.72);
+      transform: rotateX(58deg) rotateZ(45deg);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        inset 0 -34px 80px rgba(0,0,0,0.24),
+        0 30px 90px rgba(0,0,0,0.45);
+      animation: diamondFloat 8s ease-in-out infinite;
+    }
+
+    .diamond::before,
+    .diamond::after {
+      content: "";
+      position: absolute;
+      inset: 16%;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+    }
+
+    .diamond::after {
+      inset: 31%;
+      border-color: rgba(242,199,111,0.22);
+      background:
+        radial-gradient(circle, rgba(127,224,186,0.18), transparent 64%);
+    }
+
+    .inner-orb {
+      width: 24%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(141,184,255,0.28);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.36), transparent 15%),
+        radial-gradient(circle at 60% 60%, rgba(127,224,186,0.28), transparent 38%),
+        rgba(11, 24, 40, 0.82);
+      box-shadow:
+        inset -18px -22px 38px rgba(0,0,0,0.38),
+        0 0 42px rgba(141,184,255,0.18);
+      animation: pulse 5s ease-in-out infinite;
+    }
+
+    .axis-line {
+      height: 80%;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.34), transparent);
+      transform: rotateZ(23deg);
+    }
+
+    .small-node {
+      width: 13px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 28px rgba(242,199,111,0.55);
+    }
+
+    .node-n { top: 7%; left: 50%; }
+    .node-e { right: 8%; top: 50%; background: var(--green); box-shadow: 0 0 28px rgba(127,224,186,0.50); }
+    .node-s { bottom: 7%; left: 50%; background: var(--blue); box-shadow: 0 0 28px rgba(141,184,255,0.50); }
+    .node-w { left: 8%; top: 50%; background: var(--rose); box-shadow: 0 0 28px rgba(232,160,200,0.46); }
+
+    .visual-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .visual-label {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(2, 5, 11, 0.58);
+      color: rgba(245,247,251,0.78);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+
+    .visual-label.top { top: 2%; left: 50%; transform: translateX(-50%); }
+    .visual-label.right { right: 0; top: 50%; transform: translateY(-50%); }
+    .visual-label.bottom { bottom: 2%; left: 50%; transform: translateX(-50%); }
+    .visual-label.left { left: 0; top: 50%; transform: translateY(-50%); }
+
     .panel {
       padding: clamp(20px, 4.5vw, 34px);
       display: grid;
       gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(242,199,111,0.06), transparent 16rem),
+        radial-gradient(circle at 86% 70%, rgba(141,184,255,0.07), transparent 16rem);
+    }
+
+    .panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nested-doors {
+      display: grid;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .door-shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(14px, 3vw, 22px);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+        rgba(255,255,255,0.035);
+    }
+
+    .door-shell.outer {
+      border-color: rgba(242,199,111,0.34);
+    }
+
+    .door-shell.middle {
+      margin-left: clamp(0px, 3vw, 28px);
+      border-color: rgba(141,184,255,0.28);
+    }
+
+    .door-shell.inner {
+      margin-left: clamp(0px, 6vw, 56px);
+      border-color: rgba(127,224,186,0.28);
+    }
+
+    .intro-grid,
+    .paths,
+    .cards,
+    .split {
+      display: grid;
+      gap: 12px;
     }
 
     .intro-grid {
-      display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+    }
+
+    .paths {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .step,
     .path,
     .card {
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 24px;
       padding: 16px;
-      background: var(--panel-2);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+        var(--panel-2);
+    }
+
+    .step {
+      min-height: 150px;
     }
 
     .step strong {
@@ -246,26 +556,18 @@
       margin-bottom: 10px;
     }
 
-    .step p,
-    .path p,
-    .card p {
-      font-size: 0.98rem;
-    }
-
-    .paths {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
     .path {
       display: grid;
       gap: 12px;
       min-height: 100%;
     }
 
-    .path .label,
-    .card .label {
+    .path.book { border-color: rgba(242,199,111,0.34); }
+    .path.world { border-color: rgba(141,184,255,0.32); }
+    .path.voice { border-color: rgba(127,224,186,0.32); }
+    .path.products { border-color: rgba(185,162,255,0.30); }
+
+    .label {
       color: var(--gold);
       font-size: 0.72rem;
       font-weight: 950;
@@ -273,31 +575,46 @@
       text-transform: uppercase;
     }
 
-    .path a,
-    .card a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      min-height: 42px;
+    .path.world .label { color: var(--blue); }
+    .path.voice .label { color: var(--green); }
+    .path.products .label { color: var(--violet); }
+
+    .step p,
+    .path p,
+    .card p {
+      font-size: 0.98rem;
+    }
+
+    .lane-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .lane {
+      min-height: 110px;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 14px;
-      background: rgba(255,255,255,0.05);
+      border-radius: 22px;
+      padding: 14px;
+      background:
+        radial-gradient(circle at 30% 20%, var(--tint, rgba(242,199,111,0.12)), transparent 70%),
+        rgba(255,255,255,0.035);
+    }
+
+    .lane strong {
+      display: block;
       color: var(--text);
-      font-weight: 880;
+      font-size: 1.08rem;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
     }
 
-    .split {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+    .lane span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
     }
 
     footer {
@@ -307,9 +624,34 @@
       line-height: 1.5;
     }
 
+    @keyframes slowSpin {
+      from { transform: rotateX(66deg) rotateZ(0deg); }
+      to { transform: rotateX(66deg) rotateZ(360deg); }
+    }
+
+    @keyframes diamondFloat {
+      0%, 100% { transform: rotateX(58deg) rotateZ(45deg) translateY(0); }
+      50% { transform: rotateX(58deg) rotateZ(51deg) translateY(-12px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.98); opacity: 0.84; }
+      50% { transform: scale(1.04); opacity: 1; }
+    }
+
     @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: 430px;
+      }
+
       .paths,
-      .intro-grid {
+      .intro-grid,
+      .lane-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -319,18 +661,48 @@
     }
 
     @media (max-width: 680px) {
+      .hero {
+        padding: 28px 18px;
+      }
+
+      .hero-visual {
+        min-height: 340px;
+      }
+
       .paths,
       .intro-grid,
-      .split {
+      .split,
+      .lane-strip {
         grid-template-columns: 1fr;
       }
 
       .actions a {
         width: 100%;
       }
+
+      .visual-label {
+        font-size: 0.58rem;
+        padding: 6px 8px;
+      }
+
+      .door-shell.middle,
+      .door-shell.inner {
+        margin-left: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
+
 <body>
   <a class="skip" href="#compass-main">Skip to Compass</a>
 
@@ -355,17 +727,42 @@
 
     <main id="compass-main">
       <section class="hero" aria-labelledby="page-title">
-        <div class="eyebrow">Diamond Gate Bridge</div>
-        <h1 id="page-title">Find the key. Climb the summit. Open the world.</h1>
-        <p>
-          Start with the story. Follow the voice. Open the map. Choose where to enter.
-        </p>
+        <div class="hero-copy">
+          <div class="eyebrow">Diamond Gate Bridge</div>
+          <h1 id="page-title">Find the key. Climb the summit. Open the world.</h1>
+          <p>
+            Start with the story. Follow the voice. Open the map. Choose where to enter.
+          </p>
 
-        <div class="actions">
-          <a class="primary" href="/nine-summits/">Explore Nine Summits</a>
-          <a class="green" href="/this-underdog/">Meet This Underdog</a>
-          <a href="/products/">View Products</a>
-          <a href="/showroom/">Open Showroom</a>
+          <div class="actions">
+            <a class="primary" href="/nine-summits/">Explore Nine Summits</a>
+            <a class="green" href="/this-underdog/">Meet This Underdog</a>
+            <a class="blue" href="/showroom/">Open Showroom</a>
+            <a href="/products/">View Products</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="nested-compass">
+            <div class="orbit"></div>
+            <div class="orbit two"></div>
+            <div class="orbit three"></div>
+            <div class="diamond"></div>
+            <div class="axis-line"></div>
+            <div class="inner-orb"></div>
+
+            <div class="small-node node-n"></div>
+            <div class="small-node node-e"></div>
+            <div class="small-node node-s"></div>
+            <div class="small-node node-w"></div>
+
+            <div class="visual-labels">
+              <div class="visual-label top">Key</div>
+              <div class="visual-label right">World</div>
+              <div class="visual-label bottom">Proof</div>
+              <div class="visual-label left">Voice</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -377,25 +774,20 @@
           Pressure is often where the key is hiding.
         </p>
 
-        <div class="intro-grid">
-          <div class="step">
-            <strong>01</strong>
-            <p>If you came for change, begin with the book.</p>
+        <div class="nested-doors" aria-label="Nested entry structure">
+          <div class="door-shell outer">
+            <h3>First, name why you came.</h3>
+            <p>If you came for change, the book is the first door.</p>
           </div>
 
-          <div class="step">
-            <strong>02</strong>
-            <p>If you came for the world, enter the Nine Summits Universe.</p>
+          <div class="door-shell middle">
+            <h3>Then, choose the world around it.</h3>
+            <p>If you came for the larger map, the Universe opens the terrain around the climb.</p>
           </div>
 
-          <div class="step">
-            <strong>03</strong>
-            <p>If you came for voice, meet This Underdog.</p>
-          </div>
-
-          <div class="step">
-            <strong>04</strong>
-            <p>If you came for tools, open the Product Wing.</p>
+          <div class="door-shell inner">
+            <h3>Finally, make the work useful.</h3>
+            <p>If you came for tools, proof, speaking, or products, enter through the lane that helps you move.</p>
           </div>
         </div>
       </section>
@@ -405,17 +797,17 @@
         <h2 id="main-paths">Choose the door that matches why you came.</h2>
 
         <div class="paths">
-          <article class="path">
+          <article class="path book">
             <div class="label">Book</div>
             <h3>Nine Summits of Love</h3>
             <p>
               A human path through character, balance, dignity, free will, and love.
-              The message is simple: love is not weakness. Love is discipline with a heart.
+              Love is not weakness. Love is discipline with a heart.
             </p>
             <a href="/nine-summits-of-love/">Open book path</a>
           </article>
 
-          <article class="path">
+          <article class="path world">
             <div class="label">World</div>
             <h3>Nine Summits Universe</h3>
             <p>
@@ -425,7 +817,7 @@
             <a href="/nine-summits/universe/">Open universe path</a>
           </article>
 
-          <article class="path">
+          <article class="path voice">
             <div class="label">Voice</div>
             <h3>This Underdog</h3>
             <p>
@@ -435,7 +827,7 @@
             <a href="/this-underdog/">Open speaking path</a>
           </article>
 
-          <article class="path">
+          <article class="path products">
             <div class="label">Products</div>
             <h3>Product Wing</h3>
             <p>
@@ -444,6 +836,38 @@
             </p>
             <a href="/products/">Open products</a>
           </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="world-layers">
+        <div class="eyebrow">How the pieces fit</div>
+        <h2 id="world-layers">The story has layers. Each layer opens the next.</h2>
+
+        <div class="lane-strip">
+          <div class="lane" style="--tint: var(--gold-soft);">
+            <strong>Story</strong>
+            <span>You begin with pressure, memory, want, fear, hope, and the next choice.</span>
+          </div>
+
+          <div class="lane" style="--tint: var(--green-soft);">
+            <strong>Voice</strong>
+            <span>The pressure becomes language. The language becomes something another person can hear.</span>
+          </div>
+
+          <div class="lane" style="--tint: var(--blue-soft);">
+            <strong>World</strong>
+            <span>The climb becomes terrain. The path becomes visible enough to enter.</span>
+          </div>
+
+          <div class="lane" style="--tint: var(--violet-soft);">
+            <strong>Tools</strong>
+            <span>The idea becomes practical. It becomes a product, a room, a game, or a system.</span>
+          </div>
+
+          <div class="lane" style="--tint: var(--copper-soft);">
+            <strong>Proof</strong>
+            <span>The work becomes measurable. The Showroom displays it. Gauges checks it.</span>
+          </div>
         </div>
       </section>
 
@@ -545,14 +969,14 @@
         <div class="actions">
           <a class="primary" href="/nine-summits/">Start with Nine Summits</a>
           <a class="green" href="/this-underdog/">Start with This Underdog</a>
+          <a class="blue" href="/showroom/">Start with Showroom</a>
           <a href="/products/">Start with Products</a>
-          <a href="/showroom/">Start with Showroom</a>
         </div>
       </section>
     </main>
 
     <footer>
-      COMPASS_READER_FIRST_ROOT_COPY_TNT_v1 · Root page for Diamond Gate Bridge.
+      COMPASS_READER_FIRST_3D_NESTED_ROOT_TNT_v2 · Root page for Diamond Gate Bridge.
     </footer>
   </div>
 </body>

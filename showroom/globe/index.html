@@ -1,81 +1,975 @@
 <!doctype html>
 <html
   lang="en"
-  data-showroom-generation="GENERATION_4"
-  data-showroom-cycle="GEN_2_V1_EARTH_DEFINITION"
-  data-showroom-mode="standalone"
+  data-page="showroom-globe"
   data-route="/showroom/globe/"
-  data-demo-universe-scope="our-universe"
-  data-visual-expression="solar-system-field"
-  data-orbit-field="visible"
-  data-earth-zoom="active"
-  data-round-earth-fix="active">
-
+  data-generation="demo-planet-transition-layer-tnt-v1"
+  data-estate="rich-manor-and-estate"
+  data-construct-class="inspection-route"
+  data-inspection-route="demo-planet"
+  data-demo-planet="nine-summits-universe"
+  data-transition-layer="our-universe-to-demo-planet"
+  data-traversal="quad-linear"
+  data-map-protocol="tiktok"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Demo Universe · Earth Definition · Diamond Gate Bridge</title>
-  <meta name="description" content="Gen 2 V1 Earth Definition inspection view for Demo Universe.">
-  <link rel="stylesheet" href="/showroom/showroom.css?v=gen-2-v1-round-earth-fix-tnt-v2">
+  <title>Demo Planet · Nine Summits Universe · Showroom</title>
+  <meta
+    name="description"
+    content="Showroom inspection route for the Demo Planet transition layer: our universe provides the reference field, and the Nine Summits Universe becomes the destination world."
+  >
+
+  <style>
+    :root {
+      --bg: #03050a;
+      --panel: rgba(9, 15, 25, 0.94);
+      --panel2: rgba(14, 24, 38, 0.84);
+      --line: rgba(168, 199, 255, 0.22);
+      --gold-line: rgba(242, 199, 111, 0.36);
+      --text: #f4f7ff;
+      --muted: #b8c2d6;
+      --soft: rgba(244, 247, 255, 0.76);
+      --gold: #f2c76f;
+      --green: #8ff0c6;
+      --blue: #91bdff;
+      --shadow: rgba(0, 0, 0, 0.56);
+      --showroom-axis-tilt: 23.5deg;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
+        radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
+        radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      font-weight: 800;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1160px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 60px;
+    }
+
+    .brand {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .nav,
+    .actions,
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav {
+      margin-bottom: 26px;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(242, 199, 111, 0.48);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.48);
+      background: rgba(143, 240, 198, 0.13);
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .inspection-stage {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 90% 8%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero,
+    .panel {
+      padding: clamp(24px, 5vw, 48px);
+      margin-top: 18px;
+    }
+
+    .hero {
+      min-height: 480px;
+      display: grid;
+      align-content: center;
+      gap: 24px;
+      border-color: var(--gold-line);
+      background:
+        radial-gradient(circle at 72% 18%, rgba(242, 199, 111, 0.16), transparent 20rem),
+        radial-gradient(circle at 24% 70%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.96), rgba(5, 9, 16, 0.78));
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .kicker.gold {
+      color: var(--gold);
+    }
+
+    .kicker.blue {
+      color: var(--blue);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(3.05rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.078em;
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(1.7rem, 5vw, 3.35rem);
+      line-height: 1;
+      letter-spacing: -0.058em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3.6vw, 2rem);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+      line-height: 1.6;
+    }
+
+    .lead {
+      max-width: 920px;
+      color: var(--soft);
+      font-size: clamp(1.16rem, 3vw, 1.55rem);
+      line-height: 1.45;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .inspection-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 18px;
+    }
+
+    .inspection-stage {
+      position: relative;
+      overflow: hidden;
+      min-height: 620px;
+      padding: clamp(18px, 3vw, 30px);
+      border-color: rgba(242, 199, 111, 0.34);
+      background:
+        radial-gradient(circle at 50% 30%, rgba(145, 189, 255, 0.12), transparent 18rem),
+        radial-gradient(circle at 50% 58%, rgba(242, 199, 111, 0.08), transparent 24rem),
+        rgba(4, 10, 18, 0.92);
+    }
+
+    .inspection-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1.7px);
+      background-size: 92px 92px, 137px 137px;
+      background-position: 0 0, 37px 53px;
+      opacity: 0.34;
+      pointer-events: none;
+    }
+
+    .inspection-copy {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 13px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .status-row strong {
+      color: var(--green);
+    }
+
+    .status-row span {
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 22px;
+      min-height: 220px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
+        var(--panel2);
+      box-shadow: none;
+    }
+
+    .card span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 12px 0 0;
+    }
+
+    .transition-flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid rgba(242, 199, 111, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .flow-step strong {
+      color: var(--gold);
+    }
+
+    .flow-step span {
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .quote {
+      color: var(--text);
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+    }
+
+    #demo-planet-mount {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      min-height: 560px;
+    }
+
+    .showroom-generation-3-shell {
+      position: relative;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      width: 100%;
+      min-height: 560px;
+      padding: 24px 0 28px;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .showroom-generation-3-axis-line {
+      position: absolute;
+      top: 9%;
+      bottom: 19%;
+      left: 50%;
+      z-index: 12;
+      width: 2px;
+      transform: translateX(-50%) rotate(var(--showroom-axis-tilt));
+      transform-origin: center;
+      background: linear-gradient(180deg, transparent, rgba(242, 199, 111, 0.72), transparent);
+      box-shadow: 0 0 24px rgba(242, 199, 111, 0.32);
+      pointer-events: none;
+    }
+
+    .showroom-generation-3-axis-node {
+      position: absolute;
+      left: 50%;
+      z-index: 13;
+      width: 10px;
+      height: 10px;
+      border: 1px solid rgba(242, 199, 111, 0.74);
+      border-radius: 999px;
+      background: rgba(242, 199, 111, 0.8);
+      box-shadow: 0 0 18px rgba(242, 199, 111, 0.6);
+      pointer-events: none;
+    }
+
+    .showroom-generation-3-axis-node-north {
+      top: 8%;
+      transform: translateX(-50%);
+    }
+
+    .showroom-generation-3-axis-node-south {
+      bottom: 18%;
+      transform: translateX(-50%);
+    }
+
+    .showroom-generation-3-active-globe {
+      position: relative;
+      z-index: 10;
+      width: min(390px, 74vw);
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.34);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255,255,255,.22), transparent 9rem),
+        radial-gradient(circle at 50% 50%, rgba(53, 118, 188, .55), rgba(5, 15, 28, .95) 72%);
+      box-shadow:
+        inset -38px -34px 54px rgba(0, 0, 0, 0.52),
+        inset 24px 18px 40px rgba(255, 255, 255, 0.08),
+        0 0 0 12px rgba(255, 255, 255, 0.025),
+        0 40px 100px rgba(0, 0, 0, 0.74),
+        0 0 92px rgba(145, 189, 255, 0.18);
+      transform: rotate(calc(-1 * var(--showroom-axis-tilt))) scale(var(--showroom-control-scale, 1));
+      transform-origin: center;
+    }
+
+    .showroom-generation-3-earth-surface,
+    .showroom-generation-3-earth-clouds {
+      position: absolute;
+      inset: -2%;
+      width: 104%;
+      height: 104%;
+      object-fit: cover;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .showroom-generation-3-earth-surface {
+      z-index: 2;
+      opacity: 0.96;
+      filter: saturate(1.2) contrast(1.08) brightness(0.94);
+      animation: dgbSurfaceDrift 18s linear infinite;
+    }
+
+    .showroom-generation-3-earth-clouds {
+      z-index: 4;
+      opacity: 0.42;
+      mix-blend-mode: screen;
+      filter: contrast(1.14) brightness(1.04);
+      animation: dgbCloudDrift 31s linear infinite;
+    }
+
+    .showroom-generation-3-ocean-land-color,
+    .showroom-generation-3-cloud-depth,
+    .showroom-generation-3-light,
+    .showroom-generation-3-terminator,
+    .showroom-generation-3-night-depth,
+    .showroom-generation-3-moon-reflection,
+    .showroom-generation-3-atmosphere,
+    .showroom-generation-3-rim {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .showroom-generation-3-light {
+      z-index: 6;
+      background: radial-gradient(circle at 31% 22%, rgba(255,255,255,.28), transparent 10rem);
+      mix-blend-mode: screen;
+    }
+
+    .showroom-generation-3-terminator {
+      z-index: 7;
+      background: linear-gradient(112deg, transparent 0 42%, rgba(0,0,0,.18) 56%, rgba(0,0,0,.58) 100%);
+    }
+
+    .showroom-generation-3-night-depth {
+      z-index: 8;
+      background: radial-gradient(circle at 78% 70%, rgba(0,0,0,.56), transparent 16rem);
+    }
+
+    .showroom-generation-3-moon-reflection {
+      z-index: 9;
+      background: radial-gradient(circle at 68% 28%, rgba(242,199,111,.16), transparent 5.4rem);
+      mix-blend-mode: screen;
+    }
+
+    .showroom-generation-3-atmosphere {
+      z-index: 11;
+      inset: -1.8%;
+      border: 2px solid rgba(145, 189, 255, 0.25);
+      box-shadow:
+        inset 0 0 28px rgba(145, 189, 255, 0.24),
+        0 0 44px rgba(145, 189, 255, 0.24);
+      animation: dgbAtmospherePulse 7s ease-in-out infinite;
+    }
+
+    .showroom-generation-3-rim {
+      z-index: 12;
+      box-shadow:
+        inset -18px -16px 30px rgba(0,0,0,.42),
+        inset 14px 10px 24px rgba(255,255,255,.1);
+    }
+
+    .showroom-generation-3-caption {
+      position: relative;
+      z-index: 20;
+      margin: 22px auto 8px;
+      color: rgba(244, 247, 255, 0.84);
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .showroom-generation-3-telemetry {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      width: min(760px, 100%);
+      margin: 8px auto;
+    }
+
+    .showroom-generation-3-telemetry span {
+      border: 1px solid rgba(168, 199, 255, 0.16);
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: rgba(255, 255, 255, 0.045);
+      color: rgba(244, 247, 255, 0.7);
+      font-size: 0.68rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .showroom-generation-3-link {
+      position: relative;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 10px 14px;
+      margin-top: 6px;
+      border: 1px solid rgba(242, 199, 111, 0.34);
+      border-radius: 999px;
+      background: rgba(242, 199, 111, 0.12);
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .fallback {
+      position: relative;
+      z-index: 3;
+      display: none;
+      padding: 22px;
+      border: 1px solid rgba(242, 199, 111, 0.34);
+      border-radius: 24px;
+      background: rgba(4, 10, 18, 0.82);
+      text-align: center;
+    }
+
+    .fallback[data-active="true"] {
+      display: block;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @keyframes dgbSurfaceDrift {
+      from { transform: translateX(-2%) scale(1.04); }
+      to { transform: translateX(2%) scale(1.04); }
+    }
+
+    @keyframes dgbCloudDrift {
+      from { transform: translateX(2%) scale(1.06); }
+      to { transform: translateX(-2%) scale(1.06); }
+    }
+
+    @keyframes dgbAtmospherePulse {
+      0%, 100% { opacity: 0.72; }
+      50% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .showroom-generation-3-earth-surface,
+      .showroom-generation-3-earth-clouds,
+      .showroom-generation-3-atmosphere {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .inspection-layout,
+      .grid.three,
+      .grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .inspection-stage,
+      #demo-planet-mount,
+      .showroom-generation-3-shell {
+        min-height: 500px;
+      }
+
+      .hero {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 24px, 620px);
+        padding-top: 18px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 40px;
+        padding: 9px 14px;
+      }
+
+      .status-row,
+      .flow-step {
+        grid-template-columns: 1fr;
+      }
+
+      .showroom-generation-3-active-globe {
+        width: min(320px, 80vw);
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <a class="showroom-skip" href="#globe-main">Skip to Demo Universe</a>
+  <a class="skip" href="#globe-main">Skip to Demo Planet inspection</a>
 
   <main
     id="globe-main"
-    class="showroom-page showroom-inspection-page"
+    class="page"
     data-route="/showroom/globe/"
-    data-showroom-generation="GENERATION_4"
-    data-showroom-cycle="GEN_2_V1_EARTH_DEFINITION"
-    data-demo-universe-scope="our-universe"
-    data-visual-expression="solar-system-field"
-    data-orbit-field="visible"
-    data-earth-zoom="active"
-    data-round-earth-fix="active">
+    data-page-purpose="visible-demo-planet-inspection-route"
+    data-transition-layer="our-universe-to-demo-planet"
+    data-reference-field="our-universe"
+    data-destination-field="nine-summits-universe"
+    data-demo-planet="planet-1"
+    data-showroom-role="inspection"
+    data-universe-page="/nine-summits-universe/"
+    data-gauges-page="/gauges/"
+  >
+    <a class="brand" href="/">
+      <strong>Diamond Gate Bridge</strong>
+      Showroom · Demo Planet Inspection Route
+    </a>
 
-    <header class="showroom-topbar">
-      <div class="showroom-brand">Demo Universe · Our Universe</div>
-      <nav class="showroom-nav" aria-label="Demo Universe navigation">
-        <a href="/showroom/">Showroom</a>
-        <a href="/">Compass</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="/showroom/">Showroom</a>
+      <a href="/">Compass</a>
+      <a href="/nine-summits-universe/">Nine Summits Universe</a>
+      <a href="/nine-summits-of-love/">Nine Summits of Love</a>
+      <a href="/products/">Products</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
 
-    <section class="showroom-hero showroom-hero-compact">
-      <p class="showroom-kicker">Gen 2 V1 · Earth Definition</p>
-      <h1>Demo Universe</h1>
-      <p>Earth becomes the inspection focus inside the completed our-universe field.</p>
+    <section class="hero" aria-labelledby="globe-title">
+      <p class="kicker">Our Universe → Demo Planet</p>
+      <h1 id="globe-title">The inspection route now opens the transition layer.</h1>
+
+      <p class="lead">
+        Our universe gives the visitor the first language: Sun, Earth, Moon, planets, orbit, gravity, atmosphere, and scale. The Demo Planet then translates that familiar language into the Nine Summits Universe.
+      </p>
+
+      <p class="lead">
+        This route does not replace the world explanation page. It inspects the transition: familiar cosmic reference becoming Planet 1, a seven-landmass coherence world restored through a floating magnetic core.
+      </p>
+
+      <div class="actions" aria-label="Primary actions">
+        <a class="button primary" href="/nine-summits-universe/">Read World Map</a>
+        <a class="button" href="/showroom/">Return to Showroom</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
     </section>
 
-    <section
-      id="showroomRenderRoot"
-      data-showroom-render-root="true"
-      data-showroom-mode="standalone"
-      data-showroom-generation="GENERATION_4"
-      data-showroom-cycle="GEN_2_V1_EARTH_DEFINITION"
-      data-visible-code-globe="true"
-      data-phase-bind="complete"
-      data-gen4-closeout="complete"
-      data-final-closeout="true"
-      data-demo-universe-scope="our-universe"
-      data-visual-expression="solar-system-field"
-      data-orbit-field="visible"
-      data-earth-zoom="active"
-      data-round-earth-fix="active"
-      data-sun="included"
-      data-moon="included"
-      data-planets="included">
-      <noscript>Demo Universe requires JavaScript.</noscript>
+    <section class="section panel" aria-labelledby="inspection-title">
+      <p class="kicker gold">Live inspection</p>
+      <h2 id="inspection-title">Reference field first. Destination field second.</h2>
+
+      <div class="inspection-layout">
+        <article class="inspection-stage" aria-label="Demo Planet visual inspection">
+          <div id="demo-planet-mount" data-globe-mount="demo-planet-transition-layer"></div>
+
+          <div id="demo-planet-fallback" class="fallback" aria-live="polite">
+            <p class="kicker gold">Instrument fallback</p>
+            <h3>Demo Planet inspection is waiting for the globe instrument.</h3>
+            <p>The transition layer is still active. The visible globe mount will load when the Showroom globe instrument is available.</p>
+          </div>
+        </article>
+
+        <article class="inspection-copy">
+          <p class="kicker">Transition layer</p>
+          <h3>What the visitor is seeing.</h3>
+
+          <p>
+            The visible globe uses our-universe familiarity as the inspection surface. The page language then redirects comprehension into the Demo Planet: a constructed world with seven landmasses, coherence access, archetype-personality population law, and the TikTok map protocol.
+          </p>
+
+          <div class="status-grid" aria-label="Inspection translation statuses">
+            <div class="status-row">
+              <strong>Sun</strong>
+              <span>Illumination and coherence exposure.</span>
+            </div>
+
+            <div class="status-row">
+              <strong>Earth</strong>
+              <span>Orientation baseline only. The Demo Planet is not ordinary Earth.</span>
+            </div>
+
+            <div class="status-row">
+              <strong>Moon</strong>
+              <span>Relationship, reflection, timing, and secondary-body logic.</span>
+            </div>
+
+            <div class="status-row">
+              <strong>Orbit</strong>
+              <span>Traversal through coherence fields, landmasses, sectors, and access gates.</span>
+            </div>
+
+            <div class="status-row">
+              <strong>Gravity</strong>
+              <span>Coherence pull: lawful movement through harder terrain and higher-order regions.</span>
+            </div>
+
+            <div class="status-row">
+              <strong>Atmosphere</strong>
+              <span>Admissibility field: the world admits or resists access by coherence and comprehension.</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="destination-title">
+      <p class="kicker">Destination field</p>
+      <h2 id="destination-title">The Demo Planet is Planet 1: Nine Summits Universe.</h2>
+
+      <p>
+        The destination is not a generic globe. Planet 1 is an ancient seven-landmass world found desolate and in despair. Its restoration begins through a floating magnetic core that is half natural and half man-made.
+      </p>
+
+      <div class="grid four" aria-label="Demo Planet facts">
+        <article class="card">
+          <span>7 landmasses</span>
+          <h3>Mainland, four main regions, North Pole, South Pole.</h3>
+          <p>The world has one central Mainland, four large directional regions, and two extreme coherence poles.</p>
+        </article>
+
+        <article class="card">
+          <span>Floating core</span>
+          <h3>Half natural. Half man-made.</h3>
+          <p>The core is the restoration engine that reconciles life, memory, terrain, measurement, cities, and repair.</p>
+        </article>
+
+        <article class="card">
+          <span>Coherence access</span>
+          <h3>Harder terrain, sweeter solutions.</h3>
+          <p>Higher coherence opens more difficult terrain, deeper comprehension, sweeter fruit, and more elegant possibility.</p>
+        </article>
+
+        <article class="card">
+          <span>TikTok protocol</span>
+          <h3>1 → 4 → 16 → 32 → 64 → 256.</h3>
+          <p>The map expands forward and audits back through the inverse path with A–Z semantic checkpoints.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="flow-title">
+      <p class="kicker gold">Quad-linear transition</p>
+      <h2 id="flow-title">The route does one job: it turns reference into entry.</h2>
+
+      <div class="transition-flow" aria-label="Quad-linear transition flow">
+        <div class="flow-step">
+          <strong>North</strong>
+          <span>Orientation law. Our universe gives stable reference: Sun, Earth, Moon, planets, orbit, gravity, atmosphere, and scale.</span>
+        </div>
+
+        <div class="flow-step">
+          <strong>East</strong>
+          <span>Visible expression. The Demo Planet becomes readable as Planet 1, not ordinary Earth and not a generic lore page.</span>
+        </div>
+
+        <div class="flow-step">
+          <strong>South</strong>
+          <span>Human usability. Visitors are taught that coherence determines access, terrain, cities, fruit, and solutions.</span>
+        </div>
+
+        <div class="flow-step">
+          <strong>West</strong>
+          <span>Proof and audit. Showroom inspects, Universe explains, and Gauges measures. Page roles do not collapse.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="route-title">
+      <p class="kicker">Route separation</p>
+      <h2 id="route-title">Inspection stays here. The world map lives on the Universe page.</h2>
+
+      <div class="grid three" aria-label="Route roles">
+        <article class="card">
+          <span>/showroom/globe/</span>
+          <h3>Inspection route.</h3>
+          <p>This page owns the visible transition inspection from our-universe reference into Demo Planet comprehension.</p>
+        </article>
+
+        <article class="card">
+          <span>/nine-summits-universe/</span>
+          <h3>World explanation route.</h3>
+          <p>The Universe page owns seven landmasses, world origin, core law, country-region-metroplex structure, and population law.</p>
+        </article>
+
+        <article class="card">
+          <span>/gauges/</span>
+          <h3>Measurement route.</h3>
+          <p>Gauges owns route health, source verification, marker checks, and pass/fail measurement.</p>
+        </article>
+      </div>
+
+      <div class="links" aria-label="Footer links">
+        <a class="button primary" href="/nine-summits-universe/">Open Universe Map</a>
+        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button" href="/nine-summits-of-love/">Book Path</a>
+        <a class="button" href="/gauges/">Gauges</a>
+        <a class="button" href="/">Compass</a>
+      </div>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      SHOWROOM_GLOBE_DEMO_PLANET_TRANSITION_LAYER_TNT_v1
+      route=/showroom/globe/
+      page-purpose=visible-demo-planet-inspection-route
+      reference-field=our-universe
+      destination-field=planet-1-nine-summits-universe
+      transition-layer=our-universe-to-demo-planet
+      sun=illumination-and-coherence-exposure
+      earth=orientation-baseline-only
+      moon=relationship-and-reflection-marker
+      planets=construct-class-reference
+      orbit=traversal
+      gravity=coherence-pull
+      atmosphere=admissibility-field
+      terrain=coherence-challenge
+      population=archetype-personality-capacity
+      map=tiktok-traversal
+      demo-planet=Nine Summits Universe
+      planet-number=1
+      landmasses=7
+      core=floating-magnetic-half-natural-half-man-made
+      origin=desolate-and-in-despair
+      age=4x-earth
+      mountains-origin=4x-everest
+      materials=diamond-opal-marble-slate-granite-gold-platinum-silver-copper-iron-lead
+      access=coherence-correlated
+      traversal=quad-linear
+      showroom-role=inspection
+      universe-page-role=world-explanation
+      gauges-role=measurement
+      globe-instrument=/assets/showroom.globe.instrument.js
+      no-graphic-generation=true
+      no-page-role-collapse=true
     </section>
   </main>
 
-  <script src="/showroom/runtime.js?v=gen-2-v1-round-earth-fix-tnt-v2"></script>
-  <script src="/showroom/consumer.authority.js?v=gen-2-v1-round-earth-fix-tnt-v2"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=gen-2-v1-round-earth-fix-tnt-v2"></script>
-  <script src="/showroom/showroom.render.js?v=gen-2-v1-round-earth-fix-tnt-v2"></script>
-  <script src="/showroom/globe/index.js?v=gen-2-v1-round-earth-fix-tnt-v2"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=demo-planet-transition-layer-tnt-v1"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      function markFallback(reason) {
+        var fallback = document.getElementById("demo-planet-fallback");
+        var mount = document.getElementById("demo-planet-mount");
+
+        if (fallback) {
+          fallback.dataset.active = "true";
+          fallback.dataset.fallbackReason = reason || "unknown";
+        }
+
+        if (mount) {
+          mount.dataset.renderStatus = "instrument-fallback";
+          mount.dataset.fallbackReason = reason || "unknown";
+        }
+
+        document.documentElement.dataset.demoPlanetInspection = "fallback";
+      }
+
+      function bootDemoPlanetInspection() {
+        var mount = document.getElementById("demo-planet-mount");
+        var instrument = window.DGBShowroomGlobeInstrument;
+
+        if (!mount) {
+          markFallback("missing-mount");
+          return;
+        }
+
+        if (!instrument || typeof instrument.renderGlobe !== "function") {
+          markFallback("missing-showroom-globe-instrument");
+          return;
+        }
+
+        try {
+          instrument.renderGlobe(mount, {
+            context: "standalone",
+            caption: "TRANSITION LAYER · OUR UNIVERSE → DEMO PLANET · PLANET 1"
+          });
+
+          mount.dataset.renderStatus = "demo-planet-transition-layer-mounted";
+          mount.dataset.demoPlanet = "nine-summits-universe";
+          mount.dataset.transitionLayer = "our-universe-to-demo-planet";
+          mount.dataset.referenceField = "our-universe";
+          mount.dataset.destinationField = "planet-1-nine-summits-universe";
+          mount.dataset.routeRole = "visible-demo-planet-inspection";
+          mount.dataset.tiktokProtocol = "active";
+          mount.dataset.quadLinearTraversal = "active";
+          mount.dataset.pageRoleCollapse = "forbidden";
+
+          document.documentElement.dataset.demoPlanetInspection = "active";
+          document.documentElement.dataset.showroomGlobeInstrument = instrument.version || "active";
+        } catch (error) {
+          markFallback("instrument-render-error");
+          if (mount) {
+            mount.dataset.errorMessage = error && error.message ? error.message : "unknown";
+          }
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bootDemoPlanetInspection);
+      } else {
+        bootDemoPlanetInspection();
+      }
+    })();
+  </script>
 </body>
 </html>

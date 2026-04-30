@@ -4,18 +4,15 @@
   const VERSION = "PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1";
   const PREVIOUS_V8 = "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY";
   const ROOT_MARKER = "PLANET_ONE_RENDER_TEAM_TNT_v1";
+  const V8_REALISM_PASS = "planet-one-realism-pass=v8-axis-spin-climate-topology";
 
   /*
-    PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1
-
-    Current-state renewal:
-    This file renews the Planet 1 renderer from the present v8 state forward.
-    It does not restore legacy demo behavior.
-
-    Required source markers:
     PLANET_ONE_RENDER_TEAM_TNT_v1
     PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
     PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1
+
+    window.DGBPlanetOneRenderTeam
+    planet-one-realism-pass=v8-axis-spin-climate-topology
 
     v8 preserved:
     planet-one-render-active=true
@@ -40,13 +37,13 @@
   */
 
   const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · globe render lane";
-
   const ACTIVE_INSTANCES = new Set();
 
   const MARKERS = Object.freeze({
     root: ROOT_MARKER,
     v8: PREVIOUS_V8,
     v9: VERSION,
+    v8RealismPass: V8_REALISM_PASS,
     planetOneRenderActive: true,
     axisSpinActive: true,
     climateTopologyActive: true,
@@ -346,111 +343,24 @@
 
           <g class="planet-one-v9-surface" filter="url(#planetOneTerrainTexture)">
             <g opacity="1">
-              <path
-                d="M48 195
-                C95 150 172 128 250 146
-                C310 160 348 128 421 139
-                C510 151 596 171 648 220
-                C703 272 690 324 632 342
-                C571 361 511 337 455 365
-                C396 394 366 458 296 464
-                C217 471 164 421 106 426
-                C50 431 13 466 -42 444
-                C-102 420 -92 333 -42 290
-                C-5 258 9 231 48 195Z"
-                fill="#c9b36d">
-              </path>
+              <path d="M48 195 C95 150 172 128 250 146 C310 160 348 128 421 139 C510 151 596 171 648 220 C703 272 690 324 632 342 C571 361 511 337 455 365 C396 394 366 458 296 464 C217 471 164 421 106 426 C50 431 13 466 -42 444 C-102 420 -92 333 -42 290 C-5 258 9 231 48 195Z" fill="#c9b36d"></path>
 
-              <path
-                d="M96 210
-                C182 172 263 181 335 197
-                C415 216 500 208 580 252
-                C633 281 650 312 616 329
-                C550 360 480 313 414 353
-                C348 392 310 423 234 410
-                C160 397 103 360 42 379
-                C10 389 -31 389 -48 354
-                C-71 307 -20 253 96 210Z"
-                fill="#6da162">
-              </path>
+              <path d="M96 210 C182 172 263 181 335 197 C415 216 500 208 580 252 C633 281 650 312 616 329 C550 360 480 313 414 353 C348 392 310 423 234 410 C160 397 103 360 42 379 C10 389 -31 389 -48 354 C-71 307 -20 253 96 210Z" fill="#6da162"></path>
 
-              <path
-                d="M-20 477
-                C82 441 168 483 259 465
-                C343 448 421 385 510 410
-                C603 437 658 510 747 484
-                C830 460 894 405 964 430
-                C1030 454 1058 546 1006 610
-                C960 667 852 658 775 684
-                C683 716 625 777 522 765
-                C421 753 359 690 267 698
-                C180 706 104 760 23 727
-                C-56 694 -105 596 -70 540
-                C-51 509 -45 486 -20 477Z"
-                fill="#b99a58">
-              </path>
+              <path d="M-20 477 C82 441 168 483 259 465 C343 448 421 385 510 410 C603 437 658 510 747 484 C830 460 894 405 964 430 C1030 454 1058 546 1006 610 C960 667 852 658 775 684 C683 716 625 777 522 765 C421 753 359 690 267 698 C180 706 104 760 23 727 C-56 694 -105 596 -70 540 C-51 509 -45 486 -20 477Z" fill="#b99a58"></path>
 
-              <path
-                d="M20 500
-                C118 458 229 503 312 484
-                C390 466 452 430 535 449
-                C606 466 648 531 725 522
-                C794 514 865 455 941 477
-                C999 494 1022 562 982 608
-                C922 677 808 628 730 672
-                C645 720 566 730 471 709
-                C393 692 338 640 250 650
-                C162 660 88 700 25 668
-                C-52 628 -61 539 20 500Z"
-                fill="#527f45">
-              </path>
+              <path d="M20 500 C118 458 229 503 312 484 C390 466 452 430 535 449 C606 466 648 531 725 522 C794 514 865 455 941 477 C999 494 1022 562 982 608 C922 677 808 628 730 672 C645 720 566 730 471 709 C393 692 338 640 250 650 C162 660 88 700 25 668 C-52 628 -61 539 20 500Z" fill="#527f45"></path>
 
-              <path
-                d="M176 742
-                C259 704 360 736 426 776
-                C496 819 584 800 653 842
-                C714 879 702 929 635 950
-                C558 975 476 946 408 913
-                C330 875 249 884 175 850
-                C116 823 118 771 176 742Z"
-                fill="#a87f4d">
-              </path>
+              <path d="M176 742 C259 704 360 736 426 776 C496 819 584 800 653 842 C714 879 702 929 635 950 C558 975 476 946 408 913 C330 875 249 884 175 850 C116 823 118 771 176 742Z" fill="#a87f4d"></path>
 
-              <path
-                d="M716 228
-                C782 190 874 190 945 224
-                C1000 250 1017 313 975 351
-                C938 384 868 361 825 391
-                C774 425 701 425 677 376
-                C650 322 655 263 716 228Z"
-                fill="#7e9256">
-              </path>
+              <path d="M716 228 C782 190 874 190 945 224 C1000 250 1017 313 975 351 C938 384 868 361 825 391 C774 425 701 425 677 376 C650 322 655 263 716 228Z" fill="#7e9256"></path>
 
-              <path
-                d="M755 671
-                C823 630 904 651 940 702
-                C981 762 926 824 849 805
-                C783 789 703 765 705 718
-                C706 700 729 686 755 671Z"
-                fill="#836948">
-              </path>
+              <path d="M755 671 C823 630 904 651 940 702 C981 762 926 824 849 805 C783 789 703 765 705 718 C706 700 729 686 755 671Z" fill="#836948"></path>
 
-              <path
-                d="M116 295 C172 282 221 304 257 341 C205 351 151 344 106 325Z"
-                fill="#0b5f80">
-              </path>
-              <path
-                d="M244 570 C286 543 344 548 384 579 C337 603 291 608 244 570Z"
-                fill="#0b5f80">
-              </path>
-              <path
-                d="M653 414 C713 372 790 377 840 430 C780 470 709 469 653 414Z"
-                fill="#063c5e">
-              </path>
-              <path
-                d="M616 820 C660 796 707 809 742 840 C695 862 653 857 616 820Z"
-                fill="#082d46">
-              </path>
+              <path d="M116 295 C172 282 221 304 257 341 C205 351 151 344 106 325Z" fill="#0b5f80"></path>
+              <path d="M244 570 C286 543 344 548 384 579 C337 603 291 608 244 570Z" fill="#0b5f80"></path>
+              <path d="M653 414 C713 372 790 377 840 430 C780 470 709 469 653 414Z" fill="#063c5e"></path>
+              <path d="M616 820 C660 796 707 809 742 840 C695 862 653 857 616 820Z" fill="#082d46"></path>
             </g>
 
             <g opacity="0.98" filter="url(#planetOneRidgeShadow)">
@@ -479,19 +389,8 @@
           <circle cx="500" cy="500" r="394" fill="url(#planetOneMoonReflection)"></circle>
           <circle cx="500" cy="500" r="394" fill="url(#planetOneSunReflection)" filter="url(#planetOneSoftGlow)"></circle>
 
-          <path
-            d="M112 500 C250 452 392 451 512 489 C639 529 744 526 888 480"
-            fill="none"
-            stroke="rgba(147,205,255,0.22)"
-            stroke-width="6">
-          </path>
-
-          <path
-            d="M118 570 C268 526 384 555 512 583 C655 615 760 600 884 556"
-            fill="none"
-            stroke="rgba(105,173,235,0.16)"
-            stroke-width="5">
-          </path>
+          <path d="M112 500 C250 452 392 451 512 489 C639 529 744 526 888 480" fill="none" stroke="rgba(147,205,255,0.22)" stroke-width="6"></path>
+          <path d="M118 570 C268 526 384 555 512 583 C655 615 760 600 884 556" fill="none" stroke="rgba(105,173,235,0.16)" stroke-width="5"></path>
         </g>
 
         <circle cx="500" cy="500" r="394" fill="none" stroke="rgba(160,214,255,0.44)" stroke-width="5"></circle>
@@ -572,6 +471,7 @@
         data-root-marker="${ROOT_MARKER}"
         data-v8-marker="${PREVIOUS_V8}"
         data-v9-marker="${VERSION}"
+        data-planet-one-realism-pass="v8-axis-spin-climate-topology"
         data-planet-one-render-active="true"
         data-axis-spin-active="true"
         data-climate-topology-active="true"
@@ -608,6 +508,7 @@
       version: VERSION,
       rootMarker: ROOT_MARKER,
       v8Marker: PREVIOUS_V8,
+      v8RealismPass: V8_REALISM_PASS,
       markers: MARKERS,
       mount,
       shell,
@@ -645,8 +546,10 @@
           version: VERSION,
           rootMarker: ROOT_MARKER,
           v8Marker: PREVIOUS_V8,
+          v8RealismPass: V8_REALISM_PASS,
           markers: MARKERS,
           active: shell ? !shell.classList.contains("is-paused") : false,
+          planetOneRealismPass: "v8-axis-spin-climate-topology",
           opaqueGlobeActive: true,
           sunReflectionActive: true,
           moonReflectionActive: true,
@@ -693,10 +596,11 @@
     return true;
   }
 
-  global.DGBPlanetOneRenderTeam = Object.freeze({
+  const api = Object.freeze({
     VERSION,
     PREVIOUS_V8,
     ROOT_MARKER,
+    V8_REALISM_PASS,
     MARKERS,
     renderPlanetOne,
     stopAll,
@@ -710,6 +614,7 @@
         version: VERSION,
         previousV8: PREVIOUS_V8,
         rootMarker: ROOT_MARKER,
+        v8RealismPass: V8_REALISM_PASS,
         markers: MARKERS,
         activeCount: ACTIVE_INSTANCES.size,
         planetOneRenderActive: true,
@@ -728,4 +633,10 @@
       };
     }
   });
+
+  global.DGBPlanetOneRenderTeam = api;
+
+  if (typeof window !== "undefined") {
+    window.DGBPlanetOneRenderTeam = api;
+  }
 })(window);

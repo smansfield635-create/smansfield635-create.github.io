@@ -1,144 +1,105 @@
-(function bootDemoUniverseEarth(global, document) {
+(function bootDemoUniverseGeneration2Mount(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_STANDALONE_BOOT_TRUE_GEN4_PHASE_ROTATION_CLOSEOUT_TNT_v1";
-  const GENERATION = "GENERATION_4";
-  const GEN4_TYPE = "narrative-code";
+  const VERSION = "SHOWROOM_STANDALONE_BOOT_GENERATION_2_RENDER_MOUNT_ACTIVATION_CTG_v1";
+  const GENERATION = "GENERATION_2";
   const ROUTE = "/showroom/globe/";
   const MODE = "standalone";
 
-  function markDocument(stage, value) {
+  function mark(stage, detail) {
     document.documentElement.dataset.showroomBoot = stage;
     document.documentElement.dataset.showroomBootVersion = VERSION;
     document.documentElement.dataset.showroomGeneration = GENERATION;
-    document.documentElement.dataset.showroomGen4Type = GEN4_TYPE;
     document.documentElement.dataset.showroomRoute = ROUTE;
-    document.documentElement.dataset.phaseRotationCloseout = String(value);
+    document.documentElement.dataset.showroomMode = MODE;
     document.documentElement.dataset.parentIdentityShared = "false";
+    document.documentElement.dataset.generation2MountActivation = detail || "active";
+  }
+
+  function findRoot() {
+    return (
+      document.querySelector("[data-showroom-render-root]") ||
+      document.getElementById("showroomRenderRoot") ||
+      document.querySelector("main") ||
+      document.body
+    );
+  }
+
+  function ensureRenderRoot(candidate) {
+    if (!candidate) {
+      throw new Error("Demo Universe boot failed: no render root or main container found.");
+    }
+
+    if (candidate.matches && candidate.matches("[data-showroom-render-root]")) {
+      return candidate;
+    }
+
+    const existing = document.querySelector("[data-showroom-render-root]");
+    if (existing) return existing;
+
+    const section = document.createElement("section");
+    section.id = "showroomRenderRoot";
+    section.dataset.showroomRenderRoot = "true";
+    section.dataset.showroomMode = MODE;
+    section.dataset.showroomGeneration = GENERATION;
+    section.dataset.parentIdentityShared = "false";
+    section.dataset.generation2MountActivation = "created-by-standalone-boot";
+
+    candidate.append(section);
+    return section;
   }
 
   function requireRender() {
     if (!global.ShowroomRender || typeof global.ShowroomRender.renderShowroomProofSurface !== "function") {
-      throw new Error("Demo Universe Earth boot failed: ShowroomRender is not available.");
+      throw new Error("Demo Universe boot failed: ShowroomRender.renderShowroomProofSurface is unavailable.");
     }
-  }
-
-  function findRoot() {
-    return document.querySelector("[data-showroom-render-root]");
-  }
-
-  function writeBootDataset(root) {
-    root.dataset.standaloneBoot = "true";
-    root.dataset.showroomGeneration = GENERATION;
-    root.dataset.showroomGen4Type = GEN4_TYPE;
-    root.dataset.showroomMode = MODE;
-    root.dataset.showroomRoute = ROUTE;
-    root.dataset.phaseRotationCloseout = "pending";
-    root.dataset.parentIdentityShared = "false";
-  }
-
-  function closeoutRuntime(app) {
-    if (!app || !app.runtime) return null;
-
-    if (typeof app.runtime.writeReceipt === "function") {
-      app.runtime.writeReceipt("standalone_boot_consumed_true_gen4_render", {
-        generation: GENERATION,
-        gen4Type: GEN4_TYPE,
-        route: ROUTE,
-        mode: MODE,
-        bootVersion: VERSION,
-        parentIdentityShared: false,
-        meaning:
-          "Standalone Demo Universe route consumed the same True Gen 4 phase engine without taking parent identity."
-      });
-    }
-
-    if (typeof app.runtime.writePhaseReceipt === "function") {
-      app.runtime.writePhaseReceipt("HOME", {
-        route: ROUTE,
-        meaning: "Standalone route starts from its own inspection context."
-      });
-
-      app.runtime.writePhaseReceipt("BOUNDARY", {
-        route: ROUTE,
-        meaning: "Standalone route accepts state-defined boundary authority."
-      });
-
-      app.runtime.writePhaseReceipt("MOTION", {
-        route: ROUTE,
-        meaning: "Standalone route treats motion as proof-cycle, not parent speed ownership."
-      });
-
-      app.runtime.writePhaseReceipt("REALM", {
-        route: ROUTE,
-        meaning:
-          "Standalone route remains separate from the parent Showroom proof realm."
-      });
-
-      app.runtime.writePhaseReceipt("RECEIPT", {
-        route: ROUTE,
-        meaning: "Standalone route has written readable inspection receipts."
-      });
-
-      app.runtime.writePhaseReceipt("NEXT", {
-        route: ROUTE,
-        meaning: "Standalone route is ready to return or advance without identity collapse."
-      });
-    }
-
-    if (typeof app.runtime.closeoutRoute === "function") {
-      return app.runtime.closeoutRoute({
-        route: ROUTE,
-        mode: MODE,
-        bootVersion: VERSION,
-        closeoutType: "standalone-route-phase-rotation",
-        parentIdentityShared: false
-      });
-    }
-
-    return null;
   }
 
   function boot() {
+    mark("starting", "render-required");
     requireRender();
 
-    const root = findRoot();
+    const root = ensureRenderRoot(findRoot());
 
-    if (!root) {
-      throw new Error("Demo Universe Earth boot failed: render root not found.");
-    }
-
-    markDocument("starting", false);
-    writeBootDataset(root);
+    root.dataset.standaloneBoot = "true";
+    root.dataset.showroomMode = MODE;
+    root.dataset.showroomRoute = ROUTE;
+    root.dataset.showroomGeneration = GENERATION;
+    root.dataset.parentIdentityShared = "false";
+    root.dataset.generation2MountActivation = "starting";
 
     const app = global.ShowroomRender.renderShowroomProofSurface({
-      root: root,
+      root,
       mode: MODE
     });
 
-    const closeoutReceipt = closeoutRuntime(app);
-
-    root.dataset.phaseRotationCloseout = "complete";
-    root.dataset.standaloneBootVersion = VERSION;
     root.dataset.standaloneBootComplete = "true";
+    root.dataset.standaloneBootVersion = VERSION;
+    root.dataset.generation2MountActivation = "complete";
     root.dataset.parentIdentityShared = "false";
 
-    markDocument("complete", true);
+    mark("complete", "generation-2-render-mounted");
 
     global.__DEMO_UNIVERSE_EARTH_APP__ = app;
-    global.__DEMO_UNIVERSE_PHASE_CLOSEOUT__ = closeoutReceipt;
+    global.__DEMO_UNIVERSE_GENERATION_2_MOUNT__ = {
+      version: VERSION,
+      generation: GENERATION,
+      route: ROUTE,
+      mode: MODE,
+      parentIdentityShared: false,
+      complete: true,
+      app
+    };
 
     global.dispatchEvent(
-      new CustomEvent("showroom:standalone-phase-rotation-closeout", {
+      new CustomEvent("showroom:generation-2-standalone-mount-complete", {
         detail: {
           version: VERSION,
           generation: GENERATION,
-          gen4Type: GEN4_TYPE,
           route: ROUTE,
           mode: MODE,
           parentIdentityShared: false,
-          closeout: true,
-          receipt: closeoutReceipt
+          visibleCodeGlobe: Boolean(app && app.instrument)
         }
       })
     );
@@ -148,20 +109,31 @@
     try {
       boot();
     } catch (error) {
-      markDocument("failed", false);
+      mark("failed", error.message);
       global.__DEMO_UNIVERSE_BOOT_ERROR__ = error;
 
       global.dispatchEvent(
-        new CustomEvent("showroom:standalone-boot-failed", {
+        new CustomEvent("showroom:generation-2-standalone-mount-failed", {
           detail: {
             version: VERSION,
+            generation: GENERATION,
             route: ROUTE,
             error: error.message
           }
         })
       );
 
-      throw error;
+      const main = document.querySelector("main") || document.body;
+      const fallback = document.createElement("section");
+      fallback.className = "showroom-receipt-panel";
+      fallback.innerHTML =
+        "<h2>Generation 2 standalone mount error</h2>" +
+        "<p>The standalone route is live, but the lower render boot failed.</p>" +
+        "<ul class='showroom-receipts'>" +
+        "<li><strong>BOOT_VERSION</strong><span>" + VERSION + "</span></li>" +
+        "<li><strong>ERROR</strong><span>" + error.message + "</span></li>" +
+        "</ul>";
+      main.append(fallback);
     }
   }
 

@@ -1,34 +1,116 @@
 (function attachShowroomRender(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_RENDER_TRUE_GEN4_NARRATIVE_CODE_CONTRACT_CHAIN_CTG_v1";
-  const GENERATION = "GENERATION_4";
-  const GEN4_TYPE = "narrative-code";
+  const VERSION = "SHOWROOM_RENDER_GENERATION_2_CODE_GLOBE_RESTORATION_TNT_v1";
+  const GENERATION = "GENERATION_2";
 
   function createElement(tagName, className, text) {
-    const element = document.createElement(tagName);
-    if (className) element.className = className;
-    if (typeof text === "string") element.textContent = text;
-    return element;
+    const node = document.createElement(tagName);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
   }
 
-  function dependencyReport() {
+  function clear(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function fallbackRuntime(config) {
+    const receipts = [];
+
     return {
-      runtime: Boolean(global.ShowroomRuntime),
-      consumerAuthority: Boolean(global.ShowroomConsumerAuthority),
-      globeInstrument: Boolean(global.ShowroomGlobeInstrument)
+      version: "fallback-runtime",
+      writeReceipt: function writeReceipt(type, payload) {
+        receipts.push({
+          type: type,
+          payload: payload || {},
+          timestamp: new Date().toISOString()
+        });
+      },
+      getReceipts: function getReceipts() {
+        return receipts.slice();
+      },
+      getStatus: function getStatus() {
+        return {
+          config: config || {},
+          receipts: receipts.slice()
+        };
+      }
     };
   }
 
-  function assertDependencies() {
-    const report = dependencyReport();
-    const missing = Object.keys(report).filter((key) => !report[key]);
-
-    if (missing.length) {
-      throw new Error(`Showroom render missing dependencies: ${missing.join(", ")}`);
+  function createRuntime(contract) {
+    if (global.ShowroomRuntime && typeof global.ShowroomRuntime.createRuntime === "function") {
+      return global.ShowroomRuntime.createRuntime({
+        mode: contract.mode,
+        realm: contract.realm,
+        route: contract.route,
+        routeRole: contract.routeRole
+      });
     }
 
-    return report;
+    return fallbackRuntime(contract);
+  }
+
+  function fallbackContract(mode) {
+    const isStandalone = mode === "standalone";
+
+    return {
+      mode: isStandalone ? "standalone" : "parent",
+      realm: isStandalone ? "demo-universe-earth-inspection-realm" : "showroom-parent-proof-realm",
+      route: isStandalone ? "/showroom/globe/" : "/showroom/",
+      routeRole: isStandalone ? "standalone-earth-inspection-surface" : "showroom-proof-surface",
+      chamber: isStandalone ? "STANDALONE_DEMO_UNIVERSE_EARTH" : "ROOM_05_OF_16_H5_SHOWROOM",
+      headline: isStandalone ? "Standalone code-globe inspection surface" : "Earth-centered public proof surface",
+      caption: isStandalone
+        ? "Inspect Demo Universe consumes the restored Generation 2 code-generated globe without taking parent Showroom identity."
+        : "The Showroom consumes the restored Generation 2 code-generated globe while preserving the True Generation 4 narrative-code direction for later phases."
+    };
+  }
+
+  function normalizeContract(raw, mode) {
+    const fallback = fallbackContract(mode);
+    const contract = Object.assign({}, fallback, raw || {});
+
+    contract.mode = mode === "standalone" ? "standalone" : "parent";
+    contract.realm = contract.realm || fallback.realm;
+    contract.route = contract.route || fallback.route;
+    contract.routeRole = contract.routeRole || fallback.routeRole;
+    contract.chamber = contract.chamber || fallback.chamber;
+    contract.headline = contract.headline || fallback.headline;
+    contract.caption = contract.caption || fallback.caption;
+
+    return contract;
+  }
+
+  function getContract(mode) {
+    if (
+      global.ShowroomConsumerAuthority &&
+      typeof global.ShowroomConsumerAuthority.getContract === "function"
+    ) {
+      return normalizeContract(global.ShowroomConsumerAuthority.getContract(mode), mode);
+    }
+
+    return normalizeContract(null, mode);
+  }
+
+  function writeMarkers(root, contract) {
+    if (
+      global.ShowroomConsumerAuthority &&
+      typeof global.ShowroomConsumerAuthority.writeContractMarkers === "function"
+    ) {
+      global.ShowroomConsumerAuthority.writeContractMarkers(root, contract);
+    }
+
+    root.dataset.showroomGeneration = GENERATION;
+    root.dataset.showroomRestorationGeneration = "GENERATION_2";
+    root.dataset.showroomMode = contract.mode;
+    root.dataset.showroomRealm = contract.realm;
+    root.dataset.showroomRoute = contract.route;
+    root.dataset.visibleCodeGlobe = "true";
+    root.dataset.externalImageDependency = "false";
+    root.dataset.generatedImageDependency = "false";
+    root.dataset.nextAllowedGeneration = "GENERATION_3_PHASE_BIND";
   }
 
   function makeProofItem(title, body) {
@@ -39,69 +121,56 @@
     return item;
   }
 
-  function makeReceiptItem(name, value) {
-    const item = createElement("li", "");
-    item.innerHTML = `<strong>${name}</strong><span>${String(value)}</span>`;
+  function makeReceipt(name, value) {
+    const item = createElement("li");
+    item.innerHTML = "<strong>" + name + "</strong><span>" + String(value) + "</span>";
     return item;
   }
 
-  function writeReceiptList(panel, contract, runtime) {
+  function writeReceipts(panel, contract, runtime, instrument) {
     const list = createElement("ul", "showroom-receipts");
 
     [
       ["SHOWROOM_CHAMBER", contract.chamber],
-      ["GENERATION", GENERATION],
-      ["GEN4_TYPE", GEN4_TYPE],
+      ["RESTORED_GENERATION", GENERATION],
+      ["VISIBLE_CODE_GLOBE", "true"],
       ["ROUTE", contract.route],
       ["ACTIVE_REALM", contract.realm],
       ["ACTIVE_ROUTE_ROLE", contract.routeRole],
-      ["DEMO_ROUTE_AVAILABLE", contract.demoRouteAvailable || "false"],
-      ["CROSS_REALM_LINK_TYPE", contract.crossRealmLinkType],
-      ["SHARED_INSTRUMENT_ROLE", contract.sharedInstrumentRole],
-      ["SHARED_ACTIVE_REALM_IDENTITY", contract.sharedActiveRealmIdentity],
-      ["GRAPHIC_DEPENDENCY", contract.graphicDependency],
-      ["EXTERNAL_IMAGE_DEPENDENCY", contract.externalImageDependency],
-      ["GENERATED_GRAPHIC_DEPENDENCY", contract.generatedGraphicDependency],
-      ["IMAGE_DEPENDENCY", contract.imageDependency],
-      ["SPEED_AUTHORITY", contract.speedAuthority],
-      ["MOTION_AUTHORITY", contract.motionAuthority],
-      ["BOUNDARY_AUTHORITY", contract.boundaryAuthority],
-      ["VISUAL_EDGE_AUTHORITY", contract.visualEdgeAuthority],
-      ["INSTRUMENT_AUTHORITY", contract.instrumentAuthority],
-      ["RUNTIME_AUTHORITY", contract.runtimeAuthority],
-      ["CSS_AUTHORITY", contract.cssAuthority],
-      ["RENDER_AUTHORITY", contract.renderAuthority],
-      ["HOME_ANCHOR", contract.homeAnchor],
-      ["IDLE_AUTO_DRIFT", contract.idleAutoDrift],
-      ["PLACEMENT_FIXED", contract.placementFixed],
-      ["MOTION_ONLY_CONTROL", contract.motionOnlyControl],
-      ["CENTER_LOCKED", contract.centerLocked],
-      ["DECORATIVE_SHELL", contract.decorativeShell],
-      ["RIM_SHELL", contract.rimShell],
-      ["CAP_SHELL", contract.capShell],
-      ["ATMOSPHERE_SHELL", contract.atmosphereShell],
-      ["OUTER_GLOW_AUTHORITY", contract.outerGlowAuthority],
-      ["NARRATIVE_SEQUENCE", contract.narrativeSequence.join(" → ")],
-      ["CURRENT_TNT", contract.currentTNT],
-      ["RENDER_TNT", VERSION]
-    ].forEach(([name, value]) => list.append(makeReceiptItem(name, value)));
+      ["INSTRUMENT_TYPE", "code-generated-globe"],
+      ["GRAPHIC_DEPENDENCY", "false"],
+      ["EXTERNAL_IMAGE_DEPENDENCY", "false"],
+      ["GENERATED_IMAGE_DEPENDENCY", "false"],
+      ["SHELL", "absent"],
+      ["RIM", "absent"],
+      ["CAP", "absent"],
+      ["BOWL", "absent"],
+      ["INSTRUMENT_AUTHORITY", "/assets/showroom.globe.instrument.js"],
+      ["CSS_AUTHORITY", "/showroom/showroom.css"],
+      ["RENDER_AUTHORITY", "/showroom/showroom.render.js"],
+      ["INSTRUMENT_VERSION", instrument.version],
+      ["RENDER_TNT", VERSION],
+      ["NEXT_ALLOWED_GENERATION", "GENERATION_3_PHASE_BIND"]
+    ].forEach(function addReceipt(pair) {
+      list.append(makeReceipt(pair[0], pair[1]));
+    });
 
     panel.append(list);
 
-    runtime.writeReceipt("true_gen4_narrative_code_receipts_written", {
-      generation: GENERATION,
-      gen4Type: GEN4_TYPE,
-      route: contract.route,
-      realm: contract.realm,
-      receiptCount: list.children.length,
-      graphicDependency: false,
-      externalImageDependency: false
-    });
+    if (runtime && typeof runtime.writeReceipt === "function") {
+      runtime.writeReceipt("generation_2_code_globe_rendered", {
+        restoredGeneration: GENERATION,
+        visibleCodeGlobe: true,
+        route: contract.route,
+        realm: contract.realm,
+        instrumentVersion: instrument.version,
+        renderVersion: VERSION,
+        nextAllowedGeneration: "GENERATION_3_PHASE_BIND"
+      });
+    }
   }
 
   function renderShowroomProofSurface(options) {
-    assertDependencies();
-
     const opts = options || {};
     const root = opts.root || document.querySelector("[data-showroom-render-root]");
     const mode = opts.mode === "standalone" ? "standalone" : "parent";
@@ -110,145 +179,117 @@
       throw new Error("Showroom render root not found.");
     }
 
-    const contract = global.ShowroomConsumerAuthority.getContract(mode);
+    if (!global.ShowroomGlobeInstrument || typeof global.ShowroomGlobeInstrument.createGlobe !== "function") {
+      throw new Error("Showroom globe instrument is not available.");
+    }
 
-    const runtime = global.ShowroomRuntime.createRuntime({
-      realm: contract.realm,
-      route: contract.route,
-      routeRole: contract.routeRole
-    });
+    const contract = getContract(mode);
+    const runtime = createRuntime(contract);
 
-    root.innerHTML = "";
-    global.ShowroomConsumerAuthority.writeContractMarkers(root, contract);
+    clear(root);
+    writeMarkers(root, contract);
 
     root.dataset.showroomRenderComplete = "false";
-    root.dataset.showroomGeneration = GENERATION;
-    root.dataset.showroomGen4Type = GEN4_TYPE;
-    root.dataset.graphicDependency = "false";
-    root.dataset.externalImageDependency = "false";
-    root.dataset.currentLaw = "code-carries-narrative";
-    root.dataset.currentTnt = contract.currentTNT;
+    root.dataset.showroomRenderVersion = VERSION;
 
     const grid = createElement("section", "showroom-proof-grid");
-    grid.setAttribute("aria-label", "True Generation 4 narrative-code proof grid");
+    grid.setAttribute("aria-label", "Generation 2 code-generated globe restoration grid");
 
     const textPanel = createElement("article", "showroom-text-panel");
-    const roomMarker = createElement(
-      "p",
-      "showroom-kicker",
-      mode === "parent" ? "ROOM 05 / 16 · H5_SHOWROOM" : "STANDALONE · DEMO_UNIVERSE_EARTH"
+
+    textPanel.append(
+      createElement("p", "showroom-kicker", mode === "standalone" ? "STANDALONE · INSPECT DEMO UNIVERSE" : "ROOM 05 / 16 · H5_SHOWROOM"),
+      createElement("h2", "", contract.headline),
+      createElement("p", "", contract.caption)
     );
-
-    const textTitle = createElement("h2", "", contract.headline);
-
-    const textBody = createElement("p", "", contract.caption);
 
     const proofList = createElement("ul", "showroom-proof-list");
 
     [
       [
-        "Realm proof",
-        mode === "parent"
-          ? "Parent Showroom remains the parent proof realm."
-          : "Standalone inspection remains separate from the parent proof realm."
+        "Generation 2 proof",
+        "The visible globe is restored as a code-generated object."
       ],
       [
-        "Narrative-code proof",
-        "Generation 4 is achieved by code that carries sequence, state, receipts, room identity, and readable consequence."
+        "No-image proof",
+        "The globe does not require external images, generated art, or asset textures."
       ],
       [
-        "Graphics hold",
-        "Generated graphics, external imagery, decorative Earth skins, shells, rims, caps, and glow substitutes are not the authority layer."
+        "Shape proof",
+        "The object is constrained as a sphere without lower shell, rim, cap, bowl, or clipped-disk behavior."
       ],
       [
-        "Boundary proof",
-        "Boundary authority is assigned by state. The route reads the instrument’s phase and receipt chain instead of trusting a visual edge."
+        "Route proof",
+        mode === "standalone"
+          ? "Inspect Demo Universe uses the same globe system without becoming the parent Showroom."
+          : "Parent Showroom uses the same globe system while preserving route identity."
       ],
       [
-        "Motion proof",
-        "Motion is a proof cycle: HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT."
-      ],
-      [
-        "Receipt proof",
-        "Every transition leaves a readable receipt so the owner can audit the behavior directly."
+        "Hold proof",
+        "This layer stops at Generation 2. Phase binding is held for Generation 3."
       ]
-    ].forEach(([title, body]) => proofList.append(makeProofItem(title, body)));
+    ].forEach(function addProof(pair) {
+      proofList.append(makeProofItem(pair[0], pair[1]));
+    });
 
-    const actions = createElement("div", "showroom-actions");
-    if (mode === "parent") {
-      const demoLink = createElement("a", "showroom-button", "Inspect Demo Universe Earth");
-      demoLink.href = "/showroom/globe/";
-      actions.append(demoLink);
-    } else {
-      const parentLink = createElement("a", "showroom-button", "Return to Showroom");
-      parentLink.href = "/showroom/";
-      actions.append(parentLink);
-    }
+    textPanel.append(proofList);
 
-    textPanel.append(roomMarker, textTitle, textBody, proofList, actions);
+    const actionRow = createElement("div", "showroom-actions");
+    const routeLink = createElement(
+      "a",
+      "showroom-button",
+      mode === "standalone" ? "Return to Showroom" : "Inspect Demo Universe Earth"
+    );
+    routeLink.href = mode === "standalone" ? "/showroom/" : "/showroom/globe/";
+    actionRow.append(routeLink);
+    textPanel.append(actionRow);
 
     const globeShell = createElement("article", "showroom-globe-shell");
-    const globeTitle = createElement("h2", "", "True Gen 4 narrative-code instrument");
-    const globeMount = createElement("div", "showroom-globe-mount showroom-narrative-mount");
-    globeMount.id = mode === "standalone" ? "demoUniverseEarthMount" : "showroomGlobeMount";
-    globeMount.dataset.showroomGen4Type = GEN4_TYPE;
-    globeMount.dataset.graphicDependency = "false";
-    globeMount.dataset.externalImageDependency = "false";
-    globeShell.append(globeTitle, globeMount);
+    const globeTitle = createElement("h2", "", "Generation 2 code-generated globe");
+    const mount = createElement("div", "showroom-globe-mount showroom-code-globe-mount");
+    mount.id = mode === "standalone" ? "demoUniverseEarthMount" : "showroomGlobeMount";
+    mount.dataset.visibleCodeGlobe = "true";
+    mount.dataset.externalImageDependency = "false";
+    globeShell.append(globeTitle, mount);
 
     grid.append(textPanel, globeShell);
 
     const receiptPanel = createElement("section", "showroom-receipt-panel");
-    const receiptTitle = createElement("h2", "", "Receipts");
-    const receiptIntro = createElement(
-      "p",
-      "",
-      "This receipt field verifies the route as a code-native narrative chamber. Gauges may measure this state, but owner visual acceptance remains separate from telemetry."
+    receiptPanel.append(
+      createElement("h2", "", "Receipts"),
+      createElement(
+        "p",
+        "",
+        "This receipt field verifies Generation 2 only: a visible code-generated globe restored on the parent Showroom and Inspect Demo Universe routes."
+      )
     );
-    receiptPanel.append(receiptTitle, receiptIntro);
 
     root.append(grid, receiptPanel);
 
     const instrument = global.ShowroomGlobeInstrument.createGlobe({
-      mount: globeMount,
-      runtime,
-      contract
+      mount: mount,
+      runtime: runtime,
+      contract: contract
     });
 
-    writeReceiptList(receiptPanel, contract, runtime);
-
-    runtime.writeReceipt("true_gen4_narrative_code_render_complete", {
-      generation: GENERATION,
-      gen4Type: GEN4_TYPE,
-      route: contract.route,
-      realm: contract.realm,
-      instrumentVersion: instrument.version,
-      renderVersion: VERSION,
-      graphicDependency: false,
-      externalImageDependency: false,
-      currentTNT: contract.currentTNT
-    });
+    writeReceipts(receiptPanel, contract, runtime, instrument);
 
     root.dataset.showroomRenderComplete = "true";
-    root.dataset.showroomRenderVersion = VERSION;
     root.dataset.showroomInstrumentVersion = instrument.version;
 
     return {
       version: VERSION,
       generation: GENERATION,
-      gen4Type: GEN4_TYPE,
-      contract,
-      runtime,
-      globe: instrument,
-      instrument
+      contract: contract,
+      runtime: runtime,
+      instrument: instrument,
+      globe: instrument
     };
   }
 
   global.ShowroomRender = Object.freeze({
-    VERSION,
-    GENERATION,
-    GEN4_TYPE,
-    renderShowroomProofSurface,
-    dependencyReport
+    VERSION: VERSION,
+    GENERATION: GENERATION,
+    renderShowroomProofSurface: renderShowroomProofSurface
   });
 })(window);

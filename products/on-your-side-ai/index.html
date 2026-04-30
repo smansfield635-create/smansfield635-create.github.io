@@ -1,318 +1,791 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-page-id="on-your-side-aai"
-  data-page="on-your-side-aai"
-  data-generation="product-marker-repair-v1"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-parent-route="/products/"
-  data-product-id="on-your-side-aai"
-  data-product-route="/products/on-your-side-ai/"
->
+<!doctype html>
+<html lang="en" data-page="on-your-side-aai" data-room="PC3_ON_YOUR_SIDE_AAI" data-public-presentation="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>On Your Side AAI · Products · Diamond Gate Bridge</title>
-
-  <meta
-    name="description"
-    content="On Your Side AAI is practical assistant-class support housed inside the Product Wing as one canonical destination under Products."
-  />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>On Your Side AAI · Diamond Gate Bridge</title>
+  <meta name="description" content="On Your Side AAI is practical assistant-class support inside the Diamond Gate Bridge Product Wing.">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #05070d;
-      --panel: rgba(255,255,255,.055);
-      --panel-2: rgba(255,255,255,.035);
-      --line: rgba(255,255,255,.13);
-      --gold: #f2c76f;
-      --ink: #f4f7ff;
-      --soft: rgba(244,247,255,.72);
-      --muted: rgba(244,247,255,.52);
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --shadow: rgba(0, 0, 0, 0.48);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
-      min-height: 100%;
+      min-height: 100vh;
+      color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.08), transparent 30%),
-        radial-gradient(circle at 32% 38%, rgba(80,130,220,.09), transparent 28%),
-        linear-gradient(180deg, #05070d 0%, #02040a 100%);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.12), transparent 24rem),
+        radial-gradient(circle at 20% 18%, rgba(125, 181, 255, 0.15), transparent 32rem),
+        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
     a {
       color: inherit;
-    }
-
-    .product-page {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 28px 18px 72px;
-    }
-
-    .site-topbar {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 42px;
-    }
-
-    .site-brand {
-      display: grid;
-      gap: 5px;
       text-decoration: none;
     }
 
-    .site-brand strong {
-      color: var(--gold);
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: .18em;
-      font-size: .86rem;
     }
 
-    .site-brand span {
-      color: var(--soft);
+    .brand strong {
+      display: block;
+      color: var(--text);
       font-size: 1rem;
+      letter-spacing: 0;
+      text-transform: none;
     }
 
-    .site-nav {
+    .nav,
+    .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
     }
 
-    .site-nav a,
-    .pill-link {
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,.055);
-      color: var(--ink);
-      padding: 10px 14px;
-      font-weight: 850;
-      text-decoration: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
     }
 
-    .site-nav a[aria-current="page"],
-    .pill-link.primary {
-      border-color: rgba(242,199,111,.44);
-      background: rgba(242,199,111,.14);
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .route-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: clamp(22px, 5vw, 46px);
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 470px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(circle at 18% 12%, rgba(242,199,111,.10), transparent 32%),
-        radial-gradient(circle at 82% 70%, rgba(80,130,220,.10), transparent 34%),
-        var(--panel);
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
+        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(20px, 7vw, 90px);
+      top: 50%;
+      width: clamp(180px, 32vw, 360px);
+      aspect-ratio: 1;
+      transform: translateY(-50%) rotate(-8deg);
+      border-radius: 34px;
+      border: 1px solid rgba(143, 240, 198, 0.22);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.16), transparent 18%),
+        linear-gradient(135deg, rgba(143, 240, 198, 0.16), rgba(125, 181, 255, 0.06)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 32px);
+      box-shadow:
+        inset 0 0 38px rgba(143, 240, 198, 0.06),
+        0 0 84px rgba(125, 181, 255, 0.08);
+      opacity: 0.46;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
     }
 
     .kicker {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      font-size: .78rem;
-      font-weight: 900;
       margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
     }
 
     h1 {
-      font-size: clamp(2.4rem, 9vw, 5.8rem);
-      letter-spacing: -.07em;
-      line-height: .9;
-      margin: 0 0 18px;
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
     }
 
-    h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.28rem, 4vw, 2rem);
-      letter-spacing: -.03em;
+    .lead {
+      max-width: 860px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
     }
 
-    p {
-      color: var(--soft);
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
       line-height: 1.55;
-      max-width: 780px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
       margin-top: 18px;
     }
 
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     .card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: var(--panel-2);
-      padding: 16px;
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
+        rgba(9, 15, 25, 0.84);
+      box-shadow: none;
     }
 
-    .card strong {
-      display: block;
+    .card.compact {
+      min-height: 165px;
+    }
+
+    .card.tall {
+      min-height: 310px;
+    }
+
+    .card span {
       color: var(--gold);
-      margin-bottom: 6px;
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
-    .backlinks {
-      display: flex;
-      flex-wrap: wrap;
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .flow-list {
+      display: grid;
       gap: 10px;
-      margin-top: 24px;
+      margin-top: 16px;
     }
 
-    .audit-source {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
+    .flow-row {
+      display: grid;
+      grid-template-columns: 128px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid rgba(168, 199, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
     }
 
-    @media (max-width: 760px) {
-      .site-topbar {
-        display: grid;
+    .flow-row strong {
+      color: var(--green);
+    }
+
+    .flow-row span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .route-card {
+      min-height: 104px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .route-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .route-card span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-card strong {
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .grid.two,
+      .grid.four {
+        grid-template-columns: 1fr;
       }
 
-      .site-nav {
-        justify-content: flex-start;
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 390px;
+      }
+
+      .hero::after {
+        opacity: 0.24;
+        right: -40px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .nav,
+      .actions {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-row {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
-<body
-  data-page-id="on-your-side-aai"
-  data-page="on-your-side-aai"
-  data-generation="product-marker-repair-v1"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-parent-route="/products/"
-  data-product-id="on-your-side-aai"
-  data-product-route="/products/on-your-side-ai/"
->
+<body>
+  <a class="skip" href="#aai-main">Skip to On Your Side AAI</a>
+
   <main
-    class="product-page"
-    data-page-id="on-your-side-aai"
-    data-page="on-your-side-aai"
-    data-generation="product-marker-repair-v1"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
+    id="aai-main"
+    class="page"
+    data-route="/products/on-your-side-ai/"
+    data-product-chamber="PC3_ON_YOUR_SIDE_AAI"
+    data-product-class="product_chamber"
     data-construct-class="product"
     data-product-wing="true"
     data-parent-route="/products/"
-    data-product-id="on-your-side-aai"
-    data-product-route="/products/on-your-side-ai/"
-  >
-    <header class="site-topbar">
-      <a class="site-brand" href="/">
+    data-canonical-destination="true"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority"
+    data-terminology-lock="AAI">
+
+    <header class="topbar" aria-label="On Your Side AAI header">
+      <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Products · On Your Side AAI</span>
+        Products · On Your Side AAI
       </a>
 
-      <nav class="site-nav" aria-label="Primary routes">
+      <nav class="nav" aria-label="On Your Side AAI navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/" aria-current="page">Products</a>
+        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="PC3_ON_YOUR_SIDE_AAI">
-      <p class="kicker">PC3 · On Your Side AAI · Product Chamber</p>
-      <h1 id="PC3_ON_YOUR_SIDE_AAI">On Your Side AAI</h1>
-      <p>
-        On Your Side AAI is practical assistant-class support housed inside the Product Wing. It remains under Products as one canonical destination: <code>/products/on-your-side-ai/</code>.
-      </p>
-
-      <div class="grid">
-        <article class="card">
-          <strong>Terminology lock</strong>
-          <h2>AAI stays AAI.</h2>
-          <p>
-            This chamber preserves the On Your Side AAI identity. It does not collapse into generic AI language.
-          </p>
-        </article>
-
-        <article class="card">
-          <strong>Canonical route</strong>
-          <h2>/products/on-your-side-ai/</h2>
-          <p>
-            One route under Products. AAI support remains a product chamber, not a separate system root.
-          </p>
-        </article>
-
-        <article class="card">
-          <strong>Public frame</strong>
-          <h2>Practical Support</h2>
-          <p>
-            Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.
-          </p>
-        </article>
+    <section class="hero" aria-labelledby="aai-title">
+      <div class="hero-content">
+        <p class="kicker">PC3 · On Your Side AAI · Product Chamber</p>
+        <h1 id="aai-title">On Your Side AAI</h1>
+        <p class="lead">
+          On Your Side AAI is practical assistant-class support for real-life pressure. It helps people understand what is in front of them, organize the next move, prepare better questions, and act with more confidence.
+        </p>
       </div>
 
-      <nav class="backlinks" aria-label="Product backlinks">
-        <a class="pill-link primary" href="/products/">Products</a>
-        <a class="pill-link" href="/showroom/">Showroom</a>
-        <a class="pill-link" href="/">Compass</a>
-        <a class="pill-link" href="/home/">Home</a>
-        <a class="pill-link" href="/gauges/">Gauges</a>
-      </nav>
+      <div class="actions" aria-label="Primary On Your Side AAI actions">
+        <a class="button primary" href="/products/">Return to Products</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
     </section>
 
-    <section class="audit-source" aria-label="On Your Side AAI audit source">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/gauges/">Gauges</a>
+    <section class="section panel" aria-labelledby="terminology-title">
+      <p class="kicker">Terminology lock</p>
+      <h2 id="terminology-title">AAI stays AAI.</h2>
+      <p>
+        This chamber preserves the On Your Side AAI identity. It does not collapse into generic AI language. The point is not to impress visitors with jargon. The point is to make assistance feel clear, bounded, useful, and on the visitor’s side.
+      </p>
+    </section>
 
-      <span>route-exists</span>
-      <span>manor-skin</span>
-      <span>product-chamber</span>
-      <span>PC3_ON_YOUR_SIDE_AAI</span>
-      <span>parent-products</span>
-      <span>canonical-destination</span>
+    <section class="section panel" aria-labelledby="market-position-title">
+      <p class="kicker">Market position</p>
+      <h2 id="market-position-title">Practical support when the world gets too complicated.</h2>
+      <p>
+        Most people do not need a machine that sounds brilliant while leaving them overwhelmed. They need help translating confusing situations into readable steps. On Your Side AAI is built for that gap: the space between “I know something is wrong or difficult” and “I know what to do next.”
+      </p>
+      <p>
+        This product chamber presents assistant-class support as a practical companion: not a replacement for judgment, not a substitute for professionals, and not a black box. It is a support layer for preparation, clarity, organization, and next-step execution.
+      </p>
+    </section>
 
-      <span>estate=rich-manor-and-estate</span>
-      <span>house-field=true</span>
-      <span>gauges-truth=live-authority</span>
-      <span>construct-class=product</span>
-      <span>product-wing=true</span>
-      <span>parent-route=/products/</span>
-      <span>PRODUCT_MARKER_REPAIR_TNT_v1</span>
+    <section class="grid" aria-label="On Your Side AAI product explanation">
+      <article class="card">
+        <span>What it brings</span>
+        <h3>Translation under pressure</h3>
+        <p>
+          On Your Side AAI turns confusing material into plain language. It helps visitors understand documents, options, conversations, tasks, and decisions without drowning in complexity.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Gap it closes</span>
+        <h3>Information without support</h3>
+        <p>
+          Search can give people more information. AAI gives them support: what matters, what is missing, what question to ask, what to prepare, and what step comes next.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Why it is unique</span>
+        <h3>On the visitor’s side</h3>
+        <p>
+          The chamber is designed around the person using it. It favors clarity over spectacle, usefulness over jargon, and bounded assistance over false authority.
+        </p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="support-title">
+      <p class="kicker">Support surface</p>
+      <h2 id="support-title">AAI helps with the messy middle.</h2>
+      <p>
+        The messy middle is where people usually get stuck: before the appointment, before the call, before the form, before the meeting, before the decision, before the apology, before the plan, before the next step. On Your Side AAI is built to make that moment less chaotic.
+      </p>
+    </section>
+
+    <section class="grid four" aria-label="Practical AAI support areas">
+      <article class="card compact">
+        <span>Support</span>
+        <h3>Understand</h3>
+        <p>Summarize confusing material and separate what matters from what is noise.</p>
+      </article>
+
+      <article class="card compact">
+        <span>Support</span>
+        <h3>Prepare</h3>
+        <p>Build questions, scripts, checklists, options, and talking points before action.</p>
+      </article>
+
+      <article class="card compact">
+        <span>Support</span>
+        <h3>Organize</h3>
+        <p>Turn scattered notes, documents, plans, and concerns into a usable structure.</p>
+      </article>
+
+      <article class="card compact">
+        <span>Support</span>
+        <h3>Decide</h3>
+        <p>Clarify tradeoffs, next steps, constraints, and what still needs verification.</p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="how-it-works-title">
+      <p class="kicker">How it works</p>
+      <h2 id="how-it-works-title">From confusion to a prepared next step.</h2>
+
+      <div class="flow-list" aria-label="AAI support flow">
+        <div class="flow-row">
+          <strong>1 · Bring it</strong>
+          <span>The visitor brings the situation: a document, a message, a decision, a task, a call, a conflict, or a question.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>2 · Translate</strong>
+          <span>AAI converts the situation into plain language: what is known, what is unclear, what is risky, and what matters first.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>3 · Sort</strong>
+          <span>The support layer separates facts, assumptions, deadlines, choices, missing information, and possible next steps.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>4 · Prepare</strong>
+          <span>The visitor receives practical output: a script, checklist, outline, question list, plan, summary, or decision frame.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>5 · Verify</strong>
+          <span>AAI marks what still needs a human, professional, source, document, or official confirmation.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>6 · Act</strong>
+          <span>The visitor leaves with a cleaner next step instead of a larger pile of confusion.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="On Your Side AAI use cases">
+      <article class="card tall">
+        <span>Everyday</span>
+        <h3>Forms, calls, messages, and decisions</h3>
+        <p>
+          AAI can help prepare for phone calls, organize paperwork, draft clear messages, compare options, summarize instructions, and reduce confusion before the visitor takes action.
+        </p>
+        <ul>
+          <li>Read the situation.</li>
+          <li>Prepare the questions.</li>
+          <li>Clarify the next step.</li>
+        </ul>
+      </article>
+
+      <article class="card tall">
+        <span>Work</span>
+        <h3>Planning, communication, and follow-through</h3>
+        <p>
+          AAI can help with meeting prep, project notes, client communication, task breakdown, role clarity, decision framing, and follow-up.
+        </p>
+        <ul>
+          <li>Turn chaos into a plan.</li>
+          <li>Turn notes into action.</li>
+          <li>Turn pressure into sequence.</li>
+        </ul>
+      </article>
+
+      <article class="card tall">
+        <span>Life pressure</span>
+        <h3>When the stakes feel personal</h3>
+        <p>
+          AAI can help a visitor slow down, separate emotion from facts, prepare a conversation, identify missing information, and avoid acting from panic.
+        </p>
+        <ul>
+          <li>Clarify what happened.</li>
+          <li>Clarify what matters.</li>
+          <li>Clarify what to do next.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="boundaries-title">
+      <p class="kicker">Boundaries</p>
+      <h2 id="boundaries-title">Useful does not mean unlimited.</h2>
+      <p>
+        On Your Side AAI is a support layer. It should not pretend to be a doctor, lawyer, therapist, financial adviser, court, employer, parent, or final authority. Its job is to prepare, organize, translate, and clarify so the visitor can make better use of the right human, professional, source, or institution.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="AAI boundaries">
+      <article class="card">
+        <span>Boundary 1</span>
+        <h3>Prepare, do not impersonate</h3>
+        <p>
+          AAI can help draft, rehearse, and organize. It should not pretend to be the visitor or act as an unauthorized representative.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Boundary 2</span>
+        <h3>Clarify, do not overclaim</h3>
+        <p>
+          AAI can explain possibilities and next steps. It should mark uncertainty and avoid pretending that a guess is verified truth.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Boundary 3</span>
+        <h3>Support, do not replace</h3>
+        <p>
+          AAI can help the visitor prepare for experts and institutions. It does not replace qualified professional judgment.
+        </p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="market-gaps-title">
+      <p class="kicker">Market gaps</p>
+      <h2 id="market-gaps-title">On Your Side AAI closes the gap between access and actual help.</h2>
+      <p>
+        Access to tools is not the same as being supported. This chamber is built around practical usefulness: clear language, grounded next steps, bounded assistance, and the feeling that the visitor is no longer facing the problem alone.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="AAI market gaps">
+      <article class="card">
+        <span>Gap 1</span>
+        <h3>Tools without guidance</h3>
+        <p>
+          Many tools wait for perfect prompts. On Your Side AAI is framed around the visitor’s situation and helps shape the request with them.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Gap 2</span>
+        <h3>Answers without preparation</h3>
+        <p>
+          A quick answer is not always enough. AAI helps prepare the visitor for the call, meeting, form, decision, or conversation that comes after.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Gap 3</span>
+        <h3>Automation without trust</h3>
+        <p>
+          Visitors need to know where the support stops. AAI stays useful by staying bounded, readable, and honest about verification.
+        </p>
+      </article>
+    </section>
+
+    <section class="grid" aria-label="On Your Side AAI status">
+      <article class="card">
+        <span>Canonical Route</span>
+        <h3>/products/on-your-side-ai/</h3>
+        <p>One route under Products. AAI support remains a product chamber, not a separate system root.</p>
+      </article>
+
+      <article class="card">
+        <span>Product Class</span>
+        <h3>product_chamber</h3>
+        <p>On Your Side AAI is a product chamber, not a planetary construct and not a house part.</p>
+      </article>
+
+      <article class="card">
+        <span>Public Frame</span>
+        <h3>Practical Support</h3>
+        <p>Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.</p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="parent-binding-title">
+      <p class="kicker">Parent binding</p>
+      <h2 id="parent-binding-title">On Your Side AAI stays attached to the Product Wing.</h2>
+      <p>
+        This chamber preserves the On Your Side AAI identity while remaining one canonical product destination under Products.
+      </p>
+    </section>
+
+    <section class="section panel" aria-labelledby="product-links-title">
+      <p class="kicker">Product backlinks</p>
+      <h2 id="product-links-title">Move through the product wing.</h2>
+
+      <div class="route-grid" aria-label="On Your Side AAI backlinks">
+        <a class="route-card" href="/products/">
+          <span>Parent</span>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span>Proof</span>
+          <strong>Showroom</strong>
+        </a>
+
+        <a class="route-card" href="/">
+          <span>Control</span>
+          <strong>Compass</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <span>House</span>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span>Verification</span>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      On Your Side AAI receipt
+      route-exists
+      manor-skin
+      product-chamber
+      PC3_ON_YOUR_SIDE_AAI
+      parent-products
+      canonical-destination
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=product
+      product-wing=true
+      parent-route=/products/
+      canonical-route=/products/on-your-side-ai/
+      terminology-lock=AAI
+      AAI-stays-AAI=true
+      public-frame=practical-support
+      support-surface=understand-prepare-organize-decide
+      support-flow=bring-translate-sort-prepare-verify-act
+      boundaries=prepare-not-impersonate
+      boundaries=clarify-not-overclaim
+      boundaries=support-not-replace
+      closes-gap=tools-without-guidance
+      closes-gap=answers-without-preparation
+      closes-gap=automation-without-trust
+      not-generic-ai-language=true
+      not-separate-system-root=true
+      not-planetary-construct=true
+      not-house-part=true
+      Products=/products/
+      Showroom=/showroom/
+      Compass=/
+      Home=/home/
+      Gauges=/gauges/
+      ON_YOUR_SIDE_AAI_PUBLIC_PRODUCT_TNT_v1
     </section>
   </main>
 </body>

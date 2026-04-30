@@ -3,806 +3,943 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-generation="PLANET_ONE_TREE_RENDER_SEPARATION_GAUGES_TNT_v1"
-  data-focus-route="/showroom/globe/"
-  data-planet-one-renderer="/world/render/planet-one.render.js"
+  data-contract="GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1"
+  data-measures="planet-one-v8-axis-spin-climate-topology"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Planet 1 Render Separation · Diamond Gate Bridge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diamond Gate Bridge · Gauges · Planet 1 v8 Measurement</title>
   <meta
     name="description"
-    content="Gauges measures Planet 1 render lane separation, Showroom inspection, Universe route, and tree demo mode."
+    content="Gauges measures Planet 1 render-lane separation, v8 axis-spin climate topology, Showroom consumer alignment, Universe route, and no-collapse status."
   >
-
   <style>
     :root {
-      --bg:#03050a;
-      --panel:rgba(9,15,25,.94);
-      --panel2:rgba(14,24,38,.84);
-      --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.38);
-      --text:#f4f7ff;
-      --muted:#b8c2d6;
-      --soft:rgba(244,247,255,.78);
-      --gold:#f2c76f;
-      --green:#8ff0c6;
-      --red:#ff9a9a;
-      --hold:#ffd37a;
-      --shadow:rgba(0,0,0,.56);
+      color-scheme: dark;
+      --bg: #02050b;
+      --panel: rgba(9, 15, 25, 0.86);
+      --panel-2: rgba(13, 21, 34, 0.74);
+      --line: rgba(160, 177, 214, 0.22);
+      --gold: #f2c76f;
+      --gold-soft: rgba(242, 199, 111, 0.22);
+      --text: #f5f7fb;
+      --muted: rgba(228, 234, 246, 0.76);
+      --soft: rgba(228, 234, 246, 0.58);
+      --pass: #88e0b2;
+      --hold: #ffd37b;
+      --fail: #ff8b8b;
+      --blue: #8db8ff;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
 
     body {
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
       background:
-        radial-gradient(circle at 78% 6%,rgba(242,199,111,.14),transparent 24rem),
-        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
-        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
-        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
-      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      -webkit-font-smoothing:antialiased;
+        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 22rem),
+        radial-gradient(circle at 18% 22%, rgba(141, 184, 255, 0.10), transparent 24rem),
+        radial-gradient(circle at 82% 72%, rgba(120, 240, 195, 0.05), transparent 22rem),
+        linear-gradient(180deg, #02050b 0%, #06101d 46%, #02050b 100%);
     }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    a:focus,
-    button:focus {
-      outline:2px solid var(--green);
-      outline-offset:3px;
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid rgba(242, 199, 111, 0.70);
+      outline-offset: 4px;
     }
 
     .skip {
-      position:absolute;
-      left:-999px;
-      top:10px;
-      z-index:1000;
-      padding:8px 12px;
-      border-radius:10px;
-      background:#fff;
-      color:#000;
-      font-weight:850;
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 20;
+      transform: translateY(-160%);
+      border: 1px solid var(--gold-soft);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #07101c;
+      color: var(--text);
+      font-weight: 850;
     }
 
-    .skip:focus { left:10px; }
+    .skip:focus {
+      transform: translateY(0);
+    }
 
-    .page {
-      width:min(1160px,calc(100% - 28px));
-      margin:0 auto;
-      padding:24px 0 64px;
+    .shell {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 44px;
+    }
+
+    header.site {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 24px;
     }
 
     .brand {
-      display:block;
-      margin-bottom:18px;
-      color:var(--muted);
-      font-size:.86rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+      display: grid;
+      gap: 4px;
     }
 
     .brand strong {
-      display:block;
-      color:var(--gold);
-      font-size:1rem;
-      letter-spacing:.16em;
+      color: var(--gold);
+      font-size: clamp(1.12rem, 4vw, 1.68rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
-    .nav,
-    .actions,
-    .links {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
+    .brand span {
+      color: var(--muted);
+      font-size: clamp(0.78rem, 2.7vw, 1rem);
+      font-weight: 750;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .nav { margin-bottom:26px; }
-
-    .nav a,
-    .button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.055);
-      color:var(--text);
-      font:inherit;
-      font-weight:850;
-      cursor:pointer;
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .nav a[aria-current="page"],
-    .button.primary {
-      border-color:rgba(242,199,111,.52);
-      background:rgba(242,199,111,.14);
+    nav a,
+    .actions a,
+    .actions button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+      color: var(--text);
+      font: inherit;
+      font-weight: 880;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
-    .button.green {
-      border-color:rgba(143,240,198,.5);
-      background:rgba(143,240,198,.13);
+    nav a[aria-current="page"],
+    .actions .primary {
+      border-color: rgba(242, 199, 111, 0.58);
+      background: linear-gradient(180deg, rgba(242,199,111,0.18), rgba(242,199,111,0.055));
+    }
+
+    main {
+      display: grid;
+      gap: 24px;
     }
 
     .hero,
-    .panel,
-    .card,
-    .result {
-      border:1px solid var(--line);
-      border-radius:30px;
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: clamp(24px, 5vw, 42px);
       background:
-        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015)),
         var(--panel);
-      box-shadow:0 24px 80px var(--shadow);
-    }
-
-    .hero,
-    .panel,
-    .result {
-      padding:clamp(24px,5vw,52px);
-      margin-top:18px;
+      box-shadow: var(--shadow);
     }
 
     .hero {
-      min-height:520px;
-      display:grid;
-      align-content:center;
-      gap:24px;
-      border-color:var(--gold-line);
-      background:
-        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
-        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
-        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
+      padding: clamp(22px, 5vw, 44px);
+      overflow: hidden;
     }
 
-    .kicker {
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
     }
 
     h1 {
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3.2rem,10vw,7.2rem);
-      line-height:.88;
-      letter-spacing:-.08em;
+      max-width: 920px;
+      margin-top: 14px;
+      font-size: clamp(2.6rem, 12vw, 6.7rem);
     }
 
     h2 {
-      margin:0;
-      max-width:920px;
-      font-size:clamp(1.85rem,5vw,3.45rem);
-      line-height:1;
-      letter-spacing:-.06em;
+      font-size: clamp(1.8rem, 6vw, 3.8rem);
     }
 
     h3 {
-      margin:0;
-      font-size:clamp(1.28rem,3.7vw,2.05rem);
-      line-height:1.06;
-      letter-spacing:-.045em;
+      font-size: clamp(1.22rem, 3.4vw, 1.75rem);
     }
 
     p {
-      color:var(--muted);
-      font-size:clamp(1.02rem,2.4vw,1.2rem);
-      line-height:1.6;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.28rem);
+      line-height: 1.55;
     }
 
-    code {
-      color:var(--green);
-      word-break:break-word;
+    .hero p {
+      max-width: 940px;
+      margin-top: 18px;
     }
 
-    .lead {
-      max-width:920px;
-      color:var(--soft);
-      font-size:clamp(1.16rem,3vw,1.55rem);
-      line-height:1.45;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
     }
 
-    .score-grid,
-    .grid {
-      display:grid;
-      gap:14px;
-      margin-top:18px;
+    .score-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
     }
 
-    .score-grid {
-      grid-template-columns:repeat(5,minmax(0,1fr));
+    .metric {
+      min-height: 116px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 16px;
+      background: rgba(255,255,255,0.045);
     }
 
-    .grid.three {
-      grid-template-columns:repeat(3,minmax(0,1fr));
+    .metric strong {
+      display: block;
+      font-size: clamp(2.1rem, 7vw, 4.1rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
     }
 
-    .score,
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .metric.pass strong,
+    .status.pass {
+      color: var(--pass);
+    }
+
+    .metric.hold strong,
+    .status.hold {
+      color: var(--hold);
+    }
+
+    .metric.fail strong,
+    .status.fail {
+      color: var(--fail);
+    }
+
+    .panel {
+      padding: clamp(20px, 4.5vw, 34px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
     .card {
-      border:1px solid rgba(168,199,255,.15);
-      border-radius:22px;
-      padding:16px;
-      background:rgba(255,255,255,.045);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+      background: var(--panel-2);
     }
 
-    .score strong {
-      display:block;
-      color:var(--gold);
-      font-size:clamp(1.35rem,4vw,2.2rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .card .label {
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
-    .score span {
-      display:block;
-      margin-top:8px;
-      color:var(--muted);
-      line-height:1.35;
-      font-weight:760;
+    .card p {
+      margin-top: 8px;
+      font-size: 0.98rem;
     }
 
-    .card {
-      min-height:200px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        var(--panel2);
-      box-shadow:none;
+    .audit-table {
+      display: grid;
+      gap: 10px;
     }
 
-    .card span {
-      display:block;
-      margin-bottom:8px;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .audit-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 1.2fr) minmax(180px, 1.15fr) minmax(82px, 0.36fr) minmax(240px, 1.8fr);
+      gap: 10px;
+      align-items: stretch;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(255,255,255,0.035);
     }
 
-    .pill {
-      display:inline-flex;
-      min-width:76px;
-      justify-content:center;
-      padding:5px 10px;
-      border-radius:999px;
-      font-size:.75rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+    .audit-row.header {
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      background: rgba(242,199,111,0.06);
     }
 
-    .pass {
-      color:var(--green);
-      border:1px solid rgba(143,240,198,.42);
-      background:rgba(143,240,198,.12);
+    .audit-row code {
+      color: var(--blue);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      white-space: normal;
+      word-break: break-word;
     }
 
-    .hold {
-      color:var(--hold);
-      border:1px solid rgba(255,211,122,.42);
-      background:rgba(255,211,122,.12);
+    .status {
+      font-size: 0.86rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .fail {
-      color:var(--red);
-      border:1px solid rgba(255,154,154,.42);
-      background:rgba(255,154,154,.12);
+    .evidence {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.42;
     }
 
-    .wait {
-      color:var(--muted);
-      border:1px solid rgba(168,199,255,.2);
-      background:rgba(255,255,255,.045);
+    .evidence ul {
+      margin: 0;
+      padding-left: 18px;
     }
 
-    table {
-      width:100%;
-      border-collapse:collapse;
-      margin-top:18px;
-      border:1px solid rgba(168,199,255,.14);
-      border-radius:22px;
-      overflow:hidden;
-      background:rgba(255,255,255,.035);
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    th,
-    td {
-      padding:14px;
-      border-bottom:1px solid rgba(168,199,255,.12);
-      color:var(--muted);
-      text-align:left;
-      vertical-align:top;
-      font-size:.95rem;
-      line-height:1.45;
+    .rule {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,0.04);
     }
 
-    th {
-      color:var(--text);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.045);
+    .rule h3 {
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
     }
 
-    tr:last-child td { border-bottom:0; }
-
-    .evidence-list {
-      display:grid;
-      gap:5px;
-      margin:0;
-      padding:0;
-      list-style:none;
+    .rule p {
+      margin-top: 8px;
+      font-size: 0.96rem;
     }
 
-    .evidence-list .bad { color:var(--red); }
-    .evidence-list strong { color:var(--green); }
+    footer {
+      padding: 22px 0 0;
+      color: var(--soft);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
 
-    .receipt { display:none!important; }
-
-    @media (max-width:980px) {
-      .score-grid,
-      .grid.three {
-        grid-template-columns:1fr;
+    @media (max-width: 880px) {
+      .score-row,
+      .subgrid,
+      .rules {
+        grid-template-columns: 1fr;
       }
 
-      table,
-      tbody,
-      tr,
-      td,
-      th {
-        display:block;
-        width:100%;
+      .audit-row {
+        grid-template-columns: 1fr;
       }
 
-      thead { display:none; }
-
-      td::before {
-        display:block;
-        margin-bottom:4px;
-        color:var(--text);
-        font-size:.72rem;
-        font-weight:950;
-        letter-spacing:.09em;
-        text-transform:uppercase;
-        content:attr(data-label);
-      }
-    }
-
-    @media (max-width:620px) {
-      .page {
-        width:min(100% - 24px,620px);
-        padding-top:18px;
-      }
-
-      .nav a,
-      .button {
-        min-height:40px;
-        padding:9px 14px;
+      .audit-row.header {
+        display: none;
       }
     }
   </style>
 </head>
-
 <body>
   <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
-  <main
-    id="gauges-main"
-    class="page"
-    data-route="/gauges/"
-    data-page-purpose="planet-one-tree-render-separation-measurement"
-    data-focus-route="/showroom/globe/"
-    data-planet-one-renderer="/world/render/planet-one.render.js"
-    data-tree-demo-mode="true"
-    data-render-lanes-separated="true"
-  >
-    <a class="brand" href="/">
-      <strong>Diamond Gate Bridge</strong>
-      Gauges · Planet 1 Render Separation
-    </a>
+  <div class="shell">
+    <header class="site" aria-label="Site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Gauges · Planet 1 v8 Measurement</span>
+      </a>
 
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Planet 1</a>
-      <a href="/nine-summits/">Nine Summits</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/nine-summits-of-love/">Book</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/" aria-current="page">Gauges</a>
-    </nav>
+      <nav aria-label="Primary">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
+      </nav>
+    </header>
 
-    <section class="hero">
-      <p class="kicker">H6 · Gauges · Planet 1 Separation</p>
-      <h1>Gauges now measures render-lane separation.</h1>
+    <main id="gauges-main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="eyebrow">H6 · Gauges · Planet 1 v8</div>
+        <h1 id="page-title">Gauges now measures the axis-spin climate renderer.</h1>
+        <p>
+          The separation contract already passed. This renewed Gauge checks the stricter standard:
+          Planet 1 must be served by the v8 renderer, rotate on its axis, expose climate-topology logic,
+          preserve weather and ocean-current markers, and keep the tree in demo mode.
+        </p>
 
-      <p class="lead">
-        The globe is Planet 1, the real Nine Summits Universe render lane. The tree is now demo mode.
-      </p>
+        <div class="actions">
+          <button class="primary" type="button" id="run-audit">Run v8 audit</button>
+          <a href="/showroom/globe/">Inspect Planet 1</a>
+          <a href="/nine-summits/universe/">Open Universe</a>
+          <a href="/showroom/">Open Showroom</a>
+        </div>
 
-      <p class="lead">
-        This page checks the Planet 1 renderer, Showroom consumer route, Universe route, and no-collapse contract.
-      </p>
+        <div class="score-row" aria-label="Audit summary">
+          <div class="metric hold" id="metric-total">
+            <strong>--%</strong>
+            <span>Total v8 score</span>
+          </div>
+          <div class="metric hold" id="metric-renderer">
+            <strong>WAIT</strong>
+            <span>Renderer</span>
+          </div>
+          <div class="metric hold" id="metric-showroom">
+            <strong>WAIT</strong>
+            <span>Showroom</span>
+          </div>
+          <div class="metric hold" id="metric-next">
+            <strong>RUN</strong>
+            <span>Next target</span>
+          </div>
+        </div>
+      </section>
 
-      <div class="actions">
-        <button class="button primary" type="button" id="run-audit">Run audit</button>
-        <a class="button green" href="/showroom/globe/">Inspect Planet 1</a>
-        <a class="button" href="/nine-summits/universe/">Open Universe</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
-      </div>
+      <section class="panel" aria-labelledby="current-read">
+        <div class="eyebrow">Current read</div>
+        <h2 id="current-read">The old pass is not enough anymore.</h2>
+        <p>
+          A 100% render-lane pass proves the wiring is clean. It does not prove the newest visual standard.
+          This page now checks whether the live source has moved from v7 cinematic surface logic into
+          v8 axis-spin climate topology.
+        </p>
 
-      <div class="score-grid" aria-label="Gauge scores">
-        <div class="score"><strong id="score-total">--</strong><span>Total score</span></div>
-        <div class="score"><strong id="score-renderer">--</strong><span>Renderer</span></div>
-        <div class="score"><strong id="score-showroom">--</strong><span>Showroom</span></div>
-        <div class="score"><strong id="score-universe">--</strong><span>Universe</span></div>
-        <div class="score"><strong id="score-next">--</strong><span>Next target</span></div>
-      </div>
-    </section>
+        <div class="subgrid">
+          <div class="card">
+            <div class="label">Old standard</div>
+            <h3>Separation pass.</h3>
+            <p>Planet 1 first. Tree demo second. Renderer source separate from Showroom and Gauges.</p>
+          </div>
 
-    <section class="panel">
-      <p class="kicker">Current read</p>
-      <h2>The globe graduated. The tree moved to demo mode.</h2>
+          <div class="card">
+            <div class="label">New standard</div>
+            <h3>Axis and climate.</h3>
+            <p>The renderer must expose axis spin, climate topology, weather circulation, and ocean-current logic.</p>
+          </div>
 
-      <div class="grid three">
-        <article class="card">
-          <span>Planet 1</span>
-          <h3>Real globe lane.</h3>
-          <p>Renderer: <code>/world/render/planet-one.render.js</code>.</p>
-        </article>
+          <div class="card">
+            <div class="label">No collapse</div>
+            <h3>Measure only.</h3>
+            <p>Gauges must not become the renderer, Showroom, or Universe page. It only verifies source truth.</p>
+          </div>
+        </div>
+      </section>
 
-        <article class="card">
-          <span>Tree</span>
-          <h3>Demo branch.</h3>
-          <p>The tree remains preserved as prototype, training, and structural demonstration.</p>
-        </article>
+      <section class="panel" aria-labelledby="live-audit">
+        <div class="eyebrow">Live audit</div>
+        <h2 id="live-audit">Source check</h2>
 
-        <article class="card">
-          <span>No collapse</span>
-          <h3>Separate render lanes.</h3>
-          <p>Showroom inspects. The renderer renders. Gauges measures.</p>
-        </article>
-      </div>
-    </section>
+        <div class="audit-table" id="audit-table">
+          <div class="audit-row header" aria-hidden="true">
+            <div>Layer</div>
+            <div>Target</div>
+            <div>Status</div>
+            <div>Evidence</div>
+          </div>
+        </div>
+      </section>
 
-    <section class="panel">
-      <p class="kicker">Live audit</p>
-      <h2>Source check</h2>
+      <section class="panel" aria-labelledby="rules">
+        <div class="eyebrow">Measurement rules</div>
+        <h2 id="rules">What Gauges is allowed to claim.</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Layer</th>
-            <th>Target</th>
-            <th>Status</th>
-            <th>Evidence</th>
-          </tr>
-        </thead>
-        <tbody id="audit-body">
-          <tr>
-            <td data-label="Layer">Waiting</td>
-            <td data-label="Target"><code>Planet 1 render stack</code></td>
-            <td data-label="Status"><span class="pill wait">WAIT</span></td>
-            <td data-label="Evidence">Run audit.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <div class="rules">
+          <div class="rule">
+            <h3>Renderer v8</h3>
+            <p>
+              Passes only when <code>/world/render/planet-one.render.js</code> contains
+              the v8 TNT marker, axis-spin marker, climate-topology marker, weather-circulation marker,
+              and ocean-current marker.
+            </p>
+          </div>
 
-    <section class="result">
-      <p class="kicker">Next target</p>
-      <h2 id="audit-result">Waiting for audit.</h2>
-      <p id="audit-detail">Run the audit.</p>
+          <div class="rule">
+            <h3>Showroom consumer</h3>
+            <p>
+              Passes when <code>/showroom/globe/</code> serves Planet 1 first, tree demo second,
+              references the Planet 1 renderer, and preserves no-collapse separation.
+            </p>
+          </div>
 
-      <div class="links">
-        <a class="button primary" href="/showroom/globe/">Inspect Planet 1</a>
-        <a class="button green" href="/nine-summits/universe/">Open Universe</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button" href="/">Compass</a>
-      </div>
-    </section>
+          <div class="rule">
+            <h3>Visible copy alignment</h3>
+            <p>
+              Passes when Showroom source also names the new v8 language: axis spin, climate topology,
+              weather circulation, and ocean currents. If this fails, the renderer may be newer than the visible copy.
+            </p>
+          </div>
 
-    <section class="receipt" aria-hidden="true">
-      PLANET_ONE_TREE_RENDER_SEPARATION_GAUGES_TNT_v1
-      route=/gauges/
-      planet-one-render-active=true
-      planet-one-renderer=/world/render/planet-one.render.js
-      globe-demo-status-retired=true
-      tree-demo-mode=true
-      render-lanes-separated=true
-      showroom-inspects-planet-one=true
-      no-render-lane-collapse=true
-      measures-planet-one-renderer=true
-      measures-showroom-consumer=true
-      measures-universe-route=true
-      next-target-selected-by-audit=true
-    </section>
-  </main>
+          <div class="rule">
+            <h3>No false close</h3>
+            <p>
+              Gauges cannot claim final geography. Countries, cities, exact rivers, named climates,
+              physics constants, and final map geometry remain outside this pass.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="next-target">
+        <div class="eyebrow">Next target</div>
+        <h2 id="next-target">Waiting for audit.</h2>
+        <p id="next-copy">
+          Run the v8 audit. If the renderer fails, repair <code>/world/render/planet-one.render.js</code>.
+          If the renderer passes but visible copy fails, repair <code>/showroom/globe/index.html</code>.
+          If both pass, the next move is visual polish.
+        </p>
+
+        <div class="actions">
+          <a href="/showroom/globe/">Inspect Planet 1</a>
+          <a href="/nine-summits/universe/">Open Universe</a>
+          <a href="/showroom/">Open Showroom</a>
+          <a href="/">Compass</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1 ·
+      Measures Planet 1 renderer v8, Showroom consumer alignment, Universe route health, and no-collapse status.
+    </footer>
+  </div>
 
   <script>
     (function () {
       "use strict";
 
+      var CONTRACT = "GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1";
+
       var checks = [
         {
-          layer: "Planet 1 renderer",
+          key: "renderer-v8",
+          title: "Planet 1 v8 renderer",
           target: "/world/render/planet-one.render.js",
-          group: "renderer",
           required: [
             "PLANET_ONE_RENDER_TEAM_TNT_v1",
+            "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY",
             "window.DGBPlanetOneRenderTeam",
             "renderPlanetOne",
+            "axis-spin-active=true",
+            "climate-topology-active=true",
+            "weather-circulation-active=true",
+            "ocean-current-logic-active=true",
+            "planet-one-realism-pass=v8-axis-spin-climate-topology"
+          ],
+          softer: [
+            "axisSpinActive",
+            "climateTopologyActive",
+            "weatherCirculationActive",
+            "oceanCurrentLogicActive"
+          ]
+        },
+        {
+          key: "showroom-consumer",
+          title: "Showroom Planet 1 consumer",
+          target: "/showroom/globe/",
+          required: [
+            "Planet 1 first. Tree demo second.",
+            "/world/render/planet-one.render.js",
             "planet-one-render-active=true",
-            "planet-one-renderer=/world/render/planet-one.render.js",
             "globe-demo-status-retired=true",
             "tree-demo-mode=true",
             "render-lanes-separated=true",
             "no-render-lane-collapse=true"
           ],
-          forbidden: [
-            "DEMO_PLANET_RENDER_TEAM_CONTRACT_v1"
+          softer: [
+            "Planet 1",
+            "Tree demo",
+            "real globe renderer",
+            "Showroom inspects"
           ]
         },
         {
-          layer: "Showroom Planet 1 consumer",
+          key: "showroom-v8-copy",
+          title: "Showroom v8 visible copy",
           target: "/showroom/globe/",
-          group: "showroom",
           required: [
-            "PLANET_ONE_SHOWROOM_GLOBE_CONSUMER_TNT_v1",
-            "planet-one-renderer=/world/render/planet-one.render.js",
-            "planet-one-render-active=true",
-            "globe-demo-status-retired=true",
-            "tree-demo-mode=true",
-            "render-lanes-separated=true",
-            "no-render-lane-collapse=true",
-            "safe-inline-fallback=true",
-            "src=\"/world/render/planet-one.render.js\""
+            "axis spin",
+            "climate topology",
+            "weather circulation",
+            "ocean currents"
           ],
-          forbidden: [
-            "Instrument fallback",
-            "waiting for the globe instrument",
-            "Demo Planet · Planet 1"
+          softer: [
+            "Axis",
+            "Climate",
+            "Weather",
+            "Current"
           ]
         },
         {
-          layer: "Nine Summits Universe",
+          key: "universe-route",
+          title: "Nine Summits Universe",
           target: "/nine-summits/universe/",
-          group: "universe",
           required: [
             "NINE_SUMMITS_METAVERSE_LANE_OPEN_TNT_v1",
-            "route=/nine-summits/universe/",
             "planet=Nine Summits Universe",
             "landmasses=7",
-            "map-protocol=tiktok"
+            "map-protocol=tiktok",
+            "Planet 1"
           ],
-          forbidden: [
-            "href=\"/nine-summits-universe/\""
+          softer: [
+            "seven landmasses",
+            "coherence",
+            "population",
+            "Pangaea"
           ]
         },
         {
-          layer: "Nine Summits hub",
+          key: "nine-summits-hub",
+          title: "Nine Summits hub",
           target: "/nine-summits/",
-          group: "hub",
           required: [
             "NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1",
-            "href=\"/nine-summits/universe/\"",
             "Open metaverse lane",
-            "broken-public-universe-link-removed=true"
+            "broken-public-universe-link-removed=true",
+            "/nine-summits/universe/"
           ],
-          forbidden: [
-            "href=\"/nine-summits-universe/\""
+          softer: [
+            "Nine Summits Universe",
+            "metaverse lane",
+            "Book",
+            "This Underdog"
           ]
         }
       ];
 
-      function byId(id) {
-        return document.getElementById(id);
-      }
+      var table = document.getElementById("audit-table");
+      var runButton = document.getElementById("run-audit");
+      var metricTotal = document.getElementById("metric-total");
+      var metricRenderer = document.getElementById("metric-renderer");
+      var metricShowroom = document.getElementById("metric-showroom");
+      var metricNext = document.getElementById("metric-next");
+      var nextTitle = document.getElementById("next-target");
+      var nextCopy = document.getElementById("next-copy");
 
-      function setText(id, value) {
-        var node = byId(id);
-        if (node) node.textContent = value;
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+      function bust(path) {
+        var url = new URL(path, window.location.origin);
+        url.searchParams.set("dgb_gauge", String(Date.now()));
+        return url.toString();
       }
 
       function statusClass(status) {
         if (status === "PASS") return "pass";
-        if (status === "HOLD") return "hold";
         if (status === "FAIL") return "fail";
-        return "wait";
+        return "hold";
       }
 
-      function fetchText(target) {
-        var separator = target.indexOf("?") === -1 ? "?" : "&";
-        return fetch(target + separator + "v=" + Date.now(), { cache: "no-store" })
-          .then(function (response) {
-            return response.text().then(function (text) {
-              return { ok: response.ok, status: response.status, text: text };
-            });
+      function setMetric(node, status, text) {
+        node.classList.remove("pass", "hold", "fail");
+        node.classList.add(statusClass(status));
+        node.querySelector("strong").textContent = text;
+      }
+
+      function clearRows() {
+        table.querySelectorAll(".audit-row:not(.header)").forEach(function (row) {
+          row.remove();
+        });
+      }
+
+      function rowFor(result) {
+        var row = document.createElement("div");
+        row.className = "audit-row";
+
+        var layer = document.createElement("div");
+        layer.innerHTML = "<strong>" + escapeHtml(result.title) + "</strong>";
+
+        var target = document.createElement("div");
+        target.innerHTML = "<code>" + escapeHtml(result.target) + "</code>";
+
+        var status = document.createElement("div");
+        status.className = "status " + statusClass(result.status);
+        status.textContent = result.status;
+
+        var evidence = document.createElement("div");
+        evidence.className = "evidence";
+
+        var top = document.createElement("div");
+        top.textContent =
+          result.httpText +
+          ". " +
+          result.found +
+          " of " +
+          result.total +
+          " required markers found.";
+        evidence.appendChild(top);
+
+        if (result.missing.length) {
+          var missing = document.createElement("ul");
+          result.missing.forEach(function (item) {
+            var li = document.createElement("li");
+            li.textContent = "Missing: " + item;
+            missing.appendChild(li);
           });
+          evidence.appendChild(missing);
+        } else {
+          var clean = document.createElement("div");
+          clean.innerHTML = "<strong>Contract clean.</strong>";
+          evidence.appendChild(clean);
+        }
+
+        if (result.softFound.length) {
+          var soft = document.createElement("div");
+          soft.textContent = "Supporting markers: " + result.softFound.join(", ");
+          evidence.appendChild(soft);
+        }
+
+        row.appendChild(layer);
+        row.appendChild(target);
+        row.appendChild(status);
+        row.appendChild(evidence);
+
+        return row;
       }
 
-      function evaluate(check, payload) {
-        if (!payload.ok) {
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
           return {
-            layer: check.layer,
-            target: check.target,
-            group: check.group,
-            status: "FAIL",
-            requiredPassed: 0,
-            requiredTotal: check.required.length,
-            missing: check.required.slice(),
-            forbidden: [],
-            evidence: "HTTP " + payload.status
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+          }[char];
+        });
+      }
+
+      async function runCheck(check) {
+        var result = {
+          key: check.key,
+          title: check.title,
+          target: check.target,
+          status: "FAIL",
+          httpText: "HTTP request failed",
+          found: 0,
+          total: check.required.length,
+          missing: check.required.slice(),
+          softFound: []
+        };
+
+        try {
+          var response = await fetch(bust(check.target), {
+            cache: "no-store",
+            credentials: "same-origin"
+          });
+
+          result.httpText = "HTTP " + response.status;
+
+          if (!response.ok) {
+            result.status = "FAIL";
+            return result;
+          }
+
+          var text = await response.text();
+          var lower = text.toLowerCase();
+
+          result.missing = [];
+          check.required.forEach(function (marker) {
+            if (text.indexOf(marker) !== -1 || lower.indexOf(marker.toLowerCase()) !== -1) {
+              result.found += 1;
+            } else {
+              result.missing.push(marker);
+            }
+          });
+
+          (check.softer || []).forEach(function (marker) {
+            if (text.indexOf(marker) !== -1 || lower.indexOf(marker.toLowerCase()) !== -1) {
+              result.softFound.push(marker);
+            }
+          });
+
+          if (result.found === result.total) {
+            result.status = "PASS";
+          } else if (result.found > 0) {
+            result.status = "HOLD";
+          } else {
+            result.status = "FAIL";
+          }
+
+          return result;
+        } catch (error) {
+          result.httpText = "Fetch error";
+          result.missing = check.required.slice();
+          return result;
+        }
+      }
+
+      function chooseNext(results) {
+        var byKey = {};
+        results.forEach(function (item) {
+          byKey[item.key] = item;
+        });
+
+        if (!byKey["renderer-v8"] || byKey["renderer-v8"].status !== "PASS") {
+          return {
+            label: "RENDERER",
+            title: "Renderer v8 is not fully proven.",
+            copy:
+              "Repair /world/render/planet-one.render.js first. Gauges is missing one or more v8 markers for axis spin, climate topology, weather circulation, or ocean-current logic."
           };
         }
 
-        var missing = [];
-        var forbidden = [];
-        var passed = 0;
+        if (!byKey["showroom-consumer"] || byKey["showroom-consumer"].status !== "PASS") {
+          return {
+            label: "SHOWROOM",
+            title: "Showroom consumer is not fully aligned.",
+            copy:
+              "Repair /showroom/globe/index.html only after the renderer passes. The consumer must preserve Planet 1 first, tree demo second, and no-collapse render-lane separation."
+          };
+        }
 
-        check.required.forEach(function (marker) {
-          if (payload.text.indexOf(marker) !== -1) {
-            passed += 1;
-          } else {
-            missing.push(marker);
-          }
-        });
+        if (!byKey["showroom-v8-copy"] || byKey["showroom-v8-copy"].status !== "PASS") {
+          return {
+            label: "COPY",
+            title: "The renderer may be newer than the visible Showroom language.",
+            copy:
+              "Renderer v8 is present, but the Showroom source does not yet expose the v8 language: axis spin, climate topology, weather circulation, and ocean currents. Repair /showroom/globe/index.html if owner-facing proof needs those labels."
+          };
+        }
 
-        check.forbidden.forEach(function (marker) {
-          if (payload.text.indexOf(marker) !== -1) {
-            forbidden.push(marker);
-          }
-        });
+        if (!byKey["universe-route"] || byKey["universe-route"].status !== "PASS") {
+          return {
+            label: "UNIVERSE",
+            title: "Universe route is not fully aligned.",
+            copy:
+              "Repair /nine-summits/universe/index.html. The world explanation route must preserve Planet 1, seven landmasses, TikTok protocol, and coherence law."
+          };
+        }
 
-        var status = "FAIL";
-        if (!missing.length && !forbidden.length) status = "PASS";
-        else if (passed > 0) status = "HOLD";
+        if (!byKey["nine-summits-hub"] || byKey["nine-summits-hub"].status !== "PASS") {
+          return {
+            label: "HUB",
+            title: "Nine Summits hub link contract is not fully aligned.",
+            copy:
+              "Repair /nine-summits/index.html. The hub must point to /nine-summits/universe/ and must not revive the retired flat /nine-summits-universe/ path."
+          };
+        }
 
         return {
-          layer: check.layer,
-          target: check.target,
-          group: check.group,
-          status: status,
-          requiredPassed: passed,
-          requiredTotal: check.required.length,
-          missing: missing,
-          forbidden: forbidden,
-          evidence: "HTTP " + payload.status + ". " + passed + " of " + check.required.length + " required markers found."
+          label: "POLISH",
+          title: "All measured v8 source contracts pass.",
+          copy:
+            "Next work is visual polish, owner review, or v9 cinematic topographic refinement. Gauges now proves the v8 renderer standard instead of only the old separation standard."
         };
       }
 
-      function groupStatus(results, group) {
-        var items = results.filter(function (item) { return item.group === group; });
-        if (!items.length) return "--";
-        if (items.every(function (item) { return item.status === "PASS"; })) return "PASS";
-        if (items.some(function (item) { return item.status === "HOLD"; })) return "HOLD";
-        return "FAIL";
+      function computeScore(results) {
+        var found = 0;
+        var total = 0;
+
+        results.forEach(function (item) {
+          found += item.found;
+          total += item.total;
+        });
+
+        if (!total) return 0;
+        return Math.round((found / total) * 100);
       }
 
-      function totalScore(results) {
-        var total = results.reduce(function (sum, item) { return sum + item.requiredTotal; }, 0);
-        var passed = results.reduce(function (sum, item) { return sum + item.requiredPassed; }, 0);
-        var penalty = results.reduce(function (sum, item) { return sum + item.forbidden.length; }, 0);
-        return total ? Math.round((Math.max(0, passed - penalty) / total) * 100) + "%" : "--";
+      async function runAudit() {
+        runButton.disabled = true;
+        runButton.textContent = "Running...";
+
+        clearRows();
+
+        var pending = document.createElement("div");
+        pending.className = "audit-row";
+        pending.innerHTML =
+          "<div><strong>Audit running</strong></div>" +
+          "<div><code>" + CONTRACT + "</code></div>" +
+          '<div class="status hold">WAIT</div>' +
+          "<div class=\"evidence\">Fetching current source with cache-busting.</div>";
+        table.appendChild(pending);
+
+        var results = [];
+        for (var i = 0; i < checks.length; i += 1) {
+          results.push(await runCheck(checks[i]));
+        }
+
+        clearRows();
+
+        results.forEach(function (result) {
+          table.appendChild(rowFor(result));
+        });
+
+        var score = computeScore(results);
+        var renderer = results.find(function (r) { return r.key === "renderer-v8"; });
+        var showroom = results.find(function (r) { return r.key === "showroom-consumer"; });
+        var next = chooseNext(results);
+
+        setMetric(metricTotal, score === 100 ? "PASS" : score >= 70 ? "HOLD" : "FAIL", score + "%");
+        setMetric(metricRenderer, renderer && renderer.status === "PASS" ? "PASS" : renderer && renderer.status === "HOLD" ? "HOLD" : "FAIL", renderer ? renderer.status : "FAIL");
+        setMetric(metricShowroom, showroom && showroom.status === "PASS" ? "PASS" : showroom && showroom.status === "HOLD" ? "HOLD" : "FAIL", showroom ? showroom.status : "FAIL");
+        setMetric(metricNext, next.label === "POLISH" ? "PASS" : "HOLD", next.label);
+
+        nextTitle.textContent = next.title;
+        nextCopy.textContent = next.copy;
+
+        runButton.disabled = false;
+        runButton.textContent = "Run v8 audit";
       }
 
-      function evidenceHtml(result) {
-        var lines = [];
-        lines.push("<li>" + escapeHtml(result.evidence) + "</li>");
-
-        if (result.missing.length) {
-          lines.push("<li><span class=\"bad\">Missing:</span> " + result.missing.map(escapeHtml).join(", ") + "</li>");
-        }
-
-        if (result.forbidden.length) {
-          lines.push("<li><span class=\"bad\">Forbidden found:</span> " + result.forbidden.map(escapeHtml).join(", ") + "</li>");
-        }
-
-        if (!result.missing.length && !result.forbidden.length) {
-          lines.push("<li><strong>Contract clean.</strong></li>");
-        }
-
-        return "<ul class=\"evidence-list\">" + lines.join("") + "</ul>";
-      }
-
-      function decide(results) {
-        if (groupStatus(results, "renderer") !== "PASS") {
-          return ["RENDERER", "Planet 1 renderer is not fully aligned.", "Repair /world/render/planet-one.render.js."];
-        }
-
-        if (groupStatus(results, "showroom") !== "PASS") {
-          return ["SHOWROOM", "Showroom consumer is not fully aligned.", "Repair /showroom/globe/index.html."];
-        }
-
-        if (groupStatus(results, "universe") !== "PASS") {
-          return ["UNIVERSE", "Universe route is not fully aligned.", "Repair /nine-summits/universe/index.html."];
-        }
-
-        if (groupStatus(results, "hub") !== "PASS") {
-          return ["HUB", "Nine Summits hub is not fully aligned.", "Repair /nine-summits/index.html."];
-        }
-
-        return ["POLISH", "All measured render-lane contracts pass.", "Next work is visual polish or tree demo route refinement."];
-      }
-
-      function render(results) {
-        var body = byId("audit-body");
-        if (body) {
-          body.innerHTML = results.map(function (result) {
-            return [
-              "<tr>",
-              "<td data-label=\"Layer\">" + escapeHtml(result.layer) + "</td>",
-              "<td data-label=\"Target\"><code>" + escapeHtml(result.target) + "</code></td>",
-              "<td data-label=\"Status\"><span class=\"pill " + statusClass(result.status) + "\">" + escapeHtml(result.status) + "</span></td>",
-              "<td data-label=\"Evidence\">" + evidenceHtml(result) + "</td>",
-              "</tr>"
-            ].join("");
-          }).join("");
-        }
-
-        setText("score-total", totalScore(results));
-        setText("score-renderer", groupStatus(results, "renderer"));
-        setText("score-showroom", groupStatus(results, "showroom"));
-        setText("score-universe", groupStatus(results, "universe"));
-
-        var decision = decide(results);
-        setText("score-next", decision[0]);
-        setText("audit-result", decision[1]);
-        setText("audit-detail", decision[2]);
-      }
-
-      function runAudit() {
-        var body = byId("audit-body");
-        if (body) {
-          body.innerHTML = "<tr><td data-label=\"Layer\">Running</td><td data-label=\"Target\"><code>Planet 1 render stack</code></td><td data-label=\"Status\"><span class=\"pill hold\">RUN</span></td><td data-label=\"Evidence\">Fetching live source.</td></tr>";
-        }
-
-        Promise.all(checks.map(function (check) {
-          return fetchText(check.target)
-            .then(function (payload) { return evaluate(check, payload); })
-            .catch(function (error) {
-              return {
-                layer: check.layer,
-                target: check.target,
-                group: check.group,
-                status: "FAIL",
-                requiredPassed: 0,
-                requiredTotal: check.required.length,
-                missing: check.required.slice(),
-                forbidden: [],
-                evidence: error && error.message ? error.message : "fetch failed"
-              };
-            });
-        })).then(render);
-      }
-
-      var button = byId("run-audit");
-      if (button) button.addEventListener("click", runAudit);
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", runAudit);
-      } else {
-        runAudit();
-      }
+      runButton.addEventListener("click", runAudit);
+      window.addEventListener("load", runAudit);
     })();
   </script>
 </body>

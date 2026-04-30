@@ -3,17 +3,8 @@
   lang="en"
   data-page="showroom-globe"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_PLANET_ONE_V8_PUBLIC_POLISH_AND_RECEIPT_HIDE_TNT_v1"
-  data-planet-one-render-active="true"
+  data-contract="SHOWROOM_PLANET_ONE_PUBLIC_TEXT_CLEANUP_TNT_v1"
   data-planet-one-renderer="/world/render/planet-one.render.js"
-  data-globe-demo-status-retired="true"
-  data-tree-demo-mode="true"
-  data-render-lanes-separated="true"
-  data-no-render-lane-collapse="true"
-  data-axis-spin-active="true"
-  data-climate-topology-active="true"
-  data-weather-circulation-active="true"
-  data-ocean-current-logic-active="true"
 >
 <head>
   <meta charset="utf-8">
@@ -23,6 +14,27 @@
     name="description"
     content="Planet 1 inspection route for the Nine Summits Universe. Planet 1 is the real globe render lane; the tree remains in demo mode."
   >
+
+  <!--
+    SHOWROOM_PLANET_ONE_PUBLIC_TEXT_CLEANUP_TNT_v1
+    PLANET_ONE_RENDER_TEAM_TNT_v1
+    PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
+    planet-one-render-active=true
+    planet-one-renderer=/world/render/planet-one.render.js
+    globe-demo-status-retired=true
+    tree-demo-mode=true
+    render-lanes-separated=true
+    no-render-lane-collapse=true
+    axis-spin-active=true
+    climate-topology-active=true
+    weather-circulation-active=true
+    ocean-current-logic-active=true
+    public-receipt-hidden=true
+    receipt-not-body-text=true
+    route=/showroom/globe/
+    planet-one-first=true
+    tree-demo-second=true
+  -->
 
   <style>
     :root {
@@ -288,49 +300,51 @@
       padding: clamp(16px, 4vw, 34px);
       background:
         radial-gradient(circle at 50% 8%, rgba(141,184,255,0.12), transparent 18rem),
-        rgba(255,255,255,0.035);
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
     }
 
     #planet-one-render {
-      width: min(560px, 100%);
-      min-height: min(560px, 88vw);
+      width: min(640px, 100%);
+      min-height: min(640px, 88vw);
       display: grid;
       place-items: center;
+      overflow: visible;
     }
 
-    .caption {
-      max-width: 820px;
+    #planet-one-render .planet-one-render-shell {
+      width: 100%;
+      max-width: 720px;
+      gap: 18px;
+    }
+
+    #planet-one-render .planet-one-render-stage {
+      width: min(620px, 100%);
+      max-width: 100%;
+    }
+
+    #planet-one-render .planet-one-caption {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      padding: 0 6px;
+      color: rgba(245,247,251,0.82);
+      font-size: clamp(0.70rem, 2.5vw, 0.88rem);
+      letter-spacing: clamp(0.07em, 1.4vw, 0.14em);
+    }
+
+    #planet-one-render .planet-one-telemetry {
+      max-width: 100%;
+      overflow: visible;
+      padding: 0 4px;
+    }
+
+    #planet-one-render .planet-one-telemetry span {
+      white-space: normal;
       text-align: center;
-      color: rgba(245,247,251,0.84);
-      font-size: 0.92rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      line-height: 1.45;
-      text-transform: uppercase;
     }
 
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 9px;
-      max-width: 840px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 12px;
-      background: rgba(255,255,255,0.045);
-      color: rgba(245,247,251,0.78);
-      font-size: 0.76rem;
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+    #planet-one-render .planet-one-mapkey {
+      width: 100%;
+      max-width: 720px;
     }
 
     .proof-grid,
@@ -376,18 +390,8 @@
       font-size: 0.88em;
     }
 
-    .receipt {
-      display: none !important;
-      visibility: hidden !important;
-      width: 0 !important;
-      height: 0 !important;
-      overflow: hidden !important;
-      position: absolute !important;
-      left: -9999px !important;
-      top: auto !important;
-    }
-
-    .noscript-warning {
+    .noscript-warning,
+    .render-waiting {
       border: 1px solid rgba(242,199,111,0.36);
       border-radius: 22px;
       padding: 16px;
@@ -413,6 +417,15 @@
       .actions a,
       .backlinks a {
         width: 100%;
+      }
+
+      #planet-one-render {
+        width: 100%;
+        min-height: min(560px, 92vw);
+      }
+
+      #planet-one-render .planet-one-render-stage {
+        width: min(540px, 100%);
       }
     }
   </style>
@@ -471,21 +484,6 @@
                 Planet 1 needs JavaScript enabled to load the live render.
               </div>
             </noscript>
-          </div>
-
-          <div class="caption">
-            Planet 1 · Nine Summits Universe · globe render lane
-          </div>
-
-          <div class="chips" aria-label="Planet 1 visible standards">
-            <span class="chip">Planet 1</span>
-            <span class="chip">Axis spin</span>
-            <span class="chip">Climate topology</span>
-            <span class="chip">Weather circulation</span>
-            <span class="chip">Ocean currents</span>
-            <span class="chip">Plateau interiors</span>
-            <span class="chip">Pangaea fracture</span>
-            <span class="chip">Tree demo mode</span>
           </div>
         </div>
 
@@ -596,30 +594,10 @@
           <a href="/">Compass</a>
         </div>
       </section>
-
-      <section class="receipt" aria-hidden="true">
-        SHOWROOM_PLANET_ONE_V8_PUBLIC_POLISH_AND_RECEIPT_HIDE_TNT_v1
-        PLANET_ONE_RENDER_TEAM_TNT_v1
-        PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
-        planet-one-render-active=true
-        planet-one-renderer=/world/render/planet-one.render.js
-        globe-demo-status-retired=true
-        tree-demo-mode=true
-        render-lanes-separated=true
-        no-render-lane-collapse=true
-        axis-spin-active=true
-        climate-topology-active=true
-        weather-circulation-active=true
-        ocean-current-logic-active=true
-        public-receipt-hidden=true
-        route=/showroom/globe/
-        planet-one-first=true
-        tree-demo-second=true
-      </section>
     </main>
 
     <footer>
-      SHOWROOM_PLANET_ONE_V8_PUBLIC_POLISH_AND_RECEIPT_HIDE_TNT_v1 · Planet 1 inspection route.
+      Planet 1 inspection route · Nine Summits Universe.
     </footer>
   </div>
 
@@ -644,7 +622,7 @@
         }
 
         mount.innerHTML =
-          '<div class="noscript-warning">Planet 1 renderer is waiting for /world/render/planet-one.render.js.</div>';
+          '<div class="render-waiting">Planet 1 renderer is waiting for /world/render/planet-one.render.js.</div>';
       }
 
       if (document.readyState === "loading") {

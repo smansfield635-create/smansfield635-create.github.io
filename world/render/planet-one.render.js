@@ -1,7 +1,8 @@
 (function attachPlanetOneRenderTeam(global) {
   "use strict";
 
-  const VERSION = "PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1";
+  const VERSION = "PLANET_ONE_RENDER_V10_TOPOLOGY_SEPARATION_TNT_v1";
+  const PREVIOUS_V9 = "PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1";
   const PREVIOUS_V8 = "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY";
   const ROOT_MARKER = "PLANET_ONE_RENDER_TEAM_TNT_v1";
   const V8_REALISM_PASS = "planet-one-realism-pass=v8-axis-spin-climate-topology";
@@ -10,6 +11,7 @@
     PLANET_ONE_RENDER_TEAM_TNT_v1
     PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
     PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1
+    PLANET_ONE_RENDER_V10_TOPOLOGY_SEPARATION_TNT_v1
 
     window.DGBPlanetOneRenderTeam
     planet-one-realism-pass=v8-axis-spin-climate-topology
@@ -25,7 +27,7 @@
     render-lanes-separated=true
     no-render-lane-collapse=true
 
-    v9 added:
+    v9 preserved:
     opaque-globe-active=true
     sun-reflection-active=true
     moon-reflection-active=true
@@ -34,16 +36,32 @@
     terrain-depth-expanded=true
     atmosphere-retained=true
     axis-overlay-retained=true
+
+    v10 added:
+    topology-separation-active=true
+    shape-first-active=true
+    land-water-separation-active=true
+    shoreline-discipline-active=true
+    terrain-contained-to-land=true
+    currents-contained-to-water=true
+    weather-secondary-overlay=true
+    lighting-illumination-only=true
+    axis-overlay-only=true
+    visual-soup-correction=true
   */
 
-  const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · globe render lane";
+  const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · topology-separated render lane";
   const ACTIVE_INSTANCES = new Set();
+
+  let renderUid = 0;
 
   const MARKERS = Object.freeze({
     root: ROOT_MARKER,
     v8: PREVIOUS_V8,
-    v9: VERSION,
+    v9: PREVIOUS_V9,
+    v10: VERSION,
     v8RealismPass: V8_REALISM_PASS,
+
     planetOneRenderActive: true,
     axisSpinActive: true,
     climateTopologyActive: true,
@@ -53,6 +71,7 @@
     treeDemoMode: true,
     renderLanesSeparated: true,
     noRenderLaneCollapse: true,
+
     opaqueGlobeActive: true,
     sunReflectionActive: true,
     moonReflectionActive: true,
@@ -60,7 +79,18 @@
     solarLunarLightingActive: true,
     terrainDepthExpanded: true,
     atmosphereRetained: true,
-    axisOverlayRetained: true
+    axisOverlayRetained: true,
+
+    topologySeparationActive: true,
+    shapeFirstActive: true,
+    landWaterSeparationActive: true,
+    shorelineDisciplineActive: true,
+    terrainContainedToLand: true,
+    currentsContainedToWater: true,
+    weatherSecondaryOverlay: true,
+    lightingIlluminationOnly: true,
+    axisOverlayOnly: true,
+    visualSoupCorrection: true
   });
 
   function escapeHtml(value) {
@@ -71,14 +101,19 @@
       .replace(/"/g, "&quot;");
   }
 
+  function nextUid() {
+    renderUid += 1;
+    return "p1v10_" + renderUid + "_" + Math.random().toString(16).slice(2);
+  }
+
   function injectStyles() {
-    if (document.getElementById("planet-one-render-v9-styles")) return;
+    if (document.getElementById("planet-one-render-v10-styles")) return;
 
     const style = document.createElement("style");
-    style.id = "planet-one-render-v9-styles";
+    style.id = "planet-one-render-v10-styles";
     style.textContent = `
       .planet-one-render-shell {
-        width: min(680px, 100%);
+        width: min(700px, 100%);
         margin: 0 auto;
         display: grid;
         justify-items: center;
@@ -87,7 +122,7 @@
       }
 
       .planet-one-render-stage {
-        width: min(660px, 100%);
+        width: min(680px, 100%);
         aspect-ratio: 1;
         position: relative;
         display: grid;
@@ -95,42 +130,42 @@
         isolation: isolate;
       }
 
-      .planet-one-v9-svg {
+      .planet-one-v10-svg {
         width: 100%;
         height: 100%;
         display: block;
         overflow: visible;
-        filter: drop-shadow(0 34px 54px rgba(0, 0, 0, 0.58));
+        filter: drop-shadow(0 34px 58px rgba(0, 0, 0, 0.62));
       }
 
-      .planet-one-v9-surface {
+      .planet-one-v10-world-turn {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneSurfaceDrift 44s linear infinite;
+        animation: planetOneV10WorldTurn 92s linear infinite;
       }
 
-      .planet-one-v9-clouds {
+      .planet-one-v10-weather {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneCloudDrift 70s linear infinite;
+        animation: planetOneV10WeatherDrift 58s linear infinite;
       }
 
-      .planet-one-v9-currents {
+      .planet-one-v10-currents {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneCurrentDrift 32s linear infinite;
+        animation: planetOneV10CurrentBreath 38s ease-in-out infinite;
       }
 
-      .planet-one-v9-axis {
+      .planet-one-v10-axis {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneAxisBreath 7s ease-in-out infinite;
+        animation: planetOneV10AxisBreath 7s ease-in-out infinite;
       }
 
-      .planet-one-render-shell.is-paused .planet-one-v9-surface,
-      .planet-one-render-shell.is-paused .planet-one-v9-clouds,
-      .planet-one-render-shell.is-paused .planet-one-v9-currents,
-      .planet-one-render-shell.is-paused .planet-one-v9-axis {
+      .planet-one-render-shell.is-paused .planet-one-v10-world-turn,
+      .planet-one-render-shell.is-paused .planet-one-v10-weather,
+      .planet-one-render-shell.is-paused .planet-one-v10-currents,
+      .planet-one-render-shell.is-paused .planet-one-v10-axis {
         animation-play-state: paused;
       }
 
@@ -146,7 +181,7 @@
       }
 
       .planet-one-telemetry {
-        width: min(620px, 100%);
+        width: min(650px, 100%);
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -163,7 +198,7 @@
         padding: 7px 12px;
         background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
         color: rgba(245, 247, 251, 0.78);
-        font-size: 0.74rem;
+        font-size: 0.72rem;
         font-weight: 900;
         letter-spacing: 0.05em;
         text-align: center;
@@ -171,7 +206,7 @@
       }
 
       .planet-one-mapkey {
-        width: min(620px, 100%);
+        width: min(650px, 100%);
         display: grid;
         gap: 10px;
       }
@@ -200,26 +235,25 @@
         line-height: 1.45;
       }
 
-      @keyframes planetOneSurfaceDrift {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-210px); }
+      @keyframes planetOneV10WorldTurn {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
 
-      @keyframes planetOneCloudDrift {
-        0% { transform: translateX(0); opacity: 0.46; }
-        50% { opacity: 0.66; }
-        100% { transform: translateX(150px); opacity: 0.46; }
-      }
-
-      @keyframes planetOneCurrentDrift {
-        0% { transform: translateX(0); opacity: 0.30; }
+      @keyframes planetOneV10WeatherDrift {
+        0% { transform: rotate(0deg); opacity: 0.36; }
         50% { opacity: 0.48; }
-        100% { transform: translateX(-120px); opacity: 0.30; }
+        100% { transform: rotate(-360deg); opacity: 0.36; }
       }
 
-      @keyframes planetOneAxisBreath {
-        0%, 100% { opacity: 0.58; }
-        50% { opacity: 0.74; }
+      @keyframes planetOneV10CurrentBreath {
+        0%, 100% { opacity: 0.26; }
+        50% { opacity: 0.44; }
+      }
+
+      @keyframes planetOneV10AxisBreath {
+        0%, 100% { opacity: 0.52; }
+        50% { opacity: 0.72; }
       }
 
       @media (max-width: 680px) {
@@ -228,21 +262,21 @@
         }
 
         .planet-one-render-stage {
-          width: min(560px, 100%);
+          width: min(570px, 100%);
         }
 
         .planet-one-telemetry span {
-          font-size: 0.68rem;
+          font-size: 0.66rem;
           min-height: 34px;
           padding: 7px 10px;
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .planet-one-v9-surface,
-        .planet-one-v9-clouds,
-        .planet-one-v9-currents,
-        .planet-one-v9-axis {
+        .planet-one-v10-world-turn,
+        .planet-one-v10-weather,
+        .planet-one-v10-currents,
+        .planet-one-v10-axis {
           animation-duration: 0.001ms !important;
           animation-iteration-count: 1 !important;
         }
@@ -252,155 +286,231 @@
     document.head.appendChild(style);
   }
 
-  function planetSvg() {
+  function landDefs(uid) {
+    const northPole = `${uid}_northPole`;
+    const northRegion = `${uid}_northRegion`;
+    const mainland = `${uid}_mainland`;
+    const westRegion = `${uid}_westRegion`;
+    const eastRegion = `${uid}_eastRegion`;
+    const southRegion = `${uid}_southRegion`;
+    const southPole = `${uid}_southPole`;
+
+    return {
+      northPole,
+      northRegion,
+      mainland,
+      westRegion,
+      eastRegion,
+      southRegion,
+      southPole,
+      defs: `
+        <path id="${northPole}" d="M407 113 C448 80 526 74 587 101 C630 120 649 155 624 180 C590 214 515 207 463 191 C414 176 377 146 407 113Z"></path>
+
+        <path id="${northRegion}" d="M330 207 C383 166 467 158 541 181 C608 202 661 239 680 291 C701 350 650 389 586 381 C525 373 489 331 428 342 C370 353 319 397 263 367 C209 338 216 267 330 207Z"></path>
+
+        <path id="${mainland}" d="M320 407 C399 358 498 365 573 407 C653 452 695 537 664 619 C629 711 521 742 427 711 C337 681 270 603 278 513 C282 464 292 424 320 407Z"></path>
+
+        <path id="${westRegion}" d="M162 401 C226 350 306 360 347 421 C385 477 356 556 296 596 C234 638 145 630 104 575 C61 518 91 458 162 401Z"></path>
+
+        <path id="${eastRegion}" d="M686 388 C751 352 831 366 878 429 C924 492 900 574 838 617 C778 658 690 638 652 582 C612 524 623 423 686 388Z"></path>
+
+        <path id="${southRegion}" d="M339 732 C411 694 502 711 574 753 C629 786 646 842 604 880 C550 928 451 912 378 872 C307 833 281 763 339 732Z"></path>
+
+        <path id="${southPole}" d="M398 882 C451 856 530 858 594 887 C627 902 633 926 604 947 C553 984 453 978 401 944 C371 924 366 899 398 882Z"></path>
+      `
+    };
+  }
+
+  function planetSvg(uid) {
+    const ids = {
+      sphereClip: `${uid}_sphereClip`,
+      oceanGradient: `${uid}_oceanGradient`,
+      sphereShade: `${uid}_sphereShade`,
+      sunLight: `${uid}_sunLight`,
+      moonLight: `${uid}_moonLight`,
+      atmosphere: `${uid}_atmosphere`,
+      limbGlow: `${uid}_limbGlow`,
+      axisGradient: `${uid}_axisGradient`,
+      terrainTexture: `${uid}_terrainTexture`,
+      ridgeShadow: `${uid}_ridgeShadow`,
+      landSoft: `${uid}_landSoft`
+    };
+
+    const lands = landDefs(uid);
+
     return `
-      <svg class="planet-one-v9-svg" viewBox="0 0 1000 1000" role="img" aria-label="Opaque Planet 1 render with solar and lunar lighting">
+      <svg class="planet-one-v10-svg" viewBox="0 0 1000 1000" role="img" aria-label="Topology-separated Planet 1 render with opaque globe, land, water, terrain, weather, solar light, lunar light, and axis overlay">
         <defs>
-          <clipPath id="planetOneSphereClip">
+          <clipPath id="${ids.sphereClip}">
             <circle cx="500" cy="500" r="394"></circle>
           </clipPath>
 
-          <radialGradient id="planetOneOceanGradient" cx="34%" cy="30%" r="76%">
-            <stop offset="0%" stop-color="#1fa9d6"></stop>
-            <stop offset="22%" stop-color="#157fa8"></stop>
-            <stop offset="48%" stop-color="#0b4266"></stop>
-            <stop offset="74%" stop-color="#071f35"></stop>
-            <stop offset="100%" stop-color="#020b15"></stop>
+          ${lands.defs}
+
+          <clipPath id="${lands.northPole}Clip"><use href="#${lands.northPole}"></use></clipPath>
+          <clipPath id="${lands.northRegion}Clip"><use href="#${lands.northRegion}"></use></clipPath>
+          <clipPath id="${lands.mainland}Clip"><use href="#${lands.mainland}"></use></clipPath>
+          <clipPath id="${lands.westRegion}Clip"><use href="#${lands.westRegion}"></use></clipPath>
+          <clipPath id="${lands.eastRegion}Clip"><use href="#${lands.eastRegion}"></use></clipPath>
+          <clipPath id="${lands.southRegion}Clip"><use href="#${lands.southRegion}"></use></clipPath>
+          <clipPath id="${lands.southPole}Clip"><use href="#${lands.southPole}"></use></clipPath>
+
+          <radialGradient id="${ids.oceanGradient}" cx="34%" cy="28%" r="78%">
+            <stop offset="0%" stop-color="#1fa7d2"></stop>
+            <stop offset="24%" stop-color="#167fa8"></stop>
+            <stop offset="50%" stop-color="#0a466f"></stop>
+            <stop offset="75%" stop-color="#061f38"></stop>
+            <stop offset="100%" stop-color="#020814"></stop>
           </radialGradient>
 
-          <radialGradient id="planetOneBodyShade" cx="31%" cy="28%" r="78%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.18)"></stop>
-            <stop offset="38%" stop-color="rgba(255,255,255,0.03)"></stop>
-            <stop offset="68%" stop-color="rgba(0,0,0,0.22)"></stop>
-            <stop offset="100%" stop-color="rgba(0,0,0,0.70)"></stop>
+          <radialGradient id="${ids.sphereShade}" cx="30%" cy="27%" r="78%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.14)"></stop>
+            <stop offset="38%" stop-color="rgba(255,255,255,0.02)"></stop>
+            <stop offset="68%" stop-color="rgba(0,0,0,0.28)"></stop>
+            <stop offset="100%" stop-color="rgba(0,0,0,0.76)"></stop>
           </radialGradient>
 
-          <radialGradient id="planetOneSunReflection" cx="19%" cy="39%" r="34%">
-            <stop offset="0%" stop-color="rgba(255,235,168,0.96)"></stop>
-            <stop offset="16%" stop-color="rgba(255,204,104,0.55)"></stop>
-            <stop offset="42%" stop-color="rgba(255,176,74,0.18)"></stop>
-            <stop offset="100%" stop-color="rgba(255,176,74,0)"></stop>
+          <radialGradient id="${ids.sunLight}" cx="22%" cy="35%" r="35%">
+            <stop offset="0%" stop-color="rgba(255,237,174,0.92)"></stop>
+            <stop offset="18%" stop-color="rgba(255,204,104,0.46)"></stop>
+            <stop offset="44%" stop-color="rgba(255,180,80,0.16)"></stop>
+            <stop offset="100%" stop-color="rgba(255,180,80,0)"></stop>
           </radialGradient>
 
-          <radialGradient id="planetOneMoonReflection" cx="86%" cy="28%" r="42%">
-            <stop offset="0%" stop-color="rgba(165,205,255,0.28)"></stop>
-            <stop offset="35%" stop-color="rgba(125,175,235,0.12)"></stop>
-            <stop offset="100%" stop-color="rgba(125,175,235,0)"></stop>
+          <radialGradient id="${ids.moonLight}" cx="86%" cy="28%" r="48%">
+            <stop offset="0%" stop-color="rgba(166,205,255,0.22)"></stop>
+            <stop offset="38%" stop-color="rgba(120,168,230,0.10)"></stop>
+            <stop offset="100%" stop-color="rgba(120,168,230,0)"></stop>
           </radialGradient>
 
-          <radialGradient id="planetOneAtmosphere" cx="50%" cy="50%" r="50%">
+          <radialGradient id="${ids.atmosphere}" cx="50%" cy="50%" r="50%">
             <stop offset="72%" stop-color="rgba(95,160,235,0)"></stop>
-            <stop offset="88%" stop-color="rgba(112,187,255,0.18)"></stop>
-            <stop offset="98%" stop-color="rgba(160,215,255,0.42)"></stop>
-            <stop offset="100%" stop-color="rgba(190,230,255,0.62)"></stop>
+            <stop offset="88%" stop-color="rgba(112,187,255,0.15)"></stop>
+            <stop offset="98%" stop-color="rgba(160,215,255,0.36)"></stop>
+            <stop offset="100%" stop-color="rgba(190,230,255,0.54)"></stop>
           </radialGradient>
 
-          <linearGradient id="planetOneAxisGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(242,199,111,0.10)"></stop>
-            <stop offset="45%" stop-color="rgba(242,199,111,0.58)"></stop>
-            <stop offset="100%" stop-color="rgba(242,199,111,0.20)"></stop>
+          <radialGradient id="${ids.limbGlow}" cx="50%" cy="50%" r="50%">
+            <stop offset="82%" stop-color="rgba(125,190,255,0)"></stop>
+            <stop offset="100%" stop-color="rgba(145,205,255,0.34)"></stop>
+          </radialGradient>
+
+          <linearGradient id="${ids.axisGradient}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(242,199,111,0.06)"></stop>
+            <stop offset="45%" stop-color="rgba(242,199,111,0.54)"></stop>
+            <stop offset="100%" stop-color="rgba(242,199,111,0.15)"></stop>
           </linearGradient>
 
-          <filter id="planetOneTerrainTexture" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.028" numOctaves="5" seed="41" result="noise"></feTurbulence>
+          <filter id="${ids.terrainTexture}" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.036" numOctaves="4" seed="72" result="noise"></feTurbulence>
             <feColorMatrix
               in="noise"
               type="matrix"
               values="
-                0.42 0.00 0.00 0 0
-                0.00 0.48 0.00 0 0
-                0.00 0.00 0.34 0 0
-                0.00 0.00 0.00 0.30 0"
+                0.38 0.00 0.00 0 0
+                0.00 0.42 0.00 0 0
+                0.00 0.00 0.30 0 0
+                0.00 0.00 0.00 0.24 0"
               result="texture">
             </feColorMatrix>
             <feBlend in="SourceGraphic" in2="texture" mode="multiply"></feBlend>
           </filter>
 
-          <filter id="planetOneRidgeShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#04101a" flood-opacity="0.38"></feDropShadow>
+          <filter id="${ids.ridgeShadow}" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#04101a" flood-opacity="0.42"></feDropShadow>
           </filter>
 
-          <filter id="planetOneSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
-            <feMerge>
-              <feMergeNode in="blur"></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
+          <filter id="${ids.landSoft}" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-color="#04101a" flood-opacity="0.22"></feDropShadow>
           </filter>
         </defs>
 
-        <circle cx="500" cy="500" r="428" fill="rgba(8,20,34,0.54)"></circle>
-        <circle cx="500" cy="500" r="407" fill="rgba(92,148,222,0.10)" stroke="rgba(145,190,250,0.20)" stroke-width="3"></circle>
+        <circle cx="500" cy="500" r="430" fill="rgba(6,18,32,0.62)"></circle>
+        <circle cx="500" cy="500" r="409" fill="rgba(86,145,218,0.08)" stroke="rgba(145,190,250,0.18)" stroke-width="3"></circle>
 
-        <g clip-path="url(#planetOneSphereClip)">
-          <rect x="70" y="70" width="860" height="860" fill="url(#planetOneOceanGradient)"></rect>
+        <g clip-path="url(#${ids.sphereClip})">
+          <rect x="70" y="70" width="860" height="860" fill="url(#${ids.oceanGradient})"></rect>
 
-          <g class="planet-one-v9-currents">
-            <path d="M94 338 C218 286 330 327 453 296 C582 263 716 287 900 216" fill="none" stroke="rgba(110,215,235,0.25)" stroke-width="13"></path>
-            <path d="M70 575 C220 526 340 590 500 548 C660 506 770 568 930 505" fill="none" stroke="rgba(66,184,220,0.20)" stroke-width="15"></path>
-            <path d="M120 718 C270 672 402 730 548 694 C694 658 803 695 930 640" fill="none" stroke="rgba(70,150,205,0.18)" stroke-width="20"></path>
+          <g class="planet-one-v10-currents" aria-label="Water-only current layer">
+            <path d="M106 337 C226 292 332 324 454 296 C582 267 709 291 894 222" fill="none" stroke="rgba(105,214,235,0.22)" stroke-width="11" stroke-linecap="round"></path>
+            <path d="M86 575 C225 528 347 590 500 549 C660 506 772 570 914 510" fill="none" stroke="rgba(70,178,218,0.18)" stroke-width="12" stroke-linecap="round"></path>
+            <path d="M131 720 C276 675 407 730 548 694 C692 658 802 696 912 642" fill="none" stroke="rgba(75,150,205,0.15)" stroke-width="15" stroke-linecap="round"></path>
           </g>
 
-          <g class="planet-one-v9-surface" filter="url(#planetOneTerrainTexture)">
-            <g opacity="1">
-              <path d="M48 195 C95 150 172 128 250 146 C310 160 348 128 421 139 C510 151 596 171 648 220 C703 272 690 324 632 342 C571 361 511 337 455 365 C396 394 366 458 296 464 C217 471 164 421 106 426 C50 431 13 466 -42 444 C-102 420 -92 333 -42 290 C-5 258 9 231 48 195Z" fill="#c9b36d"></path>
-
-              <path d="M96 210 C182 172 263 181 335 197 C415 216 500 208 580 252 C633 281 650 312 616 329 C550 360 480 313 414 353 C348 392 310 423 234 410 C160 397 103 360 42 379 C10 389 -31 389 -48 354 C-71 307 -20 253 96 210Z" fill="#6da162"></path>
-
-              <path d="M-20 477 C82 441 168 483 259 465 C343 448 421 385 510 410 C603 437 658 510 747 484 C830 460 894 405 964 430 C1030 454 1058 546 1006 610 C960 667 852 658 775 684 C683 716 625 777 522 765 C421 753 359 690 267 698 C180 706 104 760 23 727 C-56 694 -105 596 -70 540 C-51 509 -45 486 -20 477Z" fill="#b99a58"></path>
-
-              <path d="M20 500 C118 458 229 503 312 484 C390 466 452 430 535 449 C606 466 648 531 725 522 C794 514 865 455 941 477 C999 494 1022 562 982 608 C922 677 808 628 730 672 C645 720 566 730 471 709 C393 692 338 640 250 650 C162 660 88 700 25 668 C-52 628 -61 539 20 500Z" fill="#527f45"></path>
-
-              <path d="M176 742 C259 704 360 736 426 776 C496 819 584 800 653 842 C714 879 702 929 635 950 C558 975 476 946 408 913 C330 875 249 884 175 850 C116 823 118 771 176 742Z" fill="#a87f4d"></path>
-
-              <path d="M716 228 C782 190 874 190 945 224 C1000 250 1017 313 975 351 C938 384 868 361 825 391 C774 425 701 425 677 376 C650 322 655 263 716 228Z" fill="#7e9256"></path>
-
-              <path d="M755 671 C823 630 904 651 940 702 C981 762 926 824 849 805 C783 789 703 765 705 718 C706 700 729 686 755 671Z" fill="#836948"></path>
-
-              <path d="M116 295 C172 282 221 304 257 341 C205 351 151 344 106 325Z" fill="#0b5f80"></path>
-              <path d="M244 570 C286 543 344 548 384 579 C337 603 291 608 244 570Z" fill="#0b5f80"></path>
-              <path d="M653 414 C713 372 790 377 840 430 C780 470 709 469 653 414Z" fill="#063c5e"></path>
-              <path d="M616 820 C660 796 707 809 742 840 C695 862 653 857 616 820Z" fill="#082d46"></path>
+          <g class="planet-one-v10-world-turn">
+            <g aria-label="Shoreline discipline layer">
+              <use href="#${lands.northPole}" fill="none" stroke="#e5f2ff" stroke-width="13" stroke-linejoin="round" opacity="0.72"></use>
+              <use href="#${lands.northRegion}" fill="none" stroke="#dec68e" stroke-width="13" stroke-linejoin="round" opacity="0.46"></use>
+              <use href="#${lands.mainland}" fill="none" stroke="#ecd49b" stroke-width="15" stroke-linejoin="round" opacity="0.58"></use>
+              <use href="#${lands.westRegion}" fill="none" stroke="#d4bb85" stroke-width="12" stroke-linejoin="round" opacity="0.48"></use>
+              <use href="#${lands.eastRegion}" fill="none" stroke="#d6c08c" stroke-width="12" stroke-linejoin="round" opacity="0.46"></use>
+              <use href="#${lands.southRegion}" fill="none" stroke="#d4bd8d" stroke-width="12" stroke-linejoin="round" opacity="0.48"></use>
+              <use href="#${lands.southPole}" fill="none" stroke="#e9f3ff" stroke-width="12" stroke-linejoin="round" opacity="0.72"></use>
             </g>
 
-            <g opacity="0.98" filter="url(#planetOneRidgeShadow)">
-              <path d="M126 236 C232 198 350 214 474 257" fill="none" stroke="#e0d29b" stroke-width="15" stroke-linecap="round" opacity="0.48"></path>
-              <path d="M288 438 C384 397 475 391 568 432" fill="none" stroke="#d8c184" stroke-width="11" stroke-linecap="round" opacity="0.44"></path>
-              <path d="M103 542 C204 512 318 530 420 593" fill="none" stroke="#e6c98e" stroke-width="12" stroke-linecap="round" opacity="0.42"></path>
-              <path d="M520 587 C625 610 704 591 798 543" fill="none" stroke="#d0b071" stroke-width="10" stroke-linecap="round" opacity="0.38"></path>
-              <path d="M260 786 C360 815 478 856 602 845" fill="none" stroke="#caa66b" stroke-width="12" stroke-linecap="round" opacity="0.36"></path>
+            <g aria-label="Shape-first landmass layer" filter="url(#${ids.landSoft})">
+              <use href="#${lands.northPole}" fill="#e6f2fb"></use>
+              <use href="#${lands.northRegion}" fill="#8f9d79"></use>
+              <use href="#${lands.mainland}" fill="#6e9b5d"></use>
+              <use href="#${lands.westRegion}" fill="#746d5f"></use>
+              <use href="#${lands.eastRegion}" fill="#78a888"></use>
+              <use href="#${lands.southRegion}" fill="#8c9d64"></use>
+              <use href="#${lands.southPole}" fill="#e5edf4"></use>
             </g>
 
-            <g opacity="0.78">
-              <path d="M86 426 C166 401 255 424 315 456" fill="none" stroke="#ead79f" stroke-width="9" opacity="0.44"></path>
-              <path d="M19 474 C95 458 179 479 239 500" fill="none" stroke="#ead79f" stroke-width="7" opacity="0.38"></path>
-              <path d="M624 341 C704 298 803 301 909 340" fill="none" stroke="#dec98d" stroke-width="8" opacity="0.33"></path>
-              <path d="M730 684 C804 659 872 674 933 714" fill="none" stroke="#c7a36a" stroke-width="7" opacity="0.31"></path>
+            <g aria-label="Contained land terrain layer" filter="url(#${ids.terrainTexture})">
+              <g clip-path="url(#${lands.northRegion}Clip)">
+                <rect x="220" y="150" width="500" height="260" fill="rgba(255,255,255,0.02)"></rect>
+                <path d="M269 286 C360 236 466 234 593 294" fill="none" stroke="#e2d09b" stroke-width="13" stroke-linecap="round" opacity="0.48" filter="url(#${ids.ridgeShadow})"></path>
+                <path d="M281 332 C376 304 499 312 631 348" fill="none" stroke="#5f764f" stroke-width="17" stroke-linecap="round" opacity="0.42"></path>
+              </g>
+
+              <g clip-path="url(#${lands.mainland}Clip)">
+                <rect x="260" y="350" width="440" height="410" fill="rgba(255,255,255,0.02)"></rect>
+                <path d="M320 482 C420 425 543 429 635 493" fill="none" stroke="#dfca90" stroke-width="14" stroke-linecap="round" opacity="0.50" filter="url(#${ids.ridgeShadow})"></path>
+                <path d="M315 560 C420 535 540 552 650 606" fill="none" stroke="#3f6f3d" stroke-width="18" stroke-linecap="round" opacity="0.44"></path>
+                <path d="M407 659 C475 681 555 673 617 632" fill="none" stroke="#c2a46b" stroke-width="12" stroke-linecap="round" opacity="0.42"></path>
+                <path d="M450 510 C484 488 528 493 558 523 C523 546 482 546 450 510Z" fill="#0d5d76" opacity="0.88"></path>
+              </g>
+
+              <g clip-path="url(#${lands.westRegion}Clip)">
+                <path d="M114 500 C169 440 240 432 320 482" fill="none" stroke="#c6a670" stroke-width="13" stroke-linecap="round" opacity="0.46" filter="url(#${ids.ridgeShadow})"></path>
+                <path d="M127 553 C191 542 244 560 295 596" fill="none" stroke="#5e574b" stroke-width="16" stroke-linecap="round" opacity="0.44"></path>
+              </g>
+
+              <g clip-path="url(#${lands.eastRegion}Clip)">
+                <path d="M658 462 C719 414 805 420 872 480" fill="none" stroke="#e2cb94" stroke-width="12" stroke-linecap="round" opacity="0.43" filter="url(#${ids.ridgeShadow})"></path>
+                <path d="M679 550 C745 532 805 548 855 594" fill="none" stroke="#4c7f64" stroke-width="17" stroke-linecap="round" opacity="0.42"></path>
+                <path d="M733 493 C767 473 813 482 836 510 C801 532 765 527 733 493Z" fill="#0b5a77" opacity="0.76"></path>
+              </g>
+
+              <g clip-path="url(#${lands.southRegion}Clip)">
+                <path d="M338 784 C418 814 505 840 594 812" fill="none" stroke="#caa66b" stroke-width="13" stroke-linecap="round" opacity="0.42" filter="url(#${ids.ridgeShadow})"></path>
+                <path d="M376 858 C445 875 520 881 589 852" fill="none" stroke="#6f744f" stroke-width="17" stroke-linecap="round" opacity="0.38"></path>
+              </g>
             </g>
           </g>
 
-          <g class="planet-one-v9-clouds">
-            <path d="M102 282 C220 244 360 268 474 299 C580 328 680 319 824 278" fill="none" stroke="rgba(244,248,255,0.26)" stroke-width="22" stroke-linecap="round"></path>
-            <path d="M64 512 C210 474 365 499 514 538 C657 576 768 566 930 517" fill="none" stroke="rgba(244,248,255,0.18)" stroke-width="20" stroke-linecap="round"></path>
-            <path d="M188 662 C315 633 441 652 566 700 C672 741 789 733 910 688" fill="none" stroke="rgba(244,248,255,0.15)" stroke-width="18" stroke-linecap="round"></path>
+          <g class="planet-one-v10-weather" aria-label="Weather secondary overlay">
+            <path d="M118 278 C235 248 362 272 486 306 C604 338 714 324 842 282" fill="none" stroke="rgba(244,248,255,0.20)" stroke-width="16" stroke-linecap="round"></path>
+            <path d="M94 514 C230 482 371 504 514 540 C642 573 762 566 902 522" fill="none" stroke="rgba(244,248,255,0.14)" stroke-width="15" stroke-linecap="round"></path>
+            <path d="M192 667 C315 640 442 658 565 702 C676 740 780 735 894 690" fill="none" stroke="rgba(244,248,255,0.12)" stroke-width="13" stroke-linecap="round"></path>
           </g>
 
-          <rect x="70" y="70" width="860" height="860" fill="url(#planetOneBodyShade)"></rect>
-          <circle cx="500" cy="500" r="394" fill="url(#planetOneMoonReflection)"></circle>
-          <circle cx="500" cy="500" r="394" fill="url(#planetOneSunReflection)" filter="url(#planetOneSoftGlow)"></circle>
-
-          <path d="M112 500 C250 452 392 451 512 489 C639 529 744 526 888 480" fill="none" stroke="rgba(147,205,255,0.22)" stroke-width="6"></path>
-          <path d="M118 570 C268 526 384 555 512 583 C655 615 760 600 884 556" fill="none" stroke="rgba(105,173,235,0.16)" stroke-width="5"></path>
+          <rect x="70" y="70" width="860" height="860" fill="url(#${ids.sphereShade})"></rect>
+          <circle cx="500" cy="500" r="394" fill="url(#${ids.moonLight})"></circle>
+          <circle cx="500" cy="500" r="394" fill="url(#${ids.sunLight})"></circle>
         </g>
 
-        <circle cx="500" cy="500" r="394" fill="none" stroke="rgba(160,214,255,0.44)" stroke-width="5"></circle>
-        <circle cx="500" cy="500" r="404" fill="url(#planetOneAtmosphere)"></circle>
-        <circle cx="500" cy="500" r="414" fill="none" stroke="rgba(126,190,255,0.20)" stroke-width="10"></circle>
+        <circle cx="500" cy="500" r="394" fill="none" stroke="rgba(160,214,255,0.42)" stroke-width="5"></circle>
+        <circle cx="500" cy="500" r="404" fill="url(#${ids.atmosphere})"></circle>
+        <circle cx="500" cy="500" r="414" fill="url(#${ids.limbGlow})"></circle>
+        <circle cx="500" cy="500" r="416" fill="none" stroke="rgba(126,190,255,0.18)" stroke-width="10"></circle>
 
-        <g class="planet-one-v9-axis">
-          <line x1="355" y1="890" x2="645" y2="110" stroke="url(#planetOneAxisGradient)" stroke-width="13" stroke-linecap="round"></line>
-          <circle cx="355" cy="890" r="15" fill="rgba(242,199,111,0.48)" stroke="rgba(242,199,111,0.42)" stroke-width="5"></circle>
-          <circle cx="645" cy="110" r="15" fill="rgba(242,199,111,0.48)" stroke="rgba(242,199,111,0.42)" stroke-width="5"></circle>
+        <g class="planet-one-v10-axis" aria-label="Axis overlay only">
+          <line x1="355" y1="890" x2="645" y2="110" stroke="url(#${ids.axisGradient})" stroke-width="12" stroke-linecap="round"></line>
+          <circle cx="355" cy="890" r="14" fill="rgba(242,199,111,0.42)" stroke="rgba(242,199,111,0.38)" stroke-width="5"></circle>
+          <circle cx="645" cy="110" r="14" fill="rgba(242,199,111,0.42)" stroke="rgba(242,199,111,0.38)" stroke-width="5"></circle>
         </g>
       </svg>
     `;
@@ -411,15 +521,15 @@
       <div class="planet-one-telemetry" aria-label="Planet 1 render standards">
         <span>Planet 1</span>
         <span>Opaque globe</span>
+        <span>Shape first</span>
+        <span>Land / water separation</span>
+        <span>Shoreline discipline</span>
+        <span>Terrain inside land</span>
+        <span>Currents inside water</span>
+        <span>Weather secondary</span>
         <span>Sun reflection</span>
         <span>Moon reflection</span>
-        <span>Axis spin</span>
-        <span>Climate topology</span>
-        <span>Weather circulation</span>
-        <span>Ocean currents</span>
-        <span>Expanded topology</span>
-        <span>Pangaea fracture</span>
-        <span>Tree demo mode</span>
+        <span>Axis overlay</span>
       </div>
     `;
   }
@@ -428,16 +538,16 @@
     return `
       <div class="planet-one-mapkey" aria-label="Planet 1 render notes">
         <article>
-          <strong>Opaque world body</strong>
-          <span>The globe now reads as a solid planet. Atmosphere and lighting add depth without turning the surface transparent.</span>
+          <strong>Shape first</strong>
+          <span>Landmasses are drawn as readable bodies before texture, weather, or lighting appear.</span>
         </article>
         <article>
-          <strong>Solar and lunar light</strong>
-          <span>Warm sun reflection leads the day side. Cool lunar relief gives the far side shape without overpowering the sun.</span>
+          <strong>Layer discipline</strong>
+          <span>Shorelines hug land, terrain stays inside land, currents stay inside water, and weather stays secondary.</span>
         </article>
         <article>
-          <strong>Expanded topology</strong>
-          <span>Ocean basins, coastal shelves, beach rings, ridges, plateaus, valleys, and fractured land memory are integrated into the surface.</span>
+          <strong>Light last</strong>
+          <span>Solar and lunar light illuminate the globe without repainting the map or hiding topology.</span>
         </article>
       </div>
     `;
@@ -455,6 +565,7 @@
 
     injectStyles();
 
+    const uid = nextUid();
     const opts = options || {};
     const caption = escapeHtml(opts.caption || DEFAULT_CAPTION);
 
@@ -470,7 +581,8 @@
         data-render-version="${VERSION}"
         data-root-marker="${ROOT_MARKER}"
         data-v8-marker="${PREVIOUS_V8}"
-        data-v9-marker="${VERSION}"
+        data-v9-marker="${PREVIOUS_V9}"
+        data-v10-marker="${VERSION}"
         data-planet-one-realism-pass="v8-axis-spin-climate-topology"
         data-planet-one-render-active="true"
         data-axis-spin-active="true"
@@ -489,9 +601,19 @@
         data-terrain-depth-expanded="true"
         data-atmosphere-retained="true"
         data-axis-overlay-retained="true"
+        data-topology-separation-active="true"
+        data-shape-first-active="true"
+        data-land-water-separation-active="true"
+        data-shoreline-discipline-active="true"
+        data-terrain-contained-to-land="true"
+        data-currents-contained-to-water="true"
+        data-weather-secondary-overlay="true"
+        data-lighting-illumination-only="true"
+        data-axis-overlay-only="true"
+        data-visual-soup-correction="true"
       >
         <div class="planet-one-render-stage">
-          ${planetSvg()}
+          ${planetSvg(uid)}
         </div>
 
         <div class="planet-one-caption">${caption}</div>
@@ -502,12 +624,14 @@
     `;
 
     const shell = mount.querySelector(".planet-one-render-shell");
-    const svg = mount.querySelector(".planet-one-v9-svg");
+    const svg = mount.querySelector(".planet-one-v10-svg");
 
     const instance = {
       version: VERSION,
       rootMarker: ROOT_MARKER,
       v8Marker: PREVIOUS_V8,
+      v9Marker: PREVIOUS_V9,
+      v10Marker: VERSION,
       v8RealismPass: V8_REALISM_PASS,
       markers: MARKERS,
       mount,
@@ -546,18 +670,22 @@
           version: VERSION,
           rootMarker: ROOT_MARKER,
           v8Marker: PREVIOUS_V8,
+          v9Marker: PREVIOUS_V9,
+          v10Marker: VERSION,
           v8RealismPass: V8_REALISM_PASS,
           markers: MARKERS,
           active: shell ? !shell.classList.contains("is-paused") : false,
           planetOneRealismPass: "v8-axis-spin-climate-topology",
-          opaqueGlobeActive: true,
-          sunReflectionActive: true,
-          moonReflectionActive: true,
-          expandedTopologyActive: true,
-          solarLunarLightingActive: true,
-          terrainDepthExpanded: true,
-          atmosphereRetained: true,
-          axisOverlayRetained: true
+          topologySeparationActive: true,
+          shapeFirstActive: true,
+          landWaterSeparationActive: true,
+          shorelineDisciplineActive: true,
+          terrainContainedToLand: true,
+          currentsContainedToWater: true,
+          weatherSecondaryOverlay: true,
+          lightingIlluminationOnly: true,
+          axisOverlayOnly: true,
+          visualSoupCorrection: true
         };
       }
     };
@@ -599,6 +727,7 @@
   const api = Object.freeze({
     VERSION,
     PREVIOUS_V8,
+    PREVIOUS_V9,
     ROOT_MARKER,
     V8_REALISM_PASS,
     MARKERS,
@@ -613,15 +742,18 @@
       return {
         version: VERSION,
         previousV8: PREVIOUS_V8,
+        previousV9: PREVIOUS_V9,
         rootMarker: ROOT_MARKER,
         v8RealismPass: V8_REALISM_PASS,
         markers: MARKERS,
         activeCount: ACTIVE_INSTANCES.size,
+
         planetOneRenderActive: true,
         axisSpinActive: true,
         climateTopologyActive: true,
         weatherCirculationActive: true,
         oceanCurrentLogicActive: true,
+
         opaqueGlobeActive: true,
         sunReflectionActive: true,
         moonReflectionActive: true,
@@ -629,7 +761,18 @@
         solarLunarLightingActive: true,
         terrainDepthExpanded: true,
         atmosphereRetained: true,
-        axisOverlayRetained: true
+        axisOverlayRetained: true,
+
+        topologySeparationActive: true,
+        shapeFirstActive: true,
+        landWaterSeparationActive: true,
+        shorelineDisciplineActive: true,
+        terrainContainedToLand: true,
+        currentsContainedToWater: true,
+        weatherSecondaryOverlay: true,
+        lightingIlluminationOnly: true,
+        axisOverlayOnly: true,
+        visualSoupCorrection: true
       };
     }
   });

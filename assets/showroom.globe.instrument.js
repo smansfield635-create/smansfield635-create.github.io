@@ -1,7 +1,7 @@
 (function attachShowroomGlobeInstrument(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN_2_V1_FULL_GRID_EARTH_BIRDS_EYE_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN_2_V1_ROUND_EARTH_FIX_TNT_v1";
   const LEGACY_VISUAL_MARKER = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
   const GENERATION = "GENERATION_4";
   const CYCLE = "GEN_2_V1_EARTH_DEFINITION";
@@ -68,10 +68,10 @@
   }
 
   function ensureStyles() {
-    if (document.getElementById("showroom-gen2-v1-full-grid-earth-birds-eye-style")) return;
+    if (document.getElementById("showroom-gen2-v1-round-earth-fix-style")) return;
 
     const style = el("style");
-    style.id = "showroom-gen2-v1-full-grid-earth-birds-eye-style";
+    style.id = "showroom-gen2-v1-round-earth-fix-style";
     style.textContent = `
       .showroom-visual-dashboard-instrument {
         display: block;
@@ -114,18 +114,6 @@
         z-index: 1;
       }
 
-      .showroom-full-grid-stage::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(90deg, transparent 0 49.8%, rgba(168,199,255,.06) 50%, transparent 50.2%),
-          linear-gradient(0deg, transparent 0 49.8%, rgba(168,199,255,.05) 50%, transparent 50.2%);
-        opacity: .28;
-        pointer-events: none;
-        z-index: 2;
-      }
-
       .showroom-void-field {
         position: absolute;
         inset: 0;
@@ -139,7 +127,7 @@
         right: -20%;
         top: -24%;
         width: clamp(360px, 62vw, 920px);
-        aspect-ratio: 1;
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
         background:
           radial-gradient(circle at 32% 30%, #fff9d7 0 9%, #ffe18a 18%, #ffb14e 36%, #e46f2e 58%, rgba(228,111,46,.22) 78%, transparent 100%);
@@ -150,34 +138,6 @@
           0 0 190px rgba(255, 145, 61, .30),
           0 0 320px rgba(255, 211, 111, .16);
         z-index: 4;
-      }
-
-      .showroom-solar-limb-label {
-        position: absolute;
-        right: 18px;
-        top: 18px;
-        z-index: 12;
-        display: grid;
-        gap: 3px;
-        max-width: 150px;
-        padding: 10px 12px;
-        border: 1px solid rgba(255, 211, 111, .34);
-        border-radius: 16px;
-        background: rgba(3, 6, 12, .72);
-        backdrop-filter: blur(8px);
-      }
-
-      .showroom-solar-limb-label span {
-        color: #aab8cf;
-        font-size: .64rem;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-      }
-
-      .showroom-solar-limb-label strong {
-        color: #ffd36f;
-        font-size: .95rem;
-        line-height: 1;
       }
 
       .showroom-sun-beam-primary {
@@ -219,32 +179,17 @@
         left: 47%;
         top: 55%;
         width: min(78vw, 640px);
-        aspect-ratio: 1;
+        aspect-ratio: 1 / 1;
         transform: translate(-50%, -50%);
         z-index: 8;
       }
 
-      .showroom-earth-moon-orbit,
-      .showroom-earth-moon-path {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: min(88vw, 700px);
-        aspect-ratio: 1;
-        transform: translate(-50%, -50%);
-        border: 1px solid rgba(220,231,244,.22);
-        border-radius: 50%;
-        opacity: .74;
-        z-index: 7;
-      }
-
-      .showroom-earth-large,
-      .showroom-planet-earth {
+      .showroom-birds-eye-earth {
         position: absolute;
         left: 50%;
         top: 50%;
         width: min(72vw, 540px);
-        aspect-ratio: 1;
+        height: min(72vw, 540px);
         transform: translate(-50%, -50%);
         border-radius: 50%;
         overflow: hidden;
@@ -357,9 +302,6 @@
         inset: 8%;
         border-radius: 50%;
         border: 1px solid rgba(238,245,255,.18);
-        box-shadow:
-          inset 0 0 0 1px rgba(238,245,255,.05),
-          inset 0 0 18px rgba(238,245,255,.06);
         opacity: .48;
       }
 
@@ -394,13 +336,25 @@
         pointer-events: none;
       }
 
-      .showroom-moon-source,
-      .showroom-earth-moon-dot {
+      .showroom-earth-moon-path {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(88vw, 700px);
+        height: min(88vw, 700px);
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(220,231,244,.22);
+        border-radius: 50%;
+        opacity: .74;
+        z-index: 7;
+      }
+
+      .showroom-moon-source {
         position: absolute;
         right: 9%;
         top: 47%;
         width: clamp(24px, 4.4vw, 46px);
-        aspect-ratio: 1;
+        height: clamp(24px, 4.4vw, 46px);
         border-radius: 50%;
         transform: translateY(-50%);
         background:
@@ -440,25 +394,35 @@
         font-size: .72rem;
         font-weight: 900;
         white-space: nowrap;
-        box-shadow: 0 0 18px rgba(143,240,198,.13);
       }
 
-      .showroom-grid-contract-card {
+      .showroom-grid-contract-card,
+      .showroom-solar-limb-label {
         position: absolute;
-        left: 16px;
-        top: 16px;
         z-index: 15;
         display: grid;
         gap: 4px;
         max-width: 170px;
         padding: 10px 12px;
-        border: 1px solid rgba(143,240,198,.30);
         border-radius: 16px;
         background: rgba(3,6,12,.76);
         backdrop-filter: blur(8px);
       }
 
-      .showroom-grid-contract-card span {
+      .showroom-grid-contract-card {
+        left: 16px;
+        top: 16px;
+        border: 1px solid rgba(143,240,198,.30);
+      }
+
+      .showroom-solar-limb-label {
+        right: 16px;
+        top: 16px;
+        border: 1px solid rgba(255,211,111,.34);
+      }
+
+      .showroom-grid-contract-card span,
+      .showroom-solar-limb-label span {
         color: #aab8cf;
         font-size: .64rem;
         letter-spacing: .08em;
@@ -471,8 +435,13 @@
         line-height: 1;
       }
 
-      .showroom-traversal-strip,
-      .showroom-linear-traversal {
+      .showroom-solar-limb-label strong {
+        color: #ffd36f;
+        font-size: .95rem;
+        line-height: 1;
+      }
+
+      .showroom-traversal-strip {
         position: absolute;
         left: 50%;
         bottom: 16px;
@@ -489,8 +458,7 @@
         backdrop-filter: blur(8px);
       }
 
-      .showroom-traversal-node,
-      .showroom-linear-node {
+      .showroom-traversal-node {
         display: grid;
         place-items: center;
         height: 30px;
@@ -500,8 +468,7 @@
         font: 900 .62rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
 
-      .showroom-traversal-node[data-active="true"],
-      .showroom-linear-node[data-active="true"] {
+      .showroom-traversal-node[data-active="true"] {
         border-color: rgba(255,211,111,.72);
         color: #ffd36f;
         background: rgba(255,211,111,.09);
@@ -535,14 +502,14 @@
           width: min(96vw, 460px);
         }
 
-        .showroom-earth-large,
-        .showroom-planet-earth {
+        .showroom-birds-eye-earth {
           width: min(82vw, 370px);
+          height: min(82vw, 370px);
         }
 
-        .showroom-earth-moon-orbit,
         .showroom-earth-moon-path {
           width: min(96vw, 430px);
+          height: min(96vw, 430px);
         }
 
         .showroom-grid-contract-card,
@@ -551,25 +518,13 @@
           padding: 8px 10px;
         }
 
-        .showroom-grid-contract-card span,
-        .showroom-solar-limb-label span {
-          font-size: .56rem;
-        }
-
-        .showroom-grid-contract-card strong,
-        .showroom-solar-limb-label strong {
-          font-size: .84rem;
-        }
-
-        .showroom-traversal-strip,
-        .showroom-linear-traversal {
+        .showroom-traversal-strip {
           gap: 4px;
           padding: 6px;
           bottom: 10px;
         }
 
-        .showroom-traversal-node,
-        .showroom-linear-node {
+        .showroom-traversal-node {
           height: 25px;
           font-size: .54rem;
         }
@@ -670,7 +625,9 @@
   }
 
   function earthObject() {
-    const earth = el("div", "showroom-earth-large showroom-planet-earth");
+    const earth = el("div", "showroom-birds-eye-earth");
+    earth.dataset.body = "EARTH";
+    earth.dataset.earthZoom = "active";
     earth.append(earthDetailStack());
     return earth;
   }
@@ -682,7 +639,7 @@
     return node;
   }
 
-  function stage() {
+  function buildStage() {
     const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument showroom-full-grid-stage");
 
     setData(root, {
@@ -690,7 +647,7 @@
       showroomCycle: CYCLE,
       authority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "full-grid-birds-eye-earth-light-model",
+      instrumentType: "round-earth-birds-eye-light-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -720,9 +677,9 @@
       el("div", "showroom-sun-beam-primary"),
       el("div", "showroom-sun-beam-secondary"),
       camera,
-      el("div", "showroom-earth-moon-orbit showroom-earth-moon-path"),
+      el("div", "showroom-earth-moon-path"),
       el("div", "showroom-moon-light"),
-      el("div", "showroom-moon-source showroom-earth-moon-dot"),
+      el("div", "showroom-moon-source"),
       card("showroom-grid-contract-card", "Grid", "7 baseline", "0 void avoided"),
       card("showroom-solar-limb-label", "Sun", "Off-frame mass", "dominant light"),
       el("div", "showroom-earth-anchor-label", "Earth camera focus"),
@@ -752,7 +709,7 @@
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "full-grid-birds-eye-earth-light-model",
+      instrumentType: "round-earth-birds-eye-light-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -767,10 +724,10 @@
       voidState: NUMERIC_SPIRAL.void
     });
 
-    mount.append(stage());
+    mount.append(buildStage());
 
     if (opts.runtime && typeof opts.runtime.writeReceipt === "function") {
-      opts.runtime.writeReceipt("gen_2_v1_full_grid_earth_birds_eye_ready", {
+      opts.runtime.writeReceipt("gen_2_v1_round_earth_fix_ready", {
         generation: GENERATION,
         cycle: CYCLE,
         authority: AUTHORITY,

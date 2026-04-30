@@ -1,8 +1,8 @@
 /*
-  PLANET_ONE_RENDER_TEAM_TNT_v5_EXTENDED_SURFACE_SYSTEM
+  PLANET_ONE_RENDER_TEAM_TNT_v6_PANGAEA_FRACTURE_SURFACE_SYSTEM
   OWNER=SEAN
   TARGET=/world/render/planet-one.render.js
-  PURPOSE=EXTEND_PLANET_ONE_RENDER_WITH_RECOGNITION_FIRST_SURFACE_CLASSES
+  PURPOSE=GIVE_PLANET_ONE_LANDMASSES_FORMER_PANGAEA_FRACTURE_SHAPE_WITH_RECOGNITION_FIRST_SURFACE_CLASSES
   STATUS=ACTIVE
 
   REQUIRED GAUGES / CONTRACT MARKERS:
@@ -16,48 +16,38 @@
   render-lanes-separated=true
   no-render-lane-collapse=true
 
-  PLANET ONE LAW:
-  Earth-equivalent mirror-world.
-  Not ordinary Earth.
-  Not decorative fantasy.
-  Not flat map.
-  Ancient mineral-rich pressure ecology.
-  Seven-landmass law remains structural, not diagrammatic.
-  Exact continent outlines, countries, named rivers, cities, physics, and population total are not closed here.
-
   VISUAL CONTRACT:
   no-generated-graphic=true
   no-external-image=true
-  planet-one-realism-pass=v5-extended-surface-system
+  planet-one-realism-pass=v6-pangaea-fracture-surface-system
   recognition-first-render=true
+  pangaea-fracture-memory=true
   cartoon-blob-globe-retired=true
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "PLANET_ONE_RENDER_TEAM_TNT_v5_EXTENDED_SURFACE_SYSTEM";
+  var VERSION = "PLANET_ONE_RENDER_TEAM_TNT_v6_PANGAEA_FRACTURE_SURFACE_SYSTEM";
   var RENDERER_PATH = "/world/render/planet-one.render.js";
 
   var SURFACE_CLASSES = [
-    "deep_ocean",
-    "shallow_ocean",
-    "continental_shelf",
-    "beach_band",
-    "rocky_coast",
-    "wetland_margin",
-    "lowland_plain",
-    "valley_basin",
-    "river_corridor",
-    "lake_basin",
-    "plateau_field",
-    "mountain_ridge",
-    "canyon_fracture",
-    "mineral_scar",
-    "polar_ice",
-    "cloud_cover",
-    "atmospheric_limb",
-    "magnetic_core_signal"
+    "deep_ocean", "shallow_ocean", "continental_shelf", "beach_band",
+    "rocky_coast", "wetland_margin", "lowland_plain", "valley_basin",
+    "river_corridor", "lake_basin", "plateau_field", "mountain_ridge",
+    "canyon_fracture", "mineral_scar", "polar_ice", "cloud_cover",
+    "atmospheric_limb", "magnetic_core_signal", "pangaea_fracture_seam",
+    "rift_ocean"
+  ];
+
+  var PLATES = [
+    { id: "northPole", cx: 0.50, cy: 0.075, rx: 0.34, ry: 0.060, rot: 0.02, weight: 1.05, seed: 111 },
+    { id: "north", cx: 0.49, cy: 0.260, rx: 0.285, ry: 0.135, rot: -0.10, weight: 0.95, seed: 222 },
+    { id: "mainland", cx: 0.485, cy: 0.505, rx: 0.255, ry: 0.230, rot: 0.16, weight: 1.05, seed: 333 },
+    { id: "west", cx: 0.285, cy: 0.500, rx: 0.165, ry: 0.260, rot: -0.38, weight: 0.96, seed: 444 },
+    { id: "east", cx: 0.725, cy: 0.485, rx: 0.185, ry: 0.250, rot: 0.35, weight: 0.96, seed: 555 },
+    { id: "south", cx: 0.525, cy: 0.740, rx: 0.300, ry: 0.135, rot: -0.08, weight: 0.92, seed: 666 },
+    { id: "southPole", cx: 0.50, cy: 0.925, rx: 0.35, ry: 0.060, rot: -0.01, weight: 1.02, seed: 777 }
   ];
 
   function el(tag, className, text) {
@@ -68,10 +58,10 @@
   }
 
   function injectStyles() {
-    if (document.getElementById("planet-one-render-team-style-v5")) return;
+    if (document.getElementById("planet-one-render-team-style-v6")) return;
 
     var style = document.createElement("style");
-    style.id = "planet-one-render-team-style-v5";
+    style.id = "planet-one-render-team-style-v6";
     style.textContent = `
       .planet-one-render-shell {
         display: grid;
@@ -196,11 +186,7 @@
   }
 
   function mixColor(a, b, t) {
-    return [
-      mix(a[0], b[0], t),
-      mix(a[1], b[1], t),
-      mix(a[2], b[2], t)
-    ];
+    return [mix(a[0], b[0], t), mix(a[1], b[1], t), mix(a[2], b[2], t)];
   }
 
   function normalize(v) {
@@ -250,32 +236,96 @@
     return value / norm;
   }
 
-  function regionInfluence(u, v) {
-    var regions = [
-      { id: "northPole", cx: 0.50, cy: 0.070, rx: 0.56, ry: 0.080, weight: 1.00 },
-      { id: "north", cx: 0.50, cy: 0.245, rx: 0.50, ry: 0.155, weight: 0.92 },
-      { id: "mainland", cx: 0.50, cy: 0.505, rx: 0.45, ry: 0.270, weight: 1.00 },
-      { id: "west", cx: 0.245, cy: 0.510, rx: 0.265, ry: 0.285, weight: 0.93 },
-      { id: "east", cx: 0.755, cy: 0.510, rx: 0.265, ry: 0.285, weight: 0.93 },
-      { id: "south", cx: 0.50, cy: 0.745, rx: 0.45, ry: 0.175, weight: 0.90 },
-      { id: "southPole", cx: 0.50, cy: 0.930, rx: 0.53, ry: 0.080, weight: 0.98 }
+  function rotatePoint(x, y, angle) {
+    var ca = Math.cos(angle);
+    var sa = Math.sin(angle);
+    return { x: x * ca - y * sa, y: x * sa + y * ca };
+  }
+
+  function plateShapeValue(u, v, plate) {
+    var local = rotatePoint(u - plate.cx, v - plate.cy, -plate.rot);
+    var nx = local.x / plate.rx;
+    var ny = local.y / plate.ry;
+    var angle = Math.atan2(ny, nx);
+    var dist = Math.sqrt(nx * nx + ny * ny);
+
+    var lobe =
+      Math.sin(angle * 3 + plate.seed * 0.011) * 0.11 +
+      Math.sin(angle * 5 - plate.seed * 0.017) * 0.08 +
+      Math.sin(angle * 9 + plate.seed * 0.023) * 0.045;
+
+    var edgeNoise = fbm(u * 13.0 + plate.seed * 0.01, v * 13.0 - plate.seed * 0.02, plate.seed, 4) - 0.5;
+    var shelfNoise = fbm(u * 30.0 + plate.seed * 0.04, v * 26.0 + plate.seed * 0.03, plate.seed + 800, 3) - 0.5;
+    var shape = 1 - dist + lobe + edgeNoise * 0.22 + shelfNoise * 0.08;
+
+    return shape * plate.weight;
+  }
+
+  function riftLineDistance(u, v, seed, baseX, baseY, angle, length, wobbleScale) {
+    var x = u - baseX;
+    var y = v - baseY;
+    var p = rotatePoint(x, y, -angle);
+    var along = p.x / length;
+    var wobble = Math.sin(along * 7 + seed) * wobbleScale + (fbm(along * 4 + seed, seed * 0.13, seed + 99, 3) - 0.5) * wobbleScale * 1.2;
+    var cross = Math.abs(p.y - wobble);
+    var endFade = 1 - smoothstep(0.82, 1.10, Math.abs(along));
+    return { cross: cross, endFade: endFade };
+  }
+
+  function pangaeaFractureField(u, v) {
+    var lines = [
+      riftLineDistance(u, v, 101, 0.50, 0.375, 0.04, 0.62, 0.016),
+      riftLineDistance(u, v, 202, 0.50, 0.655, -0.04, 0.58, 0.018),
+      riftLineDistance(u, v, 303, 0.385, 0.505, 1.18, 0.44, 0.014),
+      riftLineDistance(u, v, 404, 0.615, 0.500, -1.16, 0.45, 0.014),
+      riftLineDistance(u, v, 505, 0.500, 0.505, 1.56, 0.44, 0.010)
     ];
 
-    var best = { id: "ocean", value: 0 };
+    var field = 0;
+    lines.forEach(function (line) {
+      var band = (1 - smoothstep(0.006, 0.035, line.cross)) * line.endFade;
+      field = Math.max(field, band);
+    });
 
-    regions.forEach(function (r) {
-      var dx = (u - r.cx) / r.rx;
-      var dy = (v - r.cy) / r.ry;
-      var distance = Math.sqrt(dx * dx + dy * dy);
-      var base = Math.max(0, 1 - distance);
-      var value = Math.pow(base, 0.68) * r.weight;
+    return clamp(field, 0, 1);
+  }
 
+  function pangaeaMemoryEnvelope(u, v) {
+    var x = (u - 0.5) / 0.43;
+    var y = (v - 0.52) / 0.48;
+    var d = Math.sqrt(x * x + y * y);
+    var memory = smoothstep(1.22, 0.32, d);
+    var broken = fbm(u * 5.5 + 7.2, v * 5.2 + 1.1, 909, 4);
+    return clamp(memory * (0.74 + broken * 0.26), 0, 1);
+  }
+
+  function regionInfluence(u, v) {
+    var best = { id: "ocean", value: -1, plate: null };
+    var second = { id: "ocean", value: -1, plate: null };
+
+    PLATES.forEach(function (plate) {
+      var value = plateShapeValue(u, v, plate);
       if (value > best.value) {
-        best = { id: r.id, value: value };
+        second = best;
+        best = { id: plate.id, value: value, plate: plate };
+      } else if (value > second.value) {
+        second = { id: plate.id, value: value, plate: plate };
       }
     });
 
-    return best;
+    var rift = pangaeaFractureField(u, v);
+    var memory = pangaeaMemoryEnvelope(u, v);
+
+    return {
+      id: best.id,
+      value: best.value,
+      plate: best.plate,
+      secondId: second.id,
+      secondValue: second.value,
+      rift: rift,
+      memory: memory,
+      fitPressure: smoothstep(0.06, 0.44, Math.abs(best.value - second.value))
+    };
   }
 
   function projectPoint(px, py, cx, cy, r) {
@@ -291,14 +341,10 @@
     var lat = Math.asin(-dy) / (Math.PI / 2);
 
     return {
-      dx: dx,
-      dy: dy,
-      z: z,
       rr: rr,
       normal: normal,
       u: lon * 0.5 + 0.5,
       v: lat * -0.5 + 0.5,
-      lon: lon,
       lat: lat
     };
   }
@@ -320,9 +366,9 @@
     var canyonWave = 1 - Math.abs(Math.sin((u * 24.0 - v * 18.0) + fracture * 4.0));
 
     var isPolar = region.id === "northPole" || region.id === "southPole";
-    var coastlineRaggedness = (shelfNoise - 0.5) * 0.36 + (broad - 0.5) * 0.20 + (pressure - 0.5) * 0.14;
-    var landScore = region.value + coastlineRaggedness;
-    var threshold = isPolar ? 0.32 : 0.43;
+    var coastlineRaggedness = (shelfNoise - 0.5) * 0.24 + (broad - 0.5) * 0.14 + (pressure - 0.5) * 0.10;
+    var landScore = region.value + coastlineRaggedness + region.memory * 0.05 - region.rift * 0.38;
+    var threshold = isPolar ? 0.08 : 0.10;
     var isLand = landScore > threshold;
 
     return {
@@ -343,7 +389,9 @@
       isPolar: isPolar,
       landScore: landScore,
       threshold: threshold,
-      isLand: isLand
+      isLand: isLand,
+      pangaeaMemory: region.memory,
+      rift: region.rift
     };
   }
 
@@ -354,17 +402,19 @@
     });
 
     var margin = sample.landScore - sample.threshold;
-    var shelf = smoothstep(-0.22, -0.02, margin) * (1 - smoothstep(0.02, 0.18, margin));
-    var beach = smoothstep(-0.035, 0.018, margin) * (1 - smoothstep(0.05, 0.16, margin));
-    var shallow = smoothstep(-0.26, -0.06, margin) * (1 - sample.isLand ? 1 : 0);
+    var shelf = smoothstep(-0.20, -0.025, margin) * (1 - smoothstep(0.02, 0.16, margin));
+    var beach = smoothstep(-0.035, 0.018, margin) * (1 - smoothstep(0.05, 0.15, margin));
+    var shallow = smoothstep(-0.25, -0.055, margin) * (sample.isLand ? 0 : 1);
     var deep = 1 - smoothstep(-0.42, -0.12, margin);
 
     classes.deep_ocean = sample.isLand ? 0 : clamp(deep, 0, 1);
     classes.shallow_ocean = sample.isLand ? 0 : clamp(shallow, 0, 1);
     classes.continental_shelf = sample.isLand ? 0 : clamp(shelf, 0, 1);
+    classes.rift_ocean = sample.isLand ? 0 : sample.rift * smoothstep(-0.05, 0.10, sample.region.value);
     classes.beach_band = sample.isLand ? clamp(beach, 0, 1) : 0;
     classes.rocky_coast = classes.beach_band * smoothstep(0.52, 0.88, sample.mineral);
     classes.wetland_margin = classes.beach_band * smoothstep(0.55, 0.90, sample.moisture) * (sample.region.id === "south" || sample.region.id === "east" ? 1 : 0.35);
+    classes.pangaea_fracture_seam = sample.rift * smoothstep(-0.08, 0.18, sample.region.value);
 
     var lowland = sample.isLand ? (1 - smoothstep(0.42, 0.72, sample.elevation)) : 0;
     classes.lowland_plain = lowland * (sample.region.id === "mainland" || sample.region.id === "south" ? 1 : 0.55);
@@ -373,7 +423,7 @@
     classes.lake_basin = sample.isLand ? smoothstep(0.88, 0.975, sample.basin) * smoothstep(0.42, 0.88, sample.moisture) * (1 - smoothstep(0.70, 0.92, sample.elevation)) : 0;
     classes.plateau_field = sample.isLand ? smoothstep(0.48, 0.78, sample.elevation) * smoothstep(0.38, 0.84, sample.pressure) : 0;
     classes.mountain_ridge = sample.isLand ? smoothstep(0.70, 0.94, sample.elevation) * smoothstep(0.46, 0.90, sample.pressure) : 0;
-    classes.canyon_fracture = sample.isLand ? smoothstep(0.86, 0.98, sample.canyonWave) * smoothstep(0.52, 0.95, sample.fracture) * (sample.region.id === "west" ? 1 : 0.35) : 0;
+    classes.canyon_fracture = sample.isLand ? smoothstep(0.86, 0.98, sample.canyonWave) * smoothstep(0.52, 0.95, sample.fracture) * (sample.region.id === "west" ? 1 : 0.40) : 0;
     classes.mineral_scar = sample.isLand ? smoothstep(0.72, 0.96, sample.mineral) * smoothstep(0.45, 0.92, sample.pressure) : 0;
     classes.polar_ice = sample.isLand && sample.isPolar ? 1 : smoothstep(0.82, 1.0, Math.abs(sample.point.lat)) * smoothstep(0.70, 0.96, sample.elevation);
     classes.atmospheric_limb = smoothstep(0.68, 1.0, Math.sqrt(sample.point.rr));
@@ -381,23 +431,18 @@
 
     var cloudBand = Math.sin((sample.v * 18.0 + sample.u * 4.0) + fbm(sample.u * 3.2, sample.v * 3.2, 2221, 3) * 2.2) * 0.5 + 0.5;
     var cloudNoise = fbm(sample.u * 20.0 + 11.5, sample.v * 13.0 + 8.1, 2301, 4);
-    var cloudMask = smoothstep(0.67, 0.91, cloudNoise * 0.70 + cloudBand * 0.30);
+    var cloudMask = smoothstep(0.68, 0.91, cloudNoise * 0.70 + cloudBand * 0.30);
     var polarCloud = smoothstep(0.80, 1.0, Math.abs(sample.point.lat)) * 0.25;
-    classes.cloud_cover = clamp(cloudMask * 0.50 + polarCloud, 0, 0.76);
+    classes.cloud_cover = clamp(cloudMask * 0.46 + polarCloud, 0, 0.72);
 
     return classes;
   }
 
   function renderWater(sample, classes) {
-    var deep = [3, 18, 37];
-    var mid = [9, 63, 103];
-    var lit = [36, 126, 156];
-    var shelf = [62, 146, 138];
-
-    var water = mixColor(deep, mid, clamp(sample.broad * 0.72 + sample.shelfNoise * 0.18, 0, 1));
-    water = mixColor(water, lit, smoothstep(0.52, 0.92, sample.shelfNoise) * 0.28);
-    water = mixColor(water, shelf, classes.continental_shelf * 0.45 + classes.shallow_ocean * 0.18);
-
+    var water = mixColor([3, 18, 37], [9, 63, 103], clamp(sample.broad * 0.72 + sample.shelfNoise * 0.18, 0, 1));
+    water = mixColor(water, [36, 126, 156], smoothstep(0.52, 0.92, sample.shelfNoise) * 0.28);
+    water = mixColor(water, [62, 146, 138], classes.continental_shelf * 0.48 + classes.shallow_ocean * 0.20);
+    water = mixColor(water, [9, 40, 76], classes.rift_ocean * 0.34);
     return water;
   }
 
@@ -418,170 +463,58 @@
     return c;
   }
 
-  function renderRegions(sample, classes) {
+  function renderLand(sample, classes) {
     var color = regionBaseColor(sample.region.id, sample);
+
     color = mixColor(color, [39, 66, 56], classes.lowland_plain * 0.10);
-    return color;
-  }
-
-  function renderBeaches(color, sample, classes) {
-    var beach = [199, 179, 121];
-    var rock = [92, 82, 69];
-    var wetland = [82, 119, 86];
-
-    color = mixColor(color, beach, classes.beach_band * 0.42);
-    color = mixColor(color, rock, classes.rocky_coast * 0.36);
-    color = mixColor(color, wetland, classes.wetland_margin * 0.32);
-
-    return color;
-  }
-
-  function renderMountains(color, sample, classes) {
-    var ridgeLight = [217, 206, 164];
-    var ridgeShadow = [54, 50, 44];
-
-    color = mixColor(color, ridgeLight, classes.mountain_ridge * 0.26);
-    color = mixColor(color, ridgeShadow, classes.mountain_ridge * smoothstep(0.55, 0.95, sample.pressure) * 0.22);
-
-    return color;
-  }
-
-  function renderValleys(color, sample, classes) {
-    var valleyGreen = [60, 96, 65];
-    var basinDark = [30, 58, 53];
-
-    color = mixColor(color, valleyGreen, classes.valley_basin * 0.22);
-    color = mixColor(color, basinDark, classes.valley_basin * smoothstep(0.55, 0.90, sample.moisture) * 0.18);
+    color = mixColor(color, [120, 108, 78], sample.pangaeaMemory * 0.04);
+    color = mixColor(color, [199, 179, 121], classes.beach_band * 0.42);
+    color = mixColor(color, [92, 82, 69], classes.rocky_coast * 0.36);
+    color = mixColor(color, [82, 119, 86], classes.wetland_margin * 0.32);
+    color = mixColor(color, [128, 118, 83], classes.plateau_field * 0.22);
+    color = mixColor(color, [96, 93, 70], classes.plateau_field * sample.pressure * 0.16);
+    color = mixColor(color, [217, 206, 164], classes.mountain_ridge * 0.26);
+    color = mixColor(color, [54, 50, 44], classes.mountain_ridge * smoothstep(0.55, 0.95, sample.pressure) * 0.22);
+    color = mixColor(color, [60, 96, 65], classes.valley_basin * 0.22);
+    color = mixColor(color, [30, 58, 53], classes.valley_basin * smoothstep(0.55, 0.90, sample.moisture) * 0.18);
+    color = mixColor(color, [48, 38, 35], classes.canyon_fracture * 0.36);
+    color = mixColor(color, [136, 103, 72], classes.canyon_fracture * sample.mineral * 0.18);
+    color = mixColor(color, [20, 23, 28], classes.pangaea_fracture_seam * 0.10);
+    color = mixColor(color, [35, 112, 139], classes.lake_basin * 0.62);
+    color = mixColor(color, [86, 157, 174], classes.lake_basin * classes.plateau_field * 0.30);
+    color = mixColor(color, [73, 151, 171], classes.river_corridor * 0.38);
+    color = mixColor(color, [168, 218, 225], classes.river_corridor * classes.valley_basin * 0.22);
+    color = mixColor(color, [198, 196, 182], classes.mineral_scar * smoothstep(0.56, 0.74, sample.mineral) * 0.10);
+    color = mixColor(color, [61, 68, 75], classes.mineral_scar * smoothstep(0.70, 0.90, sample.pressure) * 0.16);
+    color = mixColor(color, [164, 98, 61], classes.mineral_scar * smoothstep(0.82, 0.98, sample.mineral) * 0.09);
+    color = mixColor(color, [138, 182, 179], classes.mineral_scar * smoothstep(0.92, 1.0, sample.mineral) * 0.07);
 
     return color;
   }
 
-  function renderCanyons(color, sample, classes) {
-    var canyonDark = [48, 38, 35];
-    var mineralCut = [136, 103, 72];
+  function finishPixel(color, sample, classes) {
+    color = mixColor(color, [143, 240, 198], classes.magnetic_core_signal * 0.08);
+    color = mixColor(color, [242, 199, 111], classes.magnetic_core_signal * sample.pressure * 0.04);
 
-    color = mixColor(color, canyonDark, classes.canyon_fracture * 0.36);
-    color = mixColor(color, mineralCut, classes.canyon_fracture * sample.mineral * 0.18);
-
-    return color;
-  }
-
-  function renderLakes(color, sample, classes) {
-    var lake = [35, 112, 139];
-    var highlandLake = [86, 157, 174];
-
-    color = mixColor(color, lake, classes.lake_basin * 0.62);
-    color = mixColor(color, highlandLake, classes.lake_basin * classes.plateau_field * 0.30);
-
-    return color;
-  }
-
-  function renderRivers(color, sample, classes) {
-    var river = [73, 151, 171];
-    var bright = [168, 218, 225];
-
-    color = mixColor(color, river, classes.river_corridor * 0.38);
-    color = mixColor(color, bright, classes.river_corridor * classes.valley_basin * 0.22);
-
-    return color;
-  }
-
-  function renderPlateaus(color, sample, classes) {
-    var plateau = [128, 118, 83];
-    var tableland = [96, 93, 70];
-
-    color = mixColor(color, plateau, classes.plateau_field * 0.22);
-    color = mixColor(color, tableland, classes.plateau_field * sample.pressure * 0.16);
-
-    return color;
-  }
-
-  function renderMinerals(color, sample, classes) {
-    var marble = [198, 196, 182];
-    var slate = [61, 68, 75];
-    var copper = [164, 98, 61];
-    var opal = [138, 182, 179];
-
-    color = mixColor(color, marble, classes.mineral_scar * smoothstep(0.56, 0.74, sample.mineral) * 0.10);
-    color = mixColor(color, slate, classes.mineral_scar * smoothstep(0.70, 0.90, sample.pressure) * 0.16);
-    color = mixColor(color, copper, classes.mineral_scar * smoothstep(0.82, 0.98, sample.mineral) * 0.09);
-    color = mixColor(color, opal, classes.mineral_scar * smoothstep(0.92, 1.0, sample.mineral) * 0.07);
-
-    return color;
-  }
-
-  function renderClouds(color, sample, classes) {
-    return mixColor(color, [242, 247, 250], classes.cloud_cover);
-  }
-
-  function renderCoreSignal(color, sample, classes) {
-    var signal = [143, 240, 198];
-    var gold = [242, 199, 111];
-
-    color = mixColor(color, signal, classes.magnetic_core_signal * 0.08);
-    color = mixColor(color, gold, classes.magnetic_core_signal * sample.pressure * 0.04);
-
-    return color;
-  }
-
-  function renderCoherenceAccess(color, sample, classes) {
     var highAccess = Math.max(classes.mountain_ridge, classes.polar_ice, classes.plateau_field * 0.55);
-    var subtleGold = [201, 166, 91];
+    color = mixColor(color, [201, 166, 91], highAccess * 0.035);
+    color = mixColor(color, [24, 26, 29], smoothstep(0.44, 0.92, sample.pressure) * 0.10);
+    color = mixColor(color, [242, 247, 250], classes.cloud_cover);
 
-    return mixColor(color, subtleGold, highAccess * 0.035);
-  }
-
-  function renderPsalmGravity(color, sample, classes) {
-    var gravity = smoothstep(0.44, 0.92, sample.pressure) * 0.10;
-    var ancient = [24, 26, 29];
-
-    return mixColor(color, ancient, gravity);
-  }
-
-  function applySphereLighting(color, sample) {
     var light = normalize([-0.58, -0.62, 0.64]);
     var lightDot = clamp(dot(sample.point.normal, light), 0, 1);
-    var shade = 0.18 + lightDot * 0.88;
-    var night = [2, 6, 15];
-
-    color = mixColor(night, color, clamp(shade, 0.06, 1.08));
+    color = mixColor([2, 6, 15], color, clamp(0.18 + lightDot * 0.88, 0.06, 1.08));
 
     var terminatorWarmth = smoothstep(0.16, 0.42, lightDot) * (1 - smoothstep(0.42, 0.82, lightDot));
     color = mixColor(color, [214, 176, 106], terminatorWarmth * 0.055);
+    color = mixColor(color, [116, 190, 222], classes.atmospheric_limb * 0.22);
 
     return color;
-  }
-
-  function renderAtmosphere(color, sample, classes) {
-    var blue = [116, 190, 222];
-    return mixColor(color, blue, classes.atmospheric_limb * 0.22);
   }
 
   function renderSpherePixel(sample, classes) {
-    var color;
-
-    if (sample.isLand) {
-      color = renderRegions(sample, classes);
-      color = renderBeaches(color, sample, classes);
-      color = renderPlateaus(color, sample, classes);
-      color = renderMountains(color, sample, classes);
-      color = renderValleys(color, sample, classes);
-      color = renderCanyons(color, sample, classes);
-      color = renderLakes(color, sample, classes);
-      color = renderRivers(color, sample, classes);
-      color = renderMinerals(color, sample, classes);
-    } else {
-      color = renderWater(sample, classes);
-    }
-
-    color = renderCoreSignal(color, sample, classes);
-    color = renderCoherenceAccess(color, sample, classes);
-    color = renderPsalmGravity(color, sample, classes);
-    color = renderClouds(color, sample, classes);
-    color = applySphereLighting(color, sample);
-    color = renderAtmosphere(color, sample, classes);
-
-    return color;
+    var color = sample.isLand ? renderLand(sample, classes) : renderWater(sample, classes);
+    return finishPixel(color, sample, classes);
   }
 
   function drawStarField(ctx, size) {
@@ -594,7 +527,6 @@
       var y = hash2(i, 20, 91) * size;
       var alpha = 0.14 + hash2(i, 30, 91) * 0.50;
       var radius = 0.45 + hash2(i, 40, 91) * 1.22;
-
       ctx.fillStyle = "rgba(255,255,255," + alpha + ")";
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -630,7 +562,7 @@
   function drawSubtleMapLaw(ctx, cx, cy, r) {
     ctx.save();
 
-    ctx.globalAlpha = 0.11;
+    ctx.globalAlpha = 0.10;
     ctx.strokeStyle = "rgba(242,199,111,0.22)";
     ctx.lineWidth = 1.15;
 
@@ -639,7 +571,7 @@
     ctx.lineTo(cx, cy + r * 0.94);
     ctx.stroke();
 
-    ctx.globalAlpha = 0.07;
+    ctx.globalAlpha = 0.065;
     ctx.beginPath();
     ctx.ellipse(cx - r * 0.48, cy, r * 0.18, r * 0.94, -0.12, 0, Math.PI * 2);
     ctx.stroke();
@@ -699,7 +631,7 @@
     var wrap = el("div", "planet-one-canvas-wrap");
     var canvas = el("canvas", "planet-one-canvas");
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Planet 1 Nine Summits Universe recognition-first terrain globe");
+    canvas.setAttribute("aria-label", "Planet 1 with former Pangaea fracture memory and recognition-first terrain");
     wrap.appendChild(canvas);
     renderSphere(canvas);
     return wrap;
@@ -710,12 +642,12 @@
 
     [
       "Planet 1",
+      "Pangaea fracture memory",
       "Recognition-first",
       "Surface classes",
       "Water / beaches",
       "Mountains / valleys",
       "Canyons / lakes",
-      "Plateaus / minerals",
       "Tree demo mode"
     ].forEach(function (item) {
       telemetry.appendChild(el("span", "", item));
@@ -728,10 +660,10 @@
     var key = el("div", "planet-one-mapkey");
 
     [
-      ["Recognize first", "Each pixel is classified before it is blended into the planet surface."],
-      ["Integrated render", "Water, beaches, mountains, valleys, canyons, lakes, plateaus, and minerals are built in."],
-      ["No final geography", "Exact shores, countries, cities, rivers, climate, physics, and population totals remain unclosed."],
-      ["Planet first", "The world reads as a globe first and a map-law carrier second."]
+      ["Former whole", "The land carries memory of one older connected body without closing exact final outlines."],
+      ["Broken plates", "Rifts, shelves, bays, and jagged coasts separate the plates into the current world."],
+      ["Integrated surface", "Water, beaches, mountains, valleys, canyons, lakes, plateaus, and minerals are blended into one globe."],
+      ["No final geography", "Exact shores, countries, cities, rivers, climate, physics, and population totals remain unclosed."]
     ].forEach(function (pair) {
       var row = el("div");
       row.appendChild(el("strong", "", pair[0]));
@@ -750,7 +682,7 @@
     injectStyles();
 
     var config = options || {};
-    var caption = config.caption || "Planet 1 · Nine Summits Universe · extended surface system render lane";
+    var caption = config.caption || "Planet 1 · Nine Summits Universe · Pangaea fracture surface render lane";
 
     mount.innerHTML = "";
     mount.dataset.renderStatus = "mounted";
@@ -760,8 +692,9 @@
     mount.dataset.treeDemoMode = "true";
     mount.dataset.renderLanesSeparated = "true";
     mount.dataset.noRenderLaneCollapse = "true";
-    mount.dataset.realismPass = "v5-extended-surface-system";
+    mount.dataset.realismPass = "v6-pangaea-fracture-surface-system";
     mount.dataset.recognitionFirstRender = "true";
+    mount.dataset.pangaeaFractureMemory = "true";
     mount.dataset.cartoonBlobGlobeRetired = "true";
     mount.dataset.surfaceClasses = SURFACE_CLASSES.join(",");
     mount.dataset.noFinalGeographyClosure = "true";
@@ -783,8 +716,9 @@
     document.documentElement.dataset.treeDemoMode = "true";
     document.documentElement.dataset.renderLanesSeparated = "true";
     document.documentElement.dataset.noRenderLaneCollapse = "true";
-    document.documentElement.dataset.planetOneRealismPass = "v5-extended-surface-system";
+    document.documentElement.dataset.planetOneRealismPass = "v6-pangaea-fracture-surface-system";
     document.documentElement.dataset.recognitionFirstRender = "true";
+    document.documentElement.dataset.pangaeaFractureMemory = "true";
     document.documentElement.dataset.cartoonBlobGlobeRetired = "true";
     document.documentElement.dataset.surfaceFirstRender = "true";
     document.documentElement.dataset.noFinalGeographyClosure = "true";
@@ -798,8 +732,9 @@
       treeDemoMode: true,
       renderLanesSeparated: true,
       noRenderLaneCollapse: true,
-      realismPass: "v5-extended-surface-system",
+      realismPass: "v6-pangaea-fracture-surface-system",
       recognitionFirstRender: true,
+      pangaeaFractureMemory: true,
       cartoonBlobGlobeRetired: true,
       noFinalGeographyClosure: true,
       surfaceClasses: SURFACE_CLASSES.slice()

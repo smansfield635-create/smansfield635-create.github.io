@@ -1,31 +1,9 @@
-(function attachShowroomGlobeInstrument(global) {
+(function attachShowroomGlobeInstrument(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_POST_GEN4_GLOBAL_RESTORE_TNT_v1";
   const GENERATION = "GENERATION_4";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
-
-  const DEFAULTS = Object.freeze({
-    degreesPerSecond: 5.2,
-    cloudDegreesPerSecond: 2.1,
-    moonDegreesPerSecond: 0.85,
-    phaseMs: 3200,
-    bodyMs: 4200,
-    homeLabel: "Earth Anchor · Our Universe"
-  });
-
-  const UNIVERSE_BODIES = Object.freeze([
-    Object.freeze({ key: "SUN", name: "Sun", role: "central light and gravity anchor", className: "sun", order: 0 }),
-    Object.freeze({ key: "MERCURY", name: "Mercury", role: "inner planet and first orbital marker", className: "mercury", order: 1 }),
-    Object.freeze({ key: "VENUS", name: "Venus", role: "inner planet and pressure marker", className: "venus", order: 2 }),
-    Object.freeze({ key: "EARTH", name: "Earth", role: "primary inspection anchor", className: "earth", order: 3 }),
-    Object.freeze({ key: "MOON", name: "Moon", role: "Earth companion and first orbital proof", className: "moon", order: 4 }),
-    Object.freeze({ key: "MARS", name: "Mars", role: "outer terrestrial marker", className: "mars", order: 5 }),
-    Object.freeze({ key: "JUPITER", name: "Jupiter", role: "gas giant and mass-scale marker", className: "jupiter", order: 6 }),
-    Object.freeze({ key: "SATURN", name: "Saturn", role: "ringed planet and boundary marker", className: "saturn", order: 7 }),
-    Object.freeze({ key: "URANUS", name: "Uranus", role: "outer ice giant and tilted-axis marker", className: "uranus", order: 8 }),
-    Object.freeze({ key: "NEPTUNE", name: "Neptune", role: "outer ice giant and far-orbit marker", className: "neptune", order: 9 })
-  ]);
 
   const PHASES = Object.freeze([
     Object.freeze({
@@ -72,6 +50,27 @@
     })
   ]);
 
+  const UNIVERSE_BODIES = Object.freeze([
+    Object.freeze({ key: "SUN", name: "Sun", role: "central light and gravity anchor", className: "sun", order: 0 }),
+    Object.freeze({ key: "MERCURY", name: "Mercury", role: "inner planet and first orbital marker", className: "mercury", order: 1 }),
+    Object.freeze({ key: "VENUS", name: "Venus", role: "inner planet and pressure marker", className: "venus", order: 2 }),
+    Object.freeze({ key: "EARTH", name: "Earth", role: "primary inspection anchor", className: "earth", order: 3 }),
+    Object.freeze({ key: "MOON", name: "Moon", role: "Earth companion and first orbital proof", className: "moon", order: 4 }),
+    Object.freeze({ key: "MARS", name: "Mars", role: "outer terrestrial marker", className: "mars", order: 5 }),
+    Object.freeze({ key: "JUPITER", name: "Jupiter", role: "gas giant and mass-scale marker", className: "jupiter", order: 6 }),
+    Object.freeze({ key: "SATURN", name: "Saturn", role: "ringed planet and boundary marker", className: "saturn", order: 7 }),
+    Object.freeze({ key: "URANUS", name: "Uranus", role: "outer ice giant and tilted-axis marker", className: "uranus", order: 8 }),
+    Object.freeze({ key: "NEPTUNE", name: "Neptune", role: "outer ice giant and far-orbit marker", className: "neptune", order: 9 })
+  ]);
+
+  const DEFAULTS = Object.freeze({
+    globeDegreesPerSecond: 5.2,
+    cloudDegreesPerSecond: 2.1,
+    phaseMs: 3200,
+    bodyMs: 4200,
+    homeLabel: "Earth Anchor · Our Universe"
+  });
+
   function createElement(tagName, className, text) {
     const node = document.createElement(tagName);
     if (className) node.className = className;
@@ -85,12 +84,12 @@
     });
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
   function receiptLine(name, value) {
@@ -99,7 +98,7 @@
     return item;
   }
 
-  function tag(text) {
+  function contractTag(text) {
     return createElement("span", "showroom-contract-tag", text);
   }
 
@@ -122,16 +121,13 @@
     return createElement("span", "showroom-code-landmass " + className);
   }
 
-  function buildCloud(className) {
-    return createElement("span", "showroom-code-cloud " + className);
-  }
-
   function buildBodyNode(body, index) {
     const item = createElement("li", "showroom-universe-body showroom-universe-body-" + body.className);
+
     setDataset(item, {
       body: body.key,
       index: index,
-      active: index === 3 ? "true" : "false"
+      active: body.key === "EARTH" ? "true" : "false"
     });
 
     const marker = createElement("span", "showroom-universe-marker");
@@ -167,15 +163,14 @@
     }
 
     if (body.key === "SATURN") {
-      const ring = createElement("span", "showroom-saturn-ring");
-      planet.append(ring);
+      planet.append(createElement("span", "showroom-saturn-ring"));
     }
 
     orbit.append(planet);
     return orbit;
   }
 
-  function buildSolarField() {
+  function buildSolarSystemField() {
     const field = createElement("div", "showroom-solar-system-field");
     field.setAttribute("aria-label", "Code-generated solar-system field");
 
@@ -183,11 +178,9 @@
     const sun = createElement("div", "showroom-solar-sun", "Sun");
     center.append(sun);
 
-    const orbitBodies = UNIVERSE_BODIES.filter(function filterBody(body) {
+    UNIVERSE_BODIES.filter(function onlyPlanets(body) {
       return body.key !== "SUN" && body.key !== "MOON";
-    });
-
-    orbitBodies.forEach(function addOrbit(body, index) {
+    }).forEach(function addOrbit(body, index) {
       field.append(buildOrbitNode(body, index + 1));
     });
 
@@ -195,34 +188,7 @@
     return field;
   }
 
-  function buildGlobeDom(contract) {
-    const root = createElement("section", "showroom-globe-instrument showroom-gen4-closeout-globe showroom-demo-universe-instrument");
-    root.setAttribute("aria-label", "Generation 4 Demo Universe visual field for our universe");
-
-    setDataset(root, {
-      generation: GENERATION,
-      authority: AUTHORITY,
-      instrumentType: "our-universe-visual-code-model",
-      visibleGlobe: "true",
-      phaseBind: "complete",
-      demoUniverseScope: "our-universe",
-      visualExpression: "solar-system-field",
-      sun: "included",
-      moon: "included",
-      planets: "included",
-      graphicDependency: "false",
-      externalImageDependency: "false",
-      generatedImageDependency: "false",
-      gen4Closeout: "complete",
-      finalCloseout: "true"
-    });
-
-    const stage = createElement("div", "showroom-code-globe-stage showroom-gen4-stage showroom-demo-universe-stage");
-    stage.setAttribute("aria-label", "Generation 4 Demo Universe visual expression stage");
-
-    const universeField = createElement("div", "showroom-universe-visual-field");
-    const solarField = buildSolarField();
-
+  function buildEarthGlobe(contract) {
     const axisFrame = createElement("div", "showroom-code-axis-frame");
     const axis = createElement("div", "showroom-code-axis");
 
@@ -244,14 +210,10 @@
     const cloudLayerA = createElement("div", "showroom-code-cloud-layer showroom-code-cloud-layer-a");
     const cloudLayerB = createElement("div", "showroom-code-cloud-layer showroom-code-cloud-layer-b");
 
-    ["cloud-a", "cloud-b", "cloud-c", "cloud-d"].forEach(function addCloud(name) {
-      cloudLayerA.append(buildCloud(name));
-      cloudLayerB.append(buildCloud(name));
-    });
-
     const highlight = createElement("div", "showroom-code-highlight");
     const terminator = createElement("div", "showroom-code-terminator");
     const atmosphere = createElement("div", "showroom-code-atmosphere");
+
     const homePin = createElement("div", "showroom-code-home-pin");
     homePin.title = contract.homeLabel || DEFAULTS.homeLabel;
 
@@ -263,9 +225,19 @@
     globe.append(surfaceTrack, cloudLayerA, cloudLayerB, highlight, terminator, atmosphere, homePin, phaseBadge);
     axisFrame.append(axis, globe);
 
-    const earthLabel = createElement("div", "showroom-earth-inspection-label", "Earth inspection anchor");
-    universeField.append(solarField, axisFrame, earthLabel);
+    return {
+      axisFrame: axisFrame,
+      globe: globe,
+      surfaceTrack: surfaceTrack,
+      cloudLayerA: cloudLayerA,
+      cloudLayerB: cloudLayerB,
+      phaseBadge: phaseBadge,
+      phaseKey: phaseKey,
+      phaseState: phaseState
+    };
+  }
 
+  function buildPhasePanel() {
     const phasePanel = createElement("article", "showroom-phase-panel");
     const phaseKicker = createElement("p", "showroom-narrative-kicker", "Generation 4 · Demo Universe");
     const phaseTitle = createElement("h2", "showroom-narrative-title", PHASES[0].title);
@@ -289,7 +261,54 @@
     });
 
     phasePanel.append(phaseKicker, phaseTitle, phaseProof, phaseConsequence, phaseRing, bodyList);
-    stage.append(universeField, phasePanel);
+
+    return {
+      phasePanel: phasePanel,
+      phaseTitle: phaseTitle,
+      phaseProof: phaseProof,
+      phaseConsequence: phaseConsequence,
+      phaseRing: phaseRing,
+      bodyList: bodyList
+    };
+  }
+
+  function buildGlobeDom(contract) {
+    const root = createElement("section", "showroom-globe-instrument showroom-gen4-closeout-globe showroom-demo-universe-instrument");
+    root.setAttribute("aria-label", "Generation 4 Demo Universe visual field for our universe");
+
+    setDataset(root, {
+      generation: GENERATION,
+      authority: AUTHORITY,
+      instrumentType: "our-universe-visual-code-model",
+      visibleGlobe: "true",
+      phaseBind: "complete",
+      demoUniverseScope: "our-universe",
+      visualExpression: "solar-system-field",
+      orbitField: "visible",
+      sun: "included",
+      moon: "included",
+      planets: "included",
+      graphicDependency: "false",
+      externalImageDependency: "false",
+      generatedImageDependency: "false",
+      generation4Closeout: "complete",
+      gen4Closeout: "complete",
+      finalCloseout: "true"
+    });
+
+    const stage = createElement("div", "showroom-code-globe-stage showroom-gen4-stage showroom-demo-universe-stage");
+    stage.setAttribute("aria-label", "Generation 4 Demo Universe visual expression stage");
+
+    const universeField = createElement("div", "showroom-universe-visual-field");
+    const solarField = buildSolarSystemField();
+    const earth = buildEarthGlobe(contract);
+    const earthLabel = createElement("div", "showroom-earth-inspection-label", "Earth inspection anchor");
+
+    universeField.append(solarField, earth.axisFrame, earthLabel);
+
+    const phase = buildPhasePanel();
+
+    stage.append(universeField, phase.phasePanel);
 
     const caption = createElement(
       "h2",
@@ -310,7 +329,7 @@
       "closeout=complete",
       "parent-globe=false"
     ].forEach(function addTag(text) {
-      tags.append(tag(text));
+      tags.append(contractTag(text));
     });
 
     const status = createElement("aside", "showroom-globe-status");
@@ -327,9 +346,11 @@
     [
       ["GENERATION", GENERATION],
       ["AUTHORITY", AUTHORITY],
+      ["INSTRUMENT_VERSION", VERSION],
       ["INSTRUMENT_TYPE", "our-universe-visual-code-model"],
       ["DEMO_UNIVERSE_SCOPE", "our-universe"],
       ["VISUAL_EXPRESSION", "solar-system-field"],
+      ["ORBIT_FIELD", "visible"],
       ["ROUTE_REALM", contract.realm],
       ["ROUTE_ROLE", contract.routeRole],
       ["VISIBLE_GLOBE", "true"],
@@ -337,7 +358,6 @@
       ["SUN", "included"],
       ["MOON", "included"],
       ["PLANETS", "Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune"],
-      ["ORBIT_FIELD", "visible"],
       ["PARENT_GLOBE_REQUIRED", "false"],
       ["PHASE_BIND", "complete"],
       ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
@@ -355,21 +375,13 @@
     root.append(stage, caption, tags, status);
 
     return {
-      root,
-      globe,
-      surfaceTrack,
-      cloudLayerA,
-      cloudLayerB,
-      phaseBadge,
-      phaseKey,
-      phaseState,
-      phaseTitle,
-      phaseProof,
-      phaseConsequence,
-      phaseRing,
-      bodyList,
-      solarField,
-      receipts
+      root: root,
+      stage: stage,
+      universeField: universeField,
+      solarField: solarField,
+      earth: earth,
+      phase: phase,
+      receipts: receipts
     };
   }
 
@@ -378,13 +390,13 @@
     const mount = opts.mount;
 
     if (!mount || !(mount instanceof Element)) {
-      throw new Error("ShowroomGlobeInstrument requires a valid mount element.");
+      throw new Error("ShowroomGlobeInstrument.createGlobe requires a valid mount element.");
     }
 
     const contract = normalizeContract(opts.contract);
     const runtime = opts.runtime || null;
     const speedMultiplier = clamp(Number(contract.speedMultiplier || 1), 0.2, 2.5);
-    const globeSpeed = DEFAULTS.degreesPerSecond * speedMultiplier;
+    const globeSpeed = DEFAULTS.globeDegreesPerSecond * speedMultiplier;
     const cloudSpeed = DEFAULTS.cloudDegreesPerSecond * speedMultiplier;
     const phaseMs = Number(opts.phaseMs || DEFAULTS.phaseMs);
     const bodyMs = Number(opts.bodyMs || DEFAULTS.bodyMs);
@@ -396,11 +408,13 @@
       generation: GENERATION,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
+      instrumentVersion: VERSION,
       instrumentType: "our-universe-visual-code-model",
       visibleGlobe: "true",
       phaseBind: "complete",
       demoUniverseScope: "our-universe",
       visualExpression: "solar-system-field",
+      orbitField: "visible",
       gen4Closeout: "complete",
       finalCloseout: "true"
     });
@@ -425,6 +439,7 @@
         type: type,
         generation: GENERATION,
         authority: AUTHORITY,
+        version: VERSION,
         payload: payload || {},
         timestamp: new Date().toISOString()
       };
@@ -449,7 +464,7 @@
       bodyIndex = index % UNIVERSE_BODIES.length;
       const body = UNIVERSE_BODIES[bodyIndex];
 
-      Array.from(dom.bodyList.children).forEach(function update(node, nodeIndex) {
+      Array.from(dom.phase.bodyList.children).forEach(function updateBodyList(node, nodeIndex) {
         node.dataset.active = nodeIndex === bodyIndex ? "true" : "false";
       });
 
@@ -460,8 +475,7 @@
       dom.root.dataset.currentBody = body.key;
       mount.dataset.currentBody = body.key;
 
-      const oldBodyReceipt = dom.receipts.querySelectorAll("[data-body-receipt='true']");
-      oldBodyReceipt.forEach(function remove(node) {
+      Array.from(dom.receipts.querySelectorAll("[data-body-receipt='true']")).forEach(function remove(node) {
         node.remove();
       });
 
@@ -469,4 +483,203 @@
       line.dataset.bodyReceipt = "true";
       dom.receipts.append(line);
 
-      write
+      writeRuntimeReceipt("demo_universe_body_selected", {
+        body: body.key,
+        name: body.name,
+        role: body.role,
+        order: body.order,
+        route: contract.route,
+        realm: contract.realm,
+        scope: "our-universe",
+        visualExpression: "solar-system-field"
+      });
+    }
+
+    function setPhase(index) {
+      phaseIndex = index % PHASES.length;
+      const phase = PHASES[phaseIndex];
+
+      dom.earth.phaseKey.textContent = phase.key;
+      dom.earth.phaseState.textContent = phase.state;
+      dom.phase.phaseTitle.textContent = phase.title;
+      dom.phase.phaseProof.textContent = phase.proof;
+      dom.phase.phaseConsequence.textContent = phase.consequence;
+
+      Array.from(dom.phase.phaseRing.children).forEach(function updatePhase(node, nodeIndex) {
+        node.dataset.active = nodeIndex === phaseIndex ? "true" : "false";
+        node.dataset.complete = nodeIndex <= phaseIndex ? "true" : "false";
+      });
+
+      dom.root.dataset.currentPhase = phase.key;
+      dom.root.dataset.currentState = phase.state;
+      mount.dataset.currentPhase = phase.key;
+      mount.dataset.currentState = phase.state;
+
+      Array.from(dom.receipts.querySelectorAll("[data-dynamic-receipt='true']")).forEach(function remove(node) {
+        node.remove();
+      });
+
+      const line = receiptLine("PHASE_" + String(phaseIndex + 1).padStart(2, "0"), phase.key + ": " + phase.consequence);
+      line.dataset.dynamicReceipt = "true";
+      dom.receipts.append(line);
+
+      writeRuntimeReceipt("demo_universe_visual_field_phase", {
+        phase: phase.key,
+        state: phase.state,
+        proof: phase.proof,
+        consequence: phase.consequence,
+        route: contract.route,
+        realm: contract.realm,
+        scope: "our-universe",
+        visualExpression: "solar-system-field",
+        gen4Closeout: "complete",
+        finalCloseout: true
+      });
+    }
+
+    function advancePhase() {
+      if (!active) return;
+      setPhase((phaseIndex + 1) % PHASES.length);
+      phaseTimer = global.setTimeout(advancePhase, phaseMs);
+    }
+
+    function advanceBody() {
+      if (!active) return;
+      setBody((bodyIndex + 1) % UNIVERSE_BODIES.length);
+      bodyTimer = global.setTimeout(advanceBody, bodyMs);
+    }
+
+    function tick(now) {
+      if (!active) return;
+
+      const delta = Math.max(0, (now - previous) / 1000);
+      previous = now;
+
+      surfaceShift = (surfaceShift + globeSpeed * delta) % 100;
+      cloudA = (cloudA + cloudSpeed * delta) % 360;
+      cloudB = (cloudB - cloudSpeed * 0.72 * delta) % 360;
+
+      dom.earth.surfaceTrack.style.transform = "translate3d(-" + surfaceShift.toFixed(3) + "%, 0, 0)";
+      dom.earth.cloudLayerA.style.transform = "rotate(" + cloudA.toFixed(3) + "deg)";
+      dom.earth.cloudLayerB.style.transform = "rotate(" + cloudB.toFixed(3) + "deg)";
+
+      frame = global.requestAnimationFrame(tick);
+    }
+
+    function start() {
+      if (active && frame) return;
+
+      active = true;
+      previous = performance.now();
+
+      writeRuntimeReceipt("showroom_globe_instrument_global_restored", {
+        generation: GENERATION,
+        authority: AUTHORITY,
+        version: VERSION,
+        route: contract.route,
+        realm: contract.realm,
+        scope: "our-universe",
+        visualExpression: "solar-system-field",
+        orbitField: "visible",
+        included: UNIVERSE_BODIES.map(function mapBody(body) {
+          return body.name;
+        }),
+        visibleGlobe: true,
+        phaseBind: "complete",
+        gen4Closeout: "complete",
+        finalCloseout: true,
+        parentGlobeRequired: false
+      });
+
+      frame = global.requestAnimationFrame(tick);
+      phaseTimer = global.setTimeout(advancePhase, phaseMs);
+      bodyTimer = global.setTimeout(advanceBody, bodyMs);
+    }
+
+    function stop() {
+      active = false;
+      if (frame) global.cancelAnimationFrame(frame);
+      if (phaseTimer) global.clearTimeout(phaseTimer);
+      if (bodyTimer) global.clearTimeout(bodyTimer);
+      frame = 0;
+      phaseTimer = 0;
+      bodyTimer = 0;
+
+      writeRuntimeReceipt("showroom_globe_instrument_global_stopped", {
+        generation: GENERATION,
+        authority: AUTHORITY,
+        version: VERSION,
+        currentPhase: PHASES[phaseIndex].key,
+        currentBody: UNIVERSE_BODIES[bodyIndex].key,
+        gen4Closeout: "complete"
+      });
+    }
+
+    setPhase(0);
+    setBody(3);
+    start();
+
+    return Object.freeze({
+      version: VERSION,
+      generation: GENERATION,
+      authority: AUTHORITY,
+      universeBodies: clone(UNIVERSE_BODIES),
+      contract: clone(contract),
+      start: start,
+      stop: stop,
+      next: function next() {
+        setPhase((phaseIndex + 1) % PHASES.length);
+      },
+      nextBody: function nextBody() {
+        setBody((bodyIndex + 1) % UNIVERSE_BODIES.length);
+      },
+      destroy: function destroy() {
+        stop();
+        mount.innerHTML = "";
+        mount.dataset.instrumentLoaded = "false";
+      },
+      getStatus: function getStatus() {
+        return {
+          version: VERSION,
+          generation: GENERATION,
+          authority: AUTHORITY,
+          active: active,
+          scope: "our-universe",
+          visualExpression: "solar-system-field",
+          orbitField: "visible",
+          visibleGlobe: true,
+          phaseBind: "complete",
+          currentPhase: PHASES[phaseIndex].key,
+          currentBody: UNIVERSE_BODIES[bodyIndex].key,
+          bodies: clone(UNIVERSE_BODIES),
+          gen4Closeout: "complete",
+          finalCloseout: true,
+          receipts: clone(localReceipts)
+        };
+      }
+    });
+  }
+
+  global.ShowroomGlobeInstrument = Object.freeze({
+    VERSION: VERSION,
+    GENERATION: GENERATION,
+    AUTHORITY: AUTHORITY,
+    PHASES: PHASES,
+    UNIVERSE_BODIES: UNIVERSE_BODIES,
+    DEFAULTS: DEFAULTS,
+    createGlobe: createGlobe
+  });
+
+  global.dispatchEvent(
+    new CustomEvent("showroom:globe-instrument-ready", {
+      detail: {
+        version: VERSION,
+        generation: GENERATION,
+        authority: AUTHORITY,
+        createGlobeAvailable: typeof global.ShowroomGlobeInstrument.createGlobe === "function",
+        scope: "our-universe",
+        visualExpression: "solar-system-field"
+      }
+    })
+  );
+})(window, document);

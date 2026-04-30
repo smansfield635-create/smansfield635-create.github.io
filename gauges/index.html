@@ -1,190 +1,311 @@
 <!doctype html>
-<html lang="en" data-gauges-cycle="GEN_2_V1_EARTH_DEFINITION">
+<html lang="en" data-page="gauges" data-room="H6_GAUGES" data-gauges-cycle="GEN_2_V1_EARTH_DEFINITION">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Gen 2 V1 Earth Definition · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges for Gen 1 baseline and Gen 2 V1 Earth Definition expression pass.">
+  <title>Gauges · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges measures the Gen 1 Demo Universe baseline and the Gen 2 V1 Earth Definition expression pass.">
   <style>
     :root {
       --bg: #05070b;
-      --panel: rgba(10, 16, 26, 0.9);
-      --line: rgba(168, 199, 255, 0.28);
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
       --text: #eef5ff;
       --muted: #aab8cf;
-      --blue: #7db5ff;
       --green: #8ff0c6;
+      --blue: #7db5ff;
       --gold: #ffd36f;
       --red: #ff9f9f;
-      --shadow: rgba(0, 0, 0, 0.45);
+      --shadow: rgba(0, 0, 0, 0.48);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html { min-height: 100%; background: var(--bg); }
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 10%, rgba(65, 116, 184, 0.16), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(255, 211, 111, 0.09), transparent 28rem),
-        linear-gradient(180deg, #03050a 0%, #08101d 48%, #04060a 100%);
+        radial-gradient(circle at 78% 8%, rgba(255, 211, 111, 0.11), transparent 24rem),
+        radial-gradient(circle at 24% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
     }
 
-    a { color: var(--blue); text-decoration: none; }
-    a:hover, a:focus { text-decoration: underline; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 44px;
+    a:focus,
+    button:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
     }
 
     .skip {
       position: absolute;
       left: -999px;
-      top: 8px;
+      top: 10px;
+      z-index: 1000;
       padding: 8px 12px;
+      border-radius: 10px;
       background: #fff;
       color: #000;
-      border-radius: 8px;
     }
 
-    .skip:focus { left: 8px; z-index: 1000; }
+    .skip:focus {
+      left: 10px;
+    }
 
-    .topbar,
-    .nav,
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
     }
 
     .brand {
       color: var(--muted);
-      font-size: 0.9rem;
-      letter-spacing: 0.06em;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
     .nav a,
-    button,
-    .button {
+    .button,
+    button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 38px;
-      padding: 8px 12px;
+      min-height: 40px;
+      padding: 9px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.05);
       color: var(--text);
       font: inherit;
+      font-weight: 650;
       cursor: pointer;
     }
 
-    button.primary,
-    .button.primary {
-      background: rgba(125, 181, 255, 0.16);
-      border-color: rgba(125, 181, 255, 0.42);
-      font-weight: 800;
+    .nav a:hover,
+    .button:hover,
+    button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .button.primary,
+    button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
     }
 
     .hero,
-    .panel {
+    .panel,
+    .metric-card,
+    .audit-card {
       border: 1px solid var(--line);
-      border-radius: 28px;
+      border-radius: 30px;
       background: var(--panel);
-      box-shadow: 0 22px 70px var(--shadow);
+      box-shadow: 0 24px 80px var(--shadow);
     }
 
     .hero {
-      margin-top: 18px;
-      padding: 22px;
-      background: linear-gradient(135deg, rgba(14, 23, 38, 0.94), rgba(7, 12, 20, 0.84));
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 390px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.16), transparent 16rem),
+        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
     }
 
     .kicker {
-      margin: 0 0 8px;
+      margin: 0 0 12px;
       color: var(--green);
       font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
+      font-weight: 850;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 6vw, 4rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
     }
 
-    h2 { margin: 0 0 10px; font-size: 1.22rem; }
-
-    .hero p,
-    .panel p {
+    .lead {
+      max-width: 780px;
+      margin: 20px 0 0;
       color: var(--muted);
-      line-height: 1.55;
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
     }
 
-    .grid {
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .metric-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
       margin-top: 18px;
     }
 
-    .panel { padding: 16px; }
-    .wide { grid-column: 1 / -1; }
-    .half { grid-column: span 3; }
-
-    .metric {
-      font-size: 1.9rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
+    .metric-card {
+      min-height: 130px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(143, 240, 198, 0.07), rgba(125, 181, 255, 0.04));
     }
 
-    .metric.pass { color: var(--green); }
-    .metric.hold { color: var(--gold); }
-    .metric.fail { color: var(--red); }
+    .metric-card span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric-card strong {
+      font-size: clamp(1.4rem, 4vw, 2.25rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-pass strong {
+      color: var(--green);
+    }
+
+    .metric-hold strong {
+      color: var(--gold);
+    }
+
+    .metric-fail strong {
+      color: var(--red);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.4rem);
+      letter-spacing: -0.05em;
+    }
 
     .ladder {
       display: grid;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
-    .card {
+    .audit-card {
       display: grid;
       gap: 6px;
       padding: 14px;
-      border: 1px solid rgba(168, 199, 255, 0.16);
-      border-radius: 18px;
       background: rgba(255, 255, 255, 0.045);
+      box-shadow: none;
     }
 
-    .card[data-status="PASS"] { border-color: rgba(143, 240, 198, 0.5); }
-    .card[data-status="HOLD"] { border-color: rgba(255, 211, 111, 0.5); }
-    .card[data-status="FAIL"] { border-color: rgba(255, 159, 159, 0.5); }
+    .audit-card[data-status="PASS"] {
+      border-color: rgba(143, 240, 198, 0.48);
+    }
 
-    .card strong { font-size: 1.02rem; }
-    .card span { color: var(--muted); line-height: 1.45; }
+    .audit-card[data-status="HOLD"] {
+      border-color: rgba(255, 211, 111, 0.48);
+    }
+
+    .audit-card[data-status="FAIL"] {
+      border-color: rgba(255, 159, 159, 0.48);
+    }
+
+    .audit-card strong {
+      font-size: 1.02rem;
+    }
+
+    .audit-card span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
 
     .audit-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
+      margin-top: 14px;
       overflow: hidden;
       border-radius: 16px;
     }
 
-    th, td {
+    th,
+    td {
       padding: 10px;
       border-bottom: 1px solid rgba(168, 199, 255, 0.13);
       text-align: left;
@@ -205,45 +326,89 @@
       font-size: 0.86em;
     }
 
-    .status-pass { color: var(--green); font-weight: 900; }
-    .status-hold { color: var(--gold); font-weight: 900; }
-    .status-fail { color: var(--red); font-weight: 900; }
+    .status-pass {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .status-hold {
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .status-fail {
+      color: var(--red);
+      font-weight: 900;
+    }
 
     .rules {
       display: grid;
-      gap: 7px;
-      margin: 10px 0 0;
+      gap: 8px;
+      margin: 14px 0 0;
       padding: 0;
       list-style: none;
     }
 
     .rules li {
       display: grid;
-      grid-template-columns: minmax(160px, 0.32fr) minmax(0, 1fr);
-      gap: 8px;
+      grid-template-columns: minmax(160px, 0.3fr) minmax(0, 1fr);
+      gap: 10px;
       overflow-wrap: anywhere;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border: 1px solid rgba(168, 199, 255, 0.12);
-      border-radius: 12px;
+      border-radius: 14px;
       background: rgba(0, 0, 0, 0.22);
       color: var(--muted);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
     }
 
-    .rules strong { color: var(--green); }
+    .rules strong {
+      color: var(--green);
+    }
+
+    .receipt {
+      display: none !important;
+    }
 
     @media (max-width: 980px) {
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .wide, .half { grid-column: 1 / -1; }
+      .metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 350px;
+      }
     }
 
     @media (max-width: 680px) {
-      .page { width: min(100% - 22px, 720px); }
-      .grid { grid-template-columns: 1fr; }
-      th, td { display: block; width: 100%; }
-      tr { display: block; border-bottom: 1px solid rgba(168, 199, 255, 0.18); }
-      .rules li { grid-template-columns: 1fr; }
+      .page {
+        width: min(100% - 22px, 720px);
+        padding-top: 16px;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        display: block;
+        border-bottom: 1px solid rgba(168, 199, 255, 0.18);
+      }
+
+      .rules li {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -251,81 +416,98 @@
 <body>
   <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
-  <main id="gauges-main" class="page" data-gauge-mode="gen-2-v1-earth-definition">
-    <header class="topbar">
+  <main
+    id="gauges-main"
+    class="page"
+    data-route="/gauges/"
+    data-house-part="gauges"
+    data-construct-class="house"
+    data-estate="rich-manor-and-estate"
+    data-gauge-mode="gen-2-v1-earth-definition">
+
+    <header class="topbar" aria-label="Gauges header">
       <div class="brand">Diamond Gate Bridge · Gauges · Gen 2 V1 Earth Definition</div>
       <nav class="nav" aria-label="Gauges navigation">
         <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Demo Universe</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <p class="kicker">H6 · Gauges · Expression Measurement</p>
-      <h1>Gauges</h1>
-      <p>
-        Gauges now separates the completed Gen 1 baseline from the Gen 2 V1 Earth Definition pass.
-        Gen 1 measures the working Demo Universe structure. Gen 2 V1 measures whether Earth is becoming the clear inspection focus.
-      </p>
-      <div class="actions">
-        <button class="primary" type="button" id="runAudit">Run Gen 2 V1 audit</button>
+    <section class="hero" aria-labelledby="gauges-title">
+      <div class="hero-content">
+        <p class="kicker">H6 · Gauges · Expression Measurement</p>
+        <h1 id="gauges-title">Gauges</h1>
+        <p class="lead">
+          Gauges checks two things separately: the completed Gen 1 Demo Universe baseline, and the Gen 2 V1 Earth Definition expression pass.
+        </p>
+      </div>
+
+      <div class="actions" aria-label="Primary Gauges actions">
+        <button class="primary" type="button" id="runAudit">Run audit</button>
         <a class="button" href="/showroom/">Open Showroom</a>
         <a class="button" href="/showroom/globe/">Inspect Universe</a>
       </div>
     </section>
 
-    <section class="grid" aria-label="Gauge summary">
-      <article class="panel">
-        <p class="kicker">Gen 1</p>
-        <div id="gen1Metric" class="metric hold">--</div>
-        <p>Baseline.</p>
+    <section class="metric-grid" aria-label="Gauge summary">
+      <article class="metric-card metric-hold" id="metricGen1Card">
+        <span>Gen 1</span>
+        <strong id="gen1Metric">--</strong>
+        <span>Baseline</span>
       </article>
 
-      <article class="panel">
-        <p class="kicker">Scope</p>
-        <div id="scopeMetric" class="metric hold">--</div>
-        <p>Our universe.</p>
+      <article class="metric-card metric-hold" id="metricScopeCard">
+        <span>Scope</span>
+        <strong id="scopeMetric">--</strong>
+        <span>Our universe</span>
       </article>
 
-      <article class="panel">
-        <p class="kicker">Visual</p>
-        <div id="visualMetric" class="metric hold">--</div>
-        <p>Solar field.</p>
+      <article class="metric-card metric-hold" id="metricVisualCard">
+        <span>Visual</span>
+        <strong id="visualMetric">--</strong>
+        <span>Solar field</span>
       </article>
 
-      <article class="panel">
-        <p class="kicker">Gen 2 V1</p>
-        <div id="g2v1Metric" class="metric hold">--</div>
-        <p>Earth definition.</p>
+      <article class="metric-card metric-hold" id="metricG2V1Card">
+        <span>Gen 2 V1</span>
+        <strong id="g2v1Metric">--</strong>
+        <span>Earth definition</span>
       </article>
 
-      <article class="panel">
-        <p class="kicker">Earth</p>
-        <div id="earthMetric" class="metric hold">--</div>
-        <p>Focus.</p>
+      <article class="metric-card metric-hold" id="metricEarthCard">
+        <span>Earth</span>
+        <strong id="earthMetric">--</strong>
+        <span>Focus</span>
       </article>
 
-      <article class="panel">
-        <p class="kicker">Moon</p>
-        <div id="moonMetric" class="metric hold">--</div>
-        <p>Relationship.</p>
+      <article class="metric-card metric-hold" id="metricMoonCard">
+        <span>Moon</span>
+        <strong id="moonMetric">--</strong>
+        <span>Relationship</span>
       </article>
+    </section>
 
-      <article class="panel half">
+    <section class="section-grid" aria-label="Gauge details">
+      <article class="panel">
+        <p class="kicker">Baseline</p>
         <h2>Gen 1 baseline</h2>
         <div id="gen1Ladder" class="ladder">
-          <div class="card" data-status="HOLD">
+          <div class="audit-card" data-status="HOLD">
             <strong>Waiting for audit</strong>
             <span>Run audit to confirm the baseline remains intact.</span>
           </div>
         </div>
       </article>
 
-      <article class="panel half">
+      <article class="panel">
+        <p class="kicker">Expression</p>
         <h2>Gen 2 V1 Earth Definition</h2>
         <div id="g2v1Ladder" class="ladder">
-          <div class="card" data-status="HOLD">
+          <div class="audit-card" data-status="HOLD">
             <strong>Waiting for audit</strong>
             <span>Run audit to measure Earth definition.</span>
           </div>
@@ -333,7 +515,8 @@
       </article>
 
       <article class="panel wide">
-        <h2>Live audit table</h2>
+        <p class="kicker">Live audit</p>
+        <h2>Source check</h2>
         <table class="audit-table">
           <thead>
             <tr>
@@ -355,14 +538,32 @@
       </article>
 
       <article class="panel wide">
-        <h2>Measurement rules</h2>
+        <p class="kicker">Measurement rules</p>
+        <h2>What Gauges is allowed to claim</h2>
         <ul class="rules">
-          <li><strong>GEN_1</strong><span>Baseline passes only if Showroom, Demo Universe, Gen 4 closeout, our-universe scope, and solar-system field remain intact.</span></li>
-          <li><strong>GEN_2_V1</strong><span>Earth Definition passes only if Earth focus, Earth zoom, Earth detail, Moon orbit, and visual dashboard markers are present.</span></li>
-          <li><strong>NO_OVERSTEP</strong><span>Gen 2 V1 does not measure solar-system definition, cinematic depth, or public closeout. Those belong to later versions.</span></li>
-          <li><strong>TNT</strong><span>GAUGES_GEN_2_V1_EARTH_DEFINITION_TNT_v1</span></li>
+          <li><strong>GEN_1</strong><span>Passes only if Showroom, Demo Universe, Gen 4 closeout, our-universe scope, and solar-system field remain intact.</span></li>
+          <li><strong>GEN_2_V1</strong><span>Passes only if Earth focus, Earth zoom, Earth detail, Moon orbit, Moon scale, and visual dashboard markers are present.</span></li>
+          <li><strong>OWNER_CONFIRMATION</strong><span>Gauges can verify source state. Final visual close still requires owner visual confirmation.</span></li>
+          <li><strong>NO_OVERSTEP</strong><span>Gen 2 V1 does not measure Gen 2 V2 solar-system definition, Gen 2 V3 cinematic depth, or Gen 2 V4 public closeout.</span></li>
+          <li><strong>TNT</strong><span>GAUGES_GEN_2_V1_EARTH_DEFINITION_TED_CLEAN_TNT_v2</span></li>
         </ul>
       </article>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      Gauges receipt
+      route-exists
+      manor-skin
+      house-class
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=house
+      house-part=gauges
+      H6_GAUGES
+      GEN_1_BASELINE_MEASUREMENT
+      GEN_2_V1_EARTH_DEFINITION_MEASUREMENT
+      GAUGES_GEN_2_V1_EARTH_DEFINITION_TED_CLEAN_TNT_v2
     </section>
   </main>
 
@@ -370,10 +571,11 @@
     (function bootGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_GEN_2_V1_EARTH_DEFINITION_TNT_v1";
+      const VERSION = "GAUGES_GEN_2_V1_EARTH_DEFINITION_TED_CLEAN_TNT_v2";
 
       const TARGETS = Object.freeze({
-        parent: "/showroom/",
+        compass: "/",
+        showroom: "/showroom/",
         inspection: "/showroom/globe/",
         instrument: "/assets/showroom.globe.instrument.js",
         css: "/showroom/showroom.css",
@@ -435,6 +637,13 @@
           "Moon locked",
           "Earth companion"
         ]),
+        gen2v1MoonScale: Object.freeze([
+          "Moon scale 27 percent Earth diameter",
+          "moonScale",
+          "0.27-earth-diameter",
+          "dg-moon",
+          "showroom-moon-source"
+        ]),
         traversal: Object.freeze([
           "HOME",
           "BOUNDARY",
@@ -459,10 +668,19 @@
         moon: document.getElementById("moonMetric")
       };
 
-      function setMetric(node, status) {
-        node.textContent = status;
-        node.classList.remove("pass", "hold", "fail");
-        node.classList.add(status === "PASS" ? "pass" : status === "FAIL" ? "fail" : "hold");
+      const metricCards = {
+        gen1: document.getElementById("metricGen1Card"),
+        scope: document.getElementById("metricScopeCard"),
+        visual: document.getElementById("metricVisualCard"),
+        g2v1: document.getElementById("metricG2V1Card"),
+        earth: document.getElementById("metricEarthCard"),
+        moon: document.getElementById("metricMoonCard")
+      };
+
+      function setMetric(key, status) {
+        metrics[key].textContent = status;
+        metricCards[key].classList.remove("metric-pass", "metric-hold", "metric-fail");
+        metricCards[key].classList.add(status === "PASS" ? "metric-pass" : status === "FAIL" ? "metric-fail" : "metric-hold");
       }
 
       function statusClass(status) {
@@ -483,7 +701,7 @@
 
       function addCard(target, title, status, body) {
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = "audit-card";
         card.dataset.status = status;
         card.innerHTML =
           "<strong>" + title + " · <span class='" + statusClass(status) + "'>" + status + "</span></strong>" +
@@ -495,9 +713,9 @@
         try {
           const response = await fetch(path, { cache: "no-store" });
           const text = await response.text();
-          return { path, ok: response.ok, status: response.status, text, error: "" };
+          return { path: path, ok: response.ok, status: response.status, text: text, error: "" };
         } catch (error) {
-          return { path, ok: false, status: "FETCH_ERROR", text: "", error: error.message };
+          return { path: path, ok: false, status: "FETCH_ERROR", text: "", error: error.message };
         }
       }
 
@@ -507,7 +725,7 @@
         });
 
         return {
-          found,
+          found: found,
           missing: markers.filter(function lacks(marker) {
             return found.indexOf(marker) === -1;
           }),
@@ -534,15 +752,16 @@
         gen1Ladder.innerHTML = "";
         g2v1Ladder.innerHTML = "";
 
-        const parent = await fetchText(TARGETS.parent);
+        const compass = await fetchText(TARGETS.compass);
+        const showroom = await fetchText(TARGETS.showroom);
         const inspection = await fetchText(TARGETS.inspection);
         const instrument = await fetchText(TARGETS.instrument);
         const css = await fetchText(TARGETS.css);
         const render = await fetchText(TARGETS.render);
         const boot = await fetchText(TARGETS.boot);
 
-        const fetches = { parent, inspection, instrument, css, render, boot };
-        const all = combine(parent.text, inspection.text, instrument.text, css.text, render.text, boot.text);
+        const fetches = { compass, showroom, inspection, instrument, css, render, boot };
+        const all = combine(compass.text, showroom.text, inspection.text, instrument.text, css.text, render.text, boot.text);
         const expressionStack = combine(inspection.text, instrument.text, css.text, render.text, boot.text);
 
         const gen1 = markerResult(all, MARKERS.gen1Baseline);
@@ -550,10 +769,11 @@
         const visual = markerResult(expressionStack, MARKERS.visualField);
         const earth = markerResult(expressionStack, MARKERS.gen2v1Earth);
         const moon = markerResult(expressionStack, MARKERS.gen2v1Moon);
+        const moonScale = markerResult(expressionStack, MARKERS.gen2v1MoonScale);
         const traversal = markerResult(expressionStack, MARKERS.traversal);
 
         const gen1Status =
-          parent.ok &&
+          showroom.ok &&
           inspection.ok &&
           instrument.ok &&
           render.ok &&
@@ -566,7 +786,7 @@
         const scopeStatus = bodies.score === 100 && all.indexOf("our-universe") !== -1 ? "PASS" : "HOLD";
         const visualStatus = statusByScore(visual.score, 70);
         const earthStatus = statusByScore(earth.score, 70);
-        const moonStatus = statusByScore(moon.score, 60);
+        const moonStatus = moon.score >= 60 && moonScale.score >= 60 ? "PASS" : "HOLD";
 
         const g2v1Status =
           gen1Status === "PASS" &&
@@ -576,12 +796,12 @@
             ? "PASS"
             : "HOLD";
 
-        setMetric(metrics.gen1, gen1Status);
-        setMetric(metrics.scope, scopeStatus);
-        setMetric(metrics.visual, visualStatus);
-        setMetric(metrics.g2v1, g2v1Status);
-        setMetric(metrics.earth, earthStatus);
-        setMetric(metrics.moon, moonStatus);
+        setMetric("gen1", gen1Status);
+        setMetric("scope", scopeStatus);
+        setMetric("visual", visualStatus);
+        setMetric("g2v1", g2v1Status);
+        setMetric("earth", earthStatus);
+        setMetric("moon", moonStatus);
 
         addRow(
           "Gen 1 baseline",
@@ -601,21 +821,21 @@
           "Visual field",
           "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
           visualStatus,
-          visual.found.length + " of " + MARKERS.visualField.length + " visual field markers found."
+          visual.found.length + " of " + MARKERS.visualField.length + " visual-field markers found."
         );
 
         addRow(
           "Gen 2 V1 · Earth definition",
           "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
           earthStatus,
-          earth.found.length + " of " + MARKERS.gen2v1Earth.length + " Earth definition markers found."
+          earth.found.length + " of " + MARKERS.gen2v1Earth.length + " Earth-definition markers found."
         );
 
         addRow(
           "Gen 2 V1 · Moon relation",
           "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
           moonStatus,
-          moon.found.length + " of " + MARKERS.gen2v1Moon.length + " Moon relation markers found."
+          moon.found.length + " of " + MARKERS.gen2v1Moon.length + " Moon-relation markers and " + moonScale.found.length + " of " + MARKERS.gen2v1MoonScale.length + " Moon-scale markers found."
         );
 
         addRow(
@@ -640,7 +860,7 @@
           visualStatus,
           visualStatus === "PASS"
             ? "Solar-system field remains source-visible."
-            : "Visual field markers are incomplete."
+            : "Visual-field markers are incomplete."
         );
 
         addCard(
@@ -657,17 +877,17 @@
           "Moon Relationship",
           moonStatus,
           moonStatus === "PASS"
-            ? "Moon orbit/relationship markers are detected."
-            : "Moon relation is incomplete."
+            ? "Moon relation and scale markers are detected."
+            : "Moon relation or scale markers are incomplete."
         );
 
         addCard(
           g2v1Ladder,
-          "Gen 2 V1 Close",
+          "Gen 2 V1 Source Close",
           g2v1Status,
           g2v1Status === "PASS"
-            ? "Earth Definition can be visually inspected for closeout."
-            : "Gen 2 V1 remains held until Earth and Moon markers pass."
+            ? "Source state is ready for owner visual confirmation."
+            : "Gen 2 V1 remains held until Earth, Moon, and baseline markers pass."
         );
 
         document.documentElement.dataset.gaugesRun = "complete";
@@ -679,10 +899,10 @@
       document.getElementById("runAudit").addEventListener("click", runAudit);
 
       window.GaugesGen2V1EarthDefinition = Object.freeze({
-        VERSION,
-        TARGETS,
-        MARKERS,
-        runAudit
+        VERSION: VERSION,
+        TARGETS: TARGETS,
+        MARKERS: MARKERS,
+        runAudit: runAudit
       });
     })();
   </script>

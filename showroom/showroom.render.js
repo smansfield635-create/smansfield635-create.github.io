@@ -1,11 +1,11 @@
 (function attachShowroomRender(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_RENDER_GENERATION_2_CODE_GLOBE_RESTORATION_TNT_v1";
+  const VERSION = "SHOWROOM_RENDER_GENERATION_2_RENDER_MOUNT_ACTIVATION_CTG_v1";
   const GENERATION = "GENERATION_2";
 
-  function createElement(tagName, className, text) {
-    const node = document.createElement(tagName);
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
     if (className) node.className = className;
     if (typeof text === "string") node.textContent = text;
     return node;
@@ -15,159 +15,218 @@
     while (node.firstChild) node.removeChild(node.firstChild);
   }
 
-  function fallbackRuntime(config) {
+  function fallbackContract(mode) {
+    const standalone = mode === "standalone";
+
+    return {
+      mode: standalone ? "standalone" : "parent",
+      route: standalone ? "/showroom/globe/" : "/showroom/",
+      realm: standalone ? "demo-universe-earth-inspection-realm" : "showroom-parent-proof-realm",
+      routeRole: standalone ? "standalone-earth-inspection-surface" : "showroom-proof-surface",
+      chamber: standalone ? "STANDALONE_DEMO_UNIVERSE_EARTH" : "ROOM_05_OF_16_H5_SHOWROOM",
+      headline: standalone ? "Standalone code-globe inspection surface" : "Earth-centered public proof surface",
+      caption: standalone
+        ? "Inspect Demo Universe mounts the same Generation 2 code-generated globe without taking parent Showroom identity."
+        : "The accepted Showroom shell now mounts the restored Generation 2 code-generated globe below the parent proof contract."
+    };
+  }
+
+  function getContract(mode) {
+    let contract = fallbackContract(mode);
+
+    if (
+      global.ShowroomConsumerAuthority &&
+      typeof global.ShowroomConsumerAuthority.getContract === "function"
+    ) {
+      try {
+        contract = Object.assign(contract, global.ShowroomConsumerAuthority.getContract(mode));
+      } catch (error) {
+        contract.consumerAuthorityError = error.message;
+      }
+    }
+
+    contract.mode = mode === "standalone" ? "standalone" : "parent";
+    contract.route = contract.mode === "standalone" ? "/showroom/globe/" : "/showroom/";
+    contract.realm = contract.realm || fallbackContract(mode).realm;
+    contract.routeRole = contract.routeRole || fallbackContract(mode).routeRole;
+    contract.chamber = contract.chamber || fallbackContract(mode).chamber;
+    contract.headline = fallbackContract(mode).headline;
+    contract.caption = fallbackContract(mode).caption;
+
+    return contract;
+  }
+
+  function createRuntime(contract) {
+    if (global.ShowroomRuntime && typeof global.ShowroomRuntime.createRuntime === "function") {
+      try {
+        return global.ShowroomRuntime.createRuntime({
+          mode: contract.mode,
+          realm: contract.realm,
+          route: contract.route,
+          routeRole: contract.routeRole
+        });
+      } catch (error) {
+        return createFallbackRuntime(contract, error.message);
+      }
+    }
+
+    return createFallbackRuntime(contract, "ShowroomRuntime unavailable");
+  }
+
+  function createFallbackRuntime(contract, reason) {
     const receipts = [];
 
     return {
-      version: "fallback-runtime",
-      writeReceipt: function writeReceipt(type, payload) {
+      version: "fallback-runtime-for-generation-2-mount",
+      writeReceipt(type, payload) {
         receipts.push({
-          type: type,
+          type,
           payload: payload || {},
+          generation: GENERATION,
+          route: contract.route,
+          realm: contract.realm,
+          fallbackReason: reason,
           timestamp: new Date().toISOString()
         });
       },
-      getReceipts: function getReceipts() {
+      getReceipts() {
         return receipts.slice();
       },
-      getStatus: function getStatus() {
+      getStatus() {
         return {
-          config: config || {},
+          fallback: true,
+          reason,
+          route: contract.route,
+          realm: contract.realm,
           receipts: receipts.slice()
         };
       }
     };
   }
 
-  function createRuntime(contract) {
-    if (global.ShowroomRuntime && typeof global.ShowroomRuntime.createRuntime === "function") {
-      return global.ShowroomRuntime.createRuntime({
-        mode: contract.mode,
-        realm: contract.realm,
-        route: contract.route,
-        routeRole: contract.routeRole
-      });
-    }
-
-    return fallbackRuntime(contract);
-  }
-
-  function fallbackContract(mode) {
-    const isStandalone = mode === "standalone";
-
-    return {
-      mode: isStandalone ? "standalone" : "parent",
-      realm: isStandalone ? "demo-universe-earth-inspection-realm" : "showroom-parent-proof-realm",
-      route: isStandalone ? "/showroom/globe/" : "/showroom/",
-      routeRole: isStandalone ? "standalone-earth-inspection-surface" : "showroom-proof-surface",
-      chamber: isStandalone ? "STANDALONE_DEMO_UNIVERSE_EARTH" : "ROOM_05_OF_16_H5_SHOWROOM",
-      headline: isStandalone ? "Standalone code-globe inspection surface" : "Earth-centered public proof surface",
-      caption: isStandalone
-        ? "Inspect Demo Universe consumes the restored Generation 2 code-generated globe without taking parent Showroom identity."
-        : "The Showroom consumes the restored Generation 2 code-generated globe while preserving the True Generation 4 narrative-code direction for later phases."
-    };
-  }
-
-  function normalizeContract(raw, mode) {
-    const fallback = fallbackContract(mode);
-    const contract = Object.assign({}, fallback, raw || {});
-
-    contract.mode = mode === "standalone" ? "standalone" : "parent";
-    contract.realm = contract.realm || fallback.realm;
-    contract.route = contract.route || fallback.route;
-    contract.routeRole = contract.routeRole || fallback.routeRole;
-    contract.chamber = contract.chamber || fallback.chamber;
-    contract.headline = contract.headline || fallback.headline;
-    contract.caption = contract.caption || fallback.caption;
-
-    return contract;
-  }
-
-  function getContract(mode) {
-    if (
-      global.ShowroomConsumerAuthority &&
-      typeof global.ShowroomConsumerAuthority.getContract === "function"
-    ) {
-      return normalizeContract(global.ShowroomConsumerAuthority.getContract(mode), mode);
-    }
-
-    return normalizeContract(null, mode);
-  }
-
-  function writeMarkers(root, contract) {
-    if (
-      global.ShowroomConsumerAuthority &&
-      typeof global.ShowroomConsumerAuthority.writeContractMarkers === "function"
-    ) {
-      global.ShowroomConsumerAuthority.writeContractMarkers(root, contract);
-    }
-
-    root.dataset.showroomGeneration = GENERATION;
-    root.dataset.showroomRestorationGeneration = "GENERATION_2";
-    root.dataset.showroomMode = contract.mode;
-    root.dataset.showroomRealm = contract.realm;
-    root.dataset.showroomRoute = contract.route;
-    root.dataset.visibleCodeGlobe = "true";
-    root.dataset.externalImageDependency = "false";
-    root.dataset.generatedImageDependency = "false";
-    root.dataset.nextAllowedGeneration = "GENERATION_3_PHASE_BIND";
-  }
-
-  function makeProofItem(title, body) {
-    const item = createElement("li");
-    const strong = createElement("strong", "", title);
-    const span = createElement("span", "", body);
+  function proofItem(title, body) {
+    const item = el("li");
+    const strong = el("strong", "", title);
+    const span = el("span", "", body);
     item.append(strong, span);
     return item;
   }
 
-  function makeReceipt(name, value) {
-    const item = createElement("li");
+  function receiptItem(name, value) {
+    const item = el("li");
     item.innerHTML = "<strong>" + name + "</strong><span>" + String(value) + "</span>";
     return item;
   }
 
+  function writeRootMarkers(root, contract) {
+    if (
+      global.ShowroomConsumerAuthority &&
+      typeof global.ShowroomConsumerAuthority.writeContractMarkers === "function"
+    ) {
+      try {
+        global.ShowroomConsumerAuthority.writeContractMarkers(root, contract);
+      } catch (error) {
+        root.dataset.consumerMarkerError = error.message;
+      }
+    }
+
+    root.dataset.showroomRenderComplete = "false";
+    root.dataset.showroomRenderVersion = VERSION;
+    root.dataset.showroomGeneration = GENERATION;
+    root.dataset.showroomMode = contract.mode;
+    root.dataset.showroomRoute = contract.route;
+    root.dataset.showroomRealm = contract.realm;
+    root.dataset.visibleCodeGlobe = "pending";
+    root.dataset.generation2MountActivation = "active";
+    root.dataset.nextAllowedGeneration = "GENERATION_3_PHASE_BIND_AFTER_VISUAL_CONFIRMATION";
+  }
+
   function writeReceipts(panel, contract, runtime, instrument) {
-    const list = createElement("ul", "showroom-receipts");
+    const list = el("ul", "showroom-receipts");
 
     [
       ["SHOWROOM_CHAMBER", contract.chamber],
       ["RESTORED_GENERATION", GENERATION],
-      ["VISIBLE_CODE_GLOBE", "true"],
+      ["MOUNT_ACTIVATION", "active"],
+      ["VISIBLE_CODE_GLOBE", instrument ? "true" : "false"],
       ["ROUTE", contract.route],
       ["ACTIVE_REALM", contract.realm],
       ["ACTIVE_ROUTE_ROLE", contract.routeRole],
-      ["INSTRUMENT_TYPE", "code-generated-globe"],
-      ["GRAPHIC_DEPENDENCY", "false"],
-      ["EXTERNAL_IMAGE_DEPENDENCY", "false"],
-      ["GENERATED_IMAGE_DEPENDENCY", "false"],
-      ["SHELL", "absent"],
-      ["RIM", "absent"],
-      ["CAP", "absent"],
-      ["BOWL", "absent"],
       ["INSTRUMENT_AUTHORITY", "/assets/showroom.globe.instrument.js"],
       ["CSS_AUTHORITY", "/showroom/showroom.css"],
       ["RENDER_AUTHORITY", "/showroom/showroom.render.js"],
-      ["INSTRUMENT_VERSION", instrument.version],
-      ["RENDER_TNT", VERSION],
-      ["NEXT_ALLOWED_GENERATION", "GENERATION_3_PHASE_BIND"]
-    ].forEach(function addReceipt(pair) {
-      list.append(makeReceipt(pair[0], pair[1]));
+      ["BOOT_AUTHORITY", contract.mode === "standalone" ? "/showroom/globe/index.js" : "/showroom/index.js"],
+      ["GRAPHIC_DEPENDENCY", "false"],
+      ["EXTERNAL_IMAGE_DEPENDENCY", "false"],
+      ["GENERATED_IMAGE_DEPENDENCY", "false"],
+      ["GEN3_PHASE_BIND", "held"],
+      ["GEN4_CLOSEOUT", "held"],
+      ["NEXT_ALLOWED_GENERATION", "GENERATION_3_PHASE_BIND_AFTER_VISUAL_CONFIRMATION"],
+      ["RENDER_TNT", VERSION]
+    ].forEach(function add(pair) {
+      list.append(receiptItem(pair[0], pair[1]));
     });
+
+    if (instrument && instrument.version) {
+      list.append(receiptItem("INSTRUMENT_VERSION", instrument.version));
+    }
 
     panel.append(list);
 
     if (runtime && typeof runtime.writeReceipt === "function") {
-      runtime.writeReceipt("generation_2_code_globe_rendered", {
-        restoredGeneration: GENERATION,
-        visibleCodeGlobe: true,
+      runtime.writeReceipt("generation_2_render_mount_activated", {
+        generation: GENERATION,
         route: contract.route,
         realm: contract.realm,
-        instrumentVersion: instrument.version,
+        visibleCodeGlobe: Boolean(instrument),
         renderVersion: VERSION,
-        nextAllowedGeneration: "GENERATION_3_PHASE_BIND"
+        instrumentVersion: instrument && instrument.version ? instrument.version : "missing"
       });
     }
+  }
+
+  function renderMissingInstrument(mount, runtime, contract) {
+    const fallback = el("section", "showroom-globe-instrument showroom-gen2-code-globe");
+    fallback.dataset.generation = GENERATION;
+    fallback.dataset.visibleCodeGlobe = "false";
+    fallback.dataset.instrumentMissing = "true";
+
+    const stage = el("div", "showroom-code-globe-stage");
+    const message = el("article", "showroom-globe-status");
+    message.append(
+      el("h3", "", "Generation 2 mount reached the globe slot"),
+      el(
+        "p",
+        "",
+        "The lower render mounted successfully, but /assets/showroom.globe.instrument.js did not expose ShowroomGlobeInstrument.createGlobe at runtime."
+      )
+    );
+
+    const receipts = el("ul", "showroom-globe-receipts");
+    [
+      ["GENERATION", GENERATION],
+      ["MOUNT_REACHED", "true"],
+      ["VISIBLE_CODE_GLOBE", "false"],
+      ["MISSING", "ShowroomGlobeInstrument.createGlobe"],
+      ["NEXT_ACTION", "verify /assets/showroom.globe.instrument.js served source"]
+    ].forEach(function add(pair) {
+      receipts.append(receiptItem(pair[0], pair[1]));
+    });
+
+    message.append(receipts);
+    stage.append(message);
+    fallback.append(stage);
+    mount.append(fallback);
+
+    if (runtime && typeof runtime.writeReceipt === "function") {
+      runtime.writeReceipt("generation_2_mount_reached_but_instrument_missing", {
+        generation: GENERATION,
+        route: contract.route,
+        realm: contract.realm
+      });
+    }
+
+    return null;
   }
 
   function renderShowroomProofSurface(options) {
@@ -179,117 +238,98 @@
       throw new Error("Showroom render root not found.");
     }
 
-    if (!global.ShowroomGlobeInstrument || typeof global.ShowroomGlobeInstrument.createGlobe !== "function") {
-      throw new Error("Showroom globe instrument is not available.");
-    }
-
     const contract = getContract(mode);
     const runtime = createRuntime(contract);
 
     clear(root);
-    writeMarkers(root, contract);
+    writeRootMarkers(root, contract);
 
-    root.dataset.showroomRenderComplete = "false";
-    root.dataset.showroomRenderVersion = VERSION;
+    const grid = el("section", "showroom-proof-grid");
+    grid.setAttribute("aria-label", "Generation 2 render mount activation grid");
 
-    const grid = createElement("section", "showroom-proof-grid");
-    grid.setAttribute("aria-label", "Generation 2 code-generated globe restoration grid");
-
-    const textPanel = createElement("article", "showroom-text-panel");
-
+    const textPanel = el("article", "showroom-text-panel");
     textPanel.append(
-      createElement("p", "showroom-kicker", mode === "standalone" ? "STANDALONE · INSPECT DEMO UNIVERSE" : "ROOM 05 / 16 · H5_SHOWROOM"),
-      createElement("h2", "", contract.headline),
-      createElement("p", "", contract.caption)
+      el("p", "showroom-kicker", mode === "standalone" ? "STANDALONE · INSPECT DEMO UNIVERSE" : "ROOM 05 / 16 · H5_SHOWROOM"),
+      el("h2", "", contract.headline),
+      el("p", "", contract.caption)
     );
 
-    const proofList = createElement("ul", "showroom-proof-list");
-
+    const proofList = el("ul", "showroom-proof-list");
     [
-      [
-        "Generation 2 proof",
-        "The visible globe is restored as a code-generated object."
-      ],
-      [
-        "No-image proof",
-        "The globe does not require external images, generated art, or asset textures."
-      ],
-      [
-        "Shape proof",
-        "The object is constrained as a sphere without lower shell, rim, cap, bowl, or clipped-disk behavior."
-      ],
-      [
-        "Route proof",
-        mode === "standalone"
-          ? "Inspect Demo Universe uses the same globe system without becoming the parent Showroom."
-          : "Parent Showroom uses the same globe system while preserving route identity."
-      ],
-      [
-        "Hold proof",
-        "This layer stops at Generation 2. Phase binding is held for Generation 3."
-      ]
-    ].forEach(function addProof(pair) {
-      proofList.append(makeProofItem(pair[0], pair[1]));
+      ["Generation 2 proof", "The lower render layer is now responsible for mounting the visible code-generated globe."],
+      ["No-image proof", "The globe remains code-generated: no external image, generated art, or texture dependency is required."],
+      ["Mount proof", "This file populates the render root below the accepted shell instead of changing the hero."],
+      ["Route proof", mode === "standalone"
+        ? "Inspect Demo Universe uses the same globe system without becoming the parent Showroom."
+        : "Parent Showroom uses the same globe system while preserving route identity."],
+      ["Hold proof", "This stops at Generation 2. Phase binding and Gen 4 closeout remain held."]
+    ].forEach(function add(pair) {
+      proofList.append(proofItem(pair[0], pair[1]));
     });
 
-    textPanel.append(proofList);
+    const actions = el("div", "showroom-actions");
+    const primary = el("a", "showroom-button", mode === "standalone" ? "Return to Showroom" : "Inspect Demo Universe Earth");
+    primary.href = mode === "standalone" ? "/showroom/" : "/showroom/globe/";
+    actions.append(primary);
 
-    const actionRow = createElement("div", "showroom-actions");
-    const routeLink = createElement(
-      "a",
-      "showroom-button",
-      mode === "standalone" ? "Return to Showroom" : "Inspect Demo Universe Earth"
-    );
-    routeLink.href = mode === "standalone" ? "/showroom/" : "/showroom/globe/";
-    actionRow.append(routeLink);
-    textPanel.append(actionRow);
+    textPanel.append(proofList, actions);
 
-    const globeShell = createElement("article", "showroom-globe-shell");
-    const globeTitle = createElement("h2", "", "Generation 2 code-generated globe");
-    const mount = createElement("div", "showroom-globe-mount showroom-code-globe-mount");
+    const globeShell = el("article", "showroom-globe-shell");
+    const globeTitle = el("h2", "", "Generation 2 code-generated globe");
+    const mount = el("div", "showroom-globe-mount showroom-code-globe-mount");
     mount.id = mode === "standalone" ? "demoUniverseEarthMount" : "showroomGlobeMount";
-    mount.dataset.visibleCodeGlobe = "true";
-    mount.dataset.externalImageDependency = "false";
+    mount.dataset.visibleCodeGlobe = "pending";
+    mount.dataset.generation = GENERATION;
     globeShell.append(globeTitle, mount);
 
     grid.append(textPanel, globeShell);
 
-    const receiptPanel = createElement("section", "showroom-receipt-panel");
+    const receiptPanel = el("section", "showroom-receipt-panel");
     receiptPanel.append(
-      createElement("h2", "", "Receipts"),
-      createElement(
-        "p",
-        "",
-        "This receipt field verifies Generation 2 only: a visible code-generated globe restored on the parent Showroom and Inspect Demo Universe routes."
-      )
+      el("h2", "", "Receipts"),
+      el("p", "", "This receipt field verifies Generation 2 render mount activation only. It does not claim Gen 3 phase binding or Gen 4 closeout.")
     );
 
     root.append(grid, receiptPanel);
 
-    const instrument = global.ShowroomGlobeInstrument.createGlobe({
-      mount: mount,
-      runtime: runtime,
-      contract: contract
-    });
+    let instrument = null;
+
+    if (
+      global.ShowroomGlobeInstrument &&
+      typeof global.ShowroomGlobeInstrument.createGlobe === "function"
+    ) {
+      instrument = global.ShowroomGlobeInstrument.createGlobe({
+        mount,
+        runtime,
+        contract
+      });
+      mount.dataset.visibleCodeGlobe = "true";
+      root.dataset.visibleCodeGlobe = "true";
+    } else {
+      instrument = renderMissingInstrument(mount, runtime, contract);
+      mount.dataset.visibleCodeGlobe = "false";
+      root.dataset.visibleCodeGlobe = "false";
+    }
 
     writeReceipts(receiptPanel, contract, runtime, instrument);
 
     root.dataset.showroomRenderComplete = "true";
-    root.dataset.showroomInstrumentVersion = instrument.version;
+    root.dataset.showroomRenderVersion = VERSION;
 
     return {
       version: VERSION,
       generation: GENERATION,
-      contract: contract,
-      runtime: runtime,
-      instrument: instrument,
+      mode,
+      contract,
+      runtime,
+      instrument,
       globe: instrument
     };
   }
 
   global.ShowroomRender = Object.freeze({
-    VERSION: VERSION,
-    GENERATION: GENERATION,
-    renderShowroomProofSurface: renderShowroomProofSurface
+    VERSION,
+    GENERATION,
+    renderShowroomProofSurface
   });
 })(window);

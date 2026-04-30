@@ -1,7 +1,7 @@
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GENERATION_4_CLOSEOUT_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_UNIVERSE_OUR_UNIVERSE_GEN4_TNT_v1";
   const GENERATION = "GENERATION_4";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
@@ -10,51 +10,125 @@
     cloudDegreesPerSecond: 2.1,
     moonDegreesPerSecond: 0.85,
     phaseMs: 3200,
-    homeLabel: "Home Anchor · Fort Worth"
+    bodyMs: 4200,
+    homeLabel: "Earth Anchor · Our Universe"
   });
+
+  const UNIVERSE_BODIES = Object.freeze([
+    Object.freeze({
+      key: "SUN",
+      name: "Sun",
+      role: "central light and gravity anchor",
+      className: "sun",
+      order: 0
+    }),
+    Object.freeze({
+      key: "MERCURY",
+      name: "Mercury",
+      role: "inner planet and first orbital marker",
+      className: "mercury",
+      order: 1
+    }),
+    Object.freeze({
+      key: "VENUS",
+      name: "Venus",
+      role: "inner planet and pressure marker",
+      className: "venus",
+      order: 2
+    }),
+    Object.freeze({
+      key: "EARTH",
+      name: "Earth",
+      role: "primary inspection anchor",
+      className: "earth",
+      order: 3
+    }),
+    Object.freeze({
+      key: "MOON",
+      name: "Moon",
+      role: "Earth companion and first orbital proof",
+      className: "moon",
+      order: 4
+    }),
+    Object.freeze({
+      key: "MARS",
+      name: "Mars",
+      role: "outer terrestrial marker",
+      className: "mars",
+      order: 5
+    }),
+    Object.freeze({
+      key: "JUPITER",
+      name: "Jupiter",
+      role: "gas giant and mass-scale marker",
+      className: "jupiter",
+      order: 6
+    }),
+    Object.freeze({
+      key: "SATURN",
+      name: "Saturn",
+      role: "ringed planet and boundary marker",
+      className: "saturn",
+      order: 7
+    }),
+    Object.freeze({
+      key: "URANUS",
+      name: "Uranus",
+      role: "outer ice giant and tilted-axis marker",
+      className: "uranus",
+      order: 8
+    }),
+    Object.freeze({
+      key: "NEPTUNE",
+      name: "Neptune",
+      role: "outer ice giant and far-orbit marker",
+      className: "neptune",
+      order: 9
+    })
+  ]);
 
   const PHASES = Object.freeze([
     Object.freeze({
       key: "HOME",
       title: "Home Anchor",
       state: "anchored",
-      proof: "The inspection globe begins from home before motion is interpreted.",
-      consequence: "Origin is established before the phase sequence advances."
+      proof: "Earth remains the primary inspection anchor inside the larger Demo Universe.",
+      consequence: "The inspection begins from Earth without reducing the universe to Earth alone."
     }),
     Object.freeze({
       key: "BOUNDARY",
-      title: "Boundary",
-      state: "state-defined",
-      proof: "The visible sphere remains code-generated while its meaning is carried by state.",
-      consequence: "The globe’s edge is visible, while authority belongs to the phase receipt."
+      title: "Universe Boundary",
+      state: "scaffolded",
+      proof: "The model names the Sun, Moon, and all planets as code-native entities.",
+      consequence: "The route carries our-universe scope instead of an isolated globe."
     }),
     Object.freeze({
       key: "MOTION",
-      title: "Motion",
-      state: "cycling",
-      proof: "The globe rotates as a visible instrument while the phase layer explains why it moves.",
-      consequence: "Motion is not decoration; it is mapped to the proof cycle."
+      title: "Orbital Motion",
+      state: "sequenced",
+      proof: "The visible system cycles through bodies and phases as readable code.",
+      consequence: "Motion expresses relationship, not decoration."
     }),
     Object.freeze({
       key: "REALM",
-      title: "Realm",
+      title: "Realm Separation",
       state: "separated",
-      proof: "Inspect Demo Universe remains standalone and does not become the parent Showroom.",
-      consequence: "The globe can be inspected without collapsing route identity."
+      proof: "The parent Showroom remains the proof shell while Demo Universe owns inspection.",
+      consequence: "The visible universe model stays on the inspection route only."
     }),
     Object.freeze({
       key: "RECEIPT",
-      title: "Receipt",
+      title: "Receipt Field",
       state: "written",
-      proof: "The active phase leaves readable evidence.",
-      consequence: "The user can audit what state the globe is carrying."
+      proof: "Every body and phase leaves readable evidence.",
+      consequence: "The user can audit the universe model without hidden graphic dependency."
     }),
     Object.freeze({
       key: "NEXT",
-      title: "Next",
+      title: "Closeout Ready",
       state: "closed-ready",
-      proof: "The phase cycle returns to readiness and closes the inspection route.",
-      consequence: "Generation 4 is closed on the inspection page without moving the globe to the parent shell."
+      proof: "Generation 4 closes with our-universe scope preserved.",
+      consequence: "Further work becomes refinement, not generation recovery."
     })
   ]);
 
@@ -93,10 +167,10 @@
     return Object.assign(
       {
         mode: "standalone",
-        realm: "demo-universe-earth-inspection-realm",
+        realm: "demo-universe-our-universe-realm",
         route: "/showroom/globe/",
-        routeRole: "standalone-earth-inspection-surface",
-        chamber: "STANDALONE_DEMO_UNIVERSE_EARTH",
+        routeRole: "standalone-demo-universe-inspection-surface",
+        chamber: "STANDALONE_DEMO_UNIVERSE_OUR_UNIVERSE",
         homeLabel: DEFAULTS.homeLabel,
         speedMultiplier: 1
       },
@@ -112,16 +186,36 @@
     return createElement("span", "showroom-code-cloud " + className);
   }
 
+  function buildBodyNode(body, index) {
+    const item = createElement("li", "showroom-universe-body showroom-universe-body-" + body.className);
+    setDataset(item, {
+      body: body.key,
+      index: index,
+      active: index === 3 ? "true" : "false"
+    });
+
+    const marker = createElement("span", "showroom-universe-marker");
+    const name = createElement("strong", "", body.name);
+    const role = createElement("span", "", body.role);
+
+    item.append(marker, name, role);
+    return item;
+  }
+
   function buildGlobeDom(contract) {
-    const root = createElement("section", "showroom-globe-instrument showroom-gen4-closeout-globe");
-    root.setAttribute("aria-label", "Generation 4 closed phase-bound code globe instrument");
+    const root = createElement("section", "showroom-globe-instrument showroom-gen4-closeout-globe showroom-demo-universe-instrument");
+    root.setAttribute("aria-label", "Generation 4 Demo Universe model for our universe");
 
     setDataset(root, {
       generation: GENERATION,
       authority: AUTHORITY,
-      instrumentType: "closed-phase-bound-code-globe",
+      instrumentType: "our-universe-code-model",
       visibleGlobe: "true",
       phaseBind: "complete",
+      demoUniverseScope: "our-universe",
+      sun: "included",
+      moon: "included",
+      planets: "included",
       graphicDependency: "false",
       externalImageDependency: "false",
       generatedImageDependency: "false",
@@ -129,8 +223,8 @@
       finalCloseout: "true"
     });
 
-    const stage = createElement("div", "showroom-code-globe-stage showroom-gen4-stage");
-    stage.setAttribute("aria-label", "Generation 4 closed code globe stage");
+    const stage = createElement("div", "showroom-code-globe-stage showroom-gen4-stage showroom-demo-universe-stage");
+    stage.setAttribute("aria-label", "Generation 4 Demo Universe stage");
 
     const lightField = createElement("div", "showroom-code-light-field");
     const sun = createElement("div", "showroom-code-sun", "☀");
@@ -144,7 +238,7 @@
 
     const globe = createElement("div", "showroom-code-globe showroom-phase-bound-globe showroom-gen4-closed-globe");
     globe.setAttribute("role", "img");
-    globe.setAttribute("aria-label", "Generation 4 closed visible code globe");
+    globe.setAttribute("aria-label", "Earth anchor inside the Demo Universe model");
 
     const surfaceTrack = createElement("div", "showroom-code-surface-track");
     const surfaceA = createElement("div", "showroom-code-surface showroom-code-surface-a");
@@ -180,7 +274,7 @@
     axisFrame.append(axis, globe);
 
     const phasePanel = createElement("article", "showroom-phase-panel");
-    const phaseKicker = createElement("p", "showroom-narrative-kicker", "Generation 4 closeout");
+    const phaseKicker = createElement("p", "showroom-narrative-kicker", "Generation 4 · Demo Universe");
     const phaseTitle = createElement("h2", "showroom-narrative-title", PHASES[0].title);
     const phaseProof = createElement("p", "showroom-narrative-proof", PHASES[0].proof);
     const phaseConsequence = createElement("p", "showroom-narrative-consequence", PHASES[0].consequence);
@@ -196,26 +290,29 @@
       phaseRing.append(node);
     });
 
-    phasePanel.append(phaseKicker, phaseTitle, phaseProof, phaseConsequence, phaseRing);
+    const bodyList = createElement("ol", "showroom-universe-bodies");
+    UNIVERSE_BODIES.forEach(function addBody(body, index) {
+      bodyList.append(buildBodyNode(body, index));
+    });
+
+    phasePanel.append(phaseKicker, phaseTitle, phaseProof, phaseConsequence, phaseRing, bodyList);
     stage.append(lightField, axisFrame, phasePanel);
 
     const caption = createElement(
       "h2",
       "showroom-globe-caption",
-      "GENERATION 4 · CLOSED PHASE-BOUND CODE GLOBE"
+      "GENERATION 4 · DEMO UNIVERSE · OUR UNIVERSE"
     );
 
     const tags = createElement("div", "showroom-contract-tags");
     [
       "GEN 4",
-      "globe=inspection-only",
+      "scope=our-universe",
+      "sun=included",
+      "moon=included",
+      "all-planets=included",
+      "earth=anchor",
       "phase-bind=complete",
-      "HOME",
-      "BOUNDARY",
-      "MOTION",
-      "REALM",
-      "RECEIPT",
-      "NEXT",
       "closeout=complete",
       "parent-globe=false"
     ].forEach(function addTag(text) {
@@ -224,11 +321,11 @@
 
     const status = createElement("aside", "showroom-globe-status");
     status.append(
-      createElement("h3", "", "Generation 4 closeout receipts"),
+      createElement("h3", "", "Demo Universe receipts"),
       createElement(
         "p",
         "",
-        "This layer closes the inspection-route globe. The parent Showroom remains the proof-realm shell; the visible globe remains inspection-only."
+        "This layer closes Generation 4 as our-universe scope. Earth remains the inspection anchor, while the Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, and Neptune are explicit code-native entities."
       )
     );
 
@@ -236,10 +333,15 @@
     [
       ["GENERATION", GENERATION],
       ["AUTHORITY", AUTHORITY],
-      ["INSTRUMENT_TYPE", "closed-phase-bound-code-globe"],
+      ["INSTRUMENT_TYPE", "our-universe-code-model"],
+      ["DEMO_UNIVERSE_SCOPE", "our-universe"],
       ["ROUTE_REALM", contract.realm],
       ["ROUTE_ROLE", contract.routeRole],
       ["VISIBLE_GLOBE", "true"],
+      ["EARTH_ROLE", "primary inspection anchor"],
+      ["SUN", "included"],
+      ["MOON", "included"],
+      ["PLANETS", "Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune"],
       ["PARENT_GLOBE_REQUIRED", "false"],
       ["PHASE_BIND", "complete"],
       ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
@@ -247,7 +349,7 @@
       ["GENERATION_4_CLOSEOUT", "complete"],
       ["GEN4_CLOSEOUT", "complete"],
       ["FINAL_CLOSEOUT", "true"],
-      ["GEN_4_FINAL_PASS", "inspection-route-closeout"],
+      ["GEN_4_FINAL_PASS", "demo-universe-our-universe-closeout"],
       ["NEXT_ALLOWED_GENERATION", "POST_GEN4_REFINEMENT_ONLY"]
     ].forEach(function addReceipt(pair) {
       receipts.append(receiptLine(pair[0], pair[1]));
@@ -270,6 +372,7 @@
       phaseProof,
       phaseConsequence,
       phaseRing,
+      bodyList,
       receipts
     };
   }
@@ -289,6 +392,7 @@
     const cloudSpeed = DEFAULTS.cloudDegreesPerSecond * speedMultiplier;
     const moonSpeed = DEFAULTS.moonDegreesPerSecond * speedMultiplier;
     const phaseMs = Number(opts.phaseMs || DEFAULTS.phaseMs);
+    const bodyMs = Number(opts.bodyMs || DEFAULTS.bodyMs);
 
     mount.innerHTML = "";
     mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount", "showroom-gen4-mount");
@@ -297,9 +401,10 @@
       generation: GENERATION,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
-      instrumentType: "closed-phase-bound-code-globe",
+      instrumentType: "our-universe-code-model",
       visibleGlobe: "true",
       phaseBind: "complete",
+      demoUniverseScope: "our-universe",
       gen4Closeout: "complete",
       finalCloseout: "true"
     });
@@ -309,13 +414,15 @@
 
     let active = true;
     let frame = 0;
-    let timer = 0;
+    let phaseTimer = 0;
+    let bodyTimer = 0;
     let previous = performance.now();
     let surfaceShift = 0;
     let cloudA = 0;
     let cloudB = 0;
-    let moon = contract.mode === "standalone" ? 124 : 34;
+    let moon = 124;
     let phaseIndex = 0;
+    let bodyIndex = 3;
     const localReceipts = [];
 
     function writeRuntimeReceipt(type, payload) {
@@ -328,8 +435,8 @@
       };
 
       localReceipts.push(receipt);
-      if (localReceipts.length > 96) {
-        localReceipts.splice(0, localReceipts.length - 96);
+      if (localReceipts.length > 128) {
+        localReceipts.splice(0, localReceipts.length - 128);
       }
 
       if (runtime && typeof runtime.writeReceipt === "function") {
@@ -341,6 +448,37 @@
       }
 
       return receipt;
+    }
+
+    function setBody(index) {
+      bodyIndex = index % UNIVERSE_BODIES.length;
+      const body = UNIVERSE_BODIES[bodyIndex];
+
+      Array.from(dom.bodyList.children).forEach(function update(node, nodeIndex) {
+        node.dataset.active = nodeIndex === bodyIndex ? "true" : "false";
+      });
+
+      dom.root.dataset.currentBody = body.key;
+      mount.dataset.currentBody = body.key;
+
+      const oldBodyReceipt = dom.receipts.querySelectorAll("[data-body-receipt='true']");
+      oldBodyReceipt.forEach(function remove(node) {
+        node.remove();
+      });
+
+      const line = receiptLine("ACTIVE_BODY", body.name + ": " + body.role);
+      line.dataset.bodyReceipt = "true";
+      dom.receipts.append(line);
+
+      writeRuntimeReceipt("demo_universe_body_selected", {
+        body: body.key,
+        name: body.name,
+        role: body.role,
+        order: body.order,
+        route: contract.route,
+        realm: contract.realm,
+        scope: "our-universe"
+      });
     }
 
     function setPhase(index) {
@@ -372,13 +510,14 @@
       line.dataset.dynamicReceipt = "true";
       dom.receipts.append(line);
 
-      writeRuntimeReceipt("generation_4_phase_closed", {
+      writeRuntimeReceipt("demo_universe_generation_4_phase_closed", {
         phase: phase.key,
         state: phase.state,
         proof: phase.proof,
         consequence: phase.consequence,
         route: contract.route,
         realm: contract.realm,
+        scope: "our-universe",
         gen4Closeout: "complete",
         finalCloseout: true
       });
@@ -387,7 +526,13 @@
     function advancePhase() {
       if (!active) return;
       setPhase((phaseIndex + 1) % PHASES.length);
-      timer = global.setTimeout(advancePhase, phaseMs);
+      phaseTimer = global.setTimeout(advancePhase, phaseMs);
+    }
+
+    function advanceBody() {
+      if (!active) return;
+      setBody((bodyIndex + 1) % UNIVERSE_BODIES.length);
+      bodyTimer = global.setTimeout(advanceBody, bodyMs);
     }
 
     function tick(now) {
@@ -415,11 +560,15 @@
       active = true;
       previous = performance.now();
 
-      writeRuntimeReceipt("generation_4_closeout_started", {
+      writeRuntimeReceipt("demo_universe_generation_4_started", {
         generation: GENERATION,
         authority: AUTHORITY,
         route: contract.route,
         realm: contract.realm,
+        scope: "our-universe",
+        included: UNIVERSE_BODIES.map(function mapBody(body) {
+          return body.name;
+        }),
         visibleGlobe: true,
         phaseBind: "complete",
         gen4Closeout: "complete",
@@ -428,36 +577,45 @@
       });
 
       frame = global.requestAnimationFrame(tick);
-      timer = global.setTimeout(advancePhase, phaseMs);
+      phaseTimer = global.setTimeout(advancePhase, phaseMs);
+      bodyTimer = global.setTimeout(advanceBody, bodyMs);
     }
 
     function stop() {
       active = false;
       if (frame) global.cancelAnimationFrame(frame);
-      if (timer) global.clearTimeout(timer);
+      if (phaseTimer) global.clearTimeout(phaseTimer);
+      if (bodyTimer) global.clearTimeout(bodyTimer);
       frame = 0;
-      timer = 0;
+      phaseTimer = 0;
+      bodyTimer = 0;
 
-      writeRuntimeReceipt("generation_4_closeout_stopped", {
+      writeRuntimeReceipt("demo_universe_generation_4_stopped", {
         generation: GENERATION,
         authority: AUTHORITY,
         currentPhase: PHASES[phaseIndex].key,
+        currentBody: UNIVERSE_BODIES[bodyIndex].key,
         gen4Closeout: "complete"
       });
     }
 
     setPhase(0);
+    setBody(3);
     start();
 
     return {
       version: VERSION,
       generation: GENERATION,
       authority: AUTHORITY,
+      universeBodies: clone(UNIVERSE_BODIES),
       contract: clone(contract),
       start: start,
       stop: stop,
       next: function next() {
         setPhase((phaseIndex + 1) % PHASES.length);
+      },
+      nextBody: function nextBody() {
+        setBody((bodyIndex + 1) % UNIVERSE_BODIES.length);
       },
       destroy: function destroy() {
         stop();
@@ -470,9 +628,12 @@
           generation: GENERATION,
           authority: AUTHORITY,
           active: active,
+          scope: "our-universe",
           visibleGlobe: true,
           phaseBind: "complete",
           currentPhase: PHASES[phaseIndex].key,
+          currentBody: UNIVERSE_BODIES[bodyIndex].key,
+          bodies: clone(UNIVERSE_BODIES),
           gen4Closeout: "complete",
           finalCloseout: true,
           receipts: clone(localReceipts)
@@ -486,6 +647,7 @@
     GENERATION: GENERATION,
     AUTHORITY: AUTHORITY,
     PHASES: PHASES,
+    UNIVERSE_BODIES: UNIVERSE_BODIES,
     createGlobe: createGlobe
   });
 })(window);

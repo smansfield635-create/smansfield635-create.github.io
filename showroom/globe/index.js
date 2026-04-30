@@ -1,7 +1,7 @@
-(function bootDemoUniverseGeneration4Closeout(global, document) {
+(function bootDemoUniverseGeneration4ReceiptCleanup(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_STANDALONE_BOOT_GENERATION_4_CLOSEOUT_TNT_v1";
+  const VERSION = "SHOWROOM_STANDALONE_BOOT_GENERATION_4_RECEIPT_CLEANUP_CTG_v1";
   const GENERATION = "GENERATION_4";
   const ROUTE = "/showroom/globe/";
   const MODE = "standalone";
@@ -21,28 +21,75 @@
     document.documentElement.dataset.finalCloseout = detail === "failed" ? "false" : "true";
   }
 
+  function removeStalePanels() {
+    const selectors = [
+      "[data-generation3-standalone-panel='true']",
+      "[data-generation2-standalone-fallback='true']",
+      "[data-generation2-mount-fallback='true']",
+      "[data-generation4-closeout-panel='true']"
+    ];
+
+    selectors.forEach(function removeSelector(selector) {
+      Array.from(document.querySelectorAll(selector)).forEach(function remove(node) {
+        node.remove();
+      });
+    });
+
+    Array.from(document.querySelectorAll(".showroom-receipt-panel")).forEach(function inspect(panel) {
+      const text = panel.textContent || "";
+      const stale =
+        text.indexOf("Generation 2 render mount activation only") !== -1 ||
+        text.indexOf("This stops at Generation 2") !== -1 ||
+        text.indexOf("Generation 3 phase bind") !== -1 ||
+        text.indexOf("GEN3_PHASE_BINDheld") !== -1 ||
+        text.indexOf("GEN4_CLOSEOUTheld") !== -1 ||
+        text.indexOf("SHOWROOM_RENDER_GENERATION_2_RENDER_MOUNT_ACTIVATION_CTG_v1") !== -1 ||
+        text.indexOf("SHOWROOM_STANDALONE_BOOT_GENERATION_3_PHASE_BIND_TNT_v1") !== -1;
+
+      if (stale) {
+        panel.remove();
+      }
+    });
+  }
+
   function makeReceiptItem(name, value) {
     const item = document.createElement("li");
     item.innerHTML = "<strong>" + name + "</strong><span>" + String(value) + "</span>";
     return item;
   }
 
-  function appendPanel(title, body, rows) {
+  function appendCloseoutPanel() {
+    removeStalePanels();
+
     const host = document.getElementById("globe-main") || document.querySelector("main") || document.body;
     const panel = document.createElement("section");
     panel.className = "showroom-receipt-panel";
     panel.dataset.generation4CloseoutPanel = "true";
 
     const heading = document.createElement("h2");
-    heading.textContent = title;
+    heading.textContent = "Generation 4 closeout confirmation";
 
     const paragraph = document.createElement("p");
-    paragraph.textContent = body;
+    paragraph.textContent =
+      "The inspection route closes Generation 4. The visible code globe remains inspection-only; the parent Showroom remains the proof-realm shell.";
 
     const list = document.createElement("ul");
     list.className = "showroom-receipts";
 
-    rows.forEach(function add(row) {
+    [
+      ["ROUTE", ROUTE],
+      ["GENERATION", GENERATION],
+      ["VISIBLE_CODE_GLOBE", "true"],
+      ["PHASE_BIND", "complete"],
+      ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
+      ["PARENT_IDENTITY_SHARED", "false"],
+      ["PARENT_GLOBE_REQUIRED", "false"],
+      ["GENERATION_4_CLOSEOUT", "complete"],
+      ["GEN4_CLOSEOUT", "complete"],
+      ["FINAL_CLOSEOUT", "true"],
+      ["GEN_4_FINAL_PASS", "inspection-route-closeout"],
+      ["BOOT_TNT", VERSION]
+    ].forEach(function add(row) {
       list.append(makeReceiptItem(row[0], row[1]));
     });
 
@@ -108,9 +155,9 @@
     }, WAIT_STEP_MS);
   }
 
-  function writeCloseoutRuntimeReceipts(app) {
+  function writeRuntimeCloseout(app) {
     if (app && app.runtime && typeof app.runtime.writeReceipt === "function") {
-      app.runtime.writeReceipt("generation_4_route_closeout_confirmed", {
+      app.runtime.writeReceipt("generation_4_receipt_cleanup_confirmed", {
         generation: GENERATION,
         route: ROUTE,
         mode: MODE,
@@ -142,6 +189,7 @@
     setDocumentState("starting", "starting");
 
     const root = ensureRenderRoot();
+    removeStalePanels();
 
     waitForRender(
       Date.now(),
@@ -152,7 +200,9 @@
             mode: MODE
           });
 
-          writeCloseoutRuntimeReceipts(app);
+          writeRuntimeCloseout(app);
+          removeStalePanels();
+          appendCloseoutPanel();
 
           root.dataset.standaloneBootComplete = "true";
           root.dataset.standaloneBootVersion = VERSION;
@@ -165,26 +215,7 @@
 
           setDocumentState("complete", "complete");
 
-          appendPanel(
-            "Generation 4 closeout confirmation",
-            "The inspection route now closes Generation 4. The visible code globe remains inspection-only; the parent Showroom remains the proof-realm shell.",
-            [
-              ["ROUTE", ROUTE],
-              ["GENERATION", GENERATION],
-              ["VISIBLE_CODE_GLOBE", "true"],
-              ["PHASE_BIND", "complete"],
-              ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
-              ["PARENT_IDENTITY_SHARED", "false"],
-              ["PARENT_GLOBE_REQUIRED", "false"],
-              ["GENERATION_4_CLOSEOUT", "complete"],
-              ["GEN4_CLOSEOUT", "complete"],
-              ["FINAL_CLOSEOUT", "true"],
-              ["GEN_4_FINAL_PASS", "inspection-route-closeout"],
-              ["BOOT_TNT", VERSION]
-            ]
-          );
-
-          global.__DEMO_UNIVERSE_GENERATION_4_CLOSEOUT__ = {
+          global.__DEMO_UNIVERSE_GENERATION_4_RECEIPT_CLEANUP__ = {
             version: VERSION,
             generation: GENERATION,
             route: ROUTE,
@@ -199,38 +230,48 @@
           };
 
           global.dispatchEvent(
-            new CustomEvent("showroom:generation-4-closeout-complete", {
-              detail: global.__DEMO_UNIVERSE_GENERATION_4_CLOSEOUT__
+            new CustomEvent("showroom:generation-4-receipt-cleanup-complete", {
+              detail: global.__DEMO_UNIVERSE_GENERATION_4_RECEIPT_CLEANUP__
             })
           );
         } catch (error) {
           setDocumentState("failed", "failed");
-          appendPanel(
-            "Generation 4 closeout error",
-            "The inspection route attempted Generation 4 closeout, but the closeout boot failed.",
-            [
-              ["BOOT_TNT", VERSION],
-              ["ROUTE", ROUTE],
-              ["ERROR", error.message],
-              ["GENERATION_4_CLOSEOUT", "failed"]
-            ]
-          );
+          appendError(error);
         }
       },
       function onTimeout() {
         setDocumentState("render-missing", "render-missing");
-        appendPanel(
-          "Generation 4 closeout waiting",
-          "The inspection shell is live, but ShowroomRender.renderShowroomProofSurface is not available.",
-          [
-            ["BOOT_TNT", VERSION],
-            ["ROUTE", ROUTE],
-            ["MISSING", "ShowroomRender.renderShowroomProofSurface"],
-            ["GENERATION_4_CLOSEOUT", "blocked"]
-          ]
-        );
+        appendError(new Error("ShowroomRender.renderShowroomProofSurface unavailable"));
       }
     );
+  }
+
+  function appendError(error) {
+    const host = document.getElementById("globe-main") || document.querySelector("main") || document.body;
+    const panel = document.createElement("section");
+    panel.className = "showroom-receipt-panel";
+    panel.dataset.generation4CloseoutPanel = "true";
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Generation 4 receipt cleanup error";
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = "Generation 4 cleanup attempted, but boot did not complete cleanly.";
+
+    const list = document.createElement("ul");
+    list.className = "showroom-receipts";
+
+    [
+      ["BOOT_TNT", VERSION],
+      ["ROUTE", ROUTE],
+      ["ERROR", error.message],
+      ["GENERATION_4_CLOSEOUT", "blocked"]
+    ].forEach(function add(row) {
+      list.append(makeReceiptItem(row[0], row[1]));
+    });
+
+    panel.append(heading, paragraph, list);
+    host.append(panel);
   }
 
   if (document.readyState === "loading") {

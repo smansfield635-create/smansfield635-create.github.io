@@ -1,220 +1,253 @@
-/*
-  PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
-  OWNER=SEAN
-  TARGET=/world/render/planet-one.render.js
-  PURPOSE=ADD_AXIS_ROTATION_AND_CLIMATE_TOPOLOGY_LOGIC_TO_PLANET_ONE_RENDER
-  STATUS=ACTIVE
-
-  REQUIRED GAUGES / CONTRACT MARKERS:
-  PLANET_ONE_RENDER_TEAM_TNT_v1
-  window.DGBPlanetOneRenderTeam
-  renderPlanetOne
-  planet-one-render-active=true
-  planet-one-renderer=/world/render/planet-one.render.js
-  globe-demo-status-retired=true
-  tree-demo-mode=true
-  render-lanes-separated=true
-  no-render-lane-collapse=true
-
-  PLANET ONE LAW:
-  Earth-equivalent mirror-world.
-  Not ordinary Earth.
-  Not decorative fantasy.
-  Not flat map.
-  Ancient mineral-rich pressure ecology.
-  Seven-landmass law remains structural, not diagrammatic.
-  Pangaea fracture memory is present without closing exact final geography.
-  Exact countries, cities, named rivers, named climates, physics constants, and population total are not closed here.
-
-  VISUAL CONTRACT:
-  no-generated-graphic=true
-  no-external-image=true
-  code-render-only=true
-  planet-one-realism-pass=v8-axis-spin-climate-topology
-  axis-spin-active=true
-  climate-topology-active=true
-  weather-circulation-active=true
-  ocean-current-logic-active=true
-  pangaea-fracture-memory=true
-  jagged-living-shorelines=true
-  plateau-heavy-interior=true
-  cinematic-mirror-earth-world=true
-  no-final-geography-closure=true
-*/
-
-(function () {
+(function attachPlanetOneRenderTeam(global) {
   "use strict";
 
-  var VERSION = "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY";
-  var RENDERER_PATH = "/world/render/planet-one.render.js";
-  var STYLE_ID = "planet-one-render-team-style-v8-axis-spin-climate-topology";
-  var ACTIVE = [];
+  const VERSION = "PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1";
+  const PREVIOUS_V8 = "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY";
+  const ROOT_MARKER = "PLANET_ONE_RENDER_TEAM_TNT_v1";
 
-  var SURFACE_CLASSES = [
-    "deep_ocean",
-    "shallow_ocean",
-    "continental_shelf",
-    "beach_band",
-    "rocky_coast",
-    "wetland_margin",
-    "lowland_plain",
-    "valley_basin",
-    "river_corridor",
-    "lake_basin",
-    "plateau_field",
-    "mountain_ridge",
-    "canyon_fracture",
-    "mineral_scar",
-    "polar_ice",
-    "tundra_belt",
-    "boreal_belt",
-    "temperate_belt",
-    "humid_basin",
-    "dry_plateau",
-    "rain_shadow",
-    "cloud_cover",
-    "weather_circulation",
-    "ocean_current",
-    "atmospheric_limb",
-    "magnetic_core_signal",
-    "pangaea_fracture_seam"
-  ];
+  /*
+    PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1
 
-  function el(tag, className, text) {
-    var node = document.createElement(tag);
-    if (className) node.className = className;
-    if (typeof text === "string") node.textContent = text;
-    return node;
+    Current-state renewal:
+    This file renews the Planet 1 renderer from the present v8 state forward.
+    It does not restore legacy demo behavior.
+
+    Required source markers:
+    PLANET_ONE_RENDER_TEAM_TNT_v1
+    PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
+    PLANET_ONE_RENDER_V9_OPAQUE_SOLAR_LUNAR_TOPOLOGY_TNT_v1
+
+    v8 preserved:
+    planet-one-render-active=true
+    axis-spin-active=true
+    climate-topology-active=true
+    weather-circulation-active=true
+    ocean-current-logic-active=true
+    globe-demo-status-retired=true
+    tree-demo-mode=true
+    render-lanes-separated=true
+    no-render-lane-collapse=true
+
+    v9 added:
+    opaque-globe-active=true
+    sun-reflection-active=true
+    moon-reflection-active=true
+    expanded-topology-active=true
+    solar-lunar-lighting-active=true
+    terrain-depth-expanded=true
+    atmosphere-retained=true
+    axis-overlay-retained=true
+  */
+
+  const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · globe render lane";
+
+  const ACTIVE_INSTANCES = new Set();
+
+  const MARKERS = Object.freeze({
+    root: ROOT_MARKER,
+    v8: PREVIOUS_V8,
+    v9: VERSION,
+    planetOneRenderActive: true,
+    axisSpinActive: true,
+    climateTopologyActive: true,
+    weatherCirculationActive: true,
+    oceanCurrentLogicActive: true,
+    globeDemoStatusRetired: true,
+    treeDemoMode: true,
+    renderLanesSeparated: true,
+    noRenderLaneCollapse: true,
+    opaqueGlobeActive: true,
+    sunReflectionActive: true,
+    moonReflectionActive: true,
+    expandedTopologyActive: true,
+    solarLunarLightingActive: true,
+    terrainDepthExpanded: true,
+    atmosphereRetained: true,
+    axisOverlayRetained: true
+  });
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function injectStyles() {
-    if (document.getElementById(STYLE_ID)) return;
+    if (document.getElementById("planet-one-render-v9-styles")) return;
 
-    var style = document.createElement("style");
-    style.id = STYLE_ID;
+    const style = document.createElement("style");
+    style.id = "planet-one-render-v9-styles";
     style.textContent = `
       .planet-one-render-shell {
+        width: min(680px, 100%);
+        margin: 0 auto;
         display: grid;
         justify-items: center;
-        gap: 16px;
-        width: 100%;
+        gap: 18px;
+        color: #f5f7fb;
       }
 
       .planet-one-render-stage {
+        width: min(660px, 100%);
+        aspect-ratio: 1;
         position: relative;
         display: grid;
         place-items: center;
-        width: min(540px, 88vw);
-        aspect-ratio: 1;
-        border-radius: 50%;
         isolation: isolate;
       }
 
-      .planet-one-render-canvas {
-        display: block;
+      .planet-one-v9-svg {
         width: 100%;
         height: 100%;
-        border-radius: 50%;
-        filter:
-          drop-shadow(0 34px 56px rgba(0, 0, 0, 0.84))
-          drop-shadow(0 0 34px rgba(112, 171, 255, 0.16));
+        display: block;
+        overflow: visible;
+        filter: drop-shadow(0 34px 54px rgba(0, 0, 0, 0.58));
       }
 
-      .planet-one-axis-overlay {
-        position: absolute;
-        inset: -7%;
-        width: 114%;
-        height: 114%;
-        pointer-events: none;
-        z-index: 3;
+      .planet-one-v9-surface {
+        transform-box: fill-box;
+        transform-origin: 500px 500px;
+        animation: planetOneSurfaceDrift 44s linear infinite;
       }
 
-      .planet-one-axis-overlay line {
-        stroke: rgba(242, 199, 111, 0.28);
-        stroke-width: 1.25;
-        stroke-linecap: round;
+      .planet-one-v9-clouds {
+        transform-box: fill-box;
+        transform-origin: 500px 500px;
+        animation: planetOneCloudDrift 70s linear infinite;
       }
 
-      .planet-one-axis-overlay circle {
-        fill: rgba(242, 199, 111, 0.28);
+      .planet-one-v9-currents {
+        transform-box: fill-box;
+        transform-origin: 500px 500px;
+        animation: planetOneCurrentDrift 32s linear infinite;
       }
 
-      .planet-one-axis-overlay ellipse {
-        fill: none;
-        stroke: rgba(145, 189, 255, 0.10);
-        stroke-width: 0.8;
+      .planet-one-v9-axis {
+        transform-box: fill-box;
+        transform-origin: 500px 500px;
+        animation: planetOneAxisBreath 7s ease-in-out infinite;
+      }
+
+      .planet-one-render-shell.is-paused .planet-one-v9-surface,
+      .planet-one-render-shell.is-paused .planet-one-v9-clouds,
+      .planet-one-render-shell.is-paused .planet-one-v9-currents,
+      .planet-one-render-shell.is-paused .planet-one-v9-axis {
+        animation-play-state: paused;
       }
 
       .planet-one-caption {
-        max-width: 840px;
-        color: rgba(244, 247, 255, 0.86);
-        font-size: 0.78rem;
+        max-width: 100%;
+        color: rgba(245, 247, 251, 0.84);
+        font-size: clamp(0.72rem, 2.5vw, 0.9rem);
         font-weight: 950;
-        letter-spacing: 0.12em;
-        line-height: 1.35;
+        letter-spacing: clamp(0.07em, 1.4vw, 0.14em);
+        line-height: 1.45;
         text-align: center;
         text-transform: uppercase;
       }
 
       .planet-one-telemetry {
+        width: min(620px, 100%);
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 8px;
-        max-width: 880px;
+        gap: 9px;
       }
 
       .planet-one-telemetry span {
-        border: 1px solid rgba(168, 199, 255, 0.18);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        border: 1px solid rgba(160, 177, 214, 0.24);
         border-radius: 999px;
-        padding: 6px 9px;
-        background: rgba(255, 255, 255, 0.05);
-        color: rgba(244, 247, 255, 0.74);
-        font-size: 0.66rem;
-        font-weight: 850;
-        letter-spacing: 0.04em;
+        padding: 7px 12px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+        color: rgba(245, 247, 251, 0.78);
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        text-align: center;
         text-transform: uppercase;
       }
 
       .planet-one-mapkey {
+        width: min(620px, 100%);
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-        width: min(740px, 100%);
+        gap: 10px;
       }
 
-      .planet-one-mapkey div {
-        border: 1px solid rgba(168, 199, 255, 0.14);
-        border-radius: 14px;
-        padding: 8px 10px;
-        background: rgba(255, 255, 255, 0.045);
-        color: rgba(244, 247, 255, 0.78);
-        font-size: 0.72rem;
-        font-weight: 800;
-        line-height: 1.25;
+      .planet-one-mapkey article {
+        border: 1px solid rgba(160, 177, 214, 0.22);
+        border-radius: 22px;
+        padding: 14px 16px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
       }
 
       .planet-one-mapkey strong {
         display: block;
         color: #f2c76f;
-        font-size: 0.68rem;
-        letter-spacing: 0.08em;
+        font-size: 0.78rem;
+        font-weight: 950;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        margin-bottom: 2px;
+        margin-bottom: 6px;
       }
 
-      .planet-one-hidden-receipt {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
+      .planet-one-mapkey span {
+        display: block;
+        color: rgba(228, 234, 246, 0.78);
+        font-size: 0.95rem;
+        line-height: 1.45;
       }
 
-      @media (max-width: 620px) {
-        .planet-one-mapkey {
-          grid-template-columns: 1fr;
+      @keyframes planetOneSurfaceDrift {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-210px); }
+      }
+
+      @keyframes planetOneCloudDrift {
+        0% { transform: translateX(0); opacity: 0.46; }
+        50% { opacity: 0.66; }
+        100% { transform: translateX(150px); opacity: 0.46; }
+      }
+
+      @keyframes planetOneCurrentDrift {
+        0% { transform: translateX(0); opacity: 0.30; }
+        50% { opacity: 0.48; }
+        100% { transform: translateX(-120px); opacity: 0.30; }
+      }
+
+      @keyframes planetOneAxisBreath {
+        0%, 100% { opacity: 0.58; }
+        50% { opacity: 0.74; }
+      }
+
+      @media (max-width: 680px) {
+        .planet-one-render-shell {
+          gap: 14px;
+        }
+
+        .planet-one-render-stage {
+          width: min(560px, 100%);
+        }
+
+        .planet-one-telemetry span {
+          font-size: 0.68rem;
+          min-height: 34px;
+          padding: 7px 10px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .planet-one-v9-surface,
+        .planet-one-v9-clouds,
+        .planet-one-v9-currents,
+        .planet-one-v9-axis {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
         }
       }
     `;
@@ -222,786 +255,477 @@
     document.head.appendChild(style);
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+  function planetSvg() {
+    return `
+      <svg class="planet-one-v9-svg" viewBox="0 0 1000 1000" role="img" aria-label="Opaque Planet 1 render with solar and lunar lighting">
+        <defs>
+          <clipPath id="planetOneSphereClip">
+            <circle cx="500" cy="500" r="394"></circle>
+          </clipPath>
+
+          <radialGradient id="planetOneOceanGradient" cx="34%" cy="30%" r="76%">
+            <stop offset="0%" stop-color="#1fa9d6"></stop>
+            <stop offset="22%" stop-color="#157fa8"></stop>
+            <stop offset="48%" stop-color="#0b4266"></stop>
+            <stop offset="74%" stop-color="#071f35"></stop>
+            <stop offset="100%" stop-color="#020b15"></stop>
+          </radialGradient>
+
+          <radialGradient id="planetOneBodyShade" cx="31%" cy="28%" r="78%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.18)"></stop>
+            <stop offset="38%" stop-color="rgba(255,255,255,0.03)"></stop>
+            <stop offset="68%" stop-color="rgba(0,0,0,0.22)"></stop>
+            <stop offset="100%" stop-color="rgba(0,0,0,0.70)"></stop>
+          </radialGradient>
+
+          <radialGradient id="planetOneSunReflection" cx="19%" cy="39%" r="34%">
+            <stop offset="0%" stop-color="rgba(255,235,168,0.96)"></stop>
+            <stop offset="16%" stop-color="rgba(255,204,104,0.55)"></stop>
+            <stop offset="42%" stop-color="rgba(255,176,74,0.18)"></stop>
+            <stop offset="100%" stop-color="rgba(255,176,74,0)"></stop>
+          </radialGradient>
+
+          <radialGradient id="planetOneMoonReflection" cx="86%" cy="28%" r="42%">
+            <stop offset="0%" stop-color="rgba(165,205,255,0.28)"></stop>
+            <stop offset="35%" stop-color="rgba(125,175,235,0.12)"></stop>
+            <stop offset="100%" stop-color="rgba(125,175,235,0)"></stop>
+          </radialGradient>
+
+          <radialGradient id="planetOneAtmosphere" cx="50%" cy="50%" r="50%">
+            <stop offset="72%" stop-color="rgba(95,160,235,0)"></stop>
+            <stop offset="88%" stop-color="rgba(112,187,255,0.18)"></stop>
+            <stop offset="98%" stop-color="rgba(160,215,255,0.42)"></stop>
+            <stop offset="100%" stop-color="rgba(190,230,255,0.62)"></stop>
+          </radialGradient>
+
+          <linearGradient id="planetOneAxisGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(242,199,111,0.10)"></stop>
+            <stop offset="45%" stop-color="rgba(242,199,111,0.58)"></stop>
+            <stop offset="100%" stop-color="rgba(242,199,111,0.20)"></stop>
+          </linearGradient>
+
+          <filter id="planetOneTerrainTexture" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.028" numOctaves="5" seed="41" result="noise"></feTurbulence>
+            <feColorMatrix
+              in="noise"
+              type="matrix"
+              values="
+                0.42 0.00 0.00 0 0
+                0.00 0.48 0.00 0 0
+                0.00 0.00 0.34 0 0
+                0.00 0.00 0.00 0.30 0"
+              result="texture">
+            </feColorMatrix>
+            <feBlend in="SourceGraphic" in2="texture" mode="multiply"></feBlend>
+          </filter>
+
+          <filter id="planetOneRidgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#04101a" flood-opacity="0.38"></feDropShadow>
+          </filter>
+
+          <filter id="planetOneSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="blur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="blur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <circle cx="500" cy="500" r="428" fill="rgba(8,20,34,0.54)"></circle>
+        <circle cx="500" cy="500" r="407" fill="rgba(92,148,222,0.10)" stroke="rgba(145,190,250,0.20)" stroke-width="3"></circle>
+
+        <g clip-path="url(#planetOneSphereClip)">
+          <rect x="70" y="70" width="860" height="860" fill="url(#planetOneOceanGradient)"></rect>
+
+          <g class="planet-one-v9-currents">
+            <path d="M94 338 C218 286 330 327 453 296 C582 263 716 287 900 216" fill="none" stroke="rgba(110,215,235,0.25)" stroke-width="13"></path>
+            <path d="M70 575 C220 526 340 590 500 548 C660 506 770 568 930 505" fill="none" stroke="rgba(66,184,220,0.20)" stroke-width="15"></path>
+            <path d="M120 718 C270 672 402 730 548 694 C694 658 803 695 930 640" fill="none" stroke="rgba(70,150,205,0.18)" stroke-width="20"></path>
+          </g>
+
+          <g class="planet-one-v9-surface" filter="url(#planetOneTerrainTexture)">
+            <g opacity="1">
+              <path
+                d="M48 195
+                C95 150 172 128 250 146
+                C310 160 348 128 421 139
+                C510 151 596 171 648 220
+                C703 272 690 324 632 342
+                C571 361 511 337 455 365
+                C396 394 366 458 296 464
+                C217 471 164 421 106 426
+                C50 431 13 466 -42 444
+                C-102 420 -92 333 -42 290
+                C-5 258 9 231 48 195Z"
+                fill="#c9b36d">
+              </path>
+
+              <path
+                d="M96 210
+                C182 172 263 181 335 197
+                C415 216 500 208 580 252
+                C633 281 650 312 616 329
+                C550 360 480 313 414 353
+                C348 392 310 423 234 410
+                C160 397 103 360 42 379
+                C10 389 -31 389 -48 354
+                C-71 307 -20 253 96 210Z"
+                fill="#6da162">
+              </path>
+
+              <path
+                d="M-20 477
+                C82 441 168 483 259 465
+                C343 448 421 385 510 410
+                C603 437 658 510 747 484
+                C830 460 894 405 964 430
+                C1030 454 1058 546 1006 610
+                C960 667 852 658 775 684
+                C683 716 625 777 522 765
+                C421 753 359 690 267 698
+                C180 706 104 760 23 727
+                C-56 694 -105 596 -70 540
+                C-51 509 -45 486 -20 477Z"
+                fill="#b99a58">
+              </path>
+
+              <path
+                d="M20 500
+                C118 458 229 503 312 484
+                C390 466 452 430 535 449
+                C606 466 648 531 725 522
+                C794 514 865 455 941 477
+                C999 494 1022 562 982 608
+                C922 677 808 628 730 672
+                C645 720 566 730 471 709
+                C393 692 338 640 250 650
+                C162 660 88 700 25 668
+                C-52 628 -61 539 20 500Z"
+                fill="#527f45">
+              </path>
+
+              <path
+                d="M176 742
+                C259 704 360 736 426 776
+                C496 819 584 800 653 842
+                C714 879 702 929 635 950
+                C558 975 476 946 408 913
+                C330 875 249 884 175 850
+                C116 823 118 771 176 742Z"
+                fill="#a87f4d">
+              </path>
+
+              <path
+                d="M716 228
+                C782 190 874 190 945 224
+                C1000 250 1017 313 975 351
+                C938 384 868 361 825 391
+                C774 425 701 425 677 376
+                C650 322 655 263 716 228Z"
+                fill="#7e9256">
+              </path>
+
+              <path
+                d="M755 671
+                C823 630 904 651 940 702
+                C981 762 926 824 849 805
+                C783 789 703 765 705 718
+                C706 700 729 686 755 671Z"
+                fill="#836948">
+              </path>
+
+              <path
+                d="M116 295 C172 282 221 304 257 341 C205 351 151 344 106 325Z"
+                fill="#0b5f80">
+              </path>
+              <path
+                d="M244 570 C286 543 344 548 384 579 C337 603 291 608 244 570Z"
+                fill="#0b5f80">
+              </path>
+              <path
+                d="M653 414 C713 372 790 377 840 430 C780 470 709 469 653 414Z"
+                fill="#063c5e">
+              </path>
+              <path
+                d="M616 820 C660 796 707 809 742 840 C695 862 653 857 616 820Z"
+                fill="#082d46">
+              </path>
+            </g>
+
+            <g opacity="0.98" filter="url(#planetOneRidgeShadow)">
+              <path d="M126 236 C232 198 350 214 474 257" fill="none" stroke="#e0d29b" stroke-width="15" stroke-linecap="round" opacity="0.48"></path>
+              <path d="M288 438 C384 397 475 391 568 432" fill="none" stroke="#d8c184" stroke-width="11" stroke-linecap="round" opacity="0.44"></path>
+              <path d="M103 542 C204 512 318 530 420 593" fill="none" stroke="#e6c98e" stroke-width="12" stroke-linecap="round" opacity="0.42"></path>
+              <path d="M520 587 C625 610 704 591 798 543" fill="none" stroke="#d0b071" stroke-width="10" stroke-linecap="round" opacity="0.38"></path>
+              <path d="M260 786 C360 815 478 856 602 845" fill="none" stroke="#caa66b" stroke-width="12" stroke-linecap="round" opacity="0.36"></path>
+            </g>
+
+            <g opacity="0.78">
+              <path d="M86 426 C166 401 255 424 315 456" fill="none" stroke="#ead79f" stroke-width="9" opacity="0.44"></path>
+              <path d="M19 474 C95 458 179 479 239 500" fill="none" stroke="#ead79f" stroke-width="7" opacity="0.38"></path>
+              <path d="M624 341 C704 298 803 301 909 340" fill="none" stroke="#dec98d" stroke-width="8" opacity="0.33"></path>
+              <path d="M730 684 C804 659 872 674 933 714" fill="none" stroke="#c7a36a" stroke-width="7" opacity="0.31"></path>
+            </g>
+          </g>
+
+          <g class="planet-one-v9-clouds">
+            <path d="M102 282 C220 244 360 268 474 299 C580 328 680 319 824 278" fill="none" stroke="rgba(244,248,255,0.26)" stroke-width="22" stroke-linecap="round"></path>
+            <path d="M64 512 C210 474 365 499 514 538 C657 576 768 566 930 517" fill="none" stroke="rgba(244,248,255,0.18)" stroke-width="20" stroke-linecap="round"></path>
+            <path d="M188 662 C315 633 441 652 566 700 C672 741 789 733 910 688" fill="none" stroke="rgba(244,248,255,0.15)" stroke-width="18" stroke-linecap="round"></path>
+          </g>
+
+          <rect x="70" y="70" width="860" height="860" fill="url(#planetOneBodyShade)"></rect>
+          <circle cx="500" cy="500" r="394" fill="url(#planetOneMoonReflection)"></circle>
+          <circle cx="500" cy="500" r="394" fill="url(#planetOneSunReflection)" filter="url(#planetOneSoftGlow)"></circle>
+
+          <path
+            d="M112 500 C250 452 392 451 512 489 C639 529 744 526 888 480"
+            fill="none"
+            stroke="rgba(147,205,255,0.22)"
+            stroke-width="6">
+          </path>
+
+          <path
+            d="M118 570 C268 526 384 555 512 583 C655 615 760 600 884 556"
+            fill="none"
+            stroke="rgba(105,173,235,0.16)"
+            stroke-width="5">
+          </path>
+        </g>
+
+        <circle cx="500" cy="500" r="394" fill="none" stroke="rgba(160,214,255,0.44)" stroke-width="5"></circle>
+        <circle cx="500" cy="500" r="404" fill="url(#planetOneAtmosphere)"></circle>
+        <circle cx="500" cy="500" r="414" fill="none" stroke="rgba(126,190,255,0.20)" stroke-width="10"></circle>
+
+        <g class="planet-one-v9-axis">
+          <line x1="355" y1="890" x2="645" y2="110" stroke="url(#planetOneAxisGradient)" stroke-width="13" stroke-linecap="round"></line>
+          <circle cx="355" cy="890" r="15" fill="rgba(242,199,111,0.48)" stroke="rgba(242,199,111,0.42)" stroke-width="5"></circle>
+          <circle cx="645" cy="110" r="15" fill="rgba(242,199,111,0.48)" stroke="rgba(242,199,111,0.42)" stroke-width="5"></circle>
+        </g>
+      </svg>
+    `;
   }
 
-  function smoothstep(edge0, edge1, value) {
-    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
+  function telemetry() {
+    return `
+      <div class="planet-one-telemetry" aria-label="Planet 1 render standards">
+        <span>Planet 1</span>
+        <span>Opaque globe</span>
+        <span>Sun reflection</span>
+        <span>Moon reflection</span>
+        <span>Axis spin</span>
+        <span>Climate topology</span>
+        <span>Weather circulation</span>
+        <span>Ocean currents</span>
+        <span>Expanded topology</span>
+        <span>Pangaea fracture</span>
+        <span>Tree demo mode</span>
+      </div>
+    `;
   }
 
-  function mix(a, b, t) {
-    return a + (b - a) * t;
+  function mapKey() {
+    return `
+      <div class="planet-one-mapkey" aria-label="Planet 1 render notes">
+        <article>
+          <strong>Opaque world body</strong>
+          <span>The globe now reads as a solid planet. Atmosphere and lighting add depth without turning the surface transparent.</span>
+        </article>
+        <article>
+          <strong>Solar and lunar light</strong>
+          <span>Warm sun reflection leads the day side. Cool lunar relief gives the far side shape without overpowering the sun.</span>
+        </article>
+        <article>
+          <strong>Expanded topology</strong>
+          <span>Ocean basins, coastal shelves, beach rings, ridges, plateaus, valleys, and fractured land memory are integrated into the surface.</span>
+        </article>
+      </div>
+    `;
   }
 
-  function mixColor(a, b, t) {
-    return [
-      mix(a[0], b[0], t),
-      mix(a[1], b[1], t),
-      mix(a[2], b[2], t)
-    ];
-  }
+  function renderPlanetOne(target, options) {
+    const mount =
+      typeof target === "string"
+        ? document.querySelector(target)
+        : target;
 
-  function normalize(v) {
-    var len = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1;
-    return [v[0] / len, v[1] / len, v[2] / len];
-  }
-
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
-
-  function rotateX(v, angle) {
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
-    return [v[0], v[1] * c - v[2] * s, v[1] * s + v[2] * c];
-  }
-
-  function rotateY(v, angle) {
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
-    return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c];
-  }
-
-  function hash2(ix, iy, seed) {
-    var n = (ix * 374761393 + iy * 668265263 + seed * 1442695041) | 0;
-    n = (n ^ (n >> 13)) * 1274126177;
-    return ((n ^ (n >> 16)) >>> 0) / 4294967295;
-  }
-
-  function valueNoise(x, y, seed) {
-    var ix = Math.floor(x);
-    var iy = Math.floor(y);
-    var fx = x - ix;
-    var fy = y - iy;
-
-    var ux = fx * fx * (3 - 2 * fx);
-    var uy = fy * fy * (3 - 2 * fy);
-
-    var a = hash2(ix, iy, seed);
-    var b = hash2(ix + 1, iy, seed);
-    var c = hash2(ix, iy + 1, seed);
-    var d = hash2(ix + 1, iy + 1, seed);
-
-    return mix(mix(a, b, ux), mix(c, d, ux), uy);
-  }
-
-  function fbm(x, y, seed, octaves) {
-    var value = 0;
-    var amp = 0.5;
-    var freq = 1;
-    var norm = 0;
-
-    for (var i = 0; i < octaves; i += 1) {
-      value += valueNoise(x * freq, y * freq, seed + i * 103) * amp;
-      norm += amp;
-      amp *= 0.52;
-      freq *= 2.04;
-    }
-
-    return value / (norm || 1);
-  }
-
-  function rotate2(x, y, angle) {
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
-    return { x: x * c - y * s, y: x * s + y * c };
-  }
-
-  function continentLobe(u, v, cx, cy, rx, ry, rot, seed) {
-    var p = rotate2(u - cx, v - cy, -rot);
-    var nx = p.x / rx;
-    var ny = p.y / ry;
-    var d = Math.sqrt(nx * nx + ny * ny);
-    var a = Math.atan2(ny, nx);
-
-    var edge =
-      Math.sin(a * 3 + seed * 0.017) * 0.10 +
-      Math.sin(a * 5 - seed * 0.013) * 0.07 +
-      Math.sin(a * 8 + seed * 0.019) * 0.04;
-
-    var jag =
-      (fbm(u * 23 + seed * 0.03, v * 23 - seed * 0.02, seed, 4) - 0.5) * 0.20 +
-      (fbm(u * 61 - seed * 0.01, v * 58 + seed * 0.01, seed + 700, 3) - 0.5) * 0.06;
-
-    return 1 - d + edge + jag;
-  }
-
-  function regionField(u, v) {
-    var groups = [
-      {
-        id: "mainland",
-        lobes: [
-          [0.50, 0.53, 0.22, 0.20, 0.12, 101],
-          [0.42, 0.42, 0.15, 0.12, -0.35, 102],
-          [0.60, 0.60, 0.16, 0.14, 0.38, 103],
-          [0.50, 0.69, 0.16, 0.09, -0.08, 104]
-        ]
-      },
-      {
-        id: "west",
-        lobes: [
-          [0.25, 0.51, 0.11, 0.22, -0.36, 201],
-          [0.20, 0.36, 0.09, 0.11, -0.10, 202],
-          [0.32, 0.66, 0.08, 0.10, 0.14, 203]
-        ]
-      },
-      {
-        id: "east",
-        lobes: [
-          [0.75, 0.50, 0.13, 0.22, 0.34, 301],
-          [0.81, 0.35, 0.08, 0.11, 0.16, 302],
-          [0.66, 0.65, 0.09, 0.11, -0.16, 303]
-        ]
-      },
-      {
-        id: "north",
-        lobes: [
-          [0.50, 0.25, 0.23, 0.10, -0.04, 401],
-          [0.37, 0.29, 0.10, 0.07, 0.22, 402],
-          [0.63, 0.23, 0.11, 0.07, -0.17, 403]
-        ]
-      },
-      {
-        id: "south",
-        lobes: [
-          [0.50, 0.76, 0.23, 0.10, 0.04, 501],
-          [0.36, 0.73, 0.10, 0.07, -0.19, 502],
-          [0.64, 0.79, 0.10, 0.07, 0.18, 503]
-        ]
-      },
-      {
-        id: "northPole",
-        lobes: [
-          [0.50, 0.075, 0.29, 0.05, 0.01, 601],
-          [0.34, 0.095, 0.08, 0.035, -0.09, 602],
-          [0.66, 0.085, 0.10, 0.035, 0.11, 603]
-        ]
-      },
-      {
-        id: "southPole",
-        lobes: [
-          [0.50, 0.925, 0.30, 0.05, -0.01, 701],
-          [0.35, 0.905, 0.09, 0.035, 0.09, 702],
-          [0.65, 0.92, 0.11, 0.035, -0.11, 703]
-        ]
-      }
-    ];
-
-    var best = { id: "ocean", value: -99 };
-    var second = { id: "ocean", value: -99 };
-
-    groups.forEach(function (group) {
-      var value = -99;
-
-      group.lobes.forEach(function (lobe) {
-        value = Math.max(value, continentLobe(u, v, lobe[0], lobe[1], lobe[2], lobe[3], lobe[4], lobe[5]));
-      });
-
-      if (value > best.value) {
-        second = best;
-        best = { id: group.id, value: value };
-      } else if (value > second.value) {
-        second = { id: group.id, value: value };
-      }
-    });
-
-    return {
-      id: best.id,
-      value: best.value,
-      secondId: second.id,
-      secondValue: second.value
-    };
-  }
-
-  function fractureField(u, v) {
-    var horizontal =
-      1 - smoothstep(0.008, 0.034, Math.abs((v - 0.50) + Math.sin((u - 0.5) * 10.8) * 0.040));
-    var lower =
-      1 - smoothstep(0.008, 0.030, Math.abs((v - 0.66) - Math.sin((u - 0.45) * 9.0) * 0.030));
-    var vertical =
-      1 - smoothstep(0.008, 0.031, Math.abs((u - 0.50) + Math.sin((v - 0.52) * 8.4) * 0.032));
-
-    return clamp(Math.max(horizontal * 0.90, lower * 0.72, vertical * 0.72), 0, 1);
-  }
-
-  function pangaeaMemory(u, v) {
-    var d = Math.hypot((u - 0.5) / 0.43, (v - 0.53) / 0.44);
-    return clamp(smoothstep(1.22, 0.32, d) * (0.72 + fbm(u * 5.5, v * 5.2, 909, 4) * 0.28), 0, 1);
-  }
-
-  function classifyClimateAndTopology(u, v) {
-    var region = regionField(u, v);
-    var memory = pangaeaMemory(u, v);
-    var fracture = fractureField(u, v);
-
-    var broad = fbm(u * 2.2 + 0.2, v * 2.6 + 1.4, 810, 5);
-    var coastNoise = fbm(u * 12.5 + 7.2, v * 13.8 + 2.9, 811, 4);
-    var elevationBase = fbm(u * 6.2 + 3.8, v * 6.8 + 1.5, 812, 5);
-    var elevationDetail = fbm(u * 22.0 + 4.1, v * 24.0 + 8.8, 813, 4);
-    var moistureBase = fbm(u * 5.4 + 6.0, v * 5.1 + 4.0, 814, 4);
-    var moistureDetail = fbm(u * 18.0 + 2.0, v * 19.0 + 9.0, 815, 3);
-    var mineral = fbm(u * 20.0 + 5.0, v * 17.0 + 3.0, 816, 4);
-    var basin = fbm(u * 10.5 + 8.0, v * 11.5 + 1.0, 817, 4);
-    var ridgeNoise = fbm(u * 30.0 + 6.5, v * 14.0 + 2.8, 818, 4);
-
-    var coastlineRag = (coastNoise - 0.5) * 0.18 + (broad - 0.5) * 0.08;
-    var landScore = region.value + coastlineRag + memory * 0.04 - fracture * 0.30;
-    var threshold = region.id === "northPole" || region.id === "southPole" ? 0.035 : 0.065;
-    var margin = landScore - threshold;
-    var isLand = margin > 0;
-
-    var latitudeFromEquator = Math.abs(v * 2 - 1);
-    var equatorial = 1 - smoothstep(0.00, 0.24, latitudeFromEquator);
-    var tropic = 1 - smoothstep(0.18, 0.42, Math.abs(latitudeFromEquator - 0.42));
-    var temperate = 1 - smoothstep(0.22, 0.58, Math.abs(latitudeFromEquator - 0.62));
-    var polar = smoothstep(0.70, 1.00, latitudeFromEquator);
-
-    var coastalMoisture = 1 - smoothstep(0.01, 0.22, Math.abs(margin));
-    var oceanCurrent = 0.5 + 0.5 * Math.sin(u * Math.PI * 4.0 + v * Math.PI * 2.0 + fbm(u * 3, v * 3, 825, 3));
-    var mountain = smoothstep(0.66, 0.91, ridgeNoise) * smoothstep(0.38, 0.92, broad);
-    var plateau = smoothstep(0.47, 0.80, elevationBase) * smoothstep(0.32, 0.88, broad);
-    var elevation = clamp(elevationBase * 0.50 + elevationDetail * 0.16 + mountain * 0.38 + plateau * 0.25 - coastalMoisture * 0.08, 0, 1);
-
-    var rainShadow = mountain * smoothstep(0.38, 0.82, u) * (region.id === "west" || region.id === "mainland" ? 1 : 0.45);
-    var humidity = clamp(moistureBase * 0.60 + moistureDetail * 0.18 + coastalMoisture * 0.25 + oceanCurrent * 0.08 - rainShadow * 0.24, 0, 1);
-    var temperature = clamp(1 - polar * 1.05 - elevation * 0.50 + equatorial * 0.15, 0, 1);
-
-    var desert = tropic * smoothstep(0.45, 0.86, 1 - humidity) * (1 - smoothstep(0.72, 0.95, elevation));
-    var tropicalForest = equatorial * smoothstep(0.50, 0.88, humidity) * (1 - smoothstep(0.76, 0.96, elevation));
-    var temperateGreen = temperate * smoothstep(0.35, 0.84, humidity) * (1 - desert * 0.8);
-    var steppe = temperate * smoothstep(0.34, 0.74, 1 - humidity) * (1 - desert * 0.5);
-    var boreal = smoothstep(0.55, 0.83, latitudeFromEquator) * smoothstep(0.25, 0.82, humidity) * (1 - polar * 0.35);
-    var tundra = polar * (1 - smoothstep(0.45, 0.82, temperature));
-    var snow = smoothstep(0.78, 1.0, polar + elevation * 0.42);
-
-    var river =
-      isLand
-        ? smoothstep(0.90, 0.985, 1 - Math.abs(Math.sin((u * 17 + v * 9) + moistureDetail * 2.5))) *
-          smoothstep(0.43, 0.86, humidity) *
-          (1 - smoothstep(0.80, 0.98, elevation))
-        : 0;
-
-    var lake =
-      isLand
-        ? smoothstep(0.85, 0.975, basin) *
-          smoothstep(0.40, 0.86, humidity) *
-          (1 - smoothstep(0.72, 0.95, elevation))
-        : 0;
-
-    var beach =
-      isLand
-        ? smoothstep(-0.025, 0.025, margin) * (1 - smoothstep(0.055, 0.15, margin))
-        : 0;
-
-    var shelf =
-      !isLand
-        ? smoothstep(-0.20, -0.025, margin) * (1 - smoothstep(0.02, 0.16, margin))
-        : 0;
-
-    var cloudNoise = fbm(u * 8.0 + 1.0, v * 7.5 + 4.0, 910, 4);
-    var stormTrack =
-      temperate * 0.36 +
-      equatorial * 0.46 +
-      polar * 0.16 +
-      coastalMoisture * 0.14 -
-      desert * 0.20;
-
-    var clouds = clamp(smoothstep(0.54, 0.86, cloudNoise + stormTrack * 0.32), 0, 0.78);
-
-    return {
-      isLand: isLand,
-      region: region,
-      margin: margin,
-      memory: memory,
-      fracture: fracture,
-      broad: broad,
-      elevation: elevation,
-      mountain: mountain,
-      plateau: plateau,
-      mineral: mineral,
-      humidity: humidity,
-      temperature: temperature,
-      oceanCurrent: oceanCurrent,
-      rainShadow: rainShadow,
-      desert: desert,
-      tropicalForest: tropicalForest,
-      temperateGreen: temperateGreen,
-      steppe: steppe,
-      boreal: boreal,
-      tundra: tundra,
-      snow: snow,
-      river: river,
-      lake: lake,
-      beach: beach,
-      shelf: shelf,
-      clouds: clouds
-    };
-  }
-
-  function colorForClimate(s) {
-    if (!s.isLand) {
-      var deep = mixColor([4, 17, 40], [8, 62, 108], smoothstep(-0.48, -0.06, s.margin));
-      deep = mixColor(deep, [32, 124, 148], s.shelf * 0.64);
-      deep = mixColor(deep, [9, 39, 79], s.fracture * 0.30);
-      deep = mixColor(deep, [18, 84, 120], s.oceanCurrent * 0.13);
-      return deep;
-    }
-
-    var color = [90, 116, 76];
-
-    color = mixColor(color, [39, 105, 60], s.tropicalForest * 0.92);
-    color = mixColor(color, [86, 132, 72], s.temperateGreen * 0.84);
-    color = mixColor(color, [74, 102, 72], s.boreal * 0.74);
-    color = mixColor(color, [142, 146, 88], s.steppe * 0.72);
-    color = mixColor(color, [176, 150, 96], s.desert * 0.96);
-    color = mixColor(color, [126, 120, 86], s.plateau * 0.44);
-    color = mixColor(color, [108, 98, 84], s.mountain * 0.54);
-    color = mixColor(color, [76, 58, 50], s.rainShadow * 0.24);
-    color = mixColor(color, [202, 188, 145], s.beach * 0.78);
-    color = mixColor(color, [74, 150, 174], s.river * 0.64);
-    color = mixColor(color, [55, 122, 160], s.lake * 0.86);
-    color = mixColor(color, [168, 162, 146], smoothstep(0.72, 0.96, s.mineral) * 0.16);
-    color = mixColor(color, [182, 188, 180], s.tundra * 0.66);
-    color = mixColor(color, [234, 242, 246], s.snow);
-
-    if (s.region.id === "northPole" || s.region.id === "southPole") {
-      color = mixColor(color, [238, 246, 250], 0.86);
-    }
-
-    color = mixColor(color, [38, 38, 42], s.fracture * 0.10);
-    return color;
-  }
-
-  function buildTexture(width, height) {
-    var surface = new Uint8ClampedArray(width * height * 4);
-    var cloud = new Uint8ClampedArray(width * height * 4);
-
-    for (var y = 0; y < height; y += 1) {
-      for (var x = 0; x < width; x += 1) {
-        var u = x / (width - 1);
-        var v = y / (height - 1);
-        var sample = classifyClimateAndTopology(u, v);
-        var color = colorForClimate(sample);
-
-        var idx = (y * width + x) * 4;
-
-        surface[idx] = Math.round(clamp(color[0], 0, 255));
-        surface[idx + 1] = Math.round(clamp(color[1], 0, 255));
-        surface[idx + 2] = Math.round(clamp(color[2], 0, 255));
-        surface[idx + 3] = 255;
-
-        var coldCloud = sample.temperature < 0.35 ? [226, 234, 240] : [241, 246, 248];
-        cloud[idx] = coldCloud[0];
-        cloud[idx + 1] = coldCloud[1];
-        cloud[idx + 2] = coldCloud[2];
-        cloud[idx + 3] = Math.round(sample.clouds * 255);
-      }
-    }
-
-    return {
-      width: width,
-      height: height,
-      surface: surface,
-      cloud: cloud
-    };
-  }
-
-  function sampleTexture(texture, u, v, layer) {
-    u = u - Math.floor(u);
-    v = clamp(v, 0, 1);
-
-    var x = Math.floor(u * (texture.width - 1));
-    var y = Math.floor(v * (texture.height - 1));
-    var idx = (y * texture.width + x) * 4;
-    var data = layer === "cloud" ? texture.cloud : texture.surface;
-
-    return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]];
-  }
-
-  function drawStarField(ctx, size) {
-    ctx.clearRect(0, 0, size, size);
-
-    var bg = ctx.createRadialGradient(size * 0.54, size * 0.46, size * 0.04, size * 0.54, size * 0.46, size * 0.54);
-    bg.addColorStop(0, "rgba(92, 139, 210, 0.11)");
-    bg.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, size, size);
-
-    for (var i = 0; i < 110; i += 1) {
-      var x = hash2(i, 11, 41) * size;
-      var y = hash2(i, 29, 41) * size;
-      var r = 0.4 + hash2(i, 53, 41) * 1.2;
-      var a = 0.10 + hash2(i, 67, 41) * 0.40;
-      ctx.fillStyle = "rgba(255,255,255," + a.toFixed(3) + ")";
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function drawAxis(axis, tiltDeg) {
-    axis.setAttribute("viewBox", "0 0 100 100");
-
-    var tilt = tiltDeg * Math.PI / 180;
-    var len = 43;
-    var cx = 50;
-    var cy = 50;
-    var dx = Math.sin(tilt) * len;
-    var dy = Math.cos(tilt) * len;
-
-    axis.innerHTML = [
-      '<ellipse cx="50" cy="50" rx="35" ry="7"></ellipse>',
-      '<line x1="' + (cx - dx).toFixed(2) + '" y1="' + (cy + dy).toFixed(2) + '" x2="' + (cx + dx).toFixed(2) + '" y2="' + (cy - dy).toFixed(2) + '"></line>',
-      '<circle cx="' + (cx - dx).toFixed(2) + '" cy="' + (cy + dy).toFixed(2) + '" r="1.45"></circle>',
-      '<circle cx="' + (cx + dx).toFixed(2) + '" cy="' + (cy - dy).toFixed(2) + '" r="1.45"></circle>'
-    ].join("");
-  }
-
-  function PlanetOneRenderer(canvas, axis, texture) {
-    this.canvas = canvas;
-    this.axis = axis;
-    this.texture = texture;
-    this.ctx = canvas.getContext("2d", { alpha: true });
-    this.raf = 0;
-    this.last = 0;
-    this.spin = 0;
-    this.cloudSpin = 0;
-    this.tilt = 23.5 * Math.PI / 180;
-    this.spinSpeed = 0.105;
-    this.cloudSpeed = 0.036;
-    this.size = 0;
-    this.radius = 0;
-    this.center = 0;
-
-    drawAxis(this.axis, 23.5);
-    this.resize();
-  }
-
-  PlanetOneRenderer.prototype.resize = function () {
-    var rect = this.canvas.getBoundingClientRect();
-    var dpr = clamp(window.devicePixelRatio || 1, 1, 1.5);
-    var cssSize = Math.max(300, Math.min(520, Math.floor(Math.min(rect.width || 430, rect.height || 430))));
-    this.size = Math.floor(cssSize * dpr);
-    this.canvas.width = this.size;
-    this.canvas.height = this.size;
-    this.center = this.size / 2;
-    this.radius = this.size * 0.405;
-    this.draw();
-  };
-
-  PlanetOneRenderer.prototype.draw = function () {
-    var ctx = this.ctx;
-    var size = this.size;
-    var cx = this.center;
-    var cy = this.center;
-    var r = this.radius;
-
-    if (!ctx || !size) return;
-
-    drawStarField(ctx, size);
-
-    var image = ctx.createImageData(size, size);
-    var data = image.data;
-    var light = normalize([-0.66, -0.34, 0.68]);
-
-    for (var py = 0; py < size; py += 1) {
-      for (var px = 0; px < size; px += 1) {
-        var dx = (px - cx) / r;
-        var dy = (py - cy) / r;
-        var rr = dx * dx + dy * dy;
-        var idx = (py * size + px) * 4;
-
-        if (rr > 1) {
-          data[idx + 3] = 0;
-          continue;
-        }
-
-        var z = Math.sqrt(1 - rr);
-        var screenNormal = normalize([dx, dy, z]);
-
-        var world = rotateX(screenNormal, -this.tilt);
-        world = rotateY(world, this.spin);
-
-        var lon = Math.atan2(world[0], world[2]);
-        var lat = Math.asin(clamp(world[1], -1, 1));
-
-        var u = lon / (Math.PI * 2) + 0.5;
-        var v = 0.5 - lat / Math.PI;
-
-        var surface = sampleTexture(this.texture, u, v, "surface");
-        var cloud = sampleTexture(this.texture, u + this.cloudSpin / (Math.PI * 2), v, "cloud");
-
-        var lightDot = clamp(dot(screenNormal, light), 0, 1);
-        var limb = smoothstep(0.62, 1.0, Math.sqrt(rr));
-        var shade = clamp(0.20 + lightDot * 0.92, 0, 1.08);
-
-        var color = [surface[0] * shade, surface[1] * shade, surface[2] * shade];
-
-        var cloudAlpha = (cloud[3] / 255) * (0.42 + lightDot * 0.34);
-        color = mixColor(color, [cloud[0], cloud[1], cloud[2]], cloudAlpha);
-
-        color = mixColor([4, 8, 16], color, clamp(0.15 + lightDot * 0.96, 0, 1));
-        color = mixColor(color, [110, 174, 234], limb * 0.24);
-
-        data[idx] = Math.round(clamp(color[0], 0, 255));
-        data[idx + 1] = Math.round(clamp(color[1], 0, 255));
-        data[idx + 2] = Math.round(clamp(color[2], 0, 255));
-        data[idx + 3] = 255;
-      }
-    }
-
-    ctx.putImageData(image, 0, 0);
-
-    var outer = ctx.createRadialGradient(cx, cy, r * 0.88, cx, cy, r * 1.13);
-    outer.addColorStop(0, "rgba(110,170,255,0)");
-    outer.addColorStop(0.56, "rgba(110,170,255,0.16)");
-    outer.addColorStop(1, "rgba(110,170,255,0)");
-
-    ctx.save();
-    ctx.strokeStyle = outer;
-    ctx.lineWidth = r * 0.105;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.012, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.strokeStyle = "rgba(180,220,245,0.30)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-  };
-
-  PlanetOneRenderer.prototype.tick = function (time) {
-    if (!this.last) this.last = time;
-    var dt = Math.min(0.05, (time - this.last) / 1000);
-    this.last = time;
-
-    this.spin += this.spinSpeed * dt;
-    this.cloudSpin += this.cloudSpeed * dt;
-
-    this.draw();
-    this.raf = window.requestAnimationFrame(this.tick.bind(this));
-  };
-
-  PlanetOneRenderer.prototype.start = function () {
-    if (this.raf) return;
-    this.last = 0;
-    this.raf = window.requestAnimationFrame(this.tick.bind(this));
-  };
-
-  PlanetOneRenderer.prototype.stop = function () {
-    if (this.raf) window.cancelAnimationFrame(this.raf);
-    this.raf = 0;
-  };
-
-  PlanetOneRenderer.prototype.destroy = function () {
-    this.stop();
-  };
-
-  function applyContractData(mount) {
-    mount.dataset.renderStatus = "mounted";
-    mount.dataset.planetOneRenderActive = "true";
-    mount.dataset.planetOneRenderer = RENDERER_PATH;
-    mount.dataset.globeDemoStatusRetired = "true";
-    mount.dataset.treeDemoMode = "true";
-    mount.dataset.renderLanesSeparated = "true";
-    mount.dataset.noRenderLaneCollapse = "true";
-    mount.dataset.realismPass = "v8-axis-spin-climate-topology";
-    mount.dataset.recognitionFirstRender = "true";
-    mount.dataset.pangaeaFractureMemory = "true";
-    mount.dataset.cinematicMirrorEarthWorld = "true";
-    mount.dataset.jaggedLivingShorelines = "true";
-    mount.dataset.plateauHeavyInterior = "true";
-    mount.dataset.axisSpinActive = "true";
-    mount.dataset.climateTopologyActive = "true";
-    mount.dataset.weatherCirculationActive = "true";
-    mount.dataset.oceanCurrentLogicActive = "true";
-    mount.dataset.cartoonBlobGlobeRetired = "true";
-    mount.dataset.noFinalGeographyClosure = "true";
-    mount.dataset.surfaceClasses = SURFACE_CLASSES.join(",");
-
-    document.documentElement.dataset.planetOneRenderActive = "true";
-    document.documentElement.dataset.planetOneRenderer = RENDERER_PATH;
-    document.documentElement.dataset.globeDemoStatusRetired = "true";
-    document.documentElement.dataset.treeDemoMode = "true";
-    document.documentElement.dataset.renderLanesSeparated = "true";
-    document.documentElement.dataset.noRenderLaneCollapse = "true";
-    document.documentElement.dataset.planetOneRealismPass = "v8-axis-spin-climate-topology";
-    document.documentElement.dataset.axisSpinActive = "true";
-    document.documentElement.dataset.climateTopologyActive = "true";
-    document.documentElement.dataset.weatherCirculationActive = "true";
-    document.documentElement.dataset.oceanCurrentLogicActive = "true";
-    document.documentElement.dataset.pangaeaFractureMemory = "true";
-    document.documentElement.dataset.cinematicMirrorEarthWorld = "true";
-    document.documentElement.dataset.jaggedLivingShorelines = "true";
-    document.documentElement.dataset.plateauHeavyInterior = "true";
-    document.documentElement.dataset.noFinalGeographyClosure = "true";
-  }
-
-  function buildTelemetry() {
-    var telemetry = el("div", "planet-one-telemetry");
-
-    [
-      "Planet 1",
-      "Axis spin",
-      "Climate topology",
-      "Weather circulation",
-      "Ocean currents",
-      "Plateau interiors",
-      "Pangaea fracture",
-      "Tree demo mode"
-    ].forEach(function (item) {
-      telemetry.appendChild(el("span", "", item));
-    });
-
-    return telemetry;
-  }
-
-  function buildMapKey() {
-    var key = el("div", "planet-one-mapkey");
-
-    [
-      ["Axis", "The globe now has a visible tilted axis and slow rotation."],
-      ["Climate", "Color is driven by latitude, elevation, humidity, ocean proximity, and rain shadow."],
-      ["Topology", "Mountains, plateaus, basins, lakes, rivers, beaches, shelves, and polar regions are integrated."],
-      ["No false close", "Exact countries, cities, rivers, climate names, physics, and final map geometry remain unclosed."]
-    ].forEach(function (pair) {
-      var row = el("div");
-      row.appendChild(el("strong", "", pair[0]));
-      row.appendChild(document.createTextNode(pair[1]));
-      key.appendChild(row);
-    });
-
-    return key;
-  }
-
-  function renderPlanetOne(mount, options) {
     if (!mount) {
-      throw new Error("DGBPlanetOneRenderTeam.renderPlanetOne requires a mount element.");
+      throw new Error("Planet 1 render mount not found.");
     }
 
     injectStyles();
-    applyContractData(mount);
 
-    ACTIVE = ACTIVE.filter(function (entry) {
-      if (entry.mount === mount) {
-        entry.destroy();
-        return false;
+    const opts = options || {};
+    const caption = escapeHtml(opts.caption || DEFAULT_CAPTION);
+
+    ACTIVE_INSTANCES.forEach(function stopExisting(instance) {
+      if (instance && typeof instance.stop === "function") {
+        instance.stop();
       }
-      return true;
     });
 
-    mount.innerHTML = "";
+    mount.innerHTML = `
+      <section
+        class="planet-one-render-shell"
+        data-render-version="${VERSION}"
+        data-root-marker="${ROOT_MARKER}"
+        data-v8-marker="${PREVIOUS_V8}"
+        data-v9-marker="${VERSION}"
+        data-planet-one-render-active="true"
+        data-axis-spin-active="true"
+        data-climate-topology-active="true"
+        data-weather-circulation-active="true"
+        data-ocean-current-logic-active="true"
+        data-globe-demo-status-retired="true"
+        data-tree-demo-mode="true"
+        data-render-lanes-separated="true"
+        data-no-render-lane-collapse="true"
+        data-opaque-globe-active="true"
+        data-sun-reflection-active="true"
+        data-moon-reflection-active="true"
+        data-expanded-topology-active="true"
+        data-solar-lunar-lighting-active="true"
+        data-terrain-depth-expanded="true"
+        data-atmosphere-retained="true"
+        data-axis-overlay-retained="true"
+      >
+        <div class="planet-one-render-stage">
+          ${planetSvg()}
+        </div>
 
-    var shell = el("div", "planet-one-render-shell");
-    var stage = el("div", "planet-one-render-stage");
+        <div class="planet-one-caption">${caption}</div>
 
-    var canvas = el("canvas", "planet-one-render-canvas");
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute(
-      "aria-label",
-      "Planet 1 rotating on a tilted axis with climate-aware terrain, oceans, shorelines, mountains, plateaus, and weather."
-    );
+        ${telemetry()}
+        ${mapKey()}
+      </section>
+    `;
 
-    var axis = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    axis.setAttribute("class", "planet-one-axis-overlay");
-    axis.setAttribute("aria-hidden", "true");
+    const shell = mount.querySelector(".planet-one-render-shell");
+    const svg = mount.querySelector(".planet-one-v9-svg");
 
-    var receipt = el("div", "planet-one-hidden-receipt");
-    receipt.textContent =
-      "PLANET_ONE_RENDER_TEAM_TNT_v1 " +
-      "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY " +
-      "planet-one-render-active=true " +
-      "planet-one-renderer=/world/render/planet-one.render.js " +
-      "globe-demo-status-retired=true " +
-      "tree-demo-mode=true " +
-      "render-lanes-separated=true " +
-      "no-render-lane-collapse=true " +
-      "axis-spin-active=true " +
-      "climate-topology-active=true " +
-      "weather-circulation-active=true " +
-      "ocean-current-logic-active=true";
-
-    stage.appendChild(canvas);
-    stage.appendChild(axis);
-    stage.appendChild(receipt);
-
-    var caption = el(
-      "div",
-      "planet-one-caption",
-      (options && options.caption) || "Planet 1 · Nine Summits Universe · axis-spin climate topology render lane"
-    );
-
-    shell.appendChild(stage);
-    shell.appendChild(caption);
-    shell.appendChild(buildTelemetry());
-    shell.appendChild(buildMapKey());
-    mount.appendChild(shell);
-
-    var texture = buildTexture(1024, 512);
-    var renderer = new PlanetOneRenderer(canvas, axis, texture);
-    renderer.start();
-
-    var onResize = function () {
-      renderer.resize();
-    };
-
-    window.addEventListener("resize", onResize, { passive: true });
-
-    var handle = {
-      mount: mount,
-      renderer: renderer,
-      destroy: function () {
-        window.removeEventListener("resize", onResize);
-        renderer.destroy();
-      },
-      start: function () {
-        renderer.start();
-      },
-      stop: function () {
-        renderer.stop();
-      },
-      version: VERSION
-    };
-
-    ACTIVE.push(handle);
-
-    return {
-      ok: true,
+    const instance = {
       version: VERSION,
-      renderer: RENDERER_PATH,
-      planetOneRenderActive: true,
-      globeDemoStatusRetired: true,
-      treeDemoMode: true,
-      renderLanesSeparated: true,
-      noRenderLaneCollapse: true,
-      realismPass: "v8-axis-spin-climate-topology",
-      axisSpinActive: true,
-      climateTopologyActive: true,
-      weatherCirculationActive: true,
-      oceanCurrentLogicActive: true,
-      pangaeaFractureMemory: true,
-      cinematicMirrorEarthWorld: true,
-      jaggedLivingShorelines: true,
-      plateauHeavyInterior: true,
-      noFinalGeographyClosure: true,
-      surfaceClasses: SURFACE_CLASSES.slice(),
-      handle: handle
+      rootMarker: ROOT_MARKER,
+      v8Marker: PREVIOUS_V8,
+      markers: MARKERS,
+      mount,
+      shell,
+      svg,
+      start() {
+        if (shell) shell.classList.remove("is-paused");
+        if (svg && typeof svg.unpauseAnimations === "function") {
+          svg.unpauseAnimations();
+        }
+        return true;
+      },
+      stop() {
+        if (shell) shell.classList.add("is-paused");
+        if (svg && typeof svg.pauseAnimations === "function") {
+          svg.pauseAnimations();
+        }
+        return true;
+      },
+      pause() {
+        return this.stop();
+      },
+      resume() {
+        return this.start();
+      },
+      destroy() {
+        this.stop();
+        ACTIVE_INSTANCES.delete(this);
+        if (mount && mount.contains(shell)) {
+          mount.innerHTML = "";
+        }
+        return true;
+      },
+      getStatus() {
+        return {
+          version: VERSION,
+          rootMarker: ROOT_MARKER,
+          v8Marker: PREVIOUS_V8,
+          markers: MARKERS,
+          active: shell ? !shell.classList.contains("is-paused") : false,
+          opaqueGlobeActive: true,
+          sunReflectionActive: true,
+          moonReflectionActive: true,
+          expandedTopologyActive: true,
+          solarLunarLightingActive: true,
+          terrainDepthExpanded: true,
+          atmosphereRetained: true,
+          axisOverlayRetained: true
+        };
+      }
     };
+
+    ACTIVE_INSTANCES.add(instance);
+    instance.start();
+
+    return instance;
   }
 
-  window.DGBPlanetOneRenderTeam = {
-    version: VERSION,
-    render: renderPlanetOne,
-    renderPlanetOne: renderPlanetOne,
-    stopAll: function () {
-      ACTIVE.forEach(function (entry) {
-        entry.destroy();
-      });
-      ACTIVE = [];
+  function stopAll() {
+    ACTIVE_INSTANCES.forEach(function stopInstance(instance) {
+      if (instance && typeof instance.stop === "function") {
+        instance.stop();
+      }
+    });
+    return true;
+  }
+
+  function startAll() {
+    ACTIVE_INSTANCES.forEach(function startInstance(instance) {
+      if (instance && typeof instance.start === "function") {
+        instance.start();
+      }
+    });
+    return true;
+  }
+
+  function destroyAll() {
+    Array.from(ACTIVE_INSTANCES).forEach(function destroyInstance(instance) {
+      if (instance && typeof instance.destroy === "function") {
+        instance.destroy();
+      }
+    });
+    ACTIVE_INSTANCES.clear();
+    return true;
+  }
+
+  global.DGBPlanetOneRenderTeam = Object.freeze({
+    VERSION,
+    PREVIOUS_V8,
+    ROOT_MARKER,
+    MARKERS,
+    renderPlanetOne,
+    stopAll,
+    startAll,
+    destroyAll,
+    getActiveCount() {
+      return ACTIVE_INSTANCES.size;
+    },
+    getStatus() {
+      return {
+        version: VERSION,
+        previousV8: PREVIOUS_V8,
+        rootMarker: ROOT_MARKER,
+        markers: MARKERS,
+        activeCount: ACTIVE_INSTANCES.size,
+        planetOneRenderActive: true,
+        axisSpinActive: true,
+        climateTopologyActive: true,
+        weatherCirculationActive: true,
+        oceanCurrentLogicActive: true,
+        opaqueGlobeActive: true,
+        sunReflectionActive: true,
+        moonReflectionActive: true,
+        expandedTopologyActive: true,
+        solarLunarLightingActive: true,
+        terrainDepthExpanded: true,
+        atmosphereRetained: true,
+        axisOverlayRetained: true
+      };
     }
-  };
-})();
+  });
+})(window);

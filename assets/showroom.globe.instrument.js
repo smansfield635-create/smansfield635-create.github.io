@@ -1,7 +1,7 @@
 (function attachShowroomGlobeInstrument(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN_2_V1_ROUND_EARTH_FIX_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN_2_V1_AZ_256_MOON_SCALE_4K_TNT_v1";
   const LEGACY_VISUAL_MARKER = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
   const GENERATION = "GENERATION_4";
   const CYCLE = "GEN_2_V1_EARTH_DEFINITION";
@@ -39,17 +39,6 @@
     closeout: 13
   });
 
-  const GRID_BITS = Object.freeze({
-    B1: "GEN_1_BASELINE_PRESERVED",
-    B2: "ACTUAL_UNIVERSE_HIERARCHY_PRESERVED",
-    B3: "BIRDS_EYE_CAMERA_ESTABLISHED",
-    B4: "EARTH_ZOOM_CAMERA_FOCUS",
-    B5: "SUN_MASSIVE_OFF_FRAME_LIGHT_SOURCE",
-    B6: "MOON_SECONDARY_SATELLITE_LIGHT",
-    B7: "VISUAL_FIRST_PAGE",
-    B8: "GAUGES_AND_OWNER_CONFIRMATION_READY"
-  });
-
   function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -68,10 +57,10 @@
   }
 
   function ensureStyles() {
-    if (document.getElementById("showroom-gen2-v1-round-earth-fix-style")) return;
+    if (document.getElementById("showroom-gen2-v1-az-256-moon-scale-4k-style")) return;
 
     const style = el("style");
-    style.id = "showroom-gen2-v1-round-earth-fix-style";
+    style.id = "showroom-gen2-v1-az-256-moon-scale-4k-style";
     style.textContent = `
       .showroom-visual-dashboard-instrument {
         display: block;
@@ -82,154 +71,149 @@
         display: none !important;
       }
 
-      .showroom-full-grid-stage {
+      .showroom-az256-stage {
+        --earth-size: min(78vw, 540px);
+        --moon-size: calc(var(--earth-size) * 0.27);
         position: relative;
         min-height: 76vh;
         overflow: hidden;
         border: 1px solid rgba(168, 199, 255, 0.18);
         border-radius: 28px;
         background:
-          radial-gradient(circle at 86% 6%, rgba(255, 207, 112, 0.28), transparent 19rem),
-          radial-gradient(circle at 68% 32%, rgba(125, 181, 255, 0.10), transparent 28rem),
-          radial-gradient(circle at 43% 58%, rgba(70, 132, 210, 0.12), transparent 32rem),
-          linear-gradient(180deg, #02040a 0%, #041023 52%, #03050a 100%);
+          radial-gradient(circle at 88% 7%, rgba(255, 218, 143, 0.34), transparent 18rem),
+          radial-gradient(circle at 72% 34%, rgba(125, 181, 255, 0.10), transparent 30rem),
+          radial-gradient(circle at 38% 58%, rgba(57, 123, 205, 0.13), transparent 31rem),
+          linear-gradient(180deg, #02040a 0%, #041125 52%, #03050a 100%);
         box-shadow:
-          inset 0 0 90px rgba(0, 0, 0, 0.62),
-          0 24px 80px rgba(0, 0, 0, 0.46);
+          inset 0 0 92px rgba(0, 0, 0, 0.64),
+          0 24px 80px rgba(0, 0, 0, 0.48);
         isolation: isolate;
       }
 
-      .showroom-full-grid-stage::before {
+      .showroom-az256-stage::before {
         content: "";
         position: absolute;
         inset: 0;
-        background-image:
-          radial-gradient(circle, rgba(255,255,255,.64) 0 .85px, transparent 1.1px),
-          radial-gradient(circle, rgba(180,210,255,.28) 0 .85px, transparent 1.1px),
-          radial-gradient(circle, rgba(255,211,111,.18) 0 .7px, transparent .95px);
-        background-size: 74px 74px, 128px 128px, 166px 166px;
-        background-position: 0 0, 31px 47px, 57px 91px;
-        opacity: .38;
-        pointer-events: none;
         z-index: 1;
+        background-image:
+          radial-gradient(circle, rgba(255,255,255,.68) 0 .8px, transparent 1.1px),
+          radial-gradient(circle, rgba(180,210,255,.30) 0 .8px, transparent 1.1px),
+          radial-gradient(circle, rgba(255,211,111,.18) 0 .7px, transparent .95px);
+        background-size: 72px 72px, 126px 126px, 164px 164px;
+        background-position: 0 0, 31px 47px, 57px 91px;
+        opacity: .36;
+        pointer-events: none;
       }
 
-      .showroom-void-field {
+      .showroom-az256-void {
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 50% 50%, transparent 0 62%, rgba(0,0,0,.30) 100%);
+        z-index: 2;
+        background:
+          radial-gradient(circle at 50% 50%, transparent 0 58%, rgba(0,0,0,.32) 100%),
+          linear-gradient(90deg, rgba(0,0,0,.28), transparent 18%, transparent 82%, rgba(0,0,0,.20));
         pointer-events: none;
-        z-index: 3;
       }
 
-      .showroom-massive-sun-source {
+      .showroom-az256-sun {
         position: absolute;
-        right: -20%;
-        top: -24%;
-        width: clamp(360px, 62vw, 920px);
+        right: -34%;
+        top: -30%;
+        z-index: 3;
+        width: clamp(520px, 86vw, 1120px);
         aspect-ratio: 1 / 1;
         border-radius: 50%;
         background:
-          radial-gradient(circle at 32% 30%, #fff9d7 0 9%, #ffe18a 18%, #ffb14e 36%, #e46f2e 58%, rgba(228,111,46,.22) 78%, transparent 100%);
-        opacity: .88;
-        filter: blur(.35px);
+          radial-gradient(circle at 31% 30%, #fff9d7 0 8%, #ffe28e 16%, #ffb34d 34%, #e8752f 56%, rgba(228,111,46,.22) 77%, transparent 100%);
+        opacity: .92;
         box-shadow:
-          0 0 80px rgba(255, 211, 111, .34),
-          0 0 190px rgba(255, 145, 61, .30),
-          0 0 320px rgba(255, 211, 111, .16);
-        z-index: 4;
+          0 0 90px rgba(255, 211, 111, .38),
+          0 0 220px rgba(255, 145, 61, .32),
+          0 0 360px rgba(255, 211, 111, .17);
       }
 
-      .showroom-sun-beam-primary {
+      .showroom-az256-sun-beam {
         position: absolute;
-        right: -2%;
+        right: -6%;
         top: 4%;
-        width: 84%;
-        height: 76%;
+        z-index: 4;
+        width: 92%;
+        height: 80%;
         transform: rotate(-17deg);
         transform-origin: right center;
         background:
-          linear-gradient(90deg, rgba(255,228,165,.42), rgba(255,211,111,.17), rgba(255,211,111,.04), transparent 82%);
-        clip-path: polygon(0 40%, 100% 0, 100% 100%, 0 60%);
-        opacity: .74;
+          linear-gradient(90deg, rgba(255,238,188,.48), rgba(255,211,111,.19), rgba(255,211,111,.055), transparent 84%);
+        clip-path: polygon(0 39%, 100% 0, 100% 100%, 0 61%);
         mix-blend-mode: screen;
+        opacity: .76;
         pointer-events: none;
-        z-index: 5;
       }
 
-      .showroom-sun-beam-secondary {
+      .showroom-az256-camera {
         position: absolute;
-        right: 5%;
-        top: 28%;
-        width: 64%;
-        height: 44%;
-        transform: rotate(-9deg);
-        transform-origin: right center;
-        background:
-          linear-gradient(90deg, rgba(255,241,196,.22), rgba(255,241,196,.08), transparent 78%);
-        clip-path: polygon(0 44%, 100% 10%, 100% 90%, 0 56%);
-        opacity: .58;
-        mix-blend-mode: screen;
-        pointer-events: none;
-        z-index: 6;
-      }
-
-      .showroom-earth-camera-stage {
-        position: absolute;
-        left: 47%;
+        left: 46%;
         top: 55%;
-        width: min(78vw, 640px);
-        aspect-ratio: 1 / 1;
-        transform: translate(-50%, -50%);
         z-index: 8;
+        width: var(--earth-size);
+        height: var(--earth-size);
+        transform: translate(-50%, -50%);
       }
 
       .showroom-birds-eye-earth {
         position: absolute;
         left: 50%;
         top: 50%;
-        width: min(72vw, 540px);
-        height: min(72vw, 540px);
+        width: var(--earth-size);
+        height: var(--earth-size);
         transform: translate(-50%, -50%);
         border-radius: 50%;
         overflow: hidden;
         background:
-          radial-gradient(circle at 29% 23%, rgba(255,255,255,.70) 0 7%, transparent 15%),
-          radial-gradient(circle at 49% 48%, #1d98df 0 44%, #0b417f 70%, #030b1a 100%);
+          radial-gradient(circle at 29% 23%, rgba(255,255,255,.72) 0 7%, transparent 15%),
+          radial-gradient(circle at 49% 48%, #1f9fe8 0 43%, #0b3e7d 70%, #030b1a 100%);
         box-shadow:
-          0 0 0 1px rgba(185,226,255,.48),
-          0 0 44px rgba(125,181,255,.28),
-          0 0 88px rgba(44,143,218,.18),
-          inset -78px -48px 88px rgba(0,0,0,.70),
-          inset 40px 28px 60px rgba(255,255,255,.17);
+          0 0 0 1px rgba(185,226,255,.50),
+          0 0 48px rgba(125,181,255,.30),
+          0 0 96px rgba(44,143,218,.18),
+          inset -82px -52px 94px rgba(0,0,0,.70),
+          inset 42px 30px 64px rgba(255,255,255,.18);
         isolation: isolate;
-        z-index: 9;
+      }
+
+      .showroom-earth-detail-stack,
+      .showroom-earth-ocean,
+      .showroom-earth-terminator,
+      .showroom-earth-glint,
+      .showroom-earth-gridline,
+      .showroom-earth-focus-ring {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
       }
 
       .showroom-earth-detail-stack {
-        position: absolute;
         inset: 0;
-        border-radius: 50%;
         overflow: hidden;
-        pointer-events: none;
         transform: translateZ(0);
       }
 
       .showroom-earth-ocean {
-        position: absolute;
         inset: 0;
-        border-radius: 50%;
         background:
           radial-gradient(circle at 29% 23%, rgba(255,255,255,.60) 0 8%, transparent 16%),
-          radial-gradient(circle at 49% 48%, #1d98df 0 44%, #0b417f 70%, #030b1a 100%);
+          radial-gradient(circle at 49% 48%, #1f9fe8 0 43%, #0b3e7d 70%, #030b1a 100%);
       }
 
       .showroom-earth-continent {
         position: absolute;
         display: block;
-        background: linear-gradient(135deg, #8ff0c6 0%, #3aaa73 50%, #d6b46d 100%);
-        opacity: .96;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,.28));
+        background:
+          linear-gradient(135deg, rgba(181, 255, 215, .98) 0%, rgba(62, 173, 112, .96) 48%, rgba(218, 184, 108, .92) 100%);
+        opacity: .98;
+        filter:
+          drop-shadow(0 1px 2px rgba(0,0,0,.32))
+          saturate(1.14)
+          contrast(1.06);
       }
 
       .showroom-earth-continent-a {
@@ -266,134 +250,115 @@
         border-radius: 42% 58% 54% 46%;
       }
 
+      .showroom-earth-continent-e {
+        width: 14%;
+        height: 11%;
+        left: 38%;
+        top: 58%;
+        border-radius: 58% 42% 49% 51%;
+      }
+
       .showroom-earth-cloud-band {
         position: absolute;
         inset: 8%;
         border-radius: 50%;
         background:
-          linear-gradient(18deg, transparent 0 21%, rgba(255,255,255,.36) 22% 26%, transparent 27% 55%, rgba(255,255,255,.22) 56% 60%, transparent 61%),
-          linear-gradient(-25deg, transparent 0 35%, rgba(255,255,255,.26) 36% 40%, transparent 41% 78%, rgba(255,255,255,.18) 79% 82%, transparent 83%);
-        opacity: .82;
+          linear-gradient(18deg, transparent 0 20%, rgba(255,255,255,.40) 21% 26%, transparent 27% 55%, rgba(255,255,255,.24) 56% 60%, transparent 61%),
+          linear-gradient(-25deg, transparent 0 34%, rgba(255,255,255,.30) 35% 40%, transparent 41% 78%, rgba(255,255,255,.20) 79% 82%, transparent 83%),
+          radial-gradient(circle at 30% 72%, rgba(255,255,255,.18), transparent 22%);
+        opacity: .84;
         mix-blend-mode: screen;
-        animation: showroomEarthCloudSweep 22s linear infinite;
+        animation: showroomEarthCloudSweep 24s linear infinite;
       }
 
       .showroom-earth-terminator {
-        position: absolute;
         inset: 0;
-        border-radius: 50%;
         background:
-          linear-gradient(105deg, transparent 0 42%, rgba(0,0,0,.16) 52%, rgba(0,0,0,.78) 100%);
+          linear-gradient(104deg, transparent 0 41%, rgba(0,0,0,.14) 52%, rgba(0,0,0,.80) 100%);
         mix-blend-mode: multiply;
       }
 
       .showroom-earth-glint {
-        position: absolute;
         inset: 0;
-        border-radius: 50%;
         background:
-          radial-gradient(circle at 29% 23%, rgba(255,255,255,.48), transparent 21%),
-          linear-gradient(118deg, rgba(255,236,180,.13) 0 34%, transparent 50%);
+          radial-gradient(circle at 28% 22%, rgba(255,255,255,.52), transparent 21%),
+          linear-gradient(118deg, rgba(255,236,180,.15) 0 34%, transparent 50%);
         mix-blend-mode: screen;
       }
 
       .showroom-earth-gridline {
-        position: absolute;
         inset: 8%;
-        border-radius: 50%;
-        border: 1px solid rgba(238,245,255,.18);
-        opacity: .48;
-      }
-
-      .showroom-earth-gridline::before,
-      .showroom-earth-gridline::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 0;
-        width: 1px;
-        height: 100%;
-        background: linear-gradient(180deg, transparent, rgba(238,245,255,.16), transparent);
-        transform: translateX(-50%);
-      }
-
-      .showroom-earth-gridline::after {
-        left: 0;
-        top: 50%;
-        width: 100%;
-        height: 1px;
-        transform: translateY(-50%);
+        border: 1px solid rgba(238,245,255,.14);
+        opacity: .36;
       }
 
       .showroom-earth-focus-ring {
-        position: absolute;
-        inset: -5%;
-        border-radius: 50%;
-        border: 1px solid rgba(143,240,198,.34);
+        inset: -4%;
+        border: 1px solid rgba(143,240,198,.36);
         box-shadow:
           0 0 34px rgba(143,240,198,.18),
           inset 0 0 22px rgba(143,240,198,.07);
+      }
+
+      .showroom-az256-moon-orbit {
+        position: absolute;
+        left: 46%;
+        top: 55%;
+        z-index: 7;
+        width: calc(var(--earth-size) * 1.28);
+        height: calc(var(--earth-size) * 1.28);
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(220,231,244,.24);
+        border-radius: 50%;
+        opacity: .76;
         pointer-events: none;
       }
 
-      .showroom-earth-moon-path {
+      .showroom-moon-source,
+      .showroom-earth-moon-dot {
         position: absolute;
-        left: 50%;
+        left: calc(46% + (var(--earth-size) * 0.52));
         top: 50%;
-        width: min(88vw, 700px);
-        height: min(88vw, 700px);
+        z-index: 12;
+        width: var(--moon-size);
+        height: var(--moon-size);
         transform: translate(-50%, -50%);
-        border: 1px solid rgba(220,231,244,.22);
         border-radius: 50%;
-        opacity: .74;
-        z-index: 7;
-      }
-
-      .showroom-moon-source {
-        position: absolute;
-        right: 9%;
-        top: 47%;
-        width: clamp(24px, 4.4vw, 46px);
-        height: clamp(24px, 4.4vw, 46px);
-        border-radius: 50%;
-        transform: translateY(-50%);
         background:
-          radial-gradient(circle at 32% 28%, #fff, #dce7f4 56%, #7e8795 100%);
+          radial-gradient(circle at 32% 28%, #ffffff 0 12%, #e8eef7 26%, #c5cfdd 54%, #778393 100%);
         box-shadow:
           0 0 18px rgba(220,231,244,.52),
-          0 0 48px rgba(180,205,255,.20);
-        z-index: 12;
+          0 0 48px rgba(180,205,255,.20),
+          inset -14px -10px 24px rgba(0,0,0,.26),
+          inset 8px 7px 16px rgba(255,255,255,.28);
+      }
+
+      .showroom-moon-source::before {
+        content: "";
+        position: absolute;
+        inset: 17%;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 28% 38%, rgba(95,105,120,.28) 0 9%, transparent 13%),
+          radial-gradient(circle at 62% 54%, rgba(95,105,120,.22) 0 7%, transparent 11%),
+          radial-gradient(circle at 48% 28%, rgba(95,105,120,.18) 0 5%, transparent 9%);
+        opacity: .72;
       }
 
       .showroom-moon-light {
         position: absolute;
-        right: 10%;
-        top: 47%;
-        width: 46%;
-        height: 30%;
-        transform: translateY(-50%) rotate(166deg);
+        left: calc(46% + (var(--earth-size) * 0.41));
+        top: 50%;
+        z-index: 10;
+        width: calc(var(--earth-size) * 0.62);
+        height: calc(var(--earth-size) * 0.34);
+        transform: translate(-50%, -50%) rotate(166deg);
         transform-origin: right center;
-        background: linear-gradient(90deg, rgba(210,226,255,.24), rgba(210,226,255,.08), transparent 76%);
+        background: linear-gradient(90deg, rgba(210,226,255,.25), rgba(210,226,255,.08), transparent 76%);
         clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 56%);
         mix-blend-mode: screen;
-        opacity: .55;
-        z-index: 10;
-      }
-
-      .showroom-earth-anchor-label {
-        position: absolute;
-        left: 50%;
-        bottom: 8%;
-        transform: translateX(-50%);
-        z-index: 14;
-        padding: 6px 12px;
-        border: 1px solid rgba(143,240,198,.38);
-        border-radius: 999px;
-        background: rgba(3,6,12,.76);
-        color: #8ff0c6;
-        font-size: .72rem;
-        font-weight: 900;
-        white-space: nowrap;
+        opacity: .52;
+        pointer-events: none;
       }
 
       .showroom-grid-contract-card,
@@ -441,6 +406,22 @@
         line-height: 1;
       }
 
+      .showroom-earth-anchor-label {
+        position: absolute;
+        left: 50%;
+        bottom: 8%;
+        z-index: 14;
+        transform: translateX(-50%);
+        padding: 6px 12px;
+        border: 1px solid rgba(143,240,198,.38);
+        border-radius: 999px;
+        background: rgba(3,6,12,.76);
+        color: #8ff0c6;
+        font-size: .72rem;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
       .showroom-traversal-strip {
         position: absolute;
         left: 50%;
@@ -480,36 +461,33 @@
       }
 
       @media (max-width: 720px) {
-        .showroom-full-grid-stage {
+        .showroom-az256-stage {
+          --earth-size: min(86vw, 390px);
           min-height: 64vh;
         }
 
-        .showroom-massive-sun-source {
-          right: -42%;
-          top: -22%;
-          width: 520px;
+        .showroom-az256-sun {
+          right: -58%;
+          top: -25%;
+          width: 620px;
         }
 
-        .showroom-sun-beam-primary {
-          right: -6%;
-          top: 8%;
-          width: 92%;
+        .showroom-az256-camera {
+          left: 45%;
+          top: 55%;
         }
 
-        .showroom-earth-camera-stage {
-          left: 46%;
-          top: 54%;
-          width: min(96vw, 460px);
+        .showroom-moon-source,
+        .showroom-earth-moon-dot {
+          left: calc(45% + (var(--earth-size) * 0.52));
         }
 
-        .showroom-birds-eye-earth {
-          width: min(82vw, 370px);
-          height: min(82vw, 370px);
+        .showroom-moon-light {
+          left: calc(45% + (var(--earth-size) * 0.41));
         }
 
-        .showroom-earth-moon-path {
-          width: min(96vw, 430px);
-          height: min(96vw, 430px);
+        .showroom-az256-moon-orbit {
+          left: 45%;
         }
 
         .showroom-grid-contract-card,
@@ -588,9 +566,10 @@
       "VISUAL_EXPRESSION solar-system-field",
       "showroom-solar-system-field showroom-orbit ORBIT_FIELD",
       "Sun Mercury Venus Earth Moon Mars Jupiter Saturn Uranus Neptune",
+      "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z",
       "B1 B2 B3 B4 B5 B6 B7 B8",
       "1 2 3 4 5 6 7 8 9 10 11 12 13",
-      "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+      "Moon scale 27 percent Earth diameter"
     ].join(" ");
     return hidden;
   }
@@ -615,6 +594,7 @@
       el("span", "showroom-earth-continent showroom-earth-continent-b"),
       el("span", "showroom-earth-continent showroom-earth-continent-c"),
       el("span", "showroom-earth-continent showroom-earth-continent-d"),
+      el("span", "showroom-earth-continent showroom-earth-continent-e"),
       el("span", "showroom-earth-cloud-band"),
       el("span", "showroom-earth-gridline"),
       el("span", "showroom-earth-terminator"),
@@ -622,14 +602,6 @@
       el("span", "showroom-earth-focus-ring")
     );
     return stack;
-  }
-
-  function earthObject() {
-    const earth = el("div", "showroom-birds-eye-earth");
-    earth.dataset.body = "EARTH";
-    earth.dataset.earthZoom = "active";
-    earth.append(earthDetailStack());
-    return earth;
   }
 
   function card(className, top, main, bottom) {
@@ -640,14 +612,14 @@
   }
 
   function buildStage() {
-    const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument showroom-full-grid-stage");
+    const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument showroom-az256-stage");
 
     setData(root, {
       generation: GENERATION,
       showroomCycle: CYCLE,
       authority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "round-earth-birds-eye-light-model",
+      instrumentType: "az-256-moon-scale-4k-earth-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -656,6 +628,7 @@
       orbitField: "visible",
       sun: "included",
       moon: "included",
+      moonScale: "0.27-earth-diameter",
       planets: "included",
       earthRole: "primary inspection anchor",
       earthZoom: "active",
@@ -668,18 +641,21 @@
       finalCloseout: "true"
     });
 
-    const camera = el("div", "showroom-earth-camera-stage");
-    camera.append(earthObject());
+    const camera = el("div", "showroom-az256-camera");
+    const earth = el("div", "showroom-birds-eye-earth");
+    earth.dataset.body = "EARTH";
+    earth.dataset.earthZoom = "active";
+    earth.append(earthDetailStack());
+    camera.append(earth);
 
     root.append(
-      el("div", "showroom-void-field"),
-      el("div", "showroom-massive-sun-source"),
-      el("div", "showroom-sun-beam-primary"),
-      el("div", "showroom-sun-beam-secondary"),
+      el("div", "showroom-az256-void"),
+      el("div", "showroom-az256-sun"),
+      el("div", "showroom-az256-sun-beam"),
       camera,
-      el("div", "showroom-earth-moon-path"),
+      el("div", "showroom-az256-moon-orbit showroom-earth-moon-orbit"),
       el("div", "showroom-moon-light"),
-      el("div", "showroom-moon-source"),
+      el("div", "showroom-moon-source showroom-earth-moon-dot"),
       card("showroom-grid-contract-card", "Grid", "7 baseline", "0 void avoided"),
       card("showroom-solar-limb-label", "Sun", "Off-frame mass", "dominant light"),
       el("div", "showroom-earth-anchor-label", "Earth camera focus"),
@@ -709,7 +685,7 @@
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "round-earth-birds-eye-light-model",
+      instrumentType: "az-256-moon-scale-4k-earth-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -719,6 +695,7 @@
       gen4Closeout: "complete",
       finalCloseout: "true",
       earthZoom: "active",
+      moonScale: "0.27-earth-diameter",
       physicalHierarchy: "sun-dominant-earth-camera-focus",
       numericBaseline: NUMERIC_SPIRAL.baseline,
       voidState: NUMERIC_SPIRAL.void
@@ -727,15 +704,15 @@
     mount.append(buildStage());
 
     if (opts.runtime && typeof opts.runtime.writeReceipt === "function") {
-      opts.runtime.writeReceipt("gen_2_v1_round_earth_fix_ready", {
+      opts.runtime.writeReceipt("gen_2_v1_az_256_moon_scale_4k_ready", {
         generation: GENERATION,
         cycle: CYCLE,
         authority: AUTHORITY,
         version: VERSION,
         scope: "our-universe",
         earthZoom: "active",
+        moonScale: "0.27-earth-diameter",
         physicalHierarchy: "sun-dominant-earth-camera-focus",
-        birdEyeCamera: "active",
         sunLight: "dominant-off-frame",
         moonLight: "secondary-satellite",
         numericBaseline: 7,
@@ -754,7 +731,6 @@
       authority: AUTHORITY,
       universeBodies: clone(ALL_BODIES),
       numericSpiral: clone(NUMERIC_SPIRAL),
-      gridBits: clone(GRID_BITS),
       start: function start() {},
       stop: function stop() {},
       next: function next() {},
@@ -773,8 +749,8 @@
           visualExpression: "solar-system-field",
           orbitField: "visible",
           earthZoom: "active",
+          moonScale: "0.27-earth-diameter",
           physicalHierarchy: "sun-dominant-earth-camera-focus",
-          birdEyeCamera: "active",
           sunLight: "dominant-off-frame",
           moonLight: "secondary-satellite",
           visibleGlobe: true,
@@ -802,7 +778,6 @@
     PHASES: PHASES,
     UNIVERSE_BODIES: ALL_BODIES,
     NUMERIC_SPIRAL: NUMERIC_SPIRAL,
-    GRID_BITS: GRID_BITS,
     createGlobe: createGlobe
   });
 })(window, document);

@@ -1,10 +1,20 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-route="/gauges/" data-generation="nested-universe-gauges-tnt-v1">
+<html
+  lang="en"
+  data-page="gauges"
+  data-route="/gauges/"
+  data-generation="gauges-self-contained-demo-planet-recognition-tnt-v1"
+  data-focus-route="/showroom/globe/"
+  data-universe-route="/nine-summits/universe/"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Nested Universe Measurement · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges measures the Showroom Demo Planet transition route, the nested Nine Summits Universe route, and the globe instrument contract.">
+  <title>Gauges · Demo Planet Measurement · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Gauges measures the Showroom, the self-contained Demo Planet render, the Nine Summits Universe route, and the active public proof contract."
+  >
 
   <style>
     :root {
@@ -12,11 +22,13 @@
       --panel:rgba(9,15,25,.94);
       --panel2:rgba(14,24,38,.84);
       --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.36);
+      --gold-line:rgba(242,199,111,.38);
       --text:#f4f7ff;
       --muted:#b8c2d6;
+      --soft:rgba(244,247,255,.78);
       --gold:#f2c76f;
       --green:#8ff0c6;
+      --blue:#91bdff;
       --red:#ff9a9a;
       --hold:#ffd37a;
       --shadow:rgba(0,0,0,.56);
@@ -24,19 +36,29 @@
 
     * { box-sizing:border-box; }
 
+    html { min-height:100%; background:var(--bg); }
+
     body {
       margin:0;
       min-height:100vh;
       color:var(--text);
       background:
-        radial-gradient(circle at 76% 4%,rgba(242,199,111,.14),transparent 24rem),
-        radial-gradient(circle at 20% 16%,rgba(145,189,255,.12),transparent 30rem),
+        radial-gradient(circle at 78% 6%,rgba(242,199,111,.14),transparent 24rem),
+        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
+        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
         linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
       font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
     a { color:inherit; text-decoration:none; }
+
+    a:focus,
+    button:focus {
+      outline:2px solid var(--green);
+      outline-offset:3px;
+    }
 
     .skip {
       position:absolute;
@@ -47,7 +69,7 @@
       border-radius:10px;
       background:#fff;
       color:#000;
-      font-weight:800;
+      font-weight:850;
     }
 
     .skip:focus { left:10px; }
@@ -55,7 +77,7 @@
     .page {
       width:min(1160px,calc(100% - 28px));
       margin:0 auto;
-      padding:24px 0 60px;
+      padding:24px 0 64px;
     }
 
     .brand {
@@ -75,7 +97,9 @@
       text-transform:uppercase;
     }
 
-    .nav, .actions, .links {
+    .nav,
+    .actions,
+    .links {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -84,7 +108,8 @@
 
     .nav { margin-bottom:26px; }
 
-    .nav a, .button {
+    .nav a,
+    .button {
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -99,12 +124,21 @@
       cursor:pointer;
     }
 
+    .nav a[aria-current="page"],
     .button.primary {
-      border-color:rgba(143,240,198,.48);
+      border-color:rgba(242,199,111,.52);
+      background:rgba(242,199,111,.14);
+    }
+
+    .button.green {
+      border-color:rgba(143,240,198,.5);
       background:rgba(143,240,198,.13);
     }
 
-    .hero, .panel, .card, .result {
+    .hero,
+    .panel,
+    .card,
+    .result {
       border:1px solid var(--line);
       border-radius:30px;
       background:
@@ -113,49 +147,56 @@
       box-shadow:0 24px 80px var(--shadow);
     }
 
-    .hero, .panel, .result {
-      padding:clamp(24px,5vw,48px);
+    .hero,
+    .panel,
+    .result {
+      padding:clamp(24px,5vw,52px);
       margin-top:18px;
     }
 
     .hero {
-      min-height:460px;
+      min-height:540px;
       display:grid;
       align-content:center;
       gap:24px;
       border-color:var(--gold-line);
+      background:
+        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
+        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
+        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
     }
 
     .kicker {
       margin:0 0 12px;
-      color:var(--green);
+      color:var(--gold);
       font-size:.82rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .kicker.gold { color:var(--gold); }
+    .kicker.green { color:var(--green); }
+    .kicker.blue { color:var(--blue); }
 
     h1 {
       margin:0;
       max-width:980px;
-      font-size:clamp(3.05rem,10vw,7rem);
-      line-height:.9;
-      letter-spacing:-.078em;
+      font-size:clamp(3.2rem,10vw,7.2rem);
+      line-height:.88;
+      letter-spacing:-.08em;
     }
 
     h2 {
       margin:0;
-      max-width:900px;
-      font-size:clamp(1.7rem,5vw,3.35rem);
+      max-width:920px;
+      font-size:clamp(1.85rem,5vw,3.45rem);
       line-height:1;
-      letter-spacing:-.058em;
+      letter-spacing:-.06em;
     }
 
     h3 {
       margin:0;
-      font-size:clamp(1.25rem,3.6vw,2rem);
+      font-size:clamp(1.28rem,3.7vw,2.05rem);
       line-height:1.06;
       letter-spacing:-.045em;
     }
@@ -166,13 +207,30 @@
       line-height:1.6;
     }
 
+    strong { color:var(--text); }
+
+    code {
+      color:var(--green);
+      word-break:break-word;
+    }
+
     .lead {
       max-width:920px;
+      color:var(--soft);
       font-size:clamp(1.16rem,3vw,1.55rem);
       line-height:1.45;
     }
 
-    .score-grid, .grid {
+    .one-line {
+      color:var(--text);
+      font-size:clamp(1.7rem,5vw,3.5rem);
+      line-height:1.05;
+      letter-spacing:-.06em;
+      font-weight:950;
+    }
+
+    .score-grid,
+    .grid {
       display:grid;
       gap:14px;
       margin-top:18px;
@@ -182,11 +240,16 @@
       grid-template-columns:repeat(5,minmax(0,1fr));
     }
 
-    .grid {
+    .grid.three {
       grid-template-columns:repeat(3,minmax(0,1fr));
     }
 
-    .score, .card {
+    .grid.four {
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .score,
+    .card {
       border:1px solid rgba(168,199,255,.15);
       border-radius:22px;
       padding:16px;
@@ -196,24 +259,30 @@
     .score strong {
       display:block;
       color:var(--gold);
-      font-size:clamp(1.4rem,4vw,2.2rem);
+      font-size:clamp(1.35rem,4vw,2.2rem);
       line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .score span, .card p {
+    .score span {
       display:block;
       margin-top:8px;
       color:var(--muted);
+      line-height:1.35;
+      font-weight:760;
     }
 
     .card {
       min-height:200px;
-      background:var(--panel2);
+      background:
+        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
+        var(--panel2);
+      box-shadow:none;
     }
 
     .card span {
       display:block;
-      margin-bottom:10px;
+      margin-bottom:8px;
       color:var(--gold);
       font-size:.76rem;
       font-weight:950;
@@ -221,21 +290,43 @@
       text-transform:uppercase;
     }
 
+    .card p { margin:0; }
+
     .pill {
       display:inline-flex;
-      min-width:74px;
+      min-width:76px;
       justify-content:center;
       padding:5px 10px;
       border-radius:999px;
       font-size:.75rem;
       font-weight:950;
       letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .pass { color:var(--green); border:1px solid rgba(143,240,198,.42); background:rgba(143,240,198,.12); }
-    .hold { color:var(--hold); border:1px solid rgba(255,211,122,.42); background:rgba(255,211,122,.12); }
-    .fail { color:var(--red); border:1px solid rgba(255,154,154,.42); background:rgba(255,154,154,.12); }
-    .wait { color:var(--muted); border:1px solid rgba(168,199,255,.2); background:rgba(255,255,255,.045); }
+    .pass {
+      color:var(--green);
+      border:1px solid rgba(143,240,198,.42);
+      background:rgba(143,240,198,.12);
+    }
+
+    .hold {
+      color:var(--hold);
+      border:1px solid rgba(255,211,122,.42);
+      background:rgba(255,211,122,.12);
+    }
+
+    .fail {
+      color:var(--red);
+      border:1px solid rgba(255,154,154,.42);
+      background:rgba(255,154,154,.12);
+    }
+
+    .wait {
+      color:var(--muted);
+      border:1px solid rgba(168,199,255,.2);
+      background:rgba(255,255,255,.045);
+    }
 
     table {
       width:100%;
@@ -247,7 +338,8 @@
       background:rgba(255,255,255,.035);
     }
 
-    th, td {
+    th,
+    td {
       padding:14px;
       border-bottom:1px solid rgba(168,199,255,.12);
       color:var(--muted);
@@ -267,14 +359,49 @@
     }
 
     tr:last-child td { border-bottom:0; }
-    code { color:var(--green); word-break:break-word; }
 
-    .receipt { display:none!important; }
+    .evidence-list {
+      display:grid;
+      gap:5px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .evidence-list li {
+      color:var(--muted);
+    }
+
+    .evidence-list strong {
+      color:var(--green);
+    }
+
+    .evidence-list .bad {
+      color:var(--red);
+    }
+
+    .receipt {
+      display:none!important;
+    }
 
     @media (max-width:980px) {
-      .score-grid, .grid { grid-template-columns:1fr; }
-      table, tbody, tr, td, th { display:block; width:100%; }
+      .score-grid,
+      .grid.three,
+      .grid.four {
+        grid-template-columns:1fr;
+      }
+
+      table,
+      tbody,
+      tr,
+      td,
+      th {
+        display:block;
+        width:100%;
+      }
+
       thead { display:none; }
+
       td::before {
         display:block;
         margin-bottom:4px;
@@ -284,6 +411,19 @@
         letter-spacing:.09em;
         text-transform:uppercase;
         content:attr(data-label);
+      }
+    }
+
+    @media (max-width:620px) {
+      .page {
+        width:min(100% - 24px,620px);
+        padding-top:18px;
+      }
+
+      .nav a,
+      .button {
+        min-height:40px;
+        padding:9px 14px;
       }
     }
   </style>
@@ -296,47 +436,103 @@
     id="gauges-main"
     class="page"
     data-route="/gauges/"
-    data-page-purpose="nested-universe-showroom-measurement"
+    data-page-purpose="self-contained-demo-planet-measurement"
     data-focus-route="/showroom/globe/"
+    data-showroom-route="/showroom/"
     data-universe-route="/nine-summits/universe/"
-    data-retired-route="/nine-summits-universe/"
+    data-retired-flat-universe-route="/nine-summits-universe/"
   >
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
-      Gauges · Nested Universe Measurement
+      Gauges · Demo Planet Measurement
     </a>
 
-    <nav class="nav">
+    <nav class="nav" aria-label="Primary navigation">
       <a href="/">Compass</a>
-      <a href="/nine-summits/">Nine Summits</a>
-      <a href="/nine-summits/universe/">Nine Summits Universe</a>
       <a href="/showroom/">Showroom</a>
       <a href="/showroom/globe/">Demo Planet</a>
+      <a href="/nine-summits/">Nine Summits</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/nine-summits-of-love/">Book</a>
       <a href="/products/">Products</a>
+      <a href="/gauges/" aria-current="page">Gauges</a>
     </nav>
 
     <section class="hero">
-      <p class="kicker">H6 · Gauges · Nested Universe Focus</p>
-      <h1>Gauges now measures the paramount architecture route.</h1>
+      <p class="kicker">H6 · Gauges · Demo Planet Focus</p>
+      <h1>Gauges now measures the visible planet.</h1>
+
       <p class="lead">
-        Gauges measures `/nine-summits/universe/` as the canonical nested world route. It no longer treats `/nine-summits-universe/` as the standard.
+        The old external instrument failure is retired. The live standard is the self-contained Demo Planet render on <strong>/showroom/globe/</strong>.
       </p>
+
       <p class="lead">
-        The current measurement separates three things: the Universe route, the Showroom transition route, and the globe instrument API.
+        This page checks the Showroom, the visible Demo Planet, the nested Universe route, and the Nine Summits hub link contract.
       </p>
 
       <div class="actions">
         <button class="button primary" type="button" id="run-audit">Run audit</button>
-        <a class="button" href="/nine-summits/universe/">Open Universe Route</a>
-        <a class="button" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button green" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button" href="/nine-summits/universe/">Open Universe</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
       </div>
 
-      <div class="score-grid">
-        <div class="score"><strong id="score-total">--</strong><span>Total source score</span></div>
-        <div class="score"><strong id="score-universe">--</strong><span>Universe route</span></div>
-        <div class="score"><strong id="score-showroom">--</strong><span>Showroom route</span></div>
-        <div class="score"><strong id="score-instrument">--</strong><span>Instrument contract</span></div>
-        <div class="score"><strong id="score-next">--</strong><span>Next target</span></div>
+      <div class="score-grid" aria-label="Gauge scores">
+        <div class="score">
+          <strong id="score-total">--</strong>
+          <span>Total source score</span>
+        </div>
+        <div class="score">
+          <strong id="score-showroom">--</strong>
+          <span>Showroom</span>
+        </div>
+        <div class="score">
+          <strong id="score-demo">--</strong>
+          <span>Demo Planet</span>
+        </div>
+        <div class="score">
+          <strong id="score-universe">--</strong>
+          <span>Universe</span>
+        </div>
+        <div class="score">
+          <strong id="score-next">--</strong>
+          <span>Next target</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker green">Current read</p>
+      <h2>The planet is visible. The measurement contract must match it.</h2>
+
+      <p class="one-line">
+        The proof changed. The gauges must measure the proof that is actually live.
+      </p>
+
+      <div class="grid four">
+        <article class="card">
+          <span>Old blocker</span>
+          <h3>External instrument dependency.</h3>
+          <p>The former failure was waiting on <code>/assets/showroom.globe.instrument.js</code>.</p>
+        </article>
+
+        <article class="card">
+          <span>New standard</span>
+          <h3>Self-contained render.</h3>
+          <p>The Demo Planet is now rendered directly inside <code>/showroom/globe/</code>.</p>
+        </article>
+
+        <article class="card">
+          <span>Universe route</span>
+          <h3>Nested architecture.</h3>
+          <p>The correct world route is <code>/nine-summits/universe/</code>.</p>
+        </article>
+
+        <article class="card">
+          <span>Retired route</span>
+          <h3>No public flat route.</h3>
+          <p><code>/nine-summits-universe/</code> is retired and should not be used as a live button.</p>
+        </article>
       </div>
     </section>
 
@@ -346,12 +542,17 @@
 
       <table>
         <thead>
-          <tr><th>Layer</th><th>Target</th><th>Status</th><th>Evidence</th></tr>
+          <tr>
+            <th>Layer</th>
+            <th>Target</th>
+            <th>Status</th>
+            <th>Evidence</th>
+          </tr>
         </thead>
         <tbody id="audit-body">
           <tr>
             <td data-label="Layer">Waiting</td>
-            <td data-label="Target"><code>Nested route audit</code></td>
+            <td data-label="Target"><code>Demo Planet source stack</code></td>
             <td data-label="Status"><span class="pill wait">WAIT</span></td>
             <td data-label="Evidence">Run audit.</td>
           </tr>
@@ -360,38 +561,66 @@
     </section>
 
     <section class="panel">
-      <p class="kicker">Measurement rules</p>
+      <p class="kicker blue">Measurement rules</p>
       <h2>What Gauges is allowed to claim.</h2>
 
-      <div class="grid">
-        <article class="card"><span>CANONICAL_UNIVERSE_ROUTE</span><h3>Measures `/nine-summits/universe/`.</h3><p>The nested route passes when it serves and carries the nested route receipt.</p></article>
-        <article class="card"><span>RETIRED_ROUTE</span><h3>Does not require `/nine-summits-universe/`.</h3><p>The old flat route is no longer the architecture target.</p></article>
-        <article class="card"><span>INSTRUMENT_CONTRACT</span><h3>Still separate.</h3><p>The globe mount remains a separate API repair if the instrument does not expose the expected object.</p></article>
+      <div class="grid three">
+        <article class="card">
+          <span>SHOWROOM</span>
+          <h3>Passes when the public proof room serves.</h3>
+          <p>Showroom must point visitors to Demo Planet, Universe, Products, and Gauges without legacy Demo Universe language as the primary contract.</p>
+        </article>
+
+        <article class="card">
+          <span>DEMO_PLANET</span>
+          <h3>Passes when the self-contained planet is source-visible.</h3>
+          <p>Required markers include <code>self-contained-render=true</code>, <code>visible-globe=true</code>, and <code>vertical-peeled-globe-projection=true</code>.</p>
+        </article>
+
+        <article class="card">
+          <span>UNIVERSE_ROUTE</span>
+          <h3>Passes when the nested world route serves.</h3>
+          <p>The correct route is <code>/nine-summits/universe/</code>. The old flat route is not the standard.</p>
+        </article>
       </div>
     </section>
 
     <section class="result">
       <p class="kicker gold">Next target</p>
       <h2 id="audit-result">Waiting for audit.</h2>
-      <p id="audit-detail">Run the audit. If the nested Universe route passes and the instrument fails, the next target becomes `/assets/showroom.globe.instrument.js`.</p>
+      <p id="audit-detail">
+        Run the audit. If Showroom, Demo Planet, Universe, and Hub links pass, the remaining work is visual polish rather than route repair.
+      </p>
+
       <div class="links">
-        <a class="button primary" href="/nine-summits/universe/">Open Universe Route</a>
-        <a class="button" href="/showroom/globe/">Inspect Demo Planet</a>
-        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button green" href="/nine-summits/universe/">Open Universe</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/nine-summits/">Nine Summits</a>
         <a class="button" href="/">Compass</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      GAUGES_NESTED_UNIVERSE_STANDARD_TNT_v1
+      GAUGES_SELF_CONTAINED_DEMO_PLANET_RECOGNITION_TNT_v1
       route=/gauges/
-      canonical-universe-route=/nine-summits/universe/
-      retired-universe-route=/nine-summits-universe/
-      showroom-route=/showroom/globe/
-      instrument=/assets/showroom.globe.instrument.js
-      nested-architecture=true
-      paramount-architecture=true
-      next-file-selected-by-audit=true
+      page-purpose=self-contained-demo-planet-measurement
+      showroom-route=/showroom/
+      demo-planet-route=/showroom/globe/
+      universe-route=/nine-summits/universe/
+      retired-flat-universe-route=/nine-summits-universe/
+      external-instrument-contract-retired=true
+      external-instrument-required=false
+      measures-self-contained-render=true
+      measures-visible-globe=true
+      measures-seven-landmasses=true
+      measures-vertical-peeled-globe-projection=true
+      expected-demo-planet-marker=SHOWROOM_GLOBE_SELF_CONTAINED_DEMO_PLANET_TNT_v1
+      expected-showroom-marker=SHOWROOM_DEMO_PLANET_PUBLIC_PROOF_RENEWAL_TNT_v1
+      expected-universe-marker=NINE_SUMMITS_METAVERSE_LANE_OPEN_TNT_v1
+      expected-hub-marker=NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1
+      next-target-selected-by-audit=true
+      result=gauges-recognize-visible-demo-planet
     </section>
   </main>
 
@@ -401,138 +630,335 @@
 
       var checks = [
         {
-          layer: "Nine Summits hub",
-          target: "/nine-summits/",
-          group: "universe",
-          markers: ["NINE_SUMMITS_HUB_NESTED_UNIVERSE_STANDARD_TNT_v1", "/nine-summits/universe/"]
+          layer: "Showroom public proof room",
+          target: "/showroom/",
+          group: "showroom",
+          required: [
+            "SHOWROOM_DEMO_PLANET_PUBLIC_PROOF_RENEWAL_TNT_v1",
+            "public-proof-room",
+            "/showroom/globe/",
+            "/nine-summits/universe/"
+          ],
+          forbidden: [
+            "href=\"/nine-summits-universe/\""
+          ]
         },
         {
-          layer: "Nested Universe route",
+          layer: "Demo Planet self-contained render",
+          target: "/showroom/globe/",
+          group: "demo",
+          required: [
+            "SHOWROOM_GLOBE_SELF_CONTAINED_DEMO_PLANET_TNT_v1",
+            "external-instrument-dependency=false",
+            "self-contained-render=true",
+            "visible-globe=true",
+            "seven-landmasses=true",
+            "vertical-peeled-globe-projection=true",
+            "instrument-fallback-removed=true"
+          ],
+          forbidden: [
+            "Instrument fallback",
+            "waiting for the globe instrument",
+            "src=\"/assets/showroom.globe.instrument.js"
+          ]
+        },
+        {
+          layer: "Nine Summits Universe route",
           target: "/nine-summits/universe/",
           group: "universe",
-          markers: ["NINE_SUMMITS_NESTED_UNIVERSE_WORLD_ROUTE_TNT_v1", "route=/nine-summits/universe/", "NINE_SUMMITS_UNIVERSE", "archetype-personality", "tiktok"]
+          required: [
+            "NINE_SUMMITS_METAVERSE_LANE_OPEN_TNT_v1",
+            "route=/nine-summits/universe/",
+            "planet=Nine Summits Universe",
+            "landmasses=7",
+            "map-protocol=tiktok"
+          ],
+          forbidden: [
+            "href=\"/nine-summits-universe/\""
+          ]
         },
         {
-          layer: "Showroom transition route",
-          target: "/showroom/globe/",
-          group: "showroom",
-          markers: ["SHOWROOM_GLOBE_NESTED_UNIVERSE_TRANSITION_TNT_v1", "universe-page=/nine-summits/universe/", "destination-field=planet-1-nine-summits-universe"]
-        },
-        {
-          layer: "Instrument API",
-          target: "/assets/showroom.globe.instrument.js",
-          group: "instrument",
-          markers: ["DGBShowroomGlobeInstrument", "renderGlobe"]
+          layer: "Nine Summits hub metaverse link",
+          target: "/nine-summits/",
+          group: "hub",
+          required: [
+            "NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1",
+            "href=\"/nine-summits/universe/\"",
+            "Open metaverse lane",
+            "broken-public-universe-link-removed=true"
+          ],
+          forbidden: [
+            "href=\"/nine-summits-universe/\"",
+            "universe-lane=/nine-summits-universe/",
+            "metaverse-lane=/nine-summits-universe/"
+          ]
         }
       ];
 
-      function id(x) { return document.getElementById(x); }
-      function set(idName, value) { var node = id(idName); if (node) node.textContent = value; }
-      function cls(status) { return status === "PASS" ? "pass" : status === "HOLD" ? "hold" : status === "FAIL" ? "fail" : "wait"; }
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function setText(id, value) {
+        var node = byId(id);
+        if (node) node.textContent = value;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function statusClass(status) {
+        if (status === "PASS") return "pass";
+        if (status === "HOLD") return "hold";
+        if (status === "FAIL") return "fail";
+        return "wait";
+      }
 
       function fetchText(target) {
-        return fetch(target + "?v=" + Date.now(), { cache: "no-store" })
-          .then(function (r) {
-            return r.text().then(function (text) {
-              return { ok: r.ok, status: r.status, text: text };
+        var separator = target.indexOf("?") === -1 ? "?" : "&";
+        return fetch(target + separator + "v=" + Date.now(), { cache: "no-store" })
+          .then(function (response) {
+            return response.text().then(function (text) {
+              return {
+                ok: response.ok,
+                status: response.status,
+                text: text
+              };
             });
           });
       }
 
       function evaluate(check, payload) {
         if (!payload.ok) {
-          return { layer: check.layer, target: check.target, group: check.group, status: "FAIL", passed: 0, total: check.markers.length, evidence: "HTTP " + payload.status };
+          return {
+            layer: check.layer,
+            target: check.target,
+            group: check.group,
+            status: "FAIL",
+            requiredPassed: 0,
+            requiredTotal: check.required.length,
+            forbiddenFound: [],
+            requiredMissing: check.required.slice(),
+            evidence: "HTTP " + payload.status
+          };
         }
 
-        var passed = check.markers.filter(function (m) { return payload.text.indexOf(m) !== -1; }).length;
-        var status = passed === check.markers.length ? "PASS" : passed > 0 ? "HOLD" : "FAIL";
+        var requiredPassed = [];
+        var requiredMissing = [];
+        var forbiddenFound = [];
+
+        check.required.forEach(function (marker) {
+          if (payload.text.indexOf(marker) !== -1) {
+            requiredPassed.push(marker);
+          } else {
+            requiredMissing.push(marker);
+          }
+        });
+
+        (check.forbidden || []).forEach(function (marker) {
+          if (payload.text.indexOf(marker) !== -1) {
+            forbiddenFound.push(marker);
+          }
+        });
+
+        var status = "FAIL";
+        if (requiredMissing.length === 0 && forbiddenFound.length === 0) {
+          status = "PASS";
+        } else if (requiredPassed.length > 0 || forbiddenFound.length > 0) {
+          status = "HOLD";
+        }
 
         return {
           layer: check.layer,
           target: check.target,
           group: check.group,
           status: status,
-          passed: passed,
-          total: check.markers.length,
-          evidence: "HTTP " + payload.status + ". " + passed + " of " + check.markers.length + " markers found."
+          requiredPassed: requiredPassed.length,
+          requiredTotal: check.required.length,
+          forbiddenFound: forbiddenFound,
+          requiredMissing: requiredMissing,
+          evidence: "HTTP " + payload.status + ". " + requiredPassed.length + " of " + check.required.length + " required markers found."
         };
       }
 
-      function group(results, groupName) {
-        var items = results.filter(function (r) { return r.group === groupName; });
+      function groupStatus(results, groupName) {
+        var items = results.filter(function (item) {
+          return item.group === groupName;
+        });
+
         if (!items.length) return "--";
-        if (items.every(function (r) { return r.status === "PASS"; })) return "PASS";
-        if (items.some(function (r) { return r.status === "HOLD"; })) return "HOLD";
+
+        if (items.every(function (item) { return item.status === "PASS"; })) {
+          return "PASS";
+        }
+
+        if (items.some(function (item) { return item.status === "HOLD"; })) {
+          return "HOLD";
+        }
+
         return "FAIL";
       }
 
-      function total(results) {
-        var t = results.reduce(function (s, r) { return s + r.total; }, 0);
-        var p = results.reduce(function (s, r) { return s + r.passed; }, 0);
-        return t ? Math.round((p / t) * 100) + "%" : "--";
+      function totalScore(results) {
+        var total = results.reduce(function (sum, result) {
+          return sum + result.requiredTotal;
+        }, 0);
+
+        var passed = results.reduce(function (sum, result) {
+          return sum + result.requiredPassed;
+        }, 0);
+
+        var forbiddenPenalty = results.reduce(function (sum, result) {
+          return sum + result.forbiddenFound.length;
+        }, 0);
+
+        var adjusted = Math.max(0, passed - forbiddenPenalty);
+
+        return total ? Math.round((adjusted / total) * 100) + "%" : "--";
+      }
+
+      function evidenceHtml(result) {
+        var out = [];
+        out.push("<li>" + escapeHtml(result.evidence) + "</li>");
+
+        if (result.requiredMissing.length) {
+          out.push("<li><span class=\"bad\">Missing:</span> " + result.requiredMissing.map(escapeHtml).join(", ") + "</li>");
+        }
+
+        if (result.forbiddenFound.length) {
+          out.push("<li><span class=\"bad\">Forbidden found:</span> " + result.forbiddenFound.map(escapeHtml).join(", ") + "</li>");
+        }
+
+        if (!result.requiredMissing.length && !result.forbiddenFound.length && result.status === "PASS") {
+          out.push("<li><strong>Contract clean.</strong></li>");
+        }
+
+        return "<ul class=\"evidence-list\">" + out.join("") + "</ul>";
       }
 
       function decide(results) {
-        var universe = group(results, "universe");
-        var showroom = group(results, "showroom");
-        var instrument = group(results, "instrument");
-
-        if (universe !== "PASS") {
-          return ["UNIVERSE", "The nested Universe architecture is not fully closed.", "Repair `/nine-summits/index.html` or `/nine-summits/universe/index.html` before continuing."];
-        }
+        var showroom = groupStatus(results, "showroom");
+        var demo = groupStatus(results, "demo");
+        var universe = groupStatus(results, "universe");
+        var hub = groupStatus(results, "hub");
 
         if (showroom !== "PASS") {
-          return ["SHOWROOM", "The Showroom transition route is not aligned to the nested Universe route.", "Repair `/showroom/globe/index.html` next."];
+          return [
+            "SHOWROOM",
+            "Showroom contract is not fully aligned.",
+            "Repair /showroom/index.html before measuring the planet again."
+          ];
         }
 
-        if (instrument !== "PASS") {
-          return ["INSTRUMENT", "The nested route and Showroom route are aligned. The globe instrument is the remaining blocker.", "Repair `/assets/showroom.globe.instrument.js` next."];
+        if (demo !== "PASS") {
+          return [
+            "DEMO",
+            "Demo Planet source contract is not fully aligned.",
+            "Repair /showroom/globe/index.html. Do not reopen the external instrument as the first move."
+          ];
         }
 
-        return ["VISUAL", "All source contracts pass.", "Proceed to owner visual confirmation."];
+        if (universe !== "PASS") {
+          return [
+            "UNIVERSE",
+            "Nine Summits Universe route is not fully aligned.",
+            "Repair /nine-summits/universe/index.html."
+          ];
+        }
+
+        if (hub !== "PASS") {
+          return [
+            "HUB",
+            "Nine Summits hub still has route mismatch or missing metaverse markers.",
+            "Repair /nine-summits/index.html."
+          ];
+        }
+
+        return [
+          "POLISH",
+          "All measured source contracts pass.",
+          "Next work is visual polish, accessibility polish, or owner-confirmed design refinement."
+        ];
       }
 
       function render(results) {
-        var body = id("audit-body");
+        var body = byId("audit-body");
+
         if (body) {
-          body.innerHTML = results.map(function (r) {
-            return "<tr><td data-label='Layer'>" + r.layer + "</td><td data-label='Target'><code>" + r.target + "</code></td><td data-label='Status'><span class='pill " + cls(r.status) + "'>" + r.status + "</span></td><td data-label='Evidence'>" + r.evidence + "</td></tr>";
+          body.innerHTML = results.map(function (result) {
+            return [
+              "<tr>",
+              "<td data-label=\"Layer\">" + escapeHtml(result.layer) + "</td>",
+              "<td data-label=\"Target\"><code>" + escapeHtml(result.target) + "</code></td>",
+              "<td data-label=\"Status\"><span class=\"pill " + statusClass(result.status) + "\">" + escapeHtml(result.status) + "</span></td>",
+              "<td data-label=\"Evidence\">" + evidenceHtml(result) + "</td>",
+              "</tr>"
+            ].join("");
           }).join("");
         }
 
-        set("score-total", total(results));
-        set("score-universe", group(results, "universe"));
-        set("score-showroom", group(results, "showroom"));
-        set("score-instrument", group(results, "instrument"));
+        setText("score-total", totalScore(results));
+        setText("score-showroom", groupStatus(results, "showroom"));
+        setText("score-demo", groupStatus(results, "demo"));
+        setText("score-universe", groupStatus(results, "universe"));
 
-        var d = decide(results);
-        set("score-next", d[0]);
-        set("audit-result", d[1]);
-        set("audit-detail", d[2]);
+        var decision = decide(results);
+        setText("score-next", decision[0]);
+        setText("audit-result", decision[1]);
+        setText("audit-detail", decision[2]);
+
+        document.documentElement.dataset.gaugesAuditStatus = decision[0];
+        document.documentElement.dataset.gaugesAuditScore = totalScore(results);
       }
 
-      function run() {
-        var body = id("audit-body");
+      function runAudit() {
+        var body = byId("audit-body");
+
         if (body) {
-          body.innerHTML = "<tr><td data-label='Layer'>Running</td><td data-label='Target'><code>Nested source stack</code></td><td data-label='Status'><span class='pill hold'>RUN</span></td><td data-label='Evidence'>Fetching source.</td></tr>";
+          body.innerHTML = [
+            "<tr>",
+            "<td data-label=\"Layer\">Running</td>",
+            "<td data-label=\"Target\"><code>Demo Planet source stack</code></td>",
+            "<td data-label=\"Status\"><span class=\"pill hold\">RUN</span></td>",
+            "<td data-label=\"Evidence\">Fetching live source.</td>",
+            "</tr>"
+          ].join("");
         }
 
         Promise.all(checks.map(function (check) {
-          return fetchText(check.target).then(function (payload) {
-            return evaluate(check, payload);
-          }).catch(function (err) {
-            return { layer: check.layer, target: check.target, group: check.group, status: "FAIL", passed: 0, total: check.markers.length, evidence: err && err.message ? err.message : "fetch failed" };
-          });
+          return fetchText(check.target)
+            .then(function (payload) {
+              return evaluate(check, payload);
+            })
+            .catch(function (error) {
+              return {
+                layer: check.layer,
+                target: check.target,
+                group: check.group,
+                status: "FAIL",
+                requiredPassed: 0,
+                requiredTotal: check.required.length,
+                forbiddenFound: [],
+                requiredMissing: check.required.slice(),
+                evidence: error && error.message ? error.message : "fetch failed"
+              };
+            });
         })).then(render);
       }
 
-      var button = id("run-audit");
-      if (button) button.addEventListener("click", run);
+      var button = byId("run-audit");
+      if (button) button.addEventListener("click", runAudit);
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", run);
+        document.addEventListener("DOMContentLoaded", runAudit);
       } else {
-        run();
+        runAudit();
       }
     })();
   </script>

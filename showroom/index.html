@@ -1,19 +1,22 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom"
-  data-route="/showroom/"
-  data-generation="showroom-demo-planet-public-proof-renewal-tnt-v1"
-  data-demo-planet-route="/showroom/globe/"
-  data-universe-route="/nine-summits/universe/"
+  data-page="showroom-globe"
+  data-route="/showroom/globe/"
+  data-generation="PLANET_ONE_SHOWROOM_GLOBE_CONSUMER_TNT_v1"
+  data-planet-one-renderer="/world/render/planet-one.render.js"
+  data-render-contract="planet-one-render-team-with-safe-fallback"
+  data-globe-demo-status-retired="true"
+  data-tree-demo-mode="true"
+  data-render-lanes-separated="true"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Showroom · Diamond Gate Bridge</title>
+  <title>Planet 1 · Showroom · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Showroom is the public proof room for Diamond Gate Bridge: inspect the Demo Planet, enter the Nine Summits Universe, view products, and read Gauges."
+    content="Inspect Planet 1, the real Nine Summits Universe globe render lane, from the Showroom."
   >
 
   <style>
@@ -72,7 +75,7 @@
     .skip:focus { left:10px; }
 
     .page {
-      width:min(1120px,calc(100% - 28px));
+      width:min(1160px,calc(100% - 28px));
       margin:0 auto;
       padding:24px 0 64px;
     }
@@ -133,7 +136,7 @@
     .hero,
     .panel,
     .card,
-    .route-card {
+    .planet-stage {
       border:1px solid var(--line);
       border-radius:30px;
       background:
@@ -149,7 +152,7 @@
     }
 
     .hero {
-      min-height:560px;
+      min-height:540px;
       display:grid;
       align-content:center;
       gap:24px;
@@ -170,7 +173,6 @@
     }
 
     .kicker.green { color:var(--green); }
-    .kicker.blue { color:var(--blue); }
 
     h1 {
       margin:0;
@@ -218,46 +220,87 @@
       font-weight:950;
     }
 
+    .planet-stage {
+      margin-top:18px;
+      padding:clamp(18px,4vw,36px);
+      border-color:rgba(242,199,111,.36);
+      background:
+        radial-gradient(circle at 50% 22%,rgba(145,189,255,.12),transparent 18rem),
+        radial-gradient(circle at 50% 78%,rgba(143,240,198,.08),transparent 20rem),
+        rgba(5,10,18,.92);
+      overflow:hidden;
+    }
+
+    .planet-one-mount {
+      display:grid;
+      place-items:center;
+      min-height:460px;
+    }
+
+    .fallback-card {
+      display:grid;
+      justify-items:center;
+      gap:14px;
+      width:min(560px,100%);
+      padding:clamp(12px,3vw,20px);
+      border:1px solid rgba(242,199,111,.38);
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 50% 10%,rgba(145,189,255,.15),transparent 15rem),
+        rgba(3,7,14,.76);
+      box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 60px rgba(145,189,255,.14);
+    }
+
+    .fallback-planet {
+      width:min(380px,80vw);
+      aspect-ratio:1;
+      border-radius:50%;
+      border:3px solid rgba(145,189,255,.42);
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.30),transparent 20%),
+        radial-gradient(ellipse at 50% 10%,rgba(255,255,255,.78) 0 7%,transparent 8%),
+        radial-gradient(ellipse at 50% 25%,rgba(150,170,172,.8) 0 12%,transparent 13%),
+        radial-gradient(ellipse at 50% 50%,rgba(88,132,80,.94) 0 18%,transparent 19%),
+        radial-gradient(ellipse at 28% 51%,rgba(92,83,70,.9) 0 13%,transparent 14%),
+        radial-gradient(ellipse at 72% 51%,rgba(96,150,104,.9) 0 13%,transparent 14%),
+        radial-gradient(ellipse at 50% 72%,rgba(105,139,84,.9) 0 13%,transparent 14%),
+        radial-gradient(ellipse at 50% 91%,rgba(225,235,240,.9) 0 7%,transparent 8%),
+        radial-gradient(circle at 34% 24%,#67b8d7 0%,#14618a 34%,#06294a 66%,#02050b 100%);
+      box-shadow:
+        inset -52px -46px 72px rgba(0,0,0,.68),
+        inset 26px 22px 46px rgba(255,255,255,.12),
+        0 0 0 10px rgba(145,189,255,.08),
+        0 26px 58px rgba(0,0,0,.72);
+    }
+
+    .fallback-note {
+      color:rgba(244,247,255,.84);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      line-height:1.35;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
     .grid {
       display:grid;
       gap:14px;
       margin-top:18px;
     }
 
-    .grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .grid.four { grid-template-columns:repeat(4,minmax(0,1fr)); }
 
-    .card,
-    .route-card {
+    .card {
       padding:22px;
+      min-height:205px;
       background:
         radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
         var(--panel2);
       box-shadow:none;
     }
 
-    .card {
-      min-height:220px;
-      display:grid;
-      align-content:start;
-      gap:12px;
-    }
-
-    .route-card {
-      min-height:285px;
-      display:grid;
-      gap:12px;
-      align-content:start;
-    }
-
-    .route-card .button {
-      width:max-content;
-      margin-top:auto;
-    }
-
-    .card span,
-    .route-card span {
+    .card span {
       display:block;
       margin-bottom:8px;
       color:var(--gold);
@@ -267,70 +310,12 @@
       text-transform:uppercase;
     }
 
-    .card p,
-    .route-card p {
-      margin:0;
-    }
+    .card p { margin:0; }
 
-    .steps {
-      display:grid;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .step {
-      display:grid;
-      grid-template-columns:92px 1fr;
-      gap:14px;
-      align-items:start;
-      padding:14px;
-      border:1px solid rgba(168,199,255,.14);
-      border-radius:18px;
-      background:rgba(255,255,255,.045);
-    }
-
-    .step strong {
-      color:var(--green);
-      font-size:1.3rem;
-      line-height:1;
-    }
-
-    .step span {
-      color:var(--muted);
-      line-height:1.48;
-    }
-
-    .status-row {
-      display:grid;
-      grid-template-columns:160px 1fr;
-      gap:14px;
-      align-items:start;
-      padding:14px;
-      border:1px solid rgba(168,199,255,.14);
-      border-radius:18px;
-      background:rgba(255,255,255,.045);
-    }
-
-    .status-row strong {
-      color:var(--green);
-    }
-
-    .status-row span {
-      color:var(--muted);
-      line-height:1.48;
-    }
-
-    .receipt {
-      display:none!important;
-    }
+    .receipt { display:none!important; }
 
     @media (max-width:980px) {
-      .grid.two,
-      .grid.three,
-      .grid.four {
-        grid-template-columns:1fr;
-      }
-
+      .grid.three { grid-template-columns:1fr; }
       .hero { min-height:470px; }
     }
 
@@ -345,275 +330,209 @@
         min-height:40px;
         padding:9px 14px;
       }
-
-      .step,
-      .status-row {
-        grid-template-columns:1fr;
-      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#showroom-main">Skip to Showroom</a>
+  <a class="skip" href="#globe-main">Skip to Planet 1 inspection</a>
 
   <main
-    id="showroom-main"
+    id="globe-main"
     class="page"
-    data-route="/showroom/"
-    data-page-purpose="public-proof-room"
-    data-demo-planet-route="/showroom/globe/"
+    data-route="/showroom/globe/"
+    data-page-purpose="planet-one-inspection-route"
+    data-render-contract="planet-one-render-team-with-safe-fallback"
+    data-planet-one-renderer="/world/render/planet-one.render.js"
+    data-planet-one-render-active="pending"
+    data-globe-demo-status-retired="true"
+    data-tree-demo-mode="true"
+    data-render-lanes-separated="true"
+    data-no-render-lane-collapse="true"
     data-universe-route="/nine-summits/universe/"
-    data-gauges-route="/gauges/"
   >
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
-      Showroom · Public Proof Room
+      Showroom · Planet 1
     </a>
 
     <nav class="nav" aria-label="Primary navigation">
+      <a href="/showroom/">Showroom</a>
       <a href="/">Compass</a>
-      <a href="/showroom/" aria-current="page">Showroom</a>
-      <a href="/showroom/globe/">Demo Planet</a>
       <a href="/nine-summits/">Nine Summits</a>
       <a href="/nine-summits/universe/">Universe</a>
       <a href="/nine-summits-of-love/">Book</a>
       <a href="/products/">Products</a>
-      <a href="/this-underdog/">This Underdog</a>
       <a href="/gauges/">Gauges</a>
     </nav>
 
     <section class="hero">
-      <p class="kicker">Showroom · Public Proof</p>
-      <h1>See what is becoming real.</h1>
+      <p class="kicker">Planet 1 · Nine Summits Universe</p>
+      <h1>The real globe lane opens the world map.</h1>
 
       <p class="lead">
-        The Showroom is where the work becomes visible: the Demo Planet, the Nine Summits Universe, the product wing, and the current proof checks.
+        The globe is no longer the demo. It is Planet 1: the Nine Summits Universe render lane.
       </p>
 
       <p class="lead">
-        No internal build history. No hidden language. Just the live doors, the visible demos, and the next place to go.
+        The tree moves to demo mode. The globe now carries the real world surface, seven-landmass law, atmosphere, terrain, ocean seam, and coherence access.
       </p>
 
       <div class="actions">
-        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-        <a class="button green" href="/nine-summits/universe/">Open Universe</a>
-        <a class="button" href="/products/">View Products</a>
+        <a class="button primary" href="#planet-one-render">View Planet 1</a>
+        <a class="button green" href="/nine-summits/universe/">Read World Map</a>
+        <a class="button" href="/showroom/">Return to Showroom</a>
         <a class="button" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
+    <section class="panel" id="planet-one-render">
+      <p class="kicker">Live inspection</p>
+      <h2>Planet 1 first. Tree demo second.</h2>
+
+      <div class="planet-stage" data-visible-globe="true" data-planet-one-render-active="true">
+        <div id="planet-one-mount" class="planet-one-mount" data-safe-fallback="true">
+          <div class="fallback-card">
+            <div class="fallback-planet" role="img" aria-label="Fallback Planet 1 globe"></div>
+            <div class="fallback-note">Planet 1 fallback · render team loading</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="panel">
-      <p class="kicker green">Start here</p>
-      <h2>The Showroom does one job: make the work inspectable.</h2>
+      <p class="kicker green">Render lane separation</p>
+      <h2>The globe and the tree now have different jobs.</h2>
 
       <p class="one-line">
-        A vision is not real because it sounds big. It becomes real when someone can inspect it.
-      </p>
-
-      <div class="steps">
-        <div class="step">
-          <strong>01</strong>
-          <span>Inspect the Demo Planet to see the visible world surface.</span>
-        </div>
-
-        <div class="step">
-          <strong>02</strong>
-          <span>Open the Nine Summits Universe to understand the world behind the planet.</span>
-        </div>
-
-        <div class="step">
-          <strong>03</strong>
-          <span>Move through Products to see the practical systems being built from the same center.</span>
-        </div>
-
-        <div class="step">
-          <strong>04</strong>
-          <span>Read Gauges when status, source checks, or route health matter.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker gold">Main showroom doors</p>
-      <h2>Choose what you want to inspect.</h2>
-
-      <div class="grid four">
-        <article class="route-card">
-          <span>Demo Planet</span>
-          <h3>Look at the world surface.</h3>
-          <p>
-            The Demo Planet is the visible inspection route for the Nine Summits Universe.
-          </p>
-          <p>
-            Start here when you want to see the planet-facing demonstration.
-          </p>
-          <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-        </article>
-
-        <article class="route-card">
-          <span>Universe</span>
-          <h3>Understand the world.</h3>
-          <p>
-            The Nine Summits Universe explains Planet 1: seven landmasses, coherence access, restoration, and the floating magnetic core.
-          </p>
-          <p>
-            Start here when you want the world map.
-          </p>
-          <a class="button green" href="/nine-summits/universe/">Open Universe</a>
-        </article>
-
-        <article class="route-card">
-          <span>Products</span>
-          <h3>See the useful pieces.</h3>
-          <p>
-            The product wing holds practical tools, games, systems, support products, and working ideas.
-          </p>
-          <p>
-            Start here when you want what can be used.
-          </p>
-          <a class="button" href="/products/">View Products</a>
-        </article>
-
-        <article class="route-card">
-          <span>Gauges</span>
-          <h3>Check the status.</h3>
-          <p>
-            Gauges measures whether the routes, markers, and pages are landing cleanly.
-          </p>
-          <p>
-            Start here when proof matters.
-          </p>
-          <a class="button" href="/gauges/">Read Gauges</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker blue">Current read</p>
-      <h2>What is live now.</h2>
-
-      <div class="grid two">
-        <article class="card">
-          <span>Demo Planet</span>
-          <h3>The planet inspection route is the visual door.</h3>
-          <p>
-            This route is where visitors inspect the planet-facing demonstration and move from visible surface into world logic.
-          </p>
-          <p>
-            <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-          </p>
-        </article>
-
-        <article class="card">
-          <span>Nine Summits Universe</span>
-          <h3>The universe route explains the world.</h3>
-          <p>
-            This route explains the landmasses, coherence access, population law, map shape, and world structure.
-          </p>
-          <p>
-            <a class="button green" href="/nine-summits/universe/">Open Universe</a>
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker gold">Status without noise</p>
-      <h2>Simple proof checks.</h2>
-
-      <div class="steps">
-        <div class="status-row">
-          <strong>Showroom</strong>
-          <span>Public proof room. This page should tell visitors where to go next without internal language.</span>
-        </div>
-
-        <div class="status-row">
-          <strong>Demo Planet</strong>
-          <span>Inspection route at <code>/showroom/globe/</code>.</span>
-        </div>
-
-        <div class="status-row">
-          <strong>Universe</strong>
-          <span>World route at <code>/nine-summits/universe/</code>.</span>
-        </div>
-
-        <div class="status-row">
-          <strong>Gauges</strong>
-          <span>Measurement route at <code>/gauges/</code>.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker green">Why this room exists</p>
-      <h2>People should not have to understand the whole architecture to enter.</h2>
-
-      <p class="one-line">
-        The Showroom gives the visitor a handle.
+        The globe expresses the world. The tree demonstrates structure.
       </p>
 
       <div class="grid three">
         <article class="card">
-          <span>Visible</span>
-          <h3>Show the work.</h3>
-          <p>
-            The Showroom makes the current build visible enough to inspect.
-          </p>
+          <span>Globe lane</span>
+          <h3>Planet 1</h3>
+          <p>The globe is the real Nine Summits Universe render lane.</p>
         </article>
 
         <article class="card">
-          <span>Simple</span>
-          <h3>Reduce the noise.</h3>
-          <p>
-            The page should not bury the visitor in internal process.
-          </p>
+          <span>Tree lane</span>
+          <h3>Demo mode</h3>
+          <p>The tree remains useful as a prototype, training, and structural demonstration branch.</p>
         </article>
 
         <article class="card">
-          <span>Directional</span>
-          <h3>Give the next door.</h3>
-          <p>
-            Each section should make the next action obvious.
-          </p>
+          <span>Showroom lane</span>
+          <h3>Inspection</h3>
+          <p>Showroom inspects both lanes without owning either render source.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker gold">Final line</p>
-      <h2>Proof is where imagination stops floating.</h2>
+      <p class="kicker">Route separation</p>
+      <h2>Showroom inspects. Universe explains. Gauges measures.</h2>
 
-      <p class="lead">
-        The Showroom is not the whole system. It is the public room where the system becomes easier to see.
-      </p>
+      <div class="grid three">
+        <article class="card">
+          <span>/world/render/planet-one.render.js</span>
+          <h3>Real globe renderer.</h3>
+          <p>This file owns Planet 1 visual expression.</p>
+        </article>
+
+        <article class="card">
+          <span>/nine-summits/universe/</span>
+          <h3>World explanation route.</h3>
+          <p>The Universe page owns landmasses, coherence law, population law, and world map language.</p>
+        </article>
+
+        <article class="card">
+          <span>/gauges/</span>
+          <h3>Measurement route.</h3>
+          <p>Gauges verifies the render-lane separation and pass state.</p>
+        </article>
+      </div>
 
       <div class="links">
-        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-        <a class="button green" href="/nine-summits/universe/">Open Universe</a>
-        <a class="button" href="/products/">View Products</a>
+        <a class="button primary" href="#planet-one-render">View Planet 1</a>
+        <a class="button green" href="/nine-summits/universe/">Read World Map</a>
+        <a class="button" href="/showroom/">Return to Showroom</a>
         <a class="button" href="/gauges/">Read Gauges</a>
-        <a class="button" href="/">Return to Compass</a>
+        <a class="button" href="/">Compass</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      SHOWROOM_DEMO_PLANET_PUBLIC_PROOF_RENEWAL_TNT_v1
-      route=/showroom/
-      page-purpose=public-proof-room
-      legacy-language-removed=true
-      rich-manor-label-removed-from-public-heading=true
-      demo-universe-public-label-replaced=true
-      demo-planet-route=/showroom/globe/
+      PLANET_ONE_SHOWROOM_GLOBE_CONSUMER_TNT_v1
+      route=/showroom/globe/
+      page-purpose=planet-one-inspection-route
+      planet-one-renderer=/world/render/planet-one.render.js
+      planet-one-render-active=true
+      globe-demo-status-retired=true
+      tree-demo-mode=true
+      render-lanes-separated=true
+      no-render-lane-collapse=true
+      safe-inline-fallback=true
+      self-contained-fallback=true
+      visible-globe=true
+      seven-landmasses=true
+      vertical-peeled-globe-projection=true
+      no-generated-graphic=true
+      no-external-image=true
       universe-route=/nine-summits/universe/
-      products-route=/products/
       gauges-route=/gauges/
-      compass-route=/
-      no-internal-build-history=true
-      no-abstract-noise=true
-      public-language=true
-      result=showroom-renewed-as-public-proof-room
     </section>
   </main>
+
+  <script src="/world/render/planet-one.render.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      function renderFallbackState(reason) {
+        var page = document.getElementById("globe-main");
+        if (!page) return;
+        page.dataset.planetOneRenderActive = "fallback";
+        page.dataset.planetOneFallbackReason = reason || "unknown";
+      }
+
+      function boot() {
+        var mount = document.getElementById("planet-one-mount");
+        var page = document.getElementById("globe-main");
+
+        if (!mount) return;
+
+        try {
+          if (window.DGBPlanetOneRenderTeam && typeof window.DGBPlanetOneRenderTeam.renderPlanetOne === "function") {
+            window.DGBPlanetOneRenderTeam.renderPlanetOne(mount, {
+              caption: "Planet 1 · Nine Summits Universe · real globe render lane"
+            });
+
+            if (page) {
+              page.dataset.planetOneRenderActive = "true";
+              page.dataset.planetOneRendererLoaded = "true";
+              page.dataset.globeDemoStatusRetired = "true";
+              page.dataset.treeDemoMode = "true";
+              page.dataset.renderLanesSeparated = "true";
+              page.dataset.noRenderLaneCollapse = "true";
+            }
+          } else {
+            renderFallbackState("render-team-not-found");
+          }
+        } catch (error) {
+          renderFallbackState(error && error.message ? error.message : "render-error");
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+      } else {
+        boot();
+      }
+
+      window.setTimeout(boot, 300);
+      window.setTimeout(boot, 1000);
+    })();
+  </script>
 </body>
 </html>

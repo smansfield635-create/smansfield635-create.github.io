@@ -1,86 +1,137 @@
 (function bootShowroomParentGeneration2Mount(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_PARENT_BOOT_GENERATION_2_RENDER_MOUNT_ACTIVATION_CTG_v1";
+  const VERSION = "SHOWROOM_PARENT_BOOT_GENERATION_2_SHELL_AND_MOUNT_PARITY_CLOSE_CTG_v1";
   const GENERATION = "GENERATION_2";
   const ROUTE = "/showroom/";
   const MODE = "parent";
 
-  function mark(stage, detail) {
+  function setDocumentState(stage, detail) {
     document.documentElement.dataset.showroomBoot = stage;
     document.documentElement.dataset.showroomBootVersion = VERSION;
     document.documentElement.dataset.showroomGeneration = GENERATION;
     document.documentElement.dataset.showroomRoute = ROUTE;
+    document.documentElement.dataset.showroomMode = MODE;
     document.documentElement.dataset.generation2MountActivation = detail || "active";
   }
 
-  function findRoot() {
-    return (
-      document.querySelector("[data-showroom-render-root]") ||
-      document.getElementById("showroomRenderRoot") ||
-      document.getElementById("showroom-main")
-    );
+  function makeReceiptItem(name, value) {
+    const item = document.createElement("li");
+    item.innerHTML = "<strong>" + name + "</strong><span>" + String(value) + "</span>";
+    return item;
   }
 
-  function ensureRenderRoot(candidate) {
-    if (!candidate) {
-      throw new Error("Parent Showroom boot failed: no render root or showroom main found.");
-    }
+  function appendFallbackPanel(title, body, rows) {
+    const host = document.getElementById("showroom-main") || document.querySelector("main") || document.body;
+    const panel = document.createElement("section");
+    panel.className = "showroom-receipt-panel";
+    panel.dataset.generation2MountFallback = "true";
 
-    if (candidate.matches && candidate.matches("[data-showroom-render-root]")) {
-      return candidate;
-    }
+    const heading = document.createElement("h2");
+    heading.textContent = title;
 
-    const existing = document.querySelector("[data-showroom-render-root]");
-    if (existing) return existing;
+    const paragraph = document.createElement("p");
+    paragraph.textContent = body;
+
+    const list = document.createElement("ul");
+    list.className = "showroom-receipts";
+
+    rows.forEach(function add(row) {
+      list.append(makeReceiptItem(row[0], row[1]));
+    });
+
+    panel.append(heading, paragraph, list);
+    host.append(panel);
+  }
+
+  function locateHost() {
+    return document.getElementById("showroom-main") || document.querySelector("main") || document.body;
+  }
+
+  function ensureRenderRoot() {
+    const existing =
+      document.querySelector("[data-showroom-render-root]") ||
+      document.getElementById("showroomRenderRoot");
+
+    if (existing) {
+      existing.dataset.showroomRenderRoot = "true";
+      existing.dataset.showroomMode = MODE;
+      existing.dataset.showroomGeneration = GENERATION;
+      existing.dataset.visibleCodeGlobe = "pending";
+      existing.dataset.generation2MountActivation = "existing-root";
+      return existing;
+    }
 
     const section = document.createElement("section");
     section.id = "showroomRenderRoot";
     section.dataset.showroomRenderRoot = "true";
     section.dataset.showroomMode = MODE;
     section.dataset.showroomGeneration = GENERATION;
+    section.dataset.visibleCodeGlobe = "pending";
     section.dataset.generation2MountActivation = "created-by-parent-boot";
 
-    candidate.append(section);
+    locateHost().append(section);
     return section;
   }
 
   function requireRender() {
-    if (!global.ShowroomRender || typeof global.ShowroomRender.renderShowroomProofSurface !== "function") {
-      throw new Error("Parent Showroom boot failed: ShowroomRender.renderShowroomProofSurface is unavailable.");
-    }
+    return Boolean(
+      global.ShowroomRender &&
+      typeof global.ShowroomRender.renderShowroomProofSurface === "function"
+    );
   }
 
   function boot() {
-    mark("starting", "render-required");
-    requireRender();
+    setDocumentState("starting", "generation-2-mount-required");
 
-    const root = ensureRenderRoot(findRoot());
+    const root = ensureRenderRoot();
 
     root.dataset.parentBoot = "true";
+    root.dataset.parentBootVersion = VERSION;
     root.dataset.showroomMode = MODE;
     root.dataset.showroomRoute = ROUTE;
     root.dataset.showroomGeneration = GENERATION;
     root.dataset.generation2MountActivation = "starting";
 
+    if (!requireRender()) {
+      root.dataset.generation2MountActivation = "render-missing";
+      root.dataset.visibleCodeGlobe = "false";
+      setDocumentState("render-missing", "showroom-render-unavailable");
+
+      appendFallbackPanel(
+        "Generation 2 render mount waiting",
+        "The accepted Showroom shell is live, but /showroom/showroom.render.js is not exposing ShowroomRender.renderShowroomProofSurface.",
+        [
+          ["BOOT_VERSION", VERSION],
+          ["ROUTE", ROUTE],
+          ["MOUNT_ROOT", "present"],
+          ["MISSING", "ShowroomRender.renderShowroomProofSurface"],
+          ["NEXT_ACTION", "verify /showroom/showroom.render.js served source"]
+        ]
+      );
+
+      return;
+    }
+
     const app = global.ShowroomRender.renderShowroomProofSurface({
-      root,
+      root: root,
       mode: MODE
     });
 
     root.dataset.parentBootComplete = "true";
-    root.dataset.parentBootVersion = VERSION;
     root.dataset.generation2MountActivation = "complete";
+    root.dataset.visibleCodeGlobe = app && app.instrument ? "true" : root.dataset.visibleCodeGlobe || "unknown";
 
-    mark("complete", "generation-2-render-mounted");
+    setDocumentState("complete", "generation-2-render-mounted");
 
     global.__SHOWROOM_PARENT_APP__ = app;
     global.__SHOWROOM_PARENT_GENERATION_2_MOUNT__ = {
       version: VERSION,
       generation: GENERATION,
       route: ROUTE,
+      mode: MODE,
       complete: true,
-      app
+      visibleCodeGlobe: Boolean(app && app.instrument)
     };
 
     global.dispatchEvent(
@@ -100,8 +151,20 @@
     try {
       boot();
     } catch (error) {
-      mark("failed", error.message);
+      setDocumentState("failed", error.message);
       global.__SHOWROOM_PARENT_BOOT_ERROR__ = error;
+
+      appendFallbackPanel(
+        "Generation 2 parent mount error",
+        "The accepted shell is live, but the lower Generation 2 render mount failed.",
+        [
+          ["BOOT_VERSION", VERSION],
+          ["ROUTE", ROUTE],
+          ["ERROR", error.message],
+          ["GEN3_PHASE_BIND", "held"],
+          ["GEN4_CLOSEOUT", "held"]
+        ]
+      );
 
       global.dispatchEvent(
         new CustomEvent("showroom:generation-2-parent-mount-failed", {
@@ -113,18 +176,6 @@
           }
         })
       );
-
-      const main = document.getElementById("showroom-main") || document.body;
-      const fallback = document.createElement("section");
-      fallback.className = "showroom-receipt-panel";
-      fallback.innerHTML =
-        "<h2>Generation 2 mount error</h2>" +
-        "<p>The accepted shell is live, but the lower render boot failed.</p>" +
-        "<ul class='showroom-receipts'>" +
-        "<li><strong>BOOT_VERSION</strong><span>" + VERSION + "</span></li>" +
-        "<li><strong>ERROR</strong><span>" + error.message + "</span></li>" +
-        "</ul>";
-      main.append(fallback);
     }
   }
 

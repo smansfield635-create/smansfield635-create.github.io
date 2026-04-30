@@ -1,176 +1,454 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-build="six-house-parts-full-tnt-v1"
-  data-generation="products-core-house-alignment-renewal-v1"
-  data-page-id="products"
-  data-page="products"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="products"
->
+<!doctype html>
+<html lang="en" data-page="products" data-room="H4_PRODUCTS" data-public-mode="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Products · Diamond Gate Bridge</title>
+  <meta name="description" content="Products is the parent wing for canonical product chambers inside Diamond Gate Bridge.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
 
-  <meta
-    name="description"
-    content="Products: the source-waterfall chamber and parent product wing inside Rich Manor and Estate."
-  />
+    * {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="/assets/manor.css?v=products-core-house-alignment-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 78% 8%, rgba(255, 211, 111, 0.11), transparent 24rem),
+        radial-gradient(circle at 22% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .hero,
+    .panel,
+    .product-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 410px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
+        radial-gradient(circle at 20% 70%, rgba(143, 240, 198, 0.08), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.52;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .product-card {
+      min-height: 220px;
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
+        rgba(9, 15, 25, 0.84);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background:
+        radial-gradient(circle at 22% 0%, rgba(143, 240, 198, 0.1), transparent 14rem),
+        rgba(12, 20, 32, 0.9);
+    }
+
+    .product-label {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .product-card h3 {
+      margin: 6px 0 0;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .product-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .card-link {
+      color: var(--green);
+      font-weight: 850;
+    }
+
+    .backlinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav,
+      .actions,
+      .backlinks {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .product-card {
+        min-height: 190px;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin manor-house house-class"
-  data-page-id="products"
-  data-page="products"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="products"
-  data-manor-room="products"
-  data-manor-slot="H4_PRODUCTS"
-  data-manor-route="/products/"
-  data-manor-batch="BATCH_1_HOUSE"
-  data-route="/products/"
-  data-class-type="house_structure"
-  data-construct-code="H4_PRODUCTS"
-  data-house-anchor="products"
-  data-skin-family="manor_house"
-  data-audit-priority="high"
-  data-view-modes="flat round meta return"
-  data-registry-version="1.0.0"
->
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/" aria-current="page">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+<body>
+  <a class="skip" href="#products-main">Skip to Products</a>
 
   <main
-    class="manor-shell manor-skin house-class"
-    data-page-id="products"
-    data-page="products"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-manor-class="house"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="house"
-    data-house-part="products"
-    data-manor-room="products"
-    data-manor-slot="H4_PRODUCTS"
-    data-manor-route="/products/"
+    id="products-main"
+    class="page"
     data-route="/products/"
-    data-class-type="house_structure"
-    data-construct-code="H4_PRODUCTS"
-    data-house-anchor="products"
-  >
-    <section class="manor-room" aria-label="Products">
-      <p class="manor-kicker">H4 · Products · Source-Waterfall Chamber</p>
+    data-house-part="products"
+    data-construct-class="house"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority">
 
-      <h1 class="manor-title">Products</h1>
+    <header class="topbar" aria-label="Products header">
+      <div class="brand">Diamond Gate Bridge · Rich Manor and Estate · Products</div>
+      <nav class="nav" aria-label="Products navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <p class="manor-lede">
-        Products distributes the canonical product chambers from one house wing. Many
-        public jump-off points may exist, but each product keeps one destination under
-        Products.
-      </p>
-
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="Canonical product destinations">
-        <p class="manor-kicker">Canonical product destinations</p>
-
-        <h2>The product wing stays under the house.</h2>
-
-        <p class="manor-lede">
-          This page remains the parent source chamber. Product chamber rewrites are not
-          part of this core-house batch. The Products page is a house part; the product
-          chambers remain downstream product constructs.
+    <section class="hero" aria-labelledby="products-title">
+      <div class="hero-content">
+        <p class="kicker">H4 · Products · Source-Waterfall Chamber</p>
+        <h1 id="products-title">Products</h1>
+        <p class="lead">
+          One wing for the product chambers. Each product can have many public entry points, but every product keeps one clear destination under Products.
         </p>
+      </div>
 
-        <div class="manor-grid">
-          <a class="manor-card" href="/products/archcoin/">
-            <p class="manor-kicker">Product Chamber</p>
-            <h2>ARCHCOIN</h2>
-            <p class="manor-lede">Structured financial product engine.</p>
-          </a>
+      <div class="actions" aria-label="Primary product actions">
+        <a class="button primary" href="/products/archcoin/">View ARCHCOIN</a>
+        <a class="button" href="/showroom/">View Showroom</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
 
-          <a class="manor-card" href="/products/five-flags/">
-            <p class="manor-kicker">Product Chamber</p>
-            <h2>Five Flags</h2>
-            <p class="manor-lede">Identity and civic product chamber.</p>
-          </a>
+    <section class="section panel" aria-labelledby="product-wing-title">
+      <p class="kicker">Canonical destinations</p>
+      <h2 id="product-wing-title">The product wing stays under the house.</h2>
+      <p>
+        This page is the parent chamber for product destinations. Product chambers remain downstream product constructs, while Products stays the clean source page.
+      </p>
+    </section>
 
-          <a class="manor-card" href="/products/on-your-side-ai/">
-            <p class="manor-kicker">Product Chamber</p>
-            <h2>On Your Side AAI</h2>
-            <p class="manor-lede">Practical AAI support.</p>
-          </a>
-
-          <a class="manor-card" href="/products/education/">
-            <p class="manor-kicker">Product Chamber</p>
-            <h2>Education</h2>
-            <p class="manor-lede">Structured learning through guided progression.</p>
-          </a>
-
-          <a class="manor-card" href="/products/nutrition/">
-            <p class="manor-kicker">Product Chamber</p>
-            <h2>Nutrition</h2>
-            <p class="manor-lede">Practical nutritional baseline support.</p>
-          </a>
-
-          <a class="manor-card" href="/showroom/">
-            <p class="manor-kicker">Proof</p>
-            <h2>Showroom</h2>
-            <p class="manor-lede">View product proof and public presentation.</p>
-          </a>
+    <section class="product-grid" aria-label="Canonical product destinations">
+      <a class="product-card" href="/products/archcoin/">
+        <div>
+          <div class="product-label">Product Chamber</div>
+          <h3>ARCHCOIN</h3>
+          <p>Structured financial product engine.</p>
         </div>
-      </section>
+        <div class="card-link">Open chamber</div>
+      </a>
+
+      <a class="product-card" href="/products/five-flags/">
+        <div>
+          <div class="product-label">Product Chamber</div>
+          <h3>Five Flags</h3>
+          <p>Identity and civic product chamber.</p>
+        </div>
+        <div class="card-link">Open chamber</div>
+      </a>
+
+      <a class="product-card" href="/products/on-your-side-ai/">
+        <div>
+          <div class="product-label">Product Chamber</div>
+          <h3>On Your Side AAI</h3>
+          <p>Practical AAI support.</p>
+        </div>
+        <div class="card-link">Open chamber</div>
+      </a>
+
+      <a class="product-card" href="/products/education/">
+        <div>
+          <div class="product-label">Product Chamber</div>
+          <h3>Education</h3>
+          <p>Structured learning through guided progression.</p>
+        </div>
+        <div class="card-link">Open chamber</div>
+      </a>
+
+      <a class="product-card" href="/products/nutrition/">
+        <div>
+          <div class="product-label">Product Chamber</div>
+          <h3>Nutrition</h3>
+          <p>Practical nutritional baseline support.</p>
+        </div>
+        <div class="card-link">Open chamber</div>
+      </a>
+
+      <a class="product-card" href="/showroom/">
+        <div>
+          <div class="product-label">Proof</div>
+          <h3>Showroom</h3>
+          <p>View product proof and public presentation.</p>
+        </div>
+        <div class="card-link">Open Showroom</div>
+      </a>
     </section>
 
-    <section class="manor-backlinks" aria-label="House backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-
-      <ul class="manor-backlinks-list">
-        <li><a href="/">Compass</a></li>
-        <li><a href="/door/">Door</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+    <section class="section panel" aria-labelledby="house-links-title">
+      <p class="kicker">House backlinks</p>
+      <h2 id="house-links-title">Move through the house.</h2>
+      <div class="backlinks">
+        <a class="button" href="/">Compass</a>
+        <a class="button" href="/door/">Door</a>
+        <a class="button" href="/home/">Home</a>
+        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button" href="/gauges/">Gauges</a>
+      </div>
     </section>
 
-    <section class="manor-audit-strip" aria-label="Products audit receipt">
-      <p class="manor-audit-title">Products receipt</p>
-
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">house-class</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=house</li>
-        <li class="manor-audit-chip pass">house-part=products</li>
-        <li class="manor-audit-chip pass">H4_PRODUCTS</li>
-        <li class="manor-audit-chip pass">product-wing-parent</li>
-      </ul>
+    <section class="receipt" aria-hidden="true">
+      Products receipt
+      route-exists
+      manor-skin
+      house-class
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=house
+      house-part=products
+      H4_PRODUCTS
+      product-wing-parent
+      source-waterfall-chamber
+      canonical-product-destinations
+      ARCHCOIN=/products/archcoin/
+      Five Flags=/products/five-flags/
+      On Your Side AAI=/products/on-your-side-ai/
+      Education=/products/education/
+      Nutrition=/products/nutrition/
+      Showroom=/showroom/
     </section>
   </main>
 </body>

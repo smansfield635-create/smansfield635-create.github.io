@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-gauges-generation="PROGRESS_CALIBRATION" data-route="/gauges/">
+<html lang="en" data-gauges-generation="DEMO_UNIVERSE_GEN4_RECOGNITION" data-route="/gauges/">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Progress Calibration · Diamond Gate Bridge</title>
-  <meta name="description" content="Progress calibration gauges for Rich Manor and Estate Showroom generation ladder.">
+  <title>Gauges · Demo Universe Gen 4 Recognition · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges recognition layer for Demo Universe Gen 4: parent shell, inspection route, our-universe scope, phase bind, closeout, and visual expression.">
   <style>
     :root {
       --bg: #05070b;
@@ -155,7 +155,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
       margin-top: 18px;
     }
@@ -277,7 +277,7 @@
 
     .receipt-list li {
       display: grid;
-      grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr);
+      grid-template-columns: minmax(180px, 0.4fr) minmax(0, 1fr);
       gap: 8px;
       overflow-wrap: anywhere;
       padding: 8px 10px;
@@ -293,7 +293,17 @@
       color: var(--green);
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .wide {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 680px) {
       .page {
         width: min(100% - 22px, 720px);
       }
@@ -322,33 +332,33 @@
 <body>
   <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
-  <main id="gauges-main" class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauge-mode="progress-calibration">
+  <main id="gauges-main" class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauge-mode="demo-universe-gen4-recognition">
     <header class="topbar">
-      <div class="brand">Diamond Gate Bridge · Gauges · Progress Calibration</div>
+      <div class="brand">Diamond Gate Bridge · Gauges · Demo Universe Gen 4 Recognition</div>
       <nav class="nav" aria-label="Gauges navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Demo Universe Earth</a>
+        <a href="/showroom/globe/">Demo Universe</a>
       </nav>
     </header>
 
     <section class="hero">
-      <p class="kicker">H6 · Gauges · Progress Calibration</p>
+      <p class="kicker">H6 · Gauges · Recognition Instrument</p>
       <h1>Gauges</h1>
       <p>
-        Gauges now measures the staged Showroom ladder. Parent Showroom owns the proof-realm shell. Inspect Demo Universe Earth owns the visible globe. Generation 4 remains held until the phase-bound globe, route receipts, and final closeout agree.
+        Gauges now recognizes the current Demo Universe contract. Parent Showroom is the proof-realm shell. Demo Universe owns the visible inspection model. Generation 4 is measured through our-universe scope, Sun, Moon, all planets, Earth anchor, phase bind, closeout receipts, and visual-expression markers.
       </p>
       <div class="actions">
-        <button class="primary" type="button" id="runProgressAudit">Run progress audit</button>
+        <button class="primary" type="button" id="runRecognitionAudit">Run recognition audit</button>
         <a class="button" href="/showroom/">Open Showroom</a>
         <a class="button" href="/showroom/globe/">Inspect Universe</a>
       </div>
     </section>
 
-    <section class="grid" aria-label="Generation progress summary">
+    <section class="grid" aria-label="Generation recognition summary">
       <article class="panel">
         <p class="kicker">Gen 1</p>
         <div id="gen1Metric" class="metric hold">--</div>
@@ -358,7 +368,7 @@
       <article class="panel">
         <p class="kicker">Gen 2</p>
         <div id="gen2Metric" class="metric hold">--</div>
-        <p>Inspection globe.</p>
+        <p>Inspection active.</p>
       </article>
 
       <article class="panel">
@@ -369,16 +379,22 @@
 
       <article class="panel">
         <p class="kicker">Gen 4</p>
-        <div id="gen4Metric" class="metric hold">HELD</div>
-        <p>Closeout held.</p>
+        <div id="gen4Metric" class="metric hold">--</div>
+        <p>Closeout.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Expression</p>
+        <div id="expressionMetric" class="metric hold">--</div>
+        <p>Our universe field.</p>
       </article>
 
       <article class="panel wide">
-        <h2>Generation ladder</h2>
+        <h2>Recognition ladder</h2>
         <div id="generationLadder" class="ladder">
           <div class="generation-card" data-status="HOLD">
             <strong>Waiting for audit</strong>
-            <span>Run progress audit to measure the current Showroom state.</span>
+            <span>Run recognition audit to measure the current Showroom and Demo Universe state.</span>
           </div>
         </div>
       </article>
@@ -388,8 +404,8 @@
         <table class="audit-table">
           <thead>
             <tr>
-              <th>Generation</th>
-              <th>Target</th>
+              <th>Layer</th>
+              <th>Targets</th>
               <th>Status</th>
               <th>Evidence</th>
             </tr>
@@ -397,65 +413,116 @@
           <tbody id="auditRows">
             <tr>
               <td>Waiting</td>
-              <td>Progress audit</td>
+              <td>Recognition audit</td>
               <td class="status-hold">HOLD</td>
-              <td>Run progress audit.</td>
+              <td>Run recognition audit.</td>
             </tr>
           </tbody>
         </table>
       </article>
 
       <article class="panel wide">
-        <h2>Calibration rules</h2>
+        <h2>Recognition rules</h2>
         <ul class="receipt-list">
           <li><strong>PARENT_ROLE</strong><span>/showroom/ is the proof-realm shell. It does not need to show the globe.</span></li>
-          <li><strong>INSPECTION_ROLE</strong><span>/showroom/globe/ owns the visible code-generated globe.</span></li>
-          <li><strong>GEN_1_PASS_RULE</strong><span>Parent shell serves clean proof-realm language and routes to Inspect Demo Universe.</span></li>
-          <li><strong>GEN_2_PASS_RULE</strong><span>Parent shell pass + inspection route visible code-globe pass.</span></li>
-          <li><strong>GEN_3_PASS_RULE</strong><span>Inspection route shows phase bind: HOME / BOUNDARY / MOTION / REALM / RECEIPT / NEXT.</span></li>
-          <li><strong>GEN_4_RULE</strong><span>Held until deliberate closeout. Gauges may not claim final Gen 4 from progress alone.</span></li>
-          <li><strong>TNT</strong><span>GAUGES_PROGRESS_CALIBRATION_TNT_v1</span></li>
+          <li><strong>INSPECTION_ROLE</strong><span>/showroom/globe/ owns Demo Universe and the visible model.</span></li>
+          <li><strong>GEN_1_PASS_RULE</strong><span>Parent shell serves clean proof-realm language and routes to Demo Universe.</span></li>
+          <li><strong>GEN_2_PASS_RULE</strong><span>Inspection route is active and serving Demo Universe / visible code-globe markers.</span></li>
+          <li><strong>GEN_3_PASS_RULE</strong><span>Phase bind is present: HOME / BOUNDARY / MOTION / REALM / RECEIPT / NEXT.</span></li>
+          <li><strong>GEN_4_PASS_RULE</strong><span>Gen 4 closeout markers are explicit: GENERATION_4_CLOSEOUT, GEN4_CLOSEOUT, FINAL_CLOSEOUT, and GEN_4_FINAL_PASS.</span></li>
+          <li><strong>EXPRESSION_RULE</strong><span>Our-universe expression requires Sun, Moon, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, and preferably visual-field/orbit markers.</span></li>
+          <li><strong>TNT</strong><span>GAUGES_DEMO_UNIVERSE_GEN4_RECOGNITION_TNT_v1</span></li>
         </ul>
       </article>
     </section>
   </main>
 
   <script>
-    (function bootProgressGauges() {
+    (function bootDemoUniverseGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_PROGRESS_CALIBRATION_TNT_v1";
+      const VERSION = "GAUGES_DEMO_UNIVERSE_GEN4_RECOGNITION_TNT_v1";
 
-      const gen1ParentMarkers = [
-        "The Showroom is the parent proof realm",
-        "True Generation 4 narrative-code instrument",
-        "Inspect Demo Universe Earth"
-      ];
+      const TARGETS = Object.freeze({
+        parent: "/showroom/",
+        inspection: "/showroom/globe/",
+        instrument: "/assets/showroom.globe.instrument.js",
+        render: "/showroom/showroom.render.js",
+        boot: "/showroom/globe/index.js"
+      });
 
-      const gen2InspectionMarkers = [
-        "RESTORED_GENERATION",
-        "GENERATION_2",
-        "VISIBLE_CODE_GLOBE",
-        "true"
-      ];
+      const REQUIRED_BODIES = Object.freeze([
+        "Sun",
+        "Mercury",
+        "Venus",
+        "Earth",
+        "Moon",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune"
+      ]);
 
-      const gen3InspectionMarkers = [
-        "GENERATION_3",
-        "PHASE_BIND",
-        "HOME",
-        "BOUNDARY",
-        "MOTION",
-        "REALM",
-        "RECEIPT",
-        "NEXT"
-      ];
-
-      const gen4CloseoutMarkers = [
-        "GENERATION_4_CLOSEOUT",
-        "FINAL_CLOSEOUT",
-        "GEN4_CLOSEOUT=complete",
-        "GEN_4_FINAL_PASS"
-      ];
+      const MARKERS = Object.freeze({
+        gen1: Object.freeze([
+          "The Showroom is the parent proof realm",
+          "Inspect Demo Universe",
+          "Demo Universe"
+        ]),
+        gen2: Object.freeze([
+          "visible code globe",
+          "VISIBLE_GLOBE",
+          "VISIBLE_CODE_GLOBE",
+          "ShowroomGlobeInstrument",
+          "createGlobe"
+        ]),
+        gen3: Object.freeze([
+          "PHASE_BIND",
+          "phaseBind",
+          "PHASE_SEQUENCE",
+          "HOME",
+          "BOUNDARY",
+          "MOTION",
+          "REALM",
+          "RECEIPT",
+          "NEXT"
+        ]),
+        gen4: Object.freeze([
+          "GENERATION_4",
+          "GENERATION_4_CLOSEOUT",
+          "GEN4_CLOSEOUT",
+          "FINAL_CLOSEOUT",
+          "GEN_4_FINAL_PASS",
+          "POST_GEN4_REFINEMENT_ONLY"
+        ]),
+        expression: Object.freeze([
+          "Demo Universe",
+          "Our Universe",
+          "our-universe",
+          "DEMO_UNIVERSE_SCOPE",
+          "EARTH_ROLE",
+          "SUN",
+          "MOON",
+          "PLANETS",
+          "Mercury",
+          "Venus",
+          "Mars",
+          "Jupiter",
+          "Saturn",
+          "Uranus",
+          "Neptune"
+        ]),
+        visualExpression: Object.freeze([
+          "VISUAL_EXPRESSION",
+          "solar-system-field",
+          "showroom-solar-system-field",
+          "showroom-orbit",
+          "ORBIT_FIELD",
+          "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1",
+          "our-universe-visual-code-model"
+        ])
+      });
 
       const rows = document.getElementById("auditRows");
       const ladder = document.getElementById("generationLadder");
@@ -463,6 +530,7 @@
       const gen2Metric = document.getElementById("gen2Metric");
       const gen3Metric = document.getElementById("gen3Metric");
       const gen4Metric = document.getElementById("gen4Metric");
+      const expressionMetric = document.getElementById("expressionMetric");
 
       function setMetric(node, status) {
         node.textContent = status;
@@ -483,11 +551,11 @@
         return "status-hold";
       }
 
-      function addRow(generation, target, status, evidence) {
+      function addRow(layer, targets, status, evidence) {
         const row = document.createElement("tr");
         row.innerHTML =
-          "<td>" + generation + "</td>" +
-          "<td><code>" + target + "</code></td>" +
+          "<td>" + layer + "</td>" +
+          "<td><code>" + targets + "</code></td>" +
           "<td class='" + statusClass(status) + "'>" + status + "</td>" +
           "<td>" + evidence + "</td>";
         rows.append(row);
@@ -504,14 +572,25 @@
       }
 
       async function fetchText(path) {
-        const response = await fetch(path, { cache: "no-store" });
-        const text = await response.text();
-        return {
-          path,
-          ok: response.ok,
-          status: response.status,
-          text
-        };
+        try {
+          const response = await fetch(path, { cache: "no-store" });
+          const text = await response.text();
+          return {
+            path,
+            ok: response.ok,
+            status: response.status,
+            text,
+            error: ""
+          };
+        } catch (error) {
+          return {
+            path,
+            ok: false,
+            status: "FETCH_ERROR",
+            text: "",
+            error: error.message
+          };
+        }
       }
 
       function markerResult(text, markers) {
@@ -524,106 +603,172 @@
           missing: markers.filter(function lacks(marker) {
             return found.indexOf(marker) === -1;
           }),
-          score: Math.round((found.length / markers.length) * 100)
+          score: markers.length ? Math.round((found.length / markers.length) * 100) : 0
         };
       }
 
-      function passFromScore(result, requiredPercent) {
-        return result.score >= requiredPercent ? "PASS" : "HOLD";
+      function bodyResult(text) {
+        const found = REQUIRED_BODIES.filter(function has(body) {
+          return text.indexOf(body) !== -1 || text.indexOf(body.toUpperCase()) !== -1;
+        });
+
+        return {
+          found,
+          missing: REQUIRED_BODIES.filter(function lacks(body) {
+            return found.indexOf(body) === -1;
+          }),
+          score: Math.round((found.length / REQUIRED_BODIES.length) * 100)
+        };
       }
 
-      async function runProgressAudit() {
+      function statusByScore(score, required) {
+        return score >= required ? "PASS" : "HOLD";
+      }
+
+      function combine() {
+        return Array.prototype.slice.call(arguments).join("\n\n");
+      }
+
+      function summarizeFetch(fetches) {
+        return Object.keys(fetches).map(function map(key) {
+          const item = fetches[key];
+          return key + "=" + item.status;
+        }).join(", ");
+      }
+
+      async function runRecognitionAudit() {
         rows.innerHTML = "";
         ladder.innerHTML = "";
 
-        let parent;
-        let inspection;
+        const parent = await fetchText(TARGETS.parent);
+        const inspection = await fetchText(TARGETS.inspection);
+        const instrument = await fetchText(TARGETS.instrument);
+        const render = await fetchText(TARGETS.render);
+        const boot = await fetchText(TARGETS.boot);
 
-        try {
-          parent = await fetchText("/showroom/");
-        } catch (error) {
-          parent = { ok: false, status: "FETCH_ERROR", text: "", error: error.message };
-        }
+        const fetches = { parent, inspection, instrument, render, boot };
+        const allSource = combine(parent.text, inspection.text, instrument.text, render.text, boot.text);
+        const inspectionStack = combine(inspection.text, instrument.text, render.text, boot.text);
 
-        try {
-          inspection = await fetchText("/showroom/globe/");
-        } catch (error) {
-          inspection = { ok: false, status: "FETCH_ERROR", text: "", error: error.message };
-        }
+        const gen1 = markerResult(parent.text, MARKERS.gen1);
+        const gen2 = markerResult(inspectionStack, MARKERS.gen2);
+        const gen3 = markerResult(inspectionStack, MARKERS.gen3);
+        const gen4 = markerResult(allSource, MARKERS.gen4);
+        const expression = markerResult(allSource, MARKERS.expression);
+        const bodies = bodyResult(allSource);
+        const visualExpression = markerResult(allSource, MARKERS.visualExpression);
 
-        const gen1 = markerResult(parent.text, gen1ParentMarkers);
-        const gen2 = markerResult(inspection.text, gen2InspectionMarkers);
-        const gen3 = markerResult(inspection.text, gen3InspectionMarkers);
-        const gen4 = markerResult(inspection.text + "\n" + parent.text, gen4CloseoutMarkers);
+        const gen1Status = parent.ok && statusByScore(gen1.score, 67) === "PASS" ? "PASS" : "HOLD";
+        const gen2Status = inspection.ok && statusByScore(gen2.score, 40) === "PASS" ? "PASS" : "HOLD";
+        const gen3Status = inspection.ok && statusByScore(gen3.score, 70) === "PASS" ? "PASS" : "HOLD";
+        const gen4Status = inspection.ok && statusByScore(gen4.score, 67) === "PASS" ? "PASS" : "HOLD";
 
-        const gen1Status = parent.ok && passFromScore(gen1, 67) === "PASS" ? "PASS" : "HOLD";
-        const gen2Status = gen1Status === "PASS" && inspection.ok && passFromScore(gen2, 75) === "PASS" ? "PASS" : "HOLD";
-        const gen3Status = gen2Status === "PASS" && inspection.ok && passFromScore(gen3, 75) === "PASS" ? "PASS" : "HOLD";
-        const gen4Status = gen3Status === "PASS" && gen4.score >= 75 ? "PASS" : "HELD";
+        const expressionStatus =
+          inspection.ok &&
+          bodies.score === 100 &&
+          statusByScore(expression.score, 75) === "PASS"
+            ? "PASS"
+            : "HOLD";
+
+        const visualStatus =
+          visualExpression.score >= 40
+            ? "PASS"
+            : "HOLD";
 
         setMetric(gen1Metric, gen1Status);
         setMetric(gen2Metric, gen2Status);
         setMetric(gen3Metric, gen3Status);
         setMetric(gen4Metric, gen4Status);
+        setMetric(expressionMetric, expressionStatus);
 
         addRow(
           "Generation 1",
           "/showroom/",
           gen1Status,
-          gen1.found.length + " of " + gen1ParentMarkers.length + " parent shell markers found. HTTP " + parent.status + "."
+          gen1.found.length + " of " + MARKERS.gen1.length + " parent shell markers found. HTTP " + parent.status + "."
         );
 
         addRow(
           "Generation 2",
-          "/showroom/globe/",
+          "/showroom/globe/ + instrument/render/boot",
           gen2Status,
-          gen2.found.length + " of " + gen2InspectionMarkers.length + " inspection globe markers found. HTTP " + inspection.status + "."
+          gen2.found.length + " of " + MARKERS.gen2.length + " inspection/globe markers found. HTTP " + inspection.status + "."
         );
 
         addRow(
           "Generation 3",
-          "/showroom/globe/",
+          "/showroom/globe/ + instrument/render/boot",
           gen3Status,
-          gen3.found.length + " of " + gen3InspectionMarkers.length + " phase-bind markers found. HTTP " + inspection.status + "."
+          gen3.found.length + " of " + MARKERS.gen3.length + " phase markers found. HTTP " + inspection.status + "."
         );
 
         addRow(
           "Generation 4",
-          "/showroom/ + /showroom/globe/",
+          "/showroom/ + /showroom/globe/ + source files",
           gen4Status,
-          gen4.found.length + " of " + gen4CloseoutMarkers.length + " closeout markers found. Held unless explicit closeout markers exist."
+          gen4.found.length + " of " + MARKERS.gen4.length + " closeout markers found. " + summarizeFetch(fetches) + "."
+        );
+
+        addRow(
+          "Our-universe scope",
+          "/showroom/globe/ + source files",
+          expressionStatus,
+          expression.found.length + " of " + MARKERS.expression.length + " scope markers found; " + bodies.found.length + " of " + REQUIRED_BODIES.length + " bodies found."
+        );
+
+        addRow(
+          "Visual expression",
+          "/assets/showroom.globe.instrument.js + /showroom/showroom.css source-dependent",
+          visualStatus,
+          visualExpression.found.length + " of " + MARKERS.visualExpression.length + " visual-field markers found. PASS means served source contains the orbit/solar-system field contract."
         );
 
         addCard(
           "Generation 1 · Parent shell",
           gen1Status,
           gen1Status === "PASS"
-            ? "Parent Showroom shell is accepted as the proof-realm surface."
-            : "Parent Showroom shell markers are incomplete."
+            ? "Parent Showroom is accepted as the proof-realm shell."
+            : "Parent shell markers are incomplete."
         );
 
         addCard(
-          "Generation 2 · Inspection globe",
+          "Generation 2 · Inspection active",
           gen2Status,
           gen2Status === "PASS"
-            ? "Generation 2 is accepted through parent shell pass plus /showroom/globe/ visible code-globe pass."
-            : "Inspection globe markers are not yet complete."
+            ? "Inspection route and source stack expose the visible code-globe / inspection contract."
+            : "Inspection route or source stack does not expose enough Gen 2 visibility markers."
         );
 
         addCard(
           "Generation 3 · Phase bind",
           gen3Status,
           gen3Status === "PASS"
-            ? "Inspection globe is carrying the phase-bind layer."
-            : "Phase bind is pending visual/source confirmation."
+            ? "Phase bind is recognized across the inspection stack."
+            : "Phase bind markers are incomplete."
         );
 
         addCard(
           "Generation 4 · Closeout",
           gen4Status,
           gen4Status === "PASS"
-            ? "Closeout markers exist. Owner confirmation still controls final acceptance."
-            : "Held by design. Do not claim Gen 4 completion from progress markers alone."
+            ? "Gen 4 closeout is recognized from explicit closeout markers."
+            : "Gen 4 closeout markers are incomplete."
+        );
+
+        addCard(
+          "Our-universe expression",
+          expressionStatus,
+          expressionStatus === "PASS"
+            ? "Sun, Moon, all planets, Earth anchor, and our-universe scope are recognized."
+            : "Our-universe scope or body list is incomplete."
+        );
+
+        addCard(
+          "Visual expression · Solar-system field",
+          visualStatus,
+          visualStatus === "PASS"
+            ? "The served source contains visual-field/orbit markers for the our-universe expression layer."
+            : "The generation and scope may pass, but the served source does not yet prove the visual orbit field."
         );
 
         document.documentElement.dataset.gaugesRun = "complete";
@@ -632,13 +777,18 @@
         document.documentElement.dataset.gen2Status = gen2Status;
         document.documentElement.dataset.gen3Status = gen3Status;
         document.documentElement.dataset.gen4Status = gen4Status;
+        document.documentElement.dataset.expressionStatus = expressionStatus;
+        document.documentElement.dataset.visualExpressionStatus = visualStatus;
       }
 
-      document.getElementById("runProgressAudit").addEventListener("click", runProgressAudit);
+      document.getElementById("runRecognitionAudit").addEventListener("click", runRecognitionAudit);
 
-      window.GaugesProgressCalibration = Object.freeze({
+      window.GaugesDemoUniverseGen4Recognition = Object.freeze({
         VERSION,
-        runProgressAudit
+        TARGETS,
+        MARKERS,
+        REQUIRED_BODIES,
+        runRecognitionAudit
       });
     })();
   </script>

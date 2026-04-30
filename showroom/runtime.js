@@ -1,279 +1,311 @@
-/*
-  /showroom/runtime.js
-  SHOWROOM_RUNTIME_STATUS_CONTRACT_CLEANUP_TNT_v1
-
-  Purpose:
-  - Keep runtime as state/receipt authority only.
-  - Remove old active-looking Gen 1 / Gen 2 runtime language.
-  - Align runtime receipts to the current no-orbital-scaffold Gen 3 object.
-  - Preserve motionTick, rotationPhase, axis tilt, and CSS variables.
-  - Preserve public API used by parent Showroom boot.
-
-  Owns:
-  - runtime state
-  - runtime receipts
-  - motion tick
-  - rotation phase
-  - CSS runtime variables
-
-  Does not own:
-  - DOM replacement
-  - page layout
-  - globe rendering
-  - orbit/ring/scaffold emission
-  - Earth image assets
-  - Showroom copy
-  - Gauges logic
-*/
-
-(function () {
+(function attachShowroomRuntime(global) {
   "use strict";
 
-  const VERSION = "showroom-generation-3-runtime-status-contract-cleanup-v1";
+  const VERSION = "SHOWROOM_RUNTIME_TRUE_GEN4_PHASE_ROTATION_CLOSEOUT_TNT_v1";
+  const GENERATION = "GENERATION_4";
+  const GEN4_TYPE = "narrative-code";
+  const AUTHORITY = "/showroom/runtime.js";
 
-  const AXIS_TILT_DEGREES = 23.5;
-  const ROTATION_STEP_DEGREES = 6;
-  const TICK_MS = 1000;
+  const PHASE_SEQUENCE = Object.freeze([
+    "HOME",
+    "BOUNDARY",
+    "MOTION",
+    "REALM",
+    "RECEIPT",
+    "NEXT"
+  ]);
 
-  const state = {
-    generation1: "receipt-only-no-orbital-scaffold",
-    generation2: "receipt-only-baseline-graphics",
-    generation3: "context-isolated-no-orbital-scaffold-runtime",
-    activeGlobeStatus: "pending",
-    generation3MotionStatus: "pending",
-    reducedMotion: false,
-    started: false,
-    axisTiltDegrees: AXIS_TILT_DEGREES,
-    rotationDirection: "east-west",
-    motionTick: 0,
-    rotationPhase: 0,
-    intervalId: null
+  const store = {
+    createdAt: new Date().toISOString(),
+    receipts: [],
+    routeSessions: {},
+    status: {
+      generation: GENERATION,
+      gen4Type: GEN4_TYPE,
+      runtimeAuthority: AUTHORITY,
+      receiptLedger: true,
+      ownsMotion: false,
+      ownsSpeed: false,
+      ownsPlacement: false,
+      phaseSequence: PHASE_SEQUENCE.join(" → "),
+      activeRealm: null,
+      activeRoute: null,
+      activeRouteRole: null,
+      lastReceiptType: null,
+      lastReceiptAt: null,
+      phaseRotationClosed: false
+    }
   };
 
-  function detectReducedMotion() {
-    state.reducedMotion =
-      Boolean(window.matchMedia) &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    return state.reducedMotion;
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
-  function normalizeStatus(status, fallback) {
-    const value = String(status || fallback || "active");
-
-    if (
-      value.indexOf("axis-rotation-depth") !== -1 ||
-      value.indexOf("generation-2") !== -1 ||
-      value.indexOf("active-globe-visible") !== -1
-    ) {
-      return "generation-3-no-orbital-scaffold-active";
-    }
-
-    if (value.indexOf("context-isolated") !== -1) return value;
-    if (value.indexOf("no-orbital-scaffold") !== -1) return value;
-
-    return value;
+  function now() {
+    return new Date().toISOString();
   }
 
-  function nodes() {
-    return [
-      document.getElementById("showroom-root"),
-      document.getElementById("showroom-main"),
-      document.getElementById("showroom-globe-mount")
-    ].filter(Boolean);
+  function normalizePhase(phase) {
+    const candidate = String(phase || "").toUpperCase();
+    return PHASE_SEQUENCE.includes(candidate) ? candidate : "UNSPECIFIED";
   }
 
-  function setDataset(node, values) {
-    if (!node) return;
-
-    Object.entries(values || {}).forEach(function (entry) {
-      node.dataset[entry[0]] = String(entry[1]);
-    });
-  }
-
-  function writeRuntimeDataset(node) {
-    setDataset(node, {
-      showroomRuntime: VERSION,
-      runtimeOwns: "state-and-receipts-only",
-      runtimeDomReplacement: "false",
-      runtimePageLayout: "false",
-      runtimeVisualScaffold: "false",
-      runtimeRingScaffold: "false",
-
-      generation1NoGraphicBaseline: "receipt-only",
-      generation1RingScaffold: "removed",
-      generation1OrbitalScaffold: "removed",
-
-      generation2BaselineGraphics: "receipt-only",
-      generation2ActiveGlobe: "receipt-only",
-      generation2ReceiptOnly: "true",
-      generation2VisualClassEmission: "not-owned-by-runtime",
-
-      generation3: state.generation3,
-      generation3RuntimeMotion: state.generation3MotionStatus,
-      generation3AxisRotation: "active",
-      generation3AxisTiltDegrees: String(state.axisTiltDegrees),
-      generation3RotationDirection: state.rotationDirection,
-      generation3MotionTick: String(state.motionTick),
-      generation3RotationPhase: String(state.rotationPhase),
-      generation3RingScaffold: "removed",
-      generation3OrbitalScaffold: "removed",
-      generation3ContextIsolation: "active",
-
-      activeGlobeStatus: state.activeGlobeStatus,
-      reducedMotion: String(state.reducedMotion),
-      runtimeStatusContract: "cleaned",
-      runtimeCompatibility: "parent-showroom"
-    });
-  }
-
-  function writeCssVariables() {
-    const root = document.documentElement;
-    if (!root || !root.style) return;
-
-    root.style.setProperty("--showroom-runtime-phase", String(state.rotationPhase));
-    root.style.setProperty("--showroom-axis-tilt", String(state.axisTiltDegrees) + "deg");
-  }
-
-  function writeAll() {
-    detectReducedMotion();
-
-    nodes().forEach(writeRuntimeDataset);
-    writeCssVariables();
-  }
-
-  function tick() {
-    state.motionTick += 1;
-
-    if (!state.reducedMotion) {
-      state.rotationPhase = (state.rotationPhase + ROTATION_STEP_DEGREES) % 360;
-    }
-
-    writeAll();
-  }
-
-  function start() {
-    if (state.started) {
-      writeAll();
-      return getState();
-    }
-
-    detectReducedMotion();
-
-    state.started = true;
-    state.activeGlobeStatus = normalizeStatus(
-      state.activeGlobeStatus,
-      "generation-3-no-orbital-scaffold-mounted"
-    );
-    state.generation3MotionStatus = normalizeStatus(
-      state.generation3MotionStatus,
-      "generation-3-no-orbital-scaffold-motion-active"
+  function publish(type, receipt) {
+    global.dispatchEvent(
+      new CustomEvent("showroom:runtime-receipt", {
+        detail: clone(receipt)
+      })
     );
 
-    writeAll();
-
-    if (state.intervalId) {
-      window.clearInterval(state.intervalId);
-    }
-
-    state.intervalId = window.setInterval(tick, TICK_MS);
-
-    return getState();
-  }
-
-  function stop() {
-    if (state.intervalId) {
-      window.clearInterval(state.intervalId);
-      state.intervalId = null;
-    }
-
-    state.started = false;
-    writeAll();
-
-    return getState();
-  }
-
-  function setActiveGlobeStatus(status) {
-    state.activeGlobeStatus = normalizeStatus(
-      status,
-      "generation-3-no-orbital-scaffold-mounted"
+    global.dispatchEvent(
+      new CustomEvent("showroom:true-gen4-ledger", {
+        detail: {
+          type,
+          generation: GENERATION,
+          gen4Type: GEN4_TYPE,
+          receipt: clone(receipt),
+          status: clone(store.status)
+        }
+      })
     );
-
-    writeAll();
-
-    return getState();
   }
 
-  function setGeneration3MotionStatus(status) {
-    state.generation3MotionStatus = normalizeStatus(
-      status,
-      "generation-3-no-orbital-scaffold-motion-active"
-    );
-
-    writeAll();
-
-    return getState();
-  }
-
-  function setRotationPhase(phase) {
-    const parsed = Number(phase);
-
-    if (Number.isFinite(parsed)) {
-      state.rotationPhase = ((parsed % 360) + 360) % 360;
-      writeAll();
-    }
-
-    return getState();
-  }
-
-  function resetRuntimeView() {
-    state.motionTick = 0;
-    state.rotationPhase = 0;
-    state.activeGlobeStatus = "generation-3-no-orbital-scaffold-mounted";
-    state.generation3MotionStatus = "generation-3-no-orbital-scaffold-motion-active";
-
-    writeAll();
-
-    return getState();
-  }
-
-  function getState() {
-    return {
-      version: VERSION,
-      generation1: state.generation1,
-      generation2: state.generation2,
-      generation3: state.generation3,
-      activeGlobeStatus: state.activeGlobeStatus,
-      generation3MotionStatus: state.generation3MotionStatus,
-      reducedMotion: state.reducedMotion,
-      started: state.started,
-      axisTiltDegrees: state.axisTiltDegrees,
-      rotationDirection: state.rotationDirection,
-      motionTick: state.motionTick,
-      rotationPhase: state.rotationPhase,
-      ownsDomReplacement: false,
-      ownsPageLayout: false,
-      ownsVisualScaffold: false,
-      ringScaffoldStatus: "removed",
-      statusContract: "cleaned"
+  function pushReceipt(type, payload, session) {
+    const receipt = {
+      type,
+      generation: GENERATION,
+      gen4Type: GEN4_TYPE,
+      runtimeAuthority: AUTHORITY,
+      ownsMotion: false,
+      ownsSpeed: false,
+      ownsPlacement: false,
+      sessionId: session ? session.sessionId : null,
+      route: session ? session.route : null,
+      realm: session ? session.realm : null,
+      routeRole: session ? session.routeRole : null,
+      payload: payload || {},
+      timestamp: now()
     };
+
+    store.receipts.push(receipt);
+
+    if (store.receipts.length > 144) {
+      store.receipts.splice(0, store.receipts.length - 144);
+    }
+
+    store.status.lastReceiptType = type;
+    store.status.lastReceiptAt = receipt.timestamp;
+
+    publish(type, receipt);
+
+    return clone(receipt);
   }
 
-  window.DGBShowroomRuntime = Object.freeze({
-    version: VERSION,
-    start: start,
-    stop: stop,
-    getState: getState,
-    setActiveGlobeStatus: setActiveGlobeStatus,
-    setGeneration3MotionStatus: setGeneration3MotionStatus,
-    setRotationPhase: setRotationPhase,
-    resetRuntimeView: resetRuntimeView,
-    writeAll: writeAll
+  function createSession(config) {
+    const cfg = Object.assign(
+      {
+        realm: "showroom-parent-proof-realm",
+        route: "/showroom/",
+        routeRole: "showroom-proof-surface",
+        mode: "parent"
+      },
+      config || {}
+    );
+
+    const sessionId = [
+      "showroom",
+      cfg.mode || "route",
+      Date.now(),
+      Math.random().toString(16).slice(2)
+    ].join("-");
+
+    const session = {
+      sessionId,
+      mode: cfg.mode,
+      realm: cfg.realm,
+      route: cfg.route,
+      routeRole: cfg.routeRole,
+      createdAt: now(),
+      phaseReceipts: [],
+      phaseIndex: -1,
+      phaseRotationClosed: false
+    };
+
+    store.routeSessions[sessionId] = session;
+
+    store.status.activeRealm = cfg.realm;
+    store.status.activeRoute = cfg.route;
+    store.status.activeRouteRole = cfg.routeRole;
+    store.status.activeMode = cfg.mode;
+    store.status.activeSessionId = sessionId;
+    store.status.updatedAt = now();
+
+    pushReceipt(
+      "runtime_session_created",
+      {
+        mode: cfg.mode,
+        realm: cfg.realm,
+        route: cfg.route,
+        routeRole: cfg.routeRole,
+        phaseSequence: PHASE_SEQUENCE,
+        runtimeRole: "receipt-ledger-only",
+        motionAuthority: "instrument-proof-cycle",
+        speedAuthority: "retired",
+        placementAuthority: "route-consumer"
+      },
+      session
+    );
+
+    return session;
+  }
+
+  function closePhaseRotation(session) {
+    const phasesSeen = session.phaseReceipts.map(function phaseKey(item) {
+      return item.phase;
+    });
+
+    const closed = PHASE_SEQUENCE.every(function required(phase) {
+      return phasesSeen.includes(phase);
+    });
+
+    session.phaseRotationClosed = closed;
+    store.status.phaseRotationClosed = closed;
+    store.status.phaseRotationSessionId = session.sessionId;
+
+    if (closed) {
+      pushReceipt(
+        "phase_rotation_closed",
+        {
+          phaseSequence: PHASE_SEQUENCE,
+          phasesSeen,
+          meaning:
+            "The route has recorded the full True Gen 4 phase rotation from HOME through NEXT.",
+          closeout: true
+        },
+        session
+      );
+    }
+
+    return closed;
+  }
+
+  function createRuntime(config) {
+    const session = createSession(config);
+
+    function writeReceipt(type, payload) {
+      return pushReceipt(type, payload || {}, session);
+    }
+
+    function writePhaseReceipt(phase, payload) {
+      const normalized = normalizePhase(phase);
+      const index = PHASE_SEQUENCE.indexOf(normalized);
+
+      const phaseReceipt = {
+        phase: normalized,
+        phaseIndex: index,
+        payload: payload || {},
+        timestamp: now()
+      };
+
+      session.phaseIndex = index;
+      session.phaseReceipts.push(phaseReceipt);
+
+      const receipt = pushReceipt(
+        "phase_receipt_written",
+        {
+          phase: normalized,
+          phaseIndex: index,
+          phaseSequence: PHASE_SEQUENCE,
+          consequence:
+            normalized === "UNSPECIFIED"
+              ? "Unspecified phase recorded without closing the rotation."
+              : "Phase recorded into the True Gen 4 narrative-code ledger.",
+          details: payload || {}
+        },
+        session
+      );
+
+      closePhaseRotation(session);
+
+      return receipt;
+    }
+
+    function closeoutRoute(payload) {
+      PHASE_SEQUENCE.forEach(function recordPhase(phase, index) {
+        const alreadySeen = session.phaseReceipts.some(function seen(item) {
+          return item.phase === phase;
+        });
+
+        if (!alreadySeen) {
+          writePhaseReceipt(phase, {
+            closeoutGenerated: true,
+            phaseIndex: index,
+            route: session.route,
+            realm: session.realm
+          });
+        }
+      });
+
+      const closed = closePhaseRotation(session);
+
+      return pushReceipt(
+        "route_phase_closeout_complete",
+        {
+          route: session.route,
+          realm: session.realm,
+          routeRole: session.routeRole,
+          mode: session.mode,
+          closed,
+          closeoutPayload: payload || {},
+          phaseSequence: PHASE_SEQUENCE,
+          runtimeRole: "receipt-ledger-only"
+        },
+        session
+      );
+    }
+
+    function getReceipts() {
+      return clone(
+        store.receipts.filter(function bySession(receipt) {
+          return receipt.sessionId === session.sessionId;
+        })
+      );
+    }
+
+    function getStatus() {
+      return clone({
+        session,
+        global: store.status
+      });
+    }
+
+    return Object.freeze({
+      version: VERSION,
+      generation: GENERATION,
+      gen4Type: GEN4_TYPE,
+      authority: AUTHORITY,
+      phaseSequence: PHASE_SEQUENCE.slice(),
+      config: clone(config || {}),
+      writeReceipt,
+      writePhaseReceipt,
+      closeoutRoute,
+      getReceipts,
+      getStatus
+    });
+  }
+
+  global.ShowroomRuntime = Object.freeze({
+    VERSION,
+    GENERATION,
+    GEN4_TYPE,
+    AUTHORITY,
+    PHASE_SEQUENCE,
+    createRuntime,
+    getGlobalStatus: function getGlobalStatus() {
+      return clone(store.status);
+    },
+    getGlobalReceipts: function getGlobalReceipts() {
+      return clone(store.receipts);
+    }
   });
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
-  } else {
-    start();
-  }
-})();
+})(window);

@@ -1,7 +1,8 @@
 (function attachPlanetOneRenderTeam(global) {
   "use strict";
 
-  const VERSION = "PLANET_ONE_RENDER_V13_PASS_FILTER_ARCHITECTURE_TNT_v1";
+  const VERSION = "PLANET_ONE_RENDER_V14_TERRAIN_256_LATTICE_ENGINE_TNT_v1";
+  const PREVIOUS_V13 = "PLANET_ONE_RENDER_V13_PASS_FILTER_ARCHITECTURE_TNT_v1";
   const PREVIOUS_V12 = "PLANET_ONE_RENDER_V12_NATURAL_CONTINENT_SURFACE_TNT_v1";
   const PREVIOUS_V11 = "PLANET_ONE_RENDER_V11_RENDER_ASSET_COORDINATION_TNT_v1";
   const PREVIOUS_V10 = "PLANET_ONE_RENDER_V10_TOPOLOGY_SEPARATION_TNT_v1";
@@ -12,32 +13,28 @@
   const V8_REALISM_PASS = "planet-one-realism-pass=v8-axis-spin-climate-topology";
 
   /*
-    PRE-WRITE:
-    V13 is not a realism expansion. V13 is a render-pass filter architecture.
-    The failure being corrected is simultaneous-layer collapse.
+    TIC_TAC_TOE_AUDIT_PLANET_ONE_TERRAIN_256_LATTICE_v1
 
-    PRE-BUILD:
-    The renderer becomes the compositor/filter.
-    Each visual responsibility becomes inspectable one pass at a time.
+    TOP ROW:
+    NW = Terrain must remain inside land.
+    N  = 256 lattice must organize terrain, not decorate randomly.
+    NE = Raw materials must appear as strata/mineral pressure, not loose colors.
 
-    PRE-GAME:
-    Each pass must be readable by itself before the composite is trusted.
+    MIDDLE ROW:
+    W  = Water/land separation quota must survive.
+    C  = Terrain engine must be readable one pass at a time.
+    E  = Plateaus, valleys, canyons, ridges, basins, lakes, and shelves must remain distinguishable.
 
-    BUILD:
-    /world/render/planet-one.render.js remains the only true Planet 1 render authority.
+    BOTTOM ROW:
+    SW = Terrain must support America-meets-China logic: breadth plus vertical complexity.
+    S  = Composite remains earned, not guessed.
+    SE = No final countries, cities, rivers, climate names, physics, or final map geometry.
 
-    POST-GAME:
-    Composite is allowed only after individual layers remain legible.
-
-    POST-BUILD:
-    V8, V9, V10, V11, V12, shared asset-contract, and Gauges source markers remain available.
-
-    POST-WRITE:
-    V13 claims pass-filter architecture only. It does not close final geography.
-
-    CANONICAL RESULT:
-    Planet 1 is no longer forced to express every layer at once.
-    The same globe can show Surface, Landmass, Shoreline, Terrain, Water, Weather, Light, Axis, or Composite.
+    QUADRILATERAL_TRAVERSAL:
+    NORTH = boundary and authority
+    EAST  = lattice generation
+    SOUTH = continuity and quota preservation
+    WEST  = adversarial failure audit
 
     Required source markers:
     PLANET_ONE_RENDER_TEAM_TNT_v1
@@ -47,6 +44,7 @@
     PLANET_ONE_RENDER_V11_RENDER_ASSET_COORDINATION_TNT_v1
     PLANET_ONE_RENDER_V12_NATURAL_CONTINENT_SURFACE_TNT_v1
     PLANET_ONE_RENDER_V13_PASS_FILTER_ARCHITECTURE_TNT_v1
+    PLANET_ONE_RENDER_V14_TERRAIN_256_LATTICE_ENGINE_TNT_v1
     PLANET_ONE_RENDER_AND_ASSET_INSTRUMENT_SHARED_CONTRACT_v1
 
     window.DGBPlanetOneRenderTeam
@@ -59,22 +57,19 @@
     no-competing-globe-surface=true
     no-legacy-demo-planet-return=true
 
-    v13:
-    pass-filter-architecture-active=true
-    render-pass-filter-active=true
-    single-pass-inspection-active=true
-    composite-earned-not-guessed=true
-    surface-pass-active=true
-    landmass-pass-active=true
-    shoreline-pass-active=true
-    terrain-pass-active=true
-    water-pass-active=true
-    weather-pass-active=true
-    light-pass-active=true
-    axis-pass-active=true
+    v14:
+    terrain-256-lattice-engine-active=true
+    raw-material-strata-active=true
+    mineral-pressure-active=true
+    terrain-quadrilateral-traversal-active=true
+    land-water-separation-quota-preserved=true
+    terrain-pass-default-active=true
+    terrain-contained-to-land=true
+    water-depth-preserved=true
   */
 
-  const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · render-pass filter lane";
+  const DEFAULT_CAPTION = "Planet 1 · Nine Summits Universe · 256 terrain lattice lane";
+  const DEFAULT_PASS = "terrain";
   const ACTIVE_INSTANCES = new Set();
 
   const PASSES = Object.freeze([
@@ -101,6 +96,20 @@
     composite: "Composite"
   });
 
+  const RAW_MATERIALS = Object.freeze([
+    { name: "diamond", color: "rgba(210, 238, 255, 0.52)" },
+    { name: "opal", color: "rgba(176, 230, 218, 0.48)" },
+    { name: "marble", color: "rgba(238, 230, 210, 0.48)" },
+    { name: "slate", color: "rgba(74, 86, 94, 0.48)" },
+    { name: "granite", color: "rgba(112, 105, 93, 0.50)" },
+    { name: "gold", color: "rgba(242, 199, 111, 0.56)" },
+    { name: "platinum", color: "rgba(218, 224, 226, 0.48)" },
+    { name: "silver", color: "rgba(198, 214, 225, 0.48)" },
+    { name: "copper", color: "rgba(194, 119, 73, 0.46)" },
+    { name: "iron", color: "rgba(126, 70, 58, 0.44)" },
+    { name: "lead", color: "rgba(76, 83, 92, 0.42)" }
+  ]);
+
   let uidCounter = 0;
 
   const MARKERS = Object.freeze({
@@ -110,7 +119,8 @@
     v10: PREVIOUS_V10,
     v11: PREVIOUS_V11,
     v12: PREVIOUS_V12,
-    v13: VERSION,
+    v13: PREVIOUS_V13,
+    v14: VERSION,
     sharedContract: SHARED_CONTRACT,
     v8RealismPass: V8_REALISM_PASS,
 
@@ -163,14 +173,14 @@
     renderPassFilterActive: true,
     singlePassInspectionActive: true,
     compositeEarnedNotGuessed: true,
-    surfacePassActive: true,
-    landmassPassActive: true,
-    shorelinePassActive: true,
-    terrainPassActive: true,
-    waterPassActive: true,
-    weatherPassActive: true,
-    lightPassActive: true,
-    axisPassActive: true
+
+    terrain256LatticeEngineActive: true,
+    rawMaterialStrataActive: true,
+    mineralPressureActive: true,
+    terrainQuadrilateralTraversalActive: true,
+    landWaterSeparationQuotaPreserved: true,
+    terrainPassDefaultActive: true,
+    waterDepthPreserved: true
   });
 
   function escapeHtml(value) {
@@ -183,19 +193,19 @@
 
   function nextUid() {
     uidCounter += 1;
-    return "p1v13_" + uidCounter + "_" + Math.random().toString(16).slice(2);
+    return "p1v14_" + uidCounter + "_" + Math.random().toString(16).slice(2);
   }
 
   function normalizePass(pass) {
     const candidate = String(pass || "").trim().toLowerCase();
-    return PASSES.includes(candidate) ? candidate : "surface";
+    return PASSES.includes(candidate) ? candidate : DEFAULT_PASS;
   }
 
   function injectStyles() {
-    if (document.getElementById("planet-one-render-v13-styles")) return;
+    if (document.getElementById("planet-one-render-v14-styles")) return;
 
     const style = document.createElement("style");
-    style.id = "planet-one-render-v13-styles";
+    style.id = "planet-one-render-v14-styles";
     style.textContent = `
       .planet-one-render-shell {
         width: min(700px, 100%);
@@ -215,7 +225,7 @@
         isolation: isolate;
       }
 
-      .planet-one-v13-svg {
+      .planet-one-v14-svg {
         width: 100%;
         height: 100%;
         display: block;
@@ -223,34 +233,34 @@
         filter: drop-shadow(0 34px 58px rgba(0, 0, 0, 0.62));
       }
 
-      .planet-one-v13-world-turn {
+      .planet-one-v14-world-turn {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneV13WorldTurn 118s linear infinite;
+        animation: planetOneV14WorldTurn 128s linear infinite;
       }
 
-      .planet-one-v13-weather {
+      .planet-one-v14-weather {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneV13WeatherDrift 82s linear infinite;
+        animation: planetOneV14WeatherDrift 84s linear infinite;
       }
 
-      .planet-one-v13-currents {
+      .planet-one-v14-currents {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneV13CurrentPulse 46s ease-in-out infinite;
+        animation: planetOneV14CurrentPulse 46s ease-in-out infinite;
       }
 
-      .planet-one-v13-axis {
+      .planet-one-v14-axis {
         transform-box: fill-box;
         transform-origin: 500px 500px;
-        animation: planetOneV13AxisPulse 7s ease-in-out infinite;
+        animation: planetOneV14AxisPulse 7s ease-in-out infinite;
       }
 
-      .planet-one-render-shell.is-paused .planet-one-v13-world-turn,
-      .planet-one-render-shell.is-paused .planet-one-v13-weather,
-      .planet-one-render-shell.is-paused .planet-one-v13-currents,
-      .planet-one-render-shell.is-paused .planet-one-v13-axis {
+      .planet-one-render-shell.is-paused .planet-one-v14-world-turn,
+      .planet-one-render-shell.is-paused .planet-one-v14-weather,
+      .planet-one-render-shell.is-paused .planet-one-v14-currents,
+      .planet-one-render-shell.is-paused .planet-one-v14-axis {
         animation-play-state: paused;
       }
 
@@ -286,26 +296,23 @@
         display: none;
       }
 
-      .planet-one-render-shell[data-pass="surface"] .p1-sphere-base,
-      .planet-one-render-shell[data-pass="water"] .p1-sphere-base,
-      .planet-one-render-shell[data-pass="weather"] .p1-sphere-base,
-      .planet-one-render-shell[data-pass="axis"] .p1-sphere-base {
-        opacity: 1;
+      .planet-one-render-shell[data-pass="composite"] .p1-layer {
+        display: inline;
       }
 
+      .planet-one-render-shell[data-pass="terrain"] .p1-sphere-base,
       .planet-one-render-shell[data-pass="landmass"] .p1-sphere-base,
       .planet-one-render-shell[data-pass="shoreline"] .p1-sphere-base,
-      .planet-one-render-shell[data-pass="terrain"] .p1-sphere-base,
       .planet-one-render-shell[data-pass="light"] .p1-sphere-base {
         opacity: 0.42;
       }
 
-      .planet-one-render-shell[data-pass="light"] .p1-light-land-context {
-        opacity: 0.30;
-      }
-
-      .planet-one-render-shell[data-pass="composite"] .p1-layer {
-        display: inline;
+      .planet-one-render-shell[data-pass="surface"] .p1-sphere-base,
+      .planet-one-render-shell[data-pass="water"] .p1-sphere-base,
+      .planet-one-render-shell[data-pass="weather"] .p1-sphere-base,
+      .planet-one-render-shell[data-pass="axis"] .p1-sphere-base,
+      .planet-one-render-shell[data-pass="composite"] .p1-sphere-base {
+        opacity: 1;
       }
 
       .planet-one-pass-controls {
@@ -401,23 +408,23 @@
         line-height: 1.45;
       }
 
-      @keyframes planetOneV13WorldTurn {
+      @keyframes planetOneV14WorldTurn {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
 
-      @keyframes planetOneV13WeatherDrift {
+      @keyframes planetOneV14WeatherDrift {
         0% { transform: rotate(0deg); opacity: 0.18; }
         50% { opacity: 0.28; }
         100% { transform: rotate(-360deg); opacity: 0.18; }
       }
 
-      @keyframes planetOneV13CurrentPulse {
+      @keyframes planetOneV14CurrentPulse {
         0%, 100% { opacity: 0.18; }
         50% { opacity: 0.30; }
       }
 
-      @keyframes planetOneV13AxisPulse {
+      @keyframes planetOneV14AxisPulse {
         0%, 100% { opacity: 0.42; }
         50% { opacity: 0.62; }
       }
@@ -440,10 +447,10 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .planet-one-v13-world-turn,
-        .planet-one-v13-weather,
-        .planet-one-v13-currents,
-        .planet-one-v13-axis {
+        .planet-one-v14-world-turn,
+        .planet-one-v14-weather,
+        .planet-one-v14-currents,
+        .planet-one-v14-axis {
           animation-duration: 0.001ms !important;
           animation-iteration-count: 1 !important;
         }
@@ -462,6 +469,7 @@
       eastRegion: uid + "_eastRegion",
       southRegion: uid + "_southRegion",
       southPole: uid + "_southPole",
+      landAll: uid + "_landAll",
       defs: `
         <path id="${uid}_northPole" d="M385 103 L425 82 L482 76 L536 83 L591 101 L636 130 L628 158 L590 180 L530 174 L488 190 L438 173 L402 151 L370 132Z"></path>
         <path id="${uid}_northRegion" d="M302 194 L354 166 L414 154 L471 169 L531 162 L589 188 L642 226 L684 274 L666 318 L619 344 L566 337 L522 361 L467 346 L424 354 L375 388 L315 375 L262 337 L232 288 L253 235Z"></path>
@@ -472,6 +480,61 @@
         <path id="${uid}_southPole" d="M382 884 L438 862 L506 858 L574 876 L625 904 L610 936 L554 962 L483 966 L417 948 L375 919Z"></path>
       `
     };
+  }
+
+  function lattice256TerrainLayer(uid, land) {
+    const startX = 170;
+    const startY = 135;
+    const stepX = 42;
+    const stepY = 45;
+    const cells = [];
+
+    for (let row = 0; row < 16; row += 1) {
+      for (let col = 0; col < 16; col += 1) {
+        const index = row * 16 + col;
+        const x = startX + col * stepX + ((row % 2) * 7);
+        const y = startY + row * stepY;
+        const material = RAW_MATERIALS[index % RAW_MATERIALS.length];
+        const pressure = (row + col) % 4;
+        const length = 8 + pressure * 4;
+        const angle = ((row * 13 + col * 17) % 55) - 27;
+        const opacity = 0.16 + (pressure * 0.035);
+
+        cells.push(`
+          <g transform="translate(${x} ${y}) rotate(${angle})" data-lattice-cell="${index + 1}" data-material="${material.name}">
+            <line x1="${-length}" y1="0" x2="${length}" y2="0" stroke="${material.color}" stroke-width="2.2" stroke-linecap="round" opacity="${opacity.toFixed(2)}"></line>
+            <circle cx="0" cy="0" r="${1.4 + pressure * 0.35}" fill="${material.color}" opacity="${(opacity + 0.05).toFixed(2)}"></circle>
+          </g>
+        `);
+      }
+    }
+
+    return `
+      <g clip-path="url(#${land.landAll}Clip)" aria-label="256 lattice terrain engine">
+        <g opacity="0.88">
+          ${cells.join("")}
+        </g>
+
+        <path d="M270 279 C350 238 469 232 594 291" fill="none" stroke="rgba(218,195,140,0.46)" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M283 329 C380 306 502 312 628 346" fill="none" stroke="rgba(93,112,76,0.38)" stroke-width="13" stroke-linecap="round"></path>
+
+        <path d="M320 481 C418 426 541 430 633 491" fill="none" stroke="rgba(218,196,131,0.48)" stroke-width="11" stroke-linecap="round"></path>
+        <path d="M314 560 C421 535 540 553 649 604" fill="none" stroke="rgba(65,108,61,0.38)" stroke-width="14" stroke-linecap="round"></path>
+        <path d="M408 659 C477 681 555 672 615 633" fill="none" stroke="rgba(183,154,98,0.38)" stroke-width="9" stroke-linecap="round"></path>
+
+        <path d="M114 500 C170 443 239 434 318 482" fill="none" stroke="rgba(191,162,105,0.42)" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M127 553 C192 543 244 560 294 596" fill="none" stroke="rgba(95,87,73,0.38)" stroke-width="12" stroke-linecap="round"></path>
+
+        <path d="M660 462 C718 417 804 422 870 480" fill="none" stroke="rgba(216,195,138,0.40)" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M680 550 C746 534 805 548 854 592" fill="none" stroke="rgba(77,118,96,0.38)" stroke-width="12" stroke-linecap="round"></path>
+
+        <path d="M338 784 C419 814 506 840 592 813" fill="none" stroke="rgba(189,157,99,0.38)" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M376 858 C446 875 520 880 588 852" fill="none" stroke="rgba(111,116,79,0.34)" stroke-width="12" stroke-linecap="round"></path>
+
+        <path d="M455 511 L489 493 L531 501 L560 526 L523 544 L482 540Z" fill="rgba(11,82,107,0.80)"></path>
+        <path d="M735 494 L768 478 L809 486 L834 510 L801 528 L766 524Z" fill="rgba(11,82,109,0.70)"></path>
+      </g>
+    `;
   }
 
   function planetSvg(uid) {
@@ -492,7 +555,7 @@
     const land = landDefinitions(uid);
 
     return `
-      <svg class="planet-one-v13-svg" viewBox="0 0 1000 1000" role="img" aria-label="Planet 1 render-pass filter architecture">
+      <svg class="planet-one-v14-svg" viewBox="0 0 1000 1000" role="img" aria-label="Planet 1 terrain 256 lattice engine">
         <defs>
           <clipPath id="${ids.sphereClip}">
             <circle cx="500" cy="500" r="394"></circle>
@@ -500,13 +563,15 @@
 
           ${land.defs}
 
-          <clipPath id="${land.northPole}Clip"><use href="#${land.northPole}"></use></clipPath>
-          <clipPath id="${land.northRegion}Clip"><use href="#${land.northRegion}"></use></clipPath>
-          <clipPath id="${land.mainland}Clip"><use href="#${land.mainland}"></use></clipPath>
-          <clipPath id="${land.westRegion}Clip"><use href="#${land.westRegion}"></use></clipPath>
-          <clipPath id="${land.eastRegion}Clip"><use href="#${land.eastRegion}"></use></clipPath>
-          <clipPath id="${land.southRegion}Clip"><use href="#${land.southRegion}"></use></clipPath>
-          <clipPath id="${land.southPole}Clip"><use href="#${land.southPole}"></use></clipPath>
+          <clipPath id="${land.landAll}Clip">
+            <use href="#${land.northPole}"></use>
+            <use href="#${land.northRegion}"></use>
+            <use href="#${land.mainland}"></use>
+            <use href="#${land.westRegion}"></use>
+            <use href="#${land.eastRegion}"></use>
+            <use href="#${land.southRegion}"></use>
+            <use href="#${land.southPole}"></use>
+          </clipPath>
 
           <radialGradient id="${ids.oceanGradient}" cx="34%" cy="28%" r="78%">
             <stop offset="0%" stop-color="#209bc7"></stop>
@@ -569,10 +634,6 @@
             <feBlend in="SourceGraphic" in2="texture" mode="multiply"></feBlend>
           </filter>
 
-          <filter id="${ids.ridgeShadow}" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="3" stdDeviation="2.1" flood-color="#04101a" flood-opacity="0.42"></feDropShadow>
-          </filter>
-
           <filter id="${ids.landSoft}" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="1.5" stdDeviation="1.4" flood-color="#04101a" flood-opacity="0.18"></feDropShadow>
           </filter>
@@ -586,7 +647,7 @@
             <rect x="70" y="70" width="860" height="860" fill="url(#${ids.oceanGradient})"></rect>
           </g>
 
-          <g class="p1-layer planet-one-v13-currents" data-layer="water" aria-label="water pass">
+          <g class="p1-layer planet-one-v14-currents" data-layer="water" aria-label="water depth and current pass">
             <path d="M118 331 C248 293 354 319 474 291 C586 264 704 292 884 232" fill="none" stroke="rgba(105,214,235,0.18)" stroke-width="9" stroke-linecap="round"></path>
             <path d="M96 574 C238 534 356 587 501 549 C648 510 762 565 904 516" fill="none" stroke="rgba(70,178,218,0.15)" stroke-width="10" stroke-linecap="round"></path>
             <path d="M145 719 C286 681 416 725 552 694 C686 663 797 691 900 647" fill="none" stroke="rgba(75,150,205,0.13)" stroke-width="12" stroke-linecap="round"></path>
@@ -594,7 +655,7 @@
             <path d="M735 494 L768 478 L809 486 L834 510 L801 528 L766 524Z" fill="#0b526d" opacity="0.72"></path>
           </g>
 
-          <g class="planet-one-v13-world-turn">
+          <g class="planet-one-v14-world-turn">
             <g class="p1-layer" data-layer="shoreline" aria-label="shoreline pass">
               <use href="#${land.northPole}" fill="none" stroke="#dff2ff" stroke-width="8" stroke-linejoin="round" opacity="0.64"></use>
               <use href="#${land.northRegion}" fill="none" stroke="#d8c18a" stroke-width="8" stroke-linejoin="round" opacity="0.42"></use>
@@ -615,36 +676,12 @@
               <use href="#${land.southPole}" fill="#dfe8ee"></use>
             </g>
 
-            <g class="p1-layer" data-layer="terrain" aria-label="terrain pass" filter="url(#${ids.terrainTexture})">
-              <g clip-path="url(#${land.northRegion}Clip)">
-                <path d="M270 279 C350 238 469 232 594 291" fill="none" stroke="#d4c38c" stroke-width="10" stroke-linecap="round" opacity="0.46" filter="url(#${ids.ridgeShadow})"></path>
-                <path d="M283 329 C380 306 502 312 628 346" fill="none" stroke="#5d704c" stroke-width="13" stroke-linecap="round" opacity="0.38"></path>
-              </g>
-
-              <g clip-path="url(#${land.mainland}Clip)">
-                <path d="M320 481 C418 426 541 430 633 491" fill="none" stroke="#dac483" stroke-width="11" stroke-linecap="round" opacity="0.48" filter="url(#${ids.ridgeShadow})"></path>
-                <path d="M314 560 C421 535 540 553 649 604" fill="none" stroke="#416c3d" stroke-width="14" stroke-linecap="round" opacity="0.38"></path>
-                <path d="M408 659 C477 681 555 672 615 633" fill="none" stroke="#b79a62" stroke-width="9" stroke-linecap="round" opacity="0.38"></path>
-              </g>
-
-              <g clip-path="url(#${land.westRegion}Clip)">
-                <path d="M114 500 C170 443 239 434 318 482" fill="none" stroke="#bfa269" stroke-width="10" stroke-linecap="round" opacity="0.42" filter="url(#${ids.ridgeShadow})"></path>
-                <path d="M127 553 C192 543 244 560 294 596" fill="none" stroke="#5f5749" stroke-width="12" stroke-linecap="round" opacity="0.38"></path>
-              </g>
-
-              <g clip-path="url(#${land.eastRegion}Clip)">
-                <path d="M660 462 C718 417 804 422 870 480" fill="none" stroke="#d8c38a" stroke-width="10" stroke-linecap="round" opacity="0.40" filter="url(#${ids.ridgeShadow})"></path>
-                <path d="M680 550 C746 534 805 548 854 592" fill="none" stroke="#4d7660" stroke-width="12" stroke-linecap="round" opacity="0.38"></path>
-              </g>
-
-              <g clip-path="url(#${land.southRegion}Clip)">
-                <path d="M338 784 C419 814 506 840 592 813" fill="none" stroke="#bd9d63" stroke-width="10" stroke-linecap="round" opacity="0.38" filter="url(#${ids.ridgeShadow})"></path>
-                <path d="M376 858 C446 875 520 880 588 852" fill="none" stroke="#6f744f" stroke-width="12" stroke-linecap="round" opacity="0.34"></path>
-              </g>
+            <g class="p1-layer" data-layer="terrain" aria-label="terrain 256 lattice pass" filter="url(#${ids.terrainTexture})">
+              ${lattice256TerrainLayer(uid, land)}
             </g>
           </g>
 
-          <g class="p1-layer planet-one-v13-weather" data-layer="weather" aria-label="weather pass">
+          <g class="p1-layer planet-one-v14-weather" data-layer="weather" aria-label="weather pass">
             <path d="M124 278 C236 251 362 273 486 306 C604 337 711 326 835 286" fill="none" stroke="rgba(244,248,255,0.13)" stroke-width="11" stroke-linecap="round"></path>
             <path d="M102 514 C234 486 373 506 514 540 C640 571 758 566 898 523" fill="none" stroke="rgba(244,248,255,0.10)" stroke-width="10" stroke-linecap="round"></path>
             <path d="M198 668 C318 643 443 659 565 702 C674 739 777 735 889 692" fill="none" stroke="rgba(244,248,255,0.08)" stroke-width="9" stroke-linecap="round"></path>
@@ -664,7 +701,7 @@
           <circle cx="500" cy="500" r="416" fill="none" stroke="rgba(126,190,255,0.13)" stroke-width="8"></circle>
         </g>
 
-        <g class="p1-layer planet-one-v13-axis" data-layer="axis" aria-label="axis pass">
+        <g class="p1-layer planet-one-v14-axis" data-layer="axis" aria-label="axis pass">
           <line x1="355" y1="890" x2="645" y2="110" stroke="url(#${ids.axisGradient})" stroke-width="11" stroke-linecap="round"></line>
           <circle cx="355" cy="890" r="13" fill="rgba(242,199,111,0.36)" stroke="rgba(242,199,111,0.32)" stroke-width="4"></circle>
           <circle cx="645" cy="110" r="13" fill="rgba(242,199,111,0.36)" stroke="rgba(242,199,111,0.32)" stroke-width="4"></circle>
@@ -688,31 +725,31 @@
     return `
       <div class="planet-one-telemetry" aria-label="Planet 1 render standards">
         <span>Planet 1</span>
-        <span>Pass filter</span>
-        <span>One layer at a time</span>
-        <span>Composite earned</span>
-        <span>Natural continents</span>
-        <span>Opaque globe</span>
-        <span>Asset coordinated</span>
-        <span>No competing surface</span>
+        <span>Terrain engine</span>
+        <span>256 lattice</span>
+        <span>Raw materials</span>
+        <span>Mineral pressure</span>
+        <span>Land contained</span>
+        <span>Water quota preserved</span>
+        <span>Quadrilateral audit</span>
       </div>
     `;
   }
 
   function mapKey() {
     return `
-      <div class="planet-one-mapkey" aria-label="Planet 1 render notes">
+      <div class="planet-one-mapkey" aria-label="Planet 1 terrain notes">
         <article>
-          <strong>Filter first</strong>
-          <span>The globe can now isolate one visual responsibility at a time instead of forcing every layer into one read.</span>
+          <strong>Terrain engine</strong>
+          <span>The terrain pass now uses a 16 by 16 lattice so ridges, strata, plateaus, valleys, canyons, basins, and mineral pressure are inspectable.</span>
         </article>
         <article>
-          <strong>Pass before composite</strong>
-          <span>Surface, landmass, shoreline, terrain, water, weather, light, and axis can each be checked before the full planet is trusted.</span>
+          <strong>Raw materials</strong>
+          <span>Diamond, opal, marble, slate, granite, gold, platinum, silver, copper, iron, and lead appear as land-contained strata signals.</span>
         </article>
         <article>
-          <strong>No new geography closure</strong>
-          <span>V13 changes render architecture only. It does not close countries, cities, final rivers, final climate names, or final physics.</span>
+          <strong>Quota preserved</strong>
+          <span>Terrain remains clipped to land. Water depth and ocean-current logic remain water-owned and separate.</span>
         </article>
       </div>
     `;
@@ -739,7 +776,7 @@
     const uid = nextUid();
     const opts = options || {};
     const caption = escapeHtml(opts.caption || DEFAULT_CAPTION);
-    const initialPass = normalizePass(opts.pass || opts.renderPass || "surface");
+    const initialPass = normalizePass(opts.pass || opts.renderPass || DEFAULT_PASS);
 
     ACTIVE_INSTANCES.forEach(function stopExisting(instance) {
       if (instance && typeof instance.stop === "function") instance.stop();
@@ -758,7 +795,8 @@
         data-v10-marker="${PREVIOUS_V10}"
         data-v11-marker="${PREVIOUS_V11}"
         data-v12-marker="${PREVIOUS_V12}"
-        data-v13-marker="${VERSION}"
+        data-v13-marker="${PREVIOUS_V13}"
+        data-v14-marker="${VERSION}"
         data-planet-one-realism-pass="v8-axis-spin-climate-topology"
         data-render-authority="/world/render/planet-one.render.js"
         data-asset-instrument="/assets/showroom.globe.instrument.js"
@@ -803,14 +841,13 @@
         data-render-pass-filter-active="true"
         data-single-pass-inspection-active="true"
         data-composite-earned-not-guessed="true"
-        data-surface-pass-active="true"
-        data-landmass-pass-active="true"
-        data-shoreline-pass-active="true"
-        data-terrain-pass-active="true"
-        data-water-pass-active="true"
-        data-weather-pass-active="true"
-        data-light-pass-active="true"
-        data-axis-pass-active="true"
+        data-terrain-256-lattice-engine-active="true"
+        data-raw-material-strata-active="true"
+        data-mineral-pressure-active="true"
+        data-terrain-quadrilateral-traversal-active="true"
+        data-land-water-separation-quota-preserved="true"
+        data-terrain-pass-default-active="true"
+        data-water-depth-preserved="true"
       >
         <div class="planet-one-render-stage">
           ${planetSvg(uid)}
@@ -825,7 +862,7 @@
     `;
 
     const shell = mount.querySelector(".planet-one-render-shell");
-    const svg = mount.querySelector(".planet-one-v13-svg");
+    const svg = mount.querySelector(".planet-one-v14-svg");
 
     function setPass(pass) {
       const nextPass = normalizePass(pass);
@@ -850,7 +887,8 @@
       v10Marker: PREVIOUS_V10,
       v11Marker: PREVIOUS_V11,
       v12Marker: PREVIOUS_V12,
-      v13Marker: VERSION,
+      v13Marker: PREVIOUS_V13,
+      v14Marker: VERSION,
       v8RealismPass: V8_REALISM_PASS,
       markers: MARKERS,
       mount,
@@ -900,16 +938,17 @@
           v10Marker: PREVIOUS_V10,
           v11Marker: PREVIOUS_V11,
           v12Marker: PREVIOUS_V12,
-          v13Marker: VERSION,
+          v13Marker: PREVIOUS_V13,
+          v14Marker: VERSION,
           v8RealismPass: V8_REALISM_PASS,
           markers: MARKERS,
           active: shell ? !shell.classList.contains("is-paused") : false,
           currentPass: this.getPass(),
           availablePasses: PASSES.slice(),
-          passFilterArchitectureActive: true,
-          renderPassFilterActive: true,
-          singlePassInspectionActive: true,
-          compositeEarnedNotGuessed: true
+          terrain256LatticeEngineActive: true,
+          rawMaterialStrataActive: true,
+          mineralPressureActive: true,
+          landWaterSeparationQuotaPreserved: true
         };
       }
     };
@@ -962,11 +1001,13 @@
     PREVIOUS_V10,
     PREVIOUS_V11,
     PREVIOUS_V12,
+    PREVIOUS_V13,
     ROOT_MARKER,
     V8_REALISM_PASS,
     MARKERS,
     PASSES,
     PASS_LABELS,
+    RAW_MATERIALS,
     renderPlanetOne,
     stopAll,
     startAll,
@@ -986,15 +1027,19 @@
         previousV10: PREVIOUS_V10,
         previousV11: PREVIOUS_V11,
         previousV12: PREVIOUS_V12,
+        previousV13: PREVIOUS_V13,
         rootMarker: ROOT_MARKER,
         v8RealismPass: V8_REALISM_PASS,
         markers: MARKERS,
         activeCount: ACTIVE_INSTANCES.size,
         availablePasses: PASSES.slice(),
-        passFilterArchitectureActive: true,
-        renderPassFilterActive: true,
-        singlePassInspectionActive: true,
-        compositeEarnedNotGuessed: true,
+        defaultPass: DEFAULT_PASS,
+        terrain256LatticeEngineActive: true,
+        rawMaterialStrataActive: true,
+        mineralPressureActive: true,
+        terrainQuadrilateralTraversalActive: true,
+        landWaterSeparationQuotaPreserved: true,
+        waterDepthPreserved: true,
         singlePlanetAuthority: true,
         noCompetingGlobeSurface: true,
         noLegacyDemoPlanetReturn: true

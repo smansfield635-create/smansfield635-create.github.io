@@ -1,32 +1,16 @@
 <!doctype html>
-<html
-  lang="en"
-  data-page="nine-summits-universe"
-  data-route="/nine-summits-universe/"
-  data-generation="demo-planet-upgrade-tnt-v1"
-  data-estate="rich-manor-and-estate"
-  data-construct-class="planetary"
-  data-planet="nine-summits-universe"
-  data-planet-number="1"
-  data-traversal="quad-linear"
-  data-map-protocol="tiktok"
->
+<html lang="en" data-page="nine-summits-universe" data-route="/nine-summits-universe/">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Nine Summits Universe · Demo Planet · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Nine Summits Universe is the first demo planet: a seven-landmass coherence world with a floating magnetic core, TikTok grid protocol, archetype-personality population law, and quad-linear traversal."
-  >
+  <title>Nine Summits Universe · Diamond Gate Bridge</title>
+  <meta name="description" content="Nine Summits Universe is Planet 1: a seven-landmass coherence world restored through a floating magnetic core and governed by the TikTok map protocol.">
 
   <style>
     :root {
       --bg: #03050a;
-      --bg2: #07101d;
       --panel: rgba(9, 15, 25, 0.94);
       --panel2: rgba(14, 24, 38, 0.84);
-      --panel3: rgba(255, 255, 255, 0.045);
       --line: rgba(168, 199, 255, 0.2);
       --gold-line: rgba(242, 199, 111, 0.36);
       --text: #f4f7ff;
@@ -35,18 +19,12 @@
       --gold: #f2c76f;
       --green: #8ff0c6;
       --blue: #91bdff;
-      --red: #ff9a9a;
       --shadow: rgba(0, 0, 0, 0.54);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
+    html { min-height: 100%; background: var(--bg); }
 
     body {
       margin: 0;
@@ -56,16 +34,13 @@
         radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
         radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
         radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 52%, #020308 100%);
+        linear-gradient(180deg, var(--bg) 0%, #07101d 52%, #020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus {
       outline: 2px solid var(--green);
@@ -84,9 +59,7 @@
       font-weight: 800;
     }
 
-    .skip:focus {
-      left: 10px;
-    }
+    .skip:focus { left: 10px; }
 
     .page {
       width: min(1160px, calc(100% - 28px));
@@ -120,9 +93,7 @@
       align-items: center;
     }
 
-    .nav {
-      margin-bottom: 26px;
-    }
+    .nav { margin-bottom: 26px; }
 
     .nav a,
     .button {
@@ -152,8 +123,7 @@
     .hero,
     .panel,
     .card,
-    .land-card,
-    .protocol-card {
+    .land-card {
       border: 1px solid var(--line);
       border-radius: 30px;
       background:
@@ -169,7 +139,7 @@
     }
 
     .hero {
-      min-height: 560px;
+      min-height: 540px;
       display: grid;
       align-content: center;
       gap: 24px;
@@ -189,13 +159,7 @@
       text-transform: uppercase;
     }
 
-    .kicker.gold {
-      color: var(--gold);
-    }
-
-    .kicker.blue {
-      color: var(--blue);
-    }
+    .kicker.gold { color: var(--gold); }
 
     h1 {
       margin: 0;
@@ -233,9 +197,7 @@
       line-height: 1.45;
     }
 
-    .section {
-      margin-top: 18px;
-    }
+    .section { margin-top: 18px; }
 
     .stats {
       display: grid;
@@ -248,7 +210,7 @@
       border: 1px solid rgba(168, 199, 255, 0.15);
       border-radius: 22px;
       padding: 16px;
-      background: var(--panel3);
+      background: rgba(255, 255, 255, 0.045);
     }
 
     .stat strong {
@@ -273,21 +235,12 @@
       margin-top: 18px;
     }
 
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .card,
-    .land-card,
-    .protocol-card {
+    .land-card {
       padding: 22px;
       background:
         radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
@@ -303,9 +256,7 @@
     }
 
     .card span,
-    .land-card span,
-    .protocol-card span,
-    .label {
+    .land-card span {
       display: block;
       margin-bottom: 10px;
       color: var(--gold);
@@ -316,10 +267,7 @@
     }
 
     .card p,
-    .land-card p,
-    .protocol-card p {
-      margin: 0;
-    }
+    .land-card p { margin: 12px 0 0; }
 
     .land-card {
       min-height: 300px;
@@ -350,7 +298,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: 170px 1fr;
+      grid-template-columns: 180px 1fr;
       gap: 14px;
       align-items: start;
       padding: 14px;
@@ -359,9 +307,7 @@
       background: rgba(255, 255, 255, 0.045);
     }
 
-    .row strong {
-      color: var(--green);
-    }
+    .row strong { color: var(--green); }
 
     .row span {
       color: var(--muted);
@@ -396,38 +342,6 @@
       line-height: 1.48;
     }
 
-    .az-grid {
-      display: grid;
-      grid-template-columns: repeat(13, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .az-chip {
-      display: grid;
-      gap: 4px;
-      align-content: center;
-      min-height: 68px;
-      border: 1px solid rgba(168, 199, 255, 0.14);
-      border-radius: 16px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.045);
-      text-align: center;
-    }
-
-    .az-chip strong {
-      color: var(--gold);
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-
-    .az-chip span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 800;
-      line-height: 1.15;
-    }
-
     .quote {
       color: var(--text);
       font-size: clamp(1.7rem, 5vw, 3.4rem);
@@ -436,25 +350,15 @@
       font-weight: 950;
     }
 
-    .receipt {
-      display: none !important;
-    }
+    .receipt { display: none !important; }
 
     @media (max-width: 980px) {
       .stats,
       .grid.two,
       .grid.three,
-      .grid.four {
-        grid-template-columns: 1fr;
-      }
+      .grid.four { grid-template-columns: 1fr; }
 
-      .az-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .hero {
-        min-height: 460px;
-      }
+      .hero { min-height: 460px; }
     }
 
     @media (max-width: 620px) {
@@ -470,13 +374,7 @@
       }
 
       .row,
-      .flow-step {
-        grid-template-columns: 1fr;
-      }
-
-      .az-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .flow-step { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -522,7 +420,7 @@
       </p>
 
       <p class="lead">
-        The planet is not a generic globe. It is a progressive world-map where terrain difficulty, fruit, cities, comprehension, and solutions are governed by coherence.
+        This is not a generic globe. It is a progressive world-map where terrain difficulty, fruit, cities, comprehension, and solutions are governed by coherence.
       </p>
 
       <div class="actions" aria-label="Primary actions">
@@ -829,46 +727,17 @@
       </p>
 
       <div class="grid two" aria-label="TikTok protocol">
-        <article class="protocol-card">
+        <article class="card">
           <span>Forward tick</span>
           <h3>1 → 4 → 16 → 32 → 64 → 256</h3>
           <p>The map expands from one planet to four governing directions, then sectors, paired pressure gates, expansion branches, and full lattice nodes.</p>
         </article>
 
-        <article class="protocol-card">
+        <article class="card">
           <span>Inverse tock</span>
           <h3>256 → 64 → 32 → 16 → 4 → 1</h3>
           <p>The map audits every node back into branches, pressure pairs, sectors, directions, and finally one coherent world.</p>
         </article>
-      </div>
-
-      <div class="az-grid" aria-label="A to Z semantic overlay">
-        <div class="az-chip"><strong>A</strong><span>Authority</span></div>
-        <div class="az-chip"><strong>B</strong><span>Boundary</span></div>
-        <div class="az-chip"><strong>C</strong><span>Coherence</span></div>
-        <div class="az-chip"><strong>D</strong><span>Direction</span></div>
-        <div class="az-chip"><strong>E</strong><span>Entry</span></div>
-        <div class="az-chip"><strong>F</strong><span>Friction</span></div>
-        <div class="az-chip"><strong>G</strong><span>Gate</span></div>
-        <div class="az-chip"><strong>H</strong><span>Home</span></div>
-        <div class="az-chip"><strong>I</strong><span>Identity</span></div>
-        <div class="az-chip"><strong>J</strong><span>Judgment</span></div>
-        <div class="az-chip"><strong>K</strong><span>Key</span></div>
-        <div class="az-chip"><strong>L</strong><span>Law</span></div>
-        <div class="az-chip"><strong>M</strong><span>Motion</span></div>
-        <div class="az-chip"><strong>N</strong><span>Nature</span></div>
-        <div class="az-chip"><strong>O</strong><span>Origin</span></div>
-        <div class="az-chip"><strong>P</strong><span>Population</span></div>
-        <div class="az-chip"><strong>Q</strong><span>Quest</span></div>
-        <div class="az-chip"><strong>R</strong><span>Region</span></div>
-        <div class="az-chip"><strong>S</strong><span>Sector</span></div>
-        <div class="az-chip"><strong>T</strong><span>Terrain</span></div>
-        <div class="az-chip"><strong>U</strong><span>Utility</span></div>
-        <div class="az-chip"><strong>V</strong><span>Value</span></div>
-        <div class="az-chip"><strong>W</strong><span>Water</span></div>
-        <div class="az-chip"><strong>X</strong><span>Extreme</span></div>
-        <div class="az-chip"><strong>Y</strong><span>Yield</span></div>
-        <div class="az-chip"><strong>Z</strong><span>Zenith</span></div>
       </div>
     </section>
 
@@ -907,9 +776,11 @@
     </section>
 
     <section class="receipt" aria-hidden="true">
-      NINE_SUMMITS_UNIVERSE_DEMO_PLANET_UPGRADE_TNT_v1
+      NINE_SUMMITS_UNIVERSE_ROUTE_CREATION_TNT_v1
       route=/nine-summits-universe/
       page-purpose=world-explanation-and-planetary-map-route
+      route-created=true
+      resolves-404=true
       planet=Nine Summits Universe
       planet-number=1
       demo-planet=true

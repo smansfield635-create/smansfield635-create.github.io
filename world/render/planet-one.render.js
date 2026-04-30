@@ -1,8 +1,8 @@
 /*
-  PLANET_ONE_RENDER_TEAM_TNT_v1
+  PLANET_ONE_RENDER_TEAM_TNT_v2_REALISM
   OWNER=SEAN
   TARGET=/world/render/planet-one.render.js
-  PURPOSE=CREATE_REAL_PLANET_ONE_RENDER_TEAM_FOR_NINE_SUMMITS_UNIVERSE
+  PURPOSE=REPLACE_CARTOON_BLOB_GLOBE_WITH_LAYERED_PLANET_ONE_REALISM_RENDER
   STATUS=ACTIVE
   planet-one-render-active=true
   planet-one-renderer=/world/render/planet-one.render.js
@@ -12,12 +12,17 @@
   no-render-lane-collapse=true
   no-generated-graphic=true
   no-external-image=true
+
+  COMPATIBILITY_MARKERS_FOR_GAUGES:
+  PLANET_ONE_RENDER_TEAM_TNT_v1
+  window.DGBPlanetOneRenderTeam
+  renderPlanetOne
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "PLANET_ONE_RENDER_TEAM_TNT_v1";
+  var VERSION = "PLANET_ONE_RENDER_TEAM_TNT_v2_REALISM";
   var NS = "http://www.w3.org/2000/svg";
 
   function el(tag, className, text) {
@@ -36,10 +41,10 @@
   }
 
   function injectStyles() {
-    if (document.getElementById("planet-one-render-team-style")) return;
+    if (document.getElementById("planet-one-render-team-style-v2")) return;
 
     var style = document.createElement("style");
-    style.id = "planet-one-render-team-style";
+    style.id = "planet-one-render-team-style-v2";
     style.textContent = `
       .planet-one-render-shell {
         display: grid;
@@ -52,26 +57,27 @@
         display: grid;
         justify-items: center;
         gap: 14px;
-        width: min(580px, 100%);
+        width: min(620px, 100%);
         padding: clamp(12px, 3vw, 20px);
         border: 1px solid rgba(242, 199, 111, 0.38);
         border-radius: 30px;
         background:
-          radial-gradient(circle at 50% 10%, rgba(145, 189, 255, 0.15), transparent 15rem),
-          rgba(3, 7, 14, 0.76);
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.58), 0 0 60px rgba(145, 189, 255, 0.14);
+          radial-gradient(circle at 50% 10%, rgba(145, 189, 255, 0.16), transparent 16rem),
+          radial-gradient(circle at 50% 60%, rgba(143, 240, 198, 0.07), transparent 18rem),
+          rgba(3, 7, 14, 0.78);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.60), 0 0 70px rgba(145, 189, 255, 0.16);
       }
 
       .planet-one-svg {
         display: block;
-        width: min(460px, 84vw);
+        width: min(480px, 86vw);
         height: auto;
         max-width: 100%;
-        filter: drop-shadow(0 26px 46px rgba(0, 0, 0, 0.72));
+        filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.78));
       }
 
       .planet-one-caption {
-        max-width: 760px;
+        max-width: 780px;
         color: rgba(244, 247, 255, 0.86);
         font-size: 0.78rem;
         font-weight: 950;
@@ -86,7 +92,7 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 8px;
-        max-width: 820px;
+        max-width: 840px;
       }
 
       .planet-one-telemetry span {
@@ -105,7 +111,7 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
-        width: min(680px, 100%);
+        width: min(700px, 100%);
       }
 
       .planet-one-mapkey div {
@@ -130,33 +136,33 @@
 
       @media (prefers-reduced-motion: no-preference) {
         .planet-one-surface {
-          animation: planetOneDrift 24s ease-in-out infinite alternate;
-          transform-origin: 250px 250px;
+          animation: planetOneSurfaceDrift 28s ease-in-out infinite alternate;
+          transform-origin: 300px 300px;
         }
 
         .planet-one-clouds {
-          animation: planetOneCloudDrift 32s ease-in-out infinite alternate;
-          transform-origin: 250px 250px;
+          animation: planetOneCloudDrift 34s ease-in-out infinite alternate;
+          transform-origin: 300px 300px;
         }
 
         .planet-one-core-signal {
-          animation: planetOneCorePulse 5.5s ease-in-out infinite alternate;
-          transform-origin: 250px 250px;
+          animation: planetOneCorePulse 6.5s ease-in-out infinite alternate;
+          transform-origin: 300px 300px;
         }
 
-        @keyframes planetOneDrift {
-          from { transform: rotate(-1.1deg) scale(1.006); }
-          to { transform: rotate(1.1deg) scale(1.006); }
+        @keyframes planetOneSurfaceDrift {
+          from { transform: rotate(-0.9deg) scale(1.004); }
+          to { transform: rotate(0.9deg) scale(1.004); }
         }
 
         @keyframes planetOneCloudDrift {
-          from { transform: rotate(0.7deg) translateX(-2px); opacity: 0.54; }
-          to { transform: rotate(-0.7deg) translateX(2px); opacity: 0.72; }
+          from { transform: rotate(0.9deg) translateX(-3px); opacity: 0.58; }
+          to { transform: rotate(-0.9deg) translateX(3px); opacity: 0.76; }
         }
 
         @keyframes planetOneCorePulse {
-          from { opacity: 0.18; }
-          to { opacity: 0.42; }
+          from { opacity: 0.12; }
+          to { opacity: 0.34; }
         }
       }
 
@@ -169,193 +175,201 @@
     document.head.appendChild(style);
   }
 
+  function addPath(group, d, fill, opacity, extraAttrs) {
+    var attrs = {
+      d: d,
+      fill: fill,
+      opacity: opacity || "1"
+    };
+
+    Object.keys(extraAttrs || {}).forEach(function (key) {
+      attrs[key] = extraAttrs[key];
+    });
+
+    group.appendChild(svg("path", attrs));
+  }
+
+  function addLine(group, d, stroke, width, opacity) {
+    group.appendChild(svg("path", {
+      d: d,
+      fill: "none",
+      stroke: stroke,
+      "stroke-width": width,
+      opacity: opacity || "1",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    }));
+  }
+
   function buildSvg() {
     var root = svg("svg", {
       class: "planet-one-svg",
-      viewBox: "0 0 500 500",
+      viewBox: "0 0 600 600",
       role: "img",
-      "aria-label": "Planet 1, Nine Summits Universe, realistic globe render with seven landmasses"
+      "aria-label": "Planet 1 Nine Summits Universe realistic globe with seven landmasses"
     });
 
     var defs = svg("defs");
 
-    var ocean = svg("radialGradient", { id: "p1Ocean", cx: "34%", cy: "24%", r: "78%" });
-    ocean.appendChild(svg("stop", { offset: "0%", "stop-color": "#6bb9d9", "stop-opacity": "1" }));
-    ocean.appendChild(svg("stop", { offset: "36%", "stop-color": "#14618a", "stop-opacity": "1" }));
-    ocean.appendChild(svg("stop", { offset: "68%", "stop-color": "#06294a", "stop-opacity": "1" }));
-    ocean.appendChild(svg("stop", { offset: "100%", "stop-color": "#02050b", "stop-opacity": "1" }));
+    var ocean = svg("radialGradient", { id: "p1v2Ocean", cx: "31%", cy: "23%", r: "82%" });
+    ocean.appendChild(svg("stop", { offset: "0%", "stop-color": "#78d6ec", "stop-opacity": "1" }));
+    ocean.appendChild(svg("stop", { offset: "28%", "stop-color": "#1b779d", "stop-opacity": "1" }));
+    ocean.appendChild(svg("stop", { offset: "58%", "stop-color": "#073a63", "stop-opacity": "1" }));
+    ocean.appendChild(svg("stop", { offset: "82%", "stop-color": "#03192f", "stop-opacity": "1" }));
+    ocean.appendChild(svg("stop", { offset: "100%", "stop-color": "#01040a", "stop-opacity": "1" }));
     defs.appendChild(ocean);
 
-    var glow = svg("radialGradient", { id: "p1Glow", cx: "30%", cy: "22%", r: "76%" });
-    glow.appendChild(svg("stop", { offset: "0%", "stop-color": "#ffffff", "stop-opacity": ".36" }));
-    glow.appendChild(svg("stop", { offset: "24%", "stop-color": "#b8e9ff", "stop-opacity": ".18" }));
-    glow.appendChild(svg("stop", { offset: "58%", "stop-color": "#5ca7d0", "stop-opacity": ".06" }));
-    glow.appendChild(svg("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": "0" }));
-    defs.appendChild(glow);
+    var limbLight = svg("radialGradient", { id: "p1v2LimbLight", cx: "27%", cy: "20%", r: "76%" });
+    limbLight.appendChild(svg("stop", { offset: "0%", "stop-color": "#ffffff", "stop-opacity": ".42" }));
+    limbLight.appendChild(svg("stop", { offset: "20%", "stop-color": "#ccf4ff", "stop-opacity": ".22" }));
+    limbLight.appendChild(svg("stop", { offset: "52%", "stop-color": "#6db8d9", "stop-opacity": ".07" }));
+    limbLight.appendChild(svg("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": "0" }));
+    defs.appendChild(limbLight);
 
-    var terminator = svg("radialGradient", { id: "p1Terminator", cx: "74%", cy: "60%", r: "76%" });
+    var terminator = svg("radialGradient", { id: "p1v2Terminator", cx: "77%", cy: "61%", r: "78%" });
     terminator.appendChild(svg("stop", { offset: "0%", "stop-color": "#000000", "stop-opacity": "0" }));
-    terminator.appendChild(svg("stop", { offset: "44%", "stop-color": "#000000", "stop-opacity": ".18" }));
-    terminator.appendChild(svg("stop", { offset: "78%", "stop-color": "#000000", "stop-opacity": ".62" }));
-    terminator.appendChild(svg("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": ".88" }));
+    terminator.appendChild(svg("stop", { offset: "38%", "stop-color": "#000000", "stop-opacity": ".16" }));
+    terminator.appendChild(svg("stop", { offset: "70%", "stop-color": "#000000", "stop-opacity": ".58" }));
+    terminator.appendChild(svg("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": ".92" }));
     defs.appendChild(terminator);
 
-    var polar = svg("linearGradient", { id: "p1PolarIce", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
-    polar.appendChild(svg("stop", { offset: "0%", "stop-color": "#ffffff", "stop-opacity": ".96" }));
-    polar.appendChild(svg("stop", { offset: "42%", "stop-color": "#c8d8df", "stop-opacity": ".86" }));
-    polar.appendChild(svg("stop", { offset: "100%", "stop-color": "#8aa1aa", "stop-opacity": ".78" }));
+    var polar = svg("linearGradient", { id: "p1v2Polar", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    polar.appendChild(svg("stop", { offset: "0%", "stop-color": "#f7fbff" }));
+    polar.appendChild(svg("stop", { offset: "45%", "stop-color": "#c9d7df" }));
+    polar.appendChild(svg("stop", { offset: "100%", "stop-color": "#82969f" }));
     defs.appendChild(polar);
 
-    var main = svg("linearGradient", { id: "p1MainTerrain", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
-    main.appendChild(svg("stop", { offset: "0%", "stop-color": "#5f8a58" }));
-    main.appendChild(svg("stop", { offset: "42%", "stop-color": "#4c6e43" }));
-    main.appendChild(svg("stop", { offset: "70%", "stop-color": "#7c704f" }));
-    main.appendChild(svg("stop", { offset: "100%", "stop-color": "#c7b98a" }));
+    var north = svg("linearGradient", { id: "p1v2North", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    north.appendChild(svg("stop", { offset: "0%", "stop-color": "#9dadad" }));
+    north.appendChild(svg("stop", { offset: "50%", "stop-color": "#647070" }));
+    north.appendChild(svg("stop", { offset: "100%", "stop-color": "#2f3c40" }));
+    defs.appendChild(north);
+
+    var main = svg("linearGradient", { id: "p1v2Main", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    main.appendChild(svg("stop", { offset: "0%", "stop-color": "#7fa765" }));
+    main.appendChild(svg("stop", { offset: "35%", "stop-color": "#4d743f" }));
+    main.appendChild(svg("stop", { offset: "72%", "stop-color": "#8e7b52" }));
+    main.appendChild(svg("stop", { offset: "100%", "stop-color": "#c0ad78" }));
     defs.appendChild(main);
 
-    var west = svg("linearGradient", { id: "p1WestTerrain", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
-    west.appendChild(svg("stop", { offset: "0%", "stop-color": "#9b8a6b" }));
-    west.appendChild(svg("stop", { offset: "46%", "stop-color": "#625b52" }));
-    west.appendChild(svg("stop", { offset: "100%", "stop-color": "#2f3439" }));
+    var west = svg("linearGradient", { id: "p1v2West", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    west.appendChild(svg("stop", { offset: "0%", "stop-color": "#98846a" }));
+    west.appendChild(svg("stop", { offset: "44%", "stop-color": "#5d574d" }));
+    west.appendChild(svg("stop", { offset: "100%", "stop-color": "#242b31" }));
     defs.appendChild(west);
 
-    var east = svg("linearGradient", { id: "p1EastTerrain", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
-    east.appendChild(svg("stop", { offset: "0%", "stop-color": "#8fbf8e" }));
-    east.appendChild(svg("stop", { offset: "46%", "stop-color": "#477454" }));
-    east.appendChild(svg("stop", { offset: "100%", "stop-color": "#1f3b3d" }));
+    var east = svg("linearGradient", { id: "p1v2East", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    east.appendChild(svg("stop", { offset: "0%", "stop-color": "#9bc889" }));
+    east.appendChild(svg("stop", { offset: "44%", "stop-color": "#4e8857" }));
+    east.appendChild(svg("stop", { offset: "100%", "stop-color": "#183f42" }));
     defs.appendChild(east);
 
-    var south = svg("linearGradient", { id: "p1SouthTerrain", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
-    south.appendChild(svg("stop", { offset: "0%", "stop-color": "#7d9460" }));
-    south.appendChild(svg("stop", { offset: "44%", "stop-color": "#4b6841" }));
-    south.appendChild(svg("stop", { offset: "100%", "stop-color": "#283a31" }));
+    var south = svg("linearGradient", { id: "p1v2South", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+    south.appendChild(svg("stop", { offset: "0%", "stop-color": "#8a985d" }));
+    south.appendChild(svg("stop", { offset: "45%", "stop-color": "#4c6c3f" }));
+    south.appendChild(svg("stop", { offset: "100%", "stop-color": "#263730" }));
     defs.appendChild(south);
 
-    var landTexture = svg("filter", { id: "p1LandTexture", x: "-20%", y: "-20%", width: "140%", height: "140%" });
-    landTexture.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".018 .034", numOctaves: "5", seed: "7", result: "noise" }));
+    var landTexture = svg("filter", { id: "p1v2LandTexture", x: "-25%", y: "-25%", width: "150%", height: "150%" });
+    landTexture.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".023 .041", numOctaves: "6", seed: "19", result: "noise" }));
     landTexture.appendChild(svg("feColorMatrix", {
       in: "noise",
       type: "matrix",
-      values: ".55 0 0 0 0 0 .55 0 0 0 0 0 .55 0 0 0 0 0 .24 0",
+      values: ".62 0 0 0 0 0 .62 0 0 0 0 0 .62 0 0 0 0 0 .33 0",
       result: "grain"
     }));
     landTexture.appendChild(svg("feBlend", { in: "SourceGraphic", in2: "grain", mode: "multiply" }));
     defs.appendChild(landTexture);
 
-    var oceanTexture = svg("filter", { id: "p1OceanTexture", x: "-20%", y: "-20%", width: "140%", height: "140%" });
-    oceanTexture.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".012 .025", numOctaves: "4", seed: "11", result: "waterNoise" }));
-    oceanTexture.appendChild(svg("feColorMatrix", {
+    var waterTexture = svg("filter", { id: "p1v2WaterTexture", x: "-25%", y: "-25%", width: "150%", height: "150%" });
+    waterTexture.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".011 .028", numOctaves: "5", seed: "29", result: "waterNoise" }));
+    waterTexture.appendChild(svg("feColorMatrix", {
       in: "waterNoise",
       type: "matrix",
-      values: ".25 0 0 0 0 0 .32 0 0 0 0 0 .55 0 0 0 0 0 .20 0",
+      values: ".20 0 0 0 0 0 .30 0 0 0 0 0 .62 0 0 0 0 0 .22 0",
       result: "waterGrain"
     }));
-    oceanTexture.appendChild(svg("feBlend", { in: "SourceGraphic", in2: "waterGrain", mode: "screen" }));
-    defs.appendChild(oceanTexture);
+    waterTexture.appendChild(svg("feBlend", { in: "SourceGraphic", in2: "waterGrain", mode: "screen" }));
+    defs.appendChild(waterTexture);
 
-    var clouds = svg("filter", { id: "p1Clouds", x: "-20%", y: "-20%", width: "140%", height: "140%" });
-    clouds.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".022 .035", numOctaves: "4", seed: "21", result: "cloudNoise" }));
+    var clouds = svg("filter", { id: "p1v2Clouds", x: "-25%", y: "-25%", width: "150%", height: "150%" });
+    clouds.appendChild(svg("feTurbulence", { type: "fractalNoise", baseFrequency: ".018 .032", numOctaves: "5", seed: "41", result: "cloudNoise" }));
     clouds.appendChild(svg("feColorMatrix", {
       in: "cloudNoise",
       type: "matrix",
-      values: "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .34 -.02",
+      values: "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .42 -.08",
       result: "cloudAlpha"
     }));
-    clouds.appendChild(svg("feGaussianBlur", { stdDeviation: "1.2" }));
+    clouds.appendChild(svg("feGaussianBlur", { stdDeviation: "1.4" }));
     defs.appendChild(clouds);
 
-    var clip = svg("clipPath", { id: "p1Clip" });
-    clip.appendChild(svg("circle", { cx: "250", cy: "250", r: "212" }));
+    var blur = svg("filter", { id: "p1v2SoftBlur" });
+    blur.appendChild(svg("feGaussianBlur", { stdDeviation: "1.1" }));
+    defs.appendChild(blur);
+
+    var clip = svg("clipPath", { id: "p1v2Clip" });
+    clip.appendChild(svg("circle", { cx: "300", cy: "300", r: "252" }));
     defs.appendChild(clip);
 
     root.appendChild(defs);
 
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "230", fill: "rgba(145,189,255,.08)" }));
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "218", fill: "url(#p1Ocean)", stroke: "rgba(145,189,255,.32)", "stroke-width": "3", filter: "url(#p1OceanTexture)" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "272", fill: "rgba(145,189,255,.08)" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "258", fill: "url(#p1v2Ocean)", stroke: "rgba(145,189,255,.30)", "stroke-width": "3", filter: "url(#p1v2WaterTexture)" }));
 
-    var surface = svg("g", { class: "planet-one-surface", "clip-path": "url(#p1Clip)" });
-    surface.appendChild(svg("rect", { x: "38", y: "38", width: "424", height: "424", fill: "url(#p1Ocean)", filter: "url(#p1OceanTexture)" }));
+    var surface = svg("g", { class: "planet-one-surface", "clip-path": "url(#p1v2Clip)" });
+    surface.appendChild(svg("rect", { x: "48", y: "48", width: "504", height: "504", fill: "url(#p1v2Ocean)", filter: "url(#p1v2WaterTexture)" }));
 
-    surface.appendChild(svg("path", {
-      d: "M160 58 C194 36 254 38 303 53 C340 65 370 82 382 106 C339 126 290 126 251 121 C206 116 167 103 132 84 C136 73 146 64 160 58 Z",
-      fill: "url(#p1PolarIce)",
-      opacity: ".94",
-      filter: "url(#p1LandTexture)"
-    }));
+    addPath(surface, "M150 74 C186 47 247 45 303 57 C361 69 405 92 433 122 C391 143 342 147 292 141 C240 135 191 119 140 91 C141 85 145 79 150 74 Z", "url(#p1v2Polar)", ".92", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M157 125 C202 96 270 94 333 115 C384 132 424 168 424 204 C373 218 320 218 270 204 C219 190 173 164 134 137 C139 133 147 128 157 125 Z", "url(#p1v2North)", ".83", { filter: "url(#p1v2LandTexture)" });
 
-    surface.appendChild(svg("path", {
-      d: "M160 108 C196 88 246 88 291 102 C333 116 362 144 356 174 C322 192 272 193 231 185 C190 177 150 157 131 132 C137 122 146 114 160 108 Z",
-      fill: "#8ca3a7",
-      opacity: ".82",
-      filter: "url(#p1LandTexture)"
-    }));
+    addPath(surface, "M186 222 C221 181 300 170 359 206 C412 238 425 308 386 357 C345 408 268 415 210 381 C153 348 134 282 186 222 Z", "url(#p1v2Main)", ".96", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M94 213 C125 168 190 171 228 210 C260 243 251 314 210 356 C164 403 84 386 55 329 C29 278 50 239 94 213 Z", "url(#p1v2West)", ".92", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M376 212 C421 166 494 184 523 241 C548 292 515 360 458 390 C404 419 335 392 318 328 C303 272 329 243 376 212 Z", "url(#p1v2East)", ".94", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M176 382 C221 348 302 345 371 373 C419 393 446 429 426 464 C379 498 298 508 232 488 C178 471 141 434 154 405 C160 395 167 388 176 382 Z", "url(#p1v2South)", ".94", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M152 477 C203 449 288 447 360 466 C414 481 445 504 443 529 C386 558 287 566 210 548 C158 535 121 511 118 493 C127 487 139 482 152 477 Z", "url(#p1v2Polar)", ".88", { filter: "url(#p1v2LandTexture)" });
 
-    surface.appendChild(svg("path", {
-      d: "M176 183 C205 159 267 151 313 176 C353 198 372 242 352 275 C331 311 276 319 229 307 C182 295 146 263 146 226 C146 207 157 193 176 183 Z",
-      fill: "url(#p1MainTerrain)",
-      opacity: ".96",
-      filter: "url(#p1LandTexture)"
-    }));
+    addPath(surface, "M233 242 C257 232 288 235 304 251 C282 263 252 262 229 251 Z", "#a39a6f", ".72", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M329 286 C355 273 388 279 407 301 C383 316 349 315 326 298 Z", "#6b8d59", ".76", { filter: "url(#p1v2LandTexture)" });
+    addPath(surface, "M126 292 C151 277 184 282 201 305 C177 319 145 318 122 302 Z", "#514b42", ".72", { filter: "url(#p1v2LandTexture)" });
 
-    surface.appendChild(svg("path", {
-      d: "M86 181 C115 149 169 152 196 182 C220 209 214 257 186 286 C153 321 95 311 68 273 C45 239 54 204 86 181 Z",
-      fill: "url(#p1WestTerrain)",
-      opacity: ".93",
-      filter: "url(#p1LandTexture)"
-    }));
+    addLine(surface, "M54 116 C103 158 95 220 55 267 C103 304 103 374 57 456", "rgba(242,199,111,.20)", "4", ".85");
+    addLine(surface, "M546 116 C497 158 505 220 545 267 C497 304 497 374 543 456", "rgba(242,199,111,.20)", "4", ".85");
+    addLine(surface, "M300 55 L300 545", "rgba(242,199,111,.26)", "2", ".76");
+    addLine(surface, "M70 300 H530", "rgba(255,255,255,.10)", "1.5", ".70");
 
-    surface.appendChild(svg("path", {
-      d: "M310 184 C343 151 401 160 425 200 C446 235 430 281 395 305 C358 330 305 316 288 276 C273 240 281 211 310 184 Z",
-      fill: "url(#p1EastTerrain)",
-      opacity: ".95",
-      filter: "url(#p1LandTexture)"
-    }));
-
-    surface.appendChild(svg("path", {
-      d: "M164 306 C204 287 262 287 312 302 C349 313 373 338 361 366 C329 389 277 395 230 388 C185 381 146 360 135 334 C141 322 150 313 164 306 Z",
-      fill: "url(#p1SouthTerrain)",
-      opacity: ".95",
-      filter: "url(#p1LandTexture)"
-    }));
-
-    surface.appendChild(svg("path", {
-      d: "M158 392 C197 375 263 375 315 390 C350 400 371 414 371 431 C325 453 258 461 201 451 C162 444 134 431 123 414 C131 404 142 397 158 392 Z",
-      fill: "url(#p1PolarIce)",
-      opacity: ".9",
-      filter: "url(#p1LandTexture)"
-    }));
-
-    surface.appendChild(svg("path", { d: "M45 95 C82 129 75 177 46 214 C83 247 84 303 48 367", fill: "none", stroke: "rgba(242,199,111,.22)", "stroke-width": "4", "stroke-linecap": "round" }));
-    surface.appendChild(svg("path", { d: "M455 95 C418 129 425 177 454 214 C417 247 416 303 452 367", fill: "none", stroke: "rgba(242,199,111,.22)", "stroke-width": "4", "stroke-linecap": "round" }));
-    surface.appendChild(svg("path", { d: "M250 45 L250 455", fill: "none", stroke: "rgba(242,199,111,.32)", "stroke-width": "2", "stroke-linecap": "round" }));
-    surface.appendChild(svg("path", { d: "M64 250 H436", fill: "none", stroke: "rgba(255,255,255,.12)", "stroke-width": "1.5", "stroke-linecap": "round" }));
-
-    surface.appendChild(svg("path", { d: "M188 190 C220 202 260 203 298 192", fill: "none", stroke: "rgba(245,245,245,.38)", "stroke-width": "2", "stroke-linecap": "round" }));
-    surface.appendChild(svg("path", { d: "M170 240 C214 252 282 255 332 236", fill: "none", stroke: "rgba(245,245,245,.22)", "stroke-width": "1.8", "stroke-linecap": "round" }));
-    surface.appendChild(svg("path", { d: "M156 340 C205 352 286 354 345 331", fill: "none", stroke: "rgba(245,245,245,.24)", "stroke-width": "1.8", "stroke-linecap": "round" }));
+    addLine(surface, "M200 230 C238 247 294 250 348 232", "rgba(245,245,245,.32)", "2", ".76");
+    addLine(surface, "M184 292 C248 312 333 311 403 281", "rgba(245,245,245,.20)", "2", ".62");
+    addLine(surface, "M168 420 C241 438 349 437 416 403", "rgba(245,245,245,.21)", "2", ".62");
+    addLine(surface, "M115 244 C145 222 181 223 214 248", "rgba(255,255,255,.18)", "1.6", ".60");
+    addLine(surface, "M390 238 C428 220 472 235 501 271", "rgba(255,255,255,.18)", "1.6", ".60");
 
     root.appendChild(surface);
 
-    var cloudLayer = svg("g", { class: "planet-one-clouds", "clip-path": "url(#p1Clip)", opacity: ".58", filter: "url(#p1Clouds)" });
-    cloudLayer.appendChild(svg("path", { d: "M84 132 C141 102 202 118 250 136 C301 155 352 144 412 116", fill: "none", stroke: "rgba(255,255,255,.88)", "stroke-width": "13", "stroke-linecap": "round" }));
-    cloudLayer.appendChild(svg("path", { d: "M61 275 C128 247 202 253 257 271 C319 291 380 279 441 247", fill: "none", stroke: "rgba(255,255,255,.72)", "stroke-width": "12", "stroke-linecap": "round" }));
-    cloudLayer.appendChild(svg("path", { d: "M108 370 C173 345 247 350 304 365 C348 377 390 371 430 352", fill: "none", stroke: "rgba(255,255,255,.74)", "stroke-width": "11", "stroke-linecap": "round" }));
-    cloudLayer.appendChild(svg("path", { d: "M114 72 C160 57 207 63 238 82", fill: "none", stroke: "rgba(255,255,255,.7)", "stroke-width": "10", "stroke-linecap": "round" }));
-    root.appendChild(cloudLayer);
+    var cloudsGroup = svg("g", { class: "planet-one-clouds", "clip-path": "url(#p1v2Clip)", opacity: ".66", filter: "url(#p1v2Clouds)" });
+    addLine(cloudsGroup, "M88 154 C164 115 238 133 309 158 C378 183 443 170 512 132", "rgba(255,255,255,.82)", "15", ".82");
+    addLine(cloudsGroup, "M62 330 C139 300 227 308 302 331 C390 358 467 334 541 298", "rgba(255,255,255,.72)", "15", ".78");
+    addLine(cloudsGroup, "M120 450 C202 419 292 428 364 451 C419 469 470 458 524 430", "rgba(255,255,255,.72)", "12", ".72");
+    addLine(cloudsGroup, "M132 82 C183 60 251 67 292 95", "rgba(255,255,255,.64)", "10", ".70");
+    addLine(cloudsGroup, "M246 205 C304 187 375 195 423 226", "rgba(255,255,255,.58)", "9", ".65");
+    root.appendChild(cloudsGroup);
 
-    var core = svg("g", { class: "planet-one-core-signal", opacity: ".28" });
-    core.appendChild(svg("circle", { cx: "250", cy: "250", r: "32", fill: "none", stroke: "rgba(143,240,198,.42)", "stroke-width": "2" }));
-    core.appendChild(svg("path", { d: "M250 205 C278 226 278 274 250 295 C222 274 222 226 250 205 Z", fill: "rgba(143,240,198,.12)", stroke: "rgba(242,199,111,.30)", "stroke-width": "1.5" }));
+    var core = svg("g", { class: "planet-one-core-signal", opacity: ".20" });
+    core.appendChild(svg("circle", { cx: "300", cy: "300", r: "44", fill: "none", stroke: "rgba(143,240,198,.38)", "stroke-width": "2" }));
+    core.appendChild(svg("circle", { cx: "300", cy: "300", r: "22", fill: "rgba(143,240,198,.10)", stroke: "rgba(242,199,111,.28)", "stroke-width": "1.5" }));
+    core.appendChild(svg("path", { d: "M300 245 C335 273 335 327 300 355 C265 327 265 273 300 245 Z", fill: "rgba(143,240,198,.08)", stroke: "rgba(242,199,111,.24)", "stroke-width": "1.5" }));
     root.appendChild(core);
 
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "218", fill: "url(#p1Glow)" }));
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "218", fill: "url(#p1Terminator)" }));
-    root.appendChild(svg("path", { d: "M155 43 C211 116 212 382 155 457", fill: "none", stroke: "rgba(255,255,255,.10)", "stroke-width": "1.2" }));
-    root.appendChild(svg("path", { d: "M345 43 C289 116 288 382 345 457", fill: "none", stroke: "rgba(255,255,255,.10)", "stroke-width": "1.2" }));
-    root.appendChild(svg("path", { d: "M67 165 C155 193 345 193 433 165", fill: "none", stroke: "rgba(255,255,255,.09)", "stroke-width": "1" }));
-    root.appendChild(svg("path", { d: "M67 335 C155 307 345 307 433 335", fill: "none", stroke: "rgba(255,255,255,.09)", "stroke-width": "1" }));
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "218", fill: "none", stroke: "rgba(145,189,255,.42)", "stroke-width": "3" }));
-    root.appendChild(svg("circle", { cx: "250", cy: "250", r: "224", fill: "none", stroke: "rgba(145,189,255,.18)", "stroke-width": "10" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "258", fill: "url(#p1v2LimbLight)" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "258", fill: "url(#p1v2Terminator)" }));
+
+    addLine(root, "M186 49 C252 139 252 461 186 551", "rgba(255,255,255,.08)", "1.2", ".80");
+    addLine(root, "M414 49 C348 139 348 461 414 551", "rgba(255,255,255,.08)", "1.2", ".80");
+    addLine(root, "M79 200 C185 233 415 233 521 200", "rgba(255,255,255,.07)", "1", ".80");
+    addLine(root, "M79 400 C185 367 415 367 521 400", "rgba(255,255,255,.07)", "1", ".80");
+
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "258", fill: "none", stroke: "rgba(145,189,255,.42)", "stroke-width": "3" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "265", fill: "none", stroke: "rgba(145,189,255,.18)", "stroke-width": "12" }));
+    root.appendChild(svg("circle", { cx: "300", cy: "300", r: "272", fill: "none", stroke: "rgba(145,189,255,.08)", "stroke-width": "18" }));
 
     return root;
   }
@@ -415,6 +429,8 @@
     mount.dataset.treeDemoMode = "true";
     mount.dataset.renderLanesSeparated = "true";
     mount.dataset.noRenderLaneCollapse = "true";
+    mount.dataset.realismPass = "v2";
+    mount.dataset.cartoonBlobGlobeRetired = "true";
 
     var shell = el("div", "planet-one-render-shell");
     var card = el("div", "planet-one-render-card");
@@ -433,6 +449,8 @@
     document.documentElement.dataset.treeDemoMode = "true";
     document.documentElement.dataset.renderLanesSeparated = "true";
     document.documentElement.dataset.noRenderLaneCollapse = "true";
+    document.documentElement.dataset.planetOneRealismPass = "v2";
+    document.documentElement.dataset.cartoonBlobGlobeRetired = "true";
 
     return {
       ok: true,
@@ -442,7 +460,9 @@
       globeDemoStatusRetired: true,
       treeDemoMode: true,
       renderLanesSeparated: true,
-      noRenderLaneCollapse: true
+      noRenderLaneCollapse: true,
+      realismPass: "v2",
+      cartoonBlobGlobeRetired: true
     };
   }
 

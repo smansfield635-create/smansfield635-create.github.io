@@ -1,67 +1,88 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page="this-underdog" data-public-presentation="speaking-lane-face-visible">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>About This Underdog · Sean Mansfield</title>
-  <meta name="description" content="About This Underdog introduces Sean Mansfield, the public voice behind This Underdog and The Nine Summits of Love.">
+  <title>This Underdog · Diamond Gate Bridge</title>
+  <meta name="description" content="This Underdog is the public speaking, story, comedy, and seminar lane for Sean Mansfield, Consider the Energy, and The Nine Summits of Love.">
 
   <style>
     :root {
       --bg: #05070b;
       --panel: rgba(9, 15, 25, 0.94);
-      --line: rgba(242, 199, 111, 0.3);
-      --text: #f6f1e6;
-      --muted: #c8c0b2;
+      --panel2: rgba(14, 24, 38, 0.82);
+      --line: rgba(168, 199, 255, 0.22);
       --gold: #f2c76f;
       --green: #8ff0c6;
+      --text: #f3f7ff;
+      --muted: #b8c2d6;
     }
 
     * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 75% 10%, rgba(242, 199, 111, 0.16), transparent 24rem),
-        radial-gradient(circle at 20% 20%, rgba(125, 181, 255, 0.12), transparent 28rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
+        radial-gradient(circle at 80% 8%, rgba(242, 199, 111, 0.12), transparent 24rem),
+        radial-gradient(circle at 20% 20%, rgba(125, 181, 255, 0.12), transparent 30rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #020308 100%);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a { color: inherit; text-decoration: none; }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
     }
+
+    .skip:focus { left: 10px; }
 
     .page {
-      width: min(960px, calc(100% - 28px));
+      width: min(1080px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 22px 0 54px;
+      padding: 24px 0 56px;
     }
 
     .brand {
       display: block;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       color: var(--muted);
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
+      font-size: 0.9rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
     .brand strong {
       display: block;
-      color: var(--gold);
-      font-size: 1rem;
-      letter-spacing: 0.14em;
+      color: var(--text);
+      font-size: 1.05rem;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .nav,
+    .actions,
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
     }
 
     .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     .nav a,
@@ -69,71 +90,91 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
-      border: 1px solid rgba(168, 199, 255, 0.2);
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      font-weight: 750;
+      background: rgba(255, 255, 255, 0.055);
+      font-weight: 800;
     }
 
     .button.primary {
-      border-color: rgba(242, 199, 111, 0.55);
-      background: rgba(242, 199, 111, 0.14);
+      border-color: rgba(143, 240, 198, 0.46);
+      background: rgba(143, 240, 198, 0.13);
     }
 
-    .panel {
+    .panel,
+    .hero,
+    .card {
       border: 1px solid var(--line);
       border-radius: 30px;
-      background: var(--panel);
-      padding: clamp(20px, 4vw, 42px);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.58);
+      background:
+        radial-gradient(circle at 90% 8%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        var(--panel);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero,
+    .panel {
+      padding: clamp(24px, 5vw, 46px);
       margin-top: 18px;
+    }
+
+    .hero {
+      min-height: 500px;
+      display: grid;
+      align-content: center;
+      gap: 24px;
     }
 
     .kicker {
       margin: 0 0 12px;
-      color: var(--gold);
+      color: var(--green);
       font-size: 0.82rem;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
+    .kicker.gold { color: var(--gold); }
+
     h1 {
-      margin: 0 0 16px;
-      font-size: clamp(3rem, 10vw, 6.4rem);
-      line-height: 0.9;
+      margin: 0;
+      max-width: 950px;
+      font-size: clamp(3.1rem, 10vw, 6.8rem);
+      line-height: 0.92;
       letter-spacing: -0.075em;
     }
 
     h2 {
-      margin: 0 0 12px;
-      font-size: clamp(1.8rem, 5vw, 3rem);
+      margin: 0;
+      font-size: clamp(1.75rem, 5vw, 3.15rem);
       line-height: 1;
       letter-spacing: -0.055em;
     }
 
     h3 {
       margin: 0 0 10px;
-      font-size: clamp(1.35rem, 4vw, 2rem);
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      line-height: 1.05;
       letter-spacing: -0.04em;
     }
 
     p {
       color: var(--muted);
-      line-height: 1.58;
-      font-size: 1.05rem;
+      font-size: clamp(1.02rem, 2.7vw, 1.26rem);
+      line-height: 1.6;
     }
 
     .lead {
-      font-size: clamp(1.15rem, 3vw, 1.5rem);
-      line-height: 1.42;
+      max-width: 890px;
+      font-size: clamp(1.16rem, 3.2vw, 1.55rem);
+      line-height: 1.45;
     }
 
     .profile {
       display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
       gap: 18px;
       align-items: start;
     }
@@ -159,78 +200,131 @@
 
     .fact {
       display: grid;
-      grid-template-columns: 120px 1fr;
+      grid-template-columns: 135px 1fr;
       gap: 12px;
-      padding: 12px;
+      padding: 13px;
       border: 1px solid rgba(168, 199, 255, 0.14);
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.045);
     }
 
     .fact strong {
       color: var(--green);
     }
 
+    .fact span {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card {
+      padding: 22px;
+      min-height: 225px;
+      background: var(--panel2);
+      box-shadow: none;
+    }
+
+    .card span {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
     .quote {
       color: var(--text);
-      font-size: clamp(1.5rem, 5vw, 3rem);
-      line-height: 1.05;
-      letter-spacing: -0.055em;
-      font-weight: 900;
+      font-size: clamp(1.8rem, 6vw, 3.8rem);
+      line-height: 1.04;
+      letter-spacing: -0.06em;
+      font-weight: 950;
     }
 
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
+    .receipt { display: none !important; }
 
-    .receipt {
-      display: none;
-    }
-
-    @media (max-width: 760px) {
-      .profile {
+    @media (max-width: 860px) {
+      .profile,
+      .grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 24px, 560px);
       }
 
       .fact {
         grid-template-columns: 1fr;
+      }
+
+      .nav a,
+      .button {
+        min-height: 40px;
+        padding: 9px 14px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" id="about-this-underdog-main">
+  <a class="skip" href="#underdog-main">Skip to This Underdog</a>
+
+  <main id="underdog-main" class="page" data-route="/this-underdog/" data-photo="/about-this-underdog/20250426_194823.jpg">
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
-      About This Underdog · Sean Mansfield
+      This Underdog · Speaking Lane
     </a>
 
     <nav class="nav" aria-label="Primary navigation">
       <a href="/">Compass</a>
-      <a href="/this-underdog/">This Underdog</a>
+      <a href="/home/">Home</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
       <a href="/nine-summits/">Nine Summits</a>
       <a href="/nine-summits-of-love/">Nine Summits of Love</a>
-      <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
     </nav>
 
-    <section class="panel">
-      <p class="kicker">About This Underdog</p>
-      <h1>Sean Mansfield</h1>
+    <section class="hero">
+      <p class="kicker">This Underdog · Story / Comedy / Speaking</p>
+      <h1>This Underdog has been on stage for years.</h1>
       <p class="lead">
-        This page anchors This Underdog to the real person behind the voice, the story, the comedy, the speaking lane, and The Nine Summits of Love.
+        The difference now is that the stage is becoming visible.
       </p>
+      <p class="lead">
+        What looked like comedy, conversation, sales, struggle, recovery, and scattered public moments was actually stage preparation. Now the pattern is stepping into the light.
+      </p>
+
+      <div class="actions">
+        <a class="button primary" href="/nine-summits-of-love/">Open Nine Summits of Love</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/products/">View Products</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
     </section>
 
-    <section class="panel">
+    <section class="panel" aria-labelledby="sean-profile-title">
+      <p class="kicker gold">Public origin</p>
+      <h2 id="sean-profile-title">Sean Mansfield · the face behind This Underdog.</h2>
+
       <div class="profile">
-        <div>
-          <p class="kicker">Photo</p>
-          <h2>This Underdog</h2>
+        <article>
+          <p>
+            This is the visible person behind the speaking lane, the comedy lane, the story lane, and the public voice carrying The Nine Summits of Love.
+          </p>
 
           <div class="photo-frame">
             <img
@@ -240,11 +334,15 @@
               decoding="sync"
               fetchpriority="high">
           </div>
-        </div>
 
-        <div>
+          <p>
+            <a class="button" href="/about-this-underdog/20250426_194823.jpg">Open photo directly</a>
+          </p>
+        </article>
+
+        <article>
           <p class="kicker">Origin</p>
-          <h2>Arlington, Texas.</h2>
+          <h3>Arlington, Texas.</h3>
 
           <p>
             My name is Sean Mansfield. I grew up in Arlington, Texas, went to Mansfield High School, and graduated with the class of 2004.
@@ -259,69 +357,200 @@
               <strong>Name</strong>
               <span>Sean Mansfield</span>
             </div>
-
             <div class="fact">
               <strong>Origin</strong>
               <span>Arlington, Texas</span>
             </div>
-
             <div class="fact">
               <strong>School</strong>
               <span>Mansfield High School · Class of 2004</span>
             </div>
-
             <div class="fact">
               <strong>Born</strong>
               <span>October 1, 1985</span>
             </div>
-
             <div class="fact">
               <strong>Age</strong>
               <span>40</span>
             </div>
           </div>
-        </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">The public thesis</p>
+      <h2>Finding your inner underdog is the same thing as unlocking your inner genius.</h2>
+      <p>
+        This Underdog is the speaking and performance lane of Diamond Gate Bridge: part comedy, part testimony, part seminar, part public proof that the work was never only digital.
+      </p>
+      <p>
+        Finding your inner underdog is merely finding your voice. The underdog is not the weakest part of the person. It is often the part that learned to survive before it learned how to speak.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="Story lanes">
+      <article class="card">
+        <span>The story</span>
+        <h3>The stage was already there.</h3>
+        <p>Comedy, public conversation, sales, recovery, fatherhood, pressure, and building in public were not separate lanes. They were rehearsal rooms.</p>
+      </article>
+
+      <article class="card">
+        <span>The voice</span>
+        <h3>The underdog finds language.</h3>
+        <p>This Underdog turns survival into speech. The point is not to glorify struggle; the point is to translate it into voice, service, humor, and usable meaning.</p>
+      </article>
+
+      <article class="card">
+        <span>The emergence</span>
+        <h3>The calendar is catching up.</h3>
+        <p>Public speaking gigs do not appear as a random pivot. They appear as the outside world beginning to recognize what was already forming underneath.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <p class="kicker gold">Manifestation in action</p>
+      <h2>The story was being written before the calendar caught up.</h2>
+      <p>
+        Manifestation here does not mean pretending effort is unnecessary. It means alignment becoming visible in reality. The internal work, the jokes, the patterns, the brand, the seminars, the book ideas, and the public moments begin to converge into one speaking lane.
+      </p>
+      <p>
+        What once felt scattered becomes recognizable. The stage was not created overnight. It was noticed.
+      </p>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Inner nature</p>
+      <h2>Every person is a different breed of flower.</h2>
+      <p>
+        In a Kant-inspired sense, beauty becomes visible when inner nature finds its proper form. A flower does not become beautiful by trying to be every other flower. It becomes beautiful by becoming what it already is.
+      </p>
+      <p>
+        This Underdog carries that idea into public speaking: when people understand their inner nature, their outside expression becomes clearer. The voice stops trying to imitate permission and starts becoming legible.
+      </p>
+    </section>
+
+    <section class="panel">
+      <p class="kicker gold">Speaking lane</p>
+      <h2>Comedy, seminar, story, and human potential now meet on the same stage.</h2>
+      <p>
+        This lane can carry comedy sets, corporate talks, public seminars, recovery stories, creative testimony, and Consider the Energy presentations. The format may change, but the center remains the same: the underdog voice becomes a bridge between pressure and possibility.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <span>Comedy</span>
+          <h3>Lower the wall.</h3>
+          <p>Uses humor to lower resistance and make the truth easier to hear.</p>
+        </article>
+
+        <article class="card">
+          <span>Story</span>
+          <h3>Make pressure readable.</h3>
+          <p>Turns lived experience into a public frame people can recognize.</p>
+        </article>
+
+        <article class="card">
+          <span>Seminar</span>
+          <h3>Give the room structure.</h3>
+          <p>Builds practical pathways for self, voice, energy, pressure, and potential.</p>
+        </article>
+
+        <article class="card">
+          <span>Brand</span>
+          <h3>Consider the Energy.</h3>
+          <p>Consider the Energy becomes the presentation layer for the larger work.</p>
+        </article>
+
+        <article class="card">
+          <span>Proof</span>
+          <h3>The work moves people.</h3>
+          <p>The public stage confirms that the work is not trapped in theory.</p>
+        </article>
+
+        <article class="card">
+          <span>Voice</span>
+          <h3>The underdog speaks.</h3>
+          <p>The speaking lane makes the buried signal audible.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel">
       <p class="kicker">Core line</p>
-      <p class="quote">
-        Finding your inner underdog is the same thing as unlocking your inner genius.
+      <p class="quote">Finding your inner underdog is merely finding your voice.</p>
+    </section>
+
+    <section class="panel">
+      <p class="kicker gold">Consider the Energy presents</p>
+      <h2>The Nine Summits of Love and 256 Carats of Human Potential belong on stage.</h2>
+      <p>
+        This Underdog gives the public voice a place to stand. Consider the Energy can present the book, the seminar, the story, the comedy, and the larger human-potential system without forcing them to compete.
+      </p>
+      <p>
+        The speaking lane becomes the human-facing bridge: people do not have to understand the entire architecture first. They can hear the story, feel the pattern, and recognize the underdog inside themselves.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="Offerings">
+      <article class="card">
+        <span>Offering</span>
+        <h3>Public speaking</h3>
+        <p>Talks built around the underdog voice, imperfect storms, self-discovery, energy, humor, and practical human potential.</p>
+      </article>
+
+      <article class="card">
+        <span>Offering</span>
+        <h3>Seminars</h3>
+        <p>Structured sessions for entry-level, platform, and executive audiences through Consider the Energy.</p>
+      </article>
+
+      <article class="card">
+        <span>Offering</span>
+        <h3>Comedy and story</h3>
+        <p>Performance that uses humor as a doorway into truth, recovery, resilience, and voice.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Why now</p>
+      <h2>The stage is becoming visible because the voice is ready to be carried publicly.</h2>
+      <p>
+        The public speaking layer is not separate from the rest of the work. It is the live human expression of it. The website can organize the rooms. Products can hold the engines. Showroom can display proof. Gauges can measure status. But the stage carries the voice.
       </p>
     </section>
 
     <section class="panel">
-      <p class="kicker">Voice</p>
-      <h2>Finding the underdog is finding the voice.</h2>
-
-      <p>
-        This Underdog is the public-facing identity for the person who had been standing near the stage before recognizing that the stage was part of the path.
-      </p>
-
-      <p>
-        The work begins from the underdog position because the underdog knows pressure before applause. That pressure can become language. That language can become story. That story can become a room where other people recognize their own voice.
-      </p>
-
+      <p class="kicker">Estate links</p>
+      <h2>Move through the public system.</h2>
       <div class="links">
-        <a class="button primary" href="/this-underdog/">Open This Underdog</a>
-        <a class="button" href="/nine-summits-of-love/">Open Nine Summits of Love</a>
-        <a class="button" href="/nine-summits/">Open Nine Summits</a>
-        <a class="button" href="/">Compass</a>
+        <a class="button primary" href="/">Compass</a>
+        <a class="button" href="/products/">Products</a>
+        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button" href="/showroom/globe/">Demo Universe</a>
+        <a class="button" href="/nine-summits/">Nine Summits</a>
+        <a class="button" href="/nine-summits-of-love/">Nine Summits of Love</a>
+        <a class="button" href="/gauges/">Gauges</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      ABOUT_THIS_UNDERDOG_FACE_FIRST_RESET_TNT_v1
-      route=/about-this-underdog/
+      THIS_UNDERDOG_FACE_VISIBLE_TNT_v2
+      route=/this-underdog/
+      visible-page-confirmed=true
       photo=/about-this-underdog/20250426_194823.jpg
+      image-visible-in-body=true
       speaker=Sean Mansfield
       origin=Arlington Texas
       school=Mansfield High School
       class-year=2004
       born=October 1 1985
       age=40
-      image-visible-in-body=true
+      public-speaking-lane=true
+      brand=Consider the Energy
+      inner-underdog=unlocking-inner-genius
+      inner-underdog=finding-your-voice
     </section>
   </main>
 </body>

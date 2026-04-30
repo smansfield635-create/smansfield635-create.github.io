@@ -196,7 +196,7 @@
     }
 
     .lead {
-      max-width: 780px;
+      max-width: 820px;
       margin: 20px 0 0;
       color: var(--muted);
       font-size: clamp(1.08rem, 2.6vw, 1.55rem);
@@ -242,7 +242,7 @@
 
     .status-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
       margin-top: 18px;
     }
@@ -409,7 +409,8 @@
     data-estate="rich-manor-and-estate"
     data-gauges-truth="live-authority"
     data-compass-generation="generation-2"
-    data-compass-control-surface="active">
+    data-compass-control-surface="active"
+    data-this-underdog-route="active">
 
     <header class="topbar" aria-label="Compass header">
       <a class="brand" href="/">
@@ -423,6 +424,7 @@
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
+        <a href="/this-underdog/">This Underdog</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -432,13 +434,13 @@
         <p class="kicker">H1 · Compass · Public Control Surface</p>
         <h1 id="compass-title">Compass</h1>
         <p class="lead">
-          The Compass is the public control surface for Rich Manor and Estate. It keeps the map stable, opens the house routes, and hands the globe view to Demo Universe.
+          The Compass is the public control surface for Rich Manor and Estate. It keeps the map stable, opens the house routes, hands the globe view to Demo Universe, and now makes the public speaking lane visible through This Underdog.
         </p>
       </div>
 
       <div class="actions" aria-label="Primary Compass actions">
         <a class="button primary" href="/showroom/globe/">Inspect Demo Universe</a>
-        <a class="button" href="/showroom/">Enter Showroom</a>
+        <a class="button" href="/this-underdog/">Open This Underdog</a>
         <a class="button" href="/gauges/">Read Gauges</a>
       </div>
     </section>
@@ -447,7 +449,7 @@
       <p class="kicker">Live orientation</p>
       <h2 id="orientation-title">Choose the view. Keep the route clear.</h2>
       <p>
-        Compass is a control room, not a final globe. It gives the visitor a stable way to move through the estate: map first, expansion second, inspection through Showroom.
+        Compass is a control room, not a final globe. It gives the visitor a stable way to move through the estate: map first, expansion second, inspection through Showroom, and public voice through This Underdog.
       </p>
 
       <div class="status-grid" aria-label="Compass status">
@@ -462,6 +464,10 @@
         <div class="status-card">
           <span>Globe</span>
           <strong>Handoff</strong>
+        </div>
+        <div class="status-card">
+          <span>Stage</span>
+          <strong>Visible</strong>
         </div>
         <div class="status-card">
           <span>Gauges</span>
@@ -503,7 +509,7 @@
       <p class="kicker">House routes</p>
       <h2 id="routes-title">Move through the estate.</h2>
       <p>
-        The Compass stays simple: orient, enter, stabilize, distribute, inspect, and verify.
+        The Compass stays simple: orient, enter, stabilize, distribute, inspect, speak, and verify.
       </p>
 
       <div class="route-grid" aria-label="House route cards">
@@ -552,6 +558,24 @@
           <div class="card-link">Open Showroom</div>
         </a>
 
+        <a class="route-card" href="/showroom/globe/">
+          <div>
+            <div class="route-label">Demo Universe</div>
+            <h3>Inspection</h3>
+            <p>Inspect the our-universe model and Earth definition lane.</p>
+          </div>
+          <div class="card-link">Inspect Universe</div>
+        </a>
+
+        <a class="route-card" href="/this-underdog/">
+          <div>
+            <div class="route-label">This Underdog</div>
+            <h3>Speaking lane</h3>
+            <p>The stage was already there. Now it is becoming visible.</p>
+          </div>
+          <div class="card-link">Open This Underdog</div>
+        </a>
+
         <a class="route-card" href="/gauges/">
           <div>
             <div class="route-label">Gauges</div>
@@ -560,6 +584,21 @@
           </div>
           <div class="card-link">Read Gauges</div>
         </a>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="underdog-title">
+      <p class="kicker">Speaking lane</p>
+      <h2 id="underdog-title">This Underdog is now visible from Compass.</h2>
+      <p>
+        This Underdog is the public voice lane: comedy, story, speaking, seminars, Consider the Energy, and the message that finding your inner underdog is the same thing as unlocking your inner genius.
+      </p>
+      <p>
+        The stage was already there. Compass now gives visitors a clean route to see it.
+      </p>
+
+      <div class="actions" style="margin-top:18px">
+        <a class="button primary" href="/this-underdog/">Open This Underdog</a>
       </div>
     </section>
 
@@ -573,6 +612,7 @@
         <a class="button" href="/products/">Products</a>
         <a class="button" href="/showroom/">Showroom</a>
         <a class="button" href="/showroom/globe/">Demo Universe</a>
+        <a class="button" href="/this-underdog/">This Underdog</a>
         <a class="button" href="/gauges/">Gauges</a>
       </div>
     </section>
@@ -595,9 +635,11 @@
       globe-handoff=showroom-demo-universe
       visual-control-surface=active
       mobile-layout-hardened=true
-      COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1
-      COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1
-      TED_PUBLIC_COMPASS_CLEAN_TNT_v1
+      stage-lane=visible
+      this-underdog-route=active
+      speaking-lane=visible
+      stage-becoming-visible=true
+      This Underdog=/this-underdog/
       Compass=/
       Door=/door/
       Home=/home/
@@ -605,6 +647,10 @@
       Showroom=/showroom/
       Demo Universe=/showroom/globe/
       Gauges=/gauges/
+      COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1
+      COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1
+      TED_PUBLIC_COMPASS_CLEAN_TNT_v1
+      COMPASS_THIS_UNDERDOG_VISIBLE_ROUTE_TNT_v1
     </section>
   </main>
 </body>

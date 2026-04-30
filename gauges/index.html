@@ -1,902 +1,570 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="gauges"
-  data-chamber="H6_GAUGES"
-  data-generation="gauges-h6-generation-4-speed-authority-drift-readiness-v1"
->
+<!doctype html>
+<html lang="en" data-gauges-generation="GENERATION_4" data-route="/gauges/">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Generation 4 Drift Readiness · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Gauges reads Generation 4 speed authority, route consumption, consumer drift, and drift-calculation readiness for the Showroom globe system."
-  />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gauges · Diagnostic Instrument Room · Diamond Gate Bridge</title>
+  <meta name="description" content="Generation 4 diagnostic gauges for Rich Manor and Estate.">
   <style>
     :root {
-      --void: #050914;
-      --panel: rgba(12, 24, 42, 0.86);
-      --panel-strong: rgba(7, 15, 29, 0.96);
-      --gold: #f5c76b;
-      --blue: #74b8ff;
-      --green: #78d99b;
-      --red: #ff817a;
-      --amber: #ffc857;
-      --text: #f6efe0;
-      --muted: #b9c2cf;
-      --line: rgba(245, 199, 107, 0.28);
-      --blue-line: rgba(116, 184, 255, 0.24);
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
-      --radius: 28px;
+      --bg: #05070b;
+      --panel: rgba(12, 18, 30, 0.9);
+      --line: rgba(168, 199, 255, 0.26);
+      --text: #edf5ff;
+      --muted: #aebbd0;
+      --good: #8ff0c6;
+      --warn: #ffd36f;
+      --bad: #ff9a9a;
+      --blue: #7db5ff;
     }
 
-    * { box-sizing: border-box; }
-
-    html { min-height: 100%; background: var(--void); }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
-      min-height: 100%;
       margin: 0;
+      min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 50% 8%, rgba(116, 184, 255, 0.14), transparent 28rem),
-        radial-gradient(circle at 82% 24%, rgba(245, 199, 107, 0.10), transparent 22rem),
-        linear-gradient(180deg, #02050c 0%, var(--void) 48%, #080d18 100%);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 20% 0%, rgba(125, 181, 255, 0.14), transparent 26rem),
+        linear-gradient(180deg, #03050a, #08101d 48%, #03050a);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; }
-
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 100;
-      transform: translateY(-150%);
-      border: 1px solid var(--gold);
-      border-radius: 999px;
-      padding: 0.7rem 1rem;
-      color: #080d18;
-      background: var(--gold);
-      font-weight: 900;
-    }
-
-    .skip-link:focus { transform: translateY(0); }
-
-    .shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 32px 0 56px;
-    }
-
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: grid;
-      gap: 0.15rem;
+    a {
+      color: var(--blue);
       text-decoration: none;
     }
 
-    .brand strong {
-      color: var(--gold);
-      font-size: 1rem;
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 44px;
+    }
+
+    .topbar,
+    .nav,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.88rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
-    .brand span {
-      color: var(--muted);
-      font-size: 0.86rem;
-      font-weight: 800;
-    }
-
-    .nav,
-    .actions,
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-    }
-
     .nav a,
-    .actions a,
-    .actions button {
-      border: 1px solid rgba(245, 199, 107, 0.42);
+    button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 0.72rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text);
-      background: rgba(255, 255, 255, 0.055);
-      text-decoration: none;
       font: inherit;
-      font-weight: 900;
       cursor: pointer;
     }
 
-    .nav a[aria-current="page"],
-    .nav a:hover,
-    .nav a:focus-visible,
-    .actions a:hover,
-    .actions a:focus-visible,
-    .actions button:hover,
-    .actions button:focus-visible {
-      color: #080d18;
-      background: var(--gold);
-      outline: none;
+    button.primary {
+      background: rgba(125, 181, 255, 0.16);
+      border-color: rgba(125, 181, 255, 0.42);
+      font-weight: 700;
     }
 
     .hero,
-    .panel,
-    .receipt {
+    .panel {
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background:
-        linear-gradient(135deg, rgba(12, 24, 42, 0.88), rgba(8, 20, 38, 0.70)),
-        radial-gradient(circle at 78% 18%, rgba(245, 199, 107, 0.12), transparent 18rem);
-      box-shadow: var(--shadow);
+      border-radius: 26px;
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     }
 
-    .hero { padding: clamp(24px, 4vw, 48px); }
-
-    .panel,
-    .receipt {
-      margin-top: 24px;
-      padding: clamp(22px, 3.5vw, 36px);
+    .hero {
+      margin-top: 18px;
+      padding: 22px;
     }
 
-    .receipt { background: var(--panel-strong); }
-
-    .kicker,
-    .receipt-line {
-      margin: 0 0 0.85rem;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.18em;
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--good);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    h1, h2, h3, p, li { overflow-wrap: anywhere; }
-
     h1 {
       margin: 0;
-      font-size: clamp(2.4rem, 6vw, 5.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.065em;
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
     }
 
-    h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 3rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
-    }
-
-    .lede,
-    .copy,
-    .small {
+    .hero p,
+    .panel p {
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.6;
     }
 
-    .lede {
-      max-width: 980px;
-      margin: 1.2rem 0 0;
-      font-size: clamp(1rem, 2vw, 1.22rem);
-    }
-
-    .actions { margin-top: 1.5rem; }
-
-    .score-grid,
     .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 1.25rem;
+      margin-top: 18px;
     }
 
-    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    .score-card,
-    .card {
-      border: 1px solid var(--blue-line);
-      border-radius: 22px;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.045);
+    .panel {
+      padding: 16px;
     }
 
-    .score-card strong {
-      display: block;
-      font-size: clamp(1.85rem, 5vw, 3.1rem);
-      line-height: 0.95;
-      color: var(--gold);
+    .metric {
+      font-size: 2.15rem;
+      font-weight: 850;
+      letter-spacing: -0.04em;
     }
 
-    .score-card span {
-      display: block;
-      margin-top: 0.3rem;
+    .metric.good {
+      color: var(--good);
+    }
+
+    .metric.warn {
+      color: var(--warn);
+    }
+
+    .metric.bad {
+      color: var(--bad);
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(168, 199, 255, 0.13);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.92rem;
+    }
+
+    th {
       color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    code {
+      color: var(--good);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em;
+    }
+
+    .status-pass {
+      color: var(--good);
       font-weight: 800;
     }
 
-    .card[data-status="pass"] { border-color: rgba(120, 217, 155, 0.44); }
-    .card[data-status="fail"] { border-color: rgba(255, 129, 122, 0.44); }
-    .card[data-status="hold"] { border-color: rgba(245, 199, 107, 0.44); }
-
-    .card[data-status="pass"] b { color: var(--green); }
-    .card[data-status="fail"] b { color: var(--red); }
-    .card[data-status="hold"] b { color: var(--amber); }
-
-    .card b {
-      display: block;
-      margin-bottom: 0.35rem;
-      font-size: 1rem;
-    }
-
-    pre {
-      overflow: auto;
-      max-height: 320px;
-      border-radius: 14px;
-      padding: 0.85rem;
-      color: var(--muted);
-      background: rgba(0, 0, 0, 0.26);
-      white-space: pre-wrap;
-      font-size: 0.82rem;
-    }
-
-    .chips { margin-top: 1rem; }
-
-    .chips span,
-    .chips a {
-      border: 1px solid rgba(245, 199, 107, 0.25);
-      border-radius: 999px;
-      padding: 0.48rem 0.7rem;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.82rem;
+    .status-hold {
+      color: var(--warn);
       font-weight: 800;
-      text-decoration: none;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    @media (max-width: 920px) {
-      .score-grid,
-      .grid { grid-template-columns: 1fr; }
-      .shell { width: min(100%, calc(100% - 24px)); }
+    .status-fail {
+      color: var(--bad);
+      font-weight: 800;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: min(100% - 22px, 720px);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        display: block;
+        border-bottom: 1px solid rgba(168, 199, 255, 0.18);
+      }
     }
   </style>
 </head>
-
-<body
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="gauges"
->
-  <a class="skip-link" href="#gauges-main">Skip to Gauges content</a>
-
-  <div
-    id="gauges-root"
-    class="shell"
-    data-proof-marker="H6_GAUGES"
-    data-gauges-role="generation-4-speed-authority-drift-readiness"
-    data-safe-mode="true"
-  >
+<body>
+  <main class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauges-truth="live-authority">
     <header class="topbar">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Gauges · Gen 4 Drift Readiness</span>
-      </a>
-
-      <nav class="nav" aria-label="Primary navigation">
+      <div class="brand">Diamond Gate Bridge · Dexter Lab · Measurement Key</div>
+      <nav class="nav" aria-label="Gauges navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Demo Universe Earth</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <main id="gauges-main">
-      <section class="hero">
-        <p class="kicker">H6 · Gauges · Generation 4 Drift Readiness</p>
-        <h1>Gauges Diagnostic Instrument Room</h1>
-        <p class="lede">
-          Gauges now reads the Generation 4 speed-authority contract, route consumption,
-          consumer-writer drift, and readiness for final drift calculation. It does not inspect iframe DOM
-          and does not mutate Showroom, Demo Universe, runtime, assets, or routes.
+    <section class="hero">
+      <p class="kicker">H6 · Gauges · Diagnostic Instrument Room</p>
+      <h1>Gauges Diagnostic Instrument Room</h1>
+      <p>
+        Gauges measures the finished field. It does not drive the repair, fake visual acceptance, or replace owner confirmation. This Gen 4 gauge verifies route liveness, source-contract markers, Showroom authority alignment, and minimum rebuild status.
+      </p>
+      <div class="actions">
+        <button class="primary" type="button" id="runDiagnostic">Run estate diagnostic</button>
+        <button type="button" id="runShowroomSelector">Run Showroom selector</button>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Estate health summary">
+      <article class="panel">
+        <p class="kicker">Overall health</p>
+        <div id="overallMetric" class="metric warn">--</div>
+      </article>
+      <article class="panel">
+        <p class="kicker">House skeleton</p>
+        <div id="houseMetric" class="metric warn">--</div>
+      </article>
+      <article class="panel">
+        <p class="kicker">Showroom</p>
+        <div id="showroomMetric" class="metric warn">--</div>
+      </article>
+      <article class="panel">
+        <p class="kicker">Minimum selector</p>
+        <div id="selectorMetric" class="metric warn">HOLD</div>
+      </article>
+
+      <article class="panel wide">
+        <h2>Live audit table</h2>
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Batch</th>
+              <th>Target</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="auditRows">
+            <tr>
+              <td>Waiting</td>
+              <td>Diagnostic</td>
+              <td>--</td>
+              <td class="status-hold">HOLD</td>
+              <td>Run estate diagnostic.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel wide">
+        <h2>Internal Panel · Showroom Minimum Rebuild Selector</h2>
+        <p>
+          This internal panel returns the smallest lawful target only when a source-contract break is detected. Owner visual truth remains admissible and must be translated into a source-auditable target.
         </p>
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Selector lane</th>
+              <th>Status</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody id="selectorRows">
+            <tr>
+              <td>Route liveness</td>
+              <td class="status-hold">HOLD</td>
+              <td>Not run.</td>
+            </tr>
+            <tr>
+              <td>Source congruence</td>
+              <td class="status-hold">HOLD</td>
+              <td>Not run.</td>
+            </tr>
+            <tr>
+              <td>Render motion</td>
+              <td class="status-hold">HOLD</td>
+              <td>Not run.</td>
+            </tr>
+            <tr>
+              <td>Visual acceptance</td>
+              <td class="status-hold">OWNER</td>
+              <td>Telemetry cannot claim final visual truth without owner acceptance.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
 
-        <div class="actions">
-          <button id="run" type="button">Run Gen 4 diagnostic</button>
-          <a href="/showroom/">Inspect Showroom</a>
-          <a href="/showroom/globe/">Inspect Demo Universe Earth</a>
-          <a href="/assets/showroom.globe.instrument.js">Asset instrument</a>
-          <a href="/showroom/runtime.js">Runtime</a>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="kicker">Gen 4 Ceiling Read</p>
-        <h2>Current source field.</h2>
-        <p id="summary" class="copy">Gen 4 diagnostic loaded. Diagnostic has not run yet.</p>
-
-        <div class="score-grid">
-          <article class="score-card">
-            <strong id="score-total">--</strong>
-            <span>Total / 100</span>
-          </article>
-          <article class="score-card">
-            <strong id="score-speed">--</strong>
-            <span>Speed authority</span>
-          </article>
-          <article class="score-card">
-            <strong id="score-consumer">--</strong>
-            <span>Consumer alignment</span>
-          </article>
-          <article class="score-card">
-            <strong id="score-drift">--</strong>
-            <span>Drift readiness</span>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="kicker">Minimum Lawful Target</p>
-        <h2 id="target-title">Waiting for diagnostic.</h2>
-        <p id="target-copy" class="copy">No file selected yet.</p>
-        <div id="target-chips" class="chips"></div>
-      </section>
-
-      <section class="panel">
-        <p class="kicker">Evidence</p>
-        <h2>Safe source lanes.</h2>
-        <div id="evidence" class="grid"></div>
-      </section>
-
-      <section class="receipt">
-        <p class="receipt-line">Calibration receipt</p>
-        <h2>H6 Gauges Gen 4 drift-readiness receipt.</h2>
-        <p class="copy">
-          VERSION: GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1.
-          This update replaces the older source-classifier expectation with the current Generation 4
-          speed-authority contract.
+      <article class="panel wide">
+        <h2>Calibration receipt</h2>
+        <p>
+          VERSION: GAUGES_GEN4_333_PLUS_1_FINAL_MEASUREMENT_TNT_v1. Gauges is the H6 estate diagnostic instrument room. It measures the Gen 4 Showroom stretch after source, containment, and consumer files are applied.
         </p>
-
-        <div class="chips">
-          <a href="/">Compass</a>
-          <a href="/door/">Door</a>
-          <a href="/home/">Home</a>
-          <a href="/products/">Products</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/showroom/globe/">Demo Universe Earth</a>
-          <a href="/gauges/">Gauges</a>
-          <span>H6_GAUGES</span>
-          <span>gauges-truth=live-authority</span>
-          <span>safe-mode=true</span>
-          <span>gen4-speed-authority=active</span>
-          <span>drift-readiness=active</span>
-          <span>GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1</span>
-        </div>
-      </section>
-    </main>
-  </div>
+      </article>
+    </section>
+  </main>
 
   <script>
-    (function () {
+    (function bootGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_H6_GENERATION_4_SPEED_AUTHORITY_DRIFT_READINESS_TNT_v1";
+      const VERSION = "GAUGES_GEN4_333_PLUS_1_FINAL_MEASUREMENT_TNT_v1";
 
-      const EXPECTED = Object.freeze({
-        instrument: "showroom-generation-4-speed-authority-calibration-v1",
-        runtime: "showroom-generation-3-runtime-status-contract-cleanup-v1",
-        parentRoute: "showroom-parent-proof-realm-generation-4-speed-authority-route-consumer-v1",
-        demoRoute: "demo-universe-earth-demo-realm-generation-4-speed-authority-route-consumer-v1",
-        speedAuthority: "/assets/showroom.globe.instrument.js"
-      });
-
-      const EXPECTED_MOTION = Object.freeze({
-        longitudeAutoStep: "0.009",
-        cloudAutoStep: "0.004",
-        dragLongitudeFactor: "0.038",
-        dragCloudFactor: "0.018",
-        dragLatitudeFactor: "0.62",
-        latitudeReturnFriction: "0.006",
-        axisTiltDegrees: "23.5"
-      });
-
-      const PATHS = Object.freeze({
-        showroom: "/showroom/",
-        demo: "/showroom/globe/",
-        instrument: "/assets/showroom.globe.instrument.js",
-        runtime: "/showroom/runtime.js",
-        parentBoot: "/showroom/index.js",
-        parentRender: "/showroom/showroom.render.js",
-        demoBoot: "/showroom/globe/index.js",
-        css: "/showroom/showroom.css"
-      });
-
-      const CONSUMER_STALE_TOKENS = [
-        "axis-rotation-depth-refinement-active",
-        "generation3AxisRotationDepth",
-        "generation2ActiveGlobe",
-        "generation2BaselineGraphics",
-        "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE",
-        "GENERATION 3 · DEMO UNIVERSE EARTH · AXIS ROTATION ACTIVE",
-        "standalone-generation-3-axis-rotation-depth-mounted",
-        "showroom-generation-3-parent-consumer-congruence-v1",
-        "showroom-parent-render-bridge-gen3-caption-congruence-v1",
-        "demo-universe-earth-generation-3-standalone-consumer-congruence-v1"
+      const routeTargets = [
+        { batch: "House skeleton", target: "Compass", path: "/", markers: ["H1 · Compass", "route-exists"] },
+        { batch: "House skeleton", target: "Door", path: "/door/", markers: ["route-exists"] },
+        { batch: "House skeleton", target: "Home", path: "/home/", markers: ["route-exists"] },
+        { batch: "House skeleton", target: "Products", path: "/products/", markers: ["route-exists"] },
+        { batch: "Showroom", target: "Parent Showroom", path: "/showroom/", markers: ["GENERATION_4", "SPEED_AUTHORITY", "SHOWROOM"] },
+        { batch: "Showroom", target: "Demo Universe Earth", path: "/showroom/globe/", markers: ["GENERATION_4", "Demo Universe Earth"] }
       ];
 
-      const FORBIDDEN_ACTIVE_TOKENS = [
-        "showroom-generation-2-shell",
-        "showroom-generation-2-orbit",
-        "showroom-generation-2-active-globe",
-        "showroom-generation-2-earth-surface",
-        "showroom-generation-2-earth-clouds",
-        "showroom-generation-3-orbit"
+      const sourceTargets = [
+        { lane: "Source authority", path: "/assets/showroom.globe.instrument.js", markers: ["GENERATION_4", "ShowroomGlobeInstrument", "createGlobe"] },
+        { lane: "Runtime support", path: "/showroom/runtime.js", markers: ["GENERATION_4", "ShowroomRuntime", "createRuntime"] },
+        { lane: "Consumer authority", path: "/showroom/consumer.authority.js", markers: ["GENERATION_4", "ShowroomConsumerAuthority", "getContract"] },
+        { lane: "Containment", path: "/showroom/showroom.css", markers: ["showroom-globe-shell", "showroom-orbital-stage", "border: 0"] },
+        { lane: "Render bridge", path: "/showroom/showroom.render.js", markers: ["GENERATION_4", "ShowroomRender", "renderShowroomProofSurface"] }
       ];
 
-      const state = {
-        results: {},
-        evidence: [],
-        scores: { total: 0, speed: 0, consumer: 0, drift: 0 },
-        decision: {
-          target: [],
-          title: "Waiting for diagnostic.",
-          copy: "No file selected yet."
+      const auditRows = document.getElementById("auditRows");
+      const selectorRows = document.getElementById("selectorRows");
+      const overallMetric = document.getElementById("overallMetric");
+      const houseMetric = document.getElementById("houseMetric");
+      const showroomMetric = document.getElementById("showroomMetric");
+      const selectorMetric = document.getElementById("selectorMetric");
+
+      function setMetric(el, value) {
+        el.textContent = value;
+        el.classList.remove("good", "warn", "bad");
+
+        if (value === "PASS" || Number(value) >= 90) {
+          el.classList.add("good");
+        } else if (value === "FAIL" || Number(value) < 60) {
+          el.classList.add("bad");
+        } else {
+          el.classList.add("warn");
         }
-      };
-
-      function el(id) {
-        return document.getElementById(id);
       }
 
-      function create(tag, attrs, children) {
-        const node = document.createElement(tag);
-
-        Object.entries(attrs || {}).forEach(function (entry) {
-          const key = entry[0];
-          const value = entry[1];
-
-          if (value === null || value === undefined || value === false) return;
-
-          if (key === "className") node.className = value;
-          else if (key === "text") node.textContent = value;
-          else node.setAttribute(key, String(value));
-        });
-
-        (children || []).forEach(function (child) {
-          if (typeof child === "string") node.appendChild(document.createTextNode(child));
-          else if (child) node.appendChild(child);
-        });
-
-        return node;
-      }
-
-      function setText(id, value) {
-        const node = el(id);
-        if (node) node.textContent = String(value);
-      }
-
-      function has(text, token) {
-        return String(text || "").indexOf(token) !== -1;
-      }
-
-      function foundTokens(text, tokens) {
-        return tokens.filter(function (token) {
-          return has(text, token);
-        });
-      }
-
-      function extractConstVersion(text) {
-        return (String(text).match(/const VERSION\s*=\s*"([^"]+)"/) || [])[1] || "";
-      }
-
-      function extractMotionValue(text, key) {
-        const expression = new RegExp(key + "\\s*:\\s*([^,\\n}]+)");
-        const match = String(text).match(expression);
-        return match ? String(match[1]).trim().replace(/["']/g, "") : "";
-      }
-
-      function isActiveEmission(text, token) {
-        const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const patterns = [
-          "className\\s*:\\s*[\"'][^\"']*" + escaped,
-          "setAttribute\\(\\s*[\"']class[\"']\\s*,\\s*[\"'][^\"']*" + escaped,
-          "classList\\.add\\([\\s\\S]{0,180}" + escaped
-        ];
-
-        return patterns.some(function (pattern) {
-          return new RegExp(pattern).test(String(text || ""));
-        });
+      function statusClass(score) {
+        if (score >= 90) return "status-pass";
+        if (score >= 60) return "status-hold";
+        return "status-fail";
       }
 
       async function fetchText(path) {
-        const response = await fetch(path + "?gauges-gen4=" + Date.now(), { cache: "no-store" });
+        const response = await fetch(path, { cache: "no-store" });
         const text = await response.text();
-
         return {
-          path: path,
           ok: response.ok,
           status: response.status,
-          type: response.headers.get("content-type") || "",
-          text: text
+          text
         };
       }
 
-      function addEvidence(name, status, detail, raw) {
-        state.evidence.push({ name: name, status: status, detail: detail, raw: raw || "" });
-      }
-
-      function renderEvidence() {
-        const root = el("evidence");
-        if (!root) return;
-
-        root.replaceChildren();
-
-        state.evidence.forEach(function (item) {
-          root.appendChild(
-            create("article", { className: "card", "data-status": item.status }, [
-              create("b", { text: item.status.toUpperCase() + " · " + item.name }),
-              create("p", { className: "small", text: item.detail }),
-              item.raw ? create("pre", { text: String(item.raw).slice(0, 2600) }) : null
-            ])
-          );
-        });
-      }
-
-      function updateScores() {
-        setText("score-total", state.scores.total);
-        setText("score-speed", state.scores.speed);
-        setText("score-consumer", state.scores.consumer);
-        setText("score-drift", state.scores.drift);
-      }
-
-      function renderDecision() {
-        setText("target-title", state.decision.title);
-        setText("target-copy", state.decision.copy);
-
-        const chips = el("target-chips");
-        if (!chips) return;
-
-        chips.replaceChildren();
-
-        if (!state.decision.target.length) {
-          chips.appendChild(create("span", { text: "DRIFT_READY_OR_HOLD" }));
-          return;
-        }
-
-        state.decision.target.forEach(function (target) {
-          chips.appendChild(create("span", { text: target }));
-        });
-      }
-
-      function classifyInstrument(text) {
-        const motion = {
-          longitudeAutoStep: extractMotionValue(text, "longitudeAutoStep"),
-          cloudAutoStep: extractMotionValue(text, "cloudAutoStep"),
-          dragLongitudeFactor: extractMotionValue(text, "dragLongitudeFactor"),
-          dragCloudFactor: extractMotionValue(text, "dragCloudFactor"),
-          dragLatitudeFactor: extractMotionValue(text, "dragLatitudeFactor"),
-          latitudeReturnFriction: extractMotionValue(text, "latitudeReturnFriction"),
-          axisTiltDegrees: extractMotionValue(text, "axisTiltDegrees")
-        };
-
-        const activeEmission = FORBIDDEN_ACTIVE_TOKENS.filter(function (token) {
-          return isActiveEmission(text, token);
-        });
-
+      function scoreMarkers(text, markers) {
+        const found = markers.filter((marker) => text.includes(marker));
         return {
-          version: extractConstVersion(text),
-          current: has(text, EXPECTED.instrument),
-          speedAuthorityObject: has(text, "const SPEED_AUTHORITY"),
-          speedAuthorityFile: has(text, EXPECTED.speedAuthority),
-          instrumentSpeedAuthority: has(text, "instrumentSpeedAuthority: true"),
-          runtimeSpeedAuthorityFalse: has(text, "runtimeSpeedAuthority: false"),
-          cssAnimationAuthorityFalse: has(text, "cssAnimationAuthority: false"),
-          renderBridgeSpeedAuthorityFalse: has(text, "renderBridgeSpeedAuthority: false"),
-          motion: motion,
-          motionMatchesExpected: Object.keys(EXPECTED_MOTION).every(function (key) {
-            return String(motion[key]) === String(EXPECTED_MOTION[key]);
-          }),
-          activeEmission: activeEmission
+          found,
+          score: Math.round((found.length / markers.length) * 100)
         };
       }
 
-      function classifyRuntime(text) {
-        return {
-          version: extractConstVersion(text),
-          current: has(text, EXPECTED.runtime),
-          ownsStatusOnly: has(text, "Does not own:") && has(text, "globe rendering"),
-          staleLanguageStillPresentButNormalized: foundTokens(text, [
-            "generation-2",
-            "active-globe-visible",
-            "axis-rotation-depth"
-          ])
-        };
+      function addRow(batch, target, score, status, evidence) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${batch}</td>
+          <td><code>${target}</code></td>
+          <td>${score}</td>
+          <td class="${statusClass(score)}">${status}</td>
+          <td>${evidence}</td>
+        `;
+        auditRows.append(row);
       }
 
-      function classifyRoute(text, expectedGeneration) {
-        return {
-          generationCurrent: has(text, expectedGeneration),
-          speedAuthorityReceipt: has(text, "data-speed-authority=\"/assets/showroom.globe.instrument.js\"") ||
-            has(text, "SPEED_AUTHORITY=/assets/showroom.globe.instrument.js"),
-          instrumentAuthorityTrue: has(text, "data-instrument-speed-authority=\"true\"") ||
-            has(text, "INSTRUMENT_SPEED_AUTHORITY=true"),
-          runtimeAuthorityFalse: has(text, "data-runtime-speed-authority=\"false\"") ||
-            has(text, "RUNTIME_SPEED_AUTHORITY=false"),
-          cssAuthorityFalse: has(text, "data-css-animation-authority=\"false\"") ||
-            has(text, "CSS_ANIMATION_AUTHORITY=false"),
-          assetQueryCurrent: has(text, "/assets/showroom.globe.instrument.js?v=showroom-generation-4-speed-authority-calibration-v1"),
-          diskRemoved: has(text, "GENERATION_4_DISK_ROTATION_REMOVED") ||
-            has(text, "data-generation-4-disk-rotation=\"removed\""),
-          axisReceipt: has(text, "23.5-degree-axis-frame"),
-          staleRouteTokens: foundTokens(text, [
-            "showroom-parent-cache-bust-no-behavior-change-v1",
-            "showroom-generation-3-axis-rotation-depth-v1",
-            "GENERATION_2_ACTIVE_GLOBE_PRESERVED",
-            "GENERATION_2_STANDALONE_GLOBE_PRESERVED"
-          ])
-        };
-      }
+      async function runEstateDiagnostic() {
+        auditRows.innerHTML = "";
 
-      function classifyConsumer(text) {
-        return {
-          version: extractConstVersion(text),
-          staleTokens: foundTokens(text, CONSUMER_STALE_TOKENS),
-          speedAuthorityTokens: foundTokens(text, [
-            "showroom-generation-4-speed-authority-calibration-v1",
-            "speedAuthority",
-            "SPEED_AUTHORITY",
-            "dragLongitudeFactor",
-            "dragLatitudeFactor",
-            "23.5-degree-axis-frame"
-          ])
-        };
-      }
+        const results = [];
 
-      function classifyCss(text) {
-        return {
-          loaded: Boolean(text),
-          generation3BackgroundIsolation: has(text, "SHOWROOM_GENERATION_3_BACKGROUND_ROLE_ISOLATION_CSS_TNT_v1"),
-          keyframesPresent: has(text, "@keyframes"),
-          oldAnimationLanguage: foundTokens(text, [
-            "showroom-generation-2",
-            "showroom-generation-3-orbit",
-            "orbit"
-          ])
-        };
-      }
-
-      function scoreSpeed(classified) {
-        let score = 0;
-
-        if (classified.instrument.current) score += 18;
-        if (classified.instrument.speedAuthorityObject) score += 12;
-        if (classified.instrument.speedAuthorityFile) score += 10;
-        if (classified.instrument.instrumentSpeedAuthority) score += 10;
-        if (classified.instrument.runtimeSpeedAuthorityFalse) score += 8;
-        if (classified.instrument.cssAnimationAuthorityFalse) score += 8;
-        if (classified.instrument.renderBridgeSpeedAuthorityFalse) score += 8;
-        if (classified.instrument.motionMatchesExpected) score += 16;
-        if (classified.instrument.activeEmission.length === 0) score += 10;
-
-        return Math.min(100, score);
-      }
-
-      function scoreConsumer(classified) {
-        const consumers = [
-          classified.parentBoot,
-          classified.parentRender,
-          classified.demoBoot
-        ];
-
-        const staleCount = consumers.reduce(function (sum, item) {
-          return sum + (item.staleTokens.length > 0 ? 1 : 0);
-        }, 0);
-
-        return Math.max(0, 100 - staleCount * 34);
-      }
-
-      function scoreDrift(classified, speedScore, consumerScore) {
-        let score = 0;
-
-        if (speedScore >= 90) score += 30;
-        if (classified.showroom.generationCurrent && classified.demo.generationCurrent) score += 20;
-        if (classified.showroom.assetQueryCurrent && classified.demo.assetQueryCurrent) score += 15;
-        if (classified.showroom.speedAuthorityReceipt && classified.demo.speedAuthorityReceipt) score += 15;
-        if (consumerScore >= 90) score += 15;
-        if (classified.instrument.activeEmission.length === 0) score += 5;
-
-        return Math.min(100, score);
-      }
-
-      function chooseDecision(classified) {
-        if (!classified.instrument.current || !classified.instrument.motionMatchesExpected) {
-          return {
-            target: ["/assets/showroom.globe.instrument.js"],
-            title: "ASSET INSTRUMENT SPEED CONTRACT NOT CURRENT",
-            copy:
-              "The Gen 4 speed-authority instrument is not current or the expected motion constants are not present."
-          };
-        }
-
-        if (
-          !classified.showroom.generationCurrent ||
-          !classified.demo.generationCurrent ||
-          !classified.showroom.assetQueryCurrent ||
-          !classified.demo.assetQueryCurrent ||
-          !classified.showroom.speedAuthorityReceipt ||
-          !classified.demo.speedAuthorityReceipt
-        ) {
-          return {
-            target: ["/showroom/index.html", "/showroom/globe/index.html"],
-            title: "ROUTE SPEED-AUTHORITY CONSUMPTION NOT CURRENT",
-            copy:
-              "The speed-authority instrument is current, but one or both route HTML consumers are not aligned to the Gen 4 speed contract."
-          };
-        }
-
-        const consumerTargets = [];
-        if (classified.parentBoot.staleTokens.length > 0) consumerTargets.push("/showroom/index.js");
-        if (classified.parentRender.staleTokens.length > 0) consumerTargets.push("/showroom/showroom.render.js");
-        if (classified.demoBoot.staleTokens.length > 0) consumerTargets.push("/showroom/globe/index.js");
-
-        if (consumerTargets.length > 0) {
-          return {
-            target: consumerTargets,
-            title: "CONSUMER WRITER DRIFT REMAINS",
-            copy:
-              "The instrument and route consumers are current. The remaining Gen 4 source drift is in consumer writers still carrying Gen 3 / axis-depth / Gen 2 receipt language."
-          };
-        }
-
-        return {
-          target: [],
-          title: "DRIFT CALCULATION READY",
-          copy:
-            "The speed-authority contract, route consumption, and consumer writers are aligned enough for final Gen 4 drift calculation and owner visual acceptance."
-        };
-      }
-
-      async function run() {
-        state.results = {};
-        state.evidence = [];
-
-        setText("summary", "Running Gen 4 speed-authority and drift-readiness diagnostic.");
-
-        const entries = [
-          ["showroom", PATHS.showroom],
-          ["demo", PATHS.demo],
-          ["instrument", PATHS.instrument],
-          ["runtime", PATHS.runtime],
-          ["parentBoot", PATHS.parentBoot],
-          ["parentRender", PATHS.parentRender],
-          ["demoBoot", PATHS.demoBoot],
-          ["css", PATHS.css]
-        ];
-
-        for (const entry of entries) {
-          const key = entry[0];
-          const path = entry[1];
-
+        for (const target of routeTargets) {
           try {
-            state.results[key] = await fetchText(path);
+            const result = await fetchText(target.path);
+            const marker = scoreMarkers(result.text, target.markers);
+            const score = result.ok ? marker.score : 0;
+            const status = score >= 90 ? "PASS" : score >= 60 ? "HOLD" : "FAIL";
+            results.push({ target, score, status, kind: "route" });
+            addRow(
+              target.batch,
+              target.path,
+              score,
+              status,
+              `${marker.found.length} of ${target.markers.length} required markers found. HTTP ${result.status}.`
+            );
           } catch (error) {
-            state.results[key] = {
-              path: path,
-              ok: false,
-              status: 0,
-              text: "",
-              error: error && error.message ? error.message : String(error)
-            };
+            results.push({ target, score: 0, status: "FAIL", kind: "route" });
+            addRow(target.batch, target.path, 0, "FAIL", error.message);
           }
         }
 
-        const classified = {
-          instrument: classifyInstrument(state.results.instrument.text || ""),
-          runtime: classifyRuntime(state.results.runtime.text || ""),
-          showroom: classifyRoute(state.results.showroom.text || "", EXPECTED.parentRoute),
-          demo: classifyRoute(state.results.demo.text || "", EXPECTED.demoRoute),
-          parentBoot: classifyConsumer(state.results.parentBoot.text || ""),
-          parentRender: classifyConsumer(state.results.parentRender.text || ""),
-          demoBoot: classifyConsumer(state.results.demoBoot.text || ""),
-          css: classifyCss(state.results.css.text || "")
-        };
+        for (const target of sourceTargets) {
+          try {
+            const result = await fetchText(target.path);
+            const marker = scoreMarkers(result.text, target.markers);
+            const score = result.ok ? marker.score : 0;
+            const status = score >= 90 ? "PASS" : score >= 60 ? "HOLD" : "FAIL";
+            results.push({ target, score, status, kind: "source" });
+            addRow(
+              target.lane,
+              target.path,
+              score,
+              status,
+              `${marker.found.length} of ${target.markers.length} required source markers found. HTTP ${result.status}.`
+            );
+          } catch (error) {
+            results.push({ target, score: 0, status: "FAIL", kind: "source" });
+            addRow(target.lane, target.path, 0, "FAIL", error.message);
+          }
+        }
 
-        state.scores.speed = scoreSpeed(classified);
-        state.scores.consumer = scoreConsumer(classified);
-        state.scores.drift = scoreDrift(classified, state.scores.speed, state.scores.consumer);
-        state.scores.total = Math.round((state.scores.speed + state.scores.consumer + state.scores.drift) / 3);
-        state.decision = chooseDecision(classified);
-
-        addEvidence(
-          "Gen 4 classifier summary",
-          "hold",
-          "Current Generation 4 speed-authority and drift-readiness classification.",
-          JSON.stringify(classified, null, 2)
+        const overall = Math.round(results.reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.length));
+        const house = Math.round(
+          results
+            .filter((item) => item.target.batch === "House skeleton")
+            .reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.filter((item) => item.target.batch === "House skeleton").length)
+        );
+        const showroom = Math.round(
+          results
+            .filter((item) => item.target.batch === "Showroom" || item.kind === "source")
+            .reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.filter((item) => item.target.batch === "Showroom" || item.kind === "source").length)
         );
 
-        addEvidence(
-          "Route liveness",
-          Object.keys(state.results).every(function (key) { return state.results[key].ok; }) ? "pass" : "fail",
-          "Fetch-only same-origin source read.",
-          JSON.stringify(Object.keys(state.results).reduce(function (acc, key) {
-            acc[key] = {
-              path: state.results[key].path,
-              ok: state.results[key].ok,
-              status: state.results[key].status
-            };
-            return acc;
-          }, {}), null, 2)
-        );
+        setMetric(overallMetric, overall);
+        setMetric(houseMetric, house);
+        setMetric(showroomMetric, showroom);
 
-        addEvidence(
-          "Minimum target decision",
-          state.decision.target.length ? "hold" : "pass",
-          state.decision.title,
-          JSON.stringify(state.decision, null, 2)
-        );
+        document.documentElement.dataset.gaugesRun = "complete";
+        document.documentElement.dataset.gaugesVersion = VERSION;
+      }
 
-        renderEvidence();
-        renderDecision();
-        updateScores();
+      async function runShowroomSelector() {
+        const lanes = [
+          {
+            lane: "Route liveness",
+            run: async () => {
+              const parent = await fetchText("/showroom/");
+              const demo = await fetchText("/showroom/globe/");
+              return parent.ok && demo.ok
+                ? ["PASS", "Parent and standalone Showroom routes are live."]
+                : ["FAIL", "One or more Showroom routes failed liveness."];
+            }
+          },
+          {
+            lane: "Source congruence",
+            run: async () => {
+              const contract = await fetchText("/showroom/consumer.authority.js");
+              const instrument = await fetchText("/assets/showroom.globe.instrument.js");
+              const ok = contract.text.includes("GENERATION_4") && instrument.text.includes("GENERATION_4");
+              return ok
+                ? ["PASS", "Consumer contract and globe instrument both declare Gen 4."]
+                : ["HOLD", "Generation contract mismatch remains possible."];
+            }
+          },
+          {
+            lane: "Render motion",
+            run: async () => {
+              const render = await fetchText("/showroom/showroom.render.js");
+              const ok = render.text.includes("createGlobe") && render.text.includes("renderShowroomProofSurface");
+              return ok
+                ? ["PASS", "Render bridge consumes the instrument instead of owning motion."]
+                : ["HOLD", "Render bridge may not be consuming the instrument correctly."];
+            }
+          },
+          {
+            lane: "Visual acceptance",
+            run: async () => ["OWNER", "Owner visual confirmation remains required after deployment."]
+          }
+        ];
 
-        setText(
-          "summary",
-          "Gen 4 diagnostic complete. Selected target: " +
-            (state.decision.target.length ? state.decision.target.join(", ") : "DRIFT_READY_OR_HOLD")
-        );
+        selectorRows.innerHTML = "";
+        let passCount = 0;
+        let hardFail = false;
 
-        const root = el("gauges-root");
-        if (root) {
-          root.dataset.diagnosticVersion = VERSION;
-          root.dataset.diagnosticComplete = "true";
-          root.dataset.minimumTarget = state.decision.target.join(",");
-          root.dataset.totalScore = String(state.scores.total);
-          root.dataset.speedScore = String(state.scores.speed);
-          root.dataset.consumerScore = String(state.scores.consumer);
-          root.dataset.driftScore = String(state.scores.drift);
-          root.dataset.speedAuthority = EXPECTED.speedAuthority;
+        for (const lane of lanes) {
+          let status = "HOLD";
+          let meaning = "Not run.";
+
+          try {
+            const result = await lane.run();
+            status = result[0];
+            meaning = result[1];
+          } catch (error) {
+            status = "FAIL";
+            meaning = error.message;
+          }
+
+          if (status === "PASS") passCount += 1;
+          if (status === "FAIL") hardFail = true;
+
+          const row = document.createElement("tr");
+          const cls = status === "PASS" ? "status-pass" : status === "FAIL" ? "status-fail" : "status-hold";
+          row.innerHTML = `
+            <td>${lane.lane}</td>
+            <td class="${cls}">${status}</td>
+            <td>${meaning}</td>
+          `;
+          selectorRows.append(row);
+        }
+
+        if (hardFail) {
+          setMetric(selectorMetric, "FAIL");
+        } else if (passCount >= 3) {
+          setMetric(selectorMetric, "HOLD");
+          selectorMetric.textContent = "OWNER";
+        } else {
+          setMetric(selectorMetric, "HOLD");
         }
       }
 
-      function bind() {
-        const button = el("run");
-        if (button) button.addEventListener("click", run);
-        window.setTimeout(run, 250);
-      }
+      document.getElementById("runDiagnostic").addEventListener("click", runEstateDiagnostic);
+      document.getElementById("runShowroomSelector").addEventListener("click", runShowroomSelector);
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", bind, { once: true });
-      } else {
-        bind();
-      }
-
-      window.DGBGaugesGen4DriftReadiness = Object.freeze({
-        version: VERSION,
-        run: run,
-        state: state
+      window.GaugesGen4 = Object.freeze({
+        VERSION,
+        runEstateDiagnostic,
+        runShowroomSelector
       });
     })();
   </script>

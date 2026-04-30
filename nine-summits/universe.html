@@ -1,25 +1,38 @@
 <!doctype html>
-<html lang="en" data-page="nine-summits-universe" data-route="/nine-summits-universe/">
+<html
+  lang="en"
+  data-page="nine-summits-universe"
+  data-route="/nine-summits-universe/"
+  data-generation="nine-summits-universe-route-creation-tnt-v2"
+  data-planet="NINE_SUMMITS_UNIVERSE"
+  data-demo-planet="planet-1"
+  data-core="floating-magnetic-half-natural-half-man-made"
+  data-map-protocol="tiktok"
+  data-population-law="archetype-personality"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Nine Summits Universe · Diamond Gate Bridge</title>
-  <meta name="description" content="Nine Summits Universe is Planet 1: a seven-landmass coherence world restored through a floating magnetic core and governed by the TikTok map protocol.">
+  <title>Nine Summits Universe · Demo Planet · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Nine Summits Universe is Planet 1: a seven-landmass coherence world restored through a floating magnetic core and governed by archetype-personality population, coherence access, and the TikTok map protocol."
+  >
 
   <style>
     :root {
       --bg: #03050a;
       --panel: rgba(9, 15, 25, 0.94);
       --panel2: rgba(14, 24, 38, 0.84);
-      --line: rgba(168, 199, 255, 0.2);
+      --line: rgba(168, 199, 255, 0.22);
       --gold-line: rgba(242, 199, 111, 0.36);
       --text: #f4f7ff;
       --muted: #b8c2d6;
-      --soft: rgba(244, 247, 255, 0.76);
+      --soft: rgba(244, 247, 255, 0.78);
       --gold: #f2c76f;
       --green: #8ff0c6;
       --blue: #91bdff;
-      --shadow: rgba(0, 0, 0, 0.54);
+      --shadow: rgba(0, 0, 0, 0.56);
     }
 
     * { box-sizing: border-box; }
@@ -34,7 +47,7 @@
         radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
         radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
         radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
-        linear-gradient(180deg, var(--bg) 0%, #07101d 52%, #020308 100%);
+        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
@@ -106,7 +119,7 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.055);
       color: var(--text);
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .nav a:hover,
@@ -160,6 +173,7 @@
     }
 
     .kicker.gold { color: var(--gold); }
+    .kicker.blue { color: var(--blue); }
 
     h1 {
       margin: 0;
@@ -226,7 +240,7 @@
       margin-top: 8px;
       color: var(--muted);
       line-height: 1.35;
-      font-weight: 700;
+      font-weight: 760;
     }
 
     .grid {
@@ -342,6 +356,38 @@
       line-height: 1.48;
     }
 
+    .az-grid {
+      display: grid;
+      grid-template-columns: repeat(13, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .az-chip {
+      display: grid;
+      gap: 4px;
+      align-content: center;
+      min-height: 68px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 16px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.045);
+      text-align: center;
+    }
+
+    .az-chip strong {
+      color: var(--gold);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .az-chip span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
     .quote {
       color: var(--text);
       font-size: clamp(1.7rem, 5vw, 3.4rem);
@@ -356,7 +402,13 @@
       .stats,
       .grid.two,
       .grid.three,
-      .grid.four { grid-template-columns: 1fr; }
+      .grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .az-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
 
       .hero { min-height: 460px; }
     }
@@ -374,7 +426,13 @@
       }
 
       .row,
-      .flow-step { grid-template-columns: 1fr; }
+      .flow-step {
+        grid-template-columns: 1fr;
+      }
+
+      .az-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
@@ -386,8 +444,9 @@
     id="universe-main"
     class="page"
     data-route="/nine-summits-universe/"
-    data-planet="nine-summits-universe"
+    data-planet="NINE_SUMMITS_UNIVERSE"
     data-planet-number="1"
+    data-demo-planet="true"
     data-core="floating-magnetic-half-natural-half-man-made"
     data-landmasses="7"
     data-world-age="4x-earth"
@@ -412,7 +471,7 @@
     </nav>
 
     <section class="hero" aria-labelledby="universe-title">
-      <p class="kicker">Planet 1 · Nine Summits Universe</p>
+      <p class="kicker">Planet 1 · NINE_SUMMITS_UNIVERSE</p>
       <h1 id="universe-title">The demo planet is becoming a world.</h1>
 
       <p class="lead">
@@ -739,6 +798,35 @@
           <p>The map audits every node back into branches, pressure pairs, sectors, directions, and finally one coherent world.</p>
         </article>
       </div>
+
+      <div class="az-grid" aria-label="A to Z semantic overlay">
+        <div class="az-chip"><strong>A</strong><span>Authority</span></div>
+        <div class="az-chip"><strong>B</strong><span>Boundary</span></div>
+        <div class="az-chip"><strong>C</strong><span>Coherence</span></div>
+        <div class="az-chip"><strong>D</strong><span>Direction</span></div>
+        <div class="az-chip"><strong>E</strong><span>Entry</span></div>
+        <div class="az-chip"><strong>F</strong><span>Friction</span></div>
+        <div class="az-chip"><strong>G</strong><span>Gate</span></div>
+        <div class="az-chip"><strong>H</strong><span>Home</span></div>
+        <div class="az-chip"><strong>I</strong><span>Identity</span></div>
+        <div class="az-chip"><strong>J</strong><span>Judgment</span></div>
+        <div class="az-chip"><strong>K</strong><span>Key</span></div>
+        <div class="az-chip"><strong>L</strong><span>Law</span></div>
+        <div class="az-chip"><strong>M</strong><span>Motion</span></div>
+        <div class="az-chip"><strong>N</strong><span>Nature</span></div>
+        <div class="az-chip"><strong>O</strong><span>Origin</span></div>
+        <div class="az-chip"><strong>P</strong><span>Population</span></div>
+        <div class="az-chip"><strong>Q</strong><span>Quest</span></div>
+        <div class="az-chip"><strong>R</strong><span>Region</span></div>
+        <div class="az-chip"><strong>S</strong><span>Sector</span></div>
+        <div class="az-chip"><strong>T</strong><span>Terrain</span></div>
+        <div class="az-chip"><strong>U</strong><span>Utility</span></div>
+        <div class="az-chip"><strong>V</strong><span>Value</span></div>
+        <div class="az-chip"><strong>W</strong><span>Water</span></div>
+        <div class="az-chip"><strong>X</strong><span>Extreme</span></div>
+        <div class="az-chip"><strong>Y</strong><span>Yield</span></div>
+        <div class="az-chip"><strong>Z</strong><span>Zenith</span></div>
+      </div>
     </section>
 
     <section class="section panel" aria-labelledby="route-title">
@@ -776,7 +864,8 @@
     </section>
 
     <section class="receipt" aria-hidden="true">
-      NINE_SUMMITS_UNIVERSE_ROUTE_CREATION_TNT_v1
+      NINE_SUMMITS_UNIVERSE_ROUTE_CREATION_TNT_v2
+      NINE_SUMMITS_UNIVERSE
       route=/nine-summits-universe/
       page-purpose=world-explanation-and-planetary-map-route
       route-created=true
@@ -798,12 +887,15 @@
       terrain=extreme-beautiful-coherence-demanding
       materials=diamond-opal-marble-slate-granite-gold-platinum-silver-copper-iron-lead
       population=archetype-personality-capacity
+      archetype-personality=true
       person=one-admissible-archetype-personality-configuration
       access=coherence-correlated
       country-structure=4-regions-per-country
       region-structure=4-metroplexes-per-region
       intercity-construct=16-sectors-4-districts-4-nodes
       intercity-total=256
+      map-protocol=tiktok
+      tiktok=true
       tiktok-forward=1-4-16-32-64-256
       tiktok-inverse=256-64-32-16-4-1
       alphabetic-overlay=A-Z

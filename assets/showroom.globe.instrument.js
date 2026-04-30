@@ -1,485 +1,464 @@
 /*
-  SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2
+  SHOWROOM_GLOBE_INSTRUMENT_DEMO_RETIRE_AND_PLANET_ONE_DELEGATE_TNT_v1
   OWNER=SEAN
   TARGET=/assets/showroom.globe.instrument.js
-  PURPOSE=RENEW_SHOWROOM_GLOBE_INSTRUMENT_CONTRACT_AND_FORCE_VISIBLE_DEMO_PLANET_OUTPUT
-  EXPECTED_GLOBAL=window.DGBShowroomGlobeInstrument
-  EXPECTED_API=renderGlobe
-  ROUTE_OWNER=/showroom/globe/
-  VISUAL_OBJECT=DEMO_PLANET
+
+  PURPOSE=
+  RETIRE_LEGACY_DEMO_PLANET_RENDERING
+  PRESERVE_BACKWARD_COMPATIBILITY_FOR window.DGBShowroomGlobeInstrument
+  PRESERVE EXPECTED_API=renderGlobe
+  DELEGATE ANY EXPLICIT GLOBE_RENDER_REQUEST TO /world/render/planet-one.render.js
+  PREVENT_LEGACY_AUTOBOOT_TIMEOUTS_FROM_CREATING_LAG
+
+  LEGACY_RETIRED=
+  SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2
+
+  CURRENT_AUTHORITY=
+  /world/render/planet-one.render.js
+
+  ROUTE_OWNER=
+  /showroom/globe/
+
+  VISUAL_OBJECT=
+  PLANET_1
+
+  DEMO_PLANET_STATUS=
+  RETIRED
+
+  TREE_STATUS=
+  DEMO_MODE
+
+  HARD_RULES=
+  NO_AUTOBOOT_ON_PARENT_SHOWROOM
+  NO_TIMEOUT_RENDER_RETRIES
+  NO_DEMO_PLANET_DRAWING
+  NO_DUPLICATE_RENDER_LOOP
+  NO_PUBLIC_RECEIPT_TEXT
 */
 
-(function () {
+(function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  var VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2";
-  var NS = "http://www.w3.org/2000/svg";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_RETIRE_AND_PLANET_ONE_DELEGATE_TNT_v1";
+  const LEGACY_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2";
+  const EXPECTED_GLOBAL = "window.DGBShowroomGlobeInstrument";
+  const EXPECTED_API = "renderGlobe";
+  const ROUTE_OWNER = "/showroom/globe/";
+  const PLANET_ONE_RENDERER = "/world/render/planet-one.render.js";
 
-  function markDocument() {
-    document.documentElement.dataset.showroomGlobeInstrument = VERSION;
-    document.documentElement.dataset.dgbShowroomGlobeInstrument = "active";
-    document.documentElement.dataset.demoPlanetVisualContract = "visible";
+  let rendererPromise = null;
+  let lastMount = null;
+  let lastHandle = null;
+
+  function now() {
+    return new Date().toISOString();
   }
 
-  function removeFallback() {
-    var fallback = document.getElementById("demo-planet-fallback");
-    if (!fallback) return;
+  function routePath() {
+    const raw = global.location && global.location.pathname ? global.location.pathname : "/";
+    return raw.endsWith("/") ? raw : raw + "/";
+  }
+
+  function markDocument() {
+    const root = document.documentElement;
+
+    root.dataset.showroomGlobeInstrument = VERSION;
+    root.dataset.dgbShowroomGlobeInstrument = "delegation-only";
+    root.dataset.showroomGlobeInstrumentLegacyRetired = LEGACY_VERSION;
+    root.dataset.demoPlanetVisualContract = "retired";
+    root.dataset.demoPlanetStatus = "retired";
+    root.dataset.visualObject = "planet-1";
+    root.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
+    root.dataset.planetOneDelegateActive = "true";
+    root.dataset.noLegacyAutoboot = "true";
+    root.dataset.noTimeoutRenderRetries = "true";
+  }
+
+  function publish(type, payload) {
+    const detail = {
+      type,
+      version: VERSION,
+      legacyRetired: LEGACY_VERSION,
+      expectedGlobal: EXPECTED_GLOBAL,
+      expectedApi: EXPECTED_API,
+      routeOwner: ROUTE_OWNER,
+      planetOneRenderer: PLANET_ONE_RENDERER,
+      payload: payload || {},
+      timestamp: now()
+    };
+
+    global.dispatchEvent(
+      new CustomEvent("showroom:globe-instrument", {
+        detail
+      })
+    );
+
+    return detail;
+  }
+
+  function normalizeMount(mount) {
+    if (typeof mount === "string") {
+      return document.querySelector(mount);
+    }
+
+    return mount || null;
+  }
+
+  function hideLegacyFallback() {
+    const fallback = document.getElementById("demo-planet-fallback");
+
+    if (!fallback) return false;
 
     fallback.dataset.active = "false";
-    fallback.dataset.reason = "instrument-rendered-visible-demo-planet";
+    fallback.dataset.reason = "demo-planet-retired-planet-one-delegation-active";
+    fallback.hidden = true;
+    fallback.setAttribute("aria-hidden", "true");
     fallback.style.display = "none";
     fallback.style.visibility = "hidden";
     fallback.style.opacity = "0";
+
+    return true;
   }
 
-  function createEl(tag, className, text) {
-    var el = document.createElement(tag);
-    if (className) el.className = className;
-    if (typeof text === "string") el.textContent = text;
-    return el;
+  function loadPlanetOneRenderer() {
+    if (
+      global.DGBPlanetOneRenderTeam &&
+      typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+    ) {
+      return Promise.resolve(global.DGBPlanetOneRenderTeam);
+    }
+
+    if (rendererPromise) {
+      return rendererPromise;
+    }
+
+    rendererPromise = new Promise(function loadRenderer(resolve, reject) {
+      const existing = Array.from(document.scripts).find(function findScript(script) {
+        if (!script.src) return false;
+        return new URL(script.src, global.location.origin).pathname === PLANET_ONE_RENDERER;
+      });
+
+      if (existing) {
+        existing.addEventListener(
+          "load",
+          function loadedExisting() {
+            if (
+              global.DGBPlanetOneRenderTeam &&
+              typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+            ) {
+              resolve(global.DGBPlanetOneRenderTeam);
+              return;
+            }
+
+            reject(new Error("Planet One renderer loaded, but API is unavailable."));
+          },
+          { once: true }
+        );
+
+        existing.addEventListener(
+          "error",
+          function existingFailed() {
+            reject(new Error("Existing Planet One renderer script failed."));
+          },
+          { once: true }
+        );
+
+        if (
+          global.DGBPlanetOneRenderTeam &&
+          typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+        ) {
+          resolve(global.DGBPlanetOneRenderTeam);
+        }
+
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = PLANET_ONE_RENDERER;
+      script.async = true;
+      script.dataset.loadedBy = VERSION;
+
+      script.onload = function onLoad() {
+        if (
+          global.DGBPlanetOneRenderTeam &&
+          typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+        ) {
+          publish("planet_one_renderer_loaded", {
+            renderer: PLANET_ONE_RENDERER,
+            loadedBy: VERSION
+          });
+          resolve(global.DGBPlanetOneRenderTeam);
+          return;
+        }
+
+        reject(new Error("Planet One renderer script loaded, but API is unavailable."));
+      };
+
+      script.onerror = function onError() {
+        reject(new Error("Planet One renderer failed to load."));
+      };
+
+      document.body.appendChild(script);
+    });
+
+    return rendererPromise;
   }
 
-  function svgEl(tag, attrs) {
-    var el = document.createElementNS(NS, tag);
-    Object.keys(attrs || {}).forEach(function (key) {
-      el.setAttribute(key, attrs[key]);
-    });
-    return el;
-  }
+  function renderWaiting(mount, message) {
+    if (!mount) return;
 
-  function injectStyles() {
-    if (document.getElementById("dgb-demo-planet-visible-style-v2")) return;
-
-    var style = document.createElement("style");
-    style.id = "dgb-demo-planet-visible-style-v2";
-    style.textContent = [
-      ".dgb-demo-planet-shell{",
-      "position:relative;",
-      "z-index:10;",
-      "display:grid;",
-      "justify-items:center;",
-      "align-content:center;",
-      "gap:18px;",
-      "width:100%;",
-      "min-height:440px;",
-      "padding:18px;",
-      "}",
-      ".dgb-demo-planet-card{",
-      "position:relative;",
-      "display:grid;",
-      "justify-items:center;",
-      "gap:14px;",
-      "width:min(430px,82vw);",
-      "padding:18px;",
-      "border:1px solid rgba(242,199,111,.38);",
-      "border-radius:28px;",
-      "background:radial-gradient(circle at 50% 12%,rgba(145,189,255,.16),transparent 16rem),rgba(3,7,14,.72);",
-      "box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 60px rgba(145,189,255,.12);",
-      "}",
-      ".dgb-demo-planet-svg{",
-      "display:block;",
-      "width:min(360px,72vw);",
-      "height:auto;",
-      "max-width:100%;",
-      "filter:drop-shadow(0 24px 42px rgba(0,0,0,.68));",
-      "}",
-      ".dgb-demo-planet-caption{",
-      "max-width:720px;",
-      "color:rgba(244,247,255,.86);",
-      "font-size:.78rem;",
-      "font-weight:950;",
-      "letter-spacing:.12em;",
-      "line-height:1.35;",
-      "text-align:center;",
-      "text-transform:uppercase;",
-      "}",
-      ".dgb-demo-planet-telemetry{",
-      "display:flex;",
-      "flex-wrap:wrap;",
-      "justify-content:center;",
-      "gap:6px;",
-      "max-width:820px;",
-      "}",
-      ".dgb-demo-planet-telemetry span{",
-      "border:1px solid rgba(168,199,255,.18);",
-      "border-radius:999px;",
-      "padding:5px 8px;",
-      "background:rgba(255,255,255,.05);",
-      "color:rgba(244,247,255,.74);",
-      "font-size:.66rem;",
-      "font-weight:850;",
-      "letter-spacing:.04em;",
-      "text-transform:uppercase;",
-      "}",
-      ".dgb-demo-planet-mapkey{",
-      "display:grid;",
-      "grid-template-columns:repeat(2,minmax(0,1fr));",
-      "gap:8px;",
-      "width:min(620px,100%);",
-      "}",
-      ".dgb-demo-planet-mapkey div{",
-      "border:1px solid rgba(168,199,255,.14);",
-      "border-radius:14px;",
-      "padding:8px 10px;",
-      "background:rgba(255,255,255,.045);",
-      "color:rgba(244,247,255,.78);",
-      "font-size:.72rem;",
-      "font-weight:800;",
-      "line-height:1.25;",
-      "}",
-      ".dgb-demo-planet-mapkey strong{",
-      "display:block;",
-      "color:#f2c76f;",
-      "font-size:.68rem;",
-      "letter-spacing:.08em;",
-      "text-transform:uppercase;",
-      "margin-bottom:2px;",
-      "}",
-      "@media(max-width:620px){",
-      ".dgb-demo-planet-shell{min-height:390px;padding:10px;}",
-      ".dgb-demo-planet-card{width:100%;padding:12px;}",
-      ".dgb-demo-planet-mapkey{grid-template-columns:1fr;}",
-      "}",
-      "@media(prefers-reduced-motion:no-preference){",
-      ".dgb-demo-planet-svg .planet-surface{animation:dgbPlanetDrift 18s ease-in-out infinite alternate;transform-origin:200px 200px;}",
-      "@keyframes dgbPlanetDrift{from{transform:rotate(-1.8deg) scale(1.01);}to{transform:rotate(1.8deg) scale(1.01);}}",
-      "}"
-    ].join("");
-
-    document.head.appendChild(style);
-  }
-
-  function makeDemoPlanetSvg() {
-    var svg = svgEl("svg", {
-      class: "dgb-demo-planet-svg",
-      viewBox: "0 0 400 400",
-      role: "img",
-      "aria-label": "Visible Demo Planet globe with seven-landmass vertical peeled-globe logic"
-    });
-
-    var defs = svgEl("defs");
-
-    var ocean = svgEl("radialGradient", {
-      id: "dgbOceanGradient",
-      cx: "36%",
-      cy: "26%",
-      r: "76%"
-    });
-    ocean.appendChild(svgEl("stop", { offset: "0%", "stop-color": "#7fb8ff", "stop-opacity": "0.98" }));
-    ocean.appendChild(svgEl("stop", { offset: "44%", "stop-color": "#236aa2", "stop-opacity": "0.98" }));
-    ocean.appendChild(svgEl("stop", { offset: "78%", "stop-color": "#071a34", "stop-opacity": "1" }));
-    ocean.appendChild(svgEl("stop", { offset: "100%", "stop-color": "#020712", "stop-opacity": "1" }));
-
-    var glow = svgEl("radialGradient", {
-      id: "dgbAtmosphereGlow",
-      cx: "35%",
-      cy: "22%",
-      r: "72%"
-    });
-    glow.appendChild(svgEl("stop", { offset: "0%", "stop-color": "#ffffff", "stop-opacity": "0.44" }));
-    glow.appendChild(svgEl("stop", { offset: "28%", "stop-color": "#91bdff", "stop-opacity": "0.18" }));
-    glow.appendChild(svgEl("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": "0" }));
-
-    var shadow = svgEl("radialGradient", {
-      id: "dgbTerminator",
-      cx: "72%",
-      cy: "64%",
-      r: "70%"
-    });
-    shadow.appendChild(svgEl("stop", { offset: "0%", "stop-color": "#000000", "stop-opacity": "0" }));
-    shadow.appendChild(svgEl("stop", { offset: "48%", "stop-color": "#000000", "stop-opacity": "0.16" }));
-    shadow.appendChild(svgEl("stop", { offset: "100%", "stop-color": "#000000", "stop-opacity": "0.72" }));
-
-    var clip = svgEl("clipPath", { id: "dgbPlanetClip" });
-    clip.appendChild(svgEl("circle", { cx: "200", cy: "200", r: "174" }));
-
-    defs.appendChild(ocean);
-    defs.appendChild(glow);
-    defs.appendChild(shadow);
-    defs.appendChild(clip);
-    svg.appendChild(defs);
-
-    svg.appendChild(svgEl("circle", {
-      cx: "200",
-      cy: "200",
-      r: "184",
-      fill: "rgba(145,189,255,.10)"
-    }));
-
-    svg.appendChild(svgEl("circle", {
-      cx: "200",
-      cy: "200",
-      r: "176",
-      fill: "url(#dgbOceanGradient)",
-      stroke: "rgba(242,199,111,.45)",
-      "stroke-width": "2"
-    }));
-
-    var surface = svgEl("g", {
-      class: "planet-surface",
-      "clip-path": "url(#dgbPlanetClip)"
-    });
-
-    surface.appendChild(svgEl("rect", {
-      x: "26",
-      y: "26",
-      width: "348",
-      height: "348",
-      fill: "url(#dgbOceanGradient)"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "200",
-      cy: "57",
-      rx: "70",
-      ry: "23",
-      fill: "#e8f3ff",
-      opacity: "0.96"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "200",
-      cy: "105",
-      rx: "96",
-      ry: "42",
-      fill: "#9fb2b9",
-      opacity: "0.92"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "200",
-      cy: "202",
-      rx: "104",
-      ry: "72",
-      fill: "#5f9c68",
-      opacity: "0.96"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "124",
-      cy: "204",
-      rx: "62",
-      ry: "55",
-      fill: "#6d6961",
-      opacity: "0.94"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "278",
-      cy: "204",
-      rx: "62",
-      ry: "55",
-      fill: "#75a989",
-      opacity: "0.96"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "200",
-      cy: "289",
-      rx: "92",
-      ry: "46",
-      fill: "#7f9b67",
-      opacity: "0.94"
-    }));
-
-    surface.appendChild(svgEl("ellipse", {
-      cx: "200",
-      cy: "344",
-      rx: "72",
-      ry: "22",
-      fill: "#dfe9f2",
-      opacity: "0.96"
-    }));
-
-    surface.appendChild(svgEl("path", {
-      d: "M31 61 C72 94 62 142 32 180 C68 204 72 245 33 308",
-      fill: "none",
-      stroke: "rgba(242,199,111,.28)",
-      "stroke-width": "3",
-      "stroke-linecap": "round"
-    }));
-
-    surface.appendChild(svgEl("path", {
-      d: "M369 61 C328 94 338 142 368 180 C332 204 328 245 367 308",
-      fill: "none",
-      stroke: "rgba(242,199,111,.28)",
-      "stroke-width": "3",
-      "stroke-linecap": "round"
-    }));
-
-    surface.appendChild(svgEl("path", {
-      d: "M200 33 L200 367",
-      fill: "none",
-      stroke: "rgba(242,199,111,.46)",
-      "stroke-width": "2",
-      "stroke-linecap": "round"
-    }));
-
-    surface.appendChild(svgEl("path", {
-      d: "M48 200 H352",
-      fill: "none",
-      stroke: "rgba(255,255,255,.18)",
-      "stroke-width": "1.5",
-      "stroke-linecap": "round"
-    }));
-
-    svg.appendChild(surface);
-
-    svg.appendChild(svgEl("circle", {
-      cx: "200",
-      cy: "200",
-      r: "176",
-      fill: "url(#dgbAtmosphereGlow)"
-    }));
-
-    svg.appendChild(svgEl("circle", {
-      cx: "200",
-      cy: "200",
-      r: "176",
-      fill: "url(#dgbTerminator)"
-    }));
-
-    svg.appendChild(svgEl("circle", {
-      cx: "200",
-      cy: "200",
-      r: "176",
-      fill: "none",
-      stroke: "rgba(145,189,255,.38)",
-      "stroke-width": "3"
-    }));
-
-    svg.appendChild(svgEl("path", {
-      d: "M126 39 C174 95 174 305 126 361",
-      fill: "none",
-      stroke: "rgba(255,255,255,.12)",
-      "stroke-width": "1"
-    }));
-
-    svg.appendChild(svgEl("path", {
-      d: "M274 39 C226 95 226 305 274 361",
-      fill: "none",
-      stroke: "rgba(255,255,255,.12)",
-      "stroke-width": "1"
-    }));
-
-    svg.appendChild(svgEl("path", {
-      d: "M56 134 C132 158 268 158 344 134",
-      fill: "none",
-      stroke: "rgba(255,255,255,.10)",
-      "stroke-width": "1"
-    }));
-
-    svg.appendChild(svgEl("path", {
-      d: "M56 266 C132 242 268 242 344 266",
-      fill: "none",
-      stroke: "rgba(255,255,255,.10)",
-      "stroke-width": "1"
-    }));
-
-    return svg;
+    mount.innerHTML =
+      '<div style="' +
+      [
+        "border:1px solid rgba(242,199,111,.36)",
+        "border-radius:22px",
+        "padding:16px",
+        "background:rgba(242,199,111,.055)",
+        "color:rgba(228,234,246,.78)",
+        "font:800 0.95rem/1.45 system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif",
+        "text-align:center"
+      ].join(";") +
+      '">' +
+      String(message || "Planet 1 renderer is loading.") +
+      "</div>";
   }
 
   function renderGlobe(mount, options) {
-    if (!mount) {
-      throw new Error("renderGlobe requires a mount element.");
-    }
+    const target = normalizeMount(mount);
+    const config = options || {};
 
     markDocument();
-    injectStyles();
-    removeFallback();
+    hideLegacyFallback();
 
-    var config = options || {};
-    var caption = config.caption || "DEMO PLANET · NINE SUMMITS UNIVERSE · VISIBLE INSPECTION";
+    if (!target) {
+      const error = new Error("renderGlobe requires a valid mount element.");
+      publish("render_globe_failed", {
+        reason: error.message
+      });
+      throw error;
+    }
 
-    mount.innerHTML = "";
-    mount.dataset.renderStatus = "mounted";
-    mount.dataset.visibleGlobe = "true";
-    mount.dataset.demoPlanet = "nine-summits-universe";
-    mount.dataset.instrumentVersion = VERSION;
-    mount.dataset.mapType = "vertical-peeled-globe-projection";
-    mount.style.display = "grid";
-    mount.style.placeItems = "center";
-    mount.style.minHeight = "440px";
-    mount.style.width = "100%";
+    target.dataset.showroomGlobeInstrument = VERSION;
+    target.dataset.legacyDemoPlanetRetired = "true";
+    target.dataset.demoPlanetStatus = "retired";
+    target.dataset.visualObject = "planet-1";
+    target.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
+    target.dataset.renderDelegation = "planet-one-render-team";
+    target.dataset.renderGlobeApiPreserved = "true";
 
-    var shell = createEl("div", "dgb-demo-planet-shell");
-    var card = createEl("div", "dgb-demo-planet-card");
+    renderWaiting(target, "Planet 1 renderer is preparing.");
 
-    card.appendChild(makeDemoPlanetSvg());
-    card.appendChild(createEl("div", "dgb-demo-planet-caption", caption));
+    return loadPlanetOneRenderer()
+      .then(function delegateToPlanetOne(api) {
+        if (config.stopExisting !== false && typeof api.stopAll === "function") {
+          api.stopAll();
+        }
 
-    var telemetry = createEl("div", "dgb-demo-planet-telemetry");
-    [
-      "PLANET 1",
-      "7 LANDMASSES",
-      "MAINLAND CENTER",
-      "NORTH/SOUTH CAPS",
-      "OCEAN WRAP SEAM",
-      "COHERENCE ACCESS",
-      VERSION
-    ].forEach(function (label) {
-      telemetry.appendChild(createEl("span", "", label));
+        lastMount = target;
+        lastHandle = api.renderPlanetOne(target, {
+          caption:
+            config.caption ||
+            "Planet 1 · Nine Summits Universe · delegated globe render lane"
+        });
+
+        target.dataset.renderStatus = "mounted";
+        target.dataset.instrumentVersion = VERSION;
+        target.dataset.planetOneRenderActive = "true";
+        target.dataset.opaqueGlobeActive = "true";
+        target.dataset.sunReflectionActive = "true";
+        target.dataset.moonReflectionActive = "true";
+
+        publish("render_globe_delegated_to_planet_one", {
+          mountId: target.id || null,
+          renderer: PLANET_ONE_RENDERER,
+          visualObject: "Planet 1",
+          demoPlanetStatus: "retired"
+        });
+
+        return {
+          ok: true,
+          version: VERSION,
+          legacyRetired: LEGACY_VERSION,
+          renderGlobe: true,
+          delegated: true,
+          visualObject: "Planet 1",
+          demoPlanetStatus: "retired",
+          renderer: PLANET_ONE_RENDERER,
+          handle: lastHandle
+        };
+      })
+      .catch(function renderFailed(error) {
+        target.dataset.renderStatus = "error";
+        target.dataset.renderError = error && error.message ? error.message : "unknown";
+
+        renderWaiting(
+          target,
+          "Planet 1 renderer could not load. Check /world/render/planet-one.render.js."
+        );
+
+        publish("render_globe_delegate_failed", {
+          error: error && error.message ? error.message : "unknown",
+          renderer: PLANET_ONE_RENDERER
+        });
+
+        return {
+          ok: false,
+          version: VERSION,
+          delegated: false,
+          error: error && error.message ? error.message : "unknown"
+        };
+      });
+  }
+
+  function autoBoot(options) {
+    const cfg = options || {};
+    const path = routePath();
+    const allowedByOption = cfg.force === true;
+    const allowedByData =
+      document.documentElement.dataset.allowShowroomGlobeInstrumentAutoboot === "true";
+
+    const allowedRoute = path === ROUTE_OWNER;
+
+    if (!allowedRoute || (!allowedByOption && !allowedByData)) {
+      markDocument();
+
+      publish("legacy_autoboot_blocked", {
+        route: path,
+        routeOwner: ROUTE_OWNER,
+        reason: "legacy-demo-autoboot-retired",
+        force: Boolean(cfg.force),
+        allowedByData
+      });
+
+      return {
+        ok: true,
+        version: VERSION,
+        autoBoot: false,
+        blocked: true,
+        reason: "legacy-demo-autoboot-retired",
+        route: path,
+        routeOwner: ROUTE_OWNER
+      };
+    }
+
+    const mount =
+      normalizeMount(cfg.mount) ||
+      document.getElementById("planet-one-render") ||
+      document.getElementById("demo-planet-mount");
+
+    if (!mount) {
+      publish("autoboot_allowed_but_mount_missing", {
+        route: path
+      });
+
+      return {
+        ok: false,
+        version: VERSION,
+        autoBoot: true,
+        reason: "mount-missing"
+      };
+    }
+
+    return renderGlobe(mount, {
+      caption:
+        cfg.caption ||
+        "Planet 1 · Nine Summits Universe · delegated inspection render lane",
+      stopExisting: cfg.stopExisting
+    });
+  }
+
+  function stop() {
+    if (lastHandle && typeof lastHandle.stop === "function") {
+      lastHandle.stop();
+    } else if (
+      lastHandle &&
+      lastHandle.handle &&
+      typeof lastHandle.handle.stop === "function"
+    ) {
+      lastHandle.handle.stop();
+    } else if (
+      global.DGBPlanetOneRenderTeam &&
+      typeof global.DGBPlanetOneRenderTeam.stopAll === "function"
+    ) {
+      global.DGBPlanetOneRenderTeam.stopAll();
+    }
+
+    publish("delegated_render_stopped", {
+      mountId: lastMount && lastMount.id ? lastMount.id : null
     });
 
-    var key = createEl("div", "dgb-demo-planet-mapkey");
-    [
-      ["Top", "North Pole · upper coherence cap"],
-      ["Center", "Mainland · first-entry civilization"],
-      ["Left", "West Region · trial and proof"],
-      ["Right", "East Region · learning and invention"],
-      ["Lower", "South Region · restoration and roots"],
-      ["Bottom", "South Pole · depth coherence cap"]
-    ].forEach(function (item) {
-      var row = createEl("div");
-      row.appendChild(createEl("strong", "", item[0]));
-      row.appendChild(document.createTextNode(item[1]));
-      key.appendChild(row);
+    return true;
+  }
+
+  function start() {
+    if (lastHandle && typeof lastHandle.start === "function") {
+      lastHandle.start();
+    } else if (
+      lastHandle &&
+      lastHandle.handle &&
+      typeof lastHandle.handle.start === "function"
+    ) {
+      lastHandle.handle.start();
+    } else if (
+      global.DGBPlanetOneRenderTeam &&
+      typeof global.DGBPlanetOneRenderTeam.startAll === "function"
+    ) {
+      global.DGBPlanetOneRenderTeam.startAll();
+    }
+
+    publish("delegated_render_started", {
+      mountId: lastMount && lastMount.id ? lastMount.id : null
     });
 
-    card.appendChild(telemetry);
-    card.appendChild(key);
-    shell.appendChild(card);
-    mount.appendChild(shell);
+    return true;
+  }
 
+  function getStatus() {
     return {
-      ok: true,
       version: VERSION,
-      renderGlobe: true,
-      visibleGlobe: true,
-      demoPlanet: "nine-summits-universe"
+      legacyRetired: LEGACY_VERSION,
+      expectedGlobal: EXPECTED_GLOBAL,
+      expectedApi: EXPECTED_API,
+      routeOwner: ROUTE_OWNER,
+      visualObject: "Planet 1",
+      demoPlanetStatus: "retired",
+      renderer: PLANET_ONE_RENDERER,
+      autoBootDefault: false,
+      timeoutRetries: false,
+      lastMountId: lastMount && lastMount.id ? lastMount.id : null,
+      hasPlanetOneRenderer: Boolean(
+        global.DGBPlanetOneRenderTeam &&
+          typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+      )
     };
   }
 
-  function autoBoot() {
-    var mount = document.getElementById("demo-planet-mount");
-    if (!mount) return;
-    if (mount.dataset.renderStatus === "mounted" && mount.dataset.instrumentVersion === VERSION) return;
-
-    try {
-      renderGlobe(mount, {
-        context: "auto",
-        caption: "DEMO PLANET · OUR UNIVERSE → NINE SUMMITS UNIVERSE"
-      });
-    } catch (error) {
-      document.documentElement.dataset.demoPlanetVisualContract = "render-error";
-      document.documentElement.dataset.demoPlanetRenderError = error && error.message ? error.message : "unknown";
-    }
-  }
-
-  window.DGBShowroomGlobeInstrument = {
+  const api = Object.freeze({
     version: VERSION,
-    renderGlobe: renderGlobe,
-    autoBoot: autoBoot
-  };
+    VERSION,
+    LEGACY_VERSION,
+    ROUTE_OWNER,
+    PLANET_ONE_RENDERER,
+    renderGlobe,
+    autoBoot,
+    start,
+    stop,
+    getStatus
+  });
 
   markDocument();
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoBoot);
-  } else {
-    autoBoot();
+  global.DGBShowroomGlobeInstrument = api;
+
+  if (typeof window !== "undefined") {
+    window.DGBShowroomGlobeInstrument = api;
   }
 
-  window.setTimeout(autoBoot, 250);
-  window.setTimeout(autoBoot, 900);
-})();
+  publish("showroom_globe_instrument_delegation_ready", {
+    expectedGlobal: EXPECTED_GLOBAL,
+    expectedApi: EXPECTED_API,
+    demoPlanetStatus: "retired",
+    renderer: PLANET_ONE_RENDERER,
+    noLegacyAutoboot: true
+  });
+})(window);

@@ -1,222 +1,136 @@
-/*
-  /showroom/index.js
-  SHOWROOM_GENERATION_3_PARENT_CONSUMER_CONGRUENCE_TNT_v1
-
-  Owns parent boot and parent consumer status only.
-  Does not own asset primitive, runtime loop, CSS, route rail, or Gauges.
-*/
-
-(function () {
+(function bootShowroomParentGeneration2Mount(global, document) {
   "use strict";
 
-  const VERSION = "showroom-generation-3-parent-consumer-congruence-v1";
-  const EARTH_SURFACE = "/assets/earth/earth_surface_2048.jpg";
-  const EARTH_CLOUDS = "/assets/earth/earth_clouds_2048.jpg";
-  const MOUNT_ID = "showroom-globe-mount";
+  const VERSION = "SHOWROOM_PARENT_BOOT_GENERATION_2_RENDER_MOUNT_ACTIVATION_CTG_v1";
+  const GENERATION = "GENERATION_2";
+  const ROUTE = "/showroom/";
+  const MODE = "parent";
 
-  let attempts = 0;
-  const maxAttempts = 20;
-
-  function qsa(selector) {
-    return Array.from(document.querySelectorAll(selector));
+  function mark(stage, detail) {
+    document.documentElement.dataset.showroomBoot = stage;
+    document.documentElement.dataset.showroomBootVersion = VERSION;
+    document.documentElement.dataset.showroomGeneration = GENERATION;
+    document.documentElement.dataset.showroomRoute = ROUTE;
+    document.documentElement.dataset.generation2MountActivation = detail || "active";
   }
 
-  function statusDataset(status) {
-    return {
-      showroomParentBoot: VERSION,
-      generation1NoGraphicBaseline: "preserved",
-      generation2BaselineGraphics: "preserved",
-      generation2ActiveGlobe: status || "preserved",
-      generation3: "axis-rotation-depth-refinement-active",
-      generation3AxisRotationDepth: "active",
-      generation3RuntimeMotion: "active",
-      generation3VisualClarityRefinement: "active",
-      generation3VisualTruth: "pending-user-confirmation",
-      showroomCardGlobeHandoff: "active",
-      demoUniverseCardPreview: "active",
-      earthSurface: EARTH_SURFACE,
-      earthClouds: EARTH_CLOUDS
-    };
+  function findRoot() {
+    return (
+      document.querySelector("[data-showroom-render-root]") ||
+      document.getElementById("showroomRenderRoot") ||
+      document.getElementById("showroom-main")
+    );
   }
 
-  function writeDataset(node, values) {
-    if (!node) return;
-
-    Object.entries(values).forEach(function (entry) {
-      node.dataset[entry[0]] = String(entry[1]);
-    });
-  }
-
-  function writeParentReceipts(status) {
-    [
-      document.getElementById("showroom-root"),
-      document.getElementById("showroom-main"),
-      document.getElementById(MOUNT_ID)
-    ].forEach(function (node) {
-      writeDataset(node, statusDataset(status));
-    });
-  }
-
-  function normalizeCaption() {
-    const caption =
-      document.querySelector("#" + MOUNT_ID + " .showroom-generation-3-caption") ||
-      document.querySelector("#" + MOUNT_ID + " .showroom-generation-2-caption");
-
-    if (caption) {
-      caption.textContent = "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE";
-      caption.dataset.captionStatus = "generation-3-parent-congruent";
-    }
-  }
-
-  function normalizeTelemetry() {
-    qsa("#" + MOUNT_ID + " .showroom-generation-3-telemetry span").forEach(function (node) {
-      if (node.textContent === "context=parent") node.dataset.contextReceipt = "parent";
-    });
-  }
-
-  function normalizeMount(status) {
-    const mount = document.getElementById(MOUNT_ID);
-    if (!mount) return;
-
-    writeDataset(mount, statusDataset(status || "generation-3-axis-rotation-depth-mounted"));
-
-    mount.dataset.renderStatus = "generation-3-parent-consumer-congruent";
-    mount.dataset.generation3AxisRotationDepth = "active";
-    mount.dataset.generation3RuntimeMotion = "active";
-    mount.dataset.generation3VisualClarityRefinement = "active";
-    mount.dataset.generation3VisualTruth = "pending-user-confirmation";
-
-    normalizeCaption();
-    normalizeTelemetry();
-  }
-
-  function renderFallback(reason) {
-    const mount = document.getElementById(MOUNT_ID);
-    if (!mount || mount.children.length > 0) return;
-
-    mount.dataset.renderStatus = "parent-boot-fallback";
-    mount.dataset.fallbackReason = reason || "unknown";
-
-    const caption = document.createElement("p");
-    caption.className = "showroom-generation-2-caption showroom-generation-3-caption";
-    caption.textContent = "GENERATION 3 · AXIS ROTATION FALLBACK";
-
-    const link = document.createElement("a");
-    link.className = "showroom-generation-2-link showroom-generation-3-link";
-    link.href = "/showroom/globe/";
-    link.textContent = "Open Demo Universe Earth";
-
-    mount.appendChild(caption);
-    mount.appendChild(link);
-    normalizeMount("fallback");
-  }
-
-  function startRuntime() {
-    if (window.DGBShowroomRuntime && typeof window.DGBShowroomRuntime.start === "function") {
-      window.DGBShowroomRuntime.start();
-    }
-  }
-
-  function notifyRuntime() {
-    if (
-      window.DGBShowroomRuntime &&
-      typeof window.DGBShowroomRuntime.setActiveGlobeStatus === "function"
-    ) {
-      window.DGBShowroomRuntime.setActiveGlobeStatus("generation-3-axis-rotation-depth-mounted");
+  function ensureRenderRoot(candidate) {
+    if (!candidate) {
+      throw new Error("Parent Showroom boot failed: no render root or showroom main found.");
     }
 
-    if (
-      window.DGBShowroomRuntime &&
-      typeof window.DGBShowroomRuntime.setGeneration3MotionStatus === "function"
-    ) {
-      window.DGBShowroomRuntime.setGeneration3MotionStatus("axis-rotation-depth-active");
+    if (candidate.matches && candidate.matches("[data-showroom-render-root]")) {
+      return candidate;
     }
+
+    const existing = document.querySelector("[data-showroom-render-root]");
+    if (existing) return existing;
+
+    const section = document.createElement("section");
+    section.id = "showroomRenderRoot";
+    section.dataset.showroomRenderRoot = "true";
+    section.dataset.showroomMode = MODE;
+    section.dataset.showroomGeneration = GENERATION;
+    section.dataset.generation2MountActivation = "created-by-parent-boot";
+
+    candidate.append(section);
+    return section;
   }
 
-  function renderViaBridge() {
-    if (window.DGBShowroomRender && typeof window.DGBShowroomRender.renderParentGlobe === "function") {
-      return window.DGBShowroomRender.renderParentGlobe();
+  function requireRender() {
+    if (!global.ShowroomRender || typeof global.ShowroomRender.renderShowroomProofSurface !== "function") {
+      throw new Error("Parent Showroom boot failed: ShowroomRender.renderShowroomProofSurface is unavailable.");
     }
-
-    return null;
-  }
-
-  function renderViaInstrument() {
-    const mount = document.getElementById(MOUNT_ID);
-    const instrument = window.DGBShowroomGlobeInstrument;
-
-    if (!mount || !instrument || typeof instrument.renderGlobe !== "function") return null;
-
-    instrument.renderGlobe(mount, {
-      context: "parent",
-      caption: "GENERATION 3 · AXIS ROTATION · SHADOW DEPTH ACTIVE"
-    });
-
-    if (typeof instrument.writeReceipts === "function") {
-      instrument.writeReceipts(mount, "parent", {
-        showroomParentBoot: VERSION,
-        generation2ActiveGlobe: "preserved",
-        generation3AxisRotationDepth: "active",
-        generation3RuntimeMotion: "active",
-        generation3VisualClarityRefinement: "active",
-        generation3VisualTruth: "pending-user-confirmation"
-      });
-    }
-
-    return { ok: true, mount: mount, source: "instrument-direct" };
-  }
-
-  function renderParentGlobe() {
-    writeParentReceipts("booting");
-    startRuntime();
-
-    const result = renderViaBridge() || renderViaInstrument();
-
-    if (result && result.ok) {
-      writeParentReceipts("generation-3-axis-rotation-depth-mounted");
-      normalizeMount("generation-3-axis-rotation-depth-mounted");
-      notifyRuntime();
-
-      window.setTimeout(function () {
-        normalizeMount("generation-3-axis-rotation-depth-mounted");
-        notifyRuntime();
-      }, 300);
-
-      window.setTimeout(function () {
-        normalizeMount("generation-3-axis-rotation-depth-mounted");
-        notifyRuntime();
-      }, 1200);
-
-      return;
-    }
-
-    attempts += 1;
-
-    if (attempts < maxAttempts) {
-      window.setTimeout(renderParentGlobe, 100);
-      return;
-    }
-
-    writeParentReceipts("render-failed");
-    renderFallback(result && result.reason ? result.reason : "render failed");
   }
 
   function boot() {
-    renderParentGlobe();
+    mark("starting", "render-required");
+    requireRender();
+
+    const root = ensureRenderRoot(findRoot());
+
+    root.dataset.parentBoot = "true";
+    root.dataset.showroomMode = MODE;
+    root.dataset.showroomRoute = ROUTE;
+    root.dataset.showroomGeneration = GENERATION;
+    root.dataset.generation2MountActivation = "starting";
+
+    const app = global.ShowroomRender.renderShowroomProofSurface({
+      root,
+      mode: MODE
+    });
+
+    root.dataset.parentBootComplete = "true";
+    root.dataset.parentBootVersion = VERSION;
+    root.dataset.generation2MountActivation = "complete";
+
+    mark("complete", "generation-2-render-mounted");
+
+    global.__SHOWROOM_PARENT_APP__ = app;
+    global.__SHOWROOM_PARENT_GENERATION_2_MOUNT__ = {
+      version: VERSION,
+      generation: GENERATION,
+      route: ROUTE,
+      complete: true,
+      app
+    };
+
+    global.dispatchEvent(
+      new CustomEvent("showroom:generation-2-parent-mount-complete", {
+        detail: {
+          version: VERSION,
+          generation: GENERATION,
+          route: ROUTE,
+          mode: MODE,
+          visibleCodeGlobe: Boolean(app && app.instrument)
+        }
+      })
+    );
+  }
+
+  function bootSafely() {
+    try {
+      boot();
+    } catch (error) {
+      mark("failed", error.message);
+      global.__SHOWROOM_PARENT_BOOT_ERROR__ = error;
+
+      global.dispatchEvent(
+        new CustomEvent("showroom:generation-2-parent-mount-failed", {
+          detail: {
+            version: VERSION,
+            generation: GENERATION,
+            route: ROUTE,
+            error: error.message
+          }
+        })
+      );
+
+      const main = document.getElementById("showroom-main") || document.body;
+      const fallback = document.createElement("section");
+      fallback.className = "showroom-receipt-panel";
+      fallback.innerHTML =
+        "<h2>Generation 2 mount error</h2>" +
+        "<p>The accepted shell is live, but the lower render boot failed.</p>" +
+        "<ul class='showroom-receipts'>" +
+        "<li><strong>BOOT_VERSION</strong><span>" + VERSION + "</span></li>" +
+        "<li><strong>ERROR</strong><span>" + error.message + "</span></li>" +
+        "</ul>";
+      main.append(fallback);
+    }
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+    document.addEventListener("DOMContentLoaded", bootSafely, { once: true });
   } else {
-    boot();
+    bootSafely();
   }
-
-  window.DGBShowroomParentBoot = Object.freeze({
-    version: VERSION,
-    boot: boot,
-    renderParentGlobe: renderParentGlobe,
-    normalizeMount: normalizeMount,
-    earthSurface: EARTH_SURFACE,
-    earthClouds: EARTH_CLOUDS
-  });
-})();
+})(window, document);

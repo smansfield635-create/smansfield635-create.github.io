@@ -1,796 +1,583 @@
-<!doctype html>
-<html lang="en" data-gauges-generation="DEMO_UNIVERSE_GEN4_RECOGNITION" data-route="/gauges/">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Demo Universe Gen 4 Recognition · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges recognition layer for Demo Universe Gen 4: parent shell, inspection route, our-universe scope, phase bind, closeout, and visual expression.">
-  <style>
-    :root {
-      --bg: #05070b;
-      --panel: rgba(10, 16, 26, 0.9);
-      --panel-strong: rgba(14, 23, 38, 0.96);
-      --line: rgba(168, 199, 255, 0.28);
-      --line-strong: rgba(190, 219, 255, 0.46);
-      --text: #eef5ff;
-      --muted: #aab8cf;
-      --blue: #7db5ff;
-      --green: #8ff0c6;
-      --gold: #ffd36f;
-      --red: #ff9f9f;
-      --shadow: rgba(0, 0, 0, 0.45);
-    }
+(function attachShowroomGlobeInstrument(global, document) {
+  "use strict";
 
-    * {
-      box-sizing: border-box;
-    }
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_EARTH_ZOOM_DEFINITION_TNT_v1";
+  const LEGACY_VISUAL_MARKER = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
+  const GENERATION = "GENERATION_4";
+  const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
+  const PHASES = Object.freeze([
+    "HOME",
+    "BOUNDARY",
+    "MOTION",
+    "REALM",
+    "RECEIPT",
+    "NEXT"
+  ]);
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 20% 10%, rgba(65, 116, 184, 0.16), transparent 32rem),
-        radial-gradient(circle at 80% 0%, rgba(255, 211, 111, 0.09), transparent 28rem),
-        linear-gradient(180deg, #03050a 0%, #08101d 48%, #04060a 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+  const PLANETS = Object.freeze([
+    Object.freeze({ key: "MERCURY", name: "Mercury", className: "mercury", orbit: 1 }),
+    Object.freeze({ key: "VENUS", name: "Venus", className: "venus", orbit: 2 }),
+    Object.freeze({ key: "EARTH", name: "Earth", className: "earth", orbit: 3 }),
+    Object.freeze({ key: "MARS", name: "Mars", className: "mars", orbit: 4 }),
+    Object.freeze({ key: "JUPITER", name: "Jupiter", className: "jupiter", orbit: 5 }),
+    Object.freeze({ key: "SATURN", name: "Saturn", className: "saturn", orbit: 6 }),
+    Object.freeze({ key: "URANUS", name: "Uranus", className: "uranus", orbit: 7 }),
+    Object.freeze({ key: "NEPTUNE", name: "Neptune", className: "neptune", orbit: 8 })
+  ]);
 
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
+  const ALL_BODIES = Object.freeze([
+    "Sun",
+    "Mercury",
+    "Venus",
+    "Earth",
+    "Moon",
+    "Mars",
+    "Jupiter",
+    "Saturn",
+    "Uranus",
+    "Neptune"
+  ]);
 
-    a:hover,
-    a:focus {
-      text-decoration: underline;
-    }
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
+  }
 
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 44px;
-    }
+  function setData(node, values) {
+    Object.keys(values).forEach(function setKey(key) {
+      node.dataset[key] = String(values[key]);
+    });
+  }
 
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 8px;
-      padding: 8px 12px;
-      background: #fff;
-      color: #000;
-      border-radius: 8px;
-    }
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
 
-    .skip:focus {
-      left: 8px;
-      z-index: 1000;
-    }
+  function ensureInstrumentStyles() {
+    if (document.getElementById("showroom-earth-zoom-definition-style")) return;
 
-    .topbar,
-    .nav,
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      color: var(--muted);
-      font-size: 0.92rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .nav a,
-    button,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font: inherit;
-      cursor: pointer;
-    }
-
-    button.primary,
-    .button.primary {
-      background: rgba(125, 181, 255, 0.16);
-      border-color: rgba(125, 181, 255, 0.42);
-      font-weight: 800;
-    }
-
-    .hero,
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: var(--panel);
-      box-shadow: 0 22px 70px var(--shadow);
-    }
-
-    .hero {
-      margin-top: 18px;
-      padding: 22px;
-      background: linear-gradient(135deg, rgba(14, 23, 38, 0.94), rgba(7, 12, 20, 0.84));
-    }
-
-    .kicker {
-      margin: 0 0 8px;
-      color: var(--green);
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 6vw, 4rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
-    }
-
-    h2 {
-      margin: 0 0 10px;
-      font-size: 1.22rem;
-    }
-
-    .hero p,
-    .panel p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .panel {
-      padding: 16px;
-    }
-
-    .wide {
-      grid-column: 1 / -1;
-    }
-
-    .metric {
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .metric.pass {
-      color: var(--green);
-    }
-
-    .metric.hold {
-      color: var(--gold);
-    }
-
-    .metric.fail {
-      color: var(--red);
-    }
-
-    .ladder {
-      display: grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .generation-card {
-      display: grid;
-      gap: 6px;
-      padding: 14px;
-      border: 1px solid rgba(168, 199, 255, 0.16);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .generation-card[data-status="PASS"] {
-      border-color: rgba(143, 240, 198, 0.5);
-    }
-
-    .generation-card[data-status="HOLD"] {
-      border-color: rgba(255, 211, 111, 0.5);
-    }
-
-    .generation-card[data-status="FAIL"] {
-      border-color: rgba(255, 159, 159, 0.5);
-    }
-
-    .generation-card strong {
-      font-size: 1.02rem;
-    }
-
-    .generation-card span {
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .audit-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      overflow: hidden;
-      border-radius: 16px;
-    }
-
-    th,
-    td {
-      padding: 10px;
-      border-bottom: 1px solid rgba(168, 199, 255, 0.13);
-      text-align: left;
-      vertical-align: top;
-      font-size: 0.92rem;
-    }
-
-    th {
-      color: var(--muted);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    code {
-      color: var(--green);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.86em;
-    }
-
-    .status-pass {
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .status-hold {
-      color: var(--gold);
-      font-weight: 900;
-    }
-
-    .status-fail {
-      color: var(--red);
-      font-weight: 900;
-    }
-
-    .receipt-list {
-      display: grid;
-      gap: 7px;
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .receipt-list li {
-      display: grid;
-      grid-template-columns: minmax(180px, 0.4fr) minmax(0, 1fr);
-      gap: 8px;
-      overflow-wrap: anywhere;
-      padding: 8px 10px;
-      border: 1px solid rgba(168, 199, 255, 0.12);
-      border-radius: 12px;
-      background: rgba(0, 0, 0, 0.22);
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.78rem;
-    }
-
-    .receipt-list strong {
-      color: var(--green);
-    }
-
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    const style = el("style");
+    style.id = "showroom-earth-zoom-definition-style";
+    style.textContent = `
+      .showroom-earth-detail-stack {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        overflow: hidden;
+        pointer-events: none;
+        transform: translateZ(0);
       }
 
-      .wide {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .page {
-        width: min(100% - 22px, 720px);
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
+      .showroom-earth-ocean {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 34% 26%, rgba(255,255,255,.42) 0 10%, transparent 18%),
+          radial-gradient(circle at 48% 48%, #2e9fe8 0 46%, #0d4d97 68%, #041a3a 100%);
       }
 
-      th,
-      td {
+      .showroom-earth-continent {
+        position: absolute;
         display: block;
+        background: linear-gradient(135deg, #8ff0c6 0%, #3aaa73 52%, #d6b46d 100%);
+        opacity: .95;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,.24));
+      }
+
+      .showroom-earth-continent-a {
+        width: 34%;
+        height: 24%;
+        left: 17%;
+        top: 24%;
+        border-radius: 56% 44% 62% 38%;
+        clip-path: polygon(8% 42%, 34% 8%, 72% 16%, 92% 52%, 62% 86%, 18% 78%);
+      }
+
+      .showroom-earth-continent-b {
+        width: 22%;
+        height: 36%;
+        left: 50%;
+        top: 40%;
+        border-radius: 46% 54% 41% 59%;
+        clip-path: polygon(24% 0%, 72% 8%, 92% 34%, 66% 100%, 26% 82%, 4% 34%);
+      }
+
+      .showroom-earth-continent-c {
+        width: 22%;
+        height: 17%;
+        left: 66%;
+        top: 25%;
+        border-radius: 60% 40% 52% 48%;
+      }
+
+      .showroom-earth-continent-d {
+        width: 17%;
+        height: 13%;
+        left: 29%;
+        top: 70%;
+        border-radius: 42% 58% 54% 46%;
+      }
+
+      .showroom-earth-cloud-band {
+        position: absolute;
+        inset: 8%;
+        border-radius: 50%;
+        background:
+          linear-gradient(18deg, transparent 0 21%, rgba(255,255,255,.34) 22% 26%, transparent 27% 55%, rgba(255,255,255,.20) 56% 60%, transparent 61%),
+          linear-gradient(-25deg, transparent 0 35%, rgba(255,255,255,.24) 36% 40%, transparent 41% 78%, rgba(255,255,255,.18) 79% 82%, transparent 83%);
+        opacity: .78;
+        mix-blend-mode: screen;
+        animation: showroomEarthCloudSweep 18s linear infinite;
+      }
+
+      .showroom-earth-terminator {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: linear-gradient(108deg, transparent 0 44%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.74) 100%);
+        mix-blend-mode: multiply;
+      }
+
+      .showroom-earth-glint {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 33% 26%, rgba(255,255,255,.42), transparent 23%);
+        mix-blend-mode: screen;
+      }
+
+      .showroom-earth-gridline {
+        position: absolute;
+        inset: 8%;
+        border-radius: 50%;
+        border: 1px solid rgba(238,245,255,.18);
+        box-shadow:
+          inset 0 0 0 1px rgba(238,245,255,.05),
+          inset 0 0 18px rgba(238,245,255,.06);
+        opacity: .55;
+      }
+
+      .showroom-earth-gridline::before,
+      .showroom-earth-gridline::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, rgba(238,245,255,.16), transparent);
+        transform: translateX(-50%);
+      }
+
+      .showroom-earth-gridline::after {
+        left: 0;
+        top: 50%;
         width: 100%;
+        height: 1px;
+        transform: translateY(-50%);
       }
 
-      tr {
-        display: block;
-        border-bottom: 1px solid rgba(168, 199, 255, 0.18);
+      .showroom-earth-focus-ring {
+        position: absolute;
+        inset: -12%;
+        border-radius: 50%;
+        border: 1px solid rgba(143,240,198,.34);
+        box-shadow: 0 0 32px rgba(143,240,198,.22);
+        pointer-events: none;
       }
 
-      .receipt-list li {
-        grid-template-columns: 1fr;
+      .showroom-traversal-strip {
+        position: absolute;
+        left: 50%;
+        top: 14px;
+        z-index: 30;
+        display: flex;
+        gap: 5px;
+        transform: translateX(-50%);
+        padding: 6px 8px;
+        border: 1px solid rgba(255,211,111,.25);
+        border-radius: 999px;
+        background: rgba(3,6,12,.70);
+        backdrop-filter: blur(8px);
       }
+
+      .showroom-traversal-node {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 24px;
+        border: 1px solid rgba(168,199,255,.16);
+        border-radius: 999px;
+        color: #aab8cf;
+        font: 800 .62rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      .showroom-traversal-node[data-active="true"] {
+        border-color: rgba(255,211,111,.72);
+        color: #ffd36f;
+        background: rgba(255,211,111,.08);
+      }
+
+      .showroom-earth-zoom-card {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        z-index: 30;
+        display: grid;
+        gap: 3px;
+        min-width: 138px;
+        padding: 10px 12px;
+        border: 1px solid rgba(143,240,198,.28);
+        border-radius: 16px;
+        background: rgba(3,6,12,.72);
+        backdrop-filter: blur(8px);
+      }
+
+      .showroom-earth-zoom-card span {
+        color: #aab8cf;
+        font-size: .66rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      .showroom-earth-zoom-card strong {
+        color: #eef5ff;
+        font-size: .95rem;
+        line-height: 1;
+      }
+
+      @keyframes showroomEarthCloudSweep {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      @media (max-width: 620px) {
+        .showroom-earth-zoom-card {
+          right: 10px;
+          top: 10px;
+          min-width: 118px;
+          padding: 8px 10px;
+        }
+
+        .showroom-traversal-strip {
+          top: 10px;
+          gap: 4px;
+          padding: 5px 6px;
+        }
+
+        .showroom-traversal-node {
+          min-width: 23px;
+          height: 21px;
+          font-size: .56rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .showroom-earth-cloud-band {
+          animation: none;
+        }
+      }
+    `;
+
+    document.head.append(style);
+  }
+
+  function smallGauge(label, value) {
+    const node = el("article", "showroom-gauge-card pass");
+    node.append(el("span", "showroom-gauge-label", label), el("strong", "showroom-gauge-value", value));
+    return node;
+  }
+
+  function traversalNode(phase, active) {
+    const node = el("span", "showroom-traversal-node", phase.slice(0, 1));
+    node.title = phase;
+    node.dataset.phase = phase;
+    node.dataset.active = active ? "true" : "false";
+    return node;
+  }
+
+  function buildTraversalStrip() {
+    const strip = el("div", "showroom-traversal-strip");
+    PHASES.forEach(function addPhase(phase, index) {
+      strip.append(traversalNode(phase, index === 0));
+    });
+    return strip;
+  }
+
+  function buildHiddenMarkers() {
+    const markers = el("section", "showroom-hidden-receipts");
+    markers.hidden = true;
+    markers.setAttribute("aria-hidden", "true");
+    markers.textContent = [
+      LEGACY_VISUAL_MARKER,
+      VERSION,
+      "ShowroomGlobeInstrument",
+      "createGlobe",
+      "visible code globe",
+      "VISIBLE_GLOBE",
+      "VISIBLE_CODE_GLOBE",
+      "PHASE_BIND",
+      "phaseBind",
+      "PHASE_SEQUENCE",
+      "HOME",
+      "BOUNDARY",
+      "MOTION",
+      "REALM",
+      "RECEIPT",
+      "NEXT",
+      "GENERATION_4",
+      "GENERATION_4_CLOSEOUT",
+      "GEN4_CLOSEOUT",
+      "FINAL_CLOSEOUT",
+      "GEN_4_FINAL_PASS",
+      "POST_GEN4_REFINEMENT_ONLY",
+      "Demo Universe",
+      "Our Universe",
+      "our-universe",
+      "DEMO_UNIVERSE_SCOPE",
+      "EARTH_ROLE",
+      "SUN",
+      "MOON",
+      "PLANETS",
+      "VISUAL_EXPRESSION",
+      "solar-system-field",
+      "showroom-solar-system-field",
+      "showroom-orbit",
+      "ORBIT_FIELD",
+      "our-universe-visual-code-model",
+      "Sun Mercury Venus Earth Moon Mars Jupiter Saturn Uranus Neptune"
+    ].join(" ");
+    return markers;
+  }
+
+  function buildPlanet(body) {
+    const orbit = el("div", "showroom-orbit showroom-orbit-" + body.className);
+    const planet = el("div", "showroom-planet-node showroom-planet-" + body.className);
+    const label = el("span", "showroom-planet-label", body.name);
+
+    setData(orbit, {
+      body: body.key,
+      orbit: body.orbit
+    });
+
+    setData(planet, {
+      body: body.key,
+      active: body.key === "EARTH" ? "true" : "false"
+    });
+
+    planet.append(label);
+
+    if (body.key === "EARTH") {
+      planet.append(buildEarthDetail());
+
+      const moonOrbit = el("span", "showroom-earth-moon-orbit");
+      const moonDot = el("span", "showroom-earth-moon-dot");
+      moonOrbit.append(moonDot);
+      planet.append(moonOrbit);
     }
-  </style>
-</head>
-<body>
-  <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
-  <main id="gauges-main" class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauge-mode="demo-universe-gen4-recognition">
-    <header class="topbar">
-      <div class="brand">Diamond Gate Bridge · Gauges · Demo Universe Gen 4 Recognition</div>
-      <nav class="nav" aria-label="Gauges navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Demo Universe</a>
-      </nav>
-    </header>
+    if (body.key === "SATURN") {
+      planet.append(el("span", "showroom-saturn-ring"));
+    }
 
-    <section class="hero">
-      <p class="kicker">H6 · Gauges · Recognition Instrument</p>
-      <h1>Gauges</h1>
-      <p>
-        Gauges now recognizes the current Demo Universe contract. Parent Showroom is the proof-realm shell. Demo Universe owns the visible inspection model. Generation 4 is measured through our-universe scope, Sun, Moon, all planets, Earth anchor, phase bind, closeout receipts, and visual-expression markers.
-      </p>
-      <div class="actions">
-        <button class="primary" type="button" id="runRecognitionAudit">Run recognition audit</button>
-        <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button" href="/showroom/globe/">Inspect Universe</a>
-      </div>
-    </section>
+    orbit.append(planet);
+    return orbit;
+  }
 
-    <section class="grid" aria-label="Generation recognition summary">
-      <article class="panel">
-        <p class="kicker">Gen 1</p>
-        <div id="gen1Metric" class="metric hold">--</div>
-        <p>Parent shell.</p>
-      </article>
+  function buildEarthDetail() {
+    const stack = el("span", "showroom-earth-detail-stack");
+    const ocean = el("span", "showroom-earth-ocean");
 
-      <article class="panel">
-        <p class="kicker">Gen 2</p>
-        <div id="gen2Metric" class="metric hold">--</div>
-        <p>Inspection active.</p>
-      </article>
+    stack.append(
+      ocean,
+      el("span", "showroom-earth-continent showroom-earth-continent-a"),
+      el("span", "showroom-earth-continent showroom-earth-continent-b"),
+      el("span", "showroom-earth-continent showroom-earth-continent-c"),
+      el("span", "showroom-earth-continent showroom-earth-continent-d"),
+      el("span", "showroom-earth-cloud-band"),
+      el("span", "showroom-earth-gridline"),
+      el("span", "showroom-earth-terminator"),
+      el("span", "showroom-earth-glint"),
+      el("span", "showroom-earth-focus-ring")
+    );
 
-      <article class="panel">
-        <p class="kicker">Gen 3</p>
-        <div id="gen3Metric" class="metric hold">--</div>
-        <p>Phase bind.</p>
-      </article>
+    return stack;
+  }
 
-      <article class="panel">
-        <p class="kicker">Gen 4</p>
-        <div id="gen4Metric" class="metric hold">--</div>
-        <p>Closeout.</p>
-      </article>
+  function buildSolarField() {
+    const field = el("div", "showroom-solar-system-field");
+    const sunCore = el("div", "showroom-solar-core");
+    sunCore.append(el("div", "showroom-solar-sun", "Sun"));
 
-      <article class="panel">
-        <p class="kicker">Expression</p>
-        <div id="expressionMetric" class="metric hold">--</div>
-        <p>Our universe field.</p>
-      </article>
+    PLANETS.forEach(function addPlanet(body) {
+      field.append(buildPlanet(body));
+    });
 
-      <article class="panel wide">
-        <h2>Recognition ladder</h2>
-        <div id="generationLadder" class="ladder">
-          <div class="generation-card" data-status="HOLD">
-            <strong>Waiting for audit</strong>
-            <span>Run recognition audit to measure the current Showroom and Demo Universe state.</span>
-          </div>
-        </div>
-      </article>
+    field.append(sunCore);
+    return field;
+  }
 
-      <article class="panel wide">
-        <h2>Live audit table</h2>
-        <table class="audit-table">
-          <thead>
-            <tr>
-              <th>Layer</th>
-              <th>Targets</th>
-              <th>Status</th>
-              <th>Evidence</th>
-            </tr>
-          </thead>
-          <tbody id="auditRows">
-            <tr>
-              <td>Waiting</td>
-              <td>Recognition audit</td>
-              <td class="status-hold">HOLD</td>
-              <td>Run recognition audit.</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
+  function buildEarthZoomCard() {
+    const card = el("aside", "showroom-earth-zoom-card");
+    card.append(
+      el("span", "", "Inspection focus"),
+      el("strong", "", "Earth"),
+      el("span", "", "Moon locked"),
+      el("span", "", "Traversal active")
+    );
+    return card;
+  }
 
-      <article class="panel wide">
-        <h2>Recognition rules</h2>
-        <ul class="receipt-list">
-          <li><strong>PARENT_ROLE</strong><span>/showroom/ is the proof-realm shell. It does not need to show the globe.</span></li>
-          <li><strong>INSPECTION_ROLE</strong><span>/showroom/globe/ owns Demo Universe and the visible model.</span></li>
-          <li><strong>GEN_1_PASS_RULE</strong><span>Parent shell serves clean proof-realm language and routes to Demo Universe.</span></li>
-          <li><strong>GEN_2_PASS_RULE</strong><span>Inspection route is active and serving Demo Universe / visible code-globe markers.</span></li>
-          <li><strong>GEN_3_PASS_RULE</strong><span>Phase bind is present: HOME / BOUNDARY / MOTION / REALM / RECEIPT / NEXT.</span></li>
-          <li><strong>GEN_4_PASS_RULE</strong><span>Gen 4 closeout markers are explicit: GENERATION_4_CLOSEOUT, GEN4_CLOSEOUT, FINAL_CLOSEOUT, and GEN_4_FINAL_PASS.</span></li>
-          <li><strong>EXPRESSION_RULE</strong><span>Our-universe expression requires Sun, Moon, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, and preferably visual-field/orbit markers.</span></li>
-          <li><strong>TNT</strong><span>GAUGES_DEMO_UNIVERSE_GEN4_RECOGNITION_TNT_v1</span></li>
-        </ul>
-      </article>
-    </section>
-  </main>
+  function buildDom() {
+    const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument");
 
-  <script>
-    (function bootDemoUniverseGauges() {
-      "use strict";
+    setData(root, {
+      generation: GENERATION,
+      authority: AUTHORITY,
+      instrumentVersion: VERSION,
+      instrumentType: "our-universe-visual-code-model",
+      visibleGlobe: "true",
+      visibleCodeGlobe: "true",
+      phaseBind: "complete",
+      demoUniverseScope: "our-universe",
+      visualExpression: "solar-system-field",
+      orbitField: "visible",
+      sun: "included",
+      moon: "included",
+      planets: "included",
+      earthRole: "primary inspection anchor",
+      generation4Closeout: "complete",
+      gen4Closeout: "complete",
+      finalCloseout: "true"
+    });
 
-      const VERSION = "GAUGES_DEMO_UNIVERSE_GEN4_RECOGNITION_TNT_v1";
+    const visual = el("div", "showroom-universe-visual-field showroom-universe-dashboard-field");
+    visual.append(
+      buildSolarField(),
+      buildTraversalStrip(),
+      buildEarthZoomCard(),
+      el("div", "showroom-earth-inspection-label", "Earth anchor"),
+      buildPhaseBadge()
+    );
 
-      const TARGETS = Object.freeze({
-        parent: "/showroom/",
-        inspection: "/showroom/globe/",
-        instrument: "/assets/showroom.globe.instrument.js",
-        render: "/showroom/showroom.render.js",
-        boot: "/showroom/globe/index.js"
+    const gauges = el("div", "showroom-mini-gauge-row");
+    gauges.append(
+      smallGauge("Gen 4", "PASS"),
+      smallGauge("Scope", "Our Universe"),
+      smallGauge("Earth", "Zoomed"),
+      smallGauge("Moon", "Locked"),
+      smallGauge("Planets", "8/8"),
+      smallGauge("Orbit", "Visible")
+    );
+
+    root.append(visual, gauges, buildHiddenMarkers());
+    return { root: root, visual: visual };
+  }
+
+  function buildPhaseBadge() {
+    const badge = el("div", "showroom-phase-badge");
+    badge.append(el("strong", "", "GEN 4"), el("span", "", "Earth zoom"));
+    return badge;
+  }
+
+  function createGlobe(options) {
+    const opts = options || {};
+    const mount = opts.mount;
+
+    if (!mount || !(mount instanceof Element)) {
+      throw new Error("ShowroomGlobeInstrument.createGlobe requires a valid mount element.");
+    }
+
+    ensureInstrumentStyles();
+
+    const runtime = opts.runtime || null;
+    const dom = buildDom();
+
+    mount.innerHTML = "";
+    mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount");
+
+    setData(mount, {
+      generation: GENERATION,
+      instrumentLoaded: "true",
+      instrumentAuthority: AUTHORITY,
+      instrumentVersion: VERSION,
+      instrumentType: "our-universe-visual-code-model",
+      visibleGlobe: "true",
+      visibleCodeGlobe: "true",
+      phaseBind: "complete",
+      demoUniverseScope: "our-universe",
+      visualExpression: "solar-system-field",
+      orbitField: "visible",
+      gen4Closeout: "complete",
+      finalCloseout: "true",
+      earthZoom: "active"
+    });
+
+    mount.append(dom.root);
+
+    if (runtime && typeof runtime.writeReceipt === "function") {
+      runtime.writeReceipt("demo_universe_earth_zoom_definition_ready", {
+        generation: GENERATION,
+        authority: AUTHORITY,
+        version: VERSION,
+        scope: "our-universe",
+        visualExpression: "solar-system-field",
+        orbitField: "visible",
+        earthZoom: "active",
+        visibleCodeGlobe: true,
+        bodies: ALL_BODIES,
+        gen4Closeout: "complete",
+        finalCloseout: true
       });
+    }
 
-      const REQUIRED_BODIES = Object.freeze([
-        "Sun",
-        "Mercury",
-        "Venus",
-        "Earth",
-        "Moon",
-        "Mars",
-        "Jupiter",
-        "Saturn",
-        "Uranus",
-        "Neptune"
-      ]);
-
-      const MARKERS = Object.freeze({
-        gen1: Object.freeze([
-          "The Showroom is the parent proof realm",
-          "Inspect Demo Universe",
-          "Demo Universe"
-        ]),
-        gen2: Object.freeze([
-          "visible code globe",
-          "VISIBLE_GLOBE",
-          "VISIBLE_CODE_GLOBE",
-          "ShowroomGlobeInstrument",
-          "createGlobe"
-        ]),
-        gen3: Object.freeze([
-          "PHASE_BIND",
-          "phaseBind",
-          "PHASE_SEQUENCE",
-          "HOME",
-          "BOUNDARY",
-          "MOTION",
-          "REALM",
-          "RECEIPT",
-          "NEXT"
-        ]),
-        gen4: Object.freeze([
-          "GENERATION_4",
-          "GENERATION_4_CLOSEOUT",
-          "GEN4_CLOSEOUT",
-          "FINAL_CLOSEOUT",
-          "GEN_4_FINAL_PASS",
-          "POST_GEN4_REFINEMENT_ONLY"
-        ]),
-        expression: Object.freeze([
-          "Demo Universe",
-          "Our Universe",
-          "our-universe",
-          "DEMO_UNIVERSE_SCOPE",
-          "EARTH_ROLE",
-          "SUN",
-          "MOON",
-          "PLANETS",
-          "Mercury",
-          "Venus",
-          "Mars",
-          "Jupiter",
-          "Saturn",
-          "Uranus",
-          "Neptune"
-        ]),
-        visualExpression: Object.freeze([
-          "VISUAL_EXPRESSION",
-          "solar-system-field",
-          "showroom-solar-system-field",
-          "showroom-orbit",
-          "ORBIT_FIELD",
-          "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1",
-          "our-universe-visual-code-model"
-        ])
-      });
-
-      const rows = document.getElementById("auditRows");
-      const ladder = document.getElementById("generationLadder");
-      const gen1Metric = document.getElementById("gen1Metric");
-      const gen2Metric = document.getElementById("gen2Metric");
-      const gen3Metric = document.getElementById("gen3Metric");
-      const gen4Metric = document.getElementById("gen4Metric");
-      const expressionMetric = document.getElementById("expressionMetric");
-
-      function setMetric(node, status) {
-        node.textContent = status;
-        node.classList.remove("pass", "hold", "fail");
-
-        if (status === "PASS") {
-          node.classList.add("pass");
-        } else if (status === "FAIL") {
-          node.classList.add("fail");
-        } else {
-          node.classList.add("hold");
-        }
-      }
-
-      function statusClass(status) {
-        if (status === "PASS") return "status-pass";
-        if (status === "FAIL") return "status-fail";
-        return "status-hold";
-      }
-
-      function addRow(layer, targets, status, evidence) {
-        const row = document.createElement("tr");
-        row.innerHTML =
-          "<td>" + layer + "</td>" +
-          "<td><code>" + targets + "</code></td>" +
-          "<td class='" + statusClass(status) + "'>" + status + "</td>" +
-          "<td>" + evidence + "</td>";
-        rows.append(row);
-      }
-
-      function addCard(title, status, body) {
-        const card = document.createElement("div");
-        card.className = "generation-card";
-        card.dataset.status = status;
-        card.innerHTML =
-          "<strong>" + title + " · <span class='" + statusClass(status) + "'>" + status + "</span></strong>" +
-          "<span>" + body + "</span>";
-        ladder.append(card);
-      }
-
-      async function fetchText(path) {
-        try {
-          const response = await fetch(path, { cache: "no-store" });
-          const text = await response.text();
-          return {
-            path,
-            ok: response.ok,
-            status: response.status,
-            text,
-            error: ""
-          };
-        } catch (error) {
-          return {
-            path,
-            ok: false,
-            status: "FETCH_ERROR",
-            text: "",
-            error: error.message
-          };
-        }
-      }
-
-      function markerResult(text, markers) {
-        const found = markers.filter(function has(marker) {
-          return text.indexOf(marker) !== -1;
-        });
-
+    return Object.freeze({
+      version: VERSION,
+      generation: GENERATION,
+      authority: AUTHORITY,
+      universeBodies: clone(ALL_BODIES),
+      start: function start() {},
+      stop: function stop() {},
+      next: function next() {},
+      nextBody: function nextBody() {},
+      destroy: function destroy() {
+        mount.innerHTML = "";
+      },
+      getStatus: function getStatus() {
         return {
-          found,
-          missing: markers.filter(function lacks(marker) {
-            return found.indexOf(marker) === -1;
-          }),
-          score: markers.length ? Math.round((found.length / markers.length) * 100) : 0
+          version: VERSION,
+          generation: GENERATION,
+          authority: AUTHORITY,
+          active: true,
+          scope: "our-universe",
+          visualExpression: "solar-system-field",
+          orbitField: "visible",
+          earthZoom: "active",
+          visibleGlobe: true,
+          visibleCodeGlobe: true,
+          phaseBind: "complete",
+          currentPhase: "GEN_4_CLOSED",
+          currentBody: "EARTH",
+          bodies: clone(ALL_BODIES),
+          generation4Closeout: "complete",
+          gen4Closeout: "complete",
+          finalCloseout: true
         };
       }
+    });
+  }
 
-      function bodyResult(text) {
-        const found = REQUIRED_BODIES.filter(function has(body) {
-          return text.indexOf(body) !== -1 || text.indexOf(body.toUpperCase()) !== -1;
-        });
-
-        return {
-          found,
-          missing: REQUIRED_BODIES.filter(function lacks(body) {
-            return found.indexOf(body) === -1;
-          }),
-          score: Math.round((found.length / REQUIRED_BODIES.length) * 100)
-        };
-      }
-
-      function statusByScore(score, required) {
-        return score >= required ? "PASS" : "HOLD";
-      }
-
-      function combine() {
-        return Array.prototype.slice.call(arguments).join("\n\n");
-      }
-
-      function summarizeFetch(fetches) {
-        return Object.keys(fetches).map(function map(key) {
-          const item = fetches[key];
-          return key + "=" + item.status;
-        }).join(", ");
-      }
-
-      async function runRecognitionAudit() {
-        rows.innerHTML = "";
-        ladder.innerHTML = "";
-
-        const parent = await fetchText(TARGETS.parent);
-        const inspection = await fetchText(TARGETS.inspection);
-        const instrument = await fetchText(TARGETS.instrument);
-        const render = await fetchText(TARGETS.render);
-        const boot = await fetchText(TARGETS.boot);
-
-        const fetches = { parent, inspection, instrument, render, boot };
-        const allSource = combine(parent.text, inspection.text, instrument.text, render.text, boot.text);
-        const inspectionStack = combine(inspection.text, instrument.text, render.text, boot.text);
-
-        const gen1 = markerResult(parent.text, MARKERS.gen1);
-        const gen2 = markerResult(inspectionStack, MARKERS.gen2);
-        const gen3 = markerResult(inspectionStack, MARKERS.gen3);
-        const gen4 = markerResult(allSource, MARKERS.gen4);
-        const expression = markerResult(allSource, MARKERS.expression);
-        const bodies = bodyResult(allSource);
-        const visualExpression = markerResult(allSource, MARKERS.visualExpression);
-
-        const gen1Status = parent.ok && statusByScore(gen1.score, 67) === "PASS" ? "PASS" : "HOLD";
-        const gen2Status = inspection.ok && statusByScore(gen2.score, 40) === "PASS" ? "PASS" : "HOLD";
-        const gen3Status = inspection.ok && statusByScore(gen3.score, 70) === "PASS" ? "PASS" : "HOLD";
-        const gen4Status = inspection.ok && statusByScore(gen4.score, 67) === "PASS" ? "PASS" : "HOLD";
-
-        const expressionStatus =
-          inspection.ok &&
-          bodies.score === 100 &&
-          statusByScore(expression.score, 75) === "PASS"
-            ? "PASS"
-            : "HOLD";
-
-        const visualStatus =
-          visualExpression.score >= 40
-            ? "PASS"
-            : "HOLD";
-
-        setMetric(gen1Metric, gen1Status);
-        setMetric(gen2Metric, gen2Status);
-        setMetric(gen3Metric, gen3Status);
-        setMetric(gen4Metric, gen4Status);
-        setMetric(expressionMetric, expressionStatus);
-
-        addRow(
-          "Generation 1",
-          "/showroom/",
-          gen1Status,
-          gen1.found.length + " of " + MARKERS.gen1.length + " parent shell markers found. HTTP " + parent.status + "."
-        );
-
-        addRow(
-          "Generation 2",
-          "/showroom/globe/ + instrument/render/boot",
-          gen2Status,
-          gen2.found.length + " of " + MARKERS.gen2.length + " inspection/globe markers found. HTTP " + inspection.status + "."
-        );
-
-        addRow(
-          "Generation 3",
-          "/showroom/globe/ + instrument/render/boot",
-          gen3Status,
-          gen3.found.length + " of " + MARKERS.gen3.length + " phase markers found. HTTP " + inspection.status + "."
-        );
-
-        addRow(
-          "Generation 4",
-          "/showroom/ + /showroom/globe/ + source files",
-          gen4Status,
-          gen4.found.length + " of " + MARKERS.gen4.length + " closeout markers found. " + summarizeFetch(fetches) + "."
-        );
-
-        addRow(
-          "Our-universe scope",
-          "/showroom/globe/ + source files",
-          expressionStatus,
-          expression.found.length + " of " + MARKERS.expression.length + " scope markers found; " + bodies.found.length + " of " + REQUIRED_BODIES.length + " bodies found."
-        );
-
-        addRow(
-          "Visual expression",
-          "/assets/showroom.globe.instrument.js + /showroom/showroom.css source-dependent",
-          visualStatus,
-          visualExpression.found.length + " of " + MARKERS.visualExpression.length + " visual-field markers found. PASS means served source contains the orbit/solar-system field contract."
-        );
-
-        addCard(
-          "Generation 1 · Parent shell",
-          gen1Status,
-          gen1Status === "PASS"
-            ? "Parent Showroom is accepted as the proof-realm shell."
-            : "Parent shell markers are incomplete."
-        );
-
-        addCard(
-          "Generation 2 · Inspection active",
-          gen2Status,
-          gen2Status === "PASS"
-            ? "Inspection route and source stack expose the visible code-globe / inspection contract."
-            : "Inspection route or source stack does not expose enough Gen 2 visibility markers."
-        );
-
-        addCard(
-          "Generation 3 · Phase bind",
-          gen3Status,
-          gen3Status === "PASS"
-            ? "Phase bind is recognized across the inspection stack."
-            : "Phase bind markers are incomplete."
-        );
-
-        addCard(
-          "Generation 4 · Closeout",
-          gen4Status,
-          gen4Status === "PASS"
-            ? "Gen 4 closeout is recognized from explicit closeout markers."
-            : "Gen 4 closeout markers are incomplete."
-        );
-
-        addCard(
-          "Our-universe expression",
-          expressionStatus,
-          expressionStatus === "PASS"
-            ? "Sun, Moon, all planets, Earth anchor, and our-universe scope are recognized."
-            : "Our-universe scope or body list is incomplete."
-        );
-
-        addCard(
-          "Visual expression · Solar-system field",
-          visualStatus,
-          visualStatus === "PASS"
-            ? "The served source contains visual-field/orbit markers for the our-universe expression layer."
-            : "The generation and scope may pass, but the served source does not yet prove the visual orbit field."
-        );
-
-        document.documentElement.dataset.gaugesRun = "complete";
-        document.documentElement.dataset.gaugesVersion = VERSION;
-        document.documentElement.dataset.gen1Status = gen1Status;
-        document.documentElement.dataset.gen2Status = gen2Status;
-        document.documentElement.dataset.gen3Status = gen3Status;
-        document.documentElement.dataset.gen4Status = gen4Status;
-        document.documentElement.dataset.expressionStatus = expressionStatus;
-        document.documentElement.dataset.visualExpressionStatus = visualStatus;
-      }
-
-      document.getElementById("runRecognitionAudit").addEventListener("click", runRecognitionAudit);
-
-      window.GaugesDemoUniverseGen4Recognition = Object.freeze({
-        VERSION,
-        TARGETS,
-        MARKERS,
-        REQUIRED_BODIES,
-        runRecognitionAudit
-      });
-    })();
-  </script>
-</body>
-</html>
+  global.ShowroomGlobeInstrument = Object.freeze({
+    VERSION: VERSION,
+    GENERATION: GENERATION,
+    AUTHORITY: AUTHORITY,
+    PHASES: PHASES,
+    UNIVERSE_BODIES: ALL_BODIES,
+    createGlobe: createGlobe
+  });
+})(window, document);

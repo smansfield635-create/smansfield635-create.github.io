@@ -1,18 +1,18 @@
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN4_HOME_ANCHOR_SPEED_AUTHORITY_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN4_NATURAL_SPHERE_CTG_TNT_v1";
   const GENERATION = "GENERATION_4";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
   const DEFAULTS = Object.freeze({
     degreesPerSecond: 4.8,
+    cloudDriftDegreesPerSecond: 2.1,
+    moonOrbitDegreesPerSecond: 1.08,
+    axisTilt: 23.5,
     homeLatitude: 32.7555,
     homeLongitude: -97.3308,
-    homeLabel: "Home Anchor · Fort Worth",
-    axisTilt: 23.4,
-    moonOrbitDegreesPerSecond: 1.15,
-    cloudDriftDegreesPerSecond: 2.4
+    homeLabel: "Home Anchor · Fort Worth"
   });
 
   function clamp(value, min, max) {
@@ -26,10 +26,15 @@
     return el;
   }
 
-  function setDataset(el, values) {
+  function writeDataset(el, values) {
     Object.keys(values).forEach((key) => {
       el.dataset[key] = String(values[key]);
     });
+  }
+
+  function makeTag(text) {
+    const tag = createElement("span", "showroom-contract-tag", text);
+    return tag;
   }
 
   function makeReceipt(name, value) {
@@ -38,55 +43,122 @@
     return item;
   }
 
-  function buildInstrumentDom(contract) {
+  function resolveTexture(options, contract) {
+    return (
+      options.earthTexture ||
+      contract.earthTexture ||
+      global.SHOWROOM_EARTH_TEXTURE ||
+      document.documentElement.dataset.showroomEarthTexture ||
+      ""
+    );
+  }
+
+  function buildInstrumentDom(contract, textureUrl) {
     const root = createElement("section", "showroom-globe-instrument");
-    root.setAttribute("aria-label", "Generation 4 showroom globe instrument");
-    setDataset(root, {
+    root.setAttribute("aria-label", "Generation 4 natural Earth sphere instrument");
+
+    writeDataset(root, {
       showroomInstrument: "active",
       generation: GENERATION,
       authority: AUTHORITY,
-      speedAuthority: "true",
-      cssAnimationAuthority: "false",
-      runtimeSpeedAuthority: "false",
-      homeAnchor: "active",
-      motionControl: "instrument",
-      internalBoundary: "none"
+      boundary: "organic",
+      sphere: "natural",
+      shell: "absent",
+      rim: "absent",
+      cap: "absent",
+      glow: "absent",
+      motion: "internal",
+      homeAnchor: "active"
     });
 
     const stage = createElement("div", "showroom-orbital-stage");
-    stage.setAttribute("aria-hidden", "false");
+    stage.setAttribute("aria-label", "Natural Earth boundary field");
 
     const lightField = createElement("div", "showroom-light-field");
     const sun = createElement("div", "showroom-sun", "☀");
     const moonTrack = createElement("div", "showroom-moon-track");
     const moon = createElement("div", "showroom-moon", "◐");
-
-    const earthWrap = createElement("div", "showroom-earth-wrap");
-    const earth = createElement("div", "showroom-earth");
-    const axis = createElement("div", "showroom-earth-axis");
-    const ocean = createElement("div", "showroom-earth-ocean");
-    const landA = createElement("div", "showroom-landmass showroom-landmass-a");
-    const landB = createElement("div", "showroom-landmass showroom-landmass-b");
-    const landC = createElement("div", "showroom-landmass showroom-landmass-c");
-    const cloudA = createElement("div", "showroom-cloud showroom-cloud-a");
-    const cloudB = createElement("div", "showroom-cloud showroom-cloud-b");
-    const terminator = createElement("div", "showroom-terminator");
-    const atmosphere = createElement("div", "showroom-atmosphere");
-    const homePin = createElement("div", "showroom-home-pin");
-    homePin.title = contract.homeLabel;
-
-    earth.append(ocean, landA, landB, landC, cloudA, cloudB, terminator, atmosphere, homePin);
-    earthWrap.append(axis, earth);
     moonTrack.append(moon);
     lightField.append(sun, moonTrack);
-    stage.append(lightField, earthWrap);
+
+    const sphereFrame = createElement("div", "showroom-natural-sphere-frame");
+    const axis = createElement("div", "showroom-earth-axis");
+
+    const sphere = createElement("div", "showroom-earth-sphere");
+    sphere.setAttribute("role", "img");
+    sphere.setAttribute("aria-label", "Natural spherical Earth with organic boundary");
+
+    writeDataset(sphere, {
+      naturalBoundary: "true",
+      shellRemoved: "true",
+      rimRemoved: "true",
+      capRemoved: "true",
+      facetedBodyRemoved: "true"
+    });
+
+    const mapA = createElement("div", "showroom-earth-map showroom-earth-map-a");
+    const mapB = createElement("div", "showroom-earth-map showroom-earth-map-b");
+    const cloudA = createElement("div", "showroom-cloud-layer showroom-cloud-layer-a");
+    const cloudB = createElement("div", "showroom-cloud-layer showroom-cloud-layer-b");
+    const terminator = createElement("div", "showroom-earth-terminator");
+    const atmosphere = createElement("div", "showroom-earth-atmosphere");
+    const homePin = createElement("div", "showroom-home-pin");
+    homePin.title = contract.homeLabel || DEFAULTS.homeLabel;
+
+    if (textureUrl) {
+      mapA.style.backgroundImage = `url("${textureUrl}")`;
+      mapB.style.backgroundImage = `url("${textureUrl}")`;
+      mapA.dataset.texture = "provided";
+      mapB.dataset.texture = "provided";
+    } else {
+      mapA.dataset.texture = "procedural";
+      mapB.dataset.texture = "procedural";
+    }
+
+    sphere.append(mapA, mapB, cloudA, cloudB, terminator, atmosphere, homePin);
+    sphereFrame.append(axis, sphere);
+    stage.append(lightField, sphereFrame);
+
+    const caption = createElement(
+      "h2",
+      "showroom-globe-caption",
+      "GENERATION 4 · SHOWROOM PROOF REALM · NATURAL SPHERE"
+    );
+
+    const tags = createElement("div", "showroom-contract-tags");
+    [
+      "GEN 4",
+      "boundary=organic",
+      "sphere=natural",
+      "shell=absent",
+      "rim=absent",
+      "cap=absent",
+      "glow=absent",
+      "home=anchored",
+      "idle=locked",
+      "motion=internal",
+      "spin=release",
+      "axis=23.5°",
+      `context=${contract.mode || "parent"}`
+    ].forEach((text) => tags.append(makeTag(text)));
+
+    const actions = createElement("div", "showroom-globe-actions");
+    if (contract.mode !== "standalone") {
+      const demoLink = createElement("a", "showroom-button", "Open Demo Universe Earth");
+      demoLink.href = "/showroom/globe/";
+      actions.append(demoLink);
+    } else {
+      const parentLink = createElement("a", "showroom-button", "Return to Showroom");
+      parentLink.href = "/showroom/";
+      actions.append(parentLink);
+    }
 
     const status = createElement("aside", "showroom-globe-status");
-    const title = createElement("h3", "", "Generation 4 Globe Instrument");
-    const body = createElement(
+    const statusTitle = createElement("h3", "", "Natural-boundary receipts");
+    const statusBody = createElement(
       "p",
       "",
-      "Speed, home anchor, internal motion, sun/moon light, shadow, atmosphere, and natural-boundary emission are owned by the instrument."
+      "The Earth object is emitted as one circular sphere. No lower shell, faceted body, rim, cap, or bowl geometry is emitted by this instrument."
     );
 
     const receipts = createElement("ul", "showroom-globe-receipts");
@@ -95,26 +167,27 @@
       ["AUTHORITY", AUTHORITY],
       ["REALM", contract.realm],
       ["ROUTE_ROLE", contract.routeRole],
-      ["HOME_ANCHOR", "active"],
-      ["INSTRUMENT_SPEED_AUTHORITY", "true"],
-      ["CSS_ANIMATION_AUTHORITY", "false"],
-      ["RUNTIME_SPEED_AUTHORITY", "false"],
-      ["INTERNAL_GLOBE_BOUNDARY", "none"],
+      ["NATURAL_SPHERE", "true"],
+      ["LOWER_SHELL", "absent"],
+      ["FACETED_BODY", "absent"],
+      ["RIM", "absent"],
+      ["CAP", "absent"],
+      ["INTERNAL_GLOBE_BOUNDARY", "organic-circle"],
       ["OUTER_SECTION_BOUNDARY", "consumer-shell-only"]
     ].forEach(([name, value]) => receipts.append(makeReceipt(name, value)));
 
-    status.append(title, body, receipts);
-    root.append(stage, status);
+    status.append(statusTitle, statusBody, receipts);
+    root.append(stage, caption, tags, actions, status);
 
     return {
       root,
-      earth,
-      earthWrap,
-      moonTrack,
+      sphere,
+      mapA,
+      mapB,
       cloudA,
       cloudB,
-      homePin,
-      status
+      moonTrack,
+      homePin
     };
   }
 
@@ -139,29 +212,36 @@
       opts.contract || {}
     );
 
+    const textureUrl = resolveTexture(opts, contract);
     const runtime = opts.runtime || null;
     const speedMultiplier = clamp(Number(contract.speedMultiplier || 1), 0.15, 3);
     const degreesPerSecond = DEFAULTS.degreesPerSecond * speedMultiplier;
-    const cloudDrift = DEFAULTS.cloudDriftDegreesPerSecond * speedMultiplier;
+    const cloudSpeed = DEFAULTS.cloudDriftDegreesPerSecond * speedMultiplier;
     const moonSpeed = DEFAULTS.moonOrbitDegreesPerSecond * speedMultiplier;
 
     mount.innerHTML = "";
     mount.classList.add("showroom-globe-mount");
-    setDataset(mount, {
+
+    writeDataset(mount, {
       generation: GENERATION,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
-      globeBoundary: "instrument-internal-none"
+      naturalBoundary: "true",
+      shellRemoved: "true",
+      rimRemoved: "true",
+      capRemoved: "true",
+      globeBoundary: "organic-sphere"
     });
 
-    const dom = buildInstrumentDom(contract);
+    const dom = buildInstrumentDom(contract, textureUrl);
     mount.append(dom.root);
 
     let raf = 0;
     let active = true;
     let previous = performance.now();
-    let earthRotation = 0;
-    let cloudRotation = 0;
+    let mapShift = 0;
+    let cloudRotationA = 0;
+    let cloudRotationB = 0;
     let moonRotation = contract.mode === "standalone" ? 144 : 38;
 
     function writeTick(now) {
@@ -170,22 +250,27 @@
       const deltaSeconds = Math.max(0, (now - previous) / 1000);
       previous = now;
 
-      earthRotation = (earthRotation + degreesPerSecond * deltaSeconds) % 360;
-      cloudRotation = (cloudRotation + cloudDrift * deltaSeconds) % 360;
+      mapShift = (mapShift + degreesPerSecond * deltaSeconds) % 100;
+      cloudRotationA = (cloudRotationA + cloudSpeed * deltaSeconds) % 360;
+      cloudRotationB = (cloudRotationB - cloudSpeed * 0.72 * deltaSeconds) % 360;
       moonRotation = (moonRotation + moonSpeed * deltaSeconds) % 360;
 
-      dom.earth.style.setProperty("--showroom-earth-rotation", `${earthRotation.toFixed(3)}deg`);
-      dom.cloudA.style.setProperty("--showroom-cloud-rotation", `${cloudRotation.toFixed(3)}deg`);
-      dom.cloudB.style.setProperty("--showroom-cloud-rotation", `${(cloudRotation * -0.72).toFixed(3)}deg`);
-      dom.moonTrack.style.setProperty("--showroom-moon-rotation", `${moonRotation.toFixed(3)}deg`);
+      dom.mapA.style.transform = `translate3d(${-mapShift}%, 0, 0)`;
+      dom.mapB.style.transform = `translate3d(${100 - mapShift}%, 0, 0)`;
+      dom.cloudA.style.transform = `rotate(${cloudRotationA.toFixed(3)}deg)`;
+      dom.cloudB.style.transform = `rotate(${cloudRotationB.toFixed(3)}deg)`;
+      dom.moonTrack.style.transform = `rotate(${moonRotation.toFixed(3)}deg)`;
 
       if (runtime && typeof runtime.writeReceipt === "function") {
-        runtime.writeReceipt("motion_tick", {
+        runtime.writeReceipt("natural_sphere_motion_tick", {
           generation: GENERATION,
           authority: AUTHORITY,
-          earthRotation: Number(earthRotation.toFixed(3)),
+          mapShift: Number(mapShift.toFixed(3)),
           moonRotation: Number(moonRotation.toFixed(3)),
-          speedAuthority: "instrument",
+          naturalBoundary: true,
+          shellRemoved: true,
+          rimRemoved: true,
+          capRemoved: true,
           timestamp: new Date().toISOString()
         });
       }
@@ -199,12 +284,15 @@
       raf = global.requestAnimationFrame(writeTick);
 
       if (runtime && typeof runtime.writeReceipt === "function") {
-        runtime.writeReceipt("instrument_started", {
+        runtime.writeReceipt("natural_sphere_instrument_started", {
           generation: GENERATION,
           authority: AUTHORITY,
           realm: contract.realm,
           routeRole: contract.routeRole,
-          homeAnchor: "active"
+          naturalBoundary: true,
+          emittedShellGeometry: false,
+          emittedRimGeometry: false,
+          emittedCapGeometry: false
         });
       }
     }
@@ -235,12 +323,14 @@
           generation: GENERATION,
           authority: AUTHORITY,
           active,
-          earthRotation,
+          mapShift,
           moonRotation,
-          homeAnchor: "active",
-          speedAuthority: "instrument",
-          cssAnimationAuthority: false,
-          runtimeSpeedAuthority: false
+          naturalBoundary: true,
+          lowerShell: false,
+          rim: false,
+          cap: false,
+          facetedBody: false,
+          speedAuthority: "instrument"
         };
       }
     };

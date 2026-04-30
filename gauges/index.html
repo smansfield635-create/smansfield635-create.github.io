@@ -1,583 +1,690 @@
-(function attachShowroomGlobeInstrument(global, document) {
-  "use strict";
-
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_EARTH_ZOOM_DEFINITION_TNT_v1";
-  const LEGACY_VISUAL_MARKER = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
-  const GENERATION = "GENERATION_4";
-  const AUTHORITY = "/assets/showroom.globe.instrument.js";
-
-  const PHASES = Object.freeze([
-    "HOME",
-    "BOUNDARY",
-    "MOTION",
-    "REALM",
-    "RECEIPT",
-    "NEXT"
-  ]);
-
-  const PLANETS = Object.freeze([
-    Object.freeze({ key: "MERCURY", name: "Mercury", className: "mercury", orbit: 1 }),
-    Object.freeze({ key: "VENUS", name: "Venus", className: "venus", orbit: 2 }),
-    Object.freeze({ key: "EARTH", name: "Earth", className: "earth", orbit: 3 }),
-    Object.freeze({ key: "MARS", name: "Mars", className: "mars", orbit: 4 }),
-    Object.freeze({ key: "JUPITER", name: "Jupiter", className: "jupiter", orbit: 5 }),
-    Object.freeze({ key: "SATURN", name: "Saturn", className: "saturn", orbit: 6 }),
-    Object.freeze({ key: "URANUS", name: "Uranus", className: "uranus", orbit: 7 }),
-    Object.freeze({ key: "NEPTUNE", name: "Neptune", className: "neptune", orbit: 8 })
-  ]);
-
-  const ALL_BODIES = Object.freeze([
-    "Sun",
-    "Mercury",
-    "Venus",
-    "Earth",
-    "Moon",
-    "Mars",
-    "Jupiter",
-    "Saturn",
-    "Uranus",
-    "Neptune"
-  ]);
-
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (typeof text === "string") node.textContent = text;
-    return node;
-  }
-
-  function setData(node, values) {
-    Object.keys(values).forEach(function setKey(key) {
-      node.dataset[key] = String(values[key]);
-    });
-  }
-
-  function clone(value) {
-    return JSON.parse(JSON.stringify(value));
-  }
-
-  function ensureInstrumentStyles() {
-    if (document.getElementById("showroom-earth-zoom-definition-style")) return;
-
-    const style = el("style");
-    style.id = "showroom-earth-zoom-definition-style";
-    style.textContent = `
-      .showroom-earth-detail-stack {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        overflow: hidden;
-        pointer-events: none;
-        transform: translateZ(0);
-      }
-
-      .showroom-earth-ocean {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background:
-          radial-gradient(circle at 34% 26%, rgba(255,255,255,.42) 0 10%, transparent 18%),
-          radial-gradient(circle at 48% 48%, #2e9fe8 0 46%, #0d4d97 68%, #041a3a 100%);
-      }
-
-      .showroom-earth-continent {
-        position: absolute;
-        display: block;
-        background: linear-gradient(135deg, #8ff0c6 0%, #3aaa73 52%, #d6b46d 100%);
-        opacity: .95;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,.24));
-      }
-
-      .showroom-earth-continent-a {
-        width: 34%;
-        height: 24%;
-        left: 17%;
-        top: 24%;
-        border-radius: 56% 44% 62% 38%;
-        clip-path: polygon(8% 42%, 34% 8%, 72% 16%, 92% 52%, 62% 86%, 18% 78%);
-      }
-
-      .showroom-earth-continent-b {
-        width: 22%;
-        height: 36%;
-        left: 50%;
-        top: 40%;
-        border-radius: 46% 54% 41% 59%;
-        clip-path: polygon(24% 0%, 72% 8%, 92% 34%, 66% 100%, 26% 82%, 4% 34%);
-      }
-
-      .showroom-earth-continent-c {
-        width: 22%;
-        height: 17%;
-        left: 66%;
-        top: 25%;
-        border-radius: 60% 40% 52% 48%;
-      }
-
-      .showroom-earth-continent-d {
-        width: 17%;
-        height: 13%;
-        left: 29%;
-        top: 70%;
-        border-radius: 42% 58% 54% 46%;
-      }
-
-      .showroom-earth-cloud-band {
-        position: absolute;
-        inset: 8%;
-        border-radius: 50%;
-        background:
-          linear-gradient(18deg, transparent 0 21%, rgba(255,255,255,.34) 22% 26%, transparent 27% 55%, rgba(255,255,255,.20) 56% 60%, transparent 61%),
-          linear-gradient(-25deg, transparent 0 35%, rgba(255,255,255,.24) 36% 40%, transparent 41% 78%, rgba(255,255,255,.18) 79% 82%, transparent 83%);
-        opacity: .78;
-        mix-blend-mode: screen;
-        animation: showroomEarthCloudSweep 18s linear infinite;
-      }
-
-      .showroom-earth-terminator {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: linear-gradient(108deg, transparent 0 44%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.74) 100%);
-        mix-blend-mode: multiply;
-      }
-
-      .showroom-earth-glint {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: radial-gradient(circle at 33% 26%, rgba(255,255,255,.42), transparent 23%);
-        mix-blend-mode: screen;
-      }
-
-      .showroom-earth-gridline {
-        position: absolute;
-        inset: 8%;
-        border-radius: 50%;
-        border: 1px solid rgba(238,245,255,.18);
-        box-shadow:
-          inset 0 0 0 1px rgba(238,245,255,.05),
-          inset 0 0 18px rgba(238,245,255,.06);
-        opacity: .55;
-      }
-
-      .showroom-earth-gridline::before,
-      .showroom-earth-gridline::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 0;
-        width: 1px;
-        height: 100%;
-        background: linear-gradient(180deg, transparent, rgba(238,245,255,.16), transparent);
-        transform: translateX(-50%);
-      }
-
-      .showroom-earth-gridline::after {
-        left: 0;
-        top: 50%;
-        width: 100%;
-        height: 1px;
-        transform: translateY(-50%);
-      }
-
-      .showroom-earth-focus-ring {
-        position: absolute;
-        inset: -12%;
-        border-radius: 50%;
-        border: 1px solid rgba(143,240,198,.34);
-        box-shadow: 0 0 32px rgba(143,240,198,.22);
-        pointer-events: none;
-      }
-
-      .showroom-traversal-strip {
-        position: absolute;
-        left: 50%;
-        top: 14px;
-        z-index: 30;
-        display: flex;
-        gap: 5px;
-        transform: translateX(-50%);
-        padding: 6px 8px;
-        border: 1px solid rgba(255,211,111,.25);
-        border-radius: 999px;
-        background: rgba(3,6,12,.70);
-        backdrop-filter: blur(8px);
-      }
-
-      .showroom-traversal-node {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 28px;
-        height: 24px;
-        border: 1px solid rgba(168,199,255,.16);
-        border-radius: 999px;
-        color: #aab8cf;
-        font: 800 .62rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      }
-
-      .showroom-traversal-node[data-active="true"] {
-        border-color: rgba(255,211,111,.72);
-        color: #ffd36f;
-        background: rgba(255,211,111,.08);
-      }
-
-      .showroom-earth-zoom-card {
-        position: absolute;
-        right: 14px;
-        top: 14px;
-        z-index: 30;
-        display: grid;
-        gap: 3px;
-        min-width: 138px;
-        padding: 10px 12px;
-        border: 1px solid rgba(143,240,198,.28);
-        border-radius: 16px;
-        background: rgba(3,6,12,.72);
-        backdrop-filter: blur(8px);
-      }
-
-      .showroom-earth-zoom-card span {
-        color: #aab8cf;
-        font-size: .66rem;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-      }
-
-      .showroom-earth-zoom-card strong {
-        color: #eef5ff;
-        font-size: .95rem;
-        line-height: 1;
-      }
-
-      @keyframes showroomEarthCloudSweep {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-
-      @media (max-width: 620px) {
-        .showroom-earth-zoom-card {
-          right: 10px;
-          top: 10px;
-          min-width: 118px;
-          padding: 8px 10px;
-        }
-
-        .showroom-traversal-strip {
-          top: 10px;
-          gap: 4px;
-          padding: 5px 6px;
-        }
-
-        .showroom-traversal-node {
-          min-width: 23px;
-          height: 21px;
-          font-size: .56rem;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .showroom-earth-cloud-band {
-          animation: none;
-        }
-      }
-    `;
-
-    document.head.append(style);
-  }
-
-  function smallGauge(label, value) {
-    const node = el("article", "showroom-gauge-card pass");
-    node.append(el("span", "showroom-gauge-label", label), el("strong", "showroom-gauge-value", value));
-    return node;
-  }
-
-  function traversalNode(phase, active) {
-    const node = el("span", "showroom-traversal-node", phase.slice(0, 1));
-    node.title = phase;
-    node.dataset.phase = phase;
-    node.dataset.active = active ? "true" : "false";
-    return node;
-  }
-
-  function buildTraversalStrip() {
-    const strip = el("div", "showroom-traversal-strip");
-    PHASES.forEach(function addPhase(phase, index) {
-      strip.append(traversalNode(phase, index === 0));
-    });
-    return strip;
-  }
-
-  function buildHiddenMarkers() {
-    const markers = el("section", "showroom-hidden-receipts");
-    markers.hidden = true;
-    markers.setAttribute("aria-hidden", "true");
-    markers.textContent = [
-      LEGACY_VISUAL_MARKER,
-      VERSION,
-      "ShowroomGlobeInstrument",
-      "createGlobe",
-      "visible code globe",
-      "VISIBLE_GLOBE",
-      "VISIBLE_CODE_GLOBE",
-      "PHASE_BIND",
-      "phaseBind",
-      "PHASE_SEQUENCE",
-      "HOME",
-      "BOUNDARY",
-      "MOTION",
-      "REALM",
-      "RECEIPT",
-      "NEXT",
-      "GENERATION_4",
-      "GENERATION_4_CLOSEOUT",
-      "GEN4_CLOSEOUT",
-      "FINAL_CLOSEOUT",
-      "GEN_4_FINAL_PASS",
-      "POST_GEN4_REFINEMENT_ONLY",
-      "Demo Universe",
-      "Our Universe",
-      "our-universe",
-      "DEMO_UNIVERSE_SCOPE",
-      "EARTH_ROLE",
-      "SUN",
-      "MOON",
-      "PLANETS",
-      "VISUAL_EXPRESSION",
-      "solar-system-field",
-      "showroom-solar-system-field",
-      "showroom-orbit",
-      "ORBIT_FIELD",
-      "our-universe-visual-code-model",
-      "Sun Mercury Venus Earth Moon Mars Jupiter Saturn Uranus Neptune"
-    ].join(" ");
-    return markers;
-  }
-
-  function buildPlanet(body) {
-    const orbit = el("div", "showroom-orbit showroom-orbit-" + body.className);
-    const planet = el("div", "showroom-planet-node showroom-planet-" + body.className);
-    const label = el("span", "showroom-planet-label", body.name);
-
-    setData(orbit, {
-      body: body.key,
-      orbit: body.orbit
-    });
-
-    setData(planet, {
-      body: body.key,
-      active: body.key === "EARTH" ? "true" : "false"
-    });
-
-    planet.append(label);
-
-    if (body.key === "EARTH") {
-      planet.append(buildEarthDetail());
-
-      const moonOrbit = el("span", "showroom-earth-moon-orbit");
-      const moonDot = el("span", "showroom-earth-moon-dot");
-      moonOrbit.append(moonDot);
-      planet.append(moonOrbit);
+<!doctype html>
+<html lang="en" data-gauges-cycle="GEN_2_V1_EARTH_DEFINITION">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gauges · Gen 2 V1 Earth Definition · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges for Gen 1 baseline and Gen 2 V1 Earth Definition expression pass.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(10, 16, 26, 0.9);
+      --line: rgba(168, 199, 255, 0.28);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --blue: #7db5ff;
+      --green: #8ff0c6;
+      --gold: #ffd36f;
+      --red: #ff9f9f;
+      --shadow: rgba(0, 0, 0, 0.45);
     }
 
-    if (body.key === "SATURN") {
-      planet.append(el("span", "showroom-saturn-ring"));
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(65, 116, 184, 0.16), transparent 32rem),
+        radial-gradient(circle at 80% 0%, rgba(255, 211, 111, 0.09), transparent 28rem),
+        linear-gradient(180deg, #03050a 0%, #08101d 48%, #04060a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    orbit.append(planet);
-    return orbit;
-  }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover, a:focus { text-decoration: underline; }
 
-  function buildEarthDetail() {
-    const stack = el("span", "showroom-earth-detail-stack");
-    const ocean = el("span", "showroom-earth-ocean");
-
-    stack.append(
-      ocean,
-      el("span", "showroom-earth-continent showroom-earth-continent-a"),
-      el("span", "showroom-earth-continent showroom-earth-continent-b"),
-      el("span", "showroom-earth-continent showroom-earth-continent-c"),
-      el("span", "showroom-earth-continent showroom-earth-continent-d"),
-      el("span", "showroom-earth-cloud-band"),
-      el("span", "showroom-earth-gridline"),
-      el("span", "showroom-earth-terminator"),
-      el("span", "showroom-earth-glint"),
-      el("span", "showroom-earth-focus-ring")
-    );
-
-    return stack;
-  }
-
-  function buildSolarField() {
-    const field = el("div", "showroom-solar-system-field");
-    const sunCore = el("div", "showroom-solar-core");
-    sunCore.append(el("div", "showroom-solar-sun", "Sun"));
-
-    PLANETS.forEach(function addPlanet(body) {
-      field.append(buildPlanet(body));
-    });
-
-    field.append(sunCore);
-    return field;
-  }
-
-  function buildEarthZoomCard() {
-    const card = el("aside", "showroom-earth-zoom-card");
-    card.append(
-      el("span", "", "Inspection focus"),
-      el("strong", "", "Earth"),
-      el("span", "", "Moon locked"),
-      el("span", "", "Traversal active")
-    );
-    return card;
-  }
-
-  function buildDom() {
-    const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument");
-
-    setData(root, {
-      generation: GENERATION,
-      authority: AUTHORITY,
-      instrumentVersion: VERSION,
-      instrumentType: "our-universe-visual-code-model",
-      visibleGlobe: "true",
-      visibleCodeGlobe: "true",
-      phaseBind: "complete",
-      demoUniverseScope: "our-universe",
-      visualExpression: "solar-system-field",
-      orbitField: "visible",
-      sun: "included",
-      moon: "included",
-      planets: "included",
-      earthRole: "primary inspection anchor",
-      generation4Closeout: "complete",
-      gen4Closeout: "complete",
-      finalCloseout: "true"
-    });
-
-    const visual = el("div", "showroom-universe-visual-field showroom-universe-dashboard-field");
-    visual.append(
-      buildSolarField(),
-      buildTraversalStrip(),
-      buildEarthZoomCard(),
-      el("div", "showroom-earth-inspection-label", "Earth anchor"),
-      buildPhaseBadge()
-    );
-
-    const gauges = el("div", "showroom-mini-gauge-row");
-    gauges.append(
-      smallGauge("Gen 4", "PASS"),
-      smallGauge("Scope", "Our Universe"),
-      smallGauge("Earth", "Zoomed"),
-      smallGauge("Moon", "Locked"),
-      smallGauge("Planets", "8/8"),
-      smallGauge("Orbit", "Visible")
-    );
-
-    root.append(visual, gauges, buildHiddenMarkers());
-    return { root: root, visual: visual };
-  }
-
-  function buildPhaseBadge() {
-    const badge = el("div", "showroom-phase-badge");
-    badge.append(el("strong", "", "GEN 4"), el("span", "", "Earth zoom"));
-    return badge;
-  }
-
-  function createGlobe(options) {
-    const opts = options || {};
-    const mount = opts.mount;
-
-    if (!mount || !(mount instanceof Element)) {
-      throw new Error("ShowroomGlobeInstrument.createGlobe requires a valid mount element.");
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 44px;
     }
 
-    ensureInstrumentStyles();
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+    }
 
-    const runtime = opts.runtime || null;
-    const dom = buildDom();
+    .skip:focus { left: 8px; z-index: 1000; }
 
-    mount.innerHTML = "";
-    mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount");
+    .topbar,
+    .nav,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    setData(mount, {
-      generation: GENERATION,
-      instrumentLoaded: "true",
-      instrumentAuthority: AUTHORITY,
-      instrumentVersion: VERSION,
-      instrumentType: "our-universe-visual-code-model",
-      visibleGlobe: "true",
-      visibleCodeGlobe: "true",
-      phaseBind: "complete",
-      demoUniverseScope: "our-universe",
-      visualExpression: "solar-system-field",
-      orbitField: "visible",
-      gen4Closeout: "complete",
-      finalCloseout: "true",
-      earthZoom: "active"
-    });
+    .brand {
+      color: var(--muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
 
-    mount.append(dom.root);
+    .nav a,
+    button,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
 
-    if (runtime && typeof runtime.writeReceipt === "function") {
-      runtime.writeReceipt("demo_universe_earth_zoom_definition_ready", {
-        generation: GENERATION,
-        authority: AUTHORITY,
-        version: VERSION,
-        scope: "our-universe",
-        visualExpression: "solar-system-field",
-        orbitField: "visible",
-        earthZoom: "active",
-        visibleCodeGlobe: true,
-        bodies: ALL_BODIES,
-        gen4Closeout: "complete",
-        finalCloseout: true
+    button.primary,
+    .button.primary {
+      background: rgba(125, 181, 255, 0.16);
+      border-color: rgba(125, 181, 255, 0.42);
+      font-weight: 800;
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: 0 22px 70px var(--shadow);
+    }
+
+    .hero {
+      margin-top: 18px;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(14, 23, 38, 0.94), rgba(7, 12, 20, 0.84));
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    h2 { margin: 0 0 10px; font-size: 1.22rem; }
+
+    .hero p,
+    .panel p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .panel { padding: 16px; }
+    .wide { grid-column: 1 / -1; }
+    .half { grid-column: span 3; }
+
+    .metric {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .metric.pass { color: var(--green); }
+    .metric.hold { color: var(--gold); }
+    .metric.fail { color: var(--red); }
+
+    .ladder {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .card {
+      display: grid;
+      gap: 6px;
+      padding: 14px;
+      border: 1px solid rgba(168, 199, 255, 0.16);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .card[data-status="PASS"] { border-color: rgba(143, 240, 198, 0.5); }
+    .card[data-status="HOLD"] { border-color: rgba(255, 211, 111, 0.5); }
+    .card[data-status="FAIL"] { border-color: rgba(255, 159, 159, 0.5); }
+
+    .card strong { font-size: 1.02rem; }
+    .card span { color: var(--muted); line-height: 1.45; }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(168, 199, 255, 0.13);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.92rem;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    code {
+      color: var(--green);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em;
+    }
+
+    .status-pass { color: var(--green); font-weight: 900; }
+    .status-hold { color: var(--gold); font-weight: 900; }
+    .status-fail { color: var(--red); font-weight: 900; }
+
+    .rules {
+      display: grid;
+      gap: 7px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rules li {
+      display: grid;
+      grid-template-columns: minmax(160px, 0.32fr) minmax(0, 1fr);
+      gap: 8px;
+      overflow-wrap: anywhere;
+      padding: 8px 10px;
+      border: 1px solid rgba(168, 199, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+    }
+
+    .rules strong { color: var(--green); }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wide, .half { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 22px, 720px); }
+      .grid { grid-template-columns: 1fr; }
+      th, td { display: block; width: 100%; }
+      tr { display: block; border-bottom: 1px solid rgba(168, 199, 255, 0.18); }
+      .rules li { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#gauges-main">Skip to Gauges</a>
+
+  <main id="gauges-main" class="page" data-gauge-mode="gen-2-v1-earth-definition">
+    <header class="topbar">
+      <div class="brand">Diamond Gate Bridge · Gauges · Gen 2 V1 Earth Definition</div>
+      <nav class="nav" aria-label="Gauges navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Demo Universe</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <p class="kicker">H6 · Gauges · Expression Measurement</p>
+      <h1>Gauges</h1>
+      <p>
+        Gauges now separates the completed Gen 1 baseline from the Gen 2 V1 Earth Definition pass.
+        Gen 1 measures the working Demo Universe structure. Gen 2 V1 measures whether Earth is becoming the clear inspection focus.
+      </p>
+      <div class="actions">
+        <button class="primary" type="button" id="runAudit">Run Gen 2 V1 audit</button>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/showroom/globe/">Inspect Universe</a>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Gauge summary">
+      <article class="panel">
+        <p class="kicker">Gen 1</p>
+        <div id="gen1Metric" class="metric hold">--</div>
+        <p>Baseline.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Scope</p>
+        <div id="scopeMetric" class="metric hold">--</div>
+        <p>Our universe.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Visual</p>
+        <div id="visualMetric" class="metric hold">--</div>
+        <p>Solar field.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Gen 2 V1</p>
+        <div id="g2v1Metric" class="metric hold">--</div>
+        <p>Earth definition.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Earth</p>
+        <div id="earthMetric" class="metric hold">--</div>
+        <p>Focus.</p>
+      </article>
+
+      <article class="panel">
+        <p class="kicker">Moon</p>
+        <div id="moonMetric" class="metric hold">--</div>
+        <p>Relationship.</p>
+      </article>
+
+      <article class="panel half">
+        <h2>Gen 1 baseline</h2>
+        <div id="gen1Ladder" class="ladder">
+          <div class="card" data-status="HOLD">
+            <strong>Waiting for audit</strong>
+            <span>Run audit to confirm the baseline remains intact.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel half">
+        <h2>Gen 2 V1 Earth Definition</h2>
+        <div id="g2v1Ladder" class="ladder">
+          <div class="card" data-status="HOLD">
+            <strong>Waiting for audit</strong>
+            <span>Run audit to measure Earth definition.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel wide">
+        <h2>Live audit table</h2>
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Targets</th>
+              <th>Status</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="auditRows">
+            <tr>
+              <td>Waiting</td>
+              <td>Gen 2 V1 audit</td>
+              <td class="status-hold">HOLD</td>
+              <td>Run audit.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel wide">
+        <h2>Measurement rules</h2>
+        <ul class="rules">
+          <li><strong>GEN_1</strong><span>Baseline passes only if Showroom, Demo Universe, Gen 4 closeout, our-universe scope, and solar-system field remain intact.</span></li>
+          <li><strong>GEN_2_V1</strong><span>Earth Definition passes only if Earth focus, Earth zoom, Earth detail, Moon orbit, and visual dashboard markers are present.</span></li>
+          <li><strong>NO_OVERSTEP</strong><span>Gen 2 V1 does not measure solar-system definition, cinematic depth, or public closeout. Those belong to later versions.</span></li>
+          <li><strong>TNT</strong><span>GAUGES_GEN_2_V1_EARTH_DEFINITION_TNT_v1</span></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    (function bootGauges() {
+      "use strict";
+
+      const VERSION = "GAUGES_GEN_2_V1_EARTH_DEFINITION_TNT_v1";
+
+      const TARGETS = Object.freeze({
+        parent: "/showroom/",
+        inspection: "/showroom/globe/",
+        instrument: "/assets/showroom.globe.instrument.js",
+        css: "/showroom/showroom.css",
+        render: "/showroom/showroom.render.js",
+        boot: "/showroom/globe/index.js"
       });
-    }
 
-    return Object.freeze({
-      version: VERSION,
-      generation: GENERATION,
-      authority: AUTHORITY,
-      universeBodies: clone(ALL_BODIES),
-      start: function start() {},
-      stop: function stop() {},
-      next: function next() {},
-      nextBody: function nextBody() {},
-      destroy: function destroy() {
-        mount.innerHTML = "";
-      },
-      getStatus: function getStatus() {
+      const MARKERS = Object.freeze({
+        gen1Baseline: Object.freeze([
+          "GENERATION_4",
+          "GENERATION_4_CLOSEOUT",
+          "GEN4_CLOSEOUT",
+          "FINAL_CLOSEOUT",
+          "GEN_4_FINAL_PASS",
+          "DEMO_UNIVERSE_SCOPE",
+          "our-universe",
+          "VISUAL_EXPRESSION",
+          "solar-system-field",
+          "ORBIT_FIELD"
+        ]),
+        bodies: Object.freeze([
+          "Sun",
+          "Mercury",
+          "Venus",
+          "Earth",
+          "Moon",
+          "Mars",
+          "Jupiter",
+          "Saturn",
+          "Uranus",
+          "Neptune"
+        ]),
+        visualField: Object.freeze([
+          "showroom-solar-system-field",
+          "showroom-orbit",
+          "VISIBLE_GLOBE",
+          "VISIBLE_CODE_GLOBE",
+          "ShowroomGlobeInstrument",
+          "createGlobe"
+        ]),
+        gen2v1Earth: Object.freeze([
+          "EARTH_ROLE",
+          "Earth",
+          "earthZoom",
+          "Earth zoom",
+          "Earth anchor",
+          "showroom-planet-earth",
+          "showroom-earth-detail-stack",
+          "showroom-earth-continent",
+          "showroom-earth-cloud-band",
+          "showroom-earth-terminator",
+          "showroom-earth-glint",
+          "showroom-earth-gridline"
+        ]),
+        gen2v1Moon: Object.freeze([
+          "Moon",
+          "showroom-earth-moon-orbit",
+          "showroom-earth-moon-dot",
+          "Moon locked",
+          "Earth companion"
+        ]),
+        traversal: Object.freeze([
+          "HOME",
+          "BOUNDARY",
+          "MOTION",
+          "REALM",
+          "RECEIPT",
+          "NEXT",
+          "showroom-traversal-strip"
+        ])
+      });
+
+      const rows = document.getElementById("auditRows");
+      const gen1Ladder = document.getElementById("gen1Ladder");
+      const g2v1Ladder = document.getElementById("g2v1Ladder");
+
+      const metrics = {
+        gen1: document.getElementById("gen1Metric"),
+        scope: document.getElementById("scopeMetric"),
+        visual: document.getElementById("visualMetric"),
+        g2v1: document.getElementById("g2v1Metric"),
+        earth: document.getElementById("earthMetric"),
+        moon: document.getElementById("moonMetric")
+      };
+
+      function setMetric(node, status) {
+        node.textContent = status;
+        node.classList.remove("pass", "hold", "fail");
+        node.classList.add(status === "PASS" ? "pass" : status === "FAIL" ? "fail" : "hold");
+      }
+
+      function statusClass(status) {
+        if (status === "PASS") return "status-pass";
+        if (status === "FAIL") return "status-fail";
+        return "status-hold";
+      }
+
+      function addRow(layer, targets, status, evidence) {
+        const row = document.createElement("tr");
+        row.innerHTML =
+          "<td>" + layer + "</td>" +
+          "<td><code>" + targets + "</code></td>" +
+          "<td class='" + statusClass(status) + "'>" + status + "</td>" +
+          "<td>" + evidence + "</td>";
+        rows.append(row);
+      }
+
+      function addCard(target, title, status, body) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.status = status;
+        card.innerHTML =
+          "<strong>" + title + " · <span class='" + statusClass(status) + "'>" + status + "</span></strong>" +
+          "<span>" + body + "</span>";
+        target.append(card);
+      }
+
+      async function fetchText(path) {
+        try {
+          const response = await fetch(path, { cache: "no-store" });
+          const text = await response.text();
+          return { path, ok: response.ok, status: response.status, text, error: "" };
+        } catch (error) {
+          return { path, ok: false, status: "FETCH_ERROR", text: "", error: error.message };
+        }
+      }
+
+      function markerResult(text, markers) {
+        const found = markers.filter(function has(marker) {
+          return text.indexOf(marker) !== -1;
+        });
+
         return {
-          version: VERSION,
-          generation: GENERATION,
-          authority: AUTHORITY,
-          active: true,
-          scope: "our-universe",
-          visualExpression: "solar-system-field",
-          orbitField: "visible",
-          earthZoom: "active",
-          visibleGlobe: true,
-          visibleCodeGlobe: true,
-          phaseBind: "complete",
-          currentPhase: "GEN_4_CLOSED",
-          currentBody: "EARTH",
-          bodies: clone(ALL_BODIES),
-          generation4Closeout: "complete",
-          gen4Closeout: "complete",
-          finalCloseout: true
+          found,
+          missing: markers.filter(function lacks(marker) {
+            return found.indexOf(marker) === -1;
+          }),
+          score: markers.length ? Math.round((found.length / markers.length) * 100) : 0
         };
       }
-    });
-  }
 
-  global.ShowroomGlobeInstrument = Object.freeze({
-    VERSION: VERSION,
-    GENERATION: GENERATION,
-    AUTHORITY: AUTHORITY,
-    PHASES: PHASES,
-    UNIVERSE_BODIES: ALL_BODIES,
-    createGlobe: createGlobe
-  });
-})(window, document);
+      function statusByScore(score, required) {
+        return score >= required ? "PASS" : "HOLD";
+      }
+
+      function combine() {
+        return Array.prototype.slice.call(arguments).join("\n\n");
+      }
+
+      function fetchSummary(fetches) {
+        return Object.keys(fetches).map(function map(key) {
+          return key + "=" + fetches[key].status;
+        }).join(", ");
+      }
+
+      async function runAudit() {
+        rows.innerHTML = "";
+        gen1Ladder.innerHTML = "";
+        g2v1Ladder.innerHTML = "";
+
+        const parent = await fetchText(TARGETS.parent);
+        const inspection = await fetchText(TARGETS.inspection);
+        const instrument = await fetchText(TARGETS.instrument);
+        const css = await fetchText(TARGETS.css);
+        const render = await fetchText(TARGETS.render);
+        const boot = await fetchText(TARGETS.boot);
+
+        const fetches = { parent, inspection, instrument, css, render, boot };
+        const all = combine(parent.text, inspection.text, instrument.text, css.text, render.text, boot.text);
+        const expressionStack = combine(inspection.text, instrument.text, css.text, render.text, boot.text);
+
+        const gen1 = markerResult(all, MARKERS.gen1Baseline);
+        const bodies = markerResult(all, MARKERS.bodies);
+        const visual = markerResult(expressionStack, MARKERS.visualField);
+        const earth = markerResult(expressionStack, MARKERS.gen2v1Earth);
+        const moon = markerResult(expressionStack, MARKERS.gen2v1Moon);
+        const traversal = markerResult(expressionStack, MARKERS.traversal);
+
+        const gen1Status =
+          parent.ok &&
+          inspection.ok &&
+          instrument.ok &&
+          render.ok &&
+          boot.ok &&
+          statusByScore(gen1.score, 80) === "PASS" &&
+          bodies.score === 100
+            ? "PASS"
+            : "HOLD";
+
+        const scopeStatus = bodies.score === 100 && all.indexOf("our-universe") !== -1 ? "PASS" : "HOLD";
+        const visualStatus = statusByScore(visual.score, 70);
+        const earthStatus = statusByScore(earth.score, 70);
+        const moonStatus = statusByScore(moon.score, 60);
+
+        const g2v1Status =
+          gen1Status === "PASS" &&
+          visualStatus === "PASS" &&
+          earthStatus === "PASS" &&
+          moonStatus === "PASS"
+            ? "PASS"
+            : "HOLD";
+
+        setMetric(metrics.gen1, gen1Status);
+        setMetric(metrics.scope, scopeStatus);
+        setMetric(metrics.visual, visualStatus);
+        setMetric(metrics.g2v1, g2v1Status);
+        setMetric(metrics.earth, earthStatus);
+        setMetric(metrics.moon, moonStatus);
+
+        addRow(
+          "Gen 1 baseline",
+          "/showroom/ + /showroom/globe/ + source files",
+          gen1Status,
+          gen1.found.length + " of " + MARKERS.gen1Baseline.length + " baseline markers; " + bodies.found.length + " of 10 bodies. " + fetchSummary(fetches) + "."
+        );
+
+        addRow(
+          "Our-universe scope",
+          "/showroom/globe/ + source files",
+          scopeStatus,
+          bodies.found.length + " of " + MARKERS.bodies.length + " required bodies found."
+        );
+
+        addRow(
+          "Visual field",
+          "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
+          visualStatus,
+          visual.found.length + " of " + MARKERS.visualField.length + " visual field markers found."
+        );
+
+        addRow(
+          "Gen 2 V1 · Earth definition",
+          "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
+          earthStatus,
+          earth.found.length + " of " + MARKERS.gen2v1Earth.length + " Earth definition markers found."
+        );
+
+        addRow(
+          "Gen 2 V1 · Moon relation",
+          "/assets/showroom.globe.instrument.js + /showroom/showroom.css",
+          moonStatus,
+          moon.found.length + " of " + MARKERS.gen2v1Moon.length + " Moon relation markers found."
+        );
+
+        addRow(
+          "Traversal path",
+          "/assets/showroom.globe.instrument.js + source stack",
+          statusByScore(traversal.score, 70),
+          traversal.found.length + " of " + MARKERS.traversal.length + " traversal markers found."
+        );
+
+        addCard(
+          gen1Ladder,
+          "Gen 1 · Our Universe baseline",
+          gen1Status,
+          gen1Status === "PASS"
+            ? "Structure remains intact: Showroom shell, Demo Universe, scope, bodies, and closeout."
+            : "Baseline is not fully detected. Do not continue expression work until restored."
+        );
+
+        addCard(
+          gen1Ladder,
+          "Visual field",
+          visualStatus,
+          visualStatus === "PASS"
+            ? "Solar-system field remains source-visible."
+            : "Visual field markers are incomplete."
+        );
+
+        addCard(
+          g2v1Ladder,
+          "Earth Definition",
+          earthStatus,
+          earthStatus === "PASS"
+            ? "Earth zoom/detail markers are detected."
+            : "Earth definition is not fully detected."
+        );
+
+        addCard(
+          g2v1Ladder,
+          "Moon Relationship",
+          moonStatus,
+          moonStatus === "PASS"
+            ? "Moon orbit/relationship markers are detected."
+            : "Moon relation is incomplete."
+        );
+
+        addCard(
+          g2v1Ladder,
+          "Gen 2 V1 Close",
+          g2v1Status,
+          g2v1Status === "PASS"
+            ? "Earth Definition can be visually inspected for closeout."
+            : "Gen 2 V1 remains held until Earth and Moon markers pass."
+        );
+
+        document.documentElement.dataset.gaugesRun = "complete";
+        document.documentElement.dataset.gaugesVersion = VERSION;
+        document.documentElement.dataset.gen1Baseline = gen1Status;
+        document.documentElement.dataset.gen2V1EarthDefinition = g2v1Status;
+      }
+
+      document.getElementById("runAudit").addEventListener("click", runAudit);
+
+      window.GaugesGen2V1EarthDefinition = Object.freeze({
+        VERSION,
+        TARGETS,
+        MARKERS,
+        runAudit
+      });
+    })();
+  </script>
+</body>
+</html>

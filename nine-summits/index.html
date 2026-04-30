@@ -1,201 +1,280 @@
 <!doctype html>
-<html lang="en" data-page="nine-summits" data-route="/nine-summits/" data-generation="nested-universe-standard-tnt-v1">
+<html
+  lang="en"
+  data-page="nine-summits"
+  data-route="/nine-summits/"
+  data-generation="NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1"
+  data-universe-route="/nine-summits/universe/"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>The Nine Summits · Diamond Gate Bridge</title>
-  <meta name="description" content="The Nine Summits is the public hub for the book path, nested universe path, and This Underdog speaking lane.">
+  <meta name="description" content="The Nine Summits is the public doorway for The Nine Summits of Love, the Nine Summits Universe, and This Underdog.">
 
   <style>
     :root {
-      --bg: #03050a;
-      --panel: rgba(9,15,25,.94);
-      --panel2: rgba(14,24,38,.84);
-      --line: rgba(168,199,255,.22);
-      --gold-line: rgba(242,199,111,.36);
-      --text: #f4f7ff;
-      --muted: #b8c2d6;
-      --gold: #f2c76f;
-      --green: #8ff0c6;
-      --shadow: rgba(0,0,0,.56);
+      --bg:#03050a;
+      --panel:rgba(9,15,25,.94);
+      --panel2:rgba(14,24,38,.84);
+      --line:rgba(168,199,255,.22);
+      --gold-line:rgba(242,199,111,.38);
+      --text:#f4f7ff;
+      --muted:#b8c2d6;
+      --soft:rgba(244,247,255,.78);
+      --gold:#f2c76f;
+      --green:#8ff0c6;
+      --blue:#91bdff;
+      --shadow:rgba(0,0,0,.56);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
       background:
-        radial-gradient(circle at 78% 6%, rgba(242,199,111,.14), transparent 24rem),
-        radial-gradient(circle at 20% 18%, rgba(145,189,255,.12), transparent 30rem),
+        radial-gradient(circle at 76% 4%,rgba(242,199,111,.14),transparent 24rem),
+        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
+        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
         linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a { color:inherit; text-decoration:none; }
+    a:focus { outline:2px solid var(--green); outline-offset:3px; }
 
     .skip {
-      position: absolute;
-      left: -999px;
-      top: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-      font-weight: 800;
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:1000;
+      padding:8px 12px;
+      border-radius:10px;
+      background:#fff;
+      color:#000;
+      font-weight:850;
     }
 
-    .skip:focus { left: 10px; }
+    .skip:focus { left:10px; }
 
     .page {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 24px 0 60px;
+      width:min(1120px,calc(100% - 28px));
+      margin:0 auto;
+      padding:24px 0 64px;
     }
 
     .brand {
-      display: block;
-      margin-bottom: 18px;
-      color: var(--muted);
-      font-size: .86rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+      display:block;
+      margin-bottom:18px;
+      color:var(--muted);
+      font-size:.86rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .brand strong {
-      display: block;
-      color: var(--gold);
-      font-size: 1rem;
-      letter-spacing: .16em;
-      text-transform: uppercase;
+      display:block;
+      color:var(--gold);
+      font-size:1rem;
+      letter-spacing:.16em;
     }
 
-    .nav, .actions, .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    .nav,
+    .actions,
+    .links {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
     }
 
-    .nav { margin-bottom: 26px; }
+    .nav { margin-bottom:26px; }
 
-    .nav a, .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 16px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255,255,255,.055);
-      font-weight: 850;
+    .nav a,
+    .button {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 16px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      color:var(--text);
+      font-weight:850;
     }
 
-    .nav a[aria-current="page"], .button.primary {
-      border-color: rgba(242,199,111,.5);
-      background: rgba(242,199,111,.13);
+    .nav a[aria-current="page"],
+    .button.primary {
+      border-color:rgba(242,199,111,.52);
+      background:rgba(242,199,111,.14);
     }
 
-    .hero, .panel, .card {
-      border: 1px solid var(--line);
-      border-radius: 30px;
+    .button.green {
+      border-color:rgba(143,240,198,.5);
+      background:rgba(143,240,198,.13);
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .route-card {
+      border:1px solid var(--line);
+      border-radius:30px;
       background:
-        radial-gradient(circle at 90% 8%, rgba(242,199,111,.08), transparent 18rem),
+        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
         var(--panel);
-      box-shadow: 0 24px 80px var(--shadow);
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .hero, .panel {
-      padding: clamp(24px,5vw,48px);
-      margin-top: 18px;
+    .hero,
+    .panel {
+      padding:clamp(24px,5vw,52px);
+      margin-top:18px;
     }
 
     .hero {
-      min-height: 500px;
-      display: grid;
-      align-content: center;
-      gap: 24px;
-      border-color: var(--gold-line);
+      min-height:540px;
+      display:grid;
+      align-content:center;
+      gap:24px;
+      border-color:var(--gold-line);
+      background:
+        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
+        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
+        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
     }
 
     .kicker {
-      margin: 0 0 12px;
-      color: var(--gold);
-      font-size: .82rem;
-      font-weight: 950;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
+    .kicker.green { color:var(--green); }
+    .kicker.blue { color:var(--blue); }
+
     h1 {
-      margin: 0;
-      max-width: 980px;
-      font-size: clamp(3rem,10vw,7rem);
-      line-height: .9;
-      letter-spacing: -.078em;
+      margin:0;
+      max-width:980px;
+      font-size:clamp(3.2rem,10vw,7.2rem);
+      line-height:.88;
+      letter-spacing:-.08em;
     }
 
     h2 {
-      margin: 0;
-      max-width: 900px;
-      font-size: clamp(1.7rem,5vw,3.35rem);
-      line-height: 1;
-      letter-spacing: -.058em;
+      margin:0;
+      max-width:920px;
+      font-size:clamp(1.85rem,5vw,3.45rem);
+      line-height:1;
+      letter-spacing:-.06em;
     }
 
     h3 {
-      margin: 0;
-      font-size: clamp(1.25rem,3.6vw,2rem);
-      line-height: 1.06;
-      letter-spacing: -.045em;
+      margin:0;
+      font-size:clamp(1.28rem,3.7vw,2.05rem);
+      line-height:1.06;
+      letter-spacing:-.045em;
     }
 
     p {
-      color: var(--muted);
-      font-size: clamp(1.02rem,2.4vw,1.2rem);
-      line-height: 1.6;
+      color:var(--muted);
+      font-size:clamp(1.02rem,2.4vw,1.2rem);
+      line-height:1.6;
     }
 
     .lead {
-      max-width: 900px;
-      font-size: clamp(1.16rem,3vw,1.55rem);
-      line-height: 1.45;
+      max-width:920px;
+      color:var(--soft);
+      font-size:clamp(1.16rem,3vw,1.55rem);
+      line-height:1.45;
+    }
+
+    .one-line {
+      color:var(--text);
+      font-size:clamp(1.7rem,5vw,3.5rem);
+      line-height:1.05;
+      letter-spacing:-.06em;
+      font-weight:950;
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
+      display:grid;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+
+    .card,
+    .route-card {
+      padding:22px;
+      background:
+        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
+        var(--panel2);
+      box-shadow:none;
     }
 
     .card {
-      padding: 22px;
-      min-height: 240px;
-      background: var(--panel2);
-      box-shadow: none;
+      min-height:205px;
+      display:grid;
+      align-content:start;
+      gap:12px;
     }
 
-    .card span {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--gold);
-      font-size: .76rem;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+    .route-card {
+      min-height:285px;
+      display:grid;
+      gap:12px;
+      align-content:start;
     }
 
-    .card p { margin: 12px 0 0; }
+    .route-card .button {
+      width:max-content;
+      margin-top:auto;
+    }
 
-    .receipt { display: none !important; }
+    .card span,
+    .route-card span {
+      display:block;
+      margin-bottom:8px;
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .hero { min-height: 430px; }
+    .card p,
+    .route-card p { margin:0; }
+
+    .receipt { display:none!important; }
+
+    @media (max-width:980px) {
+      .grid.two,
+      .grid.three { grid-template-columns:1fr; }
+      .hero { min-height:470px; }
+    }
+
+    @media (max-width:620px) {
+      .page {
+        width:min(100% - 24px,620px);
+        padding-top:18px;
+      }
+
+      .nav a,
+      .button {
+        min-height:40px;
+        padding:9px 14px;
+      }
     }
   </style>
 </head>
@@ -203,7 +282,13 @@
 <body>
   <a class="skip" href="#summits-main">Skip to Nine Summits</a>
 
-  <main id="summits-main" class="page" data-route="/nine-summits/" data-canonical-universe-route="/nine-summits/universe/">
+  <main
+    id="summits-main"
+    class="page"
+    data-route="/nine-summits/"
+    data-page-purpose="book-metaverse-public-voice-hub"
+    data-universe-route="/nine-summits/universe/"
+  >
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
       Nine Summits · Book + Metaverse Hub
@@ -211,8 +296,9 @@
 
     <nav class="nav" aria-label="Primary navigation">
       <a href="/">Compass</a>
-      <a href="/nine-summits-of-love/">Nine Summits of Love</a>
-      <a href="/nine-summits/universe/" aria-current="page">Nine Summits Universe</a>
+      <a href="/nine-summits/" aria-current="page">Nine Summits</a>
+      <a href="/nine-summits-of-love/">Book</a>
+      <a href="/nine-summits/universe/">Universe</a>
       <a href="/this-underdog/">This Underdog</a>
       <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
@@ -221,98 +307,130 @@
     <section class="hero">
       <p class="kicker">Nine Summits · Book / Metaverse / Public Voice</p>
       <h1>The Nine Summits</h1>
+
       <p class="lead">
-        The Nine Summits is the public doorway for two connected expressions: The Nine Summits of Love as the book and human transformation path, and the Nine Summits Universe as the nested world, platform, and expansion field around it.
+        The Nine Summits is the doorway to three connected paths: the book, the universe, and the public voice.
       </p>
+
       <p class="lead">
-        The book gives the human path. The universe gives the world around the path. This Underdog carries the public voice that brings both into the room.
+        The book gives the human climb. The universe gives the climb a world. This Underdog gives both a voice.
       </p>
 
       <div class="actions">
         <a class="button primary" href="/nine-summits-of-love/">Open book lane</a>
-        <a class="button primary" href="/nine-summits/universe/">Open universe lane</a>
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
         <a class="button" href="/this-underdog/">Open This Underdog</a>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker">Paramount architecture</p>
-      <h2>The Universe is nested under the Nine Summits hub.</h2>
-      <p>
-        The canonical universe route is now `/nine-summits/universe/`. That preserves architecture: the hub remains the parent, and the universe becomes a child lane under the Nine Summits system instead of a loose parallel route.
+      <p class="kicker green">Start here</p>
+      <h2>The climb begins with pressure. The world opens through coherence.</h2>
+
+      <p class="one-line">
+        A locked heart is not a dead heart. It is a heart waiting for the right key.
+      </p>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Choose the lane</p>
+      <h2>One system. Three doors. No confusion.</h2>
+
+      <div class="grid three">
+        <article class="route-card">
+          <span>Book lane</span>
+          <h3>The Nine Summits of Love</h3>
+          <p>The human path: love, pressure, dignity, free will, and 256 carats of human potential.</p>
+          <p>Start here when the question is personal: Who am I becoming?</p>
+          <a class="button primary" href="/nine-summits-of-love/">Open book page</a>
+        </article>
+
+        <article class="route-card">
+          <span>Metaverse lane</span>
+          <h3>Nine Summits Universe</h3>
+          <p>The world around the book: Planet 1, seven landmasses, coherence access, the floating magnetic core, cities, products, and experiences.</p>
+          <p>Start here when the question becomes larger: Where does the path lead?</p>
+          <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
+        </article>
+
+        <article class="route-card">
+          <span>Speaking lane</span>
+          <h3>This Underdog</h3>
+          <p>The public voice: comedy, story, seminars, stage identity, and the underdog message.</p>
+          <p>Start here when the question needs a human voice.</p>
+          <a class="button" href="/this-underdog/">Open speaking page</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker blue">Book and world</p>
+      <h2>The book gives the climb. The universe gives the climb a world.</h2>
+
+      <div class="grid two">
+        <article class="card">
+          <span>The book</span>
+          <h3>The human path stays human first.</h3>
+          <p>The Nine Summits of Love moves through character, structure, balance, stability, peace, joy, dignity, free will, and love.</p>
+          <p><a class="button primary" href="/nine-summits-of-love/">Open Nine Summits of Love</a></p>
+        </article>
+
+        <article class="card">
+          <span>The universe</span>
+          <h3>The path becomes a place.</h3>
+          <p>Nine Summits Universe opens the metaverse lane: a world where lessons become rooms, trials become terrain, and coherence determines access.</p>
+          <p><a class="button green" href="/nine-summits/universe/">Open metaverse lane</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">What the metaverse lane can hold</p>
+      <h2>The world is built to carry more than one page.</h2>
+
+      <div class="grid three">
+        <article class="card"><span>Stories</span><h3>Characters need places.</h3><p>The universe gives the book a world where stories can move, test, fail, recover, and rise.</p></article>
+        <article class="card"><span>Products</span><h3>Tools need context.</h3><p>Products can live inside chambers, regions, missions, lessons, games, and public experiences.</p></article>
+        <article class="card"><span>Events</span><h3>Rooms need a map.</h3><p>Seminars, shows, talks, workshops, and live experiences can attach to places inside the world.</p></article>
+      </div>
+
+      <div class="links">
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
+        <a class="button" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Final line</p>
+      <h2>The pressure was not the end. It was the beginning of the map.</h2>
+
+      <p class="lead">
+        The Nine Summits turns pressure into language, language into a path, and the path into a world.
       </p>
 
-      <div class="grid">
-        <article class="card">
-          <span>Hub lane</span>
-          <h3>/nine-summits/</h3>
-          <p>The public control surface for book, universe, and underdog routes.</p>
-        </article>
-
-        <article class="card">
-          <span>Book lane</span>
-          <h3>/nine-summits-of-love/</h3>
-          <p>The human transformation path: character, structure, balance, stability, peace, joy, dignity, free will, and love.</p>
-        </article>
-
-        <article class="card">
-          <span>Universe lane</span>
-          <h3>/nine-summits/universe/</h3>
-          <p>The Planet 1 world map: seven landmasses, floating magnetic core, coherence access, population law, and TikTok protocol.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker">Choose the right lane</p>
-      <h2>One summit system. Three public routes.</h2>
-
-      <div class="grid">
-        <article class="card">
-          <span>Book</span>
-          <h3>Nine Summits of Love</h3>
-          <p>The human path: love, voice, pressure, dignity, free will, and 256 carats of human potential.</p>
-          <p><a class="button primary" href="/nine-summits-of-love/">Open book page</a></p>
-        </article>
-
-        <article class="card">
-          <span>Universe</span>
-          <h3>Nine Summits Universe</h3>
-          <p>The larger world around the book: planet, landmasses, coherence terrain, cities, systems, and platform expansion.</p>
-          <p><a class="button primary" href="/nine-summits/universe/">Open universe page</a></p>
-        </article>
-
-        <article class="card">
-          <span>Voice</span>
-          <h3>This Underdog</h3>
-          <p>The speaking lane: story, comedy, seminar, public proof, and the underdog voice.</p>
-          <p><a class="button" href="/this-underdog/">Open speaking page</a></p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker">Estate links</p>
-      <h2>Move through the public system.</h2>
       <div class="links">
-        <a class="button primary" href="/">Compass</a>
-        <a class="button" href="/nine-summits-of-love/">Nine Summits of Love</a>
-        <a class="button" href="/nine-summits/universe/">Nine Summits Universe</a>
-        <a class="button" href="/this-underdog/">This Underdog</a>
-        <a class="button" href="/showroom/">Showroom</a>
-        <a class="button" href="/gauges/">Gauges</a>
+        <a class="button primary" href="/nine-summits-of-love/">Open book lane</a>
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
+        <a class="button" href="/this-underdog/">Open This Underdog</a>
+        <a class="button" href="/">Return to Compass</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      NINE_SUMMITS_HUB_NESTED_UNIVERSE_STANDARD_TNT_v1
+      NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1
       route=/nine-summits/
-      canonical-universe-route=/nine-summits/universe/
-      retired-route=/nine-summits-universe/
-      parent-route=true
-      universe-child-route=true
-      paramount-architecture=true
-      poor-architecture-avoidance=true
+      href="/nine-summits/universe/"
+      Open metaverse lane
+      broken-public-universe-link-removed=true
+      page-purpose=book-metaverse-public-voice-hub
+      universe-route=/nine-summits/universe/
+      metaverse-route=/nine-summits/universe/
+      all-public-metaverse-links-point-to-nested-route=true
+      book-route=/nine-summits-of-love/
+      speaking-route=/this-underdog/
+      demo-planet-route=/showroom/globe/
+      gauges-route=/gauges/
     </section>
   </main>
 </body>

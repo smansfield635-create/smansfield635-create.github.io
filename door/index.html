@@ -1,153 +1,446 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-build="six-house-parts-full-tnt-v1"
-  data-generation="door-core-house-alignment-renewal-v1"
-  data-page-id="door"
-  data-page="door"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="door"
->
+<!doctype html>
+<html lang="en" data-page="door" data-room="H2_DOOR" data-public-mode="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Door · Diamond Gate Bridge</title>
+  <meta name="description" content="Door is the entry threshold into Rich Manor and Estate.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
 
-  <meta
-    name="description"
-    content="Door: the threshold, gate, and bridge into Rich Manor and Estate."
-  />
+    * {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="/assets/manor.css?v=door-core-house-alignment-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 76% 10%, rgba(255, 211, 111, 0.11), transparent 24rem),
+        radial-gradient(circle at 22% 20%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .hero,
+    .panel,
+    .path-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 410px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
+        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.08), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(24px, 7vw, 84px);
+      top: 50%;
+      width: clamp(110px, 24vw, 230px);
+      height: clamp(210px, 46vw, 440px);
+      transform: translateY(-50%);
+      border: 1px solid rgba(255, 211, 111, 0.24);
+      border-radius: 999px 999px 26px 26px;
+      background:
+        linear-gradient(90deg, rgba(255, 211, 111, 0.10), rgba(143, 240, 198, 0.035)),
+        radial-gradient(circle at 50% 25%, rgba(255, 211, 111, 0.18), transparent 9rem);
+      box-shadow:
+        inset 0 0 32px rgba(255, 211, 111, 0.06),
+        0 0 70px rgba(255, 211, 111, 0.08);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.52;
+    }
+
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .path-card {
+      min-height: 210px;
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
+        rgba(9, 15, 25, 0.84);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .path-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background:
+        radial-gradient(circle at 22% 0%, rgba(143, 240, 198, 0.1), transparent 14rem),
+        rgba(12, 20, 32, 0.9);
+    }
+
+    .path-label {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .path-card h3 {
+      margin: 6px 0 0;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .path-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .card-link {
+      color: var(--green);
+      font-weight: 850;
+    }
+
+    .backlinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .path-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 360px;
+      }
+
+      .hero::after {
+        opacity: 0.28;
+        right: -30px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .nav,
+      .actions,
+      .backlinks {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .path-card {
+        min-height: 180px;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin manor-house house-class"
-  data-page-id="door"
-  data-page="door"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-class="house"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="door"
-  data-manor-room="door"
-  data-manor-slot="H2_DOOR"
-  data-manor-route="/door/"
-  data-manor-batch="BATCH_1_HOUSE"
-  data-route="/door/"
-  data-class-type="house_structure"
-  data-construct-code="H2_DOOR"
-  data-house-anchor="door"
-  data-skin-family="manor_house"
-  data-audit-priority="high"
-  data-view-modes="flat round meta return"
-  data-registry-version="1.0.0"
->
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/" aria-current="page">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+<body>
+  <a class="skip" href="#door-main">Skip to Door</a>
 
   <main
-    class="manor-shell manor-skin house-class"
-    data-page-id="door"
-    data-page="door"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-manor-class="house"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="house"
-    data-house-part="door"
-    data-manor-room="door"
-    data-manor-slot="H2_DOOR"
-    data-manor-route="/door/"
+    id="door-main"
+    class="page"
     data-route="/door/"
-    data-class-type="house_structure"
-    data-construct-code="H2_DOOR"
-    data-house-anchor="door"
-  >
-    <section class="manor-room" aria-label="Door">
-      <p class="manor-kicker">H2 · Door · Entry Threshold</p>
+    data-house-part="door"
+    data-construct-class="house"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority">
 
-      <h1 class="manor-title">Door</h1>
+    <header class="topbar" aria-label="Door header">
+      <div class="brand">Diamond Gate Bridge · Rich Manor and Estate · Door</div>
+      <nav class="nav" aria-label="Door navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <p class="manor-lede">
-        The Door controls entry. It is the gate, bridge, and threshold between first perception and arrival inside Rich Manor and Estate.
-      </p>
-
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="Door threshold">
-        <p class="manor-kicker">Threshold rule</p>
-
-        <h2>Cross into the Manor.</h2>
-
-        <p class="manor-lede">
-          Compass chooses how the estate is viewed. Door performs the entry. This page does not replace the Compass; it turns orientation into arrival.
+    <section class="hero" aria-labelledby="door-title">
+      <div class="hero-content">
+        <p class="kicker">H2 · Door · Entry Threshold</p>
+        <h1 id="door-title">Door</h1>
+        <p class="lead">
+          The Door turns orientation into arrival. Compass chooses the view; Door performs the entry into Rich Manor and Estate.
         </p>
+      </div>
 
-        <div class="manor-grid">
-          <a class="manor-card" href="/">
-            <p class="manor-kicker">Return</p>
-            <h2>Compass</h2>
-            <p class="manor-lede">Choose the view again.</p>
-          </a>
+      <div class="actions" aria-label="Primary Door actions">
+        <a class="button primary" href="/home/">Enter Home</a>
+        <a class="button" href="/">Return to Compass</a>
+        <a class="button" href="/products/">Continue to Products</a>
+      </div>
+    </section>
 
-          <a class="manor-card" href="/home/">
-            <p class="manor-kicker">Enter</p>
-            <h2>Home</h2>
-            <p class="manor-lede">Move into the receiving hall.</p>
-          </a>
+    <section class="section panel" aria-labelledby="threshold-rule-title">
+      <p class="kicker">Threshold rule</p>
+      <h2 id="threshold-rule-title">Cross into the Manor.</h2>
+      <p>
+        This page does not replace the Compass. It carries the visitor from first perception into arrival, then opens the path toward Home and Products.
+      </p>
+    </section>
 
-          <a class="manor-card" href="/products/">
-            <p class="manor-kicker">Continue</p>
-            <h2>Products</h2>
-            <p class="manor-lede">Proceed toward the source chamber.</p>
-          </a>
+    <section class="path-grid" aria-label="Door path">
+      <a class="path-card" href="/">
+        <div>
+          <div class="path-label">Return</div>
+          <h3>Compass</h3>
+          <p>Choose the view again.</p>
         </div>
-      </section>
+        <div class="card-link">Return to Compass</div>
+      </a>
+
+      <a class="path-card" href="/home/">
+        <div>
+          <div class="path-label">Enter</div>
+          <h3>Home</h3>
+          <p>Move into the receiving hall.</p>
+        </div>
+        <div class="card-link">Enter Home</div>
+      </a>
+
+      <a class="path-card" href="/products/">
+        <div>
+          <div class="path-label">Continue</div>
+          <h3>Products</h3>
+          <p>Proceed toward the source chamber.</p>
+        </div>
+        <div class="card-link">Continue to Products</div>
+      </a>
     </section>
 
-    <section class="manor-backlinks" aria-label="House backlinks">
-      <p class="manor-backlinks-title">House backlinks</p>
-
-      <ul class="manor-backlinks-list">
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+    <section class="section panel" aria-labelledby="house-links-title">
+      <p class="kicker">House backlinks</p>
+      <h2 id="house-links-title">Move through the house.</h2>
+      <div class="backlinks">
+        <a class="button" href="/">Compass</a>
+        <a class="button" href="/home/">Home</a>
+        <a class="button" href="/products/">Products</a>
+        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button" href="/gauges/">Gauges</a>
+      </div>
     </section>
 
-    <section class="manor-audit-strip" aria-label="Door audit receipt">
-      <p class="manor-audit-title">Door receipt</p>
-
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">house-class</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=house</li>
-        <li class="manor-audit-chip pass">house-part=door</li>
-        <li class="manor-audit-chip pass">H2_DOOR</li>
-      </ul>
+    <section class="receipt" aria-hidden="true">
+      Door receipt
+      route-exists
+      manor-skin
+      house-class
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=house
+      house-part=door
+      H2_DOOR
+      entry-threshold
+      threshold-rule
+      Compass=/ 
+      Home=/home/
+      Products=/products/
+      Showroom=/showroom/
+      Gauges=/gauges/
     </section>
   </main>
 </body>

@@ -1,22 +1,18 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="nine-summits-universe"
-  data-route="/nine-summits/universe/"
-  data-generation="metaverse-lane-open-tnt-v1"
-  data-planet="NINE_SUMMITS_UNIVERSE"
-  data-demo-planet="planet-1"
-  data-core="floating-magnetic-half-natural-half-man-made"
-  data-map-protocol="tiktok"
-  data-population-law="archetype-personality-capacity"
+  data-page="nine-summits"
+  data-route="/nine-summits/"
+  data-generation="nine-summits-hub-metaverse-link-repair-tnt-v1"
+  data-universe-route="/nine-summits/universe/"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Nine Summits Universe · Metaverse Lane · Diamond Gate Bridge</title>
+  <title>The Nine Summits · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Enter the Nine Summits Universe: Planet 1, a seven-landmass coherence world restored through a floating magnetic core and governed by terrain, access, archetype-personality population, and the TikTok map protocol."
+    content="The Nine Summits is the public doorway for The Nine Summits of Love, the Nine Summits Universe, and This Underdog."
   >
 
   <style>
@@ -50,8 +46,8 @@
       color: var(--text);
       background:
         radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
-        radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
-        radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
+        radial-gradient(circle at 18% 18%, rgba(145, 189, 255, 0.12), transparent 30rem),
+        radial-gradient(circle at 50% 92%, rgba(143, 240, 198, 0.08), transparent 26rem),
         linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -85,7 +81,7 @@
     }
 
     .page {
-      width: min(1160px, calc(100% - 28px));
+      width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
       padding: 24px 0 64px;
     }
@@ -148,7 +144,7 @@
     .hero,
     .panel,
     .card,
-    .land-card {
+    .route-card {
       border: 1px solid var(--line);
       border-radius: 30px;
       background:
@@ -164,7 +160,7 @@
     }
 
     .hero {
-      min-height: 580px;
+      min-height: 560px;
       display: grid;
       align-content: center;
       gap: 24px;
@@ -177,15 +173,15 @@
 
     .kicker {
       margin: 0 0 12px;
-      color: var(--green);
+      color: var(--gold);
       font-size: 0.82rem;
       font-weight: 950;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .kicker.gold {
-      color: var(--gold);
+    .kicker.green {
+      color: var(--green);
     }
 
     .kicker.blue {
@@ -219,6 +215,10 @@
       color: var(--muted);
       font-size: clamp(1.02rem, 2.4vw, 1.2rem);
       line-height: 1.6;
+    }
+
+    strong {
+      color: var(--text);
     }
 
     .lead {
@@ -255,7 +255,7 @@
     }
 
     .card,
-    .land-card {
+    .route-card {
       padding: 22px;
       background:
         radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
@@ -270,29 +270,20 @@
       gap: 12px;
     }
 
-    .land-card {
-      min-height: 300px;
+    .route-card {
+      min-height: 295px;
       display: grid;
-      align-content: start;
       gap: 12px;
+      align-content: start;
     }
 
-    .land-card.primary {
-      border-color: rgba(242, 199, 111, 0.42);
-      background:
-        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.12), transparent 18rem),
-        var(--panel2);
-    }
-
-    .land-card.pole {
-      border-color: rgba(143, 240, 198, 0.36);
-      background:
-        radial-gradient(circle at 18% 0%, rgba(143, 240, 198, 0.1), transparent 18rem),
-        var(--panel2);
+    .route-card .button {
+      width: max-content;
+      margin-top: auto;
     }
 
     .card span,
-    .land-card span {
+    .route-card span {
       display: block;
       margin-bottom: 8px;
       color: var(--gold);
@@ -303,8 +294,25 @@
     }
 
     .card p,
-    .land-card p {
+    .route-card p {
       margin: 0;
+    }
+
+    .cover-frame {
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.36);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: clamp(12px, 3vw, 24px);
+      margin-top: 18px;
+    }
+
+    .cover-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 22px;
+      border: 1px solid rgba(242, 199, 111, 0.24);
     }
 
     .steps {
@@ -335,38 +343,6 @@
       line-height: 1.48;
     }
 
-    .az-grid {
-      display: grid;
-      grid-template-columns: repeat(13, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .az-chip {
-      display: grid;
-      gap: 4px;
-      align-content: center;
-      min-height: 68px;
-      border: 1px solid rgba(168, 199, 255, 0.14);
-      border-radius: 16px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.045);
-      text-align: center;
-    }
-
-    .az-chip strong {
-      color: var(--gold);
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-
-    .az-chip span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 800;
-      line-height: 1.15;
-    }
-
     .receipt {
       display: none !important;
     }
@@ -378,12 +354,8 @@
         grid-template-columns: 1fr;
       }
 
-      .az-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
       .hero {
-        min-height: 480px;
+        min-height: 470px;
       }
     }
 
@@ -402,424 +374,253 @@
       .step {
         grid-template-columns: 1fr;
       }
-
-      .az-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#universe-main">Skip to Nine Summits Universe</a>
+  <a class="skip" href="#summits-main">Skip to Nine Summits</a>
 
   <main
-    id="universe-main"
+    id="summits-main"
     class="page"
-    data-route="/nine-summits/universe/"
-    data-parent-route="/nine-summits/"
-    data-page-purpose="metaverse-lane-entry"
-    data-planet="NINE_SUMMITS_UNIVERSE"
-    data-planet-number="1"
-    data-demo-planet="true"
-    data-core="floating-magnetic-half-natural-half-man-made"
-    data-landmasses="7"
-    data-world-age="4x-earth"
-    data-origin-state="desolate-and-in-despair"
-    data-map-protocol="tiktok"
-    data-traversal="quad-linear"
-    data-population-law="archetype-personality-capacity"
-    data-access-law="coherence-correlated"
+    data-route="/nine-summits/"
+    data-page-purpose="book-metaverse-public-voice-hub"
+    data-universe-route="/nine-summits/universe/"
+    data-love-route="/nine-summits-of-love/"
+    data-underdog-route="/this-underdog/"
   >
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
-      Nine Summits / Universe
+      Nine Summits · Book + Metaverse Hub
     </a>
 
     <nav class="nav" aria-label="Primary navigation">
       <a href="/">Compass</a>
-      <a href="/nine-summits/">Nine Summits Hub</a>
-      <a href="/nine-summits/universe/" aria-current="page">Universe</a>
+      <a href="/nine-summits/" aria-current="page">Nine Summits</a>
       <a href="/nine-summits-of-love/">Book</a>
+      <a href="/nine-summits/universe/">Universe</a>
       <a href="/this-underdog/">This Underdog</a>
-      <a href="/showroom/globe/">Inspect Planet</a>
+      <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
     </nav>
 
     <section class="hero">
-      <p class="kicker gold">Metaverse lane · Planet 1</p>
-      <h1>Enter the world around the climb.</h1>
+      <p class="kicker">Nine Summits · Book / Metaverse / Public Voice</p>
+      <h1>The Nine Summits</h1>
 
       <p class="lead">
-        The book gives the human path. The universe gives that path a world.
+        The Nine Summits is the doorway to three connected paths: the book, the universe, and the public voice.
       </p>
 
       <p class="lead">
-        This is Planet 1: a seven-landmass coherence world found desolate, restored through a floating magnetic core, and opened by the climb itself.
+        The book gives the human climb. The universe gives the climb a world. This Underdog gives both a voice.
       </p>
 
       <div class="actions">
-        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-        <a class="button green" href="/nine-summits/">Return to Nine Summits</a>
-        <a class="button" href="/nine-summits-of-love/">Open Book Path</a>
+        <a class="button primary" href="/nine-summits-of-love/">Open book lane</a>
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
         <a class="button" href="/this-underdog/">Open This Underdog</a>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker green">Opening rule</p>
-      <h2>The metaverse opens when the path becomes a place.</h2>
+      <p class="kicker green">Start here</p>
+      <h2>The climb begins with pressure. The world opens through coherence.</h2>
 
       <p class="one-line">
-        A lesson becomes a room. A wound becomes a gate. A climb becomes a world.
+        A locked heart is not a dead heart. It is a heart waiting for the right key.
       </p>
 
       <div class="steps">
         <div class="step">
           <strong>01</strong>
-          <span>Start with the human path: character, structure, balance, stability, peace, joy, dignity, free will, and love.</span>
+          <span>The book names the human path: character, structure, balance, stability, peace, joy, dignity, free will, and love.</span>
         </div>
 
         <div class="step">
           <strong>02</strong>
-          <span>Enter the planet: seven landmasses, harder terrain, sweeter fruit, and deeper solutions.</span>
+          <span>The metaverse turns the path into place: terrain, cities, gates, fruit, trials, products, and public experiences.</span>
         </div>
 
         <div class="step">
           <strong>03</strong>
-          <span>Move by coherence. The world does not open by accident. It opens by readiness.</span>
-        </div>
-
-        <div class="step">
-          <strong>04</strong>
-          <span>Return with proof: a story, a product, a map, a room, a show, or a usable tool.</span>
+          <span>This Underdog carries the voice: story, comedy, seminars, and the message that pressure can become language.</span>
         </div>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker gold">Planet origin</p>
-      <h2>The world was not found thriving. It was found waiting.</h2>
-
-      <p>
-        Planet 1 was found desolate and in despair. The point is not conquest. The point is restoration.
-      </p>
-
-      <p>
-        At the center is a floating magnetic core: half natural, half man-made. The natural half carries water, terrain, fruit, seed, memory, and life. The man-made half carries structure, measurement, city systems, repair, instruments, and access.
-      </p>
-
-      <div class="grid two">
-        <article class="card">
-          <span>Natural half</span>
-          <h3>Life remembers.</h3>
-          <p>The planet still carries seed, water, minerals, weather, memory, and organic recovery.</p>
-        </article>
-
-        <article class="card">
-          <span>Constructed half</span>
-          <h3>Structure repairs.</h3>
-          <p>The world needs instruments, cities, routes, gates, measurements, and tools to become livable again.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker blue">How access works</p>
-      <h2>The higher the coherence, the harder the terrain.</h2>
-
-      <p class="one-line">
-        The world does not get easier as you rise. It gets more worth reaching.
-      </p>
-
-      <div class="grid four">
-        <article class="card">
-          <span>Entry terrain</span>
-          <h3>Stable ground.</h3>
-          <p>Simple routes, clear signs, basic cities, ordinary food, and safe first movement.</p>
-        </article>
-
-        <article class="card">
-          <span>Developing terrain</span>
-          <h3>The first climb.</h3>
-          <p>Regional movement, stronger lessons, harder choices, richer fruit, and clearer self-knowledge.</p>
-        </article>
-
-        <article class="card">
-          <span>High terrain</span>
-          <h3>The rare path.</h3>
-          <p>Severe mountains, advanced cities, rare materials, deep comprehension, and sweeter solutions.</p>
-        </article>
-
-        <article class="card">
-          <span>Peak terrain</span>
-          <h3>The summit field.</h3>
-          <p>Polar access, diamond ice, deep-core gates, final trials, and the cleanest answers.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker gold">Seven landmasses</p>
-      <h2>The world has one Mainland, four major regions, and two poles.</h2>
-
-      <div class="grid two">
-        <article class="land-card primary">
-          <span>Landmass 1</span>
-          <h3>The Mainland</h3>
-          <p>The first-entry civilization field: countries, roads, cities, public rooms, schools, markets, and the beginning of the climb.</p>
-          <p>Material profile: granite, marble, copper, iron, gold, and platinum.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 2</span>
-          <h3>North Main Region</h3>
-          <p>Law, clarity, memory, discipline, cold pressure, summit trials, and structural academies.</p>
-          <p>Material profile: diamond, slate, platinum, and iron.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 3</span>
-          <h3>East Main Region</h3>
-          <p>Learning, invention, exploration, language, schools, discovery paths, and luminous experimental cities.</p>
-          <p>Material profile: opal, copper, silver, and marble.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 4</span>
-          <h3>South Main Region</h3>
-          <p>Restoration, agriculture, food systems, gardens, care, family continuity, and recovery corridors.</p>
-          <p>Material profile: granite, marble, copper, gold, and opal.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 5</span>
-          <h3>West Main Region</h3>
-          <p>Trial, fracture, defense, proof, repair after pressure, severe cliffs, slate fields, and metallic fault lines.</p>
-          <p>Material profile: slate, iron, lead, silver, and diamond.</p>
-        </article>
-
-        <article class="land-card pole">
-          <span>Landmass 6</span>
-          <h3>North Pole</h3>
-          <p>Extreme upper-coherence access: diamond ice, magnetic skyfields, upper-world gates, and final law trials.</p>
-          <p>Material profile: diamond, platinum, iron, and slate.</p>
-        </article>
-
-        <article class="land-card pole">
-          <span>Landmass 7</span>
-          <h3>South Pole</h3>
-          <p>Extreme depth-coherence access: pressure fields, hidden caverns, root-world gates, survival trials, and deep-core restoration.</p>
-          <p>Material profile: granite, opal, lead, gold, and copper.</p>
-        </article>
-
-        <article class="land-card primary">
-          <span>World rule</span>
-          <h3>Difficulty is not punishment.</h3>
-          <p>Harder terrain means the world is asking for higher coherence. The reward is deeper comprehension, sweeter fruit, and more elegant possibility.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker green">Population law</p>
-      <h2>The people count is not random.</h2>
-
-      <p class="one-line">
-        One person equals one admissible archetype-personality configuration.
-      </p>
+      <p class="kicker gold">Choose the lane</p>
+      <h2>One system. Three doors. No confusion.</h2>
 
       <div class="grid three">
-        <article class="card">
-          <span>Person</span>
-          <h3>One living signature.</h3>
-          <p>Each person carries one admitted archetype-personality configuration inside the world.</p>
+        <article class="route-card">
+          <span>Book lane</span>
+          <h3>The Nine Summits of Love</h3>
+          <p>
+            The human path: love, pressure, dignity, free will, and 256 carats of human potential.
+          </p>
+          <p>
+            Start here when the question is personal: Who am I becoming?
+          </p>
+          <a class="button primary" href="/nine-summits-of-love/">Open book page</a>
         </article>
 
-        <article class="card">
-          <span>Planet</span>
-          <h3>One complete capacity field.</h3>
-          <p>The planet can hold exactly the number of possible innate configurations admitted by the construct at one time.</p>
+        <article class="route-card">
+          <span>Metaverse lane</span>
+          <h3>Nine Summits Universe</h3>
+          <p>
+            The world around the book: Planet 1, seven landmasses, coherence access, the floating magnetic core, cities, products, and experiences.
+          </p>
+          <p>
+            Start here when the question becomes larger: Where does the path lead?
+          </p>
+          <a class="button green" href="/nine-summits/universe/">Open metaverse page</a>
         </article>
 
-        <article class="card">
-          <span>Access</span>
-          <h3>Coherence opens place.</h3>
-          <p>Where someone can go depends on coherence, terrain, readiness, and comprehension.</p>
+        <article class="route-card">
+          <span>Speaking lane</span>
+          <h3>This Underdog</h3>
+          <p>
+            The public voice: comedy, story, seminars, stage identity, and the underdog message.
+          </p>
+          <p>
+            Start here when the question needs a human voice.
+          </p>
+          <a class="button" href="/this-underdog/">Open speaking page</a>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker gold">Map protocol</p>
-      <h2>The map ticks forward and tocks back.</h2>
+      <p class="kicker blue">Book and world</p>
+      <h2>The book gives the climb. The universe gives the climb a world.</h2>
 
       <div class="grid two">
         <article class="card">
-          <span>Forward tick</span>
-          <h3>1 → 4 → 16 → 32 → 64 → 256</h3>
-          <p>The world expands from one planet into directions, sectors, pressure gates, branches, and full lattice nodes.</p>
+          <span>The book</span>
+          <h3>The human path stays human first.</h3>
+          <p>
+            The Nine Summits of Love moves through character, structure, balance, stability, peace, joy, dignity, free will, and love.
+          </p>
+          <p>
+            <a class="button primary" href="/nine-summits-of-love/">Open Nine Summits of Love</a>
+          </p>
         </article>
 
         <article class="card">
-          <span>Inverse tock</span>
-          <h3>256 → 64 → 32 → 16 → 4 → 1</h3>
-          <p>The world audits back from every node into one coherent planet.</p>
+          <span>The universe</span>
+          <h3>The path becomes a place.</h3>
+          <p>
+            Nine Summits Universe opens the metaverse lane: a world where lessons become rooms, trials become terrain, and coherence determines access.
+          </p>
+          <p>
+            <a class="button green" href="/nine-summits/universe/">Open Nine Summits Universe</a>
+          </p>
         </article>
-      </div>
-
-      <div class="az-grid">
-        <div class="az-chip"><strong>A</strong><span>Authority</span></div>
-        <div class="az-chip"><strong>B</strong><span>Boundary</span></div>
-        <div class="az-chip"><strong>C</strong><span>Coherence</span></div>
-        <div class="az-chip"><strong>D</strong><span>Direction</span></div>
-        <div class="az-chip"><strong>E</strong><span>Entry</span></div>
-        <div class="az-chip"><strong>F</strong><span>Friction</span></div>
-        <div class="az-chip"><strong>G</strong><span>Gate</span></div>
-        <div class="az-chip"><strong>H</strong><span>Home</span></div>
-        <div class="az-chip"><strong>I</strong><span>Identity</span></div>
-        <div class="az-chip"><strong>J</strong><span>Judgment</span></div>
-        <div class="az-chip"><strong>K</strong><span>Key</span></div>
-        <div class="az-chip"><strong>L</strong><span>Law</span></div>
-        <div class="az-chip"><strong>M</strong><span>Motion</span></div>
-        <div class="az-chip"><strong>N</strong><span>Nature</span></div>
-        <div class="az-chip"><strong>O</strong><span>Origin</span></div>
-        <div class="az-chip"><strong>P</strong><span>Population</span></div>
-        <div class="az-chip"><strong>Q</strong><span>Quest</span></div>
-        <div class="az-chip"><strong>R</strong><span>Region</span></div>
-        <div class="az-chip"><strong>S</strong><span>Sector</span></div>
-        <div class="az-chip"><strong>T</strong><span>Terrain</span></div>
-        <div class="az-chip"><strong>U</strong><span>Utility</span></div>
-        <div class="az-chip"><strong>V</strong><span>Value</span></div>
-        <div class="az-chip"><strong>W</strong><span>Water</span></div>
-        <div class="az-chip"><strong>X</strong><span>Extreme</span></div>
-        <div class="az-chip"><strong>Y</strong><span>Yield</span></div>
-        <div class="az-chip"><strong>Z</strong><span>Zenith</span></div>
       </div>
     </section>
 
     <section class="panel">
-      <p class="kicker blue">What the metaverse can hold</p>
+      <p class="kicker gold">Visible origin cover</p>
+      <h2>The locked-heart cover is the origin panel.</h2>
+
+      <p>
+        This cover belongs near the top because it explains the emotional starting point before the reader is asked to understand the larger system. The heart is locked, but not destroyed. The key is present, but it must be recognized. The underdog signature places the story at the base of the climb.
+      </p>
+
+      <div class="cover-frame">
+        <img
+          src="/assets/nine-summits-love-preface-cover.png"
+          alt="The Nine Summits of Love preface cover with a locked diamond heart, key, chain, and This Underdog signature."
+        >
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker green">World cover</p>
+      <h2>The radiant-heart cover opens the larger field.</h2>
+
+      <p>
+        The metaverse is not a replacement for the book. It is the world around the book. The heart becomes central, radiant, and world-bearing.
+      </p>
+
+      <div class="cover-frame">
+        <img
+          src="/assets/nine-summits-love-hero.png"
+          alt="The Nine Summits of Love metaverse cover with radiant diamond heart and mountain landscape."
+        >
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">What the metaverse lane can hold</p>
       <h2>The world is built to carry more than one page.</h2>
 
       <div class="grid three">
         <article class="card">
           <span>Stories</span>
           <h3>Characters need places.</h3>
-          <p>The universe gives the book a world where stories can move, test, fail, recover, and rise.</p>
+          <p>
+            The universe gives the book a world where stories can move, test, fail, recover, and rise.
+          </p>
         </article>
 
         <article class="card">
           <span>Products</span>
           <h3>Tools need context.</h3>
-          <p>Products can live inside chambers, regions, missions, lessons, games, and public experiences.</p>
+          <p>
+            Products can live inside chambers, regions, missions, lessons, games, and public experiences.
+          </p>
         </article>
 
         <article class="card">
           <span>Events</span>
           <h3>Rooms need a map.</h3>
-          <p>Seminars, shows, talks, workshops, and live experiences can attach to places inside the world.</p>
-        </article>
-
-        <article class="card">
-          <span>Education</span>
-          <h3>Learning needs a path.</h3>
-          <p>The world can teach through routes, gates, levels, cities, language, and earned comprehension.</p>
-        </article>
-
-        <article class="card">
-          <span>Showroom</span>
-          <h3>Proof needs display.</h3>
-          <p>The Showroom can inspect the visible planet while this page explains the world behind it.</p>
-        </article>
-
-        <article class="card">
-          <span>Gauges</span>
-          <h3>Systems need measurement.</h3>
-          <p>Gauges checks whether the routes, pages, and markers are landing cleanly.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker gold">Route separation</p>
-      <h2>One system. Clean doors.</h2>
-
-      <div class="grid three">
-        <article class="card">
-          <span>/nine-summits/</span>
-          <h3>The hub.</h3>
-          <p>The doorway to the book, universe, and public voice.</p>
-        </article>
-
-        <article class="card">
-          <span>/nine-summits/universe/</span>
-          <h3>The world.</h3>
-          <p>The metaverse lane: Planet 1, terrain, coherence, cities, and population law.</p>
-        </article>
-
-        <article class="card">
-          <span>/showroom/globe/</span>
-          <h3>The inspection.</h3>
-          <p>The visible demonstration route for the Demo Planet transition layer.</p>
+          <p>
+            Seminars, shows, talks, workshops, and live experiences can attach to places inside the world.
+          </p>
         </article>
       </div>
 
       <div class="links">
-        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
-        <a class="button green" href="/nine-summits/">Nine Summits Hub</a>
-        <a class="button" href="/nine-summits-of-love/">Book Path</a>
-        <a class="button" href="/this-underdog/">This Underdog</a>
-        <a class="button" href="/gauges/">Gauges</a>
-        <a class="button" href="/">Compass</a>
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
+        <a class="button" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker gold">Final line</p>
+      <h2>The pressure was not the end. It was the beginning of the map.</h2>
+
+      <p class="lead">
+        The Nine Summits turns pressure into language, language into a path, and the path into a world.
+      </p>
+
+      <div class="links">
+        <a class="button primary" href="/nine-summits-of-love/">Open book lane</a>
+        <a class="button green" href="/nine-summits/universe/">Open metaverse lane</a>
+        <a class="button" href="/this-underdog/">Open This Underdog</a>
+        <a class="button" href="/">Return to Compass</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      NINE_SUMMITS_METAVERSE_LANE_OPEN_TNT_v1
-      NINE_SUMMITS_NESTED_UNIVERSE_WORLD_ROUTE_TNT_v1
-      NINE_SUMMITS_UNIVERSE
-      route=/nine-summits/universe/
-      parent-route=/nine-summits/
-      retired-route=/nine-summits-universe/
-      page-purpose=metaverse-lane-entry
-      nested-architecture=true
-      paramount-architecture=true
-      planet=Nine Summits Universe
-      planet-number=1
-      demo-planet=true
-      world-scale=Earth-equivalent
-      landmasses=7
-      mainland=central-civilization-field
-      four-main-regions=true
-      north-pole=true
-      south-pole=true
-      origin=desolate-and-in-despair
-      core=floating-magnetic-half-natural-half-man-made
-      core-role=restoration-engine
-      age=4x-earth
-      mountains-origin=4x-everest
-      terrain=extreme-beautiful-coherence-demanding
-      materials=diamond-opal-marble-slate-granite-gold-platinum-silver-copper-iron-lead
-      population=archetype-personality-capacity
-      archetype-personality=true
-      person=one-admissible-archetype-personality-configuration
-      access=coherence-correlated
-      country-structure=4-regions-per-country
-      region-structure=4-metroplexes-per-region
-      intercity-construct=16-sectors-4-districts-4-nodes
-      intercity-total=256
-      map-protocol=tiktok
-      tiktok=true
-      tiktok-forward=1-4-16-32-64-256
-      tiktok-inverse=256-64-32-16-4-1
-      alphabetic-overlay=A-Z
-      traversal=quad-linear
-      no-graphic-generation=true
-      showroom-globe-role=inspection-route
-      gauges-role=measurement-route
+      NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1
+      route=/nine-summits/
+      page-purpose=book-metaverse-public-voice-hub
       book-route=/nine-summits-of-love/
-      compass=/
+      universe-route=/nine-summits/universe/
+      metaverse-route=/nine-summits/universe/
+      speaking-route=/this-underdog/
+      showroom-route=/showroom/
+      demo-planet-route=/showroom/globe/
+      gauges-route=/gauges/
+      broken-public-universe-link-removed=true
+      all-public-metaverse-links-point-to-nested-route=true
+      expected-live-universe-url=https://diamondgatebridge.com/nine-summits/universe/
     </section>
   </main>
 </body>

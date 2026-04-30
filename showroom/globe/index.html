@@ -3,20 +3,28 @@
   lang="en"
   data-page="showroom-globe"
   data-route="/showroom/globe/"
-  data-contract="SHOWROOM_PLANET_ONE_PUBLIC_TEXT_CLEANUP_TNT_v1"
+  data-route-role="planet-one-inspection-room"
+  data-parent-showroom-route="/showroom/"
+  data-contract="SHOWROOM_GLOBE_INSPECTION_ROOM_DEMERGE_AND_PERFORMANCE_GATE_TNT_v1"
   data-planet-one-renderer="/world/render/planet-one.render.js"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Diamond Gate Bridge · Showroom · Planet 1</title>
+  <title>Diamond Gate Bridge · Planet 1 Inspection Room</title>
   <meta
     name="description"
-    content="Planet 1 inspection route for the Nine Summits Universe. Planet 1 is the real globe render lane; the tree remains in demo mode."
+    content="Planet 1 inspection room for the Nine Summits Universe. The Showroom parent stays a lobby; this route owns the active Planet 1 inspection render."
   >
 
   <!--
-    SHOWROOM_PLANET_ONE_PUBLIC_TEXT_CLEANUP_TNT_v1
+    SHOWROOM_GLOBE_INSPECTION_ROOM_DEMERGE_AND_PERFORMANCE_GATE_TNT_v1
+
+    ROUTE LAW:
+    /showroom/ = lightweight Showroom lobby
+    /showroom/globe/ = active Planet 1 inspection room
+
+    REQUIRED CONTRACT MARKERS:
     PLANET_ONE_RENDER_TEAM_TNT_v1
     PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY
     planet-one-render-active=true
@@ -29,8 +37,13 @@
     climate-topology-active=true
     weather-circulation-active=true
     ocean-current-logic-active=true
+
+    PUBLIC POLISH:
     public-receipt-hidden=true
     receipt-not-body-text=true
+    no-parent-showroom-merge=true
+    no-parent-lobby-render=true
+    performance-gated-render=true
     route=/showroom/globe/
     planet-one-first=true
     tree-demo-second=true
@@ -52,8 +65,6 @@
       --blue-soft: rgba(141, 184, 255, 0.16);
       --green: #83e0b9;
       --green-soft: rgba(131, 224, 185, 0.16);
-      --purple: #c7a6ff;
-      --purple-soft: rgba(199, 166, 255, 0.14);
 
       --text: #f5f7fb;
       --muted: rgba(228, 234, 246, 0.76);
@@ -105,7 +116,8 @@
       text-decoration: none;
     }
 
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
       outline: 3px solid rgba(242, 199, 111, 0.70);
       outline-offset: 4px;
     }
@@ -163,7 +175,8 @@
 
     nav,
     .actions,
-    .backlinks {
+    .backlinks,
+    .render-controls {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -172,7 +185,7 @@
     nav a,
     .actions a,
     .backlinks a,
-    .card a {
+    .render-controls button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -182,24 +195,33 @@
       padding: 10px 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
       color: var(--text);
+      font: inherit;
       font-weight: 880;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      cursor: pointer;
     }
 
     nav a[aria-current="page"],
-    .actions .primary {
+    .actions .primary,
+    .render-controls .primary {
       border-color: rgba(242, 199, 111, 0.62);
       background: linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
-    }
-
-    .actions .green {
-      border-color: rgba(131, 224, 185, 0.46);
-      background: linear-gradient(180deg, rgba(131,224,185,0.18), rgba(131,224,185,0.055));
     }
 
     .actions .blue {
       border-color: rgba(141, 184, 255, 0.46);
       background: linear-gradient(180deg, rgba(141,184,255,0.18), rgba(141,184,255,0.055));
+    }
+
+    .actions .green,
+    .render-controls .green {
+      border-color: rgba(131, 224, 185, 0.46);
+      background: linear-gradient(180deg, rgba(131,224,185,0.18), rgba(131,224,185,0.055));
+    }
+
+    button[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
     main {
@@ -291,6 +313,46 @@
       overflow: hidden;
     }
 
+    .route-split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .split-card,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+        var(--panel-2);
+    }
+
+    .split-card.parent {
+      border-color: rgba(131, 224, 185, 0.34);
+    }
+
+    .split-card.inspect {
+      border-color: rgba(242, 199, 111, 0.38);
+    }
+
+    .split-card p,
+    .card p {
+      margin-top: 8px;
+      font-size: 0.98rem;
+    }
+
+    .label {
+      display: block;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
     .planet-frame {
       display: grid;
       justify-items: center;
@@ -301,6 +363,26 @@
       background:
         radial-gradient(circle at 50% 8%, rgba(141,184,255,0.12), transparent 18rem),
         linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+    }
+
+    .render-gate {
+      width: min(640px, 100%);
+      min-height: min(640px, 88vw);
+      display: grid;
+      place-items: center;
+      border: 1px dashed rgba(242,199,111,0.24);
+      border-radius: clamp(22px, 5vw, 38px);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(141,184,255,0.10), transparent 18rem),
+        rgba(255,255,255,0.025);
+      padding: 18px;
+      text-align: center;
+    }
+
+    .render-gate.loaded {
+      border-style: solid;
+      background: transparent;
+      padding: 0;
     }
 
     #planet-one-render {
@@ -347,6 +429,25 @@
       max-width: 720px;
     }
 
+    .placeholder {
+      display: grid;
+      gap: 12px;
+      max-width: 520px;
+      justify-items: center;
+    }
+
+    .placeholder strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.5rem, 5vw, 2.45rem);
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .placeholder p {
+      font-size: 1rem;
+    }
+
     .proof-grid,
     .lane-grid {
       display: grid;
@@ -359,29 +460,6 @@
 
     .lane-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
-        var(--panel-2);
-    }
-
-    .label {
-      display: block;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      font-size: 0.98rem;
     }
 
     code {
@@ -408,18 +486,21 @@
 
     @media (max-width: 920px) {
       .proof-grid,
-      .lane-grid {
+      .lane-grid,
+      .route-split {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 680px) {
       .actions a,
-      .backlinks a {
+      .backlinks a,
+      .render-controls button {
         width: 100%;
       }
 
-      #planet-one-render {
+      #planet-one-render,
+      .render-gate {
         width: 100%;
         min-height: min(560px, 92vw);
       }
@@ -438,15 +519,15 @@
     <header class="site" aria-label="Site header">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        <span>Showroom · Planet 1</span>
+        <span>Planet 1 inspection room</span>
       </a>
 
       <nav aria-label="Primary">
         <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/" aria-current="page">Planet 1</a>
         <a href="/">Compass</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits/universe/">Universe</a>
-        <a href="/nine-summits-of-love/">Book</a>
         <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -455,21 +536,45 @@
     <main id="globe-main">
       <section class="hero" aria-labelledby="page-title">
         <div>
-          <div class="eyebrow">Planet 1 · Nine Summits Universe</div>
-          <h1 id="page-title">The real globe lane opens the world map.</h1>
+          <div class="eyebrow">Planet 1 · Inspection room</div>
+          <h1 id="page-title">This room inspects the world. The Showroom lobby stays light.</h1>
         </div>
 
         <p class="lead">
-          Planet 1 is no longer the demo. It is the Nine Summits Universe render lane.
-          The tree moves to demo mode. The globe now carries the world surface, atmosphere,
-          terrain, ocean seam, climate motion, and coherence access.
+          Planet 1 lives here, on the inspection route. The parent Showroom stays a lobby.
+          This prevents the public entry page and the heavy render room from collapsing into the same experience.
         </p>
 
         <div class="actions">
-          <a class="primary" href="/showroom/globe/#planet-one-render">View Planet 1</a>
+          <a class="primary" href="/showroom/globe/#planet-one-render">Inspect Planet 1</a>
           <a class="blue" href="/nine-summits/universe/">Read World Map</a>
-          <a href="/showroom/">Return to Showroom</a>
+          <a href="/showroom/">Return to Showroom Lobby</a>
           <a href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="route-boundary">
+        <div class="eyebrow">Route boundary</div>
+        <h2 id="route-boundary">Two pages. Two jobs.</h2>
+
+        <div class="route-split">
+          <article class="split-card parent">
+            <span class="label">Parent route</span>
+            <h3><code>/showroom/</code></h3>
+            <p>
+              Lightweight public lobby. It should not mount the Planet 1 renderer.
+              It should point visitors here when they choose to inspect the globe.
+            </p>
+          </article>
+
+          <article class="split-card inspect">
+            <span class="label">Inspection route</span>
+            <h3><code>/showroom/globe/</code></h3>
+            <p>
+              Active Planet 1 inspection room. This route may load the globe,
+              axis spin, climate topology, weather circulation, and ocean currents.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -478,12 +583,26 @@
         <h2 id="inspection-title">Planet 1 first. Tree demo second.</h2>
 
         <div class="planet-frame">
-          <div id="planet-one-render" aria-label="Planet 1 render mount">
-            <noscript>
-              <div class="noscript-warning">
-                Planet 1 needs JavaScript enabled to load the live render.
+          <div class="render-controls" aria-label="Planet 1 render controls">
+            <button class="primary" type="button" id="load-render">Load Planet 1 render</button>
+            <button class="green" type="button" id="pause-render" disabled>Pause render</button>
+            <button type="button" id="resume-render" disabled>Resume render</button>
+          </div>
+
+          <div class="render-gate" id="render-gate">
+            <div id="planet-one-render" aria-label="Planet 1 render mount">
+              <div class="placeholder">
+                <strong>Planet 1 is ready to inspect.</strong>
+                <p>
+                  The renderer is gated for performance. Load it when you are ready to inspect the active globe.
+                </p>
               </div>
-            </noscript>
+              <noscript>
+                <div class="noscript-warning">
+                  Planet 1 needs JavaScript enabled to load the live render.
+                </div>
+              </noscript>
+            </div>
           </div>
         </div>
 
@@ -547,10 +666,10 @@
           </article>
 
           <article class="card">
-            <span class="label">Showroom lane</span>
-            <h3>Inspection</h3>
+            <span class="label">Inspection lane</span>
+            <h3>Showroom / Planet 1</h3>
             <p>
-              Showroom inspects both lanes without owning either render source.
+              This route inspects Planet 1 without turning the parent Showroom into the heavy render room.
             </p>
           </article>
         </div>
@@ -581,15 +700,15 @@
             <span class="label">Measurement route</span>
             <h3><code>/gauges/</code></h3>
             <p>
-              Gauges verifies the render-lane separation and pass state.
+              Gauges verifies route separation, renderer source state, and pass state.
             </p>
           </article>
         </div>
 
         <div class="backlinks">
-          <a href="/showroom/globe/#planet-one-render">View Planet 1</a>
+          <a href="/showroom/globe/#planet-one-render">Inspect Planet 1</a>
           <a href="/nine-summits/universe/">Read World Map</a>
-          <a href="/showroom/">Return to Showroom</a>
+          <a href="/showroom/">Return to Showroom Lobby</a>
           <a href="/gauges/">Read Gauges</a>
           <a href="/">Compass</a>
         </div>
@@ -597,39 +716,141 @@
     </main>
 
     <footer>
-      Planet 1 inspection route · Nine Summits Universe.
+      Planet 1 inspection room · Showroom lobby remains separate.
     </footer>
   </div>
 
-  <script src="/world/render/planet-one.render.js"></script>
   <script>
     (function () {
       "use strict";
 
-      function mountPlanetOne() {
-        var mount = document.getElementById("planet-one-render");
+      var rendererScript = "/world/render/planet-one.render.js";
+      var scriptLoaded = false;
+      var renderHandle = null;
 
+      var mount = document.getElementById("planet-one-render");
+      var gate = document.getElementById("render-gate");
+      var loadButton = document.getElementById("load-render");
+      var pauseButton = document.getElementById("pause-render");
+      var resumeButton = document.getElementById("resume-render");
+
+      function setStatus(loaded) {
+        if (gate) {
+          gate.classList.toggle("loaded", loaded);
+        }
+
+        if (loadButton) {
+          loadButton.disabled = loaded;
+          loadButton.textContent = loaded ? "Planet 1 render loaded" : "Load Planet 1 render";
+        }
+
+        if (pauseButton) {
+          pauseButton.disabled = !loaded;
+        }
+
+        if (resumeButton) {
+          resumeButton.disabled = !loaded;
+        }
+      }
+
+      function loadScript() {
+        return new Promise(function (resolve, reject) {
+          if (scriptLoaded) {
+            resolve();
+            return;
+          }
+
+          var existing = document.querySelector('script[src="' + rendererScript + '"]');
+
+          if (existing) {
+            scriptLoaded = true;
+            resolve();
+            return;
+          }
+
+          var script = document.createElement("script");
+          script.src = rendererScript;
+          script.async = true;
+
+          script.onload = function () {
+            scriptLoaded = true;
+            resolve();
+          };
+
+          script.onerror = function () {
+            reject(new Error("Planet 1 renderer failed to load."));
+          };
+
+          document.body.appendChild(script);
+        });
+      }
+
+      function mountPlanetOne() {
         if (!mount) return;
 
-        if (
-          window.DGBPlanetOneRenderTeam &&
-          typeof window.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
-        ) {
-          window.DGBPlanetOneRenderTeam.renderPlanetOne(mount, {
-            caption: "Planet 1 · Nine Summits Universe · globe render lane"
-          });
+        loadScript().then(function () {
+          if (
+            window.DGBPlanetOneRenderTeam &&
+            typeof window.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+          ) {
+            renderHandle = window.DGBPlanetOneRenderTeam.renderPlanetOne(mount, {
+              caption: "Planet 1 · Nine Summits Universe · inspection render lane"
+            });
+            setStatus(true);
+            return;
+          }
+
+          mount.innerHTML =
+            '<div class="render-waiting">Planet 1 renderer is waiting for /world/render/planet-one.render.js.</div>';
+        }).catch(function () {
+          mount.innerHTML =
+            '<div class="render-waiting">Planet 1 renderer could not load. Check /world/render/planet-one.render.js.</div>';
+        });
+      }
+
+      function pauseRender() {
+        if (renderHandle && typeof renderHandle.stop === "function") {
+          renderHandle.stop();
           return;
         }
 
-        mount.innerHTML =
-          '<div class="render-waiting">Planet 1 renderer is waiting for /world/render/planet-one.render.js.</div>';
+        if (
+          renderHandle &&
+          renderHandle.handle &&
+          typeof renderHandle.handle.stop === "function"
+        ) {
+          renderHandle.handle.stop();
+        }
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", mountPlanetOne);
-      } else {
-        mountPlanetOne();
+      function resumeRender() {
+        if (renderHandle && typeof renderHandle.start === "function") {
+          renderHandle.start();
+          return;
+        }
+
+        if (
+          renderHandle &&
+          renderHandle.handle &&
+          typeof renderHandle.handle.start === "function"
+        ) {
+          renderHandle.handle.start();
+        }
       }
+
+      if (loadButton) {
+        loadButton.addEventListener("click", mountPlanetOne);
+      }
+
+      if (pauseButton) {
+        pauseButton.addEventListener("click", pauseRender);
+      }
+
+      if (resumeButton) {
+        resumeButton.addEventListener("click", resumeRender);
+      }
+
+      setStatus(false);
     })();
   </script>
 </body>

@@ -1,8 +1,8 @@
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GENERATION_3_PHASE_BIND_TNT_v1";
-  const GENERATION = "GENERATION_3";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GENERATION_4_CLOSEOUT_TNT_v1";
+  const GENERATION = "GENERATION_4";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
   const DEFAULTS = Object.freeze({
@@ -26,14 +26,14 @@
       title: "Boundary",
       state: "state-defined",
       proof: "The visible sphere remains code-generated while its meaning is carried by state.",
-      consequence: "The globe’s edge is visible, but authority belongs to the phase receipt."
+      consequence: "The globe’s edge is visible, while authority belongs to the phase receipt."
     }),
     Object.freeze({
       key: "MOTION",
       title: "Motion",
       state: "cycling",
       proof: "The globe rotates as a visible instrument while the phase layer explains why it moves.",
-      consequence: "Motion is no longer decoration; it is mapped to the proof cycle."
+      consequence: "Motion is not decoration; it is mapped to the proof cycle."
     }),
     Object.freeze({
       key: "REALM",
@@ -52,9 +52,9 @@
     Object.freeze({
       key: "NEXT",
       title: "Next",
-      state: "ready",
-      proof: "The phase cycle returns to readiness without claiming Generation 4.",
-      consequence: "Generation 3 is phase-bound and ready for later closeout."
+      state: "closed-ready",
+      proof: "The phase cycle returns to readiness and closes the inspection route.",
+      consequence: "Generation 4 is closed on the inspection page without moving the globe to the parent shell."
     })
   ]);
 
@@ -113,23 +113,24 @@
   }
 
   function buildGlobeDom(contract) {
-    const root = createElement("section", "showroom-globe-instrument showroom-gen3-phase-globe");
-    root.setAttribute("aria-label", "Generation 3 phase-bound code globe instrument");
+    const root = createElement("section", "showroom-globe-instrument showroom-gen4-closeout-globe");
+    root.setAttribute("aria-label", "Generation 4 closed phase-bound code globe instrument");
 
     setDataset(root, {
       generation: GENERATION,
       authority: AUTHORITY,
-      instrumentType: "phase-bound-code-globe",
+      instrumentType: "closed-phase-bound-code-globe",
       visibleGlobe: "true",
-      phaseBind: "active",
+      phaseBind: "complete",
       graphicDependency: "false",
       externalImageDependency: "false",
       generatedImageDependency: "false",
-      gen4Closeout: "held"
+      gen4Closeout: "complete",
+      finalCloseout: "true"
     });
 
-    const stage = createElement("div", "showroom-code-globe-stage showroom-gen3-stage");
-    stage.setAttribute("aria-label", "Phase-bound code globe stage");
+    const stage = createElement("div", "showroom-code-globe-stage showroom-gen4-stage");
+    stage.setAttribute("aria-label", "Generation 4 closed code globe stage");
 
     const lightField = createElement("div", "showroom-code-light-field");
     const sun = createElement("div", "showroom-code-sun", "☀");
@@ -141,9 +142,9 @@
     const axisFrame = createElement("div", "showroom-code-axis-frame");
     const axis = createElement("div", "showroom-code-axis");
 
-    const globe = createElement("div", "showroom-code-globe showroom-phase-bound-globe");
+    const globe = createElement("div", "showroom-code-globe showroom-phase-bound-globe showroom-gen4-closed-globe");
     globe.setAttribute("role", "img");
-    globe.setAttribute("aria-label", "Generation 3 phase-bound visible code globe");
+    globe.setAttribute("aria-label", "Generation 4 closed visible code globe");
 
     const surfaceTrack = createElement("div", "showroom-code-surface-track");
     const surfaceA = createElement("div", "showroom-code-surface showroom-code-surface-a");
@@ -179,7 +180,7 @@
     axisFrame.append(axis, globe);
 
     const phasePanel = createElement("article", "showroom-phase-panel");
-    const phaseKicker = createElement("p", "showroom-narrative-kicker", "Generation 3 phase bind");
+    const phaseKicker = createElement("p", "showroom-narrative-kicker", "Generation 4 closeout");
     const phaseTitle = createElement("h2", "showroom-narrative-title", PHASES[0].title);
     const phaseProof = createElement("p", "showroom-narrative-proof", PHASES[0].proof);
     const phaseConsequence = createElement("p", "showroom-narrative-consequence", PHASES[0].consequence);
@@ -201,32 +202,33 @@
     const caption = createElement(
       "h2",
       "showroom-globe-caption",
-      "GENERATION 3 · PHASE-BIND CODE GLOBE"
+      "GENERATION 4 · CLOSED PHASE-BOUND CODE GLOBE"
     );
 
     const tags = createElement("div", "showroom-contract-tags");
     [
-      "GEN 3",
-      "globe=visible",
-      "phase-bind=active",
+      "GEN 4",
+      "globe=inspection-only",
+      "phase-bind=complete",
       "HOME",
       "BOUNDARY",
       "MOTION",
       "REALM",
       "RECEIPT",
       "NEXT",
-      "gen4=held"
+      "closeout=complete",
+      "parent-globe=false"
     ].forEach(function addTag(text) {
       tags.append(tag(text));
     });
 
     const status = createElement("aside", "showroom-globe-status");
     status.append(
-      createElement("h3", "", "Generation 3 phase-bind receipts"),
+      createElement("h3", "", "Generation 4 closeout receipts"),
       createElement(
         "p",
         "",
-        "This layer binds the phase sequence onto the visible code-generated globe. It does not claim Generation 4 closeout."
+        "This layer closes the inspection-route globe. The parent Showroom remains the proof-realm shell; the visible globe remains inspection-only."
       )
     );
 
@@ -234,15 +236,19 @@
     [
       ["GENERATION", GENERATION],
       ["AUTHORITY", AUTHORITY],
-      ["INSTRUMENT_TYPE", "phase-bound-code-globe"],
+      ["INSTRUMENT_TYPE", "closed-phase-bound-code-globe"],
       ["ROUTE_REALM", contract.realm],
       ["ROUTE_ROLE", contract.routeRole],
       ["VISIBLE_GLOBE", "true"],
-      ["PHASE_BIND", "active"],
+      ["PARENT_GLOBE_REQUIRED", "false"],
+      ["PHASE_BIND", "complete"],
       ["PHASE_SEQUENCE", "HOME → BOUNDARY → MOTION → REALM → RECEIPT → NEXT"],
       ["CURRENT_PHASE", PHASES[0].key],
-      ["GEN4_CLOSEOUT", "held"],
-      ["NEXT_ALLOWED_GENERATION", "GENERATION_4_CLOSEOUT_AFTER_CONFIRMATION"]
+      ["GENERATION_4_CLOSEOUT", "complete"],
+      ["GEN4_CLOSEOUT", "complete"],
+      ["FINAL_CLOSEOUT", "true"],
+      ["GEN_4_FINAL_PASS", "inspection-route-closeout"],
+      ["NEXT_ALLOWED_GENERATION", "POST_GEN4_REFINEMENT_ONLY"]
     ].forEach(function addReceipt(pair) {
       receipts.append(receiptLine(pair[0], pair[1]));
     });
@@ -285,16 +291,17 @@
     const phaseMs = Number(opts.phaseMs || DEFAULTS.phaseMs);
 
     mount.innerHTML = "";
-    mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount", "showroom-gen3-mount");
+    mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount", "showroom-gen4-mount");
 
     setDataset(mount, {
       generation: GENERATION,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
-      instrumentType: "phase-bound-code-globe",
+      instrumentType: "closed-phase-bound-code-globe",
       visibleGlobe: "true",
-      phaseBind: "active",
-      gen4Closeout: "held"
+      phaseBind: "complete",
+      gen4Closeout: "complete",
+      finalCloseout: "true"
     });
 
     const dom = buildGlobeDom(contract);
@@ -321,8 +328,8 @@
       };
 
       localReceipts.push(receipt);
-      if (localReceipts.length > 72) {
-        localReceipts.splice(0, localReceipts.length - 72);
+      if (localReceipts.length > 96) {
+        localReceipts.splice(0, localReceipts.length - 96);
       }
 
       if (runtime && typeof runtime.writeReceipt === "function") {
@@ -348,7 +355,7 @@
 
       Array.from(dom.phaseRing.children).forEach(function update(node, nodeIndex) {
         node.dataset.active = nodeIndex === phaseIndex ? "true" : "false";
-        node.dataset.complete = nodeIndex < phaseIndex ? "true" : "false";
+        node.dataset.complete = nodeIndex <= phaseIndex ? "true" : "false";
       });
 
       dom.root.dataset.currentPhase = phase.key;
@@ -365,14 +372,15 @@
       line.dataset.dynamicReceipt = "true";
       dom.receipts.append(line);
 
-      writeRuntimeReceipt("generation_3_phase_bound", {
+      writeRuntimeReceipt("generation_4_phase_closed", {
         phase: phase.key,
         state: phase.state,
         proof: phase.proof,
         consequence: phase.consequence,
         route: contract.route,
         realm: contract.realm,
-        gen4Closeout: "held"
+        gen4Closeout: "complete",
+        finalCloseout: true
       });
     }
 
@@ -407,14 +415,16 @@
       active = true;
       previous = performance.now();
 
-      writeRuntimeReceipt("generation_3_phase_globe_started", {
+      writeRuntimeReceipt("generation_4_closeout_started", {
         generation: GENERATION,
         authority: AUTHORITY,
         route: contract.route,
         realm: contract.realm,
         visibleGlobe: true,
-        phaseBind: "active",
-        gen4Closeout: "held"
+        phaseBind: "complete",
+        gen4Closeout: "complete",
+        finalCloseout: true,
+        parentGlobeRequired: false
       });
 
       frame = global.requestAnimationFrame(tick);
@@ -428,10 +438,11 @@
       frame = 0;
       timer = 0;
 
-      writeRuntimeReceipt("generation_3_phase_globe_stopped", {
+      writeRuntimeReceipt("generation_4_closeout_stopped", {
         generation: GENERATION,
         authority: AUTHORITY,
-        currentPhase: PHASES[phaseIndex].key
+        currentPhase: PHASES[phaseIndex].key,
+        gen4Closeout: "complete"
       });
     }
 
@@ -460,9 +471,10 @@
           authority: AUTHORITY,
           active: active,
           visibleGlobe: true,
-          phaseBind: "active",
+          phaseBind: "complete",
           currentPhase: PHASES[phaseIndex].key,
-          gen4Closeout: "held",
+          gen4Closeout: "complete",
+          finalCloseout: true,
           receipts: clone(localReceipts)
         };
       }

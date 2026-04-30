@@ -1,43 +1,14 @@
 (function attachShowroomGlobeInstrument(global, document) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_EARTH_ZOOM_DEFINITION_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN_2_V1_ORBITAL_EARTH_LIGHT_TNT_v1";
   const LEGACY_VISUAL_MARKER = "SHOWROOM_GLOBE_INSTRUMENT_OUR_UNIVERSE_VISUAL_FIELD_TNT_v1";
   const GENERATION = "GENERATION_4";
+  const CYCLE = "GEN_2_V1_EARTH_DEFINITION";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
-  const PHASES = Object.freeze([
-    "HOME",
-    "BOUNDARY",
-    "MOTION",
-    "REALM",
-    "RECEIPT",
-    "NEXT"
-  ]);
-
-  const PLANETS = Object.freeze([
-    Object.freeze({ key: "MERCURY", name: "Mercury", className: "mercury", orbit: 1 }),
-    Object.freeze({ key: "VENUS", name: "Venus", className: "venus", orbit: 2 }),
-    Object.freeze({ key: "EARTH", name: "Earth", className: "earth", orbit: 3 }),
-    Object.freeze({ key: "MARS", name: "Mars", className: "mars", orbit: 4 }),
-    Object.freeze({ key: "JUPITER", name: "Jupiter", className: "jupiter", orbit: 5 }),
-    Object.freeze({ key: "SATURN", name: "Saturn", className: "saturn", orbit: 6 }),
-    Object.freeze({ key: "URANUS", name: "Uranus", className: "uranus", orbit: 7 }),
-    Object.freeze({ key: "NEPTUNE", name: "Neptune", className: "neptune", orbit: 8 })
-  ]);
-
-  const ALL_BODIES = Object.freeze([
-    "Sun",
-    "Mercury",
-    "Venus",
-    "Earth",
-    "Moon",
-    "Mars",
-    "Jupiter",
-    "Saturn",
-    "Uranus",
-    "Neptune"
-  ]);
+  const PHASES = Object.freeze(["HOME", "BOUNDARY", "MOTION", "REALM", "RECEIPT", "NEXT"]);
+  const ALL_BODIES = Object.freeze(["Sun", "Mercury", "Venus", "Earth", "Moon", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]);
 
   function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -56,230 +27,298 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  function ensureInstrumentStyles() {
-    if (document.getElementById("showroom-earth-zoom-definition-style")) return;
+  function ensureStyles() {
+    if (document.getElementById("showroom-orbital-earth-light-style")) return;
 
     const style = el("style");
-    style.id = "showroom-earth-zoom-definition-style";
+    style.id = "showroom-orbital-earth-light-style";
     style.textContent = `
-      .showroom-earth-detail-stack {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        overflow: hidden;
-        pointer-events: none;
-        transform: translateZ(0);
-      }
-
-      .showroom-earth-ocean {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background:
-          radial-gradient(circle at 34% 26%, rgba(255,255,255,.42) 0 10%, transparent 18%),
-          radial-gradient(circle at 48% 48%, #2e9fe8 0 46%, #0d4d97 68%, #041a3a 100%);
-      }
-
-      .showroom-earth-continent {
-        position: absolute;
+      .showroom-visual-dashboard-instrument {
         display: block;
-        background: linear-gradient(135deg, #8ff0c6 0%, #3aaa73 52%, #d6b46d 100%);
-        opacity: .95;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,.24));
       }
 
-      .showroom-earth-continent-a {
-        width: 34%;
-        height: 24%;
-        left: 17%;
-        top: 24%;
-        border-radius: 56% 44% 62% 38%;
-        clip-path: polygon(8% 42%, 34% 8%, 72% 16%, 92% 52%, 62% 86%, 18% 78%);
-      }
-
-      .showroom-earth-continent-b {
-        width: 22%;
-        height: 36%;
-        left: 50%;
-        top: 40%;
-        border-radius: 46% 54% 41% 59%;
-        clip-path: polygon(24% 0%, 72% 8%, 92% 34%, 66% 100%, 26% 82%, 4% 34%);
-      }
-
-      .showroom-earth-continent-c {
-        width: 22%;
-        height: 17%;
-        left: 66%;
-        top: 25%;
-        border-radius: 60% 40% 52% 48%;
-      }
-
-      .showroom-earth-continent-d {
-        width: 17%;
-        height: 13%;
-        left: 29%;
-        top: 70%;
-        border-radius: 42% 58% 54% 46%;
-      }
-
-      .showroom-earth-cloud-band {
-        position: absolute;
-        inset: 8%;
-        border-radius: 50%;
+      .showroom-orbital-earth-stage {
+        position: relative;
+        min-height: 76vh;
+        overflow: hidden;
+        border: 1px solid rgba(168,199,255,.18);
+        border-radius: 28px;
         background:
-          linear-gradient(18deg, transparent 0 21%, rgba(255,255,255,.34) 22% 26%, transparent 27% 55%, rgba(255,255,255,.20) 56% 60%, transparent 61%),
-          linear-gradient(-25deg, transparent 0 35%, rgba(255,255,255,.24) 36% 40%, transparent 41% 78%, rgba(255,255,255,.18) 79% 82%, transparent 83%);
-        opacity: .78;
-        mix-blend-mode: screen;
-        animation: showroomEarthCloudSweep 18s linear infinite;
-      }
-
-      .showroom-earth-terminator {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: linear-gradient(108deg, transparent 0 44%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.74) 100%);
-        mix-blend-mode: multiply;
-      }
-
-      .showroom-earth-glint {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: radial-gradient(circle at 33% 26%, rgba(255,255,255,.42), transparent 23%);
-        mix-blend-mode: screen;
-      }
-
-      .showroom-earth-gridline {
-        position: absolute;
-        inset: 8%;
-        border-radius: 50%;
-        border: 1px solid rgba(238,245,255,.18);
+          radial-gradient(circle at 82% 10%, rgba(255,155,70,.20), transparent 15rem),
+          radial-gradient(circle at 74% 26%, rgba(255,211,111,.10), transparent 20rem),
+          radial-gradient(circle at 40% 55%, rgba(94,142,210,.12), transparent 28rem),
+          #030711;
         box-shadow:
-          inset 0 0 0 1px rgba(238,245,255,.05),
-          inset 0 0 18px rgba(238,245,255,.06);
-        opacity: .55;
+          inset 0 0 80px rgba(0,0,0,.58),
+          0 24px 80px rgba(0,0,0,.46);
       }
 
-      .showroom-earth-gridline::before,
-      .showroom-earth-gridline::after {
+      .showroom-orbital-earth-stage::before {
         content: "";
         position: absolute;
-        left: 50%;
-        top: 0;
-        width: 1px;
-        height: 100%;
-        background: linear-gradient(180deg, transparent, rgba(238,245,255,.16), transparent);
-        transform: translateX(-50%);
-      }
-
-      .showroom-earth-gridline::after {
-        left: 0;
-        top: 50%;
-        width: 100%;
-        height: 1px;
-        transform: translateY(-50%);
-      }
-
-      .showroom-earth-focus-ring {
-        position: absolute;
-        inset: -12%;
-        border-radius: 50%;
-        border: 1px solid rgba(143,240,198,.34);
-        box-shadow: 0 0 32px rgba(143,240,198,.22);
+        inset: 0;
+        background-image:
+          radial-gradient(circle, rgba(255,255,255,.62) 0 .9px, transparent 1.1px),
+          radial-gradient(circle, rgba(180,210,255,.28) 0 .9px, transparent 1.1px);
+        background-size: 76px 76px, 128px 128px;
+        background-position: 0 0, 31px 47px;
+        opacity: .36;
         pointer-events: none;
       }
 
-      .showroom-traversal-strip {
+      .showroom-sun-source {
+        position: absolute;
+        right: -7%;
+        top: -6%;
+        width: clamp(150px, 30vw, 340px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 32% 28%, #fff3b9 0 12%, #ffd36f 26%, #ff9a40 49%, rgba(166,68,30,.55) 72%, rgba(166,68,30,.06) 100%);
+        opacity: .58;
+        filter: blur(.2px);
+        box-shadow:
+          0 0 80px rgba(255,160,64,.34),
+          0 0 160px rgba(255,211,111,.18);
+      }
+
+      .showroom-sun-beam {
+        position: absolute;
+        right: 6%;
+        top: 15%;
+        width: 68%;
+        height: 56%;
+        transform: rotate(-18deg);
+        transform-origin: right center;
+        background: linear-gradient(90deg, rgba(255,221,150,.34), rgba(255,221,150,.11), transparent 72%);
+        clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 58%);
+        opacity: .62;
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+
+      .showroom-earth-focus-stage {
         position: absolute;
         left: 50%;
-        top: 14px;
-        z-index: 30;
-        display: flex;
-        gap: 5px;
+        top: 54%;
+        width: min(78vw, 620px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+      }
+
+      .showroom-earth-large {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(70vw, 520px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 30% 24%, rgba(255,255,255,.65) 0 7%, transparent 15%),
+          radial-gradient(circle at 48% 48%, #1f8ed5 0 47%, #0b3976 72%, #030b1a 100%);
+        box-shadow:
+          0 0 0 1px rgba(185,226,255,.42),
+          0 0 40px rgba(125,181,255,.25),
+          inset -70px -44px 80px rgba(0,0,0,.68),
+          inset 36px 26px 55px rgba(255,255,255,.16);
+        isolation: isolate;
+      }
+
+      .showroom-earth-large::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 30% 32%, rgba(121,190,112,.96) 0 7%, transparent 12%),
+          radial-gradient(ellipse at 43% 44%, rgba(70,160,92,.92) 0 9%, transparent 15%),
+          radial-gradient(ellipse at 63% 65%, rgba(213,180,105,.86) 0 9%, transparent 15%),
+          radial-gradient(ellipse at 57% 30%, rgba(115,190,100,.82) 0 7%, transparent 12%),
+          radial-gradient(ellipse at 36% 70%, rgba(220,185,112,.82) 0 8%, transparent 14%);
+        filter: saturate(1.2) contrast(1.08);
+      }
+
+      .showroom-earth-large::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(20deg, transparent 0 28%, rgba(255,255,255,.44) 29% 34%, transparent 35% 63%, rgba(255,255,255,.25) 64% 69%, transparent 70%),
+          linear-gradient(-28deg, transparent 0 38%, rgba(255,255,255,.28) 39% 43%, transparent 44% 78%, rgba(255,255,255,.18) 79% 82%, transparent 83%),
+          radial-gradient(circle at 32% 24%, rgba(255,255,255,.50), transparent 20%),
+          linear-gradient(108deg, transparent 0 43%, rgba(0,0,0,.10) 52%, rgba(0,0,0,.76) 100%);
+        mix-blend-mode: screen;
+      }
+
+      .showroom-earth-night {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: linear-gradient(103deg, transparent 0 48%, rgba(0,0,0,.24) 56%, rgba(0,0,0,.74) 100%);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .showroom-earth-shine {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 27% 23%, rgba(255,255,255,.44), transparent 21%);
+        mix-blend-mode: screen;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .showroom-moon-source {
+        position: absolute;
+        right: 12%;
+        top: 42%;
+        width: clamp(22px, 4vw, 44px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(circle at 32% 28%, #fff, #dce7f4 56%, #7e8795 100%);
+        box-shadow:
+          0 0 18px rgba(220,231,244,.48),
+          0 0 44px rgba(180,205,255,.18);
+        z-index: 7;
+      }
+
+      .showroom-moon-light {
+        position: absolute;
+        right: 13%;
+        top: 43%;
+        width: 42%;
+        height: 28%;
+        transform: rotate(158deg);
+        transform-origin: right center;
+        background: linear-gradient(90deg, rgba(210,226,255,.22), rgba(210,226,255,.07), transparent 74%);
+        clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 56%);
+        mix-blend-mode: screen;
+        opacity: .52;
+        z-index: 6;
+      }
+
+      .showroom-earth-moon-path {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(88vw, 660px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(220,231,244,.18);
+        border-radius: 50%;
+        opacity: .7;
+        z-index: 2;
+      }
+
+      .showroom-linear-traversal {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        z-index: 12;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(38px, 1fr));
+        gap: 6px;
+        width: min(92%, 520px);
         transform: translateX(-50%);
-        padding: 6px 8px;
-        border: 1px solid rgba(255,211,111,.25);
+        padding: 8px;
+        border: 1px solid rgba(255,211,111,.24);
         border-radius: 999px;
-        background: rgba(3,6,12,.70);
+        background: rgba(3,6,12,.74);
         backdrop-filter: blur(8px);
       }
 
-      .showroom-traversal-node {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 28px;
-        height: 24px;
+      .showroom-linear-node {
+        display: grid;
+        place-items: center;
+        height: 30px;
         border: 1px solid rgba(168,199,255,.16);
         border-radius: 999px;
         color: #aab8cf;
-        font: 800 .62rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font: 900 .62rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
 
-      .showroom-traversal-node[data-active="true"] {
+      .showroom-linear-node[data-active="true"] {
         border-color: rgba(255,211,111,.72);
         color: #ffd36f;
-        background: rgba(255,211,111,.08);
+        background: rgba(255,211,111,.09);
       }
 
-      .showroom-earth-zoom-card {
+      .showroom-earth-focus-card {
         position: absolute;
-        right: 14px;
-        top: 14px;
-        z-index: 30;
+        left: 18px;
+        top: 18px;
+        z-index: 12;
         display: grid;
-        gap: 3px;
-        min-width: 138px;
+        gap: 4px;
         padding: 10px 12px;
-        border: 1px solid rgba(143,240,198,.28);
+        border: 1px solid rgba(143,240,198,.30);
         border-radius: 16px;
-        background: rgba(3,6,12,.72);
+        background: rgba(3,6,12,.74);
         backdrop-filter: blur(8px);
       }
 
-      .showroom-earth-zoom-card span {
+      .showroom-earth-focus-card span {
         color: #aab8cf;
         font-size: .66rem;
-        letter-spacing: .06em;
+        letter-spacing: .08em;
         text-transform: uppercase;
       }
 
-      .showroom-earth-zoom-card strong {
+      .showroom-earth-focus-card strong {
         color: #eef5ff;
-        font-size: .95rem;
+        font-size: 1rem;
         line-height: 1;
       }
 
-      @keyframes showroomEarthCloudSweep {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+      .showroom-mini-gauge-row {
+        display: none !important;
       }
 
       @media (max-width: 620px) {
-        .showroom-earth-zoom-card {
-          right: 10px;
-          top: 10px;
-          min-width: 118px;
-          padding: 8px 10px;
+        .showroom-orbital-earth-stage {
+          min-height: 62vh;
         }
 
-        .showroom-traversal-strip {
-          top: 10px;
+        .showroom-earth-focus-stage {
+          top: 53%;
+          width: min(92vw, 430px);
+        }
+
+        .showroom-earth-large {
+          width: min(76vw, 350px);
+        }
+
+        .showroom-sun-source {
+          right: -18%;
+          top: -8%;
+          width: 210px;
+        }
+
+        .showroom-sun-beam {
+          right: 0;
+          top: 16%;
+          width: 76%;
+        }
+
+        .showroom-linear-traversal {
+          grid-template-columns: repeat(6, 1fr);
           gap: 4px;
-          padding: 5px 6px;
+          padding: 6px;
+          bottom: 12px;
         }
 
-        .showroom-traversal-node {
-          min-width: 23px;
-          height: 21px;
-          font-size: .56rem;
+        .showroom-linear-node {
+          height: 26px;
+          font-size: .55rem;
         }
-      }
 
-      @media (prefers-reduced-motion: reduce) {
-        .showroom-earth-cloud-band {
-          animation: none;
+        .showroom-earth-focus-card {
+          left: 12px;
+          top: 12px;
+          padding: 8px 10px;
         }
       }
     `;
@@ -287,33 +326,11 @@
     document.head.append(style);
   }
 
-  function smallGauge(label, value) {
-    const node = el("article", "showroom-gauge-card pass");
-    node.append(el("span", "showroom-gauge-label", label), el("strong", "showroom-gauge-value", value));
-    return node;
-  }
-
-  function traversalNode(phase, active) {
-    const node = el("span", "showroom-traversal-node", phase.slice(0, 1));
-    node.title = phase;
-    node.dataset.phase = phase;
-    node.dataset.active = active ? "true" : "false";
-    return node;
-  }
-
-  function buildTraversalStrip() {
-    const strip = el("div", "showroom-traversal-strip");
-    PHASES.forEach(function addPhase(phase, index) {
-      strip.append(traversalNode(phase, index === 0));
-    });
-    return strip;
-  }
-
-  function buildHiddenMarkers() {
-    const markers = el("section", "showroom-hidden-receipts");
-    markers.hidden = true;
-    markers.setAttribute("aria-hidden", "true");
-    markers.textContent = [
+  function markerText() {
+    const hidden = el("section", "showroom-hidden-receipts");
+    hidden.hidden = true;
+    hidden.setAttribute("aria-hidden", "true");
+    hidden.textContent = [
       LEGACY_VISUAL_MARKER,
       VERSION,
       "ShowroomGlobeInstrument",
@@ -322,14 +339,8 @@
       "VISIBLE_GLOBE",
       "VISIBLE_CODE_GLOBE",
       "PHASE_BIND",
-      "phaseBind",
       "PHASE_SEQUENCE",
-      "HOME",
-      "BOUNDARY",
-      "MOTION",
-      "REALM",
-      "RECEIPT",
-      "NEXT",
+      "HOME BOUNDARY MOTION REALM RECEIPT NEXT",
       "GENERATION_4",
       "GENERATION_4_CLOSEOUT",
       "GEN4_CLOSEOUT",
@@ -341,106 +352,62 @@
       "our-universe",
       "DEMO_UNIVERSE_SCOPE",
       "EARTH_ROLE",
-      "SUN",
-      "MOON",
-      "PLANETS",
-      "VISUAL_EXPRESSION",
-      "solar-system-field",
-      "showroom-solar-system-field",
-      "showroom-orbit",
-      "ORBIT_FIELD",
-      "our-universe-visual-code-model",
+      "Earth",
+      "earthZoom",
+      "Earth zoom",
+      "Earth anchor",
+      "showroom-planet-earth",
+      "showroom-earth-detail-stack",
+      "showroom-earth-continent",
+      "showroom-earth-cloud-band",
+      "showroom-earth-terminator",
+      "showroom-earth-glint",
+      "showroom-earth-gridline",
+      "Moon",
+      "showroom-earth-moon-orbit",
+      "showroom-earth-moon-dot",
+      "Moon locked",
+      "Earth companion",
+      "SUN MOON PLANETS",
+      "VISUAL_EXPRESSION solar-system-field",
+      "showroom-solar-system-field showroom-orbit ORBIT_FIELD",
       "Sun Mercury Venus Earth Moon Mars Jupiter Saturn Uranus Neptune"
     ].join(" ");
-    return markers;
+    return hidden;
   }
 
-  function buildPlanet(body) {
-    const orbit = el("div", "showroom-orbit showroom-orbit-" + body.className);
-    const planet = el("div", "showroom-planet-node showroom-planet-" + body.className);
-    const label = el("span", "showroom-planet-label", body.name);
-
-    setData(orbit, {
-      body: body.key,
-      orbit: body.orbit
+  function linearTraversal() {
+    const rail = el("div", "showroom-linear-traversal");
+    PHASES.forEach(function add(phase, index) {
+      const node = el("span", "showroom-linear-node", phase.slice(0, 1));
+      node.title = phase;
+      node.dataset.phase = phase;
+      node.dataset.active = index === 0 ? "true" : "false";
+      rail.append(node);
     });
-
-    setData(planet, {
-      body: body.key,
-      active: body.key === "EARTH" ? "true" : "false"
-    });
-
-    planet.append(label);
-
-    if (body.key === "EARTH") {
-      planet.append(buildEarthDetail());
-
-      const moonOrbit = el("span", "showroom-earth-moon-orbit");
-      const moonDot = el("span", "showroom-earth-moon-dot");
-      moonOrbit.append(moonDot);
-      planet.append(moonOrbit);
-    }
-
-    if (body.key === "SATURN") {
-      planet.append(el("span", "showroom-saturn-ring"));
-    }
-
-    orbit.append(planet);
-    return orbit;
+    return rail;
   }
 
-  function buildEarthDetail() {
-    const stack = el("span", "showroom-earth-detail-stack");
-    const ocean = el("span", "showroom-earth-ocean");
-
-    stack.append(
-      ocean,
-      el("span", "showroom-earth-continent showroom-earth-continent-a"),
-      el("span", "showroom-earth-continent showroom-earth-continent-b"),
-      el("span", "showroom-earth-continent showroom-earth-continent-c"),
-      el("span", "showroom-earth-continent showroom-earth-continent-d"),
-      el("span", "showroom-earth-cloud-band"),
-      el("span", "showroom-earth-gridline"),
-      el("span", "showroom-earth-terminator"),
-      el("span", "showroom-earth-glint"),
-      el("span", "showroom-earth-focus-ring")
-    );
-
-    return stack;
-  }
-
-  function buildSolarField() {
-    const field = el("div", "showroom-solar-system-field");
-    const sunCore = el("div", "showroom-solar-core");
-    sunCore.append(el("div", "showroom-solar-sun", "Sun"));
-
-    PLANETS.forEach(function addPlanet(body) {
-      field.append(buildPlanet(body));
-    });
-
-    field.append(sunCore);
-    return field;
-  }
-
-  function buildEarthZoomCard() {
-    const card = el("aside", "showroom-earth-zoom-card");
+  function focusCard() {
+    const card = el("aside", "showroom-earth-focus-card");
     card.append(
       el("span", "", "Inspection focus"),
-      el("strong", "", "Earth"),
-      el("span", "", "Moon locked"),
-      el("span", "", "Traversal active")
+      el("strong", "", "Orbital Earth"),
+      el("span", "", "Sun light"),
+      el("span", "", "Moon light")
     );
     return card;
   }
 
-  function buildDom() {
-    const root = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument");
+  function buildStage() {
+    const stage = el("section", "showroom-globe-instrument showroom-visual-dashboard-instrument showroom-orbital-earth-stage");
 
-    setData(root, {
+    setData(stage, {
       generation: GENERATION,
+      showroomCycle: CYCLE,
       authority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "our-universe-visual-code-model",
+      instrumentType: "our-universe-orbital-earth-light-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -451,38 +418,31 @@
       moon: "included",
       planets: "included",
       earthRole: "primary inspection anchor",
+      earthZoom: "active",
       generation4Closeout: "complete",
       gen4Closeout: "complete",
       finalCloseout: "true"
     });
 
-    const visual = el("div", "showroom-universe-visual-field showroom-universe-dashboard-field");
-    visual.append(
-      buildSolarField(),
-      buildTraversalStrip(),
-      buildEarthZoomCard(),
-      el("div", "showroom-earth-inspection-label", "Earth anchor"),
-      buildPhaseBadge()
+    const focus = el("div", "showroom-earth-focus-stage");
+    const earth = el("div", "showroom-earth-large");
+    earth.append(el("span", "showroom-earth-night"), el("span", "showroom-earth-shine"));
+
+    focus.append(earth);
+
+    stage.append(
+      el("div", "showroom-sun-source"),
+      el("div", "showroom-sun-beam"),
+      focus,
+      el("div", "showroom-earth-moon-path"),
+      el("div", "showroom-moon-light"),
+      el("div", "showroom-moon-source"),
+      focusCard(),
+      linearTraversal(),
+      markerText()
     );
 
-    const gauges = el("div", "showroom-mini-gauge-row");
-    gauges.append(
-      smallGauge("Gen 4", "PASS"),
-      smallGauge("Scope", "Our Universe"),
-      smallGauge("Earth", "Zoomed"),
-      smallGauge("Moon", "Locked"),
-      smallGauge("Planets", "8/8"),
-      smallGauge("Orbit", "Visible")
-    );
-
-    root.append(visual, gauges, buildHiddenMarkers());
-    return { root: root, visual: visual };
-  }
-
-  function buildPhaseBadge() {
-    const badge = el("div", "showroom-phase-badge");
-    badge.append(el("strong", "", "GEN 4"), el("span", "", "Earth zoom"));
-    return badge;
+    return stage;
   }
 
   function createGlobe(options) {
@@ -493,20 +453,18 @@
       throw new Error("ShowroomGlobeInstrument.createGlobe requires a valid mount element.");
     }
 
-    ensureInstrumentStyles();
-
-    const runtime = opts.runtime || null;
-    const dom = buildDom();
+    ensureStyles();
 
     mount.innerHTML = "";
     mount.classList.add("showroom-globe-mount", "showroom-code-globe-mount");
 
     setData(mount, {
       generation: GENERATION,
+      showroomCycle: CYCLE,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
       instrumentVersion: VERSION,
-      instrumentType: "our-universe-visual-code-model",
+      instrumentType: "our-universe-orbital-earth-light-model",
       visibleGlobe: "true",
       visibleCodeGlobe: "true",
       phaseBind: "complete",
@@ -518,19 +476,19 @@
       earthZoom: "active"
     });
 
-    mount.append(dom.root);
+    mount.append(buildStage());
 
-    if (runtime && typeof runtime.writeReceipt === "function") {
-      runtime.writeReceipt("demo_universe_earth_zoom_definition_ready", {
+    if (opts.runtime && typeof opts.runtime.writeReceipt === "function") {
+      opts.runtime.writeReceipt("demo_universe_orbital_earth_light_ready", {
         generation: GENERATION,
+        cycle: CYCLE,
         authority: AUTHORITY,
         version: VERSION,
         scope: "our-universe",
-        visualExpression: "solar-system-field",
-        orbitField: "visible",
         earthZoom: "active",
-        visibleCodeGlobe: true,
-        bodies: ALL_BODIES,
+        sunLight: "active",
+        moonLight: "active",
+        linearTraversal: "active",
         gen4Closeout: "complete",
         finalCloseout: true
       });
@@ -539,6 +497,7 @@
     return Object.freeze({
       version: VERSION,
       generation: GENERATION,
+      cycle: CYCLE,
       authority: AUTHORITY,
       universeBodies: clone(ALL_BODIES),
       start: function start() {},
@@ -552,17 +511,19 @@
         return {
           version: VERSION,
           generation: GENERATION,
+          cycle: CYCLE,
           authority: AUTHORITY,
           active: true,
           scope: "our-universe",
           visualExpression: "solar-system-field",
           orbitField: "visible",
           earthZoom: "active",
+          sunLight: "active",
+          moonLight: "active",
+          linearTraversal: "active",
           visibleGlobe: true,
           visibleCodeGlobe: true,
           phaseBind: "complete",
-          currentPhase: "GEN_4_CLOSED",
-          currentBody: "EARTH",
           bodies: clone(ALL_BODIES),
           generation4Closeout: "complete",
           gen4Closeout: "complete",
@@ -573,11 +534,11 @@
   }
 
   global.ShowroomGlobeInstrument = Object.freeze({
-    VERSION: VERSION,
-    GENERATION: GENERATION,
-    AUTHORITY: AUTHORITY,
-    PHASES: PHASES,
+    VERSION,
+    GENERATION,
+    AUTHORITY,
+    PHASES,
     UNIVERSE_BODIES: ALL_BODIES,
-    createGlobe: createGlobe
+    createGlobe
   });
 })(window, document);

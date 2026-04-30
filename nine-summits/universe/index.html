@@ -2,8 +2,8 @@
 <html
   lang="en"
   data-page="nine-summits-universe"
-  data-route="/nine-summits-universe/"
-  data-generation="renewed-contract-route-creation-tnt-v1"
+  data-route="/nine-summits/universe/"
+  data-generation="nested-universe-world-route-tnt-v1"
   data-planet="NINE_SUMMITS_UNIVERSE"
   data-demo-planet="planet-1"
   data-core="floating-magnetic-half-natural-half-man-made"
@@ -14,59 +14,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Nine Summits Universe · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Nine Summits Universe is Planet 1: a seven-landmass coherence world restored through a floating magnetic core and governed by archetype-personality population, coherence access, and the TikTok map protocol."
-  >
+  <meta name="description" content="Nine Summits Universe is Planet 1: a seven-landmass coherence world restored through a floating magnetic core and governed by archetype-personality population, coherence access, and the TikTok map protocol.">
 
   <style>
     :root {
       --bg: #03050a;
-      --panel: rgba(9, 15, 25, 0.94);
-      --panel2: rgba(14, 24, 38, 0.84);
-      --line: rgba(168, 199, 255, 0.22);
-      --gold-line: rgba(242, 199, 111, 0.36);
+      --panel: rgba(9,15,25,.94);
+      --panel2: rgba(14,24,38,.84);
+      --line: rgba(168,199,255,.22);
+      --gold-line: rgba(242,199,111,.36);
       --text: #f4f7ff;
       --muted: #b8c2d6;
-      --soft: rgba(244, 247, 255, 0.78);
+      --soft: rgba(244,247,255,.78);
       --gold: #f2c76f;
       --green: #8ff0c6;
-      --blue: #91bdff;
-      --shadow: rgba(0, 0, 0, 0.56);
+      --shadow: rgba(0,0,0,.56);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
-        radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
-        radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
+        radial-gradient(circle at 76% 4%, rgba(242,199,111,.14), transparent 24rem),
+        radial-gradient(circle at 20% 16%, rgba(145,189,255,.12), transparent 30rem),
+        radial-gradient(circle at 50% 90%, rgba(143,240,198,.08), transparent 26rem),
+        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:focus {
-      outline: 2px solid var(--green);
-      outline-offset: 3px;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip {
       position: absolute;
@@ -80,9 +60,7 @@
       font-weight: 800;
     }
 
-    .skip:focus {
-      left: 10px;
-    }
+    .skip:focus { left: 10px; }
 
     .page {
       width: min(1160px, calc(100% - 28px));
@@ -94,8 +72,8 @@
       display: block;
       margin-bottom: 18px;
       color: var(--muted);
-      font-size: 0.86rem;
-      letter-spacing: 0.12em;
+      font-size: .86rem;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
@@ -103,25 +81,20 @@
       display: block;
       color: var(--gold);
       font-size: 1rem;
-      letter-spacing: 0.16em;
+      letter-spacing: .16em;
       text-transform: uppercase;
     }
 
-    .nav,
-    .actions,
-    .links {
+    .nav, .actions, .links {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
     }
 
-    .nav {
-      margin-bottom: 26px;
-    }
+    .nav { margin-bottom: 26px; }
 
-    .nav a,
-    .button {
+    .nav a, .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -129,37 +102,26 @@
       padding: 10px 16px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.055);
-      color: var(--text);
+      background: rgba(255,255,255,.055);
       font-weight: 850;
     }
 
-    .nav a:hover,
-    .button:hover {
-      border-color: rgba(242, 199, 111, 0.48);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
     .button.primary {
-      border-color: rgba(143, 240, 198, 0.48);
-      background: rgba(143, 240, 198, 0.13);
+      border-color: rgba(143,240,198,.48);
+      background: rgba(143,240,198,.13);
     }
 
-    .hero,
-    .panel,
-    .card,
-    .land-card {
+    .hero, .panel, .card, .land-card {
       border: 1px solid var(--line);
       border-radius: 30px;
       background:
-        radial-gradient(circle at 90% 8%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        radial-gradient(circle at 90% 8%, rgba(242,199,111,.08), transparent 18rem),
         var(--panel);
       box-shadow: 0 24px 80px var(--shadow);
     }
 
-    .hero,
-    .panel {
-      padding: clamp(24px, 5vw, 48px);
+    .hero, .panel {
+      padding: clamp(24px,5vw,48px);
       margin-top: 18px;
     }
 
@@ -169,85 +131,77 @@
       align-content: center;
       gap: 24px;
       border-color: var(--gold-line);
-      background:
-        radial-gradient(circle at 72% 18%, rgba(242, 199, 111, 0.16), transparent 20rem),
-        radial-gradient(circle at 24% 70%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.96), rgba(5, 9, 16, 0.78));
     }
 
     .kicker {
       margin: 0 0 12px;
       color: var(--green);
-      font-size: 0.82rem;
+      font-size: .82rem;
       font-weight: 950;
-      letter-spacing: 0.14em;
+      letter-spacing: .14em;
       text-transform: uppercase;
     }
 
-    .kicker.gold {
-      color: var(--gold);
-    }
+    .kicker.gold { color: var(--gold); }
 
     h1 {
       margin: 0;
       max-width: 980px;
-      font-size: clamp(3.05rem, 10vw, 7rem);
-      line-height: 0.9;
-      letter-spacing: -0.078em;
+      font-size: clamp(3.05rem,10vw,7rem);
+      line-height: .9;
+      letter-spacing: -.078em;
     }
 
     h2 {
       margin: 0;
       max-width: 900px;
-      font-size: clamp(1.7rem, 5vw, 3.35rem);
+      font-size: clamp(1.7rem,5vw,3.35rem);
       line-height: 1;
-      letter-spacing: -0.058em;
+      letter-spacing: -.058em;
     }
 
     h3 {
       margin: 0;
-      font-size: clamp(1.25rem, 3.6vw, 2rem);
+      font-size: clamp(1.25rem,3.6vw,2rem);
       line-height: 1.06;
-      letter-spacing: -0.045em;
+      letter-spacing: -.045em;
     }
 
     p {
       color: var(--muted);
-      font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+      font-size: clamp(1.02rem,2.4vw,1.2rem);
       line-height: 1.6;
     }
 
     .lead {
       max-width: 920px;
       color: var(--soft);
-      font-size: clamp(1.16rem, 3vw, 1.55rem);
+      font-size: clamp(1.16rem,3vw,1.55rem);
       line-height: 1.45;
     }
 
-    .section {
-      margin-top: 18px;
-    }
+    .section { margin-top: 18px; }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(4,minmax(0,1fr));
       gap: 12px;
       margin-top: 24px;
     }
 
     .stat {
-      border: 1px solid rgba(168, 199, 255, 0.15);
+      border: 1px solid rgba(168,199,255,.15);
       border-radius: 22px;
       padding: 16px;
-      background: rgba(255, 255, 255, 0.045);
+      background: rgba(255,255,255,.045);
     }
 
     .stat strong {
       display: block;
       color: var(--gold);
-      font-size: clamp(1.4rem, 4vw, 2.3rem);
+      font-size: clamp(1.4rem,4vw,2.3rem);
       line-height: 1;
-      letter-spacing: -0.05em;
+      letter-spacing: -.05em;
     }
 
     .stat span {
@@ -264,24 +218,13 @@
       margin-top: 18px;
     }
 
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .grid.two { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .grid.three { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .grid.four { grid-template-columns: repeat(4,minmax(0,1fr)); }
 
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card,
-    .land-card {
+    .card, .land-card {
       padding: 22px;
-      background:
-        radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
-        var(--panel2);
+      background: var(--panel2);
       box-shadow: none;
     }
 
@@ -292,22 +235,6 @@
       gap: 12px;
     }
 
-    .card span,
-    .land-card span {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--gold);
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .card p,
-    .land-card p {
-      margin: 12px 0 0;
-    }
-
     .land-card {
       min-height: 300px;
       display: grid;
@@ -316,18 +243,30 @@
     }
 
     .land-card.primary {
-      border-color: rgba(242, 199, 111, 0.42);
+      border-color: rgba(242,199,111,.42);
       background:
-        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.12), transparent 18rem),
+        radial-gradient(circle at 18% 0%, rgba(242,199,111,.12), transparent 18rem),
         var(--panel2);
     }
 
     .land-card.pole {
-      border-color: rgba(143, 240, 198, 0.36);
+      border-color: rgba(143,240,198,.36);
       background:
-        radial-gradient(circle at 18% 0%, rgba(143, 240, 198, 0.1), transparent 18rem),
+        radial-gradient(circle at 18% 0%, rgba(143,240,198,.1), transparent 18rem),
         var(--panel2);
     }
+
+    .card span, .land-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .card p, .land-card p { margin: 12px 0 0; }
 
     .list {
       display: grid;
@@ -335,65 +274,31 @@
       margin-top: 18px;
     }
 
-    .row {
+    .row, .flow-step {
       display: grid;
       grid-template-columns: 180px 1fr;
       gap: 14px;
       align-items: start;
       padding: 14px;
-      border: 1px solid rgba(168, 199, 255, 0.14);
+      border: 1px solid rgba(168,199,255,.14);
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.045);
+      background: rgba(255,255,255,.045);
     }
 
-    .row strong {
-      color: var(--green);
-    }
-
-    .row span {
-      color: var(--muted);
-      line-height: 1.48;
-    }
-
-    .flow {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .flow-step {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      gap: 14px;
-      align-items: start;
-      padding: 14px;
-      border: 1px solid rgba(242, 199, 111, 0.18);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .flow-step strong {
-      color: var(--gold);
-      font-size: 1.25rem;
-      line-height: 1;
-    }
-
-    .flow-step span {
-      color: var(--muted);
-      line-height: 1.48;
-    }
+    .row strong, .flow-step strong { color: var(--green); }
+    .row span, .flow-step span { color: var(--muted); line-height: 1.48; }
 
     .quote {
       color: var(--text);
-      font-size: clamp(1.7rem, 5vw, 3.4rem);
+      font-size: clamp(1.7rem,5vw,3.4rem);
       line-height: 1.05;
-      letter-spacing: -0.06em;
+      letter-spacing: -.06em;
       font-weight: 950;
     }
 
     .az-grid {
       display: grid;
-      grid-template-columns: repeat(13, minmax(0, 1fr));
+      grid-template-columns: repeat(13,minmax(0,1fr));
       gap: 8px;
       margin-top: 18px;
     }
@@ -403,67 +308,28 @@
       gap: 4px;
       align-content: center;
       min-height: 68px;
-      border: 1px solid rgba(168, 199, 255, 0.14);
+      border: 1px solid rgba(168,199,255,.14);
       border-radius: 16px;
       padding: 10px;
-      background: rgba(255, 255, 255, 0.045);
+      background: rgba(255,255,255,.045);
       text-align: center;
     }
 
-    .az-chip strong {
-      color: var(--gold);
-      font-size: 1.1rem;
-      line-height: 1;
-    }
+    .az-chip strong { color: var(--gold); font-size: 1.1rem; }
+    .az-chip span { color: var(--muted); font-size: .72rem; font-weight: 800; }
 
-    .az-chip span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 800;
-      line-height: 1.15;
-    }
-
-    .receipt {
-      display: none !important;
-    }
+    .receipt { display: none !important; }
 
     @media (max-width: 980px) {
-      .stats,
-      .grid.two,
-      .grid.three,
-      .grid.four {
-        grid-template-columns: 1fr;
-      }
-
-      .az-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .hero {
-        min-height: 460px;
-      }
+      .stats, .grid.two, .grid.three, .grid.four { grid-template-columns: 1fr; }
+      .az-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+      .hero { min-height: 460px; }
     }
 
     @media (max-width: 620px) {
-      .page {
-        width: min(100% - 24px, 620px);
-        padding-top: 18px;
-      }
-
-      .nav a,
-      .button {
-        min-height: 40px;
-        padding: 9px 14px;
-      }
-
-      .row,
-      .flow-step {
-        grid-template-columns: 1fr;
-      }
-
-      .az-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .page { width: min(100% - 24px,620px); padding-top: 18px; }
+      .row, .flow-step { grid-template-columns: 1fr; }
+      .az-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
   </style>
 </head>
@@ -474,7 +340,8 @@
   <main
     id="universe-main"
     class="page"
-    data-route="/nine-summits-universe/"
+    data-route="/nine-summits/universe/"
+    data-parent-route="/nine-summits/"
     data-planet="NINE_SUMMITS_UNIVERSE"
     data-planet-number="1"
     data-demo-planet="true"
@@ -489,432 +356,174 @@
   >
     <a class="brand" href="/">
       <strong>Diamond Gate Bridge</strong>
-      Nine Summits Universe · Demo Planet
+      Nine Summits / Universe · Planet 1
     </a>
 
     <nav class="nav" aria-label="Primary navigation">
       <a href="/">Compass</a>
-      <a href="/nine-summits/">Nine Summits</a>
+      <a href="/nine-summits/">Nine Summits Hub</a>
       <a href="/nine-summits-of-love/">Nine Summits of Love</a>
       <a href="/showroom/globe/">Inspect Demo Planet</a>
       <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
     </nav>
 
-    <section class="hero" aria-labelledby="universe-title">
+    <section class="hero">
       <p class="kicker">Planet 1 · NINE_SUMMITS_UNIVERSE</p>
-      <h1 id="universe-title">The missing universe route is now its own world page.</h1>
-
+      <h1>The universe lane is now nested under the Nine Summits hub.</h1>
       <p class="lead">
-        This page is the destination behind the Nine Summits Universe link. It is not the book page, not the speaking page, and not the Showroom inspection page. It is the world explanation route for Planet 1.
+        This is the canonical world route: `/nine-summits/universe/`. It carries Planet 1, the Demo Planet, and the world explanation layer for the Nine Summits system.
       </p>
-
       <p class="lead">
         Nine Summits Universe is an ancient seven-landmass coherence world found desolate and in despair, restored through a floating magnetic core that is half natural and half man-made.
       </p>
 
-      <div class="actions" aria-label="Primary actions">
+      <div class="actions">
         <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
         <a class="button" href="/nine-summits-of-love/">Open Book Path</a>
-        <a class="button" href="/nine-summits/">Return to Nine Summits Hub</a>
+        <a class="button" href="/nine-summits/">Return to Hub</a>
         <a class="button" href="/gauges/">Read Gauges</a>
       </div>
 
-      <div class="stats" aria-label="Planet facts">
-        <div class="stat">
-          <strong>7</strong>
-          <span>landmasses</span>
-        </div>
-        <div class="stat">
-          <strong>4×</strong>
-          <span>Earth-age world</span>
-        </div>
-        <div class="stat">
-          <strong>256</strong>
-          <span>lattice allocation grammar</span>
-        </div>
-        <div class="stat">
-          <strong>A–Z</strong>
-          <span>TikTok semantic sweep</span>
-        </div>
+      <div class="stats">
+        <div class="stat"><strong>7</strong><span>landmasses</span></div>
+        <div class="stat"><strong>4×</strong><span>Earth-age world</span></div>
+        <div class="stat"><strong>256</strong><span>lattice allocation grammar</span></div>
+        <div class="stat"><strong>A–Z</strong><span>TikTok semantic sweep</span></div>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="contract-title">
-      <p class="kicker gold">Renewed contract</p>
-      <h2 id="contract-title">This route has one job: explain the world.</h2>
-
-      <p>
-        The Nine Summits hub links here. This page receives that link and carries the world map. Showroom inspects the planet. Gauges measures it. The book page carries The Nine Summits of Love. This page carries the Nine Summits Universe.
-      </p>
-
-      <div class="grid three">
-        <article class="card">
-          <span>/nine-summits/</span>
-          <h3>Hub route.</h3>
-          <p>The public doorway that links to the book, universe, and underdog lanes.</p>
-        </article>
-
-        <article class="card">
-          <span>/nine-summits-universe/</span>
-          <h3>World route.</h3>
-          <p>This route explains Planet 1, the seven landmasses, core, coherence law, population law, and TikTok protocol.</p>
-        </article>
-
-        <article class="card">
-          <span>/showroom/globe/</span>
-          <h3>Inspection route.</h3>
-          <p>The visible inspection surface for the Demo Planet transition layer.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section panel" aria-labelledby="origin-title">
+    <section class="section panel">
       <p class="kicker gold">World origin</p>
-      <h2 id="origin-title">The planet was found desolate and in despair.</h2>
-
+      <h2>The planet was found desolate and in despair.</h2>
       <p>
         This world was not discovered in a thriving state. It was found dormant, damaged, and spiritually exhausted: a planet with immense buried value, but without stable continuity. The first planetary story is restoration, not conquest.
       </p>
-
       <p>
         The restoration begins with the floating magnetic core. The natural half carries life, memory, terrain, seed, water, fruit, ecology, and organic possibility. The man-made half carries structure, routing, measurement, city systems, repair, instruments, and access control.
       </p>
-
-      <div class="grid two">
-        <article class="card">
-          <span>Natural half</span>
-          <h3>Life and memory.</h3>
-          <p>The natural half carries terrain, water, fruit, organic recovery, and the planet’s deep ecological memory.</p>
-        </article>
-
-        <article class="card">
-          <span>Man-made half</span>
-          <h3>Structure and repair.</h3>
-          <p>The man-made half carries measurement, routing, city order, technology, access grammar, and repair systems.</p>
-        </article>
-      </div>
     </section>
 
-    <section class="section panel" aria-labelledby="coherence-title">
+    <section class="section panel">
       <p class="kicker">Coherence terrain law</p>
-      <h2 id="coherence-title">As comprehension becomes more complex, solutions become sweeter.</h2>
+      <h2>As comprehension becomes more complex, solutions become sweeter.</h2>
+      <p class="quote">Higher coherence opens harder terrain, deeper comprehension, sweeter fruit, and more elegant solutions.</p>
 
-      <p class="quote">
-        Higher coherence opens harder terrain, deeper comprehension, sweeter fruit, and more elegant solutions.
-      </p>
-
-      <div class="list" aria-label="Coherence progression">
-        <div class="row">
-          <strong>Low coherence</strong>
-          <span>Stable entry terrain, basic cities, simple routes, ordinary food, and clear civic instruction.</span>
-        </div>
-
-        <div class="row">
-          <strong>Developing coherence</strong>
-          <span>Regional travel, stronger schools, specialized cities, richer fruit, and more complex choices.</span>
-        </div>
-
-        <div class="row">
-          <strong>High coherence</strong>
-          <span>Difficult terrain, rare materials, advanced cities, deeper comprehension, and sweeter solutions.</span>
-        </div>
-
-        <div class="row">
-          <strong>Peak coherence</strong>
-          <span>Polar access, summit gates, deep-core restoration, diamond and opal extreme zones, and the most elegant solutions.</span>
-        </div>
+      <div class="list">
+        <div class="row"><strong>Low coherence</strong><span>Stable entry terrain, basic cities, simple routes, ordinary food, and clear civic instruction.</span></div>
+        <div class="row"><strong>Developing coherence</strong><span>Regional travel, stronger schools, specialized cities, richer fruit, and more complex choices.</span></div>
+        <div class="row"><strong>High coherence</strong><span>Difficult terrain, rare materials, advanced cities, deeper comprehension, and sweeter solutions.</span></div>
+        <div class="row"><strong>Peak coherence</strong><span>Polar access, summit gates, deep-core restoration, diamond and opal extreme zones, and the most elegant solutions.</span></div>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="landmasses-title">
+    <section class="section panel">
       <p class="kicker gold">Seven-landmass world</p>
-      <h2 id="landmasses-title">The planet has one Mainland, four major regions, and two poles.</h2>
-
+      <h2>The planet has one Mainland, four major regions, and two poles.</h2>
       <p>
         The total world scale is Earth-equivalent, but the land distribution is not ordinary Earth. The world is split into seven land pieces: one central Mainland, four other main regions, the North Pole, and the South Pole.
       </p>
 
-      <div class="grid two" aria-label="Seven landmasses">
-        <article class="land-card primary">
-          <span>Landmass 1</span>
-          <h3>The Mainland</h3>
-          <p>Central civilization field, first-entry world, primary population density, main countries, book/metaverse entry, civic systems, and coherence onboarding.</p>
-          <p>Material profile: granite foundations, marble civic structures, copper and iron utility, gold and platinum high-order districts.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 2</span>
-          <h3>North Main Region</h3>
-          <p>Clarity, law, memory, discipline, cold pressure, summit trials, structural academies, and high-order civic tests.</p>
-          <p>Material profile: diamond, slate, platinum, iron.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 3</span>
-          <h3>East Main Region</h3>
-          <p>Learning, emergence, invention, exploration, schools, language systems, discovery paths, and luminous experimental cities.</p>
-          <p>Material profile: opal, copper, silver, marble.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 4</span>
-          <h3>South Main Region</h3>
-          <p>Continuity, restoration, agriculture, care, deep gardens, food systems, recovery corridors, and family/civil continuity.</p>
-          <p>Material profile: granite, marble, copper, gold, opal.</p>
-        </article>
-
-        <article class="land-card">
-          <span>Landmass 5</span>
-          <h3>West Main Region</h3>
-          <p>Trial, fracture, defense, adversarial proof, repair after pressure, severe cliffs, slate fields, and metallic fault lines.</p>
-          <p>Material profile: slate, iron, lead, silver, diamond.</p>
-        </article>
-
-        <article class="land-card pole">
-          <span>Landmass 6</span>
-          <h3>North Pole</h3>
-          <p>Extreme upper-coherence access: impossible cold, diamond ice, magnetic skyfields, upper-world gates, and final law trials.</p>
-          <p>Material profile: diamond, platinum, iron, slate.</p>
-        </article>
-
-        <article class="land-card pole">
-          <span>Landmass 7</span>
-          <h3>South Pole</h3>
-          <p>Extreme depth-coherence access: pressure fields, hidden caverns, root-world gates, survival trials, and deep-core restoration.</p>
-          <p>Material profile: granite, opal, lead, gold, copper.</p>
-        </article>
-
-        <article class="land-card primary">
-          <span>World rule</span>
-          <h3>Difficulty is not punishment.</h3>
-          <p>Harder terrain means the world is asking for higher coherence. The reward is deeper comprehension, sweeter fruit, and more elegant possibility.</p>
-        </article>
+      <div class="grid two">
+        <article class="land-card primary"><span>Landmass 1</span><h3>The Mainland</h3><p>Central civilization field, first-entry world, primary population density, main countries, book/metaverse entry, civic systems, and coherence onboarding.</p><p>Material profile: granite foundations, marble civic structures, copper and iron utility, gold and platinum high-order districts.</p></article>
+        <article class="land-card"><span>Landmass 2</span><h3>North Main Region</h3><p>Clarity, law, memory, discipline, cold pressure, summit trials, structural academies, and high-order civic tests.</p><p>Material profile: diamond, slate, platinum, iron.</p></article>
+        <article class="land-card"><span>Landmass 3</span><h3>East Main Region</h3><p>Learning, emergence, invention, exploration, schools, language systems, discovery paths, and luminous experimental cities.</p><p>Material profile: opal, copper, silver, marble.</p></article>
+        <article class="land-card"><span>Landmass 4</span><h3>South Main Region</h3><p>Continuity, restoration, agriculture, care, deep gardens, food systems, recovery corridors, and family/civil continuity.</p><p>Material profile: granite, marble, copper, gold, opal.</p></article>
+        <article class="land-card"><span>Landmass 5</span><h3>West Main Region</h3><p>Trial, fracture, defense, adversarial proof, repair after pressure, severe cliffs, slate fields, and metallic fault lines.</p><p>Material profile: slate, iron, lead, silver, diamond.</p></article>
+        <article class="land-card pole"><span>Landmass 6</span><h3>North Pole</h3><p>Extreme upper-coherence access: impossible cold, diamond ice, magnetic skyfields, upper-world gates, and final law trials.</p><p>Material profile: diamond, platinum, iron, slate.</p></article>
+        <article class="land-card pole"><span>Landmass 7</span><h3>South Pole</h3><p>Extreme depth-coherence access: pressure fields, hidden caverns, root-world gates, survival trials, and deep-core restoration.</p><p>Material profile: granite, opal, lead, gold, copper.</p></article>
+        <article class="land-card primary"><span>World rule</span><h3>Difficulty is not punishment.</h3><p>Harder terrain means the world is asking for higher coherence. The reward is deeper comprehension, sweeter fruit, and more elegant possibility.</p></article>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="materials-title">
+    <section class="section panel">
       <p class="kicker">Material world law</p>
-      <h2 id="materials-title">Pressure clarifies value.</h2>
-
+      <h2>Pressure clarifies value.</h2>
       <p>
         The planet is approximately four times the age of Earth. At the beginning of the world, its mountains were approximately four times the height of Everest. Its terrain is ancient, gorgeous, severe, mineral-rich, and coherence-demanding.
       </p>
 
-      <div class="grid three" aria-label="Materials">
-        <article class="card">
-          <span>Diamond</span>
-          <h3>Pressure clarified into structure.</h3>
-          <p>Diamond marks high-pressure value, summit discipline, and structural clarity.</p>
-        </article>
-
-        <article class="card">
-          <span>Opal</span>
-          <h3>Hidden color and internal light.</h3>
-          <p>Opal marks refracted possibility, interior beauty, and buried depth becoming visible.</p>
-        </article>
-
-        <article class="card">
-          <span>Marble</span>
-          <h3>Public dignity.</h3>
-          <p>Marble marks civic architecture, ceremony, public trust, and visible elegance.</p>
-        </article>
-
-        <article class="card">
-          <span>Slate</span>
-          <h3>Memory and record.</h3>
-          <p>Slate marks law surfaces, pressure records, judgment fields, and hard memory.</p>
-        </article>
-
-        <article class="card">
-          <span>Granite</span>
-          <h3>Root stability.</h3>
-          <p>Granite marks endurance, foundation, root systems, and long-term stability.</p>
-        </article>
-
-        <article class="card">
-          <span>Metals</span>
-          <h3>Tools, currency, circuitry, and repair.</h3>
-          <p>Gold, platinum, silver, copper, iron, and lead support governance, utility, tools, defense, conductance, shielding, and city systems.</p>
-        </article>
+      <div class="grid three">
+        <article class="card"><span>Diamond</span><h3>Pressure clarified into structure.</h3><p>Diamond marks high-pressure value, summit discipline, and structural clarity.</p></article>
+        <article class="card"><span>Opal</span><h3>Hidden color and internal light.</h3><p>Opal marks refracted possibility, interior beauty, and buried depth becoming visible.</p></article>
+        <article class="card"><span>Marble</span><h3>Public dignity.</h3><p>Marble marks civic architecture, ceremony, public trust, and visible elegance.</p></article>
+        <article class="card"><span>Slate</span><h3>Memory and record.</h3><p>Slate marks law surfaces, pressure records, judgment fields, and hard memory.</p></article>
+        <article class="card"><span>Granite</span><h3>Root stability.</h3><p>Granite marks endurance, foundation, root systems, and long-term stability.</p></article>
+        <article class="card"><span>Metals</span><h3>Tools, currency, circuitry, and repair.</h3><p>Gold, platinum, silver, copper, iron, and lead support governance, utility, tools, defense, conductance, shielding, and city systems.</p></article>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="population-title">
+    <section class="section panel">
       <p class="kicker gold">Population law</p>
-      <h2 id="population-title">The people count equals the archetype-personality capacity.</h2>
-
+      <h2>The people count equals the archetype-personality capacity.</h2>
       <p>
         The planet does not contain random filler population. Each person corresponds to one admissible archetype-personality configuration. The total population capacity is exactly the number of innately possible archetype-personality signatures admitted by the construct at one time.
       </p>
 
-      <div class="list" aria-label="Population structure">
-        <div class="row">
-          <strong>One person</strong>
-          <span>One admissible archetype-personality configuration.</span>
-        </div>
-
-        <div class="row">
-          <strong>One planet</strong>
-          <span>The complete population field of all admissible configurations.</span>
-        </div>
-
-        <div class="row">
-          <strong>256-state lattice</strong>
-          <span>Allocation, coherence access, region distribution, metroplex distribution, and world-state expression.</span>
-        </div>
-
-        <div class="row">
-          <strong>Coherence</strong>
-          <span>The access permission that determines which cities, regions, terrain, fruit, and solutions can be reached.</span>
-        </div>
+      <div class="list">
+        <div class="row"><strong>One person</strong><span>One admissible archetype-personality configuration.</span></div>
+        <div class="row"><strong>One planet</strong><span>The complete population field of all admissible configurations.</span></div>
+        <div class="row"><strong>256-state lattice</strong><span>Allocation, coherence access, region distribution, metroplex distribution, and world-state expression.</span></div>
+        <div class="row"><strong>Coherence</strong><span>The access permission that determines which cities, regions, terrain, fruit, and solutions can be reached.</span></div>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="country-title">
+    <section class="section panel">
       <p class="kicker">Country / city construct</p>
-      <h2 id="country-title">Every country has four regions. Every region has four metroplexes.</h2>
+      <h2>Every country has four regions. Every region has four metroplexes.</h2>
 
-      <div class="flow" aria-label="World hierarchy">
-        <div class="flow-step">
-          <strong>01</strong>
-          <span>Planet: Nine Summits Universe.</span>
-        </div>
-
-        <div class="flow-step">
-          <strong>07</strong>
-          <span>Seven landmasses: Mainland, four main regions, North Pole, South Pole.</span>
-        </div>
-
-        <div class="flow-step">
-          <strong>4R</strong>
-          <span>Each country contains four regions.</span>
-        </div>
-
-        <div class="flow-step">
-          <strong>4M</strong>
-          <span>Each region contains four metroplex areas similar to Dallas–Fort Worth.</span>
-        </div>
-
-        <div class="flow-step">
-          <strong>256</strong>
-          <span>The 256-state lattice governs population allocation, coherence access, distribution, and world-state receipts.</span>
-        </div>
+      <div class="list">
+        <div class="flow-step"><strong>01</strong><span>Planet: Nine Summits Universe.</span></div>
+        <div class="flow-step"><strong>07</strong><span>Seven landmasses: Mainland, four main regions, North Pole, South Pole.</span></div>
+        <div class="flow-step"><strong>4R</strong><span>Each country contains four regions.</span></div>
+        <div class="flow-step"><strong>4M</strong><span>Each region contains four metroplex areas similar to Dallas–Fort Worth.</span></div>
+        <div class="flow-step"><strong>256</strong><span>The 256-state lattice governs population allocation, coherence access, distribution, and world-state receipts.</span></div>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="intercity-title">
+    <section class="section panel">
       <p class="kicker gold">Intercity construct</p>
-      <h2 id="intercity-title">The 16 × 4 × 4 grid governs intercity traversal.</h2>
-
+      <h2>The 16 × 4 × 4 grid governs intercity traversal.</h2>
       <p>
         The 16 sectors, four districts, and four nodes are the intercity construct. This is separate from the larger country, region, and metroplex world model.
       </p>
 
-      <div class="grid four" aria-label="Intercity structure">
-        <article class="card">
-          <span>16 sectors</span>
-          <h3>World movement fields.</h3>
-          <p>Gateway, Character, Structure, Balance, Stability, Peace, Joy, Dignity, Free Will, Love, Diamond Heart, Underdog Voice, Book Path, Seminar Path, Metaverse Path, Return.</p>
-        </article>
-
-        <article class="card">
-          <span>4 districts</span>
-          <h3>Each sector has four districts.</h3>
-          <p>North defines meaning. East expresses. South humanizes. West tests and audits.</p>
-        </article>
-
-        <article class="card">
-          <span>4 nodes</span>
-          <h3>Each district has four nodes.</h3>
-          <p>Concept, Route, Interaction, Receipt.</p>
-        </article>
-
-        <article class="card">
-          <span>256 total</span>
-          <h3>Full intercity lattice.</h3>
-          <p>16 sectors × 4 districts × 4 nodes = 256 intercity traversal nodes.</p>
-        </article>
+      <div class="grid four">
+        <article class="card"><span>16 sectors</span><h3>World movement fields.</h3><p>Gateway, Character, Structure, Balance, Stability, Peace, Joy, Dignity, Free Will, Love, Diamond Heart, Underdog Voice, Book Path, Seminar Path, Metaverse Path, Return.</p></article>
+        <article class="card"><span>4 districts</span><h3>Each sector has four districts.</h3><p>North defines meaning. East expresses. South humanizes. West tests and audits.</p></article>
+        <article class="card"><span>4 nodes</span><h3>Each district has four nodes.</h3><p>Concept, Route, Interaction, Receipt.</p></article>
+        <article class="card"><span>256 total</span><h3>Full intercity lattice.</h3><p>16 sectors × 4 districts × 4 nodes = 256 intercity traversal nodes.</p></article>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="tiktok-title">
+    <section class="section panel">
       <p class="kicker">TikTok protocol</p>
-      <h2 id="tiktok-title">The map ticks forward and tocks back.</h2>
-
+      <h2>The map ticks forward and tocks back.</h2>
       <p>
         TikTok is the grid-enforcement and inversion protocol. It expands the map from root to full lattice, then audits it back to one coherent world-object.
       </p>
 
-      <div class="grid two" aria-label="TikTok protocol">
-        <article class="card">
-          <span>Forward tick</span>
-          <h3>1 → 4 → 16 → 32 → 64 → 256</h3>
-          <p>The map expands from one planet to four governing directions, then sectors, paired pressure gates, expansion branches, and full lattice nodes.</p>
-        </article>
-
-        <article class="card">
-          <span>Inverse tock</span>
-          <h3>256 → 64 → 32 → 16 → 4 → 1</h3>
-          <p>The map audits every node back into branches, pressure pairs, sectors, directions, and finally one coherent world.</p>
-        </article>
+      <div class="grid two">
+        <article class="card"><span>Forward tick</span><h3>1 → 4 → 16 → 32 → 64 → 256</h3><p>The map expands from one planet to four governing directions, then sectors, paired pressure gates, expansion branches, and full lattice nodes.</p></article>
+        <article class="card"><span>Inverse tock</span><h3>256 → 64 → 32 → 16 → 4 → 1</h3><p>The map audits every node back into branches, pressure pairs, sectors, directions, and finally one coherent world.</p></article>
       </div>
 
-      <div class="az-grid" aria-label="A to Z semantic overlay">
-        <div class="az-chip"><strong>A</strong><span>Authority</span></div>
-        <div class="az-chip"><strong>B</strong><span>Boundary</span></div>
-        <div class="az-chip"><strong>C</strong><span>Coherence</span></div>
-        <div class="az-chip"><strong>D</strong><span>Direction</span></div>
-        <div class="az-chip"><strong>E</strong><span>Entry</span></div>
-        <div class="az-chip"><strong>F</strong><span>Friction</span></div>
-        <div class="az-chip"><strong>G</strong><span>Gate</span></div>
-        <div class="az-chip"><strong>H</strong><span>Home</span></div>
-        <div class="az-chip"><strong>I</strong><span>Identity</span></div>
-        <div class="az-chip"><strong>J</strong><span>Judgment</span></div>
-        <div class="az-chip"><strong>K</strong><span>Key</span></div>
-        <div class="az-chip"><strong>L</strong><span>Law</span></div>
-        <div class="az-chip"><strong>M</strong><span>Motion</span></div>
-        <div class="az-chip"><strong>N</strong><span>Nature</span></div>
-        <div class="az-chip"><strong>O</strong><span>Origin</span></div>
-        <div class="az-chip"><strong>P</strong><span>Population</span></div>
-        <div class="az-chip"><strong>Q</strong><span>Quest</span></div>
-        <div class="az-chip"><strong>R</strong><span>Region</span></div>
-        <div class="az-chip"><strong>S</strong><span>Sector</span></div>
-        <div class="az-chip"><strong>T</strong><span>Terrain</span></div>
-        <div class="az-chip"><strong>U</strong><span>Utility</span></div>
-        <div class="az-chip"><strong>V</strong><span>Value</span></div>
-        <div class="az-chip"><strong>W</strong><span>Water</span></div>
-        <div class="az-chip"><strong>X</strong><span>Extreme</span></div>
-        <div class="az-chip"><strong>Y</strong><span>Yield</span></div>
-        <div class="az-chip"><strong>Z</strong><span>Zenith</span></div>
+      <div class="az-grid">
+        <div class="az-chip"><strong>A</strong><span>Authority</span></div><div class="az-chip"><strong>B</strong><span>Boundary</span></div><div class="az-chip"><strong>C</strong><span>Coherence</span></div><div class="az-chip"><strong>D</strong><span>Direction</span></div><div class="az-chip"><strong>E</strong><span>Entry</span></div><div class="az-chip"><strong>F</strong><span>Friction</span></div><div class="az-chip"><strong>G</strong><span>Gate</span></div><div class="az-chip"><strong>H</strong><span>Home</span></div><div class="az-chip"><strong>I</strong><span>Identity</span></div><div class="az-chip"><strong>J</strong><span>Judgment</span></div><div class="az-chip"><strong>K</strong><span>Key</span></div><div class="az-chip"><strong>L</strong><span>Law</span></div><div class="az-chip"><strong>M</strong><span>Motion</span></div><div class="az-chip"><strong>N</strong><span>Nature</span></div><div class="az-chip"><strong>O</strong><span>Origin</span></div><div class="az-chip"><strong>P</strong><span>Population</span></div><div class="az-chip"><strong>Q</strong><span>Quest</span></div><div class="az-chip"><strong>R</strong><span>Region</span></div><div class="az-chip"><strong>S</strong><span>Sector</span></div><div class="az-chip"><strong>T</strong><span>Terrain</span></div><div class="az-chip"><strong>U</strong><span>Utility</span></div><div class="az-chip"><strong>V</strong><span>Value</span></div><div class="az-chip"><strong>W</strong><span>Water</span></div><div class="az-chip"><strong>X</strong><span>Extreme</span></div><div class="az-chip"><strong>Y</strong><span>Yield</span></div><div class="az-chip"><strong>Z</strong><span>Zenith</span></div>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="route-title">
+    <section class="section panel">
       <p class="kicker gold">Route separation</p>
-      <h2 id="route-title">The Universe page explains the world. Showroom inspects it. Gauges measures it.</h2>
+      <h2>The Universe page explains the world. Showroom inspects it. Gauges measures it.</h2>
 
-      <div class="grid three" aria-label="Route separation">
-        <article class="card">
-          <span>/nine-summits-universe/</span>
-          <h3>World explanation route.</h3>
-          <p>This page owns the seven landmasses, origin, core, coherence law, population law, and TikTok map protocol.</p>
-        </article>
-
-        <article class="card">
-          <span>/showroom/globe/</span>
-          <h3>Inspection route.</h3>
-          <p>The Showroom globe route owns visible planet inspection and demo planet viewing.</p>
-        </article>
-
-        <article class="card">
-          <span>/gauges/</span>
-          <h3>Measurement route.</h3>
-          <p>Gauges owns route health, markers, source verification, and pass/fail receipts.</p>
-        </article>
+      <div class="grid three">
+        <article class="card"><span>/nine-summits/universe/</span><h3>World explanation route.</h3><p>This page owns the seven landmasses, origin, core, coherence law, population law, and TikTok map protocol.</p></article>
+        <article class="card"><span>/showroom/globe/</span><h3>Inspection route.</h3><p>The Showroom globe route owns visible planet inspection and demo planet viewing.</p></article>
+        <article class="card"><span>/gauges/</span><h3>Measurement route.</h3><p>Gauges owns route health, markers, source verification, and pass/fail receipts.</p></article>
       </div>
 
-      <div class="links" aria-label="Footer links">
+      <div class="links">
         <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
         <a class="button" href="/nine-summits-of-love/">Open Nine Summits of Love</a>
         <a class="button" href="/nine-summits/">Nine Summits Hub</a>
@@ -925,13 +534,15 @@
     </section>
 
     <section class="receipt" aria-hidden="true">
-      NINE_SUMMITS_UNIVERSE_RENEWED_CONTRACT_ROUTE_TNT_v1
+      NINE_SUMMITS_NESTED_UNIVERSE_WORLD_ROUTE_TNT_v1
       NINE_SUMMITS_UNIVERSE
-      route=/nine-summits-universe/
+      route=/nine-summits/universe/
+      parent-route=/nine-summits/
+      retired-route=/nine-summits-universe/
       page-purpose=world-explanation-and-planetary-map-route
+      nested-architecture=true
+      paramount-architecture=true
       receives-link-from=/nine-summits/
-      route-created=true
-      resolves-404=true
       planet=Nine Summits Universe
       planet-number=1
       demo-planet=true

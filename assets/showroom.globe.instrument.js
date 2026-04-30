@@ -1,34 +1,36 @@
 /*
-  SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V13_PASS_FILTER_PAIR_TNT_v1
-  PLANET_ONE_RENDER_AND_ASSET_INSTRUMENT_SHARED_CONTRACT_v1
-
+  SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1
   OWNER=SEAN
   TARGET=/assets/showroom.globe.instrument.js
 
-  PAIRED_RENDERER=
-  PLANET_ONE_RENDER_V13_PASS_FILTER_ARCHITECTURE_TNT_v1
-
-  EXPECTED_GLOBAL=
-  window.DGBShowroomGlobeInstrument
-
-  EXPECTED_API=
-  renderGlobe
-
-  ROLE=
-  ASSET_INSTRUMENT_SUPPORT_ONLY
-  DELEGATION_SUPPORT_ONLY
-  PASS_FILTER_BRIDGE_ONLY
+  PURPOSE=
+  LOAD_PLANET_1_TERRAIN_RENDER_BEFORE_PLANET_1_MAIN_RENDERER
+  FORCE_OPTIMUM_EXPRESSION_TO_USE_DEDICATED_TERRAIN_MODULE
+  PRESERVE_NO_DEMO_PLANET_RETURN
+  PRESERVE_NO_PUBLIC_PASS_OPTIONS
+  PRESERVE_NO_DUPLICATE_RENDER_LOOP
 
   PRIMARY_RENDER_AUTHORITY=
   /world/render/planet-one.render.js
+
+  TERRAIN_RENDER_AUTHORITY=
+  /world/render/planet-one.terrain.render.js
+
+  PAIRED_MAIN_RENDERER=
+  PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
+
+  PAIRED_TERRAIN_RENDERER=
+  PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1
 
   HARD RULES=
   NO_DEMO_PLANET_DRAWING
   NO_OWN_SVG_GLOBE
   NO_OWN_LANDMASSES
   NO_OWN_TOPOLOGY
+  NO_OWN_TERRAIN
   NO_OWN_AXIS
-  NO_LEGACY_AUTOBOOT
+  NO_PUBLIC_PASS_BUTTONS
+  NO_LEGACY_AUTOBOOT_RETRIES
   NO_TIMEOUT_RENDER_RETRIES
   NO_DUPLICATE_RENDER_LOOP
   NO_COMPETING_GLOBE_SURFACE
@@ -37,35 +39,31 @@
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V13_PASS_FILTER_PAIR_TNT_v1";
-  const PREVIOUS_PAIR = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V11_PAIR_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1";
+
+  const PREVIOUS_PAIR = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V13_PASS_FILTER_PAIR_TNT_v1";
   const SUPPORT_CONTRACT = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_SUPPORT_CONTRACT_TNT_v2";
-  const PREVIOUS_DELEGATE = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_RETIRE_AND_PLANET_ONE_DELEGATE_TNT_v1";
   const LEGACY_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2";
   const SHARED_CONTRACT = "PLANET_ONE_RENDER_AND_ASSET_INSTRUMENT_SHARED_CONTRACT_v1";
 
-  const PAIRED_RENDERER_VERSION = "PLANET_ONE_RENDER_V13_PASS_FILTER_ARCHITECTURE_TNT_v1";
+  const PAIRED_MAIN_RENDERER_VERSION = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
+  const PAIRED_TERRAIN_RENDERER_VERSION = "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1";
+
   const EXPECTED_GLOBAL = "window.DGBShowroomGlobeInstrument";
   const EXPECTED_API = "renderGlobe";
-  const ROUTE_OWNER = "/showroom/globe/";
+
+  const SHOWROOM_ROUTE = "/showroom/";
+  const SHOWROOM_GLOBE_ROUTE = "/showroom/globe/";
+
+  const TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
   const PLANET_ONE_RENDERER = "/world/render/planet-one.render.js";
 
-  const PASSES = Object.freeze([
-    "surface",
-    "landmass",
-    "shoreline",
-    "terrain",
-    "water",
-    "weather",
-    "light",
-    "axis",
-    "composite"
-  ]);
-
+  let terrainPromise = null;
   let rendererPromise = null;
   let lastMount = null;
   let lastHandle = null;
-  let currentPass = "surface";
+  let autoBooted = false;
+
   const receipts = [];
 
   function now() {
@@ -81,9 +79,46 @@
     return raw.endsWith("/") ? raw : raw + "/";
   }
 
-  function normalizePass(pass) {
-    const candidate = String(pass || "").trim().toLowerCase();
-    return PASSES.includes(candidate) ? candidate : "surface";
+  function hasTerrainApi() {
+    return Boolean(
+      global.DGBPlanetOneTerrainRender &&
+        typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function"
+    );
+  }
+
+  function hasRendererApi() {
+    return Boolean(
+      global.DGBPlanetOneRenderTeam &&
+        typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+    );
+  }
+
+  function terrainStatus() {
+    if (!hasTerrainApi() || typeof global.DGBPlanetOneTerrainRender.getStatus !== "function") {
+      return null;
+    }
+
+    try {
+      return global.DGBPlanetOneTerrainRender.getStatus();
+    } catch (error) {
+      return {
+        error: error && error.message ? error.message : "terrain-status-error"
+      };
+    }
+  }
+
+  function rendererStatus() {
+    if (!hasRendererApi() || typeof global.DGBPlanetOneRenderTeam.getStatus !== "function") {
+      return null;
+    }
+
+    try {
+      return global.DGBPlanetOneRenderTeam.getStatus();
+    } catch (error) {
+      return {
+        error: error && error.message ? error.message : "renderer-status-error"
+      };
+    }
   }
 
   function markDocument() {
@@ -92,32 +127,34 @@
     root.dataset.showroomGlobeInstrument = VERSION;
     root.dataset.showroomGlobeInstrumentPreviousPair = PREVIOUS_PAIR;
     root.dataset.showroomGlobeInstrumentSupportContract = SUPPORT_CONTRACT;
-    root.dataset.showroomGlobeInstrumentPreviousDelegate = PREVIOUS_DELEGATE;
     root.dataset.showroomGlobeInstrumentLegacyRetired = LEGACY_VERSION;
     root.dataset.sharedPlanetOneRenderContract = SHARED_CONTRACT;
-    root.dataset.pairedPlanetOneRenderer = PAIRED_RENDERER_VERSION;
 
-    root.dataset.dgbShowroomGlobeInstrument = "delegation-support-only";
+    root.dataset.pairedPlanetOneRenderer = PAIRED_MAIN_RENDERER_VERSION;
+    root.dataset.pairedPlanetOneTerrainRenderer = PAIRED_TERRAIN_RENDERER_VERSION;
+
+    root.dataset.dgbShowroomGlobeInstrument = "terrain-first-delegation-support-only";
     root.dataset.demoPlanetVisualContract = "retired";
     root.dataset.demoPlanetStatus = "retired";
     root.dataset.visualObject = "planet-1";
+
+    root.dataset.terrainRenderer = TERRAIN_RENDERER;
     root.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
-    root.dataset.planetOneDelegateActive = "true";
+    root.dataset.terrainFirstLoadOrder = "true";
+    root.dataset.optimumExpressionOnly = "true";
 
     root.dataset.assetInstrument = "/assets/showroom.globe.instrument.js";
-    root.dataset.assetRole = "delegation-support-only";
+    root.dataset.assetRole = "terrain-first-delegation-support-only";
     root.dataset.renderAuthority = PLANET_ONE_RENDERER;
+    root.dataset.terrainAuthority = TERRAIN_RENDERER;
+
     root.dataset.singlePlanetAuthority = "true";
     root.dataset.noCompetingGlobeSurface = "true";
     root.dataset.noLegacyDemoPlanetReturn = "true";
-    root.dataset.noLegacyAutoboot = "true";
+    root.dataset.noPublicPassButtons = "true";
+    root.dataset.noLegacyAutobootRetries = "true";
     root.dataset.noTimeoutRenderRetries = "true";
     root.dataset.drawsOwnPlanet = "false";
-
-    root.dataset.passFilterBridgeActive = "true";
-    root.dataset.renderPassFilterActive = "true";
-    root.dataset.singlePassInspectionActive = "true";
-    root.dataset.compositeEarnedNotGuessed = "true";
   }
 
   function publish(type, payload) {
@@ -126,16 +163,15 @@
       version: VERSION,
       previousPair: PREVIOUS_PAIR,
       supportContract: SUPPORT_CONTRACT,
-      previousDelegate: PREVIOUS_DELEGATE,
       legacyRetired: LEGACY_VERSION,
       sharedContract: SHARED_CONTRACT,
-      pairedRendererVersion: PAIRED_RENDERER_VERSION,
+      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
       expectedGlobal: EXPECTED_GLOBAL,
       expectedApi: EXPECTED_API,
-      routeOwner: ROUTE_OWNER,
+      terrainRenderer: TERRAIN_RENDERER,
       planetOneRenderer: PLANET_ONE_RENDERER,
-      assetRole: "delegation-support-only",
-      currentPass,
+      assetRole: "terrain-first-delegation-support-only",
       payload: payload || {},
       timestamp: now()
     };
@@ -160,25 +196,137 @@
     return mount || null;
   }
 
-  function rendererApiReady() {
-    return Boolean(
-      global.DGBPlanetOneRenderTeam &&
-        typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
-    );
+  function findScript(pathname) {
+    return Array.from(document.scripts).find(function findExisting(script) {
+      if (!script.src) return false;
+      return new URL(script.src, global.location.origin).pathname === pathname;
+    });
   }
 
-  function rendererStatus() {
-    if (!rendererApiReady() || typeof global.DGBPlanetOneRenderTeam.getStatus !== "function") {
-      return null;
+  function appendScript(pathname, globalCheck, dataset) {
+    if (globalCheck()) {
+      return Promise.resolve(true);
     }
 
-    try {
-      return global.DGBPlanetOneRenderTeam.getStatus();
-    } catch (error) {
-      return {
-        error: error && error.message ? error.message : "renderer-status-error"
-      };
+    const existing = findScript(pathname);
+
+    if (existing) {
+      if (globalCheck()) {
+        return Promise.resolve(true);
+      }
+
+      return new Promise(function waitForExisting(resolve, reject) {
+        existing.addEventListener(
+          "load",
+          function loadedExisting() {
+            if (globalCheck()) {
+              resolve(true);
+              return;
+            }
+
+            reject(new Error(pathname + " loaded, but expected API is unavailable."));
+          },
+          { once: true }
+        );
+
+        existing.addEventListener(
+          "error",
+          function failedExisting() {
+            reject(new Error(pathname + " failed to load."));
+          },
+          { once: true }
+        );
+      });
     }
+
+    return new Promise(function loadNewScript(resolve, reject) {
+      const script = document.createElement("script");
+      script.src = pathname;
+      script.async = false;
+      script.dataset.loadedBy = VERSION;
+
+      Object.keys(dataset || {}).forEach(function applyDataset(key) {
+        script.dataset[key] = dataset[key];
+      });
+
+      script.onload = function onLoad() {
+        if (globalCheck()) {
+          resolve(true);
+          return;
+        }
+
+        reject(new Error(pathname + " loaded, but expected API is unavailable."));
+      };
+
+      script.onerror = function onError() {
+        reject(new Error(pathname + " failed to load."));
+      };
+
+      document.body.appendChild(script);
+    });
+  }
+
+  function loadTerrainRenderer() {
+    if (hasTerrainApi()) {
+      return Promise.resolve(global.DGBPlanetOneTerrainRender);
+    }
+
+    if (terrainPromise) {
+      return terrainPromise;
+    }
+
+    terrainPromise = appendScript(TERRAIN_RENDERER, hasTerrainApi, {
+      terrainAuthority: TERRAIN_RENDERER,
+      pairedTerrainRenderer: PAIRED_TERRAIN_RENDERER_VERSION,
+      terrainFirstLoadOrder: "true",
+      planet: "Planet 1"
+    }).then(function terrainReady() {
+      publish("terrain_renderer_ready", {
+        terrainRenderer: TERRAIN_RENDERER,
+        pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
+        terrainStatus: terrainStatus()
+      });
+
+      return global.DGBPlanetOneTerrainRender;
+    });
+
+    return terrainPromise;
+  }
+
+  function loadMainRendererAfterTerrain() {
+    if (hasRendererApi()) {
+      return Promise.resolve(global.DGBPlanetOneRenderTeam);
+    }
+
+    if (rendererPromise) {
+      return rendererPromise;
+    }
+
+    rendererPromise = loadTerrainRenderer()
+      .then(function terrainLoadedFirst() {
+        return appendScript(PLANET_ONE_RENDERER, hasRendererApi, {
+          renderAuthority: PLANET_ONE_RENDERER,
+          terrainAuthority: TERRAIN_RENDERER,
+          pairedMainRenderer: PAIRED_MAIN_RENDERER_VERSION,
+          pairedTerrainRenderer: PAIRED_TERRAIN_RENDERER_VERSION,
+          terrainFirstLoadOrder: "true",
+          optimumExpressionOnly: "true",
+          noCompetingGlobeSurface: "true"
+        });
+      })
+      .then(function rendererReady() {
+        publish("main_renderer_ready_after_terrain", {
+          planetOneRenderer: PLANET_ONE_RENDERER,
+          terrainRenderer: TERRAIN_RENDERER,
+          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+          terrainStatus: terrainStatus(),
+          rendererStatus: rendererStatus()
+        });
+
+        return global.DGBPlanetOneRenderTeam;
+      });
+
+    return rendererPromise;
   }
 
   function hideLegacyFallback() {
@@ -186,7 +334,7 @@
     if (!fallback) return false;
 
     fallback.dataset.active = "false";
-    fallback.dataset.reason = "demo-planet-retired-planet-one-v13-pass-filter-delegation-active";
+    fallback.dataset.reason = "demo-planet-retired-planet-one-terrain-first-optimum-active";
     fallback.hidden = true;
     fallback.setAttribute("aria-hidden", "true");
     fallback.style.display = "none";
@@ -211,111 +359,25 @@
         "text-align:center"
       ].join(";") +
       '">' +
-      String(message || "Planet 1 renderer is preparing.") +
+      String(message || "Planet 1 optimum renderer is preparing.") +
       "</div>";
-  }
-
-  function findExistingRendererScript() {
-    return Array.from(document.scripts).find(function findScript(script) {
-      if (!script.src) return false;
-      return new URL(script.src, global.location.origin).pathname === PLANET_ONE_RENDERER;
-    });
-  }
-
-  function loadPlanetOneRenderer() {
-    if (rendererApiReady()) {
-      return Promise.resolve(global.DGBPlanetOneRenderTeam);
-    }
-
-    if (rendererPromise) {
-      return rendererPromise;
-    }
-
-    rendererPromise = new Promise(function loadRenderer(resolve, reject) {
-      const existing = findExistingRendererScript();
-
-      if (existing) {
-        if (rendererApiReady()) {
-          resolve(global.DGBPlanetOneRenderTeam);
-          return;
-        }
-
-        existing.addEventListener(
-          "load",
-          function loadedExisting() {
-            if (rendererApiReady()) {
-              resolve(global.DGBPlanetOneRenderTeam);
-              return;
-            }
-
-            reject(new Error("Planet One renderer script loaded, but API is unavailable."));
-          },
-          { once: true }
-        );
-
-        existing.addEventListener(
-          "error",
-          function existingFailed() {
-            reject(new Error("Existing Planet One renderer script failed."));
-          },
-          { once: true }
-        );
-
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = PLANET_ONE_RENDERER;
-      script.async = true;
-      script.dataset.loadedBy = VERSION;
-      script.dataset.assetRole = "delegation-support-only";
-      script.dataset.sharedContract = SHARED_CONTRACT;
-      script.dataset.pairedRenderer = PAIRED_RENDERER_VERSION;
-      script.dataset.noCompetingGlobeSurface = "true";
-      script.dataset.passFilterBridgeActive = "true";
-
-      script.onload = function onLoad() {
-        if (rendererApiReady()) {
-          publish("planet_one_renderer_loaded", {
-            renderer: PLANET_ONE_RENDERER,
-            loadedBy: VERSION,
-            pairedRendererVersion: PAIRED_RENDERER_VERSION,
-            sharedContract: SHARED_CONTRACT
-          });
-
-          resolve(global.DGBPlanetOneRenderTeam);
-          return;
-        }
-
-        reject(new Error("Planet One renderer script loaded, but API is unavailable."));
-      };
-
-      script.onerror = function onError() {
-        reject(new Error("Planet One renderer failed to load."));
-      };
-
-      document.body.appendChild(script);
-    });
-
-    return rendererPromise;
   }
 
   function stopExistingRender(api) {
     let stopped = false;
 
-    if (lastHandle && typeof lastHandle.stop === "function") {
-      lastHandle.stop();
+    if (lastHandle && typeof lastHandle.destroy === "function") {
+      lastHandle.destroy();
       stopped = true;
-    } else if (
-      lastHandle &&
-      lastHandle.handle &&
-      typeof lastHandle.handle.stop === "function"
-    ) {
-      lastHandle.handle.stop();
+    } else if (lastHandle && typeof lastHandle.stop === "function") {
+      lastHandle.stop();
       stopped = true;
     }
 
-    if (api && typeof api.stopAll === "function") {
+    if (api && typeof api.destroyAll === "function") {
+      api.destroyAll();
+      stopped = true;
+    } else if (api && typeof api.stopAll === "function") {
       api.stopAll();
       stopped = true;
     }
@@ -323,36 +385,9 @@
     return stopped;
   }
 
-  function setPass(pass) {
-    const nextPass = normalizePass(pass);
-    currentPass = nextPass;
-
-    if (lastHandle && typeof lastHandle.setPass === "function") {
-      lastHandle.setPass(nextPass);
-    } else if (
-      global.DGBPlanetOneRenderTeam &&
-      typeof global.DGBPlanetOneRenderTeam.setAllPasses === "function"
-    ) {
-      global.DGBPlanetOneRenderTeam.setAllPasses(nextPass);
-    }
-
-    if (lastMount) {
-      lastMount.dataset.currentRenderPass = nextPass;
-      lastMount.dataset.passFilterBridgeActive = "true";
-    }
-
-    publish("render_pass_set", {
-      pass: nextPass,
-      pairedRendererVersion: PAIRED_RENDERER_VERSION
-    });
-
-    return nextPass;
-  }
-
   function renderGlobe(mount, options) {
     const target = normalizeMount(mount);
     const config = options || {};
-    const requestedPass = normalizePass(config.pass || config.renderPass || currentPass || "surface");
 
     markDocument();
     hideLegacyFallback();
@@ -362,38 +397,42 @@
 
       publish("render_globe_failed", {
         reason: error.message,
-        assetRole: "delegation-support-only"
+        assetRole: "terrain-first-delegation-support-only"
       });
 
       throw error;
     }
 
-    currentPass = requestedPass;
-
     target.dataset.showroomGlobeInstrument = VERSION;
-    target.dataset.showroomGlobeInstrumentPreviousPair = PREVIOUS_PAIR;
-    target.dataset.showroomGlobeInstrumentSupportContract = SUPPORT_CONTRACT;
     target.dataset.sharedContract = SHARED_CONTRACT;
-    target.dataset.pairedRendererVersion = PAIRED_RENDERER_VERSION;
+    target.dataset.pairedMainRendererVersion = PAIRED_MAIN_RENDERER_VERSION;
+    target.dataset.pairedTerrainRendererVersion = PAIRED_TERRAIN_RENDERER_VERSION;
     target.dataset.legacyDemoPlanetRetired = "true";
     target.dataset.demoPlanetStatus = "retired";
     target.dataset.visualObject = "planet-1";
+
+    target.dataset.terrainRenderer = TERRAIN_RENDERER;
     target.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
+    target.dataset.terrainFirstLoadOrder = "true";
     target.dataset.renderAuthority = PLANET_ONE_RENDERER;
+    target.dataset.terrainAuthority = TERRAIN_RENDERER;
     target.dataset.renderDelegation = "planet-one-render-team";
     target.dataset.renderGlobeApiPreserved = "true";
-    target.dataset.assetRole = "delegation-support-only";
+    target.dataset.assetRole = "terrain-first-delegation-support-only";
     target.dataset.singlePlanetAuthority = "true";
     target.dataset.noCompetingGlobeSurface = "true";
     target.dataset.noLegacyDemoPlanetReturn = "true";
+    target.dataset.noPublicPassButtons = "true";
+    target.dataset.optimumExpressionOnly = "true";
     target.dataset.drawsOwnPlanet = "false";
-    target.dataset.passFilterBridgeActive = "true";
-    target.dataset.currentRenderPass = requestedPass;
 
-    renderWaiting(target, "Planet 1 pass-filter renderer is preparing.");
+    renderWaiting(target, "Planet 1 terrain-first optimum expression is preparing.");
 
-    return loadPlanetOneRenderer()
-      .then(function delegateToPlanetOne(api) {
+    return loadTerrainRenderer()
+      .then(function terrainReady() {
+        return loadMainRendererAfterTerrain();
+      })
+      .then(function renderAfterTerrain(api) {
         if (config.stopExisting !== false) {
           stopExistingRender(api);
         }
@@ -402,37 +441,32 @@
         lastHandle = api.renderPlanetOne(target, {
           caption:
             config.caption ||
-            "Planet 1 · Nine Summits Universe · V13 pass-filter render lane",
-          pass: requestedPass,
-          renderPass: requestedPass
+            "Planet 1 · Nine Summits Universe · optimum expression",
+          expression: "optimum"
         });
-
-        currentPass = requestedPass;
 
         target.dataset.renderStatus = "mounted";
         target.dataset.instrumentVersion = VERSION;
         target.dataset.planetOneRenderActive = "true";
-        target.dataset.opaqueGlobeActive = "true";
-        target.dataset.sunReflectionActive = "true";
-        target.dataset.moonReflectionActive = "true";
-        target.dataset.topologySeparationActive = "true";
-        target.dataset.visualSoupCorrection = "true";
+        target.dataset.planetOneTerrainRenderActive = hasTerrainApi() ? "true" : "false";
+        target.dataset.terrainIntegratedBeforeRender = hasTerrainApi() ? "true" : "false";
+        target.dataset.ancient39bCrustEngineActive =
+          hasTerrainApi() && terrainStatus() ? "true" : "false";
+        target.dataset.optimumExpressionOnly = "true";
         target.dataset.assetCoordinated = "true";
-        target.dataset.renderPassFilterActive = "true";
-        target.dataset.singlePassInspectionActive = "true";
-        target.dataset.compositeEarnedNotGuessed = "true";
-        target.dataset.currentRenderPass = requestedPass;
 
-        publish("render_globe_delegated_to_planet_one_v13_pass_filter", {
+        publish("render_globe_delegated_to_planet_one_v16_terrain_first_optimum", {
           mountId: target.id || null,
-          renderer: PLANET_ONE_RENDERER,
-          pairedRendererVersion: PAIRED_RENDERER_VERSION,
+          terrainRenderer: TERRAIN_RENDERER,
+          planetOneRenderer: PLANET_ONE_RENDERER,
+          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
           visualObject: "Planet 1",
+          expression: "optimum",
           demoPlanetStatus: "retired",
-          sharedContract: SHARED_CONTRACT,
+          terrainIntegratedBeforeRender: hasTerrainApi(),
           noCompetingGlobeSurface: true,
-          pass: requestedPass,
-          availablePasses: PASSES.slice(),
+          terrainStatus: terrainStatus(),
           rendererStatus: rendererStatus()
         });
 
@@ -441,19 +475,21 @@
           version: VERSION,
           previousPair: PREVIOUS_PAIR,
           supportContract: SUPPORT_CONTRACT,
-          previousDelegate: PREVIOUS_DELEGATE,
           legacyRetired: LEGACY_VERSION,
           sharedContract: SHARED_CONTRACT,
-          pairedRendererVersion: PAIRED_RENDERER_VERSION,
+          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
           renderGlobe: true,
           delegated: true,
           visualObject: "Planet 1",
+          expression: "optimum",
           demoPlanetStatus: "retired",
-          assetRole: "delegation-support-only",
-          renderer: PLANET_ONE_RENDERER,
-          pass: requestedPass,
-          availablePasses: PASSES.slice(),
+          assetRole: "terrain-first-delegation-support-only",
+          terrainRenderer: TERRAIN_RENDERER,
+          planetOneRenderer: PLANET_ONE_RENDERER,
+          terrainIntegratedBeforeRender: hasTerrainApi(),
           handle: lastHandle,
+          terrainStatus: terrainStatus(),
           rendererStatus: rendererStatus()
         };
       })
@@ -463,14 +499,16 @@
 
         renderWaiting(
           target,
-          "Planet 1 renderer could not load. Check /world/render/planet-one.render.js."
+          "Planet 1 terrain-first renderer could not load. Check /world/render/planet-one.terrain.render.js and /world/render/planet-one.render.js."
         );
 
         publish("render_globe_delegate_failed", {
           error: error && error.message ? error.message : "unknown",
-          renderer: PLANET_ONE_RENDERER,
+          terrainRenderer: TERRAIN_RENDERER,
+          planetOneRenderer: PLANET_ONE_RENDERER,
           sharedContract: SHARED_CONTRACT,
-          pairedRendererVersion: PAIRED_RENDERER_VERSION
+          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION
         });
 
         return {
@@ -482,25 +520,58 @@
       });
   }
 
+  function routeAllowsAutoboot() {
+    const path = routePath();
+    const hash = global.location && global.location.hash ? global.location.hash : "";
+
+    if (path === SHOWROOM_GLOBE_ROUTE) return true;
+
+    if (
+      path === SHOWROOM_ROUTE &&
+      (hash === "#planet-one-render" || hash === "#globe-main" || hash === "#planet-one")
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function findAutoMount() {
+    return (
+      document.querySelector("[data-planet-one-autoboot='true']") ||
+      document.getElementById("planet-one-render") ||
+      document.getElementById("demo-planet-mount")
+    );
+  }
+
   function autoBoot(options) {
     const cfg = options || {};
-    const path = routePath();
+    const target = normalizeMount(cfg.mount) || findAutoMount();
+
+    markDocument();
 
     const allowedByForce = cfg.force === true;
     const allowedByData =
-      document.documentElement.dataset.allowShowroomGlobeInstrumentAutoboot === "true";
+      document.documentElement.dataset.allowShowroomGlobeInstrumentAutoboot === "true" ||
+      Boolean(target && target.dataset && target.dataset.planetOneAutoboot === "true");
 
-    const allowedRoute = path === ROUTE_OWNER;
+    if (!target) {
+      publish("autoboot_blocked_mount_missing", {
+        route: routePath()
+      });
 
-    if (!allowedRoute || (!allowedByForce && !allowedByData)) {
-      markDocument();
+      return {
+        ok: false,
+        version: VERSION,
+        autoBoot: false,
+        reason: "mount-missing"
+      };
+    }
 
-      publish("legacy_autoboot_blocked", {
-        route: path,
-        routeOwner: ROUTE_OWNER,
-        reason: "asset-instrument-delegation-only",
-        force: Boolean(cfg.force),
-        allowedByData,
+    if (!allowedByForce && !allowedByData && !routeAllowsAutoboot()) {
+      publish("autoboot_blocked", {
+        route: routePath(),
+        reason: "route-not-authorized-for-terrain-first-autoboot",
         noTimeoutRenderRetries: true
       });
 
@@ -509,52 +580,39 @@
         version: VERSION,
         autoBoot: false,
         blocked: true,
-        reason: "asset-instrument-delegation-only",
-        route: path,
-        routeOwner: ROUTE_OWNER
+        reason: "route-not-authorized-for-terrain-first-autoboot"
       };
     }
 
-    const target =
-      normalizeMount(cfg.mount) ||
-      document.getElementById("planet-one-render") ||
-      document.getElementById("demo-planet-mount");
-
-    if (!target) {
-      publish("autoboot_allowed_but_mount_missing", {
-        route: path
+    if (autoBooted && cfg.force !== true) {
+      publish("autoboot_blocked_already_ran", {
+        route: routePath(),
+        mountId: target.id || null
       });
 
       return {
-        ok: false,
+        ok: true,
         version: VERSION,
-        autoBoot: true,
-        reason: "mount-missing"
+        autoBoot: false,
+        blocked: true,
+        reason: "already-ran"
       };
     }
+
+    autoBooted = true;
 
     return renderGlobe(target, {
       caption:
         cfg.caption ||
-        "Planet 1 · Nine Summits Universe · V13 pass-filter inspection lane",
-      stopExisting: cfg.stopExisting,
-      pass: cfg.pass || cfg.renderPass || currentPass
+        "Planet 1 · Nine Summits Universe · optimum expression",
+      stopExisting: cfg.stopExisting
     });
   }
 
   function start() {
     if (lastHandle && typeof lastHandle.start === "function") {
       lastHandle.start();
-    } else if (
-      lastHandle &&
-      lastHandle.handle &&
-      typeof lastHandle.handle.start === "function"
-    ) {
-      lastHandle.handle.start();
-    } else if (
-      rendererApiReady() &&
-      typeof global.DGBPlanetOneRenderTeam.startAll === "function"
-    ) {
+    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.startAll === "function") {
       global.DGBPlanetOneRenderTeam.startAll();
     }
 
@@ -568,16 +626,7 @@
   function stop() {
     if (lastHandle && typeof lastHandle.stop === "function") {
       lastHandle.stop();
-    } else if (
-      lastHandle &&
-      lastHandle.handle &&
-      typeof lastHandle.handle.stop === "function"
-    ) {
-      lastHandle.handle.stop();
-    } else if (
-      rendererApiReady() &&
-      typeof global.DGBPlanetOneRenderTeam.stopAll === "function"
-    ) {
+    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.stopAll === "function") {
       global.DGBPlanetOneRenderTeam.stopAll();
     }
 
@@ -591,10 +640,7 @@
   function destroy() {
     if (lastHandle && typeof lastHandle.destroy === "function") {
       lastHandle.destroy();
-    } else if (
-      rendererApiReady() &&
-      typeof global.DGBPlanetOneRenderTeam.destroyAll === "function"
-    ) {
+    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.destroyAll === "function") {
       global.DGBPlanetOneRenderTeam.destroyAll();
     }
 
@@ -603,14 +649,11 @@
 
     publish("delegated_render_destroyed", {
       sharedContract: SHARED_CONTRACT,
-      pairedRendererVersion: PAIRED_RENDERER_VERSION
+      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION
     });
 
     return true;
-  }
-
-  function getAvailablePasses() {
-    return PASSES.slice();
   }
 
   function getStatus() {
@@ -618,33 +661,33 @@
       version: VERSION,
       previousPair: PREVIOUS_PAIR,
       supportContract: SUPPORT_CONTRACT,
-      previousDelegate: PREVIOUS_DELEGATE,
       legacyRetired: LEGACY_VERSION,
       sharedContract: SHARED_CONTRACT,
-      pairedRendererVersion: PAIRED_RENDERER_VERSION,
+      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
       expectedGlobal: EXPECTED_GLOBAL,
       expectedApi: EXPECTED_API,
-      routeOwner: ROUTE_OWNER,
       visualObject: "Planet 1",
+      expression: "optimum",
       demoPlanetStatus: "retired",
-      renderer: PLANET_ONE_RENDERER,
+      terrainRenderer: TERRAIN_RENDERER,
+      planetOneRenderer: PLANET_ONE_RENDERER,
       renderAuthority: PLANET_ONE_RENDERER,
+      terrainAuthority: TERRAIN_RENDERER,
       assetInstrument: "/assets/showroom.globe.instrument.js",
-      assetRole: "delegation-support-only",
+      assetRole: "terrain-first-delegation-support-only",
+      terrainFirstLoadOrder: true,
+      terrainIntegrated: hasTerrainApi(),
+      mainRendererAvailable: hasRendererApi(),
       singlePlanetAuthority: true,
       noCompetingGlobeSurface: true,
       noLegacyDemoPlanetReturn: true,
-      autoBootDefault: false,
+      noPublicPassButtons: true,
+      autoBooted,
       timeoutRetries: false,
       drawsOwnPlanet: false,
-      passFilterBridgeActive: true,
-      renderPassFilterActive: true,
-      singlePassInspectionActive: true,
-      compositeEarnedNotGuessed: true,
-      currentPass,
-      availablePasses: PASSES.slice(),
       lastMountId: lastMount && lastMount.id ? lastMount.id : null,
-      hasPlanetOneRenderer: rendererApiReady(),
+      terrainStatus: terrainStatus(),
       rendererStatus: rendererStatus(),
       receipts: clone(receipts)
     };
@@ -655,20 +698,19 @@
     VERSION,
     PREVIOUS_PAIR,
     SUPPORT_CONTRACT,
-    PREVIOUS_DELEGATE,
     LEGACY_VERSION,
     SHARED_CONTRACT,
-    PAIRED_RENDERER_VERSION,
-    ROUTE_OWNER,
+    PAIRED_MAIN_RENDERER_VERSION,
+    PAIRED_TERRAIN_RENDERER_VERSION,
+    TERRAIN_RENDERER,
     PLANET_ONE_RENDERER,
-    PASSES,
     renderGlobe,
     autoBoot,
     start,
     stop,
     destroy,
-    setPass,
-    getAvailablePasses,
+    loadTerrainRenderer,
+    loadMainRendererAfterTerrain,
     getStatus
   });
 
@@ -680,19 +722,32 @@
     window.DGBShowroomGlobeInstrument = api;
   }
 
-  publish("showroom_globe_instrument_v13_pass_filter_pair_ready", {
+  publish("showroom_globe_instrument_v16_terrain_first_optimum_ready", {
     expectedGlobal: EXPECTED_GLOBAL,
     expectedApi: EXPECTED_API,
     sharedContract: SHARED_CONTRACT,
-    pairedRendererVersion: PAIRED_RENDERER_VERSION,
+    pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
+    pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
     demoPlanetStatus: "retired",
-    renderer: PLANET_ONE_RENDERER,
-    assetRole: "delegation-support-only",
-    noLegacyAutoboot: true,
+    terrainRenderer: TERRAIN_RENDERER,
+    planetOneRenderer: PLANET_ONE_RENDERER,
+    assetRole: "terrain-first-delegation-support-only",
+    noLegacyAutobootRetries: true,
     noTimeoutRenderRetries: true,
     noCompetingGlobeSurface: true,
     drawsOwnPlanet: false,
-    passFilterBridgeActive: true,
-    availablePasses: PASSES.slice()
+    optimumExpressionOnly: true
   });
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      function bootWhenReady() {
+        autoBoot();
+      },
+      { once: true }
+    );
+  } else {
+    autoBoot();
+  }
 })(window);

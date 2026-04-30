@@ -9,8 +9,7 @@
   --showroom-green: #8ff0c6;
   --showroom-gold: #ffd36f;
   --showroom-shadow: rgba(0, 0, 0, 0.45);
-  --showroom-field-size: min(92vw, 720px);
-  --showroom-earth-size: min(34vw, 250px);
+  --showroom-field-size: min(92vw, 760px);
   --showroom-radius: 28px;
 }
 
@@ -95,9 +94,8 @@ a:focus {
 }
 
 .showroom-hero,
-.showroom-text-panel,
-.showroom-globe-shell,
-.showroom-receipt-panel {
+.showroom-parent-dashboard,
+.showroom-dashboard-hold {
   border: 1px solid var(--showroom-line);
   border-radius: var(--showroom-radius);
   background: var(--showroom-panel);
@@ -108,6 +106,10 @@ a:focus {
   padding: 16px 18px;
   margin-bottom: 14px;
   background: linear-gradient(135deg, rgba(14, 23, 38, 0.86), rgba(7, 12, 20, 0.76));
+}
+
+.showroom-hero-compact {
+  padding: 14px 16px;
 }
 
 .showroom-kicker {
@@ -127,126 +129,47 @@ a:focus {
 }
 
 .showroom-hero p {
-  max-width: 860px;
+  max-width: 780px;
   margin: 10px 0 0;
   color: var(--showroom-muted);
   font-size: 0.98rem;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
-.showroom-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.showroom-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 38px;
-  padding: 8px 15px;
-  border: 1px solid var(--showroom-line-strong);
-  border-radius: 999px;
-  background: rgba(125, 181, 255, 0.12);
-  color: var(--showroom-text);
-  font-weight: 800;
-  font-size: 0.9rem;
-}
-
-.showroom-button.secondary {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--showroom-muted);
-}
-
-/* Visual-first inspection layout */
-.showroom-proof-grid {
+.showroom-dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 0.34fr) minmax(420px, 1.66fr);
-  gap: 14px;
-  margin-top: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 0.28fr);
+  gap: 12px;
   align-items: stretch;
 }
 
-.showroom-text-panel,
-.showroom-globe-shell,
-.showroom-receipt-panel {
-  padding: 14px;
-}
-
-.showroom-text-panel {
-  align-self: start;
-}
-
-.showroom-text-panel p:not(.showroom-kicker),
-.showroom-proof-list span {
-  display: none;
-}
-
-.showroom-proof-list {
-  display: grid;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.showroom-proof-list li {
-  padding: 8px 10px;
-  border: 1px solid rgba(168, 199, 255, 0.14);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.showroom-proof-list strong {
-  display: block;
-  margin: 0;
-  color: var(--showroom-text);
-  font-size: 0.86rem;
-}
-
-.showroom-globe-shell {
-  overflow: hidden;
-}
-
-.showroom-globe-shell h2 {
-  margin: 0 0 8px;
-  font-size: 1rem;
-  color: var(--showroom-muted);
-  font-weight: 800;
-  letter-spacing: 0.02em;
+.showroom-visual-card {
+  min-width: 0;
 }
 
 .showroom-globe-mount {
-  min-height: 760px;
+  min-height: 74vh;
 }
 
 .showroom-globe-instrument {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   min-height: 100%;
-  text-align: center;
 }
 
-.showroom-code-globe-stage {
+.showroom-universe-visual-field {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.55fr);
-  gap: 12px;
-  align-items: stretch;
-  min-height: 680px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 24px;
-  padding: 12px;
+  min-height: 74vh;
+  border: 1px solid rgba(168, 199, 255, 0.14);
+  border-radius: 26px;
   background:
-    radial-gradient(circle at 46% 44%, rgba(255, 211, 111, 0.11), transparent 14rem),
-    radial-gradient(circle at 50% 50%, rgba(125, 181, 255, 0.13), transparent 31rem),
-    #03060c;
+    radial-gradient(circle at 50% 50%, rgba(255, 211, 111, 0.10), transparent 9rem),
+    radial-gradient(circle at 50% 50%, rgba(125, 181, 255, 0.08), transparent 26rem),
+    rgba(4, 10, 18, 0.56);
+  overflow: hidden;
 }
 
-.showroom-code-globe-stage::before {
+.showroom-universe-visual-field::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -257,19 +180,6 @@ a:focus {
   background-position: 0 0, 18px 32px;
   opacity: 0.32;
   pointer-events: none;
-}
-
-.showroom-universe-visual-field {
-  position: relative;
-  z-index: 2;
-  min-height: 656px;
-  border: 1px solid rgba(168, 199, 255, 0.14);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 211, 111, 0.10), transparent 9rem),
-    radial-gradient(circle at 50% 50%, rgba(125, 181, 255, 0.08), transparent 24rem),
-    rgba(4, 10, 18, 0.56);
-  overflow: hidden;
 }
 
 .showroom-solar-system-field {
@@ -292,8 +202,8 @@ a:focus {
   height: 15%;
   min-width: 64px;
   min-height: 64px;
-  max-width: 104px;
-  max-height: 104px;
+  max-width: 108px;
+  max-height: 108px;
   border-radius: 50%;
   z-index: 20;
 }
@@ -324,62 +234,14 @@ a:focus {
   animation: showroomOrbitSpin linear infinite;
 }
 
-.showroom-orbit-mercury {
-  width: 24%;
-  height: 24%;
-  animation-duration: 18s;
-  animation-delay: -3s;
-}
-
-.showroom-orbit-venus {
-  width: 33%;
-  height: 33%;
-  animation-duration: 24s;
-  animation-delay: -9s;
-}
-
-.showroom-orbit-earth {
-  width: 43%;
-  height: 43%;
-  border-color: rgba(143, 240, 198, 0.35);
-  animation-duration: 30s;
-  animation-delay: -15s;
-}
-
-.showroom-orbit-mars {
-  width: 52%;
-  height: 52%;
-  animation-duration: 38s;
-  animation-delay: -23s;
-}
-
-.showroom-orbit-jupiter {
-  width: 62%;
-  height: 62%;
-  animation-duration: 50s;
-  animation-delay: -31s;
-}
-
-.showroom-orbit-saturn {
-  width: 72%;
-  height: 72%;
-  animation-duration: 62s;
-  animation-delay: -39s;
-}
-
-.showroom-orbit-uranus {
-  width: 82%;
-  height: 82%;
-  animation-duration: 74s;
-  animation-delay: -47s;
-}
-
-.showroom-orbit-neptune {
-  width: 92%;
-  height: 92%;
-  animation-duration: 88s;
-  animation-delay: -55s;
-}
+.showroom-orbit-mercury { width: 24%; height: 24%; animation-duration: 18s; animation-delay: -3s; }
+.showroom-orbit-venus { width: 33%; height: 33%; animation-duration: 24s; animation-delay: -9s; }
+.showroom-orbit-earth { width: 43%; height: 43%; border-color: rgba(143, 240, 198, 0.35); animation-duration: 30s; animation-delay: -15s; }
+.showroom-orbit-mars { width: 52%; height: 52%; animation-duration: 38s; animation-delay: -23s; }
+.showroom-orbit-jupiter { width: 62%; height: 62%; animation-duration: 50s; animation-delay: -31s; }
+.showroom-orbit-saturn { width: 72%; height: 72%; animation-duration: 62s; animation-delay: -39s; }
+.showroom-orbit-uranus { width: 82%; height: 82%; animation-duration: 74s; animation-delay: -47s; }
+.showroom-orbit-neptune { width: 92%; height: 92%; animation-duration: 88s; animation-delay: -55s; }
 
 .showroom-planet-node {
   position: absolute;
@@ -395,69 +257,33 @@ a:focus {
   box-shadow: 0 0 12px rgba(190, 219, 255, 0.22);
 }
 
-.showroom-planet-node[data-active="true"] {
-  z-index: 30;
-  box-shadow:
-    0 0 0 2px rgba(255, 211, 111, 0.52),
-    0 0 18px rgba(255, 211, 111, 0.42);
+.showroom-planet-label {
+  display: none;
 }
 
-.showroom-planet-label {
+.showroom-planet-earth .showroom-planet-label {
+  display: inline-flex;
   position: absolute;
-  top: 16px;
+  top: 17px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 999px;
   background: rgba(3, 6, 12, 0.74);
-  color: var(--showroom-muted);
-  font-size: 0.58rem;
-  font-weight: 800;
-  line-height: 1.2;
+  color: var(--showroom-gold);
+  font-size: 0.6rem;
+  font-weight: 900;
   white-space: nowrap;
 }
 
-.showroom-planet-node[data-active="true"] .showroom-planet-label {
-  color: var(--showroom-gold);
-  border: 1px solid rgba(255, 211, 111, 0.28);
-}
-
-.showroom-planet-mercury {
-  width: 8px;
-  height: 8px;
-  background: #b9afa2;
-}
-
-.showroom-planet-venus {
-  width: 12px;
-  height: 12px;
-  background: #d8b36d;
-}
-
-.showroom-planet-earth {
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle at 35% 28%, #93f0c7 0 20%, #2c8fda 48%, #0d3f83 100%);
-  box-shadow: 0 0 20px rgba(143, 240, 198, 0.44);
-}
-
-.showroom-planet-mars {
-  width: 12px;
-  height: 12px;
-  background: #c66c4a;
-}
-
-.showroom-planet-jupiter {
-  width: 26px;
-  height: 26px;
-  background: linear-gradient(180deg, #d9bd8e, #9a6c43, #e8d0a3);
-}
-
-.showroom-planet-saturn {
-  width: 23px;
-  height: 23px;
-  background: #c8b27a;
-}
+.showroom-planet-mercury { width: 8px; height: 8px; background: #b9afa2; }
+.showroom-planet-venus { width: 12px; height: 12px; background: #d8b36d; }
+.showroom-planet-earth { width: 20px; height: 20px; background: radial-gradient(circle at 35% 28%, #93f0c7 0 20%, #2c8fda 48%, #0d3f83 100%); box-shadow: 0 0 20px rgba(143, 240, 198, 0.44); }
+.showroom-planet-mars { width: 12px; height: 12px; background: #c66c4a; }
+.showroom-planet-jupiter { width: 26px; height: 26px; background: linear-gradient(180deg, #d9bd8e, #9a6c43, #e8d0a3); }
+.showroom-planet-saturn { width: 23px; height: 23px; background: #c8b27a; }
+.showroom-planet-uranus { width: 18px; height: 18px; background: #7ed6df; }
+.showroom-planet-neptune { width: 18px; height: 18px; background: #4f75d9; }
 
 .showroom-saturn-ring {
   position: absolute;
@@ -466,18 +292,6 @@ a:focus {
   border: 2px solid rgba(238, 223, 172, 0.66);
   border-radius: 50%;
   transform: rotate(-18deg);
-}
-
-.showroom-planet-uranus {
-  width: 18px;
-  height: 18px;
-  background: #7ed6df;
-}
-
-.showroom-planet-neptune {
-  width: 18px;
-  height: 18px;
-  background: #4f75d9;
 }
 
 .showroom-earth-moon-orbit {
@@ -500,20 +314,10 @@ a:focus {
   background: #dce7f4;
 }
 
-.showroom-code-axis-frame {
-  position: absolute;
-  z-index: 12;
-  right: 24px;
-  bottom: 28px;
-  width: var(--showroom-earth-size);
-  aspect-ratio: 1;
-  transform: rotate(-23.5deg);
-}
-
 .showroom-earth-inspection-label {
   position: absolute;
   right: 18px;
-  bottom: 10px;
+  bottom: 14px;
   z-index: 14;
   padding: 5px 10px;
   border: 1px solid rgba(143, 240, 198, 0.32);
@@ -524,182 +328,15 @@ a:focus {
   font-weight: 800;
 }
 
-.showroom-code-axis {
-  position: absolute;
-  left: 50%;
-  top: -8%;
-  bottom: -8%;
-  width: 2px;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg, transparent, rgba(255, 211, 111, 0.46), transparent);
-  opacity: 0.66;
-  z-index: 1;
-}
-
-.showroom-code-globe {
-  position: absolute;
-  inset: 7%;
-  overflow: hidden;
-  border-radius: 50%;
-  clip-path: circle(50% at 50% 50%);
-  transform: rotate(23.5deg);
-  isolation: isolate;
-  background:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.42), transparent 17%),
-    radial-gradient(circle at 50% 55%, #257ccc 0%, #0e4a87 56%, #061f3f 100%);
-  box-shadow:
-    inset -46px -26px 55px rgba(0, 0, 0, 0.58),
-    inset 22px 16px 32px rgba(255, 255, 255, 0.12),
-    0 18px 60px rgba(0, 0, 0, 0.62);
-}
-
-.showroom-code-surface-track {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  width: 200%;
-  height: 100%;
-  will-change: transform;
-}
-
-.showroom-code-surface {
-  position: relative;
-  width: 50%;
-  height: 100%;
-  flex: 0 0 50%;
-  overflow: hidden;
-  background: linear-gradient(90deg, #0a356d 0%, #1e70b7 32%, #0f4e94 62%, #082d61 100%);
-}
-
-.showroom-code-landmass {
-  position: absolute;
-  display: block;
-  background: linear-gradient(135deg, #78d68b, #2f8c5c 58%, #d7b16a);
-  opacity: 0.94;
-}
-
-.showroom-code-landmass.land-a {
-  width: 30%;
-  height: 22%;
-  left: 13%;
-  top: 22%;
-  border-radius: 56% 44% 62% 38%;
-  clip-path: polygon(8% 42%, 34% 8%, 72% 16%, 92% 52%, 62% 86%, 18% 78%);
-}
-
-.showroom-code-landmass.land-b {
-  width: 20%;
-  height: 34%;
-  left: 47%;
-  top: 40%;
-  border-radius: 46% 54% 41% 59%;
-  clip-path: polygon(24% 0%, 72% 8%, 92% 34%, 66% 100%, 26% 82%, 4% 34%);
-}
-
-.showroom-code-landmass.land-c {
-  width: 22%;
-  height: 17%;
-  left: 63%;
-  top: 24%;
-  border-radius: 60% 40% 52% 48%;
-}
-
-.showroom-code-landmass.land-d {
-  width: 18%;
-  height: 13%;
-  left: 27%;
-  top: 69%;
-  border-radius: 42% 58% 54% 46%;
-}
-
-.showroom-code-landmass.land-e {
-  width: 13%;
-  height: 11%;
-  left: 77%;
-  top: 62%;
-  border-radius: 58% 42% 48% 52%;
-}
-
-.showroom-code-landmass.land-f {
-  width: 10%;
-  height: 9%;
-  left: 6%;
-  top: 58%;
-  border-radius: 52% 48% 60% 40%;
-}
-
-.showroom-code-cloud-layer {
-  position: absolute;
-  inset: 2%;
-  z-index: 3;
-  border-radius: 50%;
-  background:
-    linear-gradient(16deg, transparent 12%, rgba(255, 255, 255, 0.42) 13% 17%, transparent 18% 44%, rgba(255, 255, 255, 0.26) 45% 49%, transparent 50%),
-    linear-gradient(-24deg, transparent 28%, rgba(255, 255, 255, 0.20) 29% 33%, transparent 34% 72%, rgba(255, 255, 255, 0.16) 73% 76%, transparent 77%);
-  opacity: 0.66;
-  transform-origin: center;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.showroom-code-cloud-layer-b {
-  opacity: 0.38;
-  filter: blur(1px);
-}
-
-.showroom-code-highlight,
-.showroom-code-terminator,
-.showroom-code-atmosphere {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.showroom-code-highlight {
-  z-index: 4;
-  background: radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.30), transparent 22%);
-  mix-blend-mode: screen;
-}
-
-.showroom-code-terminator {
-  z-index: 5;
-  background: linear-gradient(102deg, transparent 0 44%, rgba(0, 0, 0, 0.12) 52%, rgba(0, 0, 0, 0.72) 100%);
-  mix-blend-mode: multiply;
-}
-
-.showroom-code-atmosphere {
-  z-index: 7;
-  border: 1px solid rgba(150, 215, 255, 0.46);
-  box-shadow:
-    inset 0 0 18px rgba(206, 237, 255, 0.13),
-    0 0 18px rgba(125, 181, 255, 0.24);
-}
-
-.showroom-code-home-pin {
-  position: absolute;
-  left: 45%;
-  top: 45%;
-  z-index: 9;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #fff7c7;
-  border-radius: 50%;
-  background: var(--showroom-gold);
-  box-shadow: 0 0 16px rgba(255, 211, 111, 0.95);
-}
-
 .showroom-phase-badge {
   position: absolute;
-  left: 50%;
-  bottom: 9%;
-  z-index: 12;
+  left: 18px;
+  bottom: 14px;
+  z-index: 14;
   display: grid;
   gap: 2px;
-  min-width: 118px;
+  min-width: 108px;
   padding: 7px 10px;
-  transform: translateX(-50%);
   border: 1px solid rgba(255, 211, 111, 0.46);
   border-radius: 999px;
   background: rgba(3, 6, 12, 0.72);
@@ -712,317 +349,113 @@ a:focus {
   color: var(--showroom-muted);
 }
 
-.showroom-phase-panel {
-  position: relative;
-  z-index: 2;
+.showroom-dashboard-gauges {
   display: grid;
   align-content: start;
-  gap: 10px;
-  min-height: 656px;
-  padding: 16px;
-  border: 1px solid rgba(168, 199, 255, 0.16);
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(168, 199, 255, 0.14);
   border-radius: 22px;
   background: rgba(4, 10, 18, 0.72);
-  text-align: left;
 }
 
-.showroom-narrative-kicker {
-  margin: 0;
-  color: var(--showroom-green);
+.showroom-dashboard-gauges h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: var(--showroom-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.showroom-mini-gauge-row,
+.showroom-gauge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.showroom-gauge-card {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(143, 240, 198, 0.28);
+  border-radius: 16px;
+  background: rgba(143, 240, 198, 0.06);
+}
+
+.showroom-gauge-card.hold {
+  border-color: rgba(255, 211, 111, 0.4);
+  background: rgba(255, 211, 111, 0.06);
+}
+
+.showroom-gauge-label {
+  color: var(--showroom-muted);
   font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.showroom-narrative-title {
-  margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2.4rem);
+.showroom-gauge-value {
+  color: var(--showroom-text);
+  font-size: 1rem;
   line-height: 1;
-  letter-spacing: -0.04em;
 }
 
-.showroom-narrative-proof,
-.showroom-narrative-consequence {
-  margin: 0;
-  color: var(--showroom-muted);
-  line-height: 1.42;
-  font-size: 0.9rem;
-}
-
-.showroom-narrative-consequence {
-  padding-top: 8px;
-  border-top: 1px solid rgba(168, 199, 255, 0.14);
-  color: var(--showroom-text);
-}
-
-.showroom-phase-ring {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.showroom-phase-node {
-  padding: 5px 8px;
-  border: 1px solid rgba(168, 199, 255, 0.18);
-  border-radius: 999px;
-  background: rgba(6, 16, 30, 0.88);
-  color: var(--showroom-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.66rem;
-  font-weight: 900;
-}
-
-.showroom-phase-node[data-active="true"] {
-  border-color: rgba(255, 211, 111, 0.72);
-  color: var(--showroom-gold);
-}
-
-.showroom-phase-node[data-complete="true"] {
-  border-color: rgba(143, 240, 198, 0.42);
-  color: var(--showroom-green);
-}
-
-.showroom-universe-bodies {
-  display: grid;
-  gap: 5px;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.showroom-universe-body {
-  display: grid;
-  grid-template-columns: 10px minmax(62px, auto) minmax(0, 1fr);
-  gap: 6px;
-  align-items: center;
-  padding: 6px 8px;
-  border: 1px solid rgba(168, 199, 255, 0.1);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.032);
-  color: var(--showroom-muted);
-  line-height: 1.25;
-  font-size: 0.82rem;
-}
-
-.showroom-universe-body[data-active="true"] {
-  border-color: rgba(255, 211, 111, 0.52);
-  background: rgba(255, 211, 111, 0.08);
-}
-
-.showroom-universe-marker {
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--showroom-blue);
-}
-
-.showroom-universe-body-sun .showroom-universe-marker {
-  background: var(--showroom-gold);
-  box-shadow: 0 0 10px rgba(255, 211, 111, 0.55);
-}
-
-.showroom-universe-body-earth .showroom-universe-marker {
-  background: var(--showroom-green);
-  box-shadow: 0 0 10px rgba(143, 240, 198, 0.44);
-}
-
-.showroom-universe-body-name {
-  color: var(--showroom-text);
-  white-space: nowrap;
-}
-
-.showroom-universe-body-role {
-  color: var(--showroom-muted);
-}
-
-.showroom-globe-caption {
-  margin: 6px auto 0;
-  max-width: 760px;
-  color: var(--showroom-gold);
-  font-size: clamp(0.9rem, 2vw, 1.08rem);
-  line-height: 1.28;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.showroom-contract-tags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  width: min(100%, 860px);
-  margin: 0 auto;
-}
-
-.showroom-contract-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 5px 10px;
-  border: 1px solid rgba(125, 181, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(6, 16, 30, 0.72);
-  color: var(--showroom-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-/* Keep receipt data in source, but remove visual clutter from the public inspection read. */
+.showroom-hidden-receipts,
 .showroom-globe-status,
-.showroom-receipt-panel {
-  display: none;
+.showroom-receipt-panel,
+.showroom-text-panel,
+.showroom-proof-list,
+.showroom-contract-tags,
+.showroom-globe-caption {
+  display: none !important;
 }
 
-.showroom-earth-shell,
-.showroom-globe-shell-lower,
-.showroom-lower-shell,
-.showroom-faceted-shell,
-.showroom-faceted-body,
-.showroom-earth-rim,
-.showroom-globe-rim,
-.showroom-earth-cap,
-.showroom-globe-cap,
-.showroom-bowl,
-.showroom-cylinder,
-.globe-shell,
-.globe-rim,
-.globe-cap,
-.globe-bowl,
-.globe-cylinder {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+.showroom-parent-dashboard,
+.showroom-dashboard-hold {
+  padding: 18px;
 }
 
 @keyframes showroomOrbitSpin {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes showroomMoonOrbit {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-@media (max-width: 1080px) {
-  :root {
-    --showroom-field-size: min(100%, 560px);
-    --showroom-earth-size: min(36vw, 210px);
-  }
-
-  .showroom-proof-grid {
+@media (max-width: 900px) {
+  .showroom-dashboard {
     grid-template-columns: 1fr;
   }
 
-  .showroom-text-panel {
-    display: none;
+  .showroom-dashboard-gauges {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .showroom-code-globe-stage {
-    grid-template-columns: 1fr;
-    min-height: auto;
+  .showroom-dashboard-gauges h2 {
+    grid-column: 1 / -1;
   }
 
-  .showroom-universe-visual-field {
-    min-height: 620px;
-  }
-
-  .showroom-phase-panel {
-    min-height: auto;
-  }
-}
-
-@media (max-width: 860px) {
-  :root {
-    --showroom-field-size: min(96vw, 460px);
-    --showroom-earth-size: min(44vw, 176px);
-  }
-
-  .showroom-page {
-    width: min(100% - 18px, 720px);
-    padding-top: 12px;
-  }
-
-  .showroom-topbar,
-  .showroom-nav {
-    justify-content: flex-start;
-  }
-
-  .showroom-globe-mount {
-    min-height: 650px;
-  }
-
-  .showroom-code-globe-stage {
-    padding: 10px;
-    border-radius: 18px;
-  }
-
-  .showroom-universe-visual-field {
-    min-height: 520px;
-  }
-
-  .showroom-code-axis-frame {
-    right: 16px;
-    bottom: 34px;
-  }
-
-  .showroom-earth-inspection-label {
-    right: 12px;
-    bottom: 12px;
-    font-size: 0.66rem;
-  }
-
-  .showroom-planet-label {
-    display: none;
-  }
-
-  .showroom-planet-node[data-active="true"] .showroom-planet-label,
-  .showroom-planet-earth .showroom-planet-label {
-    display: inline-flex;
-  }
-
-  .showroom-contract-tag {
-    font-size: 0.72rem;
-    padding-inline: 9px;
+  .showroom-mini-gauge-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 620px) {
   :root {
-    --showroom-field-size: min(106vw, 398px);
-    --showroom-earth-size: min(44vw, 146px);
+    --showroom-field-size: min(112vw, 420px);
   }
 
   .showroom-page {
     width: min(100% - 14px, 560px);
-  }
-
-  .showroom-hero,
-  .showroom-text-panel,
-  .showroom-globe-shell,
-  .showroom-receipt-panel {
-    border-radius: 22px;
+    padding-top: 12px;
   }
 
   .showroom-hero {
-    padding: 16px;
+    padding: 14px;
   }
 
   .showroom-hero h1 {
@@ -1030,20 +463,13 @@ a:focus {
   }
 
   .showroom-hero p {
-    font-size: 0.94rem;
-    line-height: 1.42;
+    font-size: 0.92rem;
+    line-height: 1.38;
   }
 
-  .showroom-globe-shell {
-    padding: 10px;
-  }
-
-  .showroom-globe-mount {
-    min-height: 610px;
-  }
-
+  .showroom-globe-mount,
   .showroom-universe-visual-field {
-    min-height: 430px;
+    min-height: 58vh;
   }
 
   .showroom-solar-core {
@@ -1053,22 +479,6 @@ a:focus {
 
   .showroom-solar-sun {
     font-size: 0.64rem;
-  }
-
-  .showroom-planet-mercury {
-    width: 7px;
-    height: 7px;
-  }
-
-  .showroom-planet-venus,
-  .showroom-planet-mars {
-    width: 10px;
-    height: 10px;
-  }
-
-  .showroom-planet-earth {
-    width: 17px;
-    height: 17px;
   }
 
   .showroom-planet-jupiter {
@@ -1087,98 +497,12 @@ a:focus {
     height: 15px;
   }
 
-  .showroom-saturn-ring {
-    width: 32px;
-    height: 10px;
+  .showroom-dashboard-gauges {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .showroom-earth-moon-orbit {
-    width: 31px;
-    height: 31px;
-  }
-
-  .showroom-code-axis-frame {
-    right: 10px;
-    bottom: 34px;
-  }
-
-  .showroom-earth-inspection-label {
-    max-width: 140px;
-    white-space: normal;
-    text-align: center;
-    line-height: 1.15;
-  }
-
-  .showroom-phase-panel {
-    padding: 14px;
-  }
-
-  .showroom-narrative-title {
-    font-size: clamp(1.5rem, 8vw, 2.2rem);
-  }
-
-  .showroom-phase-ring {
-    gap: 5px;
-  }
-
-  .showroom-phase-node {
-    font-size: 0.64rem;
-    padding: 5px 7px;
-  }
-
-  .showroom-universe-body {
-    grid-template-columns: 12px 1fr;
-    align-items: start;
-  }
-
-  .showroom-universe-body-name {
-    white-space: normal;
-  }
-
-  .showroom-universe-body-role {
-    grid-column: 2;
-  }
-
-  .showroom-globe-caption {
-    font-size: 0.88rem;
-    letter-spacing: 0.03em;
-  }
-}
-
-@media (max-width: 420px) {
-  :root {
-    --showroom-field-size: min(110vw, 360px);
-    --showroom-earth-size: min(46vw, 132px);
-  }
-
-  .showroom-page {
-    width: min(100% - 10px, 420px);
-  }
-
-  .showroom-universe-visual-field {
-    min-height: 390px;
-  }
-
-  .showroom-code-axis-frame {
-    right: 8px;
-    bottom: 38px;
-  }
-
-  .showroom-earth-inspection-label {
-    right: 8px;
-    bottom: 10px;
-    max-width: 126px;
-    padding: 5px 8px;
-    font-size: 0.6rem;
-  }
-
-  .showroom-solar-core {
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .showroom-contract-tags {
-    justify-content: flex-start;
+  .showroom-mini-gauge-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

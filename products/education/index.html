@@ -1,151 +1,725 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-build="product-wing-full-tnt-v1"
-  data-generation="education-product-chamber-unity-renewal-v1"
-  data-page-id="education"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-parent-route="/products/"
->
+<!doctype html>
+<html lang="en" data-page="education" data-room="PC4_EDUCATION" data-public-presentation="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Education · Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Education: structured learning through guided progression inside the Diamond Gate Bridge Product Wing."
-  />
-  <link rel="stylesheet" href="/assets/manor.css?v=education-product-chamber-unity-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Education · Diamond Gate Bridge</title>
+  <meta name="description" content="Education houses the 1001 Word System: a guided learning cube for vocabulary, meaning, use, and expression.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.13), transparent 24rem),
+        radial-gradient(circle at 18% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .route-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 470px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.2), transparent 16rem),
+        radial-gradient(circle at 22% 68%, rgba(143, 240, 198, 0.08), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(20px, 7vw, 90px);
+      top: 50%;
+      width: clamp(180px, 32vw, 360px);
+      aspect-ratio: 1;
+      transform: translateY(-50%) rotate(-9deg);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 211, 111, 0.2);
+      background:
+        linear-gradient(135deg, rgba(255, 211, 111, 0.12), rgba(143, 240, 198, 0.05)),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px);
+      background-size: auto, 36px 36px, 36px 36px;
+      box-shadow:
+        inset 0 0 38px rgba(255, 211, 111, 0.05),
+        0 0 84px rgba(125, 181, 255, 0.08);
+      opacity: 0.46;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 860px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      min-height: 230px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
+        rgba(9, 15, 25, 0.84);
+      box-shadow: none;
+    }
+
+    .card span {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card ul,
+    .card ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .phase-card {
+      min-height: 280px;
+    }
+
+    .cube-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .cube-face {
+      min-height: 140px;
+      padding: 16px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .cube-face strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .cube-face span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .route-card {
+      min-height: 104px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .route-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .route-card span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-card strong {
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .download-panel {
+      border-color: rgba(255, 211, 111, 0.32);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255, 211, 111, 0.1), transparent 18rem),
+        rgba(14, 24, 38, 0.78);
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .grid.two,
+      .grid.four,
+      .cube-map {
+        grid-template-columns: 1fr;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 390px;
+      }
+
+      .hero::after {
+        opacity: 0.24;
+        right: -40px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .nav,
+      .actions {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin manor-product"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-page-id="education"
-  data-product-id="education"
-  data-product-parent="/products/"
-  data-parent-route="/products/"
-  data-route="/products/education/"
-  data-class-type="product_chamber"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-construct-code="PC4_EDUCATION"
-  data-parent-construct="products"
-  data-house-anchor="products"
-  data-skin-family="manor_product"
-  data-canonical-destination-status="canonical"
-  data-host-status="standalone"
-  data-audit-priority="critical"
-  data-registry-version="1.0.0"
->
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/" aria-current="page">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+<body>
+  <a class="skip" href="#education-main">Skip to Education</a>
 
   <main
-    class="manor-shell"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-page-id="education"
-    data-product-id="education"
-    data-product-parent="/products/"
-    data-parent-route="/products/"
+    id="education-main"
+    class="page"
     data-route="/products/education/"
-    data-class-type="product_chamber"
+    data-product-chamber="PC4_EDUCATION"
+    data-product-class="product_chamber"
     data-construct-class="product"
     data-product-wing="true"
-    data-construct-code="PC4_EDUCATION"
-    data-parent-construct="products"
-    data-house-anchor="products"
-    data-canonical-destination-status="canonical"
-  >
-    <section class="manor-room" aria-label="Education product chamber">
-      <p class="manor-kicker">PC4 · Education · Product Chamber</p>
+    data-parent-route="/products/"
+    data-canonical-destination="true"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority"
+    data-education-system="1001-word-system">
 
-      <h1 class="manor-title">Education</h1>
+    <header class="topbar" aria-label="Education header">
+      <div class="brand">Diamond Gate Bridge · Products · Education</div>
+      <nav class="nav" aria-label="Education navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <p class="manor-lede">
-        Education is structured learning through guided progression inside the Product Wing.
-        It remains under Products as one canonical destination: <strong>/products/education/</strong>.
+    <section class="hero" aria-labelledby="education-title">
+      <div class="hero-content">
+        <p class="kicker">PC4 · Education · 1001 Word System</p>
+        <h1 id="education-title">Education</h1>
+        <p class="lead">
+          The 1001 Word System is a guided learning cube: 1001 essential words organized so learners do not just memorize definitions, but learn how words move through meaning, use, expression, and real life.
+        </p>
+      </div>
+
+      <div class="actions" aria-label="Primary Education actions">
+        <a class="button primary" href="/products/education/1001-word-system.pdf">Download Free PDF</a>
+        <a class="button" href="/products/">Return to Products</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="system-title">
+      <p class="kicker">The system</p>
+      <h2 id="system-title">Not a vocabulary list. A word operating system.</h2>
+      <p>
+        Most vocabulary tools move in a straight line: word, definition, quiz, next word. The 1001 Word System is different. It treats each word as a living unit inside a cube. A learner can enter through meaning, sound, sentence, emotion, category, situation, memory, or action, then rotate the word until it becomes usable.
+      </p>
+      <p>
+        The goal is not to know a word once. The goal is to own it from multiple angles: what it means, how it feels, when to use it, when not to use it, what it connects to, and how it changes a sentence, a decision, or a conversation.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="What the 1001 Word System brings">
+      <article class="card">
+        <span>What it brings</span>
+        <h3>A controlled learning universe</h3>
+        <p>
+          1001 words create a large enough vocabulary field to matter, but a small enough field to organize. The learner is not drowning in endless words; they are moving through a bounded system.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Gap it closes</span>
+        <h3>Knowing versus using</h3>
+        <p>
+          Many learners can recognize a word but cannot use it under pressure. This system closes that gap by moving every word through understanding, sentence use, personal connection, and active expression.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Why it is unique</span>
+        <h3>The cube replaces the line</h3>
+        <p>
+          The system is not a linear path where the learner goes from word 1 to word 1001 and stops. It is a cube: words can be revisited, rotated, grouped, compared, challenged, and applied from different directions.
+        </p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="cube-title">
+      <p class="kicker">Cube model</p>
+      <h2 id="cube-title">A cube, not a line.</h2>
+      <p>
+        A line only asks, “What comes next?” A cube asks better questions: “Where does this word sit? What does it touch? What does it oppose? What does it unlock? What face of the word am I looking at right now?”
+      </p>
+      <p>
+        In the 1001 Word System, a word is not finished because it was defined once. A word becomes stable when the learner can rotate it through the cube and still recognize it, explain it, use it, and connect it.
       </p>
 
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="Education product identity">
-        <p class="manor-kicker">Parent binding</p>
-
-        <h2>Education stays attached to the Product Wing.</h2>
-
-        <p class="manor-lede">
-          This chamber keeps learning practical, ordered, and readable. It supports guided
-          progression without becoming a detached school system, separate root, or planetary construct.
-        </p>
-
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">Canonical Route</p>
-            <h2>/products/education/</h2>
-            <p class="manor-lede">One route under Products. No duplicate education root.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Product Class</p>
-            <h2>product_chamber</h2>
-            <p class="manor-lede">Education is a product chamber, not a planetary construct and not a house part.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Learning Frame</p>
-            <h2>Guided Progression</h2>
-            <p class="manor-lede">Structured movement from first step to stronger understanding.</p>
-          </article>
+      <div class="cube-map" aria-label="Cube faces">
+        <div class="cube-face">
+          <strong>Face 1 · Meaning</strong>
+          <span>Definition, plain-language explanation, and the core idea of the word.</span>
         </div>
-      </section>
+        <div class="cube-face">
+          <strong>Face 2 · Use</strong>
+          <span>How the word appears in sentences, questions, stories, and real situations.</span>
+        </div>
+        <div class="cube-face">
+          <strong>Face 3 · Relation</strong>
+          <span>Synonyms, opposites, categories, emotional neighbors, and nearby concepts.</span>
+        </div>
+        <div class="cube-face">
+          <strong>Face 4 · Expression</strong>
+          <span>Speaking, writing, presenting, explaining, and choosing the word with intention.</span>
+        </div>
+        <div class="cube-face">
+          <strong>Face 5 · Memory</strong>
+          <span>Images, stories, personal anchors, repetition, and retrieval.</span>
+        </div>
+        <div class="cube-face">
+          <strong>Face 6 · Action</strong>
+          <span>How the word changes behavior, choices, conflict, learning, or communication.</span>
+        </div>
+      </div>
     </section>
 
-    <section class="manor-backlinks" aria-label="Product backlinks">
-      <p class="manor-backlinks-title">Product backlinks</p>
-
-      <ul class="manor-backlinks-list">
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+    <section class="section panel" aria-labelledby="phases-title">
+      <p class="kicker">Four phases</p>
+      <h2 id="phases-title">Every word moves through four phases.</h2>
+      <p>
+        The four phases give the system its progression. The cube gives the learner depth; the phases give the learner movement. Together, they prevent the page from becoming a flat word list.
+      </p>
     </section>
 
-    <section class="manor-audit-strip" aria-label="Education product receipt">
-      <p class="manor-audit-title">Education receipt</p>
+    <section class="grid four" aria-label="Four phases">
+      <article class="card phase-card">
+        <span>Phase 1</span>
+        <h3>Receive</h3>
+        <p>
+          The learner meets the word. They hear it, see it, pronounce it, define it, and attach it to a simple image or situation.
+        </p>
+        <p>
+          The question is: “What is this word, and can I recognize it?”
+        </p>
+      </article>
 
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=product</li>
-        <li class="manor-audit-chip pass">product-wing=true</li>
-        <li class="manor-audit-chip pass">parent-route=/products/</li>
-        <li class="manor-audit-chip pass">PC4_EDUCATION</li>
-        <li class="manor-audit-chip pass">canonical-destination</li>
-      </ul>
+      <article class="card phase-card">
+        <span>Phase 2</span>
+        <h3>Place</h3>
+        <p>
+          The learner places the word inside the cube. They connect it to categories, opposites, related words, emotional tone, and real-life context.
+        </p>
+        <p>
+          The question is: “Where does this word belong?”
+        </p>
+      </article>
+
+      <article class="card phase-card">
+        <span>Phase 3</span>
+        <h3>Use</h3>
+        <p>
+          The learner uses the word in sentences, short answers, explanations, stories, choices, and conversations.
+        </p>
+        <p>
+          The question is: “Can I use this word when it matters?”
+        </p>
+      </article>
+
+      <article class="card phase-card">
+        <span>Phase 4</span>
+        <h3>Own</h3>
+        <p>
+          The learner can retrieve the word, explain it to someone else, choose it intentionally, and recognize when another word would be better.
+        </p>
+        <p>
+          The question is: “Has this word become part of my operating language?”
+        </p>
+      </article>
+    </section>
+
+    <section class="grid two" aria-label="Linear path versus cube">
+      <article class="card">
+        <span>Linear path</span>
+        <h3>The old model</h3>
+        <p>
+          A linear model says: learn word 1, then word 2, then word 3. It can work for memorization, but it often breaks when the learner has to speak, write, explain, argue, or think in real time.
+        </p>
+        <ul>
+          <li>Good for sequence.</li>
+          <li>Weak for depth.</li>
+          <li>Easy to test.</li>
+          <li>Hard to transfer into life.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <span>Cube path</span>
+        <h3>The 1001 Word model</h3>
+        <p>
+          A cube model lets the learner move forward, backward, sideways, inward, and outward. A word can be studied through meaning, use, relationship, memory, expression, and action.
+        </p>
+        <ul>
+          <li>Built for understanding.</li>
+          <li>Built for conversation.</li>
+          <li>Built for writing.</li>
+          <li>Built for real-world transfer.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="download-title">
+      <p class="kicker">Free download</p>
+      <h2 id="download-title">Start with the 1001 Word System PDF.</h2>
+      <p>
+        The PDF should give visitors a clean starting point: what the system is, why 1001 words matter, how the cube works, how the four phases work, and how a learner can begin without needing the full product chamber.
+      </p>
+      <p>
+        Place the file at <strong>/products/education/1001-word-system.pdf</strong> so the download button works from this page.
+      </p>
+
+      <div class="actions" style="margin-top:18px">
+        <a class="button primary" href="/products/education/1001-word-system.pdf">Download Free PDF</a>
+      </div>
+    </section>
+
+    <section class="section panel" aria-labelledby="bases-title">
+      <p class="kicker">Covered bases</p>
+      <h2 id="bases-title">What this product page now explains.</h2>
+      <p>
+        Education is no longer just a generic learning chamber. It now presents a concrete product: the 1001 Word System, a cube-based learning model, a four-phase progression, and a free PDF entry point.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="Education status">
+      <article class="card">
+        <span>Canonical Route</span>
+        <h3>/products/education/</h3>
+        <p>One route under Products. No duplicate education root.</p>
+      </article>
+
+      <article class="card">
+        <span>Product Class</span>
+        <h3>product_chamber</h3>
+        <p>Education is a product chamber, not a planetary construct and not a house part.</p>
+      </article>
+
+      <article class="card">
+        <span>Learning Frame</span>
+        <h3>Guided cube progression</h3>
+        <p>The learner moves through the word cube by receiving, placing, using, and owning each word.</p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="product-links-title">
+      <p class="kicker">Product backlinks</p>
+      <h2 id="product-links-title">Move through the product wing.</h2>
+
+      <div class="route-grid" aria-label="Education backlinks">
+        <a class="route-card" href="/products/">
+          <span>Parent</span>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span>Proof</span>
+          <strong>Showroom</strong>
+        </a>
+
+        <a class="route-card" href="/">
+          <span>Control</span>
+          <strong>Compass</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <span>House</span>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span>Verification</span>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      Education receipt
+      route-exists
+      manor-skin
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=product
+      product-wing=true
+      parent-route=/products/
+      PC4_EDUCATION
+      canonical-destination
+      canonical-route=/products/education/
+      product-class=product_chamber
+      education-product-chamber=true
+      1001-word-system=true
+      free-pdf-download=/products/education/1001-word-system.pdf
+      cube-not-linear-path=true
+      word-cube=true
+      four-phases=receive-place-use-own
+      guided-progression=true
+      no-duplicate-education-root=true
+      not-planetary-construct=true
+      not-house-part=true
+      Products=/products/
+      Showroom=/showroom/
+      Compass=/
+      Home=/home/
+      Gauges=/gauges/
+      EDUCATION_1001_WORD_SYSTEM_CUBE_TNT_v1
     </section>
   </main>
 </body>

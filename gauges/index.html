@@ -1,119 +1,103 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-gauge-contract="PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1">
+<html lang="en" data-page="gauges" data-gauge-contract="GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Planet 1 True State Diagnostic</title>
+  <title>Gauges · Planet 1 Forward Progress Construct</title>
   <meta
     name="description"
-    content="True-state diagnostic for Planet 1: terrain module, optimum renderer, asset instrument, route boot chain, legacy marker compatibility, and next target clarity."
+    content="Forward-progress Gauges for Planet 1: source chain is trusted after pass; next frame measures visual construction readiness and terrain realism progression."
   />
 
   <!--
-    GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1
-    PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_CONTRACT_v1
+    GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1
+    PLANET_ONE_GAUGES_V18_FORWARD_PROGRESS_CONTRACT_v1
 
     PURPOSE=
-    RENEW_GAUGES_SO_IT_MEASURES_THE_CURRENT_PLANET_1_ARCHITECTURE
-    STOP_MEASURING_ONLY_THE_OLD_V8_AXIS_CLIMATE_CONTRACT
-    IDENTIFY_WHERE_THE_CURRENT_RENDER_CHAIN_IS_BREAKING
-    PROVE_WHETHER_TERRAIN_FIRST_OPTIMUM_EXPRESSION_IS_ACTUALLY_SERVED
-    SEPARATE_SOURCE_FAILURE_FROM_LOAD_ORDER_FAILURE_FROM_VISUAL_FAILURE
+    REBUILD_GAUGES_FROM_BREAK-FINDING_MODE_TO_FORWARD-PROGRESS_MODE
+    TRUST_THE_100_PERCENT_SOURCE_CHAIN_PASS_AS_REAL_PROGRESS
+    STOP_TREATING_ABSENCE_OF_THE_NEXT_VISUAL_FRAME_AS_A FAILURE
+    IDENTIFY_THE_NEXT_CONSTRUCTION_TARGET_WITHOUT_REOPENING_SETTLED_BOOT_CHAIN
+    MEASURE_THE_CURRENT FRAME: V2 TERRAIN SOURCE LOCKED -> V3 VISUAL 39B CRUST REALISM READY
 
-    TRUE_STATE_FOCUS=
+    CURRENT LOCKED CHAIN=
     /world/render/planet-one.terrain.render.js
     /world/render/planet-one.render.js
     /assets/showroom.globe.instrument.js
     /showroom/globe/
-    /showroom/
     /gauges/
 
-    REQUIRED CURRENT MARKERS=
-    PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1
-    PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
-    SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1
+    CURRENT PASSED STATE=
+    terrain module passed
+    main renderer passed
+    asset instrument passed
+    route boot passed
+    Gauges passed
 
-    REQUIRED LEGACY MARKERS=
-    axis-spin-active=true
-    climate-topology-active=true
-    weather-circulation-active=true
-    ocean-current-logic-active=true
+    NEXT FRAME TARGET=
+    /world/render/planet-one.terrain.render.js
+
+    NEXT FRAME TNT=
+    PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1
 
     GAUGES RULE=
+    SOURCE PASS IS PROGRESS
+    VISUAL ABSENCE IS NOT SOURCE FAILURE
+    FUTURE MARKER ABSENCE MEANS NEXT TARGET, NOT FAILURE
     GAUGES_MEASURES_ONLY
     GAUGES_DOES_NOT_RENDER_PLANET
-    GAUGES_DOES_NOT_FIX_RENDERER
     GAUGES_DOES_NOT_CLOSE_GEOGRAPHY
-    GAUGES_DOES_NOT_DECLARE_VISUAL_SUCCESS_FROM_SOURCE_MARKERS_ALONE
   -->
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #05070d;
-      --panel: rgba(255, 255, 255, 0.052);
-      --panel-strong: rgba(255, 255, 255, 0.085);
-      --line: rgba(168, 199, 255, 0.18);
-      --line-strong: rgba(242, 199, 111, 0.42);
-      --text: rgba(246, 248, 255, 0.92);
-      --muted: rgba(226, 232, 246, 0.68);
-      --soft: rgba(226, 232, 246, 0.52);
+      --panel: rgba(255,255,255,.055);
+      --panel2: rgba(255,255,255,.085);
+      --line: rgba(168,199,255,.18);
       --gold: #f2c76f;
-      --good: #8fe3b0;
-      --hold: #f2c76f;
-      --bad: #ff9b9b;
+      --green: #8fe3b0;
       --blue: #91bdff;
-      --radius: 28px;
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.52);
+      --red: #ff9b9b;
+      --text: rgba(246,248,255,.93);
+      --muted: rgba(226,232,246,.68);
+      --soft: rgba(226,232,246,.52);
       --max: 1180px;
+      --radius: 28px;
+      --shadow: 0 28px 80px rgba(0,0,0,.52);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(145, 189, 255, 0.16), transparent 34rem),
-        radial-gradient(circle at 15% 20%, rgba(242, 199, 111, 0.08), transparent 22rem),
-        linear-gradient(180deg, #07101f 0%, var(--bg) 42%, #02030a 100%);
+        radial-gradient(circle at 50% -10%, rgba(145,189,255,.16), transparent 34rem),
+        radial-gradient(circle at 15% 20%, rgba(242,199,111,.08), transparent 22rem),
+        linear-gradient(180deg,#07101f 0%,var(--bg) 42%,#02030a 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100%;
-      margin: 0;
-      color: var(--text);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: var(--gold);
-    }
+    body { margin: 0; color: var(--text); }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--gold); }
 
     .skip-link {
       position: absolute;
       left: -999px;
       top: 10px;
       z-index: 20;
-      border: 1px solid var(--line-strong);
+      border: 1px solid rgba(242,199,111,.42);
       border-radius: 999px;
       padding: 10px 14px;
       background: #101725;
-      color: var(--text);
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      left: 12px;
-    }
+    .skip-link:focus { left: 12px; }
 
     .site-shell {
       width: min(var(--max), calc(100% - 28px));
@@ -130,28 +114,26 @@
       padding: 12px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+      background: rgba(255,255,255,.045);
+      box-shadow: 0 18px 50px rgba(0,0,0,.22);
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      min-width: fit-content;
       font-weight: 950;
-      letter-spacing: -0.03em;
+      letter-spacing: -.03em;
     }
 
     .brand-mark {
       width: 30px;
       height: 30px;
       border-radius: 12px;
-      border: 1px solid rgba(242, 199, 111, 0.48);
+      border: 1px solid rgba(242,199,111,.48);
       background:
-        linear-gradient(135deg, rgba(242, 199, 111, 0.9), rgba(145, 189, 255, 0.45)),
+        linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
         radial-gradient(circle at 35% 30%, #fff, transparent 40%);
-      box-shadow: 0 0 36px rgba(242, 199, 111, 0.18);
     }
 
     nav {
@@ -162,52 +144,56 @@
     }
 
     nav a {
-      border: 1px solid rgba(168, 199, 255, 0.16);
+      border: 1px solid rgba(168,199,255,.16);
       border-radius: 999px;
       padding: 8px 10px;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 850;
     }
 
     nav a[aria-current="page"] {
-      border-color: var(--line-strong);
+      border-color: rgba(242,199,111,.42);
       color: var(--gold);
-      background: rgba(242, 199, 111, 0.065);
+      background: rgba(242,199,111,.065);
+    }
+
+    .hero, .panel, .score-card, .check-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 48px);
+      padding: clamp(24px,5vw,48px);
       background:
-        radial-gradient(circle at 78% 18%, rgba(242, 199, 111, 0.12), transparent 20rem),
-        radial-gradient(circle at 18% 20%, rgba(145, 189, 255, 0.14), transparent 22rem),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: var(--shadow);
+        radial-gradient(circle at 78% 18%, rgba(242,199,111,.12), transparent 20rem),
+        radial-gradient(circle at 18% 20%, rgba(145,189,255,.14), transparent 22rem),
+        rgba(255,255,255,.045);
     }
 
     .kicker {
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.16em;
+      letter-spacing: .16em;
       text-transform: uppercase;
     }
 
     h1 {
       max-width: 940px;
-      margin: 12px 0 12px;
-      font-size: clamp(2.35rem, 7vw, 5.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.075em;
+      margin: 12px 0;
+      font-size: clamp(2.35rem,7vw,5.4rem);
+      line-height: .94;
+      letter-spacing: -.075em;
     }
 
     .lead {
       max-width: 860px;
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      font-size: clamp(1rem,2.4vw,1.25rem);
       line-height: 1.55;
     }
 
@@ -222,19 +208,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(242, 199, 111, 0.46);
+      border: 1px solid rgba(242,199,111,.46);
       border-radius: 999px;
       padding: 11px 15px;
-      background: linear-gradient(180deg, rgba(242, 199, 111, 0.18), rgba(242, 199, 111, 0.04));
+      background: linear-gradient(180deg, rgba(242,199,111,.18), rgba(242,199,111,.04));
       color: #fff4d3;
       font-weight: 950;
-      letter-spacing: -0.01em;
       cursor: pointer;
     }
 
     .button.secondary {
-      border-color: rgba(168, 199, 255, 0.22);
-      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(168,199,255,.22);
+      background: rgba(255,255,255,.045);
       color: var(--text);
     }
 
@@ -246,18 +231,8 @@
 
     .score-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(5,minmax(0,1fr));
       gap: 12px;
-    }
-
-    .score-card,
-    .panel,
-    .source-card,
-    .logic-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
     }
 
     .score-card {
@@ -266,45 +241,37 @@
       display: grid;
       align-content: space-between;
       gap: 12px;
-    }
-
-    .score-card strong {
-      display: block;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.08em;
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
     }
 
     .score-card span {
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.12em;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
-    .status-good strong,
-    .status-good .status-label {
-      color: var(--good);
+    .score-card strong {
+      display: block;
+      font-size: clamp(1.7rem,4vw,3.2rem);
+      line-height: .95;
+      letter-spacing: -.07em;
+      overflow-wrap: anywhere;
     }
 
-    .status-hold strong,
-    .status-hold .status-label {
-      color: var(--hold);
-    }
-
-    .status-bad strong,
-    .status-bad .status-label {
-      color: var(--bad);
-    }
+    .good strong { color: var(--green); }
+    .next strong { color: var(--gold); }
+    .hold strong { color: var(--blue); }
+    .bad strong { color: var(--red); }
 
     .panel {
-      padding: clamp(18px, 3vw, 28px);
+      padding: clamp(18px,3vw,28px);
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
     }
 
     .panel-head {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
       margin-bottom: 18px;
@@ -312,9 +279,9 @@
 
     .panel h2 {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-size: clamp(1.35rem,3vw,2rem);
       line-height: 1.05;
-      letter-spacing: -0.055em;
+      letter-spacing: -.055em;
     }
 
     .panel p {
@@ -332,63 +299,62 @@
       border-radius: 999px;
       padding: 6px 10px;
       color: var(--muted);
-      font-size: 0.7rem;
+      font-size: .7rem;
       font-weight: 950;
-      letter-spacing: 0.08em;
+      letter-spacing: .08em;
       text-transform: uppercase;
       white-space: nowrap;
     }
 
     .pill.pass {
-      border-color: rgba(143, 227, 176, 0.45);
-      color: var(--good);
-      background: rgba(143, 227, 176, 0.06);
+      border-color: rgba(143,227,176,.45);
+      color: var(--green);
+      background: rgba(143,227,176,.06);
+    }
+
+    .pill.next {
+      border-color: rgba(242,199,111,.45);
+      color: var(--gold);
+      background: rgba(242,199,111,.06);
     }
 
     .pill.hold {
-      border-color: rgba(242, 199, 111, 0.45);
-      color: var(--hold);
-      background: rgba(242, 199, 111, 0.06);
+      border-color: rgba(145,189,255,.45);
+      color: var(--blue);
+      background: rgba(145,189,255,.06);
     }
 
-    .pill.fail {
-      border-color: rgba(255, 155, 155, 0.48);
-      color: var(--bad);
-      background: rgba(255, 155, 155, 0.06);
-    }
-
-    .source-grid {
+    .checks-grid, .frame-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(2,minmax(0,1fr));
       gap: 14px;
     }
 
-    .source-card,
-    .logic-card {
+    .check-card {
       padding: 16px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.025));
+      background: linear-gradient(180deg, rgba(255,255,255,.062), rgba(255,255,255,.025));
+      box-shadow: 0 18px 54px rgba(0,0,0,.18);
     }
 
-    .source-title {
+    .check-title {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 12px;
       margin-bottom: 10px;
     }
 
-    .source-title h3 {
+    .check-title h3 {
       margin: 0;
       font-size: 1.04rem;
       line-height: 1.2;
-      letter-spacing: -0.035em;
+      letter-spacing: -.035em;
       overflow-wrap: anywhere;
     }
 
     code {
+      color: rgba(255,244,211,.94);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      color: rgba(255, 244, 211, 0.92);
       overflow-wrap: anywhere;
     }
 
@@ -400,11 +366,10 @@
 
     .marker {
       display: grid;
-      grid-template-columns: 24px minmax(0, 1fr);
+      grid-template-columns: 24px minmax(0,1fr);
       gap: 8px;
-      align-items: start;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: .84rem;
       line-height: 1.35;
     }
 
@@ -413,85 +378,54 @@
       height: 16px;
       margin-top: 1px;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(168,199,255,.24);
+      background: rgba(255,255,255,.05);
     }
 
-    .dot.pass {
-      border-color: rgba(143, 227, 176, 0.6);
-      background: rgba(143, 227, 176, 0.28);
-    }
+    .dot.pass { border-color: rgba(143,227,176,.6); background: rgba(143,227,176,.28); }
+    .dot.next { border-color: rgba(242,199,111,.6); background: rgba(242,199,111,.22); }
+    .dot.fail { border-color: rgba(255,155,155,.6); background: rgba(255,155,155,.22); }
 
-    .dot.fail {
-      border-color: rgba(255, 155, 155, 0.6);
-      background: rgba(255, 155, 155, 0.22);
-    }
-
-    .mono-block {
+    .mono {
       margin-top: 12px;
-      border: 1px solid rgba(168, 199, 255, 0.14);
+      border: 1px solid rgba(168,199,255,.14);
       border-radius: 18px;
       padding: 12px;
-      background: rgba(0, 0, 0, 0.16);
+      background: rgba(0,0,0,.16);
       color: var(--soft);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.78rem;
+      font-size: .78rem;
       line-height: 1.45;
-      overflow-wrap: anywhere;
       white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
-    .logic-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+    .frame-card {
+      border: 1px solid rgba(168,199,255,.16);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
     }
 
-    .logic-card strong {
+    .frame-card strong {
       display: block;
-      margin-bottom: 7px;
+      margin-bottom: 6px;
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.12em;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
-    .logic-card span,
-    .logic-card li {
-      color: var(--muted);
-      line-height: 1.45;
+    .frame-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+      letter-spacing: -.035em;
     }
 
-    .logic-card ul {
-      margin: 10px 0 0;
-      padding-left: 18px;
-    }
-
-    .decision-box {
-      border: 1px solid var(--line-strong);
-      border-radius: 28px;
-      padding: 18px;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(242, 199, 111, 0.12), transparent 20rem),
-        rgba(242, 199, 111, 0.04);
-    }
-
-    .decision-box h3 {
-      margin: 0 0 10px;
-      font-size: clamp(1.3rem, 3vw, 2rem);
-      letter-spacing: -0.055em;
-    }
-
-    .decision-box p {
+    .frame-card p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .small-note {
-      color: var(--soft);
-      font-size: 0.84rem;
       line-height: 1.45;
     }
 
@@ -499,49 +433,37 @@
       margin-top: 24px;
       padding: 18px 4px;
       color: var(--soft);
-      font-size: 0.84rem;
+      font-size: .84rem;
       text-align: center;
     }
 
     @media (max-width: 960px) {
-      .score-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .source-grid,
-      .logic-grid {
-        grid-template-columns: 1fr;
-      }
-
       .topbar {
         align-items: flex-start;
         border-radius: 26px;
         flex-direction: column;
       }
 
-      nav {
-        justify-content: flex-start;
+      nav { justify-content: flex-start; }
+
+      .score-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      .checks-grid, .frame-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 540px) {
       .site-shell {
-        width: min(100% - 18px, var(--max));
+        width: min(100% - 18px,var(--max));
         padding-top: 12px;
       }
 
-      .hero,
-      .panel {
-        border-radius: 24px;
-      }
-
-      .score-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .panel-head {
-        display: grid;
-      }
+      .hero, .panel { border-radius: 24px; }
+      .score-grid { grid-template-columns: 1fr; }
+      .panel-head { display: grid; }
     }
   </style>
 </head>
@@ -568,40 +490,40 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 True State Diagnostic</div>
-      <h1>Measure the current chain, not the old contract.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Forward Frame</div>
+      <h1>Trust the pass. Move the frame forward.</h1>
       <p class="lead">
-        These Gauges check the terrain module, main renderer, asset instrument, inspection route,
-        legacy marker compatibility, and the next file to renew. They do not declare the planet visually solved.
+        The previous Gauge proved the source and route chain. This Gauge preserves that proof and shifts the construct forward:
+        Planet 1 is ready for the next terrain realism frame.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAuditButton">Run true-state audit</button>
+        <button class="button" type="button" id="runAuditButton">Run forward-frame audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="button secondary" href="/showroom/">Open Showroom</a>
         <a class="button secondary" href="/nine-summits/universe/">Open Universe</a>
       </div>
     </section>
 
-    <main aria-live="polite">
-      <section class="score-grid" aria-label="True state summary">
-        <article class="score-card" id="scoreTotal">
-          <span>Total score</span>
+    <main>
+      <section class="score-grid" aria-label="Forward progress summary">
+        <article class="score-card" id="scoreProgress">
+          <span>Progress state</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreSource">
-          <span>Source state</span>
+        <article class="score-card" id="scoreChain">
+          <span>Chain lock</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreRoute">
-          <span>Route state</span>
+        <article class="score-card" id="scoreFrame">
+          <span>Current frame</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreTerrain">
-          <span>Terrain state</span>
+        <article class="score-card" id="scoreVisual">
+          <span>Visual target</span>
           <strong>WAIT</strong>
         </article>
 
@@ -611,157 +533,131 @@
         </article>
       </section>
 
-      <section class="panel" aria-labelledby="current-read-title">
+      <section class="panel">
         <div class="panel-head">
           <div>
-            <h2 id="current-read-title">Current read</h2>
+            <h2>Current read</h2>
             <p id="currentRead">
-              Audit has not run yet. The new Gauge will identify whether the break is source, marker,
-              load order, route boot, fallback, or visual expression.
+              Audit has not run yet. This Gauge treats the proven boot chain as real progress and measures the next construction frame.
             </p>
           </div>
           <span class="pill hold" id="auditStatus">WAIT</span>
         </div>
 
-        <div class="decision-box">
-          <h3 id="decisionTitle">No decision yet.</h3>
-          <p id="decisionText">
-            Run the audit before renewing more render code. The measuring instrument must identify the next file first.
-          </p>
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="source-check-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="source-check-title">File source check</h2>
-            <p>
-              Every required file is fetched directly from the live site. Cache-busting is added so the Gauge reads
-              current source instead of relying on browser memory.
-            </p>
-          </div>
-          <span class="pill hold" id="sourcePanelStatus">WAIT</span>
-        </div>
-
-        <div class="source-grid" id="sourceGrid"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="terrain-check-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="terrain-check-title">Terrain module check</h2>
-            <p>
-              This panel proves whether the dedicated Planet 1 terrain file exists and contains the ancient 39B crust engine.
-            </p>
-          </div>
-          <span class="pill hold" id="terrainPanelStatus">WAIT</span>
-        </div>
-
-        <div id="terrainPanel"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="renderer-check-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="renderer-check-title">Main renderer check</h2>
-            <p>
-              This checks the single public Optimum Expression renderer, terrain integration markers, and old v8 compatibility strings.
-            </p>
-          </div>
-          <span class="pill hold" id="rendererPanelStatus">WAIT</span>
-        </div>
-
-        <div id="rendererPanel"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="instrument-check-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="instrument-check-title">Asset instrument check</h2>
-            <p>
-              This checks whether the asset instrument is a terrain-first loader bridge and not a competing globe renderer.
-            </p>
-          </div>
-          <span class="pill hold" id="instrumentPanelStatus">WAIT</span>
-        </div>
-
-        <div id="instrumentPanel"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="route-check-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="route-check-title">Route boot check</h2>
-            <p>
-              This checks whether the inspection route is aligned with the current render chain or bypassing the terrain-first instrument.
-            </p>
-          </div>
-          <span class="pill hold" id="routePanelStatus">WAIT</span>
-        </div>
-
-        <div id="routePanel"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="wrong-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="wrong-title">Where we might be wrong</h2>
-            <p>
-              The Gauge separates assumptions from proof. A source pass does not mean the visual target is solved.
-            </p>
-          </div>
-        </div>
-
-        <div class="logic-grid" id="wrongGrid"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="rules-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="rules-title">Measurement rules</h2>
-            <p>
-              These rules prevent a false close. A 100% source score means the chain is measurable and internally consistent,
-              not that the planet looks 39 billion years old.
-            </p>
-          </div>
-        </div>
-
-        <div class="logic-grid">
-          <article class="logic-card">
-            <strong>Gauges measures only</strong>
-            <span>It does not draw the planet, repair the renderer, rewrite the instrument, or close geography.</span>
+        <div class="frame-grid">
+          <article class="frame-card">
+            <strong>What is already trusted</strong>
+            <h3>Source chain and route chain.</h3>
+            <p>Terrain, renderer, asset instrument, inspection route, and Gauges passed the prior diagnostic. That progress is not reopened unless a source check breaks again.</p>
           </article>
 
-          <article class="logic-card">
-            <strong>Source before visual</strong>
-            <span>If the chain fails source, markers, route, or load order, do not rewrite visual realism yet.</span>
+          <article class="frame-card">
+            <strong>What is next</strong>
+            <h3>Terrain visual realism.</h3>
+            <p>The next move is not another boot repair. It is the terrain renderer’s visible expression: older crust, heavier scars, deeper mineral pressure, and less cartoon softness.</p>
           </article>
 
-          <article class="logic-card">
-            <strong>Visual after proof</strong>
-            <span>If the whole chain passes but the planet still looks cartooned, the next renewal belongs to the terrain renderer.</span>
+          <article class="frame-card">
+            <strong>What may still be wrong</strong>
+            <h3>The source may pass before the visual catches up.</h3>
+            <p>A clean chain does not automatically mean the planet looks 39 billion years old. It means the system is ready to work on that visual frame.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>How to move forward</strong>
+            <h3>Renew the terrain file next.</h3>
+            <p>The next TNT should be <code>PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1</code>.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Frame checks</h2>
+            <p>
+              Future markers are not scored as failure. If a future marker is absent, the Gauge names it as the next frame.
+            </p>
+          </div>
+          <span class="pill hold" id="frameStatus">WAIT</span>
+        </div>
+
+        <div class="checks-grid" id="checksGrid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Next construction decision</h2>
+            <p id="decisionText">
+              Run the audit. If the proven chain remains intact, the terrain visual frame becomes the next lawful target.
+            </p>
+          </div>
+          <span class="pill hold" id="decisionStatus">WAIT</span>
+        </div>
+
+        <div class="mono" id="decisionMono">
+          NEXT_TARGET=WAIT
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Measurement rules</h2>
+            <p>
+              This Gauge is no longer only a break finder. It is a forward-progress construct.
+            </p>
+          </div>
+        </div>
+
+        <div class="frame-grid">
+          <article class="frame-card">
+            <strong>Do not reopen settled chain</strong>
+            <h3>Passed source stays passed.</h3>
+            <p>Terrain, renderer, instrument, and route are rechecked, but the frame does not regress unless one of those checks actually fails.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>Future absence is not failure</strong>
+            <h3>It names the next target.</h3>
+            <p>V3 terrain realism is expected to be absent until it is built. That should produce NEXT, not FAIL.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>Visual review remains separate</strong>
+            <h3>Source proof is not beauty proof.</h3>
+            <p>When source passes but the visual still looks weak, the next move is visual terrain renewal.</p>
+          </article>
+
+          <article class="frame-card">
+            <strong>No geography closure</strong>
+            <h3>The map remains open.</h3>
+            <p>Countries, cities, exact rivers, climate names, final physics, and final map geometry remain unclosed.</p>
           </article>
         </div>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1 · Measures Planet 1 terrain-first optimum-expression architecture.
+      GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1 · Forward frame for Planet 1 terrain realism.
     </footer>
   </div>
 
   <script>
-    (function runPlanetOneTrueStateGauges() {
+    (function runPlanetOneForwardFrameGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1";
-      const CONTRACT = "PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_CONTRACT_v1";
+      const VERSION = "GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1";
+      const CONTRACT = "PLANET_ONE_GAUGES_V18_FORWARD_PROGRESS_CONTRACT_v1";
 
-      const FILES = {
+      const NEXT_TERRAIN_TNT = "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1";
+      const NEXT_TARGET = "/world/render/planet-one.terrain.render.js";
+
+      const CHECKS = {
         terrain: {
-          label: "Planet 1 terrain renderer",
+          label: "Terrain renderer · current lock",
           path: "/world/render/planet-one.terrain.render.js",
-          type: "script",
           required: [
             "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
             "window.DGBPlanetOneTerrainRender",
@@ -772,18 +668,14 @@
             "raw-material-strata-active=true",
             "terrain-contained-to-land=true"
           ],
-          supporting: [
-            "ancient39bCrustEngineActive",
-            "pressureFormedCrustActive",
-            "tectonicScarNetworkActive",
-            "landWaterSeparationQuotaPreserved"
+          future: [
+            NEXT_TERRAIN_TNT
           ]
         },
 
         renderer: {
-          label: "Planet 1 main renderer",
+          label: "Main renderer · source chain lock",
           path: "/world/render/planet-one.render.js",
-          type: "script",
           required: [
             "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
             "window.DGBPlanetOneRenderTeam",
@@ -792,27 +684,18 @@
             "terrain-render-authority=/world/render/planet-one.terrain.render.js",
             "terrain-module-integrated=true",
             "ancient-39b-crust-engine-active=true",
-            "planet-one-realism-pass=v8-axis-spin-climate-topology"
-          ],
-          legacyRequired: [
+            "planet-one-realism-pass=v8-axis-spin-climate-topology",
             "axis-spin-active=true",
             "climate-topology-active=true",
             "weather-circulation-active=true",
             "ocean-current-logic-active=true"
           ],
-          supporting: [
-            "optimumExpressionOnlyActive",
-            "terrainLayer",
-            "DGBPlanetOneTerrainRender",
-            "terrainFallback",
-            "AVAILABLE_EXPRESSIONS"
-          ]
+          future: []
         },
 
         instrument: {
-          label: "Showroom globe asset instrument",
+          label: "Asset instrument · boot chain lock",
           path: "/assets/showroom.globe.instrument.js",
-          type: "script",
           required: [
             "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
             "window.DGBShowroomGlobeInstrument",
@@ -824,108 +707,38 @@
             "noCompetingGlobeSurface",
             "drawsOwnPlanet"
           ],
-          supporting: [
-            "/world/render/planet-one.terrain.render.js",
-            "/world/render/planet-one.render.js",
-            "terrain-first-delegation-support-only"
-          ]
+          future: []
         },
 
-        globeRoute: {
-          label: "Planet 1 inspection route",
+        route: {
+          label: "Inspection route · boot proof lock",
           path: "/showroom/globe/",
-          type: "route",
           required: [
+            "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
             "Planet 1 inspection room",
             "planet-one-render",
             "Planet 1 render loaded",
             "Optimum expression",
-            "Real globe renderer",
-            "Gauges measures"
-          ],
-          scriptChecks: [
             "/assets/showroom.globe.instrument.js",
             "/world/render/planet-one.terrain.render.js",
-            "/world/render/planet-one.render.js"
+            "/world/render/planet-one.render.js",
+            "terrain-first-load-order=true"
           ],
-          supporting: [
-            "Showroom lobby stays separate",
-            "Inspection route",
-            "Pause render",
-            "Resume render"
-          ]
+          future: []
         },
 
-        showroomRoute: {
-          label: "Showroom lobby route",
-          path: "/showroom/",
-          type: "route",
-          required: [
-            "Showroom",
-            "Planet 1"
-          ],
-          supporting: [
-            "lobby",
-            "showroom",
-            "globe"
-          ]
-        },
-
-        gaugesRoute: {
-          label: "Gauges route",
+        gauges: {
+          label: "Gauges · forward frame",
           path: "/gauges/",
-          type: "route",
           required: [
-            "GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1",
-            "Planet 1 True State Diagnostic",
-            "terrain module",
-            "main renderer",
-            "asset instrument"
-          ],
-          supporting: [
+            VERSION,
             CONTRACT,
-            VERSION
-          ]
+            "Forward Progress Construct",
+            "source chain is trusted",
+            "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1"
+          ],
+          future: []
         }
-      };
-
-      const WRONG_ASSUMPTIONS = [
-        {
-          title: "The asset instrument may not be used by the route.",
-          test: "Check /showroom/globe/ for /assets/showroom.globe.instrument.js.",
-          consequence: "If missing, the terrain-first bridge cannot affect the inspection route."
-        },
-        {
-          title: "The terrain module may not load before the renderer.",
-          test: "Check source references and marker proof for terrain-first load order.",
-          consequence: "If false, the main renderer can draw fallback terrain before the 39B terrain module exists."
-        },
-        {
-          title: "The main renderer may be stale.",
-          test: "Check /world/render/planet-one.render.js for the current optimum-expression TNT marker.",
-          consequence: "If false, the live site is serving old renderer source."
-        },
-        {
-          title: "The terrain file may not be live.",
-          test: "Check /world/render/planet-one.terrain.render.js for the ancient 39B crust TNT marker.",
-          consequence: "If false, the new terrain engine was not deployed or is misnamed."
-        },
-        {
-          title: "The source may pass while the visual still fails.",
-          test: "Separate source/route pass from visual inspection.",
-          consequence: "If source passes and the planet still looks cartooned, renew the terrain file next."
-        },
-        {
-          title: "Cache may not be the issue.",
-          test: "Fetch with cache-busting and compare source markers.",
-          consequence: "If stale source remains after cache clear, deployment/source path is the issue."
-        }
-      ];
-
-      const state = {
-        startedAt: null,
-        results: {},
-        decision: null
       };
 
       function $(id) {
@@ -940,65 +753,6 @@
           .replace(/"/g, "&quot;");
       }
 
-      function classForStatus(status) {
-        if (status === "PASS") return "pass";
-        if (status === "FAIL") return "fail";
-        return "hold";
-      }
-
-      function scoreStatus(score) {
-        if (score >= 95) return "PASS";
-        if (score >= 70) return "HOLD";
-        return "FAIL";
-      }
-
-      function setPill(id, status) {
-        const el = $(id);
-        if (!el) return;
-        el.className = "pill " + classForStatus(status);
-        el.textContent = status;
-      }
-
-      function setScoreCard(id, value, status) {
-        const el = $(id);
-        if (!el) return;
-        el.classList.remove("status-good", "status-hold", "status-bad");
-
-        if (status === "PASS") el.classList.add("status-good");
-        else if (status === "FAIL") el.classList.add("status-bad");
-        else el.classList.add("status-hold");
-
-        const strong = el.querySelector("strong");
-        if (strong) strong.textContent = value;
-      }
-
-      function includesMarker(source, marker) {
-        return String(source || "").indexOf(marker) !== -1;
-      }
-
-      function markerRows(markers, source) {
-        return (markers || []).map(function mapMarker(marker) {
-          const ok = includesMarker(source, marker);
-          return {
-            marker,
-            ok
-          };
-        });
-      }
-
-      function summarizeRows(rows) {
-        const total = rows.length;
-        const passed = rows.filter(function count(row) { return row.ok; }).length;
-        const score = total ? Math.round((passed / total) * 100) : 100;
-        return {
-          total,
-          passed,
-          missing: rows.filter(function missing(row) { return !row.ok; }).map(function marker(row) { return row.marker; }),
-          score,
-          status: score === 100 ? "PASS" : score >= 50 ? "HOLD" : "FAIL"
-        };
-      }
-
       function cacheBusted(path) {
         const url = new URL(path, window.location.origin);
         url.searchParams.set("_gauge", VERSION);
@@ -1011,351 +765,295 @@
           cache: "no-store",
           credentials: "same-origin"
         })
-          .then(function handleResponse(response) {
+          .then(function got(response) {
             return response.text().then(function body(text) {
               return {
+                path,
                 ok: response.ok,
                 status: response.status,
-                text,
-                path
+                text
               };
             });
           })
-          .catch(function handleError(error) {
+          .catch(function failed(error) {
             return {
+              path,
               ok: false,
               status: 0,
               text: "",
-              path,
               error: error && error.message ? error.message : "fetch failed"
             };
           });
       }
 
-      function evaluateSpec(key, spec, fetched) {
-        const requiredRows = markerRows(spec.required || [], fetched.text);
-        const legacyRows = markerRows(spec.legacyRequired || [], fetched.text);
-        const scriptRows = markerRows(spec.scriptChecks || [], fetched.text);
-        const supportingRows = markerRows(spec.supporting || [], fetched.text);
+      function has(source, marker) {
+        return String(source || "").indexOf(marker) !== -1;
+      }
 
-        const requiredSummary = summarizeRows(requiredRows);
-        const legacySummary = summarizeRows(legacyRows);
-        const scriptSummary = summarizeRows(scriptRows);
+      function rows(markers, source, future) {
+        return markers.map(function one(marker) {
+          return {
+            marker,
+            ok: has(source, marker),
+            future: Boolean(future)
+          };
+        });
+      }
 
-        const allRequired = requiredRows.concat(legacyRows).concat(scriptRows);
-        const allSummary = summarizeRows(allRequired);
+      function summarize(rows) {
+        const requiredRows = rows.filter(function row(item) {
+          return !item.future;
+        });
 
-        const httpScore = fetched.ok ? 100 : 0;
-        const markerScore = allRequired.length ? allSummary.score : requiredSummary.score;
-        const score = Math.round((httpScore * 0.35) + (markerScore * 0.65));
+        const total = requiredRows.length;
+        const passed = requiredRows.filter(function row(item) {
+          return item.ok;
+        }).length;
 
-        const status = !fetched.ok
-          ? "FAIL"
-          : score === 100
-            ? "PASS"
-            : score >= 65
-              ? "HOLD"
-              : "FAIL";
+        return {
+          total,
+          passed,
+          score: total ? Math.round((passed / total) * 100) : 100,
+          missing: requiredRows.filter(function row(item) {
+            return !item.ok;
+          }).map(function item(row) {
+            return row.marker;
+          })
+        };
+      }
+
+      function evaluate(key, spec, fetched) {
+        const requiredRows = rows(spec.required || [], fetched.text, false);
+        const futureRows = rows(spec.future || [], fetched.text, true);
+        const requiredSummary = summarize(requiredRows);
+
+        const requiredPass = fetched.ok && requiredSummary.score === 100;
+        const futureReady = futureRows.length
+          ? futureRows.every(function item(row) { return row.ok; })
+          : null;
 
         return {
           key,
           label: spec.label,
           path: spec.path,
-          type: spec.type,
           httpOk: fetched.ok,
           httpStatus: fetched.status,
           error: fetched.error || null,
           text: fetched.text,
-          score,
-          status,
           requiredRows,
-          legacyRows,
-          scriptRows,
-          supportingRows,
+          futureRows,
           requiredSummary,
-          legacySummary,
-          scriptSummary,
-          allSummary
+          requiredPass,
+          futureReady,
+          status: !fetched.ok ? "FAIL" : requiredPass ? "PASS" : "HOLD"
         };
       }
 
-      function renderMarkerList(rows, emptyLabel) {
-        if (!rows || !rows.length) {
-          return '<div class="small-note">' + escapeHtml(emptyLabel || "No markers configured.") + "</div>";
-        }
-
-        return '<div class="marker-list">' + rows.map(function row(item) {
-          return [
-            '<div class="marker">',
-              '<span class="dot ' + (item.ok ? "pass" : "fail") + '" aria-hidden="true"></span>',
-              '<code>' + escapeHtml(item.marker) + '</code>',
-            '</div>'
-          ].join("");
-        }).join("") + "</div>";
+      function className(status) {
+        if (status === "PASS") return "pass";
+        if (status === "NEXT") return "next";
+        if (status === "FAIL") return "fail";
+        return "hold";
       }
 
-      function renderSourceCard(result) {
-        const statusClass = classForStatus(result.status);
-        const missing = result.allSummary.missing.length
-          ? "Missing: " + result.allSummary.missing.join(", ")
-          : "Contract clean.";
+      function setPill(id, status) {
+        const el = $(id);
+        if (!el) return;
+        el.className = "pill " + className(status);
+        el.textContent = status;
+      }
+
+      function setScore(id, value, status) {
+        const el = $(id);
+        if (!el) return;
+
+        el.classList.remove("good", "next", "hold", "bad");
+
+        if (status === "PASS") el.classList.add("good");
+        else if (status === "NEXT") el.classList.add("next");
+        else if (status === "FAIL") el.classList.add("bad");
+        else el.classList.add("hold");
+
+        const strong = el.querySelector("strong");
+        if (strong) strong.textContent = value;
+      }
+
+      function markerHtml(row) {
+        const dotClass = row.ok ? "pass" : row.future ? "next" : "fail";
+        const label = row.future && !row.ok ? "NEXT: " : "";
+        return [
+          '<div class="marker">',
+            '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
+            '<code>' + label + escapeHtml(row.marker) + '</code>',
+          '</div>'
+        ].join("");
+      }
+
+      function cardHtml(result) {
+        const futureAbsent = result.futureRows.some(function item(row) {
+          return !row.ok;
+        });
+
+        const cardStatus = result.requiredPass ? (futureAbsent ? "NEXT" : "PASS") : result.status;
 
         const httpLine = result.httpOk
-          ? "HTTP " + result.httpStatus + "."
-          : "HTTP " + result.httpStatus + (result.error ? ". " + result.error : ".");
+          ? "HTTP " + result.httpStatus + ". Required source checks: " + result.requiredSummary.passed + " of " + result.requiredSummary.total + "."
+          : "HTTP " + result.httpStatus + ". " + (result.error || "fetch failed");
 
         return [
-          '<article class="source-card">',
-            '<div class="source-title">',
+          '<article class="check-card">',
+            '<div class="check-title">',
               '<h3>' + escapeHtml(result.label) + '</h3>',
-              '<span class="pill ' + statusClass + '">' + result.status + '</span>',
+              '<span class="pill ' + className(cardStatus) + '">' + cardStatus + '</span>',
             '</div>',
-            '<div class="small-note"><code>' + escapeHtml(result.path) + '</code></div>',
-            '<div class="mono-block">' + escapeHtml(httpLine + " " + result.allSummary.passed + " of " + result.allSummary.total + " required checks found. " + missing) + '</div>',
-            '<strong class="small-note">Required markers</strong>',
-            renderMarkerList(result.requiredRows, "No required markers."),
-            result.legacyRows.length ? '<strong class="small-note">Legacy compatibility markers</strong>' + renderMarkerList(result.legacyRows) : "",
-            result.scriptRows.length ? '<strong class="small-note">Route script checks</strong>' + renderMarkerList(result.scriptRows) : "",
-            result.supportingRows.length ? '<strong class="small-note">Supporting markers</strong>' + renderMarkerList(result.supportingRows) : "",
+            '<div><code>' + escapeHtml(result.path) + '</code></div>',
+            '<div class="mono">' + escapeHtml(httpLine) + '</div>',
+            '<div class="marker-list">',
+              result.requiredRows.map(markerHtml).join(""),
+              result.futureRows.length ? result.futureRows.map(markerHtml).join("") : "",
+            '</div>',
           '</article>'
         ].join("");
       }
 
-      function computeDecision(results) {
-        const terrain = results.terrain;
-        const renderer = results.renderer;
-        const instrument = results.instrument;
-        const globeRoute = results.globeRoute;
-        const gaugesRoute = results.gaugesRoute;
-
-        const routeReferencesInstrument = globeRoute && includesMarker(globeRoute.text, "/assets/showroom.globe.instrument.js");
-        const routeReferencesTerrain = globeRoute && includesMarker(globeRoute.text, "/world/render/planet-one.terrain.render.js");
-        const routeReferencesRenderer = globeRoute && includesMarker(globeRoute.text, "/world/render/planet-one.render.js");
-
-        if (!gaugesRoute || gaugesRoute.status === "FAIL") {
-          return {
-            status: "FAIL",
-            target: "/gauges/index.html",
-            title: "Gauges renewal is not fully served.",
-            text: "The diagnostic page itself is not proving the new V17 contract. Renew /gauges/index.html before trusting downstream readings."
-          };
-        }
-
-        if (!terrain || terrain.status === "FAIL") {
-          return {
-            status: "FAIL",
-            target: "/world/render/planet-one.terrain.render.js",
-            title: "Terrain file is the next target.",
-            text: "The dedicated Planet 1 terrain renderer is not served or is missing the ancient 39B crust engine markers."
-          };
-        }
-
-        if (renderer && renderer.legacyRows && renderer.legacyRows.some(function missing(row) { return !row.ok; })) {
-          return {
-            status: "HOLD",
-            target: "/world/render/planet-one.render.js",
-            title: "Main renderer is missing legacy Gauge markers.",
-            text: "The renderer may contain camelCase concepts, but old Gauges compatibility requires exact hyphen marker strings. Renew the full renderer file, not a patch."
-          };
-        }
-
-        if (!renderer || renderer.status === "FAIL") {
-          return {
-            status: "FAIL",
-            target: "/world/render/planet-one.render.js",
-            title: "Main renderer is the next target.",
-            text: "The main Planet 1 renderer is not proving Optimum Expression, terrain integration, or current renderer markers."
-          };
-        }
-
-        if (!instrument || instrument.status === "FAIL") {
-          return {
-            status: "FAIL",
-            target: "/assets/showroom.globe.instrument.js",
-            title: "Asset instrument is the next target.",
-            text: "The instrument is not proving terrain-first loading, delegation-only role, or no competing globe surface."
-          };
-        }
-
-        if (!routeReferencesInstrument && routeReferencesRenderer) {
-          return {
-            status: "HOLD",
-            target: "/showroom/globe/index.html",
-            title: "Inspection route may be bypassing the instrument.",
-            text: "The route references the renderer without proving the terrain-first asset bridge. Renew the inspection route if the intended boot path must run through the instrument."
-          };
-        }
-
-        if (!routeReferencesTerrain && !routeReferencesInstrument) {
-          return {
-            status: "HOLD",
-            target: "/showroom/globe/index.html",
-            title: "Inspection route does not prove terrain-first boot.",
-            text: "The route source does not expose the terrain module or the instrument bridge. Renew /showroom/globe/index.html if live boot order is unproven."
-          };
-        }
-
-        if (terrain.status === "PASS" && renderer.status === "PASS" && instrument.status === "PASS" && globeRoute.status !== "FAIL") {
-          return {
-            status: "PASS",
-            target: "/world/render/planet-one.terrain.render.js",
-            title: "Source chain passes. Visual review is next.",
-            text: "The chain is measurable and internally consistent. If Planet 1 still looks cartooned, the next renewal belongs to the terrain renderer’s visual expression, not the boot chain."
-          };
-        }
-
-        return {
-          status: "HOLD",
-          target: "Review source cards",
-          title: "The next target is partially proven.",
-          text: "The Gauge found mixed results. Use the failing panel above to identify the exact full-file TNT renewal."
-        };
-      }
-
-      function renderFocusedPanels(results) {
-        $("terrainPanel").innerHTML = renderSourceCard(results.terrain);
-        $("rendererPanel").innerHTML = renderSourceCard(results.renderer);
-        $("instrumentPanel").innerHTML = renderSourceCard(results.instrument);
-        $("routePanel").innerHTML = renderSourceCard(results.globeRoute);
-      }
-
-      function renderWrongAssumptions(results) {
-        const globe = results.globeRoute;
-        const instrumentUsed = globe && includesMarker(globe.text, "/assets/showroom.globe.instrument.js");
-        const terrainReferenced = globe && includesMarker(globe.text, "/world/render/planet-one.terrain.render.js");
-        const rendererReferenced = globe && includesMarker(globe.text, "/world/render/planet-one.render.js");
-
-        const assumptionRows = WRONG_ASSUMPTIONS.map(function map(item, index) {
-          let status = "HOLD";
-
-          if (index === 0) status = instrumentUsed ? "PASS" : "FAIL";
-          if (index === 1) status = terrainReferenced || instrumentUsed ? "PASS" : "HOLD";
-          if (index === 2) status = results.renderer && results.renderer.status === "PASS" ? "PASS" : "FAIL";
-          if (index === 3) status = results.terrain && results.terrain.status === "PASS" ? "PASS" : "FAIL";
-          if (index === 4) status = "HOLD";
-          if (index === 5) status = "HOLD";
-
-          return [
-            '<article class="logic-card">',
-              '<span class="pill ' + classForStatus(status) + '">' + status + '</span>',
-              '<strong>' + escapeHtml(item.title) + '</strong>',
-              '<span>' + escapeHtml(item.test) + '</span>',
-              '<ul><li>' + escapeHtml(item.consequence) + '</li></ul>',
-            '</article>'
-          ].join("");
+      function decide(results) {
+        const list = Object.keys(results).map(function key(k) { return results[k]; });
+        const chainPass = ["terrain", "renderer", "instrument", "route"].every(function key(name) {
+          return results[name] && results[name].requiredPass;
         });
 
-        $("wrongGrid").innerHTML = assumptionRows.join("");
+        const gaugesPass = results.gauges && results.gauges.requiredPass;
+        const v3Present = results.terrain && results.terrain.futureRows.length && results.terrain.futureRows.every(function row(item) {
+          return item.ok;
+        });
+
+        const firstBroken = list.find(function item(result) {
+          return !result.requiredPass;
+        });
+
+        if (!gaugesPass) {
+          return {
+            progress: "HOLD",
+            chain: chainPass ? "PASS" : "HOLD",
+            frame: "GAUGES",
+            visual: "WAIT",
+            next: "/gauges/index.html",
+            title: "Gauges frame is not fully self-proving.",
+            text: "Renew Gauges if the forward-progress contract does not serve correctly."
+          };
+        }
+
+        if (!chainPass && firstBroken) {
+          return {
+            progress: "HOLD",
+            chain: "HOLD",
+            frame: "REPAIR",
+            visual: "WAIT",
+            next: firstBroken.path,
+            title: "A settled source check broke.",
+            text: "The forward frame must pause because a required chain file is no longer proving its lock."
+          };
+        }
+
+        if (v3Present) {
+          return {
+            progress: "PASS",
+            chain: "PASS",
+            frame: "V3 ACTIVE",
+            visual: "REVIEW",
+            next: "/showroom/globe/",
+            title: "V3 terrain frame is present.",
+            text: "The source chain and V3 terrain marker are both present. The next task is visual review on the inspection route."
+          };
+        }
 
         return {
-          instrumentUsed,
-          terrainReferenced,
-          rendererReferenced
+          progress: "PASS",
+          chain: "PASS",
+          frame: "V2 LOCKED",
+          visual: "NEXT",
+          next: NEXT_TARGET,
+          title: "The system is ready for the next terrain visual frame.",
+          text: "The chain is trusted. The absence of V3 is not a failure; it means the next lawful TNT is the terrain visual realism renewal."
         };
       }
 
-      function updateSummary(results, decision) {
-        const resultList = Object.keys(results).map(function map(key) { return results[key]; });
-        const sourceScore = Math.round(resultList.reduce(function sum(acc, item) {
-          return acc + item.score;
-        }, 0) / resultList.length);
-
-        const routeScore = Math.round(((results.globeRoute ? results.globeRoute.score : 0) + (results.showroomRoute ? results.showroomRoute.score : 0)) / 2);
-        const terrainScore = results.terrain ? results.terrain.score : 0;
-        const total = Math.round((sourceScore * 0.35) + (routeScore * 0.2) + (terrainScore * 0.2) + ((results.renderer ? results.renderer.score : 0) * 0.15) + ((results.instrument ? results.instrument.score : 0) * 0.1));
-
-        const totalStatus = scoreStatus(total);
-        const sourceStatus = scoreStatus(sourceScore);
-        const routeStatus = scoreStatus(routeScore);
-        const terrainStatusValue = scoreStatus(terrainScore);
-
-        setScoreCard("scoreTotal", String(total) + "%", totalStatus);
-        setScoreCard("scoreSource", sourceStatus, sourceStatus);
-        setScoreCard("scoreRoute", routeStatus, routeStatus);
-        setScoreCard("scoreTerrain", terrainStatusValue, terrainStatusValue);
-        setScoreCard("scoreNext", decision.target, decision.status);
-
-        setPill("auditStatus", decision.status);
-        setPill("sourcePanelStatus", sourceStatus);
-        setPill("terrainPanelStatus", terrainStatusValue);
-        setPill("rendererPanelStatus", results.renderer.status);
-        setPill("instrumentPanelStatus", results.instrument.status);
-        setPill("routePanelStatus", results.globeRoute.status);
-
-        $("decisionTitle").textContent = decision.title;
-        $("decisionText").textContent = decision.text;
-        $("currentRead").textContent =
-          "True-state audit complete. Source score: " + sourceScore + "%. Route score: " + routeScore +
-          "%. Terrain score: " + terrainScore + "%. Next target: " + decision.target + ".";
-
-        return {
-          total,
-          sourceScore,
-          routeScore,
-          terrainScore
-        };
-      }
-
-      function renderAll(results) {
-        $("sourceGrid").innerHTML = Object.keys(results).map(function render(key) {
-          return renderSourceCard(results[key]);
+      function render(results, decision) {
+        $("checksGrid").innerHTML = Object.keys(results).map(function key(k) {
+          return cardHtml(results[k]);
         }).join("");
 
-        renderFocusedPanels(results);
-        renderWrongAssumptions(results);
+        setScore("scoreProgress", decision.progress, decision.progress === "PASS" ? "PASS" : "HOLD");
+        setScore("scoreChain", decision.chain, decision.chain === "PASS" ? "PASS" : "HOLD");
+        setScore("scoreFrame", decision.frame, decision.frame === "V2 LOCKED" ? "NEXT" : "PASS");
+        setScore("scoreVisual", decision.visual, decision.visual === "NEXT" ? "NEXT" : "HOLD");
+        setScore("scoreNext", decision.next, decision.next === NEXT_TARGET ? "NEXT" : "HOLD");
 
-        const decision = computeDecision(results);
-        state.decision = decision;
+        setPill("auditStatus", decision.progress === "PASS" ? "PASS" : "HOLD");
+        setPill("frameStatus", decision.visual === "NEXT" ? "NEXT" : "PASS");
+        setPill("decisionStatus", decision.visual === "NEXT" ? "NEXT" : decision.progress);
 
-        updateSummary(results, decision);
+        $("currentRead").textContent = decision.text;
+        $("decisionText").textContent = decision.title;
+
+        $("decisionMono").textContent = [
+          "PROGRESS_STATE=" + decision.progress,
+          "CHAIN_LOCK=" + decision.chain,
+          "CURRENT_FRAME=" + decision.frame,
+          "VISUAL_TARGET=" + decision.visual,
+          "NEXT_TARGET=" + decision.next,
+          "NEXT_TNT=" + NEXT_TERRAIN_TNT,
+          "RULE=Future marker absence means NEXT, not FAIL."
+        ].join("\n");
+
+        window.DGBPlanetOneGaugesV18 = Object.freeze({
+          VERSION,
+          CONTRACT,
+          NEXT_TERRAIN_TNT,
+          NEXT_TARGET,
+          results,
+          decision,
+          getStatus: function getStatus() {
+            return {
+              version: VERSION,
+              contract: CONTRACT,
+              nextTerrainTnt: NEXT_TERRAIN_TNT,
+              nextTarget: NEXT_TARGET,
+              results,
+              decision
+            };
+          }
+        });
       }
 
       function runAudit() {
-        state.startedAt = new Date().toISOString();
+        $("currentRead").textContent = "Running forward-frame audit. The chain is rechecked, but future-marker absence will be treated as NEXT.";
 
-        setPill("auditStatus", "HOLD");
-        $("currentRead").textContent = "Running true-state audit. Fetching live files with cache-busting.";
+        const keys = Object.keys(CHECKS);
 
-        const keys = Object.keys(FILES);
-
-        return Promise.all(keys.map(function fetchSpec(key) {
-          return fetchText(FILES[key].path).then(function evaluate(fetched) {
-            return evaluateSpec(key, FILES[key], fetched);
+        return Promise.all(keys.map(function key(k) {
+          return fetchText(CHECKS[k].path).then(function fetched(result) {
+            return evaluate(k, CHECKS[k], result);
           });
-        })).then(function finish(list) {
+        })).then(function done(list) {
           const results = {};
-          list.forEach(function assign(result) {
+
+          list.forEach(function item(result) {
             results[result.key] = result;
           });
 
-          state.results = results;
-          renderAll(results);
+          const decision = decide(results);
+          render(results, decision);
 
-          window.DGBPlanetOneGaugesV17 = Object.freeze({
-            VERSION,
-            CONTRACT,
+          return {
             results,
-            decision: state.decision,
-            getStatus: function getStatus() {
-              return {
-                version: VERSION,
-                contract: CONTRACT,
-                startedAt: state.startedAt,
-                decision: state.decision,
-                results
-              };
-            }
-          });
-
-          return results;
+            decision
+          };
         });
       }
 
-      $("runAuditButton").addEventListener("click", function onRunClick() {
-        runAudit();
-      });
-
-      window.DGBRunPlanetOneTrueStateGauges = runAudit;
+      $("runAuditButton").addEventListener("click", runAudit);
+      window.DGBRunPlanetOneForwardFrameGauges = runAudit;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", runAudit, { once: true });

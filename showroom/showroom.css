@@ -1022,8 +1022,7 @@ a:focus {
   }
 
   .showroom-planet-node[data-active="true"] .showroom-planet-label,
-  .showroom-planet-earth .showroom-planet-label,
-  .showroom-planet-sun .showroom-planet-label {
+  .showroom-planet-earth .showroom-planet-label {
     display: inline-flex;
   }
 

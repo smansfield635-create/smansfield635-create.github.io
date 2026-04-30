@@ -1,37 +1,72 @@
 <!doctype html>
-<html
-  lang="en"
-  data-page="gauges"
-  data-route="/gauges/"
-  data-contract="GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1"
-  data-measures="planet-one-v8-axis-spin-climate-topology"
->
+<html lang="en" data-page="gauges" data-gauge-contract="PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · Planet 1 v8 Measurement</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Gauges · Planet 1 True State Diagnostic</title>
   <meta
     name="description"
-    content="Gauges measures Planet 1 render-lane separation, v8 axis-spin climate topology, Showroom consumer alignment, Universe route, and no-collapse status."
-  >
+    content="True-state diagnostic for Planet 1: terrain module, optimum renderer, asset instrument, route boot chain, legacy marker compatibility, and next target clarity."
+  />
+
+  <!--
+    GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1
+    PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_CONTRACT_v1
+
+    PURPOSE=
+    RENEW_GAUGES_SO_IT_MEASURES_THE_CURRENT_PLANET_1_ARCHITECTURE
+    STOP_MEASURING_ONLY_THE_OLD_V8_AXIS_CLIMATE_CONTRACT
+    IDENTIFY_WHERE_THE_CURRENT_RENDER_CHAIN_IS_BREAKING
+    PROVE_WHETHER_TERRAIN_FIRST_OPTIMUM_EXPRESSION_IS_ACTUALLY_SERVED
+    SEPARATE_SOURCE_FAILURE_FROM_LOAD_ORDER_FAILURE_FROM_VISUAL_FAILURE
+
+    TRUE_STATE_FOCUS=
+    /world/render/planet-one.terrain.render.js
+    /world/render/planet-one.render.js
+    /assets/showroom.globe.instrument.js
+    /showroom/globe/
+    /showroom/
+    /gauges/
+
+    REQUIRED CURRENT MARKERS=
+    PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1
+    PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
+    SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1
+
+    REQUIRED LEGACY MARKERS=
+    axis-spin-active=true
+    climate-topology-active=true
+    weather-circulation-active=true
+    ocean-current-logic-active=true
+
+    GAUGES RULE=
+    GAUGES_MEASURES_ONLY
+    GAUGES_DOES_NOT_RENDER_PLANET
+    GAUGES_DOES_NOT_FIX_RENDERER
+    GAUGES_DOES_NOT_CLOSE_GEOGRAPHY
+    GAUGES_DOES_NOT_DECLARE_VISUAL_SUCCESS_FROM_SOURCE_MARKERS_ALONE
+  -->
+
   <style>
     :root {
       color-scheme: dark;
-      --bg: #02050b;
-      --panel: rgba(9, 15, 25, 0.86);
-      --panel-2: rgba(13, 21, 34, 0.74);
-      --line: rgba(160, 177, 214, 0.22);
+      --bg: #05070d;
+      --panel: rgba(255, 255, 255, 0.052);
+      --panel-strong: rgba(255, 255, 255, 0.085);
+      --line: rgba(168, 199, 255, 0.18);
+      --line-strong: rgba(242, 199, 111, 0.42);
+      --text: rgba(246, 248, 255, 0.92);
+      --muted: rgba(226, 232, 246, 0.68);
+      --soft: rgba(226, 232, 246, 0.52);
       --gold: #f2c76f;
-      --gold-soft: rgba(242, 199, 111, 0.22);
-      --text: #f5f7fb;
-      --muted: rgba(228, 234, 246, 0.76);
-      --soft: rgba(228, 234, 246, 0.58);
-      --pass: #88e0b2;
-      --hold: #ffd37b;
-      --fail: #ff8b8b;
-      --blue: #8db8ff;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --good: #8fe3b0;
+      --hold: #f2c76f;
+      --bad: #ff9b9b;
+      --blue: #91bdff;
+      --radius: 28px;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.52);
+      --max: 1180px;
     }
 
     * {
@@ -39,19 +74,19 @@
     }
 
     html {
-      scroll-behavior: smooth;
-      background: var(--bg);
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(145, 189, 255, 0.16), transparent 34rem),
+        radial-gradient(circle at 15% 20%, rgba(242, 199, 111, 0.08), transparent 22rem),
+        linear-gradient(180deg, #07101f 0%, var(--bg) 42%, #02030a 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
+      min-height: 100%;
       margin: 0;
-      min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 22rem),
-        radial-gradient(circle at 18% 22%, rgba(141, 184, 255, 0.10), transparent 24rem),
-        radial-gradient(circle at 82% 72%, rgba(120, 240, 195, 0.05), transparent 22rem),
-        linear-gradient(180deg, #02050b 0%, #06101d 46%, #02050b 100%);
     }
 
     a {
@@ -59,887 +94,1274 @@
       text-decoration: none;
     }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid rgba(242, 199, 111, 0.70);
-      outline-offset: 4px;
+    a:hover {
+      color: var(--gold);
     }
 
-    .skip {
+    .skip-link {
       position: absolute;
-      left: 12px;
-      top: 12px;
+      left: -999px;
+      top: 10px;
       z-index: 20;
-      transform: translateY(-160%);
-      border: 1px solid var(--gold-soft);
+      border: 1px solid var(--line-strong);
       border-radius: 999px;
       padding: 10px 14px;
-      background: #07101c;
+      background: #101725;
       color: var(--text);
-      font-weight: 850;
+      font-weight: 900;
     }
 
-    .skip:focus {
-      transform: translateY(0);
+    .skip-link:focus {
+      left: 12px;
     }
 
-    .shell {
-      width: min(1180px, calc(100% - 28px));
+    .site-shell {
+      width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
-      padding: 26px 0 44px;
+      padding: 22px 0 48px;
     }
 
-    header.site {
-      display: grid;
-      gap: 18px;
-      margin-bottom: 24px;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
     }
 
     .brand {
-      display: grid;
-      gap: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: fit-content;
+      font-weight: 950;
+      letter-spacing: -0.03em;
     }
 
-    .brand strong {
-      color: var(--gold);
-      font-size: clamp(1.12rem, 4vw, 1.68rem);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: clamp(0.78rem, 2.7vw, 1rem);
-      font-weight: 750;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(242, 199, 111, 0.48);
+      background:
+        linear-gradient(135deg, rgba(242, 199, 111, 0.9), rgba(145, 189, 255, 0.45)),
+        radial-gradient(circle at 35% 30%, #fff, transparent 40%);
+      box-shadow: 0 0 36px rgba(242, 199, 111, 0.18);
     }
 
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
-    nav a,
-    .actions a,
-    .actions button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      border: 1px solid var(--line);
+    nav a {
+      border: 1px solid rgba(168, 199, 255, 0.16);
       border-radius: 999px;
-      padding: 10px 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
-      color: var(--text);
-      font: inherit;
-      font-weight: 880;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 850;
     }
 
-    nav a[aria-current="page"],
-    .actions .primary {
-      border-color: rgba(242, 199, 111, 0.58);
-      background: linear-gradient(180deg, rgba(242,199,111,0.18), rgba(242,199,111,0.055));
-    }
-
-    main {
-      display: grid;
-      gap: 24px;
-    }
-
-    .hero,
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: clamp(24px, 5vw, 42px);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015)),
-        var(--panel);
-      box-shadow: var(--shadow);
+    nav a[aria-current="page"] {
+      border-color: var(--line-strong);
+      color: var(--gold);
+      background: rgba(242, 199, 111, 0.065);
     }
 
     .hero {
-      padding: clamp(22px, 5vw, 44px);
-      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 48px);
+      background:
+        radial-gradient(circle at 78% 18%, rgba(242, 199, 111, 0.12), transparent 20rem),
+        radial-gradient(circle at 18% 20%, rgba(145, 189, 255, 0.14), transparent 22rem),
+        rgba(255, 255, 255, 0.045);
+      box-shadow: var(--shadow);
     }
 
-    .eyebrow {
+    .kicker {
       color: var(--gold);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 950;
-      letter-spacing: 0.20em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-      letter-spacing: -0.055em;
-      line-height: 0.98;
-    }
-
     h1 {
-      max-width: 920px;
-      margin-top: 14px;
-      font-size: clamp(2.6rem, 12vw, 6.7rem);
+      max-width: 940px;
+      margin: 12px 0 12px;
+      font-size: clamp(2.35rem, 7vw, 5.4rem);
+      line-height: 0.94;
+      letter-spacing: -0.075em;
     }
 
-    h2 {
-      font-size: clamp(1.8rem, 6vw, 3.8rem);
-    }
-
-    h3 {
-      font-size: clamp(1.22rem, 3.4vw, 1.75rem);
-    }
-
-    p {
+    .lead {
+      max-width: 860px;
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.8vw, 1.28rem);
+      font-size: clamp(1rem, 2.4vw, 1.25rem);
       line-height: 1.55;
-    }
-
-    .hero p {
-      max-width: 940px;
-      margin-top: 18px;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       margin-top: 24px;
     }
 
-    .score-row {
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(242, 199, 111, 0.46);
+      border-radius: 999px;
+      padding: 11px 15px;
+      background: linear-gradient(180deg, rgba(242, 199, 111, 0.18), rgba(242, 199, 111, 0.04));
+      color: #fff4d3;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      border-color: rgba(168, 199, 255, 0.22);
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--text);
+    }
+
+    main {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 28px;
     }
 
-    .metric {
-      min-height: 116px;
+    .score-card,
+    .panel,
+    .source-card,
+    .logic-card {
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 16px;
-      background: rgba(255,255,255,0.045);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
     }
 
-    .metric strong {
+    .score-card {
+      min-height: 132px;
+      padding: 18px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+    }
+
+    .score-card strong {
       display: block;
-      font-size: clamp(2.1rem, 7vw, 4.1rem);
+      font-size: clamp(2rem, 5vw, 3.4rem);
       line-height: 0.92;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.08em;
     }
 
-    .metric span {
-      display: block;
-      margin-top: 8px;
+    .score-card span {
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       font-weight: 950;
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .metric.pass strong,
-    .status.pass {
-      color: var(--pass);
+    .status-good strong,
+    .status-good .status-label {
+      color: var(--good);
     }
 
-    .metric.hold strong,
-    .status.hold {
+    .status-hold strong,
+    .status-hold .status-label {
       color: var(--hold);
     }
 
-    .metric.fail strong,
-    .status.fail {
-      color: var(--fail);
+    .status-bad strong,
+    .status-bad .status-label {
+      color: var(--bad);
     }
 
     .panel {
-      padding: clamp(20px, 4.5vw, 34px);
-      display: grid;
+      padding: clamp(18px, 3vw, 28px);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       gap: 18px;
+      margin-bottom: 18px;
     }
 
-    .subgrid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
     }
 
-    .card {
+    .panel p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
       border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 16px;
-      background: var(--panel-2);
-    }
-
-    .card .label {
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .card p {
-      margin-top: 8px;
-      font-size: 0.98rem;
-    }
-
-    .audit-table {
-      display: grid;
-      gap: 10px;
-    }
-
-    .audit-row {
-      display: grid;
-      grid-template-columns: minmax(160px, 1.2fr) minmax(180px, 1.15fr) minmax(82px, 0.36fr) minmax(240px, 1.8fr);
-      gap: 10px;
-      align-items: stretch;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .audit-row.header {
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-      background: rgba(242,199,111,0.06);
-    }
-
-    .audit-row code {
-      color: var(--blue);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.85rem;
-      white-space: normal;
-      word-break: break-word;
-    }
-
-    .status {
-      font-size: 0.86rem;
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--muted);
+      font-size: 0.7rem;
       font-weight: 950;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
-    .evidence {
+    .pill.pass {
+      border-color: rgba(143, 227, 176, 0.45);
+      color: var(--good);
+      background: rgba(143, 227, 176, 0.06);
+    }
+
+    .pill.hold {
+      border-color: rgba(242, 199, 111, 0.45);
+      color: var(--hold);
+      background: rgba(242, 199, 111, 0.06);
+    }
+
+    .pill.fail {
+      border-color: rgba(255, 155, 155, 0.48);
+      color: var(--bad);
+      background: rgba(255, 155, 155, 0.06);
+    }
+
+    .source-grid {
       display: grid;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.42;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .evidence ul {
+    .source-card,
+    .logic-card {
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.025));
+    }
+
+    .source-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .source-title h3 {
       margin: 0;
+      font-size: 1.04rem;
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+      overflow-wrap: anywhere;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      color: rgba(255, 244, 211, 0.92);
+      overflow-wrap: anywhere;
+    }
+
+    .marker-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .marker {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      margin-top: 1px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .dot.pass {
+      border-color: rgba(143, 227, 176, 0.6);
+      background: rgba(143, 227, 176, 0.28);
+    }
+
+    .dot.fail {
+      border-color: rgba(255, 155, 155, 0.6);
+      background: rgba(255, 155, 155, 0.22);
+    }
+
+    .mono-block {
+      margin-top: 12px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.16);
+      color: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .logic-card strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .logic-card span,
+    .logic-card li {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .logic-card ul {
+      margin: 10px 0 0;
       padding-left: 18px;
     }
 
-    .rules {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+    .decision-box {
+      border: 1px solid var(--line-strong);
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(242, 199, 111, 0.12), transparent 20rem),
+        rgba(242, 199, 111, 0.04);
     }
 
-    .rule {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(255,255,255,0.04);
+    .decision-box h3 {
+      margin: 0 0 10px;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      letter-spacing: -0.055em;
     }
 
-    .rule h3 {
-      font-size: 1.15rem;
-      letter-spacing: -0.03em;
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
-    .rule p {
-      margin-top: 8px;
-      font-size: 0.96rem;
+    .small-note {
+      color: var(--soft);
+      font-size: 0.84rem;
+      line-height: 1.45;
     }
 
     footer {
-      padding: 22px 0 0;
+      margin-top: 24px;
+      padding: 18px 4px;
       color: var(--soft);
-      font-size: 0.86rem;
-      line-height: 1.5;
+      font-size: 0.84rem;
+      text-align: center;
     }
 
-    @media (max-width: 880px) {
-      .score-row,
-      .subgrid,
-      .rules {
+    @media (max-width: 960px) {
+      .score-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .source-grid,
+      .logic-grid {
         grid-template-columns: 1fr;
       }
 
-      .audit-row {
+      .topbar {
+        align-items: flex-start;
+        border-radius: 26px;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .site-shell {
+        width: min(100% - 18px, var(--max));
+        padding-top: 12px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .score-grid {
         grid-template-columns: 1fr;
       }
 
-      .audit-row.header {
-        display: none;
+      .panel-head {
+        display: grid;
       }
     }
   </style>
 </head>
-<body>
-  <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
-  <div class="shell">
-    <header class="site" aria-label="Site header">
+<body>
+  <a class="skip-link" href="#gauges-main">Skip to Gauges</a>
+
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
       <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Gauges · Planet 1 v8 Measurement</span>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
       </a>
 
-      <nav aria-label="Primary">
+      <nav aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Planet 1</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits/universe/">Universe</a>
-        <a href="/nine-summits-of-love/">Book</a>
         <a href="/products/">Products</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <main id="gauges-main">
-      <section class="hero" aria-labelledby="page-title">
-        <div class="eyebrow">H6 · Gauges · Planet 1 v8</div>
-        <h1 id="page-title">Gauges now measures the axis-spin climate renderer.</h1>
-        <p>
-          The separation contract already passed. This renewed Gauge checks the stricter standard:
-          Planet 1 must be served by the v8 renderer, rotate on its axis, expose climate-topology logic,
-          preserve weather and ocean-current markers, and keep the tree in demo mode.
-        </p>
+    <section class="hero" id="gauges-main">
+      <div class="kicker">H6 · Gauges · Planet 1 True State Diagnostic</div>
+      <h1>Measure the current chain, not the old contract.</h1>
+      <p class="lead">
+        These Gauges check the terrain module, main renderer, asset instrument, inspection route,
+        legacy marker compatibility, and the next file to renew. They do not declare the planet visually solved.
+      </p>
 
-        <div class="actions">
-          <button class="primary" type="button" id="run-audit">Run v8 audit</button>
-          <a href="/showroom/globe/">Inspect Planet 1</a>
-          <a href="/nine-summits/universe/">Open Universe</a>
-          <a href="/showroom/">Open Showroom</a>
+      <div class="actions">
+        <button class="button" type="button" id="runAuditButton">Run true-state audit</button>
+        <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
+        <a class="button secondary" href="/showroom/">Open Showroom</a>
+        <a class="button secondary" href="/nine-summits/universe/">Open Universe</a>
+      </div>
+    </section>
+
+    <main aria-live="polite">
+      <section class="score-grid" aria-label="True state summary">
+        <article class="score-card" id="scoreTotal">
+          <span>Total score</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreSource">
+          <span>Source state</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreRoute">
+          <span>Route state</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreTerrain">
+          <span>Terrain state</span>
+          <strong>WAIT</strong>
+        </article>
+
+        <article class="score-card" id="scoreNext">
+          <span>Next target</span>
+          <strong>WAIT</strong>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="current-read-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="current-read-title">Current read</h2>
+            <p id="currentRead">
+              Audit has not run yet. The new Gauge will identify whether the break is source, marker,
+              load order, route boot, fallback, or visual expression.
+            </p>
+          </div>
+          <span class="pill hold" id="auditStatus">WAIT</span>
         </div>
 
-        <div class="score-row" aria-label="Audit summary">
-          <div class="metric hold" id="metric-total">
-            <strong>--%</strong>
-            <span>Total v8 score</span>
-          </div>
-          <div class="metric hold" id="metric-renderer">
-            <strong>WAIT</strong>
-            <span>Renderer</span>
-          </div>
-          <div class="metric hold" id="metric-showroom">
-            <strong>WAIT</strong>
-            <span>Showroom</span>
-          </div>
-          <div class="metric hold" id="metric-next">
-            <strong>RUN</strong>
-            <span>Next target</span>
-          </div>
+        <div class="decision-box">
+          <h3 id="decisionTitle">No decision yet.</h3>
+          <p id="decisionText">
+            Run the audit before renewing more render code. The measuring instrument must identify the next file first.
+          </p>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="current-read">
-        <div class="eyebrow">Current read</div>
-        <h2 id="current-read">The old pass is not enough anymore.</h2>
-        <p>
-          A 100% render-lane pass proves the wiring is clean. It does not prove the newest visual standard.
-          This page now checks whether the live source has moved from v7 cinematic surface logic into
-          v8 axis-spin climate topology.
-        </p>
-
-        <div class="subgrid">
-          <div class="card">
-            <div class="label">Old standard</div>
-            <h3>Separation pass.</h3>
-            <p>Planet 1 first. Tree demo second. Renderer source separate from Showroom and Gauges.</p>
+      <section class="panel" aria-labelledby="source-check-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="source-check-title">File source check</h2>
+            <p>
+              Every required file is fetched directly from the live site. Cache-busting is added so the Gauge reads
+              current source instead of relying on browser memory.
+            </p>
           </div>
-
-          <div class="card">
-            <div class="label">New standard</div>
-            <h3>Axis and climate.</h3>
-            <p>The renderer must expose axis spin, climate topology, weather circulation, and ocean-current logic.</p>
-          </div>
-
-          <div class="card">
-            <div class="label">No collapse</div>
-            <h3>Measure only.</h3>
-            <p>Gauges must not become the renderer, Showroom, or Universe page. It only verifies source truth.</p>
-          </div>
+          <span class="pill hold" id="sourcePanelStatus">WAIT</span>
         </div>
+
+        <div class="source-grid" id="sourceGrid"></div>
       </section>
 
-      <section class="panel" aria-labelledby="live-audit">
-        <div class="eyebrow">Live audit</div>
-        <h2 id="live-audit">Source check</h2>
-
-        <div class="audit-table" id="audit-table">
-          <div class="audit-row header" aria-hidden="true">
-            <div>Layer</div>
-            <div>Target</div>
-            <div>Status</div>
-            <div>Evidence</div>
+      <section class="panel" aria-labelledby="terrain-check-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="terrain-check-title">Terrain module check</h2>
+            <p>
+              This panel proves whether the dedicated Planet 1 terrain file exists and contains the ancient 39B crust engine.
+            </p>
           </div>
+          <span class="pill hold" id="terrainPanelStatus">WAIT</span>
         </div>
+
+        <div id="terrainPanel"></div>
       </section>
 
-      <section class="panel" aria-labelledby="rules">
-        <div class="eyebrow">Measurement rules</div>
-        <h2 id="rules">What Gauges is allowed to claim.</h2>
-
-        <div class="rules">
-          <div class="rule">
-            <h3>Renderer v8</h3>
+      <section class="panel" aria-labelledby="renderer-check-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="renderer-check-title">Main renderer check</h2>
             <p>
-              Passes only when <code>/world/render/planet-one.render.js</code> contains
-              the v8 TNT marker, axis-spin marker, climate-topology marker, weather-circulation marker,
-              and ocean-current marker.
+              This checks the single public Optimum Expression renderer, terrain integration markers, and old v8 compatibility strings.
             </p>
           </div>
+          <span class="pill hold" id="rendererPanelStatus">WAIT</span>
+        </div>
 
-          <div class="rule">
-            <h3>Showroom consumer</h3>
+        <div id="rendererPanel"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="instrument-check-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="instrument-check-title">Asset instrument check</h2>
             <p>
-              Passes when <code>/showroom/globe/</code> serves Planet 1 first, tree demo second,
-              references the Planet 1 renderer, and preserves no-collapse separation.
+              This checks whether the asset instrument is a terrain-first loader bridge and not a competing globe renderer.
             </p>
           </div>
+          <span class="pill hold" id="instrumentPanelStatus">WAIT</span>
+        </div>
 
-          <div class="rule">
-            <h3>Visible copy alignment</h3>
+        <div id="instrumentPanel"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="route-check-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="route-check-title">Route boot check</h2>
             <p>
-              Passes when Showroom source also names the new v8 language: axis spin, climate topology,
-              weather circulation, and ocean currents. If this fails, the renderer may be newer than the visible copy.
+              This checks whether the inspection route is aligned with the current render chain or bypassing the terrain-first instrument.
             </p>
           </div>
+          <span class="pill hold" id="routePanelStatus">WAIT</span>
+        </div>
 
-          <div class="rule">
-            <h3>No false close</h3>
+        <div id="routePanel"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="wrong-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="wrong-title">Where we might be wrong</h2>
             <p>
-              Gauges cannot claim final geography. Countries, cities, exact rivers, named climates,
-              physics constants, and final map geometry remain outside this pass.
+              The Gauge separates assumptions from proof. A source pass does not mean the visual target is solved.
             </p>
           </div>
         </div>
+
+        <div class="logic-grid" id="wrongGrid"></div>
       </section>
 
-      <section class="panel" aria-labelledby="next-target">
-        <div class="eyebrow">Next target</div>
-        <h2 id="next-target">Waiting for audit.</h2>
-        <p id="next-copy">
-          Run the v8 audit. If the renderer fails, repair <code>/world/render/planet-one.render.js</code>.
-          If the renderer passes but visible copy fails, repair <code>/showroom/globe/index.html</code>.
-          If both pass, the next move is visual polish.
-        </p>
+      <section class="panel" aria-labelledby="rules-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="rules-title">Measurement rules</h2>
+            <p>
+              These rules prevent a false close. A 100% source score means the chain is measurable and internally consistent,
+              not that the planet looks 39 billion years old.
+            </p>
+          </div>
+        </div>
 
-        <div class="actions">
-          <a href="/showroom/globe/">Inspect Planet 1</a>
-          <a href="/nine-summits/universe/">Open Universe</a>
-          <a href="/showroom/">Open Showroom</a>
-          <a href="/">Compass</a>
+        <div class="logic-grid">
+          <article class="logic-card">
+            <strong>Gauges measures only</strong>
+            <span>It does not draw the planet, repair the renderer, rewrite the instrument, or close geography.</span>
+          </article>
+
+          <article class="logic-card">
+            <strong>Source before visual</strong>
+            <span>If the chain fails source, markers, route, or load order, do not rewrite visual realism yet.</span>
+          </article>
+
+          <article class="logic-card">
+            <strong>Visual after proof</strong>
+            <span>If the whole chain passes but the planet still looks cartooned, the next renewal belongs to the terrain renderer.</span>
+          </article>
         </div>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1 ·
-      Measures Planet 1 renderer v8, Showroom consumer alignment, Universe route health, and no-collapse status.
+      GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1 · Measures Planet 1 terrain-first optimum-expression architecture.
     </footer>
   </div>
 
   <script>
-    (function () {
+    (function runPlanetOneTrueStateGauges() {
       "use strict";
 
-      var CONTRACT = "GAUGES_PLANET_ONE_V8_AXIS_CLIMATE_MEASUREMENT_TNT_v1";
+      const VERSION = "GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1";
+      const CONTRACT = "PLANET_ONE_GAUGES_V17_TRUE_STATE_DIAGNOSTIC_CONTRACT_v1";
 
-      var checks = [
-        {
-          key: "renderer-v8",
-          title: "Planet 1 v8 renderer",
-          target: "/world/render/planet-one.render.js",
+      const FILES = {
+        terrain: {
+          label: "Planet 1 terrain renderer",
+          path: "/world/render/planet-one.terrain.render.js",
+          type: "script",
           required: [
-            "PLANET_ONE_RENDER_TEAM_TNT_v1",
-            "PLANET_ONE_RENDER_TEAM_TNT_v8_AXIS_SPIN_CLIMATE_TOPOLOGY",
+            "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
+            "window.DGBPlanetOneTerrainRender",
+            "createTerrainLayer",
+            "ancient-39b-crust-engine-active=true",
+            "pressure-formed-crust-active=true",
+            "tectonic-scar-network-active=true",
+            "raw-material-strata-active=true",
+            "terrain-contained-to-land=true"
+          ],
+          supporting: [
+            "ancient39bCrustEngineActive",
+            "pressureFormedCrustActive",
+            "tectonicScarNetworkActive",
+            "landWaterSeparationQuotaPreserved"
+          ]
+        },
+
+        renderer: {
+          label: "Planet 1 main renderer",
+          path: "/world/render/planet-one.render.js",
+          type: "script",
+          required: [
+            "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
             "window.DGBPlanetOneRenderTeam",
             "renderPlanetOne",
+            "optimum-expression-only-active=true",
+            "terrain-render-authority=/world/render/planet-one.terrain.render.js",
+            "terrain-module-integrated=true",
+            "ancient-39b-crust-engine-active=true",
+            "planet-one-realism-pass=v8-axis-spin-climate-topology"
+          ],
+          legacyRequired: [
             "axis-spin-active=true",
             "climate-topology-active=true",
             "weather-circulation-active=true",
-            "ocean-current-logic-active=true",
-            "planet-one-realism-pass=v8-axis-spin-climate-topology"
+            "ocean-current-logic-active=true"
           ],
-          softer: [
-            "axisSpinActive",
-            "climateTopologyActive",
-            "weatherCirculationActive",
-            "oceanCurrentLogicActive"
+          supporting: [
+            "optimumExpressionOnlyActive",
+            "terrainLayer",
+            "DGBPlanetOneTerrainRender",
+            "terrainFallback",
+            "AVAILABLE_EXPRESSIONS"
           ]
         },
-        {
-          key: "showroom-consumer",
-          title: "Showroom Planet 1 consumer",
-          target: "/showroom/globe/",
+
+        instrument: {
+          label: "Showroom globe asset instrument",
+          path: "/assets/showroom.globe.instrument.js",
+          type: "script",
           required: [
-            "Planet 1 first. Tree demo second.",
+            "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
+            "window.DGBShowroomGlobeInstrument",
+            "renderGlobe",
+            "loadTerrainRenderer",
+            "loadMainRendererAfterTerrain",
+            "terrainFirstLoadOrder",
+            "optimumExpressionOnly",
+            "noCompetingGlobeSurface",
+            "drawsOwnPlanet"
+          ],
+          supporting: [
+            "/world/render/planet-one.terrain.render.js",
             "/world/render/planet-one.render.js",
-            "planet-one-render-active=true",
-            "globe-demo-status-retired=true",
-            "tree-demo-mode=true",
-            "render-lanes-separated=true",
-            "no-render-lane-collapse=true"
-          ],
-          softer: [
-            "Planet 1",
-            "Tree demo",
-            "real globe renderer",
-            "Showroom inspects"
+            "terrain-first-delegation-support-only"
           ]
         },
-        {
-          key: "showroom-v8-copy",
-          title: "Showroom v8 visible copy",
-          target: "/showroom/globe/",
+
+        globeRoute: {
+          label: "Planet 1 inspection route",
+          path: "/showroom/globe/",
+          type: "route",
           required: [
-            "axis spin",
-            "climate topology",
-            "weather circulation",
-            "ocean currents"
+            "Planet 1 inspection room",
+            "planet-one-render",
+            "Planet 1 render loaded",
+            "Optimum expression",
+            "Real globe renderer",
+            "Gauges measures"
           ],
-          softer: [
-            "Axis",
-            "Climate",
-            "Weather",
-            "Current"
+          scriptChecks: [
+            "/assets/showroom.globe.instrument.js",
+            "/world/render/planet-one.terrain.render.js",
+            "/world/render/planet-one.render.js"
+          ],
+          supporting: [
+            "Showroom lobby stays separate",
+            "Inspection route",
+            "Pause render",
+            "Resume render"
           ]
         },
-        {
-          key: "universe-route",
-          title: "Nine Summits Universe",
-          target: "/nine-summits/universe/",
+
+        showroomRoute: {
+          label: "Showroom lobby route",
+          path: "/showroom/",
+          type: "route",
           required: [
-            "NINE_SUMMITS_METAVERSE_LANE_OPEN_TNT_v1",
-            "planet=Nine Summits Universe",
-            "landmasses=7",
-            "map-protocol=tiktok",
+            "Showroom",
             "Planet 1"
           ],
-          softer: [
-            "seven landmasses",
-            "coherence",
-            "population",
-            "Pangaea"
+          supporting: [
+            "lobby",
+            "showroom",
+            "globe"
           ]
         },
-        {
-          key: "nine-summits-hub",
-          title: "Nine Summits hub",
-          target: "/nine-summits/",
+
+        gaugesRoute: {
+          label: "Gauges route",
+          path: "/gauges/",
+          type: "route",
           required: [
-            "NINE_SUMMITS_HUB_METAVERSE_LINK_REPAIR_TNT_v1",
-            "Open metaverse lane",
-            "broken-public-universe-link-removed=true",
-            "/nine-summits/universe/"
+            "GAUGES_PLANET_ONE_V17_TRUE_STATE_DIAGNOSTIC_TNT_v1",
+            "Planet 1 True State Diagnostic",
+            "terrain module",
+            "main renderer",
+            "asset instrument"
           ],
-          softer: [
-            "Nine Summits Universe",
-            "metaverse lane",
-            "Book",
-            "This Underdog"
+          supporting: [
+            CONTRACT,
+            VERSION
           ]
+        }
+      };
+
+      const WRONG_ASSUMPTIONS = [
+        {
+          title: "The asset instrument may not be used by the route.",
+          test: "Check /showroom/globe/ for /assets/showroom.globe.instrument.js.",
+          consequence: "If missing, the terrain-first bridge cannot affect the inspection route."
+        },
+        {
+          title: "The terrain module may not load before the renderer.",
+          test: "Check source references and marker proof for terrain-first load order.",
+          consequence: "If false, the main renderer can draw fallback terrain before the 39B terrain module exists."
+        },
+        {
+          title: "The main renderer may be stale.",
+          test: "Check /world/render/planet-one.render.js for the current optimum-expression TNT marker.",
+          consequence: "If false, the live site is serving old renderer source."
+        },
+        {
+          title: "The terrain file may not be live.",
+          test: "Check /world/render/planet-one.terrain.render.js for the ancient 39B crust TNT marker.",
+          consequence: "If false, the new terrain engine was not deployed or is misnamed."
+        },
+        {
+          title: "The source may pass while the visual still fails.",
+          test: "Separate source/route pass from visual inspection.",
+          consequence: "If source passes and the planet still looks cartooned, renew the terrain file next."
+        },
+        {
+          title: "Cache may not be the issue.",
+          test: "Fetch with cache-busting and compare source markers.",
+          consequence: "If stale source remains after cache clear, deployment/source path is the issue."
         }
       ];
 
-      var table = document.getElementById("audit-table");
-      var runButton = document.getElementById("run-audit");
-      var metricTotal = document.getElementById("metric-total");
-      var metricRenderer = document.getElementById("metric-renderer");
-      var metricShowroom = document.getElementById("metric-showroom");
-      var metricNext = document.getElementById("metric-next");
-      var nextTitle = document.getElementById("next-target");
-      var nextCopy = document.getElementById("next-copy");
+      const state = {
+        startedAt: null,
+        results: {},
+        decision: null
+      };
 
-      function bust(path) {
-        var url = new URL(path, window.location.origin);
-        url.searchParams.set("dgb_gauge", String(Date.now()));
-        return url.toString();
+      function $(id) {
+        return document.getElementById(id);
       }
 
-      function statusClass(status) {
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function classForStatus(status) {
         if (status === "PASS") return "pass";
         if (status === "FAIL") return "fail";
         return "hold";
       }
 
-      function setMetric(node, status, text) {
-        node.classList.remove("pass", "hold", "fail");
-        node.classList.add(statusClass(status));
-        node.querySelector("strong").textContent = text;
+      function scoreStatus(score) {
+        if (score >= 95) return "PASS";
+        if (score >= 70) return "HOLD";
+        return "FAIL";
       }
 
-      function clearRows() {
-        table.querySelectorAll(".audit-row:not(.header)").forEach(function (row) {
-          row.remove();
-        });
+      function setPill(id, status) {
+        const el = $(id);
+        if (!el) return;
+        el.className = "pill " + classForStatus(status);
+        el.textContent = status;
       }
 
-      function rowFor(result) {
-        var row = document.createElement("div");
-        row.className = "audit-row";
+      function setScoreCard(id, value, status) {
+        const el = $(id);
+        if (!el) return;
+        el.classList.remove("status-good", "status-hold", "status-bad");
 
-        var layer = document.createElement("div");
-        layer.innerHTML = "<strong>" + escapeHtml(result.title) + "</strong>";
+        if (status === "PASS") el.classList.add("status-good");
+        else if (status === "FAIL") el.classList.add("status-bad");
+        else el.classList.add("status-hold");
 
-        var target = document.createElement("div");
-        target.innerHTML = "<code>" + escapeHtml(result.target) + "</code>";
-
-        var status = document.createElement("div");
-        status.className = "status " + statusClass(result.status);
-        status.textContent = result.status;
-
-        var evidence = document.createElement("div");
-        evidence.className = "evidence";
-
-        var top = document.createElement("div");
-        top.textContent =
-          result.httpText +
-          ". " +
-          result.found +
-          " of " +
-          result.total +
-          " required markers found.";
-        evidence.appendChild(top);
-
-        if (result.missing.length) {
-          var missing = document.createElement("ul");
-          result.missing.forEach(function (item) {
-            var li = document.createElement("li");
-            li.textContent = "Missing: " + item;
-            missing.appendChild(li);
-          });
-          evidence.appendChild(missing);
-        } else {
-          var clean = document.createElement("div");
-          clean.innerHTML = "<strong>Contract clean.</strong>";
-          evidence.appendChild(clean);
-        }
-
-        if (result.softFound.length) {
-          var soft = document.createElement("div");
-          soft.textContent = "Supporting markers: " + result.softFound.join(", ");
-          evidence.appendChild(soft);
-        }
-
-        row.appendChild(layer);
-        row.appendChild(target);
-        row.appendChild(status);
-        row.appendChild(evidence);
-
-        return row;
+        const strong = el.querySelector("strong");
+        if (strong) strong.textContent = value;
       }
 
-      function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, function (char) {
+      function includesMarker(source, marker) {
+        return String(source || "").indexOf(marker) !== -1;
+      }
+
+      function markerRows(markers, source) {
+        return (markers || []).map(function mapMarker(marker) {
+          const ok = includesMarker(source, marker);
           return {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-          }[char];
+            marker,
+            ok
+          };
         });
       }
 
-      async function runCheck(check) {
-        var result = {
-          key: check.key,
-          title: check.title,
-          target: check.target,
-          status: "FAIL",
-          httpText: "HTTP request failed",
-          found: 0,
-          total: check.required.length,
-          missing: check.required.slice(),
-          softFound: []
+      function summarizeRows(rows) {
+        const total = rows.length;
+        const passed = rows.filter(function count(row) { return row.ok; }).length;
+        const score = total ? Math.round((passed / total) * 100) : 100;
+        return {
+          total,
+          passed,
+          missing: rows.filter(function missing(row) { return !row.ok; }).map(function marker(row) { return row.marker; }),
+          score,
+          status: score === 100 ? "PASS" : score >= 50 ? "HOLD" : "FAIL"
         };
-
-        try {
-          var response = await fetch(bust(check.target), {
-            cache: "no-store",
-            credentials: "same-origin"
-          });
-
-          result.httpText = "HTTP " + response.status;
-
-          if (!response.ok) {
-            result.status = "FAIL";
-            return result;
-          }
-
-          var text = await response.text();
-          var lower = text.toLowerCase();
-
-          result.missing = [];
-          check.required.forEach(function (marker) {
-            if (text.indexOf(marker) !== -1 || lower.indexOf(marker.toLowerCase()) !== -1) {
-              result.found += 1;
-            } else {
-              result.missing.push(marker);
-            }
-          });
-
-          (check.softer || []).forEach(function (marker) {
-            if (text.indexOf(marker) !== -1 || lower.indexOf(marker.toLowerCase()) !== -1) {
-              result.softFound.push(marker);
-            }
-          });
-
-          if (result.found === result.total) {
-            result.status = "PASS";
-          } else if (result.found > 0) {
-            result.status = "HOLD";
-          } else {
-            result.status = "FAIL";
-          }
-
-          return result;
-        } catch (error) {
-          result.httpText = "Fetch error";
-          result.missing = check.required.slice();
-          return result;
-        }
       }
 
-      function chooseNext(results) {
-        var byKey = {};
-        results.forEach(function (item) {
-          byKey[item.key] = item;
-        });
+      function cacheBusted(path) {
+        const url = new URL(path, window.location.origin);
+        url.searchParams.set("_gauge", VERSION);
+        url.searchParams.set("_t", String(Date.now()));
+        return url.pathname + url.search;
+      }
 
-        if (!byKey["renderer-v8"] || byKey["renderer-v8"].status !== "PASS") {
+      function fetchText(path) {
+        return fetch(cacheBusted(path), {
+          cache: "no-store",
+          credentials: "same-origin"
+        })
+          .then(function handleResponse(response) {
+            return response.text().then(function body(text) {
+              return {
+                ok: response.ok,
+                status: response.status,
+                text,
+                path
+              };
+            });
+          })
+          .catch(function handleError(error) {
+            return {
+              ok: false,
+              status: 0,
+              text: "",
+              path,
+              error: error && error.message ? error.message : "fetch failed"
+            };
+          });
+      }
+
+      function evaluateSpec(key, spec, fetched) {
+        const requiredRows = markerRows(spec.required || [], fetched.text);
+        const legacyRows = markerRows(spec.legacyRequired || [], fetched.text);
+        const scriptRows = markerRows(spec.scriptChecks || [], fetched.text);
+        const supportingRows = markerRows(spec.supporting || [], fetched.text);
+
+        const requiredSummary = summarizeRows(requiredRows);
+        const legacySummary = summarizeRows(legacyRows);
+        const scriptSummary = summarizeRows(scriptRows);
+
+        const allRequired = requiredRows.concat(legacyRows).concat(scriptRows);
+        const allSummary = summarizeRows(allRequired);
+
+        const httpScore = fetched.ok ? 100 : 0;
+        const markerScore = allRequired.length ? allSummary.score : requiredSummary.score;
+        const score = Math.round((httpScore * 0.35) + (markerScore * 0.65));
+
+        const status = !fetched.ok
+          ? "FAIL"
+          : score === 100
+            ? "PASS"
+            : score >= 65
+              ? "HOLD"
+              : "FAIL";
+
+        return {
+          key,
+          label: spec.label,
+          path: spec.path,
+          type: spec.type,
+          httpOk: fetched.ok,
+          httpStatus: fetched.status,
+          error: fetched.error || null,
+          text: fetched.text,
+          score,
+          status,
+          requiredRows,
+          legacyRows,
+          scriptRows,
+          supportingRows,
+          requiredSummary,
+          legacySummary,
+          scriptSummary,
+          allSummary
+        };
+      }
+
+      function renderMarkerList(rows, emptyLabel) {
+        if (!rows || !rows.length) {
+          return '<div class="small-note">' + escapeHtml(emptyLabel || "No markers configured.") + "</div>";
+        }
+
+        return '<div class="marker-list">' + rows.map(function row(item) {
+          return [
+            '<div class="marker">',
+              '<span class="dot ' + (item.ok ? "pass" : "fail") + '" aria-hidden="true"></span>',
+              '<code>' + escapeHtml(item.marker) + '</code>',
+            '</div>'
+          ].join("");
+        }).join("") + "</div>";
+      }
+
+      function renderSourceCard(result) {
+        const statusClass = classForStatus(result.status);
+        const missing = result.allSummary.missing.length
+          ? "Missing: " + result.allSummary.missing.join(", ")
+          : "Contract clean.";
+
+        const httpLine = result.httpOk
+          ? "HTTP " + result.httpStatus + "."
+          : "HTTP " + result.httpStatus + (result.error ? ". " + result.error : ".");
+
+        return [
+          '<article class="source-card">',
+            '<div class="source-title">',
+              '<h3>' + escapeHtml(result.label) + '</h3>',
+              '<span class="pill ' + statusClass + '">' + result.status + '</span>',
+            '</div>',
+            '<div class="small-note"><code>' + escapeHtml(result.path) + '</code></div>',
+            '<div class="mono-block">' + escapeHtml(httpLine + " " + result.allSummary.passed + " of " + result.allSummary.total + " required checks found. " + missing) + '</div>',
+            '<strong class="small-note">Required markers</strong>',
+            renderMarkerList(result.requiredRows, "No required markers."),
+            result.legacyRows.length ? '<strong class="small-note">Legacy compatibility markers</strong>' + renderMarkerList(result.legacyRows) : "",
+            result.scriptRows.length ? '<strong class="small-note">Route script checks</strong>' + renderMarkerList(result.scriptRows) : "",
+            result.supportingRows.length ? '<strong class="small-note">Supporting markers</strong>' + renderMarkerList(result.supportingRows) : "",
+          '</article>'
+        ].join("");
+      }
+
+      function computeDecision(results) {
+        const terrain = results.terrain;
+        const renderer = results.renderer;
+        const instrument = results.instrument;
+        const globeRoute = results.globeRoute;
+        const gaugesRoute = results.gaugesRoute;
+
+        const routeReferencesInstrument = globeRoute && includesMarker(globeRoute.text, "/assets/showroom.globe.instrument.js");
+        const routeReferencesTerrain = globeRoute && includesMarker(globeRoute.text, "/world/render/planet-one.terrain.render.js");
+        const routeReferencesRenderer = globeRoute && includesMarker(globeRoute.text, "/world/render/planet-one.render.js");
+
+        if (!gaugesRoute || gaugesRoute.status === "FAIL") {
           return {
-            label: "RENDERER",
-            title: "Renderer v8 is not fully proven.",
-            copy:
-              "Repair /world/render/planet-one.render.js first. Gauges is missing one or more v8 markers for axis spin, climate topology, weather circulation, or ocean-current logic."
+            status: "FAIL",
+            target: "/gauges/index.html",
+            title: "Gauges renewal is not fully served.",
+            text: "The diagnostic page itself is not proving the new V17 contract. Renew /gauges/index.html before trusting downstream readings."
           };
         }
 
-        if (!byKey["showroom-consumer"] || byKey["showroom-consumer"].status !== "PASS") {
+        if (!terrain || terrain.status === "FAIL") {
           return {
-            label: "SHOWROOM",
-            title: "Showroom consumer is not fully aligned.",
-            copy:
-              "Repair /showroom/globe/index.html only after the renderer passes. The consumer must preserve Planet 1 first, tree demo second, and no-collapse render-lane separation."
+            status: "FAIL",
+            target: "/world/render/planet-one.terrain.render.js",
+            title: "Terrain file is the next target.",
+            text: "The dedicated Planet 1 terrain renderer is not served or is missing the ancient 39B crust engine markers."
           };
         }
 
-        if (!byKey["showroom-v8-copy"] || byKey["showroom-v8-copy"].status !== "PASS") {
+        if (renderer && renderer.legacyRows && renderer.legacyRows.some(function missing(row) { return !row.ok; })) {
           return {
-            label: "COPY",
-            title: "The renderer may be newer than the visible Showroom language.",
-            copy:
-              "Renderer v8 is present, but the Showroom source does not yet expose the v8 language: axis spin, climate topology, weather circulation, and ocean currents. Repair /showroom/globe/index.html if owner-facing proof needs those labels."
+            status: "HOLD",
+            target: "/world/render/planet-one.render.js",
+            title: "Main renderer is missing legacy Gauge markers.",
+            text: "The renderer may contain camelCase concepts, but old Gauges compatibility requires exact hyphen marker strings. Renew the full renderer file, not a patch."
           };
         }
 
-        if (!byKey["universe-route"] || byKey["universe-route"].status !== "PASS") {
+        if (!renderer || renderer.status === "FAIL") {
           return {
-            label: "UNIVERSE",
-            title: "Universe route is not fully aligned.",
-            copy:
-              "Repair /nine-summits/universe/index.html. The world explanation route must preserve Planet 1, seven landmasses, TikTok protocol, and coherence law."
+            status: "FAIL",
+            target: "/world/render/planet-one.render.js",
+            title: "Main renderer is the next target.",
+            text: "The main Planet 1 renderer is not proving Optimum Expression, terrain integration, or current renderer markers."
           };
         }
 
-        if (!byKey["nine-summits-hub"] || byKey["nine-summits-hub"].status !== "PASS") {
+        if (!instrument || instrument.status === "FAIL") {
           return {
-            label: "HUB",
-            title: "Nine Summits hub link contract is not fully aligned.",
-            copy:
-              "Repair /nine-summits/index.html. The hub must point to /nine-summits/universe/ and must not revive the retired flat /nine-summits-universe/ path."
+            status: "FAIL",
+            target: "/assets/showroom.globe.instrument.js",
+            title: "Asset instrument is the next target.",
+            text: "The instrument is not proving terrain-first loading, delegation-only role, or no competing globe surface."
+          };
+        }
+
+        if (!routeReferencesInstrument && routeReferencesRenderer) {
+          return {
+            status: "HOLD",
+            target: "/showroom/globe/index.html",
+            title: "Inspection route may be bypassing the instrument.",
+            text: "The route references the renderer without proving the terrain-first asset bridge. Renew the inspection route if the intended boot path must run through the instrument."
+          };
+        }
+
+        if (!routeReferencesTerrain && !routeReferencesInstrument) {
+          return {
+            status: "HOLD",
+            target: "/showroom/globe/index.html",
+            title: "Inspection route does not prove terrain-first boot.",
+            text: "The route source does not expose the terrain module or the instrument bridge. Renew /showroom/globe/index.html if live boot order is unproven."
+          };
+        }
+
+        if (terrain.status === "PASS" && renderer.status === "PASS" && instrument.status === "PASS" && globeRoute.status !== "FAIL") {
+          return {
+            status: "PASS",
+            target: "/world/render/planet-one.terrain.render.js",
+            title: "Source chain passes. Visual review is next.",
+            text: "The chain is measurable and internally consistent. If Planet 1 still looks cartooned, the next renewal belongs to the terrain renderer’s visual expression, not the boot chain."
           };
         }
 
         return {
-          label: "POLISH",
-          title: "All measured v8 source contracts pass.",
-          copy:
-            "Next work is visual polish, owner review, or v9 cinematic topographic refinement. Gauges now proves the v8 renderer standard instead of only the old separation standard."
+          status: "HOLD",
+          target: "Review source cards",
+          title: "The next target is partially proven.",
+          text: "The Gauge found mixed results. Use the failing panel above to identify the exact full-file TNT renewal."
         };
       }
 
-      function computeScore(results) {
-        var found = 0;
-        var total = 0;
-
-        results.forEach(function (item) {
-          found += item.found;
-          total += item.total;
-        });
-
-        if (!total) return 0;
-        return Math.round((found / total) * 100);
+      function renderFocusedPanels(results) {
+        $("terrainPanel").innerHTML = renderSourceCard(results.terrain);
+        $("rendererPanel").innerHTML = renderSourceCard(results.renderer);
+        $("instrumentPanel").innerHTML = renderSourceCard(results.instrument);
+        $("routePanel").innerHTML = renderSourceCard(results.globeRoute);
       }
 
-      async function runAudit() {
-        runButton.disabled = true;
-        runButton.textContent = "Running...";
+      function renderWrongAssumptions(results) {
+        const globe = results.globeRoute;
+        const instrumentUsed = globe && includesMarker(globe.text, "/assets/showroom.globe.instrument.js");
+        const terrainReferenced = globe && includesMarker(globe.text, "/world/render/planet-one.terrain.render.js");
+        const rendererReferenced = globe && includesMarker(globe.text, "/world/render/planet-one.render.js");
 
-        clearRows();
+        const assumptionRows = WRONG_ASSUMPTIONS.map(function map(item, index) {
+          let status = "HOLD";
 
-        var pending = document.createElement("div");
-        pending.className = "audit-row";
-        pending.innerHTML =
-          "<div><strong>Audit running</strong></div>" +
-          "<div><code>" + CONTRACT + "</code></div>" +
-          '<div class="status hold">WAIT</div>' +
-          "<div class=\"evidence\">Fetching current source with cache-busting.</div>";
-        table.appendChild(pending);
+          if (index === 0) status = instrumentUsed ? "PASS" : "FAIL";
+          if (index === 1) status = terrainReferenced || instrumentUsed ? "PASS" : "HOLD";
+          if (index === 2) status = results.renderer && results.renderer.status === "PASS" ? "PASS" : "FAIL";
+          if (index === 3) status = results.terrain && results.terrain.status === "PASS" ? "PASS" : "FAIL";
+          if (index === 4) status = "HOLD";
+          if (index === 5) status = "HOLD";
 
-        var results = [];
-        for (var i = 0; i < checks.length; i += 1) {
-          results.push(await runCheck(checks[i]));
-        }
-
-        clearRows();
-
-        results.forEach(function (result) {
-          table.appendChild(rowFor(result));
+          return [
+            '<article class="logic-card">',
+              '<span class="pill ' + classForStatus(status) + '">' + status + '</span>',
+              '<strong>' + escapeHtml(item.title) + '</strong>',
+              '<span>' + escapeHtml(item.test) + '</span>',
+              '<ul><li>' + escapeHtml(item.consequence) + '</li></ul>',
+            '</article>'
+          ].join("");
         });
 
-        var score = computeScore(results);
-        var renderer = results.find(function (r) { return r.key === "renderer-v8"; });
-        var showroom = results.find(function (r) { return r.key === "showroom-consumer"; });
-        var next = chooseNext(results);
+        $("wrongGrid").innerHTML = assumptionRows.join("");
 
-        setMetric(metricTotal, score === 100 ? "PASS" : score >= 70 ? "HOLD" : "FAIL", score + "%");
-        setMetric(metricRenderer, renderer && renderer.status === "PASS" ? "PASS" : renderer && renderer.status === "HOLD" ? "HOLD" : "FAIL", renderer ? renderer.status : "FAIL");
-        setMetric(metricShowroom, showroom && showroom.status === "PASS" ? "PASS" : showroom && showroom.status === "HOLD" ? "HOLD" : "FAIL", showroom ? showroom.status : "FAIL");
-        setMetric(metricNext, next.label === "POLISH" ? "PASS" : "HOLD", next.label);
-
-        nextTitle.textContent = next.title;
-        nextCopy.textContent = next.copy;
-
-        runButton.disabled = false;
-        runButton.textContent = "Run v8 audit";
+        return {
+          instrumentUsed,
+          terrainReferenced,
+          rendererReferenced
+        };
       }
 
-      runButton.addEventListener("click", runAudit);
-      window.addEventListener("load", runAudit);
+      function updateSummary(results, decision) {
+        const resultList = Object.keys(results).map(function map(key) { return results[key]; });
+        const sourceScore = Math.round(resultList.reduce(function sum(acc, item) {
+          return acc + item.score;
+        }, 0) / resultList.length);
+
+        const routeScore = Math.round(((results.globeRoute ? results.globeRoute.score : 0) + (results.showroomRoute ? results.showroomRoute.score : 0)) / 2);
+        const terrainScore = results.terrain ? results.terrain.score : 0;
+        const total = Math.round((sourceScore * 0.35) + (routeScore * 0.2) + (terrainScore * 0.2) + ((results.renderer ? results.renderer.score : 0) * 0.15) + ((results.instrument ? results.instrument.score : 0) * 0.1));
+
+        const totalStatus = scoreStatus(total);
+        const sourceStatus = scoreStatus(sourceScore);
+        const routeStatus = scoreStatus(routeScore);
+        const terrainStatusValue = scoreStatus(terrainScore);
+
+        setScoreCard("scoreTotal", String(total) + "%", totalStatus);
+        setScoreCard("scoreSource", sourceStatus, sourceStatus);
+        setScoreCard("scoreRoute", routeStatus, routeStatus);
+        setScoreCard("scoreTerrain", terrainStatusValue, terrainStatusValue);
+        setScoreCard("scoreNext", decision.target, decision.status);
+
+        setPill("auditStatus", decision.status);
+        setPill("sourcePanelStatus", sourceStatus);
+        setPill("terrainPanelStatus", terrainStatusValue);
+        setPill("rendererPanelStatus", results.renderer.status);
+        setPill("instrumentPanelStatus", results.instrument.status);
+        setPill("routePanelStatus", results.globeRoute.status);
+
+        $("decisionTitle").textContent = decision.title;
+        $("decisionText").textContent = decision.text;
+        $("currentRead").textContent =
+          "True-state audit complete. Source score: " + sourceScore + "%. Route score: " + routeScore +
+          "%. Terrain score: " + terrainScore + "%. Next target: " + decision.target + ".";
+
+        return {
+          total,
+          sourceScore,
+          routeScore,
+          terrainScore
+        };
+      }
+
+      function renderAll(results) {
+        $("sourceGrid").innerHTML = Object.keys(results).map(function render(key) {
+          return renderSourceCard(results[key]);
+        }).join("");
+
+        renderFocusedPanels(results);
+        renderWrongAssumptions(results);
+
+        const decision = computeDecision(results);
+        state.decision = decision;
+
+        updateSummary(results, decision);
+      }
+
+      function runAudit() {
+        state.startedAt = new Date().toISOString();
+
+        setPill("auditStatus", "HOLD");
+        $("currentRead").textContent = "Running true-state audit. Fetching live files with cache-busting.";
+
+        const keys = Object.keys(FILES);
+
+        return Promise.all(keys.map(function fetchSpec(key) {
+          return fetchText(FILES[key].path).then(function evaluate(fetched) {
+            return evaluateSpec(key, FILES[key], fetched);
+          });
+        })).then(function finish(list) {
+          const results = {};
+          list.forEach(function assign(result) {
+            results[result.key] = result;
+          });
+
+          state.results = results;
+          renderAll(results);
+
+          window.DGBPlanetOneGaugesV17 = Object.freeze({
+            VERSION,
+            CONTRACT,
+            results,
+            decision: state.decision,
+            getStatus: function getStatus() {
+              return {
+                version: VERSION,
+                contract: CONTRACT,
+                startedAt: state.startedAt,
+                decision: state.decision,
+                results
+              };
+            }
+          });
+
+          return results;
+        });
+      }
+
+      $("runAuditButton").addEventListener("click", function onRunClick() {
+        runAudit();
+      });
+
+      window.DGBRunPlanetOneTrueStateGauges = runAudit;
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runAudit, { once: true });
+      } else {
+        runAudit();
+      }
     })();
   </script>
 </body>

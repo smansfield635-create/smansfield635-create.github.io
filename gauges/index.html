@@ -1,25 +1,33 @@
 <!doctype html>
-<html lang="en" data-gauges-generation="GENERATION_4" data-route="/gauges/">
+<html lang="en" data-gauges-generation="PROGRESS_CALIBRATION" data-route="/gauges/">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Diagnostic Instrument Room · Diamond Gate Bridge</title>
-  <meta name="description" content="Generation 4 diagnostic gauges for Rich Manor and Estate.">
+  <title>Gauges · Progress Calibration · Diamond Gate Bridge</title>
+  <meta name="description" content="Progress calibration gauges for Rich Manor and Estate Showroom generation ladder.">
   <style>
     :root {
       --bg: #05070b;
-      --panel: rgba(12, 18, 30, 0.9);
-      --line: rgba(168, 199, 255, 0.26);
-      --text: #edf5ff;
-      --muted: #aebbd0;
-      --good: #8ff0c6;
-      --warn: #ffd36f;
-      --bad: #ff9a9a;
+      --panel: rgba(10, 16, 26, 0.9);
+      --panel-strong: rgba(14, 23, 38, 0.96);
+      --line: rgba(168, 199, 255, 0.28);
+      --line-strong: rgba(190, 219, 255, 0.46);
+      --text: #eef5ff;
+      --muted: #aab8cf;
       --blue: #7db5ff;
+      --green: #8ff0c6;
+      --gold: #ffd36f;
+      --red: #ff9f9f;
+      --shadow: rgba(0, 0, 0, 0.45);
     }
 
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
     }
 
     body {
@@ -27,8 +35,9 @@
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 0%, rgba(125, 181, 255, 0.14), transparent 26rem),
-        linear-gradient(180deg, #03050a, #08101d 48%, #03050a);
+        radial-gradient(circle at 20% 10%, rgba(65, 116, 184, 0.16), transparent 32rem),
+        radial-gradient(circle at 80% 0%, rgba(255, 211, 111, 0.09), transparent 28rem),
+        linear-gradient(180deg, #03050a 0%, #08101d 48%, #04060a 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -48,6 +57,21 @@
       padding: 24px 0 44px;
     }
 
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+    }
+
+    .skip:focus {
+      left: 8px;
+      z-index: 1000;
+    }
+
     .topbar,
     .nav,
     .actions {
@@ -60,15 +84,17 @@
 
     .brand {
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.92rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
     .nav a,
-    button {
+    button,
+    .button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       min-height: 38px;
       padding: 8px 12px;
       border: 1px solid var(--line);
@@ -79,28 +105,30 @@
       cursor: pointer;
     }
 
-    button.primary {
+    button.primary,
+    .button.primary {
       background: rgba(125, 181, 255, 0.16);
       border-color: rgba(125, 181, 255, 0.42);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .hero,
     .panel {
       border: 1px solid var(--line);
-      border-radius: 26px;
+      border-radius: 28px;
       background: var(--panel);
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 22px 70px var(--shadow);
     }
 
     .hero {
       margin-top: 18px;
       padding: 22px;
+      background: linear-gradient(135deg, rgba(14, 23, 38, 0.94), rgba(7, 12, 20, 0.84));
     }
 
     .kicker {
       margin: 0 0 8px;
-      color: var(--good);
+      color: var(--green);
       font-size: 0.82rem;
       font-weight: 800;
       letter-spacing: 0.1em;
@@ -112,6 +140,11 @@
       font-size: clamp(2rem, 6vw, 4rem);
       line-height: 0.98;
       letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.22rem;
     }
 
     .hero p,
@@ -131,22 +164,62 @@
       padding: 16px;
     }
 
+    .wide {
+      grid-column: 1 / -1;
+    }
+
     .metric {
-      font-size: 2.15rem;
-      font-weight: 850;
+      font-size: 2rem;
+      font-weight: 900;
       letter-spacing: -0.04em;
     }
 
-    .metric.good {
-      color: var(--good);
+    .metric.pass {
+      color: var(--green);
     }
 
-    .metric.warn {
-      color: var(--warn);
+    .metric.hold {
+      color: var(--gold);
     }
 
-    .metric.bad {
-      color: var(--bad);
+    .metric.fail {
+      color: var(--red);
+    }
+
+    .ladder {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .generation-card {
+      display: grid;
+      gap: 6px;
+      padding: 14px;
+      border: 1px solid rgba(168, 199, 255, 0.16);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .generation-card[data-status="PASS"] {
+      border-color: rgba(143, 240, 198, 0.5);
+    }
+
+    .generation-card[data-status="HOLD"] {
+      border-color: rgba(255, 211, 111, 0.5);
+    }
+
+    .generation-card[data-status="FAIL"] {
+      border-color: rgba(255, 159, 159, 0.5);
+    }
+
+    .generation-card strong {
+      font-size: 1.02rem;
+    }
+
+    .generation-card span {
+      color: var(--muted);
+      line-height: 1.45;
     }
 
     .audit-table {
@@ -174,28 +247,50 @@
     }
 
     code {
-      color: var(--good);
+      color: var(--green);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 0.86em;
     }
 
     .status-pass {
-      color: var(--good);
-      font-weight: 800;
+      color: var(--green);
+      font-weight: 900;
     }
 
     .status-hold {
-      color: var(--warn);
-      font-weight: 800;
+      color: var(--gold);
+      font-weight: 900;
     }
 
     .status-fail {
-      color: var(--bad);
-      font-weight: 800;
+      color: var(--red);
+      font-weight: 900;
     }
 
-    .wide {
-      grid-column: 1 / -1;
+    .receipt-list {
+      display: grid;
+      gap: 7px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .receipt-list li {
+      display: grid;
+      grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr);
+      gap: 8px;
+      overflow-wrap: anywhere;
+      padding: 8px 10px;
+      border: 1px solid rgba(168, 199, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+    }
+
+    .receipt-list strong {
+      color: var(--green);
     }
 
     @media (max-width: 860px) {
@@ -217,13 +312,19 @@
         display: block;
         border-bottom: 1px solid rgba(168, 199, 255, 0.18);
       }
+
+      .receipt-list li {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauges-truth="live-authority">
+  <a class="skip" href="#gauges-main">Skip to Gauges</a>
+
+  <main id="gauges-main" class="page" data-house-part="H6_GAUGES" data-construct-class="house" data-gauge-mode="progress-calibration">
     <header class="topbar">
-      <div class="brand">Diamond Gate Bridge · Dexter Lab · Measurement Key</div>
+      <div class="brand">Diamond Gate Bridge · Gauges · Progress Calibration</div>
       <nav class="nav" aria-label="Gauges navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
@@ -235,33 +336,51 @@
     </header>
 
     <section class="hero">
-      <p class="kicker">H6 · Gauges · Diagnostic Instrument Room</p>
-      <h1>Gauges Diagnostic Instrument Room</h1>
+      <p class="kicker">H6 · Gauges · Progress Calibration</p>
+      <h1>Gauges</h1>
       <p>
-        Gauges measures the finished field. It does not drive the repair, fake visual acceptance, or replace owner confirmation. This Gen 4 gauge verifies route liveness, source-contract markers, Showroom authority alignment, and minimum rebuild status.
+        Gauges now measures the staged Showroom ladder. Parent Showroom owns the proof-realm shell. Inspect Demo Universe Earth owns the visible globe. Generation 4 remains held until the phase-bound globe, route receipts, and final closeout agree.
       </p>
       <div class="actions">
-        <button class="primary" type="button" id="runDiagnostic">Run estate diagnostic</button>
-        <button type="button" id="runShowroomSelector">Run Showroom selector</button>
+        <button class="primary" type="button" id="runProgressAudit">Run progress audit</button>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/showroom/globe/">Inspect Universe</a>
       </div>
     </section>
 
-    <section class="grid" aria-label="Estate health summary">
+    <section class="grid" aria-label="Generation progress summary">
       <article class="panel">
-        <p class="kicker">Overall health</p>
-        <div id="overallMetric" class="metric warn">--</div>
+        <p class="kicker">Gen 1</p>
+        <div id="gen1Metric" class="metric hold">--</div>
+        <p>Parent shell.</p>
       </article>
+
       <article class="panel">
-        <p class="kicker">House skeleton</p>
-        <div id="houseMetric" class="metric warn">--</div>
+        <p class="kicker">Gen 2</p>
+        <div id="gen2Metric" class="metric hold">--</div>
+        <p>Inspection globe.</p>
       </article>
+
       <article class="panel">
-        <p class="kicker">Showroom</p>
-        <div id="showroomMetric" class="metric warn">--</div>
+        <p class="kicker">Gen 3</p>
+        <div id="gen3Metric" class="metric hold">--</div>
+        <p>Phase bind.</p>
       </article>
+
       <article class="panel">
-        <p class="kicker">Minimum selector</p>
-        <div id="selectorMetric" class="metric warn">HOLD</div>
+        <p class="kicker">Gen 4</p>
+        <div id="gen4Metric" class="metric hold">HELD</div>
+        <p>Closeout held.</p>
+      </article>
+
+      <article class="panel wide">
+        <h2>Generation ladder</h2>
+        <div id="generationLadder" class="ladder">
+          <div class="generation-card" data-status="HOLD">
+            <strong>Waiting for audit</strong>
+            <span>Run progress audit to measure the current Showroom state.</span>
+          </div>
+        </div>
       </article>
 
       <article class="panel wide">
@@ -269,9 +388,8 @@
         <table class="audit-table">
           <thead>
             <tr>
-              <th>Batch</th>
+              <th>Generation</th>
               <th>Target</th>
-              <th>Score</th>
               <th>Status</th>
               <th>Evidence</th>
             </tr>
@@ -279,292 +397,248 @@
           <tbody id="auditRows">
             <tr>
               <td>Waiting</td>
-              <td>Diagnostic</td>
-              <td>--</td>
+              <td>Progress audit</td>
               <td class="status-hold">HOLD</td>
-              <td>Run estate diagnostic.</td>
+              <td>Run progress audit.</td>
             </tr>
           </tbody>
         </table>
       </article>
 
       <article class="panel wide">
-        <h2>Internal Panel · Showroom Minimum Rebuild Selector</h2>
-        <p>
-          This internal panel returns the smallest lawful target only when a source-contract break is detected. Owner visual truth remains admissible and must be translated into a source-auditable target.
-        </p>
-        <table class="audit-table">
-          <thead>
-            <tr>
-              <th>Selector lane</th>
-              <th>Status</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody id="selectorRows">
-            <tr>
-              <td>Route liveness</td>
-              <td class="status-hold">HOLD</td>
-              <td>Not run.</td>
-            </tr>
-            <tr>
-              <td>Source congruence</td>
-              <td class="status-hold">HOLD</td>
-              <td>Not run.</td>
-            </tr>
-            <tr>
-              <td>Render motion</td>
-              <td class="status-hold">HOLD</td>
-              <td>Not run.</td>
-            </tr>
-            <tr>
-              <td>Visual acceptance</td>
-              <td class="status-hold">OWNER</td>
-              <td>Telemetry cannot claim final visual truth without owner acceptance.</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
-
-      <article class="panel wide">
-        <h2>Calibration receipt</h2>
-        <p>
-          VERSION: GAUGES_GEN4_333_PLUS_1_FINAL_MEASUREMENT_TNT_v1. Gauges is the H6 estate diagnostic instrument room. It measures the Gen 4 Showroom stretch after source, containment, and consumer files are applied.
-        </p>
+        <h2>Calibration rules</h2>
+        <ul class="receipt-list">
+          <li><strong>PARENT_ROLE</strong><span>/showroom/ is the proof-realm shell. It does not need to show the globe.</span></li>
+          <li><strong>INSPECTION_ROLE</strong><span>/showroom/globe/ owns the visible code-generated globe.</span></li>
+          <li><strong>GEN_1_PASS_RULE</strong><span>Parent shell serves clean proof-realm language and routes to Inspect Demo Universe.</span></li>
+          <li><strong>GEN_2_PASS_RULE</strong><span>Parent shell pass + inspection route visible code-globe pass.</span></li>
+          <li><strong>GEN_3_PASS_RULE</strong><span>Inspection route shows phase bind: HOME / BOUNDARY / MOTION / REALM / RECEIPT / NEXT.</span></li>
+          <li><strong>GEN_4_RULE</strong><span>Held until deliberate closeout. Gauges may not claim final Gen 4 from progress alone.</span></li>
+          <li><strong>TNT</strong><span>GAUGES_PROGRESS_CALIBRATION_TNT_v1</span></li>
+        </ul>
       </article>
     </section>
   </main>
 
   <script>
-    (function bootGauges() {
+    (function bootProgressGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_GEN4_333_PLUS_1_FINAL_MEASUREMENT_TNT_v1";
+      const VERSION = "GAUGES_PROGRESS_CALIBRATION_TNT_v1";
 
-      const routeTargets = [
-        { batch: "House skeleton", target: "Compass", path: "/", markers: ["H1 · Compass", "route-exists"] },
-        { batch: "House skeleton", target: "Door", path: "/door/", markers: ["route-exists"] },
-        { batch: "House skeleton", target: "Home", path: "/home/", markers: ["route-exists"] },
-        { batch: "House skeleton", target: "Products", path: "/products/", markers: ["route-exists"] },
-        { batch: "Showroom", target: "Parent Showroom", path: "/showroom/", markers: ["GENERATION_4", "SPEED_AUTHORITY", "SHOWROOM"] },
-        { batch: "Showroom", target: "Demo Universe Earth", path: "/showroom/globe/", markers: ["GENERATION_4", "Demo Universe Earth"] }
+      const gen1ParentMarkers = [
+        "The Showroom is the parent proof realm",
+        "True Generation 4 narrative-code instrument",
+        "Inspect Demo Universe Earth"
       ];
 
-      const sourceTargets = [
-        { lane: "Source authority", path: "/assets/showroom.globe.instrument.js", markers: ["GENERATION_4", "ShowroomGlobeInstrument", "createGlobe"] },
-        { lane: "Runtime support", path: "/showroom/runtime.js", markers: ["GENERATION_4", "ShowroomRuntime", "createRuntime"] },
-        { lane: "Consumer authority", path: "/showroom/consumer.authority.js", markers: ["GENERATION_4", "ShowroomConsumerAuthority", "getContract"] },
-        { lane: "Containment", path: "/showroom/showroom.css", markers: ["showroom-globe-shell", "showroom-orbital-stage", "border: 0"] },
-        { lane: "Render bridge", path: "/showroom/showroom.render.js", markers: ["GENERATION_4", "ShowroomRender", "renderShowroomProofSurface"] }
+      const gen2InspectionMarkers = [
+        "RESTORED_GENERATION",
+        "GENERATION_2",
+        "VISIBLE_CODE_GLOBE",
+        "true"
       ];
 
-      const auditRows = document.getElementById("auditRows");
-      const selectorRows = document.getElementById("selectorRows");
-      const overallMetric = document.getElementById("overallMetric");
-      const houseMetric = document.getElementById("houseMetric");
-      const showroomMetric = document.getElementById("showroomMetric");
-      const selectorMetric = document.getElementById("selectorMetric");
+      const gen3InspectionMarkers = [
+        "GENERATION_3",
+        "PHASE_BIND",
+        "HOME",
+        "BOUNDARY",
+        "MOTION",
+        "REALM",
+        "RECEIPT",
+        "NEXT"
+      ];
 
-      function setMetric(el, value) {
-        el.textContent = value;
-        el.classList.remove("good", "warn", "bad");
+      const gen4CloseoutMarkers = [
+        "GENERATION_4_CLOSEOUT",
+        "FINAL_CLOSEOUT",
+        "GEN4_CLOSEOUT=complete",
+        "GEN_4_FINAL_PASS"
+      ];
 
-        if (value === "PASS" || Number(value) >= 90) {
-          el.classList.add("good");
-        } else if (value === "FAIL" || Number(value) < 60) {
-          el.classList.add("bad");
+      const rows = document.getElementById("auditRows");
+      const ladder = document.getElementById("generationLadder");
+      const gen1Metric = document.getElementById("gen1Metric");
+      const gen2Metric = document.getElementById("gen2Metric");
+      const gen3Metric = document.getElementById("gen3Metric");
+      const gen4Metric = document.getElementById("gen4Metric");
+
+      function setMetric(node, status) {
+        node.textContent = status;
+        node.classList.remove("pass", "hold", "fail");
+
+        if (status === "PASS") {
+          node.classList.add("pass");
+        } else if (status === "FAIL") {
+          node.classList.add("fail");
         } else {
-          el.classList.add("warn");
+          node.classList.add("hold");
         }
       }
 
-      function statusClass(score) {
-        if (score >= 90) return "status-pass";
-        if (score >= 60) return "status-hold";
-        return "status-fail";
+      function statusClass(status) {
+        if (status === "PASS") return "status-pass";
+        if (status === "FAIL") return "status-fail";
+        return "status-hold";
+      }
+
+      function addRow(generation, target, status, evidence) {
+        const row = document.createElement("tr");
+        row.innerHTML =
+          "<td>" + generation + "</td>" +
+          "<td><code>" + target + "</code></td>" +
+          "<td class='" + statusClass(status) + "'>" + status + "</td>" +
+          "<td>" + evidence + "</td>";
+        rows.append(row);
+      }
+
+      function addCard(title, status, body) {
+        const card = document.createElement("div");
+        card.className = "generation-card";
+        card.dataset.status = status;
+        card.innerHTML =
+          "<strong>" + title + " · <span class='" + statusClass(status) + "'>" + status + "</span></strong>" +
+          "<span>" + body + "</span>";
+        ladder.append(card);
       }
 
       async function fetchText(path) {
         const response = await fetch(path, { cache: "no-store" });
         const text = await response.text();
         return {
+          path,
           ok: response.ok,
           status: response.status,
           text
         };
       }
 
-      function scoreMarkers(text, markers) {
-        const found = markers.filter((marker) => text.includes(marker));
+      function markerResult(text, markers) {
+        const found = markers.filter(function has(marker) {
+          return text.indexOf(marker) !== -1;
+        });
+
         return {
           found,
+          missing: markers.filter(function lacks(marker) {
+            return found.indexOf(marker) === -1;
+          }),
           score: Math.round((found.length / markers.length) * 100)
         };
       }
 
-      function addRow(batch, target, score, status, evidence) {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${batch}</td>
-          <td><code>${target}</code></td>
-          <td>${score}</td>
-          <td class="${statusClass(score)}">${status}</td>
-          <td>${evidence}</td>
-        `;
-        auditRows.append(row);
+      function passFromScore(result, requiredPercent) {
+        return result.score >= requiredPercent ? "PASS" : "HOLD";
       }
 
-      async function runEstateDiagnostic() {
-        auditRows.innerHTML = "";
+      async function runProgressAudit() {
+        rows.innerHTML = "";
+        ladder.innerHTML = "";
 
-        const results = [];
+        let parent;
+        let inspection;
 
-        for (const target of routeTargets) {
-          try {
-            const result = await fetchText(target.path);
-            const marker = scoreMarkers(result.text, target.markers);
-            const score = result.ok ? marker.score : 0;
-            const status = score >= 90 ? "PASS" : score >= 60 ? "HOLD" : "FAIL";
-            results.push({ target, score, status, kind: "route" });
-            addRow(
-              target.batch,
-              target.path,
-              score,
-              status,
-              `${marker.found.length} of ${target.markers.length} required markers found. HTTP ${result.status}.`
-            );
-          } catch (error) {
-            results.push({ target, score: 0, status: "FAIL", kind: "route" });
-            addRow(target.batch, target.path, 0, "FAIL", error.message);
-          }
+        try {
+          parent = await fetchText("/showroom/");
+        } catch (error) {
+          parent = { ok: false, status: "FETCH_ERROR", text: "", error: error.message };
         }
 
-        for (const target of sourceTargets) {
-          try {
-            const result = await fetchText(target.path);
-            const marker = scoreMarkers(result.text, target.markers);
-            const score = result.ok ? marker.score : 0;
-            const status = score >= 90 ? "PASS" : score >= 60 ? "HOLD" : "FAIL";
-            results.push({ target, score, status, kind: "source" });
-            addRow(
-              target.lane,
-              target.path,
-              score,
-              status,
-              `${marker.found.length} of ${target.markers.length} required source markers found. HTTP ${result.status}.`
-            );
-          } catch (error) {
-            results.push({ target, score: 0, status: "FAIL", kind: "source" });
-            addRow(target.lane, target.path, 0, "FAIL", error.message);
-          }
+        try {
+          inspection = await fetchText("/showroom/globe/");
+        } catch (error) {
+          inspection = { ok: false, status: "FETCH_ERROR", text: "", error: error.message };
         }
 
-        const overall = Math.round(results.reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.length));
-        const house = Math.round(
-          results
-            .filter((item) => item.target.batch === "House skeleton")
-            .reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.filter((item) => item.target.batch === "House skeleton").length)
-        );
-        const showroom = Math.round(
-          results
-            .filter((item) => item.target.batch === "Showroom" || item.kind === "source")
-            .reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.filter((item) => item.target.batch === "Showroom" || item.kind === "source").length)
+        const gen1 = markerResult(parent.text, gen1ParentMarkers);
+        const gen2 = markerResult(inspection.text, gen2InspectionMarkers);
+        const gen3 = markerResult(inspection.text, gen3InspectionMarkers);
+        const gen4 = markerResult(inspection.text + "\n" + parent.text, gen4CloseoutMarkers);
+
+        const gen1Status = parent.ok && passFromScore(gen1, 67) === "PASS" ? "PASS" : "HOLD";
+        const gen2Status = gen1Status === "PASS" && inspection.ok && passFromScore(gen2, 75) === "PASS" ? "PASS" : "HOLD";
+        const gen3Status = gen2Status === "PASS" && inspection.ok && passFromScore(gen3, 75) === "PASS" ? "PASS" : "HOLD";
+        const gen4Status = gen3Status === "PASS" && gen4.score >= 75 ? "PASS" : "HELD";
+
+        setMetric(gen1Metric, gen1Status);
+        setMetric(gen2Metric, gen2Status);
+        setMetric(gen3Metric, gen3Status);
+        setMetric(gen4Metric, gen4Status);
+
+        addRow(
+          "Generation 1",
+          "/showroom/",
+          gen1Status,
+          gen1.found.length + " of " + gen1ParentMarkers.length + " parent shell markers found. HTTP " + parent.status + "."
         );
 
-        setMetric(overallMetric, overall);
-        setMetric(houseMetric, house);
-        setMetric(showroomMetric, showroom);
+        addRow(
+          "Generation 2",
+          "/showroom/globe/",
+          gen2Status,
+          gen2.found.length + " of " + gen2InspectionMarkers.length + " inspection globe markers found. HTTP " + inspection.status + "."
+        );
+
+        addRow(
+          "Generation 3",
+          "/showroom/globe/",
+          gen3Status,
+          gen3.found.length + " of " + gen3InspectionMarkers.length + " phase-bind markers found. HTTP " + inspection.status + "."
+        );
+
+        addRow(
+          "Generation 4",
+          "/showroom/ + /showroom/globe/",
+          gen4Status,
+          gen4.found.length + " of " + gen4CloseoutMarkers.length + " closeout markers found. Held unless explicit closeout markers exist."
+        );
+
+        addCard(
+          "Generation 1 · Parent shell",
+          gen1Status,
+          gen1Status === "PASS"
+            ? "Parent Showroom shell is accepted as the proof-realm surface."
+            : "Parent Showroom shell markers are incomplete."
+        );
+
+        addCard(
+          "Generation 2 · Inspection globe",
+          gen2Status,
+          gen2Status === "PASS"
+            ? "Generation 2 is accepted through parent shell pass plus /showroom/globe/ visible code-globe pass."
+            : "Inspection globe markers are not yet complete."
+        );
+
+        addCard(
+          "Generation 3 · Phase bind",
+          gen3Status,
+          gen3Status === "PASS"
+            ? "Inspection globe is carrying the phase-bind layer."
+            : "Phase bind is pending visual/source confirmation."
+        );
+
+        addCard(
+          "Generation 4 · Closeout",
+          gen4Status,
+          gen4Status === "PASS"
+            ? "Closeout markers exist. Owner confirmation still controls final acceptance."
+            : "Held by design. Do not claim Gen 4 completion from progress markers alone."
+        );
 
         document.documentElement.dataset.gaugesRun = "complete";
         document.documentElement.dataset.gaugesVersion = VERSION;
+        document.documentElement.dataset.gen1Status = gen1Status;
+        document.documentElement.dataset.gen2Status = gen2Status;
+        document.documentElement.dataset.gen3Status = gen3Status;
+        document.documentElement.dataset.gen4Status = gen4Status;
       }
 
-      async function runShowroomSelector() {
-        const lanes = [
-          {
-            lane: "Route liveness",
-            run: async () => {
-              const parent = await fetchText("/showroom/");
-              const demo = await fetchText("/showroom/globe/");
-              return parent.ok && demo.ok
-                ? ["PASS", "Parent and standalone Showroom routes are live."]
-                : ["FAIL", "One or more Showroom routes failed liveness."];
-            }
-          },
-          {
-            lane: "Source congruence",
-            run: async () => {
-              const contract = await fetchText("/showroom/consumer.authority.js");
-              const instrument = await fetchText("/assets/showroom.globe.instrument.js");
-              const ok = contract.text.includes("GENERATION_4") && instrument.text.includes("GENERATION_4");
-              return ok
-                ? ["PASS", "Consumer contract and globe instrument both declare Gen 4."]
-                : ["HOLD", "Generation contract mismatch remains possible."];
-            }
-          },
-          {
-            lane: "Render motion",
-            run: async () => {
-              const render = await fetchText("/showroom/showroom.render.js");
-              const ok = render.text.includes("createGlobe") && render.text.includes("renderShowroomProofSurface");
-              return ok
-                ? ["PASS", "Render bridge consumes the instrument instead of owning motion."]
-                : ["HOLD", "Render bridge may not be consuming the instrument correctly."];
-            }
-          },
-          {
-            lane: "Visual acceptance",
-            run: async () => ["OWNER", "Owner visual confirmation remains required after deployment."]
-          }
-        ];
+      document.getElementById("runProgressAudit").addEventListener("click", runProgressAudit);
 
-        selectorRows.innerHTML = "";
-        let passCount = 0;
-        let hardFail = false;
-
-        for (const lane of lanes) {
-          let status = "HOLD";
-          let meaning = "Not run.";
-
-          try {
-            const result = await lane.run();
-            status = result[0];
-            meaning = result[1];
-          } catch (error) {
-            status = "FAIL";
-            meaning = error.message;
-          }
-
-          if (status === "PASS") passCount += 1;
-          if (status === "FAIL") hardFail = true;
-
-          const row = document.createElement("tr");
-          const cls = status === "PASS" ? "status-pass" : status === "FAIL" ? "status-fail" : "status-hold";
-          row.innerHTML = `
-            <td>${lane.lane}</td>
-            <td class="${cls}">${status}</td>
-            <td>${meaning}</td>
-          `;
-          selectorRows.append(row);
-        }
-
-        if (hardFail) {
-          setMetric(selectorMetric, "FAIL");
-        } else if (passCount >= 3) {
-          setMetric(selectorMetric, "HOLD");
-          selectorMetric.textContent = "OWNER";
-        } else {
-          setMetric(selectorMetric, "HOLD");
-        }
-      }
-
-      document.getElementById("runDiagnostic").addEventListener("click", runEstateDiagnostic);
-      document.getElementById("runShowroomSelector").addEventListener("click", runShowroomSelector);
-
-      window.GaugesGen4 = Object.freeze({
+      window.GaugesProgressCalibration = Object.freeze({
         VERSION,
-        runEstateDiagnostic,
-        runShowroomSelector
+        runProgressAudit
       });
     })();
   </script>

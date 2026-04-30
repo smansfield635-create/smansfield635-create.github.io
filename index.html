@@ -1,23 +1,33 @@
 <!doctype html>
-<html lang="en" data-page="compass" data-room="H1_COMPASS" data-public-mode="ted-clean">
+<html
+  lang="en"
+  data-page="compass"
+  data-route="/"
+  data-generation="public-compass-renewed-contract-tnt-v1"
+  data-canonical-universe-route="/nine-summits/universe/"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Compass · Diamond Gate Bridge</title>
-  <meta name="description" content="Compass is the public control surface for Rich Manor and Estate.">
+  <title>Diamond Gate Bridge · Compass</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge is the starting point for Nine Summits, This Underdog, products, showroom demonstrations, and public speaking work."
+  >
+
   <style>
     :root {
-      --bg: #05070b;
-      --panel: rgba(9, 15, 25, 0.9);
-      --panel-soft: rgba(14, 24, 38, 0.74);
+      --bg: #03050a;
+      --panel: rgba(9, 15, 25, 0.94);
+      --panel2: rgba(14, 24, 38, 0.84);
       --line: rgba(168, 199, 255, 0.22);
-      --line-strong: rgba(143, 240, 198, 0.34);
-      --text: #eef5ff;
-      --muted: #aab8cf;
+      --gold-line: rgba(242, 199, 111, 0.38);
+      --text: #f4f7ff;
+      --muted: #b8c2d6;
+      --soft: rgba(244, 247, 255, 0.78);
+      --gold: #f2c76f;
       --green: #8ff0c6;
-      --blue: #7db5ff;
-      --gold: #ffd36f;
-      --shadow: rgba(0, 0, 0, 0.48);
+      --shadow: rgba(0, 0, 0, 0.56);
     }
 
     * {
@@ -34,10 +44,10 @@
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 78% 8%, rgba(255, 211, 111, 0.12), transparent 24rem),
-        radial-gradient(circle at 24% 18%, rgba(125, 181, 255, 0.15), transparent 32rem),
-        radial-gradient(circle at 52% 82%, rgba(143, 240, 198, 0.08), transparent 24rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+        radial-gradient(circle at 78% 6%, rgba(242, 199, 111, 0.14), transparent 24rem),
+        radial-gradient(circle at 18% 18%, rgba(145, 189, 255, 0.12), transparent 30rem),
+        radial-gradient(circle at 50% 92%, rgba(143, 240, 198, 0.08), transparent 26rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
@@ -62,6 +72,7 @@
       border-radius: 10px;
       background: #fff;
       color: #000;
+      font-weight: 850;
     }
 
     .skip:focus {
@@ -71,35 +82,37 @@
     .page {
       width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 22px 0 44px;
-    }
-
-    .topbar {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 22px;
+      padding: 24px 0 64px;
     }
 
     .brand {
+      display: block;
+      margin-bottom: 18px;
       color: var(--muted);
       font-size: 0.86rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
     .brand strong {
       display: block;
-      color: var(--text);
+      color: var(--gold);
       font-size: 1rem;
-      letter-spacing: 0;
-      text-transform: none;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .nav {
+    .nav,
+    .actions,
+    .links {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+    }
+
+    .nav {
+      margin-bottom: 26px;
     }
 
     .nav a,
@@ -107,291 +120,233 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
+      min-height: 42px;
+      padding: 10px 16px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.055);
       color: var(--text);
-      font-weight: 650;
+      font-weight: 850;
     }
 
-    .nav a:hover,
-    .button:hover {
-      border-color: rgba(168, 199, 255, 0.42);
-      background: rgba(255, 255, 255, 0.075);
+    .nav a[aria-current="page"],
+    .button.primary {
+      border-color: rgba(242, 199, 111, 0.52);
+      background: rgba(242, 199, 111, 0.14);
+    }
+
+    .button.green {
+      border-color: rgba(143, 240, 198, 0.5);
+      background: rgba(143, 240, 198, 0.13);
     }
 
     .hero,
     .panel,
-    .mode-card,
+    .card,
     .route-card {
       border: 1px solid var(--line);
       border-radius: 30px;
-      background: var(--panel);
+      background:
+        radial-gradient(circle at 90% 8%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        var(--panel);
       box-shadow: 0 24px 80px var(--shadow);
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
+    .hero,
+    .panel {
       padding: clamp(24px, 5vw, 52px);
-      min-height: 430px;
+      margin-top: 18px;
+    }
+
+    .hero {
+      min-height: 560px;
       display: grid;
       align-content: center;
-      gap: 22px;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+      gap: 24px;
+      border-color: var(--gold-line);
       background:
-        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
-        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: clamp(18px, 6vw, 82px);
-      top: 50%;
-      width: clamp(160px, 32vw, 360px);
-      aspect-ratio: 1;
-      transform: translateY(-50%);
-      border: 1px solid rgba(255, 211, 111, 0.18);
-      border-radius: 50%;
-      background:
-        conic-gradient(from 0deg, rgba(255, 211, 111, 0.24), rgba(143, 240, 198, 0.08), rgba(125, 181, 255, 0.16), rgba(255, 211, 111, 0.24)),
-        radial-gradient(circle at 50% 50%, rgba(3, 6, 12, 0.82) 0 44%, transparent 45%);
-      box-shadow:
-        inset 0 0 36px rgba(255, 211, 111, 0.05),
-        0 0 78px rgba(125, 181, 255, 0.08);
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .hero-content,
-    .actions {
-      position: relative;
-      z-index: 2;
+        radial-gradient(circle at 72% 18%, rgba(242, 199, 111, 0.17), transparent 22rem),
+        radial-gradient(circle at 24% 70%, rgba(143, 240, 198, 0.08), transparent 18rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.96), rgba(5, 9, 16, 0.78));
     }
 
     .kicker {
       margin: 0 0 12px;
-      color: var(--green);
+      color: var(--gold);
       font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
+      font-weight: 950;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+    }
+
+    .kicker.green {
+      color: var(--green);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
+      max-width: 980px;
+      font-size: clamp(3.2rem, 10vw, 7.2rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 920px;
+      font-size: clamp(1.85rem, 5vw, 3.45rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.28rem, 3.7vw, 2.05rem);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+      line-height: 1.6;
     }
 
     .lead {
-      max-width: 840px;
-      margin: 20px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
-      line-height: 1.42;
+      max-width: 910px;
+      color: var(--soft);
+      font-size: clamp(1.16rem, 3vw, 1.55rem);
+      line-height: 1.45;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
+    .one-line {
       color: var(--text);
-      font-weight: 850;
+      font-size: clamp(1.7rem, 5vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+      font-weight: 950;
     }
 
-    .section {
-      margin-top: 18px;
-    }
-
-    .panel {
-      padding: clamp(20px, 3vw, 30px);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        var(--panel-soft);
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 2.6rem);
-      letter-spacing: -0.05em;
-    }
-
-    .panel p {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.52;
-    }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .status-card {
-      min-height: 112px;
-      display: grid;
-      align-content: center;
-      gap: 7px;
-      padding: 16px;
-      border: 1px solid var(--line-strong);
-      border-radius: 22px;
-      background:
-        linear-gradient(180deg, rgba(143, 240, 198, 0.08), rgba(125, 181, 255, 0.045));
-    }
-
-    .status-card span {
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .status-card strong {
-      font-size: clamp(1.25rem, 3vw, 1.75rem);
-      line-height: 1.02;
-    }
-
-    .mode-grid,
-    .route-grid {
+    .grid {
       display: grid;
       gap: 14px;
       margin-top: 18px;
     }
 
-    .mode-grid {
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .route-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .mode-card,
+    .card,
     .route-card {
+      padding: 22px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
+        var(--panel2);
+      box-shadow: none;
+    }
+
+    .card {
       min-height: 210px;
       display: grid;
-      align-content: space-between;
-      gap: 18px;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
-        rgba(9, 15, 25, 0.84);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      align-content: start;
+      gap: 12px;
     }
 
-    .mode-card:hover,
-    .route-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      background:
-        radial-gradient(circle at 22% 0%, rgba(143, 240, 198, 0.1), transparent 14rem),
-        rgba(12, 20, 32, 0.9);
+    .route-card {
+      min-height: 290px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
     }
 
-    .mode-label,
-    .route-label {
+    .route-card .button {
+      width: max-content;
+      margin-top: auto;
+    }
+
+    .card span,
+    .route-card span {
+      display: block;
+      margin-bottom: 8px;
       color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 850;
-      letter-spacing: 0.1em;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .mode-card h3,
-    .route-card h3 {
-      margin: 6px 0 0;
-      font-size: clamp(1.45rem, 3vw, 2.15rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
+    .card p,
+    .route-card p {
+      margin: 0;
     }
 
-    .mode-card p,
-    .route-card p {
-      margin: 10px 0 0;
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .step strong {
+      color: var(--green);
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .step span {
       color: var(--muted);
       line-height: 1.48;
-    }
-
-    .card-link {
-      color: var(--green);
-      font-weight: 850;
-    }
-
-    .backlinks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
     }
 
     .receipt {
       display: none !important;
     }
 
-    @media (max-width: 960px) {
-      .status-grid,
-      .mode-grid,
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media (max-width: 980px) {
+      .grid.two,
+      .grid.three,
+      .grid.four {
+        grid-template-columns: 1fr;
       }
 
       .hero {
-        min-height: 370px;
-      }
-
-      .hero::after {
-        opacity: 0.3;
-        right: -50px;
+        min-height: 460px;
       }
     }
 
     @media (max-width: 620px) {
       .page {
-        width: min(100% - 22px, 620px);
-        padding-top: 16px;
-      }
-
-      .status-grid,
-      .mode-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .nav,
-      .actions,
-      .backlinks {
-        gap: 8px;
+        width: min(100% - 24px, 620px);
+        padding-top: 18px;
       }
 
       .nav a,
       .button {
-        min-height: 38px;
-        padding: 8px 12px;
+        min-height: 40px;
+        padding: 9px 14px;
       }
 
-      .mode-card,
-      .route-card {
-        min-height: 180px;
+      .step {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -404,293 +359,270 @@
     id="compass-main"
     class="page"
     data-route="/"
-    data-house-part="compass"
-    data-construct-class="house"
-    data-estate="rich-manor-and-estate"
-    data-gauges-truth="live-authority"
-    data-compass-generation="generation-2"
-    data-compass-control-surface="active"
-    data-this-underdog-route="active"
-    data-nine-summits-route="active">
+    data-page-purpose="public-homepage"
+    data-canonical-universe-route="/nine-summits/universe/"
+    data-retired-universe-route="/nine-summits-universe/"
+  >
+    <a class="brand" href="/">
+      <strong>Diamond Gate Bridge</strong>
+      Start here
+    </a>
 
-    <header class="topbar" aria-label="Compass header">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        Rich Manor and Estate · Compass
-      </a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="/" aria-current="page">Compass</a>
+      <a href="/nine-summits/">Nine Summits</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/nine-summits-of-love/">Book</a>
+      <a href="/this-underdog/">This Underdog</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
 
-      <nav class="nav" aria-label="Compass navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/this-underdog/">This Underdog</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+    <section class="hero">
+      <p class="kicker">Diamond Gate Bridge</p>
+      <h1>Find the key. Climb the summit. Build the thing.</h1>
 
-    <section class="hero" aria-labelledby="compass-title">
-      <div class="hero-content">
-        <p class="kicker">H1 · Compass · Public Control Surface</p>
-        <h1 id="compass-title">Compass</h1>
-        <p class="lead">
-          The Compass is the public control surface for Rich Manor and Estate. It keeps the map stable, opens the house routes, hands the globe view to Demo Universe, and routes visitors toward This Underdog and the Nine Summits.
-        </p>
-      </div>
+      <p class="lead">
+        This is the front door for the work: the book, the world, the products, the stage, and the proof.
+      </p>
 
-      <div class="actions" aria-label="Primary Compass actions">
-        <a class="button primary" href="/showroom/globe/">Inspect Demo Universe</a>
-        <a class="button" href="/nine-summits/">Open Nine Summits</a>
-        <a class="button" href="/this-underdog/">Open This Underdog</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
+      <p class="lead">
+        Start with the story. Follow the voice. Open the map. Then choose where to enter.
+      </p>
+
+      <div class="actions">
+        <a class="button primary" href="/nine-summits/">Explore Nine Summits</a>
+        <a class="button green" href="/this-underdog/">Meet This Underdog</a>
+        <a class="button" href="/products/">View Products</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="orientation-title">
-      <p class="kicker">Live orientation</p>
-      <h2 id="orientation-title">Choose the view. Keep the route clear.</h2>
-      <p>
-        Compass is a control room, not a final globe. It gives the visitor a stable way to move through the estate: map first, expansion second, inspection through Showroom, public voice through This Underdog, and summit routing through Nine Summits.
+    <section class="panel">
+      <p class="kicker green">Start here</p>
+      <h2>The work has many doors. The point is simple.</h2>
+
+      <p class="one-line">
+        Pressure can become language. Language can become a path. A path can become a world.
       </p>
 
-      <div class="status-grid" aria-label="Compass status">
-        <div class="status-card">
-          <span>Flat</span>
-          <strong>Baseline</strong>
+      <div class="steps">
+        <div class="step">
+          <strong>01</strong>
+          <span>Read the human path through The Nine Summits of Love.</span>
         </div>
-        <div class="status-card">
-          <span>Tree</span>
-          <strong>Available</strong>
+
+        <div class="step">
+          <strong>02</strong>
+          <span>Enter the Nine Summits Universe and see the world around the path.</span>
         </div>
-        <div class="status-card">
-          <span>Globe</span>
-          <strong>Handoff</strong>
+
+        <div class="step">
+          <strong>03</strong>
+          <span>Meet This Underdog, the public voice carrying the story into rooms, stages, and seminars.</span>
         </div>
-        <div class="status-card">
-          <span>Stage</span>
-          <strong>Visible</strong>
+
+        <div class="step">
+          <strong>04</strong>
+          <span>Explore the products, tools, games, systems, and support pieces being built from the same center.</span>
         </div>
-        <div class="status-card">
-          <span>Summits</span>
-          <strong>Linked</strong>
-        </div>
-        <div class="status-card">
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Main paths</p>
+      <h2>Choose the door that matches what you came for.</h2>
+
+      <div class="grid four">
+        <article class="route-card">
+          <span>Book</span>
+          <h3>Nine Summits of Love</h3>
+          <p>
+            A human path through character, structure, balance, stability, peace, joy, dignity, free will, and love.
+          </p>
+          <p>
+            The message: love is not weakness. Love is discipline with a heart.
+          </p>
+          <a class="button primary" href="/nine-summits-of-love/">Open book path</a>
+        </article>
+
+        <article class="route-card">
+          <span>World</span>
+          <h3>Nine Summits Universe</h3>
+          <p>
+            A seven-landmass world built around coherence, terrain, restoration, and a floating magnetic core.
+          </p>
+          <p>
+            The message: the higher the climb, the sweeter the fruit.
+          </p>
+          <a class="button primary" href="/nine-summits/universe/">Open universe path</a>
+        </article>
+
+        <article class="route-card">
+          <span>Voice</span>
+          <h3>This Underdog</h3>
+          <p>
+            The speaking lane: comedy, story, seminars, public rooms, and the voice behind the work.
+          </p>
+          <p>
+            The message: finding your inner underdog is finding your voice.
+          </p>
+          <a class="button green" href="/this-underdog/">Open speaking path</a>
+        </article>
+
+        <article class="route-card">
+          <span>Products</span>
+          <h3>Product Wing</h3>
+          <p>
+            Practical tools, games, learning systems, support products, and working ideas.
+          </p>
+          <p>
+            The message: an idea becomes real when it helps someone use it.
+          </p>
+          <a class="button" href="/products/">Open products</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker gold">Nine Summits</p>
+      <h2>The book gives the climb. The universe gives the world.</h2>
+
+      <div class="grid two">
+        <article class="card">
+          <span>The book</span>
+          <h3>Human change, written plainly.</h3>
+          <p>
+            The Nine Summits of Love is the personal path. It speaks to pressure, dignity, free will, and the decision to become whole without becoming hard.
+          </p>
+          <p>
+            <a class="button primary" href="/nine-summits-of-love/">Read the book path</a>
+          </p>
+        </article>
+
+        <article class="card">
+          <span>The universe</span>
+          <h3>The world around the climb.</h3>
+          <p>
+            Nine Summits Universe is the world path. It turns the climb into places, terrain, cities, access, trials, fruit, and possibility.
+          </p>
+          <p>
+            <a class="button primary" href="/nine-summits/universe/">Enter the universe</a>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker green">This Underdog</p>
+      <h2>The stage was already there. Now it is visible.</h2>
+
+      <p class="one-line">
+        The underdog is not the weak part. It is the part that survived before it learned how to speak.
+      </p>
+
+      <div class="grid three">
+        <article class="card">
+          <span>Story</span>
+          <h3>Pressure becomes usable.</h3>
+          <p>
+            This Underdog turns lived experience into language people can recognize.
+          </p>
+        </article>
+
+        <article class="card">
+          <span>Comedy</span>
+          <h3>The wall comes down.</h3>
+          <p>
+            Humor opens the room so the truth has somewhere to land.
+          </p>
+        </article>
+
+        <article class="card">
+          <span>Speaking</span>
+          <h3>The message enters the room.</h3>
+          <p>
+            Public speaking gives the work a human voice before it becomes a system.
+          </p>
+        </article>
+      </div>
+
+      <div class="links">
+        <a class="button green" href="/this-underdog/">Open This Underdog</a>
+        <a class="button" href="/about-this-underdog/">About This Underdog</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="kicker">Products and proof</p>
+      <h2>Ideas need a place to become useful.</h2>
+
+      <div class="grid three">
+        <article class="route-card">
+          <span>Products</span>
+          <h3>Tools people can use.</h3>
+          <p>
+            Games, learning systems, support tools, practical products, and product families.
+          </p>
+          <a class="button primary" href="/products/">Open Products</a>
+        </article>
+
+        <article class="route-card">
+          <span>Showroom</span>
+          <h3>See what is being built.</h3>
+          <p>
+            Showroom is the display room for live demonstrations, visible builds, and public proof.
+          </p>
+          <a class="button" href="/showroom/">Open Showroom</a>
+        </article>
+
+        <article class="route-card">
           <span>Gauges</span>
-          <strong>Live</strong>
-        </div>
+          <h3>Check what is working.</h3>
+          <p>
+            Gauges measures routes, page health, and whether the current work is landing cleanly.
+          </p>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </article>
       </div>
     </section>
 
-    <section class="mode-grid" aria-label="Compass modes">
-      <article class="mode-card">
-        <div>
-          <div class="mode-label">Flat</div>
-          <h3>Stable map</h3>
-          <p>Clear house routes, product chambers, Showroom access, and Gauges verification.</p>
-        </div>
-        <div class="card-link">Baseline preserved</div>
-      </article>
+    <section class="panel">
+      <p class="kicker gold">Final line</p>
+      <h2>Start where the pressure is. That is usually where the key is.</h2>
 
-      <article class="mode-card">
-        <div>
-          <div class="mode-label">Tree</div>
-          <h3>Expansion lane</h3>
-          <p>Tree mode remains available for structured growth without disrupting the baseline map.</p>
-        </div>
-        <div class="card-link">Available</div>
-      </article>
-
-      <article class="mode-card">
-        <div>
-          <div class="mode-label">Globe</div>
-          <h3>Demo Universe</h3>
-          <p>The globe lane is handled by the Showroom inspection route, where Earth becomes the visual focus.</p>
-        </div>
-        <a class="card-link" href="/showroom/globe/">Inspect Globe</a>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="routes-title">
-      <p class="kicker">House routes</p>
-      <h2 id="routes-title">Move through the estate.</h2>
-      <p>
-        The Compass stays simple: orient, enter, stabilize, distribute, inspect, speak, summit, and verify.
+      <p class="lead">
+        The work is not asking people to pretend life is easy. It is asking them to stop wasting the pressure.
       </p>
 
-      <div class="route-grid" aria-label="House route cards">
-        <a class="route-card" href="/">
-          <div>
-            <div class="route-label">Compass</div>
-            <h3>Orientation</h3>
-            <p>Return to the control surface.</p>
-          </div>
-          <div class="card-link">Open Compass</div>
-        </a>
-
-        <a class="route-card" href="/door/">
-          <div>
-            <div class="route-label">Door</div>
-            <h3>Entry</h3>
-            <p>Cross into the Manor.</p>
-          </div>
-          <div class="card-link">Open Door</div>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <div>
-            <div class="route-label">Home</div>
-            <h3>Residence</h3>
-            <p>Stabilize inside the house.</p>
-          </div>
-          <div class="card-link">Open Home</div>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <div>
-            <div class="route-label">Products</div>
-            <h3>Source wing</h3>
-            <p>Move into the product chambers.</p>
-          </div>
-          <div class="card-link">Open Products</div>
-        </a>
-
-        <a class="route-card" href="/showroom/">
-          <div>
-            <div class="route-label">Showroom</div>
-            <h3>Display</h3>
-            <p>See public proof and demonstration.</p>
-          </div>
-          <div class="card-link">Open Showroom</div>
-        </a>
-
-        <a class="route-card" href="/showroom/globe/">
-          <div>
-            <div class="route-label">Demo Universe</div>
-            <h3>Inspection</h3>
-            <p>Inspect the our-universe model and Earth definition lane.</p>
-          </div>
-          <div class="card-link">Inspect Universe</div>
-        </a>
-
-        <a class="route-card" href="/this-underdog/">
-          <div>
-            <div class="route-label">This Underdog</div>
-            <h3>Speaking lane</h3>
-            <p>The stage was already there. Now it is becoming visible.</p>
-          </div>
-          <div class="card-link">Open This Underdog</div>
-        </a>
-
-        <a class="route-card" href="/nine-summits/">
-          <div>
-            <div class="route-label">Nine Summits</div>
-            <h3>Summit routes</h3>
-            <p>The doorway to the book, the universe, and the public speaking lane.</p>
-          </div>
-          <div class="card-link">Open Nine Summits</div>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <div>
-            <div class="route-label">Gauges</div>
-            <h3>Measurement</h3>
-            <p>Check the current health of the estate.</p>
-          </div>
-          <div class="card-link">Read Gauges</div>
-        </a>
-      </div>
-    </section>
-
-    <section class="section panel" aria-labelledby="summits-title">
-      <p class="kicker">Summit doorway</p>
-      <h2 id="summits-title">Nine Summits is now visible from Compass.</h2>
-      <p>
-        Nine Summits is the public routing hub. It sends visitors to the book lane, the universe lane, and the speaking lane without making those pages compete.
-      </p>
-      <p>
-        Nine Summits of Love remains the book and human path. Nine Summits Universe remains the world and platform lane. This Underdog remains the public voice.
-      </p>
-
-      <div class="actions" style="margin-top:18px">
-        <a class="button primary" href="/nine-summits/">Open Nine Summits</a>
-        <a class="button" href="/nine-summits-of-love/">Book lane</a>
-        <a class="button" href="/nine-summits-universe/">Universe lane</a>
-        <a class="button" href="/this-underdog/">Speaking lane</a>
-      </div>
-    </section>
-
-    <section class="section panel" aria-labelledby="underdog-title">
-      <p class="kicker">Speaking lane</p>
-      <h2 id="underdog-title">This Underdog remains visible from Compass.</h2>
-      <p>
-        This Underdog is the public voice lane: comedy, story, speaking, seminars, Consider the Energy, and the message that finding your inner underdog is the same thing as unlocking your inner genius.
-      </p>
-
-      <div class="actions" style="margin-top:18px">
-        <a class="button primary" href="/this-underdog/">Open This Underdog</a>
-      </div>
-    </section>
-
-    <section class="section panel" aria-labelledby="backlinks-title">
-      <p class="kicker">Backlinks</p>
-      <h2 id="backlinks-title">Core movement stays visible.</h2>
-      <div class="backlinks">
-        <a class="button" href="/">Compass</a>
-        <a class="button" href="/door/">Door</a>
-        <a class="button" href="/home/">Home</a>
-        <a class="button" href="/products/">Products</a>
-        <a class="button" href="/showroom/">Showroom</a>
-        <a class="button" href="/showroom/globe/">Demo Universe</a>
-        <a class="button" href="/this-underdog/">This Underdog</a>
-        <a class="button" href="/nine-summits/">Nine Summits</a>
-        <a class="button" href="/gauges/">Gauges</a>
+      <div class="links">
+        <a class="button primary" href="/nine-summits/">Start with Nine Summits</a>
+        <a class="button green" href="/this-underdog/">Start with This Underdog</a>
+        <a class="button" href="/products/">Start with Products</a>
+        <a class="button" href="/showroom/">Start with Showroom</a>
       </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      Compass receipt
-      route-exists
-      estate=rich-manor-and-estate
-      manor-skin=active
-      house-field=true
-      gauges-truth=live-authority
-      construct-class=house
-      house-part=compass
-      H1_COMPASS
-      compass-generation=generation-2
-      compass-control-surface=active
-      flat-world-baseline=preserved
-      tree-mode=available
-      globe-mode=available
-      globe-handoff=showroom-demo-universe
-      visual-control-surface=active
-      mobile-layout-hardened=true
-      stage-lane=visible
-      this-underdog-route=active
-      speaking-lane=visible
-      stage-becoming-visible=true
-      nine-summits-route=active
-      nine-summits-master-hub=visible
-      summit-routes=visible
-      no-route-competition=true
-      Nine Summits=/nine-summits/
-      Nine Summits of Love=/nine-summits-of-love/
-      Nine Summits Universe=/nine-summits-universe/
-      This Underdog=/this-underdog/
-      Compass=/
-      Door=/door/
-      Home=/home/
-      Products=/products/
-      Showroom=/showroom/
-      Demo Universe=/showroom/globe/
-      Gauges=/gauges/
-      COMPASS_GENERATION_2_VISUAL_CONTROL_SURFACE_TNT_v1
-      COMPASS_G2_MOBILE_LAYOUT_HARDENING_TNT_v1
-      TED_PUBLIC_COMPASS_CLEAN_TNT_v1
-      COMPASS_THIS_UNDERDOG_VISIBLE_ROUTE_TNT_v1
-      COMPASS_NINE_SUMMITS_VISIBLE_ROUTE_TNT_v1
+      COMPASS_PUBLIC_SPOKEN_RENEWED_CONTRACT_TNT_v1
+      route=/
+      page-purpose=public-homepage
+      public-language=true
+      direct-language=true
+      no-internal-control-surface-language=true
+      no-flat-tree-globe-abstraction=true
+      no-direct-ted-reference=true
+      canonical-universe-route=/nine-summits/universe/
+      retired-universe-route=/nine-summits-universe/
+      nine-summits-route=/nine-summits/
+      book-route=/nine-summits-of-love/
+      speaking-route=/this-underdog/
+      about-route=/about-this-underdog/
+      products-route=/products/
+      showroom-route=/showroom/
+      gauges-route=/gauges/
+      result=compass-renewed-as-public-entry-page
     </section>
   </main>
 </body>

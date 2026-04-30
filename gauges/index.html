@@ -1,53 +1,48 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-room="H6_GAUGES" data-gauges-cycle="DEMO_UNIVERSE_AND_PRODUCT_WING">
+<html lang="en" data-page="gauges" data-route="/gauges/" data-generation="showroom-demo-planet-gauges-tnt-v1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges measures Demo Universe, Gen 2 V1 Earth Definition, and the expanded Product Wing.">
+  <title>Gauges · Showroom Demo Planet · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges measures the Showroom Demo Planet transition route, the Nine Summits Universe world map, the Showroom globe instrument contract, and route separation.">
+
   <style>
     :root {
-      --bg: #05070b;
-      --panel: rgba(9, 15, 25, 0.9);
-      --panel-soft: rgba(14, 24, 38, 0.74);
+      --bg: #03050a;
+      --panel: rgba(9, 15, 25, 0.94);
+      --panel2: rgba(14, 24, 38, 0.84);
       --line: rgba(168, 199, 255, 0.22);
-      --line-strong: rgba(143, 240, 198, 0.34);
-      --text: #eef5ff;
-      --muted: #aab8cf;
+      --gold-line: rgba(242, 199, 111, 0.36);
+      --text: #f4f7ff;
+      --muted: #b8c2d6;
+      --soft: rgba(244, 247, 255, 0.78);
+      --gold: #f2c76f;
       --green: #8ff0c6;
-      --blue: #7db5ff;
-      --gold: #ffd36f;
-      --red: #ff9f9f;
-      --shadow: rgba(0, 0, 0, 0.48);
+      --blue: #91bdff;
+      --red: #ff9a9a;
+      --hold: #ffd37a;
+      --shadow: rgba(0, 0, 0, 0.56);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
+    html { min-height: 100%; background: var(--bg); }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.11), transparent 24rem),
-        radial-gradient(circle at 20% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
-        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+        radial-gradient(circle at 76% 4%, rgba(242, 199, 111, 0.14), transparent 24rem),
+        radial-gradient(circle at 20% 16%, rgba(145, 189, 255, 0.12), transparent 30rem),
+        radial-gradient(circle at 50% 90%, rgba(143, 240, 198, 0.08), transparent 26rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 52%, #020308 100%);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     a:focus,
     button:focus {
@@ -64,379 +59,386 @@
       border-radius: 10px;
       background: #fff;
       color: #000;
+      font-weight: 800;
     }
 
-    .skip:focus {
-      left: 10px;
-    }
+    .skip:focus { left: 10px; }
 
     .page {
-      width: min(1120px, calc(100% - 28px));
+      width: min(1160px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 22px 0 44px;
-    }
-
-    .topbar {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 22px;
+      padding: 24px 0 60px;
     }
 
     .brand {
+      display: block;
+      margin-bottom: 18px;
       color: var(--muted);
       font-size: 0.86rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
     .nav,
-    .actions {
+    .actions,
+    .links {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
     }
 
+    .nav { margin-bottom: 26px; }
+
     .nav a,
-    .button,
-    button {
+    .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
+      min-height: 42px;
+      padding: 10px 16px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.055);
       color: var(--text);
       font: inherit;
-      font-weight: 650;
+      font-weight: 850;
       cursor: pointer;
     }
 
     .nav a:hover,
-    .button:hover,
-    button:hover {
-      border-color: rgba(168, 199, 255, 0.42);
-      background: rgba(255, 255, 255, 0.075);
+    .button:hover {
+      border-color: rgba(242, 199, 111, 0.48);
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    .button.primary,
-    button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
-      color: var(--text);
-      font-weight: 850;
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.48);
+      background: rgba(143, 240, 198, 0.13);
     }
 
     .hero,
     .panel,
-    .metric-card,
-    .audit-card,
-    .route-card {
+    .card,
+    .result-card {
       border: 1px solid var(--line);
       border-radius: 30px;
-      background: var(--panel);
+      background:
+        radial-gradient(circle at 90% 8%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        var(--panel);
       box-shadow: 0 24px 80px var(--shadow);
     }
 
+    .hero,
+    .panel {
+      padding: clamp(24px, 5vw, 48px);
+      margin-top: 18px;
+    }
+
     .hero {
-      position: relative;
-      overflow: hidden;
-      padding: clamp(24px, 5vw, 52px);
-      min-height: 390px;
+      min-height: 500px;
       display: grid;
       align-content: center;
-      gap: 22px;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+      gap: 24px;
+      border-color: var(--gold-line);
       background:
-        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.16), transparent 16rem),
-        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
-      pointer-events: none;
-    }
-
-    .hero-content,
-    .actions {
-      position: relative;
-      z-index: 2;
+        radial-gradient(circle at 72% 18%, rgba(242, 199, 111, 0.16), transparent 20rem),
+        radial-gradient(circle at 24% 70%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.96), rgba(5, 9, 16, 0.78));
     }
 
     .kicker {
       margin: 0 0 12px;
       color: var(--green);
       font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
+      font-weight: 950;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
     }
+
+    .kicker.gold { color: var(--gold); }
 
     h1 {
       margin: 0;
-      font-size: clamp(3rem, 10vw, 7rem);
+      max-width: 980px;
+      font-size: clamp(3.05rem, 10vw, 7rem);
       line-height: 0.9;
-      letter-spacing: -0.075em;
+      letter-spacing: -0.078em;
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(1.7rem, 5vw, 3.35rem);
+      line-height: 1;
+      letter-spacing: -0.058em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3.6vw, 2rem);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+      line-height: 1.6;
     }
 
     .lead {
-      max-width: 820px;
-      margin: 20px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
-      line-height: 1.42;
+      max-width: 920px;
+      color: var(--soft);
+      font-size: clamp(1.16rem, 3vw, 1.55rem);
+      line-height: 1.45;
     }
 
-    .metric-grid {
+    .section { margin-top: 18px; }
+
+    .score-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 24px;
     }
 
-    .metric-card {
-      min-height: 130px;
-      display: grid;
-      align-content: center;
-      gap: 8px;
+    .score-card {
+      border: 1px solid rgba(168, 199, 255, 0.15);
+      border-radius: 22px;
       padding: 16px;
-      background: linear-gradient(180deg, rgba(143, 240, 198, 0.07), rgba(125, 181, 255, 0.04));
+      background: rgba(255, 255, 255, 0.045);
     }
 
-    .metric-card span {
-      color: var(--muted);
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .metric-card strong {
-      font-size: clamp(1.4rem, 4vw, 2.25rem);
+    .score-card strong {
+      display: block;
+      color: var(--gold);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
       line-height: 1;
       letter-spacing: -0.05em;
     }
 
-    .metric-pass strong {
-      color: var(--green);
+    .score-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.35;
+      font-weight: 760;
     }
 
-    .metric-hold strong {
-      color: var(--gold);
-    }
-
-    .metric-fail strong {
-      color: var(--red);
-    }
-
-    .section-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
       margin-top: 18px;
     }
 
-    .panel {
-      padding: clamp(20px, 3vw, 30px);
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      padding: 22px;
+      min-height: 215px;
       background:
-        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        var(--panel-soft);
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 2.4rem);
-      letter-spacing: -0.05em;
-    }
-
-    .ladder {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .audit-card {
-      display: grid;
-      gap: 6px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.045);
+        radial-gradient(circle at 22% 0%, rgba(145, 189, 255, 0.08), transparent 14rem),
+        var(--panel2);
       box-shadow: none;
     }
 
-    .audit-card[data-status="PASS"] {
-      border-color: rgba(143, 240, 198, 0.48);
+    .card span,
+    .label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .audit-card[data-status="HOLD"] {
-      border-color: rgba(255, 211, 111, 0.48);
+    .card p { margin: 12px 0 0; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 74px;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .audit-card[data-status="FAIL"] {
-      border-color: rgba(255, 159, 159, 0.48);
-    }
-
-    .audit-card strong {
-      font-size: 1.02rem;
-    }
-
-    .audit-card span {
+    .status-waiting {
+      border: 1px solid rgba(168, 199, 255, 0.2);
+      background: rgba(255, 255, 255, 0.045);
       color: var(--muted);
-      line-height: 1.45;
     }
 
-    .wide {
-      grid-column: 1 / -1;
+    .status-pass {
+      border: 1px solid rgba(143, 240, 198, 0.42);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--green);
+    }
+
+    .status-hold {
+      border: 1px solid rgba(255, 211, 122, 0.42);
+      background: rgba(255, 211, 122, 0.12);
+      color: var(--hold);
+    }
+
+    .status-fail {
+      border: 1px solid rgba(255, 154, 154, 0.42);
+      background: rgba(255, 154, 154, 0.12);
+      color: var(--red);
     }
 
     .audit-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 14px;
+      margin-top: 18px;
       overflow: hidden;
-      border-radius: 16px;
+      border: 1px solid rgba(168, 199, 255, 0.14);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.035);
     }
 
-    th,
-    td {
-      padding: 10px;
-      border-bottom: 1px solid rgba(168, 199, 255, 0.13);
+    .audit-table th,
+    .audit-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(168, 199, 255, 0.12);
+      color: var(--muted);
       text-align: left;
       vertical-align: top;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
+      line-height: 1.45;
     }
 
-    th {
-      color: var(--muted);
+    .audit-table th {
+      color: var(--text);
       font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      background: rgba(255, 255, 255, 0.045);
     }
 
-    code {
+    .audit-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .audit-table code {
       color: var(--green);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.86em;
+      font-size: 0.86rem;
+      word-break: break-word;
     }
 
-    .status-pass {
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .status-hold {
-      color: var(--gold);
-      font-weight: 900;
-    }
-
-    .status-fail {
-      color: var(--red);
-      font-weight: 900;
-    }
-
-    .rules {
+    .evidence-list {
       display: grid;
       gap: 8px;
-      margin: 14px 0 0;
       padding: 0;
+      margin: 0;
       list-style: none;
     }
 
-    .rules li {
-      display: grid;
-      grid-template-columns: minmax(160px, 0.3fr) minmax(0, 1fr);
-      gap: 10px;
-      overflow-wrap: anywhere;
-      padding: 10px 12px;
-      border: 1px solid rgba(168, 199, 255, 0.12);
-      border-radius: 14px;
-      background: rgba(0, 0, 0, 0.22);
+    .evidence-list li {
       color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.8rem;
     }
 
-    .rules strong {
+    .evidence-list li.pass {
       color: var(--green);
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
+    .evidence-list li.fail {
+      color: var(--red);
     }
 
-    .route-card {
-      min-height: 104px;
-      display: grid;
-      align-content: center;
-      gap: 7px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.045);
+    .evidence-list li.hold {
+      color: var(--hold);
+    }
+
+    .result-card {
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.08), transparent 18rem),
+        var(--panel2);
       box-shadow: none;
     }
 
-    .route-card span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .result-card p { margin: 12px 0 0; }
+
+    .result-main {
+      color: var(--text);
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+      font-weight: 950;
     }
 
-    .route-card strong {
-      color: var(--green);
-      font-size: 1rem;
-    }
-
-    .receipt {
-      display: none !important;
-    }
+    .receipt { display: none !important; }
 
     @media (max-width: 980px) {
-      .metric-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .section-grid {
+      .score-grid,
+      .grid.three,
+      .grid.four {
         grid-template-columns: 1fr;
       }
 
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .hero { min-height: 420px; }
 
-      .hero {
-        min-height: 350px;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .page {
-        width: min(100% - 22px, 720px);
-        padding-top: 16px;
-      }
-
-      .metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      th,
-      td {
+      .audit-table,
+      .audit-table tbody,
+      .audit-table tr,
+      .audit-table td,
+      .audit-table th {
         display: block;
         width: 100%;
       }
 
-      tr {
-        display: block;
-        border-bottom: 1px solid rgba(168, 199, 255, 0.18);
+      .audit-table thead {
+        display: none;
       }
 
-      .rules li,
-      .route-grid {
-        grid-template-columns: 1fr;
+      .audit-table tr {
+        border-bottom: 1px solid rgba(168, 199, 255, 0.15);
+      }
+
+      .audit-table td {
+        border-bottom: 0;
+      }
+
+      .audit-table td::before {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        content: attr(data-label);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 24px, 620px);
+        padding-top: 18px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 40px;
+        padding: 9px 14px;
       }
     }
   </style>
@@ -449,621 +451,538 @@
     id="gauges-main"
     class="page"
     data-route="/gauges/"
-    data-house-part="gauges"
-    data-construct-class="house"
-    data-estate="rich-manor-and-estate"
-    data-gauge-mode="demo-universe-product-wing">
+    data-page-purpose="showroom-demo-planet-measurement"
+    data-gauges-truth="live-authority"
+    data-focus-route="/showroom/globe/"
+    data-transition-layer="our-universe-to-demo-planet"
+    data-showroom-gauges="active"
+  >
+    <a class="brand" href="/">
+      <strong>Diamond Gate Bridge</strong>
+      Gauges · Showroom Demo Planet Measurement
+    </a>
 
-    <header class="topbar" aria-label="Gauges header">
-      <div class="brand">Diamond Gate Bridge · Gauges · Demo Universe + Product Wing</div>
-      <nav class="nav" aria-label="Gauges navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Demo Universe</a>
-      </nav>
-    </header>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="/">Compass</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Demo Planet</a>
+      <a href="/nine-summits-universe/">Nine Summits Universe</a>
+      <a href="/nine-summits-of-love/">Nine Summits of Love</a>
+      <a href="/products/">Products</a>
+    </nav>
 
     <section class="hero" aria-labelledby="gauges-title">
-      <div class="hero-content">
-        <p class="kicker">H6 · Gauges · Live Measurement</p>
-        <h1 id="gauges-title">Gauges</h1>
-        <p class="lead">
-          Gauges now measures the current site in two lanes: Demo Universe visual structure and Product Wing public product expansion.
-        </p>
+      <p class="kicker">H6 · Gauges · Showroom Focus</p>
+      <h1 id="gauges-title">Gauges now measures the Demo Planet inspection route.</h1>
+
+      <p class="lead">
+        This page checks the Showroom transition layer, the Demo Planet inspection route, the Nine Summits Universe world-map route, and the globe instrument contract. It does not claim visual success when the Showroom is still showing fallback.
+      </p>
+
+      <p class="lead">
+        The measurement job is simple: prove what is live, identify what is held, and prevent drift before the next Showroom file update.
+      </p>
+
+      <div class="actions">
+        <button class="button primary" type="button" id="run-audit">Run Showroom audit</button>
+        <a class="button" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button" href="/nine-summits-universe/">Open Universe Map</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
       </div>
 
-      <div class="actions" aria-label="Primary Gauges actions">
-        <button class="primary" type="button" id="runAudit">Run audit</button>
-        <a class="button" href="/products/">Open Products</a>
-        <a class="button" href="/showroom/globe/">Inspect Universe</a>
+      <div class="score-grid" aria-label="Audit summary">
+        <div class="score-card">
+          <strong id="score-total">--</strong>
+          <span>Total source score</span>
+        </div>
+
+        <div class="score-card">
+          <strong id="score-showroom">--</strong>
+          <span>Showroom route</span>
+        </div>
+
+        <div class="score-card">
+          <strong id="score-transition">--</strong>
+          <span>Transition layer</span>
+        </div>
+
+        <div class="score-card">
+          <strong id="score-instrument">--</strong>
+          <span>Instrument contract</span>
+        </div>
+
+        <div class="score-card">
+          <strong id="score-next">--</strong>
+          <span>Next target</span>
+        </div>
       </div>
     </section>
 
-    <section class="metric-grid" aria-label="Gauge summary">
-      <article class="metric-card metric-hold" id="metricDemoCard">
-        <span>Demo</span>
-        <strong id="demoMetric">--</strong>
-        <span>Universe</span>
-      </article>
+    <section class="section panel" aria-labelledby="current-read-title">
+      <p class="kicker gold">Current read</p>
+      <h2 id="current-read-title">The copy landed. The globe mount is the next proof target.</h2>
 
-      <article class="metric-card metric-hold" id="metricEarthCard">
-        <span>Earth</span>
-        <strong id="earthMetric">--</strong>
-        <span>Definition</span>
-      </article>
+      <div class="grid three">
+        <article class="card">
+          <span>Showroom inspection route</span>
+          <h3>/showroom/globe/</h3>
+          <p>The transition-layer page must contain Demo Planet language, route separation, and the Showroom inspection receipt.</p>
+        </article>
 
-      <article class="metric-card metric-hold" id="metricProductsCard">
-        <span>Products</span>
-        <strong id="productsMetric">--</strong>
-        <span>Wing</span>
-      </article>
+        <article class="card">
+          <span>Universe map route</span>
+          <h3>/nine-summits-universe/</h3>
+          <p>The world explanation route must exist before Showroom can point at the larger planet map without creating a 404.</p>
+        </article>
 
-      <article class="metric-card metric-hold" id="metricAAICard">
-        <span>AAI</span>
-        <strong id="aaiMetric">--</strong>
-        <span>Frontier</span>
-      </article>
-
-      <article class="metric-card metric-hold" id="metricEducationCard">
-        <span>Education</span>
-        <strong id="educationMetric">--</strong>
-        <span>1001 Cube</span>
-      </article>
-
-      <article class="metric-card metric-hold" id="metricNutritionCard">
-        <span>Nutrition</span>
-        <strong id="nutritionMetric">--</strong>
-        <span>Baseline</span>
-      </article>
+        <article class="card">
+          <span>Globe instrument</span>
+          <h3>/assets/showroom.globe.instrument.js</h3>
+          <p>The asset must expose the render contract expected by the inspection route. If this fails, Showroom fallback is lawful and must not be misread as visual success.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="section-grid" aria-label="Gauge details">
-      <article class="panel">
-        <p class="kicker">Visual structure</p>
-        <h2>Demo Universe</h2>
-        <div id="demoLadder" class="ladder">
-          <div class="audit-card" data-status="HOLD">
-            <strong>Waiting for audit</strong>
-            <span>Run audit to confirm Demo Universe and Earth Definition.</span>
-          </div>
-        </div>
-      </article>
+    <section class="section panel" aria-labelledby="live-audit-title">
+      <p class="kicker">Live audit</p>
+      <h2 id="live-audit-title">Source check</h2>
 
-      <article class="panel">
-        <p class="kicker">Product structure</p>
-        <h2>Product Wing</h2>
-        <div id="productLadder" class="ladder">
-          <div class="audit-card" data-status="HOLD">
-            <strong>Waiting for audit</strong>
-            <span>Run audit to confirm expanded public product chambers.</span>
-          </div>
-        </div>
-      </article>
+      <table class="audit-table" aria-label="Showroom source audit">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Target</th>
+            <th>Status</th>
+            <th>Evidence</th>
+          </tr>
+        </thead>
+        <tbody id="audit-body">
+          <tr>
+            <td data-label="Layer">Waiting</td>
+            <td data-label="Target"><code>Showroom audit</code></td>
+            <td data-label="Status"><span class="status-pill status-waiting">WAIT</span></td>
+            <td data-label="Evidence">Run audit.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <article class="panel wide">
-        <p class="kicker">Live audit</p>
-        <h2>Source check</h2>
-        <table class="audit-table">
-          <thead>
-            <tr>
-              <th>Layer</th>
-              <th>Targets</th>
-              <th>Status</th>
-              <th>Evidence</th>
-            </tr>
-          </thead>
-          <tbody id="auditRows">
-            <tr>
-              <td>Waiting</td>
-              <td>Full audit</td>
-              <td class="status-hold">HOLD</td>
-              <td>Run audit.</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
+    <section class="section panel" aria-labelledby="rules-title">
+      <p class="kicker gold">Measurement rules</p>
+      <h2 id="rules-title">What Gauges is allowed to claim.</h2>
 
-      <article class="panel wide">
-        <p class="kicker">Product routes</p>
-        <h2>Measured product chambers</h2>
-        <div class="route-grid" aria-label="Measured product chamber links">
-          <a class="route-card" href="/products/archcoin/">
-            <span>PC1</span>
-            <strong>ARCHCOIN</strong>
-          </a>
-          <a class="route-card" href="/products/five-flags/">
-            <span>PC2</span>
-            <strong>Five Flags</strong>
-          </a>
-          <a class="route-card" href="/products/on-your-side-ai/">
-            <span>PC3</span>
-            <strong>On Your Side AAI</strong>
-          </a>
-          <a class="route-card" href="/products/education/">
-            <span>PC4</span>
-            <strong>Education</strong>
-          </a>
-          <a class="route-card" href="/products/nutrition/">
-            <span>PC5</span>
-            <strong>Nutrition</strong>
-          </a>
-        </div>
-      </article>
+      <div class="grid three">
+        <article class="card">
+          <span>SHOWROOM_ROUTE</span>
+          <h3>Passes when the route serves.</h3>
+          <p>Showroom route status passes only when `/showroom/` and `/showroom/globe/` serve live content.</p>
+        </article>
 
-      <article class="panel wide">
-        <p class="kicker">Measurement rules</p>
-        <h2>What Gauges is allowed to claim</h2>
-        <ul class="rules">
-          <li><strong>DEMO_UNIVERSE</strong><span>Passes when Showroom, Demo Universe, our-universe scope, body markers, visual field, and Earth Definition markers remain source-visible.</span></li>
-          <li><strong>PRODUCT_WING</strong><span>Passes when Products and the five product chambers serve canonical product markers under /products/.</span></li>
-          <li><strong>AAI_FRONTIER</strong><span>Passes when On Your Side AAI preserves AAI terminology and the practical applied intelligence expansion.</span></li>
-          <li><strong>EDUCATION_CUBE</strong><span>Passes when Education preserves the 1001 Word System, cube model, four phases, and free PDF route.</span></li>
-          <li><strong>NUTRITION_BASELINE</strong><span>Passes when Baseline Nutrition Systems preserves kitchen/pantry, water-first, baseline layers, product family, and boundary markers.</span></li>
-          <li><strong>OWNER_CONFIRMATION</strong><span>Gauges verifies source state. Final visual and product-language close still depends on owner review.</span></li>
-          <li><strong>TNT</strong><span>GAUGES_DEMO_UNIVERSE_PRODUCT_WING_RECOGNITION_TNT_v3</span></li>
-        </ul>
-      </article>
+        <article class="card">
+          <span>TRANSITION_LAYER</span>
+          <h3>Passes when the new contract is visible.</h3>
+          <p>The transition layer passes only when our-universe reference, Demo Planet destination, seven-landmass language, and receipt markers are source-visible.</p>
+        </article>
+
+        <article class="card">
+          <span>INSTRUMENT_CONTRACT</span>
+          <h3>Passes only when the expected API exists.</h3>
+          <p>The instrument contract passes only when the asset exposes the expected Showroom globe object and render function. Otherwise the state is HOLD or FAIL.</p>
+        </article>
+
+        <article class="card">
+          <span>UNIVERSE_ROUTE</span>
+          <h3>Passes when the map route exists.</h3>
+          <p>`/nine-summits-universe/` must exist and carry the world-map receipt before Showroom can rely on it.</p>
+        </article>
+
+        <article class="card">
+          <span>OWNER_CONFIRMATION</span>
+          <h3>Gauges verifies source state.</h3>
+          <p>Gauges does not replace owner visual review. If the live page shows fallback, the next repair must target the owning route or instrument.</p>
+        </article>
+
+        <article class="card">
+          <span>NO_DRIFT</span>
+          <h3>Page roles stay separate.</h3>
+          <p>Showroom inspects, Nine Summits Universe explains, and Gauges measures. This page must not become the Showroom or the Universe page.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section result-card" aria-labelledby="next-target-title">
+      <p class="kicker">Next target</p>
+      <h2 id="next-target-title">The next file is chosen by the audit.</h2>
+
+      <p id="audit-result" class="result-main">
+        Waiting for Showroom audit.
+      </p>
+
+      <p id="audit-detail">
+        Run the audit. If the transition route passes but the instrument contract fails, the next file is the Showroom globe instrument or the Showroom globe route, not Gauges.
+      </p>
+
+      <div class="links">
+        <a class="button primary" href="/showroom/globe/">Inspect Demo Planet</a>
+        <a class="button" href="/nine-summits-universe/">Open Universe Map</a>
+        <a class="button" href="/showroom/">Showroom</a>
+        <a class="button" href="/">Compass</a>
+      </div>
     </section>
 
     <section class="receipt" aria-hidden="true">
-      Gauges receipt
-      route-exists
-      manor-skin
-      house-class
-      estate=rich-manor-and-estate
-      house-field=true
+      GAUGES_SHOWROOM_DEMO_PLANET_FOCUS_TNT_v1
+      route=/gauges/
+      page-purpose=showroom-demo-planet-measurement
       gauges-truth=live-authority
-      construct-class=house
-      house-part=gauges
-      H6_GAUGES
-      DEMO_UNIVERSE_MEASUREMENT
-      GEN_2_V1_EARTH_DEFINITION_MEASUREMENT
-      PRODUCT_WING_MEASUREMENT
-      ARCHCOIN_MEASUREMENT
-      FIVE_FLAGS_MEASUREMENT
-      ON_YOUR_SIDE_AAI_MEASUREMENT
-      EDUCATION_1001_WORD_SYSTEM_MEASUREMENT
-      BASELINE_NUTRITION_SYSTEMS_MEASUREMENT
-      GAUGES_DEMO_UNIVERSE_PRODUCT_WING_RECOGNITION_TNT_v3
+      focus=/showroom/globe/
+      showroom-route=/showroom/
+      inspection-route=/showroom/globe/
+      universe-route=/nine-summits-universe/
+      instrument=/assets/showroom.globe.instrument.js
+      transition-layer=our-universe-to-demo-planet
+      demo-planet=Nine Summits Universe
+      measurement=source-state
+      runtime-iframe-dom-inspection=false
+      owner-confirmation-required=true
+      showroom-role=inspection
+      universe-role=world-explanation
+      gauges-role=measurement
+      next-file-selected-by-audit=true
+      no-page-role-collapse=true
     </section>
   </main>
 
   <script>
-    (function bootGauges() {
+    (function () {
       "use strict";
 
-      const VERSION = "GAUGES_DEMO_UNIVERSE_PRODUCT_WING_RECOGNITION_TNT_v3";
+      var checks = [
+        {
+          key: "showroom-shell",
+          layer: "Showroom shell",
+          target: "/showroom/",
+          group: "showroom",
+          markers: [
+            "Showroom"
+          ]
+        },
+        {
+          key: "demo-planet-transition",
+          layer: "Demo Planet transition",
+          target: "/showroom/globe/",
+          group: "transition",
+          markers: [
+            "SHOWROOM_GLOBE_DEMO_PLANET_TRANSITION_LAYER_TNT_v1",
+            "transition-layer=our-universe-to-demo-planet",
+            "destination-field=planet-1-nine-summits-universe",
+            "demo-planet=Nine Summits Universe",
+            "page-purpose=visible-demo-planet-inspection-route"
+          ]
+        },
+        {
+          key: "inspection-mount-contract",
+          layer: "Inspection mount contract",
+          target: "/showroom/globe/",
+          group: "transition",
+          markers: [
+            "demo-planet-mount",
+            "demo-planet-fallback",
+            "showroom.globe.instrument.js",
+            "DGBShowroomGlobeInstrument",
+            "renderGlobe"
+          ]
+        },
+        {
+          key: "universe-map-route",
+          layer: "Universe map route",
+          target: "/nine-summits-universe/",
+          group: "universe",
+          markers: [
+            "NINE_SUMMITS_UNIVERSE",
+            "route=/nine-summits-universe/",
+            "floating-magnetic-half-natural-half-man-made",
+            "tiktok",
+            "archetype-personality"
+          ]
+        },
+        {
+          key: "instrument-api",
+          layer: "Globe instrument API",
+          target: "/assets/showroom.globe.instrument.js",
+          group: "instrument",
+          markers: [
+            "DGBShowroomGlobeInstrument",
+            "renderGlobe"
+          ]
+        },
+        {
+          key: "route-separation",
+          layer: "Route separation",
+          target: "/showroom/globe/",
+          group: "transition",
+          markers: [
+            "showroom-role=inspection",
+            "universe-page-role=world-explanation",
+            "gauges-role=measurement",
+            "no-page-role-collapse=true"
+          ]
+        }
+      ];
 
-      const TARGETS = Object.freeze({
-        compass: "/",
-        showroom: "/showroom/",
-        inspection: "/showroom/globe/",
-        instrument: "/assets/showroom.globe.instrument.js",
-        css: "/showroom/showroom.css",
-        render: "/showroom/showroom.render.js",
-        boot: "/showroom/globe/index.js",
-        products: "/products/",
-        archcoin: "/products/archcoin/",
-        fiveFlags: "/products/five-flags/",
-        aai: "/products/on-your-side-ai/",
-        education: "/products/education/",
-        nutrition: "/products/nutrition/"
-      });
-
-      const MARKERS = Object.freeze({
-        demoUniverse: Object.freeze([
-          "GENERATION_4",
-          "GENERATION_4_CLOSEOUT",
-          "GEN4_CLOSEOUT",
-          "FINAL_CLOSEOUT",
-          "GEN_4_FINAL_PASS",
-          "DEMO_UNIVERSE_SCOPE",
-          "our-universe",
-          "VISUAL_EXPRESSION",
-          "solar-system-field",
-          "ORBIT_FIELD"
-        ]),
-
-        bodies: Object.freeze([
-          "Sun",
-          "Mercury",
-          "Venus",
-          "Earth",
-          "Moon",
-          "Mars",
-          "Jupiter",
-          "Saturn",
-          "Uranus",
-          "Neptune"
-        ]),
-
-        earthDefinition: Object.freeze([
-          "EARTH_ROLE",
-          "Earth",
-          "earthZoom",
-          "showroom-earth-detail-stack",
-          "showroom-earth-continent",
-          "showroom-earth-cloud-band",
-          "showroom-earth-terminator",
-          "showroom-earth-glint",
-          "showroom-earth-gridline",
-          "showroom-earth-moon-orbit",
-          "showroom-earth-moon-dot",
-          "moonScale"
-        ]),
-
-        products: Object.freeze([
-          "H4_PRODUCTS",
-          "product-wing-parent",
-          "canonical-product-destinations",
-          "/products/archcoin/",
-          "/products/five-flags/",
-          "/products/on-your-side-ai/",
-          "/products/education/",
-          "/products/nutrition/"
-        ]),
-
-        archcoin: Object.freeze([
-          "PC1_ARCHCOIN",
-          "canonical-route=/products/archcoin/",
-          "frontier-value-coordination-engine",
-          "product-first-architecture",
-          "closes-gap=trust-without-proof",
-          "ARCHCOIN"
-        ]),
-
-        fiveFlags: Object.freeze([
-          "PC2_FIVE_FLAGS",
-          "canonical-route=/products/five-flags/",
-          "game-type=charades-style-signal-reading",
-          "minimum-players=3",
-          "referee-shows-card-to-flag-master",
-          "flag-master-can-only-use-flags",
-          "theme=identity-made-visible-under-pressure"
-        ]),
-
-        aai: Object.freeze([
-          "PC3_ON_YOUR_SIDE_AAI",
-          "canonical-route=/products/on-your-side-ai/",
-          "terminology-lock=AAI",
-          "AAI-stays-AAI",
-          "public-frame=practical-applied-intelligence",
-          "messy-middle=confusion-to-prepared-action",
-          "product-family=personal-family-work-education-health-prep-legal-prep-finance-prep-small-business-crisis-recovery",
-          "ON_YOUR_SIDE_AAI_FRONTIER_PRODUCT_EXPANSION_TNT_v2"
-        ]),
-
-        education: Object.freeze([
-          "PC4_EDUCATION",
-          "canonical-route=/products/education/",
-          "1001-word-system",
-          "free-pdf-download=/products/education/1001-word-system.pdf",
-          "cube-not-linear-path",
-          "four-phases=receive-place-use-own",
-          "EDUCATION_1001_WORD_SYSTEM_CUBE_TNT_v1"
-        ]),
-
-        nutrition: Object.freeze([
-          "PC5_NUTRITION",
-          "canonical-route=/products/nutrition/",
-          "food-is-support-not-moral-score",
-          "start=water-first",
-          "layers=outer-baseline-second-water-middle-fuel-inner-rhythm-return-repeat",
-          "product-family=water-first-pantry-reset-meal-rhythm-family-kitchen-budget-baseline-recovery-kitchen-workday-fuel-aai-kitchen-support-baseline-journal",
-          "BASELINE_NUTRITION_SYSTEMS_EXPANSION_TNT_v1"
-        ])
-      });
-
-      const rows = document.getElementById("auditRows");
-      const demoLadder = document.getElementById("demoLadder");
-      const productLadder = document.getElementById("productLadder");
-
-      const metrics = {
-        demo: document.getElementById("demoMetric"),
-        earth: document.getElementById("earthMetric"),
-        products: document.getElementById("productsMetric"),
-        aai: document.getElementById("aaiMetric"),
-        education: document.getElementById("educationMetric"),
-        nutrition: document.getElementById("nutritionMetric")
-      };
-
-      const metricCards = {
-        demo: document.getElementById("metricDemoCard"),
-        earth: document.getElementById("metricEarthCard"),
-        products: document.getElementById("metricProductsCard"),
-        aai: document.getElementById("metricAAICard"),
-        education: document.getElementById("metricEducationCard"),
-        nutrition: document.getElementById("metricNutritionCard")
-      };
-
-      function setMetric(key, status) {
-        metrics[key].textContent = status;
-        metricCards[key].classList.remove("metric-pass", "metric-hold", "metric-fail");
-        metricCards[key].classList.add(status === "PASS" ? "metric-pass" : status === "FAIL" ? "metric-fail" : "metric-hold");
+      function byId(id) {
+        return document.getElementById(id);
       }
 
       function statusClass(status) {
         if (status === "PASS") return "status-pass";
+        if (status === "HOLD") return "status-hold";
         if (status === "FAIL") return "status-fail";
-        return "status-hold";
+        return "status-waiting";
       }
 
-      function addRow(layer, targets, status, evidence) {
-        const row = document.createElement("tr");
-        row.innerHTML =
-          "<td>" + layer + "</td>" +
-          "<td><code>" + targets + "</code></td>" +
-          "<td class='" + statusClass(status) + "'>" + status + "</td>" +
-          "<td>" + evidence + "</td>";
-        rows.append(row);
+      function setText(id, value) {
+        var node = byId(id);
+        if (node) node.textContent = value;
       }
 
-      function addCard(target, title, status, body) {
-        const card = document.createElement("div");
-        card.className = "audit-card";
-        card.dataset.status = status;
-        card.innerHTML =
-          "<strong>" + title + " · <span class='" + statusClass(status) + "'>" + status + "</span></strong>" +
-          "<span>" + body + "</span>";
-        target.append(card);
+      function containsMarker(source, marker) {
+        return source.indexOf(marker) !== -1;
       }
 
-      async function fetchText(path) {
-        try {
-          const response = await fetch(path, { cache: "no-store" });
-          const text = await response.text();
-          return { path: path, ok: response.ok, status: response.status, text: text, error: "" };
-        } catch (error) {
-          return { path: path, ok: false, status: "FETCH_ERROR", text: "", error: error.message };
+      function rowTemplate(result) {
+        var status = result.status;
+        var evidenceItems = result.evidence.map(function (item) {
+          var cls = item.ok ? "pass" : "fail";
+          return '<li class="' + cls + '">' + item.label + '</li>';
+        }).join("");
+
+        if (result.note) {
+          evidenceItems += '<li class="hold">' + result.note + '</li>';
         }
+
+        return [
+          "<tr>",
+          '<td data-label="Layer">' + result.layer + "</td>",
+          '<td data-label="Target"><code>' + result.target + "</code></td>",
+          '<td data-label="Status"><span class="status-pill ' + statusClass(status) + '">' + status + "</span></td>",
+          '<td data-label="Evidence"><ul class="evidence-list">' + evidenceItems + "</ul></td>",
+          "</tr>"
+        ].join("");
       }
 
-      function markerResult(text, markers) {
-        const found = markers.filter(function has(marker) {
-          return text.indexOf(marker) !== -1;
+      function fetchText(target) {
+        return fetch(target + (target.indexOf("?") === -1 ? "?v=" : "&v=") + Date.now(), {
+          method: "GET",
+          cache: "no-store"
+        }).then(function (response) {
+          return response.text().then(function (text) {
+            return {
+              ok: response.ok,
+              status: response.status,
+              text: text
+            };
+          });
+        });
+      }
+
+      function evaluateCheck(check, payload) {
+        if (!payload.ok) {
+          return {
+            key: check.key,
+            group: check.group,
+            layer: check.layer,
+            target: check.target,
+            status: "FAIL",
+            evidence: [
+              { ok: false, label: "HTTP " + payload.status }
+            ],
+            passed: 0,
+            total: check.markers.length
+          };
+        }
+
+        var evidence = check.markers.map(function (marker) {
+          return {
+            ok: containsMarker(payload.text, marker),
+            label: marker
+          };
         });
 
+        var passed = evidence.filter(function (item) { return item.ok; }).length;
+        var total = evidence.length;
+        var status = passed === total ? "PASS" : passed > 0 ? "HOLD" : "FAIL";
+        var note = "HTTP " + payload.status + ". " + passed + " of " + total + " markers found.";
+
         return {
-          found: found,
-          missing: markers.filter(function lacks(marker) {
-            return found.indexOf(marker) === -1;
-          }),
-          score: markers.length ? Math.round((found.length / markers.length) * 100) : 0
+          key: check.key,
+          group: check.group,
+          layer: check.layer,
+          target: check.target,
+          status: status,
+          evidence: evidence,
+          note: note,
+          passed: passed,
+          total: total
         };
       }
 
-      function resultStatus(result, requiredPercent) {
-        return result.score >= requiredPercent ? "PASS" : "HOLD";
+      function groupScore(results, group) {
+        var filtered = results.filter(function (result) {
+          return result.group === group;
+        });
+
+        if (!filtered.length) return "--";
+
+        var passCount = filtered.filter(function (result) {
+          return result.status === "PASS";
+        }).length;
+
+        if (passCount === filtered.length) return "PASS";
+        if (filtered.some(function (result) { return result.status === "HOLD"; })) return "HOLD";
+        return "FAIL";
       }
 
-      function combine() {
-        return Array.prototype.slice.call(arguments).join("\n\n");
+      function totalScore(results) {
+        var total = results.reduce(function (sum, result) {
+          return sum + result.total;
+        }, 0);
+
+        var passed = results.reduce(function (sum, result) {
+          return sum + result.passed;
+        }, 0);
+
+        if (!total) return "--";
+        return Math.round((passed / total) * 100) + "%";
       }
 
-      function fetchSummary(fetches) {
-        return Object.keys(fetches).map(function map(key) {
-          return key + "=" + fetches[key].status;
-        }).join(", ");
-      }
+      function decideNext(results) {
+        var transition = groupScore(results, "transition");
+        var instrument = groupScore(results, "instrument");
+        var universe = groupScore(results, "universe");
+        var showroom = groupScore(results, "showroom");
 
-      async function runAudit() {
-        rows.innerHTML = "";
-        demoLadder.innerHTML = "";
-        productLadder.innerHTML = "";
-
-        const fetched = {};
-        const keys = Object.keys(TARGETS);
-
-        for (let i = 0; i < keys.length; i += 1) {
-          const key = keys[i];
-          fetched[key] = await fetchText(TARGETS[key]);
+        if (showroom === "FAIL") {
+          return {
+            next: "SHOWROOM",
+            result: "Showroom shell is not stable.",
+            detail: "Repair /showroom/ before continuing the Demo Planet inspection route."
+          };
         }
 
-        const demoStack = combine(
-          fetched.compass.text,
-          fetched.showroom.text,
-          fetched.inspection.text,
-          fetched.instrument.text,
-          fetched.css.text,
-          fetched.render.text,
-          fetched.boot.text
-        );
+        if (transition === "FAIL") {
+          return {
+            next: "GLOBE",
+            result: "The inspection route is missing its transition-layer source.",
+            detail: "Repair /showroom/globe/index.html before touching the instrument."
+          };
+        }
 
-        const productStack = combine(
-          fetched.products.text,
-          fetched.archcoin.text,
-          fetched.fiveFlags.text,
-          fetched.aai.text,
-          fetched.education.text,
-          fetched.nutrition.text
-        );
+        if (universe === "FAIL") {
+          return {
+            next: "UNIVERSE",
+            result: "The Universe map route is missing or incomplete.",
+            detail: "Create or repair /nine-summits-universe/index.html before relying on it from Showroom."
+          };
+        }
 
-        const demo = markerResult(demoStack, MARKERS.demoUniverse);
-        const bodies = markerResult(demoStack, MARKERS.bodies);
-        const earth = markerResult(demoStack, MARKERS.earthDefinition);
+        if (instrument === "FAIL" || instrument === "HOLD") {
+          return {
+            next: "INSTRUMENT",
+            result: "The page copy is live, but the globe instrument contract is not confirmed.",
+            detail: "Next target should be /assets/showroom.globe.instrument.js or the Showroom globe boot call. Do not rewrite Gauges again for that failure."
+          };
+        }
 
-        const products = markerResult(fetched.products.text, MARKERS.products);
-        const archcoin = markerResult(fetched.archcoin.text, MARKERS.archcoin);
-        const fiveFlags = markerResult(fetched.fiveFlags.text, MARKERS.fiveFlags);
-        const aai = markerResult(fetched.aai.text, MARKERS.aai);
-        const education = markerResult(fetched.education.text, MARKERS.education);
-        const nutrition = markerResult(fetched.nutrition.text, MARKERS.nutrition);
+        if (transition === "HOLD" || universe === "HOLD") {
+          return {
+            next: "GLOBE",
+            result: "The transition layer is partially present but not fully closed.",
+            detail: "Next target is /showroom/globe/index.html with marker alignment, not a broad site rewrite."
+          };
+        }
 
-        const demoStatus =
-          fetched.showroom.ok &&
-          fetched.inspection.ok &&
-          fetched.instrument.ok &&
-          fetched.render.ok &&
-          fetched.boot.ok &&
-          demo.score >= 80 &&
-          bodies.score === 100
-            ? "PASS"
-            : "HOLD";
-
-        const earthStatus = fetched.instrument.ok && earth.score >= 70 ? "PASS" : "HOLD";
-        const productsStatus = fetched.products.ok && products.score >= 70 ? "PASS" : "HOLD";
-        const archcoinStatus = fetched.archcoin.ok && archcoin.score >= 70 ? "PASS" : "HOLD";
-        const fiveFlagsStatus = fetched.fiveFlags.ok && fiveFlags.score >= 70 ? "PASS" : "HOLD";
-        const aaiStatus = fetched.aai.ok && aai.score >= 70 ? "PASS" : "HOLD";
-        const educationStatus = fetched.education.ok && education.score >= 70 ? "PASS" : "HOLD";
-        const nutritionStatus = fetched.nutrition.ok && nutrition.score >= 70 ? "PASS" : "HOLD";
-
-        const productWingStatus =
-          productsStatus === "PASS" &&
-          archcoinStatus === "PASS" &&
-          fiveFlagsStatus === "PASS" &&
-          aaiStatus === "PASS" &&
-          educationStatus === "PASS" &&
-          nutritionStatus === "PASS"
-            ? "PASS"
-            : "HOLD";
-
-        setMetric("demo", demoStatus);
-        setMetric("earth", earthStatus);
-        setMetric("products", productWingStatus);
-        setMetric("aai", aaiStatus);
-        setMetric("education", educationStatus);
-        setMetric("nutrition", nutritionStatus);
-
-        addRow(
-          "Demo Universe",
-          "/showroom/ + /showroom/globe/ + source files",
-          demoStatus,
-          demo.found.length + " of " + MARKERS.demoUniverse.length + " Demo markers; " + bodies.found.length + " of 10 bodies. " + fetchSummary({
-            compass: fetched.compass,
-            showroom: fetched.showroom,
-            inspection: fetched.inspection,
-            instrument: fetched.instrument,
-            css: fetched.css,
-            render: fetched.render,
-            boot: fetched.boot
-          }) + "."
-        );
-
-        addRow(
-          "Gen 2 V1 · Earth definition",
-          "/assets/showroom.globe.instrument.js + source stack",
-          earthStatus,
-          earth.found.length + " of " + MARKERS.earthDefinition.length + " Earth-definition markers found."
-        );
-
-        addRow(
-          "Products parent",
-          "/products/",
-          productsStatus,
-          products.found.length + " of " + MARKERS.products.length + " Products parent markers found. HTTP " + fetched.products.status + "."
-        );
-
-        addRow(
-          "ARCHCOIN",
-          "/products/archcoin/",
-          archcoinStatus,
-          archcoin.found.length + " of " + MARKERS.archcoin.length + " ARCHCOIN markers found. HTTP " + fetched.archcoin.status + "."
-        );
-
-        addRow(
-          "Five Flags",
-          "/products/five-flags/",
-          fiveFlagsStatus,
-          fiveFlags.found.length + " of " + MARKERS.fiveFlags.length + " Five Flags markers found. HTTP " + fetched.fiveFlags.status + "."
-        );
-
-        addRow(
-          "On Your Side AAI",
-          "/products/on-your-side-ai/",
-          aaiStatus,
-          aai.found.length + " of " + MARKERS.aai.length + " AAI frontier markers found. HTTP " + fetched.aai.status + "."
-        );
-
-        addRow(
-          "Education",
-          "/products/education/",
-          educationStatus,
-          education.found.length + " of " + MARKERS.education.length + " Education cube markers found. HTTP " + fetched.education.status + "."
-        );
-
-        addRow(
-          "Baseline Nutrition Systems",
-          "/products/nutrition/",
-          nutritionStatus,
-          nutrition.found.length + " of " + MARKERS.nutrition.length + " Nutrition baseline markers found. HTTP " + fetched.nutrition.status + "."
-        );
-
-        addCard(
-          demoLadder,
-          "Demo Universe baseline",
-          demoStatus,
-          demoStatus === "PASS"
-            ? "Showroom, Demo Universe, our-universe scope, body markers, and closeout markers remain source-visible."
-            : "Demo Universe source state is not fully detected."
-        );
-
-        addCard(
-          demoLadder,
-          "Gen 2 V1 Earth Definition",
-          earthStatus,
-          earthStatus === "PASS"
-            ? "Earth Definition markers remain source-visible. Gauges can verify source state; owner visual confirmation remains separate."
-            : "Earth Definition markers are incomplete."
-        );
-
-        addCard(
-          productLadder,
-          "Product Wing",
-          productWingStatus,
-          productWingStatus === "PASS"
-            ? "Products parent and five measured product chambers are source-visible under /products/."
-            : "One or more product chambers are not fully recognized."
-        );
-
-        addCard(
-          productLadder,
-          "On Your Side AAI",
-          aaiStatus,
-          aaiStatus === "PASS"
-            ? "AAI frontier product expansion markers are detected."
-            : "AAI expansion markers are incomplete."
-        );
-
-        addCard(
-          productLadder,
-          "Education · 1001 Word System",
-          educationStatus,
-          educationStatus === "PASS"
-            ? "Education cube, four-phase, and PDF route markers are detected."
-            : "Education cube markers are incomplete."
-        );
-
-        addCard(
-          productLadder,
-          "Baseline Nutrition Systems",
-          nutritionStatus,
-          nutritionStatus === "PASS"
-            ? "Kitchen/pantry, water-first, baseline-layer, product-family, and boundary markers are detected."
-            : "Nutrition baseline markers are incomplete."
-        );
-
-        document.documentElement.dataset.gaugesRun = "complete";
-        document.documentElement.dataset.gaugesVersion = VERSION;
-        document.documentElement.dataset.demoUniverse = demoStatus;
-        document.documentElement.dataset.earthDefinition = earthStatus;
-        document.documentElement.dataset.productWing = productWingStatus;
-        document.documentElement.dataset.onYourSideAai = aaiStatus;
-        document.documentElement.dataset.educationCube = educationStatus;
-        document.documentElement.dataset.nutritionBaseline = nutritionStatus;
+        return {
+          next: "SHOWROOM",
+          result: "Showroom source path is ready for the next controlled file.",
+          detail: "Proceed to the Showroom-facing file only after visual owner review confirms the Gauges read."
+        };
       }
 
-      document.getElementById("runAudit").addEventListener("click", runAudit);
+      function renderResults(results) {
+        var body = byId("audit-body");
+        if (body) {
+          body.innerHTML = results.map(rowTemplate).join("");
+        }
 
-      window.GaugesDemoUniverseProductWing = Object.freeze({
-        VERSION: VERSION,
-        TARGETS: TARGETS,
-        MARKERS: MARKERS,
-        runAudit: runAudit
-      });
+        setText("score-total", totalScore(results));
+        setText("score-showroom", groupScore(results, "showroom"));
+        setText("score-transition", groupScore(results, "transition"));
+        setText("score-instrument", groupScore(results, "instrument"));
+
+        var decision = decideNext(results);
+        setText("score-next", decision.next);
+        setText("audit-result", decision.result);
+        setText("audit-detail", decision.detail);
+
+        document.documentElement.dataset.gaugesAuditStatus = decision.next;
+        document.documentElement.dataset.gaugesAuditTotal = totalScore(results);
+      }
+
+      function runAudit() {
+        var body = byId("audit-body");
+        if (body) {
+          body.innerHTML = [
+            "<tr>",
+            '<td data-label="Layer">Running</td>',
+            '<td data-label="Target"><code>Showroom source stack</code></td>',
+            '<td data-label="Status"><span class="status-pill status-hold">RUN</span></td>',
+            '<td data-label="Evidence">Fetching source files.</td>',
+            "</tr>"
+          ].join("");
+        }
+
+        setText("score-total", "--");
+        setText("score-showroom", "--");
+        setText("score-transition", "--");
+        setText("score-instrument", "--");
+        setText("score-next", "--");
+        setText("audit-result", "Running Showroom audit.");
+        setText("audit-detail", "Fetching /showroom/, /showroom/globe/, /nine-summits-universe/, and the globe instrument.");
+
+        Promise.all(checks.map(function (check) {
+          return fetchText(check.target)
+            .then(function (payload) {
+              return evaluateCheck(check, payload);
+            })
+            .catch(function (error) {
+              return {
+                key: check.key,
+                group: check.group,
+                layer: check.layer,
+                target: check.target,
+                status: "FAIL",
+                evidence: [
+                  { ok: false, label: error && error.message ? error.message : "fetch failed" }
+                ],
+                passed: 0,
+                total: check.markers.length,
+                note: "Fetch failed."
+              };
+            });
+        })).then(renderResults);
+      }
+
+      var button = byId("run-audit");
+      if (button) {
+        button.addEventListener("click", runAudit);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runAudit);
+      } else {
+        runAudit();
+      }
     })();
   </script>
 </body>

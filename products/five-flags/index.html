@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Five Flags · Diamond Gate Bridge</title>
-  <meta name="description" content="Five Flags is an identity and civic game housed inside the Diamond Gate Bridge Product Wing.">
+  <meta name="description" content="Five Flags is a charades-style signal-reading game where a Flag Master can only guide players with flags.">
   <style>
     :root {
       --bg: #05070b;
@@ -88,7 +88,8 @@
       text-transform: uppercase;
     }
 
-    .nav {
+    .nav,
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -113,6 +114,13 @@
     .button:hover {
       border-color: rgba(168, 199, 255, 0.42);
       background: rgba(255, 255, 255, 0.075);
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
     }
 
     .hero,
@@ -153,12 +161,12 @@
       top: 50%;
       width: clamp(180px, 32vw, 360px);
       aspect-ratio: 1;
-      transform: translateY(-50%);
-      border-radius: 28px;
+      transform: translateY(-50%) rotate(-8deg);
+      border-radius: 30px;
       border: 1px solid rgba(255, 211, 111, 0.18);
       background:
-        linear-gradient(90deg, rgba(255, 211, 111, 0.18), transparent 18% 20%, rgba(125, 181, 255, 0.16) 21% 39%, transparent 40% 42%, rgba(143, 240, 198, 0.16) 43% 61%, transparent 62% 64%, rgba(255, 159, 159, 0.14) 65% 83%, transparent 84% 86%, rgba(255, 255, 255, 0.12) 87%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 62%);
+        linear-gradient(90deg, rgba(143, 240, 198, 0.18) 0 18%, transparent 18% 20%, rgba(125, 181, 255, 0.16) 20% 38%, transparent 38% 40%, rgba(255, 211, 111, 0.16) 40% 58%, transparent 58% 60%, rgba(255, 159, 159, 0.15) 60% 78%, transparent 78% 80%, rgba(238, 245, 255, 0.12) 80% 100%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), transparent 60%);
       box-shadow:
         inset 0 0 38px rgba(255, 211, 111, 0.05),
         0 0 84px rgba(125, 181, 255, 0.08);
@@ -189,24 +197,11 @@
     }
 
     .lead {
-      max-width: 840px;
+      max-width: 860px;
       margin: 20px 0 0;
       color: var(--muted);
       font-size: clamp(1.08rem, 2.6vw, 1.55rem);
       line-height: 1.42;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
-      color: var(--text);
-      font-weight: 850;
     }
 
     .section {
@@ -230,7 +225,7 @@
       margin: 14px 0 0;
       color: var(--muted);
       font-size: 1.02rem;
-      line-height: 1.52;
+      line-height: 1.55;
     }
 
     .grid {
@@ -242,6 +237,10 @@
 
     .grid.two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.five {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
     .card {
@@ -256,6 +255,10 @@
       box-shadow: none;
     }
 
+    .card.compact {
+      min-height: 150px;
+    }
+
     .card span {
       color: var(--gold);
       font-size: 0.74rem;
@@ -266,7 +269,7 @@
 
     .card h3 {
       margin: 0;
-      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      font-size: clamp(1.35rem, 3vw, 2rem);
       line-height: 0.98;
       letter-spacing: -0.05em;
     }
@@ -287,15 +290,25 @@
       padding-left: 1.2rem;
     }
 
-    .flag-list {
+    .signal-card {
+      min-height: 165px;
+    }
+
+    .signal-card:nth-child(1) { border-color: rgba(125, 181, 255, 0.34); }
+    .signal-card:nth-child(2) { border-color: rgba(255, 211, 111, 0.34); }
+    .signal-card:nth-child(3) { border-color: rgba(143, 240, 198, 0.34); }
+    .signal-card:nth-child(4) { border-color: rgba(255, 159, 159, 0.34); }
+    .signal-card:nth-child(5) { border-color: rgba(238, 245, 255, 0.28); }
+
+    .flow-list {
       display: grid;
       gap: 10px;
       margin-top: 16px;
     }
 
-    .flag-row {
+    .flow-row {
       display: grid;
-      grid-template-columns: 92px 1fr;
+      grid-template-columns: 110px 1fr;
       gap: 12px;
       align-items: start;
       padding: 12px;
@@ -304,17 +317,13 @@
       background: rgba(255, 255, 255, 0.04);
     }
 
-    .flag-row strong {
+    .flow-row strong {
       color: var(--green);
     }
 
-    .flag-row span {
+    .flow-row span {
       color: var(--muted);
       line-height: 1.45;
-    }
-
-    .version-card {
-      min-height: 320px;
     }
 
     .route-grid {
@@ -359,7 +368,8 @@
 
     @media (max-width: 980px) {
       .grid,
-      .grid.two {
+      .grid.two,
+      .grid.five {
         grid-template-columns: 1fr;
       }
 
@@ -398,7 +408,7 @@
         grid-template-columns: 1fr;
       }
 
-      .flag-row {
+      .flow-row {
         grid-template-columns: 1fr;
       }
     }
@@ -419,7 +429,9 @@
     data-parent-route="/products/"
     data-canonical-destination="true"
     data-estate="rich-manor-and-estate"
-    data-gauges-truth="live-authority">
+    data-gauges-truth="live-authority"
+    data-game-type="charades-style-signal-reading"
+    data-minimum-players="3">
 
     <header class="topbar" aria-label="Five Flags header">
       <div class="brand">Diamond Gate Bridge · Products · Five Flags</div>
@@ -435,10 +447,10 @@
 
     <section class="hero" aria-labelledby="five-flags-title">
       <div class="hero-content">
-        <p class="kicker">PC2 · Five Flags · Product Chamber</p>
+        <p class="kicker">PC2 · Five Flags · Signal-Reading Game</p>
         <h1 id="five-flags-title">Five Flags</h1>
         <p class="lead">
-          Five Flags is an identity and civic game where players build a personal flag, test it through real-life choices, and learn how self, family, community, country, and future can work together without collapsing into one another.
+          Five Flags is like charades, except the clue-giver cannot act it out or explain it. The Flag Master can only guide the room with flags, and the players have to read the signal before the meaning disappears.
         </p>
       </div>
 
@@ -449,132 +461,176 @@
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="game-title">
-      <p class="kicker">The game</p>
-      <h2 id="game-title">A civic identity game built around five loyalties.</h2>
+    <section class="section panel" aria-labelledby="theme-title">
+      <p class="kicker">Theme</p>
+      <h2 id="theme-title">Identity made visible under pressure.</h2>
       <p>
-        Five Flags turns identity into a playable structure. Each player builds a five-part flag, then moves through scenario cards that ask what they would protect, what they would sacrifice, where they belong, and how they would act when different loyalties pull in different directions.
+        Five Flags is not flag trivia, politics, civics homework, or a collecting game. It is a signal-reading game about what a flag communicates when words are limited. The pressure is simple: the Flag Master knows the card, but cannot simply tell the table what it is.
       </p>
+      <p>
+        The game asks the room to notice meaning, direction, confidence, hesitation, correction, and arrival. A flag becomes more than decoration. It becomes the only language allowed.
+      </p>
+    </section>
 
-      <div class="flag-list" aria-label="The five flags">
-        <div class="flag-row">
-          <strong>Self</strong>
-          <span>Personal values, conscience, boundaries, responsibility, and the question: “Who am I when no one is watching?”</span>
+    <section class="grid" aria-label="Five Flags roles">
+      <article class="card">
+        <span>Role 1</span>
+        <h3>Referee</h3>
+        <p>
+          The Referee controls the card, shows it to the Flag Master, watches the round, and confirms when the guessers hit the target. The Referee keeps the game honest.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Role 2</span>
+        <h3>Flag Master</h3>
+        <p>
+          The Flag Master receives the card from the Referee. They cannot explain verbally. They can only use flags to guide the guessers toward or away from the answer.
+        </p>
+      </article>
+
+      <article class="card">
+        <span>Role 3</span>
+        <h3>Guessers</h3>
+        <p>
+          Guessers interpret the Flag Master’s signals. They call out guesses, adjust direction, read the table, and try to hit the nail on the head.
+        </p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="minimum-title">
+      <p class="kicker">Minimum table</p>
+      <h2 id="minimum-title">Three players minimum.</h2>
+      <p>
+        Five Flags needs at least three people because the core triangle matters: one person controls truth, one person carries the signal, and one person has to interpret. More guessers can join, but the minimum structure is Referee, Flag Master, and Guesser.
+      </p>
+    </section>
+
+    <section class="section panel" aria-labelledby="loop-title">
+      <p class="kicker">Round loop</p>
+      <h2 id="loop-title">Referee shows. Flag Master signals. Guessers interpret.</h2>
+
+      <div class="flow-list" aria-label="Five Flags round flow">
+        <div class="flow-row">
+          <strong>1 · Draw</strong>
+          <span>The Referee draws or selects a card. The card may contain a word, phrase, value, identity, person, place, object, prompt, or idea depending on the version being played.</span>
         </div>
-        <div class="flag-row">
-          <strong>Family</strong>
-          <span>Origin, care, loyalty, tradition, conflict, inheritance, and the question: “What do I owe the people closest to me?”</span>
+
+        <div class="flow-row">
+          <strong>2 · Show</strong>
+          <span>The Referee shows the card to the Flag Master only. The guessers do not see it.</span>
         </div>
-        <div class="flag-row">
-          <strong>Community</strong>
-          <span>Friends, school, workplace, neighborhood, teams, service, and the question: “How do I belong without disappearing?”</span>
+
+        <div class="flow-row">
+          <strong>3 · Signal</strong>
+          <span>The Flag Master uses flags to guide the table. They are not explaining; they are signaling direction.</span>
         </div>
-        <div class="flag-row">
-          <strong>Country</strong>
-          <span>Civic responsibility, law, disagreement, public duty, shared story, and the question: “What does citizenship require from me?”</span>
+
+        <div class="flow-row">
+          <strong>4 · Guess</strong>
+          <span>Guessers call out answers, revise their thinking, and follow the Flag Master’s feedback.</span>
         </div>
-        <div class="flag-row">
-          <strong>Future</strong>
-          <span>The world players are helping build, the people not yet present, long-range consequences, and the question: “What should survive me?”</span>
+
+        <div class="flow-row">
+          <strong>5 · Correct</strong>
+          <span>The Flag Master keeps signaling: colder, warmer, closer, wrong direction, almost there, or hit the nail on the head.</span>
+        </div>
+
+        <div class="flow-row">
+          <strong>6 · Confirm</strong>
+          <span>The Referee confirms the successful answer when the guessers land on the card.</span>
         </div>
       </div>
     </section>
 
-    <section class="grid" aria-label="How Five Flags works">
-      <article class="card">
-        <span>Step 1</span>
-        <h3>Build your flag</h3>
-        <p>
-          Players choose symbols, values, colors, and commitments for each of the five flags. The goal is not to make a pretty banner; the goal is to make identity visible.
-        </p>
+    <section class="grid five" aria-label="Signal language">
+      <article class="card compact signal-card">
+        <span>Signal</span>
+        <h3>Colder</h3>
+        <p>The table is moving away from the target.</p>
       </article>
 
-      <article class="card">
-        <span>Step 2</span>
-        <h3>Draw a civic scenario</h3>
-        <p>
-          Scenario cards place players in realistic pressure: a friend needs help, a rule feels unfair, a group disagrees, a family expectation conflicts with a public duty, or the future cost of a choice becomes visible.
-        </p>
+      <article class="card compact signal-card">
+        <span>Signal</span>
+        <h3>Warmer</h3>
+        <p>The table is moving in the right direction.</p>
       </article>
 
-      <article class="card">
-        <span>Step 3</span>
-        <h3>Choose and explain</h3>
-        <p>
-          Players choose which flag leads the decision, which flag gets protected, and which flag absorbs the cost. The explanation matters as much as the move.
-        </p>
+      <article class="card compact signal-card">
+        <span>Signal</span>
+        <h3>Closer</h3>
+        <p>The table is near the meaning but not there yet.</p>
       </article>
 
-      <article class="card">
-        <span>Step 4</span>
-        <h3>Negotiate the table</h3>
-        <p>
-          Other players may challenge, support, trade, question, or offer a better path. The game rewards listening, not just winning an argument.
-        </p>
+      <article class="card compact signal-card">
+        <span>Signal</span>
+        <h3>Wrong way</h3>
+        <p>The table needs to change direction before it locks onto the wrong idea.</p>
       </article>
 
-      <article class="card">
-        <span>Step 5</span>
-        <h3>Earn civic strength</h3>
-        <p>
-          Players gain tokens for clarity, courage, fairness, repair, service, wisdom, and accountability. The strongest player is not the loudest; it is the one who can hold identity under pressure.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>End state</span>
-        <h3>Build a shared banner</h3>
-        <p>
-          The game ends when players can build a shared civic banner from different individual flags. The win condition is not sameness; it is coordinated difference.
-        </p>
+      <article class="card compact signal-card">
+        <span>Signal</span>
+        <h3>Nailed it</h3>
+        <p>The table has hit the answer cleanly.</p>
       </article>
     </section>
 
-    <section class="section panel" aria-labelledby="versions-title">
-      <p class="kicker">Three versions</p>
-      <h2 id="versions-title">Same game. Different depth.</h2>
+    <section class="section panel" aria-labelledby="example-title">
+      <p class="kicker">Example round</p>
+      <h2 id="example-title">One card. No explanation. Only flags.</h2>
       <p>
-        Five Flags keeps the same core structure across every version: five loyalties, pressure cards, explanation, challenge, repair, and shared banner. The difference is the weight of the scenarios, the language of the prompts, and the level of civic complexity.
+        The Referee shows the Flag Master a card. The guessers start broad. The Flag Master shows a flag that tells them they are cold. A guesser changes direction. The Flag Master signals warmer. The table starts narrowing the meaning. Another guess gets close, but not exact. The Flag Master signals almost there. Someone finally says the right word or phrase. The Referee confirms the hit.
+      </p>
+      <p>
+        The fun is not only in guessing. The fun is in watching the room learn how to read a person who is not allowed to explain themselves.
+      </p>
+    </section>
+
+    <section class="section panel" aria-labelledby="versions-title">
+      <p class="kicker">Versions</p>
+      <h2 id="versions-title">Same mechanic. Different card pressure.</h2>
+      <p>
+        Kids, teen, and adult versions do not change the core game. The Referee still shows the card. The Flag Master still cannot explain. Guessers still read the flags. What changes is the complexity of the cards and the pressure of the interpretation.
       </p>
     </section>
 
     <section class="grid" aria-label="Five Flags versions">
-      <article class="card version-card">
+      <article class="card">
         <span>Kids version</span>
-        <h3>Color, story, and belonging</h3>
+        <h3>Simple words, pictures, and feelings.</h3>
         <p>
-          The kids version uses simple choices, bright flag-building, story prompts, and guided discussion. It teaches children how to name what matters to them without turning every disagreement into a fight.
+          The kids version uses concrete cards: animals, places, emotions, actions, colors, classroom situations, family moments, and simple values. The point is to make signal-reading playful and safe.
         </p>
         <ul>
-          <li>Best for classrooms, families, youth groups, and first civic lessons.</li>
-          <li>Scenarios are concrete: sharing, fairness, helping, apologizing, telling the truth, joining a team.</li>
-          <li>Winning means explaining a choice kindly and helping the table build one shared banner.</li>
+          <li>Best for families, classrooms, youth groups, and parties.</li>
+          <li>Cards stay visual, concrete, and easy to act on.</li>
+          <li>The table learns listening, guessing, correction, and confidence.</li>
         </ul>
       </article>
 
-      <article class="card version-card">
+      <article class="card">
         <span>Teen version</span>
-        <h3>Identity under pressure</h3>
+        <h3>Identity, pressure, and social meaning.</h3>
         <p>
-          The teen version adds social pressure, disagreement, reputation, online behavior, belonging, leadership, and personal boundaries. It lets players practice adult-level choices before those choices become permanent.
+          The teen version adds harder cards: reputation, belonging, online behavior, inside jokes, social pressure, school life, friendship tension, confidence, and identity.
         </p>
         <ul>
-          <li>Best for schools, clubs, youth leadership, mentorship, and debate settings.</li>
-          <li>Scenarios include peer pressure, family conflict, public speech, group loyalty, exclusion, responsibility, and digital identity.</li>
-          <li>Winning means defending a position, revising it when challenged, and showing how identity can mature without becoming fake.</li>
+          <li>Best for youth groups, classrooms, team-building, and social play.</li>
+          <li>Cards require sharper interpretation without becoming heavy-handed.</li>
+          <li>The room practices reading tone, confidence, and symbolic meaning.</li>
         </ul>
       </article>
 
-      <article class="card version-card">
+      <article class="card">
         <span>Adult version</span>
-        <h3>Civic negotiation and consequence</h3>
+        <h3>Abstract ideas, culture, and layered meaning.</h3>
         <p>
-          The adult version turns the game into a negotiation surface for families, teams, organizations, and communities. It deals with tradeoffs, leadership, competing duties, institutional trust, and long-range consequence.
+          The adult version can include abstract ideas, values, conflict, brands, culture, public figures, relationship dynamics, work situations, and layered prompts.
         </p>
         <ul>
-          <li>Best for workshops, leadership training, community rooms, family systems, and public conversation.</li>
-          <li>Scenarios include resource allocation, loyalty conflicts, public trust, repair after harm, competing rights, and future stewardship.</li>
-          <li>Winning means producing a decision that can survive disagreement, not just a decision that feels good in the moment.</li>
+          <li>Best for parties, workshops, retreats, team-building, and conversation rooms.</li>
+          <li>Cards can be funny, strategic, personal, cultural, or philosophical.</li>
+          <li>The table has to read meaning under pressure without overexplaining.</li>
         </ul>
       </article>
     </section>
@@ -582,17 +638,17 @@
     <section class="grid two" aria-label="What Five Flags brings">
       <article class="card">
         <span>What it brings</span>
-        <h3>A playable civic mirror</h3>
+        <h3>A new signal-reading party game.</h3>
         <p>
-          Five Flags gives people a safe way to see how they make decisions before real conflict forces the issue. It turns identity, responsibility, belonging, and public life into something players can practice.
+          Five Flags gives people the fun of charades without copying charades. The limitation is different: the Flag Master is not silent because they are acting; they are silent because the flag is the language.
         </p>
       </article>
 
       <article class="card">
-        <span>Gap it closes</span>
-        <h3>Civics without embodiment</h3>
+        <span>Why it is unique</span>
+        <h3>The clue is not the answer. The clue is the signal.</h3>
         <p>
-          Most civic education explains systems from the outside. Five Flags puts the player inside the decision. It asks not only what the rule is, but who the player becomes when the rule costs something.
+          The game turns feedback itself into the mechanic. Players are not only guessing a card. They are learning how to read direction, confidence, correction, and arrival from a symbolic signal.
         </p>
       </article>
     </section>
@@ -601,8 +657,28 @@
       <p class="kicker">Parent binding</p>
       <h2 id="parent-binding-title">Five Flags stays attached to the Product Wing.</h2>
       <p>
-        This chamber carries civic and identity meaning without becoming a detached civic island. Its public route remains bound to Products, Showroom, Compass, Home, and Gauges.
+        This chamber carries identity and signal meaning without becoming a detached civic island. Its public route remains bound to Products, Showroom, Compass, Home, and Gauges.
       </p>
+    </section>
+
+    <section class="grid" aria-label="Five Flags status">
+      <article class="card">
+        <span>Canonical Route</span>
+        <h3>/products/five-flags/</h3>
+        <p>One route under Products. No duplicate civic root.</p>
+      </article>
+
+      <article class="card">
+        <span>Product Class</span>
+        <h3>product_chamber</h3>
+        <p>Five Flags is a product chamber, not a planetary construct and not a house part.</p>
+      </article>
+
+      <article class="card">
+        <span>Core mechanic</span>
+        <h3>Flag-only feedback</h3>
+        <p>The Flag Master cannot explain verbally and can only guide the table with flags.</p>
+      </article>
     </section>
 
     <section class="section panel" aria-labelledby="product-links-title">
@@ -651,8 +727,14 @@
       canonical-destination
       canonical-route=/products/five-flags/
       product-class=product_chamber
-      identity-and-civic-game=true
-      five-flags=self-family-community-country-future
+      game-type=charades-style-signal-reading
+      minimum-players=3
+      roles=referee-flag-master-guesser
+      referee-shows-card-to-flag-master=true
+      flag-master-cannot-explain-verbally=true
+      flag-master-can-only-use-flags=true
+      signals=colder-warmer-closer-wrong-direction-almost-there-nailed-it
+      theme=identity-made-visible-under-pressure
       kids-version=true
       teen-version=true
       adult-version=true
@@ -664,7 +746,7 @@
       Compass=/
       Home=/home/
       Gauges=/gauges/
-      FIVE_FLAGS_GAME_VERSIONS_TED_PUBLIC_TNT_v1
+      FIVE_FLAGS_ACTUAL_GAME_RULES_TNT_v1
     </section>
   </main>
 </body>

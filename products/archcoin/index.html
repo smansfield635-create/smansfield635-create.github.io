@@ -1,151 +1,484 @@
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-build="product-wing-full-tnt-v1"
-  data-generation="archcoin-product-chamber-unity-renewal-v1"
-  data-page-id="archcoin"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-parent-route="/products/"
->
+<!doctype html>
+<html lang="en" data-page="archcoin" data-room="PC1_ARCHCOIN" data-public-mode="ted-clean">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ARCHCOIN · Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="ARCHCOIN: a structured financial product chamber inside the Diamond Gate Bridge Product Wing."
-  />
-  <link rel="stylesheet" href="/assets/manor.css?v=archcoin-product-chamber-unity-renewal-v1" />
-  <script src="/assets/page_registry.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ARCHCOIN · Diamond Gate Bridge</title>
+  <meta name="description" content="ARCHCOIN is a structured financial product engine inside the Product Wing.">
+  <style>
+    :root {
+      --bg: #05070b;
+      --panel: rgba(9, 15, 25, 0.9);
+      --panel-soft: rgba(14, 24, 38, 0.74);
+      --line: rgba(168, 199, 255, 0.22);
+      --line-strong: rgba(143, 240, 198, 0.34);
+      --text: #eef5ff;
+      --muted: #aab8cf;
+      --green: #8ff0c6;
+      --blue: #7db5ff;
+      --gold: #ffd36f;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 78% 8%, rgba(255, 211, 111, 0.13), transparent 24rem),
+        radial-gradient(circle at 24% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
+        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
+        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 44px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      color: var(--muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .nav a:hover,
+    .button:hover {
+      border-color: rgba(168, 199, 255, 0.42);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .hero,
+    .panel,
+    .status-card,
+    .route-card {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 52px);
+      min-height: 410px;
+      display: grid;
+      align-content: center;
+      gap: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.2), transparent 16rem),
+        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.08), transparent 20rem),
+        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(22px, 7vw, 92px);
+      top: 50%;
+      width: clamp(150px, 28vw, 320px);
+      aspect-ratio: 1;
+      transform: translateY(-50%);
+      border: 1px solid rgba(255, 211, 111, 0.22);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.26), transparent 18%),
+        radial-gradient(circle at 50% 50%, rgba(255, 211, 111, 0.18), rgba(143, 240, 198, 0.05) 48%, rgba(3, 6, 12, 0.2) 100%);
+      box-shadow:
+        inset 0 0 38px rgba(255, 211, 111, 0.07),
+        0 0 84px rgba(255, 211, 111, 0.08);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .actions {
+      position: relative;
+      z-index: 2;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button.primary {
+      border-color: rgba(143, 240, 198, 0.45);
+      background: rgba(143, 240, 198, 0.12);
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: clamp(20px, 3vw, 30px);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
+        var(--panel-soft);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.52;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .status-card {
+      min-height: 170px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(143, 240, 198, 0.07), rgba(125, 181, 255, 0.04));
+      box-shadow: none;
+    }
+
+    .status-card span {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .status-card strong {
+      font-size: clamp(1.28rem, 3vw, 1.85rem);
+      line-height: 1.02;
+    }
+
+    .status-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .route-card {
+      min-height: 104px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .route-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .route-card span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route-card strong {
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 360px;
+      }
+
+      .hero::after {
+        opacity: 0.28;
+        right: -40px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 22px, 620px);
+        padding-top: 16px;
+      }
+
+      .nav,
+      .actions {
+        gap: 8px;
+      }
+
+      .nav a,
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="manor-skin manor-product"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-page-id="archcoin"
-  data-product-id="archcoin"
-  data-product-parent="/products/"
-  data-parent-route="/products/"
-  data-route="/products/archcoin/"
-  data-class-type="product_chamber"
-  data-construct-class="product"
-  data-product-wing="true"
-  data-construct-code="PC1_ARCHCOIN"
-  data-parent-construct="products"
-  data-house-anchor="products"
-  data-skin-family="manor_product"
-  data-canonical-destination-status="canonical"
-  data-host-status="standalone"
-  data-audit-priority="critical"
-  data-registry-version="1.0.0"
->
-  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
-    <a href="/">Compass</a>
-    <a href="/door/">Door</a>
-    <a href="/home/">Home</a>
-    <a href="/products/" aria-current="page">Products</a>
-    <a href="/showroom/">Showroom</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
+<body>
+  <a class="skip" href="#archcoin-main">Skip to ARCHCOIN</a>
 
   <main
-    class="manor-shell"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-page-id="archcoin"
-    data-product-id="archcoin"
-    data-product-parent="/products/"
-    data-parent-route="/products/"
+    id="archcoin-main"
+    class="page"
     data-route="/products/archcoin/"
-    data-class-type="product_chamber"
+    data-product-chamber="PC1_ARCHCOIN"
+    data-product-class="product_chamber"
     data-construct-class="product"
     data-product-wing="true"
-    data-construct-code="PC1_ARCHCOIN"
-    data-parent-construct="products"
-    data-house-anchor="products"
-    data-canonical-destination-status="canonical"
-  >
-    <section class="manor-room" aria-label="ARCHCOIN product chamber">
-      <p class="manor-kicker">PC1 · ARCHCOIN · Product Chamber</p>
+    data-parent-route="/products/"
+    data-canonical-destination="true"
+    data-estate="rich-manor-and-estate"
+    data-gauges-truth="live-authority">
 
-      <h1 class="manor-title">ARCHCOIN</h1>
+    <header class="topbar" aria-label="ARCHCOIN header">
+      <div class="brand">Diamond Gate Bridge · Products · ARCHCOIN</div>
+      <nav class="nav" aria-label="ARCHCOIN navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      <p class="manor-lede">
-        ARCHCOIN is a structured financial product engine housed inside the Product Wing.
-        It remains under Products as one canonical destination: <strong>/products/archcoin/</strong>.
-      </p>
-
-      <div class="manor-divider"></div>
-
-      <section class="manor-stage" aria-label="ARCHCOIN product identity">
-        <p class="manor-kicker">Parent binding</p>
-
-        <h2>ARCHCOIN stays inside Products.</h2>
-
-        <p class="manor-lede">
-          This chamber does not split into competing roots. North, South, East, and West may exist as under-the-hood structure,
-          but the public product destination remains one route under the Product Wing.
+    <section class="hero" aria-labelledby="archcoin-title">
+      <div class="hero-content">
+        <p class="kicker">PC1 · ARCHCOIN · Product Chamber</p>
+        <h1 id="archcoin-title">ARCHCOIN</h1>
+        <p class="lead">
+          ARCHCOIN is a structured financial product engine housed inside the Product Wing. One product, one canonical destination, one route under Products.
         </p>
+      </div>
 
-        <div class="manor-grid">
-          <article class="manor-card">
-            <p class="manor-kicker">Canonical Route</p>
-            <h2>/products/archcoin/</h2>
-            <p class="manor-lede">One product destination. No duplicate public root.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Product Class</p>
-            <h2>product_chamber</h2>
-            <p class="manor-lede">ARCHCOIN is a product chamber, not a planetary construct and not a house part.</p>
-          </article>
-
-          <article class="manor-card">
-            <p class="manor-kicker">Parent</p>
-            <h2>Products</h2>
-            <p class="manor-lede">Products remains the source-waterfall chamber and routing parent.</p>
-          </article>
-        </div>
-      </section>
+      <div class="actions" aria-label="Primary ARCHCOIN actions">
+        <a class="button primary" href="/products/">Return to Products</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/gauges/">Read Gauges</a>
+      </div>
     </section>
 
-    <section class="manor-backlinks" aria-label="Product backlinks">
-      <p class="manor-backlinks-title">Product backlinks</p>
-
-      <ul class="manor-backlinks-list">
-        <li><a href="/products/">Products</a></li>
-        <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/">Compass</a></li>
-        <li><a href="/home/">Home</a></li>
-        <li><a href="/gauges/">Gauges</a></li>
-      </ul>
+    <section class="section panel" aria-labelledby="parent-binding-title">
+      <p class="kicker">Parent binding</p>
+      <h2 id="parent-binding-title">ARCHCOIN stays inside Products.</h2>
+      <p>
+        This chamber does not split into competing roots. North, South, East, and West may exist as under-the-hood structure, but the public product destination remains one route under the Product Wing.
+      </p>
     </section>
 
-    <section class="manor-audit-strip" aria-label="ARCHCOIN product receipt">
-      <p class="manor-audit-title">ARCHCOIN receipt</p>
+    <section class="status-grid" aria-label="ARCHCOIN status">
+      <article class="status-card">
+        <span>Canonical Route</span>
+        <strong>/products/archcoin/</strong>
+        <p>One product destination. No duplicate public root.</p>
+      </article>
 
-      <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass">route-exists</li>
-        <li class="manor-audit-chip pass">manor-skin</li>
-        <li class="manor-audit-chip pass">estate=rich-manor-and-estate</li>
-        <li class="manor-audit-chip pass">house-field=true</li>
-        <li class="manor-audit-chip pass">gauges-truth=live-authority</li>
-        <li class="manor-audit-chip pass">construct-class=product</li>
-        <li class="manor-audit-chip pass">product-wing=true</li>
-        <li class="manor-audit-chip pass">parent-route=/products/</li>
-        <li class="manor-audit-chip pass">PC1_ARCHCOIN</li>
-        <li class="manor-audit-chip pass">canonical-destination</li>
-      </ul>
+      <article class="status-card">
+        <span>Product Class</span>
+        <strong>product_chamber</strong>
+        <p>ARCHCOIN is a product chamber, not a planetary construct and not a house part.</p>
+      </article>
+
+      <article class="status-card">
+        <span>Parent</span>
+        <strong>Products</strong>
+        <p>Products remains the source-waterfall chamber and routing parent.</p>
+      </article>
+    </section>
+
+    <section class="section panel" aria-labelledby="product-links-title">
+      <p class="kicker">Product backlinks</p>
+      <h2 id="product-links-title">Move through the product wing.</h2>
+
+      <div class="route-grid" aria-label="ARCHCOIN backlinks">
+        <a class="route-card" href="/products/">
+          <span>Parent</span>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span>Proof</span>
+          <strong>Showroom</strong>
+        </a>
+
+        <a class="route-card" href="/">
+          <span>Control</span>
+          <strong>Compass</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <span>House</span>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span>Verification</span>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="receipt" aria-hidden="true">
+      ARCHCOIN receipt
+      route-exists
+      manor-skin
+      estate=rich-manor-and-estate
+      house-field=true
+      gauges-truth=live-authority
+      construct-class=product
+      product-wing=true
+      parent-route=/products/
+      PC1_ARCHCOIN
+      canonical-destination
+      canonical-route=/products/archcoin/
+      product-class=product_chamber
+      no-duplicate-public-root=true
+      not-planetary-construct=true
+      not-house-part=true
+      Products=/products/
+      Showroom=/showroom/
+      Compass=/
+      Home=/home/
+      Gauges=/gauges/
+      ARCHCOIN_TED_PUBLIC_PRODUCT_CHAMBER_TNT_v1
     </section>
   </main>
 </body>

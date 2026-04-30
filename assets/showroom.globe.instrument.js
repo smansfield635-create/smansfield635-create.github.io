@@ -1,144 +1,179 @@
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_GEN4_NATURAL_SPHERE_CTG_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_TRUE_GEN4_NARRATIVE_CODE_TNT_v1";
   const GENERATION = "GENERATION_4";
   const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
   const DEFAULTS = Object.freeze({
-    degreesPerSecond: 4.8,
-    cloudDriftDegreesPerSecond: 2.1,
-    moonOrbitDegreesPerSecond: 1.08,
+    tickMs: 2600,
     axisTilt: 23.5,
+    homeLabel: "Home Anchor · Fort Worth",
     homeLatitude: 32.7555,
-    homeLongitude: -97.3308,
-    homeLabel: "Home Anchor · Fort Worth"
+    homeLongitude: -97.3308
   });
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
+  const PHASES = Object.freeze([
+    Object.freeze({
+      key: "HOME",
+      title: "Home Anchor",
+      short: "HOME",
+      proof: "The instrument begins from home before it moves.",
+      state: "anchored",
+      consequence: "Motion cannot drift because origin is declared first."
+    }),
+    Object.freeze({
+      key: "BOUNDARY",
+      title: "Natural Boundary",
+      short: "BOUNDARY",
+      proof: "The object’s edge is defined by state, not by a decorative shell.",
+      state: "organic",
+      consequence: "No rim, cap, bowl, glow, or graphic skin is allowed to carry authority."
+    }),
+    Object.freeze({
+      key: "MOTION",
+      title: "Internal Motion",
+      short: "MOTION",
+      proof: "Motion is released inside the instrument and does not relocate the room.",
+      state: "released",
+      consequence: "The route stays stable while the proof cycle advances."
+    }),
+    Object.freeze({
+      key: "REALM",
+      title: "Realm Separation",
+      short: "REALM",
+      proof: "Parent Showroom and Demo Universe remain connected by navigation only.",
+      state: "separated",
+      consequence: "The shared instrument does not collapse route identity."
+    }),
+    Object.freeze({
+      key: "RECEIPT",
+      title: "Readable Receipt",
+      short: "RECEIPT",
+      proof: "Every phase leaves a readable consequence.",
+      state: "written",
+      consequence: "The user can inspect what the code is doing without a hidden graphic layer."
+    }),
+    Object.freeze({
+      key: "NEXT",
+      title: "Next State",
+      short: "NEXT",
+      proof: "The instrument returns to home and continues the proof cycle.",
+      state: "ready",
+      consequence: "Generation 4 becomes a repeatable narrative-code machine."
+    })
+  ]);
 
   function createElement(tagName, className, text) {
-    const el = document.createElement(tagName);
-    if (className) el.className = className;
-    if (typeof text === "string") el.textContent = text;
-    return el;
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    if (typeof text === "string") element.textContent = text;
+    return element;
   }
 
-  function writeDataset(el, values) {
+  function writeDataset(element, values) {
     Object.keys(values).forEach((key) => {
-      el.dataset[key] = String(values[key]);
+      element.dataset[key] = String(values[key]);
     });
   }
 
-  function makeTag(text) {
-    const tag = createElement("span", "showroom-contract-tag", text);
-    return tag;
+  function safeClone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
-  function makeReceipt(name, value) {
+  function makeTag(text) {
+    return createElement("span", "showroom-contract-tag", text);
+  }
+
+  function makeReceiptLine(name, value) {
     const item = createElement("li", "showroom-globe-receipt");
-    item.textContent = `${name}=${value}`;
+    item.innerHTML = `<strong>${name}</strong><span>${value}</span>`;
     return item;
   }
 
-  function resolveTexture(options, contract) {
-    return (
-      options.earthTexture ||
-      contract.earthTexture ||
-      global.SHOWROOM_EARTH_TEXTURE ||
-      document.documentElement.dataset.showroomEarthTexture ||
-      ""
+  function normalizeContract(contract) {
+    return Object.assign(
+      {
+        realm: "showroom-parent-proof-realm",
+        routeRole: "showroom-proof-surface",
+        route: "/showroom/",
+        mode: "parent",
+        homeLabel: DEFAULTS.homeLabel,
+        axisTilt: DEFAULTS.axisTilt
+      },
+      contract || {}
     );
   }
 
-  function buildInstrumentDom(contract, textureUrl) {
-    const root = createElement("section", "showroom-globe-instrument");
-    root.setAttribute("aria-label", "Generation 4 natural Earth sphere instrument");
+  function buildNarrativeInstrumentDom(contract) {
+    const root = createElement("section", "showroom-globe-instrument showroom-narrative-instrument");
+    root.setAttribute("aria-label", "Generation 4 narrative-code instrument");
 
     writeDataset(root, {
       showroomInstrument: "active",
       generation: GENERATION,
       authority: AUTHORITY,
-      boundary: "organic",
-      sphere: "natural",
-      shell: "absent",
-      rim: "absent",
-      cap: "absent",
-      glow: "absent",
-      motion: "internal",
+      instrumentType: "narrative-code",
+      graphicDependency: "false",
+      externalImageDependency: "false",
+      decorativeShell: "false",
+      boundary: "state-defined",
+      motion: "phase-cycle",
       homeAnchor: "active"
     });
 
-    const stage = createElement("div", "showroom-orbital-stage");
-    stage.setAttribute("aria-label", "Natural Earth boundary field");
+    const stage = createElement("div", "showroom-narrative-stage");
+    stage.setAttribute("aria-live", "polite");
 
-    const lightField = createElement("div", "showroom-light-field");
-    const sun = createElement("div", "showroom-sun", "☀");
-    const moonTrack = createElement("div", "showroom-moon-track");
-    const moon = createElement("div", "showroom-moon", "◐");
-    moonTrack.append(moon);
-    lightField.append(sun, moonTrack);
+    const proofDial = createElement("div", "showroom-proof-dial");
+    const dialCore = createElement("div", "showroom-proof-core");
+    const phaseKey = createElement("div", "showroom-phase-key", "HOME");
+    const phaseTitle = createElement("div", "showroom-phase-title", "Home Anchor");
+    const phaseState = createElement("div", "showroom-phase-state", "anchored");
 
-    const sphereFrame = createElement("div", "showroom-natural-sphere-frame");
-    const axis = createElement("div", "showroom-earth-axis");
+    dialCore.append(phaseKey, phaseTitle, phaseState);
 
-    const sphere = createElement("div", "showroom-earth-sphere");
-    sphere.setAttribute("role", "img");
-    sphere.setAttribute("aria-label", "Natural spherical Earth with organic boundary");
-
-    writeDataset(sphere, {
-      naturalBoundary: "true",
-      shellRemoved: "true",
-      rimRemoved: "true",
-      capRemoved: "true",
-      facetedBodyRemoved: "true"
+    const ring = createElement("ol", "showroom-proof-ring");
+    PHASES.forEach((phase, index) => {
+      const item = createElement("li", "showroom-proof-node", phase.short);
+      writeDataset(item, {
+        phase: phase.key,
+        index,
+        active: index === 0 ? "true" : "false"
+      });
+      ring.append(item);
     });
 
-    const mapA = createElement("div", "showroom-earth-map showroom-earth-map-a");
-    const mapB = createElement("div", "showroom-earth-map showroom-earth-map-b");
-    const cloudA = createElement("div", "showroom-cloud-layer showroom-cloud-layer-a");
-    const cloudB = createElement("div", "showroom-cloud-layer showroom-cloud-layer-b");
-    const terminator = createElement("div", "showroom-earth-terminator");
-    const atmosphere = createElement("div", "showroom-earth-atmosphere");
-    const homePin = createElement("div", "showroom-home-pin");
-    homePin.title = contract.homeLabel || DEFAULTS.homeLabel;
+    proofDial.append(dialCore, ring);
 
-    if (textureUrl) {
-      mapA.style.backgroundImage = `url("${textureUrl}")`;
-      mapB.style.backgroundImage = `url("${textureUrl}")`;
-      mapA.dataset.texture = "provided";
-      mapB.dataset.texture = "provided";
-    } else {
-      mapA.dataset.texture = "procedural";
-      mapB.dataset.texture = "procedural";
-    }
+    const narrativePanel = createElement("article", "showroom-narrative-panel");
+    const narrativeKicker = createElement("p", "showroom-narrative-kicker", "Current proof state");
+    const narrativeTitle = createElement("h2", "showroom-narrative-title", PHASES[0].title);
+    const narrativeProof = createElement("p", "showroom-narrative-proof", PHASES[0].proof);
+    const narrativeConsequence = createElement("p", "showroom-narrative-consequence", PHASES[0].consequence);
+    narrativePanel.append(narrativeKicker, narrativeTitle, narrativeProof, narrativeConsequence);
 
-    sphere.append(mapA, mapB, cloudA, cloudB, terminator, atmosphere, homePin);
-    sphereFrame.append(axis, sphere);
-    stage.append(lightField, sphereFrame);
+    stage.append(proofDial, narrativePanel);
 
     const caption = createElement(
       "h2",
       "showroom-globe-caption",
-      "GENERATION 4 · SHOWROOM PROOF REALM · NATURAL SPHERE"
+      "GENERATION 4 · SHOWROOM PROOF REALM · NARRATIVE CODE"
     );
 
     const tags = createElement("div", "showroom-contract-tags");
     [
       "GEN 4",
-      "boundary=organic",
-      "sphere=natural",
+      "graphics=none",
+      "instrument=narrative-code",
+      "boundary=state-defined",
       "shell=absent",
       "rim=absent",
       "cap=absent",
-      "glow=absent",
       "home=anchored",
-      "idle=locked",
-      "motion=internal",
-      "spin=release",
-      "axis=23.5°",
+      "motion=phase-cycle",
+      "receipts=readable",
+      `axis=${contract.axisTilt || DEFAULTS.axisTilt}°`,
       `context=${contract.mode || "parent"}`
     ].forEach((text) => tags.append(makeTag(text)));
 
@@ -153,12 +188,12 @@
       actions.append(parentLink);
     }
 
-    const status = createElement("aside", "showroom-globe-status");
-    const statusTitle = createElement("h3", "", "Natural-boundary receipts");
-    const statusBody = createElement(
+    const receiptsPanel = createElement("aside", "showroom-globe-status");
+    const receiptsTitle = createElement("h3", "", "Narrative-code receipts");
+    const receiptsBody = createElement(
       "p",
       "",
-      "The Earth object is emitted as one circular sphere. No lower shell, faceted body, rim, cap, or bowl geometry is emitted by this instrument."
+      "This instrument does not depend on generated graphics or external imagery. It advances through readable proof states and writes receipts as the room’s behavior changes."
     );
 
     const receipts = createElement("ul", "showroom-globe-receipts");
@@ -167,27 +202,29 @@
       ["AUTHORITY", AUTHORITY],
       ["REALM", contract.realm],
       ["ROUTE_ROLE", contract.routeRole],
-      ["NATURAL_SPHERE", "true"],
-      ["LOWER_SHELL", "absent"],
-      ["FACETED_BODY", "absent"],
-      ["RIM", "absent"],
-      ["CAP", "absent"],
-      ["INTERNAL_GLOBE_BOUNDARY", "organic-circle"],
-      ["OUTER_SECTION_BOUNDARY", "consumer-shell-only"]
-    ].forEach(([name, value]) => receipts.append(makeReceipt(name, value)));
+      ["INSTRUMENT_TYPE", "narrative-code"],
+      ["GRAPHIC_DEPENDENCY", "false"],
+      ["EXTERNAL_IMAGE_DEPENDENCY", "false"],
+      ["BOUNDARY_AUTHORITY", "state"],
+      ["MOTION_AUTHORITY", "phase-cycle"],
+      ["CURRENT_PHASE", PHASES[0].key]
+    ].forEach(([name, value]) => receipts.append(makeReceiptLine(name, value)));
 
-    status.append(statusTitle, statusBody, receipts);
-    root.append(stage, caption, tags, actions, status);
+    receiptsPanel.append(receiptsTitle, receiptsBody, receipts);
+    root.append(stage, caption, tags, actions, receiptsPanel);
 
     return {
       root,
-      sphere,
-      mapA,
-      mapB,
-      cloudA,
-      cloudB,
-      moonTrack,
-      homePin
+      proofDial,
+      dialCore,
+      phaseKey,
+      phaseTitle,
+      phaseState,
+      ring,
+      narrativeTitle,
+      narrativeProof,
+      narrativeConsequence,
+      receipts
     };
   }
 
@@ -199,119 +236,136 @@
       throw new Error("ShowroomGlobeInstrument requires a valid mount element.");
     }
 
-    const contract = Object.assign(
-      {
-        realm: "showroom-parent-proof-realm",
-        routeRole: "showroom-proof-surface",
-        homeLabel: DEFAULTS.homeLabel,
-        homeLatitude: DEFAULTS.homeLatitude,
-        homeLongitude: DEFAULTS.homeLongitude,
-        speedMultiplier: 1,
-        mode: "parent"
-      },
-      opts.contract || {}
-    );
-
-    const textureUrl = resolveTexture(opts, contract);
+    const contract = normalizeContract(opts.contract);
     const runtime = opts.runtime || null;
-    const speedMultiplier = clamp(Number(contract.speedMultiplier || 1), 0.15, 3);
-    const degreesPerSecond = DEFAULTS.degreesPerSecond * speedMultiplier;
-    const cloudSpeed = DEFAULTS.cloudDriftDegreesPerSecond * speedMultiplier;
-    const moonSpeed = DEFAULTS.moonOrbitDegreesPerSecond * speedMultiplier;
+    const tickMs = Number(opts.tickMs || contract.tickMs || DEFAULTS.tickMs);
 
     mount.innerHTML = "";
-    mount.classList.add("showroom-globe-mount");
+    mount.classList.add("showroom-globe-mount", "showroom-narrative-mount");
 
     writeDataset(mount, {
       generation: GENERATION,
       instrumentLoaded: "true",
       instrumentAuthority: AUTHORITY,
-      naturalBoundary: "true",
+      instrumentType: "narrative-code",
+      graphicDependency: "false",
+      naturalBoundary: "state-defined",
       shellRemoved: "true",
       rimRemoved: "true",
       capRemoved: "true",
-      globeBoundary: "organic-sphere"
+      globeBoundary: "narrative-proof-cycle"
     });
 
-    const dom = buildInstrumentDom(contract, textureUrl);
+    const dom = buildNarrativeInstrumentDom(contract);
     mount.append(dom.root);
 
-    let raf = 0;
     let active = true;
-    let previous = performance.now();
-    let mapShift = 0;
-    let cloudRotationA = 0;
-    let cloudRotationB = 0;
-    let moonRotation = contract.mode === "standalone" ? 144 : 38;
+    let timer = 0;
+    let currentIndex = 0;
+    const localReceipts = [];
 
-    function writeTick(now) {
-      if (!active) return;
+    function record(type, payload) {
+      const receipt = {
+        type,
+        generation: GENERATION,
+        authority: AUTHORITY,
+        payload: payload || {},
+        timestamp: new Date().toISOString()
+      };
 
-      const deltaSeconds = Math.max(0, (now - previous) / 1000);
-      previous = now;
-
-      mapShift = (mapShift + degreesPerSecond * deltaSeconds) % 100;
-      cloudRotationA = (cloudRotationA + cloudSpeed * deltaSeconds) % 360;
-      cloudRotationB = (cloudRotationB - cloudSpeed * 0.72 * deltaSeconds) % 360;
-      moonRotation = (moonRotation + moonSpeed * deltaSeconds) % 360;
-
-      dom.mapA.style.transform = `translate3d(${-mapShift}%, 0, 0)`;
-      dom.mapB.style.transform = `translate3d(${100 - mapShift}%, 0, 0)`;
-      dom.cloudA.style.transform = `rotate(${cloudRotationA.toFixed(3)}deg)`;
-      dom.cloudB.style.transform = `rotate(${cloudRotationB.toFixed(3)}deg)`;
-      dom.moonTrack.style.transform = `rotate(${moonRotation.toFixed(3)}deg)`;
-
-      if (runtime && typeof runtime.writeReceipt === "function") {
-        runtime.writeReceipt("natural_sphere_motion_tick", {
-          generation: GENERATION,
-          authority: AUTHORITY,
-          mapShift: Number(mapShift.toFixed(3)),
-          moonRotation: Number(moonRotation.toFixed(3)),
-          naturalBoundary: true,
-          shellRemoved: true,
-          rimRemoved: true,
-          capRemoved: true,
-          timestamp: new Date().toISOString()
-        });
+      localReceipts.push(receipt);
+      if (localReceipts.length > 36) {
+        localReceipts.splice(0, localReceipts.length - 36);
       }
 
-      raf = global.requestAnimationFrame(writeTick);
+      if (runtime && typeof runtime.writeReceipt === "function") {
+        runtime.writeReceipt(type, receipt.payload);
+      }
+
+      return receipt;
+    }
+
+    function renderPhase(index) {
+      const phase = PHASES[index];
+
+      dom.phaseKey.textContent = phase.key;
+      dom.phaseTitle.textContent = phase.title;
+      dom.phaseState.textContent = phase.state;
+      dom.narrativeTitle.textContent = phase.title;
+      dom.narrativeProof.textContent = phase.proof;
+      dom.narrativeConsequence.textContent = phase.consequence;
+
+      Array.from(dom.ring.children).forEach((node, nodeIndex) => {
+        node.dataset.active = nodeIndex === index ? "true" : "false";
+        node.dataset.complete = nodeIndex < index ? "true" : "false";
+      });
+
+      dom.root.dataset.currentPhase = phase.key;
+      dom.root.dataset.currentState = phase.state;
+
+      const priorDynamic = dom.receipts.querySelectorAll("[data-dynamic-receipt='true']");
+      priorDynamic.forEach((node) => node.remove());
+
+      const dynamicReceipt = makeReceiptLine(
+        `PHASE_${String(index + 1).padStart(2, "0")}`,
+        `${phase.key}: ${phase.consequence}`
+      );
+      dynamicReceipt.dataset.dynamicReceipt = "true";
+      dom.receipts.append(dynamicReceipt);
+
+      record("narrative_phase_advanced", {
+        phase: phase.key,
+        title: phase.title,
+        state: phase.state,
+        consequence: phase.consequence,
+        graphicDependency: false,
+        externalImageDependency: false
+      });
+    }
+
+    function advance() {
+      if (!active) return;
+      currentIndex = (currentIndex + 1) % PHASES.length;
+      renderPhase(currentIndex);
+      timer = global.setTimeout(advance, tickMs);
     }
 
     function start() {
-      if (!active) active = true;
-      previous = performance.now();
-      raf = global.requestAnimationFrame(writeTick);
-
-      if (runtime && typeof runtime.writeReceipt === "function") {
-        runtime.writeReceipt("natural_sphere_instrument_started", {
-          generation: GENERATION,
-          authority: AUTHORITY,
-          realm: contract.realm,
-          routeRole: contract.routeRole,
-          naturalBoundary: true,
-          emittedShellGeometry: false,
-          emittedRimGeometry: false,
-          emittedCapGeometry: false
-        });
-      }
+      if (active && timer) return;
+      active = true;
+      record("narrative_instrument_started", {
+        generation: GENERATION,
+        authority: AUTHORITY,
+        realm: contract.realm,
+        routeRole: contract.routeRole,
+        instrumentType: "narrative-code"
+      });
+      timer = global.setTimeout(advance, tickMs);
     }
 
     function stop() {
       active = false;
-      if (raf) global.cancelAnimationFrame(raf);
-      raf = 0;
+      if (timer) global.clearTimeout(timer);
+      timer = 0;
+      record("narrative_instrument_stopped", {
+        phase: PHASES[currentIndex].key
+      });
     }
 
+    renderPhase(0);
     start();
 
     return {
       version: VERSION,
       generation: GENERATION,
       authority: AUTHORITY,
-      contract,
+      contract: safeClone(contract),
       start,
       stop,
+      next() {
+        currentIndex = (currentIndex + 1) % PHASES.length;
+        renderPhase(currentIndex);
+      },
       destroy() {
         stop();
         mount.innerHTML = "";
@@ -323,14 +377,15 @@
           generation: GENERATION,
           authority: AUTHORITY,
           active,
-          mapShift,
-          moonRotation,
-          naturalBoundary: true,
-          lowerShell: false,
+          currentPhase: PHASES[currentIndex].key,
+          currentState: PHASES[currentIndex].state,
+          instrumentType: "narrative-code",
+          graphicDependency: false,
+          externalImageDependency: false,
+          shell: false,
           rim: false,
           cap: false,
-          facetedBody: false,
-          speedAuthority: "instrument"
+          receipts: safeClone(localReceipts)
         };
       }
     };
@@ -341,6 +396,7 @@
     GENERATION,
     AUTHORITY,
     DEFAULTS,
+    PHASES,
     createGlobe
   });
 })(window);

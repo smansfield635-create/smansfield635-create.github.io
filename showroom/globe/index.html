@@ -2,13 +2,16 @@
 <html
   lang="en"
   data-page="showroom-globe"
-  data-route-contract="SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1"
+  data-route-contract="SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1"
+  data-previous-route-contract="SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1"
+  data-room-role="inspection-route-only"
+  data-hydration-engine-required="true"
+  data-hydro-terrain-marriage-active="true"
+  data-hydration-first-or-before-terrain="true"
   data-terrain-first-load-order="true"
   data-instrument-boot-required="true"
-  data-terrain-module-required="true"
-  data-main-renderer-required="true"
-  data-no-public-pass-buttons="true"
-  data-showroom-lobby-stays-separate="true"
+  data-no-room-expression="true"
+  data-no-fallback-planet="true"
 >
 <head>
   <meta charset="utf-8" />
@@ -17,51 +20,61 @@
   <title>Diamond Gate Bridge · Planet 1 inspection room</title>
   <meta
     name="description"
-    content="Planet 1 inspection room for the Nine Summits Universe. The Showroom lobby stays light while this route loads the terrain-first optimum expression."
+    content="Planet 1 inspection room. This route mounts the hydration-first hydro-terrain engine chain without drawing the world inside the room."
   />
 
   <!--
+    SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1
     SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1
 
     TARGET=
     /showroom/globe/index.html
 
     PURPOSE=
-    MAKE_THE_PLANET_1_INSPECTION_ROUTE_TERRAIN_FIRST
-    PROVE_THE_ASSET_INSTRUMENT_BOOT_CHAIN
-    PROVE_THE_TERRAIN_MODULE_IS_ROUTE_VISIBLE
-    PROVE_THE_MAIN_RENDERER_IS_ROUTE_VISIBLE
-    PRESERVE_SHOWROOM_LOBBY_SEPARATION
-    PRESERVE_OPTIMUM_EXPRESSION_ONLY
+    RENEW_THE_INSPECTION_ROUTE_AS_HYDRATION_AWARE
+    KEEP_THE_ROOM_AS_MOUNT_AND_RUNTIME_BOUNDARY_ONLY
+    PROVE_HYDRATION_FIRST_OR_BEFORE_TERRAIN
+    PRESERVE_TERRAIN_FIRST_COMPATIBILITY
+    ROUTE_TO_ASSET_INSTRUMENT_AS_BOOT_COORDINATOR
+    PREVENT_ROOM_LEVEL_WORLD_EXPRESSION
 
-    REQUIRED ROUTE PROOF=
+    REQUIRED V19 ROUTE EXPANSION MARKERS=
+    /world/render/planet-one.hydration.render.js
+    hydration-engine-required=true
+    hydro-terrain-marriage-active=true
+    hydration-first-or-before-terrain=true
+
+    REQUIRED EXISTING ROUTE MARKERS=
+    SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1
+    Planet 1 inspection room
+    planet-one-render
+    Planet 1 render loaded
+    Optimum expression
     /assets/showroom.globe.instrument.js
     /world/render/planet-one.terrain.render.js
     /world/render/planet-one.render.js
-    Optimum expression
-    Planet 1 render loaded
     terrain-first-load-order=true
-    instrument-boot-required=true
-    terrain-module-required=true
-    main-renderer-required=true
-    no-public-pass-buttons=true
-    showroom-lobby-stays-separate=true
 
-    BOOT ORDER=
-    1. /world/render/planet-one.terrain.render.js
-    2. /assets/showroom.globe.instrument.js
-    3. /assets/showroom.globe.instrument.js loads /world/render/planet-one.render.js after terrain is ready
+    ROOM LAW=
+    ROOMS DO NOT DRAW THE WORLD.
+    THIS ROUTE MOUNTS ONLY.
+    ASSET INSTRUMENT LOADS.
+    HYDRATION HYDRATES.
+    TERRAIN ELEVATES.
+    MAIN RENDERER COMPOSES.
+    GAUGES MEASURE.
 
-    HARD RULES=
-    ROUTE_CONSUMES_RENDERERS_ONLY
-    ROUTE_DOES_NOT_OWN_TERRAIN
-    ROUTE_DOES_NOT_OWN_MAIN_RENDERER
-    ROUTE_DOES_NOT_OWN_ASSET_INSTRUMENT
-    ROUTE_DOES_NOT_RESTORE_PUBLIC_PASS_BUTTONS
-    ROUTE_DOES_NOT_REOPEN_DEMO_PLANET
-    ROUTE_DOES_NOT_COLLAPSE_WITH_SHOWROOM_LOBBY
+    HARD BLOCKS=
+    NO_INLINE_GLOBE_SVG
+    NO_INLINE_TERRAIN
+    NO_INLINE_HYDRATION
+    NO_DEMO_PLANET
+    NO_FALLBACK_PLANET
+    NO_PUBLIC_LAYER_SELECTOR
+    NO_GEOGRAPHY_CLOSURE
   -->
 
+  <link rel="preload" as="script" href="/world/render/planet-one.hydration.render.js" />
   <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js" />
   <link rel="preload" as="script" href="/assets/showroom.globe.instrument.js" />
   <link rel="preload" as="script" href="/world/render/planet-one.render.js" />
@@ -70,56 +83,44 @@
     :root {
       color-scheme: dark;
       --bg: #05070d;
-      --panel: rgba(255, 255, 255, 0.052);
-      --panel-strong: rgba(255, 255, 255, 0.085);
-      --line: rgba(168, 199, 255, 0.18);
-      --line-strong: rgba(242, 199, 111, 0.42);
-      --text: rgba(246, 248, 255, 0.92);
-      --muted: rgba(226, 232, 246, 0.68);
-      --soft: rgba(226, 232, 246, 0.52);
+      --panel: rgba(255,255,255,.055);
+      --panel2: rgba(255,255,255,.085);
+      --line: rgba(168,199,255,.18);
+      --line2: rgba(242,199,111,.42);
+      --text: rgba(246,248,255,.93);
+      --muted: rgba(226,232,246,.68);
+      --soft: rgba(226,232,246,.52);
       --gold: #f2c76f;
+      --green: #8fe3b0;
       --blue: #91bdff;
-      --good: #8fe3b0;
-      --radius: 28px;
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.52);
       --max: 1180px;
+      --radius: 28px;
+      --shadow: 0 28px 80px rgba(0,0,0,.52);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(145, 189, 255, 0.16), transparent 34rem),
-        radial-gradient(circle at 15% 20%, rgba(242, 199, 111, 0.08), transparent 22rem),
-        linear-gradient(180deg, #07101f 0%, var(--bg) 42%, #02030a 100%);
+        radial-gradient(circle at 50% -10%, rgba(145,189,255,.16), transparent 34rem),
+        radial-gradient(circle at 15% 20%, rgba(242,199,111,.08), transparent 22rem),
+        linear-gradient(180deg,#07101f 0%,var(--bg) 42%,#02030a 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100%;
-      margin: 0;
-      color: var(--text);
-    }
+    body { margin: 0; color: var(--text); }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: var(--gold);
-    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--gold); }
 
     .skip-link {
       position: absolute;
       left: -999px;
       top: 10px;
       z-index: 20;
-      border: 1px solid var(--line-strong);
+      border: 1px solid var(--line2);
       border-radius: 999px;
       padding: 10px 14px;
       background: #101725;
@@ -127,9 +128,7 @@
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      left: 12px;
-    }
+    .skip-link:focus { left: 12px; }
 
     .site-shell {
       width: min(var(--max), calc(100% - 28px));
@@ -146,8 +145,8 @@
       padding: 12px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+      background: rgba(255,255,255,.045);
+      box-shadow: 0 18px 50px rgba(0,0,0,.22);
     }
 
     .brand {
@@ -156,18 +155,18 @@
       gap: 10px;
       min-width: fit-content;
       font-weight: 950;
-      letter-spacing: -0.03em;
+      letter-spacing: -.03em;
     }
 
     .brand-mark {
       width: 30px;
       height: 30px;
       border-radius: 12px;
-      border: 1px solid rgba(242, 199, 111, 0.48);
+      border: 1px solid rgba(242,199,111,.48);
       background:
-        linear-gradient(135deg, rgba(242, 199, 111, 0.9), rgba(145, 189, 255, 0.45)),
+        linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
         radial-gradient(circle at 35% 30%, #fff, transparent 40%);
-      box-shadow: 0 0 36px rgba(242, 199, 111, 0.18);
+      box-shadow: 0 0 36px rgba(242,199,111,.18);
     }
 
     nav {
@@ -178,52 +177,56 @@
     }
 
     nav a {
-      border: 1px solid rgba(168, 199, 255, 0.16);
+      border: 1px solid rgba(168,199,255,.16);
       border-radius: 999px;
       padding: 8px 10px;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 850;
     }
 
     nav a[aria-current="page"] {
-      border-color: var(--line-strong);
+      border-color: var(--line2);
       color: var(--gold);
-      background: rgba(242, 199, 111, 0.065);
+      background: rgba(242,199,111,.065);
+    }
+
+    .hero, .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 48px);
+      padding: clamp(24px,5vw,48px);
       background:
-        radial-gradient(circle at 78% 18%, rgba(242, 199, 111, 0.12), transparent 20rem),
-        radial-gradient(circle at 18% 20%, rgba(145, 189, 255, 0.14), transparent 22rem),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: var(--shadow);
+        radial-gradient(circle at 78% 18%, rgba(242,199,111,.12), transparent 20rem),
+        radial-gradient(circle at 18% 20%, rgba(145,189,255,.14), transparent 22rem),
+        rgba(255,255,255,.045);
     }
 
     .kicker {
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.16em;
+      letter-spacing: .16em;
       text-transform: uppercase;
     }
 
     h1 {
-      max-width: 960px;
-      margin: 12px 0 12px;
-      font-size: clamp(2.35rem, 7vw, 5.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.075em;
+      max-width: 980px;
+      margin: 12px 0;
+      font-size: clamp(2.3rem,7vw,5.35rem);
+      line-height: .94;
+      letter-spacing: -.075em;
     }
 
     .lead {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      font-size: clamp(1rem,2.4vw,1.25rem);
       line-height: 1.55;
     }
 
@@ -238,19 +241,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(242, 199, 111, 0.46);
+      border: 1px solid rgba(242,199,111,.46);
       border-radius: 999px;
       padding: 11px 15px;
-      background: linear-gradient(180deg, rgba(242, 199, 111, 0.18), rgba(242, 199, 111, 0.04));
+      background: linear-gradient(180deg, rgba(242,199,111,.18), rgba(242,199,111,.04));
       color: #fff4d3;
       font-weight: 950;
-      letter-spacing: -0.01em;
       cursor: pointer;
     }
 
     .button.secondary {
-      border-color: rgba(168, 199, 255, 0.22);
-      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(168,199,255,.22);
+      background: rgba(255,255,255,.045);
       color: var(--text);
     }
 
@@ -261,26 +263,23 @@
     }
 
     .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: clamp(18px, 3vw, 28px);
-      background: var(--panel);
-      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+      padding: clamp(18px,3vw,28px);
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
     }
 
     .panel-head {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 18px;
       margin-bottom: 18px;
     }
 
     .panel h2 {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-size: clamp(1.35rem,3vw,2rem);
       line-height: 1.05;
-      letter-spacing: -0.055em;
+      letter-spacing: -.055em;
     }
 
     .panel p {
@@ -298,17 +297,23 @@
       border-radius: 999px;
       padding: 6px 10px;
       color: var(--muted);
-      font-size: 0.7rem;
+      font-size: .7rem;
       font-weight: 950;
-      letter-spacing: 0.08em;
+      letter-spacing: .08em;
       text-transform: uppercase;
       white-space: nowrap;
     }
 
     .pill.pass {
-      border-color: rgba(143, 227, 176, 0.45);
-      color: var(--good);
-      background: rgba(143, 227, 176, 0.06);
+      border-color: rgba(143,227,176,.45);
+      color: var(--green);
+      background: rgba(143,227,176,.06);
+    }
+
+    .pill.hold {
+      border-color: rgba(145,189,255,.45);
+      color: var(--blue);
+      background: rgba(145,189,255,.06);
     }
 
     .render-shell {
@@ -326,83 +331,77 @@
     }
 
     .render-status {
-      width: min(680px, 100%);
-      border: 1px solid rgba(242, 199, 111, 0.36);
+      width: min(720px, 100%);
+      border: 1px solid rgba(242,199,111,.36);
       border-radius: 22px;
       padding: 13px 15px;
-      background: rgba(242, 199, 111, 0.055);
-      color: rgba(255, 244, 211, 0.88);
+      background: rgba(242,199,111,.055);
+      color: rgba(255,244,211,.88);
       font-weight: 900;
       line-height: 1.35;
       text-align: center;
     }
 
     #planet-one-render {
-      width: min(700px, 100%);
-      min-height: 420px;
+      width: min(760px, 100%);
+      min-height: 430px;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(168, 199, 255, 0.16);
+      border: 1px solid rgba(168,199,255,.16);
       border-radius: 32px;
-      padding: clamp(12px, 2vw, 18px);
+      padding: clamp(12px,2vw,18px);
       background:
-        radial-gradient(circle at 50% 35%, rgba(145, 189, 255, 0.12), transparent 18rem),
-        rgba(0, 0, 0, 0.14);
+        radial-gradient(circle at 50% 35%, rgba(145,189,255,.12), transparent 18rem),
+        rgba(0,0,0,.14);
     }
 
-    .info-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(4,minmax(0,1fr));
       gap: 14px;
     }
 
-    .info-card {
-      border: 1px solid rgba(168, 199, 255, 0.16);
+    .card {
+      border: 1px solid rgba(168,199,255,.16);
       border-radius: 22px;
       padding: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
     }
 
-    .info-card strong {
+    .card strong {
       display: block;
       margin-bottom: 6px;
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.12em;
+      letter-spacing: .12em;
       text-transform: uppercase;
     }
 
-    .info-card h3 {
+    .card h3 {
       margin: 0 0 8px;
       font-size: 1.15rem;
-      letter-spacing: -0.035em;
+      letter-spacing: -.035em;
     }
 
-    .info-card p {
+    .card p {
       margin: 0;
       color: var(--muted);
       line-height: 1.45;
     }
 
-    code {
-      color: rgba(255, 244, 211, 0.94);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      overflow-wrap: anywhere;
-    }
-
-    .boot-proof {
+    .proof {
       display: grid;
       gap: 8px;
-      border: 1px solid var(--line-strong);
+      border: 1px solid var(--line2);
       border-radius: 24px;
       padding: 16px;
-      background: rgba(242, 199, 111, 0.04);
+      background: rgba(242,199,111,.04);
     }
 
-    .boot-proof div {
+    .proof div {
       display: grid;
-      grid-template-columns: 26px minmax(0, 1fr);
+      grid-template-columns: 26px minmax(0,1fr);
       gap: 8px;
       color: var(--muted);
       font-weight: 760;
@@ -413,15 +412,21 @@
       height: 16px;
       margin-top: 2px;
       border-radius: 999px;
-      border: 1px solid rgba(143, 227, 176, 0.55);
-      background: rgba(143, 227, 176, 0.18);
+      border: 1px solid rgba(143,227,176,.55);
+      background: rgba(143,227,176,.18);
+    }
+
+    code {
+      color: rgba(255,244,211,.94);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      overflow-wrap: anywhere;
     }
 
     footer {
       margin-top: 24px;
       padding: 18px 4px;
       color: var(--soft);
-      font-size: 0.84rem;
+      font-size: .84rem;
       text-align: center;
     }
 
@@ -432,37 +437,24 @@
         flex-direction: column;
       }
 
-      nav {
-        justify-content: flex-start;
-      }
+      nav { justify-content: flex-start; }
 
-      .info-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
 
     @media (max-width: 620px) {
       .site-shell {
-        width: min(100% - 18px, var(--max));
+        width: min(100% - 18px,var(--max));
         padding-top: 12px;
       }
 
-      .hero,
-      .panel {
-        border-radius: 24px;
-      }
+      .hero, .panel { border-radius: 24px; }
 
-      .panel-head {
-        display: grid;
-      }
+      .panel-head { display: grid; }
 
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: 1fr; }
 
-      #planet-one-render {
-        min-height: 340px;
-      }
+      #planet-one-render { min-height: 340px; }
     }
   </style>
 </head>
@@ -490,16 +482,16 @@
 
     <section class="hero" id="globe-main">
       <div class="kicker">Planet 1 · Inspection room</div>
-      <h1>This room inspects the world. The Showroom lobby stays light.</h1>
+      <h1>This room mounts the hydration-first world chain.</h1>
       <p class="lead">
-        Planet 1 lives here, on the inspection route. The parent Showroom stays a lobby.
-        This page boots the terrain module first, then the asset instrument, then the main renderer.
+        Planet 1 lives here, on the inspection route. This room does not draw the world.
+        It proves hydration-first hydro-terrain boot, then hands the mount to the asset instrument and renderer.
       </p>
 
       <div class="actions">
         <a class="button" href="#planet-one-render">Inspect Planet 1</a>
-        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
         <a class="button secondary" href="/showroom/">Return to Showroom Lobby</a>
+        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
         <a class="button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
@@ -508,37 +500,37 @@
       <section class="panel" aria-labelledby="route-boundary-title">
         <div class="panel-head">
           <div>
-            <h2 id="route-boundary-title">Two pages. Two jobs.</h2>
+            <h2 id="route-boundary-title">Inspection route. Mount only.</h2>
             <p>
-              Showroom stays light. Planet 1 inspection carries the heavy render.
+              The room frames, constrains, and mounts. Hydration, terrain, and renderer expression remain in the engine layer.
             </p>
           </div>
           <span class="pill pass">Route separated</span>
         </div>
 
-        <div class="info-grid">
-          <article class="info-card">
+        <div class="grid">
+          <article class="card">
             <strong>Parent route</strong>
             <h3><code>/showroom/</code></h3>
-            <p>Lightweight public lobby. It points visitors here when they choose to inspect the globe.</p>
+            <p>Lightweight lobby. No Planet 1 render and no world expression.</p>
           </article>
 
-          <article class="info-card">
+          <article class="card">
             <strong>Inspection route</strong>
             <h3><code>/showroom/globe/</code></h3>
-            <p>Active Planet 1 inspection room. This route may load the globe, axis spin, climate topology, weather circulation, and ocean currents.</p>
+            <p>Mount and runtime boundary only. No inline globe, no inline terrain, no inline hydration.</p>
           </article>
 
-          <article class="info-card">
-            <strong>Expression</strong>
+          <article class="card">
+            <strong>Public expression</strong>
             <h3>Optimum expression</h3>
-            <p>One public expression only. No public pass buttons. No layer selector.</p>
+            <p>One public expression only. No pass buttons, no layer selector, no fallback option.</p>
           </article>
 
-          <article class="info-card">
-            <strong>Boundary</strong>
-            <h3>Showroom lobby stays separate</h3>
-            <p>The parent lobby does not mount Planet 1 and does not become the heavy render room.</p>
+          <article class="card">
+            <strong>Fallback law</strong>
+            <h3>Diagnostic hold only.</h3>
+            <p>Missing dependencies must hold diagnostically. The room must not fake the planet.</p>
           </article>
         </div>
       </section>
@@ -547,20 +539,23 @@
         class="panel"
         aria-labelledby="live-inspection-title"
         data-route-proof="Planet 1 render loaded"
+        data-hydration-engine-required="true"
+        data-hydro-terrain-marriage-active="true"
+        data-hydration-first-or-before-terrain="true"
         data-terrain-first-load-order="true"
         data-instrument-boot-required="true"
-        data-terrain-module-required="true"
         data-main-renderer-required="true"
-        data-no-public-pass-buttons="true"
+        data-no-room-expression="true"
+        data-no-fallback-planet="true"
       >
         <div class="panel-head">
           <div>
-            <h2 id="live-inspection-title">Planet 1 first. Tree demo second.</h2>
+            <h2 id="live-inspection-title">Planet 1 render loaded.</h2>
             <p>
-              The route boots through the terrain-first instrument chain and mounts the single Optimum expression.
+              The route calls the hydration-first asset instrument. The asset loads hydration, terrain, and renderer.
             </p>
           </div>
-          <span class="pill pass" id="planet-one-status-pill">Planet 1 render loaded</span>
+          <span class="pill hold" id="planet-one-status-pill">Preparing chain</span>
         </div>
 
         <div class="render-shell">
@@ -571,7 +566,7 @@
           </div>
 
           <div class="render-status" id="renderStatus">
-            Planet 1 render loaded. Optimum expression is the only public expression.
+            Hydration-first hydro-terrain chain is ready to mount.
           </div>
 
           <div
@@ -580,16 +575,19 @@
             data-render-mount="planet-one-render"
             data-expression="Optimum expression"
             data-optimum-expression="Optimum expression"
+            data-hydration-engine-required="true"
+            data-hydro-terrain-marriage-active="true"
+            data-hydration-first-or-before-terrain="true"
             data-terrain-first-load-order="true"
             data-instrument-boot-required="true"
-            data-terrain-module-required="true"
             data-main-renderer-required="true"
-            data-no-public-pass-buttons="true"
+            data-no-room-expression="true"
+            data-no-fallback-planet="true"
             data-showroom-lobby-stays-separate="true"
             aria-label="Planet 1 render mount"
           >
             <noscript>
-              Planet 1 needs JavaScript enabled to load the live render.
+              Planet 1 requires JavaScript to run the hydration-first inspection chain.
             </noscript>
           </div>
         </div>
@@ -598,15 +596,19 @@
       <section class="panel" aria-labelledby="boot-proof-title">
         <div class="panel-head">
           <div>
-            <h2 id="boot-proof-title">Terrain-first boot proof.</h2>
+            <h2 id="boot-proof-title">Hydration-first boot proof.</h2>
             <p>
-              The route exposes the source chain so Gauges can verify whether the route bypasses the instrument.
+              This source proves the route has moved beyond the old terrain-first-only frame.
             </p>
           </div>
-          <span class="pill pass">Instrument required</span>
+          <span class="pill pass">Hydration aware</span>
         </div>
 
-        <div class="boot-proof">
+        <div class="proof">
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Hydration renderer: <code>/world/render/planet-one.hydration.render.js</code></span>
+          </div>
           <div>
             <span class="dot" aria-hidden="true"></span>
             <span>Asset instrument: <code>/assets/showroom.globe.instrument.js</code></span>
@@ -617,263 +619,260 @@
           </div>
           <div>
             <span class="dot" aria-hidden="true"></span>
-            <span>Real globe renderer: <code>/world/render/planet-one.render.js</code></span>
+            <span>Main renderer: <code>/world/render/planet-one.render.js</code></span>
           </div>
           <div>
             <span class="dot" aria-hidden="true"></span>
-            <span><code>terrain-first-load-order=true</code></span>
+            <span><code>hydration-engine-required=true</code></span>
           </div>
           <div>
             <span class="dot" aria-hidden="true"></span>
-            <span><code>instrument-boot-required=true</code></span>
+            <span><code>hydro-terrain-marriage-active=true</code></span>
           </div>
           <div>
             <span class="dot" aria-hidden="true"></span>
-            <span><code>terrain-module-required=true</code> · <code>main-renderer-required=true</code></span>
+            <span><code>hydration-first-or-before-terrain=true</code></span>
+          </div>
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span><code>terrain-first-load-order=true</code> preserved for compatibility.</span>
           </div>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="render-lanes-title">
+      <section class="panel" aria-labelledby="lane-title">
         <div class="panel-head">
           <div>
-            <h2 id="render-lanes-title">The globe and the tree now have different jobs.</h2>
+            <h2 id="lane-title">World expression belongs to the engines.</h2>
             <p>
-              The globe expresses the world. The tree demonstrates structure.
+              The inspection room does not express terrain or water. It only proves the lawful chain and mounts the result.
             </p>
           </div>
-          <span class="pill pass">No collapse</span>
+          <span class="pill pass">No room expression</span>
         </div>
 
-        <div class="info-grid">
-          <article class="info-card">
-            <strong>Globe lane</strong>
-            <h3>Planet 1</h3>
-            <p>The globe is the real Nine Summits Universe render lane.</p>
+        <div class="grid">
+          <article class="card">
+            <strong>Hydration</strong>
+            <h3>Water authority</h3>
+            <p>Ocean depth, shelves, shoreline wetness, rivers, lakes, glaciers, and basins.</p>
           </article>
 
-          <article class="info-card">
-            <strong>Tree lane</strong>
-            <h3>Demo mode</h3>
-            <p>The tree remains useful as prototype, training, and structural demonstration branch.</p>
+          <article class="card">
+            <strong>Terrain</strong>
+            <h3>Elevation authority</h3>
+            <p>Mountains, canyons, plateaus, crust, mineral seams, scars, and erosion.</p>
           </article>
 
-          <article class="info-card">
-            <strong>Inspection lane</strong>
-            <h3>Showroom / Planet 1</h3>
-            <p>This route inspects Planet 1 without turning the parent Showroom into the heavy render room.</p>
+          <article class="card">
+            <strong>Renderer</strong>
+            <h3>Composition authority</h3>
+            <p>Sphere, atmosphere, axis, light, rotation, and final assembly.</p>
           </article>
 
-          <article class="info-card">
-            <strong>No false close</strong>
-            <h3>The map is not finished.</h3>
-            <p>Exact countries, cities, river systems, climate names, physics, and final geometry remain unclosed.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="route-separation-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="route-separation-title">Showroom inspects. Universe explains. Gauges measures.</h2>
-            <p>
-              The route consumes the render chain. It does not become the terrain renderer, main renderer, or asset instrument.
-            </p>
-          </div>
-        </div>
-
-        <div class="info-grid">
-          <article class="info-card">
-            <strong>Real globe renderer</strong>
-            <h3><code>/world/render/planet-one.render.js</code></h3>
-            <p>This file owns Planet 1 visual expression.</p>
-          </article>
-
-          <article class="info-card">
-            <strong>Terrain renderer</strong>
-            <h3><code>/world/render/planet-one.terrain.render.js</code></h3>
-            <p>This file owns Planet 1 terrain, raw-material strata, and ancient crust logic.</p>
-          </article>
-
-          <article class="info-card">
-            <strong>Asset instrument</strong>
-            <h3><code>/assets/showroom.globe.instrument.js</code></h3>
-            <p>This file owns terrain-first delegation and renderer boot order.</p>
-          </article>
-
-          <article class="info-card">
-            <strong>Measurement route</strong>
-            <h3><code>/gauges/</code></h3>
-            <p>Gauges measures route separation, renderer source state, terrain state, and pass state. Gauges measures.</p>
+          <article class="card">
+            <strong>Gauges</strong>
+            <h3>Measurement authority</h3>
+            <p>Measures hydration, terrain, asset, route, renderer, and next target.</p>
           </article>
         </div>
       </section>
 
       <section class="actions" aria-label="Footer navigation">
         <a class="button" href="#planet-one-render">Inspect Planet 1</a>
-        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
         <a class="button secondary" href="/showroom/">Return to Showroom Lobby</a>
+        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
         <a class="button secondary" href="/gauges/">Read Gauges</a>
         <a class="button secondary" href="/">Compass</a>
       </section>
     </main>
 
     <footer>
-      Planet 1 inspection room · Showroom lobby remains separate · SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1
+      SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1 · Planet 1 inspection room · hydration-first hydro-terrain route proof.
     </footer>
   </div>
-
-  <script
-    src="/world/render/planet-one.terrain.render.js"
-    defer
-    data-terrain-module-required="true"
-    data-terrain-first-load-order="true"
-  ></script>
 
   <script
     src="/assets/showroom.globe.instrument.js"
     defer
     data-instrument-boot-required="true"
-    data-main-renderer-required="true"
-    data-terrain-first-load-order="true"
-    data-main-renderer-reference="/world/render/planet-one.render.js"
+    data-hydration-engine-required="true"
+    data-hydro-terrain-marriage-active="true"
+    data-hydration-first-or-before-terrain="true"
+    data-hydration-renderer="/world/render/planet-one.hydration.render.js"
+    data-terrain-renderer="/world/render/planet-one.terrain.render.js"
+    data-main-renderer="/world/render/planet-one.render.js"
   ></script>
 
   <script>
-    (function bindPlanetOneInspectionRoute(global) {
+    (function bindPlanetOneHydrationAwareInspectionRoute(global) {
       "use strict";
 
-      const VERSION = "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1";
-      const TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
+      const VERSION = "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1";
+      const PREVIOUS_V17 = "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1";
+
+      const HYDRATION_RENDERER = "/world/render/planet-one.hydration.render.js";
       const ASSET_INSTRUMENT = "/assets/showroom.globe.instrument.js";
+      const TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
       const MAIN_RENDERER = "/world/render/planet-one.render.js";
 
-      /*
-        Route proof strings:
-        /assets/showroom.globe.instrument.js
-        /world/render/planet-one.terrain.render.js
-        /world/render/planet-one.render.js
-        Optimum expression
-        Planet 1 render loaded
-        terrain-first-load-order=true
-        instrument-boot-required=true
-        terrain-module-required=true
-        main-renderer-required=true
-        no-public-pass-buttons=true
-        showroom-lobby-stays-separate=true
-      */
-
-      let currentHandle = null;
+      let currentResult = null;
 
       function byId(id) {
         return document.getElementById(id);
       }
 
-      function setStatus(message, pass) {
-        const status = byId("renderStatus");
-        const pill = byId("planet-one-status-pill");
-
-        if (status) {
-          status.textContent = message;
-        }
-
-        if (pill) {
-          pill.textContent = pass ? "Planet 1 render loaded" : "Preparing render";
-          pill.className = pass ? "pill pass" : "pill";
-        }
-      }
-
-      function markRoute() {
+      function markRoute(state) {
         const root = document.documentElement;
 
         root.dataset.showroomGlobeRoute = VERSION;
-        root.dataset.terrainFirstLoadOrder = "true";
-        root.dataset.instrumentBootRequired = "true";
-        root.dataset.terrainModuleRequired = "true";
-        root.dataset.mainRendererRequired = "true";
-        root.dataset.noPublicPassButtons = "true";
-        root.dataset.showroomLobbyStaysSeparate = "true";
+        root.dataset.previousRouteContract = PREVIOUS_V17;
 
+        root.dataset.hydrationRenderer = HYDRATION_RENDERER;
         root.dataset.assetInstrument = ASSET_INSTRUMENT;
         root.dataset.terrainRenderer = TERRAIN_RENDERER;
         root.dataset.mainRenderer = MAIN_RENDERER;
-        root.dataset.expression = "Optimum expression";
+
+        root.dataset.hydrationEngineRequired = "true";
+        root.dataset.hydroTerrainMarriageActive = "true";
+        root.dataset.hydrationFirstOrBeforeTerrain = "true";
+        root.dataset.terrainFirstLoadOrder = "true";
+        root.dataset.instrumentBootRequired = "true";
+        root.dataset.noRoomExpression = "true";
+        root.dataset.noFallbackPlanet = "true";
+
+        if (state) root.dataset.showroomGlobeRouteState = state;
+      }
+
+      function setStatus(message, status) {
+        const statusBox = byId("renderStatus");
+        const pill = byId("planet-one-status-pill");
+
+        if (statusBox) statusBox.textContent = message;
+
+        if (pill) {
+          pill.textContent = status || "Preparing chain";
+          pill.className = status === "Planet 1 render loaded" ? "pill pass" : "pill hold";
+        }
+      }
+
+      function waitForInstrument() {
+        if (
+          global.DGBShowroomGlobeInstrument &&
+          typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function"
+        ) {
+          return Promise.resolve(global.DGBShowroomGlobeInstrument);
+        }
+
+        return new Promise(function wait(resolve, reject) {
+          let tries = 0;
+
+          function poll() {
+            tries += 1;
+
+            if (
+              global.DGBShowroomGlobeInstrument &&
+              typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function"
+            ) {
+              resolve(global.DGBShowroomGlobeInstrument);
+              return;
+            }
+
+            if (tries > 40) {
+              reject(new Error("Hydration-first asset instrument did not become available."));
+              return;
+            }
+
+            global.setTimeout(poll, 75);
+          }
+
+          poll();
+        });
       }
 
       function renderPlanetOne() {
         const mount = byId("planet-one-render");
 
         if (!mount) {
-          setStatus("Planet 1 render mount is missing.", false);
+          setStatus("Planet 1 mount is missing.", "Diagnostic hold");
           return Promise.resolve(null);
         }
 
-        markRoute();
+        markRoute("boot-started");
 
-        if (!global.DGBShowroomGlobeInstrument || typeof global.DGBShowroomGlobeInstrument.renderGlobe !== "function") {
-          setStatus("Asset instrument is not ready yet. Terrain-first boot will retry once the instrument loads.", false);
+        mount.dataset.renderStatus = "hydration-first-boot-started";
+        mount.dataset.hydrationRenderer = HYDRATION_RENDERER;
+        mount.dataset.assetInstrument = ASSET_INSTRUMENT;
+        mount.dataset.terrainRenderer = TERRAIN_RENDERER;
+        mount.dataset.mainRenderer = MAIN_RENDERER;
+        mount.dataset.hydrationEngineRequired = "true";
+        mount.dataset.hydroTerrainMarriageActive = "true";
+        mount.dataset.hydrationFirstOrBeforeTerrain = "true";
+        mount.dataset.terrainFirstLoadOrder = "true";
+        mount.dataset.noRoomExpression = "true";
+        mount.dataset.noFallbackPlanet = "true";
 
-          return new Promise(function waitForInstrument(resolve) {
-            global.setTimeout(function retry() {
-              resolve(renderPlanetOne());
-            }, 120);
-          });
-        }
+        setStatus("Hydration-first hydro-terrain chain is booting.", "Preparing chain");
 
-        setStatus("Planet 1 terrain-first boot is running. Optimum expression is the only public expression.", false);
+        return waitForInstrument()
+          .then(function loadedInstrument(instrument) {
+            markRoute("delegating-to-asset-instrument");
 
-        return Promise.resolve(
-          global.DGBShowroomGlobeInstrument.renderGlobe(mount, {
-            caption: "Planet 1 · Nine Summits Universe · Optimum expression",
-            expression: "optimum",
-            stopExisting: true
+            return instrument.renderGlobe(mount, {
+              caption: "Planet 1 · Nine Summits Universe · Optimum expression",
+              expression: "optimum",
+              stopExisting: true,
+              hydrationRenderer: HYDRATION_RENDERER,
+              terrainRenderer: TERRAIN_RENDERER,
+              mainRenderer: MAIN_RENDERER,
+              hydrationFirstLoadOrder: true,
+              hydroTerrainMarriage: true
+            });
           })
-        ).then(function rendered(result) {
-          currentHandle = result && result.handle ? result.handle : result;
+          .then(function rendered(result) {
+            currentResult = result;
 
-          mount.dataset.renderStatus = "Planet 1 render loaded";
-          mount.dataset.expression = "Optimum expression";
-          mount.dataset.assetInstrument = ASSET_INSTRUMENT;
-          mount.dataset.terrainRenderer = TERRAIN_RENDERER;
-          mount.dataset.mainRenderer = MAIN_RENDERER;
-          mount.dataset.terrainFirstLoadOrder = "true";
-          mount.dataset.instrumentBootRequired = "true";
-          mount.dataset.terrainModuleRequired = "true";
-          mount.dataset.mainRendererRequired = "true";
-          mount.dataset.noPublicPassButtons = "true";
+            mount.dataset.renderStatus = result && result.ok === false ? "diagnostic-hold" : "mounted";
+            mount.dataset.planetOneRenderLoaded = result && result.ok === false ? "false" : "true";
+            mount.dataset.hydrationEngineRequired = "true";
+            mount.dataset.hydroTerrainMarriageActive = "true";
+            mount.dataset.hydrationFirstOrBeforeTerrain = "true";
 
-          setStatus("Planet 1 render loaded. Optimum expression is active through the terrain-first instrument chain.", true);
-          return result;
-        }).catch(function failed(error) {
-          const message = error && error.message ? error.message : "unknown render error";
-          setStatus("Planet 1 render failed: " + message, false);
-          return null;
-        });
+            if (result && result.ok === false) {
+              markRoute("diagnostic-hold");
+              setStatus("Diagnostic hold. The route refused fallback expression.", "Diagnostic hold");
+            } else {
+              markRoute("mounted");
+              setStatus("Planet 1 render loaded. Optimum expression mounted through hydration-first chain.", "Planet 1 render loaded");
+            }
+
+            return result;
+          })
+          .catch(function failed(error) {
+            const message = error && error.message ? error.message : "unknown route boot failure";
+            markRoute("diagnostic-hold");
+            setStatus("Diagnostic hold: " + message, "Diagnostic hold");
+            return null;
+          });
       }
 
       function pauseRender() {
-        if (currentHandle && typeof currentHandle.stop === "function") {
-          currentHandle.stop();
-          setStatus("Planet 1 render paused.", true);
-          return;
-        }
-
-        if (global.DGBShowroomGlobeInstrument && typeof global.DGBShowroomGlobeInstrument.stop === "function") {
+        if (
+          global.DGBShowroomGlobeInstrument &&
+          typeof global.DGBShowroomGlobeInstrument.stop === "function"
+        ) {
           global.DGBShowroomGlobeInstrument.stop();
-          setStatus("Planet 1 render paused.", true);
+          setStatus("Planet 1 render paused.", "Planet 1 render loaded");
         }
       }
 
       function resumeRender() {
-        if (currentHandle && typeof currentHandle.start === "function") {
-          currentHandle.start();
-          setStatus("Planet 1 render loaded. Optimum expression resumed.", true);
-          return;
-        }
-
-        if (global.DGBShowroomGlobeInstrument && typeof global.DGBShowroomGlobeInstrument.start === "function") {
+        if (
+          global.DGBShowroomGlobeInstrument &&
+          typeof global.DGBShowroomGlobeInstrument.start === "function"
+        ) {
           global.DGBShowroomGlobeInstrument.start();
-          setStatus("Planet 1 render loaded. Optimum expression resumed.", true);
+          setStatus("Planet 1 render resumed.", "Planet 1 render loaded");
         }
       }
 
@@ -888,15 +887,17 @@
       }
 
       function boot() {
-        markRoute();
+        markRoute("ready");
         bindButtons();
         renderPlanetOne();
       }
 
-      global.DGBShowroomGlobeRouteV17 = Object.freeze({
+      global.DGBShowroomGlobeRouteV21 = Object.freeze({
         VERSION,
-        TERRAIN_RENDERER,
+        PREVIOUS_V17,
+        HYDRATION_RENDERER,
         ASSET_INSTRUMENT,
+        TERRAIN_RENDERER,
         MAIN_RENDERER,
         renderPlanetOne,
         pauseRender,
@@ -904,17 +905,18 @@
         getStatus: function getStatus() {
           return {
             version: VERSION,
-            terrainRenderer: TERRAIN_RENDERER,
+            previousV17: PREVIOUS_V17,
+            hydrationRenderer: HYDRATION_RENDERER,
             assetInstrument: ASSET_INSTRUMENT,
+            terrainRenderer: TERRAIN_RENDERER,
             mainRenderer: MAIN_RENDERER,
-            expression: "Optimum expression",
+            hydrationEngineRequired: true,
+            hydroTerrainMarriageActive: true,
+            hydrationFirstOrBeforeTerrain: true,
             terrainFirstLoadOrder: true,
-            instrumentBootRequired: true,
-            terrainModuleRequired: true,
-            mainRendererRequired: true,
-            noPublicPassButtons: true,
-            showroomLobbyStaysSeparate: true,
-            currentHandle: Boolean(currentHandle)
+            noRoomExpression: true,
+            noFallbackPlanet: true,
+            currentResult: Boolean(currentResult)
           };
         }
       });

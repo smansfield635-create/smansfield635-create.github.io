@@ -1,76 +1,12 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-estate="rich-manor-and-estate" data-construct-class="house" data-house-part="gauges" data-gauges-contract="B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1">
+<html lang="en" data-page="gauges" data-estate="rich-manor-and-estate" data-construct-class="house" data-house-part="gauges" data-gauges-contract="G5_GAUGES_BASELINE_ALIGNMENT_TNT_v1" data-generation-baseline="PLANET_1_GENERATION_5_ARCHITECTURE_BASELINE_v1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gauges · Split Render Chain Diagnostic · Diamond Gate Bridge</title>
-  <meta name="description" content="Gauges diagnostic instrument room for Diamond Gate Bridge, including Planet 1 split render chain contract measurement.">
+  <title>Gauges · G5 Planet 1 Baseline · Diamond Gate Bridge</title>
+  <meta name="description" content="Generation 5 Planet 1 baseline diagnostic gauges for architecture pass, visual hold, and B27 candidate branch review.">
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#05070d;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.085);
-      --line:rgba(176,205,255,.18);
-      --text:rgba(246,248,255,.92);
-      --muted:rgba(218,227,255,.66);
-      --pass:#8ff5d2;
-      --warn:#ffd284;
-      --fail:#ff9a8a;
-      --hold:#b9c5ff;
-      --none:#a7adbd;
-      --accent:#93e8ff;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:radial-gradient(circle at 28% 0%,rgba(65,118,179,.22),transparent 34%),radial-gradient(circle at 86% 16%,rgba(137,232,235,.12),transparent 31%),linear-gradient(180deg,#07101d 0%,#02040a 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;min-height:100vh}
-    a{color:inherit;text-decoration:none}
-    .skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}.skip:focus{left:8px}
-    .shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 42px}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0 20px;border-bottom:1px solid var(--line)}
-    .brand{font-weight:950;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;color:rgba(248,251,255,.84)}
-    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    nav a{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:850;color:rgba(242,247,255,.72)}
-    nav a[aria-current="page"]{border-color:rgba(147,232,255,.42);color:var(--accent)}
-    .hero{display:grid;gap:14px;padding:34px 0 22px}
-    .kicker{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:950}
-    h1{font-size:clamp(2rem,5vw,4.5rem);line-height:.95;margin:0;letter-spacing:-.07em;max-width:980px}
-    p.lede{margin:0;max-width:820px;color:var(--muted);font-size:1rem}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-    button,.button{border:1px solid rgba(147,232,255,.28);background:linear-gradient(180deg,rgba(147,232,255,.18),rgba(147,232,255,.06));color:var(--text);border-radius:14px;padding:11px 14px;font-weight:950;letter-spacing:.03em;cursor:pointer}
-    button.secondary,.button.secondary{border-color:var(--line);background:rgba(255,255,255,.055);color:rgba(242,247,255,.78)}
-    .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}
-    @media(max-width:860px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}nav{justify-content:flex-start}}
-    @media(max-width:560px){.summary{grid-template-columns:1fr}.shell{width:min(100% - 20px,1180px)}}
-    .metric,.panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:22px;box-shadow:0 20px 80px rgba(0,0,0,.26)}
-    .metric{padding:16px}
-    .metric b{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .metric strong{font-size:1.35rem;letter-spacing:-.02em}
-    .status{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:.67rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-    .status::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--none)}
-    .status.pass{color:var(--pass);border-color:rgba(143,245,210,.35)}.status.pass::before{background:var(--pass)}
-    .status.warn{color:var(--warn);border-color:rgba(255,210,132,.35)}.status.warn::before{background:var(--warn)}
-    .status.fail{color:var(--fail);border-color:rgba(255,154,138,.35)}.status.fail::before{background:var(--fail)}
-    .status.hold{color:var(--hold);border-color:rgba(185,197,255,.35)}.status.hold::before{background:var(--hold)}
-    .status.not_tested{color:var(--none)}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .panel{padding:16px;min-height:180px}
-    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
-    .panel h2{font-size:1rem;margin:0;letter-spacing:-.02em}
-    .panel small{display:block;color:var(--muted);margin-top:3px}
-    .facts{display:grid;gap:6px}
-    .fact{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.3fr);gap:10px;border-bottom:1px solid rgba(176,205,255,.08);padding:7px 0}
-    .fact span:first-child{color:rgba(218,227,255,.62);font-size:.75rem;font-weight:850}
-    .fact span:last-child{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.73rem;color:rgba(246,248,255,.86);word-break:break-word}
-    .wide{grid-column:1/-1}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;font-size:.75rem;color:rgba(234,242,255,.82);background:rgba(0,0,0,.25);border:1px solid rgba(176,205,255,.12);border-radius:16px;padding:12px;max-height:340px;overflow:auto}
-    .hidden-mount{position:absolute;left:-99999px;top:auto;width:420px;height:420px;overflow:hidden;opacity:.01;pointer-events:none}
-    .receipt{margin-top:18px;border:1px solid rgba(147,232,255,.22);background:rgba(147,232,255,.055);border-radius:20px;padding:14px}
-    .footer{margin-top:28px;color:rgba(218,227,255,.58);font-size:.8rem}
-    .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .route-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .route-links a{border:1px solid var(--line);border-radius:999px;padding:6px 9px;color:rgba(242,247,255,.70);font-size:.72rem;font-weight:850;background:rgba(255,255,255,.04)}
+    :root{color-scheme:dark;--bg:#05070d;--panel:rgba(255,255,255,.055);--panel2:rgba(255,255,255,.085);--line:rgba(176,205,255,.18);--text:rgba(246,248,255,.92);--muted:rgba(218,227,255,.66);--pass:#8ff5d2;--warn:#ffd284;--fail:#ff9a8a;--hold:#b9c5ff;--none:#a7adbd;--accent:#93e8ff;--gold:#f2c76f}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 28% 0%,rgba(65,118,179,.22),transparent 34%),radial-gradient(circle at 86% 16%,rgba(137,232,235,.12),transparent 31%),linear-gradient(180deg,#07101d 0%,#02040a 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;min-height:100vh}a{color:inherit;text-decoration:none}.skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}.skip:focus{left:8px}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 42px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0 20px;border-bottom:1px solid var(--line)}.brand{font-weight:950;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;color:rgba(248,251,255,.84)}nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}nav a{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:850;color:rgba(242,247,255,.72)}nav a[aria-current="page"]{border-color:rgba(147,232,255,.42);color:var(--accent)}.hero{display:grid;gap:14px;padding:34px 0 22px}.kicker{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:950}h1{font-size:clamp(2rem,5vw,4.5rem);line-height:.95;margin:0;letter-spacing:-.07em;max-width:980px}p.lede{margin:0;max-width:880px;color:var(--muted);font-size:1rem}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}button,.button{border:1px solid rgba(147,232,255,.28);background:linear-gradient(180deg,rgba(147,232,255,.18),rgba(147,232,255,.06));color:var(--text);border-radius:14px;padding:11px 14px;font-weight:950;letter-spacing:.03em;cursor:pointer}button.secondary,.button.secondary{border-color:var(--line);background:rgba(255,255,255,.055);color:rgba(242,247,255,.78)}.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}@media(max-width:860px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}nav{justify-content:flex-start}}@media(max-width:560px){.summary{grid-template-columns:1fr}.shell{width:min(100% - 20px,1180px)}}.metric,.panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:22px;box-shadow:0 20px 80px rgba(0,0,0,.26)}.metric{padding:16px}.metric b{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.metric strong{font-size:1.22rem;letter-spacing:-.02em;word-break:break-word}.status{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:.67rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.status::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--none)}.status.pass{color:var(--pass);border-color:rgba(143,245,210,.35)}.status.pass::before{background:var(--pass)}.status.warn{color:var(--warn);border-color:rgba(255,210,132,.35)}.status.warn::before{background:var(--warn)}.status.fail{color:var(--fail);border-color:rgba(255,154,138,.35)}.status.fail::before{background:var(--fail)}.status.hold{color:var(--hold);border-color:rgba(185,197,255,.35)}.status.hold::before{background:var(--hold)}.status.not_tested{color:var(--none)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:900px){.grid{grid-template-columns:1fr}}.panel{padding:16px;min-height:180px}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.panel h2{font-size:1rem;margin:0;letter-spacing:-.02em}.panel small{display:block;color:var(--muted);margin-top:3px}.facts{display:grid;gap:6px}.fact{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.3fr);gap:10px;border-bottom:1px solid rgba(176,205,255,.08);padding:7px 0}.fact span:first-child{color:rgba(218,227,255,.62);font-size:.75rem;font-weight:850}.fact span:last-child{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.73rem;color:rgba(246,248,255,.86);word-break:break-word}.wide{grid-column:1/-1}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;font-size:.75rem;color:rgba(234,242,255,.82);background:rgba(0,0,0,.25);border:1px solid rgba(176,205,255,.12);border-radius:16px;padding:12px;max-height:360px;overflow:auto}.hidden-mount{position:absolute;left:-99999px;top:auto;width:420px;height:420px;overflow:hidden;opacity:.01;pointer-events:none}.receipt{margin-top:18px;border:1px solid rgba(147,232,255,.22);background:rgba(147,232,255,.055);border-radius:20px;padding:14px}.footer{margin-top:28px;color:rgba(218,227,255,.58);font-size:.8rem}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.route-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.route-links a{border:1px solid var(--line);border-radius:999px;padding:6px 9px;color:rgba(242,247,255,.70);font-size:.72rem;font-weight:850;background:rgba(255,255,255,.04)}.baseline-note{border:1px solid rgba(242,199,111,.22);background:rgba(242,199,111,.055);border-radius:18px;padding:12px;color:rgba(255,238,190,.86);font-weight:850}
   </style>
 </head>
 <body>
@@ -85,11 +21,12 @@
 
     <main id="gauges-content">
       <section class="hero" aria-labelledby="page-title">
-        <div class="kicker">H6 · Gauges · Split Render Chain Diagnostic</div>
-        <h1 id="page-title">Gauges Diagnostic Instrument Room</h1>
-        <p class="lede">Measures the estate field and the Planet 1 split render chain without repairing, rendering, or hiding gaps. Mount health, chain health, visual readiness, and generation readiness are intentionally separate.</p>
+        <div class="kicker">H6 · Gauges · Generation 5 Baseline Diagnostic</div>
+        <h1 id="page-title">Planet 1 Generation 5 Architecture Baseline</h1>
+        <p class="lede">Measures the coherent architecture baseline separately from the visual branch. Generation 5 can pass architecture while visual readiness remains held for screenshot review.</p>
+        <div class="baseline-note">Canonical read: G5 architecture baseline is the target. B27 is a candidate visual branch, not a final visual pass. B28 remains held until baseline review is complete.</div>
         <div class="actions">
-          <button type="button" id="run-diagnostic">Run split-chain diagnostic</button>
+          <button type="button" id="run-diagnostic">Run G5 baseline diagnostic</button>
           <button type="button" id="run-estate" class="secondary">Run estate route diagnostic</button>
           <a class="button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
         </div>
@@ -98,28 +35,30 @@
         </div>
       </section>
 
-      <section class="summary" aria-label="Estate health summary">
-        <div class="metric"><b>Overall health</b><strong id="overall-health">NOT TESTED</strong></div>
-        <div class="metric"><b>Generation readiness</b><strong id="generation-readiness">NOT READY</strong></div>
-        <div class="metric"><b>Next controlling gap</b><strong id="next-gap">UNKNOWN</strong></div>
-        <div class="metric"><b>Required next TNT</b><strong id="next-tnt">Run diagnostic</strong></div>
+      <section class="summary" aria-label="G5 baseline summary">
+        <div class="metric"><b>Architecture health</b><strong id="architecture-health">NOT TESTED</strong></div>
+        <div class="metric"><b>G5 baseline</b><strong id="baseline-state">NOT TESTED</strong></div>
+        <div class="metric"><b>Visual branch</b><strong id="visual-branch">NOT TESTED</strong></div>
+        <div class="metric"><b>Next controlling move</b><strong id="next-move">Run diagnostic</strong></div>
       </section>
 
       <section class="grid" aria-label="Diagnostic lanes">
-        <article class="panel" id="lane-route"><div class="panel-head"><div><h2>Route Health</h2><small>/showroom/globe/ mount and route liveness.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-route"><div class="panel-head"><div><h2>Route Health</h2><small>/showroom/globe/ route runtime and asset references.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
         <article class="panel" id="lane-runtime"><div class="panel-head"><div><h2>Runtime Health</h2><small>/showroom/runtime.js split-chain observation.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
-        <article class="panel" id="lane-asset"><div class="panel-head"><div><h2>Asset Consumer Health</h2><small>/assets/showroom.globe.instrument.js caller/validator.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-asset"><div class="panel-head"><div><h2>Asset Consumer Health</h2><small>/assets/showroom.globe.instrument.js caller and validator.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
         <article class="panel" id="lane-renderer"><div class="panel-head"><div><h2>Renderer Facade Health</h2><small>/world/render/planet-one.render.js public facade.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
-        <article class="panel" id="lane-land"><div class="panel-head"><div><h2>Land Constructs Health</h2><small>Seven-body law and fused tri-region wrap.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
-        <article class="panel" id="lane-surface"><div class="panel-head"><div><h2>Surface Materials Health</h2><small>Ocean, shelf, ridge, atmosphere material authority.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
-        <article class="panel" id="lane-terrain"><div class="panel-head"><div><h2>Terrain / Hydration Health</h2><small>Existing terrain and hydration modules remain detected.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
-        <article class="panel" id="lane-visual"><div class="panel-head"><div><h2>Visual Readiness</h2><small>Visual pass requires screenshot/owner review; telemetry alone cannot pass it.</small></div><span class="status hold">HOLD</span></div><div class="facts"></div></article>
-        <article class="panel wide" id="lane-gap"><div class="panel-head"><div><h2>Gap Discovery</h2><small>One controlling gap and the next lawful TNT.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-land"><div class="panel-head"><div><h2>Land Constructs Health</h2><small>Land module and B27A candidate marker status.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-surface"><div class="panel-head"><div><h2>Surface Materials Health</h2><small>Surface module and B27B candidate marker status.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-terrain"><div class="panel-head"><div><h2>Terrain / Hydration Health</h2><small>Support modules remain detected.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-baseline"><div class="panel-head"><div><h2>G5 Architecture Baseline</h2><small>Architecture pass without visual pass claim.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-visual-branch"><div class="panel-head"><div><h2>B27 Visual Branch</h2><small>B27A/B27B are candidate visual branch markers only.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-visual"><div class="panel-head"><div><h2>Visual Readiness</h2><small>Requires screenshot/owner review; telemetry cannot pass visual readiness.</small></div><span class="status hold">HOLD</span></div><div class="facts"></div></article>
+        <article class="panel wide" id="lane-gap"><div class="panel-head"><div><h2>Gap Discovery</h2><small>One controlling move after baseline measurement.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
       </section>
 
       <section class="receipt">
         <h2>Live receipt</h2>
-        <div class="mono" id="receipt-output">Waiting to run split-chain diagnostic.</div>
+        <div class="mono" id="receipt-output">Waiting to run G5 baseline diagnostic.</div>
         <div class="route-links"><a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/showroom/globe/">Planet 1</a></div>
       </section>
 
@@ -127,16 +66,17 @@
     </main>
 
     <footer class="footer">
-      VERSION: B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1. Gauges measures route, runtime, asset consumer, renderer facade, land constructs, surface materials, terrain/hydration, visual readiness, and generation readiness. Gauges does not repair, render, or hide gaps.
-      <span hidden>route-exists manor-skin house-class estate=rich-manor-and-estate house-field=true gauges-truth=live-authority construct-class=house house-part=gauges H6_GAUGES diagnostic-instrument-room=active B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1</span>
+      VERSION: G5_GAUGES_BASELINE_ALIGNMENT_TNT_v1. Gauges measures Generation 5 architecture baseline, B27 candidate branch, and visual hold separately. Gauges does not repair, render, or claim visual pass.
+      <span hidden>PLANET_1_GENERATION_5_ARCHITECTURE_BASELINE_v1 G5_GAUGES_BASELINE_ALIGNMENT_TNT_v1 B27_candidate_visual_branch=true B28_held=true visual_pass_not_claimed=true</span>
     </footer>
   </div>
 
   <script>
-(function attachB26HGauges(global) {
+(function attachG5Gauges(global) {
   "use strict";
 
-  var VERSION = "B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1";
+  var VERSION = "G5_GAUGES_BASELINE_ALIGNMENT_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_5_ARCHITECTURE_BASELINE_v1";
   var PATHS = {
     route: "/showroom/globe/",
     runtime: "/showroom/runtime.js",
@@ -148,27 +88,30 @@
     hydration: "/world/render/planet-one.hydration.render.js"
   };
   var scriptPromises = {};
-  var lastReceipt = null;
+  var lastBaselineReceipt = null;
+  var lastEstateReceipt = null;
 
   function $(selector) { return global.document.querySelector(selector); }
-
-  function bool(value) { return value === true ? "true" : value === false ? "false" : value == null ? "pending" : String(value); }
-
-  function now() { return new Date().toISOString(); }
 
   function safeCall(fn) {
     try { return fn(); } catch (error) { return { ok: false, error: String(error && error.message ? error.message : error) }; }
   }
 
+  function now() { return new Date().toISOString(); }
+
   function compact(value) {
     if (value == null) return value;
     if (typeof value !== "object") return value;
-    try { return JSON.parse(JSON.stringify(value, function (key, inner) {
-      if (key === "canvas" || key === "activeCanvas" || key === "mount" || key === "ctx" || key === "parentNode" || key === "ownerDocument") return "[DOM]";
-      if (key === "state" && inner && typeof inner === "object") return "[renderer-state]";
-      if (Array.isArray(inner) && inner.length > 12) return inner.slice(0, 12).concat(["..." + (inner.length - 12) + " more"]);
-      return inner;
-    })); } catch (error) { return String(value); }
+    try {
+      return JSON.parse(JSON.stringify(value, function (key, inner) {
+        if (key === "canvas" || key === "activeCanvas" || key === "mount" || key === "ctx" || key === "parentNode" || key === "ownerDocument") return "[DOM]";
+        if (key === "state" && inner && typeof inner === "object") return "[renderer-state]";
+        if (Array.isArray(inner) && inner.length > 14) return inner.slice(0, 14).concat(["..." + (inner.length - 14) + " more"]);
+        return inner;
+      }));
+    } catch (error) {
+      return String(value);
+    }
   }
 
   function setText(id, text) {
@@ -178,6 +121,18 @@
 
   function classFor(state) {
     return String(state || "not_tested").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+  }
+
+  function fact(label, value) {
+    var row = global.document.createElement("div");
+    var a = global.document.createElement("span");
+    var b = global.document.createElement("span");
+    row.className = "fact";
+    a.textContent = label;
+    b.textContent = typeof value === "string" ? value : JSON.stringify(compact(value));
+    row.appendChild(a);
+    row.appendChild(b);
+    return row;
   }
 
   function renderLane(id, lane) {
@@ -195,23 +150,9 @@
     if (facts) {
       facts.innerHTML = "";
       for (key in lane.facts) {
-        if (Object.prototype.hasOwnProperty.call(lane.facts, key)) {
-          facts.appendChild(fact(key, lane.facts[key]));
-        }
+        if (Object.prototype.hasOwnProperty.call(lane.facts, key)) facts.appendChild(fact(key, lane.facts[key]));
       }
     }
-  }
-
-  function fact(label, value) {
-    var row = global.document.createElement("div");
-    var a = global.document.createElement("span");
-    var b = global.document.createElement("span");
-    row.className = "fact";
-    a.textContent = label;
-    b.textContent = typeof value === "string" ? value : JSON.stringify(compact(value));
-    row.appendChild(a);
-    row.appendChild(b);
-    return row;
   }
 
   function globalHas(name, fnName) {
@@ -253,10 +194,10 @@
     }
     scriptPromises[key] = new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = path;
+      script.src = path + (path.indexOf("?") === -1 ? "?" : "&") + "g5=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
-      script.dataset.gaugesLoaded = VERSION;
+      script.dataset.g5GaugesLoaded = VERSION;
       script.onload = function () { waitFor(detector, 1600).then(resolve); };
       script.onerror = function () { resolve(false); };
       target = global.document.head || global.document.body || global.document.documentElement;
@@ -275,11 +216,24 @@
           status: response.status,
           hasPlanetMount: text.indexOf("planet-one-render") !== -1 || text.indexOf("globe-main") !== -1,
           hasRuntime: text.indexOf("/showroom/runtime.js") !== -1 || text.indexOf("showroom/runtime.js") !== -1,
-          hasAsset: text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1
+          hasAsset: text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1,
+          hasB26Route: text.indexOf("B26I") !== -1,
+          hasG5Baseline: text.indexOf(BASELINE) !== -1 || text.indexOf("Generation 5") !== -1,
+          hasStaleV21Expectation: text.indexOf("SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF") !== -1
         };
       });
     }).catch(function (error) {
       return { ok: false, error: String(error && error.message ? error.message : error) };
+    });
+  }
+
+  function readStatus(apiName, primary, secondary) {
+    var api = global[apiName];
+    if (!api) return null;
+    return safeCall(function () {
+      if (typeof api[primary] === "function") return api[primary]();
+      if (secondary && typeof api[secondary] === "function") return api[secondary]();
+      return null;
     });
   }
 
@@ -296,44 +250,14 @@
     return safeCall(function () { return api.getSplitRenderChainStatus(); });
   }
 
-  function readAssetStatus() {
-    var api = global.DGBShowroomGlobeInstrument;
-    if (!api) return null;
-    if (typeof api.getStatus === "function") return safeCall(function () { return api.getStatus(); });
-    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
-    return null;
-  }
+  function hasTerrain() { return Boolean(global.DGBPlanetOneTerrainRender); }
+  function hasHydration() { return Boolean(global.DGBPlanetOneHydrationRender); }
 
-  function readRendererStatus() {
-    var api = global.DGBPlanetOneRenderTeam;
-    if (!api) return null;
-    if (typeof api.getStatus === "function") return safeCall(function () { return api.getStatus(); });
-    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
-    return null;
-  }
-
-  function readLandStatus() {
-    var api = global.DGBPlanetOneLandConstructs;
-    if (!api) return null;
-    if (typeof api.getLandConstructStatus === "function") return safeCall(function () { return api.getLandConstructStatus(); });
-    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
-    return null;
-  }
-
-  function readSurfaceStatus() {
-    var api = global.DGBPlanetOneSurfaceMaterials;
-    if (!api) return null;
-    if (typeof api.getSurfaceMaterialStatus === "function") return safeCall(function () { return api.getSurfaceMaterialStatus(); });
-    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
-    return null;
-  }
-
-  function hasTerrain() {
-    return Boolean(global.DGBPlanetOneTerrainRender);
-  }
-
-  function hasHydration() {
-    return Boolean(global.DGBPlanetOneHydrationRender);
+  function markerHas(status, token) {
+    var markers = status && (status.CONTRACT_MARKERS || status.markers || []);
+    if (String(status && (status.VERSION || status.version || "")).indexOf(token) !== -1) return true;
+    if (!Array.isArray(markers)) return false;
+    return markers.some(function (item) { return String(item).indexOf(token) !== -1; });
   }
 
   function mountAssetProbe() {
@@ -341,58 +265,48 @@
     var asset = global.DGBShowroomGlobeInstrument;
     if (!mount || !asset || typeof asset.renderGlobe !== "function") return Promise.resolve({ ok: false, reason: "asset-or-mount-missing" });
     return Promise.resolve(safeCall(function () {
-      return asset.renderGlobe(mount, { animate: false, size: 360, caption: "Gauges hidden split-chain probe" });
+      return asset.renderGlobe(mount, { animate: false, size: 360, caption: "G5 Gauges hidden split-chain probe" });
     })).then(function (result) {
       return waitFor(function () {
-        var a = readAssetStatus();
+        var a = readStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
         return Boolean(a && a.rendererResultMounted);
       }, 2200).then(function () { return result; });
     });
   }
 
-  function stateFrom(required, warnCondition) {
-    if (required === true) return "PASS";
-    if (warnCondition === true) return "WARN";
+  function stateFrom(pass, warn) {
+    if (pass === true) return "PASS";
+    if (warn === true) return "WARN";
     return "FAIL";
   }
 
   function minimumState(states) {
     if (states.indexOf("FAIL") !== -1) return "FAIL";
-    if (states.indexOf("HOLD") !== -1) return "HOLD";
     if (states.indexOf("WARN") !== -1) return "WARN";
+    if (states.indexOf("HOLD") !== -1) return "HOLD";
     if (states.indexOf("NOT_TESTED") !== -1) return "NOT TESTED";
     return "PASS";
-  }
-
-  function determineNextGap(lanes) {
-    if (lanes.route.state === "FAIL") return ["ROUTE_OR_DOM_MOUNT", "REPAIR_/showroom/globe/_mount_or_script_references"];
-    if (lanes.runtime.state === "FAIL") return ["RUNTIME_SPLIT_CHAIN_AWARENESS", "B26G_RUNTIME_REPAIR_TNT"];
-    if (lanes.asset.state === "FAIL") return ["ASSET_CONSUMER_ALIGNMENT", "B26F_ASSET_CONSUMER_REPAIR_TNT"];
-    if (lanes.renderer.state === "FAIL") return ["RENDERER_FACADE_STATUS_SURFACE", "B26D_RENDERER_FACADE_REPAIR_TNT"];
-    if (lanes.land.state === "FAIL") return ["LAND_CONSTRUCTS_MODULE_LOAD", "B26B_LAND_CONSTRUCTS_REPAIR_TNT"];
-    if (lanes.surface.state === "FAIL") return ["SURFACE_MATERIALS_MODULE_LOAD", "B26C_SURFACE_MATERIALS_REPAIR_TNT"];
-    if (lanes.terrain.state === "FAIL") return ["TERRAIN_HYDRATION_DETECTION", "TERRAIN_HYDRATION_BRIDGE_REPAIR_TNT"];
-    if (lanes.route.state === "WARN" || lanes.runtime.state === "WARN" || lanes.asset.state === "WARN" || lanes.renderer.state === "WARN" || lanes.land.state === "WARN" || lanes.surface.state === "WARN" || lanes.terrain.state === "WARN") return ["CHAIN_RECEIPT_PARTIAL_OR_DELAYED", "RECEIPT_ALIGNMENT_TNT"];
-    return ["VISUAL_GEOMETRY_RELIEF_B27", "B27_GEOMETRIC_CONTINENT_SPLIT_AND_RELIEF_REFINEMENT_TNT"];
   }
 
   function buildLanes(routeProbe, assetProbe) {
     var runtimeStatus = readRuntimeStatus();
     var runtimeSplit = readRuntimeSplitStatus();
-    var assetStatus = readAssetStatus();
-    var rendererStatus = readRendererStatus();
-    var landStatus = readLandStatus();
-    var surfaceStatus = readSurfaceStatus();
+    var assetStatus = readStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
+    var rendererStatus = readStatus("DGBPlanetOneRenderTeam", "getStatus", "status");
+    var landStatus = readStatus("DGBPlanetOneLandConstructs", "getLandConstructStatus", "status");
+    var surfaceStatus = readStatus("DGBPlanetOneSurfaceMaterials", "getSurfaceMaterialStatus", "status");
     var terrainDetected = hasTerrain() || Boolean(rendererStatus && rendererStatus.terrainModuleDetected);
     var hydrationDetected = hasHydration() || Boolean(rendererStatus && rendererStatus.hydrationModuleDetected);
+    var b27aLive = markerHas(landStatus, "B27A_LAND_CONSTRUCTS_GEOMETRY_TNT_v1") || Boolean(landStatus && landStatus.threeFusedTectonicLobesLegible && landStatus.coastFollowingGulfDataActive);
+    var b27bLive = markerHas(surfaceStatus, "B27B_SURFACE_MATERIALS_RELIEF_TNT_v1") || Boolean(surfaceStatus && surfaceStatus.coastFollowingMaterialCutsActive && surfaceStatus.physicalWorldMaterialReadActive);
 
     var lanes = {
       route: {
-        state: stateFrom(Boolean(routeProbe && routeProbe.ok && routeProbe.hasPlanetMount), Boolean(routeProbe && routeProbe.ok)),
-        facts: { path: PATHS.route, response: routeProbe && routeProbe.status, hasPlanetMount: routeProbe && routeProbe.hasPlanetMount, hasRuntime: routeProbe && routeProbe.hasRuntime, hasAsset: routeProbe && routeProbe.hasAsset }
+        state: stateFrom(Boolean(routeProbe && routeProbe.ok && routeProbe.hasPlanetMount && routeProbe.hasRuntime && routeProbe.hasAsset && !routeProbe.hasStaleV21Expectation), Boolean(routeProbe && routeProbe.ok && routeProbe.hasPlanetMount)),
+        facts: { path: PATHS.route, response: routeProbe && routeProbe.status, hasPlanetMount: routeProbe && routeProbe.hasPlanetMount, hasRuntime: routeProbe && routeProbe.hasRuntime, hasAsset: routeProbe && routeProbe.hasAsset, staleV21Expectation: routeProbe && routeProbe.hasStaleV21Expectation }
       },
       runtime: {
-        state: stateFrom(Boolean(runtimeStatus && runtimeStatus.splitRenderChainAware !== false && (runtimeStatus.assetInstrumentPath || runtimeStatus.ASSET_INSTRUMENT_PATH || runtimeSplit)), Boolean(runtimeStatus || runtimeSplit)),
+        state: stateFrom(Boolean(runtimeStatus && runtimeStatus.splitRenderChainAware !== false && runtimeSplit && runtimeSplit.assetInstrumentDetected && runtimeSplit.responsibilitySplitActive), Boolean(runtimeStatus || runtimeSplit)),
         facts: { detected: Boolean(runtimeStatus || runtimeSplit), splitRenderChainAware: runtimeStatus && runtimeStatus.splitRenderChainAware, assetInstrumentDetected: runtimeSplit && runtimeSplit.assetInstrumentDetected, responsibilitySplitActive: runtimeSplit && runtimeSplit.responsibilitySplitActive, rendererFacadeActive: runtimeSplit && runtimeSplit.rendererFacadeActive }
       },
       asset: {
@@ -405,11 +319,11 @@
       },
       land: {
         state: stateFrom(Boolean(landStatus && landStatus.ok && landStatus.sevenLandmassLawActive && landStatus.attachedTriRegionWrapActive && landStatus.polarBodiesDistinct), Boolean(landStatus && landStatus.ok)),
-        facts: { detected: Boolean(global.DGBPlanetOneLandConstructs), ok: landStatus && landStatus.ok, constructCount: landStatus && landStatus.constructCount, sevenLandmassLawActive: landStatus && landStatus.sevenLandmassLawActive, attachedTriRegionWrapActive: landStatus && landStatus.attachedTriRegionWrapActive, fusedTectonicLobesActive: landStatus && landStatus.fusedTectonicLobesActive, polarBodiesDistinct: landStatus && landStatus.polarBodiesDistinct }
+        facts: { detected: Boolean(global.DGBPlanetOneLandConstructs), version: landStatus && (landStatus.VERSION || landStatus.version), ok: landStatus && landStatus.ok, constructCount: landStatus && landStatus.constructCount, sevenLandmassLawActive: landStatus && landStatus.sevenLandmassLawActive, attachedTriRegionWrapActive: landStatus && landStatus.attachedTriRegionWrapActive, fusedTectonicLobesActive: landStatus && landStatus.fusedTectonicLobesActive, b27aCandidateMarkerLive: b27aLive }
       },
       surface: {
         state: stateFrom(Boolean(surfaceStatus && surfaceStatus.ok && surfaceStatus.cinematicMaterialAuthorityActive && surfaceStatus.oceanDepthAuthorityActive && surfaceStatus.coastalShelfAuthorityActive), Boolean(surfaceStatus && surfaceStatus.ok)),
-        facts: { detected: Boolean(global.DGBPlanetOneSurfaceMaterials), ok: surfaceStatus && surfaceStatus.ok, cinematicMaterialAuthorityActive: surfaceStatus && surfaceStatus.cinematicMaterialAuthorityActive, oceanDepthAuthorityActive: surfaceStatus && surfaceStatus.oceanDepthAuthorityActive, coastalShelfAuthorityActive: surfaceStatus && surfaceStatus.coastalShelfAuthorityActive, plateauRidgeMaterialAuthorityActive: surfaceStatus && surfaceStatus.plateauRidgeMaterialAuthorityActive, mineralPressureAuthorityActive: surfaceStatus && surfaceStatus.mineralPressureAuthorityActive }
+        facts: { detected: Boolean(global.DGBPlanetOneSurfaceMaterials), version: surfaceStatus && (surfaceStatus.VERSION || surfaceStatus.version), ok: surfaceStatus && surfaceStatus.ok, cinematicMaterialAuthorityActive: surfaceStatus && surfaceStatus.cinematicMaterialAuthorityActive, coastalShelfAuthorityActive: surfaceStatus && surfaceStatus.coastalShelfAuthorityActive, physicalWorldMaterialReadActive: surfaceStatus && surfaceStatus.physicalWorldMaterialReadActive, b27bCandidateMarkerLive: b27bLive }
       },
       terrain: {
         state: stateFrom(Boolean(terrainDetected && hydrationDetected), Boolean(terrainDetected || hydrationDetected)),
@@ -417,11 +331,54 @@
       },
       visual: {
         state: "HOLD",
-        facts: { manualScreenshotReviewRequired: true, telemetryCanPassVisual: false, passRequires: "no blob, no slab, three fused lobes, structural coast, visible relief, distinct poles", currentDefault: "HOLD until screenshot confirms" }
+        facts: { manualScreenshotReviewRequired: true, telemetryCanPassVisual: false, passRequires: "no blob, no slab, three fused lobes, structural coast, visible relief, distinct poles", currentDefault: "HOLD until screenshot confirms", noFalseVisualPass: true }
       }
     };
 
+    lanes.baseline = buildBaselineLane(lanes);
+    lanes.visualBranch = buildVisualBranchLane(b27aLive, b27bLive, landStatus, surfaceStatus);
     return lanes;
+  }
+
+  function buildBaselineLane(lanes) {
+    var architectureState = minimumState([lanes.route.state, lanes.runtime.state, lanes.asset.state, lanes.renderer.state, lanes.land.state, lanes.surface.state, lanes.terrain.state]);
+    return {
+      state: architectureState === "PASS" ? "PASS" : architectureState,
+      facts: {
+        baseline: BASELINE,
+        architectureHealth: architectureState,
+        visualReadiness: "HOLD",
+        baselineClaim: architectureState === "PASS" ? "ACTIVE_ARCHITECTURE_BASELINE" : "NOT_READY",
+        b26SplitChainAbsorbedIntoG5: architectureState === "PASS",
+        visualPassClaimed: false,
+        b28Authorized: false
+      }
+    };
+  }
+
+  function buildVisualBranchLane(b27aLive, b27bLive, landStatus, surfaceStatus) {
+    var state = b27aLive && b27bLive ? "WARN" : b27aLive || b27bLive ? "HOLD" : "HOLD";
+    return {
+      state: state,
+      facts: {
+        b27Status: b27aLive && b27bLive ? "CANDIDATE_VISUAL_BRANCH_LIVE" : "CANDIDATE_NOT_FULLY_LIVE",
+        b27aLandMarkerLive: b27aLive,
+        b27bSurfaceMarkerLive: b27bLive,
+        landVersion: landStatus && (landStatus.VERSION || landStatus.version),
+        surfaceVersion: surfaceStatus && (surfaceStatus.VERSION || surfaceStatus.version),
+        visualPassClaimed: false,
+        b28Status: "HELD"
+      }
+    };
+  }
+
+  function determineNextMove(lanes) {
+    var architecture = lanes.baseline.facts.architectureHealth;
+    var b27Live = lanes.visualBranch.facts.b27aLandMarkerLive && lanes.visualBranch.facts.b27bSurfaceMarkerLive;
+    if (architecture === "FAIL") return ["REPAIR_FAILED_ARCHITECTURE_LANE", "REPAIR_ONLY_THE_FAILED_LANE"];
+    if (architecture === "WARN") return ["ALIGN_PARTIAL_ARCHITECTURE_RECEIPTS", "G5_SOURCE_MARKER_ALIGNMENT_TNT"];
+    if (!b27Live) return ["B27_SOURCE_NOT_FULLY_LIVE", "REAPPLY_B27A_B27B_OR_ROLLBACK_DECISION"];
+    return ["G5_VISUAL_REVIEW_DECISION", "SCREENSHOT_REVIEW_THEN_G5_VISUAL_REFINEMENT_OR_ROLLBACK"];
   }
 
   function renderReceipt(receipt) {
@@ -430,23 +387,10 @@
   }
 
   function applyResults(lanes) {
-    var critical = [lanes.route.state, lanes.runtime.state, lanes.asset.state, lanes.renderer.state, lanes.land.state, lanes.surface.state];
-    var architecture = minimumState(critical);
-    var chain = minimumState(critical.concat([lanes.terrain.state]));
-    var next = determineNextGap(lanes);
-    var generation;
-    var overall;
-
-    if (chain === "FAIL") {
-      overall = "FAIL";
-      generation = "NOT READY";
-    } else if (chain === "WARN" || chain === "HOLD") {
-      overall = "WARN";
-      generation = "ARCHITECTURE PARTIAL / HOLD";
-    } else {
-      overall = "WARN";
-      generation = "READY FOR B27 / VISUAL HOLD";
-    }
+    var next = determineNextMove(lanes);
+    var architecture = lanes.baseline.facts.architectureHealth;
+    var baselineState = architecture === "PASS" ? "ACTIVE" : architecture;
+    var visualBranch = lanes.visualBranch.facts.b27Status;
 
     renderLane("lane-route", lanes.route);
     renderLane("lane-runtime", lanes.runtime);
@@ -455,24 +399,26 @@
     renderLane("lane-land", lanes.land);
     renderLane("lane-surface", lanes.surface);
     renderLane("lane-terrain", lanes.terrain);
+    renderLane("lane-baseline", lanes.baseline);
+    renderLane("lane-visual-branch", lanes.visualBranch);
     renderLane("lane-visual", lanes.visual);
-    renderLane("lane-gap", { state: overall, facts: { architectureHealth: architecture, chainHealth: chain, visualReadiness: lanes.visual.state, nextControllingGap: next[0], requiredNextTNT: next[1], generationReadiness: generation } });
+    renderLane("lane-gap", { state: architecture === "PASS" ? "WARN" : architecture, facts: { architectureHealth: architecture, g5Baseline: baselineState, b27VisualBranch: visualBranch, visualReadiness: "HOLD", nextControllingMove: next[0], requiredNextAction: next[1], noFalseVisualPass: true } });
 
-    setText("overall-health", overall);
-    setText("generation-readiness", generation);
-    setText("next-gap", next[0]);
-    setText("next-tnt", next[1]);
+    setText("architecture-health", architecture);
+    setText("baseline-state", baselineState);
+    setText("visual-branch", visualBranch);
+    setText("next-move", next[0]);
 
-    lastReceipt = { version: VERSION, timestamp: now(), overallHealth: overall, architectureHealth: architecture, chainHealth: chain, generationReadiness: generation, nextControllingGap: next[0], requiredNextTNT: next[1], lanes: lanes };
-    renderReceipt(lastReceipt);
+    lastBaselineReceipt = { version: VERSION, baseline: BASELINE, timestamp: now(), architectureHealth: architecture, g5Baseline: baselineState, b27VisualBranch: visualBranch, visualReadiness: "HOLD", nextControllingMove: next[0], requiredNextAction: next[1], lanes: lanes };
+    renderReceipt(lastBaselineReceipt);
   }
 
-  function runSplitChainDiagnostic() {
-    setText("overall-health", "RUNNING");
-    setText("generation-readiness", "MEASURING");
-    setText("next-gap", "MEASURING");
-    setText("next-tnt", "MEASURING");
-    renderReceipt({ version: VERSION, timestamp: now(), status: "running split-chain diagnostic" });
+  function runG5BaselineDiagnostic() {
+    setText("architecture-health", "RUNNING");
+    setText("baseline-state", "MEASURING");
+    setText("visual-branch", "MEASURING");
+    setText("next-move", "MEASURING");
+    renderReceipt({ version: VERSION, baseline: BASELINE, timestamp: now(), status: "running G5 baseline diagnostic" });
 
     return Promise.all([
       fetchRoute(PATHS.route),
@@ -486,8 +432,8 @@
         return loadScript("asset", PATHS.asset, function () { return globalHas("DGBShowroomGlobeInstrument", "renderGlobe"); }).then(function () {
           return mountAssetProbe().then(function (probe) {
             return waitFor(function () {
-              var asset = readAssetStatus();
-              var renderer = readRendererStatus();
+              var asset = readStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
+              var renderer = readStatus("DGBPlanetOneRenderTeam", "getStatus", "status");
               return Boolean(asset && renderer);
             }, 1600).then(function () {
               applyResults(buildLanes(first[0], probe));
@@ -496,36 +442,39 @@
         });
       });
     }).catch(function (error) {
-      renderReceipt({ version: VERSION, timestamp: now(), ok: false, error: String(error && error.message ? error.message : error) });
-      setText("overall-health", "FAIL");
-      setText("generation-readiness", "NOT READY");
-      setText("next-gap", "GAUGES_EXECUTION_ERROR");
-      setText("next-tnt", "B26H_GAUGES_REPAIR_TNT");
+      renderReceipt({ version: VERSION, baseline: BASELINE, timestamp: now(), ok: false, error: String(error && error.message ? error.message : error) });
+      setText("architecture-health", "FAIL");
+      setText("baseline-state", "NOT READY");
+      setText("visual-branch", "NOT TESTED");
+      setText("next-move", "G5_GAUGES_EXECUTION_ERROR");
     });
   }
 
   function runEstateDiagnostic() {
     var routes = ["/", "/door/", "/home/", "/products/", "/showroom/", "/showroom/globe/", "/gauges/"];
-    setText("overall-health", "RUNNING");
-    Promise.all(routes.map(fetchRoute)).then(function (results) {
-      renderReceipt({ version: VERSION, timestamp: now(), estateRouteDiagnostic: results.map(function (result, index) { return { route: routes[index], result: result }; }) });
-      setText("overall-health", results.every(function (r) { return r.ok; }) ? "PASS" : "WARN");
+    renderReceipt({ version: VERSION, baseline: BASELINE, timestamp: now(), status: "running estate route diagnostic", note: "This does not overwrite G5 baseline health." });
+    return Promise.all(routes.map(fetchRoute)).then(function (results) {
+      lastEstateReceipt = { version: VERSION, timestamp: now(), estateRouteDiagnostic: results.map(function (result, index) { return { route: routes[index], result: result }; }) };
+      renderReceipt({ baselineReceipt: lastBaselineReceipt || "Run G5 baseline diagnostic for baseline state.", estateReceipt: lastEstateReceipt });
     });
   }
 
-  global.B26HGaugesSplitRenderChain = {
+  global.G5PlanetOneBaselineGauges = {
     VERSION: VERSION,
     version: VERSION,
+    BASELINE: BASELINE,
     paths: PATHS,
-    runSplitChainDiagnostic: runSplitChainDiagnostic,
+    runG5BaselineDiagnostic: runG5BaselineDiagnostic,
+    runSplitChainDiagnostic: runG5BaselineDiagnostic,
     runEstateDiagnostic: runEstateDiagnostic,
-    getLastReceipt: function () { return compact(lastReceipt); }
+    getLastBaselineReceipt: function () { return compact(lastBaselineReceipt); },
+    getLastEstateReceipt: function () { return compact(lastEstateReceipt); }
   };
 
   global.document.addEventListener("DOMContentLoaded", function () {
     var run = $("#run-diagnostic");
     var estate = $("#run-estate");
-    if (run) run.addEventListener("click", runSplitChainDiagnostic);
+    if (run) run.addEventListener("click", runG5BaselineDiagnostic);
     if (estate) estate.addEventListener("click", runEstateDiagnostic);
   });
 })(typeof window !== "undefined" ? window : globalThis);

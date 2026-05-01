@@ -1,22 +1,22 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="home"
-  data-route="/home/"
-  data-house-part="home"
-  data-construct-class="rich-manor-systemic-containment-home"
-  data-g5-site-uniformity="active"
-  data-page-standard="G5_HOME_RICH_MANOR_SYSTEMIC_CONTAINMENT_RENEWAL_TNT_v1"
-  data-architecture-claim="home-receiving-surface"
+  data-page="gauges"
+  data-route="/gauges/"
+  data-house-part="gauges"
+  data-construct-class="planet-one-generation-reset-instrument"
+  data-gauges-contract="G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v1"
+  data-planet-generation="generation-1-reset"
+  data-hex-substrate-required="true"
   data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Home · Rich Manor · Diamond Gate Bridge</title>
+  <title>Gauges · Planet 1 G1 Reset · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Home explains Rich Manor: the systemic dynamic containment system that gives every part of the work a room while keeping the whole house connected."
+    content="Generation 1 reset gauges for Planet 1. Measures preserved architecture, archived G5 visual branch, missing hexagonal pixel substrate, and next required rebuild step."
   >
 
   <style>
@@ -33,9 +33,11 @@
       --gold:#f2c76f;
       --green:#8ff0c6;
       --blue:#91bdff;
+      --fail:#ff9a8a;
+      --hold:#b9c5ff;
       --shadow:rgba(0,0,0,.56);
-      --max:1120px;
-      --radius:30px;
+      --max:1180px;
+      --radius:28px;
     }
 
     *{box-sizing:border-box}
@@ -63,7 +65,8 @@
 
     a{color:inherit;text-decoration:none}
 
-    a:focus{
+    a:focus,
+    button:focus{
       outline:2px solid var(--green);
       outline-offset:3px;
     }
@@ -126,7 +129,8 @@
     .nav{justify-content:flex-end}
 
     .nav a,
-    .button{
+    .button,
+    button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -138,30 +142,32 @@
       color:var(--text);
       font-weight:850;
       font-size:.9rem;
+      cursor:pointer;
     }
 
     .nav a[aria-current="page"],
-    .button.primary{
+    .button.primary,
+    button.primary{
       border-color:rgba(242,199,111,.54);
       background:rgba(242,199,111,.14);
     }
 
-    .button.green{
+    .button.green,
+    button.green{
       border-color:rgba(143,240,198,.50);
       background:rgba(143,240,198,.13);
     }
 
-    .button.secondary{
+    .button.secondary,
+    button.secondary{
       color:rgba(244,247,255,.82);
       background:rgba(255,255,255,.04);
     }
 
     .hero{
-      min-height:540px;
       display:grid;
-      align-content:center;
-      gap:24px;
-      padding:clamp(26px,5vw,56px);
+      gap:20px;
+      padding:clamp(24px,5vw,52px);
       border:1px solid var(--gold-line);
       border-radius:34px;
       background:
@@ -180,242 +186,199 @@
       text-transform:uppercase;
     }
 
-    .kicker.green{color:var(--green)}
-    .kicker.blue{color:var(--blue)}
-
     h1{
       margin:0;
-      max-width:1020px;
-      font-size:clamp(3rem,9.2vw,7rem);
-      line-height:.88;
+      max-width:1040px;
+      font-size:clamp(2.8rem,7.6vw,6rem);
+      line-height:.9;
       letter-spacing:-.08em;
     }
 
     h2{
       margin:0;
-      max-width:940px;
-      font-size:clamp(1.85rem,5vw,3.45rem);
-      line-height:1;
-      letter-spacing:-.06em;
-    }
-
-    h3{
-      margin:0;
-      font-size:clamp(1.22rem,3vw,1.85rem);
-      line-height:1.06;
-      letter-spacing:-.045em;
+      font-size:clamp(1.25rem,2.8vw,2rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
     }
 
     p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(1.02rem,2.4vw,1.2rem);
+      font-size:clamp(1.02rem,2.2vw,1.2rem);
       line-height:1.6;
     }
 
-    strong{color:var(--text)}
-
     .lead{
-      max-width:930px;
+      max-width:940px;
       color:var(--soft);
-      font-size:clamp(1.16rem,3vw,1.55rem);
+      font-size:clamp(1.12rem,2.7vw,1.42rem);
       line-height:1.45;
     }
 
-    .one-line{
-      color:var(--text);
-      font-size:clamp(1.55rem,4.6vw,3.25rem);
-      line-height:1.05;
-      letter-spacing:-.06em;
-      font-weight:950;
+    .reset-note{
+      border:1px solid rgba(242,199,111,.25);
+      border-radius:20px;
+      background:rgba(242,199,111,.065);
+      padding:15px;
+      color:rgba(255,238,190,.92);
+      font-weight:850;
     }
 
-    .principles{
+    .summary{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
-      margin-top:6px;
+      margin:18px 0;
     }
 
-    .principle{
-      border:1px solid rgba(242,199,111,.32);
-      border-radius:24px;
-      padding:18px;
-      background:linear-gradient(180deg,rgba(242,199,111,.10),rgba(255,255,255,.04));
-      min-height:150px;
-      display:grid;
-      gap:8px;
-      align-content:start;
-    }
-
-    .principle b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .principle strong{
-      font-size:clamp(1.25rem,3.1vw,2rem);
-      line-height:.98;
-      letter-spacing:-.055em;
-    }
-
-    .home-bubble{
-      margin-top:22px;
-      padding:18px;
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(242,199,111,.12),transparent 22rem),
-        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
-      box-shadow:0 24px 80px var(--shadow);
-    }
-
-    details{
+    .metric,
+    .panel,
+    .receipt{
       border:1px solid var(--line);
       border-radius:var(--radius);
       background:
         radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
         var(--panel);
-      overflow:hidden;
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    details + details{margin-top:12px}
-
-    summary{
-      list-style:none;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:18px;
-      font-weight:950;
-      color:rgba(248,251,255,.94);
-    }
-
-    summary::-webkit-details-marker{display:none}
-
-    summary::after{
-      content:"+";
-      display:grid;
-      place-items:center;
-      min-width:32px;
-      width:32px;
-      height:32px;
-      border-radius:999px;
-      border:1px solid rgba(145,189,255,.32);
-      color:var(--blue);
-      background:rgba(145,189,255,.08);
-      font-size:1.15rem;
-      line-height:1;
-    }
-
-    details[open] > summary::after{
-      content:"–";
-      border-color:rgba(242,199,111,.42);
-      color:var(--gold);
-      background:rgba(242,199,111,.08);
-    }
-
-    .summary-copy{
-      display:grid;
-      gap:7px;
-    }
-
-    .summary-copy b{
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .summary-copy span{
-      font-size:1.08rem;
-      letter-spacing:-.025em;
-    }
-
-    .bubble-body{
-      display:grid;
-      gap:14px;
-      padding:0 18px 18px;
-    }
-
-    .bubble-note{
-      border:1px solid rgba(242,199,111,.24);
-      border-radius:20px;
-      background:rgba(242,199,111,.065);
-      padding:15px;
-    }
-
-    .nested{
-      display:grid;
-      gap:12px;
-    }
-
-    .nested details{
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        var(--panel2);
-    }
-
-    .nested summary{padding:15px}
-    .nested .bubble-body{padding:0 15px 15px}
-
-    .grid{display:grid;gap:14px}
-    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .grid.six{grid-template-columns:repeat(6,minmax(0,1fr))}
-
-    .card,
-    .route-card{
-      border:1px solid rgba(168,199,255,.18);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        rgba(255,255,255,.045);
-      padding:20px;
+    .metric{
+      padding:16px;
+      min-height:120px;
       display:grid;
       align-content:start;
-      gap:12px;
+      gap:8px;
     }
 
-    .card{min-height:190px}
-    .route-card{min-height:240px}
-    .route-card .button{width:max-content;margin-top:auto}
-
-    .card span,
-    .route-card span,
-    .card b{
-      display:block;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
+    .metric b{
+      color:var(--muted);
+      font-size:.72rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .card p,
-    .route-card p{
-      margin:0;
-      font-size:1rem;
+    .metric strong{
+      color:var(--text);
+      font-size:1.14rem;
+      line-height:1.1;
+      word-break:break-word;
     }
 
-    .final-band{
+    .grid{
       display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:14px;
-      margin-top:22px;
-      padding:clamp(22px,4vw,38px);
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 75% 10%,rgba(242,199,111,.12),transparent 20rem),
-        rgba(255,255,255,.05);
-      box-shadow:0 24px 80px var(--shadow);
+    }
+
+    .panel{
+      padding:16px;
+      min-height:200px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      padding-bottom:12px;
+      margin-bottom:12px;
+      border-bottom:1px solid rgba(168,199,255,.14);
+    }
+
+    .panel small{
+      display:block;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:5px 9px;
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .status::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:var(--muted);
+    }
+
+    .status.pass{color:var(--green);border-color:rgba(143,240,198,.35)}
+    .status.pass::before{background:var(--green)}
+    .status.warn{color:var(--gold);border-color:rgba(242,199,111,.38)}
+    .status.warn::before{background:var(--gold)}
+    .status.fail{color:var(--fail);border-color:rgba(255,154,138,.38)}
+    .status.fail::before{background:var(--fail)}
+    .status.hold{color:var(--hold);border-color:rgba(185,197,255,.38)}
+    .status.hold::before{background:var(--hold)}
+    .status.not_tested{color:var(--muted)}
+
+    .facts{
+      display:grid;
+      gap:6px;
+    }
+
+    .fact{
+      display:grid;
+      grid-template-columns:minmax(128px,.7fr) minmax(0,1.3fr);
+      gap:10px;
+      padding:7px 0;
+      border-bottom:1px solid rgba(168,199,255,.08);
+    }
+
+    .fact span:first-child{
+      color:rgba(218,227,255,.65);
+      font-size:.76rem;
+      font-weight:850;
+    }
+
+    .fact span:last-child{
+      color:rgba(246,248,255,.86);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:.74rem;
+      word-break:break-word;
+    }
+
+    .wide{grid-column:1/-1}
+
+    .receipt{
+      margin-top:16px;
+      padding:16px;
+    }
+
+    .mono{
+      margin-top:10px;
+      border:1px solid rgba(168,199,255,.15);
+      border-radius:18px;
+      background:rgba(0,0,0,.26);
+      padding:12px;
+      color:rgba(234,242,255,.84);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:.75rem;
+      white-space:pre-wrap;
+      overflow:auto;
+      max-height:420px;
+    }
+
+    .hidden-mount{
+      position:absolute;
+      left:-99999px;
+      top:auto;
+      width:420px;
+      height:420px;
+      overflow:hidden;
+      opacity:.01;
+      pointer-events:none;
     }
 
     .footer{
@@ -428,440 +391,822 @@
       font-size:.8rem;
     }
 
-    .public-receipt{color:rgba(244,247,255,.72)}
-    .receipt{display:none!important}
+    .receipt-hidden{display:none!important}
 
-    @media(max-width:980px){
+    @media(max-width:1020px){
+      .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{grid-template-columns:1fr}
       .topbar{display:grid}
       .nav{justify-content:flex-start}
-      .grid.two,
-      .grid.three,
-      .grid.four,
-      .grid.six,
-      .principles{grid-template-columns:1fr}
-      .hero{min-height:460px}
     }
 
     @media(max-width:620px){
-      .page{
-        width:min(100% - 24px,620px);
-        padding-top:18px;
-      }
-
-      .nav a,
-      .button{
-        min-height:40px;
-        padding:9px 14px;
-      }
-
-      summary{align-items:flex-start}
+      .page{width:min(100% - 24px,620px);padding-top:18px}
+      .summary{grid-template-columns:1fr}
+      .fact{grid-template-columns:1fr}
+      .nav a,.button,button{min-height:40px;padding:9px 14px}
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#home-main">Skip to Home</a>
+  <a class="skip" href="#gauges-content">Skip to Gauges content</a>
 
-  <main
-    id="home-main"
-    class="page"
-    data-route="/home/"
-    data-page-purpose="rich-manor-systemic-containment-home"
-    data-systemic-dynamic-containment="true"
-    data-compass-route="/"
-    data-door-route="/door/"
-    data-products-route="/products/"
-    data-showroom-route="/showroom/"
-    data-gauges-route="/gauges/"
-  >
+  <main id="gauges-content" class="page">
     <header class="topbar" aria-label="Site header">
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
-        Rich Manor · Home
+        Gauges · Planet 1 Generation 1 Reset
       </a>
 
       <nav class="nav" aria-label="Primary house navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
-        <a href="/home/" aria-current="page">Home</a>
+        <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
     <section class="hero">
-      <p class="kicker">H3 · Home · Rich Manor</p>
-      <h1>Rich Manor gives the work a place to live.</h1>
-
+      <p class="kicker">H6 · Gauges · Planet 1 Reset Instrument</p>
+      <h1>Planet 1 Generation 1 Hex Substrate Reset</h1>
       <p class="lead">
-        Home explains Rich Manor: the systemic dynamic containment system that gives every part of the work a room while keeping the whole house connected.
+        Gauges no longer treats the painted G5 visual branch as the forward Planet 1 foundation. Architecture may remain preserved, but the planet build resets to Generation 1 until the hexagonal pixel substrate exists and is consumed.
       </p>
-
-      <p class="lead">
-        In plain language: complex work needs rooms. The book, voice, products, world, proof engine, and live build each get a place so the whole system stays understandable, expandable, usable, and measurable.
-      </p>
-
-      <div class="principles" aria-label="Rich Manor principles">
-        <article class="principle">
-          <b>Contain</b>
-          <strong>Every part gets a room.</strong>
-          <p>The work becomes easier to understand when each piece has a clear place.</p>
-        </article>
-
-        <article class="principle">
-          <b>Connect</b>
-          <strong>Every room belongs to one house.</strong>
-          <p>Separate rooms prevent overload. Shared structure prevents fragmentation.</p>
-        </article>
-
-        <article class="principle">
-          <b>Move</b>
-          <strong>The next door stays visible.</strong>
-          <p>The visitor does not need the whole map first. They need the next honest room.</p>
-        </article>
+      <div class="reset-note">
+        Canonical read: the old chain can still mount. The old visual branch is archived. Generation 1 now requires a 256-state hexagonal terrain-cell substrate before any visual realism claim is allowed.
       </div>
 
       <div class="actions">
-        <a class="button primary" href="/door/">Return to Door</a>
-        <a class="button green" href="/products/">Continue to Products</a>
-        <a class="button" href="/showroom/">Inspect the Build</a>
-        <a class="button secondary" href="/gauges/">Read Gauges</a>
+        <button type="button" class="primary" id="run-reset">Run G1 reset diagnostic</button>
+        <button type="button" class="secondary" id="run-estate">Run estate route diagnostic</button>
+        <a class="button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
       </div>
     </section>
 
-    <section class="home-bubble" aria-label="Rich Manor systemic containment home">
-      <details open>
-        <summary>
-          <span class="summary-copy">
-            <b>Home bubble</b>
-            <span>Rich Manor contains the work without flattening it.</span>
-          </span>
-        </summary>
-
-        <div class="bubble-body">
-          <div class="bubble-note">
-            <p>Rich Manor is not just a setting. It is the containment architecture for the work. It keeps the public voice, human climb, product wing, world-building, proof engine, and live build from fighting for the same room.</p>
-          </div>
-
-          <div class="nested">
-            <details open>
-              <summary>
-                <span class="summary-copy">
-                  <b>What Rich Manor is</b>
-                  <span>A systemic dynamic containment system.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <p class="one-line">A house for complex work.</p>
-                <p>Rich Manor gives every major part of the project a defined room, lane, or chamber. The purpose is not to hide complexity. The purpose is to make complexity navigable.</p>
-                <p>When everything tries to live on one page, the work becomes noise. When each part has a room, the system can breathe.</p>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>What it contains</b>
-                  <span>The book, the voice, the products, the world, the build, and the proof.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <div class="grid six">
-                  <article class="card">
-                    <span>Book</span>
-                    <h3>The climb.</h3>
-                    <p>Nine Summits of Love carries the human path: pressure, dignity, discipline, free will, and love.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Voice</span>
-                    <h3>The room language.</h3>
-                    <p>This Underdog turns pressure into comedy, story, speaking, and public-facing language.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Products</span>
-                    <h3>The practical use.</h3>
-                    <p>The product wing turns ideas into tools, games, systems, and useful surfaces.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>World</span>
-                    <h3>The terrain.</h3>
-                    <p>The universe gives the climb a world where pressure, access, movement, and coherence can be seen.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Showroom</span>
-                    <h3>The live build.</h3>
-                    <p>The Showroom displays active work, visual branches, demonstrations, and public build surfaces.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Gauges</span>
-                    <h3>The measurement.</h3>
-                    <p>Gauges separate architecture health, candidate branches, visual readiness, and content hold.</p>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>Why containment matters</b>
-                  <span>Complex work fails when every idea tries to live in the same room.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <p class="one-line">Containment is not limitation. It is how the work stays usable.</p>
-
-                <div class="grid three">
-                  <article class="card">
-                    <span>Less noise</span>
-                    <h3>Each room has one job.</h3>
-                    <p>The visitor should not have to decode every part of the system at once.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Less drift</span>
-                    <h3>Each lane stays accountable.</h3>
-                    <p>The book does not have to become the product page. The voice page does not have to become the proof engine.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>More motion</span>
-                    <h3>The next step stays visible.</h3>
-                    <p>When each room is clear, movement through the house becomes practical instead of overwhelming.</p>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>Universal application</b>
-                  <span>A person, business, project, or learning system can use the same logic.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <p>Rich Manor is built for this work, but the principle is universal: separate the parts enough to work, connect them enough to matter.</p>
-
-                <div class="grid four">
-                  <article class="card">
-                    <span>Person</span>
-                    <h3>Compartmentalize pressure.</h3>
-                    <p>A person can give work, family, money, recovery, voice, and purpose separate rooms instead of carrying them as one blur.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Business</span>
-                    <h3>Separate functions cleanly.</h3>
-                    <p>A business can give sales, product, operations, finance, brand, and proof their own lanes without losing the whole picture.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Creative project</span>
-                    <h3>Protect the core idea.</h3>
-                    <p>A creative system can hold story, world, audience, products, and production without forcing one page to explain everything.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Learning system</span>
-                    <h3>Let the path unfold.</h3>
-                    <p>A learning system can reveal only the layer a person is ready to use, then open deeper rooms as understanding grows.</p>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>House movement</b>
-                  <span>Where each public route fits.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <div class="grid three">
-                  <article class="route-card">
-                    <span>Compass</span>
-                    <h3>Orient.</h3>
-                    <p>Compass helps the visitor find the first honest door into the system.</p>
-                    <a class="button secondary" href="/">Return to Compass</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Door</span>
-                    <h3>Admit.</h3>
-                    <p>The Door confirms the view and carries the visitor from orientation into arrival.</p>
-                    <a class="button primary" href="/door/">Choose the Door</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Home</span>
-                    <h3>Receive.</h3>
-                    <p>Home explains the Manor and receives the visitor into the containment system.</p>
-                    <a class="button green" href="/home/">Stay Home</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Products</span>
-                    <h3>Organize use.</h3>
-                    <p>Products give the work practical surfaces, tools, games, and system applications.</p>
-                    <a class="button" href="/products/">View Products</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Showroom</span>
-                    <h3>Display the build.</h3>
-                    <p>Showroom shows the active build and current public demonstrations.</p>
-                    <a class="button" href="/showroom/">Open Showroom</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Gauges</span>
-                    <h3>Measure readiness.</h3>
-                    <p>Gauges check whether pages, routes, branches, and readiness are landing cleanly.</p>
-                    <a class="button secondary" href="/gauges/">Read Gauges</a>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>Public paths inside the house</b>
-                  <span>The deeper work remains available without overloading Home.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <div class="grid three">
-                  <article class="route-card">
-                    <span>This Underdog</span>
-                    <h3>The public voice.</h3>
-                    <p>Fail fast, fail often, fail forward. The speaking lane turns failure and pressure into usable language.</p>
-                    <a class="button primary" href="/this-underdog/">Open This Underdog</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Nine Summits</span>
-                    <h3>The human climb.</h3>
-                    <p>The climb gives pressure a human path through character, structure, balance, dignity, and love.</p>
-                    <a class="button green" href="/nine-summits/">Open Nine Summits</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Universe</span>
-                    <h3>The world layer.</h3>
-                    <p>The universe turns the climb into terrain, gates, movement, events, stories, and public experience.</p>
-                    <a class="button" href="/nine-summits/universe/">Enter Universe</a>
-                  </article>
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </details>
+    <section class="summary" aria-label="Reset summary">
+      <div class="metric"><b>Architecture health</b><strong id="architecture-health">NOT TESTED</strong></div>
+      <div class="metric"><b>Planet generation</b><strong id="planet-generation">G1 RESET</strong></div>
+      <div class="metric"><b>Hex substrate</b><strong id="hex-substrate">REQUIRED</strong></div>
+      <div class="metric"><b>Planet build readiness</b><strong id="planet-readiness">NOT READY</strong></div>
+      <div class="metric"><b>Next controlling gap</b><strong id="next-gap">Run diagnostic</strong></div>
     </section>
 
-    <section class="final-band">
-      <p class="kicker green">Home rule</p>
-      <h2>Do not carry the whole house at once.</h2>
+    <section class="grid" aria-label="Diagnostic lanes">
+      <article class="panel" id="lane-route"><div class="panel-head"><div><h2>Route Health</h2><small>/showroom/globe/ route exists and responds.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-runtime"><div class="panel-head"><div><h2>Runtime Health</h2><small>/showroom/runtime.js remains split-chain aware.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-asset"><div class="panel-head"><div><h2>Asset Consumer Health</h2><small>/assets/showroom.globe.instrument.js calls renderer safely.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-renderer"><div class="panel-head"><div><h2>Renderer Facade Health</h2><small>Renderer remains available as composition facade.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-legacy"><div class="panel-head"><div><h2>Legacy G5 Visual Branch</h2><small>Detected but archived, not promoted.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-hexgrid"><div class="panel-head"><div><h2>Hexgrid Substrate Health</h2><small>Generation 1 requires the canonical hexagonal pixel substrate.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-lattice"><div class="panel-head"><div><h2>256 Lattice Health</h2><small>State formula: 4 × 4 × 2 × 2 × 4 = 256.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+      <article class="panel" id="lane-visual"><div class="panel-head"><div><h2>Visual Readiness</h2><small>Held until substrate exists, renderer consumes it, and screenshot review passes.</small></div><span class="status hold">HOLD</span></div><div class="facts"></div></article>
+      <article class="panel wide" id="lane-gap"><div class="panel-head"><div><h2>Next Controlling Gap</h2><small>Reset-specific next action.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+    </section>
 
-      <p class="lead">
-        Enter the room that matches the pressure. Rich Manor is comprehensive because it is compartmentalized, and it is useful because every compartment still belongs to one system.
-      </p>
-
-      <div class="links">
-        <a class="button primary" href="/door/">Choose the Door</a>
-        <a class="button green" href="/products/">Continue to Products</a>
-        <a class="button" href="/this-underdog/">Open This Underdog</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button secondary" href="/gauges/">Read Gauges</a>
+    <section class="receipt">
+      <h2>Live receipt</h2>
+      <div class="mono" id="receipt-output">Waiting to run G1 reset diagnostic.</div>
+      <div class="links" style="margin-top:12px">
+        <a class="button secondary" href="/">Compass</a>
+        <a class="button secondary" href="/door/">Door</a>
+        <a class="button secondary" href="/home/">Home</a>
+        <a class="button secondary" href="/showroom/globe/">Planet 1</a>
       </div>
     </section>
+
+    <div id="planet-one-hidden-test-mount" class="hidden-mount" aria-hidden="true"></div>
 
     <footer class="footer">
-      <div class="public-receipt">Home · G5 Rich Manor systemic containment renewal active. Home explains Rich Manor as the house that holds and compartmentalizes the work while keeping it connected, usable, expandable, and measurable.</div>
-
-      <section class="receipt" aria-hidden="true">
-        G5_HOME_RICH_MANOR_SYSTEMIC_CONTAINMENT_RENEWAL_TNT_v1
-        route=/home/
-        page-purpose=rich-manor-systemic-containment-home
-        systemic-dynamic-containment-system=true
-        public-translation=living-house-for-complex-work
-        russian-doll-bubble-structure=true
-        primary-house-nav=Compass|Door|Home|Products|Showroom|Gauges
-        compass-orients=true
-        door-admits=true
-        home-receives=true
-        products-organize-use=true
-        showroom-displays-build=true
-        gauges-measure-readiness=true
-        no-graphic-box=true
-        no-generated-visual=true
+      <div>VERSION: G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v1. Gauges measures preserved architecture, archived G5 visual branch, Generation 1 hex substrate readiness, 256 lattice health, and visual hold. Gauges does not repair, render, or claim visual pass.</div>
+      <section class="receipt-hidden" aria-hidden="true">
+        G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v1
+        route=/gauges/
+        generation-reset-active=true
+        planet-generation=GENERATION_1_RESET
+        old-forward-baseline=G5_ARCHITECTURE_BASELINE
+        new-forward-baseline=PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE
+        legacy-g5-branch=ARCHIVED
+        hex-substrate-required=true
+        required-next-tnt=G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1
         no-false-pass-claim=true
         visual-pass-claim=false
-        result=home-renewed-as-rich-manor-systemic-containment-surface
       </section>
     </footer>
   </main>
 
   <script>
-    (function () {
+    (function attachG1PlanetResetGauges(global) {
       "use strict";
 
-      var VALID = { flat:true, round:true, globe:true };
-      var STORAGE_KEY = "dgb:viewMode";
+      var VERSION = "G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v1";
+      var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE";
+      var REQUIRED_TNT = "G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1";
 
-      function safeGet(key) {
-        try { return window.localStorage ? window.localStorage.getItem(key) : null; }
-        catch (error) { return null; }
+      var PATHS = {
+        route: "/showroom/globe/",
+        runtime: "/showroom/runtime.js",
+        asset: "/assets/showroom.globe.instrument.js",
+        renderer: "/world/render/planet-one.render.js",
+        land: "/world/render/planet-one.land.constructs.js",
+        surface: "/world/render/planet-one.surface.materials.js",
+        terrain: "/world/render/planet-one.terrain.render.js",
+        hydration: "/world/render/planet-one.hydration.render.js",
+        hexgrid: "/world/render/planet-one.hexgrid.render.js"
+      };
+
+      var scriptPromises = {};
+      var lastResetReceipt = null;
+      var lastEstateReceipt = null;
+
+      function $(selector) {
+        return global.document.querySelector(selector);
       }
 
-      function safeSet(key, value) {
-        try { if (window.localStorage) window.localStorage.setItem(key, value); }
-        catch (error) {}
+      function now() {
+        return new Date().toISOString();
       }
 
-      function getView() {
-        var params = new URLSearchParams(window.location.search);
-        var incoming = params.get("view");
-        var saved = safeGet(STORAGE_KEY);
+      function safeCall(fn) {
+        try { return fn(); }
+        catch (error) { return { ok:false, error:String(error && error.message ? error.message : error) }; }
+      }
 
-        if (VALID[incoming]) {
-          safeSet(STORAGE_KEY, incoming);
-          return incoming;
+      function compact(value) {
+        if (value == null) return value;
+        if (typeof value !== "object") return value;
+        try {
+          return JSON.parse(JSON.stringify(value, function (key, inner) {
+            if (key === "canvas" || key === "activeCanvas" || key === "mount" || key === "ctx" || key === "parentNode" || key === "ownerDocument") return "[DOM]";
+            if (key === "state" && inner && typeof inner === "object") return "[renderer-state]";
+            if (Array.isArray(inner) && inner.length > 16) return inner.slice(0,16).concat(["..." + (inner.length - 16) + " more"]);
+            return inner;
+          }));
+        } catch (error) {
+          return String(value);
+        }
+      }
+
+      function setText(id, text) {
+        var node = $("#" + id);
+        if (node) node.textContent = text;
+      }
+
+      function classFor(state) {
+        return String(state || "not_tested").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      }
+
+      function fact(label, value) {
+        var row = global.document.createElement("div");
+        var a = global.document.createElement("span");
+        var b = global.document.createElement("span");
+
+        row.className = "fact";
+        a.textContent = label;
+        b.textContent = typeof value === "string" ? value : JSON.stringify(compact(value));
+
+        row.appendChild(a);
+        row.appendChild(b);
+        return row;
+      }
+
+      function renderLane(id, lane) {
+        var panel = $("#" + id);
+        var statusNode;
+        var facts;
+        var key;
+
+        if (!panel) return;
+
+        statusNode = panel.querySelector(".status");
+        facts = panel.querySelector(".facts");
+
+        if (statusNode) {
+          statusNode.className = "status " + classFor(lane.state);
+          statusNode.textContent = lane.state || "NOT TESTED";
         }
 
-        if (VALID[saved]) return saved;
-        return "flat";
+        if (facts) {
+          facts.innerHTML = "";
+          for (key in lane.facts) {
+            if (Object.prototype.hasOwnProperty.call(lane.facts, key)) {
+              facts.appendChild(fact(key, lane.facts[key]));
+            }
+          }
+        }
       }
 
-      function apply() {
-        var view = getView();
-        document.documentElement.setAttribute("data-view-mode", view);
-        document.body.setAttribute("data-view-mode", view);
-        document.documentElement.setAttribute("data-home-receives-view", "true");
-        document.documentElement.setAttribute("data-view-selector-authority", "/door/");
+      function renderReceipt(receipt) {
+        var out = $("#receipt-output");
+        if (out) out.textContent = JSON.stringify(compact(receipt), null, 2);
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", apply, { once:true });
-      } else {
-        apply();
+      function findScript(path) {
+        var scripts = global.document.getElementsByTagName("script");
+        var i;
+
+        for (i = 0; i < scripts.length; i += 1) {
+          if (scripts[i].src && scripts[i].src.indexOf(path) !== -1) return scripts[i];
+        }
+
+        return null;
       }
-    })();
+
+      function waitFor(detector, timeoutMs) {
+        var start = Date.now();
+
+        return new Promise(function (resolve) {
+          function tick() {
+            if (!detector || detector()) {
+              resolve(true);
+              return;
+            }
+
+            if (Date.now() - start > timeoutMs) {
+              resolve(false);
+              return;
+            }
+
+            global.setTimeout(tick, 45);
+          }
+
+          tick();
+        });
+      }
+
+      function loadScript(key, path, detector) {
+        var existing;
+        var script;
+        var target;
+
+        if (detector && detector()) return Promise.resolve(true);
+        if (scriptPromises[key]) return scriptPromises[key];
+
+        existing = findScript(path);
+
+        if (existing) {
+          scriptPromises[key] = waitFor(detector, 1600);
+          return scriptPromises[key];
+        }
+
+        scriptPromises[key] = new Promise(function (resolve) {
+          script = global.document.createElement("script");
+          script.src = path + (path.indexOf("?") === -1 ? "?" : "&") + "g1reset=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
+          script.async = false;
+          script.defer = false;
+          script.dataset.g1ResetLoaded = VERSION;
+          script.onload = function () {
+            waitFor(detector, 1600).then(resolve);
+          };
+          script.onerror = function () {
+            resolve(false);
+          };
+
+          target = global.document.head || global.document.body || global.document.documentElement;
+          if (!target) {
+            resolve(false);
+            return;
+          }
+
+          target.appendChild(script);
+        });
+
+        return scriptPromises[key];
+      }
+
+      function fetchText(path) {
+        if (typeof global.fetch !== "function") {
+          return Promise.resolve({ ok:false, status:null, text:"", reason:"fetch-unavailable" });
+        }
+
+        return global.fetch(path, { method:"GET", cache:"no-store" }).then(function (response) {
+          return response.text().then(function (text) {
+            return {
+              ok:response.ok,
+              status:response.status,
+              text:text
+            };
+          });
+        }).catch(function (error) {
+          return {
+            ok:false,
+            status:null,
+            text:"",
+            error:String(error && error.message ? error.message : error)
+          };
+        });
+      }
+
+      function fetchRouteProbe(path) {
+        return fetchText(path).then(function (result) {
+          var text = result.text || "";
+          return {
+            ok:result.ok,
+            status:result.status,
+            hasPlanetMount:text.indexOf("planet-one-render") !== -1 || text.indexOf("globe-main") !== -1,
+            hasRuntime:text.indexOf("/showroom/runtime.js") !== -1 || text.indexOf("showroom/runtime.js") !== -1,
+            hasAsset:text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1,
+            hasHexgrid:text.indexOf("planet-one.hexgrid.render.js") !== -1 || text.indexOf("DGBPlanetOneHexgridRender") !== -1,
+            error:result.error || null
+          };
+        });
+      }
+
+      function fetchFileProbe(path, tokens) {
+        return fetchText(path).then(function (result) {
+          var text = result.text || {};
+          var facts = {
+            path:path,
+            response:result.status,
+            exists:!!result.ok
+          };
+
+          (tokens || []).forEach(function (token) {
+            facts[token.label] = String(text).indexOf(token.value) !== -1;
+          });
+
+          if (result.error) facts.error = result.error;
+          return facts;
+        });
+      }
+
+      function readStatus(apiName, primary, secondary) {
+        var api = global[apiName];
+
+        if (!api) return null;
+
+        return safeCall(function () {
+          if (typeof api[primary] === "function") return api[primary]();
+          if (secondary && typeof api[secondary] === "function") return api[secondary]();
+          return null;
+        });
+      }
+
+      function readRuntimeStatus() {
+        var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
+
+        if (!api) return null;
+
+        if (typeof api.getGlobalStatus === "function") {
+          return safeCall(function () { return api.getGlobalStatus(); });
+        }
+
+        return null;
+      }
+
+      function readRuntimeSplitStatus() {
+        var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
+
+        if (!api || typeof api.getSplitRenderChainStatus !== "function") return null;
+
+        return safeCall(function () { return api.getSplitRenderChainStatus(); });
+      }
+
+      function readHexgridStatus() {
+        var api = global.DGBPlanetOneHexgridRender;
+
+        if (!api) return null;
+
+        return safeCall(function () {
+          if (typeof api.getHexgridStatus === "function") return api.getHexgridStatus();
+          if (typeof api.status === "function") return api.status();
+          return null;
+        });
+      }
+
+      function markerHas(status, token) {
+        var markers = status && (status.CONTRACT_MARKERS || status.markers || []);
+
+        if (String(status && (status.VERSION || status.version || "")).indexOf(token) !== -1) return true;
+        if (!Array.isArray(markers)) return false;
+
+        return markers.some(function (item) {
+          return String(item).indexOf(token) !== -1;
+        });
+      }
+
+      function minimumArchitectureState(states) {
+        if (states.indexOf("FAIL") !== -1) return "FAIL";
+        if (states.indexOf("WARN") !== -1) return "WARN";
+        return "PASS";
+      }
+
+      function mountAssetProbe() {
+        var mount = $("#planet-one-hidden-test-mount");
+        var asset = global.DGBShowroomGlobeInstrument;
+
+        if (!mount || !asset || typeof asset.renderGlobe !== "function") {
+          return Promise.resolve({ ok:false, reason:"asset-or-mount-missing" });
+        }
+
+        return Promise.resolve(safeCall(function () {
+          return asset.renderGlobe(mount, {
+            animate:false,
+            size:360,
+            caption:"G1 Gauges reset hidden architecture probe"
+          });
+        })).then(function (result) {
+          return waitFor(function () {
+            var a = readStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
+            return Boolean(a && a.rendererResultMounted);
+          }, 2200).then(function () {
+            return result;
+          });
+        });
+      }
+
+      function buildLanes(routeProbe, fileProbes, assetProbe) {
+        var runtimeStatus = readRuntimeStatus();
+        var runtimeSplit = readRuntimeSplitStatus();
+        var assetStatus = readStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
+        var rendererStatus = readStatus("DGBPlanetOneRenderTeam", "getStatus", "status");
+        var landStatus = readStatus("DGBPlanetOneLandConstructs", "getLandConstructStatus", "status");
+        var surfaceStatus = readStatus("DGBPlanetOneSurfaceMaterials", "getSurfaceMaterialStatus", "status");
+        var hexStatus = readHexgridStatus();
+
+        var terrainDetected = Boolean(global.DGBPlanetOneTerrainRender || (rendererStatus && rendererStatus.terrainModuleDetected));
+        var hydrationDetected = Boolean(global.DGBPlanetOneHydrationRender || (rendererStatus && rendererStatus.hydrationModuleDetected));
+
+        var legacyLandLive = Boolean(
+          landStatus &&
+          (
+            markerHas(landStatus, "G5_VISUAL_REFINEMENT_LAND_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1") ||
+            markerHas(landStatus, "B27A_LAND_CONSTRUCTS_GEOMETRY_TNT_v1") ||
+            landStatus.negativeSpaceGulfCarvingActive
+          )
+        );
+
+        var legacySurfaceLive = Boolean(
+          surfaceStatus &&
+          (
+            markerHas(surfaceStatus, "G5_VISUAL_REFINEMENT_SURFACE_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1") ||
+            markerHas(surfaceStatus, "B27B_SURFACE_MATERIALS_RELIEF_TNT_v1") ||
+            surfaceStatus.physicalWorldMaterialReadActive
+          )
+        );
+
+        var hexFile = fileProbes.hexgrid || {};
+        var hexGlobalDetected = Boolean(global.DGBPlanetOneHexgridRender);
+        var hexMethodsDetected = Boolean(
+          global.DGBPlanetOneHexgridRender &&
+          typeof global.DGBPlanetOneHexgridRender.createPlanetOneHexGrid === "function" &&
+          typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function" &&
+          (
+            typeof global.DGBPlanetOneHexgridRender.getHexgridStatus === "function" ||
+            typeof global.DGBPlanetOneHexgridRender.status === "function"
+          )
+        );
+
+        var stateFormula = hexStatus && (hexStatus.stateFormula || hexStatus.formula || hexStatus.state_formula);
+        var stateCount = Number(hexStatus && (hexStatus.stateCount || hexStatus.state_count || hexStatus.totalStates || hexStatus.total_states));
+
+        var latticePass = Boolean(
+          hexStatus &&
+          (
+            stateCount === 256 ||
+            String(stateFormula || "").replace(/\s/g,"").indexOf("4x4x2x2x4") !== -1 ||
+            String(stateFormula || "").replace(/\s/g,"").indexOf("4×4×2×2×4") !== -1
+          ) &&
+          (hexStatus.domainAxis || hexStatus.domainAxisActive || hexStatus.domain_axis) &&
+          (hexStatus.reliefAxis || hexStatus.reliefAxisActive || hexStatus.relief_axis) &&
+          (hexStatus.edgeRoleAxis || hexStatus.edgeRoleAxisActive || hexStatus.edgeRole_axis) &&
+          (hexStatus.pressureAxis || hexStatus.pressureAxisActive || hexStatus.pressure_axis) &&
+          (hexStatus.materialAxis || hexStatus.materialAxisActive || hexStatus.material_axis)
+        );
+
+        var rendererConsumesHex = Boolean(
+          rendererStatus &&
+          (
+            rendererStatus.hexgridDetected ||
+            rendererStatus.hexGridDetected ||
+            rendererStatus.hexgridSubstrateDetected ||
+            rendererStatus.hexCellSubstrateActive ||
+            rendererStatus.hexagonalPixelFormatActive
+          )
+        );
+
+        var lanes = {
+          route:{
+            state:routeProbe && routeProbe.ok && routeProbe.hasPlanetMount ? "PASS" : "FAIL",
+            facts:{
+              path:PATHS.route,
+              response:routeProbe && routeProbe.status,
+              hasPlanetMount:routeProbe && routeProbe.hasPlanetMount,
+              hasRuntime:routeProbe && routeProbe.hasRuntime,
+              hasAsset:routeProbe && routeProbe.hasAsset,
+              routeMentionsHexgrid:routeProbe && routeProbe.hasHexgrid
+            }
+          },
+
+          runtime:{
+            state:runtimeStatus || runtimeSplit ? "PASS" : "FAIL",
+            facts:{
+              detected:Boolean(runtimeStatus || runtimeSplit),
+              splitRenderChainAware:runtimeStatus && runtimeStatus.splitRenderChainAware,
+              assetInstrumentDetected:runtimeSplit && runtimeSplit.assetInstrumentDetected,
+              responsibilitySplitActive:runtimeSplit && runtimeSplit.responsibilitySplitActive,
+              rendererFacadeActive:runtimeSplit && runtimeSplit.rendererFacadeActive
+            }
+          },
+
+          asset:{
+            state:assetStatus && assetStatus.rendererResultMounted ? "PASS" : assetStatus ? "WARN" : "FAIL",
+            facts:{
+              detected:Boolean(global.DGBShowroomGlobeInstrument),
+              assetCalledRenderer:assetStatus && assetStatus.assetCalledRenderer,
+              rendererResultMounted:assetStatus && assetStatus.rendererResultMounted,
+              mountComplete:assetStatus && assetStatus.mountComplete,
+              assetModuleAwareConsumption:assetStatus && assetStatus.assetModuleAwareConsumption,
+              probe:assetProbe && assetProbe.ok
+            }
+          },
+
+          renderer:{
+            state:rendererStatus && rendererStatus.responsibilitySplitActive ? "PASS" : rendererStatus ? "WARN" : "FAIL",
+            facts:{
+              detected:Boolean(global.DGBPlanetOneRenderTeam),
+              active:rendererStatus && rendererStatus.active,
+              responsibilitySplitActive:rendererStatus && rendererStatus.responsibilitySplitActive,
+              rendererFacadeActive:rendererStatus && rendererStatus.rendererFacadeActive,
+              landConstructsModuleDetected:rendererStatus && rendererStatus.landConstructsModuleDetected,
+              surfaceMaterialsModuleDetected:rendererStatus && rendererStatus.surfaceMaterialsModuleDetected,
+              terrainModuleDetected:terrainDetected,
+              hydrationModuleDetected:hydrationDetected,
+              rendererConsumesHexgrid:rendererConsumesHex
+            }
+          },
+
+          legacy:{
+            state:legacyLandLive || legacySurfaceLive ? "WARN" : "HOLD",
+            facts:{
+              label:"LEGACY_G5_VISUAL_BRANCH_ARCHIVED",
+              landDetected:Boolean(global.DGBPlanetOneLandConstructs),
+              surfaceDetected:Boolean(global.DGBPlanetOneSurfaceMaterials),
+              landVersion:landStatus && (landStatus.VERSION || landStatus.version),
+              surfaceVersion:surfaceStatus && (surfaceStatus.VERSION || surfaceStatus.version),
+              legacyLandLive:legacyLandLive,
+              legacySurfaceLive:legacySurfaceLive,
+              archived:true,
+              promoted:false,
+              visualBaseline:false
+            }
+          },
+
+          hexgrid:{
+            state:hexGlobalDetected && hexMethodsDetected && hexStatus && hexStatus.hexagonalPixelFormatActive ? "PASS" : "FAIL",
+            facts:{
+              path:PATHS.hexgrid,
+              fileExists:hexFile.exists,
+              fileResponse:hexFile.response,
+              globalDetected:hexGlobalDetected,
+              methodsDetected:hexMethodsDetected,
+              ok:hexStatus && hexStatus.ok,
+              active:hexStatus && hexStatus.active,
+              hexagonalPixelFormatActive:hexStatus && hexStatus.hexagonalPixelFormatActive,
+              hexCellSubstrateActive:hexStatus && hexStatus.hexCellSubstrateActive,
+              terrainCellSamplingActive:hexStatus && hexStatus.terrainCellSamplingActive,
+              coastCellQuantizationActive:hexStatus && hexStatus.coastCellQuantizationActive,
+              elevationCellFieldActive:hexStatus && hexStatus.elevationCellFieldActive,
+              waterDepthCellFieldActive:hexStatus && hexStatus.waterDepthCellFieldActive,
+              mineralPressureCellFieldActive:hexStatus && hexStatus.mineralPressureCellFieldActive,
+              visualPassClaimed:false
+            }
+          },
+
+          lattice:{
+            state:latticePass ? "PASS" : "FAIL",
+            facts:{
+              stateFormula:stateFormula || "4x4x2x2x4 required",
+              stateCount:stateCount || 0,
+              domainAxis:Boolean(hexStatus && (hexStatus.domainAxis || hexStatus.domainAxisActive || hexStatus.domain_axis)),
+              reliefAxis:Boolean(hexStatus && (hexStatus.reliefAxis || hexStatus.reliefAxisActive || hexStatus.relief_axis)),
+              edgeRoleAxis:Boolean(hexStatus && (hexStatus.edgeRoleAxis || hexStatus.edgeRoleAxisActive || hexStatus.edgeRole_axis)),
+              pressureAxis:Boolean(hexStatus && (hexStatus.pressureAxis || hexStatus.pressureAxisActive || hexStatus.pressure_axis)),
+              materialAxis:Boolean(hexStatus && (hexStatus.materialAxis || hexStatus.materialAxisActive || hexStatus.material_axis)),
+              requiredStateCount:256
+            }
+          },
+
+          visual:{
+            state:"HOLD",
+            facts:{
+              visualReadiness:"HOLD",
+              manualScreenshotReviewRequired:true,
+              telemetryCanPassVisual:false,
+              generationOneRequires:"hex substrate exists, renderer consumes it, Gauges detects it, screenshot review passes",
+              visualPassClaimed:false
+            }
+          }
+        };
+
+        lanes.gap = buildGapLane(lanes, rendererConsumesHex);
+        return lanes;
+      }
+
+      function buildGapLane(lanes, rendererConsumesHex) {
+        var architecture = minimumArchitectureState([
+          lanes.route.state,
+          lanes.runtime.state,
+          lanes.asset.state,
+          lanes.renderer.state
+        ]);
+
+        var nextGap;
+        var requiredAction;
+        var planetReadiness;
+
+        if (architecture !== "PASS") {
+          nextGap = "ARCHITECTURE_PRESERVATION_REPAIR_REQUIRED";
+          requiredAction = "REPAIR_FAILED_ARCHITECTURE_LANE_ONLY";
+          planetReadiness = "NOT READY";
+        } else if (lanes.hexgrid.state !== "PASS") {
+          nextGap = "G1_HEXGRID_SUBSTRATE_MISSING";
+          requiredAction = REQUIRED_TNT;
+          planetReadiness = "NOT READY UNTIL HEXGRID";
+        } else if (!rendererConsumesHex) {
+          nextGap = "G1_RENDERER_HEXGRID_CONSUMPTION_MISSING";
+          requiredAction = "UPDATE_RENDERER_TO_CONSUME_HEXGRID";
+          planetReadiness = "NOT READY UNTIL RENDERER CONSUMES HEXGRID";
+        } else if (lanes.lattice.state !== "PASS") {
+          nextGap = "G1_256_LATTICE_DETECTION_MISSING";
+          requiredAction = "REPAIR_HEXGRID_STATUS_OR_GAUGES_LATTICE_DETECTION";
+          planetReadiness = "NOT READY UNTIL 256 LATTICE PASSES";
+        } else {
+          nextGap = "G1_SCREENSHOT_REVIEW";
+          requiredAction = "SCREENSHOT_REVIEW_THEN_G1_VISUAL_BASELINE_DECISION";
+          planetReadiness = "SUBSTRATE READY / VISUAL HOLD";
+        }
+
+        return {
+          state:architecture === "PASS" && nextGap === "G1_SCREENSHOT_REVIEW" ? "HOLD" : architecture === "PASS" ? "WARN" : "FAIL",
+          facts:{
+            architectureHealth:architecture,
+            planetGeneration:"GENERATION_1_RESET",
+            oldForwardBaseline:"G5_ARCHITECTURE_BASELINE_ARCHIVED",
+            newForwardBaseline:BASELINE,
+            planetBuildReadiness:planetReadiness,
+            visualReadiness:"HOLD",
+            legacyG5Branch:"ARCHIVED",
+            nextControllingGap:nextGap,
+            requiredNextAction:requiredAction,
+            requiredNextTNT:nextGap === "G1_HEXGRID_SUBSTRATE_MISSING" ? REQUIRED_TNT : "NOT_THIS_STEP",
+            noFalseVisualPass:true
+          }
+        };
+      }
+
+      function applyResults(lanes) {
+        var gapFacts = lanes.gap.facts;
+
+        renderLane("lane-route", lanes.route);
+        renderLane("lane-runtime", lanes.runtime);
+        renderLane("lane-asset", lanes.asset);
+        renderLane("lane-renderer", lanes.renderer);
+        renderLane("lane-legacy", lanes.legacy);
+        renderLane("lane-hexgrid", lanes.hexgrid);
+        renderLane("lane-lattice", lanes.lattice);
+        renderLane("lane-visual", lanes.visual);
+        renderLane("lane-gap", lanes.gap);
+
+        setText("architecture-health", gapFacts.architectureHealth === "PASS" ? "PASS ONLY" : gapFacts.architectureHealth);
+        setText("planet-generation", "GENERATION 1 RESET");
+        setText("hex-substrate", lanes.hexgrid.state === "PASS" ? "DETECTED" : "MISSING");
+        setText("planet-readiness", gapFacts.planetBuildReadiness);
+        setText("next-gap", gapFacts.nextControllingGap);
+
+        lastResetReceipt = {
+          version:VERSION,
+          timestamp:now(),
+          planetGeneration:"GENERATION_1_RESET",
+          oldForwardBaseline:"G5_ARCHITECTURE_BASELINE_ARCHIVED",
+          newForwardBaseline:BASELINE,
+          architectureHealth:gapFacts.architectureHealth,
+          hexSubstrate:lanes.hexgrid.state === "PASS" ? "DETECTED" : "MISSING",
+          planetBuildReadiness:gapFacts.planetBuildReadiness,
+          visualReadiness:"HOLD",
+          nextControllingGap:gapFacts.nextControllingGap,
+          requiredNextAction:gapFacts.requiredNextAction,
+          requiredNextTNT:gapFacts.requiredNextTNT,
+          lanes:lanes
+        };
+
+        renderReceipt(lastResetReceipt);
+      }
+
+      function runG1ResetDiagnostic() {
+        setText("architecture-health", "RUNNING");
+        setText("planet-generation", "GENERATION 1 RESET");
+        setText("hex-substrate", "MEASURING");
+        setText("planet-readiness", "MEASURING");
+        setText("next-gap", "MEASURING");
+
+        renderReceipt({
+          version:VERSION,
+          baseline:BASELINE,
+          status:"running G1 reset diagnostic",
+          timestamp:now()
+        });
+
+        return Promise.all([
+          fetchRouteProbe(PATHS.route),
+          fetchFileProbe(PATHS.hexgrid, [
+            { label:"hasGlobalName", value:"DGBPlanetOneHexgridRender" },
+            { label:"hasCreateMethod", value:"createPlanetOneHexGrid" },
+            { label:"hasDrawMethod", value:"drawPlanetOneHexGrid" },
+            { label:"hasStatusMethod", value:"getHexgridStatus" },
+            { label:"has256Formula", value:"4" }
+          ]),
+          loadScript("runtime", PATHS.runtime, function () { return Boolean(global.DGBShowroomRuntime || global.ShowroomRuntime); }),
+          loadScript("land", PATHS.land, function () { return Boolean(global.DGBPlanetOneLandConstructs); }),
+          loadScript("surface", PATHS.surface, function () { return Boolean(global.DGBPlanetOneSurfaceMaterials); }),
+          loadScript("terrain", PATHS.terrain, function () { return Boolean(global.DGBPlanetOneTerrainRender); }),
+          loadScript("hydration", PATHS.hydration, function () { return Boolean(global.DGBPlanetOneHydrationRender); }),
+          loadScript("hexgrid", PATHS.hexgrid, function () { return Boolean(global.DGBPlanetOneHexgridRender); })
+        ]).then(function (first) {
+          return loadScript("renderer", PATHS.renderer, function () {
+            return Boolean(global.DGBPlanetOneRenderTeam);
+          }).then(function () {
+            return loadScript("asset", PATHS.asset, function () {
+              return Boolean(global.DGBShowroomGlobeInstrument);
+            }).then(function () {
+              return mountAssetProbe().then(function (probe) {
+                return waitFor(function () {
+                  return Boolean(global.DGBPlanetOneRenderTeam || global.DGBShowroomGlobeInstrument);
+                }, 1600).then(function () {
+                  applyResults(buildLanes(first[0], { hexgrid:first[1] }, probe));
+                });
+              });
+            });
+          });
+        }).catch(function (error) {
+          renderReceipt({
+            version:VERSION,
+            timestamp:now(),
+            ok:false,
+            error:String(error && error.message ? error.message : error)
+          });
+
+          setText("architecture-health", "FAIL");
+          setText("planet-generation", "GENERATION 1 RESET");
+          setText("hex-substrate", "UNKNOWN");
+          setText("planet-readiness", "NOT READY");
+          setText("next-gap", "GAUGES_EXECUTION_ERROR");
+        });
+      }
+
+      function runEstateDiagnostic() {
+        var routes = ["/", "/door/", "/home/", "/products/", "/showroom/", "/showroom/globe/", "/gauges/"];
+
+        renderReceipt({
+          version:VERSION,
+          timestamp:now(),
+          status:"running estate route diagnostic",
+          note:"This does not overwrite Planet 1 Generation 1 reset state."
+        });
+
+        return Promise.all(routes.map(fetchRouteProbe)).then(function (results) {
+          lastEstateReceipt = {
+            version:VERSION,
+            timestamp:now(),
+            estateRouteDiagnostic:results.map(function (result, index) {
+              return {
+                route:routes[index],
+                result:result
+              };
+            })
+          };
+
+          renderReceipt({
+            resetReceipt:lastResetReceipt || "Run G1 reset diagnostic for Planet 1 reset state.",
+            estateReceipt:lastEstateReceipt
+          });
+        });
+      }
+
+      global.G1PlanetOneResetGauges = {
+        VERSION:VERSION,
+        version:VERSION,
+        BASELINE:BASELINE,
+        REQUIRED_TNT:REQUIRED_TNT,
+        paths:PATHS,
+        runG1ResetDiagnostic:runG1ResetDiagnostic,
+        runResetDiagnostic:runG1ResetDiagnostic,
+        runEstateDiagnostic:runEstateDiagnostic,
+        getLastResetReceipt:function () { return compact(lastResetReceipt); },
+        getLastEstateReceipt:function () { return compact(lastEstateReceipt); }
+      };
+
+      global.document.addEventListener("DOMContentLoaded", function () {
+        var run = $("#run-reset");
+        var estate = $("#run-estate");
+
+        if (run) run.addEventListener("click", runG1ResetDiagnostic);
+        if (estate) estate.addEventListener("click", runEstateDiagnostic);
+      });
+    })(typeof window !== "undefined" ? window : globalThis);
   </script>
 </body>
 </html>

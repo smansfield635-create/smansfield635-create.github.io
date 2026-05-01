@@ -1,12 +1,13 @@
-/* G1 PLANET 1 HYDRATION BOUNDARY AND WATER DEFINITION
+/* G1 PLANET 1 HYDROLOGY SYSTEM PHYSICAL GOVERNANCE
    FILE: /world/render/planet-one.hydration.render.js
-   VERSION: G1_PLANET_1_HYDRATION_BOUNDARY_AND_WATER_DEFINITION_TNT_v1
+   VERSION: G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1
 */
 
 (function attachPlanetOneHydrationRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDRATION_BOUNDARY_AND_WATER_DEFINITION_TNT_v1";
+  var VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_HYDROLOGY_VEIN_NETWORK_AND_INTERNAL_WATER_BALANCE_CANON_v1";
   var SEA_LEVEL_DATUM = 0;
 
   function clamp(value, min, max) {
@@ -15,6 +16,11 @@
 
   function mix(a, b, t) {
     return a + (b - a) * clamp(t, 0, 1);
+  }
+
+  function smoothstep(edge0, edge1, value) {
+    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function round(value, places) {
@@ -31,97 +37,197 @@
     };
   }
 
-  function getSampleValue(sample, camelName, snakeName, fallback) {
+  function get(sample, camelName, snakeName, fallback) {
     if (!sample) return fallback;
     if (sample[camelName] != null) return Number(sample[camelName]);
     if (sample[snakeName] != null) return Number(sample[snakeName]);
     return fallback;
   }
 
-  function getDomain(sample) {
-    if (!sample) return 0;
-    return Number(sample.domain == null ? 0 : sample.domain);
+  function colorBlend(a, b, t) {
+    return rgba(
+      mix(a.r, b.r, t),
+      mix(a.g, b.g, t),
+      mix(a.b, b.b, t),
+      mix(a.a, b.a, t)
+    );
   }
 
   function sampleHydrationSurface(lon, lat, surfaceSample) {
-    var sample = surfaceSample || {};
-    var domain = getDomain(sample);
-    var height = getSampleValue(sample, "height", "height", 0);
-    var waterDepth = getSampleValue(sample, "waterDepth", "water_depth", 0);
-    var shelfDistance = getSampleValue(sample, "shelfDistance", "shelf_distance", 0);
-    var coastDistance = getSampleValue(sample, "coastDistance", "coast_distance", 0);
-    var landMask = getSampleValue(sample, "landMask", "land_mask", 0);
-    var beachReady = Boolean(sample.beachReadyZone || sample.beach_ready_zone);
-    var hill = getSampleValue(sample, "hillshade", "hillshade", 0.62);
+    var s = surfaceSample || {};
+    var domain = Number(s.domain == null ? 0 : s.domain);
+    var height = get(s, "height", "height", 0);
+    var waterDepth = get(s, "waterDepth", "water_depth", 0);
+    var shelfDistance = get(s, "shelfDistance", "shelf_distance", 0);
+    var coastDistance = get(s, "coastDistance", "coast_distance", 0);
+    var coastBand = get(s, "coastBand", "coast_band", 0);
+    var landMask = get(s, "landMask", "land_mask", 0);
+    var moisture = get(s, "moisture", "moisture", 0.4);
+    var slope = get(s, "slope", "slope", 0);
+    var basinPressure = get(s, "basinPressure", "basin_pressure", 0);
+    var riverVein = get(s, "riverVein", "river_vein", 0);
+    var riverBranch = get(s, "riverBranch", "river_branch", 0);
+    var lakeBasin = get(s, "lakeBasin", "lake_basin", 0);
+    var pondPocket = get(s, "pondPocket", "pond_pocket", 0);
+    var wetland = get(s, "wetland", "wetland", 0);
+    var estuary = get(s, "estuaryMouth", "estuary_mouth", 0);
+    var waterfall = get(s, "waterfallDrop", "waterfall_drop", 0);
+    var drainage = get(s, "drainagePath", "drainage_path", 0);
+    var hillshade = get(s, "hillshade", "hillshade", 0.62);
 
-    var deepOcean = domain === 0 || height < -0.18;
-    var midOcean = !deepOcean && height < -0.055;
-    var shelf = domain === 1 || (height >= -0.055 && height <= 0.08);
-    var wetEdge = height > -0.025 && height <= 0.13;
-    var emergentLand = height > 0.13 && landMask > 0.65;
+    var deepOceanMask = domain === 0 || height < -0.18 ? 1 : 0;
+    var midOceanMask = !deepOceanMask && height < -0.055 ? 1 : 0;
+    var shelfMask = domain === 1 || (height >= -0.055 && height <= 0.075) ? clamp(0.55 + shelfDistance * 0.42, 0, 1) : 0;
+    var coastalMask = clamp(coastBand * 0.68 + estuary * 0.42, 0, 1);
 
-    var hydrationAlpha;
-    var terrainAlpha;
-    var material;
-    var color;
+    var riverMask = clamp(Math.max(riverVein, riverBranch * 0.68, drainage * 0.34) * landMask, 0, 1);
+    var lakeMask = clamp(lakeBasin * landMask, 0, 1);
+    var pondMask = clamp(pondPocket * landMask, 0, 1);
+    var wetlandMask = clamp(wetland * landMask, 0, 1);
+    var estuaryMask = clamp(estuary * Math.max(shelfMask, coastalMask, 0.35), 0, 1);
+    var waterfallMask = clamp(waterfall * riverMask, 0, 1);
 
-    if (deepOcean) {
-      material = waterDepth > 0.68 ? "DEEP_OCEAN" : "MID_OCEAN";
-      hydrationAlpha = 1;
-      terrainAlpha = 0;
-      color = rgba(
-        mix(5, 14, hill),
-        mix(24, 66, hill),
-        mix(82, 154, hill),
-        1
-      );
-    } else if (midOcean) {
+    var internalWaterMask = clamp(
+      lakeMask * 0.92 +
+      riverMask * 0.76 +
+      pondMask * 0.54 +
+      wetlandMask * 0.42 +
+      waterfallMask * 0.88,
+      0,
+      1
+    );
+
+    var waterAuthority = clamp(
+      deepOceanMask +
+      midOceanMask * 0.92 +
+      shelfMask * 0.74 +
+      coastalMask * 0.35 +
+      estuaryMask * 0.70 +
+      internalWaterMask * 0.82,
+      0,
+      1
+    );
+
+    var terrainAllowance = clamp(1 - waterAuthority * 0.82, 0.06, 1);
+
+    var deepOceanColor = rgba(
+      mix(5, 14, hillshade),
+      mix(22, 62, hillshade),
+      mix(80, 154, hillshade),
+      1
+    );
+
+    var midOceanColor = rgba(
+      mix(8, 22, hillshade),
+      mix(54, 106, hillshade),
+      mix(112, 174, hillshade),
+      0.96
+    );
+
+    var shelfColor = rgba(
+      mix(30, 105, shelfDistance),
+      mix(116, 204, shelfDistance),
+      mix(138, 190, shelfDistance),
+      0.86
+    );
+
+    var riverColor = rgba(
+      mix(28, 72, moisture),
+      mix(102, 174, moisture),
+      mix(142, 202, moisture),
+      0.78
+    );
+
+    var lakeColor = rgba(
+      mix(18, 58, basinPressure),
+      mix(84, 142, basinPressure),
+      mix(132, 186, basinPressure),
+      0.82
+    );
+
+    var wetlandColor = rgba(
+      mix(46, 82, wetlandMask),
+      mix(116, 154, wetlandMask),
+      mix(104, 126, wetlandMask),
+      0.56
+    );
+
+    var estuaryColor = rgba(78, 168, 178, 0.78);
+    var waterfallColor = rgba(178, 225, 232, 0.64);
+
+    var color = deepOceanColor;
+    var material = "DEEP_OCEAN";
+
+    if (midOceanMask) {
+      color = midOceanColor;
       material = "MID_OCEAN";
-      hydrationAlpha = 0.96;
-      terrainAlpha = 0.04;
-      color = rgba(
-        mix(10, 22, hill),
-        mix(58, 108, hill),
-        mix(110, 168, hill),
-        0.96
-      );
-    } else if (shelf) {
-      material = beachReady ? "BEACH_READY_EDGE" : "SHALLOW_SHELF";
-      hydrationAlpha = clamp(0.78 - Math.max(0, height) * 1.7 + shelfDistance * 0.18, 0.48, 0.92);
-      terrainAlpha = clamp(1 - hydrationAlpha, 0.08, 0.46);
-      color = rgba(
-        mix(34, 116, shelfDistance) + (beachReady ? 22 : 0),
-        mix(122, 204, shelfDistance) + (beachReady ? 14 : 0),
-        mix(140, 188, shelfDistance) - (beachReady ? 24 : 0),
-        hydrationAlpha
-      );
-    } else if (wetEdge) {
-      material = "WET_EDGE";
-      hydrationAlpha = clamp(0.36 - coastDistance * 0.16, 0.16, 0.40);
-      terrainAlpha = clamp(1 - hydrationAlpha, 0.60, 0.84);
-      color = rgba(
-        mix(75, 150, shelfDistance),
-        mix(130, 190, shelfDistance),
-        mix(122, 158, shelfDistance),
-        hydrationAlpha
-      );
-    } else if (emergentLand) {
-      material = "EMERGENT_LAND";
-      hydrationAlpha = clamp(0.08 * (1 - coastDistance), 0, 0.08);
-      terrainAlpha = 1 - hydrationAlpha;
-      color = rgba(54, 96, 104, hydrationAlpha);
-    } else {
+    }
+
+    if (shelfMask > 0) {
+      color = colorBlend(color, shelfColor, shelfMask);
+      material = "SHALLOW_SHELF";
+    }
+
+    if (coastalMask > 0.18) {
+      color = colorBlend(color, rgba(60, 144, 158, 0.72), coastalMask);
       material = "COASTAL_WATER";
-      hydrationAlpha = 0.52;
-      terrainAlpha = 0.48;
-      color = rgba(64, 154, 162, hydrationAlpha);
+    }
+
+    if (estuaryMask > 0.06) {
+      color = colorBlend(color, estuaryColor, estuaryMask);
+      material = "ESTUARY_MOUTH";
+    }
+
+    if (wetlandMask > 0.06) {
+      color = colorBlend(color, wetlandColor, wetlandMask);
+      material = "WETLAND_FIELD";
+    }
+
+    if (pondMask > 0.08) {
+      color = colorBlend(color, rgba(42, 126, 152, 0.70), pondMask);
+      material = "POND_POCKET";
+    }
+
+    if (lakeMask > 0.08) {
+      color = colorBlend(color, lakeColor, lakeMask);
+      material = "LAKE_BASIN";
+    }
+
+    if (riverMask > 0.055) {
+      color = colorBlend(color, riverColor, riverMask);
+      material = riverVein >= riverBranch ? "PRIMARY_RIVER_VEIN" : "SECONDARY_RIVER_BRANCH";
+    }
+
+    if (waterfallMask > 0.08) {
+      color = colorBlend(color, waterfallColor, waterfallMask);
+      material = "WATERFALL_DROP_POINT";
     }
 
     return {
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
+
       hydrationLayerActive: true,
-      hydrationBoundaryContractActive: true,
+      hydrologyNetworkActive: true,
+      physicalHydrologyGovernanceActive: true,
+      internalWaterVeinsActive: true,
+      riverVeinFieldActive: true,
+      lakeBasinFieldActive: true,
+      pondPocketFieldActive: true,
+      estuaryMouthFieldActive: true,
+      wetlandFieldActive: true,
+      waterfallDropPointFieldActive: true,
+      watershedDirectionActive: true,
+      hydrologyBalanceMaskActive: true,
+      terrainHydrationBalanceActive: true,
+
+      oceanBoundaryPreserved: true,
+      shallowShelfPreserved: true,
       waterLandSeparationActive: true,
+      terrainOverpaintBlocked: true,
+      decorativeWaterBlocked: true,
+      cartoonRiverBlocked: true,
+      blueUIScribbleBlocked: true,
 
       deepOceanMaterialActive: true,
       midOceanMaterialActive: true,
@@ -130,22 +236,29 @@
       wetEdgeTransitionActive: true,
       beachReadyWaterEdgeActive: true,
 
-      terrainOverpaintBlocked: true,
-      seaLevelDatumPreserved: true,
-      seaLevelDatum: SEA_LEVEL_DATUM,
-
       material: material,
       hydrationMaterial: material,
-      hydrationAlpha: round(hydrationAlpha, 4),
-      terrainExpressionAlpha: round(terrainAlpha, 4),
-      hydrationBoundaryMask: round(hydrationAlpha, 4),
-      terrainAllowanceMask: round(terrainAlpha, 4),
-
-      oceanDepthTone: round(waterDepth, 4),
-      shelfTone: round(shelfDistance, 4),
-      coastWetnessTone: round(1 - coastDistance, 4),
-
       waterColor: color,
+
+      deepOceanMask: round(deepOceanMask, 4),
+      midOceanMask: round(midOceanMask, 4),
+      shelfMask: round(shelfMask, 4),
+      coastalMask: round(coastalMask, 4),
+      riverMask: round(riverMask, 4),
+      lakeMask: round(lakeMask, 4),
+      pondMask: round(pondMask, 4),
+      wetlandMask: round(wetlandMask, 4),
+      estuaryMask: round(estuaryMask, 4),
+      waterfallMask: round(waterfallMask, 4),
+      internalWaterMask: round(internalWaterMask, 4),
+
+      hydrationAlpha: round(waterAuthority, 4),
+      terrainExpressionAlpha: round(terrainAllowance, 4),
+      hydrationBoundaryMask: round(waterAuthority, 4),
+      terrainAllowanceMask: round(terrainAllowance, 4),
+
+      seaLevelDatumPreserved: true,
+      seaLevelDatum: SEA_LEVEL_DATUM,
       visualPassClaimed: false
     };
   }
@@ -156,15 +269,35 @@
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
+
       hydrationLayerActive: true,
-      hydrationBoundaryContractActive: true,
+      hydrologyNetworkActive: true,
+      physicalHydrologyGovernanceActive: true,
+      internalWaterVeinsActive: true,
+      riverVeinFieldActive: true,
+      lakeBasinFieldActive: true,
+      pondPocketFieldActive: true,
+      estuaryMouthFieldActive: true,
+      wetlandFieldActive: true,
+      waterfallDropPointFieldActive: true,
+      watershedDirectionActive: true,
+      hydrologyBalanceMaskActive: true,
+      terrainHydrationBalanceActive: true,
+
+      oceanBoundaryPreserved: true,
+      shallowShelfPreserved: true,
       waterLandSeparationActive: true,
+      terrainOverpaintBlocked: true,
+      decorativeWaterBlocked: true,
+      cartoonRiverBlocked: true,
+      blueUIScribbleBlocked: true,
+
       deepOceanMaterialActive: true,
       shallowShelfMaterialActive: true,
       coastalWaterBoundaryActive: true,
       wetEdgeTransitionActive: true,
       beachReadyWaterEdgeActive: true,
-      terrainOverpaintBlocked: true,
       seaLevelDatumPreserved: true,
       seaLevelDatum: SEA_LEVEL_DATUM,
       visualPassClaimed: false
@@ -175,7 +308,9 @@
     VERSION: VERSION,
     version: VERSION,
     sampleHydrationSurface: sampleHydrationSurface,
+    sampleHydrologySurface: sampleHydrationSurface,
     getHydrationStatus: getHydrationStatus,
+    getHydrologyStatus: getHydrationStatus,
     status: getHydrationStatus
   };
 

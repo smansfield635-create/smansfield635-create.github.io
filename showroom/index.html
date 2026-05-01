@@ -1,538 +1,655 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-globe"
-  data-route="/showroom/globe/"
-  data-generation="PLANET_ONE_SHOWROOM_GLOBE_CONSUMER_TNT_v1"
-  data-planet-one-renderer="/world/render/planet-one.render.js"
-  data-render-contract="planet-one-render-team-with-safe-fallback"
-  data-globe-demo-status-retired="true"
-  data-tree-demo-mode="true"
-  data-render-lanes-separated="true"
+  data-page="showroom-lobby"
+  data-route-contract="SHOWROOM_LOBBY_V20_EXPRESSION_PURGE_LIGHTWEIGHT_ROUTER_TNT_v1"
+  data-room-role="lobby-router-only"
+  data-showroom-lobby-only="true"
+  data-no-planet-render="true"
+  data-no-globe-mount="true"
+  data-no-engine-scripts="true"
+  data-no-terrain-expression="true"
+  data-no-hydration-expression="true"
+  data-no-fallback-planet="true"
 >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Planet 1 · Showroom · Diamond Gate Bridge</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Diamond Gate Bridge · Showroom</title>
   <meta
     name="description"
-    content="Inspect Planet 1, the real Nine Summits Universe globe render lane, from the Showroom."
-  >
+    content="The Diamond Gate Bridge Showroom is a lightweight lobby. It routes visitors to Planet 1 inspection, Nine Summits, Universe, Products, and Gauges without mounting the heavy world renderer."
+  />
+
+  <!--
+    SHOWROOM_LOBBY_V20_EXPRESSION_PURGE_LIGHTWEIGHT_ROUTER_TNT_v1
+
+    TARGET=
+    /showroom/index.html
+
+    PURPOSE=
+    PURGE_PARENT_SHOWROOM_EXPRESSION
+    RESTORE_SHOWROOM_AS_LOBBY_ROUTER_ONLY
+    PREVENT_PARENT_ROUTE_FROM_MOUNTING_PLANET_1
+    PREVENT_PARENT_ROUTE_FROM_DRAWING_GLOBE_TERRAIN_HYDRATION_OR_FALLBACK
+    ROUTE_ALL_PLANET_1_INSPECTION_TO /showroom/globe/
+
+    ROOM LAW=
+    ROOMS DO NOT DRAW THE WORLD.
+    ROOMS ROUTE, FRAME, LABEL, LIMIT, AND HAND OFF.
+
+    THIS FILE OWNS=[
+      public showroom lobby,
+      route cards,
+      navigation,
+      page copy,
+      handoff to Planet 1 inspection route,
+      boundaries,
+      limitations
+    ]
+
+    THIS FILE DOES_NOT_OWN=[
+      Planet 1 render,
+      globe mount,
+      terrain,
+      hydration,
+      fallback planet,
+      demo planet,
+      internal SVG world,
+      canvas world,
+      animation world,
+      engine scripts
+    ]
+
+    REQUIRED PUBLIC ROUTE TERMS=
+    Showroom
+    Planet 1
+    lobby
+    showroom
+    globe
+
+    REQUIRED TARGET ROUTE=
+    /showroom/globe/
+
+    NO_LINKS_TO=
+    /showroom/#planet-one-render
+    /showroom/#globe-main
+  -->
 
   <style>
     :root {
-      --bg:#03050a;
-      --panel:rgba(9,15,25,.94);
-      --panel2:rgba(14,24,38,.84);
-      --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.38);
-      --text:#f4f7ff;
-      --muted:#b8c2d6;
-      --soft:rgba(244,247,255,.78);
-      --gold:#f2c76f;
-      --green:#8ff0c6;
-      --blue:#91bdff;
-      --shadow:rgba(0,0,0,.56);
+      color-scheme: dark;
+      --bg: #05070d;
+      --panel: rgba(255,255,255,.055);
+      --panel-strong: rgba(255,255,255,.085);
+      --line: rgba(168,199,255,.18);
+      --line-strong: rgba(242,199,111,.42);
+      --text: rgba(246,248,255,.93);
+      --muted: rgba(226,232,246,.68);
+      --soft: rgba(226,232,246,.52);
+      --gold: #f2c76f;
+      --green: #8fe3b0;
+      --blue: #91bdff;
+      --max: 1180px;
+      --radius: 30px;
+      --shadow: 0 28px 80px rgba(0,0,0,.52);
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html { min-height:100%; background:var(--bg); }
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(145,189,255,.16), transparent 34rem),
+        radial-gradient(circle at 14% 18%, rgba(242,199,111,.09), transparent 23rem),
+        radial-gradient(circle at 90% 28%, rgba(143,227,176,.07), transparent 24rem),
+        linear-gradient(180deg,#07101f 0%,var(--bg) 44%,#02030a 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
     body {
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 78% 6%,rgba(242,199,111,.14),transparent 24rem),
-        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
-        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
-        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
-      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+      margin: 0;
+      color: var(--text);
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    a:focus {
-      outline:2px solid var(--green);
-      outline-offset:3px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .skip {
-      position:absolute;
-      left:-999px;
-      top:10px;
-      z-index:1000;
-      padding:8px 12px;
-      border-radius:10px;
-      background:#fff;
-      color:#000;
-      font-weight:850;
+    a:hover {
+      color: var(--gold);
     }
 
-    .skip:focus { left:10px; }
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 20;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #101725;
+      color: var(--text);
+      font-weight: 900;
+    }
 
-    .page {
-      width:min(1160px,calc(100% - 28px));
-      margin:0 auto;
-      padding:24px 0 64px;
+    .skip-link:focus {
+      left: 12px;
+    }
+
+    .site-shell {
+      width: min(var(--max), calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.045);
+      box-shadow: 0 18px 50px rgba(0,0,0,.22);
     }
 
     .brand {
-      display:block;
-      margin-bottom:18px;
-      color:var(--muted);
-      font-size:.86rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: fit-content;
+      font-weight: 950;
+      letter-spacing: -.03em;
     }
 
-    .brand strong {
-      display:block;
-      color:var(--gold);
-      font-size:1rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .nav,
-    .actions,
-    .links {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-
-    .nav { margin-bottom:26px; }
-
-    .nav a,
-    .button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.055);
-      color:var(--text);
-      font-weight:850;
-    }
-
-    .nav a[aria-current="page"],
-    .button.primary {
-      border-color:rgba(242,199,111,.52);
-      background:rgba(242,199,111,.14);
-    }
-
-    .button.green {
-      border-color:rgba(143,240,198,.5);
-      background:rgba(143,240,198,.13);
-    }
-
-    .hero,
-    .panel,
-    .card,
-    .planet-stage {
-      border:1px solid var(--line);
-      border-radius:30px;
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(242,199,111,.48);
       background:
-        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
-        var(--panel);
-      box-shadow:0 24px 80px var(--shadow);
+        linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
+        radial-gradient(circle at 35% 30%, #fff, transparent 40%);
+      box-shadow: 0 0 36px rgba(242,199,111,.18);
     }
 
-    .hero,
-    .panel {
-      padding:clamp(24px,5vw,52px);
-      margin-top:18px;
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    nav a {
+      border: 1px solid rgba(168,199,255,.16);
+      border-radius: 999px;
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 850;
+    }
+
+    nav a[aria-current="page"] {
+      border-color: var(--line-strong);
+      color: var(--gold);
+      background: rgba(242,199,111,.065);
     }
 
     .hero {
-      min-height:540px;
-      display:grid;
-      align-content:center;
-      gap:24px;
-      border-color:var(--gold-line);
+      border: 1px solid var(--line);
+      border-radius: 36px;
+      padding: clamp(24px,5vw,52px);
       background:
-        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
-        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
-        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
+        radial-gradient(circle at 78% 20%, rgba(242,199,111,.12), transparent 20rem),
+        radial-gradient(circle at 18% 18%, rgba(145,189,255,.15), transparent 23rem),
+        rgba(255,255,255,.045);
+      box-shadow: var(--shadow);
     }
 
     .kicker {
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
     }
-
-    .kicker.green { color:var(--green); }
 
     h1 {
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3.2rem,10vw,7.2rem);
-      line-height:.88;
-      letter-spacing:-.08em;
+      max-width: 960px;
+      margin: 12px 0;
+      font-size: clamp(2.45rem,7vw,5.5rem);
+      line-height: .94;
+      letter-spacing: -.075em;
     }
-
-    h2 {
-      margin:0;
-      max-width:920px;
-      font-size:clamp(1.85rem,5vw,3.45rem);
-      line-height:1;
-      letter-spacing:-.06em;
-    }
-
-    h3 {
-      margin:0;
-      font-size:clamp(1.28rem,3.7vw,2.05rem);
-      line-height:1.06;
-      letter-spacing:-.045em;
-    }
-
-    p {
-      color:var(--muted);
-      font-size:clamp(1.02rem,2.4vw,1.2rem);
-      line-height:1.6;
-    }
-
-    strong { color:var(--text); }
 
     .lead {
-      max-width:920px;
-      color:var(--soft);
-      font-size:clamp(1.16rem,3vw,1.55rem);
-      line-height:1.45;
+      max-width: 880px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem,2.4vw,1.25rem);
+      line-height: 1.55;
     }
 
-    .one-line {
-      color:var(--text);
-      font-size:clamp(1.7rem,5vw,3.5rem);
-      line-height:1.05;
-      letter-spacing:-.06em;
-      font-weight:950;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
     }
 
-    .planet-stage {
-      margin-top:18px;
-      padding:clamp(18px,4vw,36px);
-      border-color:rgba(242,199,111,.36);
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(242,199,111,.46);
+      border-radius: 999px;
+      padding: 11px 15px;
+      background: linear-gradient(180deg, rgba(242,199,111,.18), rgba(242,199,111,.04));
+      color: #fff4d3;
+      font-weight: 950;
+      letter-spacing: -.01em;
+    }
+
+    .button.secondary {
+      border-color: rgba(168,199,255,.22);
+      background: rgba(255,255,255,.045);
+      color: var(--text);
+    }
+
+    main {
+      display: grid;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(18px,3vw,30px);
+      background: var(--panel);
+      box-shadow: 0 18px 54px rgba(0,0,0,.26);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(1.35rem,3vw,2rem);
+      line-height: 1.05;
+      letter-spacing: -.055em;
+    }
+
+    .panel p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .pill.pass {
+      border-color: rgba(143,227,176,.45);
+      color: var(--green);
+      background: rgba(143,227,176,.06);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .route-card {
+      min-height: 230px;
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      border: 1px solid rgba(168,199,255,.16);
+      border-radius: 24px;
+      padding: 20px;
       background:
-        radial-gradient(circle at 50% 22%,rgba(145,189,255,.12),transparent 18rem),
-        radial-gradient(circle at 50% 78%,rgba(143,240,198,.08),transparent 20rem),
-        rgba(5,10,18,.92);
-      overflow:hidden;
+        linear-gradient(180deg, rgba(255,255,255,.066), rgba(255,255,255,.022)),
+        rgba(255,255,255,.02);
+      box-shadow: 0 18px 54px rgba(0,0,0,.18);
     }
 
-    .planet-one-mount {
-      display:grid;
-      place-items:center;
-      min-height:460px;
-    }
-
-    .fallback-card {
-      display:grid;
-      justify-items:center;
-      gap:14px;
-      width:min(560px,100%);
-      padding:clamp(12px,3vw,20px);
-      border:1px solid rgba(242,199,111,.38);
-      border-radius:30px;
+    .route-card.primary {
+      border-color: rgba(242,199,111,.42);
       background:
-        radial-gradient(circle at 50% 10%,rgba(145,189,255,.15),transparent 15rem),
-        rgba(3,7,14,.76);
-      box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 60px rgba(145,189,255,.14);
+        radial-gradient(circle at 20% 18%, rgba(242,199,111,.11), transparent 14rem),
+        linear-gradient(180deg, rgba(255,255,255,.074), rgba(255,255,255,.026));
     }
 
-    .fallback-planet {
-      width:min(380px,80vw);
-      aspect-ratio:1;
-      border-radius:50%;
-      border:3px solid rgba(145,189,255,.42);
-      background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.30),transparent 20%),
-        radial-gradient(ellipse at 50% 10%,rgba(255,255,255,.78) 0 7%,transparent 8%),
-        radial-gradient(ellipse at 50% 25%,rgba(150,170,172,.8) 0 12%,transparent 13%),
-        radial-gradient(ellipse at 50% 50%,rgba(88,132,80,.94) 0 18%,transparent 19%),
-        radial-gradient(ellipse at 28% 51%,rgba(92,83,70,.9) 0 13%,transparent 14%),
-        radial-gradient(ellipse at 72% 51%,rgba(96,150,104,.9) 0 13%,transparent 14%),
-        radial-gradient(ellipse at 50% 72%,rgba(105,139,84,.9) 0 13%,transparent 14%),
-        radial-gradient(ellipse at 50% 91%,rgba(225,235,240,.9) 0 7%,transparent 8%),
-        radial-gradient(circle at 34% 24%,#67b8d7 0%,#14618a 34%,#06294a 66%,#02050b 100%);
-      box-shadow:
-        inset -52px -46px 72px rgba(0,0,0,.68),
-        inset 26px 22px 46px rgba(255,255,255,.12),
-        0 0 0 10px rgba(145,189,255,.08),
-        0 26px 58px rgba(0,0,0,.72);
+    .route-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
     }
 
-    .fallback-note {
-      color:rgba(244,247,255,.84);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      line-height:1.35;
-      text-align:center;
-      text-transform:uppercase;
+    .route-card h3 {
+      margin: 0;
+      font-size: clamp(1.35rem,3vw,2.15rem);
+      line-height: 1.02;
+      letter-spacing: -.06em;
     }
 
-    .grid {
-      display:grid;
-      gap:14px;
-      margin-top:18px;
+    .route-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.48;
     }
 
-    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
-
-    .card {
-      padding:22px;
-      min-height:205px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        var(--panel2);
-      box-shadow:none;
+    .route-card .button {
+      width: fit-content;
+      margin-top: 16px;
     }
 
-    .card span {
-      display:block;
-      margin-bottom:8px;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 14px;
     }
 
-    .card p { margin:0; }
-
-    .receipt { display:none!important; }
-
-    @media (max-width:980px) {
-      .grid.three { grid-template-columns:1fr; }
-      .hero { min-height:470px; }
+    .boundary-card {
+      border: 1px solid rgba(168,199,255,.15);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
     }
 
-    @media (max-width:620px) {
-      .page {
-        width:min(100% - 24px,620px);
-        padding-top:18px;
+    .boundary-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--gold);
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .boundary-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+      letter-spacing: -.035em;
+    }
+
+    .boundary-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    code {
+      color: rgba(255,244,211,.94);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      margin-top: 24px;
+      padding: 18px 4px;
+      color: var(--soft);
+      font-size: .84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      .topbar {
+        align-items: flex-start;
+        border-radius: 26px;
+        flex-direction: column;
       }
 
-      .nav a,
-      .button {
-        min-height:40px;
-        padding:9px 14px;
+      nav {
+        justify-content: flex-start;
+      }
+
+      .card-grid,
+      .boundary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .site-shell {
+        width: min(100% - 18px,var(--max));
+        padding-top: 12px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .panel-head {
+        display: grid;
+      }
+
+      .route-card {
+        min-height: auto;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#globe-main">Skip to Planet 1 inspection</a>
+  <a class="skip-link" href="#showroom-main">Skip to Showroom lobby</a>
 
-  <main
-    id="globe-main"
-    class="page"
-    data-route="/showroom/globe/"
-    data-page-purpose="planet-one-inspection-route"
-    data-render-contract="planet-one-render-team-with-safe-fallback"
-    data-planet-one-renderer="/world/render/planet-one.render.js"
-    data-planet-one-render-active="pending"
-    data-globe-demo-status-retired="true"
-    data-tree-demo-mode="true"
-    data-render-lanes-separated="true"
-    data-no-render-lane-collapse="true"
-    data-universe-route="/nine-summits/universe/"
-  >
-    <a class="brand" href="/">
-      <strong>Diamond Gate Bridge</strong>
-      Showroom · Planet 1
-    </a>
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
+      </a>
 
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="/showroom/">Showroom</a>
-      <a href="/">Compass</a>
-      <a href="/nine-summits/">Nine Summits</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/nine-summits-of-love/">Book</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
+      <nav aria-label="Primary navigation">
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/">Compass</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-    <section class="hero">
-      <p class="kicker">Planet 1 · Nine Summits Universe</p>
-      <h1>The real globe lane opens the world map.</h1>
-
+    <section class="hero" id="showroom-main">
+      <div class="kicker">Showroom · Lightweight lobby</div>
+      <h1>The Showroom routes. The engines express.</h1>
       <p class="lead">
-        The globe is no longer the demo. It is Planet 1: the Nine Summits Universe render lane.
-      </p>
-
-      <p class="lead">
-        The tree moves to demo mode. The globe now carries the real world surface, seven-landmass law, atmosphere, terrain, ocean seam, and coherence access.
+        This lobby does not mount Planet 1, draw the globe, run terrain, run hydration, or show fallback world art.
+        It sends visitors to the proper inspection room where the engine chain can be measured.
       </p>
 
       <div class="actions">
-        <a class="button primary" href="#planet-one-render">View Planet 1</a>
-        <a class="button green" href="/nine-summits/universe/">Read World Map</a>
-        <a class="button" href="/showroom/">Return to Showroom</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
+        <a class="button" href="/showroom/globe/">Inspect Planet 1</a>
+        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
+        <a class="button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
-    <section class="panel" id="planet-one-render">
-      <p class="kicker">Live inspection</p>
-      <h2>Planet 1 first. Tree demo second.</h2>
+    <main>
+      <section class="panel" aria-labelledby="primary-routes-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="primary-routes-title">Lobby routes</h2>
+            <p>
+              The Showroom is now a public routing surface only. Heavy world inspection stays outside the lobby.
+            </p>
+          </div>
+          <span class="pill pass">Lobby only</span>
+        </div>
 
-      <div class="planet-stage" data-visible-globe="true" data-planet-one-render-active="true">
-        <div id="planet-one-mount" class="planet-one-mount" data-safe-fallback="true">
-          <div class="fallback-card">
-            <div class="fallback-planet" role="img" aria-label="Fallback Planet 1 globe"></div>
-            <div class="fallback-note">Planet 1 fallback · render team loading</div>
+        <div class="card-grid">
+          <article class="route-card primary">
+            <div>
+              <strong>Inspection route</strong>
+              <h3>Planet 1</h3>
+              <p>
+                Open the globe inspection room. This is where Planet 1 may mount the approved engine chain.
+              </p>
+            </div>
+            <a class="button" href="/showroom/globe/">Open Planet 1</a>
+          </article>
+
+          <article class="route-card">
+            <div>
+              <strong>World map route</strong>
+              <h3>Nine Summits Universe</h3>
+              <p>
+                Read the universe context, landmass law, coherence law, population law, and world-map language.
+              </p>
+            </div>
+            <a class="button secondary" href="/nine-summits/universe/">Open Universe</a>
+          </article>
+
+          <article class="route-card">
+            <div>
+              <strong>Measurement route</strong>
+              <h3>Gauges</h3>
+              <p>
+                Check whether the live source chain, route chain, and current frame are passing.
+              </p>
+            </div>
+            <a class="button secondary" href="/gauges/">Open Gauges</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="house-routes-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="house-routes-title">Public house routes</h2>
+            <p>
+              These routes remain lightweight exits from the lobby.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="panel">
-      <p class="kicker green">Render lane separation</p>
-      <h2>The globe and the tree now have different jobs.</h2>
+        <div class="card-grid">
+          <article class="route-card">
+            <div>
+              <strong>Compass</strong>
+              <h3>Main entry</h3>
+              <p>
+                Return to the public Compass surface and primary Diamond Gate Bridge entry.
+              </p>
+            </div>
+            <a class="button secondary" href="/">Open Compass</a>
+          </article>
 
-      <p class="one-line">
-        The globe expresses the world. The tree demonstrates structure.
-      </p>
+          <article class="route-card">
+            <div>
+              <strong>Nine Summits</strong>
+              <h3>Hub</h3>
+              <p>
+                Open the hub that keeps book, universe, speaking, and platform routes from competing.
+              </p>
+            </div>
+            <a class="button secondary" href="/nine-summits/">Open Hub</a>
+          </article>
 
-      <div class="grid three">
-        <article class="card">
-          <span>Globe lane</span>
-          <h3>Planet 1</h3>
-          <p>The globe is the real Nine Summits Universe render lane.</p>
-        </article>
+          <article class="route-card">
+            <div>
+              <strong>Products</strong>
+              <h3>Product wing</h3>
+              <p>
+                Open the product route without requiring the Showroom lobby to mount visual world systems.
+              </p>
+            </div>
+            <a class="button secondary" href="/products/">Open Products</a>
+          </article>
+        </div>
+      </section>
 
-        <article class="card">
-          <span>Tree lane</span>
-          <h3>Demo mode</h3>
-          <p>The tree remains useful as a prototype, training, and structural demonstration branch.</p>
-        </article>
+      <section class="panel" aria-labelledby="boundary-title">
+        <div class="panel-head">
+          <div>
+            <h2 id="boundary-title">Room expression purge</h2>
+            <p>
+              This page establishes the boundary: rooms do not draw the world.
+            </p>
+          </div>
+          <span class="pill pass">Expression limited</span>
+        </div>
 
-        <article class="card">
-          <span>Showroom lane</span>
-          <h3>Inspection</h3>
-          <p>Showroom inspects both lanes without owning either render source.</p>
-        </article>
-      </div>
-    </section>
+        <div class="boundary-grid">
+          <article class="boundary-card">
+            <strong>This lobby owns</strong>
+            <h3>Routing and handoff.</h3>
+            <p>
+              Navigation, route cards, labels, public copy, and handoff to the Planet 1 inspection room.
+            </p>
+          </article>
 
-    <section class="panel">
-      <p class="kicker">Route separation</p>
-      <h2>Showroom inspects. Universe explains. Gauges measures.</h2>
+          <article class="boundary-card">
+            <strong>This lobby does not own</strong>
+            <h3>World expression.</h3>
+            <p>
+              No Planet 1 render, no globe mount, no terrain, no hydration, no fallback planet, and no demo planet.
+            </p>
+          </article>
 
-      <div class="grid three">
-        <article class="card">
-          <span>/world/render/planet-one.render.js</span>
-          <h3>Real globe renderer.</h3>
-          <p>This file owns Planet 1 visual expression.</p>
-        </article>
+          <article class="boundary-card">
+            <strong>Inspection room owns</strong>
+            <h3>Mounting and inspection.</h3>
+            <p>
+              <code>/showroom/globe/</code> is the route that may mount the approved engine chain.
+            </p>
+          </article>
 
-        <article class="card">
-          <span>/nine-summits/universe/</span>
-          <h3>World explanation route.</h3>
-          <p>The Universe page owns landmasses, coherence law, population law, and world map language.</p>
-        </article>
+          <article class="boundary-card">
+            <strong>Engine layer owns</strong>
+            <h3>Actual expression.</h3>
+            <p>
+              Hydration, terrain, and render-composition engines carry the world. The lobby does not.
+            </p>
+          </article>
+        </div>
+      </section>
 
-        <article class="card">
-          <span>/gauges/</span>
-          <h3>Measurement route.</h3>
-          <p>Gauges verifies the render-lane separation and pass state.</p>
-        </article>
-      </div>
+      <section class="actions" aria-label="Footer routing">
+        <a class="button" href="/showroom/globe/">Inspect Planet 1</a>
+        <a class="button secondary" href="/nine-summits/universe/">Read World Map</a>
+        <a class="button secondary" href="/gauges/">Read Gauges</a>
+        <a class="button secondary" href="/">Compass</a>
+      </section>
+    </main>
 
-      <div class="links">
-        <a class="button primary" href="#planet-one-render">View Planet 1</a>
-        <a class="button green" href="/nine-summits/universe/">Read World Map</a>
-        <a class="button" href="/showroom/">Return to Showroom</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
-        <a class="button" href="/">Compass</a>
-      </div>
-    </section>
-
-    <section class="receipt" aria-hidden="true">
-      PLANET_ONE_SHOWROOM_GLOBE_CONSUMER_TNT_v1
-      route=/showroom/globe/
-      page-purpose=planet-one-inspection-route
-      planet-one-renderer=/world/render/planet-one.render.js
-      planet-one-render-active=true
-      globe-demo-status-retired=true
-      tree-demo-mode=true
-      render-lanes-separated=true
-      no-render-lane-collapse=true
-      safe-inline-fallback=true
-      self-contained-fallback=true
-      visible-globe=true
-      seven-landmasses=true
-      vertical-peeled-globe-projection=true
-      no-generated-graphic=true
-      no-external-image=true
-      universe-route=/nine-summits/universe/
-      gauges-route=/gauges/
-    </section>
-  </main>
-
-  <script src="/world/render/planet-one.render.js"></script>
-  <script>
-    (function () {
-      "use strict";
-
-      function renderFallbackState(reason) {
-        var page = document.getElementById("globe-main");
-        if (!page) return;
-        page.dataset.planetOneRenderActive = "fallback";
-        page.dataset.planetOneFallbackReason = reason || "unknown";
-      }
-
-      function boot() {
-        var mount = document.getElementById("planet-one-mount");
-        var page = document.getElementById("globe-main");
-
-        if (!mount) return;
-
-        try {
-          if (window.DGBPlanetOneRenderTeam && typeof window.DGBPlanetOneRenderTeam.renderPlanetOne === "function") {
-            window.DGBPlanetOneRenderTeam.renderPlanetOne(mount, {
-              caption: "Planet 1 · Nine Summits Universe · real globe render lane"
-            });
-
-            if (page) {
-              page.dataset.planetOneRenderActive = "true";
-              page.dataset.planetOneRendererLoaded = "true";
-              page.dataset.globeDemoStatusRetired = "true";
-              page.dataset.treeDemoMode = "true";
-              page.dataset.renderLanesSeparated = "true";
-              page.dataset.noRenderLaneCollapse = "true";
-            }
-          } else {
-            renderFallbackState("render-team-not-found");
-          }
-        } catch (error) {
-          renderFallbackState(error && error.message ? error.message : "render-error");
-        }
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot);
-      } else {
-        boot();
-      }
-
-      window.setTimeout(boot, 300);
-      window.setTimeout(boot, 1000);
-    })();
-  </script>
+    <footer>
+      SHOWROOM_LOBBY_V20_EXPRESSION_PURGE_LIGHTWEIGHT_ROUTER_TNT_v1 · Showroom lobby only · Planet 1 inspection lives at /showroom/globe/
+    </footer>
+  </div>
 </body>
 </html>

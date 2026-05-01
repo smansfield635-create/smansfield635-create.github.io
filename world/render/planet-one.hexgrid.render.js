@@ -1,28 +1,40 @@
-/* G1 PLANET 1 RAISED LOW LAND WITH TURQUOISE SHELF RIM
+/* G1 PLANET 1 256 LATTICE ARCHITECTURE RECEIPT REPAIR
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_TNT_v1
+   VERSION: G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1
 
    PURPOSE:
-   - Preserve the hidden 256-state hexagonal terrain-cell substrate.
-   - Preserve the water-dominant maritime globe and continuous orbital shelf bodies.
-   - Raise land bodies above sea level.
-   - Preserve a turquoise shallow-water rim around each land body.
-   - Keep debug cell visibility separate from public satellite mode.
+   - Preserve the current visual surface behavior.
+   - Repair the architecture receipt required by Gauges.
+   - Expose the formal 256-state lattice contract:
+     4 × 4 × 2 × 2 × 4 = 256.
+   - Keep the hidden 256-state hexagonal terrain-cell substrate active.
    - Keep visual pass on HOLD.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_TNT_v1";
-  var BASELINE = "PLANET_1_G1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_v1";
+  var VERSION = "G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
+  var VISUAL_BASELINE = "PLANET_1_G1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_v1";
   var PRIOR_BASELINE = "PLANET_1_G1_MARITIME_LOW_LAND_INTERMEDIATE_BASELINE_v1";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var DEFAULT_SEED = 256451;
 
+  var LATTICE_STATE_FORMULA = "4x4x2x2x4";
+  var LATTICE_STATE_FORMULA_DISPLAY = "4 × 4 × 2 × 2 × 4 = 256";
+  var REQUIRED_STATE_COUNT = 256;
+
+  var DOMAIN_AXIS = ["ocean", "shelf", "land", "polar"];
+  var RELIEF_AXIS = ["datum", "low", "raised", "held_high_relief"];
+  var EDGE_ROLE_AXIS = ["interior", "edge"];
+  var PRESSURE_AXIS = ["calm", "pressure"];
+  var MATERIAL_AXIS = ["water", "sediment", "vegetation", "ice"];
+
   var CONTRACT_MARKERS = [
     VERSION,
     BASELINE,
+    VISUAL_BASELINE,
     PRIOR_BASELINE,
     MARITIME_BASELINE,
     "HEXGRID_RENDERER_ACTIVE",
@@ -32,6 +44,15 @@
     "RAISED_LOW_LAND_ACTIVE",
     "TURQUOISE_SHELF_RIM_ACTIVE",
     "COASTAL_GRADIENT_ACTIVE",
+    "LATTICE_256_ACTIVE",
+    "LATTICE_STATE_FORMULA_ACTIVE",
+    "STATE_FORMULA_4x4x2x2x4",
+    "STATE_COUNT_256",
+    "DOMAIN_AXIS_ACTIVE",
+    "RELIEF_AXIS_ACTIVE",
+    "EDGE_ROLE_AXIS_ACTIVE",
+    "PRESSURE_AXIS_ACTIVE",
+    "MATERIAL_AXIS_ACTIVE",
     "PUBLIC_HONEYCOMB_BLOCKED",
     "PUBLIC_CELL_DOTS_BLOCKED",
     "PUBLIC_SCANLINE_LAND_BLOCKED",
@@ -47,10 +68,12 @@
     active: true,
     version: VERSION,
     baseline: BASELINE,
+    visualBaseline: VISUAL_BASELINE,
     lastGrid: null,
     lastDraw: null,
     lastSurface: null,
     lastError: null,
+    latticeStates: null,
     cellDebugModeAvailable: true,
     publicHoneycombBlocked: true,
     publicCellDotsBlocked: true,
@@ -59,6 +82,7 @@
     continuousOrbitalLandSurfaceActive: true,
     raisedLowLandActive: true,
     turquoiseShelfRimActive: true,
+    lattice256Active: true,
     visualPassClaimed: false
   };
 
@@ -145,6 +169,89 @@
     return clamp(pressure + edgeBreak, 0, 1);
   }
 
+  function buildLatticeStates() {
+    var states = [];
+    var d;
+    var r;
+    var e;
+    var p;
+    var m;
+
+    for (d = 0; d < DOMAIN_AXIS.length; d += 1) {
+      for (r = 0; r < RELIEF_AXIS.length; r += 1) {
+        for (e = 0; e < EDGE_ROLE_AXIS.length; e += 1) {
+          for (p = 0; p < PRESSURE_AXIS.length; p += 1) {
+            for (m = 0; m < MATERIAL_AXIS.length; m += 1) {
+              states.push({
+                id: states.length,
+                domain: DOMAIN_AXIS[d],
+                relief: RELIEF_AXIS[r],
+                edgeRole: EDGE_ROLE_AXIS[e],
+                pressure: PRESSURE_AXIS[p],
+                material: MATERIAL_AXIS[m],
+                formula: LATTICE_STATE_FORMULA
+              });
+            }
+          }
+        }
+      }
+    }
+
+    return states;
+  }
+
+  function getLatticeStates() {
+    if (!state.latticeStates) {
+      state.latticeStates = buildLatticeStates();
+    }
+
+    return state.latticeStates;
+  }
+
+  function getLatticeReceipt() {
+    var states = getLatticeStates();
+
+    return {
+      ok: true,
+      active: true,
+      lattice256Active: true,
+      latticeStateFormulaActive: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateFormulaDisplay: LATTICE_STATE_FORMULA_DISPLAY,
+      stateCount: states.length,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+
+      domainAxis: true,
+      domainAxisCount: DOMAIN_AXIS.length,
+      domainAxisValues: DOMAIN_AXIS.slice(),
+
+      reliefAxis: true,
+      reliefAxisCount: RELIEF_AXIS.length,
+      reliefAxisValues: RELIEF_AXIS.slice(),
+
+      edgeRoleAxis: true,
+      edgeRoleAxisCount: EDGE_ROLE_AXIS.length,
+      edgeRoleAxisValues: EDGE_ROLE_AXIS.slice(),
+
+      pressureAxis: true,
+      pressureAxisCount: PRESSURE_AXIS.length,
+      pressureAxisValues: PRESSURE_AXIS.slice(),
+
+      materialAxis: true,
+      materialAxisCount: MATERIAL_AXIS.length,
+      materialAxisValues: MATERIAL_AXIS.slice(),
+
+      formulaProduct:
+        DOMAIN_AXIS.length *
+        RELIEF_AXIS.length *
+        EDGE_ROLE_AXIS.length *
+        PRESSURE_AXIS.length *
+        MATERIAL_AXIS.length,
+
+      visualPassClaimed: false
+    };
+  }
+
   function getSurfaceFields(lon, lat, seed) {
     var northPole = smoothstep(60, 77, lat);
     var southPole = smoothstep(60, 77, -lat);
@@ -175,12 +282,24 @@
 
     var type = "water";
     var structure = "ocean";
+    var domainIndex = 0;
+    var reliefIndex = 0;
+    var edgeIndex = coastStrength > 0.42 || turquoiseRimStrength > 0.34 ? 1 : 0;
+    var pressureIndex = materialTexture > 0.58 ? 1 : 0;
+    var materialIndex = 0;
 
     if (polarScore > 0.30) {
       type = "polar";
       structure = northPole >= southPole ? "north_polar_lid" : "south_polar_lid";
+      domainIndex = 3;
+      reliefIndex = 0;
+      materialIndex = 3;
     } else if (landStrength > 0.05) {
       type = "land";
+      domainIndex = 2;
+      reliefIndex = raisedCoreStrength > 0.36 ? 2 : 1;
+      materialIndex = 2;
+
       if (westDynamic >= eastDynamic && westDynamic >= secondaryLand) {
         structure = "west_dynamic_hemispheric_land_structure";
       } else if (eastDynamic >= westDynamic && eastDynamic >= secondaryLand) {
@@ -195,6 +314,9 @@
     } else if (shelfStrength > 0.08 || turquoiseRimStrength > 0.08) {
       type = "shelf";
       structure = "turquoise_shallow_coastal_rim";
+      domainIndex = 1;
+      reliefIndex = 1;
+      materialIndex = 1;
     }
 
     return {
@@ -202,11 +324,13 @@
       lat: lat,
       type: type,
       structure: structure,
+
       westDynamic: westDynamic,
       eastDynamic: eastDynamic,
       secondaryOne: secondaryOne,
       secondaryTwo: secondaryTwo,
       secondaryThree: secondaryThree,
+
       landScore: landScore,
       landStrength: landStrength,
       raisedCoreStrength: raisedCoreStrength,
@@ -214,12 +338,27 @@
       shelfStrength: shelfStrength,
       turquoiseRimStrength: turquoiseRimStrength,
       coastStrength: coastStrength,
+
       elevation: type === "land" ? clamp(0.055 + lowElevation * 0.205 + materialTexture * 0.026, 0.05, 0.29) : 0,
       waterDepth: waterDepth,
       mineralPressure: type === "land" ? clamp(materialTexture * 0.11, 0, 0.11) : 0,
       plateauPressure: type === "land" ? clamp(lowElevation * 0.08, 0, 0.08) : 0,
       higherRelief: 0,
       maritimeDatum: 0,
+
+      latticeFormula: LATTICE_STATE_FORMULA,
+      latticeStateIndex:
+        (((domainIndex * RELIEF_AXIS.length + reliefIndex) *
+        EDGE_ROLE_AXIS.length + edgeIndex) *
+        PRESSURE_AXIS.length + pressureIndex) *
+        MATERIAL_AXIS.length + materialIndex,
+
+      domainAxisValue: DOMAIN_AXIS[domainIndex],
+      reliefAxisValue: RELIEF_AXIS[reliefIndex],
+      edgeRoleAxisValue: EDGE_ROLE_AXIS[edgeIndex],
+      pressureAxisValue: PRESSURE_AXIS[pressureIndex],
+      materialAxisValue: MATERIAL_AXIS[materialIndex],
+
       hiddenSubstrateCell: true
     };
   }
@@ -234,6 +373,7 @@
     var latStep = Math.max(2, Number(opts.latStep || 4));
     var seed = Number(opts.seed || DEFAULT_SEED);
     var cells = [];
+    var latticeReceipt = getLatticeReceipt();
     var lat;
     var lon;
     var grid;
@@ -248,6 +388,7 @@
       ok: true,
       version: VERSION,
       baseline: BASELINE,
+      visualBaseline: VISUAL_BASELINE,
       priorBaseline: PRIOR_BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       seed: seed,
@@ -256,6 +397,7 @@
       cells: cells,
       cellCount: cells.length,
       generatedAt: now(),
+
       hiddenPlanetaryData: true,
       publicHoneycombBlocked: true,
       publicCellDotsBlocked: true,
@@ -263,6 +405,26 @@
       continuousOrbitalLandSurfaceActive: true,
       raisedLowLandActive: true,
       turquoiseShelfRimActive: true,
+
+      lattice256Active: true,
+      latticeStateFormulaActive: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateFormulaDisplay: LATTICE_STATE_FORMULA_DISPLAY,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+
+      domainAxis: true,
+      domainAxisCount: DOMAIN_AXIS.length,
+      reliefAxis: true,
+      reliefAxisCount: RELIEF_AXIS.length,
+      edgeRoleAxis: true,
+      edgeRoleAxisCount: EDGE_ROLE_AXIS.length,
+      pressureAxis: true,
+      pressureAxisCount: PRESSURE_AXIS.length,
+      materialAxis: true,
+      materialAxisCount: MATERIAL_AXIS.length,
+
+      latticeReceipt: latticeReceipt,
       visualPassClaimed: false
     };
 
@@ -478,6 +640,7 @@
       ok: true,
       version: VERSION,
       baseline: BASELINE,
+      visualBaseline: VISUAL_BASELINE,
       renderedAt: now(),
       mode: "raised_low_land_with_turquoise_shelf_rim",
       surfaceWidth: w,
@@ -485,6 +648,12 @@
       radius: radius,
       viewLon: viewLon,
       viewLat: viewLat,
+
+      lattice256Active: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+
       publicCellDotsBlocked: true,
       publicScanlineLandBlocked: true,
       continuousOrbitalLandSurfaceActive: true,
@@ -507,9 +676,11 @@
       ok: Boolean(drewBuffer),
       version: VERSION,
       baseline: BASELINE,
+      visualBaseline: VISUAL_BASELINE,
       renderedAt: now(),
       renderMode: "satellite",
       cellCount: workingGrid.cells ? workingGrid.cells.length : 0,
+
       hiddenPlanetaryData: true,
       drawsPublicCellOutlines: false,
       drawsPublicCellDots: false,
@@ -517,6 +688,7 @@
       publicHoneycombBlocked: true,
       publicCellDotsBlocked: true,
       publicScanlineLandBlocked: true,
+
       maritimeSeaLevelBaselineActive: true,
       continuousOrbitalLandSurfaceActive: true,
       raisedLowLandActive: true,
@@ -524,6 +696,18 @@
       coastalGradientActive: true,
       debugCellVisibilityOnly: true,
       highReliefHeld: true,
+
+      lattice256Active: true,
+      latticeStateFormulaActive: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      domainAxis: true,
+      reliefAxis: true,
+      edgeRoleAxis: true,
+      pressureAxis: true,
+      materialAxis: true,
+
       visualPassClaimed: false,
       lastSurface: state.lastSurface
     };
@@ -570,6 +754,7 @@
       ok: true,
       version: VERSION,
       baseline: BASELINE,
+      visualBaseline: VISUAL_BASELINE,
       renderedAt: now(),
       renderMode: "debug",
       cellCount: cells.length,
@@ -577,6 +762,12 @@
       publicCellDotsBlocked: false,
       publicScanlineLandBlocked: false,
       debugOnly: true,
+
+      lattice256Active: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+
       visualPassClaimed: false
     };
 
@@ -594,6 +785,8 @@
         ok: false,
         reason: "NO_CONTEXT",
         version: VERSION,
+        stateFormula: LATTICE_STATE_FORMULA,
+        stateCount: REQUIRED_STATE_COUNT,
         visualPassClaimed: false
       };
     }
@@ -606,12 +799,15 @@
   }
 
   function getHexgridStatus() {
+    var latticeReceipt = getLatticeReceipt();
+
     return {
       ok: true,
       active: true,
       VERSION: VERSION,
       version: VERSION,
       baseline: BASELINE,
+      visualBaseline: VISUAL_BASELINE,
       priorBaseline: PRIOR_BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
@@ -655,6 +851,37 @@
       sevenLandmassLawActive: true,
       northSouthPolarDistinctionActive: true,
 
+      lattice256Active: true,
+      latticeStateFormulaActive: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateFormulaDisplay: LATTICE_STATE_FORMULA_DISPLAY,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+
+      domainAxis: true,
+      domainAxisCount: DOMAIN_AXIS.length,
+      domainAxisValues: DOMAIN_AXIS.slice(),
+
+      reliefAxis: true,
+      reliefAxisCount: RELIEF_AXIS.length,
+      reliefAxisValues: RELIEF_AXIS.slice(),
+
+      edgeRoleAxis: true,
+      edgeRoleAxisCount: EDGE_ROLE_AXIS.length,
+      edgeRoleAxisValues: EDGE_ROLE_AXIS.slice(),
+
+      pressureAxis: true,
+      pressureAxisCount: PRESSURE_AXIS.length,
+      pressureAxisValues: PRESSURE_AXIS.slice(),
+
+      materialAxis: true,
+      materialAxisCount: MATERIAL_AXIS.length,
+      materialAxisValues: MATERIAL_AXIS.slice(),
+
+      latticeReceipt: latticeReceipt,
+      latticeStatesAvailable: true,
+      latticeStatesPreview: getLatticeStates().slice(0, 8),
+
       visualPassClaimed: false,
 
       lastGrid: state.lastGrid ? {
@@ -662,7 +889,11 @@
         lonStep: state.lastGrid.lonStep,
         latStep: state.lastGrid.latStep,
         seed: state.lastGrid.seed,
-        generatedAt: state.lastGrid.generatedAt
+        generatedAt: state.lastGrid.generatedAt,
+        stateFormula: state.lastGrid.stateFormula,
+        stateCount: state.lastGrid.stateCount,
+        requiredStateCount: state.lastGrid.requiredStateCount,
+        lattice256Active: state.lastGrid.lattice256Active
       } : null,
 
       lastSurface: state.lastSurface,
@@ -675,16 +906,47 @@
     return getHexgridStatus();
   }
 
+  function getLatticeStatus() {
+    return getLatticeReceipt();
+  }
+
+  function get256Lattice() {
+    return {
+      ok: true,
+      active: true,
+      stateFormula: LATTICE_STATE_FORMULA,
+      stateFormulaDisplay: LATTICE_STATE_FORMULA_DISPLAY,
+      stateCount: REQUIRED_STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      axes: {
+        domain: DOMAIN_AXIS.slice(),
+        relief: RELIEF_AXIS.slice(),
+        edgeRole: EDGE_ROLE_AXIS.slice(),
+        pressure: PRESSURE_AXIS.slice(),
+        material: MATERIAL_AXIS.slice()
+      },
+      states: getLatticeStates(),
+      visualPassClaimed: false
+    };
+  }
+
   var api = {
     VERSION: VERSION,
     version: VERSION,
     BASELINE: BASELINE,
+    VISUAL_BASELINE: VISUAL_BASELINE,
     PRIOR_BASELINE: PRIOR_BASELINE,
     MARITIME_BASELINE: MARITIME_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
+
     createPlanetOneHexGrid: createPlanetOneHexGrid,
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,
+
     getHexgridStatus: getHexgridStatus,
+    getLatticeStatus: getLatticeStatus,
+    get256Lattice: get256Lattice,
+    getLatticeStates: getLatticeStates,
+
     status: status
   };
 

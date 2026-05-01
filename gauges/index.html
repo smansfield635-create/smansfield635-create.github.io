@@ -2,8 +2,9 @@
 <html
   lang="en"
   data-page="gauges"
-  data-gauge-contract="GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1"
-  data-previous-gauge-contract="GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1"
+  data-gauge-contract="GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1"
+  data-previous-gauge-contract="GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1"
+  data-terminal-chain-observer="true"
   data-self-diagnosing-gauge="true"
   data-does-not-render-planet="true"
 >
@@ -11,40 +12,46 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>Diamond Gate Bridge · Gauges · Planet 1 Boot Sentinel</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Terminal Chain Observer</title>
   <meta
     name="description"
-    content="Minimal self-booting Gauges page that proves JavaScript execution before running Planet 1 runtime forensics."
+    content="Planet 1 Gauges V21D waits for terminal route conditions before scoring script tags, globals, mount, leakage, and next target."
   >
 
   <!--
+    GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1
     GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1
+    GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1
+    GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1
 
     TARGET=
     /gauges/index.html
 
     PURPOSE=
-    PROVE_GAUGES_JAVASCRIPT_EXECUTES_FIRST
-    AVOID_COMPLEX_SCRIPT_PARSE_FAILURE
-    USE_ES5_ONLY_JAVASCRIPT
-    RUN_FORENSIC_AUDIT_ONLY_AFTER_VISIBLE_BOOT_PROOF
-    IDENTIFY_ROUTE_SOURCE_RUNTIME_SCRIPT_GLOBAL_MOUNT_OR_LEAKAGE_BREAK
+    STOP_PREMATURE_IFRAME_SNAPSHOT
+    WAIT_FOR_SCRIPT_CHAIN_TERMINAL_CONDITION
+    WAIT_FOR_RENDERER_AND_ASSET_STAGE_BEFORE_SCORING
+    MEASURE_SOURCE_ROUTE_RUNTIME_SCRIPT_TAGS_GLOBALS_MOUNT_LEAKAGE_NEXT_TARGET
 
-    MEASUREMENT LAW=
-    GAUGES MUST PROVE ITS OWN BOOT BEFORE DIAGNOSING PLANET 1.
-    SOURCE PASS IS NOT RUNTIME PASS.
-    RUNTIME PASS IS NOT MOUNT PASS.
-    MOUNT PASS IS NOT VISUAL PASS.
-    GAUGES MEASURE ONLY.
+    TERMINAL CONDITIONS=
+    SCRIPT_CHAIN_COMPLETE
+    MOUNT_COMPLETE
+    document.documentElement.dataset.mountComplete === true
+    document.documentElement.dataset.rendererScriptLoaded === true
+    document.documentElement.dataset.assetScriptLoaded === true
+    #planet-one-render contains Terrain-water adhesion active
 
     EXPECTED ROUTE=
-    SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1
+    SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1
+
+    EXPECTED RENDERER=
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
 
     EXPECTED ASSET=
     SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1
 
-    EXPECTED RENDERER=
-    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
+    EXPECTED TERRAIN=
+    PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1
   -->
 
   <style>
@@ -79,16 +86,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      margin: 0;
-      color: var(--text);
-    }
+    body { margin: 0; color: var(--text); }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
+    a { color: inherit; text-decoration: none; }
     a:hover { color: var(--gold); }
 
     .skip-link {
@@ -488,14 +488,14 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Boot Sentinel</div>
-      <h1>Prove the Gauge boot before the audit.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Terminal Chain Observer</div>
+      <h1>Wait for the chain to finish before scoring it.</h1>
       <p class="lead">
-        V21C uses a minimal ES5 boot sentinel first. Only after the page visibly proves JavaScript execution does it run the forensic audit.
+        V21D stops premature iframe snapshots. It waits for SCRIPT_CHAIN_COMPLETE or MOUNT_COMPLETE before scoring script tags, globals, mount, leakage, and next target.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAudit">Run V21C forensic audit</button>
+        <button class="button" type="button" id="runAudit">Run V21D terminal audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="button secondary" href="/governance/runtime/">Open Runtime Panel</a>
       </div>
@@ -505,7 +505,7 @@
       <section class="score-grid" aria-label="Gauge summary">
         <article class="score-card" id="scoreBoot"><span>Gauge boot</span><strong>STATIC</strong></article>
         <article class="score-card" id="scoreSource"><span>Source</span><strong>WAIT</strong></article>
-        <article class="score-card" id="scoreRoute"><span>Route runtime</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreTerminal"><span>Terminal chain</span><strong>WAIT</strong></article>
         <article class="score-card" id="scoreScripts"><span>Script tags</span><strong>WAIT</strong></article>
         <article class="score-card" id="scoreMount"><span>Mount</span><strong>WAIT</strong></article>
         <article class="score-card" id="scoreNext"><span>Next target</span><strong>WAIT</strong></article>
@@ -527,7 +527,7 @@
         <div class="panel-head">
           <div>
             <h2>Gauges boot log</h2>
-            <p>If this stays static, the Gauges script is not executing. If an error occurs, it prints here.</p>
+            <p>V21D waits for terminal route state before evaluating the iframe.</p>
           </div>
           <span class="pill hold" id="bootStatus">STATIC</span>
         </div>
@@ -537,7 +537,7 @@
 
       <script>
         (function () {
-          var VERSION = "GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1";
+          var VERSION = "GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1";
           var lines = [];
 
           function byId(id) {
@@ -545,41 +545,29 @@
           }
 
           function now() {
-            try {
-              return new Date().toLocaleTimeString();
-            } catch (e) {
-              return "time";
-            }
+            try { return new Date().toLocaleTimeString(); }
+            catch (e) { return "time"; }
           }
 
           function setText(id, text) {
             var el = byId(id);
-            if (el) {
-              el.textContent = text;
-            }
+            if (el) el.textContent = text;
           }
 
           function setClass(id, cls) {
             var el = byId(id);
-            if (el) {
-              el.className = cls;
-            }
+            if (el) el.className = cls;
           }
 
           function setScore(id, text, cls) {
             var el = byId(id);
             var strong;
-
-            if (!el) {
-              return;
-            }
+            if (!el) return;
 
             el.className = "score-card " + cls;
             strong = el.getElementsByTagName("strong")[0];
 
-            if (strong) {
-              strong.textContent = text;
-            }
+            if (strong) strong.textContent = text;
           }
 
           function log(line) {
@@ -589,7 +577,7 @@
 
           function fail(code, message) {
             log("ERROR · " + code + " · " + message);
-            setText("currentRead", "Gauges boot sentinel caught a visible error.");
+            setText("currentRead", "Gauges terminal observer caught a visible error.");
             setText("decisionMono", "DIAGNOSTIC_CODE=" + code + "\nERROR=" + message + "\nNEXT_TARGET=/gauges/index.html");
             setClass("overallStatus", "pill fail");
             setText("overallStatus", "FAIL");
@@ -612,7 +600,7 @@
           document.documentElement.setAttribute("data-gauge-js-booted", "true");
           document.documentElement.setAttribute("data-gauge-contract", VERSION);
 
-          window.DGBGaugeV21C = {
+          window.DGBGaugeV21D = {
             VERSION: VERSION,
             booted: true,
             log: log,
@@ -631,8 +619,8 @@
           setText("bootStatus", "PASS");
           setClass("overallStatus", "pill hold");
           setText("overallStatus", "BOOTED");
-          setText("currentRead", "Gauges JavaScript booted. Minimal sentinel is alive. Audit engine is ready.");
-          setText("decisionMono", "DIAGNOSTIC_CODE=GAUGES_JS_BOOTED\nGAUGE=" + VERSION + "\nNEXT_ACTION=Run V21C forensic audit\nAUTO_RUN=true");
+          setText("currentRead", "Gauges JavaScript booted. Terminal observer is ready.");
+          setText("decisionMono", "DIAGNOSTIC_CODE=GAUGES_JS_BOOTED\nGAUGE=" + VERSION + "\nNEXT_ACTION=Run V21D terminal audit\nAUTO_RUN=true");
         }());
       </script>
 
@@ -651,8 +639,8 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Runtime forensics</h2>
-            <p>These inspect active route aliases, script tags, runtime globals, mounted DOM, and leakage from the live Planet 1 frame.</p>
+            <h2>Terminal runtime forensics</h2>
+            <p>These inspect the route only after terminal chain state is reached or the observer times out.</p>
           </div>
           <span class="pill hold" id="runtimeStatus">WAIT</span>
         </div>
@@ -673,21 +661,23 @@
           class="observer-frame"
           id="observerFrame"
           title="Observed Planet 1 route"
-          src="/showroom/globe/?_gauges_v21c_runtime_forensics=1"
+          src="/showroom/globe/?_gauges_v21d_terminal_chain_observer=1"
           loading="eager"
         ></iframe>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1 · Minimal self-booting Gauges before full forensics.
+      GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1 · Waits for terminal chain before scoring runtime.
     </footer>
   </div>
 
   <script>
     (function () {
-      var VERSION = "GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1";
+      var VERSION = "GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1";
+
       var EXPECTED = {
+        routeV22C: "SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1",
         routeV22B: "SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1",
         routeV21: "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1",
         assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
@@ -696,6 +686,7 @@
         rendererV16: "PLANET_ONE_RENDER_V16_TERRAIN_MODULE_PROOF_AND_LEGACY_GAUGE_REPAIR_TNT_v1",
         rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
         hydrationV1: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
+        terrainV5: "PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1",
         terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1"
       };
 
@@ -717,12 +708,15 @@
           "terrain-water-adhesion-active=true"
         ],
         terrain: [
+          EXPECTED.terrainV5,
           EXPECTED.terrainV4,
           "window.DGBPlanetOneTerrainRender",
           "createTerrainLayer",
           "hydration-engine-paired=true",
           "hydro-terrain-marriage-active=true",
-          "terrain-water-adhesion-active=true"
+          "terrain-water-adhesion-active=true",
+          "world-body-terrain-expression-active=true",
+          "no-lily-pad-terrain=true"
         ],
         asset: [
           EXPECTED.assetV20,
@@ -746,6 +740,7 @@
           "terrain-water-adhesion-active=true"
         ],
         route: [
+          EXPECTED.routeV22C,
           EXPECTED.routeV22B,
           EXPECTED.routeV21,
           "Planet 1 inspection room",
@@ -759,25 +754,23 @@
           "hydration-engine-required=true",
           "hydro-terrain-marriage-active=true",
           "hydration-first-or-before-terrain=true",
-          "route-runtime-version-parity=true"
+          "route-runtime-version-parity=true",
+          "script-chain-completion-diagnostic=true"
         ]
       };
 
       var ROUTE_RUNTIME_CHECKS = [
-        EXPECTED.routeV22B,
+        EXPECTED.routeV22C,
         "routeRuntimeVersionParity",
-        "runtimeCacheBustBootParity"
+        "runtimeCacheBustBootParity",
+        "scriptChainCompletionDiagnostic"
       ];
 
-      var SCRIPT_CHECKS = [
+      var SCRIPT_PATH_CHECKS = [
         "showroom.globe.instrument.js",
-        EXPECTED.assetV20,
         "planet-one.render.js",
-        EXPECTED.rendererV18B,
         "planet-one.hydration.render.js",
-        EXPECTED.hydrationV1,
-        "planet-one.terrain.render.js",
-        EXPECTED.terrainV4
+        "planet-one.terrain.render.js"
       ];
 
       var GLOBAL_CHECKS = [
@@ -786,6 +779,15 @@
         "hydrationModuleIntegrated",
         "hydroTerrainMarriageActive",
         "terrainWaterAdhesionActive"
+      ];
+
+      var TERMINAL_CHECKS = [
+        "SCRIPT_CHAIN_COMPLETE",
+        "MOUNT_COMPLETE",
+        "mountComplete",
+        "rendererScriptLoaded",
+        "assetScriptLoaded",
+        "Terrain-water adhesion active"
       ];
 
       var MOUNT_CHECKS = [
@@ -807,12 +809,10 @@
       ];
 
       function boot() {
-        window.DGBGaugeV21C.log("AUDIT ENGINE BOUND");
+        window.DGBGaugeV21D.log("AUDIT ENGINE BOUND");
         var button = document.getElementById("runAudit");
-        if (button) {
-          button.onclick = runAudit;
-        }
-        window.DGBRunPlanetOneV21CGauges = runAudit;
+        if (button) button.onclick = runAudit;
+        window.DGBRunPlanetOneV21DGauges = runAudit;
         runAudit();
       }
 
@@ -821,15 +821,15 @@
       }
 
       function setText(id, text) {
-        window.DGBGaugeV21C.setText(id, text);
+        window.DGBGaugeV21D.setText(id, text);
       }
 
       function setClass(id, cls) {
-        window.DGBGaugeV21C.setClass(id, cls);
+        window.DGBGaugeV21D.setClass(id, cls);
       }
 
       function setScore(id, text, cls) {
-        window.DGBGaugeV21C.setScore(id, text, cls);
+        window.DGBGaugeV21D.setScore(id, text, cls);
       }
 
       function escapeHtml(value) {
@@ -842,17 +842,17 @@
 
       function setPill(id, status) {
         var cls = "hold";
-        if (status === "PASS") { cls = "pass"; }
-        if (status === "FAIL") { cls = "fail"; }
-        if (status === "NEXT") { cls = "next"; }
+        if (status === "PASS") cls = "pass";
+        if (status === "FAIL") cls = "fail";
+        if (status === "NEXT") cls = "next";
         setClass(id, "pill " + cls);
         setText(id, status);
       }
 
       function statusScore(status) {
-        if (status === "PASS") { return "good"; }
-        if (status === "FAIL") { return "bad"; }
-        if (status === "NEXT") { return "next"; }
+        if (status === "PASS") return "good";
+        if (status === "FAIL") return "bad";
+        if (status === "NEXT") return "next";
         return "hold";
       }
 
@@ -875,12 +875,7 @@
           }
         };
         xhr.onerror = function () {
-          done({
-            path: path,
-            ok: false,
-            status: 0,
-            text: ""
-          });
+          done({ path: path, ok: false, status: 0, text: "" });
         };
         xhr.send(null);
       }
@@ -894,16 +889,12 @@
         function one(key) {
           fetchText(PATHS[key], function (result) {
             out[key] = result;
-            left = left - 1;
-            if (left === 0) {
-              done(out);
-            }
+            left -= 1;
+            if (left === 0) done(out);
           });
         }
 
-        for (i = 0; i < keys.length; i = i + 1) {
-          one(keys[i]);
-        }
+        for (i = 0; i < keys.length; i += 1) one(keys[i]);
       }
 
       function has(text, marker) {
@@ -914,7 +905,8 @@
         var rows = [];
         var i;
         var found;
-        for (i = 0; i < markers.length; i = i + 1) {
+
+        for (i = 0; i < markers.length; i += 1) {
           found = has(text, markers[i]);
           rows.push({
             marker: markers[i],
@@ -923,17 +915,18 @@
             ok: invert ? !found : found
           });
         }
+
         return rows;
       }
 
       function summarize(rows) {
         var passed = 0;
         var i;
-        for (i = 0; i < rows.length; i = i + 1) {
-          if (rows[i].ok) {
-            passed = passed + 1;
-          }
+
+        for (i = 0; i < rows.length; i += 1) {
+          if (rows[i].ok) passed += 1;
         }
+
         return {
           total: rows.length,
           passed: passed,
@@ -944,11 +937,62 @@
       function evaluate(label, text, markers, invert, sourceOk) {
         var r = makeRows(markers, text, invert);
         var s = summarize(r);
+
         return {
           label: label,
           rows: r,
           summary: s,
           status: s.score === 100 && sourceOk !== false ? "PASS" : "FAIL"
+        };
+      }
+
+      function evaluateScriptPaths(text) {
+        var rows = [];
+        var scripts = String(text || "");
+        var i;
+
+        for (i = 0; i < SCRIPT_PATH_CHECKS.length; i += 1) {
+          rows.push({
+            marker: SCRIPT_PATH_CHECKS[i],
+            found: has(scripts, SCRIPT_PATH_CHECKS[i]),
+            invert: false,
+            ok: has(scripts, SCRIPT_PATH_CHECKS[i])
+          });
+        }
+
+        rows.push({
+          marker: "asset version accepted: " + EXPECTED.assetV20,
+          found: has(scripts, EXPECTED.assetV20),
+          invert: false,
+          ok: has(scripts, EXPECTED.assetV20)
+        });
+
+        rows.push({
+          marker: "renderer version accepted: " + EXPECTED.rendererV18B,
+          found: has(scripts, EXPECTED.rendererV18B),
+          invert: false,
+          ok: has(scripts, EXPECTED.rendererV18B)
+        });
+
+        rows.push({
+          marker: "terrain version accepted: " + EXPECTED.terrainV5 + " OR " + EXPECTED.terrainV4,
+          found: has(scripts, EXPECTED.terrainV5) || has(scripts, EXPECTED.terrainV4),
+          invert: false,
+          ok: has(scripts, EXPECTED.terrainV5) || has(scripts, EXPECTED.terrainV4)
+        });
+
+        rows.push({
+          marker: "hydration version accepted: " + EXPECTED.hydrationV1,
+          found: has(scripts, EXPECTED.hydrationV1),
+          invert: false,
+          ok: has(scripts, EXPECTED.hydrationV1)
+        });
+
+        return {
+          label: "scripts",
+          rows: rows,
+          summary: summarize(rows),
+          status: summarize(rows).score === 100 ? "PASS" : "FAIL"
         };
       }
 
@@ -961,12 +1005,15 @@
       function card(title, path, status, rows, meta) {
         var i;
         var html = "";
-        for (i = 0; i < rows.length; i = i + 1) {
+        var pillClass = status === "PASS" ? "pass" : status === "FAIL" ? "fail" : "hold";
+
+        for (i = 0; i < rows.length; i += 1) {
           html += rowHtml(rows[i]);
         }
+
         return ''
           + '<article class="check-card">'
-          + '<div class="check-title"><h3>' + escapeHtml(title) + '</h3><span class="pill ' + (status === "PASS" ? "pass" : "fail") + '">' + escapeHtml(status) + '</span></div>'
+          + '<div class="check-title"><h3>' + escapeHtml(title) + '</h3><span class="pill ' + pillClass + '">' + escapeHtml(status) + '</span></div>'
           + (path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '')
           + '<div class="mono">' + escapeHtml(meta || "") + '</div>'
           + '<div class="marker-list">' + html + '</div>'
@@ -978,7 +1025,8 @@
         var out = [];
         var i;
         var s;
-        for (i = 0; i < list.length; i = i + 1) {
+
+        for (i = 0; i < list.length; i += 1) {
           s = list[i];
           out.push([
             s.getAttribute("src") || "inline-script",
@@ -987,12 +1035,28 @@
             s.getAttribute("data-runtime-parity-label") || ""
           ].join(" "));
         }
+
         return out.join("\n");
+      }
+
+      function datasetText(doc, mount) {
+        var text = "";
+
+        try {
+          text += JSON.stringify(doc.documentElement.dataset || {}) + "\n";
+        } catch (e1) {}
+
+        try {
+          if (mount) text += JSON.stringify(mount.dataset || {}) + "\n";
+        } catch (e2) {}
+
+        return text;
       }
 
       function inspectFrame(done) {
         var frame = byId("observerFrame");
         var start = new Date().getTime();
+        var maxWait = 24000;
 
         function attempt() {
           var win;
@@ -1000,29 +1064,39 @@
           var mount;
           var renderer;
           var asset;
+          var terrain;
+          var hydration;
           var routeV21;
           var routeV22;
           var routeV22B;
+          var routeV22C;
           var routeStatus;
           var globalStatus;
           var scripts;
           var mountText;
-          var enough;
+          var dataText;
+          var combined;
+          var terminal;
 
-          if (new Date().getTime() - start > 10000) {
+          if (new Date().getTime() - start > maxWait) {
             done({
               ok: false,
               timedOut: true,
+              terminalReached: false,
               routeStatus: "",
               globalStatus: "",
               scripts: "",
               mountText: "",
+              terminalText: "",
               rendererVersion: "missing",
               assetVersion: "missing",
+              terrainVersion: "missing",
+              hydrationVersion: "missing",
               routeV21Version: "missing",
               routeV22Version: "missing",
               routeV22BVersion: "missing",
-              error: "Observer frame timed out."
+              routeV22CVersion: "missing",
+              error: "Terminal observer timed out after " + maxWait + "ms."
             });
             return;
           }
@@ -1030,26 +1104,40 @@
           try {
             win = frame.contentWindow;
             doc = frame.contentDocument;
+
+            if (!win || !doc || !doc.documentElement) {
+              setTimeout(attempt, 250);
+              return;
+            }
+
             mount = doc.getElementById("planet-one-render");
 
             renderer = win.DGBPlanetOneRenderTeam;
             asset = win.DGBShowroomGlobeInstrument;
+            terrain = win.DGBPlanetOneTerrainRender;
+            hydration = win.DGBPlanetOneHydrationRender;
+
             routeV21 = win.DGBShowroomGlobeRouteV21;
             routeV22 = win.DGBShowroomGlobeRouteV22;
             routeV22B = win.DGBShowroomGlobeRouteV22B;
+            routeV22C = win.DGBShowroomGlobeRouteV22C;
 
             routeStatus = [
               routeV21 && routeV21.getStatus ? JSON.stringify(routeV21.getStatus()) : "",
               routeV22 && routeV22.getStatus ? JSON.stringify(routeV22.getStatus()) : "",
               routeV22B && routeV22B.getStatus ? JSON.stringify(routeV22B.getStatus()) : "",
-              doc.documentElement ? JSON.stringify(doc.documentElement.dataset || {}) : ""
+              routeV22C && routeV22C.getStatus ? JSON.stringify(routeV22C.getStatus()) : ""
             ].join("\n");
 
             globalStatus = [
               renderer && renderer.VERSION ? renderer.VERSION : "",
               asset && asset.VERSION ? asset.VERSION : "",
+              terrain && terrain.VERSION ? terrain.VERSION : "",
+              hydration && hydration.VERSION ? hydration.VERSION : "",
               renderer && renderer.getStatus ? JSON.stringify(renderer.getStatus()) : "",
-              asset && asset.getStatus ? JSON.stringify(asset.getStatus()) : ""
+              asset && asset.getStatus ? JSON.stringify(asset.getStatus()) : "",
+              terrain && terrain.getStatus ? JSON.stringify(terrain.getStatus()) : "",
+              hydration && hydration.getStatus ? JSON.stringify(hydration.getStatus()) : ""
             ].join("\n");
 
             scripts = scriptInventory(doc);
@@ -1060,42 +1148,74 @@
               mount ? JSON.stringify(mount.dataset || {}) : ""
             ].join("\n");
 
-            enough =
-              routeStatus.indexOf(EXPECTED.routeV22B) !== -1 ||
-              globalStatus.indexOf(EXPECTED.rendererV18B) !== -1 ||
-              mountText.indexOf("Hydration module integrated") !== -1 ||
-              mountText.indexOf("Planet 1 render loaded") !== -1;
+            dataText = datasetText(doc, mount);
+            combined = [routeStatus, globalStatus, scripts, mountText, dataText].join("\n");
 
-            if (!enough) {
-              setTimeout(attempt, 250);
+            terminal =
+              has(combined, "SCRIPT_CHAIN_COMPLETE") ||
+              has(combined, "MOUNT_COMPLETE") ||
+              has(combined, "mountComplete") ||
+              has(combined, "mount-complete") ||
+              has(combined, "Terrain-water adhesion active") ||
+              (
+                has(combined, "rendererScriptLoaded") &&
+                has(combined, "assetScriptLoaded") &&
+                has(combined, "mountComplete")
+              );
+
+            if (!terminal) {
+              setText("currentRead", "Terminal observer is waiting. Route is loaded, but SCRIPT_CHAIN_COMPLETE or MOUNT_COMPLETE has not been observed yet.");
+              setText("decisionMono", "DIAGNOSTIC_CODE=TERMINAL_CHAIN_WAITING\nWAITING_FOR=SCRIPT_CHAIN_COMPLETE_OR_MOUNT_COMPLETE\nELAPSED_MS=" + (new Date().getTime() - start));
+              setTimeout(attempt, 300);
               return;
             }
 
             done({
               ok: true,
+              timedOut: false,
+              terminalReached: true,
               routeStatus: routeStatus,
               globalStatus: globalStatus,
               scripts: scripts,
               mountText: mountText,
+              terminalText: combined,
               rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "missing",
               assetVersion: asset && asset.VERSION ? asset.VERSION : "missing",
+              terrainVersion: terrain && terrain.VERSION ? terrain.VERSION : "missing",
+              hydrationVersion: hydration && hydration.VERSION ? hydration.VERSION : "missing",
               routeV21Version: routeV21 && routeV21.VERSION ? routeV21.VERSION : "missing",
               routeV22Version: routeV22 && routeV22.VERSION ? routeV22.VERSION : "missing",
-              routeV22BVersion: routeV22B && routeV22B.VERSION ? routeV22B.VERSION : "missing"
+              routeV22BVersion: routeV22B && routeV22B.VERSION ? routeV22B.VERSION : "missing",
+              routeV22CVersion: routeV22C && routeV22C.VERSION ? routeV22C.VERSION : "missing"
             });
           } catch (e) {
-            setTimeout(attempt, 250);
+            setTimeout(attempt, 300);
           }
         }
 
         attempt();
       }
 
+      function decision(progress, source, terminal, scripts, mount, next, code, read) {
+        return {
+          progress: progress,
+          source: source,
+          terminal: terminal,
+          scripts: scripts,
+          mount: mount,
+          next: next,
+          code: code,
+          read: read
+        };
+      }
+
       function decide(state) {
-        var sourcePass = state.hydration.status === "PASS" &&
+        var sourcePass =
+          state.hydration.status === "PASS" &&
           state.terrain.status === "PASS" &&
           state.assetSource.status === "PASS" &&
-          state.rendererSource.status === "PASS";
+          state.rendererSource.status === "PASS" &&
+          state.routeSource.status === "PASS";
 
         if (!sourcePass) {
           if (state.hydration.status !== "PASS") {
@@ -1107,57 +1227,49 @@
           if (state.assetSource.status !== "PASS") {
             return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.asset, "ASSET_SOURCE_BREAK", "Asset source is not passing.");
           }
-          return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.renderer, "RENDERER_SOURCE_BREAK", "Renderer source is not passing.");
+          if (state.rendererSource.status !== "PASS") {
+            return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.renderer, "RENDERER_SOURCE_BREAK", "Renderer source is not passing.");
+          }
+          return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_BREAK", "Route source is not passing.");
         }
 
-        if (state.routeSource.status !== "PASS") {
-          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_NOT_V22B", "Route source does not contain V22B proof.");
-        }
-
-        if (state.frame.timedOut) {
-          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "OBSERVER_FRAME_TIMEOUT", "Planet 1 observer frame timed out before runtime could be inspected.");
+        if (state.frame.timedOut || !state.frame.terminalReached) {
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "TERMINAL_CHAIN_NOT_OBSERVED", "Route source passes, but terminal chain state was not observed before timeout.");
         }
 
         if (state.routeRuntime.status !== "PASS") {
-          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_NOT_V22B", "Route runtime aliases do not expose V22B.");
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_NOT_V22C", "Terminal state was observed, but route runtime aliases are not V22C current.");
+        }
+
+        if (state.terminal.status !== "PASS") {
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "TERMINAL_CHAIN_INCOMPLETE", "Observer reached route but did not prove terminal chain markers cleanly.");
         }
 
         if (state.scripts.status !== "PASS") {
-          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "VERSIONED_SCRIPT_TAGS_MISSING", "Versioned script tags are not all present.");
+          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "VERSIONED_SCRIPT_TAGS_MISSING_AFTER_TERMINAL", "Terminal state was reached, but final script tags are still incomplete.");
         }
 
         if (state.globals.status !== "PASS") {
-          if (state.frame.assetVersion !== EXPECTED.assetV20) {
-            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.asset, "ASSET_RUNTIME_EXECUTION_BREAK", "Asset global is not V20.");
+          if (state.frame.rendererVersion === "missing") {
+            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.renderer, "RENDERER_RUNTIME_GLOBAL_MISSING_AFTER_TERMINAL", "Terminal observer completed, but renderer global is missing.");
           }
-          if (state.frame.rendererVersion !== EXPECTED.rendererV18B) {
-            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.renderer, "RENDERER_RUNTIME_EXECUTION_BREAK", "Renderer global is not V18B.");
+
+          if (state.frame.assetVersion === "missing") {
+            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.asset, "ASSET_RUNTIME_GLOBAL_MISSING_AFTER_TERMINAL", "Terminal observer completed, but asset global is missing.");
           }
-          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "RUNTIME_GLOBAL_BREAK", "Runtime globals are not current.");
+
+          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "RUNTIME_GLOBAL_BREAK_AFTER_TERMINAL", "Terminal observer completed, but runtime globals are not current.");
         }
 
         if (state.mount.status !== "PASS") {
-          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "mount lifecycle / stale DOM purge", "MOUNTED_DOM_BREAK", "Mounted DOM is incomplete.");
+          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "mount lifecycle / renderer composition", "MOUNTED_DOM_BREAK_AFTER_TERMINAL", "Terminal chain completed, but mounted DOM is incomplete.");
         }
 
         if (state.leakage.status !== "PASS") {
-          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE", "Current mount exists, but old expression leakage remains.");
+          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE_AFTER_TERMINAL", "Terminal chain completed, but old expression leakage remains.");
         }
 
-        return decision("PASS", "PASS", "PASS", "PASS", "PASS", "/showroom/globe/ visual review", "FORENSIC_PARITY_PASS", "Source, route runtime, scripts, globals, mount, and leakage checks pass. Visual review is lawful.");
-      }
-
-      function decision(progress, source, route, scripts, mount, next, code, read) {
-        return {
-          progress: progress,
-          source: source,
-          route: route,
-          scripts: scripts,
-          mount: mount,
-          next: next,
-          code: code,
-          read: read
-        };
+        return decision("PASS", "PASS", "PASS", "PASS", "PASS", "/world/render/planet-one.render.js visual projection review", "FORENSIC_TERMINAL_PARITY_PASS", "Source, terminal chain, scripts, globals, mount, and leakage checks pass. Visual projection review is now lawful.");
       }
 
       function renderState(state, d) {
@@ -1169,15 +1281,16 @@
           card("Route source", PATHS.route, state.routeSource.status, state.routeSource.rows, "Required: " + state.routeSource.summary.passed + " of " + state.routeSource.summary.total + ".");
 
         byId("runtimeChecks").innerHTML =
-          card("Route runtime aliases", "/showroom/globe/ iframe", state.routeRuntime.status, state.routeRuntime.rows, "RouteV21=" + state.frame.routeV21Version + "\nRouteV22=" + state.frame.routeV22Version + "\nRouteV22B=" + state.frame.routeV22BVersion) +
-          card("Loaded script tags", "/showroom/globe/ document.scripts", state.scripts.status, state.scripts.rows, state.frame.scripts || state.frame.error || "No script inventory.") +
-          card("Runtime globals", "/showroom/globe/ globals", state.globals.status, state.globals.rows, "Renderer VERSION: " + state.frame.rendererVersion + "\nAsset VERSION: " + state.frame.assetVersion) +
-          card("Mounted DOM", "#planet-one-render", state.mount.status, state.mount.rows, "Mounted checks: " + state.mount.summary.passed + " of " + state.mount.summary.total + ".") +
+          card("Terminal chain observer", "/showroom/globe/ iframe", state.terminal.status, state.terminal.rows, "Terminal reached: " + state.frame.terminalReached + "\nTimed out: " + state.frame.timedOut) +
+          card("Route runtime aliases", "/showroom/globe/ iframe", state.routeRuntime.status, state.routeRuntime.rows, "RouteV21=" + state.frame.routeV21Version + "\nRouteV22=" + state.frame.routeV22Version + "\nRouteV22B=" + state.frame.routeV22BVersion + "\nRouteV22C=" + state.frame.routeV22CVersion) +
+          card("Loaded script tags after terminal", "/showroom/globe/ document.scripts", state.scripts.status, state.scripts.rows, state.frame.scripts || state.frame.error || "No script inventory.") +
+          card("Runtime globals after terminal", "/showroom/globe/ globals", state.globals.status, state.globals.rows, "Renderer VERSION: " + state.frame.rendererVersion + "\nAsset VERSION: " + state.frame.assetVersion + "\nTerrain VERSION: " + state.frame.terrainVersion + "\nHydration VERSION: " + state.frame.hydrationVersion) +
+          card("Mounted DOM after terminal", "#planet-one-render", state.mount.status, state.mount.rows, "Mounted checks: " + state.mount.summary.passed + " of " + state.mount.summary.total + ".") +
           card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, "Leakage clean: " + state.leakage.summary.passed + " of " + state.leakage.summary.total + ".");
 
         setScore("scoreBoot", "PASS", "good");
         setScore("scoreSource", d.source, statusScore(d.source));
-        setScore("scoreRoute", d.route, statusScore(d.route));
+        setScore("scoreTerminal", d.terminal, statusScore(d.terminal));
         setScore("scoreScripts", d.scripts, statusScore(d.scripts));
         setScore("scoreMount", d.mount, statusScore(d.mount));
         setScore("scoreNext", d.next, d.progress === "PASS" ? "good" : "next");
@@ -1185,7 +1298,7 @@
         setPill("overallStatus", d.progress);
         setPill("bootStatus", "PASS");
         setPill("sourceStatus", d.source);
-        setPill("runtimeStatus", d.route === "PASS" && d.scripts === "PASS" ? "PASS" : "HOLD");
+        setPill("runtimeStatus", d.terminal === "PASS" && d.scripts === "PASS" ? "PASS" : "HOLD");
         setPill("frameStatus", state.frame.ok ? "PASS" : "FAIL");
 
         setText("currentRead", d.read);
@@ -1194,21 +1307,25 @@
           "DIAGNOSTIC_CODE=" + d.code,
           "GAUGE=" + VERSION,
           "SOURCE_STATE=" + d.source,
-          "ROUTE_RUNTIME_STATE=" + d.route,
+          "TERMINAL_CHAIN_STATE=" + d.terminal,
           "SCRIPT_TAG_STATE=" + d.scripts,
           "MOUNT_STATE=" + d.mount,
           "NEXT_TARGET=" + d.next,
           "ROUTE_V21_VERSION=" + state.frame.routeV21Version,
           "ROUTE_V22_VERSION=" + state.frame.routeV22Version,
           "ROUTE_V22B_VERSION=" + state.frame.routeV22BVersion,
+          "ROUTE_V22C_VERSION=" + state.frame.routeV22CVersion,
           "RENDERER_VERSION=" + state.frame.rendererVersion,
           "ASSET_VERSION=" + state.frame.assetVersion,
+          "TERRAIN_VERSION=" + state.frame.terrainVersion,
+          "HYDRATION_VERSION=" + state.frame.hydrationVersion,
           "FRAME_OK=" + state.frame.ok,
           "FRAME_TIMEOUT=" + Boolean(state.frame.timedOut),
-          "RULE=Gauge boot first; then source/runtime/mount/script-tag parity before visual judgment."
+          "TERMINAL_REACHED=" + Boolean(state.frame.terminalReached),
+          "RULE=Wait for terminal chain before scoring runtime."
         ].join("\n"));
 
-        window.DGBPlanetOneV21CGauges = {
+        window.DGBPlanetOneV21DGauges = {
           VERSION: VERSION,
           EXPECTED: EXPECTED,
           PATHS: PATHS,
@@ -1221,15 +1338,16 @@
       }
 
       function runAudit() {
-        window.DGBGaugeV21C.log("AUDIT RUNNING");
+        window.DGBGaugeV21D.log("AUDIT RUNNING");
         setScore("scoreBoot", "RUNNING", "hold");
         setClass("bootStatus", "pill hold");
         setText("bootStatus", "RUNNING");
-        setText("currentRead", "Audit engine is running. Fetching source and inspecting route runtime.");
+        setText("currentRead", "Audit engine is running. Fetching source and waiting for terminal route state.");
         setText("decisionMono", "DIAGNOSTIC_CODE=AUDIT_RUNNING");
 
         fetchAll(function (fetched) {
           inspectFrame(function (frame) {
+            var terminalText = frame.terminalText || "";
             var state;
             var d;
 
@@ -1243,14 +1361,15 @@
             };
 
             state.routeRuntime = evaluate("routeRuntime", frame.routeStatus || "", ROUTE_RUNTIME_CHECKS, false, true);
-            state.scripts = evaluate("scripts", frame.scripts || "", SCRIPT_CHECKS, false, true);
+            state.terminal = evaluate("terminal", terminalText, TERMINAL_CHECKS, false, frame.terminalReached);
+            state.scripts = evaluateScriptPaths(frame.scripts || "");
             state.globals = evaluate("globals", frame.globalStatus || "", GLOBAL_CHECKS, false, true);
             state.mount = evaluate("mount", frame.mountText || "", MOUNT_CHECKS, false, true);
             state.leakage = evaluate("leakage", frame.mountText || "", LEAKAGE_CHECKS, true, true);
 
             d = decide(state);
             renderState(state, d);
-            window.DGBGaugeV21C.log("AUDIT COMPLETE · " + d.code);
+            window.DGBGaugeV21D.log("AUDIT COMPLETE · " + d.code);
           });
         });
       }

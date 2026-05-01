@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-page="showroom-globe" data-route-contract="B26I_SHOWROOM_GLOBE_ROUTE_CHAIN_RENEWAL_TNT_v1" data-runtime-attached="true" data-asset-consumer-attached="true" data-render-chain="split">
+<html lang="en" data-page="showroom-globe" data-route-contract="B26I_B_SHOWROOM_GLOBE_ROUTE_VALIDATOR_RENEWAL_TNT_v1" data-runtime-attached="true" data-asset-consumer-attached="true" data-render-chain="split" data-accepts-asset="B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Planet 1 inspection room</title>
-  <meta name="description" content="Planet 1 inspection route renewed to attach the split render runtime, asset consumer, renderer facade, land constructs, surface materials, terrain, and hydration chain.">
+  <meta name="description" content="Planet 1 inspection route renewed to accept the B26 split render chain without stale V21 asset validation.">
 
   <link rel="preload" as="script" href="/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1">
   <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1">
@@ -19,8 +19,7 @@
     *{box-sizing:border-box}
     html{min-height:100%;background:#05070d;scroll-behavior:smooth}
     body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(61,117,177,.24),transparent 40%),linear-gradient(180deg,#07101d,#02040a 78%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
-    .skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}
-    .skip:focus{left:8px}
+    .skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}.skip:focus{left:8px}
     .shell{width:min(var(--max),calc(100% - 28px));margin:0 auto;padding:22px 0 42px}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:18px}
     .brand{font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,251,255,.84);font-size:.78rem;text-decoration:none}
@@ -28,31 +27,18 @@
     nav a,.button,button{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:999px;padding:8px 11px;color:rgba(242,247,255,.76);font-size:.74rem;font-weight:850;text-decoration:none}
     button,.button{cursor:pointer;padding:11px 16px;font-size:.9rem;color:var(--text);border-color:rgba(242,199,111,.34);background:linear-gradient(180deg,rgba(242,199,111,.16),rgba(255,255,255,.04))}
     .button.secondary,button.secondary{border-color:var(--line);background:rgba(255,255,255,.055)}
-    .hero{padding:34px 0 24px}
-    .kicker{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:950}
-    h1{font-size:clamp(2.2rem,6vw,5rem);line-height:.95;margin:6px 0 12px;letter-spacing:-.07em}
-    p{color:var(--muted);margin:0}
+    .hero{padding:34px 0 24px}.kicker{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:950}
+    h1{font-size:clamp(2.2rem,6vw,5rem);line-height:.95;margin:6px 0 12px;letter-spacing:-.07em}p{color:var(--muted);margin:0}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
     .panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.075),var(--panel));border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin:18px 0}
     .panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid rgba(168,199,255,.12);padding-bottom:14px;margin-bottom:14px}
-    .panel h2{margin:0;font-size:1.24rem}
-    .pill{display:inline-flex;align-items:center;justify-content:center;min-width:170px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:950;letter-spacing:.1em;text-transform:uppercase}
-    .pill.pass{border-color:rgba(143,227,176,.35);color:var(--green)}
-    .pill.hold{border-color:rgba(242,199,111,.35);color:var(--gold)}
-    .pill.fail{border-color:rgba(255,155,155,.35);color:var(--red)}
-    .stage-log{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.78rem;color:rgba(210,238,255,.82);background:rgba(0,0,0,.23);border:1px solid rgba(168,199,255,.12);border-radius:18px;padding:12px;white-space:pre-wrap;max-height:210px;overflow:auto}
-    .render-shell{display:grid;gap:16px}
-    .runtime-proof,.render-status{border:1px solid var(--line2);background:rgba(242,199,111,.06);border-radius:22px;padding:14px;text-align:center;color:rgba(255,238,190,.90);font-weight:950}
-    .runtime-proof.pass{border-color:rgba(143,227,176,.35);color:var(--green);background:rgba(143,227,176,.05)}
-    .runtime-proof.fail{border-color:rgba(255,155,155,.35);color:var(--red);background:rgba(255,155,155,.055)}
-    .render-toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .render-mount{min-height:440px;border:1px solid rgba(168,199,255,.16);border-radius:28px;background:radial-gradient(circle at 50% 45%,rgba(37,57,83,.38),rgba(8,13,24,.64) 65%,rgba(0,0,0,.18));display:grid;place-items:center;overflow:hidden}
-    .render-mount canvas{max-width:100%;height:auto}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .card{border:1px solid rgba(168,199,255,.13);border-radius:20px;background:rgba(255,255,255,.035);padding:14px}
-    .card strong{display:block;color:var(--gold);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase}
-    .card h3{margin:6px 0;font-size:1rem}
-    .footer{margin-top:24px;color:rgba(226,232,246,.58);font-size:.78rem}
+    .panel h2{margin:0;font-size:1.24rem}.pill{display:inline-flex;align-items:center;justify-content:center;min-width:170px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:950;letter-spacing:.1em;text-transform:uppercase}
+    .pill.pass{border-color:rgba(143,227,176,.35);color:var(--green)}.pill.hold{border-color:rgba(242,199,111,.35);color:var(--gold)}.pill.fail{border-color:rgba(255,155,155,.35);color:var(--red)}
+    .stage-log{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.78rem;color:rgba(210,238,255,.82);background:rgba(0,0,0,.23);border:1px solid rgba(168,199,255,.12);border-radius:18px;padding:12px;white-space:pre-wrap;max-height:230px;overflow:auto}
+    .render-shell{display:grid;gap:16px}.runtime-proof,.render-status{border:1px solid var(--line2);background:rgba(242,199,111,.06);border-radius:22px;padding:14px;text-align:center;color:rgba(255,238,190,.90);font-weight:950}
+    .runtime-proof.pass{border-color:rgba(143,227,176,.35);color:var(--green);background:rgba(143,227,176,.05)}.runtime-proof.fail{border-color:rgba(255,155,155,.35);color:var(--red);background:rgba(255,155,155,.055)}
+    .render-toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.render-mount{min-height:440px;border:1px solid rgba(168,199,255,.16);border-radius:28px;background:radial-gradient(circle at 50% 45%,rgba(37,57,83,.38),rgba(8,13,24,.64) 65%,rgba(0,0,0,.18));display:grid;place-items:center;overflow:hidden}.render-mount canvas{max-width:100%;height:auto}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{border:1px solid rgba(168,199,255,.13);border-radius:20px;background:rgba(255,255,255,.035);padding:14px}.card strong{display:block;color:var(--gold);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase}.card h3{margin:6px 0;font-size:1rem}.footer{margin-top:24px;color:rgba(226,232,246,.58);font-size:.78rem}
     @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}nav{justify-content:flex-start}}
     @media(max-width:560px){.grid{grid-template-columns:1fr}.shell{width:min(100% - 20px,var(--max))}.panel{padding:16px}.render-mount{min-height:360px}}
   </style>
@@ -78,8 +64,8 @@
     <main id="globe-main">
       <section class="hero" aria-labelledby="page-title">
         <div class="kicker">Planet 1 · Inspection room</div>
-        <h1 id="page-title">This route accepts the split chain.</h1>
-        <p>B26I renews the route boundary. The page attaches the showroom runtime and asset consumer, then lets runtime govern inspection and asset govern renderer consumption.</p>
+        <h1 id="page-title">This route accepts the B26 split chain.</h1>
+        <p>B26I-B removes the stale V22D/V21 exact-version validator. The route now accepts the B26F asset consumer, the B26G runtime, the B26D renderer facade, and the B26B/B26C split modules.</p>
         <div class="actions">
           <a class="button" href="#planet-one-render">Inspect Planet 1</a>
           <a class="button secondary" href="/showroom/">Return to Showroom Lobby</a>
@@ -91,26 +77,27 @@
       <section class="panel" aria-labelledby="diagnostic-title">
         <div class="panel-head">
           <div>
-            <h2 id="diagnostic-title">Runtime-governed inspection diagnostic.</h2>
-            <p>The route no longer treats pending async asset mount as refusal. Runtime owns the inspection boundary.</p>
+            <h2 id="diagnostic-title">B26 split-chain route diagnostic.</h2>
+            <p>The route accepts B26F as the lawful asset surface. Pending async load is treated as pending, not refusal.</p>
           </div>
           <span class="pill hold" id="routeStatusPill">Preparing runtime</span>
         </div>
         <div class="stage-log" id="stageLog">BOOT_LOG=STATIC_HTML_RENDERED
-B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
+B26I_B_ROUTE_VALIDATOR_RENEWAL=TRUE
+STALE_V21_ASSET_EXPECTATION=REMOVED</div>
       </section>
 
       <section class="panel" data-route-proof="Planet 1 render loaded" data-runtime-attached="true" data-asset-consumer-attached="true" data-renderer-facade="true" data-land-constructs-module="true" data-surface-materials-module="true" data-terrain-module="true" data-hydration-module="true" data-no-fallback-planet="true">
         <div class="panel-head">
           <div>
             <h2>Planet 1 render loaded.</h2>
-            <p>Mount begins through runtime and asset after the split render chain is available.</p>
+            <p>Mount begins through the runtime boundary and the module-aware asset consumer after the split render chain is available.</p>
           </div>
           <span class="pill hold" id="planet-one-status-pill">Preparing chain</span>
         </div>
 
         <div class="render-shell">
-          <div class="runtime-proof" id="runtimeProof">RUNTIME CHAIN WAITING</div>
+          <div class="runtime-proof" id="runtimeProof">B26 SPLIT CHAIN WAITING</div>
 
           <div class="render-toolbar" aria-label="Planet 1 render controls">
             <button type="button" id="loadPlanetOne">Run script chain</button>
@@ -118,7 +105,7 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
             <button class="secondary" type="button" id="resumePlanetOne">Resume render</button>
           </div>
 
-          <div class="render-status" id="renderStatus">B26I route is ready to attach /showroom/runtime.js and consume /assets/showroom.globe.instrument.js.</div>
+          <div class="render-status" id="renderStatus">B26I-B route is ready to attach /showroom/runtime.js and consume /assets/showroom.globe.instrument.js.</div>
 
           <div
             id="planet-one-render"
@@ -150,49 +137,36 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
         </div>
 
         <div class="grid">
-          <article class="card">
-            <strong>Runtime</strong>
-            <h3>Inspection boundary</h3>
-            <p>Route/session receipts, activation, pause/resume, split-chain observation.</p>
-          </article>
-          <article class="card">
-            <strong>Asset</strong>
-            <h3>Consumer authority</h3>
-            <p>Calls renderer facade and reports module-aware consumption.</p>
-          </article>
-          <article class="card">
-            <strong>Renderer</strong>
-            <h3>Facade authority</h3>
-            <p>Canvas, mount, frame order, public contract, module wiring.</p>
-          </article>
-          <article class="card">
-            <strong>Land / Surface</strong>
-            <h3>World expression</h3>
-            <p>Land constructs and surface materials remain in their dedicated modules.</p>
-          </article>
+          <article class="card"><strong>Runtime</strong><h3>Inspection boundary</h3><p>Route/session receipts, activation, pause/resume, split-chain observation.</p></article>
+          <article class="card"><strong>Asset</strong><h3>Consumer authority</h3><p>Calls renderer facade and reports module-aware consumption.</p></article>
+          <article class="card"><strong>Renderer</strong><h3>Facade authority</h3><p>Canvas, mount, frame order, public contract, module wiring.</p></article>
+          <article class="card"><strong>Land / Surface</strong><h3>World expression</h3><p>Land constructs and surface materials remain in their dedicated modules.</p></article>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      B26I_SHOWROOM_GLOBE_ROUTE_CHAIN_RENEWAL_TNT_v1 · /showroom/globe/index.html · runtime attached · asset consumer attached · renderer split chain preserved.
-      <span hidden>SHOWROOM_GLOBE_ROUTE_CHAIN_RENEWAL runtime=/showroom/runtime.js asset=/assets/showroom.globe.instrument.js renderer=/world/render/planet-one.render.js land=/world/render/planet-one.land.constructs.js surface=/world/render/planet-one.surface.materials.js route-runtime-attachment=true</span>
+      B26I_B_SHOWROOM_GLOBE_ROUTE_VALIDATOR_RENEWAL_TNT_v1 · /showroom/globe/index.html · runtime attached · asset consumer attached · stale V21 exact-version validator removed · renderer split chain preserved.
+      <span hidden>SHOWROOM_GLOBE_ROUTE_VALIDATOR_RENEWAL runtime=/showroom/runtime.js asset=/assets/showroom.globe.instrument.js assetAccepted=B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1 renderer=/world/render/planet-one.render.js land=/world/render/planet-one.land.constructs.js surface=/world/render/planet-one.surface.materials.js route-runtime-attachment=true stale-v21-validator-removed=true</span>
     </footer>
   </div>
 
-  <script src="/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1" defer></script>
-  <script src="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1" defer></script>
-  <script src="/world/render/planet-one.land.constructs.js?v=B26B_LAND_CONSTRUCTS_MODULE_TNT_v1" defer></script>
-  <script src="/world/render/planet-one.surface.materials.js?v=B26C_SURFACE_MATERIALS_MODULE_TNT_v1" defer></script>
-  <script src="/world/render/planet-one.render.js?v=B26D_RENDERER_FACADE_TNT_v1" defer></script>
-  <script src="/assets/showroom.globe.instrument.js?v=B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1" defer></script>
-  <script src="/showroom/runtime.js?v=B26G_SHOWROOM_RUNTIME_SPLIT_RENDER_CHAIN_AWARENESS_TNT_v1" defer></script>
+  <script src="/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1&route=B26I_B" defer></script>
+  <script src="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1&route=B26I_B" defer></script>
+  <script src="/world/render/planet-one.land.constructs.js?v=B26B_LAND_CONSTRUCTS_MODULE_TNT_v1&route=B26I_B" defer></script>
+  <script src="/world/render/planet-one.surface.materials.js?v=B26C_SURFACE_MATERIALS_MODULE_TNT_v1&route=B26I_B" defer></script>
+  <script src="/world/render/planet-one.render.js?v=B26D_RENDERER_FACADE_TNT_v1&route=B26I_B" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1&route=B26I_B" defer></script>
+  <script src="/showroom/runtime.js?v=B26G_SHOWROOM_RUNTIME_SPLIT_RENDER_CHAIN_AWARENESS_TNT_v1&route=B26I_B" defer></script>
 
   <script>
 (function attachRouteRuntimeControls(global) {
   "use strict";
 
-  var VERSION = "B26I_SHOWROOM_GLOBE_ROUTE_CHAIN_RENEWAL_TNT_v1";
+  var VERSION = "B26I_B_SHOWROOM_GLOBE_ROUTE_VALIDATOR_RENEWAL_TNT_v1";
+  var ACCEPTED_ASSET = "B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1";
+  var ACCEPTED_RUNTIME = "B26G_SHOWROOM_RUNTIME_SPLIT_RENDER_CHAIN_AWARENESS_TNT_v1";
+  var ACCEPTED_RENDERER = "B26D_RENDERER_FACADE_TNT_v1";
   var logLines = [];
 
   function $(id) {
@@ -221,8 +195,12 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
   function log(code, detail) {
     var line = new Date().toLocaleTimeString() + " · " + code + (detail ? " · " + detail : "");
     logLines.push(line);
-    if (logLines.length > 12) logLines.shift();
+    if (logLines.length > 14) logLines.shift();
     setText("stageLog", logLines.join("\n"));
+  }
+
+  function versionOf(api) {
+    return api && (api.VERSION || api.version || "UNKNOWN");
   }
 
   function getBoundary() {
@@ -231,6 +209,22 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
 
   function getRuntime() {
     return global.DGBShowroomRuntime || global.ShowroomRuntime || null;
+  }
+
+  function getAsset() {
+    return global.DGBShowroomGlobeInstrument || null;
+  }
+
+  function getRenderer() {
+    return global.DGBPlanetOneRenderTeam || null;
+  }
+
+  function includesMarker(api, marker) {
+    var markers = api && (api.CONTRACT_MARKERS || api.markers || []);
+    var version = versionOf(api);
+    if (version === marker) return true;
+    if (!Array.isArray(markers)) return false;
+    return markers.indexOf(marker) !== -1;
   }
 
   function getSplitStatus() {
@@ -245,51 +239,104 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
     return null;
   }
 
-  function refreshStatus(label) {
-    var runtime = getRuntime();
-    var split = getSplitStatus();
-    var assetReady = Boolean(global.DGBShowroomGlobeInstrument && typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function");
-    var rendererReady = Boolean(global.DGBPlanetOneRenderTeam && typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function");
-    var runtimeReady = Boolean(runtime);
-    var splitReady = Boolean(split && split.assetInstrumentDetected && split.rendererFacadeDetected && split.responsibilitySplitActive);
+  function getAssetStatus() {
+    var asset = getAsset();
+    if (asset && typeof asset.getStatus === "function") {
+      try {
+        return asset.getStatus();
+      } catch (error) {
+        return { ok: false, error: String(error && error.message ? error.message : error) };
+      }
+    }
+    return null;
+  }
 
-    if (runtimeReady && assetReady && rendererReady && splitReady) {
-      setPill("routeStatusPill", "Runtime attached", "pass");
-      setPill("planet-one-status-pill", "Split chain active", "pass");
-      setProof("RUNTIME CHAIN PASS", "pass");
-      setText("renderStatus", "Runtime attached. Asset consumer active. Renderer facade and split modules detected. Visual readiness remains the B27 gate.");
-      log(label || "STATUS", "runtime=true asset=true renderer=true split=true");
+  function assetAccepted() {
+    var asset = getAsset();
+    if (!asset || typeof asset.renderGlobe !== "function") return false;
+    if (includesMarker(asset, ACCEPTED_ASSET)) return true;
+    return versionOf(asset).indexOf("B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER") !== -1;
+  }
+
+  function runtimeAccepted() {
+    var runtime = getRuntime();
+    if (!runtime) return false;
+    if (includesMarker(runtime, ACCEPTED_RUNTIME)) return true;
+    return versionOf(runtime).indexOf("B26G_SHOWROOM_RUNTIME_SPLIT_RENDER_CHAIN_AWARENESS") !== -1 || typeof runtime.createInspectionBoundary === "function";
+  }
+
+  function rendererAccepted() {
+    var renderer = getRenderer();
+    if (!renderer || typeof renderer.renderPlanetOne !== "function") return false;
+    if (includesMarker(renderer, ACCEPTED_RENDERER)) return true;
+    return Boolean(renderer.responsibilitySplitActive || renderer.B26_FACADE_TNT || renderer.LAND_CONSTRUCTS_AUTHORITY || renderer.SURFACE_MATERIALS_AUTHORITY);
+  }
+
+  function refreshStatus(label) {
+    var split = getSplitStatus();
+    var assetStatus = getAssetStatus();
+    var runtimeReady = runtimeAccepted();
+    var assetReady = assetAccepted();
+    var rendererReady = rendererAccepted();
+    var landReady = Boolean(global.DGBPlanetOneLandConstructs && typeof global.DGBPlanetOneLandConstructs.createPlanetOneLandConstructs === "function");
+    var surfaceReady = Boolean(global.DGBPlanetOneSurfaceMaterials && typeof global.DGBPlanetOneSurfaceMaterials.drawPlanetOneConstructSurface === "function");
+    var mounted = Boolean(assetStatus && assetStatus.rendererResultMounted);
+    var splitReady = Boolean(
+      split && split.responsibilitySplitActive ||
+      assetStatus && assetStatus.responsibilitySplitActive ||
+      runtimeReady && assetReady && rendererReady && landReady && surfaceReady
+    );
+
+    global.document.documentElement.dataset.routeContract = VERSION;
+    global.document.documentElement.dataset.assetAccepted = String(assetReady);
+    global.document.documentElement.dataset.runtimeAccepted = String(runtimeReady);
+    global.document.documentElement.dataset.rendererAccepted = String(rendererReady);
+
+    if (runtimeReady && assetReady && rendererReady && landReady && surfaceReady && splitReady) {
+      setPill("routeStatusPill", "B26 chain accepted", "pass");
+      setPill("planet-one-status-pill", mounted ? "Render mounted" : "Mount pending", mounted ? "pass" : "hold");
+      setProof(mounted ? "B26 SPLIT CHAIN PASS" : "B26 SPLIT CHAIN ACCEPTED", mounted ? "pass" : "");
+      setText("renderStatus", mounted ? "Runtime boundary mounted the asset consumer. B27 remains the visual gate." : "B26 chain accepted. Waiting for asset mount receipt.");
+      log(label || "STATUS", "runtime=true asset=B26F renderer=true land=true surface=true mounted=" + mounted);
       return true;
     }
 
-    if (runtimeReady && assetReady) {
-      setPill("routeStatusPill", "Runtime pending", "hold");
-      setPill("planet-one-status-pill", "Chain pending", "hold");
-      setProof("RUNTIME CHAIN PENDING", "");
-      setText("renderStatus", "Runtime and asset are attached; waiting for renderer facade and split-chain status receipts.");
-      log(label || "STATUS", "runtime=true asset=true split=pending");
-      return false;
-    }
-
-    setPill("routeStatusPill", "Preparing runtime", "hold");
+    setPill("routeStatusPill", "B26 chain pending", "hold");
     setPill("planet-one-status-pill", "Preparing chain", "hold");
-    setProof("RUNTIME CHAIN WAITING", "");
-    setText("renderStatus", "Waiting for /showroom/runtime.js and /assets/showroom.globe.instrument.js.");
-    log(label || "STATUS", "runtime=" + runtimeReady + " asset=" + assetReady + " renderer=" + rendererReady);
+    setProof("B26 SPLIT CHAIN WAITING", "");
+    setText("renderStatus", "Waiting for B26 runtime, B26F asset consumer, renderer facade, land module, and surface module. Pending is not refusal.");
+    log(label || "STATUS", "runtime=" + runtimeReady + " asset=" + assetReady + " renderer=" + rendererReady + " land=" + landReady + " surface=" + surfaceReady);
     return false;
   }
 
   function activate(reason) {
     var boundary = getBoundary();
+    var runtime = getRuntime();
     log("ACTIVATE_REQUEST", reason || VERSION);
 
+    if (!boundary && runtime && typeof runtime.createInspectionBoundary === "function") {
+      try {
+        global.__DGBShowroomRuntimeBoundary = runtime.createInspectionBoundary();
+        boundary = getBoundary();
+        log("BOUNDARY_CREATED", "runtime.createInspectionBoundary");
+      } catch (error) {
+        log("BOUNDARY_CREATE_ERROR", String(error && error.message ? error.message : error));
+      }
+    }
+
     if (boundary && typeof boundary.activateInspection === "function") {
-      boundary.activateInspection(reason || "route-control", true);
-    } else if (global.DGBShowroomRuntime && typeof global.DGBShowroomRuntime.createInspectionBoundary === "function") {
-      global.__DGBShowroomRuntimeBoundary = global.DGBShowroomRuntime.createInspectionBoundary();
-      boundary = getBoundary();
-      if (boundary && typeof boundary.activateInspection === "function") {
-        boundary.activateInspection(reason || "route-created-boundary", true);
+      try {
+        boundary.activateInspection(reason || "route-control", true);
+        log("BOUNDARY_ACTIVATED", reason || "route-control");
+      } catch (error2) {
+        log("BOUNDARY_ACTIVATE_ERROR", String(error2 && error2.message ? error2.message : error2));
+      }
+    } else if (assetAccepted()) {
+      try {
+        getAsset().renderGlobe($("planet-one-render"), { animate: true, caption: "Planet 1 · B26 split-chain route" });
+        log("ASSET_DIRECT_MOUNT_USED", "runtime boundary pending");
+      } catch (error3) {
+        log("ASSET_DIRECT_MOUNT_ERROR", String(error3 && error3.message ? error3.message : error3));
       }
     }
 
@@ -304,11 +351,11 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
 
     if (boundary && typeof boundary.pauseRenderer === "function") {
       boundary.pauseRenderer("route-button");
-    } else if (global.DGBPlanetOneRenderTeam && typeof global.DGBPlanetOneRenderTeam.stop === "function") {
-      global.DGBPlanetOneRenderTeam.stop();
+    } else if (getRenderer() && typeof getRenderer().stop === "function") {
+      getRenderer().stop();
     }
 
-    setProof("RUNTIME CHAIN PAUSED", "");
+    setProof("B26 SPLIT CHAIN PAUSED", "");
     setText("renderStatus", "Runtime boundary pause requested.");
   }
 
@@ -335,10 +382,10 @@ B26I_ROUTE_RUNTIME_ATTACHMENT=TRUE</div>
     if (start) start.addEventListener("click", resume);
 
     refreshStatus("DOM_READY");
-
-    global.setTimeout(function () { activate("initial-route-autoboot"); }, 180);
-    global.setTimeout(function () { refreshStatus("AUTOBOOT_REFRESH_1"); }, 700);
+    global.setTimeout(function () { activate("initial-route-autoboot"); }, 260);
+    global.setTimeout(function () { refreshStatus("AUTOBOOT_REFRESH_1"); }, 750);
     global.setTimeout(function () { refreshStatus("AUTOBOOT_REFRESH_2"); }, 1700);
+    global.setTimeout(function () { refreshStatus("AUTOBOOT_REFRESH_3"); }, 3200);
   });
 })(typeof window !== "undefined" ? window : globalThis);
   </script>

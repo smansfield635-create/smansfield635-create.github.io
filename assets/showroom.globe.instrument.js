@@ -1,720 +1,499 @@
 /*
-  SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1
-  OWNER=SEAN
+  SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1
   TARGET=/assets/showroom.globe.instrument.js
 
-  PURPOSE=
-  LOAD_PLANET_1_TERRAIN_RENDER_BEFORE_PLANET_1_MAIN_RENDERER
-  FORCE_OPTIMUM_EXPRESSION_TO_USE_DEDICATED_TERRAIN_MODULE
-  PRESERVE_NO_DEMO_PLANET_RETURN
-  PRESERVE_NO_PUBLIC_PASS_OPTIONS
-  PRESERVE_NO_DUPLICATE_RENDER_LOOP
+  PRESERVED COMPATIBILITY MARKER:
+  SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1
 
-  PRIMARY_RENDER_AUTHORITY=
-  /world/render/planet-one.render.js
+  REQUIRED V19 EXPANSION MARKERS:
+  /world/render/planet-one.hydration.render.js
+  loadHydrationRenderer
+  hydrationFirstLoadOrder
+  hydroTerrainMarriage
 
-  TERRAIN_RENDER_AUTHORITY=
-  /world/render/planet-one.terrain.render.js
+  REQUIRED EXISTING MARKERS:
+  window.DGBShowroomGlobeInstrument
+  renderGlobe
+  loadTerrainRenderer
+  loadMainRendererAfterTerrain
+  terrainFirstLoadOrder
+  optimumExpressionOnly
 
-  PAIRED_MAIN_RENDERER=
-  PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
-
-  PAIRED_TERRAIN_RENDERER=
-  PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1
-
-  HARD RULES=
-  NO_DEMO_PLANET_DRAWING
-  NO_OWN_SVG_GLOBE
-  NO_OWN_LANDMASSES
-  NO_OWN_TOPOLOGY
-  NO_OWN_TERRAIN
-  NO_OWN_AXIS
-  NO_PUBLIC_PASS_BUTTONS
-  NO_LEGACY_AUTOBOOT_RETRIES
-  NO_TIMEOUT_RENDER_RETRIES
-  NO_DUPLICATE_RENDER_LOOP
-  NO_COMPETING_GLOBE_SURFACE
+  ROLE:
+  Asset instrument is now a hydration-first delegator only.
+  It loads hydration, then terrain, then main renderer.
+  It does not draw its own planet.
+  It does not draw fallback terrain.
+  It does not draw a demo globe.
 */
 
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1";
+  const PREVIOUS_V16 = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1";
 
-  const PREVIOUS_PAIR = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V13_PASS_FILTER_PAIR_TNT_v1";
-  const SUPPORT_CONTRACT = "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_SUPPORT_CONTRACT_TNT_v2";
-  const LEGACY_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v2";
-  const SHARED_CONTRACT = "PLANET_ONE_RENDER_AND_ASSET_INSTRUMENT_SHARED_CONTRACT_v1";
-
-  const PAIRED_MAIN_RENDERER_VERSION = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
-  const PAIRED_TERRAIN_RENDERER_VERSION = "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1";
-
-  const EXPECTED_GLOBAL = "window.DGBShowroomGlobeInstrument";
-  const EXPECTED_API = "renderGlobe";
-
-  const SHOWROOM_ROUTE = "/showroom/";
-  const SHOWROOM_GLOBE_ROUTE = "/showroom/globe/";
-
+  const HYDRATION_RENDERER = "/world/render/planet-one.hydration.render.js";
   const TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
-  const PLANET_ONE_RENDERER = "/world/render/planet-one.render.js";
+  const MAIN_RENDERER = "/world/render/planet-one.render.js";
+  const AUTHORITY = "/assets/showroom.globe.instrument.js";
 
-  let terrainPromise = null;
-  let rendererPromise = null;
-  let lastMount = null;
-  let lastHandle = null;
-  let autoBooted = false;
+  const CONTRACT = Object.freeze({
+    version: VERSION,
+    previousV16: PREVIOUS_V16,
+    authority: AUTHORITY,
 
-  const receipts = [];
+    hydrationRenderer: HYDRATION_RENDERER,
+    terrainRenderer: TERRAIN_RENDERER,
+    mainRenderer: MAIN_RENDERER,
 
-  function now() {
-    return new Date().toISOString();
-  }
+    hydrationFirstLoadOrder: true,
+    terrainFirstLoadOrder: true,
+    hydroTerrainMarriage: true,
+    optimumExpressionOnly: true,
 
-  function clone(value) {
-    return JSON.parse(JSON.stringify(value));
-  }
+    loadHydrationRenderer: true,
+    loadTerrainRenderer: true,
+    loadMainRendererAfterTerrain: true,
 
-  function routePath() {
-    const raw = global.location && global.location.pathname ? global.location.pathname : "/";
-    return raw.endsWith("/") ? raw : raw + "/";
-  }
+    noCompetingGlobeSurface: true,
+    drawsOwnPlanet: false,
+    noOwnPlanetDrawing: true,
+    noDemoPlanet: true,
+    noFallbackPlanet: true,
+    noFallbackTerrainExpression: true,
+    delegationOnly: true
+  });
 
-  function hasTerrainApi() {
-    return Boolean(
-      global.DGBPlanetOneTerrainRender &&
-        typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function"
-    );
-  }
+  let currentHandle = null;
+  const loadedScripts = new Map();
 
-  function hasRendererApi() {
-    return Boolean(
-      global.DGBPlanetOneRenderTeam &&
-        typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
-    );
-  }
-
-  function terrainStatus() {
-    if (!hasTerrainApi() || typeof global.DGBPlanetOneTerrainRender.getStatus !== "function") {
-      return null;
-    }
-
-    try {
-      return global.DGBPlanetOneTerrainRender.getStatus();
-    } catch (error) {
-      return {
-        error: error && error.message ? error.message : "terrain-status-error"
-      };
-    }
-  }
-
-  function rendererStatus() {
-    if (!hasRendererApi() || typeof global.DGBPlanetOneRenderTeam.getStatus !== "function") {
-      return null;
-    }
-
-    try {
-      return global.DGBPlanetOneRenderTeam.getStatus();
-    } catch (error) {
-      return {
-        error: error && error.message ? error.message : "renderer-status-error"
-      };
-    }
-  }
-
-  function markDocument() {
+  function markDocument(state) {
     const root = document.documentElement;
 
     root.dataset.showroomGlobeInstrument = VERSION;
-    root.dataset.showroomGlobeInstrumentPreviousPair = PREVIOUS_PAIR;
-    root.dataset.showroomGlobeInstrumentSupportContract = SUPPORT_CONTRACT;
-    root.dataset.showroomGlobeInstrumentLegacyRetired = LEGACY_VERSION;
-    root.dataset.sharedPlanetOneRenderContract = SHARED_CONTRACT;
+    root.dataset.showroomGlobeInstrumentPrevious = PREVIOUS_V16;
+    root.dataset.showroomGlobeInstrumentAuthority = AUTHORITY;
 
-    root.dataset.pairedPlanetOneRenderer = PAIRED_MAIN_RENDERER_VERSION;
-    root.dataset.pairedPlanetOneTerrainRenderer = PAIRED_TERRAIN_RENDERER_VERSION;
-
-    root.dataset.dgbShowroomGlobeInstrument = "terrain-first-delegation-support-only";
-    root.dataset.demoPlanetVisualContract = "retired";
-    root.dataset.demoPlanetStatus = "retired";
-    root.dataset.visualObject = "planet-1";
-
+    root.dataset.hydrationRenderer = HYDRATION_RENDERER;
     root.dataset.terrainRenderer = TERRAIN_RENDERER;
-    root.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
+    root.dataset.mainRenderer = MAIN_RENDERER;
+
+    root.dataset.hydrationFirstLoadOrder = "true";
     root.dataset.terrainFirstLoadOrder = "true";
+    root.dataset.hydroTerrainMarriage = "true";
     root.dataset.optimumExpressionOnly = "true";
 
-    root.dataset.assetInstrument = "/assets/showroom.globe.instrument.js";
-    root.dataset.assetRole = "terrain-first-delegation-support-only";
-    root.dataset.renderAuthority = PLANET_ONE_RENDERER;
-    root.dataset.terrainAuthority = TERRAIN_RENDERER;
-
-    root.dataset.singlePlanetAuthority = "true";
     root.dataset.noCompetingGlobeSurface = "true";
-    root.dataset.noLegacyDemoPlanetReturn = "true";
-    root.dataset.noPublicPassButtons = "true";
-    root.dataset.noLegacyAutobootRetries = "true";
-    root.dataset.noTimeoutRenderRetries = "true";
     root.dataset.drawsOwnPlanet = "false";
+    root.dataset.noOwnPlanetDrawing = "true";
+    root.dataset.noDemoPlanet = "true";
+    root.dataset.noFallbackPlanet = "true";
+    root.dataset.noFallbackTerrainExpression = "true";
+
+    if (state) root.dataset.showroomGlobeInstrumentState = state;
   }
 
-  function publish(type, payload) {
-    const detail = {
-      type,
-      version: VERSION,
-      previousPair: PREVIOUS_PAIR,
-      supportContract: SUPPORT_CONTRACT,
-      legacyRetired: LEGACY_VERSION,
-      sharedContract: SHARED_CONTRACT,
-      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-      expectedGlobal: EXPECTED_GLOBAL,
-      expectedApi: EXPECTED_API,
-      terrainRenderer: TERRAIN_RENDERER,
-      planetOneRenderer: PLANET_ONE_RENDERER,
-      assetRole: "terrain-first-delegation-support-only",
-      payload: payload || {},
-      timestamp: now()
-    };
-
-    receipts.push(detail);
-
-    if (receipts.length > 80) {
-      receipts.splice(0, receipts.length - 80);
-    }
-
-    global.dispatchEvent(
-      new CustomEvent("showroom:globe-instrument", {
-        detail: clone(detail)
-      })
-    );
-
-    return clone(detail);
+  function cacheKey(src) {
+    return String(src || "").split("?")[0];
   }
 
-  function normalizeMount(mount) {
-    if (typeof mount === "string") return document.querySelector(mount);
-    return mount || null;
-  }
-
-  function findScript(pathname) {
-    return Array.from(document.scripts).find(function findExisting(script) {
-      if (!script.src) return false;
-      return new URL(script.src, global.location.origin).pathname === pathname;
+  function hasScript(src) {
+    const key = cacheKey(src);
+    return Array.from(document.scripts).some(function find(script) {
+      return cacheKey(script.getAttribute("src") || "") === key;
     });
   }
 
-  function appendScript(pathname, globalCheck, dataset) {
-    if (globalCheck()) {
-      return Promise.resolve(true);
+  function loadScript(src, globalCheck, label) {
+    if (typeof globalCheck === "function" && globalCheck()) {
+      return Promise.resolve({
+        ok: true,
+        src,
+        label,
+        alreadyAvailable: true
+      });
     }
 
-    const existing = findScript(pathname);
+    if (loadedScripts.has(src)) {
+      return loadedScripts.get(src).then(function done(result) {
+        if (typeof globalCheck === "function" && globalCheck()) return result;
 
-    if (existing) {
-      if (globalCheck()) {
-        return Promise.resolve(true);
+        throw new Error(label + " loaded but expected global is unavailable.");
+      });
+    }
+
+    const promise = new Promise(function load(resolve, reject) {
+      const existing = hasScript(src);
+
+      if (existing && typeof globalCheck === "function" && globalCheck()) {
+        resolve({
+          ok: true,
+          src,
+          label,
+          alreadyPresent: true
+        });
+        return;
       }
 
-      return new Promise(function waitForExisting(resolve, reject) {
-        existing.addEventListener(
-          "load",
-          function loadedExisting() {
-            if (globalCheck()) {
-              resolve(true);
-              return;
-            }
+      const script = existing
+        ? Array.from(document.scripts).find(function find(existingScript) {
+            return cacheKey(existingScript.getAttribute("src") || "") === cacheKey(src);
+          })
+        : document.createElement("script");
 
-            reject(new Error(pathname + " loaded, but expected API is unavailable."));
-          },
-          { once: true }
-        );
+      let settled = false;
 
-        existing.addEventListener(
-          "error",
-          function failedExisting() {
-            reject(new Error(pathname + " failed to load."));
-          },
-          { once: true }
-        );
-      });
-    }
+      function finish() {
+        if (settled) return;
+        settled = true;
 
-    return new Promise(function loadNewScript(resolve, reject) {
-      const script = document.createElement("script");
-      script.src = pathname;
-      script.async = false;
-      script.dataset.loadedBy = VERSION;
-
-      Object.keys(dataset || {}).forEach(function applyDataset(key) {
-        script.dataset[key] = dataset[key];
-      });
-
-      script.onload = function onLoad() {
-        if (globalCheck()) {
-          resolve(true);
+        if (typeof globalCheck === "function" && !globalCheck()) {
+          reject(new Error(label + " script served, but expected API is missing."));
           return;
         }
 
-        reject(new Error(pathname + " loaded, but expected API is unavailable."));
-      };
+        resolve({
+          ok: true,
+          src,
+          label
+        });
+      }
 
-      script.onerror = function onError() {
-        reject(new Error(pathname + " failed to load."));
-      };
+      function fail() {
+        if (settled) return;
+        settled = true;
+        reject(new Error(label + " failed to load at " + src));
+      }
 
-      document.body.appendChild(script);
+      script.addEventListener("load", finish, { once: true });
+      script.addEventListener("error", fail, { once: true });
+
+      if (!existing) {
+        script.src = src;
+        script.defer = true;
+        script.dataset.showroomGlobeInstrumentLoaded = VERSION;
+        document.head.appendChild(script);
+      }
+
+      global.setTimeout(function timeoutCheck() {
+        if (settled) return;
+        if (typeof globalCheck === "function" && globalCheck()) finish();
+      }, 120);
     });
+
+    loadedScripts.set(src, promise);
+    return promise;
+  }
+
+  function loadHydrationRenderer() {
+    markDocument("loading-hydration");
+
+    return loadScript(
+      HYDRATION_RENDERER,
+      function checkHydration() {
+        return Boolean(
+          global.DGBPlanetOneHydrationRender &&
+            typeof global.DGBPlanetOneHydrationRender.createHydrationLayer === "function"
+        );
+      },
+      "Planet 1 hydration renderer"
+    );
   }
 
   function loadTerrainRenderer() {
-    if (hasTerrainApi()) {
-      return Promise.resolve(global.DGBPlanetOneTerrainRender);
-    }
+    markDocument("loading-terrain");
 
-    if (terrainPromise) {
-      return terrainPromise;
-    }
-
-    terrainPromise = appendScript(TERRAIN_RENDERER, hasTerrainApi, {
-      terrainAuthority: TERRAIN_RENDERER,
-      pairedTerrainRenderer: PAIRED_TERRAIN_RENDERER_VERSION,
-      terrainFirstLoadOrder: "true",
-      planet: "Planet 1"
-    }).then(function terrainReady() {
-      publish("terrain_renderer_ready", {
-        terrainRenderer: TERRAIN_RENDERER,
-        pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-        terrainStatus: terrainStatus()
-      });
-
-      return global.DGBPlanetOneTerrainRender;
-    });
-
-    return terrainPromise;
+    return loadScript(
+      TERRAIN_RENDERER,
+      function checkTerrain() {
+        return Boolean(
+          global.DGBPlanetOneTerrainRender &&
+            typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function"
+        );
+      },
+      "Planet 1 terrain renderer"
+    );
   }
 
   function loadMainRendererAfterTerrain() {
-    if (hasRendererApi()) {
-      return Promise.resolve(global.DGBPlanetOneRenderTeam);
-    }
+    markDocument("loading-main-renderer");
 
-    if (rendererPromise) {
-      return rendererPromise;
-    }
+    return loadScript(
+      MAIN_RENDERER,
+      function checkMainRenderer() {
+        return Boolean(
+          global.DGBPlanetOneRenderTeam &&
+            typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+        );
+      },
+      "Planet 1 main renderer"
+    );
+  }
 
-    rendererPromise = loadTerrainRenderer()
-      .then(function terrainLoadedFirst() {
-        return appendScript(PLANET_ONE_RENDERER, hasRendererApi, {
-          renderAuthority: PLANET_ONE_RENDERER,
-          terrainAuthority: TERRAIN_RENDERER,
-          pairedMainRenderer: PAIRED_MAIN_RENDERER_VERSION,
-          pairedTerrainRenderer: PAIRED_TERRAIN_RENDERER_VERSION,
-          terrainFirstLoadOrder: "true",
-          optimumExpressionOnly: "true",
-          noCompetingGlobeSurface: "true"
-        });
+  function loadHydroTerrainChain() {
+    return loadHydrationRenderer()
+      .then(function afterHydration() {
+        return loadTerrainRenderer();
       })
-      .then(function rendererReady() {
-        publish("main_renderer_ready_after_terrain", {
-          planetOneRenderer: PLANET_ONE_RENDERER,
-          terrainRenderer: TERRAIN_RENDERER,
-          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-          terrainStatus: terrainStatus(),
-          rendererStatus: rendererStatus()
-        });
-
-        return global.DGBPlanetOneRenderTeam;
+      .then(function afterTerrain() {
+        return loadMainRendererAfterTerrain();
       });
-
-    return rendererPromise;
   }
 
-  function hideLegacyFallback() {
-    const fallback = document.getElementById("demo-planet-fallback");
-    if (!fallback) return false;
-
-    fallback.dataset.active = "false";
-    fallback.dataset.reason = "demo-planet-retired-planet-one-terrain-first-optimum-active";
-    fallback.hidden = true;
-    fallback.setAttribute("aria-hidden", "true");
-    fallback.style.display = "none";
-    fallback.style.visibility = "hidden";
-    fallback.style.opacity = "0";
-
-    return true;
-  }
-
-  function renderWaiting(mount, message) {
+  function writeMountDiagnostic(mount, message) {
     if (!mount) return;
 
-    mount.innerHTML =
-      '<div style="' +
-      [
-        "border:1px solid rgba(242,199,111,.36)",
-        "border-radius:22px",
-        "padding:16px",
-        "background:rgba(242,199,111,.055)",
-        "color:rgba(228,234,246,.78)",
-        "font:800 0.95rem/1.45 system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif",
-        "text-align:center"
-      ].join(";") +
-      '">' +
-      String(message || "Planet 1 optimum renderer is preparing.") +
-      "</div>";
+    mount.dataset.renderStatus = "diagnostic-hold";
+    mount.dataset.showroomGlobeInstrument = VERSION;
+    mount.dataset.hydrationFirstLoadOrder = "true";
+    mount.dataset.hydroTerrainMarriage = "true";
+    mount.dataset.noFallbackPlanet = "true";
+    mount.dataset.noFallbackTerrainExpression = "true";
+
+    mount.innerHTML = [
+      '<section style="',
+      "width:min(680px,100%);",
+      "margin:0 auto;",
+      "border:1px solid rgba(242,199,111,.42);",
+      "border-radius:28px;",
+      "padding:22px;",
+      "background:rgba(242,199,111,.055);",
+      "color:rgba(255,244,211,.92);",
+      "font:800 15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;",
+      "text-align:center;",
+      '">',
+      "<strong>Planet 1 diagnostic hold.</strong><br>",
+      String(message || "Hydration-first chain is not ready."),
+      "<br><code>",
+      HYDRATION_RENDERER,
+      " → ",
+      TERRAIN_RENDERER,
+      " → ",
+      MAIN_RENDERER,
+      "</code>",
+      "</section>"
+    ].join("");
   }
 
-  function stopExistingRender(api) {
-    let stopped = false;
-
-    if (lastHandle && typeof lastHandle.destroy === "function") {
-      lastHandle.destroy();
-      stopped = true;
-    } else if (lastHandle && typeof lastHandle.stop === "function") {
-      lastHandle.stop();
-      stopped = true;
+  function stopExistingHandle() {
+    if (currentHandle && typeof currentHandle.stop === "function") {
+      currentHandle.stop();
     }
 
-    if (api && typeof api.destroyAll === "function") {
-      api.destroyAll();
-      stopped = true;
-    } else if (api && typeof api.stopAll === "function") {
-      api.stopAll();
-      stopped = true;
+    if (currentHandle && typeof currentHandle.destroy === "function") {
+      currentHandle.destroy();
     }
 
-    return stopped;
+    currentHandle = null;
   }
 
-  function renderGlobe(mount, options) {
-    const target = normalizeMount(mount);
-    const config = options || {};
+  function renderGlobe(target, options) {
+    const mount = typeof target === "string" ? document.querySelector(target) : target;
+    const opts = options || {};
 
-    markDocument();
-    hideLegacyFallback();
-
-    if (!target) {
-      const error = new Error("renderGlobe requires a valid mount element.");
-
-      publish("render_globe_failed", {
-        reason: error.message,
-        assetRole: "terrain-first-delegation-support-only"
-      });
-
-      throw error;
+    if (!mount) {
+      return Promise.reject(new Error("renderGlobe requires a mount element."));
     }
 
-    target.dataset.showroomGlobeInstrument = VERSION;
-    target.dataset.sharedContract = SHARED_CONTRACT;
-    target.dataset.pairedMainRendererVersion = PAIRED_MAIN_RENDERER_VERSION;
-    target.dataset.pairedTerrainRendererVersion = PAIRED_TERRAIN_RENDERER_VERSION;
-    target.dataset.legacyDemoPlanetRetired = "true";
-    target.dataset.demoPlanetStatus = "retired";
-    target.dataset.visualObject = "planet-1";
+    markDocument("boot-started");
 
-    target.dataset.terrainRenderer = TERRAIN_RENDERER;
-    target.dataset.planetOneRenderer = PLANET_ONE_RENDERER;
-    target.dataset.terrainFirstLoadOrder = "true";
-    target.dataset.renderAuthority = PLANET_ONE_RENDERER;
-    target.dataset.terrainAuthority = TERRAIN_RENDERER;
-    target.dataset.renderDelegation = "planet-one-render-team";
-    target.dataset.renderGlobeApiPreserved = "true";
-    target.dataset.assetRole = "terrain-first-delegation-support-only";
-    target.dataset.singlePlanetAuthority = "true";
-    target.dataset.noCompetingGlobeSurface = "true";
-    target.dataset.noLegacyDemoPlanetReturn = "true";
-    target.dataset.noPublicPassButtons = "true";
-    target.dataset.optimumExpressionOnly = "true";
-    target.dataset.drawsOwnPlanet = "false";
+    mount.dataset.showroomGlobeInstrument = VERSION;
+    mount.dataset.showroomGlobeInstrumentPrevious = PREVIOUS_V16;
+    mount.dataset.assetAuthority = AUTHORITY;
 
-    renderWaiting(target, "Planet 1 terrain-first optimum expression is preparing.");
+    mount.dataset.hydrationRenderer = HYDRATION_RENDERER;
+    mount.dataset.terrainRenderer = TERRAIN_RENDERER;
+    mount.dataset.mainRenderer = MAIN_RENDERER;
 
-    return loadTerrainRenderer()
-      .then(function terrainReady() {
-        return loadMainRendererAfterTerrain();
-      })
-      .then(function renderAfterTerrain(api) {
-        if (config.stopExisting !== false) {
-          stopExistingRender(api);
+    mount.dataset.hydrationFirstLoadOrder = "true";
+    mount.dataset.terrainFirstLoadOrder = "true";
+    mount.dataset.hydroTerrainMarriage = "true";
+    mount.dataset.optimumExpressionOnly = "true";
+
+    mount.dataset.noCompetingGlobeSurface = "true";
+    mount.dataset.drawsOwnPlanet = "false";
+    mount.dataset.noOwnPlanetDrawing = "true";
+    mount.dataset.noFallbackPlanet = "true";
+    mount.dataset.noFallbackTerrainExpression = "true";
+    mount.dataset.renderStatus = "loading-hydration-first-chain";
+
+    if (opts.stopExisting !== false) {
+      stopExistingHandle();
+    }
+
+    return loadHydroTerrainChain()
+      .then(function chainReady() {
+        markDocument("chain-ready");
+
+        if (
+          !global.DGBPlanetOneRenderTeam ||
+          typeof global.DGBPlanetOneRenderTeam.renderPlanetOne !== "function"
+        ) {
+          throw new Error("Main renderer API is unavailable after hydration-first boot.");
         }
 
-        lastMount = target;
-        lastHandle = api.renderPlanetOne(target, {
-          caption:
-            config.caption ||
-            "Planet 1 · Nine Summits Universe · optimum expression",
-          expression: "optimum"
-        });
+        mount.dataset.renderStatus = "delegating-to-main-renderer";
+        mount.dataset.hydrationModuleIntegrated = "true";
+        mount.dataset.terrainModuleIntegrated = "true";
+        mount.dataset.hydroTerrainMarriage = "true";
 
-        target.dataset.renderStatus = "mounted";
-        target.dataset.instrumentVersion = VERSION;
-        target.dataset.planetOneRenderActive = "true";
-        target.dataset.planetOneTerrainRenderActive = hasTerrainApi() ? "true" : "false";
-        target.dataset.terrainIntegratedBeforeRender = hasTerrainApi() ? "true" : "false";
-        target.dataset.ancient39bCrustEngineActive =
-          hasTerrainApi() && terrainStatus() ? "true" : "false";
-        target.dataset.optimumExpressionOnly = "true";
-        target.dataset.assetCoordinated = "true";
-
-        publish("render_globe_delegated_to_planet_one_v16_terrain_first_optimum", {
-          mountId: target.id || null,
-          terrainRenderer: TERRAIN_RENDERER,
-          planetOneRenderer: PLANET_ONE_RENDERER,
-          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-          visualObject: "Planet 1",
+        const handle = global.DGBPlanetOneRenderTeam.renderPlanetOne(mount, {
+          caption: opts.caption || "Planet 1 · Nine Summits Universe · Optimum expression",
           expression: "optimum",
-          demoPlanetStatus: "retired",
-          terrainIntegratedBeforeRender: hasTerrainApi(),
-          noCompetingGlobeSurface: true,
-          terrainStatus: terrainStatus(),
-          rendererStatus: rendererStatus()
+          bootAuthority: AUTHORITY,
+          hydrationRenderer: HYDRATION_RENDERER,
+          terrainRenderer: TERRAIN_RENDERER,
+          mainRenderer: MAIN_RENDERER,
+          hydrationFirstLoadOrder: true,
+          hydroTerrainMarriage: true
         });
+
+        currentHandle = handle;
+
+        mount.dataset.renderStatus = "mounted";
+        mount.dataset.planetOneRenderLoaded = "true";
+        mount.dataset.optimumExpressionOnly = "true";
 
         return {
           ok: true,
           version: VERSION,
-          previousPair: PREVIOUS_PAIR,
-          supportContract: SUPPORT_CONTRACT,
-          legacyRetired: LEGACY_VERSION,
-          sharedContract: SHARED_CONTRACT,
-          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-          renderGlobe: true,
-          delegated: true,
-          visualObject: "Planet 1",
-          expression: "optimum",
-          demoPlanetStatus: "retired",
-          assetRole: "terrain-first-delegation-support-only",
+          previousV16: PREVIOUS_V16,
+          handle,
+          mount,
+          hydrationRenderer: HYDRATION_RENDERER,
           terrainRenderer: TERRAIN_RENDERER,
-          planetOneRenderer: PLANET_ONE_RENDERER,
-          terrainIntegratedBeforeRender: hasTerrainApi(),
-          handle: lastHandle,
-          terrainStatus: terrainStatus(),
-          rendererStatus: rendererStatus()
+          mainRenderer: MAIN_RENDERER,
+          hydrationFirstLoadOrder: true,
+          terrainFirstLoadOrder: true,
+          hydroTerrainMarriage: true,
+          optimumExpressionOnly: true,
+          noFallbackPlanet: true,
+          noOwnPlanetDrawing: true
         };
       })
-      .catch(function renderFailed(error) {
-        target.dataset.renderStatus = "error";
-        target.dataset.renderError = error && error.message ? error.message : "unknown";
+      .catch(function failed(error) {
+        const message = error && error.message ? error.message : "unknown hydration-first boot failure";
 
-        renderWaiting(
-          target,
-          "Planet 1 terrain-first renderer could not load. Check /world/render/planet-one.terrain.render.js and /world/render/planet-one.render.js."
-        );
-
-        publish("render_globe_delegate_failed", {
-          error: error && error.message ? error.message : "unknown",
-          terrainRenderer: TERRAIN_RENDERER,
-          planetOneRenderer: PLANET_ONE_RENDERER,
-          sharedContract: SHARED_CONTRACT,
-          pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-          pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION
-        });
+        markDocument("diagnostic-hold");
+        writeMountDiagnostic(mount, message);
 
         return {
           ok: false,
           version: VERSION,
-          delegated: false,
-          error: error && error.message ? error.message : "unknown"
+          error: message,
+          diagnosticHold: true,
+          hydrationFirstLoadOrder: true,
+          hydroTerrainMarriage: true,
+          noFallbackPlanet: true,
+          noOwnPlanetDrawing: true
         };
       });
   }
 
-  function routeAllowsAutoboot() {
-    const path = routePath();
-    const hash = global.location && global.location.hash ? global.location.hash : "";
+  function start() {
+    if (currentHandle && typeof currentHandle.start === "function") {
+      return currentHandle.start();
+    }
 
-    if (path === SHOWROOM_GLOBE_ROUTE) return true;
-
-    if (
-      path === SHOWROOM_ROUTE &&
-      (hash === "#planet-one-render" || hash === "#globe-main" || hash === "#planet-one")
-    ) {
-      return true;
+    if (currentHandle && typeof currentHandle.resume === "function") {
+      return currentHandle.resume();
     }
 
     return false;
   }
 
-  function findAutoMount() {
-    return (
-      document.querySelector("[data-planet-one-autoboot='true']") ||
-      document.getElementById("planet-one-render") ||
-      document.getElementById("demo-planet-mount")
-    );
-  }
-
-  function autoBoot(options) {
-    const cfg = options || {};
-    const target = normalizeMount(cfg.mount) || findAutoMount();
-
-    markDocument();
-
-    const allowedByForce = cfg.force === true;
-    const allowedByData =
-      document.documentElement.dataset.allowShowroomGlobeInstrumentAutoboot === "true" ||
-      Boolean(target && target.dataset && target.dataset.planetOneAutoboot === "true");
-
-    if (!target) {
-      publish("autoboot_blocked_mount_missing", {
-        route: routePath()
-      });
-
-      return {
-        ok: false,
-        version: VERSION,
-        autoBoot: false,
-        reason: "mount-missing"
-      };
-    }
-
-    if (!allowedByForce && !allowedByData && !routeAllowsAutoboot()) {
-      publish("autoboot_blocked", {
-        route: routePath(),
-        reason: "route-not-authorized-for-terrain-first-autoboot",
-        noTimeoutRenderRetries: true
-      });
-
-      return {
-        ok: true,
-        version: VERSION,
-        autoBoot: false,
-        blocked: true,
-        reason: "route-not-authorized-for-terrain-first-autoboot"
-      };
-    }
-
-    if (autoBooted && cfg.force !== true) {
-      publish("autoboot_blocked_already_ran", {
-        route: routePath(),
-        mountId: target.id || null
-      });
-
-      return {
-        ok: true,
-        version: VERSION,
-        autoBoot: false,
-        blocked: true,
-        reason: "already-ran"
-      };
-    }
-
-    autoBooted = true;
-
-    return renderGlobe(target, {
-      caption:
-        cfg.caption ||
-        "Planet 1 · Nine Summits Universe · optimum expression",
-      stopExisting: cfg.stopExisting
-    });
-  }
-
-  function start() {
-    if (lastHandle && typeof lastHandle.start === "function") {
-      lastHandle.start();
-    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.startAll === "function") {
-      global.DGBPlanetOneRenderTeam.startAll();
-    }
-
-    publish("delegated_render_started", {
-      mountId: lastMount && lastMount.id ? lastMount.id : null
-    });
-
-    return true;
-  }
-
   function stop() {
-    if (lastHandle && typeof lastHandle.stop === "function") {
-      lastHandle.stop();
-    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.stopAll === "function") {
-      global.DGBPlanetOneRenderTeam.stopAll();
+    if (currentHandle && typeof currentHandle.stop === "function") {
+      return currentHandle.stop();
     }
 
-    publish("delegated_render_stopped", {
-      mountId: lastMount && lastMount.id ? lastMount.id : null
-    });
+    if (currentHandle && typeof currentHandle.pause === "function") {
+      return currentHandle.pause();
+    }
 
-    return true;
+    return false;
   }
 
   function destroy() {
-    if (lastHandle && typeof lastHandle.destroy === "function") {
-      lastHandle.destroy();
-    } else if (hasRendererApi() && typeof global.DGBPlanetOneRenderTeam.destroyAll === "function") {
-      global.DGBPlanetOneRenderTeam.destroyAll();
+    if (currentHandle && typeof currentHandle.destroy === "function") {
+      currentHandle.destroy();
     }
 
-    lastHandle = null;
-    lastMount = null;
-
-    publish("delegated_render_destroyed", {
-      sharedContract: SHARED_CONTRACT,
-      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION
-    });
-
+    currentHandle = null;
     return true;
+  }
+
+  function autoBoot() {
+    const mount =
+      document.getElementById("planet-one-render") ||
+      document.getElementById("demo-planet-mount");
+
+    if (!mount) return Promise.resolve(null);
+
+    if (mount.dataset.renderStatus === "mounted" && mount.dataset.showroomGlobeInstrument === VERSION) {
+      return Promise.resolve({
+        ok: true,
+        alreadyMounted: true,
+        version: VERSION
+      });
+    }
+
+    return renderGlobe(mount, {
+      context: "auto",
+      caption: "Planet 1 · Nine Summits Universe · Optimum expression",
+      stopExisting: true
+    });
   }
 
   function getStatus() {
     return {
       version: VERSION,
-      previousPair: PREVIOUS_PAIR,
-      supportContract: SUPPORT_CONTRACT,
-      legacyRetired: LEGACY_VERSION,
-      sharedContract: SHARED_CONTRACT,
-      pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-      pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-      expectedGlobal: EXPECTED_GLOBAL,
-      expectedApi: EXPECTED_API,
-      visualObject: "Planet 1",
-      expression: "optimum",
-      demoPlanetStatus: "retired",
+      previousV16: PREVIOUS_V16,
+      authority: AUTHORITY,
+      hydrationRenderer: HYDRATION_RENDERER,
       terrainRenderer: TERRAIN_RENDERER,
-      planetOneRenderer: PLANET_ONE_RENDERER,
-      renderAuthority: PLANET_ONE_RENDERER,
-      terrainAuthority: TERRAIN_RENDERER,
-      assetInstrument: "/assets/showroom.globe.instrument.js",
-      assetRole: "terrain-first-delegation-support-only",
+      mainRenderer: MAIN_RENDERER,
+      hydrationFirstLoadOrder: true,
       terrainFirstLoadOrder: true,
-      terrainIntegrated: hasTerrainApi(),
-      mainRendererAvailable: hasRendererApi(),
-      singlePlanetAuthority: true,
+      hydroTerrainMarriage: true,
+      optimumExpressionOnly: true,
+      loadHydrationRenderer: true,
+      loadTerrainRenderer: true,
+      loadMainRendererAfterTerrain: true,
       noCompetingGlobeSurface: true,
-      noLegacyDemoPlanetReturn: true,
-      noPublicPassButtons: true,
-      autoBooted,
-      timeoutRetries: false,
       drawsOwnPlanet: false,
-      lastMountId: lastMount && lastMount.id ? lastMount.id : null,
-      terrainStatus: terrainStatus(),
-      rendererStatus: rendererStatus(),
-      receipts: clone(receipts)
+      noOwnPlanetDrawing: true,
+      noDemoPlanet: true,
+      noFallbackPlanet: true,
+      noFallbackTerrainExpression: true,
+      delegationOnly: true,
+      hasHydration: Boolean(global.DGBPlanetOneHydrationRender),
+      hasTerrain: Boolean(global.DGBPlanetOneTerrainRender),
+      hasMainRenderer: Boolean(global.DGBPlanetOneRenderTeam),
+      currentHandle: Boolean(currentHandle)
     };
   }
 
   const api = Object.freeze({
-    version: VERSION,
     VERSION,
-    PREVIOUS_PAIR,
-    SUPPORT_CONTRACT,
-    LEGACY_VERSION,
-    SHARED_CONTRACT,
-    PAIRED_MAIN_RENDERER_VERSION,
-    PAIRED_TERRAIN_RENDERER_VERSION,
+    PREVIOUS_V16,
+    AUTHORITY,
+    HYDRATION_RENDERER,
     TERRAIN_RENDERER,
-    PLANET_ONE_RENDERER,
+    MAIN_RENDERER,
+    CONTRACT,
     renderGlobe,
     autoBoot,
+    loadHydrationRenderer,
+    loadTerrainRenderer,
+    loadMainRendererAfterTerrain,
+    loadHydroTerrainChain,
     start,
     stop,
     destroy,
-    loadTerrainRenderer,
-    loadMainRendererAfterTerrain,
     getStatus
   });
-
-  markDocument();
 
   global.DGBShowroomGlobeInstrument = api;
 
@@ -722,31 +501,10 @@
     window.DGBShowroomGlobeInstrument = api;
   }
 
-  publish("showroom_globe_instrument_v16_terrain_first_optimum_ready", {
-    expectedGlobal: EXPECTED_GLOBAL,
-    expectedApi: EXPECTED_API,
-    sharedContract: SHARED_CONTRACT,
-    pairedMainRendererVersion: PAIRED_MAIN_RENDERER_VERSION,
-    pairedTerrainRendererVersion: PAIRED_TERRAIN_RENDERER_VERSION,
-    demoPlanetStatus: "retired",
-    terrainRenderer: TERRAIN_RENDERER,
-    planetOneRenderer: PLANET_ONE_RENDERER,
-    assetRole: "terrain-first-delegation-support-only",
-    noLegacyAutobootRetries: true,
-    noTimeoutRenderRetries: true,
-    noCompetingGlobeSurface: true,
-    drawsOwnPlanet: false,
-    optimumExpressionOnly: true
-  });
+  markDocument("ready");
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      function bootWhenReady() {
-        autoBoot();
-      },
-      { once: true }
-    );
+    document.addEventListener("DOMContentLoaded", autoBoot, { once: true });
   } else {
     autoBoot();
   }

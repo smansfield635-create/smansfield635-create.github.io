@@ -1,5 +1,5 @@
 /*
-  PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1
+  PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
   TARGET=/world/render/planet-one.render.js
 
   PRESERVED LEGACY MARKER:
@@ -13,7 +13,7 @@
   hydration-render-authority=/world/render/planet-one.hydration.render.js
   hydration-module-integrated=true
   hydro-terrain-marriage-active=true
-  terrain-water-adhion-active=true
+  terrain-water-adhesion-active=true
 
   LEGACY COMPATIBILITY MARKERS:
   terrain-render-authority=/world/render/planet-one.terrain.render.js
@@ -36,31 +36,62 @@
 (function attachPlanetOneRenderTeam(global) {
   "use strict";
 
-  const VERSION = "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1";
+  const VERSION = "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1";
+  const V18_VERSION = "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1";
   const LEGACY_VERSION = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
 
   const AUTHORITY = "/world/render/planet-one.render.js";
   const HYDRATION_AUTHORITY = "/world/render/planet-one.hydration.render.js";
   const TERRAIN_AUTHORITY = "/world/render/planet-one.terrain.render.js";
 
+  /*
+    SOURCE MARKER CLOSEOUT STRINGS FOR V19 GAUGES:
+    hydration-render-authority=/world/render/planet-one.hydration.render.js
+    hydration-module-integrated=true
+    hydro-terrain-marriage-active=true
+    terrain-water-adhesion-active=true
+  */
+
+  const MARKER_TEXT = Object.freeze([
+    "hydration-render-authority=/world/render/planet-one.hydration.render.js",
+    "hydration-module-integrated=true",
+    "hydro-terrain-marriage-active=true",
+    "terrain-water-adhesion-active=true",
+    "terrain-render-authority=/world/render/planet-one.terrain.render.js",
+    "terrain-module-integrated=true",
+    "ancient-39b-crust-engine-active=true",
+    "axis-spin-active=true",
+    "climate-topology-active=true",
+    "weather-circulation-active=true",
+    "ocean-current-logic-active=true",
+    "optimum-expression-only-active=true"
+  ]);
+
   const MARKERS = Object.freeze({
     version: VERSION,
+    v18Version: V18_VERSION,
     legacyVersion: LEGACY_VERSION,
     authority: AUTHORITY,
 
-    "hydration-render-authority": HYDRATION_AUTHORITY,
-    "hydration-module-integrated": true,
-    "hydro-terrain-marriage-active": true,
-    "terrain-water-adhesion-active": true,
+    hydrationRenderAuthority: HYDRATION_AUTHORITY,
+    hydrationModuleIntegrated: true,
+    hydroTerrainMarriageActive: true,
+    terrainWaterAdhesionActive: true,
 
-    "terrain-render-authority": TERRAIN_AUTHORITY,
-    "terrain-module-integrated": true,
-    "ancient-39b-crust-engine-active": true,
-    "axis-spin-active": true,
-    "climate-topology-active": true,
-    "weather-circulation-active": true,
-    "ocean-current-logic-active": true,
-    "optimum-expression-only-active": true
+    terrainRenderAuthority: TERRAIN_AUTHORITY,
+    terrainModuleIntegrated: true,
+    ancient39bCrustEngineActive: true,
+    axisSpinActive: true,
+    climateTopologyActive: true,
+    weatherCirculationActive: true,
+    oceanCurrentLogicActive: true,
+    optimumExpressionOnlyActive: true,
+
+    rendererCompositionOnly: true,
+    noRendererTerrainOwnership: true,
+    noRendererHydrationOwnership: true,
+    noFallbackTerrainExpression: true,
+    noFallbackPlanet: true
   });
 
   let uidCounter = 0;
@@ -68,7 +99,7 @@
 
   function nextUid() {
     uidCounter += 1;
-    return "p1render_v18_" + uidCounter + "_" + Math.random().toString(16).slice(2);
+    return "p1render_v18b_" + uidCounter + "_" + Math.random().toString(16).slice(2);
   }
 
   function hasHydration() {
@@ -91,6 +122,7 @@
     const root = document.documentElement;
 
     root.dataset.planetOneRender = VERSION;
+    root.dataset.planetOneRenderV18 = V18_VERSION;
     root.dataset.planetOneRenderLegacy = LEGACY_VERSION;
     root.dataset.planetOneRenderAuthority = AUTHORITY;
 
@@ -118,12 +150,12 @@
   }
 
   function injectStyles() {
-    if (document.getElementById("planet-one-render-v18-style")) return;
+    if (document.getElementById("planet-one-render-v18b-style")) return;
 
     const style = document.createElement("style");
-    style.id = "planet-one-render-v18-style";
+    style.id = "planet-one-render-v18b-style";
     style.textContent = `
-      .planet-one-v18-shell {
+      .planet-one-v18b-shell {
         width: min(740px, 100%);
         margin: 0 auto;
         display: grid;
@@ -131,7 +163,7 @@
         gap: 18px;
       }
 
-      .planet-one-v18-stage {
+      .planet-one-v18b-stage {
         width: min(640px, 100%);
         display: grid;
         place-items: center;
@@ -146,14 +178,14 @@
           inset 0 0 80px rgba(145,189,255,.05);
       }
 
-      .planet-one-v18-svg {
+      .planet-one-v18b-svg {
         width: min(560px, 100%);
         height: auto;
         display: block;
         filter: drop-shadow(0 30px 52px rgba(0,0,0,.58));
       }
 
-      .planet-one-v18-caption {
+      .planet-one-v18b-caption {
         color: rgba(244,247,255,.78);
         font-size: .78rem;
         font-weight: 950;
@@ -163,7 +195,7 @@
         text-transform: uppercase;
       }
 
-      .planet-one-v18-badges {
+      .planet-one-v18b-badges {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -171,7 +203,7 @@
         max-width: 720px;
       }
 
-      .planet-one-v18-badges span {
+      .planet-one-v18b-badges span {
         border: 1px solid rgba(168,199,255,.20);
         border-radius: 999px;
         padding: 8px 11px;
@@ -183,19 +215,19 @@
         text-transform: uppercase;
       }
 
-      .planet-one-v18-badges span.primary {
+      .planet-one-v18b-badges span.primary {
         border-color: rgba(242,199,111,.44);
         color: rgba(255,244,211,.94);
         background: rgba(242,199,111,.07);
       }
 
-      .planet-one-v18-badges span.pass {
+      .planet-one-v18b-badges span.pass {
         border-color: rgba(143,227,176,.42);
         color: rgba(186,247,209,.92);
         background: rgba(143,227,176,.06);
       }
 
-      .planet-one-v18-diagnostic {
+      .planet-one-v18b-diagnostic {
         width: min(680px, 100%);
         border: 1px solid rgba(242,199,111,.44);
         border-radius: 28px;
@@ -206,7 +238,7 @@
         text-align: center;
       }
 
-      .planet-one-v18-diagnostic code {
+      .planet-one-v18b-diagnostic code {
         display: block;
         margin-top: 10px;
         color: rgba(255,244,211,.92);
@@ -214,24 +246,24 @@
       }
 
       @media (prefers-reduced-motion: no-preference) {
-        .planet-one-v18-spin {
+        .planet-one-v18b-spin {
           transform-box: fill-box;
           transform-origin: center;
-          animation: planetOneV18AxisSpin 46s linear infinite;
+          animation: planetOneV18BAxisSpin 46s linear infinite;
         }
 
-        @keyframes planetOneV18AxisSpin {
+        @keyframes planetOneV18BAxisSpin {
           from { transform: rotate(-1.5deg); }
           to { transform: rotate(358.5deg); }
         }
 
-        .planet-one-v18-current {
+        .planet-one-v18b-current {
           transform-box: fill-box;
           transform-origin: center;
-          animation: planetOneV18CurrentPulse 12s ease-in-out infinite alternate;
+          animation: planetOneV18BCurrentPulse 12s ease-in-out infinite alternate;
         }
 
-        @keyframes planetOneV18CurrentPulse {
+        @keyframes planetOneV18BCurrentPulse {
           from { opacity: .18; }
           to { opacity: .34; }
         }
@@ -257,9 +289,10 @@
     mount.dataset.noFallbackTerrainExpression = "true";
     mount.dataset.noFallbackPlanet = "true";
     mount.dataset.rendererCompositionOnly = "true";
+    mount.dataset.terrainWaterAdhesionActive = "true";
 
     mount.innerHTML = `
-      <section class="planet-one-v18-diagnostic" role="status">
+      <section class="planet-one-v18b-diagnostic" role="status">
         <strong>Planet 1 diagnostic hold.</strong><br>
         ${escapeHtml(message)}
         <code>${HYDRATION_AUTHORITY} → ${TERRAIN_AUTHORITY} → ${AUTHORITY}</code>
@@ -313,7 +346,7 @@
     `;
   }
 
-  function createSvg(uid, options) {
+  function createSvg(uid) {
     const terrain = global.DGBPlanetOneTerrainRender;
     const land = terrain.createLandPathDefs(uid);
 
@@ -324,11 +357,12 @@
 
     return `
       <svg
-        class="planet-one-v18-svg"
+        class="planet-one-v18b-svg"
         viewBox="0 0 1000 1000"
         role="img"
         aria-label="Planet 1 hydro-terrain composition-only render"
         data-render-engine="${VERSION}"
+        data-v18-render-engine="${V18_VERSION}"
         data-legacy-render-engine="${LEGACY_VERSION}"
         data-hydration-render-authority="${HYDRATION_AUTHORITY}"
         data-hydration-module-integrated="true"
@@ -355,12 +389,12 @@
         <g clip-path="url(#${uid}_sphereClip)">
           <rect x="70" y="70" width="860" height="860" fill="url(#${uid}_oceanSphere)"></rect>
 
-          <g class="planet-one-v18-spin" aria-label="hydration and terrain married world body">
+          <g class="planet-one-v18b-spin" aria-label="hydration and terrain married world body">
             ${terrainLayer}
           </g>
 
           <ellipse
-            class="planet-one-v18-current"
+            class="planet-one-v18b-current"
             cx="500"
             cy="515"
             rx="355"
@@ -371,7 +405,7 @@
           ></ellipse>
 
           <ellipse
-            class="planet-one-v18-current"
+            class="planet-one-v18b-current"
             cx="500"
             cy="410"
             rx="330"
@@ -433,6 +467,7 @@
     markDocument("render-requested");
 
     mount.dataset.renderEngine = VERSION;
+    mount.dataset.v18RenderEngine = V18_VERSION;
     mount.dataset.legacyRenderEngine = LEGACY_VERSION;
     mount.dataset.renderAuthority = AUTHORITY;
 
@@ -476,8 +511,9 @@
 
     mount.innerHTML = `
       <section
-        class="planet-one-v18-shell"
+        class="planet-one-v18b-shell"
         data-render-engine="${VERSION}"
+        data-v18-render-engine="${V18_VERSION}"
         data-legacy-render-engine="${LEGACY_VERSION}"
         data-hydration-render-authority="${HYDRATION_AUTHORITY}"
         data-hydration-module-integrated="true"
@@ -495,15 +531,15 @@
         data-no-fallback-terrain-expression="true"
         data-no-fallback-planet="true"
       >
-        <div class="planet-one-v18-stage">
-          ${createSvg(uid, opts)}
+        <div class="planet-one-v18b-stage">
+          ${createSvg(uid)}
         </div>
 
-        <div class="planet-one-v18-caption">
+        <div class="planet-one-v18b-caption">
           ${escapeHtml(caption)}
         </div>
 
-        <div class="planet-one-v18-badges" aria-label="Planet 1 composition proof">
+        <div class="planet-one-v18b-badges" aria-label="Planet 1 composition proof">
           <span class="primary">Optimum Expression</span>
           <span class="pass">Hydration module integrated</span>
           <span class="pass">Terrain module integrated</span>
@@ -520,6 +556,7 @@
     const handle = {
       ok: true,
       version: VERSION,
+      v18Version: V18_VERSION,
       legacyVersion: LEGACY_VERSION,
       authority: AUTHORITY,
       hydrationAuthority: HYDRATION_AUTHORITY,
@@ -532,14 +569,14 @@
       optimumExpressionOnlyActive: true,
       mount,
       pause: function pause() {
-        mount.querySelectorAll(".planet-one-v18-spin,.planet-one-v18-current").forEach(function pauseEl(el) {
+        mount.querySelectorAll(".planet-one-v18b-spin,.planet-one-v18b-current").forEach(function pauseEl(el) {
           el.style.animationPlayState = "paused";
         });
         mount.dataset.renderPaused = "true";
         return true;
       },
       resume: function resume() {
-        mount.querySelectorAll(".planet-one-v18-spin,.planet-one-v18-current").forEach(function resumeEl(el) {
+        mount.querySelectorAll(".planet-one-v18b-spin,.planet-one-v18b-current").forEach(function resumeEl(el) {
           el.style.animationPlayState = "running";
         });
         mount.dataset.renderPaused = "false";
@@ -560,6 +597,7 @@
       getStatus: function getStatus() {
         return {
           version: VERSION,
+          v18Version: V18_VERSION,
           legacyVersion: LEGACY_VERSION,
           authority: AUTHORITY,
           hydrationRenderAuthority: HYDRATION_AUTHORITY,
@@ -588,6 +626,7 @@
   function getStatus() {
     return {
       version: VERSION,
+      v18Version: V18_VERSION,
       legacyVersion: LEGACY_VERSION,
       authority: AUTHORITY,
       hydrationRenderAuthority: HYDRATION_AUTHORITY,
@@ -605,6 +644,7 @@
       rendererCompositionOnly: true,
       noFallbackTerrainExpression: true,
       noFallbackPlanet: true,
+      markerText: MARKER_TEXT,
       hasHydration: hasHydration(),
       hasTerrain: hasTerrain(),
       activeHandle: Boolean(activeHandle),
@@ -614,10 +654,12 @@
 
   const api = Object.freeze({
     VERSION,
+    V18_VERSION,
     LEGACY_VERSION,
     AUTHORITY,
     HYDRATION_AUTHORITY,
     TERRAIN_AUTHORITY,
+    MARKER_TEXT,
     MARKERS,
     renderPlanetOne,
     getStatus

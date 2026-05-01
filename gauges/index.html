@@ -2,41 +2,52 @@
 <html
   lang="en"
   data-page="gauges"
-  data-gauge-contract="GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1"
-  data-previous-gauge-contract="GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1"
-  data-measures-source-runtime-mount="true"
+  data-gauge-contract="GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1"
+  data-previous-gauge-contract="GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1"
+  data-measures-source-runtime-mount-script-tags="true"
   data-does-not-render-planet="true"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Diamond Gate Bridge · Gauges · Planet 1 Runtime Parity</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Runtime Forensics</title>
   <meta
     name="description"
-    content="Planet 1 Gauges measure source, runtime, mount, leakage, hydration, terrain, asset, route, and renderer parity without rendering the planet."
+    content="Planet 1 Gauges V21 measures route source, runtime globals, script tags, mounted DOM, old-expression leakage, and next target."
   />
 
   <!--
+    GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1
     GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1
     GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1
-    PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1
 
     TARGET=
     /gauges/index.html
 
     PURPOSE=
-    PRESERVE_V19_HYDRO_TERRAIN_SOURCE_MEASUREMENT
-    ADD_SOURCE_RUNTIME_MOUNT_PARITY_MEASUREMENT
-    DETECT_OLD_RENDER_EXPRESSION_LEAKAGE
-    IDENTIFY_WHETHER_BREAK_IS_SOURCE_RUNTIME_MOUNT_ROUTE_ASSET_RENDERER_OR_VISUAL
-    PREVENT_BLIND_RENDER_REWRITES
+    MOVE_BEYOND_SIMPLE_RUNTIME_FAIL
+    IDENTIFY_WHETHER_BREAK_IS_ROUTE_SOURCE_ROUTE_RUNTIME_SCRIPT_TAGS_GLOBALS_MOUNT_OR_LEAKAGE
+    VERIFY_V22B_ROUTE_RUNTIME_VERSION_PARITY
+    VERIFY_VERSIONED_SCRIPT_TAGS
+    VERIFY_RENDERER_V18B_AND_ASSET_V20_RUNTIME_GLOBALS
+    VERIFY_MOUNTED_DOM_PROOF
+    PREVENT_BLIND_REWRITES
 
-    THIS PAGE DOES_NOT_RENDER_PLANET=TRUE
-    THIS PAGE MEASURES_ONLY=TRUE
+    MEASUREMENT LAW=
+    SOURCE PASS IS NOT RUNTIME PASS.
+    RUNTIME PASS IS NOT MOUNT PASS.
+    MOUNT PASS IS NOT VISUAL PASS.
+    GAUGES MEASURE ONLY.
 
-    EXPECTED RULE=
-    SOURCE = RUNTIME = MOUNT BEFORE VISUAL JUDGMENT
+    EXPECTED ROUTE=
+    SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1
+
+    EXPECTED ASSET=
+    SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1
+
+    EXPECTED RENDERER=
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
   -->
 
   <style>
@@ -71,16 +82,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      margin: 0;
-      color: var(--text);
-    }
+    body { margin: 0; color: var(--text); }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
+    a { color: inherit; text-decoration: none; }
     a:hover { color: var(--gold); }
 
     .skip-link {
@@ -235,12 +239,12 @@
 
     .score-grid {
       display: grid;
-      grid-template-columns: repeat(5,minmax(0,1fr));
+      grid-template-columns: repeat(6,minmax(0,1fr));
       gap: 12px;
     }
 
     .score-card {
-      min-height: 132px;
+      min-height: 126px;
       padding: 18px;
       display: grid;
       align-content: space-between;
@@ -250,7 +254,7 @@
 
     .score-card span {
       color: var(--muted);
-      font-size: .78rem;
+      font-size: .72rem;
       font-weight: 950;
       letter-spacing: .12em;
       text-transform: uppercase;
@@ -258,7 +262,7 @@
 
     .score-card strong {
       display: block;
-      font-size: clamp(1.35rem,3.6vw,2.35rem);
+      font-size: clamp(1.15rem,3vw,2rem);
       line-height: .98;
       letter-spacing: -.055em;
       overflow-wrap: anywhere;
@@ -413,7 +417,7 @@
 
     .observer-frame {
       width: 100%;
-      min-height: 480px;
+      min-height: 500px;
       border: 1px solid rgba(168,199,255,.18);
       border-radius: 24px;
       background: rgba(0,0,0,.22);
@@ -427,6 +431,10 @@
       text-align: center;
     }
 
+    @media (max-width: 1100px) {
+      .score-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    }
+
     @media (max-width: 960px) {
       .topbar {
         align-items: flex-start;
@@ -436,13 +444,7 @@
 
       nav { justify-content: flex-start; }
 
-      .score-grid {
-        grid-template-columns: repeat(2,minmax(0,1fr));
-      }
-
-      .checks-grid {
-        grid-template-columns: 1fr;
-      }
+      .checks-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 540px) {
@@ -452,21 +454,13 @@
       }
 
       .hero,
-      .panel {
-        border-radius: 24px;
-      }
+      .panel { border-radius: 24px; }
 
-      .panel-head {
-        display: grid;
-      }
+      .panel-head { display: grid; }
 
-      .score-grid {
-        grid-template-columns: 1fr;
-      }
+      .score-grid { grid-template-columns: 1fr; }
 
-      .observer-frame {
-        min-height: 420px;
-      }
+      .observer-frame { min-height: 420px; }
     }
   </style>
 </head>
@@ -493,14 +487,14 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Runtime Parity</div>
-      <h1>Measure what is still missing.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Runtime Forensics</div>
+      <h1>Find the active break, not just the first failure.</h1>
       <p class="lead">
-        V20 keeps the hydro-terrain source audit and adds the missing diagnostic: source, runtime, mount, and old-expression leakage must agree before visual judgment.
+        V21 separates source files, route source, route runtime aliases, loaded script tags, global versions, mounted DOM, leakage, and visual readiness.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAudit">Run V20 parity audit</button>
+        <button class="button" type="button" id="runAudit">Run V21 forensic audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="button secondary" href="/governance/runtime/">Open Runtime Panel</a>
       </div>
@@ -508,30 +502,12 @@
 
     <main>
       <section class="score-grid" aria-label="Gauge summary">
-        <article class="score-card" id="scoreProgress">
-          <span>Progress state</span>
-          <strong>WAIT</strong>
-        </article>
-
-        <article class="score-card" id="scoreSource">
-          <span>Source</span>
-          <strong>WAIT</strong>
-        </article>
-
-        <article class="score-card" id="scoreRuntime">
-          <span>Runtime</span>
-          <strong>WAIT</strong>
-        </article>
-
-        <article class="score-card" id="scoreMount">
-          <span>Mount</span>
-          <strong>WAIT</strong>
-        </article>
-
-        <article class="score-card" id="scoreNext">
-          <span>Next target</span>
-          <strong>WAIT</strong>
-        </article>
+        <article class="score-card" id="scoreProgress"><span>Progress</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreSource"><span>Source</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreRoute"><span>Route runtime</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreScripts"><span>Script tags</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreMount"><span>Mount</span><strong>WAIT</strong></article>
+        <article class="score-card" id="scoreNext"><span>Next target</span><strong>WAIT</strong></article>
       </section>
 
       <section class="panel">
@@ -539,7 +515,7 @@
           <div>
             <h2>Current read</h2>
             <p id="currentRead">
-              Audit has not run yet. V20 will distinguish source proof from runtime proof and mounted DOM proof.
+              Audit has not run yet. V21 will identify which layer is actually stale or under-proven.
             </p>
           </div>
           <span class="pill hold" id="overallStatus">WAIT</span>
@@ -551,9 +527,9 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Source checks</h2>
+            <h2>Source and route-source checks</h2>
             <p>
-              These checks preserve V19 and add the V20 renderer parity standard.
+              These verify whether the served files contain the current intended contracts.
             </p>
           </div>
           <span class="pill hold" id="sourceStatus">WAIT</span>
@@ -565,9 +541,9 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Runtime and mount checks</h2>
+            <h2>Runtime forensics</h2>
             <p>
-              These checks inspect the live Planet 1 route in an observer frame.
+              These inspect active route aliases, script tags, runtime globals, mounted DOM, and leakage from the live Planet 1 frame.
             </p>
           </div>
           <span class="pill hold" id="runtimeStatus">WAIT</span>
@@ -581,7 +557,7 @@
           <div>
             <h2>Observed Planet 1 route</h2>
             <p>
-              Gauges uses this same-origin observer frame only to inspect runtime globals and mounted DOM. Gauges does not draw the planet.
+              Gauges uses this same-origin observer frame only to inspect runtime. Gauges does not draw the planet.
             </p>
           </div>
           <span class="pill hold" id="frameStatus">WAIT</span>
@@ -591,37 +567,39 @@
           class="observer-frame"
           id="observerFrame"
           title="Observed Planet 1 route"
-          src="/showroom/globe/?_gauges_runtime_observer=1"
+          src="/showroom/globe/?_gauges_v21_runtime_forensics=1"
           loading="eager"
         ></iframe>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1 · Measures V19 hydro-terrain source chain plus V20 source/runtime/mount parity.
+      GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1 · Measures source, route, scripts, runtime globals, mount, leakage, and next target.
     </footer>
   </div>
 
   <script>
-    (function planetOneV20Gauges(global) {
+    (function planetOneV21RuntimeForensics(global) {
       "use strict";
 
-      const VERSION = "GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1";
-      const V19 = "GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1";
-      const QUADA = "PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1";
+      const VERSION = "GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1";
+      const PREVIOUS_V20 = "GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1";
+      const PREVIOUS_V19 = "GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1";
 
       const EXPECTED = Object.freeze({
-        hydration: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
-        terrainV2: "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
-        terrainV3: "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1",
-        terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1",
-        assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
-        assetV16: "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
+        gaugeV21: VERSION,
+        routeV22B: "SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1",
+        routeV22: "SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1",
         routeV21: "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1",
         routeV17: "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
+        assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
+        assetV16: "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
         rendererV18B: "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1",
         rendererV18: "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1",
-        rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1"
+        rendererV16: "PLANET_ONE_RENDER_V16_TERRAIN_MODULE_PROOF_AND_LEGACY_GAUGE_REPAIR_TNT_v1",
+        rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
+        hydrationV1: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
+        terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1"
       });
 
       const PATHS = Object.freeze({
@@ -633,97 +611,88 @@
         gauges: "/gauges/"
       });
 
-      const CHECKS = {
+      const SOURCE_CHECKS = {
         hydration: [
-          EXPECTED.hydration,
+          EXPECTED.hydrationV1,
           "window.DGBPlanetOneHydrationRender",
           "createHydrationLayer",
           "hydration-engine-active=true",
           "hydro-terrain-marriage-active=true",
-          "ocean-depth-field-active=true",
-          "shoreline-wetness-active=true",
-          "river-basin-system-active=true",
-          "lake-catchment-system-active=true",
-          "glacier-field-active=true",
           "terrain-water-adhesion-active=true"
         ],
-
         terrain: [
-          EXPECTED.terrainV2,
-          EXPECTED.terrainV3,
           EXPECTED.terrainV4,
           "window.DGBPlanetOneTerrainRender",
           "createTerrainLayer",
           "hydration-engine-paired=true",
           "hydro-terrain-marriage-active=true",
-          "terrain-water-adhesion-active=true",
-          "shoreline-marriage-active=true",
-          "mountains-canyons-rivers-lakes-glaciers-ready=true",
-          "terrain-contained-to-land=true",
-          "land-water-separation-quota-preserved=true"
+          "terrain-water-adhesion-active=true"
         ],
-
         asset: [
           EXPECTED.assetV20,
           EXPECTED.assetV16,
           "window.DGBShowroomGlobeInstrument",
           "renderGlobe",
+          "loadHydrationRenderer",
           "loadTerrainRenderer",
           "loadMainRendererAfterTerrain",
-          "terrainFirstLoadOrder",
-          "optimumExpressionOnly",
-          PATHS.hydration,
-          "loadHydrationRenderer",
           "hydrationFirstLoadOrder",
           "hydroTerrainMarriage"
         ],
-
-        route: [
-          EXPECTED.routeV21,
-          EXPECTED.routeV17,
-          "Planet 1 inspection room",
-          "planet-one-render",
-          "Planet 1 render loaded",
-          "Optimum expression",
-          PATHS.asset,
-          PATHS.terrain,
-          PATHS.renderer,
-          "terrain-first-load-order=true",
-          PATHS.hydration,
-          "hydration-engine-required=true",
-          "hydro-terrain-marriage-active=true",
-          "hydration-first-or-before-terrain=true"
-        ],
-
         renderer: [
           EXPECTED.rendererV18B,
           EXPECTED.rendererV15,
           "window.DGBPlanetOneRenderTeam",
           "renderPlanetOne",
-          "terrain-render-authority=/world/render/planet-one.terrain.render.js",
-          "terrain-module-integrated=true",
-          "ancient-39b-crust-engine-active=true",
-          "axis-spin-active=true",
-          "climate-topology-active=true",
-          "weather-circulation-active=true",
-          "ocean-current-logic-active=true",
           "hydration-render-authority=/world/render/planet-one.hydration.render.js",
           "hydration-module-integrated=true",
           "hydro-terrain-marriage-active=true",
           "terrain-water-adhesion-active=true"
+        ],
+        route: [
+          EXPECTED.routeV22B,
+          EXPECTED.routeV21,
+          "Planet 1 inspection room",
+          "planet-one-render",
+          "Planet 1 render loaded",
+          "Optimum expression",
+          PATHS.asset,
+          PATHS.hydration,
+          PATHS.terrain,
+          PATHS.renderer,
+          "hydration-engine-required=true",
+          "hydro-terrain-marriage-active=true",
+          "hydration-first-or-before-terrain=true",
+          "route-runtime-version-parity=true"
         ]
       };
 
-      const RUNTIME_REQUIRED = [
+      const ROUTE_RUNTIME_CHECKS = [
+        EXPECTED.routeV22B,
+        "routeRuntimeVersionParity",
+        "runtimeCacheBustBootParity"
+      ];
+
+      const SCRIPT_CHECKS = [
+        "showroom.globe.instrument.js",
+        EXPECTED.assetV20,
+        "planet-one.render.js",
+        EXPECTED.rendererV18B,
+        "planet-one.hydration.render.js",
+        EXPECTED.hydrationV1,
+        "planet-one.terrain.render.js",
+        EXPECTED.terrainV4
+      ];
+
+      const GLOBAL_CHECKS = [
         EXPECTED.rendererV18B,
         EXPECTED.assetV20,
-        EXPECTED.routeV21,
         "hydrationModuleIntegrated",
         "hydroTerrainMarriageActive",
         "terrainWaterAdhesionActive"
       ];
 
-      const MOUNT_REQUIRED = [
+      const MOUNT_CHECKS = [
         "Hydration module integrated",
         "Terrain module integrated",
         "Hydro-terrain marriage active",
@@ -731,13 +700,14 @@
         "Composition only"
       ];
 
-      const OLD_LEAKAGE = [
+      const LEAKAGE_CHECKS = [
         "Terrain fallback active",
         "Legacy markers restored",
         "terrain-first instrument chain",
         "DEMO PLANET",
         "demo planet",
-        "fallback planet"
+        "fallback planet",
+        EXPECTED.rendererV16
       ];
 
       function byId(id) {
@@ -769,6 +739,7 @@
       function setScore(id, text, status) {
         const el = byId(id);
         if (!el) return;
+
         el.classList.remove("good", "next", "hold", "bad");
 
         if (status === "PASS") el.classList.add("good");
@@ -843,16 +814,16 @@
         };
       }
 
-      function evaluateSource(label, fetched, markers) {
-        const checkRows = rows(markers, fetched.text, false);
+      function evaluate(label, source, markers, invert) {
+        const checkRows = rows(markers, source.text || source, Boolean(invert));
         const summary = summarize(checkRows);
 
         return {
           label,
-          fetched,
+          source,
           rows: checkRows,
           summary,
-          status: fetched.ok && summary.score === 100 ? "PASS" : "FAIL"
+          status: summary.score === 100 && (source.ok !== false) ? "PASS" : "FAIL"
         };
       }
 
@@ -884,6 +855,17 @@
         ].join("");
       }
 
+      function scriptInventory(doc) {
+        return Array.from(doc.scripts).map(function script) {
+          return [
+            script.getAttribute("src") || "inline-script",
+            script.dataset.runtimeParityOwner ? "owner=" + script.dataset.runtimeParityOwner : "",
+            script.dataset.runtimeParityVersion ? "version=" + script.dataset.runtimeParityVersion : "",
+            script.dataset.runtimeParityLabel ? "label=" + script.dataset.runtimeParityLabel : ""
+          ].filter(Boolean).join(" ");
+        }).join("\n");
+      }
+
       function inspectFrame() {
         const frame = byId("observerFrame");
 
@@ -900,18 +882,25 @@
 
               const renderer = win.DGBPlanetOneRenderTeam;
               const asset = win.DGBShowroomGlobeInstrument;
-              const route = win.DGBShowroomGlobeRouteV21;
+              const routeV21 = win.DGBShowroomGlobeRouteV21;
+              const routeV22 = win.DGBShowroomGlobeRouteV22;
+              const routeV22B = win.DGBShowroomGlobeRouteV22B;
 
-              const runtimeText = [
+              const routeStatus = [
+                routeV21 && typeof routeV21.getStatus === "function" ? JSON.stringify(routeV21.getStatus()) : "",
+                routeV22 && typeof routeV22.getStatus === "function" ? JSON.stringify(routeV22.getStatus()) : "",
+                routeV22B && typeof routeV22B.getStatus === "function" ? JSON.stringify(routeV22B.getStatus()) : "",
+                doc.documentElement && doc.documentElement.dataset ? JSON.stringify(doc.documentElement.dataset) : ""
+              ].join("\n");
+
+              const globalStatus = [
                 renderer && renderer.VERSION ? renderer.VERSION : "",
                 asset && asset.VERSION ? asset.VERSION : "",
-                route && route.VERSION ? route.VERSION : "",
                 renderer && typeof renderer.getStatus === "function" ? JSON.stringify(renderer.getStatus()) : "",
-                asset && typeof asset.getStatus === "function" ? JSON.stringify(asset.getStatus()) : "",
-                route && typeof route.getStatus === "function" ? JSON.stringify(route.getStatus()) : "",
-                doc.documentElement && doc.documentElement.dataset ? JSON.stringify(doc.documentElement.dataset) : "",
-                mount && mount.dataset ? JSON.stringify(mount.dataset) : ""
+                asset && typeof asset.getStatus === "function" ? JSON.stringify(asset.getStatus()) : ""
               ].join("\n");
+
+              const scripts = scriptInventory(doc);
 
               const mountText = [
                 mount ? mount.innerHTML : "",
@@ -920,10 +909,10 @@
               ].join("\n");
 
               const ready =
-                runtimeText.indexOf(EXPECTED.rendererV18B) !== -1 ||
+                routeStatus.indexOf(EXPECTED.routeV22B) !== -1 ||
+                globalStatus.indexOf(EXPECTED.rendererV18B) !== -1 ||
                 mountText.indexOf("Hydration module integrated") !== -1 ||
-                mountText.indexOf("Terrain module integrated") !== -1 ||
-                tries > 36;
+                tries > 44;
 
               if (!ready) {
                 global.setTimeout(inspect, 250);
@@ -932,23 +921,34 @@
 
               resolve({
                 ok: true,
-                runtimeText,
+                routeStatus,
+                globalStatus,
+                scripts,
                 mountText,
-                rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "",
-                assetVersion: asset && asset.VERSION ? asset.VERSION : "",
-                routeVersion: route && route.VERSION ? route.VERSION : ""
+                rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "missing",
+                assetVersion: asset && asset.VERSION ? asset.VERSION : "missing",
+                routeV21Version: routeV21 && routeV21.VERSION ? routeV21.VERSION : "missing",
+                routeV22Version: routeV22 && routeV22.VERSION ? routeV22.VERSION : "missing",
+                routeV22BVersion: routeV22B && routeV22B.VERSION ? routeV22B.VERSION : "missing"
               });
             } catch (error) {
-              if (tries < 24) {
+              if (tries < 28) {
                 global.setTimeout(inspect, 250);
                 return;
               }
 
               resolve({
                 ok: false,
-                runtimeText: "",
+                routeStatus: "",
+                globalStatus: "",
+                scripts: "",
                 mountText: "",
-                error: error && error.message ? error.message : "frame inspection failed"
+                error: error && error.message ? error.message : "frame inspection failed",
+                rendererVersion: "missing",
+                assetVersion: "missing",
+                routeV21Version: "missing",
+                routeV22Version: "missing",
+                routeV22BVersion: "missing"
               });
             }
           }
@@ -957,190 +957,102 @@
         });
       }
 
-      function evaluateRuntime(frame) {
-        const checkRows = rows(RUNTIME_REQUIRED, frame.runtimeText || "", false);
-        const summary = summarize(checkRows);
-
-        return {
-          rows: checkRows,
-          summary,
-          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
-          meta: frame.ok
-            ? [
-                "Renderer VERSION: " + (frame.rendererVersion || "missing"),
-                "Asset VERSION: " + (frame.assetVersion || "missing"),
-                "Route VERSION: " + (frame.routeVersion || "missing")
-              ].join("\n")
-            : "Frame blocked: " + (frame.error || "unknown")
-        };
-      }
-
-      function evaluateMount(frame) {
-        const checkRows = rows(MOUNT_REQUIRED, frame.mountText || "", false);
-        const summary = summarize(checkRows);
-
-        return {
-          rows: checkRows,
-          summary,
-          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
-          meta: "Mounted DOM checks: " + summary.passed + " of " + summary.total + "."
-        };
-      }
-
-      function evaluateLeakage(frame) {
-        const checkRows = rows(OLD_LEAKAGE, frame.mountText || "", true);
-        const summary = summarize(checkRows);
-
-        return {
-          rows: checkRows,
-          summary,
-          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
-          meta: "Old-expression leakage clean: " + summary.passed + " of " + summary.total + "."
-        };
-      }
-
       function decide(state) {
-        const sourcesPass =
+        const sourcePass =
           state.hydration.status === "PASS" &&
           state.terrain.status === "PASS" &&
-          state.asset.status === "PASS" &&
-          state.route.status === "PASS" &&
-          state.renderer.status === "PASS";
+          state.assetSource.status === "PASS" &&
+          state.rendererSource.status === "PASS";
 
-        if (!sourcesPass) {
+        if (!sourcePass) {
           if (state.hydration.status !== "PASS") {
-            return {
-              progress: "HOLD",
-              source: "FAIL",
-              runtime: "WAIT",
-              mount: "WAIT",
-              next: PATHS.hydration,
-              code: "HYDRATION_SOURCE_BREAK",
-              read: "Hydration source is not passing. Restore the hydration engine first."
-            };
+            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.hydration, "HYDRATION_SOURCE_BREAK", "Hydration source is not passing.");
           }
 
           if (state.terrain.status !== "PASS") {
-            return {
-              progress: "HOLD",
-              source: "FAIL",
-              runtime: "WAIT",
-              mount: "WAIT",
-              next: PATHS.terrain,
-              code: "TERRAIN_SOURCE_BREAK",
-              read: "Terrain source is not passing. Restore the terrain pair first."
-            };
+            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.terrain, "TERRAIN_SOURCE_BREAK", "Terrain source is not passing.");
           }
 
-          if (state.asset.status !== "PASS") {
-            return {
-              progress: "HOLD",
-              source: "FAIL",
-              runtime: "WAIT",
-              mount: "WAIT",
-              next: PATHS.asset,
-              code: "ASSET_SOURCE_BREAK",
-              read: "Asset source is not hydration-first aware."
-            };
+          if (state.assetSource.status !== "PASS") {
+            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.asset, "ASSET_SOURCE_BREAK", "Asset source is not passing.");
           }
 
-          if (state.route.status !== "PASS") {
-            return {
-              progress: "HOLD",
-              source: "FAIL",
-              runtime: "WAIT",
-              mount: "WAIT",
-              next: "/showroom/globe/index.html",
-              code: "ROUTE_SOURCE_BREAK",
-              read: "Inspection route source is not hydration-aware."
-            };
-          }
-
-          return {
-            progress: "HOLD",
-            source: "FAIL",
-            runtime: "WAIT",
-            mount: "WAIT",
-            next: PATHS.renderer,
-            code: "RENDERER_SOURCE_BREAK",
-            read: "Renderer source is not current. Renew /world/render/planet-one.render.js."
-          };
+          return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.renderer, "RENDERER_SOURCE_BREAK", "Renderer source is not passing.");
         }
 
-        if (state.runtime.status !== "PASS") {
-          return {
-            progress: "HOLD",
-            source: "PASS",
-            runtime: "FAIL",
-            mount: "WAIT",
-            next: "/showroom/globe/index.html",
-            code: "RUNTIME_GLOBAL_BREAK",
-            read: "Source passes, but the browser runtime is not loading the current renderer/asset/route versions."
-          };
+        if (state.routeSource.status !== "PASS") {
+          return makeDecision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_NOT_V22B", "Route source does not contain the V22B contract and route-runtime-version-parity proof.");
+        }
+
+        if (state.routeRuntime.status !== "PASS") {
+          return makeDecision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_NOT_V22B", "Route source may be present, but active route runtime aliases do not expose V22B.");
+        }
+
+        if (state.scripts.status !== "PASS") {
+          return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "VERSIONED_SCRIPT_TAGS_MISSING", "Route runtime is current, but versioned script tags are not all present.");
+        }
+
+        if (state.globals.status !== "PASS") {
+          if (state.scripts.source.indexOf(EXPECTED.assetV20) !== -1 && state.frame.assetVersion !== EXPECTED.assetV20) {
+            return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.asset, "ASSET_RUNTIME_EXECUTION_BREAK", "Versioned asset script appears present but asset global is not V20.");
+          }
+
+          if (state.scripts.source.indexOf(EXPECTED.rendererV18B) !== -1 && state.frame.rendererVersion !== EXPECTED.rendererV18B) {
+            return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.renderer, "RENDERER_RUNTIME_EXECUTION_BREAK", "Versioned renderer script appears present but renderer global is not V18B.");
+          }
+
+          return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "RUNTIME_GLOBAL_BREAK", "Runtime globals are not current.");
         }
 
         if (state.mount.status !== "PASS") {
-          return {
-            progress: "HOLD",
-            source: "PASS",
-            runtime: "PASS",
-            mount: "FAIL",
-            next: "mount lifecycle / stale DOM purge",
-            code: "MOUNTED_DOM_BREAK",
-            read: "Source and runtime pass, but the mounted DOM is still old or incomplete."
-          };
+          return makeDecision("HOLD", "PASS", "PASS", "PASS", "FAIL", "mount lifecycle / stale DOM purge", "MOUNTED_DOM_BREAK", "Source, route, scripts, and globals pass, but mounted DOM is incomplete.");
         }
 
         if (state.leakage.status !== "PASS") {
-          return {
-            progress: "HOLD",
-            source: "PASS",
-            runtime: "PASS",
-            mount: "PASS",
-            next: "old expression leakage purge",
-            code: "OLD_EXPRESSION_LEAKAGE",
-            read: "Source/runtime/mount pass, but old expression leakage remains."
-          };
+          return makeDecision("HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE", "Current mount exists, but old expression leakage remains.");
         }
 
-        return {
-          progress: "PASS",
-          source: "PASS",
-          runtime: "PASS",
-          mount: "PASS",
-          next: "/showroom/globe/ visual review",
-          code: "SOURCE_RUNTIME_MOUNT_PARITY_PASS",
-          read: "Source, runtime, and mounted DOM agree. Visual review is now lawful."
-        };
+        return makeDecision("PASS", "PASS", "PASS", "PASS", "PASS", "/showroom/globe/ visual review", "FORENSIC_PARITY_PASS", "Source, route runtime, script tags, globals, mounted DOM, and leakage checks pass. Visual review is lawful.");
+      }
+
+      function makeDecision(progress, source, route, scripts, mount, next, code, read) {
+        return { progress, source, route, scripts, mount, next, code, read };
       }
 
       function render(state, decision) {
-        const sourceCards = [
-          card("Hydration engine · source", PATHS.hydration, state.hydration.status, state.hydration.rows, "HTTP " + state.hydration.fetched.status + ". Required: " + state.hydration.summary.passed + " of " + state.hydration.summary.total + "."),
-          card("Terrain engine · V4 pair", PATHS.terrain, state.terrain.status, state.terrain.rows, "HTTP " + state.terrain.fetched.status + ". Required: " + state.terrain.summary.passed + " of " + state.terrain.summary.total + "."),
-          card("Asset instrument · hydration awareness", PATHS.asset, state.asset.status, state.asset.rows, "HTTP " + state.asset.fetched.status + ". Required: " + state.asset.summary.passed + " of " + state.asset.summary.total + "."),
-          card("Inspection route · hydration proof", PATHS.route, state.route.status, state.route.rows, "HTTP " + state.route.fetched.status + ". Required: " + state.route.summary.passed + " of " + state.route.summary.total + "."),
-          card("Main renderer · composition source", PATHS.renderer, state.renderer.status, state.renderer.rows, "HTTP " + state.renderer.fetched.status + ". Required: " + state.renderer.summary.passed + " of " + state.renderer.summary.total + ".")
-        ];
+        byId("sourceChecks").innerHTML = [
+          card("Hydration source", PATHS.hydration, state.hydration.status, state.hydration.rows, "Required: " + state.hydration.summary.passed + " of " + state.hydration.summary.total + "."),
+          card("Terrain source", PATHS.terrain, state.terrain.status, state.terrain.rows, "Required: " + state.terrain.summary.passed + " of " + state.terrain.summary.total + "."),
+          card("Asset source", PATHS.asset, state.assetSource.status, state.assetSource.rows, "Required: " + state.assetSource.summary.passed + " of " + state.assetSource.summary.total + "."),
+          card("Renderer source", PATHS.renderer, state.rendererSource.status, state.rendererSource.rows, "Required: " + state.rendererSource.summary.passed + " of " + state.rendererSource.summary.total + "."),
+          card("Route source", PATHS.route, state.routeSource.status, state.routeSource.rows, "Required: " + state.routeSource.summary.passed + " of " + state.routeSource.summary.total + ".")
+        ].join("");
 
-        const runtimeCards = [
-          card("Runtime globals", "/showroom/globe/ iframe", state.runtime.status, state.runtime.rows, state.runtime.meta),
-          card("Mounted DOM expression", "#planet-one-render", state.mount.status, state.mount.rows, state.mount.meta),
-          card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, state.leakage.meta)
-        ];
-
-        byId("sourceChecks").innerHTML = sourceCards.join("");
-        byId("runtimeChecks").innerHTML = runtimeCards.join("");
+        byId("runtimeChecks").innerHTML = [
+          card("Route runtime aliases", "/showroom/globe/ iframe", state.routeRuntime.status, state.routeRuntime.rows, [
+            "DGBShowroomGlobeRouteV21.VERSION=" + state.frame.routeV21Version,
+            "DGBShowroomGlobeRouteV22.VERSION=" + state.frame.routeV22Version,
+            "DGBShowroomGlobeRouteV22B.VERSION=" + state.frame.routeV22BVersion
+          ].join("\n")),
+          card("Loaded script tags", "/showroom/globe/ document.scripts", state.scripts.status, state.scripts.rows, state.frame.scripts || "No script inventory."),
+          card("Runtime globals", "/showroom/globe/ globals", state.globals.status, state.globals.rows, [
+            "Renderer VERSION: " + state.frame.rendererVersion,
+            "Asset VERSION: " + state.frame.assetVersion
+          ].join("\n")),
+          card("Mounted DOM", "#planet-one-render", state.mount.status, state.mount.rows, "Mounted checks: " + state.mount.summary.passed + " of " + state.mount.summary.total + "."),
+          card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, "Leakage clean: " + state.leakage.summary.passed + " of " + state.leakage.summary.total + ".")
+        ].join("");
 
         setScore("scoreProgress", decision.progress, decision.progress);
         setScore("scoreSource", decision.source, decision.source);
-        setScore("scoreRuntime", decision.runtime, decision.runtime);
+        setScore("scoreRoute", decision.route, decision.route);
+        setScore("scoreScripts", decision.scripts, decision.scripts);
         setScore("scoreMount", decision.mount, decision.mount);
         setScore("scoreNext", decision.next, decision.progress === "PASS" ? "PASS" : "NEXT");
 
         setPill("overallStatus", decision.progress);
         setPill("sourceStatus", decision.source);
-        setPill("runtimeStatus", decision.runtime === "WAIT" ? "HOLD" : decision.runtime);
+        setPill("runtimeStatus", decision.route === "PASS" && decision.scripts === "PASS" ? "PASS" : "HOLD");
         setPill("frameStatus", state.frame.ok ? "PASS" : "FAIL");
 
         byId("currentRead").textContent = decision.read;
@@ -1148,37 +1060,43 @@
         byId("decisionMono").textContent = [
           "DIAGNOSTIC_CODE=" + decision.code,
           "GAUGE=" + VERSION,
-          "PREVIOUS_GAUGE=" + V19,
+          "PREVIOUS_GAUGE=" + PREVIOUS_V20,
           "SOURCE_STATE=" + decision.source,
-          "RUNTIME_STATE=" + decision.runtime,
+          "ROUTE_RUNTIME_STATE=" + decision.route,
+          "SCRIPT_TAG_STATE=" + decision.scripts,
           "MOUNT_STATE=" + decision.mount,
           "NEXT_TARGET=" + decision.next,
-          "RULE=Source/runtime/mount parity before visual judgment."
+          "ROUTE_V21_VERSION=" + state.frame.routeV21Version,
+          "ROUTE_V22_VERSION=" + state.frame.routeV22Version,
+          "ROUTE_V22B_VERSION=" + state.frame.routeV22BVersion,
+          "RENDERER_VERSION=" + state.frame.rendererVersion,
+          "ASSET_VERSION=" + state.frame.assetVersion,
+          "RULE=Source/runtime/mount/script-tag parity before visual judgment."
         ].join("\n");
 
-        global.DGBPlanetOneV20Gauges = Object.freeze({
+        global.DGBPlanetOneV21Gauges = Object.freeze({
           VERSION,
-          V19,
-          QUADA,
+          PREVIOUS_V20,
+          PREVIOUS_V19,
           EXPECTED,
           PATHS,
           state,
           decision,
           getStatus: function getStatus() {
-            return { version: VERSION, previousGauge: V19, decision };
+            return { version: VERSION, previousGauge: PREVIOUS_V20, decision };
           }
         });
       }
 
       function runAudit() {
-        byId("currentRead").textContent = "Running V20 audit. Fetching source and inspecting runtime/mount state.";
+        byId("currentRead").textContent = "Running V21 forensic audit. Fetching source and inspecting route runtime, scripts, globals, mount, and leakage.";
 
         const fetches = Promise.all([
           fetchText(PATHS.hydration),
           fetchText(PATHS.terrain),
           fetchText(PATHS.asset),
-          fetchText(PATHS.route),
-          fetchText(PATHS.renderer)
+          fetchText(PATHS.renderer),
+          fetchText(PATHS.route)
         ]);
 
         return Promise.all([fetches, inspectFrame()]).then(function complete(payload) {
@@ -1186,17 +1104,19 @@
           const frame = payload[1];
 
           const state = {
-            hydration: evaluateSource("hydration", fetched[0], CHECKS.hydration),
-            terrain: evaluateSource("terrain", fetched[1], CHECKS.terrain),
-            asset: evaluateSource("asset", fetched[2], CHECKS.asset),
-            route: evaluateSource("route", fetched[3], CHECKS.route),
-            renderer: evaluateSource("renderer", fetched[4], CHECKS.renderer),
-            frame
+            hydration: evaluate("hydration", fetched[0], SOURCE_CHECKS.hydration, false),
+            terrain: evaluate("terrain", fetched[1], SOURCE_CHECKS.terrain, false),
+            assetSource: evaluate("asset", fetched[2], SOURCE_CHECKS.asset, false),
+            rendererSource: evaluate("renderer", fetched[3], SOURCE_CHECKS.renderer, false),
+            routeSource: evaluate("route", fetched[4], SOURCE_CHECKS.route, false),
+            frame: frame
           };
 
-          state.runtime = evaluateRuntime(frame);
-          state.mount = evaluateMount(frame);
-          state.leakage = evaluateLeakage(frame);
+          state.routeRuntime = evaluate("routeRuntime", frame.routeStatus || "", ROUTE_RUNTIME_CHECKS, false);
+          state.scripts = evaluate("scripts", frame.scripts || "", SCRIPT_CHECKS, false);
+          state.globals = evaluate("globals", frame.globalStatus || "", GLOBAL_CHECKS, false);
+          state.mount = evaluate("mount", frame.mountText || "", MOUNT_CHECKS, false);
+          state.leakage = evaluate("leakage", frame.mountText || "", LEAKAGE_CHECKS, true);
 
           const decision = decide(state);
           render(state, decision);
@@ -1206,7 +1126,7 @@
       }
 
       byId("runAudit").addEventListener("click", runAudit);
-      global.DGBRunPlanetOneV20Gauges = runAudit;
+      global.DGBRunPlanetOneV21Gauges = runAudit;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", runAudit, { once: true });

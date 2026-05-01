@@ -4,60 +4,22 @@
   PLANET_ONE_RENDER_V20_BALANCED_GLOBE_VISUAL_PRESSURE_RELEASE_TNT_v1
   PLANET_ONE_RENDER_V21_VISUAL_BALANCE_REFINEMENT_TNT_v1
   PLANET_ONE_RENDER_V22_FINE_SURFACE_SAMPLING_AND_SHORELINE_SMOOTHING_TNT_v1
+  PLANET_ONE_RENDER_V23_CINEMATIC_MATERIAL_ATMOSPHERE_REFINEMENT_TNT_v1
 
   TARGET=/world/render/planet-one.render.js
 
-  PRESERVED REQUIRED MARKERS:
-  PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
-  window.DGBPlanetOneRenderTeam
-  renderPlanetOne
-  terrain-render-authority=/world/render/planet-one.terrain.render.js
-  terrain-module-integrated=true
-  ancient-39b-crust-engine-active=true
-  axis-spin-active=true
-  climate-topology-active=true
-  weather-circulation-active=true
-  ocean-current-logic-active=true
-  hydration-render-authority=/world/render/planet-one.hydration.render.js
-  hydration-module-integrated=true
-  hydro-terrain-marriage-active=true
-  terrain-water-adhesion-active=true
-
-  REQUIRED PROJECTION MARKERS:
-  spherical-land-distribution-active=true
-  visible-hemisphere-projection-active=true
-  backside-land-culling-active=true
-  limb-compression-active=true
-  front-hemisphere-packing-rejected=true
-  balanced-globe-visual-pressure-release-active=true
-  land-scale-rebalanced=true
-  water-field-dominance-restored=true
-  bad-squeeze-released=true
-
-  V21 VISUAL MARKERS:
-  visual-balance-refinement-active=true
-  continent-curvature-refined=true
-  shoreline-wrap-refined=true
-  ocean-breathing-room-active=true
-  plate-stamp-effect-reduced=true
-  atmospheric-depth-refined=true
-  bad-pull-released=true
-  bad-squeeze-released=true
-
-  V22 VISUAL MARKERS:
-  fine-surface-sampling-active=true
-  shoreline-smoothing-active=true
-  blocky-cell-artifact-reduced=true
-  geologic-blend-field-active=true
-  smooth-continent-wrap-active=true
-  renderer-only-visual-refinement=true
-
   PURPOSE:
-  Keep the current passing route/asset/terrain/hydration chain.
-  Replace visible block-grid terrain with smoother spherical continental fields.
-  Keep land distributed around the globe.
-  Preserve ocean breathing room.
-  Preserve rotation and proof markers.
+  Renderer-only refinement.
+  Preserve the proven route / asset / terrain / hydration chain.
+  Move Planet 1 away from cartoon-model expression.
+  Add cinematic material, atmosphere, ocean depth, ancient crust pressure, and subtler world-body lighting.
+
+  DO NOT TOUCH:
+  /showroom/globe/index.html
+  /assets/showroom.globe.instrument.js
+  /world/render/planet-one.terrain.render.js
+  /world/render/planet-one.hydration.render.js
+  /gauges/index.html
 */
 
 (function attachPlanetOneRenderer(global) {
@@ -68,6 +30,7 @@
   var BALANCE_TNT = "PLANET_ONE_RENDER_V20_BALANCED_GLOBE_VISUAL_PRESSURE_RELEASE_TNT_v1";
   var VISUAL_TNT = "PLANET_ONE_RENDER_V21_VISUAL_BALANCE_REFINEMENT_TNT_v1";
   var SURFACE_TNT = "PLANET_ONE_RENDER_V22_FINE_SURFACE_SAMPLING_AND_SHORELINE_SMOOTHING_TNT_v1";
+  var CINEMATIC_TNT = "PLANET_ONE_RENDER_V23_CINEMATIC_MATERIAL_ATMOSPHERE_REFINEMENT_TNT_v1";
   var PREVIOUS_V15 = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
 
   var TERRAIN_AUTHORITY = "/world/render/planet-one.terrain.render.js";
@@ -83,6 +46,7 @@
     BALANCE_TNT,
     VISUAL_TNT,
     SURFACE_TNT,
+    CINEMATIC_TNT,
     PREVIOUS_V15,
     "window.DGBPlanetOneRenderTeam",
     "renderPlanetOne",
@@ -118,7 +82,14 @@
     "blocky-cell-artifact-reduced=true",
     "geologic-blend-field-active=true",
     "smooth-continent-wrap-active=true",
-    "renderer-only-visual-refinement=true"
+    "renderer-only-visual-refinement=true",
+    "cinematic-material-atmosphere-active=true",
+    "ancient-surface-materiality-active=true",
+    "ocean-basin-depth-active=true",
+    "atmospheric-limb-depth-active=true",
+    "non-cartoon-world-body-active=true",
+    "mineral-pressure-surface-active=true",
+    "geologic-scar-subtlety-active=true"
   ];
 
   function clamp(value, min, max) {
@@ -153,7 +124,7 @@
   function makeCanvas(mount, options) {
     var canvas = document.createElement("canvas");
     var hostWidth = mount.clientWidth || 720;
-    var size = Math.max(340, Math.min(820, options.size || hostWidth));
+    var size = Math.max(340, Math.min(860, options.size || hostWidth));
     var ratio = Math.max(1, Math.min(2, global.devicePixelRatio || 1));
 
     canvas.width = Math.floor(size * ratio);
@@ -165,7 +136,7 @@
     canvas.style.display = "block";
     canvas.style.margin = "0 auto";
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Planet 1 fine surface sampling and shoreline smoothing render");
+    canvas.setAttribute("aria-label", "Planet 1 cinematic material atmosphere refinement render");
 
     return {
       canvas: canvas,
@@ -193,7 +164,16 @@
     return (
       Math.sin(deg(lon * 2.3 + lat * 1.7 + phase * 19)) * 0.11 +
       Math.cos(deg(lon * 4.9 - lat * 2.8 + phase * 23)) * 0.07 +
-      Math.sin(deg(lon * 8.7 + lat * 6.4 + phase * 31)) * 0.035
+      Math.sin(deg(lon * 8.7 + lat * 6.4 + phase * 31)) * 0.035 +
+      Math.cos(deg(lon * 14.2 - lat * 11.1 + phase * 13)) * 0.018
+    );
+  }
+
+  function materialNoise(lon, lat, phase) {
+    return (
+      Math.sin(deg(lon * 5.7 + lat * 3.4 + phase * 11)) * 0.18 +
+      Math.cos(deg(lon * 9.2 - lat * 6.8 + phase * 17)) * 0.11 +
+      Math.sin(deg(lon * 17.4 + lat * 14.6 + phase * 29)) * 0.045
     );
   }
 
@@ -205,12 +185,13 @@
         lat: 2,
         lonR: 31,
         latR: 27,
-        colorA: "rgba(74,132,78,0.90)",
-        colorB: "rgba(34,82,62,0.92)",
-        shore: "rgba(107,232,238,0.48)",
-        ridge: "rgba(24,29,23,0.58)",
-        river: "rgba(121,230,240,0.36)",
-        mineral: "rgba(238,195,92,0.20)",
+        colorA: "rgba(80,118,76,0.88)",
+        colorB: "rgba(37,72,55,0.92)",
+        colorC: "rgba(118,98,66,0.34)",
+        shore: "rgba(126,215,218,0.34)",
+        ridge: "rgba(21,24,20,0.50)",
+        river: "rgba(105,207,219,0.26)",
+        mineral: "rgba(213,170,82,0.17)",
         phase: 0.2,
         detail: 1.00
       },
@@ -220,12 +201,13 @@
         lat: 38,
         lonR: 34,
         latR: 17,
-        colorA: "rgba(114,143,96,0.88)",
-        colorB: "rgba(48,88,67,0.91)",
-        shore: "rgba(123,232,240,0.42)",
-        ridge: "rgba(25,31,24,0.54)",
-        river: "rgba(118,226,236,0.31)",
-        mineral: "rgba(226,231,210,0.16)",
+        colorA: "rgba(110,126,88,0.85)",
+        colorB: "rgba(45,79,62,0.90)",
+        colorC: "rgba(132,115,78,0.30)",
+        shore: "rgba(126,218,224,0.30)",
+        ridge: "rgba(24,29,23,0.48)",
+        river: "rgba(104,206,218,0.22)",
+        mineral: "rgba(211,216,202,0.13)",
         phase: 1.1,
         detail: 0.88
       },
@@ -235,12 +217,13 @@
         lat: -5,
         lonR: 27,
         latR: 24,
-        colorA: "rgba(89,131,93,0.88)",
-        colorB: "rgba(39,78,61,0.91)",
-        shore: "rgba(103,221,232,0.40)",
-        ridge: "rgba(24,31,26,0.54)",
-        river: "rgba(118,226,236,0.30)",
-        mineral: "rgba(198,214,224,0.15)",
+        colorA: "rgba(85,117,84,0.84)",
+        colorB: "rgba(39,72,58,0.90)",
+        colorC: "rgba(94,83,64,0.28)",
+        shore: "rgba(103,207,218,0.29)",
+        ridge: "rgba(23,29,25,0.47)",
+        river: "rgba(102,203,215,0.22)",
+        mineral: "rgba(193,205,213,0.12)",
         phase: 2.4,
         detail: 0.82
       },
@@ -250,12 +233,13 @@
         lat: 7,
         lonR: 25,
         latR: 22,
-        colorA: "rgba(128,105,74,0.86)",
-        colorB: "rgba(77,62,48,0.91)",
-        shore: "rgba(96,214,230,0.38)",
-        ridge: "rgba(32,26,20,0.58)",
-        river: "rgba(115,220,232,0.26)",
-        mineral: "rgba(212,126,77,0.18)",
+        colorA: "rgba(118,94,67,0.84)",
+        colorB: "rgba(73,58,46,0.91)",
+        colorC: "rgba(134,84,55,0.30)",
+        shore: "rgba(94,199,214,0.28)",
+        ridge: "rgba(29,24,19,0.50)",
+        river: "rgba(98,196,211,0.20)",
+        mineral: "rgba(196,111,69,0.16)",
         phase: 3.2,
         detail: 0.72
       },
@@ -265,12 +249,13 @@
         lat: -46,
         lonR: 33,
         latR: 15,
-        colorA: "rgba(111,129,82,0.86)",
-        colorB: "rgba(55,83,58,0.89)",
-        shore: "rgba(100,213,229,0.36)",
-        ridge: "rgba(29,34,24,0.50)",
-        river: "rgba(115,220,232,0.24)",
-        mineral: "rgba(233,182,83,0.15)",
+        colorA: "rgba(105,119,80,0.83)",
+        colorB: "rgba(53,77,55,0.88)",
+        colorC: "rgba(118,100,68,0.24)",
+        shore: "rgba(97,200,216,0.26)",
+        ridge: "rgba(27,31,23,0.43)",
+        river: "rgba(100,197,212,0.18)",
+        mineral: "rgba(218,170,82,0.13)",
         phase: 4.1,
         detail: 0.68
       },
@@ -280,12 +265,13 @@
         lat: 24,
         lonR: 23,
         latR: 18,
-        colorA: "rgba(86,118,86,0.80)",
-        colorB: "rgba(38,70,58,0.84)",
-        shore: "rgba(92,207,225,0.30)",
-        ridge: "rgba(23,28,24,0.42)",
-        river: "rgba(115,220,232,0.20)",
-        mineral: "rgba(210,225,220,0.11)",
+        colorA: "rgba(82,108,80,0.76)",
+        colorB: "rgba(38,66,55,0.82)",
+        colorC: "rgba(94,86,65,0.20)",
+        shore: "rgba(91,190,210,0.22)",
+        ridge: "rgba(23,27,23,0.36)",
+        river: "rgba(97,190,207,0.16)",
+        mineral: "rgba(201,215,210,0.09)",
         phase: 5.3,
         detail: 0.56
       },
@@ -295,12 +281,13 @@
         lat: -29,
         lonR: 23,
         latR: 17,
-        colorA: "rgba(103,121,80,0.80)",
-        colorB: "rgba(49,72,55,0.84)",
-        shore: "rgba(92,205,224,0.30)",
-        ridge: "rgba(24,28,22,0.42)",
-        river: "rgba(115,220,232,0.19)",
-        mineral: "rgba(225,182,95,0.11)",
+        colorA: "rgba(97,111,76,0.76)",
+        colorB: "rgba(48,68,52,0.82)",
+        colorC: "rgba(116,90,60,0.20)",
+        shore: "rgba(90,188,209,0.22)",
+        ridge: "rgba(24,27,21,0.36)",
+        river: "rgba(97,190,207,0.15)",
+        mineral: "rgba(211,170,88,0.09)",
         phase: 6.0,
         detail: 0.52
       },
@@ -310,12 +297,13 @@
         lat: 75,
         lonR: 50,
         latR: 8,
-        colorA: "rgba(231,248,251,0.78)",
-        colorB: "rgba(145,190,204,0.58)",
-        shore: "rgba(205,246,252,0.28)",
-        ridge: "rgba(87,118,130,0.30)",
-        river: "rgba(220,250,255,0.18)",
-        mineral: "rgba(255,255,255,0.10)",
+        colorA: "rgba(220,235,237,0.70)",
+        colorB: "rgba(129,168,184,0.54)",
+        colorC: "rgba(255,255,255,0.14)",
+        shore: "rgba(203,238,243,0.22)",
+        ridge: "rgba(81,110,122,0.24)",
+        river: "rgba(220,250,255,0.14)",
+        mineral: "rgba(255,255,255,0.08)",
         phase: 0.9,
         detail: 0.30
       },
@@ -325,12 +313,13 @@
         lat: -74,
         lonR: 48,
         latR: 8,
-        colorA: "rgba(229,246,249,0.76)",
-        colorB: "rgba(145,187,202,0.56)",
-        shore: "rgba(205,246,252,0.26)",
-        ridge: "rgba(86,116,130,0.28)",
-        river: "rgba(220,250,255,0.18)",
-        mineral: "rgba(255,255,255,0.09)",
+        colorA: "rgba(218,233,236,0.68)",
+        colorB: "rgba(126,164,181,0.52)",
+        colorC: "rgba(255,255,255,0.12)",
+        shore: "rgba(200,236,242,0.20)",
+        ridge: "rgba(80,108,122,0.22)",
+        river: "rgba(220,250,255,0.14)",
+        mineral: "rgba(255,255,255,0.07)",
         phase: 2.6,
         detail: 0.28
       }
@@ -346,23 +335,23 @@
     var lon;
     var lat;
 
-    count = count || 128;
+    count = count || 160;
 
     for (i = 0; i < count; i += 1) {
       angle = Math.PI * 2 * (i / count);
 
       wobble =
         1 +
-        Math.sin(angle * 3 + land.phase) * 0.075 +
-        Math.cos(angle * 5 + land.phase * 0.8) * 0.046 +
-        Math.sin(angle * 9 + land.phase * 1.35) * 0.024 +
-        Math.cos(angle * 13 + land.phase * 0.4) * 0.014;
+        Math.sin(angle * 3 + land.phase) * 0.070 +
+        Math.cos(angle * 5 + land.phase * 0.8) * 0.042 +
+        Math.sin(angle * 9 + land.phase * 1.35) * 0.020 +
+        Math.cos(angle * 13 + land.phase * 0.4) * 0.012;
 
-      skew = Math.sin(angle + land.phase) * 0.08;
+      skew = Math.sin(angle + land.phase) * 0.07;
 
       lon = normalizeLon(land.lon + Math.cos(angle) * land.lonR * wobble + skew * land.lonR);
       lat = clamp(
-        land.lat + Math.sin(angle) * land.latR * (1 + Math.cos(angle * 4 + land.phase) * 0.05),
+        land.lat + Math.sin(angle) * land.latR * (1 + Math.cos(angle * 4 + land.phase) * 0.045),
         -86,
         86
       );
@@ -412,9 +401,7 @@
       }
     }
 
-    if (current.length) {
-      segments.push(current);
-    }
+    if (current.length) segments.push(current);
 
     if (segments.length > 1 && points.length) {
       var firstOriginal = project(points[0].lon, points[0].lat, rotation, tilt, cx, cy, radius);
@@ -502,17 +489,23 @@
     var r;
 
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#02050d";
+
+    var bg = ctx.createRadialGradient(width * 0.5, height * 0.45, 0, width * 0.5, height * 0.5, width * 0.72);
+    bg.addColorStop(0, "#071426");
+    bg.addColorStop(0.62, "#020714");
+    bg.addColorStop(1, "#010207");
+
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, width, height);
 
-    for (i = 0; i < 96; i += 1) {
+    for (i = 0; i < 118; i += 1) {
       x = (i * 89) % width;
       y = (i * 47) % height;
-      r = 0.42 + ((i * 17) % 7) * 0.08;
+      r = 0.38 + ((i * 17) % 7) * 0.07;
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(216,232,255," + (0.13 + ((i * 13) % 9) / 100) + ")";
+      ctx.fillStyle = "rgba(216,232,255," + (0.10 + ((i * 13) % 9) / 115) + ")";
       ctx.fill();
     }
   }
@@ -528,25 +521,60 @@
 
   function drawOcean(ctx, cx, cy, radius) {
     var ocean = ctx.createRadialGradient(
-      cx - radius * 0.30,
-      cy - radius * 0.34,
-      radius * 0.04,
+      cx - radius * 0.32,
+      cy - radius * 0.35,
+      radius * 0.03,
       cx,
       cy,
       radius
     );
 
-    ocean.addColorStop(0.00, "#22a5c9");
-    ocean.addColorStop(0.25, "#0d709b");
-    ocean.addColorStop(0.56, "#073f61");
-    ocean.addColorStop(0.84, "#041b31");
-    ocean.addColorStop(1.00, "#020812");
+    ocean.addColorStop(0.00, "#1b91ac");
+    ocean.addColorStop(0.22, "#0d617f");
+    ocean.addColorStop(0.52, "#06364f");
+    ocean.addColorStop(0.78, "#031827");
+    ocean.addColorStop(1.00, "#010611");
 
     ctx.fillStyle = ocean;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
+    drawOceanBasins(ctx, cx, cy, radius);
     drawOceanDepth(ctx, cx, cy, radius);
     drawOceanCurrents(ctx, cx, cy, radius);
+  }
+
+  function drawOceanBasins(ctx, cx, cy, radius) {
+    var basin;
+    var i;
+
+    var basins = [
+      { x: -0.32, y: -0.05, rx: 0.30, ry: 0.17, a: 0.18 },
+      { x: 0.20, y: 0.18, rx: 0.36, ry: 0.20, a: 0.16 },
+      { x: 0.08, y: -0.30, rx: 0.28, ry: 0.14, a: 0.13 },
+      { x: -0.05, y: 0.43, rx: 0.34, ry: 0.11, a: 0.13 }
+    ];
+
+    ctx.save();
+
+    for (i = 0; i < basins.length; i += 1) {
+      basin = basins[i];
+
+      ctx.beginPath();
+      ctx.ellipse(
+        cx + radius * basin.x,
+        cy + radius * basin.y,
+        radius * basin.rx,
+        radius * basin.ry,
+        deg(i * 23 - 18),
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fillStyle = "rgba(0,6,18," + basin.a + ")";
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 
   function drawOceanDepth(ctx, cx, cy, radius) {
@@ -560,9 +588,9 @@
     );
 
     depth.addColorStop(0, "rgba(255,255,255,0)");
-    depth.addColorStop(0.48, "rgba(0,16,31,0.08)");
-    depth.addColorStop(0.82, "rgba(0,6,18,0.31)");
-    depth.addColorStop(1, "rgba(0,0,0,0.58)");
+    depth.addColorStop(0.42, "rgba(0,16,31,0.08)");
+    depth.addColorStop(0.72, "rgba(0,7,20,0.31)");
+    depth.addColorStop(1, "rgba(0,0,0,0.68)");
 
     ctx.fillStyle = depth;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -575,14 +603,14 @@
 
     ctx.save();
 
-    for (i = -4; i <= 4; i += 1) {
-      y = cy + i * radius * 0.15;
-      w = radius * (1.46 - Math.abs(i) * 0.11);
+    for (i = -5; i <= 5; i += 1) {
+      y = cy + i * radius * 0.13;
+      w = radius * (1.46 - Math.abs(i) * 0.09);
 
       ctx.beginPath();
-      ctx.ellipse(cx, y, w * 0.48, radius * 0.034, 0.08 * i, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(122,225,240,0.045)";
-      ctx.lineWidth = Math.max(1, radius * 0.004);
+      ctx.ellipse(cx, y, w * 0.48, radius * 0.030, 0.06 * i, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(124,220,232,0.040)";
+      ctx.lineWidth = Math.max(1, radius * 0.0035);
       ctx.stroke();
     }
 
@@ -596,6 +624,7 @@
 
     for (i = 0; i < path.length; i += 1) {
       p = project(path[i][0], path[i][1], rotation, tilt, cx, cy, radius);
+
       if (p.visible && p.limb > 0.08) {
         projected.push(p);
       } else if (projected.length > 1) {
@@ -639,7 +668,7 @@
         path.push([lon, lat]);
       }
 
-      drawProjectedLine(ctx, path, rotation, tilt, cx, cy, radius, "rgba(190,224,255,0.055)", Math.max(0.35, radius * 0.0012), 0.50);
+      drawProjectedLine(ctx, path, rotation, tilt, cx, cy, radius, "rgba(190,224,255,0.035)", Math.max(0.32, radius * 0.001), 0.38);
     }
 
     for (lon = -150; lon <= 180; lon += 30) {
@@ -649,12 +678,12 @@
         path.push([lon, lat]);
       }
 
-      drawProjectedLine(ctx, path, rotation, tilt, cx, cy, radius, "rgba(190,224,255,0.040)", Math.max(0.35, radius * 0.001), 0.42);
+      drawProjectedLine(ctx, path, rotation, tilt, cx, cy, radius, "rgba(190,224,255,0.025)", Math.max(0.30, radius * 0.0009), 0.32);
     }
   }
 
   function drawLandmass(ctx, land, rotation, tilt, cx, cy, radius) {
-    var outline = landOutline(land, 136);
+    var outline = landOutline(land, 164);
     var segments = splitVisibleSegments(outline, rotation, tilt, cx, cy, radius);
     var s;
     var segment;
@@ -668,14 +697,14 @@
       if (segment.length < 8) continue;
 
       limb = segmentAverageLimb(segment);
-      alpha = clamp(0.22 + limb * 0.66, 0.18, 0.86);
+      alpha = clamp(0.18 + limb * 0.67, 0.14, 0.82);
 
       ctx.save();
       smoothClosedPath(ctx, segment);
 
       fill = ctx.createRadialGradient(
-        cx - radius * 0.26,
-        cy - radius * 0.32,
+        cx - radius * 0.30,
+        cy - radius * 0.34,
         radius * 0.05,
         cx,
         cy,
@@ -683,30 +712,38 @@
       );
 
       fill.addColorStop(0.00, land.colorA);
-      fill.addColorStop(0.56, land.colorB);
-      fill.addColorStop(1.00, "rgba(21,31,27,0.92)");
+      fill.addColorStop(0.42, land.colorB);
+      fill.addColorStop(0.76, land.colorC);
+      fill.addColorStop(1.00, "rgba(18,27,24,0.88)");
 
       ctx.globalAlpha = alpha;
       ctx.fillStyle = fill;
       ctx.fill();
 
-      ctx.globalAlpha = clamp(0.18 + limb * 0.30, 0.14, 0.48);
+      ctx.globalCompositeOperation = "overlay";
+      ctx.globalAlpha = clamp(0.10 + limb * 0.18, 0.08, 0.25);
+      ctx.fillStyle = "rgba(255,228,165,0.18)";
+      ctx.fill();
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = clamp(0.11 + limb * 0.20, 0.08, 0.31);
       ctx.strokeStyle = land.shore;
-      ctx.lineWidth = Math.max(1.0, radius * 0.0062);
-      ctx.shadowColor = "rgba(92,228,238,0.18)";
-      ctx.shadowBlur = radius * 0.010;
+      ctx.lineWidth = Math.max(0.9, radius * 0.0048);
+      ctx.shadowColor = "rgba(94,220,230,0.13)";
+      ctx.shadowBlur = radius * 0.006;
       ctx.stroke();
 
       ctx.shadowBlur = 0;
-      ctx.globalAlpha = clamp(0.10 + limb * 0.18, 0.08, 0.28);
-      ctx.strokeStyle = "rgba(238,255,247,0.26)";
-      ctx.lineWidth = Math.max(0.6, radius * 0.0022);
+      ctx.globalAlpha = clamp(0.07 + limb * 0.11, 0.05, 0.18);
+      ctx.strokeStyle = "rgba(238,255,247,0.22)";
+      ctx.lineWidth = Math.max(0.4, radius * 0.0014);
       ctx.stroke();
 
       ctx.restore();
     }
 
     drawLandInterior(ctx, land, rotation, tilt, cx, cy, radius);
+    drawMaterialFreckles(ctx, land, rotation, tilt, cx, cy, radius);
   }
 
   function drawLandInterior(ctx, land, rotation, tilt, cx, cy, radius) {
@@ -738,10 +775,41 @@
       [normalizeLon(land.lon + land.lonR * 0.46), clamp(land.lat + land.latR * 0.32, -86, 86)]
     ];
 
-    drawProjectedLine(ctx, ridgeA, rotation, tilt, cx, cy, radius, land.ridge, Math.max(0.65, radius * 0.0042 * land.detail), 0.42);
-    drawProjectedLine(ctx, ridgeB, rotation, tilt, cx, cy, radius, land.ridge, Math.max(0.55, radius * 0.0036 * land.detail), 0.34);
-    drawProjectedLine(ctx, river, rotation, tilt, cx, cy, radius, land.river, Math.max(0.45, radius * 0.0024), 0.30);
-    drawProjectedLine(ctx, mineral, rotation, tilt, cx, cy, radius, land.mineral, Math.max(0.40, radius * 0.0018), 0.28);
+    drawProjectedLine(ctx, ridgeA, rotation, tilt, cx, cy, radius, land.ridge, Math.max(0.55, radius * 0.0032 * land.detail), 0.32);
+    drawProjectedLine(ctx, ridgeB, rotation, tilt, cx, cy, radius, land.ridge, Math.max(0.45, radius * 0.0028 * land.detail), 0.25);
+    drawProjectedLine(ctx, river, rotation, tilt, cx, cy, radius, land.river, Math.max(0.38, radius * 0.0019), 0.22);
+    drawProjectedLine(ctx, mineral, rotation, tilt, cx, cy, radius, land.mineral, Math.max(0.35, radius * 0.0014), 0.22);
+  }
+
+  function drawMaterialFreckles(ctx, land, rotation, tilt, cx, cy, radius) {
+    var lon;
+    var lat;
+    var p;
+    var n;
+    var spanLon = land.lonR * 1.35;
+    var spanLat = land.latR * 1.25;
+    var step = 8;
+
+    ctx.save();
+
+    for (lat = land.lat - spanLat; lat <= land.lat + spanLat; lat += step) {
+      for (lon = land.lon - spanLon; lon <= land.lon + spanLon; lon += step) {
+        n = materialNoise(lon, lat, land.phase);
+
+        if (n < 0.19) continue;
+
+        p = project(normalizeLon(lon), clamp(lat, -86, 86), rotation, tilt, cx, cy, radius);
+
+        if (!p.visible || p.limb < 0.16) continue;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.38, radius * 0.0028), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,178,92," + clamp(0.018 + p.limb * 0.028, 0.012, 0.048) + ")";
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
   }
 
   function drawGeologicBlend(ctx, rotation, tilt, cx, cy, radius) {
@@ -752,8 +820,8 @@
 
     ctx.save();
 
-    for (lat = -72; lat <= 72; lat += 8) {
-      for (lon = -176; lon <= 176; lon += 8) {
+    for (lat = -72; lat <= 72; lat += 7) {
+      for (lon = -176; lon <= 176; lon += 7) {
         n = trigNoise(lon, lat, 2.5);
 
         if (n < 0.20) continue;
@@ -763,10 +831,38 @@
         if (!p.visible || p.limb < 0.16) continue;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.5, radius * 0.004), 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(242,199,111," + clamp(0.018 + p.limb * 0.034, 0.012, 0.055) + ")";
+        ctx.arc(p.x, p.y, Math.max(0.45, radius * 0.0032), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(242,199,111," + clamp(0.014 + p.limb * 0.028, 0.010, 0.046) + ")";
         ctx.fill();
       }
+    }
+
+    ctx.restore();
+  }
+
+  function drawAncientSurfaceFilm(ctx, cx, cy, radius) {
+    var i;
+    var x;
+    var y;
+    var alpha;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    for (i = 0; i < 180; i += 1) {
+      x = cx - radius + ((i * 97) % Math.floor(radius * 2));
+      y = cy - radius + ((i * 53) % Math.floor(radius * 2));
+
+      if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) > radius * radius) continue;
+
+      alpha = 0.010 + ((i * 17) % 13) / 1400;
+
+      ctx.beginPath();
+      ctx.arc(x, y, Math.max(0.45, radius * (0.0018 + ((i % 5) * 0.00045))), 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,238,190," + alpha + ")";
+      ctx.fill();
     }
 
     ctx.restore();
@@ -775,16 +871,35 @@
   function drawTerminator(ctx, cx, cy, radius) {
     var shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
 
-    shade.addColorStop(0.00, "rgba(255,255,255,0.075)");
-    shade.addColorStop(0.38, "rgba(255,255,255,0.00)");
-    shade.addColorStop(0.72, "rgba(0,0,0,0.17)");
-    shade.addColorStop(1.00, "rgba(0,0,0,0.55)");
+    shade.addColorStop(0.00, "rgba(255,255,255,0.085)");
+    shade.addColorStop(0.30, "rgba(255,255,255,0.018)");
+    shade.addColorStop(0.62, "rgba(0,0,0,0.18)");
+    shade.addColorStop(0.84, "rgba(0,0,0,0.43)");
+    shade.addColorStop(1.00, "rgba(0,0,0,0.70)");
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.clip();
     ctx.fillStyle = shade;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+    ctx.restore();
+  }
+
+  function drawCinematicLimb(ctx, cx, cy, radius) {
+    var limb = ctx.createRadialGradient(cx, cy, radius * 0.54, cx, cy, radius * 1.02);
+
+    limb.addColorStop(0.00, "rgba(255,255,255,0)");
+    limb.addColorStop(0.62, "rgba(255,255,255,0)");
+    limb.addColorStop(0.82, "rgba(29,73,102,0.13)");
+    limb.addColorStop(0.94, "rgba(5,16,30,0.42)");
+    limb.addColorStop(1.00, "rgba(0,0,0,0.72)");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = limb;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
     ctx.restore();
   }
@@ -797,44 +912,56 @@
     ctx.beginPath();
     ctx.moveTo(0, -radius * 0.98);
     ctx.lineTo(0, radius * 0.98);
-    ctx.strokeStyle = "rgba(242,199,111,0.34)";
-    ctx.lineWidth = Math.max(1.0, radius * 0.007);
+    ctx.strokeStyle = "rgba(242,199,111,0.26)";
+    ctx.lineWidth = Math.max(0.9, radius * 0.0052);
     ctx.lineCap = "round";
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(0, -radius * 0.98, radius * 0.018, 0, Math.PI * 2);
-    ctx.arc(0, radius * 0.98, radius * 0.018, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(242,199,111,0.32)";
+    ctx.arc(0, -radius * 0.98, radius * 0.015, 0, Math.PI * 2);
+    ctx.arc(0, radius * 0.98, radius * 0.015, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(242,199,111,0.25)";
     ctx.fill();
 
     ctx.restore();
   }
 
   function drawAtmosphere(ctx, cx, cy, radius) {
-    var glow = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.13);
+    var glow = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.16);
+    var blueShell = ctx.createRadialGradient(cx - radius * 0.12, cy - radius * 0.18, radius * 0.52, cx, cy, radius * 1.07);
 
     glow.addColorStop(0, "rgba(255,255,255,0)");
-    glow.addColorStop(0.76, "rgba(122,210,245,0.055)");
-    glow.addColorStop(1, "rgba(122,210,245,0.28)");
+    glow.addColorStop(0.70, "rgba(122,210,245,0.045)");
+    glow.addColorStop(0.90, "rgba(122,210,245,0.16)");
+    glow.addColorStop(1, "rgba(122,210,245,0.30)");
+
+    blueShell.addColorStop(0, "rgba(255,255,255,0.055)");
+    blueShell.addColorStop(0.55, "rgba(255,255,255,0.000)");
+    blueShell.addColorStop(0.90, "rgba(81,159,209,0.13)");
+    blueShell.addColorStop(1, "rgba(61,126,184,0.23)");
 
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.06, 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius * 1.075, 0, Math.PI * 2);
     ctx.fillStyle = glow;
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(171,222,255,0.32)";
-    ctx.lineWidth = Math.max(1.1, radius * 0.009);
+    ctx.fillStyle = blueShell;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(166,218,255,0.30)";
+    ctx.lineWidth = Math.max(1.0, radius * 0.0075);
     ctx.stroke();
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 0.978, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(95,177,225,0.16)";
-    ctx.lineWidth = Math.max(0.8, radius * 0.0038);
+    ctx.strokeStyle = "rgba(91,168,218,0.14)";
+    ctx.lineWidth = Math.max(0.7, radius * 0.0032);
     ctx.stroke();
 
     ctx.restore();
@@ -857,8 +984,8 @@
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.shadowColor = "rgba(83,190,240,0.22)";
-    ctx.shadowBlur = radius * 0.15;
+    ctx.shadowColor = "rgba(69,165,218,0.20)";
+    ctx.shadowBlur = radius * 0.16;
     ctx.fillStyle = "rgba(0,0,0,0.12)";
     ctx.fill();
     ctx.restore();
@@ -872,7 +999,9 @@
       }
 
       drawGeologicBlend(ctx, rotation, tilt, cx, cy, radius);
+      drawAncientSurfaceFilm(ctx, cx, cy, radius);
       drawTerminator(ctx, cx, cy, radius);
+      drawCinematicLimb(ctx, cx, cy, radius);
     });
 
     drawAxis(ctx, cx, cy, radius);
@@ -888,20 +1017,25 @@
     proof.setAttribute("data-balance-tnt", BALANCE_TNT);
     proof.setAttribute("data-visual-tnt", VISUAL_TNT);
     proof.setAttribute("data-surface-tnt", SURFACE_TNT);
+    proof.setAttribute("data-cinematic-tnt", CINEMATIC_TNT);
+
     proof.setAttribute("data-hydration-module-integrated", "true");
     proof.setAttribute("data-terrain-module-integrated", "true");
     proof.setAttribute("data-hydro-terrain-marriage-active", "true");
     proof.setAttribute("data-terrain-water-adhesion-active", "true");
     proof.setAttribute("data-composition-only", "true");
+
     proof.setAttribute("data-spherical-land-distribution-active", "true");
     proof.setAttribute("data-visible-hemisphere-projection-active", "true");
     proof.setAttribute("data-backside-land-culling-active", "true");
     proof.setAttribute("data-limb-compression-active", "true");
     proof.setAttribute("data-front-hemisphere-packing-rejected", "true");
+
     proof.setAttribute("data-balanced-globe-visual-pressure-release-active", "true");
     proof.setAttribute("data-land-scale-rebalanced", "true");
     proof.setAttribute("data-water-field-dominance-restored", "true");
     proof.setAttribute("data-bad-squeeze-released", "true");
+
     proof.setAttribute("data-visual-balance-refinement-active", "true");
     proof.setAttribute("data-continent-curvature-refined", "true");
     proof.setAttribute("data-shoreline-wrap-refined", "true");
@@ -909,12 +1043,21 @@
     proof.setAttribute("data-plate-stamp-effect-reduced", "true");
     proof.setAttribute("data-atmospheric-depth-refined", "true");
     proof.setAttribute("data-bad-pull-released", "true");
+
     proof.setAttribute("data-fine-surface-sampling-active", "true");
     proof.setAttribute("data-shoreline-smoothing-active", "true");
     proof.setAttribute("data-blocky-cell-artifact-reduced", "true");
     proof.setAttribute("data-geologic-blend-field-active", "true");
     proof.setAttribute("data-smooth-continent-wrap-active", "true");
     proof.setAttribute("data-renderer-only-visual-refinement", "true");
+
+    proof.setAttribute("data-cinematic-material-atmosphere-active", "true");
+    proof.setAttribute("data-ancient-surface-materiality-active", "true");
+    proof.setAttribute("data-ocean-basin-depth-active", "true");
+    proof.setAttribute("data-atmospheric-limb-depth-active", "true");
+    proof.setAttribute("data-non-cartoon-world-body-active", "true");
+    proof.setAttribute("data-mineral-pressure-surface-active", "true");
+    proof.setAttribute("data-geologic-scar-subtlety-active", "true");
 
     proof.style.cssText = [
       "width:min(760px,100%)",
@@ -956,7 +1099,14 @@
       "Blocky cell artifact reduced",
       "Geologic blend field active",
       "Smooth continent wrap active",
-      "Renderer only visual refinement"
+      "Renderer only visual refinement",
+      "Cinematic material atmosphere active",
+      "Ancient surface materiality active",
+      "Ocean basin depth active",
+      "Atmospheric limb depth active",
+      "Non-cartoon world body active",
+      "Mineral pressure surface active",
+      "Geologic scar subtlety active"
     ].join(" · ");
 
     mount.appendChild(proof);
@@ -967,15 +1117,18 @@
     mount.dataset.hydroTerrainMarriageActive = "true";
     mount.dataset.terrainWaterAdhesionActive = "true";
     mount.dataset.compositionOnly = "true";
+
     mount.dataset.sphericalLandDistributionActive = "true";
     mount.dataset.visibleHemisphereProjectionActive = "true";
     mount.dataset.backsideLandCullingActive = "true";
     mount.dataset.limbCompressionActive = "true";
     mount.dataset.frontHemispherePackingRejected = "true";
+
     mount.dataset.balancedGlobeVisualPressureReleaseActive = "true";
     mount.dataset.landScaleRebalanced = "true";
     mount.dataset.waterFieldDominanceRestored = "true";
     mount.dataset.badSqueezeReleased = "true";
+
     mount.dataset.visualBalanceRefinementActive = "true";
     mount.dataset.continentCurvatureRefined = "true";
     mount.dataset.shorelineWrapRefined = "true";
@@ -983,24 +1136,35 @@
     mount.dataset.plateStampEffectReduced = "true";
     mount.dataset.atmosphericDepthRefined = "true";
     mount.dataset.badPullReleased = "true";
+
     mount.dataset.fineSurfaceSamplingActive = "true";
     mount.dataset.shorelineSmoothingActive = "true";
     mount.dataset.blockyCellArtifactReduced = "true";
     mount.dataset.geologicBlendFieldActive = "true";
     mount.dataset.smoothContinentWrapActive = "true";
     mount.dataset.rendererOnlyVisualRefinement = "true";
+
+    mount.dataset.cinematicMaterialAtmosphereActive = "true";
+    mount.dataset.ancientSurfaceMaterialityActive = "true";
+    mount.dataset.oceanBasinDepthActive = "true";
+    mount.dataset.atmosphericLimbDepthActive = "true";
+    mount.dataset.nonCartoonWorldBodyActive = "true";
+    mount.dataset.mineralPressureSurfaceActive = "true";
+    mount.dataset.geologicScarSubtletyActive = "true";
+
     mount.dataset.rendererVersion = VERSION;
     mount.dataset.projectionTnt = PROJECTION_TNT;
     mount.dataset.balanceTnt = BALANCE_TNT;
     mount.dataset.visualTnt = VISUAL_TNT;
     mount.dataset.surfaceTnt = SURFACE_TNT;
+    mount.dataset.cinematicTnt = CINEMATIC_TNT;
   }
 
   function normalizeOptions(options) {
     options = options || {};
 
     return {
-      caption: options.caption || "Planet 1 · Nine Summits Universe · Optimum expression",
+      caption: options.caption || "Planet 1 · Nine Summits Universe · Cinematic material refinement",
       rotate: options.rotate !== false,
       speed: Number(options.speed == null ? 0.0032 : options.speed),
       rotation: Number(options.rotation == null ? -62 : options.rotation),
@@ -1036,19 +1200,24 @@
       balanceTnt: BALANCE_TNT,
       visualTnt: VISUAL_TNT,
       surfaceTnt: SURFACE_TNT,
+      cinematicTnt: CINEMATIC_TNT,
+
       terrainModuleIntegrated: hasTerrainModule(),
       hydrationModuleIntegrated: hasHydrationModule(),
       hydroTerrainMarriageActive: true,
       terrainWaterAdhesionActive: true,
+
       sphericalLandDistributionActive: true,
       visibleHemisphereProjectionActive: true,
       backsideLandCullingActive: true,
       limbCompressionActive: true,
       frontHemispherePackingRejected: true,
+
       balancedGlobeVisualPressureReleaseActive: true,
       landScaleRebalanced: true,
       waterFieldDominanceRestored: true,
       badSqueezeReleased: true,
+
       visualBalanceRefinementActive: true,
       continentCurvatureRefined: true,
       shorelineWrapRefined: true,
@@ -1056,12 +1225,22 @@
       plateStampEffectReduced: true,
       atmosphericDepthRefined: true,
       badPullReleased: true,
+
       fineSurfaceSamplingActive: true,
       shorelineSmoothingActive: true,
       blockyCellArtifactReduced: true,
       geologicBlendFieldActive: true,
       smoothContinentWrapActive: true,
       rendererOnlyVisualRefinement: true,
+
+      cinematicMaterialAtmosphereActive: true,
+      ancientSurfaceMaterialityActive: true,
+      oceanBasinDepthActive: true,
+      atmosphericLimbDepthActive: true,
+      nonCartoonWorldBodyActive: true,
+      mineralPressureSurfaceActive: true,
+      geologicScarSubtletyActive: true,
+
       rotation: normalized.rotation,
       tilt: normalized.tilt,
       speed: normalized.speed,
@@ -1097,22 +1276,29 @@
       VISUAL_TNT: VISUAL_TNT,
       surfaceTnt: SURFACE_TNT,
       SURFACE_TNT: SURFACE_TNT,
+      cinematicTnt: CINEMATIC_TNT,
+      CINEMATIC_TNT: CINEMATIC_TNT,
+
       mount: mount,
       canvas: canvas,
       state: state,
+
       terrainModuleIntegrated: state.terrainModuleIntegrated,
       hydrationModuleIntegrated: state.hydrationModuleIntegrated,
       hydroTerrainMarriageActive: true,
       terrainWaterAdhesionActive: true,
+
       sphericalLandDistributionActive: true,
       visibleHemisphereProjectionActive: true,
       backsideLandCullingActive: true,
       limbCompressionActive: true,
       frontHemispherePackingRejected: true,
+
       balancedGlobeVisualPressureReleaseActive: true,
       landScaleRebalanced: true,
       waterFieldDominanceRestored: true,
       badSqueezeReleased: true,
+
       visualBalanceRefinementActive: true,
       continentCurvatureRefined: true,
       shorelineWrapRefined: true,
@@ -1120,17 +1306,28 @@
       plateStampEffectReduced: true,
       atmosphericDepthRefined: true,
       badPullReleased: true,
+
       fineSurfaceSamplingActive: true,
       shorelineSmoothingActive: true,
       blockyCellArtifactReduced: true,
       geologicBlendFieldActive: true,
       smoothContinentWrapActive: true,
       rendererOnlyVisualRefinement: true,
+
+      cinematicMaterialAtmosphereActive: true,
+      ancientSurfaceMaterialityActive: true,
+      oceanBasinDepthActive: true,
+      atmosphericLimbDepthActive: true,
+      nonCartoonWorldBodyActive: true,
+      mineralPressureSurfaceActive: true,
+      geologicScarSubtletyActive: true,
+
       start: function start() {
         state.rotate = true;
         clearActiveAnimation();
         activeAnimation = requestAnimationFrame(tick);
       },
+
       stop: function stop() {
         state.rotate = false;
         clearActiveAnimation();
@@ -1154,6 +1351,7 @@
 
       function tick(now) {
         drawPlanet(ctx, activeState, now || timestamp || 0);
+
         if (activeState.rotate) {
           activeAnimation = requestAnimationFrame(tick);
         }
@@ -1177,11 +1375,15 @@
       VISUAL_TNT: VISUAL_TNT,
       surfaceTnt: SURFACE_TNT,
       SURFACE_TNT: SURFACE_TNT,
+      cinematicTnt: CINEMATIC_TNT,
+      CINEMATIC_TNT: CINEMATIC_TNT,
       previousV15: PREVIOUS_V15,
+
       terrainRenderAuthority: TERRAIN_AUTHORITY,
       hydrationRenderAuthority: HYDRATION_AUTHORITY,
       terrainModuleIntegrated: hasTerrainModule(),
       hydrationModuleIntegrated: hasHydrationModule(),
+
       ancient39bCrustEngineActive: true,
       axisSpinActive: true,
       climateTopologyActive: true,
@@ -1189,16 +1391,19 @@
       oceanCurrentLogicActive: true,
       hydroTerrainMarriageActive: true,
       terrainWaterAdhesionActive: true,
+
       sphericalLandDistributionActive: true,
       visibleHemisphereProjectionActive: true,
       backsideLandCullingActive: true,
       limbCompressionActive: true,
       frontHemispherePackingRejected: true,
+
       balancedGlobeVisualPressureReleaseActive: true,
       landScaleRebalanced: true,
       waterFieldDominanceRestored: true,
       longitudinalLandDistributionActive: true,
       badSqueezeReleased: true,
+
       visualBalanceRefinementActive: true,
       continentCurvatureRefined: true,
       shorelineWrapRefined: true,
@@ -1206,12 +1411,22 @@
       plateStampEffectReduced: true,
       atmosphericDepthRefined: true,
       badPullReleased: true,
+
       fineSurfaceSamplingActive: true,
       shorelineSmoothingActive: true,
       blockyCellArtifactReduced: true,
       geologicBlendFieldActive: true,
       smoothContinentWrapActive: true,
       rendererOnlyVisualRefinement: true,
+
+      cinematicMaterialAtmosphereActive: true,
+      ancientSurfaceMaterialityActive: true,
+      oceanBasinDepthActive: true,
+      atmosphericLimbDepthActive: true,
+      nonCartoonWorldBodyActive: true,
+      mineralPressureSurfaceActive: true,
+      geologicScarSubtletyActive: true,
+
       contractMarkers: CONTRACT_MARKERS.slice(0),
       active: Boolean(activeCanvas),
       activeState: activeState
@@ -1221,18 +1436,27 @@
   var api = Object.freeze({
     VERSION: VERSION,
     version: VERSION,
+
     PROJECTION_TNT: PROJECTION_TNT,
     projectionTnt: PROJECTION_TNT,
+
     BALANCE_TNT: BALANCE_TNT,
     balanceTnt: BALANCE_TNT,
+
     VISUAL_TNT: VISUAL_TNT,
     visualTnt: VISUAL_TNT,
+
     SURFACE_TNT: SURFACE_TNT,
     surfaceTnt: SURFACE_TNT,
+
+    CINEMATIC_TNT: CINEMATIC_TNT,
+    cinematicTnt: CINEMATIC_TNT,
+
     PREVIOUS_V15: PREVIOUS_V15,
     TERRAIN_AUTHORITY: TERRAIN_AUTHORITY,
     HYDRATION_AUTHORITY: HYDRATION_AUTHORITY,
     CONTRACT_MARKERS: CONTRACT_MARKERS.slice(0),
+
     renderPlanetOne: renderPlanetOne,
     render: renderPlanetOne,
     mount: renderPlanetOne,
@@ -1254,22 +1478,28 @@
     document.documentElement.setAttribute("data-planet-one-balance-tnt", BALANCE_TNT);
     document.documentElement.setAttribute("data-planet-one-visual-tnt", VISUAL_TNT);
     document.documentElement.setAttribute("data-planet-one-surface-tnt", SURFACE_TNT);
+    document.documentElement.setAttribute("data-planet-one-cinematic-tnt", CINEMATIC_TNT);
+
     document.documentElement.setAttribute("data-terrain-render-authority", TERRAIN_AUTHORITY);
     document.documentElement.setAttribute("data-hydration-render-authority", HYDRATION_AUTHORITY);
+
     document.documentElement.setAttribute("data-terrain-module-integrated", "true");
     document.documentElement.setAttribute("data-hydration-module-integrated", "true");
     document.documentElement.setAttribute("data-hydro-terrain-marriage-active", "true");
     document.documentElement.setAttribute("data-terrain-water-adhesion-active", "true");
+
     document.documentElement.setAttribute("data-spherical-land-distribution-active", "true");
     document.documentElement.setAttribute("data-visible-hemisphere-projection-active", "true");
     document.documentElement.setAttribute("data-backside-land-culling-active", "true");
     document.documentElement.setAttribute("data-limb-compression-active", "true");
     document.documentElement.setAttribute("data-front-hemisphere-packing-rejected", "true");
+
     document.documentElement.setAttribute("data-balanced-globe-visual-pressure-release-active", "true");
     document.documentElement.setAttribute("data-land-scale-rebalanced", "true");
     document.documentElement.setAttribute("data-water-field-dominance-restored", "true");
     document.documentElement.setAttribute("data-longitudinal-land-distribution-active", "true");
     document.documentElement.setAttribute("data-bad-squeeze-released", "true");
+
     document.documentElement.setAttribute("data-visual-balance-refinement-active", "true");
     document.documentElement.setAttribute("data-continent-curvature-refined", "true");
     document.documentElement.setAttribute("data-shoreline-wrap-refined", "true");
@@ -1277,11 +1507,20 @@
     document.documentElement.setAttribute("data-plate-stamp-effect-reduced", "true");
     document.documentElement.setAttribute("data-atmospheric-depth-refined", "true");
     document.documentElement.setAttribute("data-bad-pull-released", "true");
+
     document.documentElement.setAttribute("data-fine-surface-sampling-active", "true");
     document.documentElement.setAttribute("data-shoreline-smoothing-active", "true");
     document.documentElement.setAttribute("data-blocky-cell-artifact-reduced", "true");
     document.documentElement.setAttribute("data-geologic-blend-field-active", "true");
     document.documentElement.setAttribute("data-smooth-continent-wrap-active", "true");
     document.documentElement.setAttribute("data-renderer-only-visual-refinement", "true");
+
+    document.documentElement.setAttribute("data-cinematic-material-atmosphere-active", "true");
+    document.documentElement.setAttribute("data-ancient-surface-materiality-active", "true");
+    document.documentElement.setAttribute("data-ocean-basin-depth-active", "true");
+    document.documentElement.setAttribute("data-atmospheric-limb-depth-active", "true");
+    document.documentElement.setAttribute("data-non-cartoon-world-body-active", "true");
+    document.documentElement.setAttribute("data-mineral-pressure-surface-active", "true");
+    document.documentElement.setAttribute("data-geologic-scar-subtlety-active", "true");
   }
 })(window);

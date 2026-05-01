@@ -6,17 +6,18 @@
   data-house-part="voice"
   data-construct-class="public-speaking-lane"
   data-g5-site-uniformity="active"
-  data-page-standard="G5_THIS_UNDERDOG_PUBLIC_SPEAKING_RUSSIAN_DOLL_RENEWAL_TNT_v1"
+  data-page-standard="G5_THIS_UNDERDOG_THREE_FS_CONTRACT_RENEWAL_v1"
+  data-core-message="fail-fast-fail-often-fail-forward"
   data-architecture-claim="public-voice-surface"
   data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>This Underdog · Diamond Gate Bridge</title>
+  <title>This Underdog · Fail Fast, Fail Often, Fail Forward</title>
   <meta
     name="description"
-    content="This Underdog is the public speaking, comedy, story, and seminar lane for Diamond Gate Bridge."
+    content="This Underdog is the public speaking, comedy, story, and seminar lane for Diamond Gate Bridge. The message: fail fast, fail often, and fail forward."
   >
 
   <style>
@@ -25,9 +26,8 @@
       --bg:#03050a;
       --panel:rgba(9,15,25,.94);
       --panel2:rgba(14,24,38,.84);
-      --panel3:rgba(255,255,255,.055);
       --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.38);
+      --gold-line:rgba(242,199,111,.40);
       --text:#f4f7ff;
       --muted:#b8c2d6;
       --soft:rgba(244,247,255,.78);
@@ -40,14 +40,19 @@
     }
 
     *{box-sizing:border-box}
-    html{min-height:100%;background:var(--bg);scroll-behavior:smooth}
+
+    html{
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+    }
 
     body{
       margin:0;
       min-height:100vh;
       color:var(--text);
       background:
-        radial-gradient(circle at 78% 6%,rgba(242,199,111,.14),transparent 24rem),
+        radial-gradient(circle at 78% 6%,rgba(242,199,111,.15),transparent 24rem),
         radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
         radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
         linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
@@ -140,12 +145,12 @@
 
     .nav a[aria-current="page"],
     .button.primary{
-      border-color:rgba(242,199,111,.52);
+      border-color:rgba(242,199,111,.54);
       background:rgba(242,199,111,.14);
     }
 
     .button.green{
-      border-color:rgba(143,240,198,.5);
+      border-color:rgba(143,240,198,.50);
       background:rgba(143,240,198,.13);
     }
 
@@ -155,7 +160,7 @@
     }
 
     .hero{
-      min-height:520px;
+      min-height:540px;
       display:grid;
       align-content:center;
       gap:24px;
@@ -183,15 +188,15 @@
 
     h1{
       margin:0;
-      max-width:980px;
-      font-size:clamp(3.2rem,10vw,7.2rem);
+      max-width:1020px;
+      font-size:clamp(3.1rem,9.5vw,7.2rem);
       line-height:.88;
       letter-spacing:-.08em;
     }
 
     h2{
       margin:0;
-      max-width:920px;
+      max-width:940px;
       font-size:clamp(1.85rem,5vw,3.45rem);
       line-height:1;
       letter-spacing:-.06em;
@@ -214,7 +219,7 @@
     strong{color:var(--text)}
 
     .lead{
-      max-width:920px;
+      max-width:930px;
       color:var(--soft);
       font-size:clamp(1.16rem,3vw,1.55rem);
       line-height:1.45;
@@ -226,6 +231,37 @@
       line-height:1.05;
       letter-spacing:-.06em;
       font-weight:950;
+    }
+
+    .three-fs{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .f-card{
+      border:1px solid rgba(242,199,111,.32);
+      border-radius:24px;
+      padding:18px;
+      background:linear-gradient(180deg,rgba(242,199,111,.10),rgba(255,255,255,.04));
+      min-height:152px;
+      display:grid;
+      gap:8px;
+      align-content:start;
+    }
+
+    .f-card b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .f-card strong{
+      font-size:clamp(1.3rem,3.4vw,2.2rem);
+      line-height:.98;
+      letter-spacing:-.055em;
     }
 
     .voice-bubble{
@@ -332,11 +368,7 @@
     .nested summary{padding:15px}
     .nested .bubble-body{padding:0 15px 15px}
 
-    .grid{
-      display:grid;
-      gap:14px;
-    }
-
+    .grid{display:grid;gap:14px}
     .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
     .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
     .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -356,11 +388,7 @@
 
     .card{min-height:200px}
     .route-card{min-height:250px}
-
-    .route-card .button{
-      width:max-content;
-      margin-top:auto;
-    }
+    .route-card .button{width:max-content;margin-top:auto}
 
     .card span,
     .route-card span,
@@ -450,13 +478,15 @@
     }
 
     .public-receipt{color:rgba(244,247,255,.72)}
-
     .receipt{display:none!important}
 
     @media(max-width:980px){
       .topbar{display:grid}
       .nav{justify-content:flex-start}
-      .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+      .grid.two,
+      .grid.three,
+      .grid.four,
+      .three-fs{grid-template-columns:1fr}
       .hero{min-height:460px}
     }
 
@@ -487,6 +517,7 @@
     data-route="/this-underdog/"
     data-page-purpose="public-speaking-lane"
     data-speaking-lane="true"
+    data-three-fs="fail-fast-fail-often-fail-forward"
     data-about-route="/about-this-underdog/"
     data-nine-summits-route="/nine-summits/"
     data-book-route="/nine-summits-of-love/"
@@ -510,15 +541,35 @@
 
     <section class="hero">
       <p class="kicker">Story · Comedy · Speaking</p>
-      <h1>This is where the underdog learns to speak.</h1>
+      <h1>Fail fast. Fail often. Fail forward.</h1>
 
       <p class="lead">
         This Underdog is the public voice of the work: comedy, story, seminars, rooms, stages, and the message behind the climb.
       </p>
 
       <p class="lead">
-        The point is not to worship struggle. The point is to stop wasting it.
+        The point is not to worship struggle. The point is to stop wasting it. Failure is not the identity. Failure is the feedback. The underdog learns how to use it.
       </p>
+
+      <div class="three-fs" aria-label="The three Fs">
+        <article class="f-card">
+          <b>First F</b>
+          <strong>Fail fast.</strong>
+          <p>Tell the truth quickly. Do not protect a mistake until it becomes a life.</p>
+        </article>
+
+        <article class="f-card">
+          <b>Second F</b>
+          <strong>Fail often.</strong>
+          <p>Get the reps. A person cannot build a real voice by avoiding the room.</p>
+        </article>
+
+        <article class="f-card">
+          <b>Third F</b>
+          <strong>Fail forward.</strong>
+          <p>Carry the lesson out. The miss only matters if it changes the next move.</p>
+        </article>
+      </div>
 
       <div class="actions">
         <a class="button primary" href="/about-this-underdog/">Meet Sean Mansfield</a>
@@ -533,13 +584,13 @@
         <summary>
           <span class="summary-copy">
             <b>Voice bubble</b>
-            <span>The underdog is not the weak part.</span>
+            <span>The three Fs turn pressure into motion.</span>
           </span>
         </summary>
 
         <div class="bubble-body">
           <div class="bubble-note">
-            <p>The underdog is the part of you that survived before it learned how to speak. This page exists for one reason: to turn pressure into language people can use.</p>
+            <p>The underdog is not the weak part. The underdog is the part that keeps moving before the world knows how to measure it. The message is simple: fail fast, fail often, and fail forward.</p>
           </div>
 
           <div class="nested">
@@ -547,42 +598,43 @@
               <summary>
                 <span class="summary-copy">
                   <b>The thesis</b>
-                  <span>Survival becomes language.</span>
+                  <span>Failure is not the identity. Failure is the feedback.</span>
                 </span>
               </summary>
 
               <div class="bubble-body">
-                <p class="one-line">The underdog is the part of you that survived before it learned how to speak.</p>
+                <p class="one-line">The underdog does not win by avoiding failure. The underdog wins by learning how to move through failure faster, cleaner, and stronger.</p>
                 <p>Most people think the underdog is a person losing the game. That is too small. The underdog is the part of a person that keeps showing up before the world knows how to measure them.</p>
+                <p>This page exists for one reason: to turn pressure into language people can use.</p>
               </div>
             </details>
 
             <details>
               <summary>
                 <span class="summary-copy">
-                  <b>The room problem</b>
-                  <span>People do not need more noise. They need a sentence that finds them.</span>
+                  <b>Fail fast</b>
+                  <span>Name the miss before it owns the room.</span>
                 </span>
               </summary>
 
               <div class="bubble-body">
                 <div class="grid three">
                   <article class="card">
+                    <span>Truth</span>
+                    <h3>Admit the signal early.</h3>
+                    <p>Fail fast does not mean quit fast. It means stop pretending the miss is not talking.</p>
+                  </article>
+
+                  <article class="card">
                     <span>Pressure</span>
-                    <h3>People carry more than they say.</h3>
-                    <p>Work pressure. Family pressure. Money pressure. Identity pressure. Recovery pressure. The room already has weight in it.</p>
+                    <h3>Shorten the denial loop.</h3>
+                    <p>The longer a person hides the miss, the more expensive the lesson becomes.</p>
                   </article>
 
                   <article class="card">
-                    <span>Voice</span>
-                    <h3>The first win is language.</h3>
-                    <p>When someone can name what they are carrying, they stop being trapped inside it.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Motion</span>
-                    <h3>Insight has to become usable.</h3>
-                    <p>A good talk does not just inspire people. It gives them a handle they can carry out of the room.</p>
+                    <span>Room</span>
+                    <h3>Say the sentence.</h3>
+                    <p>The first win is language. Name what happened, then the room can move.</p>
                   </article>
                 </div>
               </div>
@@ -591,13 +643,13 @@
             <details>
               <summary>
                 <span class="summary-copy">
-                  <b>The core idea</b>
-                  <span>Finding your inner underdog is finding your voice.</span>
+                  <b>Fail often</b>
+                  <span>Build the reps without becoming the mistake.</span>
                 </span>
               </summary>
 
               <div class="bubble-body">
-                <p class="one-line">Your overlooked part may be the most intelligent part of you.</p>
+                <p class="one-line">A person cannot build a real voice by avoiding the room.</p>
 
                 <div class="steps">
                   <div class="step"><strong>01</strong><span>Comedy lowers the wall.</span></div>
@@ -611,8 +663,39 @@
             <details>
               <summary>
                 <span class="summary-copy">
+                  <b>Fail forward</b>
+                  <span>The lesson has to become the next move.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <div class="grid three">
+                  <article class="card">
+                    <span>Convert</span>
+                    <h3>Turn the miss into language.</h3>
+                    <p>If the failure cannot be named, it cannot be carried forward cleanly.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Choose</span>
+                    <h3>Make the next move honest.</h3>
+                    <p>Forward does not mean louder. Forward means truer.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Return</span>
+                    <h3>Go back into the room.</h3>
+                    <p>The underdog becomes a voice by returning with the lesson instead of hiding with the wound.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
                   <b>What this lane can carry</b>
-                  <span>One voice. Several rooms.</span>
+                  <span>One message. Several rooms.</span>
                 </span>
               </summary>
 
@@ -639,7 +722,7 @@
                   <article class="route-card">
                     <span>Keynote</span>
                     <h3>The big room needs one clean idea.</h3>
-                    <p>The message has to be memorable enough to survive the parking lot.</p>
+                    <p>Fail fast, fail often, fail forward is simple enough to remember and strong enough to move.</p>
                   </article>
                 </div>
               </div>
@@ -660,7 +743,7 @@
                   <article class="card">
                     <span>For a workplace</span>
                     <h3>Pressure is data.</h3>
-                    <p>Teams do not only burn out from work. They burn out from unnamed pressure.</p>
+                    <p>Teams do not only burn out from work. They burn out from unnamed pressure, slow feedback, and mistakes no one is allowed to name.</p>
                   </article>
 
                   <article class="card">
@@ -688,10 +771,12 @@
 
               <div class="bubble-body">
                 <ul class="quote-list">
+                  <li>Fail fast. Fail often. Fail forward.</li>
+                  <li>Failure is not the identity. Failure is the feedback.</li>
+                  <li>The underdog does not win by avoiding failure. The underdog wins by learning how to move through failure.</li>
                   <li>Finding your inner underdog is finding your voice.</li>
                   <li>Pressure is not the end of the story. Sometimes it is the beginning of the map.</li>
                   <li>The underdog is not the weak part. It is the part that refused to disappear.</li>
-                  <li>A person does not need to become someone else. They need to stop burying the part that already knows.</li>
                   <li>The key you are looking for is usually on the other side of the imperfect storm.</li>
                 </ul>
               </div>
@@ -742,7 +827,7 @@
       <h2>The stage was not created overnight. It was noticed.</h2>
 
       <p class="lead">
-        This Underdog is where the story speaks out loud: not to decorate the system, but to make it human enough to enter.
+        This Underdog is where the story speaks out loud: not to decorate the system, but to make failure useful enough to become a voice.
       </p>
 
       <div class="links">
@@ -755,11 +840,16 @@
     </section>
 
     <footer class="footer">
-      <div class="public-receipt">This Underdog · G5 Russian-doll speaking lane renewal active. Public speaking surface only. House navigation, nested disclosure structure, and readiness separation are aligned to the current site baseline.</div>
+      <div class="public-receipt">This Underdog · G5 three-F speaking lane renewal active. Core message: fail fast, fail often, fail forward. House navigation, nested disclosure structure, and readiness separation are aligned to the current site baseline.</div>
+
       <section class="receipt" aria-hidden="true">
-        G5_THIS_UNDERDOG_PUBLIC_SPEAKING_RUSSIAN_DOLL_RENEWAL_TNT_v1
+        G5_THIS_UNDERDOG_THREE_FS_CONTRACT_RENEWAL_v1
         route=/this-underdog/
         page-purpose=public-speaking-lane
+        core-message=fail-fast|fail-often|fail-forward
+        fail-fast=true
+        fail-often=true
+        fail-forward=true
         public-language=true
         russian-doll-bubble-structure=true
         no-graphic-box=true
@@ -773,7 +863,7 @@
         products-route=/products/
         showroom-route=/showroom/
         gauges-route=/gauges/
-        result=this-underdog-renewed-as-g5-speaking-page
+        result=this-underdog-renewed-as-three-f-speaking-page
       </section>
     </footer>
   </main>

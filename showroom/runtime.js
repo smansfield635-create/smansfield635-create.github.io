@@ -1,256 +1,353 @@
-/* SHOWROOM RUNTIME GLOBE BRIDGE
+/* G1 PLANET 1 SHOWROOM RUNTIME / ASSET BRIDGE REPAIR
    FILE: /showroom/runtime.js
-   VERSION: SHOWROOM_GLOBE_RUNTIME_BRIDGE_TNT_v1
+   VERSION: G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
 
    PURPOSE:
-   - Boot the Showroom route into the existing Planet 1 renderer/runtime/control system.
-   - Use /assets/showroom.globe.instrument.js as the adapter.
-   - Do not own independent planet physics or terrain.
-   - Do not create a second fake globe.
-   - Keep visual pass on HOLD.
+   - Boot the Showroom Planet 1 bridge after route, renderer, hexgrid, and asset instrument are loaded.
+   - Repaint the active renderer after hexgrid/renderer readiness.
+   - Keep Showroom as adapter only.
+   - Do not own terrain.
+   - Do not create duplicate fake globe.
+   - Default public mode to satellite.
+   - Keep visual pass held.
 */
 
-(function attachShowroomRuntime(global) {
+(function attachShowroomGlobeRuntime(global) {
   "use strict";
 
-  var VERSION = "SHOWROOM_GLOBE_RUNTIME_BRIDGE_TNT_v1";
-
-  var CONTRACT_MARKERS = [
-    VERSION,
-    "SHOWROOM_RUNTIME_ACTIVE",
-    "SHOWROOM_GLOBE_BOOT_ACTIVE",
-    "SHOWROOM_USES_PLANET_ONE_RUNTIME",
-    "SHOWROOM_USES_PLANET_ONE_RENDERER",
-    "NO_INDEPENDENT_PLANET_PHYSICS",
-    "NO_DUPLICATE_FAKE_GLOBE",
-    "VISUAL_PASS_NOT_CLAIMED"
-  ];
+  var VERSION = "G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1";
+  var RENDER_PAIR = "G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1";
+  var DEFAULT_VIEW_LON = -28;
+  var DEFAULT_VIEW_LAT = 0;
+  var DEFAULT_SPEED = 2.4;
+  var MAX_FPS = 10;
 
   var state = {
-    active: true,
+    version: VERSION,
+    showroomRuntimeActive: true,
     booted: false,
-    bootAttempted: false,
-    mountNode: null,
-    controlNode: null,
-    statusNode: null,
-    lastBoot: null,
-    lastError: null,
-    visualPassClaimed: false
+    running: true,
+    paused: false,
+    direction: 1,
+    viewLon: DEFAULT_VIEW_LON,
+    viewLat: DEFAULT_VIEW_LAT,
+    speedDegreesPerSecond: DEFAULT_SPEED,
+    axisVisible: false,
+    frameCount: 0,
+    renderCount: 0,
+    lastFrameTime: 0,
+    lastRenderTime: 0,
+    instrumentDetected: false,
+    showroomUsesPlanetOneRuntime: true,
+    showroomUsesPlanetOneRenderer: true,
+    noDuplicateFakeGlobe: true,
+    noIndependentPlanetPhysics: true,
+    visualPassClaimed: false,
+    lastInstrumentStatus: null,
+    lastError: null
   };
 
   function now() {
     return new Date().toISOString();
   }
 
-  function safeCall(fn, fallback) {
+  function wrapLon(lon) {
+    var x = ((lon + 180) % 360 + 360) % 360 - 180;
+    return x === -180 ? 180 : x;
+  }
+
+  function safeJson(value) {
     try {
-      return fn();
+      return JSON.stringify(value, null, 2);
     } catch (error) {
-      state.lastError = String(error && error.message ? error.message : error);
-      return fallback;
+      return String(value);
     }
+  }
+
+  function writeReceipt(id, value) {
+    var el = global.document && global.document.getElementById(id);
+    if (el) el.textContent = safeJson(value);
+  }
+
+  function getMount() {
+    if (!global.document) return null;
+    return global.document.querySelector("[data-planet-one-mount='true']") ||
+      global.document.getElementById("planet-one-render");
   }
 
   function getInstrument() {
-    return global.DGBShowroomGlobeInstrument ||
-      global.DGBShowroomGlobe ||
-      null;
+    return global.DGBShowroomGlobeInstrument || null;
   }
 
-  function resolveNode(selectors) {
-    var i;
-    var node;
-
-    if (!global.document) return null;
-
-    for (i = 0; i < selectors.length; i += 1) {
-      node = global.document.querySelector(selectors[i]);
-      if (node) return node;
-    }
-
-    return null;
-  }
-
-  function resolveMount() {
-    var node = resolveNode([
-      "#planet-one-render",
-      "#showroom-globe-render",
-      "[data-planet-one-mount='true']",
-      "[data-showroom-globe-mount='true']",
-      ".planet-one-render",
-      ".showroom-globe-render"
-    ]);
-
-    if (node) return node;
-
-    if (!global.document) return null;
-
-    node = global.document.createElement("div");
-    node.id = "planet-one-render";
-    node.setAttribute("data-planet-one-mount", "true");
-    node.setAttribute("data-showroom-globe-mount", "true");
-
-    (global.document.body || global.document.documentElement).appendChild(node);
-    return node;
-  }
-
-  function resolveControl() {
-    return resolveNode([
-      "#planet-one-controls",
-      "#showroom-globe-controls",
-      "[data-planet-one-controls='true']",
-      "[data-showroom-globe-controls='true']"
-    ]);
-  }
-
-  function resolveStatus() {
-    return resolveNode([
-      "#showroom-globe-status",
-      "#planet-one-status",
-      "[data-showroom-globe-status='true']",
-      "[data-planet-one-status='true']"
-    ]);
-  }
-
-  function writeStatus() {
+  function render(reason) {
     var instrument = getInstrument();
-    var instrumentStatus = instrument && typeof instrument.getStatus === "function"
-      ? safeCall(function () { return instrument.getStatus(); }, null)
-      : null;
+    var mount = getMount();
 
-    if (state.statusNode && "textContent" in state.statusNode) {
-      state.statusNode.textContent = JSON.stringify({
-        showroomRuntimeVersion: VERSION,
-        showroomRuntimeActive: true,
-        booted: state.booted,
-        instrumentDetected: Boolean(instrument),
-        showroomUsesPlanetOneRuntime: Boolean(instrumentStatus && instrumentStatus.planetOneRuntimeDetected),
-        showroomUsesPlanetOneRenderer: Boolean(instrumentStatus && instrumentStatus.planetOneRendererDetected),
-        noDuplicateFakeGlobe: true,
-        noIndependentPlanetPhysics: true,
-        instrument: instrumentStatus ? {
-          mounted: instrumentStatus.mounted,
-          started: instrumentStatus.started,
-          runtime: instrumentStatus.runtimeSummary,
-          renderer: instrumentStatus.rendererSummary
-        } : null,
-        visualPassClaimed: false
-      }, null, 2);
-    }
+    state.instrumentDetected = Boolean(instrument);
 
-    return getStatus();
-  }
-
-  function boot(options) {
-    var instrument;
-
-    options = options || {};
-    state.bootAttempted = true;
-
-    state.mountNode = resolveMount();
-    state.controlNode = resolveControl();
-    state.statusNode = resolveStatus();
-
-    if (state.mountNode && state.mountNode.setAttribute) {
-      state.mountNode.setAttribute("data-planet-one-mount", "true");
-      state.mountNode.setAttribute("data-showroom-globe-mount", "true");
-      state.mountNode.setAttribute("data-showroom-runtime", VERSION);
-    }
-
-    instrument = getInstrument();
-
-    if (!instrument) {
-      state.lastError = "SHOWROOM_GLOBE_INSTRUMENT_NOT_AVAILABLE";
-      writeStatus();
+    if (!instrument || typeof instrument.render !== "function") {
+      state.lastError = "INSTRUMENT_NOT_READY";
       return getStatus();
     }
 
-    if (typeof instrument.mount === "function") {
-      safeCall(function () {
-        instrument.mount(state.mountNode, {
-          controlTarget: state.controlNode,
-          statusTarget: state.statusNode,
-          viewLon: options.viewLon == null ? -28 : options.viewLon,
-          viewLat: options.viewLat == null ? 0 : options.viewLat,
-          axisTilt: options.axisTilt == null ? -0.28 : options.axisTilt,
-          showAxis: options.showAxis == null ? true : Boolean(options.showAxis),
-          speedDegreesPerSecond: options.speedDegreesPerSecond == null ? 2.4 : Number(options.speedDegreesPerSecond)
-        });
-      }, null);
+    if (!mount) {
+      state.lastError = "PLANET_MOUNT_NOT_FOUND";
+      return getStatus();
     }
-
-    if (typeof instrument.start === "function") {
-      safeCall(function () {
-        instrument.start(state.mountNode, {
-          controlTarget: state.controlNode,
-          statusTarget: state.statusNode,
-          viewLon: options.viewLon == null ? -28 : options.viewLon,
-          viewLat: options.viewLat == null ? 0 : options.viewLat,
-          axisTilt: options.axisTilt == null ? -0.28 : options.axisTilt,
-          showAxis: options.showAxis == null ? true : Boolean(options.showAxis),
-          speedDegreesPerSecond: options.speedDegreesPerSecond == null ? 2.4 : Number(options.speedDegreesPerSecond)
-        });
-      }, null);
-    }
-
-    state.booted = true;
-    state.lastBoot = {
-      at: now(),
-      mountDetected: Boolean(state.mountNode),
-      controlDetected: Boolean(state.controlNode),
-      statusDetected: Boolean(state.statusNode),
-      instrumentDetected: Boolean(instrument)
-    };
-
-    writeStatus();
 
     try {
-      if (global.dispatchEvent && typeof global.CustomEvent === "function") {
-        global.dispatchEvent(new global.CustomEvent("dgb:showroom-runtime-booted", {
-          detail: getStatus()
-        }));
-      }
+      state.lastInstrumentStatus = instrument.render(mount, {
+        renderMode: "satellite",
+        viewLon: state.viewLon,
+        viewLat: state.viewLat,
+        showAxis: state.axisVisible,
+        compositorScale: 0.64,
+        surfaceAlpha: 0.94,
+        clearMount: state.renderCount === 0,
+        source: reason || "showroom-runtime"
+      });
+
+      state.renderCount += 1;
+      state.lastError = null;
     } catch (error) {
       state.lastError = String(error && error.message ? error.message : error);
     }
 
+    writeReceipts();
+
+    try {
+      global.dispatchEvent(new CustomEvent("dgb:showroom-globe:runtime-render", {
+        detail: getStatus()
+      }));
+    } catch (error2) {}
+
     return getStatus();
   }
 
-  function refreshStatus() {
-    return writeStatus();
+  function tick(timestamp) {
+    var dt;
+    var renderInterval = 1000 / MAX_FPS;
+
+    if (!state.booted) {
+      global.requestAnimationFrame(tick);
+      return;
+    }
+
+    if (!state.lastFrameTime) state.lastFrameTime = timestamp;
+
+    dt = timestamp - state.lastFrameTime;
+    state.lastFrameTime = timestamp;
+
+    if (state.running && !state.paused) {
+      state.viewLon = wrapLon(
+        state.viewLon + state.direction * state.speedDegreesPerSecond * (dt / 1000)
+      );
+    }
+
+    if (timestamp - state.lastRenderTime >= renderInterval) {
+      state.frameCount += 1;
+      state.lastRenderTime = timestamp;
+      render("runtime-loop");
+    }
+
+    global.requestAnimationFrame(tick);
+  }
+
+  function writeReceipts() {
+    writeReceipt("planet-one-runtime-receipt", getStatus());
+
+    if (state.lastInstrumentStatus) {
+      writeReceipt("planet-one-bridge-receipt", state.lastInstrumentStatus);
+    }
+  }
+
+  function bindControls() {
+    if (!global.document) return;
+
+    global.document.querySelectorAll("[data-planet-action]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var action = button.getAttribute("data-planet-action");
+
+        if (action === "start") start();
+        if (action === "pause") pause();
+        if (action === "resume") resume();
+        if (action === "reset") reset();
+        if (action === "reverse") reverse();
+
+        render("control-" + action);
+      });
+    });
+
+    global.document.querySelectorAll("[data-planet-speed]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var value = button.getAttribute("data-planet-speed");
+
+        if (value === "slow") slow();
+        if (value === "normal") normal();
+        if (value === "fast") fast();
+
+        global.document.querySelectorAll("[data-planet-speed]").forEach(function (item) {
+          item.setAttribute("data-active", "false");
+        });
+
+        button.setAttribute("data-active", "true");
+        render("control-speed-" + value);
+      });
+    });
+
+    global.document.querySelectorAll("[data-planet-speed-select]").forEach(function (select) {
+      select.addEventListener("change", function () {
+        state.speedDegreesPerSecond = Number(select.value || DEFAULT_SPEED);
+        render("control-speed-select");
+      });
+    });
+
+    global.document.querySelectorAll("[data-planet-axis-toggle]").forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+        state.axisVisible = checkbox.checked === true;
+        render("control-axis-toggle");
+      });
+    });
+  }
+
+  function boot() {
+    var instrument = getInstrument();
+
+    state.instrumentDetected = Boolean(instrument);
+    state.booted = true;
+
+    bindControls();
+
+    if (instrument && typeof instrument.start === "function") {
+      try {
+        state.lastInstrumentStatus = instrument.start(getMount(), {
+          renderMode: "satellite",
+          viewLon: state.viewLon,
+          viewLat: state.viewLat,
+          showAxis: state.axisVisible,
+          compositorScale: 0.64,
+          surfaceAlpha: 0.94,
+          clearMount: true,
+          source: "showroom-runtime-boot"
+        });
+      } catch (error) {
+        state.lastError = String(error && error.message ? error.message : error);
+      }
+    }
+
+    render("boot");
+    writeReceipts();
+
+    try {
+      global.dispatchEvent(new CustomEvent("dgb:showroom-globe:runtime-ready", {
+        detail: getStatus()
+      }));
+    } catch (error2) {}
+
+    global.requestAnimationFrame(tick);
+  }
+
+  function waitForInstrument(timeoutMs) {
+    var started = Date.now();
+    var timeout = Number(timeoutMs || 2600);
+
+    function check() {
+      if (getInstrument()) {
+        boot();
+        return;
+      }
+
+      if (Date.now() - started > timeout) {
+        boot();
+        return;
+      }
+
+      global.setTimeout(check, 45);
+    }
+
+    check();
+  }
+
+  function start() {
+    state.running = true;
+    state.paused = false;
+    return getStatus();
+  }
+
+  function pause() {
+    state.paused = true;
+    return getStatus();
+  }
+
+  function resume() {
+    state.running = true;
+    state.paused = false;
+    return getStatus();
+  }
+
+  function reset() {
+    state.viewLon = DEFAULT_VIEW_LON;
+    state.viewLat = DEFAULT_VIEW_LAT;
+    state.direction = 1;
+    state.paused = false;
+    return getStatus();
+  }
+
+  function reverse() {
+    state.direction = state.direction * -1;
+    return getStatus();
+  }
+
+  function slow() {
+    state.speedDegreesPerSecond = 0.8;
+    return getStatus();
+  }
+
+  function normal() {
+    state.speedDegreesPerSecond = 2.4;
+    return getStatus();
+  }
+
+  function fast() {
+    state.speedDegreesPerSecond = 5.2;
+    return getStatus();
+  }
+
+  function setView(viewLon, viewLat) {
+    state.viewLon = wrapLon(Number(viewLon == null ? state.viewLon : viewLon));
+    state.viewLat = Number(viewLat == null ? state.viewLat : viewLat);
+    render("set-view");
+    return getStatus();
+  }
+
+  function setAxisVisible(value) {
+    state.axisVisible = value === true;
+    render("set-axis-visible");
+    return getStatus();
   }
 
   function getStatus() {
-    var instrument = getInstrument();
-    var instrumentStatus = instrument && typeof instrument.getStatus === "function"
-      ? safeCall(function () { return instrument.getStatus(); }, null)
-      : null;
-
     return {
-      ok: true,
-      active: true,
-      VERSION: VERSION,
-      version: VERSION,
-      CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
-
+      showroomRuntimeVersion: VERSION,
+      renderPair: RENDER_PAIR,
       showroomRuntimeActive: true,
-      showroomGlobeBootActive: true,
-      showroomUsesPlanetOneRuntime: Boolean(instrumentStatus && instrumentStatus.planetOneRuntimeDetected),
-      showroomUsesPlanetOneRenderer: Boolean(instrumentStatus && instrumentStatus.planetOneRendererDetected),
-      noIndependentPlanetPhysics: true,
-      noDuplicateFakeGlobe: true,
-
-      bootAttempted: state.bootAttempted,
       booted: state.booted,
-      mountDetected: Boolean(state.mountNode),
-      controlDetected: Boolean(state.controlNode),
-      statusDetected: Boolean(state.statusNode),
-      instrumentDetected: Boolean(instrument),
-
-      lastBoot: state.lastBoot,
+      instrumentDetected: Boolean(getInstrument()),
+      showroomUsesPlanetOneRuntime: true,
+      showroomUsesPlanetOneRenderer: true,
+      noDuplicateFakeGlobe: true,
+      noIndependentPlanetPhysics: true,
+      running: state.running,
+      paused: state.paused,
+      viewLon: Number(state.viewLon.toFixed(4)),
+      viewLat: Number(state.viewLat.toFixed(4)),
+      speedDegreesPerSecond: state.speedDegreesPerSecond,
+      axisVisible: state.axisVisible,
+      frameCount: state.frameCount,
+      renderCount: state.renderCount,
+      instrument: state.lastInstrumentStatus,
       lastError: state.lastError,
-      statusAt: now(),
+      timestamp: now(),
       visualPassClaimed: false
     };
   }
@@ -262,30 +359,41 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
-    CONTRACT_MARKERS: CONTRACT_MARKERS,
-    boot: boot,
-    refreshStatus: refreshStatus,
+    start: start,
+    pause: pause,
+    resume: resume,
+    reset: reset,
+    reverse: reverse,
+    slow: slow,
+    normal: normal,
+    fast: fast,
+    render: render,
+    setView: setView,
+    setAxisVisible: setAxisVisible,
     getStatus: getStatus,
     status: status
   };
 
-  global.DGBShowroomRuntime = api;
+  global.DGBShowroomGlobeRuntime = api;
+  global.DGBPlanetOneRuntimeBridge = api;
 
-  try {
-    if (global.dispatchEvent && typeof global.CustomEvent === "function") {
-      global.dispatchEvent(new global.CustomEvent("dgb:showroom-runtime-ready", {
-        detail: getStatus()
-      }));
-    }
-  } catch (error) {
-    state.lastError = String(error && error.message ? error.message : error);
-  }
+  global.addEventListener("dgb:planet-one:hexgrid-ready", function () {
+    render("hexgrid-ready");
+  });
+
+  global.addEventListener("dgb:planet-one:renderer-ready", function () {
+    render("renderer-ready");
+  });
+
+  global.addEventListener("dgb:showroom-globe:instrument-ready", function () {
+    render("instrument-ready");
+  });
 
   if (global.document && global.document.readyState === "loading") {
     global.document.addEventListener("DOMContentLoaded", function () {
-      boot();
+      waitForInstrument(2600);
     }, { once: true });
   } else {
-    boot();
+    waitForInstrument(2600);
   }
 })(typeof window !== "undefined" ? window : globalThis);

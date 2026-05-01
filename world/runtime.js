@@ -1,251 +1,336 @@
-// /world/runtime.js
-// MODE: DIRECT RUNTIME AUTHORITY
-// CONTRACT: RUNTIME_CONTRACT_G4
-// STATUS: DETERMINISTIC | PUBLIC PATH SAFE | SIBLING TO RENDER
+/* G1 PLANET 1 AXIS ROTATION RUNTIME
+   FILE: /world/runtime.js
+   VERSION: G1_PLANET_1_AXIS_ROTATION_RUNTIME_TNT_v1
 
-const RUNTIME_META = Object.freeze({
-  name: "runtime",
-  version: "G4",
-  contract: "RUNTIME_CONTRACT_G4",
-  role: "direct_state_authority",
-  deterministic: true,
-  sourceOfTruth: true,
-  mutatesState: false,
-  platformOwned: true
-});
+   PURPOSE:
+   - Own animation loop and rotation state.
+   - Advance Planet 1 viewLon over time.
+   - Keep renderer passive.
+   - Expose runtime controls for /world/control.js.
+   - Preserve visual HOLD.
+*/
 
-function deepFreeze(value) {
-  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
-  const keys = Object.getOwnPropertyNames(value);
-  for (let i = 0; i < keys.length; i += 1) deepFreeze(value[keys[i]]);
-  return Object.freeze(value);
-}
+(function attachWorldRuntime(global) {
+  "use strict";
 
-function clamp(value, min, max) {
-  if (!Number.isFinite(value)) return min;
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
-}
+  var VERSION = "G1_PLANET_1_AXIS_ROTATION_RUNTIME_TNT_v1";
+  var DEFAULT_MOUNT_SELECTORS = [
+    "#planet-one-render",
+    "[data-planet-one-mount='true']",
+    ".planet-one-render"
+  ];
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
-}
+  var CONTRACT_MARKERS = [
+    VERSION,
+    "WORLD_RUNTIME_ACTIVE",
+    "PLANET_ONE_ROTATION_RUNTIME_ACTIVE",
+    "VIEWLON_PROGRESS_OWNS_ROTATION",
+    "RENDERER_PASSIVE_RUNTIME_ACTIVE",
+    "CONTROL_PANEL_COMMANDS_ACCEPTED",
+    "VISUAL_PASS_NOT_CLAIMED"
+  ];
 
-function getElapsedSeconds(frameState = {}) {
-  const source = normalizeObject(frameState);
-  return Number.isFinite(source.elapsedSeconds) ? Math.max(0, source.elapsedSeconds) : 0;
-}
+  var state = {
+    active: true,
+    mounted: false,
+    running: false,
+    paused: false,
+    animationFrame: null,
+    mount: null,
+    viewLon: -28,
+    viewLat: 0,
+    axisTilt: -0.28,
+    axisVisible: true,
+    speedDegreesPerSecond: 2.4,
+    lastTimestamp: null,
+    lastRender: null,
+    lastError: null,
+    frameCount: 0,
+    visualPassClaimed: false
+  };
 
-function computeFieldSummary() {
-  return deepFreeze({ width: 256, height: 256 });
-}
+  function now() {
+    return new Date().toISOString();
+  }
 
-function computeDenseIndex(elapsedSeconds) {
-  const x = 128 + Math.round(Math.sin(elapsedSeconds * 0.11) * 8);
-  const y = 128 + Math.round(Math.cos(elapsedSeconds * 0.09) * 8);
-  return deepFreeze({
-    x: clamp(x, 0, 255),
-    y: clamp(y, 0, 255)
-  });
-}
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
-function computeKernelIndex(denseIndex) {
-  return deepFreeze({
-    i: clamp(Math.floor(denseIndex.x / 32), 0, 7),
-    j: clamp(Math.floor(denseIndex.y / 32), 0, 7)
-  });
-}
+  function wrapLon(value) {
+    var lon = value;
+    while (lon <= -180) lon += 360;
+    while (lon > 180) lon -= 360;
+    return lon;
+  }
 
-function computeForceVector(elapsedSeconds, denseIndex) {
-  const a = elapsedSeconds * 0.7;
-  const n = Math.sin(a) * 2.8;
-  const e = Math.cos(a * 0.9) * 2.4;
-  const s = Math.sin(a * 0.6 + denseIndex.x * 0.01) * 2.1;
-  const w = Math.cos(a * 0.5 + denseIndex.y * 0.01) * 1.9;
-  const b = Math.sin(a * 0.4) * 1.4;
+  function resolveMount(target) {
+    var i;
+    var found;
 
-  return deepFreeze({
-    N: Math.round(n * 1000) / 1000,
-    E: Math.round(e * 1000) / 1000,
-    S: Math.round(s * 1000) / 1000,
-    W: Math.round(w * 1000) / 1000,
-    B: Math.round(b * 1000) / 1000
-  });
-}
+    if (target && typeof target !== "string") return target;
 
-function computeBoundary(forceVector) {
-  const burden = Math.abs(forceVector.B);
-  if (burden > 1.2) return deepFreeze({ classification: "HOLD", label: "HOLD" });
-  return deepFreeze({ classification: "OPEN", label: "OPEN" });
-}
+    if (!global.document) return null;
 
-function computeThreshold(forceVector) {
-  const magnitude =
-    Math.abs(forceVector.N) +
-    Math.abs(forceVector.E) +
-    Math.abs(forceVector.S) +
-    Math.abs(forceVector.W);
+    if (typeof target === "string") {
+      found = global.document.querySelector(target);
+      if (found) return found;
+    }
 
-  const pass = magnitude < 12;
+    for (i = 0; i < DEFAULT_MOUNT_SELECTORS.length; i += 1) {
+      found = global.document.querySelector(DEFAULT_MOUNT_SELECTORS[i]);
+      if (found) return found;
+    }
 
-  return deepFreeze({
-    action: pass ? "PASS" : "HALT",
-    value: Math.round((magnitude / 12) * 1000) / 1000
-  });
-}
+    found = global.document.createElement("div");
+    found.id = "planet-one-render";
+    found.setAttribute("data-planet-one-mount", "true");
+    found.style.width = "100%";
+    found.style.maxWidth = "720px";
+    found.style.margin = "0 auto";
 
-function computeTraversalStatus(boundary, threshold) {
-  const admissible = boundary.classification !== "BLOCK" && threshold.action === "PASS";
-  return deepFreeze({
-    admissible,
-    action: admissible ? "PASS" : "HALT",
-    thresholdPass: threshold.action === "PASS",
-    boundaryPass: boundary.classification !== "BLOCK",
-    targetExists: true,
-    targetLawful: true
-  });
-}
+    (global.document.body || global.document.documentElement).appendChild(found);
+    return found;
+  }
 
-function computeProjection(denseIndex) {
-  const x = denseIndex.x;
-  const y = denseIndex.y;
-  const nx = (x - 128) / 128;
-  const ny = (y - 128) / 128;
-  const zSquared = Math.max(0, 1 - nx * nx - ny * ny);
-  const z = Math.sqrt(zSquared);
+  function getRenderer() {
+    return global.DGBPlanetOneRender ||
+      global.DGBPlanetOneRenderer ||
+      global.DGBPlanetOneRenderTeam ||
+      null;
+  }
 
-  return deepFreeze({
-    kind: "flat",
-    x,
-    y,
-    z: Math.round(z * 1000000) / 1000000,
-    width: 256,
-    height: 256,
-    longitude: Math.round(nx * 180 * 1000000) / 1000000,
-    latitude: Math.round(ny * 90 * 1000000) / 1000000
-  });
-}
+  function renderFrame() {
+    var renderer = getRenderer();
 
-function computeRegion(kernelIndex) {
-  return deepFreeze({
-    regionId: "R-" + kernelIndex.i + "-" + kernelIndex.j,
-    label: "REGION_" + kernelIndex.i + "_" + kernelIndex.j
-  });
-}
+    if (!renderer || typeof renderer.renderPlanetOne !== "function") {
+      state.lastError = "PLANET_ONE_RENDERER_NOT_AVAILABLE";
+      return null;
+    }
 
-function computeNode(denseIndex) {
-  return deepFreeze({
-    nodeId: "NODE-" + denseIndex.x + "-" + denseIndex.y,
-    label: "NODE_" + denseIndex.x + "_" + denseIndex.y
-  });
-}
+    state.lastRender = renderer.renderPlanetOne(state.mount, {
+      renderMode: "satellite",
+      viewLon: state.viewLon,
+      viewLat: state.viewLat,
+      axisTilt: state.axisTilt,
+      showAxis: state.axisVisible,
+      clearMount: false
+    });
 
-function buildReceipt({
-  timestamp,
-  kernelIndex,
-  denseIndex,
-  region,
-  node,
-  boundary,
-  threshold,
-  forceVector,
-  traversalStatus,
-  selectedProjection
-}) {
-  return deepFreeze({
-    source: RUNTIME_META.name,
-    contract: RUNTIME_META.contract,
-    timestamp,
-    verification: deepFreeze({
-      pass: true,
-      deterministic: true
-    }),
-    phase: threshold.action,
-    projection: "flat",
-    state: deepFreeze({
-      i: kernelIndex.i,
-      j: kernelIndex.j
-    }),
-    denseIndex: deepFreeze({
-      x: denseIndex.x,
-      y: denseIndex.y
-    }),
-    region,
-    node,
-    boundary,
-    threshold,
-    forces: forceVector,
-    traversalStatus,
-    selectedProjection,
-    fieldSummary: computeFieldSummary(),
-    terrainClass: denseIndex.y < 96 ? "RIDGE" : denseIndex.y > 160 ? "BASIN" : "PLAIN",
-    biomeType: denseIndex.x < 96 ? "FOREST" : denseIndex.x > 160 ? "DESERT" : "GRASSLAND",
-    surfaceMaterial: denseIndex.y < 96 ? "STONE" : denseIndex.y > 160 ? "SEDIMENT" : "SOIL",
-    climateBand: denseIndex.y < 96 ? "COOL" : denseIndex.y > 160 ? "WARM" : "TEMPERATE",
-    climate: Math.round((0.35 + denseIndex.y / 512) * 1000) / 1000,
-    moisture: Math.round((0.65 - denseIndex.x / 512) * 1000) / 1000,
-    accumulation: Math.round((Math.abs(forceVector.B) / 2) * 1000) / 1000,
-    shorelineMask: Math.round((denseIndex.y / 255) * 1000) / 1000,
-    landMask: Math.round((1 - Math.abs(selectedProjection.z || 0) * 0.2) * 1000) / 1000,
-    waterMask: Math.round((denseIndex.x / 255) * 1000) / 1000,
-    habitability: Math.round((0.55 + (selectedProjection.z || 0) * 0.25) * 1000) / 1000,
-    traversalDifficulty: Math.round((Math.abs(forceVector.B) / 3 + 0.2) * 1000) / 1000
-  });
-}
+    return state.lastRender;
+  }
 
-export function getRuntimeReceipt(options = {}) {
-  const source = normalizeObject(options);
-  const timestamp = Number.isFinite(source.timestamp) ? source.timestamp : Date.now();
-  const elapsedSeconds = getElapsedSeconds(source.frameState);
-  const denseIndex = computeDenseIndex(elapsedSeconds);
-  const kernelIndex = computeKernelIndex(denseIndex);
-  const region = computeRegion(kernelIndex);
-  const node = computeNode(denseIndex);
-  const forceVector = computeForceVector(elapsedSeconds, denseIndex);
-  const boundary = computeBoundary(forceVector);
-  const threshold = computeThreshold(forceVector);
-  const traversalStatus = computeTraversalStatus(boundary, threshold);
-  const selectedProjection = computeProjection(denseIndex);
+  function tick(timestamp) {
+    var deltaSeconds;
 
-  return buildReceipt({
-    timestamp,
-    kernelIndex,
-    denseIndex,
-    region,
-    node,
-    boundary,
-    threshold,
-    forceVector,
-    traversalStatus,
-    selectedProjection
-  });
-}
+    if (!state.running) return;
 
-export function getCurrentState(options = {}) {
-  const receipt = getRuntimeReceipt(options);
-  return deepFreeze({
-    index: receipt.state,
-    denseIndex: receipt.denseIndex,
-    projectionState: receipt.projection,
-    selectedProjection: receipt.selectedProjection,
-    region: receipt.region,
-    node: receipt.node,
-    boundary: receipt.boundary,
-    threshold: receipt.threshold,
-    receipt: deepFreeze({ timestamp: receipt.timestamp }),
-    traversalStatus: receipt.traversalStatus,
-    terrainClass: receipt.terrainClass,
-    biomeType: receipt.biomeType,
-    forces: receipt.forces
-  });
-}
+    if (state.paused) {
+      state.lastTimestamp = timestamp;
+      state.animationFrame = global.requestAnimationFrame(tick);
+      return;
+    }
 
-const DEFAULT_RUNTIME = deepFreeze({
-  meta: RUNTIME_META,
-  getRuntimeReceipt,
-  getCurrentState
-});
+    if (state.lastTimestamp == null) state.lastTimestamp = timestamp;
+    deltaSeconds = Math.max(0, Math.min(0.08, (timestamp - state.lastTimestamp) / 1000));
+    state.lastTimestamp = timestamp;
 
-export const meta = RUNTIME_META;
-export default DEFAULT_RUNTIME;
+    state.viewLon = wrapLon(state.viewLon + state.speedDegreesPerSecond * deltaSeconds);
+    state.frameCount += 1;
+
+    renderFrame();
+
+    state.animationFrame = global.requestAnimationFrame(tick);
+  }
+
+  function mount(target, options) {
+    options = options || {};
+
+    state.mount = resolveMount(target || options.target || options.mount);
+    if (!state.mount) {
+      state.lastError = "NO_PLANET_ONE_MOUNT";
+      return {
+        ok: false,
+        reason: "NO_PLANET_ONE_MOUNT",
+        version: VERSION,
+        visualPassClaimed: false
+      };
+    }
+
+    if (options.viewLon != null) state.viewLon = Number(options.viewLon);
+    if (options.viewLat != null) state.viewLat = Number(options.viewLat);
+    if (options.axisTilt != null) state.axisTilt = Number(options.axisTilt);
+    if (options.axisVisible != null) state.axisVisible = Boolean(options.axisVisible);
+    if (options.speedDegreesPerSecond != null) {
+      state.speedDegreesPerSecond = clamp(Number(options.speedDegreesPerSecond), -18, 18);
+    }
+
+    state.mounted = true;
+    renderFrame();
+
+    return getStatus();
+  }
+
+  function start(target, options) {
+    mount(target, options || {});
+
+    if (state.running) return getStatus();
+
+    state.running = true;
+    state.paused = false;
+    state.lastTimestamp = null;
+
+    if (typeof global.requestAnimationFrame === "function") {
+      state.animationFrame = global.requestAnimationFrame(tick);
+    } else {
+      state.lastError = "REQUEST_ANIMATION_FRAME_NOT_AVAILABLE";
+    }
+
+    return getStatus();
+  }
+
+  function pause() {
+    state.paused = true;
+    return getStatus();
+  }
+
+  function resume() {
+    state.paused = false;
+
+    if (!state.running) {
+      return start(state.mount);
+    }
+
+    return getStatus();
+  }
+
+  function stop() {
+    state.running = false;
+    state.paused = false;
+
+    if (state.animationFrame && typeof global.cancelAnimationFrame === "function") {
+      global.cancelAnimationFrame(state.animationFrame);
+    }
+
+    state.animationFrame = null;
+    state.lastTimestamp = null;
+
+    return getStatus();
+  }
+
+  function reset() {
+    state.viewLon = -28;
+    state.viewLat = 0;
+    state.axisTilt = -0.28;
+    renderFrame();
+    return getStatus();
+  }
+
+  function setSpeed(value) {
+    state.speedDegreesPerSecond = clamp(Number(value), -18, 18);
+    return getStatus();
+  }
+
+  function setView(lon, lat) {
+    if (lon != null) state.viewLon = wrapLon(Number(lon));
+    if (lat != null) state.viewLat = clamp(Number(lat), -55, 55);
+    renderFrame();
+    return getStatus();
+  }
+
+  function setAxisVisible(value) {
+    state.axisVisible = Boolean(value);
+    renderFrame();
+    return getStatus();
+  }
+
+  function setAxisTilt(value) {
+    state.axisTilt = clamp(Number(value), -0.9, 0.9);
+    renderFrame();
+    return getStatus();
+  }
+
+  function nudge(deltaLon) {
+    state.viewLon = wrapLon(state.viewLon + Number(deltaLon || 0));
+    renderFrame();
+    return getStatus();
+  }
+
+  function getStatus() {
+    return {
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+      worldRuntimeActive: true,
+      planetOneRotationRuntimeActive: true,
+      mounted: state.mounted,
+      running: state.running,
+      paused: state.paused,
+      viewLon: state.viewLon,
+      viewLat: state.viewLat,
+      axisTilt: state.axisTilt,
+      axisVisible: state.axisVisible,
+      speedDegreesPerSecond: state.speedDegreesPerSecond,
+      frameCount: state.frameCount,
+      mountDetected: Boolean(state.mount),
+      rendererDetected: Boolean(getRenderer()),
+      lastRender: state.lastRender,
+      lastError: state.lastError,
+      statusAt: now(),
+      visualPassClaimed: false
+    };
+  }
+
+  function status() {
+    return getStatus();
+  }
+
+  var api = {
+    VERSION: VERSION,
+    version: VERSION,
+    CONTRACT_MARKERS: CONTRACT_MARKERS,
+    mount: mount,
+    start: start,
+    pause: pause,
+    resume: resume,
+    stop: stop,
+    reset: reset,
+    setSpeed: setSpeed,
+    setView: setView,
+    setAxisVisible: setAxisVisible,
+    setAxisTilt: setAxisTilt,
+    nudge: nudge,
+    getStatus: getStatus,
+    status: status
+  };
+
+  global.DGBWorldRuntime = api;
+  global.DGBPlanetOneRuntime = api;
+
+  function autostart() {
+    var mountNode = resolveMount();
+
+    if (mountNode) {
+      start(mountNode, {
+        viewLon: state.viewLon,
+        viewLat: state.viewLat,
+        axisTilt: state.axisTilt,
+        axisVisible: state.axisVisible
+      });
+    }
+  }
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:world-runtime-ready", {
+      detail: getStatus()
+    }));
+  } catch (error) {}
+
+  if (global.document && global.document.readyState === "loading") {
+    global.document.addEventListener("DOMContentLoaded", autostart, { once: true });
+  } else {
+    global.setTimeout(autostart, 60);
+  }
+})(typeof window !== "undefined" ? window : globalThis);

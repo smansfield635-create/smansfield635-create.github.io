@@ -2,17 +2,19 @@
 <html
   lang="en"
   data-page="showroom-globe"
-  data-route-contract="SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1"
-  data-previous-route-contract="SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1"
+  data-route-contract="SHOWROOM_GLOBE_V22D_ACCEPT_V21_ASSET_AND_V5_TERRAIN_TNT_v1"
+  data-previous-route-contract="SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1"
   data-v22b-route-contract="SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1"
   data-v21-route-contract="SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1"
   data-runtime-cache-bust-boot-parity="true"
   data-route-runtime-version-parity="true"
+  data-script-chain-completion-diagnostic="true"
   data-hydration-engine-required="true"
   data-hydro-terrain-marriage-active="true"
   data-hydration-first-or-before-terrain="true"
   data-terrain-first-load-order="true"
-  data-script-chain-completion-diagnostic="true"
+  data-accept-asset-v21="true"
+  data-accept-terrain-v5="true"
   data-no-room-expression="true"
   data-no-fallback-planet="true"
 >
@@ -23,10 +25,11 @@
   <title>Diamond Gate Bridge · Planet 1 inspection room</title>
   <meta
     name="description"
-    content="Planet 1 inspection route with V22C script-chain completion diagnostics for hydration, terrain, renderer, and asset runtime."
+    content="Planet 1 inspection route V22D accepts Asset V21, Terrain V5, Renderer V18B/V19 projection, and proves the full script chain before mount."
   >
 
   <!--
+    SHOWROOM_GLOBE_V22D_ACCEPT_V21_ASSET_AND_V5_TERRAIN_TNT_v1
     SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1
     SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1
     SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1
@@ -49,13 +52,30 @@
     hydration-first-or-before-terrain=true
     terrain-first-load-order=true
     route-runtime-version-parity=true
+    script-chain-completion-diagnostic=true
+
+    ACCEPTED HYDRATION=
+    PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1
+
+    ACCEPTED TERRAIN=
+    PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1
+    PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1 preserved marker only
+
+    ACCEPTED RENDERER=
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
+    PLANET_ONE_RENDER_V19_SPHERICAL_LAND_DISTRIBUTION_PROJECTION_TNT_v1
+
+    ACCEPTED ASSET=
+    SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF_TNT_v1
+    SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1 preserved marker only
 
     PURPOSE=
-    COMPLETE_AND_DIAGNOSE_THE_SCRIPT_CHAIN_AFTER_HYDRATION
-    LOAD_HYDRATION_TERRAIN_RENDERER_ASSET_WITH_VISIBLE_STAGE_PROOF
-    EXPOSE_ROUTE_BOOT_STATE
-    REFUSE_FALLBACK_EXPRESSION
-    DO_NOT_SILENTLY_STOP_AFTER_HYDRATION
+    ACCEPT_CURRENT_ASSET_V21
+    ACCEPT_CURRENT_TERRAIN_V5
+    STOP_REJECTING_ASSET_BECAUSE_IT_IS_NOT_V20
+    LET_ASSET_CALL_RENDERER
+    PROVE_RENDERER_CONSUMPTION
+    REACH_MOUNT_COMPLETE
 
     REQUIRED SCRIPT ORDER=
     HYDRATION_SCRIPT_LOADED
@@ -66,25 +86,17 @@
     RENDERER_GLOBAL_READY
     ASSET_SCRIPT_LOADED
     ASSET_GLOBAL_READY
+    SCRIPT_CHAIN_COMPLETE
     MOUNT_STARTED
+    ASSET_CALLED_RENDERER
+    RENDERER_RESULT_MOUNTED
     MOUNT_COMPLETE
-
-    FAILURE CODES=
-    HYDRATION_SCRIPT_LOAD_FAILED
-    HYDRATION_RUNTIME_GLOBAL_MISSING
-    TERRAIN_SCRIPT_LOAD_FAILED
-    TERRAIN_RUNTIME_GLOBAL_MISSING
-    RENDERER_SCRIPT_LOAD_FAILED
-    RENDERER_RUNTIME_GLOBAL_MISSING
-    ASSET_SCRIPT_LOAD_FAILED
-    ASSET_RUNTIME_GLOBAL_MISSING
-    MOUNT_FAILED
   -->
 
   <link rel="preload" as="script" href="/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1">
-  <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1">
+  <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1">
   <link rel="preload" as="script" href="/world/render/planet-one.render.js?v=PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1">
-  <link rel="preload" as="script" href="/assets/showroom.globe.instrument.js?v=SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1">
+  <link rel="preload" as="script" href="/assets/showroom.globe.instrument.js?v=SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF_TNT_v1">
 
   <style>
     :root {
@@ -351,21 +363,10 @@
       width: 100%;
     }
 
-    .render-status,
     .runtime-proof,
+    .render-status,
     .stage-log {
       width: min(780px, 100%);
-    }
-
-    .render-status {
-      border: 1px solid rgba(242,199,111,.36);
-      border-radius: 22px;
-      padding: 13px 15px;
-      background: rgba(242,199,111,.055);
-      color: rgba(255,244,211,.88);
-      font-weight: 900;
-      line-height: 1.35;
-      text-align: center;
     }
 
     .runtime-proof {
@@ -380,6 +381,17 @@
       text-align: center;
       text-transform: uppercase;
       overflow-wrap: anywhere;
+    }
+
+    .render-status {
+      border: 1px solid rgba(242,199,111,.36);
+      border-radius: 22px;
+      padding: 13px 15px;
+      background: rgba(242,199,111,.055);
+      color: rgba(255,244,211,.88);
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
     }
 
     .stage-log {
@@ -444,12 +456,6 @@
       line-height: 1.45;
     }
 
-    code {
-      color: rgba(255,244,211,.94);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      overflow-wrap: anywhere;
-    }
-
     footer {
       margin-top: 24px;
       padding: 18px 4px;
@@ -508,9 +514,9 @@
 
     <section class="hero" id="globe-main">
       <div class="kicker">Planet 1 · Inspection room</div>
-      <h1>This route diagnoses the full script chain.</h1>
+      <h1>This route accepts the current chain.</h1>
       <p class="lead">
-        V22C keeps the route runtime current and proves each boot stage: hydration, terrain, renderer, asset, and mount. If the chain stops, the failed stage is printed visibly.
+        V22D accepts Asset V21, Terrain V5, Renderer V18B with V19 projection, and Hydration V1. It rejects stale validation drift instead of rejecting the current build.
       </p>
 
       <div class="actions">
@@ -527,7 +533,7 @@
           <div>
             <h2>Script-chain completion diagnostic.</h2>
             <p>
-              The route must not silently stop after hydration. Every script load and global validation is reported.
+              The route now validates the current asset and terrain versions before mount.
             </p>
           </div>
           <span class="pill hold" id="routeStatusPill">Preparing runtime</span>
@@ -546,6 +552,8 @@
         data-runtime-cache-bust-boot-parity="true"
         data-route-runtime-version-parity="true"
         data-script-chain-completion-diagnostic="true"
+        data-accept-asset-v21="true"
+        data-accept-terrain-v5="true"
         data-no-room-expression="true"
         data-no-fallback-planet="true"
       >
@@ -553,16 +561,14 @@
           <div>
             <h2>Planet 1 render loaded.</h2>
             <p>
-              Mount begins only after hydration, terrain, renderer, and asset globals validate.
+              Mount begins only after hydration, terrain, renderer, and asset globals validate against current versions.
             </p>
           </div>
           <span class="pill hold" id="planet-one-status-pill">Preparing chain</span>
         </div>
 
         <div class="render-shell">
-          <div class="runtime-proof" id="runtimeProof">
-            SCRIPT CHAIN WAITING
-          </div>
+          <div class="runtime-proof" id="runtimeProof">SCRIPT CHAIN WAITING</div>
 
           <div class="render-toolbar" aria-label="Planet 1 render controls">
             <button class="button" type="button" id="loadPlanetOne">Run script chain</button>
@@ -571,7 +577,7 @@
           </div>
 
           <div class="render-status" id="renderStatus">
-            V22C route is ready to prove the full runtime chain.
+            V22D route is ready to accept the current runtime chain.
           </div>
 
           <div
@@ -587,6 +593,8 @@
             data-hydro-terrain-marriage-active="true"
             data-hydration-first-or-before-terrain="true"
             data-terrain-first-load-order="true"
+            data-accept-asset-v21="true"
+            data-accept-terrain-v5="true"
             data-no-room-expression="true"
             data-no-fallback-planet="true"
             aria-label="Planet 1 render mount"
@@ -603,7 +611,7 @@
           <div>
             <h2>Layer ownership remains separated.</h2>
             <p>
-              V22C diagnoses the boot chain. It does not move terrain, hydration, renderer, or asset ownership into the route.
+              V22D accepts the current runtime chain. It does not move terrain, hydration, renderer, or asset ownership into the route.
             </p>
           </div>
           <span class="pill pass">Separation preserved</span>
@@ -646,23 +654,27 @@
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1 · Planet 1 inspection room · full script-chain diagnostic.
+      SHOWROOM_GLOBE_V22D_ACCEPT_V21_ASSET_AND_V5_TERRAIN_TNT_v1 · Planet 1 inspection room · current chain accepted.
     </footer>
   </div>
 
   <script>
-    (function bindPlanetOneV22CScriptChainDiagnostic(global) {
+    (function bindPlanetOneV22DCurrentChainAcceptance(global) {
       "use strict";
 
-      var VERSION = "SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1";
+      var VERSION = "SHOWROOM_GLOBE_V22D_ACCEPT_V21_ASSET_AND_V5_TERRAIN_TNT_v1";
+      var PREVIOUS_V22C = "SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1";
       var PREVIOUS_V22B = "SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1";
       var PREVIOUS_V21 = "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1";
       var LEGACY_V17 = "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1";
 
       var HYDRATION_VERSION = "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1";
-      var TERRAIN_VERSION = "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1";
+      var TERRAIN_VERSION = "PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1";
+      var TERRAIN_PREVIOUS_V4 = "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1";
       var RENDERER_VERSION = "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1";
-      var ASSET_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1";
+      var RENDERER_PROJECTION = "PLANET_ONE_RENDER_V19_SPHERICAL_LAND_DISTRIBUTION_PROJECTION_TNT_v1";
+      var ASSET_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF_TNT_v1";
+      var ASSET_PREVIOUS_V20 = "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1";
 
       var HYDRATION_RENDERER = "/world/render/planet-one.hydration.render.js";
       var TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
@@ -682,6 +694,8 @@
         assetGlobalReady: false,
         mountStarted: false,
         mountComplete: false,
+        assetCalledRenderer: false,
+        rendererResultMounted: false,
         lastStage: "STATIC",
         lastError: ""
       };
@@ -760,6 +774,7 @@
 
         root.dataset.showroomGlobeRoute = VERSION;
         root.dataset.showroomGlobeRouteActive = VERSION;
+        root.dataset.previousV22c = PREVIOUS_V22C;
         root.dataset.previousV22b = PREVIOUS_V22B;
         root.dataset.previousV21 = PREVIOUS_V21;
         root.dataset.legacyV17 = LEGACY_V17;
@@ -769,6 +784,14 @@
         root.dataset.mainRenderer = MAIN_RENDERER;
         root.dataset.assetInstrument = ASSET_INSTRUMENT;
 
+        root.dataset.hydrationVersionAccepted = HYDRATION_VERSION;
+        root.dataset.terrainVersionAccepted = TERRAIN_VERSION;
+        root.dataset.terrainPreviousV4 = TERRAIN_PREVIOUS_V4;
+        root.dataset.rendererVersionAccepted = RENDERER_VERSION;
+        root.dataset.rendererProjectionAccepted = RENDERER_PROJECTION;
+        root.dataset.assetVersionAccepted = ASSET_VERSION;
+        root.dataset.assetPreviousV20 = ASSET_PREVIOUS_V20;
+
         root.dataset.hydrationEngineRequired = "true";
         root.dataset.hydroTerrainMarriageActive = "true";
         root.dataset.hydrationFirstOrBeforeTerrain = "true";
@@ -776,6 +799,8 @@
         root.dataset.runtimeCacheBustBootParity = "true";
         root.dataset.routeRuntimeVersionParity = "true";
         root.dataset.scriptChainCompletionDiagnostic = "true";
+        root.dataset.acceptAssetV21 = "true";
+        root.dataset.acceptTerrainV5 = "true";
         root.dataset.noRoomExpression = "true";
         root.dataset.noFallbackPlanet = "true";
 
@@ -789,6 +814,8 @@
         root.dataset.assetGlobalReady = String(stageState.assetGlobalReady);
         root.dataset.mountStarted = String(stageState.mountStarted);
         root.dataset.mountComplete = String(stageState.mountComplete);
+        root.dataset.assetCalledRenderer = String(stageState.assetCalledRenderer);
+        root.dataset.rendererResultMounted = String(stageState.rendererResultMounted);
         root.dataset.lastStage = stageState.lastStage;
         root.dataset.lastError = stageState.lastError;
 
@@ -871,11 +898,16 @@
       }
 
       function validateHydration() {
+        var got = global.DGBPlanetOneHydrationRender && global.DGBPlanetOneHydrationRender.VERSION
+          ? global.DGBPlanetOneHydrationRender.VERSION
+          : "missing";
+
         if (
           !global.DGBPlanetOneHydrationRender ||
-          typeof global.DGBPlanetOneHydrationRender.createHydrationLayer !== "function"
+          typeof global.DGBPlanetOneHydrationRender.createHydrationLayer !== "function" ||
+          got !== HYDRATION_VERSION
         ) {
-          failStage("HYDRATION_RUNTIME_GLOBAL_MISSING", "window.DGBPlanetOneHydrationRender.createHydrationLayer missing");
+          failStage("HYDRATION_RUNTIME_GLOBAL_MISSING", "expected " + HYDRATION_VERSION + ", got " + got);
         }
 
         stageState.hydrationGlobalReady = true;
@@ -883,11 +915,16 @@
       }
 
       function validateTerrain() {
+        var got = global.DGBPlanetOneTerrainRender && global.DGBPlanetOneTerrainRender.VERSION
+          ? global.DGBPlanetOneTerrainRender.VERSION
+          : "missing";
+
         if (
           !global.DGBPlanetOneTerrainRender ||
-          typeof global.DGBPlanetOneTerrainRender.createTerrainLayer !== "function"
+          typeof global.DGBPlanetOneTerrainRender.createTerrainLayer !== "function" ||
+          got !== TERRAIN_VERSION
         ) {
-          failStage("TERRAIN_RUNTIME_GLOBAL_MISSING", "window.DGBPlanetOneTerrainRender.createTerrainLayer missing");
+          failStage("TERRAIN_RUNTIME_GLOBAL_MISSING", "expected " + TERRAIN_VERSION + ", got " + got);
         }
 
         stageState.terrainGlobalReady = true;
@@ -895,30 +932,38 @@
       }
 
       function validateRenderer() {
+        var renderer = global.DGBPlanetOneRenderTeam;
+        var got = renderer && renderer.VERSION ? renderer.VERSION : "missing";
+        var projection = renderer && renderer.PROJECTION_TNT ? renderer.PROJECTION_TNT : "missing";
+
         if (
-          !global.DGBPlanetOneRenderTeam ||
-          global.DGBPlanetOneRenderTeam.VERSION !== RENDERER_VERSION ||
-          typeof global.DGBPlanetOneRenderTeam.renderPlanetOne !== "function"
+          !renderer ||
+          got !== RENDERER_VERSION ||
+          projection !== RENDERER_PROJECTION ||
+          typeof renderer.renderPlanetOne !== "function"
         ) {
           failStage(
             "RENDERER_RUNTIME_GLOBAL_MISSING",
-            "expected " + RENDERER_VERSION + ", got " + (global.DGBPlanetOneRenderTeam && global.DGBPlanetOneRenderTeam.VERSION ? global.DGBPlanetOneRenderTeam.VERSION : "missing")
+            "expected " + RENDERER_VERSION + " / " + RENDERER_PROJECTION + ", got " + got + " / " + projection
           );
         }
 
         stageState.rendererGlobalReady = true;
-        logStage("RENDERER_GLOBAL_READY", RENDERER_VERSION);
+        logStage("RENDERER_GLOBAL_READY", RENDERER_VERSION + " · " + RENDERER_PROJECTION);
       }
 
       function validateAsset() {
+        var asset = global.DGBShowroomGlobeInstrument;
+        var got = asset && asset.VERSION ? asset.VERSION : "missing";
+
         if (
-          !global.DGBShowroomGlobeInstrument ||
-          global.DGBShowroomGlobeInstrument.VERSION !== ASSET_VERSION ||
-          typeof global.DGBShowroomGlobeInstrument.renderGlobe !== "function"
+          !asset ||
+          got !== ASSET_VERSION ||
+          typeof asset.renderGlobe !== "function"
         ) {
           failStage(
             "ASSET_RUNTIME_GLOBAL_MISSING",
-            "expected " + ASSET_VERSION + ", got " + (global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing")
+            "expected " + ASSET_VERSION + ", got " + got
           );
         }
 
@@ -934,7 +979,7 @@
         logStage("BOOT_STARTED", VERSION);
 
         markRoute("runtime-priming");
-        setStatus("Running V22C script-chain diagnostic.", "Preparing runtime", "hold");
+        setStatus("Running V22D current-chain acceptance.", "Preparing runtime", "hold");
         setRuntimeProof("SCRIPT CHAIN RUNNING", false);
 
         removePriorScripts();
@@ -984,18 +1029,17 @@
             validateAsset();
 
             markRoute("runtime-current");
-            setRuntimeProof("SCRIPT CHAIN PASS · ROUTE V22C · RENDERER V18B · ASSET V20", true);
-            logStage("SCRIPT_CHAIN_COMPLETE", "hydration → terrain → renderer → asset");
+            setRuntimeProof("SCRIPT CHAIN PASS · ROUTE V22D · ASSET V21 · TERRAIN V5 · RENDERER V18B/V19", true);
+            logStage("SCRIPT_CHAIN_COMPLETE", "hydration → terrain V5 → renderer V18B/V19 → asset V21");
 
             return {
               ok: true,
               version: VERSION,
               rendererVersion: global.DGBPlanetOneRenderTeam.VERSION,
+              rendererProjection: global.DGBPlanetOneRenderTeam.PROJECTION_TNT,
               assetVersion: global.DGBShowroomGlobeInstrument.VERSION,
-              hydrationReady: true,
-              terrainReady: true,
-              assetReady: true,
-              rendererReady: true
+              terrainVersion: global.DGBPlanetOneTerrainRender.VERSION,
+              hydrationVersion: global.DGBPlanetOneHydrationRender.VERSION
             };
           })
           .catch(function caught(error) {
@@ -1009,7 +1053,9 @@
               error: message,
               version: VERSION,
               rendererVersion: global.DGBPlanetOneRenderTeam && global.DGBPlanetOneRenderTeam.VERSION ? global.DGBPlanetOneRenderTeam.VERSION : "missing",
-              assetVersion: global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing"
+              assetVersion: global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing",
+              terrainVersion: global.DGBPlanetOneTerrainRender && global.DGBPlanetOneTerrainRender.VERSION ? global.DGBPlanetOneTerrainRender.VERSION : "missing",
+              hydrationVersion: global.DGBPlanetOneHydrationRender && global.DGBPlanetOneHydrationRender.VERSION ? global.DGBPlanetOneHydrationRender.VERSION : "missing"
             };
           });
 
@@ -1026,11 +1072,15 @@
 
         stageState.mountStarted = false;
         stageState.mountComplete = false;
+        stageState.assetCalledRenderer = false;
+        stageState.rendererResultMounted = false;
 
         mount.dataset.renderStatus = "script-chain-started";
         mount.dataset.runtimeCacheBustBootParity = "true";
         mount.dataset.routeRuntimeVersionParity = "true";
         mount.dataset.scriptChainCompletionDiagnostic = "true";
+        mount.dataset.acceptAssetV21 = "true";
+        mount.dataset.acceptTerrainV5 = "true";
         mount.dataset.hydrationEngineRequired = "true";
         mount.dataset.hydroTerrainMarriageActive = "true";
         mount.dataset.hydrationFirstOrBeforeTerrain = "true";
@@ -1045,7 +1095,7 @@
             }
 
             stageState.mountStarted = true;
-            logStage("MOUNT_STARTED", "delegating to asset instrument");
+            logStage("MOUNT_STARTED", "delegating to Asset V21 renderer-consumption proof");
 
             return global.DGBShowroomGlobeInstrument.renderGlobe(mount, {
               caption: "Planet 1 · Nine Summits Universe · Optimum expression",
@@ -1055,10 +1105,13 @@
               terrainRenderer: TERRAIN_RENDERER,
               mainRenderer: MAIN_RENDERER,
               hydrationFirstLoadOrder: true,
+              terrainFirstLoadOrder: true,
               hydroTerrainMarriage: true,
               runtimeCacheBustBootParity: true,
               routeRuntimeVersionParity: true,
-              scriptChainCompletionDiagnostic: true
+              scriptChainCompletionDiagnostic: true,
+              acceptAssetV21: true,
+              acceptTerrainV5: true
             });
           })
           .then(function mounted(result) {
@@ -1071,20 +1124,32 @@
               return result;
             }
 
-            stageState.mountComplete = true;
+            stageState.assetCalledRenderer = Boolean(result && result.assetCalledRenderer);
+            stageState.rendererResultMounted = Boolean(result && result.rendererResultMounted);
+            stageState.mountComplete = Boolean(result && result.ok !== false);
 
             mount.dataset.renderStatus = "mounted";
             mount.dataset.planetOneRenderLoaded = "true";
             mount.dataset.runtimeCacheBustBootParity = "true";
             mount.dataset.routeRuntimeVersionParity = "true";
             mount.dataset.scriptChainCompletionDiagnostic = "true";
+            mount.dataset.acceptAssetV21 = "true";
+            mount.dataset.acceptTerrainV5 = "true";
             mount.dataset.hydrationEngineRequired = "true";
             mount.dataset.hydroTerrainMarriageActive = "true";
             mount.dataset.hydrationFirstOrBeforeTerrain = "true";
+            mount.dataset.assetCalledRenderer = String(stageState.assetCalledRenderer);
+            mount.dataset.rendererResultMounted = String(stageState.rendererResultMounted);
+            mount.dataset.mountComplete = String(stageState.mountComplete);
 
             markRoute("mounted");
+
+            logStage("ASSET_CALLED_RENDERER", String(stageState.assetCalledRenderer));
+            logStage("RENDERER_RESULT_MOUNTED", String(stageState.rendererResultMounted));
             logStage("MOUNT_COMPLETE", "Planet 1 render loaded");
-            setStatus("Planet 1 render loaded. Optimum expression mounted through V22C script chain.", "Planet 1 render loaded", "pass");
+
+            setStatus("Planet 1 render loaded. Asset V21 accepted and renderer consumption proved.", "Planet 1 render loaded", "pass");
+            setRuntimeProof("MOUNT PASS · ASSET V21 CALLED RENDERER · TERRAIN V5 ACCEPTED", true);
 
             return result;
           })
@@ -1123,13 +1188,24 @@
         return {
           version: VERSION,
           activeVersion: VERSION,
+          previousV22C: PREVIOUS_V22C,
           previousV22B: PREVIOUS_V22B,
           previousV21: PREVIOUS_V21,
           legacyV17: LEGACY_V17,
+
           hydrationRenderer: HYDRATION_RENDERER,
           terrainRenderer: TERRAIN_RENDERER,
           mainRenderer: MAIN_RENDERER,
           assetInstrument: ASSET_INSTRUMENT,
+
+          hydrationVersionAccepted: HYDRATION_VERSION,
+          terrainVersionAccepted: TERRAIN_VERSION,
+          terrainPreviousV4: TERRAIN_PREVIOUS_V4,
+          rendererVersionAccepted: RENDERER_VERSION,
+          rendererProjectionAccepted: RENDERER_PROJECTION,
+          assetVersionAccepted: ASSET_VERSION,
+          assetPreviousV20: ASSET_PREVIOUS_V20,
+
           runtimeCacheBustBootParity: true,
           routeRuntimeVersionParity: true,
           scriptChainCompletionDiagnostic: true,
@@ -1137,12 +1213,19 @@
           hydroTerrainMarriageActive: true,
           hydrationFirstOrBeforeTerrain: true,
           terrainFirstLoadOrder: true,
+          acceptAssetV21: true,
+          acceptTerrainV5: true,
           noRoomExpression: true,
           noFallbackPlanet: true,
+
           stageState: stageState,
           currentResult: Boolean(currentResult),
+
           rendererRuntimeVersion: global.DGBPlanetOneRenderTeam && global.DGBPlanetOneRenderTeam.VERSION ? global.DGBPlanetOneRenderTeam.VERSION : "missing",
-          assetRuntimeVersion: global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing"
+          rendererProjectionRuntime: global.DGBPlanetOneRenderTeam && global.DGBPlanetOneRenderTeam.PROJECTION_TNT ? global.DGBPlanetOneRenderTeam.PROJECTION_TNT : "missing",
+          assetRuntimeVersion: global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing",
+          terrainRuntimeVersion: global.DGBPlanetOneTerrainRender && global.DGBPlanetOneTerrainRender.VERSION ? global.DGBPlanetOneTerrainRender.VERSION : "missing",
+          hydrationRuntimeVersion: global.DGBPlanetOneHydrationRender && global.DGBPlanetOneHydrationRender.VERSION ? global.DGBPlanetOneHydrationRender.VERSION : "missing"
         };
       }
 
@@ -1163,9 +1246,10 @@
         renderPlanetOne();
       }
 
-      global.DGBShowroomGlobeRouteV21 = Object.freeze({
+      var routeApi = Object.freeze({
         VERSION: VERSION,
         ACTIVE_VERSION: VERSION,
+        PREVIOUS_V22C: PREVIOUS_V22C,
         PREVIOUS_V22B: PREVIOUS_V22B,
         PREVIOUS_V21: PREVIOUS_V21,
         LEGACY_V17: LEGACY_V17,
@@ -1176,44 +1260,11 @@
         getStatus: routeStatus
       });
 
-      global.DGBShowroomGlobeRouteV22 = Object.freeze({
-        VERSION: VERSION,
-        ACTIVE_VERSION: VERSION,
-        PREVIOUS_V22B: PREVIOUS_V22B,
-        PREVIOUS_V21: PREVIOUS_V21,
-        LEGACY_V17: LEGACY_V17,
-        primeRuntimeChain: primeRuntimeChain,
-        renderPlanetOne: renderPlanetOne,
-        pauseRender: pauseRender,
-        resumeRender: resumeRender,
-        getStatus: routeStatus
-      });
-
-      global.DGBShowroomGlobeRouteV22B = Object.freeze({
-        VERSION: VERSION,
-        ACTIVE_VERSION: VERSION,
-        PREVIOUS_V22B: PREVIOUS_V22B,
-        PREVIOUS_V21: PREVIOUS_V21,
-        LEGACY_V17: LEGACY_V17,
-        primeRuntimeChain: primeRuntimeChain,
-        renderPlanetOne: renderPlanetOne,
-        pauseRender: pauseRender,
-        resumeRender: resumeRender,
-        getStatus: routeStatus
-      });
-
-      global.DGBShowroomGlobeRouteV22C = Object.freeze({
-        VERSION: VERSION,
-        ACTIVE_VERSION: VERSION,
-        PREVIOUS_V22B: PREVIOUS_V22B,
-        PREVIOUS_V21: PREVIOUS_V21,
-        LEGACY_V17: LEGACY_V17,
-        primeRuntimeChain: primeRuntimeChain,
-        renderPlanetOne: renderPlanetOne,
-        pauseRender: pauseRender,
-        resumeRender: resumeRender,
-        getStatus: routeStatus
-      });
+      global.DGBShowroomGlobeRouteV21 = routeApi;
+      global.DGBShowroomGlobeRouteV22 = routeApi;
+      global.DGBShowroomGlobeRouteV22B = routeApi;
+      global.DGBShowroomGlobeRouteV22C = routeApi;
+      global.DGBShowroomGlobeRouteV22D = routeApi;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", boot, { once: true });

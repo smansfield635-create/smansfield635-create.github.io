@@ -1,292 +1,968 @@
 <!doctype html>
-<!-- TNT RENEWAL — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · RICHIE MANOR FULL CIRCLE · B7
+<!--
+  TNT RENEWAL — /about-this-underdog/index.html
+  ABOUT_THIS_UNDERDOG_V3_RICHIE_MANOR_FULL_CIRCLE_PROFILE_MERGE_TNT_v1
 
-     RESULT:
-       - Keeps sunrise, heavier snow, darker upper sky, clouds, and morning light.
-       - Grounds the underdog in real life.
-       - Marries the story to Richie's Manor and Estate.
-       - Names the estate as 256 acres.
-       - Names the house as four floors.
-       - Uses basement for deep foundational layers.
-       - Uses vault for deeper secured/hidden layers.
-       - Uses attic for upper linear/category layers.
-       - Brings the story full circle: the underdog is why the Manor exists.
-       - No graphic box.
-       - No generated image.
-       - No external image.
+  OPTION B MERGE:
+    - Keeps B7 sunrise, heavy snow, darker upper sky, clouds, morning light, and CSS-built sun compass.
+    - Keeps Richie's Manor and Estate, 256 acres, four floors, basement, vault, and attic language.
+    - Keeps Russian Doll chamber structure.
+    - Restores Sean Mansfield as the real-person anchor.
+    - Restores Arlington, Mansfield High School, Class of 2004, October 1, 1985, and This Underdog as public voice.
+    - Restores local photo section using /about-this-underdog/20250426_194823.jpg.
+    - Uses no generated graphic box.
+    - Uses no external images.
+    - Uses local photo only.
+    - Keeps /big-laugh/about-this-underdog/ as the deeper Vault Chamber.
 -->
 
-<html lang="en" data-page="about-this-underdog" data-generation="about-richie-manor-full-circle-b7">
+<html
+  lang="en"
+  data-page="about-this-underdog"
+  data-route="/about-this-underdog/"
+  data-generation="ABOUT_THIS_UNDERDOG_V3_RICHIE_MANOR_FULL_CIRCLE_PROFILE_MERGE_TNT_v1"
+  data-previous-profile-contract="ABOUT_THIS_UNDERDOG_V2_PUBLIC_PROFILE_COMMAND_PATH_TNT_v1"
+  data-previous-manor-contract="about-richie-manor-full-circle-b7"
+  data-option-b-merge="true"
+>
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>About This Underdog — Richie's Manor</title>
+
+  <title>About This Underdog — Sean Mansfield · Richie’s Manor</title>
   <meta
     name="description"
-    content="About This Underdog: a sunrise-and-snow entry chamber inside Richie's Manor and Estate."
+    content="About This Underdog introduces Sean Mansfield through Richie's Manor and Estate: the real person, the underdog voice, the sunrise, the snow, the basement, the attic, and the vault."
   />
 
   <style>
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    html,body{
-      margin:0;min-height:100%;width:100%;color:#251506;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-      background:linear-gradient(180deg,#18365f 0%,#2f6ea8 18%,#7cc8ff 36%,#ffe0a3 64%,#ff9965 100%);
-    }
-    body::before{
-      content:"";position:fixed;inset:0;z-index:-5;pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 93%,rgba(255,253,218,.98) 0 6rem,rgba(255,215,111,.62) 8rem,rgba(255,143,87,.34) 18rem,transparent 34rem),
-        radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.74),transparent 26rem),
-        radial-gradient(ellipse at 18% 16%,rgba(255,255,255,.22),transparent 24rem),
-        radial-gradient(ellipse at 84% 20%,rgba(120,190,255,.16),transparent 26rem),
-        linear-gradient(180deg,rgba(8,28,62,.42),rgba(255,255,255,.08) 38%,rgba(255,120,60,.18));
-    }
-    body::after{
-      content:"";position:fixed;inset:0;z-index:-4;pointer-events:none;
-      background:
-        linear-gradient(180deg,rgba(5,17,38,.32),rgba(255,255,255,.04) 42%,rgba(255,170,95,.13)),
-        radial-gradient(circle at 50% 88%,rgba(255,255,255,.45),transparent 16rem);
-    }
-    :root{
-      --ink:#251506;--ink2:#3a210a;--txt:rgba(37,21,6,.78);--soft:rgba(37,21,6,.60);
-      --panel:rgba(255,255,255,.72);--line2:rgba(255,255,255,.70);
-      --gold:#f2b84b;--shadow:0 24px 80px rgba(108,62,12,.20);
-    }
-    @keyframes skyDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-112px,72px,0)}}
-    @keyframes cloudDriftSlow{from{transform:translate3d(-16vw,0,0)}to{transform:translate3d(114vw,0,0)}}
-    @keyframes cloudDriftReverse{from{transform:translate3d(110vw,0,0)}to{transform:translate3d(-22vw,0,0)}}
-    @keyframes snowFall{
-      0%{transform:translate3d(var(--x-start),-14vh,0) rotate(0deg);opacity:0}
-      6%{opacity:var(--snow-opacity)}
-      94%{opacity:var(--snow-opacity)}
-      100%{transform:translate3d(var(--x-end),114vh,0) rotate(360deg);opacity:0}
-    }
-    @keyframes slowTurn{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes reverseTurn{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
-    @keyframes sunrisePulse{
-      0%,100%{transform:translate(-50%,-50%) rotate(45deg) scale(1);filter:drop-shadow(0 0 20px rgba(255,184,75,.24))}
-      50%{transform:translate(-50%,-50%) rotate(45deg) scale(1.05);filter:drop-shadow(0 0 36px rgba(255,223,134,.46))}
-    }
-    @keyframes shimmer{0%,100%{opacity:.42;transform:scale(1)}50%{opacity:1;transform:scale(1.22)}}
-    @keyframes glint{0%,58%,100%{transform:translateX(-120%);opacity:0}72%{opacity:.78}86%{transform:translateX(120%);opacity:0}}
-    a{color:inherit;text-decoration:none}
+    * { box-sizing: border-box; }
 
-    .weatherLayer{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
-    .cloud{
-      position:absolute;width:clamp(240px,40vw,560px);height:clamp(82px,14vw,170px);
-      border-radius:999px;opacity:.64;filter:blur(1.2px);
-      background:
-        radial-gradient(circle at 18% 62%,rgba(255,255,255,.82) 0 22%,transparent 23%),
-        radial-gradient(circle at 34% 42%,rgba(255,255,255,.88) 0 30%,transparent 31%),
-        radial-gradient(circle at 54% 48%,rgba(236,245,255,.76) 0 26%,transparent 27%),
-        radial-gradient(circle at 74% 62%,rgba(220,234,248,.72) 0 24%,transparent 25%),
-        linear-gradient(180deg,rgba(255,255,255,.74),rgba(91,118,151,.26) 82%,rgba(42,63,92,.18));
-      box-shadow:0 12px 44px rgba(255,255,255,.14),0 22px 70px rgba(31,59,96,.20),inset 0 -24px 46px rgba(67,91,125,.20);
+    html {
+      scroll-behavior: smooth;
+      min-height: 100%;
     }
-    .cloud::after{
-      content:"";position:absolute;inset:58% 8% 8%;border-radius:999px;
-      background:linear-gradient(180deg,rgba(69,91,121,.18),rgba(21,43,77,.22));
-      filter:blur(8px);opacity:.68;
-    }
-    .cloudOne{top:7vh;left:-20vw;animation:cloudDriftSlow 76s linear infinite}
-    .cloudTwo{top:20vh;left:20vw;width:clamp(200px,34vw,450px);opacity:.50;animation:cloudDriftSlow 98s linear infinite;animation-delay:-34s}
-    .cloudThree{top:34vh;left:70vw;width:clamp(220px,38vw,510px);opacity:.40;animation:cloudDriftReverse 90s linear infinite;animation-delay:-22s}
-    .cloudFour{top:1vh;left:58vw;width:clamp(180px,30vw,390px);opacity:.42;animation:cloudDriftReverse 110s linear infinite;animation-delay:-46s}
-    .cloudFive{top:13vh;left:45vw;width:clamp(220px,36vw,500px);opacity:.38;animation:cloudDriftSlow 120s linear infinite;animation-delay:-68s}
 
-    .skySparkle{
-      position:fixed;inset:0;z-index:-2;pointer-events:none;
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      color: #251506;
+      background: linear-gradient(180deg, #18365f 0%, #2f6ea8 18%, #7cc8ff 36%, #ffe0a3 64%, #ff9965 100%);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -5;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 93%, rgba(255, 253, 218, .98) 0 6rem, rgba(255, 215, 111, .62) 8rem, rgba(255, 143, 87, .34) 18rem, transparent 34rem),
+        radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, .74), transparent 26rem),
+        radial-gradient(ellipse at 18% 16%, rgba(255, 255, 255, .22), transparent 24rem),
+        radial-gradient(ellipse at 84% 20%, rgba(120, 190, 255, .16), transparent 26rem),
+        linear-gradient(180deg, rgba(8, 28, 62, .42), rgba(255, 255, 255, .08) 38%, rgba(255, 120, 60, .18));
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(5, 17, 38, .32), rgba(255, 255, 255, .04) 42%, rgba(255, 170, 95, .13)),
+        radial-gradient(circle at 50% 88%, rgba(255, 255, 255, .45), transparent 16rem);
+    }
+
+    :root {
+      --ink: #251506;
+      --ink2: #3a210a;
+      --txt: rgba(37, 21, 6, .78);
+      --soft: rgba(37, 21, 6, .60);
+      --panel: rgba(255, 255, 255, .72);
+      --line: rgba(122, 73, 19, .18);
+      --line2: rgba(255, 255, 255, .70);
+      --gold: #f2b84b;
+      --green: #18795f;
+      --shadow: 0 24px 80px rgba(108, 62, 12, .20);
+    }
+
+    @keyframes skyDrift {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-112px, 72px, 0); }
+    }
+
+    @keyframes cloudDriftSlow {
+      from { transform: translate3d(-16vw, 0, 0); }
+      to { transform: translate3d(114vw, 0, 0); }
+    }
+
+    @keyframes cloudDriftReverse {
+      from { transform: translate3d(110vw, 0, 0); }
+      to { transform: translate3d(-22vw, 0, 0); }
+    }
+
+    @keyframes snowFall {
+      0% {
+        transform: translate3d(var(--x-start), -14vh, 0) rotate(0deg);
+        opacity: 0;
+      }
+
+      6% { opacity: var(--snow-opacity); }
+      94% { opacity: var(--snow-opacity); }
+
+      100% {
+        transform: translate3d(var(--x-end), 114vh, 0) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes slowTurn {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes reverseTurn {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    @keyframes sunrisePulse {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) rotate(45deg) scale(1);
+        filter: drop-shadow(0 0 20px rgba(255, 184, 75, .24));
+      }
+
+      50% {
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.05);
+        filter: drop-shadow(0 0 36px rgba(255, 223, 134, .46));
+      }
+    }
+
+    @keyframes shimmer {
+      0%,
+      100% {
+        opacity: .42;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.22);
+      }
+    }
+
+    @keyframes glint {
+      0%,
+      58%,
+      100% {
+        transform: translateX(-120%);
+        opacity: 0;
+      }
+
+      72% { opacity: .78; }
+      86% {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(24, 121, 95, .62);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      font-weight: 900;
+    }
+
+    .skip:focus {
+      left: 10px;
+    }
+
+    .weatherLayer {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      width: clamp(240px, 40vw, 560px);
+      height: clamp(82px, 14vw, 170px);
+      border-radius: 999px;
+      opacity: .64;
+      filter: blur(1.2px);
+      background:
+        radial-gradient(circle at 18% 62%, rgba(255, 255, 255, .82) 0 22%, transparent 23%),
+        radial-gradient(circle at 34% 42%, rgba(255, 255, 255, .88) 0 30%, transparent 31%),
+        radial-gradient(circle at 54% 48%, rgba(236, 245, 255, .76) 0 26%, transparent 27%),
+        radial-gradient(circle at 74% 62%, rgba(220, 234, 248, .72) 0 24%, transparent 25%),
+        linear-gradient(180deg, rgba(255, 255, 255, .74), rgba(91, 118, 151, .26) 82%, rgba(42, 63, 92, .18));
+      box-shadow: 0 12px 44px rgba(255, 255, 255, .14), 0 22px 70px rgba(31, 59, 96, .20), inset 0 -24px 46px rgba(67, 91, 125, .20);
+    }
+
+    .cloud::after {
+      content: "";
+      position: absolute;
+      inset: 58% 8% 8%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(69, 91, 121, .18), rgba(21, 43, 77, .22));
+      filter: blur(8px);
+      opacity: .68;
+    }
+
+    .cloudOne {
+      top: 7vh;
+      left: -20vw;
+      animation: cloudDriftSlow 76s linear infinite;
+    }
+
+    .cloudTwo {
+      top: 20vh;
+      left: 20vw;
+      width: clamp(200px, 34vw, 450px);
+      opacity: .50;
+      animation: cloudDriftSlow 98s linear infinite;
+      animation-delay: -34s;
+    }
+
+    .cloudThree {
+      top: 34vh;
+      left: 70vw;
+      width: clamp(220px, 38vw, 510px);
+      opacity: .40;
+      animation: cloudDriftReverse 90s linear infinite;
+      animation-delay: -22s;
+    }
+
+    .cloudFour {
+      top: 1vh;
+      left: 58vw;
+      width: clamp(180px, 30vw, 390px);
+      opacity: .42;
+      animation: cloudDriftReverse 110s linear infinite;
+      animation-delay: -46s;
+    }
+
+    .cloudFive {
+      top: 13vh;
+      left: 45vw;
+      width: clamp(220px, 36vw, 500px);
+      opacity: .38;
+      animation: cloudDriftSlow 120s linear infinite;
+      animation-delay: -68s;
+    }
+
+    .skySparkle {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.86) 0 1px,transparent 1.8px),
-        radial-gradient(circle,rgba(255,245,188,.54) 0 1px,transparent 2px),
-        radial-gradient(circle,rgba(94,160,255,.20) 0 1px,transparent 2.2px);
-      background-size:112px 112px,168px 168px,236px 236px;
-      background-position:0 0,34px 42px,71px 91px;
-      opacity:.18;animation:skyDrift 88s linear infinite;
+        radial-gradient(circle, rgba(255, 255, 255, .86) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(255, 245, 188, .54) 0 1px, transparent 2px),
+        radial-gradient(circle, rgba(94, 160, 255, .20) 0 1px, transparent 2.2px);
+      background-size: 112px 112px, 168px 168px, 236px 236px;
+      background-position: 0 0, 34px 42px, 71px 91px;
+      opacity: .18;
+      animation: skyDrift 88s linear infinite;
     }
-    .snowField{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
-    .snowflake{
-      position:absolute;top:0;left:0;width:var(--snow-size);height:var(--snow-size);
-      border-radius:50%;background:rgba(255,255,255,.96);
-      box-shadow:0 0 8px rgba(255,255,255,.66),0 0 18px rgba(210,235,255,.28);
-      opacity:0;animation:snowFall var(--snow-duration) linear infinite;animation-delay:var(--snow-delay);
-    }
-    .snowflake.soft{background:rgba(255,255,255,.76);filter:blur(.85px)}
-    .snowflake.heavy{box-shadow:0 0 10px rgba(255,255,255,.78),0 0 22px rgba(210,235,255,.34)}
 
-    .page{
-      position:relative;z-index:2;width:min(100% - 28px,1120px);min-height:100svh;
-      margin:0 auto;padding:18px 0 34px;display:grid;gap:16px;
+    .snowField {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      overflow: hidden;
     }
-    .hero,.talkStage,.routeRail{
-      border:1px solid var(--line2);border-radius:30px;
-      background:linear-gradient(135deg,rgba(255,255,255,.80),rgba(255,248,232,.64)),var(--panel);
-      box-shadow:var(--shadow);backdrop-filter:blur(14px);position:relative;overflow:hidden;
+
+    .snowflake {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--snow-size);
+      height: var(--snow-size);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 0 8px rgba(255, 255, 255, .66), 0 0 18px rgba(210, 235, 255, .28);
+      opacity: 0;
+      animation: snowFall var(--snow-duration) linear infinite;
+      animation-delay: var(--snow-delay);
     }
-    .hero::before,.talkStage::before,.routeRail::before{
-      content:"";position:absolute;inset:0;pointer-events:none;
+
+    .snowflake.soft {
+      background: rgba(255, 255, 255, .76);
+      filter: blur(.85px);
+    }
+
+    .snowflake.heavy {
+      box-shadow: 0 0 10px rgba(255, 255, 255, .78), 0 0 22px rgba(210, 235, 255, .34);
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      width: min(100% - 28px, 1120px);
+      min-height: 100svh;
+      margin: 0 auto;
+      padding: 18px 0 34px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero,
+    .talkStage,
+    .profileStage,
+    .routeRail,
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line2);
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .80), rgba(255, 248, 232, .64)), var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero::before,
+    .talkStage::before,
+    .profileStage::before,
+    .routeRail::before,
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 82% 12%,rgba(255,255,255,.56),transparent 18rem),
-        radial-gradient(circle at 10% 100%,rgba(255,143,87,.22),transparent 22rem),
-        radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.20),transparent 24rem),
-        linear-gradient(135deg,rgba(255,255,255,.12),transparent 48%,rgba(255,223,134,.09));
+        radial-gradient(circle at 82% 12%, rgba(255, 255, 255, .56), transparent 18rem),
+        radial-gradient(circle at 10% 100%, rgba(255, 143, 87, .22), transparent 22rem),
+        radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, .20), transparent 24rem),
+        linear-gradient(135deg, rgba(255, 255, 255, .12), transparent 48%, rgba(255, 223, 134, .09));
     }
-    .hero{
-      min-height:calc(100svh - 190px);padding:clamp(24px,5vw,56px);
-      display:grid;grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);gap:28px;align-items:center;
+
+    .hero {
+      min-height: calc(100svh - 190px);
+      padding: clamp(24px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
+      gap: 28px;
+      align-items: center;
     }
-    .heroCopy,.heroSymbol,.stageContent{position:relative;z-index:2}
-    .brandRow{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    .brandMark{
-      width:36px;height:36px;border-radius:999px;
+
+    .heroCopy,
+    .heroSymbol,
+    .stageContent,
+    .profileContent,
+    .panelContent,
+    .routeRailInner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .brandRow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brandMark {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, .66);
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 34% 28%,rgba(255,255,255,.95),transparent 18%),
-        radial-gradient(circle,rgba(255,236,147,.95),rgba(255,167,64,.68) 58%,rgba(164,80,18,.88));
-      border:1px solid rgba(255,255,255,.66);
-      box-shadow:inset 0 0 16px rgba(255,255,255,.30),0 0 24px rgba(255,183,70,.28);
-      flex:0 0 auto;
-    }
-    .brandName{color:var(--ink);font-size:clamp(1.18rem,4vw,1.8rem);font-weight:950;letter-spacing:-.04em}
-    .kicker{margin:0 0 12px;color:#9a5415;font-size:12px;line-height:1.35;font-weight:950;letter-spacing:3px;text-transform:uppercase}
-    h1{
-      margin:0;max-width:980px;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(3.4rem,10vw,7.4rem);line-height:.84;letter-spacing:-.085em;
-      text-shadow:0 14px 42px rgba(255,255,255,.36);
-    }
-    .thesis{
-      margin:18px 0 0;max-width:980px;color:var(--ink2);
-      font-size:clamp(1.42rem,3.4vw,2.45rem);line-height:1.1;font-weight:950;letter-spacing:-.052em;
-    }
-    .lead,.realLifeLine{
-      margin:18px 0 0;max-width:880px;color:var(--txt);
-      font-size:clamp(1.05rem,2.35vw,1.32rem);line-height:1.58;
-    }
-    .realLifeLine{color:rgba(37,21,6,.86);font-size:clamp(1rem,2.1vw,1.18rem);font-weight:760}
-    .heroActions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-    .heroButton,.routeLink{
-      min-height:48px;display:inline-grid;place-items:center;padding:12px 16px;border-radius:999px;
-      border:1px solid rgba(122,73,19,.18);background:rgba(255,255,255,.58);
-      color:var(--ink);font-weight:950;box-shadow:0 10px 28px rgba(120,72,18,.08);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-    .heroButton:hover,.heroButton:focus-visible,.routeLink:hover,.routeLink:focus-visible{
-      transform:translateY(-2px);border-color:rgba(242,184,75,.62);background:rgba(255,248,232,.82);outline:none;
-    }
-    .heroButton.primary{
-      border-color:rgba(242,184,75,.60);
-      background:radial-gradient(circle at 50% 50%,rgba(255,223,134,.36),transparent 64%),rgba(255,255,255,.76);
-      box-shadow:0 0 28px rgba(255,184,75,.22);
+        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, .95), transparent 18%),
+        radial-gradient(circle, rgba(255, 236, 147, .95), rgba(255, 167, 64, .68) 58%, rgba(164, 80, 18, .88));
+      box-shadow: inset 0 0 16px rgba(255, 255, 255, .30), 0 0 24px rgba(255, 183, 70, .28);
     }
 
-    .sunCompass{position:relative;width:min(100%,460px);aspect-ratio:1;margin:0 auto;filter:drop-shadow(0 22px 42px rgba(159,85,20,.22))}
-    .sunCompass .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.70)}
-    .sunCompass .ring.one{inset:8%;animation:slowTurn 24s linear infinite}
-    .sunCompass .ring.two{inset:17%;border-style:dashed;opacity:.80;animation:reverseTurn 18s linear infinite}
-    .sunCompass .ring.three{inset:27%;opacity:.48;animation:slowTurn 13s linear infinite}
-    .sunCompass .axisX,.sunCompass .axisY{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:999px}
-    .sunCompass .axisX{width:76%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.92),transparent)}
-    .sunCompass .axisY{width:1px;height:76%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.92),transparent)}
-    .sunRay{position:absolute;left:50%;top:50%;width:26%;height:26%;transform-origin:50% 0%}
-    .sunRay::before{
-      content:"";position:absolute;left:50%;top:-6%;width:52%;height:100%;transform:translateX(-50%);
-      clip-path:polygon(50% 0%,100% 100%,50% 82%,0% 100%);
-      background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,223,134,.74) 54%,rgba(255,143,87,.26) 100%);
-      box-shadow:inset 0 0 18px rgba(255,255,255,.38);opacity:.96;
+    .brandName {
+      color: var(--ink);
+      font-size: clamp(1.18rem, 4vw, 1.8rem);
+      font-weight: 950;
+      letter-spacing: -.04em;
     }
-    .sunRay.n{transform:translate(-50%,-50%) rotate(0deg)}.sunRay.e{transform:translate(-50%,-50%) rotate(90deg)}
-    .sunRay.s{transform:translate(-50%,-50%) rotate(180deg)}.sunRay.w{transform:translate(-50%,-50%) rotate(270deg)}
-    .sunRay.ne{transform:translate(-50%,-50%) rotate(45deg)}.sunRay.se{transform:translate(-50%,-50%) rotate(135deg)}
-    .sunRay.sw{transform:translate(-50%,-50%) rotate(225deg)}.sunRay.nw{transform:translate(-50%,-50%) rotate(315deg)}
-    .sunRay.ne::before,.sunRay.se::before,.sunRay.sw::before,.sunRay.nw::before{width:38%;opacity:.74}
-    .sunCore{
-      position:absolute;left:50%;top:50%;width:31%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(45deg);
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(255,245,188,.94) 32%,rgba(255,184,75,.62) 68%,rgba(255,255,255,.88) 100%);
-      box-shadow:0 0 44px rgba(255,184,75,.34),inset 0 0 26px rgba(255,255,255,.34);
-      animation:sunrisePulse 6s ease-in-out infinite;
-    }
-    .sunCore::before,.sunCore::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.46);clip-path:inherit}
-    .sunCore::after{transform:scale(.64);opacity:.68}
-    .spark{position:absolute;width:8px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,245,188,.94) 45%,transparent 70%);animation:shimmer 3s ease-in-out infinite}
-    .spark.s1{left:18%;top:24%;animation-delay:0s}.spark.s2{right:20%;top:22%;animation-delay:.8s}
-    .spark.s3{left:22%;bottom:18%;animation-delay:1.6s}.spark.s4{right:18%;bottom:22%;animation-delay:2.4s}
-    .spark.s5{left:50%;top:10%;animation-delay:1.2s}
-    .symbolCaption{margin:18px auto 0;max-width:34rem;color:var(--soft);text-align:center;font-size:.96rem;line-height:1.62}
 
-    .talkStage{
-      padding:clamp(20px,4vw,38px);display:grid;gap:18px;
-      background:radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.44),transparent 28rem),linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,248,232,.68));
+    .kicker {
+      margin: 0 0 12px;
+      color: #9a5415;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 950;
+      letter-spacing: 3px;
+      text-transform: uppercase;
     }
-    .stageHeader{display:grid;gap:10px;max-width:940px;position:relative;z-index:2}
-    .stageTitle{
-      margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2rem,5.8vw,4.2rem);line-height:.92;letter-spacing:-.065em;
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.4rem, 10vw, 7.4rem);
+      line-height: .84;
+      letter-spacing: -.085em;
+      text-shadow: 0 14px 42px rgba(255, 255, 255, .36);
     }
-    .dollGrid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
-    .doll{
-      border:1px solid rgba(122,73,19,.18);border-radius:22px;background:rgba(255,255,255,.50);
-      overflow:hidden;min-height:100%;box-shadow:0 12px 34px rgba(120,72,18,.08);
+
+    h2 {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5.8vw, 4.2rem);
+      line-height: .92;
+      letter-spacing: -.065em;
     }
-    .doll[open]{
-      background:radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.28),transparent 18rem),rgba(255,255,255,.70);
-      border-color:rgba(242,184,75,.48);box-shadow:0 18px 48px rgba(255,143,87,.12);
+
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(1.06rem, 2.2vw, 1.4rem);
+      line-height: 1.06;
+      font-weight: 950;
+      letter-spacing: -.035em;
     }
-    .doll summary{list-style:none;cursor:pointer;min-height:172px;padding:16px;display:grid;gap:10px;align-content:start;-webkit-tap-highlight-color:transparent}
-    .doll summary::-webkit-details-marker{display:none}
-    .dollTag{color:#9a5415;font-size:.76rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
-    .dollTitle{color:var(--ink);font-size:clamp(1.06rem,2.2vw,1.4rem);line-height:1.06;font-weight:950;letter-spacing:-.035em}
-    .dollHint{margin:0;color:var(--soft);line-height:1.42;font-size:.96rem}
-    .dollBody{border-top:1px solid rgba(122,73,19,.12);padding:16px;display:grid;gap:12px;background:rgba(255,248,232,.42)}
-    .dollBody p{margin:0;color:var(--txt);line-height:1.55}
-    .speechLine{margin:0;color:var(--ink2);font-size:clamp(1.12rem,2.4vw,1.45rem);line-height:1.2;font-weight:950;letter-spacing:-.038em}
-    .realExamples{margin:0;padding-left:18px;color:var(--txt);line-height:1.58}
-    .realExamples li{margin:7px 0}
-    .continueLink{
-      display:grid;gap:7px;padding:13px 14px;border:1px solid rgba(122,73,19,.16);
-      border-radius:18px;background:rgba(255,255,255,.58);color:var(--ink);font-weight:950;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-      box-shadow:0 10px 28px rgba(120,72,18,.08);
+
+    .thesis {
+      margin: 18px 0 0;
+      max-width: 980px;
+      color: var(--ink2);
+      font-size: clamp(1.42rem, 3.4vw, 2.45rem);
+      line-height: 1.1;
+      font-weight: 950;
+      letter-spacing: -.052em;
     }
-    .continueLink:hover,.continueLink:focus-visible{transform:translateY(-2px);border-color:rgba(242,184,75,.58);background:rgba(255,248,232,.82);outline:none}
-    .continueLink small{color:var(--soft);font-size:.86rem;line-height:1.35;font-weight:750}
-    .routeRail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:12px}
-    .routeLink{min-height:58px;border-radius:18px;text-align:center}
-    .routeLink.gold{
-      border-color:rgba(242,184,75,.68);
-      background:radial-gradient(circle at 50% 50%,rgba(255,223,134,.42),transparent 62%),rgba(255,255,255,.78);
-      box-shadow:0 0 26px rgba(255,184,75,.30),inset 0 0 18px rgba(255,255,255,.22);
-      position:relative;overflow:hidden;
+
+    .lead,
+    .realLifeLine,
+    .bodyLine {
+      margin: 18px 0 0;
+      max-width: 900px;
+      color: var(--txt);
+      font-size: clamp(1.05rem, 2.35vw, 1.32rem);
+      line-height: 1.58;
     }
-    .routeLink.gold::after{
-      content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.56) 48%,transparent 62%);
-      transform:translateX(-120%);animation:glint 4.8s ease-in-out infinite;pointer-events:none;
+
+    .realLifeLine {
+      color: rgba(37, 21, 6, .86);
+      font-size: clamp(1rem, 2.1vw, 1.18rem);
+      font-weight: 760;
     }
-    @media(max-width:980px){
-      .hero{grid-template-columns:1fr;min-height:auto}
-      .dollGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    .heroActions,
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
     }
-    @media(max-width:680px){
-      .page{width:min(100% - 20px,1120px);padding-top:10px}
-      .hero,.talkStage,.routeRail{border-radius:24px}
-      .hero{padding:22px}
-      .dollGrid{grid-template-columns:1fr}
-      .doll summary{min-height:auto}
-      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .heroActions{display:grid;grid-template-columns:1fr}
-      .cloud{opacity:.48}
+
+    .heroButton,
+    .routeLink,
+    .continueLink {
+      display: inline-grid;
+      place-items: center;
+      min-height: 48px;
+      padding: 12px 16px;
+      border: 1px solid rgba(122, 73, 19, .18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .58);
+      color: var(--ink);
+      font-weight: 950;
+      box-shadow: 0 10px 28px rgba(120, 72, 18, .08);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
-    @media(prefers-reduced-motion:reduce){
-      .skySparkle,.cloud,.snowflake,.sunCompass .ring,.sunCore,.spark,.routeLink.gold::after{animation:none}
-      .snowflake{display:none}
+
+    .heroButton:hover,
+    .heroButton:focus-visible,
+    .routeLink:hover,
+    .routeLink:focus-visible,
+    .continueLink:hover,
+    .continueLink:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(242, 184, 75, .62);
+      background: rgba(255, 248, 232, .82);
+      outline: none;
+    }
+
+    .heroButton.primary,
+    .routeLink.gold {
+      position: relative;
+      overflow: hidden;
+      border-color: rgba(242, 184, 75, .68);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 223, 134, .42), transparent 62%), rgba(255, 255, 255, .78);
+      box-shadow: 0 0 26px rgba(255, 184, 75, .30), inset 0 0 18px rgba(255, 255, 255, .22);
+    }
+
+    .routeLink.gold::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, .56) 48%, transparent 62%);
+      transform: translateX(-120%);
+      animation: glint 4.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .sunCompass {
+      position: relative;
+      width: min(100%, 460px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      filter: drop-shadow(0 22px 42px rgba(159, 85, 20, .22));
+    }
+
+    .sunCompass .ring {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, .70);
+      border-radius: 50%;
+    }
+
+    .sunCompass .ring.one {
+      inset: 8%;
+      animation: slowTurn 24s linear infinite;
+    }
+
+    .sunCompass .ring.two {
+      inset: 17%;
+      border-style: dashed;
+      opacity: .80;
+      animation: reverseTurn 18s linear infinite;
+    }
+
+    .sunCompass .ring.three {
+      inset: 27%;
+      opacity: .48;
+      animation: slowTurn 13s linear infinite;
+    }
+
+    .sunCompass .axisX,
+    .sunCompass .axisY {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 999px;
+      transform: translate(-50%, -50%);
+    }
+
+    .sunCompass .axisX {
+      width: 76%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .92), transparent);
+    }
+
+    .sunCompass .axisY {
+      width: 1px;
+      height: 76%;
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .92), transparent);
+    }
+
+    .sunRay {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 26%;
+      height: 26%;
+      transform-origin: 50% 0%;
+    }
+
+    .sunRay::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -6%;
+      width: 52%;
+      height: 100%;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 0%, 100% 100%, 50% 82%, 0% 100%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(255, 223, 134, .74) 54%, rgba(255, 143, 87, .26) 100%);
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, .38);
+      opacity: .96;
+    }
+
+    .sunRay.n { transform: translate(-50%, -50%) rotate(0deg); }
+    .sunRay.e { transform: translate(-50%, -50%) rotate(90deg); }
+    .sunRay.s { transform: translate(-50%, -50%) rotate(180deg); }
+    .sunRay.w { transform: translate(-50%, -50%) rotate(270deg); }
+    .sunRay.ne { transform: translate(-50%, -50%) rotate(45deg); }
+    .sunRay.se { transform: translate(-50%, -50%) rotate(135deg); }
+    .sunRay.sw { transform: translate(-50%, -50%) rotate(225deg); }
+    .sunRay.nw { transform: translate(-50%, -50%) rotate(315deg); }
+
+    .sunRay.ne::before,
+    .sunRay.se::before,
+    .sunRay.sw::before,
+    .sunRay.nw::before {
+      width: 38%;
+      opacity: .74;
+    }
+
+    .sunCore {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 31%;
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%) rotate(45deg);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(255, 245, 188, .94) 32%, rgba(255, 184, 75, .62) 68%, rgba(255, 255, 255, .88) 100%);
+      box-shadow: 0 0 44px rgba(255, 184, 75, .34), inset 0 0 26px rgba(255, 255, 255, .34);
+      animation: sunrisePulse 6s ease-in-out infinite;
+    }
+
+    .sunCore::before,
+    .sunCore::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255, 255, 255, .46);
+      clip-path: inherit;
+    }
+
+    .sunCore::after {
+      transform: scale(.64);
+      opacity: .68;
+    }
+
+    .spark {
+      position: absolute;
+      width: 8px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 245, 188, .94) 45%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .spark.s1 { left: 18%; top: 24%; animation-delay: 0s; }
+    .spark.s2 { right: 20%; top: 22%; animation-delay: .8s; }
+    .spark.s3 { left: 22%; bottom: 18%; animation-delay: 1.6s; }
+    .spark.s4 { right: 18%; bottom: 22%; animation-delay: 2.4s; }
+    .spark.s5 { left: 50%; top: 10%; animation-delay: 1.2s; }
+
+    .symbolCaption {
+      max-width: 34rem;
+      margin: 18px auto 0;
+      color: var(--soft);
+      text-align: center;
+      font-size: .96rem;
+      line-height: 1.62;
+    }
+
+    .profileStage,
+    .talkStage,
+    .panel {
+      padding: clamp(20px, 4vw, 38px);
+      display: grid;
+      gap: 18px;
+      background: radial-gradient(ellipse at 12% 16%, rgba(255, 255, 255, .44), transparent 28rem), linear-gradient(180deg, rgba(255, 255, 255, .78), rgba(255, 248, 232, .68));
+    }
+
+    .stageHeader {
+      display: grid;
+      gap: 10px;
+      max-width: 940px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .profileGrid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .photoFrame {
+      overflow: hidden;
+      border: 1px solid rgba(122, 73, 19, .20);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .58);
+      box-shadow: 0 18px 48px rgba(120, 72, 18, .12);
+    }
+
+    .photoFrame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .facts {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .fact {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid rgba(122, 73, 19, .14);
+      border-radius: 17px;
+      background: rgba(255, 255, 255, .42);
+    }
+
+    .fact strong {
+      color: #18795f;
+    }
+
+    .fact span {
+      color: var(--txt);
+      line-height: 1.45;
+    }
+
+    .dollGrid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+
+    .doll {
+      min-height: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(122, 73, 19, .18);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, .50);
+      box-shadow: 0 12px 34px rgba(120, 72, 18, .08);
+    }
+
+    .doll[open] {
+      border-color: rgba(242, 184, 75, .48);
+      background: radial-gradient(ellipse at 18% 10%, rgba(255, 223, 134, .28), transparent 18rem), rgba(255, 255, 255, .70);
+      box-shadow: 0 18px 48px rgba(255, 143, 87, .12);
+    }
+
+    .doll summary {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-height: 172px;
+      padding: 16px;
+      list-style: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .doll summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dollTag {
+      color: #9a5415;
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .dollTitle {
+      color: var(--ink);
+      font-size: clamp(1.06rem, 2.2vw, 1.4rem);
+      line-height: 1.06;
+      font-weight: 950;
+      letter-spacing: -.035em;
+    }
+
+    .dollHint {
+      margin: 0;
+      color: var(--soft);
+      line-height: 1.42;
+      font-size: .96rem;
+    }
+
+    .dollBody {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-top: 1px solid rgba(122, 73, 19, .12);
+      background: rgba(255, 248, 232, .42);
+    }
+
+    .dollBody p {
+      margin: 0;
+      color: var(--txt);
+      line-height: 1.55;
+    }
+
+    .speechLine {
+      margin: 0;
+      color: var(--ink2);
+      font-size: clamp(1.12rem, 2.4vw, 1.45rem);
+      line-height: 1.2;
+      font-weight: 950;
+      letter-spacing: -.038em;
+    }
+
+    .realExamples {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--txt);
+      line-height: 1.58;
+    }
+
+    .realExamples li {
+      margin: 7px 0;
+    }
+
+    .continueLink {
+      display: grid;
+      gap: 7px;
+      border-radius: 18px;
+      text-align: left;
+    }
+
+    .continueLink small {
+      color: var(--soft);
+      font-size: .86rem;
+      line-height: 1.35;
+      font-weight: 750;
+    }
+
+    .routeRail {
+      padding: 12px;
+    }
+
+    .routeRailInner {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .routeLink {
+      min-height: 58px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .receipt {
+      display: none !important;
+    }
+
+    @media (max-width: 1080px) {
+      .routeRailInner {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .dollGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .profileGrid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 10px;
+      }
+
+      .hero,
+      .talkStage,
+      .profileStage,
+      .routeRail,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .dollGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .doll summary {
+        min-height: auto;
+      }
+
+      .routeRailInner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .heroActions,
+      .links {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .heroButton,
+      .routeLink,
+      .continueLink {
+        width: 100%;
+      }
+
+      .fact {
+        grid-template-columns: 1fr;
+      }
+
+      .cloud {
+        opacity: .48;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skySparkle,
+      .cloud,
+      .snowflake,
+      .sunCompass .ring,
+      .sunCore,
+      .spark,
+      .routeLink.gold::after {
+        animation: none;
+      }
+
+      .snowflake {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <a class="skip" href="#about-this-underdog-main">Skip to About This Underdog</a>
+
   <div class="weatherLayer" aria-hidden="true">
     <div class="cloud cloudOne"></div>
     <div class="cloud cloudTwo"></div>
@@ -299,9 +975,10 @@
   <div class="snowField" id="snow-field" aria-hidden="true"></div>
 
   <main
+    id="about-this-underdog-main"
     class="page"
     data-backlink-root="about-this-underdog"
-    data-backlink-version="richie-manor-full-circle-b7"
+    data-backlink-version="ABOUT_THIS_UNDERDOG_V3_RICHIE_MANOR_FULL_CIRCLE_PROFILE_MERGE_TNT_v1"
     data-existing-full-route="/big-laugh/about-this-underdog/"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
@@ -310,12 +987,14 @@
     data-estate-size="256-acres"
     data-house-floors="four"
     data-depth-language="basement-vault-attic"
+    data-profile-photo="/about-this-underdog/20250426_194823.jpg"
+    data-real-person-anchor="Sean Mansfield"
   >
     <section class="hero" aria-label="About This Underdog">
       <article class="heroCopy">
         <div class="brandRow">
           <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
-          <a class="brandName" href="/">Richie's Manor · Diamond Gate Bridge</a>
+          <a class="brandName" href="/">Richie’s Manor · Diamond Gate Bridge</a>
         </div>
 
         <p class="kicker">About This Underdog</p>
@@ -326,14 +1005,11 @@
         </p>
 
         <p class="lead">
-          Richie's Manor sits on 256 acres because the story needed room: room for the house, room for the basement,
-          room for the attic, room for the vault, and room for every person who has had to rebuild while the weather was still falling.
+          This page anchors This Underdog to Sean Mansfield, the real person behind the voice, the story, the comedy, the speaking lane, and The Nine Summits of Love.
         </p>
 
         <p class="lead">
-          The house has four floors. Some people arrive at the front door. Some start in the basement, carrying the deep things
-          that life buried under bills, work, family pressure, grief, rejection, or starting over. Some climb toward the attic,
-          where the upper rooms organize the larger categories of the life they are trying to build.
+          Richie’s Manor sits on 256 acres because the story needed room: room for the house, room for the basement, room for the attic, room for the vault, and room for every person who has had to rebuild while the weather was still falling.
         </p>
 
         <p class="realLifeLine">
@@ -342,9 +1018,10 @@
         </p>
 
         <div class="heroActions" aria-label="Primary actions">
-          <a class="heroButton primary" href="#underdog-dolls">Open the Russian Doll</a>
+          <a class="heroButton primary" href="#profile-anchor">Meet Sean</a>
+          <a class="heroButton" href="#underdog-dolls">Open the Russian Doll</a>
           <a class="heroButton" href="/big-laugh/about-this-underdog/">Go to the Vault Chamber</a>
-          <a class="heroButton" href="/showroom/">Return to Showroom</a>
+          <a class="heroButton" href="/this-underdog/">Open This Underdog</a>
         </div>
       </article>
 
@@ -380,11 +1057,96 @@
       </aside>
     </section>
 
+    <section id="profile-anchor" class="profileStage" aria-label="Sean Mansfield profile">
+      <div class="profileContent">
+        <div class="stageHeader">
+          <p class="kicker">Real person anchor</p>
+          <h2>Sean Mansfield.</h2>
+          <p class="lead">
+            The Manor language matters, but the voice is not abstract. This Underdog is attached to a real person, a real origin, and a real public lane.
+          </p>
+        </div>
+
+        <div class="profileGrid">
+          <article>
+            <p class="kicker">Photo</p>
+            <div class="photoFrame">
+              <img
+                src="/about-this-underdog/20250426_194823.jpg"
+                alt="Sean Mansfield, This Underdog."
+                loading="eager"
+                decoding="sync"
+                fetchpriority="high">
+            </div>
+
+            <div class="links">
+              <a class="heroButton" href="/about-this-underdog/20250426_194823.jpg">Open photo directly</a>
+            </div>
+          </article>
+
+          <article>
+            <p class="kicker">Origin</p>
+            <h3>Arlington, Texas.</h3>
+
+            <p class="bodyLine">
+              My name is Sean Mansfield. I grew up in Arlington, Texas, went to Mansfield High School, and graduated with the class of 2004.
+            </p>
+
+            <p class="bodyLine">
+              I was born on October 1, 1985. I am 40 years old. This Underdog is the voice, story, comedy, and speaking lane that grew out of that path.
+            </p>
+
+            <div class="facts">
+              <div class="fact">
+                <strong>Name</strong>
+                <span>Sean Mansfield</span>
+              </div>
+
+              <div class="fact">
+                <strong>Origin</strong>
+                <span>Arlington, Texas</span>
+              </div>
+
+              <div class="fact">
+                <strong>School</strong>
+                <span>Mansfield High School · Class of 2004</span>
+              </div>
+
+              <div class="fact">
+                <strong>Born</strong>
+                <span>October 1, 1985</span>
+              </div>
+
+              <div class="fact">
+                <strong>Age</strong>
+                <span>40</span>
+              </div>
+
+              <div class="fact">
+                <strong>Public lane</strong>
+                <span>This Underdog · comedy, story, seminars, speaking, and underdog message</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Core This Underdog line">
+      <div class="panelContent">
+        <p class="kicker">Core line</p>
+        <h2>Finding your inner underdog is the same thing as unlocking your inner genius.</h2>
+        <p class="lead">
+          The underdog is not the weak part. The underdog is the part that survived before it had clean language.
+        </p>
+      </div>
+    </section>
+
     <section id="underdog-dolls" class="talkStage" aria-label="Underdog Russian doll chambers">
       <div class="stageContent">
         <div class="stageHeader">
-          <p class="kicker">Open Richie's Manor</p>
-          <h2 class="stageTitle">The story comes full circle here.</h2>
+          <p class="kicker">Open Richie’s Manor</p>
+          <h2>The story comes full circle here.</h2>
           <p class="lead">
             Each chamber opens one layer of the house. The full route carries the deeper room.
           </p>
@@ -468,6 +1230,11 @@
                 <small>The deeper existing route for the protected underdog story.</small>
               </a>
 
+              <a class="continueLink" href="/nine-summits-of-love/">
+                Continue to The Nine Summits of Love
+                <small>The book and seminar path where the human climb is named.</small>
+              </a>
+
               <a class="continueLink" href="/products/">
                 Continue to Products
                 <small>The product route where the public lanes can be married to the estate later.</small>
@@ -484,29 +1251,68 @@
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
-      <a class="routeLink gold" href="/showroom/">Showroom</a>
-      <a class="routeLink" href="/big-laugh/about-this-underdog/">Vault Chamber</a>
-      <a class="routeLink" href="/products/">Products</a>
-      <a class="routeLink" href="/">Compass</a>
+      <div class="routeRailInner">
+        <a class="routeLink gold" href="/this-underdog/">This Underdog</a>
+        <a class="routeLink" href="/big-laugh/about-this-underdog/">Vault Chamber</a>
+        <a class="routeLink" href="/nine-summits-of-love/">Book</a>
+        <a class="routeLink" href="/nine-summits/">Nine Summits</a>
+        <a class="routeLink" href="/nine-summits/universe/">Universe</a>
+        <a class="routeLink" href="/products/">Products</a>
+        <a class="routeLink" href="/showroom/">Showroom</a>
+        <a class="routeLink" href="/">Compass</a>
+      </div>
     </nav>
+
+    <section class="receipt" aria-hidden="true">
+      ABOUT_THIS_UNDERDOG_V3_RICHIE_MANOR_FULL_CIRCLE_PROFILE_MERGE_TNT_v1
+      option-b-merge=true
+      route=/about-this-underdog/
+      previous-profile=ABOUT_THIS_UNDERDOG_V2_PUBLIC_PROFILE_COMMAND_PATH_TNT_v1
+      previous-manor=about-richie-manor-full-circle-b7
+      photo=/about-this-underdog/20250426_194823.jpg
+      real-person-anchor=Sean Mansfield
+      origin=Arlington Texas
+      school=Mansfield High School
+      class=2004
+      born=October 1 1985
+      age=40
+      public-lane=This Underdog
+      visual-tone=sunrise-heavy-snow
+      estate=Richie's Manor and Estate
+      estate-size=256-acres
+      house-floors=four
+      basement=true
+      attic=true
+      vault=true
+      vault-route=/big-laugh/about-this-underdog/
+      no-graphic-box=true
+      no-generated-image=true
+      no-external-image=true
+      local-photo-only=true
+      connects-to-nine-summits=true
+      connects-to-nine-summits-of-love=true
+      connects-to-universe=true
+      connects-to-products=true
+      connects-to-showroom=true
+    </section>
   </main>
 
   <script>
-    (function(){
+    (function () {
       "use strict";
 
-      var VERSION = "about-this-underdog-b7-richie-manor-full-circle";
+      var VERSION = "ABOUT_THIS_UNDERDOG_V3_RICHIE_MANOR_FULL_CIRCLE_PROFILE_MERGE_TNT_v1";
       var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
       var snowField = document.getElementById("snow-field");
       var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       document.documentElement.setAttribute("data-underdog-controller", VERSION);
 
-      dolls.forEach(function(doll){
-        doll.addEventListener("toggle", function(){
+      dolls.forEach(function (doll) {
+        doll.addEventListener("toggle", function () {
           if (!doll.open) return;
 
-          dolls.forEach(function(other){
+          dolls.forEach(function (other) {
             if (other !== doll) other.removeAttribute("open");
           });
 
@@ -514,11 +1320,11 @@
         });
       });
 
-      function random(min,max){
+      function random(min, max) {
         return min + Math.random() * (max - min);
       }
 
-      function buildSnow(){
+      function buildSnow() {
         var count;
         var i;
         var flake;
@@ -551,7 +1357,7 @@
 
       buildSnow();
 
-      window.addEventListener("resize", function(){
+      window.addEventListener("resize", function () {
         window.clearTimeout(window.__dgbSnowResizeTimer);
         window.__dgbSnowResizeTimer = window.setTimeout(buildSnow, 180);
       });

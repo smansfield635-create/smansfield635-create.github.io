@@ -3,7 +3,12 @@
   lang="en"
   data-page="this-underdog"
   data-route="/this-underdog/"
-  data-generation="this-underdog-public-speaking-renewal-tnt-v1"
+  data-house-part="voice"
+  data-construct-class="public-speaking-lane"
+  data-g5-site-uniformity="active"
+  data-page-standard="G5_THIS_UNDERDOG_PUBLIC_SPEAKING_RUSSIAN_DOLL_RENEWAL_TNT_v1"
+  data-architecture-claim="public-voice-surface"
+  data-visual-pass-claim="false"
 >
 <head>
   <meta charset="utf-8">
@@ -15,10 +20,12 @@
   >
 
   <style>
-    :root {
+    :root{
+      color-scheme:dark;
       --bg:#03050a;
       --panel:rgba(9,15,25,.94);
       --panel2:rgba(14,24,38,.84);
+      --panel3:rgba(255,255,255,.055);
       --line:rgba(168,199,255,.22);
       --gold-line:rgba(242,199,111,.38);
       --text:#f4f7ff;
@@ -28,13 +35,14 @@
       --green:#8ff0c6;
       --blue:#91bdff;
       --shadow:rgba(0,0,0,.56);
+      --max:1120px;
+      --radius:30px;
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
+    html{min-height:100%;background:var(--bg);scroll-behavior:smooth}
 
-    html { min-height:100%; background:var(--bg); }
-
-    body {
+    body{
       margin:0;
       min-height:100vh;
       color:var(--text);
@@ -46,16 +54,17 @@
       font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
+      line-height:1.55;
     }
 
-    a { color:inherit; text-decoration:none; }
+    a{color:inherit;text-decoration:none}
 
-    a:focus {
+    a:focus{
       outline:2px solid var(--green);
       outline-offset:3px;
     }
 
-    .skip {
+    .skip{
       position:absolute;
       left:-999px;
       top:10px;
@@ -67,25 +76,34 @@
       font-weight:850;
     }
 
-    .skip:focus { left:10px; }
+    .skip:focus{left:10px}
 
-    .page {
-      width:min(1120px,calc(100% - 28px));
+    .page{
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
       padding:24px 0 64px;
     }
 
-    .brand {
-      display:block;
-      margin-bottom:18px;
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      padding-bottom:20px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:26px;
+    }
+
+    .brand{
+      display:grid;
+      gap:3px;
       color:var(--muted);
-      font-size:.86rem;
+      font-size:.82rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .brand strong {
-      display:block;
+    .brand strong{
       color:var(--gold);
       font-size:1rem;
       letter-spacing:.16em;
@@ -94,17 +112,19 @@
 
     .nav,
     .actions,
-    .links {
+    .links{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
     }
 
-    .nav { margin-bottom:26px; }
+    .nav{
+      justify-content:flex-end;
+    }
 
     .nav a,
-    .button {
+    .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -115,51 +135,42 @@
       background:rgba(255,255,255,.055);
       color:var(--text);
       font-weight:850;
+      font-size:.9rem;
     }
 
     .nav a[aria-current="page"],
-    .button.primary {
+    .button.primary{
       border-color:rgba(242,199,111,.52);
       background:rgba(242,199,111,.14);
     }
 
-    .button.green {
+    .button.green{
       border-color:rgba(143,240,198,.5);
       background:rgba(143,240,198,.13);
     }
 
-    .hero,
-    .panel,
-    .card,
-    .route-card {
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:
-        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
-        var(--panel);
-      box-shadow:0 24px 80px var(--shadow);
+    .button.secondary{
+      color:rgba(244,247,255,.82);
+      background:rgba(255,255,255,.04);
     }
 
-    .hero,
-    .panel {
-      padding:clamp(24px,5vw,52px);
-      margin-top:18px;
-    }
-
-    .hero {
-      min-height:560px;
+    .hero{
+      min-height:520px;
       display:grid;
       align-content:center;
       gap:24px;
-      border-color:var(--gold-line);
+      padding:clamp(26px,5vw,56px);
+      border:1px solid var(--gold-line);
+      border-radius:34px;
       background:
         radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
         radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
         linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .kicker {
-      margin:0 0 12px;
+    .kicker{
+      margin:0;
       color:var(--gold);
       font-size:.82rem;
       font-weight:950;
@@ -167,10 +178,10 @@
       text-transform:uppercase;
     }
 
-    .kicker.green { color:var(--green); }
-    .kicker.blue { color:var(--blue); }
+    .kicker.green{color:var(--green)}
+    .kicker.blue{color:var(--blue)}
 
-    h1 {
+    h1{
       margin:0;
       max-width:980px;
       font-size:clamp(3.2rem,10vw,7.2rem);
@@ -178,7 +189,7 @@
       letter-spacing:-.08em;
     }
 
-    h2 {
+    h2{
       margin:0;
       max-width:920px;
       font-size:clamp(1.85rem,5vw,3.45rem);
@@ -186,78 +197,175 @@
       letter-spacing:-.06em;
     }
 
-    h3 {
+    h3{
       margin:0;
-      font-size:clamp(1.28rem,3.7vw,2.05rem);
+      font-size:clamp(1.22rem,3vw,1.85rem);
       line-height:1.06;
       letter-spacing:-.045em;
     }
 
-    p {
+    p{
+      margin:0;
       color:var(--muted);
       font-size:clamp(1.02rem,2.4vw,1.2rem);
       line-height:1.6;
     }
 
-    strong { color:var(--text); }
+    strong{color:var(--text)}
 
-    .lead {
+    .lead{
       max-width:920px;
       color:var(--soft);
       font-size:clamp(1.16rem,3vw,1.55rem);
       line-height:1.45;
     }
 
-    .one-line {
+    .one-line{
       color:var(--text);
-      font-size:clamp(1.7rem,5vw,3.5rem);
+      font-size:clamp(1.55rem,4.6vw,3.25rem);
       line-height:1.05;
       letter-spacing:-.06em;
       font-weight:950;
     }
 
-    .grid {
-      display:grid;
-      gap:14px;
-      margin-top:18px;
+    .voice-bubble{
+      margin-top:22px;
+      padding:18px;
+      border:1px solid var(--gold-line);
+      border-radius:34px;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(242,199,111,.12),transparent 22rem),
+        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
-    .grid.four { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    details{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:
+        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
+        var(--panel);
+      overflow:hidden;
+    }
 
-    .card,
-    .route-card {
-      padding:22px;
+    details + details{margin-top:12px}
+
+    summary{
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px;
+      font-weight:950;
+      color:rgba(248,251,255,.94);
+    }
+
+    summary::-webkit-details-marker{display:none}
+
+    summary::after{
+      content:"+";
+      display:grid;
+      place-items:center;
+      min-width:32px;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      border:1px solid rgba(145,189,255,.32);
+      color:var(--blue);
+      background:rgba(145,189,255,.08);
+      font-size:1.15rem;
+      line-height:1;
+    }
+
+    details[open] > summary::after{
+      content:"–";
+      border-color:rgba(242,199,111,.42);
+      color:var(--gold);
+      background:rgba(242,199,111,.08);
+    }
+
+    .summary-copy{
+      display:grid;
+      gap:7px;
+    }
+
+    .summary-copy b{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .summary-copy span{
+      font-size:1.08rem;
+      letter-spacing:-.025em;
+    }
+
+    .bubble-body{
+      display:grid;
+      gap:14px;
+      padding:0 18px 18px;
+    }
+
+    .bubble-note{
+      border:1px solid rgba(242,199,111,.24);
+      border-radius:20px;
+      background:rgba(242,199,111,.065);
+      padding:15px;
+    }
+
+    .nested{
+      display:grid;
+      gap:12px;
+    }
+
+    .nested details{
+      border-radius:24px;
       background:
         radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
         var(--panel2);
-      box-shadow:none;
     }
 
-    .card {
-      min-height:220px;
+    .nested summary{padding:15px}
+    .nested .bubble-body{padding:0 15px 15px}
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card,
+    .route-card{
+      border:1px solid rgba(168,199,255,.18);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
+        rgba(255,255,255,.045);
+      padding:20px;
       display:grid;
       align-content:start;
       gap:12px;
     }
 
-    .route-card {
-      min-height:285px;
-      display:grid;
-      gap:12px;
-      align-content:start;
-    }
+    .card{min-height:200px}
+    .route-card{min-height:250px}
 
-    .route-card .button {
+    .route-card .button{
       width:max-content;
       margin-top:auto;
     }
 
     .card span,
-    .route-card span {
+    .route-card span,
+    .card b{
       display:block;
-      margin-bottom:8px;
       color:var(--gold);
       font-size:.76rem;
       font-weight:950;
@@ -266,19 +374,19 @@
     }
 
     .card p,
-    .route-card p {
+    .route-card p{
       margin:0;
+      font-size:1rem;
     }
 
-    .steps {
+    .steps{
       display:grid;
       gap:10px;
-      margin-top:18px;
     }
 
-    .step {
+    .step{
       display:grid;
-      grid-template-columns:92px 1fr;
+      grid-template-columns:86px 1fr;
       gap:14px;
       align-items:start;
       padding:14px;
@@ -287,62 +395,85 @@
       background:rgba(255,255,255,.045);
     }
 
-    .step strong {
+    .step strong{
       color:var(--green);
       font-size:1.3rem;
       line-height:1;
     }
 
-    .step span {
+    .step span{
       color:var(--muted);
       line-height:1.48;
     }
 
-    .quote-list {
+    .quote-list{
       display:grid;
       gap:12px;
-      margin-top:18px;
+      margin:0;
+      padding:0;
+      list-style:none;
     }
 
-    .quote-line {
+    .quote-list li{
       padding:16px;
       border:1px solid rgba(242,199,111,.22);
       border-radius:18px;
       background:rgba(255,255,255,.045);
       color:var(--text);
-      font-size:clamp(1.18rem,3vw,1.65rem);
+      font-size:clamp(1.1rem,2.8vw,1.45rem);
       line-height:1.18;
       letter-spacing:-.035em;
       font-weight:900;
     }
 
-    .receipt {
-      display:none!important;
+    .final-band{
+      display:grid;
+      gap:14px;
+      margin-top:22px;
+      padding:clamp(22px,4vw,38px);
+      border:1px solid var(--gold-line);
+      border-radius:34px;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(242,199,111,.12),transparent 20rem),
+        rgba(255,255,255,.05);
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    @media (max-width:980px) {
-      .grid.two,
-      .grid.three,
-      .grid.four {
-        grid-template-columns:1fr;
-      }
-
-      .hero { min-height:470px; }
+    .footer{
+      display:grid;
+      gap:10px;
+      margin-top:30px;
+      padding-top:20px;
+      border-top:1px solid var(--line);
+      color:rgba(218,227,255,.58);
+      font-size:.8rem;
     }
 
-    @media (max-width:620px) {
-      .page {
+    .public-receipt{color:rgba(244,247,255,.72)}
+
+    .receipt{display:none!important}
+
+    @media(max-width:980px){
+      .topbar{display:grid}
+      .nav{justify-content:flex-start}
+      .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+      .hero{min-height:460px}
+    }
+
+    @media(max-width:620px){
+      .page{
         width:min(100% - 24px,620px);
         padding-top:18px;
       }
 
       .nav a,
-      .button {
+      .button{
         min-height:40px;
         padding:9px 14px;
       }
 
-      .step { grid-template-columns:1fr; }
+      .step{grid-template-columns:1fr}
+      summary{align-items:flex-start}
     }
   </style>
 </head>
@@ -361,22 +492,21 @@
     data-book-route="/nine-summits-of-love/"
     data-universe-route="/nine-summits/universe/"
   >
-    <a class="brand" href="/">
-      <strong>Diamond Gate Bridge</strong>
-      This Underdog · Speaking Lane
-    </a>
+    <header class="topbar" aria-label="Site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        This Underdog · Speaking Lane
+      </a>
 
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/this-underdog/" aria-current="page">This Underdog</a>
-      <a href="/about-this-underdog/">About</a>
-      <a href="/nine-summits/">Nine Summits</a>
-      <a href="/nine-summits-of-love/">Book</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
+      <nav class="nav" aria-label="Primary house navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
     <section class="hero">
       <p class="kicker">Story · Comedy · Speaking</p>
@@ -394,215 +524,220 @@
         <a class="button primary" href="/about-this-underdog/">Meet Sean Mansfield</a>
         <a class="button green" href="/nine-summits/">Open Nine Summits</a>
         <a class="button" href="/nine-summits-of-love/">Open the Book Path</a>
-        <a class="button" href="/products/">View Products</a>
+        <a class="button secondary" href="/products/">View Products</a>
       </div>
     </section>
 
-    <section class="panel">
-      <p class="kicker green">The thesis</p>
-      <h2>The underdog is not the weak part.</h2>
+    <section class="voice-bubble" aria-label="This Underdog Russian doll speaking system">
+      <details open>
+        <summary>
+          <span class="summary-copy">
+            <b>Voice bubble</b>
+            <span>The underdog is not the weak part.</span>
+          </span>
+        </summary>
 
-      <p class="one-line">
-        The underdog is the part of you that survived before it learned how to speak.
-      </p>
+        <div class="bubble-body">
+          <div class="bubble-note">
+            <p>The underdog is the part of you that survived before it learned how to speak. This page exists for one reason: to turn pressure into language people can use.</p>
+          </div>
 
-      <p>
-        Most people think the underdog is a person losing the game. That is too small. The underdog is the part of a person that keeps showing up before the world knows how to measure them.
-      </p>
+          <div class="nested">
+            <details open>
+              <summary>
+                <span class="summary-copy">
+                  <b>The thesis</b>
+                  <span>Survival becomes language.</span>
+                </span>
+              </summary>
 
-      <p>
-        This page exists for one reason: to turn pressure into language people can use.
-      </p>
-    </section>
+              <div class="bubble-body">
+                <p class="one-line">The underdog is the part of you that survived before it learned how to speak.</p>
+                <p>Most people think the underdog is a person losing the game. That is too small. The underdog is the part of a person that keeps showing up before the world knows how to measure them.</p>
+              </div>
+            </details>
 
-    <section class="panel">
-      <p class="kicker gold">The room problem</p>
-      <h2>People do not need more noise. They need a sentence that finds them.</h2>
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>The room problem</b>
+                  <span>People do not need more noise. They need a sentence that finds them.</span>
+                </span>
+              </summary>
 
-      <div class="grid three">
-        <article class="card">
-          <span>Pressure</span>
-          <h3>People carry more than they say.</h3>
-          <p>
-            Work pressure. Family pressure. Money pressure. Identity pressure. Recovery pressure. The room already has weight in it.
-          </p>
-        </article>
+              <div class="bubble-body">
+                <div class="grid three">
+                  <article class="card">
+                    <span>Pressure</span>
+                    <h3>People carry more than they say.</h3>
+                    <p>Work pressure. Family pressure. Money pressure. Identity pressure. Recovery pressure. The room already has weight in it.</p>
+                  </article>
 
-        <article class="card">
-          <span>Voice</span>
-          <h3>The first win is language.</h3>
-          <p>
-            When someone can name what they are carrying, they stop being trapped inside it.
-          </p>
-        </article>
+                  <article class="card">
+                    <span>Voice</span>
+                    <h3>The first win is language.</h3>
+                    <p>When someone can name what they are carrying, they stop being trapped inside it.</p>
+                  </article>
 
-        <article class="card">
-          <span>Motion</span>
-          <h3>Insight has to become usable.</h3>
-          <p>
-            A good talk does not just inspire people. It gives them a handle they can carry out of the room.
-          </p>
-        </article>
-      </div>
-    </section>
+                  <article class="card">
+                    <span>Motion</span>
+                    <h3>Insight has to become usable.</h3>
+                    <p>A good talk does not just inspire people. It gives them a handle they can carry out of the room.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
 
-    <section class="panel">
-      <p class="kicker blue">The core idea</p>
-      <h2>Finding your inner underdog is finding your voice.</h2>
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>The core idea</b>
+                  <span>Finding your inner underdog is finding your voice.</span>
+                </span>
+              </summary>
 
-      <p class="one-line">
-        Your overlooked part may be the most intelligent part of you.
-      </p>
+              <div class="bubble-body">
+                <p class="one-line">Your overlooked part may be the most intelligent part of you.</p>
 
-      <div class="steps">
-        <div class="step">
-          <strong>01</strong>
-          <span>Comedy lowers the wall.</span>
+                <div class="steps">
+                  <div class="step"><strong>01</strong><span>Comedy lowers the wall.</span></div>
+                  <div class="step"><strong>02</strong><span>Story gives the room something human to hold.</span></div>
+                  <div class="step"><strong>03</strong><span>Structure turns the moment into a path.</span></div>
+                  <div class="step"><strong>04</strong><span>The person leaves with language, not just emotion.</span></div>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>What this lane can carry</b>
+                  <span>One voice. Several rooms.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <div class="grid four">
+                  <article class="route-card">
+                    <span>Comedy</span>
+                    <h3>Laugh first. Land truth second.</h3>
+                    <p>Humor opens the door without forcing the room to pretend it is not uncomfortable.</p>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Story</span>
+                    <h3>The lived part matters.</h3>
+                    <p>The story gives the work a face, a voice, and a reason to be believed.</p>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Seminar</span>
+                    <h3>The room needs a structure.</h3>
+                    <p>A seminar turns the message into steps: pressure, language, choice, action, and return.</p>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Keynote</span>
+                    <h3>The big room needs one clean idea.</h3>
+                    <p>The message has to be memorable enough to survive the parking lot.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>The clean talk</b>
+                  <span>Not “believe in yourself.” Something sharper.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <p class="one-line">The talk is: stop abandoning the part of you that kept you alive.</p>
+
+                <div class="grid three">
+                  <article class="card">
+                    <span>For a workplace</span>
+                    <h3>Pressure is data.</h3>
+                    <p>Teams do not only burn out from work. They burn out from unnamed pressure.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>For a public room</span>
+                    <h3>The story becomes a mirror.</h3>
+                    <p>People listen when the message sounds like something they have lived.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>For a seminar</span>
+                    <h3>The path becomes practical.</h3>
+                    <p>The room leaves with language, exercises, decisions, and next steps.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>Center lines</b>
+                  <span>The sentences that carry the lane.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <ul class="quote-list">
+                  <li>Finding your inner underdog is finding your voice.</li>
+                  <li>Pressure is not the end of the story. Sometimes it is the beginning of the map.</li>
+                  <li>The underdog is not the weak part. It is the part that refused to disappear.</li>
+                  <li>A person does not need to become someone else. They need to stop burying the part that already knows.</li>
+                  <li>The key you are looking for is usually on the other side of the imperfect storm.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>Connection to Nine Summits</b>
+                  <span>The voice points back to the climb.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <p>This Underdog is not separate from Nine Summits. It is the live voice that can bring the book, the seminar, and the larger world into a room.</p>
+
+                <div class="grid three">
+                  <article class="route-card">
+                    <span>Book path</span>
+                    <h3>The Nine Summits of Love</h3>
+                    <p>The human climb: character, structure, balance, stability, peace, joy, dignity, free will, and love.</p>
+                    <a class="button primary" href="/nine-summits-of-love/">Open book path</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Universe path</span>
+                    <h3>Nine Summits Universe</h3>
+                    <p>The world around the climb: terrain, gates, coherence, products, events, stories, and public experiences.</p>
+                    <a class="button green" href="/nine-summits/universe/">Open universe path</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Profile path</span>
+                    <h3>Meet Sean Mansfield</h3>
+                    <p>The personal profile, photo, biography, and Sean Mansfield context live on the profile page.</p>
+                    <a class="button" href="/about-this-underdog/">Meet Sean Mansfield</a>
+                  </article>
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
-
-        <div class="step">
-          <strong>02</strong>
-          <span>Story gives the room something human to hold.</span>
-        </div>
-
-        <div class="step">
-          <strong>03</strong>
-          <span>Structure turns the moment into a path.</span>
-        </div>
-
-        <div class="step">
-          <strong>04</strong>
-          <span>The person leaves with language, not just emotion.</span>
-        </div>
-      </div>
+      </details>
     </section>
 
-    <section class="panel">
-      <p class="kicker gold">What this lane can carry</p>
-      <h2>One voice. Several rooms.</h2>
-
-      <div class="grid four">
-        <article class="route-card">
-          <span>Comedy</span>
-          <h3>Laugh first. Land truth second.</h3>
-          <p>
-            Humor opens the door without forcing the room to pretend it is not uncomfortable.
-          </p>
-        </article>
-
-        <article class="route-card">
-          <span>Story</span>
-          <h3>The lived part matters.</h3>
-          <p>
-            The story gives the work a face, a voice, and a reason to be believed.
-          </p>
-        </article>
-
-        <article class="route-card">
-          <span>Seminar</span>
-          <h3>The room needs a structure.</h3>
-          <p>
-            A seminar turns the message into steps: pressure, language, choice, action, and return.
-          </p>
-        </article>
-
-        <article class="route-card">
-          <span>Keynote</span>
-          <h3>The big room needs one clean idea.</h3>
-          <p>
-            The message has to be memorable enough to survive the parking lot.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker green">The clean talk</p>
-      <h2>The talk is not “believe in yourself.” That is not enough.</h2>
-
-      <p class="one-line">
-        The talk is: stop abandoning the part of you that kept you alive.
-      </p>
-
-      <div class="grid three">
-        <article class="card">
-          <span>For a workplace</span>
-          <h3>Pressure is data.</h3>
-          <p>
-            Teams do not only burn out from work. They burn out from unnamed pressure.
-          </p>
-        </article>
-
-        <article class="card">
-          <span>For a public room</span>
-          <h3>The story becomes a mirror.</h3>
-          <p>
-            People listen when the message sounds like something they have lived.
-          </p>
-        </article>
-
-        <article class="card">
-          <span>For a seminar</span>
-          <h3>The path becomes practical.</h3>
-          <p>
-            The room leaves with language, exercises, decisions, and next steps.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker gold">Lines that carry the lane</p>
-      <h2>These are the center lines.</h2>
-
-      <div class="quote-list">
-        <div class="quote-line">Finding your inner underdog is finding your voice.</div>
-        <div class="quote-line">Pressure is not the end of the story. Sometimes it is the beginning of the map.</div>
-        <div class="quote-line">The underdog is not the weak part. It is the part that refused to disappear.</div>
-        <div class="quote-line">A person does not need to become someone else. They need to stop burying the part that already knows.</div>
-        <div class="quote-line">The key you are looking for is usually on the other side of the imperfect storm.</div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="kicker blue">Connection to Nine Summits</p>
-      <h2>The voice points back to the climb.</h2>
-
-      <p>
-        This Underdog is not separate from Nine Summits. It is the live voice that can bring the book, the seminar, and the larger world into a room.
-      </p>
-
-      <div class="grid three">
-        <article class="route-card">
-          <span>Book path</span>
-          <h3>The Nine Summits of Love</h3>
-          <p>
-            The human climb: character, structure, balance, stability, peace, joy, dignity, free will, and love.
-          </p>
-          <a class="button primary" href="/nine-summits-of-love/">Open book path</a>
-        </article>
-
-        <article class="route-card">
-          <span>Universe path</span>
-          <h3>Nine Summits Universe</h3>
-          <p>
-            The world around the climb: terrain, gates, coherence, products, events, stories, and public experiences.
-          </p>
-          <a class="button green" href="/nine-summits/universe/">Open universe path</a>
-        </article>
-
-        <article class="route-card">
-          <span>Profile path</span>
-          <h3>About This Underdog</h3>
-          <p>
-            The personal profile, photo, biography, and Sean Mansfield context live on the About page.
-          </p>
-          <a class="button" href="/about-this-underdog/">Meet Sean Mansfield</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
+    <section class="final-band">
       <p class="kicker green">Final line</p>
       <h2>The stage was not created overnight. It was noticed.</h2>
 
@@ -615,29 +750,32 @@
         <a class="button green" href="/nine-summits/">Open Nine Summits</a>
         <a class="button" href="/products/">View Products</a>
         <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button" href="/">Return to Compass</a>
+        <a class="button secondary" href="/">Return to Compass</a>
       </div>
     </section>
 
-    <section class="receipt" aria-hidden="true">
-      THIS_UNDERDOG_PUBLIC_SPEAKING_RENEWAL_TNT_v1
-      route=/this-underdog/
-      page-purpose=public-speaking-lane
-      public-language=true
-      no-direct-ted-reference=true
-      abstract-noise-reduced=true
-      speaking-theory=true
-      one-liner-forward=true
-      concrete-room-use=true
-      about-route=/about-this-underdog/
-      nine-summits-route=/nine-summits/
-      book-route=/nine-summits-of-love/
-      universe-route=/nine-summits/universe/
-      products-route=/products/
-      showroom-route=/showroom/
-      gauges-route=/gauges/
-      result=this-underdog-renewed-as-clear-speaking-page
-    </section>
+    <footer class="footer">
+      <div class="public-receipt">This Underdog · G5 Russian-doll speaking lane renewal active. Public speaking surface only. House navigation, nested disclosure structure, and readiness separation are aligned to the current site baseline.</div>
+      <section class="receipt" aria-hidden="true">
+        G5_THIS_UNDERDOG_PUBLIC_SPEAKING_RUSSIAN_DOLL_RENEWAL_TNT_v1
+        route=/this-underdog/
+        page-purpose=public-speaking-lane
+        public-language=true
+        russian-doll-bubble-structure=true
+        no-graphic-box=true
+        no-generated-visual=true
+        no-false-pass-claim=true
+        visual-pass-claim=false
+        about-route=/about-this-underdog/
+        nine-summits-route=/nine-summits/
+        book-route=/nine-summits-of-love/
+        universe-route=/nine-summits/universe/
+        products-route=/products/
+        showroom-route=/showroom/
+        gauges-route=/gauges/
+        result=this-underdog-renewed-as-g5-speaking-page
+      </section>
+    </footer>
   </main>
 </body>
 </html>

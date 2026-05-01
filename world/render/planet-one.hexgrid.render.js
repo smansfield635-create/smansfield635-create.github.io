@@ -1,22 +1,22 @@
-/* G1 PLANET 1 TERRAIN ELEVATION FIELD HEXGRID
+/* G1 PLANET 1 PUBLIC SURFACE COMPOSITOR + TERRAIN ELEVATION VISIBILITY
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1
+   VERSION: G1_PLANET_1_PUBLIC_SURFACE_COMPOSITOR_AND_TERRAIN_ELEVATION_VISIBILITY_PAIR_TNT_v1
 
    PURPOSE:
-   - Preserve the maritime sea-level datum.
-   - Preserve the 256-state lattice receipt.
-   - Move from controlled emergence into a true terrain elevation field.
-   - Prepare beach-ready zones without painting final beaches.
-   - Hold plateau, mineral, and higher relief for later layers.
-   - Keep public mode satellite-observational, not honeycomb.
+   - Preserve the 256-state hidden hexagonal terrain-cell substrate.
+   - Stop public mode from drawing visible sample dots / honeycomb.
+   - Composite hidden terrain data into a continuous satellite-observed planetary surface.
+   - Preserve maritime datum, water dominance, terrain elevation field, and beach-ready zone.
+   - Hold plateau, mineral exposure, mountains, glaciers, waterfalls, and final beaches.
+   - Keep debug mode available.
    - Do not claim visual pass.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1";
+  var VERSION = "G1_PLANET_1_PUBLIC_SURFACE_COMPOSITOR_AND_TERRAIN_ELEVATION_VISIBILITY_PAIR_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
 
@@ -32,20 +32,15 @@
     PRIOR_VERSION,
     BASELINE,
     MARITIME_BASELINE,
-    "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
-    "SEA_LEVEL_DATUM_ACTIVE",
-    "CONTROLLED_LAND_ELEVATION_ACTIVE",
-    "TERRAIN_ELEVATION_FIELD_ACTIVE",
-    "BEACH_READY_ZONE_PREPARED",
-    "ELEVATION_BANDS_ACTIVE",
-    "PLATEAU_PRESSURE_HELD",
-    "HIGHER_RELIEF_HELD",
-    "NORTH_SOUTH_EAST_WEST_NODAL_SEQUENCE_ACTIVE",
-    "NODAL_CONSTRUCT_256_ACTIVE",
-    "LATTICE_256_ARCHITECTURE_RECEIPT_ACTIVE",
-    "WATER_DOMINANCE_PRESERVED",
+    "PUBLIC_SURFACE_COMPOSITOR_ACTIVE",
+    "PUBLIC_SAMPLE_DOTS_SUPPRESSED",
     "PUBLIC_HONEYCOMB_BLOCKED",
-    "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
+    "CONTINUOUS_ORBITAL_SURFACE_TEXTURE_ACTIVE",
+    "TERRAIN_ELEVATION_VISIBILITY_ACTIVE",
+    "BEACH_READY_ZONE_PREPARED_NOT_FINAL",
+    "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
+    "WATER_DOMINANCE_PRESERVED",
+    "LATTICE_256_ARCHITECTURE_RECEIPT_ACTIVE",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
 
@@ -105,6 +100,10 @@
     return value * Math.PI / 180;
   }
 
+  function radToDeg(value) {
+    return value * 180 / Math.PI;
+  }
+
   function normalizeLon(lon) {
     var x = ((lon + 180) % 360 + 360) % 360 - 180;
     return x === -180 ? 180 : x;
@@ -121,9 +120,16 @@
 
   function noise(lon, lat, seed) {
     return (
-      hash2(Math.round(lon * 2), Math.round(lat * 2), seed) * 0.50 +
+      hash2(Math.round(lon * 2), Math.round(lat * 2), seed) * 0.48 +
       hash2(Math.round(lon / 2), Math.round(lat / 2), seed + 13) * 0.32 +
-      hash2(Math.round(lon / 6), Math.round(lat / 6), seed + 31) * 0.18
+      hash2(Math.round(lon / 7), Math.round(lat / 7), seed + 31) * 0.20
+    );
+  }
+
+  function fineNoise(lon, lat, seed) {
+    return (
+      hash2(Math.round(lon * 5), Math.round(lat * 5), seed + 101) * 0.55 +
+      hash2(Math.round(lon * 1.5), Math.round(lat * 1.5), seed + 211) * 0.45
     );
   }
 
@@ -201,10 +207,7 @@
     var absLon = Math.abs(normalizeLon(lon));
     var absLat = Math.abs(lat);
 
-    if (absLat >= absLon * 0.55) {
-      return lat >= 0 ? "NORTH" : "SOUTH";
-    }
-
+    if (absLat >= absLon * 0.55) return lat >= 0 ? "NORTH" : "SOUTH";
     return normalizeLon(lon) >= 0 ? "EAST" : "WEST";
   }
 
@@ -225,11 +228,11 @@
 
   function getLandSignature(lon, lat, seed) {
     var n = noise(lon, lat, seed);
-    var rough = (n - 0.5) * 0.22;
+    var rough = (n - 0.5) * 0.20;
 
     var bodies = [
-      { id: "primary_west_dynamic_structure", role: "dynamic_hemispheric_side_structure", lon: -78, lat: 4, rx: 64, ry: 74, weight: 1.18, wrap: 0.22, skew: -0.08 },
-      { id: "primary_east_dynamic_structure", role: "dynamic_hemispheric_side_structure", lon: 104, lat: -4, rx: 67, ry: 72, weight: 1.15, wrap: 0.20, skew: 0.07 },
+      { id: "primary_west_dynamic_structure", role: "dynamic_hemispheric_side_structure", lon: -78, lat: 4, rx: 64, ry: 74, weight: 1.20, wrap: 0.22, skew: -0.08 },
+      { id: "primary_east_dynamic_structure", role: "dynamic_hemispheric_side_structure", lon: 104, lat: -4, rx: 67, ry: 72, weight: 1.17, wrap: 0.20, skew: 0.07 },
       { id: "secondary_north_midland", role: "secondary_non_polar_body", lon: 12, lat: 34, rx: 34, ry: 28, weight: 0.92, wrap: 0.06 },
       { id: "secondary_south_midland", role: "secondary_non_polar_body", lon: -18, lat: -38, rx: 38, ry: 30, weight: 0.88, wrap: 0.05 },
       { id: "secondary_far_wrap_body", role: "secondary_non_polar_body", lon: 176, lat: 16, rx: 28, ry: 42, weight: 0.84, wrap: 0.18 }
@@ -277,9 +280,7 @@
     var materialResistance = n * 0.045;
     var value;
 
-    if (domain === DOMAIN.OCEAN_DEEP) {
-      return clamp(baseElevation, -1.0, -0.18);
-    }
+    if (domain === DOMAIN.OCEAN_DEEP) return clamp(baseElevation, -1.0, -0.18);
 
     if (domain === DOMAIN.COASTAL_SHELF) {
       value = baseElevation + lift * 0.34 + fractureLift * 0.30 + materialResistance * 0.22;
@@ -339,11 +340,7 @@
       domain = DOMAIN.OCEAN_DEEP;
     }
 
-    edgeRole = (
-      coastDelta < 0.18 ||
-      domain === DOMAIN.COASTAL_SHELF ||
-      absLat > 66
-    ) ? EDGE_ROLE.BOUNDARY : EDGE_ROLE.CORE;
+    edgeRole = (coastDelta < 0.18 || domain === DOMAIN.COASTAL_SHELF || absLat > 66) ? EDGE_ROLE.BOUNDARY : EDGE_ROLE.CORE;
 
     if (domain === DOMAIN.OCEAN_DEEP) {
       waterDepth = clamp(0.48 + Math.abs(signature.score) * 0.54 + (1 - n) * 0.18, 0.25, 1);
@@ -568,16 +565,19 @@
       seaLevelDatum: SEA_LEVEL_DATUM,
       elevationBands: ELEVATION_BANDS,
       terrainElevationFieldActive: true,
+      terrainElevationVisibilityActive: true,
+      publicSurfaceCompositorActive: true,
+      publicSampleDotsSuppressed: true,
       beachReadyZonePrepared: true,
       elevationBandsActive: true,
       plateauPressureHeld: true,
       higherReliefHeld: true,
 
       projectionModel: "planetary_lat_lon_surface_samples",
-      publicMode: "satellite_observational",
+      publicMode: "continuous_satellite_surface_compositor",
       debugMode: "cell-debug",
       landmassLaw: "2_dynamic_hemispheric_side_structures_plus_3_secondary_non_polar_bodies_plus_2_poles",
-      beautySequenceLayer: "3_terrain_elevation_field_before_coastal_shelf_refinement",
+      beautySequenceLayer: "public_surface_compositor_before_coastal_shelf_refinement",
 
       axes: { domain: true, relief: true, edgeRole: true, pressure: true, material: true },
       domainAxis: true,
@@ -603,15 +603,208 @@
     return lastGrid;
   }
 
+  function inverseOrthographic(x, y, viewLon, viewLat) {
+    var rho = Math.sqrt(x * x + y * y);
+    var c;
+    var sinC;
+    var cosC;
+    var lat0;
+    var lon0;
+    var lat;
+    var lon;
+
+    if (rho > 1) return null;
+
+    if (rho < 0.000001) {
+      return {
+        lon: normalizeLon(viewLon),
+        lat: viewLat,
+        limb: 1
+      };
+    }
+
+    c = Math.asin(rho);
+    sinC = Math.sin(c);
+    cosC = Math.cos(c);
+    lat0 = degToRad(viewLat || 0);
+    lon0 = degToRad(viewLon || 0);
+
+    lat = Math.asin(cosC * Math.sin(lat0) + (y * sinC * Math.cos(lat0)) / rho);
+    lon = lon0 + Math.atan2(
+      x * sinC,
+      rho * Math.cos(lat0) * cosC - y * Math.sin(lat0) * sinC
+    );
+
+    return {
+      lon: normalizeLon(radToDeg(lon)),
+      lat: clamp(radToDeg(lat), -90, 90),
+      limb: Math.sqrt(Math.max(0, 1 - rho * rho))
+    };
+  }
+
+  function surfaceColor(cell, lon, lat, limb) {
+    var terrain = clamp(cell.terrain_elevation || cell.elevation || 0, -1, PLATEAU_HELD_CAP);
+    var emergence = clamp(cell.emergence_pressure || 0, 0, 1);
+    var fn = fineNoise(lon, lat, 256451);
+    var beach = cell.beach_ready_zone ? 0.13 : 0;
+    var tone = clamp(
+      0.45 +
+      terrain * 0.24 +
+      emergence * 0.13 +
+      beach +
+      cell.mineral_pressure * 0.05 +
+      cell.ice_pressure * 0.12 -
+      cell.water_depth * 0.20 +
+      (fn - 0.5) * 0.08,
+      0,
+      1
+    );
+
+    var r;
+    var g;
+    var b;
+
+    if (cell.domain === DOMAIN.OCEAN_DEEP) {
+      r = 6 + tone * 18;
+      g = 28 + tone * 58;
+      b = 68 + tone * 84;
+    } else if (cell.domain === DOMAIN.COASTAL_SHELF) {
+      r = 56 + tone * 70 + emergence * 20 + beach * 78;
+      g = 96 + tone * 80 + emergence * 16 + beach * 50;
+      b = 92 + tone * 54 - emergence * 8 - beach * 28;
+    } else if (cell.domain === DOMAIN.POLAR_ICE) {
+      r = 162 + tone * 80;
+      g = 190 + tone * 58;
+      b = 210 + tone * 42;
+    } else {
+      r = 74 + tone * 88 + emergence * 26 + cell.mineral_pressure * 14;
+      g = 86 + tone * 70 + emergence * 15 + terrain * 12;
+      b = 48 + tone * 42 + cell.ridge_pressure * 10 - emergence * 7;
+    }
+
+    var light = clamp(0.52 + limb * 0.54, 0.28, 1.04);
+
+    return [
+      Math.round(clamp(r * light, 0, 255)),
+      Math.round(clamp(g * light, 0, 255)),
+      Math.round(clamp(b * light, 0, 255)),
+      255
+    ];
+  }
+
+  function drawContinuousSurface(ctx, options) {
+    var canvas = ctx.canvas;
+    var scale = clamp(Number(options.compositorScale || 0.72), 0.45, 1);
+    var offW = Math.max(180, Math.round(canvas.width * scale));
+    var offH = Math.max(180, Math.round(canvas.height * scale));
+    var off = document.createElement("canvas");
+    var offCtx;
+    var img;
+    var data;
+    var cx = offW / 2;
+    var cy = offH / 2;
+    var radius = Number(options.radius || Math.min(canvas.width, canvas.height) * 0.43) * scale;
+    var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
+    var viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
+    var seed = Number(options.seed || 256451);
+    var x;
+    var y;
+    var dx;
+    var dy;
+    var p;
+    var geo;
+    var cell;
+    var c;
+    var i;
+
+    off.width = offW;
+    off.height = offH;
+    offCtx = off.getContext("2d");
+    img = offCtx.createImageData(offW, offH);
+    data = img.data;
+
+    for (y = 0; y < offH; y += 1) {
+      for (x = 0; x < offW; x += 1) {
+        dx = (x - cx) / radius;
+        dy = (cy - y) / radius;
+        i = (y * offW + x) * 4;
+
+        if (dx * dx + dy * dy > 1) {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 0;
+          continue;
+        }
+
+        geo = inverseOrthographic(dx, dy, viewLon, viewLat);
+
+        if (!geo) {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 0;
+          continue;
+        }
+
+        cell = classifySurfaceCell(geo.lon, geo.lat, { seed: seed });
+        c = surfaceColor(cell, geo.lon, geo.lat, geo.limb);
+
+        data[i] = c[0];
+        data[i + 1] = c[1];
+        data[i + 2] = c[2];
+        data[i + 3] = c[3];
+      }
+    }
+
+    offCtx.putImageData(img, 0, 0);
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.90 : options.surfaceAlpha);
+    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    lastDraw = {
+      ok: true,
+      version: VERSION,
+      priorVersion: PRIOR_VERSION,
+      renderMode: "satellite",
+      defaultRenderMode: DEFAULT_RENDER_MODE,
+      publicSurfaceCompositorActive: true,
+      publicSampleDotsSuppressed: true,
+      continuousOrbitalSurfaceTextureActive: true,
+      terrainElevationVisibilityActive: true,
+      publicHoneycombBlocked: true,
+      satelliteObservationalModeActive: true,
+      cellDebugModeAvailable: true,
+      maritimeSeaLevelBaselineActive: true,
+      seaLevelDatum: SEA_LEVEL_DATUM,
+      controlledLandElevationActive: true,
+      terrainElevationFieldActive: true,
+      beachReadyZonePrepared: true,
+      beachReadyZoneVisibleButNotFinal: true,
+      elevationBandsActive: true,
+      plateauPressureHeld: true,
+      higherReliefHeld: true,
+      waterDominancePreserved: true,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      renderedAt: new Date().toISOString(),
+      visualPassClaimed: false
+    };
+
+    return lastDraw;
+  }
+
   function orthographicProject(lon, lat, viewLon, viewLat, cx, cy, radius) {
     var lambda = degToRad(normalizeLon(lon - viewLon));
     var phi = degToRad(lat);
     var phi0 = degToRad(viewLat || 0);
     var cosc = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * Math.cos(phi) * Math.cos(lambda);
 
-    if (cosc <= 0) {
-      return { visible: false, z: cosc, x: null, y: null, scale: 0 };
-    }
+    if (cosc <= 0) return { visible: false, z: cosc, x: null, y: null, scale: 0 };
 
     return {
       visible: true,
@@ -622,82 +815,11 @@
     };
   }
 
-  function satelliteColor(cell, limbScale) {
-    var terrain = clamp(cell.terrain_elevation || cell.elevation || 0, -1, PLATEAU_HELD_CAP);
-    var emergence = clamp(cell.emergence_pressure || 0, 0, 1);
-    var beach = cell.beach_ready_zone ? 0.12 : 0;
-    var tone = clamp(
-      0.44 +
-      terrain * 0.22 +
-      emergence * 0.14 +
-      beach +
-      cell.mineral_pressure * 0.06 +
-      cell.ice_pressure * 0.12 -
-      cell.water_depth * 0.18,
-      0,
-      1
-    );
-
-    var r;
-    var g;
-    var b;
-    var a;
-
-    if (cell.domain === DOMAIN.OCEAN_DEEP) {
-      r = 8 + tone * 16;
-      g = 28 + tone * 56;
-      b = 66 + tone * 82;
-      a = 0.34 + limbScale * 0.22;
-    } else if (cell.domain === DOMAIN.COASTAL_SHELF) {
-      r = 54 + tone * 66 + emergence * 18 + beach * 80;
-      g = 92 + tone * 78 + emergence * 12 + beach * 46;
-      b = 88 + tone * 52 - emergence * 10 - beach * 28;
-      a = 0.36 + limbScale * 0.23;
-    } else if (cell.domain === DOMAIN.POLAR_ICE) {
-      r = 168 + tone * 74;
-      g = 194 + tone * 54;
-      b = 210 + tone * 38;
-      a = 0.32 + limbScale * 0.24;
-    } else {
-      r = 72 + tone * 86 + emergence * 24 + cell.mineral_pressure * 18;
-      g = 84 + tone * 68 + emergence * 14 + terrain * 12;
-      b = 48 + tone * 42 + cell.ridge_pressure * 10 - emergence * 7;
-      a = 0.38 + limbScale * 0.26;
-    }
-
-    return "rgba(" + Math.round(clamp(r, 0, 255)) + "," + Math.round(clamp(g, 0, 255)) + "," + Math.round(clamp(b, 0, 255)) + "," + round(clamp(a, 0.18, 0.78), 3) + ")";
-  }
-
-  function drawSatelliteSample(ctx, cell, projected, radius, options) {
-    var emergence = clamp(cell.emergence_pressure || 0, 0, 1);
-    var terrain = clamp(cell.terrain_elevation || cell.elevation || 0, -1, PLATEAU_HELD_CAP);
-    var sampleRadius = Math.max(1.25, radius * (0.0072 + emergence * 0.0022 + Math.max(0, terrain) * 0.0012) * projected.scale);
-    var elongation = Math.max(0.55, projected.scale);
-    var ry = sampleRadius * (0.72 + projected.scale * 0.28);
-
-    ctx.save();
-    ctx.globalAlpha *= clamp(0.30 + projected.z * 0.58 + emergence * 0.05, 0.18, 0.88);
-    ctx.fillStyle = satelliteColor(cell, projected.scale);
-
-    ctx.beginPath();
-    ctx.ellipse(projected.x, projected.y, sampleRadius, ry * elongation, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (cell.beach_ready_zone && options.beachReadyGlow !== false) {
-      ctx.globalAlpha *= 0.36;
-      ctx.fillStyle = "rgba(236,213,150,.22)";
-      ctx.beginPath();
-      ctx.ellipse(projected.x, projected.y, sampleRadius * 1.90, ry * 1.22, 0, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (cell.nearshore_transition_flag && cell.domain !== DOMAIN.OCEAN_DEEP && options.coastGlow !== false) {
-      ctx.globalAlpha *= 0.34;
-      ctx.fillStyle = "rgba(226,207,146,.16)";
-      ctx.beginPath();
-      ctx.ellipse(projected.x, projected.y, sampleRadius * 1.58, ry * 1.12, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.restore();
+  function debugColor(cell) {
+    if (cell.domain === DOMAIN.OCEAN_DEEP) return "rgba(10,58,96,.74)";
+    if (cell.domain === DOMAIN.COASTAL_SHELF) return cell.beach_ready_zone ? "rgba(220,192,120,.76)" : "rgba(60,128,130,.70)";
+    if (cell.domain === DOMAIN.POLAR_ICE) return "rgba(218,236,248,.78)";
+    return "rgba(110,128,82,.76)";
   }
 
   function drawDebugHex(ctx, cell, projected, radius) {
@@ -720,7 +842,7 @@
     }
 
     ctx.closePath();
-    ctx.fillStyle = satelliteColor(cell, projected.scale);
+    ctx.fillStyle = debugColor(cell);
     ctx.fill();
     ctx.strokeStyle = cell.edgeRole === EDGE_ROLE.BOUNDARY ? "rgba(242,199,111,.34)" : "rgba(255,255,255,.12)";
     ctx.lineWidth = cell.edgeRole === EDGE_ROLE.BOUNDARY ? 0.8 : 0.38;
@@ -737,38 +859,13 @@
     return null;
   }
 
-  function drawPlanetOneHexGrid(target, gridOrOptions, maybeOptions) {
-    var ctx = resolveContext(target);
-    var grid;
-    var options;
-    var renderMode;
-    var cx;
-    var cy;
-    var radius;
-    var viewLon;
-    var viewLat;
+  function drawDebugSurface(ctx, grid, options) {
+    var cx = Number(options.centerX || ctx.canvas.width / 2);
+    var cy = Number(options.centerY || ctx.canvas.height / 2);
+    var radius = Number(options.radius || Math.min(ctx.canvas.width, ctx.canvas.height) * 0.43);
+    var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
+    var viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
     var visibleCount = 0;
-
-    if (!ctx) {
-      return { ok: false, reason: "NO_CANVAS_CONTEXT", version: VERSION, visualPassClaimed: false };
-    }
-
-    if (gridOrOptions && Array.isArray(gridOrOptions.cells)) {
-      grid = gridOrOptions;
-      options = maybeOptions || {};
-    } else {
-      options = gridOrOptions || {};
-      grid = createPlanetOneHexGrid(options);
-    }
-
-    renderMode = options.renderMode || DEFAULT_RENDER_MODE;
-    cx = Number(options.centerX || ctx.canvas.width / 2);
-    cy = Number(options.centerY || ctx.canvas.height / 2);
-    radius = Number(options.radius || Math.min(ctx.canvas.width, ctx.canvas.height) * 0.43);
-    viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
-    viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
-
-    ctx.save();
 
     grid.cells.forEach(function (cell) {
       var projected = orthographicProject(cell.center_lon, cell.center_lat, viewLon, viewLat, cx, cy, radius);
@@ -779,57 +876,49 @@
       cell.projected_y = projected.visible ? round(projected.y, 3) : null;
 
       if (!projected.visible) return;
-
       visibleCount += 1;
-
-      if (renderMode === "cell-debug") {
-        drawDebugHex(ctx, cell, projected, radius);
-      } else {
-        drawSatelliteSample(ctx, cell, projected, radius, options);
-      }
+      drawDebugHex(ctx, cell, projected, radius);
     });
-
-    ctx.restore();
 
     grid.visibleCellCount = visibleCount;
 
     lastDraw = {
       ok: true,
       version: VERSION,
-      priorVersion: PRIOR_VERSION,
-      renderMode: renderMode,
-      defaultRenderMode: DEFAULT_RENDER_MODE,
-      projectionModel: "orthographic_orbital_projection",
-      satelliteObservationalModeActive: renderMode === "satellite",
+      renderMode: "cell-debug",
       cellDebugModeAvailable: true,
-      publicHoneycombBlocked: renderMode === "satellite",
-
-      maritimeSeaLevelBaselineActive: true,
-      seaLevelDatum: SEA_LEVEL_DATUM,
-      controlledLandElevationActive: true,
-      terrainElevationFieldActive: true,
-      beachReadyZonePrepared: true,
-      elevationBandsActive: true,
-      plateauPressureHeld: true,
-      higherReliefHeld: true,
-
-      northSouthEastWestNodalSequenceActive: true,
-      nodalConstruct256Active: true,
-      waterDominancePreserved: true,
-
-      lattice256ArchitectureReceiptActive: true,
-      stateSpaceReceipt: true,
-      stateFormula: STATE_FORMULA,
-      stateCount: STATE_COUNT,
-      requiredStateCount: REQUIRED_STATE_COUNT,
-
+      publicHoneycombBlocked: false,
       cellCount: grid.cellCount,
       visibleCellCount: visibleCount,
-      renderedAt: new Date().toISOString(),
       visualPassClaimed: false
     };
 
     return lastDraw;
+  }
+
+  function drawPlanetOneHexGrid(target, gridOrOptions, maybeOptions) {
+    var ctx = resolveContext(target);
+    var grid;
+    var options;
+    var renderMode;
+
+    if (!ctx) return { ok: false, reason: "NO_CANVAS_CONTEXT", version: VERSION, visualPassClaimed: false };
+
+    if (gridOrOptions && Array.isArray(gridOrOptions.cells)) {
+      grid = gridOrOptions;
+      options = maybeOptions || {};
+    } else {
+      options = gridOrOptions || {};
+      grid = createPlanetOneHexGrid(options);
+    }
+
+    renderMode = options.renderMode || DEFAULT_RENDER_MODE;
+
+    if (renderMode === "cell-debug") {
+      return drawDebugSurface(ctx, grid, options);
+    }
+
+    return drawContinuousSurface(ctx, options);
   }
 
   function getLatticeReceipt() {
@@ -861,12 +950,18 @@
       waterDepthCellFieldActive: true,
       mineralPressureCellFieldActive: true,
 
+      publicSurfaceCompositorActive: true,
+      publicSampleDotsSuppressed: true,
+      continuousOrbitalSurfaceTextureActive: true,
+      terrainElevationVisibilityActive: true,
+
       maritimeSeaLevelBaselineActive: true,
       seaLevelDatum: SEA_LEVEL_DATUM,
       controlledLandElevationActive: true,
       terrainElevationFieldActive: true,
       terrainElevationFieldReceiptActive: true,
       beachReadyZonePrepared: true,
+      beachReadyZoneVisibleButNotFinal: true,
       elevationBandsActive: true,
       plateauPressureHeld: true,
       higherReliefHeld: true,
@@ -879,7 +974,7 @@
       cellDebugModeAvailable: true,
       publicHoneycombBlocked: true,
       defaultRenderMode: DEFAULT_RENDER_MODE,
-      projectionModel: "planetary_lat_lon_to_orthographic_projection",
+      projectionModel: "continuous_orbital_surface_compositor",
 
       twoDynamicHemisphericLandStructuresActive: true,
       threeSecondaryNonPolarBodiesActive: true,
@@ -946,9 +1041,7 @@
   }
 
   function createDefaultProbeGrid() {
-    if (!lastGrid) {
-      createPlanetOneHexGrid({ lonStep: 4, latStep: 4, seed: 256451 });
-    }
+    if (!lastGrid) createPlanetOneHexGrid({ lonStep: 4, latStep: 4, seed: 256451 });
     return lastGrid;
   }
 
@@ -1000,11 +1093,17 @@
     satelliteObservationalModeActive: true,
     cellDebugModeAvailable: true,
     publicHoneycombBlocked: true,
+    publicSurfaceCompositorActive: true,
+    publicSampleDotsSuppressed: true,
+    continuousOrbitalSurfaceTextureActive: true,
+
     maritimeSeaLevelBaselineActive: true,
     seaLevelDatum: SEA_LEVEL_DATUM,
     controlledLandElevationActive: true,
     terrainElevationFieldActive: true,
+    terrainElevationVisibilityActive: true,
     beachReadyZonePrepared: true,
+    beachReadyZoneVisibleButNotFinal: true,
     elevationBandsActive: true,
     plateauPressureHeld: true,
     higherReliefHeld: true,

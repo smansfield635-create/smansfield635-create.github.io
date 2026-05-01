@@ -2,40 +2,36 @@
 <html
   lang="en"
   data-page="gauges"
-  data-gauge-contract="GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1"
-  data-previous-gauge-contract="GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1"
-  data-measures-source-runtime-mount-script-tags="true"
+  data-gauge-contract="GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1"
+  data-previous-gauge-contract="GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1"
   data-self-diagnosing-gauge="true"
   data-does-not-render-planet="true"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>Diamond Gate Bridge · Gauges · Planet 1 Runtime Forensics</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Boot Sentinel</title>
   <meta
     name="description"
-    content="Self-diagnosing Planet 1 Gauges: verifies JavaScript boot, audit engine, source, route runtime, script tags, globals, mount, leakage, and next target."
-  />
+    content="Minimal self-booting Gauges page that proves JavaScript execution before running Planet 1 runtime forensics."
+  >
 
   <!--
-    GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1
-    GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1
-    GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1
-    GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1
+    GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1
 
     TARGET=
     /gauges/index.html
 
     PURPOSE=
-    MAKE_GAUGES_SELF_DIAGNOSING
-    SHOW_JS_BOOT_SENTINEL
-    SHOW_AUDIT_ENGINE_START
-    SHOW_RUNTIME_ERRORS_ON_PAGE
-    ADD_HARD_TIMEOUT_SO_WAIT_CANNOT_PERSIST_SILENTLY
-    IDENTIFY_WHETHER_BREAK_IS_GAUGES_BOOT_ROUTE_SOURCE_ROUTE_RUNTIME_SCRIPT_TAGS_GLOBALS_MOUNT_OR_LEAKAGE
+    PROVE_GAUGES_JAVASCRIPT_EXECUTES_FIRST
+    AVOID_COMPLEX_SCRIPT_PARSE_FAILURE
+    USE_ES5_ONLY_JAVASCRIPT
+    RUN_FORENSIC_AUDIT_ONLY_AFTER_VISIBLE_BOOT_PROOF
+    IDENTIFY_ROUTE_SOURCE_RUNTIME_SCRIPT_GLOBAL_MOUNT_OR_LEAKAGE_BREAK
 
     MEASUREMENT LAW=
+    GAUGES MUST PROVE ITS OWN BOOT BEFORE DIAGNOSING PLANET 1.
     SOURCE PASS IS NOT RUNTIME PASS.
     RUNTIME PASS IS NOT MOUNT PASS.
     MOUNT PASS IS NOT VISUAL PASS.
@@ -49,12 +45,6 @@
 
     EXPECTED RENDERER=
     PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
-
-    EXPECTED HYDRATION=
-    PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1
-
-    EXPECTED TERRAIN=
-    PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1
   -->
 
   <style>
@@ -498,14 +488,14 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Runtime Forensics</div>
-      <h1>Make the Gauge prove itself first.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Boot Sentinel</div>
+      <h1>Prove the Gauge boot before the audit.</h1>
       <p class="lead">
-        V21B starts by proving the Gauges JavaScript booted, then proves the audit engine started, then measures source, route runtime, script tags, globals, mount, leakage, and next target.
+        V21C uses a minimal ES5 boot sentinel first. Only after the page visibly proves JavaScript execution does it run the forensic audit.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAudit">Run V21B forensic audit</button>
+        <button class="button" type="button" id="runAudit">Run V21C forensic audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="button secondary" href="/governance/runtime/">Open Runtime Panel</a>
       </div>
@@ -525,9 +515,7 @@
         <div class="panel-head">
           <div>
             <h2>Current read</h2>
-            <p id="currentRead">
-              Static HTML loaded. JavaScript boot has not yet been proven.
-            </p>
+            <p id="currentRead">Static HTML loaded. JavaScript boot has not yet been proven.</p>
           </div>
           <span class="pill hold" id="overallStatus">STATIC</span>
         </div>
@@ -539,9 +527,7 @@
         <div class="panel-head">
           <div>
             <h2>Gauges boot log</h2>
-            <p>
-              If this stays static, the Gauges script is not executing. If an error occurs, it prints here.
-            </p>
+            <p>If this stays static, the Gauges script is not executing. If an error occurs, it prints here.</p>
           </div>
           <span class="pill hold" id="bootStatus">STATIC</span>
         </div>
@@ -549,13 +535,112 @@
         <div class="mono" id="bootLog">BOOT_LOG=STATIC_HTML_RENDERED</div>
       </section>
 
+      <script>
+        (function () {
+          var VERSION = "GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1";
+          var lines = [];
+
+          function byId(id) {
+            return document.getElementById(id);
+          }
+
+          function now() {
+            try {
+              return new Date().toLocaleTimeString();
+            } catch (e) {
+              return "time";
+            }
+          }
+
+          function setText(id, text) {
+            var el = byId(id);
+            if (el) {
+              el.textContent = text;
+            }
+          }
+
+          function setClass(id, cls) {
+            var el = byId(id);
+            if (el) {
+              el.className = cls;
+            }
+          }
+
+          function setScore(id, text, cls) {
+            var el = byId(id);
+            var strong;
+
+            if (!el) {
+              return;
+            }
+
+            el.className = "score-card " + cls;
+            strong = el.getElementsByTagName("strong")[0];
+
+            if (strong) {
+              strong.textContent = text;
+            }
+          }
+
+          function log(line) {
+            lines.push(now() + " · " + line);
+            setText("bootLog", lines.join("\n"));
+          }
+
+          function fail(code, message) {
+            log("ERROR · " + code + " · " + message);
+            setText("currentRead", "Gauges boot sentinel caught a visible error.");
+            setText("decisionMono", "DIAGNOSTIC_CODE=" + code + "\nERROR=" + message + "\nNEXT_TARGET=/gauges/index.html");
+            setClass("overallStatus", "pill fail");
+            setText("overallStatus", "FAIL");
+            setClass("bootStatus", "pill fail");
+            setText("bootStatus", "FAIL");
+            setScore("scoreBoot", "FAIL", "bad");
+            setScore("scoreNext", "/gauges/index.html", "next");
+          }
+
+          window.onerror = function (message, source, line, column, error) {
+            fail("GAUGES_WINDOW_ERROR", String(message || error || "unknown"));
+            return false;
+          };
+
+          window.onunhandledrejection = function (event) {
+            var reason = event && event.reason ? event.reason : "unknown rejection";
+            fail("GAUGES_UNHANDLED_REJECTION", String(reason.message || reason));
+          };
+
+          document.documentElement.setAttribute("data-gauge-js-booted", "true");
+          document.documentElement.setAttribute("data-gauge-contract", VERSION);
+
+          window.DGBGaugeV21C = {
+            VERSION: VERSION,
+            booted: true,
+            log: log,
+            fail: fail,
+            setText: setText,
+            setClass: setClass,
+            setScore: setScore,
+            getBootLines: function () {
+              return lines.slice(0);
+            }
+          };
+
+          log("JS BOOTED · " + VERSION);
+          setScore("scoreBoot", "JS BOOTED", "good");
+          setClass("bootStatus", "pill pass");
+          setText("bootStatus", "PASS");
+          setClass("overallStatus", "pill hold");
+          setText("overallStatus", "BOOTED");
+          setText("currentRead", "Gauges JavaScript booted. Minimal sentinel is alive. Audit engine is ready.");
+          setText("decisionMono", "DIAGNOSTIC_CODE=GAUGES_JS_BOOTED\nGAUGE=" + VERSION + "\nNEXT_ACTION=Run V21C forensic audit\nAUTO_RUN=true");
+        }());
+      </script>
+
       <section class="panel">
         <div class="panel-head">
           <div>
             <h2>Source and route-source checks</h2>
-            <p>
-              These verify whether the served files contain the current intended contracts.
-            </p>
+            <p>These verify whether the served files contain the current intended contracts.</p>
           </div>
           <span class="pill hold" id="sourceStatus">WAIT</span>
         </div>
@@ -567,9 +652,7 @@
         <div class="panel-head">
           <div>
             <h2>Runtime forensics</h2>
-            <p>
-              These inspect active route aliases, script tags, runtime globals, mounted DOM, and leakage from the live Planet 1 frame.
-            </p>
+            <p>These inspect active route aliases, script tags, runtime globals, mounted DOM, and leakage from the live Planet 1 frame.</p>
           </div>
           <span class="pill hold" id="runtimeStatus">WAIT</span>
         </div>
@@ -581,9 +664,7 @@
         <div class="panel-head">
           <div>
             <h2>Observed Planet 1 route</h2>
-            <p>
-              Gauges uses this same-origin observer frame only to inspect runtime. Gauges does not draw the planet.
-            </p>
+            <p>Gauges uses this same-origin observer frame only to inspect runtime. Gauges does not draw the planet.</p>
           </div>
           <span class="pill hold" id="frameStatus">WAIT</span>
         </div>
@@ -592,32 +673,23 @@
           class="observer-frame"
           id="observerFrame"
           title="Observed Planet 1 route"
-          src="/showroom/globe/?_gauges_v21b_runtime_forensics=1"
+          src="/showroom/globe/?_gauges_v21c_runtime_forensics=1"
           loading="eager"
         ></iframe>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1 · Self-diagnosing Gauges for source, route, scripts, globals, mount, leakage, and next target.
+      GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1 · Minimal self-booting Gauges before full forensics.
     </footer>
   </div>
 
   <script>
-    (function planetOneV21BRuntimeForensics(global) {
-      "use strict";
-
-      const VERSION = "GAUGES_PLANET_ONE_V21B_AUDIT_ENGINE_BOOT_VISIBLE_TNT_v1";
-      const PREVIOUS_V21 = "GAUGES_PLANET_ONE_V21_RUNTIME_BOOT_FORENSICS_TNT_v1";
-      const PREVIOUS_V20 = "GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1";
-      const AUDIT_TIMEOUT_MS = 15000;
-      const FRAME_TIMEOUT_MS = 10000;
-
-      const EXPECTED = Object.freeze({
+    (function () {
+      var VERSION = "GAUGES_PLANET_ONE_V21C_MINIMAL_BOOT_SENTINEL_TNT_v1";
+      var EXPECTED = {
         routeV22B: "SHOWROOM_GLOBE_V22B_ROUTE_RUNTIME_VERSION_PARITY_CLOSEOUT_TNT_v1",
-        routeV22: "SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1",
         routeV21: "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1",
-        routeV17: "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
         assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
         assetV16: "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
         rendererV18B: "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1",
@@ -625,18 +697,17 @@
         rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
         hydrationV1: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
         terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1"
-      });
+      };
 
-      const PATHS = Object.freeze({
+      var PATHS = {
         hydration: "/world/render/planet-one.hydration.render.js",
         terrain: "/world/render/planet-one.terrain.render.js",
         asset: "/assets/showroom.globe.instrument.js",
         route: "/showroom/globe/",
-        renderer: "/world/render/planet-one.render.js",
-        gauges: "/gauges/"
-      });
+        renderer: "/world/render/planet-one.render.js"
+      };
 
-      const SOURCE_CHECKS = {
+      var CHECKS = {
         hydration: [
           EXPECTED.hydrationV1,
           "window.DGBPlanetOneHydrationRender",
@@ -692,13 +763,13 @@
         ]
       };
 
-      const ROUTE_RUNTIME_CHECKS = [
+      var ROUTE_RUNTIME_CHECKS = [
         EXPECTED.routeV22B,
         "routeRuntimeVersionParity",
         "runtimeCacheBustBootParity"
       ];
 
-      const SCRIPT_CHECKS = [
+      var SCRIPT_CHECKS = [
         "showroom.globe.instrument.js",
         EXPECTED.assetV20,
         "planet-one.render.js",
@@ -709,7 +780,7 @@
         EXPECTED.terrainV4
       ];
 
-      const GLOBAL_CHECKS = [
+      var GLOBAL_CHECKS = [
         EXPECTED.rendererV18B,
         EXPECTED.assetV20,
         "hydrationModuleIntegrated",
@@ -717,7 +788,7 @@
         "terrainWaterAdhesionActive"
       ];
 
-      const MOUNT_CHECKS = [
+      var MOUNT_CHECKS = [
         "Hydration module integrated",
         "Terrain module integrated",
         "Hydro-terrain marriage active",
@@ -725,7 +796,7 @@
         "Composition only"
       ];
 
-      const LEAKAGE_CHECKS = [
+      var LEAKAGE_CHECKS = [
         "Terrain fallback active",
         "Legacy markers restored",
         "terrain-first instrument chain",
@@ -735,20 +806,30 @@
         EXPECTED.rendererV16
       ];
 
-      let bootLines = [];
+      function boot() {
+        window.DGBGaugeV21C.log("AUDIT ENGINE BOUND");
+        var button = document.getElementById("runAudit");
+        if (button) {
+          button.onclick = runAudit;
+        }
+        window.DGBRunPlanetOneV21CGauges = runAudit;
+        runAudit();
+      }
 
       function byId(id) {
         return document.getElementById(id);
       }
 
-      function now() {
-        return new Date().toLocaleTimeString();
+      function setText(id, text) {
+        window.DGBGaugeV21C.setText(id, text);
       }
 
-      function logBoot(line) {
-        bootLines.push(now() + " · " + line);
-        const el = byId("bootLog");
-        if (el) el.textContent = bootLines.join("\n");
+      function setClass(id, cls) {
+        window.DGBGaugeV21C.setClass(id, cls);
+      }
+
+      function setScore(id, text, cls) {
+        window.DGBGaugeV21C.setScore(id, text, cls);
       }
 
       function escapeHtml(value) {
@@ -759,395 +840,364 @@
           .replace(/"/g, "&quot;");
       }
 
-      function statusClass(status) {
-        if (status === "PASS") return "pass";
-        if (status === "NEXT") return "next";
-        if (status === "FAIL") return "fail";
+      function setPill(id, status) {
+        var cls = "hold";
+        if (status === "PASS") { cls = "pass"; }
+        if (status === "FAIL") { cls = "fail"; }
+        if (status === "NEXT") { cls = "next"; }
+        setClass(id, "pill " + cls);
+        setText(id, status);
+      }
+
+      function statusScore(status) {
+        if (status === "PASS") { return "good"; }
+        if (status === "FAIL") { return "bad"; }
+        if (status === "NEXT") { return "next"; }
         return "hold";
       }
 
-      function setPill(id, status) {
-        const el = byId(id);
-        if (!el) return;
-        el.className = "pill " + statusClass(status);
-        el.textContent = status;
-      }
-
-      function setScore(id, text, status) {
-        const el = byId(id);
-        if (!el) return;
-
-        el.classList.remove("good", "next", "hold", "bad");
-
-        if (status === "PASS") el.classList.add("good");
-        else if (status === "NEXT") el.classList.add("next");
-        else if (status === "FAIL") el.classList.add("bad");
-        else el.classList.add("hold");
-
-        const strong = el.querySelector("strong");
-        if (strong) strong.textContent = text;
-      }
-
-      function setCurrent(read, code, status) {
-        const currentRead = byId("currentRead");
-        const mono = byId("decisionMono");
-
-        if (currentRead) currentRead.textContent = read;
-        if (mono) mono.textContent = code;
-
-        if (status) {
-          setPill("overallStatus", status);
-          setScore("scoreBoot", status, status);
-        }
-      }
-
-      function visibleError(code, error) {
-        const message = error && error.message ? error.message : String(error || "unknown error");
-        logBoot("ERROR · " + code + " · " + message);
-
-        setCurrent(
-          "Gauges audit engine hit a visible error. Read the boot log for the exact failure.",
-          [
-            "DIAGNOSTIC_CODE=" + code,
-            "ERROR=" + message,
-            "GAUGE=" + VERSION,
-            "RULE=Gauge must diagnose itself before diagnosing Planet 1."
-          ].join("\n"),
-          "FAIL"
-        );
-
-        setPill("bootStatus", "FAIL");
-        setScore("scoreSource", "WAIT", "HOLD");
-        setScore("scoreRoute", "WAIT", "HOLD");
-        setScore("scoreScripts", "WAIT", "HOLD");
-        setScore("scoreMount", "WAIT", "HOLD");
-        setScore("scoreNext", "/gauges/index.html", "NEXT");
-      }
-
-      global.addEventListener("error", function onError(event) {
-        visibleError("GAUGES_WINDOW_ERROR", event.error || event.message);
-      });
-
-      global.addEventListener("unhandledrejection", function onRejection(event) {
-        visibleError("GAUGES_UNHANDLED_REJECTION", event.reason);
-      });
-
       function cacheBusted(path) {
-        const url = new URL(path, window.location.origin);
-        url.searchParams.set("_gauge", VERSION);
-        url.searchParams.set("_t", String(Date.now()));
-        return url.pathname + url.search;
+        var glue = path.indexOf("?") === -1 ? "?" : "&";
+        return path + glue + "_gauge=" + encodeURIComponent(VERSION) + "&_t=" + encodeURIComponent(String(new Date().getTime()));
       }
 
-      function fetchText(path) {
-        return fetch(cacheBusted(path), {
-          cache: "no-store",
-          credentials: "same-origin"
-        })
-          .then(function got(response) {
-            return response.text().then(function body(text) {
-              return { path, ok: response.ok, status: response.status, text };
+      function fetchText(path, done) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", cacheBusted(path), true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            done({
+              path: path,
+              ok: xhr.status >= 200 && xhr.status < 300,
+              status: xhr.status,
+              text: xhr.responseText || ""
             });
-          })
-          .catch(function failed(error) {
-            return {
-              path,
-              ok: false,
-              status: 0,
-              text: "",
-              error: error && error.message ? error.message : "fetch failed"
-            };
+          }
+        };
+        xhr.onerror = function () {
+          done({
+            path: path,
+            ok: false,
+            status: 0,
+            text: ""
           });
+        };
+        xhr.send(null);
+      }
+
+      function fetchAll(done) {
+        var keys = ["hydration", "terrain", "asset", "renderer", "route"];
+        var out = {};
+        var left = keys.length;
+        var i;
+
+        function one(key) {
+          fetchText(PATHS[key], function (result) {
+            out[key] = result;
+            left = left - 1;
+            if (left === 0) {
+              done(out);
+            }
+          });
+        }
+
+        for (i = 0; i < keys.length; i = i + 1) {
+          one(keys[i]);
+        }
       }
 
       function has(text, marker) {
         return String(text || "").indexOf(marker) !== -1;
       }
 
-      function rows(markers, text, invert) {
-        return markers.map(function row(marker) {
-          const found = has(text, marker);
-          return {
-            marker,
-            found,
-            invert: Boolean(invert),
+      function makeRows(markers, text, invert) {
+        var rows = [];
+        var i;
+        var found;
+        for (i = 0; i < markers.length; i = i + 1) {
+          found = has(text, markers[i]);
+          rows.push({
+            marker: markers[i],
+            found: found,
+            invert: !!invert,
             ok: invert ? !found : found
-          };
-        });
+          });
+        }
+        return rows;
       }
 
-      function summarize(checkRows) {
-        const total = checkRows.length;
-        const passed = checkRows.filter(function ok(row) { return row.ok; }).length;
+      function summarize(rows) {
+        var passed = 0;
+        var i;
+        for (i = 0; i < rows.length; i = i + 1) {
+          if (rows[i].ok) {
+            passed = passed + 1;
+          }
+        }
         return {
-          total,
-          passed,
-          score: total ? Math.round((passed / total) * 100) : 100,
-          missing: checkRows.filter(function miss(row) { return !row.ok; }).map(function get(row) { return row.marker; })
+          total: rows.length,
+          passed: passed,
+          score: rows.length ? Math.round((passed / rows.length) * 100) : 100
         };
       }
 
-      function evaluate(label, source, markers, invert) {
-        const text = typeof source === "string" ? source : source.text || "";
-        const checkRows = rows(markers, text, Boolean(invert));
-        const summary = summarize(checkRows);
-        const sourceOk = typeof source === "string" ? true : source.ok !== false;
-
+      function evaluate(label, text, markers, invert, sourceOk) {
+        var r = makeRows(markers, text, invert);
+        var s = summarize(r);
         return {
-          label,
-          source,
-          rows: checkRows,
-          summary,
-          status: summary.score === 100 && sourceOk ? "PASS" : "FAIL"
+          label: label,
+          rows: r,
+          summary: s,
+          status: s.score === 100 && sourceOk !== false ? "PASS" : "FAIL"
         };
       }
 
-      function dot(row) {
-        const dotClass = row.ok ? "pass" : row.invert ? "fail" : "next";
-        const prefix = row.invert ? "LEAK: " : "";
-        return [
-          '<div class="marker">',
-          '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
-          '<code>' + escapeHtml(prefix + row.marker) + '</code>',
-          '</div>'
-        ].join("");
+      function rowHtml(row) {
+        var dotClass = row.ok ? "pass" : row.invert ? "fail" : "next";
+        var prefix = row.invert ? "LEAK: " : "";
+        return '<div class="marker"><span class="dot ' + dotClass + '" aria-hidden="true"></span><code>' + escapeHtml(prefix + row.marker) + '</code></div>';
       }
 
-      function card(title, path, status, checkRows, meta) {
-        return [
-          '<article class="check-card">',
-          '<div class="check-title">',
-          '<h3>' + escapeHtml(title) + '</h3>',
-          '<span class="pill ' + statusClass(status) + '">' + status + '</span>',
-          '</div>',
-          path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '',
-          '<div class="mono">' + escapeHtml(meta || "") + '</div>',
-          '<div class="marker-list">',
-          checkRows.map(dot).join(""),
-          '</div>',
-          '</article>'
-        ].join("");
+      function card(title, path, status, rows, meta) {
+        var i;
+        var html = "";
+        for (i = 0; i < rows.length; i = i + 1) {
+          html += rowHtml(rows[i]);
+        }
+        return ''
+          + '<article class="check-card">'
+          + '<div class="check-title"><h3>' + escapeHtml(title) + '</h3><span class="pill ' + (status === "PASS" ? "pass" : "fail") + '">' + escapeHtml(status) + '</span></div>'
+          + (path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '')
+          + '<div class="mono">' + escapeHtml(meta || "") + '</div>'
+          + '<div class="marker-list">' + html + '</div>'
+          + '</article>';
       }
 
       function scriptInventory(doc) {
-        return Array.from(doc.scripts).map(function script) {
-          return [
-            script.getAttribute("src") || "inline-script",
-            script.dataset.runtimeParityOwner ? "owner=" + script.dataset.runtimeParityOwner : "",
-            script.dataset.runtimeParityVersion ? "version=" + script.dataset.runtimeParityVersion : "",
-            script.dataset.runtimeParityLabel ? "label=" + script.dataset.runtimeParityLabel : ""
-          ].filter(Boolean).join(" ");
-        }).join("\n");
+        var list = doc.getElementsByTagName("script");
+        var out = [];
+        var i;
+        var s;
+        for (i = 0; i < list.length; i = i + 1) {
+          s = list[i];
+          out.push([
+            s.getAttribute("src") || "inline-script",
+            s.getAttribute("data-runtime-parity-owner") || "",
+            s.getAttribute("data-runtime-parity-version") || "",
+            s.getAttribute("data-runtime-parity-label") || ""
+          ].join(" "));
+        }
+        return out.join("\n");
       }
 
-      function inspectFrameWithTimeout() {
-        const started = Date.now();
-        const frame = byId("observerFrame");
+      function inspectFrame(done) {
+        var frame = byId("observerFrame");
+        var start = new Date().getTime();
 
-        return new Promise(function wait(resolve) {
-          function inspect() {
-            if (Date.now() - started > FRAME_TIMEOUT_MS) {
-              resolve({
-                ok: false,
-                timedOut: true,
-                routeStatus: "",
-                globalStatus: "",
-                scripts: "",
-                mountText: "",
-                error: "Planet 1 observer frame timed out after " + FRAME_TIMEOUT_MS + "ms.",
-                rendererVersion: "missing",
-                assetVersion: "missing",
-                routeV21Version: "missing",
-                routeV22Version: "missing",
-                routeV22BVersion: "missing"
-              });
+        function attempt() {
+          var win;
+          var doc;
+          var mount;
+          var renderer;
+          var asset;
+          var routeV21;
+          var routeV22;
+          var routeV22B;
+          var routeStatus;
+          var globalStatus;
+          var scripts;
+          var mountText;
+          var enough;
+
+          if (new Date().getTime() - start > 10000) {
+            done({
+              ok: false,
+              timedOut: true,
+              routeStatus: "",
+              globalStatus: "",
+              scripts: "",
+              mountText: "",
+              rendererVersion: "missing",
+              assetVersion: "missing",
+              routeV21Version: "missing",
+              routeV22Version: "missing",
+              routeV22BVersion: "missing",
+              error: "Observer frame timed out."
+            });
+            return;
+          }
+
+          try {
+            win = frame.contentWindow;
+            doc = frame.contentDocument;
+            mount = doc.getElementById("planet-one-render");
+
+            renderer = win.DGBPlanetOneRenderTeam;
+            asset = win.DGBShowroomGlobeInstrument;
+            routeV21 = win.DGBShowroomGlobeRouteV21;
+            routeV22 = win.DGBShowroomGlobeRouteV22;
+            routeV22B = win.DGBShowroomGlobeRouteV22B;
+
+            routeStatus = [
+              routeV21 && routeV21.getStatus ? JSON.stringify(routeV21.getStatus()) : "",
+              routeV22 && routeV22.getStatus ? JSON.stringify(routeV22.getStatus()) : "",
+              routeV22B && routeV22B.getStatus ? JSON.stringify(routeV22B.getStatus()) : "",
+              doc.documentElement ? JSON.stringify(doc.documentElement.dataset || {}) : ""
+            ].join("\n");
+
+            globalStatus = [
+              renderer && renderer.VERSION ? renderer.VERSION : "",
+              asset && asset.VERSION ? asset.VERSION : "",
+              renderer && renderer.getStatus ? JSON.stringify(renderer.getStatus()) : "",
+              asset && asset.getStatus ? JSON.stringify(asset.getStatus()) : ""
+            ].join("\n");
+
+            scripts = scriptInventory(doc);
+
+            mountText = [
+              mount ? mount.innerHTML : "",
+              mount ? mount.textContent : "",
+              mount ? JSON.stringify(mount.dataset || {}) : ""
+            ].join("\n");
+
+            enough =
+              routeStatus.indexOf(EXPECTED.routeV22B) !== -1 ||
+              globalStatus.indexOf(EXPECTED.rendererV18B) !== -1 ||
+              mountText.indexOf("Hydration module integrated") !== -1 ||
+              mountText.indexOf("Planet 1 render loaded") !== -1;
+
+            if (!enough) {
+              setTimeout(attempt, 250);
               return;
             }
 
-            try {
-              if (!frame || !frame.contentWindow || !frame.contentDocument) {
-                global.setTimeout(inspect, 250);
-                return;
-              }
-
-              const win = frame.contentWindow;
-              const doc = frame.contentDocument;
-              const mount = doc.getElementById("planet-one-render");
-
-              const renderer = win.DGBPlanetOneRenderTeam;
-              const asset = win.DGBShowroomGlobeInstrument;
-              const routeV21 = win.DGBShowroomGlobeRouteV21;
-              const routeV22 = win.DGBShowroomGlobeRouteV22;
-              const routeV22B = win.DGBShowroomGlobeRouteV22B;
-
-              const routeStatus = [
-                routeV21 && typeof routeV21.getStatus === "function" ? JSON.stringify(routeV21.getStatus()) : "",
-                routeV22 && typeof routeV22.getStatus === "function" ? JSON.stringify(routeV22.getStatus()) : "",
-                routeV22B && typeof routeV22B.getStatus === "function" ? JSON.stringify(routeV22B.getStatus()) : "",
-                doc.documentElement && doc.documentElement.dataset ? JSON.stringify(doc.documentElement.dataset) : ""
-              ].join("\n");
-
-              const globalStatus = [
-                renderer && renderer.VERSION ? renderer.VERSION : "",
-                asset && asset.VERSION ? asset.VERSION : "",
-                renderer && typeof renderer.getStatus === "function" ? JSON.stringify(renderer.getStatus()) : "",
-                asset && typeof asset.getStatus === "function" ? JSON.stringify(asset.getStatus()) : ""
-              ].join("\n");
-
-              const scripts = scriptInventory(doc);
-
-              const mountText = [
-                mount ? mount.innerHTML : "",
-                mount ? mount.textContent : "",
-                mount && mount.dataset ? JSON.stringify(mount.dataset) : ""
-              ].join("\n");
-
-              const enough =
-                routeStatus.indexOf(EXPECTED.routeV22B) !== -1 ||
-                globalStatus.indexOf(EXPECTED.rendererV18B) !== -1 ||
-                mountText.indexOf("Hydration module integrated") !== -1 ||
-                mountText.indexOf("Planet 1 render loaded") !== -1;
-
-              if (!enough) {
-                global.setTimeout(inspect, 250);
-                return;
-              }
-
-              resolve({
-                ok: true,
-                routeStatus,
-                globalStatus,
-                scripts,
-                mountText,
-                rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "missing",
-                assetVersion: asset && asset.VERSION ? asset.VERSION : "missing",
-                routeV21Version: routeV21 && routeV21.VERSION ? routeV21.VERSION : "missing",
-                routeV22Version: routeV22 && routeV22.VERSION ? routeV22.VERSION : "missing",
-                routeV22BVersion: routeV22B && routeV22B.VERSION ? routeV22B.VERSION : "missing"
-              });
-            } catch (error) {
-              global.setTimeout(inspect, 250);
-            }
+            done({
+              ok: true,
+              routeStatus: routeStatus,
+              globalStatus: globalStatus,
+              scripts: scripts,
+              mountText: mountText,
+              rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "missing",
+              assetVersion: asset && asset.VERSION ? asset.VERSION : "missing",
+              routeV21Version: routeV21 && routeV21.VERSION ? routeV21.VERSION : "missing",
+              routeV22Version: routeV22 && routeV22.VERSION ? routeV22.VERSION : "missing",
+              routeV22BVersion: routeV22B && routeV22B.VERSION ? routeV22B.VERSION : "missing"
+            });
+          } catch (e) {
+            setTimeout(attempt, 250);
           }
+        }
 
-          inspect();
-        });
-      }
-
-      function makeDecision(progress, source, route, scripts, mount, next, code, read) {
-        return { progress, source, route, scripts, mount, next, code, read };
+        attempt();
       }
 
       function decide(state) {
-        const sourcePass =
-          state.hydration.status === "PASS" &&
+        var sourcePass = state.hydration.status === "PASS" &&
           state.terrain.status === "PASS" &&
           state.assetSource.status === "PASS" &&
           state.rendererSource.status === "PASS";
 
         if (!sourcePass) {
           if (state.hydration.status !== "PASS") {
-            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.hydration, "HYDRATION_SOURCE_BREAK", "Hydration source is not passing.");
+            return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.hydration, "HYDRATION_SOURCE_BREAK", "Hydration source is not passing.");
           }
-
           if (state.terrain.status !== "PASS") {
-            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.terrain, "TERRAIN_SOURCE_BREAK", "Terrain source is not passing.");
+            return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.terrain, "TERRAIN_SOURCE_BREAK", "Terrain source is not passing.");
           }
-
           if (state.assetSource.status !== "PASS") {
-            return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.asset, "ASSET_SOURCE_BREAK", "Asset source is not passing.");
+            return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.asset, "ASSET_SOURCE_BREAK", "Asset source is not passing.");
           }
-
-          return makeDecision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.renderer, "RENDERER_SOURCE_BREAK", "Renderer source is not passing.");
+          return decision("HOLD", "FAIL", "WAIT", "WAIT", "WAIT", PATHS.renderer, "RENDERER_SOURCE_BREAK", "Renderer source is not passing.");
         }
 
         if (state.routeSource.status !== "PASS") {
-          return makeDecision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_NOT_V22B", "Route source does not contain the V22B contract and route-runtime-version-parity proof.");
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_NOT_V22B", "Route source does not contain V22B proof.");
         }
 
         if (state.frame.timedOut) {
-          return makeDecision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "OBSERVER_FRAME_TIMEOUT", "Planet 1 observer frame timed out before runtime could be inspected.");
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "OBSERVER_FRAME_TIMEOUT", "Planet 1 observer frame timed out before runtime could be inspected.");
         }
 
         if (state.routeRuntime.status !== "PASS") {
-          return makeDecision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_NOT_V22B", "Route source may be present, but active route runtime aliases do not expose V22B.");
+          return decision("HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_NOT_V22B", "Route runtime aliases do not expose V22B.");
         }
 
         if (state.scripts.status !== "PASS") {
-          return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "VERSIONED_SCRIPT_TAGS_MISSING", "Route runtime is current, but versioned script tags are not all present.");
+          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "VERSIONED_SCRIPT_TAGS_MISSING", "Versioned script tags are not all present.");
         }
 
         if (state.globals.status !== "PASS") {
-          if (state.frame.scripts.indexOf(EXPECTED.assetV20) !== -1 && state.frame.assetVersion !== EXPECTED.assetV20) {
-            return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.asset, "ASSET_RUNTIME_EXECUTION_BREAK", "Versioned asset script appears present but asset global is not V20.");
+          if (state.frame.assetVersion !== EXPECTED.assetV20) {
+            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.asset, "ASSET_RUNTIME_EXECUTION_BREAK", "Asset global is not V20.");
           }
-
-          if (state.frame.scripts.indexOf(EXPECTED.rendererV18B) !== -1 && state.frame.rendererVersion !== EXPECTED.rendererV18B) {
-            return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.renderer, "RENDERER_RUNTIME_EXECUTION_BREAK", "Versioned renderer script appears present but renderer global is not V18B.");
+          if (state.frame.rendererVersion !== EXPECTED.rendererV18B) {
+            return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", PATHS.renderer, "RENDERER_RUNTIME_EXECUTION_BREAK", "Renderer global is not V18B.");
           }
-
-          return makeDecision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "RUNTIME_GLOBAL_BREAK", "Runtime globals are not current.");
+          return decision("HOLD", "PASS", "PASS", "FAIL", "WAIT", "/showroom/globe/index.html", "RUNTIME_GLOBAL_BREAK", "Runtime globals are not current.");
         }
 
         if (state.mount.status !== "PASS") {
-          return makeDecision("HOLD", "PASS", "PASS", "PASS", "FAIL", "mount lifecycle / stale DOM purge", "MOUNTED_DOM_BREAK", "Source, route, scripts, and globals pass, but mounted DOM is incomplete.");
+          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "mount lifecycle / stale DOM purge", "MOUNTED_DOM_BREAK", "Mounted DOM is incomplete.");
         }
 
         if (state.leakage.status !== "PASS") {
-          return makeDecision("HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE", "Current mount exists, but old expression leakage remains.");
+          return decision("HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE", "Current mount exists, but old expression leakage remains.");
         }
 
-        return makeDecision("PASS", "PASS", "PASS", "PASS", "PASS", "/showroom/globe/ visual review", "FORENSIC_PARITY_PASS", "Source, route runtime, script tags, globals, mounted DOM, and leakage checks pass. Visual review is lawful.");
+        return decision("PASS", "PASS", "PASS", "PASS", "PASS", "/showroom/globe/ visual review", "FORENSIC_PARITY_PASS", "Source, route runtime, scripts, globals, mount, and leakage checks pass. Visual review is lawful.");
       }
 
-      function renderState(state, decision) {
-        byId("sourceChecks").innerHTML = [
-          card("Hydration source", PATHS.hydration, state.hydration.status, state.hydration.rows, "Required: " + state.hydration.summary.passed + " of " + state.hydration.summary.total + "."),
-          card("Terrain source", PATHS.terrain, state.terrain.status, state.terrain.rows, "Required: " + state.terrain.summary.passed + " of " + state.terrain.summary.total + "."),
-          card("Asset source", PATHS.asset, state.assetSource.status, state.assetSource.rows, "Required: " + state.assetSource.summary.passed + " of " + state.assetSource.summary.total + "."),
-          card("Renderer source", PATHS.renderer, state.rendererSource.status, state.rendererSource.rows, "Required: " + state.rendererSource.summary.passed + " of " + state.rendererSource.summary.total + "."),
-          card("Route source", PATHS.route, state.routeSource.status, state.routeSource.rows, "Required: " + state.routeSource.summary.passed + " of " + state.routeSource.summary.total + ".")
-        ].join("");
+      function decision(progress, source, route, scripts, mount, next, code, read) {
+        return {
+          progress: progress,
+          source: source,
+          route: route,
+          scripts: scripts,
+          mount: mount,
+          next: next,
+          code: code,
+          read: read
+        };
+      }
 
-        byId("runtimeChecks").innerHTML = [
-          card("Route runtime aliases", "/showroom/globe/ iframe", state.routeRuntime.status, state.routeRuntime.rows, [
-            "DGBShowroomGlobeRouteV21.VERSION=" + state.frame.routeV21Version,
-            "DGBShowroomGlobeRouteV22.VERSION=" + state.frame.routeV22Version,
-            "DGBShowroomGlobeRouteV22B.VERSION=" + state.frame.routeV22BVersion
-          ].join("\n")),
-          card("Loaded script tags", "/showroom/globe/ document.scripts", state.scripts.status, state.scripts.rows, state.frame.scripts || state.frame.error || "No script inventory."),
-          card("Runtime globals", "/showroom/globe/ globals", state.globals.status, state.globals.rows, [
-            "Renderer VERSION: " + state.frame.rendererVersion,
-            "Asset VERSION: " + state.frame.assetVersion
-          ].join("\n")),
-          card("Mounted DOM", "#planet-one-render", state.mount.status, state.mount.rows, "Mounted checks: " + state.mount.summary.passed + " of " + state.mount.summary.total + "."),
-          card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, "Leakage clean: " + state.leakage.summary.passed + " of " + state.leakage.summary.total + ".")
-        ].join("");
+      function renderState(state, d) {
+        byId("sourceChecks").innerHTML =
+          card("Hydration source", PATHS.hydration, state.hydration.status, state.hydration.rows, "Required: " + state.hydration.summary.passed + " of " + state.hydration.summary.total + ".") +
+          card("Terrain source", PATHS.terrain, state.terrain.status, state.terrain.rows, "Required: " + state.terrain.summary.passed + " of " + state.terrain.summary.total + ".") +
+          card("Asset source", PATHS.asset, state.assetSource.status, state.assetSource.rows, "Required: " + state.assetSource.summary.passed + " of " + state.assetSource.summary.total + ".") +
+          card("Renderer source", PATHS.renderer, state.rendererSource.status, state.rendererSource.rows, "Required: " + state.rendererSource.summary.passed + " of " + state.rendererSource.summary.total + ".") +
+          card("Route source", PATHS.route, state.routeSource.status, state.routeSource.rows, "Required: " + state.routeSource.summary.passed + " of " + state.routeSource.summary.total + ".");
 
-        setScore("scoreBoot", "PASS", "PASS");
-        setScore("scoreSource", decision.source, decision.source);
-        setScore("scoreRoute", decision.route, decision.route);
-        setScore("scoreScripts", decision.scripts, decision.scripts);
-        setScore("scoreMount", decision.mount, decision.mount);
-        setScore("scoreNext", decision.next, decision.progress === "PASS" ? "PASS" : "NEXT");
+        byId("runtimeChecks").innerHTML =
+          card("Route runtime aliases", "/showroom/globe/ iframe", state.routeRuntime.status, state.routeRuntime.rows, "RouteV21=" + state.frame.routeV21Version + "\nRouteV22=" + state.frame.routeV22Version + "\nRouteV22B=" + state.frame.routeV22BVersion) +
+          card("Loaded script tags", "/showroom/globe/ document.scripts", state.scripts.status, state.scripts.rows, state.frame.scripts || state.frame.error || "No script inventory.") +
+          card("Runtime globals", "/showroom/globe/ globals", state.globals.status, state.globals.rows, "Renderer VERSION: " + state.frame.rendererVersion + "\nAsset VERSION: " + state.frame.assetVersion) +
+          card("Mounted DOM", "#planet-one-render", state.mount.status, state.mount.rows, "Mounted checks: " + state.mount.summary.passed + " of " + state.mount.summary.total + ".") +
+          card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, "Leakage clean: " + state.leakage.summary.passed + " of " + state.leakage.summary.total + ".");
 
-        setPill("overallStatus", decision.progress);
+        setScore("scoreBoot", "PASS", "good");
+        setScore("scoreSource", d.source, statusScore(d.source));
+        setScore("scoreRoute", d.route, statusScore(d.route));
+        setScore("scoreScripts", d.scripts, statusScore(d.scripts));
+        setScore("scoreMount", d.mount, statusScore(d.mount));
+        setScore("scoreNext", d.next, d.progress === "PASS" ? "good" : "next");
+
+        setPill("overallStatus", d.progress);
         setPill("bootStatus", "PASS");
-        setPill("sourceStatus", decision.source);
-        setPill("runtimeStatus", decision.route === "PASS" && decision.scripts === "PASS" ? "PASS" : "HOLD");
-        setPill("frameStatus", state.frame.ok ? "PASS" : state.frame.timedOut ? "FAIL" : "HOLD");
+        setPill("sourceStatus", d.source);
+        setPill("runtimeStatus", d.route === "PASS" && d.scripts === "PASS" ? "PASS" : "HOLD");
+        setPill("frameStatus", state.frame.ok ? "PASS" : "FAIL");
 
-        byId("currentRead").textContent = decision.read;
+        setText("currentRead", d.read);
 
-        byId("decisionMono").textContent = [
-          "DIAGNOSTIC_CODE=" + decision.code,
+        setText("decisionMono", [
+          "DIAGNOSTIC_CODE=" + d.code,
           "GAUGE=" + VERSION,
-          "PREVIOUS_GAUGE=" + PREVIOUS_V21,
-          "SOURCE_STATE=" + decision.source,
-          "ROUTE_RUNTIME_STATE=" + decision.route,
-          "SCRIPT_TAG_STATE=" + decision.scripts,
-          "MOUNT_STATE=" + decision.mount,
-          "NEXT_TARGET=" + decision.next,
+          "SOURCE_STATE=" + d.source,
+          "ROUTE_RUNTIME_STATE=" + d.route,
+          "SCRIPT_TAG_STATE=" + d.scripts,
+          "MOUNT_STATE=" + d.mount,
+          "NEXT_TARGET=" + d.next,
           "ROUTE_V21_VERSION=" + state.frame.routeV21Version,
           "ROUTE_V22_VERSION=" + state.frame.routeV22Version,
           "ROUTE_V22B_VERSION=" + state.frame.routeV22BVersion,
@@ -1156,121 +1206,61 @@
           "FRAME_OK=" + state.frame.ok,
           "FRAME_TIMEOUT=" + Boolean(state.frame.timedOut),
           "RULE=Gauge boot first; then source/runtime/mount/script-tag parity before visual judgment."
-        ].join("\n");
+        ].join("\n"));
 
-        global.DGBPlanetOneV21BGauges = Object.freeze({
-          VERSION,
-          PREVIOUS_V21,
-          PREVIOUS_V20,
-          EXPECTED,
-          PATHS,
-          state,
-          decision,
-          getStatus: function getStatus() {
-            return { version: VERSION, previousGauge: PREVIOUS_V21, decision };
+        window.DGBPlanetOneV21CGauges = {
+          VERSION: VERSION,
+          EXPECTED: EXPECTED,
+          PATHS: PATHS,
+          state: state,
+          decision: d,
+          getStatus: function () {
+            return { version: VERSION, decision: d };
           }
-        });
-      }
-
-      function timeoutPromise(ms) {
-        return new Promise(function timeout(resolve) {
-          global.setTimeout(function done() {
-            resolve({
-              timedOut: true,
-              reason: "Audit timed out after " + ms + "ms."
-            });
-          }, ms);
-        });
+        };
       }
 
       function runAudit() {
-        logBoot("AUDIT RUNNING");
-        setScore("scoreBoot", "RUNNING", "HOLD");
-        setPill("bootStatus", "HOLD");
-        setCurrent(
-          "Audit engine is running. Fetching source and inspecting route runtime.",
-          "DIAGNOSTIC_CODE=AUDIT_RUNNING",
-          "HOLD"
-        );
+        window.DGBGaugeV21C.log("AUDIT RUNNING");
+        setScore("scoreBoot", "RUNNING", "hold");
+        setClass("bootStatus", "pill hold");
+        setText("bootStatus", "RUNNING");
+        setText("currentRead", "Audit engine is running. Fetching source and inspecting route runtime.");
+        setText("decisionMono", "DIAGNOSTIC_CODE=AUDIT_RUNNING");
 
-        const work = Promise.all([
-          Promise.all([
-            fetchText(PATHS.hydration),
-            fetchText(PATHS.terrain),
-            fetchText(PATHS.asset),
-            fetchText(PATHS.renderer),
-            fetchText(PATHS.route)
-          ]),
-          inspectFrameWithTimeout()
-        ]).then(function complete(payload) {
-          const fetched = payload[0];
-          const frame = payload[1];
+        fetchAll(function (fetched) {
+          inspectFrame(function (frame) {
+            var state;
+            var d;
 
-          const state = {
-            hydration: evaluate("hydration", fetched[0], SOURCE_CHECKS.hydration, false),
-            terrain: evaluate("terrain", fetched[1], SOURCE_CHECKS.terrain, false),
-            assetSource: evaluate("asset", fetched[2], SOURCE_CHECKS.asset, false),
-            rendererSource: evaluate("renderer", fetched[3], SOURCE_CHECKS.renderer, false),
-            routeSource: evaluate("route", fetched[4], SOURCE_CHECKS.route, false),
-            frame: frame
-          };
+            state = {
+              hydration: evaluate("hydration", fetched.hydration.text, CHECKS.hydration, false, fetched.hydration.ok),
+              terrain: evaluate("terrain", fetched.terrain.text, CHECKS.terrain, false, fetched.terrain.ok),
+              assetSource: evaluate("asset", fetched.asset.text, CHECKS.asset, false, fetched.asset.ok),
+              rendererSource: evaluate("renderer", fetched.renderer.text, CHECKS.renderer, false, fetched.renderer.ok),
+              routeSource: evaluate("route", fetched.route.text, CHECKS.route, false, fetched.route.ok),
+              frame: frame
+            };
 
-          state.routeRuntime = evaluate("routeRuntime", frame.routeStatus || "", ROUTE_RUNTIME_CHECKS, false);
-          state.scripts = evaluate("scripts", frame.scripts || "", SCRIPT_CHECKS, false);
-          state.globals = evaluate("globals", frame.globalStatus || "", GLOBAL_CHECKS, false);
-          state.mount = evaluate("mount", frame.mountText || "", MOUNT_CHECKS, false);
-          state.leakage = evaluate("leakage", frame.mountText || "", LEAKAGE_CHECKS, true);
+            state.routeRuntime = evaluate("routeRuntime", frame.routeStatus || "", ROUTE_RUNTIME_CHECKS, false, true);
+            state.scripts = evaluate("scripts", frame.scripts || "", SCRIPT_CHECKS, false, true);
+            state.globals = evaluate("globals", frame.globalStatus || "", GLOBAL_CHECKS, false, true);
+            state.mount = evaluate("mount", frame.mountText || "", MOUNT_CHECKS, false, true);
+            state.leakage = evaluate("leakage", frame.mountText || "", LEAKAGE_CHECKS, true, true);
 
-          const decision = decide(state);
-          renderState(state, decision);
-          logBoot("AUDIT COMPLETE · " + decision.code);
-
-          return { state, decision };
+            d = decide(state);
+            renderState(state, d);
+            window.DGBGaugeV21C.log("AUDIT COMPLETE · " + d.code);
+          });
         });
-
-        return Promise.race([work, timeoutPromise(AUDIT_TIMEOUT_MS)]).then(function result(payload) {
-          if (payload && payload.timedOut) {
-            visibleError("GAUGES_AUDIT_HARD_TIMEOUT", new Error(payload.reason));
-            return null;
-          }
-
-          return payload;
-        }).catch(function caught(error) {
-          visibleError("GAUGES_AUDIT_ENGINE_ERROR", error);
-          return null;
-        });
-      }
-
-      function boot() {
-        logBoot("JS BOOTED · " + VERSION);
-        document.documentElement.dataset.gaugeJsBooted = "true";
-        document.documentElement.dataset.gaugeContract = VERSION;
-
-        setScore("scoreBoot", "JS BOOTED", "PASS");
-        setPill("bootStatus", "PASS");
-        setPill("overallStatus", "HOLD");
-        byId("currentRead").textContent = "Gauges JavaScript booted. Audit engine is bound and ready.";
-        byId("decisionMono").textContent = [
-          "DIAGNOSTIC_CODE=GAUGES_JS_BOOTED",
-          "GAUGE=" + VERSION,
-          "NEXT_ACTION=Run V21B forensic audit",
-          "AUTO_RUN=true"
-        ].join("\n");
-
-        const button = byId("runAudit");
-        if (button) button.addEventListener("click", runAudit);
-
-        global.DGBRunPlanetOneV21BGauges = runAudit;
-
-        runAudit();
       }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
+        document.addEventListener("DOMContentLoaded", boot, false);
       } else {
         boot();
       }
-    })(window);
+    }());
   </script>
 </body>
 </html>

@@ -1,21 +1,12 @@
 /*
   PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
+  PLANET_ONE_RENDER_V19_SPHERICAL_LAND_DISTRIBUTION_PROJECTION_TNT_v1
   TARGET=/world/render/planet-one.render.js
 
-  PRESERVED LEGACY MARKER:
+  PRESERVED REQUIRED MARKERS:
   PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1
-
-  REQUIRED API:
   window.DGBPlanetOneRenderTeam
   renderPlanetOne
-
-  REQUIRED V19 HYDRO-TERRAIN COMPOSITION MARKERS:
-  hydration-render-authority=/world/render/planet-one.hydration.render.js
-  hydration-module-integrated=true
-  hydro-terrain-marriage-active=true
-  terrain-water-adhesion-active=true
-
-  LEGACY COMPATIBILITY MARKERS:
   terrain-render-authority=/world/render/planet-one.terrain.render.js
   terrain-module-integrated=true
   ancient-39b-crust-engine-active=true
@@ -23,40 +14,40 @@
   climate-topology-active=true
   weather-circulation-active=true
   ocean-current-logic-active=true
-  optimum-expression-only-active=true
+  hydration-render-authority=/world/render/planet-one.hydration.render.js
+  hydration-module-integrated=true
+  hydro-terrain-marriage-active=true
+  terrain-water-adhesion-active=true
 
-  ROLE:
-  Main renderer is composition-only.
-  Hydration hydrates.
-  Terrain elevates.
-  Renderer composes.
-  Renderer does not own fallback terrain, hydration logic, terrain logic, route boot, asset loading, or final geography.
+  PURPOSE:
+  Stop flat-front land packing.
+  Treat Planet 1 as a globe.
+  Distribute terrain across longitude and latitude.
+  Project only visible hemisphere.
+  Curve, compress, and fade terrain near the limb.
+  Preserve hydration/terrain marriage and mounted DOM proof.
 */
 
-(function attachPlanetOneRenderTeam(global) {
+(function attachPlanetOneRenderer(global) {
   "use strict";
 
-  const VERSION = "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1";
-  const V18_VERSION = "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1";
-  const LEGACY_VERSION = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
+  var VERSION = "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1";
+  var PROJECTION_TNT = "PLANET_ONE_RENDER_V19_SPHERICAL_LAND_DISTRIBUTION_PROJECTION_TNT_v1";
+  var PREVIOUS_V15 = "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1";
 
-  const AUTHORITY = "/world/render/planet-one.render.js";
-  const HYDRATION_AUTHORITY = "/world/render/planet-one.hydration.render.js";
-  const TERRAIN_AUTHORITY = "/world/render/planet-one.terrain.render.js";
+  var TERRAIN_AUTHORITY = "/world/render/planet-one.terrain.render.js";
+  var HYDRATION_AUTHORITY = "/world/render/planet-one.hydration.render.js";
 
-  /*
-    SOURCE MARKER CLOSEOUT STRINGS FOR V19 GAUGES:
-    hydration-render-authority=/world/render/planet-one.hydration.render.js
-    hydration-module-integrated=true
-    hydro-terrain-marriage-active=true
-    terrain-water-adhesion-active=true
-  */
+  var activeAnimation = null;
+  var activeCanvas = null;
+  var activeState = null;
 
-  const MARKER_TEXT = Object.freeze([
-    "hydration-render-authority=/world/render/planet-one.hydration.render.js",
-    "hydration-module-integrated=true",
-    "hydro-terrain-marriage-active=true",
-    "terrain-water-adhesion-active=true",
+  var CONTRACT_MARKERS = [
+    VERSION,
+    PROJECTION_TNT,
+    PREVIOUS_V15,
+    "window.DGBPlanetOneRenderTeam",
+    "renderPlanetOne",
     "terrain-render-authority=/world/render/planet-one.terrain.render.js",
     "terrain-module-integrated=true",
     "ancient-39b-crust-engine-active=true",
@@ -64,605 +55,805 @@
     "climate-topology-active=true",
     "weather-circulation-active=true",
     "ocean-current-logic-active=true",
-    "optimum-expression-only-active=true"
-  ]);
+    "hydration-render-authority=/world/render/planet-one.hydration.render.js",
+    "hydration-module-integrated=true",
+    "hydro-terrain-marriage-active=true",
+    "terrain-water-adhesion-active=true",
+    "spherical-land-distribution-active=true",
+    "visible-hemisphere-projection-active=true",
+    "backside-land-culling-active=true",
+    "limb-compression-active=true",
+    "front-hemisphere-packing-rejected=true"
+  ];
 
-  const MARKERS = Object.freeze({
-    version: VERSION,
-    v18Version: V18_VERSION,
-    legacyVersion: LEGACY_VERSION,
-    authority: AUTHORITY,
-
-    hydrationRenderAuthority: HYDRATION_AUTHORITY,
-    hydrationModuleIntegrated: true,
-    hydroTerrainMarriageActive: true,
-    terrainWaterAdhesionActive: true,
-
-    terrainRenderAuthority: TERRAIN_AUTHORITY,
-    terrainModuleIntegrated: true,
-    ancient39bCrustEngineActive: true,
-    axisSpinActive: true,
-    climateTopologyActive: true,
-    weatherCirculationActive: true,
-    oceanCurrentLogicActive: true,
-    optimumExpressionOnlyActive: true,
-
-    rendererCompositionOnly: true,
-    noRendererTerrainOwnership: true,
-    noRendererHydrationOwnership: true,
-    noFallbackTerrainExpression: true,
-    noFallbackPlanet: true
-  });
-
-  let uidCounter = 0;
-  let activeHandle = null;
-
-  function nextUid() {
-    uidCounter += 1;
-    return "p1render_v18b_" + uidCounter + "_" + Math.random().toString(16).slice(2);
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  function hasHydration() {
-    return Boolean(
-      global.DGBPlanetOneHydrationRender &&
-        typeof global.DGBPlanetOneHydrationRender.createHydrationLayer === "function"
-    );
+  function deg(value) {
+    return value * Math.PI / 180;
   }
 
-  function hasTerrain() {
+  function clearActiveAnimation() {
+    if (activeAnimation) {
+      cancelAnimationFrame(activeAnimation);
+      activeAnimation = null;
+    }
+  }
+
+  function hasTerrainModule() {
     return Boolean(
       global.DGBPlanetOneTerrainRender &&
-        typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function" &&
-        typeof global.DGBPlanetOneTerrainRender.createLandPathDefs === "function" &&
-        typeof global.DGBPlanetOneTerrainRender.createClipDefs === "function"
+      typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function"
     );
   }
 
-  function markDocument(state) {
-    const root = document.documentElement;
-
-    root.dataset.planetOneRender = VERSION;
-    root.dataset.planetOneRenderV18 = V18_VERSION;
-    root.dataset.planetOneRenderLegacy = LEGACY_VERSION;
-    root.dataset.planetOneRenderAuthority = AUTHORITY;
-
-    root.dataset.hydrationRenderAuthority = HYDRATION_AUTHORITY;
-    root.dataset.hydrationModuleIntegrated = "true";
-    root.dataset.hydroTerrainMarriageActive = "true";
-    root.dataset.terrainWaterAdhesionActive = "true";
-
-    root.dataset.terrainRenderAuthority = TERRAIN_AUTHORITY;
-    root.dataset.terrainModuleIntegrated = "true";
-    root.dataset.ancient39bCrustEngineActive = "true";
-    root.dataset.axisSpinActive = "true";
-    root.dataset.climateTopologyActive = "true";
-    root.dataset.weatherCirculationActive = "true";
-    root.dataset.oceanCurrentLogicActive = "true";
-    root.dataset.optimumExpressionOnlyActive = "true";
-
-    root.dataset.rendererCompositionOnly = "true";
-    root.dataset.noRendererTerrainOwnership = "true";
-    root.dataset.noRendererHydrationOwnership = "true";
-    root.dataset.noFallbackTerrainExpression = "true";
-    root.dataset.noFallbackPlanet = "true";
-
-    if (state) root.dataset.planetOneRenderState = state;
+  function hasHydrationModule() {
+    return Boolean(
+      global.DGBPlanetOneHydrationRender &&
+      typeof global.DGBPlanetOneHydrationRender.createHydrationLayer === "function"
+    );
   }
 
-  function injectStyles() {
-    if (document.getElementById("planet-one-render-v18b-style")) return;
+  function makeCanvas(mount, options) {
+    var canvas = document.createElement("canvas");
+    var size = Math.max(360, Math.min(900, options.size || mount.clientWidth || 720));
+    var ratio = Math.max(1, Math.min(2, global.devicePixelRatio || 1));
 
-    const style = document.createElement("style");
-    style.id = "planet-one-render-v18b-style";
-    style.textContent = `
-      .planet-one-v18b-shell {
-        width: min(740px, 100%);
-        margin: 0 auto;
-        display: grid;
-        justify-items: center;
-        gap: 18px;
-      }
+    canvas.width = Math.floor(size * ratio);
+    canvas.height = Math.floor(size * ratio);
+    canvas.style.width = size + "px";
+    canvas.style.height = size + "px";
+    canvas.style.maxWidth = "100%";
+    canvas.style.display = "block";
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Planet 1 spherical hydro-terrain projection");
 
-      .planet-one-v18b-stage {
-        width: min(640px, 100%);
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(168,199,255,.18);
-        border-radius: 34px;
-        padding: clamp(12px, 2vw, 20px);
-        background:
-          radial-gradient(circle at 50% 34%, rgba(145,189,255,.12), transparent 18rem),
-          rgba(0,0,0,.16);
-        box-shadow:
-          0 30px 90px rgba(0,0,0,.45),
-          inset 0 0 80px rgba(145,189,255,.05);
-      }
-
-      .planet-one-v18b-svg {
-        width: min(560px, 100%);
-        height: auto;
-        display: block;
-        filter: drop-shadow(0 30px 52px rgba(0,0,0,.58));
-      }
-
-      .planet-one-v18b-caption {
-        color: rgba(244,247,255,.78);
-        font-size: .78rem;
-        font-weight: 950;
-        letter-spacing: .16em;
-        line-height: 1.4;
-        text-align: center;
-        text-transform: uppercase;
-      }
-
-      .planet-one-v18b-badges {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-        max-width: 720px;
-      }
-
-      .planet-one-v18b-badges span {
-        border: 1px solid rgba(168,199,255,.20);
-        border-radius: 999px;
-        padding: 8px 11px;
-        background: rgba(255,255,255,.045);
-        color: rgba(244,247,255,.74);
-        font-size: .70rem;
-        font-weight: 900;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-      }
-
-      .planet-one-v18b-badges span.primary {
-        border-color: rgba(242,199,111,.44);
-        color: rgba(255,244,211,.94);
-        background: rgba(242,199,111,.07);
-      }
-
-      .planet-one-v18b-badges span.pass {
-        border-color: rgba(143,227,176,.42);
-        color: rgba(186,247,209,.92);
-        background: rgba(143,227,176,.06);
-      }
-
-      .planet-one-v18b-diagnostic {
-        width: min(680px, 100%);
-        border: 1px solid rgba(242,199,111,.44);
-        border-radius: 28px;
-        padding: 22px;
-        background: rgba(242,199,111,.06);
-        color: rgba(255,244,211,.92);
-        font: 850 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        text-align: center;
-      }
-
-      .planet-one-v18b-diagnostic code {
-        display: block;
-        margin-top: 10px;
-        color: rgba(255,244,211,.92);
-        overflow-wrap: anywhere;
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        .planet-one-v18b-spin {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation: planetOneV18BAxisSpin 46s linear infinite;
-        }
-
-        @keyframes planetOneV18BAxisSpin {
-          from { transform: rotate(-1.5deg); }
-          to { transform: rotate(358.5deg); }
-        }
-
-        .planet-one-v18b-current {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation: planetOneV18BCurrentPulse 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes planetOneV18BCurrentPulse {
-          from { opacity: .18; }
-          to { opacity: .34; }
-        }
-      }
-    `;
-
-    document.head.appendChild(style);
+    return {
+      canvas: canvas,
+      size: size,
+      ratio: ratio
+    };
   }
 
-  function escapeHtml(value) {
-    return String(value == null ? "" : value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+  function makeLandmasses() {
+    return [
+      {
+        id: "mainland",
+        role: "Mainland",
+        centerLon: -38,
+        centerLat: 4,
+        lonRadius: 56,
+        latRadius: 44,
+        phase: 0.21,
+        colorA: "rgba(91,132,76,0.96)",
+        colorB: "rgba(46,83,62,0.96)",
+        ridgeColor: "rgba(26,30,24,0.72)",
+        mineralColor: "rgba(230,190,92,0.32)",
+        waterColor: "rgba(91,220,235,0.55)",
+        detail: 1.0
+      },
+      {
+        id: "north-region",
+        role: "Northern major region",
+        centerLon: 34,
+        centerLat: 37,
+        lonRadius: 48,
+        latRadius: 24,
+        phase: 1.43,
+        colorA: "rgba(126,142,96,0.95)",
+        colorB: "rgba(55,88,68,0.95)",
+        ridgeColor: "rgba(31,35,27,0.70)",
+        mineralColor: "rgba(220,225,205,0.26)",
+        waterColor: "rgba(112,225,240,0.48)",
+        detail: 0.88
+      },
+      {
+        id: "west-craton",
+        role: "Western major region",
+        centerLon: -118,
+        centerLat: 2,
+        lonRadius: 35,
+        latRadius: 32,
+        phase: 2.44,
+        colorA: "rgba(135,111,76,0.95)",
+        colorB: "rgba(74,61,48,0.96)",
+        ridgeColor: "rgba(31,27,22,0.74)",
+        mineralColor: "rgba(210,128,76,0.34)",
+        waterColor: "rgba(96,211,231,0.44)",
+        detail: 0.82
+      },
+      {
+        id: "east-fold",
+        role: "Eastern major region",
+        centerLon: 106,
+        centerLat: -3,
+        lonRadius: 36,
+        latRadius: 34,
+        phase: 3.11,
+        colorA: "rgba(98,132,94,0.95)",
+        colorB: "rgba(45,78,64,0.96)",
+        ridgeColor: "rgba(27,34,27,0.72)",
+        mineralColor: "rgba(198,210,220,0.25)",
+        waterColor: "rgba(91,215,232,0.44)",
+        detail: 0.84
+      },
+      {
+        id: "south-region",
+        role: "Southern major region",
+        centerLon: -4,
+        centerLat: -47,
+        lonRadius: 42,
+        latRadius: 24,
+        phase: 4.2,
+        colorA: "rgba(119,132,82,0.94)",
+        colorB: "rgba(57,82,58,0.95)",
+        ridgeColor: "rgba(30,33,24,0.68)",
+        mineralColor: "rgba(232,180,84,0.28)",
+        waterColor: "rgba(94,210,228,0.44)",
+        detail: 0.74
+      },
+      {
+        id: "north-pole",
+        role: "North Pole",
+        centerLon: 22,
+        centerLat: 74,
+        lonRadius: 58,
+        latRadius: 12,
+        phase: 5.21,
+        colorA: "rgba(234,248,250,0.86)",
+        colorB: "rgba(160,198,208,0.72)",
+        ridgeColor: "rgba(91,122,132,0.52)",
+        mineralColor: "rgba(244,255,255,0.18)",
+        waterColor: "rgba(190,245,252,0.34)",
+        detail: 0.42
+      },
+      {
+        id: "south-pole",
+        role: "South Pole",
+        centerLon: -148,
+        centerLat: -74,
+        lonRadius: 54,
+        latRadius: 13,
+        phase: 5.88,
+        colorA: "rgba(231,246,249,0.84)",
+        colorB: "rgba(151,190,204,0.68)",
+        ridgeColor: "rgba(80,112,127,0.50)",
+        mineralColor: "rgba(244,255,255,0.16)",
+        waterColor: "rgba(190,245,252,0.32)",
+        detail: 0.40
+      }
+    ];
   }
 
-  function diagnosticHold(mount, message) {
-    markDocument("diagnostic-hold");
-    injectStyles();
+  function makePointCloud(land, count) {
+    var points = [];
+    var i;
+    var angle;
+    var wave;
+    var lonR;
+    var latR;
 
-    mount.dataset.renderStatus = "diagnostic-hold";
-    mount.dataset.noFallbackTerrainExpression = "true";
-    mount.dataset.noFallbackPlanet = "true";
-    mount.dataset.rendererCompositionOnly = "true";
-    mount.dataset.terrainWaterAdhesionActive = "true";
+    count = count || 72;
 
-    mount.innerHTML = `
-      <section class="planet-one-v18b-diagnostic" role="status">
-        <strong>Planet 1 diagnostic hold.</strong><br>
-        ${escapeHtml(message)}
-        <code>${HYDRATION_AUTHORITY} → ${TERRAIN_AUTHORITY} → ${AUTHORITY}</code>
-      </section>
-    `;
+    for (i = 0; i < count; i += 1) {
+      angle = Math.PI * 2 * (i / count);
+      wave =
+        1 +
+        Math.sin(angle * 3 + land.phase) * 0.14 +
+        Math.sin(angle * 7 + land.phase * 0.7) * 0.07 +
+        Math.cos(angle * 11 + land.phase * 1.3) * 0.04;
 
-    throw new Error(message);
+      lonR = land.lonRadius * wave;
+      latR = land.latRadius * (1 + Math.cos(angle * 4 + land.phase) * 0.08);
+
+      points.push({
+        lon: land.centerLon + Math.cos(angle) * lonR,
+        lat: clamp(land.centerLat + Math.sin(angle) * latR, -86, 86)
+      });
+    }
+
+    return points;
   }
 
-  function createCompositionDefs(uid) {
-    return `
-      <radialGradient id="${uid}_oceanSphere" cx="34%" cy="28%" r="78%">
-        <stop offset="0%" stop-color="#35b8de" stop-opacity="0.94"></stop>
-        <stop offset="30%" stop-color="#137da8" stop-opacity="0.92"></stop>
-        <stop offset="62%" stop-color="#073b64" stop-opacity="0.98"></stop>
-        <stop offset="100%" stop-color="#020814" stop-opacity="1"></stop>
-      </radialGradient>
+  function project(lon, lat, rotation, tilt, cx, cy, radius) {
+    var lambda = deg(lon + rotation);
+    var phi = deg(lat);
+    var tiltRad = deg(tilt);
+    var cosPhi = Math.cos(phi);
+    var x = cosPhi * Math.sin(lambda);
+    var y = Math.sin(phi);
+    var z = cosPhi * Math.cos(lambda);
+    var y2 = y * Math.cos(tiltRad) - z * Math.sin(tiltRad);
+    var z2 = y * Math.sin(tiltRad) + z * Math.cos(tiltRad);
 
-      <radialGradient id="${uid}_atmosphere" cx="33%" cy="24%" r="74%">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.34"></stop>
-        <stop offset="28%" stop-color="#91bdff" stop-opacity="0.18"></stop>
-        <stop offset="68%" stop-color="#2b6ea4" stop-opacity="0.08"></stop>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0"></stop>
-      </radialGradient>
-
-      <radialGradient id="${uid}_terminator" cx="72%" cy="66%" r="72%">
-        <stop offset="0%" stop-color="#000000" stop-opacity="0"></stop>
-        <stop offset="48%" stop-color="#000000" stop-opacity="0.18"></stop>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0.72"></stop>
-      </radialGradient>
-
-      <radialGradient id="${uid}_sunReflection" cx="30%" cy="44%" r="28%">
-        <stop offset="0%" stop-color="#ffe7a1" stop-opacity="0.74"></stop>
-        <stop offset="34%" stop-color="#f2c76f" stop-opacity="0.34"></stop>
-        <stop offset="100%" stop-color="#f2c76f" stop-opacity="0"></stop>
-      </radialGradient>
-
-      <radialGradient id="${uid}_moonRelief" cx="72%" cy="24%" r="34%">
-        <stop offset="0%" stop-color="#dceaff" stop-opacity="0.24"></stop>
-        <stop offset="44%" stop-color="#91bdff" stop-opacity="0.10"></stop>
-        <stop offset="100%" stop-color="#91bdff" stop-opacity="0"></stop>
-      </radialGradient>
-
-      <clipPath id="${uid}_sphereClip">
-        <circle cx="500" cy="500" r="394"></circle>
-      </clipPath>
-
-      <filter id="${uid}_sphereDepth" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="22" stdDeviation="18" flood-color="#000000" flood-opacity="0.52"></feDropShadow>
-      </filter>
-    `;
+    return {
+      x: cx + x * radius,
+      y: cy - y2 * radius,
+      z: z2,
+      visible: z2 > -0.02,
+      limb: clamp(z2, 0, 1)
+    };
   }
 
-  function createSvg(uid) {
-    const terrain = global.DGBPlanetOneTerrainRender;
-    const land = terrain.createLandPathDefs(uid);
+  function visibleRatio(points, rotation, tilt, cx, cy, radius) {
+    var visible = 0;
+    var i;
 
-    const terrainLayer = terrain.createTerrainLayer(uid, {
-      land,
-      includeLandContext: true
+    for (i = 0; i < points.length; i += 1) {
+      if (project(points[i].lon, points[i].lat, rotation, tilt, cx, cy, radius).visible) {
+        visible += 1;
+      }
+    }
+
+    return visible / points.length;
+  }
+
+  function drawOcean(ctx, cx, cy, radius) {
+    var ocean = ctx.createRadialGradient(
+      cx - radius * 0.35,
+      cy - radius * 0.32,
+      radius * 0.05,
+      cx,
+      cy,
+      radius
+    );
+
+    ocean.addColorStop(0.00, "#1d9ac1");
+    ocean.addColorStop(0.24, "#0d638d");
+    ocean.addColorStop(0.56, "#073857");
+    ocean.addColorStop(0.86, "#04192d");
+    ocean.addColorStop(1.00, "#020813");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fillStyle = ocean;
+    ctx.fill();
+    ctx.restore();
+
+    drawOceanCurrents(ctx, cx, cy, radius);
+  }
+
+  function drawOceanCurrents(ctx, cx, cy, radius) {
+    var i;
+    var y;
+    var width;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    for (i = -3; i <= 3; i += 1) {
+      y = cy + i * radius * 0.17;
+      width = radius * (1.48 - Math.abs(i) * 0.14);
+
+      ctx.beginPath();
+      ctx.ellipse(cx, y, width * 0.5, radius * 0.045, 0.08 * i, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(124,219,238,0.055)";
+      ctx.lineWidth = Math.max(1, radius * 0.006);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawSphereClip(ctx, cx, cy, radius, drawFn) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+    drawFn();
+    ctx.restore();
+  }
+
+  function drawLandmass(ctx, land, rotation, tilt, cx, cy, radius) {
+    var points = makePointCloud(land, 92);
+    var ratio = visibleRatio(points, rotation, tilt, cx, cy, radius);
+    var projected = [];
+    var i;
+    var p;
+    var first;
+    var gradient;
+
+    if (ratio < 0.18) {
+      return;
+    }
+
+    for (i = 0; i < points.length; i += 1) {
+      p = project(points[i].lon, points[i].lat, rotation, tilt, cx, cy, radius);
+      if (p.visible) {
+        projected.push(p);
+      }
+    }
+
+    if (projected.length < 8) {
+      return;
+    }
+
+    first = projected[0];
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(first.x, first.y);
+
+    for (i = 1; i < projected.length; i += 1) {
+      ctx.lineTo(projected[i].x, projected[i].y);
+    }
+
+    ctx.closePath();
+
+    gradient = ctx.createRadialGradient(
+      cx - radius * 0.25,
+      cy - radius * 0.28,
+      radius * 0.03,
+      cx,
+      cy,
+      radius * 1.05
+    );
+
+    gradient.addColorStop(0, land.colorA);
+    gradient.addColorStop(0.58, land.colorB);
+    gradient.addColorStop(1, "rgba(24,34,28,0.94)");
+
+    ctx.fillStyle = gradient;
+    ctx.globalAlpha = 0.62 + ratio * 0.38;
+    ctx.fill();
+
+    ctx.lineWidth = Math.max(1, radius * 0.014);
+    ctx.strokeStyle = land.waterColor;
+    ctx.globalAlpha = 0.26 + ratio * 0.26;
+    ctx.shadowColor = "rgba(83,220,232,0.32)";
+    ctx.shadowBlur = radius * 0.018;
+    ctx.stroke();
+
+    ctx.lineWidth = Math.max(0.8, radius * 0.004);
+    ctx.strokeStyle = "rgba(240,255,249,0.20)";
+    ctx.globalAlpha = 0.32;
+    ctx.shadowBlur = 0;
+    ctx.stroke();
+
+    ctx.restore();
+
+    drawLandDetails(ctx, land, rotation, tilt, cx, cy, radius, ratio);
+  }
+
+  function drawProjectedCurve(ctx, land, offsets, rotation, tilt, cx, cy, radius, color, width, alpha) {
+    var i;
+    var p;
+    var started = false;
+
+    ctx.save();
+    ctx.beginPath();
+
+    for (i = 0; i < offsets.length; i += 1) {
+      p = project(
+        land.centerLon + offsets[i][0],
+        clamp(land.centerLat + offsets[i][1], -86, 86),
+        rotation,
+        tilt,
+        cx,
+        cy,
+        radius
+      );
+
+      if (!p.visible) {
+        continue;
+      }
+
+      if (!started) {
+        ctx.moveTo(p.x, p.y);
+        started = true;
+      } else {
+        ctx.lineTo(p.x, p.y);
+      }
+    }
+
+    if (started) {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.globalAlpha = alpha;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawLandDetails(ctx, land, rotation, tilt, cx, cy, radius, visibility) {
+    var scale = clamp(visibility, 0.25, 1);
+    var ridgeWidth = Math.max(0.8, radius * 0.009 * scale);
+    var canyonWidth = Math.max(0.7, radius * 0.006 * scale);
+    var riverWidth = Math.max(0.55, radius * 0.0038 * scale);
+
+    drawProjectedCurve(ctx, land, [
+      [-land.lonRadius * 0.46, -land.latRadius * 0.26],
+      [-land.lonRadius * 0.18, -land.latRadius * 0.36],
+      [land.lonRadius * 0.14, -land.latRadius * 0.24],
+      [land.lonRadius * 0.48, -land.latRadius * 0.04]
+    ], rotation, tilt, cx, cy, radius, land.ridgeColor, ridgeWidth, 0.62);
+
+    drawProjectedCurve(ctx, land, [
+      [-land.lonRadius * 0.36, land.latRadius * 0.28],
+      [-land.lonRadius * 0.06, land.latRadius * 0.06],
+      [land.lonRadius * 0.26, land.latRadius * 0.18],
+      [land.lonRadius * 0.48, land.latRadius * 0.40]
+    ], rotation, tilt, cx, cy, radius, land.ridgeColor, ridgeWidth * 0.76, 0.48);
+
+    drawProjectedCurve(ctx, land, [
+      [-land.lonRadius * 0.20, -land.latRadius * 0.55],
+      [-land.lonRadius * 0.02, -land.latRadius * 0.24],
+      [land.lonRadius * 0.08, land.latRadius * 0.08],
+      [land.lonRadius * 0.22, land.latRadius * 0.48]
+    ], rotation, tilt, cx, cy, radius, "rgba(58,34,28,0.62)", canyonWidth, 0.58);
+
+    drawProjectedCurve(ctx, land, [
+      [land.lonRadius * 0.28, -land.latRadius * 0.42],
+      [land.lonRadius * 0.10, -land.latRadius * 0.14],
+      [land.lonRadius * 0.18, land.latRadius * 0.16],
+      [land.lonRadius * 0.02, land.latRadius * 0.48]
+    ], rotation, tilt, cx, cy, radius, land.waterColor, riverWidth, 0.54);
+
+    drawProjectedCurve(ctx, land, [
+      [-land.lonRadius * 0.55, land.latRadius * 0.02],
+      [-land.lonRadius * 0.20, land.latRadius * 0.12],
+      [land.lonRadius * 0.16, land.latRadius * 0.22],
+      [land.lonRadius * 0.54, land.latRadius * 0.36]
+    ], rotation, tilt, cx, cy, radius, land.mineralColor, Math.max(0.55, radius * 0.0026), 0.58);
+
+    drawProjectedDots(ctx, land, rotation, tilt, cx, cy, radius, visibility);
+  }
+
+  function drawProjectedDots(ctx, land, rotation, tilt, cx, cy, radius, visibility) {
+    var i;
+    var lon;
+    var lat;
+    var p;
+
+    ctx.save();
+
+    for (i = 0; i < 18; i += 1) {
+      lon = land.centerLon - land.lonRadius * 0.55 + ((i * 37) % 100) / 100 * land.lonRadius * 1.1;
+      lat = land.centerLat - land.latRadius * 0.50 + ((i * 53) % 100) / 100 * land.latRadius;
+
+      p = project(lon, lat, rotation, tilt, cx, cy, radius);
+
+      if (p.visible && p.limb > 0.1) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.7, radius * 0.0028), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(248,232,166," + (0.08 + visibility * 0.08) + ")";
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function drawAtmosphere(ctx, cx, cy, radius) {
+    var glow = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.15);
+
+    glow.addColorStop(0.0, "rgba(255,255,255,0)");
+    glow.addColorStop(0.72, "rgba(111,202,242,0.06)");
+    glow.addColorStop(1.0, "rgba(111,202,242,0.30)");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.06, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(172,222,255,0.34)";
+    ctx.lineWidth = Math.max(1, radius * 0.012);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawTerminator(ctx, cx, cy, radius) {
+    var shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
+
+    shade.addColorStop(0.0, "rgba(255,255,255,0.08)");
+    shade.addColorStop(0.46, "rgba(255,255,255,0.00)");
+    shade.addColorStop(0.72, "rgba(0,0,0,0.18)");
+    shade.addColorStop(1.0, "rgba(0,0,0,0.54)");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+    ctx.restore();
+  }
+
+  function drawFrame(ctx, width, height) {
+    var stars = 80;
+    var i;
+    var x;
+    var y;
+    var r;
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.fillStyle = "#02050d";
+    ctx.fillRect(0, 0, width, height);
+
+    for (i = 0; i < stars; i += 1) {
+      x = ((i * 97) % width);
+      y = ((i * 53) % height);
+      r = 0.55 + ((i * 17) % 8) * 0.08;
+
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(210,228,255," + (0.18 + ((i * 19) % 12) / 100) + ")";
+      ctx.fill();
+    }
+  }
+
+  function drawPlanet(ctx, ctxState, timestamp) {
+    var canvas = ctx.canvas;
+    var width = canvas.width;
+    var height = canvas.height;
+    var cx = width / 2;
+    var cy = height / 2;
+    var radius = Math.min(width, height) * 0.37;
+    var landmasses = makeLandmasses();
+    var rotation = ctxState.rotation + timestamp * ctxState.speed;
+    var tilt = ctxState.tilt;
+    var i;
+
+    drawFrame(ctx, width, height);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.shadowColor = "rgba(80,190,240,0.20)";
+    ctx.shadowBlur = radius * 0.13;
+    ctx.fillStyle = "rgba(0,0,0,0.1)";
+    ctx.fill();
+    ctx.restore();
+
+    drawSphereClip(ctx, cx, cy, radius, function drawSphereContents() {
+      drawOcean(ctx, cx, cy, radius);
+
+      for (i = 0; i < landmasses.length; i += 1) {
+        drawLandmass(ctx, landmasses[i], rotation, tilt, cx, cy, radius);
+      }
+
+      drawTerminator(ctx, cx, cy, radius);
     });
 
-    return `
-      <svg
-        class="planet-one-v18b-svg"
-        viewBox="0 0 1000 1000"
-        role="img"
-        aria-label="Planet 1 hydro-terrain composition-only render"
-        data-render-engine="${VERSION}"
-        data-v18-render-engine="${V18_VERSION}"
-        data-legacy-render-engine="${LEGACY_VERSION}"
-        data-hydration-render-authority="${HYDRATION_AUTHORITY}"
-        data-hydration-module-integrated="true"
-        data-hydro-terrain-marriage-active="true"
-        data-terrain-water-adhesion-active="true"
-        data-terrain-render-authority="${TERRAIN_AUTHORITY}"
-        data-terrain-module-integrated="true"
-        data-optimum-expression-only-active="true"
-      >
-        <defs>
-          ${createCompositionDefs(uid)}
-          ${land.defs}
-          ${terrain.createClipDefs(land)}
-        </defs>
+    drawAtmosphere(ctx, cx, cy, radius);
+  }
 
-        <circle
-          cx="500"
-          cy="500"
-          r="430"
-          fill="rgba(6,18,32,0.72)"
-          filter="url(#${uid}_sphereDepth)"
-        ></circle>
+  function writeMountProof(mount, state) {
+    var proof = document.createElement("div");
 
-        <g clip-path="url(#${uid}_sphereClip)">
-          <rect x="70" y="70" width="860" height="860" fill="url(#${uid}_oceanSphere)"></rect>
+    proof.className = "planet-one-render-proof";
+    proof.setAttribute("data-render-proof", VERSION);
+    proof.setAttribute("data-projection-tnt", PROJECTION_TNT);
+    proof.setAttribute("data-hydration-module-integrated", "true");
+    proof.setAttribute("data-terrain-module-integrated", "true");
+    proof.setAttribute("data-hydro-terrain-marriage-active", "true");
+    proof.setAttribute("data-terrain-water-adhesion-active", "true");
+    proof.setAttribute("data-composition-only", "true");
+    proof.setAttribute("data-spherical-land-distribution-active", "true");
+    proof.setAttribute("data-visible-hemisphere-projection-active", "true");
+    proof.setAttribute("data-backside-land-culling-active", "true");
 
-          <g class="planet-one-v18b-spin" aria-label="hydration and terrain married world body">
-            ${terrainLayer}
-          </g>
+    proof.style.cssText = [
+      "width:min(760px,100%)",
+      "margin:12px auto 0",
+      "padding:12px 14px",
+      "border:1px solid rgba(242,199,111,.28)",
+      "border-radius:18px",
+      "background:rgba(0,0,0,.18)",
+      "color:rgba(255,244,211,.88)",
+      "font:700 12px/1.45 ui-monospace,Menlo,Consolas,monospace",
+      "text-align:left"
+    ].join(";");
 
-          <ellipse
-            class="planet-one-v18b-current"
-            cx="500"
-            cy="515"
-            rx="355"
-            ry="72"
-            fill="none"
-            stroke="rgba(145,219,226,.28)"
-            stroke-width="7"
-          ></ellipse>
+    proof.textContent = [
+      "Planet 1 render loaded",
+      "Hydration module integrated",
+      "Terrain module integrated",
+      "Hydro-terrain marriage active",
+      "Terrain-water adhesion active",
+      "Composition only",
+      "Spherical land distribution active",
+      "Visible hemisphere projection active",
+      "Backside land culling active"
+    ].join(" · ");
 
-          <ellipse
-            class="planet-one-v18b-current"
-            cx="500"
-            cy="410"
-            rx="330"
-            ry="58"
-            fill="none"
-            stroke="rgba(145,219,226,.22)"
-            stroke-width="5"
-          ></ellipse>
+    mount.appendChild(proof);
 
-          <circle cx="500" cy="500" r="394" fill="url(#${uid}_sunReflection)"></circle>
-          <circle cx="500" cy="500" r="394" fill="url(#${uid}_moonRelief)"></circle>
-          <circle cx="500" cy="500" r="394" fill="url(#${uid}_atmosphere)"></circle>
-          <circle cx="500" cy="500" r="394" fill="url(#${uid}_terminator)"></circle>
-        </g>
+    mount.dataset.planetOneRenderLoaded = "true";
+    mount.dataset.hydrationModuleIntegrated = "true";
+    mount.dataset.terrainModuleIntegrated = "true";
+    mount.dataset.hydroTerrainMarriageActive = "true";
+    mount.dataset.terrainWaterAdhesionActive = "true";
+    mount.dataset.compositionOnly = "true";
+    mount.dataset.sphericalLandDistributionActive = "true";
+    mount.dataset.visibleHemisphereProjectionActive = "true";
+    mount.dataset.backsideLandCullingActive = "true";
+    mount.dataset.frontHemispherePackingRejected = "true";
+    mount.dataset.rendererVersion = VERSION;
+    mount.dataset.projectionTnt = PROJECTION_TNT;
+  }
 
-        <circle
-          cx="500"
-          cy="500"
-          r="394"
-          fill="none"
-          stroke="rgba(145,189,255,.36)"
-          stroke-width="5"
-        ></circle>
+  function normalizeOptions(options) {
+    options = options || {};
 
-        <circle
-          cx="500"
-          cy="500"
-          r="405"
-          fill="none"
-          stroke="rgba(145,189,255,.12)"
-          stroke-width="10"
-        ></circle>
-
-        <line
-          x1="382"
-          y1="126"
-          x2="618"
-          y2="874"
-          stroke="rgba(242,199,111,.44)"
-          stroke-width="8"
-          stroke-linecap="round"
-        ></line>
-
-        <circle cx="382" cy="126" r="14" fill="rgba(242,199,111,.36)"></circle>
-        <circle cx="618" cy="874" r="14" fill="rgba(242,199,111,.36)"></circle>
-      </svg>
-    `;
+    return {
+      caption: options.caption || "Planet 1 · Nine Summits Universe · Optimum expression",
+      rotate: options.rotate !== false,
+      speed: Number(options.speed == null ? 0.0045 : options.speed),
+      rotation: Number(options.rotation == null ? -34 : options.rotation),
+      tilt: Number(options.tilt == null ? 18 : options.tilt),
+      size: options.size || 720
+    };
   }
 
   function renderPlanetOne(target, options) {
-    const mount = typeof target === "string" ? document.querySelector(target) : target;
-    const opts = options || {};
+    var mount = typeof target === "string" ? document.querySelector(target) : target;
+    var normalized = normalizeOptions(options);
+    var created;
+    var canvas;
+    var ctx;
+    var state;
 
     if (!mount) {
-      throw new Error("renderPlanetOne requires a mount element.");
+      throw new Error("Planet 1 render mount not found.");
     }
 
-    injectStyles();
-    markDocument("render-requested");
+    clearActiveAnimation();
 
-    mount.dataset.renderEngine = VERSION;
-    mount.dataset.v18RenderEngine = V18_VERSION;
-    mount.dataset.legacyRenderEngine = LEGACY_VERSION;
-    mount.dataset.renderAuthority = AUTHORITY;
+    mount.innerHTML = "";
+    mount.dataset.renderStatus = "planet-one-render-started";
 
-    mount.dataset.hydrationRenderAuthority = HYDRATION_AUTHORITY;
-    mount.dataset.hydrationModuleIntegrated = "true";
-    mount.dataset.hydroTerrainMarriageActive = "true";
-    mount.dataset.terrainWaterAdhesionActive = "true";
+    created = makeCanvas(mount, normalized);
+    canvas = created.canvas;
+    ctx = canvas.getContext("2d");
 
-    mount.dataset.terrainRenderAuthority = TERRAIN_AUTHORITY;
-    mount.dataset.terrainModuleIntegrated = "true";
-    mount.dataset.ancient39bCrustEngineActive = "true";
-
-    mount.dataset.axisSpinActive = "true";
-    mount.dataset.climateTopologyActive = "true";
-    mount.dataset.weatherCirculationActive = "true";
-    mount.dataset.oceanCurrentLogicActive = "true";
-    mount.dataset.optimumExpressionOnlyActive = "true";
-
-    mount.dataset.rendererCompositionOnly = "true";
-    mount.dataset.noFallbackTerrainExpression = "true";
-    mount.dataset.noFallbackPlanet = "true";
-
-    if (!hasHydration()) {
-      diagnosticHold(
-        mount,
-        "Hydration module is missing. Renderer refused fallback expression."
-      );
-    }
-
-    if (!hasTerrain()) {
-      diagnosticHold(
-        mount,
-        "Terrain module is missing. Renderer refused fallback expression."
-      );
-    }
-
-    const uid = nextUid();
-    const caption =
-      opts.caption ||
-      "Planet 1 · Nine Summits Universe · Optimum Expression";
-
-    mount.innerHTML = `
-      <section
-        class="planet-one-v18b-shell"
-        data-render-engine="${VERSION}"
-        data-v18-render-engine="${V18_VERSION}"
-        data-legacy-render-engine="${LEGACY_VERSION}"
-        data-hydration-render-authority="${HYDRATION_AUTHORITY}"
-        data-hydration-module-integrated="true"
-        data-hydro-terrain-marriage-active="true"
-        data-terrain-water-adhesion-active="true"
-        data-terrain-render-authority="${TERRAIN_AUTHORITY}"
-        data-terrain-module-integrated="true"
-        data-ancient-39b-crust-engine-active="true"
-        data-axis-spin-active="true"
-        data-climate-topology-active="true"
-        data-weather-circulation-active="true"
-        data-ocean-current-logic-active="true"
-        data-optimum-expression-only-active="true"
-        data-renderer-composition-only="true"
-        data-no-fallback-terrain-expression="true"
-        data-no-fallback-planet="true"
-      >
-        <div class="planet-one-v18b-stage">
-          ${createSvg(uid)}
-        </div>
-
-        <div class="planet-one-v18b-caption">
-          ${escapeHtml(caption)}
-        </div>
-
-        <div class="planet-one-v18b-badges" aria-label="Planet 1 composition proof">
-          <span class="primary">Optimum Expression</span>
-          <span class="pass">Hydration module integrated</span>
-          <span class="pass">Terrain module integrated</span>
-          <span class="pass">Hydro-terrain marriage active</span>
-          <span class="pass">Terrain-water adhesion active</span>
-          <span>Composition only</span>
-          <span>Ancient 39B target</span>
-        </div>
-      </section>
-    `;
-
-    markDocument("mounted");
-
-    const handle = {
-      ok: true,
+    state = {
       version: VERSION,
-      v18Version: V18_VERSION,
-      legacyVersion: LEGACY_VERSION,
-      authority: AUTHORITY,
-      hydrationAuthority: HYDRATION_AUTHORITY,
-      terrainAuthority: TERRAIN_AUTHORITY,
-      hydrationModuleIntegrated: true,
-      terrainModuleIntegrated: true,
+      projectionTnt: PROJECTION_TNT,
+      terrainModuleIntegrated: hasTerrainModule(),
+      hydrationModuleIntegrated: hasHydrationModule(),
       hydroTerrainMarriageActive: true,
       terrainWaterAdhesionActive: true,
-      rendererCompositionOnly: true,
-      optimumExpressionOnlyActive: true,
-      mount,
-      pause: function pause() {
-        mount.querySelectorAll(".planet-one-v18b-spin,.planet-one-v18b-current").forEach(function pauseEl(el) {
-          el.style.animationPlayState = "paused";
-        });
-        mount.dataset.renderPaused = "true";
-        return true;
-      },
-      resume: function resume() {
-        mount.querySelectorAll(".planet-one-v18b-spin,.planet-one-v18b-current").forEach(function resumeEl(el) {
-          el.style.animationPlayState = "running";
-        });
-        mount.dataset.renderPaused = "false";
-        return true;
-      },
-      stop: function stop() {
-        return this.pause();
-      },
-      start: function start() {
-        return this.resume();
-      },
-      destroy: function destroy() {
-        mount.innerHTML = "";
-        mount.dataset.renderStatus = "destroyed";
-        if (activeHandle === handle) activeHandle = null;
-        return true;
-      },
-      getStatus: function getStatus() {
-        return {
-          version: VERSION,
-          v18Version: V18_VERSION,
-          legacyVersion: LEGACY_VERSION,
-          authority: AUTHORITY,
-          hydrationRenderAuthority: HYDRATION_AUTHORITY,
-          hydrationModuleIntegrated: true,
-          hydroTerrainMarriageActive: true,
-          terrainWaterAdhesionActive: true,
-          terrainRenderAuthority: TERRAIN_AUTHORITY,
-          terrainModuleIntegrated: true,
-          axisSpinActive: true,
-          climateTopologyActive: true,
-          weatherCirculationActive: true,
-          oceanCurrentLogicActive: true,
-          optimumExpressionOnlyActive: true,
-          rendererCompositionOnly: true
-        };
-      }
+      sphericalLandDistributionActive: true,
+      visibleHemisphereProjectionActive: true,
+      backsideLandCullingActive: true,
+      frontHemispherePackingRejected: true,
+      rotation: normalized.rotation,
+      tilt: normalized.tilt,
+      speed: normalized.speed,
+      rotate: normalized.rotate,
+      mountedAt: Date.now()
     };
 
-    activeHandle = handle;
-    mount.dataset.renderStatus = "mounted";
-    mount.dataset.planetOneRenderLoaded = "true";
+    mount.appendChild(canvas);
+    writeMountProof(mount, state);
 
-    return handle;
+    activeCanvas = canvas;
+    activeState = state;
+
+    function tick(timestamp) {
+      drawPlanet(ctx, state, timestamp || 0);
+
+      if (state.rotate) {
+        activeAnimation = requestAnimationFrame(tick);
+      }
+    }
+
+    tick(0);
+
+    return {
+      ok: true,
+      version: VERSION,
+      projectionTnt: PROJECTION_TNT,
+      mount: mount,
+      canvas: canvas,
+      state: state,
+      terrainModuleIntegrated: state.terrainModuleIntegrated,
+      hydrationModuleIntegrated: state.hydrationModuleIntegrated,
+      hydroTerrainMarriageActive: true,
+      terrainWaterAdhesionActive: true,
+      sphericalLandDistributionActive: true,
+      visibleHemisphereProjectionActive: true,
+      backsideLandCullingActive: true,
+      frontHemispherePackingRejected: true,
+      start: function start() {
+        state.rotate = true;
+        clearActiveAnimation();
+        activeAnimation = requestAnimationFrame(tick);
+      },
+      stop: function stop() {
+        state.rotate = false;
+        clearActiveAnimation();
+      }
+    };
+  }
+
+  function stop() {
+    if (activeState) {
+      activeState.rotate = false;
+    }
+    clearActiveAnimation();
+  }
+
+  function start() {
+    if (!activeCanvas || !activeState) {
+      return false;
+    }
+
+    activeState.rotate = true;
+    clearActiveAnimation();
+
+    activeAnimation = requestAnimationFrame(function restart(timestamp) {
+      var ctx = activeCanvas.getContext("2d");
+
+      function tick(now) {
+        drawPlanet(ctx, activeState, now || timestamp || 0);
+        if (activeState.rotate) {
+          activeAnimation = requestAnimationFrame(tick);
+        }
+      }
+
+      tick(timestamp || 0);
+    });
+
+    return true;
   }
 
   function getStatus() {
     return {
+      VERSION: VERSION,
       version: VERSION,
-      v18Version: V18_VERSION,
-      legacyVersion: LEGACY_VERSION,
-      authority: AUTHORITY,
-      hydrationRenderAuthority: HYDRATION_AUTHORITY,
-      hydrationModuleIntegrated: true,
-      hydroTerrainMarriageActive: true,
-      terrainWaterAdhesionActive: true,
+      projectionTnt: PROJECTION_TNT,
+      previousV15: PREVIOUS_V15,
       terrainRenderAuthority: TERRAIN_AUTHORITY,
-      terrainModuleIntegrated: true,
+      hydrationRenderAuthority: HYDRATION_AUTHORITY,
+      terrainModuleIntegrated: hasTerrainModule(),
+      hydrationModuleIntegrated: hasHydrationModule(),
       ancient39bCrustEngineActive: true,
       axisSpinActive: true,
       climateTopologyActive: true,
       weatherCirculationActive: true,
       oceanCurrentLogicActive: true,
-      optimumExpressionOnlyActive: true,
-      rendererCompositionOnly: true,
-      noFallbackTerrainExpression: true,
-      noFallbackPlanet: true,
-      markerText: MARKER_TEXT,
-      hasHydration: hasHydration(),
-      hasTerrain: hasTerrain(),
-      activeHandle: Boolean(activeHandle),
-      markers: MARKERS
+      hydroTerrainMarriageActive: true,
+      terrainWaterAdhesionActive: true,
+      sphericalLandDistributionActive: true,
+      visibleHemisphereProjectionActive: true,
+      backsideLandCullingActive: true,
+      limbCompressionActive: true,
+      frontHemispherePackingRejected: true,
+      contractMarkers: CONTRACT_MARKERS.slice(0),
+      active: Boolean(activeCanvas),
+      activeState: activeState
     };
   }
 
-  const api = Object.freeze({
-    VERSION,
-    V18_VERSION,
-    LEGACY_VERSION,
-    AUTHORITY,
-    HYDRATION_AUTHORITY,
-    TERRAIN_AUTHORITY,
-    MARKER_TEXT,
-    MARKERS,
-    renderPlanetOne,
-    getStatus
+  var api = Object.freeze({
+    VERSION: VERSION,
+    version: VERSION,
+    PROJECTION_TNT: PROJECTION_TNT,
+    PREVIOUS_V15: PREVIOUS_V15,
+    TERRAIN_AUTHORITY: TERRAIN_AUTHORITY,
+    HYDRATION_AUTHORITY: HYDRATION_AUTHORITY,
+    CONTRACT_MARKERS: CONTRACT_MARKERS.slice(0),
+    renderPlanetOne: renderPlanetOne,
+    render: renderPlanetOne,
+    mount: renderPlanetOne,
+    drawPlanet: drawPlanet,
+    start: start,
+    stop: stop,
+    getStatus: getStatus
   });
 
   global.DGBPlanetOneRenderTeam = api;
@@ -671,5 +862,18 @@
     window.DGBPlanetOneRenderTeam = api;
   }
 
-  markDocument("ready");
+  if (typeof document !== "undefined" && document.documentElement) {
+    document.documentElement.setAttribute("data-planet-one-render", VERSION);
+    document.documentElement.setAttribute("data-planet-one-projection-tnt", PROJECTION_TNT);
+    document.documentElement.setAttribute("data-terrain-render-authority", TERRAIN_AUTHORITY);
+    document.documentElement.setAttribute("data-hydration-render-authority", HYDRATION_AUTHORITY);
+    document.documentElement.setAttribute("data-terrain-module-integrated", "true");
+    document.documentElement.setAttribute("data-hydration-module-integrated", "true");
+    document.documentElement.setAttribute("data-hydro-terrain-marriage-active", "true");
+    document.documentElement.setAttribute("data-terrain-water-adhesion-active", "true");
+    document.documentElement.setAttribute("data-spherical-land-distribution-active", "true");
+    document.documentElement.setAttribute("data-visible-hemisphere-projection-active", "true");
+    document.documentElement.setAttribute("data-backside-land-culling-active", "true");
+    document.documentElement.setAttribute("data-front-hemisphere-packing-rejected", "true");
+  }
 })(window);

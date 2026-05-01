@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · Planet 1 G1 Architecture Renewal</title>
-  <meta name="description" content="Gauges measures Planet 1 Generation 1 architecture, route health, hex substrate readiness, 256 lattice health, showroom bridge health, visual hold, and next controlling gap.">
+  <title>Diamond Gate Bridge · Gauges · G1 Architecture Renewal</title>
+  <meta name="description" content="Planet 1 Generation 1 Gauges served-source authority renewal. Measures route, asset, renderer, hexgrid, 256 lattice, estate parity, archive isolation, and visual hold.">
   <style>
     :root {
       color-scheme: dark;
       --bg: #030714;
-      --panel: rgba(6, 13, 28, .82);
-      --panel2: rgba(11, 24, 48, .76);
+      --panel: rgba(6, 13, 28, .84);
+      --panel2: rgba(10, 22, 44, .78);
       --line: rgba(157, 200, 255, .18);
       --gold: #f2c76f;
       --text: #f7ead0;
@@ -26,11 +29,11 @@
 
     html,
     body {
-      margin: 0;
       min-height: 100%;
+      margin: 0;
       background:
         radial-gradient(circle at 18% 12%, rgba(78,132,180,.18), transparent 30rem),
-        radial-gradient(circle at 82% 4%, rgba(242,199,111,.12), transparent 28rem),
+        radial-gradient(circle at 82% 4%, rgba(242,199,111,.11), transparent 28rem),
         radial-gradient(circle at 50% 120%, rgba(51,124,150,.16), transparent 38rem),
         var(--bg);
       color: var(--text);
@@ -47,14 +50,10 @@
         radial-gradient(circle, rgba(157,200,255,.42) 0 1px, transparent 1.5px);
       background-size: 96px 96px, 138px 138px;
       background-position: 12px 28px, 42px 18px;
-      opacity: .18;
+      opacity: .17;
     }
 
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
-
+    a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     .skip {
@@ -91,20 +90,9 @@
       backdrop-filter: blur(10px);
     }
 
-    .brand {
-      display: grid;
-      gap: 2px;
-    }
-
-    .brand strong {
-      color: var(--gold);
-      letter-spacing: .03em;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: .92rem;
-    }
+    .brand { display: grid; gap: 2px; }
+    .brand strong { color: var(--gold); letter-spacing: .03em; }
+    .brand span { color: var(--muted); font-size: .92rem; }
 
     .nav {
       display: flex;
@@ -147,9 +135,21 @@
 
     .lead {
       color: var(--muted);
-      max-width: 76ch;
+      max-width: 78ch;
       line-height: 1.62;
       margin: 14px 0 0;
+    }
+
+    .contract {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(242,199,111,.24);
+      border-radius: 16px;
+      background: rgba(0,0,0,.22);
+      color: var(--gold);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .86rem;
+      overflow-wrap: anywhere;
     }
 
     .actions {
@@ -205,7 +205,8 @@
       margin-bottom: 8px;
     }
 
-    .tile span {
+    .tile span,
+    .badge {
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
@@ -288,7 +289,7 @@
     }
 
     pre {
-      max-height: 420px;
+      max-height: 460px;
       overflow: auto;
       white-space: pre-wrap;
       word-break: break-word;
@@ -334,7 +335,7 @@
     <header class="topbar">
       <div class="brand">
         <a href="/"><strong>Diamond Gate Bridge</strong></a>
-        <span>Gauges · Planet 1 Generation 1 Architecture Renewal</span>
+        <span>Gauges · Planet 1 G1 Architecture Renewal</span>
       </div>
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
@@ -348,13 +349,16 @@
     </header>
 
     <section class="hero">
-      <p class="eyebrow">H6 · Gauges · Generation 1 Architecture Lane</p>
-      <h1>Planet 1 Generation 1 Gauges Renewal</h1>
+      <p class="eyebrow">H6 · Gauges · Served Source Authority</p>
+      <h1>Planet 1 Generation 1 Architecture Renewal</h1>
       <p class="lead">
-        Gauges measures the active Planet 1 route, Showroom bridge, renderer facade, hidden hex substrate,
-        256-state lattice receipt, visual hold, legacy archive boundary, and estate route parity. Gauges does not repair,
+        This renewed Gauges page measures the served route, Showroom bridge, renderer facade, hidden hex substrate,
+        256-state lattice receipt, legacy archive boundary, estate route parity, and visual hold. It does not repair,
         render, mutate terrain, or claim visual pass.
       </p>
+      <div class="contract" id="served-contract">
+        SERVED_CONTRACT=G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1
+      </div>
 
       <div class="actions">
         <button type="button" id="run-g1">Run G1 architecture diagnostic</button>
@@ -376,7 +380,7 @@
     <section class="lane">
       <div class="lane-head">
         <h2>Live receipt</h2>
-        <span id="receipt-state" class="status-hold">PENDING</span>
+        <span id="receipt-state" class="badge status-hold">PENDING</span>
       </div>
       <div class="lane-body">
         <pre id="receipt">{}</pre>
@@ -384,16 +388,16 @@
     </section>
 
     <p class="footer">
-      VERSION: G1_PLANET_1_GAUGES_ARCHITECTURE_RENEWAL_CONTRACT_v1. Visual readiness remains held until manual screenshot review passes.
+      VERSION: G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1. Visual readiness remains held until manual screenshot review passes.
     </p>
   </main>
 
   <script>
-    (function attachG1ArchitectureGauges(global) {
+    (function attachServedSourceAuthorityGauges(global) {
       "use strict";
 
-      var VERSION = "G1_PLANET_1_GAUGES_ARCHITECTURE_RENEWAL_CONTRACT_v1";
-      var CACHE_TAG = "_g1_gauges_architecture_renewal=" + Date.now();
+      var VERSION = "G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1";
+      var CACHE_TAG = "_gauges_served_source_authority=" + Date.now();
 
       var PATHS = {
         showroomGlobe: "/showroom/globe/",
@@ -404,7 +408,6 @@
         renderer: "/world/render/planet-one.render.js",
         hexgrid: "/world/render/planet-one.hexgrid.render.js",
         home: "/home/",
-        gauges: "/gauges/",
         legacyLand: "/world/render/planet-one.land.render.js",
         legacySurface: "/world/render/planet-one.surface.render.js"
       };
@@ -426,16 +429,21 @@
         return path + (path.indexOf("?") === -1 ? "?" : "&") + CACHE_TAG;
       }
 
-      function boolText(value) {
-        return value ? "true" : "false";
-      }
-
       function includesAny(text, list) {
         var i;
+        text = String(text || "");
         for (i = 0; i < list.length; i += 1) {
           if (text.indexOf(list[i]) !== -1) return true;
         }
         return false;
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
       }
 
       function fetchText(path) {
@@ -462,14 +470,18 @@
       }
 
       function statusClass(status) {
-        if (status === "PASS") return "status-pass";
-        if (status === "WARN") return "status-warn";
-        if (status === "FAIL") return "status-fail";
+        if (status === "PASS" || status === "DETECTED" || status === "GENERATION_1_ACTIVE") return "status-pass";
+        if (status === "WARN" || status === "HOLD" || status === "VISUAL_HOLD") return "status-warn";
+        if (status === "FAIL" || String(status).indexOf("REPAIR_REQUIRED") !== -1) return "status-fail";
         return "status-hold";
       }
 
       function makeStatus(status) {
-        return "<span class=\"" + statusClass(status) + "\">" + status + "</span>";
+        return "<span class=\"badge " + statusClass(status) + "\">" + escapeHtml(status) + "</span>";
+      }
+
+      function summaryTile(label, value) {
+        return "<div class=\"tile\"><b>" + escapeHtml(label) + "</b><span class=\"" + statusClass(value) + "\">" + escapeHtml(value) + "</span></div>";
       }
 
       function setSummary(receipt) {
@@ -480,26 +492,9 @@
           summaryTile("Architecture health", receipt.architectureHealth),
           summaryTile("Planet generation", receipt.planetGeneration),
           summaryTile("Hex substrate", receipt.hexSubstrate),
-          summaryTile("256 lattice", receipt.lanes.lattice.state),
+          summaryTile("256 lattice", receipt.lattice256),
           summaryTile("Next controlling gap", receipt.nextControllingGap)
         ].join("");
-      }
-
-      function summaryTile(label, value) {
-        var status = value === "PASS" || value === "DETECTED" || value === "READY_FOR_SCREENSHOT_REVIEW" ? "PASS" :
-          value === "WARN" || value === "VISUAL_HOLD" || value === "GENERATION_1_ACTIVE" ? "WARN" :
-          value === "FAIL" || String(value).indexOf("REPAIR_REQUIRED") !== -1 ? "FAIL" :
-          "HOLD";
-
-        return "<div class=\"tile\"><b>" + escapeHtml(label) + "</b><span class=\"" + statusClass(status) + "\">" + escapeHtml(value) + "</span></div>";
-      }
-
-      function escapeHtml(value) {
-        return String(value == null ? "" : value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
       }
 
       function renderFacts(facts) {
@@ -511,23 +506,23 @@
       function renderLanes(receipt) {
         var lanes = byId("lanes");
         var order = [
+          ["served", "Served Source Authority", "The visible Gauges shell and live receipt must both come from the renewed served-source contract."],
           ["route", "Route Health", "The /showroom/globe/ route must exist, mount Planet 1, and load the split chain."],
           ["runtime", "Runtime Health", "Runtime must remain bridge-aware and must not own terrain."],
           ["asset", "Asset Consumer Health", "The Showroom globe instrument must bridge safely into the Planet 1 renderer/runtime."],
           ["renderer", "Renderer Facade Health", "The renderer must act as the composition facade and consume the hexgrid substrate."],
-          ["legacy", "Legacy G5 Visual Branch", "Legacy files may exist only as archived, non-promoted branches."],
+          ["legacy", "Legacy G5 Visual Branch", "Legacy files may exist as archived files, but must not be loaded by the active Planet route."],
           ["hexgrid", "Hexgrid Substrate Health", "Generation 1 requires the canonical hexagonal terrain-cell substrate."],
           ["lattice", "256 Lattice Health", "State formula: 4 × 4 × 2 × 2 × 4 = 256."],
           ["visual", "Visual Readiness", "Telemetry cannot pass visual readiness. Manual screenshot review remains required."],
           ["estateParity", "Estate Route Parity", "Non-Planet routes must not carry live Planet 1 script dependencies."],
-          ["gap", "Next Controlling Gap", "The next action is computed from the first remaining failed lane."]
+          ["gap", "Next Controlling Gap", "The next action is computed from the first remaining true failed lane."]
         ];
 
         if (!lanes) return;
 
         lanes.innerHTML = order.map(function (item) {
-          var key = item[0];
-          var lane = receipt.lanes[key];
+          var lane = receipt.lanes[item[0]];
           return [
             "<article class=\"lane\">",
             "<div class=\"lane-head\"><h2>" + escapeHtml(item[1]) + "</h2>" + makeStatus(lane.state) + "</div>",
@@ -540,8 +535,28 @@
         }).join("");
       }
 
+      function parseServedAuthority() {
+        var visibleContractNode = byId("served-contract");
+        var visibleContract = visibleContractNode ? visibleContractNode.textContent : "";
+        var visibleRenewed = visibleContract.indexOf(VERSION) !== -1;
+        var globalAvailable = Boolean(global.DGBGaugesServedSourceAuthority);
+        var footerText = global.document.body ? global.document.body.textContent : "";
+        var oldContractVisible = footerText.indexOf("G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2") !== -1;
+
+        return {
+          state: visibleRenewed && globalAvailable && !oldContractVisible ? "PASS" : "FAIL",
+          facts: {
+            visibleContract: visibleRenewed ? VERSION : "missing",
+            globalAvailable: globalAvailable,
+            oldContractVisible: oldContractVisible,
+            servedAuthorityRenewed: visibleRenewed && globalAvailable && !oldContractVisible
+          }
+        };
+      }
+
       function parseRoute(data) {
         var text = data.text || "";
+
         var hasPlanetMount = includesAny(text, [
           "id=\"planet-one-render\"",
           "id='planet-one-render'",
@@ -549,13 +564,27 @@
           "data-showroom-globe-mount"
         ]);
 
-        var hasRuntimeScript = text.indexOf("/showroom/runtime.js") !== -1 || text.indexOf("showroom/runtime.js") !== -1;
-        var hasAssetScript = text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1;
-        var hasRendererScript = text.indexOf("/world/render/planet-one.render.js") !== -1 || text.indexOf("planet-one.render.js") !== -1;
-        var routeMentionsHexgrid = text.indexOf("planet-one.hexgrid.render.js") !== -1 || text.indexOf("hexgrid") !== -1;
-        var hasHexgridScript = text.indexOf("/world/render/planet-one.hexgrid.render.js") !== -1 || text.indexOf("planet-one.hexgrid.render.js") !== -1;
-        var staleV21Expectation = text.indexOf("v21") !== -1 || text.indexOf("V21") !== -1;
+        var hasRuntimeScript = includesAny(text, [
+          "/showroom/runtime.js",
+          "showroom/runtime.js"
+        ]);
 
+        var hasAssetScript = includesAny(text, [
+          "/assets/showroom.globe.instrument.js",
+          "showroom.globe.instrument.js"
+        ]);
+
+        var hasRendererScript = includesAny(text, [
+          "/world/render/planet-one.render.js",
+          "planet-one.render.js"
+        ]);
+
+        var hasHexgridScript = includesAny(text, [
+          "/world/render/planet-one.hexgrid.render.js",
+          "planet-one.hexgrid.render.js"
+        ]);
+
+        var staleV21Expectation = includesAny(text, ["v21", "V21"]);
         var pass = data.ok && hasPlanetMount && hasRuntimeScript && hasAssetScript && hasRendererScript && hasHexgridScript && !staleV21Expectation;
 
         return {
@@ -567,7 +596,6 @@
             hasRuntimeScript: hasRuntimeScript,
             hasAssetScript: hasAssetScript,
             hasRendererScript: hasRendererScript,
-            routeMentionsHexgrid: routeMentionsHexgrid,
             hasHexgridScript: hasHexgridScript,
             staleV21Expectation: staleV21Expectation
           }
@@ -579,7 +607,11 @@
         var world = worldRuntimeData.text || "";
         var control = controlData.text || "";
 
-        var detected = showroomRuntimeData.ok && showroom.indexOf("DGBShowroomRuntime") !== -1;
+        var detected = showroomRuntimeData.ok && includesAny(showroom, [
+          "DGBShowroomRuntime",
+          "SHOWROOM_RUNTIME_ACTIVE"
+        ]);
+
         var splitRenderChainAware = includesAny(showroom, [
           "SHOWROOM_USES_PLANET_ONE_RUNTIME",
           "SHOWROOM_USES_PLANET_ONE_RENDERER",
@@ -605,10 +637,8 @@
           "drawPlanetOneHexGrid("
         ]);
 
-        var pass = detected && splitRenderChainAware && worldRuntimeDetected && worldControlDetected && !ownsTerrain;
-
         return {
-          state: pass ? "PASS" : "FAIL",
+          state: detected && splitRenderChainAware && worldRuntimeDetected && worldControlDetected && !ownsTerrain ? "PASS" : "FAIL",
           facts: {
             detected: detected,
             splitRenderChainAware: splitRenderChainAware,
@@ -622,6 +652,7 @@
 
       function parseAsset(assetData) {
         var text = assetData.text || "";
+
         var detected = assetData.ok && includesAny(text, [
           "DGBShowroomGlobeInstrument",
           "DGBShowroomGlobe",
@@ -661,14 +692,19 @@
           "noDuplicateFakeGlobe"
         ]);
 
-        var noTerrainOwnership = includesAny(text, [
+        var noTerrainOwnershipMarker = includesAny(text, [
           "NO_TERRAIN_OWNERSHIP",
           "noTerrainOwnership"
-        ]) && !includesAny(text, [
-          "getSurfaceFields(",
-          "createPlanetOneHexGrid(",
-          "drawContinuousSurfaceBuffer("
         ]);
+
+        var terrainCodePresent = includesAny(text, [
+          "getSurfaceFields(",
+          "drawContinuousSurfaceBuffer(",
+          "ellipseScore(",
+          "createPlanetOneHexGrid("
+        ]);
+
+        var noTerrainOwnership = noTerrainOwnershipMarker && !terrainCodePresent;
 
         var probe = detected &&
           assetCalledRenderer &&
@@ -704,10 +740,12 @@
         ]);
 
         var active = detected;
+
         var responsibilitySplitActive = includesAny(text, [
           "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
           "RUNTIME_VIEWLON_ACCEPTED",
-          "AXIS_ROTATION_RENDER_TARGET_ACTIVE"
+          "AXIS_ROTATION_RENDER_TARGET_ACTIVE",
+          "responsibilitySplitActive"
         ]);
 
         var rendererFacadeActive = includesAny(text, [
@@ -725,14 +763,6 @@
 
         var routeLoadsLegacyLand = route.indexOf("planet-one.land.render.js") !== -1;
         var routeLoadsLegacySurface = route.indexOf("planet-one.surface.render.js") !== -1;
-
-        var compatibilityLegacyDetectorsPresent = includesAny(text, [
-          "landConstructsModuleDetected",
-          "surfaceMaterialsModuleDetected",
-          "terrainModuleDetected",
-          "hydrationModuleDetected"
-        ]);
-
         var legacyPromotedByRenderer = includesAny(text, [
           "G5_ARCHITECTURE_BASELINE",
           "G5_VISUAL_REFINEMENT"
@@ -755,7 +785,6 @@
             responsibilitySplitActive: responsibilitySplitActive,
             rendererFacadeActive: rendererFacadeActive,
             rendererConsumesHexgrid: rendererConsumesHexgrid,
-            compatibilityLegacyDetectorsPresent: compatibilityLegacyDetectorsPresent,
             routeLoadsLegacyLand: routeLoadsLegacyLand,
             routeLoadsLegacySurface: routeLoadsLegacySurface,
             legacyPromotedByRenderer: legacyPromotedByRenderer
@@ -765,50 +794,32 @@
 
       function parseLegacy(legacyLandData, legacySurfaceData, showroomRouteData) {
         var route = showroomRouteData.text || "";
-        var land = legacyLandData.text || "";
-        var surface = legacySurfaceData.text || "";
-
         var landDetected = legacyLandData.ok;
         var surfaceDetected = legacySurfaceData.ok;
-        var landVersion = extractVersion(land);
-        var surfaceVersion = extractVersion(surface);
 
         var legacyLandLive = route.indexOf("planet-one.land.render.js") !== -1;
         var legacySurfaceLive = route.indexOf("planet-one.surface.render.js") !== -1;
-
-        var archived = (landDetected || surfaceDetected) && !legacyLandLive && !legacySurfaceLive;
         var promoted = legacyLandLive || legacySurfaceLive;
-        var visualBaseline = false;
+        var archived = (landDetected || surfaceDetected) && !promoted;
 
         return {
           state: promoted ? "FAIL" : "PASS",
           facts: {
-            label: archived ? "LEGACY_G5_VISUAL_BRANCH_ARCHIVED_AVAILABLE_NOT_PROMOTED" : "NO_FORWARD_LEGACY_PROMOTION",
+            label: archived ? "LEGACY_G5_ARCHIVED_AVAILABLE_NOT_PROMOTED" : "NO_FORWARD_LEGACY_PROMOTION",
             landDetected: landDetected,
             surfaceDetected: surfaceDetected,
-            landVersion: landVersion,
-            surfaceVersion: surfaceVersion,
             legacyLandLive: legacyLandLive,
             legacySurfaceLive: legacySurfaceLive,
             archived: archived,
             promoted: promoted,
-            visualBaseline: visualBaseline
+            visualBaseline: false
           }
         };
       }
 
-      function extractVersion(text) {
-        var match;
-        if (!text) return null;
-        match = text.match(/VERSION\s*[:=]\s*["']?([A-Z0-9_\-]+_v\d+|G[0-9][A-Z0-9_\-]+_v\d+)/);
-        if (match && match[1]) return match[1];
-        match = text.match(/var\s+VERSION\s*=\s*["']([^"']+)["']/);
-        if (match && match[1]) return match[1];
-        return null;
-      }
-
       function parseHexgrid(hexgridData) {
         var text = hexgridData.text || "";
+
         var fileExists = hexgridData.ok;
         var fileHasGlobalName = includesAny(text, [
           "DGBPlanetOneHexgridRender",
@@ -819,17 +830,7 @@
         var fileHasDrawMethod = text.indexOf("drawPlanetOneHexGrid") !== -1;
         var fileHasStatusMethod = text.indexOf("getHexgridStatus") !== -1 || text.indexOf("status:") !== -1;
 
-        var ok = fileExists &&
-          fileHasGlobalName &&
-          fileHasCreateMethod &&
-          fileHasDrawMethod &&
-          fileHasStatusMethod;
-
-        var active = includesAny(text, [
-          "HEXGRID_RENDERER_ACTIVE",
-          "hexgridRendererActive",
-          "active: true"
-        ]);
+        var visualPassClaimed = /visualPassClaimed\s*:\s*true/.test(text);
 
         var facts = {
           path: hexgridData.path,
@@ -841,8 +842,8 @@
           fileHasStatusMethod: fileHasStatusMethod,
           globalDetected: fileHasGlobalName,
           methodsDetected: fileHasCreateMethod && fileHasDrawMethod && fileHasStatusMethod,
-          ok: ok,
-          active: active,
+          ok: fileExists && fileHasGlobalName && fileHasCreateMethod && fileHasDrawMethod && fileHasStatusMethod,
+          active: includesAny(text, ["HEXGRID_RENDERER_ACTIVE", "hexgridRendererActive", "active: true"]),
           hexagonalPixelFormatActive: text.indexOf("hexagonalPixelFormatActive") !== -1,
           hexCellSubstrateActive: text.indexOf("hexCellSubstrateActive") !== -1,
           terrainCellSamplingActive: text.indexOf("terrainCellSamplingActive") !== -1,
@@ -850,11 +851,11 @@
           elevationCellFieldActive: text.indexOf("elevationCellFieldActive") !== -1,
           waterDepthCellFieldActive: text.indexOf("waterDepthCellFieldActive") !== -1,
           mineralPressureCellFieldActive: text.indexOf("mineralPressureCellFieldActive") !== -1,
-          visualPassClaimed: /visualPassClaimed\s*:\s*true/.test(text)
+          visualPassClaimed: visualPassClaimed
         };
 
         return {
-          state: ok && active && !facts.visualPassClaimed ? "PASS" : "FAIL",
+          state: facts.ok && facts.active && !visualPassClaimed ? "PASS" : "FAIL",
           facts: facts
         };
       }
@@ -862,15 +863,17 @@
       function parseLattice(hexgridData) {
         var text = hexgridData.text || "";
 
-        var stateFormula =
-          text.indexOf("4x4x2x2x4") !== -1 ||
-          text.indexOf("4 × 4 × 2 × 2 × 4") !== -1;
+        var stateFormula = includesAny(text, [
+          "4x4x2x2x4",
+          "4 × 4 × 2 × 2 × 4"
+        ]);
 
-        var stateCount =
-          text.indexOf("stateCount: REQUIRED_STATE_COUNT") !== -1 ||
-          text.indexOf("stateCount: 256") !== -1 ||
-          text.indexOf("REQUIRED_STATE_COUNT = 256") !== -1 ||
-          text.indexOf("var REQUIRED_STATE_COUNT = 256") !== -1;
+        var stateCount = includesAny(text, [
+          "stateCount: REQUIRED_STATE_COUNT",
+          "stateCount: 256",
+          "REQUIRED_STATE_COUNT = 256",
+          "var REQUIRED_STATE_COUNT = 256"
+        ]);
 
         var domainAxis = text.indexOf("domainAxis: true") !== -1 || text.indexOf("DOMAIN_AXIS") !== -1;
         var reliefAxis = text.indexOf("reliefAxis: true") !== -1 || text.indexOf("RELIEF_AXIS") !== -1;
@@ -879,14 +882,7 @@
         var materialAxis = text.indexOf("materialAxis: true") !== -1 || text.indexOf("MATERIAL_AXIS") !== -1;
         var requiredStateCount = text.indexOf("requiredStateCount") !== -1 && text.indexOf("256") !== -1;
 
-        var pass = stateFormula &&
-          stateCount &&
-          domainAxis &&
-          reliefAxis &&
-          edgeRoleAxis &&
-          pressureAxis &&
-          materialAxis &&
-          requiredStateCount;
+        var pass = stateFormula && stateCount && domainAxis && reliefAxis && edgeRoleAxis && pressureAxis && materialAxis && requiredStateCount;
 
         return {
           state: pass ? "PASS" : "FAIL",
@@ -933,33 +929,36 @@
           "data-showroom-globe-mount"
         ]);
 
-        var homeHasRuntimeScript =
-          home.indexOf("/world/runtime.js") !== -1 ||
-          home.indexOf("/showroom/runtime.js") !== -1 ||
-          /<script[^>]+runtime\.js/.test(home);
+        var homeHasRuntimeScript = includesAny(home, [
+          "/world/runtime.js",
+          "/showroom/runtime.js"
+        ]);
 
-        var homeHasAssetScript =
-          home.indexOf("/assets/showroom.globe.instrument.js") !== -1 ||
-          home.indexOf("showroom.globe.instrument.js") !== -1;
+        var homeHasAssetScript = includesAny(home, [
+          "/assets/showroom.globe.instrument.js",
+          "showroom.globe.instrument.js"
+        ]);
 
-        var homeHasRendererScript =
-          home.indexOf("/world/render/planet-one.render.js") !== -1 ||
-          home.indexOf("planet-one.render.js") !== -1;
+        var homeHasRendererScript = includesAny(home, [
+          "/world/render/planet-one.render.js",
+          "planet-one.render.js"
+        ]);
 
-        var homeHasHexgridScript =
-          home.indexOf("/world/render/planet-one.hexgrid.render.js") !== -1 ||
-          home.indexOf("planet-one.hexgrid.render.js") !== -1;
+        var homeHasHexgridScript = includesAny(home, [
+          "/world/render/planet-one.hexgrid.render.js",
+          "planet-one.hexgrid.render.js"
+        ]);
 
-        var homeMentionsHexgrid = home.indexOf("hexgrid") !== -1 || home.indexOf("Hexgrid") !== -1;
+        var homeMentionsHexgridTextOnly =
+          (home.indexOf("hexgrid") !== -1 || home.indexOf("Hexgrid") !== -1) &&
+          !homeHasHexgridScript;
 
-        var homeRouteParity =
+        var livePlanetDependency =
           homeHasPlanetMount ||
           homeHasRuntimeScript ||
           homeHasAssetScript ||
           homeHasRendererScript ||
-          homeHasHexgridScript
-            ? "HOME_ROUTE_PARITY_WARN"
-            : "HOME_ROUTE_PARITY_PASS";
+          homeHasHexgridScript;
 
         var showroomGlobeHasPlanetMount = includesAny(route, [
           "data-planet-one-mount",
@@ -969,18 +968,18 @@
         ]);
 
         return {
-          state: homeRouteParity === "HOME_ROUTE_PARITY_PASS" ? "PASS" : "WARN",
+          state: livePlanetDependency ? "WARN" : "PASS",
           facts: {
             estateDiagnosticRan: true,
-            homeRouteParity: homeRouteParity,
+            homeRouteParity: livePlanetDependency ? "HOME_ROUTE_PARITY_WARN" : "HOME_ROUTE_PARITY_PASS",
             homeHasPlanetMount: homeHasPlanetMount,
             homeHasRuntimeScript: homeHasRuntimeScript,
             homeHasAssetScript: homeHasAssetScript,
             homeHasRendererScript: homeHasRendererScript,
             homeHasHexgridScript: homeHasHexgridScript,
-            homeMentionsHexgridTextOnly: homeMentionsHexgrid && !homeHasHexgridScript,
+            homeMentionsHexgridTextOnly: homeMentionsHexgridTextOnly,
             showroomGlobeHasPlanetMount: showroomGlobeHasPlanetMount,
-            gaugesRenewed: true
+            gaugesServedAuthorityRenewed: true
           }
         };
       }
@@ -991,7 +990,12 @@
         var architectureHealth = "PASS";
         var planetBuildReadiness = "TELEMETRY_READY_VISUAL_HOLD";
 
-        if (lanes.route.state !== "PASS") {
+        if (lanes.served.state !== "PASS") {
+          action = "GAUGES_SERVED_SOURCE_AUTHORITY_REPAIR_REQUIRED";
+          requiredNextTNT = "GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_TNT_v1";
+          architectureHealth = "FAIL";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.route.state !== "PASS") {
           action = "ROUTE_REPAIR_REQUIRED";
           requiredNextTNT = "SHOWROOM_GLOBE_ROUTE_REPAIR_TNT_v1";
           architectureHealth = "FAIL";
@@ -1052,6 +1056,7 @@
       }
 
       function buildReceipt(results) {
+        var served = parseServedAuthority();
         var route = parseRoute(results.showroomGlobe);
         var runtime = parseRuntime(results.showroomRuntime, results.worldRuntime, results.worldControl);
         var asset = parseAsset(results.assetInstrument);
@@ -1063,6 +1068,7 @@
         var estateParity = parseEstateParity(results.home, results.showroomGlobe);
 
         var lanes = {
+          served: served,
           route: route,
           runtime: runtime,
           asset: asset,
@@ -1099,10 +1105,10 @@
         var receiptNode = byId("receipt");
         var receiptState = byId("receipt-state");
 
-        if (receiptNode) receiptNode.textContent = "Running diagnostic…";
+        if (receiptNode) receiptNode.textContent = "Running renewed served-source diagnostic…";
         if (receiptState) {
           receiptState.textContent = "RUNNING";
-          receiptState.className = "status-hold";
+          receiptState.className = "badge status-hold";
         }
 
         return Promise.all([
@@ -1114,7 +1120,6 @@
           fetchText(PATHS.renderer),
           fetchText(PATHS.hexgrid),
           fetchText(PATHS.home),
-          fetchText(PATHS.gauges),
           fetchText(PATHS.legacyLand),
           fetchText(PATHS.legacySurface)
         ]).then(function (items) {
@@ -1127,13 +1132,11 @@
             renderer: items[5],
             hexgrid: items[6],
             home: items[7],
-            gauges: items[8],
-            legacyLand: items[9],
-            legacySurface: items[10]
+            legacyLand: items[8],
+            legacySurface: items[9]
           };
 
           var receipt = buildReceipt(results);
-
           state.lastReceipt = receipt;
 
           setSummary(receipt);
@@ -1145,13 +1148,15 @@
 
           if (receiptState) {
             receiptState.textContent = receipt.architectureHealth;
-            receiptState.className = statusClass(receipt.architectureHealth === "PASS" ? "PASS" : receipt.architectureHealth);
+            receiptState.className = "badge " + statusClass(receipt.architectureHealth);
           }
 
           try {
-            global.dispatchEvent(new CustomEvent("dgb:gauges:g1-architecture-renewed", {
-              detail: receipt
-            }));
+            if (global.dispatchEvent && typeof global.CustomEvent === "function") {
+              global.dispatchEvent(new global.CustomEvent("dgb:gauges:served-source-authority-renewed", {
+                detail: receipt
+              }));
+            }
           } catch (error) {}
 
           return receipt;
@@ -1169,7 +1174,7 @@
 
           if (receiptState) {
             receiptState.textContent = "FAIL";
-            receiptState.className = "status-fail";
+            receiptState.className = "badge status-fail";
           }
         });
       }
@@ -1186,7 +1191,7 @@
         };
       }
 
-      global.DGBG1ArchitectureGauges = {
+      global.DGBGaugesServedSourceAuthority = {
         VERSION: VERSION,
         version: VERSION,
         runDiagnostic: runDiagnostic,

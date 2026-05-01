@@ -1,20 +1,18 @@
 /*
- B27B_SURFACE_MATERIALS_RELIEF_TNT_v1
+ G5_VISUAL_REFINEMENT_SURFACE_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1
  TARGET=/world/render/planet-one.surface.materials.js
  PURPOSE:
- Materials-second renewal for Planet 1 after B27A geometry.
- Owns ocean depth, coast-following cuts, shelf gradients, plateau relief, mountain spine contrast,
- valley/basin shadow, mineral pressure, surface film, and atmospheric finish.
- DOES NOT OWN:
- Landmass law, construct count, region attachment law, polar separation law, public renderer contract,
- canvas mount, route, runtime, asset consumer, gauges, or tree demo.
+ Materials-second refinement for the G5 Planet 1 visual branch.
+ Consumes the G5 land geometry, paints negative-space ocean gulfs as water/shelf/depth,
+ reduces decorative dark ribbons, reinforces lobe relief only where geometry supports it,
+ and preserves the public surface-material API.
 */
 
 (function attachPlanetOneSurfaceMaterials(global) {
   "use strict";
 
-  var VERSION = "B27B_SURFACE_MATERIALS_RELIEF_TNT_v1";
-  var PREVIOUS_VERSION = "B26C_SURFACE_MATERIALS_MODULE_TNT_v1";
+  var VERSION = "G5_VISUAL_REFINEMENT_SURFACE_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1";
+  var PREVIOUS_VERSION = "B27B_SURFACE_MATERIALS_RELIEF_TNT_v1";
   var CONTRACT_MARKERS = [
     VERSION,
     PREVIOUS_VERSION,
@@ -24,13 +22,15 @@
     "coastal-shelf-authority-active=true",
     "plateau-ridge-material-authority-active=true",
     "mineral-pressure-authority-active=true",
-    "coast-following-material-cuts-active=true",
-    "plateau-relief-visible=true",
-    "mountain-spine-contrast-active=true",
-    "basin-valley-shadow-active=true",
-    "mineral-pressure-banding-active=true",
-    "flat-fill-dominance-reduced=true",
+    "g5-visual-refinement-active=true",
+    "b27-candidate-refined=true",
+    "negative-space-gulf-carving-active=true",
+    "lobe-silhouette-strengthened=true",
+    "decorative-ribbon-reduced=true",
+    "ocean-intrusion-geometry-active=true",
+    "shelf-gradient-replaces-ribbon=true",
     "physical-world-material-read-active=true",
+    "visual-pass-not-claimed=true",
     "surface-authority-only=true",
     "land-geometry-owned-by-land-constructs-module=true",
     "canvas-mount-owned-by-renderer-facade=true"
@@ -67,10 +67,10 @@
     var radius = frame.radius;
     var ocean = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.36, radius * 0.02, cx, cy, radius * 1.04);
 
-    ocean.addColorStop(0.00, "#1b96ae");
-    ocean.addColorStop(0.18, "#0f6f8e");
-    ocean.addColorStop(0.44, "#063750");
-    ocean.addColorStop(0.72, "#02182b");
+    ocean.addColorStop(0.00, "#1a91a9");
+    ocean.addColorStop(0.18, "#0d6888");
+    ocean.addColorStop(0.44, "#06334d");
+    ocean.addColorStop(0.72, "#02182c");
     ocean.addColorStop(1.00, "#010610");
     ctx.fillStyle = ocean;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -94,15 +94,7 @@
     for (i = 0; i < basins.length; i += 1) {
       basin = basins[i];
       ctx.beginPath();
-      ctx.ellipse(
-        cx + radius * basin.x,
-        cy + radius * basin.y,
-        radius * basin.rx,
-        radius * basin.ry,
-        deg(basin.r),
-        0,
-        Math.PI * 2
-      );
+      ctx.ellipse(cx + radius * basin.x, cy + radius * basin.y, radius * basin.rx, radius * basin.ry, deg(basin.r), 0, Math.PI * 2);
       ctx.fillStyle = "rgba(0,6,18," + basin.a + ")";
       ctx.fill();
     }
@@ -120,7 +112,7 @@
       w = radius * (1.52 - Math.abs(i) * 0.08);
       ctx.beginPath();
       ctx.ellipse(cx, y, w * 0.48, radius * 0.026, 0.055 * i, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(124,220,232,0.036)";
+      ctx.strokeStyle = "rgba(124,220,232,0.034)";
       ctx.lineWidth = Math.max(1, radius * 0.003);
       ctx.stroke();
     }
@@ -128,7 +120,7 @@
   }
 
   function drawPlanetOneConstructSurface(ctx, construct, helpers, frame) {
-    var outline = helpers.fractureConstructOutline(construct.outline, construct.fractureProfile || { phase: construct.phase, force: construct.type === "attached-triad" ? 1.2 : 0.9 });
+    var outline = helpers.fractureConstructOutline(construct.outline, construct.fractureProfile || { phase: construct.phase, force: construct.type === "attached-triad" ? 1.0 : 0.85 });
     var projected = helpers.visibleProjectedPath(outline, frame.rotation, frame.tilt, frame.cx, frame.cy, frame.radius);
     var fill;
     var radius = frame.radius;
@@ -138,14 +130,14 @@
 
     ctx.save();
     if (helpers.smoothClosedPath(ctx, projected)) {
-      fill = ctx.createRadialGradient(frame.cx - radius * 0.25, frame.cy - radius * 0.32, radius * 0.03, frame.cx, frame.cy, radius * 1.07);
-      fill.addColorStop(0.00, construct.colorA || "rgba(86,123,74,0.82)");
-      fill.addColorStop(0.26, "rgba(55,106,72,0.84)");
-      fill.addColorStop(0.48, construct.colorB || "rgba(39,78,57,0.88)");
-      fill.addColorStop(0.69, construct.colorC || "rgba(132,107,71,0.28)");
-      fill.addColorStop(1.00, "rgba(13,22,21,0.88)");
+      fill = ctx.createRadialGradient(frame.cx - radius * 0.25, frame.cy - radius * 0.32, radius * 0.03, frame.cx, frame.cy, radius * 1.08);
+      fill.addColorStop(0.00, construct.colorA || "rgba(74,111,70,0.82)");
+      fill.addColorStop(0.25, "rgba(48,96,67,0.82)");
+      fill.addColorStop(0.48, construct.colorB || "rgba(34,70,55,0.88)");
+      fill.addColorStop(0.69, construct.colorC || "rgba(119,98,67,0.27)");
+      fill.addColorStop(1.00, "rgba(11,20,20,0.88)");
 
-      ctx.globalAlpha = construct.type === "attached-triad" ? 0.79 : 0.74;
+      ctx.globalAlpha = construct.type === "attached-triad" ? 0.77 : 0.72;
       ctx.fillStyle = fill;
       ctx.fill();
 
@@ -155,21 +147,22 @@
         drawInteriorTerrain(ctx, construct, helpers, frame);
         drawFusedLobePressure(ctx, construct, helpers, frame);
         drawBasins(ctx, construct, helpers, frame);
+        drawNegativeSpaceGulfs(ctx, construct, helpers, frame);
         drawMineralPressure(ctx, construct, helpers, frame);
       }
       ctx.restore();
 
-      ctx.shadowColor = "rgba(95,222,232,0.16)";
-      ctx.shadowBlur = radius * 0.006;
-      ctx.strokeStyle = construct.shore || "rgba(137,232,235,0.38)";
-      ctx.lineWidth = Math.max(0.9, radius * (construct.type === "attached-triad" ? 0.0062 : 0.0046));
-      ctx.globalAlpha = construct.type === "attached-triad" ? 0.41 : 0.26;
+      ctx.shadowColor = "rgba(95,222,232,0.13)";
+      ctx.shadowBlur = radius * 0.005;
+      ctx.strokeStyle = construct.shore || "rgba(132,225,231,0.34)";
+      ctx.lineWidth = Math.max(0.8, radius * (construct.type === "attached-triad" ? 0.0054 : 0.0042));
+      ctx.globalAlpha = construct.type === "attached-triad" ? 0.34 : 0.22;
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      ctx.strokeStyle = "rgba(238,255,247,0.17)";
-      ctx.lineWidth = Math.max(0.4, radius * 0.0012);
-      ctx.globalAlpha = 0.14;
+      ctx.strokeStyle = "rgba(238,255,247,0.13)";
+      ctx.lineWidth = Math.max(0.35, radius * 0.0010);
+      ctx.globalAlpha = 0.12;
       ctx.stroke();
     }
     ctx.restore();
@@ -178,23 +171,63 @@
     drawCoastFollowingCuts(ctx, construct, helpers, frame);
 
     for (i = 0; construct.plateaus && i < construct.plateaus.length; i += 1) {
-      helpers.drawOpenProjectedLine(ctx, construct.plateaus[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(215,183,112,0.24)", Math.max(0.75, radius * 0.0027), construct.type === "attached-triad" ? 0.68 : 0.40);
-      helpers.drawOpenProjectedLine(ctx, construct.plateaus[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(18,26,20,0.24)", Math.max(0.55, radius * 0.0014), construct.type === "attached-triad" ? 0.34 : 0.22);
+      helpers.drawOpenProjectedLine(ctx, construct.plateaus[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(209,178,108,0.22)", Math.max(0.72, radius * 0.0025), construct.type === "attached-triad" ? 0.58 : 0.34);
+      helpers.drawOpenProjectedLine(ctx, construct.plateaus[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(13,22,18,0.22)", Math.max(0.48, radius * 0.0012), construct.type === "attached-triad" ? 0.28 : 0.18);
     }
 
     for (i = 0; construct.ridges && i < construct.ridges.length; i += 1) {
-      helpers.drawOpenProjectedLine(ctx, construct.ridges[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, construct.ridge || "rgba(12,18,17,0.56)", Math.max(0.8, radius * (construct.type === "attached-triad" ? 0.0038 : 0.0028)), construct.type === "attached-triad" ? 0.48 : 0.28);
-      helpers.drawOpenProjectedLine(ctx, construct.ridges[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(232,197,113,0.12)", Math.max(0.38, radius * 0.0012), construct.type === "attached-triad" ? 0.38 : 0.20);
+      helpers.drawOpenProjectedLine(ctx, construct.ridges[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, construct.ridge || "rgba(9,15,15,0.56)", Math.max(0.8, radius * (construct.type === "attached-triad" ? 0.0034 : 0.0025)), construct.type === "attached-triad" ? 0.44 : 0.24);
+      helpers.drawOpenProjectedLine(ctx, construct.ridges[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(223,190,112,0.10)", Math.max(0.32, radius * 0.0010), construct.type === "attached-triad" ? 0.34 : 0.18);
     }
 
     for (i = 0; construct.tectonicSeams && i < construct.tectonicSeams.length; i += 1) {
-      helpers.drawOpenProjectedLine(ctx, construct.tectonicSeams[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(7,12,12,0.38)", Math.max(0.9, radius * 0.0032), 0.36);
-      helpers.drawOpenProjectedLine(ctx, construct.tectonicSeams[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(238,196,111,0.20)", Math.max(0.48, radius * 0.0017), 0.34);
+      helpers.drawOpenProjectedLine(ctx, construct.tectonicSeams[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(7,12,12,0.22)", Math.max(0.85, radius * 0.0026), 0.24);
+      helpers.drawOpenProjectedLine(ctx, construct.tectonicSeams[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(230,190,112,0.12)", Math.max(0.42, radius * 0.0012), 0.24);
     }
 
     for (i = 0; construct.lobeBoundaryPressure && i < construct.lobeBoundaryPressure.length; i += 1) {
-      helpers.drawOpenProjectedLine(ctx, construct.lobeBoundaryPressure[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(0,10,12,0.28)", Math.max(1.1, radius * 0.0045), 0.30);
-      helpers.drawOpenProjectedLine(ctx, construct.lobeBoundaryPressure[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(134,219,213,0.10)", Math.max(0.55, radius * 0.0016), 0.36);
+      helpers.drawOpenProjectedLine(ctx, construct.lobeBoundaryPressure[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(0,10,12,0.18)", Math.max(0.95, radius * 0.0034), 0.22);
+      helpers.drawOpenProjectedLine(ctx, construct.lobeBoundaryPressure[i], frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(132,210,206,0.075)", Math.max(0.46, radius * 0.0012), 0.28);
+    }
+  }
+
+  function drawProjectedPolygon(ctx, points, helpers, frame, fillStyle, strokeStyle, lineWidth, alpha) {
+    var projected = helpers.visibleProjectedPath(points, frame.rotation, frame.tilt, frame.cx, frame.cy, frame.radius);
+
+    if (!projected || projected.length < 3) return false;
+
+    ctx.save();
+    ctx.globalAlpha = alpha == null ? 1 : alpha;
+    if (helpers.smoothClosedPath(ctx, projected)) {
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+      }
+      if (strokeStyle) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth || 1;
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    return true;
+  }
+
+  function drawNegativeSpaceGulfs(ctx, construct, helpers, frame) {
+    var gulfs = construct.negativeSpaceGulfs || [];
+    var radius = frame.radius;
+    var i;
+    var gulf;
+    var fill;
+
+    if (!gulfs.length) return;
+
+    for (i = 0; i < gulfs.length; i += 1) {
+      gulf = gulfs[i];
+      fill = "rgba(3,42,62," + clamp(0.30 + (gulf.depth || 0.6) * 0.18, 0.28, 0.52) + ")";
+      drawProjectedPolygon(ctx, gulf.polygon, helpers, frame, "rgba(0,7,14,0.18)", null, 0, 0.88);
+      drawProjectedPolygon(ctx, gulf.polygon, helpers, frame, fill, "rgba(112,224,230,0.20)", Math.max(0.7, radius * 0.0022), 0.92);
+      drawProjectedPolygon(ctx, gulf.polygon, helpers, frame, "rgba(120,222,224,0.055)", null, 0, 1);
     }
   }
 
@@ -203,16 +236,16 @@
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    ctx.strokeStyle = construct.shelf || "rgba(78,196,210,0.16)";
-    ctx.lineWidth = Math.max(1.4, radius * (construct.type === "attached-triad" ? 0.014 : 0.008));
-    ctx.globalAlpha = construct.type === "attached-triad" ? 0.44 : 0.24;
+    ctx.strokeStyle = construct.shelf || "rgba(74,185,204,0.16)";
+    ctx.lineWidth = Math.max(1.1, radius * (construct.type === "attached-triad" ? 0.010 : 0.007));
+    ctx.globalAlpha = construct.type === "attached-triad" ? 0.32 : 0.20;
     if (helpers.smoothClosedPath(ctx, projected)) ctx.stroke();
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = "rgba(1,10,20,0.38)";
-    ctx.lineWidth = Math.max(1.0, radius * 0.006);
-    ctx.globalAlpha = construct.type === "attached-triad" ? 0.31 : 0.15;
+    ctx.strokeStyle = "rgba(1,12,22,0.24)";
+    ctx.lineWidth = Math.max(0.8, radius * 0.0042);
+    ctx.globalAlpha = construct.type === "attached-triad" ? 0.18 : 0.10;
     if (helpers.smoothClosedPath(ctx, projected)) ctx.stroke();
     ctx.restore();
   }
@@ -227,42 +260,10 @@
     ctx.save();
     for (i = 0; i < cuts.length; i += 1) {
       cut = cuts[i];
-      width = Math.max(1.0, radius * (cut.width || 8) / 560);
-      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(0,12,24," + (0.22 + (cut.depth || 0.5) * 0.26) + ")", width * 3.2, 0.78);
-      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(35,150,174," + (0.10 + (cut.depth || 0.5) * 0.10) + ")", width * 2.0, 0.62);
-      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(151,236,232," + (0.10 + (cut.depth || 0.5) * 0.08) + ")", width * 0.8, 0.50);
-    }
-    ctx.restore();
-
-    if (!cuts.length) {
-      drawLegacyIntrusions(ctx, construct, helpers, frame);
-    }
-  }
-
-  function drawLegacyIntrusions(ctx, construct, helpers, frame) {
-    var i;
-    var bite;
-    var p;
-    var scale;
-    var radius = frame.radius;
-
-    if (!construct.coastalIntrusions || !construct.coastalIntrusions.length) return;
-
-    ctx.save();
-    for (i = 0; i < construct.coastalIntrusions.length; i += 1) {
-      bite = construct.coastalIntrusions[i];
-      p = helpers.project(bite.lon, bite.lat, frame.rotation, frame.tilt, frame.cx, frame.cy, radius);
-      if (!p.visible || p.limb < 0.12) continue;
-      scale = p.limb * radius;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(deg(bite.angle || 0));
-      ctx.beginPath();
-      ctx.ellipse(0, 0, scale * bite.rx / 100, scale * bite.ry / 112, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(1,20,32," + (0.10 + bite.depth * 0.11) + ")";
-      ctx.fill();
-      ctx.restore();
+      width = Math.max(0.7, radius * (cut.width || 6) / 680);
+      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(3,36,55," + (0.12 + (cut.depth || 0.4) * 0.10) + ")", width * 2.2, 0.54);
+      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(69,177,196," + (0.08 + (cut.depth || 0.4) * 0.07) + ")", width * 1.4, 0.46);
+      helpers.drawOpenProjectedLine(ctx, cut.path, frame.rotation, frame.tilt, frame.cx, frame.cy, radius, "rgba(156,235,231," + (0.06 + (cut.depth || 0.4) * 0.04) + ")", width * 0.55, 0.38);
     }
     ctx.restore();
   }
@@ -282,13 +283,13 @@
         if (!helpers.pointInPolygon(construct.outline, lon, lat)) continue;
         n = signedNoise(lon, lat, (construct.phase || 0) + 1.7);
         h = highNoise(lon, lat, (construct.phase || 0) + 2.1);
-        if (n + h * 0.62 < 0.22) continue;
+        if (n + h * 0.62 < 0.24) continue;
         p = helpers.project(lon, lat, frame.rotation, frame.tilt, frame.cx, frame.cy, frame.radius);
         if (!p.visible || p.limb < 0.14) continue;
-        alpha = clamp(0.014 + (n + h) * 0.033, 0.010, 0.074) * p.limb;
+        alpha = clamp(0.012 + (n + h) * 0.030, 0.008, 0.062) * p.limb;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.30, frame.radius * 0.0022), 0, Math.PI * 2);
-        ctx.fillStyle = n > 0.52 ? "rgba(223,186,104," + alpha + ")" : "rgba(8,16,14," + alpha + ")";
+        ctx.arc(p.x, p.y, Math.max(0.27, frame.radius * 0.0020), 0, Math.PI * 2);
+        ctx.fillStyle = n > 0.52 ? "rgba(218,181,102," + alpha + ")" : "rgba(8,15,14," + alpha + ")";
         ctx.fill();
       }
     }
@@ -308,11 +309,11 @@
       p = helpers.project(lobe.center[0], lobe.center[1], frame.rotation, frame.tilt, frame.cx, frame.cy, radius);
       if (!p.visible || p.limb < 0.10) continue;
       ctx.beginPath();
-      ctx.ellipse(p.x, p.y, radius * lobe.radius[0] / 180, radius * lobe.radius[1] / 180, deg((i - 1) * 10), 0, Math.PI * 2);
-      ctx.fillStyle = i === 1 ? "rgba(226,194,113,0.038)" : "rgba(0,12,10,0.042)";
+      ctx.ellipse(p.x, p.y, radius * lobe.radius[0] / 185, radius * lobe.radius[1] / 185, deg((i - 1) * 10), 0, Math.PI * 2);
+      ctx.fillStyle = i === 1 ? "rgba(217,185,108,0.030)" : "rgba(0,12,10,0.034)";
       ctx.fill();
-      ctx.strokeStyle = i === 1 ? "rgba(229,193,112,0.060)" : "rgba(0,20,18,0.070)";
-      ctx.lineWidth = Math.max(0.5, radius * 0.0015);
+      ctx.strokeStyle = i === 1 ? "rgba(218,184,108,0.050)" : "rgba(0,19,17,0.056)";
+      ctx.lineWidth = Math.max(0.45, radius * 0.0012);
       ctx.stroke();
     }
     ctx.restore();
@@ -334,8 +335,8 @@
       ctx.translate(p.x, p.y);
       ctx.rotate(deg(basin.angle || 0));
       ctx.beginPath();
-      ctx.ellipse(0, 0, radius * basin.radius[0] / 210, radius * basin.radius[1] / 210, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0,13,11," + (0.038 + (basin.depth || 0.3) * 0.055) + ")";
+      ctx.ellipse(0, 0, radius * basin.radius[0] / 220, radius * basin.radius[1] / 220, 0, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0,13,11," + (0.028 + (basin.depth || 0.3) * 0.045) + ")";
       ctx.fill();
       ctx.restore();
     }
@@ -356,13 +357,13 @@
         if (!helpers.pointInPolygon(construct.outline, lon, lat)) continue;
         n = signedNoise(lon, lat, (construct.phase || 0) + 6.3);
         h = highNoise(lon, lat, (construct.phase || 0) + 5.6);
-        if (n + h * 0.40 < 0.24) continue;
+        if (n + h * 0.40 < 0.25) continue;
         p = helpers.project(lon, lat, frame.rotation, frame.tilt, frame.cx, frame.cy, frame.radius);
         if (!p.visible || p.limb < 0.14) continue;
-        alpha = clamp(0.012 + p.limb * 0.033 + Math.max(0, h) * 0.010, 0.010, 0.060);
+        alpha = clamp(0.010 + p.limb * 0.028 + Math.max(0, h) * 0.009, 0.008, 0.052);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.28, frame.radius * 0.0022), 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(225,181,95," + alpha + ")";
+        ctx.arc(p.x, p.y, Math.max(0.25, frame.radius * 0.0020), 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,176,92," + alpha + ")";
         ctx.fill();
       }
     }
@@ -388,9 +389,9 @@
       x = cx - radius + ((i * 97) % Math.floor(radius * 2));
       y = cy - radius + ((i * 53) % Math.floor(radius * 2));
       if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) > radius * radius) continue;
-      alpha = 0.009 + ((i * 17) % 13) / 1500;
+      alpha = 0.008 + ((i * 17) % 13) / 1700;
       ctx.beginPath();
-      ctx.arc(x, y, Math.max(0.42, radius * (0.0016 + ((i % 5) * 0.00040))), 0, Math.PI * 2);
+      ctx.arc(x, y, Math.max(0.38, radius * (0.0014 + ((i % 5) * 0.00034))), 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255,238,190," + alpha + ")";
       ctx.fill();
     }
@@ -404,13 +405,13 @@
     var cy = frame.cy;
     var radius = frame.radius;
     var shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-    var limb = ctx.createRadialGradient(cx, cy, radius * 0.48, cx, cy, radius * 1.05);
+    var limb = ctx.createRadialGradient(cx, cy, radius * 0.46, cx, cy, radius * 1.05);
 
-    shade.addColorStop(0.00, "rgba(255,255,255,0.095)");
-    shade.addColorStop(0.28, "rgba(255,255,255,0.020)");
+    shade.addColorStop(0.00, "rgba(255,255,255,0.092)");
+    shade.addColorStop(0.28, "rgba(255,255,255,0.019)");
     shade.addColorStop(0.55, "rgba(0,0,0,0.16)");
-    shade.addColorStop(0.80, "rgba(0,0,0,0.46)");
-    shade.addColorStop(1.00, "rgba(0,0,0,0.76)");
+    shade.addColorStop(0.80, "rgba(0,0,0,0.47)");
+    shade.addColorStop(1.00, "rgba(0,0,0,0.77)");
 
     ctx.save();
     ctx.beginPath();
@@ -420,9 +421,9 @@
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     limb.addColorStop(0.00, "rgba(255,255,255,0)");
-    limb.addColorStop(0.66, "rgba(72,164,192,0.035)");
-    limb.addColorStop(0.88, "rgba(98,218,238,0.19)");
-    limb.addColorStop(1.00, "rgba(220,248,255,0.36)");
+    limb.addColorStop(0.66, "rgba(72,164,192,0.034)");
+    limb.addColorStop(0.88, "rgba(98,218,238,0.18)");
+    limb.addColorStop(1.00, "rgba(220,248,255,0.35)");
     ctx.fillStyle = limb;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
     ctx.restore();
@@ -430,9 +431,9 @@
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(142,232,245,0.25)";
+    ctx.strokeStyle = "rgba(142,232,245,0.24)";
     ctx.lineWidth = Math.max(1, radius * 0.006);
-    ctx.shadowColor = "rgba(114,219,242,0.25)";
+    ctx.shadowColor = "rgba(114,219,242,0.24)";
     ctx.shadowBlur = radius * 0.032;
     ctx.stroke();
     ctx.restore();
@@ -451,12 +452,12 @@
       plateauRidgeMaterialAuthorityActive: true,
       mineralPressureAuthorityActive: true,
       coastFollowingMaterialCutsActive: true,
-      plateauReliefVisible: true,
-      mountainSpineContrastActive: true,
-      basinValleyShadowActive: true,
-      mineralPressureBandingActive: true,
-      flatFillDominanceReduced: true,
+      negativeSpaceGulfCarvingActive: true,
+      lobeSilhouetteStrengthened: true,
+      decorativeRibbonReduced: true,
+      shelfGradientReplacesRibbon: true,
       physicalWorldMaterialReadActive: true,
+      visualPassClaimed: false,
       markers: CONTRACT_MARKERS.slice(),
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice()
     };

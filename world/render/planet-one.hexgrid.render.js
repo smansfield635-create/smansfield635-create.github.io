@@ -1,34 +1,37 @@
-/* G1 PLANET 1 CONTINUOUS ORBITAL LAND SURFACE SMOOTHING
+/* G1 PLANET 1 RAISED LOW LAND WITH TURQUOISE SHELF RIM
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_CONTINUOUS_ORBITAL_LAND_SURFACE_SMOOTHING_TNT_v1
+   VERSION: G1_PLANET_1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_TNT_v1
 
    PURPOSE:
-   - Preserve the 256-state hexagonal terrain-cell substrate as hidden planetary data.
-   - Prevent public honeycomb, visible cell dots, and horizontal scanline/band land.
-   - Render satellite mode as continuous orbital land, coast, shelf, water-depth, and polar fields.
-   - Preserve sea-level maritime baseline, low land elevation, seven-landmass law,
-     two dynamic hemispheric land structures, three secondary non-polar bodies,
-     north/south polar distinction, debug-only cell visibility, and visual HOLD.
+   - Preserve the hidden 256-state hexagonal terrain-cell substrate.
+   - Preserve the water-dominant maritime globe and continuous orbital shelf bodies.
+   - Raise land bodies above sea level.
+   - Preserve a turquoise shallow-water rim around each land body.
+   - Keep debug cell visibility separate from public satellite mode.
+   - Keep visual pass on HOLD.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_CONTINUOUS_ORBITAL_LAND_SURFACE_SMOOTHING_TNT_v1";
-  var BASELINE = "PLANET_1_G1_MARITIME_LOW_LAND_INTERMEDIATE_BASELINE_v1";
-  var PRIOR_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
+  var VERSION = "G1_PLANET_1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_TNT_v1";
+  var BASELINE = "PLANET_1_G1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_v1";
+  var PRIOR_BASELINE = "PLANET_1_G1_MARITIME_LOW_LAND_INTERMEDIATE_BASELINE_v1";
+  var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var DEFAULT_SEED = 256451;
 
   var CONTRACT_MARKERS = [
     VERSION,
     BASELINE,
     PRIOR_BASELINE,
+    MARITIME_BASELINE,
     "HEXGRID_RENDERER_ACTIVE",
     "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
     "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
-    "CONTROLLED_LAND_ELEVATION_LAYER_ACTIVE",
     "CONTINUOUS_ORBITAL_LAND_SURFACE_ACTIVE",
-    "SATELLITE_MODE_DRAWS_CONTINUOUS_SURFACE_FIELDS_ONLY",
+    "RAISED_LOW_LAND_ACTIVE",
+    "TURQUOISE_SHELF_RIM_ACTIVE",
+    "COASTAL_GRADIENT_ACTIVE",
     "PUBLIC_HONEYCOMB_BLOCKED",
     "PUBLIC_CELL_DOTS_BLOCKED",
     "PUBLIC_SCANLINE_LAND_BLOCKED",
@@ -36,6 +39,7 @@
     "TWO_DYNAMIC_HEMISPHERIC_LAND_STRUCTURES_ACTIVE",
     "THREE_SECONDARY_NON_POLAR_BODIES_ACTIVE",
     "SEVEN_LANDMASS_LAW_ACTIVE",
+    "HIGH_RELIEF_HELD",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
 
@@ -53,6 +57,8 @@
     publicScanlineLandBlocked: true,
     satelliteObservationalModeActive: true,
     continuousOrbitalLandSurfaceActive: true,
+    raisedLowLandActive: true,
+    turquoiseShelfRimActive: true,
     visualPassClaimed: false
   };
 
@@ -127,14 +133,6 @@
     return fractalNoise(lon, lat, seed) * 2 - 1;
   }
 
-  function rgba(r, g, b, a) {
-    return "rgba(" +
-      Math.round(clamp(r, 0, 255)) + "," +
-      Math.round(clamp(g, 0, 255)) + "," +
-      Math.round(clamp(b, 0, 255)) + "," +
-      clamp(a, 0, 1).toFixed(3) + ")";
-  }
-
   function ellipseScore(lon, lat, centerLon, centerLat, scaleLon, scaleLat, curve, seed) {
     var coastNoise = signedFractalNoise(lon, lat, seed) * 9.0;
     var longCurve = Math.sin(degToRad((lon + centerLon) * 1.03 + seed * 13.0)) * curve;
@@ -153,7 +151,6 @@
 
     var westDynamic = ellipseScore(lon, lat, -116, 7, 68, 49, 12, seed + 1);
     var eastDynamic = ellipseScore(lon, lat, 74, -7, 72, 47, -10, seed + 2);
-
     var secondaryOne = ellipseScore(lon, lat, -20, -31, 27, 20, 5, seed + 3);
     var secondaryTwo = ellipseScore(lon, lat, 151, 22, 28, 19, -5, seed + 4);
     var secondaryThree = ellipseScore(lon, lat, 22, 40, 23, 17, 4, seed + 5);
@@ -167,12 +164,14 @@
     var landScore = clamp(nonPolarLand + broadTexture * 0.035 + fineTexture * 0.018, 0, 1);
     var polarScore = Math.max(northPole, southPole);
 
-    var landStrength = smoothstep(0.48, 0.64, landScore);
-    var shelfStrength = smoothstep(0.31, 0.52, landScore) * (1 - smoothstep(0.58, 0.74, landScore));
-    var coastStrength = clamp(1 - Math.abs(landScore - 0.535) / 0.17, 0, 1);
+    var landStrength = smoothstep(0.49, 0.67, landScore);
+    var raisedCoreStrength = smoothstep(0.60, 0.82, landScore);
+    var shelfStrength = smoothstep(0.27, 0.50, landScore) * (1 - smoothstep(0.55, 0.74, landScore));
+    var turquoiseRimStrength = smoothstep(0.39, 0.535, landScore) * (1 - smoothstep(0.58, 0.72, landScore));
+    var coastStrength = clamp(1 - Math.abs(landScore - 0.545) / 0.145, 0, 1);
     var lowElevation = clamp((landScore - 0.49) / 0.51, 0, 1);
     var materialTexture = fractalNoise(lon * 1.52, lat * 1.52, seed + 211);
-    var waterDepth = clamp(1 - landScore * 0.90 - shelfStrength * 0.26, 0, 1);
+    var waterDepth = clamp(1 - landScore * 0.90 - shelfStrength * 0.30, 0, 1);
 
     var type = "water";
     var structure = "ocean";
@@ -182,7 +181,6 @@
       structure = northPole >= southPole ? "north_polar_lid" : "south_polar_lid";
     } else if (landStrength > 0.05) {
       type = "land";
-
       if (westDynamic >= eastDynamic && westDynamic >= secondaryLand) {
         structure = "west_dynamic_hemispheric_land_structure";
       } else if (eastDynamic >= westDynamic && eastDynamic >= secondaryLand) {
@@ -194,9 +192,9 @@
       } else {
         structure = "secondary_non_polar_body_3";
       }
-    } else if (shelfStrength > 0.08) {
+    } else if (shelfStrength > 0.08 || turquoiseRimStrength > 0.08) {
       type = "shelf";
-      structure = "shallow_coastal_shelf_hint";
+      structure = "turquoise_shallow_coastal_rim";
     }
 
     return {
@@ -211,12 +209,14 @@
       secondaryThree: secondaryThree,
       landScore: landScore,
       landStrength: landStrength,
+      raisedCoreStrength: raisedCoreStrength,
       polarScore: polarScore,
       shelfStrength: shelfStrength,
+      turquoiseRimStrength: turquoiseRimStrength,
       coastStrength: coastStrength,
-      elevation: type === "land" ? clamp(0.025 + lowElevation * 0.155 + materialTexture * 0.018, 0.02, 0.20) : 0,
+      elevation: type === "land" ? clamp(0.055 + lowElevation * 0.205 + materialTexture * 0.026, 0.05, 0.29) : 0,
       waterDepth: waterDepth,
-      mineralPressure: type === "land" ? clamp(materialTexture * 0.13, 0, 0.13) : 0,
+      mineralPressure: type === "land" ? clamp(materialTexture * 0.11, 0, 0.11) : 0,
       plateauPressure: type === "land" ? clamp(lowElevation * 0.08, 0, 0.08) : 0,
       higherRelief: 0,
       maritimeDatum: 0,
@@ -249,6 +249,7 @@
       version: VERSION,
       baseline: BASELINE,
       priorBaseline: PRIOR_BASELINE,
+      maritimeBaseline: MARITIME_BASELINE,
       seed: seed,
       lonStep: lonStep,
       latStep: latStep,
@@ -260,6 +261,8 @@
       publicCellDotsBlocked: true,
       publicScanlineLandBlocked: true,
       continuousOrbitalLandSurfaceActive: true,
+      raisedLowLandActive: true,
+      turquoiseShelfRimActive: true,
       visualPassClaimed: false
     };
 
@@ -355,10 +358,10 @@
     var radius = Number(opts.radius || Math.min(ctx.canvas.width, ctx.canvas.height) * 0.43);
     var viewLon = Number(opts.viewLon == null ? -28 : opts.viewLon);
     var viewLat = Number(opts.viewLat == null ? 0 : opts.viewLat);
-    var alpha = clamp(Number(opts.alpha == null ? 0.86 : opts.alpha), 0, 1);
+    var alpha = clamp(Number(opts.alpha == null ? 0.90 : opts.alpha), 0, 1);
     var seed = Number((grid && grid.seed) || opts.seed || DEFAULT_SEED);
     var diameter = Math.max(180, Math.round(radius * 2));
-    var scale = clamp(Number(opts.surfaceScale || 0.72), 0.48, 1.0);
+    var scale = clamp(Number(opts.surfaceScale || 0.74), 0.48, 1.0);
     var w = Math.max(180, Math.round(diameter * scale));
     var h = Math.max(180, Math.round(diameter * scale));
     var workCanvas = createWorkCanvas(w, h);
@@ -378,11 +381,11 @@
     var landAlpha;
     var shelfAlpha;
     var polarAlpha;
-    var coastAlpha;
+    var rimAlpha;
+    var elevationLight;
     var r;
     var g;
     var b;
-    var a;
 
     if (!workCanvas) {
       state.lastError = "NO_WORK_CANVAS";
@@ -416,38 +419,39 @@
         texture = fractalNoise(mapped.lon * 2.0, mapped.lat * 2.0, seed + 307);
 
         if (field.type === "polar") {
-          polarAlpha = alpha * edgeFade * light * (0.10 + field.polarScore * 0.26);
-          r = 214 + texture * 34;
-          g = 232 + texture * 22;
-          b = 238 + texture * 16;
+          polarAlpha = alpha * edgeFade * light * (0.12 + field.polarScore * 0.26);
+          r = 216 + texture * 34;
+          g = 234 + texture * 22;
+          b = 239 + texture * 16;
           putPixel(data, index, r, g, b, polarAlpha);
           continue;
         }
 
         if (field.type === "land") {
-          coastAlpha = alpha * edgeFade * light * field.coastStrength * 0.10;
-          landAlpha = alpha * edgeFade * light * (0.19 + field.landStrength * 0.39);
-          r = 62 + field.elevation * 260 + texture * 30;
-          g = 88 + field.elevation * 155 + texture * 22;
-          b = 58 + field.elevation * 90 + texture * 14;
+          elevationLight = 1 + field.elevation * 1.18 + field.raisedCoreStrength * 0.22;
+          landAlpha = alpha * edgeFade * light * (0.27 + field.landStrength * 0.48);
 
-          if (field.coastStrength > 0.04) {
-            r = mix(r, 176, field.coastStrength * 0.25);
-            g = mix(g, 159, field.coastStrength * 0.20);
-            b = mix(b, 104, field.coastStrength * 0.18);
-            landAlpha += coastAlpha;
-          }
+          r = (66 + field.elevation * 310 + texture * 28) * elevationLight;
+          g = (98 + field.elevation * 175 + texture * 22) * elevationLight;
+          b = (62 + field.elevation * 82 + texture * 13) * elevationLight;
+
+          r = mix(r, 188, field.coastStrength * 0.14);
+          g = mix(g, 171, field.coastStrength * 0.12);
+          b = mix(b, 116, field.coastStrength * 0.10);
 
           putPixel(data, index, r, g, b, landAlpha);
           continue;
         }
 
         if (field.type === "shelf") {
-          shelfAlpha = alpha * edgeFade * light * (0.035 + field.shelfStrength * 0.115);
-          r = 154 + texture * 28;
-          g = 160 + texture * 18;
-          b = 116 + texture * 10;
-          putPixel(data, index, r, g, b, shelfAlpha);
+          rimAlpha = alpha * edgeFade * light * (0.11 + field.turquoiseRimStrength * 0.28);
+          shelfAlpha = alpha * edgeFade * light * (0.045 + field.shelfStrength * 0.13);
+
+          r = mix(72, 118, texture * 0.35);
+          g = mix(164, 214, field.turquoiseRimStrength);
+          b = mix(178, 218, field.turquoiseRimStrength);
+
+          putPixel(data, index, r, g, b, Math.max(rimAlpha, shelfAlpha));
           continue;
         }
 
@@ -459,9 +463,15 @@
 
     ctx.save();
     ctx.globalCompositeOperation = "source-over";
-    if ("filter" in ctx) ctx.filter = "blur(" + Math.max(0.45, radius * 0.0032).toFixed(2) + "px)";
+
+    if ("filter" in ctx) {
+      ctx.filter = "blur(" + Math.max(0.36, radius * 0.0026).toFixed(2) + "px)";
+    }
+
     ctx.drawImage(workCanvas, cx - radius, cy - radius, radius * 2, radius * 2);
+
     if ("filter" in ctx) ctx.filter = "none";
+
     ctx.restore();
 
     state.lastSurface = {
@@ -469,7 +479,7 @@
       version: VERSION,
       baseline: BASELINE,
       renderedAt: now(),
-      mode: "continuous_surface_buffer",
+      mode: "raised_low_land_with_turquoise_shelf_rim",
       surfaceWidth: w,
       surfaceHeight: h,
       radius: radius,
@@ -478,6 +488,10 @@
       publicCellDotsBlocked: true,
       publicScanlineLandBlocked: true,
       continuousOrbitalLandSurfaceActive: true,
+      raisedLowLandActive: true,
+      turquoiseShelfRimActive: true,
+      coastalGradientActive: true,
+      highReliefHeld: true,
       visualPassClaimed: false
     };
 
@@ -504,9 +518,12 @@
       publicCellDotsBlocked: true,
       publicScanlineLandBlocked: true,
       maritimeSeaLevelBaselineActive: true,
-      controlledLandElevationLayerActive: true,
       continuousOrbitalLandSurfaceActive: true,
+      raisedLowLandActive: true,
+      turquoiseShelfRimActive: true,
+      coastalGradientActive: true,
       debugCellVisibilityOnly: true,
+      highReliefHeld: true,
       visualPassClaimed: false,
       lastSurface: state.lastSurface
     };
@@ -596,6 +613,7 @@
       version: VERSION,
       baseline: BASELINE,
       priorBaseline: PRIOR_BASELINE,
+      maritimeBaseline: MARITIME_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
 
       hexgridRendererActive: true,
@@ -609,13 +627,16 @@
       mineralPressureCellFieldActive: true,
 
       maritimeSeaLevelBaselineActive: true,
-      controlledLandElevationLayerActive: true,
       continuousOrbitalLandSurfaceActive: true,
+      raisedLowLandActive: true,
+      turquoiseShelfRimActive: true,
+      coastalGradientActive: true,
       shallowShelfHintActive: true,
 
       plateauPressureHeld: true,
       mineralPressureHeld: true,
       higherReliefHeld: true,
+      highReliefHeld: true,
 
       satelliteObservationalModeActive: true,
       satelliteModeDrawsContinuousSurfaceFieldsOnly: true,
@@ -659,6 +680,7 @@
     version: VERSION,
     BASELINE: BASELINE,
     PRIOR_BASELINE: PRIOR_BASELINE,
+    MARITIME_BASELINE: MARITIME_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
     createPlanetOneHexGrid: createPlanetOneHexGrid,
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,

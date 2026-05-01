@@ -1,278 +1,324 @@
-import { createWorldKernel } from "./world_kernel.js";
+/* G1 PLANET 1 AXIS ROTATION CONTROL PANEL
+   FILE: /world/control.js
+   VERSION: G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1
 
-const CONTROL_META = Object.freeze({
-  name: "CONTROL",
-  version: "G2_SOLAR_TEMPLATE_BASELINE",
-  role: "world_scale_camera_and_label_governance",
-  contract: "CONTROL_CONTRACT_G2_SOLAR_TEMPLATE",
-  status: "ACTIVE",
-  deterministic: true
-});
+   PURPOSE:
+   - Provide Planet 1 runtime controls.
+   - Start, pause, resume, reset, slow, fast, reverse, and axis toggle.
+   - Keep runtime as motion owner.
+   - Keep renderer as passive draw target.
+   - Keep visual pass on HOLD.
+*/
 
-const KERNEL = createWorldKernel();
+(function attachWorldControlPanel(global) {
+  "use strict";
 
-const WORLD_DIMENSIONS_KM = Object.freeze({
-  width: 256_000_000,
-  height: 256_000_000
-});
+  var VERSION = "G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1";
 
-const SCALE_MODE = "COMPRESSED_PROPORTIONAL";
+  var CONTRACT_MARKERS = [
+    VERSION,
+    "WORLD_CONTROL_PANEL_ACTIVE",
+    "PLANET_ONE_ROTATION_CONTROLS_ACTIVE",
+    "RUNTIME_COMMAND_LAYER_ACTIVE",
+    "NO_TERRAIN_OWNERSHIP",
+    "VISUAL_PASS_NOT_CLAIMED"
+  ];
 
-const CAMERA_POLICY = Object.freeze({
-  type: "BOUNDING_CAMERA",
-  fit: "ENTIRE_WORLD",
-  keepSunCentered: true,
-  lockWorldToViewport: true,
-  allowPointerParallax: true,
-  mobileInsetRatio: 0.12,
-  desktopInsetRatio: 0.08
-});
+  var state = {
+    active: true,
+    panelMounted: false,
+    lastAction: null,
+    lastError: null,
+    visualPassClaimed: false
+  };
 
-const LABEL_POLICY = Object.freeze({
-  mode: "ATTACHED_TO_PLANETS",
-  centerReservedForSunOnly: true,
-  allowHoverMeta: true,
-  preventCenterCollision: true,
-  mobileSafe: true,
-  minLabelOffsetPx: 0,
-  metaOffsetPx: 10
-});
+  function now() {
+    return new Date().toISOString();
+  }
 
-const SOLAR_POLICY = Object.freeze({
-  template: "FULL_NINE_PLANET_SYSTEM",
-  includePluto: true,
-  centerBody: "sun",
-  orbitModel: "EUCLIDEAN_ELLIPTICAL_TEMPLATE",
-  orbitConditioning: "REAL_SOLAR_SYSTEM_COMPRESSED_PROPORTIONAL",
-  bodyCount: 9
-});
+  function getRuntime() {
+    return global.DGBPlanetOneRuntime || global.DGBWorldRuntime || null;
+  }
 
-function deepFreeze(value) {
-  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
-  return Object.freeze(value);
-}
+  function runtimeAction(name, value) {
+    var runtime = getRuntime();
 
-function clamp(value, min, max) {
-  if (!Number.isFinite(value)) return min;
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
-}
+    state.lastAction = {
+      name: name,
+      value: value,
+      at: now()
+    };
 
-function isMobileViewport(viewport = {}) {
-  return Number(viewport.width || 0) <= 760;
-}
-
-function getViewport(viewport = {}) {
-  const width = Number.isFinite(viewport.width) && viewport.width > 0 ? viewport.width : 1280;
-  const height = Number.isFinite(viewport.height) && viewport.height > 0 ? viewport.height : 720;
-  const dpr = Number.isFinite(viewport.dpr) && viewport.dpr > 0 ? viewport.dpr : 1;
-
-  return { width, height, dpr };
-}
-
-function getCameraInsetRatio(viewport = {}) {
-  return isMobileViewport(viewport)
-    ? CAMERA_POLICY.mobileInsetRatio
-    : CAMERA_POLICY.desktopInsetRatio;
-}
-
-export function getWorldDimensionsKm() {
-  return WORLD_DIMENSIONS_KM;
-}
-
-export function getScaleMode() {
-  return SCALE_MODE;
-}
-
-export function getSolarPolicy() {
-  return SOLAR_POLICY;
-}
-
-export function getLabelPolicy() {
-  return LABEL_POLICY;
-}
-
-export function getCameraPolicy() {
-  return CAMERA_POLICY;
-}
-
-export function getUniverseBoundsKm() {
-  const halfWidth = WORLD_DIMENSIONS_KM.width * 0.5;
-  const halfHeight = WORLD_DIMENSIONS_KM.height * 0.5;
-
-  return deepFreeze({
-    minX: -halfWidth,
-    maxX: halfWidth,
-    minY: -halfHeight,
-    maxY: halfHeight,
-    width: WORLD_DIMENSIONS_KM.width,
-    height: WORLD_DIMENSIONS_KM.height
-  });
-}
-
-export function getUniverseCenterKm() {
-  return deepFreeze({
-    x: 0,
-    y: 0
-  });
-}
-
-export function getSunExclusionRadiusKm() {
-  /*
-    This is a control-space protection boundary for layout/readability,
-    not the literal solar radius.
-  */
-  return 22_000_000;
-}
-
-export function getCameraFrame(viewport = {}) {
-  const nextViewport = getViewport(viewport);
-  const insetRatio = getCameraInsetRatio(nextViewport);
-
-  const drawableWidthPx = Math.max(1, nextViewport.width * (1 - insetRatio * 2));
-  const drawableHeightPx = Math.max(1, nextViewport.height * (1 - insetRatio * 2));
-
-  const kmPerPxX = WORLD_DIMENSIONS_KM.width / drawableWidthPx;
-  const kmPerPxY = WORLD_DIMENSIONS_KM.height / drawableHeightPx;
-  const kmPerPx = Math.max(kmPerPxX, kmPerPxY);
-
-  const pxPerKm = 1 / kmPerPx;
-
-  return deepFreeze({
-    world: getUniverseBoundsKm(),
-    viewport: nextViewport,
-    insetRatio,
-    drawableWidthPx,
-    drawableHeightPx,
-    kmPerPx,
-    pxPerKm,
-    centerPx: {
-      x: nextViewport.width * 0.5,
-      y: nextViewport.height * 0.5
+    if (!runtime) {
+      state.lastError = "PLANET_ONE_RUNTIME_NOT_AVAILABLE";
+      return null;
     }
-  });
-}
 
-export function worldToViewport(pointKm = {}, viewport = {}) {
-  const frame = getCameraFrame(viewport);
-  const xKm = Number.isFinite(pointKm.x) ? pointKm.x : 0;
-  const yKm = Number.isFinite(pointKm.y) ? pointKm.y : 0;
+    if (name === "start" && typeof runtime.start === "function") return runtime.start();
+    if (name === "pause" && typeof runtime.pause === "function") return runtime.pause();
+    if (name === "resume" && typeof runtime.resume === "function") return runtime.resume();
+    if (name === "stop" && typeof runtime.stop === "function") return runtime.stop();
+    if (name === "reset" && typeof runtime.reset === "function") return runtime.reset();
+    if (name === "speed" && typeof runtime.setSpeed === "function") return runtime.setSpeed(value);
+    if (name === "axis" && typeof runtime.setAxisVisible === "function") return runtime.setAxisVisible(value);
+    if (name === "tilt" && typeof runtime.setAxisTilt === "function") return runtime.setAxisTilt(value);
+    if (name === "nudge" && typeof runtime.nudge === "function") return runtime.nudge(value);
 
-  return deepFreeze({
-    x: frame.centerPx.x + xKm * frame.pxPerKm,
-    y: frame.centerPx.y + yKm * frame.pxPerKm
-  });
-}
+    state.lastError = "RUNTIME_ACTION_NOT_SUPPORTED:" + name;
+    return null;
+  }
 
-export function radiusKmToPx(radiusKm, viewport = {}) {
-  const frame = getCameraFrame(viewport);
-  const nextRadiusKm = Number.isFinite(radiusKm) && radiusKm >= 0 ? radiusKm : 0;
-  return nextRadiusKm * frame.pxPerKm;
-}
+  function resolvePanelMount(target) {
+    var mount;
 
-export function getControlReceipt(options = {}) {
-  const hostRead = KERNEL.getHostRead();
-  const viewport = getViewport(options.viewport || {});
-  const cameraFrame = getCameraFrame(viewport);
+    if (target && typeof target !== "string") return target;
 
-  return deepFreeze({
-    meta: CONTROL_META,
-    verification: {
-      pass: true,
-      deterministic: true,
-      scaleMode: SCALE_MODE
-    },
-    hostEntry: hostRead.publicEntry,
-    house: hostRead.house,
-    roomCount: hostRead.roomCount,
-    descendantOrder: ["render", "control", "index", "explore", "products"],
-    publicTraversal: {
-      houseFirst: true,
-      metaverseRequired: false,
-      roomsVisible: true,
-      programmableRooms: true
-    },
-    runtimeLaw: {
-      localRuntimeAllowedForDistinctSpines: true,
-      globalHostTruthRequired: true,
-      signalSubordinateToGeometry: true
-    },
-    controlState: {
-      phase: "READY",
-      admissible: true,
-      activeSurface: "solar_template_universe",
-      pageContext: "richie_richs_manor",
-      animationContext: "demo_template_universe",
-      bodyCount: SOLAR_POLICY.bodyCount,
-      centerReservedForSunOnly: LABEL_POLICY.centerReservedForSunOnly
-    },
-    world: {
-      widthKm: WORLD_DIMENSIONS_KM.width,
-      heightKm: WORLD_DIMENSIONS_KM.height,
-      boundsKm: getUniverseBoundsKm(),
-      centerKm: getUniverseCenterKm()
-    },
-    camera: cameraFrame,
-    solarPolicy: SOLAR_POLICY,
-    labelPolicy: LABEL_POLICY
-  });
-}
+    if (!global.document) return null;
 
-export function getControlPlan(options = {}) {
-  const receipt = getControlReceipt(options);
+    if (typeof target === "string") {
+      mount = global.document.querySelector(target);
+      if (mount) return mount;
+    }
 
-  return deepFreeze({
-    meta: CONTROL_META,
-    intent: "governed_solar_template_universe",
-    entry: receipt.hostEntry,
-    next: ["planet_engine", "world_runtime", "render", "index"],
-    state: receipt.controlState,
-    world: receipt.world,
-    camera: {
-      kmPerPx: receipt.camera.kmPerPx,
-      pxPerKm: receipt.camera.pxPerKm,
-      drawableWidthPx: receipt.camera.drawableWidthPx,
-      drawableHeightPx: receipt.camera.drawableHeightPx
-    },
-    solarPolicy: receipt.solarPolicy,
-    labelPolicy: receipt.labelPolicy
-  });
-}
+    mount = global.document.querySelector("[data-planet-one-controls='true']") ||
+      global.document.getElementById("planet-one-controls") ||
+      global.document.querySelector(".planet-one-controls");
 
-export function getLabelVisibilityPolicy(viewport = {}) {
-  const nextViewport = getViewport(viewport);
-  const mobile = isMobileViewport(nextViewport);
+    if (mount) return mount;
 
-  return deepFreeze({
-    mode: LABEL_POLICY.mode,
-    centerReservedForSunOnly: LABEL_POLICY.centerReservedForSunOnly,
-    showMetaByDefault: false,
-    showMetaOnHover: LABEL_POLICY.allowHoverMeta,
-    preventCenterCollision: LABEL_POLICY.preventCenterCollision,
-    minPlanetToSunDistancePx: clamp(
-      radiusKmToPx(getSunExclusionRadiusKm(), nextViewport),
-      mobile ? 54 : 68,
-      mobile ? 84 : 110
-    )
-  });
-}
+    mount = global.document.createElement("div");
+    mount.id = "planet-one-controls";
+    mount.setAttribute("data-planet-one-controls", "true");
 
-export default deepFreeze({
-  meta: CONTROL_META,
-  getWorldDimensionsKm,
-  getScaleMode,
-  getSolarPolicy,
-  getLabelPolicy,
-  getCameraPolicy,
-  getUniverseBoundsKm,
-  getUniverseCenterKm,
-  getSunExclusionRadiusKm,
-  getCameraFrame,
-  worldToViewport,
-  radiusKmToPx,
-  getControlReceipt,
-  getControlPlan,
-  getLabelVisibilityPolicy
-});
+    mount.style.maxWidth = "720px";
+    mount.style.margin = "12px auto";
+    mount.style.padding = "12px";
+    mount.style.border = "1px solid rgba(242,199,111,.26)";
+    mount.style.borderRadius = "18px";
+    mount.style.background = "rgba(5,10,22,.72)";
+    mount.style.color = "#f2d99b";
+    mount.style.fontFamily = "inherit";
+
+    var renderMount = global.document.getElementById("planet-one-render") ||
+      global.document.querySelector("[data-planet-one-mount='true']") ||
+      global.document.querySelector(".planet-one-render");
+
+    if (renderMount && renderMount.parentNode) {
+      renderMount.parentNode.insertBefore(mount, renderMount.nextSibling);
+    } else {
+      (global.document.body || global.document.documentElement).appendChild(mount);
+    }
+
+    return mount;
+  }
+
+  function makeButton(label, action) {
+    var button = global.document.createElement("button");
+
+    button.type = "button";
+    button.textContent = label;
+    button.setAttribute("data-planet-one-control-button", label.toLowerCase().replace(/\s+/g, "-"));
+
+    button.style.margin = "4px";
+    button.style.padding = "8px 10px";
+    button.style.border = "1px solid rgba(242,199,111,.32)";
+    button.style.borderRadius = "999px";
+    button.style.background = "rgba(12,24,46,.86)";
+    button.style.color = "#f2d99b";
+    button.style.cursor = "pointer";
+    button.style.font = "inherit";
+
+    button.addEventListener("click", action);
+
+    return button;
+  }
+
+  function mountPanel(target) {
+    var mount;
+    var title;
+    var rowOne;
+    var rowTwo;
+    var speedLabel;
+    var speed;
+    var axisLabel;
+    var axisToggle;
+    var status;
+
+    if (!global.document) {
+      state.lastError = "DOCUMENT_NOT_AVAILABLE";
+      return getStatus();
+    }
+
+    mount = resolvePanelMount(target);
+    if (!mount) {
+      state.lastError = "CONTROL_PANEL_MOUNT_NOT_AVAILABLE";
+      return getStatus();
+    }
+
+    mount.innerHTML = "";
+
+    title = global.document.createElement("div");
+    title.textContent = "Planet 1 Motion Control";
+    title.style.fontWeight = "700";
+    title.style.marginBottom = "8px";
+    title.style.letterSpacing = ".02em";
+
+    rowOne = global.document.createElement("div");
+    rowOne.style.display = "flex";
+    rowOne.style.flexWrap = "wrap";
+    rowOne.style.gap = "4px";
+    rowOne.style.alignItems = "center";
+
+    rowOne.appendChild(makeButton("Start", function () { runtimeAction("start"); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Pause", function () { runtimeAction("pause"); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Resume", function () { runtimeAction("resume"); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Reset", function () { runtimeAction("reset"); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Reverse", function () { runtimeAction("speed", -2.4); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Slow", function () { runtimeAction("speed", 1.2); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Normal", function () { runtimeAction("speed", 2.4); updateStatus(status); }));
+    rowOne.appendChild(makeButton("Fast", function () { runtimeAction("speed", 5.6); updateStatus(status); }));
+
+    rowTwo = global.document.createElement("div");
+    rowTwo.style.display = "grid";
+    rowTwo.style.gridTemplateColumns = "1fr";
+    rowTwo.style.gap = "8px";
+    rowTwo.style.marginTop = "10px";
+
+    speedLabel = global.document.createElement("label");
+    speedLabel.textContent = "Rotation speed";
+    speedLabel.style.display = "grid";
+    speedLabel.style.gap = "4px";
+
+    speed = global.document.createElement("input");
+    speed.type = "range";
+    speed.min = "-8";
+    speed.max = "8";
+    speed.step = "0.2";
+    speed.value = "2.4";
+    speed.addEventListener("input", function () {
+      runtimeAction("speed", Number(speed.value));
+      updateStatus(status);
+    });
+
+    speedLabel.appendChild(speed);
+
+    axisLabel = global.document.createElement("label");
+    axisLabel.style.display = "flex";
+    axisLabel.style.alignItems = "center";
+    axisLabel.style.gap = "8px";
+
+    axisToggle = global.document.createElement("input");
+    axisToggle.type = "checkbox";
+    axisToggle.checked = true;
+    axisToggle.addEventListener("change", function () {
+      runtimeAction("axis", axisToggle.checked);
+      updateStatus(status);
+    });
+
+    axisLabel.appendChild(axisToggle);
+    axisLabel.appendChild(global.document.createTextNode("Show soft axis"));
+
+    status = global.document.createElement("pre");
+    status.setAttribute("data-planet-one-control-status", "true");
+    status.style.whiteSpace = "pre-wrap";
+    status.style.fontSize = "12px";
+    status.style.opacity = ".78";
+    status.style.margin = "10px 0 0";
+    status.style.color = "#d8e6ff";
+
+    rowTwo.appendChild(speedLabel);
+    rowTwo.appendChild(axisLabel);
+
+    mount.appendChild(title);
+    mount.appendChild(rowOne);
+    mount.appendChild(rowTwo);
+    mount.appendChild(status);
+
+    state.panelMounted = true;
+
+    runtimeAction("start");
+    updateStatus(status);
+
+    return getStatus();
+  }
+
+  function updateStatus(node) {
+    var runtime = getRuntime();
+    var runtimeStatus = runtime && typeof runtime.getStatus === "function" ? runtime.getStatus() : null;
+
+    if (!node) return;
+
+    node.textContent = JSON.stringify({
+      controlVersion: VERSION,
+      runtimeDetected: Boolean(runtime),
+      running: runtimeStatus ? runtimeStatus.running : false,
+      paused: runtimeStatus ? runtimeStatus.paused : false,
+      viewLon: runtimeStatus ? Math.round(runtimeStatus.viewLon * 100) / 100 : null,
+      viewLat: runtimeStatus ? runtimeStatus.viewLat : null,
+      speed: runtimeStatus ? runtimeStatus.speedDegreesPerSecond : null,
+      axisVisible: runtimeStatus ? runtimeStatus.axisVisible : null,
+      visualPassClaimed: false
+    }, null, 2);
+  }
+
+  function getStatus() {
+    var runtime = getRuntime();
+    var runtimeStatus = runtime && typeof runtime.getStatus === "function" ? runtime.getStatus() : null;
+
+    return {
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+      worldControlPanelActive: true,
+      planetOneRotationControlsActive: true,
+      panelMounted: state.panelMounted,
+      runtimeDetected: Boolean(runtime),
+      runtimeStatus: runtimeStatus,
+      lastAction: state.lastAction,
+      lastError: state.lastError,
+      statusAt: now(),
+      visualPassClaimed: false
+    };
+  }
+
+  function status() {
+    return getStatus();
+  }
+
+  var api = {
+    VERSION: VERSION,
+    version: VERSION,
+    CONTRACT_MARKERS: CONTRACT_MARKERS,
+    mountPanel: mountPanel,
+    start: function () { return runtimeAction("start"); },
+    pause: function () { return runtimeAction("pause"); },
+    resume: function () { return runtimeAction("resume"); },
+    reset: function () { return runtimeAction("reset"); },
+    setSpeed: function (value) { return runtimeAction("speed", value); },
+    setAxisVisible: function (value) { return runtimeAction("axis", value); },
+    nudge: function (value) { return runtimeAction("nudge", value); },
+    getStatus: getStatus,
+    status: status
+  };
+
+  global.DGBWorldControl = api;
+  global.DGBPlanetOneControl = api;
+
+  function autoMount() {
+    mountPanel();
+  }
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:world-control-ready", {
+      detail: getStatus()
+    }));
+  } catch (error) {}
+
+  if (global.document && global.document.readyState === "loading") {
+    global.document.addEventListener("DOMContentLoaded", autoMount, { once: true });
+  } else {
+    global.setTimeout(autoMount, 120);
+  }
+})(typeof window !== "undefined" ? window : globalThis);

@@ -1,21 +1,22 @@
-/* G1 PLANET 1 HEXGRID SUBSTRATE INSERTION
+/* G1 PLANET 1 HEXGRID SATELLITE SUBSTRATE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1
+   VERSION: G1_PLANET_1_HEXGRID_RENDERER_SATELLITE_PAIR_TNT_v1
 
    PURPOSE:
-   - Create the canonical 256-state hexagonal terrain-cell substrate.
-   - Provide the missing graphics foundation between macro land geometry and surface materials.
+   - Preserve the canonical 256-state hexagonal terrain-cell substrate.
+   - Default public visual translation to satellite-observational mode.
+   - Keep cell-debug mode available for audit only.
    - Do not claim visual pass.
-   - Do not replace land constructs, surface materials, renderer, terrain, or hydration.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1";
+  var VERSION = "G1_PLANET_1_HEXGRID_RENDERER_SATELLITE_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var STATE_FORMULA = "4x4x2x2x4";
   var STATE_COUNT = 256;
+  var DEFAULT_RENDER_MODE = "satellite";
 
   var CONTRACT_MARKERS = [
     VERSION,
@@ -27,6 +28,8 @@
     "ELEVATION_CELL_FIELD_ACTIVE",
     "WATER_DEPTH_CELL_FIELD_ACTIVE",
     "MINERAL_PRESSURE_CELL_FIELD_ACTIVE",
+    "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
+    "CELL_DEBUG_MODE_AVAILABLE",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
 
@@ -138,10 +141,10 @@
 
   function lobeScore(nx, ny) {
     var lobes = [
-      { x: -0.38, y: -0.05, rx: 0.33, ry: 0.52, weight: 1.03 },
-      { x: -0.04, y: 0.08, rx: 0.46, ry: 0.40, weight: 1.08 },
-      { x: 0.36, y: -0.04, rx: 0.34, ry: 0.50, weight: 1.00 },
-      { x: 0.05, y: -0.28, rx: 0.62, ry: 0.22, weight: 0.75 }
+      { x: -0.40, y: -0.05, rx: 0.34, ry: 0.53, weight: 1.03 },
+      { x: -0.04, y: 0.08, rx: 0.47, ry: 0.41, weight: 1.08 },
+      { x: 0.36, y: -0.04, rx: 0.35, ry: 0.50, weight: 1.00 },
+      { x: 0.06, y: -0.28, rx: 0.62, ry: 0.22, weight: 0.72 }
     ];
 
     var best = -999;
@@ -172,7 +175,8 @@
     var lat = clamp(-ny * 90, -90, 90);
     var lon = clamp(nx * 180, -180, 180);
     var noise = layeredNoise(q, r, options.seed);
-    var lobe = lobeScore(nx, ny) + (noise - 0.5) * 0.24;
+    var fine = layeredNoise(q * 3, r * 3, options.seed + 503);
+    var lobe = lobeScore(nx, ny) + (noise - 0.5) * 0.22;
     var absLat = Math.abs(lat);
 
     var domain;
@@ -190,6 +194,7 @@
     var icePressure;
     var materialHint;
     var adjacencyClass;
+    var satelliteTone;
 
     if (absLat > 72 || (absLat > 64 && lobe < -0.12)) {
       domain = DOMAIN.POLAR_ICE;
@@ -201,63 +206,71 @@
       domain = DOMAIN.OCEAN_DEEP;
     }
 
-    edgeRole = (Math.abs(lobe - 0.16) < 0.17 || Math.abs(lobe + 0.10) < 0.10 || absLat > 66) ? EDGE_ROLE.BOUNDARY : EDGE_ROLE.CORE;
+    edgeRole = (
+      Math.abs(lobe - 0.16) < 0.16 ||
+      Math.abs(lobe + 0.10) < 0.10 ||
+      absLat > 66
+    ) ? EDGE_ROLE.BOUNDARY : EDGE_ROLE.CORE;
 
     if (domain === DOMAIN.OCEAN_DEEP) {
       relief = lobe < -0.55 ? RELIEF.BASIN : RELIEF.PLAIN;
-      waterDepth = clamp(0.55 + Math.abs(lobe) * 0.55 + (1 - dist) * 0.18, 0.25, 1);
+      waterDepth = clamp(0.55 + Math.abs(lobe) * 0.52 + (1 - dist) * 0.14, 0.25, 1);
       elevation = -waterDepth;
       shelfLevel = 0;
-      ridgePressure = noise > 0.86 ? 0.35 : 0.08;
+      ridgePressure = noise > 0.88 ? 0.25 : 0.06;
       basinPressure = clamp(waterDepth, 0, 1);
-      mineralPressure = noise > 0.88 ? 0.25 : 0.06;
+      mineralPressure = noise > 0.90 ? 0.22 : 0.05;
       icePressure = 0;
-      material = noise > 0.88 ? MATERIAL.METAL_OR_MINERAL : MATERIAL.SEDIMENT_OR_ORGANIC;
+      material = noise > 0.90 ? MATERIAL.METAL_OR_MINERAL : MATERIAL.SEDIMENT_OR_ORGANIC;
       terrainClass = waterDepth > 0.72 ? "ocean_deep" : "ocean_mid";
       materialHint = material === MATERIAL.METAL_OR_MINERAL ? "mineral_dark_water" : "deep_water_sediment";
       adjacencyClass = edgeRole === EDGE_ROLE.BOUNDARY ? "ocean_transition" : "ocean_core";
+      satelliteTone = 0.22 + (1 - waterDepth) * 0.22 + fine * 0.05;
     } else if (domain === DOMAIN.COASTAL_SHELF) {
       relief = noise > 0.74 ? RELIEF.RIDGE : RELIEF.PLAIN;
-      waterDepth = clamp(0.10 + Math.abs(lobe + 0.10) * 0.55, 0.05, 0.42);
-      shelfLevel = clamp(1 - waterDepth * 2.2, 0, 1);
-      elevation = clamp(-waterDepth + 0.10, -0.35, 0.18);
-      ridgePressure = relief === RELIEF.RIDGE ? 0.55 : 0.18;
+      waterDepth = clamp(0.08 + Math.abs(lobe + 0.10) * 0.50, 0.04, 0.40);
+      shelfLevel = clamp(1 - waterDepth * 2.25, 0, 1);
+      elevation = clamp(-waterDepth + 0.11, -0.32, 0.20);
+      ridgePressure = relief === RELIEF.RIDGE ? 0.36 : 0.14;
       basinPressure = waterDepth;
-      mineralPressure = noise > 0.78 ? 0.42 : 0.14;
-      icePressure = absLat > 58 ? 0.25 : 0;
+      mineralPressure = noise > 0.78 ? 0.34 : 0.12;
+      icePressure = absLat > 58 ? 0.22 : 0;
       material = noise > 0.78 ? MATERIAL.STONE : MATERIAL.SEDIMENT_OR_ORGANIC;
       terrainClass = edgeRole === EDGE_ROLE.BOUNDARY ? "shoreline" : "coastal_shelf";
       materialHint = material === MATERIAL.STONE ? "stone_shelf" : "wet_sediment_shelf";
       adjacencyClass = "coast_transition";
+      satelliteTone = 0.44 + shelfLevel * 0.22 + fine * 0.07;
     } else if (domain === DOMAIN.LAND_INTERIOR) {
       relief = noise > 0.80 ? RELIEF.RIDGE : noise > 0.56 ? RELIEF.PLATEAU : noise < 0.23 ? RELIEF.BASIN : RELIEF.PLAIN;
       waterDepth = 0;
       shelfLevel = 0;
-      elevation = clamp(0.18 + lobe * 0.78 + noise * 0.22, 0.05, 1);
-      ridgePressure = relief === RELIEF.RIDGE ? clamp(0.62 + noise * 0.30, 0, 1) : relief === RELIEF.PLATEAU ? 0.42 : 0.16;
-      basinPressure = relief === RELIEF.BASIN ? 0.72 : 0.12;
-      mineralPressure = (relief === RELIEF.RIDGE || noise > 0.77) ? clamp(0.48 + noise * 0.36, 0, 1) : 0.18;
-      icePressure = absLat > 58 ? 0.18 : 0;
+      elevation = clamp(0.18 + lobe * 0.72 + noise * 0.20, 0.05, 1);
+      ridgePressure = relief === RELIEF.RIDGE ? clamp(0.50 + noise * 0.28, 0, 1) : relief === RELIEF.PLATEAU ? 0.36 : 0.13;
+      basinPressure = relief === RELIEF.BASIN ? 0.62 : 0.10;
+      mineralPressure = (relief === RELIEF.RIDGE || noise > 0.77) ? clamp(0.40 + noise * 0.34, 0, 1) : 0.15;
+      icePressure = absLat > 58 ? 0.15 : 0;
       material = mineralPressure > 0.72 ? MATERIAL.CRYSTAL_OR_ICE : mineralPressure > 0.48 ? MATERIAL.METAL_OR_MINERAL : relief === RELIEF.PLATEAU ? MATERIAL.STONE : MATERIAL.SEDIMENT_OR_ORGANIC;
       terrainClass = relief === RELIEF.RIDGE ? "ridge" : relief === RELIEF.PLATEAU ? "plateau" : relief === RELIEF.BASIN ? "basin" : "lowland";
       materialHint = material === MATERIAL.CRYSTAL_OR_ICE ? "crystal_pressure" : material === MATERIAL.METAL_OR_MINERAL ? "mineral_seam" : material === MATERIAL.STONE ? "stone_plateau" : "organic_lowland";
       adjacencyClass = edgeRole === EDGE_ROLE.BOUNDARY ? "land_edge" : "land_core";
+      satelliteTone = 0.48 + elevation * 0.20 + ridgePressure * 0.10 + fine * 0.08 - basinPressure * 0.07;
     } else {
       relief = noise > 0.62 ? RELIEF.PLATEAU : RELIEF.PLAIN;
       waterDepth = 0;
       shelfLevel = 0;
-      elevation = clamp(0.24 + noise * 0.34 + (absLat - 64) / 40, 0.15, 1);
-      ridgePressure = noise > 0.76 ? 0.48 : 0.18;
-      basinPressure = 0.06;
-      mineralPressure = noise > 0.70 ? 0.38 : 0.12;
+      elevation = clamp(0.24 + noise * 0.30 + (absLat - 64) / 42, 0.15, 1);
+      ridgePressure = noise > 0.76 ? 0.36 : 0.14;
+      basinPressure = 0.05;
+      mineralPressure = noise > 0.70 ? 0.30 : 0.10;
       icePressure = clamp((absLat - 58) / 26, 0.25, 1);
       material = MATERIAL.CRYSTAL_OR_ICE;
       terrainClass = "polar_ice";
       materialHint = "ice_crystal_pressure";
       adjacencyClass = edgeRole === EDGE_ROLE.BOUNDARY ? "polar_boundary" : "polar_core";
+      satelliteTone = 0.70 + icePressure * 0.24 + fine * 0.05;
     }
 
-    pressure = (ridgePressure + mineralPressure + icePressure > 1.05 || relief === RELIEF.RIDGE) ? PRESSURE.HIGH : PRESSURE.BASE;
+    pressure = (ridgePressure + mineralPressure + icePressure > 1.02 || relief === RELIEF.RIDGE) ? PRESSURE.HIGH : PRESSURE.BASE;
 
     return {
       cell_id: "hex_" + q + "_" + r,
@@ -285,7 +298,8 @@
       mineral_pressure: round(mineralPressure, 4),
       ice_pressure: round(icePressure, 4),
       material_hint: materialHint,
-      adjacency_class: adjacencyClass
+      adjacency_class: adjacencyClass,
+      satellite_tone: round(clamp(satelliteTone, 0, 1), 4)
     };
   }
 
@@ -297,7 +311,7 @@
     var centerX = Number(options.centerX || width / 2);
     var centerY = Number(options.centerY || height / 2);
     var radius = Number(options.radius || Math.min(width, height) * 0.43);
-    var hexSize = Number(options.hexSize || options.cellSize || Math.max(4.5, radius / 34));
+    var hexSize = Number(options.hexSize || options.cellSize || Math.max(3.2, radius / 42));
     var seed = Number(options.seed || 256451);
     var maxRing = Math.ceil(radius / (hexSize * 1.45)) + 2;
 
@@ -356,6 +370,7 @@
       baseline: BASELINE,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
+      defaultRenderMode: DEFAULT_RENDER_MODE,
       axes: {
         domain: true,
         relief: true,
@@ -378,43 +393,77 @@
     return lastGrid;
   }
 
-  function colorForCell(cell) {
+  function satelliteColor(cell) {
+    var tone = clamp(cell.satellite_tone == null ? 0.5 : cell.satellite_tone, 0, 1);
+    var r;
+    var g;
+    var b;
+    var a;
+
     if (cell.domain === DOMAIN.OCEAN_DEEP) {
-      return cell.terrain_class === "ocean_deep" ? "rgba(16,48,82,.72)" : "rgba(26,76,112,.66)";
+      r = 8 + tone * 18;
+      g = 30 + tone * 52;
+      b = 64 + tone * 78;
+      a = 0.56 + tone * 0.16;
+    } else if (cell.domain === DOMAIN.COASTAL_SHELF) {
+      r = 38 + tone * 66;
+      g = 78 + tone * 76;
+      b = 84 + tone * 58;
+      a = 0.48 + tone * 0.18;
+    } else if (cell.domain === DOMAIN.POLAR_ICE) {
+      r = 174 + tone * 70;
+      g = 198 + tone * 50;
+      b = 210 + tone * 38;
+      a = 0.50 + tone * 0.22;
+    } else {
+      r = 62 + tone * 80 + cell.mineral_pressure * 24;
+      g = 76 + tone * 64 + cell.elevation * 22;
+      b = 48 + tone * 42 + cell.ridge_pressure * 18;
+      a = 0.50 + tone * 0.20;
     }
 
-    if (cell.domain === DOMAIN.COASTAL_SHELF) {
-      return cell.terrain_class === "shoreline" ? "rgba(122,124,82,.66)" : "rgba(50,110,126,.58)";
-    }
-
-    if (cell.domain === DOMAIN.POLAR_ICE) {
-      return "rgba(212,230,244,.66)";
-    }
-
-    if (cell.material === MATERIAL.CRYSTAL_OR_ICE) {
-      return "rgba(184,170,122,.66)";
-    }
-
-    if (cell.material === MATERIAL.METAL_OR_MINERAL) {
-      return "rgba(122,104,78,.70)";
-    }
-
-    if (cell.relief === RELIEF.RIDGE) {
-      return "rgba(115,92,68,.72)";
-    }
-
-    if (cell.relief === RELIEF.PLATEAU) {
-      return "rgba(124,112,76,.68)";
-    }
-
-    if (cell.relief === RELIEF.BASIN) {
-      return "rgba(74,92,70,.62)";
-    }
-
-    return "rgba(82,112,74,.66)";
+    return "rgba(" + Math.round(clamp(r, 0, 255)) + "," + Math.round(clamp(g, 0, 255)) + "," + Math.round(clamp(b, 0, 255)) + "," + round(clamp(a, 0.30, 0.86), 3) + ")";
   }
 
-  function drawCell(ctx, cell, size, options) {
+  function debugColor(cell) {
+    if (cell.domain === DOMAIN.OCEAN_DEEP) return cell.terrain_class === "ocean_deep" ? "rgba(16,48,82,.78)" : "rgba(26,76,112,.70)";
+    if (cell.domain === DOMAIN.COASTAL_SHELF) return cell.terrain_class === "shoreline" ? "rgba(122,124,82,.72)" : "rgba(50,110,126,.64)";
+    if (cell.domain === DOMAIN.POLAR_ICE) return "rgba(212,230,244,.72)";
+    if (cell.material === MATERIAL.CRYSTAL_OR_ICE) return "rgba(184,170,122,.72)";
+    if (cell.material === MATERIAL.METAL_OR_MINERAL) return "rgba(122,104,78,.76)";
+    if (cell.relief === RELIEF.RIDGE) return "rgba(115,92,68,.76)";
+    if (cell.relief === RELIEF.PLATEAU) return "rgba(124,112,76,.72)";
+    if (cell.relief === RELIEF.BASIN) return "rgba(74,92,70,.68)";
+    return "rgba(82,112,74,.70)";
+  }
+
+  function drawSatelliteCell(ctx, cell, size) {
+    var points = hexCorners(cell.projected_x, cell.projected_y, size * 1.04);
+    var i;
+
+    if (!cell.visible) return;
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (i = 1; i < points.length; i += 1) {
+      ctx.lineTo(points[i].x, points[i].y);
+    }
+
+    ctx.closePath();
+    ctx.fillStyle = satelliteColor(cell);
+    ctx.fill();
+
+    if (cell.edgeRole === EDGE_ROLE.BOUNDARY) {
+      ctx.globalAlpha *= 0.55;
+      ctx.strokeStyle = cell.domain === DOMAIN.COASTAL_SHELF ? "rgba(218,205,143,.18)" : "rgba(255,255,255,.07)";
+      ctx.lineWidth = Math.max(0.35, size * 0.035);
+      ctx.stroke();
+      ctx.globalAlpha /= 0.55;
+    }
+  }
+
+  function drawDebugCell(ctx, cell, size) {
     var points = hexCorners(cell.projected_x, cell.projected_y, size * 0.96);
     var i;
 
@@ -428,14 +477,12 @@
     }
 
     ctx.closePath();
-    ctx.fillStyle = colorForCell(cell);
+    ctx.fillStyle = debugColor(cell);
     ctx.fill();
 
-    if (options && options.stroke !== false) {
-      ctx.strokeStyle = cell.edgeRole === EDGE_ROLE.BOUNDARY ? "rgba(242,199,111,.16)" : "rgba(255,255,255,.045)";
-      ctx.lineWidth = cell.edgeRole === EDGE_ROLE.BOUNDARY ? 0.8 : 0.35;
-      ctx.stroke();
-    }
+    ctx.strokeStyle = cell.edgeRole === EDGE_ROLE.BOUNDARY ? "rgba(242,199,111,.26)" : "rgba(255,255,255,.08)";
+    ctx.lineWidth = cell.edgeRole === EDGE_ROLE.BOUNDARY ? 0.9 : 0.45;
+    ctx.stroke();
   }
 
   function resolveContext(target) {
@@ -457,6 +504,7 @@
     var ctx = resolveContext(target);
     var grid;
     var options;
+    var renderMode;
     var i;
 
     if (!ctx) {
@@ -464,6 +512,7 @@
         ok: false,
         reason: "NO_CANVAS_CONTEXT",
         version: VERSION,
+        defaultRenderMode: DEFAULT_RENDER_MODE,
         visualPassClaimed: false
       };
     }
@@ -484,11 +533,16 @@
       });
     }
 
-    ctx.save();
-    ctx.globalAlpha = options.alpha == null ? 0.78 : options.alpha;
+    renderMode = options.renderMode || DEFAULT_RENDER_MODE;
 
-    for (i = 0; i < grid.cells.length; i += 1) {
-      drawCell(ctx, grid.cells[i], grid.hexSize || options.hexSize || 8, options);
+    ctx.save();
+
+    if (renderMode === "cell-debug") {
+      ctx.globalAlpha = options.alpha == null ? 0.82 : options.alpha;
+      for (i = 0; i < grid.cells.length; i += 1) drawDebugCell(ctx, grid.cells[i], grid.hexSize || options.hexSize || 8);
+    } else {
+      ctx.globalAlpha = options.alpha == null ? 0.76 : options.alpha;
+      for (i = 0; i < grid.cells.length; i += 1) drawSatelliteCell(ctx, grid.cells[i], grid.hexSize || options.hexSize || 6);
     }
 
     ctx.restore();
@@ -496,6 +550,10 @@
     lastDraw = {
       ok: true,
       version: VERSION,
+      renderMode: renderMode,
+      defaultRenderMode: DEFAULT_RENDER_MODE,
+      satelliteObservationalModeActive: renderMode === "satellite",
+      cellDebugModeAvailable: true,
       cellCount: grid.cellCount,
       visibleCellCount: grid.visibleCellCount,
       renderedAt: new Date().toISOString(),
@@ -520,6 +578,9 @@
       elevationCellFieldActive: true,
       waterDepthCellFieldActive: true,
       mineralPressureCellFieldActive: true,
+      satelliteObservationalModeActive: true,
+      cellDebugModeAvailable: true,
+      defaultRenderMode: DEFAULT_RENDER_MODE,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       domainAxis: true,
@@ -558,7 +619,8 @@
         "mineral_pressure",
         "ice_pressure",
         "material_hint",
-        "adjacency_class"
+        "adjacency_class",
+        "satellite_tone"
       ],
       lastGridCellCount: lastGrid ? lastGrid.cellCount : 0,
       lastVisibleCellCount: lastGrid ? lastGrid.visibleCellCount : 0,
@@ -577,7 +639,7 @@
         width: 640,
         height: 640,
         radius: 276,
-        hexSize: 8.4,
+        hexSize: 6.6,
         seed: 256451
       });
     }
@@ -598,6 +660,9 @@
     TERRAIN_CLASS: TERRAIN_CLASS,
     stateFormula: STATE_FORMULA,
     stateCount: STATE_COUNT,
+    defaultRenderMode: DEFAULT_RENDER_MODE,
+    satelliteObservationalModeActive: true,
+    cellDebugModeAvailable: true,
     createPlanetOneHexGrid: createPlanetOneHexGrid,
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,
     getHexgridStatus: getHexgridStatus,
@@ -613,7 +678,5 @@
     global.dispatchEvent(new CustomEvent("dgb:planet-one:hexgrid-ready", {
       detail: getHexgridStatus()
     }));
-  } catch (error) {
-    /* CustomEvent may fail in older engines. The global contract remains available. */
-  }
+  } catch (error) {}
 })(typeof window !== "undefined" ? window : globalThis);

@@ -374,6 +374,7 @@
     var x;
     var y;
     var alpha;
+    var ctx = frame.ctx;
     var cx = frame.cx;
     var cy = frame.cy;
     var radius = frame.radius;

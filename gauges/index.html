@@ -6,8 +6,8 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · G1 Architecture Renewal</title>
-  <meta name="description" content="Planet 1 Generation 1 Gauges served-source authority renewal. Measures route, asset, renderer, hexgrid, 256 lattice, estate parity, archive isolation, and visual hold.">
+  <title>Diamond Gate Bridge · Gauges · Parser Repair</title>
+  <meta name="description" content="Planet 1 Generation 1 Gauges false-positive parser repair. Measures served source, route, runtime, asset, renderer, legacy isolation, hexgrid, 256 lattice, estate parity, and visual hold.">
   <style>
     :root {
       color-scheme: dark;
@@ -94,11 +94,7 @@
     .brand strong { color: var(--gold); letter-spacing: .03em; }
     .brand span { color: var(--muted); font-size: .92rem; }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .nav a {
       border: 1px solid rgba(157,200,255,.16);
@@ -223,11 +219,7 @@
     .status-fail { color: var(--fail); border-color: rgba(255,119,119,.34) !important; }
     .status-hold { color: var(--hold); border-color: rgba(157,200,255,.34) !important; }
 
-    .grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-    }
+    .grid { display: grid; gap: 14px; margin-top: 18px; }
 
     .lane {
       border: 1px solid var(--line);
@@ -335,7 +327,7 @@
     <header class="topbar">
       <div class="brand">
         <a href="/"><strong>Diamond Gate Bridge</strong></a>
-        <span>Gauges · Planet 1 G1 Architecture Renewal</span>
+        <span>Gauges · False-Positive Parser Repair</span>
       </div>
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
@@ -349,15 +341,13 @@
     </header>
 
     <section class="hero">
-      <p class="eyebrow">H6 · Gauges · Served Source Authority</p>
+      <p class="eyebrow">H6 · Gauges · Parser Repair</p>
       <h1>Planet 1 Generation 1 Architecture Renewal</h1>
       <p class="lead">
-        This renewed Gauges page measures the served route, Showroom bridge, renderer facade, hidden hex substrate,
-        256-state lattice receipt, legacy archive boundary, estate route parity, and visual hold. It does not repair,
-        render, mutate terrain, or claim visual pass.
+        This Gauges renewal repairs false positives. Served-source authority is measured from the visible contract and active global only. Estate parity counts actual script tags only, not explanatory text.
       </p>
       <div class="contract" id="served-contract">
-        SERVED_CONTRACT=G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1
+        SERVED_CONTRACT=G1_PLANET_1_GAUGES_FALSE_POSITIVE_PARSER_REPAIR_CONTRACT_v1
       </div>
 
       <div class="actions">
@@ -388,16 +378,16 @@
     </section>
 
     <p class="footer">
-      VERSION: G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1. Visual readiness remains held until manual screenshot review passes.
+      VERSION: G1_PLANET_1_GAUGES_FALSE_POSITIVE_PARSER_REPAIR_CONTRACT_v1. Visual readiness remains held until manual screenshot review passes.
     </p>
   </main>
 
   <script>
-    (function attachServedSourceAuthorityGauges(global) {
+    (function attachFalsePositiveParserRepairGauges(global) {
       "use strict";
 
-      var VERSION = "G1_PLANET_1_GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_CONTRACT_v1";
-      var CACHE_TAG = "_gauges_served_source_authority=" + Date.now();
+      var VERSION = "G1_PLANET_1_GAUGES_FALSE_POSITIVE_PARSER_REPAIR_CONTRACT_v1";
+      var CACHE_TAG = "_gauges_false_positive_parser_repair=" + Date.now();
 
       var PATHS = {
         showroomGlobe: "/showroom/globe/",
@@ -469,6 +459,26 @@
           });
       }
 
+      function extractScriptSrcs(html) {
+        var srcs = [];
+        var regex = /<script\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>/gi;
+        var match;
+
+        while ((match = regex.exec(String(html || ""))) !== null) {
+          srcs.push(match[1]);
+        }
+
+        return srcs;
+      }
+
+      function scriptSrcContains(srcs, needle) {
+        var i;
+        for (i = 0; i < srcs.length; i += 1) {
+          if (String(srcs[i]).indexOf(needle) !== -1) return true;
+        }
+        return false;
+      }
+
       function statusClass(status) {
         if (status === "PASS" || status === "DETECTED" || status === "GENERATION_1_ACTIVE") return "status-pass";
         if (status === "WARN" || status === "HOLD" || status === "VISUAL_HOLD") return "status-warn";
@@ -506,7 +516,7 @@
       function renderLanes(receipt) {
         var lanes = byId("lanes");
         var order = [
-          ["served", "Served Source Authority", "The visible Gauges shell and live receipt must both come from the renewed served-source contract."],
+          ["served", "Served Source Authority", "Visible contract and live receipt must come from the active repaired Gauges contract."],
           ["route", "Route Health", "The /showroom/globe/ route must exist, mount Planet 1, and load the split chain."],
           ["runtime", "Runtime Health", "Runtime must remain bridge-aware and must not own terrain."],
           ["asset", "Asset Consumer Health", "The Showroom globe instrument must bridge safely into the Planet 1 renderer/runtime."],
@@ -536,26 +546,26 @@
       }
 
       function parseServedAuthority() {
-        var visibleContractNode = byId("served-contract");
-        var visibleContract = visibleContractNode ? visibleContractNode.textContent : "";
-        var visibleRenewed = visibleContract.indexOf(VERSION) !== -1;
-        var globalAvailable = Boolean(global.DGBGaugesServedSourceAuthority);
-        var footerText = global.document.body ? global.document.body.textContent : "";
-        var oldContractVisible = footerText.indexOf("G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2") !== -1;
+        var node = byId("served-contract");
+        var visible = node ? node.textContent : "";
+        var visibleContractMatches = visible.indexOf(VERSION) !== -1;
+        var globalAvailable = Boolean(global.DGBGaugesFalsePositiveParserRepair);
+        var globalVersionMatches = globalAvailable && global.DGBGaugesFalsePositiveParserRepair.VERSION === VERSION;
 
         return {
-          state: visibleRenewed && globalAvailable && !oldContractVisible ? "PASS" : "FAIL",
+          state: visibleContractMatches && globalAvailable && globalVersionMatches ? "PASS" : "FAIL",
           facts: {
-            visibleContract: visibleRenewed ? VERSION : "missing",
+            visibleContract: visibleContractMatches ? VERSION : "missing",
             globalAvailable: globalAvailable,
-            oldContractVisible: oldContractVisible,
-            servedAuthorityRenewed: visibleRenewed && globalAvailable && !oldContractVisible
+            globalVersionMatches: globalVersionMatches,
+            parserRepairActive: visibleContractMatches && globalAvailable && globalVersionMatches
           }
         };
       }
 
       function parseRoute(data) {
         var text = data.text || "";
+        var srcs = extractScriptSrcs(text);
 
         var hasPlanetMount = includesAny(text, [
           "id=\"planet-one-render\"",
@@ -564,34 +574,26 @@
           "data-showroom-globe-mount"
         ]);
 
-        var hasRuntimeScript = includesAny(text, [
-          "/showroom/runtime.js",
-          "showroom/runtime.js"
-        ]);
-
-        var hasAssetScript = includesAny(text, [
-          "/assets/showroom.globe.instrument.js",
-          "showroom.globe.instrument.js"
-        ]);
-
-        var hasRendererScript = includesAny(text, [
-          "/world/render/planet-one.render.js",
-          "planet-one.render.js"
-        ]);
-
-        var hasHexgridScript = includesAny(text, [
-          "/world/render/planet-one.hexgrid.render.js",
-          "planet-one.hexgrid.render.js"
-        ]);
-
+        var hasRuntimeScript = scriptSrcContains(srcs, "/showroom/runtime.js");
+        var hasAssetScript = scriptSrcContains(srcs, "/assets/showroom.globe.instrument.js");
+        var hasRendererScript = scriptSrcContains(srcs, "/world/render/planet-one.render.js");
+        var hasHexgridScript = scriptSrcContains(srcs, "/world/render/planet-one.hexgrid.render.js");
         var staleV21Expectation = includesAny(text, ["v21", "V21"]);
-        var pass = data.ok && hasPlanetMount && hasRuntimeScript && hasAssetScript && hasRendererScript && hasHexgridScript && !staleV21Expectation;
+
+        var pass = data.ok &&
+          hasPlanetMount &&
+          hasRuntimeScript &&
+          hasAssetScript &&
+          hasRendererScript &&
+          hasHexgridScript &&
+          !staleV21Expectation;
 
         return {
           state: pass ? "PASS" : "FAIL",
           facts: {
             path: data.path,
             response: data.response,
+            scriptCount: srcs.length,
             hasPlanetMount: hasPlanetMount,
             hasRuntimeScript: hasRuntimeScript,
             hasAssetScript: hasAssetScript,
@@ -731,7 +733,7 @@
 
       function parseRenderer(rendererData, showroomRouteData) {
         var text = rendererData.text || "";
-        var route = showroomRouteData.text || "";
+        var routeSrcs = extractScriptSrcs(showroomRouteData.text || "");
 
         var detected = rendererData.ok && includesAny(text, [
           "DGBPlanetOneRender",
@@ -761,8 +763,8 @@
           "HEXGRID_PATH"
         ]);
 
-        var routeLoadsLegacyLand = route.indexOf("planet-one.land.render.js") !== -1;
-        var routeLoadsLegacySurface = route.indexOf("planet-one.surface.render.js") !== -1;
+        var routeLoadsLegacyLand = scriptSrcContains(routeSrcs, "planet-one.land.render.js");
+        var routeLoadsLegacySurface = scriptSrcContains(routeSrcs, "planet-one.surface.render.js");
         var legacyPromotedByRenderer = includesAny(text, [
           "G5_ARCHITECTURE_BASELINE",
           "G5_VISUAL_REFINEMENT"
@@ -793,12 +795,11 @@
       }
 
       function parseLegacy(legacyLandData, legacySurfaceData, showroomRouteData) {
-        var route = showroomRouteData.text || "";
+        var routeSrcs = extractScriptSrcs(showroomRouteData.text || "");
         var landDetected = legacyLandData.ok;
         var surfaceDetected = legacySurfaceData.ok;
-
-        var legacyLandLive = route.indexOf("planet-one.land.render.js") !== -1;
-        var legacySurfaceLive = route.indexOf("planet-one.surface.render.js") !== -1;
+        var legacyLandLive = scriptSrcContains(routeSrcs, "planet-one.land.render.js");
+        var legacySurfaceLive = scriptSrcContains(routeSrcs, "planet-one.surface.render.js");
         var promoted = legacyLandLive || legacySurfaceLive;
         var archived = (landDetected || surfaceDetected) && !promoted;
 
@@ -819,8 +820,8 @@
 
       function parseHexgrid(hexgridData) {
         var text = hexgridData.text || "";
-
         var fileExists = hexgridData.ok;
+
         var fileHasGlobalName = includesAny(text, [
           "DGBPlanetOneHexgridRender",
           "DGBPlanetOneHexGridRender"
@@ -829,7 +830,6 @@
         var fileHasCreateMethod = text.indexOf("createPlanetOneHexGrid") !== -1;
         var fileHasDrawMethod = text.indexOf("drawPlanetOneHexGrid") !== -1;
         var fileHasStatusMethod = text.indexOf("getHexgridStatus") !== -1 || text.indexOf("status:") !== -1;
-
         var visualPassClaimed = /visualPassClaimed\s*:\s*true/.test(text);
 
         var facts = {
@@ -882,7 +882,14 @@
         var materialAxis = text.indexOf("materialAxis: true") !== -1 || text.indexOf("MATERIAL_AXIS") !== -1;
         var requiredStateCount = text.indexOf("requiredStateCount") !== -1 && text.indexOf("256") !== -1;
 
-        var pass = stateFormula && stateCount && domainAxis && reliefAxis && edgeRoleAxis && pressureAxis && materialAxis && requiredStateCount;
+        var pass = stateFormula &&
+          stateCount &&
+          domainAxis &&
+          reliefAxis &&
+          edgeRoleAxis &&
+          pressureAxis &&
+          materialAxis &&
+          requiredStateCount;
 
         return {
           state: pass ? "PASS" : "FAIL",
@@ -921,6 +928,8 @@
       function parseEstateParity(homeData, showroomRouteData) {
         var home = homeData.text || "";
         var route = showroomRouteData.text || "";
+        var homeSrcs = extractScriptSrcs(home);
+        var routeSrcs = extractScriptSrcs(route);
 
         var homeHasPlanetMount = includesAny(home, [
           "data-planet-one-mount",
@@ -929,25 +938,13 @@
           "data-showroom-globe-mount"
         ]);
 
-        var homeHasRuntimeScript = includesAny(home, [
-          "/world/runtime.js",
-          "/showroom/runtime.js"
-        ]);
+        var homeHasRuntimeScript =
+          scriptSrcContains(homeSrcs, "/world/runtime.js") ||
+          scriptSrcContains(homeSrcs, "/showroom/runtime.js");
 
-        var homeHasAssetScript = includesAny(home, [
-          "/assets/showroom.globe.instrument.js",
-          "showroom.globe.instrument.js"
-        ]);
-
-        var homeHasRendererScript = includesAny(home, [
-          "/world/render/planet-one.render.js",
-          "planet-one.render.js"
-        ]);
-
-        var homeHasHexgridScript = includesAny(home, [
-          "/world/render/planet-one.hexgrid.render.js",
-          "planet-one.hexgrid.render.js"
-        ]);
+        var homeHasAssetScript = scriptSrcContains(homeSrcs, "/assets/showroom.globe.instrument.js");
+        var homeHasRendererScript = scriptSrcContains(homeSrcs, "/world/render/planet-one.render.js");
+        var homeHasHexgridScript = scriptSrcContains(homeSrcs, "/world/render/planet-one.hexgrid.render.js");
 
         var homeMentionsHexgridTextOnly =
           (home.indexOf("hexgrid") !== -1 || home.indexOf("Hexgrid") !== -1) &&
@@ -971,7 +968,9 @@
           state: livePlanetDependency ? "WARN" : "PASS",
           facts: {
             estateDiagnosticRan: true,
+            parserCountsScriptTagsOnly: true,
             homeRouteParity: livePlanetDependency ? "HOME_ROUTE_PARITY_WARN" : "HOME_ROUTE_PARITY_PASS",
+            homeScriptCount: homeSrcs.length,
             homeHasPlanetMount: homeHasPlanetMount,
             homeHasRuntimeScript: homeHasRuntimeScript,
             homeHasAssetScript: homeHasAssetScript,
@@ -979,7 +978,8 @@
             homeHasHexgridScript: homeHasHexgridScript,
             homeMentionsHexgridTextOnly: homeMentionsHexgridTextOnly,
             showroomGlobeHasPlanetMount: showroomGlobeHasPlanetMount,
-            gaugesServedAuthorityRenewed: true
+            showroomScriptCount: routeSrcs.length,
+            gaugesParserRepairActive: true
           }
         };
       }
@@ -991,8 +991,8 @@
         var planetBuildReadiness = "TELEMETRY_READY_VISUAL_HOLD";
 
         if (lanes.served.state !== "PASS") {
-          action = "GAUGES_SERVED_SOURCE_AUTHORITY_REPAIR_REQUIRED";
-          requiredNextTNT = "GAUGES_SERVED_SOURCE_AUTHORITY_RENEWAL_TNT_v1";
+          action = "GAUGES_FALSE_POSITIVE_PARSER_REPAIR_REQUIRED";
+          requiredNextTNT = "GAUGES_FALSE_POSITIVE_PARSER_REPAIR_TNT_v1";
           architectureHealth = "FAIL";
           planetBuildReadiness = "NOT_READY";
         } else if (lanes.route.state !== "PASS") {
@@ -1105,7 +1105,7 @@
         var receiptNode = byId("receipt");
         var receiptState = byId("receipt-state");
 
-        if (receiptNode) receiptNode.textContent = "Running renewed served-source diagnostic…";
+        if (receiptNode) receiptNode.textContent = "Running parser-repaired diagnostic…";
         if (receiptState) {
           receiptState.textContent = "RUNNING";
           receiptState.className = "badge status-hold";
@@ -1142,9 +1142,7 @@
           setSummary(receipt);
           renderLanes(receipt);
 
-          if (receiptNode) {
-            receiptNode.textContent = JSON.stringify(receipt, null, 2);
-          }
+          if (receiptNode) receiptNode.textContent = JSON.stringify(receipt, null, 2);
 
           if (receiptState) {
             receiptState.textContent = receipt.architectureHealth;
@@ -1153,7 +1151,7 @@
 
           try {
             if (global.dispatchEvent && typeof global.CustomEvent === "function") {
-              global.dispatchEvent(new global.CustomEvent("dgb:gauges:served-source-authority-renewed", {
+              global.dispatchEvent(new global.CustomEvent("dgb:gauges:false-positive-parser-repaired", {
                 detail: receipt
               }));
             }
@@ -1191,7 +1189,7 @@
         };
       }
 
-      global.DGBGaugesServedSourceAuthority = {
+      global.DGBGaugesFalsePositiveParserRepair = {
         VERSION: VERSION,
         version: VERSION,
         runDiagnostic: runDiagnostic,

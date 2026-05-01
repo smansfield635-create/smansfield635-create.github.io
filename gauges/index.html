@@ -1,55 +1,42 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-gauge-contract="GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1">
+<html
+  lang="en"
+  data-page="gauges"
+  data-gauge-contract="GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1"
+  data-previous-gauge-contract="GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1"
+  data-measures-source-runtime-mount="true"
+  data-does-not-render-planet="true"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Planet 1 Hydro-Terrain Marriage Diagnostic</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Runtime Parity</title>
   <meta
     name="description"
-    content="V19 diagnostic for Planet 1 hydro-terrain marriage: hydration engine, terrain V4 pair, asset boot awareness, route hydration proof, renderer composition awareness, and next target."
+    content="Planet 1 Gauges measure source, runtime, mount, leakage, hydration, terrain, asset, route, and renderer parity without rendering the planet."
   />
 
   <!--
+    GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1
     GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1
     PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1
 
+    TARGET=
+    /gauges/index.html
+
     PURPOSE=
-    MEASURE_THE_HYDRO_TERRAIN_MARRIAGE_FRAME
-    STOP_TREATING_TERRAIN_DETAIL_AS_THE_ONLY_VISUAL_PROBLEM
-    PROVE_WHETHER_HYDRATION_IS_PRESENT_LOADED_AND_MARRIED_TO_TERRAIN
-    DISTINGUISH:
-      HYDRATION_FILE_MISSING
-      TERRAIN_V4_MISSING
-      ASSET_BOOT_NOT_HYDRATION_AWARE
-      ROUTE_NOT_HYDRATION_AWARE
-      RENDERER_NOT_HYDRATION_AWARE
-      HYDRO_TERRAIN_SOURCE_PASS_VISUAL_REVIEW
-      ALL_CHAIN_PASS_READY_FOR_WEATHER_FRAME
+    PRESERVE_V19_HYDRO_TERRAIN_SOURCE_MEASUREMENT
+    ADD_SOURCE_RUNTIME_MOUNT_PARITY_MEASUREMENT
+    DETECT_OLD_RENDER_EXPRESSION_LEAKAGE
+    IDENTIFY_WHETHER_BREAK_IS_SOURCE_RUNTIME_MOUNT_ROUTE_ASSET_RENDERER_OR_VISUAL
+    PREVENT_BLIND_RENDER_REWRITES
 
-    MEASURED FILES=
-    /world/render/planet-one.hydration.render.js
-    /world/render/planet-one.terrain.render.js
-    /assets/showroom.globe.instrument.js
-    /showroom/globe/
-    /world/render/planet-one.render.js
-    /gauges/
+    THIS PAGE DOES_NOT_RENDER_PLANET=TRUE
+    THIS PAGE MEASURES_ONLY=TRUE
 
-    REQUIRED CORE MARKERS=
-    PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1
-    PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1
-    hydro-terrain-marriage-active=true
-    hydration-engine-paired=true
-    terrain-water-adhesion-active=true
-    shoreline-marriage-active=true
-    mountains-canyons-rivers-lakes-glaciers-ready=true
-
-    GAUGES RULE=
-    GAUGES_MEASURES_ONLY
-    GAUGES_DOES_NOT_RENDER_PLANET
-    GAUGES_DOES_NOT_REWRITE_TERRAIN
-    GAUGES_DOES_NOT_REWRITE_HYDRATION
-    GAUGES_DOES_NOT_CLOSE_GEOGRAPHY
+    EXPECTED RULE=
+    SOURCE = RUNTIME = MOUNT BEFORE VISUAL JUDGMENT
   -->
 
   <style>
@@ -57,7 +44,6 @@
       color-scheme: dark;
       --bg: #05070d;
       --panel: rgba(255,255,255,.055);
-      --panel2: rgba(255,255,255,.085);
       --line: rgba(168,199,255,.18);
       --line2: rgba(242,199,111,.42);
       --text: rgba(246,248,255,.93);
@@ -77,15 +63,24 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 50% -10%, rgba(145,189,255,.16), transparent 34rem),
-        radial-gradient(circle at 15% 20%, rgba(242,199,111,.08), transparent 22rem),
-        linear-gradient(180deg,#07101f 0%,var(--bg) 42%,#02030a 100%);
+        radial-gradient(circle at 50% -12%, rgba(145,189,255,.16), transparent 34rem),
+        radial-gradient(circle at 15% 18%, rgba(242,199,111,.09), transparent 23rem),
+        radial-gradient(circle at 88% 26%, rgba(143,227,176,.07), transparent 24rem),
+        linear-gradient(180deg,#07101f 0%,var(--bg) 44%,#02030a 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { margin: 0; color: var(--text); }
-    a { color: inherit; text-decoration: none; }
+    body {
+      margin: 0;
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     a:hover { color: var(--gold); }
 
     .skip-link {
@@ -97,6 +92,7 @@
       border-radius: 999px;
       padding: 10px 14px;
       background: #101725;
+      color: var(--text);
       font-weight: 900;
     }
 
@@ -105,7 +101,7 @@
     .site-shell {
       width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
-      padding: 22px 0 48px;
+      padding: 22px 0 50px;
     }
 
     .topbar {
@@ -125,6 +121,7 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
+      min-width: fit-content;
       font-weight: 950;
       letter-spacing: -.03em;
     }
@@ -137,6 +134,7 @@
       background:
         linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
         radial-gradient(circle at 35% 30%, #fff, transparent 40%);
+      box-shadow: 0 0 36px rgba(242,199,111,.18);
     }
 
     nav {
@@ -161,7 +159,10 @@
       background: rgba(242,199,111,.065);
     }
 
-    .hero, .panel, .score-card, .check-card, .decision-box {
+    .hero,
+    .panel,
+    .score-card,
+    .check-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--panel);
@@ -169,10 +170,10 @@
     }
 
     .hero {
-      padding: clamp(24px,5vw,48px);
+      padding: clamp(24px,5vw,52px);
       background:
-        radial-gradient(circle at 78% 18%, rgba(242,199,111,.12), transparent 20rem),
-        radial-gradient(circle at 18% 20%, rgba(145,189,255,.14), transparent 22rem),
+        radial-gradient(circle at 78% 20%, rgba(242,199,111,.12), transparent 20rem),
+        radial-gradient(circle at 18% 18%, rgba(145,189,255,.15), transparent 23rem),
         rgba(255,255,255,.045);
     }
 
@@ -187,13 +188,13 @@
     h1 {
       max-width: 980px;
       margin: 12px 0;
-      font-size: clamp(2.25rem,7vw,5.2rem);
+      font-size: clamp(2.35rem,7vw,5.25rem);
       line-height: .94;
       letter-spacing: -.075em;
     }
 
     .lead {
-      max-width: 880px;
+      max-width: 900px;
       margin: 0;
       color: var(--muted);
       font-size: clamp(1rem,2.4vw,1.25rem);
@@ -257,9 +258,9 @@
 
     .score-card strong {
       display: block;
-      font-size: clamp(1.55rem,4vw,3rem);
-      line-height: .95;
-      letter-spacing: -.065em;
+      font-size: clamp(1.35rem,3.6vw,2.35rem);
+      line-height: .98;
+      letter-spacing: -.055em;
       overflow-wrap: anywhere;
     }
 
@@ -276,6 +277,7 @@
     .panel-head {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 18px;
       margin-bottom: 18px;
     }
@@ -333,7 +335,7 @@
       background: rgba(255,155,155,.06);
     }
 
-    .checks-grid, .frame-grid {
+    .checks-grid {
       display: grid;
       grid-template-columns: repeat(2,minmax(0,1fr));
       gap: 14px;
@@ -367,6 +369,20 @@
       overflow-wrap: anywhere;
     }
 
+    .mono {
+      margin-top: 12px;
+      border: 1px solid rgba(168,199,255,.14);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(0,0,0,.16);
+      color: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
     .marker-list {
       display: grid;
       gap: 7px;
@@ -395,47 +411,12 @@
     .dot.next { border-color: rgba(242,199,111,.6); background: rgba(242,199,111,.22); }
     .dot.fail { border-color: rgba(255,155,155,.6); background: rgba(255,155,155,.22); }
 
-    .mono {
-      margin-top: 12px;
-      border: 1px solid rgba(168,199,255,.14);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(0,0,0,.16);
-      color: var(--soft);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: .78rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .frame-card {
-      border: 1px solid rgba(168,199,255,.16);
-      border-radius: 22px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    }
-
-    .frame-card strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--gold);
-      font-size: .78rem;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .frame-card h3 {
-      margin: 0 0 8px;
-      font-size: 1.18rem;
-      letter-spacing: -.035em;
-    }
-
-    .frame-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.45;
+    .observer-frame {
+      width: 100%;
+      min-height: 480px;
+      border: 1px solid rgba(168,199,255,.18);
+      border-radius: 24px;
+      background: rgba(0,0,0,.22);
     }
 
     footer {
@@ -459,7 +440,7 @@
         grid-template-columns: repeat(2,minmax(0,1fr));
       }
 
-      .checks-grid, .frame-grid {
+      .checks-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -470,9 +451,22 @@
         padding-top: 12px;
       }
 
-      .hero, .panel { border-radius: 24px; }
-      .score-grid { grid-template-columns: 1fr; }
-      .panel-head { display: grid; }
+      .hero,
+      .panel {
+        border-radius: 24px;
+      }
+
+      .panel-head {
+        display: grid;
+      }
+
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .observer-frame {
+        min-height: 420px;
+      }
     }
   </style>
 </head>
@@ -499,40 +493,38 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Hydro-Terrain Frame</div>
-      <h1>Measure whether water and terrain are married.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Runtime Parity</div>
+      <h1>Measure what is still missing.</h1>
       <p class="lead">
-        V19 checks the new hydro-terrain construct: hydration engine, V4 terrain pair, asset boot awareness,
-        route hydration proof, renderer composition awareness, and the next lawful target.
+        V20 keeps the hydro-terrain source audit and adds the missing diagnostic: source, runtime, mount, and old-expression leakage must agree before visual judgment.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAuditButton">Run hydro-terrain audit</button>
+        <button class="button" type="button" id="runAudit">Run V20 parity audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
-        <a class="button secondary" href="/showroom/">Open Showroom</a>
-        <a class="button secondary" href="/nine-summits/universe/">Open Universe</a>
+        <a class="button secondary" href="/governance/runtime/">Open Runtime Panel</a>
       </div>
     </section>
 
     <main>
-      <section class="score-grid" aria-label="Hydro terrain summary">
+      <section class="score-grid" aria-label="Gauge summary">
         <article class="score-card" id="scoreProgress">
           <span>Progress state</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreHydration">
-          <span>Hydration</span>
+        <article class="score-card" id="scoreSource">
+          <span>Source</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreMarriage">
-          <span>Marriage frame</span>
+        <article class="score-card" id="scoreRuntime">
+          <span>Runtime</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreBoot">
-          <span>Boot awareness</span>
+        <article class="score-card" id="scoreMount">
+          <span>Mount</span>
           <strong>WAIT</strong>
         </article>
 
@@ -547,248 +539,208 @@
           <div>
             <h2>Current read</h2>
             <p id="currentRead">
-              Audit has not run yet. This Gauge measures whether hydration and terrain are present, paired, and boot-visible.
+              Audit has not run yet. V20 will distinguish source proof from runtime proof and mounted DOM proof.
             </p>
           </div>
-          <span class="pill hold" id="auditStatus">WAIT</span>
+          <span class="pill hold" id="overallStatus">WAIT</span>
         </div>
 
-        <div class="frame-grid">
-          <article class="frame-card">
-            <strong>Anchor</strong>
-            <h3>One world body.</h3>
-            <p>Water and land must no longer read as separate objects. Hydration and terrain must share the surface logic.</p>
-          </article>
-
-          <article class="frame-card">
-            <strong>Appropriate</strong>
-            <h3>Correct ownership.</h3>
-            <p>Hydration owns oceans, shores, rivers, lakes, glaciers, and basins. Terrain owns elevation, mountains, canyons, crust, scars, and mineral pressure.</p>
-          </article>
-
-          <article class="frame-card">
-            <strong>Adhere</strong>
-            <h3>Water must stick to terrain.</h3>
-            <p>The route must prove hydration is loaded and usable before the terrain layer creates the married surface.</p>
-          </article>
-
-          <article class="frame-card">
-            <strong>Age</strong>
-            <h3>Ancientness rides through the married body.</h3>
-            <p>The 39B crust read only works if scars, seams, basins, glaciers, rivers, and shorelines belong to one planet body.</p>
-          </article>
-        </div>
+        <div class="mono" id="decisionMono">DIAGNOSTIC_CODE=WAIT</div>
       </section>
 
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Hydro-terrain source checks</h2>
+            <h2>Source checks</h2>
             <p>
-              These checks separate source presence, pairing, boot awareness, route proof, and renderer composition awareness.
+              These checks preserve V19 and add the V20 renderer parity standard.
             </p>
           </div>
-          <span class="pill hold" id="checksStatus">WAIT</span>
+          <span class="pill hold" id="sourceStatus">WAIT</span>
         </div>
 
-        <div class="checks-grid" id="checksGrid"></div>
+        <div class="checks-grid" id="sourceChecks"></div>
       </section>
 
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Next construction decision</h2>
-            <p id="decisionText">
-              Run the audit. The next target depends on whether hydration is missing, present but not paired, paired but not route-visible, or fully source-passed and ready for visual review.
-            </p>
-          </div>
-          <span class="pill hold" id="decisionStatus">WAIT</span>
-        </div>
-
-        <div class="mono" id="decisionMono">
-          NEXT_TARGET=WAIT
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Measurement rules</h2>
+            <h2>Runtime and mount checks</h2>
             <p>
-              V19 is a hydro-terrain diagnostic. It does not draw the planet or declare visual success.
+              These checks inspect the live Planet 1 route in an observer frame.
             </p>
           </div>
+          <span class="pill hold" id="runtimeStatus">WAIT</span>
         </div>
 
-        <div class="frame-grid">
-          <article class="frame-card">
-            <strong>No weather yet</strong>
-            <h3>Weather remains held.</h3>
-            <p>Weather cannot fix floating land. It comes after hydration and terrain adhere.</p>
-          </article>
+        <div class="checks-grid" id="runtimeChecks"></div>
+      </section>
 
-          <article class="frame-card">
-            <strong>No source drift</strong>
-            <h3>Measure before rewriting.</h3>
-            <p>If hydration exists but route or asset does not load it, the next target is boot awareness, not another terrain rewrite.</p>
-          </article>
-
-          <article class="frame-card">
-            <strong>No false visual pass</strong>
-            <h3>Source pass is not beauty proof.</h3>
-            <p>If all hydro-terrain source checks pass and the visual still fails, then return to visual expression with evidence.</p>
-          </article>
-
-          <article class="frame-card">
-            <strong>No geography closure</strong>
-            <h3>The map remains open.</h3>
-            <p>No final countries, cities, named rivers, climate taxonomy, physics constants, or final map geometry.</p>
-          </article>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Observed Planet 1 route</h2>
+            <p>
+              Gauges uses this same-origin observer frame only to inspect runtime globals and mounted DOM. Gauges does not draw the planet.
+            </p>
+          </div>
+          <span class="pill hold" id="frameStatus">WAIT</span>
         </div>
+
+        <iframe
+          class="observer-frame"
+          id="observerFrame"
+          title="Observed Planet 1 route"
+          src="/showroom/globe/?_gauges_runtime_observer=1"
+          loading="eager"
+        ></iframe>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1 · Measures Planet 1 hydro-terrain marriage.
+      GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1 · Measures V19 hydro-terrain source chain plus V20 source/runtime/mount parity.
     </footer>
   </div>
 
   <script>
-    (function runPlanetOneHydroTerrainMarriageGauges() {
+    (function planetOneV20Gauges(global) {
       "use strict";
 
-      const VERSION = "GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1";
-      const CONTRACT = "PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1";
+      const VERSION = "GAUGES_PLANET_ONE_V20_SOURCE_RUNTIME_MOUNT_PARITY_TNT_v1";
+      const V19 = "GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1";
+      const QUADA = "PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1";
 
-      const TARGETS = {
+      const EXPECTED = Object.freeze({
+        hydration: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
+        terrainV2: "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
+        terrainV3: "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1",
+        terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1",
+        assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
+        assetV16: "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
+        routeV21: "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1",
+        routeV17: "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
+        rendererV18B: "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1",
+        rendererV18: "PLANET_ONE_RENDER_V18_HYDRO_TERRAIN_COMPOSITION_ONLY_TNT_v1",
+        rendererV15: "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1"
+      });
+
+      const PATHS = Object.freeze({
         hydration: "/world/render/planet-one.hydration.render.js",
         terrain: "/world/render/planet-one.terrain.render.js",
         asset: "/assets/showroom.globe.instrument.js",
         route: "/showroom/globe/",
         renderer: "/world/render/planet-one.render.js",
         gauges: "/gauges/"
-      };
+      });
 
       const CHECKS = {
-        hydration: {
-          label: "Hydration engine · source",
-          path: TARGETS.hydration,
-          required: [
-            "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
-            "window.DGBPlanetOneHydrationRender",
-            "createHydrationLayer",
-            "hydration-engine-active=true",
-            "hydro-terrain-marriage-active=true",
-            "ocean-depth-field-active=true",
-            "shoreline-wetness-active=true",
-            "river-basin-system-active=true",
-            "lake-catchment-system-active=true",
-            "glacier-field-active=true",
-            "terrain-water-adhesion-active=true"
-          ]
-        },
+        hydration: [
+          EXPECTED.hydration,
+          "window.DGBPlanetOneHydrationRender",
+          "createHydrationLayer",
+          "hydration-engine-active=true",
+          "hydro-terrain-marriage-active=true",
+          "ocean-depth-field-active=true",
+          "shoreline-wetness-active=true",
+          "river-basin-system-active=true",
+          "lake-catchment-system-active=true",
+          "glacier-field-active=true",
+          "terrain-water-adhesion-active=true"
+        ],
 
-        terrain: {
-          label: "Terrain engine · V4 pair",
-          path: TARGETS.terrain,
-          required: [
-            "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
-            "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1",
-            "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1",
-            "window.DGBPlanetOneTerrainRender",
-            "createTerrainLayer",
-            "hydration-engine-paired=true",
-            "hydro-terrain-marriage-active=true",
-            "terrain-water-adhesion-active=true",
-            "shoreline-marriage-active=true",
-            "mountains-canyons-rivers-lakes-glaciers-ready=true",
-            "terrain-contained-to-land=true",
-            "land-water-separation-quota-preserved=true"
-          ]
-        },
+        terrain: [
+          EXPECTED.terrainV2,
+          EXPECTED.terrainV3,
+          EXPECTED.terrainV4,
+          "window.DGBPlanetOneTerrainRender",
+          "createTerrainLayer",
+          "hydration-engine-paired=true",
+          "hydro-terrain-marriage-active=true",
+          "terrain-water-adhesion-active=true",
+          "shoreline-marriage-active=true",
+          "mountains-canyons-rivers-lakes-glaciers-ready=true",
+          "terrain-contained-to-land=true",
+          "land-water-separation-quota-preserved=true"
+        ],
 
-        asset: {
-          label: "Asset instrument · hydration awareness",
-          path: TARGETS.asset,
-          required: [
-            "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
-            "window.DGBShowroomGlobeInstrument",
-            "renderGlobe",
-            "loadTerrainRenderer",
-            "loadMainRendererAfterTerrain",
-            "terrainFirstLoadOrder",
-            "optimumExpressionOnly"
-          ],
-          expanded: [
-            "/world/render/planet-one.hydration.render.js",
-            "loadHydrationRenderer",
-            "hydrationFirstLoadOrder",
-            "hydroTerrainMarriage"
-          ]
-        },
+        asset: [
+          EXPECTED.assetV20,
+          EXPECTED.assetV16,
+          "window.DGBShowroomGlobeInstrument",
+          "renderGlobe",
+          "loadTerrainRenderer",
+          "loadMainRendererAfterTerrain",
+          "terrainFirstLoadOrder",
+          "optimumExpressionOnly",
+          PATHS.hydration,
+          "loadHydrationRenderer",
+          "hydrationFirstLoadOrder",
+          "hydroTerrainMarriage"
+        ],
 
-        route: {
-          label: "Inspection route · hydration proof",
-          path: TARGETS.route,
-          required: [
-            "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
-            "Planet 1 inspection room",
-            "planet-one-render",
-            "Planet 1 render loaded",
-            "Optimum expression",
-            "/assets/showroom.globe.instrument.js",
-            "/world/render/planet-one.terrain.render.js",
-            "/world/render/planet-one.render.js",
-            "terrain-first-load-order=true"
-          ],
-          expanded: [
-            "/world/render/planet-one.hydration.render.js",
-            "hydration-engine-required=true",
-            "hydro-terrain-marriage-active=true",
-            "hydration-first-or-before-terrain=true"
-          ]
-        },
+        route: [
+          EXPECTED.routeV21,
+          EXPECTED.routeV17,
+          "Planet 1 inspection room",
+          "planet-one-render",
+          "Planet 1 render loaded",
+          "Optimum expression",
+          PATHS.asset,
+          PATHS.terrain,
+          PATHS.renderer,
+          "terrain-first-load-order=true",
+          PATHS.hydration,
+          "hydration-engine-required=true",
+          "hydro-terrain-marriage-active=true",
+          "hydration-first-or-before-terrain=true"
+        ],
 
-        renderer: {
-          label: "Main renderer · hydration composition awareness",
-          path: TARGETS.renderer,
-          required: [
-            "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
-            "window.DGBPlanetOneRenderTeam",
-            "renderPlanetOne",
-            "terrain-render-authority=/world/render/planet-one.terrain.render.js",
-            "terrain-module-integrated=true",
-            "ancient-39b-crust-engine-active=true",
-            "axis-spin-active=true",
-            "climate-topology-active=true",
-            "weather-circulation-active=true",
-            "ocean-current-logic-active=true"
-          ],
-          expanded: [
-            "hydration-render-authority=/world/render/planet-one.hydration.render.js",
-            "hydration-module-integrated=true",
-            "hydro-terrain-marriage-active=true",
-            "terrain-water-adhesion-active=true"
-          ]
-        },
-
-        gauges: {
-          label: "Gauges · V19 diagnostic",
-          path: TARGETS.gauges,
-          required: [
-            VERSION,
-            CONTRACT,
-            "Hydro-Terrain Marriage Diagnostic",
-            "hydration engine",
-            "terrain V4 pair",
-            "asset boot awareness",
-            "route hydration proof",
-            "renderer composition awareness"
-          ]
-        }
+        renderer: [
+          EXPECTED.rendererV18B,
+          EXPECTED.rendererV15,
+          "window.DGBPlanetOneRenderTeam",
+          "renderPlanetOne",
+          "terrain-render-authority=/world/render/planet-one.terrain.render.js",
+          "terrain-module-integrated=true",
+          "ancient-39b-crust-engine-active=true",
+          "axis-spin-active=true",
+          "climate-topology-active=true",
+          "weather-circulation-active=true",
+          "ocean-current-logic-active=true",
+          "hydration-render-authority=/world/render/planet-one.hydration.render.js",
+          "hydration-module-integrated=true",
+          "hydro-terrain-marriage-active=true",
+          "terrain-water-adhesion-active=true"
+        ]
       };
 
-      function $(id) {
+      const RUNTIME_REQUIRED = [
+        EXPECTED.rendererV18B,
+        EXPECTED.assetV20,
+        EXPECTED.routeV21,
+        "hydrationModuleIntegrated",
+        "hydroTerrainMarriageActive",
+        "terrainWaterAdhesionActive"
+      ];
+
+      const MOUNT_REQUIRED = [
+        "Hydration module integrated",
+        "Terrain module integrated",
+        "Hydro-terrain marriage active",
+        "Terrain-water adhesion active",
+        "Composition only"
+      ];
+
+      const OLD_LEAKAGE = [
+        "Terrain fallback active",
+        "Legacy markers restored",
+        "terrain-first instrument chain",
+        "DEMO PLANET",
+        "demo planet",
+        "fallback planet"
+      ];
+
+      function byId(id) {
         return document.getElementById(id);
       }
 
@@ -798,6 +750,34 @@
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
+      }
+
+      function statusClass(status) {
+        if (status === "PASS") return "pass";
+        if (status === "NEXT") return "next";
+        if (status === "FAIL") return "fail";
+        return "hold";
+      }
+
+      function setPill(id, status) {
+        const el = byId(id);
+        if (!el) return;
+        el.className = "pill " + statusClass(status);
+        el.textContent = status;
+      }
+
+      function setScore(id, text, status) {
+        const el = byId(id);
+        if (!el) return;
+        el.classList.remove("good", "next", "hold", "bad");
+
+        if (status === "PASS") el.classList.add("good");
+        else if (status === "NEXT") el.classList.add("next");
+        else if (status === "FAIL") el.classList.add("bad");
+        else el.classList.add("hold");
+
+        const strong = el.querySelector("strong");
+        if (strong) strong.textContent = text;
       }
 
       function cacheBusted(path) {
@@ -833,301 +813,407 @@
           });
       }
 
-      function has(source, marker) {
-        return String(source || "").indexOf(marker) !== -1;
+      function has(text, marker) {
+        return String(text || "").indexOf(marker) !== -1;
       }
 
-      function makeRows(markers, source, type) {
-        return (markers || []).map(function markerRow(marker) {
+      function rows(markers, text, invert) {
+        return markers.map(function row(marker) {
+          const found = has(text, marker);
           return {
             marker,
-            ok: has(source, marker),
-            type: type || "required"
+            found,
+            invert: Boolean(invert),
+            ok: invert ? !found : found
           };
         });
       }
 
-      function summarize(rows) {
-        const total = rows.length;
-        const passed = rows.filter(function item(row) { return row.ok; }).length;
+      function summarize(checkRows) {
+        const total = checkRows.length;
+        const passed = checkRows.filter(function ok(row) { return row.ok; }).length;
 
         return {
           total,
           passed,
           score: total ? Math.round((passed / total) * 100) : 100,
-          missing: rows.filter(function item(row) { return !row.ok; }).map(function item(row) { return row.marker; })
+          missing: checkRows
+            .filter(function miss(row) { return !row.ok; })
+            .map(function get(row) { return row.marker; })
         };
       }
 
-      function evaluate(key, spec, fetched) {
-        const requiredRows = makeRows(spec.required || [], fetched.text, "required");
-        const expandedRows = makeRows(spec.expanded || [], fetched.text, "expanded");
-
-        const requiredSummary = summarize(requiredRows);
-        const expandedSummary = summarize(expandedRows);
-
-        const requiredPass = Boolean(fetched.ok && requiredSummary.score === 100);
-        const expandedPass = expandedRows.length ? expandedSummary.score === 100 : true;
-
-        let status = "PASS";
-
-        if (!fetched.ok) status = "FAIL";
-        else if (!requiredPass) status = "FAIL";
-        else if (!expandedPass) status = "HOLD";
+      function evaluateSource(label, fetched, markers) {
+        const checkRows = rows(markers, fetched.text, false);
+        const summary = summarize(checkRows);
 
         return {
-          key,
-          label: spec.label,
-          path: spec.path,
-          httpOk: fetched.ok,
-          httpStatus: fetched.status,
-          error: fetched.error || null,
-          text: fetched.text,
-          requiredRows,
-          expandedRows,
-          requiredSummary,
-          expandedSummary,
-          requiredPass,
-          expandedPass,
-          status
+          label,
+          fetched,
+          rows: checkRows,
+          summary,
+          status: fetched.ok && summary.score === 100 ? "PASS" : "FAIL"
         };
       }
 
-      function className(status) {
-        if (status === "PASS") return "pass";
-        if (status === "NEXT") return "next";
-        if (status === "FAIL") return "fail";
-        return "hold";
-      }
-
-      function setPill(id, status) {
-        const el = $(id);
-        if (!el) return;
-        el.className = "pill " + className(status);
-        el.textContent = status;
-      }
-
-      function setScore(id, value, status) {
-        const el = $(id);
-        if (!el) return;
-
-        el.classList.remove("good", "next", "hold", "bad");
-
-        if (status === "PASS") el.classList.add("good");
-        else if (status === "NEXT") el.classList.add("next");
-        else if (status === "FAIL") el.classList.add("bad");
-        else el.classList.add("hold");
-
-        const strong = el.querySelector("strong");
-        if (strong) strong.textContent = value;
-      }
-
-      function markerHtml(row) {
-        const dotClass = row.ok ? "pass" : row.type === "expanded" ? "next" : "fail";
-        const label = row.type === "expanded" && !row.ok ? "EXPAND: " : "";
+      function dot(row) {
+        const dotClass = row.ok ? "pass" : row.invert ? "fail" : "next";
+        const prefix = row.invert ? "LEAK: " : "";
 
         return [
           '<div class="marker">',
-            '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
-            '<code>' + label + escapeHtml(row.marker) + '</code>',
+          '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
+          '<code>' + escapeHtml(prefix + row.marker) + '</code>',
           '</div>'
         ].join("");
       }
 
-      function cardHtml(result) {
-        const status = result.status;
-        const httpLine = result.httpOk
-          ? "HTTP " + result.httpStatus + ". Required: " + result.requiredSummary.passed + " of " + result.requiredSummary.total + ". Expanded: " + result.expandedSummary.passed + " of " + result.expandedSummary.total + "."
-          : "HTTP " + result.httpStatus + ". " + (result.error || "fetch failed");
-
+      function card(title, path, status, checkRows, meta) {
         return [
           '<article class="check-card">',
-            '<div class="check-title">',
-              '<h3>' + escapeHtml(result.label) + '</h3>',
-              '<span class="pill ' + className(status) + '">' + status + '</span>',
-            '</div>',
-            '<div><code>' + escapeHtml(result.path) + '</code></div>',
-            '<div class="mono">' + escapeHtml(httpLine) + '</div>',
-            '<div class="marker-list">',
-              result.requiredRows.map(markerHtml).join(""),
-              result.expandedRows.length ? result.expandedRows.map(markerHtml).join("") : "",
-            '</div>',
+          '<div class="check-title">',
+          '<h3>' + escapeHtml(title) + '</h3>',
+          '<span class="pill ' + statusClass(status) + '">' + status + '</span>',
+          '</div>',
+          path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '',
+          '<div class="mono">' + escapeHtml(meta || "") + '</div>',
+          '<div class="marker-list">',
+          checkRows.map(dot).join(""),
+          '</div>',
           '</article>'
         ].join("");
       }
 
-      function decide(results) {
-        if (!results.gauges || !results.gauges.requiredPass) {
+      function inspectFrame() {
+        const frame = byId("observerFrame");
+
+        return new Promise(function wait(resolve) {
+          let tries = 0;
+
+          function inspect() {
+            tries += 1;
+
+            try {
+              const win = frame.contentWindow;
+              const doc = frame.contentDocument;
+              const mount = doc.getElementById("planet-one-render");
+
+              const renderer = win.DGBPlanetOneRenderTeam;
+              const asset = win.DGBShowroomGlobeInstrument;
+              const route = win.DGBShowroomGlobeRouteV21;
+
+              const runtimeText = [
+                renderer && renderer.VERSION ? renderer.VERSION : "",
+                asset && asset.VERSION ? asset.VERSION : "",
+                route && route.VERSION ? route.VERSION : "",
+                renderer && typeof renderer.getStatus === "function" ? JSON.stringify(renderer.getStatus()) : "",
+                asset && typeof asset.getStatus === "function" ? JSON.stringify(asset.getStatus()) : "",
+                route && typeof route.getStatus === "function" ? JSON.stringify(route.getStatus()) : "",
+                doc.documentElement && doc.documentElement.dataset ? JSON.stringify(doc.documentElement.dataset) : "",
+                mount && mount.dataset ? JSON.stringify(mount.dataset) : ""
+              ].join("\n");
+
+              const mountText = [
+                mount ? mount.innerHTML : "",
+                mount ? mount.textContent : "",
+                mount && mount.dataset ? JSON.stringify(mount.dataset) : ""
+              ].join("\n");
+
+              const ready =
+                runtimeText.indexOf(EXPECTED.rendererV18B) !== -1 ||
+                mountText.indexOf("Hydration module integrated") !== -1 ||
+                mountText.indexOf("Terrain module integrated") !== -1 ||
+                tries > 36;
+
+              if (!ready) {
+                global.setTimeout(inspect, 250);
+                return;
+              }
+
+              resolve({
+                ok: true,
+                runtimeText,
+                mountText,
+                rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "",
+                assetVersion: asset && asset.VERSION ? asset.VERSION : "",
+                routeVersion: route && route.VERSION ? route.VERSION : ""
+              });
+            } catch (error) {
+              if (tries < 24) {
+                global.setTimeout(inspect, 250);
+                return;
+              }
+
+              resolve({
+                ok: false,
+                runtimeText: "",
+                mountText: "",
+                error: error && error.message ? error.message : "frame inspection failed"
+              });
+            }
+          }
+
+          inspect();
+        });
+      }
+
+      function evaluateRuntime(frame) {
+        const checkRows = rows(RUNTIME_REQUIRED, frame.runtimeText || "", false);
+        const summary = summarize(checkRows);
+
+        return {
+          rows: checkRows,
+          summary,
+          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
+          meta: frame.ok
+            ? [
+                "Renderer VERSION: " + (frame.rendererVersion || "missing"),
+                "Asset VERSION: " + (frame.assetVersion || "missing"),
+                "Route VERSION: " + (frame.routeVersion || "missing")
+              ].join("\n")
+            : "Frame blocked: " + (frame.error || "unknown")
+        };
+      }
+
+      function evaluateMount(frame) {
+        const checkRows = rows(MOUNT_REQUIRED, frame.mountText || "", false);
+        const summary = summarize(checkRows);
+
+        return {
+          rows: checkRows,
+          summary,
+          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
+          meta: "Mounted DOM checks: " + summary.passed + " of " + summary.total + "."
+        };
+      }
+
+      function evaluateLeakage(frame) {
+        const checkRows = rows(OLD_LEAKAGE, frame.mountText || "", true);
+        const summary = summarize(checkRows);
+
+        return {
+          rows: checkRows,
+          summary,
+          status: frame.ok && summary.score === 100 ? "PASS" : "FAIL",
+          meta: "Old-expression leakage clean: " + summary.passed + " of " + summary.total + "."
+        };
+      }
+
+      function decide(state) {
+        const sourcesPass =
+          state.hydration.status === "PASS" &&
+          state.terrain.status === "PASS" &&
+          state.asset.status === "PASS" &&
+          state.route.status === "PASS" &&
+          state.renderer.status === "PASS";
+
+        if (!sourcesPass) {
+          if (state.hydration.status !== "PASS") {
+            return {
+              progress: "HOLD",
+              source: "FAIL",
+              runtime: "WAIT",
+              mount: "WAIT",
+              next: PATHS.hydration,
+              code: "HYDRATION_SOURCE_BREAK",
+              read: "Hydration source is not passing. Restore the hydration engine first."
+            };
+          }
+
+          if (state.terrain.status !== "PASS") {
+            return {
+              progress: "HOLD",
+              source: "FAIL",
+              runtime: "WAIT",
+              mount: "WAIT",
+              next: PATHS.terrain,
+              code: "TERRAIN_SOURCE_BREAK",
+              read: "Terrain source is not passing. Restore the terrain pair first."
+            };
+          }
+
+          if (state.asset.status !== "PASS") {
+            return {
+              progress: "HOLD",
+              source: "FAIL",
+              runtime: "WAIT",
+              mount: "WAIT",
+              next: PATHS.asset,
+              code: "ASSET_SOURCE_BREAK",
+              read: "Asset source is not hydration-first aware."
+            };
+          }
+
+          if (state.route.status !== "PASS") {
+            return {
+              progress: "HOLD",
+              source: "FAIL",
+              runtime: "WAIT",
+              mount: "WAIT",
+              next: "/showroom/globe/index.html",
+              code: "ROUTE_SOURCE_BREAK",
+              read: "Inspection route source is not hydration-aware."
+            };
+          }
+
           return {
             progress: "HOLD",
-            hydration: results.hydration && results.hydration.requiredPass ? "PASS" : "WAIT",
-            marriage: "WAIT",
-            boot: "WAIT",
-            next: "/gauges/index.html",
-            title: "Gauges V19 is not fully self-proving.",
-            text: "Renew Gauges before trusting hydro-terrain readings.",
-            code: "GAUGES_SELF_CHECK_HOLD"
+            source: "FAIL",
+            runtime: "WAIT",
+            mount: "WAIT",
+            next: PATHS.renderer,
+            code: "RENDERER_SOURCE_BREAK",
+            read: "Renderer source is not current. Renew /world/render/planet-one.render.js."
           };
         }
 
-        if (!results.hydration || !results.hydration.requiredPass) {
+        if (state.runtime.status !== "PASS") {
           return {
             progress: "HOLD",
-            hydration: "FAIL",
-            marriage: "WAIT",
-            boot: "WAIT",
-            next: TARGETS.hydration,
-            title: "Hydration file is missing or incomplete.",
-            text: "The hydro-terrain frame cannot proceed until the hydration engine is served and exposes createHydrationLayer.",
-            code: "HYDRATION_FILE_MISSING"
-          };
-        }
-
-        if (!results.terrain || !results.terrain.requiredPass) {
-          return {
-            progress: "HOLD",
-            hydration: "PASS",
-            marriage: "FAIL",
-            boot: "WAIT",
-            next: TARGETS.terrain,
-            title: "Terrain V4 marriage pair is missing or incomplete.",
-            text: "The terrain file must prove the V4 hydro-terrain marriage markers before route or renderer work can be trusted.",
-            code: "TERRAIN_V4_MISSING"
-          };
-        }
-
-        if (!results.asset || !results.asset.requiredPass || !results.asset.expandedPass) {
-          return {
-            progress: "HOLD",
-            hydration: "PASS",
-            marriage: "PASS",
-            boot: "HOLD",
-            next: TARGETS.asset,
-            title: "Asset boot is not hydration-aware.",
-            text: "Hydration and terrain are present, but the asset instrument does not prove hydration loading before terrain/render composition.",
-            code: "ASSET_BOOT_NOT_HYDRATION_AWARE"
-          };
-        }
-
-        if (!results.route || !results.route.requiredPass || !results.route.expandedPass) {
-          return {
-            progress: "HOLD",
-            hydration: "PASS",
-            marriage: "PASS",
-            boot: "HOLD",
+            source: "PASS",
+            runtime: "FAIL",
+            mount: "WAIT",
             next: "/showroom/globe/index.html",
-            title: "Inspection route is not hydration-aware.",
-            text: "The route still proves terrain-first boot, but not hydration-first or hydro-terrain boot.",
-            code: "ROUTE_NOT_HYDRATION_AWARE"
+            code: "RUNTIME_GLOBAL_BREAK",
+            read: "Source passes, but the browser runtime is not loading the current renderer/asset/route versions."
           };
         }
 
-        if (!results.renderer || !results.renderer.requiredPass || !results.renderer.expandedPass) {
+        if (state.mount.status !== "PASS") {
           return {
             progress: "HOLD",
-            hydration: "PASS",
-            marriage: "PASS",
-            boot: "PASS",
-            next: TARGETS.renderer,
-            title: "Main renderer is not hydration-aware.",
-            text: "The renderer passes the older terrain contract but does not yet acknowledge hydration composition.",
-            code: "RENDERER_NOT_HYDRATION_AWARE"
+            source: "PASS",
+            runtime: "PASS",
+            mount: "FAIL",
+            next: "mount lifecycle / stale DOM purge",
+            code: "MOUNTED_DOM_BREAK",
+            read: "Source and runtime pass, but the mounted DOM is still old or incomplete."
+          };
+        }
+
+        if (state.leakage.status !== "PASS") {
+          return {
+            progress: "HOLD",
+            source: "PASS",
+            runtime: "PASS",
+            mount: "PASS",
+            next: "old expression leakage purge",
+            code: "OLD_EXPRESSION_LEAKAGE",
+            read: "Source/runtime/mount pass, but old expression leakage remains."
           };
         }
 
         return {
           progress: "PASS",
-          hydration: "PASS",
-          marriage: "PASS",
-          boot: "PASS",
-          next: "/showroom/globe/",
-          title: "Hydro-terrain source chain passes. Visual review is next.",
-          text: "Hydration, terrain, asset, route, and renderer all prove the hydro-terrain marriage source frame. Inspect the globe visually before weather.",
-          code: "HYDRO_TERRAIN_SOURCE_PASS_VISUAL_REVIEW"
+          source: "PASS",
+          runtime: "PASS",
+          mount: "PASS",
+          next: "/showroom/globe/ visual review",
+          code: "SOURCE_RUNTIME_MOUNT_PARITY_PASS",
+          read: "Source, runtime, and mounted DOM agree. Visual review is now lawful."
         };
       }
 
-      function render(results, decision) {
-        $("checksGrid").innerHTML = Object.keys(results).map(function map(key) {
-          return cardHtml(results[key]);
-        }).join("");
+      function render(state, decision) {
+        const sourceCards = [
+          card("Hydration engine · source", PATHS.hydration, state.hydration.status, state.hydration.rows, "HTTP " + state.hydration.fetched.status + ". Required: " + state.hydration.summary.passed + " of " + state.hydration.summary.total + "."),
+          card("Terrain engine · V4 pair", PATHS.terrain, state.terrain.status, state.terrain.rows, "HTTP " + state.terrain.fetched.status + ". Required: " + state.terrain.summary.passed + " of " + state.terrain.summary.total + "."),
+          card("Asset instrument · hydration awareness", PATHS.asset, state.asset.status, state.asset.rows, "HTTP " + state.asset.fetched.status + ". Required: " + state.asset.summary.passed + " of " + state.asset.summary.total + "."),
+          card("Inspection route · hydration proof", PATHS.route, state.route.status, state.route.rows, "HTTP " + state.route.fetched.status + ". Required: " + state.route.summary.passed + " of " + state.route.summary.total + "."),
+          card("Main renderer · composition source", PATHS.renderer, state.renderer.status, state.renderer.rows, "HTTP " + state.renderer.fetched.status + ". Required: " + state.renderer.summary.passed + " of " + state.renderer.summary.total + ".")
+        ];
+
+        const runtimeCards = [
+          card("Runtime globals", "/showroom/globe/ iframe", state.runtime.status, state.runtime.rows, state.runtime.meta),
+          card("Mounted DOM expression", "#planet-one-render", state.mount.status, state.mount.rows, state.mount.meta),
+          card("Old expression leakage", "#planet-one-render leakage scan", state.leakage.status, state.leakage.rows, state.leakage.meta)
+        ];
+
+        byId("sourceChecks").innerHTML = sourceCards.join("");
+        byId("runtimeChecks").innerHTML = runtimeCards.join("");
 
         setScore("scoreProgress", decision.progress, decision.progress);
-        setScore("scoreHydration", decision.hydration, decision.hydration);
-        setScore("scoreMarriage", decision.marriage, decision.marriage);
-        setScore("scoreBoot", decision.boot, decision.boot);
+        setScore("scoreSource", decision.source, decision.source);
+        setScore("scoreRuntime", decision.runtime, decision.runtime);
+        setScore("scoreMount", decision.mount, decision.mount);
         setScore("scoreNext", decision.next, decision.progress === "PASS" ? "PASS" : "NEXT");
 
-        setPill("auditStatus", decision.progress);
-        setPill("checksStatus", decision.progress === "PASS" ? "PASS" : "HOLD");
-        setPill("decisionStatus", decision.progress === "PASS" ? "PASS" : "NEXT");
+        setPill("overallStatus", decision.progress);
+        setPill("sourceStatus", decision.source);
+        setPill("runtimeStatus", decision.runtime === "WAIT" ? "HOLD" : decision.runtime);
+        setPill("frameStatus", state.frame.ok ? "PASS" : "FAIL");
 
-        $("currentRead").textContent = decision.text;
-        $("decisionText").textContent = decision.title;
+        byId("currentRead").textContent = decision.read;
 
-        $("decisionMono").textContent = [
+        byId("decisionMono").textContent = [
           "DIAGNOSTIC_CODE=" + decision.code,
-          "PROGRESS_STATE=" + decision.progress,
-          "HYDRATION_STATE=" + decision.hydration,
-          "MARRIAGE_FRAME=" + decision.marriage,
-          "BOOT_AWARENESS=" + decision.boot,
+          "GAUGE=" + VERSION,
+          "PREVIOUS_GAUGE=" + V19,
+          "SOURCE_STATE=" + decision.source,
+          "RUNTIME_STATE=" + decision.runtime,
+          "MOUNT_STATE=" + decision.mount,
           "NEXT_TARGET=" + decision.next,
-          "RULE=Measure hydration participation before weather or further visual terrain work."
+          "RULE=Source/runtime/mount parity before visual judgment."
         ].join("\n");
 
-        window.DGBPlanetOneGaugesV19 = Object.freeze({
+        global.DGBPlanetOneV20Gauges = Object.freeze({
           VERSION,
-          CONTRACT,
-          TARGETS,
-          results,
+          V19,
+          QUADA,
+          EXPECTED,
+          PATHS,
+          state,
           decision,
           getStatus: function getStatus() {
-            return {
-              version: VERSION,
-              contract: CONTRACT,
-              targets: TARGETS,
-              results,
-              decision
-            };
+            return { version: VERSION, previousGauge: V19, decision };
           }
         });
       }
 
       function runAudit() {
-        $("currentRead").textContent = "Running hydro-terrain audit. Measuring hydration, terrain V4, asset boot awareness, route proof, and renderer composition awareness.";
+        byId("currentRead").textContent = "Running V20 audit. Fetching source and inspecting runtime/mount state.";
 
-        const keys = Object.keys(CHECKS);
+        const fetches = Promise.all([
+          fetchText(PATHS.hydration),
+          fetchText(PATHS.terrain),
+          fetchText(PATHS.asset),
+          fetchText(PATHS.route),
+          fetchText(PATHS.renderer)
+        ]);
 
-        return Promise.all(keys.map(function each(key) {
-          return fetchText(CHECKS[key].path).then(function finish(fetched) {
-            return evaluate(key, CHECKS[key], fetched);
-          });
-        })).then(function done(list) {
-          const results = {};
+        return Promise.all([fetches, inspectFrame()]).then(function complete(payload) {
+          const fetched = payload[0];
+          const frame = payload[1];
 
-          list.forEach(function assign(result) {
-            results[result.key] = result;
-          });
-
-          const decision = decide(results);
-          render(results, decision);
-
-          return {
-            results,
-            decision
+          const state = {
+            hydration: evaluateSource("hydration", fetched[0], CHECKS.hydration),
+            terrain: evaluateSource("terrain", fetched[1], CHECKS.terrain),
+            asset: evaluateSource("asset", fetched[2], CHECKS.asset),
+            route: evaluateSource("route", fetched[3], CHECKS.route),
+            renderer: evaluateSource("renderer", fetched[4], CHECKS.renderer),
+            frame
           };
+
+          state.runtime = evaluateRuntime(frame);
+          state.mount = evaluateMount(frame);
+          state.leakage = evaluateLeakage(frame);
+
+          const decision = decide(state);
+          render(state, decision);
+
+          return { state, decision };
         });
       }
 
-      $("runAuditButton").addEventListener("click", runAudit);
-      window.DGBRunPlanetOneHydroTerrainMarriageGauges = runAudit;
+      byId("runAudit").addEventListener("click", runAudit);
+      global.DGBRunPlanetOneV20Gauges = runAudit;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", runAudit, { once: true });
       } else {
         runAudit();
       }
-    })();
+    })(window);
   </script>
 </body>
 </html>

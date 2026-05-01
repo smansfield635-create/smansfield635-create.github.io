@@ -1,340 +1,429 @@
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="showroom-planet-one-globe"
+  data-route="/showroom/globe/"
+  data-generation="g1-runtime-asset-bridge-chain-repair"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Showroom Globe</title>
-  <meta name="description" content="Showroom bridge for Planet 1: a rotating satellite-observed globe using the existing Planet 1 renderer, runtime, and control panel.">
+  <title>Planet 1 Globe Bridge · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Showroom bridge for the Planet 1 Generation 1 renderer, runtime, asset instrument, and control handoff."
+  >
+
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #020713;
-      --panel: rgba(6, 13, 28, .78);
-      --panel-2: rgba(10, 23, 48, .82);
-      --gold: #f2c76f;
-      --gold-soft: rgba(242, 199, 111, .28);
-      --text: #f7ead0;
-      --muted: #aebbd2;
-      --blue: #9dc8ff;
-      --line: rgba(157, 200, 255, .18);
+      --bg:#03050a;
+      --panel:rgba(9,15,25,.94);
+      --panel2:rgba(14,24,38,.86);
+      --line:rgba(168,199,255,.22);
+      --gold:rgba(242,199,111,.96);
+      --green:rgba(143,240,198,.96);
+      --text:#f4f7ff;
+      --muted:#b8c2d6;
+      --shadow:rgba(0,0,0,.55);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
-    html,
+    html { min-height:100%; background:var(--bg); }
+
     body {
-      min-height: 100%;
-      margin: 0;
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
       background:
-        radial-gradient(circle at 20% 15%, rgba(91, 135, 190, .14), transparent 28rem),
-        radial-gradient(circle at 80% 8%, rgba(242, 199, 111, .10), transparent 24rem),
-        radial-gradient(circle at 50% 115%, rgba(43, 111, 151, .18), transparent 34rem),
-        var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 72% 8%,rgba(242,199,111,.12),transparent 24rem),
+        radial-gradient(circle at 20% 24%,rgba(145,189,255,.10),transparent 30rem),
+        linear-gradient(180deg,#03050a 0%,#07101d 54%,#020308 100%);
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(157,200,255,.44) 0 1px, transparent 1.5px);
-      background-size: 92px 92px, 137px 137px;
-      background-position: 12px 28px, 44px 16px;
-      opacity: .20;
+    a { color:inherit; text-decoration:none; }
+
+    a:focus,
+    button:focus,
+    select:focus,
+    input:focus {
+      outline:2px solid var(--green);
+      outline-offset:3px;
     }
 
-    a {
-      color: var(--blue);
-      text-decoration: none;
+    .skip {
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:1000;
+      padding:8px 12px;
+      border-radius:10px;
+      background:#fff;
+      color:#000;
+      font-weight:850;
     }
 
-    a:hover {
-      text-decoration: underline;
-    }
+    .skip:focus { left:10px; }
 
     .page {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 36px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(3, 9, 20, .58);
-      backdrop-filter: blur(10px);
+      width:min(1180px,calc(100% - 28px));
+      margin:0 auto;
+      padding:24px 0 68px;
     }
 
     .brand {
-      display: grid;
-      gap: 2px;
+      display:block;
+      margin-bottom:18px;
+      color:var(--muted);
+      font-size:.86rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .brand strong {
-      color: var(--gold);
-      letter-spacing: .03em;
+      display:block;
+      color:var(--gold);
+      font-size:1rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
-    .brand span {
-      color: var(--muted);
-      font-size: .92rem;
+    .nav,
+    .actions,
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
     }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
+    .nav { margin-bottom:24px; }
+
+    .nav a,
+    .button,
+    .controls button,
+    .controls select {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:9px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      color:var(--text);
+      font:inherit;
+      font-weight:850;
     }
 
-    .nav a {
-      border: 1px solid rgba(157, 200, 255, .16);
-      border-radius: 999px;
-      padding: 7px 10px;
-      color: var(--text);
-      background: rgba(12, 24, 46, .46);
-      font-size: .92rem;
+    .nav a[aria-current="page"],
+    .button.primary,
+    .controls button[data-active="true"] {
+      border-color:rgba(242,199,111,.52);
+      background:rgba(242,199,111,.14);
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
-      gap: 18px;
-      align-items: start;
-      margin-top: 20px;
-    }
-
+    .hero,
+    .panel,
     .card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: var(--panel);
-      box-shadow: 0 24px 80px rgba(0,0,0,.32);
-      overflow: hidden;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 88% 10%,rgba(242,199,111,.08),transparent 18rem),
+        var(--panel);
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .copy {
-      padding: 22px;
+    .hero,
+    .panel {
+      padding:clamp(24px,5vw,52px);
+      margin-top:18px;
     }
 
-    .eyebrow {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      font-size: .76rem;
-      margin: 0 0 10px;
+    .kicker {
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 4.2rem);
-      line-height: .96;
-      letter-spacing: -.05em;
+      margin:0;
+      max-width:900px;
+      font-size:clamp(2.8rem,8vw,6.4rem);
+      line-height:.9;
+      letter-spacing:-.075em;
+    }
+
+    h2 {
+      margin:0;
+      max-width:880px;
+      font-size:clamp(1.7rem,4.6vw,3.2rem);
+      line-height:1;
+      letter-spacing:-.055em;
+    }
+
+    h3 {
+      margin:0;
+      font-size:clamp(1.18rem,3vw,1.75rem);
+      line-height:1.08;
+      letter-spacing:-.04em;
+    }
+
+    p {
+      color:var(--muted);
+      font-size:clamp(1rem,2.2vw,1.18rem);
+      line-height:1.58;
     }
 
     .lead {
-      margin: 16px 0 0;
-      color: var(--muted);
-      max-width: 64ch;
-      font-size: 1.02rem;
-      line-height: 1.6;
+      max-width:900px;
+      color:rgba(244,247,255,.82);
+      font-size:clamp(1.14rem,3vw,1.42rem);
+      line-height:1.45;
     }
 
-    .receipt-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 18px;
+    .grid {
+      display:grid;
+      gap:14px;
+      margin-top:18px;
     }
 
-    .receipt {
-      border: 1px solid rgba(242,199,111,.20);
-      border-radius: 18px;
-      padding: 10px;
-      background: rgba(4, 11, 24, .55);
+    .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid.two { grid-template-columns:1.2fr .8fr; align-items:start; }
+
+    .card {
+      min-height:150px;
+      padding:20px;
+      background:var(--panel2);
+      box-shadow:none;
     }
 
-    .receipt b {
-      display: block;
-      color: var(--gold);
-      font-size: .78rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
+    .card span {
+      display:block;
+      margin-bottom:8px;
+      color:var(--gold);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .receipt span {
-      color: var(--muted);
-      font-size: .9rem;
+    .planet-shell {
+      display:grid;
+      gap:18px;
+      justify-items:center;
     }
 
-    .globe-card {
-      padding: 16px;
-    }
-
-    .globe-shell {
-      position: relative;
-      display: grid;
-      place-items: center;
-      min-height: 360px;
-      border: 1px solid rgba(157, 200, 255, .13);
-      border-radius: 26px;
+    .planet-stage {
+      width:min(760px,100%);
+      min-height:min(760px,calc(100vw - 36px));
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(168,199,255,.18);
+      border-radius:34px;
       background:
-        radial-gradient(circle at center, rgba(42, 93, 139, .18), transparent 58%),
-        rgba(2, 7, 17, .54);
-      overflow: hidden;
+        radial-gradient(circle at 50% 50%,rgba(145,189,255,.08),transparent 18rem),
+        rgba(0,0,0,.24);
+      overflow:hidden;
     }
 
     #planet-one-render,
-    #showroom-globe-render {
-      width: 100%;
-      max-width: 760px;
-      min-height: 320px;
-      display: grid;
-      place-items: center;
+    [data-planet-one-mount="true"] {
+      width:min(720px,100%);
+      min-height:320px;
+      display:grid;
+      place-items:center;
     }
 
-    .status-wrap {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 12px;
+    .receipt {
+      width:100%;
+      max-width:760px;
+      padding:14px;
+      border:1px solid rgba(168,199,255,.16);
+      border-radius:18px;
+      background:rgba(0,0,0,.24);
+      color:var(--muted);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:.78rem;
+      line-height:1.45;
+      white-space:pre-wrap;
+      overflow:auto;
     }
 
-    #planet-one-controls,
-    #showroom-globe-controls {
-      width: 100%;
+    .control-panel {
+      width:100%;
+      max-width:760px;
+      padding:16px;
+      border:1px solid rgba(168,199,255,.16);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
     }
 
-    #showroom-globe-status {
-      margin: 0;
-      padding: 12px;
-      max-height: 260px;
-      overflow: auto;
-      border: 1px solid rgba(157, 200, 255, .14);
-      border-radius: 18px;
-      background: rgba(0,0,0,.26);
-      color: #d8e6ff;
-      font-size: 12px;
-      line-height: 1.45;
-      white-space: pre-wrap;
+    .control-panel label {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-weight:800;
     }
 
-    .footer-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: .9rem;
-      text-align: center;
+    .hidden-receipt {
+      display:none!important;
     }
 
-    @media (max-width: 860px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .receipt-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .globe-shell {
-        min-height: 320px;
+    @media (max-width:900px) {
+      .grid.three,
+      .grid.two {
+        grid-template-columns:1fr;
       }
     }
   </style>
+
+  <script defer src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1"></script>
+  <script defer src="/world/render/planet-one.render.js?v=G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1"></script>
+  <script defer src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"></script>
+  <script defer src="/world/control.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"></script>
+  <script defer src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"></script>
+  <script defer src="/showroom/runtime.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"></script>
 </head>
+
 <body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Showroom · Planet 1 Globe Bridge</span>
+  <a class="skip" href="#globe-main">Skip to Planet 1 globe bridge</a>
+
+  <main
+    id="globe-main"
+    class="page"
+    data-route="/showroom/globe/"
+    data-showroom-globe-route="true"
+    data-planet-one-generation="GENERATION_1_ACTIVE"
+    data-runtime-asset-bridge-repair="G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"
+  >
+    <a class="brand" href="/">
+      <strong>Diamond Gate Bridge</strong>
+      Showroom · Planet 1 Globe Bridge
+    </a>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="/">Compass</a>
+      <a href="/showroom/" aria-current="page">Showroom</a>
+      <a href="/products/">Products</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+
+    <section class="hero">
+      <p class="kicker">Active globe lane</p>
+      <h1>Planet 1 on axis</h1>
+      <p class="lead">
+        This route mounts the active Planet 1 Generation 1 renderer through the Showroom bridge. The Showroom does not create terrain, duplicate the globe, or claim visual pass.
+      </p>
+
+      <div class="actions">
+        <a class="button primary" href="/gauges/">Run Gauges</a>
+        <a class="button" href="/showroom/">Return to Showroom</a>
+        <a class="button" href="/">Return to Compass</a>
       </div>
-      <nav class="nav" aria-label="Primary">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
-
-    <section class="hero" aria-labelledby="showroom-globe-title">
-      <article class="card copy">
-        <p class="eyebrow">Active globe lane</p>
-        <h1 id="showroom-globe-title">Planet 1 on axis</h1>
-        <p class="lead">
-          This route hosts the same Planet 1 system used by the world renderer. The Showroom does not create a separate globe. It mounts the existing renderer, runtime, and control panel through the asset instrument bridge.
-        </p>
-
-        <div class="receipt-grid" aria-label="Bridge receipts">
-          <div class="receipt">
-            <b>Surface</b>
-            <span>Owned by the Planet 1 hidden substrate and renderer chain.</span>
-          </div>
-          <div class="receipt">
-            <b>Motion</b>
-            <span>Owned by /world/runtime.js through viewLon progression.</span>
-          </div>
-          <div class="receipt">
-            <b>Controls</b>
-            <span>Owned by /world/control.js and mounted into this page.</span>
-          </div>
-          <div class="receipt">
-            <b>Showroom</b>
-            <span>Adapter only. No terrain ownership. No duplicate globe.</span>
-          </div>
-        </div>
-      </article>
-
-      <section class="card globe-card" aria-label="Planet 1 rotating globe">
-        <div class="globe-shell">
-          <div
-            id="planet-one-render"
-            class="planet-one-render"
-            data-planet-one-mount="true"
-            data-showroom-globe-mount="true"
-          ></div>
-        </div>
-
-        <div class="status-wrap">
-          <div
-            id="planet-one-controls"
-            class="planet-one-controls"
-            data-planet-one-controls="true"
-            data-showroom-globe-controls="true"
-          ></div>
-
-          <pre
-            id="showroom-globe-status"
-            class="showroom-globe-status"
-            data-showroom-globe-status="true"
-          >Showroom globe bridge booting…</pre>
-        </div>
-      </section>
     </section>
 
-    <p class="footer-note">
-      Visual pass remains held. This route verifies the Showroom bridge, axis, runtime, and control handoff.
-    </p>
-  </main>
+    <section class="panel">
+      <div class="grid three">
+        <article class="card">
+          <span>Surface</span>
+          <h3>Hidden substrate and renderer chain.</h3>
+          <p>Surface data belongs to the Planet 1 hexgrid and renderer pair.</p>
+        </article>
 
-  <script src="/world/render/planet-one.hexgrid.render.js"></script>
-  <script src="/world/render/planet-one.render.js"></script>
-  <script src="/world/runtime.js"></script>
-  <script src="/world/control.js"></script>
-  <script src="/assets/showroom.globe.instrument.js"></script>
-  <script src="/showroom/runtime.js"></script>
+        <article class="card">
+          <span>Motion</span>
+          <h3>Runtime handoff only.</h3>
+          <p>The bridge advances view longitude and repaints the active renderer. It does not own terrain.</p>
+        </article>
+
+        <article class="card">
+          <span>Showroom</span>
+          <h3>Adapter only.</h3>
+          <p>No duplicate fake globe, no independent planet physics, and no visual pass claim.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="grid two">
+        <div class="planet-shell">
+          <div class="planet-stage">
+            <div
+              id="planet-one-render"
+              data-planet-one-mount="true"
+              data-render-mode="satellite"
+              data-public-surface-compositor="true"
+              data-show-axis-default="false"
+            ></div>
+          </div>
+
+          <div id="planet-one-control-panel" class="control-panel" data-control-panel="planet-one">
+            <p class="kicker">Planet 1 Motion Control</p>
+
+            <div class="controls" aria-label="Planet 1 controls">
+              <button type="button" data-planet-action="start">Start</button>
+              <button type="button" data-planet-action="pause">Pause</button>
+              <button type="button" data-planet-action="resume">Resume</button>
+              <button type="button" data-planet-action="reset">Reset</button>
+              <button type="button" data-planet-action="reverse">Reverse</button>
+
+              <button type="button" data-planet-speed="slow">Slow</button>
+              <button type="button" data-planet-speed="normal" data-active="true">Normal</button>
+              <button type="button" data-planet-speed="fast">Fast</button>
+
+              <label>
+                Rotation speed
+                <select data-planet-speed-select>
+                  <option value="0.8">Slow</option>
+                  <option value="2.4" selected>Normal</option>
+                  <option value="5.2">Fast</option>
+                </select>
+              </label>
+
+              <label>
+                <input type="checkbox" data-planet-axis-toggle>
+                Show soft axis
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <section class="card">
+            <span>Bridge status</span>
+            <h3>Runtime and asset receipt.</h3>
+            <p>The receipts below must report the bridge, renderer, and compositor status without claiming visual pass.</p>
+          </section>
+
+          <pre id="planet-one-runtime-receipt" class="receipt">Runtime not booted yet.</pre>
+          <pre id="planet-one-bridge-receipt" class="receipt">Instrument not booted yet.</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="lead">
+        Visual pass remains held. This route verifies the Showroom bridge, runtime handoff, renderer consumption, compositor surface, and control behavior.
+      </p>
+    </section>
+
+    <section class="hidden-receipt" aria-hidden="true">
+      G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
+      route=/showroom/globe/
+      script_order=hexgrid,renderer,world-runtime,world-control,asset-bridge,showroom-runtime
+      showroom_adapter_only=true
+      no_duplicate_fake_globe=true
+      renderer_consumption_required=true
+      public_mode=satellite
+      default_axis_visible=false
+      visualPassClaimed=false
+    </section>
+  </main>
 </body>
 </html>

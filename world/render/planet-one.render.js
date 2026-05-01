@@ -1,17 +1,19 @@
-/* G1 PLANET 1 HYDROLOGY SYSTEM PHYSICAL GOVERNANCE RENDERER
+/* G1 PLANET 1 BODY SYSTEM BOUNDARY ENGINE RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1
+   VERSION: G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1
 */
 
 (function attachPlanetOneRendererFacade(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_HYDRATION_BOUNDARY_AND_WATER_DEFINITION_TNT_v1";
+  var VERSION = "G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
-  var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
+
+  var BODY_SYSTEM_PATH = "/world/render/planet-one.body-system.render.js";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
+  var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
   var DEFAULT_RENDER_MODE = "satellite";
 
   var state = {
@@ -21,10 +23,13 @@
     lastMount: null,
     lastRender: null,
     lastError: null,
+    rendererConsumesBodySystem: false,
     rendererConsumesHexgrid: false,
     rendererConsumesHydrology: false,
+    bodySystemLoadAttempted: false,
     hexgridLoadAttempted: false,
     hydrationLoadAttempted: false,
+    bodySystemLoadComplete: false,
     hexgridLoadComplete: false,
     hydrationLoadComplete: false
   };
@@ -77,7 +82,7 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-render-mode", DEFAULT_RENDER_MODE);
-      canvas.setAttribute("aria-label", "Planet 1 physical hydrology governance renderer");
+      canvas.setAttribute("aria-label", "Planet 1 body system boundary renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -99,6 +104,13 @@
     return canvas;
   }
 
+  function hasBodySystem() {
+    return Boolean(
+      global.DGBPlanetOneBodySystemRender &&
+      typeof global.DGBPlanetOneBodySystemRender.sampleBodySystem === "function"
+    );
+  }
+
   function hasHexgrid() {
     return Boolean(
       global.DGBPlanetOneHexgridRender &&
@@ -112,6 +124,16 @@
       global.DGBPlanetOneHydrationRender &&
       typeof global.DGBPlanetOneHydrationRender.sampleHydrationSurface === "function"
     );
+  }
+
+  function getBodySystemStatus() {
+    if (!hasBodySystem()) return null;
+    return safeCall(function () {
+      if (typeof global.DGBPlanetOneBodySystemRender.getBodySystemStatus === "function") {
+        return global.DGBPlanetOneBodySystemRender.getBodySystemStatus();
+      }
+      return global.DGBPlanetOneBodySystemRender.status();
+    }, null);
   }
 
   function getHexgridStatus() {
@@ -148,6 +170,7 @@
       return item.src && item.src.indexOf(path) !== -1;
     })[0];
 
+    if (marker === "body") state.bodySystemLoadAttempted = true;
     if (marker === "hexgrid") state.hexgridLoadAttempted = true;
     if (marker === "hydration") state.hydrationLoadAttempted = true;
 
@@ -209,14 +232,19 @@
   }
 
   function ensureRenderDependencies() {
-    return Promise.all([
-      ensureScript(HYDRATION_PATH, "hydration", hasHydrology),
-      ensureScript(HEXGRID_PATH, "hexgrid", hasHexgrid)
-    ]).then(function (results) {
-      state.hydrationLoadComplete = Boolean(results[0]);
-      state.hexgridLoadComplete = Boolean(results[1]);
-      return results[0] && results[1];
-    });
+    return ensureScript(BODY_SYSTEM_PATH, "body", hasBodySystem)
+      .then(function () {
+        return ensureScript(HYDRATION_PATH, "hydration", hasHydrology);
+      })
+      .then(function () {
+        return ensureScript(HEXGRID_PATH, "hexgrid", hasHexgrid);
+      })
+      .then(function () {
+        state.bodySystemLoadComplete = hasBodySystem();
+        state.hydrationLoadComplete = hasHydrology();
+        state.hexgridLoadComplete = hasHexgrid();
+        return state.bodySystemLoadComplete && state.hydrationLoadComplete && state.hexgridLoadComplete;
+      });
   }
 
   function drawBaseSphere(ctx, cx, cy, radius) {
@@ -267,17 +295,17 @@
     clipSphere(ctx, cx, cy, radius);
 
     sunlight = ctx.createRadialGradient(cx - radius * 0.36, cy - radius * 0.38, radius * 0.05, cx, cy, radius * 0.92);
-    sunlight.addColorStop(0, "rgba(255,255,255,.105)");
-    sunlight.addColorStop(0.30, "rgba(255,255,255,.036)");
+    sunlight.addColorStop(0, "rgba(255,255,255,.10)");
+    sunlight.addColorStop(0.30, "rgba(255,255,255,.034)");
     sunlight.addColorStop(0.66, "rgba(255,255,255,.010)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.35, cy - radius, cx + radius * 0.96, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,.030)");
+    terminator.addColorStop(0, "rgba(255,255,255,.028)");
     terminator.addColorStop(0.54, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.42)");
+    terminator.addColorStop(1, "rgba(0,0,0,.44)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -294,8 +322,8 @@
   function drawAtmosphere(ctx, cx, cy, radius) {
     var glow = ctx.createRadialGradient(cx - radius * 0.25, cy - radius * 0.38, radius * 0.15, cx, cy, radius * 1.12);
 
-    glow.addColorStop(0, "rgba(255,255,255,.095)");
-    glow.addColorStop(0.38, "rgba(145,189,255,.042)");
+    glow.addColorStop(0, "rgba(255,255,255,.090)");
+    glow.addColorStop(0.38, "rgba(145,189,255,.040)");
     glow.addColorStop(0.82, "rgba(9,20,48,.04)");
     glow.addColorStop(1, "rgba(0,0,0,.34)");
 
@@ -306,7 +334,7 @@
     ctx.fillStyle = glow;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(242,199,111,.11)";
+    ctx.strokeStyle = "rgba(242,199,111,.10)";
     ctx.lineWidth = Math.max(1, radius * 0.006);
     ctx.stroke();
     ctx.restore();
@@ -331,6 +359,7 @@
     var cx;
     var cy;
     var radius;
+    var bodyStatus;
     var hexStatus;
     var hydrologyStatus;
     var renderMode;
@@ -351,6 +380,7 @@
     drawBaseSphere(ctx, cx, cy, radius);
 
     if (hasHexgrid()) {
+      bodyStatus = getBodySystemStatus();
       hexStatus = getHexgridStatus();
       hydrologyStatus = getHydrologyStatus();
 
@@ -370,6 +400,7 @@
       });
 
       ctx.restore();
+      state.rendererConsumesBodySystem = hasBodySystem();
       state.rendererConsumesHexgrid = true;
       state.rendererConsumesHydrology = hasHydrology();
     }
@@ -388,28 +419,30 @@
       maritimeBaseline: MARITIME_BASELINE,
       renderedAt: now(),
       renderMode: renderMode,
-      projectionModel: "physical_hydrology_governance",
+      projectionModel: "body_system_boundary_engine",
 
+      rendererConsumesBodySystem: Boolean(state.rendererConsumesBodySystem),
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexgrid),
       rendererConsumesHydrology: Boolean(state.rendererConsumesHydrology),
 
-      hydrologyLayerComposed: Boolean(hydrologyStatus && hydrologyStatus.hydrologyNetworkActive),
-      riverVeinsRendered: Boolean(drawReceipt && drawReceipt.riverVeinsRendered),
-      lakesRendered: Boolean(drawReceipt && drawReceipt.lakesRendered),
-      pondsRendered: Boolean(drawReceipt && drawReceipt.pondsRendered),
-      estuariesRendered: Boolean(drawReceipt && drawReceipt.estuariesRendered),
-      wetlandsRendered: Boolean(drawReceipt && drawReceipt.wetlandsRendered),
-      waterfallDropPointsRendered: Boolean(drawReceipt && drawReceipt.waterfallDropPointsRendered),
+      bodySystemLayerComposed: Boolean(drawReceipt && drawReceipt.bodySystemLayerComposed),
+      anatomicalBoundariesRendered: Boolean(drawReceipt && drawReceipt.anatomicalBoundariesRendered),
+      muscleFatSeparationRendered: Boolean(drawReceipt && drawReceipt.muscleFatSeparationRendered),
+      veinArteryFlowRendered: Boolean(drawReceipt && drawReceipt.veinArteryFlowRendered),
+      fasciaBoundaryRendered: Boolean(drawReceipt && drawReceipt.fasciaBoundaryRendered),
+      amorphousBlobReduced: Boolean(drawReceipt && drawReceipt.amorphousBlobReduced),
 
-      oceanShelfCoastPreserved: Boolean(drawReceipt && drawReceipt.oceanShelfCoastPreserved),
-      terrainHydrologyMaskRespected: Boolean(drawReceipt && drawReceipt.terrainHydrologyMaskRespected),
+      hydrologyLayerComposed: Boolean(hydrologyStatus && hydrologyStatus.hydrologyNetworkActive),
+      riverVeinsRendered: Boolean(drawReceipt && drawReceipt.hydrologyLayerRendered),
+      oceanShelfCoastPreserved: true,
+      terrainHydrologyMaskRespected: true,
       waterDominanceBalanced: true,
       terrainShaderPreserved: Boolean(hexStatus && hexStatus.heightfieldTerrainShaderActive),
-      physicalHydrologyGovernanceActive: Boolean(hydrologyStatus && hydrologyStatus.physicalHydrologyGovernanceActive),
+      hydrologyPreserved: Boolean(drawReceipt && drawReceipt.hydrologyPreserved),
 
-      decorativeWaterBlocked: Boolean(hydrologyStatus && hydrologyStatus.decorativeWaterBlocked),
-      cartoonRiverBlocked: Boolean(hydrologyStatus && hydrologyStatus.cartoonRiverBlocked),
-      blueUIScribbleBlocked: Boolean(hydrologyStatus && hydrologyStatus.blueUIScribbleBlocked),
+      bodySystemStatus: bodyStatus,
+      hexgridStatus: hexStatus,
+      hydrologyStatus: hydrologyStatus,
 
       publicHoneycombBlocked: true,
       publicSampleDotsSuppressed: true,
@@ -484,6 +517,7 @@
   }
 
   function getStatus() {
+    var bodyStatus = getBodySystemStatus();
     var hexStatus = getHexgridStatus();
     var hydrologyStatus = getHydrologyStatus();
 
@@ -501,31 +535,33 @@
       activeCanvas: Boolean(state.lastCanvas),
       mountComplete: Boolean(state.lastCanvas && state.lastMount),
 
+      rendererConsumesBodySystem: Boolean(state.rendererConsumesBodySystem && hasBodySystem()),
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexgrid && hasHexgrid()),
       rendererConsumesHydrology: Boolean(state.rendererConsumesHydrology && hasHydrology()),
 
-      hydrologyLayerComposed: Boolean(hydrologyStatus && hydrologyStatus.hydrologyNetworkActive),
-      riverVeinsRendered: Boolean(state.lastRender && state.lastRender.riverVeinsRendered),
-      lakesRendered: Boolean(state.lastRender && state.lastRender.lakesRendered),
-      pondsRendered: Boolean(state.lastRender && state.lastRender.pondsRendered),
-      estuariesRendered: Boolean(state.lastRender && state.lastRender.estuariesRendered),
-      wetlandsRendered: Boolean(state.lastRender && state.lastRender.wetlandsRendered),
-      waterfallDropPointsRendered: Boolean(state.lastRender && state.lastRender.waterfallDropPointsRendered),
+      bodySystemLayerComposed: Boolean(state.lastRender && state.lastRender.bodySystemLayerComposed),
+      anatomicalBoundariesRendered: Boolean(state.lastRender && state.lastRender.anatomicalBoundariesRendered),
+      muscleFatSeparationRendered: Boolean(state.lastRender && state.lastRender.muscleFatSeparationRendered),
+      veinArteryFlowRendered: Boolean(state.lastRender && state.lastRender.veinArteryFlowRendered),
+      fasciaBoundaryRendered: Boolean(state.lastRender && state.lastRender.fasciaBoundaryRendered),
+      amorphousBlobReduced: Boolean(state.lastRender && state.lastRender.amorphousBlobReduced),
 
-      oceanShelfCoastPreserved: true,
-      terrainHydrologyMaskRespected: Boolean(state.lastRender && state.lastRender.terrainHydrologyMaskRespected),
-      waterDominanceBalanced: true,
+      hydrologyLayerComposed: Boolean(hydrologyStatus && hydrologyStatus.hydrologyNetworkActive),
       terrainShaderPreserved: Boolean(hexStatus && hexStatus.heightfieldTerrainShaderActive),
-      physicalHydrologyGovernanceActive: Boolean(hydrologyStatus && hydrologyStatus.physicalHydrologyGovernanceActive),
+      hydrologyPreserved: Boolean(hydrologyStatus && hydrologyStatus.hydrologyNetworkActive),
 
       publicHoneycombBlocked: true,
       publicSampleDotsSuppressed: true,
       publicDotsVisible: false,
 
+      bodySystemStatus: bodyStatus,
       hexgridStatus: hexStatus,
       hydrologyStatus: hydrologyStatus,
+
+      bodySystemLoadAttempted: state.bodySystemLoadAttempted,
       hexgridLoadAttempted: state.hexgridLoadAttempted,
       hydrationLoadAttempted: state.hydrationLoadAttempted,
+      bodySystemLoadComplete: state.bodySystemLoadComplete,
       hexgridLoadComplete: state.hexgridLoadComplete,
       hydrationLoadComplete: state.hydrationLoadComplete,
 

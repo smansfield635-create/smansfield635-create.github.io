@@ -1,13 +1,13 @@
-/* G1 PLANET 1 HYDROLOGY SYSTEM PHYSICAL GOVERNANCE SOURCE
+/* G1 PLANET 1 BODY SYSTEM BOUNDARY ENGINE SOURCE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1
+   VERSION: G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_HYDRATION_BOUNDARY_AND_WATER_DEFINITION_TNT_v1";
+  var VERSION = "G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var STATE_FORMULA = "4x4x2x2x4";
@@ -398,7 +398,7 @@
       base.ridgeHint > 0.26 ? MATERIAL.STONE :
       MATERIAL.SEDIMENT_OR_ORGANIC;
 
-    return {
+    var sample = {
       domain: base.domain,
       relief: relief,
       edgeRole: edgeRole,
@@ -441,26 +441,18 @@
       lowlandChannel: round(lowland, 4),
       lowland_channel: round(lowland, 4),
 
-      riverCandidate: round(riverVein, 4),
-      river_candidate: round(riverVein, 4),
       riverVein: round(riverVein, 4),
       river_vein: round(riverVein, 4),
       riverBranch: round(riverBranch, 4),
       river_branch: round(riverBranch, 4),
-      lakeCandidate: round(lakeBasin, 4),
-      lake_candidate: round(lakeBasin, 4),
       lakeBasin: round(lakeBasin, 4),
       lake_basin: round(lakeBasin, 4),
-      pondCandidate: round(pondPocket, 4),
-      pond_candidate: round(pondPocket, 4),
       pondPocket: round(pondPocket, 4),
       pond_pocket: round(pondPocket, 4),
       estuaryMouth: round(estuaryMouth, 4),
       estuary_mouth: round(estuaryMouth, 4),
       wetland: round(wetland, 4),
       wetland_field: round(wetland, 4),
-      waterfallCandidate: round(waterfallDrop, 4),
-      waterfall_candidate: round(waterfallDrop, 4),
       waterfallDrop: round(waterfallDrop, 4),
       waterfall_drop: round(waterfallDrop, 4),
 
@@ -489,8 +481,28 @@
       pondCandidateFieldActive: true,
       waterfallCandidateFieldActive: true,
       physicalHydrologyGovernanceActive: true,
+      bodySystemSampleFieldsActive: true,
+      terrainHydrologyBodyIntegrationActive: true,
       visualPassClaimed: false
     };
+
+    var bodySystem = global.DGBPlanetOneBodySystemRender;
+    if (bodySystem && typeof bodySystem.sampleBodySystem === "function") {
+      sample.bodySystem = bodySystem.sampleBodySystem(lon, lat, sample);
+      sample.bodySystemLayerActive = true;
+      sample.anatomicalBoundaryModelActive = true;
+      sample.boneFrame = sample.bodySystem.boneFrame;
+      sample.muscleField = sample.bodySystem.muscleField;
+      sample.fatBuffer = sample.bodySystem.fatBuffer;
+      sample.fasciaBoundary = sample.bodySystem.fasciaBoundary;
+      sample.veinFlow = sample.bodySystem.veinFlow;
+      sample.arteryFlow = sample.bodySystem.arteryFlow;
+      sample.lymphDrainage = sample.bodySystem.lymphDrainage;
+      sample.pressureChannel = sample.bodySystem.pressureChannel;
+      sample.blobSuppression = sample.bodySystem.blobSuppression;
+    }
+
+    return sample;
   }
 
   function createPlanetOneHexGrid(options) {
@@ -533,6 +545,10 @@
           wetland_field: sample.wetland_field,
           estuary_mouth: sample.estuary_mouth,
           waterfall_drop: sample.waterfall_drop,
+          bone_frame: sample.boneFrame || 0,
+          muscle_field: sample.muscleField || 0,
+          fat_buffer: sample.fatBuffer || 0,
+          fascia_boundary: sample.fasciaBoundary || 0,
           terrain_band: sample.terrain_band,
           nodal_index_256: sample.nodal_index_256
         });
@@ -554,6 +570,8 @@
       stateSpace: receipt.states,
 
       samplePlanetSurfaceActive: true,
+      bodySystemSampleFieldsActive: true,
+      terrainHydrologyBodyIntegrationActive: true,
       heightfieldTerrainShaderActive: true,
       slopeFieldActive: true,
       basinPressureFieldActive: true,
@@ -565,7 +583,6 @@
       lakeCandidateFieldActive: true,
       pondCandidateFieldActive: true,
       waterfallCandidateFieldActive: true,
-      physicalHydrologyGovernanceActive: true,
       visualPassClaimed: false
     };
 
@@ -612,6 +629,13 @@
     var hill = sample.hillshade || 0.55;
     var moisture = sample.moisture || 0.4;
     var ridge = sample.ridgeHint || sample.ridge_hint || 0;
+    var body = sample.bodySystem || {};
+    var muscle = Number(body.muscleField || sample.muscleField || 0);
+    var fat = Number(body.fatBuffer || sample.fatBuffer || 0);
+    var bone = Number(body.boneFrame || sample.boneFrame || 0);
+    var fascia = Number(body.fasciaBoundary || sample.fasciaBoundary || 0);
+    var suppression = Number(body.blobSuppression || sample.blobSuppression || 0);
+
     var hydrologyCut = clamp(
       sample.riverVein * 0.18 +
       sample.lakeBasin * 0.22 +
@@ -620,21 +644,22 @@
       0,
       0.32
     );
-    var light = clamp(0.34 + hill * 0.46 + limb * 0.22 - hydrologyCut, 0.20, 1.08);
+
+    var light = clamp(0.32 + hill * 0.42 + limb * 0.21 + muscle * 0.08 + bone * 0.07 - hydrologyCut - fat * 0.04, 0.18, 1.10);
 
     if (sample.domain === DOMAIN.POLAR_ICE) {
       return [
-        Math.round(clamp(mix(145, 235, light), 0, 255)),
-        Math.round(clamp(mix(174, 242, light), 0, 255)),
+        Math.round(clamp(mix(145, 235, light) + fascia * 10, 0, 255)),
+        Math.round(clamp(mix(174, 242, light) + fascia * 8, 0, 255)),
         Math.round(clamp(mix(194, 248, light), 0, 255)),
         255
       ];
     }
 
     return [
-      Math.round(clamp(mix(42, 118, light) + ridge * 18, 0, 255)),
-      Math.round(clamp(mix(66, 126, light) + moisture * 20 - ridge * 8, 0, 255)),
-      Math.round(clamp(mix(43, 78, light) + moisture * 8 - ridge * 10, 0, 255)),
+      Math.round(clamp(mix(40, 118, light) + ridge * 16 + bone * 16 - suppression * 8, 0, 255)),
+      Math.round(clamp(mix(64, 126, light) + moisture * 18 - ridge * 8 + fat * 12 - suppression * 7, 0, 255)),
+      Math.round(clamp(mix(42, 78, light) + moisture * 8 - ridge * 10 + fascia * 6, 0, 255)),
       255
     ];
   }
@@ -742,17 +767,17 @@
       ok: true,
       version: VERSION,
       priorVersion: PRIOR_VERSION,
+      bodySystemLayerComposed: Boolean(global.DGBPlanetOneBodySystemRender),
+      anatomicalBoundariesRendered: Boolean(global.DGBPlanetOneBodySystemRender),
+      muscleFatSeparationRendered: Boolean(global.DGBPlanetOneBodySystemRender),
+      veinArteryFlowRendered: Boolean(global.DGBPlanetOneBodySystemRender),
+      fasciaBoundaryRendered: Boolean(global.DGBPlanetOneBodySystemRender),
+      amorphousBlobReduced: Boolean(global.DGBPlanetOneBodySystemRender),
       hydrologyLayerRendered: Boolean(hydration),
-      riverVeinsRendered: Boolean(hydration),
-      lakesRendered: Boolean(hydration),
-      pondsRendered: Boolean(hydration),
-      estuariesRendered: Boolean(hydration),
-      wetlandsRendered: Boolean(hydration),
-      waterfallDropPointsRendered: Boolean(hydration),
-      oceanShelfCoastPreserved: true,
-      terrainHydrologyMaskRespected: Boolean(hydration),
-      physicalHydrologyGovernanceActive: true,
-      decorativeWaterBlocked: true,
+      terrainShaderPreserved: true,
+      hydrologyPreserved: Boolean(hydration),
+      publicHoneycombBlocked: true,
+      publicSampleDotsSuppressed: true,
       visualPassClaimed: false,
       renderedAt: new Date().toISOString()
     };
@@ -772,7 +797,17 @@
       baseline: BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
 
+      hexagonalPixelFormatActive: true,
+      hexCellSubstrateActive: true,
+      terrainCellSamplingActive: true,
+      coastCellQuantizationActive: true,
+      elevationCellFieldActive: true,
+      waterDepthCellFieldActive: true,
+      mineralPressureCellFieldActive: true,
+
       samplePlanetSurfaceActive: true,
+      bodySystemSampleFieldsActive: true,
+      terrainHydrologyBodyIntegrationActive: true,
       heightfieldTerrainShaderActive: true,
       slopeFieldActive: true,
       basinPressureFieldActive: true,
@@ -784,7 +819,6 @@
       lakeCandidateFieldActive: true,
       pondCandidateFieldActive: true,
       waterfallCandidateFieldActive: true,
-      physicalHydrologyGovernanceActive: true,
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,

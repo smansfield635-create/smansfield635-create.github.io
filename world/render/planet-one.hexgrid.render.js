@@ -1,31 +1,38 @@
-/* G1 PLANET 1 MARITIME BASELINE TO LAND ELEVATION HEXGRID
+/* G1 PLANET 1 CONTINUOUS ORBITAL LAND SURFACE SMOOTHING
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_MARITIME_BASELINE_TO_LAND_ELEVATION_HEXGRID_TNT_v1
+   VERSION: G1_PLANET_1_CONTINUOUS_ORBITAL_LAND_SURFACE_SMOOTHING_TNT_v1
 
    PURPOSE:
-   - Keep the 256-state hexagonal substrate hidden from public view.
-   - Render satellite-mode land/water as orbital surface matter, not honeycomb.
-   - Preserve sea-level maritime baseline and begin controlled land elevation.
-   - Preserve two dynamic hemispheric land structures, three secondary non-polar bodies,
-     north/south polar distinction, and visual HOLD.
+   - Preserve the 256-state hexagonal terrain-cell substrate as hidden planetary data.
+   - Prevent public honeycomb, visible cell dots, and horizontal scanline/band land.
+   - Render satellite mode as continuous orbital land, coast, shelf, water-depth, and polar fields.
+   - Preserve sea-level maritime baseline, low land elevation, seven-landmass law,
+     two dynamic hemispheric land structures, three secondary non-polar bodies,
+     north/south polar distinction, debug-only cell visibility, and visual HOLD.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_MARITIME_BASELINE_TO_LAND_ELEVATION_HEXGRID_TNT_v1";
-  var BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
+  var VERSION = "G1_PLANET_1_CONTINUOUS_ORBITAL_LAND_SURFACE_SMOOTHING_TNT_v1";
+  var BASELINE = "PLANET_1_G1_MARITIME_LOW_LAND_INTERMEDIATE_BASELINE_v1";
+  var PRIOR_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var DEFAULT_SEED = 256451;
 
   var CONTRACT_MARKERS = [
     VERSION,
     BASELINE,
+    PRIOR_BASELINE,
     "HEXGRID_RENDERER_ACTIVE",
     "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
     "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
     "CONTROLLED_LAND_ELEVATION_LAYER_ACTIVE",
-    "SATELLITE_MODE_DRAWS_SURFACE_EFFECTS_ONLY",
+    "CONTINUOUS_ORBITAL_LAND_SURFACE_ACTIVE",
+    "SATELLITE_MODE_DRAWS_CONTINUOUS_SURFACE_FIELDS_ONLY",
     "PUBLIC_HONEYCOMB_BLOCKED",
+    "PUBLIC_CELL_DOTS_BLOCKED",
+    "PUBLIC_SCANLINE_LAND_BLOCKED",
+    "DEBUG_CELL_VISIBILITY_ONLY",
     "TWO_DYNAMIC_HEMISPHERIC_LAND_STRUCTURES_ACTIVE",
     "THREE_SECONDARY_NON_POLAR_BODIES_ACTIVE",
     "SEVEN_LANDMASS_LAW_ACTIVE",
@@ -38,10 +45,14 @@
     baseline: BASELINE,
     lastGrid: null,
     lastDraw: null,
+    lastSurface: null,
     lastError: null,
     cellDebugModeAvailable: true,
     publicHoneycombBlocked: true,
+    publicCellDotsBlocked: true,
+    publicScanlineLandBlocked: true,
     satelliteObservationalModeActive: true,
+    continuousOrbitalLandSurfaceActive: true,
     visualPassClaimed: false
   };
 
@@ -55,6 +66,10 @@
 
   function degToRad(value) {
     return value * Math.PI / 180;
+  }
+
+  function radToDeg(value) {
+    return value * 180 / Math.PI;
   }
 
   function wrapLon(value) {
@@ -73,59 +88,113 @@
     return t * t * (3 - 2 * t);
   }
 
-  function noise(lon, lat, seed) {
-    var value = Math.sin((lon * 12.9898) + (lat * 78.233) + (seed * 0.013)) * 43758.5453;
+  function mix(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
+  }
+
+  function fract(value) {
     return value - Math.floor(value);
   }
 
-  function signedNoise(lon, lat, seed) {
-    return (noise(lon, lat, seed) * 2) - 1;
+  function hash2(x, y, seed) {
+    return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+  }
+
+  function valueNoise(x, y, seed) {
+    var ix = Math.floor(x);
+    var iy = Math.floor(y);
+    var fx = fract(x);
+    var fy = fract(y);
+    var ux = fx * fx * (3 - 2 * fx);
+    var uy = fy * fy * (3 - 2 * fy);
+    var a = hash2(ix, iy, seed);
+    var b = hash2(ix + 1, iy, seed);
+    var c = hash2(ix, iy + 1, seed);
+    var d = hash2(ix + 1, iy + 1, seed);
+    return mix(mix(a, b, ux), mix(c, d, ux), uy);
+  }
+
+  function fractalNoise(lon, lat, seed) {
+    var x = (lon + 180) / 360;
+    var y = (lat + 90) / 180;
+    var n1 = valueNoise(x * 7.0, y * 5.0, seed);
+    var n2 = valueNoise(x * 15.0, y * 11.0, seed + 17);
+    var n3 = valueNoise(x * 31.0, y * 23.0, seed + 41);
+    return (n1 * 0.55) + (n2 * 0.30) + (n3 * 0.15);
+  }
+
+  function signedFractalNoise(lon, lat, seed) {
+    return fractalNoise(lon, lat, seed) * 2 - 1;
+  }
+
+  function rgba(r, g, b, a) {
+    return "rgba(" +
+      Math.round(clamp(r, 0, 255)) + "," +
+      Math.round(clamp(g, 0, 255)) + "," +
+      Math.round(clamp(b, 0, 255)) + "," +
+      clamp(a, 0, 1).toFixed(3) + ")";
   }
 
   function ellipseScore(lon, lat, centerLon, centerLat, scaleLon, scaleLat, curve, seed) {
-    var curvedLat = centerLat + Math.sin(degToRad((lon + centerLon) * 0.92 + seed * 11)) * curve;
+    var coastNoise = signedFractalNoise(lon, lat, seed) * 9.0;
+    var longCurve = Math.sin(degToRad((lon + centerLon) * 1.03 + seed * 13.0)) * curve;
+    var curvedLat = centerLat + longCurve + coastNoise;
     var dx = lonDistance(lon, centerLon) / scaleLon;
     var dy = (lat - curvedLat) / scaleLat;
     var distance = Math.sqrt((dx * dx) + (dy * dy));
-    return 1 - smoothstep(0.58, 1.06, distance);
+    var pressure = 1 - smoothstep(0.58, 1.04, distance);
+    var edgeBreak = signedFractalNoise(lon * 1.7, lat * 1.7, seed + 101) * 0.09;
+    return clamp(pressure + edgeBreak, 0, 1);
   }
 
-  function classifyCell(lon, lat, seed) {
-    var northPole = smoothstep(62, 78, lat);
-    var southPole = smoothstep(62, 78, -lat);
+  function getSurfaceFields(lon, lat, seed) {
+    var northPole = smoothstep(60, 77, lat);
+    var southPole = smoothstep(60, 77, -lat);
 
-    var westDynamic = ellipseScore(lon, lat, -116, 7, 66, 50, 13, seed + 1);
-    var eastDynamic = ellipseScore(lon, lat, 74, -6, 70, 48, -11, seed + 2);
-    var secondaryOne = ellipseScore(lon, lat, -18, -30, 24, 19, 5, seed + 3);
-    var secondaryTwo = ellipseScore(lon, lat, 151, 21, 25, 18, -5, seed + 4);
-    var secondaryThree = ellipseScore(lon, lat, 21, 39, 20, 16, 4, seed + 5);
+    var westDynamic = ellipseScore(lon, lat, -116, 7, 68, 49, 12, seed + 1);
+    var eastDynamic = ellipseScore(lon, lat, 74, -7, 72, 47, -10, seed + 2);
+
+    var secondaryOne = ellipseScore(lon, lat, -20, -31, 27, 20, 5, seed + 3);
+    var secondaryTwo = ellipseScore(lon, lat, 151, 22, 28, 19, -5, seed + 4);
+    var secondaryThree = ellipseScore(lon, lat, 22, 40, 23, 17, 4, seed + 5);
 
     var dynamicLand = Math.max(westDynamic, eastDynamic);
     var secondaryLand = Math.max(secondaryOne, secondaryTwo, secondaryThree);
     var nonPolarLand = Math.max(dynamicLand, secondaryLand);
-    var coastalBreak = signedNoise(lon * 0.7, lat * 0.7, seed + 22) * 0.055;
-    var landScore = clamp(nonPolarLand + coastalBreak, 0, 1);
+
+    var broadTexture = signedFractalNoise(lon * 0.84, lat * 0.84, seed + 72);
+    var fineTexture = signedFractalNoise(lon * 2.15, lat * 2.15, seed + 109);
+    var landScore = clamp(nonPolarLand + broadTexture * 0.035 + fineTexture * 0.018, 0, 1);
     var polarScore = Math.max(northPole, southPole);
-    var shelfScore = clamp(1 - Math.abs(landScore - 0.44) / 0.26, 0, 1);
-    var coastScore = clamp(1 - Math.abs(landScore - 0.52) / 0.18, 0, 1);
-    var lowElevation = clamp((landScore - 0.46) / 0.54, 0, 1);
-    var materialNoise = noise(lon * 1.9, lat * 1.9, seed + 72);
-    var waterDepth = clamp(1 - (landScore * 0.82) - (shelfScore * 0.22), 0, 1);
+
+    var landStrength = smoothstep(0.48, 0.64, landScore);
+    var shelfStrength = smoothstep(0.31, 0.52, landScore) * (1 - smoothstep(0.58, 0.74, landScore));
+    var coastStrength = clamp(1 - Math.abs(landScore - 0.535) / 0.17, 0, 1);
+    var lowElevation = clamp((landScore - 0.49) / 0.51, 0, 1);
+    var materialTexture = fractalNoise(lon * 1.52, lat * 1.52, seed + 211);
+    var waterDepth = clamp(1 - landScore * 0.90 - shelfStrength * 0.26, 0, 1);
 
     var type = "water";
     var structure = "ocean";
 
-    if (polarScore > 0.32) {
+    if (polarScore > 0.30) {
       type = "polar";
       structure = northPole >= southPole ? "north_polar_lid" : "south_polar_lid";
-    } else if (landScore > 0.50) {
+    } else if (landStrength > 0.05) {
       type = "land";
-      if (westDynamic >= eastDynamic && westDynamic >= secondaryLand) structure = "west_dynamic_hemispheric_land_structure";
-      else if (eastDynamic >= westDynamic && eastDynamic >= secondaryLand) structure = "east_dynamic_hemispheric_land_structure";
-      else if (secondaryOne >= secondaryTwo && secondaryOne >= secondaryThree) structure = "secondary_non_polar_body_1";
-      else if (secondaryTwo >= secondaryOne && secondaryTwo >= secondaryThree) structure = "secondary_non_polar_body_2";
-      else structure = "secondary_non_polar_body_3";
-    } else if (shelfScore > 0.22) {
+
+      if (westDynamic >= eastDynamic && westDynamic >= secondaryLand) {
+        structure = "west_dynamic_hemispheric_land_structure";
+      } else if (eastDynamic >= westDynamic && eastDynamic >= secondaryLand) {
+        structure = "east_dynamic_hemispheric_land_structure";
+      } else if (secondaryOne >= secondaryTwo && secondaryOne >= secondaryThree) {
+        structure = "secondary_non_polar_body_1";
+      } else if (secondaryTwo >= secondaryOne && secondaryTwo >= secondaryThree) {
+        structure = "secondary_non_polar_body_2";
+      } else {
+        structure = "secondary_non_polar_body_3";
+      }
+    } else if (shelfStrength > 0.08) {
       type = "shelf";
       structure = "shallow_coastal_shelf_hint";
     }
@@ -135,18 +204,28 @@
       lat: lat,
       type: type,
       structure: structure,
+      westDynamic: westDynamic,
+      eastDynamic: eastDynamic,
+      secondaryOne: secondaryOne,
+      secondaryTwo: secondaryTwo,
+      secondaryThree: secondaryThree,
       landScore: landScore,
+      landStrength: landStrength,
       polarScore: polarScore,
-      shelfScore: shelfScore,
-      coastScore: coastScore,
-      elevation: type === "land" ? clamp(0.025 + lowElevation * 0.145 + materialNoise * 0.025, 0.02, 0.19) : 0,
+      shelfStrength: shelfStrength,
+      coastStrength: coastStrength,
+      elevation: type === "land" ? clamp(0.025 + lowElevation * 0.155 + materialTexture * 0.018, 0.02, 0.20) : 0,
       waterDepth: waterDepth,
-      mineralPressure: type === "land" ? clamp(materialNoise * 0.16, 0, 0.16) : 0,
-      plateauPressure: type === "land" ? clamp(lowElevation * 0.10, 0, 0.10) : 0,
+      mineralPressure: type === "land" ? clamp(materialTexture * 0.13, 0, 0.13) : 0,
+      plateauPressure: type === "land" ? clamp(lowElevation * 0.08, 0, 0.08) : 0,
       higherRelief: 0,
       maritimeDatum: 0,
       hiddenSubstrateCell: true
     };
+  }
+
+  function classifyCell(lon, lat, seed) {
+    return getSurfaceFields(lon, lat, seed);
   }
 
   function createPlanetOneHexGrid(options) {
@@ -169,6 +248,7 @@
       ok: true,
       version: VERSION,
       baseline: BASELINE,
+      priorBaseline: PRIOR_BASELINE,
       seed: seed,
       lonStep: lonStep,
       latStep: latStep,
@@ -177,6 +257,9 @@
       generatedAt: now(),
       hiddenPlanetaryData: true,
       publicHoneycombBlocked: true,
+      publicCellDotsBlocked: true,
+      publicScanlineLandBlocked: true,
+      continuousOrbitalLandSurfaceActive: true,
       visualPassClaimed: false
     };
 
@@ -204,89 +287,228 @@
     };
   }
 
-  function rgba(r, g, b, a) {
-    return "rgba(" + Math.round(clamp(r, 0, 255)) + "," + Math.round(clamp(g, 0, 255)) + "," + Math.round(clamp(b, 0, 255)) + "," + clamp(a, 0, 1).toFixed(3) + ")";
+  function inverseProjectToLonLat(px, py, cx, cy, radius, viewLon, viewLat) {
+    var x = (px - cx) / radius;
+    var screenY = (py - cy) / radius;
+    var y = -screenY;
+    var rho2 = x * x + y * y;
+    var z;
+    var vLat;
+    var cosViewLat;
+    var sinViewLat;
+    var lat;
+    var lonRel;
+    var lon;
+
+    if (rho2 > 1) return null;
+
+    z = Math.sqrt(Math.max(0, 1 - rho2));
+    vLat = degToRad(viewLat || 0);
+    cosViewLat = Math.cos(vLat);
+    sinViewLat = Math.sin(vLat);
+
+    lat = Math.asin(clamp(y * cosViewLat + z * sinViewLat, -1, 1));
+    lonRel = Math.atan2(x, z * cosViewLat - y * sinViewLat);
+    lon = wrapLon(radToDeg(lonRel) + viewLon);
+
+    return {
+      lon: lon,
+      lat: radToDeg(lat),
+      z: z,
+      rho: Math.sqrt(rho2)
+    };
   }
 
-  function fillPatch(ctx, x, y, rx, ry, rotation) {
-    ctx.beginPath();
-    if (typeof ctx.ellipse === "function") {
-      ctx.ellipse(x, y, rx, ry, rotation || 0, 0, Math.PI * 2);
-    } else {
-      ctx.arc(x, y, Math.max(rx, ry), 0, Math.PI * 2);
+  function getDocument() {
+    return global.document || null;
+  }
+
+  function createWorkCanvas(width, height) {
+    var doc = getDocument();
+    var canvas;
+
+    if (typeof global.OffscreenCanvas === "function") {
+      return new global.OffscreenCanvas(width, height);
     }
-    ctx.closePath();
-    ctx.fill();
+
+    if (doc && typeof doc.createElement === "function") {
+      canvas = doc.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      return canvas;
+    }
+
+    return null;
   }
 
-  function drawSatelliteSurface(ctx, grid, options) {
+  function putPixel(data, index, r, g, b, a) {
+    data[index] = Math.round(clamp(r, 0, 255));
+    data[index + 1] = Math.round(clamp(g, 0, 255));
+    data[index + 2] = Math.round(clamp(b, 0, 255));
+    data[index + 3] = Math.round(clamp(a, 0, 1) * 255);
+  }
+
+  function drawContinuousSurfaceBuffer(ctx, grid, options) {
     var opts = options || {};
     var cx = Number(opts.centerX || ctx.canvas.width / 2);
     var cy = Number(opts.centerY || ctx.canvas.height / 2);
     var radius = Number(opts.radius || Math.min(ctx.canvas.width, ctx.canvas.height) * 0.43);
     var viewLon = Number(opts.viewLon == null ? -28 : opts.viewLon);
     var viewLat = Number(opts.viewLat == null ? 0 : opts.viewLat);
-    var alpha = clamp(Number(opts.alpha == null ? 0.82 : opts.alpha), 0, 1);
-    var pointRadius = Math.max(1.1, radius * Math.max(grid.lonStep, grid.latStep) / 150);
-    var cells = grid && grid.cells ? grid.cells : [];
-    var i;
-    var cell;
-    var p;
-    var fade;
-    var rx;
-    var ry;
-    var elevation;
+    var alpha = clamp(Number(opts.alpha == null ? 0.86 : opts.alpha), 0, 1);
+    var seed = Number((grid && grid.seed) || opts.seed || DEFAULT_SEED);
+    var diameter = Math.max(180, Math.round(radius * 2));
+    var scale = clamp(Number(opts.surfaceScale || 0.72), 0.48, 1.0);
+    var w = Math.max(180, Math.round(diameter * scale));
+    var h = Math.max(180, Math.round(diameter * scale));
+    var workCanvas = createWorkCanvas(w, h);
+    var workCtx;
+    var image;
+    var data;
+    var x;
+    var y;
+    var wx;
+    var wy;
+    var mapped;
+    var field;
+    var index;
+    var edgeFade;
+    var light;
+    var texture;
+    var landAlpha;
+    var shelfAlpha;
+    var polarAlpha;
+    var coastAlpha;
+    var r;
+    var g;
+    var b;
+    var a;
 
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
+    if (!workCanvas) {
+      state.lastError = "NO_WORK_CANVAS";
+      return false;
+    }
 
-    for (i = 0; i < cells.length; i += 1) {
-      cell = cells[i];
-      p = projectCell(cell, viewLon, viewLat, cx, cy, radius);
-      if (!p.visible) continue;
+    workCtx = workCanvas.getContext("2d");
+    if (!workCtx) {
+      state.lastError = "NO_WORK_CONTEXT";
+      return false;
+    }
 
-      fade = clamp((p.z + 0.08) / 1.08, 0, 1);
-      rx = pointRadius * (1.05 + (1 - Math.abs(cell.lat) / 90) * 0.42);
-      ry = pointRadius * (0.72 + fade * 0.22);
+    image = workCtx.createImageData(w, h);
+    data = image.data;
 
-      if (cell.type === "shelf") {
-        ctx.fillStyle = rgba(160, 170, 126, alpha * 0.13 * fade * cell.shelfScore);
-        fillPatch(ctx, p.x, p.y, rx * 1.22, ry * 1.08, degToRad(cell.lon * 0.18));
-      } else if (cell.type === "polar") {
-        ctx.fillStyle = rgba(226, 240, 242, alpha * (0.16 + cell.polarScore * 0.18) * fade);
-        fillPatch(ctx, p.x, p.y, rx * 1.10, ry * 0.92, degToRad(-8));
-      } else if (cell.type === "land") {
-        if (opts.coastGlow !== false && cell.coastScore > 0.08) {
-          ctx.fillStyle = rgba(190, 174, 112, alpha * 0.12 * fade * cell.coastScore);
-          fillPatch(ctx, p.x, p.y, rx * 1.45, ry * 1.25, degToRad(cell.lat + cell.lon * 0.1));
+    for (y = 0; y < h; y += 1) {
+      for (x = 0; x < w; x += 1) {
+        wx = cx - radius + (x + 0.5) / scale;
+        wy = cy - radius + (y + 0.5) / scale;
+        mapped = inverseProjectToLonLat(wx, wy, cx, cy, radius, viewLon, viewLat);
+        index = (y * w + x) * 4;
+
+        if (!mapped) {
+          putPixel(data, index, 0, 0, 0, 0);
+          continue;
         }
 
-        elevation = clamp(cell.elevation / 0.19, 0, 1);
-        ctx.fillStyle = rgba(
-          72 + elevation * 48,
-          96 + elevation * 36,
-          66 + elevation * 20,
-          alpha * (0.34 + cell.landScore * 0.24) * fade
-        );
-        fillPatch(ctx, p.x, p.y, rx * 1.18, ry, degToRad(cell.lon * 0.12));
+        field = getSurfaceFields(mapped.lon, mapped.lat, seed);
+        edgeFade = smoothstep(1.0, 0.78, mapped.rho);
+        light = clamp(0.43 + mapped.z * 0.56, 0.18, 1.0);
+        texture = fractalNoise(mapped.lon * 2.0, mapped.lat * 2.0, seed + 307);
+
+        if (field.type === "polar") {
+          polarAlpha = alpha * edgeFade * light * (0.10 + field.polarScore * 0.26);
+          r = 214 + texture * 34;
+          g = 232 + texture * 22;
+          b = 238 + texture * 16;
+          putPixel(data, index, r, g, b, polarAlpha);
+          continue;
+        }
+
+        if (field.type === "land") {
+          coastAlpha = alpha * edgeFade * light * field.coastStrength * 0.10;
+          landAlpha = alpha * edgeFade * light * (0.19 + field.landStrength * 0.39);
+          r = 62 + field.elevation * 260 + texture * 30;
+          g = 88 + field.elevation * 155 + texture * 22;
+          b = 58 + field.elevation * 90 + texture * 14;
+
+          if (field.coastStrength > 0.04) {
+            r = mix(r, 176, field.coastStrength * 0.25);
+            g = mix(g, 159, field.coastStrength * 0.20);
+            b = mix(b, 104, field.coastStrength * 0.18);
+            landAlpha += coastAlpha;
+          }
+
+          putPixel(data, index, r, g, b, landAlpha);
+          continue;
+        }
+
+        if (field.type === "shelf") {
+          shelfAlpha = alpha * edgeFade * light * (0.035 + field.shelfStrength * 0.115);
+          r = 154 + texture * 28;
+          g = 160 + texture * 18;
+          b = 116 + texture * 10;
+          putPixel(data, index, r, g, b, shelfAlpha);
+          continue;
+        }
+
+        putPixel(data, index, 0, 0, 0, 0);
       }
     }
 
+    workCtx.putImageData(image, 0, 0);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
+    if ("filter" in ctx) ctx.filter = "blur(" + Math.max(0.45, radius * 0.0032).toFixed(2) + "px)";
+    ctx.drawImage(workCanvas, cx - radius, cy - radius, radius * 2, radius * 2);
+    if ("filter" in ctx) ctx.filter = "none";
     ctx.restore();
 
-    state.lastDraw = {
+    state.lastSurface = {
       ok: true,
       version: VERSION,
       baseline: BASELINE,
       renderedAt: now(),
+      mode: "continuous_surface_buffer",
+      surfaceWidth: w,
+      surfaceHeight: h,
+      radius: radius,
+      viewLon: viewLon,
+      viewLat: viewLat,
+      publicCellDotsBlocked: true,
+      publicScanlineLandBlocked: true,
+      continuousOrbitalLandSurfaceActive: true,
+      visualPassClaimed: false
+    };
+
+    return true;
+  }
+
+  function drawSatelliteSurface(ctx, grid, options) {
+    var opts = options || {};
+    var workingGrid = grid && grid.cells ? grid : createPlanetOneHexGrid(opts);
+    var drewBuffer = drawContinuousSurfaceBuffer(ctx, workingGrid, opts);
+
+    state.lastDraw = {
+      ok: Boolean(drewBuffer),
+      version: VERSION,
+      baseline: BASELINE,
+      renderedAt: now(),
       renderMode: "satellite",
-      cellCount: cells.length,
+      cellCount: workingGrid.cells ? workingGrid.cells.length : 0,
       hiddenPlanetaryData: true,
-      publicHoneycombBlocked: true,
       drawsPublicCellOutlines: false,
+      drawsPublicCellDots: false,
+      drawsPublicScanlineLand: false,
+      publicHoneycombBlocked: true,
+      publicCellDotsBlocked: true,
+      publicScanlineLandBlocked: true,
       maritimeSeaLevelBaselineActive: true,
       controlledLandElevationLayerActive: true,
-      visualPassClaimed: false
+      continuousOrbitalLandSurfaceActive: true,
+      debugCellVisibilityOnly: true,
+      visualPassClaimed: false,
+      lastSurface: state.lastSurface
     };
 
     return state.lastDraw;
@@ -300,7 +522,7 @@
     var viewLon = Number(opts.viewLon == null ? -28 : opts.viewLon);
     var viewLat = Number(opts.viewLat == null ? 0 : opts.viewLat);
     var cells = grid && grid.cells ? grid.cells : [];
-    var pointRadius = Math.max(1.0, radius * Math.max(grid.lonStep, grid.latStep) / 170);
+    var pointRadius = Math.max(1.0, radius * Math.max(grid.lonStep || 4, grid.latStep || 4) / 168);
     var i;
     var p;
     var cell;
@@ -313,8 +535,15 @@
       cell = cells[i];
       p = projectCell(cell, viewLon, viewLat, cx, cy, radius);
       if (!p.visible) continue;
+
       ctx.beginPath();
-      ctx.arc(p.x, p.y, pointRadius, 0, Math.PI * 2);
+
+      if (typeof ctx.ellipse === "function") {
+        ctx.ellipse(p.x, p.y, pointRadius * 1.22, pointRadius * 0.82, degToRad(cell.lon * 0.1), 0, Math.PI * 2);
+      } else {
+        ctx.arc(p.x, p.y, pointRadius, 0, Math.PI * 2);
+      }
+
       ctx.stroke();
     }
 
@@ -328,6 +557,8 @@
       renderMode: "debug",
       cellCount: cells.length,
       publicHoneycombBlocked: false,
+      publicCellDotsBlocked: false,
+      publicScanlineLandBlocked: false,
       debugOnly: true,
       visualPassClaimed: false
     };
@@ -364,7 +595,9 @@
       VERSION: VERSION,
       version: VERSION,
       baseline: BASELINE,
+      priorBaseline: PRIOR_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+
       hexgridRendererActive: true,
       hiddenPlanetaryData: true,
       hexCellSubstrateActive: true,
@@ -374,22 +607,35 @@
       elevationCellFieldActive: true,
       waterDepthCellFieldActive: true,
       mineralPressureCellFieldActive: true,
+
       maritimeSeaLevelBaselineActive: true,
       controlledLandElevationLayerActive: true,
+      continuousOrbitalLandSurfaceActive: true,
       shallowShelfHintActive: true,
+
       plateauPressureHeld: true,
       mineralPressureHeld: true,
       higherReliefHeld: true,
+
       satelliteObservationalModeActive: true,
+      satelliteModeDrawsContinuousSurfaceFieldsOnly: true,
       publicHoneycombBlocked: true,
-      satelliteModeDrawsSurfaceEffectsOnly: true,
+      publicCellDotsBlocked: true,
+      publicScanlineLandBlocked: true,
       drawsPublicCellOutlinesInSatelliteMode: false,
+      drawsPublicCellDotsInSatelliteMode: false,
+      drawsPublicScanlinesInSatelliteMode: false,
+
+      debugCellVisibilityOnly: true,
       cellDebugModeAvailable: true,
+
       twoDynamicHemisphericLandStructuresActive: true,
       threeSecondaryNonPolarBodiesActive: true,
       sevenLandmassLawActive: true,
       northSouthPolarDistinctionActive: true,
+
       visualPassClaimed: false,
+
       lastGrid: state.lastGrid ? {
         cellCount: state.lastGrid.cellCount,
         lonStep: state.lastGrid.lonStep,
@@ -397,6 +643,8 @@
         seed: state.lastGrid.seed,
         generatedAt: state.lastGrid.generatedAt
       } : null,
+
+      lastSurface: state.lastSurface,
       lastDraw: state.lastDraw,
       lastError: state.lastError
     };
@@ -410,6 +658,7 @@
     VERSION: VERSION,
     version: VERSION,
     BASELINE: BASELINE,
+    PRIOR_BASELINE: PRIOR_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
     createPlanetOneHexGrid: createPlanetOneHexGrid,
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,
@@ -426,5 +675,7 @@
         detail: getHexgridStatus()
       }));
     }
-  } catch (error) {}
+  } catch (error) {
+    state.lastError = String(error && error.message ? error.message : error);
+  }
 })(typeof window !== "undefined" ? window : globalThis);

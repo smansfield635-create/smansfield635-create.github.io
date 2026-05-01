@@ -1,484 +1,502 @@
-/*
- B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1
- TARGET=/assets/showroom.globe.instrument.js
- PURPOSE:
- Asset showroom globe instrument becomes a module-aware consumer of the Planet 1 renderer facade.
- It calls and verifies /world/render/planet-one.render.js.
- It observes /world/render/planet-one.land.constructs.js and /world/render/planet-one.surface.materials.js.
- It does not draw Planet 1, own land geometry, own surface materials, rewrite gauges, or touch the tree demo.
+/* SHOWROOM GLOBE ASSET RUNTIME BRIDGE
+   FILE: /assets/showroom.globe.instrument.js
+   VERSION: SHOWROOM_GLOBE_ASSET_RUNTIME_BRIDGE_TNT_v1
+
+   PURPOSE:
+   - Bridge the public Showroom globe lane to the existing Planet 1 renderer/runtime.
+   - Do not create a duplicate globe.
+   - Do not own terrain, surface fields, land, shelf, axis physics, or animation loop.
+   - Expose a stable Showroom-safe API for mount/start/pause/resume/reset/status.
+   - Keep visual pass on HOLD.
 */
 
 (function attachShowroomGlobeInstrument(global) {
   "use strict";
 
-  var VERSION = "B26F_ASSET_SHOWROOM_GLOBE_MODULE_AWARE_CONSUMER_TNT_v1";
-  var PREVIOUS_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_DEMO_PLANET_VISIBLE_TNT_v1";
-  var RENDERER_AUTHORITY = "/world/render/planet-one.render.js";
-  var LAND_CONSTRUCTS_AUTHORITY = "/world/render/planet-one.land.constructs.js";
-  var SURFACE_MATERIALS_AUTHORITY = "/world/render/planet-one.surface.materials.js";
+  var VERSION = "SHOWROOM_GLOBE_ASSET_RUNTIME_BRIDGE_TNT_v1";
 
   var CONTRACT_MARKERS = [
     VERSION,
-    PREVIOUS_VERSION,
-    "asset-module-aware-consumption-active=true",
-    "renderer-facade-consumer-active=true",
-    "land-constructs-module-detected-by-asset=true",
-    "surface-materials-module-detected-by-asset=true",
-    "responsibility-split-observed-by-asset=true",
-    "asset-does-not-own-visual-rendering=true",
-    "asset-does-not-own-land-geometry=true",
-    "asset-does-not-own-surface-materials=true"
+    "SHOWROOM_GLOBE_INSTRUMENT_ACTIVE",
+    "PLANET_ONE_RUNTIME_BRIDGE_ACTIVE",
+    "PLANET_ONE_RENDERER_BRIDGE_ACTIVE",
+    "NO_DUPLICATE_FAKE_GLOBE",
+    "NO_TERRAIN_OWNERSHIP",
+    "NO_GRAPHICBOX",
+    "VISUAL_PASS_NOT_CLAIMED"
   ];
 
-  var lastStatus = null;
-  var activeMount = null;
-  var activeRenderHost = null;
-  var activeReceiptHost = null;
-  var scriptPromises = {};
+  var state = {
+    active: true,
+    mounted: false,
+    started: false,
+    mountNode: null,
+    controlNode: null,
+    statusNode: null,
+    lastAction: null,
+    lastStatusWrite: null,
+    lastError: null,
+    visualPassClaimed: false
+  };
 
   function now() {
-    return global.performance && typeof global.performance.now === "function" ? global.performance.now() : Date.now();
+    return new Date().toISOString();
   }
 
-  function boolString(value) {
-    return value ? "true" : "false";
+  function safeCall(fn, fallback) {
+    try {
+      return fn();
+    } catch (error) {
+      state.lastError = String(error && error.message ? error.message : error);
+      return fallback;
+    }
   }
 
   function getRenderer() {
-    return global.DGBPlanetOneRenderTeam || null;
+    return global.DGBPlanetOneRender ||
+      global.DGBPlanetOneRenderer ||
+      global.DGBPlanetOneRenderTeam ||
+      null;
   }
 
-  function getLandModule() {
-    return global.DGBPlanetOneLandConstructs || null;
+  function getRuntime() {
+    return global.DGBPlanetOneRuntime ||
+      global.DGBWorldRuntime ||
+      null;
   }
 
-  function getSurfaceModule() {
-    return global.DGBPlanetOneSurfaceMaterials || null;
+  function getControl() {
+    return global.DGBPlanetOneControl ||
+      global.DGBWorldControl ||
+      null;
   }
 
-  function hasRendererFacade() {
-    var renderer = getRenderer();
-    return Boolean(renderer && (typeof renderer.renderPlanetOne === "function" || typeof renderer.mount === "function" || typeof renderer.render === "function"));
-  }
-
-  function hasLandConstructsModule() {
-    var module = getLandModule();
-    return Boolean(module && typeof module.createPlanetOneLandConstructs === "function");
-  }
-
-  function hasSurfaceMaterialsModule() {
-    var module = getSurfaceModule();
-    return Boolean(
-      module &&
-      typeof module.drawPlanetOneOcean === "function" &&
-      typeof module.drawPlanetOneConstructSurface === "function" &&
-      typeof module.drawPlanetOneAtmosphere === "function"
-    );
-  }
-
-  function readRendererStatus() {
-    var renderer = getRenderer();
-    if (renderer && typeof renderer.getStatus === "function") {
-      try {
-        return renderer.getStatus();
-      } catch (error) {
-        return { ok: false, error: error && error.message ? error.message : String(error) };
-      }
-    }
-    if (renderer && typeof renderer.status === "function") {
-      try {
-        return renderer.status();
-      } catch (error2) {
-        return { ok: false, error: error2 && error2.message ? error2.message : String(error2) };
-      }
-    }
-    return null;
-  }
-
-  function readLandStatus() {
-    var module = getLandModule();
-    if (module && typeof module.getLandConstructStatus === "function") {
-      try {
-        return module.getLandConstructStatus();
-      } catch (error) {
-        return { ok: false, error: error && error.message ? error.message : String(error) };
-      }
-    }
-    if (module && typeof module.status === "function") {
-      try {
-        return module.status();
-      } catch (error2) {
-        return { ok: false, error: error2 && error2.message ? error2.message : String(error2) };
-      }
-    }
-    return null;
-  }
-
-  function readSurfaceStatus() {
-    var module = getSurfaceModule();
-    if (module && typeof module.getSurfaceMaterialStatus === "function") {
-      try {
-        return module.getSurfaceMaterialStatus();
-      } catch (error) {
-        return { ok: false, error: error && error.message ? error.message : String(error) };
-      }
-    }
-    if (module && typeof module.status === "function") {
-      try {
-        return module.status();
-      } catch (error2) {
-        return { ok: false, error: error2 && error2.message ? error2.message : String(error2) };
-      }
-    }
-    return null;
-  }
-
-  function findExistingScript(path) {
-    var scripts;
+  function resolveElement(target, fallbackSelectors) {
     var i;
+    var node;
+
+    if (target && typeof target !== "string") return target;
     if (!global.document) return null;
-    scripts = global.document.getElementsByTagName("script");
-    for (i = 0; i < scripts.length; i += 1) {
-      if (scripts[i].src && scripts[i].src.indexOf(path) !== -1) return scripts[i];
+
+    if (typeof target === "string") {
+      node = global.document.querySelector(target);
+      if (node) return node;
     }
+
+    for (i = 0; i < fallbackSelectors.length; i += 1) {
+      node = global.document.querySelector(fallbackSelectors[i]);
+      if (node) return node;
+    }
+
     return null;
   }
 
-  function requestScript(key, path, detector) {
-    var existing;
-    var script;
-    var target;
+  function resolveMount(target) {
+    var node = resolveElement(target, [
+      "#planet-one-render",
+      "#showroom-globe-render",
+      "[data-planet-one-mount='true']",
+      "[data-showroom-globe-mount='true']",
+      ".planet-one-render",
+      ".showroom-globe-render"
+    ]);
 
-    if (!global.document) return Promise.resolve(false);
-    if (detector && detector()) return Promise.resolve(true);
-    if (scriptPromises[key]) return scriptPromises[key];
+    if (node) return node;
 
-    existing = findExistingScript(path);
-    if (existing) {
-      scriptPromises[key] = waitForDetector(detector, 2400).then(function (ok) {
-        return ok;
-      });
-      return scriptPromises[key];
+    if (!global.document) return null;
+
+    node = global.document.createElement("div");
+    node.id = "planet-one-render";
+    node.setAttribute("data-planet-one-mount", "true");
+    node.setAttribute("data-showroom-globe-mount", "true");
+    node.style.width = "100%";
+    node.style.maxWidth = "760px";
+    node.style.margin = "0 auto";
+
+    (global.document.body || global.document.documentElement).appendChild(node);
+    return node;
+  }
+
+  function resolveControl(target) {
+    return resolveElement(target, [
+      "#planet-one-controls",
+      "#showroom-globe-controls",
+      "[data-planet-one-controls='true']",
+      "[data-showroom-globe-controls='true']",
+      ".planet-one-controls",
+      ".showroom-globe-controls"
+    ]);
+  }
+
+  function resolveStatus(target) {
+    return resolveElement(target, [
+      "#showroom-globe-status",
+      "#planet-one-status",
+      "[data-showroom-globe-status='true']",
+      "[data-planet-one-status='true']",
+      ".showroom-globe-status",
+      ".planet-one-status"
+    ]);
+  }
+
+  function markMount(node) {
+    if (!node || !node.setAttribute) return;
+
+    node.setAttribute("data-planet-one-mount", "true");
+    node.setAttribute("data-showroom-globe-mount", "true");
+    node.setAttribute("data-showroom-globe-instrument", VERSION);
+  }
+
+  function writeStatus(statusNode) {
+    var node = statusNode || state.statusNode;
+    var status = getStatus();
+
+    if (!node) return status;
+
+    if ("textContent" in node) {
+      node.textContent = JSON.stringify({
+        version: VERSION,
+        showroomGlobeInstrumentActive: true,
+        planetOneRendererDetected: status.planetOneRendererDetected,
+        planetOneRuntimeDetected: status.planetOneRuntimeDetected,
+        planetOneControlDetected: status.planetOneControlDetected,
+        mounted: status.mounted,
+        started: status.started,
+        runtime: status.runtimeSummary,
+        renderer: status.rendererSummary,
+        visualPassClaimed: false
+      }, null, 2);
     }
 
-    scriptPromises[key] = new Promise(function (resolve) {
-      script = global.document.createElement("script");
-      script.id = "dgb-showroom-globe-module-" + key;
-      script.src = path;
-      script.async = false;
-      script.defer = false;
-      script.onload = function onLoad() {
-        waitForDetector(detector, 1400).then(resolve);
-      };
-      script.onerror = function onError() {
-        resolve(false);
-      };
-      target = global.document.head || global.document.body || global.document.documentElement;
-      if (target && typeof target.appendChild === "function") {
-        target.appendChild(script);
-      } else {
-        resolve(false);
-      }
-    });
-
-    return scriptPromises[key];
+    state.lastStatusWrite = now();
+    return status;
   }
 
-  function waitForDetector(detector, timeoutMs) {
-    var start = now();
-    return new Promise(function (resolve) {
-      function tick() {
-        if (!detector || detector()) {
-          resolve(true);
-          return;
-        }
-        if (now() - start >= timeoutMs) {
-          resolve(false);
-          return;
-        }
-        global.setTimeout(tick, 40);
-      }
-      tick();
-    });
-  }
+  function mount(target, options) {
+    var renderer;
+    var runtime;
+    var control;
+    var mountNode;
+    var controlNode;
+    var statusNode;
+    var renderResult = null;
 
-  function ensureSplitRenderChain() {
-    return Promise.all([
-      requestScript("land-constructs", LAND_CONSTRUCTS_AUTHORITY, hasLandConstructsModule),
-      requestScript("surface-materials", SURFACE_MATERIALS_AUTHORITY, hasSurfaceMaterialsModule),
-      requestScript("renderer-facade", RENDERER_AUTHORITY, hasRendererFacade)
-    ]).then(function () {
-      return waitForDetector(hasRendererFacade, 2200);
-    });
-  }
+    options = options || {};
 
-  function injectStyles() {
-    var style;
-    if (!global.document || global.document.getElementById("dgb-showroom-globe-instrument-styles")) return;
+    mountNode = resolveMount(target || options.mount || options.target);
+    controlNode = resolveControl(options.controlTarget);
+    statusNode = resolveStatus(options.statusTarget);
 
-    style = global.document.createElement("style");
-    style.id = "dgb-showroom-globe-instrument-styles";
-    style.textContent = [
-      ".dgb-globe-shell{position:relative;display:grid;justify-items:center;align-content:center;gap:14px;width:100%;min-height:420px;padding:18px;isolation:isolate;}",
-      ".dgb-globe-render-host{position:relative;width:100%;display:grid;place-items:center;min-height:340px;}",
-      ".dgb-globe-caption{position:relative;z-index:4;max-width:760px;text-align:center;color:rgba(244,247,255,.84);font-size:.78rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase;}",
-      ".dgb-globe-telemetry{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:880px;}",
-      ".dgb-globe-telemetry span{border:1px solid rgba(168,199,255,.16);border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.045);color:rgba(244,247,255,.72);font-size:.68rem;font-weight:850;letter-spacing:.04em;text-transform:uppercase;}",
-      ".dgb-globe-telemetry span[data-pass='true']{border-color:rgba(137,232,235,.32);color:rgba(202,255,248,.88);}",
-      ".dgb-globe-telemetry span[data-pass='false']{border-color:rgba(255,149,117,.28);color:rgba(255,207,196,.82);}",
-      ".dgb-globe-telemetry span[data-pass='pending']{border-color:rgba(242,199,111,.26);color:rgba(255,232,183,.82);}",
-      ".dgb-globe-fallback{display:grid;place-items:center;width:min(390px,76vw);aspect-ratio:1;border-radius:50%;border:1px solid rgba(242,199,111,.32);background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.16),transparent 22%),radial-gradient(circle at 52% 48%,rgba(40,112,176,.45),rgba(7,16,32,.94) 72%);box-shadow:inset -42px -36px 62px rgba(0,0,0,.58),0 36px 90px rgba(0,0,0,.72);color:rgba(244,247,255,.72);font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:24px;}",
-      "@media (prefers-reduced-motion:reduce){.dgb-globe-shell *{animation:none!important;transition:none!important;}}"
-    ].join("");
-    global.document.head.appendChild(style);
-  }
+    state.mountNode = mountNode;
+    state.controlNode = controlNode;
+    state.statusNode = statusNode;
 
-  function createElement(tag, className, text) {
-    var element = global.document.createElement(tag);
-    if (className) element.className = className;
-    if (typeof text === "string") element.textContent = text;
-    return element;
-  }
-
-  function setReceipt(host, label, value) {
-    var node;
-    var key;
-    if (!host) return;
-    key = label.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
-    node = host.querySelector("[data-receipt='" + key + "']");
-    if (!node) {
-      node = createElement("span", "", "");
-      node.setAttribute("data-receipt", key);
-      host.appendChild(node);
+    if (!mountNode) {
+      state.lastError = "SHOWROOM_GLOBE_MOUNT_NOT_AVAILABLE";
+      return getStatus();
     }
-    node.textContent = label + "=" + value;
-    if (value === true || value === "true") node.setAttribute("data-pass", "true");
-    else if (value === false || value === "false") node.setAttribute("data-pass", "false");
-    else node.setAttribute("data-pass", "pending");
+
+    markMount(mountNode);
+
+    renderer = getRenderer();
+    runtime = getRuntime();
+    control = getControl();
+
+    if (renderer && typeof renderer.renderPlanetOne === "function") {
+      renderResult = safeCall(function () {
+        return renderer.renderPlanetOne(mountNode, {
+          renderMode: "satellite",
+          viewLon: options.viewLon == null ? -28 : options.viewLon,
+          viewLat: options.viewLat == null ? 0 : options.viewLat,
+          axisTilt: options.axisTilt == null ? -0.28 : options.axisTilt,
+          showAxis: options.showAxis == null ? true : Boolean(options.showAxis),
+          clearMount: false
+        });
+      }, null);
+    }
+
+    if (runtime && typeof runtime.mount === "function") {
+      safeCall(function () {
+        runtime.mount(mountNode, {
+          viewLon: options.viewLon == null ? -28 : options.viewLon,
+          viewLat: options.viewLat == null ? 0 : options.viewLat,
+          axisTilt: options.axisTilt == null ? -0.28 : options.axisTilt,
+          axisVisible: options.showAxis == null ? true : Boolean(options.showAxis),
+          speedDegreesPerSecond: options.speedDegreesPerSecond == null ? 2.4 : Number(options.speedDegreesPerSecond)
+        });
+      }, null);
+    }
+
+    if (control && controlNode && typeof control.mountPanel === "function") {
+      safeCall(function () {
+        control.mountPanel(controlNode);
+      }, null);
+    }
+
+    state.mounted = true;
+    state.lastAction = {
+      name: "mount",
+      at: now(),
+      rendererDetected: Boolean(renderer),
+      runtimeDetected: Boolean(runtime),
+      controlDetected: Boolean(control),
+      renderResult: renderResult
+    };
+
+    writeStatus(statusNode);
+
+    return getStatus();
   }
 
-  function buildShell(mount, options) {
-    var shell;
-    var renderHost;
-    var captionNode;
-    var telemetry;
-    var fallback;
-    var caption = options.caption || "PLANET 1 · SPLIT RENDER CHAIN · MODULE-AWARE ASSET CONSUMER";
+  function start(target, options) {
+    var runtime;
 
-    injectStyles();
-    mount.innerHTML = "";
-    mount.dataset.instrumentVersion = VERSION;
-    mount.dataset.previousInstrumentVersion = PREVIOUS_VERSION;
-    mount.dataset.renderStatus = "pending";
-    mount.dataset.assetModuleAwareConsumption = "true";
-    mount.dataset.assetOwnsVisualRendering = "false";
-    mount.dataset.assetOwnsLandGeometry = "false";
-    mount.dataset.assetOwnsSurfaceMaterials = "false";
+    options = options || {};
 
-    shell = createElement("div", "dgb-globe-shell");
-    renderHost = createElement("div", "dgb-globe-render-host");
-    fallback = createElement("div", "dgb-globe-fallback", "Renderer facade pending");
-    renderHost.appendChild(fallback);
-    captionNode = createElement("div", "dgb-globe-caption", caption);
-    telemetry = createElement("div", "dgb-globe-telemetry");
+    if (!state.mounted || target) {
+      mount(target, options);
+    }
 
-    shell.appendChild(renderHost);
-    shell.appendChild(captionNode);
-    shell.appendChild(telemetry);
-    mount.appendChild(shell);
+    runtime = getRuntime();
 
-    activeMount = mount;
-    activeRenderHost = renderHost;
-    activeReceiptHost = telemetry;
+    if (runtime && typeof runtime.start === "function") {
+      safeCall(function () {
+        runtime.start(state.mountNode, {
+          viewLon: options.viewLon == null ? undefined : options.viewLon,
+          viewLat: options.viewLat == null ? undefined : options.viewLat,
+          axisTilt: options.axisTilt == null ? undefined : options.axisTilt,
+          axisVisible: options.showAxis == null ? undefined : Boolean(options.showAxis),
+          speedDegreesPerSecond: options.speedDegreesPerSecond == null ? undefined : Number(options.speedDegreesPerSecond)
+        });
+      }, null);
+    }
+
+    state.started = true;
+    state.lastAction = {
+      name: "start",
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function pause() {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.pause === "function") {
+      safeCall(function () {
+        runtime.pause();
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "pause",
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function resume() {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.resume === "function") {
+      safeCall(function () {
+        runtime.resume();
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "resume",
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function reset() {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.reset === "function") {
+      safeCall(function () {
+        runtime.reset();
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "reset",
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function setSpeed(value) {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.setSpeed === "function") {
+      safeCall(function () {
+        runtime.setSpeed(Number(value));
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "setSpeed",
+      value: Number(value),
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function setAxisVisible(value) {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.setAxisVisible === "function") {
+      safeCall(function () {
+        runtime.setAxisVisible(Boolean(value));
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "setAxisVisible",
+      value: Boolean(value),
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function nudge(value) {
+    var runtime = getRuntime();
+
+    if (runtime && typeof runtime.nudge === "function") {
+      safeCall(function () {
+        runtime.nudge(Number(value || 0));
+      }, null);
+    }
+
+    state.lastAction = {
+      name: "nudge",
+      value: Number(value || 0),
+      at: now()
+    };
+
+    writeStatus();
+    return getStatus();
+  }
+
+  function summarizeRuntime(runtimeStatus) {
+    if (!runtimeStatus) return null;
 
     return {
-      shell: shell,
-      renderHost: renderHost,
-      telemetry: telemetry,
-      fallback: fallback
+      running: Boolean(runtimeStatus.running),
+      paused: Boolean(runtimeStatus.paused),
+      viewLon: runtimeStatus.viewLon,
+      viewLat: runtimeStatus.viewLat,
+      axisVisible: runtimeStatus.axisVisible,
+      speedDegreesPerSecond: runtimeStatus.speedDegreesPerSecond,
+      frameCount: runtimeStatus.frameCount
     };
   }
 
-  function callRenderer(renderHost, options) {
-    var renderer = getRenderer();
-    var renderOptions;
-    var result;
-
-    if (!renderer) {
-      return { ok: false, reason: "renderer-facade-not-detected" };
-    }
-
-    renderOptions = {
-      mount: renderHost,
-      replace: true,
-      animate: options.animate !== false,
-      size: options.size,
-      rotation: options.rotation,
-      rotationSpeed: options.rotationSpeed,
-      tilt: options.tilt
-    };
-
-    try {
-      if (typeof renderer.renderPlanetOne === "function") result = renderer.renderPlanetOne(renderOptions);
-      else if (typeof renderer.mount === "function") result = renderer.mount(renderOptions);
-      else if (typeof renderer.render === "function") result = renderer.render(renderOptions);
-      else result = { ok: false, reason: "renderer-call-surface-missing" };
-    } catch (error) {
-      result = { ok: false, reason: "renderer-call-threw", error: error && error.message ? error.message : String(error) };
-    }
-
-    return result || { ok: false, reason: "renderer-returned-empty-result" };
-  }
-
-  function collectStatus(rendererResult) {
-    var rendererStatus = readRendererStatus();
-    var landStatus = readLandStatus();
-    var surfaceStatus = readSurfaceStatus();
-    var rendererMounted = Boolean(rendererResult && rendererResult.ok !== false && (rendererResult.canvas || rendererResult.state || rendererResult.ok === true));
-    var rendererFacadeActive = Boolean(
-      hasRendererFacade() &&
-      (!rendererStatus || rendererStatus.rendererFacadeActive !== false) &&
-      (!rendererStatus || rendererStatus.responsibilitySplitActive !== false)
-    );
-    var responsibilitySplitActive = Boolean(
-      rendererStatus && rendererStatus.responsibilitySplitActive ||
-      rendererResult && rendererResult.responsibilitySplitActive ||
-      hasLandConstructsModule() && hasSurfaceMaterialsModule()
-    );
+  function summarizeRenderer(rendererStatus) {
+    if (!rendererStatus) return null;
 
     return {
-      ok: rendererMounted,
-      version: VERSION,
-      VERSION: VERSION,
-      previousVersion: PREVIOUS_VERSION,
-      rendererAuthority: RENDERER_AUTHORITY,
-      landConstructsAuthority: LAND_CONSTRUCTS_AUTHORITY,
-      surfaceMaterialsAuthority: SURFACE_MATERIALS_AUTHORITY,
-      assetCalledRenderer: Boolean(rendererResult),
-      rendererDetected: hasRendererFacade(),
-      rendererResultMounted: rendererMounted,
-      mountComplete: rendererMounted,
-      rendererFacadeActive: rendererFacadeActive,
-      responsibilitySplitActive: responsibilitySplitActive,
-      landConstructsModuleDetected: hasLandConstructsModule(),
-      surfaceMaterialsModuleDetected: hasSurfaceMaterialsModule(),
-      landConstructsStatus: landStatus,
-      surfaceMaterialsStatus: surfaceStatus,
-      lastRendererStatus: rendererStatus,
-      lastRendererResult: rendererResult || null,
-      assetModuleAwareConsumption: true,
-      assetOwnsVisualRendering: false,
-      assetOwnsLandGeometry: false,
-      assetOwnsSurfaceMaterials: false,
-      compositionOnly: true,
-      markers: CONTRACT_MARKERS.slice(),
-      CONTRACT_MARKERS: CONTRACT_MARKERS.slice()
-    };
-  }
-
-  function writeStatusToDom(status) {
-    if (!activeMount || !activeReceiptHost) return;
-
-    activeMount.dataset.renderStatus = status.mountComplete ? "mounted" : "pending";
-    activeMount.dataset.rendererDetected = boolString(status.rendererDetected);
-    activeMount.dataset.assetCalledRenderer = boolString(status.assetCalledRenderer);
-    activeMount.dataset.rendererResultMounted = boolString(status.rendererResultMounted);
-    activeMount.dataset.mountComplete = boolString(status.mountComplete);
-    activeMount.dataset.rendererFacadeActive = boolString(status.rendererFacadeActive);
-    activeMount.dataset.responsibilitySplitActive = boolString(status.responsibilitySplitActive);
-    activeMount.dataset.landConstructsModuleDetected = boolString(status.landConstructsModuleDetected);
-    activeMount.dataset.surfaceMaterialsModuleDetected = boolString(status.surfaceMaterialsModuleDetected);
-    activeMount.dataset.assetModuleAwareConsumption = "true";
-
-    setReceipt(activeReceiptHost, "ASSET_CALLED_RENDERER", status.assetCalledRenderer);
-    setReceipt(activeReceiptHost, "RENDERER_RESULT_MOUNTED", status.rendererResultMounted);
-    setReceipt(activeReceiptHost, "MOUNT_COMPLETE", status.mountComplete);
-    setReceipt(activeReceiptHost, "RENDERER_FACADE_ACTIVE", status.rendererFacadeActive);
-    setReceipt(activeReceiptHost, "RESPONSIBILITY_SPLIT_ACTIVE", status.responsibilitySplitActive);
-    setReceipt(activeReceiptHost, "LAND_CONSTRUCTS_MODULE_DETECTED", status.landConstructsModuleDetected);
-    setReceipt(activeReceiptHost, "SURFACE_MATERIALS_MODULE_DETECTED", status.surfaceMaterialsModuleDetected);
-    setReceipt(activeReceiptHost, "ASSET_MODULE_AWARE_CONSUMPTION", true);
-  }
-
-  function refreshStatus(rendererResult) {
-    lastStatus = collectStatus(rendererResult || (lastStatus && lastStatus.lastRendererResult) || null);
-    writeStatusToDom(lastStatus);
-    return lastStatus;
-  }
-
-  function renderGlobe(mount, options) {
-    var config = options || {};
-    var shell;
-    var earlyResult = null;
-
-    if (!mount) {
-      throw new Error("DGBShowroomGlobeInstrument.renderGlobe requires a mount element.");
-    }
-
-    shell = buildShell(mount, config);
-    refreshStatus(null);
-
-    if (hasRendererFacade()) {
-      earlyResult = callRenderer(shell.renderHost, config);
-      refreshStatus(earlyResult);
-    }
-
-    ensureSplitRenderChain().then(function onChainReady() {
-      var result = callRenderer(shell.renderHost, config);
-      refreshStatus(result);
-      global.setTimeout(function delayedReceiptRefresh() {
-        refreshStatus(result);
-      }, 260);
-      global.setTimeout(function secondDelayedReceiptRefresh() {
-        refreshStatus(result);
-      }, 1100);
-    }).catch(function onChainError(error) {
-      lastStatus = collectStatus({
-        ok: false,
-        reason: "split-render-chain-load-failed",
-        error: error && error.message ? error.message : String(error)
-      });
-      writeStatusToDom(lastStatus);
-    });
-
-    return {
-      ok: true,
-      pending: !earlyResult,
-      version: VERSION,
-      VERSION: VERSION,
-      previousVersion: PREVIOUS_VERSION,
-      rendererAuthority: RENDERER_AUTHORITY,
-      landConstructsAuthority: LAND_CONSTRUCTS_AUTHORITY,
-      surfaceMaterialsAuthority: SURFACE_MATERIALS_AUTHORITY,
-      assetModuleAwareConsumption: true,
-      assetOwnsVisualRendering: false,
-      assetOwnsLandGeometry: false,
-      assetOwnsSurfaceMaterials: false,
-      rendererDetected: hasRendererFacade(),
-      landConstructsModuleDetected: hasLandConstructsModule(),
-      surfaceMaterialsModuleDetected: hasSurfaceMaterialsModule(),
-      getStatus: getStatus,
-      markers: CONTRACT_MARKERS.slice(),
-      CONTRACT_MARKERS: CONTRACT_MARKERS.slice()
+      activeCanvas: Boolean(rendererStatus.activeCanvas),
+      mountComplete: Boolean(rendererStatus.mountComplete),
+      viewLon: rendererStatus.viewLon,
+      viewLat: rendererStatus.viewLat,
+      axisVisible: rendererStatus.axisVisible,
+      rendererConsumesHexgrid: Boolean(rendererStatus.rendererConsumesHexgrid),
+      publicHoneycombBlocked: Boolean(rendererStatus.publicHoneycombBlocked)
     };
   }
 
   function getStatus() {
-    return refreshStatus(lastStatus && lastStatus.lastRendererResult ? lastStatus.lastRendererResult : null);
+    var renderer = getRenderer();
+    var runtime = getRuntime();
+    var control = getControl();
+
+    var rendererStatus = renderer && typeof renderer.getStatus === "function"
+      ? safeCall(function () { return renderer.getStatus(); }, null)
+      : null;
+
+    var runtimeStatus = runtime && typeof runtime.getStatus === "function"
+      ? safeCall(function () { return runtime.getStatus(); }, null)
+      : null;
+
+    return {
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+
+      showroomGlobeInstrumentActive: true,
+      showroomUsesExistingPlanetOneSystem: true,
+      noDuplicateFakeGlobe: true,
+      noTerrainOwnership: true,
+
+      mounted: state.mounted,
+      started: state.started,
+      mountDetected: Boolean(state.mountNode),
+      controlMountDetected: Boolean(state.controlNode),
+      statusMountDetected: Boolean(state.statusNode),
+
+      planetOneRendererDetected: Boolean(renderer),
+      planetOneRuntimeDetected: Boolean(runtime),
+      planetOneControlDetected: Boolean(control),
+
+      rendererSummary: summarizeRenderer(rendererStatus),
+      runtimeSummary: summarizeRuntime(runtimeStatus),
+
+      lastAction: state.lastAction,
+      lastStatusWrite: state.lastStatusWrite,
+      lastError: state.lastError,
+      statusAt: now(),
+      visualPassClaimed: false
+    };
   }
 
-  global.DGBShowroomGlobeInstrument = {
-    version: VERSION,
+  function status() {
+    return getStatus();
+  }
+
+  var api = {
     VERSION: VERSION,
-    previousVersion: PREVIOUS_VERSION,
-    rendererAuthority: RENDERER_AUTHORITY,
-    landConstructsAuthority: LAND_CONSTRUCTS_AUTHORITY,
-    surfaceMaterialsAuthority: SURFACE_MATERIALS_AUTHORITY,
-    CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
-    markers: CONTRACT_MARKERS.slice(),
-    renderGlobe: renderGlobe,
-    mount: renderGlobe,
+    version: VERSION,
+    CONTRACT_MARKERS: CONTRACT_MARKERS,
+    mount: mount,
+    start: start,
+    pause: pause,
+    resume: resume,
+    reset: reset,
+    setSpeed: setSpeed,
+    setAxisVisible: setAxisVisible,
+    nudge: nudge,
+    writeStatus: writeStatus,
     getStatus: getStatus,
-    status: getStatus
+    status: status
   };
+
+  global.DGBShowroomGlobeInstrument = api;
+  global.DGBShowroomGlobe = api;
+
+  try {
+    if (global.dispatchEvent && typeof global.CustomEvent === "function") {
+      global.dispatchEvent(new global.CustomEvent("dgb:showroom-globe-instrument-ready", {
+        detail: getStatus()
+      }));
+    }
+  } catch (error) {
+    state.lastError = String(error && error.message ? error.message : error);
+  }
 })(typeof window !== "undefined" ? window : globalThis);

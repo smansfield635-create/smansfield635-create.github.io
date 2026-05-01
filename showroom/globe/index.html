@@ -2,14 +2,14 @@
 <html
   lang="en"
   data-page="showroom-globe"
-  data-route-contract="SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1"
-  data-previous-route-contract="SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1"
-  data-room-role="inspection-route-only"
+  data-route-contract="SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1"
+  data-previous-route-contract="SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1"
+  data-legacy-route-contract="SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1"
+  data-runtime-cache-bust-boot-parity="true"
   data-hydration-engine-required="true"
   data-hydro-terrain-marriage-active="true"
   data-hydration-first-or-before-terrain="true"
   data-terrain-first-load-order="true"
-  data-instrument-boot-required="true"
   data-no-room-expression="true"
   data-no-fallback-planet="true"
 >
@@ -20,10 +20,11 @@
   <title>Diamond Gate Bridge · Planet 1 inspection room</title>
   <meta
     name="description"
-    content="Planet 1 inspection room. This route mounts the hydration-first hydro-terrain engine chain without drawing the world inside the room."
+    content="Planet 1 inspection room with runtime cache-bust boot parity for hydration-first hydro-terrain rendering."
   />
 
   <!--
+    SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1
     SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1
     SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1
 
@@ -31,60 +32,51 @@
     /showroom/globe/index.html
 
     PURPOSE=
-    RENEW_THE_INSPECTION_ROUTE_AS_HYDRATION_AWARE
-    KEEP_THE_ROOM_AS_MOUNT_AND_RUNTIME_BOUNDARY_ONLY
-    PROVE_HYDRATION_FIRST_OR_BEFORE_TERRAIN
-    PRESERVE_TERRAIN_FIRST_COMPATIBILITY
-    ROUTE_TO_ASSET_INSTRUMENT_AS_BOOT_COORDINATOR
-    PREVENT_ROOM_LEVEL_WORLD_EXPRESSION
+    FORCE_CURRENT_SCRIPT_RUNTIME
+    BREAK_STALE_V16_GLOBALS
+    LOAD_CURRENT_ASSET_INSTRUMENT_WITH_VERSIONED_URL
+    PRIME_CURRENT_HYDRATION_TERRAIN_AND_RENDERER_WITH_VERSIONED_URLS
+    PRESERVE_ROUTE_SOURCE_PASS
+    MOVE_V20_GAUGES_RUNTIME_GLOBAL_BREAK_TO_PASS_OR_NEXT_REAL_BREAK
 
-    REQUIRED V19 ROUTE EXPANSION MARKERS=
-    /world/render/planet-one.hydration.render.js
-    hydration-engine-required=true
-    hydro-terrain-marriage-active=true
-    hydration-first-or-before-terrain=true
-
-    REQUIRED EXISTING ROUTE MARKERS=
-    SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1
+    REQUIRED SOURCE MARKERS=
     Planet 1 inspection room
     planet-one-render
     Planet 1 render loaded
     Optimum expression
     /assets/showroom.globe.instrument.js
+    /world/render/planet-one.hydration.render.js
     /world/render/planet-one.terrain.render.js
     /world/render/planet-one.render.js
     terrain-first-load-order=true
+    hydration-engine-required=true
+    hydro-terrain-marriage-active=true
+    hydration-first-or-before-terrain=true
 
-    ROOM LAW=
-    ROOMS DO NOT DRAW THE WORLD.
-    THIS ROUTE MOUNTS ONLY.
-    ASSET INSTRUMENT LOADS.
-    HYDRATION HYDRATES.
-    TERRAIN ELEVATES.
-    MAIN RENDERER COMPOSES.
-    GAUGES MEASURE.
+    REQUIRED RUNTIME TARGETS=
+    SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1
+    PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1
+    PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1
+    PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1
 
-    HARD BLOCKS=
-    NO_INLINE_GLOBE_SVG
-    NO_INLINE_TERRAIN
-    NO_INLINE_HYDRATION
-    NO_DEMO_PLANET
-    NO_FALLBACK_PLANET
-    NO_PUBLIC_LAYER_SELECTOR
-    NO_GEOGRAPHY_CLOSURE
+    LAW=
+    SOURCE PASS IS NOT RUNTIME PASS.
+    ROUTE OWNS SCRIPT ENTRY.
+    ASSET LOADS AND DELEGATES.
+    RENDERER COMPOSES.
+    ROOM DOES NOT DRAW THE PLANET.
   -->
 
-  <link rel="preload" as="script" href="/world/render/planet-one.hydration.render.js" />
-  <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js" />
-  <link rel="preload" as="script" href="/assets/showroom.globe.instrument.js" />
-  <link rel="preload" as="script" href="/world/render/planet-one.render.js" />
+  <link rel="preload" as="script" href="/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1" />
+  <link rel="preload" as="script" href="/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1" />
+  <link rel="preload" as="script" href="/world/render/planet-one.render.js?v=PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1" />
+  <link rel="preload" as="script" href="/assets/showroom.globe.instrument.js?v=SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1" />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #05070d;
       --panel: rgba(255,255,255,.055);
-      --panel2: rgba(255,255,255,.085);
       --line: rgba(168,199,255,.18);
       --line2: rgba(242,199,111,.42);
       --text: rgba(246,248,255,.93);
@@ -93,6 +85,7 @@
       --gold: #f2c76f;
       --green: #8fe3b0;
       --blue: #91bdff;
+      --red: #ff9b9b;
       --max: 1180px;
       --radius: 28px;
       --shadow: 0 28px 80px rgba(0,0,0,.52);
@@ -110,9 +103,16 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { margin: 0; color: var(--text); }
+    body {
+      margin: 0;
+      color: var(--text);
+    }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     a:hover { color: var(--gold); }
 
     .skip-link {
@@ -191,7 +191,8 @@
       background: rgba(242,199,111,.065);
     }
 
-    .hero, .panel {
+    .hero,
+    .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--panel);
@@ -316,6 +317,12 @@
       background: rgba(145,189,255,.06);
     }
 
+    .pill.fail {
+      border-color: rgba(255,155,155,.45);
+      color: var(--red);
+      background: rgba(255,155,155,.06);
+    }
+
     .render-shell {
       display: grid;
       gap: 14px;
@@ -331,7 +338,7 @@
     }
 
     .render-status {
-      width: min(720px, 100%);
+      width: min(760px, 100%);
       border: 1px solid rgba(242,199,111,.36);
       border-radius: 22px;
       padding: 13px 15px;
@@ -340,6 +347,21 @@
       font-weight: 900;
       line-height: 1.35;
       text-align: center;
+    }
+
+    .runtime-proof {
+      width: min(760px, 100%);
+      border: 1px solid rgba(143,227,176,.28);
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: rgba(143,227,176,.055);
+      color: rgba(186,247,209,.92);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     #planet-one-render {
@@ -482,10 +504,9 @@
 
     <section class="hero" id="globe-main">
       <div class="kicker">Planet 1 · Inspection room</div>
-      <h1>This room mounts the hydration-first world chain.</h1>
+      <h1>This route now forces runtime parity.</h1>
       <p class="lead">
-        Planet 1 lives here, on the inspection route. This room does not draw the world.
-        It proves hydration-first hydro-terrain boot, then hands the mount to the asset instrument and renderer.
+        The source already passed. This route now prevents stale V16 globals by loading the current hydration, terrain, renderer, and asset instrument through versioned script URLs.
       </p>
 
       <div class="actions">
@@ -497,68 +518,63 @@
     </section>
 
     <main>
-      <section class="panel" aria-labelledby="route-boundary-title">
+      <section class="panel">
         <div class="panel-head">
           <div>
-            <h2 id="route-boundary-title">Inspection route. Mount only.</h2>
+            <h2>Runtime cache-bust boot parity.</h2>
             <p>
-              The room frames, constrains, and mounts. Hydration, terrain, and renderer expression remain in the engine layer.
+              The route no longer trusts unversioned browser runtime. It primes current source into current runtime before mounting Planet 1.
             </p>
           </div>
-          <span class="pill pass">Route separated</span>
+          <span class="pill hold" id="routeStatusPill">Preparing runtime</span>
         </div>
 
-        <div class="grid">
-          <article class="card">
-            <strong>Parent route</strong>
-            <h3><code>/showroom/</code></h3>
-            <p>Lightweight lobby. No Planet 1 render and no world expression.</p>
-          </article>
-
-          <article class="card">
-            <strong>Inspection route</strong>
-            <h3><code>/showroom/globe/</code></h3>
-            <p>Mount and runtime boundary only. No inline globe, no inline terrain, no inline hydration.</p>
-          </article>
-
-          <article class="card">
-            <strong>Public expression</strong>
-            <h3>Optimum expression</h3>
-            <p>One public expression only. No pass buttons, no layer selector, no fallback option.</p>
-          </article>
-
-          <article class="card">
-            <strong>Fallback law</strong>
-            <h3>Diagnostic hold only.</h3>
-            <p>Missing dependencies must hold diagnostically. The room must not fake the planet.</p>
-          </article>
+        <div class="proof">
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Hydration runtime: <code>/world/render/planet-one.hydration.render.js?v=PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1</code></span>
+          </div>
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Terrain runtime: <code>/world/render/planet-one.terrain.render.js?v=PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1</code></span>
+          </div>
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Renderer runtime: <code>/world/render/planet-one.render.js?v=PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1</code></span>
+          </div>
+          <div>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Asset runtime: <code>/assets/showroom.globe.instrument.js?v=SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1</code></span>
+          </div>
         </div>
       </section>
 
       <section
         class="panel"
-        aria-labelledby="live-inspection-title"
         data-route-proof="Planet 1 render loaded"
         data-hydration-engine-required="true"
         data-hydro-terrain-marriage-active="true"
         data-hydration-first-or-before-terrain="true"
         data-terrain-first-load-order="true"
-        data-instrument-boot-required="true"
-        data-main-renderer-required="true"
+        data-runtime-cache-bust-boot-parity="true"
         data-no-room-expression="true"
         data-no-fallback-planet="true"
       >
         <div class="panel-head">
           <div>
-            <h2 id="live-inspection-title">Planet 1 render loaded.</h2>
+            <h2>Planet 1 render loaded.</h2>
             <p>
-              The route calls the hydration-first asset instrument. The asset loads hydration, terrain, and renderer.
+              The room mounts only after the current runtime chain is confirmed.
             </p>
           </div>
           <span class="pill hold" id="planet-one-status-pill">Preparing chain</span>
         </div>
 
         <div class="render-shell">
+          <div class="runtime-proof" id="runtimeProof">
+            RUNTIME PARITY WAITING
+          </div>
+
           <div class="render-toolbar" aria-label="Planet 1 render controls">
             <button class="button" type="button" id="loadPlanetOne">Load Planet 1 render</button>
             <button class="button secondary" type="button" id="pausePlanetOne">Pause render</button>
@@ -566,7 +582,7 @@
           </div>
 
           <div class="render-status" id="renderStatus">
-            Hydration-first hydro-terrain chain is ready to mount.
+            Versioned runtime chain is ready to boot.
           </div>
 
           <div
@@ -575,87 +591,38 @@
             data-render-mount="planet-one-render"
             data-expression="Optimum expression"
             data-optimum-expression="Optimum expression"
+            data-runtime-cache-bust-boot-parity="true"
             data-hydration-engine-required="true"
             data-hydro-terrain-marriage-active="true"
             data-hydration-first-or-before-terrain="true"
             data-terrain-first-load-order="true"
-            data-instrument-boot-required="true"
-            data-main-renderer-required="true"
             data-no-room-expression="true"
             data-no-fallback-planet="true"
-            data-showroom-lobby-stays-separate="true"
             aria-label="Planet 1 render mount"
           >
             <noscript>
-              Planet 1 requires JavaScript to run the hydration-first inspection chain.
+              Planet 1 requires JavaScript to run the runtime parity inspection chain.
             </noscript>
           </div>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="boot-proof-title">
+      <section class="panel">
         <div class="panel-head">
           <div>
-            <h2 id="boot-proof-title">Hydration-first boot proof.</h2>
+            <h2>Layer ownership remains separated.</h2>
             <p>
-              This source proves the route has moved beyond the old terrain-first-only frame.
+              Runtime cache-busting does not change authority. It only forces the current scripts to become the active browser globals.
             </p>
           </div>
-          <span class="pill pass">Hydration aware</span>
-        </div>
-
-        <div class="proof">
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span>Hydration renderer: <code>/world/render/planet-one.hydration.render.js</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span>Asset instrument: <code>/assets/showroom.globe.instrument.js</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span>Terrain renderer: <code>/world/render/planet-one.terrain.render.js</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span>Main renderer: <code>/world/render/planet-one.render.js</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span><code>hydration-engine-required=true</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span><code>hydro-terrain-marriage-active=true</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span><code>hydration-first-or-before-terrain=true</code></span>
-          </div>
-          <div>
-            <span class="dot" aria-hidden="true"></span>
-            <span><code>terrain-first-load-order=true</code> preserved for compatibility.</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="lane-title">
-        <div class="panel-head">
-          <div>
-            <h2 id="lane-title">World expression belongs to the engines.</h2>
-            <p>
-              The inspection room does not express terrain or water. It only proves the lawful chain and mounts the result.
-            </p>
-          </div>
-          <span class="pill pass">No room expression</span>
+          <span class="pill pass">Separation preserved</span>
         </div>
 
         <div class="grid">
           <article class="card">
             <strong>Hydration</strong>
             <h3>Water authority</h3>
-            <p>Ocean depth, shelves, shoreline wetness, rivers, lakes, glaciers, and basins.</p>
+            <p>Oceans, shores, rivers, lakes, glaciers, and basins.</p>
           </article>
 
           <article class="card">
@@ -671,9 +638,9 @@
           </article>
 
           <article class="card">
-            <strong>Gauges</strong>
-            <h3>Measurement authority</h3>
-            <p>Measures hydration, terrain, asset, route, renderer, and next target.</p>
+            <strong>Route</strong>
+            <h3>Script entry authority</h3>
+            <p>The route forces current runtime versions, then mounts only.</p>
           </article>
         </div>
       </section>
@@ -688,56 +655,59 @@
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1 · Planet 1 inspection room · hydration-first hydro-terrain route proof.
+      SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1 · Planet 1 inspection room · source/runtime/mount parity repair.
     </footer>
   </div>
 
-  <script
-    src="/assets/showroom.globe.instrument.js"
-    defer
-    data-instrument-boot-required="true"
-    data-hydration-engine-required="true"
-    data-hydro-terrain-marriage-active="true"
-    data-hydration-first-or-before-terrain="true"
-    data-hydration-renderer="/world/render/planet-one.hydration.render.js"
-    data-terrain-renderer="/world/render/planet-one.terrain.render.js"
-    data-main-renderer="/world/render/planet-one.render.js"
-  ></script>
-
   <script>
-    (function bindPlanetOneHydrationAwareInspectionRoute(global) {
+    (function bindPlanetOneRuntimeCacheBustRoute(global) {
       "use strict";
 
-      const VERSION = "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1";
-      const PREVIOUS_V17 = "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1";
+      const VERSION = "SHOWROOM_GLOBE_V22_RUNTIME_CACHE_BUST_BOOT_PARITY_TNT_v1";
+      const PREVIOUS_V21 = "SHOWROOM_GLOBE_V21_HYDRATION_AWARE_INSPECTION_ROUTE_TNT_v1";
+      const LEGACY_V17 = "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1";
+
+      const HYDRATION_VERSION = "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1";
+      const TERRAIN_VERSION = "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1";
+      const RENDERER_VERSION = "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1";
+      const ASSET_VERSION = "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1";
 
       const HYDRATION_RENDERER = "/world/render/planet-one.hydration.render.js";
-      const ASSET_INSTRUMENT = "/assets/showroom.globe.instrument.js";
       const TERRAIN_RENDERER = "/world/render/planet-one.terrain.render.js";
       const MAIN_RENDERER = "/world/render/planet-one.render.js";
+      const ASSET_INSTRUMENT = "/assets/showroom.globe.instrument.js";
 
       let currentResult = null;
+      let bootPromise = null;
 
       function byId(id) {
         return document.getElementById(id);
+      }
+
+      function versioned(path, version) {
+        const url = new URL(path, window.location.origin);
+        url.searchParams.set("v", version);
+        url.searchParams.set("runtime", VERSION);
+        return url.pathname + url.search;
       }
 
       function markRoute(state) {
         const root = document.documentElement;
 
         root.dataset.showroomGlobeRoute = VERSION;
-        root.dataset.previousRouteContract = PREVIOUS_V17;
+        root.dataset.previousRouteContract = PREVIOUS_V21;
+        root.dataset.legacyRouteContract = LEGACY_V17;
 
         root.dataset.hydrationRenderer = HYDRATION_RENDERER;
-        root.dataset.assetInstrument = ASSET_INSTRUMENT;
         root.dataset.terrainRenderer = TERRAIN_RENDERER;
         root.dataset.mainRenderer = MAIN_RENDERER;
+        root.dataset.assetInstrument = ASSET_INSTRUMENT;
 
         root.dataset.hydrationEngineRequired = "true";
         root.dataset.hydroTerrainMarriageActive = "true";
         root.dataset.hydrationFirstOrBeforeTerrain = "true";
         root.dataset.terrainFirstLoadOrder = "true";
-        root.dataset.instrumentBootRequired = "true";
+        root.dataset.runtimeCacheBustBootParity = "true";
         root.dataset.noRoomExpression = "true";
         root.dataset.noFallbackPlanet = "true";
 
@@ -747,47 +717,193 @@
       function setStatus(message, status) {
         const statusBox = byId("renderStatus");
         const pill = byId("planet-one-status-pill");
+        const routePill = byId("routeStatusPill");
 
         if (statusBox) statusBox.textContent = message;
 
         if (pill) {
           pill.textContent = status || "Preparing chain";
-          pill.className = status === "Planet 1 render loaded" ? "pill pass" : "pill hold";
+          pill.className = status === "Planet 1 render loaded" ? "pill pass" : status === "Diagnostic hold" ? "pill fail" : "pill hold";
+        }
+
+        if (routePill) {
+          routePill.textContent = status || "Preparing runtime";
+          routePill.className = status === "Planet 1 render loaded" ? "pill pass" : status === "Diagnostic hold" ? "pill fail" : "pill hold";
         }
       }
 
-      function waitForInstrument() {
-        if (
-          global.DGBShowroomGlobeInstrument &&
-          typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function"
-        ) {
-          return Promise.resolve(global.DGBShowroomGlobeInstrument);
-        }
+      function setRuntimeProof(message, pass) {
+        const el = byId("runtimeProof");
+        if (!el) return;
+        el.textContent = message;
+        el.style.borderColor = pass ? "rgba(143,227,176,.42)" : "rgba(242,199,111,.42)";
+        el.style.color = pass ? "rgba(186,247,209,.92)" : "rgba(255,244,211,.92)";
+      }
 
-        return new Promise(function wait(resolve, reject) {
-          let tries = 0;
+      function removePriorScripts() {
+        const targets = [
+          HYDRATION_RENDERER,
+          TERRAIN_RENDERER,
+          MAIN_RENDERER,
+          ASSET_INSTRUMENT
+        ];
 
-          function poll() {
-            tries += 1;
+        Array.from(document.scripts).forEach(function each(script) {
+          const src = script.getAttribute("src") || "";
+          if (!src) return;
 
-            if (
-              global.DGBShowroomGlobeInstrument &&
-              typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function"
-            ) {
-              resolve(global.DGBShowroomGlobeInstrument);
+          const clean = src.split("?")[0];
+
+          if (targets.indexOf(clean) !== -1 && script.dataset.runtimeParityOwner !== VERSION) {
+            script.parentNode.removeChild(script);
+          }
+        });
+      }
+
+      function clearKnownGlobals() {
+        try { global.DGBPlanetOneHydrationRender = undefined; } catch (error) {}
+        try { global.DGBPlanetOneTerrainRender = undefined; } catch (error) {}
+        try { global.DGBPlanetOneRenderTeam = undefined; } catch (error) {}
+        try { global.DGBShowroomGlobeInstrument = undefined; } catch (error) {}
+      }
+
+      function loadScript(path, version, label, check) {
+        return new Promise(function load(resolve, reject) {
+          const script = document.createElement("script");
+          const src = versioned(path, version);
+
+          script.src = src;
+          script.defer = false;
+          script.async = false;
+          script.dataset.runtimeParityOwner = VERSION;
+          script.dataset.runtimeParityLabel = label;
+          script.dataset.runtimeParityVersion = version;
+
+          let settled = false;
+
+          function finish() {
+            if (settled) return;
+            settled = true;
+
+            if (typeof check === "function" && !check()) {
+              reject(new Error(label + " loaded, but expected current runtime global is missing."));
               return;
             }
 
-            if (tries > 40) {
-              reject(new Error("Hydration-first asset instrument did not become available."));
-              return;
-            }
-
-            global.setTimeout(poll, 75);
+            resolve({
+              ok: true,
+              label: label,
+              path: path,
+              version: version,
+              src: src
+            });
           }
 
-          poll();
+          function fail() {
+            if (settled) return;
+            settled = true;
+            reject(new Error(label + " failed to load at " + src));
+          }
+
+          script.addEventListener("load", finish, { once: true });
+          script.addEventListener("error", fail, { once: true });
+
+          document.head.appendChild(script);
         });
+      }
+
+      function currentRuntimeIsValid() {
+        return Boolean(
+          global.DGBPlanetOneHydrationRender &&
+          global.DGBPlanetOneTerrainRender &&
+          global.DGBPlanetOneRenderTeam &&
+          global.DGBShowroomGlobeInstrument &&
+          global.DGBPlanetOneRenderTeam.VERSION === RENDERER_VERSION &&
+          global.DGBShowroomGlobeInstrument.VERSION === ASSET_VERSION
+        );
+      }
+
+      function primeRuntimeChain() {
+        if (bootPromise) return bootPromise;
+
+        markRoute("runtime-priming");
+        setStatus("Priming current script runtime with versioned URLs.", "Preparing runtime");
+        setRuntimeProof("RUNTIME PARITY PRIMING", false);
+
+        removePriorScripts();
+        clearKnownGlobals();
+
+        bootPromise = loadScript(
+          HYDRATION_RENDERER,
+          HYDRATION_VERSION,
+          "Planet 1 hydration renderer",
+          function checkHydration() {
+            return Boolean(
+              global.DGBPlanetOneHydrationRender &&
+              typeof global.DGBPlanetOneHydrationRender.createHydrationLayer === "function"
+            );
+          }
+        )
+          .then(function loadTerrain() {
+            return loadScript(
+              TERRAIN_RENDERER,
+              TERRAIN_VERSION,
+              "Planet 1 terrain renderer",
+              function checkTerrain() {
+                return Boolean(
+                  global.DGBPlanetOneTerrainRender &&
+                  typeof global.DGBPlanetOneTerrainRender.createTerrainLayer === "function"
+                );
+              }
+            );
+          })
+          .then(function loadRenderer() {
+            return loadScript(
+              MAIN_RENDERER,
+              RENDERER_VERSION,
+              "Planet 1 main renderer",
+              function checkRenderer() {
+                return Boolean(
+                  global.DGBPlanetOneRenderTeam &&
+                  global.DGBPlanetOneRenderTeam.VERSION === RENDERER_VERSION &&
+                  typeof global.DGBPlanetOneRenderTeam.renderPlanetOne === "function"
+                );
+              }
+            );
+          })
+          .then(function loadAsset() {
+            return loadScript(
+              ASSET_INSTRUMENT,
+              ASSET_VERSION,
+              "Showroom globe asset instrument",
+              function checkAsset() {
+                return Boolean(
+                  global.DGBShowroomGlobeInstrument &&
+                  global.DGBShowroomGlobeInstrument.VERSION === ASSET_VERSION &&
+                  typeof global.DGBShowroomGlobeInstrument.renderGlobe === "function"
+                );
+              }
+            );
+          })
+          .then(function ready() {
+            if (!currentRuntimeIsValid()) {
+              throw new Error("Runtime parity loaded but current globals did not validate.");
+            }
+
+            markRoute("runtime-current");
+            setRuntimeProof("RUNTIME PARITY PASS · RENDERER V18B · ASSET V20", true);
+
+            return {
+              ok: true,
+              routeVersion: VERSION,
+              rendererVersion: global.DGBPlanetOneRenderTeam.VERSION,
+              assetVersion: global.DGBShowroomGlobeInstrument.VERSION,
+              hydrationReady: Boolean(global.DGBPlanetOneHydrationRender),
+              terrainReady: Boolean(global.DGBPlanetOneTerrainRender)
+            };
+          });
+
+        return bootPromise;
       }
 
       function renderPlanetOne() {
@@ -800,11 +916,12 @@
 
         markRoute("boot-started");
 
-        mount.dataset.renderStatus = "hydration-first-boot-started";
+        mount.dataset.renderStatus = "runtime-parity-boot-started";
+        mount.dataset.runtimeCacheBustBootParity = "true";
         mount.dataset.hydrationRenderer = HYDRATION_RENDERER;
-        mount.dataset.assetInstrument = ASSET_INSTRUMENT;
         mount.dataset.terrainRenderer = TERRAIN_RENDERER;
         mount.dataset.mainRenderer = MAIN_RENDERER;
+        mount.dataset.assetInstrument = ASSET_INSTRUMENT;
         mount.dataset.hydrationEngineRequired = "true";
         mount.dataset.hydroTerrainMarriageActive = "true";
         mount.dataset.hydrationFirstOrBeforeTerrain = "true";
@@ -812,13 +929,11 @@
         mount.dataset.noRoomExpression = "true";
         mount.dataset.noFallbackPlanet = "true";
 
-        setStatus("Hydration-first hydro-terrain chain is booting.", "Preparing chain");
+        return primeRuntimeChain()
+          .then(function runtimeReady() {
+            markRoute("delegating-to-current-asset");
 
-        return waitForInstrument()
-          .then(function loadedInstrument(instrument) {
-            markRoute("delegating-to-asset-instrument");
-
-            return instrument.renderGlobe(mount, {
+            return global.DGBShowroomGlobeInstrument.renderGlobe(mount, {
               caption: "Planet 1 · Nine Summits Universe · Optimum expression",
               expression: "optimum",
               stopExisting: true,
@@ -826,7 +941,8 @@
               terrainRenderer: TERRAIN_RENDERER,
               mainRenderer: MAIN_RENDERER,
               hydrationFirstLoadOrder: true,
-              hydroTerrainMarriage: true
+              hydroTerrainMarriage: true,
+              runtimeCacheBustBootParity: true
             });
           })
           .then(function rendered(result) {
@@ -834,6 +950,7 @@
 
             mount.dataset.renderStatus = result && result.ok === false ? "diagnostic-hold" : "mounted";
             mount.dataset.planetOneRenderLoaded = result && result.ok === false ? "false" : "true";
+            mount.dataset.runtimeCacheBustBootParity = "true";
             mount.dataset.hydrationEngineRequired = "true";
             mount.dataset.hydroTerrainMarriageActive = "true";
             mount.dataset.hydrationFirstOrBeforeTerrain = "true";
@@ -843,14 +960,15 @@
               setStatus("Diagnostic hold. The route refused fallback expression.", "Diagnostic hold");
             } else {
               markRoute("mounted");
-              setStatus("Planet 1 render loaded. Optimum expression mounted through hydration-first chain.", "Planet 1 render loaded");
+              setStatus("Planet 1 render loaded. Optimum expression mounted through versioned runtime chain.", "Planet 1 render loaded");
             }
 
             return result;
           })
           .catch(function failed(error) {
-            const message = error && error.message ? error.message : "unknown route boot failure";
+            const message = error && error.message ? error.message : "unknown runtime boot failure";
             markRoute("diagnostic-hold");
+            setRuntimeProof("RUNTIME PARITY FAIL", false);
             setStatus("Diagnostic hold: " + message, "Diagnostic hold");
             return null;
           });
@@ -893,31 +1011,54 @@
       }
 
       global.DGBShowroomGlobeRouteV21 = Object.freeze({
-        VERSION,
-        PREVIOUS_V17,
-        HYDRATION_RENDERER,
-        ASSET_INSTRUMENT,
-        TERRAIN_RENDERER,
-        MAIN_RENDERER,
-        renderPlanetOne,
-        pauseRender,
-        resumeRender,
+        VERSION: PREVIOUS_V21,
+        CURRENT_VERSION: VERSION,
+        PREVIOUS_V21: PREVIOUS_V21,
+        LEGACY_V17: LEGACY_V17,
+        HYDRATION_RENDERER: HYDRATION_RENDERER,
+        TERRAIN_RENDERER: TERRAIN_RENDERER,
+        MAIN_RENDERER: MAIN_RENDERER,
+        ASSET_INSTRUMENT: ASSET_INSTRUMENT,
+        RENDERER_VERSION: RENDERER_VERSION,
+        ASSET_VERSION: ASSET_VERSION,
+        primeRuntimeChain: primeRuntimeChain,
+        renderPlanetOne: renderPlanetOne,
+        pauseRender: pauseRender,
+        resumeRender: resumeRender,
         getStatus: function getStatus() {
           return {
-            version: VERSION,
-            previousV17: PREVIOUS_V17,
+            version: PREVIOUS_V21,
+            currentVersion: VERSION,
+            previousV21: PREVIOUS_V21,
+            legacyV17: LEGACY_V17,
             hydrationRenderer: HYDRATION_RENDERER,
-            assetInstrument: ASSET_INSTRUMENT,
             terrainRenderer: TERRAIN_RENDERER,
             mainRenderer: MAIN_RENDERER,
+            assetInstrument: ASSET_INSTRUMENT,
+            runtimeCacheBustBootParity: true,
             hydrationEngineRequired: true,
             hydroTerrainMarriageActive: true,
             hydrationFirstOrBeforeTerrain: true,
             terrainFirstLoadOrder: true,
             noRoomExpression: true,
             noFallbackPlanet: true,
-            currentResult: Boolean(currentResult)
+            currentResult: Boolean(currentResult),
+            rendererRuntimeVersion: global.DGBPlanetOneRenderTeam && global.DGBPlanetOneRenderTeam.VERSION ? global.DGBPlanetOneRenderTeam.VERSION : "missing",
+            assetRuntimeVersion: global.DGBShowroomGlobeInstrument && global.DGBShowroomGlobeInstrument.VERSION ? global.DGBShowroomGlobeInstrument.VERSION : "missing"
           };
+        }
+      });
+
+      global.DGBShowroomGlobeRouteV22 = Object.freeze({
+        VERSION: VERSION,
+        PREVIOUS_V21: PREVIOUS_V21,
+        LEGACY_V17: LEGACY_V17,
+        primeRuntimeChain: primeRuntimeChain,
+        renderPlanetOne: renderPlanetOne,
+        pauseRender: pauseRender,
+        resumeRender: resumeRender,
+        getStatus: function getStatus() {
+          return global.DGBShowroomGlobeRouteV21.getStatus();
         }
       });
 

@@ -1,335 +1,460 @@
 <!doctype html>
-<html lang="en" data-page="home" data-room="H3_HOME" data-public-mode="ted-clean">
+<html
+  lang="en"
+  data-page="home"
+  data-route="/home/"
+  data-house-part="home"
+  data-construct-class="rich-manor-systemic-containment-home"
+  data-g5-site-uniformity="active"
+  data-page-standard="G5_HOME_RICH_MANOR_SYSTEMIC_CONTAINMENT_RENEWAL_TNT_v1"
+  data-architecture-claim="home-receiving-surface"
+  data-visual-pass-claim="false"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Home · Diamond Gate Bridge</title>
-  <meta name="description" content="Home is the receiving hall inside Rich Manor and Estate.">
+  <title>Home · Rich Manor · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Home explains Rich Manor: the systemic dynamic containment system that gives every part of the work a room while keeping the whole house connected."
+  >
+
   <style>
-    :root {
-      --bg: #05070b;
-      --panel: rgba(9, 15, 25, 0.9);
-      --panel-soft: rgba(14, 24, 38, 0.74);
-      --line: rgba(168, 199, 255, 0.22);
-      --line-strong: rgba(143, 240, 198, 0.34);
-      --text: #eef5ff;
-      --muted: #aab8cf;
-      --green: #8ff0c6;
-      --blue: #7db5ff;
-      --gold: #ffd36f;
-      --shadow: rgba(0, 0, 0, 0.48);
+    :root{
+      color-scheme:dark;
+      --bg:#03050a;
+      --panel:rgba(9,15,25,.94);
+      --panel2:rgba(14,24,38,.84);
+      --line:rgba(168,199,255,.22);
+      --gold-line:rgba(242,199,111,.40);
+      --text:#f4f7ff;
+      --muted:#b8c2d6;
+      --soft:rgba(244,247,255,.78);
+      --gold:#f2c76f;
+      --green:#8ff0c6;
+      --blue:#91bdff;
+      --shadow:rgba(0,0,0,.56);
+      --max:1120px;
+      --radius:30px;
     }
 
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+
+    html{
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
     }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
       background:
-        radial-gradient(circle at 74% 8%, rgba(255, 211, 111, 0.11), transparent 24rem),
-        radial-gradient(circle at 24% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
-        radial-gradient(circle at 50% 88%, rgba(143, 240, 198, 0.08), transparent 24rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
+        radial-gradient(circle at 78% 6%,rgba(242,199,111,.15),transparent 24rem),
+        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
+        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
+        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
+      line-height:1.55;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a{color:inherit;text-decoration:none}
+
+    a:focus{
+      outline:2px solid var(--green);
+      outline-offset:3px;
     }
 
-    a:focus {
-      outline: 2px solid var(--green);
-      outline-offset: 3px;
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:10px;
+      z-index:1000;
+      padding:8px 12px;
+      border-radius:10px;
+      background:#fff;
+      color:#000;
+      font-weight:850;
     }
 
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
+    .skip:focus{left:10px}
+
+    .page{
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:24px 0 64px;
     }
 
-    .skip:focus {
-      left: 10px;
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      padding-bottom:20px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:26px;
     }
 
-    .page {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 44px;
+    .brand{
+      display:grid;
+      gap:3px;
+      color:var(--muted);
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .topbar {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 22px;
+    .brand strong{
+      color:var(--gold);
+      font-size:1rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
-    .brand {
-      color: var(--muted);
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .nav,
+    .actions,
+    .links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
     }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
+    .nav{justify-content:flex-end}
 
     .nav a,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font-weight: 650;
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 16px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      color:var(--text);
+      font-weight:850;
+      font-size:.9rem;
     }
 
-    .nav a:hover,
-    .button:hover {
-      border-color: rgba(168, 199, 255, 0.42);
-      background: rgba(255, 255, 255, 0.075);
+    .nav a[aria-current="page"],
+    .button.primary{
+      border-color:rgba(242,199,111,.54);
+      background:rgba(242,199,111,.14);
     }
 
-    .hero,
-    .panel,
-    .path-card {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: var(--panel);
-      box-shadow: 0 24px 80px var(--shadow);
+    .button.green{
+      border-color:rgba(143,240,198,.50);
+      background:rgba(143,240,198,.13);
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: clamp(24px, 5vw, 52px);
-      min-height: 410px;
-      display: grid;
-      align-content: center;
-      gap: 22px;
+    .button.secondary{
+      color:rgba(244,247,255,.82);
+      background:rgba(255,255,255,.04);
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .hero{
+      min-height:540px;
+      display:grid;
+      align-content:center;
+      gap:24px;
+      padding:clamp(26px,5vw,56px);
+      border:1px solid var(--gold-line);
+      border-radius:34px;
       background:
-        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.16), transparent 16rem),
-        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
-      pointer-events: none;
+        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
+        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
+        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: clamp(18px, 6vw, 76px);
-      bottom: clamp(18px, 6vw, 64px);
-      width: clamp(180px, 34vw, 380px);
-      height: clamp(120px, 24vw, 250px);
-      border: 1px solid rgba(143, 240, 198, 0.18);
-      border-radius: 999px 999px 40px 40px;
+    .kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .kicker.green{color:var(--green)}
+    .kicker.blue{color:var(--blue)}
+
+    h1{
+      margin:0;
+      max-width:1020px;
+      font-size:clamp(3rem,9.2vw,7rem);
+      line-height:.88;
+      letter-spacing:-.08em;
+    }
+
+    h2{
+      margin:0;
+      max-width:940px;
+      font-size:clamp(1.85rem,5vw,3.45rem);
+      line-height:1;
+      letter-spacing:-.06em;
+    }
+
+    h3{
+      margin:0;
+      font-size:clamp(1.22rem,3vw,1.85rem);
+      line-height:1.06;
+      letter-spacing:-.045em;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1.02rem,2.4vw,1.2rem);
+      line-height:1.6;
+    }
+
+    strong{color:var(--text)}
+
+    .lead{
+      max-width:930px;
+      color:var(--soft);
+      font-size:clamp(1.16rem,3vw,1.55rem);
+      line-height:1.45;
+    }
+
+    .one-line{
+      color:var(--text);
+      font-size:clamp(1.55rem,4.6vw,3.25rem);
+      line-height:1.05;
+      letter-spacing:-.06em;
+      font-weight:950;
+    }
+
+    .principles{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .principle{
+      border:1px solid rgba(242,199,111,.32);
+      border-radius:24px;
+      padding:18px;
+      background:linear-gradient(180deg,rgba(242,199,111,.10),rgba(255,255,255,.04));
+      min-height:150px;
+      display:grid;
+      gap:8px;
+      align-content:start;
+    }
+
+    .principle b{
+      color:var(--gold);
+      font-size:.72rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .principle strong{
+      font-size:clamp(1.25rem,3.1vw,2rem);
+      line-height:.98;
+      letter-spacing:-.055em;
+    }
+
+    .home-bubble{
+      margin-top:22px;
+      padding:18px;
+      border:1px solid var(--gold-line);
+      border-radius:34px;
       background:
-        radial-gradient(circle at 50% 18%, rgba(255, 211, 111, 0.16), transparent 8rem),
-        linear-gradient(180deg, rgba(143, 240, 198, 0.08), rgba(125, 181, 255, 0.03));
-      box-shadow:
-        inset 0 0 38px rgba(143, 240, 198, 0.06),
-        0 0 70px rgba(125, 181, 255, 0.06);
-      opacity: 0.55;
-      pointer-events: none;
+        radial-gradient(circle at 20% 0%,rgba(242,199,111,.12),transparent 22rem),
+        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .hero-content,
-    .actions {
-      position: relative;
-      z-index: 2;
-    }
-
-    .kicker {
-      margin: 0 0 12px;
-      color: var(--green);
-      font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
-    }
-
-    .lead {
-      max-width: 760px;
-      margin: 20px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
-      line-height: 1.42;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
-      color: var(--text);
-      font-weight: 850;
-    }
-
-    .section {
-      margin-top: 18px;
-    }
-
-    .panel {
-      padding: clamp(20px, 3vw, 30px);
+    details{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
       background:
-        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        var(--panel-soft);
+        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
+        var(--panel);
+      overflow:hidden;
     }
 
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 2.6rem);
-      letter-spacing: -0.05em;
+    details + details{margin-top:12px}
+
+    summary{
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px;
+      font-weight:950;
+      color:rgba(248,251,255,.94);
     }
 
-    .panel p {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.52;
+    summary::-webkit-details-marker{display:none}
+
+    summary::after{
+      content:"+";
+      display:grid;
+      place-items:center;
+      min-width:32px;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      border:1px solid rgba(145,189,255,.32);
+      color:var(--blue);
+      background:rgba(145,189,255,.08);
+      font-size:1.15rem;
+      line-height:1;
     }
 
-    .path-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
+    details[open] > summary::after{
+      content:"–";
+      border-color:rgba(242,199,111,.42);
+      color:var(--gold);
+      background:rgba(242,199,111,.08);
     }
 
-    .path-card {
-      min-height: 210px;
-      display: grid;
-      align-content: space-between;
-      gap: 18px;
-      padding: 20px;
+    .summary-copy{
+      display:grid;
+      gap:7px;
+    }
+
+    .summary-copy b{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .summary-copy span{
+      font-size:1.08rem;
+      letter-spacing:-.025em;
+    }
+
+    .bubble-body{
+      display:grid;
+      gap:14px;
+      padding:0 18px 18px;
+    }
+
+    .bubble-note{
+      border:1px solid rgba(242,199,111,.24);
+      border-radius:20px;
+      background:rgba(242,199,111,.065);
+      padding:15px;
+    }
+
+    .nested{
+      display:grid;
+      gap:12px;
+    }
+
+    .nested details{
+      border-radius:24px;
       background:
-        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
-        rgba(9, 15, 25, 0.84);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
+        var(--panel2);
     }
 
-    .path-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
+    .nested summary{padding:15px}
+    .nested .bubble-body{padding:0 15px 15px}
+
+    .grid{display:grid;gap:14px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .grid.six{grid-template-columns:repeat(6,minmax(0,1fr))}
+
+    .card,
+    .route-card{
+      border:1px solid rgba(168,199,255,.18);
+      border-radius:24px;
       background:
-        radial-gradient(circle at 22% 0%, rgba(143, 240, 198, 0.1), transparent 14rem),
-        rgba(12, 20, 32, 0.9);
+        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
+        rgba(255,255,255,.045);
+      padding:20px;
+      display:grid;
+      align-content:start;
+      gap:12px;
     }
 
-    .path-label {
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 850;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .card{min-height:190px}
+    .route-card{min-height:240px}
+    .route-card .button{width:max-content;margin-top:auto}
+
+    .card span,
+    .route-card span,
+    .card b{
+      display:block;
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .path-card h3 {
-      margin: 6px 0 0;
-      font-size: clamp(1.45rem, 3vw, 2.15rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
+    .card p,
+    .route-card p{
+      margin:0;
+      font-size:1rem;
     }
 
-    .path-card p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.48;
+    .final-band{
+      display:grid;
+      gap:14px;
+      margin-top:22px;
+      padding:clamp(22px,4vw,38px);
+      border:1px solid var(--gold-line);
+      border-radius:34px;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(242,199,111,.12),transparent 20rem),
+        rgba(255,255,255,.05);
+      box-shadow:0 24px 80px var(--shadow);
     }
 
-    .card-link {
-      color: var(--green);
-      font-weight: 850;
+    .footer{
+      display:grid;
+      gap:10px;
+      margin-top:30px;
+      padding-top:20px;
+      border-top:1px solid var(--line);
+      color:rgba(218,227,255,.58);
+      font-size:.8rem;
     }
 
-    .backlinks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+    .public-receipt{color:rgba(244,247,255,.72)}
+    .receipt{display:none!important}
+
+    @media(max-width:980px){
+      .topbar{display:grid}
+      .nav{justify-content:flex-start}
+      .grid.two,
+      .grid.three,
+      .grid.four,
+      .grid.six,
+      .principles{grid-template-columns:1fr}
+      .hero{min-height:460px}
     }
 
-    .receipt {
-      display: none !important;
-    }
-
-    @media (max-width: 900px) {
-      .path-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        min-height: 360px;
-      }
-
-      .hero::after {
-        opacity: 0.28;
-        right: -40px;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .page {
-        width: min(100% - 22px, 620px);
-        padding-top: 16px;
-      }
-
-      .nav,
-      .actions,
-      .backlinks {
-        gap: 8px;
+    @media(max-width:620px){
+      .page{
+        width:min(100% - 24px,620px);
+        padding-top:18px;
       }
 
       .nav a,
-      .button {
-        min-height: 38px;
-        padding: 8px 12px;
+      .button{
+        min-height:40px;
+        padding:9px 14px;
       }
 
-      .path-card {
-        min-height: 180px;
-      }
+      summary{align-items:flex-start}
     }
   </style>
 </head>
@@ -341,108 +466,402 @@
     id="home-main"
     class="page"
     data-route="/home/"
-    data-house-part="home"
-    data-construct-class="house"
-    data-estate="rich-manor-and-estate"
-    data-gauges-truth="live-authority">
+    data-page-purpose="rich-manor-systemic-containment-home"
+    data-systemic-dynamic-containment="true"
+    data-compass-route="/"
+    data-door-route="/door/"
+    data-products-route="/products/"
+    data-showroom-route="/showroom/"
+    data-gauges-route="/gauges/"
+  >
+    <header class="topbar" aria-label="Site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        Rich Manor · Home
+      </a>
 
-    <header class="topbar" aria-label="Home header">
-      <div class="brand">Diamond Gate Bridge · Rich Manor and Estate · Home</div>
-      <nav class="nav" aria-label="Home navigation">
+      <nav class="nav" aria-label="Primary house navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
+        <a href="/home/" aria-current="page">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="home-title">
-      <div class="hero-content">
-        <p class="kicker">H3 · Home · Receiving Hall</p>
-        <h1 id="home-title">Home</h1>
-        <p class="lead">
-          You are inside the Manor. Home receives the visitor after the Door, stabilizes the frame, and routes movement toward Products, Showroom, and Gauges.
-        </p>
-      </div>
+    <section class="hero">
+      <p class="kicker">H3 · Home · Rich Manor</p>
+      <h1>Rich Manor gives the work a place to live.</h1>
 
-      <div class="actions" aria-label="Primary Home actions">
-        <a class="button primary" href="/products/">Go to Products</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
-      </div>
-    </section>
-
-    <section class="section panel" aria-labelledby="inside-manor-title">
-      <p class="kicker">Inside the Manor</p>
-      <h2 id="inside-manor-title">The house is now the frame.</h2>
-      <p>
-        Home is the central receiving room. It is not a generic homepage; it is where the estate becomes stable, readable, and ready for deeper movement.
+      <p class="lead">
+        Home explains Rich Manor: the systemic dynamic containment system that gives every part of the work a room while keeping the whole house connected.
       </p>
-    </section>
 
-    <section class="path-grid" aria-label="Home path">
-      <a class="path-card" href="/products/">
-        <div>
-          <div class="path-label">Distribution</div>
-          <h3>Products</h3>
-          <p>Move into the source-waterfall chamber.</p>
-        </div>
-        <div class="card-link">Go to Products</div>
-      </a>
+      <p class="lead">
+        In plain language: complex work needs rooms. The book, voice, products, world, proof engine, and live build each get a place so the whole system stays understandable, expandable, usable, and measurable.
+      </p>
 
-      <a class="path-card" href="/showroom/">
-        <div>
-          <div class="path-label">Proof</div>
-          <h3>Showroom</h3>
-          <p>See public proof and demonstration.</p>
-        </div>
-        <div class="card-link">Open Showroom</div>
-      </a>
+      <div class="principles" aria-label="Rich Manor principles">
+        <article class="principle">
+          <b>Contain</b>
+          <strong>Every part gets a room.</strong>
+          <p>The work becomes easier to understand when each piece has a clear place.</p>
+        </article>
 
-      <a class="path-card" href="/gauges/">
-        <div>
-          <div class="path-label">Verification</div>
-          <h3>Gauges</h3>
-          <p>Check the health of the estate.</p>
-        </div>
-        <div class="card-link">Read Gauges</div>
-      </a>
-    </section>
+        <article class="principle">
+          <b>Connect</b>
+          <strong>Every room belongs to one house.</strong>
+          <p>Separate rooms prevent overload. Shared structure prevents fragmentation.</p>
+        </article>
 
-    <section class="section panel" aria-labelledby="house-links-title">
-      <p class="kicker">House backlinks</p>
-      <h2 id="house-links-title">Move through the house.</h2>
-      <div class="backlinks">
-        <a class="button" href="/">Compass</a>
-        <a class="button" href="/door/">Door</a>
-        <a class="button" href="/products/">Products</a>
-        <a class="button" href="/showroom/">Showroom</a>
-        <a class="button" href="/gauges/">Gauges</a>
+        <article class="principle">
+          <b>Move</b>
+          <strong>The next door stays visible.</strong>
+          <p>The visitor does not need the whole map first. They need the next honest room.</p>
+        </article>
+      </div>
+
+      <div class="actions">
+        <a class="button primary" href="/door/">Return to Door</a>
+        <a class="button green" href="/products/">Continue to Products</a>
+        <a class="button" href="/showroom/">Inspect the Build</a>
+        <a class="button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
-    <section class="receipt" aria-hidden="true">
-      Home receipt
-      route-exists
-      manor-skin
-      house-class
-      estate=rich-manor-and-estate
-      house-field=true
-      gauges-truth=live-authority
-      construct-class=house
-      house-part=home
-      H3_HOME
-      receiving-hall
-      inside-the-manor
-      central-receiving-room
-      Products=/products/
-      Showroom=/showroom/
-      Gauges=/gauges/
-      Compass=/
-      Door=/door/
+    <section class="home-bubble" aria-label="Rich Manor systemic containment home">
+      <details open>
+        <summary>
+          <span class="summary-copy">
+            <b>Home bubble</b>
+            <span>Rich Manor contains the work without flattening it.</span>
+          </span>
+        </summary>
+
+        <div class="bubble-body">
+          <div class="bubble-note">
+            <p>Rich Manor is not just a setting. It is the containment architecture for the work. It keeps the public voice, human climb, product wing, world-building, proof engine, and live build from fighting for the same room.</p>
+          </div>
+
+          <div class="nested">
+            <details open>
+              <summary>
+                <span class="summary-copy">
+                  <b>What Rich Manor is</b>
+                  <span>A systemic dynamic containment system.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <p class="one-line">A house for complex work.</p>
+                <p>Rich Manor gives every major part of the project a defined room, lane, or chamber. The purpose is not to hide complexity. The purpose is to make complexity navigable.</p>
+                <p>When everything tries to live on one page, the work becomes noise. When each part has a room, the system can breathe.</p>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>What it contains</b>
+                  <span>The book, the voice, the products, the world, the build, and the proof.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <div class="grid six">
+                  <article class="card">
+                    <span>Book</span>
+                    <h3>The climb.</h3>
+                    <p>Nine Summits of Love carries the human path: pressure, dignity, discipline, free will, and love.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Voice</span>
+                    <h3>The room language.</h3>
+                    <p>This Underdog turns pressure into comedy, story, speaking, and public-facing language.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Products</span>
+                    <h3>The practical use.</h3>
+                    <p>The product wing turns ideas into tools, games, systems, and useful surfaces.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>World</span>
+                    <h3>The terrain.</h3>
+                    <p>The universe gives the climb a world where pressure, access, movement, and coherence can be seen.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Showroom</span>
+                    <h3>The live build.</h3>
+                    <p>The Showroom displays active work, visual branches, demonstrations, and public build surfaces.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Gauges</span>
+                    <h3>The measurement.</h3>
+                    <p>Gauges separate architecture health, candidate branches, visual readiness, and content hold.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>Why containment matters</b>
+                  <span>Complex work fails when every idea tries to live in the same room.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <p class="one-line">Containment is not limitation. It is how the work stays usable.</p>
+
+                <div class="grid three">
+                  <article class="card">
+                    <span>Less noise</span>
+                    <h3>Each room has one job.</h3>
+                    <p>The visitor should not have to decode every part of the system at once.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Less drift</span>
+                    <h3>Each lane stays accountable.</h3>
+                    <p>The book does not have to become the product page. The voice page does not have to become the proof engine.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>More motion</span>
+                    <h3>The next step stays visible.</h3>
+                    <p>When each room is clear, movement through the house becomes practical instead of overwhelming.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>Universal application</b>
+                  <span>A person, business, project, or learning system can use the same logic.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <p>Rich Manor is built for this work, but the principle is universal: separate the parts enough to work, connect them enough to matter.</p>
+
+                <div class="grid four">
+                  <article class="card">
+                    <span>Person</span>
+                    <h3>Compartmentalize pressure.</h3>
+                    <p>A person can give work, family, money, recovery, voice, and purpose separate rooms instead of carrying them as one blur.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Business</span>
+                    <h3>Separate functions cleanly.</h3>
+                    <p>A business can give sales, product, operations, finance, brand, and proof their own lanes without losing the whole picture.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Creative project</span>
+                    <h3>Protect the core idea.</h3>
+                    <p>A creative system can hold story, world, audience, products, and production without forcing one page to explain everything.</p>
+                  </article>
+
+                  <article class="card">
+                    <span>Learning system</span>
+                    <h3>Let the path unfold.</h3>
+                    <p>A learning system can reveal only the layer a person is ready to use, then open deeper rooms as understanding grows.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>House movement</b>
+                  <span>Where each public route fits.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <div class="grid three">
+                  <article class="route-card">
+                    <span>Compass</span>
+                    <h3>Orient.</h3>
+                    <p>Compass helps the visitor find the first honest door into the system.</p>
+                    <a class="button secondary" href="/">Return to Compass</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Door</span>
+                    <h3>Admit.</h3>
+                    <p>The Door confirms the view and carries the visitor from orientation into arrival.</p>
+                    <a class="button primary" href="/door/">Choose the Door</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Home</span>
+                    <h3>Receive.</h3>
+                    <p>Home explains the Manor and receives the visitor into the containment system.</p>
+                    <a class="button green" href="/home/">Stay Home</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Products</span>
+                    <h3>Organize use.</h3>
+                    <p>Products give the work practical surfaces, tools, games, and system applications.</p>
+                    <a class="button" href="/products/">View Products</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Showroom</span>
+                    <h3>Display the build.</h3>
+                    <p>Showroom shows the active build and current public demonstrations.</p>
+                    <a class="button" href="/showroom/">Open Showroom</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Gauges</span>
+                    <h3>Measure readiness.</h3>
+                    <p>Gauges check whether pages, routes, branches, and readiness are landing cleanly.</p>
+                    <a class="button secondary" href="/gauges/">Read Gauges</a>
+                  </article>
+                </div>
+              </div>
+            </details>
+
+            <details>
+              <summary>
+                <span class="summary-copy">
+                  <b>Public paths inside the house</b>
+                  <span>The deeper work remains available without overloading Home.</span>
+                </span>
+              </summary>
+
+              <div class="bubble-body">
+                <div class="grid three">
+                  <article class="route-card">
+                    <span>This Underdog</span>
+                    <h3>The public voice.</h3>
+                    <p>Fail fast, fail often, fail forward. The speaking lane turns failure and pressure into usable language.</p>
+                    <a class="button primary" href="/this-underdog/">Open This Underdog</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Nine Summits</span>
+                    <h3>The human climb.</h3>
+                    <p>The climb gives pressure a human path through character, structure, balance, dignity, and love.</p>
+                    <a class="button green" href="/nine-summits/">Open Nine Summits</a>
+                  </article>
+
+                  <article class="route-card">
+                    <span>Universe</span>
+                    <h3>The world layer.</h3>
+                    <p>The universe turns the climb into terrain, gates, movement, events, stories, and public experience.</p>
+                    <a class="button" href="/nine-summits/universe/">Enter Universe</a>
+                  </article>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </details>
     </section>
+
+    <section class="final-band">
+      <p class="kicker green">Home rule</p>
+      <h2>Do not carry the whole house at once.</h2>
+
+      <p class="lead">
+        Enter the room that matches the pressure. Rich Manor is comprehensive because it is compartmentalized, and it is useful because every compartment still belongs to one system.
+      </p>
+
+      <div class="links">
+        <a class="button primary" href="/door/">Choose the Door</a>
+        <a class="button green" href="/products/">Continue to Products</a>
+        <a class="button" href="/this-underdog/">Open This Underdog</a>
+        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button secondary" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="public-receipt">Home · G5 Rich Manor systemic containment renewal active. Home explains Rich Manor as the house that holds and compartmentalizes the work while keeping it connected, usable, expandable, and measurable.</div>
+
+      <section class="receipt" aria-hidden="true">
+        G5_HOME_RICH_MANOR_SYSTEMIC_CONTAINMENT_RENEWAL_TNT_v1
+        route=/home/
+        page-purpose=rich-manor-systemic-containment-home
+        systemic-dynamic-containment-system=true
+        public-translation=living-house-for-complex-work
+        russian-doll-bubble-structure=true
+        primary-house-nav=Compass|Door|Home|Products|Showroom|Gauges
+        compass-orients=true
+        door-admits=true
+        home-receives=true
+        products-organize-use=true
+        showroom-displays-build=true
+        gauges-measure-readiness=true
+        no-graphic-box=true
+        no-generated-visual=true
+        no-false-pass-claim=true
+        visual-pass-claim=false
+        result=home-renewed-as-rich-manor-systemic-containment-surface
+      </section>
+    </footer>
   </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var VALID = { flat:true, round:true, globe:true };
+      var STORAGE_KEY = "dgb:viewMode";
+
+      function safeGet(key) {
+        try { return window.localStorage ? window.localStorage.getItem(key) : null; }
+        catch (error) { return null; }
+      }
+
+      function safeSet(key, value) {
+        try { if (window.localStorage) window.localStorage.setItem(key, value); }
+        catch (error) {}
+      }
+
+      function getView() {
+        var params = new URLSearchParams(window.location.search);
+        var incoming = params.get("view");
+        var saved = safeGet(STORAGE_KEY);
+
+        if (VALID[incoming]) {
+          safeSet(STORAGE_KEY, incoming);
+          return incoming;
+        }
+
+        if (VALID[saved]) return saved;
+        return "flat";
+      }
+
+      function apply() {
+        var view = getView();
+        document.documentElement.setAttribute("data-view-mode", view);
+        document.body.setAttribute("data-view-mode", view);
+        document.documentElement.setAttribute("data-home-receives-view", "true");
+        document.documentElement.setAttribute("data-view-selector-authority", "/door/");
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", apply, { once:true });
+      } else {
+        apply();
+      }
+    })();
+  </script>
 </body>
 </html>

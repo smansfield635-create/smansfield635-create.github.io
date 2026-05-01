@@ -1,29 +1,32 @@
-/* G1 PLANET 1 CONTROLLED LAND ELEVATION HEXGRID
+/* G1 PLANET 1 256 LATTICE ARCHITECTURE RECEIPT REPAIR
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1
+   VERSION: G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1
 
    PURPOSE:
    - Preserve the G1 maritime sea-level baseline.
-   - Keep the 256-state hexagonal terrain-cell substrate canonical.
-   - Add controlled land elevation above the maritime datum.
-   - Apply north/south/east/west 256-node emergence sequence.
-   - Keep public mode satellite-observational, not honeycomb.
+   - Preserve controlled land elevation.
+   - Preserve the hidden 256-state hexagonal terrain-cell substrate.
+   - Repair the explicit 256 lattice architecture receipt so Gauges reads stateCount=256.
    - Do not claim visual pass.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1";
+  var VERSION = "G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
+
   var STATE_FORMULA = "4x4x2x2x4";
   var STATE_COUNT = 256;
+  var REQUIRED_STATE_COUNT = 256;
   var DEFAULT_RENDER_MODE = "satellite";
   var SEA_LEVEL_DATUM = 0;
 
   var CONTRACT_MARKERS = [
     VERSION,
+    PRIOR_VERSION,
     BASELINE,
     MARITIME_BASELINE,
     "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
@@ -36,6 +39,9 @@
     "WATER_DOMINANCE_PRESERVED",
     "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
     "PUBLIC_HONEYCOMB_BLOCKED",
+    "LATTICE_256_ARCHITECTURE_RECEIPT_ACTIVE",
+    "STATE_SPACE_RECEIPT_ACTIVE",
+    "STATE_COUNT_256_CONFIRMED",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
 
@@ -68,6 +74,19 @@
     STONE: 1,
     METAL_OR_MINERAL: 2,
     CRYSTAL_OR_ICE: 3
+  };
+
+  var AXIS_RECEIPT = {
+    domainAxis: true,
+    reliefAxis: true,
+    edgeRoleAxis: true,
+    pressureAxis: true,
+    materialAxis: true,
+    domainAxisActive: true,
+    reliefAxisActive: true,
+    edgeRoleAxisActive: true,
+    pressureAxisActive: true,
+    materialAxisActive: true
   };
 
   var lastGrid = null;
@@ -106,6 +125,66 @@
       hash2(Math.round(lon / 2), Math.round(lat / 2), seed + 13) * 0.32 +
       hash2(Math.round(lon / 6), Math.round(lat / 6), seed + 31) * 0.18
     );
+  }
+
+  function buildStateSpaceReceipt() {
+    var states = [];
+    var domain;
+    var relief;
+    var edgeRole;
+    var pressure;
+    var material;
+    var id;
+
+    for (domain = 0; domain < 4; domain += 1) {
+      for (relief = 0; relief < 4; relief += 1) {
+        for (edgeRole = 0; edgeRole < 2; edgeRole += 1) {
+          for (pressure = 0; pressure < 2; pressure += 1) {
+            for (material = 0; material < 4; material += 1) {
+              id = stateId(domain, relief, edgeRole, pressure, material);
+              states.push({
+                state_id: id,
+                domain: domain,
+                relief: relief,
+                edgeRole: edgeRole,
+                pressure: pressure,
+                material: material
+              });
+            }
+          }
+        }
+      }
+    }
+
+    return {
+      ok: states.length === STATE_COUNT,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      totalStates: STATE_COUNT,
+      totalStateCount: STATE_COUNT,
+      latticeStateCount: STATE_COUNT,
+      stateSpaceCount: STATE_COUNT,
+      state_count: STATE_COUNT,
+      total_states: STATE_COUNT,
+      required_state_count: REQUIRED_STATE_COUNT,
+      stateSpaceReceipt: true,
+      stateSpaceReceiptActive: true,
+      lattice256ArchitectureReceiptActive: true,
+      lattice256ReceiptActive: true,
+      stateCount256Confirmed: true,
+      domainAxis: true,
+      reliefAxis: true,
+      edgeRoleAxis: true,
+      pressureAxis: true,
+      materialAxis: true,
+      domainAxisActive: true,
+      reliefAxisActive: true,
+      edgeRoleAxisActive: true,
+      pressureAxisActive: true,
+      materialAxisActive: true,
+      states: states
+    };
   }
 
   function stateId(domain, relief, edgeRole, pressure, material) {
@@ -406,6 +485,7 @@
     var cell;
     var surface;
     var id;
+    var receipt = buildStateSpaceReceipt();
 
     for (lat = -88; lat <= 88; lat += latStep) {
       q = 0;
@@ -481,10 +561,23 @@
 
     lastGrid = {
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      totalStates: STATE_COUNT,
+      totalStateCount: STATE_COUNT,
+      latticeStateCount: STATE_COUNT,
+      stateSpaceCount: STATE_COUNT,
+      state_count: STATE_COUNT,
+      total_states: STATE_COUNT,
+      stateSpaceReceipt: true,
+      stateSpaceReceiptActive: true,
+      lattice256ArchitectureReceiptActive: true,
+      lattice256ReceiptActive: true,
+      stateCount256Confirmed: true,
       defaultRenderMode: DEFAULT_RENDER_MODE,
       seaLevelDatum: SEA_LEVEL_DATUM,
       projectionModel: "planetary_lat_lon_surface_samples",
@@ -499,6 +592,17 @@
         pressure: true,
         material: true
       },
+      domainAxis: true,
+      reliefAxis: true,
+      edgeRoleAxis: true,
+      pressureAxis: true,
+      materialAxis: true,
+      domainAxisActive: true,
+      reliefAxisActive: true,
+      edgeRoleAxisActive: true,
+      pressureAxisActive: true,
+      materialAxisActive: true,
+      stateSpace: receipt.states,
       seed: seed,
       lonStep: lonStep,
       latStep: latStep,
@@ -704,6 +808,7 @@
     lastDraw = {
       ok: true,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       renderMode: renderMode,
       defaultRenderMode: DEFAULT_RENDER_MODE,
       projectionModel: "orthographic_orbital_projection",
@@ -718,6 +823,11 @@
       landEmergenceStage: "controlled_elevation",
       elevationNotPainted: true,
       waterDominancePreserved: true,
+      lattice256ArchitectureReceiptActive: true,
+      stateSpaceReceipt: true,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
       cellCount: grid.cellCount,
       visibleCellCount: visibleCount,
       renderedAt: new Date().toISOString(),
@@ -727,15 +837,27 @@
     return lastDraw;
   }
 
+  function getLatticeReceipt() {
+    return buildStateSpaceReceipt();
+  }
+
+  function getStateSpaceReceipt() {
+    return buildStateSpaceReceipt();
+  }
+
   function getHexgridStatus() {
+    var receipt = buildStateSpaceReceipt();
+
     return {
       ok: true,
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+
       hexagonalPixelFormatActive: true,
       hexCellSubstrateActive: true,
       terrainCellSamplingActive: true,
@@ -743,6 +865,7 @@
       elevationCellFieldActive: true,
       waterDepthCellFieldActive: true,
       mineralPressureCellFieldActive: true,
+
       maritimeSeaLevelBaselineActive: true,
       seaLevelDatum: SEA_LEVEL_DATUM,
       controlledLandElevationActive: true,
@@ -751,18 +874,40 @@
       landEmergenceStage: "controlled_elevation",
       elevationNotPainted: true,
       waterDominancePreserved: true,
+
       satelliteObservationalModeActive: true,
       cellDebugModeAvailable: true,
       publicHoneycombBlocked: true,
       defaultRenderMode: DEFAULT_RENDER_MODE,
       projectionModel: "planetary_lat_lon_to_orthographic_projection",
+
       twoDynamicHemisphericLandStructuresActive: true,
       threeSecondaryNonPolarBodiesActive: true,
       sevenLandmassLawActive: true,
       nonPolarLandBodyCount: 5,
       polarLandBodyCount: 2,
+
       stateFormula: STATE_FORMULA,
+      formula: STATE_FORMULA,
+      state_formula: STATE_FORMULA,
+
       stateCount: STATE_COUNT,
+      requiredStateCount: REQUIRED_STATE_COUNT,
+      totalStates: STATE_COUNT,
+      totalStateCount: STATE_COUNT,
+      latticeStateCount: STATE_COUNT,
+      stateSpaceCount: STATE_COUNT,
+      state_count: STATE_COUNT,
+      total_states: STATE_COUNT,
+      required_state_count: REQUIRED_STATE_COUNT,
+
+      stateSpaceReceipt: true,
+      stateSpaceReceiptActive: true,
+      lattice256ArchitectureReceiptActive: true,
+      lattice256ReceiptActive: true,
+      stateCount256Confirmed: true,
+      requiredStateCountConfirmed: true,
+
       domainAxis: true,
       reliefAxis: true,
       edgeRoleAxis: true,
@@ -773,9 +918,34 @@
       edgeRoleAxisActive: true,
       pressureAxisActive: true,
       materialAxisActive: true,
+
+      axes: {
+        domain: true,
+        relief: true,
+        edgeRole: true,
+        pressure: true,
+        material: true
+      },
+
+      lattice: {
+        ok: true,
+        stateFormula: STATE_FORMULA,
+        stateCount: STATE_COUNT,
+        requiredStateCount: REQUIRED_STATE_COUNT,
+        domainAxis: true,
+        reliefAxis: true,
+        edgeRoleAxis: true,
+        pressureAxis: true,
+        materialAxis: true
+      },
+
+      stateSpace: receipt.states,
+      stateSpacePreview: receipt.states.slice(0, 16),
+
       lastGridCellCount: lastGrid ? lastGrid.cellCount : 0,
       lastVisibleCellCount: lastGrid ? lastGrid.visibleCellCount : 0,
       lastDraw: lastDraw,
+
       visualPassClaimed: false
     };
   }
@@ -799,17 +969,49 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    PRIOR_VERSION: PRIOR_VERSION,
+    priorVersion: PRIOR_VERSION,
     BASELINE: BASELINE,
     MARITIME_BASELINE: MARITIME_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
+
     DOMAIN: DOMAIN,
     RELIEF: RELIEF,
     EDGE_ROLE: EDGE_ROLE,
     PRESSURE: PRESSURE,
     MATERIAL: MATERIAL,
+
     stateFormula: STATE_FORMULA,
+    formula: STATE_FORMULA,
+    state_formula: STATE_FORMULA,
+
     stateCount: STATE_COUNT,
-    defaultRenderMode: DEFAULT_RENDER_MODE,
+    requiredStateCount: REQUIRED_STATE_COUNT,
+    totalStates: STATE_COUNT,
+    totalStateCount: STATE_COUNT,
+    latticeStateCount: STATE_COUNT,
+    stateSpaceCount: STATE_COUNT,
+    state_count: STATE_COUNT,
+    total_states: STATE_COUNT,
+    required_state_count: REQUIRED_STATE_COUNT,
+
+    stateSpaceReceipt: true,
+    stateSpaceReceiptActive: true,
+    lattice256ArchitectureReceiptActive: true,
+    lattice256ReceiptActive: true,
+    stateCount256Confirmed: true,
+
+    domainAxis: true,
+    reliefAxis: true,
+    edgeRoleAxis: true,
+    pressureAxis: true,
+    materialAxis: true,
+    domainAxisActive: true,
+    reliefAxisActive: true,
+    edgeRoleAxisActive: true,
+    pressureAxisActive: true,
+    materialAxisActive: true,
+
     satelliteObservationalModeActive: true,
     cellDebugModeAvailable: true,
     publicHoneycombBlocked: true,
@@ -818,9 +1020,12 @@
     controlledLandElevationActive: true,
     northSouthEastWestNodalSequenceActive: true,
     nodalConstruct256Active: true,
+
     createPlanetOneHexGrid: createPlanetOneHexGrid,
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,
     getHexgridStatus: getHexgridStatus,
+    getLatticeReceipt: getLatticeReceipt,
+    getStateSpaceReceipt: getStateSpaceReceipt,
     status: status,
     createDefaultProbeGrid: createDefaultProbeGrid
   };

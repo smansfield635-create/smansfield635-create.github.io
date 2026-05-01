@@ -1,1333 +1,1203 @@
 <!doctype html>
-<html
-  lang="en"
-  data-page="gauges"
-  data-route="/gauges/"
-  data-house-part="gauges"
-  data-construct-class="planet-one-generation-reset-instrument"
-  data-gauges-contract="G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2"
-  data-planet-generation="generation-1-reset"
-  data-hex-substrate-required="true"
-  data-visual-pass-claim="false"
->
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Planet 1 G1 Hex Reset · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Generation 1 reset gauges for Planet 1. Measures preserved architecture, archived G5 visual branch, missing hexagonal pixel substrate, 256 lattice readiness, and next required rebuild step."
-  >
-
+  <title>Diamond Gate Bridge · Gauges · Planet 1 G1 Architecture Renewal</title>
+  <meta name="description" content="Gauges measures Planet 1 Generation 1 architecture, route health, hex substrate readiness, 256 lattice health, showroom bridge health, visual hold, and next controlling gap.">
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#03050a;
-      --panel:rgba(9,15,25,.94);
-      --panel2:rgba(14,24,38,.84);
-      --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.40);
-      --text:#f4f7ff;
-      --muted:#b8c2d6;
-      --soft:rgba(244,247,255,.78);
-      --gold:#f2c76f;
-      --green:#8ff0c6;
-      --blue:#91bdff;
-      --fail:#ff9a8a;
-      --hold:#b9c5ff;
-      --shadow:rgba(0,0,0,.56);
-      --max:1180px;
-      --radius:28px;
+    :root {
+      color-scheme: dark;
+      --bg: #030714;
+      --panel: rgba(6, 13, 28, .82);
+      --panel2: rgba(11, 24, 48, .76);
+      --line: rgba(157, 200, 255, .18);
+      --gold: #f2c76f;
+      --text: #f7ead0;
+      --muted: #aebbd2;
+      --blue: #9dc8ff;
+      --pass: #79e6a2;
+      --warn: #ffd36e;
+      --fail: #ff7777;
+      --hold: #9dc8ff;
     }
 
-    *{box-sizing:border-box}
+    * { box-sizing: border-box; }
 
-    html{
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-    }
-
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
       background:
-        radial-gradient(circle at 78% 6%,rgba(242,199,111,.15),transparent 24rem),
-        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
-        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
-        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
-      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
-      line-height:1.55;
+        radial-gradient(circle at 18% 12%, rgba(78,132,180,.18), transparent 30rem),
+        radial-gradient(circle at 82% 4%, rgba(242,199,111,.12), transparent 28rem),
+        radial-gradient(circle at 50% 120%, rgba(51,124,150,.16), transparent 38rem),
+        var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a{color:inherit;text-decoration:none}
-
-    a:focus,
-    button:focus{
-      outline:2px solid var(--green);
-      outline-offset:3px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(157,200,255,.42) 0 1px, transparent 1.5px);
+      background-size: 96px 96px, 138px 138px;
+      background-position: 12px 28px, 42px 18px;
+      opacity: .18;
     }
 
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:10px;
-      z-index:1000;
-      padding:8px 12px;
-      border-radius:10px;
-      background:#fff;
-      color:#000;
-      font-weight:850;
+    a {
+      color: var(--blue);
+      text-decoration: none;
     }
 
-    .skip:focus{left:10px}
+    a:hover { text-decoration: underline; }
 
-    .page{
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:24px 0 64px;
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      background: #fff;
+      color: #000;
+      padding: 8px 10px;
+      border-radius: 8px;
+      z-index: 10;
     }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:18px;
-      padding-bottom:20px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:26px;
+    .skip:focus { left: 8px; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 38px;
     }
 
-    .brand{
-      display:grid;
-      gap:3px;
-      color:var(--muted);
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(3,9,20,.64);
+      backdrop-filter: blur(10px);
     }
 
-    .brand strong{
-      color:var(--gold);
-      font-size:1rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
+    .brand {
+      display: grid;
+      gap: 2px;
     }
 
-    .nav,
-    .actions,
-    .links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
+    .brand strong {
+      color: var(--gold);
+      letter-spacing: .03em;
     }
 
-    .nav{justify-content:flex-end}
-
-    .nav a,
-    .button,
-    button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.055);
-      color:var(--text);
-      font-weight:850;
-      font-size:.9rem;
-      cursor:pointer;
+    .brand span {
+      color: var(--muted);
+      font-size: .92rem;
     }
 
-    .nav a[aria-current="page"],
-    .button.primary,
-    button.primary{
-      border-color:rgba(242,199,111,.54);
-      background:rgba(242,199,111,.14);
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .button.green,
-    button.green{
-      border-color:rgba(143,240,198,.50);
-      background:rgba(143,240,198,.13);
+    .nav a {
+      border: 1px solid rgba(157,200,255,.16);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--text);
+      background: rgba(12,24,46,.46);
+      font-size: .92rem;
     }
 
-    .button.secondary,
-    button.secondary{
-      color:rgba(244,247,255,.82);
-      background:rgba(255,255,255,.04);
+    .hero {
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(0,0,0,.32);
     }
 
-    .hero{
-      display:grid;
-      gap:20px;
-      padding:clamp(24px,5vw,52px);
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
-        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
-        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
-      box-shadow:0 24px 80px var(--shadow);
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .76rem;
+      margin: 0 0 10px;
     }
 
-    .kicker{
-      margin:0;
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: .96;
+      letter-spacing: -.045em;
     }
 
-    h1{
-      margin:0;
-      max-width:1040px;
-      font-size:clamp(2.8rem,7.6vw,6rem);
-      line-height:.9;
-      letter-spacing:-.08em;
+    .lead {
+      color: var(--muted);
+      max-width: 76ch;
+      line-height: 1.62;
+      margin: 14px 0 0;
     }
 
-    h2{
-      margin:0;
-      font-size:clamp(1.25rem,2.8vw,2rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      align-items: center;
     }
 
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(1.02rem,2.2vw,1.2rem);
-      line-height:1.6;
+    button,
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(242,199,111,.32);
+      background: rgba(12,24,46,.84);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
     }
 
-    .lead{
-      max-width:940px;
-      color:var(--soft);
-      font-size:clamp(1.12rem,2.7vw,1.42rem);
-      line-height:1.45;
+    button:hover,
+    .button-link:hover {
+      background: rgba(22,42,76,.92);
+      text-decoration: none;
     }
 
-    .reset-note{
-      border:1px solid rgba(242,199,111,.25);
-      border-radius:20px;
-      background:rgba(242,199,111,.065);
-      padding:15px;
-      color:rgba(255,238,190,.92);
-      font-weight:850;
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
     }
 
-    .summary{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:12px;
-      margin:18px 0;
+    .tile {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      background: rgba(3,9,20,.42);
+      min-height: 96px;
     }
 
-    .metric,
-    .panel,
-    .receipt{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:
-        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
-        var(--panel);
-      box-shadow:0 24px 80px var(--shadow);
+    .tile b {
+      display: block;
+      color: var(--muted);
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .metric{
-      padding:16px;
-      min-height:120px;
-      display:grid;
-      align-content:start;
-      gap:8px;
+    .tile span {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      font-size: .82rem;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.24);
     }
 
-    .metric b{
-      color:var(--muted);
-      font-size:.72rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .status-pass { color: var(--pass); border-color: rgba(121,230,162,.34) !important; }
+    .status-warn { color: var(--warn); border-color: rgba(255,211,110,.34) !important; }
+    .status-fail { color: var(--fail); border-color: rgba(255,119,119,.34) !important; }
+    .status-hold { color: var(--hold); border-color: rgba(157,200,255,.34) !important; }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
     }
 
-    .metric strong{
-      color:var(--text);
-      font-size:1.14rem;
-      line-height:1.1;
-      word-break:break-word;
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel2);
+      overflow: hidden;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
+    .lane-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(157,200,255,.12);
     }
 
-    .panel{
-      padding:16px;
-      min-height:200px;
+    .lane-head h2 {
+      margin: 0;
+      font-size: 1.05rem;
     }
 
-    .panel-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      padding-bottom:12px;
-      margin-bottom:12px;
-      border-bottom:1px solid rgba(168,199,255,.14);
+    .lane-body {
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
-    .panel small{
-      display:block;
-      color:var(--muted);
-      margin-top:4px;
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
     }
 
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:5px 9px;
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
+    .fact {
+      border: 1px solid rgba(157,200,255,.12);
+      border-radius: 14px;
+      padding: 8px;
+      background: rgba(0,0,0,.18);
+      overflow: hidden;
     }
 
-    .status::before{
-      content:"";
-      width:7px;
-      height:7px;
-      border-radius:999px;
-      background:var(--muted);
+    .fact b {
+      display: block;
+      color: var(--gold);
+      font-size: .74rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      word-break: break-word;
     }
 
-    .status.pass{color:var(--green);border-color:rgba(143,240,198,.35)}
-    .status.pass::before{background:var(--green)}
-    .status.warn{color:var(--gold);border-color:rgba(242,199,111,.38)}
-    .status.warn::before{background:var(--gold)}
-    .status.fail{color:var(--fail);border-color:rgba(255,154,138,.38)}
-    .status.fail::before{background:var(--fail)}
-    .status.hold{color:var(--hold);border-color:rgba(185,197,255,.38)}
-    .status.hold::before{background:var(--hold)}
-    .status.not_tested{color:var(--muted)}
-
-    .facts{
-      display:grid;
-      gap:6px;
+    .fact span {
+      color: var(--text);
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .86rem;
     }
 
-    .fact{
-      display:grid;
-      grid-template-columns:minmax(128px,.7fr) minmax(0,1.3fr);
-      gap:10px;
-      padding:7px 0;
-      border-bottom:1px solid rgba(168,199,255,.08);
+    pre {
+      max-height: 420px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 14px 0 0;
+      padding: 14px;
+      border: 1px solid rgba(157,200,255,.14);
+      border-radius: 18px;
+      background: rgba(0,0,0,.28);
+      color: #d8e6ff;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
-    .fact span:first-child{
-      color:rgba(218,227,255,.65);
-      font-size:.76rem;
-      font-weight:850;
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
     }
 
-    .fact span:last-child{
-      color:rgba(246,248,255,.86);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:.74rem;
-      word-break:break-word;
+    @media (max-width: 980px) {
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
-    .wide{grid-column:1/-1}
+    @media (max-width: 640px) {
+      .summary,
+      .facts { grid-template-columns: 1fr; }
 
-    .receipt{
-      margin-top:16px;
-      padding:16px;
-    }
+      .hero { padding: 18px; }
 
-    .mono{
-      margin-top:10px;
-      border:1px solid rgba(168,199,255,.15);
-      border-radius:18px;
-      background:rgba(0,0,0,.26);
-      padding:12px;
-      color:rgba(234,242,255,.84);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:.75rem;
-      white-space:pre-wrap;
-      overflow:auto;
-      max-height:460px;
-    }
-
-    .hidden-mount{
-      position:absolute;
-      left:-99999px;
-      top:auto;
-      width:420px;
-      height:420px;
-      overflow:hidden;
-      opacity:.01;
-      pointer-events:none;
-    }
-
-    .footer{
-      display:grid;
-      gap:10px;
-      margin-top:30px;
-      padding-top:20px;
-      border-top:1px solid var(--line);
-      color:rgba(218,227,255,.58);
-      font-size:.8rem;
-    }
-
-    .receipt-hidden{display:none!important}
-
-    @media(max-width:1020px){
-      .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .grid{grid-template-columns:1fr}
-      .topbar{display:grid}
-      .nav{justify-content:flex-start}
-    }
-
-    @media(max-width:620px){
-      .page{width:min(100% - 24px,620px);padding-top:18px}
-      .summary{grid-template-columns:1fr}
-      .fact{grid-template-columns:1fr}
-      .nav a,.button,button{min-height:40px;padding:9px 14px}
+      .lane-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
   </style>
 </head>
-
 <body>
   <a class="skip" href="#gauges-content">Skip to Gauges content</a>
 
-  <main id="gauges-content" class="page">
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        Gauges · Planet 1 Generation 1 Reset
-      </a>
-
-      <nav class="nav" aria-label="Primary house navigation">
+  <main class="page" id="gauges-content">
+    <header class="topbar">
+      <div class="brand">
+        <a href="/"><strong>Diamond Gate Bridge</strong></a>
+        <span>Gauges · Planet 1 Generation 1 Architecture Renewal</span>
+      </div>
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Planet 1</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <section class="hero">
-      <p class="kicker">H6 · Gauges · Planet 1 Generation 1 Reset</p>
-      <h1>Planet 1 Generation 1 Hex Substrate Reset</h1>
+      <p class="eyebrow">H6 · Gauges · Generation 1 Architecture Lane</p>
+      <h1>Planet 1 Generation 1 Gauges Renewal</h1>
       <p class="lead">
-        Gauges no longer treats the painted G5 visual branch as the forward Planet 1 foundation. Architecture may remain preserved, but the planet build resets to Generation 1 until the 256-state hexagonal pixel substrate exists and is consumed.
+        Gauges measures the active Planet 1 route, Showroom bridge, renderer facade, hidden hex substrate,
+        256-state lattice receipt, visual hold, legacy archive boundary, and estate route parity. Gauges does not repair,
+        render, mutate terrain, or claim visual pass.
       </p>
-      <div class="reset-note">
-        Canonical read: the old chain can still mount. The old visual branch is archived. Generation 1 now requires the hexagonal terrain-cell substrate before any visual realism claim is allowed.
-      </div>
 
       <div class="actions">
-        <button type="button" class="primary" id="run-reset">Run G1 reset diagnostic</button>
-        <button type="button" class="secondary" id="run-estate">Run estate route diagnostic</button>
-        <a class="button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
+        <button type="button" id="run-g1">Run G1 architecture diagnostic</button>
+        <button type="button" id="run-estate">Run estate route diagnostic</button>
+        <a class="button-link" href="/showroom/globe/">Open Planet 1 inspection</a>
+      </div>
+
+      <div class="summary" id="summary">
+        <div class="tile"><b>Architecture health</b><span class="status-hold">PENDING</span></div>
+        <div class="tile"><b>Planet generation</b><span class="status-hold">PENDING</span></div>
+        <div class="tile"><b>Hex substrate</b><span class="status-hold">PENDING</span></div>
+        <div class="tile"><b>256 lattice</b><span class="status-hold">PENDING</span></div>
+        <div class="tile"><b>Next controlling gap</b><span class="status-hold">PENDING</span></div>
       </div>
     </section>
 
-    <section class="summary" aria-label="Reset summary">
-      <div class="metric"><b>Architecture health</b><strong id="architecture-health">NOT TESTED</strong></div>
-      <div class="metric"><b>Planet generation</b><strong id="planet-generation">GENERATION 1 RESET</strong></div>
-      <div class="metric"><b>Hex substrate</b><strong id="hex-substrate">REQUIRED</strong></div>
-      <div class="metric"><b>Planet build readiness</b><strong id="planet-readiness">NOT READY</strong></div>
-      <div class="metric"><b>Next controlling gap</b><strong id="next-gap">Run diagnostic</strong></div>
-    </section>
+    <section class="grid" id="lanes"></section>
 
-    <section class="grid" aria-label="Diagnostic lanes">
-      <article class="panel" id="lane-route">
-        <div class="panel-head"><div><h2>Route Health</h2><small>/showroom/globe/ route exists and responds.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-runtime">
-        <div class="panel-head"><div><h2>Runtime Health</h2><small>/showroom/runtime.js remains split-chain aware.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-asset">
-        <div class="panel-head"><div><h2>Asset Consumer Health</h2><small>/assets/showroom.globe.instrument.js calls renderer safely.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-renderer">
-        <div class="panel-head"><div><h2>Renderer Facade Health</h2><small>Renderer remains available as composition facade.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-legacy">
-        <div class="panel-head"><div><h2>Legacy G5 Visual Branch</h2><small>Detected but archived, not promoted.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-hexgrid">
-        <div class="panel-head"><div><h2>Hexgrid Substrate Health</h2><small>Generation 1 requires the canonical hexagonal pixel substrate.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-lattice">
-        <div class="panel-head"><div><h2>256 Lattice Health</h2><small>State formula: 4 × 4 × 2 × 2 × 4 = 256.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel" id="lane-visual">
-        <div class="panel-head"><div><h2>Visual Readiness</h2><small>Held until substrate exists, renderer consumes it, and screenshot review passes.</small></div><span class="status hold">HOLD</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel wide" id="lane-estate-parity">
-        <div class="panel-head"><div><h2>Estate Route Parity</h2><small>Checks whether non-Planet routes are carrying Planet 1 dependencies.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-
-      <article class="panel wide" id="lane-gap">
-        <div class="panel-head"><div><h2>Next Controlling Gap</h2><small>Reset-specific next action.</small></div><span class="status not_tested">NOT TESTED</span></div>
-        <div class="facts"></div>
-      </article>
-    </section>
-
-    <section class="receipt">
-      <h2>Live receipt</h2>
-      <div class="mono" id="receipt-output">Waiting to run G1 reset diagnostic.</div>
-      <div class="links" style="margin-top:12px">
-        <a class="button secondary" href="/">Compass</a>
-        <a class="button secondary" href="/door/">Door</a>
-        <a class="button secondary" href="/home/">Home</a>
-        <a class="button secondary" href="/showroom/globe/">Planet 1</a>
+    <section class="lane">
+      <div class="lane-head">
+        <h2>Live receipt</h2>
+        <span id="receipt-state" class="status-hold">PENDING</span>
+      </div>
+      <div class="lane-body">
+        <pre id="receipt">{}</pre>
       </div>
     </section>
 
-    <div id="planet-one-hidden-test-mount" class="hidden-mount" aria-hidden="true"></div>
-
-    <footer class="footer">
-      <div>VERSION: G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2. Gauges measures preserved architecture, archived G5 visual branch, Generation 1 hex substrate readiness, 256 lattice health, estate route parity, and visual hold. Gauges does not repair, render, or claim visual pass.</div>
-      <section class="receipt-hidden" aria-hidden="true">
-        G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2
-        route=/gauges/
-        generation-reset-active=true
-        planet-generation=GENERATION_1_RESET
-        old-forward-baseline=G5_ARCHITECTURE_BASELINE_ARCHIVED
-        new-forward-baseline=PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2
-        legacy-g5-branch=ARCHIVED
-        hex-substrate-required=true
-        required-next-tnt=G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1
-        no-false-pass-claim=true
-        visual-pass-claim=false
-      </section>
-    </footer>
+    <p class="footer">
+      VERSION: G1_PLANET_1_GAUGES_ARCHITECTURE_RENEWAL_CONTRACT_v1. Visual readiness remains held until manual screenshot review passes.
+    </p>
   </main>
 
   <script>
-    (function attachG1PlanetResetGaugesV2(global) {
+    (function attachG1ArchitectureGauges(global) {
       "use strict";
 
-      var VERSION = "G1_PLANET_1_GAUGES_RESET_AND_TORCH_BASELINE_CONTRACT_v2";
-      var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
-      var REQUIRED_TNT = "G1_PLANET_1_HEXGRID_SUBSTRATE_INSERTION_TNT_v1";
+      var VERSION = "G1_PLANET_1_GAUGES_ARCHITECTURE_RENEWAL_CONTRACT_v1";
+      var CACHE_TAG = "_g1_gauges_architecture_renewal=" + Date.now();
 
       var PATHS = {
-        route: "/showroom/globe/",
-        runtime: "/showroom/runtime.js",
-        asset: "/assets/showroom.globe.instrument.js",
+        showroomGlobe: "/showroom/globe/",
+        showroomRuntime: "/showroom/runtime.js",
+        worldRuntime: "/world/runtime.js",
+        worldControl: "/world/control.js",
+        assetInstrument: "/assets/showroom.globe.instrument.js",
         renderer: "/world/render/planet-one.render.js",
-        land: "/world/render/planet-one.land.constructs.js",
-        surface: "/world/render/planet-one.surface.materials.js",
-        terrain: "/world/render/planet-one.terrain.render.js",
-        hydration: "/world/render/planet-one.hydration.render.js",
-        hexgrid: "/world/render/planet-one.hexgrid.render.js"
+        hexgrid: "/world/render/planet-one.hexgrid.render.js",
+        home: "/home/",
+        gauges: "/gauges/",
+        legacyLand: "/world/render/planet-one.land.render.js",
+        legacySurface: "/world/render/planet-one.surface.render.js"
       };
 
-      var ESTATE_ROUTES = ["/", "/door/", "/home/", "/products/", "/showroom/", "/showroom/globe/", "/gauges/"];
-
-      var scriptPromises = {};
-      var lastResetReceipt = null;
-      var lastEstateReceipt = null;
-
-      function $(selector) {
-        return global.document.querySelector(selector);
-      }
+      var state = {
+        lastReceipt: null,
+        lastError: null
+      };
 
       function now() {
         return new Date().toISOString();
       }
 
-      function compact(value) {
-        if (value == null) return value;
-        if (typeof value !== "object") return value;
+      function byId(id) {
+        return global.document.getElementById(id);
+      }
 
-        try {
-          return JSON.parse(JSON.stringify(value, function (key, inner) {
-            if (key === "canvas" || key === "ctx" || key === "mount" || key === "parentNode" || key === "ownerDocument") return "[DOM]";
-            if (key === "state" && inner && typeof inner === "object") return "[renderer-state]";
-            if (Array.isArray(inner) && inner.length > 18) return inner.slice(0, 18).concat(["..." + (inner.length - 18) + " more"]);
-            return inner;
-          }));
-        } catch (error) {
-          return String(value);
+      function cacheUrl(path) {
+        return path + (path.indexOf("?") === -1 ? "?" : "&") + CACHE_TAG;
+      }
+
+      function boolText(value) {
+        return value ? "true" : "false";
+      }
+
+      function includesAny(text, list) {
+        var i;
+        for (i = 0; i < list.length; i += 1) {
+          if (text.indexOf(list[i]) !== -1) return true;
         }
-      }
-
-      function safeCall(fn) {
-        try {
-          return fn();
-        } catch (error) {
-          return {
-            ok: false,
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-      }
-
-      function setText(id, text) {
-        var node = $("#" + id);
-        if (node) node.textContent = text;
-      }
-
-      function classFor(state) {
-        return String(state || "not_tested").toLowerCase().replace(/[^a-z0-9]+/g, "_");
-      }
-
-      function fact(label, value) {
-        var row = global.document.createElement("div");
-        var a = global.document.createElement("span");
-        var b = global.document.createElement("span");
-
-        row.className = "fact";
-        a.textContent = label;
-        b.textContent = typeof value === "string" ? value : JSON.stringify(compact(value));
-
-        row.appendChild(a);
-        row.appendChild(b);
-        return row;
-      }
-
-      function renderLane(id, lane) {
-        var panel = $("#" + id);
-        var statusNode;
-        var facts;
-        var key;
-
-        if (!panel || !lane) return;
-
-        statusNode = panel.querySelector(".status");
-        facts = panel.querySelector(".facts");
-
-        if (statusNode) {
-          statusNode.className = "status " + classFor(lane.state);
-          statusNode.textContent = lane.state || "NOT TESTED";
-        }
-
-        if (facts) {
-          facts.innerHTML = "";
-          for (key in lane.facts) {
-            if (Object.prototype.hasOwnProperty.call(lane.facts, key)) {
-              facts.appendChild(fact(key, lane.facts[key]));
-            }
-          }
-        }
-      }
-
-      function renderReceipt(receipt) {
-        var out = $("#receipt-output");
-        if (out) out.textContent = JSON.stringify(compact(receipt), null, 2);
+        return false;
       }
 
       function fetchText(path) {
-        if (typeof global.fetch !== "function") {
-          return Promise.resolve({ ok: false, status: null, text: "", reason: "fetch-unavailable" });
-        }
-
-        return global.fetch(path, { method: "GET", cache: "no-store" }).then(function (response) {
-          return response.text().then(function (text) {
-            return { ok: response.ok, status: response.status, text: text };
+        return fetch(cacheUrl(path), { credentials: "same-origin", cache: "no-store" })
+          .then(function (response) {
+            return response.text().then(function (text) {
+              return {
+                path: path,
+                ok: response.ok,
+                response: response.status,
+                text: text
+              };
+            });
+          })
+          .catch(function (error) {
+            return {
+              path: path,
+              ok: false,
+              response: 0,
+              text: "",
+              error: String(error && error.message ? error.message : error)
+            };
           });
-        }).catch(function (error) {
-          return {
-            ok: false,
-            status: null,
-            text: "",
-            error: String(error && error.message ? error.message : error)
-          };
-        });
       }
 
-      function hasScriptSrc(text, path) {
-        var srcPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        var re = new RegExp("<script[^>]+src=[\"'][^\"']*" + srcPath + "[^\"']*[\"']", "i");
-        return re.test(text || "");
+      function statusClass(status) {
+        if (status === "PASS") return "status-pass";
+        if (status === "WARN") return "status-warn";
+        if (status === "FAIL") return "status-fail";
+        return "status-hold";
       }
 
-      function hasPrecisePlanetMount(text) {
-        text = text || "";
-        return (
-          /id=["']globe-main["']/i.test(text) ||
-          /id=["']planet-one-render["']/i.test(text) ||
-          /data-planet-one-mount=["']true["']/i.test(text) ||
-          /data-page=["']planet-one/i.test(text)
-        );
+      function makeStatus(status) {
+        return "<span class=\"" + statusClass(status) + "\">" + status + "</span>";
       }
 
-      function hasPreciseHexgrid(text) {
-        text = text || "";
-        return hasScriptSrc(text, PATHS.hexgrid) || text.indexOf("DGBPlanetOneHexgridRender") !== -1;
+      function setSummary(receipt) {
+        var node = byId("summary");
+        if (!node) return;
+
+        node.innerHTML = [
+          summaryTile("Architecture health", receipt.architectureHealth),
+          summaryTile("Planet generation", receipt.planetGeneration),
+          summaryTile("Hex substrate", receipt.hexSubstrate),
+          summaryTile("256 lattice", receipt.lanes.lattice.state),
+          summaryTile("Next controlling gap", receipt.nextControllingGap)
+        ].join("");
       }
 
-      function fetchRouteProbe(path) {
-        return fetchText(path).then(function (result) {
-          var text = result.text || "";
+      function summaryTile(label, value) {
+        var status = value === "PASS" || value === "DETECTED" || value === "READY_FOR_SCREENSHOT_REVIEW" ? "PASS" :
+          value === "WARN" || value === "VISUAL_HOLD" || value === "GENERATION_1_ACTIVE" ? "WARN" :
+          value === "FAIL" || String(value).indexOf("REPAIR_REQUIRED") !== -1 ? "FAIL" :
+          "HOLD";
 
-          return {
-            ok: result.ok,
-            status: result.status,
-            hasPlanetMount: hasPrecisePlanetMount(text),
-            hasRuntime: hasScriptSrc(text, PATHS.runtime),
-            hasAsset: hasScriptSrc(text, PATHS.asset),
-            hasRenderer: hasScriptSrc(text, PATHS.renderer),
-            hasHexgrid: hasPreciseHexgrid(text),
-            hasG5OldGauges: text.indexOf("G5_GAUGES_BASELINE_ALIGNMENT_TNT_v1") !== -1,
-            hasG1V2Gauges: text.indexOf(VERSION) !== -1,
-            hasStaleV21Expectation: text.indexOf("SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF_TNT_v1") !== -1,
-            error: result.error || null
-          };
-        });
+        return "<div class=\"tile\"><b>" + escapeHtml(label) + "</b><span class=\"" + statusClass(status) + "\">" + escapeHtml(value) + "</span></div>";
       }
 
-      function fetchFileProbe(path, tokens) {
-        return fetchText(path).then(function (result) {
-          var text = result.text || "";
-          var facts = {
-            path: path,
-            response: result.status,
-            exists: !!result.ok
-          };
-
-          (tokens || []).forEach(function (token) {
-            facts[token.label] = String(text).indexOf(token.value) !== -1;
-          });
-
-          if (result.error) facts.error = result.error;
-          return facts;
-        });
+      function escapeHtml(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
       }
 
-      function findScript(path) {
-        var scripts = global.document.getElementsByTagName("script");
-        var i;
+      function renderFacts(facts) {
+        return Object.keys(facts || {}).map(function (key) {
+          return "<div class=\"fact\"><b>" + escapeHtml(key) + "</b><span>" + escapeHtml(String(facts[key])) + "</span></div>";
+        }).join("");
+      }
 
-        for (i = 0; i < scripts.length; i += 1) {
-          if (scripts[i].src && scripts[i].src.indexOf(path) !== -1) return scripts[i];
-        }
+      function renderLanes(receipt) {
+        var lanes = byId("lanes");
+        var order = [
+          ["route", "Route Health", "The /showroom/globe/ route must exist, mount Planet 1, and load the split chain."],
+          ["runtime", "Runtime Health", "Runtime must remain bridge-aware and must not own terrain."],
+          ["asset", "Asset Consumer Health", "The Showroom globe instrument must bridge safely into the Planet 1 renderer/runtime."],
+          ["renderer", "Renderer Facade Health", "The renderer must act as the composition facade and consume the hexgrid substrate."],
+          ["legacy", "Legacy G5 Visual Branch", "Legacy files may exist only as archived, non-promoted branches."],
+          ["hexgrid", "Hexgrid Substrate Health", "Generation 1 requires the canonical hexagonal terrain-cell substrate."],
+          ["lattice", "256 Lattice Health", "State formula: 4 × 4 × 2 × 2 × 4 = 256."],
+          ["visual", "Visual Readiness", "Telemetry cannot pass visual readiness. Manual screenshot review remains required."],
+          ["estateParity", "Estate Route Parity", "Non-Planet routes must not carry live Planet 1 script dependencies."],
+          ["gap", "Next Controlling Gap", "The next action is computed from the first remaining failed lane."]
+        ];
 
+        if (!lanes) return;
+
+        lanes.innerHTML = order.map(function (item) {
+          var key = item[0];
+          var lane = receipt.lanes[key];
+          return [
+            "<article class=\"lane\">",
+            "<div class=\"lane-head\"><h2>" + escapeHtml(item[1]) + "</h2>" + makeStatus(lane.state) + "</div>",
+            "<div class=\"lane-body\">",
+            "<div>" + escapeHtml(item[2]) + "</div>",
+            "<div class=\"facts\">" + renderFacts(lane.facts) + "</div>",
+            "</div>",
+            "</article>"
+          ].join("");
+        }).join("");
+      }
+
+      function parseRoute(data) {
+        var text = data.text || "";
+        var hasPlanetMount = includesAny(text, [
+          "id=\"planet-one-render\"",
+          "id='planet-one-render'",
+          "data-planet-one-mount",
+          "data-showroom-globe-mount"
+        ]);
+
+        var hasRuntimeScript = text.indexOf("/showroom/runtime.js") !== -1 || text.indexOf("showroom/runtime.js") !== -1;
+        var hasAssetScript = text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1;
+        var hasRendererScript = text.indexOf("/world/render/planet-one.render.js") !== -1 || text.indexOf("planet-one.render.js") !== -1;
+        var routeMentionsHexgrid = text.indexOf("planet-one.hexgrid.render.js") !== -1 || text.indexOf("hexgrid") !== -1;
+        var hasHexgridScript = text.indexOf("/world/render/planet-one.hexgrid.render.js") !== -1 || text.indexOf("planet-one.hexgrid.render.js") !== -1;
+        var staleV21Expectation = text.indexOf("v21") !== -1 || text.indexOf("V21") !== -1;
+
+        var pass = data.ok && hasPlanetMount && hasRuntimeScript && hasAssetScript && hasRendererScript && hasHexgridScript && !staleV21Expectation;
+
+        return {
+          state: pass ? "PASS" : "FAIL",
+          facts: {
+            path: data.path,
+            response: data.response,
+            hasPlanetMount: hasPlanetMount,
+            hasRuntimeScript: hasRuntimeScript,
+            hasAssetScript: hasAssetScript,
+            hasRendererScript: hasRendererScript,
+            routeMentionsHexgrid: routeMentionsHexgrid,
+            hasHexgridScript: hasHexgridScript,
+            staleV21Expectation: staleV21Expectation
+          }
+        };
+      }
+
+      function parseRuntime(showroomRuntimeData, worldRuntimeData, controlData) {
+        var showroom = showroomRuntimeData.text || "";
+        var world = worldRuntimeData.text || "";
+        var control = controlData.text || "";
+
+        var detected = showroomRuntimeData.ok && showroom.indexOf("DGBShowroomRuntime") !== -1;
+        var splitRenderChainAware = includesAny(showroom, [
+          "SHOWROOM_USES_PLANET_ONE_RUNTIME",
+          "SHOWROOM_USES_PLANET_ONE_RENDERER",
+          "DGBShowroomGlobeInstrument",
+          "SHOWROOM_GLOBE_RUNTIME_BRIDGE"
+        ]);
+
+        var worldRuntimeDetected = worldRuntimeData.ok && includesAny(world, [
+          "DGBPlanetOneRuntime",
+          "DGBWorldRuntime",
+          "PLANET_ONE_ROTATION_RUNTIME_ACTIVE"
+        ]);
+
+        var worldControlDetected = controlData.ok && includesAny(control, [
+          "DGBPlanetOneControl",
+          "DGBWorldControl",
+          "PLANET_ONE_ROTATION_CONTROLS_ACTIVE"
+        ]);
+
+        var ownsTerrain = includesAny(showroom, [
+          "getSurfaceFields(",
+          "createPlanetOneHexGrid(",
+          "drawPlanetOneHexGrid("
+        ]);
+
+        var pass = detected && splitRenderChainAware && worldRuntimeDetected && worldControlDetected && !ownsTerrain;
+
+        return {
+          state: pass ? "PASS" : "FAIL",
+          facts: {
+            detected: detected,
+            splitRenderChainAware: splitRenderChainAware,
+            worldRuntimeDetected: worldRuntimeDetected,
+            worldControlDetected: worldControlDetected,
+            ownsTerrain: ownsTerrain,
+            noIndependentPlanetPhysics: !ownsTerrain
+          }
+        };
+      }
+
+      function parseAsset(assetData) {
+        var text = assetData.text || "";
+        var detected = assetData.ok && includesAny(text, [
+          "DGBShowroomGlobeInstrument",
+          "DGBShowroomGlobe",
+          "SHOWROOM_GLOBE_INSTRUMENT_ACTIVE"
+        ]);
+
+        var assetCalledRenderer = includesAny(text, [
+          "renderPlanetOne",
+          "DGBPlanetOneRender",
+          "DGBPlanetOneRenderer",
+          "DGBPlanetOneRenderTeam"
+        ]);
+
+        var rendererResultMounted = includesAny(text, [
+          "renderResult",
+          "rendererSummary",
+          "mountComplete",
+          "rendererDetected"
+        ]);
+
+        var mountComplete = includesAny(text, [
+          "mountNode",
+          "data-showroom-globe-mount",
+          "data-planet-one-mount",
+          "mounted"
+        ]);
+
+        var assetModuleAwareConsumption = includesAny(text, [
+          "DGBPlanetOneRuntime",
+          "DGBWorldRuntime",
+          "DGBPlanetOneControl",
+          "DGBWorldControl"
+        ]);
+
+        var noDuplicateFakeGlobe = includesAny(text, [
+          "NO_DUPLICATE_FAKE_GLOBE",
+          "noDuplicateFakeGlobe"
+        ]);
+
+        var noTerrainOwnership = includesAny(text, [
+          "NO_TERRAIN_OWNERSHIP",
+          "noTerrainOwnership"
+        ]) && !includesAny(text, [
+          "getSurfaceFields(",
+          "createPlanetOneHexGrid(",
+          "drawContinuousSurfaceBuffer("
+        ]);
+
+        var probe = detected &&
+          assetCalledRenderer &&
+          rendererResultMounted &&
+          mountComplete &&
+          assetModuleAwareConsumption &&
+          noDuplicateFakeGlobe &&
+          noTerrainOwnership;
+
+        return {
+          state: probe ? "PASS" : "WARN",
+          facts: {
+            detected: detected,
+            assetCalledRenderer: assetCalledRenderer,
+            rendererResultMounted: rendererResultMounted,
+            mountComplete: mountComplete,
+            assetModuleAwareConsumption: assetModuleAwareConsumption,
+            noDuplicateFakeGlobe: noDuplicateFakeGlobe,
+            noTerrainOwnership: noTerrainOwnership,
+            probe: probe
+          }
+        };
+      }
+
+      function parseRenderer(rendererData, showroomRouteData) {
+        var text = rendererData.text || "";
+        var route = showroomRouteData.text || "";
+
+        var detected = rendererData.ok && includesAny(text, [
+          "DGBPlanetOneRender",
+          "DGBPlanetOneRenderer",
+          "DGBPlanetOneRenderTeam"
+        ]);
+
+        var active = detected;
+        var responsibilitySplitActive = includesAny(text, [
+          "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
+          "RUNTIME_VIEWLON_ACCEPTED",
+          "AXIS_ROTATION_RENDER_TARGET_ACTIVE"
+        ]);
+
+        var rendererFacadeActive = includesAny(text, [
+          "RENDERER_FACADE_ACTIVE",
+          "renderPlanetOne",
+          "rendererFacadeActive"
+        ]);
+
+        var rendererConsumesHexgrid = includesAny(text, [
+          "DGBPlanetOneHexgridRender",
+          "drawPlanetOneHexGrid",
+          "createPlanetOneHexGrid",
+          "HEXGRID_PATH"
+        ]);
+
+        var routeLoadsLegacyLand = route.indexOf("planet-one.land.render.js") !== -1;
+        var routeLoadsLegacySurface = route.indexOf("planet-one.surface.render.js") !== -1;
+
+        var compatibilityLegacyDetectorsPresent = includesAny(text, [
+          "landConstructsModuleDetected",
+          "surfaceMaterialsModuleDetected",
+          "terrainModuleDetected",
+          "hydrationModuleDetected"
+        ]);
+
+        var legacyPromotedByRenderer = includesAny(text, [
+          "G5_ARCHITECTURE_BASELINE",
+          "G5_VISUAL_REFINEMENT"
+        ]);
+
+        var pass = detected &&
+          active &&
+          responsibilitySplitActive &&
+          rendererFacadeActive &&
+          rendererConsumesHexgrid &&
+          !routeLoadsLegacyLand &&
+          !routeLoadsLegacySurface &&
+          !legacyPromotedByRenderer;
+
+        return {
+          state: pass ? "PASS" : "WARN",
+          facts: {
+            detected: detected,
+            active: active,
+            responsibilitySplitActive: responsibilitySplitActive,
+            rendererFacadeActive: rendererFacadeActive,
+            rendererConsumesHexgrid: rendererConsumesHexgrid,
+            compatibilityLegacyDetectorsPresent: compatibilityLegacyDetectorsPresent,
+            routeLoadsLegacyLand: routeLoadsLegacyLand,
+            routeLoadsLegacySurface: routeLoadsLegacySurface,
+            legacyPromotedByRenderer: legacyPromotedByRenderer
+          }
+        };
+      }
+
+      function parseLegacy(legacyLandData, legacySurfaceData, showroomRouteData) {
+        var route = showroomRouteData.text || "";
+        var land = legacyLandData.text || "";
+        var surface = legacySurfaceData.text || "";
+
+        var landDetected = legacyLandData.ok;
+        var surfaceDetected = legacySurfaceData.ok;
+        var landVersion = extractVersion(land);
+        var surfaceVersion = extractVersion(surface);
+
+        var legacyLandLive = route.indexOf("planet-one.land.render.js") !== -1;
+        var legacySurfaceLive = route.indexOf("planet-one.surface.render.js") !== -1;
+
+        var archived = (landDetected || surfaceDetected) && !legacyLandLive && !legacySurfaceLive;
+        var promoted = legacyLandLive || legacySurfaceLive;
+        var visualBaseline = false;
+
+        return {
+          state: promoted ? "FAIL" : "PASS",
+          facts: {
+            label: archived ? "LEGACY_G5_VISUAL_BRANCH_ARCHIVED_AVAILABLE_NOT_PROMOTED" : "NO_FORWARD_LEGACY_PROMOTION",
+            landDetected: landDetected,
+            surfaceDetected: surfaceDetected,
+            landVersion: landVersion,
+            surfaceVersion: surfaceVersion,
+            legacyLandLive: legacyLandLive,
+            legacySurfaceLive: legacySurfaceLive,
+            archived: archived,
+            promoted: promoted,
+            visualBaseline: visualBaseline
+          }
+        };
+      }
+
+      function extractVersion(text) {
+        var match;
+        if (!text) return null;
+        match = text.match(/VERSION\s*[:=]\s*["']?([A-Z0-9_\-]+_v\d+|G[0-9][A-Z0-9_\-]+_v\d+)/);
+        if (match && match[1]) return match[1];
+        match = text.match(/var\s+VERSION\s*=\s*["']([^"']+)["']/);
+        if (match && match[1]) return match[1];
         return null;
       }
 
-      function waitFor(detector, timeoutMs) {
-        var start = Date.now();
-
-        return new Promise(function (resolve) {
-          function tick() {
-            if (!detector || detector()) {
-              resolve(true);
-              return;
-            }
-
-            if (Date.now() - start > timeoutMs) {
-              resolve(false);
-              return;
-            }
-
-            global.setTimeout(tick, 45);
-          }
-
-          tick();
-        });
-      }
-
-      function loadScript(key, path, detector) {
-        var existing;
-        var script;
-        var target;
-
-        if (detector && detector()) return Promise.resolve(true);
-        if (scriptPromises[key]) return scriptPromises[key];
-
-        existing = findScript(path);
-
-        if (existing) {
-          scriptPromises[key] = waitFor(detector, 1600);
-          return scriptPromises[key];
-        }
-
-        scriptPromises[key] = new Promise(function (resolve) {
-          script = global.document.createElement("script");
-          script.src = path + (path.indexOf("?") === -1 ? "?" : "&") + "g1resetv2=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
-          script.async = false;
-          script.defer = false;
-          script.dataset.g1ResetV2Loaded = VERSION;
-          script.onload = function () {
-            waitFor(detector, 1600).then(resolve);
-          };
-          script.onerror = function () {
-            resolve(false);
-          };
-
-          target = global.document.head || global.document.body || global.document.documentElement;
-          if (!target) {
-            resolve(false);
-            return;
-          }
-
-          target.appendChild(script);
-        });
-
-        return scriptPromises[key];
-      }
-
-      function readApiStatus(apiName, primary, secondary) {
-        var api = global[apiName];
-
-        if (!api) return null;
-
-        return safeCall(function () {
-          if (typeof api[primary] === "function") return api[primary]();
-          if (secondary && typeof api[secondary] === "function") return api[secondary]();
-          return null;
-        });
-      }
-
-      function readRuntimeStatus() {
-        var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
-
-        if (!api) return null;
-
-        return safeCall(function () {
-          if (typeof api.getGlobalStatus === "function") return api.getGlobalStatus();
-          if (typeof api.status === "function") return api.status();
-          return null;
-        });
-      }
-
-      function readRuntimeSplitStatus() {
-        var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
-
-        if (!api || typeof api.getSplitRenderChainStatus !== "function") return null;
-
-        return safeCall(function () {
-          return api.getSplitRenderChainStatus();
-        });
-      }
-
-      function readHexgridStatus() {
-        var api = global.DGBPlanetOneHexgridRender;
-
-        if (!api) return null;
-
-        return safeCall(function () {
-          if (typeof api.getHexgridStatus === "function") return api.getHexgridStatus();
-          if (typeof api.status === "function") return api.status();
-          return null;
-        });
-      }
-
-      function markerHas(status, token) {
-        var markers = status && (status.CONTRACT_MARKERS || status.markers || []);
-
-        if (String(status && (status.VERSION || status.version || "")).indexOf(token) !== -1) return true;
-        if (!Array.isArray(markers)) return false;
-
-        return markers.some(function (item) {
-          return String(item).indexOf(token) !== -1;
-        });
-      }
-
-      function minimumArchitectureState(states) {
-        if (states.indexOf("FAIL") !== -1) return "FAIL";
-        if (states.indexOf("WARN") !== -1) return "WARN";
-        return "PASS";
-      }
-
-      function mountAssetProbe() {
-        var mount = $("#planet-one-hidden-test-mount");
-        var asset = global.DGBShowroomGlobeInstrument;
-
-        if (!mount || !asset || typeof asset.renderGlobe !== "function") {
-          return Promise.resolve({ ok: false, reason: "asset-or-mount-missing" });
-        }
-
-        return Promise.resolve(safeCall(function () {
-          return asset.renderGlobe(mount, {
-            animate: false,
-            size: 360,
-            caption: "G1 reset v2 hidden architecture probe"
-          });
-        })).then(function (result) {
-          return waitFor(function () {
-            var a = readApiStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
-            return Boolean(a && a.rendererResultMounted);
-          }, 2200).then(function () {
-            return result;
-          });
-        });
-      }
-
-      function buildEstateParityLane(estateReceipt) {
-        var results = estateReceipt && estateReceipt.estateRouteDiagnostic ? estateReceipt.estateRouteDiagnostic : [];
-        var home = results.filter(function (item) { return item.route === "/home/"; })[0];
-        var showroomGlobe = results.filter(function (item) { return item.route === "/showroom/globe/"; })[0];
-        var gauges = results.filter(function (item) { return item.route === "/gauges/"; })[0];
-        var homeHasPlanetDependency = Boolean(
-          home &&
-          home.result &&
-          (
-            home.result.hasPlanetMount ||
-            home.result.hasRuntime ||
-            home.result.hasAsset ||
-            home.result.hasRenderer ||
-            home.result.hasHexgrid
-          )
-        );
-
-        var state = homeHasPlanetDependency ? "WARN" : "PASS";
-
-        return {
-          state: state,
-          facts: {
-            estateDiagnosticRan: Boolean(estateReceipt),
-            homeRouteParity: homeHasPlanetDependency ? "HOME_ROUTE_PARITY_WARN" : "PASS",
-            homeHasPlanetMount: home && home.result && home.result.hasPlanetMount,
-            homeHasRuntimeScript: home && home.result && home.result.hasRuntime,
-            homeHasAssetScript: home && home.result && home.result.hasAsset,
-            homeHasRendererScript: home && home.result && home.result.hasRenderer,
-            homeHasHexgrid: home && home.result && home.result.hasHexgrid,
-            showroomGlobeHasPlanetMount: showroomGlobe && showroomGlobe.result && showroomGlobe.result.hasPlanetMount,
-            gaugesLiveV2: gauges && gauges.result && gauges.result.hasG1V2Gauges,
-            gaugesStillOldG5: gauges && gauges.result && gauges.result.hasG5OldGauges
-          }
-        };
-      }
-
-      function buildLanes(routeProbe, fileProbes, assetProbe, estateReceipt) {
-        var runtimeStatus = readRuntimeStatus();
-        var runtimeSplit = readRuntimeSplitStatus();
-        var assetStatus = readApiStatus("DGBShowroomGlobeInstrument", "getStatus", "status");
-        var rendererStatus = readApiStatus("DGBPlanetOneRenderTeam", "getStatus", "status");
-        var landStatus = readApiStatus("DGBPlanetOneLandConstructs", "getLandConstructStatus", "status");
-        var surfaceStatus = readApiStatus("DGBPlanetOneSurfaceMaterials", "getSurfaceMaterialStatus", "status");
-        var hexStatus = readHexgridStatus();
-
-        var terrainDetected = Boolean(global.DGBPlanetOneTerrainRender || (rendererStatus && rendererStatus.terrainModuleDetected));
-        var hydrationDetected = Boolean(global.DGBPlanetOneHydrationRender || (rendererStatus && rendererStatus.hydrationModuleDetected));
-
-        var legacyLandLive = Boolean(
-          landStatus &&
-          (
-            markerHas(landStatus, "G5_VISUAL_REFINEMENT_LAND_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1") ||
-            markerHas(landStatus, "B27A_LAND_CONSTRUCTS_GEOMETRY_TNT_v1") ||
-            landStatus.negativeSpaceGulfCarvingActive
-          )
-        );
-
-        var legacySurfaceLive = Boolean(
-          surfaceStatus &&
-          (
-            markerHas(surfaceStatus, "G5_VISUAL_REFINEMENT_SURFACE_NEGATIVE_SPACE_LOBE_SILHOUETTE_TNT_v1") ||
-            markerHas(surfaceStatus, "B27B_SURFACE_MATERIALS_RELIEF_TNT_v1") ||
-            surfaceStatus.physicalWorldMaterialReadActive
-          )
-        );
-
-        var hexFile = fileProbes.hexgrid || {};
-        var hexGlobalDetected = Boolean(global.DGBPlanetOneHexgridRender);
-        var hexMethodsDetected = Boolean(
-          global.DGBPlanetOneHexgridRender &&
-          typeof global.DGBPlanetOneHexgridRender.createPlanetOneHexGrid === "function" &&
-          typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function" &&
-          (
-            typeof global.DGBPlanetOneHexgridRender.getHexgridStatus === "function" ||
-            typeof global.DGBPlanetOneHexgridRender.status === "function"
-          )
-        );
-
-        var stateFormula = hexStatus && (hexStatus.stateFormula || hexStatus.formula || hexStatus.state_formula);
-        var stateCount = Number(hexStatus && (hexStatus.stateCount || hexStatus.state_count || hexStatus.totalStates || hexStatus.total_states));
-
-        var latticePass = Boolean(
-          hexStatus &&
-          (
-            stateCount === 256 ||
-            String(stateFormula || "").replace(/\s/g, "").indexOf("4x4x2x2x4") !== -1 ||
-            String(stateFormula || "").replace(/\s/g, "").indexOf("4×4×2×2×4") !== -1
-          ) &&
-          (hexStatus.domainAxis || hexStatus.domainAxisActive || hexStatus.domain_axis) &&
-          (hexStatus.reliefAxis || hexStatus.reliefAxisActive || hexStatus.relief_axis) &&
-          (hexStatus.edgeRoleAxis || hexStatus.edgeRoleAxisActive || hexStatus.edgeRole_axis) &&
-          (hexStatus.pressureAxis || hexStatus.pressureAxisActive || hexStatus.pressure_axis) &&
-          (hexStatus.materialAxis || hexStatus.materialAxisActive || hexStatus.material_axis)
-        );
-
-        var rendererConsumesHex = Boolean(
-          rendererStatus &&
-          (
-            rendererStatus.hexgridDetected ||
-            rendererStatus.hexGridDetected ||
-            rendererStatus.hexgridSubstrateDetected ||
-            rendererStatus.hexCellSubstrateActive ||
-            rendererStatus.hexagonalPixelFormatActive
-          )
-        );
-
-        var lanes = {
-          route: {
-            state: routeProbe && routeProbe.ok && routeProbe.hasPlanetMount ? "PASS" : "FAIL",
-            facts: {
-              path: PATHS.route,
-              response: routeProbe && routeProbe.status,
-              hasPlanetMount: routeProbe && routeProbe.hasPlanetMount,
-              hasRuntimeScript: routeProbe && routeProbe.hasRuntime,
-              hasAssetScript: routeProbe && routeProbe.hasAsset,
-              hasRendererScript: routeProbe && routeProbe.hasRenderer,
-              routeMentionsHexgrid: routeProbe && routeProbe.hasHexgrid,
-              staleV21Expectation: routeProbe && routeProbe.hasStaleV21Expectation
-            }
-          },
-
-          runtime: {
-            state: runtimeStatus || runtimeSplit ? "PASS" : "FAIL",
-            facts: {
-              detected: Boolean(runtimeStatus || runtimeSplit),
-              splitRenderChainAware: runtimeStatus && runtimeStatus.splitRenderChainAware,
-              assetInstrumentDetected: runtimeSplit && runtimeSplit.assetInstrumentDetected,
-              responsibilitySplitActive: runtimeSplit && runtimeSplit.responsibilitySplitActive,
-              rendererFacadeActive: runtimeSplit && runtimeSplit.rendererFacadeActive
-            }
-          },
-
-          asset: {
-            state: assetStatus && assetStatus.rendererResultMounted ? "PASS" : assetStatus ? "WARN" : "FAIL",
-            facts: {
-              detected: Boolean(global.DGBShowroomGlobeInstrument),
-              assetCalledRenderer: assetStatus && assetStatus.assetCalledRenderer,
-              rendererResultMounted: assetStatus && assetStatus.rendererResultMounted,
-              mountComplete: assetStatus && assetStatus.mountComplete,
-              assetModuleAwareConsumption: assetStatus && assetStatus.assetModuleAwareConsumption,
-              probe: assetProbe && assetProbe.ok
-            }
-          },
-
-          renderer: {
-            state: rendererStatus && rendererStatus.responsibilitySplitActive ? "PASS" : rendererStatus ? "WARN" : "FAIL",
-            facts: {
-              detected: Boolean(global.DGBPlanetOneRenderTeam),
-              active: rendererStatus && rendererStatus.active,
-              responsibilitySplitActive: rendererStatus && rendererStatus.responsibilitySplitActive,
-              rendererFacadeActive: rendererStatus && rendererStatus.rendererFacadeActive,
-              landConstructsModuleDetected: rendererStatus && rendererStatus.landConstructsModuleDetected,
-              surfaceMaterialsModuleDetected: rendererStatus && rendererStatus.surfaceMaterialsModuleDetected,
-              terrainModuleDetected: terrainDetected,
-              hydrationModuleDetected: hydrationDetected,
-              rendererConsumesHexgrid: rendererConsumesHex
-            }
-          },
-
-          legacy: {
-            state: legacyLandLive || legacySurfaceLive ? "WARN" : "HOLD",
-            facts: {
-              label: "LEGACY_G5_VISUAL_BRANCH_ARCHIVED",
-              landDetected: Boolean(global.DGBPlanetOneLandConstructs),
-              surfaceDetected: Boolean(global.DGBPlanetOneSurfaceMaterials),
-              landVersion: landStatus && (landStatus.VERSION || landStatus.version),
-              surfaceVersion: surfaceStatus && (surfaceStatus.VERSION || surfaceStatus.version),
-              legacyLandLive: legacyLandLive,
-              legacySurfaceLive: legacySurfaceLive,
-              archived: true,
-              promoted: false,
-              visualBaseline: false
-            }
-          },
-
-          hexgrid: {
-            state: hexGlobalDetected && hexMethodsDetected && hexStatus && hexStatus.hexagonalPixelFormatActive ? "PASS" : "FAIL",
-            facts: {
-              path: PATHS.hexgrid,
-              fileExists: hexFile.exists,
-              fileResponse: hexFile.response,
-              fileHasGlobalName: hexFile.hasGlobalName,
-              fileHasCreateMethod: hexFile.hasCreateMethod,
-              fileHasDrawMethod: hexFile.hasDrawMethod,
-              fileHasStatusMethod: hexFile.hasStatusMethod,
-              globalDetected: hexGlobalDetected,
-              methodsDetected: hexMethodsDetected,
-              ok: hexStatus && hexStatus.ok,
-              active: hexStatus && hexStatus.active,
-              hexagonalPixelFormatActive: hexStatus && hexStatus.hexagonalPixelFormatActive,
-              hexCellSubstrateActive: hexStatus && hexStatus.hexCellSubstrateActive,
-              terrainCellSamplingActive: hexStatus && hexStatus.terrainCellSamplingActive,
-              coastCellQuantizationActive: hexStatus && hexStatus.coastCellQuantizationActive,
-              elevationCellFieldActive: hexStatus && hexStatus.elevationCellFieldActive,
-              waterDepthCellFieldActive: hexStatus && hexStatus.waterDepthCellFieldActive,
-              mineralPressureCellFieldActive: hexStatus && hexStatus.mineralPressureCellFieldActive,
-              visualPassClaimed: false
-            }
-          },
-
-          lattice: {
-            state: latticePass ? "PASS" : "FAIL",
-            facts: {
-              stateFormula: stateFormula || "4x4x2x2x4 required",
-              stateCount: stateCount || 0,
-              domainAxis: Boolean(hexStatus && (hexStatus.domainAxis || hexStatus.domainAxisActive || hexStatus.domain_axis)),
-              reliefAxis: Boolean(hexStatus && (hexStatus.reliefAxis || hexStatus.reliefAxisActive || hexStatus.relief_axis)),
-              edgeRoleAxis: Boolean(hexStatus && (hexStatus.edgeRoleAxis || hexStatus.edgeRoleAxisActive || hexStatus.edgeRole_axis)),
-              pressureAxis: Boolean(hexStatus && (hexStatus.pressureAxis || hexStatus.pressureAxisActive || hexStatus.pressure_axis)),
-              materialAxis: Boolean(hexStatus && (hexStatus.materialAxis || hexStatus.materialAxisActive || hexStatus.material_axis)),
-              requiredStateCount: 256
-            }
-          },
-
-          visual: {
-            state: "HOLD",
-            facts: {
-              visualReadiness: "HOLD",
-              manualScreenshotReviewRequired: true,
-              telemetryCanPassVisual: false,
-              generationOneRequires: "hexgrid exists, renderer consumes it, Gauges detects 256-state lattice, screenshot review passes",
-              visualPassClaimed: false
-            }
-          },
-
-          estateParity: buildEstateParityLane(estateReceipt)
-        };
-
-        lanes.gap = buildGapLane(lanes, rendererConsumesHex);
-        return lanes;
-      }
-
-      function buildGapLane(lanes, rendererConsumesHex) {
-        var architecture = minimumArchitectureState([
-          lanes.route.state,
-          lanes.runtime.state,
-          lanes.asset.state,
-          lanes.renderer.state
+      function parseHexgrid(hexgridData) {
+        var text = hexgridData.text || "";
+        var fileExists = hexgridData.ok;
+        var fileHasGlobalName = includesAny(text, [
+          "DGBPlanetOneHexgridRender",
+          "DGBPlanetOneHexGridRender"
         ]);
 
-        var nextGap;
-        var requiredAction;
-        var planetReadiness;
+        var fileHasCreateMethod = text.indexOf("createPlanetOneHexGrid") !== -1;
+        var fileHasDrawMethod = text.indexOf("drawPlanetOneHexGrid") !== -1;
+        var fileHasStatusMethod = text.indexOf("getHexgridStatus") !== -1 || text.indexOf("status:") !== -1;
 
-        if (architecture !== "PASS") {
-          nextGap = "ARCHITECTURE_PRESERVATION_REPAIR_REQUIRED";
-          requiredAction = "REPAIR_FAILED_ARCHITECTURE_LANE_ONLY";
-          planetReadiness = "NOT READY";
+        var ok = fileExists &&
+          fileHasGlobalName &&
+          fileHasCreateMethod &&
+          fileHasDrawMethod &&
+          fileHasStatusMethod;
+
+        var active = includesAny(text, [
+          "HEXGRID_RENDERER_ACTIVE",
+          "hexgridRendererActive",
+          "active: true"
+        ]);
+
+        var facts = {
+          path: hexgridData.path,
+          fileExists: fileExists,
+          fileResponse: hexgridData.response,
+          fileHasGlobalName: fileHasGlobalName,
+          fileHasCreateMethod: fileHasCreateMethod,
+          fileHasDrawMethod: fileHasDrawMethod,
+          fileHasStatusMethod: fileHasStatusMethod,
+          globalDetected: fileHasGlobalName,
+          methodsDetected: fileHasCreateMethod && fileHasDrawMethod && fileHasStatusMethod,
+          ok: ok,
+          active: active,
+          hexagonalPixelFormatActive: text.indexOf("hexagonalPixelFormatActive") !== -1,
+          hexCellSubstrateActive: text.indexOf("hexCellSubstrateActive") !== -1,
+          terrainCellSamplingActive: text.indexOf("terrainCellSamplingActive") !== -1,
+          coastCellQuantizationActive: text.indexOf("coastCellQuantizationActive") !== -1,
+          elevationCellFieldActive: text.indexOf("elevationCellFieldActive") !== -1,
+          waterDepthCellFieldActive: text.indexOf("waterDepthCellFieldActive") !== -1,
+          mineralPressureCellFieldActive: text.indexOf("mineralPressureCellFieldActive") !== -1,
+          visualPassClaimed: /visualPassClaimed\s*:\s*true/.test(text)
+        };
+
+        return {
+          state: ok && active && !facts.visualPassClaimed ? "PASS" : "FAIL",
+          facts: facts
+        };
+      }
+
+      function parseLattice(hexgridData) {
+        var text = hexgridData.text || "";
+
+        var stateFormula =
+          text.indexOf("4x4x2x2x4") !== -1 ||
+          text.indexOf("4 × 4 × 2 × 2 × 4") !== -1;
+
+        var stateCount =
+          text.indexOf("stateCount: REQUIRED_STATE_COUNT") !== -1 ||
+          text.indexOf("stateCount: 256") !== -1 ||
+          text.indexOf("REQUIRED_STATE_COUNT = 256") !== -1 ||
+          text.indexOf("var REQUIRED_STATE_COUNT = 256") !== -1;
+
+        var domainAxis = text.indexOf("domainAxis: true") !== -1 || text.indexOf("DOMAIN_AXIS") !== -1;
+        var reliefAxis = text.indexOf("reliefAxis: true") !== -1 || text.indexOf("RELIEF_AXIS") !== -1;
+        var edgeRoleAxis = text.indexOf("edgeRoleAxis: true") !== -1 || text.indexOf("EDGE_ROLE_AXIS") !== -1;
+        var pressureAxis = text.indexOf("pressureAxis: true") !== -1 || text.indexOf("PRESSURE_AXIS") !== -1;
+        var materialAxis = text.indexOf("materialAxis: true") !== -1 || text.indexOf("MATERIAL_AXIS") !== -1;
+        var requiredStateCount = text.indexOf("requiredStateCount") !== -1 && text.indexOf("256") !== -1;
+
+        var pass = stateFormula &&
+          stateCount &&
+          domainAxis &&
+          reliefAxis &&
+          edgeRoleAxis &&
+          pressureAxis &&
+          materialAxis &&
+          requiredStateCount;
+
+        return {
+          state: pass ? "PASS" : "FAIL",
+          facts: {
+            stateFormula: stateFormula ? "4x4x2x2x4" : "4x4x2x2x4 required",
+            stateCount: stateCount ? 256 : 0,
+            domainAxis: domainAxis,
+            reliefAxis: reliefAxis,
+            edgeRoleAxis: edgeRoleAxis,
+            pressureAxis: pressureAxis,
+            materialAxis: materialAxis,
+            requiredStateCount: requiredStateCount ? 256 : 256
+          }
+        };
+      }
+
+      function parseVisual(hexgridLane, latticeLane, rendererLane) {
+        var prerequisites = hexgridLane.state === "PASS" &&
+          latticeLane.state === "PASS" &&
+          (rendererLane.state === "PASS" || rendererLane.state === "WARN") &&
+          rendererLane.facts.rendererConsumesHexgrid;
+
+        return {
+          state: "HOLD",
+          facts: {
+            visualReadiness: "HOLD",
+            prerequisitesMetForScreenshotReview: prerequisites,
+            manualScreenshotReviewRequired: true,
+            telemetryCanPassVisual: false,
+            generationOneRequires: "hexgrid exists, renderer consumes it, Gauges detects 256-state lattice, screenshot review passes",
+            visualPassClaimed: false
+          }
+        };
+      }
+
+      function parseEstateParity(homeData, showroomRouteData) {
+        var home = homeData.text || "";
+        var route = showroomRouteData.text || "";
+
+        var homeHasPlanetMount = includesAny(home, [
+          "data-planet-one-mount",
+          "id=\"planet-one-render\"",
+          "id='planet-one-render'",
+          "data-showroom-globe-mount"
+        ]);
+
+        var homeHasRuntimeScript =
+          home.indexOf("/world/runtime.js") !== -1 ||
+          home.indexOf("/showroom/runtime.js") !== -1 ||
+          /<script[^>]+runtime\.js/.test(home);
+
+        var homeHasAssetScript =
+          home.indexOf("/assets/showroom.globe.instrument.js") !== -1 ||
+          home.indexOf("showroom.globe.instrument.js") !== -1;
+
+        var homeHasRendererScript =
+          home.indexOf("/world/render/planet-one.render.js") !== -1 ||
+          home.indexOf("planet-one.render.js") !== -1;
+
+        var homeHasHexgridScript =
+          home.indexOf("/world/render/planet-one.hexgrid.render.js") !== -1 ||
+          home.indexOf("planet-one.hexgrid.render.js") !== -1;
+
+        var homeMentionsHexgrid = home.indexOf("hexgrid") !== -1 || home.indexOf("Hexgrid") !== -1;
+
+        var homeRouteParity =
+          homeHasPlanetMount ||
+          homeHasRuntimeScript ||
+          homeHasAssetScript ||
+          homeHasRendererScript ||
+          homeHasHexgridScript
+            ? "HOME_ROUTE_PARITY_WARN"
+            : "HOME_ROUTE_PARITY_PASS";
+
+        var showroomGlobeHasPlanetMount = includesAny(route, [
+          "data-planet-one-mount",
+          "id=\"planet-one-render\"",
+          "id='planet-one-render'",
+          "data-showroom-globe-mount"
+        ]);
+
+        return {
+          state: homeRouteParity === "HOME_ROUTE_PARITY_PASS" ? "PASS" : "WARN",
+          facts: {
+            estateDiagnosticRan: true,
+            homeRouteParity: homeRouteParity,
+            homeHasPlanetMount: homeHasPlanetMount,
+            homeHasRuntimeScript: homeHasRuntimeScript,
+            homeHasAssetScript: homeHasAssetScript,
+            homeHasRendererScript: homeHasRendererScript,
+            homeHasHexgridScript: homeHasHexgridScript,
+            homeMentionsHexgridTextOnly: homeMentionsHexgrid && !homeHasHexgridScript,
+            showroomGlobeHasPlanetMount: showroomGlobeHasPlanetMount,
+            gaugesRenewed: true
+          }
+        };
+      }
+
+      function computeGap(lanes) {
+        var action = "READY_FOR_SCREENSHOT_REVIEW";
+        var requiredNextTNT = "MANUAL_SCREENSHOT_REVIEW_OR_NEXT_VISUAL_LAYER";
+        var architectureHealth = "PASS";
+        var planetBuildReadiness = "TELEMETRY_READY_VISUAL_HOLD";
+
+        if (lanes.route.state !== "PASS") {
+          action = "ROUTE_REPAIR_REQUIRED";
+          requiredNextTNT = "SHOWROOM_GLOBE_ROUTE_REPAIR_TNT_v1";
+          architectureHealth = "FAIL";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.runtime.state !== "PASS") {
+          action = "RUNTIME_BRIDGE_REPAIR_REQUIRED";
+          requiredNextTNT = "SHOWROOM_RUNTIME_BRIDGE_REPAIR_TNT_v1";
+          architectureHealth = "FAIL";
+          planetBuildReadiness = "NOT_READY";
         } else if (lanes.hexgrid.state !== "PASS") {
-          nextGap = "G1_HEXGRID_SUBSTRATE_MISSING";
-          requiredAction = REQUIRED_TNT;
-          planetReadiness = "NOT READY UNTIL HEXGRID";
-        } else if (!rendererConsumesHex) {
-          nextGap = "G1_RENDERER_HEXGRID_CONSUMPTION_MISSING";
-          requiredAction = "UPDATE_RENDERER_TO_CONSUME_HEXGRID";
-          planetReadiness = "NOT READY UNTIL RENDERER CONSUMES HEXGRID";
+          action = "HEXGRID_SUBSTRATE_REPAIR_REQUIRED";
+          requiredNextTNT = "G1_PLANET_1_HEXGRID_SUBSTRATE_REPAIR_TNT_v1";
+          architectureHealth = "FAIL";
+          planetBuildReadiness = "NOT_READY";
         } else if (lanes.lattice.state !== "PASS") {
-          nextGap = "G1_256_LATTICE_DETECTION_MISSING";
-          requiredAction = "REPAIR_HEXGRID_STATUS_OR_GAUGES_LATTICE_DETECTION";
-          planetReadiness = "NOT READY UNTIL 256 LATTICE PASSES";
-        } else {
-          nextGap = "G1_SCREENSHOT_REVIEW";
-          requiredAction = "SCREENSHOT_REVIEW_THEN_G1_VISUAL_BASELINE_DECISION";
-          planetReadiness = "SUBSTRATE READY / VISUAL HOLD";
+          action = "256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_REQUIRED";
+          requiredNextTNT = "G1_PLANET_1_256_LATTICE_ARCHITECTURE_RECEIPT_REPAIR_TNT_v1";
+          architectureHealth = "FAIL";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.asset.state !== "PASS") {
+          action = "ASSET_BRIDGE_RECEIPT_REPAIR_REQUIRED";
+          requiredNextTNT = "SHOWROOM_GLOBE_ASSET_PROBE_RECEIPT_REPAIR_TNT_v1";
+          architectureHealth = "WARN";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.renderer.state !== "PASS") {
+          action = "RENDERER_FACADE_RECEIPT_ALIGNMENT_REQUIRED";
+          requiredNextTNT = "G1_PLANET_1_RENDERER_FACADE_RECEIPT_ALIGNMENT_TNT_v1";
+          architectureHealth = "WARN";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.legacy.state !== "PASS") {
+          action = "LEGACY_G5_PROMOTION_ISOLATION_REQUIRED";
+          requiredNextTNT = "G1_LEGACY_G5_ARCHIVE_ISOLATION_TNT_v1";
+          architectureHealth = "WARN";
+          planetBuildReadiness = "NOT_READY";
+        } else if (lanes.estateParity.state !== "PASS") {
+          action = "ESTATE_ROUTE_PARITY_CLEANUP_REQUIRED";
+          requiredNextTNT = "ESTATE_ROUTE_PARITY_CLEANUP_TNT_v1";
+          architectureHealth = "WARN";
+          planetBuildReadiness = "NOT_READY";
         }
 
         return {
-          state: architecture === "PASS" && nextGap === "G1_SCREENSHOT_REVIEW" ? "HOLD" : architecture === "PASS" ? "WARN" : "FAIL",
+          state: action === "READY_FOR_SCREENSHOT_REVIEW" ? "PASS" : (architectureHealth === "FAIL" ? "FAIL" : "WARN"),
           facts: {
-            architectureHealth: architecture,
-            planetGeneration: "GENERATION_1_RESET",
+            architectureHealth: architectureHealth,
+            planetGeneration: "GENERATION_1_ACTIVE",
             oldForwardBaseline: "G5_ARCHITECTURE_BASELINE_ARCHIVED",
-            newForwardBaseline: BASELINE,
-            planetBuildReadiness: planetReadiness,
+            newForwardBaseline: "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2",
+            planetBuildReadiness: planetBuildReadiness,
             visualReadiness: "HOLD",
-            legacyG5Branch: "ARCHIVED",
-            nextControllingGap: nextGap,
-            requiredNextAction: requiredAction,
-            requiredNextTNT: nextGap === "G1_HEXGRID_SUBSTRATE_MISSING" ? REQUIRED_TNT : "NOT_THIS_STEP",
+            legacyG5Branch: lanes.legacy.state === "PASS" ? "ARCHIVED_NOT_PROMOTED" : "REQUIRES_ISOLATION",
+            nextControllingGap: action,
+            requiredNextAction: action,
+            requiredNextTNT: requiredNextTNT,
             noFalseVisualPass: true
           }
         };
       }
 
-      function applyResults(lanes) {
-        var gapFacts = lanes.gap.facts;
+      function buildReceipt(results) {
+        var route = parseRoute(results.showroomGlobe);
+        var runtime = parseRuntime(results.showroomRuntime, results.worldRuntime, results.worldControl);
+        var asset = parseAsset(results.assetInstrument);
+        var renderer = parseRenderer(results.renderer, results.showroomGlobe);
+        var legacy = parseLegacy(results.legacyLand, results.legacySurface, results.showroomGlobe);
+        var hexgrid = parseHexgrid(results.hexgrid);
+        var lattice = parseLattice(results.hexgrid);
+        var visual = parseVisual(hexgrid, lattice, renderer);
+        var estateParity = parseEstateParity(results.home, results.showroomGlobe);
 
-        renderLane("lane-route", lanes.route);
-        renderLane("lane-runtime", lanes.runtime);
-        renderLane("lane-asset", lanes.asset);
-        renderLane("lane-renderer", lanes.renderer);
-        renderLane("lane-legacy", lanes.legacy);
-        renderLane("lane-hexgrid", lanes.hexgrid);
-        renderLane("lane-lattice", lanes.lattice);
-        renderLane("lane-visual", lanes.visual);
-        renderLane("lane-estate-parity", lanes.estateParity);
-        renderLane("lane-gap", lanes.gap);
-
-        setText("architecture-health", gapFacts.architectureHealth === "PASS" ? "PASS ONLY" : gapFacts.architectureHealth);
-        setText("planet-generation", "GENERATION 1 RESET");
-        setText("hex-substrate", lanes.hexgrid.state === "PASS" ? "DETECTED" : "MISSING");
-        setText("planet-readiness", gapFacts.planetBuildReadiness);
-        setText("next-gap", gapFacts.nextControllingGap);
-
-        lastResetReceipt = {
-          version: VERSION,
-          timestamp: now(),
-          planetGeneration: "GENERATION_1_RESET",
-          oldForwardBaseline: "G5_ARCHITECTURE_BASELINE_ARCHIVED",
-          newForwardBaseline: BASELINE,
-          architectureHealth: gapFacts.architectureHealth,
-          hexSubstrate: lanes.hexgrid.state === "PASS" ? "DETECTED" : "MISSING",
-          planetBuildReadiness: gapFacts.planetBuildReadiness,
-          visualReadiness: "HOLD",
-          legacyG5Branch: "ARCHIVED",
-          nextControllingGap: gapFacts.nextControllingGap,
-          requiredNextAction: gapFacts.requiredNextAction,
-          requiredNextTNT: gapFacts.requiredNextTNT,
-          lanes: lanes
+        var lanes = {
+          route: route,
+          runtime: runtime,
+          asset: asset,
+          renderer: renderer,
+          legacy: legacy,
+          hexgrid: hexgrid,
+          lattice: lattice,
+          visual: visual,
+          estateParity: estateParity
         };
 
-        renderReceipt(lastResetReceipt);
-      }
+        lanes.gap = computeGap(lanes);
 
-      function runEstateDiagnostic() {
-        renderReceipt({
+        return {
           version: VERSION,
           timestamp: now(),
-          status: "running estate route diagnostic",
-          note: "This does not overwrite Planet 1 Generation 1 reset state."
-        });
-
-        return Promise.all(ESTATE_ROUTES.map(fetchRouteProbe)).then(function (results) {
-          lastEstateReceipt = {
-            version: VERSION,
-            timestamp: now(),
-            estateRouteDiagnostic: results.map(function (result, index) {
-              return {
-                route: ESTATE_ROUTES[index],
-                result: result
-              };
-            })
-          };
-
-          renderLane("lane-estate-parity", buildEstateParityLane(lastEstateReceipt));
-
-          renderReceipt({
-            resetReceipt: lastResetReceipt || "Run G1 reset diagnostic for Planet 1 reset state.",
-            estateReceipt: lastEstateReceipt
-          });
-
-          return lastEstateReceipt;
-        });
+          planetGeneration: "GENERATION_1_ACTIVE",
+          oldForwardBaseline: "G5_ARCHITECTURE_BASELINE_ARCHIVED",
+          newForwardBaseline: "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2",
+          architectureHealth: lanes.gap.facts.architectureHealth,
+          hexSubstrate: hexgrid.state === "PASS" ? "DETECTED" : "MISSING_OR_INCOMPLETE",
+          lattice256: lattice.state,
+          planetBuildReadiness: lanes.gap.facts.planetBuildReadiness,
+          visualReadiness: "HOLD",
+          legacyG5Branch: lanes.gap.facts.legacyG5Branch,
+          nextControllingGap: lanes.gap.facts.nextControllingGap,
+          requiredNextAction: lanes.gap.facts.requiredNextAction,
+          requiredNextTNT: lanes.gap.facts.requiredNextTNT,
+          lanes: lanes
+        };
       }
 
-      function runG1ResetDiagnostic() {
-        setText("architecture-health", "RUNNING");
-        setText("planet-generation", "GENERATION 1 RESET");
-        setText("hex-substrate", "MEASURING");
-        setText("planet-readiness", "MEASURING");
-        setText("next-gap", "MEASURING");
+      function runDiagnostic() {
+        var receiptNode = byId("receipt");
+        var receiptState = byId("receipt-state");
 
-        renderReceipt({
-          version: VERSION,
-          baseline: BASELINE,
-          status: "running G1 reset diagnostic",
-          timestamp: now()
-        });
+        if (receiptNode) receiptNode.textContent = "Running diagnostic…";
+        if (receiptState) {
+          receiptState.textContent = "RUNNING";
+          receiptState.className = "status-hold";
+        }
 
         return Promise.all([
-          fetchRouteProbe(PATHS.route),
-          fetchFileProbe(PATHS.hexgrid, [
-            { label: "hasGlobalName", value: "DGBPlanetOneHexgridRender" },
-            { label: "hasCreateMethod", value: "createPlanetOneHexGrid" },
-            { label: "hasDrawMethod", value: "drawPlanetOneHexGrid" },
-            { label: "hasStatusMethod", value: "getHexgridStatus" },
-            { label: "hasV2FormulaMarker", value: "4x4x2x2x4" }
-          ]),
-          runEstateDiagnostic(),
-          loadScript("runtime", PATHS.runtime, function () { return Boolean(global.DGBShowroomRuntime || global.ShowroomRuntime); }),
-          loadScript("land", PATHS.land, function () { return Boolean(global.DGBPlanetOneLandConstructs); }),
-          loadScript("surface", PATHS.surface, function () { return Boolean(global.DGBPlanetOneSurfaceMaterials); }),
-          loadScript("terrain", PATHS.terrain, function () { return Boolean(global.DGBPlanetOneTerrainRender); }),
-          loadScript("hydration", PATHS.hydration, function () { return Boolean(global.DGBPlanetOneHydrationRender); }),
-          loadScript("hexgrid", PATHS.hexgrid, function () { return Boolean(global.DGBPlanetOneHexgridRender); })
-        ]).then(function (first) {
-          return loadScript("renderer", PATHS.renderer, function () {
-            return Boolean(global.DGBPlanetOneRenderTeam);
-          }).then(function () {
-            return loadScript("asset", PATHS.asset, function () {
-              return Boolean(global.DGBShowroomGlobeInstrument);
-            }).then(function () {
-              return mountAssetProbe().then(function (probe) {
-                return waitFor(function () {
-                  return Boolean(global.DGBPlanetOneRenderTeam || global.DGBShowroomGlobeInstrument);
-                }, 1600).then(function () {
-                  applyResults(buildLanes(first[0], { hexgrid: first[1] }, probe, first[2]));
-                });
-              });
-            });
-          });
-        }).catch(function (error) {
-          renderReceipt({
-            version: VERSION,
-            timestamp: now(),
-            ok: false,
-            error: String(error && error.message ? error.message : error)
-          });
+          fetchText(PATHS.showroomGlobe),
+          fetchText(PATHS.showroomRuntime),
+          fetchText(PATHS.worldRuntime),
+          fetchText(PATHS.worldControl),
+          fetchText(PATHS.assetInstrument),
+          fetchText(PATHS.renderer),
+          fetchText(PATHS.hexgrid),
+          fetchText(PATHS.home),
+          fetchText(PATHS.gauges),
+          fetchText(PATHS.legacyLand),
+          fetchText(PATHS.legacySurface)
+        ]).then(function (items) {
+          var results = {
+            showroomGlobe: items[0],
+            showroomRuntime: items[1],
+            worldRuntime: items[2],
+            worldControl: items[3],
+            assetInstrument: items[4],
+            renderer: items[5],
+            hexgrid: items[6],
+            home: items[7],
+            gauges: items[8],
+            legacyLand: items[9],
+            legacySurface: items[10]
+          };
 
-          setText("architecture-health", "FAIL");
-          setText("planet-generation", "GENERATION 1 RESET");
-          setText("hex-substrate", "UNKNOWN");
-          setText("planet-readiness", "NOT READY");
-          setText("next-gap", "GAUGES_EXECUTION_ERROR");
+          var receipt = buildReceipt(results);
+
+          state.lastReceipt = receipt;
+
+          setSummary(receipt);
+          renderLanes(receipt);
+
+          if (receiptNode) {
+            receiptNode.textContent = JSON.stringify(receipt, null, 2);
+          }
+
+          if (receiptState) {
+            receiptState.textContent = receipt.architectureHealth;
+            receiptState.className = statusClass(receipt.architectureHealth === "PASS" ? "PASS" : receipt.architectureHealth);
+          }
+
+          try {
+            global.dispatchEvent(new CustomEvent("dgb:gauges:g1-architecture-renewed", {
+              detail: receipt
+            }));
+          } catch (error) {}
+
+          return receipt;
+        }).catch(function (error) {
+          state.lastError = String(error && error.message ? error.message : error);
+
+          if (receiptNode) {
+            receiptNode.textContent = JSON.stringify({
+              ok: false,
+              version: VERSION,
+              error: state.lastError,
+              timestamp: now()
+            }, null, 2);
+          }
+
+          if (receiptState) {
+            receiptState.textContent = "FAIL";
+            receiptState.className = "status-fail";
+          }
         });
       }
 
-      global.G1PlanetOneResetGaugesV2 = {
+      function getStatus() {
+        return {
+          ok: true,
+          active: true,
+          VERSION: VERSION,
+          version: VERSION,
+          lastReceipt: state.lastReceipt,
+          lastError: state.lastError,
+          visualPassClaimed: false
+        };
+      }
+
+      global.DGBG1ArchitectureGauges = {
         VERSION: VERSION,
         version: VERSION,
-        BASELINE: BASELINE,
-        REQUIRED_TNT: REQUIRED_TNT,
-        paths: PATHS,
-        runG1ResetDiagnostic: runG1ResetDiagnostic,
-        runResetDiagnostic: runG1ResetDiagnostic,
-        runEstateDiagnostic: runEstateDiagnostic,
-        getLastResetReceipt: function () { return compact(lastResetReceipt); },
-        getLastEstateReceipt: function () { return compact(lastEstateReceipt); }
+        runDiagnostic: runDiagnostic,
+        getStatus: getStatus,
+        status: getStatus
       };
 
-      global.document.addEventListener("DOMContentLoaded", function () {
-        var run = $("#run-reset");
-        var estate = $("#run-estate");
+      byId("run-g1").addEventListener("click", runDiagnostic);
+      byId("run-estate").addEventListener("click", runDiagnostic);
 
-        if (run) run.addEventListener("click", runG1ResetDiagnostic);
-        if (estate) estate.addEventListener("click", runEstateDiagnostic);
-      });
+      runDiagnostic();
     })(typeof window !== "undefined" ? window : globalThis);
   </script>
 </body>

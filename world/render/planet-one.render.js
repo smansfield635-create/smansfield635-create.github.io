@@ -1,19 +1,21 @@
-/* G1 PLANET 1 CONTROLLED LAND ELEVATION RENDERER
+/* G1 PLANET 1 TERRAIN ELEVATION FIELD RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1
+   VERSION: G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1
 
    PURPOSE:
-   - Preserve the maritime sea-level datum.
-   - Render controlled land emergence from the hidden 256-state hexgrid.
-   - Keep water dominance and satellite-observational projection.
-   - Do not skip into shelf finalization, plateau pressure, mineral pressure, or higher relief.
+   - Preserve water dominance and the maritime datum.
+   - Render a true terrain elevation field from the hidden 256-state substrate.
+   - Prepare beach-ready zones without painting final beaches.
+   - Hold plateau, mineral exposure, mountains, glaciers, waterfalls, and higher relief.
+   - Keep public mode satellite-observational.
    - Do not claim visual pass.
 */
 
 (function attachPlanetOneRendererFacade(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1";
+  var VERSION = "G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -21,6 +23,7 @@
 
   var CONTRACT_MARKERS = [
     VERSION,
+    PRIOR_VERSION,
     BASELINE,
     MARITIME_BASELINE,
     "RENDERER_FACADE_ACTIVE",
@@ -29,9 +32,10 @@
     "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
     "MARITIME_DATUM_PRESERVED",
     "SEA_LEVEL_PLANE_READ_PRESERVED",
-    "CONTROLLED_LAND_ELEVATION_RENDERED",
-    "SUBTLE_LAND_EMERGENCE_VISIBLE",
-    "NO_PREMATURE_SHELF_FINALIZATION",
+    "TERRAIN_ELEVATION_RENDERED",
+    "BEACH_READY_ZONE_VISIBLE_BUT_NOT_FINAL",
+    "LOWLAND_TERRAIN_VISIBLE",
+    "INTERIOR_TERRAIN_LIFT_VISIBLE",
     "NO_PREMATURE_PLATEAU_RELIEF",
     "NO_PREMATURE_MOUNTAIN_RELIEF",
     "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
@@ -105,7 +109,7 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-render-mode", DEFAULT_RENDER_MODE);
-      canvas.setAttribute("aria-label", "Planet 1 controlled land elevation satellite renderer");
+      canvas.setAttribute("aria-label", "Planet 1 terrain elevation field satellite renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -146,7 +150,6 @@
       if (typeof global.DGBPlanetOneHexgridRender.getHexgridStatus === "function") {
         return global.DGBPlanetOneHexgridRender.getHexgridStatus();
       }
-
       return global.DGBPlanetOneHexgridRender.status();
     }, null);
   }
@@ -198,7 +201,7 @@
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = HEXGRID_PATH + "?controlled_land_elevation=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
+      script.src = HEXGRID_PATH + "?terrain_elevation_field=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
       script.dataset.planetOneHexgridRequiredByRenderer = VERSION;
@@ -229,8 +232,8 @@
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.42, radius * 0.08, cx, cy, radius * 1.08);
-    ocean.addColorStop(0, "rgba(78,136,166,.98)");
-    ocean.addColorStop(0.32, "rgba(31,82,122,.98)");
+    ocean.addColorStop(0, "rgba(78,138,168,.98)");
+    ocean.addColorStop(0.32, "rgba(31,84,124,.98)");
     ocean.addColorStop(0.70, "rgba(8,31,64,.99)");
     ocean.addColorStop(1, "rgba(2,8,24,1)");
 
@@ -273,10 +276,11 @@
     ctx.clip();
   }
 
-  function drawSeaLevelAtmosphere(ctx, cx, cy, radius) {
+  function drawTerrainElevationAtmosphere(ctx, cx, cy, radius) {
     var haze;
     var terminator;
     var waterline;
+    var terrainLift;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
@@ -297,11 +301,18 @@
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     waterline = ctx.createRadialGradient(cx, cy, radius * 0.42, cx, cy, radius * 1.0);
-    waterline.addColorStop(0, "rgba(226,207,146,.018)");
-    waterline.addColorStop(0.52, "rgba(226,207,146,.035)");
+    waterline.addColorStop(0, "rgba(226,207,146,.020)");
+    waterline.addColorStop(0.52, "rgba(226,207,146,.040)");
     waterline.addColorStop(0.86, "rgba(226,207,146,.018)");
     waterline.addColorStop(1, "rgba(226,207,146,0)");
     ctx.fillStyle = waterline;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    terrainLift = ctx.createRadialGradient(cx - radius * 0.10, cy - radius * 0.06, radius * 0.08, cx, cy, radius * 0.96);
+    terrainLift.addColorStop(0, "rgba(245,218,150,.026)");
+    terrainLift.addColorStop(0.54, "rgba(245,218,150,.016)");
+    terrainLift.addColorStop(1, "rgba(245,218,150,0)");
+    ctx.fillStyle = terrainLift;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
@@ -335,7 +346,7 @@
     ctx.beginPath();
     ctx.moveTo(0, -radius * 1.10);
     ctx.lineTo(0, radius * 1.10);
-    ctx.strokeStyle = "rgba(242,199,111,.16)";
+    ctx.strokeStyle = "rgba(242,199,111,.14)";
     ctx.lineWidth = Math.max(1, radius * 0.004);
     ctx.stroke();
     ctx.restore();
@@ -356,13 +367,7 @@
     options = options || {};
 
     if (!ctx) {
-      return {
-        ok: false,
-        mounted: false,
-        reason: "NO_2D_CONTEXT",
-        version: VERSION,
-        visualPassClaimed: false
-      };
+      return { ok: false, mounted: false, reason: "NO_2D_CONTEXT", version: VERSION, visualPassClaimed: false };
     }
 
     size = Math.min(canvas.width, canvas.height);
@@ -392,9 +397,10 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        alpha: options.hexAlpha == null ? 0.84 : options.hexAlpha,
+        alpha: options.hexAlpha == null ? 0.86 : options.hexAlpha,
         renderMode: renderMode,
-        coastGlow: true
+        coastGlow: true,
+        beachReadyGlow: true
       });
 
       ctx.restore();
@@ -405,7 +411,7 @@
       state.rendererConsumesHexgrid = false;
     }
 
-    drawSeaLevelAtmosphere(ctx, cx, cy, radius);
+    drawTerrainElevationAtmosphere(ctx, cx, cy, radius);
     drawAtmosphere(ctx, cx, cy, radius);
     if (options.showAxis !== false) drawAxis(ctx, cx, cy, radius);
 
@@ -413,6 +419,7 @@
       ok: true,
       mounted: true,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       renderedAt: now(),
@@ -422,29 +429,43 @@
       renderMode: renderMode,
       defaultRenderMode: DEFAULT_RENDER_MODE,
       projectionModel: "orthographic_orbital_projection",
+
       hexgridDetected: hasHexgrid(),
       hexgridSubstrateDetected: hasHexgrid(),
       hexCellSubstrateActive: Boolean(hexStatus && hexStatus.hexCellSubstrateActive),
       hexagonalPixelFormatActive: Boolean(hexStatus && hexStatus.hexagonalPixelFormatActive),
+
       maritimeDatumPreserved: true,
       maritimeSeaLevelBaselineActive: Boolean(hexStatus && hexStatus.maritimeSeaLevelBaselineActive),
       seaLevelPlaneReadPreserved: true,
+
       controlledLandElevationRendered: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
-      subtleLandEmergenceVisible: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+      terrainElevationRendered: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      terrainElevationFieldActive: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      beachReadyZoneVisibleButNotFinal: Boolean(hexStatus && hexStatus.beachReadyZonePrepared),
+      lowlandTerrainVisible: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      interiorTerrainLiftVisible: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+
+      waterDominancePreserved: Boolean(hexStatus && hexStatus.waterDominancePreserved),
+      plateauPressureHeld: Boolean(hexStatus && hexStatus.plateauPressureHeld),
+      higherReliefHeld: Boolean(hexStatus && hexStatus.higherReliefHeld),
       noPrematureShelfFinalization: true,
       noPrematurePlateauRelief: true,
       noPrematureMountainRelief: true,
+
       satelliteObservationalModeActive: renderMode === "satellite",
       publicHoneycombBlocked: renderMode === "satellite",
       cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
       twoDynamicHemisphericLandStructuresActive: Boolean(hexStatus && hexStatus.twoDynamicHemisphericLandStructuresActive),
       threeSecondaryNonPolarBodiesActive: Boolean(hexStatus && hexStatus.threeSecondaryNonPolarBodiesActive),
       sevenLandmassLawActive: Boolean(hexStatus && hexStatus.sevenLandmassLawActive),
+
       rendererConsumesHexgrid: drewHexgrid,
       landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
       surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
       terrainModuleDetected: moduleDetected("DGBPlanetOneTerrainRender"),
       hydrationModuleDetected: moduleDetected("DGBPlanetOneHydrationRender"),
+
       visualPassClaimed: false
     };
 
@@ -460,13 +481,7 @@
     options.renderMode = options.renderMode || DEFAULT_RENDER_MODE;
 
     if (!canvas) {
-      state.lastRender = {
-        ok: false,
-        mounted: false,
-        reason: "NO_MOUNT",
-        version: VERSION,
-        visualPassClaimed: false
-      };
+      state.lastRender = { ok: false, mounted: false, reason: "NO_MOUNT", version: VERSION, visualPassClaimed: false };
       return state.lastRender;
     }
 
@@ -481,33 +496,13 @@
     return immediate;
   }
 
-  function render(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function mount(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function renderGlobe(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function mountPlanetOne(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function createPlanetOneRender(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function createPlanetOneScene(target, options) {
-    return renderPlanetOne(target, options);
-  }
-
-  function create(target, options) {
-    return renderPlanetOne(target, options);
-  }
+  function render(target, options) { return renderPlanetOne(target, options); }
+  function mount(target, options) { return renderPlanetOne(target, options); }
+  function renderGlobe(target, options) { return renderPlanetOne(target, options); }
+  function mountPlanetOne(target, options) { return renderPlanetOne(target, options); }
+  function createPlanetOneRender(target, options) { return renderPlanetOne(target, options); }
+  function createPlanetOneScene(target, options) { return renderPlanetOne(target, options); }
+  function create(target, options) { return renderPlanetOne(target, options); }
 
   function start(target, options) {
     state.paused = false;
@@ -516,27 +511,13 @@
 
   function pause() {
     state.paused = true;
-    return {
-      ok: true,
-      paused: true,
-      version: VERSION,
-      visualPassClaimed: false
-    };
+    return { ok: true, paused: true, version: VERSION, visualPassClaimed: false };
   }
 
   function resume() {
     state.paused = false;
-
-    if (state.lastCanvas) {
-      renderNow(state.lastCanvas, { renderMode: DEFAULT_RENDER_MODE });
-    }
-
-    return {
-      ok: true,
-      paused: false,
-      version: VERSION,
-      visualPassClaimed: false
-    };
+    if (state.lastCanvas) renderNow(state.lastCanvas, { renderMode: DEFAULT_RENDER_MODE });
+    return { ok: true, paused: false, version: VERSION, visualPassClaimed: false };
   }
 
   function destroy() {
@@ -549,12 +530,7 @@
     state.lastCanvas = null;
     state.lastMount = null;
 
-    return {
-      ok: true,
-      destroyed: true,
-      version: VERSION,
-      visualPassClaimed: false
-    };
+    return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
   }
 
   function getStatus() {
@@ -565,14 +541,17 @@
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
       maritimeBaseline: MARITIME_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
+
       rendererFacadeActive: true,
       responsibilitySplitActive: true,
       activeCanvas: Boolean(state.lastCanvas),
       mountComplete: Boolean(state.lastCanvas && state.lastMount),
       projectionModel: "orthographic_orbital_projection",
+
       hexgridDetected: hasHexgrid(),
       hexGridDetected: hasHexgrid(),
       hexgridSubstrateDetected: hasHexgrid(),
@@ -583,26 +562,40 @@
       elevationCellFieldActive: Boolean(hexStatus && hexStatus.elevationCellFieldActive),
       waterDepthCellFieldActive: Boolean(hexStatus && hexStatus.waterDepthCellFieldActive),
       mineralPressureCellFieldActive: Boolean(hexStatus && hexStatus.mineralPressureCellFieldActive),
+
       maritimeDatumPreserved: true,
       maritimeSeaLevelBaselineActive: Boolean(hexStatus && hexStatus.maritimeSeaLevelBaselineActive),
       seaLevelPlaneReadPreserved: true,
       controlledLandElevationRendered: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
-      subtleLandEmergenceVisible: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+
+      terrainElevationRendered: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      terrainElevationFieldActive: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      beachReadyZoneVisibleButNotFinal: Boolean(hexStatus && hexStatus.beachReadyZonePrepared),
+      lowlandTerrainVisible: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      interiorTerrainLiftVisible: Boolean(hexStatus && hexStatus.terrainElevationFieldActive),
+      waterDominancePreserved: Boolean(hexStatus && hexStatus.waterDominancePreserved),
+      plateauPressureHeld: Boolean(hexStatus && hexStatus.plateauPressureHeld),
+      higherReliefHeld: Boolean(hexStatus && hexStatus.higherReliefHeld),
+
       noPrematureShelfFinalization: true,
       noPrematurePlateauRelief: true,
       noPrematureMountainRelief: true,
+
       satelliteObservationalModeActive: true,
       publicHoneycombBlocked: true,
       cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
       defaultRenderMode: DEFAULT_RENDER_MODE,
+
       twoDynamicHemisphericLandStructuresActive: Boolean(hexStatus && hexStatus.twoDynamicHemisphericLandStructuresActive),
       threeSecondaryNonPolarBodiesActive: Boolean(hexStatus && hexStatus.threeSecondaryNonPolarBodiesActive),
       sevenLandmassLawActive: Boolean(hexStatus && hexStatus.sevenLandmassLawActive),
+
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexgrid && hasHexgrid()),
       landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
       surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
       terrainModuleDetected: moduleDetected("DGBPlanetOneTerrainRender"),
       hydrationModuleDetected: moduleDetected("DGBPlanetOneHydrationRender"),
+
       hexgridLoadAttempted: state.hexgridLoadAttempted,
       hexgridLoadComplete: state.hexgridLoadComplete,
       hexgridLoadFailed: state.hexgridLoadFailed,
@@ -619,9 +612,12 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    PRIOR_VERSION: PRIOR_VERSION,
+    priorVersion: PRIOR_VERSION,
     BASELINE: BASELINE,
     MARITIME_BASELINE: MARITIME_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
+
     renderPlanetOne: renderPlanetOne,
     render: render,
     renderGlobe: renderGlobe,

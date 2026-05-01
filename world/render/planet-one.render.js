@@ -1,21 +1,22 @@
-/* G1 PLANET 1 RENDERER HEXGRID CONSUMPTION
+/* G1 PLANET 1 RENDERER SATELLITE TRANSLATION
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_RENDERER_HEXGRID_CONSUMPTION_TNT_v1
+   VERSION: G1_PLANET_1_HEXGRID_RENDERER_SATELLITE_PAIR_TNT_v1
 
    PURPOSE:
-   - Preserve renderer as the public composition facade.
-   - Consume /world/render/planet-one.hexgrid.render.js.
-   - Keep land constructs, surface materials, terrain, and hydration as detected support modules.
+   - Preserve renderer as public composition facade.
+   - Consume the canonical hexgrid substrate.
+   - Translate hex terrain intelligence into satellite-observational surface.
+   - Do not render ground-level terrain, skyline, diorama, or thick honeycomb.
    - Do not claim visual pass.
-   - Move Planet 1 from painted-only composition toward hex-cell terrain substrate composition.
 */
 
 (function attachPlanetOneRendererFacade(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_RENDERER_HEXGRID_CONSUMPTION_TNT_v1";
+  var VERSION = "G1_PLANET_1_HEXGRID_RENDERER_SATELLITE_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
+  var DEFAULT_RENDER_MODE = "satellite";
 
   var CONTRACT_MARKERS = [
     VERSION,
@@ -25,13 +26,14 @@
     "HEXGRID_CONSUMPTION_ACTIVE",
     "HEXAGONAL_PIXEL_FORMAT_CONSUMED",
     "HEX_CELL_SUBSTRATE_CONSUMED",
+    "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
+    "CELL_DEBUG_MODE_AVAILABLE",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
 
   var state = {
     active: true,
     paused: false,
-    animationFrame: null,
     lastCanvas: null,
     lastMount: null,
     lastRender: null,
@@ -39,15 +41,13 @@
     hexgridLoadAttempted: false,
     hexgridLoadComplete: false,
     hexgridLoadFailed: false,
-    rendererConsumesHexgrid: false
+    rendererConsumesHexgrid: false,
+    satelliteObservationalModeActive: true,
+    defaultRenderMode: DEFAULT_RENDER_MODE
   };
 
   function now() {
     return new Date().toISOString();
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
   }
 
   function safeCall(fn, fallback) {
@@ -96,12 +96,10 @@
       canvas = global.document.createElement("canvas");
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
-      canvas.setAttribute("aria-label", "Planet 1 Generation 1 hex substrate renderer");
+      canvas.setAttribute("data-render-mode", DEFAULT_RENDER_MODE);
+      canvas.setAttribute("aria-label", "Planet 1 Generation 1 satellite hex substrate renderer");
 
-      if (options.clearMount !== false) {
-        mount.innerHTML = "";
-      }
-
+      if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
     }
 
@@ -145,49 +143,6 @@
     }, null);
   }
 
-  function ensureHexgridScript() {
-    var existing;
-    var script;
-
-    if (hasHexgrid()) {
-      state.hexgridLoadComplete = true;
-      state.rendererConsumesHexgrid = true;
-      return Promise.resolve(true);
-    }
-
-    if (!global.document) return Promise.resolve(false);
-
-    existing = Array.prototype.slice.call(global.document.getElementsByTagName("script")).filter(function (item) {
-      return item.src && item.src.indexOf(HEXGRID_PATH) !== -1;
-    })[0];
-
-    state.hexgridLoadAttempted = true;
-
-    if (existing) {
-      return waitForHexgrid(1800);
-    }
-
-    return new Promise(function (resolve) {
-      script = global.document.createElement("script");
-      script.src = HEXGRID_PATH + "?renderer_consume=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
-      script.async = false;
-      script.defer = false;
-      script.dataset.planetOneHexgridRequiredByRenderer = VERSION;
-
-      script.onload = function () {
-        waitForHexgrid(1800).then(resolve);
-      };
-
-      script.onerror = function () {
-        state.hexgridLoadFailed = true;
-        state.lastError = "HEXGRID_SCRIPT_LOAD_FAILED";
-        resolve(false);
-      };
-
-      (global.document.head || global.document.body || global.document.documentElement).appendChild(script);
-    });
-  }
-
   function waitForHexgrid(timeoutMs) {
     var start = Date.now();
 
@@ -213,6 +168,47 @@
     });
   }
 
+  function ensureHexgridScript() {
+    var existing;
+    var script;
+
+    if (hasHexgrid()) {
+      state.hexgridLoadComplete = true;
+      state.rendererConsumesHexgrid = true;
+      return Promise.resolve(true);
+    }
+
+    if (!global.document) return Promise.resolve(false);
+
+    existing = Array.prototype.slice.call(global.document.getElementsByTagName("script")).filter(function (item) {
+      return item.src && item.src.indexOf(HEXGRID_PATH) !== -1;
+    })[0];
+
+    state.hexgridLoadAttempted = true;
+
+    if (existing) return waitForHexgrid(1800);
+
+    return new Promise(function (resolve) {
+      script = global.document.createElement("script");
+      script.src = HEXGRID_PATH + "?renderer_satellite_pair=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
+      script.async = false;
+      script.defer = false;
+      script.dataset.planetOneHexgridRequiredByRenderer = VERSION;
+
+      script.onload = function () {
+        waitForHexgrid(1800).then(resolve);
+      };
+
+      script.onerror = function () {
+        state.hexgridLoadFailed = true;
+        state.lastError = "HEXGRID_SCRIPT_LOAD_FAILED";
+        resolve(false);
+      };
+
+      (global.document.head || global.document.body || global.document.documentElement).appendChild(script);
+    });
+  }
+
   function moduleDetected(name) {
     return Boolean(global[name]);
   }
@@ -224,10 +220,10 @@
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.08, cx, cy, radius * 1.08);
-    ocean.addColorStop(0, "rgba(76,126,156,.96)");
-    ocean.addColorStop(0.36, "rgba(30,74,111,.98)");
-    ocean.addColorStop(0.72, "rgba(10,31,62,.99)");
+    ocean = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.42, radius * 0.07, cx, cy, radius * 1.08);
+    ocean.addColorStop(0, "rgba(72,124,154,.96)");
+    ocean.addColorStop(0.34, "rgba(26,72,110,.98)");
+    ocean.addColorStop(0.70, "rgba(9,31,62,.99)");
     ocean.addColorStop(1, "rgba(2,8,24,1)");
 
     ctx.save();
@@ -238,10 +234,10 @@
     ctx.fill();
 
     shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-    shade.addColorStop(0, "rgba(255,255,255,.12)");
-    shade.addColorStop(0.42, "rgba(255,255,255,.02)");
-    shade.addColorStop(0.72, "rgba(0,0,0,.18)");
-    shade.addColorStop(1, "rgba(0,0,0,.42)");
+    shade.addColorStop(0, "rgba(255,255,255,.13)");
+    shade.addColorStop(0.42, "rgba(255,255,255,.025)");
+    shade.addColorStop(0.73, "rgba(0,0,0,.18)");
+    shade.addColorStop(1, "rgba(0,0,0,.44)");
     ctx.fillStyle = shade;
     ctx.fill();
 
@@ -249,13 +245,13 @@
 
     rim = ctx.createRadialGradient(cx, cy, radius * 0.82, cx, cy, radius * 1.05);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.72, "rgba(145,189,255,.06)");
+    rim.addColorStop(0.74, "rgba(145,189,255,.06)");
     rim.addColorStop(1, "rgba(145,189,255,.34)");
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 1.015, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(145,189,255,.34)";
+    ctx.strokeStyle = "rgba(145,189,255,.32)";
     ctx.lineWidth = Math.max(1, radius * 0.012);
     ctx.stroke();
     ctx.fillStyle = rim;
@@ -270,11 +266,36 @@
     ctx.clip();
   }
 
+  function drawSatelliteSoftening(ctx, cx, cy, radius) {
+    var haze;
+    var terminator;
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    haze = ctx.createRadialGradient(cx - radius * 0.22, cy - radius * 0.34, radius * 0.12, cx, cy, radius);
+    haze.addColorStop(0, "rgba(255,255,255,.10)");
+    haze.addColorStop(0.45, "rgba(255,255,255,.025)");
+    haze.addColorStop(0.74, "rgba(10,28,58,.04)");
+    haze.addColorStop(1, "rgba(0,0,0,.32)");
+    ctx.fillStyle = haze;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    terminator = ctx.createLinearGradient(cx - radius * 0.4, cy - radius, cx + radius * 0.95, cy + radius);
+    terminator.addColorStop(0, "rgba(255,255,255,.045)");
+    terminator.addColorStop(0.54, "rgba(255,255,255,0)");
+    terminator.addColorStop(1, "rgba(0,0,0,.30)");
+    ctx.fillStyle = terminator;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+  }
+
   function drawAtmosphere(ctx, cx, cy, radius) {
     var glow = ctx.createRadialGradient(cx - radius * 0.25, cy - radius * 0.38, radius * 0.15, cx, cy, radius * 1.12);
 
-    glow.addColorStop(0, "rgba(255,255,255,.13)");
-    glow.addColorStop(0.38, "rgba(145,189,255,.04)");
+    glow.addColorStop(0, "rgba(255,255,255,.12)");
+    glow.addColorStop(0.38, "rgba(145,189,255,.045)");
     glow.addColorStop(0.82, "rgba(9,20,48,.04)");
     glow.addColorStop(1, "rgba(0,0,0,.34)");
 
@@ -285,7 +306,7 @@
     ctx.fillStyle = glow;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(242,199,111,.18)";
+    ctx.strokeStyle = "rgba(242,199,111,.16)";
     ctx.lineWidth = Math.max(1, radius * 0.006);
     ctx.stroke();
     ctx.restore();
@@ -296,10 +317,10 @@
     ctx.translate(cx, cy);
     ctx.rotate(-0.28);
     ctx.beginPath();
-    ctx.moveTo(0, -radius * 1.12);
-    ctx.lineTo(0, radius * 1.12);
-    ctx.strokeStyle = "rgba(242,199,111,.28)";
-    ctx.lineWidth = Math.max(1, radius * 0.006);
+    ctx.moveTo(0, -radius * 1.10);
+    ctx.lineTo(0, radius * 1.10);
+    ctx.strokeStyle = "rgba(242,199,111,.20)";
+    ctx.lineWidth = Math.max(1, radius * 0.004);
     ctx.stroke();
     ctx.restore();
   }
@@ -307,8 +328,8 @@
   function drawFallbackLandHint(ctx, cx, cy, radius) {
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
-    ctx.globalAlpha = 0.36;
-    ctx.fillStyle = "rgba(112,96,65,.68)";
+    ctx.globalAlpha = 0.24;
+    ctx.fillStyle = "rgba(112,96,65,.52)";
 
     ctx.beginPath();
     ctx.ellipse(cx - radius * 0.22, cy + radius * 0.02, radius * 0.34, radius * 0.52, -0.18, 0, Math.PI * 2);
@@ -320,7 +341,7 @@
 
     ctx.beginPath();
     ctx.ellipse(cx + radius * 0.02, cy - radius * 0.72, radius * 0.58, radius * 0.12, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(226,238,245,.56)";
+    ctx.fillStyle = "rgba(226,238,245,.48)";
     ctx.fill();
 
     ctx.beginPath();
@@ -338,6 +359,7 @@
     var hexgrid;
     var grid;
     var hexStatus;
+    var renderMode;
     var drewHexgrid = false;
 
     options = options || {};
@@ -357,6 +379,7 @@
     cx = canvas.width / 2;
     cy = canvas.height / 2;
     radius = Number(options.radius || size * 0.43);
+    renderMode = options.renderMode || DEFAULT_RENDER_MODE;
 
     drawBaseSphere(ctx, cx, cy, radius);
 
@@ -373,17 +396,17 @@
         centerX: cx,
         centerY: cy,
         radius: radius,
-        hexSize: options.hexSize || Math.max(4.5, radius / 34),
+        hexSize: options.hexSize || Math.max(3.2, radius / 42),
         seed: options.seed || 256451
       });
 
       hexgrid.drawPlanetOneHexGrid(ctx, grid, {
-        alpha: options.hexAlpha == null ? 0.84 : options.hexAlpha,
-        stroke: options.hexStroke !== false
+        alpha: options.hexAlpha == null ? 0.76 : options.hexAlpha,
+        renderMode: renderMode,
+        stroke: renderMode === "cell-debug"
       });
 
       ctx.restore();
-
       drewHexgrid = true;
       state.rendererConsumesHexgrid = true;
     } else {
@@ -391,11 +414,10 @@
       state.rendererConsumesHexgrid = false;
     }
 
+    drawSatelliteSoftening(ctx, cx, cy, radius);
     drawAtmosphere(ctx, cx, cy, radius);
 
-    if (options.showAxis !== false) {
-      drawAxis(ctx, cx, cy, radius);
-    }
+    if (options.showAxis !== false) drawAxis(ctx, cx, cy, radius);
 
     state.lastRender = {
       ok: true,
@@ -406,10 +428,14 @@
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
       radius: radius,
+      renderMode: renderMode,
+      defaultRenderMode: DEFAULT_RENDER_MODE,
       hexgridDetected: hasHexgrid(),
       hexgridSubstrateDetected: hasHexgrid(),
       hexCellSubstrateActive: Boolean(hexStatus && hexStatus.hexCellSubstrateActive),
       hexagonalPixelFormatActive: Boolean(hexStatus && hexStatus.hexagonalPixelFormatActive),
+      satelliteObservationalModeActive: renderMode === "satellite",
+      cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
       rendererConsumesHexgrid: drewHexgrid,
       landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
       surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
@@ -426,6 +452,9 @@
     var canvas = ensureCanvas(mount, options);
     var immediate;
 
+    options = options || {};
+    options.renderMode = options.renderMode || DEFAULT_RENDER_MODE;
+
     if (!canvas) {
       state.lastRender = {
         ok: false,
@@ -434,15 +463,14 @@
         version: VERSION,
         visualPassClaimed: false
       };
-
       return state.lastRender;
     }
 
-    immediate = renderNow(canvas, options || {});
+    immediate = renderNow(canvas, options);
 
     ensureHexgridScript().then(function (loaded) {
       if (loaded && !state.paused && state.lastCanvas === canvas) {
-        renderNow(canvas, options || {});
+        renderNow(canvas, options);
       }
     });
 
@@ -484,13 +512,6 @@
 
   function pause() {
     state.paused = true;
-
-    if (state.animationFrame && global.cancelAnimationFrame) {
-      global.cancelAnimationFrame(state.animationFrame);
-    }
-
-    state.animationFrame = null;
-
     return {
       ok: true,
       paused: true,
@@ -503,7 +524,7 @@
     state.paused = false;
 
     if (state.lastCanvas) {
-      renderNow(state.lastCanvas, {});
+      renderNow(state.lastCanvas, { renderMode: DEFAULT_RENDER_MODE });
     }
 
     return {
@@ -556,6 +577,9 @@
       elevationCellFieldActive: Boolean(hexStatus && hexStatus.elevationCellFieldActive),
       waterDepthCellFieldActive: Boolean(hexStatus && hexStatus.waterDepthCellFieldActive),
       mineralPressureCellFieldActive: Boolean(hexStatus && hexStatus.mineralPressureCellFieldActive),
+      satelliteObservationalModeActive: true,
+      cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
+      defaultRenderMode: DEFAULT_RENDER_MODE,
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexgrid && hasHexgrid()),
       landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
       surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
@@ -605,7 +629,5 @@
     global.dispatchEvent(new CustomEvent("dgb:planet-one:renderer-ready", {
       detail: getStatus()
     }));
-  } catch (error) {
-    /* Event dispatch is optional. The global renderer contract remains available. */
-  }
+  } catch (error) {}
 })(typeof window !== "undefined" ? window : globalThis);

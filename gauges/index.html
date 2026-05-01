@@ -1,52 +1,54 @@
 <!doctype html>
-<html lang="en" data-page="gauges" data-gauge-contract="GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1">
+<html lang="en" data-page="gauges" data-gauge-contract="GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Gauges · Planet 1 Forward Progress Construct</title>
+  <title>Gauges · Planet 1 Hydro-Terrain Marriage Diagnostic</title>
   <meta
     name="description"
-    content="Forward-progress Gauges for Planet 1: source chain is trusted after pass; next frame measures visual construction readiness and terrain realism progression."
+    content="V19 diagnostic for Planet 1 hydro-terrain marriage: hydration engine, terrain V4 pair, asset boot awareness, route hydration proof, renderer composition awareness, and next target."
   />
 
   <!--
-    GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1
-    PLANET_ONE_GAUGES_V18_FORWARD_PROGRESS_CONTRACT_v1
+    GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1
+    PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1
 
     PURPOSE=
-    REBUILD_GAUGES_FROM_BREAK-FINDING_MODE_TO_FORWARD-PROGRESS_MODE
-    TRUST_THE_100_PERCENT_SOURCE_CHAIN_PASS_AS_REAL_PROGRESS
-    STOP_TREATING_ABSENCE_OF_THE_NEXT_VISUAL_FRAME_AS_A FAILURE
-    IDENTIFY_THE_NEXT_CONSTRUCTION_TARGET_WITHOUT_REOPENING_SETTLED_BOOT_CHAIN
-    MEASURE_THE_CURRENT FRAME: V2 TERRAIN SOURCE LOCKED -> V3 VISUAL 39B CRUST REALISM READY
+    MEASURE_THE_HYDRO_TERRAIN_MARRIAGE_FRAME
+    STOP_TREATING_TERRAIN_DETAIL_AS_THE_ONLY_VISUAL_PROBLEM
+    PROVE_WHETHER_HYDRATION_IS_PRESENT_LOADED_AND_MARRIED_TO_TERRAIN
+    DISTINGUISH:
+      HYDRATION_FILE_MISSING
+      TERRAIN_V4_MISSING
+      ASSET_BOOT_NOT_HYDRATION_AWARE
+      ROUTE_NOT_HYDRATION_AWARE
+      RENDERER_NOT_HYDRATION_AWARE
+      HYDRO_TERRAIN_SOURCE_PASS_VISUAL_REVIEW
+      ALL_CHAIN_PASS_READY_FOR_WEATHER_FRAME
 
-    CURRENT LOCKED CHAIN=
+    MEASURED FILES=
+    /world/render/planet-one.hydration.render.js
     /world/render/planet-one.terrain.render.js
-    /world/render/planet-one.render.js
     /assets/showroom.globe.instrument.js
     /showroom/globe/
+    /world/render/planet-one.render.js
     /gauges/
 
-    CURRENT PASSED STATE=
-    terrain module passed
-    main renderer passed
-    asset instrument passed
-    route boot passed
-    Gauges passed
-
-    NEXT FRAME TARGET=
-    /world/render/planet-one.terrain.render.js
-
-    NEXT FRAME TNT=
-    PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1
+    REQUIRED CORE MARKERS=
+    PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1
+    PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1
+    hydro-terrain-marriage-active=true
+    hydration-engine-paired=true
+    terrain-water-adhesion-active=true
+    shoreline-marriage-active=true
+    mountains-canyons-rivers-lakes-glaciers-ready=true
 
     GAUGES RULE=
-    SOURCE PASS IS PROGRESS
-    VISUAL ABSENCE IS NOT SOURCE FAILURE
-    FUTURE MARKER ABSENCE MEANS NEXT TARGET, NOT FAILURE
     GAUGES_MEASURES_ONLY
     GAUGES_DOES_NOT_RENDER_PLANET
+    GAUGES_DOES_NOT_REWRITE_TERRAIN
+    GAUGES_DOES_NOT_REWRITE_HYDRATION
     GAUGES_DOES_NOT_CLOSE_GEOGRAPHY
   -->
 
@@ -57,13 +59,14 @@
       --panel: rgba(255,255,255,.055);
       --panel2: rgba(255,255,255,.085);
       --line: rgba(168,199,255,.18);
+      --line2: rgba(242,199,111,.42);
+      --text: rgba(246,248,255,.93);
+      --muted: rgba(226,232,246,.68);
+      --soft: rgba(226,232,246,.52);
       --gold: #f2c76f;
       --green: #8fe3b0;
       --blue: #91bdff;
       --red: #ff9b9b;
-      --text: rgba(246,248,255,.93);
-      --muted: rgba(226,232,246,.68);
-      --soft: rgba(226,232,246,.52);
       --max: 1180px;
       --radius: 28px;
       --shadow: 0 28px 80px rgba(0,0,0,.52);
@@ -90,7 +93,7 @@
       left: -999px;
       top: 10px;
       z-index: 20;
-      border: 1px solid rgba(242,199,111,.42);
+      border: 1px solid var(--line2);
       border-radius: 999px;
       padding: 10px 14px;
       background: #101725;
@@ -153,12 +156,12 @@
     }
 
     nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,.42);
+      border-color: var(--line2);
       color: var(--gold);
       background: rgba(242,199,111,.065);
     }
 
-    .hero, .panel, .score-card, .check-card {
+    .hero, .panel, .score-card, .check-card, .decision-box {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--panel);
@@ -182,15 +185,15 @@
     }
 
     h1 {
-      max-width: 940px;
+      max-width: 980px;
       margin: 12px 0;
-      font-size: clamp(2.35rem,7vw,5.4rem);
+      font-size: clamp(2.25rem,7vw,5.2rem);
       line-height: .94;
       letter-spacing: -.075em;
     }
 
     .lead {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0;
       color: var(--muted);
       font-size: clamp(1rem,2.4vw,1.25rem);
@@ -254,9 +257,9 @@
 
     .score-card strong {
       display: block;
-      font-size: clamp(1.7rem,4vw,3.2rem);
+      font-size: clamp(1.55rem,4vw,3rem);
       line-height: .95;
-      letter-spacing: -.07em;
+      letter-spacing: -.065em;
       overflow-wrap: anywhere;
     }
 
@@ -322,6 +325,12 @@
       border-color: rgba(145,189,255,.45);
       color: var(--blue);
       background: rgba(145,189,255,.06);
+    }
+
+    .pill.fail {
+      border-color: rgba(255,155,155,.45);
+      color: var(--red);
+      background: rgba(255,155,155,.06);
     }
 
     .checks-grid, .frame-grid {
@@ -490,15 +499,15 @@
     </header>
 
     <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Forward Frame</div>
-      <h1>Trust the pass. Move the frame forward.</h1>
+      <div class="kicker">H6 · Gauges · Planet 1 Hydro-Terrain Frame</div>
+      <h1>Measure whether water and terrain are married.</h1>
       <p class="lead">
-        The previous Gauge proved the source and route chain. This Gauge preserves that proof and shifts the construct forward:
-        Planet 1 is ready for the next terrain realism frame.
+        V19 checks the new hydro-terrain construct: hydration engine, V4 terrain pair, asset boot awareness,
+        route hydration proof, renderer composition awareness, and the next lawful target.
       </p>
 
       <div class="actions">
-        <button class="button" type="button" id="runAuditButton">Run forward-frame audit</button>
+        <button class="button" type="button" id="runAuditButton">Run hydro-terrain audit</button>
         <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="button secondary" href="/showroom/">Open Showroom</a>
         <a class="button secondary" href="/nine-summits/universe/">Open Universe</a>
@@ -506,24 +515,24 @@
     </section>
 
     <main>
-      <section class="score-grid" aria-label="Forward progress summary">
+      <section class="score-grid" aria-label="Hydro terrain summary">
         <article class="score-card" id="scoreProgress">
           <span>Progress state</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreChain">
-          <span>Chain lock</span>
+        <article class="score-card" id="scoreHydration">
+          <span>Hydration</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreFrame">
-          <span>Current frame</span>
+        <article class="score-card" id="scoreMarriage">
+          <span>Marriage frame</span>
           <strong>WAIT</strong>
         </article>
 
-        <article class="score-card" id="scoreVisual">
-          <span>Visual target</span>
+        <article class="score-card" id="scoreBoot">
+          <span>Boot awareness</span>
           <strong>WAIT</strong>
         </article>
 
@@ -538,7 +547,7 @@
           <div>
             <h2>Current read</h2>
             <p id="currentRead">
-              Audit has not run yet. This Gauge treats the proven boot chain as real progress and measures the next construction frame.
+              Audit has not run yet. This Gauge measures whether hydration and terrain are present, paired, and boot-visible.
             </p>
           </div>
           <span class="pill hold" id="auditStatus">WAIT</span>
@@ -546,27 +555,27 @@
 
         <div class="frame-grid">
           <article class="frame-card">
-            <strong>What is already trusted</strong>
-            <h3>Source chain and route chain.</h3>
-            <p>Terrain, renderer, asset instrument, inspection route, and Gauges passed the prior diagnostic. That progress is not reopened unless a source check breaks again.</p>
+            <strong>Anchor</strong>
+            <h3>One world body.</h3>
+            <p>Water and land must no longer read as separate objects. Hydration and terrain must share the surface logic.</p>
           </article>
 
           <article class="frame-card">
-            <strong>What is next</strong>
-            <h3>Terrain visual realism.</h3>
-            <p>The next move is not another boot repair. It is the terrain renderer’s visible expression: older crust, heavier scars, deeper mineral pressure, and less cartoon softness.</p>
+            <strong>Appropriate</strong>
+            <h3>Correct ownership.</h3>
+            <p>Hydration owns oceans, shores, rivers, lakes, glaciers, and basins. Terrain owns elevation, mountains, canyons, crust, scars, and mineral pressure.</p>
           </article>
 
           <article class="frame-card">
-            <strong>What may still be wrong</strong>
-            <h3>The source may pass before the visual catches up.</h3>
-            <p>A clean chain does not automatically mean the planet looks 39 billion years old. It means the system is ready to work on that visual frame.</p>
+            <strong>Adhere</strong>
+            <h3>Water must stick to terrain.</h3>
+            <p>The route must prove hydration is loaded and usable before the terrain layer creates the married surface.</p>
           </article>
 
           <article class="frame-card">
-            <strong>How to move forward</strong>
-            <h3>Renew the terrain file next.</h3>
-            <p>The next TNT should be <code>PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1</code>.</p>
+            <strong>Age</strong>
+            <h3>Ancientness rides through the married body.</h3>
+            <p>The 39B crust read only works if scars, seams, basins, glaciers, rivers, and shorelines belong to one planet body.</p>
           </article>
         </div>
       </section>
@@ -574,12 +583,12 @@
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Frame checks</h2>
+            <h2>Hydro-terrain source checks</h2>
             <p>
-              Future markers are not scored as failure. If a future marker is absent, the Gauge names it as the next frame.
+              These checks separate source presence, pairing, boot awareness, route proof, and renderer composition awareness.
             </p>
           </div>
-          <span class="pill hold" id="frameStatus">WAIT</span>
+          <span class="pill hold" id="checksStatus">WAIT</span>
         </div>
 
         <div class="checks-grid" id="checksGrid"></div>
@@ -590,7 +599,7 @@
           <div>
             <h2>Next construction decision</h2>
             <p id="decisionText">
-              Run the audit. If the proven chain remains intact, the terrain visual frame becomes the next lawful target.
+              Run the audit. The next target depends on whether hydration is missing, present but not paired, paired but not route-visible, or fully source-passed and ready for visual review.
             </p>
           </div>
           <span class="pill hold" id="decisionStatus">WAIT</span>
@@ -606,96 +615,101 @@
           <div>
             <h2>Measurement rules</h2>
             <p>
-              This Gauge is no longer only a break finder. It is a forward-progress construct.
+              V19 is a hydro-terrain diagnostic. It does not draw the planet or declare visual success.
             </p>
           </div>
         </div>
 
         <div class="frame-grid">
           <article class="frame-card">
-            <strong>Do not reopen settled chain</strong>
-            <h3>Passed source stays passed.</h3>
-            <p>Terrain, renderer, instrument, and route are rechecked, but the frame does not regress unless one of those checks actually fails.</p>
+            <strong>No weather yet</strong>
+            <h3>Weather remains held.</h3>
+            <p>Weather cannot fix floating land. It comes after hydration and terrain adhere.</p>
           </article>
 
           <article class="frame-card">
-            <strong>Future absence is not failure</strong>
-            <h3>It names the next target.</h3>
-            <p>V3 terrain realism is expected to be absent until it is built. That should produce NEXT, not FAIL.</p>
+            <strong>No source drift</strong>
+            <h3>Measure before rewriting.</h3>
+            <p>If hydration exists but route or asset does not load it, the next target is boot awareness, not another terrain rewrite.</p>
           </article>
 
           <article class="frame-card">
-            <strong>Visual review remains separate</strong>
-            <h3>Source proof is not beauty proof.</h3>
-            <p>When source passes but the visual still looks weak, the next move is visual terrain renewal.</p>
+            <strong>No false visual pass</strong>
+            <h3>Source pass is not beauty proof.</h3>
+            <p>If all hydro-terrain source checks pass and the visual still fails, then return to visual expression with evidence.</p>
           </article>
 
           <article class="frame-card">
             <strong>No geography closure</strong>
             <h3>The map remains open.</h3>
-            <p>Countries, cities, exact rivers, climate names, final physics, and final map geometry remain unclosed.</p>
+            <p>No final countries, cities, named rivers, climate taxonomy, physics constants, or final map geometry.</p>
           </article>
         </div>
       </section>
     </main>
 
     <footer>
-      GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1 · Forward frame for Planet 1 terrain realism.
+      GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1 · Measures Planet 1 hydro-terrain marriage.
     </footer>
   </div>
 
   <script>
-    (function runPlanetOneForwardFrameGauges() {
+    (function runPlanetOneHydroTerrainMarriageGauges() {
       "use strict";
 
-      const VERSION = "GAUGES_PLANET_ONE_V18_FORWARD_PROGRESS_CONSTRUCT_TNT_v1";
-      const CONTRACT = "PLANET_ONE_GAUGES_V18_FORWARD_PROGRESS_CONTRACT_v1";
+      const VERSION = "GAUGES_PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_DIAGNOSTIC_TNT_v1";
+      const CONTRACT = "PLANET_ONE_V19_HYDRO_TERRAIN_MARRIAGE_EXPANSION_ATTACK_QUADA_v1";
 
-      const NEXT_TERRAIN_TNT = "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1";
-      const NEXT_TARGET = "/world/render/planet-one.terrain.render.js";
+      const TARGETS = {
+        hydration: "/world/render/planet-one.hydration.render.js",
+        terrain: "/world/render/planet-one.terrain.render.js",
+        asset: "/assets/showroom.globe.instrument.js",
+        route: "/showroom/globe/",
+        renderer: "/world/render/planet-one.render.js",
+        gauges: "/gauges/"
+      };
 
       const CHECKS = {
-        terrain: {
-          label: "Terrain renderer · current lock",
-          path: "/world/render/planet-one.terrain.render.js",
+        hydration: {
+          label: "Hydration engine · source",
+          path: TARGETS.hydration,
           required: [
-            "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
-            "window.DGBPlanetOneTerrainRender",
-            "createTerrainLayer",
-            "ancient-39b-crust-engine-active=true",
-            "pressure-formed-crust-active=true",
-            "tectonic-scar-network-active=true",
-            "raw-material-strata-active=true",
-            "terrain-contained-to-land=true"
-          ],
-          future: [
-            NEXT_TERRAIN_TNT
+            "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1",
+            "window.DGBPlanetOneHydrationRender",
+            "createHydrationLayer",
+            "hydration-engine-active=true",
+            "hydro-terrain-marriage-active=true",
+            "ocean-depth-field-active=true",
+            "shoreline-wetness-active=true",
+            "river-basin-system-active=true",
+            "lake-catchment-system-active=true",
+            "glacier-field-active=true",
+            "terrain-water-adhesion-active=true"
           ]
         },
 
-        renderer: {
-          label: "Main renderer · source chain lock",
-          path: "/world/render/planet-one.render.js",
+        terrain: {
+          label: "Terrain engine · V4 pair",
+          path: TARGETS.terrain,
           required: [
-            "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
-            "window.DGBPlanetOneRenderTeam",
-            "renderPlanetOne",
-            "optimum-expression-only-active=true",
-            "terrain-render-authority=/world/render/planet-one.terrain.render.js",
-            "terrain-module-integrated=true",
-            "ancient-39b-crust-engine-active=true",
-            "planet-one-realism-pass=v8-axis-spin-climate-topology",
-            "axis-spin-active=true",
-            "climate-topology-active=true",
-            "weather-circulation-active=true",
-            "ocean-current-logic-active=true"
-          ],
-          future: []
+            "PLANET_ONE_TERRAIN_RENDER_V2_ANCIENT_39B_CRUST_ENGINE_TNT_v1",
+            "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1",
+            "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1",
+            "window.DGBPlanetOneTerrainRender",
+            "createTerrainLayer",
+            "hydration-engine-paired=true",
+            "hydro-terrain-marriage-active=true",
+            "terrain-water-adhesion-active=true",
+            "shoreline-marriage-active=true",
+            "mountains-canyons-rivers-lakes-glaciers-ready=true",
+            "terrain-contained-to-land=true",
+            "land-water-separation-quota-preserved=true"
+          ]
         },
 
-        instrument: {
-          label: "Asset instrument · boot chain lock",
-          path: "/assets/showroom.globe.instrument.js",
+        asset: {
+          label: "Asset instrument · hydration awareness",
+          path: TARGETS.asset,
           required: [
             "SHOWROOM_GLOBE_INSTRUMENT_PLANET_ONE_V16_TERRAIN_FIRST_OPTIMUM_PAIR_TNT_v1",
             "window.DGBShowroomGlobeInstrument",
@@ -703,16 +717,19 @@
             "loadTerrainRenderer",
             "loadMainRendererAfterTerrain",
             "terrainFirstLoadOrder",
-            "optimumExpressionOnly",
-            "noCompetingGlobeSurface",
-            "drawsOwnPlanet"
+            "optimumExpressionOnly"
           ],
-          future: []
+          expanded: [
+            "/world/render/planet-one.hydration.render.js",
+            "loadHydrationRenderer",
+            "hydrationFirstLoadOrder",
+            "hydroTerrainMarriage"
+          ]
         },
 
         route: {
-          label: "Inspection route · boot proof lock",
-          path: "/showroom/globe/",
+          label: "Inspection route · hydration proof",
+          path: TARGETS.route,
           required: [
             "SHOWROOM_GLOBE_V17_TERRAIN_FIRST_ROUTE_BOOT_TNT_v1",
             "Planet 1 inspection room",
@@ -724,20 +741,50 @@
             "/world/render/planet-one.render.js",
             "terrain-first-load-order=true"
           ],
-          future: []
+          expanded: [
+            "/world/render/planet-one.hydration.render.js",
+            "hydration-engine-required=true",
+            "hydro-terrain-marriage-active=true",
+            "hydration-first-or-before-terrain=true"
+          ]
+        },
+
+        renderer: {
+          label: "Main renderer · hydration composition awareness",
+          path: TARGETS.renderer,
+          required: [
+            "PLANET_ONE_RENDER_V15_OPTIMUM_EXPRESSION_ONLY_TNT_v1",
+            "window.DGBPlanetOneRenderTeam",
+            "renderPlanetOne",
+            "terrain-render-authority=/world/render/planet-one.terrain.render.js",
+            "terrain-module-integrated=true",
+            "ancient-39b-crust-engine-active=true",
+            "axis-spin-active=true",
+            "climate-topology-active=true",
+            "weather-circulation-active=true",
+            "ocean-current-logic-active=true"
+          ],
+          expanded: [
+            "hydration-render-authority=/world/render/planet-one.hydration.render.js",
+            "hydration-module-integrated=true",
+            "hydro-terrain-marriage-active=true",
+            "terrain-water-adhesion-active=true"
+          ]
         },
 
         gauges: {
-          label: "Gauges · forward frame",
-          path: "/gauges/",
+          label: "Gauges · V19 diagnostic",
+          path: TARGETS.gauges,
           required: [
             VERSION,
             CONTRACT,
-            "Forward Progress Construct",
-            "source chain is trusted",
-            "PLANET_ONE_TERRAIN_RENDER_V3_VISUAL_39B_CRUST_REALISM_TNT_v1"
-          ],
-          future: []
+            "Hydro-Terrain Marriage Diagnostic",
+            "hydration engine",
+            "terrain V4 pair",
+            "asset boot awareness",
+            "route hydration proof",
+            "renderer composition awareness"
+          ]
         }
       };
 
@@ -790,47 +837,43 @@
         return String(source || "").indexOf(marker) !== -1;
       }
 
-      function rows(markers, source, future) {
-        return markers.map(function one(marker) {
+      function makeRows(markers, source, type) {
+        return (markers || []).map(function markerRow(marker) {
           return {
             marker,
             ok: has(source, marker),
-            future: Boolean(future)
+            type: type || "required"
           };
         });
       }
 
       function summarize(rows) {
-        const requiredRows = rows.filter(function row(item) {
-          return !item.future;
-        });
-
-        const total = requiredRows.length;
-        const passed = requiredRows.filter(function row(item) {
-          return item.ok;
-        }).length;
+        const total = rows.length;
+        const passed = rows.filter(function item(row) { return row.ok; }).length;
 
         return {
           total,
           passed,
           score: total ? Math.round((passed / total) * 100) : 100,
-          missing: requiredRows.filter(function row(item) {
-            return !item.ok;
-          }).map(function item(row) {
-            return row.marker;
-          })
+          missing: rows.filter(function item(row) { return !row.ok; }).map(function item(row) { return row.marker; })
         };
       }
 
       function evaluate(key, spec, fetched) {
-        const requiredRows = rows(spec.required || [], fetched.text, false);
-        const futureRows = rows(spec.future || [], fetched.text, true);
-        const requiredSummary = summarize(requiredRows);
+        const requiredRows = makeRows(spec.required || [], fetched.text, "required");
+        const expandedRows = makeRows(spec.expanded || [], fetched.text, "expanded");
 
-        const requiredPass = fetched.ok && requiredSummary.score === 100;
-        const futureReady = futureRows.length
-          ? futureRows.every(function item(row) { return row.ok; })
-          : null;
+        const requiredSummary = summarize(requiredRows);
+        const expandedSummary = summarize(expandedRows);
+
+        const requiredPass = Boolean(fetched.ok && requiredSummary.score === 100);
+        const expandedPass = expandedRows.length ? expandedSummary.score === 100 : true;
+
+        let status = "PASS";
+
+        if (!fetched.ok) status = "FAIL";
+        else if (!requiredPass) status = "FAIL";
+        else if (!expandedPass) status = "HOLD";
 
         return {
           key,
@@ -841,11 +884,12 @@
           error: fetched.error || null,
           text: fetched.text,
           requiredRows,
-          futureRows,
+          expandedRows,
           requiredSummary,
+          expandedSummary,
           requiredPass,
-          futureReady,
-          status: !fetched.ok ? "FAIL" : requiredPass ? "PASS" : "HOLD"
+          expandedPass,
+          status
         };
       }
 
@@ -879,8 +923,9 @@
       }
 
       function markerHtml(row) {
-        const dotClass = row.ok ? "pass" : row.future ? "next" : "fail";
-        const label = row.future && !row.ok ? "NEXT: " : "";
+        const dotClass = row.ok ? "pass" : row.type === "expanded" ? "next" : "fail";
+        const label = row.type === "expanded" && !row.ok ? "EXPAND: " : "";
+
         return [
           '<div class="marker">',
             '<span class="dot ' + dotClass + '" aria-hidden="true"></span>',
@@ -890,135 +935,157 @@
       }
 
       function cardHtml(result) {
-        const futureAbsent = result.futureRows.some(function item(row) {
-          return !row.ok;
-        });
-
-        const cardStatus = result.requiredPass ? (futureAbsent ? "NEXT" : "PASS") : result.status;
-
+        const status = result.status;
         const httpLine = result.httpOk
-          ? "HTTP " + result.httpStatus + ". Required source checks: " + result.requiredSummary.passed + " of " + result.requiredSummary.total + "."
+          ? "HTTP " + result.httpStatus + ". Required: " + result.requiredSummary.passed + " of " + result.requiredSummary.total + ". Expanded: " + result.expandedSummary.passed + " of " + result.expandedSummary.total + "."
           : "HTTP " + result.httpStatus + ". " + (result.error || "fetch failed");
 
         return [
           '<article class="check-card">',
             '<div class="check-title">',
               '<h3>' + escapeHtml(result.label) + '</h3>',
-              '<span class="pill ' + className(cardStatus) + '">' + cardStatus + '</span>',
+              '<span class="pill ' + className(status) + '">' + status + '</span>',
             '</div>',
             '<div><code>' + escapeHtml(result.path) + '</code></div>',
             '<div class="mono">' + escapeHtml(httpLine) + '</div>',
             '<div class="marker-list">',
               result.requiredRows.map(markerHtml).join(""),
-              result.futureRows.length ? result.futureRows.map(markerHtml).join("") : "",
+              result.expandedRows.length ? result.expandedRows.map(markerHtml).join("") : "",
             '</div>',
           '</article>'
         ].join("");
       }
 
       function decide(results) {
-        const list = Object.keys(results).map(function key(k) { return results[k]; });
-        const chainPass = ["terrain", "renderer", "instrument", "route"].every(function key(name) {
-          return results[name] && results[name].requiredPass;
-        });
-
-        const gaugesPass = results.gauges && results.gauges.requiredPass;
-        const v3Present = results.terrain && results.terrain.futureRows.length && results.terrain.futureRows.every(function row(item) {
-          return item.ok;
-        });
-
-        const firstBroken = list.find(function item(result) {
-          return !result.requiredPass;
-        });
-
-        if (!gaugesPass) {
+        if (!results.gauges || !results.gauges.requiredPass) {
           return {
             progress: "HOLD",
-            chain: chainPass ? "PASS" : "HOLD",
-            frame: "GAUGES",
-            visual: "WAIT",
+            hydration: results.hydration && results.hydration.requiredPass ? "PASS" : "WAIT",
+            marriage: "WAIT",
+            boot: "WAIT",
             next: "/gauges/index.html",
-            title: "Gauges frame is not fully self-proving.",
-            text: "Renew Gauges if the forward-progress contract does not serve correctly."
+            title: "Gauges V19 is not fully self-proving.",
+            text: "Renew Gauges before trusting hydro-terrain readings.",
+            code: "GAUGES_SELF_CHECK_HOLD"
           };
         }
 
-        if (!chainPass && firstBroken) {
+        if (!results.hydration || !results.hydration.requiredPass) {
           return {
             progress: "HOLD",
-            chain: "HOLD",
-            frame: "REPAIR",
-            visual: "WAIT",
-            next: firstBroken.path,
-            title: "A settled source check broke.",
-            text: "The forward frame must pause because a required chain file is no longer proving its lock."
+            hydration: "FAIL",
+            marriage: "WAIT",
+            boot: "WAIT",
+            next: TARGETS.hydration,
+            title: "Hydration file is missing or incomplete.",
+            text: "The hydro-terrain frame cannot proceed until the hydration engine is served and exposes createHydrationLayer.",
+            code: "HYDRATION_FILE_MISSING"
           };
         }
 
-        if (v3Present) {
+        if (!results.terrain || !results.terrain.requiredPass) {
           return {
-            progress: "PASS",
-            chain: "PASS",
-            frame: "V3 ACTIVE",
-            visual: "REVIEW",
-            next: "/showroom/globe/",
-            title: "V3 terrain frame is present.",
-            text: "The source chain and V3 terrain marker are both present. The next task is visual review on the inspection route."
+            progress: "HOLD",
+            hydration: "PASS",
+            marriage: "FAIL",
+            boot: "WAIT",
+            next: TARGETS.terrain,
+            title: "Terrain V4 marriage pair is missing or incomplete.",
+            text: "The terrain file must prove the V4 hydro-terrain marriage markers before route or renderer work can be trusted.",
+            code: "TERRAIN_V4_MISSING"
+          };
+        }
+
+        if (!results.asset || !results.asset.requiredPass || !results.asset.expandedPass) {
+          return {
+            progress: "HOLD",
+            hydration: "PASS",
+            marriage: "PASS",
+            boot: "HOLD",
+            next: TARGETS.asset,
+            title: "Asset boot is not hydration-aware.",
+            text: "Hydration and terrain are present, but the asset instrument does not prove hydration loading before terrain/render composition.",
+            code: "ASSET_BOOT_NOT_HYDRATION_AWARE"
+          };
+        }
+
+        if (!results.route || !results.route.requiredPass || !results.route.expandedPass) {
+          return {
+            progress: "HOLD",
+            hydration: "PASS",
+            marriage: "PASS",
+            boot: "HOLD",
+            next: "/showroom/globe/index.html",
+            title: "Inspection route is not hydration-aware.",
+            text: "The route still proves terrain-first boot, but not hydration-first or hydro-terrain boot.",
+            code: "ROUTE_NOT_HYDRATION_AWARE"
+          };
+        }
+
+        if (!results.renderer || !results.renderer.requiredPass || !results.renderer.expandedPass) {
+          return {
+            progress: "HOLD",
+            hydration: "PASS",
+            marriage: "PASS",
+            boot: "PASS",
+            next: TARGETS.renderer,
+            title: "Main renderer is not hydration-aware.",
+            text: "The renderer passes the older terrain contract but does not yet acknowledge hydration composition.",
+            code: "RENDERER_NOT_HYDRATION_AWARE"
           };
         }
 
         return {
           progress: "PASS",
-          chain: "PASS",
-          frame: "V2 LOCKED",
-          visual: "NEXT",
-          next: NEXT_TARGET,
-          title: "The system is ready for the next terrain visual frame.",
-          text: "The chain is trusted. The absence of V3 is not a failure; it means the next lawful TNT is the terrain visual realism renewal."
+          hydration: "PASS",
+          marriage: "PASS",
+          boot: "PASS",
+          next: "/showroom/globe/",
+          title: "Hydro-terrain source chain passes. Visual review is next.",
+          text: "Hydration, terrain, asset, route, and renderer all prove the hydro-terrain marriage source frame. Inspect the globe visually before weather.",
+          code: "HYDRO_TERRAIN_SOURCE_PASS_VISUAL_REVIEW"
         };
       }
 
       function render(results, decision) {
-        $("checksGrid").innerHTML = Object.keys(results).map(function key(k) {
-          return cardHtml(results[k]);
+        $("checksGrid").innerHTML = Object.keys(results).map(function map(key) {
+          return cardHtml(results[key]);
         }).join("");
 
-        setScore("scoreProgress", decision.progress, decision.progress === "PASS" ? "PASS" : "HOLD");
-        setScore("scoreChain", decision.chain, decision.chain === "PASS" ? "PASS" : "HOLD");
-        setScore("scoreFrame", decision.frame, decision.frame === "V2 LOCKED" ? "NEXT" : "PASS");
-        setScore("scoreVisual", decision.visual, decision.visual === "NEXT" ? "NEXT" : "HOLD");
-        setScore("scoreNext", decision.next, decision.next === NEXT_TARGET ? "NEXT" : "HOLD");
+        setScore("scoreProgress", decision.progress, decision.progress);
+        setScore("scoreHydration", decision.hydration, decision.hydration);
+        setScore("scoreMarriage", decision.marriage, decision.marriage);
+        setScore("scoreBoot", decision.boot, decision.boot);
+        setScore("scoreNext", decision.next, decision.progress === "PASS" ? "PASS" : "NEXT");
 
-        setPill("auditStatus", decision.progress === "PASS" ? "PASS" : "HOLD");
-        setPill("frameStatus", decision.visual === "NEXT" ? "NEXT" : "PASS");
-        setPill("decisionStatus", decision.visual === "NEXT" ? "NEXT" : decision.progress);
+        setPill("auditStatus", decision.progress);
+        setPill("checksStatus", decision.progress === "PASS" ? "PASS" : "HOLD");
+        setPill("decisionStatus", decision.progress === "PASS" ? "PASS" : "NEXT");
 
         $("currentRead").textContent = decision.text;
         $("decisionText").textContent = decision.title;
 
         $("decisionMono").textContent = [
+          "DIAGNOSTIC_CODE=" + decision.code,
           "PROGRESS_STATE=" + decision.progress,
-          "CHAIN_LOCK=" + decision.chain,
-          "CURRENT_FRAME=" + decision.frame,
-          "VISUAL_TARGET=" + decision.visual,
+          "HYDRATION_STATE=" + decision.hydration,
+          "MARRIAGE_FRAME=" + decision.marriage,
+          "BOOT_AWARENESS=" + decision.boot,
           "NEXT_TARGET=" + decision.next,
-          "NEXT_TNT=" + NEXT_TERRAIN_TNT,
-          "RULE=Future marker absence means NEXT, not FAIL."
+          "RULE=Measure hydration participation before weather or further visual terrain work."
         ].join("\n");
 
-        window.DGBPlanetOneGaugesV18 = Object.freeze({
+        window.DGBPlanetOneGaugesV19 = Object.freeze({
           VERSION,
           CONTRACT,
-          NEXT_TERRAIN_TNT,
-          NEXT_TARGET,
+          TARGETS,
           results,
           decision,
           getStatus: function getStatus() {
             return {
               version: VERSION,
               contract: CONTRACT,
-              nextTerrainTnt: NEXT_TERRAIN_TNT,
-              nextTarget: NEXT_TARGET,
+              targets: TARGETS,
               results,
               decision
             };
@@ -1027,18 +1094,18 @@
       }
 
       function runAudit() {
-        $("currentRead").textContent = "Running forward-frame audit. The chain is rechecked, but future-marker absence will be treated as NEXT.";
+        $("currentRead").textContent = "Running hydro-terrain audit. Measuring hydration, terrain V4, asset boot awareness, route proof, and renderer composition awareness.";
 
         const keys = Object.keys(CHECKS);
 
-        return Promise.all(keys.map(function key(k) {
-          return fetchText(CHECKS[k].path).then(function fetched(result) {
-            return evaluate(k, CHECKS[k], result);
+        return Promise.all(keys.map(function each(key) {
+          return fetchText(CHECKS[key].path).then(function finish(fetched) {
+            return evaluate(key, CHECKS[key], fetched);
           });
         })).then(function done(list) {
           const results = {};
 
-          list.forEach(function item(result) {
+          list.forEach(function assign(result) {
             results[result.key] = result;
           });
 
@@ -1053,7 +1120,7 @@
       }
 
       $("runAuditButton").addEventListener("click", runAudit);
-      window.DGBRunPlanetOneForwardFrameGauges = runAudit;
+      window.DGBRunPlanetOneHydroTerrainMarriageGauges = runAudit;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", runAudit, { once: true });

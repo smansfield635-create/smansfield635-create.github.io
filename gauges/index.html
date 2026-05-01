@@ -1,1531 +1,534 @@
 <!doctype html>
-<html
-  lang="en"
-  data-page="gauges"
-  data-gauge-contract="GAUGES_PLANET_ONE_V22C_PROOF_NORMALIZATION_TNT_v1"
-  data-previous-gauge-contract="GAUGES_PLANET_ONE_V22B_RUNTIME_FRAME_BIND_FIX_TNT_v1"
-  data-full-scope-adversarial-audit="true"
-  data-proof-normalization="true"
-  data-does-not-render-planet="true"
->
+<html lang="en" data-page="gauges" data-estate="rich-manor-and-estate" data-construct-class="house" data-house-part="gauges" data-gauges-contract="B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <title>Diamond Gate Bridge · Gauges · Planet 1 Proof Normalization</title>
-  <meta
-    name="description"
-    content="Planet 1 full-scope Gauges with normalized proof matching for route, asset, renderer, terrain, hydration, mount, and leakage."
-  >
-
-  <!--
-    GAUGES_PLANET_ONE_V22C_PROOF_NORMALIZATION_TNT_v1
-    GAUGES_PLANET_ONE_V22B_RUNTIME_FRAME_BIND_FIX_TNT_v1
-    GAUGES_PLANET_ONE_V22_FULL_SCOPE_ADVERSARIAL_AUDIT_TNT_v1
-    GAUGES_PLANET_ONE_V21D_TERMINAL_CHAIN_OBSERVER_TNT_v1
-
-    TARGET=/gauges/index.html
-
-    PURPOSE=
-    FIX_FALSE_NEGATIVE_PROOF_MATCHING
-    ACCEPT_CAMELCASE_TRUE
-    ACCEPT_JSON_QUOTED_BOOLEAN_TRUE
-    ACCEPT_DATA_KEBAB_TRUE
-    ACCEPT_VISIBLE_PROOF_TEXT
-    ACCEPT_MOUNT_DATASET_PROOF
-    AUDIT_EVERY_FILE_THAT_MATTERS
-    CONFIRM_ROUTE_V22D
-    CONFIRM_ASSET_V21
-    CONFIRM_RENDERER_V18B_V19_V20
-    CONFIRM_TERRAIN_V5
-    CONFIRM_HYDRATION_V1
-    CONFIRM_MOUNT_COMPLETE
-    CONFIRM_NO_OLD_EXPRESSION_LEAKAGE
-
-    RULE=
-    Gauges measure only. Gauges do not draw the planet.
-  -->
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gauges · Split Render Chain Diagnostic · Diamond Gate Bridge</title>
+  <meta name="description" content="Gauges diagnostic instrument room for Diamond Gate Bridge, including Planet 1 split render chain contract measurement.">
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #05070d;
-      --panel: rgba(255,255,255,.055);
-      --line: rgba(168,199,255,.18);
-      --line2: rgba(242,199,111,.42);
-      --text: rgba(246,248,255,.93);
-      --muted: rgba(226,232,246,.68);
-      --soft: rgba(226,232,246,.52);
-      --gold: #f2c76f;
-      --green: #8fe3b0;
-      --blue: #91bdff;
-      --red: #ff9b9b;
-      --max: 1180px;
-      --radius: 28px;
-      --shadow: 0 28px 80px rgba(0,0,0,.52);
+    :root{
+      color-scheme:dark;
+      --bg:#05070d;
+      --panel:rgba(255,255,255,.055);
+      --panel2:rgba(255,255,255,.085);
+      --line:rgba(176,205,255,.18);
+      --text:rgba(246,248,255,.92);
+      --muted:rgba(218,227,255,.66);
+      --pass:#8ff5d2;
+      --warn:#ffd284;
+      --fail:#ff9a8a;
+      --hold:#b9c5ff;
+      --none:#a7adbd;
+      --accent:#93e8ff;
     }
-
-    * { box-sizing: border-box; }
-
-    html {
-      min-height: 100%;
-      background:
-        radial-gradient(circle at 50% -12%, rgba(145,189,255,.16), transparent 34rem),
-        radial-gradient(circle at 15% 18%, rgba(242,199,111,.09), transparent 23rem),
-        radial-gradient(circle at 88% 26%, rgba(143,227,176,.07), transparent 24rem),
-        linear-gradient(180deg,#07101f 0%,var(--bg) 44%,#02030a 100%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body { margin: 0; color: var(--text); }
-    a { color: inherit; text-decoration: none; }
-    a:hover { color: var(--gold); }
-
-    .skip-link {
-      position: absolute;
-      left: -999px;
-      top: 10px;
-      z-index: 20;
-      border: 1px solid var(--line2);
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: #101725;
-      color: var(--text);
-      font-weight: 900;
-    }
-
-    .skip-link:focus { left: 12px; }
-
-    .site-shell {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 50px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 28px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255,255,255,.045);
-      box-shadow: 0 18px 50px rgba(0,0,0,.22);
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: fit-content;
-      font-weight: 950;
-      letter-spacing: -.03em;
-    }
-
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 12px;
-      border: 1px solid rgba(242,199,111,.48);
-      background:
-        linear-gradient(135deg, rgba(242,199,111,.9), rgba(145,189,255,.45)),
-        radial-gradient(circle at 35% 30%, #fff, transparent 40%);
-      box-shadow: 0 0 36px rgba(242,199,111,.18);
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    nav a {
-      border: 1px solid rgba(168,199,255,.16);
-      border-radius: 999px;
-      padding: 8px 10px;
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 850;
-    }
-
-    nav a[aria-current="page"] {
-      border-color: var(--line2);
-      color: var(--gold);
-      background: rgba(242,199,111,.065);
-    }
-
-    .hero,
-    .panel,
-    .score-card,
-    .check-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .hero {
-      padding: clamp(24px,5vw,52px);
-      background:
-        radial-gradient(circle at 78% 20%, rgba(242,199,111,.12), transparent 20rem),
-        radial-gradient(circle at 18% 18%, rgba(145,189,255,.15), transparent 23rem),
-        rgba(255,255,255,.045);
-    }
-
-    .kicker {
-      color: var(--gold);
-      font-size: .78rem;
-      font-weight: 950;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      max-width: 980px;
-      margin: 12px 0;
-      font-size: clamp(2.35rem,7vw,5.25rem);
-      line-height: .94;
-      letter-spacing: -.075em;
-    }
-
-    .lead {
-      max-width: 900px;
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem,2.4vw,1.25rem);
-      line-height: 1.55;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(242,199,111,.46);
-      border-radius: 999px;
-      padding: 11px 15px;
-      background: linear-gradient(180deg, rgba(242,199,111,.18), rgba(242,199,111,.04));
-      color: #fff4d3;
-      font-weight: 950;
-      cursor: pointer;
-    }
-
-    .button.secondary {
-      border-color: rgba(168,199,255,.22);
-      background: rgba(255,255,255,.045);
-      color: var(--text);
-    }
-
-    main {
-      display: grid;
-      gap: 20px;
-      margin-top: 22px;
-    }
-
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(6,minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .score-card {
-      min-height: 126px;
-      padding: 18px;
-      display: grid;
-      align-content: space-between;
-      gap: 12px;
-      box-shadow: 0 18px 54px rgba(0,0,0,.26);
-    }
-
-    .score-card span {
-      color: var(--muted);
-      font-size: .72rem;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .score-card strong {
-      display: block;
-      font-size: clamp(1.15rem,3vw,2rem);
-      line-height: .98;
-      letter-spacing: -.055em;
-      overflow-wrap: anywhere;
-    }
-
-    .good strong { color: var(--green); }
-    .next strong { color: var(--gold); }
-    .hold strong { color: var(--blue); }
-    .bad strong { color: var(--red); }
-
-    .panel {
-      padding: clamp(18px,3vw,28px);
-      box-shadow: 0 18px 54px rgba(0,0,0,.26);
-    }
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.35rem,3vw,2rem);
-      line-height: 1.05;
-      letter-spacing: -.055em;
-    }
-
-    .panel p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 10px;
-      color: var(--muted);
-      font-size: .7rem;
-      font-weight: 950;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .pill.pass {
-      border-color: rgba(143,227,176,.45);
-      color: var(--green);
-      background: rgba(143,227,176,.06);
-    }
-
-    .pill.next {
-      border-color: rgba(242,199,111,.45);
-      color: var(--gold);
-      background: rgba(242,199,111,.06);
-    }
-
-    .pill.hold {
-      border-color: rgba(145,189,255,.45);
-      color: var(--blue);
-      background: rgba(145,189,255,.06);
-    }
-
-    .pill.fail {
-      border-color: rgba(255,155,155,.45);
-      color: var(--red);
-      background: rgba(255,155,155,.06);
-    }
-
-    .checks-grid {
-      display: grid;
-      grid-template-columns: repeat(2,minmax(0,1fr));
-      gap: 14px;
-    }
-
-    .check-card {
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.062), rgba(255,255,255,.025));
-      box-shadow: 0 18px 54px rgba(0,0,0,.18);
-    }
-
-    .check-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .check-title h3 {
-      margin: 0;
-      font-size: 1.04rem;
-      line-height: 1.2;
-      letter-spacing: -.035em;
-      overflow-wrap: anywhere;
-    }
-
-    code {
-      color: rgba(255,244,211,.94);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      overflow-wrap: anywhere;
-    }
-
-    .mono {
-      margin-top: 12px;
-      border: 1px solid rgba(168,199,255,.14);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(0,0,0,.16);
-      color: var(--soft);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: .78rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .marker-list {
-      display: grid;
-      gap: 7px;
-      margin-top: 12px;
-    }
-
-    .marker {
-      display: grid;
-      grid-template-columns: 24px minmax(0,1fr);
-      gap: 8px;
-      color: var(--muted);
-      font-size: .84rem;
-      line-height: 1.35;
-    }
-
-    .dot {
-      width: 16px;
-      height: 16px;
-      margin-top: 1px;
-      border-radius: 999px;
-      border: 1px solid rgba(168,199,255,.24);
-      background: rgba(255,255,255,.05);
-    }
-
-    .dot.pass { border-color: rgba(143,227,176,.6); background: rgba(143,227,176,.28); }
-    .dot.next { border-color: rgba(242,199,111,.6); background: rgba(242,199,111,.22); }
-    .dot.fail { border-color: rgba(255,155,155,.6); background: rgba(255,155,155,.22); }
-
-    .observer-frame {
-      width: 100%;
-      min-height: 540px;
-      border: 1px solid rgba(168,199,255,.18);
-      border-radius: 24px;
-      background: rgba(0,0,0,.22);
-    }
-
-    footer {
-      margin-top: 24px;
-      padding: 18px 4px;
-      color: var(--soft);
-      font-size: .84rem;
-      text-align: center;
-    }
-
-    @media (max-width: 1100px) {
-      .score-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
-    }
-
-    @media (max-width: 960px) {
-      .topbar {
-        align-items: flex-start;
-        border-radius: 26px;
-        flex-direction: column;
-      }
-
-      nav { justify-content: flex-start; }
-      .checks-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 540px) {
-      .site-shell {
-        width: min(100% - 18px,var(--max));
-        padding-top: 12px;
-      }
-
-      .hero,
-      .panel { border-radius: 24px; }
-
-      .panel-head { display: grid; }
-      .score-grid { grid-template-columns: 1fr; }
-      .observer-frame { min-height: 430px; }
-    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 28% 0%,rgba(65,118,179,.22),transparent 34%),radial-gradient(circle at 86% 16%,rgba(137,232,235,.12),transparent 31%),linear-gradient(180deg,#07101d 0%,#02040a 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    .skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}.skip:focus{left:8px}
+    .shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:24px 0 42px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0 20px;border-bottom:1px solid var(--line)}
+    .brand{font-weight:950;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;color:rgba(248,251,255,.84)}
+    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    nav a{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:850;color:rgba(242,247,255,.72)}
+    nav a[aria-current="page"]{border-color:rgba(147,232,255,.42);color:var(--accent)}
+    .hero{display:grid;gap:14px;padding:34px 0 22px}
+    .kicker{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:950}
+    h1{font-size:clamp(2rem,5vw,4.5rem);line-height:.95;margin:0;letter-spacing:-.07em;max-width:980px}
+    p.lede{margin:0;max-width:820px;color:var(--muted);font-size:1rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    button,.button{border:1px solid rgba(147,232,255,.28);background:linear-gradient(180deg,rgba(147,232,255,.18),rgba(147,232,255,.06));color:var(--text);border-radius:14px;padding:11px 14px;font-weight:950;letter-spacing:.03em;cursor:pointer}
+    button.secondary,.button.secondary{border-color:var(--line);background:rgba(255,255,255,.055);color:rgba(242,247,255,.78)}
+    .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}
+    @media(max-width:860px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}nav{justify-content:flex-start}}
+    @media(max-width:560px){.summary{grid-template-columns:1fr}.shell{width:min(100% - 20px,1180px)}}
+    .metric,.panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:22px;box-shadow:0 20px 80px rgba(0,0,0,.26)}
+    .metric{padding:16px}
+    .metric b{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .metric strong{font-size:1.35rem;letter-spacing:-.02em}
+    .status{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:.67rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+    .status::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--none)}
+    .status.pass{color:var(--pass);border-color:rgba(143,245,210,.35)}.status.pass::before{background:var(--pass)}
+    .status.warn{color:var(--warn);border-color:rgba(255,210,132,.35)}.status.warn::before{background:var(--warn)}
+    .status.fail{color:var(--fail);border-color:rgba(255,154,138,.35)}.status.fail::before{background:var(--fail)}
+    .status.hold{color:var(--hold);border-color:rgba(185,197,255,.35)}.status.hold::before{background:var(--hold)}
+    .status.not_tested{color:var(--none)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .panel{padding:16px;min-height:180px}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
+    .panel h2{font-size:1rem;margin:0;letter-spacing:-.02em}
+    .panel small{display:block;color:var(--muted);margin-top:3px}
+    .facts{display:grid;gap:6px}
+    .fact{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.3fr);gap:10px;border-bottom:1px solid rgba(176,205,255,.08);padding:7px 0}
+    .fact span:first-child{color:rgba(218,227,255,.62);font-size:.75rem;font-weight:850}
+    .fact span:last-child{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.73rem;color:rgba(246,248,255,.86);word-break:break-word}
+    .wide{grid-column:1/-1}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;font-size:.75rem;color:rgba(234,242,255,.82);background:rgba(0,0,0,.25);border:1px solid rgba(176,205,255,.12);border-radius:16px;padding:12px;max-height:340px;overflow:auto}
+    .hidden-mount{position:absolute;left:-99999px;top:auto;width:420px;height:420px;overflow:hidden;opacity:.01;pointer-events:none}
+    .receipt{margin-top:18px;border:1px solid rgba(147,232,255,.22);background:rgba(147,232,255,.055);border-radius:20px;padding:14px}
+    .footer{margin-top:28px;color:rgba(218,227,255,.58);font-size:.8rem}
+    .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .route-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .route-links a{border:1px solid var(--line);border-radius:999px;padding:6px 9px;color:rgba(242,247,255,.70);font-size:.72rem;font-weight:850;background:rgba(255,255,255,.04)}
   </style>
 </head>
-
 <body>
-  <a class="skip-link" href="#gauges-main">Skip to Gauges</a>
-
-  <div class="site-shell">
-    <header class="topbar" aria-label="Site navigation">
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
-      </a>
-
+  <a class="skip" href="#gauges-content">Skip to Gauges content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">Diamond Gate Bridge Dexter Lab · Measurement Key</a>
       <nav aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Planet 1</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
+        <a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/showroom/globe/">Planet 1</a><a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" id="gauges-main">
-      <div class="kicker">H6 · Gauges · Planet 1 Proof Normalization</div>
-      <h1>Measure proof in every valid form.</h1>
-      <p class="lead">
-        V22C removes false negatives by accepting proof from JSON, camelCase, data attributes, visible text, and mounted DOM. Gauges still measure only.
-      </p>
-
-      <div class="actions">
-        <button class="button" type="button" id="runAudit">Run full scope audit</button>
-        <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
-        <a class="button secondary" href="/governance/runtime/">Open Runtime Panel</a>
-      </div>
-    </section>
-
-    <main>
-      <section class="score-grid" aria-label="Gauge summary">
-        <article class="score-card" id="scoreBoot"><span>Gauge boot</span><strong>STATIC</strong></article>
-        <article class="score-card" id="scoreSource"><span>Source scope</span><strong>WAIT</strong></article>
-        <article class="score-card" id="scoreRoute"><span>Route runtime</span><strong>WAIT</strong></article>
-        <article class="score-card" id="scoreAsset"><span>Asset proof</span><strong>WAIT</strong></article>
-        <article class="score-card" id="scoreRenderer"><span>Renderer proof</span><strong>WAIT</strong></article>
-        <article class="score-card" id="scoreNext"><span>Next target</span><strong>WAIT</strong></article>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Current read</h2>
-            <p id="currentRead">Static HTML loaded. JavaScript boot has not yet been proven.</p>
-          </div>
-          <span class="pill hold" id="overallStatus">STATIC</span>
+    <main id="gauges-content">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="kicker">H6 · Gauges · Split Render Chain Diagnostic</div>
+        <h1 id="page-title">Gauges Diagnostic Instrument Room</h1>
+        <p class="lede">Measures the estate field and the Planet 1 split render chain without repairing, rendering, or hiding gaps. Mount health, chain health, visual readiness, and generation readiness are intentionally separate.</p>
+        <div class="actions">
+          <button type="button" id="run-diagnostic">Run split-chain diagnostic</button>
+          <button type="button" id="run-estate" class="secondary">Run estate route diagnostic</button>
+          <a class="button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
         </div>
-
-        <div class="mono" id="decisionMono">DIAGNOSTIC_CODE=STATIC_HTML_ONLY</div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Gauges boot log</h2>
-            <p>This Gauge audits normalized proof. It does not render or repair the planet.</p>
-          </div>
-          <span class="pill hold" id="bootStatus">STATIC</span>
+        <div class="legend" aria-label="Status legend">
+          <span class="status pass">PASS</span><span class="status warn">WARN</span><span class="status fail">FAIL</span><span class="status hold">HOLD</span><span class="status not_tested">NOT TESTED</span>
         </div>
-
-        <div class="mono" id="bootLog">BOOT_LOG=STATIC_HTML_RENDERED</div>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Source checks</h2>
-            <p>These verify that each served file contains the expected contract markers.</p>
-          </div>
-          <span class="pill hold" id="sourceStatus">WAIT</span>
-        </div>
-
-        <div class="checks-grid" id="sourceChecks"></div>
+      <section class="summary" aria-label="Estate health summary">
+        <div class="metric"><b>Overall health</b><strong id="overall-health">NOT TESTED</strong></div>
+        <div class="metric"><b>Generation readiness</b><strong id="generation-readiness">NOT READY</strong></div>
+        <div class="metric"><b>Next controlling gap</b><strong id="next-gap">UNKNOWN</strong></div>
+        <div class="metric"><b>Required next TNT</b><strong id="next-tnt">Run diagnostic</strong></div>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Runtime checks</h2>
-            <p>These inspect the live Planet 1 route through a same-origin observer frame.</p>
-          </div>
-          <span class="pill hold" id="runtimeStatus">WAIT</span>
-        </div>
-
-        <div class="checks-grid" id="runtimeChecks"></div>
+      <section class="grid" aria-label="Diagnostic lanes">
+        <article class="panel" id="lane-route"><div class="panel-head"><div><h2>Route Health</h2><small>/showroom/globe/ mount and route liveness.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-runtime"><div class="panel-head"><div><h2>Runtime Health</h2><small>/showroom/runtime.js split-chain observation.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-asset"><div class="panel-head"><div><h2>Asset Consumer Health</h2><small>/assets/showroom.globe.instrument.js caller/validator.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-renderer"><div class="panel-head"><div><h2>Renderer Facade Health</h2><small>/world/render/planet-one.render.js public facade.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-land"><div class="panel-head"><div><h2>Land Constructs Health</h2><small>Seven-body law and fused tri-region wrap.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-surface"><div class="panel-head"><div><h2>Surface Materials Health</h2><small>Ocean, shelf, ridge, atmosphere material authority.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-terrain"><div class="panel-head"><div><h2>Terrain / Hydration Health</h2><small>Existing terrain and hydration modules remain detected.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
+        <article class="panel" id="lane-visual"><div class="panel-head"><div><h2>Visual Readiness</h2><small>Visual pass requires screenshot/owner review; telemetry alone cannot pass it.</small></div><span class="status hold">HOLD</span></div><div class="facts"></div></article>
+        <article class="panel wide" id="lane-gap"><div class="panel-head"><div><h2>Gap Discovery</h2><small>One controlling gap and the next lawful TNT.</small></div><span class="status not_tested">NOT TESTED</span></div><div class="facts"></div></article>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Observed Planet 1 route</h2>
-            <p>Observer frame only. Gauges do not draw Planet 1.</p>
-          </div>
-          <span class="pill hold" id="frameStatus">WAIT</span>
-        </div>
-
-        <iframe
-          class="observer-frame"
-          id="observerFrame"
-          title="Observed Planet 1 route"
-          src="/showroom/globe/?_gauges_v22c_proof_normalization=1"
-          loading="eager"
-        ></iframe>
+      <section class="receipt">
+        <h2>Live receipt</h2>
+        <div class="mono" id="receipt-output">Waiting to run split-chain diagnostic.</div>
+        <div class="route-links"><a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/showroom/globe/">Planet 1</a></div>
       </section>
+
+      <div id="planet-one-hidden-test-mount" class="hidden-mount" aria-hidden="true"></div>
     </main>
 
-    <footer>
-      GAUGES_PLANET_ONE_V22C_PROOF_NORMALIZATION_TNT_v1 · Measures normalized Planet 1 proof across route, asset, renderer, terrain, hydration, mount, and leakage.
+    <footer class="footer">
+      VERSION: B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1. Gauges measures route, runtime, asset consumer, renderer facade, land constructs, surface materials, terrain/hydration, visual readiness, and generation readiness. Gauges does not repair, render, or hide gaps.
+      <span hidden>route-exists manor-skin house-class estate=rich-manor-and-estate house-field=true gauges-truth=live-authority construct-class=house house-part=gauges H6_GAUGES diagnostic-instrument-room=active B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1</span>
     </footer>
   </div>
 
   <script>
-    (function () {
-      "use strict";
+(function attachB26HGauges(global) {
+  "use strict";
 
-      var VERSION = "GAUGES_PLANET_ONE_V22C_PROOF_NORMALIZATION_TNT_v1";
-      var PREVIOUS = "GAUGES_PLANET_ONE_V22B_RUNTIME_FRAME_BIND_FIX_TNT_v1";
-      var ROOT_PREVIOUS = "GAUGES_PLANET_ONE_V22_FULL_SCOPE_ADVERSARIAL_AUDIT_TNT_v1";
+  var VERSION = "B26H_GAUGES_SPLIT_RENDER_CHAIN_CONTRACT_TNT_v1";
+  var PATHS = {
+    route: "/showroom/globe/",
+    runtime: "/showroom/runtime.js",
+    asset: "/assets/showroom.globe.instrument.js",
+    renderer: "/world/render/planet-one.render.js",
+    land: "/world/render/planet-one.land.constructs.js",
+    surface: "/world/render/planet-one.surface.materials.js",
+    terrain: "/world/render/planet-one.terrain.render.js",
+    hydration: "/world/render/planet-one.hydration.render.js"
+  };
+  var scriptPromises = {};
+  var lastReceipt = null;
 
-      var EXPECTED = {
-        routeV22D: "SHOWROOM_GLOBE_V22D_ACCEPT_V21_ASSET_AND_V5_TERRAIN_TNT_v1",
-        routeV22C: "SHOWROOM_GLOBE_V22C_SCRIPT_CHAIN_COMPLETION_DIAGNOSTIC_TNT_v1",
-        assetV21: "SHOWROOM_GLOBE_INSTRUMENT_V21_RENDERER_CONSUMPTION_PROOF_TNT_v1",
-        assetV20: "SHOWROOM_GLOBE_INSTRUMENT_V20_HYDRATION_FIRST_DELEGATOR_TNT_v1",
-        rendererV18B: "PLANET_ONE_RENDER_V18B_TERRAIN_WATER_ADHESION_MARKER_CLOSEOUT_TNT_v1",
-        rendererV19: "PLANET_ONE_RENDER_V19_SPHERICAL_LAND_DISTRIBUTION_PROJECTION_TNT_v1",
-        rendererV20: "PLANET_ONE_RENDER_V20_BALANCED_GLOBE_VISUAL_PRESSURE_RELEASE_TNT_v1",
-        terrainV5: "PLANET_ONE_TERRAIN_RENDER_V5_RELIEF_ADHESION_CRUST_REALISM_TNT_v1",
-        terrainV4: "PLANET_ONE_TERRAIN_RENDER_V4_HYDRO_TERRAIN_MARRIAGE_PAIR_TNT_v1",
-        hydrationV1: "PLANET_ONE_HYDRATION_RENDER_V1_HYDRO_TERRAIN_MARRIAGE_TNT_v1"
-      };
+  function $(selector) { return global.document.querySelector(selector); }
 
-      var PATHS = {
-        route: "/showroom/globe/",
-        asset: "/assets/showroom.globe.instrument.js",
-        renderer: "/world/render/planet-one.render.js",
-        terrain: "/world/render/planet-one.terrain.render.js",
-        hydration: "/world/render/planet-one.hydration.render.js",
-        gauges: "/gauges/"
-      };
+  function bool(value) { return value === true ? "true" : value === false ? "false" : value == null ? "pending" : String(value); }
 
-      var SOURCE_CHECKS = {
-        route: [
-          EXPECTED.routeV22D,
-          EXPECTED.routeV22C,
-          "Planet 1 inspection room",
-          "planet-one-render",
-          "script-chain-completion-diagnostic=true",
-          "accept-asset-v21",
-          "accept-terrain-v5",
-          EXPECTED.assetV21,
-          EXPECTED.terrainV5,
-          EXPECTED.rendererV18B,
-          EXPECTED.rendererV19,
-          EXPECTED.hydrationV1
-        ],
-        asset: [
-          EXPECTED.assetV21,
-          EXPECTED.assetV20,
-          "window.DGBShowroomGlobeInstrument",
-          "renderGlobe",
-          "asset-called-renderer=true",
-          "asset-did-not-draw-own-globe=true",
-          "fallback-expression-disabled=true",
-          "renderer-result-mounted=true",
-          "noCompetingGlobeSurface",
-          "drawsOwnPlanet"
-        ],
-        renderer: [
-          EXPECTED.rendererV18B,
-          EXPECTED.rendererV19,
-          EXPECTED.rendererV20,
-          "window.DGBPlanetOneRenderTeam",
-          "renderPlanetOne",
-          "spherical-land-distribution-active=true",
-          "visible-hemisphere-projection-active=true",
-          "backside-land-culling-active=true",
-          "limb-compression-active=true",
-          "front-hemisphere-packing-rejected=true",
-          "balanced-globe-visual-pressure-release-active=true",
-          "land-scale-rebalanced=true",
-          "water-field-dominance-restored=true",
-          "bad-squeeze-released=true",
-          "terrain-water-adhesion-active=true"
-        ],
-        terrain: [
-          EXPECTED.terrainV5,
-          EXPECTED.terrainV4,
-          "window.DGBPlanetOneTerrainRender",
-          "createTerrainLayer",
-          "world-body-terrain-expression-active=true",
-          "no-lily-pad-terrain=true",
-          "terrain-water-adhesion-active=true",
-          "hydro-terrain-marriage-active=true"
-        ],
-        hydration: [
-          EXPECTED.hydrationV1,
-          "window.DGBPlanetOneHydrationRender",
-          "createHydrationLayer",
-          "hydration-engine-active=true",
-          "hydro-terrain-marriage-active=true",
-          "terrain-water-adhesion-active=true"
-        ],
-        gauges: [
-          VERSION,
-          PREVIOUS,
-          ROOT_PREVIOUS,
-          "full-scope-adversarial-audit=true",
-          "proof-normalization=true",
-          "does-not-render-planet=true"
-        ]
-      };
+  function now() { return new Date().toISOString(); }
 
-      var RUNTIME_ROUTE_PROOF = [
-        {
-          label: "Route V22D",
-          any: [EXPECTED.routeV22D]
-        },
-        {
-          label: "Route runtime parity",
-          any: ["routeRuntimeVersionParity", "route-runtime-version-parity", "routeRuntimeVersionParity:true", '"routeRuntimeVersionParity":true', 'data-route-runtime-version-parity="true"']
-        },
-        {
-          label: "Cache-bust boot parity",
-          any: ["runtimeCacheBustBootParity", "runtime-cache-bust-boot-parity", "runtimeCacheBustBootParity:true", '"runtimeCacheBustBootParity":true', 'data-runtime-cache-bust-boot-parity="true"']
-        },
-        {
-          label: "Script-chain diagnostic",
-          any: ["scriptChainCompletionDiagnostic", "script-chain-completion-diagnostic", "scriptChainCompletionDiagnostic:true", '"scriptChainCompletionDiagnostic":true', 'data-script-chain-completion-diagnostic="true"']
-        },
-        {
-          label: "Accept Asset V21",
-          any: ["acceptAssetV21", "accept-asset-v21", "acceptAssetV21:true", '"acceptAssetV21":true', 'data-accept-asset-v21="true"']
-        },
-        {
-          label: "Accept Terrain V5",
-          any: ["acceptTerrainV5", "accept-terrain-v5", "acceptTerrainV5:true", '"acceptTerrainV5":true', 'data-accept-terrain-v5="true"']
+  function safeCall(fn) {
+    try { return fn(); } catch (error) { return { ok: false, error: String(error && error.message ? error.message : error) }; }
+  }
+
+  function compact(value) {
+    if (value == null) return value;
+    if (typeof value !== "object") return value;
+    try { return JSON.parse(JSON.stringify(value, function (key, inner) {
+      if (key === "canvas" || key === "activeCanvas" || key === "mount" || key === "ctx" || key === "parentNode" || key === "ownerDocument") return "[DOM]";
+      if (key === "state" && inner && typeof inner === "object") return "[renderer-state]";
+      if (Array.isArray(inner) && inner.length > 12) return inner.slice(0, 12).concat(["..." + (inner.length - 12) + " more"]);
+      return inner;
+    })); } catch (error) { return String(value); }
+  }
+
+  function setText(id, text) {
+    var node = $("#" + id);
+    if (node) node.textContent = text;
+  }
+
+  function classFor(state) {
+    return String(state || "not_tested").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+  }
+
+  function renderLane(id, lane) {
+    var panel = $("#" + id);
+    var statusNode;
+    var facts;
+    var key;
+    if (!panel) return;
+    statusNode = panel.querySelector(".status");
+    facts = panel.querySelector(".facts");
+    if (statusNode) {
+      statusNode.className = "status " + classFor(lane.state);
+      statusNode.textContent = lane.state || "NOT TESTED";
+    }
+    if (facts) {
+      facts.innerHTML = "";
+      for (key in lane.facts) {
+        if (Object.prototype.hasOwnProperty.call(lane.facts, key)) {
+          facts.appendChild(fact(key, lane.facts[key]));
         }
-      ];
-
-      var RUNTIME_STAGE_PROOF = [
-        { label: "Hydration script loaded", field: "hydrationScriptLoaded" },
-        { label: "Hydration global ready", field: "hydrationGlobalReady" },
-        { label: "Terrain script loaded", field: "terrainScriptLoaded" },
-        { label: "Terrain global ready", field: "terrainGlobalReady" },
-        { label: "Renderer script loaded", field: "rendererScriptLoaded" },
-        { label: "Renderer global ready", field: "rendererGlobalReady" },
-        { label: "Asset script loaded", field: "assetScriptLoaded" },
-        { label: "Asset global ready", field: "assetGlobalReady" },
-        { label: "Mount started", field: "mountStarted" },
-        { label: "Mount complete", field: "mountComplete" }
-      ];
-
-      var RUNTIME_ASSET_PROOF = [
-        {
-          label: "Asset V21",
-          any: [EXPECTED.assetV21]
-        },
-        {
-          label: "Asset called renderer",
-          any: ["assetCalledRenderer:true", '"assetCalledRenderer":true', "asset-called-renderer=true", 'data-asset-called-renderer="true"', "Asset called renderer", "ASSET_CALLED_RENDERER · true"]
-        },
-        {
-          label: "Asset did not draw own globe",
-          any: ["assetDidNotDrawOwnGlobe:true", '"assetDidNotDrawOwnGlobe":true', "asset-did-not-draw-own-globe=true", 'data-asset-did-not-draw-own-globe="true"', "Asset did not draw own globe"]
-        },
-        {
-          label: "Fallback expression disabled",
-          any: ["fallbackExpressionDisabled:true", '"fallbackExpressionDisabled":true', "fallback-expression-disabled=true", 'data-fallback-expression-disabled="true"', "Fallback expression disabled"]
-        },
-        {
-          label: "Renderer result mounted",
-          any: ["rendererResultMounted:true", '"rendererResultMounted":true', "renderer-result-mounted=true", 'data-renderer-result-mounted="true"', "Renderer result mounted", "RENDERER_RESULT_MOUNTED · true"]
-        },
-        {
-          label: "Asset draws own planet false",
-          any: ["drawsOwnPlanet:false", '"drawsOwnPlanet":false', "draws-own-planet=false", 'data-draws-own-planet="false"']
-        }
-      ];
-
-      var RUNTIME_RENDERER_PROOF = [
-        {
-          label: "Renderer V18B",
-          any: [EXPECTED.rendererV18B]
-        },
-        {
-          label: "Renderer V19 projection",
-          any: [EXPECTED.rendererV19]
-        },
-        {
-          label: "Renderer V20 balance",
-          any: [EXPECTED.rendererV20]
-        },
-        {
-          label: "Spherical land distribution",
-          any: ["sphericalLandDistributionActive:true", '"sphericalLandDistributionActive":true', "spherical-land-distribution-active=true", 'data-spherical-land-distribution-active="true"', "Spherical land distribution active"]
-        },
-        {
-          label: "Visible hemisphere projection",
-          any: ["visibleHemisphereProjectionActive:true", '"visibleHemisphereProjectionActive":true', "visible-hemisphere-projection-active=true", 'data-visible-hemisphere-projection-active="true"', "Visible hemisphere projection active"]
-        },
-        {
-          label: "Backside land culling",
-          any: ["backsideLandCullingActive:true", '"backsideLandCullingActive":true', "backside-land-culling-active=true", 'data-backside-land-culling-active="true"', "Backside land culling active"]
-        },
-        {
-          label: "Front hemisphere packing rejected",
-          any: ["frontHemispherePackingRejected:true", '"frontHemispherePackingRejected":true', "front-hemisphere-packing-rejected=true", 'data-front-hemisphere-packing-rejected="true"', "Front hemisphere packing rejected"]
-        },
-        {
-          label: "Balanced globe pressure release",
-          any: ["balancedGlobeVisualPressureReleaseActive:true", '"balancedGlobeVisualPressureReleaseActive":true', "balanced-globe-visual-pressure-release-active=true", 'data-balanced-globe-visual-pressure-release-active="true"', "Balanced globe visual pressure release active"]
-        },
-        {
-          label: "Land scale rebalanced",
-          any: ["landScaleRebalanced:true", '"landScaleRebalanced":true', "land-scale-rebalanced=true", 'data-land-scale-rebalanced="true"', "Land scale rebalanced"]
-        },
-        {
-          label: "Water field dominance restored",
-          any: ["waterFieldDominanceRestored:true", '"waterFieldDominanceRestored":true', "water-field-dominance-restored=true", 'data-water-field-dominance-restored="true"', "Water field dominance restored"]
-        }
-      ];
-
-      var MOUNT_PROOF = [
-        {
-          label: "Hydration module integrated",
-          any: ["Hydration module integrated", "hydrationModuleIntegrated:true", '"hydrationModuleIntegrated":true', 'data-hydration-module-integrated="true"']
-        },
-        {
-          label: "Terrain module integrated",
-          any: ["Terrain module integrated", "terrainModuleIntegrated:true", '"terrainModuleIntegrated":true', 'data-terrain-module-integrated="true"']
-        },
-        {
-          label: "Hydro-terrain marriage active",
-          any: ["Hydro-terrain marriage active", "hydroTerrainMarriageActive:true", '"hydroTerrainMarriageActive":true', 'data-hydro-terrain-marriage-active="true"']
-        },
-        {
-          label: "Terrain-water adhesion active",
-          any: ["Terrain-water adhesion active", "terrainWaterAdhesionActive:true", '"terrainWaterAdhesionActive":true', 'data-terrain-water-adhesion-active="true"']
-        },
-        {
-          label: "Composition only",
-          any: ["Composition only", "compositionOnly:true", '"compositionOnly":true', 'data-composition-only="true"']
-        },
-        {
-          label: "Asset called renderer",
-          any: ["Asset called renderer", "assetCalledRenderer:true", '"assetCalledRenderer":true', 'data-asset-called-renderer="true"']
-        },
-        {
-          label: "Renderer result mounted",
-          any: ["Renderer result mounted", "rendererResultMounted:true", '"rendererResultMounted":true', 'data-renderer-result-mounted="true"']
-        }
-      ];
-
-      var LEAKAGE_PROOF = [
-        "Terrain fallback active",
-        "Legacy markers restored",
-        "terrain-first instrument chain",
-        "DEMO PLANET",
-        "demo planet",
-        "fallback planet",
-        "PLANET_ONE_RENDER_V16_TERRAIN_MODULE_PROOF_AND_LEGACY_GAUGE_REPAIR_TNT_v1"
-      ];
-
-      var logLines = [];
-
-      function byId(id) {
-        return document.getElementById(id);
       }
+    }
+  }
 
-      function now() {
-        try { return new Date().toLocaleTimeString(); }
-        catch (error) { return "time"; }
+  function fact(label, value) {
+    var row = global.document.createElement("div");
+    var a = global.document.createElement("span");
+    var b = global.document.createElement("span");
+    row.className = "fact";
+    a.textContent = label;
+    b.textContent = typeof value === "string" ? value : JSON.stringify(compact(value));
+    row.appendChild(a);
+    row.appendChild(b);
+    return row;
+  }
+
+  function globalHas(name, fnName) {
+    var obj = global[name];
+    return Boolean(obj && (!fnName || typeof obj[fnName] === "function"));
+  }
+
+  function findScript(path) {
+    var scripts = global.document.getElementsByTagName("script");
+    var i;
+    for (i = 0; i < scripts.length; i += 1) {
+      if (scripts[i].src && scripts[i].src.indexOf(path) !== -1) return scripts[i];
+    }
+    return null;
+  }
+
+  function waitFor(detector, timeoutMs) {
+    var start = Date.now();
+    return new Promise(function (resolve) {
+      function tick() {
+        if (!detector || detector()) { resolve(true); return; }
+        if (Date.now() - start > timeoutMs) { resolve(false); return; }
+        global.setTimeout(tick, 45);
       }
+      tick();
+    });
+  }
 
-      function log(line) {
-        logLines.push(now() + " · " + line);
-        setText("bootLog", logLines.join("\n"));
+  function loadScript(key, path, detector) {
+    var existing;
+    var script;
+    var target;
+    if (detector && detector()) return Promise.resolve(true);
+    if (scriptPromises[key]) return scriptPromises[key];
+    existing = findScript(path);
+    if (existing) {
+      scriptPromises[key] = waitFor(detector, 2000);
+      return scriptPromises[key];
+    }
+    scriptPromises[key] = new Promise(function (resolve) {
+      script = global.document.createElement("script");
+      script.src = path;
+      script.async = false;
+      script.defer = false;
+      script.dataset.gaugesLoaded = VERSION;
+      script.onload = function () { waitFor(detector, 1600).then(resolve); };
+      script.onerror = function () { resolve(false); };
+      target = global.document.head || global.document.body || global.document.documentElement;
+      if (!target) { resolve(false); return; }
+      target.appendChild(script);
+    });
+    return scriptPromises[key];
+  }
+
+  function fetchRoute(path) {
+    if (typeof global.fetch !== "function") return Promise.resolve({ ok: false, reason: "fetch-unavailable" });
+    return global.fetch(path, { method: "GET", cache: "no-store" }).then(function (response) {
+      return response.text().then(function (text) {
+        return {
+          ok: response.ok,
+          status: response.status,
+          hasPlanetMount: text.indexOf("planet-one-render") !== -1 || text.indexOf("globe-main") !== -1,
+          hasRuntime: text.indexOf("/showroom/runtime.js") !== -1 || text.indexOf("showroom/runtime.js") !== -1,
+          hasAsset: text.indexOf("/assets/showroom.globe.instrument.js") !== -1 || text.indexOf("showroom.globe.instrument.js") !== -1
+        };
+      });
+    }).catch(function (error) {
+      return { ok: false, error: String(error && error.message ? error.message : error) };
+    });
+  }
+
+  function readRuntimeStatus() {
+    var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
+    if (!api) return null;
+    if (typeof api.getGlobalStatus === "function") return safeCall(function () { return api.getGlobalStatus(); });
+    return null;
+  }
+
+  function readRuntimeSplitStatus() {
+    var api = global.DGBShowroomRuntime || global.ShowroomRuntime;
+    if (!api || typeof api.getSplitRenderChainStatus !== "function") return null;
+    return safeCall(function () { return api.getSplitRenderChainStatus(); });
+  }
+
+  function readAssetStatus() {
+    var api = global.DGBShowroomGlobeInstrument;
+    if (!api) return null;
+    if (typeof api.getStatus === "function") return safeCall(function () { return api.getStatus(); });
+    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
+    return null;
+  }
+
+  function readRendererStatus() {
+    var api = global.DGBPlanetOneRenderTeam;
+    if (!api) return null;
+    if (typeof api.getStatus === "function") return safeCall(function () { return api.getStatus(); });
+    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
+    return null;
+  }
+
+  function readLandStatus() {
+    var api = global.DGBPlanetOneLandConstructs;
+    if (!api) return null;
+    if (typeof api.getLandConstructStatus === "function") return safeCall(function () { return api.getLandConstructStatus(); });
+    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
+    return null;
+  }
+
+  function readSurfaceStatus() {
+    var api = global.DGBPlanetOneSurfaceMaterials;
+    if (!api) return null;
+    if (typeof api.getSurfaceMaterialStatus === "function") return safeCall(function () { return api.getSurfaceMaterialStatus(); });
+    if (typeof api.status === "function") return safeCall(function () { return api.status(); });
+    return null;
+  }
+
+  function hasTerrain() {
+    return Boolean(global.DGBPlanetOneTerrainRender);
+  }
+
+  function hasHydration() {
+    return Boolean(global.DGBPlanetOneHydrationRender);
+  }
+
+  function mountAssetProbe() {
+    var mount = $("#planet-one-hidden-test-mount");
+    var asset = global.DGBShowroomGlobeInstrument;
+    if (!mount || !asset || typeof asset.renderGlobe !== "function") return Promise.resolve({ ok: false, reason: "asset-or-mount-missing" });
+    return Promise.resolve(safeCall(function () {
+      return asset.renderGlobe(mount, { animate: false, size: 360, caption: "Gauges hidden split-chain probe" });
+    })).then(function (result) {
+      return waitFor(function () {
+        var a = readAssetStatus();
+        return Boolean(a && a.rendererResultMounted);
+      }, 2200).then(function () { return result; });
+    });
+  }
+
+  function stateFrom(required, warnCondition) {
+    if (required === true) return "PASS";
+    if (warnCondition === true) return "WARN";
+    return "FAIL";
+  }
+
+  function minimumState(states) {
+    if (states.indexOf("FAIL") !== -1) return "FAIL";
+    if (states.indexOf("HOLD") !== -1) return "HOLD";
+    if (states.indexOf("WARN") !== -1) return "WARN";
+    if (states.indexOf("NOT_TESTED") !== -1) return "NOT TESTED";
+    return "PASS";
+  }
+
+  function determineNextGap(lanes) {
+    if (lanes.route.state === "FAIL") return ["ROUTE_OR_DOM_MOUNT", "REPAIR_/showroom/globe/_mount_or_script_references"];
+    if (lanes.runtime.state === "FAIL") return ["RUNTIME_SPLIT_CHAIN_AWARENESS", "B26G_RUNTIME_REPAIR_TNT"];
+    if (lanes.asset.state === "FAIL") return ["ASSET_CONSUMER_ALIGNMENT", "B26F_ASSET_CONSUMER_REPAIR_TNT"];
+    if (lanes.renderer.state === "FAIL") return ["RENDERER_FACADE_STATUS_SURFACE", "B26D_RENDERER_FACADE_REPAIR_TNT"];
+    if (lanes.land.state === "FAIL") return ["LAND_CONSTRUCTS_MODULE_LOAD", "B26B_LAND_CONSTRUCTS_REPAIR_TNT"];
+    if (lanes.surface.state === "FAIL") return ["SURFACE_MATERIALS_MODULE_LOAD", "B26C_SURFACE_MATERIALS_REPAIR_TNT"];
+    if (lanes.terrain.state === "FAIL") return ["TERRAIN_HYDRATION_DETECTION", "TERRAIN_HYDRATION_BRIDGE_REPAIR_TNT"];
+    if (lanes.route.state === "WARN" || lanes.runtime.state === "WARN" || lanes.asset.state === "WARN" || lanes.renderer.state === "WARN" || lanes.land.state === "WARN" || lanes.surface.state === "WARN" || lanes.terrain.state === "WARN") return ["CHAIN_RECEIPT_PARTIAL_OR_DELAYED", "RECEIPT_ALIGNMENT_TNT"];
+    return ["VISUAL_GEOMETRY_RELIEF_B27", "B27_GEOMETRIC_CONTINENT_SPLIT_AND_RELIEF_REFINEMENT_TNT"];
+  }
+
+  function buildLanes(routeProbe, assetProbe) {
+    var runtimeStatus = readRuntimeStatus();
+    var runtimeSplit = readRuntimeSplitStatus();
+    var assetStatus = readAssetStatus();
+    var rendererStatus = readRendererStatus();
+    var landStatus = readLandStatus();
+    var surfaceStatus = readSurfaceStatus();
+    var terrainDetected = hasTerrain() || Boolean(rendererStatus && rendererStatus.terrainModuleDetected);
+    var hydrationDetected = hasHydration() || Boolean(rendererStatus && rendererStatus.hydrationModuleDetected);
+
+    var lanes = {
+      route: {
+        state: stateFrom(Boolean(routeProbe && routeProbe.ok && routeProbe.hasPlanetMount), Boolean(routeProbe && routeProbe.ok)),
+        facts: { path: PATHS.route, response: routeProbe && routeProbe.status, hasPlanetMount: routeProbe && routeProbe.hasPlanetMount, hasRuntime: routeProbe && routeProbe.hasRuntime, hasAsset: routeProbe && routeProbe.hasAsset }
+      },
+      runtime: {
+        state: stateFrom(Boolean(runtimeStatus && runtimeStatus.splitRenderChainAware !== false && (runtimeStatus.assetInstrumentPath || runtimeStatus.ASSET_INSTRUMENT_PATH || runtimeSplit)), Boolean(runtimeStatus || runtimeSplit)),
+        facts: { detected: Boolean(runtimeStatus || runtimeSplit), splitRenderChainAware: runtimeStatus && runtimeStatus.splitRenderChainAware, assetInstrumentDetected: runtimeSplit && runtimeSplit.assetInstrumentDetected, responsibilitySplitActive: runtimeSplit && runtimeSplit.responsibilitySplitActive, rendererFacadeActive: runtimeSplit && runtimeSplit.rendererFacadeActive }
+      },
+      asset: {
+        state: stateFrom(Boolean(assetStatus && assetStatus.assetModuleAwareConsumption && assetStatus.rendererResultMounted), Boolean(assetStatus && assetStatus.assetModuleAwareConsumption)),
+        facts: { detected: Boolean(global.DGBShowroomGlobeInstrument), assetCalledRenderer: assetStatus && assetStatus.assetCalledRenderer, rendererResultMounted: assetStatus && assetStatus.rendererResultMounted, mountComplete: assetStatus && assetStatus.mountComplete, assetModuleAwareConsumption: assetStatus && assetStatus.assetModuleAwareConsumption, probe: assetProbe && assetProbe.ok }
+      },
+      renderer: {
+        state: stateFrom(Boolean(rendererStatus && rendererStatus.responsibilitySplitActive && rendererStatus.rendererFacadeActive !== false && rendererStatus.landConstructsModuleDetected && rendererStatus.surfaceMaterialsModuleDetected), Boolean(rendererStatus && rendererStatus.responsibilitySplitActive)),
+        facts: { detected: Boolean(global.DGBPlanetOneRenderTeam), active: rendererStatus && rendererStatus.active, responsibilitySplitActive: rendererStatus && rendererStatus.responsibilitySplitActive, rendererFacadeActive: rendererStatus && rendererStatus.rendererFacadeActive, landConstructsModuleDetected: rendererStatus && rendererStatus.landConstructsModuleDetected, surfaceMaterialsModuleDetected: rendererStatus && rendererStatus.surfaceMaterialsModuleDetected }
+      },
+      land: {
+        state: stateFrom(Boolean(landStatus && landStatus.ok && landStatus.sevenLandmassLawActive && landStatus.attachedTriRegionWrapActive && landStatus.polarBodiesDistinct), Boolean(landStatus && landStatus.ok)),
+        facts: { detected: Boolean(global.DGBPlanetOneLandConstructs), ok: landStatus && landStatus.ok, constructCount: landStatus && landStatus.constructCount, sevenLandmassLawActive: landStatus && landStatus.sevenLandmassLawActive, attachedTriRegionWrapActive: landStatus && landStatus.attachedTriRegionWrapActive, fusedTectonicLobesActive: landStatus && landStatus.fusedTectonicLobesActive, polarBodiesDistinct: landStatus && landStatus.polarBodiesDistinct }
+      },
+      surface: {
+        state: stateFrom(Boolean(surfaceStatus && surfaceStatus.ok && surfaceStatus.cinematicMaterialAuthorityActive && surfaceStatus.oceanDepthAuthorityActive && surfaceStatus.coastalShelfAuthorityActive), Boolean(surfaceStatus && surfaceStatus.ok)),
+        facts: { detected: Boolean(global.DGBPlanetOneSurfaceMaterials), ok: surfaceStatus && surfaceStatus.ok, cinematicMaterialAuthorityActive: surfaceStatus && surfaceStatus.cinematicMaterialAuthorityActive, oceanDepthAuthorityActive: surfaceStatus && surfaceStatus.oceanDepthAuthorityActive, coastalShelfAuthorityActive: surfaceStatus && surfaceStatus.coastalShelfAuthorityActive, plateauRidgeMaterialAuthorityActive: surfaceStatus && surfaceStatus.plateauRidgeMaterialAuthorityActive, mineralPressureAuthorityActive: surfaceStatus && surfaceStatus.mineralPressureAuthorityActive }
+      },
+      terrain: {
+        state: stateFrom(Boolean(terrainDetected && hydrationDetected), Boolean(terrainDetected || hydrationDetected)),
+        facts: { terrainModuleDetected: terrainDetected, hydrationModuleDetected: hydrationDetected, rendererTerrainDetected: rendererStatus && rendererStatus.terrainModuleDetected, rendererHydrationDetected: rendererStatus && rendererStatus.hydrationModuleDetected }
+      },
+      visual: {
+        state: "HOLD",
+        facts: { manualScreenshotReviewRequired: true, telemetryCanPassVisual: false, passRequires: "no blob, no slab, three fused lobes, structural coast, visible relief, distinct poles", currentDefault: "HOLD until screenshot confirms" }
       }
+    };
 
-      function setText(id, value) {
-        var el = byId(id);
-        if (el) el.textContent = value;
-      }
+    return lanes;
+  }
 
-      function setClass(id, value) {
-        var el = byId(id);
-        if (el) el.className = value;
-      }
+  function renderReceipt(receipt) {
+    var out = $("#receipt-output");
+    if (out) out.textContent = JSON.stringify(compact(receipt), null, 2);
+  }
 
-      function setScore(id, value, kind) {
-        var el = byId(id);
-        var strong;
+  function applyResults(lanes) {
+    var critical = [lanes.route.state, lanes.runtime.state, lanes.asset.state, lanes.renderer.state, lanes.land.state, lanes.surface.state];
+    var architecture = minimumState(critical);
+    var chain = minimumState(critical.concat([lanes.terrain.state]));
+    var next = determineNextGap(lanes);
+    var generation;
+    var overall;
 
-        if (!el) return;
+    if (chain === "FAIL") {
+      overall = "FAIL";
+      generation = "NOT READY";
+    } else if (chain === "WARN" || chain === "HOLD") {
+      overall = "WARN";
+      generation = "ARCHITECTURE PARTIAL / HOLD";
+    } else {
+      overall = "WARN";
+      generation = "READY FOR B27 / VISUAL HOLD";
+    }
 
-        el.className = "score-card " + kind;
-        strong = el.getElementsByTagName("strong")[0];
+    renderLane("lane-route", lanes.route);
+    renderLane("lane-runtime", lanes.runtime);
+    renderLane("lane-asset", lanes.asset);
+    renderLane("lane-renderer", lanes.renderer);
+    renderLane("lane-land", lanes.land);
+    renderLane("lane-surface", lanes.surface);
+    renderLane("lane-terrain", lanes.terrain);
+    renderLane("lane-visual", lanes.visual);
+    renderLane("lane-gap", { state: overall, facts: { architectureHealth: architecture, chainHealth: chain, visualReadiness: lanes.visual.state, nextControllingGap: next[0], requiredNextTNT: next[1], generationReadiness: generation } });
 
-        if (strong) strong.textContent = value;
-      }
+    setText("overall-health", overall);
+    setText("generation-readiness", generation);
+    setText("next-gap", next[0]);
+    setText("next-tnt", next[1]);
 
-      function setPill(id, status) {
-        var kind = "hold";
+    lastReceipt = { version: VERSION, timestamp: now(), overallHealth: overall, architectureHealth: architecture, chainHealth: chain, generationReadiness: generation, nextControllingGap: next[0], requiredNextTNT: next[1], lanes: lanes };
+    renderReceipt(lastReceipt);
+  }
 
-        if (status === "PASS") kind = "pass";
-        if (status === "FAIL") kind = "fail";
-        if (status === "NEXT") kind = "next";
+  function runSplitChainDiagnostic() {
+    setText("overall-health", "RUNNING");
+    setText("generation-readiness", "MEASURING");
+    setText("next-gap", "MEASURING");
+    setText("next-tnt", "MEASURING");
+    renderReceipt({ version: VERSION, timestamp: now(), status: "running split-chain diagnostic" });
 
-        setClass(id, "pill " + kind);
-        setText(id, status);
-      }
-
-      function scoreKind(status) {
-        if (status === "PASS") return "good";
-        if (status === "FAIL") return "bad";
-        if (status === "NEXT") return "next";
-        return "hold";
-      }
-
-      function escapeHtml(value) {
-        return String(value == null ? "" : value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      function cacheBusted(path) {
-        var glue = path.indexOf("?") === -1 ? "?" : "&";
-        return path + glue + "_gauge=" + encodeURIComponent(VERSION) + "&_t=" + encodeURIComponent(String(Date.now()));
-      }
-
-      function fetchText(path) {
-        return new Promise(function (resolve) {
-          var xhr = new XMLHttpRequest();
-
-          xhr.open("GET", cacheBusted(path), true);
-
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-              resolve({
-                path: path,
-                ok: xhr.status >= 200 && xhr.status < 300,
-                status: xhr.status,
-                text: xhr.responseText || ""
-              });
-            }
-          };
-
-          xhr.onerror = function () {
-            resolve({
-              path: path,
-              ok: false,
-              status: 0,
-              text: ""
+    return Promise.all([
+      fetchRoute(PATHS.route),
+      loadScript("runtime", PATHS.runtime, function () { return Boolean(global.DGBShowroomRuntime || global.ShowroomRuntime); }),
+      loadScript("land", PATHS.land, function () { return globalHas("DGBPlanetOneLandConstructs", "createPlanetOneLandConstructs"); }),
+      loadScript("surface", PATHS.surface, function () { return globalHas("DGBPlanetOneSurfaceMaterials", "drawPlanetOneConstructSurface"); }),
+      loadScript("terrain", PATHS.terrain, function () { return Boolean(global.DGBPlanetOneTerrainRender); }),
+      loadScript("hydration", PATHS.hydration, function () { return Boolean(global.DGBPlanetOneHydrationRender); })
+    ]).then(function (first) {
+      return loadScript("renderer", PATHS.renderer, function () { return globalHas("DGBPlanetOneRenderTeam", "renderPlanetOne"); }).then(function () {
+        return loadScript("asset", PATHS.asset, function () { return globalHas("DGBShowroomGlobeInstrument", "renderGlobe"); }).then(function () {
+          return mountAssetProbe().then(function (probe) {
+            return waitFor(function () {
+              var asset = readAssetStatus();
+              var renderer = readRendererStatus();
+              return Boolean(asset && renderer);
+            }, 1600).then(function () {
+              applyResults(buildLanes(first[0], probe));
             });
-          };
-
-          xhr.send(null);
+          });
         });
-      }
-
-      function contains(haystack, needle) {
-        return String(haystack || "").indexOf(String(needle || "")) !== -1;
-      }
-
-      function normalizeText(value) {
-        return String(value || "")
-          .replace(/\s+/g, "")
-          .replace(/&quot;/g, '"')
-          .replace(/&#34;/g, '"')
-          .replace(/&#x27;/g, "'")
-          .replace(/&apos;/g, "'");
-      }
-
-      function normalizedContains(haystack, needle) {
-        return normalizeText(haystack).indexOf(normalizeText(needle)) !== -1;
-      }
-
-      function anyMatch(textValue, alternatives) {
-        var i;
-
-        for (i = 0; i < alternatives.length; i += 1) {
-          if (contains(textValue, alternatives[i]) || normalizedContains(textValue, alternatives[i])) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      function rowsFromExact(textValue, markers, invert) {
-        return markers.map(function (marker) {
-          var found = contains(textValue, marker) || normalizedContains(textValue, marker);
-          return {
-            label: marker,
-            marker: marker,
-            found: found,
-            invert: Boolean(invert),
-            ok: invert ? !found : found
-          };
-        });
-      }
-
-      function rowsFromProofSpecs(textValue, specs, invert) {
-        return specs.map(function (spec) {
-          var found = anyMatch(textValue, spec.any || []);
-          return {
-            label: spec.label,
-            marker: (spec.any || []).join(" OR "),
-            found: found,
-            invert: Boolean(invert),
-            ok: invert ? !found : found
-          };
-        });
-      }
-
-      function rowsFromStage(stage, specs) {
-        return specs.map(function (spec) {
-          var value = stage && stage[spec.field] ? String(stage[spec.field]) : "";
-          return {
-            label: spec.label,
-            marker: spec.field + "=" + value,
-            found: value === "true",
-            invert: false,
-            ok: value === "true"
-          };
-        });
-      }
-
-      function summarize(rows) {
-        var passed = rows.filter(function (row) { return row.ok; }).length;
-        return {
-          passed: passed,
-          total: rows.length,
-          score: rows.length ? Math.round((passed / rows.length) * 100) : 100
-        };
-      }
-
-      function evaluateExact(label, textValue, markers, invert, sourceOk) {
-        var rows = rowsFromExact(textValue, markers, invert);
-        var summary = summarize(rows);
-
-        return {
-          label: label,
-          rows: rows,
-          summary: summary,
-          status: summary.score === 100 && sourceOk !== false ? "PASS" : "FAIL"
-        };
-      }
-
-      function evaluateProof(label, textValue, specs, sourceOk) {
-        var rows = rowsFromProofSpecs(textValue, specs, false);
-        var summary = summarize(rows);
-
-        return {
-          label: label,
-          rows: rows,
-          summary: summary,
-          status: summary.score === 100 && sourceOk !== false ? "PASS" : "FAIL"
-        };
-      }
-
-      function evaluateStage(label, stage, specs, sourceOk) {
-        var rows = rowsFromStage(stage, specs);
-        var summary = summarize(rows);
-
-        return {
-          label: label,
-          rows: rows,
-          summary: summary,
-          status: summary.score === 100 && sourceOk !== false ? "PASS" : "FAIL"
-        };
-      }
-
-      function rowHtml(row) {
-        var dot = row.ok ? "pass" : row.invert ? "fail" : "next";
-        var prefix = row.invert ? "LEAK: " : "";
-
-        return ''
-          + '<div class="marker">'
-          + '<span class="dot ' + dot + '" aria-hidden="true"></span>'
-          + '<code>' + escapeHtml(prefix + row.label) + '</code>'
-          + '</div>';
-      }
-
-      function card(title, path, result, meta) {
-        var safeResult = result || {
-          status: "FAIL",
-          rows: [],
-          summary: { passed: 0, total: 0, score: 0 }
-        };
-        var pill = safeResult.status === "PASS" ? "pass" : safeResult.status === "FAIL" ? "fail" : "hold";
-        var rows = (safeResult.rows || []).map(rowHtml).join("");
-
-        return ''
-          + '<article class="check-card">'
-          + '<div class="check-title"><h3>' + escapeHtml(title) + '</h3><span class="pill ' + pill + '">' + escapeHtml(safeResult.status) + '</span></div>'
-          + (path ? '<div><code>' + escapeHtml(path) + '</code></div>' : '')
-          + '<div class="mono">' + escapeHtml(meta || "") + '</div>'
-          + '<div class="marker-list">' + rows + '</div>'
-          + '</article>';
-      }
-
-      function getKebabDataset(root, camel) {
-        if (!root) return "";
-        return root.getAttribute("data-" + camel.replace(/[A-Z]/g, function (x) {
-          return "-" + x.toLowerCase();
-        })) || "";
-      }
-
-      function datasetText(node) {
-        var parts = [];
-        var key;
-
-        if (!node || !node.dataset) return "";
-
-        for (key in node.dataset) {
-          if (Object.prototype.hasOwnProperty.call(node.dataset, key)) {
-            parts.push(key + ":" + node.dataset[key]);
-            parts.push('data-' + key.replace(/[A-Z]/g, function (x) { return "-" + x.toLowerCase(); }) + '="' + node.dataset[key] + '"');
-          }
-        }
-
-        return parts.join("\n");
-      }
-
-      function scriptInventory(doc) {
-        var scripts = Array.prototype.slice.call(doc.getElementsByTagName("script"));
-        return scripts.map(function (script) {
-          return [
-            script.getAttribute("src") || "inline-script",
-            script.getAttribute("data-runtime-parity-owner") || "",
-            script.getAttribute("data-runtime-parity-version") || "",
-            script.getAttribute("data-runtime-parity-label") || ""
-          ].join(" ");
-        }).join("\n");
-      }
-
-      function defaultFrame(reason) {
-        return {
-          ok: false,
-          timeout: false,
-          stage: {
-            hydrationScriptLoaded: "",
-            hydrationGlobalReady: "",
-            terrainScriptLoaded: "",
-            terrainGlobalReady: "",
-            rendererScriptLoaded: "",
-            rendererGlobalReady: "",
-            assetScriptLoaded: "",
-            assetGlobalReady: "",
-            mountStarted: "",
-            mountComplete: "",
-            assetCalledRenderer: "",
-            rendererResultMounted: "",
-            lastStage: "",
-            lastError: reason || ""
-          },
-          routeVersion: "missing",
-          assetVersion: "missing",
-          rendererVersion: "missing",
-          rendererProjection: "missing",
-          rendererBalance: "missing",
-          terrainVersion: "missing",
-          hydrationVersion: "missing",
-          runtimeText: "",
-          scripts: "",
-          mountText: "",
-          rootDatasetText: "",
-          mountDatasetText: "",
-          error: reason || ""
-        };
-      }
-
-      function collectFrameRuntime() {
-        return new Promise(function (resolve) {
-          var frame = byId("observerFrame");
-          var started = Date.now();
-          var maxWait = 26000;
-
-          function attempt() {
-            var win;
-            var doc;
-            var root;
-            var mount;
-            var route;
-            var asset;
-            var renderer;
-            var terrain;
-            var hydration;
-            var runtimeText;
-            var stage;
-            var scripts;
-            var mountText;
-            var rootDatasetText;
-            var mountDatasetText;
-            var routeStatus = "";
-            var assetStatus = "";
-            var rendererStatus = "";
-            var terrainStatus = "";
-            var hydrationStatus = "";
-            var enough;
-
-            if (!frame) {
-              resolve(defaultFrame("observer frame missing"));
-              return;
-            }
-
-            if (Date.now() - started > maxWait) {
-              resolve(Object.assign(defaultFrame("Observer timeout"), { timeout: true }));
-              return;
-            }
-
-            try {
-              win = frame.contentWindow;
-              doc = frame.contentDocument;
-
-              if (!win || !doc || !doc.documentElement) {
-                setTimeout(attempt, 300);
-                return;
-              }
-
-              root = doc.documentElement;
-              mount = doc.getElementById("planet-one-render");
-
-              route = win.DGBShowroomGlobeRouteV22D || win.DGBShowroomGlobeRouteV22C || win.DGBShowroomGlobeRouteV22B || win.DGBShowroomGlobeRouteV22 || win.DGBShowroomGlobeRouteV21;
-              asset = win.DGBShowroomGlobeInstrument;
-              renderer = win.DGBPlanetOneRenderTeam;
-              terrain = win.DGBPlanetOneTerrainRender;
-              hydration = win.DGBPlanetOneHydrationRender;
-
-              try { routeStatus = route && route.getStatus ? JSON.stringify(route.getStatus()) : ""; } catch (e1) { routeStatus = ""; }
-              try { assetStatus = asset && asset.getStatus ? JSON.stringify(asset.getStatus()) : ""; } catch (e2) { assetStatus = ""; }
-              try { rendererStatus = renderer && renderer.getStatus ? JSON.stringify(renderer.getStatus()) : ""; } catch (e3) { rendererStatus = ""; }
-              try { terrainStatus = terrain && terrain.getStatus ? JSON.stringify(terrain.getStatus()) : ""; } catch (e4) { terrainStatus = ""; }
-              try { hydrationStatus = hydration && hydration.getStatus ? JSON.stringify(hydration.getStatus()) : ""; } catch (e5) { hydrationStatus = ""; }
-
-              stage = {
-                hydrationScriptLoaded: getKebabDataset(root, "hydrationScriptLoaded"),
-                hydrationGlobalReady: getKebabDataset(root, "hydrationGlobalReady"),
-                terrainScriptLoaded: getKebabDataset(root, "terrainScriptLoaded"),
-                terrainGlobalReady: getKebabDataset(root, "terrainGlobalReady"),
-                rendererScriptLoaded: getKebabDataset(root, "rendererScriptLoaded"),
-                rendererGlobalReady: getKebabDataset(root, "rendererGlobalReady"),
-                assetScriptLoaded: getKebabDataset(root, "assetScriptLoaded"),
-                assetGlobalReady: getKebabDataset(root, "assetGlobalReady"),
-                mountStarted: getKebabDataset(root, "mountStarted"),
-                mountComplete: getKebabDataset(root, "mountComplete"),
-                assetCalledRenderer: getKebabDataset(root, "assetCalledRenderer"),
-                rendererResultMounted: getKebabDataset(root, "rendererResultMounted"),
-                lastStage: getKebabDataset(root, "lastStage"),
-                lastError: getKebabDataset(root, "lastError")
-              };
-
-              scripts = scriptInventory(doc);
-              rootDatasetText = datasetText(root);
-              mountDatasetText = datasetText(mount);
-
-              mountText = mount
-                ? [mount.textContent, mount.innerHTML, mountDatasetText].join("\n")
-                : "";
-
-              runtimeText = [
-                route && route.VERSION ? route.VERSION : "",
-                routeStatus,
-                asset && asset.VERSION ? asset.VERSION : "",
-                assetStatus,
-                renderer && renderer.VERSION ? renderer.VERSION : "",
-                renderer && renderer.PROJECTION_TNT ? renderer.PROJECTION_TNT : "",
-                renderer && renderer.BALANCE_TNT ? renderer.BALANCE_TNT : "",
-                rendererStatus,
-                terrain && terrain.VERSION ? terrain.VERSION : "",
-                terrainStatus,
-                hydration && hydration.VERSION ? hydration.VERSION : "",
-                hydrationStatus,
-                JSON.stringify(stage),
-                rootDatasetText,
-                scripts,
-                mountText
-              ].join("\n");
-
-              enough =
-                stage.mountComplete === "true" ||
-                stage.lastError ||
-                contains(runtimeText, "MOUNT_COMPLETE") ||
-                contains(runtimeText, "ASSET_RUNTIME_GLOBAL_MISSING") ||
-                contains(runtimeText, "TERRAIN_RUNTIME_GLOBAL_MISSING") ||
-                contains(runtimeText, "RENDERER_RUNTIME_GLOBAL_MISSING") ||
-                contains(runtimeText, "HYDRATION_RUNTIME_GLOBAL_MISSING") ||
-                anyMatch(runtimeText, ["Asset called renderer", "assetCalledRenderer:true", '"assetCalledRenderer":true']);
-
-              if (!enough) {
-                setText("currentRead", "Observer is waiting for mount completion, normalized asset proof, or a hard route error.");
-                setText("decisionMono", "DIAGNOSTIC_CODE=OBSERVER_WAITING\nELAPSED_MS=" + (Date.now() - started) + "\nLAST_STAGE=" + stage.lastStage + "\nLAST_ERROR=" + stage.lastError);
-                setTimeout(attempt, 300);
-                return;
-              }
-
-              resolve({
-                ok: true,
-                timeout: false,
-                stage: stage,
-                routeVersion: route && route.VERSION ? route.VERSION : "missing",
-                assetVersion: asset && asset.VERSION ? asset.VERSION : "missing",
-                rendererVersion: renderer && renderer.VERSION ? renderer.VERSION : "missing",
-                rendererProjection: renderer && renderer.PROJECTION_TNT ? renderer.PROJECTION_TNT : "missing",
-                rendererBalance: renderer && renderer.BALANCE_TNT ? renderer.BALANCE_TNT : "missing",
-                terrainVersion: terrain && terrain.VERSION ? terrain.VERSION : "missing",
-                hydrationVersion: hydration && hydration.VERSION ? hydration.VERSION : "missing",
-                runtimeText: runtimeText,
-                scripts: scripts,
-                mountText: mountText,
-                rootDatasetText: rootDatasetText,
-                mountDatasetText: mountDatasetText,
-                error: stage.lastError || ""
-              });
-            } catch (error) {
-              setTimeout(attempt, 300);
-            }
-          }
-
-          attempt();
-        });
-      }
-
-      function sourceCards(source) {
-        byId("sourceChecks").innerHTML =
-          card("Route source", PATHS.route, source.route, "Route must be V22D and accept Asset V21 / Terrain V5.") +
-          card("Asset source", PATHS.asset, source.asset, "Asset must be V21 and prove renderer consumption.") +
-          card("Renderer source", PATHS.renderer, source.renderer, "Renderer must expose V18B plus V19 spherical projection plus V20 balance.") +
-          card("Terrain source", PATHS.terrain, source.terrain, "Terrain must expose V5 relief adhesion and preserve V4 marker.") +
-          card("Hydration source", PATHS.hydration, source.hydration, "Hydration must expose V1 hydro-terrain marriage.") +
-          card("Gauges source", PATHS.gauges, source.gauges, "Gauges must be this V22C proof normalization audit.");
-      }
-
-      function runtimeCards(runtime, frame) {
-        var safeFrame = frame || defaultFrame("runtime frame missing");
-
-        byId("runtimeChecks").innerHTML =
-          card("Route runtime", "/showroom/globe/ iframe", runtime.route, "Route VERSION: " + safeFrame.routeVersion + "\nLast stage: " + safeFrame.stage.lastStage + "\nLast error: " + safeFrame.stage.lastError) +
-          card("Stage chain", "documentElement dataset", runtime.stage, JSON.stringify(safeFrame.stage, null, 2)) +
-          card("Asset consumption proof", "normalized runtime + mount proof", runtime.asset, "Asset VERSION: " + safeFrame.assetVersion) +
-          card("Renderer projection proof", "normalized runtime + mount proof", runtime.renderer, "Renderer VERSION: " + safeFrame.rendererVersion + "\nProjection: " + safeFrame.rendererProjection + "\nBalance: " + (safeFrame.rendererBalance || "missing")) +
-          card("Mount proof", "#planet-one-render", runtime.mount, "Mount text / dataset scan.") +
-          card("Old expression leakage", "#planet-one-render leakage scan", runtime.leakage, "Leakage must remain clean.");
-      }
-
-      function decide(source, runtime, frame) {
-        var sourcePass =
-          source.route.status === "PASS" &&
-          source.asset.status === "PASS" &&
-          source.renderer.status === "PASS" &&
-          source.terrain.status === "PASS" &&
-          source.hydration.status === "PASS" &&
-          source.gauges.status === "PASS";
-
-        if (!sourcePass) {
-          if (source.route.status !== "PASS") return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_SOURCE_SCOPE_BREAK", "Route source is not aligned to V22D current-chain scope."];
-          if (source.asset.status !== "PASS") return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/assets/showroom.globe.instrument.js", "ASSET_SOURCE_SCOPE_BREAK", "Asset source is not aligned to V21 renderer-consumption proof."];
-          if (source.renderer.status !== "PASS") return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/world/render/planet-one.render.js", "RENDERER_SOURCE_SCOPE_BREAK", "Renderer source is not aligned to V18B/V19/V20 balance projection."];
-          if (source.terrain.status !== "PASS") return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/world/render/planet-one.terrain.render.js", "TERRAIN_SOURCE_SCOPE_BREAK", "Terrain source is not aligned to V5 relief adhesion."];
-          if (source.hydration.status !== "PASS") return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/world/render/planet-one.hydration.render.js", "HYDRATION_SOURCE_SCOPE_BREAK", "Hydration source is not aligned to V1 hydro-terrain marriage."];
-          return ["HOLD", "FAIL", "WAIT", "WAIT", "WAIT", "/gauges/index.html", "GAUGES_SOURCE_SCOPE_BREAK", "Gauges source is not the current proof normalization audit."];
-        }
-
-        if (frame.error) {
-          if (contains(frame.error, "ASSET_RUNTIME_GLOBAL_MISSING")) return ["HOLD", "PASS", "FAIL", "FAIL", "WAIT", "/showroom/globe/index.html", "ROUTE_REJECTS_ASSET_RUNTIME", "Route still rejects or cannot validate the asset runtime."];
-          if (contains(frame.error, "TERRAIN_RUNTIME_GLOBAL_MISSING")) return ["HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_REJECTS_TERRAIN_RUNTIME", "Route still rejects or cannot validate terrain runtime."];
-          if (contains(frame.error, "RENDERER_RUNTIME_GLOBAL_MISSING")) return ["HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/world/render/planet-one.render.js", "RENDERER_RUNTIME_GLOBAL_BREAK", "Renderer script loads but runtime global does not validate."];
-          return ["HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_ERROR", frame.error];
-        }
-
-        if (runtime.route.status !== "PASS") return ["HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "ROUTE_RUNTIME_SCOPE_BREAK", "Route runtime is not V22D current-chain aligned."];
-        if (runtime.stage.status !== "PASS") return ["HOLD", "PASS", "FAIL", "WAIT", "WAIT", "/showroom/globe/index.html", "STAGE_CHAIN_INCOMPLETE", "Script chain or mount stage is incomplete."];
-        if (runtime.asset.status !== "PASS") return ["HOLD", "PASS", "PASS", "FAIL", "WAIT", "/assets/showroom.globe.instrument.js", "ASSET_CONSUMPTION_PROOF_BREAK", "Asset has not proven renderer consumption after normalized matching."];
-        if (runtime.renderer.status !== "PASS") return ["HOLD", "PASS", "PASS", "PASS", "FAIL", "/world/render/planet-one.render.js", "RENDERER_PROJECTION_PROOF_BREAK", "Renderer has not proven spherical distribution and balance projection after normalized matching."];
-        if (runtime.mount.status !== "PASS") return ["HOLD", "PASS", "PASS", "PASS", "FAIL", "/showroom/globe/index.html", "MOUNT_PROOF_BREAK", "Mounted DOM proof is incomplete."];
-        if (runtime.leakage.status !== "PASS") return ["HOLD", "PASS", "PASS", "PASS", "FAIL", "old expression leakage purge", "OLD_EXPRESSION_LEAKAGE", "Old expression leakage remains."];
-
-        return ["PASS", "PASS", "PASS", "PASS", "PASS", "/world/render/planet-one.render.js visual balance review", "FULL_SCOPE_PARITY_PASS", "Full scope passes. If the globe is still visually wrong, the next work is renderer visual balance refinement only."];
-      }
-
-      function applyDecision(d, frame) {
-        setScore("scoreBoot", "PASS", "good");
-        setScore("scoreSource", d[1], scoreKind(d[1]));
-        setScore("scoreRoute", d[2], scoreKind(d[2]));
-        setScore("scoreAsset", d[3], scoreKind(d[3]));
-        setScore("scoreRenderer", d[4], scoreKind(d[4]));
-        setScore("scoreNext", d[5], d[0] === "PASS" ? "good" : "next");
-
-        setPill("overallStatus", d[0]);
-        setPill("bootStatus", "PASS");
-        setPill("sourceStatus", d[1]);
-        setPill("runtimeStatus", d[2] === "PASS" && d[3] === "PASS" && d[4] === "PASS" ? "PASS" : "HOLD");
-        setPill("frameStatus", frame.ok ? "PASS" : "FAIL");
-
-        setText("currentRead", d[7]);
-
-        setText("decisionMono", [
-          "DIAGNOSTIC_CODE=" + d[6],
-          "GAUGE=" + VERSION,
-          "PREVIOUS_GAUGE=" + PREVIOUS,
-          "SOURCE_SCOPE_STATE=" + d[1],
-          "ROUTE_RUNTIME_STATE=" + d[2],
-          "ASSET_PROOF_STATE=" + d[3],
-          "RENDERER_PROOF_STATE=" + d[4],
-          "NEXT_TARGET=" + d[5],
-          "ROUTE_VERSION=" + frame.routeVersion,
-          "ASSET_VERSION=" + frame.assetVersion,
-          "RENDERER_VERSION=" + frame.rendererVersion,
-          "RENDERER_PROJECTION=" + frame.rendererProjection,
-          "RENDERER_BALANCE=" + (frame.rendererBalance || "missing"),
-          "TERRAIN_VERSION=" + frame.terrainVersion,
-          "HYDRATION_VERSION=" + frame.hydrationVersion,
-          "FRAME_OK=" + frame.ok,
-          "FRAME_TIMEOUT=" + frame.timeout,
-          "LAST_STAGE=" + frame.stage.lastStage,
-          "LAST_ERROR=" + frame.stage.lastError,
-          "RULE=Every layer belongs in the picture, but only in its proper proportion."
-        ].join("\n"));
-      }
-
-      function runAudit() {
-        log("AUDIT RUNNING");
-
-        setScore("scoreBoot", "RUNNING", "hold");
-        setClass("bootStatus", "pill hold");
-        setText("bootStatus", "RUNNING");
-        setText("currentRead", "Fetching source scope and observing normalized live route proof.");
-        setText("decisionMono", "DIAGNOSTIC_CODE=AUDIT_RUNNING");
-
-        Promise.all([
-          fetchText(PATHS.route),
-          fetchText(PATHS.asset),
-          fetchText(PATHS.renderer),
-          fetchText(PATHS.terrain),
-          fetchText(PATHS.hydration),
-          fetchText(PATHS.gauges),
-          collectFrameRuntime()
-        ]).then(function (results) {
-          var route = results[0];
-          var asset = results[1];
-          var renderer = results[2];
-          var terrain = results[3];
-          var hydration = results[4];
-          var gauges = results[5];
-          var frame = results[6] || defaultFrame("frame result missing");
-          var runtimeCombined = [
-            frame.runtimeText,
-            frame.mountText,
-            frame.rootDatasetText,
-            frame.mountDatasetText,
-            JSON.stringify(frame.stage)
-          ].join("\n");
-
-          var source = {
-            route: evaluateExact("route", route.text, SOURCE_CHECKS.route, false, route.ok),
-            asset: evaluateExact("asset", asset.text, SOURCE_CHECKS.asset, false, asset.ok),
-            renderer: evaluateExact("renderer", renderer.text, SOURCE_CHECKS.renderer, false, renderer.ok),
-            terrain: evaluateExact("terrain", terrain.text, SOURCE_CHECKS.terrain, false, terrain.ok),
-            hydration: evaluateExact("hydration", hydration.text, SOURCE_CHECKS.hydration, false, hydration.ok),
-            gauges: evaluateExact("gauges", gauges.text, SOURCE_CHECKS.gauges, false, gauges.ok)
-          };
-
-          var runtime = {
-            route: evaluateProof("routeRuntime", runtimeCombined, RUNTIME_ROUTE_PROOF, frame.ok),
-            stage: evaluateStage("stageChain", frame.stage, RUNTIME_STAGE_PROOF, frame.ok),
-            asset: evaluateProof("assetRuntime", runtimeCombined, RUNTIME_ASSET_PROOF, frame.ok),
-            renderer: evaluateProof("rendererRuntime", runtimeCombined, RUNTIME_RENDERER_PROOF, frame.ok),
-            mount: evaluateProof("mount", runtimeCombined, MOUNT_PROOF, frame.ok),
-            leakage: evaluateExact("leakage", frame.mountText, LEAKAGE_PROOF, true, frame.ok)
-          };
-
-          var d = decide(source, runtime, frame);
-
-          sourceCards(source);
-          runtimeCards(runtime, frame);
-          applyDecision(d, frame);
-
-          window.DGBPlanetOneFullScopeGauges = {
-            VERSION: VERSION,
-            PREVIOUS: PREVIOUS,
-            ROOT_PREVIOUS: ROOT_PREVIOUS,
-            EXPECTED: EXPECTED,
-            PATHS: PATHS,
-            source: source,
-            runtime: runtime,
-            frame: frame,
-            decision: d,
-            getStatus: function () {
-              return {
-                version: VERSION,
-                diagnosticCode: d[6],
-                nextTarget: d[5]
-              };
-            }
-          };
-
-          log("AUDIT COMPLETE · " + d[6]);
-        }).catch(function (error) {
-          var message = error && error.message ? error.message : String(error);
-
-          setText("currentRead", "Gauge audit failed.");
-          setText("decisionMono", "DIAGNOSTIC_CODE=GAUGE_RUNTIME_ERROR\nERROR=" + message + "\nNEXT_TARGET=/gauges/index.html");
-
-          setScore("scoreBoot", "FAIL", "bad");
-          setScore("scoreNext", "/gauges/index.html", "next");
-
-          setPill("overallStatus", "FAIL");
-          setPill("bootStatus", "FAIL");
-
-          log("ERROR · " + message);
-        });
-      }
-
-      window.onerror = function (message) {
-        setText("currentRead", "Gauge JavaScript error.");
-        setText("decisionMono", "DIAGNOSTIC_CODE=GAUGE_WINDOW_ERROR\nERROR=" + String(message) + "\nNEXT_TARGET=/gauges/index.html");
-        setScore("scoreBoot", "FAIL", "bad");
-        setPill("overallStatus", "FAIL");
-        log("WINDOW ERROR · " + String(message));
-        return false;
-      };
-
-      window.DGBGaugeV22CProofNormalization = {
-        VERSION: VERSION,
-        PREVIOUS: PREVIOUS,
-        ROOT_PREVIOUS: ROOT_PREVIOUS,
-        runAudit: runAudit
-      };
-
-      function boot() {
-        document.documentElement.setAttribute("data-gauge-js-booted", "true");
-        document.documentElement.setAttribute("data-gauge-contract", VERSION);
-        document.documentElement.setAttribute("data-previous-gauge-contract", PREVIOUS);
-        document.documentElement.setAttribute("data-root-previous-gauge-contract", ROOT_PREVIOUS);
-        document.documentElement.setAttribute("data-full-scope-adversarial-audit", "true");
-        document.documentElement.setAttribute("data-proof-normalization", "true");
-        document.documentElement.setAttribute("data-does-not-render-planet", "true");
-
-        log("JS BOOTED · " + VERSION);
-
-        setScore("scoreBoot", "PASS", "good");
-        setPill("bootStatus", "PASS");
-        setPill("overallStatus", "BOOTED");
-
-        setText("currentRead", "Gauges JavaScript booted. Normalized full-scope audit is ready.");
-        setText("decisionMono", "DIAGNOSTIC_CODE=GAUGES_JS_BOOTED\nGAUGE=" + VERSION + "\nAUTO_RUN=true");
-
-        var button = byId("runAudit");
-        if (button) button.addEventListener("click", runAudit);
-
-        runAudit();
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
-    })();
+      });
+    }).catch(function (error) {
+      renderReceipt({ version: VERSION, timestamp: now(), ok: false, error: String(error && error.message ? error.message : error) });
+      setText("overall-health", "FAIL");
+      setText("generation-readiness", "NOT READY");
+      setText("next-gap", "GAUGES_EXECUTION_ERROR");
+      setText("next-tnt", "B26H_GAUGES_REPAIR_TNT");
+    });
+  }
+
+  function runEstateDiagnostic() {
+    var routes = ["/", "/door/", "/home/", "/products/", "/showroom/", "/showroom/globe/", "/gauges/"];
+    setText("overall-health", "RUNNING");
+    Promise.all(routes.map(fetchRoute)).then(function (results) {
+      renderReceipt({ version: VERSION, timestamp: now(), estateRouteDiagnostic: results.map(function (result, index) { return { route: routes[index], result: result }; }) });
+      setText("overall-health", results.every(function (r) { return r.ok; }) ? "PASS" : "WARN");
+    });
+  }
+
+  global.B26HGaugesSplitRenderChain = {
+    VERSION: VERSION,
+    version: VERSION,
+    paths: PATHS,
+    runSplitChainDiagnostic: runSplitChainDiagnostic,
+    runEstateDiagnostic: runEstateDiagnostic,
+    getLastReceipt: function () { return compact(lastReceipt); }
+  };
+
+  global.document.addEventListener("DOMContentLoaded", function () {
+    var run = $("#run-diagnostic");
+    var estate = $("#run-estate");
+    if (run) run.addEventListener("click", runSplitChainDiagnostic);
+    if (estate) estate.addEventListener("click", runEstateDiagnostic);
+  });
+})(typeof window !== "undefined" ? window : globalThis);
   </script>
 </body>
 </html>

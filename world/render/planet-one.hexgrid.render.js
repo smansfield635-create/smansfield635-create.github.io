@@ -1,22 +1,22 @@
-/* G1 PLANET 1 PUBLIC SURFACE COMPOSITOR + TERRAIN ELEVATION VISIBILITY
+/* G1 PLANET 1 TERRAIN DEPTH / NORMAL / RELIEF TRANSLATION
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_PUBLIC_SURFACE_COMPOSITOR_AND_TERRAIN_ELEVATION_VISIBILITY_PAIR_TNT_v1
+   VERSION: G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1
 
    PURPOSE:
    - Preserve the 256-state hidden hexagonal terrain-cell substrate.
-   - Stop public mode from drawing visible sample dots / honeycomb.
-   - Composite hidden terrain data into a continuous satellite-observed planetary surface.
-   - Preserve maritime datum, water dominance, terrain elevation field, and beach-ready zone.
-   - Hold plateau, mineral exposure, mountains, glaciers, waterfalls, and final beaches.
-   - Keep debug mode available.
+   - Preserve maritime sea-level datum and water dominance.
+   - Preserve public surface compositor / public sample suppression.
+   - Translate elevation into terrain depth through gradient, normal, slope light, and slope shadow.
+   - Keep beaches prepared but not final.
+   - Hold plateau, mineral exposure, mountains, glaciers, waterfalls, and higher relief.
    - Do not claim visual pass.
 */
 
 (function attachPlanetOneHexgridRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_PUBLIC_SURFACE_COMPOSITOR_AND_TERRAIN_ELEVATION_VISIBILITY_PAIR_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_ELEVATION_FIELD_PAIR_TNT_v1";
+  var VERSION = "G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_PUBLIC_SURFACE_COMPOSITOR_AND_TERRAIN_ELEVATION_VISIBILITY_PAIR_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
   var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
 
@@ -36,8 +36,17 @@
     "PUBLIC_SAMPLE_DOTS_SUPPRESSED",
     "PUBLIC_HONEYCOMB_BLOCKED",
     "CONTINUOUS_ORBITAL_SURFACE_TEXTURE_ACTIVE",
-    "TERRAIN_ELEVATION_VISIBILITY_ACTIVE",
+    "TERRAIN_ELEVATION_FIELD_ACTIVE",
+    "TERRAIN_NORMAL_FIELD_ACTIVE",
+    "ELEVATION_GRADIENT_FIELD_ACTIVE",
+    "SHADED_RELIEF_INPUTS_ACTIVE",
+    "NEIGHBOR_ELEVATION_SAMPLING_ACTIVE",
+    "LOWLAND_INTERIOR_DEPTH_SEPARATION_ACTIVE",
+    "RELIEF_TRANSLATION_STAGE_NORMAL_DEPTH_TRANSLATION",
     "BEACH_READY_ZONE_PREPARED_NOT_FINAL",
+    "MOUNTAINS_HELD",
+    "WATERFALLS_HELD",
+    "GLACIERS_HELD",
     "MARITIME_SEA_LEVEL_BASELINE_ACTIVE",
     "WATER_DOMINANCE_PRESERVED",
     "LATTICE_256_ARCHITECTURE_RECEIPT_ACTIVE",
@@ -84,6 +93,7 @@
     plateauPressureHeldAbove: 0.61
   };
 
+  var LIGHT_VECTOR = normalize3(-0.58, -0.46, 0.68);
   var lastGrid = null;
   var lastDraw = null;
 
@@ -111,6 +121,15 @@
 
   function angularDistance(a, b) {
     return Math.abs(normalizeLon(a - b));
+  }
+
+  function normalize3(x, y, z) {
+    var len = Math.sqrt(x * x + y * y + z * z) || 1;
+    return { x: x / len, y: y / len, z: z / len };
+  }
+
+  function dot3(a, b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
   }
 
   function hash2(a, b, seed) {
@@ -302,7 +321,7 @@
     return clamp(value, 0.12, PLATEAU_HELD_CAP);
   }
 
-  function classifySurfaceCell(lon, lat, options) {
+  function baseSurfaceCell(lon, lat, options) {
     var seed = options.seed || 256451;
     var absLat = Math.abs(lat);
     var signature = getLandSignature(lon, lat, seed);
@@ -415,22 +434,25 @@
       material: material,
       state_id: stateId(domain, relief, edgeRole, pressure, material),
       terrain_class: terrainClass,
-      elevation: round(elevation, 4),
-      terrain_elevation: round(elevation, 4),
-      terrain_elevation_field_value: round(elevation, 4),
+      elevation: elevation,
+      terrain_elevation: elevation,
+      terrain_elevation_field_value: elevation,
       terrain_band: terrainBandForElevation(elevation, domain),
-      water_depth: round(waterDepth, 4),
-      shelf_level: round(shelfLevel, 4),
-      ridge_pressure: round(ridgePressure, 4),
-      basin_pressure: round(basinPressure, 4),
-      mineral_pressure: round(mineralPressure, 4),
-      ice_pressure: round(icePressure, 4),
-      emergence_pressure: round(emergencePressure, 4),
+      water_depth: waterDepth,
+      shelf_level: shelfLevel,
+      ridge_pressure: ridgePressure,
+      basin_pressure: basinPressure,
+      mineral_pressure: mineralPressure,
+      ice_pressure: icePressure,
+      emergence_pressure: emergencePressure,
       emergence_stage: domain === DOMAIN.OCEAN_DEEP ? "submerged_ocean" : "terrain_elevation_field",
       sea_level_datum: SEA_LEVEL_DATUM,
       beach_ready_zone: beachReady,
       plateau_pressure_held: true,
       higher_relief_held: true,
+      mountains_held: true,
+      waterfalls_held: true,
+      glaciers_held: true,
       maritime_preservation_flag: true,
       nearshore_transition_flag: domain === DOMAIN.COASTAL_SHELF || edgeRole === EDGE_ROLE.BOUNDARY,
       cardinal_node: cardinal,
@@ -439,9 +461,63 @@
       adjacency_class: adjacencyClass,
       land_body_id: signature.body ? signature.body.id : "ocean_or_polar",
       land_body_role: signature.body ? signature.body.role : "ocean_or_polar",
-      land_score: round(signature.score, 4),
-      fracture_pressure: round(signature.fracturePressure, 4)
+      land_score: signature.score,
+      fracture_pressure: signature.fracturePressure
     };
+  }
+
+  function sampleElevation(lon, lat, options) {
+    return baseSurfaceCell(normalizeLon(lon), clamp(lat, -88, 88), options).terrain_elevation;
+  }
+
+  function classifySurfaceCell(lon, lat, options) {
+    options = options || {};
+
+    var base = baseSurfaceCell(lon, lat, options);
+    var step = Number(options.normalStep || 2.75);
+    var eW = sampleElevation(lon - step, lat, options);
+    var eE = sampleElevation(lon + step, lat, options);
+    var eS = sampleElevation(lon, lat - step, options);
+    var eN = sampleElevation(lon, lat + step, options);
+
+    var gradientX = (eW - eE) * 2.15;
+    var gradientY = (eS - eN) * 2.15;
+    var verticalStrength = base.domain === DOMAIN.OCEAN_DEEP ? 5.8 : base.domain === DOMAIN.COASTAL_SHELF ? 4.4 : 3.45;
+    var normal = normalize3(gradientX, gradientY, verticalStrength);
+    var light = clamp(dot3(normal, LIGHT_VECTOR), -1, 1);
+    var slope = clamp(Math.sqrt(gradientX * gradientX + gradientY * gradientY), 0, 1.25);
+    var reliefIntensity = clamp(slope * 0.72 + Math.max(0, base.terrain_elevation) * 0.26 + base.ridge_pressure * 0.16, 0, 1);
+
+    base.elevation = round(base.elevation, 4);
+    base.terrain_elevation = round(base.terrain_elevation, 4);
+    base.terrain_elevation_field_value = round(base.terrain_elevation_field_value, 4);
+    base.water_depth = round(base.water_depth, 4);
+    base.shelf_level = round(base.shelf_level, 4);
+    base.ridge_pressure = round(base.ridge_pressure, 4);
+    base.basin_pressure = round(base.basin_pressure, 4);
+    base.mineral_pressure = round(base.mineral_pressure, 4);
+    base.ice_pressure = round(base.ice_pressure, 4);
+    base.emergence_pressure = round(base.emergence_pressure, 4);
+    base.land_score = round(base.land_score, 4);
+    base.fracture_pressure = round(base.fracture_pressure, 4);
+
+    base.elevation_gradient_x = round(gradientX, 4);
+    base.elevation_gradient_y = round(gradientY, 4);
+    base.terrain_normal_x = round(normal.x, 4);
+    base.terrain_normal_y = round(normal.y, 4);
+    base.terrain_normal_z = round(normal.z, 4);
+    base.slope_light = round(Math.max(0, light), 4);
+    base.slope_shadow = round(Math.max(0, -light), 4);
+    base.relief_intensity = round(reliefIntensity, 4);
+    base.lowland_interior_depth = round(clamp(base.terrain_elevation * 0.8 + reliefIntensity * 0.4, 0, 1), 4);
+    base.terrain_normal_field_active = true;
+    base.elevation_gradient_field_active = true;
+    base.shaded_relief_inputs_active = true;
+    base.neighbor_elevation_sampling_active = true;
+    base.lowland_interior_depth_separation_active = true;
+    base.relief_translation_stage = "normal_depth_translation";
+
+    return base;
   }
 
   function createPlanetOneHexGrid(options) {
@@ -456,7 +532,6 @@
     var lat;
     var row = 0;
     var q;
-    var r;
     var cell;
     var surface;
     var id;
@@ -467,19 +542,19 @@
 
       for (lon = -180; lon < 180; lon += lonStep) {
         surface = classifySurfaceCell(lon, lat, { seed: seed });
-        r = row;
         id = "hex_lat_" + lat + "_lon_" + lon;
 
         cell = {
           cell_id: id,
           q_coordinate: q,
-          r_coordinate: r,
+          r_coordinate: row,
           center_lon: round(lon, 5),
           center_lat: round(lat, 5),
           projected_x: null,
           projected_y: null,
           visibility: "planetary_data_unprojected",
           visible: false,
+
           domain: surface.domain,
           relief: surface.relief,
           edgeRole: surface.edgeRole,
@@ -487,6 +562,7 @@
           material: surface.material,
           state_id: surface.state_id,
           neighbors: [],
+
           terrain_class: surface.terrain_class,
           elevation: surface.elevation,
           terrain_elevation: surface.terrain_elevation,
@@ -502,8 +578,29 @@
           emergence_stage: surface.emergence_stage,
           sea_level_datum: surface.sea_level_datum,
           beach_ready_zone: surface.beach_ready_zone,
-          plateau_pressure_held: surface.plateau_pressure_held,
-          higher_relief_held: surface.higher_relief_held,
+
+          elevation_gradient_x: surface.elevation_gradient_x,
+          elevation_gradient_y: surface.elevation_gradient_y,
+          terrain_normal_x: surface.terrain_normal_x,
+          terrain_normal_y: surface.terrain_normal_y,
+          terrain_normal_z: surface.terrain_normal_z,
+          slope_light: surface.slope_light,
+          slope_shadow: surface.slope_shadow,
+          relief_intensity: surface.relief_intensity,
+          lowland_interior_depth: surface.lowland_interior_depth,
+
+          terrain_normal_field_active: true,
+          elevation_gradient_field_active: true,
+          shaded_relief_inputs_active: true,
+          neighbor_elevation_sampling_active: true,
+          lowland_interior_depth_separation_active: true,
+
+          plateau_pressure_held: true,
+          higher_relief_held: true,
+          mountains_held: true,
+          waterfalls_held: true,
+          glaciers_held: true,
+
           maritime_preservation_flag: surface.maritime_preservation_flag,
           nearshore_transition_flag: surface.nearshore_transition_flag,
           cardinal_node: surface.cardinal_node,
@@ -564,20 +661,33 @@
       defaultRenderMode: DEFAULT_RENDER_MODE,
       seaLevelDatum: SEA_LEVEL_DATUM,
       elevationBands: ELEVATION_BANDS,
+
       terrainElevationFieldActive: true,
       terrainElevationVisibilityActive: true,
+      terrainNormalFieldActive: true,
+      elevationGradientFieldActive: true,
+      shadedReliefInputsActive: true,
+      neighborElevationSamplingActive: true,
+      lowlandInteriorDepthSeparationActive: true,
+      reliefTranslationStage: "normal_depth_translation",
+
       publicSurfaceCompositorActive: true,
       publicSampleDotsSuppressed: true,
+      continuousOrbitalSurfaceTextureActive: true,
       beachReadyZonePrepared: true,
+      beachReadyZoneVisibleButNotFinal: true,
       elevationBandsActive: true,
       plateauPressureHeld: true,
       higherReliefHeld: true,
+      mountainsHeld: true,
+      waterfallsHeld: true,
+      glaciersHeld: true,
 
-      projectionModel: "planetary_lat_lon_surface_samples",
+      projectionModel: "continuous_orbital_surface_compositor",
       publicMode: "continuous_satellite_surface_compositor",
       debugMode: "cell-debug",
       landmassLaw: "2_dynamic_hemispheric_side_structures_plus_3_secondary_non_polar_bodies_plus_2_poles",
-      beautySequenceLayer: "public_surface_compositor_before_coastal_shelf_refinement",
+      beautySequenceLayer: "terrain_depth_normal_relief_translation_before_plateau_pressure",
 
       axes: { domain: true, relief: true, edgeRole: true, pressure: true, material: true },
       domainAxis: true,
@@ -616,11 +726,7 @@
     if (rho > 1) return null;
 
     if (rho < 0.000001) {
-      return {
-        lon: normalizeLon(viewLon),
-        lat: viewLat,
-        limb: 1
-      };
+      return { lon: normalizeLon(viewLon), lat: viewLat, limb: 1 };
     }
 
     c = Math.asin(rho);
@@ -646,16 +752,25 @@
     var terrain = clamp(cell.terrain_elevation || cell.elevation || 0, -1, PLATEAU_HELD_CAP);
     var emergence = clamp(cell.emergence_pressure || 0, 0, 1);
     var fn = fineNoise(lon, lat, 256451);
-    var beach = cell.beach_ready_zone ? 0.13 : 0;
+    var beach = cell.beach_ready_zone ? 0.12 : 0;
+    var relief = clamp(cell.relief_intensity || 0, 0, 1);
+    var light = clamp(cell.slope_light || 0, 0, 1);
+    var shadow = clamp(cell.slope_shadow || 0, 0, 1);
+    var depth = clamp(cell.lowland_interior_depth || 0, 0, 1);
+
     var tone = clamp(
-      0.45 +
-      terrain * 0.24 +
-      emergence * 0.13 +
+      0.43 +
+      terrain * 0.21 +
+      emergence * 0.10 +
       beach +
-      cell.mineral_pressure * 0.05 +
-      cell.ice_pressure * 0.12 -
+      relief * 0.12 +
+      light * 0.18 -
+      shadow * 0.22 +
+      depth * 0.08 +
+      cell.mineral_pressure * 0.045 +
+      cell.ice_pressure * 0.10 -
       cell.water_depth * 0.20 +
-      (fn - 0.5) * 0.08,
+      (fn - 0.5) * 0.07,
       0,
       1
     );
@@ -669,32 +784,32 @@
       g = 28 + tone * 58;
       b = 68 + tone * 84;
     } else if (cell.domain === DOMAIN.COASTAL_SHELF) {
-      r = 56 + tone * 70 + emergence * 20 + beach * 78;
-      g = 96 + tone * 80 + emergence * 16 + beach * 50;
-      b = 92 + tone * 54 - emergence * 8 - beach * 28;
+      r = 58 + tone * 68 + emergence * 15 + beach * 70 + light * 10 - shadow * 12;
+      g = 98 + tone * 78 + emergence * 12 + beach * 46 + light * 8 - shadow * 10;
+      b = 92 + tone * 50 - emergence * 7 - beach * 24 - shadow * 8;
     } else if (cell.domain === DOMAIN.POLAR_ICE) {
-      r = 162 + tone * 80;
-      g = 190 + tone * 58;
-      b = 210 + tone * 42;
+      r = 162 + tone * 80 + light * 12 - shadow * 20;
+      g = 190 + tone * 58 + light * 10 - shadow * 18;
+      b = 210 + tone * 42 + light * 8 - shadow * 10;
     } else {
-      r = 74 + tone * 88 + emergence * 26 + cell.mineral_pressure * 14;
-      g = 86 + tone * 70 + emergence * 15 + terrain * 12;
-      b = 48 + tone * 42 + cell.ridge_pressure * 10 - emergence * 7;
+      r = 70 + tone * 80 + emergence * 18 + relief * 18 + light * 20 - shadow * 30 + cell.mineral_pressure * 12;
+      g = 82 + tone * 64 + emergence * 10 + relief * 12 + light * 14 - shadow * 22 + terrain * 10;
+      b = 46 + tone * 38 + cell.ridge_pressure * 9 - emergence * 6 - shadow * 14;
     }
 
-    var light = clamp(0.52 + limb * 0.54, 0.28, 1.04);
+    var orbitalLight = clamp(0.50 + limb * 0.56, 0.25, 1.04);
 
     return [
-      Math.round(clamp(r * light, 0, 255)),
-      Math.round(clamp(g * light, 0, 255)),
-      Math.round(clamp(b * light, 0, 255)),
+      Math.round(clamp(r * orbitalLight, 0, 255)),
+      Math.round(clamp(g * orbitalLight, 0, 255)),
+      Math.round(clamp(b * orbitalLight, 0, 255)),
       255
     ];
   }
 
   function drawContinuousSurface(ctx, options) {
     var canvas = ctx.canvas;
-    var scale = clamp(Number(options.compositorScale || 0.72), 0.45, 1);
+    var scale = clamp(Number(options.compositorScale || 0.64), 0.42, 1);
     var offW = Math.max(180, Math.round(canvas.width * scale));
     var offH = Math.max(180, Math.round(canvas.height * scale));
     var off = document.createElement("canvas");
@@ -711,10 +826,9 @@
     var y;
     var dx;
     var dy;
-    var p;
     var geo;
     var cell;
-    var c;
+    var color;
     var i;
 
     off.width = offW;
@@ -748,12 +862,12 @@
         }
 
         cell = classifySurfaceCell(geo.lon, geo.lat, { seed: seed });
-        c = surfaceColor(cell, geo.lon, geo.lat, geo.limb);
+        color = surfaceColor(cell, geo.lon, geo.lat, geo.limb);
 
-        data[i] = c[0];
-        data[i + 1] = c[1];
-        data[i + 2] = c[2];
-        data[i + 3] = c[3];
+        data[i] = color[0];
+        data[i + 1] = color[1];
+        data[i + 2] = color[2];
+        data[i + 3] = color[3];
       }
     }
 
@@ -761,7 +875,7 @@
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
-    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.90 : options.surfaceAlpha);
+    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.94 : options.surfaceAlpha);
     ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
@@ -774,6 +888,13 @@
       publicSurfaceCompositorActive: true,
       publicSampleDotsSuppressed: true,
       continuousOrbitalSurfaceTextureActive: true,
+      terrainElevationFieldActive: true,
+      terrainNormalFieldActive: true,
+      elevationGradientFieldActive: true,
+      shadedReliefInputsActive: true,
+      neighborElevationSamplingActive: true,
+      lowlandInteriorDepthSeparationActive: true,
+      reliefTranslationStage: "normal_depth_translation",
       terrainElevationVisibilityActive: true,
       publicHoneycombBlocked: true,
       satelliteObservationalModeActive: true,
@@ -781,12 +902,14 @@
       maritimeSeaLevelBaselineActive: true,
       seaLevelDatum: SEA_LEVEL_DATUM,
       controlledLandElevationActive: true,
-      terrainElevationFieldActive: true,
       beachReadyZonePrepared: true,
       beachReadyZoneVisibleButNotFinal: true,
       elevationBandsActive: true,
       plateauPressureHeld: true,
       higherReliefHeld: true,
+      mountainsHeld: true,
+      waterfallsHeld: true,
+      glaciersHeld: true,
       waterDominancePreserved: true,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
@@ -955,6 +1078,13 @@
       continuousOrbitalSurfaceTextureActive: true,
       terrainElevationVisibilityActive: true,
 
+      terrainNormalFieldActive: true,
+      elevationGradientFieldActive: true,
+      shadedReliefInputsActive: true,
+      neighborElevationSamplingActive: true,
+      lowlandInteriorDepthSeparationActive: true,
+      reliefTranslationStage: "normal_depth_translation",
+
       maritimeSeaLevelBaselineActive: true,
       seaLevelDatum: SEA_LEVEL_DATUM,
       controlledLandElevationActive: true,
@@ -965,6 +1095,9 @@
       elevationBandsActive: true,
       plateauPressureHeld: true,
       higherReliefHeld: true,
+      mountainsHeld: true,
+      waterfallsHeld: true,
+      glaciersHeld: true,
       waterDominancePreserved: true,
 
       northSouthEastWestNodalSequenceActive: true,
@@ -974,7 +1107,7 @@
       cellDebugModeAvailable: true,
       publicHoneycombBlocked: true,
       defaultRenderMode: DEFAULT_RENDER_MODE,
-      projectionModel: "continuous_orbital_surface_compositor",
+      projectionModel: "continuous_orbital_surface_compositor_with_normal_relief",
 
       twoDynamicHemisphericLandStructuresActive: true,
       threeSecondaryNonPolarBodiesActive: true,
@@ -1097,6 +1230,12 @@
     publicSampleDotsSuppressed: true,
     continuousOrbitalSurfaceTextureActive: true,
 
+    terrainNormalFieldActive: true,
+    elevationGradientFieldActive: true,
+    shadedReliefInputsActive: true,
+    neighborElevationSamplingActive: true,
+    lowlandInteriorDepthSeparationActive: true,
+
     maritimeSeaLevelBaselineActive: true,
     seaLevelDatum: SEA_LEVEL_DATUM,
     controlledLandElevationActive: true,
@@ -1107,6 +1246,9 @@
     elevationBandsActive: true,
     plateauPressureHeld: true,
     higherReliefHeld: true,
+    mountainsHeld: true,
+    waterfallsHeld: true,
+    glaciersHeld: true,
     northSouthEastWestNodalSequenceActive: true,
     nodalConstruct256Active: true,
 

@@ -1,32 +1,40 @@
-/* G1 PLANET 1 AXIS ROTATION RENDERER
+/* G1 PLANET 1 CONTROLLED LAND ELEVATION RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_AXIS_ROTATION_RENDERER_TNT_v1
+   VERSION: G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1
 
    PURPOSE:
-   - Preserve Planet 1 orbital renderer shell.
-   - Consume /world/render/planet-one.hexgrid.render.js as hidden surface substrate.
-   - Accept runtime-controlled viewLon/viewLat.
-   - Draw Planet 1 on a soft visible axis.
-   - Keep terrain passive; runtime owns motion.
-   - Keep visual pass on HOLD.
+   - Preserve the maritime sea-level datum.
+   - Render controlled land emergence from the hidden 256-state hexgrid.
+   - Keep water dominance and satellite-observational projection.
+   - Do not skip into shelf finalization, plateau pressure, mineral pressure, or higher relief.
+   - Do not claim visual pass.
 */
 
 (function attachPlanetOneRendererFacade(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_AXIS_ROTATION_RENDERER_TNT_v1";
-  var BASELINE = "PLANET_1_G1_RAISED_LOW_LAND_WITH_TURQUOISE_SHELF_RIM_v1";
+  var VERSION = "G1_PLANET_1_CONTROLLED_LAND_ELEVATION_PAIR_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_1_HEX_SUBSTRATE_BASELINE_v2";
+  var MARITIME_BASELINE = "PLANET_1_G1_MARITIME_SEA_LEVEL_BASELINE_v1";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
   var DEFAULT_RENDER_MODE = "satellite";
 
   var CONTRACT_MARKERS = [
     VERSION,
     BASELINE,
+    MARITIME_BASELINE,
     "RENDERER_FACADE_ACTIVE",
-    "AXIS_ROTATION_RENDER_TARGET_ACTIVE",
-    "RUNTIME_VIEWLON_ACCEPTED",
-    "RUNTIME_VIEWLAT_ACCEPTED",
+    "RESPONSIBILITY_SPLIT_ACTIVE",
+    "ORBITAL_PROJECTION_RESTRAINT_ACTIVE",
     "HEXGRID_CONSUMED_AS_HIDDEN_PLANETARY_DATA",
+    "MARITIME_DATUM_PRESERVED",
+    "SEA_LEVEL_PLANE_READ_PRESERVED",
+    "CONTROLLED_LAND_ELEVATION_RENDERED",
+    "SUBTLE_LAND_EMERGENCE_VISIBLE",
+    "NO_PREMATURE_SHELF_FINALIZATION",
+    "NO_PREMATURE_PLATEAU_RELIEF",
+    "NO_PREMATURE_MOUNTAIN_RELIEF",
+    "SATELLITE_OBSERVATIONAL_MODE_ACTIVE",
     "PUBLIC_HONEYCOMB_BLOCKED",
     "VISUAL_PASS_NOT_CLAIMED"
   ];
@@ -42,12 +50,8 @@
     hexgridLoadComplete: false,
     hexgridLoadFailed: false,
     rendererConsumesHexgrid: false,
-    defaultRenderMode: DEFAULT_RENDER_MODE,
-    viewLon: -28,
-    viewLat: 0,
-    axisTilt: -0.28,
-    axisVisible: true,
-    visualPassClaimed: false
+    satelliteObservationalModeActive: true,
+    defaultRenderMode: DEFAULT_RENDER_MODE
   };
 
   function now() {
@@ -88,28 +92,24 @@
 
     if (!mount || !global.document) return null;
 
-    if (mount.nodeName && String(mount.nodeName).toLowerCase() === "canvas") {
-      canvas = mount;
-    } else {
-      canvas = mount.querySelector && mount.querySelector("canvas[data-planet-one-render-canvas='true']");
+    width = Number(options.width || options.size || mount.clientWidth || 720);
+    height = Number(options.height || options.size || mount.clientHeight || width || 720);
 
-      if (!canvas) {
-        canvas = global.document.createElement("canvas");
-        canvas.setAttribute("data-planet-one-render-canvas", "true");
-        canvas.setAttribute("data-renderer-version", VERSION);
-        canvas.setAttribute("data-render-mode", DEFAULT_RENDER_MODE);
-        canvas.setAttribute("aria-label", "Planet 1 satellite-observed rotating orbital renderer");
+    width = Math.max(320, Math.min(1200, width));
+    height = Math.max(320, Math.min(1200, height));
 
-        if (options.clearMount !== false) mount.innerHTML = "";
-        mount.appendChild(canvas);
-      }
+    canvas = mount.querySelector && mount.querySelector("canvas[data-planet-one-render-canvas='true']");
+
+    if (!canvas) {
+      canvas = global.document.createElement("canvas");
+      canvas.setAttribute("data-planet-one-render-canvas", "true");
+      canvas.setAttribute("data-renderer-version", VERSION);
+      canvas.setAttribute("data-render-mode", DEFAULT_RENDER_MODE);
+      canvas.setAttribute("aria-label", "Planet 1 controlled land elevation satellite renderer");
+
+      if (options.clearMount !== false) mount.innerHTML = "";
+      mount.appendChild(canvas);
     }
-
-    width = Number(options.width || options.size || canvas.clientWidth || mount.clientWidth || 720);
-    height = Number(options.height || options.size || canvas.clientHeight || mount.clientHeight || width || 720);
-
-    width = Math.max(320, Math.min(1400, width));
-    height = Math.max(320, Math.min(1400, height));
 
     canvas.width = width;
     canvas.height = height;
@@ -131,7 +131,11 @@
     return Boolean(
       global.DGBPlanetOneHexgridRender &&
       typeof global.DGBPlanetOneHexgridRender.createPlanetOneHexGrid === "function" &&
-      typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function"
+      typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function" &&
+      (
+        typeof global.DGBPlanetOneHexgridRender.getHexgridStatus === "function" ||
+        typeof global.DGBPlanetOneHexgridRender.status === "function"
+      )
     );
   }
 
@@ -143,11 +147,7 @@
         return global.DGBPlanetOneHexgridRender.getHexgridStatus();
       }
 
-      if (typeof global.DGBPlanetOneHexgridRender.status === "function") {
-        return global.DGBPlanetOneHexgridRender.status();
-      }
-
-      return null;
+      return global.DGBPlanetOneHexgridRender.status();
     }, null);
   }
 
@@ -194,17 +194,17 @@
 
     state.hexgridLoadAttempted = true;
 
-    if (existing) return waitForHexgrid(2200);
+    if (existing) return waitForHexgrid(1800);
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = HEXGRID_PATH + "?axis_rotation_pair=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
+      script.src = HEXGRID_PATH + "?controlled_land_elevation=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
       script.dataset.planetOneHexgridRequiredByRenderer = VERSION;
 
       script.onload = function () {
-        waitForHexgrid(2200).then(resolve);
+        waitForHexgrid(1800).then(resolve);
       };
 
       script.onerror = function () {
@@ -217,6 +217,10 @@
     });
   }
 
+  function moduleDetected(name) {
+    return Boolean(global[name]);
+  }
+
   function drawBaseSphere(ctx, cx, cy, radius) {
     var ocean;
     var shade;
@@ -225,9 +229,9 @@
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.42, radius * 0.08, cx, cy, radius * 1.08);
-    ocean.addColorStop(0, "rgba(78,138,170,.98)");
-    ocean.addColorStop(0.34, "rgba(32,84,124,.98)");
-    ocean.addColorStop(0.72, "rgba(8,30,62,.99)");
+    ocean.addColorStop(0, "rgba(78,136,166,.98)");
+    ocean.addColorStop(0.32, "rgba(31,82,122,.98)");
+    ocean.addColorStop(0.70, "rgba(8,31,64,.99)");
     ocean.addColorStop(1, "rgba(2,8,24,1)");
 
     ctx.save();
@@ -269,10 +273,10 @@
     ctx.clip();
   }
 
-  function drawOrbitalLighting(ctx, cx, cy, radius) {
+  function drawSeaLevelAtmosphere(ctx, cx, cy, radius) {
     var haze;
     var terminator;
-    var polarCurve;
+    var waterline;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
@@ -292,19 +296,13 @@
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    polarCurve = ctx.createRadialGradient(cx, cy - radius * 0.82, radius * 0.03, cx, cy - radius * 0.82, radius * 0.72);
-    polarCurve.addColorStop(0, "rgba(235,245,252,.10)");
-    polarCurve.addColorStop(0.45, "rgba(235,245,252,.04)");
-    polarCurve.addColorStop(1, "rgba(235,245,252,0)");
-    ctx.fillStyle = polarCurve;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius);
-
-    polarCurve = ctx.createRadialGradient(cx, cy + radius * 0.82, radius * 0.03, cx, cy + radius * 0.82, radius * 0.72);
-    polarCurve.addColorStop(0, "rgba(235,245,252,.09)");
-    polarCurve.addColorStop(0.45, "rgba(235,245,252,.035)");
-    polarCurve.addColorStop(1, "rgba(235,245,252,0)");
-    ctx.fillStyle = polarCurve;
-    ctx.fillRect(cx - radius, cy, radius * 2, radius);
+    waterline = ctx.createRadialGradient(cx, cy, radius * 0.42, cx, cy, radius * 1.0);
+    waterline.addColorStop(0, "rgba(226,207,146,.018)");
+    waterline.addColorStop(0.52, "rgba(226,207,146,.035)");
+    waterline.addColorStop(0.86, "rgba(226,207,146,.018)");
+    waterline.addColorStop(1, "rgba(226,207,146,0)");
+    ctx.fillStyle = waterline;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
   }
@@ -324,30 +322,23 @@
     ctx.fillStyle = glow;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(242,199,111,.13)";
-    ctx.lineWidth = Math.max(1, radius * 0.005);
+    ctx.strokeStyle = "rgba(242,199,111,.15)";
+    ctx.lineWidth = Math.max(1, radius * 0.006);
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawAxis(ctx, cx, cy, radius, options) {
-    var tilt = Number(options.axisTilt == null ? state.axisTilt : options.axisTilt);
-    var alpha = Number(options.axisAlpha == null ? 0.16 : options.axisAlpha);
-
+  function drawAxis(ctx, cx, cy, radius) {
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(tilt);
+    ctx.rotate(-0.28);
     ctx.beginPath();
-    ctx.moveTo(0, -radius * 1.09);
-    ctx.lineTo(0, radius * 1.09);
-    ctx.strokeStyle = "rgba(242,199,111," + Math.max(0.04, Math.min(0.22, alpha)).toFixed(3) + ")";
-    ctx.lineWidth = Math.max(1, radius * 0.0032);
+    ctx.moveTo(0, -radius * 1.10);
+    ctx.lineTo(0, radius * 1.10);
+    ctx.strokeStyle = "rgba(242,199,111,.16)";
+    ctx.lineWidth = Math.max(1, radius * 0.004);
     ctx.stroke();
     ctx.restore();
-  }
-
-  function moduleDetected(name) {
-    return Boolean(global[name]);
   }
 
   function renderNow(canvas, options) {
@@ -360,9 +351,6 @@
     var grid;
     var hexStatus;
     var renderMode;
-    var viewLon;
-    var viewLat;
-    var showAxis;
     var drewHexgrid = false;
 
     options = options || {};
@@ -382,14 +370,6 @@
     cy = canvas.height / 2;
     radius = Number(options.radius || size * 0.43);
     renderMode = options.renderMode || DEFAULT_RENDER_MODE;
-    viewLon = Number(options.viewLon == null ? state.viewLon : options.viewLon);
-    viewLat = Number(options.viewLat == null ? state.viewLat : options.viewLat);
-    showAxis = options.showAxis == null ? state.axisVisible : Boolean(options.showAxis);
-
-    state.viewLon = viewLon;
-    state.viewLat = viewLat;
-    state.axisTilt = Number(options.axisTilt == null ? state.axisTilt : options.axisTilt);
-    state.axisVisible = showAxis;
 
     drawBaseSphere(ctx, cx, cy, radius);
 
@@ -410,9 +390,9 @@
         centerX: cx,
         centerY: cy,
         radius: radius,
-        viewLon: viewLon,
-        viewLat: viewLat,
-        alpha: options.hexAlpha == null ? 0.90 : options.hexAlpha,
+        viewLon: options.viewLon == null ? -28 : options.viewLon,
+        viewLat: options.viewLat == null ? 0 : options.viewLat,
+        alpha: options.hexAlpha == null ? 0.84 : options.hexAlpha,
         renderMode: renderMode,
         coastGlow: true
       });
@@ -423,36 +403,44 @@
       state.rendererConsumesHexgrid = true;
     } else {
       state.rendererConsumesHexgrid = false;
-      hexStatus = null;
     }
 
-    drawOrbitalLighting(ctx, cx, cy, radius);
+    drawSeaLevelAtmosphere(ctx, cx, cy, radius);
     drawAtmosphere(ctx, cx, cy, radius);
-    if (showAxis) drawAxis(ctx, cx, cy, radius, options);
+    if (options.showAxis !== false) drawAxis(ctx, cx, cy, radius);
 
     state.lastRender = {
       ok: true,
       mounted: true,
       version: VERSION,
       baseline: BASELINE,
+      maritimeBaseline: MARITIME_BASELINE,
       renderedAt: now(),
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
       radius: radius,
       renderMode: renderMode,
-      viewLon: viewLon,
-      viewLat: viewLat,
-      axisTilt: state.axisTilt,
-      axisVisible: showAxis,
+      defaultRenderMode: DEFAULT_RENDER_MODE,
       projectionModel: "orthographic_orbital_projection",
       hexgridDetected: hasHexgrid(),
       hexgridSubstrateDetected: hasHexgrid(),
       hexCellSubstrateActive: Boolean(hexStatus && hexStatus.hexCellSubstrateActive),
       hexagonalPixelFormatActive: Boolean(hexStatus && hexStatus.hexagonalPixelFormatActive),
+      maritimeDatumPreserved: true,
+      maritimeSeaLevelBaselineActive: Boolean(hexStatus && hexStatus.maritimeSeaLevelBaselineActive),
+      seaLevelPlaneReadPreserved: true,
+      controlledLandElevationRendered: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+      subtleLandEmergenceVisible: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+      noPrematureShelfFinalization: true,
+      noPrematurePlateauRelief: true,
+      noPrematureMountainRelief: true,
       satelliteObservationalModeActive: renderMode === "satellite",
       publicHoneycombBlocked: renderMode === "satellite",
+      cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
+      twoDynamicHemisphericLandStructuresActive: Boolean(hexStatus && hexStatus.twoDynamicHemisphericLandStructuresActive),
+      threeSecondaryNonPolarBodiesActive: Boolean(hexStatus && hexStatus.threeSecondaryNonPolarBodiesActive),
+      sevenLandmassLawActive: Boolean(hexStatus && hexStatus.sevenLandmassLawActive),
       rendererConsumesHexgrid: drewHexgrid,
-      runtimeMotionReady: true,
       landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
       surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
       terrainModuleDetected: moduleDetected("DGBPlanetOneTerrainRender"),
@@ -540,13 +528,7 @@
     state.paused = false;
 
     if (state.lastCanvas) {
-      renderNow(state.lastCanvas, {
-        renderMode: DEFAULT_RENDER_MODE,
-        viewLon: state.viewLon,
-        viewLat: state.viewLat,
-        axisTilt: state.axisTilt,
-        showAxis: state.axisVisible
-      });
+      renderNow(state.lastCanvas, { renderMode: DEFAULT_RENDER_MODE });
     }
 
     return {
@@ -584,17 +566,16 @@
       VERSION: VERSION,
       version: VERSION,
       baseline: BASELINE,
+      maritimeBaseline: MARITIME_BASELINE,
       CONTRACT_MARKERS: CONTRACT_MARKERS.slice(),
       rendererFacadeActive: true,
-      axisRotationRenderTargetActive: true,
+      responsibilitySplitActive: true,
       activeCanvas: Boolean(state.lastCanvas),
       mountComplete: Boolean(state.lastCanvas && state.lastMount),
       projectionModel: "orthographic_orbital_projection",
-      viewLon: state.viewLon,
-      viewLat: state.viewLat,
-      axisTilt: state.axisTilt,
-      axisVisible: state.axisVisible,
       hexgridDetected: hasHexgrid(),
+      hexGridDetected: hasHexgrid(),
+      hexgridSubstrateDetected: hasHexgrid(),
       hexCellSubstrateActive: Boolean(hexStatus && hexStatus.hexCellSubstrateActive),
       hexagonalPixelFormatActive: Boolean(hexStatus && hexStatus.hexagonalPixelFormatActive),
       terrainCellSamplingActive: Boolean(hexStatus && hexStatus.terrainCellSamplingActive),
@@ -602,13 +583,29 @@
       elevationCellFieldActive: Boolean(hexStatus && hexStatus.elevationCellFieldActive),
       waterDepthCellFieldActive: Boolean(hexStatus && hexStatus.waterDepthCellFieldActive),
       mineralPressureCellFieldActive: Boolean(hexStatus && hexStatus.mineralPressureCellFieldActive),
+      maritimeDatumPreserved: true,
+      maritimeSeaLevelBaselineActive: Boolean(hexStatus && hexStatus.maritimeSeaLevelBaselineActive),
+      seaLevelPlaneReadPreserved: true,
+      controlledLandElevationRendered: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+      subtleLandEmergenceVisible: Boolean(hexStatus && hexStatus.controlledLandElevationActive),
+      noPrematureShelfFinalization: true,
+      noPrematurePlateauRelief: true,
+      noPrematureMountainRelief: true,
       satelliteObservationalModeActive: true,
       publicHoneycombBlocked: true,
+      cellDebugModeAvailable: Boolean(hexStatus && hexStatus.cellDebugModeAvailable),
+      defaultRenderMode: DEFAULT_RENDER_MODE,
+      twoDynamicHemisphericLandStructuresActive: Boolean(hexStatus && hexStatus.twoDynamicHemisphericLandStructuresActive),
+      threeSecondaryNonPolarBodiesActive: Boolean(hexStatus && hexStatus.threeSecondaryNonPolarBodiesActive),
+      sevenLandmassLawActive: Boolean(hexStatus && hexStatus.sevenLandmassLawActive),
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexgrid && hasHexgrid()),
+      landConstructsModuleDetected: moduleDetected("DGBPlanetOneLandConstructs"),
+      surfaceMaterialsModuleDetected: moduleDetected("DGBPlanetOneSurfaceMaterials"),
+      terrainModuleDetected: moduleDetected("DGBPlanetOneTerrainRender"),
+      hydrationModuleDetected: moduleDetected("DGBPlanetOneHydrationRender"),
       hexgridLoadAttempted: state.hexgridLoadAttempted,
       hexgridLoadComplete: state.hexgridLoadComplete,
       hexgridLoadFailed: state.hexgridLoadFailed,
-      runtimeMotionReady: true,
       lastRender: state.lastRender,
       lastError: state.lastError,
       visualPassClaimed: false
@@ -623,6 +620,7 @@
     VERSION: VERSION,
     version: VERSION,
     BASELINE: BASELINE,
+    MARITIME_BASELINE: MARITIME_BASELINE,
     CONTRACT_MARKERS: CONTRACT_MARKERS,
     renderPlanetOne: renderPlanetOne,
     render: render,

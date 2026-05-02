@@ -1,13 +1,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="earth-generation-1"
+  data-page="earth-g1-sun-g1"
   data-route="/showroom/globe/"
-  data-contract="SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1"
+  data-contract="SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1"
   data-demo-universe="earth-sun-sequence"
   data-generation="G1"
   data-earth-g1="complete"
-  data-sun-g1="true-solar-body-runtime"
+  data-sun-g1="actual-solar-disc-runtime"
   data-moon="queued"
   data-planet-one="reserved-for-nine-summits-universe"
   data-visual-pass-claimed="false"
@@ -16,7 +16,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Earth G1 · Sun G1</title>
-  <meta name="description" content="Earth Generation 1 baseline with Sun G1 true solar body runtime inspection.">
+  <meta name="description" content="Earth Generation 1 baseline with Sun G1 actual solar disc runtime.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
@@ -26,21 +26,21 @@
       overflow-x: hidden;
     }
 
-    .earth-g1-page-note {
+    .page-note {
       color: var(--dgb-muted, rgba(228, 234, 246, 0.76));
       line-height: 1.55;
     }
 
-    .earth-g1-top-actions,
     .body-switch-row,
-    .control-grid {
+    .control-grid,
+    .top-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 18px;
     }
 
-    .earth-g1-book-bubble {
+    .book-bubble {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -57,7 +57,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
     }
 
-    .earth-g1-book-bubble::before {
+    .book-bubble::before {
       content: "Book";
       display: inline-flex;
       align-items: center;
@@ -94,97 +94,110 @@
     }
 
     .planet-stage {
-      width: min(82vw, 720px);
+      width: min(84vw, 720px);
       max-width: 100%;
       aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
       margin-inline: auto;
-      overflow: visible;
+      overflow: hidden;
       border-radius: 36px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(19, 48, 105, 0.24), transparent 52%),
+        linear-gradient(180deg, rgba(4, 9, 21, 0.98), rgba(4, 12, 28, 0.98));
+      position: relative;
+    }
+
+    .planet-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 16% 28%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.4px),
+        radial-gradient(circle at 78% 20%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 68% 78%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 28% 74%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0) 1px);
+      background-size: 180px 180px, 220px 220px, 260px 260px, 200px 200px;
+      opacity: 0.32;
+      pointer-events: none;
     }
 
     .planet-stage[data-active-body="sun"] {
-      width: min(82vw, 720px) !important;
-      height: auto !important;
-      max-width: 100% !important;
-      aspect-ratio: 1 / 1 !important;
-      display: grid !important;
-      place-items: center !important;
       overflow: visible !important;
-      transform: none !important;
     }
 
-    .sun-g1-solar-shell {
+    .sun-stage {
       position: relative;
-      display: grid;
-      place-items: center;
       width: min(82vw, 560px);
       height: min(82vw, 560px);
       max-width: 100%;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-      overflow: visible;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255, 190, 78, 0.12), transparent 64%),
-        transparent;
-      transform: none;
+      max-height: 100%;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
     }
 
-    .sun-g1-solar-shell::before {
+    .sun-stage::before {
       content: "";
       position: absolute;
-      inset: 5%;
+      inset: 8%;
       border-radius: 50%;
-      pointer-events: none;
-      box-shadow:
-        0 0 42px rgba(255, 214, 100, 0.20),
-        0 0 96px rgba(255, 118, 42, 0.13),
-        0 0 150px rgba(255, 88, 32, 0.08);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 220, 120, 0.20), rgba(255, 140, 50, 0.10) 46%, rgba(255, 100, 30, 0.035) 70%, transparent 100%);
+      filter: blur(3px);
+      z-index: 1;
     }
 
-    .sun-g1-solar-canvas {
+    .sun-stage::after {
+      content: "";
+      position: absolute;
+      inset: 2%;
+      border-radius: 50%;
+      box-shadow:
+        0 0 34px rgba(255, 220, 130, 0.18),
+        0 0 74px rgba(255, 150, 55, 0.13),
+        0 0 132px rgba(255, 96, 30, 0.08);
+      z-index: 0;
+    }
+
+    .sun-canvas {
       position: relative;
       z-index: 2;
       display: block;
-      width: min(82vw, 560px);
-      height: min(82vw, 560px);
+      width: min(76vw, 500px);
+      height: min(76vw, 500px);
       max-width: 100%;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
+      max-height: 100%;
       border-radius: 50%;
       background: transparent;
       object-fit: contain;
       transform: none;
-      filter: saturate(1.08) contrast(1.05);
+      filter: saturate(1.12) contrast(1.06);
     }
 
     .control-grid button,
     .body-switch-row button {
-      min-width: 130px;
+      min-width: 132px;
     }
 
-    .earth-g1-receipt {
+    .receipt {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
     @media (max-width: 720px) {
-      .planet-stage,
-      .planet-stage[data-active-body="sun"] {
-        width: min(82vw, 430px) !important;
+      .planet-stage {
+        width: min(84vw, 430px);
       }
 
-      .sun-g1-solar-shell,
-      .sun-g1-solar-canvas {
+      .sun-stage {
         width: min(82vw, 430px);
         height: min(82vw, 430px);
       }
 
-      .control-grid button,
-      .body-switch-row button {
-        min-width: 132px;
+      .sun-canvas {
+        width: min(76vw, 390px);
+        height: min(76vw, 390px);
       }
     }
   </style>
@@ -211,7 +224,7 @@
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Earth G1</a>
         <a href="/gauges/">Gauges</a>
-        <a class="earth-g1-book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read</a>
+        <a class="book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read</a>
       </nav>
     </div>
   </header>
@@ -222,27 +235,27 @@
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
 
       <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 now uses a local true solar-body runtime on this route so the Sun can be inspected
-        without disturbing the accepted Earth baseline.
+        Earth G1 remains complete. Sun G1 is renewed as an actual solar disc: round, luminous, turbulent, and photosphere-based.
+        Moon remains queued. Planet 1 remains reserved for the future Nine Summits Universe.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun G1 solar body</span>
+        <span class="dgb-chip">Sun G1 solar disc</span>
         <span class="dgb-chip">Moon queued</span>
         <span class="dgb-chip">Planet 1 reserved</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
 
-      <div class="earth-g1-top-actions" aria-label="Earth Generation 1 actions">
-        <a class="earth-g1-book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read about the book</a>
+      <div class="top-actions" aria-label="Book action">
+        <a class="book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read about the book</a>
       </div>
     </section>
 
     <section class="dgb-card">
       <h2>Choose Demo Universe body</h2>
-      <p class="earth-g1-page-note">
-        Earth G1 remains the accepted baseline. Sun G1 should render as a round solar body with controlled corona and plasma motion.
+      <p class="page-note">
+        Earth G1 stays on the accepted Earth renderer. Sun G1 uses a dedicated actual-solar-disc runtime.
       </p>
 
       <div class="body-switch-row" aria-label="Demo Universe body switch">
@@ -251,7 +264,7 @@
       </div>
     </section>
 
-    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Demo Universe body renderer">
+    <section class="dgb-card planet-card" aria-label="Demo Universe body renderer">
       <div class="planet-stage-shell">
         <div
           id="planet-one-render"
@@ -262,7 +275,7 @@
           data-planet-one-render="true"
           data-demo-universe="earth-sun-sequence"
           data-generation="G1"
-          data-render-contract="SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1"
+          data-render-contract="SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1"
           data-active-body="earth"
           data-visual-pass-claimed="false"
         ></div>
@@ -271,8 +284,8 @@
 
     <section class="dgb-card">
       <h2 id="control-title">Earth G1 motion control</h2>
-      <p id="control-note" class="earth-g1-page-note">
-        Controls target the active body. Earth uses the accepted Earth renderer. Sun uses the local solar-body runtime.
+      <p id="control-note" class="page-note">
+        Controls target the active body. Earth uses the accepted Earth renderer. Sun uses the solar-disc runtime.
       </p>
 
       <div class="control-grid">
@@ -286,14 +299,14 @@
         <button class="dgb-button secondary" type="button" data-action="fast">Fast</button>
       </div>
 
-      <label for="body-speed" class="earth-g1-page-note">Motion speed</label>
+      <label for="body-speed" class="page-note">Motion speed</label>
       <input
         id="body-speed"
         name="body-speed"
         type="range"
         min="0"
         max="100"
-        value="31"
+        value="28"
         data-body-speed="true"
         aria-label="Demo Universe body motion speed"
       >
@@ -301,22 +314,22 @@
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1
 route=/showroom/globe/
-page=earth-generation-1
-public-label=Earth G1
+page=earth-g1-sun-g1
 earth-g1-complete=true
-sun-g1-true-solar-body-runtime=true
+sun-g1=actual-solar-disc-runtime
+sun-shape=round
+sun-surface=photosphere-granulation
+sun-corona=controlled
 moon=queued
 planet-1=reserved-for-nine-summits-universe
-book-link=/nine-summits-of-love/
-universe-route=/nine-summits/universe/
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1 · Earth G1 · Sun G1 · Demo Universe.
+    SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1 · Earth G1 preserved · Sun G1 solar disc · Moon queued.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -324,10 +337,10 @@ visual-pass-claimed=false</pre>
   <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
 
   <script>
-    (function bootEarthG1SunG1SolarBodyRuntime(global) {
+    (function bootEarthSunSequence(window) {
       "use strict";
 
-      var VERSION = "SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1";
+      var VERSION = "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1";
       var currentBody = "earth";
       var sunRuntime = null;
 
@@ -336,11 +349,11 @@ visual-pass-claimed=false</pre>
       }
 
       function earth() {
-        return global.DGBEarthAssetCanvas || global.DGBDemoUniverseEarthCanvas || null;
+        return window.DGBEarthAssetCanvas || window.DGBDemoUniverseEarthCanvas || null;
       }
 
       function renderer() {
-        return global.DGBPlanetOneRenderer || global.DGBPlanetOneRender || global.DGBPlanetOneRenderTeam || null;
+        return window.DGBPlanetOneRenderer || window.DGBPlanetOneRender || window.DGBPlanetOneRenderTeam || null;
       }
 
       function clamp(value, min, max) {
@@ -351,9 +364,12 @@ visual-pass-claimed=false</pre>
         return a + (b - a) * clamp(t, 0, 1);
       }
 
-      function hash2(x, y, seed) {
-        var n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
-        return n - Math.floor(n);
+      function fract(value) {
+        return value - Math.floor(value);
+      }
+
+      function hash(x, y, seed) {
+        return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 91.7) * 43758.5453123);
       }
 
       function noise(x, y, seed) {
@@ -363,65 +379,76 @@ visual-pass-claimed=false</pre>
         var yf = y - y0;
         var u = xf * xf * (3 - 2 * xf);
         var v = yf * yf * (3 - 2 * yf);
-        var a = hash2(x0, y0, seed);
-        var b = hash2(x0 + 1, y0, seed);
-        var c = hash2(x0, y0 + 1, seed);
-        var d = hash2(x0 + 1, y0 + 1, seed);
+
+        var a = hash(x0, y0, seed);
+        var b = hash(x0 + 1, y0, seed);
+        var c = hash(x0, y0 + 1, seed);
+        var d = hash(x0 + 1, y0 + 1, seed);
+
         return mix(mix(a, b, u), mix(c, d, u), v);
       }
 
       function fbm(x, y, seed) {
-        return (
-          noise(x, y, seed) * 0.42 +
-          noise(x * 2.1, y * 2.1, seed + 13) * 0.26 +
-          noise(x * 4.2, y * 4.2, seed + 29) * 0.18 +
-          noise(x * 8.4, y * 8.4, seed + 47) * 0.10 +
-          noise(x * 16.8, y * 16.8, seed + 71) * 0.04
-        );
+        var total = 0;
+        var amplitude = 0.52;
+        var frequency = 1;
+        var sum = 0;
+
+        for (var i = 0; i < 6; i += 1) {
+          total += noise(x * frequency, y * frequency, seed + i * 23) * amplitude;
+          sum += amplitude;
+          amplitude *= 0.52;
+          frequency *= 2.05;
+        }
+
+        return total / sum;
       }
 
-      function plasmaColor(value, edge) {
-        var red = [128, 36, 18];
-        var orange = [236, 92, 26];
-        var gold = [255, 170, 44];
-        var yellow = [255, 224, 108];
-        var white = [255, 247, 202];
+      function solarColor(value, limb) {
+        var darkOrange = [174, 68, 18];
+        var orange = [224, 108, 28];
+        var gold = [246, 170, 55];
+        var yellow = [255, 218, 118];
+        var pale = [255, 242, 192];
+
         var c;
 
-        if (value > 0.84) {
+        if (value < 0.24) {
+          var t0 = value / 0.24;
           c = [
-            mix(yellow[0], white[0], (value - 0.84) / 0.16),
-            mix(yellow[1], white[1], (value - 0.84) / 0.16),
-            mix(yellow[2], white[2], (value - 0.84) / 0.16)
+            mix(darkOrange[0], orange[0], t0),
+            mix(darkOrange[1], orange[1], t0),
+            mix(darkOrange[2], orange[2], t0)
           ];
-        } else if (value > 0.58) {
+        } else if (value < 0.56) {
+          var t1 = (value - 0.24) / 0.32;
           c = [
-            mix(gold[0], yellow[0], (value - 0.58) / 0.26),
-            mix(gold[1], yellow[1], (value - 0.58) / 0.26),
-            mix(gold[2], yellow[2], (value - 0.58) / 0.26)
+            mix(orange[0], gold[0], t1),
+            mix(orange[1], gold[1], t1),
+            mix(orange[2], gold[2], t1)
           ];
-        } else if (value > 0.32) {
+        } else if (value < 0.84) {
+          var t2 = (value - 0.56) / 0.28;
           c = [
-            mix(orange[0], gold[0], (value - 0.32) / 0.26),
-            mix(orange[1], gold[1], (value - 0.32) / 0.26),
-            mix(orange[2], gold[2], (value - 0.32) / 0.26)
+            mix(gold[0], yellow[0], t2),
+            mix(gold[1], yellow[1], t2),
+            mix(gold[2], yellow[2], t2)
           ];
         } else {
+          var t3 = (value - 0.84) / 0.16;
           c = [
-            mix(red[0], orange[0], value / 0.32),
-            mix(red[1], orange[1], value / 0.32),
-            mix(red[2], orange[2], value / 0.32)
+            mix(yellow[0], pale[0], t3),
+            mix(yellow[1], pale[1], t3),
+            mix(yellow[2], pale[2], t3)
           ];
         }
 
-        c[0] *= 1 - edge * 0.12;
-        c[1] *= 1 - edge * 0.10;
-        c[2] *= 1 - edge * 0.18;
+        var limbShade = 1 - limb * 0.22;
 
         return [
-          Math.round(clamp(c[0], 0, 255)),
-          Math.round(clamp(c[1], 0, 255)),
-          Math.round(clamp(c[2], 0, 255)),
+          Math.round(clamp(c[0] * limbShade, 0, 255)),
+          Math.round(clamp(c[1] * limbShade, 0, 255)),
+          Math.round(clamp(c[2] * (1 - limb * 0.28), 0, 255)),
           255
         ];
       }
@@ -445,16 +472,17 @@ visual-pass-claimed=false</pre>
         if (!node) return;
 
         node.textContent =
-          "SUN_G1_TRUE_SOLAR_BODY_RUNTIME_RENEWAL_TNT_v1\n" +
+          "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1\n" +
           "route=/showroom/globe/\n" +
-          "page=earth-generation-1\n" +
-          "public-label=Earth G1\n" +
+          "page=earth-g1-sun-g1\n" +
           "current-body=" + currentBody + "\n" +
           "earth-g1-complete=true\n" +
-          "sun-g1-true-solar-body-runtime=true\n" +
+          "sun-g1=actual-solar-disc-runtime\n" +
+          "sun-shape=round\n" +
+          "sun-surface=photosphere-granulation\n" +
+          "sun-corona=controlled\n" +
           "moon=queued\n" +
           "planet-1=reserved-for-nine-summits-universe\n" +
-          "universe-route=/nine-summits/universe/\n" +
           "active-status=" + JSON.stringify(activeStatus(), null, 2) + "\n" +
           "visual-pass-claimed=false\n" +
           "status=" + status + "\n" +
@@ -473,28 +501,15 @@ visual-pass-claimed=false</pre>
 
       function clearTarget(target, body) {
         if (!target) return;
+
         target.innerHTML = "";
         target.setAttribute("data-active-body", body);
         target.setAttribute("data-visual-pass-claimed", "false");
 
         if (body === "sun") {
           target.classList.remove("earth-g2-stage");
-          target.style.setProperty("width", "min(82vw, 720px)", "important");
-          target.style.setProperty("height", "auto", "important");
-          target.style.setProperty("aspect-ratio", "1 / 1", "important");
-          target.style.setProperty("display", "grid", "important");
-          target.style.setProperty("place-items", "center", "important");
-          target.style.setProperty("overflow", "visible", "important");
-          target.style.setProperty("transform", "none", "important");
         } else {
           target.classList.add("earth-g2-stage");
-          target.style.removeProperty("width");
-          target.style.removeProperty("height");
-          target.style.removeProperty("aspect-ratio");
-          target.style.removeProperty("display");
-          target.style.removeProperty("place-items");
-          target.style.removeProperty("overflow");
-          target.style.removeProperty("transform");
         }
       }
 
@@ -502,145 +517,148 @@ visual-pass-claimed=false</pre>
         var shell = document.createElement("div");
         var canvas = document.createElement("canvas");
         var ctx = canvas.getContext("2d", { willReadFrequently: true });
+
         var raf = 0;
         var running = false;
         var phase = 0;
         var speed = 0.22;
         var direction = 1;
         var renderCount = 0;
+        var lastFrame = 0;
+        var pixelSize = 480;
 
-        var cssSize = Math.max(260, Math.min(window.innerWidth < 760 ? window.innerWidth * 0.82 : 560, 560));
-        var px = 440;
-
-        shell.className = "sun-g1-solar-shell";
-        shell.setAttribute("data-sun-g1-solar-shell", "true");
+        shell.className = "sun-stage";
+        shell.setAttribute("data-sun-g1-stage", "true");
         shell.setAttribute("data-visual-pass-claimed", "false");
 
-        canvas.className = "sun-g1-solar-canvas";
-        canvas.width = px;
-        canvas.height = px;
-        canvas.setAttribute("data-sun-g1-solar-canvas", "true");
+        canvas.className = "sun-canvas";
+        canvas.width = pixelSize;
+        canvas.height = pixelSize;
+        canvas.setAttribute("data-sun-g1-canvas", "true");
         canvas.setAttribute("data-visual-pass-claimed", "false");
-        canvas.setAttribute("aria-label", "Sun G1 true solar body runtime");
-
-        shell.style.width = cssSize + "px";
-        shell.style.height = cssSize + "px";
-        canvas.style.width = cssSize + "px";
-        canvas.style.height = cssSize + "px";
+        canvas.setAttribute("aria-label", "Sun G1 actual solar disc runtime");
 
         shell.appendChild(canvas);
         target.appendChild(shell);
 
-        function drawCorona(size) {
-          var cx = size / 2;
-          var cy = size / 2;
-          var r = size * 0.28;
-
-          var wide = ctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r * 2.05);
-          wide.addColorStop(0, "rgba(255,226,120,0.18)");
-          wide.addColorStop(0.34, "rgba(255,162,58,0.11)");
-          wide.addColorStop(0.70, "rgba(255,96,42,0.055)");
-          wide.addColorStop(1, "rgba(255,96,42,0)");
+        function drawCorona(cx, cy, radius) {
+          var corona = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 2.28);
+          corona.addColorStop(0.00, "rgba(255,236,172,0.21)");
+          corona.addColorStop(0.18, "rgba(255,202,98,0.16)");
+          corona.addColorStop(0.42, "rgba(255,146,48,0.10)");
+          corona.addColorStop(0.70, "rgba(255,96,30,0.045)");
+          corona.addColorStop(1.00, "rgba(255,96,30,0)");
 
           ctx.save();
-          ctx.fillStyle = wide;
+          ctx.fillStyle = corona;
           ctx.beginPath();
-          ctx.arc(cx, cy, r * 2.05, 0, Math.PI * 2);
+          ctx.arc(cx, cy, radius * 2.28, 0, Math.PI * 2);
           ctx.fill();
-
-          ctx.strokeStyle = "rgba(255, 216, 116, 0.10)";
-          ctx.lineWidth = Math.max(1, size * 0.003);
-          for (var i = 0; i < 36; i += 1) {
-            var a = (i / 36) * Math.PI * 2 + phase * 0.18;
-            var inner = r * (1.04 + 0.04 * Math.sin(i * 1.7 + phase));
-            var outer = r * (1.23 + 0.12 * Math.sin(i * 2.3 + phase * 1.4));
-            ctx.beginPath();
-            ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
-            ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer);
-            ctx.stroke();
-          }
-
           ctx.restore();
         }
 
-        function drawSurface(size) {
+        function drawPhotosphere(size) {
           var cx = size / 2;
           var cy = size / 2;
-          var r = size * 0.28;
+          var radius = size * 0.315;
           var image = ctx.createImageData(size, size);
           var data = image.data;
 
           for (var y = 0; y < size; y += 1) {
             for (var x = 0; x < size; x += 1) {
-              var dx = (x - cx) / r;
-              var dy = (y - cy) / r;
+              var dx = (x - cx) / radius;
+              var dy = (y - cy) / radius;
               var dist = Math.sqrt(dx * dx + dy * dy);
-              var idx = (y * size + x) * 4;
+              var index = (y * size + x) * 4;
 
               if (dist > 1) {
-                data[idx + 3] = 0;
+                data[index + 3] = 0;
                 continue;
               }
 
-              var angle = Math.atan2(dy, dx);
-              var edge = clamp((dist - 0.70) / 0.30, 0, 1);
-              var slowTurn = phase * 0.45;
-              var swirl = Math.sin(angle * 8.0 + dist * 9.5 - slowTurn * 2.1) * 0.5 + 0.5;
-              var vein = Math.sin(angle * 13.0 + dist * 16.0 + phase * 0.9) * 0.5 + 0.5;
-              var grain = fbm(dx * 3.0 + phase * 0.12, dy * 3.0 - phase * 0.09, 41);
-              var cell = fbm(dx * 10.0 - phase * 0.16, dy * 10.0 + phase * 0.13, 97);
-              var heat = clamp(0.34 + grain * 0.34 + cell * 0.18 + swirl * 0.20 + vein * 0.10 - edge * 0.18, 0, 1);
-              var color = plasmaColor(heat, edge);
+              var limb = clamp((dist - 0.64) / 0.36, 0, 1);
 
-              data[idx] = color[0];
-              data[idx + 1] = color[1];
-              data[idx + 2] = color[2];
-              data[idx + 3] = color[3];
+              var broad = fbm(dx * 2.3 + phase * 0.035, dy * 2.3 - phase * 0.026, 13);
+              var medium = fbm(dx * 5.8 - phase * 0.075, dy * 5.8 + phase * 0.052, 31);
+              var fine = fbm(dx * 18.0 + phase * 0.11, dy * 18.0 - phase * 0.09, 71);
+
+              var activeRegionA = Math.exp(-((dx + 0.34) * (dx + 0.34) + (dy - 0.12) * (dy - 0.12)) / 0.020);
+              var activeRegionB = Math.exp(-((dx - 0.30) * (dx - 0.30) + (dy + 0.22) * (dy + 0.22)) / 0.030);
+              var darkerPatch = Math.exp(-((dx - 0.12) * (dx - 0.12) + (dy - 0.26) * (dy - 0.26)) / 0.022);
+
+              var brightness = clamp(
+                0.34 +
+                broad * 0.22 +
+                medium * 0.22 +
+                fine * 0.19 +
+                activeRegionA * 0.17 +
+                activeRegionB * 0.10 -
+                darkerPatch * 0.13 -
+                limb * 0.18,
+                0,
+                1
+              );
+
+              var color = solarColor(brightness, limb);
+
+              data[index] = color[0];
+              data[index + 1] = color[1];
+              data[index + 2] = color[2];
+              data[index + 3] = 255;
             }
           }
 
           ctx.putImageData(image, 0, 0);
 
-          var limb = ctx.createRadialGradient(cx - r * 0.30, cy - r * 0.34, r * 0.08, cx, cy, r);
-          limb.addColorStop(0, "rgba(255,255,220,0.18)");
-          limb.addColorStop(0.44, "rgba(255,255,220,0.035)");
-          limb.addColorStop(0.84, "rgba(125,30,10,0.16)");
-          limb.addColorStop(1, "rgba(56,8,4,0.36)");
+          var limbGradient = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.35, radius * 0.05, cx, cy, radius);
+          limbGradient.addColorStop(0, "rgba(255,255,230,0.13)");
+          limbGradient.addColorStop(0.30, "rgba(255,242,190,0.04)");
+          limbGradient.addColorStop(0.72, "rgba(255,170,70,0.02)");
+          limbGradient.addColorStop(1, "rgba(90,24,10,0.24)");
 
           ctx.save();
           ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
           ctx.clip();
-          ctx.fillStyle = limb;
+          ctx.fillStyle = limbGradient;
           ctx.fillRect(0, 0, size, size);
           ctx.restore();
 
           ctx.save();
-          ctx.strokeStyle = "rgba(255, 222, 136, 0.36)";
-          ctx.lineWidth = Math.max(1, size * 0.004);
+          ctx.strokeStyle = "rgba(255,226,154,0.30)";
+          ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
         }
 
         function render() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawCorona(canvas.width);
-          drawSurface(canvas.width);
+          drawCorona(canvas.width / 2, canvas.height / 2, canvas.width * 0.315);
+          drawPhotosphere(canvas.width);
           renderCount += 1;
         }
 
-        function tick() {
+        function tick(timestamp) {
           if (!running) return;
-          phase += speed * direction * 0.045;
-          render();
+
+          if (!lastFrame) lastFrame = timestamp;
+          var delta = timestamp - lastFrame;
+
+          if (delta > 1000 / 18) {
+            phase += speed * direction * 0.040;
+            render();
+            lastFrame = timestamp;
+          }
+
           raf = requestAnimationFrame(tick);
         }
 
         function start() {
           if (running) return getStatus();
           running = true;
+          lastFrame = 0;
           raf = requestAnimationFrame(tick);
           return getStatus();
         }
@@ -649,32 +667,73 @@ visual-pass-claimed=false</pre>
           running = false;
           if (raf) cancelAnimationFrame(raf);
           raf = 0;
+          lastFrame = 0;
+          return getStatus();
+        }
+
+        function resume() {
+          return start();
+        }
+
+        function reset() {
+          phase = 0;
+          render();
+          return getStatus();
+        }
+
+        function reverse() {
+          direction *= -1;
+          return getStatus();
+        }
+
+        function slow() {
+          speed = 0.10;
+          return getStatus();
+        }
+
+        function normal() {
+          speed = 0.22;
+          return getStatus();
+        }
+
+        function fast() {
+          speed = 0.46;
+          return getStatus();
+        }
+
+        function setSpeed(value) {
+          var n = Number(value);
+          if (n > 1) n = n / 100;
+          speed = clamp(n, 0, 1) * 0.62;
           return getStatus();
         }
 
         function destroy() {
           pause();
           if (shell.parentNode) shell.parentNode.removeChild(shell);
-          return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
+          return {
+            ok: true,
+            destroyed: true,
+            version: VERSION,
+            visualPassClaimed: false
+          };
         }
 
         function getStatus() {
           return {
             ok: true,
             version: VERSION,
-            role: "SUN_G1_TRUE_SOLAR_BODY_RUNTIME",
+            role: "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME",
             running: running,
             circular: true,
-            solarBody: true,
-            corona: true,
-            plasmaSurface: true,
-            cssWidth: canvas.style.width,
-            cssHeight: canvas.style.height,
-            canvasWidth: canvas.width,
-            canvasHeight: canvas.height,
+            solarDisc: true,
+            photosphereGranulation: true,
+            limbDarkening: true,
+            controlledCorona: true,
             renderCount: renderCount,
             earthG1Complete: true,
             moonQueued: true,
+            planetOneReserved: true,
             visualPassClaimed: false
           };
         }
@@ -684,18 +743,13 @@ visual-pass-claimed=false</pre>
         return {
           start: start,
           pause: pause,
-          resume: start,
-          reset: function () { phase = 0; render(); return getStatus(); },
-          reverse: function () { direction *= -1; return getStatus(); },
-          slow: function () { speed = 0.10; return getStatus(); },
-          normal: function () { speed = 0.22; return getStatus(); },
-          fast: function () { speed = 0.50; return getStatus(); },
-          setSpeed: function (value) {
-            var n = Number(value);
-            if (n > 1) n = n / 100;
-            speed = clamp(n, 0, 1) * 0.70;
-            return getStatus();
-          },
+          resume: resume,
+          reset: reset,
+          reverse: reverse,
+          slow: slow,
+          normal: normal,
+          fast: fast,
+          setSpeed: setSpeed,
           destroy: destroy,
           getStatus: getStatus
         };
@@ -705,14 +759,6 @@ visual-pass-claimed=false</pre>
         var target = byId("planet-one-render");
         var r = renderer();
         var e = earth();
-        var options = {
-          autoSpin: true,
-          showAxis: true,
-          touchEnabled: true,
-          brightness: 1.10,
-          contrast: 1.08,
-          cloudStrength: 0.30
-        };
 
         currentBody = "earth";
         setActiveButtons();
@@ -721,6 +767,15 @@ visual-pass-claimed=false</pre>
 
         byId("control-title").textContent = "Earth G1 motion control";
         byId("control-note").textContent = "Earth G1 remains the accepted globe baseline. Touch drag and spin should remain active.";
+
+        var options = {
+          autoSpin: true,
+          showAxis: true,
+          touchEnabled: true,
+          brightness: 1.10,
+          contrast: 1.08,
+          cloudStrength: 0.30
+        };
 
         if (r && typeof r.renderPlanetOne === "function") {
           r.renderPlanetOne(target, options);
@@ -747,12 +802,12 @@ visual-pass-claimed=false</pre>
         clearTarget(target, "sun");
 
         byId("control-title").textContent = "Sun G1 motion control";
-        byId("control-note").textContent = "Sun G1 is rendered as a true solar body in a local square runtime mount. Earth G1 is not touched.";
+        byId("control-note").textContent = "Sun G1 uses a dedicated solar-disc runtime: photosphere texture, limb darkening, and controlled corona.";
 
         sunRuntime = createSunRuntime(target);
         sunRuntime.start();
 
-        writeReceipt("SUN_G1_TRUE_SOLAR_BODY_RUNTIME_MOUNTED");
+        writeReceipt("SUN_G1_ACTUAL_SOLAR_DISC_MOUNTED");
         return true;
       }
 
@@ -805,7 +860,7 @@ visual-pass-claimed=false</pre>
         setTimeout(mountEarth, 900);
       }
 
-      global.DGBSunG1TrueSolarBodyRuntimeRenewal = {
+      window.DGBSunG1ActualSolarDiscRuntime = {
         VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
@@ -818,7 +873,7 @@ visual-pass-claimed=false</pre>
             route: "/showroom/globe/",
             currentBody: currentBody,
             earthG1Complete: true,
-            sunG1TrueSolarBodyRuntime: true,
+            sunG1ActualSolarDisc: true,
             moonQueued: true,
             planetOneReservedFor: "nine-summits-universe",
             visualPassClaimed: false

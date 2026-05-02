@@ -1,20 +1,69 @@
-<!-- /index.html -->
 <!doctype html>
 <html
   lang="en"
   data-page="compass"
   data-route="/"
-  data-contract="DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1"
+  data-contract="COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1"
+  data-earth-g1-route="/showroom/globe/"
+  data-book-route="/nine-summits-of-love/"
+  data-planet-one-status="reserved-for-nine-summits-universe"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Planet 1, and gauges."
-  />
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
+    content="Diamond Gate Bridge Compass: the public command surface for the book, universe, Earth G1, products, showroom, and gauges."
+  >
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
+  <style>
+    .compass-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 14px;
+    }
+
+    .compass-card {
+      border: 1px solid var(--dgb-line, rgba(176,204,255,.18));
+      border-radius: 24px;
+      padding: clamp(18px, 4vw, 28px);
+      background: rgba(0,0,0,.20);
+    }
+
+    .compass-card h2 {
+      margin-top: 0;
+    }
+
+    .compass-card p {
+      color: var(--dgb-muted, rgba(228,234,246,.76));
+      line-height: 1.55;
+    }
+
+    .compass-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .compass-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      border: 1px solid rgba(242,199,111,.42);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: rgba(242,199,111,.10);
+      color: var(--dgb-text, #f5f7fb);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+  </style>
 </head>
 
 <body>
@@ -32,9 +81,11 @@
         <a href="/" aria-current="page">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </div>
@@ -44,83 +95,114 @@
     <section class="dgb-hero">
       <p class="dgb-eyebrow">Diamond Gate Bridge · Compass</p>
       <h1 class="dgb-title">Start where the pressure is.</h1>
+
       <p class="dgb-copy">
         Pressure is not the problem. Pressure is the door. Diamond Gate Bridge is the front entrance
-        to a living system: a book, a world, a public voice, a product wing, a showroom, and a proof engine.
+        to a living system: a book, a world, a public voice, a product wing, a showroom, Earth G1,
+        and a proof engine.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Public command</span>
         <span class="dgb-chip">Estate shell</span>
-        <span class="dgb-chip">Route map</span>
+        <span class="dgb-chip">Book lane</span>
+        <span class="dgb-chip">Earth G1</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
 
-      <div class="dgb-actions">
+      <div class="compass-actions">
         <a class="dgb-button" href="/door/">Cross the Door</a>
-        <a class="dgb-button secondary" href="/nine-summits/">Open the book</a>
-        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter the universe</a>
-        <a class="dgb-button secondary" href="/showroom/globe/">Inspect the build</a>
+        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open the Book</a>
+        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter the Universe</a>
+        <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1</a>
       </div>
     </section>
 
-    <section class="dgb-grid">
-      <article class="dgb-card">
+    <section class="compass-grid" aria-label="Compass route map">
+      <article class="compass-card">
+        <span class="compass-pill">Door</span>
         <h2>Door</h2>
-        <p>Choose the view, cross the threshold, and enter the estate without standing at the entrance forever.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/door/">Open Door</a>
-        </div>
+        <p>
+          Choose the view, cross the threshold, and enter the estate without standing at the entrance forever.
+        </p>
+        <a class="dgb-button secondary" href="/door/">Open Door</a>
       </article>
 
-      <article class="dgb-card">
+      <article class="compass-card">
+        <span class="compass-pill">Home</span>
         <h2>Home</h2>
-        <p>Stabilize the estate route and move to the correct chamber without loading Planet 1 engine scripts.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/home/">Open Home</a>
-        </div>
+        <p>
+          Stabilize the estate route and move to the correct chamber without loading globe engine scripts.
+        </p>
+        <a class="dgb-button secondary" href="/home/">Open Home</a>
       </article>
 
-      <article class="dgb-card">
+      <article class="compass-card">
+        <span class="compass-pill">Book</span>
+        <h2>The Nine Summits of Love</h2>
+        <p>
+          Open the human climb: pressure, dignity, free will, discipline, and love.
+        </p>
+        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open Book</a>
+      </article>
+
+      <article class="compass-card">
+        <span class="compass-pill">Universe</span>
+        <h2>Nine Summits Universe</h2>
+        <p>
+          Enter the future world around the book. Planet 1 is reserved for this universe build.
+        </p>
+        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter Universe</a>
+      </article>
+
+      <article class="compass-card">
+        <span class="compass-pill">Products</span>
         <h2>Products</h2>
-        <p>Enter the product wing where each chamber explains what it is before asking for a click.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/products/">Open Products</a>
-        </div>
+        <p>
+          Enter the product wing where each chamber explains what it is before asking for a click.
+        </p>
+        <a class="dgb-button secondary" href="/products/">Open Products</a>
       </article>
 
-      <article class="dgb-card">
+      <article class="compass-card">
+        <span class="compass-pill">Showroom</span>
         <h2>Showroom</h2>
-        <p>Use the lightweight lobby to route into the proof surfaces without duplicating engines.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
-        </div>
+        <p>
+          Use the lightweight lobby to route into proof surfaces without duplicating engines.
+        </p>
+        <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
       </article>
 
-      <article class="dgb-card">
-        <h2>Planet 1</h2>
-        <p>Inspect the active globe lane where the render chain, terrain, water, land, and air are tested.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1</a>
-        </div>
+      <article class="compass-card">
+        <span class="compass-pill">Earth G1</span>
+        <h2>Earth G1</h2>
+        <p>
+          Inspect the Demo Universe Earth baseline: the true Generation 1 globe standard for the site.
+        </p>
+        <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1</a>
       </article>
 
-      <article class="dgb-card">
+      <article class="compass-card">
+        <span class="compass-pill">Gauges</span>
         <h2>Gauges</h2>
-        <p>Audit route authority, runtime authority, served source, and diagnostic receipts.</p>
-        <div class="dgb-actions">
-          <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
-        </div>
+        <p>
+          Audit route authority, runtime authority, served source, and diagnostic receipts.
+        </p>
+        <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
       </article>
     </section>
 
-    <details class="dgb-details">
+    <details class="dgb-details" open>
       <summary>Route receipt</summary>
-      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1
+      <pre class="dgb-receipt">COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1
 route=/
 page=compass
 uses_shared_shell=/assets/dgb-ui-shell.css
-canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
+canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
+book=/nine-summits-of-love/
+universe=/nine-summits/universe/
+earth-g1=/showroom/globe/
+planet-1=reserved-for-future-nine-summits-universe
 planet_render_touched=false
 runtime_touched=false
 gauges_logic_touched=false
@@ -129,7 +211,7 @@ visual_pass_claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1 · Compass · Diamond Gate Bridge.
+    COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1 · Compass · Diamond Gate Bridge.
   </footer>
 </body>
 </html>

@@ -1,17 +1,18 @@
-/* G1 PLANET 1 HEX BRIDGE: BEACH THRESHOLD TO TERRAIN STARTLINE
+/* G1 PLANET 1 TERRAIN STARTLINE LOW EMERGENCE HEX BRIDGE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
+   VERSION: G1_PLANET_1_TERRAIN_STARTLINE_LOW_EMERGENCE_TNT_v1
 
    LAW:
-   Hexgrid owns the 256 nodal bridge.
-   Beach threshold becomes terrain permission.
-   Terrain permission does not equal terrain fill.
+   BeachLock defines the legal terrain startline.
+   Beaches must be visible definitively.
+   Beaches do not become full land fill.
+   Terrain may emerge only as restrained low land.
 */
 
-(function attachPlanetOneBeachThresholdHexBridge(global) {
+(function attachPlanetOneTerrainStartlineHexBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1";
+  var VERSION = "G1_PLANET_1_TERRAIN_STARTLINE_LOW_EMERGENCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var STATE_FORMULA = "4x4x4x4";
   var STATE_COUNT = 256;
@@ -69,27 +70,27 @@
     );
   }
 
-  function stateId(waterDepth, reefShelf, beachThreshold, terrainPermission) {
-    return (((waterDepth * 4 + reefShelf) * 4 + beachThreshold) * 4 + terrainPermission);
+  function stateId(beachAuthority, terrainPermission, surfaceBalance, visualRestraint) {
+    return (((beachAuthority * 4 + terrainPermission) * 4 + surfaceBalance) * 4 + visualRestraint);
   }
 
   function buildStateSpaceReceipt() {
     var states = [];
-    var waterDepth;
-    var reefShelf;
-    var beachThreshold;
+    var beachAuthority;
     var terrainPermission;
+    var surfaceBalance;
+    var visualRestraint;
 
-    for (waterDepth = 0; waterDepth < 4; waterDepth += 1) {
-      for (reefShelf = 0; reefShelf < 4; reefShelf += 1) {
-        for (beachThreshold = 0; beachThreshold < 4; beachThreshold += 1) {
-          for (terrainPermission = 0; terrainPermission < 4; terrainPermission += 1) {
+    for (beachAuthority = 0; beachAuthority < 4; beachAuthority += 1) {
+      for (terrainPermission = 0; terrainPermission < 4; terrainPermission += 1) {
+        for (surfaceBalance = 0; surfaceBalance < 4; surfaceBalance += 1) {
+          for (visualRestraint = 0; visualRestraint < 4; visualRestraint += 1) {
             states.push({
-              state_id: stateId(waterDepth, reefShelf, beachThreshold, terrainPermission),
-              waterDepth: waterDepth,
-              reefShelf: reefShelf,
-              beachThreshold: beachThreshold,
-              terrainPermission: terrainPermission
+              state_id: stateId(beachAuthority, terrainPermission, surfaceBalance, visualRestraint),
+              beachAuthority: beachAuthority,
+              terrainPermission: terrainPermission,
+              surfaceBalance: surfaceBalance,
+              visualRestraint: visualRestraint
             });
           }
         }
@@ -101,11 +102,11 @@
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
-      stateSpaceReceipt: true,
-      waterDepthAxisActive: true,
-      reefShelfAxisActive: true,
-      beachThresholdAxisActive: true,
+      beachAuthorityAxisActive: true,
       terrainPermissionAxisActive: true,
+      surfaceBalanceAxisActive: true,
+      visualRestraintAxisActive: true,
+      stateSpaceReceipt: true,
       states: states
     };
   }
@@ -162,21 +163,35 @@
     var beachCandidate = clamp(
       wetEdge *
       smoothstep(0.12, 0.44, potential) *
-      (1 - reef * 0.34),
+      (1 - reef * 0.25),
       0,
       1
     );
 
     var beachLock = clamp(
       beachCandidate *
-      smoothstep(0.42, 0.76, coastContact) *
-      smoothstep(0.24, 0.52, outline),
+      smoothstep(0.38, 0.72, coastContact) *
+      smoothstep(0.22, 0.50, outline),
       0,
       1
     );
 
-    var terrainStartline = clamp(beachLock, 0, 1);
-    var inlandRiseAllowed = clamp(beachLock * smoothstep(0.62, 0.88, potential), 0, 1);
+    var terrainStartline = beachLock;
+    var lowEmergentLand = clamp(
+      beachLock *
+      smoothstep(0.48, 0.84, potential) *
+      (1 - shelf * 0.55) *
+      (1 - reef * 0.68),
+      0,
+      1
+    );
+
+    var inlandRiseAllowed = clamp(
+      lowEmergentLand *
+      smoothstep(0.72, 0.92, potential),
+      0,
+      1
+    );
 
     var lowVein = veinField(lon, lat, seed, 19, 1.10, 0.055);
     var artery = veinField(lon, lat, seed, 73, -1.52, 0.044);
@@ -184,9 +199,9 @@
 
     var veinCandidate = clamp(
       Math.max(
-        lowVein * terrainStartline * 0.18,
-        artery * terrainStartline * 0.20,
-        pressure * beachLock * 0.18
+        lowVein * terrainStartline * 0.12,
+        artery * terrainStartline * 0.14,
+        pressure * beachLock * 0.12
       ),
       0,
       1
@@ -195,22 +210,25 @@
     var waterDepth = clamp(0.78 - potential * 0.45 - shelf * 0.18 - reef * 0.12 - beachLock * 0.04, 0.08, 0.96);
     if (polar) waterDepth = clamp(waterDepth * 0.70, 0.10, 0.62);
 
-    var waterDepthState = waterDepth >= 0.72 ? 0 : waterDepth >= 0.42 ? 1 : waterDepth >= 0.16 ? 2 : 3;
-
-    var reefShelfState = 0;
-    if (shelf > 0.22) reefShelfState = 1;
-    if (reef > 0.26) reefShelfState = 2;
-    if (coastContact > 0.54) reefShelfState = 3;
-
-    var beachState = 0;
-    if (wetEdge > 0.20) beachState = 1;
-    if (beachCandidate > 0.32) beachState = 2;
-    if (beachLock > 0.48) beachState = 3;
+    var beachAuthorityState = 0;
+    if (wetEdge > 0.20) beachAuthorityState = 1;
+    if (beachCandidate > 0.32) beachAuthorityState = 2;
+    if (beachLock > 0.48) beachAuthorityState = 3;
 
     var terrainPermissionState = 0;
     if (beachCandidate > 0.24) terrainPermissionState = 1;
-    if (terrainStartline > 0.48) terrainPermissionState = 2;
-    if (inlandRiseAllowed > 0.34) terrainPermissionState = 3;
+    if (lowEmergentLand > 0.18) terrainPermissionState = 2;
+    if (terrainStartline > 0.52) terrainPermissionState = 3;
+
+    var surfaceBalanceState = 0;
+    if (shelf > 0.24 || reef > 0.22) surfaceBalanceState = 1;
+    if (wetEdge > 0.30 || beachLock > 0.30) surfaceBalanceState = 2;
+    if (lowEmergentLand > 0.24) surfaceBalanceState = 3;
+
+    var visualRestraintState = 0;
+    if (beachCandidate > 0.22) visualRestraintState = 1;
+    if (beachLock > 0.38 || lowEmergentLand > 0.18) visualRestraintState = 2;
+    if (beachLock > 0.68 && lowEmergentLand > 0.42) visualRestraintState = 3;
 
     return {
       version: VERSION,
@@ -221,23 +239,29 @@
       nodalIndex256: nodalIndex256(lon, lat),
       nodal_index_256: nodalIndex256(lon, lat),
 
+      terrainStartlineLowEmergenceActive: true,
       hexBridgeActive: true,
       beachThresholdBridgeActive: true,
       hydrationTerrainBridgeActive: true,
+
+      beachLockNodesConsumed: true,
+      terrainStartlineNodesConsumed: true,
+      lowEmergentLandCandidateFieldActive: true,
+      terrainRisePermissionFieldActive: true,
+      noTerrainNodesPreserved: true,
+      reefShelfPreserved: true,
+      wetEdgePreserved: true,
+      terrainFillBlocked: true,
+      beachFillBlocked: true,
+
       terrainOutlineSourceActive: true,
       officialTerrainOutlineActive: true,
       waterDepthSamplingActive: true,
       shelfDistanceSamplingActive: true,
       reefShelfBoundaryNodesActive: true,
-
-      wetEdgeFieldActive: true,
       beachCandidateNodesActive: true,
       beachLockNodesActive: true,
       terrainStartlineNodesActive: true,
-      noTerrainNodesActive: true,
-      terrainPermissionFieldActive: true,
-
-      veinCandidateFieldActive: true,
       transitionState256Active: true,
 
       waterDepth: round(waterDepth, 4),
@@ -256,19 +280,21 @@
       shallow_water_field: round(shallow, 4),
       wetEdge: round(wetEdge, 4),
       wet_edge: round(wetEdge, 4),
+
       beachCandidate: round(beachCandidate, 4),
       beach_candidate: round(beachCandidate, 4),
       beachLock: round(beachLock, 4),
       beach_lock: round(beachLock, 4),
+
       terrainStartline: round(terrainStartline, 4),
       terrain_startline: round(terrainStartline, 4),
+      lowEmergentLand: round(lowEmergentLand, 4),
+      low_emergent_land: round(lowEmergentLand, 4),
       inlandRiseAllowed: round(inlandRiseAllowed, 4),
       inland_rise_allowed: round(inlandRiseAllowed, 4),
 
       terrainFill: 0,
       terrain_fill: 0,
-      terrainFillBlocked: true,
-      beachFillBlocked: true,
 
       veinCandidate: round(veinCandidate, 4),
       vein_candidate: round(veinCandidate, 4),
@@ -282,11 +308,11 @@
       polarBoundary: Boolean(polar),
       polar_boundary: Boolean(polar),
 
-      waterDepthState: waterDepthState,
-      reefShelfState: reefShelfState,
-      beachThresholdState: beachState,
+      beachAuthorityState: beachAuthorityState,
       terrainPermissionState: terrainPermissionState,
-      state_id: stateId(waterDepthState, reefShelfState, beachState, terrainPermissionState),
+      surfaceBalanceState: surfaceBalanceState,
+      visualRestraintState: visualRestraintState,
+      state_id: stateId(beachAuthorityState, terrainPermissionState, surfaceBalanceState, visualRestraintState),
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
@@ -348,18 +374,26 @@
     var reefTone = [88, 190, 188, 255];
     var shallowTone = [48, 148, 176, 255];
     var wetTone = [112, 178, 164, 255];
-    var beachTone = [214, 202, 148, 255];
+
+    var beachTone = [226, 210, 150, 255];
+    var beachBrightTone = [242, 224, 166, 255];
+
+    var emergentTone = [92, 128, 82, 255];
     var veinTone = [72, 166, 190, 255];
 
     out = blendPixel(out, shallowTone, clamp(sample.shallowWaterField * 0.14, 0, 0.14));
     out = blendPixel(out, reefTone, clamp(sample.reefField * 0.22, 0, 0.22));
     out = blendPixel(out, wetTone, clamp(sample.wetEdge * 0.10, 0, 0.10));
 
-    /* Beach is edge only, not fill. */
-    out = blendPixel(out, beachTone, clamp(sample.beachCandidate * 0.07 + sample.beachLock * 0.18, 0, 0.20));
+    /* Definitive beach edge. This is edge indication, not land fill. */
+    out = blendPixel(out, beachTone, clamp(sample.beachCandidate * 0.18, 0, 0.18));
+    out = blendPixel(out, beachBrightTone, clamp(sample.beachLock * 0.32, 0, 0.32));
 
-    /* Vein is restrained until later terrain elevation pass. */
-    out = blendPixel(out, veinTone, clamp(sample.veinCandidate * 0.06, 0, 0.06));
+    /* Low-emergent land is restrained and cannot override beach/water authority. */
+    out = blendPixel(out, emergentTone, clamp(sample.lowEmergentLand * 0.18, 0, 0.18));
+
+    /* Veins remain held until later hydrology pass. */
+    out = blendPixel(out, veinTone, clamp(sample.veinCandidate * 0.04, 0, 0.04));
 
     var shade = clamp(0.54 + limb * 0.48, 0.38, 1.10);
     out[0] = Math.round(clamp(out[0] * shade, 0, 255));
@@ -451,7 +485,7 @@
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
-    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.97 : options.surfaceAlpha);
+    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.98 : options.surfaceAlpha);
     ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
@@ -460,24 +494,27 @@
       version: VERSION,
 
       cleanSlatePreserved: true,
-      waterDepthFinalizing: true,
-      beachThresholdRendered: true,
-      beachEdgeIndicatesEverything: true,
-      terrainStartlineRendered: true,
+      lowEmergentLandRendered: true,
+      terrainStartlineConsumed: true,
+      beachLockNodesPreserved: true,
+      beachLockNodesConsumed: true,
+      terrainStartlineNodesConsumed: true,
+      reefShelfPreserved: true,
+      wetEdgePreserved: true,
+      waterDepthPreserved: true,
+      beachThresholdPreserved: true,
+
+      beachesVisibleDefinitively: true,
+      beachEdgeRenderedDefinitively: true,
+      beachIsEdgeNotFill: true,
+
       terrainFillBlocked: true,
-      beachFillBlocked: true,
-      noTerrainRiseInBeachPass: true,
-
-      reefFieldsRendered: true,
-      shallowWaterRendered: true,
-      shelfDepthRendered: true,
-      waterDepthRendered: true,
-      terrainOutlineRendered: true,
-      veinStructureHeld: true,
-
       noBlobReintroduced: true,
+      noMountainRelief: true,
+      noRiverNetwork: true,
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
+
       rendererConsumesHydration: Boolean(hydrationEngine),
       rendererConsumesHexBridge: true,
       visualPassClaimed: false,
@@ -525,42 +562,35 @@
       version: VERSION,
       baseline: BASELINE,
 
+      terrainStartlineLowEmergenceActive: true,
       hexBridgeActive: true,
       beachThresholdBridgeActive: true,
       hydrationTerrainBridgeActive: true,
-      terrainOutlineSourceActive: true,
-      officialTerrainOutlineActive: true,
-      waterDepthSamplingActive: true,
-      shelfDistanceSamplingActive: true,
-      reefShelfBoundaryNodesActive: true,
 
-      wetEdgeFieldActive: true,
-      beachCandidateNodesActive: true,
-      beachLockNodesActive: true,
-      terrainStartlineNodesActive: true,
-      noTerrainNodesActive: true,
-      terrainPermissionFieldActive: true,
-      veinCandidateFieldActive: true,
-      transitionState256Active: true,
-
+      beachLockNodesConsumed: true,
+      terrainStartlineNodesConsumed: true,
+      lowEmergentLandCandidateFieldActive: true,
+      terrainRisePermissionFieldActive: true,
+      noTerrainNodesPreserved: true,
+      reefShelfPreserved: true,
+      wetEdgePreserved: true,
       terrainFillBlocked: true,
       beachFillBlocked: true,
-      noTerrainRiseInBeachPass: true,
 
-      hexagonalPixelFormatActive: true,
-      hexCellSubstrateActive: true,
-      terrainCellSamplingActive: true,
-      coastCellQuantizationActive: true,
-      waterDepthCellFieldActive: true,
+      beachLockNodesActive: true,
+      terrainStartlineNodesActive: true,
+      beachesVisibleDefinitively: true,
+      beachEdgeRenderedDefinitively: true,
+      beachIsEdgeNotFill: true,
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
       stateSpaceReceipt: true,
-      waterDepthAxisActive: true,
-      reefShelfAxisActive: true,
-      beachThresholdAxisActive: true,
+      beachAuthorityAxisActive: true,
       terrainPermissionAxisActive: true,
+      surfaceBalanceAxisActive: true,
+      visualRestraintAxisActive: true,
       stateSpacePreview: receipt.states.slice(0, 16),
 
       publicHoneycombBlocked: true,
@@ -594,7 +624,7 @@
   createPlanetOneHexGrid({ seed: SEED });
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:hex-bridge-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:terrain-startline-ready", {
       detail: getHexgridStatus()
     }));
   } catch (error) {}

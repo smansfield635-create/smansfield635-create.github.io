@@ -3,10 +3,10 @@
   lang="en"
   data-page="nine-summits-universe"
   data-route="/nine-summits/universe/"
-  data-contract="NINE_SUMMITS_UNIVERSE_EARTH_SUN_MOON_RUNTIME_SIMPLIFICATION_TNT_v1"
+  data-contract="SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1"
   data-visualization="earth-sun-moon-runtime"
-  data-cardinal-artifacts="reserved-for-manor-estate"
-  data-galaxy-cardinal-mode="none"
+  data-directional-manor-artifacts="reserved-for-manor-estate"
+  data-galaxy-local-direction-mode="none"
   data-earth-g1-route="/showroom/globe/"
   data-visual-pass-claimed="false"
 >
@@ -16,7 +16,7 @@
   <title>Diamond Gate Bridge · Nine Summits Universe</title>
   <meta
     name="description"
-    content="Nine Summits Universe page showing the runtime relationship between Earth, Sun, and Moon."
+    content="Nine Summits Universe runtime chamber showing Earth G1, Sun G1, and the queued Moon."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
@@ -111,7 +111,7 @@
 
     .runtime-viewer {
       position: relative;
-      min-height: clamp(430px, 72vw, 720px);
+      min-height: clamp(460px, 76vw, 760px);
       margin-top: 22px;
       border: 1px solid rgba(176,204,255,.18);
       border-radius: clamp(22px, 5vw, 34px);
@@ -136,9 +136,9 @@
       pointer-events: none;
     }
 
-    .orbit-shell {
+    .runtime-stage {
       position: absolute;
-      inset: clamp(24px, 6vw, 60px);
+      inset: clamp(20px, 5vw, 52px);
       border: 1px solid rgba(242,199,111,.20);
       border-radius: clamp(22px, 5vw, 36px);
       background:
@@ -147,81 +147,15 @@
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.08),
         0 28px 88px rgba(0,0,0,.42);
+      overflow: hidden;
     }
 
-    .sun-body,
-    .earth-body,
-    .moon-body {
+    .runtime-canvas {
       position: absolute;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      z-index: 4;
-    }
-
-    .sun-body {
-      left: 9%;
-      top: 50%;
-      width: clamp(86px, 18vw, 170px);
-      aspect-ratio: 1 / 1;
-      transform: translateY(-50%);
-      background:
-        radial-gradient(circle at 38% 36%, #fff6c8 0 12%, #ffd86f 18%, #ff9d3e 40%, #c94b22 68%, rgba(92,20,12,.44) 100%);
-      box-shadow:
-        0 0 38px rgba(242,199,111,.38),
-        0 0 96px rgba(255,105,45,.18);
-      border: 1px solid rgba(242,199,111,.48);
-    }
-
-    .earth-body {
-      left: 58%;
-      top: 50%;
-      width: clamp(112px, 23vw, 230px);
-      aspect-ratio: 1 / 1;
-      transform: translate(-50%, -50%);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.90), transparent 12%),
-        radial-gradient(circle at 40% 42%, rgba(70,160,80,.88), transparent 18%),
-        radial-gradient(circle at 64% 58%, rgba(210,185,120,.70), transparent 14%),
-        radial-gradient(circle at 55% 50%, #0d3b8c 0 24%, #071d56 58%, #02102f 100%);
-      box-shadow:
-        0 0 30px rgba(120,185,255,.24),
-        inset -16px -18px 34px rgba(0,0,0,.34);
-      border: 1px solid rgba(158,198,255,.38);
-    }
-
-    .moon-body {
-      left: 80%;
-      top: 37%;
-      width: clamp(44px, 9vw, 82px);
-      aspect-ratio: 1 / 1;
-      transform: translate(-50%, -50%);
-      background:
-        radial-gradient(circle at 35% 32%, #f2f2e8 0 10%, #bfc4c9 28%, #747d88 68%, #3a414d 100%);
-      box-shadow: 0 0 24px rgba(158,198,255,.18);
-      border: 1px solid rgba(228,234,246,.34);
-    }
-
-    .orbit-line {
-      position: absolute;
-      left: 58%;
-      top: 50%;
-      width: clamp(190px, 44vw, 460px);
-      aspect-ratio: 1 / .48;
-      transform: translate(-50%, -50%);
-      border: 1px dashed rgba(158,198,255,.24);
-      border-radius: 50%;
-      z-index: 2;
-    }
-
-    .runtime-line {
-      position: absolute;
-      left: 18%;
-      right: 17%;
-      top: 50%;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(242,199,111,.45), rgba(158,198,255,.32), rgba(228,234,246,.22));
-      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     .body-label {
@@ -244,21 +178,21 @@
     }
 
     .label-sun {
-      left: 9%;
-      top: calc(50% + clamp(54px, 12vw, 104px));
+      left: 12%;
+      top: 17%;
+      border-color: rgba(242,199,111,.38);
     }
 
     .label-earth {
-      left: 58%;
-      top: calc(50% + clamp(72px, 15vw, 136px));
+      left: 50%;
+      bottom: 14%;
       transform: translateX(-50%);
       border-color: rgba(131,224,185,.34);
     }
 
     .label-moon {
-      left: 80%;
-      top: calc(37% + clamp(32px, 7vw, 62px));
-      transform: translateX(-50%);
+      right: 10%;
+      top: 35%;
       border-color: rgba(158,198,255,.34);
     }
 
@@ -278,61 +212,26 @@
       }
 
       .runtime-viewer {
-        min-height: 520px;
+        min-height: 560px;
       }
 
-      .orbit-shell {
+      .runtime-stage {
         inset: 16px;
-      }
-
-      .sun-body {
-        left: 50%;
-        top: 18%;
-        width: 104px;
-        transform: translateX(-50%);
-      }
-
-      .earth-body {
-        left: 50%;
-        top: 55%;
-        width: 164px;
-      }
-
-      .moon-body {
-        left: 74%;
-        top: 42%;
-        width: 58px;
-      }
-
-      .orbit-line {
-        left: 50%;
-        top: 55%;
-        width: 258px;
-      }
-
-      .runtime-line {
-        left: 50%;
-        right: auto;
-        top: 23%;
-        width: 1px;
-        height: 210px;
-        background: linear-gradient(180deg, rgba(242,199,111,.45), rgba(158,198,255,.32), rgba(228,234,246,.22));
       }
 
       .label-sun {
         left: 50%;
-        top: calc(18% + 64px);
+        top: 13%;
         transform: translateX(-50%);
       }
 
       .label-earth {
-        left: 50%;
-        top: calc(55% + 96px);
+        bottom: 10%;
       }
 
       .label-moon {
-        left: 74%;
-        top: calc(42% + 40px);
+        right: 8%;
+        top: 42%;
       }
     }
   </style>
@@ -346,7 +245,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Nine Summits / Universe</div>
-        <div class="dgb-room-line">Earth · Sun · Moon Runtime</div>
+        <div class="dgb-room-line">Earth G1 · Sun G1 · Moon Queue</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -363,19 +262,19 @@
 
   <main id="universe-main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">Universe lane · Runtime view</p>
+      <p class="dgb-eyebrow">Universe lane · G1 runtime chamber</p>
       <h1 class="dgb-title">The universe starts with relationship.</h1>
 
       <p class="dgb-copy">
-        This page now shows the simple runtime relationship between Earth, Sun, and Moon.
-        Cardinal artifacts are reserved for the mansion, manor, and estate. The galaxy does not need a house-map north, south, east, or west.
+        Earth G1 is complete. Sun G1 is the active renewal body. Moon remains queued.
+        This page shows the runtime relationship between those bodies without borrowing manor directional artifacts.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun next</span>
+        <span class="dgb-chip">Sun G1 active</span>
         <span class="dgb-chip">Moon queued</span>
-        <span class="dgb-chip">No cardinal map</span>
+        <span class="dgb-chip">Runtime relationship</span>
         <span class="dgb-chip hold">No visual lock</span>
       </div>
 
@@ -388,45 +287,39 @@
     </section>
 
     <section class="runtime-panel" aria-labelledby="runtime-title">
-      <p class="u-label">Universe runtime visualization</p>
+      <p class="u-label">Universe G1 visualization</p>
       <h2 id="runtime-title">Earth, Sun, and Moon.</h2>
       <p class="u-note">
-        This is the runtime bridge between the accepted Earth G1 standard, the Sun renewal, and the Moon queue.
-        It is intentionally simple so the Universe page does not borrow manor cardinal artifacts.
+        This is the G1 runtime chamber: Earth is the accepted globe standard, Sun is the active stellar standard,
+        and Moon remains queued behind Sun.
       </p>
 
       <div class="runtime-viewer" aria-label="Earth Sun Moon runtime visualization">
-        <div class="orbit-shell">
-          <div class="runtime-line" aria-hidden="true"></div>
-          <div class="orbit-line" aria-hidden="true"></div>
-
-          <div class="sun-body" aria-label="Sun"></div>
-          <div class="earth-body" aria-label="Earth G1"></div>
-          <div class="moon-body" aria-label="Moon"></div>
-
-          <div class="body-label label-sun">Sun next</div>
+        <div class="runtime-stage">
+          <canvas id="universe-runtime-canvas" class="runtime-canvas" data-universe-runtime-canvas="true"></canvas>
+          <div class="body-label label-sun">Sun G1</div>
           <div class="body-label label-earth">Earth G1</div>
           <div class="body-label label-moon">Moon queued</div>
         </div>
       </div>
 
       <div class="runtime-caption">
-        Earth G1 is complete. Sun is the active next body. Moon remains queued until the Sun is renewed, inspected, and accepted.
+        Earth G1 is complete. Sun G1 is the active next body. Moon remains queued until the Sun is renewed, inspected, and accepted.
       </div>
     </section>
 
     <section class="dgb-card">
       <span class="u-label">Geometry correction</span>
-      <h2>No mansion cardinal map on the Universe page.</h2>
+      <h2>The Universe page uses runtime relationship, not manor direction logic.</h2>
       <p class="u-note">
-        North, South, East, and West belong to the house, manor, estate, or a specific planetary mapping layer.
-        This route is the galactic/universe runtime lane, so its immediate job is to show body relationship, not a cardinal landmass diagram.
+        Manor directional artifacts belong to the house, manor, estate, or a later explicit planetary mapping layer.
+        This route is the galactic/runtime lane, so its job is body relationship first.
       </p>
     </section>
 
     <section class="dgb-card">
       <span class="u-label">Current sequence</span>
-      <h2>Earth complete. Sun next. Moon follows.</h2>
+      <h2>Earth complete. Sun active. Moon follows.</h2>
 
       <div class="runtime-grid">
         <article class="u-card">
@@ -436,15 +329,15 @@
         </article>
 
         <article class="u-card">
-          <span class="u-pill">Next</span>
-          <h3>Sun</h3>
-          <p class="u-note">The next body to renew and inspect. It should define light, radiance, and stellar behavior.</p>
+          <span class="u-pill">Active</span>
+          <h3>Sun G1</h3>
+          <p class="u-note">The renewed stellar body standard: circular, contained, radiant, and mobile-safe.</p>
         </article>
 
         <article class="u-card">
           <span class="u-pill">Queued</span>
           <h3>Moon</h3>
-          <p class="u-note">The companion body. It waits behind Sun and should not be forced early.</p>
+          <p class="u-note">The companion body waits behind Sun and should not be forced early.</p>
         </article>
       </div>
     </section>
@@ -457,7 +350,7 @@
         <article class="u-card">
           <span class="u-pill">/showroom/globe/</span>
           <h3>Inspection route.</h3>
-          <p class="u-note">Earth G1 and the Sun view live in Showroom for direct inspection.</p>
+          <p class="u-note">Earth G1 and Sun G1 live in Showroom for direct inspection.</p>
           <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1 / Sun</a>
         </article>
 
@@ -478,15 +371,14 @@
 
     <details class="dgb-details">
       <summary>Route contract</summary>
-      <pre class="dgb-receipt">NINE_SUMMITS_UNIVERSE_EARTH_SUN_MOON_RUNTIME_SIMPLIFICATION_TNT_v1
+      <pre class="dgb-receipt">SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1
 route=/nine-summits/universe/
 visualization=earth-sun-moon-runtime
-graphicbox=false
-image-generation=false
-cardinal-artifacts=reserved-for-manor-estate
-galaxy-cardinal-mode=none
+generated-image=false
+directional-manor-artifacts=reserved-for-manor-estate
+galaxy-local-direction-mode=none
 earth-g1=complete
-sun=next
+sun-g1=active-renewal
 moon=queued
 planet-1=future-nine-summits-universe-planet
 showroom-inspection-route=/showroom/globe/
@@ -496,7 +388,215 @@ visual-pass-claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    NINE_SUMMITS_UNIVERSE_EARTH_SUN_MOON_RUNTIME_SIMPLIFICATION_TNT_v1 · Universe · Earth/Sun/Moon Runtime · Diamond Gate Bridge.
+    SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1 · Universe · Earth/Sun/Moon Runtime · Diamond Gate Bridge.
   </footer>
+
+  <script>
+    (function bindUniverseG1Runtime() {
+      "use strict";
+
+      var VERSION = "SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1";
+      var canvas = document.getElementById("universe-runtime-canvas");
+      var ctx = canvas ? canvas.getContext("2d") : null;
+      var raf = 0;
+      var phase = 0;
+
+      function resize() {
+        var rect;
+        var dpr;
+
+        if (!canvas || !canvas.parentNode) return;
+
+        rect = canvas.parentNode.getBoundingClientRect();
+        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+        canvas.width = Math.max(300, Math.round(rect.width * dpr));
+        canvas.height = Math.max(360, Math.round(rect.height * dpr));
+        canvas.style.width = rect.width + "px";
+        canvas.style.height = rect.height + "px";
+
+        ctx = canvas.getContext("2d");
+      }
+
+      function circle(x, y, r, fill, stroke) {
+        ctx.save();
+        ctx.fillStyle = fill;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (stroke) {
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = Math.max(1, r * 0.015);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      function drawSun(x, y, r) {
+        var g = ctx.createRadialGradient(x - r * 0.28, y - r * 0.28, r * 0.05, x, y, r);
+        g.addColorStop(0, "#fff7c8");
+        g.addColorStop(0.18, "#ffe06f");
+        g.addColorStop(0.48, "#ff9d3f");
+        g.addColorStop(0.78, "#c94b23");
+        g.addColorStop(1, "rgba(90,20,12,0.92)");
+
+        var glow = ctx.createRadialGradient(x, y, r * 0.72, x, y, r * 2.0);
+        glow.addColorStop(0, "rgba(242,199,111,0.24)");
+        glow.addColorStop(0.55, "rgba(255,120,45,0.10)");
+        glow.addColorStop(1, "rgba(255,120,45,0)");
+
+        ctx.save();
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(x, y, r * 2.0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        circle(x, y, r, g, "rgba(242,199,111,0.42)");
+      }
+
+      function drawEarth(x, y, r) {
+        var ocean = ctx.createRadialGradient(x - r * 0.28, y - r * 0.32, r * 0.10, x, y, r);
+        ocean.addColorStop(0, "#bfe5ff");
+        ocean.addColorStop(0.18, "#1d74ca");
+        ocean.addColorStop(0.58, "#06347f");
+        ocean.addColorStop(1, "#03183f");
+
+        circle(x, y, r, ocean, "rgba(158,198,255,0.40)");
+
+        ctx.save();
+        ctx.globalAlpha = 0.82;
+        circle(x - r * 0.22, y + r * 0.02, r * 0.20, "rgba(63,158,86,0.72)", null);
+        circle(x + r * 0.22, y + r * 0.15, r * 0.16, "rgba(210,184,112,0.68)", null);
+        circle(x - r * 0.02, y - r * 0.25, r * 0.24, "rgba(255,255,255,0.55)", null);
+        circle(x + r * 0.15, y - r * 0.02, r * 0.09, "rgba(255,255,255,0.38)", null);
+        ctx.restore();
+
+        var shade = ctx.createRadialGradient(x - r * 0.35, y - r * 0.36, r * 0.10, x, y, r);
+        shade.addColorStop(0, "rgba(255,255,255,0.12)");
+        shade.addColorStop(0.62, "rgba(0,0,0,0)");
+        shade.addColorStop(1, "rgba(0,0,0,0.34)");
+
+        ctx.save();
+        ctx.fillStyle = shade;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawMoon(x, y, r) {
+        var moon = ctx.createRadialGradient(x - r * 0.24, y - r * 0.28, r * 0.04, x, y, r);
+        moon.addColorStop(0, "#ffffff");
+        moon.addColorStop(0.25, "#d7dbe0");
+        moon.addColorStop(0.70, "#7a828e");
+        moon.addColorStop(1, "#3a414d");
+        circle(x, y, r, moon, "rgba(228,234,246,0.34)");
+      }
+
+      function drawOrbit(cx, cy, rx, ry) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(158,198,255,0.24)";
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function draw(time) {
+        var w;
+        var h;
+        var mobile;
+        var sun;
+        var earth;
+        var moon;
+        var t;
+
+        if (!ctx || !canvas) return;
+
+        w = canvas.width;
+        h = canvas.height;
+        mobile = w < 760;
+        phase += 0.0022;
+        t = phase + (time || 0) * 0.00008;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.save();
+        ctx.fillStyle = "rgba(255,255,255,0.16)";
+        for (var i = 0; i < 56; i += 1) {
+          var sx = (Math.sin(i * 91.7) * 0.5 + 0.5) * w;
+          var sy = (Math.sin(i * 47.3 + 2) * 0.5 + 0.5) * h;
+          ctx.fillRect(sx, sy, 1.2, 1.2);
+        }
+        ctx.restore();
+
+        if (mobile) {
+          sun = { x: w * 0.50, y: h * 0.22, r: Math.min(w, h) * 0.13 };
+          earth = { x: w * 0.50, y: h * 0.58, r: Math.min(w, h) * 0.20 };
+          moon = {
+            x: earth.x + Math.cos(t) * earth.r * 1.55,
+            y: earth.y + Math.sin(t) * earth.r * 0.76,
+            r: earth.r * 0.34
+          };
+        } else {
+          sun = { x: w * 0.20, y: h * 0.50, r: Math.min(w, h) * 0.13 };
+          earth = { x: w * 0.58, y: h * 0.52, r: Math.min(w, h) * 0.18 };
+          moon = {
+            x: earth.x + Math.cos(t) * earth.r * 1.70,
+            y: earth.y + Math.sin(t) * earth.r * 0.72,
+            r: earth.r * 0.32
+          };
+        }
+
+        ctx.save();
+        ctx.strokeStyle = "rgba(242,199,111,0.26)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sun.x, sun.y);
+        ctx.lineTo(earth.x, earth.y);
+        ctx.stroke();
+        ctx.restore();
+
+        drawOrbit(earth.x, earth.y, earth.r * 1.78, earth.r * 0.78);
+        drawSun(sun.x, sun.y, sun.r);
+        drawEarth(earth.x, earth.y, earth.r);
+        drawMoon(moon.x, moon.y, moon.r);
+
+        raf = window.requestAnimationFrame(draw);
+      }
+
+      function start() {
+        resize();
+        if (raf) window.cancelAnimationFrame(raf);
+        raf = window.requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", start, { passive: true });
+      start();
+
+      window.DGBNineSummitsUniverseG1Runtime = {
+        VERSION: VERSION,
+        version: VERSION,
+        start: start,
+        getStatus: function () {
+          return {
+            ok: true,
+            route: "/nine-summits/universe/",
+            visualization: "earth-sun-moon-runtime",
+            earthG1: "complete",
+            sunG1: "active-renewal",
+            moon: "queued",
+            generatedImage: false,
+            visualPassClaimed: false
+          };
+        }
+      };
+    })();
+  </script>
 </body>
 </html>

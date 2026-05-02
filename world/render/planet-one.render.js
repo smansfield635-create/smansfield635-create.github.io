@@ -1,22 +1,20 @@
-/* G1 PLANET 1 TRI-DOMAIN VISUAL DELTA AMPLIFICATION RENDERER
+/* G1 PLANET 1 SURFACE / AIR LAYER SEPARATION RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
-   LAYER_VERSION: G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1
-   VISUAL_DELTA_VERSION: G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1
+   VERSION: G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1
 
    LAW:
-   Renderer amplifies visible differences only after hexgrid authorization.
-   Water remains sovereign.
-   Terrain gets visual life but not authority.
-   No mountains, rivers, full glaciers, public honeycomb, or visual pass claim.
+   Surface first.
+   Air second.
+   Lighting last.
+   No runtime, route, gauges, hydration, or /runtime/* edits.
 */
 
-(function attachPlanetOneTriDomainVisualDeltaRenderer(global) {
+(function attachPlanetOneSurfaceAirSeparationRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+  var VERSION = "G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
   var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
-  var VISUAL_DELTA_VERSION = "G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -31,6 +29,10 @@
     rendererConsumesHydration: false,
     rendererConsumesHexBridge: false
   };
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, Number(value) || 0));
+  }
 
   function resolveElement(target) {
     if (!target && global.document) {
@@ -65,9 +67,10 @@
       canvas = global.document.createElement("canvas");
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
+      canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
       canvas.setAttribute("data-layer-version", LAYER_VERSION);
-      canvas.setAttribute("data-visual-delta-version", VISUAL_DELTA_VERSION);
-      canvas.setAttribute("aria-label", "Planet 1 tri-domain visual delta renderer");
+      canvas.setAttribute("data-surface-air-layer-separation", "true");
+      canvas.setAttribute("aria-label", "Planet 1 surface air layer separation renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -130,7 +133,7 @@
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&visual=" + encodeURIComponent(VISUAL_DELTA_VERSION) + "&t=" + Date.now();
+      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
 
@@ -161,17 +164,23 @@
     });
   }
 
-  function drawBaseSphere(ctx, cx, cy, radius) {
+  function clipSphere(ctx, cx, cy, radius) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+  }
+
+  function drawBaseWaterSphere(ctx, cx, cy, radius) {
     var ocean;
     var rim;
-    var container;
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.06, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(92,164,195,.99)");
-    ocean.addColorStop(0.26, "rgba(22,104,160,.99)");
-    ocean.addColorStop(0.70, "rgba(6,42,98,1)");
+    ocean.addColorStop(0, "rgba(78,154,190,.99)");
+    ocean.addColorStop(0.30, "rgba(16,90,154,.99)");
+    ocean.addColorStop(0.72, "rgba(5,36,96,1)");
     ocean.addColorStop(1, "rgba(2,10,30,1)");
 
     ctx.save();
@@ -181,102 +190,78 @@
     ctx.fillStyle = ocean;
     ctx.fill();
 
-    container = ctx.createRadialGradient(cx, cy, radius * 0.38, cx, cy, radius * 1.06);
-    container.addColorStop(0, "rgba(255,255,255,0)");
-    container.addColorStop(0.70, "rgba(140,180,255,.030)");
-    container.addColorStop(1, "rgba(140,180,255,.115)");
-    ctx.fillStyle = container;
-    ctx.fill();
-
     rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.05);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.72, "rgba(145,189,255,.08)");
-    rim.addColorStop(1, "rgba(145,189,255,.42)");
+    rim.addColorStop(0.72, "rgba(145,189,255,.075)");
+    rim.addColorStop(1, "rgba(145,189,255,.38)");
     ctx.fillStyle = rim;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(155,202,255,.38)";
-    ctx.lineWidth = Math.max(1, radius * 0.012);
+    ctx.strokeStyle = "rgba(155,202,255,.34)";
+    ctx.lineWidth = Math.max(1, radius * 0.011);
     ctx.stroke();
     ctx.restore();
   }
 
-  function clipSphere(ctx, cx, cy, radius) {
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-  }
-
-  function drawAtmosphere(ctx, cx, cy, radius) {
-    var atmosphere;
-    var upper;
-    var lower;
+  function drawAirContainer(ctx, cx, cy, radius) {
+    var halo;
     var veil;
+
+    ctx.save();
+
+    halo = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.08);
+    halo.addColorStop(0, "rgba(145,189,255,0)");
+    halo.addColorStop(0.74, "rgba(145,189,255,.045)");
+    halo.addColorStop(1, "rgba(145,189,255,.22)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.03, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
-    atmosphere = ctx.createRadialGradient(cx - radius * 0.15, cy - radius * 0.20, radius * 0.20, cx, cy, radius * 1.02);
-    atmosphere.addColorStop(0, "rgba(166,210,255,.040)");
-    atmosphere.addColorStop(0.44, "rgba(166,210,255,.022)");
-    atmosphere.addColorStop(0.80, "rgba(166,210,255,.050)");
-    atmosphere.addColorStop(1, "rgba(166,210,255,.135)");
-    ctx.fillStyle = atmosphere;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    upper = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius * 0.4);
-    upper.addColorStop(0, "rgba(220,234,255,.060)");
-    upper.addColorStop(0.45, "rgba(220,234,255,.018)");
-    upper.addColorStop(1, "rgba(220,234,255,0)");
-    ctx.fillStyle = upper;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    lower = ctx.createLinearGradient(cx - radius * 0.3, cy + radius, cx + radius, cy - radius);
-    lower.addColorStop(0, "rgba(160,205,255,.050)");
-    lower.addColorStop(0.55, "rgba(160,205,255,.013)");
-    lower.addColorStop(1, "rgba(160,205,255,0)");
-    ctx.fillStyle = lower;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    veil = ctx.createRadialGradient(cx, cy, radius * 0.16, cx, cy, radius);
-    veil.addColorStop(0, "rgba(255,255,255,.010)");
-    veil.addColorStop(0.62, "rgba(255,255,255,.000)");
-    veil.addColorStop(1, "rgba(80,130,210,.070)");
+    veil = ctx.createRadialGradient(cx - radius * 0.12, cy - radius * 0.18, radius * 0.18, cx, cy, radius * 1.02);
+    veil.addColorStop(0, "rgba(190,222,255,.035)");
+    veil.addColorStop(0.48, "rgba(190,222,255,.010)");
+    veil.addColorStop(0.86, "rgba(190,222,255,.042)");
+    veil.addColorStop(1, "rgba(190,222,255,.105)");
     ctx.fillStyle = veil;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
   }
 
-  function drawLighting(ctx, cx, cy, radius) {
+  function drawLightingLast(ctx, cx, cy, radius) {
     var sunlight;
     var terminator;
-    var atmosphere;
+    var rim;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
     sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.92);
-    sunlight.addColorStop(0, "rgba(255,255,255,.14)");
-    sunlight.addColorStop(0.28, "rgba(255,255,255,.052)");
-    sunlight.addColorStop(0.70, "rgba(255,255,255,.012)");
+    sunlight.addColorStop(0, "rgba(255,255,255,.12)");
+    sunlight.addColorStop(0.30, "rgba(255,255,255,.045)");
+    sunlight.addColorStop(0.70, "rgba(255,255,255,.010)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.40, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,.030)");
+    terminator.addColorStop(0, "rgba(255,255,255,.026)");
     terminator.addColorStop(0.50, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.46)");
+    terminator.addColorStop(1, "rgba(0,0,0,.44)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    atmosphere = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.03);
-    atmosphere.addColorStop(0, "rgba(145,189,255,0)");
-    atmosphere.addColorStop(0.74, "rgba(145,189,255,.052)");
-    atmosphere.addColorStop(1, "rgba(145,189,255,.25)");
-    ctx.fillStyle = atmosphere;
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.03);
+    rim.addColorStop(0, "rgba(145,189,255,0)");
+    rim.addColorStop(0.74, "rgba(145,189,255,.045)");
+    rim.addColorStop(1, "rgba(145,189,255,.20)");
+    ctx.fillStyle = rim;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
@@ -311,8 +296,6 @@
         mounted: false,
         reason: "NO_2D_CONTEXT",
         version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -323,7 +306,7 @@
     cy = canvas.height / 2;
     radius = Number(options.radius || size * 0.43);
 
-    drawBaseSphere(ctx, cx, cy, radius);
+    drawBaseWaterSphere(ctx, cx, cy, radius);
 
     if (hasHexBridge()) {
       ctx.save();
@@ -335,7 +318,7 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.84,
+        compositorScale: options.compositorScale || 0.82,
         surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
@@ -343,8 +326,8 @@
       ctx.restore();
     }
 
-    drawAtmosphere(ctx, cx, cy, radius);
-    drawLighting(ctx, cx, cy, radius);
+    drawAirContainer(ctx, cx, cy, radius);
+    drawLightingLast(ctx, cx, cy, radius);
 
     if (options.showAxis === true) drawAxis(ctx, cx, cy, radius);
 
@@ -356,13 +339,26 @@
       mounted: true,
       version: VERSION,
       VERSION: VERSION,
+      priorVersion: PRIOR_VERSION,
       layerVersion: LAYER_VERSION,
-      LAYER_VERSION: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
-      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
 
-      cleanSlatePreserved: true,
+      surfaceAirLayerSeparationRendered: Boolean(drawReceipt && drawReceipt.surfaceAirLayerSeparationRendered),
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.waterSurfaceMaterialRendered),
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.landSurfaceMaterialRendered),
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialRendered: Boolean(drawReceipt && drawReceipt.airOverlayMaterialRendered),
+      airOverlayMaterialActive: true,
+      landMaskSeparationRendered: Boolean(drawReceipt && drawReceipt.landMaskSeparationRendered),
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
 
       wholeWorldContainerRendered: Boolean(drawReceipt && drawReceipt.wholeWorldContainerRendered),
       triDomain256Rendered: Boolean(drawReceipt && drawReceipt.triDomain256Rendered),
@@ -370,124 +366,47 @@
       land256Rendered: Boolean(drawReceipt && drawReceipt.land256Rendered),
       air256Rendered: Boolean(drawReceipt && drawReceipt.air256Rendered),
       wholeWorld256Rendered: Boolean(drawReceipt && drawReceipt.wholeWorld256Rendered),
-      triDomainCycleRendered: Boolean(drawReceipt && drawReceipt.triDomainCycleRendered),
-      domainContactZonesRendered: Boolean(drawReceipt && drawReceipt.domainContactZonesRendered),
-      waterLandExchangeRendered: Boolean(drawReceipt && drawReceipt.waterLandExchangeRendered),
-      landAirExchangeRendered: Boolean(drawReceipt && drawReceipt.landAirExchangeRendered),
-      airWaterExchangeRendered: Boolean(drawReceipt && drawReceipt.airWaterExchangeRendered),
-
-      visualDeltaAmplificationRendered: Boolean(drawReceipt && drawReceipt.visualDeltaAmplificationRendered),
-      authorizedVisualDeltaOnly: true,
-      waterDepthVisualAmplified: Boolean(drawReceipt && drawReceipt.waterDepthVisualAmplified),
-      reefShelfVisualAmplified: Boolean(drawReceipt && drawReceipt.reefShelfVisualAmplified),
-      beachEdgeVisualAmplified: Boolean(drawReceipt && drawReceipt.beachEdgeVisualAmplified),
-      lowlandVisualAmplified: Boolean(drawReceipt && drawReceipt.lowlandVisualAmplified),
-      livingTerrainVisualAmplified: Boolean(drawReceipt && drawReceipt.livingTerrainVisualAmplified),
-      atmosphereVisualAmplified: true,
-
-      landValueMapRendered: Boolean(drawReceipt && drawReceipt.landValueMapRendered),
-      invertedBacktraceRendered: Boolean(drawReceipt && drawReceipt.invertedBacktraceRendered),
-      sourceTraceValidationRendered: Boolean(drawReceipt && drawReceipt.sourceTraceValidationRendered),
-      visibleTerrainBacktracedToSource: Boolean(drawReceipt && drawReceipt.visibleTerrainBacktracedToSource),
-      unauthorizedPaintBlocked: true,
-      waterPhaseContinuityVisible: true,
-      authorizedVisualWeightOnly: true,
-      sourceBacktracedTerrain: true,
-      globalLandValueReadability: true,
-      materialToneFromLandValue: true,
-
-      terrainLifeRendered: true,
-      lowReliefRendered: true,
-      wetDryTerrainVariationRendered: true,
-      readableBeachThreshold: true,
-      wetLowlandVariation: true,
-      livingTerrainVariation: true,
-      restrainedRidgeDivideHint: true,
-      highElevationIceStateHint: true,
-
-      waterDivideRendered: true,
-      phaseStateDivideRendered: true,
-      highElevationIceStateRendered: true,
-      highElevationFrozenWaterCandidateRendered: true,
-      watershedDivideHintRendered: true,
-      futureMeltPathHeld: true,
 
       waterRemainsSovereign: true,
-      elevationTransformsWaterState: true,
-      noGlacierDivideAuthority: true,
-      noSeparateGlacierSystem: true,
-
       waterDepthPreserved: true,
       reefShelfPreserved: true,
       beachThresholdPreserved: true,
-      wetEdgePreserved: true,
       hydrationReadOnlyPreserved: true,
       terrainAuthorityBlocked: true,
       waterSovereigntyPreserved: true,
 
-      terrainFillBlocked: true,
       noBlobReintroduced: Boolean(drawReceipt && drawReceipt.noBlobReintroduced),
       noMountainRelief: true,
       noRiverNetwork: true,
       noFullGlacierSystem: true,
-
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
-      publicHoneycombBlocked: true,
-      publicSampleDotsSuppressed: true,
 
       rendererConsumesHydration: state.rendererConsumesHydration,
       rendererConsumesHexBridge: state.rendererConsumesHexBridge,
       rendererConsumesHexgrid: state.rendererConsumesHexBridge,
 
+      runtimeUntouched: true,
+      gaugesUntouched: true,
+      routeUntouched: true,
+      hydrationUntouched: true,
+      upstreamRuntimeUntouched: true,
+
       drawReceipt: drawReceipt,
-      triDomainReceipt: {
+      separationReceipt: {
         ok: true,
         version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
-        wholeWorldContainerRendered: true,
-        triDomain256Rendered: true,
-        water256Rendered: true,
-        land256Rendered: true,
-        air256Rendered: true,
-        wholeWorld256Rendered: true,
-        domainShare: 33.3333,
-        waterLandExchangeRendered: true,
-        landAirExchangeRendered: true,
-        airWaterExchangeRendered: true,
-        visualPassClaimed: false
-      },
-      visualDeltaReceipt: {
-        ok: true,
-        version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
-        visualDeltaAmplificationRendered: true,
-        authorizedVisualDeltaOnly: true,
-        waterDepthVisualAmplified: true,
-        reefShelfVisualAmplified: true,
-        beachEdgeVisualAmplified: true,
-        lowlandVisualAmplified: true,
-        livingTerrainVisualAmplified: true,
-        atmosphereVisualAmplified: true,
-        noBlobReintroduced: true,
-        noMountainRelief: true,
-        noRiverNetwork: true,
-        noFullGlacierSystem: true,
-        visualPassClaimed: false
-      },
-      waterDivideReceipt: {
-        ok: true,
-        version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
-        waterDivideRendered: true,
-        phaseStateDivideRendered: true,
-        highElevationIceStateRendered: true,
-        waterRemainsSovereign: true,
-        elevationTransformsWaterState: true,
-        noGlacierDivideAuthority: true,
+        surfaceAirLayerSeparationActive: true,
+        waterSurfaceMaterialActive: true,
+        landSurfaceMaterialActive: true,
+        airOverlayMaterialActive: true,
+        landMaskSeparationActive: true,
+        surfaceFirstAirSecondCompositor: true,
+        cloudsDoNotBecomeWater: true,
+        waterDoesNotBecomeCloud: true,
+        cloudOpacityCapped: true,
+        featheredLandMaskActive: true,
+        noCartoonCutoutEdges: true,
         visualPassClaimed: false
       },
       renderedAt: new Date().toISOString(),
@@ -510,8 +429,6 @@
         mounted: false,
         reason: "NO_MOUNT",
         version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -543,27 +460,13 @@
 
   function pause() {
     state.paused = true;
-    return {
-      ok: true,
-      paused: true,
-      version: VERSION,
-      layerVersion: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
-      visualPassClaimed: false
-    };
+    return { ok: true, paused: true, version: VERSION, visualPassClaimed: false };
   }
 
   function resume() {
     state.paused = false;
     if (state.lastCanvas) renderNow(state.lastCanvas, {});
-    return {
-      ok: true,
-      paused: false,
-      version: VERSION,
-      layerVersion: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
-      visualPassClaimed: false
-    };
+    return { ok: true, paused: false, version: VERSION, visualPassClaimed: false };
   }
 
   function destroy() {
@@ -576,14 +479,7 @@
     state.lastCanvas = null;
     state.lastMount = null;
 
-    return {
-      ok: true,
-      destroyed: true,
-      version: VERSION,
-      layerVersion: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
-      visualPassClaimed: false
-    };
+    return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
   }
 
   function getStatus() {
@@ -592,15 +488,32 @@
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      PRIOR_VERSION: PRIOR_VERSION,
+      priorVersion: PRIOR_VERSION,
       LAYER_VERSION: LAYER_VERSION,
       layerVersion: LAYER_VERSION,
-      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
 
       rendererFacadeActive: true,
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
+
+      surfaceAirLayerSeparationRendered: Boolean(state.lastRender && state.lastRender.surfaceAirLayerSeparationRendered),
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.waterSurfaceMaterialRendered),
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.landSurfaceMaterialRendered),
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialRendered: Boolean(state.lastRender && state.lastRender.airOverlayMaterialRendered),
+      airOverlayMaterialActive: true,
+      landMaskSeparationRendered: Boolean(state.lastRender && state.lastRender.landMaskSeparationRendered),
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
 
       wholeWorldContainerRendered: Boolean(state.lastRender && state.lastRender.wholeWorldContainerRendered),
       triDomain256Rendered: Boolean(state.lastRender && state.lastRender.triDomain256Rendered),
@@ -608,61 +521,15 @@
       land256Rendered: Boolean(state.lastRender && state.lastRender.land256Rendered),
       air256Rendered: Boolean(state.lastRender && state.lastRender.air256Rendered),
       wholeWorld256Rendered: Boolean(state.lastRender && state.lastRender.wholeWorld256Rendered),
-      triDomainCycleRendered: Boolean(state.lastRender && state.lastRender.triDomainCycleRendered),
-      domainContactZonesRendered: Boolean(state.lastRender && state.lastRender.domainContactZonesRendered),
-      waterLandExchangeRendered: Boolean(state.lastRender && state.lastRender.waterLandExchangeRendered),
-      landAirExchangeRendered: Boolean(state.lastRender && state.lastRender.landAirExchangeRendered),
-      airWaterExchangeRendered: Boolean(state.lastRender && state.lastRender.airWaterExchangeRendered),
-
-      visualDeltaAmplificationRendered: Boolean(state.lastRender && state.lastRender.visualDeltaAmplificationRendered),
-      authorizedVisualDeltaOnly: true,
-      waterDepthVisualAmplified: Boolean(state.lastRender && state.lastRender.waterDepthVisualAmplified),
-      reefShelfVisualAmplified: Boolean(state.lastRender && state.lastRender.reefShelfVisualAmplified),
-      beachEdgeVisualAmplified: Boolean(state.lastRender && state.lastRender.beachEdgeVisualAmplified),
-      lowlandVisualAmplified: Boolean(state.lastRender && state.lastRender.lowlandVisualAmplified),
-      livingTerrainVisualAmplified: Boolean(state.lastRender && state.lastRender.livingTerrainVisualAmplified),
-      atmosphereVisualAmplified: true,
-
-      landValueMapRendered: Boolean(state.lastRender && state.lastRender.landValueMapRendered),
-      invertedBacktraceRendered: Boolean(state.lastRender && state.lastRender.invertedBacktraceRendered),
-      sourceTraceValidationRendered: Boolean(state.lastRender && state.lastRender.sourceTraceValidationRendered),
-      visibleTerrainBacktracedToSource: Boolean(state.lastRender && state.lastRender.visibleTerrainBacktracedToSource),
-      unauthorizedPaintBlocked: true,
-      waterPhaseContinuityVisible: true,
-      authorizedVisualWeightOnly: true,
-      sourceBacktracedTerrain: true,
-      globalLandValueReadability: true,
-      materialToneFromLandValue: true,
-
-      terrainLifeRendered: Boolean(state.lastRender && state.lastRender.terrainLifeRendered),
-      lowReliefRendered: Boolean(state.lastRender && state.lastRender.lowReliefRendered),
-      wetDryTerrainVariationRendered: Boolean(state.lastRender && state.lastRender.wetDryTerrainVariationRendered),
-      readableBeachThreshold: Boolean(state.lastRender && state.lastRender.readableBeachThreshold),
-      wetLowlandVariation: Boolean(state.lastRender && state.lastRender.wetLowlandVariation),
-      livingTerrainVariation: Boolean(state.lastRender && state.lastRender.livingTerrainVariation),
-      restrainedRidgeDivideHint: Boolean(state.lastRender && state.lastRender.restrainedRidgeDivideHint),
-      highElevationIceStateHint: Boolean(state.lastRender && state.lastRender.highElevationIceStateHint),
-
-      waterDivideRendered: Boolean(state.lastRender && state.lastRender.waterDivideRendered),
-      phaseStateDivideRendered: Boolean(state.lastRender && state.lastRender.phaseStateDivideRendered),
-      highElevationIceStateRendered: Boolean(state.lastRender && state.lastRender.highElevationIceStateRendered),
-      highElevationFrozenWaterCandidateRendered: Boolean(state.lastRender && state.lastRender.highElevationFrozenWaterCandidateRendered),
-      watershedDivideHintRendered: Boolean(state.lastRender && state.lastRender.watershedDivideHintRendered),
-      futureMeltPathHeld: Boolean(state.lastRender && state.lastRender.futureMeltPathHeld),
 
       waterRemainsSovereign: true,
-      elevationTransformsWaterState: true,
-      noGlacierDivideAuthority: true,
-      noSeparateGlacierSystem: true,
-
-      waterDepthPreserved: Boolean(state.lastRender && state.lastRender.waterDepthPreserved),
-      reefShelfPreserved: Boolean(state.lastRender && state.lastRender.reefShelfPreserved),
-      beachThresholdPreserved: Boolean(state.lastRender && state.lastRender.beachThresholdPreserved),
+      waterDepthPreserved: true,
+      reefShelfPreserved: true,
+      beachThresholdPreserved: true,
       hydrationReadOnlyPreserved: true,
       terrainAuthorityBlocked: true,
       waterSovereigntyPreserved: true,
 
-      terrainFillBlocked: true,
       noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
       noMountainRelief: true,
       noRiverNetwork: true,
@@ -672,10 +539,11 @@
       rendererConsumesHexBridge: Boolean(state.rendererConsumesHexBridge),
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexBridge),
 
-      noPublicHoneycomb: true,
-      noPublicDotGrid: true,
-      publicHoneycombBlocked: true,
-      publicSampleDotsSuppressed: true,
+      runtimeUntouched: true,
+      gaugesUntouched: true,
+      routeUntouched: true,
+      hydrationUntouched: true,
+      upstreamRuntimeUntouched: true,
 
       lastRender: state.lastRender,
       lastError: state.lastError,
@@ -690,10 +558,10 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    PRIOR_VERSION: PRIOR_VERSION,
+    priorVersion: PRIOR_VERSION,
     LAYER_VERSION: LAYER_VERSION,
     layerVersion: LAYER_VERSION,
-    VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
-    visualDeltaVersion: VISUAL_DELTA_VERSION,
     BASELINE: BASELINE,
     baseline: BASELINE,
 
@@ -720,7 +588,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:tri-domain-visual-delta-renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:surface-air-separation-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

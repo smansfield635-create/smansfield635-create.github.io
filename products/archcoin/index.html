@@ -3,9 +3,10 @@
   lang="en"
   data-page="products-archcoin"
   data-route="/products/archcoin/"
-  data-contract="ARCHCOIN_TED_TALK_PRODUCT_CHAMBER_RENEWAL_TNT_v1"
+  data-contract="ARCHCOIN_RUSSIAN_DOLL_PRODUCT_CHAMBER_RENEWAL_TNT_v1"
   data-product-class="product_chamber"
   data-parent="products"
+  data-scroll-mode="compressed-russian-doll"
   data-coin-status="conceptual-product-chamber"
   data-investment-offer="false"
   data-token-sale="false"
@@ -42,18 +43,21 @@
         linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
     }
 
-    .arch-stage {
+    .arch-stage,
+    .doll-shell {
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(242, 199, 111, 0.24);
       border-radius: 36px;
-      padding: clamp(30px, 7vw, 76px);
-      background:
-        linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+      background: linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,0.035),
         0 28px 90px rgba(0,0,0,0.38);
       isolation: isolate;
+    }
+
+    .arch-stage {
+      padding: clamp(30px, 7vw, 76px);
     }
 
     .arch-stage::before {
@@ -71,23 +75,12 @@
       z-index: -3;
     }
 
-    .arch-stage::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(5,8,19,0.30), transparent 48%, rgba(5,8,19,0.18)),
-        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.09), transparent 26%);
-      pointer-events: none;
-      z-index: -2;
-    }
-
     .blurred-coin-system {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: -1;
-      opacity: 0.46;
+      opacity: 0.42;
       filter: blur(2px);
     }
 
@@ -240,180 +233,171 @@
       background: rgba(242, 199, 111, 0.11);
     }
 
-    .section-title {
-      margin: 0 0 12px;
+    .doll-shell {
+      padding: clamp(18px, 4vw, 28px);
+    }
+
+    .doll-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .doll-title {
+      margin: 0;
       color: var(--text);
-      font-size: clamp(2.1rem, 6vw, 4.2rem);
-      line-height: 0.94;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 0.95;
       letter-spacing: -0.055em;
-      text-wrap: balance;
     }
 
-    .section-copy {
-      max-width: 920px;
-      margin: 0;
+    .doll-note {
+      max-width: 900px;
+      margin: 10px 0 0;
       color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.58;
+      font-size: 1.04rem;
+      line-height: 1.56;
     }
 
-    .claim-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .claim-card {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(242, 199, 111, 0.12), transparent 38%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.028),
-        0 18px 42px rgba(0,0,0,0.22);
-    }
-
-    .claim-card span {
-      display: block;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .claim-card strong {
-      display: block;
-      color: var(--text);
-      font-size: clamp(1.25rem, 3vw, 1.72rem);
-      line-height: 1.02;
-      letter-spacing: -0.035em;
-      margin-bottom: 12px;
-    }
-
-    .claim-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.48;
-    }
-
-    .gap-grid,
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .gap-card,
-    .route-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 22px;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.10), transparent 36%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.028),
-        0 18px 42px rgba(0,0,0,0.24);
-      text-decoration: none;
-      overflow: hidden;
-    }
-
-    .gap-card {
-      min-height: 250px;
-    }
-
-    .route-card {
-      min-height: 196px;
-    }
-
-    .gap-card::after,
-    .route-card::after {
-      content: "";
-      position: absolute;
-      right: -34px;
-      bottom: -34px;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      border: 1px solid rgba(242,199,111,0.12);
-      background: rgba(255,255,255,0.025);
-      pointer-events: none;
-    }
-
-    .card-kicker {
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .gap-card h3,
-    .route-card h3 {
-      margin: 0;
-      color: var(--text);
-      font-size: 1.48rem;
-      line-height: 1.04;
-      letter-spacing: -0.03em;
-    }
-
-    .gap-card p,
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      flex: 1;
-    }
-
-    .route-link {
+    .doll-badge {
+      border: 1px solid rgba(242,199,111,0.38);
+      border-radius: 999px;
+      padding: 10px 14px;
       color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .doll-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .doll-layer {
+      border: 1px solid rgba(180, 205, 255, 0.17);
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.09), transparent 34%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.80), rgba(7, 12, 25, 0.92));
+    }
+
+    .doll-layer[open] {
+      border-color: rgba(242,199,111,0.34);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    }
+
+    .doll-layer summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 20px;
+      color: var(--text);
+    }
+
+    .doll-layer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .layer-number {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(242,199,111,0.46);
+      border-radius: 50%;
+      color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
       font-weight: 950;
     }
 
-    .binding-table {
+    .layer-title {
+      display: block;
+      font-size: clamp(1.18rem, 3vw, 1.55rem);
+      font-weight: 950;
+      letter-spacing: -0.025em;
+    }
+
+    .layer-line {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 0.96rem;
+    }
+
+    .layer-action {
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .layer-body {
+      padding: 0 20px 20px 72px;
+    }
+
+    .mini-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
+      gap: 12px;
     }
 
-    .binding-item {
-      border: 1px solid rgba(180, 205, 255, 0.16);
-      border-radius: 24px;
-      padding: 20px;
-      background: rgba(255,255,255,0.045);
+    .mini-card {
+      border: 1px solid rgba(180, 205, 255, 0.14);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.04);
     }
 
-    .binding-item strong {
+    .mini-card strong {
       display: block;
       color: var(--text);
-      font-size: 1.08rem;
+      font-size: 1.02rem;
       margin-bottom: 8px;
     }
 
-    .binding-item span {
+    .mini-card span {
       color: var(--muted);
-      line-height: 1.48;
+      line-height: 1.45;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .route-card {
+      border: 1px solid rgba(180, 205, 255, 0.14);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.04);
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 950;
+    }
+
+    .route-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.4;
     }
 
     .notice {
       border: 1px solid rgba(242,199,111,0.22);
-      border-radius: 24px;
-      padding: 18px;
+      border-radius: 22px;
+      padding: 16px;
       background: rgba(242,199,111,0.07);
       color: rgba(255, 246, 220, 0.88);
       line-height: 1.52;
-      margin-top: 24px;
+      margin-top: 14px;
     }
 
     .arch-receipt {
@@ -422,25 +406,32 @@
     }
 
     @media (max-width: 1040px) {
-      .one-liner-strip {
+      .one-liner-strip,
+      .mini-grid,
+      .route-grid {
         grid-template-columns: 1fr;
       }
 
-      .claim-grid,
-      .gap-grid,
-      .route-grid,
-      .binding-table {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .doll-head {
+        grid-template-columns: 1fr;
+      }
+
+      .layer-body {
+        padding-left: 20px;
       }
 
       .blurred-coin-system {
-        opacity: 0.30;
+        opacity: 0.28;
       }
     }
 
     @media (max-width: 640px) {
-      .arch-stage {
+      .arch-stage,
+      .doll-shell {
         border-radius: 28px;
+      }
+
+      .arch-stage {
         padding: 30px 26px;
       }
 
@@ -452,20 +443,12 @@
         font-size: 1.32rem;
       }
 
-      .claim-grid,
-      .gap-grid,
-      .route-grid,
-      .binding-table {
-        grid-template-columns: 1fr;
+      .doll-layer summary {
+        grid-template-columns: auto minmax(0, 1fr);
       }
 
-      .gap-card,
-      .route-card {
-        min-height: 0;
-      }
-
-      .blurred-coin-system {
-        opacity: 0.22;
+      .layer-action {
+        grid-column: 2;
       }
     }
   </style>
@@ -515,11 +498,11 @@
       </h1>
 
       <p class="hero-subtitle">
-        ARCHCOIN is built to make value movement readable before it asks anyone to believe in value.
+        ARCHCOIN makes value movement readable before it asks anyone to believe in value.
       </p>
 
       <p class="hero-copy">
-        Most digital assets try to create attention first and explain usefulness later. ARCHCOIN starts with the product chamber:
+        Most digital assets chase attention first and explain usefulness later. ARCHCOIN starts with the product chamber:
         trust, contribution, access, proof, allocation, and verification inside the Diamond Gate Bridge ecosystem.
       </p>
 
@@ -545,170 +528,220 @@
       </div>
     </section>
 
-    <section class="dgb-card" aria-label="ARCHCOIN claims">
-      <h2 class="section-title">The economic layer has to become understandable.</h2>
-      <p class="section-copy">
-        ARCHCOIN is the value-coordination chamber for a growing product world. Its job is not to float outside the estate.
-        Its job is to help the estate explain value, access, contribution, movement, proof, and accountability.
-      </p>
-
-      <div class="claim-grid">
-        <div class="claim-card">
-          <span>Claim 01</span>
-          <strong>Readable value movement.</strong>
-          <p>ARCHCOIN gives the project a structured way to explain how value moves through products, proof, participation, and verification.</p>
+    <section class="doll-shell" aria-label="ARCHCOIN compressed Russian doll content">
+      <div class="doll-head">
+        <div>
+          <h2 class="doll-title">Open only the layer you need.</h2>
+          <p class="doll-note">
+            ARCHCOIN is compressed into nested product layers: meaning first, proof second, market gap third,
+            binding fourth, routes last. Less scroll. More control.
+          </p>
         </div>
-
-        <div class="claim-card">
-          <span>Claim 02</span>
-          <strong>Utility before hype.</strong>
-          <p>The chamber explains the product logic first. Trust has to become legible before it becomes scalable.</p>
-        </div>
-
-        <div class="claim-card">
-          <span>Claim 03</span>
-          <strong>Contribution needs accounting.</strong>
-          <p>Communities create value. ARCHCOIN gives contribution, access, and allocation a place to be organized.</p>
-        </div>
-
-        <div class="claim-card">
-          <span>Claim 04</span>
-          <strong>Proof beats performance.</strong>
-          <p>The strongest claim is not noise. It is a chamber, a route, a receipt, and a system that can be inspected.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="dgb-card" aria-label="ARCHCOIN market position">
-      <h2 class="section-title">The market has enough coins. It needs clearer coordination.</h2>
-      <p class="section-copy">
-        ARCHCOIN is not presented here as an offer, launch, or investment instrument. It is a product chamber under Products:
-        a way to organize the economic logic of the broader Diamond Gate Bridge ecosystem before any future public financial claim is made.
-      </p>
-
-      <div class="gap-grid">
-        <div class="gap-card">
-          <span class="card-kicker">Gap 01</span>
-          <h3>Trust without proof.</h3>
-          <p>ARCHCOIN answers with visible chamber logic, product routing, proof routes, and status checks.</p>
-        </div>
-
-        <div class="gap-card">
-          <span class="card-kicker">Gap 02</span>
-          <h3>Community without accounting.</h3>
-          <p>Contribution matters only when the system can explain what was contributed, where it belongs, and how it is recognized.</p>
-        </div>
-
-        <div class="gap-card">
-          <span class="card-kicker">Gap 03</span>
-          <h3>Speculation without utility.</h3>
-          <p>ARCHCOIN keeps the product engine first. The coin identity supports the system; it does not replace the system.</p>
-        </div>
+        <div class="doll-badge">Russian doll mode</div>
       </div>
 
-      <div class="notice">
-        ARCHCOIN is described as a product architecture chamber. This page does not offer tokens, promise returns,
-        solicit investment, or claim public launch readiness.
-      </div>
-    </section>
+      <div class="doll-stack">
+        <details class="doll-layer" open>
+          <summary>
+            <span class="layer-number">1</span>
+            <span>
+              <span class="layer-title">What ARCHCOIN is</span>
+              <span class="layer-line">A product-first value coordination chamber.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-    <section class="dgb-card" aria-label="ARCHCOIN canonical binding">
-      <h2 class="section-title">ARCHCOIN stays inside Products.</h2>
-      <p class="section-copy">
-        One product destination. No duplicate public root. No floating asset outside the estate.
-        ARCHCOIN remains housed under the Product Wing, supported by Showroom, measured by Gauges, and routed from Compass.
-      </p>
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Readable value movement</strong>
+                <span>ARCHCOIN explains how value moves through products, proof, participation, and verification.</span>
+              </div>
 
-      <div class="binding-table">
-        <div class="binding-item">
-          <strong>Canonical route</strong>
-          <span>/products/archcoin/</span>
-        </div>
+              <div class="mini-card">
+                <strong>Utility before hype</strong>
+                <span>The product logic comes first. Trust has to become legible before it becomes scalable.</span>
+              </div>
 
-        <div class="binding-item">
-          <strong>Product class</strong>
-          <span>product_chamber</span>
-        </div>
+              <div class="mini-card">
+                <strong>Coordination layer</strong>
+                <span>The coin identity supports the product ecosystem; it does not replace the ecosystem.</span>
+              </div>
+            </div>
+          </div>
+        </details>
 
-        <div class="binding-item">
-          <strong>Parent</strong>
-          <span>Products remains the source-waterfall chamber.</span>
-        </div>
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">2</span>
+            <span>
+              <span class="layer-title">The market gap</span>
+              <span class="layer-line">The market has enough coins. It needs clearer coordination.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-        <div class="binding-item">
-          <strong>Not a planet</strong>
-          <span>ARCHCOIN is not a planetary construct and not part of the Demo Universe render chain.</span>
-        </div>
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Trust without proof</strong>
+                <span>ARCHCOIN answers with chamber logic, product routing, proof routes, and status checks.</span>
+              </div>
 
-        <div class="binding-item">
-          <strong>Not a house part</strong>
-          <span>ARCHCOIN belongs to Products, not the six-part house structure.</span>
-        </div>
+              <div class="mini-card">
+                <strong>Community without accounting</strong>
+                <span>Contribution needs a way to be recognized, routed, and explained.</span>
+              </div>
 
-        <div class="binding-item">
-          <strong>Measured by proof</strong>
-          <span>Showroom and Gauges remain the verification routes for system-level claims.</span>
-        </div>
-      </div>
-    </section>
+              <div class="mini-card">
+                <strong>Speculation without utility</strong>
+                <span>ARCHCOIN keeps the product engine first and the coin identity subordinate to usefulness.</span>
+              </div>
+            </div>
 
-    <section class="dgb-card" aria-label="ARCHCOIN product backlinks">
-      <h2 class="section-title">Move through the product wing.</h2>
-      <p class="section-copy">
-        ARCHCOIN is one chamber inside a larger product system. Move through the parent, proof, control, house, and verification routes.
-      </p>
+            <div class="notice">
+              ARCHCOIN is described as a product architecture chamber. This page does not offer tokens, promise returns,
+              solicit investment, or claim public launch readiness.
+            </div>
+          </div>
+        </details>
 
-      <div class="route-grid">
-        <a class="route-card" href="/products/">
-          <span class="card-kicker">Parent</span>
-          <h3>Products</h3>
-          <p>Return to the product wing and the broader waterfall chamber.</p>
-          <span class="route-link">Open Products</span>
-        </a>
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">3</span>
+            <span>
+              <span class="layer-title">The proof structure</span>
+              <span class="layer-line">The strongest claim is a chamber, a route, a receipt, and a system that can be inspected.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-        <a class="route-card" href="/showroom/">
-          <span class="card-kicker">Proof</span>
-          <h3>Showroom</h3>
-          <p>Inspect public proof surfaces and presentation lanes.</p>
-          <span class="route-link">Open Showroom</span>
-        </a>
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Showroom supports it</strong>
+                <span>Showroom remains the public proof surface for active system presentation.</span>
+              </div>
 
-        <a class="route-card" href="/gauges/">
-          <span class="card-kicker">Verification</span>
-          <h3>Gauges</h3>
-          <p>Read route, runtime, parser, and diagnostic receipts.</p>
-          <span class="route-link">Open Gauges</span>
-        </a>
+              <div class="mini-card">
+                <strong>Gauges measures it</strong>
+                <span>Gauges reads route authority, runtime authority, served source, parser safety, and receipts.</span>
+              </div>
 
-        <a class="route-card" href="/">
-          <span class="card-kicker">Control</span>
-          <h3>Compass</h3>
-          <p>Return to the public command surface.</p>
-          <span class="route-link">Open Compass</span>
-        </a>
+              <div class="mini-card">
+                <strong>Products houses it</strong>
+                <span>ARCHCOIN is not free-floating. It lives under the Product Wing.</span>
+              </div>
+            </div>
+          </div>
+        </details>
 
-        <a class="route-card" href="/home/">
-          <span class="card-kicker">House</span>
-          <h3>Home</h3>
-          <p>Return to estate stabilization and routing.</p>
-          <span class="route-link">Open Home</span>
-        </a>
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">4</span>
+            <span>
+              <span class="layer-title">Canonical binding</span>
+              <span class="layer-line">One product destination. No duplicate public root.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-        <a class="route-card" href="/nine-summits-of-love/">
-          <span class="card-kicker">Book</span>
-          <h3>Nine Summits of Love</h3>
-          <p>Return to the human climb that anchors the broader system.</p>
-          <span class="route-link">Open Book</span>
-        </a>
-      </div>
-    </section>
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Canonical route</strong>
+                <span>/products/archcoin/</span>
+              </div>
 
-    <section class="dgb-card" aria-label="Route receipt">
-      <h2>Route receipt</h2>
-      <pre class="dgb-receipt arch-receipt">ARCHCOIN_TED_TALK_PRODUCT_CHAMBER_RENEWAL_TNT_v1
+              <div class="mini-card">
+                <strong>Product class</strong>
+                <span>product_chamber</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Parent</strong>
+                <span>Products remains the source-waterfall chamber.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Not a planet</strong>
+                <span>ARCHCOIN is not a planetary construct and not part of the Demo Universe render chain.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Not a house part</strong>
+                <span>ARCHCOIN belongs to Products, not the six-part house structure.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>No investment claim</strong>
+                <span>No token sale, launch promise, return promise, or public financial offering is made here.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">5</span>
+            <span>
+              <span class="layer-title">Move through the wing</span>
+              <span class="layer-line">Parent, proof, control, house, book, and verification routes.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="route-grid">
+              <a class="route-card" href="/products/">
+                Products
+                <span>Return to the product wing and the broader waterfall chamber.</span>
+              </a>
+
+              <a class="route-card" href="/showroom/">
+                Showroom
+                <span>Inspect public proof surfaces and presentation lanes.</span>
+              </a>
+
+              <a class="route-card" href="/gauges/">
+                Gauges
+                <span>Read route, runtime, parser, and diagnostic receipts.</span>
+              </a>
+
+              <a class="route-card" href="/">
+                Compass
+                <span>Return to the public command surface.</span>
+              </a>
+
+              <a class="route-card" href="/home/">
+                Home
+                <span>Return to estate stabilization and routing.</span>
+              </a>
+
+              <a class="route-card" href="/nine-summits-of-love/">
+                Book
+                <span>Return to the human climb that anchors the broader system.</span>
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">R</span>
+            <span>
+              <span class="layer-title">Route receipt</span>
+              <span class="layer-line">Compressed contract and audit status.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <pre class="dgb-receipt arch-receipt">ARCHCOIN_RUSSIAN_DOLL_PRODUCT_CHAMBER_RENEWAL_TNT_v1
 route=/products/archcoin/
 page=products-archcoin
 style_direction=ted-talk-product-chamber
+scroll_mode=compressed-russian-doll
 uses_shared_shell=/assets/dgb-ui-shell.css
 canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
 product_class=product_chamber
@@ -727,11 +760,14 @@ gauges_logic_touched=false
 showroom=/showroom/
 gauges=/gauges/
 visual_pass_claimed=false</pre>
+          </div>
+        </details>
+      </div>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    ARCHCOIN_TED_TALK_PRODUCT_CHAMBER_RENEWAL_TNT_v1 · ARCHCOIN · Diamond Gate Bridge.
+    ARCHCOIN_RUSSIAN_DOLL_PRODUCT_CHAMBER_RENEWAL_TNT_v1 · ARCHCOIN · Diamond Gate Bridge.
   </footer>
 </body>
 </html>

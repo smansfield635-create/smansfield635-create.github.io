@@ -1,180 +1,110 @@
-/* TNT RENEWAL — /assets/sun/sun_material.css
-   SUN ASSET SPINE · MATERIAL B7 · STELLAR PLASMA SUPPORT
-
-   CONTRACT:
-     - Material CSS supports the Sun canvas.
-     - CSS does not pretend to be the Sun.
-     - No flat orange CSS planet.
-     - No hard ring.
-     - No decorative rays.
-     - Canvas owns the stellar body.
+/* SUN TERMS RENEWAL
+   FILE: /assets/sun/sun_material.css
+   VERSION: SUN_TERMS_RENEWAL_TNT_v1
 */
 
-:root{
-  --dgb-sun-ink:rgba(255,255,255,.96);
-  --dgb-sun-text:rgba(255,239,209,.78);
-  --dgb-sun-gold:rgba(255,220,128,.98);
-  --dgb-sun-line:rgba(255,227,168,.16);
-  --dgb-sun-panel:rgba(10,6,3,.54);
+:root {
+  --sun-bg: #02050b;
+  --sun-panel: rgba(8, 14, 25, 0.90);
+  --sun-line: rgba(255, 204, 111, 0.24);
+  --sun-gold: #f2c76f;
+  --sun-orange: #ff9c45;
+  --sun-red: #c84b2a;
+  --sun-text: #f5f7fb;
+  --sun-muted: rgba(228, 234, 246, 0.76);
 }
 
-[data-dgb-sun-preview]{
-  min-height:100svh;
-  margin:0;
+[data-sun-stage="true"],
+[data-demo-universe-sun="true"],
+.sun-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(82vw, 720px);
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: clamp(16px, 4vw, 32px) auto;
+  overflow: visible;
+  border-radius: 50%;
   background:
-    radial-gradient(circle at 18% 12%,rgba(255,200,88,.10),transparent 24rem),
-    radial-gradient(circle at 74% 18%,rgba(255,142,44,.08),transparent 20rem),
-    linear-gradient(180deg,#08050b 0%,#05030a 44%,#010104 100%);
-  color:var(--dgb-sun-ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    radial-gradient(circle at 50% 50%, rgba(255, 187, 76, 0.10), transparent 62%),
+    transparent;
 }
 
-.dgb-sun-preview-page{
-  width:min(100% - 28px,980px);
-  min-height:100svh;
-  margin:0 auto;
-  padding:18px 0 28px;
-  display:grid;
-  gap:16px;
-  align-content:start;
+[data-sun-stage="true"]::before,
+[data-demo-universe-sun="true"]::before,
+.sun-stage::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    0 0 42px rgba(255, 187, 76, 0.18),
+    0 0 96px rgba(255, 115, 52, 0.10);
 }
 
-.dgb-sun-preview-header,
-.dgb-sun-preview-panel{
-  border:1px solid var(--dgb-sun-line);
-  border-radius:28px;
-  background:var(--dgb-sun-panel);
-  box-shadow:0 30px 110px rgba(0,0,0,.54);
-  backdrop-filter:blur(10px);
+canvas[data-sun-asset-canvas="true"] {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: min(82vw, 720px);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: transparent;
+  filter: saturate(1.06) contrast(1.04);
 }
 
-.dgb-sun-preview-header{
-  padding:clamp(20px,5vw,44px);
-  display:grid;
-  gap:14px;
+.sun-panel {
+  border: 1px solid var(--sun-line);
+  border-radius: 28px;
+  padding: clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 187, 76, 0.10), transparent 18rem),
+    var(--sun-panel);
+  color: var(--sun-text);
 }
 
-.dgb-sun-preview-kicker{
-  margin:0;
-  color:var(--dgb-sun-gold);
-  font-size:12px;
-  line-height:1.35;
-  font-weight:950;
-  letter-spacing:3px;
-  text-transform:uppercase;
+.sun-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 1px solid var(--sun-line);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(255, 187, 76, 0.09);
+  color: #ffe4ae;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.dgb-sun-preview-title{
-  margin:0;
-  font-size:clamp(3.2rem,10vw,7rem);
-  line-height:.86;
-  letter-spacing:-.08em;
+.sun-note {
+  color: var(--sun-muted);
+  line-height: 1.55;
 }
 
-.dgb-sun-preview-copy{
-  margin:0;
-  max-width:760px;
-  color:var(--dgb-sun-text);
-  font-size:clamp(1.05rem,2.4vw,1.35rem);
-  line-height:1.55;
+.sun-receipt {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--sun-line);
+  border-radius: 20px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.26);
+  color: rgba(245, 247, 251, 0.84);
 }
 
-.dgb-sun-preview-panel{
-  position:relative;
-  padding:clamp(14px,3vw,24px);
-  overflow:hidden;
-}
-
-[data-dgb-sun-mount]{
-  position:relative;
-  z-index:1;
-  width:min(100%,760px);
-  margin:0 auto;
-  aspect-ratio:1;
-  display:grid;
-  place-items:center;
-  background:transparent;
-  border:0;
-  outline:0;
-  box-shadow:none;
-  user-select:none;
-}
-
-[data-dgb-sun-canvas]{
-  display:block;
-  width:100%;
-  height:100%;
-  border:0;
-  outline:0;
-  background:transparent;
-}
-
-.dgb-sun-control-panel{
-  position:relative;
-  z-index:2;
-  width:min(100%,760px);
-  margin:14px auto 0;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-}
-
-.dgb-sun-control-button,
-.dgb-sun-control-readout{
-  min-height:42px;
-  border-radius:999px;
-  border:1px solid var(--dgb-sun-line);
-  background:rgba(0,0,0,.28);
-  color:var(--dgb-sun-ink);
-  font:inherit;
-  font-weight:900;
-  padding:10px 14px;
-}
-
-.dgb-sun-control-button{
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.dgb-sun-control-button:hover,
-.dgb-sun-control-button:focus-visible{
-  border-color:rgba(255,220,128,.52);
-  box-shadow:0 0 22px rgba(255,145,43,.16);
-  outline:none;
-}
-
-.dgb-sun-control-readout{
-  color:rgba(255,239,209,.72);
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-
-.dgb-sun-caption{
-  position:relative;
-  z-index:2;
-  margin:10px auto 4px;
-  color:rgba(255,247,220,.92);
-  font-size:clamp(.78rem,2vw,1rem);
-  font-weight:950;
-  letter-spacing:1.7px;
-  text-align:center;
-  text-transform:uppercase;
-  text-shadow:0 3px 18px rgba(0,0,0,.8);
-}
-
-@media(max-width:760px){
-  .dgb-sun-preview-page{
-    width:min(100% - 20px,980px);
+@media (max-width: 720px) {
+  [data-sun-stage="true"],
+  [data-demo-universe-sun="true"],
+  .sun-stage {
+    width: min(84vw, 430px);
   }
 
-  [data-dgb-sun-mount],
-  .dgb-sun-control-panel{
-    width:min(100%,620px);
-  }
-
-  .dgb-sun-control-button,
-  .dgb-sun-control-readout{
-    flex:1 1 calc(50% - 10px);
-    text-align:center;
+  canvas[data-sun-asset-canvas="true"] {
+    width: min(84vw, 430px);
   }
 }

@@ -3,7 +3,7 @@
   lang="en"
   data-page="nine-summits-universe"
   data-route="/nine-summits/universe/"
-  data-contract="NINE_SUMMITS_UNIVERSE_SHOWROOM_VISUAL_EXTENSION_TNT_v1"
+  data-contract="NINE_SUMMITS_UNIVERSE_MOBILE_VISUAL_LEGIBILITY_RENEWAL_TNT_v1"
   data-visualization="css-dom-showroom-extension"
   data-planet-one-status="future-nine-summits-universe-planet"
   data-earth-g1-route="/showroom/globe/"
@@ -15,7 +15,7 @@
   <title>Diamond Gate Bridge · Nine Summits Universe</title>
   <meta
     name="description"
-    content="Nine Summits Universe page with a showroom-style visual extension for the future Planet 1 world map."
+    content="Nine Summits Universe page with a mobile-legible showroom-style visualization for the future Planet 1 world map."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
@@ -23,19 +23,15 @@
   <style>
     :root {
       color-scheme: dark;
-      --u-bg: #02050b;
       --u-panel: rgba(8, 14, 25, 0.90);
-      --u-panel-2: rgba(12, 21, 36, 0.86);
       --u-line: rgba(176, 204, 255, 0.20);
       --u-line-strong: rgba(242, 199, 111, 0.46);
       --u-gold: #f2c76f;
       --u-blue: #9ec6ff;
       --u-green: #83e0b9;
       --u-purple: #c7a6ff;
-      --u-copper: #d39a66;
       --u-text: #f5f7fb;
       --u-muted: rgba(228, 234, 246, 0.76);
-      --u-soft: rgba(228, 234, 246, 0.58);
     }
 
     body {
@@ -45,8 +41,7 @@
     .universe-actions,
     .universe-grid,
     .region-grid,
-    .mini-grid,
-    .mode-row {
+    .mini-grid {
       display: grid;
       gap: 14px;
     }
@@ -149,7 +144,7 @@
 
     .universe-viewer {
       position: relative;
-      min-height: clamp(460px, 72vw, 760px);
+      min-height: clamp(540px, 78vw, 780px);
       margin-top: 22px;
       border: 1px solid rgba(176,204,255,.18);
       border-radius: clamp(22px, 5vw, 34px);
@@ -171,7 +166,7 @@
         radial-gradient(circle, rgba(242,199,111,.16) 0 1px, transparent 1.8px);
       background-size: 120px 120px, 190px 190px;
       background-position: 10px 20px, 80px 70px;
-      opacity: .20;
+      opacity: .18;
       pointer-events: none;
     }
 
@@ -206,12 +201,13 @@
 
     .planet-map {
       position: absolute;
-      inset: 10%;
+      inset: 11% 8% 12%;
       display: grid;
-      grid-template-rows: .72fr 1fr 1.28fr 1fr .72fr;
+      grid-template-rows: .68fr .95fr 1.12fr .95fr .68fr;
       gap: 10px;
-      transform: rotateX(7deg);
+      transform: rotateX(5deg);
       transform-origin: center;
+      z-index: 3;
     }
 
     .map-row {
@@ -220,7 +216,8 @@
     }
 
     .map-row.top,
-    .map-row.bottom {
+    .map-row.bottom,
+    .map-row.center {
       grid-template-columns: 1fr;
     }
 
@@ -229,15 +226,11 @@
       grid-template-columns: 1fr 1fr;
     }
 
-    .map-row.center {
-      grid-template-columns: 1fr;
-    }
-
     .region {
       position: relative;
       display: grid;
       place-items: center;
-      min-height: 78px;
+      min-height: 76px;
       border: 1px solid rgba(176,204,255,.18);
       border-radius: 22px;
       padding: 12px;
@@ -259,7 +252,7 @@
       display: block;
       margin-top: 5px;
       color: var(--u-muted);
-      font-size: .74rem;
+      font-size: .72rem;
       font-weight: 800;
       letter-spacing: .06em;
       text-transform: uppercase;
@@ -269,9 +262,8 @@
       content: "";
       position: absolute;
       inset: -30%;
-      background:
-        linear-gradient(115deg, transparent 34%, rgba(255,255,255,.08), transparent 58%);
-      opacity: .38;
+      background: linear-gradient(115deg, transparent 34%, rgba(255,255,255,.08), transparent 58%);
+      opacity: .32;
       transform: translateX(-25%);
       pointer-events: none;
     }
@@ -279,7 +271,7 @@
     .north-pole { --region-glow: rgba(158,198,255,.16); }
     .north-main { --region-glow: rgba(199,166,255,.15); }
     .east-main { --region-glow: rgba(131,224,185,.15); }
-    .mainland { --region-glow: rgba(242,199,111,.16); min-height: 128px; }
+    .mainland { --region-glow: rgba(242,199,111,.16); min-height: 118px; padding-top: 34px; }
     .west-main { --region-glow: rgba(211,154,102,.16); }
     .south-main { --region-glow: rgba(131,224,185,.16); }
     .south-pole { --region-glow: rgba(158,198,255,.14); }
@@ -287,8 +279,8 @@
     .core {
       position: absolute;
       left: 50%;
-      top: 50%;
-      width: clamp(74px, 16vw, 138px);
+      top: 49%;
+      width: clamp(56px, 12vw, 108px);
       aspect-ratio: 1 / 1;
       transform: translate(-50%, -50%);
       border: 1px solid rgba(242,199,111,.58);
@@ -297,24 +289,34 @@
         radial-gradient(circle at 38% 38%, rgba(255,248,203,.95), rgba(242,199,111,.58) 26%, rgba(60,170,210,.34) 48%, rgba(0,0,0,.18) 70%),
         rgba(242,199,111,.12);
       box-shadow:
-        0 0 28px rgba(242,199,111,.32),
-        0 0 72px rgba(120,185,255,.16);
-      z-index: 5;
+        0 0 24px rgba(242,199,111,.30),
+        0 0 60px rgba(120,185,255,.14);
+      z-index: 4;
+      pointer-events: none;
     }
 
-    .core::before {
-      content: "Magnetic Core";
+    .core-badge {
       position: absolute;
       left: 50%;
-      top: calc(100% + 8px);
+      top: calc(49% + clamp(38px, 8vw, 76px));
       transform: translateX(-50%);
+      z-index: 7;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: max-content;
-      max-width: 170px;
+      max-width: 210px;
+      min-height: 30px;
+      border: 1px solid rgba(242,199,111,.42);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(2,5,11,.72);
       color: #ffe6a5;
-      font-size: .72rem;
+      font-size: .68rem;
       font-weight: 950;
       letter-spacing: .08em;
       text-transform: uppercase;
+      pointer-events: none;
     }
 
     .seam {
@@ -324,42 +326,47 @@
       width: 1px;
       background: linear-gradient(180deg, transparent, rgba(158,198,255,.36), transparent);
       opacity: .75;
-      z-index: 4;
+      z-index: 2;
     }
 
-    .seam.left { left: 4%; }
-    .seam.right { right: 4%; }
+    .seam.left { left: 5%; }
+    .seam.right { right: 5%; }
 
     .orbit-lane {
       position: absolute;
-      inset: 9%;
+      inset: 10%;
       border: 1px dashed rgba(158,198,255,.22);
       border-radius: 50%;
       pointer-events: none;
       opacity: .35;
+      z-index: 1;
     }
 
     .body-dot {
       position: absolute;
       display: grid;
       place-items: center;
-      width: 74px;
+      min-width: 76px;
       min-height: 34px;
       border: 1px solid rgba(176,204,255,.22);
       border-radius: 999px;
-      background: rgba(0,0,0,.34);
+      padding: 6px 10px;
+      background: rgba(0,0,0,.46);
       color: var(--u-text);
-      font-size: .72rem;
+      font-size: .68rem;
       font-weight: 950;
       letter-spacing: .06em;
       text-transform: uppercase;
-      z-index: 6;
+      z-index: 8;
+      line-height: 1.05;
+      text-align: center;
+      white-space: nowrap;
     }
 
-    .body-dot.earth { right: 6%; top: 13%; border-color: rgba(131,224,185,.38); }
-    .body-dot.sun { left: 7%; top: 14%; border-color: rgba(242,199,111,.44); }
-    .body-dot.moon { right: 10%; bottom: 11%; border-color: rgba(158,198,255,.38); }
-    .body-dot.planet-one { left: 7%; bottom: 11%; border-color: rgba(199,166,255,.38); }
+    .body-dot.earth { right: 7%; top: 6%; border-color: rgba(131,224,185,.38); }
+    .body-dot.sun { left: 7%; top: 6%; border-color: rgba(242,199,111,.44); }
+    .body-dot.moon { right: 7%; bottom: 6%; border-color: rgba(158,198,255,.38); }
+    .body-dot.planet-one { left: 7%; bottom: 6%; border-color: rgba(199,166,255,.38); }
 
     .mode-caption {
       margin-top: 16px;
@@ -374,11 +381,11 @@
     .universe-viewer[data-mode="core"] .region,
     .universe-viewer[data-mode="access"] .region,
     .universe-viewer[data-mode="sequence"] .region {
-      opacity: .48;
+      opacity: .50;
     }
 
     .universe-viewer[data-mode="core"] .core {
-      width: clamp(96px, 22vw, 180px);
+      width: clamp(76px, 18vw, 148px);
       box-shadow:
         0 0 42px rgba(242,199,111,.44),
         0 0 110px rgba(120,185,255,.22);
@@ -395,18 +402,29 @@
     }
 
     .universe-viewer[data-mode="sequence"] .body-dot {
-      transform: scale(1.08);
+      transform: scale(1.06);
       box-shadow: 0 0 28px rgba(242,199,111,.12);
     }
 
     @media (max-width: 720px) {
+      .viewer-panel {
+        padding: 16px;
+      }
+
       .universe-viewer {
-        min-height: 640px;
+        min-height: 735px;
+      }
+
+      .showroom-box {
+        inset: 16px;
+        border-radius: 28px;
       }
 
       .planet-map {
-        inset: 8%;
-        gap: 8px;
+        inset: 82px 34px 92px;
+        grid-template-rows: 82px 92px 122px 92px 82px;
+        gap: 12px;
+        transform: none;
       }
 
       .map-row.upper,
@@ -415,22 +433,73 @@
       }
 
       .region {
-        min-height: 70px;
+        min-height: 74px;
+        border-radius: 20px;
+        padding: 10px 12px;
+      }
+
+      .region strong {
+        font-size: .98rem;
+      }
+
+      .region span {
+        font-size: .62rem;
+        letter-spacing: .05em;
       }
 
       .mainland {
-        min-height: 96px;
+        min-height: 112px;
+        padding-top: 18px;
+        padding-bottom: 38px;
+      }
+
+      .core {
+        width: 58px;
+        top: 48.5%;
+      }
+
+      .core-badge {
+        top: calc(48.5% + 38px);
+        max-width: 170px;
+        min-height: 27px;
+        font-size: .58rem;
+        padding: 5px 8px;
       }
 
       .body-dot {
-        width: 66px;
-        font-size: .66rem;
+        min-width: 72px;
+        min-height: 31px;
+        font-size: .58rem;
+        padding: 5px 8px;
       }
 
-      .body-dot.sun { left: 4%; top: 8%; }
-      .body-dot.earth { right: 4%; top: 8%; }
-      .body-dot.planet-one { left: 4%; bottom: 8%; }
-      .body-dot.moon { right: 4%; bottom: 8%; }
+      .body-dot.sun {
+        left: 28px;
+        top: 30px;
+      }
+
+      .body-dot.earth {
+        right: 28px;
+        top: 30px;
+      }
+
+      .body-dot.planet-one {
+        left: 28px;
+        bottom: 30px;
+      }
+
+      .body-dot.moon {
+        right: 28px;
+        bottom: 30px;
+      }
+
+      .seam.left { left: 24px; }
+      .seam.right { right: 24px; }
+
+      .orbit-lane {
+        inset: 92px 38px;
+        border-radius: 999px;
+      }
     }
   </style>
 </head>
@@ -465,7 +534,7 @@
 
       <p class="dgb-copy">
         The book gives the human path. The Universe gives that path a world. Earth G1 remains the Demo Universe globe standard.
-        This page now adds a showroom-style visual extension for the future Nine Summits Universe planet.
+        This page adds a showroom-style visual extension for the future Nine Summits Universe planet.
       </p>
 
       <div class="dgb-chip-row">
@@ -489,7 +558,7 @@
       <h2 id="viewer-title">A showroom extension for the future Planet 1 world.</h2>
       <p class="u-note">
         This is a CSS/DOM visualization, not a generated graphic. It gives the Universe page a visible world chamber
-        while keeping the live Earth G1 renderer in Showroom.
+        while keeping the live Earth G1 and Sun inspection route in Showroom.
       </p>
 
       <div class="mode-row" aria-label="Universe visualization modes">
@@ -544,10 +613,11 @@
           </div>
 
           <div class="core" aria-label="Floating magnetic core"></div>
-          <div class="body-dot sun">Sun next</div>
+          <div class="core-badge">Magnetic Core</div>
+          <div class="body-dot sun">Sun Next</div>
           <div class="body-dot earth">Earth G1</div>
           <div class="body-dot planet-one">Planet 1</div>
-          <div class="body-dot moon">Moon queue</div>
+          <div class="body-dot moon">Moon Queue</div>
         </div>
       </div>
 
@@ -636,7 +706,7 @@
 
     <details class="dgb-details">
       <summary>Route contract</summary>
-      <pre class="dgb-receipt">NINE_SUMMITS_UNIVERSE_SHOWROOM_VISUAL_EXTENSION_TNT_v1
+      <pre class="dgb-receipt">NINE_SUMMITS_UNIVERSE_MOBILE_VISUAL_LEGIBILITY_RENEWAL_TNT_v1
 route=/nine-summits/universe/
 visualization=css-dom-showroom-extension
 graphicbox=false
@@ -647,13 +717,16 @@ sun-view-route=/showroom/globe/
 planet-1=future-nine-summits-universe-planet
 seven-landmasses=mainland,north-main,east-main,south-main,west-main,north-pole,south-pole
 magnetic-core=true
+mobile-core-reduced=true
+mobile-pills-repositioned=true
+mobile-map-breathing-room=true
 moon=queued
 visual-pass-claimed=false</pre>
     </details>
   </main>
 
   <footer class="dgb-footer">
-    NINE_SUMMITS_UNIVERSE_SHOWROOM_VISUAL_EXTENSION_TNT_v1 · Universe · Showroom extension · Diamond Gate Bridge.
+    NINE_SUMMITS_UNIVERSE_MOBILE_VISUAL_LEGIBILITY_RENEWAL_TNT_v1 · Universe · Showroom extension · Diamond Gate Bridge.
   </footer>
 
   <script>
@@ -686,9 +759,9 @@ visual-pass-claimed=false</pre>
         });
       });
 
-      window.DGBNineSummitsUniverseShowroomExtension = {
-        VERSION: "NINE_SUMMITS_UNIVERSE_SHOWROOM_VISUAL_EXTENSION_TNT_v1",
-        version: "NINE_SUMMITS_UNIVERSE_SHOWROOM_VISUAL_EXTENSION_TNT_v1",
+      window.DGBNineSummitsUniverseMobileVisualLegibilityRenewal = {
+        VERSION: "NINE_SUMMITS_UNIVERSE_MOBILE_VISUAL_LEGIBILITY_RENEWAL_TNT_v1",
+        version: "NINE_SUMMITS_UNIVERSE_MOBILE_VISUAL_LEGIBILITY_RENEWAL_TNT_v1",
         setMode: setMode,
         getStatus: function () {
           return {
@@ -698,7 +771,11 @@ visual-pass-claimed=false</pre>
             graphicBox: false,
             imageGeneration: false,
             earthG1Route: "/showroom/globe/",
+            sunViewRoute: "/showroom/globe/",
             planetOneStatus: "future-nine-summits-universe-planet",
+            mobileCoreReduced: true,
+            mobilePillsRepositioned: true,
+            mobileMapBreathingRoom: true,
             visualPassClaimed: false
           };
         }

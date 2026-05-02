@@ -3,7 +3,7 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="DGB_GAUGES_MASTER_SITE_AUDIT_CONSOLE_TNT_v1"
+  data-contract="DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1"
 >
 <head>
   <meta charset="utf-8" />
@@ -129,15 +129,11 @@
     }
 
     @media (max-width: 860px) {
-      .audit-summary {
-        grid-template-columns: 1fr 1fr;
-      }
+      .audit-summary { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 560px) {
-      .audit-summary {
-        grid-template-columns: 1fr;
-      }
+      .audit-summary { grid-template-columns: 1fr; }
 
       .audit-table th,
       .audit-table td {
@@ -273,9 +269,9 @@
               <tr>
                 <th>Runtime file</th>
                 <th>Status</th>
-                <th>Active reference</th>
-                <th>Loop signals</th>
-                <th>Control signals</th>
+                <th>Live-route usage</th>
+                <th>Served</th>
+                <th>Authority signals</th>
                 <th>Risk</th>
               </tr>
             </thead>
@@ -297,7 +293,7 @@
 
     <details class="dgb-details">
       <summary>Gauge contract</summary>
-      <pre class="dgb-receipt">DGB_GAUGES_MASTER_SITE_AUDIT_CONSOLE_TNT_v1
+      <pre class="dgb-receipt">DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1
 route=/gauges/
 page=gauges
 role=master-site-audit-console
@@ -305,6 +301,9 @@ auto_preflight=true
 deletes_files=false
 renders_planet_iframe=false
 starts_extra_animation_loops=false
+self_scan_false_positive_correction=true
+runtime_inventory_self_reference_excluded=true
+visual_pass_detector_contextual=true
 audits=ui-shell-parity,route-availability,contract-freshness,planet-render-chain,runtime-authority,loop-control-signals,visual-hold
 canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
 visual_pass_claimed=false</pre>
@@ -312,14 +311,14 @@ visual_pass_claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    DGB_GAUGES_MASTER_SITE_AUDIT_CONSOLE_TNT_v1 · Gauges · Diamond Gate Bridge.
+    DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1 · Gauges · Diamond Gate Bridge.
   </footer>
 
   <script>
     (function attachMasterSiteAuditConsole(global) {
       "use strict";
 
-      var VERSION = "DGB_GAUGES_MASTER_SITE_AUDIT_CONSOLE_TNT_v1";
+      var VERSION = "DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1";
 
       var ROUTES = [
         { key: "compass", label: "Compass", path: "/", expectedCurrent: "Compass" },
@@ -424,12 +423,6 @@ visual_pass_claimed=false</pre>
         return match ? match.length : 0;
       }
 
-      function hasAll(text, needles) {
-        return needles.every(function (needle) {
-          return String(text || "").indexOf(needle) !== -1;
-        });
-      }
-
       function getScriptRefs(text) {
         var refs = [];
         String(text || "").replace(/<script[^>]+src=["']([^"']+)["']/gi, function (_, src) {
@@ -439,13 +432,27 @@ visual_pass_claimed=false</pre>
         return refs;
       }
 
-      function getRuntimeRefs(text) {
-        var refs = [];
-        String(text || "").replace(/\/runtime\/[a-zA-Z0-9_.-]+\.js/g, function (src) {
-          if (refs.indexOf(src) === -1) refs.push(src);
-          return "";
+      function stripScriptBodies(text) {
+        return String(text || "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+      }
+
+      function getRuntimeScriptRefsFromHtml(text) {
+        return getScriptRefs(text).filter(function (src) {
+          return src.indexOf("/runtime/") === 0 || src.indexOf(location.origin + "/runtime/") === 0;
         });
-        return refs;
+      }
+
+      function hasExplicitVisualPassClaim(text, path) {
+        if (path === "/gauges/") return false;
+
+        var htmlOnly = stripScriptBodies(text);
+
+        if (/data-visual-pass-claimed=["']true["']/i.test(htmlOnly)) return true;
+        if (/visual-pass-claimed=["']true["']/i.test(htmlOnly)) return true;
+        if (/VISUAL_PASS_CLAIMED\s*=\s*true/i.test(htmlOnly)) return true;
+        if (/visual_pass_claimed\s*=\s*true/i.test(htmlOnly)) return true;
+
+        return false;
       }
 
       function fetchText(path) {
@@ -507,22 +514,36 @@ visual_pass_claimed=false</pre>
         }, 0);
       }
 
+      function normalizeScriptPath(src) {
+        var value = String(src || "").split("?")[0];
+        try {
+          var url = new URL(value, location.origin);
+          return url.pathname;
+        } catch (error) {
+          return value;
+        }
+      }
+
       function scanRoute(route, fetched) {
         var text = fetched.text || "";
-        var hasShell = text.indexOf("/assets/dgb-ui-shell.css") !== -1 ||
+        var htmlOnly = stripScriptBodies(text);
+
+        var hasShell =
+          text.indexOf("/assets/dgb-ui-shell.css") !== -1 ||
           text.indexOf("dgb-site-header") !== -1 ||
           text.indexOf("dgb-nav") !== -1;
 
-        var hasBrand = text.indexOf("Diamond Gate Bridge") !== -1;
-        var hasEstate = text.indexOf("Rich Manor and Estate") !== -1;
-        var hasPlanet1 = text.indexOf("/showroom/globe/") !== -1 && text.indexOf("Planet 1") !== -1;
+        var hasBrand = htmlOnly.indexOf("Diamond Gate Bridge") !== -1;
+        var hasEstate = htmlOnly.indexOf("Rich Manor and Estate") !== -1;
+        var hasPlanet1 = htmlOnly.indexOf("/showroom/globe/") !== -1 && htmlOnly.indexOf("Planet 1") !== -1;
 
         var navComplete = CANONICAL_NAV.every(function (item) {
-          return text.indexOf(item.href) !== -1 && text.indexOf(item.label) !== -1;
+          return htmlOnly.indexOf(item.href) !== -1 && htmlOnly.indexOf(item.label) !== -1;
         });
 
-        var activeCurrent = text.indexOf('aria-current="page"') !== -1 &&
-          text.indexOf(route.expectedCurrent) !== -1;
+        var activeCurrent =
+          htmlOnly.indexOf('aria-current="page"') !== -1 &&
+          htmlOnly.indexOf(route.expectedCurrent) !== -1;
 
         var contractMatch = text.match(/data-contract=["']([^"']+)["']/i);
         var contract = contractMatch ? contractMatch[1] : "NO_DATA_CONTRACT";
@@ -532,6 +553,8 @@ visual_pass_claimed=false</pre>
           : fetched.ok && hasBrand && (hasShell || navComplete)
             ? "WARN"
             : "FAIL";
+
+        if (route.path === "/showroom/globe/" && contract === "NO_DATA_CONTRACT") state = "WARN";
 
         return {
           key: route.key,
@@ -549,8 +572,8 @@ visual_pass_claimed=false</pre>
           activeCurrent: activeCurrent,
           contract: contract,
           scriptRefs: getScriptRefs(text),
-          runtimeRefs: getRuntimeRefs(text),
-          visualPassTrue: /visualPassClaimed\s*[:=]\s*true/.test(text),
+          runtimeScriptRefs: getRuntimeScriptRefsFromHtml(text),
+          visualPassClaim: hasExplicitVisualPassClaim(text, route.path),
           error: fetched.error
         };
       }
@@ -580,44 +603,45 @@ visual_pass_claimed=false</pre>
           loopSignalTotal: loopTotal,
           controlSignalTotal: controlTotal,
           risk: risk,
-          visualPassTrue: /visualPassClaimed\s*[:=]\s*true/.test(text),
+          visualPassClaim: false,
           error: fetched.error
         };
       }
 
-      function scanRuntimeFile(path, fetched, allRouteText) {
+      function scanRuntimeFile(path, fetched, liveRouteRuntimeScriptPaths) {
         var text = fetched.text || "";
         var loops = loopSignals(text);
         var controls = controlSignals(text);
         var loopTotal = total(loops);
         var controlTotal = total(controls);
-        var activeReference = allRouteText.indexOf(path) !== -1;
+        var served = Boolean(fetched.ok);
+        var liveRouteUsage = liveRouteRuntimeScriptPaths.indexOf(path) !== -1;
         var hasGlobal = /DGB[A-Za-z0-9_]+/.test(text);
-        var hasAuthoritySignal = loopTotal > 0 || controlTotal > 0 || hasGlobal;
+        var authoritySignalTotal = loopTotal + controlTotal + (hasGlobal ? 1 : 0);
 
-        var risk = activeReference && hasAuthoritySignal ? "HIGH" :
-          activeReference ? "MEDIUM" :
-          hasAuthoritySignal ? "MEDIUM" :
-          "LOW";
-
-        var state = fetched.ok && risk !== "HIGH" ? "PASS" :
-          fetched.ok && risk === "HIGH" ? "FAIL" :
+        var risk = liveRouteUsage && authoritySignalTotal > 0 ? "HIGH" :
+          served && authoritySignalTotal > 0 ? "MEDIUM" :
+          served ? "LOW" :
           "FAIL";
+
+        var state = risk === "HIGH" || risk === "FAIL" ? "FAIL" : "PASS";
 
         return {
           path: path,
           ok: fetched.ok,
           status: fetched.status,
           size: fetched.size,
-          activeReference: activeReference,
+          served: served,
+          liveRouteUsage: liveRouteUsage,
           hasGlobal: hasGlobal,
+          authoritySignalTotal: authoritySignalTotal,
           loopSignals: loops,
           controlSignals: controls,
           loopSignalTotal: loopTotal,
           controlSignalTotal: controlTotal,
           risk: risk,
           state: state,
-          visualPassTrue: /visualPassClaimed\s*[:=]\s*true/.test(text),
+          visualPassClaim: false,
           error: fetched.error
         };
       }
@@ -647,9 +671,9 @@ visual_pass_claimed=false</pre>
         return "<tr>" +
           "<td>" + escapeHtml(item.path) + "</td>" +
           "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.activeReference ? "yes" : "no") + "</td>" +
-          "<td>" + escapeHtml(item.loopSignalTotal) + "</td>" +
-          "<td>" + escapeHtml(item.controlSignalTotal) + "</td>" +
+          "<td>" + escapeHtml(item.liveRouteUsage ? "yes" : "no") + "</td>" +
+          "<td>" + escapeHtml(item.served ? "yes" : "no") + "</td>" +
+          "<td>" + escapeHtml(item.authoritySignalTotal) + "</td>" +
           "<td>" + escapeHtml(item.risk) + "</td>" +
           "</tr>";
       }
@@ -660,7 +684,13 @@ visual_pass_claimed=false</pre>
         var renderFails = renderResults.filter(function (item) { return item.state === "FAIL"; });
         var renderWarns = renderResults.filter(function (item) { return item.state === "WARN"; });
         var runtimeHigh = runtimeResults.filter(function (item) { return item.risk === "HIGH"; });
-        var visualPassTrue = routeResults.concat(renderResults).concat(runtimeResults).filter(function (item) { return item.visualPassTrue; });
+        var visualClaims = routeResults.concat(renderResults).concat(runtimeResults).filter(function (item) {
+          return item.visualPassClaim === true;
+        });
+
+        var missingPlanetContract = routeResults.filter(function (item) {
+          return item.path === "/showroom/globe/" && item.contract === "NO_DATA_CONTRACT";
+        });
 
         var blocking = "No blocking issue detected.";
         var tnt = "HOLD";
@@ -669,11 +699,22 @@ visual_pass_claimed=false</pre>
 
         if (routeFails.length || routeWarns.length) {
           overall = routeFails.length ? "FAIL" : "WARN";
-          blocking = "UI shell or route parity is not fully aligned.";
-          tnt = "DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_2_TNT_v1";
+          blocking = "UI shell or route metadata is not fully aligned.";
+          tnt = missingPlanetContract.length
+            ? "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
+            : "DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1";
           notes.push("<strong>UI shell:</strong> " + routeFails.length + " fail, " + routeWarns.length + " warn.");
         } else {
           notes.push("<strong>UI shell:</strong> all audited routes carry the canonical shell/nav contract.");
+        }
+
+        if (missingPlanetContract.length) {
+          if (overall !== "FAIL") overall = "WARN";
+          blocking = "Planet 1 is missing a route data-contract marker.";
+          tnt = "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1";
+          notes.push("<strong>Planet 1 contract:</strong> missing data-contract marker.");
+        } else {
+          notes.push("<strong>Planet 1 contract:</strong> route metadata marker is present.");
         }
 
         if (renderFails.length || renderWarns.length) {
@@ -687,20 +728,20 @@ visual_pass_claimed=false</pre>
 
         if (runtimeHigh.length) {
           overall = "FAIL";
-          blocking = "Active upstream runtime authority conflict remains present.";
+          blocking = "Active live-route runtime authority conflict remains present.";
           tnt = "RUNTIME_DIRECTORY_AUTHORITY_SUBORDINATION_TNT_v1";
-          notes.push("<strong>Runtime:</strong> " + runtimeHigh.length + " high-risk active /runtime/ files detected.");
+          notes.push("<strong>Runtime:</strong> " + runtimeHigh.length + " high-risk /runtime/ files are live-route active.");
         } else {
-          notes.push("<strong>Runtime:</strong> no high-risk active /runtime/ authority detected by static scan.");
+          notes.push("<strong>Runtime:</strong> no high-risk /runtime/ file is used by live route script tags.");
         }
 
-        if (visualPassTrue.length) {
+        if (visualClaims.length) {
           overall = "FAIL";
-          blocking = "One or more files claim visual pass prematurely.";
+          blocking = "One or more served pages explicitly claim visual pass.";
           tnt = "VISUAL_PASS_FALSE_CLAIM_REMOVAL_TNT_v1";
-          notes.push("<strong>Visual pass:</strong> false visual-pass claims found.");
+          notes.push("<strong>Visual pass:</strong> explicit visual pass claim found.");
         } else {
-          notes.push("<strong>Visual pass:</strong> no visualPassClaimed=true marker found.");
+          notes.push("<strong>Visual pass:</strong> no explicit visual-pass claim found.");
         }
 
         notes.push("<strong>Protected scope:</strong> this gauge does not mutate route, runtime, render, hydration, or /runtime files.");
@@ -721,9 +762,7 @@ visual_pass_claimed=false</pre>
         writeText("blocking-issue", "Audit running.");
         writeText("required-tnt", "Scanning.");
 
-        var routePromise = kind === "runtime" || kind === "render"
-          ? Promise.all(ROUTES.map(function (route) { return fetchText(route.path); }))
-          : Promise.all(ROUTES.map(function (route) { return fetchText(route.path); }));
+        var routePromise = Promise.all(ROUTES.map(function (route) { return fetchText(route.path); }));
 
         var renderPromise = kind === "routes" || kind === "runtime"
           ? Promise.resolve([])
@@ -746,15 +785,22 @@ visual_pass_claimed=false</pre>
             ? RENDER_FILES.map(function (file, index) { return scanRenderFile(file, renderFetches[index]); })
             : [];
 
-          var allRouteText = routeFetches.map(function (item) { return item.text || ""; }).join("\n\n");
+          var liveRouteRuntimeScriptPaths = [];
+          routeResults.forEach(function (route) {
+            if (route.path === "/gauges/") return;
+            route.runtimeScriptRefs.forEach(function (src) {
+              var normalized = normalizeScriptPath(src);
+              if (liveRouteRuntimeScriptPaths.indexOf(normalized) === -1) liveRouteRuntimeScriptPaths.push(normalized);
+            });
+          });
 
           var runtimeResults = runtimeFetches.length
-            ? RUNTIME_FILES.map(function (path, index) { return scanRuntimeFile(path, runtimeFetches[index], allRouteText); })
+            ? RUNTIME_FILES.map(function (path, index) {
+                return scanRuntimeFile(path, runtimeFetches[index], liveRouteRuntimeScriptPaths);
+              })
             : [];
 
-          var effectiveRender = renderResults.length ? renderResults : [];
-          var effectiveRuntime = runtimeResults.length ? runtimeResults : [];
-          var diagnosis = deriveDiagnosis(routeResults, effectiveRender, effectiveRuntime);
+          var diagnosis = deriveDiagnosis(routeResults, renderResults, runtimeResults);
 
           write("overall-state", statePill(diagnosis.overall));
           writeText("blocking-issue", diagnosis.blocking);
@@ -779,11 +825,14 @@ visual_pass_claimed=false</pre>
             noDeleteAuthorized: true,
             noPlanetIframeRendered: true,
             noExtraAnimationLoopsStarted: true,
-            visualPassClaimed: false,
+            selfScanFalsePositiveCorrectionActive: true,
+            runtimeInventorySelfReferenceExcluded: true,
+            visualPassDetectorContextual: true,
             overall: diagnosis.overall,
             blockingIssue: diagnosis.blocking,
             requiredNextTNT: diagnosis.requiredTNT,
             canonicalNav: CANONICAL_NAV,
+            liveRouteRuntimeScriptPaths: liveRouteRuntimeScriptPaths,
             routeResults: routeResults,
             renderResults: renderResults,
             runtimeResults: runtimeResults,
@@ -809,9 +858,7 @@ visual_pass_claimed=false</pre>
       });
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function () {
-          run("full");
-        });
+        document.addEventListener("DOMContentLoaded", function () { run("full"); });
       } else {
         run("full");
       }

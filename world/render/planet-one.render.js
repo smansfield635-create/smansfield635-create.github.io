@@ -1,20 +1,21 @@
-/* G1 PLANET 1 MATERIAL DOMAIN VISUAL REFINEMENT RENDERER
+/* G1 PLANET 1 UNDERLAY HEIGHTFIELD HYDROLOGY REBALANCE RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1
+   VERSION: G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1
 
    LAW:
-   Draw liquid body first.
-   Draw solid land/ice material second.
-   Draw gas/weather above the surface third.
-   Draw lighting and atmospheric rim last.
-   Do not add runtime loops.
+   Liquid base first.
+   Preserved landmask sheet second.
+   Underlay heightfield/hydrology expressed through the sheet.
+   Gas/weather above surface.
+   Lighting last.
+   No new runtime loops.
 */
 
-(function attachPlanetOneMaterialDomainRenderer(global) {
+(function attachPlanetOneUnderlayHeightfieldHydrologyRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1";
+  var VERSION = "G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -63,9 +64,9 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
-      canvas.setAttribute("data-material-domain-visual-refinement", "true");
+      canvas.setAttribute("data-underlay-heightfield-hydrology-rebalance", "true");
       canvas.setAttribute("data-visual-pass-claimed", "false");
-      canvas.setAttribute("aria-label", "Planet 1 material domain visual refinement renderer");
+      canvas.setAttribute("aria-label", "Planet 1 underlay heightfield hydrology renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -167,7 +168,7 @@
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.42, radius * 0.05, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(75,151,184,.99)");
+    ocean.addColorStop(0, "rgba(76,152,184,.99)");
     ocean.addColorStop(0.28, "rgba(14,82,145,.99)");
     ocean.addColorStop(0.68, "rgba(5,35,94,1)");
     ocean.addColorStop(1, "rgba(2,10,30,1)");
@@ -225,26 +226,26 @@
 
   function drawLightingLast(ctx, cx, cy, radius) {
     var sunlight;
+    var terrainPressure;
     var terminator;
     var rim;
-    var pressure;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
     sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.96);
-    sunlight.addColorStop(0, "rgba(255,255,255,.082)");
+    sunlight.addColorStop(0, "rgba(255,255,255,.078)");
     sunlight.addColorStop(0.30, "rgba(255,255,255,.030)");
     sunlight.addColorStop(0.72, "rgba(255,255,255,.006)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    pressure = ctx.createRadialGradient(cx - radius * 0.18, cy + radius * 0.16, radius * 0.25, cx, cy, radius * 0.96);
-    pressure.addColorStop(0, "rgba(0,0,0,0)");
-    pressure.addColorStop(0.72, "rgba(0,0,0,.045)");
-    pressure.addColorStop(1, "rgba(0,0,0,.18)");
-    ctx.fillStyle = pressure;
+    terrainPressure = ctx.createRadialGradient(cx - radius * 0.18, cy + radius * 0.16, radius * 0.25, cx, cy, radius * 0.96);
+    terrainPressure.addColorStop(0, "rgba(0,0,0,0)");
+    terrainPressure.addColorStop(0.72, "rgba(0,0,0,.045)");
+    terrainPressure.addColorStop(1, "rgba(0,0,0,.18)");
+    ctx.fillStyle = terrainPressure;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.42, cy - radius, cx + radius, cy + radius);
@@ -339,17 +340,25 @@
       priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
 
+      underlayHeightfieldHydrologyRebalanceRendered: Boolean(drawReceipt && drawReceipt.underlayHeightfieldHydrologyRebalanceRendered),
+      underlayHeightfieldActive: true,
+      landmaskPreserved: true,
+      legalLandShapeUnchanged: true,
+      hydrologyRedistributedThroughLand: Boolean(drawReceipt && drawReceipt.hydrologyRedistributedThroughLand),
+      dryLandVisuallyReduced: Boolean(drawReceipt && drawReceipt.dryLandVisuallyReduced),
+      coastalLowlandsActive: Boolean(drawReceipt && drawReceipt.coastalLowlandsActive),
+      ridgeDivideLogicActive: Boolean(drawReceipt && drawReceipt.ridgeDivideLogicActive),
+      basinReceiverLogicActive: Boolean(drawReceipt && drawReceipt.basinReceiverLogicActive),
+      internalWaterReceiversActive: Boolean(drawReceipt && drawReceipt.internalWaterReceiversActive),
+      riverVeinPotentialActive: Boolean(drawReceipt && drawReceipt.riverVeinPotentialActive),
+      lakeWetlandPocketActive: Boolean(drawReceipt && drawReceipt.lakeWetlandPocketActive),
+      estuaryMouthLogicActive: Boolean(drawReceipt && drawReceipt.estuaryMouthLogicActive),
+      beigeDominanceReduced: Boolean(drawReceipt && drawReceipt.beigeDominanceReduced),
+
       materialDomainVisualRefinementRendered: Boolean(drawReceipt && drawReceipt.materialDomainVisualRefinementRendered),
-      materialDomainVisualRefinementActive: true,
-      physicalMaterialDomainsRendered: Boolean(drawReceipt && drawReceipt.physicalMaterialDomainsRendered),
       landSolidMaterialBodyRendered: Boolean(drawReceipt && drawReceipt.landSolidMaterialBodyRendered),
       waterLiquidDepthBodyRendered: Boolean(drawReceipt && drawReceipt.waterLiquidDepthBodyRendered),
       airGasWeatherBodyRendered: Boolean(drawReceipt && drawReceipt.airGasWeatherBodyRendered),
-
-      landNoLongerFlatYellowPaint: Boolean(drawReceipt && drawReceipt.landNoLongerFlatYellowPaint),
-      liquidWaterDepthReadable: Boolean(drawReceipt && drawReceipt.liquidWaterDepthReadable),
-      airWeatherSitsAboveSurface: Boolean(drawReceipt && drawReceipt.airWeatherSitsAboveSurface),
-      solidLiquidGasSeparationReadable: Boolean(drawReceipt && drawReceipt.solidLiquidGasSeparationReadable),
 
       waterPhaseStateBoundaryRendered: Boolean(drawReceipt && drawReceipt.waterPhaseStateBoundaryRendered),
       waterPhaseStateBoundaryActive: true,
@@ -393,7 +402,6 @@
 
       noBlobReintroduced: Boolean(drawReceipt && drawReceipt.noBlobReintroduced),
       noMountainRelief: true,
-      noRiverNetwork: true,
       noFullGlacierSystem: true,
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
@@ -409,13 +417,14 @@
       upstreamRuntimeUntouched: true,
 
       drawReceipt: drawReceipt,
-      materialDomainReceipt: {
+      underlayHydrologyReceipt: {
         ok: true,
         version: VERSION,
-        materialDomainVisualRefinementActive: true,
-        landSolidMaterialBodyActive: true,
-        waterLiquidDepthBodyActive: true,
-        airGasWeatherBodyActive: true,
+        underlayHeightfieldActive: true,
+        landmaskPreserved: true,
+        legalLandShapeUnchanged: true,
+        hydrologyRedistributedThroughLand: true,
+        dryLandVisuallyReduced: true,
         visualPassClaimed: false
       },
       renderedAt: new Date().toISOString(),
@@ -503,36 +512,33 @@
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
 
+      underlayHeightfieldHydrologyRebalanceActive: true,
+      underlayHeightfieldHydrologyRebalanceRendered: Boolean(state.lastRender && state.lastRender.underlayHeightfieldHydrologyRebalanceRendered),
+      underlayHeightfieldActive: true,
+      landmaskPreserved: true,
+      legalLandShapeUnchanged: true,
+      hydrologyRedistributedThroughLand: Boolean(state.lastRender && state.lastRender.hydrologyRedistributedThroughLand),
+      dryLandVisuallyReduced: Boolean(state.lastRender && state.lastRender.dryLandVisuallyReduced),
+      coastalLowlandsActive: Boolean(state.lastRender && state.lastRender.coastalLowlandsActive),
+      ridgeDivideLogicActive: Boolean(state.lastRender && state.lastRender.ridgeDivideLogicActive),
+      basinReceiverLogicActive: Boolean(state.lastRender && state.lastRender.basinReceiverLogicActive),
+      internalWaterReceiversActive: Boolean(state.lastRender && state.lastRender.internalWaterReceiversActive),
+      riverVeinPotentialActive: Boolean(state.lastRender && state.lastRender.riverVeinPotentialActive),
+      lakeWetlandPocketActive: Boolean(state.lastRender && state.lastRender.lakeWetlandPocketActive),
+      estuaryMouthLogicActive: Boolean(state.lastRender && state.lastRender.estuaryMouthLogicActive),
+      beigeDominanceReduced: Boolean(state.lastRender && state.lastRender.beigeDominanceReduced),
+
       materialDomainVisualRefinementActive: true,
-      materialDomainVisualRefinementRendered: Boolean(state.lastRender && state.lastRender.materialDomainVisualRefinementRendered),
-      physicalMaterialDomainsRendered: Boolean(state.lastRender && state.lastRender.physicalMaterialDomainsRendered),
+      physicalMaterialDomainsRendered: Boolean(state.lastRender && state.lastRender.materialDomainVisualRefinementRendered),
       landSolidMaterialBodyRendered: Boolean(state.lastRender && state.lastRender.landSolidMaterialBodyRendered),
       waterLiquidDepthBodyRendered: Boolean(state.lastRender && state.lastRender.waterLiquidDepthBodyRendered),
       airGasWeatherBodyRendered: Boolean(state.lastRender && state.lastRender.airGasWeatherBodyRendered),
-
-      landNoLongerFlatYellowPaint: Boolean(state.lastRender && state.lastRender.landNoLongerFlatYellowPaint),
-      liquidWaterDepthReadable: Boolean(state.lastRender && state.lastRender.liquidWaterDepthReadable),
-      airWeatherSitsAboveSurface: Boolean(state.lastRender && state.lastRender.airWeatherSitsAboveSurface),
-      solidLiquidGasSeparationReadable: Boolean(state.lastRender && state.lastRender.solidLiquidGasSeparationReadable),
 
       waterPhaseStateBoundaryActive: true,
       solidLiquidGasWaterStatesActive: true,
       solidWaterOwnsIceStorage: true,
       liquidWaterOwnsSurface: true,
       gasWaterOwnsAtmosphericMoisture: true,
-
-      evaporationReadsLiquidOnly: true,
-      evaporationCannotEraseWaterDepth: true,
-      condensationCreatesGasOverlayOnly: true,
-      condensationCannotRepaintSurface: true,
-      precipitationHeldAsPotential: true,
-      precipitationCannotOverwriteLand: true,
-      precipitationCannotOverwriteOcean: true,
-
-      cloudsDoNotBecomeWater: true,
-      waterDoesNotBecomeCloud: true,
-      iceDoesNotBecomeLand: true,
-      landDoesNotOwnWaterPhase: true,
 
       weatherBoundaryActive: true,
       weatherReadsButDoesNotRepaintSurface: true,
@@ -553,7 +559,6 @@
 
       noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
       noMountainRelief: true,
-      noRiverNetwork: true,
       noFullGlacierSystem: true,
 
       rendererConsumesHydration: Boolean(state.rendererConsumesHydration),
@@ -603,7 +608,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:material-domain-visual-refinement-renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:underlay-heightfield-hydrology-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

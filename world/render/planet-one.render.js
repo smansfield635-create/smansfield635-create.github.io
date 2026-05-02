@@ -1,20 +1,22 @@
-/* G1 PLANET 1 TRI-DOMAIN 256 WHOLE-WORLD CONTAINER RENDERER
+/* G1 PLANET 1 TRI-DOMAIN VISUAL DELTA AMPLIFICATION RENDERER
    FILE: /world/render/planet-one.render.js
    VERSION: G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
    LAYER_VERSION: G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1
+   VISUAL_DELTA_VERSION: G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1
 
    LAW:
-   Renderer expresses one whole-world container with three internal domains:
-   WATER_256, LAND_256, AIR_256.
-   The renderer does not split them into separate worlds.
-   It renders coordinated cycle exchange inside one planetary body.
+   Renderer amplifies visible differences only after hexgrid authorization.
+   Water remains sovereign.
+   Terrain gets visual life but not authority.
+   No mountains, rivers, full glaciers, public honeycomb, or visual pass claim.
 */
 
-(function attachPlanetOneTriDomain256Renderer(global) {
+(function attachPlanetOneTriDomainVisualDeltaRenderer(global) {
   "use strict";
 
   var VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
   var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
+  var VISUAL_DELTA_VERSION = "G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -64,7 +66,8 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-layer-version", LAYER_VERSION);
-      canvas.setAttribute("aria-label", "Planet 1 tri-domain 256 renderer");
+      canvas.setAttribute("data-visual-delta-version", VISUAL_DELTA_VERSION);
+      canvas.setAttribute("aria-label", "Planet 1 tri-domain visual delta renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -127,7 +130,7 @@
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&t=" + Date.now();
+      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&visual=" + encodeURIComponent(VISUAL_DELTA_VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
 
@@ -165,10 +168,10 @@
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.07, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(88,154,184,.99)");
-    ocean.addColorStop(0.32, "rgba(24,92,146,.99)");
-    ocean.addColorStop(0.74, "rgba(6,35,86,1)");
+    ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.06, cx, cy, radius * 1.06);
+    ocean.addColorStop(0, "rgba(92,164,195,.99)");
+    ocean.addColorStop(0.26, "rgba(22,104,160,.99)");
+    ocean.addColorStop(0.70, "rgba(6,42,98,1)");
     ocean.addColorStop(1, "rgba(2,10,30,1)");
 
     ctx.save();
@@ -178,21 +181,21 @@
     ctx.fillStyle = ocean;
     ctx.fill();
 
-    container = ctx.createRadialGradient(cx, cy, radius * 0.40, cx, cy, radius * 1.06);
+    container = ctx.createRadialGradient(cx, cy, radius * 0.38, cx, cy, radius * 1.06);
     container.addColorStop(0, "rgba(255,255,255,0)");
-    container.addColorStop(0.76, "rgba(140,180,255,.025)");
-    container.addColorStop(1, "rgba(140,180,255,.105)");
+    container.addColorStop(0.70, "rgba(140,180,255,.030)");
+    container.addColorStop(1, "rgba(140,180,255,.115)");
     ctx.fillStyle = container;
     ctx.fill();
 
-    rim = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.05);
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.05);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.76, "rgba(145,189,255,.08)");
-    rim.addColorStop(1, "rgba(145,189,255,.38)");
+    rim.addColorStop(0.72, "rgba(145,189,255,.08)");
+    rim.addColorStop(1, "rgba(145,189,255,.42)");
     ctx.fillStyle = rim;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(145,189,255,.34)";
+    ctx.strokeStyle = "rgba(155,202,255,.38)";
     ctx.lineWidth = Math.max(1, radius * 0.012);
     ctx.stroke();
     ctx.restore();
@@ -209,30 +212,38 @@
     var atmosphere;
     var upper;
     var lower;
+    var veil;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
     atmosphere = ctx.createRadialGradient(cx - radius * 0.15, cy - radius * 0.20, radius * 0.20, cx, cy, radius * 1.02);
-    atmosphere.addColorStop(0, "rgba(166,210,255,.030)");
-    atmosphere.addColorStop(0.46, "rgba(166,210,255,.018)");
-    atmosphere.addColorStop(0.84, "rgba(166,210,255,.040)");
-    atmosphere.addColorStop(1, "rgba(166,210,255,.110)");
+    atmosphere.addColorStop(0, "rgba(166,210,255,.040)");
+    atmosphere.addColorStop(0.44, "rgba(166,210,255,.022)");
+    atmosphere.addColorStop(0.80, "rgba(166,210,255,.050)");
+    atmosphere.addColorStop(1, "rgba(166,210,255,.135)");
     ctx.fillStyle = atmosphere;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     upper = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius * 0.4);
-    upper.addColorStop(0, "rgba(210,226,255,.050)");
-    upper.addColorStop(0.45, "rgba(210,226,255,.015)");
-    upper.addColorStop(1, "rgba(210,226,255,0)");
+    upper.addColorStop(0, "rgba(220,234,255,.060)");
+    upper.addColorStop(0.45, "rgba(220,234,255,.018)");
+    upper.addColorStop(1, "rgba(220,234,255,0)");
     ctx.fillStyle = upper;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     lower = ctx.createLinearGradient(cx - radius * 0.3, cy + radius, cx + radius, cy - radius);
-    lower.addColorStop(0, "rgba(160,200,255,.040)");
-    lower.addColorStop(0.55, "rgba(160,200,255,.010)");
-    lower.addColorStop(1, "rgba(160,200,255,0)");
+    lower.addColorStop(0, "rgba(160,205,255,.050)");
+    lower.addColorStop(0.55, "rgba(160,205,255,.013)");
+    lower.addColorStop(1, "rgba(160,205,255,0)");
     ctx.fillStyle = lower;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    veil = ctx.createRadialGradient(cx, cy, radius * 0.16, cx, cy, radius);
+    veil.addColorStop(0, "rgba(255,255,255,.010)");
+    veil.addColorStop(0.62, "rgba(255,255,255,.000)");
+    veil.addColorStop(1, "rgba(80,130,210,.070)");
+    ctx.fillStyle = veil;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
@@ -246,25 +257,25 @@
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
-    sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.05, cx, cy, radius * 0.92);
-    sunlight.addColorStop(0, "rgba(255,255,255,.12)");
-    sunlight.addColorStop(0.30, "rgba(255,255,255,.045)");
+    sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.92);
+    sunlight.addColorStop(0, "rgba(255,255,255,.14)");
+    sunlight.addColorStop(0.28, "rgba(255,255,255,.052)");
     sunlight.addColorStop(0.70, "rgba(255,255,255,.012)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.40, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,.026)");
-    terminator.addColorStop(0.52, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.44)");
+    terminator.addColorStop(0, "rgba(255,255,255,.030)");
+    terminator.addColorStop(0.50, "rgba(255,255,255,0)");
+    terminator.addColorStop(1, "rgba(0,0,0,.46)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     atmosphere = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.03);
     atmosphere.addColorStop(0, "rgba(145,189,255,0)");
-    atmosphere.addColorStop(0.75, "rgba(145,189,255,.045)");
-    atmosphere.addColorStop(1, "rgba(145,189,255,.22)");
+    atmosphere.addColorStop(0.74, "rgba(145,189,255,.052)");
+    atmosphere.addColorStop(1, "rgba(145,189,255,.25)");
     ctx.fillStyle = atmosphere;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -278,7 +289,7 @@
     ctx.beginPath();
     ctx.moveTo(0, -radius * 1.10);
     ctx.lineTo(0, radius * 1.10);
-    ctx.strokeStyle = "rgba(242,199,111,.046)";
+    ctx.strokeStyle = "rgba(242,199,111,.052)";
     ctx.lineWidth = Math.max(1, radius * 0.003);
     ctx.stroke();
     ctx.restore();
@@ -301,6 +312,7 @@
         reason: "NO_2D_CONTEXT",
         version: VERSION,
         layerVersion: LAYER_VERSION,
+        visualDeltaVersion: VISUAL_DELTA_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -323,8 +335,8 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.82,
-        surfaceAlpha: options.surfaceAlpha == null ? 0.99 : options.surfaceAlpha,
+        compositorScale: options.compositorScale || 0.84,
+        surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
 
@@ -346,6 +358,8 @@
       VERSION: VERSION,
       layerVersion: LAYER_VERSION,
       LAYER_VERSION: LAYER_VERSION,
+      visualDeltaVersion: VISUAL_DELTA_VERSION,
+      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
 
       cleanSlatePreserved: true,
@@ -361,6 +375,15 @@
       waterLandExchangeRendered: Boolean(drawReceipt && drawReceipt.waterLandExchangeRendered),
       landAirExchangeRendered: Boolean(drawReceipt && drawReceipt.landAirExchangeRendered),
       airWaterExchangeRendered: Boolean(drawReceipt && drawReceipt.airWaterExchangeRendered),
+
+      visualDeltaAmplificationRendered: Boolean(drawReceipt && drawReceipt.visualDeltaAmplificationRendered),
+      authorizedVisualDeltaOnly: true,
+      waterDepthVisualAmplified: Boolean(drawReceipt && drawReceipt.waterDepthVisualAmplified),
+      reefShelfVisualAmplified: Boolean(drawReceipt && drawReceipt.reefShelfVisualAmplified),
+      beachEdgeVisualAmplified: Boolean(drawReceipt && drawReceipt.beachEdgeVisualAmplified),
+      lowlandVisualAmplified: Boolean(drawReceipt && drawReceipt.lowlandVisualAmplified),
+      livingTerrainVisualAmplified: Boolean(drawReceipt && drawReceipt.livingTerrainVisualAmplified),
+      atmosphereVisualAmplified: true,
 
       landValueMapRendered: Boolean(drawReceipt && drawReceipt.landValueMapRendered),
       invertedBacktraceRendered: Boolean(drawReceipt && drawReceipt.invertedBacktraceRendered),
@@ -422,6 +445,7 @@
         ok: true,
         version: VERSION,
         layerVersion: LAYER_VERSION,
+        visualDeltaVersion: VISUAL_DELTA_VERSION,
         wholeWorldContainerRendered: true,
         triDomain256Rendered: true,
         water256Rendered: true,
@@ -434,10 +458,30 @@
         airWaterExchangeRendered: true,
         visualPassClaimed: false
       },
+      visualDeltaReceipt: {
+        ok: true,
+        version: VERSION,
+        layerVersion: LAYER_VERSION,
+        visualDeltaVersion: VISUAL_DELTA_VERSION,
+        visualDeltaAmplificationRendered: true,
+        authorizedVisualDeltaOnly: true,
+        waterDepthVisualAmplified: true,
+        reefShelfVisualAmplified: true,
+        beachEdgeVisualAmplified: true,
+        lowlandVisualAmplified: true,
+        livingTerrainVisualAmplified: true,
+        atmosphereVisualAmplified: true,
+        noBlobReintroduced: true,
+        noMountainRelief: true,
+        noRiverNetwork: true,
+        noFullGlacierSystem: true,
+        visualPassClaimed: false
+      },
       waterDivideReceipt: {
         ok: true,
         version: VERSION,
         layerVersion: LAYER_VERSION,
+        visualDeltaVersion: VISUAL_DELTA_VERSION,
         waterDivideRendered: true,
         phaseStateDivideRendered: true,
         highElevationIceStateRendered: true,
@@ -467,6 +511,7 @@
         reason: "NO_MOUNT",
         version: VERSION,
         layerVersion: LAYER_VERSION,
+        visualDeltaVersion: VISUAL_DELTA_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -498,13 +543,27 @@
 
   function pause() {
     state.paused = true;
-    return { ok: true, paused: true, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
+    return {
+      ok: true,
+      paused: true,
+      version: VERSION,
+      layerVersion: LAYER_VERSION,
+      visualDeltaVersion: VISUAL_DELTA_VERSION,
+      visualPassClaimed: false
+    };
   }
 
   function resume() {
     state.paused = false;
     if (state.lastCanvas) renderNow(state.lastCanvas, {});
-    return { ok: true, paused: false, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
+    return {
+      ok: true,
+      paused: false,
+      version: VERSION,
+      layerVersion: LAYER_VERSION,
+      visualDeltaVersion: VISUAL_DELTA_VERSION,
+      visualPassClaimed: false
+    };
   }
 
   function destroy() {
@@ -517,7 +576,14 @@
     state.lastCanvas = null;
     state.lastMount = null;
 
-    return { ok: true, destroyed: true, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
+    return {
+      ok: true,
+      destroyed: true,
+      version: VERSION,
+      layerVersion: LAYER_VERSION,
+      visualDeltaVersion: VISUAL_DELTA_VERSION,
+      visualPassClaimed: false
+    };
   }
 
   function getStatus() {
@@ -528,6 +594,8 @@
       version: VERSION,
       LAYER_VERSION: LAYER_VERSION,
       layerVersion: LAYER_VERSION,
+      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
+      visualDeltaVersion: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
 
       rendererFacadeActive: true,
@@ -545,6 +613,15 @@
       waterLandExchangeRendered: Boolean(state.lastRender && state.lastRender.waterLandExchangeRendered),
       landAirExchangeRendered: Boolean(state.lastRender && state.lastRender.landAirExchangeRendered),
       airWaterExchangeRendered: Boolean(state.lastRender && state.lastRender.airWaterExchangeRendered),
+
+      visualDeltaAmplificationRendered: Boolean(state.lastRender && state.lastRender.visualDeltaAmplificationRendered),
+      authorizedVisualDeltaOnly: true,
+      waterDepthVisualAmplified: Boolean(state.lastRender && state.lastRender.waterDepthVisualAmplified),
+      reefShelfVisualAmplified: Boolean(state.lastRender && state.lastRender.reefShelfVisualAmplified),
+      beachEdgeVisualAmplified: Boolean(state.lastRender && state.lastRender.beachEdgeVisualAmplified),
+      lowlandVisualAmplified: Boolean(state.lastRender && state.lastRender.lowlandVisualAmplified),
+      livingTerrainVisualAmplified: Boolean(state.lastRender && state.lastRender.livingTerrainVisualAmplified),
+      atmosphereVisualAmplified: true,
 
       landValueMapRendered: Boolean(state.lastRender && state.lastRender.landValueMapRendered),
       invertedBacktraceRendered: Boolean(state.lastRender && state.lastRender.invertedBacktraceRendered),
@@ -615,6 +692,8 @@
     version: VERSION,
     LAYER_VERSION: LAYER_VERSION,
     layerVersion: LAYER_VERSION,
+    VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
+    visualDeltaVersion: VISUAL_DELTA_VERSION,
     BASELINE: BASELINE,
     baseline: BASELINE,
 
@@ -641,7 +720,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:tri-domain-visual-delta-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

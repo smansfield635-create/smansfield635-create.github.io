@@ -1,12 +1,22 @@
 <!-- /showroom/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="showroom"
+  data-route="/showroom/"
+  data-contract="DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Showroom</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Showroom: lightweight lobby for routing into Planet 1, world map, products, and gauges."
+  />
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
+
 <body>
   <a class="dgb-skip" href="#main">Skip to Showroom</a>
 
@@ -17,6 +27,7 @@
         <div class="dgb-subtitle">Rich Manor and Estate</div>
         <div class="dgb-room-line">Showroom · Lightweight Lobby</div>
       </div>
+
       <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
@@ -34,15 +45,18 @@
       <p class="dgb-eyebrow">Showroom · Lightweight Lobby</p>
       <h1 class="dgb-title">The Showroom routes. The engines express.</h1>
       <p class="dgb-copy">
-        This lobby does not mount Planet 1, draw the globe, run terrain, run hydration, or show fallback world art.
-        It sends visitors to the proper inspection room where the engine chain can be measured.
+        This lobby does not mount Planet 1, draw the globe, run terrain, run hydration,
+        or show fallback world art. It sends visitors to the proper inspection room where
+        the engine chain can be measured.
       </p>
+
       <div class="dgb-chip-row">
         <span class="dgb-chip">Lobby only</span>
         <span class="dgb-chip">No engine mount</span>
         <span class="dgb-chip">Inspection route</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
+
       <div class="dgb-actions">
         <a class="dgb-button" href="/showroom/globe/">Inspect Planet 1</a>
         <a class="dgb-button secondary" href="/nine-summits/universe/">Read World Map</a>
@@ -54,39 +68,55 @@
       <article class="dgb-card">
         <h2>Planet 1</h2>
         <p>Open the globe inspection room. This is where Planet 1 may mount the approved engine chain.</p>
-        <div class="dgb-actions"><a class="dgb-button" href="/showroom/globe/">Open Planet 1</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button" href="/showroom/globe/">Open Planet 1</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Nine Summits Universe</h2>
         <p>Read the universe context, landmass law, coherence law, population law, and world-map language.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/nine-summits/universe/">Open Universe</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/nine-summits/universe/">Open Universe</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Gauges</h2>
         <p>Check whether the live source chain, route chain, and current frame are passing.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/gauges/">Open Gauges</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Products</h2>
         <p>Exit to the Product Wing without loading Planet 1 render dependencies in the lobby.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/products/">Open Products</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/products/">Open Products</a>
+        </div>
       </article>
     </section>
 
     <details class="dgb-details">
       <summary>Route receipt</summary>
-      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1
 route=/showroom/
+page=showroom
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
 showroom_role=lightweight_lobby
 mounts_planet_1=false
 loads_render_engine=false
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
 visual_pass_claimed=false</pre>
     </details>
   </main>
 
-  <footer class="dgb-footer">Showroom · Global UI shell aligned.</footer>
+  <footer class="dgb-footer">
+    DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1 · Showroom · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

@@ -1,318 +1,87 @@
+<!-- /home/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Home</title>
-  <meta name="description" content="Diamond Gate Bridge Home route. Estate-stable home page with navigation links only. Planet 1 runtime and renderer scripts are intentionally not loaded on Home.">
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #030714;
-      --panel: rgba(6, 13, 28, .82);
-      --panel2: rgba(10, 22, 44, .74);
-      --line: rgba(157, 200, 255, .18);
-      --gold: #f2c76f;
-      --text: #f7ead0;
-      --muted: #aebbd2;
-      --blue: #9dc8ff;
-      --green: #79e6a2;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      min-height: 100%;
-      margin: 0;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(78,132,180,.18), transparent 30rem),
-        radial-gradient(circle at 82% 4%, rgba(242,199,111,.11), transparent 28rem),
-        radial-gradient(circle at 50% 120%, rgba(51,124,150,.16), transparent 38rem),
-        var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(157,200,255,.40) 0 1px, transparent 1.5px);
-      background-size: 96px 96px, 138px 138px;
-      background-position: 12px 28px, 42px 18px;
-      opacity: .16;
-    }
-
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 8px;
-      background: #fff;
-      color: #000;
-      padding: 8px 10px;
-      border-radius: 8px;
-      z-index: 10;
-    }
-
-    .skip:focus {
-      left: 8px;
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 38px;
-    }
-
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(3,9,20,.64);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand {
-      display: grid;
-      gap: 2px;
-    }
-
-    .brand strong {
-      color: var(--gold);
-      letter-spacing: .03em;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: .92rem;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .nav a {
-      border: 1px solid rgba(157,200,255,.16);
-      border-radius: 999px;
-      padding: 7px 10px;
-      color: var(--text);
-      background: rgba(12,24,46,.46);
-      font-size: .92rem;
-    }
-
-    .hero {
-      margin-top: 20px;
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: var(--panel);
-      box-shadow: 0 24px 80px rgba(0,0,0,.32);
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      font-size: .76rem;
-      margin: 0 0 10px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 4.2rem);
-      line-height: .96;
-      letter-spacing: -.045em;
-    }
-
-    .lead {
-      color: var(--muted);
-      max-width: 78ch;
-      line-height: 1.62;
-      margin: 14px 0 0;
-      font-size: 1.02rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: var(--panel2);
-      padding: 16px;
-      min-height: 160px;
-    }
-
-    .card h2 {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: 1.05rem;
-    }
-
-    .card p {
-      color: var(--muted);
-      line-height: 1.55;
-      margin: 0 0 12px;
-    }
-
-    .button-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(242,199,111,.32);
-      background: rgba(12,24,46,.84);
-      color: var(--text);
-      font: inherit;
-    }
-
-    .button-link:hover {
-      background: rgba(22,42,76,.92);
-      text-decoration: none;
-    }
-
-    .receipt {
-      margin-top: 18px;
-      border: 1px solid rgba(121,230,162,.24);
-      border-radius: 20px;
-      background: rgba(0,0,0,.22);
-      padding: 14px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .receipt b {
-      color: var(--green);
-    }
-
-    .footer {
-      margin-top: 20px;
-      text-align: center;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    @media (max-width: 860px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 18px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
 <body>
-  <a class="skip" href="#home-content">Skip to Home content</a>
+  <a class="dgb-skip" href="#main">Skip to Home</a>
 
-  <main class="page" id="home-content">
-    <header class="topbar">
-      <div class="brand">
-        <a href="/"><strong>Diamond Gate Bridge</strong></a>
-        <span>Home · Estate Route Parity Clean</span>
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Home · Estate Route</div>
       </div>
-      <nav class="nav" aria-label="Primary navigation">
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
+        <a href="/home/" aria-current="page">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Planet 1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <section class="hero">
-      <p class="eyebrow">H3 · Home</p>
-      <h1>Estate home route</h1>
-      <p class="lead">
-        Home stabilizes the estate path and routes visitors to the correct chambers. Planet 1 remains available through the Showroom globe route, but Home does not load Planet 1 renderer, runtime, control, asset, or hexgrid scripts.
+  <main id="main" class="dgb-main">
+    <section class="dgb-hero">
+      <p class="dgb-eyebrow">H3 · Home · Reception</p>
+      <h1 class="dgb-title">Estate home route</h1>
+      <p class="dgb-copy">
+        Home stabilizes the estate path and routes visitors to the correct chambers.
+        Planet 1 remains available through the Showroom globe route, but Home does not load Planet 1 renderer,
+        runtime, control, asset, or hexgrid scripts.
       </p>
-
-      <div class="grid" aria-label="Estate navigation cards">
-        <article class="card">
-          <h2>Showroom</h2>
-          <p>Open the public presentation lane and inspect the Planet 1 route from the proper chamber.</p>
-          <a class="button-link" href="/showroom/">Open Showroom</a>
-        </article>
-
-        <article class="card">
-          <h2>Planet 1</h2>
-          <p>Planet 1 lives on the Showroom globe route. This is a link only; no Planet scripts are loaded on Home.</p>
-          <a class="button-link" href="/showroom/globe/">Open Planet 1</a>
-        </article>
-
-        <article class="card">
-          <h2>Gauges</h2>
-          <p>Run the architecture, route, substrate, lattice, and visual-hold diagnostics from the Gauges chamber.</p>
-          <a class="button-link" href="/gauges/">Open Gauges</a>
-        </article>
-
-        <article class="card">
-          <h2>Products</h2>
-          <p>Enter the product wing without importing Planet 1 rendering dependencies into Home.</p>
-          <a class="button-link" href="/products/">Open Products</a>
-        </article>
-
-        <article class="card">
-          <h2>Door</h2>
-          <p>Return to the estate entry threshold and route forward through the proper boundary.</p>
-          <a class="button-link" href="/door/">Open Door</a>
-        </article>
-
-        <article class="card">
-          <h2>Compass</h2>
-          <p>Return to the main map and choose the next estate direction from the root control surface.</p>
-          <a class="button-link" href="/">Open Compass</a>
-        </article>
-      </div>
-
-      <div class="receipt">
-        <b>ESTATE_ROUTE_PARITY_CLEANUP_TNT_v1</b><br>
-        Home contains navigation links only. It intentionally does not load:
-        <code>/world/render/planet-one.hexgrid.render.js</code>,
-        <code>/world/render/planet-one.render.js</code>,
-        <code>/world/runtime.js</code>,
-        <code>/world/control.js</code>,
-        <code>/assets/showroom.globe.instrument.js</code>,
-        or <code>/showroom/runtime.js</code>.
+      <div class="dgb-chip-row">
+        <span class="dgb-chip">Route clean</span>
+        <span class="dgb-chip">No Planet scripts</span>
+        <span class="dgb-chip">Estate path</span>
+        <span class="dgb-chip hold">Visual hold</span>
       </div>
     </section>
 
-    <p class="footer">
-      VERSION: ESTATE_ROUTE_PARITY_CLEANUP_TNT_v1. Home route is clean of live Planet 1 script dependencies.
-    </p>
+    <section class="dgb-grid">
+      <article class="dgb-card">
+        <h2>Showroom</h2>
+        <p>Open the public presentation lane and inspect Planet 1 from the proper chamber.</p>
+        <div class="dgb-actions"><a class="dgb-button" href="/showroom/">Open Showroom</a></div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Planet 1</h2>
+        <p>Planet 1 lives on the Showroom globe route. This is a link only; no Planet scripts are loaded on Home.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1</a></div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Products</h2>
+        <p>Enter the product wing without importing Planet 1 rendering dependencies into Home.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/products/">Open Products</a></div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Gauges</h2>
+        <p>Run architecture, route, substrate, lattice, and visual-hold diagnostics from the Gauges chamber.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/gauges/">Open Gauges</a></div>
+      </article>
+    </section>
+
+    <details class="dgb-details">
+      <summary>Route receipt</summary>
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+route=/home/
+home_loads_planet_scripts=false
+protected_scripts=/world/render/*,/world/runtime.js,/world/control.js,/assets/showroom.globe.instrument.js,/showroom/runtime.js,/runtime/*
+visual_pass_claimed=false</pre>
+    </details>
   </main>
+
+  <footer class="dgb-footer">Home · Global UI shell aligned.</footer>
 </body>
 </html>

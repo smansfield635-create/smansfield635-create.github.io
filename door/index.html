@@ -1,702 +1,98 @@
+<!-- /door/index.html -->
 <!doctype html>
-<html
-  lang="en"
-  data-page="door"
-  data-route="/door/"
-  data-house-part="door"
-  data-construct-class="house-entry-threshold"
-  data-g5-site-uniformity="active"
-  data-page-standard="G5_DOOR_ENTRY_THRESHOLD_CONTRACT_RENEWAL_v1"
-  data-view-selector-authority="true"
-  data-architecture-claim="entry-threshold-surface"
-  data-visual-pass-claim="false"
->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Door · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="The Door is the entry threshold into Rich Manor and Estate. Choose the view, cross the threshold, and enter the house."
-  >
-
-  <style>
-    :root{
-      color-scheme:dark;
-      --bg:#03050a;
-      --panel:rgba(9,15,25,.94);
-      --panel2:rgba(14,24,38,.84);
-      --line:rgba(168,199,255,.22);
-      --gold-line:rgba(242,199,111,.40);
-      --text:#f4f7ff;
-      --muted:#b8c2d6;
-      --soft:rgba(244,247,255,.78);
-      --gold:#f2c76f;
-      --green:#8ff0c6;
-      --blue:#91bdff;
-      --shadow:rgba(0,0,0,.56);
-      --max:1120px;
-      --radius:30px;
-    }
-
-    *{box-sizing:border-box}
-
-    html{
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-    }
-
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 78% 6%,rgba(242,199,111,.15),transparent 24rem),
-        radial-gradient(circle at 18% 18%,rgba(145,189,255,.12),transparent 30rem),
-        radial-gradient(circle at 50% 92%,rgba(143,240,198,.08),transparent 26rem),
-        linear-gradient(180deg,#03050a 0%,#07101d 52%,#020308 100%);
-      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
-      line-height:1.55;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    a:focus{
-      outline:2px solid var(--green);
-      outline-offset:3px;
-    }
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:10px;
-      z-index:1000;
-      padding:8px 12px;
-      border-radius:10px;
-      background:#fff;
-      color:#000;
-      font-weight:850;
-    }
-
-    .skip:focus{left:10px}
-
-    .page{
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:24px 0 64px;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:18px;
-      padding-bottom:20px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:26px;
-    }
-
-    .brand{
-      display:grid;
-      gap:3px;
-      color:var(--muted);
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .brand strong{
-      color:var(--gold);
-      font-size:1rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .nav,
-    .actions,
-    .links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-
-    .nav{justify-content:flex-end}
-
-    .nav a,
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.055);
-      color:var(--text);
-      font-weight:850;
-      font-size:.9rem;
-    }
-
-    .nav a[aria-current="page"],
-    .button.primary{
-      border-color:rgba(242,199,111,.54);
-      background:rgba(242,199,111,.14);
-    }
-
-    .button.green{
-      border-color:rgba(143,240,198,.50);
-      background:rgba(143,240,198,.13);
-    }
-
-    .button.secondary{
-      color:rgba(244,247,255,.82);
-      background:rgba(255,255,255,.04);
-    }
-
-    .hero{
-      min-height:500px;
-      display:grid;
-      align-content:center;
-      gap:24px;
-      padding:clamp(26px,5vw,56px);
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 72% 18%,rgba(242,199,111,.17),transparent 22rem),
-        radial-gradient(circle at 24% 70%,rgba(143,240,198,.08),transparent 18rem),
-        linear-gradient(135deg,rgba(14,23,38,.96),rgba(5,9,16,.78));
-      box-shadow:0 24px 80px var(--shadow);
-    }
-
-    .kicker{
-      margin:0;
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .kicker.green{color:var(--green)}
-    .kicker.blue{color:var(--blue)}
-
-    h1{
-      margin:0;
-      max-width:1020px;
-      font-size:clamp(3.1rem,9.5vw,7.2rem);
-      line-height:.88;
-      letter-spacing:-.08em;
-    }
-
-    h2{
-      margin:0;
-      max-width:940px;
-      font-size:clamp(1.85rem,5vw,3.45rem);
-      line-height:1;
-      letter-spacing:-.06em;
-    }
-
-    h3{
-      margin:0;
-      font-size:clamp(1.22rem,3vw,1.85rem);
-      line-height:1.06;
-      letter-spacing:-.045em;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(1.02rem,2.4vw,1.2rem);
-      line-height:1.6;
-    }
-
-    strong{color:var(--text)}
-
-    .lead{
-      max-width:930px;
-      color:var(--soft);
-      font-size:clamp(1.16rem,3vw,1.55rem);
-      line-height:1.45;
-    }
-
-    .door-bubble{
-      margin-top:22px;
-      padding:18px;
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(242,199,111,.12),transparent 22rem),
-        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
-      box-shadow:0 24px 80px var(--shadow);
-    }
-
-    details{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:
-        radial-gradient(circle at 90% 8%,rgba(242,199,111,.08),transparent 18rem),
-        var(--panel);
-      overflow:hidden;
-    }
-
-    details + details{margin-top:12px}
-
-    summary{
-      list-style:none;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:18px;
-      font-weight:950;
-      color:rgba(248,251,255,.94);
-    }
-
-    summary::-webkit-details-marker{display:none}
-
-    summary::after{
-      content:"+";
-      display:grid;
-      place-items:center;
-      min-width:32px;
-      width:32px;
-      height:32px;
-      border-radius:999px;
-      border:1px solid rgba(145,189,255,.32);
-      color:var(--blue);
-      background:rgba(145,189,255,.08);
-      font-size:1.15rem;
-      line-height:1;
-    }
-
-    details[open] > summary::after{
-      content:"–";
-      border-color:rgba(242,199,111,.42);
-      color:var(--gold);
-      background:rgba(242,199,111,.08);
-    }
-
-    .summary-copy{
-      display:grid;
-      gap:7px;
-    }
-
-    .summary-copy b{
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .summary-copy span{
-      font-size:1.08rem;
-      letter-spacing:-.025em;
-    }
-
-    .bubble-body{
-      display:grid;
-      gap:14px;
-      padding:0 18px 18px;
-    }
-
-    .bubble-note{
-      border:1px solid rgba(242,199,111,.24);
-      border-radius:20px;
-      background:rgba(242,199,111,.065);
-      padding:15px;
-    }
-
-    .nested{
-      display:grid;
-      gap:12px;
-    }
-
-    .nested details{
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        var(--panel2);
-    }
-
-    .nested summary{padding:15px}
-    .nested .bubble-body{padding:0 15px 15px}
-
-    .grid{display:grid;gap:14px}
-    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}
-
-    .card,
-    .route-card,
-    .view-card{
-      border:1px solid rgba(168,199,255,.18);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(145,189,255,.08),transparent 14rem),
-        rgba(255,255,255,.045);
-      padding:20px;
-      display:grid;
-      align-content:start;
-      gap:12px;
-    }
-
-    .card{min-height:180px}
-    .route-card{min-height:230px}
-    .view-card{min-height:240px;border-color:rgba(242,199,111,.25)}
-
-    .route-card .button,
-    .view-card .button{
-      width:max-content;
-      margin-top:auto;
-    }
-
-    .card span,
-    .route-card span,
-    .view-card span{
-      display:block;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .card p,
-    .route-card p,
-    .view-card p{
-      margin:0;
-      font-size:1rem;
-    }
-
-    .threshold-line{
-      color:var(--text);
-      font-size:clamp(1.55rem,4.6vw,3.25rem);
-      line-height:1.05;
-      letter-spacing:-.06em;
-      font-weight:950;
-    }
-
-    .final-band{
-      display:grid;
-      gap:14px;
-      margin-top:22px;
-      padding:clamp(22px,4vw,38px);
-      border:1px solid var(--gold-line);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 75% 10%,rgba(242,199,111,.12),transparent 20rem),
-        rgba(255,255,255,.05);
-      box-shadow:0 24px 80px var(--shadow);
-    }
-
-    .footer{
-      display:grid;
-      gap:10px;
-      margin-top:30px;
-      padding-top:20px;
-      border-top:1px solid var(--line);
-      color:rgba(218,227,255,.58);
-      font-size:.8rem;
-    }
-
-    .public-receipt{color:rgba(244,247,255,.72)}
-    .receipt{display:none!important}
-
-    @media(max-width:980px){
-      .topbar{display:grid}
-      .nav{justify-content:flex-start}
-      .grid.two,
-      .grid.three,
-      .grid.five{grid-template-columns:1fr}
-      .hero{min-height:430px}
-    }
-
-    @media(max-width:620px){
-      .page{
-        width:min(100% - 24px,620px);
-        padding-top:18px;
-      }
-
-      .nav a,
-      .button{
-        min-height:40px;
-        padding:9px 14px;
-      }
-
-      summary{align-items:flex-start}
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diamond Gate Bridge · Door</title>
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
-
 <body>
-  <a class="skip" href="#door-main">Skip to Door</a>
+  <a class="dgb-skip" href="#main">Skip to Door</a>
 
-  <main
-    id="door-main"
-    class="page"
-    data-route="/door/"
-    data-page-purpose="entry-threshold"
-    data-view-selector-authority="true"
-    data-compass-orients="true"
-    data-door-admits="true"
-    data-home-receives="true"
-  >
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        Rich Manor and Estate · Door
-      </a>
-
-      <nav class="nav" aria-label="Primary house navigation">
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Door · Entry Threshold</div>
+      </div>
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/" aria-current="page">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Planet 1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <section class="hero">
-      <p class="kicker">H2 · Door · Entry Threshold</p>
-      <h1>Choose the view. Cross the threshold.</h1>
-
-      <p class="lead">
+  <main id="main" class="dgb-main">
+    <section class="dgb-hero">
+      <p class="dgb-eyebrow">H2 · Door · Entry Threshold</p>
+      <h1 class="dgb-title">Choose the view. Cross the threshold.</h1>
+      <p class="dgb-copy">
         The Compass orients. The Door admits. This is the entry threshold into Rich Manor and Estate.
-      </p>
-
-      <p class="lead">
         Do not stand at the door forever. Confirm the view, enter the house, and let the next room open from there.
       </p>
-
-      <div class="actions">
-        <a class="button primary" href="/home/">Enter Home</a>
-        <a class="button green" href="/home/?view=round">Enter Round View</a>
-        <a class="button" href="/showroom/globe/?view=globe">Enter Globe View</a>
-        <a class="button secondary" href="/">Return to Compass</a>
+      <div class="dgb-chip-row">
+        <span class="dgb-chip">Compass orients</span>
+        <span class="dgb-chip">Door admits</span>
+        <span class="dgb-chip">Home receives</span>
+        <span class="dgb-chip hold">Visual hold</span>
+      </div>
+      <div class="dgb-actions">
+        <a class="dgb-button" href="/home/">Enter Home</a>
+        <a class="dgb-button secondary" href="/home/?view=round">Enter Round View</a>
+        <a class="dgb-button secondary" href="/showroom/globe/?view=globe">Enter Globe View</a>
+        <a class="dgb-button secondary" href="/">Return to Compass</a>
       </div>
     </section>
 
-    <section class="door-bubble" aria-label="Door Russian doll entry threshold">
-      <details open>
-        <summary>
-          <span class="summary-copy">
-            <b>Door bubble</b>
-            <span>Orientation becomes arrival here.</span>
-          </span>
-        </summary>
+    <section class="dgb-grid">
+      <article class="dgb-card">
+        <h2>Flat</h2>
+        <p>Use Flat when the visitor needs the simplest house path: clear pages, clear links, and direct orientation.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/home/?view=flat">Enter Flat</a></div>
+      </article>
 
-        <div class="bubble-body">
-          <div class="bubble-note">
-            <p>The Door does not replace the Compass. The Compass helps the visitor orient. The Door performs the threshold motion into Rich Manor and Estate.</p>
-          </div>
+      <article class="dgb-card">
+        <h2>Round</h2>
+        <p>Use Round when the house should read as a connected living structure instead of isolated pages.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/home/?view=round">Enter Round</a></div>
+      </article>
 
-          <div class="nested">
-            <details open>
-              <summary>
-                <span class="summary-copy">
-                  <b>View selection</b>
-                  <span>Flat, Round, or Globe entry.</span>
-                </span>
-              </summary>
+      <article class="dgb-card">
+        <h2>Globe</h2>
+        <p>Use Globe when the visitor should inspect the active world-building and live visual branch.</p>
+        <div class="dgb-actions"><a class="dgb-button secondary" href="/showroom/globe/">Enter Globe</a></div>
+      </article>
 
-              <div class="bubble-body">
-                <p class="threshold-line">Choose the view before you enter.</p>
-
-                <div class="grid three">
-                  <article class="view-card">
-                    <span>Flat</span>
-                    <h3>Clear public route-map view.</h3>
-                    <p>Use Flat when you want the simplest house path: clear pages, clear links, and direct orientation.</p>
-                    <a class="button primary" href="/home/?view=flat">Enter Flat</a>
-                  </article>
-
-                  <article class="view-card">
-                    <span>Round</span>
-                    <h3>Relational manor/world view.</h3>
-                    <p>Use Round when you want the house to read as a connected living structure instead of separate pages.</p>
-                    <a class="button green" href="/home/?view=round">Enter Round</a>
-                  </article>
-
-                  <article class="view-card">
-                    <span>Globe</span>
-                    <h3>Showroom/world inspection view.</h3>
-                    <p>Use Globe when you want to inspect the active world-building and live visual branch.</p>
-                    <a class="button" href="/showroom/globe/?view=globe">Enter Globe</a>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>Cross into the Manor</b>
-                  <span>The threshold carries the visitor from perception into arrival.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <p class="threshold-line">The Door turns orientation into arrival.</p>
-
-                <div class="grid three">
-                  <article class="card">
-                    <span>Compass</span>
-                    <h3>Orientation.</h3>
-                    <p>Compass helps the visitor choose where pressure wants to enter.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Door</span>
-                    <h3>Admission.</h3>
-                    <p>Door confirms the threshold and lets the visitor cross into the house.</p>
-                  </article>
-
-                  <article class="card">
-                    <span>Home</span>
-                    <h3>Reception.</h3>
-                    <p>Home receives the visitor after entry and begins the interior path.</p>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>Three immediate motions</b>
-                  <span>Return, enter, or continue.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <div class="grid three">
-                  <article class="route-card">
-                    <span>Return</span>
-                    <h3>Compass</h3>
-                    <p>Go back to the public command surface and choose the route again.</p>
-                    <a class="button secondary" href="/">Return to Compass</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Enter</span>
-                    <h3>Home</h3>
-                    <p>Move into the receiving hall of Rich Manor and Estate.</p>
-                    <a class="button primary" href="/home/">Enter Home</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Continue</span>
-                    <h3>Products</h3>
-                    <p>Proceed toward the product chamber where ideas become useful.</p>
-                    <a class="button green" href="/products/">Continue to Products</a>
-                  </article>
-                </div>
-              </div>
-            </details>
-
-            <details>
-              <summary>
-                <span class="summary-copy">
-                  <b>House movement</b>
-                  <span>Move through the active house routes.</span>
-                </span>
-              </summary>
-
-              <div class="bubble-body">
-                <div class="grid five">
-                  <article class="route-card">
-                    <span>Orient</span>
-                    <h3>Compass</h3>
-                    <p>Start at the public command surface.</p>
-                    <a class="button secondary" href="/">Compass</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Receive</span>
-                    <h3>Home</h3>
-                    <p>Enter the receiving hall.</p>
-                    <a class="button primary" href="/home/">Home</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Use</span>
-                    <h3>Products</h3>
-                    <p>Move toward practical tools and product paths.</p>
-                    <a class="button green" href="/products/">Products</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Inspect</span>
-                    <h3>Showroom</h3>
-                    <p>See the active build and current demonstrations.</p>
-                    <a class="button" href="/showroom/">Showroom</a>
-                  </article>
-
-                  <article class="route-card">
-                    <span>Measure</span>
-                    <h3>Gauges</h3>
-                    <p>Check readiness, branches, and current site state.</p>
-                    <a class="button secondary" href="/gauges/">Gauges</a>
-                  </article>
-                </div>
-              </div>
-            </details>
-          </div>
+      <article class="dgb-card">
+        <h2>Continue</h2>
+        <p>Move through the estate without losing shell continuity.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/products/">Products</a>
+          <a class="dgb-button secondary" href="/showroom/">Showroom</a>
+          <a class="dgb-button secondary" href="/gauges/">Gauges</a>
         </div>
-      </details>
+      </article>
     </section>
 
-    <section class="final-band">
-      <p class="kicker green">Final threshold</p>
-      <h2>Do not stand at the door forever.</h2>
-
-      <p class="lead">
-        Choose the view, cross the threshold, and let the house receive you.
-      </p>
-
-      <div class="links">
-        <a class="button primary" href="/home/">Enter Home</a>
-        <a class="button green" href="/products/">Continue to Products</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
-        <a class="button secondary" href="/gauges/">Read Gauges</a>
-        <a class="button secondary" href="/">Return to Compass</a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <div class="public-receipt">Door · G5 entry threshold renewal active. Door owns view-selection authority. Compass orients, Door admits, Home receives. No visual pass is claimed.</div>
-
-      <section class="receipt" aria-hidden="true">
-        G5_DOOR_ENTRY_THRESHOLD_CONTRACT_RENEWAL_v1
-        route=/door/
-        page-purpose=entry-threshold
-        view-selector-authority=true
-        compass-orients=true
-        door-admits=true
-        home-receives=true
-        russian-doll-bubble-structure=true
-        flat-view=/home/?view=flat
-        round-view=/home/?view=round
-        globe-view=/showroom/globe/?view=globe
-        no-graphic-box=true
-        no-generated-visual=true
-        no-false-pass-claim=true
-        visual-pass-claim=false
-        compass-route=/
-        home-route=/home/
-        products-route=/products/
-        showroom-route=/showroom/
-        gauges-route=/gauges/
-        result=door-renewed-as-g5-entry-threshold
-      </section>
-    </footer>
+    <details class="dgb-details">
+      <summary>Route receipt</summary>
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+route=/door/
+brand=Diamond Gate Bridge
+estate=Rich Manor and Estate
+nav_order=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
+door_owns=entry-threshold
+visual_pass_claimed=false</pre>
+    </details>
   </main>
+
+  <footer class="dgb-footer">Door · Global UI shell aligned.</footer>
 </body>
 </html>

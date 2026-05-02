@@ -1,41 +1,33 @@
-/* SUN TERMS RENEWAL
+/* SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1
    FILE: /assets/sun/sun_canvas.js
-   VERSION: SUN_TERMS_RENEWAL_TNT_v1
-
-   ROLE:
-   Self-contained Demo Universe Sun asset renderer.
-   Owns Sun visual body only: plasma surface, controlled corona, and mobile-safe motion.
-   Does not own Earth G1, Moon, Planet 1, route runtime, Gauges, or lock-in.
+   ROLE: Self-contained Sun G1 renderer.
 */
 
-(function attachSunAssetCanvas(global) {
+(function attachSunG1Renderer(global) {
   "use strict";
 
-  var VERSION = "SUN_TERMS_RENEWAL_TNT_v1";
-  var ROLE = "DEMO_UNIVERSE_SUN_ASSET_RENDERER";
+  var VERSION = "SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1";
+  var ROLE = "DEMO_UNIVERSE_SUN_G1_RENDERER";
 
   var state = {
     mounted: false,
     running: false,
-    ready: true,
     canvas: null,
     ctx: null,
-    mount: null,
-    raf: 0,
+    mountNode: null,
+    frame: 0,
     lastTime: 0,
     phase: 0,
-    speed: 0.34,
+    speed: 0.28,
     renderCount: 0,
     lastReceipt: null,
     lastError: null,
     options: {
-      size: 520,
-      corona: true,
-      coronaStrength: 0.42,
-      plasmaStrength: 1,
-      granulation: 1,
-      brightness: 1,
-      fps: 24
+      visualSize: 560,
+      pixelSize: 400,
+      fps: 22,
+      coronaStrength: 0.38,
+      surfaceStrength: 1
     }
   };
 
@@ -52,7 +44,7 @@
     return n - Math.floor(n);
   }
 
-  function valueNoise(x, y, seed) {
+  function noise(x, y, seed) {
     var x0 = Math.floor(x);
     var y0 = Math.floor(y);
     var xf = x - x0;
@@ -70,18 +62,17 @@
 
   function fbm(x, y, seed) {
     return (
-      valueNoise(x, y, seed) * 0.40 +
-      valueNoise(x * 2.1, y * 2.1, seed + 17) * 0.27 +
-      valueNoise(x * 4.2, y * 4.2, seed + 31) * 0.18 +
-      valueNoise(x * 8.4, y * 8.4, seed + 53) * 0.10 +
-      valueNoise(x * 16.8, y * 16.8, seed + 79) * 0.05
+      noise(x, y, seed) * 0.42 +
+      noise(x * 2.1, y * 2.1, seed + 13) * 0.26 +
+      noise(x * 4.2, y * 4.2, seed + 29) * 0.18 +
+      noise(x * 8.4, y * 8.4, seed + 47) * 0.10 +
+      noise(x * 16.8, y * 16.8, seed + 71) * 0.04
     );
   }
 
   function resolveMount(target) {
     if (typeof target === "string" && global.document) return global.document.querySelector(target);
     if (target) return target;
-
     if (!global.document) return null;
 
     return global.document.getElementById("sun-render") ||
@@ -89,20 +80,29 @@
       global.document.querySelector("[data-demo-universe-sun='true']");
   }
 
-  function ensureCanvas(target, options) {
+  function prepareMount(target, options) {
     var mount = resolveMount(target);
-    var canvas;
     var rect;
-    var cssSize;
-    var dpr;
-
-    options = Object.assign({}, state.options, options || {});
+    var visualSize;
+    var pixelSize;
+    var canvas;
 
     if (!mount || !global.document) return null;
 
+    options = Object.assign({}, state.options, options || {});
     rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: 0 };
-    cssSize = Math.max(260, Math.min(760, Number(options.size || rect.width || mount.clientWidth || state.options.size)));
-    dpr = Math.max(1, Math.min(2, global.devicePixelRatio || 1));
+
+    visualSize = clamp(options.visualSize || rect.width || mount.clientWidth || 560, 260, 720);
+    if (global.innerWidth && global.innerWidth < 760) visualSize = clamp(global.innerWidth * 0.82, 260, 430);
+
+    pixelSize = clamp(options.pixelSize || visualSize, 280, 440);
+
+    mount.setAttribute("data-sun-render-active", "true");
+    mount.setAttribute("data-sun-g1-active", "true");
+    mount.style.display = "grid";
+    mount.style.placeItems = "center";
+    mount.style.aspectRatio = "1 / 1";
+    mount.style.overflow = "visible";
 
     canvas = mount.querySelector("canvas[data-sun-asset-canvas='true']");
     if (!canvas) {
@@ -110,93 +110,105 @@
       canvas.setAttribute("data-sun-asset-canvas", "true");
       canvas.setAttribute("data-sun-version", VERSION);
       canvas.setAttribute("data-visual-pass-claimed", "false");
-      canvas.setAttribute("aria-label", "Demo Universe Sun asset");
+      canvas.setAttribute("aria-label", "Sun G1 renderer");
       mount.innerHTML = "";
       mount.appendChild(canvas);
     }
 
-    canvas.width = Math.round(cssSize * dpr);
-    canvas.height = Math.round(cssSize * dpr);
-    canvas.style.width = cssSize + "px";
-    canvas.style.height = cssSize + "px";
+    canvas.width = pixelSize;
+    canvas.height = pixelSize;
+    canvas.style.width = visualSize + "px";
+    canvas.style.height = visualSize + "px";
     canvas.style.maxWidth = "100%";
+    canvas.style.aspectRatio = "1 / 1";
+    canvas.style.borderRadius = "50%";
     canvas.style.display = "block";
     canvas.style.margin = "0 auto";
-    canvas.style.borderRadius = "50%";
+    canvas.style.objectFit = "contain";
     canvas.style.background = "transparent";
 
     state.canvas = canvas;
     state.ctx = canvas.getContext("2d", { willReadFrequently: true });
-    state.mount = mount;
+    state.mountNode = mount;
     state.mounted = true;
-    state.options = options;
+    state.options = Object.assign({}, options, {
+      visualSize: visualSize,
+      pixelSize: pixelSize
+    });
 
     return canvas;
   }
 
-  function plasmaColor(intensity, heat, edge) {
-    var core = [255, 242, 166];
-    var gold = [255, 186, 58];
-    var orange = [242, 103, 28];
-    var red = [118, 32, 22];
+  function plasmaColor(value, edge) {
+    var red = [128, 36, 18];
+    var orange = [235, 94, 28];
+    var gold = [255, 176, 50];
+    var yellow = [255, 226, 112];
+    var white = [255, 246, 190];
+    var c;
 
-    var color;
-
-    if (intensity > 0.72) {
-      color = [
-        mix(gold[0], core[0], (intensity - 0.72) / 0.28),
-        mix(gold[1], core[1], (intensity - 0.72) / 0.28),
-        mix(gold[2], core[2], (intensity - 0.72) / 0.28)
+    if (value > 0.82) {
+      c = [
+        mix(yellow[0], white[0], (value - 0.82) / 0.18),
+        mix(yellow[1], white[1], (value - 0.82) / 0.18),
+        mix(yellow[2], white[2], (value - 0.82) / 0.18)
       ];
-    } else if (intensity > 0.38) {
-      color = [
-        mix(orange[0], gold[0], (intensity - 0.38) / 0.34),
-        mix(orange[1], gold[1], (intensity - 0.38) / 0.34),
-        mix(orange[2], gold[2], (intensity - 0.38) / 0.34)
+    } else if (value > 0.58) {
+      c = [
+        mix(gold[0], yellow[0], (value - 0.58) / 0.24),
+        mix(gold[1], yellow[1], (value - 0.58) / 0.24),
+        mix(gold[2], yellow[2], (value - 0.58) / 0.24)
+      ];
+    } else if (value > 0.32) {
+      c = [
+        mix(orange[0], gold[0], (value - 0.32) / 0.26),
+        mix(orange[1], gold[1], (value - 0.32) / 0.26),
+        mix(orange[2], gold[2], (value - 0.32) / 0.26)
       ];
     } else {
-      color = [
-        mix(red[0], orange[0], intensity / 0.38),
-        mix(red[1], orange[1], intensity / 0.38),
-        mix(red[2], orange[2], intensity / 0.38)
+      c = [
+        mix(red[0], orange[0], value / 0.32),
+        mix(red[1], orange[1], value / 0.32),
+        mix(red[2], orange[2], value / 0.32)
       ];
     }
 
-    color[0] = color[0] * (0.82 + heat * 0.22) * (1 - edge * 0.12);
-    color[1] = color[1] * (0.82 + heat * 0.16) * (1 - edge * 0.10);
-    color[2] = color[2] * (0.78 + heat * 0.12) * (1 - edge * 0.18);
+    c[0] *= 1 - edge * 0.16;
+    c[1] *= 1 - edge * 0.12;
+    c[2] *= 1 - edge * 0.22;
 
     return [
-      Math.round(clamp(color[0], 0, 255)),
-      Math.round(clamp(color[1], 0, 255)),
-      Math.round(clamp(color[2], 0, 255)),
+      Math.round(clamp(c[0], 0, 255)),
+      Math.round(clamp(c[1], 0, 255)),
+      Math.round(clamp(c[2], 0, 255)),
       255
     ];
   }
 
-  function drawCorona(ctx, cx, cy, radius, options) {
-    if (options.corona === false) return;
+  function drawCorona(ctx, size) {
+    var cx = size / 2;
+    var cy = size / 2;
+    var r = size * 0.32;
+    var strength = clamp(state.options.coronaStrength, 0, 0.72);
+    var g = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, r * 1.72);
 
-    var strength = clamp(options.coronaStrength == null ? 0.42 : options.coronaStrength, 0, 0.75);
-    var outer = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.65);
-
-    outer.addColorStop(0, "rgba(255,214,96," + (0.22 * strength) + ")");
-    outer.addColorStop(0.42, "rgba(255,148,50," + (0.16 * strength) + ")");
-    outer.addColorStop(0.72, "rgba(255,93,35," + (0.08 * strength) + ")");
-    outer.addColorStop(1, "rgba(255,93,35,0)");
+    g.addColorStop(0, "rgba(255,226,120," + (0.25 * strength) + ")");
+    g.addColorStop(0.32, "rgba(255,162,58," + (0.18 * strength) + ")");
+    g.addColorStop(0.68, "rgba(255,96,42," + (0.08 * strength) + ")");
+    g.addColorStop(1, "rgba(255,96,42,0)");
 
     ctx.save();
-    ctx.fillStyle = outer;
+    ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.65, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * 1.72, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
 
-  function drawDisc(ctx, size, options) {
+  function drawSurface(ctx, size) {
     var cx = size / 2;
     var cy = size / 2;
-    var radius = size * 0.31;
+    var r = size * 0.32;
     var image = ctx.createImageData(size, size);
     var data = image.data;
     var phase = state.phase;
@@ -205,22 +217,20 @@
     var dx;
     var dy;
     var dist;
-    var idx;
+    var edge;
     var angle;
-    var swirlX;
-    var swirlY;
+    var swirl;
     var band;
     var grain;
-    var flare;
-    var edge;
-    var intensity;
+    var cell;
     var heat;
+    var idx;
     var color;
 
     for (y = 0; y < size; y += 1) {
       for (x = 0; x < size; x += 1) {
-        dx = (x - cx) / radius;
-        dy = (y - cy) / radius;
+        dx = (x - cx) / r;
+        dy = (y - cy) / r;
         dist = Math.sqrt(dx * dx + dy * dy);
         idx = (y * size + x) * 4;
 
@@ -230,18 +240,14 @@
         }
 
         angle = Math.atan2(dy, dx);
-        swirlX = dx * 2.8 + Math.cos(angle * 3 + phase * 0.7) * 0.22 + phase * 0.16;
-        swirlY = dy * 2.8 + Math.sin(angle * 2 - phase * 0.6) * 0.22 - phase * 0.10;
-
-        band = Math.sin(angle * 9 + dist * 9 - phase * 1.8) * 0.5 + 0.5;
-        grain = fbm(swirlX * 1.35, swirlY * 1.35, 101);
-        flare = fbm(swirlX * 3.2 + phase, swirlY * 2.4 - phase, 211);
-
         edge = clamp((dist - 0.72) / 0.28, 0, 1);
-        heat = clamp(0.52 + grain * 0.36 + band * 0.18 + flare * 0.20, 0, 1);
-        intensity = clamp(0.36 + heat * 0.54 - edge * 0.24 + options.plasmaStrength * 0.08, 0, 1);
+        swirl = Math.sin(angle * 7 + dist * 8.5 - phase * 1.8) * 0.5 + 0.5;
+        band = Math.sin((dx * 3.2 - dy * 1.4) + phase * 0.95 + Math.sin(angle * 5) * 0.35) * 0.5 + 0.5;
+        grain = fbm(dx * 3.2 + phase * 0.18, dy * 3.2 - phase * 0.12, 41);
+        cell = fbm(dx * 8.0 - phase * 0.20, dy * 8.0 + phase * 0.16, 97);
 
-        color = plasmaColor(intensity, heat, edge);
+        heat = clamp(0.30 + grain * 0.38 + cell * 0.20 + swirl * 0.18 + band * 0.16 - edge * 0.18, 0, 1);
+        color = plasmaColor(heat, edge);
 
         data[idx] = color[0];
         data[idx + 1] = color[1];
@@ -252,35 +258,35 @@
 
     ctx.putImageData(image, 0, 0);
 
-    var limb = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.34, radius * 0.10, cx, cy, radius);
-    limb.addColorStop(0, "rgba(255,255,210,0.18)");
-    limb.addColorStop(0.48, "rgba(255,255,210,0.04)");
-    limb.addColorStop(0.82, "rgba(90,12,6,0.10)");
-    limb.addColorStop(1, "rgba(70,8,4,0.34)");
+    var shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.36, r * 0.06, cx, cy, r);
+    shade.addColorStop(0, "rgba(255,255,220,0.22)");
+    shade.addColorStop(0.42, "rgba(255,255,220,0.05)");
+    shade.addColorStop(0.86, "rgba(110,28,10,0.16)");
+    shade.addColorStop(1, "rgba(60,9,4,0.34)");
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
-    ctx.fillStyle = limb;
+    ctx.fillStyle = shade;
     ctx.fillRect(0, 0, size, size);
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = "rgba(255, 224, 145, 0.32)";
+    ctx.strokeStyle = "rgba(255, 222, 136, 0.34)";
     ctx.lineWidth = Math.max(1, size * 0.004);
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
-
-    drawCorona(ctx, cx, cy, radius, options);
   }
 
-  function draw(options) {
-    options = Object.assign({}, state.options, options || {});
+  function draw() {
+    var canvas = state.canvas;
+    var ctx = state.ctx;
+    var size;
 
-    if (!state.canvas || !state.ctx) {
+    if (!canvas || !ctx) {
       state.lastReceipt = {
         ok: false,
         reason: "NO_CANVAS",
@@ -290,69 +296,66 @@
       return state.lastReceipt;
     }
 
-    var canvas = state.canvas;
-    var ctx = state.ctx;
-    var size = Math.min(canvas.width, canvas.height);
-
+    size = Math.min(canvas.width, canvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawCorona(ctx, canvas.width / 2, canvas.height / 2, size * 0.31, options);
-    drawDisc(ctx, size, options);
+    drawCorona(ctx, size);
+    drawSurface(ctx, size);
 
     state.renderCount += 1;
     state.lastReceipt = {
       ok: true,
       version: VERSION,
       role: ROLE,
-      sun: true,
+      sunG1: true,
+      circular: true,
       plasma: true,
-      controlledCorona: true,
+      controlledRadiance: true,
       mobileSafeMotion: true,
       earthRendererInheritance: false,
       moonQueued: true,
-      planetOneReservedForFutureNineSummitsUniverse: true,
-      running: state.running,
-      phase: state.phase,
-      renderCount: state.renderCount,
       visualPassClaimed: false,
-      renderedAt: new Date().toISOString()
+      renderCount: state.renderCount,
+      timestamp: new Date().toISOString()
     };
 
     return state.lastReceipt;
   }
 
-  function frame(timestamp) {
-    var minInterval = 1000 / clamp(state.options.fps || 24, 6, 30);
+  function tick(time) {
+    var fps = clamp(state.options.fps || 22, 8, 28);
+    var minDelta = 1000 / fps;
     var delta;
 
     if (!state.running) return;
 
-    if (!state.lastTime) state.lastTime = timestamp;
-    delta = Math.min(90, timestamp - state.lastTime);
+    if (!state.lastTime) state.lastTime = time;
+    delta = time - state.lastTime;
 
-    if (delta >= minInterval) {
-      state.phase += state.speed * (delta / 1000);
-      state.lastTime = timestamp;
+    if (delta >= minDelta) {
+      state.phase += state.speed * Math.min(delta, 80) / 1000;
+      state.lastTime = time;
       draw();
     }
 
-    state.raf = global.requestAnimationFrame(frame);
+    state.frame = global.requestAnimationFrame(tick);
   }
 
   function start() {
     if (state.running) return getStatus();
+
     state.running = true;
     state.lastTime = 0;
 
-    if (state.raf) global.cancelAnimationFrame(state.raf);
-    state.raf = global.requestAnimationFrame(frame);
+    if (state.frame) global.cancelAnimationFrame(state.frame);
+    state.frame = global.requestAnimationFrame(tick);
 
     return getStatus();
   }
 
   function pause() {
     state.running = false;
-    if (state.raf) global.cancelAnimationFrame(state.raf);
-    state.raf = 0;
+    if (state.frame) global.cancelAnimationFrame(state.frame);
+    state.frame = 0;
     return getStatus();
   }
 
@@ -372,27 +375,24 @@
   }
 
   function normal() {
-    state.speed = 0.34;
+    state.speed = 0.28;
     return getStatus();
   }
 
   function fast() {
-    state.speed = 0.72;
+    state.speed = 0.64;
     return getStatus();
   }
 
   function setSpeed(value) {
     var n = Number(value);
     if (n > 1) n = n / 100;
-    state.speed = clamp(n, 0, 1) * 1.2;
+    state.speed = clamp(n, 0, 1) * 0.85;
     return getStatus();
   }
 
   function mount(target, options) {
-    options = Object.assign({}, state.options, options || {});
-    state.options = options;
-
-    var canvas = ensureCanvas(target, options);
+    var canvas = prepareMount(target, options);
 
     if (!canvas) {
       state.lastReceipt = {
@@ -404,9 +404,9 @@
       return state.lastReceipt;
     }
 
-    draw(options);
+    draw();
 
-    if (options.autoStart !== false) {
+    if (!options || options.autoStart !== false) {
       start();
     }
 
@@ -414,9 +414,9 @@
       ok: true,
       mounted: true,
       version: VERSION,
-      sun: true,
+      sunG1: true,
+      circular: true,
       plasma: true,
-      controlledCorona: true,
       visualPassClaimed: false
     };
   }
@@ -426,7 +426,8 @@
       state.canvas = target;
       state.ctx = target.getContext("2d", { willReadFrequently: true });
       state.options = Object.assign({}, state.options, options || {});
-      return draw(state.options);
+      draw();
+      return getStatus();
     }
 
     return mount(target, options);
@@ -439,9 +440,14 @@
       state.canvas.parentNode.removeChild(state.canvas);
     }
 
+    if (state.mountNode) {
+      state.mountNode.removeAttribute("data-sun-render-active");
+      state.mountNode.removeAttribute("data-sun-g1-active");
+    }
+
     state.canvas = null;
     state.ctx = null;
-    state.mount = null;
+    state.mountNode = null;
     state.mounted = false;
 
     return {
@@ -455,26 +461,24 @@
   function getStatus() {
     return {
       ok: true,
-      active: true,
       VERSION: VERSION,
       version: VERSION,
       role: ROLE,
-      ready: state.ready,
+      active: true,
       mounted: state.mounted,
       running: state.running,
       phase: state.phase,
       speed: state.speed,
       renderCount: state.renderCount,
-      sun: true,
+      sunG1: true,
+      circular: true,
       plasma: true,
-      controlledCorona: true,
-      mobileSafeMotion: true,
+      controlledRadiance: true,
       earthG1Complete: true,
       earthRendererInheritance: false,
       moonQueued: true,
       planetOneReservedForFutureNineSummitsUniverse: true,
       generatedImageDependency: false,
-      graphicBox: false,
       visualPassClaimed: false,
       lastReceipt: state.lastReceipt,
       lastError: state.lastError
@@ -507,7 +511,7 @@
   global.DGBSun = api;
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:sun:terms-renewal-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:sun:g1-standard-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

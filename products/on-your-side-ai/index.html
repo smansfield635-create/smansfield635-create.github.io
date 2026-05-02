@@ -1,10 +1,21 @@
 <!doctype html>
-<html lang="en" data-page="on-your-side-aai" data-room="PC3_ON_YOUR_SIDE_AAI" data-public-presentation="ted-clean">
+<html
+  lang="en"
+  data-page="on-your-side-aai"
+  data-room="PC3_ON_YOUR_SIDE_AAI"
+  data-public-presentation="ted-clean"
+  data-contract="ON_YOUR_SIDE_AAI_RUSSIAN_DOLL_CREATIVE_SCENE_TNT_v1"
+  data-scroll-mode="compressed-russian-doll"
+  data-terminology-lock="AAI"
+  data-interactive-comic-books="future-potential"
+  data-scene-insertion="permissioned-original-public-domain-or-parody-safe"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>On Your Side AAI · Diamond Gate Bridge</title>
-  <meta name="description" content="On Your Side AAI is practical applied intelligence for human life infrastructure inside the Diamond Gate Bridge Product Wing.">
+  <meta name="description" content="On Your Side AAI is practical applied intelligence for human life infrastructure, preparation, creative scenes, interactive comic books, and bounded support inside the Diamond Gate Bridge Product Wing.">
+
   <style>
     :root {
       --bg: #05070b;
@@ -17,6 +28,8 @@
       --green: #8ff0c6;
       --blue: #7db5ff;
       --gold: #ffd36f;
+      --purple: #d7a5ff;
+      --orange: #ff9f7a;
       --shadow: rgba(0, 0, 0, 0.48);
     }
 
@@ -48,7 +61,8 @@
       text-decoration: none;
     }
 
-    a:focus {
+    a:focus,
+    summary:focus {
       outline: 2px solid var(--green);
       outline-offset: 3px;
     }
@@ -126,11 +140,11 @@
     .button.primary {
       border-color: rgba(143, 240, 198, 0.45);
       background: rgba(143, 240, 198, 0.12);
-      color: var(--text);
       font-weight: 850;
     }
 
     .hero,
+    .doll-shell,
     .panel,
     .card,
     .route-card {
@@ -143,11 +157,12 @@
     .hero {
       position: relative;
       overflow: hidden;
-      padding: clamp(24px, 5vw, 52px);
-      min-height: 500px;
+      padding: clamp(24px, 5vw, 56px);
+      min-height: 540px;
       display: grid;
       align-content: center;
       gap: 22px;
+      isolation: isolate;
     }
 
     .hero::before {
@@ -159,6 +174,7 @@
         radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
         linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
       pointer-events: none;
+      z-index: -3;
     }
 
     .hero::after {
@@ -178,8 +194,48 @@
       box-shadow:
         inset 0 0 38px rgba(143, 240, 198, 0.06),
         0 0 84px rgba(125, 181, 255, 0.08);
-      opacity: 0.46;
+      opacity: 0.42;
       pointer-events: none;
+      z-index: -2;
+    }
+
+    .comic-ghost {
+      position: absolute;
+      right: clamp(28px, 9vw, 118px);
+      bottom: clamp(24px, 8vw, 82px);
+      width: clamp(170px, 28vw, 330px);
+      aspect-ratio: 1.55 / 1;
+      border: 1px solid rgba(215, 165, 255, 0.24);
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(215,165,255,0.08)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 54px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px);
+      box-shadow: 0 0 72px rgba(215,165,255,0.10);
+      opacity: 0.40;
+      filter: blur(1px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .comic-ghost::before,
+    .comic-ghost::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255, 211, 111, 0.18);
+      border-radius: 16px;
+    }
+
+    .comic-ghost::before {
+      inset: 16px;
+    }
+
+    .comic-ghost::after {
+      right: 18px;
+      bottom: 18px;
+      width: 42%;
+      height: 18%;
+      background: rgba(255, 211, 111, 0.10);
     }
 
     .hero-content,
@@ -199,9 +255,15 @@
 
     h1 {
       margin: 0;
+      max-width: 960px;
       font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 0.9;
+      line-height: 0.88;
       letter-spacing: -0.075em;
+    }
+
+    h1 .gold {
+      color: var(--gold);
+      text-shadow: 0 0 42px rgba(255, 211, 111, 0.12);
     }
 
     .lead {
@@ -212,35 +274,172 @@
       line-height: 1.42;
     }
 
+    .one-liners {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+      max-width: 980px;
+    }
+
+    .one-liner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(143, 240, 198, 0.22);
+      border-radius: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.045);
+      color: rgba(238, 245, 255, 0.94);
+      font-size: clamp(1rem, 2.3vw, 1.14rem);
+      font-weight: 850;
+      line-height: 1.16;
+      letter-spacing: -0.02em;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 1px solid rgba(168, 199, 255, 0.20);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.045);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .chip.lock {
+      border-color: rgba(143, 240, 198, 0.36);
+      color: var(--green);
+      background: rgba(143, 240, 198, 0.08);
+    }
+
     .section {
       margin-top: 18px;
     }
 
-    .panel {
-      padding: clamp(20px, 3vw, 30px);
+    .doll-shell {
+      margin-top: 18px;
+      padding: clamp(18px, 3vw, 28px);
       background:
         radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
         var(--panel-soft);
     }
 
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 2.6rem);
-      letter-spacing: -0.05em;
+    .doll-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
-    .panel p {
-      margin: 14px 0 0;
+    .doll-title {
+      margin: 0;
+      font-size: clamp(1.7rem, 4.5vw, 3.1rem);
+      line-height: 0.96;
+      letter-spacing: -0.055em;
+    }
+
+    .doll-note {
+      max-width: 900px;
+      margin: 10px 0 0;
       color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.55;
+      line-height: 1.52;
+    }
+
+    .doll-badge {
+      border: 1px solid rgba(143, 240, 198, 0.34);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: var(--green);
+      background: rgba(143, 240, 198, 0.08);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .doll-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    details {
+      border: 1px solid rgba(168, 199, 255, 0.16);
+      border-radius: 22px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(125, 181, 255, 0.08), transparent 14rem),
+        rgba(9, 15, 25, 0.82);
+    }
+
+    details[open] {
+      border-color: var(--line-strong);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    }
+
+    summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 20px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .layer-number {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(143, 240, 198, 0.42);
+      border-radius: 50%;
+      color: var(--green);
+      background: rgba(143, 240, 198, 0.08);
+      font-weight: 900;
+    }
+
+    .layer-title {
+      display: block;
+      font-size: clamp(1.12rem, 2.7vw, 1.48rem);
+      font-weight: 900;
+      letter-spacing: -0.025em;
+    }
+
+    .layer-line {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 0.95rem;
+    }
+
+    .layer-action {
+      color: var(--gold);
+      font-weight: 850;
+    }
+
+    .layer-body {
+      padding: 0 20px 20px 72px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 18px;
     }
 
     .grid.two {
@@ -251,24 +450,20 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
+    .grid.six {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
     .card {
-      min-height: 230px;
+      min-height: 170px;
       display: grid;
       align-content: start;
-      gap: 12px;
-      padding: 20px;
+      gap: 10px;
+      padding: 18px;
       background:
         radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
-        rgba(9, 15, 25, 0.84);
+        rgba(9, 15, 25, 0.72);
       box-shadow: none;
-    }
-
-    .card.compact {
-      min-height: 170px;
-    }
-
-    .card.tall {
-      min-height: 330px;
     }
 
     .card span {
@@ -281,15 +476,15 @@
 
     .card h3 {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
+      font-size: clamp(1.18rem, 2.6vw, 1.55rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
     }
 
     .card p,
     .card li {
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.48;
     }
 
     .card p {
@@ -298,40 +493,38 @@
 
     .card ul {
       margin: 0;
-      padding-left: 1.2rem;
+      padding-left: 1.1rem;
     }
 
-    .flow-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
+    .card::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(168, 199, 255, 0.22);
     }
 
-    .flow-row {
-      display: grid;
-      grid-template-columns: 132px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 12px;
-      border: 1px solid rgba(168, 199, 255, 0.12);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
-    }
+    .card.clarify::before { background: var(--blue); }
+    .card.prepare::before { background: var(--gold); }
+    .card.verify::before { background: var(--green); }
+    .card.creative::before { background: var(--purple); }
+    .card.support::before { background: var(--orange); }
 
-    .flow-row strong {
-      color: var(--green);
-    }
-
-    .flow-row span {
-      color: var(--muted);
-      line-height: 1.45;
+    .notice {
+      border: 1px solid rgba(255, 211, 111, 0.22);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255, 211, 111, 0.07);
+      color: rgba(238, 245, 255, 0.88);
+      line-height: 1.52;
+      margin-top: 14px;
     }
 
     .route-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 16px;
     }
 
     .route-card {
@@ -367,10 +560,15 @@
       display: none !important;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1080px) {
       .grid,
       .grid.two,
-      .grid.four {
+      .grid.four,
+      .grid.six {
+        grid-template-columns: 1fr;
+      }
+
+      .one-liners {
         grid-template-columns: 1fr;
       }
 
@@ -379,12 +577,21 @@
       }
 
       .hero {
-        min-height: 390px;
+        min-height: 430px;
       }
 
-      .hero::after {
-        opacity: 0.24;
+      .hero::after,
+      .comic-ghost {
+        opacity: 0.22;
         right: -40px;
+      }
+
+      .doll-head {
+        grid-template-columns: 1fr;
+      }
+
+      .layer-body {
+        padding-left: 20px;
       }
     }
 
@@ -409,8 +616,12 @@
         grid-template-columns: 1fr;
       }
 
-      .flow-row {
-        grid-template-columns: 1fr;
+      summary {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .layer-action {
+        grid-column: 2;
       }
     }
   </style>
@@ -443,6 +654,8 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
@@ -450,502 +663,592 @@
     </header>
 
     <section class="hero" aria-labelledby="aai-title">
+      <div class="comic-ghost" aria-hidden="true"></div>
+
       <div class="hero-content">
         <p class="kicker">PC3 · On Your Side AAI · Frontier Product Chamber</p>
-        <h1 id="aai-title">On Your Side AAI</h1>
+
+        <h1 id="aai-title">
+          On Your Side <span class="gold">AAI</span>
+        </h1>
+
         <p class="lead">
-          On Your Side AAI is practical applied intelligence for human life infrastructure. It helps people understand what is happening, organize what matters, prepare what comes next, and move with support instead of confusion.
+          Practical applied intelligence for human life infrastructure: documents, decisions, appointments, conversations,
+          creative scenes, interactive comic books, fictional training rooms, and the messy middle between confusion and prepared action.
         </p>
+
+        <div class="one-liners" aria-label="AAI one-liners">
+          <div class="one-liner">Information is not support until someone can use it.</div>
+          <div class="one-liner">AAI does not just answer. It helps you get ready.</div>
+          <div class="one-liner">The future is not a smarter answer. It is a better support layer.</div>
+        </div>
+
+        <div class="chip-row" aria-label="AAI status">
+          <span class="chip lock">AAI stays AAI</span>
+          <span class="chip lock">Applied support</span>
+          <span class="chip lock">Bounded intelligence</span>
+          <span class="chip">Interactive comics</span>
+          <span class="chip">Put yourself in the scene</span>
+        </div>
       </div>
 
       <div class="actions" aria-label="Primary On Your Side AAI actions">
         <a class="button primary" href="/products/">Return to Products</a>
-        <a class="button" href="/showroom/">Open Showroom</a>
+        <a class="button" href="/products/education/">Education</a>
+        <a class="button" href="/products/nutrition/">Nutrition</a>
         <a class="button" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="identity-title">
-      <p class="kicker">Terminology lock</p>
-      <h2 id="identity-title">AAI stays AAI.</h2>
-      <p>
-        This chamber does not collapse into generic AI language. AAI means applied assistant intelligence: intelligence organized around the person, the situation, the pressure, the missing information, and the next usable move.
-      </p>
-      <p>
-        The product is not trying to sound futuristic for its own sake. It is trying to make life more navigable when documents, systems, appointments, deadlines, choices, responsibilities, and emotions all arrive at the same time.
-      </p>
-    </section>
-
-    <section class="section panel" aria-labelledby="science-title">
-      <p class="kicker">The science of support</p>
-      <h2 id="science-title">People do not fail only because they lack information.</h2>
-      <p>
-        People often fail because information arrives in a form they cannot use. The brain has limited working memory. Stress narrows attention. Decision fatigue reduces judgment. Unclear instructions increase avoidance. Too many options can become paralysis.
-      </p>
-      <p>
-        On Your Side AAI is built around that reality. Its job is to reduce cognitive load, translate complexity, sequence decisions, preserve context, and help the visitor move from “I am overwhelmed” to “I know what to do next.”
-      </p>
-    </section>
-
-    <section class="grid four" aria-label="Science of AAI">
-      <article class="card compact">
-        <span>Science</span>
-        <h3>Cognitive load</h3>
-        <p>AAI reduces the amount a person has to hold in their head at once.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Science</span>
-        <h3>Decision fatigue</h3>
-        <p>AAI helps separate urgent, important, optional, missing, and already solved.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Science</span>
-        <h3>Sequencing</h3>
-        <p>AAI turns chaos into order: first, next, later, verify, then act.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Science</span>
-        <h3>Translation</h3>
-        <p>AAI converts system language into plain-language understanding.</p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="messy-middle-title">
-      <p class="kicker">The messy middle</p>
-      <h2 id="messy-middle-title">AAI owns the space between confusion and prepared action.</h2>
-      <p>
-        Institutions give forms. Professionals give appointments. Search engines give links. Apps give dashboards. But people still get stuck in the middle: before the call, before the meeting, before the decision, before the apology, before the deadline, before the next step.
-      </p>
-      <p>
-        That is the product gap. On Your Side AAI supports the visitor inside that middle space. It helps them understand what they are facing, prepare better questions, organize evidence, and decide what needs human or professional verification.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="What AAI brings">
-      <article class="card">
-        <span>What it brings</span>
-        <h3>Readable next steps</h3>
-        <p>
-          AAI helps visitors turn messy situations into practical next steps: what to read, what to ask, what to gather, what to avoid, and what still needs confirmation.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Gap it closes</span>
-        <h3>Access without usability</h3>
-        <p>
-          Access to information does not guarantee usable understanding. AAI closes the gap by helping translate information into action.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Why it is unique</span>
-        <h3>Support with boundaries</h3>
-        <p>
-          AAI is designed to help without pretending to be the final authority. It prepares, organizes, clarifies, and marks what still needs verification.
-        </p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="flow-title">
-      <p class="kicker">Support flow</p>
-      <h2 id="flow-title">From pressure to prepared action.</h2>
-
-      <div class="flow-list" aria-label="AAI support flow">
-        <div class="flow-row">
-          <strong>1 · Bring it</strong>
-          <span>The visitor brings the situation: a document, message, form, decision, conversation, deadline, conflict, or problem.</span>
+    <section class="doll-shell" aria-label="On Your Side AAI compressed Russian doll content">
+      <div class="doll-head">
+        <div>
+          <h2 class="doll-title">Open only the layer you need.</h2>
+          <p class="doll-note">
+            On Your Side AAI is compressed into nested layers: terminology, science, support flow, product family,
+            interactive creative potential, future platform, human boundaries, market gap, binding, routes, and receipt.
+          </p>
         </div>
 
-        <div class="flow-row">
-          <strong>2 · Translate</strong>
-          <span>AAI converts the material into plain language: what is happening, what matters, what is unclear, and what is risky.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>3 · Sort</strong>
-          <span>AAI separates facts, assumptions, choices, missing information, deadlines, people involved, and possible next moves.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>4 · Prepare</strong>
-          <span>The visitor receives usable output: questions, scripts, checklists, summaries, plans, timelines, comparisons, or decision frames.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>5 · Verify</strong>
-          <span>AAI marks what still needs a professional, official source, document, policy, person, or institution.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>6 · Act</strong>
-          <span>The visitor leaves with a cleaner next step instead of a larger pile of confusion.</span>
-        </div>
+        <div class="doll-badge">Russian doll mode</div>
       </div>
-    </section>
 
-    <section class="section panel" aria-labelledby="family-title">
-      <p class="kicker">Product family</p>
-      <h2 id="family-title">On Your Side AAI is a platform, not a single-use assistant.</h2>
-      <p>
-        The product potential is not one chat window. It is a family of bounded support products for different life domains. Each product keeps the same promise: clarify the situation, reduce overload, prepare the person, and preserve the line between support and final authority.
-      </p>
-    </section>
+      <div class="doll-stack">
+        <details open>
+          <summary>
+            <span class="layer-number">1</span>
+            <span>
+              <span class="layer-title">AAI stays AAI</span>
+              <span class="layer-line">Applied assistant intelligence, organized around the person and the pressure.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-    <section class="grid" aria-label="AAI product family">
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Personal AAI</h3>
-        <p>
-          Helps individuals organize daily decisions, messages, appointments, documents, goals, routines, and follow-through.
-        </p>
-        <ul>
-          <li>Daily planning</li>
-          <li>Message preparation</li>
-          <li>Decision framing</li>
-          <li>Task sequencing</li>
-        </ul>
-      </article>
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card clarify">
+                <span>Terminology</span>
+                <h3>Not generic AI language</h3>
+                <p>AAI means applied assistant intelligence: intelligence organized around the person, the situation, the pressure, the missing information, and the next usable move.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Family AAI</h3>
-        <p>
-          Helps households coordinate schedules, responsibilities, conversations, elder needs, school items, shared documents, and family decisions.
-        </p>
-        <ul>
-          <li>Household coordination</li>
-          <li>Family conversation prep</li>
-          <li>Care planning</li>
-          <li>Shared responsibility maps</li>
-        </ul>
-      </article>
+              <article class="card prepare">
+                <span>Position</span>
+                <h3>Practical over futuristic</h3>
+                <p>The product is not trying to sound futuristic for its own sake. It is trying to make life more navigable.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Work AAI</h3>
-        <p>
-          Helps workers and teams prepare meetings, organize notes, clarify roles, turn discussion into action, and reduce execution confusion.
-        </p>
-        <ul>
-          <li>Meeting prep</li>
-          <li>Project notes</li>
-          <li>Role clarity</li>
-          <li>Follow-up structure</li>
-        </ul>
-      </article>
+              <article class="card verify">
+                <span>Trust</span>
+                <h3>Support with boundaries</h3>
+                <p>AAI prepares, organizes, clarifies, compares, summarizes, questions, rehearses, and marks what still needs verification.</p>
+              </article>
+            </div>
+          </div>
+        </details>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Education AAI</h3>
-        <p>
-          Helps learners understand assignments, organize study paths, practice explanations, prepare questions, and build confidence.
-        </p>
-        <ul>
-          <li>Study support</li>
-          <li>Reading translation</li>
-          <li>Practice prompts</li>
-          <li>Learning plans</li>
-        </ul>
-      </article>
+        <details>
+          <summary>
+            <span class="layer-number">2</span>
+            <span>
+              <span class="layer-title">The science of support</span>
+              <span class="layer-line">People do not fail only because they lack information.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Health-Prep AAI</h3>
-        <p>
-          Helps visitors prepare for appointments, organize symptoms, write questions, summarize history, and track what needs professional review.
-        </p>
-        <ul>
-          <li>Appointment prep</li>
-          <li>Question lists</li>
-          <li>History organization</li>
-          <li>Professional verification markers</li>
-        </ul>
-      </article>
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card clarify">
+                <span>Science</span>
+                <h3>Cognitive load</h3>
+                <p>AAI reduces the amount a person has to hold in their head at once.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Legal-Prep AAI</h3>
-        <p>
-          Helps visitors organize documents, timelines, questions, facts, and next steps before speaking with qualified legal professionals.
-        </p>
-        <ul>
-          <li>Document summaries</li>
-          <li>Timeline building</li>
-          <li>Question prep</li>
-          <li>Uncertainty markers</li>
-        </ul>
-      </article>
+              <article class="card prepare">
+                <span>Science</span>
+                <h3>Decision fatigue</h3>
+                <p>AAI helps separate urgent, important, optional, missing, and already solved.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Finance-Prep AAI</h3>
-        <p>
-          Helps visitors organize bills, budgets, financial questions, account notes, deadlines, and documents before making decisions.
-        </p>
-        <ul>
-          <li>Budget organization</li>
-          <li>Question prep</li>
-          <li>Document review support</li>
-          <li>Decision framing</li>
-        </ul>
-      </article>
+              <article class="card verify">
+                <span>Science</span>
+                <h3>Sequencing</h3>
+                <p>AAI turns chaos into order: first, next, later, verify, then act.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Small Business AAI</h3>
-        <p>
-          Helps founders and operators organize offers, customers, sales scripts, workflows, follow-ups, documentation, and execution plans.
-        </p>
-        <ul>
-          <li>Offer clarity</li>
-          <li>Sales prep</li>
-          <li>Workflow maps</li>
-          <li>Execution checklists</li>
-        </ul>
-      </article>
+              <article class="card support">
+                <span>Science</span>
+                <h3>Translation</h3>
+                <p>AAI converts system language into plain-language understanding.</p>
+              </article>
 
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Crisis/Recovery AAI</h3>
-        <p>
-          Helps people slow down, sort facts from panic, identify immediate needs, prepare outreach, and stabilize the next few steps.
-        </p>
-        <ul>
-          <li>Immediate triage</li>
-          <li>Support-contact prep</li>
-          <li>Resource organization</li>
-          <li>Next-step stabilization</li>
-        </ul>
-      </article>
-    </section>
+              <article class="card creative">
+                <span>Science</span>
+                <h3>Preparation</h3>
+                <p>AAI prepares the visitor for the call, meeting, form, deadline, conversation, scene, rehearsal, or decision.</p>
+              </article>
 
-    <section class="section panel" aria-labelledby="future-title">
-      <p class="kicker">Future potential</p>
-      <h2 id="future-title">The future is not a smarter answer. It is a better support layer.</h2>
-      <p>
-        The future of AAI is persistent, bounded, user-side support. A person should be able to bring a problem into the system and receive help organizing the situation across documents, conversations, dates, responsibilities, people, risks, and next steps.
-      </p>
-      <p>
-        The product can grow into personal operating support, document understanding, appointment preparation, household coordination, small-business assistance, education support, elder-support preparation, and recovery planning. The center stays the same: help people move from pressure to prepared action.
-      </p>
-    </section>
+              <article class="card verify">
+                <span>Science</span>
+                <h3>Verification</h3>
+                <p>AAI marks what needs a professional, institution, official source, document, policy, or person.</p>
+              </article>
+            </div>
+          </div>
+        </details>
 
-    <section class="grid four" aria-label="Future use cases">
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Life dashboard</h3>
-        <p>Organize open loops, deadlines, documents, and next actions.</p>
-      </article>
+        <details>
+          <summary>
+            <span class="layer-number">3</span>
+            <span>
+              <span class="layer-title">Support flow</span>
+              <span class="layer-line">From pressure to prepared action.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Prep room</h3>
-        <p>Prepare before calls, appointments, meetings, and difficult conversations.</p>
-      </article>
+          <div class="layer-body">
+            <div class="grid six">
+              <article class="card support">
+                <span>1</span>
+                <h3>Bring it</h3>
+                <p>Bring the document, message, form, decision, conversation, deadline, conflict, scene, or problem.</p>
+              </article>
 
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Document layer</h3>
-        <p>Translate forms, letters, notices, policies, and instructions.</p>
-      </article>
+              <article class="card clarify">
+                <span>2</span>
+                <h3>Translate</h3>
+                <p>Convert the material into plain language: what is happening, what matters, and what is unclear.</p>
+              </article>
 
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Human handoff</h3>
-        <p>Mark what needs a professional, institution, source, or official answer.</p>
-      </article>
-    </section>
+              <article class="card prepare">
+                <span>3</span>
+                <h3>Sort</h3>
+                <p>Separate facts, assumptions, deadlines, people, missing information, risks, and next moves.</p>
+              </article>
 
-    <section class="section panel" aria-labelledby="boundaries-title">
-      <p class="kicker">Human boundaries</p>
-      <h2 id="boundaries-title">The boundary is part of the product.</h2>
-      <p>
-        On Your Side AAI must remain useful without becoming reckless. It should not pretend to be a doctor, lawyer, therapist, financial adviser, court, employer, parent, or final authority. It is a preparation and support layer.
-      </p>
-      <p>
-        The boundary is what makes the product trustworthy: prepare, organize, clarify, compare, summarize, question, rehearse, and verify. Do not impersonate, overclaim, diagnose, guarantee, or replace qualified human judgment.
-      </p>
-    </section>
+              <article class="card prepare">
+                <span>4</span>
+                <h3>Prepare</h3>
+                <p>Create questions, scripts, checklists, summaries, timelines, comparisons, or decision frames.</p>
+              </article>
 
-    <section class="grid" aria-label="AAI boundaries">
-      <article class="card">
-        <span>Boundary 1</span>
-        <h3>Prepare, do not impersonate</h3>
-        <p>
-          AAI can help draft, rehearse, and organize. It should not pretend to be the visitor or act as an unauthorized representative.
-        </p>
-      </article>
+              <article class="card verify">
+                <span>5</span>
+                <h3>Verify</h3>
+                <p>Mark what needs a professional, official source, policy, person, or institution.</p>
+              </article>
 
-      <article class="card">
-        <span>Boundary 2</span>
-        <h3>Clarify, do not overclaim</h3>
-        <p>
-          AAI can explain possibilities and next steps. It should mark uncertainty and avoid presenting a guess as verified truth.
-        </p>
-      </article>
+              <article class="card creative">
+                <span>6</span>
+                <h3>Act</h3>
+                <p>Leave with a cleaner next step instead of a larger pile of confusion.</p>
+              </article>
+            </div>
+          </div>
+        </details>
 
-      <article class="card">
-        <span>Boundary 3</span>
-        <h3>Support, do not replace</h3>
-        <p>
-          AAI can help the visitor prepare for experts and institutions. It does not replace qualified professional judgment.
-        </p>
-      </article>
-    </section>
+        <details>
+          <summary>
+            <span class="layer-number">4</span>
+            <span>
+              <span class="layer-title">Product family</span>
+              <span class="layer-line">AAI is a platform, not a single-use assistant.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-    <section class="section panel" aria-labelledby="market-gap-title">
-      <p class="kicker">Market gap</p>
-      <h2 id="market-gap-title">The market is full of tools. People still need someone on their side.</h2>
-      <p>
-        The largest gap is not access to intelligence. The gap is applied support. People have more links, apps, dashboards, bots, portals, PDFs, policies, and forms than ever. They still need help making those things usable.
-      </p>
-      <p>
-        On Your Side AAI becomes valuable when it helps a person do something they were avoiding because the situation felt too confusing, too emotional, too technical, or too fragmented.
-      </p>
-    </section>
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card support">
+                <span>Product line</span>
+                <h3>Personal AAI</h3>
+                <p>Daily planning, message preparation, decision framing, task sequencing, appointments, documents, goals, routines, and follow-through.</p>
+              </article>
 
-    <section class="grid" aria-label="AAI market gaps">
-      <article class="card">
-        <span>Gap 1</span>
-        <h3>Tools without guidance</h3>
-        <p>
-          Many tools wait for perfect prompts. On Your Side AAI is framed around the visitor’s situation and helps shape the request with them.
-        </p>
-      </article>
+              <article class="card support">
+                <span>Product line</span>
+                <h3>Family AAI</h3>
+                <p>Household coordination, family conversation prep, elder needs, school items, shared documents, and responsibility maps.</p>
+              </article>
 
-      <article class="card">
-        <span>Gap 2</span>
-        <h3>Answers without preparation</h3>
-        <p>
-          A quick answer is not always enough. AAI helps prepare the visitor for the call, meeting, form, decision, or conversation that comes after.
-        </p>
-      </article>
+              <article class="card prepare">
+                <span>Product line</span>
+                <h3>Work AAI</h3>
+                <p>Meeting prep, project notes, role clarity, follow-up structure, sales prep, workflows, and execution checklists.</p>
+              </article>
 
-      <article class="card">
-        <span>Gap 3</span>
-        <h3>Automation without trust</h3>
-        <p>
-          Visitors need to know where support stops. AAI stays useful by staying bounded, readable, and honest about verification.
-        </p>
-      </article>
-    </section>
+              <article class="card clarify">
+                <span>Product line</span>
+                <h3>Education AAI</h3>
+                <p>Study support, reading translation, practice prompts, learning plans, assignment support, and confidence building.</p>
+              </article>
 
-    <section class="section panel" aria-labelledby="potential-title">
-      <p class="kicker">Product potential</p>
-      <h2 id="potential-title">AAI can become the support infrastructure between people and complex systems.</h2>
-      <p>
-        The long-term product opportunity is not only one assistant. It is a support layer that can sit between people and the systems they struggle to navigate: healthcare, education, work, legal prep, finance prep, family logistics, public services, small business, recovery, and personal growth.
-      </p>
-      <p>
-        The value is not replacing those systems. The value is helping people approach them prepared.
-      </p>
-    </section>
+              <article class="card verify">
+                <span>Product line</span>
+                <h3>Health-Prep AAI</h3>
+                <p>Appointment prep, question lists, symptom organization, history summaries, and professional verification markers.</p>
+              </article>
 
-    <section class="grid" aria-label="On Your Side AAI status">
-      <article class="card">
-        <span>Canonical Route</span>
-        <h3>/products/on-your-side-ai/</h3>
-        <p>One route under Products. AAI support remains a product chamber, not a separate system root.</p>
-      </article>
+              <article class="card verify">
+                <span>Product line</span>
+                <h3>Legal-Prep AAI</h3>
+                <p>Document summaries, timeline building, fact sorting, question prep, uncertainty markers, and professional handoff preparation.</p>
+              </article>
 
-      <article class="card">
-        <span>Product Class</span>
-        <h3>product_chamber</h3>
-        <p>On Your Side AAI is a product chamber, not a planetary construct and not a house part.</p>
-      </article>
+              <article class="card prepare">
+                <span>Product line</span>
+                <h3>Finance-Prep AAI</h3>
+                <p>Bills, budgets, account notes, deadlines, financial questions, document review support, and decision framing.</p>
+              </article>
 
-      <article class="card">
-        <span>Public Frame</span>
-        <h3>Practical applied intelligence</h3>
-        <p>Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.</p>
-      </article>
-    </section>
+              <article class="card prepare">
+                <span>Product line</span>
+                <h3>Small Business AAI</h3>
+                <p>Offer clarity, customer notes, sales scripts, workflow maps, follow-ups, documentation, and execution plans.</p>
+              </article>
 
-    <section class="section panel" aria-labelledby="parent-binding-title">
-      <p class="kicker">Parent binding</p>
-      <h2 id="parent-binding-title">On Your Side AAI stays attached to the Product Wing.</h2>
-      <p>
-        This chamber preserves the On Your Side AAI identity while remaining one canonical product destination under Products.
-      </p>
-    </section>
+              <article class="card support">
+                <span>Product line</span>
+                <h3>Crisis / Recovery AAI</h3>
+                <p>Immediate triage, support-contact prep, resource organization, facts-versus-panic sorting, and next-step stabilization.</p>
+              </article>
+            </div>
+          </div>
+        </details>
 
-    <section class="section panel" aria-labelledby="product-links-title">
-      <p class="kicker">Product backlinks</p>
-      <h2 id="product-links-title">Move through the product wing.</h2>
+        <details>
+          <summary>
+            <span class="layer-number">5</span>
+            <span>
+              <span class="layer-title">Interactive creative potential</span>
+              <span class="layer-line">AAI can become a scene engine, comic book engine, and personal story layer.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
 
-      <div class="route-grid" aria-label="On Your Side AAI backlinks">
-        <a class="route-card" href="/products/">
-          <span>Parent</span>
-          <strong>Products</strong>
-        </a>
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Interactive comic books</h3>
+                <p>AAI can turn a reader into a participant: branching panels, choices, dialogue, consequences, character memory, and replayable story paths.</p>
+              </article>
 
-        <a class="route-card" href="/showroom/">
-          <span>Proof</span>
-          <strong>Showroom</strong>
-        </a>
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Put yourself in the scene</h3>
+                <p>The visitor can appear inside a story, adventure, training simulation, comic episode, confidence rehearsal, or learning scene.</p>
+              </article>
 
-        <a class="route-card" href="/">
-          <span>Control</span>
-          <strong>Compass</strong>
-        </a>
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Favorite-world energy</h3>
+                <p>With licensed, permissioned, public-domain, original, or parody-safe material, AAI can create scenes inspired by the feel of beloved TV, movie, comic, game, or fictional worlds.</p>
+              </article>
 
-        <a class="route-card" href="/home/">
-          <span>House</span>
-          <strong>Home</strong>
-        </a>
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Character interaction</h3>
+                <p>AAI can build conversations with original fictional characters, approved characters, public-domain characters, or user-created archetypes that respond to the visitor’s choices.</p>
+              </article>
 
-        <a class="route-card" href="/gauges/">
-          <span>Verification</span>
-          <strong>Gauges</strong>
-        </a>
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Learning through story</h3>
+                <p>Education, nutrition, conflict resolution, sales practice, confidence, and decision-making can be taught through scenes instead of flat lessons.</p>
+              </article>
+
+              <article class="card creative">
+                <span>Creative future</span>
+                <h3>Scene-to-system bridge</h3>
+                <p>A scene can produce scripts, checklists, summaries, reflection prompts, next steps, or a usable plan after the story ends.</p>
+              </article>
+            </div>
+
+            <div class="notice">
+              Creative scene support should use original, licensed, permissioned, public-domain, or parody-safe material.
+              The product should not claim official affiliation with protected franchises unless permission exists.
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">6</span>
+            <span>
+              <span class="layer-title">Future platform</span>
+              <span class="layer-line">The future is persistent, bounded, user-side support.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card support">
+                <span>Future</span>
+                <h3>Life dashboard</h3>
+                <p>Organize open loops, deadlines, documents, people, and next actions.</p>
+              </article>
+
+              <article class="card prepare">
+                <span>Future</span>
+                <h3>Prep room</h3>
+                <p>Prepare before calls, appointments, meetings, interviews, and difficult conversations.</p>
+              </article>
+
+              <article class="card clarify">
+                <span>Future</span>
+                <h3>Document layer</h3>
+                <p>Translate forms, letters, notices, policies, instructions, and confusing system language.</p>
+              </article>
+
+              <article class="card creative">
+                <span>Future</span>
+                <h3>Creative scene room</h3>
+                <p>Build interactive comic books, personal episodes, branching scenes, practice rooms, and fictional learning worlds.</p>
+              </article>
+
+              <article class="card verify">
+                <span>Future</span>
+                <h3>Human handoff</h3>
+                <p>Mark what needs a professional, institution, source, or official answer.</p>
+              </article>
+
+              <article class="card support">
+                <span>Future</span>
+                <h3>Support memory</h3>
+                <p>Preserve useful context so the visitor does not have to restart from zero every time.</p>
+              </article>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">7</span>
+            <span>
+              <span class="layer-title">Human boundaries</span>
+              <span class="layer-line">The boundary is part of the product.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card verify">
+                <span>Boundary 1</span>
+                <h3>Prepare, do not impersonate</h3>
+                <p>AAI can help draft, rehearse, and organize. It should not pretend to be the visitor or act as an unauthorized representative.</p>
+              </article>
+
+              <article class="card verify">
+                <span>Boundary 2</span>
+                <h3>Clarify, do not overclaim</h3>
+                <p>AAI can explain possibilities and next steps. It should mark uncertainty and avoid presenting guesses as verified truth.</p>
+              </article>
+
+              <article class="card verify">
+                <span>Boundary 3</span>
+                <h3>Support, do not replace</h3>
+                <p>AAI can prepare visitors for experts and institutions. It does not replace qualified professional judgment.</p>
+              </article>
+            </div>
+
+            <div class="notice">
+              On Your Side AAI should not pretend to be a doctor, lawyer, therapist, financial adviser, court, employer,
+              parent, or final authority. It is a preparation and support layer.
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">8</span>
+            <span>
+              <span class="layer-title">Market gap</span>
+              <span class="layer-line">The market is full of tools. People still need someone on their side.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card support">
+                <span>Gap 1</span>
+                <h3>Tools without guidance</h3>
+                <p>Many tools wait for perfect prompts. On Your Side AAI is framed around the visitor’s situation and helps shape the request with them.</p>
+              </article>
+
+              <article class="card prepare">
+                <span>Gap 2</span>
+                <h3>Answers without preparation</h3>
+                <p>A quick answer is not always enough. AAI prepares the visitor for the call, meeting, form, decision, or conversation that comes after.</p>
+              </article>
+
+              <article class="card verify">
+                <span>Gap 3</span>
+                <h3>Automation without trust</h3>
+                <p>Visitors need to know where support stops. AAI stays useful by staying bounded, readable, and honest about verification.</p>
+              </article>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">9</span>
+            <span>
+              <span class="layer-title">Product binding</span>
+              <span class="layer-line">On Your Side AAI remains one product chamber under Products.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="grid">
+              <article class="card">
+                <span>Canonical Route</span>
+                <h3>/products/on-your-side-ai/</h3>
+                <p>One route under Products. AAI support remains a product chamber, not a separate system root.</p>
+              </article>
+
+              <article class="card">
+                <span>Product Class</span>
+                <h3>product_chamber</h3>
+                <p>On Your Side AAI is a product chamber, not a planetary construct and not a house part.</p>
+              </article>
+
+              <article class="card">
+                <span>Public Frame</span>
+                <h3>Practical applied intelligence</h3>
+                <p>Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.</p>
+              </article>
+
+              <article class="card">
+                <span>Creative Extension</span>
+                <h3>Interactive scenes</h3>
+                <p>Interactive comics, fictional training rooms, and scene insertion are future product extensions inside the AAI platform.</p>
+              </article>
+
+              <article class="card">
+                <span>Parent</span>
+                <h3>Products</h3>
+                <p>This chamber preserves the On Your Side AAI identity while remaining one canonical product destination under Products.</p>
+              </article>
+
+              <article class="card">
+                <span>Verification</span>
+                <h3>Gauges</h3>
+                <p>Route, runtime, parser, and diagnostic receipts remain available from Gauges.</p>
+              </article>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">10</span>
+            <span>
+              <span class="layer-title">Move through the product wing</span>
+              <span class="layer-line">Parent, learning, nutrition, proof, control, house, and verification routes.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="route-grid" aria-label="On Your Side AAI backlinks">
+              <a class="route-card" href="/products/">
+                <span>Parent</span>
+                <strong>Products</strong>
+              </a>
+
+              <a class="route-card" href="/products/education/">
+                <span>Learning</span>
+                <strong>Education</strong>
+              </a>
+
+              <a class="route-card" href="/products/nutrition/">
+                <span>Support</span>
+                <strong>Nutrition</strong>
+              </a>
+
+              <a class="route-card" href="/showroom/">
+                <span>Proof</span>
+                <strong>Showroom</strong>
+              </a>
+
+              <a class="route-card" href="/gauges/">
+                <span>Verification</span>
+                <strong>Gauges</strong>
+              </a>
+
+              <a class="route-card" href="/">
+                <span>Control</span>
+                <strong>Compass</strong>
+              </a>
+
+              <a class="route-card" href="/home/">
+                <span>House</span>
+                <strong>Home</strong>
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="layer-number">R</span>
+            <span>
+              <span class="layer-title">Route receipt</span>
+              <span class="layer-line">Compressed contract and audit status.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <section class="receipt" aria-hidden="true">
+              ON_YOUR_SIDE_AAI_RUSSIAN_DOLL_CREATIVE_SCENE_TNT_v1
+              route=/products/on-your-side-ai/
+              page=on-your-side-aai
+              product-chamber=PC3_ON_YOUR_SIDE_AAI
+              parent-products=true
+              canonical-destination=true
+              terminology-lock=AAI
+              AAI-stays-AAI=true
+              public-frame=practical-applied-intelligence
+              support-surface=understand-prepare-organize-decide-create-verify
+              support-flow=bring-translate-sort-prepare-verify-act
+              science=cognitive-load-decision-fatigue-sequencing-translation-preparation-verification
+              messy-middle=confusion-to-prepared-action
+              product-family=personal-family-work-education-health-prep-legal-prep-finance-prep-small-business-crisis-recovery
+              creative-potential=interactive-comic-books-personal-scenes-character-interaction-fictional-training-rooms
+              scene-insertion=permissioned-original-public-domain-or-parody-safe
+              favorite-tv-movie-scene-energy=allowed-when-licensed-permissioned-original-public-domain-or-parody-safe
+              future=life-dashboard-prep-room-document-layer-creative-scene-room-human-handoff-support-memory
+              boundaries=prepare-not-impersonate
+              boundaries=clarify-not-overclaim
+              boundaries=support-not-replace
+              closes-gap=tools-without-guidance
+              closes-gap=answers-without-preparation
+              closes-gap=automation-without-trust
+              product-potential=human-life-infrastructure-support-layer
+              not-generic-ai-language=true
+              not-separate-system-root=true
+              not-planetary-construct=true
+              not-house-part=true
+              Products=/products/
+              Education=/products/education/
+              Nutrition=/products/nutrition/
+              Showroom=/showroom/
+              Compass=/
+              Home=/home/
+              Gauges=/gauges/
+            </section>
+          </div>
+        </details>
       </div>
-    </section>
-
-    <section class="receipt" aria-hidden="true">
-      On Your Side AAI receipt
-      route-exists
-      manor-skin
-      product-chamber
-      PC3_ON_YOUR_SIDE_AAI
-      parent-products
-      canonical-destination
-      estate=rich-manor-and-estate
-      house-field=true
-      gauges-truth=live-authority
-      construct-class=product
-      product-wing=true
-      parent-route=/products/
-      canonical-route=/products/on-your-side-ai/
-      terminology-lock=AAI
-      AAI-stays-AAI=true
-      public-frame=practical-applied-intelligence
-      support-surface=understand-prepare-organize-decide
-      support-flow=bring-translate-sort-prepare-verify-act
-      science=cognitive-load-decision-fatigue-sequencing-translation
-      messy-middle=confusion-to-prepared-action
-      product-family=personal-family-work-education-health-prep-legal-prep-finance-prep-small-business-crisis-recovery
-      future=life-dashboard-prep-room-document-layer-human-handoff
-      boundaries=prepare-not-impersonate
-      boundaries=clarify-not-overclaim
-      boundaries=support-not-replace
-      closes-gap=tools-without-guidance
-      closes-gap=answers-without-preparation
-      closes-gap=automation-without-trust
-      product-potential=human-life-infrastructure-support-layer
-      not-generic-ai-language=true
-      not-separate-system-root=true
-      not-planetary-construct=true
-      not-house-part=true
-      Products=/products/
-      Showroom=/showroom/
-      Compass=/
-      Home=/home/
-      Gauges=/gauges/
-      ON_YOUR_SIDE_AAI_FRONTIER_PRODUCT_EXPANSION_TNT_v2
     </section>
   </main>
 </body>

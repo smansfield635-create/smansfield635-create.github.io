@@ -1,63 +1,65 @@
 {
-  "asset_id": "sun-asset-spine-b7-stellar-plasma",
-  "asset_name": "Diamond Gate Bridge Sun Asset Spine",
-  "generation": "Generation 2",
-  "status": "active",
-  "contract": "dimensional-stellar-body-plasma-radiance",
-  "visual_target": {
-    "profile": "stellar-plasma-sun",
-    "description": "The Sun is rendered as a dimensional stellar body with plasma surface behavior, controlled radiance, soft corona, and no orange-planet read.",
-    "required": [
-      "dimensional solar body",
-      "plasma surface",
-      "granulation",
-      "limb radiance",
-      "controlled corona",
-      "mobile-safe animation",
-      "bounded frame budget",
-      "no external image dependency",
-      "no graphic generation dependency"
-    ],
-    "forbidden": [
-      "orange planet look",
-      "flat CSS circle",
-      "hard circular outline",
-      "fake ring",
-      "cartoon flames",
-      "decorative rays",
-      "unbounded glow blur",
-      "Earth renderer inheritance",
-      "external Sun runtime ownership on Earth pages"
-    ]
+  "contract": "SUN_TERMS_RENEWAL_TNT_v1",
+  "assetClass": "DEMO_UNIVERSE_SUN_ASSET",
+  "lockStatus": "NOT_LOCKED",
+  "visualPassClaimed": false,
+  "sequence": {
+    "previous": "Earth G1",
+    "current": "Sun",
+    "next": "Moon",
+    "earthG1Complete": true,
+    "moonQueued": true,
+    "planetOneReservedFor": "future Nine Summits Universe"
   },
-  "paths": {
-    "canvas_js": "/assets/sun/sun_canvas.js",
-    "material_css": "/assets/sun/sun_material.css",
-    "runtime_js": "/runtime/sun_asset_runtime.js"
+  "purpose": "Renew the Sun asset terms after Earth G1 completion and before Moon renewal.",
+  "sunStandard": {
+    "identity": "stellar body",
+    "surface": "plasma",
+    "corona": "controlled corona",
+    "motion": "mobile-safe slow plasma motion",
+    "renderer": "self-contained canvas renderer",
+    "relationshipToEarth": "does not inherit Earth renderer logic",
+    "relationshipToMoon": "Moon remains queued until Sun is renewed and inspected"
   },
-  "renderer": {
-    "type": "single-canvas-stellar-plasma-renderer",
-    "default_profile": "stellar-plasma-b7",
-    "frame_budget": {
-      "target_frame_ms": 72,
-      "min_frame_rate": 6,
-      "max_frame_rate": 14,
-      "mobile_dpr_cap": 1.25,
-      "desktop_dpr_cap": 1.6
-    },
-    "controls": {
-      "pause_resume": true,
-      "intensity": true,
-      "reset": true
-    }
+  "allowed": [
+    "local self-contained canvas rendering",
+    "plasma surface behavior",
+    "controlled corona",
+    "radiance contained inside the Sun stage",
+    "mobile-safe frame throttling",
+    "pause and resume",
+    "source-only Gauges inspection"
+  ],
+  "forbidden": [
+    "GraphicBox",
+    "image generation",
+    "generated image dependency",
+    "external image dependency",
+    "Earth renderer inheritance",
+    "Moon build before Sun inspection",
+    "Planet 1 build during Sun renewal",
+    "runtime mutation",
+    "visual pass claim before inspection",
+    "lock-in before satisfaction"
+  ],
+  "publicContracts": {
+    "sunGlobal": "DGBSunAssetCanvas",
+    "demoSunGlobal": "DGBDemoUniverseSunCanvas",
+    "statusMethod": "getStatus",
+    "mountMethod": "mount",
+    "renderMethod": "render"
   },
-  "diagnostics": {
-    "canvas_global": "window.DGBSunCanvas",
-    "runtime_global": "window.DGBSunAsset",
-    "mount_selector": "[data-dgb-sun-mount]",
-    "canvas_selector": "[data-dgb-sun-canvas]",
-    "status_attribute": "data-sun-runtime-status",
-    "version_attribute": "data-sun-asset-id"
+  "files": {
+    "manifest": "/assets/sun/sun_manifest.json",
+    "canvas": "/assets/sun/sun_canvas.js",
+    "material": "/assets/sun/sun_material.css"
   },
-  "cache_version": "sun-asset-spine-b7"
+  "receipt": {
+    "sourceFetchOnly": true,
+    "executesTargetFiles": false,
+    "rendersIframe": false,
+    "deletesFiles": false,
+    "mutatesRuntime": false,
+    "startsExtraAnimationLoopsFromGauges": false
+  }
 }

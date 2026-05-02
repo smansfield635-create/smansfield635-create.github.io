@@ -4,8 +4,8 @@
   data-page-id="frontier"
   data-page="frontier"
   data-route="/frontier/"
-  data-contract="FRONTIER_ROOT_ROUTE_SUBLINKS_REPLACEMENT_TNT_v1"
-  data-generation="planetary-attachment-marker-v5"
+  data-contract="FRONTIER_ROOT_ROUTE_EXPLORE_SUBLINKS_REPLACEMENT_TNT_v2"
+  data-generation="planetary-attachment-marker-v6"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -17,6 +17,7 @@
   data-frontier-slot="P3_FRONTIER"
   data-frontier-role="expansion-edge"
   data-frontier-relationship="semantic-child-of-explore"
+  data-frontier-subroute-base="/explore/frontier/"
   data-frontier-subroutes="closed-loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision-remote,vision,waste,water"
   data-heavy-runtime-loaded="false"
   data-planet-render-touched="false"
@@ -30,7 +31,7 @@
   <title>Explore / Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier is the downstream expansion edge of Explore. It exposes the frontier subroutes: closed loop, energy, infrastructure, lattice, manual, shimmer, trajectory, urban, vision remote, vision, waste, and water."
+    content="Frontier is the downstream expansion edge of Explore. The root route is /frontier/, while Frontier lane pages live under /explore/frontier/."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
@@ -69,8 +70,14 @@
       isolation: isolate;
     }
 
-    .frontier-stage { padding: clamp(30px, 7vw, 76px); }
-    .frontier-panel { padding: clamp(22px, 4vw, 34px); margin-top: 18px; }
+    .frontier-stage {
+      padding: clamp(30px, 7vw, 76px);
+    }
+
+    .frontier-panel {
+      padding: clamp(22px, 4vw, 34px);
+      margin-top: 18px;
+    }
 
     .frontier-stage::before,
     .frontier-panel::before {
@@ -153,8 +160,13 @@
       background: linear-gradient(90deg, transparent, rgba(215,165,255,0.30), rgba(242,199,111,0.16), transparent);
     }
 
-    .edge-line.two { transform: translate(-50%, -50%) rotate(44deg); }
-    .edge-line.three { transform: translate(-50%, -50%) rotate(-44deg); }
+    .edge-line.two {
+      transform: translate(-50%, -50%) rotate(44deg);
+    }
+
+    .edge-line.three {
+      transform: translate(-50%, -50%) rotate(-44deg);
+    }
 
     .edge-node {
       display: grid;
@@ -241,8 +253,7 @@
     }
 
     .frontier-actions,
-    .frontier-chip-row,
-    .planet-rail {
+    .frontier-chip-row {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -286,20 +297,18 @@
       line-height: 1.58;
     }
 
-    .frontier-grid,
-    .route-grid,
-    .subroute-grid {
+    .subroute-grid,
+    .route-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       margin-top: 24px;
     }
 
-    .frontier-card,
-    .route-card,
-    .subroute-card {
+    .subroute-card,
+    .route-card {
       position: relative;
-      min-height: 214px;
+      min-height: 178px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -316,13 +325,8 @@
       overflow: hidden;
     }
 
-    .subroute-card {
-      min-height: 178px;
-    }
-
-    .frontier-card::after,
-    .route-card::after,
-    .subroute-card::after {
+    .subroute-card::after,
+    .route-card::after {
       content: "";
       position: absolute;
       right: -34px;
@@ -335,9 +339,8 @@
       pointer-events: none;
     }
 
-    .frontier-kicker,
-    .route-kicker,
-    .subroute-kicker {
+    .subroute-kicker,
+    .route-kicker {
       color: var(--gold);
       font-size: 0.74rem;
       font-weight: 950;
@@ -345,9 +348,8 @@
       text-transform: uppercase;
     }
 
-    .frontier-card h3,
-    .route-card h3,
-    .subroute-card h3 {
+    .subroute-card h3,
+    .route-card h3 {
       margin: 0;
       color: var(--text);
       font-size: 1.48rem;
@@ -355,9 +357,8 @@
       letter-spacing: -0.03em;
     }
 
-    .frontier-card p,
-    .route-card p,
-    .subroute-card p {
+    .subroute-card p,
+    .route-card p {
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
@@ -367,25 +368,6 @@
     .route-link {
       color: #ffe7a7;
       font-weight: 950;
-    }
-
-    .planet-rail a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 38px;
-      padding: 0 14px;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 999px;
-      text-decoration: none;
-      color: rgba(245,247,251,0.86);
-      background: rgba(255, 255, 255, 0.045);
-      font-weight: 850;
-    }
-
-    .planet-rail a[aria-current="page"] {
-      color: #111827;
-      background: linear-gradient(180deg, #ffe3a3, #f2c76f);
-      border-color: #f2c76f;
     }
 
     .frontier-receipt {
@@ -408,13 +390,14 @@
 
     @media (max-width: 1040px) {
       .one-liner-strip,
-      .frontier-grid,
-      .route-grid,
-      .subroute-grid {
+      .subroute-grid,
+      .route-grid {
         grid-template-columns: 1fr;
       }
 
-      .frontier-visual { opacity: 0.30; }
+      .frontier-visual {
+        opacity: 0.30;
+      }
     }
 
     @media (max-width: 640px) {
@@ -424,16 +407,22 @@
         padding: 30px 26px;
       }
 
-      .hero-title { font-size: clamp(3.35rem, 15vw, 5.2rem); }
-      .hero-subtitle { font-size: 1.34rem; }
+      .hero-title {
+        font-size: clamp(3.35rem, 15vw, 5.2rem);
+      }
 
-      .frontier-card,
-      .route-card,
-      .subroute-card {
+      .hero-subtitle {
+        font-size: 1.34rem;
+      }
+
+      .subroute-card,
+      .route-card {
         min-height: 0;
       }
 
-      .frontier-visual { opacity: 0.22; }
+      .frontier-visual {
+        opacity: 0.22;
+      }
     }
   </style>
 </head>
@@ -443,7 +432,7 @@
   data-page-id="frontier"
   data-page="frontier"
   data-route="/frontier/"
-  data-generation="planetary-attachment-marker-v5"
+  data-generation="planetary-attachment-marker-v6"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-room="frontier"
@@ -460,7 +449,7 @@
   data-current-route="/frontier/"
   data-frontier-role="expansion-edge"
   data-frontier-relationship="semantic-child-of-explore"
-  data-frontier-subroutes="closed-loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision-remote,vision,waste,water"
+  data-frontier-subroute-base="/explore/frontier/"
 >
   <a class="dgb-skip" href="#frontier-main">Skip to Frontier</a>
 
@@ -529,13 +518,12 @@
       </h1>
 
       <p class="hero-subtitle">
-        Frontier is reached at <strong>/frontier/</strong>, but it belongs under Explore in the visitor’s mental map.
+        Frontier is reached at <strong>/frontier/</strong>. Its lane pages live under <strong>/explore/frontier/</strong>.
       </p>
 
       <p class="hero-copy">
         Discovery moves through Compass, then Explore, then Frontier. Explore shows the routes.
-        Frontier carries edge-of-known research, future-facing systems, expansion pressure, unknown territory,
-        and the full set of frontier lanes now exposed from this page.
+        Frontier carries the expansion lanes and sends each one to the live Explore / Frontier subpath.
       </p>
 
       <div class="one-liner-strip" aria-label="Frontier one-liners">
@@ -546,7 +534,7 @@
 
       <div class="frontier-chip-row" aria-label="Frontier status">
         <span class="frontier-chip lock">/frontier/</span>
-        <span class="frontier-chip lock">Explore / Frontier</span>
+        <span class="frontier-chip lock">Lanes at /explore/frontier/</span>
         <span class="frontier-chip lock">12 subroutes exposed</span>
         <span class="frontier-chip">P3 Frontier</span>
         <span class="frontier-chip">No heavy runtime</span>
@@ -561,96 +549,95 @@
     </section>
 
     <section id="frontier-subroutes" class="frontier-panel" aria-label="Frontier subroutes">
-      <p class="hero-mark">Frontier lanes · Live route links</p>
+      <p class="hero-mark">Frontier lanes · Explore / Frontier links</p>
       <h2 class="section-title">The edge now has doors.</h2>
       <p class="section-copy">
-        These are the physical subfolders under <strong>/frontier/</strong>. Each link points to the matching route.
-        Any subfolder that has its own <strong>index.html</strong> will render as a live page.
+        These links point to the actual lane paths under <strong>/explore/frontier/</strong>.
       </p>
 
       <div class="subroute-grid">
-        <a class="subroute-card" href="/frontier/closed-loop/">
+        <a class="subroute-card" href="/explore/frontier/closed-loop/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Closed Loop</h3>
           <p>Feedback, return logic, proof loops, and completion pathways.</p>
-          <span class="route-link">Open /frontier/closed-loop/</span>
+          <span class="route-link">Open /explore/frontier/closed-loop/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/energy/">
+        <a class="subroute-card" href="/explore/frontier/energy/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Energy</h3>
           <p>Power, motion, charge, force, pressure, and operating capacity.</p>
-          <span class="route-link">Open /frontier/energy/</span>
+          <span class="route-link">Open /explore/frontier/energy/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/infrastructure/">
+        <a class="subroute-card" href="/explore/frontier/infrastructure/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Infrastructure</h3>
           <p>Underlying systems, support layers, rails, utilities, and build foundation.</p>
-          <span class="route-link">Open /frontier/infrastructure/</span>
+          <span class="route-link">Open /explore/frontier/infrastructure/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/lattice/">
+        <a class="subroute-card" href="/explore/frontier/lattice/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Lattice</h3>
           <p>Grid logic, state-space organization, structural mapping, and 256-field thinking.</p>
-          <span class="route-link">Open /frontier/lattice/</span>
+          <span class="route-link">Open /explore/frontier/lattice/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/manual/">
+        <a class="subroute-card" href="/explore/frontier/manual/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Manual</h3>
           <p>Operating instructions, reference logic, field notes, and how-to control surfaces.</p>
-          <span class="route-link">Open /frontier/manual/</span>
+          <span class="route-link">Open /explore/frontier/manual/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/shimmer/">
+        <a class="subroute-card" href="/explore/frontier/shimmer/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Shimmer</h3>
           <p>Signal, atmosphere, surface effect, perception layer, and future visual language.</p>
-          <span class="route-link">Open /frontier/shimmer/</span>
+          <span class="route-link">Open /explore/frontier/shimmer/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/trajectory/">
+        <a class="subroute-card" href="/explore/frontier/trajectory/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Trajectory</h3>
           <p>Direction, movement, path projection, progress mapping, and system motion.</p>
-          <span class="route-link">Open /frontier/trajectory/</span>
+          <span class="route-link">Open /explore/frontier/trajectory/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/urban/">
+        <a class="subroute-card" href="/explore/frontier/urban/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Urban</h3>
           <p>City systems, population layers, civic surfaces, and built-environment logic.</p>
-          <span class="route-link">Open /frontier/urban/</span>
+          <span class="route-link">Open /explore/frontier/urban/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/vision-remote/">
+        <a class="subroute-card" href="/explore/frontier/vision-remote/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Vision Remote</h3>
           <p>Remote viewing, distributed visibility, distance interfaces, and visual relay logic.</p>
-          <span class="route-link">Open /frontier/vision-remote/</span>
+          <span class="route-link">Open /explore/frontier/vision-remote/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/vision/">
+        <a class="subroute-card" href="/explore/frontier/vision/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Vision</h3>
           <p>Visual systems, imagination surface, sightline planning, and future-facing design.</p>
-          <span class="route-link">Open /frontier/vision/</span>
+          <span class="route-link">Open /explore/frontier/vision/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/waste/">
+        <a class="subroute-card" href="/explore/frontier/waste/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Waste</h3>
           <p>Loss, recovery, disposal, inefficiency, circularity, and system-cleanup logic.</p>
-          <span class="route-link">Open /frontier/waste/</span>
+          <span class="route-link">Open /explore/frontier/waste/</span>
         </a>
 
-        <a class="subroute-card" href="/frontier/water/">
+        <a class="subroute-card" href="/explore/frontier/water/">
           <span class="subroute-kicker">Frontier Lane</span>
           <h3>Water</h3>
           <p>Flow, support, survival layer, resource motion, maritime logic, and baseline systems.</p>
-          <span class="route-link">Open /frontier/water/</span>
+          <span class="route-link">Open /explore/frontier/water/</span>
         </a>
       </div>
     </section>
@@ -659,29 +646,9 @@
       <p class="hero-mark">Sequence · Compass → Explore → Frontier</p>
       <h2 class="section-title">Known. Mapped. Unknown.</h2>
       <p class="section-copy">
-        Frontier is the downstream edge of Explore even though the live URL remains <strong>/frontier/</strong>.
-        The route is physical. The relationship is structural.
+        Frontier is the downstream edge of Explore. The root page lives at <strong>/frontier/</strong>,
+        while the lane pages live at <strong>/explore/frontier/[lane]/</strong>.
       </p>
-
-      <div class="frontier-grid">
-        <article class="frontier-card">
-          <span class="frontier-kicker">01 · Compass</span>
-          <h3>Orient the system.</h3>
-          <p>Compass gives the public command surface and tells the visitor where they are.</p>
-        </article>
-
-        <article class="frontier-card">
-          <span class="frontier-kicker">02 · Explore</span>
-          <h3>Show the paths.</h3>
-          <p>Explore separates the routes so the visitor can choose without losing the thread.</p>
-        </article>
-
-        <article class="frontier-card">
-          <span class="frontier-kicker">03 · Frontier</span>
-          <h3>Test what comes next.</h3>
-          <p>Frontier carries the expansion edge, future systems, research pressure, and unknown territory.</p>
-        </article>
-      </div>
     </section>
 
     <section class="dgb-card" aria-label="Frontier routes">
@@ -737,7 +704,7 @@
 
     <section class="dgb-card" aria-label="Route receipt">
       <h2>Route receipt</h2>
-      <pre class="dgb-receipt frontier-receipt">FRONTIER_ROOT_ROUTE_SUBLINKS_REPLACEMENT_TNT_v1
+      <pre class="dgb-receipt frontier-receipt">FRONTIER_ROOT_ROUTE_EXPLORE_SUBLINKS_REPLACEMENT_TNT_v2
 route=/frontier/
 page=frontier
 display_label=Explore / Frontier
@@ -758,20 +725,19 @@ current_route=/frontier/
 frontier_slot=P3_FRONTIER
 frontier_role=expansion-edge
 frontier_relationship=semantic-child-of-explore
-frontier_sequence=Compass -> Explore -> Frontier
-frontier_subroutes=closed-loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision-remote,vision,waste,water
-closed-loop=/frontier/closed-loop/
-energy=/frontier/energy/
-infrastructure=/frontier/infrastructure/
-lattice=/frontier/lattice/
-manual=/frontier/manual/
-shimmer=/frontier/shimmer/
-trajectory=/frontier/trajectory/
-urban=/frontier/urban/
-vision-remote=/frontier/vision-remote/
-vision=/frontier/vision/
-waste=/frontier/waste/
-water=/frontier/water/
+frontier_subroute_base=/explore/frontier/
+closed-loop=/explore/frontier/closed-loop/
+energy=/explore/frontier/energy/
+infrastructure=/explore/frontier/infrastructure/
+lattice=/explore/frontier/lattice/
+manual=/explore/frontier/manual/
+shimmer=/explore/frontier/shimmer/
+trajectory=/explore/frontier/trajectory/
+urban=/explore/frontier/urban/
+vision-remote=/explore/frontier/vision-remote/
+vision=/explore/frontier/vision/
+waste=/explore/frontier/waste/
+water=/explore/frontier/water/
 visual_pass_claimed=false</pre>
     </section>
 
@@ -779,28 +745,28 @@ visual_pass_claimed=false</pre>
       <a href="/">Compass</a>
       <a href="/explore/">Explore</a>
       <a href="/frontier/">Frontier</a>
-      <a href="/frontier/closed-loop/">Closed Loop</a>
-      <a href="/frontier/energy/">Energy</a>
-      <a href="/frontier/infrastructure/">Infrastructure</a>
-      <a href="/frontier/lattice/">Lattice</a>
-      <a href="/frontier/manual/">Manual</a>
-      <a href="/frontier/shimmer/">Shimmer</a>
-      <a href="/frontier/trajectory/">Trajectory</a>
-      <a href="/frontier/urban/">Urban</a>
-      <a href="/frontier/vision-remote/">Vision Remote</a>
-      <a href="/frontier/vision/">Vision</a>
-      <a href="/frontier/waste/">Waste</a>
-      <a href="/frontier/water/">Water</a>
+      <a href="/explore/frontier/closed-loop/">Closed Loop</a>
+      <a href="/explore/frontier/energy/">Energy</a>
+      <a href="/explore/frontier/infrastructure/">Infrastructure</a>
+      <a href="/explore/frontier/lattice/">Lattice</a>
+      <a href="/explore/frontier/manual/">Manual</a>
+      <a href="/explore/frontier/shimmer/">Shimmer</a>
+      <a href="/explore/frontier/trajectory/">Trajectory</a>
+      <a href="/explore/frontier/urban/">Urban</a>
+      <a href="/explore/frontier/vision-remote/">Vision Remote</a>
+      <a href="/explore/frontier/vision/">Vision</a>
+      <a href="/explore/frontier/waste/">Waste</a>
+      <a href="/explore/frontier/water/">Water</a>
       <a href="/laws/">Laws</a>
       <a href="/products/">Products</a>
       <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
-      <span>FRONTIER_ROOT_ROUTE_SUBLINKS_REPLACEMENT_TNT_v1</span>
+      <span>FRONTIER_ROOT_ROUTE_EXPLORE_SUBLINKS_REPLACEMENT_TNT_v2</span>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    FRONTIER_ROOT_ROUTE_SUBLINKS_REPLACEMENT_TNT_v1 · Explore / Frontier · Diamond Gate Bridge.
+    FRONTIER_ROOT_ROUTE_EXPLORE_SUBLINKS_REPLACEMENT_TNT_v2 · Explore / Frontier · Diamond Gate Bridge.
   </footer>
 </body>
 </html>

@@ -1,237 +1,133 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="nine-summits-universe"
+  data-page="nine-summits-universe-earth-sun-moon-g1"
   data-route="/nine-summits/universe/"
-  data-contract="SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1"
-  data-visualization="earth-sun-moon-runtime"
-  data-directional-manor-artifacts="reserved-for-manor-estate"
-  data-galaxy-local-direction-mode="none"
-  data-earth-g1-route="/showroom/globe/"
+  data-contract="UNIVERSE_G1_EARTH_SUN_MOON_4K_RELATIONSHIP_LOCK_TNT_v1"
+  data-generation="G1"
+  data-earth-g1="locked"
+  data-sun-g1="locked"
+  data-moon-g1="locked"
+  data-universe-mode="earth-sun-moon-same-universe"
+  data-generated-image="false"
+  data-graphic-box="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Nine Summits Universe</title>
-  <meta
-    name="description"
-    content="Nine Summits Universe runtime chamber showing Earth G1, Sun G1, and the queued Moon."
-  >
+  <title>Diamond Gate Bridge · Nine Summits Universe · Earth G1 · Sun G1 · Moon G1</title>
+  <meta name="description" content="Nine Summits Universe G1 relationship view with Earth G1, Sun G1, and Moon G1 locked into the same procedural 4K runtime universe.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
-    :root {
-      color-scheme: dark;
-      --u-panel: rgba(8, 14, 25, 0.90);
-      --u-line: rgba(176, 204, 255, 0.20);
-      --u-gold: #f2c76f;
-      --u-blue: #9ec6ff;
-      --u-green: #83e0b9;
-      --u-text: #f5f7fb;
-      --u-muted: rgba(228, 234, 246, 0.76);
-    }
-
     body {
       overflow-x: hidden;
+      background: #050813;
+    }
+
+    .universe-note {
+      color: var(--dgb-muted, rgba(228, 234, 246, 0.76));
+      line-height: 1.58;
     }
 
     .universe-actions,
-    .universe-grid,
-    .runtime-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .universe-actions {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    .universe-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       margin-top: 18px;
     }
 
-    .universe-grid {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .runtime-grid {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    .u-card {
-      border: 1px solid var(--u-line);
-      border-radius: 24px;
-      padding: clamp(18px, 4vw, 28px);
-      background: rgba(0,0,0,.20);
-    }
-
-    .u-label {
-      display: block;
-      color: var(--u-gold);
-      font-size: .74rem;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .u-note {
-      color: var(--u-muted);
-      line-height: 1.55;
-    }
-
-    .u-pill {
+    .universe-chip {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: fit-content;
-      min-height: 34px;
-      border: 1px solid rgba(242,199,111,.42);
+      min-height: 36px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
       border-radius: 999px;
-      padding: 7px 12px;
-      background: rgba(242,199,111,.10);
-      color: var(--u-text);
-      font-size: .76rem;
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
+      padding: 8px 12px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
+      font-weight: 850;
     }
 
-    .runtime-panel {
-      border: 1px solid var(--u-line);
-      border-radius: clamp(24px, 5vw, 36px);
-      padding: clamp(18px, 4vw, 32px);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.11), transparent 20rem),
-        radial-gradient(circle at 16% 36%, rgba(158,198,255,.10), transparent 22rem),
-        linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.015)),
-        var(--u-panel);
-      box-shadow: 0 28px 88px rgba(0,0,0,.44);
+    .universe-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .universe-card {
       overflow: hidden;
     }
 
-    .runtime-viewer {
+    .universe-stage-wrap {
       position: relative;
-      min-height: clamp(460px, 76vw, 760px);
-      margin-top: 22px;
-      border: 1px solid rgba(176,204,255,.18);
-      border-radius: clamp(22px, 5vw, 34px);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(120,185,255,.07), transparent 34%),
-        radial-gradient(circle at 50% 50%, rgba(242,199,111,.05), transparent 58%),
-        linear-gradient(180deg, rgba(2,5,11,.34), rgba(2,5,11,.72));
+      width: 100%;
+      min-height: min(132vw, 860px);
+      border: 1px solid rgba(242, 199, 111, 0.22);
+      border-radius: 34px;
       overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(255, 198, 94, 0.08), transparent 22%),
+        radial-gradient(circle at 50% 62%, rgba(66, 128, 230, 0.10), transparent 32%),
+        linear-gradient(180deg, rgba(12, 17, 30, 0.98), rgba(4, 8, 18, 0.99));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        inset 0 0 72px rgba(0,0,0,0.58),
+        0 28px 90px rgba(0,0,0,0.42);
       isolation: isolate;
     }
 
-    .runtime-viewer::before {
+    .universe-stage-wrap::before {
       content: "";
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,.20) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(242,199,111,.16) 0 1px, transparent 1.9px);
-      background-size: 120px 120px, 190px 190px;
-      background-position: 10px 20px, 80px 70px;
-      opacity: .18;
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+      opacity: 0.42;
       pointer-events: none;
+      z-index: 1;
     }
 
-    .runtime-stage {
-      position: absolute;
-      inset: clamp(20px, 5vw, 52px);
-      border: 1px solid rgba(242,199,111,.20);
-      border-radius: clamp(22px, 5vw, 36px);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.012)),
-        rgba(4,10,18,.55);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 28px 88px rgba(0,0,0,.42);
-      overflow: hidden;
-    }
-
-    .runtime-canvas {
+    .universe-stage-wrap::after {
+      content: "";
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 36%, rgba(0,0,0,0.26) 72%, rgba(0,0,0,0.52) 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    #universe-g1-canvas {
+      position: relative;
+      z-index: 2;
       display: block;
+      width: 100%;
+      height: min(132vw, 860px);
     }
 
-    .body-label {
-      position: absolute;
-      z-index: 6;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 32px;
-      border: 1px solid rgba(176,204,255,.24);
-      border-radius: 999px;
-      padding: 6px 10px;
-      background: rgba(0,0,0,.52);
-      color: var(--u-text);
-      font-size: .68rem;
-      font-weight: 950;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .label-sun {
-      left: 12%;
-      top: 17%;
-      border-color: rgba(242,199,111,.38);
-    }
-
-    .label-earth {
-      left: 50%;
-      bottom: 14%;
-      transform: translateX(-50%);
-      border-color: rgba(131,224,185,.34);
-    }
-
-    .label-moon {
-      right: 10%;
-      top: 35%;
-      border-color: rgba(158,198,255,.34);
-    }
-
-    .runtime-caption {
-      margin-top: 16px;
-      border: 1px solid var(--u-line);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(0,0,0,.22);
-      color: var(--u-muted);
-      line-height: 1.55;
+    .universe-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     @media (max-width: 720px) {
-      .runtime-panel {
-        padding: 16px;
+      .universe-stage-wrap {
+        min-height: 820px;
+        border-radius: 28px;
       }
 
-      .runtime-viewer {
-        min-height: 560px;
-      }
-
-      .runtime-stage {
-        inset: 16px;
-      }
-
-      .label-sun {
-        left: 50%;
-        top: 13%;
-        transform: translateX(-50%);
-      }
-
-      .label-earth {
-        bottom: 10%;
-      }
-
-      .label-moon {
-        right: 8%;
-        top: 42%;
+      #universe-g1-canvas {
+        height: 820px;
       }
     }
   </style>
@@ -245,7 +141,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Nine Summits / Universe</div>
-        <div class="dgb-room-line">Earth G1 · Sun G1 · Moon Queue</div>
+        <div class="dgb-room-line">Earth G1 · Sun G1 · Moon G1</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -253,7 +149,7 @@
         <a href="/nine-summits/">Nine Summits Hub</a>
         <a href="/nine-summits/universe/" aria-current="page">Universe</a>
         <a href="/nine-summits-of-love/">Book</a>
-        <a href="/this-underdog/">This Underdog</a>
+        <a href="/about-this-underdog/">This Underdog</a>
         <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -262,341 +158,668 @@
 
   <main id="universe-main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">Universe lane · G1 runtime chamber</p>
-      <h1 class="dgb-title">The universe starts with relationship.</h1>
+      <p class="dgb-eyebrow">Universe lane · G1 relationship chamber</p>
+      <h1 class="dgb-title">Earth, Sun, and Moon now share one G1 universe.</h1>
 
       <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 is the active renewal body. Moon remains queued.
-        This page shows the runtime relationship between those bodies without borrowing manor directional artifacts.
+        Earth G1, Sun G1, and Moon G1 are now rendered as one procedural relationship system:
+        the same universe, the same lighting logic, the same 4K source-definition standard, and no queued body.
       </p>
 
-      <div class="dgb-chip-row">
-        <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun G1 active</span>
-        <span class="dgb-chip">Moon queued</span>
-        <span class="dgb-chip">Runtime relationship</span>
-        <span class="dgb-chip hold">No visual lock</span>
+      <div class="universe-chip-row">
+        <span class="universe-chip lock">Earth G1 locked</span>
+        <span class="universe-chip lock">Sun G1 locked</span>
+        <span class="universe-chip lock">Moon G1 locked</span>
+        <span class="universe-chip">4K source detail</span>
+        <span class="universe-chip">Full moon physics</span>
+        <span class="universe-chip">Generated image false</span>
       </div>
 
       <div class="universe-actions">
-        <a class="dgb-button" href="/showroom/globe/">Inspect Earth G1 / Sun</a>
-        <a class="dgb-button secondary" href="/nine-summits/">Return to Nine Summits</a>
-        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open Book Path</a>
+        <a class="dgb-button" href="/showroom/globe/">Inspect Showroom Globe</a>
         <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
-    <section class="runtime-panel" aria-labelledby="runtime-title">
-      <p class="u-label">Universe G1 visualization</p>
-      <h2 id="runtime-title">Earth, Sun, and Moon.</h2>
-      <p class="u-note">
-        This is the G1 runtime chamber: Earth is the accepted globe standard, Sun is the active stellar standard,
-        and Moon remains queued behind Sun.
+    <section class="dgb-card universe-card" aria-label="Universe G1 visualization">
+      <h2>Earth, Sun, and Moon G1 relationship.</h2>
+      <p class="universe-note">
+        The Universe page relates the bodies. Showroom inspects the individual bodies. This runtime keeps the Sun above Earth,
+        Earth as the central accepted planet, and the Moon as a locked full-moon companion receiving solar light and subtle Earth-reflected fill.
       </p>
 
-      <div class="runtime-viewer" aria-label="Earth Sun Moon runtime visualization">
-        <div class="runtime-stage">
-          <canvas id="universe-runtime-canvas" class="runtime-canvas" data-universe-runtime-canvas="true"></canvas>
-          <div class="body-label label-sun">Sun G1</div>
-          <div class="body-label label-earth">Earth G1</div>
-          <div class="body-label label-moon">Moon queued</div>
-        </div>
-      </div>
-
-      <div class="runtime-caption">
-        Earth G1 is complete. Sun G1 is the active next body. Moon remains queued until the Sun is renewed, inspected, and accepted.
+      <div class="universe-stage-wrap">
+        <canvas
+          id="universe-g1-canvas"
+          width="1600"
+          height="2200"
+          aria-label="Earth G1, Sun G1, and Moon G1 same-universe procedural runtime"
+          data-universe-g1-canvas="true"
+          data-source-definition="4096"
+        ></canvas>
       </div>
     </section>
 
     <section class="dgb-card">
-      <span class="u-label">Geometry correction</span>
-      <h2>The Universe page uses runtime relationship, not manor direction logic.</h2>
-      <p class="u-note">
-        Manor directional artifacts belong to the house, manor, estate, or a later explicit planetary mapping layer.
-        This route is the galactic/runtime lane, so its job is body relationship first.
+      <p class="dgb-eyebrow">Current sequence</p>
+      <h2>Earth complete. Sun locked. Moon locked.</h2>
+
+      <div class="universe-chip-row">
+        <span class="universe-chip lock">Complete · Earth G1</span>
+        <span class="universe-chip lock">Complete · Sun G1</span>
+        <span class="universe-chip lock">Complete · Moon G1</span>
+      </div>
+
+      <p class="universe-note">
+        The Moon is no longer queued on this route. It is represented as a locked G1 full moon in the same visual universe as Earth and the Sun.
       </p>
     </section>
 
     <section class="dgb-card">
-      <span class="u-label">Current sequence</span>
-      <h2>Earth complete. Sun active. Moon follows.</h2>
-
-      <div class="runtime-grid">
-        <article class="u-card">
-          <span class="u-pill">Complete</span>
-          <h3>Earth G1</h3>
-          <p class="u-note">The accepted Demo Universe globe baseline. Route: /showroom/globe/.</p>
-        </article>
-
-        <article class="u-card">
-          <span class="u-pill">Active</span>
-          <h3>Sun G1</h3>
-          <p class="u-note">The renewed stellar body standard: circular, contained, radiant, and mobile-safe.</p>
-        </article>
-
-        <article class="u-card">
-          <span class="u-pill">Queued</span>
-          <h3>Moon</h3>
-          <p class="u-note">The companion body waits behind Sun and should not be forced early.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="dgb-card">
-      <span class="u-label">Route separation</span>
+      <p class="dgb-eyebrow">Route separation</p>
       <h2>Showroom inspects. Universe relates. Gauges measures.</h2>
 
-      <div class="universe-grid">
-        <article class="u-card">
-          <span class="u-pill">/showroom/globe/</span>
-          <h3>Inspection route.</h3>
-          <p class="u-note">Earth G1 and Sun G1 live in Showroom for direct inspection.</p>
-          <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1 / Sun</a>
-        </article>
-
-        <article class="u-card">
-          <span class="u-pill">/nine-summits/universe/</span>
-          <h3>Runtime relationship route.</h3>
-          <p class="u-note">This page shows Earth, Sun, and Moon relationship before deeper Planet 1 mapping.</p>
-        </article>
-
-        <article class="u-card">
-          <span class="u-pill">/gauges/</span>
-          <h3>Measurement route.</h3>
-          <p class="u-note">Gauges owns source checks and proof receipts.</p>
-          <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
-        </article>
-      </div>
+      <p class="universe-note">
+        The relationship page does not borrow manor directional artifacts. It keeps a runtime astronomical relationship:
+        Sun, Earth, and Moon inside one G1 visual system.
+      </p>
     </section>
 
-    <details class="dgb-details">
-      <summary>Route contract</summary>
-      <pre class="dgb-receipt">SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1
+    <section class="dgb-card">
+      <h2>Route contract</h2>
+      <pre id="universe-g1-receipt" class="dgb-receipt universe-receipt">UNIVERSE_G1_EARTH_SUN_MOON_4K_RELATIONSHIP_LOCK_TNT_v1
 route=/nine-summits/universe/
 visualization=earth-sun-moon-runtime
 generated-image=false
+graphic-box=false
 directional-manor-artifacts=reserved-for-manor-estate
 galaxy-local-direction-mode=none
-earth-g1=complete
-sun-g1=active-renewal
-moon=queued
-planet-1=future-nine-summits-universe-planet
+earth-g1=locked
+sun-g1=locked
+moon-g1=locked
+moon-phase=full-moon
+source-definition=4096
+same-universe=true
 showroom-inspection-route=/showroom/globe/
 gauges-route=/gauges/
 visual-pass-claimed=false</pre>
-    </details>
+    </section>
   </main>
 
   <footer class="dgb-footer">
-    SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1 · Universe · Earth/Sun/Moon Runtime · Diamond Gate Bridge.
+    UNIVERSE_G1_EARTH_SUN_MOON_4K_RELATIONSHIP_LOCK_TNT_v1 · Earth G1 · Sun G1 · Moon G1 · Same Universe.
   </footer>
 
   <script>
-    (function bindUniverseG1Runtime() {
+    (function bootUniverseG1(window, document) {
       "use strict";
 
-      var VERSION = "SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1";
-      var canvas = document.getElementById("universe-runtime-canvas");
-      var ctx = canvas ? canvas.getContext("2d") : null;
+      var VERSION = "UNIVERSE_G1_EARTH_SUN_MOON_4K_RELATIONSHIP_LOCK_TNT_v1";
+      var canvas = document.getElementById("universe-g1-canvas");
+      var receipt = document.getElementById("universe-g1-receipt");
+
+      if (!canvas) return;
+
+      var ctx = canvas.getContext("2d", { alpha: true });
+      var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var frame = 0;
       var raf = 0;
-      var phase = 0;
+
+      var textures = {
+        sun: null,
+        earth: null,
+        moon: null,
+        source: 4096,
+        fallback: false
+      };
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, Number(value) || 0));
+      }
+
+      function mix(a, b, t) {
+        return a + (b - a) * clamp(t, 0, 1);
+      }
+
+      function makeCanvas(size) {
+        var c = document.createElement("canvas");
+        c.width = size;
+        c.height = size;
+        return c;
+      }
+
+      function makeSeededRandom(seed) {
+        var s = seed >>> 0;
+        return function random() {
+          s += 0x6D2B79F5;
+          var t = s;
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function softEllipse(g, x, y, rx, ry, rotation, inner, outer, alpha) {
+        g.save();
+        g.translate(x, y);
+        g.rotate(rotation);
+        g.scale(rx, ry);
+
+        var gradient = g.createRadialGradient(0, 0, 0.04, 0, 0, 1);
+        gradient.addColorStop(0, inner);
+        gradient.addColorStop(0.64, outer);
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+
+        g.globalAlpha = alpha;
+        g.fillStyle = gradient;
+        g.beginPath();
+        g.arc(0, 0, 1, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      }
+
+      function drawLabel(g, text, x, y, scale) {
+        var padX = 24 * scale;
+        var padY = 12 * scale;
+        var fontSize = 23 * scale;
+
+        g.save();
+        g.font = "900 " + fontSize + "px system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+
+        var width = g.measureText(text).width + padX * 2;
+        var height = fontSize + padY * 2;
+        var radius = height / 2;
+
+        g.fillStyle = "rgba(9, 13, 24, 0.78)";
+        g.strokeStyle = "rgba(242, 199, 111, 0.58)";
+        g.lineWidth = Math.max(1, 1.5 * scale);
+
+        roundRect(g, x - width / 2, y - height / 2, width, height, radius);
+        g.fill();
+        g.stroke();
+
+        g.fillStyle = "rgba(255, 246, 220, 0.96)";
+        g.fillText(text, x, y + 1 * scale);
+        g.restore();
+      }
+
+      function roundRect(g, x, y, w, h, r) {
+        var rr = Math.min(r, w / 2, h / 2);
+        g.beginPath();
+        g.moveTo(x + rr, y);
+        g.arcTo(x + w, y, x + w, y + h, rr);
+        g.arcTo(x + w, y + h, x, y + h, rr);
+        g.arcTo(x, y + h, x, y, rr);
+        g.arcTo(x, y, x + w, y, rr);
+        g.closePath();
+      }
+
+      function drawSunTexture(size) {
+        var c = makeCanvas(size);
+        var g = c.getContext("2d", { alpha: true });
+        var center = size / 2;
+        var radius = size * 0.34;
+        var random = makeSeededRandom(1101);
+
+        g.clearRect(0, 0, size, size);
+
+        var corona = g.createRadialGradient(center, center, radius * 0.72, center, center, radius * 2.4);
+        corona.addColorStop(0, "rgba(255,238,170,0.28)");
+        corona.addColorStop(0.20, "rgba(255,190,72,0.18)");
+        corona.addColorStop(0.46, "rgba(255,116,38,0.10)");
+        corona.addColorStop(0.75, "rgba(255,80,24,0.035)");
+        corona.addColorStop(1, "rgba(255,80,24,0)");
+        g.fillStyle = corona;
+        g.beginPath();
+        g.arc(center, center, radius * 2.42, 0, Math.PI * 2);
+        g.fill();
+
+        g.save();
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.clip();
+
+        var base = g.createRadialGradient(center - radius * 0.24, center - radius * 0.30, radius * 0.04, center, center, radius);
+        base.addColorStop(0, "#fff3b6");
+        base.addColorStop(0.20, "#ffd46a");
+        base.addColorStop(0.42, "#ff9d35");
+        base.addColorStop(0.70, "#e85a1c");
+        base.addColorStop(1, "#7d210d");
+        g.fillStyle = base;
+        g.fillRect(0, 0, size, size);
+
+        g.globalCompositeOperation = "overlay";
+        for (var i = 0; i < 4200; i += 1) {
+          var a = random() * Math.PI * 2;
+          var d = Math.sqrt(random()) * radius * 0.99;
+          var x = center + Math.cos(a) * d;
+          var y = center + Math.sin(a) * d;
+          var r = mix(size * 0.002, size * 0.018, random());
+          g.globalAlpha = mix(0.018, 0.09, random());
+          g.fillStyle = random() > 0.44 ? "rgba(255,246,180,1)" : "rgba(132,34,10,1)";
+          g.beginPath();
+          g.arc(x, y, r, 0, Math.PI * 2);
+          g.fill();
+        }
+
+        g.globalCompositeOperation = "screen";
+        for (var j = 0; j < 26; j += 1) {
+          var bandY = center + (random() - 0.5) * radius * 1.55;
+          var bandH = mix(size * 0.008, size * 0.035, random());
+          var grad = g.createLinearGradient(center - radius, bandY, center + radius, bandY);
+          grad.addColorStop(0, "rgba(255,200,80,0)");
+          grad.addColorStop(0.25, "rgba(255,240,150,0.08)");
+          grad.addColorStop(0.50, "rgba(255,250,190,0.14)");
+          grad.addColorStop(0.75, "rgba(255,210,90,0.07)");
+          grad.addColorStop(1, "rgba(255,200,80,0)");
+          g.globalAlpha = mix(0.32, 0.80, random());
+          g.fillStyle = grad;
+          g.fillRect(center - radius, bandY - bandH / 2, radius * 2, bandH);
+        }
+
+        g.restore();
+
+        g.save();
+        g.globalCompositeOperation = "destination-in";
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+
+        return c;
+      }
+
+      function drawEarthTexture(size) {
+        var c = makeCanvas(size);
+        var g = c.getContext("2d", { alpha: true });
+        var center = size / 2;
+        var radius = size * 0.36;
+        var random = makeSeededRandom(2202);
+
+        g.clearRect(0, 0, size, size);
+
+        g.save();
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.clip();
+
+        var ocean = g.createRadialGradient(center - radius * 0.26, center - radius * 0.34, radius * 0.05, center, center, radius);
+        ocean.addColorStop(0, "#58b6ff");
+        ocean.addColorStop(0.30, "#116bd8");
+        ocean.addColorStop(0.62, "#073c98");
+        ocean.addColorStop(0.86, "#06245e");
+        ocean.addColorStop(1, "#020c24");
+        g.fillStyle = ocean;
+        g.fillRect(0, 0, size, size);
+
+        var lands = [
+          [-0.34, -0.12, 0.22, 0.36, -0.24, "#2f9d60", "#194b37", 0.80],
+          [0.12, -0.20, 0.18, 0.30, 0.32, "#d2ba68", "#5a6c38", 0.68],
+          [0.34, 0.08, 0.16, 0.26, -0.12, "#57a45d", "#244832", 0.62],
+          [-0.02, 0.30, 0.24, 0.16, 0.18, "#45a075", "#194838", 0.55],
+          [-0.46, 0.28, 0.12, 0.18, 0.40, "#cbb866", "#526233", 0.44]
+        ];
+
+        lands.forEach(function (land) {
+          softEllipse(
+            g,
+            center + land[0] * radius,
+            center + land[1] * radius,
+            land[2] * radius,
+            land[3] * radius,
+            land[4],
+            land[5],
+            land[6],
+            land[7]
+          );
+        });
+
+        g.globalCompositeOperation = "screen";
+        for (var i = 0; i < 42; i += 1) {
+          var a = random() * Math.PI * 2;
+          var d = Math.sqrt(random()) * radius * 0.88;
+          var x = center + Math.cos(a) * d;
+          var y = center + Math.sin(a) * d;
+          softEllipse(
+            g,
+            x,
+            y,
+            mix(radius * 0.045, radius * 0.16, random()),
+            mix(radius * 0.012, radius * 0.035, random()),
+            random() * Math.PI,
+            "rgba(255,255,255,0.56)",
+            "rgba(255,255,255,0.10)",
+            mix(0.22, 0.55, random())
+          );
+        }
+
+        g.globalCompositeOperation = "multiply";
+        var limb = g.createRadialGradient(center - radius * 0.30, center - radius * 0.34, radius * 0.08, center, center, radius);
+        limb.addColorStop(0, "rgba(255,255,255,0)");
+        limb.addColorStop(0.58, "rgba(255,255,255,0)");
+        limb.addColorStop(0.82, "rgba(8,18,44,0.24)");
+        limb.addColorStop(1, "rgba(0,4,18,0.58)");
+        g.fillStyle = limb;
+        g.fillRect(0, 0, size, size);
+
+        g.restore();
+
+        g.save();
+        g.globalCompositeOperation = "destination-in";
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+
+        return c;
+      }
+
+      function drawMoonTexture(size) {
+        var c = makeCanvas(size);
+        var g = c.getContext("2d", { alpha: true });
+        var center = size / 2;
+        var radius = size * 0.36;
+        var random = makeSeededRandom(3303);
+
+        g.clearRect(0, 0, size, size);
+
+        g.save();
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.clip();
+
+        var base = g.createRadialGradient(center - radius * 0.10, center - radius * 0.13, radius * 0.06, center, center, radius);
+        base.addColorStop(0, "#f0eee8");
+        base.addColorStop(0.20, "#dadbd9");
+        base.addColorStop(0.44, "#b7bbc0");
+        base.addColorStop(0.68, "#9098a2");
+        base.addColorStop(0.88, "#717b88");
+        base.addColorStop(1, "#4e5a68");
+        g.fillStyle = base;
+        g.fillRect(0, 0, size, size);
+
+        softEllipse(g, center - radius * 0.24, center - radius * 0.20, radius * 0.42, radius * 0.24, -0.12, "rgba(42,46,54,0.70)", "rgba(92,98,110,0.38)", 0.46);
+        softEllipse(g, center + radius * 0.20, center - radius * 0.04, radius * 0.34, radius * 0.23, 0.20, "rgba(48,52,60,0.64)", "rgba(104,110,122,0.34)", 0.38);
+        softEllipse(g, center + radius * 0.06, center + radius * 0.36, radius * 0.28, radius * 0.18, -0.20, "rgba(52,56,64,0.60)", "rgba(112,118,130,0.30)", 0.32);
+
+        function crater(x, y, r, strength) {
+          g.save();
+          g.globalAlpha = 0.18 * strength;
+          g.fillStyle = "rgba(6,8,14,0.74)";
+          g.beginPath();
+          g.arc(x + r * 0.08, y + r * 0.08, r * 0.86, 0, Math.PI * 2);
+          g.fill();
+
+          g.globalAlpha = 0.26 * strength;
+          g.strokeStyle = "rgba(250,252,255,0.64)";
+          g.lineWidth = Math.max(1, r * 0.08);
+          g.beginPath();
+          g.arc(x - r * 0.03, y - r * 0.03, r, 0, Math.PI * 2);
+          g.stroke();
+
+          g.globalAlpha = 0.14 * strength;
+          g.strokeStyle = "rgba(15,20,30,0.72)";
+          g.lineWidth = Math.max(1, r * 0.055);
+          g.beginPath();
+          g.arc(x + r * 0.08, y + r * 0.08, r * 0.78, 0, Math.PI * 2);
+          g.stroke();
+          g.restore();
+        }
+
+        var majors = [
+          [-0.43, -0.34, 0.115, 1.10],
+          [0.32, -0.31, 0.095, 0.98],
+          [-0.05, -0.06, 0.075, 0.84],
+          [0.34, 0.33, 0.125, 1.16],
+          [-0.30, 0.43, 0.072, 0.80],
+          [0.03, 0.43, 0.060, 0.72]
+        ];
+
+        majors.forEach(function (m) {
+          crater(center + m[0] * radius, center + m[1] * radius, m[2] * radius, m[3]);
+        });
+
+        for (var i = 0; i < 1200; i += 1) {
+          var a = random() * Math.PI * 2;
+          var d = Math.sqrt(random()) * radius * 0.97;
+          var x = center + Math.cos(a) * d;
+          var y = center + Math.sin(a) * d;
+          crater(x, y, Math.pow(random(), 2.5) * size * 0.009 + size * 0.0012, mix(0.18, 0.56, random()));
+        }
+
+        g.globalCompositeOperation = "screen";
+        for (var j = 0; j < 86; j += 1) {
+          var angle = (Math.PI * 2 * j) / 86 + (random() - 0.5) * 0.10;
+          var sx = center + radius * 0.34;
+          var sy = center + radius * 0.33;
+          var length = radius * mix(0.45, 1.10, random());
+          var ex = sx + Math.cos(angle) * length;
+          var ey = sy + Math.sin(angle) * length;
+          var grad = g.createLinearGradient(sx, sy, ex, ey);
+          grad.addColorStop(0, "rgba(255,255,255,0.16)");
+          grad.addColorStop(1, "rgba(255,255,255,0)");
+          g.globalAlpha = mix(0.20, 0.72, random());
+          g.strokeStyle = grad;
+          g.lineWidth = mix(1, 6, random()) * (size / 4096);
+          g.beginPath();
+          g.moveTo(sx, sy);
+          g.lineTo(ex, ey);
+          g.stroke();
+        }
+
+        g.globalCompositeOperation = "screen";
+        var solarFace = g.createRadialGradient(center - radius * 0.08, center - radius * 0.10, radius * 0.04, center, center, radius);
+        solarFace.addColorStop(0, "rgba(255,250,232,0.46)");
+        solarFace.addColorStop(0.35, "rgba(255,244,220,0.26)");
+        solarFace.addColorStop(0.72, "rgba(240,244,252,0.10)");
+        solarFace.addColorStop(1, "rgba(238,242,250,0.03)");
+        g.fillStyle = solarFace;
+        g.fillRect(0, 0, size, size);
+
+        var earthFill = g.createRadialGradient(center + radius * 0.14, center + radius * 0.28, radius * 0.05, center, center, radius * 1.10);
+        earthFill.addColorStop(0, "rgba(112,166,255,0.12)");
+        earthFill.addColorStop(0.55, "rgba(88,138,230,0.05)");
+        earthFill.addColorStop(1, "rgba(74,118,205,0)");
+        g.fillStyle = earthFill;
+        g.fillRect(0, 0, size, size);
+
+        g.globalCompositeOperation = "multiply";
+        var limb = g.createRadialGradient(center - radius * 0.04, center - radius * 0.05, radius * 0.14, center, center, radius);
+        limb.addColorStop(0, "rgba(255,255,255,0)");
+        limb.addColorStop(0.60, "rgba(255,255,255,0)");
+        limb.addColorStop(0.84, "rgba(80,90,108,0.10)");
+        limb.addColorStop(1, "rgba(8,12,22,0.26)");
+        g.fillStyle = limb;
+        g.fillRect(0, 0, size, size);
+
+        g.restore();
+
+        g.save();
+        g.globalCompositeOperation = "destination-in";
+        g.beginPath();
+        g.arc(center, center, radius, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+
+        return c;
+      }
+
+      function buildTextures() {
+        try {
+          textures.source = 4096;
+          textures.sun = drawSunTexture(4096);
+          textures.earth = drawEarthTexture(4096);
+          textures.moon = drawMoonTexture(4096);
+          textures.fallback = false;
+        } catch (error) {
+          textures.source = 3072;
+          textures.sun = drawSunTexture(3072);
+          textures.earth = drawEarthTexture(3072);
+          textures.moon = drawMoonTexture(3072);
+          textures.fallback = true;
+          console.warn("[DGB Universe G1] 4K texture fallback used.", error);
+        }
+      }
 
       function resize() {
-        var rect;
-        var dpr;
+        var rect = canvas.getBoundingClientRect();
+        var width = Math.max(320, Math.round(rect.width));
+        var height = Math.max(680, Math.round(rect.height));
 
-        if (!canvas || !canvas.parentNode) return;
-
-        rect = canvas.parentNode.getBoundingClientRect();
-        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-
-        canvas.width = Math.max(300, Math.round(rect.width * dpr));
-        canvas.height = Math.max(360, Math.round(rect.height * dpr));
-        canvas.style.width = rect.width + "px";
-        canvas.style.height = rect.height + "px";
-
-        ctx = canvas.getContext("2d");
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
-      function circle(x, y, r, fill, stroke) {
-        ctx.save();
-        ctx.fillStyle = fill;
+      function drawOrbit(g, x, y, rx, ry) {
+        g.save();
+        g.strokeStyle = "rgba(170, 190, 230, 0.22)";
+        g.lineWidth = 1.2;
+        g.setLineDash([5, 7]);
+        g.beginPath();
+        g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+        g.stroke();
+        g.restore();
+      }
+
+      function drawTexture(g, texture, x, y, r) {
+        g.drawImage(texture, x - r, y - r, r * 2, r * 2);
+      }
+
+      function drawScene() {
+        var width = canvas.width / dpr;
+        var height = canvas.height / dpr;
+        var scale = Math.min(width / 720, height / 860);
+        var cx = width / 2;
+
+        frame += reduceMotion ? 0 : 1;
+
+        ctx.clearRect(0, 0, width, height);
+
+        var sunR = clamp(width * 0.105, 54, 92);
+        var earthR = clamp(width * 0.165, 82, 135);
+        var moonR = clamp(width * 0.070, 34, 58);
+
+        var sunX = cx;
+        var sunY = height * 0.19;
+        var earthX = cx;
+        var earthY = height * 0.55;
+        var moonAngle = -0.78 + Math.sin(frame * 0.006) * 0.05;
+        var moonOrbitRX = earthR * 1.55;
+        var moonOrbitRY = earthR * 0.55;
+        var moonX = earthX + Math.cos(moonAngle) * moonOrbitRX;
+        var moonY = earthY + Math.sin(moonAngle) * moonOrbitRY;
+
+        var beam = ctx.createLinearGradient(sunX, sunY + sunR, earthX, earthY - earthR);
+        beam.addColorStop(0, "rgba(255,218,136,0.18)");
+        beam.addColorStop(0.48, "rgba(255,214,150,0.055)");
+        beam.addColorStop(1, "rgba(255,214,150,0)");
+        ctx.strokeStyle = beam;
+        ctx.lineWidth = Math.max(1, width * 0.004);
         ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        if (stroke) {
-          ctx.strokeStyle = stroke;
-          ctx.lineWidth = Math.max(1, r * 0.015);
-          ctx.stroke();
-        }
-
-        ctx.restore();
-      }
-
-      function drawSun(x, y, r) {
-        var g = ctx.createRadialGradient(x - r * 0.28, y - r * 0.28, r * 0.05, x, y, r);
-        g.addColorStop(0, "#fff7c8");
-        g.addColorStop(0.18, "#ffe06f");
-        g.addColorStop(0.48, "#ff9d3f");
-        g.addColorStop(0.78, "#c94b23");
-        g.addColorStop(1, "rgba(90,20,12,0.92)");
-
-        var glow = ctx.createRadialGradient(x, y, r * 0.72, x, y, r * 2.0);
-        glow.addColorStop(0, "rgba(242,199,111,0.24)");
-        glow.addColorStop(0.55, "rgba(255,120,45,0.10)");
-        glow.addColorStop(1, "rgba(255,120,45,0)");
-
-        ctx.save();
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(x, y, r * 2.0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        circle(x, y, r, g, "rgba(242,199,111,0.42)");
-      }
-
-      function drawEarth(x, y, r) {
-        var ocean = ctx.createRadialGradient(x - r * 0.28, y - r * 0.32, r * 0.10, x, y, r);
-        ocean.addColorStop(0, "#bfe5ff");
-        ocean.addColorStop(0.18, "#1d74ca");
-        ocean.addColorStop(0.58, "#06347f");
-        ocean.addColorStop(1, "#03183f");
-
-        circle(x, y, r, ocean, "rgba(158,198,255,0.40)");
-
-        ctx.save();
-        ctx.globalAlpha = 0.82;
-        circle(x - r * 0.22, y + r * 0.02, r * 0.20, "rgba(63,158,86,0.72)", null);
-        circle(x + r * 0.22, y + r * 0.15, r * 0.16, "rgba(210,184,112,0.68)", null);
-        circle(x - r * 0.02, y - r * 0.25, r * 0.24, "rgba(255,255,255,0.55)", null);
-        circle(x + r * 0.15, y - r * 0.02, r * 0.09, "rgba(255,255,255,0.38)", null);
-        ctx.restore();
-
-        var shade = ctx.createRadialGradient(x - r * 0.35, y - r * 0.36, r * 0.10, x, y, r);
-        shade.addColorStop(0, "rgba(255,255,255,0.12)");
-        shade.addColorStop(0.62, "rgba(0,0,0,0)");
-        shade.addColorStop(1, "rgba(0,0,0,0.34)");
-
-        ctx.save();
-        ctx.fillStyle = shade;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function drawMoon(x, y, r) {
-        var moon = ctx.createRadialGradient(x - r * 0.24, y - r * 0.28, r * 0.04, x, y, r);
-        moon.addColorStop(0, "#ffffff");
-        moon.addColorStop(0.25, "#d7dbe0");
-        moon.addColorStop(0.70, "#7a828e");
-        moon.addColorStop(1, "#3a414d");
-        circle(x, y, r, moon, "rgba(228,234,246,0.34)");
-      }
-
-      function drawOrbit(cx, cy, rx, ry) {
-        ctx.save();
-        ctx.strokeStyle = "rgba(158,198,255,0.24)";
-        ctx.setLineDash([5, 5]);
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        ctx.moveTo(sunX, sunY + sunR * 0.72);
+        ctx.lineTo(earthX, earthY - earthR * 0.88);
         ctx.stroke();
-        ctx.restore();
-      }
 
-      function draw(time) {
-        var w;
-        var h;
-        var mobile;
-        var sun;
-        var earth;
-        var moon;
-        var t;
+        drawOrbit(ctx, earthX, earthY, moonOrbitRX, moonOrbitRY);
 
-        if (!ctx || !canvas) return;
+        var systemHalo = ctx.createRadialGradient(earthX, earthY, earthR * 0.8, earthX, earthY, earthR * 3.1);
+        systemHalo.addColorStop(0, "rgba(58,128,230,0.14)");
+        systemHalo.addColorStop(0.42, "rgba(58,128,230,0.06)");
+        systemHalo.addColorStop(1, "rgba(58,128,230,0)");
+        ctx.fillStyle = systemHalo;
+        ctx.beginPath();
+        ctx.arc(earthX, earthY, earthR * 3.15, 0, Math.PI * 2);
+        ctx.fill();
 
-        w = canvas.width;
-        h = canvas.height;
-        mobile = w < 760;
-        phase += 0.0022;
-        t = phase + (time || 0) * 0.00008;
-
-        ctx.clearRect(0, 0, w, h);
+        drawTexture(ctx, textures.sun, sunX, sunY, sunR * 1.58);
+        drawTexture(ctx, textures.earth, earthX, earthY, earthR * 1.38);
+        drawTexture(ctx, textures.moon, moonX, moonY, moonR * 1.32);
 
         ctx.save();
-        ctx.fillStyle = "rgba(255,255,255,0.16)";
-        for (var i = 0; i < 56; i += 1) {
-          var sx = (Math.sin(i * 91.7) * 0.5 + 0.5) * w;
-          var sy = (Math.sin(i * 47.3 + 2) * 0.5 + 0.5) * h;
-          ctx.fillRect(sx, sy, 1.2, 1.2);
-        }
-        ctx.restore();
-
-        if (mobile) {
-          sun = { x: w * 0.50, y: h * 0.22, r: Math.min(w, h) * 0.13 };
-          earth = { x: w * 0.50, y: h * 0.58, r: Math.min(w, h) * 0.20 };
-          moon = {
-            x: earth.x + Math.cos(t) * earth.r * 1.55,
-            y: earth.y + Math.sin(t) * earth.r * 0.76,
-            r: earth.r * 0.34
-          };
-        } else {
-          sun = { x: w * 0.20, y: h * 0.50, r: Math.min(w, h) * 0.13 };
-          earth = { x: w * 0.58, y: h * 0.52, r: Math.min(w, h) * 0.18 };
-          moon = {
-            x: earth.x + Math.cos(t) * earth.r * 1.70,
-            y: earth.y + Math.sin(t) * earth.r * 0.72,
-            r: earth.r * 0.32
-          };
-        }
-
-        ctx.save();
-        ctx.strokeStyle = "rgba(242,199,111,0.26)";
+        ctx.strokeStyle = "rgba(242,199,111,0.20)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(sun.x, sun.y);
-        ctx.lineTo(earth.x, earth.y);
+        ctx.moveTo(sunX, sunY + sunR * 1.05);
+        ctx.lineTo(earthX, earthY - earthR * 1.10);
         ctx.stroke();
         ctx.restore();
 
-        drawOrbit(earth.x, earth.y, earth.r * 1.78, earth.r * 0.78);
-        drawSun(sun.x, sun.y, sun.r);
-        drawEarth(earth.x, earth.y, earth.r);
-        drawMoon(moon.x, moon.y, moon.r);
+        drawLabel(ctx, "SUN G1", sunX, sunY - sunR * 1.18, scale);
+        drawLabel(ctx, "MOON G1", moonX + moonR * 1.75, moonY - moonR * 0.48, scale);
+        drawLabel(ctx, "EARTH G1", earthX, earthY + earthR * 1.75, scale);
 
-        raf = window.requestAnimationFrame(draw);
+        raf = requestAnimationFrame(drawScene);
       }
 
-      function start() {
+      function writeReceipt() {
+        if (!receipt) return;
+
+        receipt.textContent =
+          "UNIVERSE_G1_EARTH_SUN_MOON_4K_RELATIONSHIP_LOCK_TNT_v1\n" +
+          "route=/nine-summits/universe/\n" +
+          "visualization=earth-sun-moon-runtime\n" +
+          "generated-image=false\n" +
+          "graphic-box=false\n" +
+          "directional-manor-artifacts=reserved-for-manor-estate\n" +
+          "galaxy-local-direction-mode=none\n" +
+          "earth-g1=locked\n" +
+          "sun-g1=locked\n" +
+          "moon-g1=locked\n" +
+          "moon-phase=full-moon\n" +
+          "moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill\n" +
+          "source-definition=" + textures.source + "\n" +
+          "source-fallback-used=" + textures.fallback + "\n" +
+          "same-universe=true\n" +
+          "showroom-inspection-route=/showroom/globe/\n" +
+          "gauges-route=/gauges/\n" +
+          "visual-pass-claimed=false\n" +
+          "timestamp=" + new Date().toISOString();
+      }
+
+      function boot() {
+        buildTextures();
         resize();
-        if (raf) window.cancelAnimationFrame(raf);
-        raf = window.requestAnimationFrame(draw);
+        writeReceipt();
+        drawScene();
+
+        window.addEventListener("resize", function () {
+          resize();
+        }, { passive: true });
+
+        window.DGBUniverseG1EarthSunMoon4KRuntime = {
+          VERSION: VERSION,
+          version: VERSION,
+          route: "/nine-summits/universe/",
+          getStatus: function () {
+            return {
+              ok: true,
+              version: VERSION,
+              route: "/nine-summits/universe/",
+              generatedImage: false,
+              graphicBox: false,
+              earthG1Locked: true,
+              sunG1Locked: true,
+              moonG1Locked: true,
+              moonPhase: "full-moon",
+              sourceDefinition: textures.source,
+              sourceFallbackUsed: textures.fallback,
+              sameUniverse: true,
+              visualPassClaimed: false
+            };
+          }
+        };
       }
 
-      window.addEventListener("resize", start, { passive: true });
-      start();
-
-      window.DGBNineSummitsUniverseG1Runtime = {
-        VERSION: VERSION,
-        version: VERSION,
-        start: start,
-        getStatus: function () {
-          return {
-            ok: true,
-            route: "/nine-summits/universe/",
-            visualization: "earth-sun-moon-runtime",
-            earthG1: "complete",
-            sunG1: "active-renewal",
-            moon: "queued",
-            generatedImage: false,
-            visualPassClaimed: false
-          };
-        }
-      };
-    })();
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+    })(window, document);
   </script>
 </body>
 </html>

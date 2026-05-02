@@ -1,12 +1,17 @@
-/* G1 PLANET 1 REEF / SHELF / LAND EMERGENCE RENDERER
+/* G1 PLANET 1 BEACH THRESHOLD RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1
+   VERSION: G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
+
+   LAW:
+   Renderer preserves clean slate.
+   Renderer shows water depth and beach edge threshold only.
+   Renderer blocks terrain fill.
 */
 
-(function attachPlanetOneRenderer(global) {
+(function attachPlanetOneBeachThresholdRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1";
+  var VERSION = "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -55,7 +60,7 @@
       canvas = global.document.createElement("canvas");
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
-      canvas.setAttribute("aria-label", "Planet 1 reef shelf shallow water and land emergence renderer");
+      canvas.setAttribute("aria-label", "Planet 1 beach threshold terrain startline renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -294,17 +299,22 @@
       baseline: BASELINE,
 
       cleanSlatePreserved: true,
-      currentViableOutlinePreserved: Boolean(receipt && receipt.currentViableOutlinePreserved),
+      waterDepthFinalizing: Boolean(receipt && receipt.waterDepthFinalizing),
+      beachThresholdRendered: Boolean(receipt && receipt.beachThresholdRendered),
+      beachEdgeIndicatesEverything: Boolean(receipt && receipt.beachEdgeIndicatesEverything),
+      terrainStartlineRendered: Boolean(receipt && receipt.terrainStartlineRendered),
+      terrainFillBlocked: true,
+      beachFillBlocked: true,
+      noTerrainRiseInBeachPass: true,
+
       reefFieldsRendered: Boolean(receipt && receipt.reefFieldsRendered),
       shallowWaterRendered: Boolean(receipt && receipt.shallowWaterRendered),
       shelfDepthRendered: Boolean(receipt && receipt.shelfDepthRendered),
-      beachReadyBoundaryRendered: Boolean(receipt && receipt.beachReadyBoundaryRendered),
-      selectedLandEmergenceRendered: Boolean(receipt && receipt.selectedLandEmergenceRendered),
-      terrainOutlineRendered: Boolean(receipt && receipt.terrainOutlineRendered),
-      veinStructureRenderedSubtly: Boolean(receipt && receipt.veinStructureRenderedSubtly),
       waterDepthRendered: Boolean(receipt && receipt.waterDepthRendered),
-      noBlobReintroduced: Boolean(receipt && receipt.noBlobReintroduced),
+      terrainOutlineRendered: Boolean(receipt && receipt.terrainOutlineRendered),
+      veinStructureHeld: Boolean(receipt && receipt.veinStructureHeld),
 
+      noBlobReintroduced: Boolean(receipt && receipt.noBlobReintroduced),
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
       publicHoneycombBlocked: true,
@@ -400,17 +410,21 @@
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
 
-      currentViableOutlinePreserved: Boolean(state.lastRender && state.lastRender.currentViableOutlinePreserved),
+      waterDepthFinalizing: Boolean(state.lastRender && state.lastRender.waterDepthFinalizing),
+      beachThresholdRendered: Boolean(state.lastRender && state.lastRender.beachThresholdRendered),
+      beachEdgeIndicatesEverything: Boolean(state.lastRender && state.lastRender.beachEdgeIndicatesEverything),
+      terrainStartlineRendered: Boolean(state.lastRender && state.lastRender.terrainStartlineRendered),
+      terrainFillBlocked: true,
+      beachFillBlocked: true,
+      noTerrainRiseInBeachPass: true,
+
       reefFieldsRendered: Boolean(state.lastRender && state.lastRender.reefFieldsRendered),
       shallowWaterRendered: Boolean(state.lastRender && state.lastRender.shallowWaterRendered),
       shelfDepthRendered: Boolean(state.lastRender && state.lastRender.shelfDepthRendered),
-      beachReadyBoundaryRendered: Boolean(state.lastRender && state.lastRender.beachReadyBoundaryRendered),
-      selectedLandEmergenceRendered: Boolean(state.lastRender && state.lastRender.selectedLandEmergenceRendered),
-      terrainOutlineRendered: Boolean(state.lastRender && state.lastRender.terrainOutlineRendered),
-      veinStructureRenderedSubtly: Boolean(state.lastRender && state.lastRender.veinStructureRenderedSubtly),
       waterDepthRendered: Boolean(state.lastRender && state.lastRender.waterDepthRendered),
-      noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
+      terrainOutlineRendered: Boolean(state.lastRender && state.lastRender.terrainOutlineRendered),
 
+      noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
       rendererConsumesHydration: Boolean(state.rendererConsumesHydration),
       rendererConsumesHexBridge: Boolean(state.rendererConsumesHexBridge),
       rendererConsumesHexgrid: Boolean(state.rendererConsumesHexBridge),

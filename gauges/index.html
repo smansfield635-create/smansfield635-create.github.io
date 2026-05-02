@@ -3,38 +3,39 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1"
+  data-contract="SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Gauges</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diamond Gate Bridge · Gauges · Runtime Parity</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Gauges: master site audit console for UI shell parity, route authority, runtime authority, render-chain freshness, and visual hold."
-  />
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
+    content="Source-served-runtime parity audit for Diamond Gate Bridge runtime files and Planet 1 live-route authority."
+  >
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
     .audit-summary {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: .75rem;
       margin: 1rem 0;
     }
 
-    .audit-tile {
+    .audit-tile,
+    .audit-card {
       border: 1px solid var(--dgb-line);
       border-radius: 20px;
-      padding: 0.95rem;
-      background: rgba(0, 0, 0, 0.20);
+      padding: .95rem;
+      background: rgba(0,0,0,.20);
     }
 
     .audit-tile strong {
       display: block;
       color: #ffe8a8;
-      font-size: 0.86rem;
-      margin-bottom: 0.35rem;
+      font-size: .82rem;
+      margin-bottom: .35rem;
     }
 
     .audit-tile span {
@@ -47,52 +48,52 @@
     .audit-state {
       display: inline-flex;
       align-items: center;
-      min-height: 2.1rem;
+      min-height: 2rem;
       border-radius: 999px;
-      padding: 0.36rem 0.7rem;
+      padding: .32rem .68rem;
       border: 1px solid var(--dgb-line);
-      font-size: 0.72rem;
+      font-size: .72rem;
       font-weight: 940;
-      letter-spacing: 0.08em;
+      letter-spacing: .08em;
       text-transform: uppercase;
     }
 
     .audit-state.pass {
       color: #83e0b9;
-      border-color: rgba(131,224,185,0.44);
-      background: rgba(131,224,185,0.10);
+      border-color: rgba(131,224,185,.44);
+      background: rgba(131,224,185,.10);
     }
 
     .audit-state.warn {
       color: #ffe8a8;
-      border-color: rgba(242,199,111,0.50);
-      background: rgba(242,199,111,0.12);
+      border-color: rgba(242,199,111,.50);
+      background: rgba(242,199,111,.12);
     }
 
     .audit-state.fail {
       color: #ffb2b2;
-      border-color: rgba(255,120,120,0.44);
-      background: rgba(255,120,120,0.10);
+      border-color: rgba(255,120,120,.44);
+      background: rgba(255,120,120,.10);
     }
 
     .audit-table-wrap {
       overflow-x: auto;
       border: 1px solid var(--dgb-line);
       border-radius: 18px;
-      background: rgba(0,0,0,0.18);
+      background: rgba(0,0,0,.18);
     }
 
     table.audit-table {
       width: 100%;
+      min-width: 980px;
       border-collapse: collapse;
-      min-width: 760px;
-      font-size: 0.86rem;
+      font-size: .84rem;
     }
 
     .audit-table th,
     .audit-table td {
-      padding: 0.72rem;
-      border-bottom: 1px solid rgba(176, 204, 255, 0.12);
+      padding: .7rem;
+      border-bottom: 1px solid rgba(176,204,255,.12);
       text-align: left;
       vertical-align: top;
       color: var(--dgb-muted);
@@ -100,10 +101,10 @@
 
     .audit-table th {
       color: #ffe8a8;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+      font-size: .72rem;
+      letter-spacing: .08em;
       text-transform: uppercase;
-      background: rgba(255,255,255,0.035);
+      background: rgba(255,255,255,.035);
     }
 
     .audit-table tr:last-child td {
@@ -112,7 +113,7 @@
 
     .audit-list {
       display: grid;
-      gap: 0.45rem;
+      gap: .45rem;
       margin: 0;
       padding-left: 1.1rem;
       color: var(--dgb-muted);
@@ -123,21 +124,21 @@
       color: #ffe8a8;
     }
 
-    .audit-section {
-      display: grid;
-      gap: 1rem;
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .78rem;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 860px) {
-      .audit-summary { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 980px) {
+      .audit-summary {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 560px) {
-      .audit-summary { grid-template-columns: 1fr; }
-
-      .audit-table th,
-      .audit-table td {
-        padding: 0.6rem;
+      .audit-summary {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -151,7 +152,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Gauges · Master Site Audit Console</div>
+        <div class="dgb-room-line">Gauges · Source Served Runtime Parity Audit</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -168,70 +169,96 @@
 
   <main id="main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">H6 · Gauges · Master Site Audit Console</p>
-      <h1 class="dgb-title">One page tells the truth.</h1>
+      <p class="dgb-eyebrow">H6 · Gauges · SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1</p>
+      <h1 class="dgb-title">Verify what is actually live.</h1>
       <p class="dgb-copy">
-        Gauges audits UI shell parity, route availability, contract freshness, Planet 1 render-chain freshness,
-        runtime authority conflict risk, loop/control signals, mobile shell usability, and visual-hold status.
-        It does not delete files, render Planet 1 in an iframe, or start extra animation loops.
+        This audit answers whether each upstream runtime file is still served, what its live source signature is,
+        whether any non-Gauges route loads it, whether it declares global authority, and whether it can override Planet 1
+        after renderer mount. It fetches source only. It does not execute /runtime/* files.
       </p>
 
       <div class="dgb-chip-row">
-        <span class="dgb-chip">Auto preflight</span>
+        <span class="dgb-chip">Source fetch only</span>
         <span class="dgb-chip">No delete</span>
-        <span class="dgb-chip">No iframe render</span>
-        <span class="dgb-chip">No runtime mutation</span>
+        <span class="dgb-chip">No iframe</span>
+        <span class="dgb-chip">No runtime execution</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
 
       <div class="dgb-actions">
-        <button class="dgb-button" type="button" data-gauge-command="full">Run full site audit</button>
-        <button class="dgb-button secondary" type="button" data-gauge-command="routes">Run route audit</button>
-        <button class="dgb-button secondary" type="button" data-gauge-command="runtime">Run runtime audit</button>
-        <button class="dgb-button secondary" type="button" data-gauge-command="render">Run render-chain audit</button>
+        <button class="dgb-button" type="button" data-audit-command="full">Run runtime parity audit</button>
+        <button class="dgb-button secondary" type="button" data-audit-command="routes">Run route usage only</button>
+        <button class="dgb-button secondary" type="button" data-audit-command="runtime">Run runtime source only</button>
         <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
       </div>
     </section>
 
-    <section class="audit-summary" aria-label="Audit summary">
+    <section class="audit-summary" aria-label="Runtime parity summary">
       <div class="audit-tile">
         <strong>Overall</strong>
         <span id="overall-state"><span class="audit-state warn">Not tested</span></span>
       </div>
       <div class="audit-tile">
-        <strong>Blocking issue</strong>
-        <span id="blocking-issue">Waiting for preflight.</span>
+        <strong>Served runtime files</strong>
+        <span id="served-count">unknown</span>
       </div>
       <div class="audit-tile">
-        <strong>Required next TNT</strong>
-        <span id="required-tnt">Not determined.</span>
+        <strong>Loaded by non-Gauges routes</strong>
+        <span id="nongauges-load-count">unknown</span>
       </div>
       <div class="audit-tile">
-        <strong>Protected files</strong>
-        <span>/world/render/* · /runtime/* · runtime bridges</span>
+        <strong>Global authority files</strong>
+        <span id="global-authority-count">unknown</span>
+      </div>
+      <div class="audit-tile">
+        <strong>Planet 1 override risk</strong>
+        <span id="override-risk-count">unknown</span>
       </div>
     </section>
 
-    <section class="dgb-grid audit-section">
+    <section class="dgb-grid">
       <article class="dgb-card full">
-        <h2>Plain-language diagnosis</h2>
-        <ul id="plain-diagnosis" class="audit-list">
-          <li>Safe preflight has not run yet.</li>
+        <h2>Five-question verdict</h2>
+        <ul id="five-question-verdict" class="audit-list">
+          <li>Audit has not run yet.</li>
         </ul>
       </article>
 
       <article class="dgb-card full">
-        <h2>Route and shell parity</h2>
+        <h2>Runtime file parity</h2>
         <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Route audit table">
+          <table class="audit-table" aria-label="Runtime parity table">
+            <thead>
+              <tr>
+                <th>Runtime file</th>
+                <th>Served?</th>
+                <th>Live size</th>
+                <th>Source signature</th>
+                <th>Non-Gauges route usage</th>
+                <th>Global authority</th>
+                <th>Planet 1 override risk</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="runtime-table">
+              <tr><td colspan="8">Not tested.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="dgb-card full">
+        <h2>Non-Gauges route usage</h2>
+        <div class="audit-table-wrap">
+          <table class="audit-table" aria-label="Route usage table">
             <thead>
               <tr>
                 <th>Route</th>
                 <th>Status</th>
-                <th>Shell</th>
-                <th>Nav</th>
-                <th>Planet 1 link</th>
-                <th>Contract</th>
+                <th>Size</th>
+                <th>/runtime/* script refs</th>
+                <th>/runtime/* text refs</th>
+                <th>Planet 1 renderer tokens</th>
               </tr>
             </thead>
             <tbody id="route-table">
@@ -242,50 +269,9 @@
       </article>
 
       <article class="dgb-card full">
-        <h2>Planet 1 render-chain freshness</h2>
-        <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Render chain audit table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Status</th>
-                <th>Expected marker</th>
-                <th>Marker present</th>
-                <th>Loop/control risk</th>
-              </tr>
-            </thead>
-            <tbody id="render-table">
-              <tr><td colspan="5">Not tested.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-
-      <article class="dgb-card full">
-        <h2>Runtime directory authority</h2>
-        <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Runtime audit table">
-            <thead>
-              <tr>
-                <th>Runtime file</th>
-                <th>Status</th>
-                <th>Live-route usage</th>
-                <th>Served</th>
-                <th>Authority signals</th>
-                <th>Risk</th>
-              </tr>
-            </thead>
-            <tbody id="runtime-table">
-              <tr><td colspan="6">Not tested.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-
-      <article class="dgb-card full">
         <h2>Raw live receipt</h2>
         <details class="dgb-details" open>
-          <summary>Audit receipt</summary>
+          <summary>Runtime parity receipt</summary>
           <pre id="live-receipt" class="dgb-receipt">Run audit to generate receipt.</pre>
         </details>
       </article>
@@ -293,80 +279,40 @@
 
     <details class="dgb-details">
       <summary>Gauge contract</summary>
-      <pre class="dgb-receipt">DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1
+      <pre class="dgb-receipt">SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1
 route=/gauges/
 page=gauges
-role=master-site-audit-console
-auto_preflight=true
+role=source-served-runtime-parity-audit
+answers=runtime-served,live-size-signature,non-gauges-route-usage,global-authority,planet-one-override-risk
+fetches_source_only=true
+executes_runtime_files=false
 deletes_files=false
 renders_planet_iframe=false
 starts_extra_animation_loops=false
-self_scan_false_positive_correction=true
-runtime_inventory_self_reference_excluded=true
-visual_pass_detector_contextual=true
-audits=ui-shell-parity,route-availability,contract-freshness,planet-render-chain,runtime-authority,loop-control-signals,visual-hold
-canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
 visual_pass_claimed=false</pre>
     </details>
   </main>
 
   <footer class="dgb-footer">
-    DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1 · Gauges · Diamond Gate Bridge.
+    SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1 · Gauges · Diamond Gate Bridge.
   </footer>
 
   <script>
-    (function attachMasterSiteAuditConsole(global) {
+    (function attachSourceServedRuntimeParityAudit(global) {
       "use strict";
 
-      var VERSION = "DGB_DIAGNOSTIC_TRUST_AND_PLANET_ROUTE_METADATA_PAIR_TNT_v1";
+      var VERSION = "SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1";
 
-      var ROUTES = [
-        { key: "compass", label: "Compass", path: "/", expectedCurrent: "Compass" },
-        { key: "door", label: "Door", path: "/door/", expectedCurrent: "Door" },
-        { key: "home", label: "Home", path: "/home/", expectedCurrent: "Home" },
-        { key: "products", label: "Products", path: "/products/", expectedCurrent: "Products" },
-        { key: "showroom", label: "Showroom", path: "/showroom/", expectedCurrent: "Showroom" },
-        { key: "planet1", label: "Planet 1", path: "/showroom/globe/", expectedCurrent: "Planet 1" },
-        { key: "gauges", label: "Gauges", path: "/gauges/", expectedCurrent: "Gauges" }
+      var NON_GAUGES_ROUTES = [
+        { label: "Compass", path: "/" },
+        { label: "Door", path: "/door/" },
+        { label: "Home", path: "/home/" },
+        { label: "Products", path: "/products/" },
+        { label: "Showroom", path: "/showroom/" },
+        { label: "Planet 1", path: "/showroom/globe/" }
       ];
 
-      var RENDER_FILES = [
-        {
-          key: "hydration",
-          path: "/world/render/planet-one.hydration.render.js",
-          expected: "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1"
-        },
-        {
-          key: "hexgrid",
-          path: "/world/render/planet-one.hexgrid.render.js",
-          expected: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
-        },
-        {
-          key: "renderer",
-          path: "/world/render/planet-one.render.js",
-          expected: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
-        },
-        {
-          key: "world-runtime",
-          path: "/world/runtime.js",
-          expected: "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1"
-        },
-        {
-          key: "world-control",
-          path: "/world/control.js",
-          expected: "G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1"
-        },
-        {
-          key: "asset-bridge",
-          path: "/assets/showroom.globe.instrument.js",
-          expected: "G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1"
-        },
-        {
-          key: "showroom-runtime",
-          path: "/showroom/runtime.js",
-          expected: "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1"
-        }
-      ];
+      var GAUGES_ROUTE = { label: "Gauges", path: "/gauges/" };
 
       var RUNTIME_FILES = [
         "/runtime/compass_cockpit_control_panel.js",
@@ -380,14 +326,14 @@ visual_pass_claimed=false</pre>
         "/runtime/world_runtime.js"
       ];
 
-      var CANONICAL_NAV = [
-        { label: "Compass", href: "/" },
-        { label: "Door", href: "/door/" },
-        { label: "Home", href: "/home/" },
-        { label: "Products", href: "/products/" },
-        { label: "Showroom", href: "/showroom/" },
-        { label: "Planet 1", href: "/showroom/globe/" },
-        { label: "Gauges", href: "/gauges/" }
+      var PLANET_RENDER_FILES = [
+        "/world/render/planet-one.hydration.render.js",
+        "/world/render/planet-one.hexgrid.render.js",
+        "/world/render/planet-one.render.js",
+        "/world/runtime.js",
+        "/world/control.js",
+        "/assets/showroom.globe.instrument.js",
+        "/showroom/runtime.js"
       ];
 
       function $(id) {
@@ -408,14 +354,37 @@ visual_pass_claimed=false</pre>
         return '<span class="audit-state ' + cls + '">' + escapeHtml(state) + "</span>";
       }
 
-      function write(id, value) {
+      function write(id, html) {
         var node = $(id);
-        if (node) node.innerHTML = value;
+        if (node) node.innerHTML = html;
       }
 
-      function writeText(id, value) {
+      function writeText(id, text) {
         var node = $(id);
-        if (node) node.textContent = value;
+        if (node) node.textContent = text;
+      }
+
+      function normalizePath(src) {
+        var raw = String(src || "").split("#")[0].split("?")[0];
+
+        try {
+          return new URL(raw, location.origin).pathname;
+        } catch (error) {
+          return raw;
+        }
+      }
+
+      function fnv1a(text) {
+        var hash = 0x811c9dc5;
+        var str = String(text || "");
+        var i;
+
+        for (i = 0; i < str.length; i += 1) {
+          hash ^= str.charCodeAt(i);
+          hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+        }
+
+        return ("00000000" + (hash >>> 0).toString(16)).slice(-8);
       }
 
       function count(pattern, text) {
@@ -423,41 +392,18 @@ visual_pass_claimed=false</pre>
         return match ? match.length : 0;
       }
 
-      function getScriptRefs(text) {
-        var refs = [];
-        String(text || "").replace(/<script[^>]+src=["']([^"']+)["']/gi, function (_, src) {
-          refs.push(src);
-          return "";
+      function unique(list) {
+        var out = [];
+        (list || []).forEach(function (item) {
+          if (out.indexOf(item) === -1) out.push(item);
         });
-        return refs;
+        return out;
       }
 
-      function stripScriptBodies(text) {
-        return String(text || "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-      }
-
-      function getRuntimeScriptRefsFromHtml(text) {
-        return getScriptRefs(text).filter(function (src) {
-          return src.indexOf("/runtime/") === 0 || src.indexOf(location.origin + "/runtime/") === 0;
-        });
-      }
-
-      function hasExplicitVisualPassClaim(text, path) {
-        if (path === "/gauges/") return false;
-
-        var htmlOnly = stripScriptBodies(text);
-
-        if (/data-visual-pass-claimed=["']true["']/i.test(htmlOnly)) return true;
-        if (/visual-pass-claimed=["']true["']/i.test(htmlOnly)) return true;
-        if (/VISUAL_PASS_CLAIMED\s*=\s*true/i.test(htmlOnly)) return true;
-        if (/visual_pass_claimed\s*=\s*true/i.test(htmlOnly)) return true;
-
-        return false;
-      }
-
-      function fetchText(path) {
-        var separator = path.indexOf("?") === -1 ? "?" : "&";
-        var url = path + separator + "_dgb_master_gauge=" + encodeURIComponent(VERSION) + "&_t=" + Date.now();
+      function fetchSource(path) {
+        var url = path + (path.indexOf("?") === -1 ? "?" : "&") +
+          "_source_served_runtime_parity=" + encodeURIComponent(VERSION) +
+          "&_t=" + Date.now();
 
         return fetch(url, { cache: "no-store" })
           .then(function (res) {
@@ -468,6 +414,10 @@ visual_pass_claimed=false</pre>
                 status: res.status,
                 size: text.length,
                 text: text,
+                hash: fnv1a(text),
+                etag: res.headers.get("etag") || "",
+                lastModified: res.headers.get("last-modified") || "",
+                contentType: res.headers.get("content-type") || "",
                 fetchedAt: new Date().toISOString(),
                 error: null
               };
@@ -480,362 +430,362 @@ visual_pass_claimed=false</pre>
               status: 0,
               size: 0,
               text: "",
+              hash: "00000000",
+              etag: "",
+              lastModified: "",
+              contentType: "",
               fetchedAt: new Date().toISOString(),
               error: String(error && error.message ? error.message : error)
             };
           });
       }
 
-      function loopSignals(text) {
-        text = String(text || "");
-        return {
-          requestAnimationFrame: count(/requestAnimationFrame/g, text),
-          cancelAnimationFrame: count(/cancelAnimationFrame/g, text),
-          setInterval: count(/setInterval/g, text),
-          setTimeout: count(/setTimeout/g, text),
-          whileLoop: count(/while\s*\(/g, text)
-        };
+      function extractScriptRefs(html) {
+        var refs = [];
+
+        String(html || "").replace(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi, function (_, src) {
+          refs.push(src);
+          return "";
+        });
+
+        return refs;
       }
 
-      function controlSignals(text) {
-        text = String(text || "");
-        return {
-          click: count(/addEventListener\s*\(\s*["']click/g, text),
-          input: count(/addEventListener\s*\(\s*["']input/g, text),
-          change: count(/addEventListener\s*\(\s*["']change/g, text),
-          querySelector: count(/querySelector/g, text),
-          getElementById: count(/getElementById/g, text)
-        };
+      function extractRuntimeTextRefs(text) {
+        var refs = [];
+
+        String(text || "").replace(/\/runtime\/[a-zA-Z0-9_.-]+\.js/g, function (src) {
+          refs.push(src);
+          return "";
+        });
+
+        return unique(refs);
       }
 
-      function total(obj) {
-        return Object.keys(obj || {}).reduce(function (sum, key) {
-          return sum + (Number(obj[key]) || 0);
-        }, 0);
+      function extractPlanetTokens(text) {
+        var tokens = [];
+
+        String(text || "").replace(/\/world\/render\/planet-one\.[a-zA-Z0-9_.-]+\.js\?v=([^"'\s&<]+)/g, function (_, token) {
+          tokens.push(token);
+          return "";
+        });
+
+        return unique(tokens);
       }
 
-      function normalizeScriptPath(src) {
-        var value = String(src || "").split("?")[0];
-        try {
-          var url = new URL(value, location.origin);
-          return url.pathname;
-        } catch (error) {
-          return value;
-        }
+      function getVersionMarkers(text) {
+        var markers = [];
+
+        String(text || "").replace(/G1_PLANET_1_[A-Z0-9_]+_TNT_v\d+/g, function (marker) {
+          markers.push(marker);
+          return "";
+        });
+
+        String(text || "").replace(/SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v\d+/g, function (marker) {
+          markers.push(marker);
+          return "";
+        });
+
+        return unique(markers).slice(0, 12);
       }
 
       function scanRoute(route, fetched) {
-        var text = fetched.text || "";
-        var htmlOnly = stripScriptBodies(text);
+        var scriptRefs = extractScriptRefs(fetched.text);
+        var runtimeScriptRefs = unique(scriptRefs.map(normalizePath).filter(function (path) {
+          return path.indexOf("/runtime/") === 0;
+        }));
 
-        var hasShell =
-          text.indexOf("/assets/dgb-ui-shell.css") !== -1 ||
-          text.indexOf("dgb-site-header") !== -1 ||
-          text.indexOf("dgb-nav") !== -1;
-
-        var hasBrand = htmlOnly.indexOf("Diamond Gate Bridge") !== -1;
-        var hasEstate = htmlOnly.indexOf("Rich Manor and Estate") !== -1;
-        var hasPlanet1 = htmlOnly.indexOf("/showroom/globe/") !== -1 && htmlOnly.indexOf("Planet 1") !== -1;
-
-        var navComplete = CANONICAL_NAV.every(function (item) {
-          return htmlOnly.indexOf(item.href) !== -1 && htmlOnly.indexOf(item.label) !== -1;
-        });
-
-        var activeCurrent =
-          htmlOnly.indexOf('aria-current="page"') !== -1 &&
-          htmlOnly.indexOf(route.expectedCurrent) !== -1;
-
-        var contractMatch = text.match(/data-contract=["']([^"']+)["']/i);
-        var contract = contractMatch ? contractMatch[1] : "NO_DATA_CONTRACT";
-
-        var state = fetched.ok && hasShell && hasBrand && hasEstate && hasPlanet1 && navComplete && activeCurrent
-          ? "PASS"
-          : fetched.ok && hasBrand && (hasShell || navComplete)
-            ? "WARN"
-            : "FAIL";
-
-        if (route.path === "/showroom/globe/" && contract === "NO_DATA_CONTRACT") state = "WARN";
+        var runtimeTextRefs = extractRuntimeTextRefs(fetched.text);
+        var planetRenderTokens = extractPlanetTokens(fetched.text);
 
         return {
-          key: route.key,
           label: route.label,
           path: route.path,
           ok: fetched.ok,
           status: fetched.status,
           size: fetched.size,
-          state: state,
-          hasShell: hasShell,
-          hasBrand: hasBrand,
-          hasEstate: hasEstate,
-          hasPlanet1: hasPlanet1,
-          navComplete: navComplete,
-          activeCurrent: activeCurrent,
-          contract: contract,
-          scriptRefs: getScriptRefs(text),
-          runtimeScriptRefs: getRuntimeScriptRefsFromHtml(text),
-          visualPassClaim: hasExplicitVisualPassClaim(text, route.path),
+          hash: fetched.hash,
+          runtimeScriptRefs: runtimeScriptRefs,
+          runtimeTextRefs: runtimeTextRefs,
+          planetRenderTokens: planetRenderTokens,
+          scriptRefs: scriptRefs,
           error: fetched.error
         };
       }
 
-      function scanRenderFile(file, fetched) {
+      function scanRuntimeFile(filePath, fetched, nonGaugesRouteResults) {
         var text = fetched.text || "";
-        var loops = loopSignals(text);
-        var controls = controlSignals(text);
-        var loopTotal = total(loops);
-        var controlTotal = total(controls);
-        var markerPresent = text.indexOf(file.expected) !== -1;
+        var normalizedPath = normalizePath(filePath);
 
-        var state = fetched.ok && markerPresent ? "PASS" : fetched.ok ? "WARN" : "FAIL";
-        var risk = loopTotal + controlTotal > 8 ? "HIGH" : loopTotal + controlTotal > 0 ? "MEDIUM" : "LOW";
+        var loadedByRoutes = nonGaugesRouteResults.filter(function (route) {
+          return route.runtimeScriptRefs.indexOf(normalizedPath) !== -1;
+        }).map(function (route) {
+          return route.path;
+        });
+
+        var textReferencedByRoutes = nonGaugesRouteResults.filter(function (route) {
+          return route.runtimeTextRefs.indexOf(normalizedPath) !== -1;
+        }).map(function (route) {
+          return route.path;
+        });
+
+        var assignsWindowGlobal =
+          count(/window\.DGB[A-Za-z0-9_]+\s*=/g, text) +
+          count(/global\.DGB[A-Za-z0-9_]+\s*=/g, text) +
+          count(/globalThis\.DGB[A-Za-z0-9_]+\s*=/g, text);
+
+        var declaresDGBGlobal =
+          count(/DGB[A-Za-z0-9_]+/g, text);
+
+        var planetOneRefs =
+          count(/DGBPlanetOne/g, text) +
+          count(/planet-one-render/g, text) +
+          count(/planetOne/g, text) +
+          count(/PlanetOne/g, text);
+
+        var rendererRefs =
+          count(/DGBPlanetOneRenderer/g, text) +
+          count(/DGBPlanetOneRenderTeam/g, text) +
+          count(/DGBPlanetOneRender/g, text) +
+          count(/renderPlanetOne/g, text) +
+          count(/mountPlanetOne/g, text);
+
+        var canvasRefs =
+          count(/getContext\s*\(/g, text) +
+          count(/canvas/g, text) +
+          count(/appendChild\s*\(/g, text) +
+          count(/innerHTML\s*=/g, text);
+
+        var loopSignals =
+          count(/requestAnimationFrame/g, text) +
+          count(/setInterval/g, text) +
+          count(/setTimeout/g, text) +
+          count(/while\s*\(/g, text);
+
+        var controlSignals =
+          count(/addEventListener\s*\(\s*["']click/g, text) +
+          count(/addEventListener\s*\(\s*["']input/g, text) +
+          count(/addEventListener\s*\(\s*["']change/g, text) +
+          count(/querySelector/g, text) +
+          count(/getElementById/g, text);
+
+        var globalAuthority = assignsWindowGlobal > 0 || declaresDGBGlobal > 0;
+        var liveLoaded = loadedByRoutes.length > 0;
+        var potentialOverride = planetOneRefs + rendererRefs + canvasRefs > 0;
+        var confirmedOverrideRisk = liveLoaded && potentialOverride;
+
+        var state = "PASS";
+        var verdict = "Served or source-only; no non-Gauges route load detected.";
+
+        if (!fetched.ok) {
+          state = "FAIL";
+          verdict = "Runtime file is not served.";
+        } else if (confirmedOverrideRisk) {
+          state = "FAIL";
+          verdict = "Loaded by a non-Gauges route and contains Planet 1/render/canvas authority signals.";
+        } else if (liveLoaded && globalAuthority) {
+          state = "FAIL";
+          verdict = "Loaded by a non-Gauges route and declares DGB global authority.";
+        } else if (globalAuthority || potentialOverride) {
+          state = "WARN";
+          verdict = "Source contains authority signals, but no non-Gauges route loads it as a script.";
+        }
 
         return {
-          key: file.key,
-          path: file.path,
+          path: filePath,
           ok: fetched.ok,
           status: fetched.status,
           size: fetched.size,
-          expected: file.expected,
-          markerPresent: markerPresent,
+          sourceSignature: {
+            hash: fetched.hash,
+            etag: fetched.etag,
+            lastModified: fetched.lastModified,
+            contentType: fetched.contentType,
+            markers: getVersionMarkers(text)
+          },
+          loadedByNonGaugesRoutes: loadedByRoutes,
+          textReferencedByNonGaugesRoutes: textReferencedByRoutes,
+          liveLoadedByNonGaugesRoute: liveLoaded,
+          assignsWindowGlobal: assignsWindowGlobal,
+          dgbGlobalReferenceCount: declaresDGBGlobal,
+          globalAuthorityDeclared: globalAuthority,
+          planetOneReferenceCount: planetOneRefs,
+          rendererReferenceCount: rendererRefs,
+          canvasMutationSignals: canvasRefs,
+          loopSignals: loopSignals,
+          controlSignals: controlSignals,
+          potentialPlanetOneOverride: potentialOverride,
+          confirmedPlanetOneOverrideRisk: confirmedOverrideRisk,
           state: state,
-          loopSignals: loops,
-          controlSignals: controls,
-          loopSignalTotal: loopTotal,
-          controlSignalTotal: controlTotal,
-          risk: risk,
-          visualPassClaim: false,
+          verdict: verdict,
           error: fetched.error
         };
       }
 
-      function scanRuntimeFile(path, fetched, liveRouteRuntimeScriptPaths) {
-        var text = fetched.text || "";
-        var loops = loopSignals(text);
-        var controls = controlSignals(text);
-        var loopTotal = total(loops);
-        var controlTotal = total(controls);
-        var served = Boolean(fetched.ok);
-        var liveRouteUsage = liveRouteRuntimeScriptPaths.indexOf(path) !== -1;
-        var hasGlobal = /DGB[A-Za-z0-9_]+/.test(text);
-        var authoritySignalTotal = loopTotal + controlTotal + (hasGlobal ? 1 : 0);
+      function rowRuntime(item) {
+        var sig = "hash=" + item.sourceSignature.hash;
 
-        var risk = liveRouteUsage && authoritySignalTotal > 0 ? "HIGH" :
-          served && authoritySignalTotal > 0 ? "MEDIUM" :
-          served ? "LOW" :
-          "FAIL";
+        if (item.sourceSignature.etag) sig += "\netag=" + item.sourceSignature.etag;
+        if (item.sourceSignature.lastModified) sig += "\nlast-modified=" + item.sourceSignature.lastModified;
+        if (item.sourceSignature.markers.length) sig += "\nmarkers=" + item.sourceSignature.markers.join(", ");
 
-        var state = risk === "HIGH" || risk === "FAIL" ? "FAIL" : "PASS";
-
-        return {
-          path: path,
-          ok: fetched.ok,
-          status: fetched.status,
-          size: fetched.size,
-          served: served,
-          liveRouteUsage: liveRouteUsage,
-          hasGlobal: hasGlobal,
-          authoritySignalTotal: authoritySignalTotal,
-          loopSignals: loops,
-          controlSignals: controls,
-          loopSignalTotal: loopTotal,
-          controlSignalTotal: controlTotal,
-          risk: risk,
-          state: state,
-          visualPassClaim: false,
-          error: fetched.error
-        };
+        return "<tr>" +
+          "<td class='mono'>" + escapeHtml(item.path) + "</td>" +
+          "<td>" + statePill(item.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
+          "<td>" + escapeHtml(item.size) + "</td>" +
+          "<td class='mono'>" + escapeHtml(sig) + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.loadedByNonGaugesRoutes.length ? item.loadedByNonGaugesRoutes.join(", ") : "none") + "</td>" +
+          "<td>" + escapeHtml(item.globalAuthorityDeclared ? "yes" : "no") +
+            "<br><small>DGB refs=" + escapeHtml(item.dgbGlobalReferenceCount) + " · assignments=" + escapeHtml(item.assignsWindowGlobal) + "</small></td>" +
+          "<td>" + escapeHtml(item.confirmedPlanetOneOverrideRisk ? "CONFIRMED RISK" : item.potentialPlanetOneOverride ? "source-only potential" : "none") +
+            "<br><small>planet=" + escapeHtml(item.planetOneReferenceCount) +
+            " · renderer=" + escapeHtml(item.rendererReferenceCount) +
+            " · canvas=" + escapeHtml(item.canvasMutationSignals) + "</small></td>" +
+          "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.verdict) + "</small></td>" +
+          "</tr>";
       }
 
       function rowRoute(item) {
         return "<tr>" +
-          "<td>" + escapeHtml(item.path) + "</td>" +
-          "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.hasShell && item.hasBrand && item.hasEstate ? "aligned" : "drift") + "</td>" +
-          "<td>" + escapeHtml(item.navComplete && item.activeCurrent ? "canonical" : "incomplete") + "</td>" +
-          "<td>" + escapeHtml(item.hasPlanet1 ? "present" : "missing") + "</td>" +
-          "<td>" + escapeHtml(item.contract) + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.path) + "</td>" +
+          "<td>" + statePill(item.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
+          "<td>" + escapeHtml(item.size) + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.runtimeScriptRefs.length ? item.runtimeScriptRefs.join(", ") : "none") + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.runtimeTextRefs.length ? item.runtimeTextRefs.join(", ") : "none") + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.planetRenderTokens.length ? item.planetRenderTokens.join(", ") : "none") + "</td>" +
           "</tr>";
       }
 
-      function rowRender(item) {
-        return "<tr>" +
-          "<td>" + escapeHtml(item.path) + "</td>" +
-          "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.expected) + "</td>" +
-          "<td>" + escapeHtml(item.markerPresent ? "yes" : "no") + "</td>" +
-          "<td>" + escapeHtml(item.risk + " · loops=" + item.loopSignalTotal + " · controls=" + item.controlSignalTotal) + "</td>" +
-          "</tr>";
-      }
-
-      function rowRuntime(item) {
-        return "<tr>" +
-          "<td>" + escapeHtml(item.path) + "</td>" +
-          "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.liveRouteUsage ? "yes" : "no") + "</td>" +
-          "<td>" + escapeHtml(item.served ? "yes" : "no") + "</td>" +
-          "<td>" + escapeHtml(item.authoritySignalTotal) + "</td>" +
-          "<td>" + escapeHtml(item.risk) + "</td>" +
-          "</tr>";
-      }
-
-      function deriveDiagnosis(routeResults, renderResults, runtimeResults) {
-        var routeFails = routeResults.filter(function (item) { return item.state === "FAIL"; });
-        var routeWarns = routeResults.filter(function (item) { return item.state === "WARN"; });
-        var renderFails = renderResults.filter(function (item) { return item.state === "FAIL"; });
-        var renderWarns = renderResults.filter(function (item) { return item.state === "WARN"; });
-        var runtimeHigh = runtimeResults.filter(function (item) { return item.risk === "HIGH"; });
-        var visualClaims = routeResults.concat(renderResults).concat(runtimeResults).filter(function (item) {
-          return item.visualPassClaim === true;
+      function deriveVerdict(runtimeResults, routeResults, mode) {
+        var served = runtimeResults.filter(function (item) { return item.ok; });
+        var unserved = runtimeResults.filter(function (item) { return !item.ok; });
+        var loaded = runtimeResults.filter(function (item) { return item.liveLoadedByNonGaugesRoute; });
+        var globalAuthority = runtimeResults.filter(function (item) { return item.globalAuthorityDeclared; });
+        var confirmedOverride = runtimeResults.filter(function (item) { return item.confirmedPlanetOneOverrideRisk; });
+        var sourceOnlyPotential = runtimeResults.filter(function (item) {
+          return item.potentialPlanetOneOverride && !item.confirmedPlanetOneOverrideRisk;
         });
 
-        var missingPlanetContract = routeResults.filter(function (item) {
-          return item.path === "/showroom/globe/" && item.contract === "NO_DATA_CONTRACT";
-        });
-
-        var blocking = "No blocking issue detected.";
-        var tnt = "HOLD";
         var overall = "PASS";
         var notes = [];
 
-        if (routeFails.length || routeWarns.length) {
-          overall = routeFails.length ? "FAIL" : "WARN";
-          blocking = "UI shell or route metadata is not fully aligned.";
-          tnt = missingPlanetContract.length
-            ? "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
-            : "DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1";
-          notes.push("<strong>UI shell:</strong> " + routeFails.length + " fail, " + routeWarns.length + " warn.");
-        } else {
-          notes.push("<strong>UI shell:</strong> all audited routes carry the canonical shell/nav contract.");
-        }
+        if (unserved.length) overall = "FAIL";
+        if (loaded.length || confirmedOverride.length) overall = "FAIL";
+        if (overall !== "FAIL" && (globalAuthority.length || sourceOnlyPotential.length)) overall = "WARN";
 
-        if (missingPlanetContract.length) {
-          if (overall !== "FAIL") overall = "WARN";
-          blocking = "Planet 1 is missing a route data-contract marker.";
-          tnt = "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1";
-          notes.push("<strong>Planet 1 contract:</strong> missing data-contract marker.");
-        } else {
-          notes.push("<strong>Planet 1 contract:</strong> route metadata marker is present.");
-        }
+        notes.push("<strong>1. Is each /runtime/* file still served?</strong> " +
+          served.length + " of " + RUNTIME_FILES.length + " served" +
+          (unserved.length ? "; missing: " + unserved.map(function (i) { return i.path; }).join(", ") : "."));
 
-        if (renderFails.length || renderWarns.length) {
-          if (overall !== "FAIL") overall = renderFails.length ? "FAIL" : "WARN";
-          blocking = "Planet 1 render-chain marker freshness has drift.";
-          tnt = "G1_PLANET_1_RENDER_CHAIN_MARKER_ALIGNMENT_TNT_v1";
-          notes.push("<strong>Render chain:</strong> " + renderFails.length + " fail, " + renderWarns.length + " warn.");
-        } else {
-          notes.push("<strong>Render chain:</strong> expected water phase-state boundary markers are present.");
-        }
+        notes.push("<strong>2. What is each file’s live size and source signature?</strong> Captured in the runtime table as size, FNV-1a hash, ETag, Last-Modified, content type, and detected version markers.");
 
-        if (runtimeHigh.length) {
-          overall = "FAIL";
-          blocking = "Active live-route runtime authority conflict remains present.";
-          tnt = "RUNTIME_DIRECTORY_AUTHORITY_SUBORDINATION_TNT_v1";
-          notes.push("<strong>Runtime:</strong> " + runtimeHigh.length + " high-risk /runtime/ files are live-route active.");
-        } else {
-          notes.push("<strong>Runtime:</strong> no high-risk /runtime/ file is used by live route script tags.");
-        }
+        notes.push("<strong>3. Does any live non-Gauges route actually load it?</strong> " +
+          (loaded.length ? "YES: " + loaded.map(function (i) { return i.path + " via " + i.loadedByNonGaugesRoutes.join(", "); }).join(" | ") : "NO. No non-Gauges route loads /runtime/* as script tags."));
 
-        if (visualClaims.length) {
-          overall = "FAIL";
-          blocking = "One or more served pages explicitly claim visual pass.";
-          tnt = "VISUAL_PASS_FALSE_CLAIM_REMOVAL_TNT_v1";
-          notes.push("<strong>Visual pass:</strong> explicit visual pass claim found.");
-        } else {
-          notes.push("<strong>Visual pass:</strong> no explicit visual-pass claim found.");
-        }
+        notes.push("<strong>4. Does any runtime file declare active global authority?</strong> " +
+          (globalAuthority.length ? "YES: " + globalAuthority.map(function (i) { return i.path; }).join(", ") : "NO DGB global authority detected in /runtime/* source."));
 
-        notes.push("<strong>Protected scope:</strong> this gauge does not mutate route, runtime, render, hydration, or /runtime files.");
-        notes.push("<strong>Best next move:</strong> execute only the TNT named in the required-next-TNT tile.");
+        notes.push("<strong>5. Does any runtime file override Planet 1 after the renderer mounts?</strong> " +
+          (confirmedOverride.length ? "CONFIRMED RISK: " + confirmedOverride.map(function (i) { return i.path; }).join(", ") :
+            sourceOnlyPotential.length ? "SOURCE-ONLY POTENTIAL, not live-route confirmed: " + sourceOnlyPotential.map(function (i) { return i.path; }).join(", ") :
+            "NO confirmed Planet 1 override risk detected."));
+
+        if (!loaded.length && globalAuthority.length) {
+          notes.push("<strong>Controlling read:</strong> /runtime/* may contain old authority code, but source existence alone is not live control. Live control requires a non-Gauges script load or downstream import path.");
+        }
 
         return {
           overall: overall,
-          blocking: blocking,
-          requiredTNT: tnt,
-          notes: notes
+          servedCount: served.length,
+          loadedCount: loaded.length,
+          globalAuthorityCount: globalAuthority.length,
+          confirmedOverrideCount: confirmedOverride.length,
+          sourceOnlyPotentialCount: sourceOnlyPotential.length,
+          notes: notes,
+          mode: mode
         };
       }
 
-      function run(kind) {
-        kind = kind || "full";
+      function run(mode) {
+        mode = mode || "full";
 
         write("overall-state", statePill("WARN"));
-        writeText("blocking-issue", "Audit running.");
-        writeText("required-tnt", "Scanning.");
+        writeText("served-count", "scanning");
+        writeText("nongauges-load-count", "scanning");
+        writeText("global-authority-count", "scanning");
+        writeText("override-risk-count", "scanning");
 
-        var routePromise = Promise.all(ROUTES.map(function (route) { return fetchText(route.path); }));
-
-        var renderPromise = kind === "routes" || kind === "runtime"
+        var routePromise = mode === "runtime"
           ? Promise.resolve([])
-          : Promise.all(RENDER_FILES.map(function (file) { return fetchText(file.path); }));
+          : Promise.all(NON_GAUGES_ROUTES.concat([GAUGES_ROUTE]).map(function (route) {
+              return fetchSource(route.path);
+            }));
 
-        var runtimePromise = kind === "routes" || kind === "render"
+        var runtimePromise = mode === "routes"
           ? Promise.resolve([])
-          : Promise.all(RUNTIME_FILES.map(fetchText));
+          : Promise.all(RUNTIME_FILES.map(fetchSource));
 
-        Promise.all([routePromise, renderPromise, runtimePromise]).then(function (parts) {
+        Promise.all([routePromise, runtimePromise]).then(function (parts) {
           var routeFetches = parts[0];
-          var renderFetches = parts[1];
-          var runtimeFetches = parts[2];
+          var runtimeFetches = parts[1];
 
-          var routeResults = ROUTES.map(function (route, index) {
-            return scanRoute(route, routeFetches[index]);
-          });
-
-          var renderResults = renderFetches.length
-            ? RENDER_FILES.map(function (file, index) { return scanRenderFile(file, renderFetches[index]); })
+          var allRoutes = NON_GAUGES_ROUTES.concat([GAUGES_ROUTE]);
+          var routeResults = routeFetches.length
+            ? allRoutes.map(function (route, index) {
+                return scanRoute(route, routeFetches[index]);
+              })
             : [];
 
-          var liveRouteRuntimeScriptPaths = [];
-          routeResults.forEach(function (route) {
-            if (route.path === "/gauges/") return;
-            route.runtimeScriptRefs.forEach(function (src) {
-              var normalized = normalizeScriptPath(src);
-              if (liveRouteRuntimeScriptPaths.indexOf(normalized) === -1) liveRouteRuntimeScriptPaths.push(normalized);
-            });
+          var nonGaugesRouteResults = routeResults.filter(function (route) {
+            return route.path !== "/gauges/";
           });
 
           var runtimeResults = runtimeFetches.length
             ? RUNTIME_FILES.map(function (path, index) {
-                return scanRuntimeFile(path, runtimeFetches[index], liveRouteRuntimeScriptPaths);
+                return scanRuntimeFile(path, runtimeFetches[index], nonGaugesRouteResults);
               })
             : [];
 
-          var diagnosis = deriveDiagnosis(routeResults, renderResults, runtimeResults);
+          var verdict = deriveVerdict(runtimeResults, nonGaugesRouteResults, mode);
 
-          write("overall-state", statePill(diagnosis.overall));
-          writeText("blocking-issue", diagnosis.blocking);
-          writeText("required-tnt", diagnosis.requiredTNT);
+          write("overall-state", statePill(verdict.overall));
+          writeText("served-count", verdict.servedCount + " / " + RUNTIME_FILES.length);
+          writeText("nongauges-load-count", String(verdict.loadedCount));
+          writeText("global-authority-count", String(verdict.globalAuthorityCount));
+          writeText("override-risk-count", String(verdict.confirmedOverrideCount));
 
-          $("plain-diagnosis").innerHTML = diagnosis.notes.map(function (note) {
+          $("five-question-verdict").innerHTML = verdict.notes.map(function (note) {
             return "<li>" + note + "</li>";
           }).join("");
 
-          $("route-table").innerHTML = routeResults.map(rowRoute).join("");
-          $("render-table").innerHTML = renderResults.length
-            ? renderResults.map(rowRender).join("")
-            : '<tr><td colspan="5">Render-chain audit not run in this mode.</td></tr>';
           $("runtime-table").innerHTML = runtimeResults.length
             ? runtimeResults.map(rowRuntime).join("")
-            : '<tr><td colspan="6">Runtime audit not run in this mode.</td></tr>';
+            : '<tr><td colspan="8">Runtime source audit not run in this mode.</td></tr>';
+
+          $("route-table").innerHTML = routeResults.length
+            ? routeResults.filter(function (route) { return route.path !== "/gauges/"; }).map(rowRoute).join("")
+            : '<tr><td colspan="6">Route usage audit not run in this mode.</td></tr>';
 
           var receipt = {
             contractVersion: VERSION,
             timestamp: new Date().toISOString(),
-            auditMode: kind,
+            auditMode: mode,
             noDeleteAuthorized: true,
+            noRuntimeExecution: true,
             noPlanetIframeRendered: true,
             noExtraAnimationLoopsStarted: true,
-            selfScanFalsePositiveCorrectionActive: true,
-            runtimeInventorySelfReferenceExcluded: true,
-            visualPassDetectorContextual: true,
-            overall: diagnosis.overall,
-            blockingIssue: diagnosis.blocking,
-            requiredNextTNT: diagnosis.requiredTNT,
-            canonicalNav: CANONICAL_NAV,
-            liveRouteRuntimeScriptPaths: liveRouteRuntimeScriptPaths,
-            routeResults: routeResults,
-            renderResults: renderResults,
+            visualPassClaimed: false,
+            questionsAnswered: [
+              "Is each /runtime/* file still served?",
+              "What is each file's live size and source signature?",
+              "Does any live non-Gauges route actually load it?",
+              "Does any runtime file declare active global authority?",
+              "Does any runtime file override Planet 1 after the renderer mounts?"
+            ],
+            verdict: verdict,
+            nonGaugesRoutes: nonGaugesRouteResults,
             runtimeResults: runtimeResults,
+            runtimeFiles: RUNTIME_FILES,
             protectedFiles: [
               "/world/render/*",
               "/world/runtime.js",
@@ -846,19 +796,19 @@ visual_pass_claimed=false</pre>
             ]
           };
 
-          global.DGBGaugesMasterSiteAuditReceipt = receipt;
+          global.DGBSourceServedRuntimeParityAuditReceipt = receipt;
           writeText("live-receipt", JSON.stringify(receipt, null, 2));
         });
       }
 
-      Array.prototype.slice.call(document.querySelectorAll("[data-gauge-command]")).forEach(function (button) {
+      Array.prototype.slice.call(document.querySelectorAll("[data-audit-command]")).forEach(function (button) {
         button.addEventListener("click", function () {
-          run(button.getAttribute("data-gauge-command"));
+          run(button.getAttribute("data-audit-command"));
         });
       });
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function () { run("full"); });
+        document.addEventListener("DOMContentLoaded", function () { run("full"); }, { once: true });
       } else {
         run("full");
       }

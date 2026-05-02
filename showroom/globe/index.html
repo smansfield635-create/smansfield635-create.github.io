@@ -3,12 +3,12 @@
   lang="en"
   data-page="earth-g1-sun-g1-moon-g1"
   data-route="/showroom/globe/"
-  data-contract="MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1"
+  data-contract="MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1"
   data-demo-universe="earth-sun-moon-sequence"
   data-generation="G1"
   data-earth-g1="complete"
   data-sun-g1="locked"
-  data-moon-g1="active-renewal"
+  data-moon-g1="4k-lunar-detail-renewal"
   data-planet-one="reserved-for-nine-summits-universe"
   data-visual-pass-claimed="false"
 >
@@ -16,7 +16,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Earth G1 · Sun G1 · Moon G1</title>
-  <meta name="description" content="Earth G1 and Sun G1 locked, with Moon G1 lunar-disc runtime renewal.">
+  <meta name="description" content="Earth G1 and Sun G1 preserved, Moon G1 renewed to high-detail lunar standard.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
@@ -185,7 +185,7 @@
       inset: 8%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 38% 32%, rgba(235, 238, 244, 0.16), rgba(170, 178, 190, 0.08) 46%, rgba(40, 47, 60, 0.03) 72%, transparent 100%);
+        radial-gradient(circle at 34% 28%, rgba(245, 248, 255, 0.18), rgba(165, 174, 190, 0.08) 44%, rgba(55, 62, 76, 0.035) 72%, transparent 100%);
       filter: blur(2px);
       z-index: 1;
     }
@@ -196,13 +196,14 @@
       inset: 5%;
       border-radius: 50%;
       box-shadow:
-        0 0 28px rgba(220, 230, 245, 0.10),
-        0 0 72px rgba(120, 145, 180, 0.08);
+        0 0 26px rgba(230, 236, 248, 0.10),
+        0 0 72px rgba(120, 145, 180, 0.08),
+        0 0 116px rgba(120, 145, 180, 0.045);
       z-index: 0;
     }
 
     .moon-canvas {
-      filter: saturate(0.92) contrast(1.08);
+      filter: saturate(0.92) contrast(1.13);
     }
 
     .control-grid button,
@@ -241,7 +242,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe · Sun G1 · Moon Next</div>
+        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe · Sun G1 · Moon G1</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -265,16 +266,16 @@
       <h1 class="dgb-title">Demo Universe baseline.</h1>
 
       <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 is now locked as the accepted star standard. Moon G1 is opened as the next renewal target:
-        a lunar disc with crater basins, maria fields, limb shading, and controlled orbital-body motion.
+        Earth G1 is complete. Sun G1 is locked. Moon G1 is renewed to the high-detail lunar standard:
+        crater fields, maria basins, ray systems, rough regolith texture, limb shading, and controlled motion.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
         <span class="dgb-chip">Sun G1 locked</span>
-        <span class="dgb-chip">Moon G1 active</span>
+        <span class="dgb-chip">Moon G1 4K detail</span>
         <span class="dgb-chip">Planet 1 reserved</span>
-        <span class="dgb-chip hold">Moon visual hold</span>
+        <span class="dgb-chip hold">Moon lock-ready</span>
       </div>
 
       <div class="top-actions" aria-label="Book action">
@@ -285,13 +286,13 @@
     <section class="dgb-card">
       <h2>Choose Demo Universe body</h2>
       <p class="page-note">
-        Earth and Sun are G1 standards. Moon is now the active renewal body.
+        Earth and Sun remain preserved. Moon is now the renewed high-detail body.
       </p>
 
       <div class="body-switch-row" aria-label="Demo Universe body switch">
         <button class="dgb-button active-view" type="button" data-body-view="earth">View Earth G1</button>
         <button class="dgb-button secondary" type="button" data-body-view="sun">View Sun G1</button>
-        <button class="dgb-button secondary" type="button" data-body-view="moon">View Moon</button>
+        <button class="dgb-button secondary" type="button" data-body-view="moon">View Moon G1</button>
       </div>
     </section>
 
@@ -306,7 +307,7 @@
           data-planet-one-render="true"
           data-demo-universe="earth-sun-moon-sequence"
           data-generation="G1"
-          data-render-contract="MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1"
+          data-render-contract="MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1"
           data-active-body="earth"
           data-visual-pass-claimed="false"
         ></div>
@@ -337,7 +338,7 @@
         type="range"
         min="0"
         max="100"
-        value="20"
+        value="18"
         data-body-speed="true"
         aria-label="Demo Universe body motion speed"
       >
@@ -345,21 +346,21 @@
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1
 route=/showroom/globe/
 page=earth-g1-sun-g1-moon-g1
 earth-g1-complete=true
 sun-g1=locked
-moon-g1=active-renewal
+moon-g1=4k-lunar-detail-lock-ready
 moon-shape=round
-moon-surface=craters-maria-limb-shading
+moon-surface=craters-maria-rays-regolith-limb-shading
 planet-1=reserved-for-nine-summits-universe
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 active renewal.
+    MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 lock-ready.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -370,7 +371,7 @@ visual-pass-claimed=false</pre>
     (function bootEarthSunMoonSequence(window) {
       "use strict";
 
-      var VERSION = "MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1";
+      var VERSION = "MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1";
       var currentBody = "earth";
       var sunRuntime = null;
       var moonRuntime = null;
@@ -455,15 +456,15 @@ visual-pass-claimed=false</pre>
         if (!node) return;
 
         node.textContent =
-          "MOON_G1_LUNAR_DISC_RUNTIME_START_TNT_v1\n" +
+          "MOON_G1_4K_LUNAR_DETAIL_LOCK_READY_TNT_v1\n" +
           "route=/showroom/globe/\n" +
           "page=earth-g1-sun-g1-moon-g1\n" +
           "current-body=" + currentBody + "\n" +
           "earth-g1-complete=true\n" +
           "sun-g1=locked\n" +
-          "moon-g1=active-renewal\n" +
+          "moon-g1=4k-lunar-detail-lock-ready\n" +
           "moon-shape=round\n" +
-          "moon-surface=craters-maria-limb-shading\n" +
+          "moon-surface=craters-maria-rays-regolith-limb-shading\n" +
           "planet-1=reserved-for-nine-summits-universe\n" +
           "active-status=" + JSON.stringify(activeStatus(), null, 2) + "\n" +
           "visual-pass-claimed=false\n" +
@@ -504,7 +505,6 @@ visual-pass-claimed=false</pre>
         var gold = [248, 174, 55];
         var yellow = [255, 222, 122];
         var pale = [255, 244, 196];
-
         var c;
 
         if (value < 0.18) {
@@ -530,26 +530,27 @@ visual-pass-claimed=false</pre>
       }
 
       function moonColor(value, limb, mare) {
-        var shadow = [70, 75, 84];
-        var basalt = [96, 102, 112];
-        var gray = [145, 151, 160];
-        var pale = [212, 216, 222];
+        var dark = [52, 56, 64];
+        var basalt = [84, 90, 100];
+        var gray = [138, 144, 154];
+        var highland = [188, 193, 202];
+        var pale = [225, 228, 234];
+
+        if (mare > 0.42) value *= 0.78;
 
         var c;
 
-        if (mare > 0.48) {
-          value = value * 0.82;
-        }
-
-        if (value < 0.30) {
-          c = [mix(shadow[0], basalt[0], value / 0.30), mix(shadow[1], basalt[1], value / 0.30), mix(shadow[2], basalt[2], value / 0.30)];
-        } else if (value < 0.72) {
-          c = [mix(basalt[0], gray[0], (value - 0.30) / 0.42), mix(basalt[1], gray[1], (value - 0.30) / 0.42), mix(basalt[2], gray[2], (value - 0.30) / 0.42)];
+        if (value < 0.24) {
+          c = [mix(dark[0], basalt[0], value / 0.24), mix(dark[1], basalt[1], value / 0.24), mix(dark[2], basalt[2], value / 0.24)];
+        } else if (value < 0.54) {
+          c = [mix(basalt[0], gray[0], (value - 0.24) / 0.30), mix(basalt[1], gray[1], (value - 0.24) / 0.30), mix(basalt[2], gray[2], (value - 0.24) / 0.30)];
+        } else if (value < 0.82) {
+          c = [mix(gray[0], highland[0], (value - 0.54) / 0.28), mix(gray[1], highland[1], (value - 0.54) / 0.28), mix(gray[2], highland[2], (value - 0.54) / 0.28)];
         } else {
-          c = [mix(gray[0], pale[0], (value - 0.72) / 0.28), mix(gray[1], pale[1], (value - 0.72) / 0.28), mix(gray[2], pale[2], (value - 0.72) / 0.28)];
+          c = [mix(highland[0], pale[0], (value - 0.82) / 0.18), mix(highland[1], pale[1], (value - 0.82) / 0.18), mix(highland[2], pale[2], (value - 0.82) / 0.18)];
         }
 
-        var limbShade = 1 - limb * 0.34;
+        var limbShade = 1 - limb * 0.36;
 
         return [
           Math.round(clamp(c[0] * limbShade, 0, 255)),
@@ -565,7 +566,6 @@ visual-pass-claimed=false</pre>
         var ctx = canvas.getContext("2d", { willReadFrequently: true });
         var raf = 0;
         var running = false;
-        var phase = 0;
         var speed = 0.18;
         var direction = 1;
         var renderCount = 0;
@@ -659,7 +659,6 @@ visual-pass-claimed=false</pre>
           var delta = timestamp - lastFrame;
 
           if (delta > 1000 / 12) {
-            phase += speed * direction * 0.035;
             render();
             lastFrame = timestamp;
           }
@@ -731,21 +730,45 @@ visual-pass-claimed=false</pre>
         var raf = 0;
         var running = false;
         var phase = 0;
-        var speed = 0.12;
+        var speed = 0.10;
         var direction = 1;
         var renderCount = 0;
         var lastFrame = 0;
-        var pixelSize = 900;
+        var pixelSize = window.innerWidth < 760 ? 820 : 1024;
         var staticImage = null;
 
         shell.className = "celestial-stage moon-stage";
         canvas.className = "celestial-canvas moon-canvas";
         canvas.width = pixelSize;
         canvas.height = pixelSize;
-        canvas.setAttribute("aria-label", "Moon G1 lunar disc runtime");
+        canvas.setAttribute("aria-label", "Moon G1 high-detail lunar disc");
 
         shell.appendChild(canvas);
         target.appendChild(shell);
+
+        var namedCraters = [
+          [-0.43, -0.34, 0.115, 0.26, 0.17],
+          [0.32, -0.31, 0.095, 0.24, 0.15],
+          [-0.05, -0.06, 0.075, 0.18, 0.12],
+          [0.34, 0.33, 0.125, 0.28, 0.18],
+          [-0.30, 0.43, 0.072, 0.19, 0.12],
+          [0.03, 0.43, 0.060, 0.16, 0.10],
+          [-0.55, 0.03, 0.052, 0.14, 0.09],
+          [0.58, -0.02, 0.048, 0.13, 0.08],
+          [0.13, -0.48, 0.060, 0.16, 0.10],
+          [-0.12, 0.22, 0.050, 0.14, 0.09]
+        ];
+
+        var smallCraters = [];
+        for (var i = 0; i < 52; i += 1) {
+          var a = i * 2.399963229728653;
+          var r = Math.sqrt((i + 0.5) / 52) * 0.88;
+          var x = Math.cos(a) * r;
+          var y = Math.sin(a) * r;
+          if (Math.sqrt(x * x + y * y) < 0.92) {
+            smallCraters.push([x, y, 0.018 + hash(i, 4, 14) * 0.032, 0.045 + hash(i, 8, 19) * 0.050, 0.025 + hash(i, 12, 23) * 0.035]);
+          }
+        }
 
         function craterInfluence(dx, dy, cx, cy, radius, rimStrength, floorStrength) {
           var qx = dx - cx;
@@ -753,7 +776,18 @@ visual-pass-claimed=false</pre>
           var d = Math.sqrt(qx * qx + qy * qy);
           var rim = Math.exp(-Math.pow((d - radius) / (radius * 0.18), 2)) * rimStrength;
           var floor = Math.exp(-Math.pow(d / radius, 2.4)) * floorStrength;
-          return rim - floor;
+          var central = Math.exp(-Math.pow(d / (radius * 0.18), 2)) * rimStrength * 0.12;
+          return rim + central - floor;
+        }
+
+        function rayInfluence(dx, dy, cx, cy, strength) {
+          var qx = dx - cx;
+          var qy = dy - cy;
+          var d = Math.sqrt(qx * qx + qy * qy);
+          if (d < 0.04) return 0;
+          var a = Math.atan2(qy, qx);
+          var spoke = Math.pow(Math.abs(Math.cos(a * 9.0)), 22);
+          return spoke * Math.exp(-d * 3.2) * strength;
         }
 
         function mareInfluence(dx, dy, cx, cy, rx, ry, strength) {
@@ -783,25 +817,46 @@ visual-pass-claimed=false</pre>
               }
 
               var limb = clamp((dist - 0.62) / 0.38, 0, 1);
-              var terrain = fbm(dx * 7.0, dy * 7.0, 101, 6) * 0.22 + fbm(dx * 25.0, dy * 25.0, 205, 4) * 0.10;
+
+              var terrain =
+                fbm(dx * 5.5, dy * 5.5, 101, 5) * 0.18 +
+                fbm(dx * 18.0, dy * 18.0, 205, 4) * 0.12 +
+                fbm(dx * 44.0, dy * 44.0, 309, 3) * 0.065;
 
               var mare =
                 mareInfluence(dx, dy, -0.18, -0.18, 0.34, 0.22, 0.58) +
                 mareInfluence(dx, dy, 0.18, 0.05, 0.25, 0.18, 0.48) +
                 mareInfluence(dx, dy, 0.05, 0.32, 0.22, 0.16, 0.36) +
-                mareInfluence(dx, dy, -0.38, 0.24, 0.16, 0.13, 0.32);
+                mareInfluence(dx, dy, -0.38, 0.24, 0.16, 0.13, 0.32) +
+                mareInfluence(dx, dy, 0.36, -0.36, 0.16, 0.11, 0.22);
 
-              var crater =
-                craterInfluence(dx, dy, -0.38, -0.30, 0.13, 0.18, 0.13) +
-                craterInfluence(dx, dy, 0.35, -0.24, 0.10, 0.16, 0.11) +
-                craterInfluence(dx, dy, -0.08, 0.10, 0.08, 0.13, 0.09) +
-                craterInfluence(dx, dy, 0.28, 0.34, 0.12, 0.18, 0.14) +
-                craterInfluence(dx, dy, -0.28, 0.42, 0.07, 0.12, 0.08);
+              var crater = 0;
 
-              var light = 0.56 + terrain + crater - mare * 0.25 - limb * 0.25;
+              for (var c = 0; c < namedCraters.length; c += 1) {
+                crater += craterInfluence(dx, dy, namedCraters[c][0], namedCraters[c][1], namedCraters[c][2], namedCraters[c][3], namedCraters[c][4]);
+              }
 
-              var terminator = clamp((dx + 0.82) / 1.52, 0, 1);
-              light *= 0.58 + terminator * 0.42;
+              for (var s = 0; s < smallCraters.length; s += 1) {
+                crater += craterInfluence(dx, dy, smallCraters[s][0], smallCraters[s][1], smallCraters[s][2], smallCraters[s][3], smallCraters[s][4]);
+              }
+
+              var rays =
+                rayInfluence(dx, dy, 0.34, 0.33, 0.20) +
+                rayInfluence(dx, dy, -0.43, -0.34, 0.13);
+
+              var sunlight = clamp((dx + 0.92) / 1.58, 0, 1);
+              var illumination = 0.50 + sunlight * 0.50;
+
+              var light = clamp(
+                0.52 +
+                terrain +
+                crater +
+                rays -
+                mare * 0.24 -
+                limb * 0.24,
+                0,
+                1
+              ) * illumination;
 
               var color = moonColor(clamp(light, 0, 1), limb, mare);
 
@@ -826,10 +881,10 @@ visual-pass-claimed=false</pre>
           var radius = canvas.width * 0.315;
 
           var g = ctx.createRadialGradient(cx - radius * 0.38, cy - radius * 0.34, radius * 0.06, cx, cy, radius);
-          g.addColorStop(0, "rgba(255,255,255,0.11)");
-          g.addColorStop(0.36, "rgba(255,255,255,0.035)");
-          g.addColorStop(0.74, "rgba(0,0,0,0.04)");
-          g.addColorStop(1, "rgba(0,0,0,0.22)");
+          g.addColorStop(0, "rgba(255,255,255,0.13)");
+          g.addColorStop(0.32, "rgba(255,255,255,0.04)");
+          g.addColorStop(0.70, "rgba(0,0,0,0.04)");
+          g.addColorStop(1, "rgba(0,0,0,0.24)");
 
           ctx.save();
           ctx.beginPath();
@@ -840,7 +895,7 @@ visual-pass-claimed=false</pre>
           ctx.restore();
 
           ctx.save();
-          ctx.strokeStyle = "rgba(230,236,248,0.20)";
+          ctx.strokeStyle = "rgba(230,236,248,0.22)";
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, Math.PI * 2);
@@ -889,16 +944,19 @@ visual-pass-claimed=false</pre>
         function getStatus() {
           return {
             ok: true,
-            role: "MOON_G1_LUNAR_DISC_RUNTIME",
+            role: "MOON_G1_4K_LUNAR_DETAIL_RUNTIME",
             version: VERSION,
             running: running,
             circular: true,
             craters: true,
             maria: true,
+            raySystems: true,
+            regolithTexture: true,
             limbShading: true,
             renderCount: renderCount,
             earthG1Complete: true,
             sunG1Locked: true,
+            lockReady: true,
             visualPassClaimed: false
           };
         }
@@ -911,13 +969,13 @@ visual-pass-claimed=false</pre>
           resume: start,
           reset: function () { phase = 0; render(); return getStatus(); },
           reverse: function () { direction *= -1; return getStatus(); },
-          slow: function () { speed = 0.06; return getStatus(); },
-          normal: function () { speed = 0.12; return getStatus(); },
-          fast: function () { speed = 0.24; return getStatus(); },
+          slow: function () { speed = 0.05; return getStatus(); },
+          normal: function () { speed = 0.10; return getStatus(); },
+          fast: function () { speed = 0.20; return getStatus(); },
           setSpeed: function (value) {
             var n = Number(value);
             if (n > 1) n = n / 100;
-            speed = clamp(n, 0, 1) * 0.35;
+            speed = clamp(n, 0, 1) * 0.30;
             return getStatus();
           },
           destroy: destroy,
@@ -974,7 +1032,7 @@ visual-pass-claimed=false</pre>
         clearTarget(target, "sun");
 
         byId("control-title").textContent = "Sun G1 motion control";
-        byId("control-note").textContent = "Sun G1 is locked as the accepted star standard.";
+        byId("control-note").textContent = "Sun G1 remains locked as the accepted star standard.";
 
         sunRuntime = createSunRuntime(target);
         sunRuntime.start();
@@ -993,12 +1051,12 @@ visual-pass-claimed=false</pre>
         clearTarget(target, "moon");
 
         byId("control-title").textContent = "Moon G1 motion control";
-        byId("control-note").textContent = "Moon G1 is the active renewal body: cratered lunar disc, maria fields, limb shading, and controlled motion.";
+        byId("control-note").textContent = "Moon G1 uses high-detail lunar runtime: crater fields, maria basins, ray systems, regolith texture, limb shading, and controlled motion.";
 
         moonRuntime = createMoonRuntime(target);
         moonRuntime.start();
 
-        writeReceipt("MOON_G1_LUNAR_DISC_MOUNTED_ACTIVE_RENEWAL");
+        writeReceipt("MOON_G1_4K_LUNAR_DETAIL_MOUNTED_LOCK_READY");
         return true;
       }
 
@@ -1061,7 +1119,7 @@ visual-pass-claimed=false</pre>
         setTimeout(mountEarth, 900);
       }
 
-      window.DGBMoonG1LunarDiscRuntimeStart = {
+      window.DGBMoonG14KLunarDetailRuntime = {
         VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
@@ -1076,7 +1134,8 @@ visual-pass-claimed=false</pre>
             currentBody: currentBody,
             earthG1Complete: true,
             sunG1Locked: true,
-            moonG1ActiveRenewal: true,
+            moonG14KLunarDetail: true,
+            moonG1LockReady: true,
             planetOneReservedFor: "nine-summits-universe",
             visualPassClaimed: false
           };

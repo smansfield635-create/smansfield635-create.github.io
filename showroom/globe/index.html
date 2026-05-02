@@ -1,11 +1,23 @@
-<!-- /showroom/globe/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="planet-1"
+  data-route="/showroom/globe/"
+  data-contract="PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
+  data-render-contract="G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
+  data-shell-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
+  data-visual-pass-claimed="false"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Planet 1</title>
+  <meta
+    name="description"
+    content="Planet 1 active globe lane for Diamond Gate Bridge: hydration, hex bridge, renderer, runtime, control, asset bridge, and showroom bridge."
+  />
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
+
   <style>
     #planet-one-render {
       position: relative;
@@ -74,6 +86,7 @@
     }
   </style>
 </head>
+
 <body>
   <a class="dgb-skip" href="#main">Skip to Planet 1 inspection</a>
 
@@ -84,6 +97,7 @@
         <div class="dgb-subtitle">Rich Manor and Estate</div>
         <div class="dgb-room-line">Planet 1 · Active Globe Lane</div>
       </div>
+
       <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
@@ -105,6 +119,7 @@
         duplicate physics, or claim visual pass. It activates hydration, hex bridge, renderer, throttled runtime,
         control bridge, asset bridge, and showroom bridge in order.
       </p>
+
       <div class="dgb-chip-row">
         <span class="dgb-chip">Hydration first</span>
         <span class="dgb-chip">Hex bridge second</span>
@@ -120,12 +135,14 @@
         id="planet-one-render"
         class="planet-one-render"
         data-planet-one-mount="true"
-        data-route-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
+        data-route-contract="PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
+        data-render-contract="G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
         data-visual-pass-claimed="false"
       ></div>
 
       <section class="dgb-card full planet-control" aria-label="Planet 1 Motion Control">
         <h2>Planet 1 Motion Control</h2>
+
         <div class="planet-control-grid">
           <button class="dgb-button" type="button" data-planet-command="start">Start</button>
           <button class="dgb-button secondary" type="button" data-planet-command="pause">Pause</button>
@@ -156,7 +173,12 @@
 
     <details class="dgb-details">
       <summary>Route contract</summary>
-      <pre class="dgb-receipt">ROUTE_CONTRACT=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+      <pre class="dgb-receipt">PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1
+route=/showroom/globe/
+page=planet-1
+data-contract=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1
+shell-contract=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+render-contract=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
 HYDRATION=/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
 HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
 RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
@@ -168,26 +190,33 @@ VISUAL_PASS_CLAIMED=false</pre>
     </details>
   </main>
 
-  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
-  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
 
   <script>
     (function attachPlanetOneShellControls(global) {
       "use strict";
 
-      var ROUTE_VERSION = "DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1";
+      var ROUTE_VERSION = "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1";
 
       function getRuntime() {
-        return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || global.DGBShowroomGlobeRuntime || global.DGBPlanetOneRuntimeBridge || null;
+        return global.DGBWorldRuntime ||
+          global.DGBPlanetOneRuntime ||
+          global.DGBShowroomGlobeRuntime ||
+          global.DGBPlanetOneRuntimeBridge ||
+          null;
       }
 
       function getRenderer() {
-        return global.DGBPlanetOneRenderTeam || global.DGBPlanetOneRenderer || global.DGBPlanetOneRender || null;
+        return global.DGBPlanetOneRenderTeam ||
+          global.DGBPlanetOneRenderer ||
+          global.DGBPlanetOneRender ||
+          null;
       }
 
       function getStatus(object) {
@@ -197,15 +226,18 @@ VISUAL_PASS_CLAIMED=false</pre>
         } catch (error) {
           return { error: String(error && error.message ? error.message : error) };
         }
+
         return null;
       }
 
       function writeReceipt(extra) {
         var runtime = getRuntime();
         var renderer = getRenderer();
+
         var receipt = {
           routeVersion: ROUTE_VERSION,
           globalUIShellAligned: true,
+          dataContractPresent: true,
           hydrationFirst: Boolean(global.DGBPlanetOneHydrationRender),
           hexBridgeSecond: Boolean(global.DGBPlanetOneHexgridRender),
           rendererThird: Boolean(renderer),
@@ -260,10 +292,18 @@ VISUAL_PASS_CLAIMED=false</pre>
         });
 
         var speed = document.getElementById("planet-one-speed");
-        if (speed) speed.addEventListener("input", function () { command("speed", Number(speed.value)); });
+        if (speed) {
+          speed.addEventListener("input", function () {
+            command("speed", Number(speed.value));
+          });
+        }
 
         var axis = document.getElementById("planet-one-axis-toggle");
-        if (axis) axis.addEventListener("change", function () { command("axis", axis.checked); });
+        if (axis) {
+          axis.addEventListener("change", function () {
+            command("axis", axis.checked);
+          });
+        }
       }
 
       function boot() {
@@ -274,7 +314,7 @@ VISUAL_PASS_CLAIMED=false</pre>
 
           if (runtime && typeof runtime.start === "function") {
             runtime.start("#planet-one-render", {
-              source: "global-ui-shell-alignment",
+              source: "planet-route-contract-metadata-alignment",
               viewLon: -28,
               viewLat: 0,
               speedDegreesPerSecond: 2.4,

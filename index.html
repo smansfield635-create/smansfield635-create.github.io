@@ -3,10 +3,16 @@
   lang="en"
   data-page="compass"
   data-route="/"
-  data-contract="COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1"
-  data-earth-g1-route="/showroom/globe/"
-  data-book-route="/nine-summits-of-love/"
-  data-planet-one-status="reserved-for-nine-summits-universe"
+  data-contract="COMPASS_DEMO_UNIVERSE_G1_PUBLIC_COMMAND_RENEWAL_TNT_v1"
+  data-generation="G1"
+  data-demo-universe="earth-sun-moon-g1"
+  data-earth-g1="locked"
+  data-sun-g1="locked"
+  data-moon-g1="satellite-renderer-integration"
+  data-planet-one="reserved-for-future-nine-summits-universe"
+  data-runtime-touched="false"
+  data-gauges-logic-touched="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
@@ -14,54 +20,402 @@
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: the public command surface for the book, universe, Earth G1, products, showroom, and gauges."
+    content="Diamond Gate Bridge public command surface: book, Demo Universe, showroom, Earth G1, products, and gauges."
   >
+
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
-    .compass-grid {
+    :root {
+      --compass-gold: #f2c76f;
+      --compass-gold-soft: rgba(242, 199, 111, 0.16);
+      --compass-blue: #a9c5ff;
+      --compass-ink: #050813;
+      --compass-panel: rgba(11, 18, 34, 0.84);
+      --compass-panel-strong: rgba(14, 23, 42, 0.92);
+      --compass-line: rgba(180, 205, 255, 0.18);
+      --compass-text: #f5f7fb;
+      --compass-muted: rgba(226, 234, 248, 0.76);
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 30%),
+        radial-gradient(circle at 78% 18%, rgba(92, 137, 230, 0.12), transparent 32%),
+        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+    }
+
+    .compass-hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.22);
+      border-radius: 34px;
+      padding: clamp(28px, 6vw, 64px);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(242, 199, 111, 0.18), transparent 28%),
+        radial-gradient(circle at 82% 28%, rgba(84, 130, 220, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(12, 20, 38, 0.94), rgba(6, 10, 22, 0.98));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 28px 90px rgba(0,0,0,0.36);
+      isolation: isolate;
+    }
+
+    .compass-hero::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0 18%, rgba(242,199,111,0.08) 19%, transparent 20% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(120,155,220,0.07) 35%, transparent 36% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(242,199,111,0.045) 53%, transparent 54% 100%);
+      opacity: 0.72;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .compass-hero-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
-      gap: 14px;
+      grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.72fr);
+      gap: clamp(24px, 5vw, 54px);
+      align-items: center;
     }
 
-    .compass-card {
-      border: 1px solid var(--dgb-line, rgba(176,204,255,.18));
-      border-radius: 24px;
-      padding: clamp(18px, 4vw, 28px);
-      background: rgba(0,0,0,.20);
+    .compass-eyebrow {
+      margin: 0 0 12px;
+      color: var(--compass-gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
     }
 
-    .compass-card h2 {
-      margin-top: 0;
+    .compass-title {
+      margin: 0;
+      max-width: 900px;
+      color: var(--compass-text);
+      font-size: clamp(2.5rem, 8vw, 5.7rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
     }
 
-    .compass-card p {
-      color: var(--dgb-muted, rgba(228,234,246,.76));
-      line-height: 1.55;
+    .compass-copy {
+      max-width: 760px;
+      margin: 22px 0 0;
+      color: var(--compass-muted);
+      font-size: clamp(1.05rem, 2.6vw, 1.36rem);
+      line-height: 1.56;
     }
 
-    .compass-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    .compass-actions,
+    .compass-chip-row {
+      display: flex;
+      flex-wrap: wrap;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 24px;
     }
 
-    .compass-pill {
+    .compass-chip {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
-      border: 1px solid rgba(242,199,111,.42);
+      min-height: 36px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
       border-radius: 999px;
-      padding: 7px 12px;
-      background: rgba(242,199,111,.10);
-      color: var(--dgb-text, #f5f7fb);
-      font-size: .76rem;
-      font-weight: 900;
-      letter-spacing: .06em;
+      padding: 8px 12px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .compass-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .compass-orbital-card {
+      position: relative;
+      min-height: 390px;
+      border: 1px solid rgba(180, 205, 255, 0.16);
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255, 199, 88, 0.20), transparent 19%),
+        radial-gradient(circle at 50% 68%, rgba(60, 120, 225, 0.22), transparent 38%),
+        linear-gradient(180deg, rgba(9, 15, 30, 0.96), rgba(3, 7, 16, 0.98));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        inset 0 0 70px rgba(0,0,0,0.40);
+    }
+
+    .mini-sun,
+    .mini-earth,
+    .mini-moon {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .mini-sun {
+      left: 50%;
+      top: 22%;
+      width: 86px;
+      height: 86px;
+      background:
+        radial-gradient(circle at 34% 30%, #fff9cb 0 9%, #ffe071 18%, #ff9f35 46%, #e85b1d 72%, #7c1d0b 100%);
+      box-shadow:
+        0 0 42px rgba(255, 220, 130, 0.42),
+        0 0 108px rgba(255, 140, 46, 0.22),
+        0 0 180px rgba(255, 86, 28, 0.10);
+    }
+
+    .mini-earth {
+      left: 50%;
+      top: 66%;
+      width: 168px;
+      height: 168px;
+      background:
+        radial-gradient(circle at 38% 28%, rgba(255,255,255,0.94) 0 5%, transparent 17%),
+        radial-gradient(circle at 46% 46%, rgba(255,255,255,0.65) 0 4%, transparent 16%),
+        radial-gradient(circle at 35% 52%, #2c8f5c 0 10%, transparent 22%),
+        radial-gradient(circle at 60% 42%, #b7a65d 0 9%, transparent 20%),
+        radial-gradient(circle at 54% 72%, #2a8a65 0 11%, transparent 24%),
+        radial-gradient(circle at 50% 50%, #1474db 0%, #073b97 54%, #031333 100%);
+      box-shadow:
+        0 0 34px rgba(44, 126, 255, 0.32),
+        0 0 92px rgba(44, 126, 255, 0.15);
+    }
+
+    .mini-moon {
+      left: 73%;
+      top: 61%;
+      width: 54px;
+      height: 54px;
+      background:
+        radial-gradient(circle at 34% 30%, rgba(255,255,255,0.16), transparent 24%),
+        radial-gradient(circle at 32% 38%, rgba(24,25,28,0.72) 0 12%, transparent 24%),
+        radial-gradient(circle at 56% 30%, rgba(34,35,40,0.68) 0 10%, transparent 22%),
+        radial-gradient(circle at 62% 62%, rgba(28,30,35,0.62) 0 9%, transparent 20%),
+        radial-gradient(circle at 50% 50%, #d6d7d6 0%, #aeb4ba 52%, #697481 100%);
+      box-shadow:
+        0 0 18px rgba(235,240,250,0.24),
+        0 0 38px rgba(136,168,224,0.13);
+    }
+
+    .mini-orbit {
+      position: absolute;
+      left: 50%;
+      top: 66%;
+      width: 258px;
+      height: 92px;
+      transform: translate(-50%, -50%);
+      border: 2px dashed rgba(172, 191, 230, 0.24);
+      border-radius: 50%;
+    }
+
+    .mini-beam {
+      position: absolute;
+      left: 50%;
+      top: 31%;
+      width: 3px;
+      height: 28%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(255,238,174,0.44), rgba(255,217,138,0.12), transparent);
+      box-shadow: 0 0 26px rgba(255, 214, 130, 0.20);
+    }
+
+    .mini-label {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      border: 1px solid rgba(242,199,111,0.48);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: rgba(8,12,24,0.82);
+      color: #fff0bf;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+
+    .mini-label.sun { left: 50%; top: 9%; }
+    .mini-label.earth { left: 50%; top: 89%; }
+    .mini-label.moon { left: 81%; top: 52%; }
+
+    .compass-section-title {
+      margin: 0 0 12px;
+      color: var(--compass-text);
+      font-size: clamp(1.8rem, 5vw, 3.1rem);
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+
+    .compass-section-copy {
+      max-width: 860px;
+      margin: 0;
+      color: var(--compass-muted);
+      font-size: 1.06rem;
+      line-height: 1.58;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .route-card {
+      position: relative;
+      min-height: 236px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--compass-line);
+      border-radius: 28px;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.10), transparent 36%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.028),
+        0 18px 42px rgba(0,0,0,0.24);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .route-card::after {
+      content: "";
+      position: absolute;
+      right: -34px;
+      bottom: -34px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 1px solid rgba(242,199,111,0.12);
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+    }
+
+    .route-kicker {
+      color: var(--compass-gold);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .route-card h3 {
+      margin: 0;
+      color: var(--compass-text);
+      font-size: 1.45rem;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+    }
+
+    .route-card p {
+      margin: 0;
+      color: var(--compass-muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .route-link {
+      color: #ffe7a7;
+      font-weight: 950;
+    }
+
+    .proof-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .proof-item {
+      border: 1px solid rgba(180, 205, 255, 0.16);
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(255,255,255,0.045);
+    }
+
+    .proof-item strong {
+      display: block;
+      color: var(--compass-text);
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+    }
+
+    .proof-item span {
+      color: var(--compass-muted);
+      line-height: 1.45;
+    }
+
+    .compass-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 980px) {
+      .compass-hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-band {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .compass-hero {
+        border-radius: 28px;
+        padding: 26px;
+      }
+
+      .compass-orbital-card {
+        min-height: 330px;
+      }
+
+      .mini-earth {
+        width: 134px;
+        height: 134px;
+      }
+
+      .mini-sun {
+        width: 70px;
+        height: 70px;
+      }
+
+      .mini-moon {
+        width: 44px;
+        height: 44px;
+      }
+
+      .mini-orbit {
+        width: 214px;
+        height: 76px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-card {
+        min-height: 0;
+      }
     }
   </style>
 </head>
@@ -92,126 +446,165 @@
   </header>
 
   <main id="main" class="dgb-main">
-    <section class="dgb-hero">
-      <p class="dgb-eyebrow">Diamond Gate Bridge · Compass</p>
-      <h1 class="dgb-title">Start where the pressure is.</h1>
+    <section class="compass-hero" aria-label="Diamond Gate Bridge compass">
+      <div class="compass-hero-grid">
+        <div>
+          <p class="compass-eyebrow">Diamond Gate Bridge · Compass</p>
+          <h1 class="compass-title">Start where the pressure is.</h1>
 
-      <p class="dgb-copy">
-        Pressure is not the problem. Pressure is the door. Diamond Gate Bridge is the front entrance
-        to a living system: a book, a world, a public voice, a product wing, a showroom, Earth G1,
-        and a proof engine.
+          <p class="compass-copy">
+            Pressure is not the problem. Pressure is the door. Diamond Gate Bridge is the front entrance
+            to a living system: a book, a public voice, a product wing, a showroom, a Demo Universe,
+            Earth G1, Sun G1, Moon G1, and a proof engine.
+          </p>
+
+          <div class="compass-chip-row" aria-label="Compass status">
+            <span class="compass-chip lock">Public command</span>
+            <span class="compass-chip lock">Book lane</span>
+            <span class="compass-chip lock">Demo Universe G1</span>
+            <span class="compass-chip">Earth · Sun · Moon</span>
+            <span class="compass-chip">Proof engine</span>
+          </div>
+
+          <div class="compass-actions" aria-label="Primary actions">
+            <a class="dgb-button" href="/door/">Cross the Door</a>
+            <a class="dgb-button secondary" href="/nine-summits-of-love/">Open the Book</a>
+            <a class="dgb-button secondary" href="/nine-summits/universe/">Enter Demo Universe</a>
+            <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1</a>
+          </div>
+        </div>
+
+        <div class="compass-orbital-card" aria-label="Demo Universe preview">
+          <div class="solar-field" aria-hidden="true"></div>
+          <div class="mini-beam" aria-hidden="true"></div>
+          <div class="mini-orbit" aria-hidden="true"></div>
+          <div class="mini-sun" aria-hidden="true"></div>
+          <div class="mini-earth" aria-hidden="true"></div>
+          <div class="mini-moon" aria-hidden="true"></div>
+          <div class="mini-label sun">Sun G1</div>
+          <div class="mini-label moon">Moon G1</div>
+          <div class="mini-label earth">Earth G1</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Primary routes">
+      <h2 class="compass-section-title">Choose the correct chamber.</h2>
+      <p class="compass-section-copy">
+        The index is the public command surface. It should not load heavy render engines. It routes cleanly
+        to the estate, the book, the Demo Universe, the showroom, products, and gauges.
       </p>
 
-      <div class="dgb-chip-row">
-        <span class="dgb-chip">Public command</span>
-        <span class="dgb-chip">Estate shell</span>
-        <span class="dgb-chip">Book lane</span>
-        <span class="dgb-chip">Earth G1</span>
-        <span class="dgb-chip hold">Visual hold</span>
-      </div>
+      <div class="route-grid">
+        <a class="route-card" href="/door/">
+          <span class="route-kicker">Threshold</span>
+          <h3>Door</h3>
+          <p>Choose the view, cross the threshold, and enter the estate without standing at the entrance forever.</p>
+          <span class="route-link">Open Door</span>
+        </a>
 
-      <div class="compass-actions">
-        <a class="dgb-button" href="/door/">Cross the Door</a>
-        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open the Book</a>
-        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter the Universe</a>
-        <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1</a>
+        <a class="route-card" href="/home/">
+          <span class="route-kicker">Stability</span>
+          <h3>Home</h3>
+          <p>Stabilize the estate route and move to the correct chamber without loading globe engine scripts.</p>
+          <span class="route-link">Open Home</span>
+        </a>
+
+        <a class="route-card" href="/nine-summits-of-love/">
+          <span class="route-kicker">Book</span>
+          <h3>The Nine Summits of Love</h3>
+          <p>Open the human climb: pressure, dignity, free will, discipline, responsibility, and love.</p>
+          <span class="route-link">Open Book</span>
+        </a>
+
+        <a class="route-card" href="/nine-summits/universe/">
+          <span class="route-kicker">Demo Universe</span>
+          <h3>Earth · Sun · Moon G1</h3>
+          <p>Enter the Demo Universe relationship view where Earth G1, Sun G1, and Moon G1 share one visual system.</p>
+          <span class="route-link">Enter Universe</span>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <span class="route-kicker">Product Wing</span>
+          <h3>Products</h3>
+          <p>Enter the product wing where each chamber explains what it is before asking for a click.</p>
+          <span class="route-link">Open Products</span>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span class="route-kicker">Proof Surface</span>
+          <h3>Showroom</h3>
+          <p>Use the lightweight lobby to route into proof surfaces without duplicating engines.</p>
+          <span class="route-link">Open Showroom</span>
+        </a>
+
+        <a class="route-card" href="/showroom/globe/">
+          <span class="route-kicker">Generation 1</span>
+          <h3>Earth G1</h3>
+          <p>Inspect the accepted Demo Universe globe baseline, with Sun G1 and Moon G1 held in the same sequence.</p>
+          <span class="route-link">Inspect Earth G1</span>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span class="route-kicker">Diagnostics</span>
+          <h3>Gauges</h3>
+          <p>Audit route authority, runtime authority, served source, parser safety, and diagnostic receipts.</p>
+          <span class="route-link">Open Gauges</span>
+        </a>
       </div>
     </section>
 
-    <section class="compass-grid" aria-label="Compass route map">
-      <article class="compass-card">
-        <span class="compass-pill">Door</span>
-        <h2>Door</h2>
-        <p>
-          Choose the view, cross the threshold, and enter the estate without standing at the entrance forever.
-        </p>
-        <a class="dgb-button secondary" href="/door/">Open Door</a>
-      </article>
+    <section class="dgb-card" aria-label="Current baseline">
+      <h2 class="compass-section-title">Current baseline.</h2>
+      <p class="compass-section-copy">
+        The current public baseline is no longer only “Earth G1.” It is now the Demo Universe G1 relationship:
+        Earth G1 as the accepted globe, Sun G1 as the lighting authority, and Moon G1 as the satellite-style full-moon body.
+        Planet 1 remains reserved for the future Nine Summits Universe build.
+      </p>
 
-      <article class="compass-card">
-        <span class="compass-pill">Home</span>
-        <h2>Home</h2>
-        <p>
-          Stabilize the estate route and move to the correct chamber without loading globe engine scripts.
-        </p>
-        <a class="dgb-button secondary" href="/home/">Open Home</a>
-      </article>
+      <div class="proof-band">
+        <div class="proof-item">
+          <strong>Showroom inspects.</strong>
+          <span>The showroom globe remains the inspection route for Earth G1, Sun G1, and Moon G1.</span>
+        </div>
 
-      <article class="compass-card">
-        <span class="compass-pill">Book</span>
-        <h2>The Nine Summits of Love</h2>
-        <p>
-          Open the human climb: pressure, dignity, free will, discipline, and love.
-        </p>
-        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open Book</a>
-      </article>
+        <div class="proof-item">
+          <strong>Universe relates.</strong>
+          <span>The Universe route currently shows the Demo Universe relationship, not the future Planet 1 world.</span>
+        </div>
 
-      <article class="compass-card">
-        <span class="compass-pill">Universe</span>
-        <h2>Nine Summits Universe</h2>
-        <p>
-          Enter the future world around the book. Planet 1 is reserved for this universe build.
-        </p>
-        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter Universe</a>
-      </article>
-
-      <article class="compass-card">
-        <span class="compass-pill">Products</span>
-        <h2>Products</h2>
-        <p>
-          Enter the product wing where each chamber explains what it is before asking for a click.
-        </p>
-        <a class="dgb-button secondary" href="/products/">Open Products</a>
-      </article>
-
-      <article class="compass-card">
-        <span class="compass-pill">Showroom</span>
-        <h2>Showroom</h2>
-        <p>
-          Use the lightweight lobby to route into proof surfaces without duplicating engines.
-        </p>
-        <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
-      </article>
-
-      <article class="compass-card">
-        <span class="compass-pill">Earth G1</span>
-        <h2>Earth G1</h2>
-        <p>
-          Inspect the Demo Universe Earth baseline: the true Generation 1 globe standard for the site.
-        </p>
-        <a class="dgb-button secondary" href="/showroom/globe/">Inspect Earth G1</a>
-      </article>
-
-      <article class="compass-card">
-        <span class="compass-pill">Gauges</span>
-        <h2>Gauges</h2>
-        <p>
-          Audit route authority, runtime authority, served source, and diagnostic receipts.
-        </p>
-        <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
-      </article>
+        <div class="proof-item">
+          <strong>Gauges measures.</strong>
+          <span>Gauges remains the diagnostic proof surface. This index does not mutate runtime or gauge logic.</span>
+        </div>
+      </div>
     </section>
 
-    <details class="dgb-details" open>
-      <summary>Route receipt</summary>
-      <pre class="dgb-receipt">COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1
+    <section class="dgb-card" aria-label="Route receipt">
+      <h2>Route receipt</h2>
+      <pre class="dgb-receipt compass-receipt">COMPASS_DEMO_UNIVERSE_G1_PUBLIC_COMMAND_RENEWAL_TNT_v1
 route=/
 page=compass
 uses_shared_shell=/assets/dgb-ui-shell.css
-canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
-book=/nine-summits-of-love/
-universe=/nine-summits/universe/
-earth-g1=/showroom/globe/
-planet-1=reserved-for-future-nine-summits-universe
+heavy_runtime_loaded=false
 planet_render_touched=false
 runtime_touched=false
 gauges_logic_touched=false
+canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
+book=/nine-summits-of-love/
+universe=/nine-summits/universe/
+universe_current_function=demo-universe-earth-sun-moon-g1-relationship
+earth-g1=/showroom/globe/
+earth-g1=locked
+sun-g1=locked
+moon-g1=satellite-renderer-integration
+planet-1=reserved-for-future-nine-summits-universe
 visual_pass_claimed=false</pre>
-    </details>
+    </section>
   </main>
 
   <footer class="dgb-footer">
-    COMPASS_EARTH_G1_AND_BOOK_NAV_STANDARD_RENEWAL_TNT_v1 · Compass · Diamond Gate Bridge.
+    COMPASS_DEMO_UNIVERSE_G1_PUBLIC_COMMAND_RENEWAL_TNT_v1 · Compass · Diamond Gate Bridge.
   </footer>
 </body>
 </html>

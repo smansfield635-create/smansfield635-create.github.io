@@ -3,18 +3,22 @@
    MOON G1 · SATELLITE-IMAGE PROCEDURAL RENDERER
    FILE: /assets/moon-g1-satellite-renderer.js
 
+   CONTRACT:
+   MOON_G1_SATELLITE_IMAGE_EXPOSURE_CORRECTION_TNT_v1
+
    PURPOSE:
    - Shared Moon G1 renderer for /showroom/globe/ and /nine-summits/universe/
    - Code only
    - No GraphicBox
    - No generated image asset
    - Full-moon satellite-image style
+   - Corrected exposure: no blown-out white center
    ========================================================================== */
 
 (function attachMoonG1SatelliteRenderer(window) {
   "use strict";
 
-  var VERSION = "MOON_G1_SATELLITE_IMAGE_RENDERER_TNT_v1";
+  var VERSION = "MOON_G1_SATELLITE_IMAGE_EXPOSURE_CORRECTION_TNT_v1";
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, Number(value) || 0));
@@ -44,7 +48,7 @@
 
     var gradient = ctx.createRadialGradient(0, 0, 0.02, 0, 0, 1);
     gradient.addColorStop(0.00, colorInner);
-    gradient.addColorStop(0.58, colorOuter);
+    gradient.addColorStop(0.60, colorOuter);
     gradient.addColorStop(1.00, "rgba(0,0,0,0)");
 
     ctx.globalAlpha = alpha;
@@ -57,26 +61,17 @@
   }
 
   function drawMaria(ctx, center, radius) {
-    /*
-      Near-side lunar mare layout:
-      - Oceanus Procellarum / Mare Imbrium mass on the left/upper-left
-      - Serenitatis / Tranquillitatis / Fecunditatis upper-right/mid-right
-      - Nubium / Humorum lower-left
-      - Crisium near right limb
-      This is built to read like a satellite full-moon image, not a generic crater ball.
-    */
-
     var maria = [
-      [-0.42, -0.04, 0.25, 0.36, -0.10, 0.74],
-      [-0.28, -0.32, 0.22, 0.16, 0.08, 0.62],
-      [-0.08, -0.38, 0.20, 0.14, -0.05, 0.56],
-      [0.17, -0.28, 0.18, 0.13, 0.20, 0.52],
-      [0.30, -0.10, 0.20, 0.14, -0.10, 0.52],
-      [0.34, 0.14, 0.18, 0.12, 0.08, 0.42],
-      [-0.22, 0.32, 0.22, 0.14, 0.15, 0.48],
-      [-0.44, 0.34, 0.15, 0.11, -0.18, 0.42],
-      [0.58, -0.28, 0.12, 0.10, 0.05, 0.46],
-      [0.02, 0.02, 0.14, 0.11, 0.10, 0.32]
+      [-0.43, -0.07, 0.27, 0.38, -0.10, 0.92],
+      [-0.31, -0.34, 0.23, 0.17, 0.06, 0.76],
+      [-0.06, -0.39, 0.21, 0.15, -0.04, 0.70],
+      [0.18, -0.29, 0.19, 0.14, 0.18, 0.64],
+      [0.32, -0.10, 0.21, 0.15, -0.08, 0.66],
+      [0.34, 0.15, 0.19, 0.13, 0.08, 0.56],
+      [-0.22, 0.33, 0.23, 0.15, 0.14, 0.64],
+      [-0.45, 0.34, 0.16, 0.12, -0.18, 0.58],
+      [0.59, -0.29, 0.13, 0.10, 0.05, 0.62],
+      [0.02, 0.02, 0.15, 0.11, 0.10, 0.42]
     ];
 
     maria.forEach(function (m) {
@@ -87,49 +82,49 @@
         m[2] * radius,
         m[3] * radius,
         m[4],
-        "rgba(32,34,38,0.98)",
-        "rgba(70,74,82,0.76)",
+        "rgba(24,25,28,0.98)",
+        "rgba(58,62,70,0.82)",
         m[5]
       );
     });
   }
 
   function drawHighlands(ctx, center, radius) {
-    drawSoftPatch(ctx, center + 0.10 * radius, center + 0.46 * radius, 0.30 * radius, 0.18 * radius, -0.22, "rgba(230,232,232,0.42)", "rgba(180,184,188,0.14)", 0.62);
-    drawSoftPatch(ctx, center + 0.42 * radius, center + 0.38 * radius, 0.24 * radius, 0.18 * radius, 0.18, "rgba(236,238,238,0.35)", "rgba(178,182,188,0.12)", 0.52);
-    drawSoftPatch(ctx, center + 0.10 * radius, center - 0.02 * radius, 0.18 * radius, 0.16 * radius, -0.16, "rgba(214,216,218,0.24)", "rgba(150,156,164,0.09)", 0.42);
+    drawSoftPatch(ctx, center + 0.12 * radius, center + 0.47 * radius, 0.31 * radius, 0.18 * radius, -0.22, "rgba(220,222,222,0.36)", "rgba(170,174,180,0.12)", 0.52);
+    drawSoftPatch(ctx, center + 0.42 * radius, center + 0.39 * radius, 0.25 * radius, 0.18 * radius, 0.18, "rgba(226,228,228,0.30)", "rgba(170,174,182,0.10)", 0.46);
+    drawSoftPatch(ctx, center + 0.08 * radius, center - 0.02 * radius, 0.19 * radius, 0.16 * radius, -0.16, "rgba(210,212,214,0.20)", "rgba(150,156,164,0.08)", 0.34);
   }
 
   function drawCrater(ctx, x, y, r, strength, lightAngle) {
     var lx = Math.cos(lightAngle);
     var ly = Math.sin(lightAngle);
-    var rim = clamp(r * 0.075, 1.1, 12);
+    var rim = clamp(r * 0.072, 1.1, 12);
 
     ctx.save();
 
-    ctx.globalAlpha = 0.15 * strength;
-    ctx.fillStyle = "rgba(4,5,7,0.82)";
+    ctx.globalAlpha = 0.18 * strength;
+    ctx.fillStyle = "rgba(4,5,7,0.84)";
     ctx.beginPath();
     ctx.arc(x - lx * r * 0.10, y - ly * r * 0.10, r * 0.88, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.globalAlpha = 0.32 * strength;
-    ctx.strokeStyle = "rgba(248,250,252,0.72)";
+    ctx.globalAlpha = 0.30 * strength;
+    ctx.strokeStyle = "rgba(238,240,242,0.66)";
     ctx.lineWidth = rim;
     ctx.beginPath();
     ctx.arc(x + lx * r * 0.04, y + ly * r * 0.04, r, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.globalAlpha = 0.20 * strength;
-    ctx.strokeStyle = "rgba(18,20,24,0.82)";
+    ctx.globalAlpha = 0.22 * strength;
+    ctx.strokeStyle = "rgba(14,16,20,0.86)";
     ctx.lineWidth = rim * 0.58;
     ctx.beginPath();
     ctx.arc(x - lx * r * 0.06, y - ly * r * 0.06, r * 0.76, 0, Math.PI * 2);
     ctx.stroke();
 
     if (r > 42) {
-      ctx.globalAlpha = 0.14 * strength;
-      ctx.fillStyle = "rgba(255,255,255,0.52)";
+      ctx.globalAlpha = 0.10 * strength;
+      ctx.fillStyle = "rgba(245,246,248,0.44)";
       ctx.beginPath();
       ctx.arc(x + lx * r * 0.20, y + ly * r * 0.20, r * 0.11, 0, Math.PI * 2);
       ctx.fill();
@@ -177,17 +172,17 @@
 
     for (var i = 0; i < 96; i += 1) {
       var angle = (Math.PI * 2 * i) / 96 + (random() - 0.5) * 0.10;
-      var length = radius * mix(0.42, 1.38, random());
-      var width = mix(1.2, 7.5, random()) * (radius / 1450);
+      var length = radius * mix(0.42, 1.34, random());
+      var width = mix(1.2, 6.8, random()) * (radius / 1450);
       var ex = tx + Math.cos(angle) * length;
       var ey = ty + Math.sin(angle) * length;
 
       var gradient = ctx.createLinearGradient(tx, ty, ex, ey);
-      gradient.addColorStop(0.00, "rgba(255,255,255,0.18)");
-      gradient.addColorStop(0.42, "rgba(235,238,242,0.08)");
+      gradient.addColorStop(0.00, "rgba(255,255,255,0.13)");
+      gradient.addColorStop(0.42, "rgba(235,238,242,0.055)");
       gradient.addColorStop(1.00, "rgba(255,255,255,0)");
 
-      ctx.globalAlpha = mix(0.20, 0.76, random());
+      ctx.globalAlpha = mix(0.18, 0.58, random());
       ctx.strokeStyle = gradient;
       ctx.lineWidth = width;
       ctx.beginPath();
@@ -215,12 +210,12 @@
       var ey = cy + Math.sin(angle) * length;
 
       var gradient = ctx.createLinearGradient(cx, cy, ex, ey);
-      gradient.addColorStop(0.00, "rgba(255,255,255,0.15)");
+      gradient.addColorStop(0.00, "rgba(255,255,255,0.11)");
       gradient.addColorStop(1.00, "rgba(255,255,255,0)");
 
-      ctx.globalAlpha = mix(0.15, 0.58, random());
+      ctx.globalAlpha = mix(0.14, 0.48, random());
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = mix(1, 5, random()) * (radius / 1450);
+      ctx.lineWidth = mix(1, 4.6, random()) * (radius / 1450);
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(ex, ey);
@@ -240,16 +235,16 @@
 
     ctx.globalCompositeOperation = "overlay";
 
-    for (var i = 0; i < 6500; i += 1) {
+    for (var i = 0; i < 7200; i += 1) {
       var a = random() * Math.PI * 2;
       var d = Math.sqrt(random()) * radius * 0.99;
       var x = center + Math.cos(a) * d;
       var y = center + Math.sin(a) * d;
       var r = mix(0.65, 4.2, random()) * (size / 4096);
-      var bright = random() > 0.48;
+      var bright = random() > 0.50;
 
-      ctx.globalAlpha = mix(0.018, 0.095, random());
-      ctx.fillStyle = bright ? "rgba(255,255,255,1)" : "rgba(6,8,12,1)";
+      ctx.globalAlpha = mix(0.020, 0.105, random());
+      ctx.fillStyle = bright ? "rgba(255,255,255,1)" : "rgba(4,6,10,1)";
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
@@ -257,7 +252,7 @@
 
     ctx.globalCompositeOperation = "source-over";
 
-    for (var j = 0; j < 1100; j += 1) {
+    for (var j = 0; j < 1200; j += 1) {
       var aa = random() * Math.PI * 2;
       var dd = Math.sqrt(random()) * radius * 0.985;
       var xx = center + Math.cos(aa) * dd;
@@ -270,7 +265,9 @@
     ctx.restore();
   }
 
-  function applyFullMoonSatelliteLighting(ctx, center, radius, size) {
+  function applyFullMoonSatelliteLighting(ctx, center, radius, size, exposure) {
+    exposure = clamp(exposure == null ? 0.55 : exposure, 0.25, 0.85);
+
     ctx.save();
     ctx.beginPath();
     ctx.arc(center, center, radius, 0, Math.PI * 2);
@@ -287,10 +284,10 @@
       radius
     );
 
-    fullFace.addColorStop(0.00, "rgba(255,255,255,0.20)");
-    fullFace.addColorStop(0.28, "rgba(246,248,250,0.14)");
-    fullFace.addColorStop(0.62, "rgba(230,234,240,0.07)");
-    fullFace.addColorStop(1.00, "rgba(220,226,236,0.025)");
+    fullFace.addColorStop(0.00, "rgba(255,255,255," + (0.10 * exposure).toFixed(3) + ")");
+    fullFace.addColorStop(0.28, "rgba(246,248,250," + (0.075 * exposure).toFixed(3) + ")");
+    fullFace.addColorStop(0.62, "rgba(230,234,240," + (0.042 * exposure).toFixed(3) + ")");
+    fullFace.addColorStop(1.00, "rgba(220,226,236," + (0.018 * exposure).toFixed(3) + ")");
 
     ctx.fillStyle = fullFace;
     ctx.fillRect(0, 0, size, size);
@@ -304,8 +301,8 @@
       radius * 1.08
     );
 
-    earthFill.addColorStop(0.00, "rgba(110,158,235,0.08)");
-    earthFill.addColorStop(0.52, "rgba(82,128,210,0.035)");
+    earthFill.addColorStop(0.00, "rgba(110,158,235,0.045)");
+    earthFill.addColorStop(0.52, "rgba(82,128,210,0.020)");
     earthFill.addColorStop(1.00, "rgba(82,128,210,0)");
 
     ctx.fillStyle = earthFill;
@@ -323,12 +320,46 @@
     );
 
     limb.addColorStop(0.00, "rgba(255,255,255,0)");
-    limb.addColorStop(0.58, "rgba(255,255,255,0)");
-    limb.addColorStop(0.82, "rgba(80,88,100,0.08)");
-    limb.addColorStop(0.94, "rgba(30,36,48,0.18)");
-    limb.addColorStop(1.00, "rgba(8,12,22,0.30)");
+    limb.addColorStop(0.56, "rgba(255,255,255,0)");
+    limb.addColorStop(0.80, "rgba(80,88,100,0.10)");
+    limb.addColorStop(0.93, "rgba(30,36,48,0.22)");
+    limb.addColorStop(1.00, "rgba(8,12,22,0.34)");
 
     ctx.fillStyle = limb;
+    ctx.fillRect(0, 0, size, size);
+
+    ctx.restore();
+  }
+
+  function applyPhaseShadow(ctx, center, radius, size, phaseAmount, lightSideX) {
+    if (phaseAmount == null || phaseAmount >= 0.98) return;
+
+    phaseAmount = clamp(phaseAmount, 0, 1);
+    lightSideX = lightSideX === -1 ? -1 : 1;
+
+    var darkness = clamp(1 - phaseAmount, 0, 1);
+    var lit = clamp(phaseAmount, 0, 1);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    ctx.globalCompositeOperation = "multiply";
+
+    var shadow = ctx.createLinearGradient(
+      center - lightSideX * radius,
+      center,
+      center + lightSideX * radius,
+      center
+    );
+
+    shadow.addColorStop(0.00, "rgba(0,0,0,0.02)");
+    shadow.addColorStop(Math.max(0.10, lit * 0.52), "rgba(0,0,0,0.03)");
+    shadow.addColorStop(Math.min(0.96, lit * 0.80 + 0.12), "rgba(0,0,0," + (0.22 + darkness * 0.38).toFixed(3) + ")");
+    shadow.addColorStop(1.00, "rgba(0,0,0," + (0.34 + darkness * 0.48).toFixed(3) + ")");
+
+    ctx.fillStyle = shadow;
     ctx.fillRect(0, 0, size, size);
 
     ctx.restore();
@@ -339,6 +370,9 @@
 
     var size = options.size || canvas.width || 4096;
     var random = randomFactory(options.seed || 19720720);
+    var exposure = options.exposure == null ? 0.55 : options.exposure;
+    var phaseAmount = options.phaseAmount == null ? 1 : options.phaseAmount;
+    var lightSideX = options.lightSideX == null ? 1 : options.lightSideX;
 
     canvas.width = size;
     canvas.height = size;
@@ -363,12 +397,12 @@
       radius
     );
 
-    base.addColorStop(0.00, "#f3f3f1");
-    base.addColorStop(0.15, "#dedfdd");
-    base.addColorStop(0.38, "#bfc3c7");
-    base.addColorStop(0.62, "#9ca4ad");
-    base.addColorStop(0.82, "#77828d");
-    base.addColorStop(1.00, "#505c68");
+    base.addColorStop(0.00, "#d8d9d8");
+    base.addColorStop(0.15, "#c3c5c6");
+    base.addColorStop(0.38, "#a4aab0");
+    base.addColorStop(0.62, "#858e98");
+    base.addColorStop(0.82, "#687480");
+    base.addColorStop(1.00, "#46525f");
 
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, size, size);
@@ -382,7 +416,8 @@
 
     ctx.restore();
 
-    applyFullMoonSatelliteLighting(ctx, center, radius, size);
+    applyFullMoonSatelliteLighting(ctx, center, radius, size, exposure);
+    applyPhaseShadow(ctx, center, radius, size, phaseAmount, lightSideX);
 
     ctx.save();
     ctx.globalCompositeOperation = "destination-in";
@@ -392,7 +427,7 @@
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = "rgba(245,248,255,0.34)";
+    ctx.strokeStyle = "rgba(225,232,242,0.30)";
     ctx.lineWidth = Math.max(2, size * 0.0012);
     ctx.beginPath();
     ctx.arc(center, center, radius - ctx.lineWidth, 0, Math.PI * 2);
@@ -400,17 +435,19 @@
     ctx.restore();
 
     canvas.setAttribute("data-moon-g1-satellite-renderer", VERSION);
-    canvas.setAttribute("data-moon-phase", "full-moon");
+    canvas.setAttribute("data-moon-phase", phaseAmount >= 0.98 ? "full-moon" : "orbital-phase");
     canvas.setAttribute("data-generated-image", "false");
     canvas.setAttribute("data-graphic-box", "false");
     canvas.setAttribute("data-source-definition", String(size));
+    canvas.setAttribute("data-exposure", String(exposure));
 
     return {
       ok: true,
       version: VERSION,
-      phase: "full-moon",
+      phase: phaseAmount >= 0.98 ? "full-moon" : "orbital-phase",
       style: "satellite-image",
       sourceDefinition: size,
+      exposure: exposure,
       generatedImage: false,
       graphicBox: false
     };
@@ -425,6 +462,7 @@
         ok: true,
         version: VERSION,
         role: "MOON_G1_SATELLITE_IMAGE_RENDERER",
+        exposureCorrected: true,
         generatedImage: false,
         graphicBox: false,
         codeOnly: true

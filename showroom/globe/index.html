@@ -3,21 +3,23 @@
   lang="en"
   data-page="earth-generation-1"
   data-route="/showroom/globe/"
-  data-contract="SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1"
+  data-contract="SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1"
   data-demo-universe="earth-sun-sequence"
   data-generation="G1"
-  data-planet-one-reserved-for="nine-summits-universe"
+  data-earth-g1="complete"
+  data-sun-g1="local-circle-runtime"
+  data-moon="queued"
+  data-planet-one="reserved-for-nine-summits-universe"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Earth G1 · Sun G1</title>
-  <meta name="description" content="Earth Generation 1 baseline with corrected Sun G1 circular containment.">
+  <meta name="description" content="Earth Generation 1 baseline with Sun G1 circular runtime inspection.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
-  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1">
 
   <style>
     body {
@@ -104,15 +106,57 @@
 
     .planet-stage[data-active-body="sun"] {
       width: min(82vw, 720px) !important;
-      max-width: 100% !important;
       height: auto !important;
+      max-width: 100% !important;
       aspect-ratio: 1 / 1 !important;
-      min-height: 0 !important;
       display: grid !important;
       place-items: center !important;
       overflow: visible !important;
-      border-radius: 36px !important;
       transform: none !important;
+    }
+
+    .sun-g1-local-shell {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(82vw, 560px);
+      height: min(82vw, 560px);
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      overflow: visible;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 187, 76, 0.10), transparent 63%),
+        transparent;
+      transform: none;
+    }
+
+    .sun-g1-local-shell::before {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow:
+        0 0 46px rgba(255, 187, 76, 0.20),
+        0 0 112px rgba(255, 115, 52, 0.12);
+    }
+
+    .sun-g1-local-canvas {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: min(82vw, 560px);
+      height: min(82vw, 560px);
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: transparent;
+      object-fit: contain;
+      transform: none;
+      filter: saturate(1.06) contrast(1.04);
     }
 
     .control-grid button,
@@ -126,12 +170,15 @@
     }
 
     @media (max-width: 720px) {
-      .planet-stage {
-        width: min(82vw, 430px);
-      }
-
+      .planet-stage,
       .planet-stage[data-active-body="sun"] {
         width: min(82vw, 430px) !important;
+      }
+
+      .sun-g1-local-shell,
+      .sun-g1-local-canvas {
+        width: min(82vw, 430px);
+        height: min(82vw, 430px);
       }
 
       .control-grid button,
@@ -174,13 +221,13 @@
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
 
       <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 is now available for corrected circular inspection.
-        Planet 1 remains reserved for the future Nine Summits Universe.
+        Earth G1 is complete. Sun G1 now uses a local circular runtime mount on this route so the Sun can be inspected
+        without disturbing the accepted Earth baseline.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun G1 circle repair</span>
+        <span class="dgb-chip">Sun G1 local circle</span>
         <span class="dgb-chip">Moon queued</span>
         <span class="dgb-chip">Planet 1 reserved</span>
         <span class="dgb-chip hold">Visual hold</span>
@@ -194,7 +241,7 @@
     <section class="dgb-card">
       <h2>Choose Demo Universe body</h2>
       <p class="earth-g1-page-note">
-        Earth G1 remains the accepted baseline. Sun G1 should render as a true circular stellar body.
+        Earth G1 remains the accepted baseline. Sun G1 should now render as a true circular stellar body.
       </p>
 
       <div class="body-switch-row" aria-label="Demo Universe body switch">
@@ -210,12 +257,11 @@
           class="planet-stage earth-g2-stage"
           data-earth-asset-stage="true"
           data-earth-asset-mount="true"
-          data-sun-mount="true"
           data-planet-one-mount="true"
           data-planet-one-render="true"
           data-demo-universe="earth-sun-sequence"
           data-generation="G1"
-          data-render-contract="SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1"
+          data-render-contract="SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1"
           data-active-body="earth"
           data-visual-pass-claimed="false"
         ></div>
@@ -225,7 +271,7 @@
     <section class="dgb-card">
       <h2 id="control-title">Earth G1 motion control</h2>
       <p id="control-note" class="earth-g1-page-note">
-        Controls target the active renderer. Earth uses spin and touch drag. Sun uses contained plasma motion.
+        Controls target the active body. Earth uses the accepted Earth renderer. Sun uses the local circular runtime.
       </p>
 
       <div class="control-grid">
@@ -254,37 +300,35 @@
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1
 route=/showroom/globe/
 page=earth-generation-1
 public-label=Earth G1
 earth-g1-complete=true
-sun-g1-circle-containment=true
-sun-contract=SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1
+sun-g1-local-circle-runtime=true
 moon=queued
 planet-1=reserved-for-nine-summits-universe
 book-link=/nine-summits-of-love/
 universe-route=/nine-summits/universe/
-runtime-post-op=pending
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1 · Earth G1 · Sun G1 · Demo Universe.
+    SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1 · Earth G1 · Sun G1 · Demo Universe.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
-  <script src="/assets/sun/sun_canvas.js?v=SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1"></script>
   <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
   <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
 
   <script>
-    (function bootEarthG1SunCircleContainmentRoute(global) {
+    (function bootEarthG1SunG1LocalRuntime(global) {
       "use strict";
 
-      var VERSION = "SUN_G1_SHOWROOM_CIRCLE_CONTAINMENT_REPAIR_TNT_v1";
+      var VERSION = "SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1";
       var currentBody = "earth";
+      var sunRuntime = null;
 
       function byId(id) {
         return document.getElementById(id);
@@ -294,18 +338,482 @@ visual-pass-claimed=false</pre>
         return global.DGBEarthAssetCanvas || global.DGBDemoUniverseEarthCanvas || null;
       }
 
-      function sun() {
-        return global.DGBSunAssetCanvas || global.DGBDemoUniverseSunCanvas || global.DGBSun || null;
-      }
-
       function renderer() {
         return global.DGBPlanetOneRenderer || global.DGBPlanetOneRender || global.DGBPlanetOneRenderTeam || null;
       }
 
-      function activeApi() {
-        return currentBody === "sun" ? sun() : earth();
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, Number(value) || 0));
+      }
+
+      function mix(a, b, t) {
+        return a + (b - a) * clamp(t, 0, 1);
+      }
+
+      function hash2(x, y, seed) {
+        var n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+        return n - Math.floor(n);
+      }
+
+      function noise(x, y, seed) {
+        var x0 = Math.floor(x);
+        var y0 = Math.floor(y);
+        var xf = x - x0;
+        var yf = y - y0;
+        var u = xf * xf * (3 - 2 * xf);
+        var v = yf * yf * (3 - 2 * yf);
+        var a = hash2(x0, y0, seed);
+        var b = hash2(x0 + 1, y0, seed);
+        var c = hash2(x0, y0 + 1, seed);
+        var d = hash2(x0 + 1, y0 + 1, seed);
+        return mix(mix(a, b, u), mix(c, d, u), v);
+      }
+
+      function fbm(x, y, seed) {
+        return (
+          noise(x, y, seed) * 0.42 +
+          noise(x * 2.1, y * 2.1, seed + 13) * 0.26 +
+          noise(x * 4.2, y * 4.2, seed + 29) * 0.18 +
+          noise(x * 8.4, y * 8.4, seed + 47) * 0.10 +
+          noise(x * 16.8, y * 16.8, seed + 71) * 0.04
+        );
+      }
+
+      function plasmaColor(value, edge) {
+        var red = [128, 36, 18];
+        var orange = [235, 94, 28];
+        var gold = [255, 176, 50];
+        var yellow = [255, 226, 112];
+        var white = [255, 246, 190];
+        var c;
+
+        if (value > 0.82) {
+          c = [
+            mix(yellow[0], white[0], (value - 0.82) / 0.18),
+            mix(yellow[1], white[1], (value - 0.82) / 0.18),
+            mix(yellow[2], white[2], (value - 0.82) / 0.18)
+          ];
+        } else if (value > 0.58) {
+          c = [
+            mix(gold[0], yellow[0], (value - 0.58) / 0.24),
+            mix(gold[1], yellow[1], (value - 0.58) / 0.24),
+            mix(gold[2], yellow[2], (value - 0.58) / 0.24)
+          ];
+        } else if (value > 0.32) {
+          c = [
+            mix(orange[0], gold[0], (value - 0.32) / 0.26),
+            mix(orange[1], gold[1], (value - 0.32) / 0.26),
+            mix(orange[2], gold[2], (value - 0.32) / 0.26)
+          ];
+        } else {
+          c = [
+            mix(red[0], orange[0], value / 0.32),
+            mix(red[1], orange[1], value / 0.32),
+            mix(red[2], orange[2], value / 0.32)
+          ];
+        }
+
+        c[0] *= 1 - edge * 0.16;
+        c[1] *= 1 - edge * 0.12;
+        c[2] *= 1 - edge * 0.22;
+
+        return [
+          Math.round(clamp(c[0], 0, 255)),
+          Math.round(clamp(c[1], 0, 255)),
+          Math.round(clamp(c[2], 0, 255)),
+          255
+        ];
       }
 
       function setActiveButtons() {
         Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
-          var active = button
+          var active = button.getAttribute("data-body-view") === currentBody;
+          button.classList.toggle("active-view", active);
+          button.classList.toggle("secondary", !active);
+        });
+      }
+
+      function activeStatus() {
+        if (currentBody === "sun" && sunRuntime) return sunRuntime.getStatus();
+        var e = earth();
+        return e && e.getStatus ? e.getStatus() : null;
+      }
+
+      function writeReceipt(status) {
+        var node = byId("planet-one-route-receipt");
+        if (!node) return;
+
+        node.textContent =
+          "SUN_G1_ROUTE_LOCAL_CIRCLE_RUNTIME_RENEWAL_TNT_v1\n" +
+          "route=/showroom/globe/\n" +
+          "page=earth-generation-1\n" +
+          "public-label=Earth G1\n" +
+          "current-body=" + currentBody + "\n" +
+          "earth-g1-complete=true\n" +
+          "sun-g1-local-circle-runtime=true\n" +
+          "moon=queued\n" +
+          "planet-1=reserved-for-nine-summits-universe\n" +
+          "universe-route=/nine-summits/universe/\n" +
+          "active-status=" + JSON.stringify(activeStatus(), null, 2) + "\n" +
+          "visual-pass-claimed=false\n" +
+          "status=" + status + "\n" +
+          "timestamp=" + new Date().toISOString();
+      }
+
+      function stopSun() {
+        if (sunRuntime && sunRuntime.destroy) sunRuntime.destroy();
+        sunRuntime = null;
+      }
+
+      function pauseEarth() {
+        var e = earth();
+        if (e && typeof e.pause === "function") e.pause();
+      }
+
+      function clearTarget(target, body) {
+        if (!target) return;
+        target.innerHTML = "";
+        target.setAttribute("data-active-body", body);
+        target.setAttribute("data-visual-pass-claimed", "false");
+
+        if (body === "sun") {
+          target.classList.remove("earth-g2-stage");
+          target.style.setProperty("width", "min(82vw, 720px)", "important");
+          target.style.setProperty("height", "auto", "important");
+          target.style.setProperty("aspect-ratio", "1 / 1", "important");
+          target.style.setProperty("display", "grid", "important");
+          target.style.setProperty("place-items", "center", "important");
+          target.style.setProperty("overflow", "visible", "important");
+          target.style.setProperty("transform", "none", "important");
+        } else {
+          target.classList.add("earth-g2-stage");
+          target.style.removeProperty("width");
+          target.style.removeProperty("height");
+          target.style.removeProperty("aspect-ratio");
+          target.style.removeProperty("display");
+          target.style.removeProperty("place-items");
+          target.style.removeProperty("overflow");
+          target.style.removeProperty("transform");
+        }
+      }
+
+      function createSunRuntime(target) {
+        var shell = document.createElement("div");
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d", { willReadFrequently: true });
+        var raf = 0;
+        var running = false;
+        var phase = 0;
+        var speed = 0.28;
+        var direction = 1;
+        var renderCount = 0;
+
+        var cssSize = Math.max(260, Math.min(window.innerWidth < 760 ? window.innerWidth * 0.82 : 560, 560));
+        var px = 420;
+
+        shell.className = "sun-g1-local-shell";
+        shell.setAttribute("data-sun-g1-local-shell", "true");
+        shell.setAttribute("data-visual-pass-claimed", "false");
+
+        canvas.className = "sun-g1-local-canvas";
+        canvas.width = px;
+        canvas.height = px;
+        canvas.setAttribute("data-sun-g1-local-canvas", "true");
+        canvas.setAttribute("data-visual-pass-claimed", "false");
+        canvas.setAttribute("aria-label", "Sun G1 local circular runtime");
+
+        shell.style.width = cssSize + "px";
+        shell.style.height = cssSize + "px";
+        canvas.style.width = cssSize + "px";
+        canvas.style.height = cssSize + "px";
+
+        shell.appendChild(canvas);
+        target.appendChild(shell);
+
+        function drawCorona(size) {
+          var cx = size / 2;
+          var cy = size / 2;
+          var r = size * 0.31;
+          var g = ctx.createRadialGradient(cx, cy, r * 0.70, cx, cy, r * 1.75);
+
+          g.addColorStop(0, "rgba(255,226,120,0.14)");
+          g.addColorStop(0.34, "rgba(255,162,58,0.10)");
+          g.addColorStop(0.70, "rgba(255,96,42,0.05)");
+          g.addColorStop(1, "rgba(255,96,42,0)");
+
+          ctx.save();
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * 1.75, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function drawSurface(size) {
+          var cx = size / 2;
+          var cy = size / 2;
+          var r = size * 0.31;
+          var image = ctx.createImageData(size, size);
+          var data = image.data;
+
+          for (var y = 0; y < size; y += 1) {
+            for (var x = 0; x < size; x += 1) {
+              var dx = (x - cx) / r;
+              var dy = (y - cy) / r;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              var idx = (y * size + x) * 4;
+
+              if (dist > 1) {
+                data[idx + 3] = 0;
+                continue;
+              }
+
+              var angle = Math.atan2(dy, dx);
+              var edge = clamp((dist - 0.72) / 0.28, 0, 1);
+              var swirl = Math.sin(angle * 7 + dist * 8.5 - phase * 1.8) * 0.5 + 0.5;
+              var band = Math.sin((dx * 3.2 - dy * 1.4) + phase * 0.95 + Math.sin(angle * 5) * 0.35) * 0.5 + 0.5;
+              var grain = fbm(dx * 3.2 + phase * 0.18, dy * 3.2 - phase * 0.12, 41);
+              var cell = fbm(dx * 8.0 - phase * 0.20, dy * 8.0 + phase * 0.16, 97);
+              var heat = clamp(0.30 + grain * 0.38 + cell * 0.20 + swirl * 0.18 + band * 0.16 - edge * 0.18, 0, 1);
+              var color = plasmaColor(heat, edge);
+
+              data[idx] = color[0];
+              data[idx + 1] = color[1];
+              data[idx + 2] = color[2];
+              data[idx + 3] = color[3];
+            }
+          }
+
+          ctx.putImageData(image, 0, 0);
+
+          var shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.36, r * 0.06, cx, cy, r);
+          shade.addColorStop(0, "rgba(255,255,220,0.22)");
+          shade.addColorStop(0.42, "rgba(255,255,220,0.05)");
+          shade.addColorStop(0.86, "rgba(110,28,10,0.16)");
+          shade.addColorStop(1, "rgba(60,9,4,0.34)");
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.fillStyle = shade;
+          ctx.fillRect(0, 0, size, size);
+          ctx.restore();
+
+          ctx.save();
+          ctx.strokeStyle = "rgba(255, 222, 136, 0.34)";
+          ctx.lineWidth = Math.max(1, size * 0.004);
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        function render() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawCorona(canvas.width);
+          drawSurface(canvas.width);
+          renderCount += 1;
+        }
+
+        function tick() {
+          if (!running) return;
+          phase += speed * direction * 0.045;
+          render();
+          raf = requestAnimationFrame(tick);
+        }
+
+        function start() {
+          if (running) return getStatus();
+          running = true;
+          raf = requestAnimationFrame(tick);
+          return getStatus();
+        }
+
+        function pause() {
+          running = false;
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0;
+          return getStatus();
+        }
+
+        function destroy() {
+          pause();
+          if (shell.parentNode) shell.parentNode.removeChild(shell);
+          return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
+        }
+
+        function getStatus() {
+          return {
+            ok: true,
+            version: VERSION,
+            role: "SUN_G1_LOCAL_CIRCLE_RUNTIME",
+            running: running,
+            circular: true,
+            cssWidth: canvas.style.width,
+            cssHeight: canvas.style.height,
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height,
+            renderCount: renderCount,
+            earthG1Complete: true,
+            moonQueued: true,
+            visualPassClaimed: false
+          };
+        }
+
+        render();
+
+        return {
+          start: start,
+          pause: pause,
+          resume: start,
+          reset: function () { phase = 0; render(); return getStatus(); },
+          reverse: function () { direction *= -1; return getStatus(); },
+          slow: function () { speed = 0.12; return getStatus(); },
+          normal: function () { speed = 0.28; return getStatus(); },
+          fast: function () { speed = 0.64; return getStatus(); },
+          setSpeed: function (value) {
+            var n = Number(value);
+            if (n > 1) n = n / 100;
+            speed = clamp(n, 0, 1) * 0.85;
+            return getStatus();
+          },
+          destroy: destroy,
+          getStatus: getStatus
+        };
+      }
+
+      function mountEarth() {
+        var target = byId("planet-one-render");
+        var r = renderer();
+        var e = earth();
+        var options = {
+          autoSpin: true,
+          showAxis: true,
+          touchEnabled: true,
+          brightness: 1.10,
+          contrast: 1.08,
+          cloudStrength: 0.30
+        };
+
+        currentBody = "earth";
+        setActiveButtons();
+        stopSun();
+        clearTarget(target, "earth");
+
+        byId("control-title").textContent = "Earth G1 motion control";
+        byId("control-note").textContent = "Earth G1 remains the accepted globe baseline. Touch drag and spin should remain active.";
+
+        if (r && typeof r.renderPlanetOne === "function") {
+          r.renderPlanetOne(target, options);
+          writeReceipt("EARTH_MOUNTED_BY_RENDERER");
+          return true;
+        }
+
+        if (e && typeof e.mount === "function") {
+          e.mount(target, options);
+          writeReceipt("EARTH_MOUNTED_BY_EARTH_ASSET");
+          return true;
+        }
+
+        writeReceipt("WAITING_FOR_EARTH_ASSET");
+        return false;
+      }
+
+      function mountSun() {
+        var target = byId("planet-one-render");
+
+        currentBody = "sun";
+        setActiveButtons();
+        pauseEarth();
+        clearTarget(target, "sun");
+
+        byId("control-title").textContent = "Sun G1 motion control";
+        byId("control-note").textContent = "Sun G1 is rendered by a square local runtime mount on this page. This protects Earth G1 from disruption.";
+
+        sunRuntime = createSunRuntime(target);
+        sunRuntime.start();
+
+        writeReceipt("SUN_G1_LOCAL_CIRCLE_RUNTIME_MOUNTED");
+        return true;
+      }
+
+      function call(action) {
+        var api = currentBody === "sun" ? sunRuntime : earth();
+
+        if (!api || typeof api[action] !== "function") {
+          writeReceipt("NO_ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
+          return;
+        }
+
+        api[action]();
+        writeReceipt("ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
+      }
+
+      function bindControls() {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
+          button.addEventListener("click", function () {
+            var body = button.getAttribute("data-body-view");
+            if (body === "sun") mountSun();
+            else mountEarth();
+          });
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll("[data-action]"), function (button) {
+          button.addEventListener("click", function () {
+            call(button.getAttribute("data-action"));
+          });
+        });
+
+        var speed = byId("body-speed");
+        if (speed) {
+          speed.addEventListener("input", function () {
+            var api = currentBody === "sun" ? sunRuntime : earth();
+            if (api && typeof api.setSpeed === "function") {
+              api.setSpeed(Number(speed.value || 0));
+              writeReceipt("SPEED_UPDATED_" + currentBody.toUpperCase());
+            }
+          });
+        }
+      }
+
+      function boot() {
+        bindControls();
+
+        if (mountEarth()) return;
+
+        setTimeout(mountEarth, 120);
+        setTimeout(mountEarth, 420);
+        setTimeout(mountEarth, 900);
+      }
+
+      global.DGBSunG1RouteLocalCircleRuntimeRenewal = {
+        VERSION: VERSION,
+        version: VERSION,
+        route: "/showroom/globe/",
+        mountEarth: mountEarth,
+        mountSun: mountSun,
+        getStatus: function () {
+          return {
+            ok: true,
+            version: VERSION,
+            route: "/showroom/globe/",
+            currentBody: currentBody,
+            earthG1Complete: true,
+            sunG1LocalCircleRuntime: true,
+            moonQueued: true,
+            planetOneReservedFor: "nine-summits-universe",
+            visualPassClaimed: false
+          };
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+    })(window);
+  </script>
+</body>
+</html>

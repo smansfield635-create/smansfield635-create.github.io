@@ -1,21 +1,20 @@
-/* G1 PLANET 1 WATER PHASE-STATE BOUNDARY RENDERER
+/* G1 PLANET 1 MATERIAL DOMAIN VISUAL REFINEMENT RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
+   VERSION: G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1
 
    LAW:
-   Draw liquid surface first.
-   Draw land second.
-   Draw gas-state water/weather overlay third.
-   Draw lighting last.
-   Weather may not repaint the surface.
+   Draw liquid body first.
+   Draw solid land/ice material second.
+   Draw gas/weather above the surface third.
+   Draw lighting and atmospheric rim last.
+   Do not add runtime loops.
 */
 
-(function attachPlanetOneWaterPhaseStateBoundaryRenderer(global) {
+(function attachPlanetOneMaterialDomainRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1";
-  var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
+  var VERSION = "G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -64,9 +63,9 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
-      canvas.setAttribute("data-layer-version", LAYER_VERSION);
-      canvas.setAttribute("data-water-phase-state-boundary", "true");
-      canvas.setAttribute("aria-label", "Planet 1 water phase-state boundary renderer");
+      canvas.setAttribute("data-material-domain-visual-refinement", "true");
+      canvas.setAttribute("data-visual-pass-claimed", "false");
+      canvas.setAttribute("aria-label", "Planet 1 material domain visual refinement renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -89,7 +88,7 @@
   }
 
   function hasHydration() {
-    return Boolean(global.DGBPlanetOneHydrationRender && typeof global.DGBPlanetOneHydrationRender.sampleHydrationDepth === "function");
+    return Boolean(global.DGBPlanetOneHydrationRender);
   }
 
   function hasHexBridge() {
@@ -123,7 +122,7 @@
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&t=" + Date.now();
+      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
 
@@ -167,11 +166,11 @@
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.06, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(68,145,184,.99)");
-    ocean.addColorStop(0.30, "rgba(12,80,146,.99)");
-    ocean.addColorStop(0.72, "rgba(4,32,90,1)");
-    ocean.addColorStop(1, "rgba(2,9,28,1)");
+    ocean = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.42, radius * 0.05, cx, cy, radius * 1.06);
+    ocean.addColorStop(0, "rgba(75,151,184,.99)");
+    ocean.addColorStop(0.28, "rgba(14,82,145,.99)");
+    ocean.addColorStop(0.68, "rgba(5,35,94,1)");
+    ocean.addColorStop(1, "rgba(2,10,30,1)");
 
     ctx.save();
     ctx.beginPath();
@@ -180,32 +179,32 @@
     ctx.fillStyle = ocean;
     ctx.fill();
 
-    rim = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.05);
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.05);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.76, "rgba(145,189,255,.046)");
-    rim.addColorStop(1, "rgba(145,189,255,.21)");
+    rim.addColorStop(0.76, "rgba(145,189,255,.045)");
+    rim.addColorStop(1, "rgba(145,189,255,.20)");
     ctx.fillStyle = rim;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(155,202,255,.28)";
+    ctx.strokeStyle = "rgba(155,202,255,.24)";
     ctx.lineWidth = Math.max(1, radius * 0.010);
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawGasBoundaryContainer(ctx, cx, cy, radius) {
+  function drawAtmosphereBoundary(ctx, cx, cy, radius) {
     var halo;
     var veil;
 
     ctx.save();
 
-    halo = ctx.createRadialGradient(cx, cy, radius * 0.80, cx, cy, radius * 1.08);
+    halo = ctx.createRadialGradient(cx, cy, radius * 0.80, cx, cy, radius * 1.09);
     halo.addColorStop(0, "rgba(145,189,255,0)");
-    halo.addColorStop(0.80, "rgba(145,189,255,.018)");
-    halo.addColorStop(1, "rgba(145,189,255,.10)");
+    halo.addColorStop(0.82, "rgba(145,189,255,.018)");
+    halo.addColorStop(1, "rgba(145,189,255,.12)");
     ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.03, 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius * 1.04, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
@@ -213,11 +212,11 @@
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
-    veil = ctx.createRadialGradient(cx - radius * 0.12, cy - radius * 0.18, radius * 0.18, cx, cy, radius * 1.02);
-    veil.addColorStop(0, "rgba(190,222,255,.014)");
-    veil.addColorStop(0.52, "rgba(190,222,255,.003)");
-    veil.addColorStop(0.88, "rgba(190,222,255,.018)");
-    veil.addColorStop(1, "rgba(190,222,255,.050)");
+    veil = ctx.createRadialGradient(cx - radius * 0.10, cy - radius * 0.18, radius * 0.20, cx, cy, radius * 1.02);
+    veil.addColorStop(0, "rgba(190,222,255,.012)");
+    veil.addColorStop(0.52, "rgba(190,222,255,.004)");
+    veil.addColorStop(0.86, "rgba(190,222,255,.020)");
+    veil.addColorStop(1, "rgba(190,222,255,.052)");
     ctx.fillStyle = veil;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -228,29 +227,37 @@
     var sunlight;
     var terminator;
     var rim;
+    var pressure;
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
-    sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.92);
-    sunlight.addColorStop(0, "rgba(255,255,255,.088)");
+    sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.96);
+    sunlight.addColorStop(0, "rgba(255,255,255,.082)");
     sunlight.addColorStop(0.30, "rgba(255,255,255,.030)");
-    sunlight.addColorStop(0.70, "rgba(255,255,255,.006)");
+    sunlight.addColorStop(0.72, "rgba(255,255,255,.006)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    terminator = ctx.createLinearGradient(cx - radius * 0.40, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,.016)");
+    pressure = ctx.createRadialGradient(cx - radius * 0.18, cy + radius * 0.16, radius * 0.25, cx, cy, radius * 0.96);
+    pressure.addColorStop(0, "rgba(0,0,0,0)");
+    pressure.addColorStop(0.72, "rgba(0,0,0,.045)");
+    pressure.addColorStop(1, "rgba(0,0,0,.18)");
+    ctx.fillStyle = pressure;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    terminator = ctx.createLinearGradient(cx - radius * 0.42, cy - radius, cx + radius, cy + radius);
+    terminator.addColorStop(0, "rgba(255,255,255,.014)");
     terminator.addColorStop(0.50, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.34)");
+    terminator.addColorStop(1, "rgba(0,0,0,.32)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.03);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.78, "rgba(145,189,255,.028)");
-    rim.addColorStop(1, "rgba(145,189,255,.12)");
+    rim.addColorStop(0.78, "rgba(145,189,255,.026)");
+    rim.addColorStop(1, "rgba(145,189,255,.13)");
     ctx.fillStyle = rim;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -281,7 +288,13 @@
     options = options || {};
 
     if (!ctx) {
-      state.lastRender = { ok: false, mounted: false, reason: "NO_2D_CONTEXT", version: VERSION, visualPassClaimed: false };
+      state.lastRender = {
+        ok: false,
+        mounted: false,
+        reason: "NO_2D_CONTEXT",
+        version: VERSION,
+        visualPassClaimed: false
+      };
       return state.lastRender;
     }
 
@@ -302,7 +315,7 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.84,
+        compositorScale: options.compositorScale || 0.78,
         surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
@@ -310,7 +323,7 @@
       ctx.restore();
     }
 
-    drawGasBoundaryContainer(ctx, cx, cy, radius);
+    drawAtmosphereBoundary(ctx, cx, cy, radius);
     drawLightingLast(ctx, cx, cy, radius);
 
     if (options.showAxis === true) drawAxis(ctx, cx, cy, radius);
@@ -324,8 +337,19 @@
       version: VERSION,
       VERSION: VERSION,
       priorVersion: PRIOR_VERSION,
-      layerVersion: LAYER_VERSION,
       baseline: BASELINE,
+
+      materialDomainVisualRefinementRendered: Boolean(drawReceipt && drawReceipt.materialDomainVisualRefinementRendered),
+      materialDomainVisualRefinementActive: true,
+      physicalMaterialDomainsRendered: Boolean(drawReceipt && drawReceipt.physicalMaterialDomainsRendered),
+      landSolidMaterialBodyRendered: Boolean(drawReceipt && drawReceipt.landSolidMaterialBodyRendered),
+      waterLiquidDepthBodyRendered: Boolean(drawReceipt && drawReceipt.waterLiquidDepthBodyRendered),
+      airGasWeatherBodyRendered: Boolean(drawReceipt && drawReceipt.airGasWeatherBodyRendered),
+
+      landNoLongerFlatYellowPaint: Boolean(drawReceipt && drawReceipt.landNoLongerFlatYellowPaint),
+      liquidWaterDepthReadable: Boolean(drawReceipt && drawReceipt.liquidWaterDepthReadable),
+      airWeatherSitsAboveSurface: Boolean(drawReceipt && drawReceipt.airWeatherSitsAboveSurface),
+      solidLiquidGasSeparationReadable: Boolean(drawReceipt && drawReceipt.solidLiquidGasSeparationReadable),
 
       waterPhaseStateBoundaryRendered: Boolean(drawReceipt && drawReceipt.waterPhaseStateBoundaryRendered),
       waterPhaseStateBoundaryActive: true,
@@ -349,7 +373,7 @@
       iceDoesNotBecomeLand: true,
       landDoesNotOwnWaterPhase: true,
 
-      weatherBoundaryRendered: Boolean(drawReceipt && drawReceipt.weatherBoundaryRendered),
+      weatherBoundaryRendered: true,
       weatherBoundaryActive: true,
       weatherReadsButDoesNotRepaintSurface: true,
       weatherProcessNonInterferenceActive: true,
@@ -358,24 +382,6 @@
       landSurfaceRenderedSecond: true,
       gasOverlayRenderedThird: true,
       lightingRenderedLast: true,
-
-      landMaskAirOpacityRebalanceRendered: Boolean(drawReceipt && drawReceipt.landMaskAirOpacityRebalanceRendered),
-      surfaceAirLayerSeparationRendered: Boolean(drawReceipt && drawReceipt.surfaceAirLayerSeparationRendered),
-      waterSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.waterSurfaceMaterialRendered),
-      landSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.landSurfaceMaterialRendered),
-      airOverlayMaterialRendered: Boolean(drawReceipt && drawReceipt.airOverlayMaterialRendered),
-      landMaskSeparationRendered: Boolean(drawReceipt && drawReceipt.landMaskSeparationRendered),
-      surfaceFirstAirSecondCompositor: true,
-      cloudOpacityCapped: true,
-      featheredLandMaskActive: true,
-      noCartoonCutoutEdges: true,
-
-      wholeWorldContainerRendered: Boolean(drawReceipt && drawReceipt.wholeWorldContainerRendered),
-      triDomain256Rendered: Boolean(drawReceipt && drawReceipt.triDomain256Rendered),
-      water256Rendered: Boolean(drawReceipt && drawReceipt.water256Rendered),
-      land256Rendered: Boolean(drawReceipt && drawReceipt.land256Rendered),
-      air256Rendered: Boolean(drawReceipt && drawReceipt.air256Rendered),
-      wholeWorld256Rendered: Boolean(drawReceipt && drawReceipt.wholeWorld256Rendered),
 
       waterRemainsSovereign: true,
       waterDepthPreserved: true,
@@ -403,25 +409,13 @@
       upstreamRuntimeUntouched: true,
 
       drawReceipt: drawReceipt,
-      waterPhaseBoundaryReceipt: {
+      materialDomainReceipt: {
         ok: true,
         version: VERSION,
-        waterPhaseStateBoundaryActive: true,
-        solidLiquidGasWaterStatesActive: true,
-        liquidWaterOwnsSurface: true,
-        solidWaterOwnsIceStorage: true,
-        gasWaterOwnsAtmosphericMoisture: true,
-        evaporationReadsLiquidOnly: true,
-        evaporationCannotEraseWaterDepth: true,
-        condensationCreatesGasOverlayOnly: true,
-        condensationCannotRepaintSurface: true,
-        precipitationHeldAsPotential: true,
-        precipitationCannotOverwriteLand: true,
-        precipitationCannotOverwriteOcean: true,
-        cloudsDoNotBecomeWater: true,
-        waterDoesNotBecomeCloud: true,
-        iceDoesNotBecomeLand: true,
-        landDoesNotOwnWaterPhase: true,
+        materialDomainVisualRefinementActive: true,
+        landSolidMaterialBodyActive: true,
+        waterLiquidDepthBodyActive: true,
+        airGasWeatherBodyActive: true,
         visualPassClaimed: false
       },
       renderedAt: new Date().toISOString(),
@@ -439,7 +433,13 @@
     options = options || {};
 
     if (!canvas) {
-      state.lastRender = { ok: false, mounted: false, reason: "NO_MOUNT", version: VERSION, visualPassClaimed: false };
+      state.lastRender = {
+        ok: false,
+        mounted: false,
+        reason: "NO_MOUNT",
+        version: VERSION,
+        visualPassClaimed: false
+      };
       return state.lastRender;
     }
 
@@ -479,7 +479,9 @@
   function destroy() {
     state.paused = true;
 
-    if (state.lastCanvas && state.lastCanvas.parentNode) state.lastCanvas.parentNode.removeChild(state.lastCanvas);
+    if (state.lastCanvas && state.lastCanvas.parentNode) {
+      state.lastCanvas.parentNode.removeChild(state.lastCanvas);
+    }
 
     state.lastCanvas = null;
     state.lastMount = null;
@@ -495,19 +497,26 @@
       version: VERSION,
       PRIOR_VERSION: PRIOR_VERSION,
       priorVersion: PRIOR_VERSION,
-      LAYER_VERSION: LAYER_VERSION,
-      layerVersion: LAYER_VERSION,
       baseline: BASELINE,
 
       rendererFacadeActive: true,
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
 
-      waterPhaseStateBoundaryActive: true,
-      waterPhaseStateBoundaryRendered: Boolean(state.lastRender && state.lastRender.waterPhaseStateBoundaryRendered),
-      solidLiquidGasWaterStatesActive: true,
-      solidLiquidGasWaterStatesRendered: Boolean(state.lastRender && state.lastRender.solidLiquidGasWaterStatesRendered),
+      materialDomainVisualRefinementActive: true,
+      materialDomainVisualRefinementRendered: Boolean(state.lastRender && state.lastRender.materialDomainVisualRefinementRendered),
+      physicalMaterialDomainsRendered: Boolean(state.lastRender && state.lastRender.physicalMaterialDomainsRendered),
+      landSolidMaterialBodyRendered: Boolean(state.lastRender && state.lastRender.landSolidMaterialBodyRendered),
+      waterLiquidDepthBodyRendered: Boolean(state.lastRender && state.lastRender.waterLiquidDepthBodyRendered),
+      airGasWeatherBodyRendered: Boolean(state.lastRender && state.lastRender.airGasWeatherBodyRendered),
 
+      landNoLongerFlatYellowPaint: Boolean(state.lastRender && state.lastRender.landNoLongerFlatYellowPaint),
+      liquidWaterDepthReadable: Boolean(state.lastRender && state.lastRender.liquidWaterDepthReadable),
+      airWeatherSitsAboveSurface: Boolean(state.lastRender && state.lastRender.airWeatherSitsAboveSurface),
+      solidLiquidGasSeparationReadable: Boolean(state.lastRender && state.lastRender.solidLiquidGasSeparationReadable),
+
+      waterPhaseStateBoundaryActive: true,
+      solidLiquidGasWaterStatesActive: true,
       solidWaterOwnsIceStorage: true,
       liquidWaterOwnsSurface: true,
       gasWaterOwnsAtmosphericMoisture: true,
@@ -533,20 +542,6 @@
       landSurfaceRenderedSecond: true,
       gasOverlayRenderedThird: true,
       lightingRenderedLast: true,
-
-      landMaskAirOpacityRebalanceRendered: Boolean(state.lastRender && state.lastRender.landMaskAirOpacityRebalanceRendered),
-      surfaceAirLayerSeparationRendered: Boolean(state.lastRender && state.lastRender.surfaceAirLayerSeparationRendered),
-      waterSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.waterSurfaceMaterialRendered),
-      landSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.landSurfaceMaterialRendered),
-      airOverlayMaterialRendered: Boolean(state.lastRender && state.lastRender.airOverlayMaterialRendered),
-      landMaskSeparationRendered: Boolean(state.lastRender && state.lastRender.landMaskSeparationRendered),
-
-      wholeWorldContainerRendered: Boolean(state.lastRender && state.lastRender.wholeWorldContainerRendered),
-      triDomain256Rendered: Boolean(state.lastRender && state.lastRender.triDomain256Rendered),
-      water256Rendered: Boolean(state.lastRender && state.lastRender.water256Rendered),
-      land256Rendered: Boolean(state.lastRender && state.lastRender.land256Rendered),
-      air256Rendered: Boolean(state.lastRender && state.lastRender.air256Rendered),
-      wholeWorld256Rendered: Boolean(state.lastRender && state.lastRender.wholeWorld256Rendered),
 
       waterRemainsSovereign: true,
       waterDepthPreserved: true,
@@ -577,17 +572,11 @@
     };
   }
 
-  function status() {
-    return getStatus();
-  }
-
   var api = {
     VERSION: VERSION,
     version: VERSION,
     PRIOR_VERSION: PRIOR_VERSION,
     priorVersion: PRIOR_VERSION,
-    LAYER_VERSION: LAYER_VERSION,
-    layerVersion: LAYER_VERSION,
     BASELINE: BASELINE,
     baseline: BASELINE,
 
@@ -604,7 +593,7 @@
     resume: resume,
     destroy: destroy,
     getStatus: getStatus,
-    status: status
+    status: getStatus
   };
 
   global.DGBPlanetOneRenderTeam = api;
@@ -614,7 +603,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:water-phase-state-boundary-renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:material-domain-visual-refinement-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

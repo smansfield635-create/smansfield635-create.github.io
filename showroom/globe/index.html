@@ -1,21 +1,23 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="planet-1"
+  data-page="earth-generation-1"
   data-route="/showroom/globe/"
-  data-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
+  data-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
   data-shell-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
-  data-render-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
+  data-render-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
   data-demo-universe="earth"
+  data-generation="G1"
+  data-planet-one-reserved-for="nine-summits-universe"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Planet 1 · Demo Universe</title>
+  <title>Diamond Gate Bridge · Earth · Generation 1</title>
   <meta
     name="description"
-    content="Planet 1 Demo Universe Earth baseline with axis, spin, and touch interaction."
+    content="Earth Generation 1 baseline for the Diamond Gate Bridge Demo Universe. Planet 1 is reserved for the future Nine Summits universe planet."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
@@ -24,6 +26,52 @@
   <style>
     body {
       overflow-x: hidden;
+    }
+
+    .earth-g1-page-note {
+      color: var(--dgb-muted, rgba(228, 234, 246, 0.76));
+      line-height: 1.55;
+    }
+
+    .earth-g1-top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .earth-g1-book-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid rgba(242, 199, 111, 0.58);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background:
+        linear-gradient(180deg, rgba(242, 199, 111, 0.18), rgba(242, 199, 111, 0.055)),
+        rgba(255, 255, 255, 0.035);
+      color: var(--dgb-text, #f5f7fb);
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+
+    .earth-g1-book-bubble::before {
+      content: "Book";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      min-height: 24px;
+      margin-right: 8px;
+      border-radius: 999px;
+      background: rgba(242, 199, 111, 0.14);
+      color: #f2c76f;
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .planet-card {
@@ -50,11 +98,6 @@
       border-radius: 50%;
     }
 
-    .asset-note {
-      color: var(--dgb-muted, rgba(228,234,246,.76));
-      line-height: 1.55;
-    }
-
     .control-grid {
       display: flex;
       flex-wrap: wrap;
@@ -64,6 +107,11 @@
 
     .control-grid button {
       min-width: 120px;
+    }
+
+    .earth-g1-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     @media (max-width: 720px) {
@@ -79,14 +127,14 @@
 </head>
 
 <body>
-  <a class="dgb-skip" href="#planet-one-main">Skip to Planet 1 inspection</a>
+  <a class="dgb-skip" href="#earth-g1-main">Skip to Earth Generation 1</a>
 
   <header class="dgb-site-header">
     <div class="dgb-header-inner">
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Planet 1 · Demo Universe · Earth Baseline</div>
+        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -95,31 +143,38 @@
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Planet 1</a>
+        <a href="/showroom/globe/" aria-current="page">Earth G1</a>
         <a href="/gauges/">Gauges</a>
+        <a class="earth-g1-book-bubble" href="/nine-summits/" data-book-link="true">Read</a>
       </nav>
     </div>
   </header>
 
-  <main id="planet-one-main" class="dgb-main">
+  <main id="earth-g1-main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">Planet 1 · Asset Generation 2</p>
+      <p class="dgb-eyebrow">Earth · Generation 1</p>
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
+
       <p class="dgb-copy">
-        Earth asset rendering is active. The planet should be fully visible, on a soft axis, spinning, and touch-draggable.
-        This is still a renewal result, not a lock-in.
+        This is the true G1 globe standard for the Demo Universe. Everything before this was first-generation formation work.
+        Planet 1 is now reserved for the future Nine Summits universe planet.
       </p>
 
       <div class="dgb-chip-row">
-        <span class="dgb-chip">Earth asset spine</span>
-        <span class="dgb-chip">Axis restored</span>
+        <span class="dgb-chip">True G1</span>
+        <span class="dgb-chip">Earth baseline</span>
+        <span class="dgb-chip">Demo Universe</span>
         <span class="dgb-chip">Spin active</span>
         <span class="dgb-chip">Touch drag active</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
+
+      <div class="earth-g1-top-actions" aria-label="Earth Generation 1 actions">
+        <a class="earth-g1-book-bubble" href="/nine-summits/" data-book-link="true">Read about the book</a>
+      </div>
     </section>
 
-    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Planet 1 Demo Universe Earth renderer">
+    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Earth Generation 1 Demo Universe renderer">
       <div class="planet-stage-shell">
         <div
           id="planet-one-render"
@@ -129,16 +184,17 @@
           data-planet-one-mount="true"
           data-planet-one-render="true"
           data-demo-universe="earth"
-          data-render-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
+          data-generation="G1"
+          data-render-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
           data-visual-pass-claimed="false"
         ></div>
       </div>
     </section>
 
     <section class="dgb-card">
-      <h2>Planet 1 Motion Control</h2>
-      <p class="asset-note">
-        Buttons now target the active Earth asset renderer directly. Runtime confirmation remains post-op.
+      <h2>Earth G1 motion control</h2>
+      <p class="earth-g1-page-note">
+        Controls target the active Earth asset renderer. Runtime post-op remains separate. This page now represents Earth G1, not Planet 1.
       </p>
 
       <div class="control-grid">
@@ -152,7 +208,7 @@
         <button class="dgb-button secondary" type="button" data-earth-action="fast">Fast</button>
       </div>
 
-      <label for="planet-one-speed" class="asset-note">Rotation speed</label>
+      <label for="planet-one-speed" class="earth-g1-page-note">Rotation speed</label>
       <input
         id="planet-one-speed"
         name="planet-one-speed"
@@ -161,28 +217,33 @@
         max="100"
         value="31"
         data-earth-speed="true"
-        aria-label="Planet 1 rotation speed"
+        aria-label="Earth G1 rotation speed"
       >
     </section>
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt" data-earth-asset-contract="true">ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1
 route=/showroom/globe/
-page=planet-1
+page=earth-generation-1
+public-label=Earth G1
 demo-universe=earth
+true-generation-one=true
+prior-work=first-generation/pre-G1
+planet-1=reserved-for-nine-summits-universe
 earth-surface=/assets/earth/earth_surface_2048.jpg
 earth-clouds=/assets/earth/earth_clouds_2048.jpg
 axis=required
 spin=required
 touch=required
+book-link=/nine-summits/
 runtime-post-op=pending
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1 · Planet 1 · Demo Universe Earth baseline.
+    EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1 · Earth G1 · Demo Universe baseline.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -190,10 +251,10 @@ visual-pass-claimed=false</pre>
   <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
 
   <script>
-    (function bootEarthAxisSpinTouchRoute(global) {
+    (function bootEarthG1Route(global) {
       "use strict";
 
-      var VERSION = "ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1";
+      var VERSION = "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1";
 
       function byId(id) {
         return document.getElementById(id);
@@ -210,21 +271,28 @@ visual-pass-claimed=false</pre>
       function writeReceipt(status) {
         var node = byId("planet-one-route-receipt");
         var asset = earth();
+        var assetStatus = asset && asset.getStatus ? asset.getStatus() : null;
 
         if (!node) return;
 
         node.textContent =
-          "ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1\n" +
+          "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1\n" +
           "route=/showroom/globe/\n" +
-          "page=planet-1\n" +
+          "page=earth-generation-1\n" +
+          "public-label=Earth G1\n" +
           "demo-universe=earth\n" +
+          "true-generation-one=true\n" +
+          "prior-work=first-generation/pre-G1\n" +
+          "planet-1=reserved-for-nine-summits-universe\n" +
           "earth-surface=/assets/earth/earth_surface_2048.jpg\n" +
           "earth-clouds=/assets/earth/earth_clouds_2048.jpg\n" +
           "axis=required\n" +
           "spin=required\n" +
           "touch=required\n" +
+          "book-link=/nine-summits/\n" +
           "asset-ready=" + String(Boolean(asset)) + "\n" +
-          "asset-status=" + JSON.stringify(asset && asset.getStatus ? asset.getStatus() : null, null, 2) + "\n" +
+          "asset-running=" + String(Boolean(assetStatus && assetStatus.running)) + "\n" +
+          "asset-touch-enabled=" + String(Boolean(assetStatus && assetStatus.touchEnabled)) + "\n" +
           "runtime-post-op=pending\n" +
           "visual-pass-claimed=false\n" +
           "status=" + status + "\n" +
@@ -252,7 +320,7 @@ visual-pass-claimed=false</pre>
 
         if (r && typeof r.renderPlanetOne === "function") {
           r.renderPlanetOne(target, options);
-          writeReceipt("MOUNTED_BY_PLANET_RENDERER");
+          writeReceipt("MOUNTED_BY_RENDERER");
           return true;
         }
 
@@ -262,12 +330,13 @@ visual-pass-claimed=false</pre>
           return true;
         }
 
-        writeReceipt("WAITING_FOR_ASSET");
+        writeReceipt("WAITING_FOR_EARTH_ASSET");
         return false;
       }
 
       function call(action) {
         var asset = earth();
+
         if (!asset || typeof asset[action] !== "function") {
           writeReceipt("NO_ACTION_" + action.toUpperCase());
           return;
@@ -306,9 +375,14 @@ visual-pass-claimed=false</pre>
         setTimeout(mount, 900);
       }
 
-      global.DGBAssetGeneration2AxisSpinTouchRoute = {
+      global.DGBEarthG1DemoUniverseRoute = {
         VERSION: VERSION,
         version: VERSION,
+        route: "/showroom/globe/",
+        publicLabel: "Earth G1",
+        demoUniverse: "earth",
+        planetOneReservedFor: "nine-summits-universe",
+        bookLink: "/nine-summits/",
         mount: mount,
         writeReceipt: writeReceipt,
         getStatus: function () {
@@ -316,7 +390,12 @@ visual-pass-claimed=false</pre>
             ok: true,
             version: VERSION,
             route: "/showroom/globe/",
+            publicLabel: "Earth G1",
             demoUniverseEarthBaseline: true,
+            trueGenerationOne: true,
+            priorWork: "first-generation/pre-G1",
+            planetOneReservedFor: "nine-summits-universe",
+            bookLink: "/nine-summits/",
             visualPassClaimed: false
           };
         },

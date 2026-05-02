@@ -1,20 +1,20 @@
-/* G1 PLANET 1 UNDERLAY HEIGHTFIELD HYDROLOGY REBALANCE
+/* G1 PLANET 1 HYDROLOGY RECEIVER VISIBILITY AND LAND ALPHA REBALANCE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1
+   VERSION: G1_PLANET_1_HYDROLOGY_RECEIVER_VISIBILITY_AND_LAND_ALPHA_REBALANCE_TNT_v1
 
    LAW:
-   Do not redraw the landmass.
-   Preserve the legal landmask as the sheet.
-   Slide a heightfield underneath it.
-   Let hydrology reveal terrain through low receivers, channels, basins, wetlands, lakes, estuaries, and shelf breaks.
+   The landmask is preserved.
+   The heightfield remains under the sheet.
+   Internal hydrology must be visible.
+   Land alpha yields to basins, channels, wetlands, lake pockets, and estuaries.
    Visual pass remains HOLD.
 */
 
-(function attachPlanetOneUnderlayHeightfieldHydrology(global) {
+(function attachPlanetOneHydrologyReceiverVisibility(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_MATERIAL_DOMAIN_VISUAL_REFINEMENT_TNT_v1";
+  var VERSION = "G1_PLANET_1_HYDROLOGY_RECEIVER_VISIBILITY_AND_LAND_ALPHA_REBALANCE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var STATE_FORMULA = "4x4x4x4";
   var STATE_COUNT = 256;
@@ -168,7 +168,6 @@
     var absLat = Math.abs(lat);
 
     var potential = legalLandPotential(lon, lat, seed);
-
     var legalLandCore = smoothstep(0.02, 0.43, potential);
     var legalLandInterior = smoothstep(0.22, 0.70, potential);
     var legalLandMask = clamp(legalLandCore * 0.74 + legalLandInterior * 0.26, 0, 1);
@@ -206,8 +205,8 @@
     var basinReceiver = clamp(
       legalLandCore *
       (1 - underlayHeightfield) *
-      smoothstep(0.30, 0.80, basinFieldA * 0.56 + basinFieldB * 0.44) *
-      (0.42 + legalLandInterior * 0.58),
+      smoothstep(0.24, 0.74, basinFieldA * 0.56 + basinFieldB * 0.44) *
+      (0.48 + legalLandInterior * 0.62),
       0,
       1
     );
@@ -218,9 +217,9 @@
 
     var drainageVein = clamp(
       legalLandCore *
-      (riverVeinA * 0.44 + riverVeinB * 0.34 + riverVeinC * 0.22) *
-      (1 - ridgeDivide * 0.58) *
-      (0.42 + basinReceiver * 0.52 + coastalLowland * 0.32),
+      smoothstep(0.30, 0.76, riverVeinA * 0.44 + riverVeinB * 0.34 + riverVeinC * 0.22) *
+      (1 - ridgeDivide * 0.46) *
+      (0.52 + basinReceiver * 0.62 + coastalLowland * 0.38),
       0,
       1
     );
@@ -228,61 +227,69 @@
     var lakePocket = clamp(
       legalLandCore *
       basinReceiver *
-      smoothstep(0.42, 0.86, fbm(lon * 4.7, lat * 4.1, seed + 1700)) *
-      (1 - ridgeDivide * 0.60),
+      smoothstep(0.34, 0.78, fbm(lon * 4.7, lat * 4.1, seed + 1700)) *
+      (1 - ridgeDivide * 0.52),
       0,
-      0.82
+      0.92
     );
 
     var wetlandPocket = clamp(
       legalLandCore *
-      (coastalLowland * 0.42 + basinReceiver * 0.38 + drainageVein * 0.32) *
-      (1 - underlayHeightfield * 0.62),
+      (coastalLowland * 0.48 + basinReceiver * 0.46 + drainageVein * 0.40) *
+      (1 - underlayHeightfield * 0.54),
       0,
-      0.88
+      0.94
     );
 
     var estuaryMouth = clamp(
       wetEdge *
-      (drainageVein * 0.72 + basinReceiver * 0.24 + shelf * 0.22) *
-      (1 - ridgeDivide * 0.76),
+      (drainageVein * 0.82 + basinReceiver * 0.30 + shelf * 0.28) *
+      (1 - ridgeDivide * 0.68),
       0,
-      0.86
+      0.94
     );
 
     var internalWaterReceiver = clamp(
-      lakePocket * 0.50 +
-      wetlandPocket * 0.28 +
-      drainageVein * 0.26 +
-      basinReceiver * 0.18 +
-      estuaryMouth * 0.34,
+      lakePocket * 0.64 +
+      wetlandPocket * 0.38 +
+      drainageVein * 0.42 +
+      basinReceiver * 0.24 +
+      estuaryMouth * 0.42,
       0,
-      0.90
+      1
     );
 
-    var dryLandVisualReduction = clamp(
-      internalWaterReceiver * 0.60 +
-      wetlandPocket * 0.22 +
-      beach * 0.12 +
-      estuaryMouth * 0.18,
-      0,
-      0.82
-    );
-
-    var visibleDryLand = clamp(
-      legalLandMask *
-      (1 - dryLandVisualReduction * 0.72) +
-      ridgeDivide * 0.12 +
-      underlayHeightfield * 0.08,
+    var hydrologyCut = clamp(
+      internalWaterReceiver * 0.78 +
+      lakePocket * 0.26 +
+      drainageVein * 0.18 +
+      estuaryMouth * 0.24,
       0,
       0.96
     );
 
+    var dryLandVisualReduction = clamp(
+      hydrologyCut * 0.72 +
+      wetlandPocket * 0.28 +
+      beach * 0.10,
+      0,
+      0.92
+    );
+
+    var visibleDryLand = clamp(
+      legalLandMask *
+      (1 - dryLandVisualReduction * 0.86) +
+      ridgeDivide * 0.13 +
+      underlayHeightfield * 0.06,
+      0,
+      0.94
+    );
+
     var plateau = clamp(legalLandCore * smoothstep(0.52, 0.86, underlayHeightfield) * (0.42 + highNoise * 0.38), 0, 1);
     var mineral = clamp(visibleDryLand * (0.30 + baseRidge * 0.30 + fineNoise * 0.22 + plateau * 0.26), 0, 1);
-    var vegetation = clamp(visibleDryLand * wetlandPocket * 0.32 + visibleDryLand * smoothstep(0.34, 0.76, fbm(lon * 1.8, lat * 1.7, seed + 2200)) * (1 - underlayHeightfield * 0.28), 0, 0.86);
+    var vegetation = clamp(visibleDryLand * wetlandPocket * 0.42 + visibleDryLand * smoothstep(0.34, 0.76, fbm(lon * 1.8, lat * 1.7, seed + 2200)) * (1 - underlayHeightfield * 0.28), 0, 0.86);
     var dryStone = clamp(visibleDryLand * (1 - vegetation * 0.62) * (0.34 + mineral * 0.42), 0, 1);
-    var basinShadow = clamp(legalLandCore * basinReceiver * (0.28 + (1 - underlayHeightfield) * 0.44), 0, 0.76);
+    var basinShadow = clamp(legalLandCore * (basinReceiver * 0.52 + hydrologyCut * 0.42) * (0.30 + (1 - underlayHeightfield) * 0.46), 0, 0.86);
 
     var waterDivide = clamp(underlayHeightfield * baseRidge * smoothstep(0.44, 0.80, potential), 0, 1);
     var highElevationIceState = clamp(waterDivide * smoothstep(0.52, 0.92, underlayHeightfield) * (0.18 + absLat / 120), 0, 0.66);
@@ -290,37 +297,46 @@
     var solidWaterStorage = clamp(highElevationIceState + polarIce, 0, 0.72);
 
     var channelSignal = clamp((1 - legalLandCore) * ridge(normalizeLon(lon + 18), lat - 4, seed + 940) * shelf, 0, 1);
+    var interiorLiquidWater = clamp(lakePocket * 0.58 + drainageVein * 0.38 + wetlandPocket * 0.28 + basinReceiver * 0.16, 0, 0.94);
+
     var liquidWaterDepth = clamp(
       0.94 -
       shelf * 0.30 -
       reef * 0.12 -
-      legalLandCore * 0.66 +
+      legalLandCore * 0.56 +
       channelSignal * 0.12 +
-      internalWaterReceiver * 0.18 -
+      interiorLiquidWater * 0.32 -
       solidWaterStorage * 0.04,
       0.07,
       0.98
     );
 
     var deepBasin = clamp(liquidWaterDepth * (1 - shelf * 0.54), 0, 1);
-    var midChannel = clamp(channelSignal * 0.54 + drainageVein * 0.26 + liquidWaterDepth * 0.20, 0, 1);
-    var shallowWater = clamp(shelf * (1 - legalLandCore * 0.64) + estuaryMouth * 0.20, 0, 1);
-    var interiorLiquidWater = clamp(lakePocket * 0.46 + drainageVein * 0.26 + wetlandPocket * 0.18 + basinReceiver * 0.10, 0, 0.82);
+    var midChannel = clamp(channelSignal * 0.54 + drainageVein * 0.36 + liquidWaterDepth * 0.20, 0, 1);
+    var shallowWater = clamp(shelf * (1 - legalLandCore * 0.58) + estuaryMouth * 0.28, 0, 1);
 
-    var evaporationPotential = clamp((liquidWaterDepth * 0.18 + shallowWater * 0.14 + interiorLiquidWater * 0.18 + wetEdge * 0.12) * (1 - plateau * 0.32), 0, 0.50);
-    var vaporHumidity = clamp(evaporationPotential * 0.46 + wetlandPocket * 0.10 + wetEdge * 0.10 + fbm(lon * 1.2, lat * 1.1, seed + 2400) * 0.10, 0, 0.44);
-    var condensationPotential = clamp(vaporHumidity * 0.46 + solidWaterStorage * 0.10 + ridgeDivide * 0.04, 0, 0.34);
-    var cloudGasMask = clamp(smoothstep(0.35, 0.76, condensationPotential) * (0.014 + vaporHumidity * 0.030), 0, 0.048);
-    var atmosphereMask = clamp(0.010 + vaporHumidity * 0.016 + condensationPotential * 0.010, 0, 0.040);
-    var gasOverlayAlpha = clamp(cloudGasMask + atmosphereMask, 0, 0.062);
+    var evaporationPotential = clamp((liquidWaterDepth * 0.16 + shallowWater * 0.14 + interiorLiquidWater * 0.24 + wetEdge * 0.10) * (1 - plateau * 0.30), 0, 0.50);
+    var vaporHumidity = clamp(evaporationPotential * 0.46 + wetlandPocket * 0.12 + wetEdge * 0.10 + fbm(lon * 1.2, lat * 1.1, seed + 2400) * 0.08, 0, 0.42);
+    var condensationPotential = clamp(vaporHumidity * 0.44 + solidWaterStorage * 0.08 + ridgeDivide * 0.03, 0, 0.32);
+    var cloudGasMask = clamp(smoothstep(0.35, 0.76, condensationPotential) * (0.012 + vaporHumidity * 0.024), 0, 0.040);
+    var atmosphereMask = clamp(0.010 + vaporHumidity * 0.014 + condensationPotential * 0.008, 0, 0.036);
+    var gasOverlayAlpha = clamp(cloudGasMask + atmosphereMask, 0, 0.054);
 
     var legalLandAlpha = smoothstep(0.05, 0.42, legalLandMask) * 0.92;
-    var dryLandAlpha = smoothstep(0.05, 0.42, visibleDryLand) * clamp(0.70 + visibleDryLand * 0.22, 0, 0.94);
-    var waterWithinLandAlpha = clamp(internalWaterReceiver * legalLandCore * 0.78, 0, 0.76);
-    var shorelineFeather = clamp(beach * 0.30 + wetEdge * 0.16 + reef * 0.10 + estuaryMouth * 0.18, 0, 0.56);
+    var dryLandAlpha = clamp(
+      smoothstep(0.05, 0.42, visibleDryLand) *
+      (0.66 + visibleDryLand * 0.20) *
+      (1 - hydrologyCut * 0.58),
+      0,
+      0.84
+    );
 
-    var liquidWaterValue = clamp(deepBasin * 0.40 + midChannel * 0.20 + shallowWater * 0.18 + reef * 0.10 + interiorLiquidWater * 0.22, 0, 1);
-    var landDomainValue = clamp(visibleDryLand * 0.28 + underlayHeightfield * 0.22 + vegetation * 0.18 + mineral * 0.18 + dryStone * 0.10 + ridgeDivide * 0.10, 0, 1);
+    var interiorWaterAlpha = clamp(interiorLiquidWater * legalLandCore * 0.88, 0, 0.86);
+    var waterWithinLandAlpha = interiorWaterAlpha;
+    var shorelineFeather = clamp(beach * 0.28 + wetEdge * 0.14 + reef * 0.10 + estuaryMouth * 0.22, 0, 0.58);
+
+    var liquidWaterValue = clamp(deepBasin * 0.36 + midChannel * 0.20 + shallowWater * 0.16 + reef * 0.08 + interiorLiquidWater * 0.34, 0, 1);
+    var landDomainValue = clamp(visibleDryLand * 0.26 + underlayHeightfield * 0.20 + vegetation * 0.18 + mineral * 0.16 + dryStone * 0.10 + ridgeDivide * 0.12, 0, 1);
     var gasWaterValue = clamp(vaporHumidity * 0.46 + condensationPotential * 0.34 + cloudGasMask * 0.16, 0, 1);
     var wholeWorldCoherence = clamp((liquidWaterValue + landDomainValue + gasWaterValue) / 3, 0, 1);
 
@@ -336,16 +352,16 @@
       nodalIndex256: nodalIndex256(lon, lat),
       cardinalNode: cardinalNode(lon, lat),
 
-      underlayHeightfieldHydrologyRebalanceActive: true,
-      underlayHeightfieldActive: true,
+      hydrologyReceiverVisibilityActive: true,
+      landAlphaRebalanceActive: true,
       landmaskPreserved: true,
       legalLandShapeUnchanged: true,
-      hydrologyRedistributedThroughLand: true,
-      dryLandVisuallyReduced: true,
-      coastalLowlandsActive: true,
-      ridgeDivideLogicActive: true,
-      basinReceiverLogicActive: true,
+      underlayHeightfieldActive: true,
+      internalHydrologyVisible: true,
+      landAlphaYieldsToHydrology: true,
+      hydrologyCutActive: true,
       internalWaterReceiversActive: true,
+      basinReceiverLogicActive: true,
       riverVeinPotentialActive: true,
       lakeWetlandPocketActive: true,
       estuaryMouthLogicActive: true,
@@ -360,14 +376,9 @@
       waterPhaseStateBoundaryActive: true,
       solidLiquidGasWaterStatesActive: true,
       waterIdentityPreservedAcrossStates: true,
-      solidWaterOwnsIceStorage: true,
-      liquidWaterOwnsSurface: true,
-      gasWaterOwnsAtmosphericMoisture: true,
 
       evaporationReadsLiquidOnly: true,
-      evaporationCannotEraseWaterDepth: true,
       condensationCreatesGasOverlayOnly: true,
-      condensationCannotRepaintSurface: true,
       precipitationHeldAsPotential: true,
       precipitationCannotOverwriteLand: true,
       precipitationCannotOverwriteOcean: true,
@@ -375,10 +386,7 @@
       waterDoesNotBecomeCloud: true,
       iceDoesNotBecomeLand: true,
       landDoesNotOwnWaterPhase: true,
-
-      weatherBoundaryActive: true,
       weatherReadsButDoesNotRepaintSurface: true,
-      weatherProcessNonInterferenceActive: true,
 
       potential: round(potential, 4),
       legalLandCore: round(legalLandCore, 4),
@@ -388,6 +396,8 @@
       legalLandAlpha: round(legalLandAlpha, 4),
       dryLandAlpha: round(dryLandAlpha, 4),
       dryLandVisualReduction: round(dryLandVisualReduction, 4),
+      hydrologyCut: round(hydrologyCut, 4),
+      interiorWaterAlpha: round(interiorWaterAlpha, 4),
       waterWithinLandAlpha: round(waterWithinLandAlpha, 4),
 
       coastContact: round(coastContact, 4),
@@ -441,7 +451,6 @@
 
       terrainAuthorityBlocked: true,
       hydrationReadOnlyPreserved: true,
-      terrainFillBlocked: true,
       waterSovereigntyPreserved: true,
       noBlobReintroduced: true,
       noMountainRelief: true,
@@ -512,47 +521,47 @@
   function getLayerColors(sample, limb) {
     var deep = [4, 23, 74, 255];
     var mid = [10, 73, 132, 255];
-    var channel = [20, 108, 162, 255];
-    var shelf = [50, 154, 178, 255];
+    var channel = [18, 108, 162, 255];
+    var shelf = [48, 154, 178, 255];
     var reef = [72, 195, 182, 255];
-    var inlandWater = [18, 111, 128, 255];
+    var inlandWater = [10, 118, 138, 255];
 
-    var beach = [205, 181, 112, 255];
-    var wetSoil = [74, 93, 64, 255];
-    var moss = [50, 112, 64, 255];
-    var olive = [82, 104, 62, 255];
-    var brown = [105, 88, 58, 255];
-    var slate = [86, 92, 88, 255];
-    var highland = [122, 119, 98, 255];
-    var shadow = [42, 54, 50, 255];
+    var beach = [194, 170, 104, 255];
+    var wetSoil = [58, 78, 58, 255];
+    var moss = [44, 104, 60, 255];
+    var olive = [74, 96, 58, 255];
+    var brown = [98, 82, 54, 255];
+    var slate = [76, 84, 82, 255];
+    var highland = [116, 112, 92, 255];
+    var shadow = [36, 48, 46, 255];
     var ice = [188, 230, 235, 255];
 
     var gasBlue = [140, 183, 225, 255];
     var gasWhite = [224, 236, 240, 255];
 
     var water = mixColor(deep, mid, 1 - sample.liquidWaterDepth);
-    water = mixColor(water, channel, clamp(sample.midChannel * 0.34, 0, 0.34));
-    water = mixColor(water, shelf, clamp(sample.shelfField * 0.36 + sample.shallowWaterField * 0.18, 0, 0.52));
-    water = mixColor(water, reef, clamp(sample.reefField * 0.20, 0, 0.20));
-    water = mixColor(water, inlandWater, clamp(sample.interiorLiquidWater * 0.36, 0, 0.36));
+    water = mixColor(water, channel, clamp(sample.midChannel * 0.36, 0, 0.36));
+    water = mixColor(water, shelf, clamp(sample.shelfField * 0.34 + sample.shallowWaterField * 0.18, 0, 0.50));
+    water = mixColor(water, reef, clamp(sample.reefField * 0.18, 0, 0.18));
+    water = mixColor(water, inlandWater, clamp(sample.interiorLiquidWater * 0.58, 0, 0.58));
 
-    var land = mixColor(beach, wetSoil, clamp(sample.wetlandPocket * 0.40 + sample.wetEdge * 0.20, 0, 0.48));
+    var land = mixColor(beach, wetSoil, clamp(sample.wetlandPocket * 0.52 + sample.wetEdge * 0.22, 0, 0.58));
     land = mixColor(land, moss, clamp(sample.vegetation * 0.48, 0, 0.48));
-    land = mixColor(land, olive, clamp(sample.visibleDryLand * 0.22, 0, 0.22));
+    land = mixColor(land, olive, clamp(sample.visibleDryLand * 0.18, 0, 0.18));
     land = mixColor(land, brown, clamp(sample.dryStone * 0.30, 0, 0.30));
-    land = mixColor(land, slate, clamp(sample.mineral * 0.28, 0, 0.28));
+    land = mixColor(land, slate, clamp(sample.mineral * 0.30, 0, 0.30));
     land = mixColor(land, highland, clamp(sample.plateau * 0.24, 0, 0.24));
-    land = mixColor(land, shadow, clamp(sample.basinShadow * 0.34, 0, 0.34));
-    land = mixColor(land, ice, clamp(sample.solidWaterStorage * 0.26, 0, 0.26));
+    land = mixColor(land, shadow, clamp(sample.basinShadow * 0.40, 0, 0.40));
+    land = mixColor(land, ice, clamp(sample.solidWaterStorage * 0.24, 0, 0.24));
 
-    var inlandWetColor = mixColor(wetSoil, inlandWater, 0.45);
-    land = mixColor(land, inlandWetColor, clamp(sample.internalWaterReceiver * 0.34, 0, 0.34));
-    land = mixColor(land, beach, clamp(sample.shorelineFeather * 0.14, 0, 0.14));
+    var inlandWetColor = mixColor(wetSoil, inlandWater, 0.62);
+    land = mixColor(land, inlandWetColor, clamp(sample.internalWaterReceiver * 0.46, 0, 0.46));
+    land = mixColor(land, beach, clamp(sample.shorelineFeather * 0.10, 0, 0.10));
 
-    var gas = mixColor(gasBlue, gasWhite, clamp(sample.cloudGasMask * 9.0, 0, 0.42));
+    var gas = mixColor(gasBlue, gasWhite, clamp(sample.cloudGasMask * 9.0, 0, 0.38));
 
     var shade = clamp(0.58 + limb * 0.52, 0.40, 1.10);
-    var terrainShadow = clamp(1 - sample.basinShadow * 0.18 - sample.internalWaterReceiver * 0.06, 0.80, 1);
+    var terrainShadow = clamp(1 - sample.basinShadow * 0.22 - sample.hydrologyCut * 0.10, 0.76, 1);
 
     water = rgba(water[0] * shade, water[1] * shade, water[2] * shade, 255);
     land = rgba(
@@ -657,49 +666,29 @@
       ok: true,
       version: VERSION,
       priorVersion: PRIOR_VERSION,
-
-      underlayHeightfieldHydrologyRebalanceRendered: true,
-      underlayHeightfieldActive: true,
+      hydrologyReceiverVisibilityRendered: true,
+      landAlphaRebalanceRendered: true,
       landmaskPreserved: true,
       legalLandShapeUnchanged: true,
-      hydrologyRedistributedThroughLand: true,
-      dryLandVisuallyReduced: true,
-      coastalLowlandsActive: true,
-      ridgeDivideLogicActive: true,
-      basinReceiverLogicActive: true,
+      underlayHeightfieldActive: true,
+      internalHydrologyVisible: true,
+      landAlphaYieldsToHydrology: true,
+      hydrologyCutActive: true,
       internalWaterReceiversActive: true,
+      basinReceiverLogicActive: true,
       riverVeinPotentialActive: true,
       lakeWetlandPocketActive: true,
       estuaryMouthLogicActive: true,
       beigeDominanceReduced: true,
-
-      materialDomainVisualRefinementRendered: true,
-      landSolidMaterialBodyRendered: true,
       waterLiquidDepthBodyRendered: true,
+      landSolidMaterialBodyRendered: true,
       airGasWeatherBodyRendered: true,
-
       waterPhaseStateBoundaryRendered: true,
-      waterPhaseStateBoundaryActive: true,
-      solidLiquidGasWaterStatesRendered: true,
-      solidLiquidGasWaterStatesActive: true,
-
-      cloudsDoNotBecomeWater: true,
-      waterDoesNotBecomeCloud: true,
-      iceDoesNotBecomeLand: true,
-      landDoesNotOwnWaterPhase: true,
-      weatherReadsButDoesNotRepaintSurface: true,
-
-      waterDepthPreserved: true,
-      reefShelfPreserved: true,
-      beachThresholdPreserved: true,
-      terrainAuthorityBlocked: true,
-      hydrationReadOnlyPreserved: true,
       noBlobReintroduced: true,
       noMountainRelief: true,
       noFullGlacierSystem: true,
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
-
       visualPassClaimed: false,
       renderedAt: new Date().toISOString()
     };
@@ -748,16 +737,16 @@
       priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
 
-      underlayHeightfieldHydrologyRebalanceActive: true,
-      underlayHeightfieldActive: true,
+      hydrologyReceiverVisibilityActive: true,
+      landAlphaRebalanceActive: true,
       landmaskPreserved: true,
       legalLandShapeUnchanged: true,
-      hydrologyRedistributedThroughLand: true,
-      dryLandVisuallyReduced: true,
-      coastalLowlandsActive: true,
-      ridgeDivideLogicActive: true,
-      basinReceiverLogicActive: true,
+      underlayHeightfieldActive: true,
+      internalHydrologyVisible: true,
+      landAlphaYieldsToHydrology: true,
+      hydrologyCutActive: true,
       internalWaterReceiversActive: true,
+      basinReceiverLogicActive: true,
       riverVeinPotentialActive: true,
       lakeWetlandPocketActive: true,
       estuaryMouthLogicActive: true,
@@ -775,7 +764,6 @@
 
       terrainAuthorityBlocked: true,
       hydrationReadOnlyPreserved: true,
-      terrainFillBlocked: true,
       waterSovereigntyPreserved: true,
 
       noBlobReintroduced: true,
@@ -805,7 +793,6 @@
     stateFormula: STATE_FORMULA,
     stateCount: STATE_COUNT,
     requiredStateCount: STATE_COUNT,
-
     sampleBridge: sampleBridge,
     samplePlanetSurface: sampleBridge,
     createPlanetOneHexGrid: createPlanetOneHexGrid,
@@ -830,7 +817,7 @@
   createPlanetOneHexGrid({ seed: SEED });
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:underlay-heightfield-hydrology-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:hydrology-receiver-visibility-ready", {
       detail: getHexgridStatus()
     }));
   } catch (error) {}

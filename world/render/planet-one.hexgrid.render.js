@@ -1,18 +1,19 @@
-/* G1 PLANET 1 TERRAIN STARTLINE LOW EMERGENCE HEX BRIDGE
+/* G1 PLANET 1 TERRAIN LIFE / GLACIER DIVIDE HEX BRIDGE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_TERRAIN_STARTLINE_LOW_EMERGENCE_TNT_v1
+   VERSION: G1_PLANET_1_TERRAIN_LIFE_GLACIER_DIVIDE_REFINEMENT_TNT_v1
 
    LAW:
-   BeachLock defines the legal terrain startline.
-   Beaches must be visible definitively.
-   Beaches do not become full land fill.
-   Terrain may emerge only as restrained low land.
+   Terrain gets life, not authority.
+   Hydration remains sovereign.
+   High elevation becomes frozen-water / glacier-storage candidate.
+   Terrain rise creates watershed divide logic.
+   No rivers, no mountains, no full glaciers, no visual pass claim.
 */
 
-(function attachPlanetOneTerrainStartlineHexBridge(global) {
+(function attachPlanetOneTerrainLifeGlacierDivideHexBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_TERRAIN_STARTLINE_LOW_EMERGENCE_TNT_v1";
+  var VERSION = "G1_PLANET_1_TERRAIN_LIFE_GLACIER_DIVIDE_REFINEMENT_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var STATE_FORMULA = "4x4x4x4";
   var STATE_COUNT = 256;
@@ -70,27 +71,32 @@
     );
   }
 
-  function stateId(beachAuthority, terrainPermission, surfaceBalance, visualRestraint) {
-    return (((beachAuthority * 4 + terrainPermission) * 4 + surfaceBalance) * 4 + visualRestraint);
+  function ridgeSignal(lon, lat, seed) {
+    var n = fbm(lon * 1.35 + 17.2, lat * 1.18 - 8.4, seed + 606);
+    return 1 - Math.abs(n * 2 - 1);
+  }
+
+  function stateId(terrainPermission, surfaceLife, reliefWaterState, waterResponse) {
+    return (((terrainPermission * 4 + surfaceLife) * 4 + reliefWaterState) * 4 + waterResponse);
   }
 
   function buildStateSpaceReceipt() {
     var states = [];
-    var beachAuthority;
     var terrainPermission;
-    var surfaceBalance;
-    var visualRestraint;
+    var surfaceLife;
+    var reliefWaterState;
+    var waterResponse;
 
-    for (beachAuthority = 0; beachAuthority < 4; beachAuthority += 1) {
-      for (terrainPermission = 0; terrainPermission < 4; terrainPermission += 1) {
-        for (surfaceBalance = 0; surfaceBalance < 4; surfaceBalance += 1) {
-          for (visualRestraint = 0; visualRestraint < 4; visualRestraint += 1) {
+    for (terrainPermission = 0; terrainPermission < 4; terrainPermission += 1) {
+      for (surfaceLife = 0; surfaceLife < 4; surfaceLife += 1) {
+        for (reliefWaterState = 0; reliefWaterState < 4; reliefWaterState += 1) {
+          for (waterResponse = 0; waterResponse < 4; waterResponse += 1) {
             states.push({
-              state_id: stateId(beachAuthority, terrainPermission, surfaceBalance, visualRestraint),
-              beachAuthority: beachAuthority,
+              state_id: stateId(terrainPermission, surfaceLife, reliefWaterState, waterResponse),
               terrainPermission: terrainPermission,
-              surfaceBalance: surfaceBalance,
-              visualRestraint: visualRestraint
+              surfaceLife: surfaceLife,
+              reliefWaterState: reliefWaterState,
+              waterResponse: waterResponse
             });
           }
         }
@@ -102,10 +108,10 @@
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
-      beachAuthorityAxisActive: true,
       terrainPermissionAxisActive: true,
-      surfaceBalanceAxisActive: true,
-      visualRestraintAxisActive: true,
+      surfaceLifeAxisActive: true,
+      reliefWaterStateAxisActive: true,
+      waterResponseAxisActive: true,
       stateSpaceReceipt: true,
       states: states
     };
@@ -128,16 +134,17 @@
     return Math.max(west, east, north, south, far) + grain;
   }
 
-  function veinField(lon, lat, seed, offset, scale, width) {
-    var n = fbm(lon * 0.68 + offset, lat * 0.82 - offset, seed + offset);
-    var line = Math.abs(Math.sin(degToRad(lon * scale + lat * scale * 1.42 + n * 88 + offset)));
-    return 1 - smoothstep(0, width, line);
-  }
-
   function nodalIndex256(lon, lat) {
     var lonBand = Math.floor(((normalizeLon(lon) + 180) / 360) * 16);
     var latBand = Math.floor(((clamp(lat, -90, 90) + 90) / 180) * 16);
     return clamp(latBand, 0, 15) * 16 + clamp(lonBand, 0, 15);
+  }
+
+  function cardinalNode(lon, lat) {
+    var absLon = Math.abs(normalizeLon(lon));
+    var absLat = Math.abs(lat);
+    if (absLat >= absLon * 0.55) return lat >= 0 ? "NORTH" : "SOUTH";
+    return normalizeLon(lon) >= 0 ? "EAST" : "WEST";
   }
 
   function sampleBridge(lon, lat, options) {
@@ -150,6 +157,8 @@
     var absLat = Math.abs(lat);
     var polar = absLat >= 73 ? 1 : 0;
     var potential = landPotential(lon, lat, seed);
+    var ridge = ridgeSignal(lon, lat, seed);
+    var texture = fbm(lon * 2.8, lat * 2.35, seed + 840);
 
     var outline = smoothstep(0.055, 0.34, potential);
     var shelf = clamp(1 - Math.abs(potential - 0.055) / 0.30, 0, 1);
@@ -177,58 +186,134 @@
     );
 
     var terrainStartline = beachLock;
+
     var lowEmergentLand = clamp(
       beachLock *
       smoothstep(0.48, 0.84, potential) *
-      (1 - shelf * 0.55) *
-      (1 - reef * 0.68),
+      (1 - shelf * 0.52) *
+      (1 - reef * 0.64),
       0,
       1
     );
 
-    var inlandRiseAllowed = clamp(
+    var wetLowland = clamp(
       lowEmergentLand *
-      smoothstep(0.72, 0.92, potential),
+      (wetEdge * 0.42 + shallow * 0.24 + (1 - smoothstep(0.56, 0.78, potential)) * 0.52),
       0,
       1
     );
 
-    var lowVein = veinField(lon, lat, seed, 19, 1.10, 0.055);
-    var artery = veinField(lon, lat, seed, 73, -1.52, 0.044);
-    var pressure = veinField(lon, lat, seed, 131, 2.08, 0.036);
-
-    var veinCandidate = clamp(
-      Math.max(
-        lowVein * terrainStartline * 0.12,
-        artery * terrainStartline * 0.14,
-        pressure * beachLock * 0.12
-      ),
+    var dryLowland = clamp(
+      lowEmergentLand *
+      smoothstep(0.56, 0.82, potential) *
+      (1 - wetLowland * 0.46),
       0,
       1
     );
 
-    var waterDepth = clamp(0.78 - potential * 0.45 - shelf * 0.18 - reef * 0.12 - beachLock * 0.04, 0.08, 0.96);
-    if (polar) waterDepth = clamp(waterDepth * 0.70, 0.10, 0.62);
+    var softLandTone = clamp(
+      lowEmergentLand *
+      (0.38 + texture * 0.42) *
+      (1 - reef * 0.50),
+      0,
+      1
+    );
 
-    var beachAuthorityState = 0;
-    if (wetEdge > 0.20) beachAuthorityState = 1;
-    if (beachCandidate > 0.32) beachAuthorityState = 2;
-    if (beachLock > 0.48) beachAuthorityState = 3;
+    var earlyStoneTone = clamp(
+      lowEmergentLand *
+      ridge *
+      smoothstep(0.70, 0.94, potential) *
+      0.42,
+      0,
+      1
+    );
+
+    var microRelief = clamp(
+      lowEmergentLand *
+      (ridge * 0.38 + texture * 0.18) *
+      (1 - shelf * 0.38),
+      0,
+      1
+    );
+
+    var highElevationPotential = clamp(
+      lowEmergentLand *
+      ridge *
+      smoothstep(0.78, 1.02, potential) *
+      (0.35 + polar * 0.34),
+      0,
+      1
+    );
+
+    var highElevationFrozenWaterCandidate = clamp(
+      highElevationPotential *
+      (0.42 + absLat / 140) *
+      (1 - reef * 0.82),
+      0,
+      1
+    );
+
+    var watershedDivideCandidate = clamp(
+      highElevationFrozenWaterCandidate * 0.72 +
+      microRelief * ridge * 0.32,
+      0,
+      1
+    );
+
+    var futureMeltPathPermission = clamp(
+      watershedDivideCandidate *
+      smoothstep(0.30, 0.74, lowEmergentLand) *
+      (1 - reef * 0.90),
+      0,
+      1
+    );
+
+    var waterResponseValue = clamp(
+      0.44 +
+      shallow * 0.20 +
+      reef * 0.18 +
+      wetEdge * 0.22 +
+      beachLock * 0.12 -
+      dryLowland * 0.12 -
+      earlyStoneTone * 0.10,
+      0,
+      1
+    );
+
+    var waterDepth = clamp(
+      0.78 -
+      potential * 0.45 -
+      shelf * 0.18 -
+      reef * 0.12 -
+      beachLock * 0.04 +
+      highElevationFrozenWaterCandidate * 0.04,
+      0.08,
+      0.96
+    );
+
+    if (polar) {
+      waterDepth = clamp(waterDepth * 0.70, 0.10, 0.62);
+    }
 
     var terrainPermissionState = 0;
     if (beachCandidate > 0.24) terrainPermissionState = 1;
     if (lowEmergentLand > 0.18) terrainPermissionState = 2;
-    if (terrainStartline > 0.52) terrainPermissionState = 3;
+    if (dryLowland > 0.34 || highElevationFrozenWaterCandidate > 0.32) terrainPermissionState = 3;
 
-    var surfaceBalanceState = 0;
-    if (shelf > 0.24 || reef > 0.22) surfaceBalanceState = 1;
-    if (wetEdge > 0.30 || beachLock > 0.30) surfaceBalanceState = 2;
-    if (lowEmergentLand > 0.24) surfaceBalanceState = 3;
+    var surfaceLifeState = 0;
+    if (wetLowland > 0.20) surfaceLifeState = 1;
+    if (softLandTone > 0.28 || dryLowland > 0.22) surfaceLifeState = 2;
+    if (earlyStoneTone > 0.22) surfaceLifeState = 3;
 
-    var visualRestraintState = 0;
-    if (beachCandidate > 0.22) visualRestraintState = 1;
-    if (beachLock > 0.38 || lowEmergentLand > 0.18) visualRestraintState = 2;
-    if (beachLock > 0.68 && lowEmergentLand > 0.42) visualRestraintState = 3;
+    var reliefWaterState = 0;
+    if (microRelief > 0.18) reliefWaterState = 1;
+    if (microRelief > 0.34 || ridge > 0.78) reliefWaterState = 2;
+    if (highElevationFrozenWaterCandidate > 0.26) reliefWaterState = 3;
+
+    var waterResponseState = 0;
+    if (waterResponseValue > 0.42) waterResponseState = 1;
+    if (waterResponseValue > 0.62 && lowEmergentLand > 0.12) waterResponseState = 2;
+    if (watershedDivideCandidate > 0.24) waterResponseState = 3;
 
     return {
       version: VERSION,
@@ -238,31 +323,36 @@
       lat: lat,
       nodalIndex256: nodalIndex256(lon, lat),
       nodal_index_256: nodalIndex256(lon, lat),
+      cardinalNode: cardinalNode(lon, lat),
+      cardinal_node: cardinalNode(lon, lat),
+
+      terrainLifeLowReliefActive: true,
+      terrainAuthorityBlocked: true,
+      hydrationReadOnlyPreserved: true,
+      terrainFillBlocked: true,
+
+      lowEmergentLandFieldActive: true,
+      wetLowlandFieldActive: true,
+      dryLowlandFieldActive: true,
+      softLandToneFieldActive: true,
+      earlyStoneToneFieldActive: true,
+      microReliefFieldActive: true,
+      waterResponseFieldActive: true,
+      highElevationFrozenWaterCandidateFieldActive: true,
+      watershedDivideCandidateFieldActive: true,
+      futureMeltPathPermissionFieldActive: true,
+
+      cleanSlatePreserved: true,
+      beachLockNodesConsumed: true,
+      terrainStartlineNodesConsumed: true,
+      reefShelfPreserved: true,
+      wetEdgePreserved: true,
+      waterDepthPreserved: true,
+      beachThresholdPreserved: true,
 
       terrainStartlineLowEmergenceActive: true,
       hexBridgeActive: true,
-      beachThresholdBridgeActive: true,
       hydrationTerrainBridgeActive: true,
-
-      beachLockNodesConsumed: true,
-      terrainStartlineNodesConsumed: true,
-      lowEmergentLandCandidateFieldActive: true,
-      terrainRisePermissionFieldActive: true,
-      noTerrainNodesPreserved: true,
-      reefShelfPreserved: true,
-      wetEdgePreserved: true,
-      terrainFillBlocked: true,
-      beachFillBlocked: true,
-
-      terrainOutlineSourceActive: true,
-      officialTerrainOutlineActive: true,
-      waterDepthSamplingActive: true,
-      shelfDistanceSamplingActive: true,
-      reefShelfBoundaryNodesActive: true,
-      beachCandidateNodesActive: true,
-      beachLockNodesActive: true,
-      terrainStartlineNodesActive: true,
-      transitionState256Active: true,
 
       waterDepth: round(waterDepth, 4),
       water_depth: round(waterDepth, 4),
@@ -290,29 +380,41 @@
       terrain_startline: round(terrainStartline, 4),
       lowEmergentLand: round(lowEmergentLand, 4),
       low_emergent_land: round(lowEmergentLand, 4),
-      inlandRiseAllowed: round(inlandRiseAllowed, 4),
-      inland_rise_allowed: round(inlandRiseAllowed, 4),
+      wetLowland: round(wetLowland, 4),
+      wet_lowland: round(wetLowland, 4),
+      dryLowland: round(dryLowland, 4),
+      dry_lowland: round(dryLowland, 4),
+      softLandTone: round(softLandTone, 4),
+      soft_land_tone: round(softLandTone, 4),
+      earlyStoneTone: round(earlyStoneTone, 4),
+      early_stone_tone: round(earlyStoneTone, 4),
+      microRelief: round(microRelief, 4),
+      micro_relief: round(microRelief, 4),
+
+      highElevationFrozenWaterCandidate: round(highElevationFrozenWaterCandidate, 4),
+      high_elevation_frozen_water_candidate: round(highElevationFrozenWaterCandidate, 4),
+      watershedDivideCandidate: round(watershedDivideCandidate, 4),
+      watershed_divide_candidate: round(watershedDivideCandidate, 4),
+      futureMeltPathPermission: round(futureMeltPathPermission, 4),
+      future_melt_path_permission: round(futureMeltPathPermission, 4),
+
+      waterResponse: round(waterResponseValue, 4),
+      water_response: round(waterResponseValue, 4),
 
       terrainFill: 0,
       terrain_fill: 0,
+      mountainRelief: 0,
+      mountain_relief: 0,
+      riverNetwork: 0,
+      river_network: 0,
+      fullGlacierSystem: 0,
+      full_glacier_system: 0,
 
-      veinCandidate: round(veinCandidate, 4),
-      vein_candidate: round(veinCandidate, 4),
-      lowlandVein: round(lowVein * terrainStartline, 4),
-      lowland_vein: round(lowVein * terrainStartline, 4),
-      primaryArtery: round(artery * terrainStartline, 4),
-      primary_artery: round(artery * terrainStartline, 4),
-      pressureCut: round(pressure * beachLock, 4),
-      pressure_cut: round(pressure * beachLock, 4),
-
-      polarBoundary: Boolean(polar),
-      polar_boundary: Boolean(polar),
-
-      beachAuthorityState: beachAuthorityState,
       terrainPermissionState: terrainPermissionState,
-      surfaceBalanceState: surfaceBalanceState,
-      visualRestraintState: visualRestraintState,
-      state_id: stateId(beachAuthorityState, terrainPermissionState, surfaceBalanceState, visualRestraintState),
+      surfaceLifeState: surfaceLifeState,
+      reliefWaterState: reliefWaterState,
+      waterResponseState: waterResponseState,
+      state_id: stateId(terrainPermissionState, surfaceLifeState, reliefWaterState, waterResponseState),
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
@@ -374,26 +476,27 @@
     var reefTone = [88, 190, 188, 255];
     var shallowTone = [48, 148, 176, 255];
     var wetTone = [112, 178, 164, 255];
-
     var beachTone = [226, 210, 150, 255];
-    var beachBrightTone = [242, 224, 166, 255];
+    var wetLowlandTone = [104, 140, 96, 255];
+    var softLandTone = [92, 124, 78, 255];
+    var dryLowlandTone = [126, 118, 82, 255];
+    var earlyStoneTone = [112, 116, 102, 255];
+    var frozenTone = [178, 220, 226, 255];
+    var divideTone = [150, 202, 212, 255];
 
-    var emergentTone = [92, 128, 82, 255];
-    var veinTone = [72, 166, 190, 255];
-
-    out = blendPixel(out, shallowTone, clamp(sample.shallowWaterField * 0.14, 0, 0.14));
-    out = blendPixel(out, reefTone, clamp(sample.reefField * 0.22, 0, 0.22));
+    out = blendPixel(out, shallowTone, clamp(sample.shallowWaterField * 0.12, 0, 0.12));
+    out = blendPixel(out, reefTone, clamp(sample.reefField * 0.18, 0, 0.18));
     out = blendPixel(out, wetTone, clamp(sample.wetEdge * 0.10, 0, 0.10));
+    out = blendPixel(out, beachTone, clamp(sample.beachCandidate * 0.14 + sample.beachLock * 0.24, 0, 0.27));
 
-    /* Definitive beach edge. This is edge indication, not land fill. */
-    out = blendPixel(out, beachTone, clamp(sample.beachCandidate * 0.18, 0, 0.18));
-    out = blendPixel(out, beachBrightTone, clamp(sample.beachLock * 0.32, 0, 0.32));
+    out = blendPixel(out, wetLowlandTone, clamp(sample.wetLowland * 0.17, 0, 0.17));
+    out = blendPixel(out, softLandTone, clamp(sample.softLandTone * 0.20, 0, 0.20));
+    out = blendPixel(out, dryLowlandTone, clamp(sample.dryLowland * 0.12, 0, 0.12));
+    out = blendPixel(out, earlyStoneTone, clamp(sample.earlyStoneTone * 0.10, 0, 0.10));
 
-    /* Low-emergent land is restrained and cannot override beach/water authority. */
-    out = blendPixel(out, emergentTone, clamp(sample.lowEmergentLand * 0.18, 0, 0.18));
-
-    /* Veins remain held until later hydrology pass. */
-    out = blendPixel(out, veinTone, clamp(sample.veinCandidate * 0.04, 0, 0.04));
+    /* Frozen-water candidate, not full glacier. */
+    out = blendPixel(out, frozenTone, clamp(sample.highElevationFrozenWaterCandidate * 0.20, 0, 0.20));
+    out = blendPixel(out, divideTone, clamp(sample.watershedDivideCandidate * 0.10, 0, 0.10));
 
     var shade = clamp(0.54 + limb * 0.48, 0.38, 1.10);
     out[0] = Math.round(clamp(out[0] * shade, 0, 255));
@@ -493,25 +596,25 @@
       ok: true,
       version: VERSION,
 
-      cleanSlatePreserved: true,
-      lowEmergentLandRendered: true,
-      terrainStartlineConsumed: true,
-      beachLockNodesPreserved: true,
-      beachLockNodesConsumed: true,
-      terrainStartlineNodesConsumed: true,
-      reefShelfPreserved: true,
-      wetEdgePreserved: true,
-      waterDepthPreserved: true,
-      beachThresholdPreserved: true,
+      terrainLifeRendered: true,
+      lowReliefRendered: true,
+      wetDryTerrainVariationRendered: true,
+      highElevationFrozenWaterCandidateRendered: true,
+      watershedDivideHintRendered: true,
+      futureMeltPathHeld: true,
 
-      beachesVisibleDefinitively: true,
-      beachEdgeRenderedDefinitively: true,
-      beachIsEdgeNotFill: true,
+      waterDepthPreserved: true,
+      reefShelfPreserved: true,
+      beachThresholdPreserved: true,
+      wetEdgePreserved: true,
+      hydrationReadOnlyPreserved: true,
+      terrainAuthorityBlocked: true,
 
       terrainFillBlocked: true,
       noBlobReintroduced: true,
       noMountainRelief: true,
       noRiverNetwork: true,
+      noFullGlacierSystem: true,
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
 
@@ -562,35 +665,37 @@
       version: VERSION,
       baseline: BASELINE,
 
-      terrainStartlineLowEmergenceActive: true,
-      hexBridgeActive: true,
-      beachThresholdBridgeActive: true,
-      hydrationTerrainBridgeActive: true,
+      terrainLifeLowReliefActive: true,
+      lowEmergentLandFieldActive: true,
+      wetLowlandFieldActive: true,
+      dryLowlandFieldActive: true,
+      softLandToneFieldActive: true,
+      earlyStoneToneFieldActive: true,
+      microReliefFieldActive: true,
+      waterResponseFieldActive: true,
+      highElevationFrozenWaterCandidateFieldActive: true,
+      watershedDivideCandidateFieldActive: true,
+      futureMeltPathPermissionFieldActive: true,
+
+      terrainAuthorityBlocked: true,
+      hydrationReadOnlyPreserved: true,
+      terrainFillBlocked: true,
 
       beachLockNodesConsumed: true,
       terrainStartlineNodesConsumed: true,
-      lowEmergentLandCandidateFieldActive: true,
-      terrainRisePermissionFieldActive: true,
-      noTerrainNodesPreserved: true,
       reefShelfPreserved: true,
       wetEdgePreserved: true,
-      terrainFillBlocked: true,
-      beachFillBlocked: true,
-
-      beachLockNodesActive: true,
-      terrainStartlineNodesActive: true,
-      beachesVisibleDefinitively: true,
-      beachEdgeRenderedDefinitively: true,
-      beachIsEdgeNotFill: true,
+      waterDepthPreserved: true,
+      beachThresholdPreserved: true,
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
       stateSpaceReceipt: true,
-      beachAuthorityAxisActive: true,
       terrainPermissionAxisActive: true,
-      surfaceBalanceAxisActive: true,
-      visualRestraintAxisActive: true,
+      surfaceLifeAxisActive: true,
+      reliefWaterStateAxisActive: true,
+      waterResponseAxisActive: true,
       stateSpacePreview: receipt.states.slice(0, 16),
 
       publicHoneycombBlocked: true,
@@ -624,7 +729,7 @@
   createPlanetOneHexGrid({ seed: SEED });
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:terrain-startline-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:terrain-life-glacier-divide-ready", {
       detail: getHexgridStatus()
     }));
   } catch (error) {}

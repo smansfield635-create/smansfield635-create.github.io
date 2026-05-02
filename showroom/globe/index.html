@@ -3,10 +3,9 @@
   lang="en"
   data-page="earth-generation-1"
   data-route="/showroom/globe/"
-  data-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
+  data-contract="EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1"
   data-shell-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
-  data-render-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
-  data-demo-universe="earth"
+  data-demo-universe="earth-sun-sequence"
   data-generation="G1"
   data-planet-one-reserved-for="nine-summits-universe"
   data-visual-pass-claimed="false"
@@ -14,14 +13,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Earth · Generation 1</title>
+  <title>Diamond Gate Bridge · Earth G1 · Sun Next</title>
   <meta
     name="description"
-    content="Earth Generation 1 baseline for the Diamond Gate Bridge Demo Universe. Planet 1 is reserved for the future Nine Summits universe planet."
+    content="Earth Generation 1 baseline with Sun view option for the next Demo Universe body."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=SUN_TERMS_RENEWAL_TNT_v1">
 
   <style>
     body {
@@ -33,11 +33,13 @@
       line-height: 1.55;
     }
 
-    .earth-g1-top-actions {
+    .earth-g1-top-actions,
+    .body-switch-row,
+    .control-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
+      gap: 12px;
+      margin-top: 18px;
     }
 
     .earth-g1-book-bubble {
@@ -74,6 +76,12 @@
       text-transform: uppercase;
     }
 
+    .body-switch-row .active-view {
+      border-color: rgba(242, 199, 111, 0.72);
+      background: linear-gradient(180deg, rgba(242,199,111,0.22), rgba(242,199,111,0.07));
+      color: #fff2c7;
+    }
+
     .planet-card {
       overflow: visible !important;
       padding-top: clamp(16px, 4vw, 32px);
@@ -98,15 +106,9 @@
       border-radius: 50%;
     }
 
-    .control-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .control-grid button {
-      min-width: 120px;
+    .control-grid button,
+    .body-switch-row button {
+      min-width: 130px;
     }
 
     .earth-g1-receipt {
@@ -119,7 +121,8 @@
         width: min(82vw, 430px);
       }
 
-      .control-grid button {
+      .control-grid button,
+      .body-switch-row button {
         min-width: 132px;
       }
     }
@@ -134,18 +137,20 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe</div>
+        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe · Sun Next</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Earth G1</a>
         <a href="/gauges/">Gauges</a>
-        <a class="earth-g1-book-bubble" href="/nine-summits/" data-book-link="true">Read</a>
+        <a class="earth-g1-book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read</a>
       </nav>
     </div>
   </header>
@@ -156,105 +161,117 @@
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
 
       <p class="dgb-copy">
-        This is the true G1 globe standard for the Demo Universe. Everything before this was first-generation formation work.
-        Planet 1 is now reserved for the future Nine Summits universe planet.
+        Earth G1 is complete. Sun is the next Demo Universe body. Use this page to inspect Earth G1
+        and switch into the renewed Sun asset without opening Moon or Planet 1 yet.
       </p>
 
       <div class="dgb-chip-row">
-        <span class="dgb-chip">True G1</span>
-        <span class="dgb-chip">Earth baseline</span>
-        <span class="dgb-chip">Demo Universe</span>
-        <span class="dgb-chip">Spin active</span>
-        <span class="dgb-chip">Touch drag active</span>
-        <span class="dgb-chip hold">Visual hold</span>
+        <span class="dgb-chip">Earth G1 complete</span>
+        <span class="dgb-chip">Sun view available</span>
+        <span class="dgb-chip">Moon queued</span>
+        <span class="dgb-chip">Planet 1 reserved</span>
+        <span class="dgb-chip hold">Sun not locked</span>
       </div>
 
       <div class="earth-g1-top-actions" aria-label="Earth Generation 1 actions">
-        <a class="earth-g1-book-bubble" href="/nine-summits/" data-book-link="true">Read about the book</a>
+        <a class="earth-g1-book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read about the book</a>
       </div>
     </section>
 
-    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Earth Generation 1 Demo Universe renderer">
+    <section class="dgb-card">
+      <h2>Choose Demo Universe body</h2>
+      <p class="earth-g1-page-note">
+        Earth G1 remains the accepted baseline. Sun is available for inspection as the next renewed body.
+      </p>
+
+      <div class="body-switch-row" aria-label="Demo Universe body switch">
+        <button class="dgb-button active-view" type="button" data-body-view="earth">View Earth G1</button>
+        <button class="dgb-button secondary" type="button" data-body-view="sun">View Sun</button>
+      </div>
+    </section>
+
+    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Demo Universe body renderer">
       <div class="planet-stage-shell">
         <div
           id="planet-one-render"
           class="planet-stage earth-g2-stage"
           data-earth-asset-stage="true"
           data-earth-asset-mount="true"
+          data-sun-mount="true"
+          data-demo-universe-sun="true"
           data-planet-one-mount="true"
           data-planet-one-render="true"
-          data-demo-universe="earth"
+          data-demo-universe="earth-sun-sequence"
           data-generation="G1"
-          data-render-contract="EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1"
+          data-render-contract="EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1"
           data-visual-pass-claimed="false"
         ></div>
       </div>
     </section>
 
     <section class="dgb-card">
-      <h2>Earth G1 motion control</h2>
-      <p class="earth-g1-page-note">
-        Controls target the active Earth asset renderer. Runtime post-op remains separate. This page now represents Earth G1, not Planet 1.
+      <h2 id="control-title">Earth G1 motion control</h2>
+      <p id="control-note" class="earth-g1-page-note">
+        Controls target the active renderer. Earth uses spin and touch drag. Sun uses plasma motion.
       </p>
 
       <div class="control-grid">
-        <button class="dgb-button" type="button" data-earth-action="start">Start</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="pause">Pause</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="resume">Resume</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="reset">Reset</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="reverse">Reverse</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="slow">Slow</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="normal">Normal</button>
-        <button class="dgb-button secondary" type="button" data-earth-action="fast">Fast</button>
+        <button class="dgb-button" type="button" data-action="start">Start</button>
+        <button class="dgb-button secondary" type="button" data-action="pause">Pause</button>
+        <button class="dgb-button secondary" type="button" data-action="resume">Resume</button>
+        <button class="dgb-button secondary" type="button" data-action="reset">Reset</button>
+        <button class="dgb-button secondary" type="button" data-action="reverse">Reverse</button>
+        <button class="dgb-button secondary" type="button" data-action="slow">Slow</button>
+        <button class="dgb-button secondary" type="button" data-action="normal">Normal</button>
+        <button class="dgb-button secondary" type="button" data-action="fast">Fast</button>
       </div>
 
-      <label for="planet-one-speed" class="earth-g1-page-note">Rotation speed</label>
+      <label for="body-speed" class="earth-g1-page-note">Motion speed</label>
       <input
-        id="planet-one-speed"
-        name="planet-one-speed"
+        id="body-speed"
+        name="body-speed"
         type="range"
         min="0"
         max="100"
         value="31"
-        data-earth-speed="true"
-        aria-label="Earth G1 rotation speed"
+        data-body-speed="true"
+        aria-label="Demo Universe body motion speed"
       >
     </section>
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt earth-g1-receipt" data-earth-asset-contract="true">EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1
 route=/showroom/globe/
 page=earth-generation-1
 public-label=Earth G1
-demo-universe=earth
-true-generation-one=true
-prior-work=first-generation/pre-G1
+demo-universe=earth-sun-sequence
+earth-g1-complete=true
+sun-view-option=true
+sun-contract=SUN_TERMS_RENEWAL_TNT_v1
+moon=queued
 planet-1=reserved-for-nine-summits-universe
-earth-surface=/assets/earth/earth_surface_2048.jpg
-earth-clouds=/assets/earth/earth_clouds_2048.jpg
-axis=required
-spin=required
-touch=required
-book-link=/nine-summits/
+book-link=/nine-summits-of-love/
 runtime-post-op=pending
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1 · Earth G1 · Demo Universe baseline.
+    EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1 · Earth G1 · Sun Next · Demo Universe.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
+  <script src="/assets/sun/sun_canvas.js?v=SUN_TERMS_RENEWAL_TNT_v1"></script>
   <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
   <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
 
   <script>
-    (function bootEarthG1Route(global) {
+    (function bootEarthG1SunOptionRoute(global) {
       "use strict";
 
-      var VERSION = "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1";
+      var VERSION = "EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1";
+      var currentBody = "earth";
 
       function byId(id) {
         return document.getElementById(id);
@@ -264,45 +281,61 @@ visual-pass-claimed=false</pre>
         return global.DGBEarthAssetCanvas || global.DGBDemoUniverseEarthCanvas || null;
       }
 
+      function sun() {
+        return global.DGBSunAssetCanvas || global.DGBDemoUniverseSunCanvas || global.DGBSun || null;
+      }
+
       function renderer() {
         return global.DGBPlanetOneRenderer || global.DGBPlanetOneRender || global.DGBPlanetOneRenderTeam || null;
       }
 
+      function activeApi() {
+        return currentBody === "sun" ? sun() : earth();
+      }
+
+      function setActiveButtons() {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
+          var active = button.getAttribute("data-body-view") === currentBody;
+          button.classList.toggle("active-view", active);
+          button.classList.toggle("secondary", !active);
+        });
+      }
+
       function writeReceipt(status) {
         var node = byId("planet-one-route-receipt");
-        var asset = earth();
-        var assetStatus = asset && asset.getStatus ? asset.getStatus() : null;
+        var e = earth();
+        var s = sun();
+        var active = activeApi();
+        var activeStatus = active && active.getStatus ? active.getStatus() : null;
 
         if (!node) return;
 
         node.textContent =
-          "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1\n" +
+          "EARTH_G1_WITH_SUN_VIEW_OPTION_TNT_v1\n" +
           "route=/showroom/globe/\n" +
           "page=earth-generation-1\n" +
           "public-label=Earth G1\n" +
-          "demo-universe=earth\n" +
-          "true-generation-one=true\n" +
-          "prior-work=first-generation/pre-G1\n" +
+          "demo-universe=earth-sun-sequence\n" +
+          "current-body=" + currentBody + "\n" +
+          "earth-g1-complete=true\n" +
+          "earth-ready=" + String(Boolean(e)) + "\n" +
+          "sun-view-option=true\n" +
+          "sun-ready=" + String(Boolean(s)) + "\n" +
+          "sun-contract=SUN_TERMS_RENEWAL_TNT_v1\n" +
+          "moon=queued\n" +
           "planet-1=reserved-for-nine-summits-universe\n" +
-          "earth-surface=/assets/earth/earth_surface_2048.jpg\n" +
-          "earth-clouds=/assets/earth/earth_clouds_2048.jpg\n" +
-          "axis=required\n" +
-          "spin=required\n" +
-          "touch=required\n" +
-          "book-link=/nine-summits/\n" +
-          "asset-ready=" + String(Boolean(asset)) + "\n" +
-          "asset-running=" + String(Boolean(assetStatus && assetStatus.running)) + "\n" +
-          "asset-touch-enabled=" + String(Boolean(assetStatus && assetStatus.touchEnabled)) + "\n" +
+          "book-link=/nine-summits-of-love/\n" +
+          "active-status=" + JSON.stringify(activeStatus, null, 2) + "\n" +
           "runtime-post-op=pending\n" +
           "visual-pass-claimed=false\n" +
           "status=" + status + "\n" +
           "timestamp=" + new Date().toISOString();
       }
 
-      function mount() {
+      function mountEarth() {
         var target = byId("planet-one-render");
         var r = renderer();
-        var asset = earth();
+        var e = earth();
 
         var options = {
           autoSpin: true,
@@ -313,20 +346,23 @@ visual-pass-claimed=false</pre>
           cloudStrength: 0.30
         };
 
-        if (!target) {
-          writeReceipt("NO_MOUNT");
-          return false;
-        }
+        currentBody = "earth";
+        setActiveButtons();
+
+        byId("control-title").textContent = "Earth G1 motion control";
+        byId("control-note").textContent = "Earth G1 remains the accepted globe baseline. Touch drag and spin should remain active.";
+
+        if (suspendSun()) {}
 
         if (r && typeof r.renderPlanetOne === "function") {
           r.renderPlanetOne(target, options);
-          writeReceipt("MOUNTED_BY_RENDERER");
+          writeReceipt("EARTH_MOUNTED_BY_RENDERER");
           return true;
         }
 
-        if (asset && typeof asset.mount === "function") {
-          asset.mount(target, options);
-          writeReceipt("MOUNTED_BY_EARTH_ASSET");
+        if (e && typeof e.mount === "function") {
+          e.mount(target, options);
+          writeReceipt("EARTH_MOUNTED_BY_EARTH_ASSET");
           return true;
         }
 
@@ -334,32 +370,96 @@ visual-pass-claimed=false</pre>
         return false;
       }
 
-      function call(action) {
-        var asset = earth();
+      function mountSun() {
+        var target = byId("planet-one-render");
+        var s = sun();
 
-        if (!asset || typeof asset[action] !== "function") {
-          writeReceipt("NO_ACTION_" + action.toUpperCase());
+        var options = {
+          autoStart: true,
+          size: 560,
+          corona: true,
+          coronaStrength: 0.42,
+          plasmaStrength: 1,
+          granulation: 1,
+          brightness: 1,
+          fps: 24
+        };
+
+        currentBody = "sun";
+        setActiveButtons();
+
+        byId("control-title").textContent = "Sun motion control";
+        byId("control-note").textContent = "Sun is the next renewed Demo Universe body. This is inspection, not lock-in.";
+
+        suspendEarth();
+
+        if (s && typeof s.mount === "function") {
+          s.mount(target, options);
+          writeReceipt("SUN_MOUNTED_BY_SUN_ASSET");
+          return true;
+        }
+
+        writeReceipt("WAITING_FOR_SUN_ASSET");
+        return false;
+      }
+
+      function suspendEarth() {
+        var e = earth();
+        if (e && typeof e.pause === "function") {
+          e.pause();
+          return true;
+        }
+        return false;
+      }
+
+      function suspendSun() {
+        var s = sun();
+        if (s && typeof s.pause === "function") {
+          s.pause();
+          return true;
+        }
+        return false;
+      }
+
+      function call(action) {
+        var api = activeApi();
+
+        if (!api || typeof api[action] !== "function") {
+          if (action === "reverse" && currentBody === "sun") {
+            writeReceipt("SUN_REVERSE_NOT_APPLICABLE");
+            return;
+          }
+
+          writeReceipt("NO_ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
           return;
         }
 
-        asset[action]();
-        writeReceipt("ACTION_" + action.toUpperCase());
+        api[action]();
+        writeReceipt("ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
       }
 
       function bindControls() {
-        Array.prototype.forEach.call(document.querySelectorAll("[data-earth-action]"), function (button) {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
           button.addEventListener("click", function () {
-            call(button.getAttribute("data-earth-action"));
+            var body = button.getAttribute("data-body-view");
+            if (body === "sun") mountSun();
+            else mountEarth();
           });
         });
 
-        var speed = byId("planet-one-speed");
+        Array.prototype.forEach.call(document.querySelectorAll("[data-action]"), function (button) {
+          button.addEventListener("click", function () {
+            call(button.getAttribute("data-action"));
+          });
+        });
+
+        var speed = byId("body-speed");
         if (speed) {
           speed.addEventListener("input", function () {
-            var asset = earth();
-            if (asset && typeof asset.setSpeed === "function") {
-              asset.setSpeed(Number(speed.value || 0));
-              writeReceipt("SPEED_UPDATED");
+            var api = activeApi();
+            if (api && typeof api.setSpeed === "function") {
+              api.setSpeed(Number(speed.value || 0));
+              writeReceipt("SPEED_UPDATED_" + currentBody.toUpperCase());
             }
           });
         }
@@ -368,22 +468,20 @@ visual-pass-claimed=false</pre>
       function boot() {
         bindControls();
 
-        if (mount()) return;
+        if (mountEarth()) return;
 
-        setTimeout(mount, 120);
-        setTimeout(mount, 420);
-        setTimeout(mount, 900);
+        setTimeout(mountEarth, 120);
+        setTimeout(mountEarth, 420);
+        setTimeout(mountEarth, 900);
       }
 
-      global.DGBEarthG1DemoUniverseRoute = {
+      global.DGBEarthG1WithSunViewOptionRoute = {
         VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
-        publicLabel: "Earth G1",
-        demoUniverse: "earth",
-        planetOneReservedFor: "nine-summits-universe",
-        bookLink: "/nine-summits/",
-        mount: mount,
+        currentBody: function () { return currentBody; },
+        mountEarth: mountEarth,
+        mountSun: mountSun,
         writeReceipt: writeReceipt,
         getStatus: function () {
           return {
@@ -391,11 +489,12 @@ visual-pass-claimed=false</pre>
             version: VERSION,
             route: "/showroom/globe/",
             publicLabel: "Earth G1",
-            demoUniverseEarthBaseline: true,
-            trueGenerationOne: true,
-            priorWork: "first-generation/pre-G1",
+            currentBody: currentBody,
+            earthG1Complete: true,
+            sunViewOption: true,
+            sunContract: "SUN_TERMS_RENEWAL_TNT_v1",
+            moonQueued: true,
             planetOneReservedFor: "nine-summits-universe",
-            bookLink: "/nine-summits/",
             visualPassClaimed: false
           };
         },

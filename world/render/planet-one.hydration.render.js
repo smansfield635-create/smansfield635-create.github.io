@@ -1,18 +1,12 @@
-/* G1 PLANET 1 HYDRATION DEPTH LAYER
+/* G1 PLANET 1 REEF / SHELF / SHALLOW WATER HYDRATION LAYER
    FILE: /world/render/planet-one.hydration.render.js
-   VERSION: G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1
-
-   LAW:
-   Hydration owns water depth only.
-   Hydration does not own terrain outline.
-   Hydration does not paint land.
-   Hydration preserves the clean blue Generation 1 body.
+   VERSION: G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1
 */
 
-(function attachPlanetOneHydrationDepth(global) {
+(function attachPlanetOneHydrationLayer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1";
+  var VERSION = "G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var SEA_LEVEL_DATUM = 0;
 
@@ -20,13 +14,13 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  function mix(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
+  }
+
   function round(value, places) {
     var m = Math.pow(10, places || 4);
     return Math.round(value * m) / m;
-  }
-
-  function mix(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
   }
 
   function rgba(r, g, b, a) {
@@ -45,63 +39,58 @@
     return fallback;
   }
 
-  function depthBandName(depth) {
-    if (depth >= 0.72) return "DEEP_OCEAN";
-    if (depth >= 0.42) return "MID_OCEAN";
-    if (depth >= 0.16) return "SHALLOW_SHELF";
-    return "COASTAL_WATER";
-  }
-
-  function depthColor(depth, shelf, coast, light) {
-    var deep = rgba(4, 24, 68, 1);
-    var mid = rgba(10, 70, 128, 1);
-    var shelfTone = rgba(38, 134, 164, 1);
-    var coastTone = rgba(76, 174, 184, 1);
-    var r;
-    var g;
-    var b;
-
-    if (depth >= 0.72) {
-      r = mix(deep.r, mid.r, 0.20);
-      g = mix(deep.g, mid.g, 0.20);
-      b = mix(deep.b, mid.b, 0.20);
-    } else if (depth >= 0.42) {
-      r = mix(deep.r, mid.r, 0.72);
-      g = mix(deep.g, mid.g, 0.72);
-      b = mix(deep.b, mid.b, 0.72);
-    } else if (depth >= 0.16) {
-      r = mix(mid.r, shelfTone.r, shelf);
-      g = mix(mid.g, shelfTone.g, shelf);
-      b = mix(mid.b, shelfTone.b, shelf);
-    } else {
-      r = mix(shelfTone.r, coastTone.r, coast);
-      g = mix(shelfTone.g, coastTone.g, coast);
-      b = mix(shelfTone.b, coastTone.b, coast);
-    }
-
+  function blendColor(a, b, t) {
     return rgba(
-      r * light,
-      g * light,
-      b * light,
-      1
+      mix(a.r, b.r, t),
+      mix(a.g, b.g, t),
+      mix(a.b, b.b, t),
+      mix(a.a, b.a, t)
     );
   }
 
-  function sampleHydrationDepth(lon, lat, bridgeSample) {
-    var s = bridgeSample || {};
-    var rawDepth = get(s, "waterDepth", "water_depth", 0.62);
-    var shelf = get(s, "shelfDistance", "shelf_distance", 0);
-    var coast = get(s, "coastDistance", "coast_distance", 0);
-    var outline = get(s, "terrainOutline", "terrain_outline", 0);
-    var limb = get(s, "limbLight", "limb_light", 0.75);
-    var vein = get(s, "veinCandidate", "vein_candidate", 0);
-    var pressure = get(s, "pressureCut", "pressure_cut", 0);
+  function depthBand(depth) {
+    if (depth >= 0.72) return "DEEP_OCEAN";
+    if (depth >= 0.42) return "MID_OCEAN";
+    if (depth >= 0.16) return "SHALLOW_SHELF";
+    return "REEF_EDGE";
+  }
 
-    var depth = clamp(rawDepth, 0, 1);
-    var boundaryHold = clamp(outline * 0.22 + vein * 0.08 + pressure * 0.05, 0, 0.30);
-    var depthVisibility = clamp(0.55 + depth * 0.32 + shelf * 0.16 - boundaryHold * 0.14, 0.42, 1);
-    var light = clamp(0.54 + limb * 0.46, 0.40, 1.12);
-    var color = depthColor(depth, shelf, coast, light);
+  function sampleHydrationDepth(lon, lat, bridgeSample) {
+    var sample = bridgeSample || {};
+    var depth = clamp(get(sample, "waterDepth", "water_depth", 0.70), 0, 1);
+    var shelf = clamp(get(sample, "shelfCandidate", "shelf_candidate", get(sample, "shelfDistance", "shelf_distance", 0)), 0, 1);
+    var shallow = clamp(get(sample, "shallowWaterCandidate", "shallow_water_candidate", 0), 0, 1);
+    var reef = clamp(get(sample, "reefCandidate", "reef_candidate", 0), 0, 1);
+    var wetEdge = clamp(get(sample, "wetEdgeCandidate", "wet_edge_candidate", 0), 0, 1);
+    var beachReady = clamp(get(sample, "beachReadyCandidate", "beach_ready_candidate", 0), 0, 1);
+    var emergent = clamp(get(sample, "emergentLandCandidate", "emergent_land_candidate", 0), 0, 1);
+    var limb = clamp(get(sample, "limbLight", "limb_light", 0.72), 0, 1);
+    var outline = clamp(get(sample, "terrainOutline", "terrain_outline", 0), 0, 1);
+
+    var deepColor = rgba(4, 24, 70, 1);
+    var midColor = rgba(10, 78, 138, 1);
+    var shelfColor = rgba(36, 134, 164, 1);
+    var reefColor = rgba(82, 184, 184, 1);
+    var wetColor = rgba(104, 174, 158, 1);
+    var beachColor = rgba(142, 174, 132, 1);
+
+    var color;
+    if (depth >= 0.72) {
+      color = blendColor(deepColor, midColor, 0.20);
+    } else if (depth >= 0.42) {
+      color = blendColor(deepColor, midColor, 0.78);
+    } else if (depth >= 0.16) {
+      color = blendColor(midColor, shelfColor, clamp(shelf + shallow * 0.35, 0, 1));
+    } else {
+      color = blendColor(shelfColor, reefColor, clamp(reef + shallow * 0.25, 0, 1));
+    }
+
+    color = blendColor(color, reefColor, reef * 0.36);
+    color = blendColor(color, wetColor, wetEdge * 0.18);
+    color = blendColor(color, beachColor, beachReady * 0.14);
+
+    var light = clamp(0.58 + limb * 0.44 - emergent * 0.05 + outline * 0.03, 0.42, 1.12);
+    color = rgba(color.r * light, color.g * light, color.b * light, 1);
 
     return {
       version: VERSION,
@@ -113,20 +102,31 @@
       midOceanDepthActive: true,
       shallowShelfDepthActive: true,
       coastalWaterDepthActive: true,
+      reefDepthFieldActive: true,
+      shallowWaterDepthActive: true,
+      shelfDepthFieldActive: true,
+      wetEdgeMoistureActive: true,
       seaLevelDatumPreserved: true,
-      terrainOutlineBlockedFromHydrationOwnership: true,
 
-      seaLevelDatum: SEA_LEVEL_DATUM,
-      depthBand: depthBandName(depth),
+      terrainOutlineBlockedFromHydrationOwnership: true,
+      hydrationOwnsWaterDepthOnly: true,
+      landPaintBlockedInHydration: true,
+
+      depthBand: depthBand(depth),
       waterDepth: round(depth, 4),
       water_depth: round(depth, 4),
-      depthVisibility: round(depthVisibility, 4),
-      depth_visibility: round(depthVisibility, 4),
       shelfTone: round(shelf, 4),
       shelf_tone: round(shelf, 4),
-      coastTone: round(coast, 4),
-      coast_tone: round(coast, 4),
+      shallowWaterTone: round(shallow, 4),
+      shallow_water_tone: round(shallow, 4),
+      reefTone: round(reef, 4),
+      reef_tone: round(reef, 4),
+      wetEdgeTone: round(wetEdge, 4),
+      wet_edge_tone: round(wetEdge, 4),
+      beachReadyTone: round(beachReady, 4),
+      beach_ready_tone: round(beachReady, 4),
 
+      seaLevelDatum: SEA_LEVEL_DATUM,
       waterColor: color,
       color: color,
 
@@ -152,8 +152,15 @@
       midOceanDepthActive: true,
       shallowShelfDepthActive: true,
       coastalWaterDepthActive: true,
+      reefDepthFieldActive: true,
+      shallowWaterDepthActive: true,
+      shelfDepthFieldActive: true,
+      wetEdgeMoistureActive: true,
       seaLevelDatumPreserved: true,
+
       terrainOutlineBlockedFromHydrationOwnership: true,
+      hydrationOwnsWaterDepthOnly: true,
+      landPaintBlockedInHydration: true,
 
       hydrationLayerActive: true,
       hydrologyNetworkActive: false,

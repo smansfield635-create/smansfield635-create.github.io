@@ -1,277 +1,199 @@
-/* G1 PLANET 1 SHOWROOM RUNTIME BRIDGE FRAME BUDGET
+/* G1 PLANET 1 GENERATION 2 SEVEN FILE SYSTEMIC DYNAMIC REWRITE
    FILE: /showroom/runtime.js
-   VERSION: G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
+   VERSION: G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1
 
-   LAW:
-   Showroom runtime is a bridge only.
-   It must not create an independent planet physics loop.
-   It delegates motion timing to /world/runtime.js.
-   It does not own terrain, hydration, hexgrid, renderer, water, land, air, or visual pass.
+   COMPATIBILITY MARKERS:
+   G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
+   G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1
+
+   ROLE:
+   Showroom runtime owns route stabilization only.
+   It does not own late canvas remount, renderer override, terrain flattening, or visual pass.
 */
 
-(function attachShowroomRuntimeFrameBudgetBridge(global) {
+(function attachShowroomRuntimeGeneration2(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1";
-  var WORLD_RUNTIME_VERSION = "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1";
-  var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
+  var VERSION = "G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1";
+  var COMPAT_VERSION = "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1";
+  var RUNTIME_COMPAT_VERSION = "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1";
 
   var state = {
     active: true,
-    booted: false,
-    mountSelector: "#planet-one-render",
-    delegatedToWorldRuntime: false,
-    fallbackSingleRenderUsed: false,
-    bootCount: 0,
-    commandCount: 0,
-    lastCommand: null,
-    lastError: null,
+    stabilized: false,
+    mountAttempted: false,
+    mountPerformed: false,
     lastReceipt: null
   };
 
-  function getWorldRuntime() {
-    return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || null;
+  function byId(id) {
+    return global.document ? global.document.getElementById(id) : null;
+  }
+
+  function mountElement() {
+    if (!global.document) return null;
+    return byId("planet-one-render") ||
+      global.document.querySelector("[data-planet-one-mount='true']") ||
+      null;
+  }
+
+  function hasRenderedCanvas(mount) {
+    return Boolean(mount && mount.querySelector && mount.querySelector("canvas[data-planet-one-render-canvas='true']"));
   }
 
   function getRenderer() {
-    return global.DGBPlanetOneRenderTeam ||
-      global.DGBPlanetOneRenderer ||
+    return global.DGBPlanetOneRenderer ||
       global.DGBPlanetOneRender ||
+      global.DGBPlanetOneRenderTeam ||
       null;
   }
 
-  function getRenderFunction(renderer) {
-    if (!renderer) return null;
-
-    return renderer.renderPlanetOne ||
-      renderer.mountPlanetOne ||
-      renderer.mount ||
-      renderer.render ||
-      renderer.renderGlobe ||
-      renderer.createPlanetOneRender ||
-      renderer.createPlanetOneScene ||
-      renderer.create ||
-      null;
+  function getRuntime() {
+    return global.DGBPlanetOneRuntime || global.DGBWorldRuntime || null;
   }
 
-  function getMount() {
-    if (!global.document) return null;
+  function writeRouteReceipt(status) {
+    var node = byId("planet-one-route-receipt");
+    if (!node) return;
 
-    return global.document.querySelector(state.mountSelector) ||
-      global.document.getElementById("planet-one-render") ||
-      global.document.querySelector("[data-planet-one-mount='true']");
+    node.textContent =
+      "G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1\n" +
+      "route=/showroom/globe/\n" +
+      "showroom-runtime-role=route-stabilization-only\n" +
+      "late-remount=false\n" +
+      "renderer-override=false\n" +
+      "terrain-flattening=false\n" +
+      "visual-pass-claimed=false\n" +
+      "status=" + status + "\n" +
+      "timestamp=" + new Date().toISOString();
   }
 
-  function makeReceipt(extra) {
-    var runtime = getWorldRuntime();
+  function stabilizeRoute(options) {
+    options = options || {};
+
+    var mount = mountElement();
     var renderer = getRenderer();
-    var runtimeStatus = runtime && runtime.status ? runtime.status() :
-      runtime && runtime.getStatus ? runtime.getStatus() :
-      null;
+    var runtime = getRuntime();
+    var alreadyRendered = hasRenderedCanvas(mount);
 
-    var rendererStatus = renderer && renderer.status ? renderer.status() :
-      renderer && renderer.getStatus ? renderer.getStatus() :
-      null;
+    state.stabilized = true;
 
-    state.lastReceipt = {
-      showroomRuntimeVersion: VERSION,
-      worldRuntimeExpectedVersion: WORLD_RUNTIME_VERSION,
-      baseline: BASELINE,
-      timestamp: new Date().toISOString(),
-
-      showroomRuntimeBridgeActive: true,
-      delegatedToWorldRuntime: state.delegatedToWorldRuntime,
-      noIndependentPlanetPhysics: true,
-      noIndependentRenderLoop: true,
-      duplicateLoopBlocked: true,
-      runtimeOwnsTimingOnly: true,
-      showroomDoesNotOwnTerrain: true,
-      showroomDoesNotOwnTriDomainModel: true,
+    var receipt = {
+      ok: true,
+      version: VERSION,
+      compatibilityVersion: COMPAT_VERSION,
+      role: "ROUTE_STABILIZATION_ONLY",
+      mountPresent: Boolean(mount),
+      rendererPresent: Boolean(renderer),
+      runtimePresent: Boolean(runtime),
+      alreadyRendered: alreadyRendered,
+      lateRemountBlocked: true,
+      rendererOverrideBlocked: true,
+      terrainFlatteningBlocked: true,
       visualPassClaimed: false,
-
-      booted: state.booted,
-      bootCount: state.bootCount,
-      commandCount: state.commandCount,
-      lastCommand: state.lastCommand,
-      mountDetected: Boolean(getMount()),
-      worldRuntimeDetected: Boolean(runtime),
-      rendererDetected: Boolean(renderer),
-      runtimeStatus: runtimeStatus,
-      rendererStatus: rendererStatus,
-      lastError: state.lastError,
-      extra: extra || null
+      stabilizedAt: new Date().toISOString()
     };
 
-    global.DGBShowroomRuntimeFrameBudgetReceipt = state.lastReceipt;
-    return state.lastReceipt;
-  }
-
-  function fallbackSingleRender(reason) {
-    var renderer = getRenderer();
-    var renderFn = getRenderFunction(renderer);
-    var mount = getMount();
-    var result = null;
-
-    if (!renderer || typeof renderFn !== "function" || !mount) {
-      state.lastError = "FALLBACK_RENDER_UNAVAILABLE";
-      return makeReceipt({ reason: reason, fallbackAttempted: true, fallbackRendered: false });
+    if (runtime && typeof runtime.registerMount === "function" && mount) {
+      runtime.registerMount(mount, options);
     }
 
-    try {
-      result = renderFn.call(renderer, mount, {
-        renderMode: "satellite",
-        viewLon: -28,
-        viewLat: 0,
-        showAxis: false,
-        compositorScale: 0.72,
-        surfaceAlpha: 0.99,
-        clearMount: false,
-        seed: 256451,
-        source: "showroom-runtime-single-render-fallback",
-        version: VERSION,
-        visualPassClaimed: false
-      });
+    if (!alreadyRendered && options.mountIfEmpty === true && renderer && mount) {
+      state.mountAttempted = true;
 
-      state.fallbackSingleRenderUsed = true;
-      state.lastError = null;
-
-      return makeReceipt({
-        reason: reason,
-        fallbackAttempted: true,
-        fallbackRendered: true,
-        renderResult: result
-      });
-    } catch (error) {
-      state.lastError = String(error && error.message ? error.message : error);
-      return makeReceipt({ reason: reason, fallbackAttempted: true, fallbackRendered: false });
-    }
-  }
-
-  function boot() {
-    var runtime = getWorldRuntime();
-
-    state.booted = true;
-    state.bootCount += 1;
-
-    if (runtime && typeof runtime.start === "function") {
-      state.delegatedToWorldRuntime = true;
-      runtime.start(state.mountSelector, {
-        source: "showroom-runtime-frame-budget-bridge",
-        viewLon: -28,
-        viewLat: 0,
-        speedDegreesPerSecond: 2.4,
-        showAxis: false,
-        seed: 256451
-      });
-      return makeReceipt({ bootDelegated: true });
-    }
-
-    state.delegatedToWorldRuntime = false;
-    return fallbackSingleRender("NO_WORLD_RUNTIME_AT_BOOT");
-  }
-
-  function delegate(command, value) {
-    var runtime = getWorldRuntime();
-    var result = null;
-
-    state.commandCount += 1;
-    state.lastCommand = command;
-
-    if (!runtime) {
-      state.lastError = "NO_WORLD_RUNTIME_FOR_COMMAND:" + command;
-      return makeReceipt({ command: command, delegated: false });
-    }
-
-    try {
-      if (command === "start" && typeof runtime.start === "function") {
-        result = runtime.start(state.mountSelector, { source: "showroom-runtime-command-start" });
-      } else if (command === "pause" && typeof runtime.pause === "function") {
-        result = runtime.pause();
-      } else if (command === "resume" && typeof runtime.resume === "function") {
-        result = runtime.resume();
-      } else if (command === "reset" && typeof runtime.reset === "function") {
-        result = runtime.reset();
-      } else if (command === "reverse" && typeof runtime.reverse === "function") {
-        result = runtime.reverse();
-      } else if (command === "setSpeed" && typeof runtime.setSpeed === "function") {
-        result = runtime.setSpeed(value);
-      } else if (command === "slow" && typeof runtime.setSpeed === "function") {
-        result = runtime.setSpeed(0.8);
-      } else if (command === "normal" && typeof runtime.setSpeed === "function") {
-        result = runtime.setSpeed(2.4);
-      } else if (command === "fast" && typeof runtime.setSpeed === "function") {
-        result = runtime.setSpeed(6.0);
-      } else if (command === "setView" && typeof runtime.setView === "function") {
-        result = runtime.setView(value || {});
-      } else {
-        state.lastError = "UNSUPPORTED_RUNTIME_COMMAND:" + command;
-        return makeReceipt({ command: command, delegated: false });
+      if (typeof renderer.renderPlanetOne === "function") {
+        receipt.rendererReceipt = renderer.renderPlanetOne(mount, options);
+      } else if (typeof renderer.render === "function") {
+        receipt.rendererReceipt = renderer.render(mount, options);
+      } else if (typeof renderer.mount === "function") {
+        receipt.rendererReceipt = renderer.mount(mount, options);
       }
 
-      state.delegatedToWorldRuntime = true;
-      state.lastError = null;
-      return makeReceipt({ command: command, delegated: true, result: result });
-    } catch (error) {
-      state.lastError = String(error && error.message ? error.message : error);
-      return makeReceipt({ command: command, delegated: false });
+      state.mountPerformed = Boolean(receipt.rendererReceipt);
+      receipt.mountPerformed = state.mountPerformed;
+    } else {
+      receipt.mountPerformed = false;
+      receipt.reason = alreadyRendered ? "CANVAS_ALREADY_PRESENT_NO_REMOUNT" : "MOUNT_IF_EMPTY_FALSE";
     }
+
+    state.lastReceipt = receipt;
+    writeRouteReceipt("STABILIZED_NO_LATE_REMOUNT");
+
+    return receipt;
   }
 
-  function start() { return delegate("start"); }
-  function pause() { return delegate("pause"); }
-  function resume() { return delegate("resume"); }
-  function reset() { return delegate("reset"); }
-  function reverse() { return delegate("reverse"); }
-  function setSpeed(value) { return delegate("setSpeed", value); }
-  function setView(value) { return delegate("setView", value); }
+  function mountIfEmpty(target, options) {
+    options = Object.assign({}, options || {}, { mountIfEmpty: true });
+
+    if (target) {
+      var renderer = getRenderer();
+      if (renderer && typeof renderer.renderPlanetOne === "function" && !hasRenderedCanvas(target)) {
+        state.mountAttempted = true;
+        state.mountPerformed = true;
+        state.lastReceipt = renderer.renderPlanetOne(target, options);
+        return state.lastReceipt;
+      }
+    }
+
+    return stabilizeRoute(options);
+  }
 
   function getStatus() {
-    return makeReceipt({ statusRead: true });
-  }
-
-  function status() {
-    return getStatus();
+    return {
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      compatibilityVersion: COMPAT_VERSION,
+      runtimeCompatibilityVersion: RUNTIME_COMPAT_VERSION,
+      role: "ROUTE_STABILIZATION_ONLY",
+      systemicDynamicStandardActive: true,
+      ownsRouteStabilizationOnly: true,
+      ownsLateCanvasRemount: false,
+      ownsRendererOverride: false,
+      ownsTerrainFlattening: false,
+      ownsRuntimeCadence: false,
+      stabilized: state.stabilized,
+      mountAttempted: state.mountAttempted,
+      mountPerformed: state.mountPerformed,
+      lastReceipt: state.lastReceipt,
+      visualPassClaimed: false
+    };
   }
 
   var api = {
     VERSION: VERSION,
     version: VERSION,
-    WORLD_RUNTIME_VERSION: WORLD_RUNTIME_VERSION,
-    worldRuntimeVersion: WORLD_RUNTIME_VERSION,
-    BASELINE: BASELINE,
-    baseline: BASELINE,
+    COMPAT_VERSION: COMPAT_VERSION,
+    compatibilityVersion: COMPAT_VERSION,
+    RUNTIME_COMPAT_VERSION: RUNTIME_COMPAT_VERSION,
+    runtimeCompatibilityVersion: RUNTIME_COMPAT_VERSION,
 
-    boot: boot,
-    start: start,
-    pause: pause,
-    resume: resume,
-    reset: reset,
-    reverse: reverse,
-    setSpeed: setSpeed,
-    setView: setView,
-
+    stabilizeRoute: stabilizeRoute,
+    mountIfEmpty: mountIfEmpty,
     getStatus: getStatus,
-    status: status,
-    getReceipt: getStatus
+    status: getStatus,
+
+    visualPassClaimed: false
   };
 
   global.DGBShowroomGlobeRuntime = api;
   global.DGBPlanetOneRuntimeBridge = api;
 
-  function bootWhenReady() {
-    global.setTimeout(function () {
-      boot();
-    }, 40);
+  function boot() {
+    stabilizeRoute({ mountIfEmpty: false, showAxis: true });
   }
 
-  if (global.document && global.document.readyState === "loading") {
-    global.document.addEventListener("DOMContentLoaded", bootWhenReady);
-  } else {
-    bootWhenReady();
+  if (global.document) {
+    if (global.document.readyState === "loading") {
+      global.document.addEventListener("DOMContentLoaded", boot, { once: true });
+    } else {
+      boot();
+    }
   }
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:showroom-runtime-frame-budget-bridge-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:showroom:runtime:generation-2-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

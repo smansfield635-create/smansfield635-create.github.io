@@ -3,15 +3,15 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1"
+  data-contract="PLANET_1_ACTIVE_LOADED_CHAIN_OVERRIDE_AUDIT_TNT_v1"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · Runtime Parity</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Active Chain Audit</title>
   <meta
     name="description"
-    content="Source-served-runtime parity audit for Diamond Gate Bridge runtime files and Planet 1 live-route authority."
+    content="Planet 1 active loaded chain override audit for route-source parity, hydration, hex bridge, renderer, world runtime, control, asset bridge, and showroom runtime."
   >
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
@@ -85,14 +85,14 @@
 
     table.audit-table {
       width: 100%;
-      min-width: 980px;
+      min-width: 1120px;
       border-collapse: collapse;
       font-size: .84rem;
     }
 
     .audit-table th,
     .audit-table td {
-      padding: .7rem;
+      padding: .72rem;
       border-bottom: 1px solid rgba(176,204,255,.12);
       text-align: left;
       vertical-align: top;
@@ -152,7 +152,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Gauges · Source Served Runtime Parity Audit</div>
+        <div class="dgb-room-line">Gauges · Planet 1 Active Loaded Chain Override Audit</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -169,78 +169,79 @@
 
   <main id="main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">H6 · Gauges · SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1</p>
-      <h1 class="dgb-title">Verify what is actually live.</h1>
+      <p class="dgb-eyebrow">H6 · Gauges · PLANET_1_ACTIVE_LOADED_CHAIN_OVERRIDE_AUDIT_TNT_v1</p>
+      <h1 class="dgb-title">Find the active visual authority.</h1>
       <p class="dgb-copy">
-        This audit answers whether each upstream runtime file is still served, what its live source signature is,
-        whether any non-Gauges route loads it, whether it declares global authority, and whether it can override Planet 1
-        after renderer mount. It fetches source only. It does not execute /runtime/* files.
+        This audit checks the route source, the active Planet 1 loaded chain, expected contract markers,
+        source signatures, load order, render authority, canvas/mount authority, global override authority,
+        and final-authority risk. It fetches source only. It does not render Planet 1 in an iframe, execute
+        target files, delete files, or start animation loops.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Source fetch only</span>
         <span class="dgb-chip">No delete</span>
         <span class="dgb-chip">No iframe</span>
-        <span class="dgb-chip">No runtime execution</span>
+        <span class="dgb-chip">No target execution</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
 
       <div class="dgb-actions">
-        <button class="dgb-button" type="button" data-audit-command="full">Run runtime parity audit</button>
-        <button class="dgb-button secondary" type="button" data-audit-command="routes">Run route usage only</button>
-        <button class="dgb-button secondary" type="button" data-audit-command="runtime">Run runtime source only</button>
+        <button class="dgb-button" type="button" data-audit-command="full">Run active chain audit</button>
+        <button class="dgb-button secondary" type="button" data-audit-command="route">Run route parity only</button>
+        <button class="dgb-button secondary" type="button" data-audit-command="chain">Run loaded chain only</button>
         <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
       </div>
     </section>
 
-    <section class="audit-summary" aria-label="Runtime parity summary">
+    <section class="audit-summary" aria-label="Active chain audit summary">
       <div class="audit-tile">
         <strong>Overall</strong>
         <span id="overall-state"><span class="audit-state warn">Not tested</span></span>
       </div>
       <div class="audit-tile">
-        <strong>Served runtime files</strong>
-        <span id="served-count">unknown</span>
+        <strong>Route parity</strong>
+        <span id="route-parity-state">unknown</span>
       </div>
       <div class="audit-tile">
-        <strong>Loaded by non-Gauges routes</strong>
-        <span id="nongauges-load-count">unknown</span>
+        <strong>Expected markers</strong>
+        <span id="marker-state">unknown</span>
       </div>
       <div class="audit-tile">
-        <strong>Global authority files</strong>
-        <span id="global-authority-count">unknown</span>
+        <strong>Final authority file</strong>
+        <span id="final-authority">unknown</span>
       </div>
       <div class="audit-tile">
-        <strong>Planet 1 override risk</strong>
-        <span id="override-risk-count">unknown</span>
+        <strong>Override risk</strong>
+        <span id="override-risk">unknown</span>
       </div>
     </section>
 
     <section class="dgb-grid">
       <article class="dgb-card full">
-        <h2>Five-question verdict</h2>
-        <ul id="five-question-verdict" class="audit-list">
+        <h2>Verdict</h2>
+        <ul id="verdict-list" class="audit-list">
           <li>Audit has not run yet.</li>
         </ul>
       </article>
 
       <article class="dgb-card full">
-        <h2>Runtime file parity</h2>
+        <h2>Route source parity</h2>
         <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Runtime parity table">
+          <table class="audit-table" aria-label="Route source parity table">
             <thead>
               <tr>
-                <th>Runtime file</th>
-                <th>Served?</th>
-                <th>Live size</th>
-                <th>Source signature</th>
-                <th>Non-Gauges route usage</th>
-                <th>Global authority</th>
-                <th>Planet 1 override risk</th>
+                <th>Route</th>
+                <th>Status</th>
+                <th>Size</th>
+                <th>Route contract</th>
+                <th>Render contract</th>
+                <th>Script refs</th>
+                <th>Expected?</th>
                 <th>Verdict</th>
               </tr>
             </thead>
-            <tbody id="runtime-table">
+            <tbody id="route-table">
               <tr><td colspan="8">Not tested.</td></tr>
             </tbody>
           </table>
@@ -248,21 +249,24 @@
       </article>
 
       <article class="dgb-card full">
-        <h2>Non-Gauges route usage</h2>
+        <h2>Active loaded chain</h2>
         <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Route usage table">
+          <table class="audit-table" aria-label="Active chain table">
             <thead>
               <tr>
-                <th>Route</th>
+                <th>Order</th>
+                <th>File</th>
                 <th>Status</th>
-                <th>Size</th>
-                <th>/runtime/* script refs</th>
-                <th>/runtime/* text refs</th>
-                <th>Planet 1 renderer tokens</th>
+                <th>Expected marker</th>
+                <th>Marker present</th>
+                <th>Source signature</th>
+                <th>Authority signals</th>
+                <th>Risk</th>
+                <th>Verdict</th>
               </tr>
             </thead>
-            <tbody id="route-table">
-              <tr><td colspan="6">Not tested.</td></tr>
+            <tbody id="chain-table">
+              <tr><td colspan="9">Not tested.</td></tr>
             </tbody>
           </table>
         </div>
@@ -271,7 +275,7 @@
       <article class="dgb-card full">
         <h2>Raw live receipt</h2>
         <details class="dgb-details" open>
-          <summary>Runtime parity receipt</summary>
+          <summary>Active loaded chain override receipt</summary>
           <pre id="live-receipt" class="dgb-receipt">Run audit to generate receipt.</pre>
         </details>
       </article>
@@ -279,13 +283,13 @@
 
     <details class="dgb-details">
       <summary>Gauge contract</summary>
-      <pre class="dgb-receipt">SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1
+      <pre class="dgb-receipt">PLANET_1_ACTIVE_LOADED_CHAIN_OVERRIDE_AUDIT_TNT_v1
 route=/gauges/
 page=gauges
-role=source-served-runtime-parity-audit
-answers=runtime-served,live-size-signature,non-gauges-route-usage,global-authority,planet-one-override-risk
+role=active-loaded-chain-override-audit
+answers=route-source-parity,loaded-chain-marker-parity,hydration-basis-risk,runtime-remount-risk,control-stale-state-risk,asset-bridge-global-risk,showroom-runtime-flatten-risk,last-visual-authority
 fetches_source_only=true
-executes_runtime_files=false
+executes_target_files=false
 deletes_files=false
 renders_planet_iframe=false
 starts_extra_animation_loops=false
@@ -294,46 +298,72 @@ visual_pass_claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1 · Gauges · Diamond Gate Bridge.
+    PLANET_1_ACTIVE_LOADED_CHAIN_OVERRIDE_AUDIT_TNT_v1 · Gauges · Diamond Gate Bridge.
   </footer>
 
   <script>
-    (function attachSourceServedRuntimeParityAudit(global) {
+    (function attachPlanetOneActiveLoadedChainOverrideAudit(global) {
       "use strict";
 
-      var VERSION = "SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v1";
+      var VERSION = "PLANET_1_ACTIVE_LOADED_CHAIN_OVERRIDE_AUDIT_TNT_v1";
+      var EXPECTED_RENDER_CONTRACT = "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1";
+      var EXPECTED_ROUTE_CONTRACT = "PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1";
 
-      var NON_GAUGES_ROUTES = [
-        { label: "Compass", path: "/" },
-        { label: "Door", path: "/door/" },
-        { label: "Home", path: "/home/" },
-        { label: "Products", path: "/products/" },
-        { label: "Showroom", path: "/showroom/" },
-        { label: "Planet 1", path: "/showroom/globe/" }
-      ];
+      var ROUTE = {
+        label: "Planet 1",
+        path: "/showroom/globe/"
+      };
 
-      var GAUGES_ROUTE = { label: "Gauges", path: "/gauges/" };
-
-      var RUNTIME_FILES = [
-        "/runtime/compass_cockpit_control_panel.js",
-        "/runtime/compass_cockpit_runtime_queue.js",
-        "/runtime/earth_asset_runtime.js",
-        "/runtime/environment_renderer.js",
-        "/runtime/live_runtime_kernel.js",
-        "/runtime/planet_projection.js",
-        "/runtime/spine_canopy_runtime.js",
-        "/runtime/sun_asset_runtime.js",
-        "/runtime/world_runtime.js"
-      ];
-
-      var PLANET_RENDER_FILES = [
-        "/world/render/planet-one.hydration.render.js",
-        "/world/render/planet-one.hexgrid.render.js",
-        "/world/render/planet-one.render.js",
-        "/world/runtime.js",
-        "/world/control.js",
-        "/assets/showroom.globe.instrument.js",
-        "/showroom/runtime.js"
+      var ACTIVE_CHAIN = [
+        {
+          key: "hydration",
+          label: "Hydration",
+          path: "/world/render/planet-one.hydration.render.js",
+          expected: "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1",
+          role: "read-only hydration / beach threshold basis"
+        },
+        {
+          key: "hexgrid",
+          label: "Hex bridge",
+          path: "/world/render/planet-one.hexgrid.render.js",
+          expected: "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1",
+          role: "surface data / land-water-air sampling"
+        },
+        {
+          key: "renderer",
+          label: "Renderer",
+          path: "/world/render/planet-one.render.js",
+          expected: "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1",
+          role: "canvas composition / mount facade"
+        },
+        {
+          key: "world-runtime",
+          label: "World runtime",
+          path: "/world/runtime.js",
+          expected: "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1",
+          role: "animation frame / throttle / runtime state"
+        },
+        {
+          key: "world-control",
+          label: "World control",
+          path: "/world/control.js",
+          expected: "G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1",
+          role: "controls / speed / axis UI"
+        },
+        {
+          key: "asset-bridge",
+          label: "Asset bridge",
+          path: "/assets/showroom.globe.instrument.js",
+          expected: "G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1",
+          role: "showroom instrument bridge / global handoff"
+        },
+        {
+          key: "showroom-runtime",
+          label: "Showroom runtime",
+          path: "/showroom/runtime.js",
+          expected: "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1",
+          role: "showroom bridge / route-level runtime"
+        }
       ];
 
       function $(id) {
@@ -374,6 +404,14 @@ visual_pass_claimed=false</pre>
         }
       }
 
+      function getQueryToken(src, key) {
+        try {
+          return new URL(String(src || ""), location.origin).searchParams.get(key) || "";
+        } catch (error) {
+          return "";
+        }
+      }
+
       function fnv1a(text) {
         var hash = 0x811c9dc5;
         var str = String(text || "");
@@ -402,7 +440,7 @@ visual_pass_claimed=false</pre>
 
       function fetchSource(path) {
         var url = path + (path.indexOf("?") === -1 ? "?" : "&") +
-          "_source_served_runtime_parity=" + encodeURIComponent(VERSION) +
+          "_active_chain_override_audit=" + encodeURIComponent(VERSION) +
           "&_t=" + Date.now();
 
         return fetch(url, { cache: "no-store" })
@@ -451,26 +489,96 @@ visual_pass_claimed=false</pre>
         return refs;
       }
 
-      function extractRuntimeTextRefs(text) {
-        var refs = [];
-
-        String(text || "").replace(/\/runtime\/[a-zA-Z0-9_.-]+\.js/g, function (src) {
-          refs.push(src);
-          return "";
-        });
-
-        return unique(refs);
+      function extractDataValue(html, attr) {
+        var re = new RegExp(attr + '=["\\']([^"\\']+)["\\']', "i");
+        var match = String(html || "").match(re);
+        return match ? match[1] : "";
       }
 
-      function extractPlanetTokens(text) {
-        var tokens = [];
+      function extractReceiptValue(html, key) {
+        var re = new RegExp(key + "=([^\\n\\r<]+)", "i");
+        var match = String(html || "").match(re);
+        return match ? String(match[1]).trim() : "";
+      }
 
-        String(text || "").replace(/\/world\/render\/planet-one\.[a-zA-Z0-9_.-]+\.js\?v=([^"'\s&<]+)/g, function (_, token) {
-          tokens.push(token);
-          return "";
+      function scanRoute(fetched) {
+        var text = fetched.text || "";
+        var scriptRefs = extractScriptRefs(text);
+        var normalizedRefs = scriptRefs.map(normalizePath);
+        var chainRefs = ACTIVE_CHAIN.map(function (item) {
+          var matched = scriptRefs.filter(function (src) {
+            return normalizePath(src) === item.path;
+          })[0] || "";
+
+          return {
+            key: item.key,
+            path: item.path,
+            expected: item.expected,
+            src: matched,
+            found: Boolean(matched),
+            vToken: getQueryToken(matched, "v"),
+            routeToken: getQueryToken(matched, "route"),
+            tokenMatchesExpected: getQueryToken(matched, "v") === item.expected
+          };
         });
 
-        return unique(tokens);
+        var dataContract = extractDataValue(text, "data-contract");
+        var dataRenderContract = extractDataValue(text, "data-render-contract");
+        var receiptContract = extractReceiptValue(text, "data-contract");
+        var receiptRenderContract = extractReceiptValue(text, "render-contract");
+
+        var routeContract = dataContract || receiptContract;
+        var renderContract = dataRenderContract || receiptRenderContract;
+
+        var staleWaterBoundaryText = text.indexOf("G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1") !== -1;
+        var expectedRenderText = text.indexOf(EXPECTED_RENDER_CONTRACT) !== -1;
+        var expectedRouteText = text.indexOf(EXPECTED_ROUTE_CONTRACT) !== -1;
+
+        var allChainFound = chainRefs.every(function (item) { return item.found; });
+        var renderTokensAligned = chainRefs.filter(function (item) {
+          return item.key === "hexgrid" || item.key === "renderer";
+        }).every(function (item) {
+          return item.vToken === EXPECTED_RENDER_CONTRACT;
+        });
+
+        var state = "PASS";
+        var verdict = "Route source is aligned with expected active chain.";
+
+        if (!fetched.ok) {
+          state = "FAIL";
+          verdict = "Planet 1 route is not served.";
+        } else if (!allChainFound) {
+          state = "FAIL";
+          verdict = "Planet 1 route is missing one or more active chain script references.";
+        } else if (!renderTokensAligned || renderContract !== EXPECTED_RENDER_CONTRACT) {
+          state = "FAIL";
+          verdict = "Planet 1 route source is not aligned to Blob Breakup Real Planet Surface.";
+        } else if (staleWaterBoundaryText) {
+          state = "WARN";
+          verdict = "Route is aligned to expected renderer but still contains stale Water Phase-State Boundary text somewhere in source.";
+        }
+
+        return {
+          path: ROUTE.path,
+          ok: fetched.ok,
+          status: fetched.status,
+          size: fetched.size,
+          hash: fetched.hash,
+          etag: fetched.etag,
+          lastModified: fetched.lastModified,
+          routeContract: routeContract,
+          renderContract: renderContract,
+          scriptRefs: scriptRefs,
+          chainRefs: chainRefs,
+          allChainFound: allChainFound,
+          renderTokensAligned: renderTokensAligned,
+          staleWaterBoundaryText: staleWaterBoundaryText,
+          expectedRenderText: expectedRenderText,
+          expectedRouteText: expectedRouteText,
+          state: state,
+          verdict: verdict,
+          error: fetched.error
+        };
       }
 
       function getVersionMarkers(text) {
@@ -481,83 +589,47 @@ visual_pass_claimed=false</pre>
           return "";
         });
 
-        String(text || "").replace(/SOURCE_SERVED_RUNTIME_PARITY_AUDIT_TNT_v\d+/g, function (marker) {
+        String(text || "").replace(/PLANET_1_[A-Z0-9_]+_TNT_v\d+/g, function (marker) {
           markers.push(marker);
           return "";
         });
 
-        return unique(markers).slice(0, 12);
+        return unique(markers).slice(0, 20);
       }
 
-      function scanRoute(route, fetched) {
-        var scriptRefs = extractScriptRefs(fetched.text);
-        var runtimeScriptRefs = unique(scriptRefs.map(normalizePath).filter(function (path) {
-          return path.indexOf("/runtime/") === 0;
-        }));
-
-        var runtimeTextRefs = extractRuntimeTextRefs(fetched.text);
-        var planetRenderTokens = extractPlanetTokens(fetched.text);
-
-        return {
-          label: route.label,
-          path: route.path,
-          ok: fetched.ok,
-          status: fetched.status,
-          size: fetched.size,
-          hash: fetched.hash,
-          runtimeScriptRefs: runtimeScriptRefs,
-          runtimeTextRefs: runtimeTextRefs,
-          planetRenderTokens: planetRenderTokens,
-          scriptRefs: scriptRefs,
-          error: fetched.error
-        };
-      }
-
-      function scanRuntimeFile(filePath, fetched, nonGaugesRouteResults) {
+      function scanChainFile(def, fetched, routeResult, order) {
         var text = fetched.text || "";
-        var normalizedPath = normalizePath(filePath);
 
-        var loadedByRoutes = nonGaugesRouteResults.filter(function (route) {
-          return route.runtimeScriptRefs.indexOf(normalizedPath) !== -1;
-        }).map(function (route) {
-          return route.path;
-        });
+        var markerPresent = text.indexOf(def.expected) !== -1;
 
-        var textReferencedByRoutes = nonGaugesRouteResults.filter(function (route) {
-          return route.runtimeTextRefs.indexOf(normalizedPath) !== -1;
-        }).map(function (route) {
-          return route.path;
-        });
-
-        var assignsWindowGlobal =
+        var globalAssignments =
           count(/window\.DGB[A-Za-z0-9_]+\s*=/g, text) +
           count(/global\.DGB[A-Za-z0-9_]+\s*=/g, text) +
           count(/globalThis\.DGB[A-Za-z0-9_]+\s*=/g, text);
 
-        var declaresDGBGlobal =
-          count(/DGB[A-Za-z0-9_]+/g, text);
+        var dgbRefs = count(/DGB[A-Za-z0-9_]+/g, text);
 
-        var planetOneRefs =
-          count(/DGBPlanetOne/g, text) +
-          count(/planet-one-render/g, text) +
-          count(/planetOne/g, text) +
-          count(/PlanetOne/g, text);
-
-        var rendererRefs =
-          count(/DGBPlanetOneRenderer/g, text) +
-          count(/DGBPlanetOneRenderTeam/g, text) +
-          count(/DGBPlanetOneRender/g, text) +
-          count(/renderPlanetOne/g, text) +
-          count(/mountPlanetOne/g, text);
-
-        var canvasRefs =
+        var canvasSignals =
           count(/getContext\s*\(/g, text) +
+          count(/createElement\s*\(\s*["']canvas["']\s*\)/g, text) +
           count(/canvas/g, text) +
-          count(/appendChild\s*\(/g, text) +
-          count(/innerHTML\s*=/g, text);
+          count(/putImageData/g, text) +
+          count(/drawImage/g, text) +
+          count(/fillRect/g, text) +
+          count(/arc\s*\(/g, text);
 
-        var loopSignals =
+        var mountSignals =
+          count(/mountPlanetOne/g, text) +
+          count(/renderPlanetOne/g, text) +
+          count(/mount\s*:/g, text) +
+          count(/appendChild\s*\(/g, text) +
+          count(/innerHTML\s*=/g, text) +
+          count(/querySelector/g, text) +
+          count(/getElementById/g, text);
+
+        var runtimeSignals =
           count(/requestAnimationFrame/g, text) +
+          count(/cancelAnimationFrame/g, text) +
           count(/setInterval/g, text) +
           count(/setTimeout/g, text) +
           count(/while\s*\(/g, text);
@@ -566,143 +638,252 @@ visual_pass_claimed=false</pre>
           count(/addEventListener\s*\(\s*["']click/g, text) +
           count(/addEventListener\s*\(\s*["']input/g, text) +
           count(/addEventListener\s*\(\s*["']change/g, text) +
-          count(/querySelector/g, text) +
-          count(/getElementById/g, text);
+          count(/data-control-action/g, text) +
+          count(/data-planet-one-control/g, text);
 
-        var globalAuthority = assignsWindowGlobal > 0 || declaresDGBGlobal > 0;
-        var liveLoaded = loadedByRoutes.length > 0;
-        var potentialOverride = planetOneRefs + rendererRefs + canvasRefs > 0;
-        var confirmedOverrideRisk = liveLoaded && potentialOverride;
+        var hydrationBasisSignals =
+          count(/beach/g, text) +
+          count(/hydration/g, text) +
+          count(/waterDepth/g, text) +
+          count(/shelf/g, text) +
+          count(/terrainStartline/g, text);
 
+        var blobSourceSignals =
+          count(/bodyScore/g, text) +
+          count(/legalLandPotential/g, text) +
+          count(/ellipse/g, text) +
+          count(/rx/g, text) +
+          count(/ry/g, text) +
+          count(/Math\.max\(west,\s*east,\s*north,\s*south,\s*far\)/g, text);
+
+        var overrideSignals =
+          count(/DGBPlanetOneRenderer\s*=/g, text) +
+          count(/DGBPlanetOneRender\s*=/g, text) +
+          count(/DGBPlanetOneRenderTeam\s*=/g, text) +
+          count(/DGBShowroomGlobeInstrument\s*=/g, text) +
+          count(/DGBShowroomGlobeRuntime\s*=/g, text) +
+          count(/DGBWorldRuntime\s*=/g, text) +
+          count(/DGBPlanetOneRuntime\s*=/g, text);
+
+        var authorityScore =
+          canvasSignals * 2 +
+          mountSignals * 2 +
+          runtimeSignals +
+          controlSignals +
+          globalAssignments * 3 +
+          overrideSignals * 3;
+
+        var risk = "LOW";
         var state = "PASS";
-        var verdict = "Served or source-only; no non-Gauges route load detected.";
+        var verdict = "Served with expected marker and low final-authority risk.";
 
         if (!fetched.ok) {
           state = "FAIL";
-          verdict = "Runtime file is not served.";
-        } else if (confirmedOverrideRisk) {
+          risk = "HIGH";
+          verdict = "Active chain file is not served.";
+        } else if (!markerPresent) {
           state = "FAIL";
-          verdict = "Loaded by a non-Gauges route and contains Planet 1/render/canvas authority signals.";
-        } else if (liveLoaded && globalAuthority) {
-          state = "FAIL";
-          verdict = "Loaded by a non-Gauges route and declares DGB global authority.";
-        } else if (globalAuthority || potentialOverride) {
+          risk = "HIGH";
+          verdict = "Expected contract marker is missing.";
+        } else if (def.key === "hydration" && blobSourceSignals > 0) {
           state = "WARN";
-          verdict = "Source contains authority signals, but no non-Gauges route loads it as a script.";
+          risk = "MEDIUM";
+          verdict = "Hydration has source-shape authority signals; verify it is not preserving the older smooth basis.";
+        } else if (def.key === "hexgrid" && blobSourceSignals > 0) {
+          state = "WARN";
+          risk = "MEDIUM";
+          verdict = "Hex bridge contains broad land primitive signals; this may be the source of the persistent blob read.";
+        } else if (def.key === "renderer" && canvasSignals > 20 && mountSignals > 4) {
+          state = "WARN";
+          risk = "MEDIUM";
+          verdict = "Renderer has strong canvas/mount authority; verify it consumes the latest hex output without smoothing it away.";
+        } else if (def.key === "world-runtime" && runtimeSignals > 3 && mountSignals > 0) {
+          state = "WARN";
+          risk = "HIGH";
+          verdict = "World runtime may redraw or remount after renderer execution.";
+        } else if (def.key === "world-control" && controlSignals > 2 && mountSignals > 0) {
+          state = "WARN";
+          risk = "MEDIUM";
+          verdict = "Control file may trigger stale render state after interaction.";
+        } else if (def.key === "asset-bridge" && overrideSignals > 0) {
+          state = "WARN";
+          risk = "MEDIUM";
+          verdict = "Asset bridge declares global handoff authority; inspect whether it overrides renderer globals.";
+        } else if (def.key === "showroom-runtime" && (mountSignals > 0 || overrideSignals > 0)) {
+          state = "WARN";
+          risk = "MEDIUM";
+          verdict = "Showroom runtime is late in load order and may flatten or remount final output.";
         }
 
         return {
-          path: filePath,
+          order: order,
+          key: def.key,
+          label: def.label,
+          path: def.path,
+          role: def.role,
+          expected: def.expected,
           ok: fetched.ok,
           status: fetched.status,
           size: fetched.size,
-          sourceSignature: {
-            hash: fetched.hash,
-            etag: fetched.etag,
-            lastModified: fetched.lastModified,
-            contentType: fetched.contentType,
-            markers: getVersionMarkers(text)
-          },
-          loadedByNonGaugesRoutes: loadedByRoutes,
-          textReferencedByNonGaugesRoutes: textReferencedByRoutes,
-          liveLoadedByNonGaugesRoute: liveLoaded,
-          assignsWindowGlobal: assignsWindowGlobal,
-          dgbGlobalReferenceCount: declaresDGBGlobal,
-          globalAuthorityDeclared: globalAuthority,
-          planetOneReferenceCount: planetOneRefs,
-          rendererReferenceCount: rendererRefs,
-          canvasMutationSignals: canvasRefs,
-          loopSignals: loopSignals,
+          hash: fetched.hash,
+          etag: fetched.etag,
+          lastModified: fetched.lastModified,
+          contentType: fetched.contentType,
+          markers: getVersionMarkers(text),
+          markerPresent: markerPresent,
+          globalAssignments: globalAssignments,
+          dgbRefs: dgbRefs,
+          canvasSignals: canvasSignals,
+          mountSignals: mountSignals,
+          runtimeSignals: runtimeSignals,
           controlSignals: controlSignals,
-          potentialPlanetOneOverride: potentialOverride,
-          confirmedPlanetOneOverrideRisk: confirmedOverrideRisk,
+          hydrationBasisSignals: hydrationBasisSignals,
+          blobSourceSignals: blobSourceSignals,
+          overrideSignals: overrideSignals,
+          authorityScore: authorityScore,
+          risk: risk,
           state: state,
           verdict: verdict,
           error: fetched.error
         };
       }
 
-      function rowRuntime(item) {
-        var sig = "hash=" + item.sourceSignature.hash;
+      function routeRow(route) {
+        var refs = route.chainRefs.map(function (item) {
+          return item.key + "=" + (item.found ? item.vToken : "missing");
+        }).join("\n");
 
-        if (item.sourceSignature.etag) sig += "\netag=" + item.sourceSignature.etag;
-        if (item.sourceSignature.lastModified) sig += "\nlast-modified=" + item.sourceSignature.lastModified;
-        if (item.sourceSignature.markers.length) sig += "\nmarkers=" + item.sourceSignature.markers.join(", ");
+        var expected = route.allChainFound && route.renderTokensAligned && route.renderContract === EXPECTED_RENDER_CONTRACT;
 
         return "<tr>" +
-          "<td class='mono'>" + escapeHtml(item.path) + "</td>" +
+          "<td class='mono'>" + escapeHtml(route.path) + "</td>" +
+          "<td>" + statePill(route.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(route.status) + "</small></td>" +
+          "<td>" + escapeHtml(route.size) + "<br><small>hash=" + escapeHtml(route.hash) + "</small></td>" +
+          "<td class='mono'>" + escapeHtml(route.routeContract || "missing") + "</td>" +
+          "<td class='mono'>" + escapeHtml(route.renderContract || "missing") + "</td>" +
+          "<td class='mono'>" + escapeHtml(refs || "none") + "</td>" +
+          "<td>" + statePill(expected ? "PASS" : "FAIL") + "</td>" +
+          "<td>" + statePill(route.state) + "<br><small>" + escapeHtml(route.verdict) + "</small></td>" +
+          "</tr>";
+      }
+
+      function chainRow(item) {
+        var sig = "hash=" + item.hash;
+        if (item.etag) sig += "\netag=" + item.etag;
+        if (item.lastModified) sig += "\nlast-modified=" + item.lastModified;
+        if (item.markers.length) sig += "\nmarkers=" + item.markers.join(", ");
+
+        var authority =
+          "score=" + item.authorityScore +
+          "\nglobalAssignments=" + item.globalAssignments +
+          "\nDGBrefs=" + item.dgbRefs +
+          "\ncanvas=" + item.canvasSignals +
+          "\nmount=" + item.mountSignals +
+          "\nruntime=" + item.runtimeSignals +
+          "\ncontrol=" + item.controlSignals +
+          "\nhydrationBasis=" + item.hydrationBasisSignals +
+          "\nblobSource=" + item.blobSourceSignals +
+          "\noverride=" + item.overrideSignals;
+
+        return "<tr>" +
+          "<td>" + escapeHtml(item.order) + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.path) + "<br><small>" + escapeHtml(item.role) + "</small></td>" +
           "<td>" + statePill(item.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.size) + "</td>" +
+          "<td class='mono'>" + escapeHtml(item.expected) + "</td>" +
+          "<td>" + statePill(item.markerPresent ? "PASS" : "FAIL") + "</td>" +
           "<td class='mono'>" + escapeHtml(sig) + "</td>" +
-          "<td class='mono'>" + escapeHtml(item.loadedByNonGaugesRoutes.length ? item.loadedByNonGaugesRoutes.join(", ") : "none") + "</td>" +
-          "<td>" + escapeHtml(item.globalAuthorityDeclared ? "yes" : "no") +
-            "<br><small>DGB refs=" + escapeHtml(item.dgbGlobalReferenceCount) + " · assignments=" + escapeHtml(item.assignsWindowGlobal) + "</small></td>" +
-          "<td>" + escapeHtml(item.confirmedPlanetOneOverrideRisk ? "CONFIRMED RISK" : item.potentialPlanetOneOverride ? "source-only potential" : "none") +
-            "<br><small>planet=" + escapeHtml(item.planetOneReferenceCount) +
-            " · renderer=" + escapeHtml(item.rendererReferenceCount) +
-            " · canvas=" + escapeHtml(item.canvasMutationSignals) + "</small></td>" +
+          "<td class='mono'>" + escapeHtml(authority) + "</td>" +
+          "<td>" + statePill(item.risk === "LOW" ? "PASS" : item.risk === "MEDIUM" ? "WARN" : "FAIL") + "<br><small>" + escapeHtml(item.risk) + "</small></td>" +
           "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.verdict) + "</small></td>" +
           "</tr>";
       }
 
-      function rowRoute(item) {
-        return "<tr>" +
-          "<td class='mono'>" + escapeHtml(item.path) + "</td>" +
-          "<td>" + statePill(item.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td>" + escapeHtml(item.size) + "</td>" +
-          "<td class='mono'>" + escapeHtml(item.runtimeScriptRefs.length ? item.runtimeScriptRefs.join(", ") : "none") + "</td>" +
-          "<td class='mono'>" + escapeHtml(item.runtimeTextRefs.length ? item.runtimeTextRefs.join(", ") : "none") + "</td>" +
-          "<td class='mono'>" + escapeHtml(item.planetRenderTokens.length ? item.planetRenderTokens.join(", ") : "none") + "</td>" +
-          "</tr>";
-      }
-
-      function deriveVerdict(runtimeResults, routeResults, mode) {
-        var served = runtimeResults.filter(function (item) { return item.ok; });
-        var unserved = runtimeResults.filter(function (item) { return !item.ok; });
-        var loaded = runtimeResults.filter(function (item) { return item.liveLoadedByNonGaugesRoute; });
-        var globalAuthority = runtimeResults.filter(function (item) { return item.globalAuthorityDeclared; });
-        var confirmedOverride = runtimeResults.filter(function (item) { return item.confirmedPlanetOneOverrideRisk; });
-        var sourceOnlyPotential = runtimeResults.filter(function (item) {
-          return item.potentialPlanetOneOverride && !item.confirmedPlanetOneOverrideRisk;
+      function deriveFinalAuthority(chainResults) {
+        var candidates = chainResults.filter(function (item) {
+          return item.ok && item.markerPresent && item.authorityScore > 0;
         });
 
-        var overall = "PASS";
+        if (!candidates.length) return null;
+
+        candidates.sort(function (a, b) {
+          if (a.order !== b.order) return b.order - a.order;
+          return b.authorityScore - a.authorityScore;
+        });
+
+        return candidates[0];
+      }
+
+      function deriveVerdict(routeResult, chainResults, mode) {
         var notes = [];
+        var overall = "PASS";
 
-        if (unserved.length) overall = "FAIL";
-        if (loaded.length || confirmedOverride.length) overall = "FAIL";
-        if (overall !== "FAIL" && (globalAuthority.length || sourceOnlyPotential.length)) overall = "WARN";
+        var missingMarkers = chainResults.filter(function (item) {
+          return !item.markerPresent;
+        });
 
-        notes.push("<strong>1. Is each /runtime/* file still served?</strong> " +
-          served.length + " of " + RUNTIME_FILES.length + " served" +
-          (unserved.length ? "; missing: " + unserved.map(function (i) { return i.path; }).join(", ") : "."));
+        var failFiles = chainResults.filter(function (item) {
+          return item.state === "FAIL";
+        });
 
-        notes.push("<strong>2. What is each file’s live size and source signature?</strong> Captured in the runtime table as size, FNV-1a hash, ETag, Last-Modified, content type, and detected version markers.");
+        var warnFiles = chainResults.filter(function (item) {
+          return item.state === "WARN";
+        });
 
-        notes.push("<strong>3. Does any live non-Gauges route actually load it?</strong> " +
-          (loaded.length ? "YES: " + loaded.map(function (i) { return i.path + " via " + i.loadedByNonGaugesRoutes.join(", "); }).join(" | ") : "NO. No non-Gauges route loads /runtime/* as script tags."));
+        var finalAuthority = deriveFinalAuthority(chainResults);
 
-        notes.push("<strong>4. Does any runtime file declare active global authority?</strong> " +
-          (globalAuthority.length ? "YES: " + globalAuthority.map(function (i) { return i.path; }).join(", ") : "NO DGB global authority detected in /runtime/* source."));
+        var hydration = chainResults.filter(function (item) { return item.key === "hydration"; })[0];
+        var hexgrid = chainResults.filter(function (item) { return item.key === "hexgrid"; })[0];
+        var renderer = chainResults.filter(function (item) { return item.key === "renderer"; })[0];
+        var worldRuntime = chainResults.filter(function (item) { return item.key === "world-runtime"; })[0];
+        var worldControl = chainResults.filter(function (item) { return item.key === "world-control"; })[0];
+        var assetBridge = chainResults.filter(function (item) { return item.key === "asset-bridge"; })[0];
+        var showroomRuntime = chainResults.filter(function (item) { return item.key === "showroom-runtime"; })[0];
 
-        notes.push("<strong>5. Does any runtime file override Planet 1 after the renderer mounts?</strong> " +
-          (confirmedOverride.length ? "CONFIRMED RISK: " + confirmedOverride.map(function (i) { return i.path; }).join(", ") :
-            sourceOnlyPotential.length ? "SOURCE-ONLY POTENTIAL, not live-route confirmed: " + sourceOnlyPotential.map(function (i) { return i.path; }).join(", ") :
-            "NO confirmed Planet 1 override risk detected."));
+        if (routeResult && routeResult.state === "FAIL") overall = "FAIL";
+        if (failFiles.length) overall = "FAIL";
+        if (overall !== "FAIL" && (warnFiles.length || (routeResult && routeResult.state === "WARN"))) overall = "WARN";
 
-        if (!loaded.length && globalAuthority.length) {
-          notes.push("<strong>Controlling read:</strong> /runtime/* may contain old authority code, but source existence alone is not live control. Live control requires a non-Gauges script load or downstream import path.");
-        }
+        notes.push("<strong>Route-source parity:</strong> " +
+          (routeResult ? routeResult.verdict : "Route parity not run in this mode."));
+
+        notes.push("<strong>Expected markers:</strong> " +
+          (missingMarkers.length ? "Missing markers in " + missingMarkers.map(function (i) { return i.path; }).join(", ") : "All audited active-chain files contain expected markers."));
+
+        notes.push("<strong>Hydration basis risk:</strong> " +
+          (hydration && hydration.hydrationBasisSignals > 0 ? "Hydration still carries beach/hydration/water-depth basis signals; this is expected but should remain read-only." : "No notable hydration basis signal detected."));
+
+        notes.push("<strong>Blob-source signal:</strong> " +
+          (hexgrid && hexgrid.blobSourceSignals > 0 ? "Hex bridge still contains broad land primitive/bodyScore/legalLandPotential signals. This is the first source-level blob suspect if route and delivered source are aligned." : "No broad land primitive signal detected in hex bridge."));
+
+        notes.push("<strong>Renderer compositor risk:</strong> " +
+          (renderer && renderer.canvasSignals > 20 ? "Renderer has strong canvas authority. If hex output is correct but visual is still smooth, inspect compositor smoothing/scale/draw order." : "Renderer canvas authority is not unusually high."));
+
+        notes.push("<strong>Runtime remount risk:</strong> " +
+          (worldRuntime && worldRuntime.runtimeSignals > 3 && worldRuntime.mountSignals > 0 ? "World runtime may redraw or remount after renderer." : "No strong world-runtime remount risk detected by source scan."));
+
+        notes.push("<strong>Control stale-state risk:</strong> " +
+          (worldControl && worldControl.controlSignals > 2 && worldControl.mountSignals > 0 ? "Control file may trigger stale render state after interaction." : "No strong control stale-state risk detected by source scan."));
+
+        notes.push("<strong>Asset bridge risk:</strong> " +
+          (assetBridge && assetBridge.overrideSignals > 0 ? "Asset bridge declares global handoff authority and needs inspection if visual source stays unresolved." : "No strong asset-bridge override signal detected."));
+
+        notes.push("<strong>Showroom runtime risk:</strong> " +
+          (showroomRuntime && (showroomRuntime.mountSignals > 0 || showroomRuntime.overrideSignals > 0) ? "Showroom runtime is late in load order and has remount/global risk." : "No strong showroom-runtime flatten/remount risk detected."));
+
+        notes.push("<strong>Probable final authority by load order/source scan:</strong> " +
+          (finalAuthority ? finalAuthority.path + " · score=" + finalAuthority.authorityScore : "none detected."));
 
         return {
           overall: overall,
-          servedCount: served.length,
-          loadedCount: loaded.length,
-          globalAuthorityCount: globalAuthority.length,
-          confirmedOverrideCount: confirmedOverride.length,
-          sourceOnlyPotentialCount: sourceOnlyPotential.length,
-          notes: notes,
-          mode: mode
+          mode: mode,
+          routeState: routeResult ? routeResult.state : "NOT_RUN",
+          markerState: missingMarkers.length ? "FAIL" : "PASS",
+          missingMarkers: missingMarkers.map(function (i) { return i.path; }),
+          warnFiles: warnFiles.map(function (i) { return i.path; }),
+          failFiles: failFiles.map(function (i) { return i.path; }),
+          finalAuthority: finalAuthority,
+          overrideRiskCount: warnFiles.length + failFiles.length,
+          notes: notes
         };
       }
 
@@ -710,93 +891,80 @@ visual_pass_claimed=false</pre>
         mode = mode || "full";
 
         write("overall-state", statePill("WARN"));
-        writeText("served-count", "scanning");
-        writeText("nongauges-load-count", "scanning");
-        writeText("global-authority-count", "scanning");
-        writeText("override-risk-count", "scanning");
+        writeText("route-parity-state", "scanning");
+        writeText("marker-state", "scanning");
+        writeText("final-authority", "scanning");
+        writeText("override-risk", "scanning");
 
-        var routePromise = mode === "runtime"
+        var routePromise = mode === "chain"
+          ? Promise.resolve(null)
+          : fetchSource(ROUTE.path);
+
+        var chainPromise = mode === "route"
           ? Promise.resolve([])
-          : Promise.all(NON_GAUGES_ROUTES.concat([GAUGES_ROUTE]).map(function (route) {
-              return fetchSource(route.path);
+          : Promise.all(ACTIVE_CHAIN.map(function (item) {
+              return fetchSource(item.path);
             }));
 
-        var runtimePromise = mode === "routes"
-          ? Promise.resolve([])
-          : Promise.all(RUNTIME_FILES.map(fetchSource));
+        Promise.all([routePromise, chainPromise]).then(function (parts) {
+          var routeFetch = parts[0];
+          var chainFetches = parts[1];
 
-        Promise.all([routePromise, runtimePromise]).then(function (parts) {
-          var routeFetches = parts[0];
-          var runtimeFetches = parts[1];
+          var routeResult = routeFetch ? scanRoute(routeFetch) : null;
 
-          var allRoutes = NON_GAUGES_ROUTES.concat([GAUGES_ROUTE]);
-          var routeResults = routeFetches.length
-            ? allRoutes.map(function (route, index) {
-                return scanRoute(route, routeFetches[index]);
+          var chainResults = chainFetches.length
+            ? ACTIVE_CHAIN.map(function (item, index) {
+                return scanChainFile(item, chainFetches[index], routeResult, index + 1);
               })
             : [];
 
-          var nonGaugesRouteResults = routeResults.filter(function (route) {
-            return route.path !== "/gauges/";
-          });
-
-          var runtimeResults = runtimeFetches.length
-            ? RUNTIME_FILES.map(function (path, index) {
-                return scanRuntimeFile(path, runtimeFetches[index], nonGaugesRouteResults);
-              })
-            : [];
-
-          var verdict = deriveVerdict(runtimeResults, nonGaugesRouteResults, mode);
+          var verdict = deriveVerdict(routeResult, chainResults, mode);
 
           write("overall-state", statePill(verdict.overall));
-          writeText("served-count", verdict.servedCount + " / " + RUNTIME_FILES.length);
-          writeText("nongauges-load-count", String(verdict.loadedCount));
-          writeText("global-authority-count", String(verdict.globalAuthorityCount));
-          writeText("override-risk-count", String(verdict.confirmedOverrideCount));
+          write("route-parity-state", statePill(verdict.routeState === "PASS" ? "PASS" : verdict.routeState === "NOT_RUN" ? "WARN" : verdict.routeState));
+          write("marker-state", statePill(verdict.markerState));
+          writeText("final-authority", verdict.finalAuthority ? verdict.finalAuthority.path : "none");
+          writeText("override-risk", String(verdict.overrideRiskCount));
 
-          $("five-question-verdict").innerHTML = verdict.notes.map(function (note) {
+          $("verdict-list").innerHTML = verdict.notes.map(function (note) {
             return "<li>" + note + "</li>";
           }).join("");
 
-          $("runtime-table").innerHTML = runtimeResults.length
-            ? runtimeResults.map(rowRuntime).join("")
-            : '<tr><td colspan="8">Runtime source audit not run in this mode.</td></tr>';
+          $("route-table").innerHTML = routeResult
+            ? routeRow(routeResult)
+            : '<tr><td colspan="8">Route parity audit not run in this mode.</td></tr>';
 
-          $("route-table").innerHTML = routeResults.length
-            ? routeResults.filter(function (route) { return route.path !== "/gauges/"; }).map(rowRoute).join("")
-            : '<tr><td colspan="6">Route usage audit not run in this mode.</td></tr>';
+          $("chain-table").innerHTML = chainResults.length
+            ? chainResults.map(chainRow).join("")
+            : '<tr><td colspan="9">Loaded chain audit not run in this mode.</td></tr>';
 
           var receipt = {
             contractVersion: VERSION,
             timestamp: new Date().toISOString(),
             auditMode: mode,
             noDeleteAuthorized: true,
-            noRuntimeExecution: true,
+            noTargetExecution: true,
             noPlanetIframeRendered: true,
             noExtraAnimationLoopsStarted: true,
             visualPassClaimed: false,
-            questionsAnswered: [
-              "Is each /runtime/* file still served?",
-              "What is each file's live size and source signature?",
-              "Does any live non-Gauges route actually load it?",
-              "Does any runtime file declare active global authority?",
-              "Does any runtime file override Planet 1 after the renderer mounts?"
-            ],
+            expectedRouteContract: EXPECTED_ROUTE_CONTRACT,
+            expectedRenderContract: EXPECTED_RENDER_CONTRACT,
+            routeResult: routeResult,
+            chainResults: chainResults,
             verdict: verdict,
-            nonGaugesRoutes: nonGaugesRouteResults,
-            runtimeResults: runtimeResults,
-            runtimeFiles: RUNTIME_FILES,
+            activeChain: ACTIVE_CHAIN,
             protectedFiles: [
+              "/runtime/*",
               "/world/render/*",
               "/world/runtime.js",
               "/world/control.js",
               "/showroom/runtime.js",
               "/assets/showroom.globe.instrument.js",
-              "/runtime/*"
+              "/showroom/globe/index.html"
             ]
           };
 
-          global.DGBSourceServedRuntimeParityAuditReceipt = receipt;
+          global.DGBPlanetOneActiveLoadedChainOverrideAuditReceipt = receipt;
           writeText("live-receipt", JSON.stringify(receipt, null, 2));
         });
       }

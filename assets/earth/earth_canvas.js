@@ -1,692 +1,466 @@
-/* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B22 · PHOTOGRAPHIC ORBITAL SHADOW
+/* ASSET GENERATION 2 TERMS RENEWAL
+   FILE: /assets/earth/earth_canvas.js
+   VERSION: ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1
 
-   CONTRACT:
-     - Preserve dimensional land wrapping from the current renderer.
-     - Restore legacy-style photographic orbital shadow.
-     - Treat the old “ring” insight correctly: natural limb glow is allowed only when it behaves like light.
-     - No external rings.
-     - No CSS atmosphere shell.
-     - No final circular stroke.
-     - No detached crescent overlay.
-     - No full outline glow.
-     - Shadow where there is shadow.
-     - Light where there is light.
-     - Preserve local B5 JPG paths.
-     - Preserve runtime API.
-     - Preserve zoom, drag, spin, reset, pause.
-     - Preserve targetFrameMs frame-budget marker.
-     - Preserve 256-lattice status marker.
+   ROLE:
+   Earth asset canvas owns Demo Universe Earth visual rendering only.
+   It uses local Earth surface and cloud assets.
+   It does not own route runtime, global navigation, Gauges, or visual pass.
 */
 
-(function () {
+(function attachEarthAssetCanvasGeneration2(global) {
   "use strict";
 
-  var TAU = Math.PI * 2;
+  var VERSION = "ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1";
+  var ROLE = "DEMO_UNIVERSE_EARTH_ASSET_RENDERER";
+  var SURFACE_URL = "/assets/earth/earth_surface_2048.jpg";
+  var CLOUDS_URL = "/assets/earth/earth_clouds_2048.jpg";
 
-  var DEFAULTS = {
-    assetId: "earth-asset-b5-orbital-shadow-b22",
-    surface: "/assets/earth/earth_surface_2048.jpg",
-    clouds: "/assets/earth/earth_clouds_2048.jpg",
-    fallback: "/assets/earth/earth.svg",
-
-    targetFrameMs: 42,
-
-    textureWidth: 1024,
-    textureHeight: 512,
-
-    mobileDprCap: 1.25,
-    desktopDprCap: 1.55,
-    mobileRenderCap: 580,
-    desktopRenderCap: 760,
-
-    defaultRotation: 0.35,
-    defaultVelocity: 0.006,
-
-    defaultZoom: 1,
-    minZoom: 0.72,
-    maxZoom: 1.38,
-    zoomStep: 0.08,
-
-    cameraRadius: 0.472,
-    cameraOffsetX: 0,
-    cameraOffsetY: 0.015,
-
-    cloudAlpha: 0,
-    edgeFeatherPx: 0.9,
-
-    ambientLight: 0.16,
-    diffuseLight: 0.98,
-    nightShadow: 0.68,
-    limbShadow: 0.42,
-    bottomShadow: 0.12,
-    litLimbGlow: 0.16,
-    oceanDepth: 0.08
+  var state = {
+    version: VERSION,
+    loading: false,
+    ready: false,
+    surfaceImage: null,
+    cloudsImage: null,
+    surfaceData: null,
+    cloudData: null,
+    surfaceCanvas: null,
+    cloudCanvas: null,
+    lastCanvas: null,
+    lastMount: null,
+    lastOptions: null,
+    lastRender: null,
+    lastError: null
   };
 
   function clamp(value, min, max) {
-    if (!Number.isFinite(value)) return min;
-    return Math.max(min, Math.min(max, value));
+    return Math.max(min, Math.min(max, Number(value) || 0));
   }
 
-  function wrap01(value) {
-    value = value % 1;
-    return value < 0 ? value + 1 : value;
+  function normalizeLon(lon) {
+    var x = ((Number(lon) + 180) % 360 + 360) % 360 - 180;
+    return x === -180 ? 180 : x;
   }
 
-  function smoothstep(edge0, edge1, value) {
-    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
+  function degToRad(value) {
+    return value * Math.PI / 180;
   }
 
-  function normalize3(x, y, z) {
-    var length = Math.sqrt(x * x + y * y + z * z) || 1;
-    return {
-      x: x / length,
-      y: y / length,
-      z: z / length
-    };
+  function radToDeg(value) {
+    return value * 180 / Math.PI;
   }
 
   function loadImage(src) {
-    return new Promise(function (resolve) {
-      var image = new Image();
-      var done = false;
-      var timer;
-
-      function finish(result) {
-        if (done) return;
-        done = true;
-        window.clearTimeout(timer);
-        resolve(result);
-      }
-
-      timer = window.setTimeout(function () {
-        finish({
-          ok: false,
-          src: src,
-          image: null,
-          reason: "timeout"
-        });
-      }, 7000);
-
-      image.onload = function () {
-        finish({
-          ok: true,
-          src: src,
-          image: image,
-          reason: "loaded"
-        });
-      };
-
-      image.onerror = function () {
-        finish({
-          ok: false,
-          src: src,
-          image: null,
-          reason: "load-error"
-        });
-      };
-
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b22-" + Date.now();
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.decoding = "async";
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error("Image load failed: " + src)); };
+      img.src = src;
     });
   }
 
-  function makeTexture(image, width, height) {
+  function prepareImageData(img) {
     var canvas = document.createElement("canvas");
-    var ctx = canvas.getContext("2d", {
-      willReadFrequently: true
-    });
+    var ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-    canvas.width = width;
-    canvas.height = height;
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(image, 0, 0, width, height);
+    canvas.width = img.naturalWidth || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     return {
-      width: width,
-      height: height,
-      data: ctx.getImageData(0, 0, width, height).data
+      canvas: canvas,
+      context: ctx,
+      imageData: ctx.getImageData(0, 0, canvas.width, canvas.height),
+      width: canvas.width,
+      height: canvas.height
     };
   }
 
-  function sampleTexture(texture, u, v) {
+  function ensureAssets() {
+    if (state.ready) return Promise.resolve(state);
+    if (state.loading) return state.loading;
+
+    state.loading = Promise.all([
+      loadImage(SURFACE_URL),
+      loadImage(CLOUDS_URL)
+    ]).then(function (images) {
+      var surface = prepareImageData(images[0]);
+      var clouds = prepareImageData(images[1]);
+
+      state.surfaceImage = images[0];
+      state.cloudsImage = images[1];
+      state.surfaceCanvas = surface.canvas;
+      state.cloudCanvas = clouds.canvas;
+      state.surfaceData = surface;
+      state.cloudData = clouds;
+      state.ready = true;
+      state.loading = false;
+
+      return state;
+    }).catch(function (error) {
+      state.lastError = String(error && error.message ? error.message : error);
+      state.loading = false;
+      throw error;
+    });
+
+    return state.loading;
+  }
+
+  function readPixel(dataObj, u, v) {
+    var width = dataObj.width;
+    var height = dataObj.height;
+    var x = Math.floor((((u % 1) + 1) % 1) * (width - 1));
+    var y = Math.floor(clamp(v, 0, 1) * (height - 1));
+    var idx = (y * width + x) * 4;
+    var d = dataObj.imageData.data;
+
+    return [d[idx], d[idx + 1], d[idx + 2], d[idx + 3]];
+  }
+
+  function inverseOrthographic(x, y, viewLon, viewLat) {
+    var rho = Math.sqrt(x * x + y * y);
+    var c;
+    var sinC;
+    var cosC;
+    var lat0;
+    var lon0;
+    var lat;
+    var lon;
+
+    if (rho > 1) return null;
+
+    if (rho < 0.000001) {
+      return { lon: normalizeLon(viewLon), lat: viewLat || 0, limb: 1 };
+    }
+
+    c = Math.asin(rho);
+    sinC = Math.sin(c);
+    cosC = Math.cos(c);
+    lat0 = degToRad(viewLat || 0);
+    lon0 = degToRad(viewLon || 0);
+
+    lat = Math.asin(cosC * Math.sin(lat0) + (y * sinC * Math.cos(lat0)) / rho);
+    lon = lon0 + Math.atan2(
+      x * sinC,
+      rho * Math.cos(lat0) * cosC - y * Math.sin(lat0) * sinC
+    );
+
+    return {
+      lon: normalizeLon(radToDeg(lon)),
+      lat: clamp(radToDeg(lat), -90, 90),
+      limb: Math.sqrt(Math.max(0, 1 - rho * rho))
+    };
+  }
+
+  function shadePixel(surface, cloud, limb, options) {
+    options = options || {};
+
+    var cloudAlpha = clamp((cloud[0] + cloud[1] + cloud[2]) / 765, 0, 1);
+    var cloudStrength = clamp(options.cloudStrength == null ? 0.28 : options.cloudStrength, 0, 0.70);
+    var brightness = clamp(options.brightness == null ? 1.13 : options.brightness, 0.60, 1.80);
+    var contrast = clamp(options.contrast == null ? 1.10 : options.contrast, 0.70, 1.60);
+    var limbShade = clamp(0.48 + limb * 0.62, 0.35, 1.10);
+    var atmosphericLift = clamp(0.04 + (1 - limb) * 0.06, 0, 0.18);
+
+    var r = surface[0];
+    var g = surface[1];
+    var b = surface[2];
+
+    r = (r - 128) * contrast + 128;
+    g = (g - 128) * contrast + 128;
+    b = (b - 128) * contrast + 128;
+
+    r = r * brightness * limbShade;
+    g = g * brightness * limbShade;
+    b = b * brightness * limbShade;
+
+    r = r * (1 - cloudAlpha * cloudStrength) + 245 * cloudAlpha * cloudStrength;
+    g = g * (1 - cloudAlpha * cloudStrength) + 250 * cloudAlpha * cloudStrength;
+    b = b * (1 - cloudAlpha * cloudStrength) + 255 * cloudAlpha * cloudStrength;
+
+    r = r + 105 * atmosphericLift;
+    g = g + 150 * atmosphericLift;
+    b = b + 230 * atmosphericLift;
+
+    return [
+      Math.round(clamp(r, 0, 255)),
+      Math.round(clamp(g, 0, 255)),
+      Math.round(clamp(b, 0, 255)),
+      255
+    ];
+  }
+
+  function drawFallback(canvas) {
+    var ctx = canvas.getContext("2d");
+    var size = Math.min(canvas.width, canvas.height);
+    var cx = canvas.width / 2;
+    var cy = canvas.height / 2;
+    var radius = size * 0.43;
+    var gradient = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.36, radius * 0.08, cx, cy, radius);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    gradient.addColorStop(0, "rgba(92,152,210,1)");
+    gradient.addColorStop(0.45, "rgba(16,88,154,1)");
+    gradient.addColorStop(0.78, "rgba(4,30,86,1)");
+    gradient.addColorStop(1, "rgba(2,8,26,1)");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(150,205,255,.24)";
+    ctx.lineWidth = Math.max(1, radius * 0.012);
+    ctx.stroke();
+
+    state.lastRender = {
+      ok: false,
+      waitingForAssets: true,
+      version: VERSION,
+      visualPassClaimed: false
+    };
+
+    return state.lastRender;
+  }
+
+  function drawAtmosphere(ctx, cx, cy, radius, options) {
+    var atmosphere = clamp(options.atmosphere == null ? 0.16 : options.atmosphere, 0, 0.45);
+    var halo = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.08);
+
+    halo.addColorStop(0, "rgba(120,185,255,0)");
+    halo.addColorStop(0.84, "rgba(120,185,255," + (atmosphere * 0.20) + ")");
+    halo.addColorStop(1, "rgba(120,185,255," + atmosphere + ")");
+
+    ctx.save();
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.05, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function renderToCanvas(canvas, options) {
+    options = options || {};
+
+    if (!state.ready || !state.surfaceData || !state.cloudData) {
+      return drawFallback(canvas);
+    }
+
+    var ctx = canvas.getContext("2d");
+    var size = Math.min(canvas.width, canvas.height);
+    var resolution = Math.max(320, Math.min(900, Math.round(size * clamp(options.resolutionScale || 0.88, 0.50, 1))));
+    var off = document.createElement("canvas");
+    var offCtx = off.getContext("2d", { willReadFrequently: true });
+    var image;
+    var data;
+    var radius = resolution * 0.43;
+    var cx = resolution / 2;
+    var cy = resolution / 2;
+    var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
+    var viewLat = Number(options.viewLat || 0);
+    var cloudDrift = Number(options.cloudDrift || 8);
     var x;
     var y;
-    var x0;
-    var y0;
-    var x1;
-    var y1;
-    var tx;
-    var ty;
-    var i00;
-    var i10;
-    var i01;
-    var i11;
-    var d = texture.data;
-    var w = texture.width;
-    var h = texture.height;
-    var r;
-    var g;
-    var b;
+    var dx;
+    var dy;
+    var idx;
+    var geo;
+    var u;
+    var cloudU;
+    var v;
+    var surface;
+    var cloud;
+    var color;
 
-    u = wrap01(u);
-    v = clamp(v, 0, 1);
+    off.width = resolution;
+    off.height = resolution;
+    image = offCtx.createImageData(resolution, resolution);
+    data = image.data;
 
-    x = u * (w - 1);
-    y = v * (h - 1);
+    for (y = 0; y < resolution; y += 1) {
+      for (x = 0; x < resolution; x += 1) {
+        dx = (x - cx) / radius;
+        dy = (cy - y) / radius;
+        idx = (y * resolution + x) * 4;
 
-    x0 = Math.floor(x);
-    y0 = Math.floor(y);
-    x1 = (x0 + 1) % w;
-    y1 = Math.min(h - 1, y0 + 1);
+        if (dx * dx + dy * dy > 1) {
+          data[idx + 3] = 0;
+          continue;
+        }
 
-    tx = x - x0;
-    ty = y - y0;
+        geo = inverseOrthographic(dx, dy, viewLon, viewLat);
+        if (!geo) {
+          data[idx + 3] = 0;
+          continue;
+        }
 
-    i00 = (y0 * w + x0) * 4;
-    i10 = (y0 * w + x1) * 4;
-    i01 = (y1 * w + x0) * 4;
-    i11 = (y1 * w + x1) * 4;
+        u = (normalizeLon(geo.lon) + 180) / 360;
+        cloudU = (normalizeLon(geo.lon + cloudDrift) + 180) / 360;
+        v = (90 - geo.lat) / 180;
 
-    r =
-      d[i00] * (1 - tx) * (1 - ty) +
-      d[i10] * tx * (1 - ty) +
-      d[i01] * (1 - tx) * ty +
-      d[i11] * tx * ty;
+        surface = readPixel(state.surfaceData, u, v);
+        cloud = readPixel(state.cloudData, cloudU, v);
+        color = shadePixel(surface, cloud, geo.limb, options);
 
-    g =
-      d[i00 + 1] * (1 - tx) * (1 - ty) +
-      d[i10 + 1] * tx * (1 - ty) +
-      d[i01 + 1] * (1 - tx) * ty +
-      d[i11 + 1] * tx * ty;
+        data[idx] = color[0];
+        data[idx + 1] = color[1];
+        data[idx + 2] = color[2];
+        data[idx + 3] = color[3];
+      }
+    }
 
-    b =
-      d[i00 + 2] * (1 - tx) * (1 - ty) +
-      d[i10 + 2] * tx * (1 - ty) +
-      d[i01 + 2] * (1 - tx) * ty +
-      d[i11 + 2] * tx * ty;
+    offCtx.putImageData(image, 0, 0);
 
-    return {
-      r: r,
-      g: g,
-      b: b
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    drawAtmosphere(ctx, canvas.width / 2, canvas.height / 2, size * 0.43, options);
+
+    state.lastCanvas = canvas;
+    state.lastOptions = Object.assign({}, options);
+    state.lastRender = {
+      ok: true,
+      version: VERSION,
+      role: ROLE,
+      source: SURFACE_URL,
+      clouds: CLOUDS_URL,
+      earthAssetBaseline: true,
+      demoUniverseEarthBaseline: true,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      renderedAt: new Date().toISOString()
     };
+
+    return state.lastRender;
   }
 
-  function createEarthRenderer(options) {
-    var config = Object.assign({}, DEFAULTS, options || {});
-    var mount = config.mount;
-    var canvas = config.canvas;
-    var ctx = null;
+  function resolveMount(target) {
+    if (typeof target === "string") return document.querySelector(target);
+    if (target) return target;
 
-    var surfaceTexture = null;
-    var cloudTexture = null;
-    var surfaceReady = false;
-    var cloudReady = false;
+    return document.getElementById("planet-one-render") ||
+      document.querySelector("[data-planet-one-mount='true']") ||
+      document.querySelector("[data-earth-asset-mount='true']");
+  }
 
-    var imageData = null;
-    var renderSize = 0;
+  function ensureCanvas(mount, options) {
+    var size;
+    var canvas;
 
-    var dragging = false;
-    var paused = false;
-    var lastX = 0;
-    var lastTime = performance.now();
-    var lastDrawTime = 0;
+    options = options || {};
+    mount = resolveMount(mount);
+    if (!mount) return null;
 
-    var rotation = Number.isFinite(config.defaultRotation) ? config.defaultRotation : DEFAULTS.defaultRotation;
-    var velocity = Number.isFinite(config.defaultVelocity) ? config.defaultVelocity : DEFAULTS.defaultVelocity;
-    var zoom = clamp(Number(config.defaultZoom || DEFAULTS.defaultZoom), config.minZoom, config.maxZoom);
+    size = Math.max(320, Math.min(1400, Number(options.size || options.width || mount.clientWidth || 760)));
 
-    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    canvas = mount.querySelector("canvas[data-earth-asset-canvas='true'], canvas[data-planet-one-render-canvas='true']");
 
-    if (!mount || !canvas) return null;
-
-    function setStatus(value) {
-      mount.setAttribute("data-earth-runtime-status", value);
-      mount.setAttribute("data-earth-asset-id", config.assetId);
-      mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
-      mount.setAttribute("data-earth-paused", paused ? "true" : "false");
-      mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b22-photographic-orbital-shadow");
-      mount.setAttribute("data-earth-projection", "full-globe-inverse-orthographic");
-      mount.setAttribute("data-earth-lattice-scope", "256");
-      mount.setAttribute("data-earth-camera-mode", "full-globe-orbital");
-      mount.setAttribute("data-earth-shadow-mode", "photographic-orbital-shadow");
-      mount.setAttribute("data-earth-glow-mode", "natural-lit-limb-only");
-      mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
+    if (!canvas) {
+      canvas = document.createElement("canvas");
+      canvas.setAttribute("data-earth-asset-canvas", "true");
+      canvas.setAttribute("data-planet-one-render-canvas", "true");
+      canvas.setAttribute("data-earth-asset-version", VERSION);
+      canvas.setAttribute("data-visual-pass-claimed", "false");
+      canvas.setAttribute("aria-label", "Demo Universe Earth baseline globe");
+      mount.innerHTML = "";
+      mount.appendChild(canvas);
     }
 
-    function resizeCanvas() {
-      var rect;
-      var dpr;
-      var cap;
-      var renderCap;
-      var cssSide;
-      var desiredSide;
+    canvas.width = size;
+    canvas.height = size;
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.maxWidth = size + "px";
+    canvas.style.height = "auto";
+    canvas.style.margin = "0 auto";
+    canvas.style.borderRadius = "50%";
+    canvas.style.background = "transparent";
 
-      if (!canvas || !ctx) return;
+    state.lastMount = mount;
+    state.lastCanvas = canvas;
 
-      rect = canvas.getBoundingClientRect();
-      cssSide = Math.max(1, Math.min(rect.width || 1, rect.height || 1));
+    return canvas;
+  }
 
-      cap = window.innerWidth <= 760 ? config.mobileDprCap : config.desktopDprCap;
-      renderCap = window.innerWidth <= 760 ? config.mobileRenderCap : config.desktopRenderCap;
-      dpr = Math.min(cap, window.devicePixelRatio || 1);
-
-      desiredSide = Math.max(1, Math.floor(cssSide * dpr));
-      desiredSide = Math.min(renderCap, desiredSide);
-
-      canvas.width = desiredSide;
-      canvas.height = desiredSide;
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-
-      if (desiredSide !== renderSize) {
-        renderSize = desiredSide;
-        imageData = ctx.createImageData(renderSize, renderSize);
-      }
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-    }
-
-    function geometry() {
-      var side = renderSize || Math.min(canvas.width, canvas.height) || 1;
-      var radius = side * config.cameraRadius * zoom;
-
+  function mount(target, options) {
+    var canvas = ensureCanvas(target, options);
+    if (!canvas) {
       return {
-        width: side,
-        height: side,
-        cx: side * (0.5 + config.cameraOffsetX),
-        cy: side * (0.5 + config.cameraOffsetY),
-        r: radius
+        ok: false,
+        reason: "NO_MOUNT",
+        version: VERSION,
+        visualPassClaimed: false
       };
     }
 
-    function clearImageData(data) {
-      data.fill(0);
-    }
-
-    function renderFallback(data, geo) {
-      var minX = Math.max(0, Math.floor(geo.cx - geo.r - 2));
-      var maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
-      var minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
-      var maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
-      var light = normalize3(-0.60, 0.36, 0.72);
-      var x;
-      var y;
-      var nx;
-      var ny;
-      var d2;
-      var nz;
-      var diffuse;
-      var limb;
-      var shade;
-      var i;
-
-      for (y = minY; y <= maxY; y += 1) {
-        ny = (geo.cy - y) / geo.r;
-
-        for (x = minX; x <= maxX; x += 1) {
-          nx = (x - geo.cx) / geo.r;
-          d2 = nx * nx + ny * ny;
-
-          if (d2 > 1) continue;
-
-          nz = Math.sqrt(Math.max(0, 1 - d2));
-          diffuse = clamp(nx * light.x + ny * light.y + nz * light.z, 0, 1);
-          limb = clamp(nz, 0, 1);
-          shade = 0.18 + Math.pow(diffuse, 0.92) * 0.86;
-          shade *= 0.70 + limb * 0.30;
-
-          i = (y * geo.width + x) * 4;
-          data[i] = 15 * shade;
-          data[i + 1] = 48 * shade;
-          data[i + 2] = 112 * shade;
-          data[i + 3] = 255;
-        }
-      }
-    }
-
-    function renderGlobe() {
-      var geo;
-      var data;
-      var minX;
-      var maxX;
-      var minY;
-      var maxY;
-      var light;
-      var theta;
-      var sinT;
-      var cosT;
-      var x;
-      var y;
-      var nx;
-      var ny;
-      var d;
-      var d2;
-      var nz;
-      var sx;
-      var sy;
-      var sz;
-      var gx;
-      var gy;
-      var gz;
-      var lon;
-      var lat;
-      var u;
-      var v;
-      var sample;
-      var cloud;
-      var i;
-      var diffuse;
-      var lit;
-      var limb;
-      var terminatorDark;
-      var limbDark;
-      var lowerDark;
-      var oceanDark;
-      var naturalGlow;
-      var shade;
-      var edgePx;
-      var alpha;
-      var r;
-      var g;
-      var b;
-
-      if (!ctx || !canvas || !imageData) return;
-
-      geo = geometry();
-      data = imageData.data;
-      clearImageData(data);
-
-      if (!surfaceReady || !surfaceTexture) {
-        renderFallback(data, geo);
-        ctx.putImageData(imageData, 0, 0);
-        return;
-      }
-
-      light = normalize3(-0.60, 0.36, 0.72);
-
-      theta = rotation * TAU;
-      sinT = Math.sin(theta);
-      cosT = Math.cos(theta);
-
-      minX = Math.max(0, Math.floor(geo.cx - geo.r - 2));
-      maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
-      minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
-      maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
-
-      for (y = minY; y <= maxY; y += 1) {
-        ny = (geo.cy - y) / geo.r;
-
-        for (x = minX; x <= maxX; x += 1) {
-          nx = (x - geo.cx) / geo.r;
-          d2 = nx * nx + ny * ny;
-
-          if (d2 > 1) continue;
-
-          d = Math.sqrt(d2);
-          nz = Math.sqrt(Math.max(0, 1 - d2));
-
-          sx = nx;
-          sy = ny;
-          sz = nz;
-
-          gx = sx * cosT + sz * sinT;
-          gy = sy;
-          gz = -sx * sinT + sz * cosT;
-
-          lon = Math.atan2(gx, gz);
-          lat = Math.asin(clamp(gy, -1, 1));
-
-          u = wrap01(0.5 + lon / TAU);
-          v = clamp(0.5 - lat / Math.PI, 0, 1);
-
-          sample = sampleTexture(surfaceTexture, u, v);
-
-          r = sample.r;
-          g = sample.g;
-          b = sample.b;
-
-          if (cloudReady && cloudTexture && config.cloudAlpha > 0) {
-            cloud = sampleTexture(cloudTexture, u, v);
-            r = r * (1 - config.cloudAlpha) + cloud.r * config.cloudAlpha;
-            g = g * (1 - config.cloudAlpha) + cloud.g * config.cloudAlpha;
-            b = b * (1 - config.cloudAlpha) + cloud.b * config.cloudAlpha;
-          }
-
-          diffuse = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
-          lit = smoothstep(0.03, 0.82, diffuse);
-          limb = clamp(nz, 0, 1);
-
-          terminatorDark = 1 - lit;
-          limbDark = smoothstep(0.58, 1.0, d) * (1 - smoothstep(0.18, 0.92, diffuse));
-          lowerDark = smoothstep(0.08, 0.92, -sy) * 0.55;
-
-          oceanDark = 0;
-          if (b > r * 1.08 && b > g * 1.02) {
-            oceanDark = config.oceanDepth;
-          }
-
-          shade = config.ambientLight + Math.pow(diffuse, 0.86) * config.diffuseLight;
-          shade *= 1 - config.nightShadow * terminatorDark;
-          shade *= 1 - config.limbShadow * limbDark;
-          shade *= 1 - config.bottomShadow * lowerDark;
-          shade -= oceanDark;
-
-          shade = clamp(shade, 0.10, 1.10);
-
-          naturalGlow =
-            config.litLimbGlow *
-            smoothstep(0.82, 0.995, d) *
-            smoothstep(0.18, 0.88, diffuse) *
-            smoothstep(0.02, 0.55, limb);
-
-          r = clamp(r * shade + naturalGlow * 34 + 2, 0, 255);
-          g = clamp(g * shade + naturalGlow * 52 + 2, 0, 255);
-          b = clamp(b * shade + naturalGlow * 76 + 4, 0, 255);
-
-          edgePx = (1 - d) * geo.r;
-          alpha = Math.round(255 * smoothstep(0, config.edgeFeatherPx, edgePx));
-
-          i = (y * geo.width + x) * 4;
-          data[i] = r;
-          data[i + 1] = g;
-          data[i + 2] = b;
-          data[i + 3] = alpha;
-        }
-      }
-
-      ctx.putImageData(imageData, 0, 0);
-      setStatus(mount.getAttribute("data-earth-runtime-status") || "strong");
-    }
-
-    function drawNow() {
-      renderGlobe();
-    }
-
-    function setZoom(value) {
-      zoom = clamp(Number(value), config.minZoom, config.maxZoom);
-      setStatus(mount.getAttribute("data-earth-runtime-status") || "strong");
-      drawNow();
-      return zoom;
-    }
-
-    function zoomIn() {
-      return setZoom(zoom + config.zoomStep);
-    }
-
-    function zoomOut() {
-      return setZoom(zoom - config.zoomStep);
-    }
-
-    function resetView() {
-      zoom = config.defaultZoom;
-      rotation = config.defaultRotation;
-      velocity = config.defaultVelocity;
-      paused = false;
-      setStatus("strong");
-      drawNow();
-      return getStatus();
-    }
-
-    function setPaused(value) {
-      paused = value === true;
-      setStatus(mount.getAttribute("data-earth-runtime-status") || "strong");
-      drawNow();
-      return paused;
-    }
-
-    function toggleSpin() {
-      return setPaused(!paused);
-    }
-
-    function getStatus() {
-      return {
-        assetId: config.assetId,
-        surfaceReady: surfaceReady,
-        cloudReady: cloudReady,
-        cloudOverlayAlpha: config.cloudAlpha,
-        projection: "full-globe-inverse-orthographic",
-        cameraMode: "full-globe-orbital",
-        shadowMode: "photographic-orbital-shadow",
-        glowMode: "natural-lit-limb-only",
-        latticeScope: 256,
-        rotation: rotation,
-        velocity: velocity,
-        zoom: zoom,
-        paused: paused,
-        targetFrameMs: config.targetFrameMs,
-        runtimeStatus: mount.getAttribute("data-earth-runtime-status")
-      };
-    }
-
-    function animate(now) {
-      var delta = Math.min(64, now - lastTime);
-      lastTime = now;
-
-      if (!reduceMotion && !dragging && !paused) {
-        rotation = wrap01(rotation + velocity * delta * 0.001);
-        velocity = velocity * 0.998 + config.defaultVelocity * 0.002;
-      }
-
-      if (now - lastDrawTime >= config.targetFrameMs || dragging) {
-        lastDrawTime = now;
-        renderGlobe();
-      }
-
-      window.requestAnimationFrame(animate);
-    }
-
-    function bindDrag() {
-      mount.addEventListener("pointerdown", function (event) {
-        dragging = true;
-        lastX = event.clientX;
-        velocity = 0;
-
-        try {
-          mount.setPointerCapture(event.pointerId);
-        } catch (error) {}
-      });
-
-      mount.addEventListener("pointermove", function (event) {
-        var dx;
-
-        if (!dragging) return;
-
-        dx = event.clientX - lastX;
-        lastX = event.clientX;
-
-        velocity = dx * 0.0018;
-        rotation = wrap01(rotation + dx * 0.0016);
-
-        renderGlobe();
-      });
-
-      mount.addEventListener("pointerup", function (event) {
-        dragging = false;
-
-        try {
-          mount.releasePointerCapture(event.pointerId);
-        } catch (error) {}
-      });
-
-      mount.addEventListener("pointercancel", function () {
-        dragging = false;
-      });
-    }
-
-    function init() {
-      ctx = canvas.getContext("2d", {
-        alpha: true,
-        desynchronized: true,
-        willReadFrequently: false
-      });
-
-      if (!ctx) {
-        setStatus("canvas-unavailable");
-        return;
-      }
-
-      resizeCanvas();
-      bindDrag();
-      setStatus("loading-assets");
-
-      window.addEventListener("resize", function () {
-        resizeCanvas();
-        drawNow();
-      }, { passive: true });
-
-      Promise.all([
-        loadImage(config.surface),
-        loadImage(config.clouds)
-      ]).then(function (results) {
-        if (results[0].ok) {
-          surfaceTexture = makeTexture(results[0].image, config.textureWidth, config.textureHeight);
-          surfaceReady = true;
-        }
-
-        if (results[1].ok) {
-          cloudTexture = makeTexture(results[1].image, config.textureWidth, config.textureHeight);
-          cloudReady = true;
-        }
-
-        if (surfaceReady && cloudReady) {
-          setStatus("strong");
-        } else if (surfaceReady || cloudReady) {
-          setStatus("partial-assets");
-        } else {
-          setStatus("asset-fallback-only");
-        }
-
-        drawNow();
-        window.requestAnimationFrame(animate);
-      });
-    }
-
-    init();
-
+    var immediate = renderToCanvas(canvas, options || {});
+
+    ensureAssets().then(function () {
+      renderToCanvas(canvas, options || {});
+    }).catch(function () {
+      drawFallback(canvas);
+    });
+
+    return immediate;
+  }
+
+  function render(target, options) {
+    if (target && target.getContext) return renderToCanvas(target, options || {});
+    return mount(target, options || {});
+  }
+
+  function getStatus() {
     return {
-      assetId: config.assetId,
-      mount: mount,
-      canvas: canvas,
-      draw: drawNow,
-      setZoom: setZoom,
-      zoomIn: zoomIn,
-      zoomOut: zoomOut,
-      resetView: resetView,
-      setPaused: setPaused,
-      toggleSpin: toggleSpin,
-      getStatus: getStatus
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      role: ROLE,
+      earthAssetBaseline: true,
+      demoUniverseEarthBaseline: true,
+      surfaceUrl: SURFACE_URL,
+      cloudsUrl: CLOUDS_URL,
+      ready: state.ready,
+      loading: Boolean(state.loading),
+      generatedImage: false,
+      graphicBox: false,
+      ownsRouteRuntime: false,
+      ownsGauges: false,
+      visualPassClaimed: false,
+      lastRender: state.lastRender,
+      lastError: state.lastError
     };
   }
 
-  window.DGBEarthCanvas = {
-    version: "earth-canvas-b22-photographic-orbital-shadow",
-    create: createEarthRenderer
+  var api = {
+    VERSION: VERSION,
+    version: VERSION,
+    ROLE: ROLE,
+    surfaceUrl: SURFACE_URL,
+    cloudsUrl: CLOUDS_URL,
+    ensureAssets: ensureAssets,
+    renderToCanvas: renderToCanvas,
+    render: render,
+    mount: mount,
+    getStatus: getStatus,
+    status: getStatus,
+    visualPassClaimed: false
   };
-})();
+
+  global.DGBEarthAssetCanvas = api;
+  global.DGBDemoUniverseEarthCanvas = api;
+
+  ensureAssets().catch(function () {});
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:earth-asset:generation-2-ready", {
+      detail: getStatus()
+    }));
+  } catch (error) {}
+})(typeof window !== "undefined" ? window : globalThis);

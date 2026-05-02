@@ -1,9 +1,457 @@
-<!DOCTYPE html>
+<!doctype html>
 <html
   lang="en"
   data-page-id="explore"
   data-page="explore"
-  data-generation="planetary-attachment-marker-v1"
+  data-route="/explore/"
+  data-contract="EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1"
+  data-generation="planetary-attachment-marker-v2"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="planetary"
+  data-manor-attached="true"
+  data-parent-route="/"
+  data-current-route="/explore/"
+  data-heavy-runtime-loaded="false"
+  data-planet-render-touched="false"
+  data-runtime-touched="false"
+  data-gauges-logic-touched="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Explore · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Explore is the route-map planetary surface for Diamond Gate Bridge: a clear pathfinder between Compass, Door, Home, Book, Universe, Products, Showroom, Earth G1, and Gauges."
+  >
+
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
+  <style>
+    :root {
+      --gold: #f2c76f;
+      --text: #f5f7fb;
+      --muted: rgba(226, 234, 248, 0.76);
+      --line: rgba(180, 205, 255, 0.18);
+      --soft: rgba(226, 234, 248, 0.58);
+      --blue: #a9c5ff;
+      --green: #8ff0c6;
+      --purple: #d7a5ff;
+      --orange: #ff9f7a;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
+        radial-gradient(circle at 76% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
+        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+    }
+
+    .explore-stage {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.24);
+      border-radius: 36px;
+      padding: clamp(30px, 7vw, 76px);
+      background:
+        linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 28px 90px rgba(0,0,0,0.38);
+      isolation: isolate;
+    }
+
+    .explore-stage::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at 73% 54%, rgba(62, 120, 220, 0.22), transparent 22%),
+        radial-gradient(circle at 73% 54%, transparent 0 22%, rgba(242,199,111,0.10) 23%, transparent 24% 100%),
+        radial-gradient(circle at 73% 54%, transparent 0 38%, rgba(130,165,230,0.09) 39%, transparent 40% 100%),
+        radial-gradient(circle at 73% 54%, transparent 0 56%, rgba(242,199,111,0.055) 57%, transparent 58% 100%);
+      filter: blur(10px);
+      opacity: 0.74;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .explore-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(5,8,19,0.30), transparent 48%, rgba(5,8,19,0.18)),
+        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.08), transparent 26%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .blurred-map-system {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.46;
+      filter: blur(2px);
+    }
+
+    .map-core,
+    .map-ring,
+    .map-axis,
+    .map-node,
+    .map-path {
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .map-core {
+      left: 78%;
+      top: 56%;
+      width: clamp(180px, 32vw, 350px);
+      height: clamp(180px, 32vw, 350px);
+      border-radius: 50%;
+      border: 2px solid rgba(242,199,111,0.20);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.16), transparent 18%),
+        radial-gradient(circle at 50% 50%, rgba(84,130,220,0.28), rgba(17,35,74,0.22) 48%, rgba(6,10,22,0.42) 100%);
+      box-shadow:
+        inset 0 0 60px rgba(242,199,111,0.04),
+        0 0 90px rgba(84,130,220,0.11);
+    }
+
+    .map-ring {
+      left: 78%;
+      top: 56%;
+      width: clamp(260px, 48vw, 540px);
+      height: clamp(110px, 22vw, 250px);
+      border: 2px dashed rgba(172, 191, 230, 0.16);
+      border-radius: 50%;
+    }
+
+    .map-ring.two {
+      transform: translate(-50%, -50%) rotate(64deg);
+      border-color: rgba(242,199,111,0.15);
+    }
+
+    .map-axis {
+      left: 78%;
+      top: 56%;
+      width: 2px;
+      height: clamp(250px, 42vw, 500px);
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.20), transparent);
+    }
+
+    .map-path {
+      left: 78%;
+      top: 56%;
+      width: clamp(280px, 50vw, 560px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.26), rgba(169,197,255,0.18), transparent);
+    }
+
+    .map-path.two {
+      transform: translate(-50%, -50%) rotate(42deg);
+    }
+
+    .map-path.three {
+      transform: translate(-50%, -50%) rotate(-42deg);
+    }
+
+    .map-node {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: #06101f;
+      font-size: 0.66rem;
+      font-weight: 950;
+      box-shadow: 0 0 24px rgba(242,199,111,0.18);
+      text-transform: uppercase;
+    }
+
+    .map-node.door { left: 66%; top: 42%; background: var(--gold); }
+    .map-node.book { left: 88%; top: 42%; background: var(--blue); }
+    .map-node.products { left: 91%; top: 63%; background: var(--green); }
+    .map-node.proof { left: 78%; top: 80%; background: var(--purple); }
+    .map-node.gauges { left: 63%; top: 66%; background: var(--orange); }
+
+    .hero-mark {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      max-width: 1020px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(3.2rem, 10vw, 7.9rem);
+      line-height: 0.88;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
+    }
+
+    .hero-title .gold {
+      color: #ffe5a3;
+      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
+    }
+
+    .hero-subtitle {
+      max-width: 880px;
+      margin: clamp(24px, 4vw, 36px) 0 0;
+      color: rgba(245, 247, 251, 0.86);
+      font-size: clamp(1.28rem, 3.8vw, 2.12rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 800px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.26rem);
+      line-height: 1.55;
+    }
+
+    .one-liner-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+      max-width: 980px;
+    }
+
+    .one-liner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,0.045);
+      color: rgba(255, 246, 220, 0.96);
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+
+    .explore-actions,
+    .explore-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .explore-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
+    .explore-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: clamp(2.1rem, 6vw, 4.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      max-width: 900px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.58;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .route-card {
+      position: relative;
+      min-height: 232px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.10), transparent 36%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.028),
+        0 18px 42px rgba(0,0,0,0.24);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .route-card::after {
+      content: "";
+      position: absolute;
+      right: -34px;
+      bottom: -34px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 1px solid rgba(242,199,111,0.12);
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+    }
+
+    .route-kicker {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .route-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.48rem;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .route-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .route-link {
+      color: #ffe7a7;
+      font-weight: 950;
+    }
+
+    .proof-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .proof-item {
+      border: 1px solid rgba(180, 205, 255, 0.16);
+      border-radius: 24px;
+      padding: 20px;
+      background: rgba(255,255,255,0.045);
+    }
+
+    .proof-item strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .proof-item span {
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .explore-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 1040px) {
+      .one-liner-strip,
+      .proof-band {
+        grid-template-columns: 1fr;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .blurred-map-system {
+        opacity: 0.30;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .explore-stage {
+        border-radius: 28px;
+        padding: 30px 26px;
+      }
+
+      .hero-title {
+        font-size: clamp(3.35rem, 15vw, 5.2rem);
+      }
+
+      .hero-subtitle {
+        font-size: 1.34rem;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-card {
+        min-height: 0;
+      }
+
+      .blurred-map-system {
+        opacity: 0.22;
+      }
+    }
+  </style>
+</head>
+
+<body
+  data-page-id="explore"
+  data-page="explore"
+  data-route="/explore/"
+  data-generation="planetary-attachment-marker-v2"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -13,50 +461,268 @@
   data-parent-route="/"
   data-current-route="/explore/"
 >
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore · Diamond Gate Bridge</title>
-  <meta name="description" content="Explore is the route-map planetary surface for Diamond Gate Bridge." />
+  <a class="dgb-skip" href="#explore-main">Skip to Explore</a>
 
-  <style>
-    :root{color-scheme:dark;--panel:rgba(255,255,255,.055);--panel2:rgba(255,255,255,.035);--line:rgba(255,255,255,.13);--gold:#f2c76f;--ink:#f4f7ff;--soft:rgba(244,247,255,.72)}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 0%,rgba(242,199,111,.08),transparent 30%),radial-gradient(circle at 30% 40%,rgba(80,130,220,.09),transparent 28%),linear-gradient(180deg,#05070d,#02040a);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    a{color:inherit}.page{max-width:1080px;margin:0 auto;padding:28px 18px 72px}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:42px}.brand{display:grid;gap:5px;text-decoration:none}.brand strong{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:.86rem}.brand span{color:var(--soft)}
-    .nav,.links{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.nav a,.pill{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.055);padding:10px 14px;font-weight:850;text-decoration:none}.nav a[aria-current="page"],.pill.primary{border-color:rgba(242,199,111,.44);background:rgba(242,199,111,.14)}
-    .hero{border:1px solid var(--line);border-radius:30px;padding:clamp(22px,5vw,46px);background:radial-gradient(circle at 18% 12%,rgba(242,199,111,.10),transparent 32%),radial-gradient(circle at 82% 70%,rgba(80,130,220,.10),transparent 34%),var(--panel)}
-    .kicker{color:var(--gold);text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:900;margin:0 0 12px}h1{font-size:clamp(2.4rem,9vw,5.8rem);letter-spacing:-.07em;line-height:.9;margin:0 0 18px}h2{font-size:clamp(1.25rem,4vw,2rem);letter-spacing:-.03em;margin:0 0 10px}p{color:var(--soft);line-height:1.55;max-width:780px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:18px}.card{border:1px solid var(--line);border-radius:22px;background:var(--panel2);padding:16px}.card strong{display:block;color:var(--gold);margin-bottom:6px}.links{justify-content:flex-start;margin-top:24px}.audit-source{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;padding:0!important;margin:-1px!important}@media(max-width:760px){.top{display:grid}.nav{justify-content:flex-start}}
-  </style>
-</head>
-
-<body data-page-id="explore" data-page="explore" data-generation="planetary-attachment-marker-v1" data-estate="rich-manor-and-estate" data-manor-skin="active" data-house-field="true" data-gauges-truth="live-authority" data-construct-class="planetary" data-manor-attached="true" data-parent-route="/" data-current-route="/explore/">
-  <main class="page" data-page-id="explore" data-page="explore" data-estate="rich-manor-and-estate" data-manor-skin="active" data-house-field="true" data-gauges-truth="live-authority" data-construct-class="planetary" data-manor-attached="true" data-parent-route="/" data-current-route="/explore/">
-    <header class="top">
-      <a class="brand" href="/"><strong>Diamond Gate Bridge</strong><span>Explore · Route Map</span></a>
-      <nav class="nav" aria-label="Primary routes"><a href="/">Compass</a><a href="/door/">Door</a><a href="/home/">Home</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a></nav>
-    </header>
-
-    <section class="hero" aria-labelledby="PL_EXPLORE">
-      <p class="kicker">PL2 · Explore · Planetary Attachment</p>
-      <h1 id="PL_EXPLORE">Choose the next path without losing the thread.</h1>
-      <p>Explore is the route-map surface. It separates destinations by purpose so the visitor can move to the correct chamber without the system becoming crowded.</p>
-
-      <div class="grid">
-        <article class="card"><strong>Map</strong><h2>Show the paths.</h2><p>Explore gives a clean view of the available public destinations.</p></article>
-        <article class="card"><strong>Separate</strong><h2>Keep purposes distinct.</h2><p>Frontier, Products, Gauges, Laws, and Showroom each carry different work.</p></article>
-        <article class="card"><strong>Send</strong><h2>Move forward.</h2><p>The page routes clearly instead of trapping the visitor inside another explanation layer.</p></article>
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Explore · Route Map Planetary Surface</div>
       </div>
 
-      <nav class="links" aria-label="Explore backlinks">
-        <a class="pill primary" href="/">Compass</a><a class="pill" href="/door/">Door</a><a class="pill" href="/prelude/">Prelude</a><a class="pill" href="/frontier/">Frontier</a><a class="pill" href="/products/">Products</a><a class="pill" href="/laws/">Laws</a><a class="pill" href="/showroom/">Showroom</a><a class="pill" href="/gauges/">Gauges</a>
+      <nav class="dgb-nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/" aria-current="page">Explore</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Earth G1</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
+    </div>
+  </header>
+
+  <main
+    id="explore-main"
+    class="dgb-main"
+    data-page-id="explore"
+    data-page="explore"
+    data-route="/explore/"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="planetary"
+    data-manor-attached="true"
+    data-parent-route="/"
+    data-current-route="/explore/"
+  >
+    <section class="explore-stage" aria-label="Explore route-map planetary surface">
+      <div class="blurred-map-system" aria-hidden="true">
+        <div class="map-axis"></div>
+        <div class="map-ring"></div>
+        <div class="map-ring two"></div>
+        <div class="map-path"></div>
+        <div class="map-path two"></div>
+        <div class="map-path three"></div>
+        <div class="map-core"></div>
+        <div class="map-node door">Door</div>
+        <div class="map-node book">Book</div>
+        <div class="map-node products">Prod</div>
+        <div class="map-node proof">Proof</div>
+        <div class="map-node gauges">Check</div>
+      </div>
+
+      <p class="hero-mark">PL2 · Explore · Route Map</p>
+
+      <h1 class="hero-title">
+        Choose the next path <span class="gold">without losing the thread.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Explore is the public route-map surface. It separates destinations by purpose so the system stays clear.
+      </p>
+
+      <p class="hero-copy">
+        Compass gives the command surface. Door creates entry. Home stabilizes. Explore shows the available paths:
+        book, universe, products, proof, diagnostics, laws, frontier, and return routes.
+      </p>
+
+      <div class="one-liner-strip" aria-label="Explore one-liners">
+        <div class="one-liner">A map is not more noise. A good map removes noise.</div>
+        <div class="one-liner">The visitor should never lose the thread just because the world got bigger.</div>
+        <div class="one-liner">Explore keeps the system from becoming a hallway with too many doors.</div>
+      </div>
+
+      <div class="explore-chip-row" aria-label="Explore status">
+        <span class="explore-chip lock">Route map</span>
+        <span class="explore-chip lock">Planetary attached</span>
+        <span class="explore-chip lock">Manor skin active</span>
+        <span class="explore-chip">No heavy runtime</span>
+        <span class="explore-chip">Gauges-readable</span>
+      </div>
+
+      <div class="explore-actions" aria-label="Primary Explore actions">
+        <a class="dgb-button" href="/door/">Cross the Door</a>
+        <a class="dgb-button secondary" href="/nine-summits-of-love/">Open the Book</a>
+        <a class="dgb-button secondary" href="/products/">Open Products</a>
+        <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Explore function">
+      <h2 class="section-title">Explore is the pathfinder.</h2>
+      <p class="section-copy">
+        Explore does not replace the Compass. It extends it. The Compass tells the visitor where they are.
+        Explore helps them decide where to go next.
+      </p>
+
+      <div class="proof-band">
+        <div class="proof-item">
+          <strong>Map.</strong>
+          <span>Show the available public paths without making the visitor inspect every chamber one by one.</span>
+        </div>
+
+        <div class="proof-item">
+          <strong>Separate.</strong>
+          <span>Keep Book, Universe, Products, Showroom, Laws, Frontier, and Gauges distinct.</span>
+        </div>
+
+        <div class="proof-item">
+          <strong>Send.</strong>
+          <span>Move the visitor forward instead of trapping them inside another explanation layer.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Explore routes">
+      <h2 class="section-title">Pick the correct destination.</h2>
+      <p class="section-copy">
+        The fastest route is not always the deepest route. Choose by purpose.
+      </p>
+
+      <div class="route-grid">
+        <a class="route-card" href="/door/">
+          <span class="route-kicker">Entry</span>
+          <h3>Door</h3>
+          <p>Use Door when the visitor needs to cross the threshold into the estate.</p>
+          <span class="route-link">Open Door</span>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <span class="route-kicker">Stability</span>
+          <h3>Home</h3>
+          <p>Use Home when the visitor needs the estate receiving room and stable routing.</p>
+          <span class="route-link">Open Home</span>
+        </a>
+
+        <a class="route-card" href="/nine-summits-of-love/">
+          <span class="route-kicker">Book</span>
+          <h3>Nine Summits of Love</h3>
+          <p>Use the Book when the visitor needs the human climb and central message.</p>
+          <span class="route-link">Open Book</span>
+        </a>
+
+        <a class="route-card" href="/nine-summits/universe/">
+          <span class="route-kicker">Universe</span>
+          <h3>Demo Universe</h3>
+          <p>Use Universe when the visitor needs the Earth, Sun, and Moon relationship view.</p>
+          <span class="route-link">Enter Universe</span>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <span class="route-kicker">Product Wing</span>
+          <h3>Products</h3>
+          <p>Use Products when the visitor needs ARCHCOIN, AAI, Five Flags, Education, Nutrition, and other chambers.</p>
+          <span class="route-link">Open Products</span>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span class="route-kicker">Proof Surface</span>
+          <h3>Showroom</h3>
+          <p>Use Showroom when the visitor needs public proof surfaces and presentation lanes.</p>
+          <span class="route-link">Open Showroom</span>
+        </a>
+
+        <a class="route-card" href="/showroom/globe/">
+          <span class="route-kicker">Generation 1</span>
+          <h3>Earth G1</h3>
+          <p>Use Earth G1 when the visitor should inspect the accepted Demo Universe baseline.</p>
+          <span class="route-link">Inspect Earth G1</span>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <span class="route-kicker">Law</span>
+          <h3>Laws</h3>
+          <p>Use Laws when the visitor needs the governing language and rule layer.</p>
+          <span class="route-link">Open Laws</span>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span class="route-kicker">Diagnostics</span>
+          <h3>Gauges</h3>
+          <p>Use Gauges when the visitor needs route authority, runtime authority, served source, and receipts.</p>
+          <span class="route-link">Open Gauges</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Explore secondary routes">
+      <h2 class="section-title">Secondary planetary paths stay reachable.</h2>
+      <p class="section-copy">
+        Explore can also carry the quieter planetary links without crowding the main public command surface.
+      </p>
+
+      <div class="explore-actions">
+        <a class="dgb-button secondary" href="/">Compass</a>
+        <a class="dgb-button secondary" href="/prelude/">Prelude</a>
+        <a class="dgb-button secondary" href="/frontier/">Frontier</a>
+        <a class="dgb-button secondary" href="/about-this-underdog/">About This Underdog</a>
+        <a class="dgb-button secondary" href="/nine-summits-universe/">Nine Summits Universe</a>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Route receipt">
+      <h2>Route receipt</h2>
+      <pre class="dgb-receipt explore-receipt">EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1
+route=/explore/
+page=explore
+style_direction=ted-talk-route-map-surface
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Explore,Book,Universe,Products,Showroom,Earth G1,Gauges
+construct_class=planetary
+manor_attached=true
+manor_skin=active
+house_field=true
+gauges_truth=live-authority
+heavy_runtime_loaded=false
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
+explore_function=route-map-planetary-surface
+compass=/
+door=/door/
+home=/home/
+book=/nine-summits-of-love/
+universe=/nine-summits/universe/
+products=/products/
+showroom=/showroom/
+earth-g1=/showroom/globe/
+laws=/laws/
+gauges=/gauges/
+prelude=/prelude/
+frontier=/frontier/
+visual_pass_claimed=false</pre>
     </section>
 
     <section class="audit-source" aria-label="Explore audit source">
-      <a href="/">Compass</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a>
-      <span>data-estate="rich-manor-and-estate"</span><span>data-manor-skin="active"</span><span>data-house-field="true"</span><span>data-gauges-truth="live-authority"</span><span>data-construct-class="planetary"</span><span>data-manor-attached="true"</span><span>PLANETARY_ATTACHMENT_MARKER_TNT_v1</span>
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/explore/">Explore</a>
+      <a href="/nine-summits-of-love/">Book</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Earth G1</a>
+      <a href="/laws/">Laws</a>
+      <a href="/gauges/">Gauges</a>
+      <span>data-estate="rich-manor-and-estate"</span>
+      <span>data-manor-skin="active"</span>
+      <span>data-house-field="true"</span>
+      <span>data-gauges-truth="live-authority"</span>
+      <span>data-construct-class="planetary"</span>
+      <span>data-manor-attached="true"</span>
+      <span>EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1</span>
     </section>
   </main>
+
+  <footer class="dgb-footer">
+    EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1 · Explore · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

@@ -4,8 +4,8 @@
   data-page-id="explore"
   data-page="explore"
   data-route="/explore/"
-  data-contract="EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1"
-  data-generation="planetary-attachment-marker-v2"
+  data-contract="EXPLORE_FRONTIER_DOWNSTREAM_ROUTE_MAP_RENEWAL_TNT_v1"
+  data-generation="planetary-attachment-marker-v3"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -14,6 +14,8 @@
   data-manor-attached="true"
   data-parent-route="/"
   data-current-route="/explore/"
+  data-frontier-route="/frontier/"
+  data-frontier-relationship="downstream-from-explore"
   data-heavy-runtime-loaded="false"
   data-planet-render-touched="false"
   data-runtime-touched="false"
@@ -26,7 +28,7 @@
   <title>Explore · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore is the route-map planetary surface for Diamond Gate Bridge: a clear pathfinder between Compass, Door, Home, Book, Universe, Products, Showroom, Earth G1, and Gauges."
+    content="Explore is the route-map planetary surface for Diamond Gate Bridge. It routes visitors from Compass into Door, Home, Book, Universe, Products, Showroom, Gauges, Laws, and downstream Frontier."
   >
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
@@ -42,6 +44,7 @@
       --green: #8ff0c6;
       --purple: #d7a5ff;
       --orange: #ff9f7a;
+      --frontier: #d7a5ff;
     }
 
     body {
@@ -49,15 +52,16 @@
       background:
         radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
         radial-gradient(circle at 76% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
+        radial-gradient(circle at 88% 76%, rgba(215, 165, 255, 0.10), transparent 34%),
         linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
     }
 
-    .explore-stage {
+    .explore-stage,
+    .frontier-stage {
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(242, 199, 111, 0.24);
       border-radius: 36px;
-      padding: clamp(30px, 7vw, 76px);
       background:
         linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
       box-shadow:
@@ -66,7 +70,17 @@
       isolation: isolate;
     }
 
-    .explore-stage::before {
+    .explore-stage {
+      padding: clamp(30px, 7vw, 76px);
+    }
+
+    .frontier-stage {
+      padding: clamp(24px, 5vw, 44px);
+      margin-top: 18px;
+    }
+
+    .explore-stage::before,
+    .frontier-stage::before {
       content: "";
       position: absolute;
       inset: -18%;
@@ -81,7 +95,15 @@
       z-index: -3;
     }
 
-    .explore-stage::after {
+    .frontier-stage::before {
+      background:
+        radial-gradient(circle at 72% 50%, rgba(215, 165, 255, 0.20), transparent 22%),
+        radial-gradient(circle at 72% 50%, transparent 0 24%, rgba(242,199,111,0.10) 25%, transparent 26% 100%),
+        radial-gradient(circle at 72% 50%, transparent 0 44%, rgba(169,197,255,0.09) 45%, transparent 46% 100%);
+    }
+
+    .explore-stage::after,
+    .frontier-stage::after {
       content: "";
       position: absolute;
       inset: 0;
@@ -92,7 +114,8 @@
       z-index: -2;
     }
 
-    .blurred-map-system {
+    .blurred-map-system,
+    .blurred-frontier-system {
       position: absolute;
       inset: 0;
       pointer-events: none;
@@ -105,7 +128,12 @@
     .map-ring,
     .map-axis,
     .map-node,
-    .map-path {
+    .map-path,
+    .frontier-core,
+    .frontier-ring,
+    .frontier-edge,
+    .frontier-node,
+    .frontier-line {
       position: absolute;
       transform: translate(-50%, -50%);
     }
@@ -125,7 +153,8 @@
         0 0 90px rgba(84,130,220,0.11);
     }
 
-    .map-ring {
+    .map-ring,
+    .frontier-ring {
       left: 78%;
       top: 56%;
       width: clamp(260px, 48vw, 540px);
@@ -134,7 +163,8 @@
       border-radius: 50%;
     }
 
-    .map-ring.two {
+    .map-ring.two,
+    .frontier-ring.two {
       transform: translate(-50%, -50%) rotate(64deg);
       border-color: rgba(242,199,111,0.15);
     }
@@ -163,7 +193,8 @@
       transform: translate(-50%, -50%) rotate(-42deg);
     }
 
-    .map-node {
+    .map-node,
+    .frontier-node {
       display: grid;
       place-items: center;
       width: 44px;
@@ -182,7 +213,56 @@
     .map-node.proof { left: 78%; top: 80%; background: var(--purple); }
     .map-node.gauges { left: 63%; top: 66%; background: var(--orange); }
 
-    .hero-mark {
+    .frontier-core {
+      left: 77%;
+      top: 56%;
+      width: clamp(190px, 31vw, 360px);
+      height: clamp(190px, 31vw, 360px);
+      border-radius: 34% 66% 42% 58%;
+      border: 2px solid rgba(215,165,255,0.23);
+      background:
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.14), transparent 18%),
+        linear-gradient(135deg, rgba(215,165,255,0.20), rgba(84,130,220,0.13), rgba(6,10,22,0.40));
+      box-shadow:
+        inset 0 0 60px rgba(215,165,255,0.05),
+        0 0 96px rgba(215,165,255,0.11);
+    }
+
+    .frontier-edge {
+      left: 77%;
+      top: 56%;
+      width: clamp(340px, 54vw, 620px);
+      height: clamp(340px, 54vw, 620px);
+      border-radius: 50%;
+      border: 1px solid rgba(215,165,255,0.11);
+      box-shadow:
+        inset 0 0 90px rgba(215,165,255,0.04),
+        0 0 72px rgba(215,165,255,0.05);
+    }
+
+    .frontier-line {
+      left: 77%;
+      top: 56%;
+      width: clamp(280px, 50vw, 560px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(215,165,255,0.28), rgba(242,199,111,0.16), transparent);
+    }
+
+    .frontier-line.two {
+      transform: translate(-50%, -50%) rotate(44deg);
+    }
+
+    .frontier-line.three {
+      transform: translate(-50%, -50%) rotate(-44deg);
+    }
+
+    .frontier-node.explore { left: 64%; top: 46%; background: var(--gold); }
+    .frontier-node.unknown { left: 88%; top: 42%; background: var(--frontier); }
+    .frontier-node.research { left: 90%; top: 64%; background: var(--blue); }
+    .frontier-node.return { left: 70%; top: 78%; background: var(--green); }
+
+    .hero-mark,
+    .frontier-mark {
       margin: 0 0 14px;
       color: var(--gold);
       font-size: 0.82rem;
@@ -191,7 +271,8 @@
       text-transform: uppercase;
     }
 
-    .hero-title {
+    .hero-title,
+    .frontier-title {
       max-width: 1020px;
       margin: 0;
       color: var(--text);
@@ -201,12 +282,18 @@
       text-wrap: balance;
     }
 
-    .hero-title .gold {
+    .frontier-title {
+      font-size: clamp(2.4rem, 8vw, 5.9rem);
+    }
+
+    .hero-title .gold,
+    .frontier-title .gold {
       color: #ffe5a3;
       text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
     }
 
-    .hero-subtitle {
+    .hero-subtitle,
+    .frontier-subtitle {
       max-width: 880px;
       margin: clamp(24px, 4vw, 36px) 0 0;
       color: rgba(245, 247, 251, 0.86);
@@ -216,7 +303,12 @@
       text-wrap: balance;
     }
 
-    .hero-copy {
+    .frontier-subtitle {
+      font-size: clamp(1.18rem, 3.2vw, 1.74rem);
+    }
+
+    .hero-copy,
+    .frontier-copy {
       max-width: 800px;
       margin: 18px 0 0;
       color: var(--muted);
@@ -248,7 +340,8 @@
     }
 
     .explore-actions,
-    .explore-chip-row {
+    .explore-chip-row,
+    .planet-rail {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -292,14 +385,16 @@
       line-height: 1.58;
     }
 
-    .route-grid {
+    .route-grid,
+    .frontier-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       margin-top: 24px;
     }
 
-    .route-card {
+    .route-card,
+    .frontier-card {
       position: relative;
       min-height: 232px;
       display: flex;
@@ -318,7 +413,12 @@
       overflow: hidden;
     }
 
-    .route-card::after {
+    .frontier-card {
+      min-height: 210px;
+    }
+
+    .route-card::after,
+    .frontier-card::after {
       content: "";
       position: absolute;
       right: -34px;
@@ -331,7 +431,8 @@
       pointer-events: none;
     }
 
-    .route-kicker {
+    .route-kicker,
+    .frontier-kicker {
       color: var(--gold);
       font-size: 0.74rem;
       font-weight: 950;
@@ -339,7 +440,8 @@
       text-transform: uppercase;
     }
 
-    .route-card h3 {
+    .route-card h3,
+    .frontier-card h3 {
       margin: 0;
       color: var(--text);
       font-size: 1.48rem;
@@ -347,7 +449,8 @@
       letter-spacing: -0.03em;
     }
 
-    .route-card p {
+    .route-card p,
+    .frontier-card p {
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
@@ -357,6 +460,25 @@
     .route-link {
       color: #ffe7a7;
       font-weight: 950;
+    }
+
+    .planet-rail a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(242, 199, 111, 0.24);
+      border-radius: 999px;
+      text-decoration: none;
+      color: rgba(245,247,251,0.86);
+      background: rgba(255, 255, 255, 0.045);
+      font-weight: 850;
+    }
+
+    .planet-rail a[aria-current="page"] {
+      color: #111827;
+      background: linear-gradient(180deg, #ffe3a3, #f2c76f);
+      border-color: #f2c76f;
     }
 
     .proof-band {
@@ -409,18 +531,25 @@
         grid-template-columns: 1fr;
       }
 
-      .route-grid {
+      .route-grid,
+      .frontier-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .blurred-map-system {
+      .blurred-map-system,
+      .blurred-frontier-system {
         opacity: 0.30;
       }
     }
 
     @media (max-width: 640px) {
-      .explore-stage {
+      .explore-stage,
+      .frontier-stage {
         border-radius: 28px;
+      }
+
+      .explore-stage,
+      .frontier-stage {
         padding: 30px 26px;
       }
 
@@ -428,19 +557,27 @@
         font-size: clamp(3.35rem, 15vw, 5.2rem);
       }
 
-      .hero-subtitle {
+      .frontier-title {
+        font-size: clamp(2.8rem, 13vw, 4.6rem);
+      }
+
+      .hero-subtitle,
+      .frontier-subtitle {
         font-size: 1.34rem;
       }
 
-      .route-grid {
+      .route-grid,
+      .frontier-grid {
         grid-template-columns: 1fr;
       }
 
-      .route-card {
+      .route-card,
+      .frontier-card {
         min-height: 0;
       }
 
-      .blurred-map-system {
+      .blurred-map-system,
+      .blurred-frontier-system {
         opacity: 0.22;
       }
     }
@@ -451,7 +588,7 @@
   data-page-id="explore"
   data-page="explore"
   data-route="/explore/"
-  data-generation="planetary-attachment-marker-v2"
+  data-generation="planetary-attachment-marker-v3"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-house-field="true"
@@ -460,6 +597,8 @@
   data-manor-attached="true"
   data-parent-route="/"
   data-current-route="/explore/"
+  data-frontier-route="/frontier/"
+  data-frontier-relationship="downstream-from-explore"
 >
   <a class="dgb-skip" href="#explore-main">Skip to Explore</a>
 
@@ -468,7 +607,7 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Explore · Route Map Planetary Surface</div>
+        <div class="dgb-room-line">Explore · Route Map · Frontier Path</div>
       </div>
 
       <nav class="dgb-nav" aria-label="Primary navigation">
@@ -476,6 +615,8 @@
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/explore/" aria-current="page">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
@@ -500,6 +641,8 @@
     data-manor-attached="true"
     data-parent-route="/"
     data-current-route="/explore/"
+    data-frontier-route="/frontier/"
+    data-frontier-relationship="downstream-from-explore"
   >
     <section class="explore-stage" aria-label="Explore route-map planetary surface">
       <div class="blurred-map-system" aria-hidden="true">
@@ -524,33 +667,102 @@
       </h1>
 
       <p class="hero-subtitle">
-        Explore is the public route-map surface. It separates destinations by purpose so the system stays clear.
+        Explore is the public route-map surface. Frontier is downstream from Explore, because discovery needs a map before it reaches the edge.
       </p>
 
       <p class="hero-copy">
-        Compass gives the command surface. Door creates entry. Home stabilizes. Explore shows the available paths:
-        book, universe, products, proof, diagnostics, laws, frontier, and return routes.
+        Compass gives the command surface. Door creates entry. Home stabilizes. Explore shows the available paths.
+        Frontier carries the expansion edge after the visitor understands the route map.
       </p>
 
       <div class="one-liner-strip" aria-label="Explore one-liners">
         <div class="one-liner">A map is not more noise. A good map removes noise.</div>
         <div class="one-liner">The visitor should never lose the thread just because the world got bigger.</div>
-        <div class="one-liner">Explore keeps the system from becoming a hallway with too many doors.</div>
+        <div class="one-liner">Frontier comes after Explore because the unknown still needs a path.</div>
       </div>
 
       <div class="explore-chip-row" aria-label="Explore status">
         <span class="explore-chip lock">Route map</span>
+        <span class="explore-chip lock">Frontier downstream</span>
         <span class="explore-chip lock">Planetary attached</span>
-        <span class="explore-chip lock">Manor skin active</span>
         <span class="explore-chip">No heavy runtime</span>
         <span class="explore-chip">Gauges-readable</span>
       </div>
 
       <div class="explore-actions" aria-label="Primary Explore actions">
-        <a class="dgb-button" href="/door/">Cross the Door</a>
+        <a class="dgb-button" href="/frontier/">Enter Frontier</a>
+        <a class="dgb-button secondary" href="/door/">Cross the Door</a>
         <a class="dgb-button secondary" href="/nine-summits-of-love/">Open the Book</a>
         <a class="dgb-button secondary" href="/products/">Open Products</a>
-        <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
+      </div>
+    </section>
+
+    <section class="frontier-stage" aria-label="Frontier downstream feature">
+      <div class="blurred-frontier-system" aria-hidden="true">
+        <div class="frontier-edge"></div>
+        <div class="frontier-ring"></div>
+        <div class="frontier-ring two"></div>
+        <div class="frontier-line"></div>
+        <div class="frontier-line two"></div>
+        <div class="frontier-line three"></div>
+        <div class="frontier-core"></div>
+        <div class="frontier-node explore">Map</div>
+        <div class="frontier-node unknown">Edge</div>
+        <div class="frontier-node research">Find</div>
+        <div class="frontier-node return">Back</div>
+      </div>
+
+      <p class="frontier-mark">P3 · Frontier · Downstream Expansion Edge</p>
+
+      <h2 class="frontier-title">
+        Explore points. <span class="gold">Frontier expands.</span>
+      </h2>
+
+      <p class="frontier-subtitle">
+        Frontier is the edge-of-known chamber: future systems, research pressure, expansion logic, and discovery that must still orbit the Manor.
+      </p>
+
+      <p class="frontier-copy">
+        Discovery moves through Compass, then Explore, then Frontier. Explore keeps the public map clean.
+        Frontier carries the unknown without letting chaos become the design language.
+      </p>
+
+      <div class="frontier-grid">
+        <article class="frontier-card">
+          <span class="frontier-kicker">Unknown</span>
+          <h3>Edge pressure.</h3>
+          <p>Frontier holds future-facing pressure without allowing the unknown to become disorder.</p>
+        </article>
+
+        <article class="frontier-card">
+          <span class="frontier-kicker">Research</span>
+          <h3>Known to unknown.</h3>
+          <p>Explore organizes the routes. Frontier takes the visitor to the expansion edge after the route is understood.</p>
+        </article>
+
+        <article class="frontier-card">
+          <span class="frontier-kicker">Return</span>
+          <h3>Expansion with anchor.</h3>
+          <p>Nothing in Frontier is allowed to detach from the Manor or outrank the house skeleton.</p>
+        </article>
+      </div>
+
+      <div class="planet-rail" aria-label="Planetary constructs">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/" aria-current="page">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a href="/upper-room/">Upper Room</a>
+        <a href="/about-this-underdog/">About</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits-of-love/">Love</a>
+      </div>
+
+      <div class="explore-actions" aria-label="Frontier call to action">
+        <a class="dgb-button" href="/frontier/">Open Frontier</a>
+        <a class="dgb-button secondary" href="/laws/">Open Laws</a>
+        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
@@ -558,7 +770,7 @@
       <h2 class="section-title">Explore is the pathfinder.</h2>
       <p class="section-copy">
         Explore does not replace the Compass. It extends it. The Compass tells the visitor where they are.
-        Explore helps them decide where to go next.
+        Explore helps them decide where to go next. Frontier receives the expansion path after Explore clarifies the map.
       </p>
 
       <div class="proof-band">
@@ -574,7 +786,7 @@
 
         <div class="proof-item">
           <strong>Send.</strong>
-          <span>Move the visitor forward instead of trapping them inside another explanation layer.</span>
+          <span>Move the visitor forward. Frontier is the primary downstream expansion destination.</span>
         </div>
       </div>
     </section>
@@ -586,6 +798,13 @@
       </p>
 
       <div class="route-grid">
+        <a class="route-card" href="/frontier/">
+          <span class="route-kicker">Expansion Edge</span>
+          <h3>Frontier</h3>
+          <p>Use Frontier when the visitor is ready to move from the known map into future-facing discovery.</p>
+          <span class="route-link">Open Frontier</span>
+        </a>
+
         <a class="route-card" href="/door/">
           <span class="route-kicker">Entry</span>
           <h3>Door</h3>
@@ -628,13 +847,6 @@
           <span class="route-link">Open Showroom</span>
         </a>
 
-        <a class="route-card" href="/showroom/globe/">
-          <span class="route-kicker">Generation 1</span>
-          <h3>Earth G1</h3>
-          <p>Use Earth G1 when the visitor should inspect the accepted Demo Universe baseline.</p>
-          <span class="route-link">Inspect Earth G1</span>
-        </a>
-
         <a class="route-card" href="/laws/">
           <span class="route-kicker">Law</span>
           <h3>Laws</h3>
@@ -654,7 +866,7 @@
     <section class="dgb-card" aria-label="Explore secondary routes">
       <h2 class="section-title">Secondary planetary paths stay reachable.</h2>
       <p class="section-copy">
-        Explore can also carry the quieter planetary links without crowding the main public command surface.
+        Explore carries the quieter planetary links without crowding the main public command surface.
       </p>
 
       <div class="explore-actions">
@@ -668,12 +880,12 @@
 
     <section class="dgb-card" aria-label="Route receipt">
       <h2>Route receipt</h2>
-      <pre class="dgb-receipt explore-receipt">EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1
+      <pre class="dgb-receipt explore-receipt">EXPLORE_FRONTIER_DOWNSTREAM_ROUTE_MAP_RENEWAL_TNT_v1
 route=/explore/
 page=explore
 style_direction=ted-talk-route-map-surface
 uses_shared_shell=/assets/dgb-ui-shell.css
-canonical_nav=Compass,Door,Home,Explore,Book,Universe,Products,Showroom,Earth G1,Gauges
+canonical_nav=Compass,Door,Home,Explore,Frontier,Laws,Book,Universe,Products,Showroom,Earth G1,Gauges
 construct_class=planetary
 manor_attached=true
 manor_skin=active
@@ -684,6 +896,12 @@ planet_render_touched=false
 runtime_touched=false
 gauges_logic_touched=false
 explore_function=route-map-planetary-surface
+frontier_relationship=downstream-from-explore
+frontier=/frontier/
+frontier_role=expansion-edge
+frontier_slot=P3_FRONTIER
+frontier_orbit=manor
+frontier_sequence=Compass -> Explore -> Frontier
 compass=/
 door=/door/
 home=/home/
@@ -695,7 +913,6 @@ earth-g1=/showroom/globe/
 laws=/laws/
 gauges=/gauges/
 prelude=/prelude/
-frontier=/frontier/
 visual_pass_claimed=false</pre>
     </section>
 
@@ -704,6 +921,7 @@ visual_pass_claimed=false</pre>
       <a href="/door/">Door</a>
       <a href="/home/">Home</a>
       <a href="/explore/">Explore</a>
+      <a href="/frontier/">Frontier</a>
       <a href="/nine-summits-of-love/">Book</a>
       <a href="/nine-summits/universe/">Universe</a>
       <a href="/products/">Products</a>
@@ -717,12 +935,14 @@ visual_pass_claimed=false</pre>
       <span>data-gauges-truth="live-authority"</span>
       <span>data-construct-class="planetary"</span>
       <span>data-manor-attached="true"</span>
-      <span>EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1</span>
+      <span>data-frontier-route="/frontier/"</span>
+      <span>data-frontier-relationship="downstream-from-explore"</span>
+      <span>EXPLORE_FRONTIER_DOWNSTREAM_ROUTE_MAP_RENEWAL_TNT_v1</span>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    EXPLORE_TED_TALK_ROUTE_MAP_PLANETARY_RENEWAL_TNT_v1 · Explore · Diamond Gate Bridge.
+    EXPLORE_FRONTIER_DOWNSTREAM_ROUTE_MAP_RENEWAL_TNT_v1 · Explore · Frontier downstream · Diamond Gate Bridge.
   </footer>
 </body>
 </html>

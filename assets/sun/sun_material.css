@@ -1,42 +1,44 @@
-/* SUN TERMS RENEWAL
+/* SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1
    FILE: /assets/sun/sun_material.css
-   VERSION: SUN_TERMS_RENEWAL_TNT_v1
+   ROLE: Sun G1 visibility and containment.
 */
 
 :root {
-  --sun-bg: #02050b;
-  --sun-panel: rgba(8, 14, 25, 0.90);
-  --sun-line: rgba(255, 204, 111, 0.24);
-  --sun-gold: #f2c76f;
-  --sun-orange: #ff9c45;
-  --sun-red: #c84b2a;
-  --sun-text: #f5f7fb;
-  --sun-muted: rgba(228, 234, 246, 0.76);
+  --sun-g1-gold: #f2c76f;
+  --sun-g1-orange: #ff9c45;
+  --sun-g1-line: rgba(255, 204, 111, 0.24);
+  --sun-g1-text: #f5f7fb;
+  --sun-g1-muted: rgba(228, 234, 246, 0.76);
 }
 
+[data-sun-render-active="true"],
+[data-sun-g1-active="true"],
 [data-sun-stage="true"],
 [data-demo-universe-sun="true"],
-.sun-stage {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: min(82vw, 720px);
-  max-width: 100%;
-  aspect-ratio: 1 / 1;
-  margin: clamp(16px, 4vw, 32px) auto;
-  overflow: visible;
-  border-radius: 50%;
+.sun-g1-stage {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  width: min(82vw, 720px) !important;
+  max-width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  margin: clamp(16px, 4vw, 32px) auto !important;
+  overflow: visible !important;
+  border-radius: 50% !important;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 187, 76, 0.10), transparent 62%),
-    transparent;
+    radial-gradient(circle at 50% 50%, rgba(255, 187, 76, 0.10), transparent 63%),
+    transparent !important;
+  transform: none !important;
 }
 
+[data-sun-render-active="true"]::before,
+[data-sun-g1-active="true"]::before,
 [data-sun-stage="true"]::before,
 [data-demo-universe-sun="true"]::before,
-.sun-stage::before {
+.sun-g1-stage::before {
   content: "";
   position: absolute;
-  inset: 8%;
+  inset: 9%;
   border-radius: 50%;
   pointer-events: none;
   box-shadow:
@@ -45,33 +47,35 @@
 }
 
 canvas[data-sun-asset-canvas="true"] {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: min(82vw, 720px);
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
-  border-radius: 50%;
-  background: transparent;
-  filter: saturate(1.06) contrast(1.04);
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  aspect-ratio: 1 / 1 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  filter: saturate(1.06) contrast(1.04) !important;
+  transform: none !important;
 }
 
 .sun-panel {
-  border: 1px solid var(--sun-line);
+  border: 1px solid var(--sun-g1-line);
   border-radius: 28px;
   padding: clamp(18px, 4vw, 30px);
   background:
     radial-gradient(circle at 50% 0%, rgba(255, 187, 76, 0.10), transparent 18rem),
-    var(--sun-panel);
-  color: var(--sun-text);
+    rgba(8, 14, 25, 0.90);
+  color: var(--sun-g1-text);
 }
 
 .sun-chip {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
-  border: 1px solid var(--sun-line);
+  border: 1px solid var(--sun-g1-line);
   border-radius: 999px;
   padding: 7px 11px;
   background: rgba(255, 187, 76, 0.09);
@@ -83,14 +87,14 @@ canvas[data-sun-asset-canvas="true"] {
 }
 
 .sun-note {
-  color: var(--sun-muted);
+  color: var(--sun-g1-muted);
   line-height: 1.55;
 }
 
 .sun-receipt {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  border: 1px solid var(--sun-line);
+  border: 1px solid var(--sun-g1-line);
   border-radius: 20px;
   padding: 16px;
   background: rgba(0, 0, 0, 0.26);
@@ -98,13 +102,16 @@ canvas[data-sun-asset-canvas="true"] {
 }
 
 @media (max-width: 720px) {
+  [data-sun-render-active="true"],
+  [data-sun-g1-active="true"],
   [data-sun-stage="true"],
   [data-demo-universe-sun="true"],
-  .sun-stage {
-    width: min(84vw, 430px);
+  .sun-g1-stage {
+    width: min(84vw, 430px) !important;
   }
 
   canvas[data-sun-asset-canvas="true"] {
-    width: min(84vw, 430px);
+    width: min(84vw, 430px) !important;
+    height: min(84vw, 430px) !important;
   }
 }

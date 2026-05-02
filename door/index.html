@@ -1,12 +1,22 @@
 <!-- /door/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="door"
+  data-route="/door/"
+  data-contract="DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Door</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Door: entry threshold into Rich Manor and Estate."
+  />
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
+
 <body>
   <a class="dgb-skip" href="#main">Skip to Door</a>
 
@@ -17,6 +27,7 @@
         <div class="dgb-subtitle">Rich Manor and Estate</div>
         <div class="dgb-room-line">Door · Entry Threshold</div>
       </div>
+
       <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/" aria-current="page">Door</a>
@@ -37,37 +48,45 @@
         The Compass orients. The Door admits. This is the entry threshold into Rich Manor and Estate.
         Do not stand at the door forever. Confirm the view, enter the house, and let the next room open from there.
       </p>
+
       <div class="dgb-chip-row">
         <span class="dgb-chip">Compass orients</span>
         <span class="dgb-chip">Door admits</span>
         <span class="dgb-chip">Home receives</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
+
       <div class="dgb-actions">
         <a class="dgb-button" href="/home/">Enter Home</a>
-        <a class="dgb-button secondary" href="/home/?view=round">Enter Round View</a>
-        <a class="dgb-button secondary" href="/showroom/globe/?view=globe">Enter Globe View</a>
-        <a class="dgb-button secondary" href="/">Return to Compass</a>
+        <a class="dgb-button secondary" href="/home/?view=flat">Flat View</a>
+        <a class="dgb-button secondary" href="/home/?view=round">Round View</a>
+        <a class="dgb-button secondary" href="/showroom/globe/">Globe View</a>
       </div>
     </section>
 
     <section class="dgb-grid">
       <article class="dgb-card">
         <h2>Flat</h2>
-        <p>Use Flat when the visitor needs the simplest house path: clear pages, clear links, and direct orientation.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/home/?view=flat">Enter Flat</a></div>
+        <p>Use Flat when the visitor needs the simplest public website path: clear pages, clear links, and direct orientation.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/home/?view=flat">Enter Flat</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Round</h2>
-        <p>Use Round when the house should read as a connected living structure instead of isolated pages.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/home/?view=round">Enter Round</a></div>
+        <p>Use Round when the estate should read as a connected living structure instead of isolated pages.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/home/?view=round">Enter Round</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Globe</h2>
         <p>Use Globe when the visitor should inspect the active world-building and live visual branch.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/showroom/globe/">Enter Globe</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/showroom/globe/">Enter Globe</a>
+        </div>
       </article>
 
       <article class="dgb-card">
@@ -83,16 +102,21 @@
 
     <details class="dgb-details">
       <summary>Route receipt</summary>
-      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1
 route=/door/
-brand=Diamond Gate Bridge
-estate=Rich Manor and Estate
-nav_order=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
+page=door
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
 door_owns=entry-threshold
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
 visual_pass_claimed=false</pre>
     </details>
   </main>
 
-  <footer class="dgb-footer">Door · Global UI shell aligned.</footer>
+  <footer class="dgb-footer">
+    DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1 · Door · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

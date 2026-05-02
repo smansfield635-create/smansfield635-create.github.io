@@ -3,9 +3,9 @@
   lang="en"
   data-page="planet-1"
   data-route="/showroom/globe/"
-  data-contract="ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"
+  data-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
   data-shell-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
-  data-render-contract="ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"
+  data-render-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
   data-demo-universe="earth"
   data-visual-pass-claimed="false"
 >
@@ -15,31 +15,65 @@
   <title>Diamond Gate Bridge · Planet 1 · Demo Universe</title>
   <meta
     name="description"
-    content="Planet 1 Demo Universe Earth baseline. Asset Generation 2 terms renewal using local Earth surface and cloud assets."
+    content="Planet 1 Demo Universe Earth baseline with axis, spin, and touch interaction."
   >
+
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1">
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
 
   <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    .planet-card {
+      overflow: visible !important;
+      padding-top: clamp(16px, 4vw, 32px);
+      padding-bottom: clamp(16px, 4vw, 32px);
+    }
+
+    .planet-stage-shell {
+      width: 100%;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+    }
+
     .planet-stage {
-      width: min(100%, 860px);
+      width: min(82vw, 720px);
+      max-width: 100%;
       aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
       margin-inline: auto;
+      overflow: visible;
       border-radius: 50%;
     }
 
-    .planet-card {
-      display: grid;
-      justify-items: center;
-      overflow: hidden;
-      min-height: min(92vw, 760px);
+    .asset-note {
+      color: var(--dgb-muted, rgba(228,234,246,.76));
+      line-height: 1.55;
     }
 
-    .asset-note {
-      color: var(--dgb-muted, rgba(228,234,246,.74));
-      line-height: 1.55;
+    .control-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .control-grid button {
+      min-width: 120px;
+    }
+
+    @media (max-width: 720px) {
+      .planet-stage {
+        width: min(82vw, 430px);
+      }
+
+      .control-grid button {
+        min-width: 132px;
+      }
     }
   </style>
 </head>
@@ -69,51 +103,53 @@
 
   <main id="planet-one-main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">Planet 1 · Asset Generation 2 Terms Renewal</p>
+      <p class="dgb-eyebrow">Planet 1 · Asset Generation 2</p>
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
       <p class="dgb-copy">
-        This route adopts the local Earth asset spine as the Demo Universe baseline. The Nine Summits universe remains
-        separate until this Earth-class visual standard is inspected and accepted.
+        Earth asset rendering is active. The planet should be fully visible, on a soft axis, spinning, and touch-draggable.
+        This is still a renewal result, not a lock-in.
       </p>
 
       <div class="dgb-chip-row">
-        <span class="dgb-chip">Demo Universe</span>
         <span class="dgb-chip">Earth asset spine</span>
-        <span class="dgb-chip">Local surface</span>
-        <span class="dgb-chip">Local clouds</span>
+        <span class="dgb-chip">Axis restored</span>
+        <span class="dgb-chip">Spin active</span>
+        <span class="dgb-chip">Touch drag active</span>
         <span class="dgb-chip hold">Visual hold</span>
       </div>
     </section>
 
-    <section class="dgb-card planet-card" aria-label="Planet 1 Demo Universe Earth renderer">
-      <div
-        id="planet-one-render"
-        class="planet-stage earth-g2-stage"
-        data-earth-asset-stage="true"
-        data-earth-asset-mount="true"
-        data-planet-one-mount="true"
-        data-planet-one-render="true"
-        data-demo-universe="earth"
-        data-render-contract="ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"
-        data-visual-pass-claimed="false"
-      ></div>
+    <section class="dgb-card planet-card" data-earth-card="true" aria-label="Planet 1 Demo Universe Earth renderer">
+      <div class="planet-stage-shell">
+        <div
+          id="planet-one-render"
+          class="planet-stage earth-g2-stage"
+          data-earth-asset-stage="true"
+          data-earth-asset-mount="true"
+          data-planet-one-mount="true"
+          data-planet-one-render="true"
+          data-demo-universe="earth"
+          data-render-contract="ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"
+          data-visual-pass-claimed="false"
+        ></div>
+      </div>
     </section>
 
     <section class="dgb-card">
       <h2>Planet 1 Motion Control</h2>
       <p class="asset-note">
-        Controls are preserved for runtime post-op. Asset Generation 2 is the active renewal target.
+        Buttons now target the active Earth asset renderer directly. Runtime confirmation remains post-op.
       </p>
 
-      <div class="dgb-actions">
-        <button class="dgb-button" id="planet-one-start" type="button" data-control-action="start" data-planet-one-control="start">Start</button>
-        <button class="dgb-button secondary" id="planet-one-pause" type="button" data-control-action="pause" data-planet-one-control="pause">Pause</button>
-        <button class="dgb-button secondary" id="planet-one-resume" type="button" data-control-action="resume" data-planet-one-control="resume">Resume</button>
-        <button class="dgb-button secondary" id="planet-one-reset" type="button" data-control-action="reset" data-planet-one-control="reset">Reset</button>
-        <button class="dgb-button secondary" id="planet-one-reverse" type="button" data-control-action="reverse" data-planet-one-control="reverse">Reverse</button>
-        <button class="dgb-button secondary" id="planet-one-slow" type="button" data-control-action="slow" data-planet-one-control="slow">Slow</button>
-        <button class="dgb-button secondary" id="planet-one-normal" type="button" data-control-action="normal" data-planet-one-control="normal" data-active="true">Normal</button>
-        <button class="dgb-button secondary" id="planet-one-fast" type="button" data-control-action="fast" data-planet-one-control="fast">Fast</button>
+      <div class="control-grid">
+        <button class="dgb-button" type="button" data-earth-action="start">Start</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="pause">Pause</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="resume">Resume</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="reset">Reset</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="reverse">Reverse</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="slow">Slow</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="normal">Normal</button>
+        <button class="dgb-button secondary" type="button" data-earth-action="fast">Fast</button>
       </div>
 
       <label for="planet-one-speed" class="asset-note">Rotation speed</label>
@@ -123,89 +159,72 @@
         type="range"
         min="0"
         max="100"
-        value="18"
-        data-planet-one-speed="true"
+        value="31"
+        data-earth-speed="true"
         aria-label="Planet 1 rotation speed"
       >
     </section>
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt" data-earth-asset-contract="true">ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt" data-earth-asset-contract="true">ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1
 route=/showroom/globe/
 page=planet-1
 demo-universe=earth
 earth-surface=/assets/earth/earth_surface_2048.jpg
 earth-clouds=/assets/earth/earth_clouds_2048.jpg
-earth-canvas=/assets/earth/earth_canvas.js
-earth-material=/assets/earth/earth_material.css
-earth-manifest=/assets/earth/earth_manifest.json
-nine-summits-universe=separate
+axis=required
+spin=required
+touch=required
 runtime-post-op=pending
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1 · Planet 1 · Demo Universe Earth baseline.
+    ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1 · Planet 1 · Demo Universe Earth baseline.
   </footer>
 
-  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/world/runtime.js?v=G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/world/control.js?v=G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-  <script src="/showroom/runtime.js?v=G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1&route=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
+  <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
+  <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
 
   <script>
-    (function bootAssetGeneration2Route(global) {
+    (function bootEarthAxisSpinTouchRoute(global) {
       "use strict";
 
-      var VERSION = "ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1";
+      var VERSION = "ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1";
 
       function byId(id) {
         return document.getElementById(id);
       }
 
-      function getRenderer() {
-        return global.DGBPlanetOneRenderer ||
-          global.DGBPlanetOneRender ||
-          global.DGBPlanetOneRenderTeam ||
-          null;
+      function earth() {
+        return global.DGBEarthAssetCanvas || global.DGBDemoUniverseEarthCanvas || null;
       }
 
-      function getRuntime() {
-        return global.DGBPlanetOneRuntime || global.DGBWorldRuntime || null;
-      }
-
-      function getInstrument() {
-        return global.DGBShowroomGlobeInstrument || global.DGBDemoUniverseAssetBridge || null;
+      function renderer() {
+        return global.DGBPlanetOneRenderer || global.DGBPlanetOneRender || global.DGBPlanetOneRenderTeam || null;
       }
 
       function writeReceipt(status) {
         var node = byId("planet-one-route-receipt");
-        var renderer = getRenderer();
-        var earth = global.DGBEarthAssetCanvas || global.DGBDemoUniverseEarthCanvas || null;
-        var runtime = getRuntime();
+        var asset = earth();
 
         if (!node) return;
 
         node.textContent =
-          "ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1\n" +
+          "ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1\n" +
           "route=/showroom/globe/\n" +
           "page=planet-1\n" +
           "demo-universe=earth\n" +
           "earth-surface=/assets/earth/earth_surface_2048.jpg\n" +
           "earth-clouds=/assets/earth/earth_clouds_2048.jpg\n" +
-          "earth-canvas=/assets/earth/earth_canvas.js\n" +
-          "earth-material=/assets/earth/earth_material.css\n" +
-          "earth-manifest=/assets/earth/earth_manifest.json\n" +
-          "renderer-ready=" + String(Boolean(renderer)) + "\n" +
-          "earth-asset-ready=" + String(Boolean(earth)) + "\n" +
-          "runtime-ready=" + String(Boolean(runtime)) + "\n" +
-          "nine-summits-universe=separate\n" +
+          "axis=required\n" +
+          "spin=required\n" +
+          "touch=required\n" +
+          "asset-ready=" + String(Boolean(asset)) + "\n" +
+          "asset-status=" + JSON.stringify(asset && asset.getStatus ? asset.getStatus() : null, null, 2) + "\n" +
           "runtime-post-op=pending\n" +
           "visual-pass-claimed=false\n" +
           "status=" + status + "\n" +
@@ -214,17 +233,16 @@ visual-pass-claimed=false</pre>
 
       function mount() {
         var target = byId("planet-one-render");
-        var renderer = getRenderer();
-        var instrument = getInstrument();
+        var r = renderer();
+        var asset = earth();
+
         var options = {
-          demoUniverseEarthBaseline: true,
-          viewLon: -28,
-          viewLat: 0,
-          brightness: 1.13,
-          contrast: 1.10,
-          cloudStrength: 0.28,
-          atmosphere: 0.16,
-          resolutionScale: 0.88
+          autoSpin: true,
+          showAxis: true,
+          touchEnabled: true,
+          brightness: 1.10,
+          contrast: 1.08,
+          cloudStrength: 0.30
         };
 
         if (!target) {
@@ -232,45 +250,47 @@ visual-pass-claimed=false</pre>
           return false;
         }
 
-        if (instrument && typeof instrument.mountDemoUniverse === "function") {
-          instrument.mountDemoUniverse(target, options);
-          writeReceipt("MOUNTED_BY_ASSET_BRIDGE");
+        if (r && typeof r.renderPlanetOne === "function") {
+          r.renderPlanetOne(target, options);
+          writeReceipt("MOUNTED_BY_PLANET_RENDERER");
           return true;
         }
 
-        if (renderer && typeof renderer.renderPlanetOne === "function") {
-          renderer.renderPlanetOne(target, options);
-          writeReceipt("MOUNTED_BY_RENDERER");
+        if (asset && typeof asset.mount === "function") {
+          asset.mount(target, options);
+          writeReceipt("MOUNTED_BY_EARTH_ASSET");
           return true;
         }
 
-        writeReceipt("WAITING_FOR_RENDERER");
+        writeReceipt("WAITING_FOR_ASSET");
         return false;
       }
 
+      function call(action) {
+        var asset = earth();
+        if (!asset || typeof asset[action] !== "function") {
+          writeReceipt("NO_ACTION_" + action.toUpperCase());
+          return;
+        }
+
+        asset[action]();
+        writeReceipt("ACTION_" + action.toUpperCase());
+      }
+
       function bindControls() {
-        var runtime = getRuntime();
-
-        Array.prototype.forEach.call(document.querySelectorAll("[data-control-action]"), function (button) {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-earth-action]"), function (button) {
           button.addEventListener("click", function () {
-            var action = button.getAttribute("data-control-action");
-
-            if (runtime && typeof runtime[action] === "function") {
-              runtime[action]();
-            } else if (action === "reset") {
-              mount();
-            }
-
-            writeReceipt("CONTROL_" + action.toUpperCase());
+            call(button.getAttribute("data-earth-action"));
           });
         });
 
         var speed = byId("planet-one-speed");
         if (speed) {
           speed.addEventListener("input", function () {
-            var currentRuntime = getRuntime();
-            if (currentRuntime && typeof currentRuntime.setSpeed === "function") {
-              currentRuntime.setSpeed(Number(speed.value || 0) / 100);
+            var asset = earth();
+            if (asset && typeof asset.setSpeed === "function") {
+              asset.setSpeed(Number(speed.value || 0));
+              writeReceipt("SPEED_UPDATED");
             }
           });
         }
@@ -283,18 +303,19 @@ visual-pass-claimed=false</pre>
 
         setTimeout(mount, 120);
         setTimeout(mount, 420);
-        setTimeout(mount, 1000);
+        setTimeout(mount, 900);
       }
 
-      global.DGBAssetGeneration2Route = {
+      global.DGBAssetGeneration2AxisSpinTouchRoute = {
         VERSION: VERSION,
         version: VERSION,
         mount: mount,
+        writeReceipt: writeReceipt,
         getStatus: function () {
           return {
             ok: true,
-            route: "/showroom/globe/",
             version: VERSION,
+            route: "/showroom/globe/",
             demoUniverseEarthBaseline: true,
             visualPassClaimed: false
           };

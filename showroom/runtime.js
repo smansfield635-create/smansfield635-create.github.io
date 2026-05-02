@@ -1,355 +1,232 @@
-/* G1 PLANET 1 SHOWROOM RUNTIME / ASSET BRIDGE REPAIR
+/* G1 PLANET 1 SHOWROOM RUNTIME BRIDGE FRAME BUDGET
    FILE: /showroom/runtime.js
-   VERSION: G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
+   VERSION: G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
 
-   PURPOSE:
-   - Boot the Showroom Planet 1 bridge after route, renderer, hexgrid, and asset instrument are loaded.
-   - Repaint the active renderer after hexgrid/renderer readiness.
-   - Keep Showroom as adapter only.
-   - Do not own terrain.
-   - Do not create duplicate fake globe.
-   - Default public mode to satellite.
-   - Keep visual pass held.
+   LAW:
+   Showroom runtime is a bridge only.
+   It must not create an independent planet physics loop.
+   It delegates motion timing to /world/runtime.js.
+   It does not own terrain, hydration, hexgrid, renderer, water, land, air, or visual pass.
 */
 
-(function attachShowroomGlobeRuntime(global) {
+(function attachShowroomRuntimeFrameBudgetBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1";
-  var RENDER_PAIR = "G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1";
-  var DEFAULT_VIEW_LON = -28;
-  var DEFAULT_VIEW_LAT = 0;
-  var DEFAULT_SPEED = 2.4;
-  var MAX_FPS = 10;
+  var VERSION = "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1";
+  var WORLD_RUNTIME_VERSION = "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
 
   var state = {
-    version: VERSION,
-    showroomRuntimeActive: true,
+    active: true,
     booted: false,
-    running: true,
-    paused: false,
-    direction: 1,
-    viewLon: DEFAULT_VIEW_LON,
-    viewLat: DEFAULT_VIEW_LAT,
-    speedDegreesPerSecond: DEFAULT_SPEED,
-    axisVisible: false,
-    frameCount: 0,
-    renderCount: 0,
-    lastFrameTime: 0,
-    lastRenderTime: 0,
-    instrumentDetected: false,
-    showroomUsesPlanetOneRuntime: true,
-    showroomUsesPlanetOneRenderer: true,
-    noDuplicateFakeGlobe: true,
-    noIndependentPlanetPhysics: true,
-    visualPassClaimed: false,
-    lastInstrumentStatus: null,
-    lastError: null
+    mountSelector: "#planet-one-render",
+    delegatedToWorldRuntime: false,
+    fallbackSingleRenderUsed: false,
+    bootCount: 0,
+    commandCount: 0,
+    lastCommand: null,
+    lastError: null,
+    lastReceipt: null
   };
 
-  function now() {
-    return new Date().toISOString();
+  function getWorldRuntime() {
+    return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || null;
   }
 
-  function wrapLon(lon) {
-    var x = ((lon + 180) % 360 + 360) % 360 - 180;
-    return x === -180 ? 180 : x;
+  function getRenderer() {
+    return global.DGBPlanetOneRenderTeam ||
+      global.DGBPlanetOneRenderer ||
+      global.DGBPlanetOneRender ||
+      null;
   }
 
-  function safeJson(value) {
-    try {
-      return JSON.stringify(value, null, 2);
-    } catch (error) {
-      return String(value);
-    }
-  }
+  function getRenderFunction(renderer) {
+    if (!renderer) return null;
 
-  function writeReceipt(id, value) {
-    var el = global.document && global.document.getElementById(id);
-    if (el) el.textContent = safeJson(value);
+    return renderer.renderPlanetOne ||
+      renderer.mountPlanetOne ||
+      renderer.mount ||
+      renderer.render ||
+      renderer.renderGlobe ||
+      renderer.createPlanetOneRender ||
+      renderer.createPlanetOneScene ||
+      renderer.create ||
+      null;
   }
 
   function getMount() {
     if (!global.document) return null;
-    return global.document.querySelector("[data-planet-one-mount='true']") ||
-      global.document.getElementById("planet-one-render");
+
+    return global.document.querySelector(state.mountSelector) ||
+      global.document.getElementById("planet-one-render") ||
+      global.document.querySelector("[data-planet-one-mount='true']");
   }
 
-  function getInstrument() {
-    return global.DGBShowroomGlobeInstrument || null;
+  function makeReceipt(extra) {
+    var runtime = getWorldRuntime();
+    var renderer = getRenderer();
+    var runtimeStatus = runtime && runtime.status ? runtime.status() :
+      runtime && runtime.getStatus ? runtime.getStatus() :
+      null;
+
+    var rendererStatus = renderer && renderer.status ? renderer.status() :
+      renderer && renderer.getStatus ? renderer.getStatus() :
+      null;
+
+    state.lastReceipt = {
+      showroomRuntimeVersion: VERSION,
+      worldRuntimeExpectedVersion: WORLD_RUNTIME_VERSION,
+      baseline: BASELINE,
+      timestamp: new Date().toISOString(),
+
+      showroomRuntimeBridgeActive: true,
+      delegatedToWorldRuntime: state.delegatedToWorldRuntime,
+      noIndependentPlanetPhysics: true,
+      noIndependentRenderLoop: true,
+      duplicateLoopBlocked: true,
+      runtimeOwnsTimingOnly: true,
+      showroomDoesNotOwnTerrain: true,
+      showroomDoesNotOwnTriDomainModel: true,
+      visualPassClaimed: false,
+
+      booted: state.booted,
+      bootCount: state.bootCount,
+      commandCount: state.commandCount,
+      lastCommand: state.lastCommand,
+      mountDetected: Boolean(getMount()),
+      worldRuntimeDetected: Boolean(runtime),
+      rendererDetected: Boolean(renderer),
+      runtimeStatus: runtimeStatus,
+      rendererStatus: rendererStatus,
+      lastError: state.lastError,
+      extra: extra || null
+    };
+
+    global.DGBShowroomRuntimeFrameBudgetReceipt = state.lastReceipt;
+    return state.lastReceipt;
   }
 
-  function render(reason) {
-    var instrument = getInstrument();
+  function fallbackSingleRender(reason) {
+    var renderer = getRenderer();
+    var renderFn = getRenderFunction(renderer);
     var mount = getMount();
+    var result = null;
 
-    state.instrumentDetected = Boolean(instrument);
-
-    if (!instrument || typeof instrument.render !== "function") {
-      state.lastError = "INSTRUMENT_NOT_READY";
-      return getStatus();
-    }
-
-    if (!mount) {
-      state.lastError = "PLANET_MOUNT_NOT_FOUND";
-      return getStatus();
+    if (!renderer || typeof renderFn !== "function" || !mount) {
+      state.lastError = "FALLBACK_RENDER_UNAVAILABLE";
+      return makeReceipt({ reason: reason, fallbackAttempted: true, fallbackRendered: false });
     }
 
     try {
-      state.lastInstrumentStatus = instrument.render(mount, {
+      result = renderFn.call(renderer, mount, {
         renderMode: "satellite",
-        viewLon: state.viewLon,
-        viewLat: state.viewLat,
-        showAxis: state.axisVisible,
-        compositorScale: 0.64,
-        surfaceAlpha: 0.94,
-        clearMount: state.renderCount === 0,
-        source: reason || "showroom-runtime"
+        viewLon: -28,
+        viewLat: 0,
+        showAxis: false,
+        compositorScale: 0.72,
+        surfaceAlpha: 0.99,
+        clearMount: false,
+        seed: 256451,
+        source: "showroom-runtime-single-render-fallback",
+        version: VERSION,
+        visualPassClaimed: false
       });
 
-      state.renderCount += 1;
+      state.fallbackSingleRenderUsed = true;
       state.lastError = null;
+
+      return makeReceipt({
+        reason: reason,
+        fallbackAttempted: true,
+        fallbackRendered: true,
+        renderResult: result
+      });
     } catch (error) {
       state.lastError = String(error && error.message ? error.message : error);
+      return makeReceipt({ reason: reason, fallbackAttempted: true, fallbackRendered: false });
     }
-
-    writeReceipts();
-
-    try {
-      global.dispatchEvent(new CustomEvent("dgb:showroom-globe:runtime-render", {
-        detail: getStatus()
-      }));
-    } catch (error2) {}
-
-    return getStatus();
-  }
-
-  function tick(timestamp) {
-    var dt;
-    var renderInterval = 1000 / MAX_FPS;
-
-    if (!state.booted) {
-      global.requestAnimationFrame(tick);
-      return;
-    }
-
-    if (!state.lastFrameTime) state.lastFrameTime = timestamp;
-
-    dt = timestamp - state.lastFrameTime;
-    state.lastFrameTime = timestamp;
-
-    if (state.running && !state.paused) {
-      state.viewLon = wrapLon(
-        state.viewLon + state.direction * state.speedDegreesPerSecond * (dt / 1000)
-      );
-    }
-
-    if (timestamp - state.lastRenderTime >= renderInterval) {
-      state.frameCount += 1;
-      state.lastRenderTime = timestamp;
-      render("runtime-loop");
-    }
-
-    global.requestAnimationFrame(tick);
-  }
-
-  function writeReceipts() {
-    writeReceipt("planet-one-runtime-receipt", getStatus());
-
-    if (state.lastInstrumentStatus) {
-      writeReceipt("planet-one-bridge-receipt", state.lastInstrumentStatus);
-    }
-  }
-
-  function bindControls() {
-    if (!global.document) return;
-
-    global.document.querySelectorAll("[data-planet-action]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var action = button.getAttribute("data-planet-action");
-
-        if (action === "start") start();
-        if (action === "pause") pause();
-        if (action === "resume") resume();
-        if (action === "reset") reset();
-        if (action === "reverse") reverse();
-
-        render("control-" + action);
-      });
-    });
-
-    global.document.querySelectorAll("[data-planet-speed]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var value = button.getAttribute("data-planet-speed");
-
-        if (value === "slow") slow();
-        if (value === "normal") normal();
-        if (value === "fast") fast();
-
-        global.document.querySelectorAll("[data-planet-speed]").forEach(function (item) {
-          item.setAttribute("data-active", "false");
-        });
-
-        button.setAttribute("data-active", "true");
-        render("control-speed-" + value);
-      });
-    });
-
-    global.document.querySelectorAll("[data-planet-speed-select]").forEach(function (select) {
-      select.addEventListener("change", function () {
-        state.speedDegreesPerSecond = Number(select.value || DEFAULT_SPEED);
-        render("control-speed-select");
-      });
-    });
-
-    global.document.querySelectorAll("[data-planet-axis-toggle]").forEach(function (checkbox) {
-      checkbox.addEventListener("change", function () {
-        state.axisVisible = checkbox.checked === true;
-        render("control-axis-toggle");
-      });
-    });
   }
 
   function boot() {
-    var instrument = getInstrument();
+    var runtime = getWorldRuntime();
 
-    state.instrumentDetected = Boolean(instrument);
     state.booted = true;
+    state.bootCount += 1;
 
-    bindControls();
-
-    if (instrument && typeof instrument.start === "function") {
-      try {
-        state.lastInstrumentStatus = instrument.start(getMount(), {
-          renderMode: "satellite",
-          viewLon: state.viewLon,
-          viewLat: state.viewLat,
-          showAxis: state.axisVisible,
-          compositorScale: 0.64,
-          surfaceAlpha: 0.94,
-          clearMount: true,
-          source: "showroom-runtime-boot"
-        });
-      } catch (error) {
-        state.lastError = String(error && error.message ? error.message : error);
-      }
+    if (runtime && typeof runtime.start === "function") {
+      state.delegatedToWorldRuntime = true;
+      runtime.start(state.mountSelector, {
+        source: "showroom-runtime-frame-budget-bridge",
+        viewLon: -28,
+        viewLat: 0,
+        speedDegreesPerSecond: 2.4,
+        showAxis: false,
+        seed: 256451
+      });
+      return makeReceipt({ bootDelegated: true });
     }
 
-    render("boot");
-    writeReceipts();
+    state.delegatedToWorldRuntime = false;
+    return fallbackSingleRender("NO_WORLD_RUNTIME_AT_BOOT");
+  }
+
+  function delegate(command, value) {
+    var runtime = getWorldRuntime();
+    var result = null;
+
+    state.commandCount += 1;
+    state.lastCommand = command;
+
+    if (!runtime) {
+      state.lastError = "NO_WORLD_RUNTIME_FOR_COMMAND:" + command;
+      return makeReceipt({ command: command, delegated: false });
+    }
 
     try {
-      global.dispatchEvent(new CustomEvent("dgb:showroom-globe:runtime-ready", {
-        detail: getStatus()
-      }));
-    } catch (error2) {}
-
-    global.requestAnimationFrame(tick);
-  }
-
-  function waitForInstrument(timeoutMs) {
-    var started = Date.now();
-    var timeout = Number(timeoutMs || 2600);
-
-    function check() {
-      if (getInstrument()) {
-        boot();
-        return;
+      if (command === "start" && typeof runtime.start === "function") {
+        result = runtime.start(state.mountSelector, { source: "showroom-runtime-command-start" });
+      } else if (command === "pause" && typeof runtime.pause === "function") {
+        result = runtime.pause();
+      } else if (command === "resume" && typeof runtime.resume === "function") {
+        result = runtime.resume();
+      } else if (command === "reset" && typeof runtime.reset === "function") {
+        result = runtime.reset();
+      } else if (command === "reverse" && typeof runtime.reverse === "function") {
+        result = runtime.reverse();
+      } else if (command === "setSpeed" && typeof runtime.setSpeed === "function") {
+        result = runtime.setSpeed(value);
+      } else if (command === "slow" && typeof runtime.setSpeed === "function") {
+        result = runtime.setSpeed(0.8);
+      } else if (command === "normal" && typeof runtime.setSpeed === "function") {
+        result = runtime.setSpeed(2.4);
+      } else if (command === "fast" && typeof runtime.setSpeed === "function") {
+        result = runtime.setSpeed(6.0);
+      } else if (command === "setView" && typeof runtime.setView === "function") {
+        result = runtime.setView(value || {});
+      } else {
+        state.lastError = "UNSUPPORTED_RUNTIME_COMMAND:" + command;
+        return makeReceipt({ command: command, delegated: false });
       }
 
-      if (Date.now() - started > timeout) {
-        boot();
-        return;
-      }
-
-      global.setTimeout(check, 45);
+      state.delegatedToWorldRuntime = true;
+      state.lastError = null;
+      return makeReceipt({ command: command, delegated: true, result: result });
+    } catch (error) {
+      state.lastError = String(error && error.message ? error.message : error);
+      return makeReceipt({ command: command, delegated: false });
     }
-
-    check();
   }
 
-  function start() {
-    state.running = true;
-    state.paused = false;
-    return getStatus();
-  }
-
-  function pause() {
-    state.paused = true;
-    return getStatus();
-  }
-
-  function resume() {
-    state.running = true;
-    state.paused = false;
-    return getStatus();
-  }
-
-  function reset() {
-    state.viewLon = DEFAULT_VIEW_LON;
-    state.viewLat = DEFAULT_VIEW_LAT;
-    state.direction = 1;
-    state.paused = false;
-    return getStatus();
-  }
-
-  function reverse() {
-    state.direction = state.direction * -1;
-    return getStatus();
-  }
-
-  function slow() {
-    state.speedDegreesPerSecond = 0.8;
-    return getStatus();
-  }
-
-  function normal() {
-    state.speedDegreesPerSecond = 2.4;
-    return getStatus();
-  }
-
-  function fast() {
-    state.speedDegreesPerSecond = 5.2;
-    return getStatus();
-  }
-
-  function setView(viewLon, viewLat) {
-    state.viewLon = wrapLon(Number(viewLon == null ? state.viewLon : viewLon));
-    state.viewLat = Number(viewLat == null ? state.viewLat : viewLat);
-    render("set-view");
-    return getStatus();
-  }
-
-  function setAxisVisible(value) {
-    state.axisVisible = value === true;
-    render("set-axis-visible");
-    return getStatus();
-  }
+  function start() { return delegate("start"); }
+  function pause() { return delegate("pause"); }
+  function resume() { return delegate("resume"); }
+  function reset() { return delegate("reset"); }
+  function reverse() { return delegate("reverse"); }
+  function setSpeed(value) { return delegate("setSpeed", value); }
+  function setView(value) { return delegate("setView", value); }
 
   function getStatus() {
-    return {
-      showroomRuntimeVersion: VERSION,
-      renderPair: RENDER_PAIR,
-      showroomRuntimeActive: true,
-      booted: state.booted,
-      instrumentDetected: Boolean(getInstrument()),
-      showroomUsesPlanetOneRuntime: true,
-      showroomUsesPlanetOneRenderer: true,
-      noDuplicateFakeGlobe: true,
-      noIndependentPlanetPhysics: true,
-      running: state.running,
-      paused: state.paused,
-      viewLon: Number(state.viewLon.toFixed(4)),
-      viewLat: Number(state.viewLat.toFixed(4)),
-      speedDegreesPerSecond: state.speedDegreesPerSecond,
-      axisVisible: state.axisVisible,
-      frameCount: state.frameCount,
-      renderCount: state.renderCount,
-      instrument: state.lastInstrumentStatus,
-      lastError: state.lastError,
-      timestamp: now(),
-      visualPassClaimed: false
-    };
+    return makeReceipt({ statusRead: true });
   }
 
   function status() {
@@ -359,41 +236,43 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    WORLD_RUNTIME_VERSION: WORLD_RUNTIME_VERSION,
+    worldRuntimeVersion: WORLD_RUNTIME_VERSION,
+    BASELINE: BASELINE,
+    baseline: BASELINE,
+
+    boot: boot,
     start: start,
     pause: pause,
     resume: resume,
     reset: reset,
     reverse: reverse,
-    slow: slow,
-    normal: normal,
-    fast: fast,
-    render: render,
+    setSpeed: setSpeed,
     setView: setView,
-    setAxisVisible: setAxisVisible,
+
     getStatus: getStatus,
-    status: status
+    status: status,
+    getReceipt: getStatus
   };
 
   global.DGBShowroomGlobeRuntime = api;
   global.DGBPlanetOneRuntimeBridge = api;
 
-  global.addEventListener("dgb:planet-one:hexgrid-ready", function () {
-    render("hexgrid-ready");
-  });
-
-  global.addEventListener("dgb:planet-one:renderer-ready", function () {
-    render("renderer-ready");
-  });
-
-  global.addEventListener("dgb:showroom-globe:instrument-ready", function () {
-    render("instrument-ready");
-  });
+  function bootWhenReady() {
+    global.setTimeout(function () {
+      boot();
+    }, 40);
+  }
 
   if (global.document && global.document.readyState === "loading") {
-    global.document.addEventListener("DOMContentLoaded", function () {
-      waitForInstrument(2600);
-    }, { once: true });
+    global.document.addEventListener("DOMContentLoaded", bootWhenReady);
   } else {
-    waitForInstrument(2600);
+    bootWhenReady();
   }
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:showroom-runtime-frame-budget-bridge-ready", {
+      detail: getStatus()
+    }));
+  } catch (error) {}
 })(typeof window !== "undefined" ? window : globalThis);

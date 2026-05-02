@@ -1,1023 +1,1011 @@
 <!doctype html>
-<html lang="en" data-page="nutrition" data-room="PC5_NUTRITION" data-public-presentation="ted-clean">
+<html
+  lang="en"
+  data-page="products-nutrition"
+  data-route="/products/nutrition/"
+  data-contract="NUTRITION_RUSSIAN_DOLL_BASELINE_SYSTEMS_RENEWAL_TNT_v1"
+  data-product-class="product_chamber"
+  data-parent="products"
+  data-scroll-mode="compressed-russian-doll"
+  data-product-title="Baseline Nutrition Systems"
+  data-public-frame="kitchen-pantry"
+  data-support-not-shame="true"
+  data-medical-care="false"
+  data-heavy-runtime-loaded="false"
+  data-runtime-touched="false"
+  data-gauges-logic-touched="false"
+  data-visual-pass-claimed="false"
+>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Baseline Nutrition Systems · Diamond Gate Bridge</title>
-  <meta name="description" content="Baseline Nutrition Systems is the kitchen and pantry product chamber for practical food rhythm, hydration, recovery, and repeatable support.">
+  <title>Diamond Gate Bridge · Products · Baseline Nutrition Systems</title>
+  <meta
+    name="description"
+    content="Baseline Nutrition Systems is a kitchen and pantry product chamber for water, food, timing, rhythm, recovery, and repeatable body support without shame."
+  >
+
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
   <style>
     :root {
-      --bg: #05070b;
-      --panel: rgba(9, 15, 25, 0.9);
-      --panel-soft: rgba(14, 24, 38, 0.74);
-      --line: rgba(168, 199, 255, 0.22);
-      --line-strong: rgba(143, 240, 198, 0.34);
-      --text: #eef5ff;
-      --muted: #aab8cf;
-      --green: #8ff0c6;
-      --blue: #7db5ff;
-      --gold: #ffd36f;
-      --shadow: rgba(0, 0, 0, 0.48);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
+      --gold: #f2c76f;
+      --text: #f5f7fb;
+      --muted: rgba(226, 234, 248, 0.76);
+      --line: rgba(180, 205, 255, 0.18);
+      --water: #80cfff;
+      --fuel: #f2c76f;
+      --rhythm: #65e6a3;
+      --recovery: #d7a5ff;
+      --pantry: #ff9f7a;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.13), transparent 24rem),
-        radial-gradient(circle at 20% 18%, rgba(125, 181, 255, 0.14), transparent 32rem),
-        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.09), transparent 24rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
+        radial-gradient(circle at 78% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
+        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    a:focus {
-      outline: 2px solid var(--green);
-      outline-offset: 3px;
-    }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-    }
-
-    .skip:focus {
-      left: 10px;
-    }
-
-    .page {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 44px;
-    }
-
-    .topbar {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .brand {
-      color: var(--muted);
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand strong {
-      display: block;
-      color: var(--text);
-      font-size: 1rem;
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .nav,
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .nav a,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font-weight: 650;
-    }
-
-    .nav a:hover,
-    .button:hover {
-      border-color: rgba(168, 199, 255, 0.42);
-      background: rgba(255, 255, 255, 0.075);
-    }
-
-    .button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
-      color: var(--text);
-      font-weight: 850;
-    }
-
-    .hero,
-    .panel,
-    .card,
-    .route-card {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: var(--panel);
-      box-shadow: 0 24px 80px var(--shadow);
-    }
-
-    .hero {
+    .nutrition-stage,
+    .doll-shell {
       position: relative;
       overflow: hidden;
-      padding: clamp(24px, 5vw, 52px);
-      min-height: 500px;
-      display: grid;
-      align-content: center;
-      gap: 22px;
+      border: 1px solid rgba(242, 199, 111, 0.24);
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 28px 90px rgba(0,0,0,0.38);
+      isolation: isolate;
     }
 
-    .hero::before {
+    .nutrition-stage {
+      padding: clamp(30px, 7vw, 76px);
+    }
+
+    .nutrition-stage::before {
       content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at 74% 52%, rgba(242, 199, 111, 0.15), transparent 21%),
+        radial-gradient(circle at 74% 52%, transparent 0 22%, rgba(242,199,111,0.10) 23%, transparent 24% 100%),
+        radial-gradient(circle at 74% 52%, transparent 0 38%, rgba(130,165,230,0.09) 39%, transparent 40% 100%),
+        radial-gradient(circle at 74% 52%, transparent 0 56%, rgba(242,199,111,0.055) 57%, transparent 58% 100%);
+      filter: blur(10px);
+      opacity: 0.76;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .blurred-kitchen-system {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
-        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.10), transparent 20rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
       pointer-events: none;
+      z-index: -1;
+      opacity: 0.44;
+      filter: blur(2px);
     }
 
-    .hero::after {
-      content: "";
+    .kitchen-ring,
+    .kitchen-bowl,
+    .kitchen-shelf,
+    .kitchen-node,
+    .kitchen-axis {
       position: absolute;
-      right: clamp(20px, 7vw, 90px);
-      top: 50%;
-      width: clamp(190px, 34vw, 380px);
-      aspect-ratio: 1;
-      transform: translateY(-50%) rotate(-8deg);
-      border-radius: 34px;
-      border: 1px solid rgba(255, 211, 111, 0.22);
+      transform: translate(-50%, -50%);
+    }
+
+    .kitchen-bowl {
+      left: 78%;
+      top: 58%;
+      width: clamp(210px, 36vw, 390px);
+      height: clamp(120px, 20vw, 220px);
+      border-radius: 50%;
       background:
-        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.16), transparent 18%),
-        linear-gradient(135deg, rgba(255, 211, 111, 0.16), rgba(143, 240, 198, 0.07)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 32px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 32px);
+        radial-gradient(circle at 45% 30%, rgba(255,255,255,0.12), transparent 24%),
+        linear-gradient(180deg, rgba(242,199,111,0.22), rgba(84,130,220,0.11), rgba(6,10,22,0.42));
+      border: 2px solid rgba(242,199,111,0.20);
       box-shadow:
-        inset 0 0 38px rgba(255, 211, 111, 0.06),
-        0 0 84px rgba(143, 240, 198, 0.08);
-      opacity: 0.46;
-      pointer-events: none;
+        inset 0 0 50px rgba(242,199,111,0.06),
+        0 0 80px rgba(84,130,220,0.10);
     }
 
-    .hero-content,
-    .actions {
-      position: relative;
-      z-index: 2;
+    .kitchen-ring {
+      left: 78%;
+      top: 58%;
+      width: clamp(290px, 50vw, 560px);
+      height: clamp(150px, 26vw, 280px);
+      border: 2px dashed rgba(172, 191, 230, 0.16);
+      border-radius: 50%;
     }
 
-    .kicker {
-      margin: 0 0 12px;
-      color: var(--green);
+    .kitchen-ring.two {
+      transform: translate(-50%, -50%) rotate(68deg);
+      border-color: rgba(242,199,111,0.15);
+    }
+
+    .kitchen-axis {
+      left: 78%;
+      top: 58%;
+      width: 2px;
+      height: clamp(250px, 42vw, 500px);
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.20), transparent);
+    }
+
+    .kitchen-shelf {
+      left: 78%;
+      top: 75%;
+      width: clamp(180px, 32vw, 340px);
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(242,199,111,0.18);
+      box-shadow: 0 0 30px rgba(242,199,111,0.12);
+    }
+
+    .kitchen-node {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #06101f;
+      font-size: 0.70rem;
+      font-weight: 950;
+      box-shadow: 0 0 24px rgba(242,199,111,0.18);
+    }
+
+    .kitchen-node.water { left: 66%; top: 42%; background: var(--water); }
+    .kitchen-node.fuel { left: 88%; top: 42%; background: var(--fuel); }
+    .kitchen-node.rhythm { left: 91%; top: 62%; background: var(--rhythm); }
+    .kitchen-node.recovery { left: 78%; top: 80%; background: var(--recovery); }
+    .kitchen-node.pantry { left: 63%; top: 66%; background: var(--pantry); }
+
+    .hero-mark {
+      margin: 0 0 14px;
+      color: var(--gold);
       font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
+      font-weight: 950;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
     }
 
-    h1 {
+    .hero-title {
+      max-width: 1040px;
       margin: 0;
-      font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
+      color: var(--text);
+      font-size: clamp(3.1rem, 10vw, 7.6rem);
+      line-height: 0.88;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
     }
 
-    .lead {
+    .hero-title .gold {
+      color: #ffe5a3;
+      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
+    }
+
+    .hero-subtitle {
       max-width: 900px;
-      margin: 20px 0 0;
+      margin: clamp(24px, 4vw, 36px) 0 0;
+      color: rgba(245, 247, 251, 0.86);
+      font-size: clamp(1.26rem, 3.8vw, 2.08rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 18px 0 0;
       color: var(--muted);
-      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
-      line-height: 1.42;
-    }
-
-    .section {
-      margin-top: 18px;
-    }
-
-    .panel {
-      padding: clamp(20px, 3vw, 30px);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        var(--panel-soft);
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(1.55rem, 4vw, 2.6rem);
-      letter-spacing: -0.05em;
-    }
-
-    .panel p {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 1.02rem;
+      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
       line-height: 1.55;
     }
 
-    .grid {
+    .one-liner-strip {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card {
-      min-height: 230px;
-      display: grid;
-      align-content: start;
       gap: 12px;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
-        rgba(9, 15, 25, 0.84);
-      box-shadow: none;
+      margin-top: 28px;
+      max-width: 980px;
     }
 
-    .card.compact {
-      min-height: 170px;
+    .one-liner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,0.045);
+      color: rgba(255, 246, 220, 0.96);
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
     }
 
-    .card.tall {
-      min-height: 330px;
+    .nutrition-actions,
+    .nutrition-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
     }
 
-    .card span {
-      color: var(--gold);
-      font-size: 0.74rem;
+    .nutrition-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
       font-weight: 850;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
     }
 
-    .card h3 {
+    .nutrition-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .doll-shell {
+      padding: clamp(18px, 4vw, 28px);
+    }
+
+    .doll-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .doll-title {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
+      color: var(--text);
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.055em;
     }
 
-    .card p,
-    .card li {
+    .doll-note {
+      max-width: 900px;
+      margin: 10px 0 0;
       color: var(--muted);
-      line-height: 1.5;
+      font-size: 1.04rem;
+      line-height: 1.56;
     }
 
-    .card p {
-      margin: 0;
+    .doll-badge {
+      border: 1px solid rgba(242,199,111,0.38);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
+      font-weight: 950;
+      white-space: nowrap;
     }
 
-    .card ul {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-
-    .flow-list {
+    .doll-stack {
       display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .flow-row {
-      display: grid;
-      grid-template-columns: 146px 1fr;
       gap: 12px;
-      align-items: start;
-      padding: 12px;
-      border: 1px solid rgba(168, 199, 255, 0.12);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
     }
 
-    .flow-row strong {
-      color: var(--green);
+    .doll-layer {
+      border: 1px solid rgba(180, 205, 255, 0.17);
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.09), transparent 34%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.80), rgba(7, 12, 25, 0.92));
     }
 
-    .flow-row span {
+    .doll-layer[open] {
+      border-color: rgba(242,199,111,0.34);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    }
+
+    .doll-layer summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 20px;
+      color: var(--text);
+    }
+
+    .doll-layer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .layer-number {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(242,199,111,0.46);
+      border-radius: 50%;
+      color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
+      font-weight: 950;
+    }
+
+    .layer-title {
+      display: block;
+      font-size: clamp(1.18rem, 3vw, 1.55rem);
+      font-weight: 950;
+      letter-spacing: -0.025em;
+    }
+
+    .layer-line {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 0.96rem;
+    }
+
+    .layer-action {
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .layer-body {
+      padding: 0 20px 20px 72px;
+    }
+
+    .mini-grid,
+    .layer-grid,
+    .product-grid,
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .layer-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .mini-card,
+    .baseline-card,
+    .product-card,
+    .route-card {
+      border: 1px solid rgba(180, 205, 255, 0.14);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .mini-card strong,
+    .baseline-card strong,
+    .product-card strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.02rem;
+      margin-bottom: 8px;
+    }
+
+    .mini-card span,
+    .baseline-card span,
+    .product-card span {
       color: var(--muted);
       line-height: 1.45;
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
+    .baseline-card::before,
+    .product-card::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      background: var(--gold);
     }
+
+    .baseline-card.water::before,
+    .product-card.water::before { background: var(--water); }
+
+    .baseline-card.fuel::before,
+    .product-card.fuel::before { background: var(--fuel); }
+
+    .baseline-card.rhythm::before,
+    .product-card.rhythm::before { background: var(--rhythm); }
+
+    .baseline-card.recovery::before,
+    .product-card.recovery::before { background: var(--recovery); }
+
+    .baseline-card.pantry::before,
+    .product-card.pantry::before { background: var(--pantry); }
 
     .route-card {
-      min-height: 104px;
-      display: grid;
-      align-content: center;
-      gap: 7px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow: none;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .route-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      background: rgba(255, 255, 255, 0.065);
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 950;
     }
 
     .route-card span {
+      display: block;
+      margin-top: 6px;
       color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-weight: 500;
+      line-height: 1.4;
     }
 
-    .route-card strong {
-      color: var(--green);
-      font-size: 1rem;
+    .notice {
+      border: 1px solid rgba(242,199,111,0.22);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(242,199,111,0.07);
+      color: rgba(255, 246, 220, 0.88);
+      line-height: 1.52;
+      margin-top: 14px;
     }
 
-    .receipt {
-      display: none !important;
+    .nutrition-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 980px) {
-      .grid,
-      .grid.two,
-      .grid.four {
-        grid-template-columns: 1fr;
-      }
-
-      .route-grid {
+    @media (max-width: 1180px) {
+      .layer-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-
-      .hero {
-        min-height: 390px;
-      }
-
-      .hero::after {
-        opacity: 0.24;
-        right: -40px;
-      }
     }
 
-    @media (max-width: 620px) {
-      .page {
-        width: min(100% - 22px, 620px);
-        padding-top: 16px;
-      }
-
-      .nav,
-      .actions {
-        gap: 8px;
-      }
-
-      .nav a,
-      .button {
-        min-height: 38px;
-        padding: 8px 12px;
-      }
-
+    @media (max-width: 1040px) {
+      .one-liner-strip,
+      .mini-grid,
+      .product-grid,
       .route-grid {
         grid-template-columns: 1fr;
       }
 
-      .flow-row {
+      .doll-head {
         grid-template-columns: 1fr;
+      }
+
+      .layer-body {
+        padding-left: 20px;
+      }
+
+      .blurred-kitchen-system {
+        opacity: 0.28;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nutrition-stage,
+      .doll-shell {
+        border-radius: 28px;
+      }
+
+      .nutrition-stage {
+        padding: 30px 26px;
+      }
+
+      .hero-title {
+        font-size: clamp(3.2rem, 14vw, 5.1rem);
+      }
+
+      .hero-subtitle {
+        font-size: 1.32rem;
+      }
+
+      .layer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .doll-layer summary {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .layer-action {
+        grid-column: 2;
+      }
+
+      .blurred-kitchen-system {
+        opacity: 0.22;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#nutrition-main">Skip to Baseline Nutrition Systems</a>
+  <a class="dgb-skip" href="#nutrition-main">Skip to Baseline Nutrition Systems</a>
 
-  <main
-    id="nutrition-main"
-    class="page"
-    data-route="/products/nutrition/"
-    data-product-chamber="PC5_NUTRITION"
-    data-product-class="product_chamber"
-    data-construct-class="product"
-    data-product-wing="true"
-    data-parent-route="/products/"
-    data-canonical-destination="true"
-    data-estate="rich-manor-and-estate"
-    data-gauges-truth="live-authority"
-    data-product-system="baseline-nutrition-systems"
-    data-room-surface="kitchen-pantry">
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Products · Kitchen / Pantry</div>
+        <div class="dgb-room-line">PC5 · Baseline Nutrition Systems</div>
+      </div>
 
-    <header class="topbar" aria-label="Baseline Nutrition Systems header">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        Products · Kitchen / Pantry
-      </a>
-
-      <nav class="nav" aria-label="Baseline Nutrition Systems navigation">
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/" aria-current="page">Products</a>
         <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <section class="hero" aria-labelledby="nutrition-title">
-      <div class="hero-content">
-        <p class="kicker">PC5 · Baseline Nutrition Systems · Kitchen / Pantry</p>
-        <h1 id="nutrition-title">Baseline Nutrition Systems</h1>
-        <p class="lead">
-          Food is support, not a moral score. Baseline Nutrition Systems helps people return to the basics: water, food, timing, rhythm, recovery, and repeatable support before optimization ever enters the room.
-        </p>
+  <main id="nutrition-main" class="dgb-main">
+    <section class="nutrition-stage" aria-label="Baseline Nutrition Systems product chamber">
+      <div class="blurred-kitchen-system" aria-hidden="true">
+        <div class="kitchen-axis"></div>
+        <div class="kitchen-ring"></div>
+        <div class="kitchen-ring two"></div>
+        <div class="kitchen-bowl"></div>
+        <div class="kitchen-shelf"></div>
+        <div class="kitchen-node water">Water</div>
+        <div class="kitchen-node fuel">Fuel</div>
+        <div class="kitchen-node rhythm">Time</div>
+        <div class="kitchen-node recovery">Reset</div>
+        <div class="kitchen-node pantry">Shelf</div>
       </div>
 
-      <div class="actions" aria-label="Primary Baseline Nutrition Systems actions">
-        <a class="button primary" href="/products/">Return to Products</a>
-        <a class="button" href="/products/on-your-side-ai/">On Your Side AAI</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
+      <p class="hero-mark">PC5 · Baseline Nutrition Systems · Kitchen / Pantry</p>
+
+      <h1 class="hero-title">
+        Food is support. <span class="gold">Not a moral score.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Water, food, timing, rhythm, recovery, and repeatable support before optimization ever enters the room.
+      </p>
+
+      <p class="hero-copy">
+        Baseline Nutrition Systems helps people return to the basics without turning food into shame.
+        The first goal is not aesthetic transformation. The first goal is stability: fewer crash days,
+        fewer skipped basics, fewer chaotic decisions, and more steady rhythm.
+      </p>
+
+      <div class="one-liner-strip" aria-label="Nutrition one-liners">
+        <div class="one-liner">The kitchen does not shame the body. It brings the day back into range.</div>
+        <div class="one-liner">Most people do not need a perfect diet. They need a survivable baseline.</div>
+        <div class="one-liner">Optimization fails when the basics are missing.</div>
       </div>
-    </section>
 
-    <section class="section panel" aria-labelledby="identity-title">
-      <p class="kicker">Product identity</p>
-      <h2 id="identity-title">The kitchen does not shame the body. It restores baseline.</h2>
-      <p>
-        This chamber rejects food-as-punishment, food-as-status, and food-as-moral-score thinking. The first goal is not aesthetic transformation. The first goal is stability: fewer crash days, fewer skipped basics, fewer chaotic decisions, and more steady rhythm.
-      </p>
-      <p>
-        Baseline Nutrition Systems is built around a practical truth: when the body is under-supported, everything else gets harder. Thinking gets harder. Patience gets harder. Work gets harder. Recovery gets harder. The kitchen and pantry become the place where the day gets brought back into range.
-      </p>
-    </section>
+      <div class="nutrition-chip-row" aria-label="Nutrition status">
+        <span class="nutrition-chip lock">Support, not shame</span>
+        <span class="nutrition-chip lock">Kitchen / Pantry</span>
+        <span class="nutrition-chip lock">Water first</span>
+        <span class="nutrition-chip">Recovery rhythm</span>
+        <span class="nutrition-chip">AAI-compatible</span>
+      </div>
 
-    <section class="grid" aria-label="Baseline Nutrition Systems explanation">
-      <article class="card">
-        <span>What it brings</span>
-        <h3>Repeatable body support</h3>
-        <p>
-          Baseline Nutrition Systems gives visitors a simple, repeatable way to return to water, food, timing, rhythm, and recovery without turning nutrition into a guilt cycle.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Gap it closes</span>
-        <h3>Advice without stability</h3>
-        <p>
-          Nutrition advice often starts too far downstream. This chamber starts with the first layer: what the body needs before strategy, tracking, optimization, or performance matters.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Why it is unique</span>
-        <h3>Kitchen-first infrastructure</h3>
-        <p>
-          The product is not framed as a diet. It is framed as kitchen and pantry infrastructure: what supports the day, what can be repeated, and what keeps the person from running on fumes.
-        </p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="science-title">
-      <p class="kicker">The science of baseline</p>
-      <h2 id="science-title">The body runs better when support becomes predictable.</h2>
-      <p>
-        Baseline nutrition is not about perfection. It is about reducing avoidable instability. Hydration, adequate food, regular timing, protein/fiber presence, recovery meals, pantry access, and simple routines can help reduce the number of decisions a person has to make while already depleted.
-      </p>
-      <p>
-        The product stays practical and bounded. It does not diagnose, prescribe, treat, or replace medical nutrition care. It helps people organize everyday support and know when a professional should be involved.
-      </p>
-    </section>
-
-    <section class="grid four" aria-label="Baseline science areas">
-      <article class="card compact">
-        <span>Baseline</span>
-        <h3>Hydration</h3>
-        <p>Water first. The day should not begin from avoidable depletion.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Baseline</span>
-        <h3>Fuel</h3>
-        <p>Enough food to keep the body from running only on stress, caffeine, or willpower.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Baseline</span>
-        <h3>Timing</h3>
-        <p>Simple rhythm so support arrives before the crash takes over.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Baseline</span>
-        <h3>Recovery</h3>
-        <p>Repair days, reset meals, and pantry fallback when the routine breaks.</p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="layers-title">
-      <p class="kicker">System layers</p>
-      <h2 id="layers-title">Outer Baseline · Second Water · Middle Fuel · Inner Rhythm · Return Repeat</h2>
-      <p>
-        The system works in layers because the body does not need a motivational speech when it is under-supported. It needs the next stabilizing move. Each layer answers one practical question.
-      </p>
-
-      <div class="flow-list" aria-label="Baseline Nutrition Systems layers">
-        <div class="flow-row">
-          <strong>Outer Baseline</strong>
-          <span>What does the body need first? This layer returns the person to the basics: water, food access, and a non-punitive starting point.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>Second Water</strong>
-          <span>Has hydration been handled before the person starts solving everything else? This layer makes water visible, repeatable, and easy to remember.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>Middle Fuel</strong>
-          <span>Is there enough food support to keep the day manageable? This layer focuses on meals, snacks, protein/fiber presence, and realistic pantry options.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>Inner Rhythm</strong>
-          <span>Can the person repeat support without overthinking it? This layer builds daily timing, fallback plans, and recovery patterns.</span>
-        </div>
-
-        <div class="flow-row">
-          <strong>Return Repeat</strong>
-          <span>What happens when the day breaks? This layer prevents failure spirals by returning to baseline instead of restarting from shame.</span>
-        </div>
+      <div class="nutrition-actions" aria-label="Nutrition actions">
+        <a class="dgb-button" href="/products/">Return to Products</a>
+        <a class="dgb-button secondary" href="/products/on-your-side-ai/">On Your Side AAI</a>
+        <a class="dgb-button secondary" href="/products/education/">Education</a>
+        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
       </div>
     </section>
 
-    <section class="section panel" aria-labelledby="messy-middle-title">
-      <p class="kicker">The messy middle</p>
-      <h2 id="messy-middle-title">Most people do not need a perfect diet. They need a survivable baseline.</h2>
-      <p>
-        The messy middle is where nutrition usually collapses: late mornings, skipped meals, chaotic schedules, tight budgets, no groceries, stress cravings, decision fatigue, family logistics, work pressure, or recovery after a bad week.
-      </p>
-      <p>
-        Baseline Nutrition Systems is built for that reality. It helps the visitor create support that still works when life is not clean.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Nutrition support areas">
-      <article class="card tall">
-        <span>Support area</span>
-        <h3>Water first</h3>
-        <p>
-          The system makes hydration a visible first layer, not an afterthought. The goal is not obsession; it is removing one common source of avoidable depletion.
-        </p>
-        <ul>
-          <li>Morning water cue</li>
-          <li>Second-water checkpoint</li>
-          <li>Low-friction refill rhythm</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Support area</span>
-        <h3>Pantry fallback</h3>
-        <p>
-          The pantry becomes a stability tool. A good fallback shelf helps the visitor eat something useful when cooking, planning, or motivation fails.
-        </p>
-        <ul>
-          <li>Simple shelf-stable options</li>
-          <li>Fast protein/fiber pairings</li>
-          <li>Recovery-day meals</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Support area</span>
-        <h3>Meal rhythm</h3>
-        <p>
-          The system favors rhythm over rigid control. It helps visitors identify the times when they usually crash and build support before those points.
-        </p>
-        <ul>
-          <li>First meal anchor</li>
-          <li>Midday support</li>
-          <li>Evening reset</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="method-title">
-      <p class="kicker">Method</p>
-      <h2 id="method-title">Start · Method · Result</h2>
-      <p>
-        The surface stays simple because nutrition already carries enough pressure. Start with water. Build baseline. Produce more steady days.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Start method result">
-      <article class="card">
-        <span>Start</span>
-        <h3>Water first</h3>
-        <p>
-          The first signal is not discipline. It is support. The body gets water before the day becomes a negotiation.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Method</span>
-        <h3>Build baseline</h3>
-        <p>
-          Baseline means enough support to make the day more manageable: water, food, timing, pantry access, and recovery rhythm.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Result</span>
-        <h3>More steady days</h3>
-        <p>
-          The product does not promise perfection. It aims for fewer chaotic days and more repeatable support.
-        </p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="family-title">
-      <p class="kicker">Product family</p>
-      <h2 id="family-title">Baseline Nutrition Systems can become a full kitchen-and-pantry product line.</h2>
-      <p>
-        The product potential is larger than one nutrition page. The kitchen and pantry can support multiple practical systems: water rhythm, pantry reset, meal timing, family food planning, recovery-day support, budget baseline, workday fuel, and AAI-assisted planning.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Nutrition product family">
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Water First</h3>
-        <p>
-          A hydration rhythm product built around simple cues, refill habits, second-water checkpoints, and low-friction daily support.
-        </p>
-        <ul>
-          <li>Morning cue</li>
-          <li>Midday checkpoint</li>
-          <li>Evening reset</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Pantry Reset</h3>
-        <p>
-          A practical pantry system for building fallback meals, emergency support, budget options, and repeatable kitchen basics.
-        </p>
-        <ul>
-          <li>Fallback shelf</li>
-          <li>Fast meals</li>
-          <li>Recovery-day options</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Meal Rhythm</h3>
-        <p>
-          A timing support product for identifying crash windows and building repeatable meals around real life.
-        </p>
-        <ul>
-          <li>First meal anchor</li>
-          <li>Workday support</li>
-          <li>Evening rhythm</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Family Kitchen</h3>
-        <p>
-          A household food-support system for shared shopping, family meals, child-friendly defaults, and reduced decision fatigue.
-        </p>
-        <ul>
-          <li>Household staples</li>
-          <li>Shared planning</li>
-          <li>Simple meal loops</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Budget Baseline</h3>
-        <p>
-          A cost-aware food support product for building stable basics without pretending everyone has unlimited time or money.
-        </p>
-        <ul>
-          <li>Low-cost staples</li>
-          <li>Batch basics</li>
-          <li>Waste reduction</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Recovery Kitchen</h3>
-        <p>
-          A product for the days after stress, travel, illness, overwork, or disruption: return to baseline without shame.
-        </p>
-        <ul>
-          <li>Reset meals</li>
-          <li>Gentle rhythm</li>
-          <li>Return-repeat loop</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Workday Fuel</h3>
-        <p>
-          A work-focused system for people whose food rhythm collapses under meetings, commute, sales calls, shifts, or long days.
-        </p>
-        <ul>
-          <li>Packable options</li>
-          <li>Desk backups</li>
-          <li>Long-day timing</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>AAI Kitchen Support</h3>
-        <p>
-          On Your Side AAI can help turn preferences, budget, schedule, and pantry inventory into practical food-support plans.
-        </p>
-        <ul>
-          <li>Shopping support</li>
-          <li>Meal idea generation</li>
-          <li>Pantry organization</li>
-        </ul>
-      </article>
-
-      <article class="card tall">
-        <span>Product line</span>
-        <h3>Baseline Journal</h3>
-        <p>
-          A simple tracking surface for noticing patterns without turning food into surveillance or shame.
-        </p>
-        <ul>
-          <li>Energy notes</li>
-          <li>Water rhythm</li>
-          <li>Support patterns</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="future-title">
-      <p class="kicker">Future potential</p>
-      <h2 id="future-title">The future is personal kitchen infrastructure.</h2>
-      <p>
-        Baseline Nutrition Systems can grow into a guided support layer for individuals, families, teams, and communities. The future is not a perfect-diet app. It is a practical kitchen system that helps people keep baseline support available through real life.
-      </p>
-      <p>
-        Connected with On Your Side AAI, the chamber can help visitors plan groceries, organize pantry defaults, build recovery meals, identify crash points, prepare budget-friendly staples, and create repeatable rhythms that match their actual schedule.
-      </p>
-    </section>
-
-    <section class="grid four" aria-label="Future use cases">
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Kitchen dashboard</h3>
-        <p>Track pantry basics, water rhythm, meal anchors, and recovery support.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Future</span>
-        <h3>AAI meal support</h3>
-        <p>Use schedule, budget, preferences, and pantry inventory to prepare options.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Household rhythm</h3>
-        <p>Coordinate family food support without making one person carry the whole system.</p>
-      </article>
-
-      <article class="card compact">
-        <span>Future</span>
-        <h3>Recovery mode</h3>
-        <p>Return to baseline after disruption without shame or restart spirals.</p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="boundaries-title">
-      <p class="kicker">Human boundaries</p>
-      <h2 id="boundaries-title">Nutrition support is not medical care.</h2>
-      <p>
-        Baseline Nutrition Systems is a practical support product. It can help organize water rhythm, pantry access, meal timing, grocery planning, and recovery basics. It should not diagnose, prescribe, treat, or replace qualified medical, nutrition, or mental-health support.
-      </p>
-      <p>
-        When a visitor has medical conditions, eating disorders, severe restriction, chronic symptoms, medication interactions, pregnancy concerns, or specialized dietary needs, the system should direct them toward qualified professional care.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Nutrition boundaries">
-      <article class="card">
-        <span>Boundary 1</span>
-        <h3>Support, not shame</h3>
-        <p>
-          The product should never make food a moral score. It should help visitors return to support.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Boundary 2</span>
-        <h3>Organize, not prescribe</h3>
-        <p>
-          The product can help organize habits and options. It should not prescribe medical diets.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Boundary 3</span>
-        <h3>Refer when needed</h3>
-        <p>
-          The product should clearly mark when a professional is the correct next step.
-        </p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="market-title">
-      <p class="kicker">Market gap</p>
-      <h2 id="market-title">The market has diets. People need baseline systems.</h2>
-      <p>
-        Many nutrition products sell aspiration, restriction, optimization, identity, or transformation. Baseline Nutrition Systems addresses a quieter and larger need: helping people feed themselves consistently enough to function.
-      </p>
-      <p>
-        The gap is not “more nutrition information.” The gap is usable food support under real constraints: time, money, energy, family needs, stress, inconsistent schedules, and decision fatigue.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Nutrition market gaps">
-      <article class="card">
-        <span>Gap 1</span>
-        <h3>Diets without recovery</h3>
-        <p>
-          Many systems punish a missed day. Baseline Nutrition Systems builds the return path first.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Gap 2</span>
-        <h3>Information without pantry</h3>
-        <p>
-          Knowing what to eat does not help if nothing usable is available. The pantry is part of the product.
-        </p>
-      </article>
-
-      <article class="card">
-        <span>Gap 3</span>
-        <h3>Optimization without baseline</h3>
-        <p>
-          Optimization fails when the basics are missing. This chamber starts where the body actually is.
-        </p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="potential-title">
-      <p class="kicker">Product potential</p>
-      <h2 id="potential-title">Baseline can become the food-support layer for the entire estate.</h2>
-      <p>
-        This chamber can connect to On Your Side AAI, Education, family systems, work support, household planning, recovery tools, and public wellness content. The kitchen becomes more than a page. It becomes a repeatable support engine.
-      </p>
-      <p>
-        The public promise remains simple: return to baseline, restore rhythm, repeat support, and stop turning food into a fight with the body.
-      </p>
-    </section>
-
-    <section class="grid" aria-label="Baseline Nutrition status">
-      <article class="card">
-        <span>Canonical Route</span>
-        <h3>/products/nutrition/</h3>
-        <p>One route under Products. Baseline Nutrition Systems remains a product chamber.</p>
-      </article>
-
-      <article class="card">
-        <span>Product Class</span>
-        <h3>product_chamber</h3>
-        <p>Nutrition is a product chamber, not a planetary construct and not a house part.</p>
-      </article>
-
-      <article class="card">
-        <span>Public Frame</span>
-        <h3>Kitchen / Pantry</h3>
-        <p>Food support, hydration rhythm, pantry readiness, recovery, and repeatable baseline.</p>
-      </article>
-    </section>
-
-    <section class="section panel" aria-labelledby="parent-binding-title">
-      <p class="kicker">Parent binding</p>
-      <h2 id="parent-binding-title">Baseline Nutrition Systems stays attached to the Product Wing.</h2>
-      <p>
-        This chamber preserves the kitchen and pantry identity while remaining one canonical product destination under Products.
-      </p>
-    </section>
-
-    <section class="section panel" aria-labelledby="product-links-title">
-      <p class="kicker">Product backlinks</p>
-      <h2 id="product-links-title">Move through the product wing.</h2>
-
-      <div class="route-grid" aria-label="Baseline Nutrition backlinks">
-        <a class="route-card" href="/products/">
-          <span>Parent</span>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <span>Support</span>
-          <strong>On Your Side AAI</strong>
-        </a>
-
-        <a class="route-card" href="/products/education/">
-          <span>Learning</span>
-          <strong>Education</strong>
-        </a>
-
-        <a class="route-card" href="/showroom/">
-          <span>Proof</span>
-          <strong>Showroom</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <span>Verification</span>
-          <strong>Gauges</strong>
-        </a>
+    <section class="doll-shell" aria-label="Nutrition compressed Russian doll content">
+      <div class="doll-head">
+        <div>
+          <h2 class="doll-title">Open only the layer you need.</h2>
+          <p class="doll-note">
+            Baseline Nutrition Systems is compressed into nested layers: identity, baseline layers,
+            messy middle, product lines, future potential, human boundaries, market gap, binding, routes, and receipt.
+            Less scroll. More support.
+          </p>
+        </div>
+        <div class="doll-badge">Russian doll mode</div>
       </div>
-    </section>
 
-    <section class="receipt" aria-hidden="true">
-      Baseline Nutrition Systems receipt
-      route-exists
-      manor-skin
-      product-chamber
-      PC5_NUTRITION
-      parent-products
-      canonical-destination
-      estate=rich-manor-and-estate
-      house-field=true
-      gauges-truth=live-authority
-      construct-class=product
-      product-wing=true
-      parent-route=/products/
-      canonical-route=/products/nutrition/
-      public-frame=kitchen-pantry
-      food-is-support-not-moral-score=true
-      start=water-first
-      method=build-baseline
-      result=more-steady-days
-      layers=outer-baseline-second-water-middle-fuel-inner-rhythm-return-repeat
-      support-surface=water-food-timing-rhythm-recovery-repeatable-support
-      science=hydration-fuel-timing-recovery-decision-fatigue-cognitive-load
-      product-family=water-first-pantry-reset-meal-rhythm-family-kitchen-budget-baseline-recovery-kitchen-workday-fuel-aai-kitchen-support-baseline-journal
-      future=kitchen-dashboard-aai-meal-support-household-rhythm-recovery-mode
-      boundaries=support-not-shame
-      boundaries=organize-not-prescribe
-      boundaries=refer-when-needed
-      closes-gap=diets-without-recovery
-      closes-gap=information-without-pantry
-      closes-gap=optimization-without-baseline
-      product-potential=food-support-layer-for-estate
-      not-medical-care=true
-      not-diet-culture=true
-      not-planetary-construct=true
-      not-house-part=true
-      Products=/products/
-      On Your Side AAI=/products/on-your-side-ai/
-      Education=/products/education/
-      Five Flags=/products/five-flags/
-      Showroom=/showroom/
-      Gauges=/gauges/
-      Compass=/
-      Door=/door/
-      Home=/home/
-      BASELINE_NUTRITION_SYSTEMS_EXPANSION_TNT_v1
+      <div class="doll-stack">
+        <details class="doll-layer" open>
+          <summary>
+            <span class="layer-number">1</span>
+            <span>
+              <span class="layer-title">Product identity</span>
+              <span class="layer-line">The kitchen does not shame the body. It restores baseline.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Repeatable body support</strong>
+                <span>A simple way to return to water, food, timing, rhythm, and recovery without guilt cycles.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Advice without stability</strong>
+                <span>This chamber starts upstream: what the body needs before strategy, tracking, or optimization matters.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Kitchen-first infrastructure</strong>
+                <span>Not a diet. A practical kitchen and pantry support system for real days.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">2</span>
+            <span>
+              <span class="layer-title">The baseline layers</span>
+              <span class="layer-line">Outer Baseline, Second Water, Middle Fuel, Inner Rhythm, Return Repeat.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="layer-grid">
+              <div class="baseline-card pantry">
+                <strong>Outer Baseline</strong>
+                <span>What does the body need first? Water, food access, and a non-punitive starting point.</span>
+              </div>
+
+              <div class="baseline-card water">
+                <strong>Second Water</strong>
+                <span>Has hydration been handled before the person starts solving everything else?</span>
+              </div>
+
+              <div class="baseline-card fuel">
+                <strong>Middle Fuel</strong>
+                <span>Is there enough food support to keep the day manageable?</span>
+              </div>
+
+              <div class="baseline-card rhythm">
+                <strong>Inner Rhythm</strong>
+                <span>Can the person repeat support without overthinking it?</span>
+              </div>
+
+              <div class="baseline-card recovery">
+                <strong>Return Repeat</strong>
+                <span>What happens when the day breaks? Return to baseline instead of restarting from shame.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">3</span>
+            <span>
+              <span class="layer-title">The messy middle</span>
+              <span class="layer-line">Where nutrition usually collapses: time, money, stress, schedules, and decision fatigue.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Water first</strong>
+                <span>Morning water cue, second-water checkpoint, and low-friction refill rhythm.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Pantry fallback</strong>
+                <span>Shelf-stable options, fast protein/fiber pairings, and recovery-day meals.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Meal rhythm</strong>
+                <span>First meal anchor, midday support, and evening reset before crash windows take over.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">4</span>
+            <span>
+              <span class="layer-title">Product family</span>
+              <span class="layer-line">The kitchen and pantry can become a full practical support line.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="product-grid">
+              <div class="product-card water">
+                <strong>Water First</strong>
+                <span>Morning cue, midday checkpoint, evening reset.</span>
+              </div>
+
+              <div class="product-card pantry">
+                <strong>Pantry Reset</strong>
+                <span>Fallback shelf, fast meals, recovery-day options.</span>
+              </div>
+
+              <div class="product-card rhythm">
+                <strong>Meal Rhythm</strong>
+                <span>First meal anchor, workday support, evening rhythm.</span>
+              </div>
+
+              <div class="product-card fuel">
+                <strong>Family Kitchen</strong>
+                <span>Household staples, shared planning, simple meal loops.</span>
+              </div>
+
+              <div class="product-card pantry">
+                <strong>Budget Baseline</strong>
+                <span>Low-cost staples, batch basics, waste reduction.</span>
+              </div>
+
+              <div class="product-card recovery">
+                <strong>Recovery Kitchen</strong>
+                <span>Reset meals, gentle rhythm, return-repeat loop.</span>
+              </div>
+
+              <div class="product-card fuel">
+                <strong>Workday Fuel</strong>
+                <span>Packable options, desk backups, long-day timing.</span>
+              </div>
+
+              <div class="product-card rhythm">
+                <strong>AAI Kitchen Support</strong>
+                <span>Shopping support, meal ideas, pantry organization.</span>
+              </div>
+
+              <div class="product-card water">
+                <strong>Baseline Journal</strong>
+                <span>Energy notes, water rhythm, support patterns.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">5</span>
+            <span>
+              <span class="layer-title">Future potential</span>
+              <span class="layer-line">The future is personal kitchen infrastructure, not a perfect-diet app.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Kitchen dashboard</strong>
+                <span>Track pantry basics, water rhythm, meal anchors, and recovery support.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>AAI meal support</strong>
+                <span>Use schedule, budget, preferences, and pantry inventory to prepare options.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Household rhythm</strong>
+                <span>Coordinate family food support without making one person carry the whole system.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">6</span>
+            <span>
+              <span class="layer-title">Human boundaries</span>
+              <span class="layer-line">Nutrition support is not medical care.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Support, not shame</strong>
+                <span>The product should never make food a moral score. It should help visitors return to support.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Organize, not prescribe</strong>
+                <span>The product can organize habits and options. It should not prescribe medical diets.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Refer when needed</strong>
+                <span>Medical conditions, eating disorders, pregnancy concerns, chronic symptoms, or specialized needs require qualified professional care.</span>
+              </div>
+            </div>
+
+            <div class="notice">
+              Baseline Nutrition Systems is a practical support product. It does not diagnose, prescribe, treat,
+              or replace qualified medical, nutrition, or mental-health support.
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">7</span>
+            <span>
+              <span class="layer-title">Market gap</span>
+              <span class="layer-line">The market has diets. People need baseline systems.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Diets without recovery</strong>
+                <span>Many systems punish a missed day. Baseline Nutrition Systems builds the return path first.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Information without pantry</strong>
+                <span>Knowing what to eat does not help if nothing usable is available. The pantry is part of the product.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Optimization without baseline</strong>
+                <span>Optimization fails when water, food, timing, and recovery are missing.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">8</span>
+            <span>
+              <span class="layer-title">Product binding</span>
+              <span class="layer-line">Baseline Nutrition Systems remains one product chamber under Products.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Canonical route</strong>
+                <span>/products/nutrition/</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Product class</strong>
+                <span>product_chamber</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Public frame</strong>
+                <span>Kitchen / Pantry: food support, hydration rhythm, pantry readiness, recovery, and repeatable baseline.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Not a planet</strong>
+                <span>Nutrition is not a planetary construct and not part of the Demo Universe render chain.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Not a house part</strong>
+                <span>Nutrition belongs to Products, not the six-part house structure.</span>
+              </div>
+
+              <div class="mini-card">
+                <strong>Connected support</strong>
+                <span>Can connect to On Your Side AAI, Education, family systems, work support, and recovery tools.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">9</span>
+            <span>
+              <span class="layer-title">Move through the wing</span>
+              <span class="layer-line">Parent, AAI support, learning, proof, and verification routes.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="route-grid">
+              <a class="route-card" href="/products/">
+                Products
+                <span>Return to the product wing and the broader waterfall chamber.</span>
+              </a>
+
+              <a class="route-card" href="/products/on-your-side-ai/">
+                On Your Side AAI
+                <span>Connect food support to preferences, budget, schedule, and pantry inventory.</span>
+              </a>
+
+              <a class="route-card" href="/products/education/">
+                Education
+                <span>Connect baseline support to learning, language, and everyday operating systems.</span>
+              </a>
+
+              <a class="route-card" href="/showroom/">
+                Showroom
+                <span>Inspect public proof surfaces and presentation lanes.</span>
+              </a>
+
+              <a class="route-card" href="/gauges/">
+                Gauges
+                <span>Read route, runtime, parser, and diagnostic receipts.</span>
+              </a>
+
+              <a class="route-card" href="/">
+                Compass
+                <span>Return to the public command surface.</span>
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">R</span>
+            <span>
+              <span class="layer-title">Route receipt</span>
+              <span class="layer-line">Compressed contract and audit status.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <pre class="dgb-receipt nutrition-receipt">NUTRITION_RUSSIAN_DOLL_BASELINE_SYSTEMS_RENEWAL_TNT_v1
+route=/products/nutrition/
+page=products-nutrition
+title=Baseline Nutrition Systems
+style_direction=ted-talk-product-chamber
+scroll_mode=compressed-russian-doll
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
+product_class=product_chamber
+parent=/products/
+canonical_route=/products/nutrition/
+public_frame=kitchen-pantry
+support_not_shame=true
+medical_care=false
+baseline_layers=outer-baseline,second-water,middle-fuel,inner-rhythm,return-repeat
+product_family=water-first,pantry-reset,meal-rhythm,family-kitchen,budget-baseline,recovery-kitchen,workday-fuel,aai-kitchen-support,baseline-journal
+connected_products=on-your-side-ai,education
+heavy_runtime_loaded=false
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
+showroom=/showroom/
+gauges=/gauges/
+visual_pass_claimed=false</pre>
+          </div>
+        </details>
+      </div>
     </section>
   </main>
+
+  <footer class="dgb-footer">
+    NUTRITION_RUSSIAN_DOLL_BASELINE_SYSTEMS_RENEWAL_TNT_v1 · Baseline Nutrition Systems · Product Chamber.
+  </footer>
 </body>
 </html>

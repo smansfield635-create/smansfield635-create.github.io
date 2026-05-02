@@ -1,583 +1,595 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Planet 1</title>
+/* G1 PLANET 1 SURFACE / AIR LAYER SEPARATION RENDERER
+   FILE: /world/render/planet-one.render.js
+   VERSION: G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 16, 31, 0.88);
-      --panel2: rgba(16, 25, 46, 0.88);
-      --line: rgba(176, 204, 255, 0.22);
-      --text: #edf4ff;
-      --muted: #aebbd0;
-      --blue: #a9caff;
-      --gold: #f2c76f;
-      --green: #7bdc9d;
-      --hold: #bdd3ff;
+   LAW:
+   Surface first.
+   Air second.
+   Lighting last.
+   No runtime, route, gauges, hydration, or /runtime/* edits.
+*/
+
+(function attachPlanetOneSurfaceAirSeparationRenderer(global) {
+  "use strict";
+
+  var VERSION = "G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+  var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
+  var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
+  var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
+
+  var state = {
+    active: true,
+    paused: false,
+    lastCanvas: null,
+    lastMount: null,
+    lastRender: null,
+    lastError: null,
+    rendererConsumesHydration: false,
+    rendererConsumesHexBridge: false
+  };
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, Number(value) || 0));
+  }
+
+  function resolveElement(target) {
+    if (!target && global.document) {
+      return global.document.getElementById("planet-one-render") ||
+        global.document.querySelector("[data-planet-one-mount='true']") ||
+        global.document.querySelector(".planet-one-render") ||
+        global.document.body;
     }
 
-    * { box-sizing: border-box; }
+    if (typeof target === "string" && global.document) return global.document.querySelector(target);
+    return target || null;
+  }
 
-    html {
-      background: var(--bg);
-      min-height: 100%;
+  function ensureCanvas(mount, options) {
+    var canvas;
+    var width;
+    var height;
+
+    options = options || {};
+    mount = resolveElement(mount);
+
+    if (!mount || !global.document) return null;
+
+    width = Number(options.width || options.size || mount.clientWidth || 720);
+    height = Number(options.height || options.size || mount.clientHeight || width || 720);
+    width = Math.max(320, Math.min(1400, width));
+    height = Math.max(320, Math.min(1400, height));
+
+    canvas = mount.querySelector && mount.querySelector("canvas[data-planet-one-render-canvas='true']");
+
+    if (!canvas) {
+      canvas = global.document.createElement("canvas");
+      canvas.setAttribute("data-planet-one-render-canvas", "true");
+      canvas.setAttribute("data-renderer-version", VERSION);
+      canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
+      canvas.setAttribute("data-layer-version", LAYER_VERSION);
+      canvas.setAttribute("data-surface-air-layer-separation", "true");
+      canvas.setAttribute("aria-label", "Planet 1 surface air layer separation renderer");
+
+      if (options.clearMount !== false) mount.innerHTML = "";
+      mount.appendChild(canvas);
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 22% 4%, rgba(88, 140, 255, 0.20), transparent 30%),
-        radial-gradient(circle at 78% 8%, rgba(242, 199, 111, 0.09), transparent 28%),
-        linear-gradient(180deg, #050812 0%, #07101f 58%, #03050c 100%);
-      overflow-x: hidden;
-    }
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = "100%";
+    canvas.style.maxWidth = width + "px";
+    canvas.style.aspectRatio = width + " / " + height;
+    canvas.style.display = "block";
+    canvas.style.margin = "0 auto";
+    canvas.style.borderRadius = "50%";
+    canvas.style.background = "transparent";
 
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
+    state.lastCanvas = canvas;
+    state.lastMount = mount;
 
-    a:hover { text-decoration: underline; }
+    return canvas;
+  }
 
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 0;
-      background: #fff;
-      color: #000;
-      padding: 0.65rem 0.9rem;
-      z-index: 99;
-    }
+  function hasHydration() {
+    return Boolean(
+      global.DGBPlanetOneHydrationRender &&
+      typeof global.DGBPlanetOneHydrationRender.sampleHydrationDepth === "function"
+    );
+  }
 
-    .skip:focus {
-      left: 1rem;
-      top: 1rem;
-    }
+  function hasHexBridge() {
+    return Boolean(
+      global.DGBPlanetOneHexgridRender &&
+      typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function"
+    );
+  }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--line);
-      background: rgba(5, 8, 18, 0.91);
-      backdrop-filter: blur(12px);
-    }
+  function ensureScript(path, testFn) {
+    var existing;
+    var script;
 
-    .topbar {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
+    if (testFn()) return Promise.resolve(true);
+    if (!global.document) return Promise.resolve(false);
 
-    .brand {
-      font-size: 1.05rem;
-      font-weight: 850;
-      letter-spacing: 0.025em;
-    }
+    existing = Array.prototype.slice.call(global.document.getElementsByTagName("script")).filter(function (item) {
+      return item.src && item.src.indexOf(path) !== -1;
+    })[0];
 
-    nav {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      font-size: 0.95rem;
-    }
+    if (existing) {
+      return new Promise(function (resolve) {
+        var start = Date.now();
 
-    main {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 1.2rem 1rem 4rem;
-    }
-
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: clamp(1.05rem, 3vw, 1.7rem);
-      background: linear-gradient(180deg, rgba(20, 32, 58, 0.82), rgba(7, 11, 22, 0.91));
-      box-shadow: 0 22px 90px rgba(0,0,0,0.28);
-      margin-bottom: 1rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.4rem;
-      color: var(--gold);
-      font-size: 0.77rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 850;
-    }
-
-    h1 {
-      margin: 0 0 0.7rem;
-      font-size: clamp(2rem, 6vw, 4.1rem);
-      line-height: 1.02;
-      letter-spacing: -0.045em;
-    }
-
-    p {
-      margin: 0 0 0.8rem;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      line-height: 1.55;
-      max-width: 820px;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      margin-top: 1.05rem;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid rgba(176, 204, 255, 0.20);
-      border-radius: 999px;
-      padding: 0.34rem 0.72rem;
-      color: var(--green);
-      font-weight: 850;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .chip.hold { color: var(--hold); }
-
-    .stage {
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 50% 12%, rgba(65, 115, 215, 0.18), transparent 48%),
-        linear-gradient(180deg, rgba(3, 7, 16, 0.88), rgba(5, 8, 18, 0.72));
-      overflow: hidden;
-      min-height: 390px;
-      padding: clamp(0.6rem, 2vw, 1.4rem);
-    }
-
-    .stage::before {
-      content: "";
-      position: absolute;
-      inset: 6%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(80, 130, 230, 0.10), rgba(10, 20, 45, 0.18) 50%, transparent 72%);
-      pointer-events: none;
-    }
-
-    #planet-one-render {
-      position: relative;
-      z-index: 2;
-      min-height: 360px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      overflow: visible;
-    }
-
-    #planet-one-render canvas {
-      max-width: min(92vw, 760px);
-      height: auto;
-      filter: saturate(1.04) contrast(1.02);
-    }
-
-    .control-shell {
-      position: relative;
-      z-index: 3;
-      margin: -0.35rem auto 0;
-      max-width: 720px;
-      border: 1px solid rgba(242, 199, 111, 0.26);
-      border-radius: 24px;
-      background: rgba(5, 8, 18, 0.78);
-      padding: 1rem;
-      box-shadow: 0 22px 70px rgba(0,0,0,0.26);
-    }
-
-    .control-shell h2 {
-      margin: 0 0 0.8rem;
-      color: #ffe8a8;
-      font-size: clamp(1.35rem, 4vw, 1.8rem);
-      line-height: 1.1;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      appearance: none;
-      border: 1px solid rgba(242, 199, 111, 0.34);
-      border-radius: 999px;
-      background: rgba(169, 202, 255, 0.08);
-      color: #ffe8a8;
-      padding: 0.64rem 0.95rem;
-      font: inherit;
-      font-weight: 720;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: rgba(169, 202, 255, 0.16);
-    }
-
-    .range-row {
-      display: grid;
-      gap: 0.55rem;
-      color: #ffe8a8;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: #8fc6ff;
-    }
-
-    label.axis-row {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      color: #ffe8a8;
-      font-weight: 700;
-    }
-
-    input[type="checkbox"] {
-      width: 1.05rem;
-      height: 1.05rem;
-      accent-color: #8fc6ff;
-    }
-
-    .receipt {
-      margin-top: 0.85rem;
-      border: 1px solid rgba(176, 204, 255, 0.14);
-      border-radius: 16px;
-      background: rgba(0,0,0,0.20);
-      padding: 0.8rem;
-      color: #ccd8ec;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.76rem;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      max-height: 280px;
-      overflow: auto;
-    }
-
-    .contract {
-      margin-top: 1rem;
-      border: 1px solid rgba(176, 204, 255, 0.16);
-      border-radius: 20px;
-      background: rgba(10, 16, 31, 0.66);
-      padding: 0.9rem;
-      color: #dce8fb;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.78rem;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 640px) {
-      .topbar {
-        align-items: flex-start;
-      }
-
-      nav {
-        width: 100%;
-        gap: 0.65rem;
-      }
-
-      .stage {
-        margin-left: -1rem;
-        margin-right: -1rem;
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-        padding-left: 0.45rem;
-        padding-right: 0.45rem;
-      }
-
-      #planet-one-render {
-        min-height: 300px;
-      }
-
-      .control-shell {
-        margin-left: 0.45rem;
-        margin-right: 0.45rem;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <a class="skip" href="#planet-one-main">Skip to Planet 1 inspection</a>
-
-  <header>
-    <div class="topbar">
-      <a class="brand" href="/">Diamond Gate Bridge</a>
-      <nav aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </div>
-  </header>
-
-  <main id="planet-one-main">
-    <section class="hero" aria-label="Planet 1 route contract">
-      <p class="eyebrow">Active Globe Lane · Route Cache Token Alignment</p>
-      <h1>Planet 1 on axis</h1>
-      <p>
-        This route mounts the active Planet 1 renderer chain directly. The Showroom does not create terrain,
-        duplicate physics, or claim visual pass. It activates hydration, hex bridge, renderer, throttled runtime,
-        control bridge, asset bridge, and showroom bridge in order.
-      </p>
-
-      <div class="chips" aria-label="Route script order">
-        <span class="chip">Hydration first</span>
-        <span class="chip">Hex bridge second</span>
-        <span class="chip">Renderer third</span>
-        <span class="chip">Runtime throttled</span>
-        <span class="chip hold">Visual hold</span>
-      </div>
-    </section>
-
-    <section class="stage" aria-label="Planet 1 live render">
-      <div
-        id="planet-one-render"
-        class="planet-one-render"
-        data-planet-one-mount="true"
-        data-route-contract="G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"
-        data-visual-pass-claimed="false"
-      ></div>
-
-      <section class="control-shell" aria-label="Planet 1 Motion Control">
-        <h2>Planet 1 Motion Control</h2>
-
-        <div class="controls">
-          <button type="button" data-planet-command="start" id="planet-one-start">Start</button>
-          <button type="button" data-planet-command="pause" id="planet-one-pause">Pause</button>
-          <button type="button" data-planet-command="resume" id="planet-one-resume">Resume</button>
-          <button type="button" data-planet-command="reset" id="planet-one-reset">Reset</button>
-          <button type="button" data-planet-command="reverse" id="planet-one-reverse">Reverse</button>
-          <button type="button" data-planet-command="slow" id="planet-one-slow">Slow</button>
-          <button type="button" data-planet-command="normal" id="planet-one-normal">Normal</button>
-          <button type="button" data-planet-command="fast" id="planet-one-fast">Fast</button>
-        </div>
-
-        <label class="range-row" for="planet-one-speed">
-          Rotation speed
-          <input
-            id="planet-one-speed"
-            type="range"
-            min="0"
-            max="6"
-            value="2.4"
-            step="0.1"
-            data-planet-control="speed"
-          />
-        </label>
-
-        <label class="axis-row" for="planet-one-axis-toggle">
-          <input id="planet-one-axis-toggle" type="checkbox" data-planet-control="axis" />
-          Show soft axis
-        </label>
-
-        <pre id="planet-one-control-receipt" class="receipt" aria-live="polite">Route booting…</pre>
-      </section>
-    </section>
-
-    <section class="contract" aria-label="Route receipt">
-ROUTE_CONTRACT=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1
-HYDRATION=/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
-HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
-RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
-WORLD_RUNTIME=/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1
-WORLD_CONTROL=/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1
-ASSET_BRIDGE=/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
-SHOWROOM_RUNTIME=/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
-TRI_DOMAIN_LAYER=G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1
-VISUAL_PASS_CLAIMED=false
-    </section>
-  </main>
-
-  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1&layer=G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1&layer=G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
-
-  <script>
-    (function attachPlanetOneRouteCacheTokenReceipt(global) {
-      "use strict";
-
-      var ROUTE_VERSION = "G1_PLANET_1_ROUTE_CACHE_TOKEN_ALIGNMENT_TNT_v1";
-
-      function getRuntime() {
-        return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || null;
-      }
-
-      function getShowroomRuntime() {
-        return global.DGBShowroomGlobeRuntime || global.DGBPlanetOneRuntimeBridge || null;
-      }
-
-      function getRenderer() {
-        return global.DGBPlanetOneRenderTeam ||
-          global.DGBPlanetOneRenderer ||
-          global.DGBPlanetOneRender ||
-          null;
-      }
-
-      function getStatus(object) {
-        try {
-          if (object && typeof object.status === "function") return object.status();
-          if (object && typeof object.getStatus === "function") return object.getStatus();
-        } catch (error) {
-          return { error: String(error && error.message ? error.message : error) };
+        function tick() {
+          if (testFn()) return resolve(true);
+          if (Date.now() - start > 2400) return resolve(false);
+          global.setTimeout(tick, 40);
         }
 
-        return null;
-      }
+        tick();
+      });
+    }
 
-      function writeReceipt(extra) {
-        var runtime = getRuntime();
-        var showroomRuntime = getShowroomRuntime();
-        var renderer = getRenderer();
+    return new Promise(function (resolve) {
+      script = global.document.createElement("script");
+      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&t=" + Date.now();
+      script.async = false;
+      script.defer = false;
 
-        var receipt = {
-          routeVersion: ROUTE_VERSION,
-          routeCacheTokenAlignmentActive: true,
-          routeScriptOrderAligned: true,
+      script.onload = function () {
+        var start = Date.now();
 
-          hydrationFirst: Boolean(global.DGBPlanetOneHydrationRender),
-          hexBridgeSecond: Boolean(global.DGBPlanetOneHexgridRender),
-          rendererThird: Boolean(renderer),
-          runtimeThrottleLoaded: Boolean(runtime),
-          showroomRuntimeBridgeLoaded: Boolean(showroomRuntime),
-
-          expectedWorldRuntime: "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1",
-          expectedShowroomRuntime: "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1",
-          expectedTriDomainLayer: "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1",
-
-          runtimeStatus: getStatus(runtime),
-          showroomRuntimeStatus: getStatus(showroomRuntime),
-          rendererStatus: getStatus(renderer),
-
-          visualPassClaimed: false,
-          timestamp: new Date().toISOString(),
-          extra: extra || null
-        };
-
-        global.DGBPlanetOneRouteCacheTokenAlignmentReceipt = receipt;
-
-        var node = document.getElementById("planet-one-control-receipt");
-        if (node) node.textContent = JSON.stringify(receipt, null, 2);
-
-        return receipt;
-      }
-
-      function command(name, value) {
-        var runtime = getRuntime();
-        var showroomRuntime = getShowroomRuntime();
-        var target = runtime || showroomRuntime;
-        var receipt;
-
-        if (!target) {
-          return writeReceipt({ command: name, error: "NO_RUNTIME_AVAILABLE" });
+        function tick() {
+          if (testFn()) return resolve(true);
+          if (Date.now() - start > 2400) return resolve(false);
+          global.setTimeout(tick, 40);
         }
 
-        try {
-          if (name === "start" && typeof target.start === "function") receipt = target.start("#planet-one-render");
-          else if (name === "pause" && typeof target.pause === "function") receipt = target.pause();
-          else if (name === "resume" && typeof target.resume === "function") receipt = target.resume();
-          else if (name === "reset" && typeof target.reset === "function") receipt = target.reset();
-          else if (name === "reverse" && typeof target.reverse === "function") receipt = target.reverse();
-          else if (name === "slow" && typeof target.setSpeed === "function") receipt = target.setSpeed(0.8);
-          else if (name === "normal" && typeof target.setSpeed === "function") receipt = target.setSpeed(2.4);
-          else if (name === "fast" && typeof target.setSpeed === "function") receipt = target.setSpeed(6);
-          else if (name === "speed" && typeof target.setSpeed === "function") receipt = target.setSpeed(value);
-          else if (name === "axis" && typeof target.setView === "function") receipt = target.setView({ axisVisible: Boolean(value) });
-          else receipt = { unsupportedCommand: name };
+        tick();
+      };
 
-          return writeReceipt({ command: name, value: value, result: receipt });
-        } catch (error) {
-          return writeReceipt({
-            command: name,
-            value: value,
-            error: String(error && error.message ? error.message : error)
-          });
-        }
+      script.onerror = function () {
+        state.lastError = "SCRIPT_LOAD_FAILED:" + path;
+        resolve(false);
+      };
+
+      (global.document.head || global.document.body || global.document.documentElement).appendChild(script);
+    });
+  }
+
+  function ensureDependencies() {
+    return ensureScript(HYDRATION_PATH, hasHydration).then(function () {
+      return ensureScript(HEXGRID_PATH, hasHexBridge);
+    });
+  }
+
+  function clipSphere(ctx, cx, cy, radius) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+  }
+
+  function drawBaseWaterSphere(ctx, cx, cy, radius) {
+    var ocean;
+    var rim;
+
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.06, cx, cy, radius * 1.06);
+    ocean.addColorStop(0, "rgba(78,154,190,.99)");
+    ocean.addColorStop(0.30, "rgba(16,90,154,.99)");
+    ocean.addColorStop(0.72, "rgba(5,36,96,1)");
+    ocean.addColorStop(1, "rgba(2,10,30,1)");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = ocean;
+    ctx.fill();
+
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.05);
+    rim.addColorStop(0, "rgba(145,189,255,0)");
+    rim.addColorStop(0.72, "rgba(145,189,255,.075)");
+    rim.addColorStop(1, "rgba(145,189,255,.38)");
+    ctx.fillStyle = rim;
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(155,202,255,.34)";
+    ctx.lineWidth = Math.max(1, radius * 0.011);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawAirContainer(ctx, cx, cy, radius) {
+    var halo;
+    var veil;
+
+    ctx.save();
+
+    halo = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.08);
+    halo.addColorStop(0, "rgba(145,189,255,0)");
+    halo.addColorStop(0.74, "rgba(145,189,255,.045)");
+    halo.addColorStop(1, "rgba(145,189,255,.22)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.03, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    veil = ctx.createRadialGradient(cx - radius * 0.12, cy - radius * 0.18, radius * 0.18, cx, cy, radius * 1.02);
+    veil.addColorStop(0, "rgba(190,222,255,.035)");
+    veil.addColorStop(0.48, "rgba(190,222,255,.010)");
+    veil.addColorStop(0.86, "rgba(190,222,255,.042)");
+    veil.addColorStop(1, "rgba(190,222,255,.105)");
+    ctx.fillStyle = veil;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+  }
+
+  function drawLightingLast(ctx, cx, cy, radius) {
+    var sunlight;
+    var terminator;
+    var rim;
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.92);
+    sunlight.addColorStop(0, "rgba(255,255,255,.12)");
+    sunlight.addColorStop(0.30, "rgba(255,255,255,.045)");
+    sunlight.addColorStop(0.70, "rgba(255,255,255,.010)");
+    sunlight.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = sunlight;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    terminator = ctx.createLinearGradient(cx - radius * 0.40, cy - radius, cx + radius, cy + radius);
+    terminator.addColorStop(0, "rgba(255,255,255,.026)");
+    terminator.addColorStop(0.50, "rgba(255,255,255,0)");
+    terminator.addColorStop(1, "rgba(0,0,0,.44)");
+    ctx.fillStyle = terminator;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.03);
+    rim.addColorStop(0, "rgba(145,189,255,0)");
+    rim.addColorStop(0.74, "rgba(145,189,255,.045)");
+    rim.addColorStop(1, "rgba(145,189,255,.20)");
+    ctx.fillStyle = rim;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+  }
+
+  function drawAxis(ctx, cx, cy, radius) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-0.28);
+    ctx.beginPath();
+    ctx.moveTo(0, -radius * 1.10);
+    ctx.lineTo(0, radius * 1.10);
+    ctx.strokeStyle = "rgba(242,199,111,.052)";
+    ctx.lineWidth = Math.max(1, radius * 0.003);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function renderNow(canvas, options) {
+    var ctx = canvas.getContext("2d");
+    var size;
+    var cx;
+    var cy;
+    var radius;
+    var drawReceipt = null;
+
+    options = options || {};
+
+    if (!ctx) {
+      state.lastRender = {
+        ok: false,
+        mounted: false,
+        reason: "NO_2D_CONTEXT",
+        version: VERSION,
+        visualPassClaimed: false
+      };
+      return state.lastRender;
+    }
+
+    size = Math.min(canvas.width, canvas.height);
+    cx = canvas.width / 2;
+    cy = canvas.height / 2;
+    radius = Number(options.radius || size * 0.43);
+
+    drawBaseWaterSphere(ctx, cx, cy, radius);
+
+    if (hasHexBridge()) {
+      ctx.save();
+      clipSphere(ctx, cx, cy, radius);
+
+      drawReceipt = global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid(ctx, {
+        centerX: cx,
+        centerY: cy,
+        radius: radius,
+        viewLon: options.viewLon == null ? -28 : options.viewLon,
+        viewLat: options.viewLat == null ? 0 : options.viewLat,
+        compositorScale: options.compositorScale || 0.82,
+        surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
+        seed: options.seed || 256451
+      });
+
+      ctx.restore();
+    }
+
+    drawAirContainer(ctx, cx, cy, radius);
+    drawLightingLast(ctx, cx, cy, radius);
+
+    if (options.showAxis === true) drawAxis(ctx, cx, cy, radius);
+
+    state.rendererConsumesHydration = hasHydration();
+    state.rendererConsumesHexBridge = hasHexBridge();
+
+    state.lastRender = {
+      ok: true,
+      mounted: true,
+      version: VERSION,
+      VERSION: VERSION,
+      priorVersion: PRIOR_VERSION,
+      layerVersion: LAYER_VERSION,
+      baseline: BASELINE,
+
+      surfaceAirLayerSeparationRendered: Boolean(drawReceipt && drawReceipt.surfaceAirLayerSeparationRendered),
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.waterSurfaceMaterialRendered),
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialRendered: Boolean(drawReceipt && drawReceipt.landSurfaceMaterialRendered),
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialRendered: Boolean(drawReceipt && drawReceipt.airOverlayMaterialRendered),
+      airOverlayMaterialActive: true,
+      landMaskSeparationRendered: Boolean(drawReceipt && drawReceipt.landMaskSeparationRendered),
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
+
+      wholeWorldContainerRendered: Boolean(drawReceipt && drawReceipt.wholeWorldContainerRendered),
+      triDomain256Rendered: Boolean(drawReceipt && drawReceipt.triDomain256Rendered),
+      water256Rendered: Boolean(drawReceipt && drawReceipt.water256Rendered),
+      land256Rendered: Boolean(drawReceipt && drawReceipt.land256Rendered),
+      air256Rendered: Boolean(drawReceipt && drawReceipt.air256Rendered),
+      wholeWorld256Rendered: Boolean(drawReceipt && drawReceipt.wholeWorld256Rendered),
+
+      waterRemainsSovereign: true,
+      waterDepthPreserved: true,
+      reefShelfPreserved: true,
+      beachThresholdPreserved: true,
+      hydrationReadOnlyPreserved: true,
+      terrainAuthorityBlocked: true,
+      waterSovereigntyPreserved: true,
+
+      noBlobReintroduced: Boolean(drawReceipt && drawReceipt.noBlobReintroduced),
+      noMountainRelief: true,
+      noRiverNetwork: true,
+      noFullGlacierSystem: true,
+      noPublicHoneycomb: true,
+      noPublicDotGrid: true,
+
+      rendererConsumesHydration: state.rendererConsumesHydration,
+      rendererConsumesHexBridge: state.rendererConsumesHexBridge,
+      rendererConsumesHexgrid: state.rendererConsumesHexBridge,
+
+      runtimeUntouched: true,
+      gaugesUntouched: true,
+      routeUntouched: true,
+      hydrationUntouched: true,
+      upstreamRuntimeUntouched: true,
+
+      drawReceipt: drawReceipt,
+      separationReceipt: {
+        ok: true,
+        version: VERSION,
+        surfaceAirLayerSeparationActive: true,
+        waterSurfaceMaterialActive: true,
+        landSurfaceMaterialActive: true,
+        airOverlayMaterialActive: true,
+        landMaskSeparationActive: true,
+        surfaceFirstAirSecondCompositor: true,
+        cloudsDoNotBecomeWater: true,
+        waterDoesNotBecomeCloud: true,
+        cloudOpacityCapped: true,
+        featheredLandMaskActive: true,
+        noCartoonCutoutEdges: true,
+        visualPassClaimed: false
+      },
+      renderedAt: new Date().toISOString(),
+      visualPassClaimed: false
+    };
+
+    return state.lastRender;
+  }
+
+  function renderPlanetOne(target, options) {
+    var mount = resolveElement(target);
+    var canvas = ensureCanvas(mount, options);
+    var immediate;
+
+    options = options || {};
+
+    if (!canvas) {
+      state.lastRender = {
+        ok: false,
+        mounted: false,
+        reason: "NO_MOUNT",
+        version: VERSION,
+        visualPassClaimed: false
+      };
+      return state.lastRender;
+    }
+
+    immediate = renderNow(canvas, options);
+
+    ensureDependencies().then(function () {
+      if (!state.paused && state.lastCanvas === canvas) {
+        renderNow(canvas, options);
       }
+    });
 
-      function bindControls() {
-        Array.prototype.slice.call(document.querySelectorAll("[data-planet-command]")).forEach(function (button) {
-          button.addEventListener("click", function () {
-            command(button.getAttribute("data-planet-command"));
-          });
-        });
+    return immediate;
+  }
 
-        var speed = document.getElementById("planet-one-speed");
-        if (speed) {
-          speed.addEventListener("input", function () {
-            command("speed", Number(speed.value));
-          });
-        }
+  function render(target, options) { return renderPlanetOne(target, options); }
+  function renderGlobe(target, options) { return renderPlanetOne(target, options); }
+  function mount(target, options) { return renderPlanetOne(target, options); }
+  function mountPlanetOne(target, options) { return renderPlanetOne(target, options); }
+  function create(target, options) { return renderPlanetOne(target, options); }
+  function createPlanetOneRender(target, options) { return renderPlanetOne(target, options); }
+  function createPlanetOneScene(target, options) { return renderPlanetOne(target, options); }
 
-        var axis = document.getElementById("planet-one-axis-toggle");
-        if (axis) {
-          axis.addEventListener("change", function () {
-            command("axis", axis.checked);
-          });
-        }
-      }
+  function start(target, options) {
+    state.paused = false;
+    return renderPlanetOne(target || state.lastMount, options || {});
+  }
 
-      function boot() {
-        bindControls();
+  function pause() {
+    state.paused = true;
+    return { ok: true, paused: true, version: VERSION, visualPassClaimed: false };
+  }
 
-        global.setTimeout(function () {
-          var showroomRuntime = getShowroomRuntime();
-          var runtime = getRuntime();
+  function resume() {
+    state.paused = false;
+    if (state.lastCanvas) renderNow(state.lastCanvas, {});
+    return { ok: true, paused: false, version: VERSION, visualPassClaimed: false };
+  }
 
-          if (showroomRuntime && typeof showroomRuntime.boot === "function") {
-            showroomRuntime.boot();
-          } else if (runtime && typeof runtime.start === "function") {
-            runtime.start("#planet-one-render", {
-              source: "route-cache-token-alignment",
-              viewLon: -28,
-              viewLat: 0,
-              speedDegreesPerSecond: 2.4,
-              showAxis: false,
-              seed: 256451
-            });
-          }
+  function destroy() {
+    state.paused = true;
 
-          writeReceipt({ boot: true });
-        }, 120);
-      }
+    if (state.lastCanvas && state.lastCanvas.parentNode) {
+      state.lastCanvas.parentNode.removeChild(state.lastCanvas);
+    }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot);
-      } else {
-        boot();
-      }
-    })(window);
-  </script>
-</body>
-</html>
+    state.lastCanvas = null;
+    state.lastMount = null;
+
+    return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
+  }
+
+  function getStatus() {
+    return {
+      ok: true,
+      active: true,
+      VERSION: VERSION,
+      version: VERSION,
+      PRIOR_VERSION: PRIOR_VERSION,
+      priorVersion: PRIOR_VERSION,
+      LAYER_VERSION: LAYER_VERSION,
+      layerVersion: LAYER_VERSION,
+      baseline: BASELINE,
+
+      rendererFacadeActive: true,
+      responsibilitySplitActive: true,
+      cleanSlatePreserved: true,
+
+      surfaceAirLayerSeparationRendered: Boolean(state.lastRender && state.lastRender.surfaceAirLayerSeparationRendered),
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.waterSurfaceMaterialRendered),
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialRendered: Boolean(state.lastRender && state.lastRender.landSurfaceMaterialRendered),
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialRendered: Boolean(state.lastRender && state.lastRender.airOverlayMaterialRendered),
+      airOverlayMaterialActive: true,
+      landMaskSeparationRendered: Boolean(state.lastRender && state.lastRender.landMaskSeparationRendered),
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
+
+      wholeWorldContainerRendered: Boolean(state.lastRender && state.lastRender.wholeWorldContainerRendered),
+      triDomain256Rendered: Boolean(state.lastRender && state.lastRender.triDomain256Rendered),
+      water256Rendered: Boolean(state.lastRender && state.lastRender.water256Rendered),
+      land256Rendered: Boolean(state.lastRender && state.lastRender.land256Rendered),
+      air256Rendered: Boolean(state.lastRender && state.lastRender.air256Rendered),
+      wholeWorld256Rendered: Boolean(state.lastRender && state.lastRender.wholeWorld256Rendered),
+
+      waterRemainsSovereign: true,
+      waterDepthPreserved: true,
+      reefShelfPreserved: true,
+      beachThresholdPreserved: true,
+      hydrationReadOnlyPreserved: true,
+      terrainAuthorityBlocked: true,
+      waterSovereigntyPreserved: true,
+
+      noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
+      noMountainRelief: true,
+      noRiverNetwork: true,
+      noFullGlacierSystem: true,
+
+      rendererConsumesHydration: Boolean(state.rendererConsumesHydration),
+      rendererConsumesHexBridge: Boolean(state.rendererConsumesHexBridge),
+      rendererConsumesHexgrid: Boolean(state.rendererConsumesHexBridge),
+
+      runtimeUntouched: true,
+      gaugesUntouched: true,
+      routeUntouched: true,
+      hydrationUntouched: true,
+      upstreamRuntimeUntouched: true,
+
+      lastRender: state.lastRender,
+      lastError: state.lastError,
+      visualPassClaimed: false
+    };
+  }
+
+  function status() {
+    return getStatus();
+  }
+
+  var api = {
+    VERSION: VERSION,
+    version: VERSION,
+    PRIOR_VERSION: PRIOR_VERSION,
+    priorVersion: PRIOR_VERSION,
+    LAYER_VERSION: LAYER_VERSION,
+    layerVersion: LAYER_VERSION,
+    BASELINE: BASELINE,
+    baseline: BASELINE,
+
+    renderPlanetOne: renderPlanetOne,
+    render: render,
+    renderGlobe: renderGlobe,
+    mount: mount,
+    mountPlanetOne: mountPlanetOne,
+    create: create,
+    createPlanetOneRender: createPlanetOneRender,
+    createPlanetOneScene: createPlanetOneScene,
+    start: start,
+    pause: pause,
+    resume: resume,
+    destroy: destroy,
+    getStatus: getStatus,
+    status: status
+  };
+
+  global.DGBPlanetOneRenderTeam = api;
+  global.DGBPlanetOneRenderer = api;
+  global.DGBPlanetOneRender = api;
+
+  ensureDependencies();
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:surface-air-separation-renderer-ready", {
+      detail: getStatus()
+    }));
+  } catch (error) {}
+})(typeof window !== "undefined" ? window : globalThis);

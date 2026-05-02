@@ -1,413 +1,302 @@
 <!doctype html>
 <html
   lang="en"
+  data-page-id="gauges"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1"
-  data-earth-g1-complete="true"
-  data-next-sequence="sun,moon"
-  data-planet-one-status="reserved-for-nine-summits-universe"
+  data-contract="GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1"
+  data-purpose="audit-entire-site-and-identify-most-impactful-next-move"
+  data-source-fetch-only="true"
+  data-renders-iframe="false"
+  data-executes-target-files="false"
+  data-mutates-runtime="false"
+  data-starts-extra-animation-loops="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · Earth G1 Complete</title>
-  <meta name="description" content="Earth G1 is complete. Sun is next. Moon follows.">
+  <title>Gauges · Full Site Impact Audit · Diamond Gate Bridge</title>
+  <meta name="description" content="Full-site source-only audit surface for Diamond Gate Bridge: route health, backlinks, Frontier lanes, product chambers, Demo Universe, and next-move impact ranking.">
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #02050b;
-      --panel: rgba(8, 14, 25, 0.92);
-      --panel2: rgba(12, 21, 36, 0.88);
-      --line: rgba(176, 204, 255, 0.22);
       --gold: #f2c76f;
-      --green: #83e0b9;
-      --blue: #9ec6ff;
-      --warn: #ffd38a;
-      --bad: #ff9b9b;
+      --green: #8ff0c6;
+      --blue: #9ec5ff;
+      --red: #ff8f8f;
+      --orange: #ffbf7f;
       --text: #f5f7fb;
-      --muted: rgba(228, 234, 246, 0.76);
-      --soft: rgba(228, 234, 246, 0.58);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      background: var(--bg);
-      scroll-behavior: smooth;
+      --muted: rgba(226,234,248,.74);
+      --line: rgba(180,205,255,.18);
+      --panel: rgba(255,255,255,.045);
+      --panel-strong: rgba(255,255,255,.07);
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.12), transparent 22rem),
-        radial-gradient(circle at 15% 24%, rgba(158, 198, 255, 0.10), transparent 24rem),
-        radial-gradient(circle at 86% 72%, rgba(131, 224, 185, 0.08), transparent 24rem),
-        linear-gradient(180deg, #02050b 0%, #07111f 52%, #02050b 100%);
+        radial-gradient(circle at 50% -8%, rgba(242,199,111,.14), transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(125,181,255,.12), transparent 34%),
+        radial-gradient(circle at 20% 80%, rgba(143,240,198,.08), transparent 34%),
+        linear-gradient(180deg, #050813, #070c18 58%, #040711);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .skip {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      z-index: 30;
-      transform: translateY(-150%);
-      border: 1px solid rgba(242, 199, 111, 0.65);
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: #07101c;
-      color: var(--text);
-      font-weight: 900;
-    }
-
-    .skip:focus {
-      transform: translateY(0);
-    }
-
-    .shell {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 26px 0 48px;
-    }
-
-    header {
-      display: grid;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .brand {
-      display: grid;
-      gap: 5px;
-      width: fit-content;
-    }
-
-    .brand strong {
-      color: var(--gold);
-      font-size: clamp(1.08rem, 4vw, 1.62rem);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: clamp(0.78rem, 2.7vw, 1rem);
-      font-weight: 820;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    nav,
-    .actions,
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    nav a,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
-      color: var(--text);
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    nav a[aria-current="page"],
-    .button.primary {
-      border-color: rgba(242, 199, 111, 0.62);
-      background: linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
-      color: #fff3c8;
-    }
-
-    .button.green {
-      border-color: rgba(131, 224, 185, 0.48);
-      background: linear-gradient(180deg, rgba(131,224,185,0.18), rgba(131,224,185,0.055));
-      color: #dfffee;
-    }
-
-    main {
-      display: grid;
-      gap: 22px;
-    }
-
-    .hero,
-    .panel,
-    .tile {
-      border: 1px solid var(--line);
-      border-radius: clamp(22px, 5vw, 34px);
+    .gauge-stage,
+    .gauge-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242,199,111,.24);
+      border-radius: 36px;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
-        var(--panel);
-      box-shadow: 0 28px 88px rgba(0, 0, 0, 0.44);
+        radial-gradient(circle at 80% 16%, rgba(242,199,111,.10), transparent 24rem),
+        linear-gradient(180deg, rgba(12,20,38,.88), rgba(6,10,22,.98));
+      box-shadow: 0 28px 90px rgba(0,0,0,.38);
+      padding: clamp(26px, 5vw, 64px);
+      margin-top: 18px;
     }
 
-    .hero {
-      padding: clamp(24px, 6vw, 56px);
-      display: grid;
-      gap: 18px;
-    }
-
-    .panel {
-      padding: clamp(18px, 4vw, 30px);
-      display: grid;
-      gap: 18px;
-    }
-
-    .eyebrow {
+    .kicker,
+    .metric span,
+    .route-card span,
+    .finding-card span {
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 950;
-      letter-spacing: 0.18em;
+      letter-spacing: .14em;
       text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-      line-height: 1;
-      letter-spacing: -0.055em;
     }
 
     h1 {
-      font-size: clamp(2.7rem, 10vw, 6.4rem);
-      max-width: 980px;
+      max-width: 1120px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(3rem, 10vw, 7.1rem);
+      line-height: .88;
+      letter-spacing: -.07em;
+      text-wrap: balance;
+    }
+
+    h1 span {
+      color: #ffe5a3;
+      text-shadow: 0 0 42px rgba(242,199,111,.15);
     }
 
     h2 {
-      font-size: clamp(1.72rem, 5.6vw, 3.35rem);
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: .94;
+      letter-spacing: -.055em;
+      text-wrap: balance;
     }
 
     h3 {
-      font-size: clamp(1.18rem, 3.5vw, 1.6rem);
-    }
-
-    p {
       margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 2.8vw, 1.18rem);
-      line-height: 1.56;
+      color: var(--text);
+      font-size: 1.22rem;
+      line-height: 1.04;
+      letter-spacing: -.025em;
     }
 
     .lead {
       max-width: 960px;
-      color: rgba(245, 247, 251, 0.88);
-      font-size: clamp(1.14rem, 4vw, 1.68rem);
-      line-height: 1.42;
+      margin: 24px 0 0;
+      color: rgba(245,247,251,.88);
+      font-size: clamp(1.16rem, 3vw, 1.76rem);
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+
+    .copy {
+      max-width: 930px;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.58;
+    }
+
+    .chips,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
     }
 
     .chip {
       display: inline-flex;
       align-items: center;
-      min-height: 34px;
-      border: 1px solid var(--line);
+      min-height: 38px;
+      border: 1px solid rgba(180,205,255,.22);
       border-radius: 999px;
-      padding: 7px 11px;
-      background: rgba(255,255,255,0.045);
-      color: rgba(245,247,251,0.84);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      padding: 8px 13px;
+      background: rgba(255,255,255,.045);
+      color: rgba(245,247,251,.88);
+      font-weight: 850;
     }
 
-    .chip.pass {
-      border-color: rgba(131, 224, 185, 0.44);
-      color: #a8f0cd;
-      background: rgba(131,224,185,0.10);
+    .chip.lock {
+      border-color: rgba(242,199,111,.58);
+      color: #ffe7a7;
+      background: rgba(242,199,111,.11);
     }
 
-    .chip.next {
-      border-color: rgba(242, 199, 111, 0.46);
-      color: #ffe6a5;
-      background: rgba(242,199,111,0.10);
-    }
-
-    .chip.queue {
-      border-color: rgba(158, 198, 255, 0.44);
-      color: #cfe2ff;
-      background: rgba(158,198,255,0.10);
-    }
-
-    .status-grid,
-    .sequence-grid {
+    .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
+      margin-top: 24px;
     }
 
-    .sequence-grid {
+    .grid.three {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .tile {
-      padding: 18px;
-      min-height: 132px;
-      background:
-        radial-gradient(circle at 100% 0%, rgba(242,199,111,0.08), transparent 18rem),
-        var(--panel2);
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .tile .label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .tile strong {
-      display: block;
-      color: var(--text);
-      font-size: clamp(1.25rem, 4.2vw, 2.15rem);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-      margin-bottom: 8px;
-    }
-
-    .tile.pass strong {
-      color: var(--green);
-    }
-
-    .tile.next strong {
-      color: var(--gold);
-    }
-
-    .tile.queue strong {
-      color: var(--blue);
-    }
-
-    .table-wrap {
-      overflow-x: auto;
+    .metric,
+    .route-card,
+    .finding-card {
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(0,0,0,0.18);
+      border-radius: 24px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(215,165,255,.10), transparent 34%),
+        var(--panel);
+      color: var(--text);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .metric strong {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: .9;
+      letter-spacing: -.055em;
+    }
+
+    .metric p,
+    .route-card p,
+    .finding-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+      flex: 1;
+    }
+
+    .status-pass { color: var(--green); }
+    .status-warn { color: var(--orange); }
+    .status-fail { color: var(--red); }
+    .status-hold { color: var(--gold); }
+
+    .audit-table-wrap {
+      overflow-x: auto;
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(0,0,0,.18);
     }
 
     table {
       width: 100%;
-      min-width: 760px;
+      min-width: 980px;
       border-collapse: collapse;
     }
 
     th,
     td {
       padding: 12px 14px;
-      border-bottom: 1px solid rgba(176,204,255,0.12);
+      border-bottom: 1px solid rgba(180,205,255,.12);
       text-align: left;
       vertical-align: top;
-      font-size: 0.92rem;
-      color: rgba(245,247,251,0.84);
+      color: rgba(245,247,251,.88);
+      font-size: .92rem;
     }
 
     th {
-      color: #dfeaff;
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
+      color: #ffe7a7;
+      font-size: .74rem;
+      letter-spacing: .12em;
       text-transform: uppercase;
+      background: rgba(255,255,255,.035);
     }
 
     tr:last-child td {
       border-bottom: 0;
     }
 
-    .state-pass {
-      color: var(--green);
-      font-weight: 950;
-    }
-
-    .state-next,
-    .state-queue,
-    .state-warn {
-      color: var(--warn);
-      font-weight: 950;
-    }
-
-    .state-fail {
-      color: var(--bad);
-      font-weight: 950;
+    code {
+      color: #ffe7a7;
+      background: rgba(242,199,111,.08);
+      border: 1px solid rgba(242,199,111,.16);
+      border-radius: 8px;
+      padding: 1px 6px;
     }
 
     .receipt {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
-      background: rgba(0,0,0,0.28);
-      color: rgba(245,247,251,0.84);
-      font-size: 0.86rem;
-      line-height: 1.52;
     }
 
-    footer {
-      color: var(--soft);
-      padding-top: 8px;
-      font-size: 0.84rem;
-      line-height: 1.5;
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
     }
 
-    @media (max-width: 900px) {
-      .status-grid,
-      .sequence-grid {
+    @media (max-width: 1100px) {
+      .grid,
+      .grid.three,
+      .grid.two {
         grid-template-columns: 1fr;
       }
+
+      .gauge-stage,
+      .gauge-panel {
+        border-radius: 28px;
+      }
     }
 
-    @media (max-width: 680px) {
-      nav a,
-      .button {
-        min-width: calc(50% - 6px);
-      }
-
-      .actions .button {
-        width: 100%;
+    @media (max-width: 640px) {
+      .gauge-stage,
+      .gauge-panel {
+        padding: 28px 22px;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Gauges</a>
+  <a class="dgb-skip" href="#main">Skip to Gauges</a>
 
-  <div class="shell">
-    <header>
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Gauges · Earth G1 Complete · Sun Next · Moon Queue</span>
-      </a>
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Gauges · Full Site Impact Audit</div>
+        <div class="dgb-room-line">Source-only · No iframe · No runtime mutation</div>
+      </div>
 
-      <nav aria-label="Primary navigation">
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
@@ -415,379 +304,700 @@
         <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main id="main">
-      <section class="hero">
-        <p class="eyebrow">H6 · Gauges · Earth G1 Final Receipt</p>
-        <h1>Earth G1 is complete. Sun is next. Moon follows.</h1>
+  <main id="main" class="dgb-main">
+    <section class="gauge-stage">
+      <p class="kicker">H6 · Gauges · Full Site Impact Audit</p>
+      <h1>Audit the whole site. <span>Name the next move.</span></h1>
+      <p class="lead">
+        This Gauges renewal fetches served source only. It checks routes, backlinks, thin-page risk,
+        Frontier lane integrity, product chamber availability, Demo Universe continuity, and then ranks the most impactful next move.
+      </p>
 
-        <p class="lead">
-          Earth G1 is the accepted Demo Universe globe baseline. This page records that completion,
-          keeps Planet 1 reserved for the future Nine Summits Universe, and opens the next build order:
-          Sun first, then Moon.
-        </p>
+      <div class="chips">
+        <span class="chip lock">Source fetch only</span>
+        <span class="chip lock">No iframe</span>
+        <span class="chip lock">No runtime mutation</span>
+        <span class="chip">Whole known site map</span>
+        <span class="chip">Frontier lanes</span>
+        <span class="chip">Products</span>
+        <span class="chip">Demo Universe</span>
+      </div>
 
-        <div class="chips">
-          <span class="chip pass">Earth G1 complete</span>
-          <span class="chip next">Sun next</span>
-          <span class="chip queue">Moon queued</span>
-          <span class="chip">Source fetch only</span>
-          <span class="chip">No iframe</span>
-          <span class="chip">No runtime mutation</span>
-        </div>
+      <div class="actions">
+        <button class="dgb-button" type="button" data-run="full">Run full site audit</button>
+        <button class="dgb-button secondary" type="button" data-run="routes">Run route audit</button>
+        <button class="dgb-button secondary" type="button" data-run="frontier">Run Frontier audit</button>
+        <button class="dgb-button secondary" type="button" data-run="products">Run Products audit</button>
+        <button class="dgb-button secondary" type="button" data-run="demo">Run Demo Universe audit</button>
+      </div>
+    </section>
 
-        <div class="actions">
-          <button class="button primary" type="button" data-audit="earth">Run Earth G1 confirmation</button>
-          <button class="button green" type="button" data-audit="sun">Run Sun readiness</button>
-          <button class="button" type="button" data-audit="moon">Run Moon queue</button>
-          <button class="button" type="button" data-audit="full">Run full sequence audit</button>
-          <a class="button" href="/showroom/globe/">Open Earth G1</a>
-        </div>
-      </section>
+    <section class="gauge-panel" aria-label="Most impactful next move">
+      <p class="kicker">Decision output</p>
+      <h2 id="next-move-title">Most impactful next move: audit pending.</h2>
+      <p id="next-move-copy" class="copy">
+        Run the full site audit. The result will prioritize the move that removes the most site-wide friction.
+      </p>
 
-      <section class="panel">
-        <p class="eyebrow">Current sequence state</p>
-        <h2>The next build order is visible.</h2>
+      <div class="grid four">
+        <article class="metric">
+          <span>Overall health</span>
+          <strong id="metric-health" class="status-hold">HOLD</strong>
+          <p id="metric-health-note">Waiting for source checks.</p>
+        </article>
 
-        <div class="status-grid">
-          <article class="tile pass">
-            <span class="label">Earth G1</span>
-            <strong id="earth-state">Complete</strong>
-            <p>Accepted Demo Universe globe baseline.</p>
-          </article>
+        <article class="metric">
+          <span>Routes passing</span>
+          <strong id="metric-routes" class="status-hold">0/0</strong>
+          <p>Known served route availability.</p>
+        </article>
 
-          <article class="tile next">
-            <span class="label">Next target</span>
-            <strong id="sun-state">Ready next</strong>
-            <p>Prepare the stellar body standard after Earth G1.</p>
-          </article>
+        <article class="metric">
+          <span>Broken links</span>
+          <strong id="metric-broken" class="status-hold">0</strong>
+          <p>Internal links that resolve as missing or failed.</p>
+        </article>
 
-          <article class="tile queue">
-            <span class="label">Queued target</span>
-            <strong id="moon-state">Queued</strong>
-            <p>Moon follows only after Sun terms are renewed.</p>
-          </article>
+        <article class="metric">
+          <span>Impact score</span>
+          <strong id="metric-impact" class="status-hold">—</strong>
+          <p>Higher score means stronger next-move priority.</p>
+        </article>
+      </div>
+    </section>
 
-          <article class="tile">
-            <span class="label">Planet 1</span>
-            <strong>Reserved</strong>
-            <p>Future Nine Summits Universe planet, not the Earth G1 route.</p>
-          </article>
-        </div>
-      </section>
+    <section class="gauge-panel">
+      <p class="kicker">Findings</p>
+      <h2>Impact-ranked findings.</h2>
+      <p class="copy">Findings are sorted by site impact, not by preference.</p>
+      <div id="finding-grid" class="grid three">
+        <article class="finding-card">
+          <span>Pending</span>
+          <h3>No findings yet.</h3>
+          <p>Run the audit to generate ranked findings.</p>
+        </article>
+      </div>
+    </section>
 
-      <section class="panel">
-        <p class="eyebrow">Formation order</p>
-        <h2>Earth gives the globe standard. Sun gives the light source. Moon gives the companion body.</h2>
+    <section class="gauge-panel">
+      <p class="kicker">Route surface</p>
+      <h2>Known route checks.</h2>
+      <p class="copy">
+        These checks fetch HTML/source only. A route can pass source while still needing visual inspection.
+      </p>
 
-        <div class="sequence-grid">
-          <article class="tile pass">
-            <span class="label">Step 1 · Complete</span>
-            <strong>Earth G1</strong>
-            <p>The accepted Demo Universe globe standard. Route: /showroom/globe/.</p>
-          </article>
+      <div class="audit-table-wrap">
+        <table aria-label="Known route audit table">
+          <thead>
+            <tr>
+              <th>Lane</th>
+              <th>Path</th>
+              <th>Status</th>
+              <th>Size</th>
+              <th>Signals</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="route-table">
+            <tr><td colspan="6">Audit pending.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-          <article class="tile next">
-            <span class="label">Step 2 · Next</span>
-            <strong>Sun</strong>
-            <p>Renew the Sun terms next: plasma surface, controlled radiance, and mobile-safe motion.</p>
-          </article>
+    <section class="gauge-panel">
+      <p class="kicker">Backlink surface</p>
+      <h2>Internal link health.</h2>
+      <p class="copy">
+        The audit gathers same-origin links from known pages and checks whether those routes resolve.
+      </p>
 
-          <article class="tile queue">
-            <span class="label">Step 3 · Queue</span>
-            <strong>Moon</strong>
-            <p>Moon remains queued until Sun is renewed and inspected.</p>
-          </article>
-        </div>
-      </section>
+      <div class="audit-table-wrap">
+        <table aria-label="Internal link audit table">
+          <thead>
+            <tr>
+              <th>Source page</th>
+              <th>Link</th>
+              <th>Status</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="link-table">
+            <tr><td colspan="4">Audit pending.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      <section class="panel">
-        <p class="eyebrow">Live diagnostic surface</p>
-        <h2>Source-only checks.</h2>
-        <p>
-          These buttons fetch route and asset source only. They do not execute target files,
-          render iframes, delete files, mutate runtime, or start extra animation loops.
-        </p>
+    <section class="gauge-panel">
+      <p class="kicker">Audit scope</p>
+      <h2>Site map under inspection.</h2>
+      <div id="scope-grid" class="grid three"></div>
+    </section>
 
-        <div class="table-wrap">
-          <table aria-label="Diagnostic result table">
-            <thead>
-              <tr>
-                <th>Lane</th>
-                <th>Path</th>
-                <th>Status</th>
-                <th>Size</th>
-                <th>Signal</th>
-                <th>Verdict</th>
-              </tr>
-            </thead>
-            <tbody id="result-body">
-              <tr>
-                <td>Earth G1</td>
-                <td>/showroom/globe/</td>
-                <td class="state-pass">ACCEPTED</td>
-                <td>locked</td>
-                <td>Accepted by Sean</td>
-                <td>Earth G1 remains complete regardless of Sun-only or Moon-only audit mode.</td>
-              </tr>
-              <tr>
-                <td>Sun</td>
-                <td>/assets/sun/</td>
-                <td class="state-next">NEXT</td>
-                <td>pending</td>
-                <td>Sun readiness lane</td>
-                <td>Renew Sun terms next.</td>
-              </tr>
-              <tr>
-                <td>Moon</td>
-                <td>/assets/moon/</td>
-                <td class="state-queue">QUEUED</td>
-                <td>pending</td>
-                <td>Moon queue lane</td>
-                <td>Do not begin Moon until Sun is renewed and inspected.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="eyebrow">Contract receipt</p>
-        <h2>Earth G1 completion receipt.</h2>
-
-        <pre id="receipt" class="receipt">GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1
+    <section class="dgb-card">
+      <h2>Contract receipt</h2>
+      <pre id="audit-receipt" class="dgb-receipt receipt">GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1
 route=/gauges/
 page=gauges
-earth-g1-complete=true
-earth-g1-route=/showroom/globe/
-earth-g1-public-label=Earth G1
-earth-g1-accepted-by-sean=true
-demo-universe=earth
-planet-1=reserved-for-future-nine-summits-universe
-next=sun
-then=moon
-source-fetch-only=true
-executes_target_files=false
+purpose=audit-entire-site-and-identify-most-impactful-next-move
+source_fetch_only=true
 renders_iframe=false
+executes_target_files=false
 deletes_files=false
 mutates_runtime=false
 starts_extra_animation_loops=false
-status=READY</pre>
-      </section>
-    </main>
+known_routes_loaded=false
+audit_status=READY</pre>
+    </section>
 
-    <footer>
-      GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1 · Gauges · Diamond Gate Bridge.
-    </footer>
-  </div>
+    <section class="audit-source" aria-label="Gauges audit source">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/explore/">Explore</a>
+      <a href="/frontier/">Frontier</a>
+      <a href="/frontier/closed-loop/">Closed Loop</a>
+      <a href="/frontier/energy/">Energy</a>
+      <a href="/frontier/infrastructure/">Infrastructure</a>
+      <a href="/frontier/lattice/">Lattice</a>
+      <a href="/frontier/manual/">Manual</a>
+      <a href="/frontier/shimmer/">Shimmer</a>
+      <a href="/frontier/trajectory/">Trajectory</a>
+      <a href="/frontier/urban/">Urban</a>
+      <a href="/frontier/vision-remote/">Vision Remote</a>
+      <a href="/frontier/vision/">Vision</a>
+      <a href="/frontier/waste/">Waste</a>
+      <a href="/frontier/water/">Water</a>
+      <a href="/laws/">Laws</a>
+      <a href="/products/">Products</a>
+      <a href="/products/archcoin/">ARCHCOIN</a>
+      <a href="/products/five-flags/">Five Flags</a>
+      <a href="/products/on-your-side-ai/">On Your Side AAI</a>
+      <a href="/products/education/">Education</a>
+      <a href="/products/nutrition/">Nutrition</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Earth G1</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/nine-summits-of-love/">Book</a>
+      <a href="/gauges/">Gauges</a>
+      <span>GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1</span>
+    </section>
+  </main>
+
+  <footer class="dgb-footer">
+    GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1 · Full Site Impact Audit · Diamond Gate Bridge.
+  </footer>
 
   <script>
-    (function bindGaugesVisibleRenewal() {
+    (function () {
       "use strict";
 
-      var CONTRACT = "GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1";
+      var CONTRACT = "GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1";
+      var CACHE_BUST = "_gauges_full_site_audit=" + Date.now();
 
-      var accepted = {
-        earthG1Complete: true,
-        earthG1AcceptedBySean: true,
-        earthG1Route: "/showroom/globe/",
-        planetOneReserved: true,
-        next: "sun",
-        then: "moon"
-      };
+      var ROUTES = [
+        { group: "Core", label: "Compass", path: "/", required: ["Diamond Gate Bridge"], weight: 10 },
+        { group: "Core", label: "Door", path: "/door/", required: ["Door"], weight: 8 },
+        { group: "Core", label: "Home", path: "/home/", required: ["Home"], weight: 8 },
+        { group: "Core", label: "Explore", path: "/explore/", required: ["Explore"], weight: 10 },
+        { group: "Frontier", label: "Frontier", path: "/frontier/", required: ["Frontier"], weight: 12 },
 
-      var targets = {
-        earth: [
-          { lane: "Earth G1", path: "/showroom/globe/", required: ["Earth", "G1", "Demo Universe"], accepted: true },
-          { lane: "Earth G1", path: "/assets/earth/earth_canvas.js", required: ["DGBEarthAssetCanvas", "earth_surface_2048.jpg", "earth_clouds_2048.jpg"], accepted: true },
-          { lane: "Earth G1", path: "/assets/earth/earth_material.css", required: ["touch-action"], accepted: true }
-        ],
-        sun: [
-          { lane: "Sun", path: "/assets/sun/sun_manifest.json", required: ["Sun"], next: true },
-          { lane: "Sun", path: "/assets/sun/sun_canvas.js", required: ["canvas"], next: true },
-          { lane: "Sun", path: "/assets/sun/sun_material.css", required: ["sun"], next: true }
-        ],
-        moon: [
-          { lane: "Moon", path: "/assets/moon/moon_manifest.json", required: ["Moon"], queued: true, optional: true },
-          { lane: "Moon", path: "/assets/moon/moon_canvas.js", required: ["Moon"], queued: true, optional: true },
-          { lane: "Moon", path: "/assets/moon/moon_material.css", required: ["moon"], queued: true, optional: true }
-        ]
-      };
+        { group: "Frontier Lane", label: "Closed Loop", path: "/frontier/closed-loop/", required: ["Closed Loop", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Energy", path: "/frontier/energy/", required: ["Energy", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Infrastructure", path: "/frontier/infrastructure/", required: ["Infrastructure", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Lattice", path: "/frontier/lattice/", required: ["Lattice", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Manual", path: "/frontier/manual/", required: ["Manual", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Shimmer", path: "/frontier/shimmer/", required: ["Shimmer", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Trajectory", path: "/frontier/trajectory/", required: ["Trajectory", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Urban", path: "/frontier/urban/", required: ["Urban", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Vision Remote", path: "/frontier/vision-remote/", required: ["Vision Remote", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Vision", path: "/frontier/vision/", required: ["Vision", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Waste", path: "/frontier/waste/", required: ["Waste", "256"], weight: 9 },
+        { group: "Frontier Lane", label: "Water", path: "/frontier/water/", required: ["Water", "256"], weight: 9 },
+
+        { group: "Rule", label: "Laws", path: "/laws/", required: ["Laws"], weight: 8 },
+        { group: "Products", label: "Products", path: "/products/", required: ["Products"], weight: 10 },
+        { group: "Products", label: "ARCHCOIN", path: "/products/archcoin/", required: ["ARCHCOIN"], weight: 8 },
+        { group: "Products", label: "Five Flags", path: "/products/five-flags/", required: ["Five Flags"], weight: 8 },
+        { group: "Products", label: "On Your Side AAI", path: "/products/on-your-side-ai/", required: ["On Your Side AAI"], weight: 8 },
+        { group: "Products", label: "Education", path: "/products/education/", required: ["Education"], weight: 8 },
+        { group: "Products", label: "Nutrition", path: "/products/nutrition/", required: ["Baseline Nutrition", "Nutrition"], weight: 8 },
+
+        { group: "Showroom", label: "Showroom", path: "/showroom/", required: ["Showroom"], weight: 9 },
+        { group: "Demo Universe", label: "Earth G1", path: "/showroom/globe/", required: ["Earth G1"], weight: 12 },
+        { group: "Universe", label: "Nine Summits Universe", path: "/nine-summits/universe/", required: ["Universe"], weight: 9 },
+        { group: "Book", label: "Book", path: "/nine-summits-of-love/", required: ["Nine Summits"], weight: 9 },
+        { group: "Diagnostics", label: "Gauges", path: "/gauges/", required: ["Gauges"], weight: 10 }
+      ];
+
+      var FRONTIER_LANES = ROUTES.filter(function (route) {
+        return route.group === "Frontier Lane";
+      });
+
+      var PRODUCT_ROUTES = ROUTES.filter(function (route) {
+        return route.group === "Products";
+      });
 
       function byId(id) {
         return document.getElementById(id);
       }
 
-      function esc(value) {
-        return String(value == null ? "" : value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+      function withBust(path) {
+        return path + (path.indexOf("?") === -1 ? "?" : "&") + CACHE_BUST;
       }
 
-      function hash(text) {
-        var h = 2166136261;
-        for (var i = 0; i < text.length; i += 1) {
-          h ^= text.charCodeAt(i);
-          h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
-        }
-        return ("0000000" + (h >>> 0).toString(16)).slice(-8);
-      }
-
-      function markerSignal(text, required) {
-        var missing = [];
-        (required || []).forEach(function (token) {
-          if (String(text || "").indexOf(token) === -1) missing.push(token);
+      function unique(values) {
+        var seen = Object.create(null);
+        return values.filter(function (value) {
+          if (!value || seen[value]) return false;
+          seen[value] = true;
+          return true;
         });
-        return missing.length ? "missing: " + missing.join(", ") : "required markers present";
       }
 
-      function fetchSource(item) {
-        var sep = item.path.indexOf("?") === -1 ? "?" : "&";
+      function normalizePath(value) {
+        try {
+          var url = new URL(value, window.location.origin);
+          if (url.origin !== window.location.origin) return null;
+          var path = url.pathname || "/";
+          if (path.indexOf("/#") === 0) path = "/";
+          if (path.indexOf(".") === -1 && path.slice(-1) !== "/") path += "/";
+          return path;
+        } catch (error) {
+          return null;
+        }
+      }
 
-        return fetch(item.path + sep + "_gauges=" + encodeURIComponent(CONTRACT + "_" + Date.now()), {
+      function statusClass(verdict) {
+        if (verdict === "PASS") return "status-pass";
+        if (verdict === "FAIL") return "status-fail";
+        if (verdict === "WARN") return "status-warn";
+        return "status-hold";
+      }
+
+      function fetchSource(route) {
+        return fetch(withBust(route.path), {
+          method: "GET",
+          credentials: "same-origin",
           cache: "no-store"
-        })
-          .then(function (res) {
-            return res.text().then(function (text) {
-              var signal = markerSignal(text, item.required);
-              var signalOk = signal === "required markers present";
-              var state;
-              var verdict;
-
-              if (item.accepted && res.ok) {
-                state = signalOk ? "PASS" : "WARN";
-                verdict = signalOk ? "Earth G1 accepted and source markers are present." : "Earth G1 remains accepted; source markers need review.";
-              } else if (item.next && res.ok) {
-                state = signalOk ? "NEXT" : "WARN";
-                verdict = signalOk ? "Sun source exists. Renew Sun terms next." : "Sun source exists but needs terms cleanup.";
-              } else if (item.queued) {
-                state = "QUEUED";
-                verdict = res.ok ? "Moon source exists, but remains queued behind Sun." : "Moon source is not required yet.";
-              } else {
-                state = res.ok ? "WARN" : "FAIL";
-                verdict = res.ok ? "Source served with review warnings." : "Source did not serve.";
-              }
-
-              return {
-                lane: item.lane,
-                path: item.path,
-                status: res.status,
-                ok: res.ok,
-                size: text.length,
-                hash: hash(text),
-                state: state,
-                signal: signal,
-                verdict: verdict
-              };
-            });
-          })
-          .catch(function (error) {
+        }).then(function (response) {
+          return response.text().then(function (text) {
             return {
-              lane: item.lane,
-              path: item.path,
-              status: "ERR",
-              ok: false,
-              size: 0,
-              hash: "none",
-              state: item.optional ? "QUEUED" : "FAIL",
-              signal: String(error && error.message ? error.message : error),
-              verdict: item.optional ? "Not required yet." : "Fetch failed."
+              route: route,
+              ok: response.ok,
+              status: response.status,
+              size: text.length,
+              text: text
             };
           });
+        }).catch(function (error) {
+          return {
+            route: route,
+            ok: false,
+            status: "ERR",
+            size: 0,
+            text: "",
+            error: error && error.message ? error.message : String(error)
+          };
+        });
       }
 
-      function classFor(state) {
-        if (state === "PASS") return "state-pass";
-        if (state === "NEXT") return "state-next";
-        if (state === "QUEUED") return "state-queue";
-        if (state === "WARN") return "state-warn";
-        return "state-fail";
+      function checkRequired(result) {
+        var text = result.text || "";
+        return (result.route.required || []).filter(function (signal) {
+          return text.indexOf(signal) !== -1;
+        });
       }
 
-      function renderRows(results) {
-        byId("result-body").innerHTML = results.map(function (r) {
-          return "<tr>" +
-            "<td>" + esc(r.lane) + "</td>" +
-            "<td>" + esc(r.path) + "</td>" +
-            "<td class='" + classFor(r.state) + "'>" + esc(r.state + " " + r.status) + "</td>" +
-            "<td>" + esc(r.size + " · " + r.hash) + "</td>" +
-            "<td>" + esc(r.signal) + "</td>" +
-            "<td>" + esc(r.verdict) + "</td>" +
-          "</tr>";
+      function extractLinks(result) {
+        var found = [];
+        var text = result.text || "";
+        var regex = /href=["']([^"']+)["']/gi;
+        var match;
+
+        while ((match = regex.exec(text))) {
+          var normalized = normalizePath(match[1]);
+          if (normalized) found.push({
+            source: result.route.path,
+            href: normalized
+          });
+        }
+
+        return found;
+      }
+
+      function routeVerdict(result) {
+        if (!result.ok) return "FAIL";
+        if (result.size < 1200) return "WARN";
+
+        var signals = checkRequired(result);
+        if (result.route.required && result.route.required.length && !signals.length) return "WARN";
+
+        if (result.route.group === "Frontier Lane") {
+          var text = result.text || "";
+          var hasFrontierBacklinks =
+            text.indexOf("/frontier/closed-loop/") !== -1 &&
+            text.indexOf("/frontier/energy/") !== -1 &&
+            text.indexOf("/frontier/lattice/") !== -1 &&
+            text.indexOf("/frontier/water/") !== -1;
+          var has256 =
+            text.indexOf("256") !== -1 ||
+            text.indexOf("lattice-scale=\"256\"") !== -1 ||
+            text.indexOf("data-lattice-scale=\"256\"") !== -1;
+
+          if (!hasFrontierBacklinks || !has256) return "WARN";
+        }
+
+        return "PASS";
+      }
+
+      function renderScope() {
+        var grouped = {};
+        ROUTES.forEach(function (route) {
+          grouped[route.group] = (grouped[route.group] || 0) + 1;
+        });
+
+        var grid = byId("scope-grid");
+        if (!grid) return;
+
+        grid.innerHTML = Object.keys(grouped).map(function (group) {
+          return '<article class="route-card"><span>' + group + '</span><h3>' + grouped[group] +
+            ' routes</h3><p>Included in the known site audit surface.</p></article>';
         }).join("");
       }
 
-      function summarize(results, mode) {
-        var sunReady = results.some(function (r) {
-          return r.lane === "Sun" && (r.state === "NEXT" || r.state === "PASS");
-        });
+      function renderRouteTable(results) {
+        var table = byId("route-table");
+        if (!table) return;
 
-        byId("earth-state").textContent = "Complete";
-        byId("sun-state").textContent = sunReady || mode === "sun" || mode === "full" ? "Ready next" : "Ready next";
-        byId("moon-state").textContent = "Queued";
+        table.innerHTML = results.map(function (result) {
+          var verdict = routeVerdict(result);
+          var signals = checkRequired(result);
+          var signalText = signals.length ? signals.join(", ") : "No required signal found";
+          if (!result.ok) signalText = result.error || ("HTTP " + result.status);
 
-        var receipt = {
-          contractVersion: CONTRACT,
-          timestamp: new Date().toISOString(),
-          auditMode: mode,
-          noDeleteAuthorized: true,
-          noIframeRendered: true,
-          noTargetExecution: true,
-          noRuntimeMutation: true,
-          noExtraAnimationLoopsStarted: true,
-          earthG1Complete: accepted.earthG1Complete,
-          earthG1AcceptedBySean: accepted.earthG1AcceptedBySean,
-          earthG1Route: accepted.earthG1Route,
-          planetOneReservedForFutureNineSummitsUniverse: accepted.planetOneReserved,
-          next: accepted.next,
-          then: accepted.then,
-          resultCount: results.length,
-          results: results
-        };
-
-        byId("receipt").textContent = "GAUGES EARTH G1 / SUN / MOON RECEIPT\n" + JSON.stringify(receipt, null, 2);
+          return "<tr>" +
+            "<td>" + result.route.group + " · " + result.route.label + "</td>" +
+            "<td><code>" + result.route.path + "</code></td>" +
+            "<td class=\"" + statusClass(verdict) + "\">" + (result.ok ? result.status : result.status) + "</td>" +
+            "<td>" + result.size + "</td>" +
+            "<td>" + signalText + "</td>" +
+            "<td class=\"" + statusClass(verdict) + "\">" + verdict + "</td>" +
+            "</tr>";
+        }).join("");
       }
 
-      function run(mode) {
-        var list = mode === "full"
-          ? [].concat(targets.earth, targets.sun, targets.moon)
-          : (targets[mode] || targets.earth);
+      function renderLinkTable(linkChecks) {
+        var table = byId("link-table");
+        if (!table) return;
 
-        byId("earth-state").textContent = "Complete";
-        byId("receipt").textContent = CONTRACT + "\nstatus=RUNNING\nmode=" + mode + "\ntimestamp=" + new Date().toISOString();
+        if (!linkChecks.length) {
+          table.innerHTML = "<tr><td colspan=\"4\">No internal links checked.</td></tr>";
+          return;
+        }
 
-        Promise.all(list.map(fetchSource)).then(function (results) {
-          renderRows(results);
-          summarize(results, mode);
+        table.innerHTML = linkChecks.slice(0, 160).map(function (item) {
+          var verdict = item.ok ? "PASS" : "FAIL";
+          return "<tr>" +
+            "<td><code>" + item.source + "</code></td>" +
+            "<td><code>" + item.href + "</code></td>" +
+            "<td class=\"" + statusClass(verdict) + "\">" + item.status + "</td>" +
+            "<td class=\"" + statusClass(verdict) + "\">" + verdict + "</td>" +
+            "</tr>";
+        }).join("");
+      }
+
+      function buildFindings(results, linkChecks) {
+        var findings = [];
+        var routeFailures = results.filter(function (r) { return routeVerdict(r) === "FAIL"; });
+        var routeWarnings = results.filter(function (r) { return routeVerdict(r) === "WARN"; });
+        var brokenLinks = linkChecks.filter(function (l) { return !l.ok; });
+
+        var missingFrontier = FRONTIER_LANES.filter(function (lane) {
+          var result = results.find(function (r) { return r.route.path === lane.path; });
+          return !result || routeVerdict(result) !== "PASS";
+        });
+
+        var productIssues = PRODUCT_ROUTES.filter(function (route) {
+          var result = results.find(function (r) { return r.route.path === route.path; });
+          return !result || routeVerdict(result) !== "PASS";
+        });
+
+        var earth = results.find(function (r) { return r.route.path === "/showroom/globe/"; });
+        var earthOk = earth && routeVerdict(earth) === "PASS";
+        var universe = results.find(function (r) { return r.route.path === "/nine-summits/universe/"; });
+        var universeOk = universe && routeVerdict(universe) === "PASS";
+
+        if (routeFailures.length) {
+          findings.push({
+            title: "Repair missing served routes first.",
+            label: "Critical route failure",
+            impact: 100 + routeFailures.length * 7,
+            action: "Fix the missing physical route files before visual upgrades.",
+            detail: routeFailures.map(function (r) { return r.route.path; }).join(", ")
+          });
+        }
+
+        if (brokenLinks.length) {
+          findings.push({
+            title: "Fix broken internal backlinks.",
+            label: "Backlink integrity",
+            impact: 90 + brokenLinks.length * 3,
+            action: "Update links to the physical served routes that actually exist.",
+            detail: brokenLinks.slice(0, 12).map(function (l) { return l.href; }).join(", ")
+          });
+        }
+
+        if (missingFrontier.length) {
+          findings.push({
+            title: "Finish the Frontier lane 256-lattice renewal.",
+            label: "Frontier lane integrity",
+            impact: 85 + missingFrontier.length * 4,
+            action: "Renew every /frontier/[lane]/ page with 256 lattice logic, sibling backlinks, origin route, Explore parent, Frontier parent, and Gauges receipt.",
+            detail: missingFrontier.map(function (r) { return r.path; }).join(", ")
+          });
+        }
+
+        if (productIssues.length) {
+          findings.push({
+            title: "Compress and strengthen product pages with Russian-doll structure.",
+            label: "Product chamber clarity",
+            impact: 74 + productIssues.length * 3,
+            action: "Renew product chambers so long pages become nested, readable, public-facing surfaces without losing content.",
+            detail: productIssues.map(function (r) { return r.path; }).join(", ")
+          });
+        }
+
+        if (!earthOk) {
+          findings.push({
+            title: "Repair Earth G1 route before any Sun or Moon move.",
+            label: "Demo Universe route",
+            impact: 95,
+            action: "Stabilize /showroom/globe/ as the accepted Demo Universe Earth G1 route.",
+            detail: "/showroom/globe/ did not pass source audit."
+          });
+        }
+
+        if (earthOk && universeOk) {
+          findings.push({
+            title: "Renew Demo Universe lighting sequence after structural links pass.",
+            label: "Visual generation queue",
+            impact: 62,
+            action: "Proceed Sun renewal only after route and backlink audit is clean enough.",
+            detail: "Earth G1 source passes; Sun remains next only if route integrity is stable."
+          });
+        }
+
+        if (routeWarnings.length) {
+          findings.push({
+            title: "Resolve thin or weak source pages.",
+            label: "Expression depth",
+            impact: 58 + routeWarnings.length * 2,
+            action: "Expand pages that serve but lack required signals, backlinks, or enough source substance.",
+            detail: routeWarnings.slice(0, 14).map(function (r) { return r.route.path; }).join(", ")
+          });
+        }
+
+        if (!findings.length) {
+          findings.push({
+            title: "Proceed to Sun G1 renewal.",
+            label: "Next generation move",
+            impact: 50,
+            action: "Site route integrity is clean enough. Resume Demo Universe Sun renewal while preserving Earth G1 and leaving Moon queued.",
+            detail: "No major route, backlink, Frontier, or product blockers detected."
+          });
+        }
+
+        return findings.sort(function (a, b) {
+          return b.impact - a.impact;
         });
       }
 
-      Array.prototype.forEach.call(document.querySelectorAll("[data-audit]"), function (button) {
+      function renderFindings(findings) {
+        var grid = byId("finding-grid");
+        if (!grid) return;
+
+        grid.innerHTML = findings.map(function (finding, index) {
+          return '<article class="finding-card">' +
+            '<span>' + (index === 0 ? "Top move" : "Finding " + (index + 1)) + ' · ' + finding.label + '</span>' +
+            '<h3>' + finding.title + '</h3>' +
+            '<p><strong>Action:</strong> ' + finding.action + '</p>' +
+            '<p><strong>Evidence:</strong> ' + (finding.detail || "No extra detail.") + '</p>' +
+            '<p><strong>Impact:</strong> ' + finding.impact + '</p>' +
+            '</article>';
+        }).join("");
+
+        var top = findings[0];
+        byId("next-move-title").textContent = "Most impactful next move: " + top.title;
+        byId("next-move-copy").textContent = top.action + " Evidence: " + top.detail;
+        byId("metric-impact").textContent = String(top.impact);
+        byId("metric-impact").className = top.impact >= 85 ? "status-fail" : top.impact >= 65 ? "status-warn" : "status-pass";
+      }
+
+      function updateMetrics(results, linkChecks, findings) {
+        var passCount = results.filter(function (r) { return routeVerdict(r) === "PASS"; }).length;
+        var failCount = results.filter(function (r) { return routeVerdict(r) === "FAIL"; }).length;
+        var warnCount = results.filter(function (r) { return routeVerdict(r) === "WARN"; }).length;
+        var broken = linkChecks.filter(function (l) { return !l.ok; }).length;
+        var total = results.length;
+
+        var health = "PASS";
+        var healthNote = "Known route surface is clean enough for next generation work.";
+
+        if (failCount || broken) {
+          health = "FAIL";
+          healthNote = "Route or backlink failures must be repaired before visual generation work.";
+        } else if (warnCount) {
+          health = "WARN";
+          healthNote = "Routes serve, but expression depth or required signals need renewal.";
+        }
+
+        byId("metric-health").textContent = health;
+        byId("metric-health").className = statusClass(health);
+        byId("metric-health-note").textContent = healthNote;
+        byId("metric-routes").textContent = passCount + "/" + total;
+        byId("metric-routes").className = failCount ? "status-fail" : warnCount ? "status-warn" : "status-pass";
+        byId("metric-broken").textContent = String(broken);
+        byId("metric-broken").className = broken ? "status-fail" : "status-pass";
+      }
+
+      function updateReceipt(mode, results, linkChecks, findings) {
+        var top = findings && findings[0] ? findings[0] : null;
+        var passCount = results.filter(function (r) { return routeVerdict(r) === "PASS"; }).length;
+        var warnCount = results.filter(function (r) { return routeVerdict(r) === "WARN"; }).length;
+        var failCount = results.filter(function (r) { return routeVerdict(r) === "FAIL"; }).length;
+        var broken = linkChecks.filter(function (l) { return !l.ok; }).length;
+
+        byId("audit-receipt").textContent =
+          CONTRACT + "\n" +
+          "route=/gauges/\n" +
+          "page=gauges\n" +
+          "mode=" + mode + "\n" +
+          "purpose=audit-entire-site-and-identify-most-impactful-next-move\n" +
+          "source_fetch_only=true\n" +
+          "renders_iframe=false\n" +
+          "executes_target_files=false\n" +
+          "deletes_files=false\n" +
+          "mutates_runtime=false\n" +
+          "starts_extra_animation_loops=false\n" +
+          "known_routes=" + results.length + "\n" +
+          "route_pass=" + passCount + "\n" +
+          "route_warn=" + warnCount + "\n" +
+          "route_fail=" + failCount + "\n" +
+          "internal_links_checked=" + linkChecks.length + "\n" +
+          "broken_internal_links=" + broken + "\n" +
+          "most_impactful_next_move=" + (top ? top.title : "pending") + "\n" +
+          "most_impactful_action=" + (top ? top.action : "pending") + "\n" +
+          "impact_score=" + (top ? top.impact : "pending") + "\n" +
+          "visual_pass_claimed=false\n" +
+          "timestamp=" + new Date().toISOString();
+      }
+
+      function filterRoutes(mode) {
+        if (mode === "frontier") {
+          return ROUTES.filter(function (route) {
+            return route.group === "Frontier" || route.group === "Frontier Lane" || route.path === "/explore/" || route.path === "/gauges/";
+          });
+        }
+
+        if (mode === "products") {
+          return ROUTES.filter(function (route) {
+            return route.group === "Products" || route.path === "/" || route.path === "/showroom/" || route.path === "/gauges/";
+          });
+        }
+
+        if (mode === "demo") {
+          return ROUTES.filter(function (route) {
+            return route.group === "Demo Universe" || route.group === "Showroom" || route.group === "Universe" || route.path === "/" || route.path === "/gauges/";
+          });
+        }
+
+        if (mode === "routes") {
+          return ROUTES;
+        }
+
+        return ROUTES;
+      }
+
+      function checkLinksFromResults(results) {
+        var knownPaths = {};
+        ROUTES.forEach(function (route) {
+          knownPaths[route.path] = true;
+        });
+
+        var links = [];
+        results.forEach(function (result) {
+          links = links.concat(extractLinks(result));
+        });
+
+        var uniqueLinks = unique(links.map(function (link) {
+          return link.source + " → " + link.href;
+        })).map(function (pair) {
+          var parts = pair.split(" → ");
+          return { source: parts[0], href: parts[1] };
+        }).filter(function (link) {
+          if (link.href.indexOf("/assets/") === 0) return false;
+          if (link.href.indexOf("/cdn-cgi/") === 0) return false;
+          return true;
+        }).slice(0, 220);
+
+        return Promise.all(uniqueLinks.map(function (link) {
+          var route = { path: link.href, label: link.href, group: "Discovered", required: [], weight: 1 };
+          return fetchSource(route).then(function (result) {
+            return {
+              source: link.source,
+              href: link.href,
+              ok: result.ok,
+              status: result.status
+            };
+          });
+        }));
+      }
+
+      function runAudit(mode) {
+        var selected = filterRoutes(mode);
+
+        byId("next-move-title").textContent = "Most impactful next move: audit running.";
+        byId("next-move-copy").textContent = "Fetching served source. No iframe, no runtime mutation, no target execution.";
+        byId("route-table").innerHTML = "<tr><td colspan=\"6\">Fetching source...</td></tr>";
+        byId("link-table").innerHTML = "<tr><td colspan=\"4\">Waiting for route source...</td></tr>";
+
+        Promise.all(selected.map(fetchSource)).then(function (results) {
+          renderRouteTable(results);
+          return checkLinksFromResults(results).then(function (linkChecks) {
+            renderLinkTable(linkChecks);
+
+            var findings = buildFindings(results, linkChecks);
+            renderFindings(findings);
+            updateMetrics(results, linkChecks, findings);
+            updateReceipt(mode, results, linkChecks, findings);
+          });
+        }).catch(function (error) {
+          byId("next-move-title").textContent = "Most impactful next move: repair Gauges audit script.";
+          byId("next-move-copy").textContent = error && error.message ? error.message : String(error);
+          byId("metric-health").textContent = "FAIL";
+          byId("metric-health").className = "status-fail";
+          byId("audit-receipt").textContent =
+            CONTRACT + "\nroute=/gauges/\naudit_status=ERROR\nerror=" + (error && error.message ? error.message : String(error));
+        });
+      }
+
+      renderScope();
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-run]"), function (button) {
         button.addEventListener("click", function () {
-          run(button.getAttribute("data-audit"));
+          runAudit(button.getAttribute("data-run") || "full");
         });
       });
 
-      window.DGBGaugesEarthG1VisibleStatusRenewal = {
-        VERSION: CONTRACT,
-        version: CONTRACT,
-        run: run,
-        getStatus: function () {
-          return {
-            ok: true,
-            route: "/gauges/",
-            earthG1Complete: true,
-            earthG1AcceptedBySean: true,
-            next: "sun",
-            then: "moon",
-            planetOneReservedForFutureNineSummitsUniverse: true,
-            sourceFetchOnly: true
-          };
-        }
+      window.DGBFullSiteImpactAudit = {
+        contract: CONTRACT,
+        run: runAudit,
+        routes: ROUTES.slice()
       };
     })();
   </script>

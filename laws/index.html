@@ -1,33 +1,984 @@
-<!DOCTYPE html>
-<html lang="en" data-page-id="laws" data-page="laws" data-generation="planetary-attachment-marker-v1" data-estate="rich-manor-and-estate" data-manor-skin="active" data-house-field="true" data-gauges-truth="live-authority" data-construct-class="planetary" data-manor-attached="true" data-parent-route="/" data-current-route="/laws/">
+<!doctype html>
+<html
+  lang="en"
+  data-page-id="laws"
+  data-page="laws"
+  data-route="/laws/"
+  data-contract="LAWS_TED_TALK_RULE_CHAMBER_RENEWAL_TNT_v1"
+  data-generation="planetary-attachment-marker-v2"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="planetary"
+  data-manor-attached="true"
+  data-parent-route="/"
+  data-current-route="/laws/"
+  data-scroll-mode="compressed-russian-doll"
+  data-heavy-runtime-loaded="false"
+  data-planet-render-touched="false"
+  data-runtime-touched="false"
+  data-gauges-logic-touched="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Laws · Diamond Gate Bridge</title>
-  <meta name="description" content="Laws is the planetary rule chamber for Diamond Gate Bridge." />
+  <meta
+    name="description"
+    content="Laws is the rule chamber for Diamond Gate Bridge: authority, route, proof, runtime, generation, product separation, and human boundary law."
+  >
+
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
   <style>
-    :root{color-scheme:dark;--panel:rgba(255,255,255,.055);--panel2:rgba(255,255,255,.035);--line:rgba(255,255,255,.13);--gold:#f2c76f;--ink:#f4f7ff;--soft:rgba(244,247,255,.72)}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 0%,rgba(242,199,111,.08),transparent 30%),radial-gradient(circle at 30% 40%,rgba(80,130,220,.09),transparent 28%),linear-gradient(180deg,#05070d,#02040a);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}.page{max-width:1100px;margin:0 auto;padding:28px 18px 72px}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:42px}.brand{display:grid;gap:5px;text-decoration:none}.brand strong{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:.86rem}.brand span{color:var(--soft)}.nav,.links{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.nav a,.pill{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.055);padding:10px 14px;font-weight:850;text-decoration:none}.nav a[aria-current="page"],.pill.primary{border-color:rgba(242,199,111,.44);background:rgba(242,199,111,.14)}.hero{border:1px solid var(--line);border-radius:30px;padding:clamp(22px,5vw,46px);background:radial-gradient(circle at 18% 12%,rgba(242,199,111,.10),transparent 32%),radial-gradient(circle at 82% 70%,rgba(80,130,220,.10),transparent 34%),var(--panel)}.kicker{color:var(--gold);text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:900;margin:0 0 12px}h1{font-size:clamp(2.4rem,9vw,5.8rem);letter-spacing:-.07em;line-height:.9;margin:0 0 18px}h2{font-size:clamp(1.25rem,4vw,2rem);letter-spacing:-.03em;margin:0 0 10px}p{color:var(--soft);line-height:1.55;max-width:820px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:18px}.card{border:1px solid var(--line);border-radius:22px;background:var(--panel2);padding:16px}.card strong{display:block;color:var(--gold);margin-bottom:6px}.links{justify-content:flex-start;margin-top:24px}.audit-source{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;padding:0!important;margin:-1px!important}@media(max-width:760px){.top{display:grid}.nav{justify-content:flex-start}}
+    :root {
+      --gold: #f2c76f;
+      --text: #f5f7fb;
+      --muted: rgba(226, 234, 248, 0.76);
+      --line: rgba(180, 205, 255, 0.18);
+      --blue: #a9c5ff;
+      --green: #8ff0c6;
+      --purple: #d7a5ff;
+      --orange: #ff9f7a;
+      --red: #ff8c6d;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
+        radial-gradient(circle at 76% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
+        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+    }
+
+    .laws-stage,
+    .doll-shell {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.24);
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 28px 90px rgba(0,0,0,0.38);
+      isolation: isolate;
+    }
+
+    .laws-stage {
+      padding: clamp(30px, 7vw, 76px);
+    }
+
+    .laws-stage::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at 73% 54%, rgba(242, 199, 111, 0.18), transparent 22%),
+        radial-gradient(circle at 73% 54%, transparent 0 22%, rgba(242,199,111,0.10) 23%, transparent 24% 100%),
+        radial-gradient(circle at 73% 54%, transparent 0 38%, rgba(130,165,230,0.09) 39%, transparent 40% 100%),
+        radial-gradient(circle at 73% 54%, transparent 0 56%, rgba(242,199,111,0.055) 57%, transparent 58% 100%);
+      filter: blur(10px);
+      opacity: 0.74;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .laws-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(5,8,19,0.30), transparent 48%, rgba(5,8,19,0.18)),
+        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.08), transparent 26%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .blurred-law-system {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.46;
+      filter: blur(2px);
+    }
+
+    .law-core,
+    .law-ring,
+    .law-axis,
+    .law-node,
+    .law-line {
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .law-core {
+      left: 78%;
+      top: 56%;
+      width: clamp(180px, 32vw, 350px);
+      height: clamp(180px, 32vw, 350px);
+      border-radius: 34px;
+      border: 2px solid rgba(242,199,111,0.20);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.14), transparent 18%),
+        linear-gradient(135deg, rgba(242,199,111,0.18), rgba(84,130,220,0.11), rgba(6,10,22,0.42));
+      box-shadow:
+        inset 0 0 60px rgba(242,199,111,0.04),
+        0 0 90px rgba(84,130,220,0.11);
+    }
+
+    .law-ring {
+      left: 78%;
+      top: 56%;
+      width: clamp(260px, 48vw, 540px);
+      height: clamp(110px, 22vw, 250px);
+      border: 2px dashed rgba(172, 191, 230, 0.16);
+      border-radius: 50%;
+    }
+
+    .law-ring.two {
+      transform: translate(-50%, -50%) rotate(64deg);
+      border-color: rgba(242,199,111,0.15);
+    }
+
+    .law-axis {
+      left: 78%;
+      top: 56%;
+      width: 2px;
+      height: clamp(250px, 42vw, 500px);
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.20), transparent);
+    }
+
+    .law-line {
+      left: 78%;
+      top: 56%;
+      width: clamp(280px, 50vw, 560px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.26), rgba(169,197,255,0.18), transparent);
+    }
+
+    .law-line.two {
+      transform: translate(-50%, -50%) rotate(42deg);
+    }
+
+    .law-line.three {
+      transform: translate(-50%, -50%) rotate(-42deg);
+    }
+
+    .law-node {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      color: #06101f;
+      font-size: 0.64rem;
+      font-weight: 950;
+      box-shadow: 0 0 24px rgba(242,199,111,0.18);
+      text-transform: uppercase;
+    }
+
+    .law-node.authority { left: 66%; top: 42%; background: var(--gold); }
+    .law-node.route { left: 88%; top: 42%; background: var(--blue); }
+    .law-node.proof { left: 91%; top: 63%; background: var(--green); }
+    .law-node.runtime { left: 78%; top: 80%; background: var(--purple); }
+    .law-node.boundary { left: 63%; top: 66%; background: var(--orange); }
+
+    .hero-mark {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      max-width: 1020px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(3.2rem, 10vw, 7.9rem);
+      line-height: 0.88;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
+    }
+
+    .hero-title .gold {
+      color: #ffe5a3;
+      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
+    }
+
+    .hero-subtitle {
+      max-width: 900px;
+      margin: clamp(24px, 4vw, 36px) 0 0;
+      color: rgba(245, 247, 251, 0.86);
+      font-size: clamp(1.28rem, 3.8vw, 2.12rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.26rem);
+      line-height: 1.55;
+    }
+
+    .one-liner-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+      max-width: 980px;
+    }
+
+    .one-liner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,0.045);
+      color: rgba(255, 246, 220, 0.96);
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+
+    .laws-actions,
+    .laws-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .laws-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
+    .laws-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .doll-shell {
+      margin-top: 18px;
+      padding: clamp(18px, 4vw, 28px);
+    }
+
+    .doll-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .doll-title {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+    }
+
+    .doll-note {
+      max-width: 940px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 1.04rem;
+      line-height: 1.56;
+    }
+
+    .doll-badge {
+      border: 1px solid rgba(242,199,111,0.38);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .doll-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .doll-layer {
+      border: 1px solid rgba(180, 205, 255, 0.17);
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.09), transparent 34%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.80), rgba(7, 12, 25, 0.92));
+    }
+
+    .doll-layer[open] {
+      border-color: rgba(242,199,111,0.34);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    }
+
+    .doll-layer summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 20px;
+      color: var(--text);
+    }
+
+    .doll-layer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .layer-number {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(242,199,111,0.46);
+      border-radius: 50%;
+      color: #ffe7a7;
+      background: rgba(242,199,111,0.08);
+      font-weight: 950;
+    }
+
+    .layer-title {
+      display: block;
+      font-size: clamp(1.18rem, 3vw, 1.55rem);
+      font-weight: 950;
+      letter-spacing: -0.025em;
+    }
+
+    .layer-line {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.42;
+      font-size: 0.96rem;
+    }
+
+    .layer-action {
+      color: var(--gold);
+      font-weight: 950;
+    }
+
+    .layer-body {
+      padding: 0 20px 20px 72px;
+    }
+
+    .law-grid,
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .law-card,
+    .route-card {
+      border: 1px solid rgba(180, 205, 255, 0.14);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .law-card strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.02rem;
+      margin-bottom: 8px;
+    }
+
+    .law-card span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .law-card::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      background: var(--gold);
+    }
+
+    .law-card.authority::before { background: var(--gold); }
+    .law-card.route::before { background: var(--blue); }
+    .law-card.proof::before { background: var(--green); }
+    .law-card.runtime::before { background: var(--purple); }
+    .law-card.generation::before { background: var(--orange); }
+    .law-card.boundary::before { background: var(--red); }
+
+    .route-card {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 950;
+    }
+
+    .route-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .notice {
+      border: 1px solid rgba(242,199,111,0.22);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(242,199,111,0.07);
+      color: rgba(255, 246, 220, 0.88);
+      line-height: 1.52;
+      margin-top: 14px;
+    }
+
+    .laws-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 1040px) {
+      .one-liner-strip,
+      .law-grid,
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .doll-head {
+        grid-template-columns: 1fr;
+      }
+
+      .layer-body {
+        padding-left: 20px;
+      }
+
+      .blurred-law-system {
+        opacity: 0.30;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .laws-stage,
+      .doll-shell {
+        border-radius: 28px;
+      }
+
+      .laws-stage {
+        padding: 30px 26px;
+      }
+
+      .hero-title {
+        font-size: clamp(3.35rem, 15vw, 5.2rem);
+      }
+
+      .hero-subtitle {
+        font-size: 1.34rem;
+      }
+
+      .doll-layer summary {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .layer-action {
+        grid-column: 2;
+      }
+
+      .blurred-law-system {
+        opacity: 0.22;
+      }
+    }
   </style>
 </head>
-<body data-page-id="laws" data-page="laws" data-generation="planetary-attachment-marker-v1" data-estate="rich-manor-and-estate" data-manor-skin="active" data-house-field="true" data-gauges-truth="live-authority" data-construct-class="planetary" data-manor-attached="true" data-parent-route="/" data-current-route="/laws/">
-  <main class="page" data-page-id="laws" data-page="laws" data-estate="rich-manor-and-estate" data-manor-skin="active" data-house-field="true" data-gauges-truth="live-authority" data-construct-class="planetary" data-manor-attached="true" data-parent-route="/" data-current-route="/laws/">
-    <header class="top">
-      <a class="brand" href="/"><strong>Diamond Gate Bridge</strong><span>Laws · Rule Chamber</span></a>
-      <nav class="nav" aria-label="Primary routes"><a href="/">Compass</a><a href="/door/">Door</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a></nav>
-    </header>
-    <section class="hero" aria-labelledby="PL_LAWS">
-      <p class="kicker">PL3 · Laws · Planetary Attachment</p>
-      <h1 id="PL_LAWS">Open the law chamber.</h1>
-      <p>The Lawscape is the rule-bearing surface. It keeps authority, instruments, runtime, and generation standards in a nested order instead of flattening everything into one long scroll.</p>
-      <div class="grid">
-        <article class="card"><strong>Authority</strong><h2>Root law.</h2><p>Entry, ownership, and first surface authority remain explicit.</p></article>
-        <article class="card"><strong>Instrument</strong><h2>Gauge law.</h2><p>Status and diagnostics stay visible before ornament.</p></article>
-        <article class="card"><strong>Runtime</strong><h2>Motion law.</h2><p>Mounted motion must stay contained, readable, and route-safe.</p></article>
-        <article class="card"><strong>Generation</strong><h2>Baseline law.</h2><p>G1, G2, and later generations must not blur into false readiness.</p></article>
+
+<body
+  data-page-id="laws"
+  data-page="laws"
+  data-route="/laws/"
+  data-generation="planetary-attachment-marker-v2"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="planetary"
+  data-manor-attached="true"
+  data-parent-route="/"
+  data-current-route="/laws/"
+>
+  <a class="dgb-skip" href="#laws-main">Skip to Laws</a>
+
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Laws · Rule Chamber</div>
       </div>
-      <nav class="links" aria-label="Laws backlinks"><a class="pill primary" href="/">Compass</a><a class="pill" href="/door/">Door</a><a class="pill" href="/products/">Products</a><a class="pill" href="/showroom/">Showroom</a><a class="pill" href="/gauges/">Gauges</a></nav>
+
+      <nav class="dgb-nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/laws/" aria-current="page">Laws</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Earth G1</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </div>
+  </header>
+
+  <main
+    id="laws-main"
+    class="dgb-main"
+    data-page-id="laws"
+    data-page="laws"
+    data-route="/laws/"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="planetary"
+    data-manor-attached="true"
+    data-parent-route="/"
+    data-current-route="/laws/"
+  >
+    <section class="laws-stage" aria-label="Laws rule chamber">
+      <div class="blurred-law-system" aria-hidden="true">
+        <div class="law-axis"></div>
+        <div class="law-ring"></div>
+        <div class="law-ring two"></div>
+        <div class="law-line"></div>
+        <div class="law-line two"></div>
+        <div class="law-line three"></div>
+        <div class="law-core"></div>
+        <div class="law-node authority">Root</div>
+        <div class="law-node route">Route</div>
+        <div class="law-node proof">Proof</div>
+        <div class="law-node runtime">Run</div>
+        <div class="law-node boundary">Hold</div>
+      </div>
+
+      <p class="hero-mark">PL3 · Laws · Rule Chamber</p>
+
+      <h1 class="hero-title">
+        Open the law chamber <span class="gold">before the system drifts.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Laws keeps authority, routes, instruments, runtime, generation standards, products, planets, and boundaries in order.
+      </p>
+
+      <p class="hero-copy">
+        A living system cannot run on vibes alone. The Lawscape keeps the estate readable:
+        what owns the page, what route it belongs to, what proof exists, what runtime is allowed,
+        what generation is real, and what must not be overclaimed.
+      </p>
+
+      <div class="one-liner-strip" aria-label="Laws one-liners">
+        <div class="one-liner">A system without law eventually becomes decoration.</div>
+        <div class="one-liner">Proof must outrank confidence when confidence gets loud.</div>
+        <div class="one-liner">The law chamber protects the promise from becoming a performance.</div>
+      </div>
+
+      <div class="laws-chip-row" aria-label="Laws status">
+        <span class="laws-chip lock">Rule chamber</span>
+        <span class="laws-chip lock">Planetary attached</span>
+        <span class="laws-chip lock">Gauges-readable</span>
+        <span class="laws-chip">Generation guarded</span>
+        <span class="laws-chip">No heavy runtime</span>
+      </div>
+
+      <div class="laws-actions" aria-label="Primary Laws actions">
+        <a class="dgb-button" href="/explore/">Return to Explore</a>
+        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
+        <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
+        <a class="dgb-button secondary" href="/">Open Compass</a>
+      </div>
     </section>
-    <section class="audit-source" aria-label="Laws audit source"><a href="/">Compass</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a><span>data-estate="rich-manor-and-estate"</span><span>data-manor-skin="active"</span><span>data-house-field="true"</span><span>data-gauges-truth="live-authority"</span><span>data-construct-class="planetary"</span><span>data-manor-attached="true"</span><span>PLANETARY_ATTACHMENT_MARKER_TNT_v1</span></section>
+
+    <section class="doll-shell" aria-label="Laws compressed Russian doll content">
+      <div class="doll-head">
+        <div>
+          <h2 class="doll-title">Open only the law you need.</h2>
+          <p class="doll-note">
+            Laws is compressed into nested layers: authority, route, proof, runtime, generation,
+            product/planet separation, human boundary, routes, and receipt.
+          </p>
+        </div>
+        <div class="doll-badge">Russian doll mode</div>
+      </div>
+
+      <div class="doll-stack">
+        <details class="doll-layer" open>
+          <summary>
+            <span class="layer-number">1</span>
+            <span>
+              <span class="layer-title">Authority law</span>
+              <span class="layer-line">Root ownership stays explicit before design, runtime, or presentation claims.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card authority">
+                <strong>Root law</strong>
+                <span>Every chamber needs a route, parent, construct class, and owner function before it can make a larger claim.</span>
+              </div>
+
+              <div class="law-card authority">
+                <strong>Entry law</strong>
+                <span>Compass orients, Door admits, Home stabilizes, Explore maps, and Laws governs. Do not collapse their jobs.</span>
+              </div>
+
+              <div class="law-card authority">
+                <strong>Surface law</strong>
+                <span>A page may present a claim only when the controlling source and route are not hidden behind style.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">2</span>
+            <span>
+              <span class="layer-title">Route law</span>
+              <span class="layer-line">Every chamber must know where it lives and where it sends the visitor next.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card route">
+                <strong>Canonical route</strong>
+                <span>Laws lives at /laws/ and remains a planetary rule chamber attached to the manor.</span>
+              </div>
+
+              <div class="law-card route">
+                <strong>Backlink law</strong>
+                <span>Compass, Explore, Showroom, and Gauges must remain reachable so the rule layer does not become isolated.</span>
+              </div>
+
+              <div class="law-card route">
+                <strong>No orphan law</strong>
+                <span>No public chamber should float without parent route, return route, and verification path.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">3</span>
+            <span>
+              <span class="layer-title">Proof law</span>
+              <span class="layer-line">Gauges, receipts, diagnostics, and visible routes outrank unsupported claims.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card proof">
+                <strong>Gauge law</strong>
+                <span>Diagnostics stay visible before ornament. Claims must remain readable by Gauges and receipts.</span>
+              </div>
+
+              <div class="law-card proof">
+                <strong>Receipt law</strong>
+                <span>Every major renewal must leave a receipt describing what changed and what stayed untouched.</span>
+              </div>
+
+              <div class="law-card proof">
+                <strong>No false pass</strong>
+                <span>A visual page can look better without proving generation readiness. Those claims must stay separate.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">4</span>
+            <span>
+              <span class="layer-title">Runtime law</span>
+              <span class="layer-line">Motion must stay contained, readable, route-safe, and owned by the correct chamber.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card runtime">
+                <strong>Motion law</strong>
+                <span>Mounted motion belongs where it is authorized. Static route chambers should not load heavy render chains.</span>
+              </div>
+
+              <div class="law-card runtime">
+                <strong>Containment law</strong>
+                <span>Runtime, renderer, instruments, and diagnostics must not leak into chambers that only need links.</span>
+              </div>
+
+              <div class="law-card runtime">
+                <strong>Route-safe law</strong>
+                <span>Planetary visuals, product chambers, and proof routes must stay separable even when they link to one another.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">5</span>
+            <span>
+              <span class="layer-title">Generation law</span>
+              <span class="layer-line">Baseline, readiness, and generation labels must not blur into false completion.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card generation">
+                <strong>Baseline law</strong>
+                <span>A baseline is a known accepted state. It is not a claim that all future generations are complete.</span>
+              </div>
+
+              <div class="law-card generation">
+                <strong>Readiness law</strong>
+                <span>Healthy enough is not the same as generation-ready. Marker health and generation readiness stay distinct.</span>
+              </div>
+
+              <div class="law-card generation">
+                <strong>Lock law</strong>
+                <span>When a generation is accepted, the page must say what is locked, what is reserved, and what is still future work.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">6</span>
+            <span>
+              <span class="layer-title">Product and planet separation law</span>
+              <span class="layer-line">Products stay products. Planetary constructs stay planetary constructs.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card boundary">
+                <strong>Product law</strong>
+                <span>ARCHCOIN, AAI, Five Flags, Education, and Nutrition are product chambers under Products.</span>
+              </div>
+
+              <div class="law-card boundary">
+                <strong>Planet law</strong>
+                <span>Explore, Laws, Universe, Prelude, Frontier, and related world surfaces remain planetary constructs.</span>
+              </div>
+
+              <div class="law-card boundary">
+                <strong>No collapse law</strong>
+                <span>A product may link to a planet and a planet may link to a product, but one should not pretend to be the other.</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">7</span>
+            <span>
+              <span class="layer-title">Human boundary law</span>
+              <span class="layer-line">Support, explanation, preparation, and proof must not become reckless authority.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="law-grid">
+              <div class="law-card boundary">
+                <strong>Support law</strong>
+                <span>AAI, education, nutrition, and other support chambers should prepare and organize without replacing qualified judgment.</span>
+              </div>
+
+              <div class="law-card boundary">
+                <strong>Creative law</strong>
+                <span>Interactive scenes should use original, licensed, permissioned, public-domain, or parody-safe material.</span>
+              </div>
+
+              <div class="law-card boundary">
+                <strong>Verification law</strong>
+                <span>Medical, legal, financial, safety, and official claims must mark what still needs professional or source verification.</span>
+              </div>
+            </div>
+
+            <div class="notice">
+              The law chamber exists to keep the system useful without letting confidence outrun proof,
+              route ownership, human boundaries, or generation truth.
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">8</span>
+            <span>
+              <span class="layer-title">Move through the rule map</span>
+              <span class="layer-line">Control, route-map, product wing, proof surface, and diagnostics remain reachable.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <div class="route-grid">
+              <a class="route-card" href="/">
+                Compass
+                <span>Return to the public command surface.</span>
+              </a>
+
+              <a class="route-card" href="/explore/">
+                Explore
+                <span>Return to the route-map planetary surface.</span>
+              </a>
+
+              <a class="route-card" href="/products/">
+                Products
+                <span>Enter the product wing and product chambers.</span>
+              </a>
+
+              <a class="route-card" href="/showroom/">
+                Showroom
+                <span>Inspect public proof surfaces and presentation lanes.</span>
+              </a>
+
+              <a class="route-card" href="/showroom/globe/">
+                Earth G1
+                <span>Inspect the accepted Demo Universe baseline.</span>
+              </a>
+
+              <a class="route-card" href="/gauges/">
+                Gauges
+                <span>Read route, runtime, parser, and diagnostic receipts.</span>
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <details class="doll-layer">
+          <summary>
+            <span class="layer-number">R</span>
+            <span>
+              <span class="layer-title">Route receipt</span>
+              <span class="layer-line">Compressed contract and audit status.</span>
+            </span>
+            <span class="layer-action">Open / close</span>
+          </summary>
+
+          <div class="layer-body">
+            <pre class="dgb-receipt laws-receipt">LAWS_TED_TALK_RULE_CHAMBER_RENEWAL_TNT_v1
+route=/laws/
+page=laws
+style_direction=ted-talk-rule-chamber
+scroll_mode=compressed-russian-doll
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Explore,Laws,Book,Universe,Products,Showroom,Earth G1,Gauges
+construct_class=planetary
+manor_attached=true
+manor_skin=active
+house_field=true
+gauges_truth=live-authority
+heavy_runtime_loaded=false
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
+laws_function=rule-bearing-planetary-chamber
+law_layers=authority,route,proof,runtime,generation,product-planet-separation,human-boundary
+compass=/
+door=/door/
+home=/home/
+explore=/explore/
+book=/nine-summits-of-love/
+universe=/nine-summits/universe/
+products=/products/
+showroom=/showroom/
+earth-g1=/showroom/globe/
+gauges=/gauges/
+visual_pass_claimed=false</pre>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="audit-source" aria-label="Laws audit source">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/explore/">Explore</a>
+      <a href="/laws/">Laws</a>
+      <a href="/nine-summits-of-love/">Book</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Earth G1</a>
+      <a href="/gauges/">Gauges</a>
+      <span>data-estate="rich-manor-and-estate"</span>
+      <span>data-manor-skin="active"</span>
+      <span>data-house-field="true"</span>
+      <span>data-gauges-truth="live-authority"</span>
+      <span>data-construct-class="planetary"</span>
+      <span>data-manor-attached="true"</span>
+      <span>LAWS_TED_TALK_RULE_CHAMBER_RENEWAL_TNT_v1</span>
+    </section>
   </main>
+
+  <footer class="dgb-footer">
+    LAWS_TED_TALK_RULE_CHAMBER_RENEWAL_TNT_v1 · Laws · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

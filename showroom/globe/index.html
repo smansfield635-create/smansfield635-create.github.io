@@ -1,170 +1,12 @@
+<!-- /showroom/globe/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Planet 1</title>
-
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 16, 31, 0.88);
-      --line: rgba(176, 204, 255, 0.22);
-      --text: #edf4ff;
-      --muted: #aebbd0;
-      --blue: #a9caff;
-      --gold: #f2c76f;
-      --green: #7bdc9d;
-      --hold: #bdd3ff;
-    }
-
-    * { box-sizing: border-box; }
-
-    html { background: var(--bg); min-height: 100%; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 22% 4%, rgba(88, 140, 255, 0.16), transparent 30%),
-        linear-gradient(180deg, #050812 0%, #07101f 58%, #03050c 100%);
-      overflow-x: hidden;
-    }
-
-    a { color: var(--blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 0;
-      background: #fff;
-      color: #000;
-      padding: 0.65rem 0.9rem;
-      z-index: 99;
-    }
-
-    .skip:focus { left: 1rem; top: 1rem; }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--line);
-      background: rgba(5, 8, 18, 0.94);
-      backdrop-filter: blur(12px);
-    }
-
-    .topbar {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0.85rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      font-size: 1.05rem;
-      font-weight: 850;
-      letter-spacing: 0.025em;
-    }
-
-    nav {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      font-size: 0.95rem;
-    }
-
-    main {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0.95rem 1rem 3rem;
-    }
-
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 1rem;
-      background: linear-gradient(180deg, rgba(20, 32, 58, 0.78), rgba(7, 11, 22, 0.88));
-      box-shadow: 0 18px 70px rgba(0,0,0,0.24);
-      margin-bottom: 0.75rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.35rem;
-      color: var(--gold);
-      font-size: 0.76rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      font-weight: 850;
-    }
-
-    h1 {
-      margin: 0 0 0.55rem;
-      font-size: clamp(1.8rem, 5vw, 3.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.045em;
-    }
-
-    p {
-      margin: 0 0 0.65rem;
-      color: var(--muted);
-      font-size: clamp(0.96rem, 2.2vw, 1.12rem);
-      line-height: 1.48;
-      max-width: 800px;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.85rem;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid rgba(176, 204, 255, 0.20);
-      border-radius: 999px;
-      padding: 0.3rem 0.66rem;
-      color: var(--green);
-      font-weight: 850;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .chip.hold { color: var(--hold); }
-
-    .stage {
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(65, 115, 215, 0.13), transparent 44%),
-        linear-gradient(180deg, rgba(3, 7, 16, 0.84), rgba(5, 8, 18, 0.72));
-      overflow: hidden;
-      min-height: 360px;
-      padding: 0.75rem;
-    }
-
-    .stage::before {
-      content: "";
-      position: absolute;
-      inset: 7%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(80, 130, 230, 0.07), rgba(10, 20, 45, 0.13) 50%, transparent 72%);
-      pointer-events: none;
-    }
-
     #planet-one-render {
       position: relative;
       z-index: 2;
@@ -182,62 +24,36 @@
       filter: saturate(1.06) contrast(1.04);
     }
 
-    .control-shell {
-      position: relative;
-      z-index: 3;
-      margin: 0.35rem auto 0;
-      max-width: 720px;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 22px;
-      background: rgba(5, 8, 18, 0.78);
-      padding: 0.92rem;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.22);
+    .planet-control {
+      margin-top: 0.75rem;
     }
 
-    .control-shell h2 {
-      margin: 0 0 0.72rem;
-      color: #ffe8a8;
-      font-size: clamp(1.25rem, 3.6vw, 1.65rem);
-      line-height: 1.1;
-    }
-
-    .controls {
+    .planet-control-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.52rem;
-      margin-bottom: 0.9rem;
-    }
-
-    button {
-      appearance: none;
-      border: 1px solid rgba(242, 199, 111, 0.32);
-      border-radius: 999px;
-      background: rgba(169, 202, 255, 0.08);
-      color: #ffe8a8;
-      padding: 0.58rem 0.86rem;
-      font: inherit;
-      font-weight: 720;
-      cursor: pointer;
-    }
-
-    button:hover { background: rgba(169, 202, 255, 0.16); }
-
-    .range-row {
-      display: grid;
-      gap: 0.48rem;
-      color: #ffe8a8;
-      font-weight: 700;
-      margin-bottom: 0.65rem;
-    }
-
-    input[type="range"] { width: 100%; accent-color: #8fc6ff; }
-
-    label.axis-row {
-      display: flex;
-      align-items: center;
       gap: 0.55rem;
+      margin: 1rem 0;
+    }
+
+    .planet-range {
+      display: grid;
+      gap: 0.5rem;
       color: #ffe8a8;
-      font-weight: 700;
+      font-weight: 780;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #8fc6ff;
+    }
+
+    .axis-row {
+      display: flex;
+      gap: 0.55rem;
+      align-items: center;
+      margin-top: 0.75rem;
+      color: #ffe8a8;
+      font-weight: 780;
     }
 
     input[type="checkbox"] {
@@ -246,100 +62,7 @@
       accent-color: #8fc6ff;
     }
 
-    details.receipt-wrap {
-      margin-top: 0.75rem;
-      border: 1px solid rgba(176, 204, 255, 0.14);
-      border-radius: 14px;
-      background: rgba(0,0,0,0.18);
-      color: #ccd8ec;
-    }
-
-    details.receipt-wrap summary {
-      cursor: pointer;
-      padding: 0.65rem 0.75rem;
-      color: #bdd3ff;
-      font-weight: 780;
-    }
-
-    .receipt {
-      margin: 0;
-      border-top: 1px solid rgba(176, 204, 255, 0.10);
-      padding: 0.75rem;
-      color: #ccd8ec;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.74rem;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      max-height: 260px;
-      overflow: auto;
-    }
-
-    .contract {
-      margin-top: 0.85rem;
-      border: 1px solid rgba(176, 204, 255, 0.14);
-      border-radius: 18px;
-      background: rgba(10, 16, 31, 0.58);
-      padding: 0.8rem;
-      color: #dce8fb;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.74rem;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 640px) {
-      .topbar {
-        padding: 0.72rem 1rem;
-        align-items: flex-start;
-      }
-
-      nav {
-        width: 100%;
-        gap: 0.62rem;
-        font-size: 0.91rem;
-      }
-
-      main { padding: 0.55rem 0 2.25rem; }
-
-      .hero {
-        margin: 0 0.65rem 0.45rem;
-        border-radius: 18px;
-        padding: 0.72rem;
-      }
-
-      .eyebrow {
-        font-size: 0.64rem;
-        margin-bottom: 0.22rem;
-      }
-
-      h1 {
-        font-size: 1.55rem;
-        margin-bottom: 0.32rem;
-      }
-
-      .hero p {
-        display: none;
-      }
-
-      .chips {
-        margin-top: 0.45rem;
-        gap: 0.36rem;
-      }
-
-      .chip {
-        font-size: 0.58rem;
-        padding: 0.22rem 0.46rem;
-        letter-spacing: 0.06em;
-      }
-
-      .stage {
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-        min-height: 320px;
-        padding: 0.2rem 0.25rem 0.8rem;
-      }
-
+    @media (max-width: 760px) {
       #planet-one-render {
         min-height: 310px;
         align-items: flex-start;
@@ -347,88 +70,74 @@
 
       #planet-one-render canvas {
         max-width: min(96vw, 560px);
-        margin-top: 0;
       }
-
-      .control-shell {
-        margin: 0.2rem 0.55rem 0;
-        border-radius: 18px;
-        padding: 0.76rem;
-      }
-
-      .control-shell h2 { font-size: 1.18rem; }
-
-      .controls { gap: 0.42rem; }
-
-      button {
-        padding: 0.50rem 0.72rem;
-        font-size: 0.92rem;
-      }
-
-      .contract { display: none; }
     }
   </style>
 </head>
-
 <body>
-  <a class="skip" href="#planet-one-main">Skip to Planet 1 inspection</a>
+  <a class="dgb-skip" href="#main">Skip to Planet 1 inspection</a>
 
-  <header>
-    <div class="topbar">
-      <a class="brand" href="/">Diamond Gate Bridge</a>
-      <nav aria-label="Primary navigation">
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Planet 1 · Active Globe Lane</div>
+      </div>
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
         <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/" aria-current="page">Planet 1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </div>
   </header>
 
-  <main id="planet-one-main">
-    <section class="hero" aria-label="Planet 1 route contract">
-      <p class="eyebrow">Active Globe Lane · Mobile Inspection + Land Mask Rebalance</p>
-      <h1>Planet 1 on axis</h1>
-      <p>
+  <main id="main" class="dgb-main">
+    <section class="dgb-hero">
+      <p class="dgb-eyebrow">Active Globe Lane · Water Phase-State Boundary</p>
+      <h1 class="dgb-title">Planet 1 on axis</h1>
+      <p class="dgb-copy">
         This route mounts the active Planet 1 renderer chain directly. The Showroom does not create terrain,
         duplicate physics, or claim visual pass. It activates hydration, hex bridge, renderer, throttled runtime,
         control bridge, asset bridge, and showroom bridge in order.
       </p>
-
-      <div class="chips" aria-label="Route script order">
-        <span class="chip">Hydration first</span>
-        <span class="chip">Hex bridge second</span>
-        <span class="chip">Renderer third</span>
-        <span class="chip">Runtime throttled</span>
-        <span class="chip">Land mask rebalance</span>
-        <span class="chip hold">Visual hold</span>
+      <div class="dgb-chip-row">
+        <span class="dgb-chip">Hydration first</span>
+        <span class="dgb-chip">Hex bridge second</span>
+        <span class="dgb-chip">Renderer third</span>
+        <span class="dgb-chip">Runtime throttled</span>
+        <span class="dgb-chip">Water phase boundary</span>
+        <span class="dgb-chip hold">Visual hold</span>
       </div>
     </section>
 
-    <section class="stage" aria-label="Planet 1 live render">
+    <section class="dgb-stage" aria-label="Planet 1 live render">
       <div
         id="planet-one-render"
         class="planet-one-render"
         data-planet-one-mount="true"
-        data-route-contract="G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"
+        data-route-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
         data-visual-pass-claimed="false"
       ></div>
 
-      <section class="control-shell" aria-label="Planet 1 Motion Control">
+      <section class="dgb-card full planet-control" aria-label="Planet 1 Motion Control">
         <h2>Planet 1 Motion Control</h2>
-
-        <div class="controls">
-          <button type="button" data-planet-command="start">Start</button>
-          <button type="button" data-planet-command="pause">Pause</button>
-          <button type="button" data-planet-command="resume">Resume</button>
-          <button type="button" data-planet-command="reset">Reset</button>
-          <button type="button" data-planet-command="reverse">Reverse</button>
-          <button type="button" data-planet-command="slow">Slow</button>
-          <button type="button" data-planet-command="normal">Normal</button>
-          <button type="button" data-planet-command="fast">Fast</button>
+        <div class="planet-control-grid">
+          <button class="dgb-button" type="button" data-planet-command="start">Start</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="pause">Pause</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="resume">Resume</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="reset">Reset</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="reverse">Reverse</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="slow">Slow</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="normal">Normal</button>
+          <button class="dgb-button secondary" type="button" data-planet-command="fast">Fast</button>
         </div>
 
-        <label class="range-row" for="planet-one-speed">
+        <label class="planet-range" for="planet-one-speed">
           Rotation speed
           <input id="planet-one-speed" type="range" min="0" max="6" value="2.4" step="0.1" data-planet-control="speed" />
         </label>
@@ -438,46 +147,43 @@
           Show soft axis
         </label>
 
-        <details class="receipt-wrap">
+        <details class="dgb-details">
           <summary>Show route receipt</summary>
-          <pre id="planet-one-control-receipt" class="receipt" aria-live="polite">Route booting…</pre>
+          <pre id="planet-one-control-receipt" class="dgb-receipt">Route booting…</pre>
         </details>
       </section>
     </section>
 
-    <section class="contract" aria-label="Route receipt">
-ROUTE_CONTRACT=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1
+    <details class="dgb-details">
+      <summary>Route contract</summary>
+      <pre class="dgb-receipt">ROUTE_CONTRACT=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
 HYDRATION=/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
-HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1
-RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1
+HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
+RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
 WORLD_RUNTIME=/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1
 WORLD_CONTROL=/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1
 ASSET_BRIDGE=/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
 SHOWROOM_RUNTIME=/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
-VISUAL_PASS_CLAIMED=false
-    </section>
+VISUAL_PASS_CLAIMED=false</pre>
+    </details>
   </main>
 
-  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
-  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1"></script>
+  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
+  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"></script>
 
   <script>
-    (function attachPlanetOneMobileInspectionReceipt(global) {
+    (function attachPlanetOneShellControls(global) {
       "use strict";
 
-      var ROUTE_VERSION = "G1_PLANET_1_MOBILE_INSPECTION_AND_LAND_MASK_REBALANCE_TNT_v1";
+      var ROUTE_VERSION = "DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1";
 
       function getRuntime() {
-        return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || null;
-      }
-
-      function getShowroomRuntime() {
-        return global.DGBShowroomGlobeRuntime || global.DGBPlanetOneRuntimeBridge || null;
+        return global.DGBWorldRuntime || global.DGBPlanetOneRuntime || global.DGBShowroomGlobeRuntime || global.DGBPlanetOneRuntimeBridge || null;
       }
 
       function getRenderer() {
@@ -491,36 +197,29 @@ VISUAL_PASS_CLAIMED=false
         } catch (error) {
           return { error: String(error && error.message ? error.message : error) };
         }
-
         return null;
       }
 
       function writeReceipt(extra) {
         var runtime = getRuntime();
-        var showroomRuntime = getShowroomRuntime();
         var renderer = getRenderer();
-
         var receipt = {
           routeVersion: ROUTE_VERSION,
-          mobileInspectionCompressionActive: true,
-          landMaskAirOpacityRebalanceActive: true,
-          routeScriptOrderAligned: true,
+          globalUIShellAligned: true,
           hydrationFirst: Boolean(global.DGBPlanetOneHydrationRender),
           hexBridgeSecond: Boolean(global.DGBPlanetOneHexgridRender),
           rendererThird: Boolean(renderer),
-          runtimeThrottleLoaded: Boolean(runtime),
-          showroomRuntimeBridgeLoaded: Boolean(showroomRuntime),
-          expectedHexgrid: "G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1",
-          expectedRenderer: "G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1",
+          runtimeDetected: Boolean(runtime),
+          expectedHexgrid: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1",
+          expectedRenderer: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1",
           runtimeStatus: getStatus(runtime),
-          showroomRuntimeStatus: getStatus(showroomRuntime),
           rendererStatus: getStatus(renderer),
           visualPassClaimed: false,
           timestamp: new Date().toISOString(),
           extra: extra || null
         };
 
-        global.DGBPlanetOneMobileInspectionReceipt = receipt;
+        global.DGBPlanetOneGlobalUIShellReceipt = receipt;
 
         var node = document.getElementById("planet-one-control-receipt");
         if (node) node.textContent = JSON.stringify(receipt, null, 2);
@@ -529,8 +228,7 @@ VISUAL_PASS_CLAIMED=false
       }
 
       function command(name, value) {
-        var runtime = getRuntime();
-        var target = runtime || getShowroomRuntime();
+        var target = getRuntime();
         var receipt;
 
         if (!target) return writeReceipt({ command: name, error: "NO_RUNTIME_AVAILABLE" });
@@ -562,32 +260,21 @@ VISUAL_PASS_CLAIMED=false
         });
 
         var speed = document.getElementById("planet-one-speed");
-        if (speed) {
-          speed.addEventListener("input", function () {
-            command("speed", Number(speed.value));
-          });
-        }
+        if (speed) speed.addEventListener("input", function () { command("speed", Number(speed.value)); });
 
         var axis = document.getElementById("planet-one-axis-toggle");
-        if (axis) {
-          axis.addEventListener("change", function () {
-            command("axis", axis.checked);
-          });
-        }
+        if (axis) axis.addEventListener("change", function () { command("axis", axis.checked); });
       }
 
       function boot() {
         bindControls();
 
         global.setTimeout(function () {
-          var showroomRuntime = getShowroomRuntime();
           var runtime = getRuntime();
 
-          if (showroomRuntime && typeof showroomRuntime.boot === "function") {
-            showroomRuntime.boot();
-          } else if (runtime && typeof runtime.start === "function") {
+          if (runtime && typeof runtime.start === "function") {
             runtime.start("#planet-one-render", {
-              source: "mobile-inspection-land-mask-rebalance",
+              source: "global-ui-shell-alignment",
               viewLon: -28,
               viewLat: 0,
               speedDegreesPerSecond: 2.4,

@@ -3,38 +3,32 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1"
+  data-contract="GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1"
   data-earth-g1-complete="true"
   data-next-sequence="sun,moon"
   data-planet-one-status="reserved-for-nine-summits-universe"
-  data-visual-pass-claimed="earth-g1-accepted-by-sean"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Gauges · Earth G1 Complete</title>
-  <meta
-    name="description"
-    content="Gauges contract renewal announcing Earth G1 complete, with Sun next and Moon queued after Sun."
-  >
-
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+  <meta name="description" content="Earth G1 is complete. Sun is next. Moon follows.">
 
   <style>
     :root {
       color-scheme: dark;
-      --gauge-bg: #02050b;
-      --gauge-panel: rgba(8, 14, 25, 0.90);
-      --gauge-panel-2: rgba(13, 22, 38, 0.84);
-      --gauge-line: rgba(176, 204, 255, 0.20);
-      --gauge-gold: #f2c76f;
-      --gauge-blue: #9ec6ff;
-      --gauge-green: #83e0b9;
-      --gauge-muted: rgba(228, 234, 246, 0.76);
-      --gauge-text: #f5f7fb;
-      --gauge-warn: #ffd38a;
-      --gauge-bad: #ff9b9b;
-      --gauge-radius: 28px;
+      --bg: #02050b;
+      --panel: rgba(8, 14, 25, 0.92);
+      --panel2: rgba(12, 21, 36, 0.88);
+      --line: rgba(176, 204, 255, 0.22);
+      --gold: #f2c76f;
+      --green: #83e0b9;
+      --blue: #9ec6ff;
+      --warn: #ffd38a;
+      --bad: #ff9b9b;
+      --text: #f5f7fb;
+      --muted: rgba(228, 234, 246, 0.76);
+      --soft: rgba(228, 234, 246, 0.58);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -43,17 +37,18 @@
     }
 
     html {
-      background: var(--gauge-bg);
+      background: var(--bg);
       scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      color: var(--gauge-text);
+      color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 22rem),
-        radial-gradient(circle at 16% 26%, rgba(158, 198, 255, 0.10), transparent 24rem),
+        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.12), transparent 22rem),
+        radial-gradient(circle at 15% 24%, rgba(158, 198, 255, 0.10), transparent 24rem),
+        radial-gradient(circle at 86% 72%, rgba(131, 224, 185, 0.08), transparent 24rem),
         linear-gradient(180deg, #02050b 0%, #07111f 52%, #02050b 100%);
     }
 
@@ -72,11 +67,11 @@
       top: 12px;
       z-index: 30;
       transform: translateY(-150%);
-      border: 1px solid rgba(242, 199, 111, 0.62);
+      border: 1px solid rgba(242, 199, 111, 0.65);
       border-radius: 999px;
       padding: 10px 14px;
       background: #07101c;
-      color: var(--gauge-text);
+      color: var(--text);
       font-weight: 900;
     }
 
@@ -87,59 +82,61 @@
     .shell {
       width: min(1180px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 26px 0 44px;
+      padding: 26px 0 48px;
     }
 
-    .site-header {
+    header {
       display: grid;
-      gap: 18px;
+      gap: 16px;
       margin-bottom: 24px;
     }
 
     .brand {
       display: grid;
-      gap: 4px;
+      gap: 5px;
       width: fit-content;
     }
 
     .brand strong {
-      color: var(--gauge-gold);
+      color: var(--gold);
       font-size: clamp(1.08rem, 4vw, 1.62rem);
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     .brand span {
-      color: rgba(228, 234, 246, 0.82);
-      font-size: clamp(0.78rem, 2.8vw, 1rem);
+      color: var(--muted);
+      font-size: clamp(0.78rem, 2.7vw, 1rem);
       font-weight: 820;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
 
-    .nav {
+    nav,
+    .actions,
+    .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    .nav a,
+    nav a,
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 44px;
-      border: 1px solid var(--gauge-line);
+      border: 1px solid var(--line);
       border-radius: 999px;
       padding: 10px 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
-      color: var(--gauge-text);
+      color: var(--text);
       font-weight: 900;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
       cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
-    .nav a[aria-current="page"],
+    nav a[aria-current="page"],
     .button.primary {
       border-color: rgba(242, 199, 111, 0.62);
       background: linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
@@ -160,16 +157,16 @@
     .hero,
     .panel,
     .tile {
-      border: 1px solid var(--gauge-line);
-      border-radius: var(--gauge-radius);
+      border: 1px solid var(--line);
+      border-radius: clamp(22px, 5vw, 34px);
       background:
         linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
-        var(--gauge-panel);
+        var(--panel);
       box-shadow: 0 28px 88px rgba(0, 0, 0, 0.44);
     }
 
     .hero {
-      padding: clamp(24px, 6vw, 54px);
+      padding: clamp(24px, 6vw, 56px);
       display: grid;
       gap: 18px;
     }
@@ -181,7 +178,7 @@
     }
 
     .eyebrow {
-      color: var(--gauge-gold);
+      color: var(--gold);
       font-size: 0.78rem;
       font-weight: 950;
       letter-spacing: 0.18em;
@@ -197,12 +194,12 @@
     }
 
     h1 {
-      font-size: clamp(2.8rem, 11vw, 6.8rem);
+      font-size: clamp(2.7rem, 10vw, 6.4rem);
       max-width: 980px;
     }
 
     h2 {
-      font-size: clamp(1.72rem, 5.6vw, 3.4rem);
+      font-size: clamp(1.72rem, 5.6vw, 3.35rem);
     }
 
     h3 {
@@ -211,35 +208,26 @@
 
     p {
       margin: 0;
-      color: var(--gauge-muted);
-      font-size: clamp(1rem, 2.9vw, 1.22rem);
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.18rem);
       line-height: 1.56;
     }
 
     .lead {
       max-width: 960px;
       color: rgba(245, 247, 251, 0.88);
-      font-size: clamp(1.16rem, 4vw, 1.72rem);
+      font-size: clamp(1.14rem, 4vw, 1.68rem);
       line-height: 1.42;
-    }
-
-    .chip-row,
-    .actions,
-    .status-grid,
-    .sequence-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
     }
 
     .chip {
       display: inline-flex;
       align-items: center;
       min-height: 34px;
-      border: 1px solid var(--gauge-line);
+      border: 1px solid var(--line);
       border-radius: 999px;
       padding: 7px 11px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.045);
       color: rgba(245,247,251,0.84);
       font-size: 0.72rem;
       font-weight: 950;
@@ -265,10 +253,15 @@
       background: rgba(158,198,255,0.10);
     }
 
-    .status-grid {
+    .status-grid,
+    .sequence-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
+    }
+
+    .sequence-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .tile {
@@ -276,12 +269,12 @@
       min-height: 132px;
       background:
         radial-gradient(circle at 100% 0%, rgba(242,199,111,0.08), transparent 18rem),
-        var(--gauge-panel-2);
+        var(--panel2);
     }
 
     .tile .label {
       display: block;
-      color: var(--gauge-muted);
+      color: var(--muted);
       font-size: 0.74rem;
       font-weight: 950;
       letter-spacing: 0.10em;
@@ -291,50 +284,28 @@
 
     .tile strong {
       display: block;
-      color: var(--gauge-text);
-      font-size: clamp(1.25rem, 4.2vw, 2.2rem);
+      color: var(--text);
+      font-size: clamp(1.25rem, 4.2vw, 2.15rem);
       line-height: 1.05;
       letter-spacing: -0.04em;
+      margin-bottom: 8px;
     }
 
     .tile.pass strong {
-      color: var(--gauge-green);
+      color: var(--green);
     }
 
     .tile.next strong {
-      color: var(--gauge-gold);
+      color: var(--gold);
     }
 
     .tile.queue strong {
-      color: var(--gauge-blue);
-    }
-
-    .sequence-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .sequence-card {
-      border: 1px solid var(--gauge-line);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(0,0,0,0.20);
-      display: grid;
-      gap: 10px;
-    }
-
-    .sequence-card .step {
-      color: var(--gauge-gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      color: var(--blue);
     }
 
     .table-wrap {
       overflow-x: auto;
-      border: 1px solid var(--gauge-line);
+      border: 1px solid var(--line);
       border-radius: 20px;
       background: rgba(0,0,0,0.18);
     }
@@ -368,34 +339,36 @@
     }
 
     .state-pass {
-      color: var(--gauge-green);
+      color: var(--green);
       font-weight: 950;
     }
 
+    .state-next,
+    .state-queue,
     .state-warn {
-      color: var(--gauge-warn);
+      color: var(--warn);
       font-weight: 950;
     }
 
     .state-fail {
-      color: var(--gauge-bad);
+      color: var(--bad);
       font-weight: 950;
     }
 
     .receipt {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      border: 1px solid var(--gauge-line);
+      border: 1px solid var(--line);
       border-radius: 20px;
       padding: 16px;
-      background: rgba(0,0,0,0.26);
+      background: rgba(0,0,0,0.28);
       color: rgba(245,247,251,0.84);
       font-size: 0.86rem;
       line-height: 1.52;
     }
 
     footer {
-      color: rgba(228,234,246,0.58);
+      color: var(--soft);
       padding-top: 8px;
       font-size: 0.84rem;
       line-height: 1.5;
@@ -409,7 +382,7 @@
     }
 
     @media (max-width: 680px) {
-      .nav a,
+      nav a,
       .button {
         min-width: calc(50% - 6px);
       }
@@ -425,13 +398,13 @@
   <a class="skip" href="#main">Skip to Gauges</a>
 
   <div class="shell">
-    <header class="site-header" aria-label="Site header">
+    <header>
       <a class="brand" href="/">
         <strong>Diamond Gate Bridge</strong>
         <span>Gauges · Earth G1 Complete · Sun Next · Moon Queue</span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
+      <nav aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -445,16 +418,17 @@
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="title">
-        <div class="eyebrow">H6 · Gauges · Final Earth G1 Contract Renewal</div>
-        <h1 id="title">Earth G1 is complete. Sun is next. Moon follows.</h1>
+      <section class="hero">
+        <p class="eyebrow">H6 · Gauges · Earth G1 Final Receipt</p>
+        <h1>Earth G1 is complete. Sun is next. Moon follows.</h1>
 
         <p class="lead">
-          The Demo Universe now has its accepted Earth-class globe baseline. This Gauges renewal records Earth G1 as complete,
-          keeps Planet 1 reserved for the future Nine Summits Universe, and opens the next formation order: Sun, then Moon.
+          Earth G1 is the accepted Demo Universe globe baseline. This page records that completion,
+          keeps Planet 1 reserved for the future Nine Summits Universe, and opens the next build order:
+          Sun first, then Moon.
         </p>
 
-        <div class="chip-row" aria-label="Contract chips">
+        <div class="chips">
           <span class="chip pass">Earth G1 complete</span>
           <span class="chip next">Sun next</span>
           <span class="chip queue">Moon queued</span>
@@ -463,7 +437,7 @@
           <span class="chip">No runtime mutation</span>
         </div>
 
-        <div class="actions" aria-label="Gauge actions">
+        <div class="actions">
           <button class="button primary" type="button" data-audit="earth">Run Earth G1 confirmation</button>
           <button class="button green" type="button" data-audit="sun">Run Sun readiness</button>
           <button class="button" type="button" data-audit="moon">Run Moon queue</button>
@@ -472,9 +446,9 @@
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="tiles">
-        <div class="eyebrow">Current sequence state</div>
-        <h2 id="tiles">The next build order is visible.</h2>
+      <section class="panel">
+        <p class="eyebrow">Current sequence state</p>
+        <h2>The next build order is visible.</h2>
 
         <div class="status-grid">
           <article class="tile pass">
@@ -485,13 +459,13 @@
 
           <article class="tile next">
             <span class="label">Next target</span>
-            <strong id="sun-state">Sun</strong>
+            <strong id="sun-state">Ready next</strong>
             <p>Prepare the stellar body standard after Earth G1.</p>
           </article>
 
           <article class="tile queue">
             <span class="label">Queued target</span>
-            <strong id="moon-state">Moon</strong>
+            <strong id="moon-state">Queued</strong>
             <p>Moon follows only after Sun terms are renewed.</p>
           </article>
 
@@ -503,46 +477,37 @@
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="sequence">
-        <div class="eyebrow">Formation order</div>
-        <h2 id="sequence">Earth gives the globe standard. Sun gives the light source. Moon gives the companion body.</h2>
+      <section class="panel">
+        <p class="eyebrow">Formation order</p>
+        <h2>Earth gives the globe standard. Sun gives the light source. Moon gives the companion body.</h2>
 
         <div class="sequence-grid">
-          <article class="sequence-card">
-            <span class="step">Step 1 · Complete</span>
-            <h3>Earth G1</h3>
-            <p>
-              The accepted Demo Universe globe standard. The route is /showroom/globe/.
-              The label is Earth G1, not Planet 1.
-            </p>
+          <article class="tile pass">
+            <span class="label">Step 1 · Complete</span>
+            <strong>Earth G1</strong>
+            <p>The accepted Demo Universe globe standard. Route: /showroom/globe/.</p>
           </article>
 
-          <article class="sequence-card">
-            <span class="step">Step 2 · Next</span>
-            <h3>Sun</h3>
-            <p>
-              The Sun renewal should establish a dimensional stellar body: plasma surface,
-              controlled radiance, mobile-safe animation, and no Earth renderer inheritance.
-            </p>
+          <article class="tile next">
+            <span class="label">Step 2 · Next</span>
+            <strong>Sun</strong>
+            <p>Renew the Sun terms next: plasma surface, controlled radiance, and mobile-safe motion.</p>
           </article>
 
-          <article class="sequence-card">
-            <span class="step">Step 3 · Queue</span>
-            <h3>Moon</h3>
-            <p>
-              The Moon remains queued. It should not be built until the Sun standard is renewed
-              and inspected.
-            </p>
+          <article class="tile queue">
+            <span class="label">Step 3 · Queue</span>
+            <strong>Moon</strong>
+            <p>Moon remains queued until Sun is renewed and inspected.</p>
           </article>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="audit-results">
-        <div class="eyebrow">Live diagnostic surface</div>
-        <h2 id="audit-results">Source-only checks.</h2>
+      <section class="panel">
+        <p class="eyebrow">Live diagnostic surface</p>
+        <h2>Source-only checks.</h2>
         <p>
-          These buttons fetch route and asset source only. They do not execute target files, render iframes,
-          delete files, mutate runtime, or start independent animation loops.
+          These buttons fetch route and asset source only. They do not execute target files,
+          render iframes, delete files, mutate runtime, or start extra animation loops.
         </p>
 
         <div class="table-wrap">
@@ -562,41 +527,42 @@
                 <td>Earth G1</td>
                 <td>/showroom/globe/</td>
                 <td class="state-pass">ACCEPTED</td>
-                <td>pending audit</td>
-                <td>Sean accepted current visual baseline</td>
-                <td>Earth G1 complete; source confirmation pending.</td>
+                <td>locked</td>
+                <td>Accepted by Sean</td>
+                <td>Earth G1 remains complete regardless of Sun-only or Moon-only audit mode.</td>
               </tr>
               <tr>
                 <td>Sun</td>
-                <td>/assets/sun/sun_manifest.json</td>
-                <td class="state-warn">NEXT</td>
-                <td>pending audit</td>
-                <td>Sun terms next</td>
-                <td>Renew Sun after Earth G1 contract.</td>
+                <td>/assets/sun/</td>
+                <td class="state-next">NEXT</td>
+                <td>pending</td>
+                <td>Sun readiness lane</td>
+                <td>Renew Sun terms next.</td>
               </tr>
               <tr>
                 <td>Moon</td>
-                <td>/assets/moon/moon_manifest.json</td>
-                <td class="state-warn">QUEUED</td>
-                <td>pending audit</td>
-                <td>Moon follows Sun</td>
-                <td>Do not start Moon before Sun.</td>
+                <td>/assets/moon/</td>
+                <td class="state-queue">QUEUED</td>
+                <td>pending</td>
+                <td>Moon queue lane</td>
+                <td>Do not begin Moon until Sun is renewed and inspected.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="receipt-title">
-        <div class="eyebrow">Contract receipt</div>
-        <h2 id="receipt-title">Earth G1 completion receipt.</h2>
+      <section class="panel">
+        <p class="eyebrow">Contract receipt</p>
+        <h2>Earth G1 completion receipt.</h2>
 
-        <pre id="receipt" class="receipt">GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1
+        <pre id="receipt" class="receipt">GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1
 route=/gauges/
 page=gauges
 earth-g1-complete=true
 earth-g1-route=/showroom/globe/
 earth-g1-public-label=Earth G1
+earth-g1-accepted-by-sean=true
 demo-universe=earth
 planet-1=reserved-for-future-nine-summits-universe
 next=sun
@@ -607,129 +573,45 @@ renders_iframe=false
 deletes_files=false
 mutates_runtime=false
 starts_extra_animation_loops=false
-visual_pass_claimed=earth-g1-accepted-by-sean
 status=READY</pre>
       </section>
     </main>
 
     <footer>
-      GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1 · Gauges · Diamond Gate Bridge.
+      GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1 · Gauges · Diamond Gate Bridge.
     </footer>
   </div>
 
   <script>
-    (function bindEarthG1SunMoonGauges() {
+    (function bindGaugesVisibleRenewal() {
       "use strict";
 
-      var CONTRACT = "GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1";
+      var CONTRACT = "GAUGES_EARTH_G1_VISIBLE_STATUS_RENEWAL_TNT_v1";
+
+      var accepted = {
+        earthG1Complete: true,
+        earthG1AcceptedBySean: true,
+        earthG1Route: "/showroom/globe/",
+        planetOneReserved: true,
+        next: "sun",
+        then: "moon"
+      };
 
       var targets = {
         earth: [
-          {
-            lane: "Earth G1",
-            path: "/showroom/globe/",
-            required: [
-              "Earth",
-              "G1",
-              "Demo Universe",
-              "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1",
-              "visual-pass-claimed=false"
-            ],
-            accepted: true
-          },
-          {
-            lane: "Earth G1",
-            path: "/assets/earth/earth_canvas.js",
-            required: [
-              "DGBEarthAssetCanvas",
-              "DGBDemoUniverseEarthCanvas",
-              "earth_surface_2048.jpg",
-              "earth_clouds_2048.jpg"
-            ],
-            accepted: true
-          },
-          {
-            lane: "Earth G1",
-            path: "/assets/earth/earth_material.css",
-            required: [
-              "earth-g2-stage",
-              "data-earth-asset-stage",
-              "touch-action"
-            ],
-            accepted: true
-          },
-          {
-            lane: "Earth G1",
-            path: "/assets/earth/earth_manifest.json",
-            required: [
-              "EARTH",
-              "earth_surface_2048.jpg",
-              "earth_clouds_2048.jpg"
-            ],
-            accepted: true,
-            optional: true
-          }
+          { lane: "Earth G1", path: "/showroom/globe/", required: ["Earth", "G1", "Demo Universe"], accepted: true },
+          { lane: "Earth G1", path: "/assets/earth/earth_canvas.js", required: ["DGBEarthAssetCanvas", "earth_surface_2048.jpg", "earth_clouds_2048.jpg"], accepted: true },
+          { lane: "Earth G1", path: "/assets/earth/earth_material.css", required: ["touch-action"], accepted: true }
         ],
         sun: [
-          {
-            lane: "Sun",
-            path: "/assets/sun/sun_manifest.json",
-            required: [
-              "Sun",
-              "plasma",
-              "controlled corona",
-              "no graphic generation dependency"
-            ],
-            next: true
-          },
-          {
-            lane: "Sun",
-            path: "/assets/sun/sun_canvas.js",
-            required: [
-              "DGBSun",
-              "canvas"
-            ],
-            next: true,
-            optional: true
-          },
-          {
-            lane: "Sun",
-            path: "/assets/sun/sun_material.css",
-            required: [
-              "sun"
-            ],
-            next: true,
-            optional: true
-          }
+          { lane: "Sun", path: "/assets/sun/sun_manifest.json", required: ["Sun"], next: true },
+          { lane: "Sun", path: "/assets/sun/sun_canvas.js", required: ["canvas"], next: true },
+          { lane: "Sun", path: "/assets/sun/sun_material.css", required: ["sun"], next: true }
         ],
         moon: [
-          {
-            lane: "Moon",
-            path: "/assets/moon/moon_manifest.json",
-            required: [
-              "Moon"
-            ],
-            queued: true,
-            optional: true
-          },
-          {
-            lane: "Moon",
-            path: "/assets/moon/moon_canvas.js",
-            required: [
-              "Moon"
-            ],
-            queued: true,
-            optional: true
-          },
-          {
-            lane: "Moon",
-            path: "/assets/moon/moon_material.css",
-            required: [
-              "moon"
-            ],
-            queued: true,
-            optional: true
-          }
+          { lane: "Moon", path: "/assets/moon/moon_manifest.json", required: ["Moon"], queued: true, optional: true },
+          { lane: "Moon", path: "/assets/moon/moon_canvas.js", required: ["Moon"], queued: true, optional: true },
+          { lane: "Moon", path: "/assets/moon/moon_material.css", required: ["moon"], queued: true, optional: true }
         ]
       };
 
@@ -737,8 +619,8 @@ status=READY</pre>
         return document.getElementById(id);
       }
 
-      function escapeHtml(value) {
-        return String(value)
+      function esc(value) {
+        return String(value == null ? "" : value)
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
@@ -746,123 +628,107 @@ status=READY</pre>
           .replace(/'/g, "&#039;");
       }
 
-      function hashFNV(text) {
-        var hash = 2166136261;
+      function hash(text) {
+        var h = 2166136261;
         for (var i = 0; i < text.length; i += 1) {
-          hash ^= text.charCodeAt(i);
-          hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+          h ^= text.charCodeAt(i);
+          h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
         }
-        return ("0000000" + (hash >>> 0).toString(16)).slice(-8);
+        return ("0000000" + (h >>> 0).toString(16)).slice(-8);
       }
 
-      function readSignal(text, required) {
+      function markerSignal(text, required) {
         var missing = [];
-        required.forEach(function (token) {
-          if (!text || text.indexOf(token) === -1) missing.push(token);
+        (required || []).forEach(function (token) {
+          if (String(text || "").indexOf(token) === -1) missing.push(token);
         });
-
-        if (!missing.length) return {
-          ok: true,
-          signal: "required markers present"
-        };
-
-        return {
-          ok: false,
-          signal: "missing: " + missing.join(", ")
-        };
+        return missing.length ? "missing: " + missing.join(", ") : "required markers present";
       }
 
       function fetchSource(item) {
-        return fetch(item.path + (item.path.indexOf("?") === -1 ? "?_gauge=" : "&_gauge=") + encodeURIComponent(CONTRACT + "_" + Date.now()), {
+        var sep = item.path.indexOf("?") === -1 ? "?" : "&";
+
+        return fetch(item.path + sep + "_gauges=" + encodeURIComponent(CONTRACT + "_" + Date.now()), {
           cache: "no-store"
-        }).then(function (response) {
-          return response.text().then(function (text) {
-            var signal = readSignal(text, item.required || []);
-            var state;
-            var verdict;
+        })
+          .then(function (res) {
+            return res.text().then(function (text) {
+              var signal = markerSignal(text, item.required);
+              var signalOk = signal === "required markers present";
+              var state;
+              var verdict;
 
-            if (response.ok && signal.ok && item.accepted) {
-              state = "PASS";
-              verdict = "Earth G1 accepted and source markers are present.";
-            } else if (response.ok && signal.ok && item.next) {
-              state = "NEXT";
-              verdict = "Sun source exists. Renew Sun terms next.";
-            } else if (response.ok && signal.ok && item.queued) {
-              state = "QUEUED";
-              verdict = "Moon source exists, but remains queued behind Sun.";
-            } else if (response.ok && !signal.ok) {
-              state = item.optional ? "WARN" : "FAIL";
-              verdict = "Source served but expected markers are incomplete.";
-            } else {
-              state = item.optional ? "QUEUED" : "FAIL";
-              verdict = item.optional ? "Source not required yet." : "Required source did not serve successfully.";
-            }
+              if (item.accepted && res.ok) {
+                state = signalOk ? "PASS" : "WARN";
+                verdict = signalOk ? "Earth G1 accepted and source markers are present." : "Earth G1 remains accepted; source markers need review.";
+              } else if (item.next && res.ok) {
+                state = signalOk ? "NEXT" : "WARN";
+                verdict = signalOk ? "Sun source exists. Renew Sun terms next." : "Sun source exists but needs terms cleanup.";
+              } else if (item.queued) {
+                state = "QUEUED";
+                verdict = res.ok ? "Moon source exists, but remains queued behind Sun." : "Moon source is not required yet.";
+              } else {
+                state = res.ok ? "WARN" : "FAIL";
+                verdict = res.ok ? "Source served with review warnings." : "Source did not serve.";
+              }
 
+              return {
+                lane: item.lane,
+                path: item.path,
+                status: res.status,
+                ok: res.ok,
+                size: text.length,
+                hash: hash(text),
+                state: state,
+                signal: signal,
+                verdict: verdict
+              };
+            });
+          })
+          .catch(function (error) {
             return {
               lane: item.lane,
               path: item.path,
-              status: response.status,
-              ok: response.ok,
-              size: text.length,
-              hash: hashFNV(text),
-              state: state,
-              signal: signal.signal,
-              verdict: verdict
+              status: "ERR",
+              ok: false,
+              size: 0,
+              hash: "none",
+              state: item.optional ? "QUEUED" : "FAIL",
+              signal: String(error && error.message ? error.message : error),
+              verdict: item.optional ? "Not required yet." : "Fetch failed."
             };
           });
-        }).catch(function (error) {
-          return {
-            lane: item.lane,
-            path: item.path,
-            status: "ERR",
-            ok: false,
-            size: 0,
-            hash: "none",
-            state: item.optional ? "QUEUED" : "FAIL",
-            signal: String(error && error.message ? error.message : error),
-            verdict: item.optional ? "Not required yet." : "Fetch failed."
-          };
-        });
       }
 
-      function stateClass(state) {
+      function classFor(state) {
         if (state === "PASS") return "state-pass";
-        if (state === "NEXT" || state === "QUEUED" || state === "WARN") return "state-warn";
+        if (state === "NEXT") return "state-next";
+        if (state === "QUEUED") return "state-queue";
+        if (state === "WARN") return "state-warn";
         return "state-fail";
       }
 
       function renderRows(results) {
-        var body = byId("result-body");
-        body.innerHTML = results.map(function (result) {
-          return [
-            "<tr>",
-            "<td>" + escapeHtml(result.lane) + "</td>",
-            "<td>" + escapeHtml(result.path) + "</td>",
-            "<td class=\"" + stateClass(result.state) + "\">" + escapeHtml(result.state + " " + result.status) + "</td>",
-            "<td>" + escapeHtml(result.size + " · " + result.hash) + "</td>",
-            "<td>" + escapeHtml(result.signal) + "</td>",
-            "<td>" + escapeHtml(result.verdict) + "</td>",
-            "</tr>"
-          ].join("");
+        byId("result-body").innerHTML = results.map(function (r) {
+          return "<tr>" +
+            "<td>" + esc(r.lane) + "</td>" +
+            "<td>" + esc(r.path) + "</td>" +
+            "<td class='" + classFor(r.state) + "'>" + esc(r.state + " " + r.status) + "</td>" +
+            "<td>" + esc(r.size + " · " + r.hash) + "</td>" +
+            "<td>" + esc(r.signal) + "</td>" +
+            "<td>" + esc(r.verdict) + "</td>" +
+          "</tr>";
         }).join("");
       }
 
       function summarize(results, mode) {
-        var earthPass = results.filter(function (r) {
-          return r.lane === "Earth G1" && r.state === "PASS";
-        }).length;
-
-        var sunReady = results.filter(function (r) {
+        var sunReady = results.some(function (r) {
           return r.lane === "Sun" && (r.state === "NEXT" || r.state === "PASS");
-        }).length;
+        });
 
-        var moonFound = results.filter(function (r) {
-          return r.lane === "Moon" && (r.state === "QUEUED" || r.state === "PASS");
-        }).length;
-
-        byId("earth-state").textContent = earthPass > 0 ? "Complete" : "Review";
-        byId("sun-state").textContent = sunReady > 0 ? "Ready next" : "Next";
-        byId("moon-state").textContent = moonFound > 0 ? "Queued" : "Queue";
+        byId("earth-state").textContent = "Complete";
+        byId("sun-state").textContent = sunReady || mode === "sun" || mode === "full" ? "Ready next" : "Ready next";
+        byId("moon-state").textContent = "Queued";
 
         var receipt = {
           contractVersion: CONTRACT,
@@ -873,12 +739,12 @@ status=READY</pre>
           noTargetExecution: true,
           noRuntimeMutation: true,
           noExtraAnimationLoopsStarted: true,
-          earthG1Complete: true,
-          earthG1Route: "/showroom/globe/",
-          earthG1AcceptedBySean: true,
-          planetOneReservedForFutureNineSummitsUniverse: true,
-          next: "sun",
-          then: "moon",
+          earthG1Complete: accepted.earthG1Complete,
+          earthG1AcceptedBySean: accepted.earthG1AcceptedBySean,
+          earthG1Route: accepted.earthG1Route,
+          planetOneReservedForFutureNineSummitsUniverse: accepted.planetOneReserved,
+          next: accepted.next,
+          then: accepted.then,
           resultCount: results.length,
           results: results
         };
@@ -887,14 +753,11 @@ status=READY</pre>
       }
 
       function run(mode) {
-        var list;
+        var list = mode === "full"
+          ? [].concat(targets.earth, targets.sun, targets.moon)
+          : (targets[mode] || targets.earth);
 
-        if (mode === "full") {
-          list = [].concat(targets.earth, targets.sun, targets.moon);
-        } else {
-          list = targets[mode] || targets.earth;
-        }
-
+        byId("earth-state").textContent = "Complete";
         byId("receipt").textContent = CONTRACT + "\nstatus=RUNNING\nmode=" + mode + "\ntimestamp=" + new Date().toISOString();
 
         Promise.all(list.map(fetchSource)).then(function (results) {
@@ -909,7 +772,7 @@ status=READY</pre>
         });
       });
 
-      window.DGBGaugesEarthG1SunMoonRenewal = {
+      window.DGBGaugesEarthG1VisibleStatusRenewal = {
         VERSION: CONTRACT,
         version: CONTRACT,
         run: run,
@@ -918,11 +781,11 @@ status=READY</pre>
             ok: true,
             route: "/gauges/",
             earthG1Complete: true,
+            earthG1AcceptedBySean: true,
             next: "sun",
             then: "moon",
             planetOneReservedForFutureNineSummitsUniverse: true,
-            sourceFetchOnly: true,
-            visualPassClaimed: "earth-g1-accepted-by-sean"
+            sourceFetchOnly: true
           };
         }
       };

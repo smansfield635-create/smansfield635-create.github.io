@@ -1,21 +1,28 @@
-/* G1 PLANET 1 BODY SYSTEM BOUNDARY ENGINE HYDROLOGY
-   FILE: /world/render/planet-one.hydration.render.js
-   VERSION: G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1
+/* G1 PLANET 1 HEX BRIDGE: HYDRATION DEPTH + TERRAIN OUTLINE
+   FILE: /world/render/planet-one.hexgrid.render.js
+   VERSION: G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1
+
+   LAW:
+   Hexgrid is the 256 bridge.
+   It connects hydration depth to terrain outline.
+   It produces official terrain outline and vein candidates.
+   It does not expose public honeycomb.
 */
 
-(function attachPlanetOneHydrationRender(global) {
+(function attachPlanetOneHexBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_BODY_SYSTEM_BOUNDARY_ENGINE_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_HYDROLOGY_SYSTEM_PHYSICAL_GOVERNANCE_TNT_v1";
-  var SEA_LEVEL_DATUM = 0;
+  var VERSION = "G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1";
+  var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
+  var STATE_FORMULA = "4x4x4x4";
+  var STATE_COUNT = 256;
+  var SEED = 256451;
+
+  var lastDraw = null;
+  var lastGrid = null;
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
-  }
-
-  function mix(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
   }
 
   function round(value, places) {
@@ -23,245 +30,469 @@
     return Math.round(value * m) / m;
   }
 
-  function rgba(r, g, b, a) {
+  function mix(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
+  }
+
+  function smoothstep(edge0, edge1, value) {
+    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function degToRad(value) {
+    return value * Math.PI / 180;
+  }
+
+  function radToDeg(value) {
+    return value * 180 / Math.PI;
+  }
+
+  function normalizeLon(lon) {
+    var x = ((lon + 180) % 360 + 360) % 360 - 180;
+    return x === -180 ? 180 : x;
+  }
+
+  function hash2(a, b, seed) {
+    var x = Math.sin(a * 127.1 + b * 311.7 + (seed || SEED) * 74.7) * 43758.5453123;
+    return x - Math.floor(x);
+  }
+
+  function noise(lon, lat, scale, seed) {
+    return hash2(Math.round(lon * scale), Math.round(lat * scale), seed || SEED);
+  }
+
+  function fbm(lon, lat, seed) {
+    return (
+      noise(lon, lat, 0.42, seed + 11) * 0.40 +
+      noise(lon, lat, 0.92, seed + 29) * 0.30 +
+      noise(lon, lat, 1.85, seed + 47) * 0.18 +
+      noise(lon, lat, 3.70, seed + 83) * 0.12
+    );
+  }
+
+  function stateId(waterDepth, terrainOutline, veinStructure, visualBoundary) {
+    return (((waterDepth * 4 + terrainOutline) * 4 + veinStructure) * 4 + visualBoundary);
+  }
+
+  function buildStateSpaceReceipt() {
+    var states = [];
+    var waterDepth;
+    var terrainOutline;
+    var veinStructure;
+    var visualBoundary;
+
+    for (waterDepth = 0; waterDepth < 4; waterDepth += 1) {
+      for (terrainOutline = 0; terrainOutline < 4; terrainOutline += 1) {
+        for (veinStructure = 0; veinStructure < 4; veinStructure += 1) {
+          for (visualBoundary = 0; visualBoundary < 4; visualBoundary += 1) {
+            states.push({
+              state_id: stateId(waterDepth, terrainOutline, veinStructure, visualBoundary),
+              waterDepth: waterDepth,
+              terrainOutline: terrainOutline,
+              veinStructure: veinStructure,
+              visualBoundary: visualBoundary
+            });
+          }
+        }
+      }
+    }
+
     return {
-      r: Math.round(clamp(r, 0, 255)),
-      g: Math.round(clamp(g, 0, 255)),
-      b: Math.round(clamp(b, 0, 255)),
-      a: clamp(a == null ? 1 : a, 0, 1)
+      ok: states.length === STATE_COUNT,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: STATE_COUNT,
+      stateSpaceReceipt: true,
+      waterDepthAxisActive: true,
+      terrainOutlineAxisActive: true,
+      veinStructureAxisActive: true,
+      visualBoundaryAxisActive: true,
+      states: states
     };
   }
 
-  function get(sample, camelName, snakeName, fallback) {
-    if (!sample) return fallback;
-    if (sample[camelName] != null) return Number(sample[camelName]);
-    if (sample[snakeName] != null) return Number(sample[snakeName]);
-    return fallback;
+  function landPotential(lon, lat, seed) {
+    var west = bodyScore(lon, lat, -92, 4, 72, 78, 1.03, 0.15);
+    var east = bodyScore(lon, lat, 96, -6, 66, 72, 0.98, 0.13);
+    var north = bodyScore(lon, lat, 28, 38, 36, 28, 0.66, 0.04);
+    var south = bodyScore(lon, lat, -22, -38, 42, 30, 0.64, 0.04);
+    var far = bodyScore(lon, lat, 178, 14, 34, 42, 0.58, 0.10);
+    var grain = (fbm(lon, lat, seed + 300) - 0.5) * 0.24;
+    return Math.max(west, east, north, south, far) + grain;
   }
 
-  function colorBlend(a, b, t) {
-    return rgba(
-      mix(a.r, b.r, t),
-      mix(a.g, b.g, t),
-      mix(a.b, b.b, t),
-      mix(a.a, b.a, t)
-    );
+  function bodyScore(lon, lat, centerLon, centerLat, rx, ry, weight, wrap) {
+    var dx = Math.abs(normalizeLon(lon - centerLon)) / rx;
+    var dy = (lat - centerLat) / ry;
+    var curve = Math.cos(degToRad(lon - centerLon)) * wrap;
+    return weight * (1 - (dx * dx + dy * dy)) + curve;
   }
 
-  function sampleHydrationSurface(lon, lat, surfaceSample) {
-    var s = surfaceSample || {};
-    var domain = Number(s.domain == null ? 0 : s.domain);
-    var height = get(s, "height", "height", 0);
-    var waterDepth = get(s, "waterDepth", "water_depth", 0);
-    var shelfDistance = get(s, "shelfDistance", "shelf_distance", 0);
-    var coastBand = get(s, "coastBand", "coast_band", 0);
-    var landMask = get(s, "landMask", "land_mask", 0);
-    var moisture = get(s, "moisture", "moisture", 0.4);
-    var riverVein = get(s, "riverVein", "river_vein", 0);
-    var riverBranch = get(s, "riverBranch", "river_branch", 0);
-    var lakeBasin = get(s, "lakeBasin", "lake_basin", 0);
-    var pondPocket = get(s, "pondPocket", "pond_pocket", 0);
-    var wetland = get(s, "wetland", "wetland_field", 0);
-    var estuary = get(s, "estuaryMouth", "estuary_mouth", 0);
-    var waterfall = get(s, "waterfallDrop", "waterfall_drop", 0);
-    var hillshade = get(s, "hillshade", "hillshade", 0.62);
+  function veinField(lon, lat, seed, offset, scale, width) {
+    var n = fbm(lon * 0.68 + offset, lat * 0.82 - offset, seed + offset);
+    var line = Math.abs(Math.sin(degToRad(lon * scale + lat * scale * 1.42 + n * 88 + offset)));
+    return 1 - smoothstep(0, width, line);
+  }
 
-    var body = s.bodySystem || {};
-    var artery = Number(body.arteryFlow || s.arteryFlow || 0);
-    var vein = Number(body.veinFlow || s.veinFlow || 0);
-    var lymph = Number(body.lymphDrainage || s.lymphDrainage || 0);
-    var pressure = Number(body.pressureChannel || s.pressureChannel || 0);
-    var fat = Number(body.fatBuffer || s.fatBuffer || 0);
-    var fascia = Number(body.fasciaBoundary || s.fasciaBoundary || 0);
+  function sampleBridge(lon, lat, options) {
+    options = options || {};
+    var seed = Number(options.seed || SEED);
 
-    var deepOceanMask = domain === 0 || height < -0.18 ? 1 : 0;
-    var midOceanMask = !deepOceanMask && height < -0.055 ? 1 : 0;
-    var shelfMask = domain === 1 || (height >= -0.055 && height <= 0.075) ? clamp(0.55 + shelfDistance * 0.42, 0, 1) : 0;
-    var coastalMask = clamp(coastBand * 0.68 + estuary * 0.42 + fascia * 0.18, 0, 1);
+    lon = normalizeLon(lon);
+    lat = clamp(lat, -88, 88);
 
-    var riverMask = clamp(Math.max(riverVein, riverBranch * 0.68, artery * 0.86, vein * 0.58) * landMask, 0, 1);
-    var lakeMask = clamp(Math.max(lakeBasin, lymph * 0.55) * landMask, 0, 1);
-    var pondMask = clamp(Math.max(pondPocket, lymph * 0.35) * landMask, 0, 1);
-    var wetlandMask = clamp(Math.max(wetland, fat * 0.42, lymph * 0.32) * landMask, 0, 1);
-    var estuaryMask = clamp(estuary * Math.max(shelfMask, coastalMask, 0.35), 0, 1);
-    var waterfallMask = clamp(Math.max(waterfall, pressure * 0.52) * riverMask, 0, 1);
+    var potential = landPotential(lon, lat, seed);
+    var absLat = Math.abs(lat);
+    var polar = absLat >= 73 ? 1 : 0;
 
-    var internalWaterMask = clamp(
-      lakeMask * 0.90 +
-      riverMask * 0.74 +
-      pondMask * 0.50 +
-      wetlandMask * 0.40 +
-      waterfallMask * 0.82,
+    var outlineRaw = smoothstep(0.055, 0.34, potential);
+    var officialCoast = 1 - Math.abs(potential - 0.13) / 0.18;
+    officialCoast = clamp(officialCoast, 0, 1);
+
+    var shelf = clamp(1 - Math.abs(potential - 0.06) / 0.30, 0, 1);
+    var coastDistance = clamp((potential - 0.08) / 0.60, 0, 1);
+
+    var oceanDepth = clamp(0.72 - potential * 0.44 - shelf * 0.18, 0.10, 0.94);
+    if (polar) oceanDepth = clamp(oceanDepth * 0.72, 0.10, 0.62);
+
+    var lowVein = veinField(lon, lat, seed, 19, 1.10, 0.055);
+    var artery = veinField(lon, lat, seed, 73, -1.52, 0.044);
+    var pressure = veinField(lon, lat, seed, 131, 2.08, 0.036);
+
+    var veinCandidate = clamp(
+      Math.max(
+        lowVein * outlineRaw * 0.60,
+        artery * outlineRaw * 0.78,
+        pressure * outlineRaw * officialCoast * 0.70
+      ),
       0,
       1
     );
 
-    var waterAuthority = clamp(
-      deepOceanMask +
-      midOceanMask * 0.92 +
-      shelfMask * 0.72 +
-      coastalMask * 0.34 +
-      estuaryMask * 0.70 +
-      internalWaterMask * 0.78,
-      0,
-      1
-    );
+    var elevationCandidate = clamp(outlineRaw * 0.64 + coastDistance * 0.20 + pressure * 0.08, 0, 1);
 
-    var terrainAllowance = clamp(1 - waterAuthority * 0.80 + fascia * 0.05, 0.06, 1);
+    var waterDepthState = oceanDepth >= 0.72 ? 0 : oceanDepth >= 0.42 ? 1 : oceanDepth >= 0.16 ? 2 : 3;
 
-    var deepOceanColor = rgba(mix(5, 14, hillshade), mix(22, 62, hillshade), mix(80, 154, hillshade), 1);
-    var midOceanColor = rgba(mix(8, 22, hillshade), mix(54, 106, hillshade), mix(112, 174, hillshade), 0.96);
-    var shelfColor = rgba(mix(30, 105, shelfDistance), mix(116, 204, shelfDistance), mix(138, 190, shelfDistance), 0.86);
-    var arteryColor = rgba(mix(22, 64, moisture), mix(110, 184, moisture), mix(150, 214, moisture), 0.80);
-    var veinColor = rgba(mix(28, 74, moisture), mix(96, 160, moisture), mix(132, 188, moisture), 0.70);
-    var lakeColor = rgba(20, 86, 148, 0.82);
-    var wetlandColor = rgba(58, 126, 116, 0.56);
-    var estuaryColor = rgba(78, 168, 178, 0.78);
-    var waterfallColor = rgba(184, 230, 236, 0.64);
+    var terrainOutlineState = 0;
+    if (outlineRaw > 0.18) terrainOutlineState = 1;
+    if (officialCoast > 0.52) terrainOutlineState = 2;
+    if (polar) terrainOutlineState = 3;
 
-    var color = deepOceanColor;
-    var material = "DEEP_OCEAN";
+    var veinState = 0;
+    if (lowVein * outlineRaw > 0.34) veinState = 1;
+    if (artery * outlineRaw > 0.42) veinState = 2;
+    if (pressure * outlineRaw > 0.50) veinState = 3;
 
-    if (midOceanMask) {
-      color = midOceanColor;
-      material = "MID_OCEAN";
-    }
-
-    if (shelfMask > 0) {
-      color = colorBlend(color, shelfColor, shelfMask);
-      material = "SHALLOW_SHELF";
-    }
-
-    if (coastalMask > 0.18) {
-      color = colorBlend(color, rgba(60, 144, 158, 0.72), coastalMask);
-      material = "COASTAL_WATER";
-    }
-
-    if (estuaryMask > 0.06) {
-      color = colorBlend(color, estuaryColor, estuaryMask);
-      material = "ESTUARY_MOUTH";
-    }
-
-    if (wetlandMask > 0.06) {
-      color = colorBlend(color, wetlandColor, wetlandMask);
-      material = "WETLAND_FIELD";
-    }
-
-    if (pondMask > 0.08) {
-      color = colorBlend(color, rgba(42, 126, 152, 0.70), pondMask);
-      material = "POND_POCKET";
-    }
-
-    if (lakeMask > 0.08) {
-      color = colorBlend(color, lakeColor, lakeMask);
-      material = "LAKE_BASIN";
-    }
-
-    if (riverMask > 0.055) {
-      color = colorBlend(color, artery >= vein ? arteryColor : veinColor, riverMask);
-      material = artery >= vein ? "ARTERY_RIVER_FLOW" : "VEIN_RETURN_FLOW";
-    }
-
-    if (waterfallMask > 0.08) {
-      color = colorBlend(color, waterfallColor, waterfallMask);
-      material = "PRESSURE_CHANNEL_WATERFALL_DROP";
-    }
+    var boundaryState = 0;
+    var boundaryPower = Math.max(officialCoast, veinCandidate * 0.72, polar * 0.72);
+    if (boundaryPower > 0.18) boundaryState = 1;
+    if (boundaryPower > 0.42) boundaryState = 2;
+    if (boundaryPower > 0.68) boundaryState = 3;
 
     return {
       version: VERSION,
-      priorVersion: PRIOR_VERSION,
+      baseline: BASELINE,
 
-      hydrationLayerActive: true,
-      hydrologyNetworkActive: true,
-      physicalHydrologyGovernanceActive: true,
-      hydrologyConsumesBodySystem: Boolean(s.bodySystem),
+      lon: lon,
+      lat: lat,
 
-      internalWaterVeinsActive: true,
-      riverVeinFieldActive: true,
-      lakeBasinFieldActive: true,
-      pondPocketFieldActive: true,
-      estuaryMouthFieldActive: true,
-      wetlandFieldActive: true,
-      waterfallDropPointFieldActive: true,
-      watershedDirectionActive: true,
-      hydrologyBalanceMaskActive: true,
-      terrainHydrationBalanceActive: true,
+      hexBridgeActive: true,
+      hydrationTerrainBridgeActive: true,
+      terrainOutlineSourceActive: true,
+      officialTerrainOutlineActive: true,
+      veinCandidateFieldActive: true,
+      waterDepthSamplingActive: true,
+      shelfDistanceSamplingActive: true,
+      coastlineCandidateFieldActive: true,
 
-      riversFollowArteryVeins: true,
-      lakesFollowBasinFatBuffer: true,
-      wetlandsFollowLymphDrainage: true,
-      waterfallDropPointsFollowPressureChannels: true,
+      waterDepth: round(oceanDepth, 4),
+      water_depth: round(oceanDepth, 4),
+      shelfDistance: round(shelf, 4),
+      shelf_distance: round(shelf, 4),
+      coastDistance: round(coastDistance, 4),
+      coast_distance: round(coastDistance, 4),
 
-      oceanBoundaryPreserved: true,
-      shallowShelfPreserved: true,
-      waterLandSeparationActive: true,
-      terrainOverpaintBlocked: true,
-      decorativeWaterBlocked: true,
-      cartoonRiverBlocked: true,
-      blueUIScribbleBlocked: true,
+      terrainOutline: round(outlineRaw, 4),
+      terrain_outline: round(outlineRaw, 4),
+      officialCoastline: round(officialCoast, 4),
+      official_coastline: round(officialCoast, 4),
+      elevationCandidate: round(elevationCandidate, 4),
+      elevation_candidate: round(elevationCandidate, 4),
 
-      material: material,
-      hydrationMaterial: material,
-      waterColor: color,
+      veinCandidate: round(veinCandidate, 4),
+      vein_candidate: round(veinCandidate, 4),
+      lowlandVein: round(lowVein * outlineRaw, 4),
+      lowland_vein: round(lowVein * outlineRaw, 4),
+      primaryArtery: round(artery * outlineRaw, 4),
+      primary_artery: round(artery * outlineRaw, 4),
+      pressureCut: round(pressure * outlineRaw, 4),
+      pressure_cut: round(pressure * outlineRaw, 4),
 
-      riverMask: round(riverMask, 4),
-      lakeMask: round(lakeMask, 4),
-      pondMask: round(pondMask, 4),
-      wetlandMask: round(wetlandMask, 4),
-      estuaryMask: round(estuaryMask, 4),
-      waterfallMask: round(waterfallMask, 4),
-      internalWaterMask: round(internalWaterMask, 4),
+      polarBoundary: Boolean(polar),
+      polar_boundary: Boolean(polar),
 
-      hydrationAlpha: round(waterAuthority, 4),
-      terrainExpressionAlpha: round(terrainAllowance, 4),
-      hydrationBoundaryMask: round(waterAuthority, 4),
-      terrainAllowanceMask: round(terrainAllowance, 4),
+      waterDepthState: waterDepthState,
+      terrainOutlineState: terrainOutlineState,
+      veinStructureState: veinState,
+      visualBoundaryState: boundaryState,
+      state_id: stateId(waterDepthState, terrainOutlineState, veinState, boundaryState),
 
-      seaLevelDatumPreserved: true,
-      seaLevelDatum: SEA_LEVEL_DATUM,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+
       visualPassClaimed: false
     };
   }
 
-  function getHydrationStatus() {
+  function inverseOrthographic(x, y, viewLon, viewLat) {
+    var rho = Math.sqrt(x * x + y * y);
+    var c;
+    var sinC;
+    var cosC;
+    var lat0;
+    var lon0;
+    var lat;
+    var lon;
+
+    if (rho > 1) return null;
+    if (rho < 0.000001) return { lon: normalizeLon(viewLon), lat: viewLat, limb: 1 };
+
+    c = Math.asin(rho);
+    sinC = Math.sin(c);
+    cosC = Math.cos(c);
+    lat0 = degToRad(viewLat || 0);
+    lon0 = degToRad(viewLon || 0);
+
+    lat = Math.asin(cosC * Math.sin(lat0) + (y * sinC * Math.cos(lat0)) / rho);
+    lon = lon0 + Math.atan2(
+      x * sinC,
+      rho * Math.cos(lat0) * cosC - y * Math.sin(lat0) * sinC
+    );
+
+    return {
+      lon: normalizeLon(radToDeg(lon)),
+      lat: clamp(radToDeg(lat), -90, 90),
+      limb: Math.sqrt(Math.max(0, 1 - rho * rho))
+    };
+  }
+
+  function getHydration() {
+    return global.DGBPlanetOneHydrationRender || null;
+  }
+
+  function blend(base, over, alpha) {
+    return [
+      Math.round(mix(base[0], over[0], alpha)),
+      Math.round(mix(base[1], over[1], alpha)),
+      Math.round(mix(base[2], over[2], alpha)),
+      255
+    ];
+  }
+
+  function colorFromBridge(sample, hydration, limb) {
+    var water = hydration && hydration.waterColor ? hydration.waterColor : { r: 12, g: 70, b: 130 };
+    var base = [water.r, water.g, water.b, 255];
+
+    var outlineAlpha = clamp(sample.officialCoastline * 0.34 + sample.polarBoundary * 0.18, 0, 0.38);
+    var veinAlpha = clamp(sample.veinCandidate * 0.20, 0, 0.20);
+    var terrainAlpha = clamp(sample.terrainOutline * 0.20, 0, 0.24);
+
+    var terrainTone = [
+      Math.round(mix(58, 104, sample.elevationCandidate)),
+      Math.round(mix(92, 128, sample.elevationCandidate)),
+      Math.round(mix(76, 86, sample.elevationCandidate)),
+      255
+    ];
+
+    var coastTone = [96, 180, 180, 255];
+    var veinTone = [82, 170, 190, 255];
+
+    var out = base;
+    out = blend(out, terrainTone, terrainAlpha);
+    out = blend(out, coastTone, outlineAlpha);
+    out = blend(out, veinTone, veinAlpha);
+
+    var shade = clamp(0.54 + limb * 0.48, 0.38, 1.10);
+    out[0] = Math.round(clamp(out[0] * shade, 0, 255));
+    out[1] = Math.round(clamp(out[1] * shade, 0, 255));
+    out[2] = Math.round(clamp(out[2] * shade, 0, 255));
+
+    return out;
+  }
+
+  function resolveContext(target) {
+    if (!target) return null;
+    if (target.canvas && typeof target.fillRect === "function") return target;
+    if (target.getContext && typeof target.getContext === "function") return target.getContext("2d");
+    return null;
+  }
+
+  function drawPlanetOneHexGrid(target, gridOrOptions, maybeOptions) {
+    var ctx = resolveContext(target);
+    if (!ctx) return { ok: false, reason: "NO_CANVAS_CONTEXT", version: VERSION, visualPassClaimed: false };
+
+    var options = gridOrOptions && gridOrOptions.cells ? maybeOptions || {} : gridOrOptions || {};
+    var canvas = ctx.canvas;
+    var scale = clamp(Number(options.compositorScale || 0.74), 0.50, 1);
+    var offW = Math.max(220, Math.round(canvas.width * scale));
+    var offH = Math.max(220, Math.round(canvas.height * scale));
+    var off = document.createElement("canvas");
+    var offCtx;
+    var img;
+    var data;
+    var cx = offW / 2;
+    var cy = offH / 2;
+    var radius = Number(options.radius || Math.min(canvas.width, canvas.height) * 0.43) * scale;
+    var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
+    var viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
+    var seed = Number(options.seed || SEED);
+    var hydrationEngine = getHydration();
+
+    var x;
+    var y;
+    var dx;
+    var dy;
+    var geo;
+    var sample;
+    var hydration;
+    var color;
+    var i;
+
+    off.width = offW;
+    off.height = offH;
+    offCtx = off.getContext("2d");
+    img = offCtx.createImageData(offW, offH);
+    data = img.data;
+
+    for (y = 0; y < offH; y += 1) {
+      for (x = 0; x < offW; x += 1) {
+        dx = (x - cx) / radius;
+        dy = (cy - y) / radius;
+        i = (y * offW + x) * 4;
+
+        if (dx * dx + dy * dy > 1) {
+          data[i + 3] = 0;
+          continue;
+        }
+
+        geo = inverseOrthographic(dx, dy, viewLon, viewLat);
+        if (!geo) {
+          data[i + 3] = 0;
+          continue;
+        }
+
+        sample = sampleBridge(geo.lon, geo.lat, { seed: seed });
+        sample.limbLight = geo.limb;
+        sample.limb_light = geo.limb;
+
+        hydration = hydrationEngine && hydrationEngine.sampleHydrationDepth
+          ? hydrationEngine.sampleHydrationDepth(geo.lon, geo.lat, sample)
+          : null;
+
+        color = colorFromBridge(sample, hydration, geo.limb);
+
+        data[i] = color[0];
+        data[i + 1] = color[1];
+        data[i + 2] = color[2];
+        data[i + 3] = color[3];
+      }
+    }
+
+    offCtx.putImageData(img, 0, 0);
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 0.97 : options.surfaceAlpha);
+    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    lastDraw = {
+      ok: true,
+      version: VERSION,
+      cleanSlatePreserved: true,
+      terrainOutlineRendered: true,
+      veinStructureRenderedSubtly: true,
+      waterDepthRendered: true,
+      noBlobReintroduced: true,
+      noPublicHoneycomb: true,
+      noPublicDotGrid: true,
+      rendererConsumesHydration: Boolean(hydrationEngine),
+      rendererConsumesHexBridge: true,
+      visualPassClaimed: false,
+      renderedAt: new Date().toISOString()
+    };
+
+    return lastDraw;
+  }
+
+  function createPlanetOneHexGrid(options) {
+    options = options || {};
+    var lonStep = Number(options.lonStep || 4);
+    var latStep = Number(options.latStep || 4);
+    var cells = [];
+    var lon;
+    var lat;
+
+    for (lat = -88; lat <= 88; lat += latStep) {
+      for (lon = -180; lon < 180; lon += lonStep) {
+        cells.push(sampleBridge(lon, lat, options));
+      }
+    }
+
+    lastGrid = {
+      version: VERSION,
+      baseline: BASELINE,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: STATE_COUNT,
+      cells: cells,
+      cellCount: cells.length,
+      visualPassClaimed: false
+    };
+
+    return lastGrid;
+  }
+
+  function getHexgridStatus() {
+    var receipt = buildStateSpaceReceipt();
+
     return {
       ok: true,
       active: true,
       VERSION: VERSION,
       version: VERSION,
-      priorVersion: PRIOR_VERSION,
+      baseline: BASELINE,
 
-      hydrationLayerActive: true,
-      hydrologyNetworkActive: true,
-      physicalHydrologyGovernanceActive: true,
-      hydrologyConsumesBodySystem: true,
+      hexBridgeActive: true,
+      hydrationTerrainBridgeActive: true,
+      terrainOutlineSourceActive: true,
+      officialTerrainOutlineActive: true,
+      veinCandidateFieldActive: true,
+      waterDepthSamplingActive: true,
+      shelfDistanceSamplingActive: true,
+      coastlineCandidateFieldActive: true,
 
-      internalWaterVeinsActive: true,
-      riverVeinFieldActive: true,
-      lakeBasinFieldActive: true,
-      pondPocketFieldActive: true,
-      estuaryMouthFieldActive: true,
-      wetlandFieldActive: true,
-      waterfallDropPointFieldActive: true,
-      watershedDirectionActive: true,
-      hydrologyBalanceMaskActive: true,
-      terrainHydrationBalanceActive: true,
+      hexagonalPixelFormatActive: true,
+      hexCellSubstrateActive: true,
+      terrainCellSamplingActive: true,
+      coastCellQuantizationActive: true,
+      elevationCellFieldActive: true,
+      waterDepthCellFieldActive: true,
 
-      riversFollowArteryVeins: true,
-      lakesFollowBasinFatBuffer: true,
-      wetlandsFollowLymphDrainage: true,
-      waterfallDropPointsFollowPressureChannels: true,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      requiredStateCount: STATE_COUNT,
+      stateSpaceReceipt: true,
+      waterDepthAxisActive: true,
+      terrainOutlineAxisActive: true,
+      veinStructureAxisActive: true,
+      visualBoundaryAxisActive: true,
+      stateSpacePreview: receipt.states.slice(0, 16),
 
-      oceanBoundaryPreserved: true,
-      shallowShelfPreserved: true,
-      waterLandSeparationActive: true,
-      terrainOverpaintBlocked: true,
-      decorativeWaterBlocked: true,
-      cartoonRiverBlocked: true,
-      blueUIScribbleBlocked: true,
-
-      seaLevelDatumPreserved: true,
-      seaLevelDatum: SEA_LEVEL_DATUM,
+      publicHoneycombBlocked: true,
+      publicSampleDotsSuppressed: true,
+      lastGrid: lastGrid ? { cellCount: lastGrid.cellCount, version: lastGrid.version } : null,
+      lastDraw: lastDraw,
       visualPassClaimed: false
     };
   }
@@ -269,18 +500,28 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
-    sampleHydrationSurface: sampleHydrationSurface,
-    sampleHydrologySurface: sampleHydrationSurface,
-    getHydrationStatus: getHydrationStatus,
-    getHydrologyStatus: getHydrationStatus,
-    status: getHydrationStatus
+    BASELINE: BASELINE,
+    baseline: BASELINE,
+    stateFormula: STATE_FORMULA,
+    stateCount: STATE_COUNT,
+    requiredStateCount: STATE_COUNT,
+
+    sampleBridge: sampleBridge,
+    samplePlanetSurface: sampleBridge,
+    createPlanetOneHexGrid: createPlanetOneHexGrid,
+    drawPlanetOneHexGrid: drawPlanetOneHexGrid,
+    getHexgridStatus: getHexgridStatus,
+    status: getHexgridStatus,
+    getLatticeReceipt: buildStateSpaceReceipt,
+    getStateSpaceReceipt: buildStateSpaceReceipt
   };
 
-  global.DGBPlanetOneHydrationRender = api;
+  global.DGBPlanetOneHexgridRender = api;
+  createPlanetOneHexGrid({ seed: SEED });
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:hydration-ready", {
-      detail: getHydrationStatus()
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:hex-bridge-ready", {
+      detail: getHexgridStatus()
     }));
   } catch (error) {}
 })(typeof window !== "undefined" ? window : globalThis);

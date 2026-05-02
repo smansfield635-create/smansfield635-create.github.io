@@ -1,21 +1,20 @@
-/* G1 PLANET 1 HYDROLOGY RECEIVER VISIBILITY AND LAND ALPHA REBALANCE RENDERER
+/* G1 PLANET 1 BLOB BREAKUP REAL PLANET SURFACE RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_HYDROLOGY_RECEIVER_VISIBILITY_AND_LAND_ALPHA_REBALANCE_TNT_v1
+   VERSION: G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1
 
    LAW:
    Liquid base first.
-   Internal hydrology must remain visible.
-   Land topcoat must yield to receivers.
+   Broken terrain surface second.
    Gas/weather above surface.
    Lighting last.
-   No runtime loop added.
+   No new runtime loop.
 */
 
-(function attachPlanetOneHydrologyReceiverVisibilityRenderer(global) {
+(function attachPlanetOneBlobBreakupRealSurfaceRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDROLOGY_RECEIVER_VISIBILITY_AND_LAND_ALPHA_REBALANCE_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_UNDERLAY_HEIGHTFIELD_HYDROLOGY_REBALANCE_TNT_v1";
+  var VERSION = "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_HYDROLOGY_RECEIVER_VISIBILITY_AND_LAND_ALPHA_REBALANCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -64,9 +63,9 @@
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
-      canvas.setAttribute("data-hydrology-receiver-visibility", "true");
+      canvas.setAttribute("data-blob-breakup-real-planet-surface", "true");
       canvas.setAttribute("data-visual-pass-claimed", "false");
-      canvas.setAttribute("aria-label", "Planet 1 hydrology receiver visibility renderer");
+      canvas.setAttribute("aria-label", "Planet 1 blob breakup real planet surface renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -168,10 +167,10 @@
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.42, radius * 0.05, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(76,152,184,.99)");
-    ocean.addColorStop(0.28, "rgba(14,82,145,.99)");
-    ocean.addColorStop(0.68, "rgba(5,35,94,1)");
-    ocean.addColorStop(1, "rgba(2,10,30,1)");
+    ocean.addColorStop(0, "rgba(70,145,180,.99)");
+    ocean.addColorStop(0.28, "rgba(10,72,134,.99)");
+    ocean.addColorStop(0.68, "rgba(4,30,88,1)");
+    ocean.addColorStop(1, "rgba(2,9,28,1)");
 
     ctx.save();
     ctx.beginPath();
@@ -234,8 +233,8 @@
     clipSphere(ctx, cx, cy, radius);
 
     sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.96);
-    sunlight.addColorStop(0, "rgba(255,255,255,.074)");
-    sunlight.addColorStop(0.30, "rgba(255,255,255,.028)");
+    sunlight.addColorStop(0, "rgba(255,255,255,.070)");
+    sunlight.addColorStop(0.30, "rgba(255,255,255,.026)");
     sunlight.addColorStop(0.72, "rgba(255,255,255,.006)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
@@ -243,15 +242,15 @@
 
     terrainPressure = ctx.createRadialGradient(cx - radius * 0.18, cy + radius * 0.16, radius * 0.25, cx, cy, radius * 0.96);
     terrainPressure.addColorStop(0, "rgba(0,0,0,0)");
-    terrainPressure.addColorStop(0.72, "rgba(0,0,0,.050)");
-    terrainPressure.addColorStop(1, "rgba(0,0,0,.20)");
+    terrainPressure.addColorStop(0.72, "rgba(0,0,0,.056)");
+    terrainPressure.addColorStop(1, "rgba(0,0,0,.22)");
     ctx.fillStyle = terrainPressure;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.42, cy - radius, cx + radius, cy + radius);
     terminator.addColorStop(0, "rgba(255,255,255,.012)");
     terminator.addColorStop(0.50, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.32)");
+    terminator.addColorStop(1, "rgba(0,0,0,.34)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -316,7 +315,7 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.78,
+        compositorScale: options.compositorScale || 0.88,
         surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
@@ -340,6 +339,14 @@
       priorVersion: PRIOR_VERSION,
       baseline: BASELINE,
 
+      blobBreakupRealPlanetSurfaceRendered: Boolean(drawReceipt && drawReceipt.blobBreakupRealPlanetSurfaceRendered),
+      smoothBlobBreakupRendered: Boolean(drawReceipt && drawReceipt.smoothBlobBreakupRendered),
+      realPlanetSurfaceTextureRendered: Boolean(drawReceipt && drawReceipt.realPlanetSurfaceTextureRendered),
+      fractureNetworkRendered: Boolean(drawReceipt && drawReceipt.fractureNetworkRendered),
+      roughCoastlineRendered: Boolean(drawReceipt && drawReceipt.roughCoastlineRendered),
+      materialNoiseRendered: Boolean(drawReceipt && drawReceipt.materialNoiseRendered),
+      terrainSurfaceRoughnessRendered: Boolean(drawReceipt && drawReceipt.terrainSurfaceRoughnessRendered),
+
       hydrologyReceiverVisibilityRendered: Boolean(drawReceipt && drawReceipt.hydrologyReceiverVisibilityRendered),
       landAlphaRebalanceRendered: Boolean(drawReceipt && drawReceipt.landAlphaRebalanceRendered),
       landmaskPreserved: true,
@@ -347,13 +354,6 @@
       underlayHeightfieldActive: true,
       internalHydrologyVisible: Boolean(drawReceipt && drawReceipt.internalHydrologyVisible),
       landAlphaYieldsToHydrology: Boolean(drawReceipt && drawReceipt.landAlphaYieldsToHydrology),
-      hydrologyCutActive: Boolean(drawReceipt && drawReceipt.hydrologyCutActive),
-      internalWaterReceiversActive: Boolean(drawReceipt && drawReceipt.internalWaterReceiversActive),
-      basinReceiverLogicActive: Boolean(drawReceipt && drawReceipt.basinReceiverLogicActive),
-      riverVeinPotentialActive: Boolean(drawReceipt && drawReceipt.riverVeinPotentialActive),
-      lakeWetlandPocketActive: Boolean(drawReceipt && drawReceipt.lakeWetlandPocketActive),
-      estuaryMouthLogicActive: Boolean(drawReceipt && drawReceipt.estuaryMouthLogicActive),
-      beigeDominanceReduced: Boolean(drawReceipt && drawReceipt.beigeDominanceReduced),
 
       materialDomainVisualRefinementRendered: true,
       landSolidMaterialBodyRendered: Boolean(drawReceipt && drawReceipt.landSolidMaterialBodyRendered),
@@ -373,6 +373,7 @@
       waterSovereigntyPreserved: true,
 
       noBlobReintroduced: Boolean(drawReceipt && drawReceipt.noBlobReintroduced),
+      blobReadReduced: Boolean(drawReceipt && drawReceipt.blobReadReduced),
       noMountainRelief: true,
       noFullGlacierSystem: true,
       noPublicHoneycomb: true,
@@ -389,13 +390,14 @@
       upstreamRuntimeUntouched: true,
 
       drawReceipt: drawReceipt,
-      hydrologyReceiverVisibilityReceipt: {
+      blobBreakupRealSurfaceReceipt: {
         ok: true,
         version: VERSION,
         landmaskPreserved: true,
         legalLandShapeUnchanged: true,
+        smoothBlobBreakupRendered: true,
+        realPlanetSurfaceTextureRendered: true,
         internalHydrologyVisible: true,
-        landAlphaYieldsToHydrology: true,
         visualPassClaimed: false
       },
       renderedAt: new Date().toISOString(),
@@ -483,6 +485,17 @@
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
 
+      blobBreakupRealPlanetSurfaceActive: true,
+      blobBreakupRealPlanetSurfaceRendered: Boolean(state.lastRender && state.lastRender.blobBreakupRealPlanetSurfaceRendered),
+      smoothBlobBreakupActive: true,
+      smoothBlobBreakupRendered: Boolean(state.lastRender && state.lastRender.smoothBlobBreakupRendered),
+      realPlanetSurfaceTextureActive: true,
+      realPlanetSurfaceTextureRendered: Boolean(state.lastRender && state.lastRender.realPlanetSurfaceTextureRendered),
+      fractureNetworkRendered: Boolean(state.lastRender && state.lastRender.fractureNetworkRendered),
+      roughCoastlineRendered: Boolean(state.lastRender && state.lastRender.roughCoastlineRendered),
+      materialNoiseRendered: Boolean(state.lastRender && state.lastRender.materialNoiseRendered),
+      terrainSurfaceRoughnessRendered: Boolean(state.lastRender && state.lastRender.terrainSurfaceRoughnessRendered),
+
       hydrologyReceiverVisibilityActive: true,
       hydrologyReceiverVisibilityRendered: Boolean(state.lastRender && state.lastRender.hydrologyReceiverVisibilityRendered),
       landAlphaRebalanceActive: true,
@@ -492,7 +505,6 @@
       underlayHeightfieldActive: true,
       internalHydrologyVisible: Boolean(state.lastRender && state.lastRender.internalHydrologyVisible),
       landAlphaYieldsToHydrology: Boolean(state.lastRender && state.lastRender.landAlphaYieldsToHydrology),
-      hydrologyCutActive: Boolean(state.lastRender && state.lastRender.hydrologyCutActive),
 
       materialDomainVisualRefinementActive: true,
       landSolidMaterialBodyRendered: Boolean(state.lastRender && state.lastRender.landSolidMaterialBodyRendered),
@@ -511,6 +523,7 @@
       waterSovereigntyPreserved: true,
 
       noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
+      blobReadReduced: Boolean(state.lastRender && state.lastRender.blobReadReduced),
       noMountainRelief: true,
       noFullGlacierSystem: true,
 
@@ -561,7 +574,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:hydrology-receiver-visibility-renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:blob-breakup-real-surface-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

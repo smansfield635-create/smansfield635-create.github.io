@@ -1,65 +1,59 @@
 {
-  "contract": "SUN_TERMS_RENEWAL_TNT_v1",
-  "assetClass": "DEMO_UNIVERSE_SUN_ASSET",
+  "contract": "SUN_AND_UNIVERSE_G1_STANDARD_RENEWAL_TNT_v1",
+  "assetClass": "DEMO_UNIVERSE_SUN_G1_ASSET",
+  "generation": "G1",
   "lockStatus": "NOT_LOCKED",
   "visualPassClaimed": false,
   "sequence": {
-    "previous": "Earth G1",
-    "current": "Sun",
-    "next": "Moon",
-    "earthG1Complete": true,
-    "moonQueued": true,
-    "planetOneReservedFor": "future Nine Summits Universe"
+    "earthG1": "complete",
+    "sunG1": "active-renewal",
+    "moon": "queued",
+    "planetOne": "reserved-for-future-nine-summits-universe"
   },
-  "purpose": "Renew the Sun asset terms after Earth G1 completion and before Moon renewal.",
-  "sunStandard": {
+  "purpose": "Bring the Sun asset to the same generational standard established by Earth G1.",
+  "standard": {
     "identity": "stellar body",
-    "surface": "plasma",
-    "corona": "controlled corona",
-    "motion": "mobile-safe slow plasma motion",
+    "shape": "stable circular body",
+    "surface": "plasma surface",
+    "motion": "controlled mobile-safe plasma motion",
+    "radiance": "contained corona and stage-safe glow",
     "renderer": "self-contained canvas renderer",
-    "relationshipToEarth": "does not inherit Earth renderer logic",
-    "relationshipToMoon": "Moon remains queued until Sun is renewed and inspected"
+    "relationshipToEarthG1": "follows Earth G1 as the next Demo Universe body",
+    "relationshipToMoon": "Moon remains queued until Sun G1 is inspected"
   },
   "allowed": [
-    "local self-contained canvas rendering",
-    "plasma surface behavior",
-    "controlled corona",
-    "radiance contained inside the Sun stage",
-    "mobile-safe frame throttling",
-    "pause and resume",
-    "source-only Gauges inspection"
+    "self-contained canvas rendering",
+    "circular Sun body",
+    "plasma bands",
+    "granulation",
+    "contained corona",
+    "mobile-safe animation",
+    "source-only inspection",
+    "pause",
+    "resume",
+    "speed control"
   ],
   "forbidden": [
-    "GraphicBox",
-    "image generation",
     "generated image dependency",
     "external image dependency",
     "Earth renderer inheritance",
     "Moon build before Sun inspection",
     "Planet 1 build during Sun renewal",
-    "runtime mutation",
+    "route runtime mutation",
     "visual pass claim before inspection",
     "lock-in before satisfaction"
   ],
-  "publicContracts": {
-    "sunGlobal": "DGBSunAssetCanvas",
-    "demoSunGlobal": "DGBDemoUniverseSunCanvas",
-    "statusMethod": "getStatus",
+  "publicApi": {
+    "primaryGlobal": "DGBSunAssetCanvas",
+    "secondaryGlobal": "DGBDemoUniverseSunCanvas",
+    "aliasGlobal": "DGBSun",
     "mountMethod": "mount",
-    "renderMethod": "render"
+    "renderMethod": "render",
+    "statusMethod": "getStatus"
   },
   "files": {
     "manifest": "/assets/sun/sun_manifest.json",
     "canvas": "/assets/sun/sun_canvas.js",
     "material": "/assets/sun/sun_material.css"
-  },
-  "receipt": {
-    "sourceFetchOnly": true,
-    "executesTargetFiles": false,
-    "rendersIframe": false,
-    "deletesFiles": false,
-    "mutatesRuntime": false,
-    "startsExtraAnimationLoopsFromGauges": false
   }
 }

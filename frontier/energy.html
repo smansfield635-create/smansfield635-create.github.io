@@ -1,18 +1,395 @@
 <!doctype html>
-<html lang="en" data-page-id="frontier-energy" data-route="/frontier/energy/" data-contract="FRONTIER_ENERGY_256_LATTICE_RENEWAL_TNT_v1" data-parent-route="/frontier/" data-structural-parent-route="/explore/" data-frontier-lane="energy" data-lattice-enabled="true" data-lattice-scale="256">
+<html
+  lang="en"
+  data-page-id="frontier-energy"
+  data-page="frontier-energy"
+  data-route="/frontier/energy/"
+  data-contract="FRONTIER_ENERGY_NORTH_EAST_256_REPAIR_TNT_v1"
+  data-parent-route="/frontier/"
+  data-structural-parent-route="/explore/"
+  data-frontier-lane="energy"
+  data-lattice-enabled="true"
+  data-lattice-scale="256"
+  data-lattice-geometry="4x4x4x4"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Frontier / Energy · Diamond Gate Bridge</title><meta name="description" content="Energy is the Frontier lane for power, motion, charge, force, pressure, and operating capacity."><link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-  <style>:root{--gold:#f2c76f;--text:#f5f7fb;--muted:rgba(226,234,248,.76);--line:rgba(180,205,255,.18);--panel:rgba(255,255,255,.045)}body{overflow-x:hidden;background:radial-gradient(circle at 50% -8%,rgba(242,199,111,.16),transparent 34%),radial-gradient(circle at 84% 70%,rgba(150,110,255,.14),transparent 36%),linear-gradient(180deg,#050813,#070c18 58%,#040711)}.panel{position:relative;overflow:hidden;border:1px solid rgba(242,199,111,.24);border-radius:36px;background:linear-gradient(180deg,rgba(12,20,38,.88),rgba(6,10,22,.98));box-shadow:0 28px 90px rgba(0,0,0,.38);padding:clamp(28px,6vw,72px);margin-top:18px}.kicker,.card span{color:var(--gold);font-size:.78rem;font-weight:950;letter-spacing:.15em;text-transform:uppercase}h1{max-width:1120px;margin:0;color:var(--text);font-size:clamp(3rem,10vw,7.4rem);line-height:.88;letter-spacing:-.07em;text-wrap:balance}h1 span{color:#ffe5a3}.lead{max-width:920px;margin:24px 0 0;color:rgba(245,247,251,.88);font-size:clamp(1.22rem,3.2vw,1.94rem);line-height:1.18;letter-spacing:-.035em}.copy{max-width:900px;color:var(--muted);font-size:1.08rem;line-height:1.58}.chips,.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.chip{border:1px solid rgba(180,205,255,.22);border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.045);font-weight:850}.chip.lock{border-color:rgba(242,199,111,.58);color:#ffe7a7;background:rgba(242,199,111,.11)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:24px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{min-height:158px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:24px;padding:18px;background:radial-gradient(circle at 18% 0%,rgba(215,165,255,.11),transparent 36%),var(--panel);color:var(--text);text-decoration:none}.card h3{margin:0;font-size:1.28rem;line-height:1.04;letter-spacing:-.03em}.card p{margin:0;color:var(--muted);line-height:1.48;flex:1}.card strong{color:#ffe7a7}.board{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;margin-top:24px;padding:14px;border:1px solid rgba(242,199,111,.20);border-radius:26px;background:rgba(0,0,0,.20)}.cell{aspect-ratio:1;min-height:34px;display:grid;place-items:center;border:1px solid rgba(180,205,255,.12);border-radius:8px;background:rgba(255,255,255,.035);font-size:.64rem;font-weight:850}.cell i{display:block;margin-top:3px;color:rgba(226,234,248,.46);font-size:.48rem;font-style:normal}.cell:nth-child(16n){background:rgba(242,199,111,.075)}.receipt{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:1100px){.grid,.grid.three{grid-template-columns:1fr}.board{grid-template-columns:repeat(8,minmax(0,1fr))}}@media(max-width:640px){.panel{border-radius:28px;padding:30px 22px}.board{grid-template-columns:repeat(4,minmax(0,1fr))}}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Frontier / Energy · Diamond Gate Bridge</title>
+  <meta name="description" content="Energy is the Frontier lane for power, motion, charge, force, pressure, and operating capacity.">
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
+  <style>
+    :root {
+      --gold: #f2c76f;
+      --amber: #ffbf7f;
+      --blue: #9ec5ff;
+      --green: #8ff0c6;
+      --text: #f5f7fb;
+      --muted: rgba(226, 234, 248, 0.76);
+      --line: rgba(180, 205, 255, 0.18);
+      --panel: rgba(255, 255, 255, 0.045);
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 52% -8%, rgba(255, 191, 127, 0.18), transparent 34%),
+        radial-gradient(circle at 88% 62%, rgba(242, 199, 111, 0.12), transparent 34%),
+        radial-gradient(circle at 14% 84%, rgba(125, 181, 255, 0.10), transparent 34%),
+        linear-gradient(180deg, #050813, #080d19 58%, #040711);
+    }
+
+    .frontier-stage,
+    .frontier-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.25);
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255, 191, 127, 0.12), transparent 26rem),
+        linear-gradient(180deg, rgba(12, 20, 38, 0.9), rgba(6, 10, 22, 0.98));
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+        0 28px 90px rgba(0, 0, 0, 0.38);
+      padding: clamp(28px, 6vw, 72px);
+      margin-top: 18px;
+    }
+
+    .frontier-stage::before,
+    .frontier-panel::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 75% 44%, rgba(255, 191, 127, 0.14), transparent 18%),
+        radial-gradient(circle at 75% 44%, transparent 0 25%, rgba(242, 199, 111, 0.12) 26%, transparent 27% 100%),
+        linear-gradient(115deg, transparent 0 48%, rgba(255, 191, 127, 0.08) 49%, transparent 52% 100%);
+      filter: blur(8px);
+      opacity: 0.72;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .frontier-stage > *,
+    .frontier-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .kicker,
+    .card span,
+    .route-card span {
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 1120px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(3.2rem, 10vw, 7.5rem);
+      line-height: 0.88;
+      letter-spacing: -0.072em;
+      text-wrap: balance;
+    }
+
+    h1 span {
+      color: #ffe5a3;
+      text-shadow: 0 0 48px rgba(242, 199, 111, 0.18);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.28rem;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      max-width: 940px;
+      margin: 24px 0 0;
+      color: rgba(245, 247, 251, 0.9);
+      font-size: clamp(1.22rem, 3.2vw, 1.94rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .copy {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.58;
+    }
+
+    .chips,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      border: 1px solid rgba(180, 205, 255, 0.22);
+      border-radius: 999px;
+      padding: 8px 13px;
+      background: rgba(255, 255, 255, 0.045);
+      color: rgba(245, 247, 251, 0.88);
+      font-weight: 850;
+    }
+
+    .chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card,
+    .route-card {
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255, 191, 127, 0.12), transparent 36%),
+        var(--panel);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .card p,
+    .route-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+      flex: 1;
+    }
+
+    .card strong,
+    .route-card strong {
+      color: #ffe7a7;
+    }
+
+    .lattice-board {
+      display: grid;
+      grid-template-columns: repeat(16, minmax(0, 1fr));
+      gap: 4px;
+      margin-top: 24px;
+      padding: 14px;
+      border: 1px solid rgba(242, 199, 111, 0.22);
+      border-radius: 26px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        rgba(0,0,0,.20);
+      background-size: 32px 32px;
+    }
+
+    .lattice-cell {
+      aspect-ratio: 1;
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(180, 205, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+      color: rgba(245, 247, 251, 0.86);
+      font-size: 0.64rem;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .lattice-cell i {
+      display: block;
+      margin-top: 3px;
+      color: rgba(226, 234, 248, 0.46);
+      font-size: 0.48rem;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .lattice-cell:nth-child(16n) {
+      background: rgba(242, 199, 111, 0.075);
+    }
+
+    .receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1100px) {
+      .grid,
+      .grid.three {
+        grid-template-columns: 1fr;
+      }
+
+      .lattice-board {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .frontier-stage,
+      .frontier-panel {
+        border-radius: 28px;
+        padding: 30px 22px;
+      }
+
+      .lattice-board {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
+
 <body>
-<a class="dgb-skip" href="#main">Skip to Energy</a><header class="dgb-site-header"><div class="dgb-header-inner"><div class="dgb-brand-row"><a class="dgb-brand" href="/">Diamond Gate Bridge</a><div class="dgb-subtitle">Explore · Frontier</div><div class="dgb-room-line">Energy · 256 Lattice Lane</div></div><nav class="dgb-nav"><a href="/">Compass</a><a href="/explore/">Explore</a><a href="/frontier/">Frontier</a><a href="/frontier/energy/" aria-current="page">Energy</a><a href="/laws/">Laws</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a></nav></div></header>
-<main id="main" class="dgb-main">
-<section class="panel"><p class="kicker">Explore / Frontier / Energy</p><h1>Energy is pressure <span>disciplined into usable motion.</span></h1><p class="lead">Energy carries power, force, movement, charge, capacity, and operating pressure without letting intensity become chaos.</p><p class="copy">This is the existing lane file at <strong>/frontier/energy/</strong>. The 256 lattice restores scale, geometry, origin, sibling routes, and verification.</p><div class="chips"><span class="chip lock">/frontier/energy/</span><span class="chip lock">Parent: /frontier/</span><span class="chip lock">Structural parent: /explore/</span><span class="chip">4 quadrants</span><span class="chip">16 sectors</span><span class="chip">256 states</span></div><div class="actions"><a class="dgb-button" href="/frontier/">Return to Frontier</a><a class="dgb-button secondary" href="/explore/">Return to Explore</a><a class="dgb-button secondary" href="#lattice">Open 256 Lattice</a><a class="dgb-button secondary" href="/gauges/">Read Gauges</a></div></section>
-<section class="panel"><p class="kicker">Lane ownership</p><h2>What Energy owns.</h2><div class="grid"><article class="card"><span>Owns</span><h3>Power</h3><p>Raw ability to move work.</p></article><article class="card"><span>Owns</span><h3>Motion</h3><p>Energy becomes visible through movement.</p></article><article class="card"><span>Owns</span><h3>Capacity</h3><p>The system must know what it can carry.</p></article><article class="card"><span>Owns</span><h3>Pressure</h3><p>Pressure must become disciplined force.</p></article></div></section>
-<section id="lattice" class="panel"><p class="kicker">256 lattice geometry</p><h2>Power becomes structure.</h2><div class="grid"><article class="card"><span>Quadrant 1</span><h3>Ignition</h3><p>The spark that starts motion.</p></article><article class="card"><span>Quadrant 2</span><h3>Flow</h3><p>The transfer of active force.</p></article><article class="card"><span>Quadrant 3</span><h3>Charge</h3><p>The reserve that holds capacity.</p></article><article class="card"><span>Quadrant 4</span><h3>Sustain</h3><p>The rhythm that keeps power usable.</p></article></div><div class="board"></div></section>
-<section class="panel"><p class="kicker">Frontier backlinks</p><h2>Sibling lanes remain physical `/frontier/` routes.</h2><div class="grid three"><a class="card" href="/frontier/closed-loop/"><span>Sibling</span><h3>Closed Loop</h3><p>Feedback and return paths.</p><strong>Open lane</strong></a><a class="card" href="/frontier/energy/" aria-current="page"><span>Current</span><h3>Energy</h3><p>Power and operating capacity.</p><strong>Current route</strong></a><a class="card" href="/frontier/infrastructure/"><span>Sibling</span><h3>Infrastructure</h3><p>Support systems and foundation.</p><strong>Open lane</strong></a><a class="card" href="/frontier/lattice/"><span>Sibling</span><h3>Lattice</h3><p>Grid and state-space logic.</p><strong>Open lane</strong></a><a class="card" href="/frontier/manual/"><span>Sibling</span><h3>Manual</h3><p>Operating instructions.</p><strong>Open lane</strong></a><a class="card" href="/frontier/shimmer/"><span>Sibling</span><h3>Shimmer</h3><p>Signal and atmosphere.</p><strong>Open lane</strong></a><a class="card" href="/frontier/trajectory/"><span>Sibling</span><h3>Trajectory</h3><p>Direction and path projection.</p><strong>Open lane</strong></a><a class="card" href="/frontier/urban/"><span>Sibling</span><h3>Urban</h3><p>City and civic systems.</p><strong>Open lane</strong></a><a class="card" href="/frontier/vision-remote/"><span>Sibling</span><h3>Vision Remote</h3><p>Remote visual relay.</p><strong>Open lane</strong></a><a class="card" href="/frontier/vision/"><span>Sibling</span><h3>Vision</h3><p>Visual systems and sightlines.</p><strong>Open lane</strong></a><a class="card" href="/frontier/waste/"><span>Sibling</span><h3>Waste</h3><p>Loss and recovery logic.</p><strong>Open lane</strong></a><a class="card" href="/frontier/water/"><span>Sibling</span><h3>Water</h3><p>Flow and support systems.</p><strong>Open lane</strong></a></div></section>
-<section class="panel"><p class="kicker">Origin and proof routes</p><div class="grid three"><a class="card" href="/frontier/"><span>Parent</span><h3>Frontier</h3><p>Expansion-edge root.</p><strong>Open Frontier</strong></a><a class="card" href="/explore/"><span>Structural parent</span><h3>Explore</h3><p>Route-map surface.</p><strong>Open Explore</strong></a><a class="card" href="/laws/"><span>Rule</span><h3>Laws</h3><p>Boundary control.</p><strong>Open Laws</strong></a><a class="card" href="/products/"><span>Product</span><h3>Products</h3><p>Product surfaces.</p><strong>Open Products</strong></a><a class="card" href="/showroom/"><span>Proof</span><h3>Showroom</h3><p>Public inspection.</p><strong>Open Showroom</strong></a><a class="card" href="/gauges/"><span>Diagnostics</span><h3>Gauges</h3><p>Route verification.</p><strong>Open Gauges</strong></a></div></section>
-<section class="dgb-card"><h2>Route receipt</h2><pre class="dgb-receipt receipt">FRONTIER_ENERGY_256_LATTICE_RENEWAL_TNT_v1
+  <a class="dgb-skip" href="#main">Skip to Energy</a>
+
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Explore · Frontier</div>
+        <div class="dgb-room-line">Energy · 256 Lattice Lane</div>
+      </div>
+
+      <nav class="dgb-nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/frontier/energy/" aria-current="page">Energy</a>
+        <a href="/laws/">Laws</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="dgb-main">
+    <section class="frontier-stage">
+      <p class="kicker">Explore / Frontier / Energy · North Repair</p>
+      <h1>Energy is pressure <span>disciplined into usable motion.</span></h1>
+      <p class="lead">
+        Energy carries power, force, movement, charge, capacity, and operating pressure without letting intensity become chaos.
+      </p>
+      <p class="copy">
+        This file repairs the hard 404 at <strong>/frontier/energy/</strong>. It keeps Explore as structural parent, Frontier as direct parent, and restores the 256-lattice lane system.
+      </p>
+
+      <div class="chips">
+        <span class="chip lock">/frontier/energy/</span>
+        <span class="chip lock">Parent: /frontier/</span>
+        <span class="chip lock">Structural parent: /explore/</span>
+        <span class="chip">4 quadrants</span>
+        <span class="chip">16 sectors</span>
+        <span class="chip">64 checkpoints</span>
+        <span class="chip">256 states</span>
+      </div>
+
+      <div class="actions">
+        <a class="dgb-button" href="/frontier/">Return to Frontier</a>
+        <a class="dgb-button secondary" href="/explore/">Return to Explore</a>
+        <a class="dgb-button secondary" href="#lattice">Open 256 Lattice</a>
+        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="frontier-panel">
+      <p class="kicker">Lane ownership</p>
+      <h2>What Energy owns.</h2>
+      <div class="grid">
+        <article class="card"><span>Owns</span><h3>Power</h3><p>Raw ability to move work through the Frontier system.</p></article>
+        <article class="card"><span>Owns</span><h3>Motion</h3><p>Energy becomes visible when pressure turns into disciplined movement.</p></article>
+        <article class="card"><span>Owns</span><h3>Capacity</h3><p>The system must know how much load it can carry before it accelerates.</p></article>
+        <article class="card"><span>Owns</span><h3>Pressure</h3><p>Pressure is not the enemy; unmanaged pressure is.</p></article>
+      </div>
+    </section>
+
+    <section id="lattice" class="frontier-panel">
+      <p class="kicker">256 lattice geometry</p>
+      <h2>Power becomes structure.</h2>
+      <p class="copy">
+        The Energy lane uses 4 × 4 × 4 × 4 geometry: ignition, flow, charge, and sustain. Each quadrant carries 64 cells and prevents intensity from outrunning structure.
+      </p>
+
+      <div class="grid">
+        <article class="card"><span>Quadrant 1</span><h3>Ignition</h3><p>The spark that begins movement.</p></article>
+        <article class="card"><span>Quadrant 2</span><h3>Flow</h3><p>The transfer of active force.</p></article>
+        <article class="card"><span>Quadrant 3</span><h3>Charge</h3><p>The stored capacity behind motion.</p></article>
+        <article class="card"><span>Quadrant 4</span><h3>Sustain</h3><p>The rhythm that keeps power usable.</p></article>
+      </div>
+
+      <div class="lattice-board" data-lane="Energy" aria-label="Energy 256-cell lattice"></div>
+    </section>
+
+    <section class="frontier-panel">
+      <p class="kicker">Frontier backlinks</p>
+      <h2>Sibling lanes stay on physical `/frontier/` routes.</h2>
+      <div class="grid three">
+        <a class="card" href="/frontier/closed-loop/"><span>Sibling</span><h3>Closed Loop</h3><p>Feedback and return paths.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/energy/" aria-current="page"><span>Current</span><h3>Energy</h3><p>Power and operating capacity.</p><strong>Current route</strong></a>
+        <a class="card" href="/frontier/infrastructure/"><span>Sibling</span><h3>Infrastructure</h3><p>Support systems and foundation.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/lattice/"><span>Sibling</span><h3>Lattice</h3><p>Grid and state-space logic.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/manual/"><span>Sibling</span><h3>Manual</h3><p>Operating instructions.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/shimmer/"><span>Sibling</span><h3>Shimmer</h3><p>Signal and atmosphere.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/trajectory/"><span>Sibling</span><h3>Trajectory</h3><p>Direction and path projection.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/urban/"><span>Sibling</span><h3>Urban</h3><p>City and civic systems.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/vision-remote/"><span>Sibling</span><h3>Vision Remote</h3><p>Remote visual relay.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/vision/"><span>Sibling</span><h3>Vision</h3><p>Visual systems and sightlines.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/waste/"><span>Sibling</span><h3>Waste</h3><p>Loss and recovery logic.</p><strong>Open lane</strong></a>
+        <a class="card" href="/frontier/water/"><span>Sibling</span><h3>Water</h3><p>Flow and support systems.</p><strong>Open lane</strong></a>
+      </div>
+    </section>
+
+    <section class="frontier-panel">
+      <p class="kicker">Origin and proof routes</p>
+      <div class="grid three">
+        <a class="route-card" href="/frontier/"><span>Parent</span><h3>Frontier</h3><p>Expansion-edge root.</p><strong>Open Frontier</strong></a>
+        <a class="route-card" href="/explore/"><span>Structural parent</span><h3>Explore</h3><p>Route-map surface.</p><strong>Open Explore</strong></a>
+        <a class="route-card" href="/laws/"><span>Rule</span><h3>Laws</h3><p>Boundary control.</p><strong>Open Laws</strong></a>
+        <a class="route-card" href="/products/"><span>Product</span><h3>Products</h3><p>Product surfaces.</p><strong>Open Products</strong></a>
+        <a class="route-card" href="/showroom/"><span>Proof</span><h3>Showroom</h3><p>Public inspection.</p><strong>Open Showroom</strong></a>
+        <a class="route-card" href="/gauges/"><span>Diagnostics</span><h3>Gauges</h3><p>Route verification.</p><strong>Open Gauges</strong></a>
+      </div>
+    </section>
+
+    <section class="dgb-card">
+      <h2>Route receipt</h2>
+      <pre class="dgb-receipt receipt">FRONTIER_ENERGY_NORTH_EAST_256_REPAIR_TNT_v1
 route=/frontier/energy/
 origin_route=/frontier/energy/
 parent_route=/frontier/
@@ -22,7 +399,30 @@ physical_sibling_base=/frontier/
 lattice_enabled=true
 lattice_scale=256
 lattice_geometry=4x4x4x4
-visual_pass_claimed=false</pre></section>
-</main><footer class="dgb-footer">FRONTIER_ENERGY_256_LATTICE_RENEWAL_TNT_v1 · Explore / Frontier / Energy.</footer><script>(function(){var b=document.querySelector(".board");if(!b)return;for(var i=1;i<=256;i++){var q=Math.floor((i-1)/64)+1,s=Math.floor((i-1)/16)+1,l=((i-1)%16)+1,c=document.createElement("span");c.className="cell";c.innerHTML=String(i).padStart(3,"0")+"<i>Q"+q+" S"+s+"."+l+"</i>";b.appendChild(c)}})();</script>
+repair_class=hard-404-route-repair
+visual_pass_claimed=false</pre>
+    </section>
+  </main>
+
+  <footer class="dgb-footer">FRONTIER_ENERGY_NORTH_EAST_256_REPAIR_TNT_v1 · Explore / Frontier / Energy.</footer>
+
+  <script>
+    (function () {
+      "use strict";
+      var board = document.querySelector(".lattice-board");
+      if (!board) return;
+
+      for (var i = 1; i <= 256; i += 1) {
+        var q = Math.floor((i - 1) / 64) + 1;
+        var s = Math.floor((i - 1) / 16) + 1;
+        var l = ((i - 1) % 16) + 1;
+        var cell = document.createElement("span");
+        cell.className = "lattice-cell";
+        cell.title = "Energy · Q" + q + " · Sector " + s + " · Cell " + i;
+        cell.innerHTML = String(i).padStart(3, "0") + "<i>Q" + q + " S" + s + "." + l + "</i>";
+        board.appendChild(cell);
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -1,27 +1,26 @@
-/* G1 PLANET 1 BEACH THRESHOLD HYDRATION LAYER
+/* G1 PLANET 1 GENERATION 2 SEVEN FILE SYSTEMIC DYNAMIC REWRITE
    FILE: /world/render/planet-one.hydration.render.js
-   VERSION: G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
+   VERSION: G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1
 
-   LAW:
-   Hydration finalizes water depth.
-   Hydration reveals the beach threshold.
-   Hydration does not fill beach as land.
-   Hydration does not raise terrain.
+   COMPATIBILITY MARKER:
+   G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
+
+   ROLE:
+   Hydration owns water-state truth only.
+   It does not paint continents, mount canvas, control runtime, or claim visual pass.
 */
 
-(function attachPlanetOneBeachThresholdHydration(global) {
+(function attachPlanetOneHydrationRender(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1";
-  var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
-  var SEA_LEVEL_DATUM = 0;
+  var VERSION = "G1_PLANET_1_GENERATION_2_SEVEN_FILE_SYSTEMIC_DYNAMIC_REWRITE_TNT_v1";
+  var COMPAT_VERSION = "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1";
+  var STATE_FORMULA = "4x4x4x4";
+  var STATE_COUNT = 256;
+  var SEED = 256451;
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, Number(value) || 0));
-  }
-
-  function mix(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
   }
 
   function round(value, places) {
@@ -29,120 +28,193 @@
     return Math.round((Number(value) || 0) * m) / m;
   }
 
-  function rgba(r, g, b, a) {
-    return {
-      r: Math.round(clamp(r, 0, 255)),
-      g: Math.round(clamp(g, 0, 255)),
-      b: Math.round(clamp(b, 0, 255)),
-      a: clamp(a == null ? 1 : a, 0, 1)
-    };
+  function mix(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
   }
 
-  function get(sample, camelName, snakeName, fallback) {
-    if (!sample) return fallback;
-    if (sample[camelName] != null) return Number(sample[camelName]);
-    if (sample[snakeName] != null) return Number(sample[snakeName]);
-    return fallback;
+  function smoothstep(a, b, value) {
+    var t = clamp((value - a) / (b - a), 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
-  function blend(a, b, t) {
-    return rgba(
-      mix(a.r, b.r, t),
-      mix(a.g, b.g, t),
-      mix(a.b, b.b, t),
-      mix(a.a, b.a, t)
+  function normalizeLon(lon) {
+    var x = ((Number(lon) + 180) % 360 + 360) % 360 - 180;
+    return x === -180 ? 180 : x;
+  }
+
+  function hash2(x, y, seed) {
+    var n = Math.sin(x * 127.1 + y * 311.7 + (seed || SEED) * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function valueNoise(x, y, seed) {
+    var x0 = Math.floor(x);
+    var y0 = Math.floor(y);
+    var xf = x - x0;
+    var yf = y - y0;
+    var u = xf * xf * (3 - 2 * xf);
+    var v = yf * yf * (3 - 2 * yf);
+
+    var a = hash2(x0, y0, seed);
+    var b = hash2(x0 + 1, y0, seed);
+    var c = hash2(x0, y0 + 1, seed);
+    var d = hash2(x0 + 1, y0 + 1, seed);
+
+    return mix(mix(a, b, u), mix(c, d, u), v);
+  }
+
+  function fbm(lon, lat, seed) {
+    var x = normalizeLon(lon) / 22;
+    var y = lat / 22;
+
+    return (
+      valueNoise(x, y, seed + 11) * 0.40 +
+      valueNoise(x * 2.15, y * 2.15, seed + 29) * 0.27 +
+      valueNoise(x * 4.4, y * 4.4, seed + 47) * 0.18 +
+      valueNoise(x * 8.8, y * 8.8, seed + 83) * 0.10 +
+      valueNoise(x * 17.6, y * 17.6, seed + 131) * 0.05
     );
   }
 
-  function depthBand(depth) {
-    if (depth >= 0.72) return "DEEP_OCEAN";
-    if (depth >= 0.42) return "MID_OCEAN";
-    if (depth >= 0.16) return "SHALLOW_SHELF";
-    return "WET_EDGE";
+  function ridge(lon, lat, seed) {
+    var n = fbm(lon * 1.32 + 17, lat * 1.17 - 9, seed + 700);
+    return 1 - Math.abs(n * 2 - 1);
   }
 
-  function sampleHydrationDepth(lon, lat, bridgeSample) {
-    var s = bridgeSample || {};
+  function stateId(a, b, c, d) {
+    return (((a * 4 + b) * 4 + c) * 4 + d);
+  }
 
-    var depth = clamp(get(s, "waterDepth", "water_depth", 0.72), 0, 1);
-    var shelf = clamp(get(s, "shelfField", "shelf_field", get(s, "shelfCandidate", "shelf_candidate", 0)), 0, 1);
-    var reef = clamp(get(s, "reefField", "reef_field", get(s, "reefCandidate", "reef_candidate", 0)), 0, 1);
-    var wetEdge = clamp(get(s, "wetEdge", "wet_edge", get(s, "wetEdgeCandidate", "wet_edge_candidate", 0)), 0, 1);
-    var beachCandidate = clamp(get(s, "beachCandidate", "beach_candidate", 0), 0, 1);
-    var beachLock = clamp(get(s, "beachLock", "beach_lock", 0), 0, 1);
-    var limb = clamp(get(s, "limbLight", "limb_light", 0.72), 0, 1);
+  function buildStateReceipt(label) {
+    var states = [];
+    var a, b, c, d;
 
-    var deepColor = rgba(4, 22, 68, 1);
-    var midColor = rgba(8, 70, 132, 1);
-    var shelfColor = rgba(32, 134, 166, 1);
-    var reefColor = rgba(76, 184, 188, 1);
-    var wetColor = rgba(96, 176, 164, 1);
-    var beachEdgeColor = rgba(202, 194, 142, 1);
-
-    var color;
-    if (depth >= 0.72) {
-      color = blend(deepColor, midColor, 0.22);
-    } else if (depth >= 0.42) {
-      color = blend(deepColor, midColor, 0.78);
-    } else if (depth >= 0.16) {
-      color = blend(midColor, shelfColor, shelf * 0.88);
-    } else {
-      color = blend(shelfColor, reefColor, Math.max(reef, wetEdge * 0.42));
+    for (a = 0; a < 4; a += 1) {
+      for (b = 0; b < 4; b += 1) {
+        for (c = 0; c < 4; c += 1) {
+          for (d = 0; d < 4; d += 1) {
+            states.push({ state_id: stateId(a, b, c, d), a: a, b: b, c: c, d: d });
+          }
+        }
+      }
     }
 
-    color = blend(color, reefColor, reef * 0.30);
-    color = blend(color, wetColor, wetEdge * 0.22);
-    color = blend(color, beachEdgeColor, beachCandidate * 0.10 + beachLock * 0.24);
-
-    var light = clamp(0.56 + limb * 0.46 + beachLock * 0.03, 0.38, 1.12);
-    color = rgba(color.r * light, color.g * light, color.b * light, 1);
-
     return {
-      version: VERSION,
-      baseline: BASELINE,
-
-      hydrationDepthLayerActive: true,
-      beachThresholdLayerActive: true,
-      waterDepthFieldActive: true,
-      deepOceanDepthActive: true,
-      midOceanDepthActive: true,
-      shallowShelfDepthActive: true,
-      wetEdgeDepthActive: true,
-      reefDepthFieldActive: true,
-      beachCandidateFieldActive: true,
-      beachLockFieldActive: true,
-      seaLevelDatumPreserved: true,
-
-      hydrationOwnsWaterDepthOnly: true,
-      hydrationRevealsBeachThresholdOnly: true,
-      beachFillBlockedInHydration: true,
-      terrainStartlineBlockedFromHydrationOwnership: true,
-      landPaintBlockedInHydration: true,
-
-      depthBand: depthBand(depth),
-      waterDepth: round(depth, 4),
-      water_depth: round(depth, 4),
-      shelfTone: round(shelf, 4),
-      shelf_tone: round(shelf, 4),
-      reefTone: round(reef, 4),
-      reef_tone: round(reef, 4),
-      wetEdgeTone: round(wetEdge, 4),
-      wet_edge_tone: round(wetEdge, 4),
-      beachCandidateTone: round(beachCandidate, 4),
-      beach_candidate_tone: round(beachCandidate, 4),
-      beachLockTone: round(beachLock, 4),
-      beach_lock_tone: round(beachLock, 4),
-
-      seaLevelDatum: SEA_LEVEL_DATUM,
-      waterColor: color,
-      color: color,
-
-      visualPassClaimed: false
+      label: label,
+      ok: states.length === STATE_COUNT,
+      stateFormula: STATE_FORMULA,
+      stateCount: states.length,
+      requiredStateCount: STATE_COUNT,
+      preview: states.slice(0, 16)
     };
   }
 
-  function sampleHydrationSurface(lon, lat, bridgeSample) {
-    return sampleHydrationDepth(lon, lat, bridgeSample);
+  function classifyPhase(temperature, elevation, availableWater, latitude) {
+    var polarFactor = smoothstep(56, 86, Math.abs(latitude));
+    var coldByHeight = smoothstep(0.52, 0.92, elevation);
+    var icePotential = clamp(polarFactor * 0.52 + coldByHeight * 0.46 + availableWater * 0.20, 0, 1);
+    var vaporPotential = clamp(smoothstep(0.44, 0.86, temperature) * availableWater * 0.64, 0, 1);
+    var liquidPotential = clamp(availableWater * (1 - icePotential * 0.46) * (1 - vaporPotential * 0.28), 0, 1);
+
+    var dominant = "LIQUID";
+    if (icePotential > liquidPotential && icePotential > vaporPotential) dominant = "SOLID";
+    if (vaporPotential > liquidPotential && vaporPotential > icePotential) dominant = "GAS";
+
+    return {
+      dominant: dominant,
+      solid: round(icePotential, 4),
+      liquid: round(liquidPotential, 4),
+      gas: round(vaporPotential, 4)
+    };
+  }
+
+  function sampleHydration(lon, lat, context) {
+    context = context || {};
+    lon = normalizeLon(lon);
+    lat = clamp(lat, -88, 88);
+
+    var seed = Number(context.seed || SEED);
+    var elevation = clamp(context.elevation == null ? 0.36 + fbm(lon, lat, seed + 200) * 0.28 : context.elevation, 0, 1);
+    var landMask = clamp(context.landMask == null ? 0 : context.landMask, 0, 1);
+
+    var basinField = clamp((1 - elevation) * 0.62 + ridge(lon + 19, lat - 8, seed + 310) * 0.20 + fbm(lon * 1.4, lat * 1.2, seed + 340) * 0.18, 0, 1);
+    var shelf = clamp(smoothstep(0.20, 0.58, basinField) * (1 - landMask * 0.42), 0, 1);
+    var coast = clamp(context.coast == null ? smoothstep(0.34, 0.72, shelf) * smoothstep(0.08, 0.90, landMask) : context.coast, 0, 1);
+    var wetEdge = clamp(coast * 0.68 + shelf * 0.18, 0, 1);
+
+    var seaLevel = 0.50;
+    var belowSea = clamp(smoothstep(seaLevel + 0.08, seaLevel - 0.18, elevation) * (1 - landMask * 0.58), 0, 1);
+    var interiorBasin = clamp(landMask * basinField * (1 - elevation * 0.58), 0, 1);
+    var drainagePotential = clamp(landMask * ridge(lon * 1.8 - 11, lat * 1.5 + 7, seed + 480) * (0.40 + interiorBasin * 0.64), 0, 1);
+
+    var liquidWater = clamp(belowSea * 0.76 + shelf * 0.22 + interiorBasin * 0.26 + drainagePotential * 0.18, 0, 1);
+    var shallowWater = clamp(shelf * 0.42 + coast * 0.28 + interiorBasin * 0.20, 0, 1);
+    var deepWater = clamp(belowSea * (1 - shelf * 0.52), 0, 1);
+
+    var equatorWarmth = 1 - Math.abs(lat) / 90;
+    var temperature = clamp(equatorWarmth * 0.76 + fbm(lon * 0.8, lat * 0.8, seed + 520) * 0.18 - elevation * 0.20, 0, 1);
+    var phase = classifyPhase(temperature, elevation, liquidWater + interiorBasin * 0.32, lat);
+
+    var evaporation = clamp((liquidWater * 0.30 + shallowWater * 0.26 + wetEdge * 0.14) * temperature, 0, 1);
+    var humidity = clamp(evaporation * 0.48 + fbm(lon * 0.9 + 7, lat * 0.9 - 3, seed + 590) * 0.12, 0, 1);
+    var condensation = clamp(humidity * smoothstep(0.22, 0.70, elevation + Math.abs(lat) / 160), 0, 1);
+    var precipitationPotential = clamp(condensation * 0.58 + ridge(lon - 13, lat + 5, seed + 610) * humidity * 0.18, 0, 1);
+
+    return {
+      VERSION: VERSION,
+      version: VERSION,
+      compatibilityVersion: COMPAT_VERSION,
+
+      lon: lon,
+      lat: lat,
+
+      hydrationAuthority: "WATER_STATE_TRUTH_ONLY",
+      ownsWaterStateTruth: true,
+      ownsSolidLiquidGasBoundary: true,
+      ownsSeaLevel: true,
+      ownsBasinShelfCoastWetEdge: true,
+      ownsEvaporationCondensationPrecipitationPotential: true,
+
+      ownsContinentPainting: false,
+      ownsCanvasComposition: false,
+      ownsRuntimeMount: false,
+      ownsControlState: false,
+      visualPassClaimed: false,
+
+      seaLevel: round(seaLevel, 4),
+      elevationInput: round(elevation, 4),
+      landMaskInput: round(landMask, 4),
+
+      basinField: round(basinField, 4),
+      shelf: round(shelf, 4),
+      coast: round(coast, 4),
+      wetEdge: round(wetEdge, 4),
+      belowSea: round(belowSea, 4),
+      interiorBasin: round(interiorBasin, 4),
+      drainagePotential: round(drainagePotential, 4),
+
+      liquidWater: round(liquidWater, 4),
+      shallowWater: round(shallowWater, 4),
+      deepWater: round(deepWater, 4),
+
+      temperature: round(temperature, 4),
+      waterPhase: phase.dominant,
+      solidWater: phase.solid,
+      liquidWaterPhase: phase.liquid,
+      gasWater: phase.gas,
+
+      evaporation: round(evaporation, 4),
+      humidity: round(humidity, 4),
+      condensation: round(condensation, 4),
+      precipitationPotential: round(precipitationPotential, 4),
+
+      waterRemainsWater: true,
+      solidLiquidGasAreWaterStates: true,
+      cloudsDoNotBecomeSurface: true,
+      precipitationDoesNotPaintLand: true,
+      airDoesNotBecomeSurface: true,
+      landDoesNotOwnWater: true
+    };
   }
 
   function getHydrationStatus() {
@@ -151,29 +223,16 @@
       active: true,
       VERSION: VERSION,
       version: VERSION,
-      baseline: BASELINE,
-
-      hydrationDepthLayerActive: true,
-      beachThresholdLayerActive: true,
-      waterDepthFieldActive: true,
-      deepOceanDepthActive: true,
-      midOceanDepthActive: true,
-      shallowShelfDepthActive: true,
-      wetEdgeDepthActive: true,
-      reefDepthFieldActive: true,
-      beachCandidateFieldActive: true,
-      beachLockFieldActive: true,
-      seaLevelDatumPreserved: true,
-
-      hydrationOwnsWaterDepthOnly: true,
-      hydrationRevealsBeachThresholdOnly: true,
-      beachFillBlockedInHydration: true,
-      terrainStartlineBlockedFromHydrationOwnership: true,
-      landPaintBlockedInHydration: true,
-
-      hydrationLayerActive: true,
-      hydrologyNetworkActive: false,
-      terrainOwnership: false,
+      compatibilityVersion: COMPAT_VERSION,
+      contract: VERSION,
+      role: "HYDRATION_WATER_STATE_TRUTH_ONLY",
+      waterStateTruthOnly: true,
+      ownsContinentPainting: false,
+      ownsCanvasComposition: false,
+      ownsRuntimeMount: false,
+      stateFormula: STATE_FORMULA,
+      stateCount: STATE_COUNT,
+      water256Receipt: buildStateReceipt("WATER_256"),
       visualPassClaimed: false
     };
   }
@@ -181,19 +240,23 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
-    BASELINE: BASELINE,
-    baseline: BASELINE,
-    sampleHydrationDepth: sampleHydrationDepth,
-    sampleHydrationSurface: sampleHydrationSurface,
+    COMPAT_VERSION: COMPAT_VERSION,
+    compatibilityVersion: COMPAT_VERSION,
+    sampleHydration: sampleHydration,
+    sampleWaterState: sampleHydration,
     getHydrationStatus: getHydrationStatus,
-    getHydrologyStatus: getHydrationStatus,
-    status: getHydrationStatus
+    getStatus: getHydrationStatus,
+    status: getHydrationStatus,
+    getLatticeReceipt: function () {
+      return buildStateReceipt("WATER_256");
+    },
+    visualPassClaimed: false
   };
 
   global.DGBPlanetOneHydrationRender = api;
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:hydration-depth-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:hydration:generation-2-ready", {
       detail: getHydrationStatus()
     }));
   } catch (error) {}

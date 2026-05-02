@@ -1,18 +1,12 @@
-/* G1 PLANET 1 HEX BRIDGE: HYDRATION DEPTH + TERRAIN OUTLINE
+/* G1 PLANET 1 HEX BRIDGE: REEF / SHELF / LAND EMERGENCE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1
-
-   LAW:
-   Hexgrid is the 256 bridge.
-   It connects hydration depth to terrain outline.
-   It produces official terrain outline and vein candidates.
-   It does not expose public honeycomb.
+   VERSION: G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1
 */
 
 (function attachPlanetOneHexBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_HYDRATION_DEPTH_TERRAIN_OUTLINE_HEX_BRIDGE_SET_TNT_v1";
+  var VERSION = "G1_PLANET_1_REEF_SHELF_SHALLOW_WATER_AND_LAND_EMERGENCE_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var STATE_FORMULA = "4x4x4x4";
   var STATE_COUNT = 256;
@@ -25,13 +19,13 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  function mix(a, b, t) {
+    return a + (b - a) * clamp(t, 0, 1);
+  }
+
   function round(value, places) {
     var m = Math.pow(10, places || 4);
     return Math.round(value * m) / m;
-  }
-
-  function mix(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
   }
 
   function smoothstep(edge0, edge1, value) {
@@ -70,27 +64,27 @@
     );
   }
 
-  function stateId(waterDepth, terrainOutline, veinStructure, visualBoundary) {
-    return (((waterDepth * 4 + terrainOutline) * 4 + veinStructure) * 4 + visualBoundary);
+  function stateId(waterDepth, surfaceClass, boundaryRole, elevationState) {
+    return (((waterDepth * 4 + surfaceClass) * 4 + boundaryRole) * 4 + elevationState);
   }
 
   function buildStateSpaceReceipt() {
     var states = [];
     var waterDepth;
-    var terrainOutline;
-    var veinStructure;
-    var visualBoundary;
+    var surfaceClass;
+    var boundaryRole;
+    var elevationState;
 
     for (waterDepth = 0; waterDepth < 4; waterDepth += 1) {
-      for (terrainOutline = 0; terrainOutline < 4; terrainOutline += 1) {
-        for (veinStructure = 0; veinStructure < 4; veinStructure += 1) {
-          for (visualBoundary = 0; visualBoundary < 4; visualBoundary += 1) {
+      for (surfaceClass = 0; surfaceClass < 4; surfaceClass += 1) {
+        for (boundaryRole = 0; boundaryRole < 4; boundaryRole += 1) {
+          for (elevationState = 0; elevationState < 4; elevationState += 1) {
             states.push({
-              state_id: stateId(waterDepth, terrainOutline, veinStructure, visualBoundary),
+              state_id: stateId(waterDepth, surfaceClass, boundaryRole, elevationState),
               waterDepth: waterDepth,
-              terrainOutline: terrainOutline,
-              veinStructure: veinStructure,
-              visualBoundary: visualBoundary
+              surfaceClass: surfaceClass,
+              boundaryRole: boundaryRole,
+              elevationState: elevationState
             });
           }
         }
@@ -104,11 +98,18 @@
       requiredStateCount: STATE_COUNT,
       stateSpaceReceipt: true,
       waterDepthAxisActive: true,
-      terrainOutlineAxisActive: true,
-      veinStructureAxisActive: true,
-      visualBoundaryAxisActive: true,
+      surfaceClassAxisActive: true,
+      boundaryRoleAxisActive: true,
+      elevationStateAxisActive: true,
       states: states
     };
+  }
+
+  function bodyScore(lon, lat, centerLon, centerLat, rx, ry, weight, wrap) {
+    var dx = Math.abs(normalizeLon(lon - centerLon)) / rx;
+    var dy = (lat - centerLat) / ry;
+    var curve = Math.cos(degToRad(lon - centerLon)) * wrap;
+    return weight * (1 - (dx * dx + dy * dy)) + curve;
   }
 
   function landPotential(lon, lat, seed) {
@@ -119,13 +120,6 @@
     var far = bodyScore(lon, lat, 178, 14, 34, 42, 0.58, 0.10);
     var grain = (fbm(lon, lat, seed + 300) - 0.5) * 0.24;
     return Math.max(west, east, north, south, far) + grain;
-  }
-
-  function bodyScore(lon, lat, centerLon, centerLat, rx, ry, weight, wrap) {
-    var dx = Math.abs(normalizeLon(lon - centerLon)) / rx;
-    var dy = (lat - centerLat) / ry;
-    var curve = Math.cos(degToRad(lon - centerLon)) * wrap;
-    return weight * (1 - (dx * dx + dy * dy)) + curve;
   }
 
   function veinField(lon, lat, seed, offset, scale, width) {
@@ -141,19 +135,50 @@
     lon = normalizeLon(lon);
     lat = clamp(lat, -88, 88);
 
-    var potential = landPotential(lon, lat, seed);
     var absLat = Math.abs(lat);
     var polar = absLat >= 73 ? 1 : 0;
+    var potential = landPotential(lon, lat, seed);
 
-    var outlineRaw = smoothstep(0.055, 0.34, potential);
-    var officialCoast = 1 - Math.abs(potential - 0.13) / 0.18;
-    officialCoast = clamp(officialCoast, 0, 1);
+    var terrainOutline = smoothstep(0.055, 0.34, potential);
+    var officialCoastline = clamp(1 - Math.abs(potential - 0.13) / 0.18, 0, 1);
+    var shelfCandidate = clamp(1 - Math.abs(potential - 0.06) / 0.30, 0, 1);
+    var shallowWaterCandidate = clamp(shelfCandidate * (1 - smoothstep(0.28, 0.70, potential)), 0, 1);
 
-    var shelf = clamp(1 - Math.abs(potential - 0.06) / 0.30, 0, 1);
-    var coastDistance = clamp((potential - 0.08) / 0.60, 0, 1);
+    var reefNoise = fbm(lon * 2.3, lat * 2.1, seed + 909);
+    var reefCandidate = clamp(
+      shelfCandidate *
+      officialCoastline *
+      smoothstep(0.46, 0.92, reefNoise) *
+      (1 - polar),
+      0,
+      1
+    );
 
-    var oceanDepth = clamp(0.72 - potential * 0.44 - shelf * 0.18, 0.10, 0.94);
-    if (polar) oceanDepth = clamp(oceanDepth * 0.72, 0.10, 0.62);
+    var wetEdgeCandidate = clamp(officialCoastline * terrainOutline * 0.78, 0, 1);
+    var beachReadyCandidate = clamp(
+      officialCoastline *
+      terrainOutline *
+      smoothstep(0.18, 0.44, potential) *
+      (1 - reefCandidate * 0.35),
+      0,
+      1
+    );
+
+    var emergentLandCandidate = clamp(
+      terrainOutline *
+      smoothstep(0.44, 0.78, potential) *
+      (1 - shelfCandidate * 0.62) *
+      (1 - reefCandidate * 0.74),
+      0,
+      1
+    );
+
+    var raisedLandCandidate = clamp(
+      emergentLandCandidate *
+      smoothstep(0.72, 0.94, fbm(lon * 1.2, lat * 1.2, seed + 707)),
+      0,
+      1
+    );
 
     var lowVein = veinField(lon, lat, seed, 19, 1.10, 0.055);
     var artery = veinField(lon, lat, seed, 73, -1.52, 0.044);
@@ -161,33 +186,33 @@
 
     var veinCandidate = clamp(
       Math.max(
-        lowVein * outlineRaw * 0.60,
-        artery * outlineRaw * 0.78,
-        pressure * outlineRaw * officialCoast * 0.70
+        lowVein * emergentLandCandidate * 0.38,
+        artery * emergentLandCandidate * 0.44,
+        pressure * terrainOutline * officialCoastline * 0.32
       ),
       0,
       1
     );
 
-    var elevationCandidate = clamp(outlineRaw * 0.64 + coastDistance * 0.20 + pressure * 0.08, 0, 1);
+    var waterDepth = clamp(0.78 - potential * 0.46 - shelfCandidate * 0.20 - reefCandidate * 0.12, 0.08, 0.96);
+    if (polar) waterDepth = clamp(waterDepth * 0.70, 0.10, 0.62);
 
-    var waterDepthState = oceanDepth >= 0.72 ? 0 : oceanDepth >= 0.42 ? 1 : oceanDepth >= 0.16 ? 2 : 3;
+    var waterDepthState = waterDepth >= 0.72 ? 0 : waterDepth >= 0.42 ? 1 : waterDepth >= 0.16 ? 2 : 3;
 
-    var terrainOutlineState = 0;
-    if (outlineRaw > 0.18) terrainOutlineState = 1;
-    if (officialCoast > 0.52) terrainOutlineState = 2;
-    if (polar) terrainOutlineState = 3;
+    var surfaceClassState = 0;
+    if (reefCandidate > 0.28) surfaceClassState = 1;
+    if (beachReadyCandidate > 0.32) surfaceClassState = 2;
+    if (emergentLandCandidate > 0.38) surfaceClassState = 3;
 
-    var veinState = 0;
-    if (lowVein * outlineRaw > 0.34) veinState = 1;
-    if (artery * outlineRaw > 0.42) veinState = 2;
-    if (pressure * outlineRaw > 0.50) veinState = 3;
+    var boundaryRoleState = 0;
+    if (officialCoastline > 0.18 || wetEdgeCandidate > 0.18) boundaryRoleState = 1;
+    if (officialCoastline > 0.44) boundaryRoleState = 2;
+    if (officialCoastline > 0.72 && emergentLandCandidate > 0.44) boundaryRoleState = 3;
 
-    var boundaryState = 0;
-    var boundaryPower = Math.max(officialCoast, veinCandidate * 0.72, polar * 0.72);
-    if (boundaryPower > 0.18) boundaryState = 1;
-    if (boundaryPower > 0.42) boundaryState = 2;
-    if (boundaryPower > 0.68) boundaryState = 3;
+    var elevationState = 0;
+    if (beachReadyCandidate > 0.16 || terrainOutline > 0.28) elevationState = 1;
+    if (emergentLandCandidate > 0.38) elevationState = 2;
+    if (raisedLandCandidate > 0.24) elevationState = 3;
 
     return {
       version: VERSION,
@@ -205,41 +230,57 @@
       shelfDistanceSamplingActive: true,
       coastlineCandidateFieldActive: true,
 
-      waterDepth: round(oceanDepth, 4),
-      water_depth: round(oceanDepth, 4),
-      shelfDistance: round(shelf, 4),
-      shelf_distance: round(shelf, 4),
-      coastDistance: round(coastDistance, 4),
-      coast_distance: round(coastDistance, 4),
+      reefCandidateFieldActive: true,
+      shelfCandidateFieldActive: true,
+      shallowWaterCandidateFieldActive: true,
+      wetEdgeCandidateFieldActive: true,
+      beachReadyCandidateFieldActive: true,
+      emergentLandCandidateFieldActive: true,
+      transitionState256Active: true,
 
-      terrainOutline: round(outlineRaw, 4),
-      terrain_outline: round(outlineRaw, 4),
-      officialCoastline: round(officialCoast, 4),
-      official_coastline: round(officialCoast, 4),
-      elevationCandidate: round(elevationCandidate, 4),
-      elevation_candidate: round(elevationCandidate, 4),
+      waterDepth: round(waterDepth, 4),
+      water_depth: round(waterDepth, 4),
+
+      terrainOutline: round(terrainOutline, 4),
+      terrain_outline: round(terrainOutline, 4),
+      officialCoastline: round(officialCoastline, 4),
+      official_coastline: round(officialCoastline, 4),
+
+      shelfCandidate: round(shelfCandidate, 4),
+      shelf_candidate: round(shelfCandidate, 4),
+      shallowWaterCandidate: round(shallowWaterCandidate, 4),
+      shallow_water_candidate: round(shallowWaterCandidate, 4),
+      reefCandidate: round(reefCandidate, 4),
+      reef_candidate: round(reefCandidate, 4),
+      wetEdgeCandidate: round(wetEdgeCandidate, 4),
+      wet_edge_candidate: round(wetEdgeCandidate, 4),
+      beachReadyCandidate: round(beachReadyCandidate, 4),
+      beach_ready_candidate: round(beachReadyCandidate, 4),
+      emergentLandCandidate: round(emergentLandCandidate, 4),
+      emergent_land_candidate: round(emergentLandCandidate, 4),
+      raisedLandCandidate: round(raisedLandCandidate, 4),
+      raised_land_candidate: round(raisedLandCandidate, 4),
 
       veinCandidate: round(veinCandidate, 4),
       vein_candidate: round(veinCandidate, 4),
-      lowlandVein: round(lowVein * outlineRaw, 4),
-      lowland_vein: round(lowVein * outlineRaw, 4),
-      primaryArtery: round(artery * outlineRaw, 4),
-      primary_artery: round(artery * outlineRaw, 4),
-      pressureCut: round(pressure * outlineRaw, 4),
-      pressure_cut: round(pressure * outlineRaw, 4),
+      lowlandVein: round(lowVein * emergentLandCandidate, 4),
+      lowland_vein: round(lowVein * emergentLandCandidate, 4),
+      primaryArtery: round(artery * emergentLandCandidate, 4),
+      primary_artery: round(artery * emergentLandCandidate, 4),
+      pressureCut: round(pressure * terrainOutline * officialCoastline, 4),
+      pressure_cut: round(pressure * terrainOutline * officialCoastline, 4),
 
       polarBoundary: Boolean(polar),
       polar_boundary: Boolean(polar),
 
       waterDepthState: waterDepthState,
-      terrainOutlineState: terrainOutlineState,
-      veinStructureState: veinState,
-      visualBoundaryState: boundaryState,
-      state_id: stateId(waterDepthState, terrainOutlineState, veinState, boundaryState),
+      surfaceClassState: surfaceClassState,
+      boundaryRoleState: boundaryRoleState,
+      elevationState: elevationState,
+      state_id: stateId(waterDepthState, surfaceClassState, boundaryRoleState, elevationState),
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
-
       visualPassClaimed: false
     };
   }
@@ -293,24 +334,22 @@
     var water = hydration && hydration.waterColor ? hydration.waterColor : { r: 12, g: 70, b: 130 };
     var base = [water.r, water.g, water.b, 255];
 
-    var outlineAlpha = clamp(sample.officialCoastline * 0.34 + sample.polarBoundary * 0.18, 0, 0.38);
-    var veinAlpha = clamp(sample.veinCandidate * 0.20, 0, 0.20);
-    var terrainAlpha = clamp(sample.terrainOutline * 0.20, 0, 0.24);
-
-    var terrainTone = [
-      Math.round(mix(58, 104, sample.elevationCandidate)),
-      Math.round(mix(92, 128, sample.elevationCandidate)),
-      Math.round(mix(76, 86, sample.elevationCandidate)),
-      255
-    ];
-
-    var coastTone = [96, 180, 180, 255];
-    var veinTone = [82, 170, 190, 255];
+    var reefTone = [96, 190, 184, 255];
+    var shallowTone = [52, 148, 174, 255];
+    var beachTone = [126, 162, 122, 255];
+    var emergentTone = [76, 116, 80, 255];
+    var veinTone = [82, 172, 190, 255];
 
     var out = base;
-    out = blend(out, terrainTone, terrainAlpha);
-    out = blend(out, coastTone, outlineAlpha);
-    out = blend(out, veinTone, veinAlpha);
+
+    out = blend(out, shallowTone, clamp(sample.shallowWaterCandidate * 0.18, 0, 0.18));
+    out = blend(out, reefTone, clamp(sample.reefCandidate * 0.32, 0, 0.32));
+    out = blend(out, beachTone, clamp(sample.beachReadyCandidate * 0.16, 0, 0.16));
+    out = blend(out, emergentTone, clamp(sample.emergentLandCandidate * 0.24, 0, 0.24));
+    out = blend(out, veinTone, clamp(sample.veinCandidate * 0.16, 0, 0.16));
+
+    var coastlineLight = clamp(sample.officialCoastline * 0.18 + sample.wetEdgeCandidate * 0.12, 0, 0.22);
+    out = blend(out, [124, 188, 176, 255], coastlineLight);
 
     var shade = clamp(0.54 + limb * 0.48, 0.38, 1.10);
     out[0] = Math.round(clamp(out[0] * shade, 0, 255));
@@ -409,10 +448,18 @@
     lastDraw = {
       ok: true,
       version: VERSION,
+
       cleanSlatePreserved: true,
+      currentViableOutlinePreserved: true,
+      reefFieldsRendered: true,
+      shallowWaterRendered: true,
+      shelfDepthRendered: true,
+      beachReadyBoundaryRendered: true,
+      selectedLandEmergenceRendered: true,
       terrainOutlineRendered: true,
       veinStructureRenderedSubtly: true,
       waterDepthRendered: true,
+
       noBlobReintroduced: true,
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
@@ -472,21 +519,30 @@
       shelfDistanceSamplingActive: true,
       coastlineCandidateFieldActive: true,
 
+      reefCandidateFieldActive: true,
+      shelfCandidateFieldActive: true,
+      shallowWaterCandidateFieldActive: true,
+      wetEdgeCandidateFieldActive: true,
+      beachReadyCandidateFieldActive: true,
+      emergentLandCandidateFieldActive: true,
+      transitionState256Active: true,
+
       hexagonalPixelFormatActive: true,
       hexCellSubstrateActive: true,
       terrainCellSamplingActive: true,
       coastCellQuantizationActive: true,
       elevationCellFieldActive: true,
       waterDepthCellFieldActive: true,
+      mineralPressureCellFieldActive: true,
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
       stateSpaceReceipt: true,
       waterDepthAxisActive: true,
-      terrainOutlineAxisActive: true,
-      veinStructureAxisActive: true,
-      visualBoundaryAxisActive: true,
+      surfaceClassAxisActive: true,
+      boundaryRoleAxisActive: true,
+      elevationStateAxisActive: true,
       stateSpacePreview: receipt.states.slice(0, 16),
 
       publicHoneycombBlocked: true,

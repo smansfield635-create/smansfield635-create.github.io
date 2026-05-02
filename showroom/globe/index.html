@@ -3,11 +3,11 @@
   lang="en"
   data-page="earth-g1-sun-g1"
   data-route="/showroom/globe/"
-  data-contract="SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1"
+  data-contract="SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1"
   data-demo-universe="earth-sun-sequence"
   data-generation="G1"
   data-earth-g1="complete"
-  data-sun-g1="actual-solar-disc-runtime"
+  data-sun-g1="4k-solar-detail-lock-ready"
   data-moon="queued"
   data-planet-one="reserved-for-nine-summits-universe"
   data-visual-pass-claimed="false"
@@ -16,7 +16,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Earth G1 · Sun G1</title>
-  <meta name="description" content="Earth Generation 1 baseline with Sun G1 actual solar disc runtime.">
+  <meta name="description" content="Earth Generation 1 baseline with Sun G1 4K solar detail lock-ready runtime.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
@@ -140,10 +140,10 @@
     .sun-stage::before {
       content: "";
       position: absolute;
-      inset: 8%;
+      inset: 7%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255, 220, 120, 0.20), rgba(255, 140, 50, 0.10) 46%, rgba(255, 100, 30, 0.035) 70%, transparent 100%);
+        radial-gradient(circle at 50% 50%, rgba(255, 226, 140, 0.22), rgba(255, 150, 55, 0.11) 46%, rgba(255, 100, 30, 0.04) 72%, transparent 100%);
       filter: blur(3px);
       z-index: 1;
     }
@@ -151,12 +151,12 @@
     .sun-stage::after {
       content: "";
       position: absolute;
-      inset: 2%;
+      inset: 1%;
       border-radius: 50%;
       box-shadow:
-        0 0 34px rgba(255, 220, 130, 0.18),
-        0 0 74px rgba(255, 150, 55, 0.13),
-        0 0 132px rgba(255, 96, 30, 0.08);
+        0 0 36px rgba(255, 226, 140, 0.20),
+        0 0 82px rgba(255, 150, 55, 0.14),
+        0 0 150px rgba(255, 96, 30, 0.08);
       z-index: 0;
     }
 
@@ -172,7 +172,7 @@
       background: transparent;
       object-fit: contain;
       transform: none;
-      filter: saturate(1.12) contrast(1.06);
+      filter: saturate(1.14) contrast(1.08);
     }
 
     .control-grid button,
@@ -235,16 +235,17 @@
       <h1 class="dgb-title">Demo Universe Earth baseline.</h1>
 
       <p class="dgb-copy">
-        Earth G1 remains complete. Sun G1 is renewed as an actual solar disc: round, luminous, turbulent, and photosphere-based.
+        Earth G1 remains complete. Sun G1 receives the final high-detail solar-disc renewal:
+        round body, photosphere granulation, subtle active regions, limb darkening, and controlled corona.
         Moon remains queued. Planet 1 remains reserved for the future Nine Summits Universe.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun G1 solar disc</span>
+        <span class="dgb-chip">Sun G1 4K detail</span>
         <span class="dgb-chip">Moon queued</span>
         <span class="dgb-chip">Planet 1 reserved</span>
-        <span class="dgb-chip hold">Visual hold</span>
+        <span class="dgb-chip hold">Lock-ready</span>
       </div>
 
       <div class="top-actions" aria-label="Book action">
@@ -255,7 +256,7 @@
     <section class="dgb-card">
       <h2>Choose Demo Universe body</h2>
       <p class="page-note">
-        Earth G1 stays on the accepted Earth renderer. Sun G1 uses a dedicated actual-solar-disc runtime.
+        Earth G1 stays on the accepted Earth renderer. Sun G1 uses a dedicated high-detail solar-disc runtime.
       </p>
 
       <div class="body-switch-row" aria-label="Demo Universe body switch">
@@ -275,7 +276,7 @@
           data-planet-one-render="true"
           data-demo-universe="earth-sun-sequence"
           data-generation="G1"
-          data-render-contract="SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1"
+          data-render-contract="SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1"
           data-active-body="earth"
           data-visual-pass-claimed="false"
         ></div>
@@ -285,7 +286,7 @@
     <section class="dgb-card">
       <h2 id="control-title">Earth G1 motion control</h2>
       <p id="control-note" class="page-note">
-        Controls target the active body. Earth uses the accepted Earth renderer. Sun uses the solar-disc runtime.
+        Controls target the active body. Earth uses the accepted Earth renderer. Sun uses the high-detail solar-disc runtime.
       </p>
 
       <div class="control-grid">
@@ -306,7 +307,7 @@
         type="range"
         min="0"
         max="100"
-        value="28"
+        value="24"
         data-body-speed="true"
         aria-label="Demo Universe body motion speed"
       >
@@ -314,13 +315,16 @@
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1
 route=/showroom/globe/
 page=earth-g1-sun-g1
 earth-g1-complete=true
-sun-g1=actual-solar-disc-runtime
+sun-g1=4k-solar-detail-lock-ready
 sun-shape=round
 sun-surface=photosphere-granulation
+sun-detail=high-density-sampling
+sun-active-regions=subtle
+sun-limb-darkening=true
 sun-corona=controlled
 moon=queued
 planet-1=reserved-for-nine-summits-universe
@@ -329,7 +333,7 @@ visual-pass-claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1 · Earth G1 preserved · Sun G1 solar disc · Moon queued.
+    SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1 · Earth G1 preserved · Sun G1 lock-ready · Moon queued.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -340,7 +344,7 @@ visual-pass-claimed=false</pre>
     (function bootEarthSunSequence(window) {
       "use strict";
 
-      var VERSION = "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1";
+      var VERSION = "SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1";
       var currentBody = "earth";
       var sunRuntime = null;
 
@@ -388,13 +392,17 @@ visual-pass-claimed=false</pre>
         return mix(mix(a, b, u), mix(c, d, u), v);
       }
 
-      function fbm(x, y, seed) {
+      function ridged(value) {
+        return 1 - Math.abs(2 * value - 1);
+      }
+
+      function fbm(x, y, seed, octaves) {
         var total = 0;
         var amplitude = 0.52;
         var frequency = 1;
         var sum = 0;
 
-        for (var i = 0; i < 6; i += 1) {
+        for (var i = 0; i < octaves; i += 1) {
           total += noise(x * frequency, y * frequency, seed + i * 23) * amplitude;
           sum += amplitude;
           amplitude *= 0.52;
@@ -405,50 +413,58 @@ visual-pass-claimed=false</pre>
       }
 
       function solarColor(value, limb) {
-        var darkOrange = [174, 68, 18];
-        var orange = [224, 108, 28];
-        var gold = [246, 170, 55];
-        var yellow = [255, 218, 118];
-        var pale = [255, 242, 192];
+        var umber = [132, 47, 13];
+        var darkOrange = [185, 72, 18];
+        var orange = [226, 112, 28];
+        var gold = [248, 174, 55];
+        var yellow = [255, 222, 122];
+        var pale = [255, 244, 196];
 
         var c;
 
-        if (value < 0.24) {
-          var t0 = value / 0.24;
+        if (value < 0.18) {
+          var t0 = value / 0.18;
           c = [
-            mix(darkOrange[0], orange[0], t0),
-            mix(darkOrange[1], orange[1], t0),
-            mix(darkOrange[2], orange[2], t0)
+            mix(umber[0], darkOrange[0], t0),
+            mix(umber[1], darkOrange[1], t0),
+            mix(umber[2], darkOrange[2], t0)
           ];
-        } else if (value < 0.56) {
-          var t1 = (value - 0.24) / 0.32;
+        } else if (value < 0.38) {
+          var t1 = (value - 0.18) / 0.20;
           c = [
-            mix(orange[0], gold[0], t1),
-            mix(orange[1], gold[1], t1),
-            mix(orange[2], gold[2], t1)
+            mix(darkOrange[0], orange[0], t1),
+            mix(darkOrange[1], orange[1], t1),
+            mix(darkOrange[2], orange[2], t1)
           ];
-        } else if (value < 0.84) {
-          var t2 = (value - 0.56) / 0.28;
+        } else if (value < 0.62) {
+          var t2 = (value - 0.38) / 0.24;
           c = [
-            mix(gold[0], yellow[0], t2),
-            mix(gold[1], yellow[1], t2),
-            mix(gold[2], yellow[2], t2)
+            mix(orange[0], gold[0], t2),
+            mix(orange[1], gold[1], t2),
+            mix(orange[2], gold[2], t2)
+          ];
+        } else if (value < 0.86) {
+          var t3 = (value - 0.62) / 0.24;
+          c = [
+            mix(gold[0], yellow[0], t3),
+            mix(gold[1], yellow[1], t3),
+            mix(gold[2], yellow[2], t3)
           ];
         } else {
-          var t3 = (value - 0.84) / 0.16;
+          var t4 = (value - 0.86) / 0.14;
           c = [
-            mix(yellow[0], pale[0], t3),
-            mix(yellow[1], pale[1], t3),
-            mix(yellow[2], pale[2], t3)
+            mix(yellow[0], pale[0], t4),
+            mix(yellow[1], pale[1], t4),
+            mix(yellow[2], pale[2], t4)
           ];
         }
 
-        var limbShade = 1 - limb * 0.22;
+        var limbShade = 1 - limb * 0.24;
 
         return [
           Math.round(clamp(c[0] * limbShade, 0, 255)),
           Math.round(clamp(c[1] * limbShade, 0, 255)),
-          Math.round(clamp(c[2] * (1 - limb * 0.28), 0, 255)),
+          Math.round(clamp(c[2] * (1 - limb * 0.32), 0, 255)),
           255
         ];
       }
@@ -472,14 +488,17 @@ visual-pass-claimed=false</pre>
         if (!node) return;
 
         node.textContent =
-          "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME_TNT_v1\n" +
+          "SUN_G1_4K_SOLAR_DETAIL_LOCK_READY_TNT_v1\n" +
           "route=/showroom/globe/\n" +
           "page=earth-g1-sun-g1\n" +
           "current-body=" + currentBody + "\n" +
           "earth-g1-complete=true\n" +
-          "sun-g1=actual-solar-disc-runtime\n" +
+          "sun-g1=4k-solar-detail-lock-ready\n" +
           "sun-shape=round\n" +
           "sun-surface=photosphere-granulation\n" +
+          "sun-detail=high-density-sampling\n" +
+          "sun-active-regions=subtle\n" +
+          "sun-limb-darkening=true\n" +
           "sun-corona=controlled\n" +
           "moon=queued\n" +
           "planet-1=reserved-for-nine-summits-universe\n" +
@@ -521,11 +540,13 @@ visual-pass-claimed=false</pre>
         var raf = 0;
         var running = false;
         var phase = 0;
-        var speed = 0.22;
+        var speed = 0.18;
         var direction = 1;
         var renderCount = 0;
         var lastFrame = 0;
-        var pixelSize = 480;
+
+        var pixelSize = 960;
+        var staticImage = null;
 
         shell.className = "sun-stage";
         shell.setAttribute("data-sun-g1-stage", "true");
@@ -536,33 +557,33 @@ visual-pass-claimed=false</pre>
         canvas.height = pixelSize;
         canvas.setAttribute("data-sun-g1-canvas", "true");
         canvas.setAttribute("data-visual-pass-claimed", "false");
-        canvas.setAttribute("aria-label", "Sun G1 actual solar disc runtime");
+        canvas.setAttribute("aria-label", "Sun G1 high-detail solar disc runtime");
 
         shell.appendChild(canvas);
         target.appendChild(shell);
 
         function drawCorona(cx, cy, radius) {
-          var corona = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 2.28);
-          corona.addColorStop(0.00, "rgba(255,236,172,0.21)");
-          corona.addColorStop(0.18, "rgba(255,202,98,0.16)");
-          corona.addColorStop(0.42, "rgba(255,146,48,0.10)");
-          corona.addColorStop(0.70, "rgba(255,96,30,0.045)");
+          var corona = ctx.createRadialGradient(cx, cy, radius * 0.80, cx, cy, radius * 2.34);
+          corona.addColorStop(0.00, "rgba(255,236,172,0.20)");
+          corona.addColorStop(0.18, "rgba(255,202,98,0.15)");
+          corona.addColorStop(0.42, "rgba(255,146,48,0.095)");
+          corona.addColorStop(0.70, "rgba(255,96,30,0.042)");
           corona.addColorStop(1.00, "rgba(255,96,30,0)");
 
           ctx.save();
           ctx.fillStyle = corona;
           ctx.beginPath();
-          ctx.arc(cx, cy, radius * 2.28, 0, Math.PI * 2);
+          ctx.arc(cx, cy, radius * 2.34, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
 
-        function drawPhotosphere(size) {
+        function generatePhotosphere(size) {
+          var image = ctx.createImageData(size, size);
+          var data = image.data;
           var cx = size / 2;
           var cy = size / 2;
           var radius = size * 0.315;
-          var image = ctx.createImageData(size, size);
-          var data = image.data;
 
           for (var y = 0; y < size; y += 1) {
             for (var x = 0; x < size; x += 1) {
@@ -576,24 +597,31 @@ visual-pass-claimed=false</pre>
                 continue;
               }
 
-              var limb = clamp((dist - 0.64) / 0.36, 0, 1);
+              var limb = clamp((dist - 0.63) / 0.37, 0, 1);
+              var angle = Math.atan2(dy, dx);
 
-              var broad = fbm(dx * 2.3 + phase * 0.035, dy * 2.3 - phase * 0.026, 13);
-              var medium = fbm(dx * 5.8 - phase * 0.075, dy * 5.8 + phase * 0.052, 31);
-              var fine = fbm(dx * 18.0 + phase * 0.11, dy * 18.0 - phase * 0.09, 71);
+              var broad = fbm(dx * 2.0, dy * 2.0, 13, 6);
+              var medium = fbm(dx * 6.5, dy * 6.5, 31, 6);
+              var fine = fbm(dx * 24.0, dy * 24.0, 71, 5);
+              var ultra = fbm(dx * 52.0, dy * 52.0, 103, 4);
+              var vein = ridged(noise(dx * 15.0 + Math.cos(angle) * 0.5, dy * 15.0 + Math.sin(angle) * 0.5, 147));
 
-              var activeRegionA = Math.exp(-((dx + 0.34) * (dx + 0.34) + (dy - 0.12) * (dy - 0.12)) / 0.020);
-              var activeRegionB = Math.exp(-((dx - 0.30) * (dx - 0.30) + (dy + 0.22) * (dy + 0.22)) / 0.030);
-              var darkerPatch = Math.exp(-((dx - 0.12) * (dx - 0.12) + (dy - 0.26) * (dy - 0.26)) / 0.022);
+              var activeRegionA = Math.exp(-((dx + 0.34) * (dx + 0.34) + (dy - 0.12) * (dy - 0.12)) / 0.018);
+              var activeRegionB = Math.exp(-((dx - 0.30) * (dx - 0.30) + (dy + 0.21) * (dy + 0.21)) / 0.026);
+              var activeRegionC = Math.exp(-((dx + 0.04) * (dx + 0.04) + (dy + 0.34) * (dy + 0.34)) / 0.020);
+              var subtleDark = Math.exp(-((dx - 0.10) * (dx - 0.10) + (dy - 0.28) * (dy - 0.28)) / 0.020);
 
               var brightness = clamp(
-                0.34 +
-                broad * 0.22 +
-                medium * 0.22 +
-                fine * 0.19 +
-                activeRegionA * 0.17 +
-                activeRegionB * 0.10 -
-                darkerPatch * 0.13 -
+                0.30 +
+                broad * 0.20 +
+                medium * 0.23 +
+                fine * 0.18 +
+                ultra * 0.10 +
+                vein * 0.08 +
+                activeRegionA * 0.15 +
+                activeRegionB * 0.10 +
+                activeRegionC * 0.07 -
+                subtleDark * 0.11 -
                 limb * 0.18,
                 0,
                 1
@@ -608,35 +636,80 @@ visual-pass-claimed=false</pre>
             }
           }
 
-          ctx.putImageData(image, 0, 0);
+          return image;
+        }
+
+        function paintStaticDisc() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawCorona(canvas.width / 2, canvas.height / 2, canvas.width * 0.315);
+
+          if (!staticImage) {
+            staticImage = generatePhotosphere(canvas.width);
+          }
+
+          ctx.putImageData(staticImage, 0, 0);
+
+          var cx = canvas.width / 2;
+          var cy = canvas.height / 2;
+          var radius = canvas.width * 0.315;
 
           var limbGradient = ctx.createRadialGradient(cx - radius * 0.30, cy - radius * 0.35, radius * 0.05, cx, cy, radius);
-          limbGradient.addColorStop(0, "rgba(255,255,230,0.13)");
+          limbGradient.addColorStop(0, "rgba(255,255,230,0.12)");
           limbGradient.addColorStop(0.30, "rgba(255,242,190,0.04)");
-          limbGradient.addColorStop(0.72, "rgba(255,170,70,0.02)");
-          limbGradient.addColorStop(1, "rgba(90,24,10,0.24)");
+          limbGradient.addColorStop(0.72, "rgba(255,170,70,0.018)");
+          limbGradient.addColorStop(1, "rgba(90,24,10,0.25)");
 
           ctx.save();
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, Math.PI * 2);
           ctx.clip();
           ctx.fillStyle = limbGradient;
-          ctx.fillRect(0, 0, size, size);
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.restore();
 
           ctx.save();
           ctx.strokeStyle = "rgba(255,226,154,0.30)";
-          ctx.lineWidth = 1.5;
+          ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(cx, cy, radius, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
         }
 
+        function drawDynamicLayer() {
+          var cx = canvas.width / 2;
+          var cy = canvas.height / 2;
+          var radius = canvas.width * 0.315;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.globalCompositeOperation = "screen";
+          ctx.globalAlpha = 0.10;
+
+          for (var i = 0; i < 9; i += 1) {
+            var a = phase * 0.38 + i * 0.698;
+            var ox = cx + Math.cos(a) * radius * 0.18;
+            var oy = cy + Math.sin(a * 0.73) * radius * 0.16;
+            var g = ctx.createRadialGradient(ox, oy, radius * 0.02, ox, oy, radius * 0.42);
+            g.addColorStop(0, "rgba(255,248,210,0.34)");
+            g.addColorStop(0.22, "rgba(255,222,130,0.16)");
+            g.addColorStop(1, "rgba(255,180,70,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(ox, oy, radius * 0.42, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+          ctx.globalCompositeOperation = "source-over";
+          ctx.globalAlpha = 1;
+        }
+
         function render() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawCorona(canvas.width / 2, canvas.height / 2, canvas.width * 0.315);
-          drawPhotosphere(canvas.width);
+          paintStaticDisc();
+          drawDynamicLayer();
           renderCount += 1;
         }
 
@@ -646,8 +719,8 @@ visual-pass-claimed=false</pre>
           if (!lastFrame) lastFrame = timestamp;
           var delta = timestamp - lastFrame;
 
-          if (delta > 1000 / 18) {
-            phase += speed * direction * 0.040;
+          if (delta > 1000 / 12) {
+            phase += speed * direction * 0.035;
             render();
             lastFrame = timestamp;
           }
@@ -687,24 +760,24 @@ visual-pass-claimed=false</pre>
         }
 
         function slow() {
-          speed = 0.10;
+          speed = 0.08;
           return getStatus();
         }
 
         function normal() {
-          speed = 0.22;
+          speed = 0.18;
           return getStatus();
         }
 
         function fast() {
-          speed = 0.46;
+          speed = 0.34;
           return getStatus();
         }
 
         function setSpeed(value) {
           var n = Number(value);
           if (n > 1) n = n / 100;
-          speed = clamp(n, 0, 1) * 0.62;
+          speed = clamp(n, 0, 1) * 0.48;
           return getStatus();
         }
 
@@ -723,17 +796,20 @@ visual-pass-claimed=false</pre>
           return {
             ok: true,
             version: VERSION,
-            role: "SUN_G1_ACTUAL_SOLAR_DISC_RUNTIME",
+            role: "SUN_G1_4K_SOLAR_DETAIL_RUNTIME",
             running: running,
             circular: true,
             solarDisc: true,
+            highDensitySampling: true,
             photosphereGranulation: true,
+            activeRegions: "subtle",
             limbDarkening: true,
             controlledCorona: true,
             renderCount: renderCount,
             earthG1Complete: true,
             moonQueued: true,
             planetOneReserved: true,
+            lockReady: true,
             visualPassClaimed: false
           };
         }
@@ -802,12 +878,12 @@ visual-pass-claimed=false</pre>
         clearTarget(target, "sun");
 
         byId("control-title").textContent = "Sun G1 motion control";
-        byId("control-note").textContent = "Sun G1 uses a dedicated solar-disc runtime: photosphere texture, limb darkening, and controlled corona.";
+        byId("control-note").textContent = "Sun G1 uses high-detail solar-disc runtime: photosphere texture, limb darkening, subtle active regions, and controlled corona.";
 
         sunRuntime = createSunRuntime(target);
         sunRuntime.start();
 
-        writeReceipt("SUN_G1_ACTUAL_SOLAR_DISC_MOUNTED");
+        writeReceipt("SUN_G1_4K_SOLAR_DETAIL_MOUNTED_LOCK_READY");
         return true;
       }
 
@@ -860,7 +936,7 @@ visual-pass-claimed=false</pre>
         setTimeout(mountEarth, 900);
       }
 
-      window.DGBSunG1ActualSolarDiscRuntime = {
+      window.DGBSunG14KSolarDetailRuntime = {
         VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
@@ -873,7 +949,8 @@ visual-pass-claimed=false</pre>
             route: "/showroom/globe/",
             currentBody: currentBody,
             earthG1Complete: true,
-            sunG1ActualSolarDisc: true,
+            sunG14KSolarDetail: true,
+            sunG1LockReady: true,
             moonQueued: true,
             planetOneReservedFor: "nine-summits-universe",
             visualPassClaimed: false

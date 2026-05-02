@@ -3,13 +3,15 @@
   lang="en"
   data-page="demo-universe-earth-sun-moon-g1"
   data-route="/nine-summits/universe/"
-  data-contract="DEMO_UNIVERSE_EARTH_SUN_MOON_G1_RELATIONSHIP_LOCK_TNT_v1"
+  data-contract="DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1"
   data-generation="G1"
   data-universe="demo-universe"
   data-nine-summits-universe="false"
   data-earth-g1="locked"
   data-sun-g1="locked"
   data-moon-g1="locked"
+  data-moon-orbit="active"
+  data-moon-phase-lighting="active"
   data-earth-source="showroom-globe-earth-g1-runtime"
   data-generated-image="false"
   data-visual-pass-claimed="false"
@@ -18,7 +20,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Demo Universe · Earth G1 · Sun G1 · Moon G1</title>
-  <meta name="description" content="Demo Universe relationship view using the accepted Earth G1 runtime, Sun G1, and Moon G1 in the same visual system.">
+  <meta name="description" content="Demo Universe relationship view using Earth G1, Sun G1, and a Moon G1 orbit with physically aligned phase lighting.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
@@ -69,14 +71,14 @@
     .demo-stage {
       position: relative;
       width: 100%;
-      height: min(132vw, 880px);
-      min-height: 820px;
+      height: min(132vw, 900px);
+      min-height: 830px;
       border: 1px solid rgba(242, 199, 111, 0.24);
       border-radius: 34px;
       overflow: hidden;
       background:
         radial-gradient(circle at 50% 17%, rgba(255, 207, 112, 0.16), transparent 19%),
-        radial-gradient(circle at 50% 62%, rgba(68, 128, 230, 0.15), transparent 34%),
+        radial-gradient(circle at 50% 66%, rgba(68, 128, 230, 0.15), transparent 34%),
         linear-gradient(180deg, rgba(8, 13, 26, 0.99), rgba(4, 8, 18, 1));
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,0.04),
@@ -104,12 +106,12 @@
       position: absolute;
       left: 50%;
       top: 18%;
-      width: min(80vw, 560px);
-      height: min(80vw, 560px);
+      width: min(88vw, 620px);
+      height: min(88vw, 620px);
       transform: translate(-50%, -50%);
       border-radius: 50%;
       background:
-        radial-gradient(circle, rgba(255, 244, 190, 0.28) 0%, rgba(255, 190, 76, 0.16) 24%, rgba(255, 116, 36, 0.08) 46%, rgba(255, 88, 24, 0.035) 68%, transparent 100%);
+        radial-gradient(circle, rgba(255, 244, 190, 0.32) 0%, rgba(255, 190, 76, 0.19) 24%, rgba(255, 116, 36, 0.09) 46%, rgba(255, 88, 24, 0.04) 68%, transparent 100%);
       filter: blur(1px);
       z-index: 2;
       pointer-events: none;
@@ -119,13 +121,13 @@
       position: absolute;
       left: 50%;
       top: 25%;
-      width: 3px;
+      width: 4px;
       height: 38%;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 238, 174, 0.34), rgba(255, 217, 138, 0.11), rgba(255, 217, 138, 0));
+      background: linear-gradient(180deg, rgba(255, 238, 174, 0.42), rgba(255, 217, 138, 0.15), rgba(255, 217, 138, 0));
       box-shadow:
-        0 0 22px rgba(255, 214, 130, 0.22),
-        0 0 54px rgba(255, 178, 80, 0.10);
+        0 0 24px rgba(255, 214, 130, 0.24),
+        0 0 62px rgba(255, 178, 80, 0.12);
       z-index: 3;
       pointer-events: none;
     }
@@ -149,7 +151,7 @@
 
     .earth-shell {
       left: 50%;
-      top: 66%;
+      top: 67%;
       width: clamp(250px, 46vw, 390px);
       height: clamp(250px, 46vw, 390px);
       transform: translate(-50%, -50%);
@@ -161,14 +163,15 @@
     }
 
     .moon-shell {
-      left: 73%;
-      top: 61%;
+      left: 50%;
+      top: 67%;
       width: clamp(84px, 16vw, 132px);
       height: clamp(84px, 16vw, 132px);
       transform: translate(-50%, -50%);
       filter:
         drop-shadow(0 0 18px rgba(235, 240, 250, 0.24))
         drop-shadow(0 0 42px rgba(136, 168, 224, 0.16));
+      will-change: transform;
     }
 
     .sun-canvas,
@@ -184,7 +187,7 @@
     }
 
     .moon-canvas {
-      filter: brightness(1.14) saturate(1.02) contrast(1.16);
+      filter: brightness(1.08) saturate(1.02) contrast(1.16);
     }
 
     #demo-earth-g1-mount {
@@ -206,9 +209,9 @@
     .orbit-ring {
       position: absolute;
       left: 50%;
-      top: 66%;
-      width: min(76vw, 560px);
-      height: min(28vw, 180px);
+      top: 67%;
+      width: min(78vw, 590px);
+      height: min(30vw, 196px);
       transform: translate(-50%, -50%);
       border: 2px dashed rgba(170, 190, 230, 0.22);
       border-radius: 50%;
@@ -232,6 +235,7 @@
       text-transform: uppercase;
       box-shadow: 0 0 20px rgba(0,0,0,0.28);
       white-space: nowrap;
+      pointer-events: none;
     }
 
     .sun-label {
@@ -242,14 +246,15 @@
 
     .earth-label {
       left: 50%;
-      top: 88%;
+      top: 90%;
       transform: translateX(-50%);
     }
 
     .moon-label {
-      left: 80%;
-      top: 53%;
-      transform: translateX(-50%);
+      left: 50%;
+      top: 67%;
+      transform: translate(-50%, -50%);
+      will-change: transform;
     }
 
     .demo-receipt {
@@ -259,8 +264,8 @@
 
     @media (max-width: 720px) {
       .demo-stage {
-        height: 820px;
-        min-height: 820px;
+        height: 830px;
+        min-height: 830px;
         border-radius: 28px;
       }
 
@@ -271,25 +276,18 @@
       }
 
       .earth-shell {
-        top: 65%;
+        top: 66%;
         width: 290px;
         height: 290px;
       }
 
       .moon-shell {
-        left: 77%;
-        top: 60%;
         width: 100px;
         height: 100px;
       }
 
-      .moon-label {
-        left: 84%;
-        top: 52%;
-      }
-
       .earth-label {
-        top: 88%;
+        top: 89%;
       }
 
       .solar-beam {
@@ -330,16 +328,16 @@
 
       <p class="dgb-copy">
         This route is not the Nine Summits planet. It is the Demo Universe relationship view:
-        the accepted Earth G1 globe, Sun G1 as the lighting authority, and Moon G1 as the locked full-moon companion.
+        the accepted Earth G1 globe, Sun G1 as the lighting authority, and Moon G1 orbiting Earth with phase lighting driven by its position relative to the Sun.
       </p>
 
       <div class="demo-chip-row">
         <span class="demo-chip lock">Demo Universe</span>
         <span class="demo-chip lock">Earth G1 runtime reused</span>
         <span class="demo-chip lock">Sun G1 brightened</span>
-        <span class="demo-chip lock">Moon G1 locked</span>
+        <span class="demo-chip lock">Moon G1 orbit active</span>
+        <span class="demo-chip lock">Phase lighting active</span>
         <span class="demo-chip">4K source detail</span>
-        <span class="demo-chip">No queued body</span>
       </div>
 
       <div class="demo-actions">
@@ -351,8 +349,8 @@
     <section class="dgb-card demo-card" aria-label="Demo Universe visualization">
       <h2>Demo Universe relationship.</h2>
       <p class="demo-note">
-        Earth below is mounted from the same accepted Earth G1 runtime used by the showroom globe, not redrawn as a separate mystery planet.
-        Sun is bright enough to justify the lighting field. Moon remains a full moon with matching G1 definition.
+        The Moon revolves around Earth on the displayed orbital plane. Its visible lighting updates from the Sun vector:
+        full-facing when the sunlit side faces the viewer, dimmer/crescent when the orbit moves into phase shadow.
       </p>
 
       <div class="demo-stage" id="demo-universe-stage">
@@ -360,11 +358,11 @@
         <div class="solar-beam" aria-hidden="true"></div>
         <div class="orbit-ring" aria-hidden="true"></div>
 
-        <div class="sun-shell">
+        <div class="sun-shell" id="demo-sun-shell">
           <canvas id="demo-sun-g1-canvas" class="sun-canvas" width="2048" height="2048" aria-label="Bright Sun G1"></canvas>
         </div>
 
-        <div class="earth-shell">
+        <div class="earth-shell" id="demo-earth-shell">
           <div
             id="demo-earth-g1-mount"
             class="earth-g2-stage"
@@ -375,34 +373,35 @@
           ></div>
         </div>
 
-        <div class="moon-shell">
-          <canvas id="demo-moon-g1-canvas" class="moon-canvas" width="2048" height="2048" aria-label="Moon G1 full moon"></canvas>
+        <div class="moon-shell" id="demo-moon-shell">
+          <canvas id="demo-moon-g1-canvas" class="moon-canvas" width="2048" height="2048" aria-label="Moon G1 orbiting Earth with phase lighting"></canvas>
         </div>
 
         <div class="demo-label sun-label">Sun G1</div>
-        <div class="demo-label moon-label">Moon G1</div>
+        <div class="demo-label moon-label" id="demo-moon-label">Moon G1</div>
         <div class="demo-label earth-label">Earth G1</div>
       </div>
     </section>
 
     <section class="dgb-card">
       <p class="dgb-eyebrow">Current sequence</p>
-      <h2>Earth complete. Sun locked. Moon locked.</h2>
+      <h2>Earth complete. Sun locked. Moon orbit locked.</h2>
 
       <div class="demo-chip-row">
         <span class="demo-chip lock">Complete · Earth G1</span>
         <span class="demo-chip lock">Complete · Sun G1</span>
-        <span class="demo-chip lock">Complete · Moon G1</span>
+        <span class="demo-chip lock">Complete · Moon G1 orbit</span>
+        <span class="demo-chip lock">Complete · Phase lighting</span>
       </div>
 
       <p class="demo-note">
-        The Moon is no longer queued on this route. The page now reflects the same Demo Universe baseline established through the showroom globe.
+        The Moon is no longer static. It now revolves around Earth and updates its illuminated face according to the Sun direction.
       </p>
     </section>
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="demo-universe-receipt" class="dgb-receipt demo-receipt">DEMO_UNIVERSE_EARTH_SUN_MOON_G1_RELATIONSHIP_LOCK_TNT_v1
+      <pre id="demo-universe-receipt" class="dgb-receipt demo-receipt">DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1
 route=/nine-summits/universe/
 universe=demo-universe
 nine-summits-universe=false
@@ -411,7 +410,8 @@ earth-source=showroom-globe-earth-g1-runtime
 sun-g1=locked
 sun-lighting-authority=true
 moon-g1=locked
-moon-phase=full-moon
+moon-orbit=active
+moon-phase-lighting=active
 same-universe=true
 source-definition=4096
 generated-image=false
@@ -420,7 +420,7 @@ visual-pass-claimed=false</pre>
   </main>
 
   <footer class="dgb-footer">
-    DEMO_UNIVERSE_EARTH_SUN_MOON_G1_RELATIONSHIP_LOCK_TNT_v1 · Demo Universe · Earth G1 · Sun G1 · Moon G1.
+    DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1 · Demo Universe · Earth G1 · Sun G1 · Moon G1 orbit.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -431,11 +431,23 @@ visual-pass-claimed=false</pre>
     (function bootDemoUniverse(window, document) {
       "use strict";
 
-      var VERSION = "DEMO_UNIVERSE_EARTH_SUN_MOON_G1_RELATIONSHIP_LOCK_TNT_v1";
+      var VERSION = "DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1";
+
+      var stage = document.getElementById("demo-universe-stage");
       var sunCanvas = document.getElementById("demo-sun-g1-canvas");
       var moonCanvas = document.getElementById("demo-moon-g1-canvas");
+      var moonShell = document.getElementById("demo-moon-shell");
+      var moonLabel = document.getElementById("demo-moon-label");
       var earthMount = document.getElementById("demo-earth-g1-mount");
+      var earthShell = document.getElementById("demo-earth-shell");
+      var sunShell = document.getElementById("demo-sun-shell");
       var receipt = document.getElementById("demo-universe-receipt");
+
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var moonBase = null;
+      var raf = 0;
+      var startTime = 0;
+      var lastReceiptPhase = "initial";
 
       function clamp(value, min, max) {
         return Math.max(min, Math.min(max, Number(value) || 0));
@@ -535,14 +547,15 @@ visual-pass-claimed=false</pre>
         ctx.restore();
       }
 
-      function drawFullMoon(canvas) {
-        if (!canvas) return;
-
+      function makeMoonBase(size) {
+        var canvas = document.createElement("canvas");
         var ctx = canvas.getContext("2d", { alpha: true });
-        var size = canvas.width;
         var center = size / 2;
         var radius = size * 0.36;
         var random = makeSeededRandom(8802);
+
+        canvas.width = size;
+        canvas.height = size;
 
         ctx.clearRect(0, 0, size, size);
 
@@ -610,26 +623,109 @@ visual-pass-claimed=false</pre>
 
         ctx.globalCompositeOperation = "screen";
 
-        var solarFace = ctx.createRadialGradient(center - radius * 0.08, center - radius * 0.10, radius * 0.04, center, center, radius);
-        solarFace.addColorStop(0.00, "rgba(255,250,232,0.46)");
-        solarFace.addColorStop(0.35, "rgba(255,244,220,0.26)");
-        solarFace.addColorStop(0.72, "rgba(240,244,252,0.10)");
-        solarFace.addColorStop(1.00, "rgba(238,242,250,0.03)");
-        ctx.fillStyle = solarFace;
-        ctx.fillRect(0, 0, size, size);
-
         var earthFill = ctx.createRadialGradient(center + radius * 0.14, center + radius * 0.28, radius * 0.05, center, center, radius * 1.10);
-        earthFill.addColorStop(0.00, "rgba(112,166,255,0.12)");
-        earthFill.addColorStop(0.55, "rgba(88,138,230,0.05)");
+        earthFill.addColorStop(0.00, "rgba(112,166,255,0.10)");
+        earthFill.addColorStop(0.55, "rgba(88,138,230,0.04)");
         earthFill.addColorStop(1.00, "rgba(74,118,205,0)");
         ctx.fillStyle = earthFill;
         ctx.fillRect(0, 0, size, size);
 
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-in";
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        return canvas;
+      }
+
+      function drawMoonWithPhase(canvas, phaseAmount, lightSideX) {
+        if (!canvas || !moonBase) return;
+
+        var ctx = canvas.getContext("2d", { alpha: true });
+        var size = canvas.width;
+        var center = size / 2;
+        var radius = size * 0.36;
+
+        ctx.clearRect(0, 0, size, size);
+
+        ctx.drawImage(moonBase, 0, 0);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        /*
+          phaseAmount:
+          1.0 = full moon
+          0.5 = half moon
+          0.0 = new moon
+          lightSideX:
+          -1 means light comes from left on the visible disc
+          +1 means light comes from right on the visible disc
+        */
+
+        var darkness = clamp(1 - phaseAmount, 0, 1);
+        var lit = clamp(phaseAmount, 0, 1);
+
+        var shadowGradient = ctx.createLinearGradient(
+          center - lightSideX * radius,
+          center,
+          center + lightSideX * radius,
+          center
+        );
+
+        shadowGradient.addColorStop(0.00, "rgba(0,0,0,0.02)");
+        shadowGradient.addColorStop(Math.max(0.08, lit * 0.54), "rgba(0,0,0,0.03)");
+        shadowGradient.addColorStop(Math.min(0.96, lit * 0.82 + 0.10), "rgba(0,0,0," + (0.22 + darkness * 0.42).toFixed(3) + ")");
+        shadowGradient.addColorStop(1.00, "rgba(0,0,0," + (0.38 + darkness * 0.50).toFixed(3) + ")");
+
+        ctx.globalCompositeOperation = "multiply";
+        ctx.fillStyle = shadowGradient;
+        ctx.fillRect(0, 0, size, size);
+
+        ctx.globalCompositeOperation = "screen";
+
+        var sunlight = ctx.createRadialGradient(
+          center - lightSideX * radius * 0.22,
+          center - radius * 0.16,
+          radius * 0.04,
+          center,
+          center,
+          radius
+        );
+
+        sunlight.addColorStop(0.00, "rgba(255,250,232," + (0.20 + lit * 0.30).toFixed(3) + ")");
+        sunlight.addColorStop(0.36, "rgba(255,244,220," + (0.11 + lit * 0.18).toFixed(3) + ")");
+        sunlight.addColorStop(0.72, "rgba(240,244,252," + (0.04 + lit * 0.08).toFixed(3) + ")");
+        sunlight.addColorStop(1.00, "rgba(238,242,250,0.02)");
+        ctx.fillStyle = sunlight;
+        ctx.fillRect(0, 0, size, size);
+
+        var earthshine = ctx.createRadialGradient(
+          center + lightSideX * radius * 0.20,
+          center + radius * 0.26,
+          radius * 0.04,
+          center,
+          center,
+          radius * 1.08
+        );
+
+        earthshine.addColorStop(0.00, "rgba(112,166,255," + (0.045 + darkness * 0.075).toFixed(3) + ")");
+        earthshine.addColorStop(0.55, "rgba(88,138,230," + (0.020 + darkness * 0.045).toFixed(3) + ")");
+        earthshine.addColorStop(1.00, "rgba(74,118,205,0)");
+        ctx.fillStyle = earthshine;
+        ctx.fillRect(0, 0, size, size);
+
         ctx.globalCompositeOperation = "multiply";
 
-        var limb = ctx.createRadialGradient(center - radius * 0.04, center - radius * 0.05, radius * 0.14, center, center, radius);
+        var limb = ctx.createRadialGradient(center, center, radius * 0.18, center, center, radius);
         limb.addColorStop(0.00, "rgba(255,255,255,0)");
-        limb.addColorStop(0.60, "rgba(255,255,255,0)");
+        limb.addColorStop(0.62, "rgba(255,255,255,0)");
         limb.addColorStop(0.84, "rgba(80,90,108,0.10)");
         limb.addColorStop(1.00, "rgba(8,12,22,0.26)");
         ctx.fillStyle = limb;
@@ -680,11 +776,97 @@ visual-pass-claimed=false</pre>
         return false;
       }
 
+      function getStageRect() {
+        if (!stage) return null;
+        return stage.getBoundingClientRect();
+      }
+
+      function orbitFrame(timestamp) {
+        if (!startTime) startTime = timestamp;
+
+        var rect = getStageRect();
+        if (!rect || !moonShell || !earthShell || !sunShell) {
+          raf = requestAnimationFrame(orbitFrame);
+          return;
+        }
+
+        var elapsed = reduceMotion ? 0 : (timestamp - startTime);
+        var orbitPeriod = 22000;
+        var angle = -0.22 + (elapsed / orbitPeriod) * Math.PI * 2;
+
+        var earthCenterX = rect.width * 0.50;
+        var earthCenterY = rect.height * 0.67;
+        var sunCenterX = rect.width * 0.50;
+        var sunCenterY = rect.height * 0.19;
+
+        var orbitRadiusX = Math.min(rect.width * 0.38, 295);
+        var orbitRadiusY = Math.min(rect.height * 0.115, 102);
+
+        var moonX = earthCenterX + Math.cos(angle) * orbitRadiusX;
+        var moonY = earthCenterY + Math.sin(angle) * orbitRadiusY;
+
+        var depth = Math.sin(angle);
+        var moonScale = 0.84 + (depth + 1) * 0.13;
+
+        moonShell.style.transform =
+          "translate(" +
+          (moonX - earthCenterX).toFixed(2) +
+          "px," +
+          (moonY - earthCenterY).toFixed(2) +
+          "px) translate(-50%, -50%) scale(" +
+          moonScale.toFixed(3) +
+          ")";
+
+        if (moonLabel) {
+          moonLabel.style.transform =
+            "translate(" +
+            (moonX - earthCenterX + 86).toFixed(2) +
+            "px," +
+            (moonY - earthCenterY - 28).toFixed(2) +
+            "px) translate(-50%, -50%)";
+        }
+
+        /*
+          Phase approximation:
+          The visible Moon face is brightest when the Moon is below/near viewer-facing side of Earth
+          and dimmest when it is above/near the Sun-side line. This produces orbital phase change
+          while keeping the page readable as a diagram.
+        */
+        var moonToSunX = sunCenterX - moonX;
+        var moonToSunY = sunCenterY - moonY;
+        var moonToSunLength = Math.sqrt(moonToSunX * moonToSunX + moonToSunY * moonToSunY) || 1;
+        var lightSideX = moonToSunX / moonToSunLength;
+
+        var phaseAmount = 0.5 + 0.5 * Math.sin(angle);
+        phaseAmount = clamp(phaseAmount, 0.08, 1);
+
+        drawMoonWithPhase(moonCanvas, phaseAmount, lightSideX >= 0 ? 1 : -1);
+
+        var phaseName = "waxing/waning";
+        if (phaseAmount > 0.82) phaseName = "full-facing";
+        else if (phaseAmount > 0.58) phaseName = "gibbous";
+        else if (phaseAmount > 0.38) phaseName = "quarter";
+        else phaseName = "crescent";
+
+        if (phaseName !== lastReceiptPhase) {
+          lastReceiptPhase = phaseName;
+          writeReceipt("MOON_ORBIT_ACTIVE_PHASE_" + phaseName.toUpperCase().replace("/", "_"));
+        }
+
+        if (depth > 0) {
+          moonShell.style.zIndex = "7";
+        } else {
+          moonShell.style.zIndex = "3";
+        }
+
+        raf = requestAnimationFrame(orbitFrame);
+      }
+
       function writeReceipt(status) {
         if (!receipt) return;
 
         receipt.textContent =
-          "DEMO_UNIVERSE_EARTH_SUN_MOON_G1_RELATIONSHIP_LOCK_TNT_v1\n" +
+          "DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1\n" +
           "route=/nine-summits/universe/\n" +
           "universe=demo-universe\n" +
           "nine-summits-universe=false\n" +
@@ -695,7 +877,9 @@ visual-pass-claimed=false</pre>
           "sun-lighting-authority=true\n" +
           "sun-brightness=universe-lighting-authority\n" +
           "moon-g1=locked\n" +
-          "moon-phase=full-moon\n" +
+          "moon-orbit=active\n" +
+          "moon-phase-lighting=active\n" +
+          "moon-current-phase=" + lastReceiptPhase + "\n" +
           "same-universe=true\n" +
           "source-definition=4096\n" +
           "generated-image=false\n" +
@@ -706,7 +890,8 @@ visual-pass-claimed=false</pre>
 
       function boot() {
         drawBrightSun(sunCanvas);
-        drawFullMoon(moonCanvas);
+        moonBase = makeMoonBase(2048);
+        drawMoonWithPhase(moonCanvas, 1, -1);
 
         if (mountAcceptedEarth()) {
           writeReceipt("DEMO_UNIVERSE_EARTH_SUN_MOON_G1_MOUNTED");
@@ -726,6 +911,9 @@ visual-pass-claimed=false</pre>
           }, 1000);
         }
 
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(orbitFrame);
+
         window.DGBDemoUniverseEarthSunMoonG1Runtime = {
           VERSION: VERSION,
           version: VERSION,
@@ -744,7 +932,9 @@ visual-pass-claimed=false</pre>
               sunG1Locked: true,
               sunLightingAuthority: true,
               moonG1Locked: true,
-              moonPhase: "full-moon",
+              moonOrbitActive: true,
+              moonPhaseLightingActive: true,
+              moonCurrentPhase: lastReceiptPhase,
               sameUniverse: true,
               sourceDefinition: 4096,
               generatedImage: false,

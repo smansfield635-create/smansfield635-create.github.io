@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Gauges · Planet 1 Latest Tech</title>
+  <title>Diamond Gate Bridge · Gauges · Planet 1 Tri-Domain 256</title>
 
   <style>
     :root {
@@ -321,20 +321,20 @@
 
   <main id="gauges-content">
     <div class="hero">
-      <p class="eyebrow">H6 · Gauges · Latest Tech Source Route Water Divide Renewal</p>
-      <h1>Planet 1 Latest Technology Diagnostic</h1>
+      <p class="eyebrow">H6 · Gauges · Tri-Domain 256 Whole-World Container</p>
+      <h1>Planet 1 Tri-Domain 256 Diagnostic</h1>
       <p>
-        This Gauges renewal measures the current Planet 1 Generation 1 water-divide / phase-state render chain.
-        It rejects legacy expectation drift, checks source truth, verifies route activation, probes active globals,
-        reads marker receipts, and preserves visual hold.
+        This Gauges contract measures the current water-land-air cycle: WATER_256, LAND_256, AIR_256,
+        and WHOLE_WORLD_256 inside one planetary container. It preserves visual hold and rejects legacy
+        single-domain readings.
       </p>
 
       <div class="contract">
-        SERVED_CONTRACT=G1_PLANET_1_GAUGES_LATEST_TECH_SOURCE_ROUTE_WATER_DIVIDE_RENEWAL_CONTRACT_v1
+        SERVED_CONTRACT=G1_PLANET_1_GAUGES_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_RENEWAL_CONTRACT_v1
       </div>
 
       <div class="buttons">
-        <button id="runFullDiagnostic" type="button">Run latest-tech diagnostic</button>
+        <button id="runFullDiagnostic" type="button">Run tri-domain diagnostic</button>
         <button id="runRouteDiagnostic" type="button">Run route/global probe</button>
         <button id="runServedSourceDiagnostic" type="button">Run served-source probe</button>
         <a class="button-link" href="/showroom/globe/">Open Planet 1 inspection</a>
@@ -347,8 +347,8 @@
         <div class="metric">Architecture health</div>
       </div>
       <div class="card">
-        <div id="latestTechState" class="state NOT_TESTED">NOT TESTED</div>
-        <div class="metric">Latest tech chain</div>
+        <div id="triDomainState" class="state NOT_TESTED">NOT TESTED</div>
+        <div class="metric">Tri-domain chain</div>
       </div>
       <div class="card">
         <div id="controllingGapState" class="state NOT_TESTED">NOT TESTED</div>
@@ -386,7 +386,7 @@
 
     <section class="panel">
       <div class="panel-head">
-        <h2>Latest Marker Health</h2>
+        <h2>Tri-Domain Marker Health</h2>
         <span id="markerBadge" class="pill NOT_TESTED">NOT TESTED</span>
       </div>
       <div class="panel-body" id="markerOutput"></div>
@@ -406,39 +406,29 @@
         <span id="receiptBadge" class="pill NOT_TESTED">NOT TESTED</span>
       </div>
       <div class="panel-body">
-        <pre id="liveReceipt">Run diagnostic to generate latest-tech receipt.</pre>
+        <pre id="liveReceipt">Run diagnostic to generate tri-domain receipt.</pre>
       </div>
     </section>
   </main>
 
   <script>
-    (function attachLatestTechGauges(global) {
+    (function attachTriDomainGauges(global) {
       "use strict";
 
-      var CONTRACT_VERSION = "G1_PLANET_1_GAUGES_LATEST_TECH_SOURCE_ROUTE_WATER_DIVIDE_RENEWAL_CONTRACT_v1";
-      var GAUGES_VERSION = "G1_PLANET_1_GAUGES_LATEST_TECH_SOURCE_ROUTE_WATER_DIVIDE_RENEWAL_TNT_v1";
+      var CONTRACT_VERSION = "G1_PLANET_1_GAUGES_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_RENEWAL_CONTRACT_v1";
+      var GAUGES_VERSION = "G1_PLANET_1_GAUGES_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_RENEWAL_TNT_v1";
 
       var ROUTE_REPAIR_VERSION = "G1_PLANET_1_RENDERER_SOURCE_AND_SHOWROOM_ROUTE_ACTIVATION_REPAIR_TNT_v1";
       var RENDERER_REQUIRED = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+      var TRI_DOMAIN_LAYER_REQUIRED = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
       var HYDRATION_REQUIRED = "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1";
       var BASELINE_REQUIRED = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
-
-      var HEXGRID_ACCEPTED = [
-        "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1",
-        "G1_PLANET_1_TERRAIN_LIFE_GLACIER_DIVIDE_REFINEMENT_TNT_v1"
-      ];
-
-      var LEGACY_FORWARD_MARKERS = [
-        "G1_PLANET_1_TERRAIN_DEPTH_NORMAL_RELIEF_TRANSLATION_PAIR_TNT_v1",
-        "G1_PLANET_1_TERRAIN_STARTLINE_LOW_EMERGENCE_TNT_v1",
-        "G5_ARCHITECTURE_BASELINE_ARCHIVED"
-      ];
 
       var FILE_PROBES = [
         { key: "route", path: "/showroom/globe/", requiredAny: [ROUTE_REPAIR_VERSION, RENDERER_REQUIRED], route: true },
         { key: "hydration", path: "/world/render/planet-one.hydration.render.js", requiredAny: [HYDRATION_REQUIRED] },
-        { key: "hexgrid", path: "/world/render/planet-one.hexgrid.render.js", requiredAny: HEXGRID_ACCEPTED },
-        { key: "renderer", path: "/world/render/planet-one.render.js", requiredAny: [RENDERER_REQUIRED] },
+        { key: "hexgrid", path: "/world/render/planet-one.hexgrid.render.js", requiredAny: [TRI_DOMAIN_LAYER_REQUIRED] },
+        { key: "renderer", path: "/world/render/planet-one.render.js", requiredAny: [TRI_DOMAIN_LAYER_REQUIRED] },
         { key: "worldRuntime", path: "/world/runtime.js", requiredAny: [] },
         { key: "worldControl", path: "/world/control.js", requiredAny: [] },
         { key: "assetBridge", path: "/assets/showroom.globe.instrument.js", requiredAny: [] },
@@ -469,67 +459,43 @@
         "DGBPlanetOneRouteActivationRepairReceipt"
       ];
 
-      var HYDRATION_EXPECTED = [
-        "hydrationDepthLayerActive",
-        "beachThresholdLayerActive",
-        "waterDepthFieldActive",
-        "beachCandidateFieldActive",
-        "beachLockFieldActive",
-        "hydrationOwnsWaterDepthOnly",
-        "hydrationRevealsBeachThresholdOnly"
-      ];
-
-      var HEXGRID_EXPECTED = [
-        "terrainLifeLowReliefActive",
-        "lowEmergentLandFieldActive",
-        "wetLowlandFieldActive",
-        "dryLowlandFieldActive",
-        "softLandToneFieldActive",
-        "earlyStoneToneFieldActive",
-        "microReliefFieldActive",
-        "waterResponseFieldActive",
-        "highElevationFrozenWaterCandidateFieldActive",
-        "watershedDivideCandidateFieldActive",
-        "futureMeltPathPermissionFieldActive",
+      var TRI_DOMAIN_HEXGRID_EXPECTED = [
+        "wholeWorldContainerActive",
+        "triDomain256Active",
+        "water256Active",
+        "land256Active",
+        "air256Active",
+        "wholeWorld256Active",
+        "triDomainCycleActive",
+        "domainContactZonesActive",
+        "waterLandExchangeActive",
+        "landAirExchangeActive",
+        "airWaterExchangeActive",
+        "waterSovereigntyPreserved",
         "terrainAuthorityBlocked",
         "hydrationReadOnlyPreserved",
-        "terrainFillBlocked"
+        "unauthorizedPaintBlocked"
       ];
 
-      var RENDERER_EXPECTED = [
-        "terrainLifeRendered",
-        "lowReliefRendered",
-        "wetDryTerrainVariationRendered",
-        "waterDivideRendered",
-        "phaseStateDivideRendered",
-        "highElevationIceStateRendered",
-        "highElevationFrozenWaterCandidateRendered",
-        "watershedDivideHintRendered",
-        "futureMeltPathHeld",
+      var TRI_DOMAIN_RENDERER_EXPECTED = [
+        "wholeWorldContainerRendered",
+        "triDomain256Rendered",
+        "water256Rendered",
+        "land256Rendered",
+        "air256Rendered",
+        "wholeWorld256Rendered",
+        "triDomainCycleRendered",
+        "domainContactZonesRendered",
+        "waterLandExchangeRendered",
+        "landAirExchangeRendered",
+        "airWaterExchangeRendered",
         "waterRemainsSovereign",
-        "elevationTransformsWaterState",
-        "noGlacierDivideAuthority",
-        "noSeparateGlacierSystem",
-        "waterDepthPreserved",
-        "reefShelfPreserved",
-        "beachThresholdPreserved",
-        "hydrationReadOnlyPreserved",
         "terrainAuthorityBlocked",
-        "terrainFillBlocked",
+        "hydrationReadOnlyPreserved",
         "noBlobReintroduced",
         "noMountainRelief",
         "noRiverNetwork",
         "noFullGlacierSystem"
-      ];
-
-      var ROUTE_REPAIR_EXPECTED = [
-        "routeActivationVersion",
-        "expectedRendererVersion",
-        "rendererVersionCurrent",
-        "routeLoadsHydrationFirst",
-        "routeLoadsHexgridSecond",
-        "routeLoadsRendererThird",
-        "noTerrainOwnershipByRoute"
       ];
 
       var lastReceipt = null;
@@ -574,7 +540,7 @@
 
       function cacheBust(path) {
         var joiner = path.indexOf("?") === -1 ? "?" : "&";
-        return path + joiner + "_latest_tech_gauges=" + encodeURIComponent(GAUGES_VERSION) + "&_t=" + Date.now();
+        return path + joiner + "_tri_domain_gauges=" + encodeURIComponent(GAUGES_VERSION) + "&_t=" + Date.now();
       }
 
       function fetchText(path) {
@@ -610,13 +576,15 @@
         var seen = {};
         var regex = /\b(?:G1|G5|PLANET_1|SHOWROOM|DGB)[A-Z0-9_/-]*(?:TNT|CONTRACT|BASELINE|REPAIR|RENEWAL|REFINEMENT|DIAGNOSTIC|LOCK_IN|v\d+)[A-Z0-9_/-]*/g;
         var match;
+
         while ((match = regex.exec(text || "")) !== null) {
           if (!seen[match[0]]) {
             markers.push(match[0]);
             seen[match[0]] = true;
           }
         }
-        return markers.slice(0, 50);
+
+        return markers.slice(0, 60);
       }
 
       function contains(text, marker) {
@@ -635,11 +603,9 @@
         var requiredPresent = probe.requiredAny && probe.requiredAny.length ? containsAny(text, probe.requiredAny) : null;
         var routeRepairPresent = contains(text, ROUTE_REPAIR_VERSION);
         var rendererRequiredPresent = contains(text, RENDERER_REQUIRED);
+        var triDomainLayerPresent = contains(text, TRI_DOMAIN_LAYER_REQUIRED);
         var hydrationRequiredPresent = contains(text, HYDRATION_REQUIRED);
         var baselinePresent = contains(text, BASELINE_REQUIRED);
-        var legacyPresent = LEGACY_FORWARD_MARKERS.filter(function (marker) {
-          return contains(text, marker);
-        });
 
         var state = "PASS";
         var note = "OK";
@@ -650,15 +616,12 @@
         } else if (probe.requiredAny && probe.requiredAny.length && !requiredPresent) {
           state = "FAIL";
           note = "REQUIRED_MARKER_MISSING";
-        } else if (probe.route && (!routeRepairPresent || !rendererRequiredPresent)) {
+        } else if (probe.key === "route" && !rendererRequiredPresent) {
           state = "FAIL";
-          note = "ROUTE_NOT_ON_LATEST_TECH";
-        } else if (legacyPresent.length > 0 && probe.key === "route" && rendererRequiredPresent) {
-          state = "WARN";
-          note = "LEGACY_TEXT_PRESENT_BUT_LATEST_ROUTE_PRESENT";
-        } else if (legacyPresent.length > 0 && ["worldRuntime", "worldControl", "assetBridge", "showroomRuntime"].indexOf(probe.key) !== -1) {
-          state = "WARN";
-          note = "OLD_LABEL_NONBLOCKING_IF_RENDERER_CURRENT";
+          note = "ROUTE_RENDERER_MARKER_MISSING";
+        } else if ((probe.key === "hexgrid" || probe.key === "renderer") && !triDomainLayerPresent) {
+          state = "FAIL";
+          note = "TRI_DOMAIN_LAYER_NOT_SERVED";
         }
 
         return {
@@ -672,9 +635,9 @@
           requiredPresent: requiredPresent,
           routeRepairPresent: routeRepairPresent,
           rendererRequiredPresent: rendererRequiredPresent,
+          triDomainLayerPresent: triDomainLayerPresent,
           hydrationRequiredPresent: hydrationRequiredPresent,
           baselinePresent: baselinePresent,
-          legacyMarkersPresent: legacyPresent,
           servedVersionMarkers: markers,
           cacheBustUrlUsed: result.url,
           fetchTimestamp: result.timestamp,
@@ -684,6 +647,7 @@
 
       function runServedSourceDiagnostic() {
         setRunning(true);
+
         return Promise.all(FILE_PROBES.map(function (probe) {
           return fetchText(probe.path).then(function (result) {
             return probeFile(probe, result);
@@ -716,6 +680,7 @@
         var parser = new DOMParser();
         var doc = parser.parseFromString(routeText || "", "text/html");
         var scriptNodes = Array.prototype.slice.call(doc.querySelectorAll("script"));
+
         var scripts = scriptNodes.map(function (script, index) {
           return {
             index: index,
@@ -726,9 +691,11 @@
 
         var order = EXPECTED_SCRIPT_ORDER.map(function (expected) {
           var foundIndex = -1;
+
           scripts.forEach(function (script) {
             if (foundIndex === -1 && script.src.indexOf(expected.path) !== -1) foundIndex = script.index;
           });
+
           return {
             key: expected.key,
             expectedPath: expected.path,
@@ -770,7 +737,6 @@
           routeReferencesRouteActivationRepair: contains(routeText, ROUTE_REPAIR_VERSION),
           routeReferencesCurrentRenderer: contains(routeText, RENDERER_REQUIRED),
           routeReferencesHydration: contains(routeText, HYDRATION_REQUIRED),
-          routeContainsLegacyForwardMarker: LEGACY_FORWARD_MARKERS.some(function (marker) { return contains(routeText, marker); }),
           visualPassClaimedTextPresent: /visualPassClaimed["']?\s*[:=]\s*true/.test(routeText || "")
         };
       }
@@ -782,13 +748,14 @@
       }
 
       function removeProbeFrames() {
-        Array.prototype.slice.call(document.querySelectorAll("iframe[data-latest-tech-probe='true']")).forEach(function (frame) {
+        Array.prototype.slice.call(document.querySelectorAll("iframe[data-tri-domain-probe='true']")).forEach(function (frame) {
           try { frame.parentNode.removeChild(frame); } catch (error) {}
         });
       }
 
       function getStatusFromObject(obj) {
         if (!obj) return null;
+
         try {
           if (typeof obj.getStatus === "function") return obj.getStatus();
           if (typeof obj.status === "function") return obj.status();
@@ -799,72 +766,8 @@
         } catch (error) {
           return { statusError: String(error && error.message ? error.message : error) };
         }
+
         return null;
-      }
-
-      function collectGlobalsFromWindow(win) {
-        var globals = {};
-        var anyDetected = false;
-
-        GLOBAL_PROBES.forEach(function (name) {
-          var obj = win[name];
-          var detected = Boolean(obj);
-          var status = getStatusFromObject(obj);
-          var version = obj && (obj.VERSION || obj.version || obj.routeActivationVersion || obj.contractVersion) ||
-            status && (status.VERSION || status.version || status.routeActivationVersion || status.contractVersion) ||
-            null;
-
-          if (detected) anyDetected = true;
-
-          globals[name] = {
-            detected: detected,
-            VERSION: obj && obj.VERSION || null,
-            version: obj && obj.version || null,
-            resolvedVersion: version,
-            statusAvailable: Boolean(status),
-            statusResult: safeJson(status),
-            visualPassClaimed: Boolean(status && status.visualPassClaimed),
-            lastRender: safeJson(status && status.lastRender || null),
-            drawReceipt: safeJson(
-              status && status.drawReceipt ||
-              status && status.lastDraw ||
-              status && status.lastRender && status.lastRender.drawReceipt ||
-              null
-            ),
-            waterDivideReceipt: safeJson(
-              status && status.waterDivideReceipt ||
-              status && status.lastRender && status.lastRender.waterDivideReceipt ||
-              null
-            )
-          };
-        });
-
-        var renderer = selectRenderer(globals);
-        var hexgrid = globals.DGBPlanetOneHexgridRender || {};
-        var hydration = globals.DGBPlanetOneHydrationRender || {};
-        var routeReceipt = globals.DGBPlanetOneRouteActivationRepairReceipt || {};
-
-        var rendererCurrent = renderer && renderer.resolvedVersion === RENDERER_REQUIRED;
-        var hexgridAccepted = Boolean(hexgrid && HEXGRID_ACCEPTED.indexOf(hexgrid.resolvedVersion) !== -1);
-        var hydrationCurrent = Boolean(hydration && hydration.resolvedVersion === HYDRATION_REQUIRED);
-        var routeReceiptPresent = Boolean(routeReceipt && routeReceipt.detected);
-
-        var state = "PASS";
-        if (!anyDetected || !renderer || !renderer.detected || !rendererCurrent) state = "FAIL";
-        else if (!hexgrid.detected || !hexgridAccepted || !hydration.detected || !hydrationCurrent) state = "FAIL";
-        else if (!routeReceiptPresent) state = "WARN";
-
-        return {
-          state: state,
-          iframeAccess: true,
-          globals: globals,
-          rendererGlobalSelected: renderer ? renderer.globalName : null,
-          rendererVersionCurrent: Boolean(rendererCurrent),
-          hexgridVersionAccepted: Boolean(hexgridAccepted),
-          hydrationVersionCurrent: Boolean(hydrationCurrent),
-          routeActivationReceiptPresent: routeReceiptPresent,
-          collectedAt: new Date().toISOString()
-        };
       }
 
       function selectRenderer(globals) {
@@ -884,6 +787,76 @@
         return null;
       }
 
+      function collectGlobalsFromWindow(win) {
+        var globals = {};
+        var anyDetected = false;
+
+        GLOBAL_PROBES.forEach(function (name) {
+          var obj = win[name];
+          var detected = Boolean(obj);
+          var status = getStatusFromObject(obj);
+          var version = obj && (obj.VERSION || obj.version || obj.routeActivationVersion || obj.contractVersion) ||
+            status && (status.VERSION || status.version || status.routeActivationVersion || status.contractVersion) ||
+            null;
+
+          var layerVersion = obj && (obj.LAYER_VERSION || obj.layerVersion) ||
+            status && (status.LAYER_VERSION || status.layerVersion) ||
+            null;
+
+          if (detected) anyDetected = true;
+
+          globals[name] = {
+            detected: detected,
+            VERSION: obj && obj.VERSION || null,
+            version: obj && obj.version || null,
+            LAYER_VERSION: obj && obj.LAYER_VERSION || null,
+            layerVersion: obj && obj.layerVersion || null,
+            resolvedVersion: version,
+            resolvedLayerVersion: layerVersion,
+            statusAvailable: Boolean(status),
+            statusResult: safeJson(status),
+            visualPassClaimed: Boolean(status && status.visualPassClaimed),
+            lastRender: safeJson(status && status.lastRender || null),
+            drawReceipt: safeJson(
+              status && status.drawReceipt ||
+              status && status.lastDraw ||
+              status && status.lastRender && status.lastRender.drawReceipt ||
+              null
+            ),
+            triDomainReceipt: safeJson(
+              status && status.triDomainReceipt ||
+              status && status.lastRender && status.lastRender.triDomainReceipt ||
+              null
+            )
+          };
+        });
+
+        var renderer = selectRenderer(globals);
+        var hexgrid = globals.DGBPlanetOneHexgridRender || {};
+        var hydration = globals.DGBPlanetOneHydrationRender || {};
+
+        var rendererCurrent = Boolean(renderer && renderer.resolvedVersion === RENDERER_REQUIRED);
+        var rendererLayerCurrent = Boolean(renderer && renderer.resolvedLayerVersion === TRI_DOMAIN_LAYER_REQUIRED);
+        var hexgridLayerCurrent = Boolean(hexgrid && hexgrid.resolvedLayerVersion === TRI_DOMAIN_LAYER_REQUIRED);
+        var hydrationCurrent = Boolean(hydration && hydration.resolvedVersion === HYDRATION_REQUIRED);
+
+        var state = "PASS";
+        if (!anyDetected || !renderer || !renderer.detected || !rendererCurrent || !rendererLayerCurrent) state = "FAIL";
+        else if (!hexgrid.detected || !hexgridLayerCurrent || !hydration.detected || !hydrationCurrent) state = "FAIL";
+
+        return {
+          state: state,
+          iframeAccess: true,
+          globals: globals,
+          rendererGlobalSelected: renderer ? renderer.globalName : null,
+          rendererVersionCurrent: rendererCurrent,
+          rendererLayerCurrent: rendererLayerCurrent,
+          hexgridLayerCurrent: hexgridLayerCurrent,
+          hydrationVersionCurrent: hydrationCurrent,
+          collectedAt: new Date().toISOString()
+        };
+      }
+
       function probeRouteGlobals() {
         removeProbeFrames();
 
@@ -899,7 +872,7 @@
             resolve(result);
           }
 
-          frame.setAttribute("data-latest-tech-probe", "true");
+          frame.setAttribute("data-tri-domain-probe", "true");
           frame.className = "hidden-frame";
           frame.src = cacheBust("/showroom/globe/");
 
@@ -958,87 +931,68 @@
         var status = source.statusResult || {};
         var lastRender = source.lastRender || status.lastRender || {};
         var drawReceipt = source.drawReceipt || status.drawReceipt || status.lastDraw || lastRender.drawReceipt || {};
-        var waterDivideReceipt = source.waterDivideReceipt || status.waterDivideReceipt || lastRender.waterDivideReceipt || {};
+        var triDomainReceipt = source.triDomainReceipt || status.triDomainReceipt || lastRender.triDomainReceipt || {};
 
         if (source[marker] === true) return true;
         if (status[marker] === true) return true;
         if (lastRender[marker] === true) return true;
         if (drawReceipt[marker] === true) return true;
-        if (waterDivideReceipt[marker] === true) return true;
+        if (triDomainReceipt[marker] === true) return true;
 
         return false;
       }
 
       function checkMarkers(source, markers) {
         return markers.map(function (marker) {
-          return {
-            marker: marker,
-            value: valueAt(source, marker)
-          };
+          return { marker: marker, value: valueAt(source, marker) };
         });
       }
 
       function collectMarkerHealth(globalProbe) {
         var globals = globalProbe && globalProbe.globals || {};
-        var hydration = globals.DGBPlanetOneHydrationRender || {};
         var hexgrid = globals.DGBPlanetOneHexgridRender || {};
         var renderer = selectRenderer(globals) || {};
-        var routeReceipt = globals.DGBPlanetOneRouteActivationRepairReceipt || {};
 
-        var hydrationMarkers = checkMarkers(hydration, HYDRATION_EXPECTED);
-        var hexgridMarkers = checkMarkers(hexgrid, HEXGRID_EXPECTED);
-        var rendererMarkers = checkMarkers(renderer, RENDERER_EXPECTED);
-
-        var routeRepairMarkers = ROUTE_REPAIR_EXPECTED.map(function (marker) {
-          var status = routeReceipt.statusResult || {};
-          var value;
-          if (marker === "routeActivationVersion") value = status.routeActivationVersion === ROUTE_REPAIR_VERSION || routeReceipt.resolvedVersion === ROUTE_REPAIR_VERSION;
-          else if (marker === "expectedRendererVersion") value = status.expectedRendererVersion === RENDERER_REQUIRED;
-          else value = status[marker] === true;
-          return { marker: marker, value: Boolean(value) };
-        });
+        var hexgridMarkers = checkMarkers(hexgrid, TRI_DOMAIN_HEXGRID_EXPECTED);
+        var rendererMarkers = checkMarkers(renderer, TRI_DOMAIN_RENDERER_EXPECTED);
 
         var hexStatus = hexgrid.statusResult || {};
-        var stateFormula = hexStatus.stateFormula || hexgrid.drawReceipt && hexgrid.drawReceipt.stateFormula || "4x4x4x4";
-        var stateCount = Number(hexStatus.stateCount || hexStatus.requiredStateCount || 0);
+        var stateFormula = hexStatus.stateFormula || "4x4x4x4";
+        var stateCount = Number(hexStatus.stateCount || 0);
+        var waterStateCount = Number(hexStatus.waterStateCount || 0);
+        var landStateCount = Number(hexStatus.landStateCount || 0);
+        var airStateCount = Number(hexStatus.airStateCount || 0);
+        var wholeWorldStateCount = Number(hexStatus.wholeWorldStateCount || 0);
 
         var visualPassClaimed = Boolean(
-          hydration.visualPassClaimed ||
           hexgrid.visualPassClaimed ||
           renderer.visualPassClaimed ||
-          routeReceipt.visualPassClaimed ||
-          hydration.statusResult && hydration.statusResult.visualPassClaimed ||
           hexgrid.statusResult && hexgrid.statusResult.visualPassClaimed ||
-          renderer.statusResult && renderer.statusResult.visualPassClaimed ||
-          routeReceipt.statusResult && routeReceipt.statusResult.visualPassClaimed
+          renderer.statusResult && renderer.statusResult.visualPassClaimed
         );
 
         var missing = []
-          .concat(hydrationMarkers.filter(function (m) { return !m.value; }).map(function (m) { return "hydration." + m.marker; }))
           .concat(hexgridMarkers.filter(function (m) { return !m.value; }).map(function (m) { return "hexgrid." + m.marker; }))
           .concat(rendererMarkers.filter(function (m) { return !m.value; }).map(function (m) { return "renderer." + m.marker; }));
 
-        var routeRepairMissing = routeRepairMarkers.filter(function (m) { return !m.value; }).map(function (m) {
-          return "routeRepair." + m.marker;
-        });
-
         var state = "PASS";
         if (visualPassClaimed) state = "FAIL";
-        else if (stateFormula !== "4x4x4x4" || stateCount !== 256) state = "FAIL";
+        else if (stateFormula !== "4x4x4x4") state = "FAIL";
+        else if (stateCount !== 256 || waterStateCount !== 256 || landStateCount !== 256 || airStateCount !== 256 || wholeWorldStateCount !== 256) state = "FAIL";
         else if (missing.length > 0) state = "FAIL";
-        else if (routeRepairMissing.length > 0) state = "WARN";
 
         return {
           state: state,
-          hydrationMarkers: hydrationMarkers,
           hexgridMarkers: hexgridMarkers,
           rendererMarkers: rendererMarkers,
-          routeRepairMarkers: routeRepairMarkers,
           stateFormula: stateFormula,
           stateCount: stateCount,
+          waterStateCount: waterStateCount,
+          landStateCount: landStateCount,
+          airStateCount: airStateCount,
+          wholeWorldStateCount: wholeWorldStateCount,
           requiredStateCount: 256,
           missingMarkers: missing,
-          routeRepairMissingMarkers: routeRepairMissing,
           visualPassClaimed: visualPassClaimed
         };
       }
@@ -1046,96 +1000,39 @@
       function classify(served, route, globalProbe, markers) {
         var files = served.filesByKey || {};
         var rendererFile = files.renderer || {};
-        var routeFile = files.route || {};
-        var hydrationFile = files.hydration || {};
         var hexgridFile = files.hexgrid || {};
-        var globals = globalProbe.globals || {};
-        var renderer = selectRenderer(globals) || {};
-        var hexgrid = globals.DGBPlanetOneHexgridRender || {};
-        var routeReceipt = globals.DGBPlanetOneRouteActivationRepairReceipt || {};
+        var routeFile = files.route || {};
+        var renderer = selectRenderer(globalProbe.globals || {}) || {};
 
-        var result = {
-          state: "HOLD",
-          cause: "MANUAL_SCREENSHOT_REVIEW_REQUIRED",
-          requiredNextAction: "MANUAL_SCREENSHOT_REVIEW",
-          requiredNextTNT: "MANUAL_SCREENSHOT_REVIEW",
-          reason: "Latest source, route, globals, and markers are sufficiently active for manual screenshot review.",
-          noFalseVisualPass: true
-        };
-
-        if (served.state === "FAIL" && !rendererFile.rendererRequiredPresent) {
+        if (!rendererFile.triDomainLayerPresent || !hexgridFile.triDomainLayerPresent) {
           return {
             state: "FAIL",
-            cause: "RENDERER_SOURCE_NOT_SERVED",
-            requiredNextAction: "REDEPLOY_RENDERER_SOURCE",
-            requiredNextTNT: "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_RENDERER_REDEPLOY_TNT_v1",
-            reason: "Renderer source does not contain the current water-divide / phase-state renderer marker.",
+            cause: "TRI_DOMAIN_SOURCE_NOT_SERVED",
+            requiredNextAction: "REDEPLOY_TRI_DOMAIN_PAIR",
+            requiredNextTNT: "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1",
+            reason: "The served hexgrid or renderer file does not contain the tri-domain 256 layer marker.",
             noFalseVisualPass: true
           };
         }
 
-        if (!routeFile.routeRepairPresent || !routeFile.rendererRequiredPresent) {
+        if (!routeFile.rendererRequiredPresent || route.state === "FAIL") {
           return {
             state: "FAIL",
-            cause: "ROUTE_NOT_REPAIRED",
+            cause: "ROUTE_SCRIPT_ORDER_OR_RENDERER_REFERENCE_FAILURE",
             requiredNextAction: "REPAIR_SHOWROOM_ROUTE_ACTIVATION",
-            requiredNextTNT: "G1_PLANET_1_RENDERER_SOURCE_AND_SHOWROOM_ROUTE_ACTIVATION_REPAIR_TNT_v1",
-            reason: "Showroom route does not prove current route activation repair and current renderer marker.",
+            requiredNextTNT: "G1_PLANET_1_TRI_DOMAIN_ROUTE_CACHE_TOKEN_REPAIR_TNT_v1",
+            reason: "The route does not prove proper script order or current renderer reference.",
             noFalseVisualPass: true
           };
         }
 
-        if (route.state === "FAIL") {
+        if (globalProbe.state === "FAIL" || renderer.resolvedLayerVersion !== TRI_DOMAIN_LAYER_REQUIRED) {
           return {
             state: "FAIL",
-            cause: "ROUTE_SCRIPT_ORDER_WRONG",
-            requiredNextAction: "REPAIR_ROUTE_SCRIPT_ORDER",
-            requiredNextTNT: "G1_PLANET_1_SHOWROOM_ROUTE_SCRIPT_ORDER_REPAIR_TNT_v1",
-            reason: "Route does not load hydration, hexgrid, renderer, runtime, control, asset bridge, showroom runtime in the required order.",
-            noFalseVisualPass: true
-          };
-        }
-
-        if (!hydrationFile.requiredPresent || !hexgridFile.requiredPresent) {
-          return {
-            state: "FAIL",
-            cause: "SOURCE_CHAIN_INCOMPLETE",
-            requiredNextAction: "REPAIR_HEXGRID_CONSUMPTION",
-            requiredNextTNT: "G1_PLANET_1_SOURCE_CHAIN_COMPLETION_TNT_v1",
-            reason: "Hydration or hexgrid source is not aligned with the accepted current chain.",
-            noFalseVisualPass: true
-          };
-        }
-
-        if (globalProbe.state === "FAIL" || renderer.resolvedVersion !== RENDERER_REQUIRED) {
-          return {
-            state: "FAIL",
-            cause: "GLOBAL_VERSION_STALE",
-            requiredNextAction: "REPAIR_RENDERER_CALL_SURFACE",
-            requiredNextTNT: "G1_PLANET_1_RENDERER_CALL_SURFACE_REPAIR_TNT_v1",
-            reason: "The active renderer global is missing or stale.",
-            noFalseVisualPass: true
-          };
-        }
-
-        if (!renderer.lastRender || renderer.lastRender.ok !== true) {
-          return {
-            state: "FAIL",
-            cause: "RENDERER_NOT_CALLED",
-            requiredNextAction: "REPAIR_RENDERER_CALL_SURFACE",
-            requiredNextTNT: "G1_PLANET_1_RENDERER_CALL_SURFACE_REPAIR_TNT_v1",
-            reason: "Renderer exists but does not show a successful lastRender receipt.",
-            noFalseVisualPass: true
-          };
-        }
-
-        if (!hexgrid.drawReceipt && !(hexgrid.statusResult && hexgrid.statusResult.lastDraw)) {
-          return {
-            state: "FAIL",
-            cause: "HEXGRID_NOT_CONSUMED",
-            requiredNextAction: "REPAIR_HEXGRID_CONSUMPTION",
-            requiredNextTNT: "G1_PLANET_1_HEXGRID_CONSUMPTION_REPAIR_TNT_v1",
-            reason: "Hexgrid source/global exists but has no draw receipt or lastDraw.",
+            cause: "ACTIVE_GLOBAL_LAYER_STALE",
+            requiredNextAction: "REPAIR_ROUTE_CACHE_TOKEN_OR_GLOBAL_ACTIVATION",
+            requiredNextTNT: "G1_PLANET_1_TRI_DOMAIN_ROUTE_CACHE_TOKEN_REPAIR_TNT_v1",
+            reason: "The served source may be current, but the active renderer global is not the tri-domain layer.",
             noFalseVisualPass: true
           };
         }
@@ -1143,49 +1040,34 @@
         if (markers.state === "FAIL") {
           return {
             state: "FAIL",
-            cause: "WATER_DIVIDE_MARKERS_MISSING",
-            requiredNextAction: "REPAIR_WATER_DIVIDE_MARKERS",
-            requiredNextTNT: "G1_PLANET_1_WATER_DIVIDE_MARKER_ALIGNMENT_TNT_v1",
-            reason: "Latest source/global chain exists but expected water-divide / phase-state markers are missing.",
-            noFalseVisualPass: true,
-            missingMarkers: markers.missingMarkers
-          };
-        }
-
-        if (globalProbe.state === "WARN" || markers.state === "WARN" || served.state === "WARN" || route.state === "WARN") {
-          return {
-            state: "WARN",
-            cause: "RUNTIME_ASSET_BRIDGE_STALE_BUT_NONBLOCKING",
-            requiredNextAction: "INCREASE_VISUAL_DELTA_WITHIN_WATER_DIVIDE_RENDER_SCOPE",
-            requiredNextTNT: "G1_PLANET_1_WATER_DIVIDE_VISUAL_DELTA_AMPLIFICATION_TNT_v1",
-            reason: "Current renderer chain is active. Remaining old runtime/asset labels are nonblocking unless screenshot review proves override.",
+            cause: "TRI_DOMAIN_MARKERS_MISSING",
+            requiredNextAction: "REPAIR_TRI_DOMAIN_MARKERS",
+            requiredNextTNT: "G1_PLANET_1_TRI_DOMAIN_MARKER_ALIGNMENT_TNT_v1",
+            reason: "The tri-domain layer is active but required water-land-air markers are missing.",
+            missingMarkers: markers.missingMarkers,
             noFalseVisualPass: true
           };
         }
 
-        if (routeReceipt.detected && routeReceipt.statusResult && routeReceipt.statusResult.rendererVersionCurrent === true && markers.state === "PASS") {
-          return {
-            state: "WARN",
-            cause: "MARKERS_TRUE_BUT_VISUAL_DELTA_TOO_SUBTLE",
-            requiredNextAction: "INCREASE_VISUAL_DELTA_WITHIN_WATER_DIVIDE_RENDER_SCOPE",
-            requiredNextTNT: "G1_PLANET_1_WATER_DIVIDE_VISUAL_DELTA_AMPLIFICATION_TNT_v1",
-            reason: "Current route, renderer, and water-divide markers are active. If screenshot still looks unchanged, visual delta is too subtle.",
-            noFalseVisualPass: true
-          };
-        }
-
-        return result;
+        return {
+          state: "WARN",
+          cause: "TRI_DOMAIN_ACTIVE_VISUAL_REVIEW_REQUIRED",
+          requiredNextAction: "MANUAL_SCREENSHOT_REVIEW",
+          requiredNextTNT: "NONE_UNTIL_SCREENSHOT_REVIEW",
+          reason: "Tri-domain source, globals, and markers are active. Visual readiness remains held for screenshot review.",
+          noFalseVisualPass: true
+        };
       }
 
       function summarize(served, route, globalProbe, markers, cause) {
         var architecture = "PASS";
+
         if ([served.state, route.state, globalProbe.state, markers.state, cause.state].indexOf("FAIL") !== -1) architecture = "FAIL";
         else if ([served.state, route.state, globalProbe.state, markers.state, cause.state].indexOf("WARN") !== -1) architecture = "WARN";
-        else if (cause.state === "HOLD") architecture = "HOLD";
 
         return {
           architectureHealth: architecture,
-          latestTechChain: cause.state,
+          triDomainChain: cause.state,
           controllingGap: cause.cause,
           requiredNextAction: cause.requiredNextAction,
           requiredNextTNT: cause.requiredNextTNT,
@@ -1210,6 +1092,7 @@
 
         rows.forEach(function (row) {
           var bodyTr = document.createElement("tr");
+
           headers.forEach(function (header) {
             var td = document.createElement("td");
             var value = typeof header.get === "function" ? header.get(row) : row[header.key];
@@ -1217,6 +1100,7 @@
             td.textContent = safeString(value);
             bodyTr.appendChild(td);
           });
+
           tbody.appendChild(bodyTr);
         });
 
@@ -1234,10 +1118,10 @@
           { label: "Note", key: "note", mono: true },
           { label: "Status", key: "status" },
           { label: "Size", key: "size" },
-          { label: "Required present", key: "requiredPresent" },
-          { label: "Route repair", key: "routeRepairPresent" },
+          { label: "Tri-domain layer", key: "triDomainLayerPresent" },
           { label: "Renderer current", key: "rendererRequiredPresent" },
-          { label: "Legacy markers", get: function (row) { return (row.legacyMarkersPresent || []).join(", "); }, mono: true }
+          { label: "Route repair", key: "routeRepairPresent" },
+          { label: "Markers", get: function (row) { return (row.servedVersionMarkers || []).join(", "); }, mono: true }
         ], served.files || []);
       }
 
@@ -1257,10 +1141,11 @@
             global: name,
             detected: item.detected,
             version: item.resolvedVersion,
+            layer: item.resolvedLayerVersion,
             status: item.statusAvailable,
             lastRender: Boolean(item.lastRender && item.lastRender.ok),
             drawReceipt: Boolean(item.drawReceipt),
-            waterDivideReceipt: Boolean(item.waterDivideReceipt),
+            triDomainReceipt: Boolean(item.triDomainReceipt),
             visualPassClaimed: item.visualPassClaimed
           };
         });
@@ -1269,20 +1154,19 @@
           { label: "Global", key: "global", mono: true },
           { label: "Detected", key: "detected" },
           { label: "Version", key: "version", mono: true },
+          { label: "Layer", key: "layer", mono: true },
           { label: "Status", key: "status" },
           { label: "Last render", key: "lastRender" },
           { label: "Draw receipt", key: "drawReceipt" },
-          { label: "Water divide receipt", key: "waterDivideReceipt" },
+          { label: "Tri-domain receipt", key: "triDomainReceipt" },
           { label: "Visual pass claimed", key: "visualPassClaimed" }
         ], rows);
       }
 
       function renderMarkers(markers) {
         var rows = []
-          .concat(markers.hydrationMarkers.map(function (m) { return { lane: "hydration", marker: m.marker, value: m.value }; }))
           .concat(markers.hexgridMarkers.map(function (m) { return { lane: "hexgrid", marker: m.marker, value: m.value }; }))
-          .concat(markers.rendererMarkers.map(function (m) { return { lane: "renderer", marker: m.marker, value: m.value }; }))
-          .concat(markers.routeRepairMarkers.map(function (m) { return { lane: "routeRepair", marker: m.marker, value: m.value }; }));
+          .concat(markers.rendererMarkers.map(function (m) { return { lane: "renderer", marker: m.marker, value: m.value }; }));
 
         renderTable("markerOutput", [
           { label: "Lane", key: "lane", mono: true },
@@ -1301,6 +1185,7 @@
 
       function runRouteDiagnostic() {
         setRunning(true);
+
         return fetchText("/showroom/globe/").then(function (routeSource) {
           var route = parseRoute(routeSource.text || "");
           renderRoute(route);
@@ -1338,7 +1223,7 @@
               setState("causeBadge", cause.state);
               setState("receiptBadge", summary.architectureHealth);
               setState("architectureState", summary.architectureHealth);
-              setState("latestTechState", summary.latestTechChain);
+              setState("triDomainState", summary.triDomainChain);
               setState("controllingGapState", cause.state);
               setText("controllingGapText", cause.cause);
               setState("visualState", "HOLD");
@@ -1348,25 +1233,29 @@
                 gaugesVersion: GAUGES_VERSION,
                 timestamp: new Date().toISOString(),
                 architectureHealth: summary.architectureHealth,
-                latestTechChain: summary.latestTechChain,
+                triDomainChain: summary.triDomainChain,
                 controllingGap: summary.controllingGap,
                 requiredNextAction: summary.requiredNextAction,
                 requiredNextTNT: summary.requiredNextTNT,
                 visualReadiness: "HOLD",
                 noFalseVisualPass: true,
-                canonicalTerminology: {
-                  controllingConcept: "WATER_DIVIDE / PHASE_STATE_DIVIDE",
-                  rejectedConcept: "GLACIER_DIVIDE_AS_AUTHORITY",
-                  law: "Water remains one connected sovereign system. Elevation transforms water phase."
+                canonicalModel: {
+                  wholeWorldContainer: true,
+                  water256: true,
+                  land256: true,
+                  air256: true,
+                  wholeWorld256: true,
+                  domainShare: "33.33% each for water, land, air",
+                  cycle: "water ↔ land ↔ air inside one whole-world container"
                 },
                 servedSourceHealth: served,
                 routeHealth: route,
                 activeGlobalHealth: globalProbe,
-                latestMarkerHealth: markers,
+                triDomainMarkerHealth: markers,
                 rootCause: cause
               };
 
-              global.DGBPlanetOneLatestTechGaugesReceipt = lastReceipt;
+              global.DGBPlanetOneTriDomainGaugesReceipt = lastReceipt;
               byId("liveReceipt").textContent = JSON.stringify(lastReceipt, null, 2);
 
               setRunning(false);
@@ -1381,7 +1270,7 @@
             gaugesVersion: GAUGES_VERSION,
             timestamp: new Date().toISOString(),
             architectureHealth: "FAIL",
-            latestTechChain: "FAIL",
+            triDomainChain: "FAIL",
             controllingGap: "GAUGES_RUNTIME_ERROR",
             requiredNextAction: "RENEW_GAUGES_EXPECTATIONS",
             requiredNextTNT: GAUGES_VERSION,
@@ -1400,7 +1289,7 @@
         byId("runRouteDiagnostic").addEventListener("click", runRouteDiagnostic);
         byId("runServedSourceDiagnostic").addEventListener("click", runServedSourceDiagnostic);
 
-        global.DGBPlanetOneLatestTechGauges = {
+        global.DGBPlanetOneTriDomainGauges = {
           VERSION: GAUGES_VERSION,
           version: GAUGES_VERSION,
           CONTRACT_VERSION: CONTRACT_VERSION,
@@ -1417,10 +1306,12 @@
               version: GAUGES_VERSION,
               contractVersion: CONTRACT_VERSION,
               visibleContract: CONTRACT_VERSION,
-              latestTechGaugesActive: true,
-              waterDivideTerminologyActive: true,
-              phaseStateDivideTerminologyActive: true,
-              glacierDivideAuthorityRejected: true,
+              triDomainGaugesActive: true,
+              wholeWorldContainerExpected: true,
+              water256Expected: true,
+              land256Expected: true,
+              air256Expected: true,
+              wholeWorld256Expected: true,
               visualPassClaimed: false,
               lastReceipt: lastReceipt
             };

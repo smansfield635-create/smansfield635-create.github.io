@@ -1,414 +1,128 @@
+<!-- /gauges/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Gauges · Runtime Directory Authority Probe</title>
-
+  <title>Diamond Gate Bridge · Gauges</title>
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #050812;
-      --panel: rgba(10, 16, 31, 0.88);
-      --panel2: rgba(16, 25, 46, 0.88);
-      --line: rgba(176, 204, 255, 0.22);
-      --text: #edf4ff;
-      --muted: #aebbd0;
-      --blue: #a9caff;
-      --gold: #f2c76f;
-      --pass: #69d391;
-      --warn: #f2c76f;
-      --fail: #ff7272;
-      --hold: #91b9ff;
-      --not: #8792a6;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 10%, rgba(80, 130, 220, 0.20), transparent 30%),
-        radial-gradient(circle at 84% 8%, rgba(242, 199, 111, 0.11), transparent 26%),
-        linear-gradient(180deg, #050812 0%, #07101f 56%, #03050c 100%);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.45;
-    }
-
-    a { color: var(--blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 0;
-      background: #fff;
-      color: #000;
-      padding: 0.6rem 0.8rem;
-      z-index: 50;
-    }
-
-    .skip:focus { left: 1rem; top: 1rem; }
-
-    header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(5, 8, 18, 0.88);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .topbar {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 0.85rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-
-    nav {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      font-size: 0.92rem;
-    }
-
-    main {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 1.15rem 1rem 4rem;
-    }
-
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 1.05rem;
-      background: linear-gradient(180deg, rgba(20, 32, 58, 0.82), rgba(7, 11, 22, 0.90));
-      box-shadow: 0 22px 90px rgba(0,0,0,0.26);
-    }
-
-    .eyebrow {
-      margin: 0 0 0.35rem;
-      color: var(--gold);
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 820;
-    }
-
-    h1 {
-      margin: 0 0 0.7rem;
-      font-size: clamp(1.85rem, 3.4vw, 3.15rem);
-      line-height: 1.05;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 1.1rem;
-    }
-
-    p {
-      margin: 0 0 0.8rem;
-      color: var(--muted);
-    }
-
-    .contract {
-      margin-top: 0.8rem;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.045);
-      padding: 0.72rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.82rem;
-      overflow-wrap: anywhere;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 0.95rem;
-    }
-
-    button, .button-link {
-      appearance: none;
-      border: 1px solid rgba(169, 202, 255, 0.36);
-      border-radius: 999px;
-      background: rgba(169, 202, 255, 0.08);
-      color: var(--text);
-      padding: 0.68rem 0.92rem;
-      font-weight: 760;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
-
-    button:hover, .button-link:hover {
-      background: rgba(169, 202, 255, 0.16);
-      text-decoration: none;
-    }
-
-    button:disabled {
-      opacity: 0.58;
-      cursor: wait;
-    }
-
-    .summary {
+    .gauge-status-row {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
       margin: 1rem 0;
     }
 
-    @media (max-width: 900px) {
-      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 520px) {
-      .summary { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      border: 1px solid var(--line);
+    .gauge-status {
+      border: 1px solid rgba(176, 204, 255, 0.18);
       border-radius: 18px;
-      background: var(--panel);
-      padding: 0.9rem;
-    }
-
-    .state {
-      font-size: 0.76rem;
-      font-weight: 850;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .state.PASS { color: var(--pass); }
-    .state.WARN { color: var(--warn); }
-    .state.FAIL { color: var(--fail); }
-    .state.HOLD { color: var(--hold); }
-    .state.NOT_TESTED { color: var(--not); }
-
-    .metric {
-      margin-top: 0.25rem;
-      font-size: 1.1rem;
-      font-weight: 820;
-      overflow-wrap: anywhere;
-    }
-
-    section.panel {
-      margin-top: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(8, 12, 24, 0.74);
-      overflow: hidden;
-    }
-
-    .panel-head {
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.035);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-
-    .panel-body {
-      padding: 1rem;
-      overflow-x: auto;
-    }
-
-    .pill {
-      display: inline-flex;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      padding: 0.2rem 0.55rem;
-      font-size: 0.72rem;
-      font-weight: 850;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .pill.PASS { color: var(--pass); }
-    .pill.WARN { color: var(--warn); }
-    .pill.FAIL { color: var(--fail); }
-    .pill.HOLD { color: var(--hold); }
-    .pill.NOT_TESTED { color: var(--not); }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
-    }
-
-    th, td {
-      text-align: left;
-      vertical-align: top;
-      border-bottom: 1px solid rgba(176, 204, 255, 0.14);
-      padding: 0.56rem 0.5rem;
-      overflow-wrap: anywhere;
-    }
-
-    th {
-      color: #d7e5ff;
-      background: rgba(255,255,255,0.025);
-      font-weight: 820;
-    }
-
-    td { color: #dce8fb; }
-
-    .mono, pre {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    }
-
-    pre {
-      margin: 0;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      background: rgba(0,0,0,0.28);
       padding: 0.85rem;
-      color: #dce8fb;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 620px;
-      overflow: auto;
-      font-size: 0.82rem;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .gauge-status strong {
+      display: block;
+      color: #ffe8a8;
+      margin-bottom: 0.25rem;
+    }
+
+    .gauge-status span {
+      color: var(--dgb-muted);
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      .gauge-status-row {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
-
 <body>
-  <a class="skip" href="#gauges-content">Skip to Gauges content</a>
+  <a class="dgb-skip" href="#main">Skip to Gauges</a>
 
-  <header>
-    <div class="topbar">
-      <a class="brand" href="/">Diamond Gate Bridge</a>
-      <nav aria-label="Primary navigation">
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Gauges · Runtime Directory Authority Probe</div>
+      </div>
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Planet 1</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </div>
   </header>
 
-  <main id="gauges-content">
-    <div class="hero">
-      <p class="eyebrow">H6 · Gauges · Runtime Directory Authority Probe</p>
-      <h1>Runtime Source Authority Inventory</h1>
-      <p>
-        This diagnostic audits the live route, local runtime bridge, world runtime, and the upstream /runtime/ directory.
+  <main id="main" class="dgb-main">
+    <section class="dgb-hero">
+      <p class="dgb-eyebrow">H6 · Gauges · Runtime Directory Authority Probe</p>
+      <h1 class="dgb-title">Runtime Source Authority Inventory</h1>
+      <p class="dgb-copy">
+        This diagnostic audits the live route, local runtime bridge, world runtime, and upstream runtime directory.
         It does not delete files, render Planet 1 in an iframe, or start extra animation loops.
       </p>
+      <div class="dgb-chip-row">
+        <span class="dgb-chip">Diagnostic only</span>
+        <span class="dgb-chip">No delete</span>
+        <span class="dgb-chip">No iframe render</span>
+        <span class="dgb-chip hold">Visual hold</span>
+      </div>
+      <div class="dgb-actions">
+        <button class="dgb-button" type="button" data-gauge-command="full">Run runtime authority audit</button>
+        <button class="dgb-button secondary" type="button" data-gauge-command="routes">Run route-only audit</button>
+        <button class="dgb-button secondary" type="button" data-gauge-command="runtime">Run /runtime/ inventory</button>
+        <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
+      </div>
+    </section>
 
-      <div class="contract">
-        SERVED_CONTRACT=G1_PLANET_1_RUNTIME_DIRECTORY_AUTHORITY_PROBE_CONTRACT_v1
-      </div>
+    <section class="gauge-status-row">
+      <div class="gauge-status"><strong>Audit health</strong><span id="audit-health">NOT TESTED</span></div>
+      <div class="gauge-status"><strong>Active runtime files</strong><span id="active-count">unknown</span></div>
+      <div class="gauge-status"><strong>Dangerous files</strong><span id="dangerous-count">unknown</span></div>
+      <div class="gauge-status"><strong>Root cause</strong><span id="root-cause">Not tested</span></div>
+    </section>
 
-      <div class="buttons">
-        <button id="runFullDiagnostic" type="button">Run runtime authority audit</button>
-        <button id="runRouteOnly" type="button">Run route-only audit</button>
-        <button id="runRuntimeOnly" type="button">Run /runtime/ inventory</button>
-        <a class="button-link" href="/showroom/globe/">Open Planet 1 inspection</a>
-      </div>
-    </div>
-
-    <div class="summary" aria-label="Summary">
-      <div class="card">
-        <div id="auditState" class="state NOT_TESTED">NOT TESTED</div>
-        <div class="metric">Audit health</div>
-      </div>
-      <div class="card">
-        <div id="activeState" class="state NOT_TESTED">NOT TESTED</div>
-        <div id="activeCount" class="metric">Active: unknown</div>
-      </div>
-      <div class="card">
-        <div id="dangerState" class="state NOT_TESTED">NOT TESTED</div>
-        <div id="dangerCount" class="metric">Dangerous: unknown</div>
-      </div>
-      <div class="card">
-        <div id="nextState" class="state NOT_TESTED">NOT TESTED</div>
-        <div id="nextAction" class="metric">Not tested</div>
-      </div>
-    </div>
-
-    <section class="panel">
-      <div class="panel-head">
+    <section class="dgb-grid">
+      <article class="dgb-card full">
         <h2>Route Source Audit</h2>
-        <span id="routeBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body" id="routeOutput"></div>
-    </section>
+        <pre id="route-audit" class="dgb-receipt">NOT TESTED</pre>
+      </article>
 
-    <section class="panel">
-      <div class="panel-head">
+      <article class="dgb-card full">
         <h2>Runtime Directory Inventory</h2>
-        <span id="runtimeBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body" id="runtimeOutput"></div>
-    </section>
+        <pre id="runtime-inventory" class="dgb-receipt">NOT TESTED</pre>
+      </article>
 
-    <section class="panel">
-      <div class="panel-head">
+      <article class="dgb-card full">
         <h2>Authority Classification</h2>
-        <span id="classificationBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body" id="classificationOutput"></div>
-    </section>
+        <pre id="authority-classification" class="dgb-receipt">NOT TESTED</pre>
+      </article>
 
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Loop / Control Signals</h2>
-        <span id="signalsBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body" id="signalsOutput"></div>
-    </section>
-
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Root Cause / Next TNT</h2>
-        <span id="causeBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body" id="causeOutput"></div>
-    </section>
-
-    <section class="panel">
-      <div class="panel-head">
+      <article class="dgb-card full">
         <h2>Live Receipt</h2>
-        <span id="receiptBadge" class="pill NOT_TESTED">NOT TESTED</span>
-      </div>
-      <div class="panel-body">
-        <pre id="liveReceipt">Run audit to generate runtime authority receipt.</pre>
-      </div>
+        <pre id="live-receipt" class="dgb-receipt">Run audit to generate runtime authority receipt.</pre>
+      </article>
     </section>
   </main>
 
   <script>
-    (function attachRuntimeDirectoryAuthorityProbe(global) {
+    (function attachRuntimeAuthorityGauge(global) {
       "use strict";
 
-      var CONTRACT_VERSION = "G1_PLANET_1_RUNTIME_DIRECTORY_AUTHORITY_PROBE_CONTRACT_v1";
-      var GAUGES_VERSION = "G1_PLANET_1_RUNTIME_DIRECTORY_AUTHORITY_PROBE_TNT_v1";
-
-      var ROUTES_TO_AUDIT = [
+      var VERSION = "DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1";
+      var ROUTES = [
         "/",
+        "/door/",
+        "/home/",
+        "/products/",
         "/showroom/",
         "/showroom/globe/",
         "/gauges/",
@@ -433,662 +147,215 @@
         "/runtime/world_runtime.js"
       ];
 
-      var LOOP_PATTERNS = [
-        { key: "requestAnimationFrame", regex: /requestAnimationFrame\s*\(/g },
-        { key: "cancelAnimationFrame", regex: /cancelAnimationFrame\s*\(/g },
-        { key: "setInterval", regex: /setInterval\s*\(/g },
-        { key: "setTimeout", regex: /setTimeout\s*\(/g },
-        { key: "whileLoop", regex: /\bwhile\s*\(/g }
-      ];
-
-      var CONTROL_PATTERNS = [
-        { key: "addClickListener", regex: /addEventListener\s*\(\s*["']click["']/g },
-        { key: "addInputListener", regex: /addEventListener\s*\(\s*["']input["']/g },
-        { key: "addChangeListener", regex: /addEventListener\s*\(\s*["']change["']/g },
-        { key: "querySelector", regex: /querySelector\s*\(/g },
-        { key: "getElementById", regex: /getElementById\s*\(/g }
-      ];
-
-      var RUNTIME_GLOBAL_PATTERNS = [
-        "DGBWorldRuntime",
-        "DGBPlanetOneRuntime",
-        "DGBShowroomGlobeRuntime",
-        "DGBPlanetOneRuntimeBridge",
-        "DGBShowroomGlobeInstrument",
-        "DGBPlanetOneRenderTeam",
-        "DGBPlanetOneRenderer",
-        "DGBPlanetOneRender",
-        "DGBPlanetOneHexgridRender",
-        "DGBPlanetOneHydrationRender",
-        "DGBLiveRuntimeKernel",
-        "DGBRuntimeQueue",
-        "DGBPlanetProjection",
-        "DGBEnvironmentRenderer",
-        "DGBEarthAssetRuntime",
-        "DGBSunAssetRuntime",
-        "DGBSpineCanopyRuntime",
-        "DGBCompassCockpitControlPanel",
-        "DGBCompassCockpitRuntimeQueue"
-      ];
-
-      var lastReceipt = null;
-
-      function byId(id) {
+      function $(id) {
         return document.getElementById(id);
       }
 
       function setText(id, value) {
-        var node = byId(id);
-        if (node) node.textContent = String(value);
+        var node = $(id);
+        if (node) node.textContent = value;
       }
 
-      function setState(id, state) {
-        var node = byId(id);
-        if (!node) return;
-        node.className = node.className.replace(/\b(PASS|WARN|FAIL|HOLD|NOT_TESTED)\b/g, "").trim();
-        node.className = (node.className + " " + state).trim();
-        node.textContent = state;
+      function count(pattern, text) {
+        var match = text.match(pattern);
+        return match ? match.length : 0;
       }
 
-      function setRunning(isRunning) {
-        ["runFullDiagnostic", "runRouteOnly", "runRuntimeOnly"].forEach(function (id) {
-          var button = byId(id);
-          if (button) button.disabled = isRunning;
-        });
-      }
-
-      function safeString(value) {
-        if (value == null) return "";
-        if (typeof value === "string") return value;
-        try { return JSON.stringify(value); } catch (error) { return String(value); }
-      }
-
-      function cacheBust(path) {
-        var joiner = path.indexOf("?") === -1 ? "?" : "&";
-        return path + joiner + "_runtime_authority_probe=" + encodeURIComponent(GAUGES_VERSION) + "&_t=" + Date.now();
-      }
-
-      function fetchText(path) {
-        var url = cacheBust(path);
-        return fetch(url, { cache: "no-store" }).then(function (response) {
-          return response.text().then(function (text) {
-            return {
-              path: path,
-              url: url,
-              ok: response.ok,
-              status: response.status,
-              size: text.length,
-              text: text,
-              timestamp: new Date().toISOString(),
-              error: null
-            };
-          });
-        }).catch(function (error) {
-          return {
-            path: path,
-            url: url,
-            ok: false,
-            status: 0,
-            size: 0,
-            text: "",
-            timestamp: new Date().toISOString(),
-            error: String(error && error.message ? error.message : error)
-          };
-        });
-      }
-
-      function countRegex(text, regex) {
-        var match;
-        var count = 0;
-        regex.lastIndex = 0;
-
-        while ((match = regex.exec(text || "")) !== null) {
-          count += 1;
-        }
-
-        return count;
-      }
-
-      function scanPatterns(text, patterns) {
-        var out = {};
-        patterns.forEach(function (pattern) {
-          out[pattern.key] = countRegex(text, pattern.regex);
-        });
-        return out;
-      }
-
-      function sumValues(obj) {
-        return Object.keys(obj || {}).reduce(function (sum, key) {
-          return sum + (Number(obj[key]) || 0);
-        }, 0);
-      }
-
-      function includesText(text, needle) {
-        return String(text || "").indexOf(needle) !== -1;
-      }
-
-      function normalizeRuntimeKey(path) {
-        return path.split("/").pop().replace(/\.js$/, "");
-      }
-
-      function extractScriptRefs(html) {
+      function scriptRefs(text) {
         var refs = [];
-        var regex = /<script\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>/gi;
-        var match;
-
-        while ((match = regex.exec(html || "")) !== null) {
-          refs.push(match[1]);
-        }
-
+        text.replace(/<script[^>]+src=["']([^"']+)["']/gi, function (_, src) {
+          refs.push(src);
+          return "";
+        });
         return refs;
       }
 
-      function extractRuntimeRefs(text) {
+      function runtimeRefs(text) {
         var refs = [];
-
-        RUNTIME_FILES.forEach(function (runtimePath) {
-          var base = runtimePath.split("/").pop();
-          var key = normalizeRuntimeKey(runtimePath);
-
-          if (includesText(text, runtimePath) || includesText(text, base) || includesText(text, key)) {
-            refs.push(runtimePath);
-          }
+        text.replace(/\/runtime\/[a-zA-Z0-9_.-]+\.js/g, function (src) {
+          if (refs.indexOf(src) === -1) refs.push(src);
+          return "";
         });
-
         return refs;
       }
 
-      function extractGlobalRefs(text) {
-        return RUNTIME_GLOBAL_PATTERNS.filter(function (name) {
-          return includesText(text, name);
+      function globalRefs(text) {
+        var names = [
+          "DGBWorldRuntime",
+          "DGBPlanetOneRuntime",
+          "DGBShowroomGlobeRuntime",
+          "DGBPlanetOneRuntimeBridge",
+          "DGBShowroomGlobeInstrument",
+          "DGBPlanetOneRenderTeam",
+          "DGBPlanetOneRenderer",
+          "DGBPlanetOneRender",
+          "DGBPlanetOneHexgridRender",
+          "DGBPlanetOneHydrationRender",
+          "DGBLiveRuntimeKernel",
+          "DGBRuntimeQueue",
+          "DGBPlanetProjection",
+          "DGBEnvironmentRenderer",
+          "DGBEarthAssetRuntime",
+          "DGBSunAssetRuntime",
+          "DGBSpineCanopyRuntime",
+          "DGBCompassCockpitControlPanel",
+          "DGBCompassCockpitRuntimeQueue"
+        ];
+
+        return names.filter(function (name) {
+          return text.indexOf(name) !== -1;
         });
       }
 
-      function scanSource(result) {
-        var text = result.text || "";
-        var loopSignals = scanPatterns(text, LOOP_PATTERNS);
-        var controlSignals = scanPatterns(text, CONTROL_PATTERNS);
-        var scriptRefs = extractScriptRefs(text);
-        var runtimeRefs = extractRuntimeRefs(text);
-        var globalRefs = extractGlobalRefs(text);
-        var importCount =
-          countRegex(text, /\bimport\s*\(/g) +
-          countRegex(text, /\bimport\s+[^;]+from\s+["'][^"']+["']/g);
+      function scanText(path, text, status, ok) {
+        var refs = scriptRefs(text);
+        var runtimes = runtimeRefs(text);
+        var globals = globalRefs(text);
+
+        var loopSignals = {
+          requestAnimationFrame: count(/requestAnimationFrame/g, text),
+          cancelAnimationFrame: count(/cancelAnimationFrame/g, text),
+          setInterval: count(/setInterval/g, text),
+          setTimeout: count(/setTimeout/g, text),
+          whileLoop: count(/while\s*\(/g, text)
+        };
+
+        var controlSignals = {
+          addClickListener: count(/addEventListener\s*\(\s*["']click/g, text),
+          addInputListener: count(/addEventListener\s*\(\s*["']input/g, text),
+          addChangeListener: count(/addEventListener\s*\(\s*["']change/g, text),
+          querySelector: count(/querySelector/g, text),
+          getElementById: count(/getElementById/g, text)
+        };
+
+        var loopTotal = loopSignals.requestAnimationFrame + loopSignals.cancelAnimationFrame + loopSignals.setInterval + loopSignals.setTimeout + loopSignals.whileLoop;
+        var controlTotal = controlSignals.addClickListener + controlSignals.addInputListener + controlSignals.addChangeListener + controlSignals.querySelector + controlSignals.getElementById;
 
         return {
-          path: result.path,
-          ok: result.ok,
-          status: result.status,
-          size: result.size,
-          fetchUrl: result.url,
-          timestamp: result.timestamp,
-          error: result.error,
-          scriptRefs: scriptRefs,
-          runtimeRefs: runtimeRefs,
-          globalRefs: globalRefs,
+          path: path,
+          ok: ok,
+          status: status,
+          size: text.length,
+          scriptRefs: refs,
+          runtimeRefs: runtimes,
+          globalRefs: globals,
           loopSignals: loopSignals,
-          loopSignalTotal: sumValues(loopSignals),
+          loopSignalTotal: loopTotal,
           controlSignals: controlSignals,
-          controlSignalTotal: sumValues(controlSignals),
-          importCount: importCount,
-          hasRuntimeDirectoryRef: includesText(text, "/runtime/"),
-          hasVisualPassClaimTrue: /visualPassClaimed["']?\s*[:=]\s*true/.test(text)
+          controlSignalTotal: controlTotal,
+          importCount: count(/\bimport\s+/g, text),
+          hasRuntimeDirectoryRef: runtimes.length > 0 || path.indexOf("/runtime/") === 0,
+          hasVisualPassClaimTrue: /visualPassClaimed\s*[:=]\s*true/.test(text)
         };
       }
 
-      function runRouteAudit() {
-        setRunning(true);
+      function fetchScan(path) {
+        var url = path + (path.indexOf("?") === -1 ? "?" : "&") + "_dgb_ui_shell_gauge=" + encodeURIComponent(VERSION) + "&_t=" + Date.now();
 
-        return Promise.all(ROUTES_TO_AUDIT.map(fetchText)).then(function (results) {
-          var scans = results.map(scanSource);
-          var state = "PASS";
-
-          scans.forEach(function (scan) {
-            if (!scan.ok) state = "WARN";
-            if (scan.hasVisualPassClaimTrue) state = "FAIL";
+        return fetch(url, { cache: "no-store" })
+          .then(function (res) {
+            return res.text().then(function (text) {
+              return scanText(path, text, res.status, res.ok);
+            });
+          })
+          .catch(function (error) {
+            return {
+              path: path,
+              ok: false,
+              status: 0,
+              size: 0,
+              error: String(error && error.message ? error.message : error)
+            };
           });
-
-          renderRouteAudit({ state: state, scans: scans });
-          setState("routeBadge", state);
-          setRunning(false);
-
-          return { state: state, scans: scans };
-        });
       }
 
-      function runRuntimeInventory() {
-        setRunning(true);
+      function classify(runtimeScans, routeScans) {
+        var routeText = JSON.stringify(routeScans);
+        return runtimeScans.map(function (scan) {
+          var activeByRoute = routeText.indexOf(scan.path) !== -1 || scan.path.indexOf("/runtime/") === 0 && routeText.indexOf("/runtime/") !== -1;
+          var hasAuthority = scan.loopSignalTotal > 0 || scan.controlSignalTotal > 0 || (scan.globalRefs && scan.globalRefs.length > 0);
+          var classification = activeByRoute && hasAuthority ? "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY" :
+            activeByRoute ? "ACTIVE_REFERENCE" :
+            hasAuthority ? "PASSIVE_AUTHORITY" :
+            "PASSIVE_REFERENCE";
 
-        return Promise.all(RUNTIME_FILES.map(fetchText)).then(function (results) {
-          var scans = results.map(scanSource);
-          var state = "PASS";
-
-          scans.forEach(function (scan) {
-            if (!scan.ok) state = "WARN";
-            if (scan.hasVisualPassClaimTrue) state = "FAIL";
-          });
-
-          renderRuntimeInventory({ state: state, scans: scans });
-          setState("runtimeBadge", state);
-          setRunning(false);
-
-          return { state: state, scans: scans };
-        });
-      }
-
-      function buildReferenceMap(routeAudit, runtimeInventory) {
-        var allSourceScans = (routeAudit.scans || []).concat(runtimeInventory.scans || []);
-        var map = {};
-
-        RUNTIME_FILES.forEach(function (path) {
-          map[path] = {
-            path: path,
-            directRouteRefs: [],
-            directSourceRefs: [],
-            referencedByRuntimeFiles: [],
-            referencedByAny: false
-          };
-        });
-
-        allSourceScans.forEach(function (scan) {
-          RUNTIME_FILES.forEach(function (runtimePath) {
-            var base = runtimePath.split("/").pop();
-            var key = normalizeRuntimeKey(runtimePath);
-            var referenced = includesText(scan.path === runtimePath ? "" : "", runtimePath);
-
-            referenced = referenced ||
-              (scan.scriptRefs || []).some(function (ref) { return ref.indexOf(runtimePath) !== -1 || ref.indexOf(base) !== -1; }) ||
-              (scan.runtimeRefs || []).indexOf(runtimePath) !== -1;
-
-            if (!referenced) return;
-
-            if (ROUTES_TO_AUDIT.indexOf(scan.path) !== -1) {
-              map[runtimePath].directRouteRefs.push(scan.path);
-            } else {
-              map[runtimePath].directSourceRefs.push(scan.path);
-            }
-
-            if (RUNTIME_FILES.indexOf(scan.path) !== -1) {
-              map[runtimePath].referencedByRuntimeFiles.push(scan.path);
-            }
-
-            map[runtimePath].referencedByAny = true;
-          });
-        });
-
-        return map;
-      }
-
-      function classifyRuntimeFiles(routeAudit, runtimeInventory) {
-        var refMap = buildReferenceMap(routeAudit, runtimeInventory);
-
-        var classifications = (runtimeInventory.scans || []).map(function (scan) {
-          var refs = refMap[scan.path] || {
-            directRouteRefs: [],
-            directSourceRefs: [],
-            referencedByRuntimeFiles: [],
-            referencedByAny: false
-          };
-
-          var loopTotal = scan.loopSignalTotal;
-          var controlTotal = scan.controlSignalTotal;
-          var hasGlobals = (scan.globalRefs || []).length > 0;
-          var served = scan.ok && scan.status === 200;
-          var activeByRoute = refs.directRouteRefs.length > 0;
-          var activeBySource = refs.directSourceRefs.length > 0 || refs.referencedByRuntimeFiles.length > 0;
-          var active = activeByRoute || activeBySource;
-
-          var classification = "PASSIVE";
-          var risk = "LOW";
-          var action = "NO_DELETE_DECISION";
-
-          if (!served) {
-            classification = "NOT_SERVED";
-            risk = "LOW";
-            action = "NO_ACTION";
-          } else if (active && (loopTotal > 0 || controlTotal > 0 || hasGlobals)) {
-            classification = "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY";
-            risk = "HIGH";
-            action = "NEUTRALIZE_OR_SUBORDINATE_NOT_DELETE_FIRST";
-          } else if (active) {
-            classification = "ACTIVE_REFERENCE";
-            risk = "MEDIUM";
-            action = "TRACE_CALL_PATH_BEFORE_CHANGE";
-          } else if (!active && (loopTotal > 0 || controlTotal > 0 || hasGlobals)) {
-            classification = "PASSIVE_HIGH_RISK_CANDIDATE";
-            risk = "MEDIUM";
-            action = "SAFE_TO_ARCHIVE_CANDIDATE_AFTER_ROUTE_CONFIRMATION";
-          } else {
-            classification = "PASSIVE_LOW_RISK_CANDIDATE";
-            risk = "LOW";
-            action = "ARCHIVE_OPTIONAL_NOT_PERFORMANCE_FIX";
-          }
+          var risk = classification === "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY" ? "HIGH" :
+            classification === "ACTIVE_REFERENCE" || classification === "PASSIVE_AUTHORITY" ? "MEDIUM" :
+            "LOW";
 
           return {
             path: scan.path,
-            served: served,
+            served: scan.ok,
             status: scan.status,
             size: scan.size,
             classification: classification,
             risk: risk,
-            action: action,
-            activeByRoute: activeByRoute,
-            activeBySource: activeBySource,
-            active: active,
-            directRouteRefs: refs.directRouteRefs,
-            directSourceRefs: refs.directSourceRefs,
-            referencedByRuntimeFiles: refs.referencedByRuntimeFiles,
-            loopSignalTotal: loopTotal,
-            controlSignalTotal: controlTotal,
-            globalRefs: scan.globalRefs,
-            loopSignals: scan.loopSignals,
-            controlSignals: scan.controlSignals,
-            hasVisualPassClaimTrue: scan.hasVisualPassClaimTrue
+            active: activeByRoute,
+            loopSignalTotal: scan.loopSignalTotal || 0,
+            controlSignalTotal: scan.controlSignalTotal || 0,
+            globalRefs: scan.globalRefs || [],
+            action: classification === "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY" ? "NEUTRALIZE_OR_SUBORDINATE_NOT_DELETE_FIRST" :
+              classification === "ACTIVE_REFERENCE" ? "TRACE_CALL_PATH_BEFORE_CHANGE" :
+              "NO_ACTION"
           };
         });
-
-        var activeCount = classifications.filter(function (item) { return item.active; }).length;
-        var dangerousCount = classifications.filter(function (item) {
-          return item.classification === "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY";
-        }).length;
-
-        var highRiskPassiveCount = classifications.filter(function (item) {
-          return item.classification === "PASSIVE_HIGH_RISK_CANDIDATE";
-        }).length;
-
-        var state = "PASS";
-        if (dangerousCount > 0) state = "FAIL";
-        else if (activeCount > 0 || highRiskPassiveCount > 0) state = "WARN";
-
-        return {
-          state: state,
-          classifications: classifications,
-          activeCount: activeCount,
-          dangerousCount: dangerousCount,
-          highRiskPassiveCount: highRiskPassiveCount
-        };
       }
 
-      function classifyRootCause(routeAudit, runtimeInventory, authority) {
-        var dangerous = authority.classifications.filter(function (item) {
-          return item.classification === "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY";
-        });
+      function run(kind) {
+        var routePromise = kind === "runtime" ? Promise.resolve([]) : Promise.all(ROUTES.map(fetchScan));
+        var runtimePromise = kind === "routes" ? Promise.resolve([]) : Promise.all(RUNTIME_FILES.map(fetchScan));
 
-        var active = authority.classifications.filter(function (item) {
-          return item.active;
-        });
+        setText("audit-health", "RUNNING");
+        setText("root-cause", "Scanning");
 
-        var passiveHighRisk = authority.classifications.filter(function (item) {
-          return item.classification === "PASSIVE_HIGH_RISK_CANDIDATE";
-        });
+        Promise.all([routePromise, runtimePromise]).then(function (parts) {
+          var routeScans = parts[0];
+          var runtimeScans = parts[1];
+          var classifications = classify(runtimeScans, routeScans);
+          var dangerous = classifications.filter(function (item) { return item.classification === "DANGEROUS_ACTIVE_RUNTIME_AUTHORITY"; });
+          var active = classifications.filter(function (item) { return item.active; });
 
-        if (dangerous.length > 0) {
-          return {
-            state: "FAIL",
-            cause: "ACTIVE_UPSTREAM_RUNTIME_AUTHORITY_CONFLICT",
-            requiredNextAction: "SUBORDINATE_ACTIVE_RUNTIME_DIRECTORY_FILES",
-            requiredNextTNT: "RUNTIME_DIRECTORY_AUTHORITY_SUBORDINATION_TNT_v1",
-            deleteAllowed: false,
-            reason: "One or more /runtime/ files are actively referenced and contain loop, control, or global authority signals. Do not delete first; subordinate or neutralize authority.",
-            files: dangerous.map(function (item) { return item.path; }),
-            noFalseVisualPass: true
-          };
-        }
+          var rootCause = dangerous.length
+            ? "ACTIVE_UPSTREAM_RUNTIME_AUTHORITY_CONFLICT"
+            : "NO_DANGEROUS_RUNTIME_AUTHORITY_DETECTED";
 
-        if (active.length > 0) {
-          return {
-            state: "WARN",
-            cause: "ACTIVE_RUNTIME_DIRECTORY_REFERENCES_FOUND",
-            requiredNextAction: "TRACE_ACTIVE_RUNTIME_CALL_PATH",
-            requiredNextTNT: "RUNTIME_DIRECTORY_CALL_PATH_TRACE_TNT_v1",
-            deleteAllowed: false,
-            reason: "One or more /runtime/ files are referenced by live source. Deletion is not authorized until call path is known.",
-            files: active.map(function (item) { return item.path; }),
-            noFalseVisualPass: true
-          };
-        }
+          var auditHealth = dangerous.length ? "FAIL" : "PASS";
 
-        if (passiveHighRisk.length > 0) {
-          return {
-            state: "WARN",
-            cause: "PASSIVE_HIGH_RISK_RUNTIME_FILES_EXIST",
-            requiredNextAction: "ARCHIVE_OPTIONAL_NOT_PERFORMANCE_FIX",
-            requiredNextTNT: "NONE_REQUIRED_FOR_LAG_IF_PASSIVE",
-            deleteAllowed: "optional_after_backup",
-            reason: "Runtime files contain loop/control/global signals but are not referenced by audited live sources. They are candidates for archive, but deleting them is not a lag fix.",
-            files: passiveHighRisk.map(function (item) { return item.path; }),
-            noFalseVisualPass: true
-          };
-        }
-
-        return {
-          state: "PASS",
-          cause: "NO_ACTIVE_RUNTIME_DIRECTORY_AUTHORITY_FOUND",
-          requiredNextAction: "CONTINUE_LOCAL_RUNTIME_THROTTLE_OR_VISUAL_DELTA_REVIEW",
-          requiredNextTNT: "NONE_FOR_RUNTIME_DIRECTORY",
-          deleteAllowed: "optional_cleanup_after_backup",
-          reason: "No active /runtime/ directory authority was found in audited live sources. The lag source is more likely local route/runtime/render load, not the /runtime/ folder.",
-          files: [],
-          noFalseVisualPass: true
-        };
-      }
-
-      function renderTable(containerId, headers, rows) {
-        var container = byId(containerId);
-        var table = document.createElement("table");
-        var thead = document.createElement("thead");
-        var tbody = document.createElement("tbody");
-        var tr = document.createElement("tr");
-
-        headers.forEach(function (header) {
-          var th = document.createElement("th");
-          th.textContent = header.label;
-          tr.appendChild(th);
-        });
-
-        thead.appendChild(tr);
-
-        rows.forEach(function (row) {
-          var bodyTr = document.createElement("tr");
-
-          headers.forEach(function (header) {
-            var td = document.createElement("td");
-            var value = typeof header.get === "function" ? header.get(row) : row[header.key];
-            if (header.mono) td.className = "mono";
-            td.textContent = safeString(value);
-            bodyTr.appendChild(td);
-          });
-
-          tbody.appendChild(bodyTr);
-        });
-
-        table.appendChild(thead);
-        table.appendChild(tbody);
-        container.innerHTML = "";
-        container.appendChild(table);
-      }
-
-      function renderRouteAudit(routeAudit) {
-        renderTable("routeOutput", [
-          { label: "Source", key: "path", mono: true },
-          { label: "Status", key: "status" },
-          { label: "Size", key: "size" },
-          { label: "Script refs", get: function (row) { return (row.scriptRefs || []).join(", "); }, mono: true },
-          { label: "Runtime refs", get: function (row) { return (row.runtimeRefs || []).join(", "); }, mono: true },
-          { label: "Loop signals", key: "loopSignalTotal" },
-          { label: "Control signals", key: "controlSignalTotal" },
-          { label: "Globals", get: function (row) { return (row.globalRefs || []).join(", "); }, mono: true }
-        ], routeAudit.scans || []);
-      }
-
-      function renderRuntimeInventory(runtimeInventory) {
-        renderTable("runtimeOutput", [
-          { label: "Runtime file", key: "path", mono: true },
-          { label: "Status", key: "status" },
-          { label: "Size", key: "size" },
-          { label: "Loop signals", key: "loopSignalTotal" },
-          { label: "Control signals", key: "controlSignalTotal" },
-          { label: "Import count", key: "importCount" },
-          { label: "Globals", get: function (row) { return (row.globalRefs || []).join(", "); }, mono: true },
-          { label: "Visual pass true", key: "hasVisualPassClaimTrue" }
-        ], runtimeInventory.scans || []);
-      }
-
-      function renderClassification(authority) {
-        renderTable("classificationOutput", [
-          { label: "Runtime file", key: "path", mono: true },
-          { label: "Class", key: "classification", mono: true },
-          { label: "Risk", key: "risk" },
-          { label: "Active", key: "active" },
-          { label: "Route refs", get: function (row) { return (row.directRouteRefs || []).join(", "); }, mono: true },
-          { label: "Source refs", get: function (row) { return (row.directSourceRefs || []).join(", "); }, mono: true },
-          { label: "Action", key: "action", mono: true }
-        ], authority.classifications || []);
-      }
-
-      function renderSignals(authority) {
-        renderTable("signalsOutput", [
-          { label: "Runtime file", key: "path", mono: true },
-          { label: "RAF", get: function (row) { return row.loopSignals && row.loopSignals.requestAnimationFrame; } },
-          { label: "setInterval", get: function (row) { return row.loopSignals && row.loopSignals.setInterval; } },
-          { label: "setTimeout", get: function (row) { return row.loopSignals && row.loopSignals.setTimeout; } },
-          { label: "click", get: function (row) { return row.controlSignals && row.controlSignals.addClickListener; } },
-          { label: "input", get: function (row) { return row.controlSignals && row.controlSignals.addInputListener; } },
-          { label: "change", get: function (row) { return row.controlSignals && row.controlSignals.addChangeListener; } },
-          { label: "Globals", get: function (row) { return (row.globalRefs || []).join(", "); }, mono: true }
-        ], authority.classifications || []);
-      }
-
-      function renderCause(cause) {
-        var container = byId("causeOutput");
-        container.innerHTML = "";
-        var pre = document.createElement("pre");
-        pre.textContent = JSON.stringify(cause, null, 2);
-        container.appendChild(pre);
-      }
-
-      function updateSummary(receipt) {
-        var authority = receipt.authorityClassification;
-        var cause = receipt.rootCause;
-
-        setState("auditState", receipt.auditHealth);
-        setState("activeState", authority.activeCount > 0 ? "WARN" : "PASS");
-        setText("activeCount", "Active: " + authority.activeCount);
-        setState("dangerState", authority.dangerousCount > 0 ? "FAIL" : "PASS");
-        setText("dangerCount", "Dangerous: " + authority.dangerousCount);
-        setState("nextState", cause.state);
-        setText("nextAction", cause.requiredNextAction);
-      }
-
-      function runFullDiagnostic() {
-        setRunning(true);
-
-        return Promise.all([runRouteAudit(), runRuntimeInventory()]).then(function (parts) {
-          var routeAudit = parts[0];
-          var runtimeInventory = parts[1];
-          var authority = classifyRuntimeFiles(routeAudit, runtimeInventory);
-          var cause = classifyRootCause(routeAudit, runtimeInventory, authority);
-
-          renderClassification(authority);
-          renderSignals(authority);
-          renderCause(cause);
-
-          setState("classificationBadge", authority.state);
-          setState("signalsBadge", authority.dangerousCount > 0 ? "FAIL" : authority.highRiskPassiveCount > 0 ? "WARN" : "PASS");
-          setState("causeBadge", cause.state);
-
-          var auditHealth = "PASS";
-          if ([routeAudit.state, runtimeInventory.state, authority.state, cause.state].indexOf("FAIL") !== -1) auditHealth = "FAIL";
-          else if ([routeAudit.state, runtimeInventory.state, authority.state, cause.state].indexOf("WARN") !== -1) auditHealth = "WARN";
-
-          lastReceipt = {
-            contractVersion: CONTRACT_VERSION,
-            gaugesVersion: GAUGES_VERSION,
+          var receipt = {
+            contractVersion: "DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1",
+            gaugesVersion: "DGB_GLOBAL_UI_SHELL_ALIGNMENT_GAUGE_VIEW_v1",
             timestamp: new Date().toISOString(),
             auditHealth: auditHealth,
             runtimeDirectoryProbeActive: true,
             noExtraPlanetIframeStarted: true,
-            noDeleteAuthorizedByProbe: cause.deleteAllowed === true ? false : true,
+            noDeleteAuthorizedByProbe: true,
             visualPassClaimed: false,
-            auditedRoutes: ROUTES_TO_AUDIT,
-            auditedRuntimeFiles: RUNTIME_FILES,
-            routeAudit: routeAudit,
-            runtimeInventory: runtimeInventory,
-            authorityClassification: authority,
-            rootCause: cause
+            auditedRoutes: routeScans.map(function (item) { return item.path; }),
+            auditedRuntimeFiles: runtimeScans.map(function (item) { return item.path; }),
+            activeCount: active.length,
+            dangerousCount: dangerous.length,
+            rootCause: rootCause,
+            requiredNextAction: dangerous.length ? "SUBORDINATE_ACTIVE_RUNTIME_DIRECTORY_FILES" : "HOLD"
           };
 
-          global.DGBRuntimeDirectoryAuthorityProbeReceipt = lastReceipt;
-          byId("liveReceipt").textContent = JSON.stringify(lastReceipt, null, 2);
-          setState("receiptBadge", auditHealth);
-          updateSummary(lastReceipt);
-          setRunning(false);
+          setText("audit-health", auditHealth);
+          setText("active-count", String(active.length || 0));
+          setText("dangerous-count", String(dangerous.length || 0));
+          setText("root-cause", rootCause);
+          setText("route-audit", routeScans.length ? JSON.stringify(routeScans, null, 2) : "NOT RUN");
+          setText("runtime-inventory", runtimeScans.length ? JSON.stringify(runtimeScans, null, 2) : "NOT RUN");
+          setText("authority-classification", classifications.length ? JSON.stringify(classifications, null, 2) : "NOT RUN");
+          setText("live-receipt", JSON.stringify(receipt, null, 2));
 
-          return lastReceipt;
-        }).catch(function (error) {
-          setRunning(false);
-
-          lastReceipt = {
-            contractVersion: CONTRACT_VERSION,
-            gaugesVersion: GAUGES_VERSION,
-            timestamp: new Date().toISOString(),
-            auditHealth: "FAIL",
-            runtimeDirectoryProbeActive: false,
-            controllingGap: "AUDIT_RUNTIME_ERROR",
-            requiredNextAction: "REPAIR_AUDIT_DIAGNOSTIC",
-            requiredNextTNT: GAUGES_VERSION,
-            visualPassClaimed: false,
-            error: String(error && error.message ? error.message : error)
-          };
-
-          global.DGBRuntimeDirectoryAuthorityProbeReceipt = lastReceipt;
-          byId("liveReceipt").textContent = JSON.stringify(lastReceipt, null, 2);
-          setState("receiptBadge", "FAIL");
-          setState("auditState", "FAIL");
-          setState("nextState", "FAIL");
-          setText("nextAction", "REPAIR_AUDIT_DIAGNOSTIC");
-
-          return lastReceipt;
+          global.DGBRuntimeAuthorityGaugeReceipt = receipt;
         });
       }
 
-      function boot() {
-        byId("runFullDiagnostic").addEventListener("click", runFullDiagnostic);
-        byId("runRouteOnly").addEventListener("click", runRouteAudit);
-        byId("runRuntimeOnly").addEventListener("click", runRuntimeInventory);
-
-        global.DGBRuntimeDirectoryAuthorityProbe = {
-          VERSION: GAUGES_VERSION,
-          version: GAUGES_VERSION,
-          CONTRACT_VERSION: CONTRACT_VERSION,
-          contractVersion: CONTRACT_VERSION,
-          runFullDiagnostic: runFullDiagnostic,
-          runRouteAudit: runRouteAudit,
-          runRuntimeInventory: runRuntimeInventory,
-          getReceipt: function () { return lastReceipt; },
-          status: function () {
-            return {
-              ok: true,
-              active: true,
-              VERSION: GAUGES_VERSION,
-              version: GAUGES_VERSION,
-              contractVersion: CONTRACT_VERSION,
-              runtimeDirectoryProbeActive: true,
-              noExtraPlanetIframeStarted: true,
-              visualPassClaimed: false,
-              lastReceipt: lastReceipt
-            };
-          }
-        };
-
-        runFullDiagnostic();
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot);
-      } else {
-        boot();
-      }
+      Array.prototype.slice.call(document.querySelectorAll("[data-gauge-command]")).forEach(function (button) {
+        button.addEventListener("click", function () {
+          run(button.getAttribute("data-gauge-command"));
+        });
+      });
     })(window);
   </script>
 </body>

@@ -1,12 +1,22 @@
 <!-- /home/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="home"
+  data-route="/home/"
+  data-contract="DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Home</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Home: estate route parity page for Rich Manor and Estate."
+  />
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
+
 <body>
   <a class="dgb-skip" href="#main">Skip to Home</a>
 
@@ -15,8 +25,9 @@
       <div class="dgb-brand-row">
         <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
         <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Home · Estate Route</div>
+        <div class="dgb-room-line">Home · Estate Route Parity</div>
       </div>
+
       <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
@@ -31,13 +42,14 @@
 
   <main id="main" class="dgb-main">
     <section class="dgb-hero">
-      <p class="dgb-eyebrow">H3 · Home · Reception</p>
+      <p class="dgb-eyebrow">H3 · Home</p>
       <h1 class="dgb-title">Estate home route</h1>
       <p class="dgb-copy">
-        Home stabilizes the estate path and routes visitors to the correct chambers.
-        Planet 1 remains available through the Showroom globe route, but Home does not load Planet 1 renderer,
-        runtime, control, asset, or hexgrid scripts.
+        Home stabilizes the estate path and routes visitors to the correct chambers. Planet 1 remains
+        available through the Showroom globe route, but Home does not load Planet 1 renderer, runtime,
+        control, asset, or hexgrid scripts.
       </p>
+
       <div class="dgb-chip-row">
         <span class="dgb-chip">Route clean</span>
         <span class="dgb-chip">No Planet scripts</span>
@@ -50,38 +62,53 @@
       <article class="dgb-card">
         <h2>Showroom</h2>
         <p>Open the public presentation lane and inspect Planet 1 from the proper chamber.</p>
-        <div class="dgb-actions"><a class="dgb-button" href="/showroom/">Open Showroom</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button" href="/showroom/">Open Showroom</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Planet 1</h2>
-        <p>Planet 1 lives on the Showroom globe route. This is a link only; no Planet scripts are loaded on Home.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1</a></div>
+        <p>Planet 1 lives on the Showroom globe route. Home links to it but does not load the render chain.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Products</h2>
         <p>Enter the product wing without importing Planet 1 rendering dependencies into Home.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/products/">Open Products</a></div>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/products/">Open Products</a>
+        </div>
       </article>
 
       <article class="dgb-card">
         <h2>Gauges</h2>
-        <p>Run architecture, route, substrate, lattice, and visual-hold diagnostics from the Gauges chamber.</p>
-        <div class="dgb-actions"><a class="dgb-button secondary" href="/gauges/">Open Gauges</a></div>
+        <p>Run architecture, route, substrate, lattice, runtime, and visual-hold diagnostics from the Gauges chamber.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
+        </div>
       </article>
     </section>
 
     <details class="dgb-details">
       <summary>Route receipt</summary>
-      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1
 route=/home/
+page=home
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
 home_loads_planet_scripts=false
-protected_scripts=/world/render/*,/world/runtime.js,/world/control.js,/assets/showroom.globe.instrument.js,/showroom/runtime.js,/runtime/*
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
 visual_pass_claimed=false</pre>
     </details>
   </main>
 
-  <footer class="dgb-footer">Home · Global UI shell aligned.</footer>
+  <footer class="dgb-footer">
+    DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1 · Home · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

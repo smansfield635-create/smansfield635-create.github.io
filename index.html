@@ -1,678 +1,135 @@
+<!-- /index.html -->
 <!doctype html>
-<html lang="en"
+<html
+  lang="en"
   data-page="compass"
-  data-house-part="compass"
-  data-construct-class="house"
-  data-g5-site-uniformity="active"
-  data-compass-standard="G5_COMPASS_RUSSIAN_DOLL_BUBBLE_RENEWAL_TNT_v1"
-  data-architecture-claim="public-entry-surface"
-  data-visual-pass-claim="false"
+  data-route="/"
+  data-contract="DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1"
 >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
-  <meta name="description" content="Compass entry page for Diamond Gate Bridge. Start where the pressure is through one expandable system: book, universe, voice, products, showroom, and gauges.">
-
-  <style>
-    :root{
-      color-scheme:dark;
-      --bg:#05070d;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.085);
-      --panel3:rgba(147,232,255,.055);
-      --goldPanel:rgba(242,199,111,.07);
-      --line:rgba(176,205,255,.18);
-      --line2:rgba(242,199,111,.32);
-      --text:rgba(246,248,255,.94);
-      --muted:rgba(218,227,255,.68);
-      --soft:rgba(218,227,255,.54);
-      --gold:#f2c76f;
-      --blue:#93e8ff;
-      --green:#8ff5d2;
-      --max:1180px;
-      --radius:28px;
-      --shadow:0 28px 90px rgba(0,0,0,.36);
-    }
-
-    *{box-sizing:border-box}
-
-    html{
-      scroll-behavior:smooth;
-      background:var(--bg);
-    }
-
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.55;
-      background:
-        radial-gradient(circle at 22% 0%,rgba(65,118,179,.28),transparent 34%),
-        radial-gradient(circle at 82% 18%,rgba(147,232,255,.12),transparent 32%),
-        linear-gradient(180deg,#07101d 0%,#02040a 100%);
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      background:#fff;
-      color:#000;
-      padding:8px 10px;
-      border-radius:8px;
-      z-index:20;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      width:min(var(--max),calc(100% - 32px));
-      margin:0 auto;
-      padding:24px 0 46px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 0 20px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .brand{
-      display:grid;
-      gap:2px;
-      color:rgba(248,251,255,.86);
-    }
-
-    .brand strong{
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-weight:950;
-    }
-
-    .brand span{
-      color:var(--soft);
-      font-size:.78rem;
-      font-weight:750;
-    }
-
-    .nav{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .nav a{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      border-radius:999px;
-      padding:8px 11px;
-      font-size:.74rem;
-      font-weight:850;
-      color:rgba(242,247,255,.74);
-    }
-
-    .nav a[aria-current="page"]{
-      border-color:rgba(147,232,255,.42);
-      color:var(--blue);
-      background:rgba(147,232,255,.06);
-    }
-
-    .hero{
-      display:grid;
-      gap:18px;
-      padding:42px 0 24px;
-    }
-
-    .kicker{
-      color:var(--blue);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    h1{
-      max-width:960px;
-      font-size:clamp(2.65rem,7.4vw,6.9rem);
-      line-height:.88;
-      margin:0;
-      letter-spacing:-.085em;
-    }
-
-    h2{
-      font-size:clamp(1.6rem,3.5vw,3rem);
-      line-height:1;
-      margin:0;
-      letter-spacing:-.055em;
-    }
-
-    h3{
-      font-size:1.12rem;
-      line-height:1.12;
-      margin:0;
-      letter-spacing:-.03em;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:1rem;
-    }
-
-    .lede{
-      max-width:860px;
-      font-size:clamp(1.08rem,2.2vw,1.42rem);
-      color:rgba(226,232,246,.78);
-    }
-
-    .actions,.link-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(147,232,255,.26);
-      background:linear-gradient(180deg,rgba(147,232,255,.16),rgba(255,255,255,.045));
-      color:var(--text);
-      border-radius:16px;
-      padding:11px 14px;
-      font-weight:950;
-      letter-spacing:.02em;
-    }
-
-    .button.gold{
-      border-color:rgba(242,199,111,.38);
-      background:linear-gradient(180deg,rgba(242,199,111,.17),rgba(255,255,255,.045));
-    }
-
-    .button.secondary{
-      border-color:var(--line);
-      background:rgba(255,255,255,.052);
-      color:rgba(242,247,255,.78);
-    }
-
-    .compass-bubble{
-      border:1px solid var(--line2);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(242,199,111,.12),transparent 38%),
-        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
-      border-radius:34px;
-      box-shadow:var(--shadow);
-      padding:18px;
-      margin:22px 0;
-    }
-
-    details{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,var(--panel2),var(--panel));
-      border-radius:var(--radius);
-      padding:0;
-      overflow:hidden;
-    }
-
-    details + details{margin-top:12px}
-
-    summary{
-      list-style:none;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:18px;
-      font-weight:950;
-      color:rgba(248,251,255,.92);
-    }
-
-    summary::-webkit-details-marker{display:none}
-
-    summary::after{
-      content:"+";
-      display:grid;
-      place-items:center;
-      min-width:30px;
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      border:1px solid rgba(147,232,255,.28);
-      color:var(--blue);
-      background:rgba(147,232,255,.06);
-      font-size:1.1rem;
-      line-height:1;
-    }
-
-    details[open] > summary::after{
-      content:"–";
-      border-color:rgba(242,199,111,.34);
-      color:var(--gold);
-      background:rgba(242,199,111,.06);
-    }
-
-    .summary-copy{
-      display:grid;
-      gap:8px;
-    }
-
-    .summary-copy b{
-      color:var(--gold);
-      font-size:.75rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .summary-copy span{
-      font-size:1.08rem;
-      letter-spacing:-.025em;
-    }
-
-    .bubble-body{
-      display:grid;
-      gap:14px;
-      padding:0 18px 18px;
-    }
-
-    .bubble-note{
-      border:1px solid rgba(242,199,111,.22);
-      background:rgba(242,199,111,.055);
-      border-radius:20px;
-      padding:14px;
-    }
-
-    .nested{
-      display:grid;
-      gap:12px;
-    }
-
-    .nested details{
-      border-radius:22px;
-      background:linear-gradient(180deg,rgba(147,232,255,.065),rgba(255,255,255,.035));
-    }
-
-    .nested summary{
-      padding:15px;
-    }
-
-    .nested .bubble-body{
-      padding:0 15px 15px;
-    }
-
-    .micro-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .micro-grid.six{
-      grid-template-columns:repeat(6,minmax(0,1fr));
-    }
-
-    .card{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
-      border-radius:22px;
-      padding:16px;
-      display:grid;
-      gap:9px;
-      align-content:start;
-      min-height:150px;
-    }
-
-    .card .tag{
-      width:max-content;
-      border:1px solid rgba(147,232,255,.22);
-      border-radius:999px;
-      padding:4px 8px;
-      color:var(--blue);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(147,232,255,.05);
-    }
-
-    .card b{
-      display:block;
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .card p{font-size:.93rem}
-
-    .path-panel{
-      border:1px solid rgba(143,245,210,.20);
-      background:rgba(143,245,210,.04);
-      border-radius:22px;
-      padding:16px;
-      display:grid;
-      gap:10px;
-    }
-
-    .voice-list{
-      display:grid;
-      gap:8px;
-      margin:4px 0 0;
-      padding:0;
-      list-style:none;
-    }
-
-    .voice-list li{
-      color:var(--muted);
-      border-bottom:1px solid rgba(176,205,255,.09);
-      padding:8px 0;
-    }
-
-    .voice-list strong{color:rgba(246,248,255,.88)}
-
-    .final-band{
-      display:grid;
-      gap:12px;
-      border:1px solid var(--line2);
-      background:linear-gradient(180deg,rgba(242,199,111,.08),rgba(255,255,255,.045));
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-      margin:22px 0;
-    }
-
-    .final-band strong{
-      color:rgba(255,238,190,.94);
-      font-size:1.08rem;
-    }
-
-    .footer{
-      display:grid;
-      gap:10px;
-      margin-top:30px;
-      padding-top:20px;
-      border-top:1px solid var(--line);
-      color:rgba(218,227,255,.58);
-      font-size:.8rem;
-    }
-
-    .public-receipt{color:rgba(242,247,255,.70)}
-
-    @media(max-width:980px){
-      .micro-grid,.micro-grid.six{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .topbar{align-items:flex-start;flex-direction:column}
-      .nav{justify-content:flex-start}
-    }
-
-    @media(max-width:640px){
-      .shell{width:min(100% - 22px,var(--max))}
-      .hero{padding-top:32px}
-      .micro-grid,.micro-grid.six{grid-template-columns:1fr}
-      h1{font-size:clamp(2.45rem,15vw,4.2rem)}
-      summary{align-items:flex-start}
-    }
-  </style>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Planet 1, and gauges."
+  />
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
 </head>
 
 <body>
-  <a class="skip" href="#compass-main">Skip to Compass</a>
+  <a class="dgb-skip" href="#main">Skip to Compass</a>
 
-  <div class="shell">
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Compass · public command surface</span>
-      </a>
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Rich Manor and Estate</div>
+        <div class="dgb-room-line">Compass · Public Command Surface</div>
+      </div>
 
-      <nav class="nav" aria-label="Primary house navigation">
+      <nav class="dgb-nav" aria-label="Primary navigation">
         <a href="/" aria-current="page">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Planet 1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main id="compass-main">
-      <section class="hero" aria-labelledby="page-title">
-        <div class="kicker">Diamond Gate Bridge · Compass</div>
-        <h1 id="page-title">Start where the pressure is.</h1>
-        <p class="lede">Pressure is not the problem. Pressure is the door. Diamond Gate Bridge is the front entrance to a living system: a book, a world, a public voice, a product wing, a showroom, and a proof engine.</p>
+  <main id="main" class="dgb-main">
+    <section class="dgb-hero">
+      <p class="dgb-eyebrow">Diamond Gate Bridge · Compass</p>
+      <h1 class="dgb-title">Start where the pressure is.</h1>
+      <p class="dgb-copy">
+        Pressure is not the problem. Pressure is the door. Diamond Gate Bridge is the front entrance
+        to a living system: a book, a world, a public voice, a product wing, a showroom, and a proof engine.
+      </p>
 
-        <div class="actions" aria-label="Primary public entry paths">
-          <a class="button gold" href="/nine-summits-of-love/">Open the book</a>
-          <a class="button" href="/nine-summits/universe/">Enter the universe</a>
-          <a class="button" href="/this-underdog/">Hear the voice</a>
-          <a class="button secondary" href="/showroom/">Inspect the build</a>
-        </div>
-      </section>
-
-      <section class="compass-bubble" aria-label="Compass Russian doll system">
-        <details open>
-          <summary>
-            <span class="summary-copy">
-              <b>Compass bubble</b>
-              <span>One door opens the whole system.</span>
-            </span>
-          </summary>
-
-          <div class="bubble-body">
-            <div class="bubble-note">
-              <p>You do not need the whole map first. Start with the next truthful door. The system gets clearer after you enter.</p>
-            </div>
-
-            <div class="nested">
-              <details open>
-                <summary>
-                  <span class="summary-copy">
-                    <b>Start</b>
-                    <span>Choose the pressure you brought with you.</span>
-                  </span>
-                </summary>
-
-                <div class="bubble-body">
-                  <div class="micro-grid six">
-                    <article class="card"><b>Key</b><p>Pressure becomes an entrance.</p></article>
-                    <article class="card"><b>Climb</b><p>The human path becomes visible.</p></article>
-                    <article class="card"><b>World</b><p>The map gives the climb terrain.</p></article>
-                    <article class="card"><b>Voice</b><p>The message learns to enter the room.</p></article>
-                    <article class="card"><b>Tools</b><p>The idea becomes useful.</p></article>
-                    <article class="card"><b>Proof</b><p>The work becomes measurable.</p></article>
-                  </div>
-                </div>
-              </details>
-
-              <details>
-                <summary>
-                  <span class="summary-copy">
-                    <b>Six doors</b>
-                    <span>Each entrance has a different job.</span>
-                  </span>
-                </summary>
-
-                <div class="bubble-body">
-                  <div class="micro-grid">
-                    <article class="card">
-                      <span class="tag">Book</span>
-                      <h3>Nine Summits of Love</h3>
-                      <p>Human change belongs here. The book carries character, dignity, free will, discipline, and love without turning love into weakness.</p>
-                      <div class="link-row"><a class="button secondary" href="/nine-summits-of-love/">Open book path</a></div>
-                    </article>
-
-                    <article class="card">
-                      <span class="tag">World</span>
-                      <h3>Nine Summits Universe</h3>
-                      <p>Terrain belongs here. The climb becomes a world where pressure, access, land, weather, and movement can be seen.</p>
-                      <div class="link-row"><a class="button secondary" href="/nine-summits/universe/">Enter universe</a></div>
-                    </article>
-
-                    <article class="card">
-                      <span class="tag">Voice</span>
-                      <h3>This Underdog</h3>
-                      <p>Public voice belongs here. Comedy, story, speaking, and lived pressure become language another person can hear.</p>
-                      <div class="link-row"><a class="button secondary" href="/this-underdog/">Open voice path</a></div>
-                    </article>
-
-                    <article class="card">
-                      <span class="tag">Products</span>
-                      <h3>Product Wing</h3>
-                      <p>Usefulness belongs here. Games, learning systems, support tools, product families, and practical ideas move toward use.</p>
-                      <div class="link-row"><a class="button secondary" href="/products/">View products</a></div>
-                    </article>
-
-                    <article class="card">
-                      <span class="tag">Showroom</span>
-                      <h3>Live Build</h3>
-                      <p>Visibility belongs here. The Showroom displays active work, live demonstrations, world-building, and public proof.</p>
-                      <div class="link-row"><a class="button secondary" href="/showroom/">Open showroom</a></div>
-                    </article>
-
-                    <article class="card">
-                      <span class="tag">Gauges</span>
-                      <h3>Measurement</h3>
-                      <p>Measurement belongs here. Gauges separate architecture health, candidate branches, visual readiness, and content hold so the work does not falsely pass itself.</p>
-                      <div class="link-row"><a class="button secondary" href="/gauges/">Read gauges</a></div>
-                    </article>
-                  </div>
-                </div>
-              </details>
-
-              <details>
-                <summary>
-                  <span class="summary-copy">
-                    <b>System fit</b>
-                    <span>Separate enough to work. Connected enough to matter.</span>
-                  </span>
-                </summary>
-
-                <div class="bubble-body">
-                  <div class="micro-grid six">
-                    <article class="card"><b>Pressure</b><h3>The door</h3><p>Pressure names the place where movement is required.</p></article>
-                    <article class="card"><b>Voice</b><h3>The language</h3><p>Voice turns pressure into something another person can recognize.</p></article>
-                    <article class="card"><b>Climb</b><h3>The human path</h3><p>Nine Summits gives the internal climb a plain structure.</p></article>
-                    <article class="card"><b>World</b><h3>The terrain</h3><p>The universe turns the climb into visible places and movement.</p></article>
-                    <article class="card"><b>Tools</b><h3>The use</h3><p>Products turn ideas into something someone can actually use.</p></article>
-                    <article class="card"><b>Proof</b><h3>The check</h3><p>Showroom and Gauges make the work visible and measurable.</p></article>
-                  </div>
-                </div>
-              </details>
-
-              <details>
-                <summary>
-                  <span class="summary-copy">
-                    <b>Deep paths</b>
-                    <span>Open only the layer you need next.</span>
-                  </span>
-                </summary>
-
-                <div class="bubble-body">
-                  <div class="micro-grid">
-                    <article class="path-panel">
-                      <h3>The book gives the climb.</h3>
-                      <p>Nine Summits of Love is the human center. It is about pressure, dignity, discipline, forgiveness, courage, and the decision to become whole without becoming hard.</p>
-                      <div class="link-row">
-                        <a class="button secondary" href="/nine-summits-of-love/">Read the book path</a>
-                        <a class="button secondary" href="/nine-summits/">Explore Nine Summits</a>
-                      </div>
-                    </article>
-
-                    <article class="path-panel">
-                      <h3>The universe gives the world.</h3>
-                      <p>Nine Summits Universe turns the climb into terrain. The world layer gives pressure a visible place to move, test, fail, recover, and open.</p>
-                      <div class="link-row">
-                        <a class="button secondary" href="/nine-summits/universe/">Enter the universe</a>
-                        <a class="button secondary" href="/showroom/globe/">Inspect Planet 1</a>
-                      </div>
-                    </article>
-
-                    <article class="path-panel">
-                      <h3>The stage was already there.</h3>
-                      <p>This Underdog is where the public voice enters. The underdog is not the weak part. The underdog is the part that survived before it had clean language.</p>
-                      <ul class="voice-list">
-                        <li><strong>Story:</strong> lived pressure becomes language people can recognize.</li>
-                        <li><strong>Comedy:</strong> humor lowers the wall so truth has somewhere to land.</li>
-                        <li><strong>Speaking:</strong> the message enters the room before the system has to explain itself.</li>
-                      </ul>
-                      <div class="link-row">
-                        <a class="button secondary" href="/this-underdog/">Open This Underdog</a>
-                        <a class="button secondary" href="/about-this-underdog/">About This Underdog</a>
-                      </div>
-                    </article>
-
-                    <article class="path-panel">
-                      <h3>Products make the idea usable.</h3>
-                      <p>Product work is where the system stops being only language. Tools, games, learning systems, and support products give the work a practical surface.</p>
-                      <div class="link-row">
-                        <a class="button secondary" href="/products/">Open Products</a>
-                      </div>
-                    </article>
-
-                    <article class="path-panel">
-                      <h3>Showroom and Gauges make it accountable.</h3>
-                      <p>Proof belongs above the sales pitch. The Showroom displays the build. Gauges check whether the work is actually landing instead of merely sounding complete.</p>
-                      <div class="link-row">
-                        <a class="button secondary" href="/showroom/">Open Showroom</a>
-                        <a class="button secondary" href="/gauges/">Read Gauges</a>
-                      </div>
-                    </article>
-
-                    <article class="path-panel">
-                      <h3>Choose one honest door.</h3>
-                      <p>Do not wait until the whole map is comfortable. Choose the honest door, enter the system, and let the next layer open from there.</p>
-                      <div class="link-row">
-                        <a class="button secondary" href="/nine-summits-of-love/">Book</a>
-                        <a class="button secondary" href="/this-underdog/">Voice</a>
-                        <a class="button secondary" href="/showroom/">Build</a>
-                        <a class="button secondary" href="/products/">Tools</a>
-                      </div>
-                    </article>
-                  </div>
-                </div>
-              </details>
-            </div>
-          </div>
-        </details>
-      </section>
-
-      <section class="final-band" aria-label="Final direction">
-        <strong>Start where the pressure is.</strong>
-        <p>Final direction: do not wait until the whole map is comfortable. Choose the honest door, enter the system, and let the next layer open from there.</p>
-        <div class="actions">
-          <a class="button gold" href="/nine-summits-of-love/">Start with the book</a>
-          <a class="button" href="/this-underdog/">Start with the voice</a>
-          <a class="button" href="/showroom/">Start with the build</a>
-          <a class="button secondary" href="/products/">Start with tools</a>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="public-receipt">Compass · G5 Russian-doll bubble renewal active. Public entry surface only. Architecture, candidate branches, and readiness are measured through Gauges.</div>
-      <div hidden>
-        G5_COMPASS_RUSSIAN_DOLL_BUBBLE_RENEWAL_TNT_v1
-        route-exists=true
-        house-nav-standard=true
-        primary-house-nav=Compass|Door|Home|Products|Showroom|Gauges
-        secondary-public-paths=Book|Universe|This_Underdog|Nine_Summits
-        russian-doll-bubble-structure=true
-        no-graphic-box=true
-        no-generated-visual=true
-        no-false-pass-claim=true
-        visual-pass-claim=false
-        gauges-measurement-route=/gauges/
-        showroom-route=/showroom/
-        planet-one-route=/showroom/globe/
+      <div class="dgb-chip-row">
+        <span class="dgb-chip">Public command</span>
+        <span class="dgb-chip">Estate shell</span>
+        <span class="dgb-chip">Route map</span>
+        <span class="dgb-chip hold">Visual hold</span>
       </div>
-    </footer>
-  </div>
+
+      <div class="dgb-actions">
+        <a class="dgb-button" href="/door/">Cross the Door</a>
+        <a class="dgb-button secondary" href="/nine-summits/">Open the book</a>
+        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter the universe</a>
+        <a class="dgb-button secondary" href="/showroom/globe/">Inspect the build</a>
+      </div>
+    </section>
+
+    <section class="dgb-grid">
+      <article class="dgb-card">
+        <h2>Door</h2>
+        <p>Choose the view, cross the threshold, and enter the estate without standing at the entrance forever.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/door/">Open Door</a>
+        </div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Home</h2>
+        <p>Stabilize the estate route and move to the correct chamber without loading Planet 1 engine scripts.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/home/">Open Home</a>
+        </div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Products</h2>
+        <p>Enter the product wing where each chamber explains what it is before asking for a click.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/products/">Open Products</a>
+        </div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Showroom</h2>
+        <p>Use the lightweight lobby to route into the proof surfaces without duplicating engines.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/showroom/">Open Showroom</a>
+        </div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Planet 1</h2>
+        <p>Inspect the active globe lane where the render chain, terrain, water, land, and air are tested.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1</a>
+        </div>
+      </article>
+
+      <article class="dgb-card">
+        <h2>Gauges</h2>
+        <p>Audit route authority, runtime authority, served source, and diagnostic receipts.</p>
+        <div class="dgb-actions">
+          <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
+        </div>
+      </article>
+    </section>
+
+    <details class="dgb-details">
+      <summary>Route receipt</summary>
+      <pre class="dgb-receipt">DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1
+route=/
+page=compass
+uses_shared_shell=/assets/dgb-ui-shell.css
+canonical_nav=Compass,Door,Home,Products,Showroom,Planet 1,Gauges
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
+visual_pass_claimed=false</pre>
+    </details>
+  </main>
+
+  <footer class="dgb-footer">
+    DGB_GLOBAL_UI_SHELL_PARITY_CLOSEOUT_TNT_v1 · Compass · Diamond Gate Bridge.
+  </footer>
 </body>
 </html>

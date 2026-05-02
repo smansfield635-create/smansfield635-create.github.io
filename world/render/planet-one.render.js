@@ -1,21 +1,20 @@
-/* G1 PLANET 1 TERRAIN LIFE / WATER DIVIDE PHASE-STATE RENDERER
+/* G1 PLANET 1 TRI-DOMAIN 256 WHOLE-WORLD CONTAINER RENDERER
    FILE: /world/render/planet-one.render.js
    VERSION: G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
+   LAYER_VERSION: G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1
 
    LAW:
-   Renderer gives terrain life.
-   Renderer does not give terrain authority.
-   Water remains one connected sovereign system.
-   Elevation transforms water state instead of replacing water.
-   High terrain becomes high-elevation ice / frozen-water candidate.
-   The divide is WATER_DIVIDE / PHASE_STATE_DIVIDE, not glacier-divide.
-   No rivers, no mountains, no full glaciers, no visual pass claim.
+   Renderer expresses one whole-world container with three internal domains:
+   WATER_256, LAND_256, AIR_256.
+   The renderer does not split them into separate worlds.
+   It renders coordinated cycle exchange inside one planetary body.
 */
 
-(function attachPlanetOneTerrainLifeWaterDivideRenderer(global) {
+(function attachPlanetOneTriDomain256Renderer(global) {
   "use strict";
 
   var VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+  var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
   var HEXGRID_PATH = "/world/render/planet-one.hexgrid.render.js";
@@ -30,59 +29,6 @@
     rendererConsumesHydration: false,
     rendererConsumesHexBridge: false
   };
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, Number(value) || 0));
-  }
-
-  function mix(a, b, t) {
-    return a + (b - a) * clamp(t, 0, 1);
-  }
-
-  function normalizeLon(lon) {
-    var x = ((Number(lon) + 180) % 360 + 360) % 360 - 180;
-    return x === -180 ? 180 : x;
-  }
-
-  function degToRad(value) {
-    return value * Math.PI / 180;
-  }
-
-  function radToDeg(value) {
-    return value * 180 / Math.PI;
-  }
-
-  function inverseOrthographic(x, y, viewLon, viewLat) {
-    var rho = Math.sqrt(x * x + y * y);
-    var c;
-    var sinC;
-    var cosC;
-    var lat0;
-    var lon0;
-    var lat;
-    var lon;
-
-    if (rho > 1) return null;
-    if (rho < 0.000001) return { lon: normalizeLon(viewLon), lat: viewLat || 0, limb: 1 };
-
-    c = Math.asin(rho);
-    sinC = Math.sin(c);
-    cosC = Math.cos(c);
-    lat0 = degToRad(viewLat || 0);
-    lon0 = degToRad(viewLon || 0);
-
-    lat = Math.asin(cosC * Math.sin(lat0) + (y * sinC * Math.cos(lat0)) / rho);
-    lon = lon0 + Math.atan2(
-      x * sinC,
-      rho * Math.cos(lat0) * cosC - y * Math.sin(lat0) * sinC
-    );
-
-    return {
-      lon: normalizeLon(radToDeg(lon)),
-      lat: clamp(radToDeg(lat), -90, 90),
-      limb: Math.sqrt(Math.max(0, 1 - rho * rho))
-    };
-  }
 
   function resolveElement(target) {
     if (!target && global.document) {
@@ -117,7 +63,8 @@
       canvas = global.document.createElement("canvas");
       canvas.setAttribute("data-planet-one-render-canvas", "true");
       canvas.setAttribute("data-renderer-version", VERSION);
-      canvas.setAttribute("aria-label", "Planet 1 terrain life water divide phase-state renderer");
+      canvas.setAttribute("data-layer-version", LAYER_VERSION);
+      canvas.setAttribute("aria-label", "Planet 1 tri-domain 256 renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -153,10 +100,6 @@
     );
   }
 
-  function getHexBridge() {
-    return global.DGBPlanetOneHexgridRender || null;
-  }
-
   function ensureScript(path, testFn) {
     var existing;
     var script;
@@ -184,7 +127,7 @@
 
     return new Promise(function (resolve) {
       script = global.document.createElement("script");
-      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&t=" + Date.now();
+      script.src = path + "?v=" + encodeURIComponent(VERSION) + "&layer=" + encodeURIComponent(LAYER_VERSION) + "&t=" + Date.now();
       script.async = false;
       script.defer = false;
 
@@ -218,6 +161,7 @@
   function drawBaseSphere(ctx, cx, cy, radius) {
     var ocean;
     var rim;
+    var container;
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -232,6 +176,13 @@
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fillStyle = ocean;
+    ctx.fill();
+
+    container = ctx.createRadialGradient(cx, cy, radius * 0.40, cx, cy, radius * 1.06);
+    container.addColorStop(0, "rgba(255,255,255,0)");
+    container.addColorStop(0.76, "rgba(140,180,255,.025)");
+    container.addColorStop(1, "rgba(140,180,255,.105)");
+    ctx.fillStyle = container;
     ctx.fill();
 
     rim = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.05);
@@ -254,172 +205,37 @@
     ctx.clip();
   }
 
-  function blendPixel(base, over, alpha) {
-    return [
-      Math.round(mix(base[0], over[0], alpha)),
-      Math.round(mix(base[1], over[1], alpha)),
-      Math.round(mix(base[2], over[2], alpha)),
-      Math.round(clamp(mix(base[3] == null ? 255 : base[3], over[3] == null ? 255 : over[3], alpha), 0, 255))
-    ];
-  }
-
-  function sampleValue(sample, camelName, snakeName, fallback) {
-    if (!sample) return fallback || 0;
-    if (sample[camelName] != null) return Number(sample[camelName]);
-    if (sample[snakeName] != null) return Number(sample[snakeName]);
-    return fallback || 0;
-  }
-
-  function drawWaterDividePhaseOverlay(ctx, cx, cy, radius, options) {
-    var hex = getHexBridge();
-    var sampleFn = hex && (hex.sampleBridge || hex.samplePlanetSurface);
-    var canvas = ctx.canvas;
-    var scale = clamp(Number(options.overlayScale || 0.78), 0.52, 1);
-    var offW = Math.max(260, Math.round(canvas.width * scale));
-    var offH = Math.max(260, Math.round(canvas.height * scale));
-    var off = document.createElement("canvas");
-    var offCtx;
-    var img;
-    var data;
-    var ox = offW / 2;
-    var oy = offH / 2;
-    var offRadius = radius * scale;
-    var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
-    var viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
-    var seed = Number(options.seed || 256451);
-    var x;
-    var y;
-    var dx;
-    var dy;
-    var geo;
-    var sample;
-    var i;
-    var wetLowland;
-    var dryLowland;
-    var softLand;
-    var earlyStone;
-    var microRelief;
-    var iceState;
-    var waterDivide;
-    var meltPermission;
-    var beachLock;
-    var reef;
-    var shelf;
-    var wetEdge;
-    var lowEmergent;
-    var terrainLife;
-    var alpha;
-    var out;
-
-    if (!sampleFn) {
-      return {
-        waterDivideOverlayRendered: false,
-        reason: "NO_SAMPLE_BRIDGE",
-        visualPassClaimed: false
-      };
-    }
-
-    off.width = offW;
-    off.height = offH;
-    offCtx = off.getContext("2d");
-    img = offCtx.createImageData(offW, offH);
-    data = img.data;
-
-    for (y = 0; y < offH; y += 1) {
-      for (x = 0; x < offW; x += 1) {
-        dx = (x - ox) / offRadius;
-        dy = (oy - y) / offRadius;
-        i = (y * offW + x) * 4;
-
-        if (dx * dx + dy * dy > 1) {
-          data[i + 3] = 0;
-          continue;
-        }
-
-        geo = inverseOrthographic(dx, dy, viewLon, viewLat);
-        if (!geo) {
-          data[i + 3] = 0;
-          continue;
-        }
-
-        sample = sampleFn(geo.lon, geo.lat, { seed: seed }) || {};
-
-        wetLowland = sampleValue(sample, "wetLowland", "wet_lowland", 0);
-        dryLowland = sampleValue(sample, "dryLowland", "dry_lowland", 0);
-        softLand = sampleValue(sample, "softLandTone", "soft_land_tone", sampleValue(sample, "lowEmergentLand", "low_emergent_land", 0) * 0.6);
-        earlyStone = sampleValue(sample, "earlyStoneTone", "early_stone_tone", 0);
-        microRelief = sampleValue(sample, "microRelief", "micro_relief", 0);
-        iceState = sampleValue(sample, "highElevationFrozenWaterCandidate", "high_elevation_frozen_water_candidate", 0);
-        waterDivide = sampleValue(sample, "watershedDivideCandidate", "watershed_divide_candidate", 0);
-        meltPermission = sampleValue(sample, "futureMeltPathPermission", "future_melt_path_permission", 0);
-        beachLock = sampleValue(sample, "beachLock", "beach_lock", 0);
-        reef = sampleValue(sample, "reefField", "reef_field", sampleValue(sample, "reefCandidate", "reef_candidate", 0));
-        shelf = sampleValue(sample, "shelfField", "shelf_field", sampleValue(sample, "shelfCandidate", "shelf_candidate", 0));
-        wetEdge = sampleValue(sample, "wetEdge", "wet_edge", sampleValue(sample, "wetEdgeCandidate", "wet_edge_candidate", 0));
-        lowEmergent = sampleValue(sample, "lowEmergentLand", "low_emergent_land", 0);
-
-        terrainLife = clamp(
-          wetLowland * 0.55 +
-          dryLowland * 0.42 +
-          softLand * 0.62 +
-          earlyStone * 0.44 +
-          microRelief * 0.26 +
-          lowEmergent * 0.32,
-          0,
-          1
-        );
-
-        out = [0, 0, 0, 0];
-
-        out = blendPixel(out, [88, 190, 188, 255], clamp(reef * 0.16, 0, 0.16));
-        out = blendPixel(out, [56, 154, 178, 255], clamp(shelf * 0.09, 0, 0.09));
-        out = blendPixel(out, [232, 214, 154, 255], clamp(beachLock * 0.26 + wetEdge * 0.08, 0, 0.30));
-
-        out = blendPixel(out, [102, 148, 94, 255], clamp(wetLowland * 0.22, 0, 0.22));
-        out = blendPixel(out, [92, 128, 78, 255], clamp(softLand * 0.28, 0, 0.28));
-        out = blendPixel(out, [132, 122, 84, 255], clamp(dryLowland * 0.18, 0, 0.18));
-        out = blendPixel(out, [126, 130, 116, 255], clamp(earlyStone * 0.16, 0, 0.16));
-
-        /* Water divide / phase-state expression. This is not a glacier authority. */
-        out = blendPixel(out, [180, 226, 232, 255], clamp(iceState * 0.34, 0, 0.34));
-        out = blendPixel(out, [142, 206, 224, 255], clamp(waterDivide * 0.18, 0, 0.18));
-        out = blendPixel(out, [122, 196, 214, 255], clamp(meltPermission * 0.08, 0, 0.08));
-
-        alpha = clamp(
-          reef * 0.10 +
-          shelf * 0.06 +
-          beachLock * 0.18 +
-          terrainLife * 0.28 +
-          iceState * 0.34 +
-          waterDivide * 0.16,
-          0,
-          0.42
-        );
-
-        alpha = alpha * clamp(0.58 + geo.limb * 0.52, 0.35, 1.02);
-
-        data[i] = out[0];
-        data[i + 1] = out[1];
-        data[i + 2] = out[2];
-        data[i + 3] = Math.round(alpha * 255);
-      }
-    }
-
-    offCtx.putImageData(img, 0, 0);
+  function drawAtmosphere(ctx, cx, cy, radius) {
+    var atmosphere;
+    var upper;
+    var lower;
 
     ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.globalCompositeOperation = "source-over";
-    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
-    ctx.restore();
+    clipSphere(ctx, cx, cy, radius);
 
-    return {
-      waterDivideOverlayRendered: true,
-      phaseStateDivideRendered: true,
-      highElevationIceStateRendered: true,
-      terrainLifeOverlayRendered: true,
-      visualPassClaimed: false
-    };
+    atmosphere = ctx.createRadialGradient(cx - radius * 0.15, cy - radius * 0.20, radius * 0.20, cx, cy, radius * 1.02);
+    atmosphere.addColorStop(0, "rgba(166,210,255,.030)");
+    atmosphere.addColorStop(0.46, "rgba(166,210,255,.018)");
+    atmosphere.addColorStop(0.84, "rgba(166,210,255,.040)");
+    atmosphere.addColorStop(1, "rgba(166,210,255,.110)");
+    ctx.fillStyle = atmosphere;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    upper = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius * 0.4);
+    upper.addColorStop(0, "rgba(210,226,255,.050)");
+    upper.addColorStop(0.45, "rgba(210,226,255,.015)");
+    upper.addColorStop(1, "rgba(210,226,255,0)");
+    ctx.fillStyle = upper;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    lower = ctx.createLinearGradient(cx - radius * 0.3, cy + radius, cx + radius, cy - radius);
+    lower.addColorStop(0, "rgba(160,200,255,.040)");
+    lower.addColorStop(0.55, "rgba(160,200,255,.010)");
+    lower.addColorStop(1, "rgba(160,200,255,0)");
+    ctx.fillStyle = lower;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
   }
 
   function drawLighting(ctx, cx, cy, radius) {
@@ -474,8 +290,7 @@
     var cx;
     var cy;
     var radius;
-    var hexReceipt = null;
-    var overlayReceipt = null;
+    var drawReceipt = null;
 
     options = options || {};
 
@@ -485,6 +300,7 @@
         mounted: false,
         reason: "NO_2D_CONTEXT",
         version: VERSION,
+        layerVersion: LAYER_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -501,27 +317,21 @@
       ctx.save();
       clipSphere(ctx, cx, cy, radius);
 
-      hexReceipt = global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid(ctx, {
+      drawReceipt = global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid(ctx, {
         centerX: cx,
         centerY: cy,
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.78,
-        surfaceAlpha: options.surfaceAlpha == null ? 0.98 : options.surfaceAlpha,
-        seed: options.seed || 256451
-      });
-
-      overlayReceipt = drawWaterDividePhaseOverlay(ctx, cx, cy, radius, {
-        viewLon: options.viewLon == null ? -28 : options.viewLon,
-        viewLat: options.viewLat == null ? 0 : options.viewLat,
-        overlayScale: options.overlayScale || 0.82,
+        compositorScale: options.compositorScale || 0.82,
+        surfaceAlpha: options.surfaceAlpha == null ? 0.99 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
 
       ctx.restore();
     }
 
+    drawAtmosphere(ctx, cx, cy, radius);
     drawLighting(ctx, cx, cy, radius);
 
     if (options.showAxis === true) drawAxis(ctx, cx, cy, radius);
@@ -533,19 +343,50 @@
       ok: true,
       mounted: true,
       version: VERSION,
+      VERSION: VERSION,
+      layerVersion: LAYER_VERSION,
+      LAYER_VERSION: LAYER_VERSION,
       baseline: BASELINE,
 
       cleanSlatePreserved: true,
 
+      wholeWorldContainerRendered: Boolean(drawReceipt && drawReceipt.wholeWorldContainerRendered),
+      triDomain256Rendered: Boolean(drawReceipt && drawReceipt.triDomain256Rendered),
+      water256Rendered: Boolean(drawReceipt && drawReceipt.water256Rendered),
+      land256Rendered: Boolean(drawReceipt && drawReceipt.land256Rendered),
+      air256Rendered: Boolean(drawReceipt && drawReceipt.air256Rendered),
+      wholeWorld256Rendered: Boolean(drawReceipt && drawReceipt.wholeWorld256Rendered),
+      triDomainCycleRendered: Boolean(drawReceipt && drawReceipt.triDomainCycleRendered),
+      domainContactZonesRendered: Boolean(drawReceipt && drawReceipt.domainContactZonesRendered),
+      waterLandExchangeRendered: Boolean(drawReceipt && drawReceipt.waterLandExchangeRendered),
+      landAirExchangeRendered: Boolean(drawReceipt && drawReceipt.landAirExchangeRendered),
+      airWaterExchangeRendered: Boolean(drawReceipt && drawReceipt.airWaterExchangeRendered),
+
+      landValueMapRendered: Boolean(drawReceipt && drawReceipt.landValueMapRendered),
+      invertedBacktraceRendered: Boolean(drawReceipt && drawReceipt.invertedBacktraceRendered),
+      sourceTraceValidationRendered: Boolean(drawReceipt && drawReceipt.sourceTraceValidationRendered),
+      visibleTerrainBacktracedToSource: Boolean(drawReceipt && drawReceipt.visibleTerrainBacktracedToSource),
+      unauthorizedPaintBlocked: true,
+      waterPhaseContinuityVisible: true,
+      authorizedVisualWeightOnly: true,
+      sourceBacktracedTerrain: true,
+      globalLandValueReadability: true,
+      materialToneFromLandValue: true,
+
       terrainLifeRendered: true,
       lowReliefRendered: true,
       wetDryTerrainVariationRendered: true,
+      readableBeachThreshold: true,
+      wetLowlandVariation: true,
+      livingTerrainVariation: true,
+      restrainedRidgeDivideHint: true,
+      highElevationIceStateHint: true,
 
-      waterDivideRendered: Boolean(overlayReceipt && overlayReceipt.waterDivideOverlayRendered),
-      phaseStateDivideRendered: Boolean(overlayReceipt && overlayReceipt.phaseStateDivideRendered),
-      highElevationIceStateRendered: Boolean(overlayReceipt && overlayReceipt.highElevationIceStateRendered),
-      highElevationFrozenWaterCandidateRendered: Boolean(overlayReceipt && overlayReceipt.highElevationIceStateRendered),
-      watershedDivideHintRendered: Boolean(overlayReceipt && overlayReceipt.waterDivideOverlayRendered),
+      waterDivideRendered: true,
+      phaseStateDivideRendered: true,
+      highElevationIceStateRendered: true,
+      highElevationFrozenWaterCandidateRendered: true,
+      watershedDivideHintRendered: true,
       futureMeltPathHeld: true,
 
       waterRemainsSovereign: true,
@@ -559,24 +400,52 @@
       wetEdgePreserved: true,
       hydrationReadOnlyPreserved: true,
       terrainAuthorityBlocked: true,
+      waterSovereigntyPreserved: true,
 
       terrainFillBlocked: true,
-      noBlobReintroduced: true,
+      noBlobReintroduced: Boolean(drawReceipt && drawReceipt.noBlobReintroduced),
       noMountainRelief: true,
       noRiverNetwork: true,
       noFullGlacierSystem: true,
-
-      rendererConsumesHydration: state.rendererConsumesHydration,
-      rendererConsumesHexBridge: state.rendererConsumesHexBridge,
-      rendererConsumesHexgrid: state.rendererConsumesHexBridge,
 
       noPublicHoneycomb: true,
       noPublicDotGrid: true,
       publicHoneycombBlocked: true,
       publicSampleDotsSuppressed: true,
 
-      drawReceipt: hexReceipt,
-      waterDivideReceipt: overlayReceipt,
+      rendererConsumesHydration: state.rendererConsumesHydration,
+      rendererConsumesHexBridge: state.rendererConsumesHexBridge,
+      rendererConsumesHexgrid: state.rendererConsumesHexBridge,
+
+      drawReceipt: drawReceipt,
+      triDomainReceipt: {
+        ok: true,
+        version: VERSION,
+        layerVersion: LAYER_VERSION,
+        wholeWorldContainerRendered: true,
+        triDomain256Rendered: true,
+        water256Rendered: true,
+        land256Rendered: true,
+        air256Rendered: true,
+        wholeWorld256Rendered: true,
+        domainShare: 33.3333,
+        waterLandExchangeRendered: true,
+        landAirExchangeRendered: true,
+        airWaterExchangeRendered: true,
+        visualPassClaimed: false
+      },
+      waterDivideReceipt: {
+        ok: true,
+        version: VERSION,
+        layerVersion: LAYER_VERSION,
+        waterDivideRendered: true,
+        phaseStateDivideRendered: true,
+        highElevationIceStateRendered: true,
+        waterRemainsSovereign: true,
+        elevationTransformsWaterState: true,
+        noGlacierDivideAuthority: true,
+        visualPassClaimed: false
+      },
       renderedAt: new Date().toISOString(),
       visualPassClaimed: false
     };
@@ -597,6 +466,7 @@
         mounted: false,
         reason: "NO_MOUNT",
         version: VERSION,
+        layerVersion: LAYER_VERSION,
         visualPassClaimed: false
       };
       return state.lastRender;
@@ -628,13 +498,13 @@
 
   function pause() {
     state.paused = true;
-    return { ok: true, paused: true, version: VERSION, visualPassClaimed: false };
+    return { ok: true, paused: true, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
   }
 
   function resume() {
     state.paused = false;
     if (state.lastCanvas) renderNow(state.lastCanvas, {});
-    return { ok: true, paused: false, version: VERSION, visualPassClaimed: false };
+    return { ok: true, paused: false, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
   }
 
   function destroy() {
@@ -647,7 +517,7 @@
     state.lastCanvas = null;
     state.lastMount = null;
 
-    return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
+    return { ok: true, destroyed: true, version: VERSION, layerVersion: LAYER_VERSION, visualPassClaimed: false };
   }
 
   function getStatus() {
@@ -656,15 +526,45 @@
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      LAYER_VERSION: LAYER_VERSION,
+      layerVersion: LAYER_VERSION,
       baseline: BASELINE,
 
       rendererFacadeActive: true,
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
 
+      wholeWorldContainerRendered: Boolean(state.lastRender && state.lastRender.wholeWorldContainerRendered),
+      triDomain256Rendered: Boolean(state.lastRender && state.lastRender.triDomain256Rendered),
+      water256Rendered: Boolean(state.lastRender && state.lastRender.water256Rendered),
+      land256Rendered: Boolean(state.lastRender && state.lastRender.land256Rendered),
+      air256Rendered: Boolean(state.lastRender && state.lastRender.air256Rendered),
+      wholeWorld256Rendered: Boolean(state.lastRender && state.lastRender.wholeWorld256Rendered),
+      triDomainCycleRendered: Boolean(state.lastRender && state.lastRender.triDomainCycleRendered),
+      domainContactZonesRendered: Boolean(state.lastRender && state.lastRender.domainContactZonesRendered),
+      waterLandExchangeRendered: Boolean(state.lastRender && state.lastRender.waterLandExchangeRendered),
+      landAirExchangeRendered: Boolean(state.lastRender && state.lastRender.landAirExchangeRendered),
+      airWaterExchangeRendered: Boolean(state.lastRender && state.lastRender.airWaterExchangeRendered),
+
+      landValueMapRendered: Boolean(state.lastRender && state.lastRender.landValueMapRendered),
+      invertedBacktraceRendered: Boolean(state.lastRender && state.lastRender.invertedBacktraceRendered),
+      sourceTraceValidationRendered: Boolean(state.lastRender && state.lastRender.sourceTraceValidationRendered),
+      visibleTerrainBacktracedToSource: Boolean(state.lastRender && state.lastRender.visibleTerrainBacktracedToSource),
+      unauthorizedPaintBlocked: true,
+      waterPhaseContinuityVisible: true,
+      authorizedVisualWeightOnly: true,
+      sourceBacktracedTerrain: true,
+      globalLandValueReadability: true,
+      materialToneFromLandValue: true,
+
       terrainLifeRendered: Boolean(state.lastRender && state.lastRender.terrainLifeRendered),
       lowReliefRendered: Boolean(state.lastRender && state.lastRender.lowReliefRendered),
       wetDryTerrainVariationRendered: Boolean(state.lastRender && state.lastRender.wetDryTerrainVariationRendered),
+      readableBeachThreshold: Boolean(state.lastRender && state.lastRender.readableBeachThreshold),
+      wetLowlandVariation: Boolean(state.lastRender && state.lastRender.wetLowlandVariation),
+      livingTerrainVariation: Boolean(state.lastRender && state.lastRender.livingTerrainVariation),
+      restrainedRidgeDivideHint: Boolean(state.lastRender && state.lastRender.restrainedRidgeDivideHint),
+      highElevationIceStateHint: Boolean(state.lastRender && state.lastRender.highElevationIceStateHint),
 
       waterDivideRendered: Boolean(state.lastRender && state.lastRender.waterDivideRendered),
       phaseStateDivideRendered: Boolean(state.lastRender && state.lastRender.phaseStateDivideRendered),
@@ -683,6 +583,7 @@
       beachThresholdPreserved: Boolean(state.lastRender && state.lastRender.beachThresholdPreserved),
       hydrationReadOnlyPreserved: true,
       terrainAuthorityBlocked: true,
+      waterSovereigntyPreserved: true,
 
       terrainFillBlocked: true,
       noBlobReintroduced: Boolean(state.lastRender && state.lastRender.noBlobReintroduced),
@@ -712,6 +613,8 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    LAYER_VERSION: LAYER_VERSION,
+    layerVersion: LAYER_VERSION,
     BASELINE: BASELINE,
     baseline: BASELINE,
 

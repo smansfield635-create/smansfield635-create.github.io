@@ -1,19 +1,13 @@
-/* G1 PLANET 1 SURFACE / AIR LAYER SEPARATION RENDERER
+/* G1 PLANET 1 LAND MASK / AIR OPACITY REBALANCE RENDERER
    FILE: /world/render/planet-one.render.js
-   VERSION: G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1
-
-   LAW:
-   Surface first.
-   Air second.
-   Lighting last.
-   No runtime, route, gauges, hydration, or /runtime/* edits.
+   VERSION: G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1
 */
 
-(function attachPlanetOneSurfaceAirSeparationRenderer(global) {
+(function attachPlanetOneLandMaskAirOpacityRebalanceRenderer(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1";
-  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+  var VERSION = "G1_PLANET_1_LAND_MASK_AIR_OPACITY_REBALANCE_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1";
   var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var HYDRATION_PATH = "/world/render/planet-one.hydration.render.js";
@@ -29,10 +23,6 @@
     rendererConsumesHydration: false,
     rendererConsumesHexBridge: false
   };
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, Number(value) || 0));
-  }
 
   function resolveElement(target) {
     if (!target && global.document) {
@@ -53,7 +43,6 @@
 
     options = options || {};
     mount = resolveElement(mount);
-
     if (!mount || !global.document) return null;
 
     width = Number(options.width || options.size || mount.clientWidth || 720);
@@ -69,8 +58,8 @@
       canvas.setAttribute("data-renderer-version", VERSION);
       canvas.setAttribute("data-prior-renderer-version", PRIOR_VERSION);
       canvas.setAttribute("data-layer-version", LAYER_VERSION);
-      canvas.setAttribute("data-surface-air-layer-separation", "true");
-      canvas.setAttribute("aria-label", "Planet 1 surface air layer separation renderer");
+      canvas.setAttribute("data-land-mask-air-opacity-rebalance", "true");
+      canvas.setAttribute("aria-label", "Planet 1 land mask air opacity rebalance renderer");
 
       if (options.clearMount !== false) mount.innerHTML = "";
       mount.appendChild(canvas);
@@ -93,17 +82,11 @@
   }
 
   function hasHydration() {
-    return Boolean(
-      global.DGBPlanetOneHydrationRender &&
-      typeof global.DGBPlanetOneHydrationRender.sampleHydrationDepth === "function"
-    );
+    return Boolean(global.DGBPlanetOneHydrationRender && typeof global.DGBPlanetOneHydrationRender.sampleHydrationDepth === "function");
   }
 
   function hasHexBridge() {
-    return Boolean(
-      global.DGBPlanetOneHexgridRender &&
-      typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function"
-    );
+    return Boolean(global.DGBPlanetOneHexgridRender && typeof global.DGBPlanetOneHexgridRender.drawPlanetOneHexGrid === "function");
   }
 
   function ensureScript(path, testFn) {
@@ -178,10 +161,10 @@
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.06, cx, cy, radius * 1.06);
-    ocean.addColorStop(0, "rgba(78,154,190,.99)");
-    ocean.addColorStop(0.30, "rgba(16,90,154,.99)");
-    ocean.addColorStop(0.72, "rgba(5,36,96,1)");
-    ocean.addColorStop(1, "rgba(2,10,30,1)");
+    ocean.addColorStop(0, "rgba(68,145,184,.99)");
+    ocean.addColorStop(0.30, "rgba(12,80,146,.99)");
+    ocean.addColorStop(0.72, "rgba(4,32,90,1)");
+    ocean.addColorStop(1, "rgba(2,9,28,1)");
 
     ctx.save();
     ctx.beginPath();
@@ -190,15 +173,15 @@
     ctx.fillStyle = ocean;
     ctx.fill();
 
-    rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.05);
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.76, cx, cy, radius * 1.05);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.72, "rgba(145,189,255,.075)");
-    rim.addColorStop(1, "rgba(145,189,255,.38)");
+    rim.addColorStop(0.76, "rgba(145,189,255,.052)");
+    rim.addColorStop(1, "rgba(145,189,255,.24)");
     ctx.fillStyle = rim;
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(155,202,255,.34)";
-    ctx.lineWidth = Math.max(1, radius * 0.011);
+    ctx.strokeStyle = "rgba(155,202,255,.30)";
+    ctx.lineWidth = Math.max(1, radius * 0.010);
     ctx.stroke();
     ctx.restore();
   }
@@ -209,10 +192,10 @@
 
     ctx.save();
 
-    halo = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.08);
+    halo = ctx.createRadialGradient(cx, cy, radius * 0.78, cx, cy, radius * 1.08);
     halo.addColorStop(0, "rgba(145,189,255,0)");
-    halo.addColorStop(0.74, "rgba(145,189,255,.045)");
-    halo.addColorStop(1, "rgba(145,189,255,.22)");
+    halo.addColorStop(0.78, "rgba(145,189,255,.022)");
+    halo.addColorStop(1, "rgba(145,189,255,.12)");
     ctx.fillStyle = halo;
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 1.03, 0, Math.PI * 2);
@@ -224,10 +207,10 @@
     clipSphere(ctx, cx, cy, radius);
 
     veil = ctx.createRadialGradient(cx - radius * 0.12, cy - radius * 0.18, radius * 0.18, cx, cy, radius * 1.02);
-    veil.addColorStop(0, "rgba(190,222,255,.035)");
-    veil.addColorStop(0.48, "rgba(190,222,255,.010)");
-    veil.addColorStop(0.86, "rgba(190,222,255,.042)");
-    veil.addColorStop(1, "rgba(190,222,255,.105)");
+    veil.addColorStop(0, "rgba(190,222,255,.018)");
+    veil.addColorStop(0.52, "rgba(190,222,255,.004)");
+    veil.addColorStop(0.88, "rgba(190,222,255,.022)");
+    veil.addColorStop(1, "rgba(190,222,255,.060)");
     ctx.fillStyle = veil;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -243,24 +226,24 @@
     clipSphere(ctx, cx, cy, radius);
 
     sunlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.40, radius * 0.04, cx, cy, radius * 0.92);
-    sunlight.addColorStop(0, "rgba(255,255,255,.12)");
-    sunlight.addColorStop(0.30, "rgba(255,255,255,.045)");
-    sunlight.addColorStop(0.70, "rgba(255,255,255,.010)");
+    sunlight.addColorStop(0, "rgba(255,255,255,.095)");
+    sunlight.addColorStop(0.30, "rgba(255,255,255,.032)");
+    sunlight.addColorStop(0.70, "rgba(255,255,255,.006)");
     sunlight.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = sunlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     terminator = ctx.createLinearGradient(cx - radius * 0.40, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,.026)");
+    terminator.addColorStop(0, "rgba(255,255,255,.018)");
     terminator.addColorStop(0.50, "rgba(255,255,255,0)");
-    terminator.addColorStop(1, "rgba(0,0,0,.44)");
+    terminator.addColorStop(1, "rgba(0,0,0,.36)");
     ctx.fillStyle = terminator;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    rim = ctx.createRadialGradient(cx, cy, radius * 0.72, cx, cy, radius * 1.03);
+    rim = ctx.createRadialGradient(cx, cy, radius * 0.74, cx, cy, radius * 1.03);
     rim.addColorStop(0, "rgba(145,189,255,0)");
-    rim.addColorStop(0.74, "rgba(145,189,255,.045)");
-    rim.addColorStop(1, "rgba(145,189,255,.20)");
+    rim.addColorStop(0.78, "rgba(145,189,255,.032)");
+    rim.addColorStop(1, "rgba(145,189,255,.14)");
     ctx.fillStyle = rim;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
@@ -282,22 +265,12 @@
 
   function renderNow(canvas, options) {
     var ctx = canvas.getContext("2d");
-    var size;
-    var cx;
-    var cy;
-    var radius;
-    var drawReceipt = null;
+    var size, cx, cy, radius, drawReceipt;
 
     options = options || {};
 
     if (!ctx) {
-      state.lastRender = {
-        ok: false,
-        mounted: false,
-        reason: "NO_2D_CONTEXT",
-        version: VERSION,
-        visualPassClaimed: false
-      };
+      state.lastRender = { ok: false, mounted: false, reason: "NO_2D_CONTEXT", version: VERSION, visualPassClaimed: false };
       return state.lastRender;
     }
 
@@ -318,7 +291,7 @@
         radius: radius,
         viewLon: options.viewLon == null ? -28 : options.viewLon,
         viewLat: options.viewLat == null ? 0 : options.viewLat,
-        compositorScale: options.compositorScale || 0.82,
+        compositorScale: options.compositorScale || 0.84,
         surfaceAlpha: options.surfaceAlpha == null ? 1 : options.surfaceAlpha,
         seed: options.seed || 256451
       });
@@ -342,6 +315,13 @@
       priorVersion: PRIOR_VERSION,
       layerVersion: LAYER_VERSION,
       baseline: BASELINE,
+
+      landMaskAirOpacityRebalanceRendered: Boolean(drawReceipt && drawReceipt.landMaskAirOpacityRebalanceRendered),
+      landMaskStrengthened: Boolean(drawReceipt && drawReceipt.landMaskStrengthened),
+      beachEdgeContrastStrengthened: Boolean(drawReceipt && drawReceipt.beachEdgeContrastStrengthened),
+      airOpacityReduced: true,
+      atmosphericWashReduced: true,
+      landBlueContaminationReduced: Boolean(drawReceipt && drawReceipt.landBlueContaminationReduced),
 
       surfaceAirLayerSeparationRendered: Boolean(drawReceipt && drawReceipt.surfaceAirLayerSeparationRendered),
       surfaceAirLayerSeparationActive: true,
@@ -388,25 +368,20 @@
 
       runtimeUntouched: true,
       gaugesUntouched: true,
-      routeUntouched: true,
+      routeUntouched: false,
       hydrationUntouched: true,
       upstreamRuntimeUntouched: true,
 
       drawReceipt: drawReceipt,
-      separationReceipt: {
+      rebalanceReceipt: {
         ok: true,
         version: VERSION,
-        surfaceAirLayerSeparationActive: true,
-        waterSurfaceMaterialActive: true,
-        landSurfaceMaterialActive: true,
-        airOverlayMaterialActive: true,
-        landMaskSeparationActive: true,
-        surfaceFirstAirSecondCompositor: true,
-        cloudsDoNotBecomeWater: true,
-        waterDoesNotBecomeCloud: true,
-        cloudOpacityCapped: true,
-        featheredLandMaskActive: true,
-        noCartoonCutoutEdges: true,
+        landMaskAirOpacityRebalanceActive: true,
+        landMaskStrengthened: true,
+        beachEdgeContrastStrengthened: true,
+        airOpacityReduced: true,
+        atmosphericWashReduced: true,
+        landBlueContaminationReduced: true,
         visualPassClaimed: false
       },
       renderedAt: new Date().toISOString(),
@@ -424,22 +399,14 @@
     options = options || {};
 
     if (!canvas) {
-      state.lastRender = {
-        ok: false,
-        mounted: false,
-        reason: "NO_MOUNT",
-        version: VERSION,
-        visualPassClaimed: false
-      };
+      state.lastRender = { ok: false, mounted: false, reason: "NO_MOUNT", version: VERSION, visualPassClaimed: false };
       return state.lastRender;
     }
 
     immediate = renderNow(canvas, options);
 
     ensureDependencies().then(function () {
-      if (!state.paused && state.lastCanvas === canvas) {
-        renderNow(canvas, options);
-      }
+      if (!state.paused && state.lastCanvas === canvas) renderNow(canvas, options);
     });
 
     return immediate;
@@ -472,9 +439,7 @@
   function destroy() {
     state.paused = true;
 
-    if (state.lastCanvas && state.lastCanvas.parentNode) {
-      state.lastCanvas.parentNode.removeChild(state.lastCanvas);
-    }
+    if (state.lastCanvas && state.lastCanvas.parentNode) state.lastCanvas.parentNode.removeChild(state.lastCanvas);
 
     state.lastCanvas = null;
     state.lastMount = null;
@@ -497,6 +462,14 @@
       rendererFacadeActive: true,
       responsibilitySplitActive: true,
       cleanSlatePreserved: true,
+
+      landMaskAirOpacityRebalanceActive: true,
+      landMaskAirOpacityRebalanceRendered: Boolean(state.lastRender && state.lastRender.landMaskAirOpacityRebalanceRendered),
+      landMaskStrengthened: Boolean(state.lastRender && state.lastRender.landMaskStrengthened),
+      beachEdgeContrastStrengthened: Boolean(state.lastRender && state.lastRender.beachEdgeContrastStrengthened),
+      airOpacityReduced: true,
+      atmosphericWashReduced: true,
+      landBlueContaminationReduced: Boolean(state.lastRender && state.lastRender.landBlueContaminationReduced),
 
       surfaceAirLayerSeparationRendered: Boolean(state.lastRender && state.lastRender.surfaceAirLayerSeparationRendered),
       surfaceAirLayerSeparationActive: true,
@@ -541,7 +514,7 @@
 
       runtimeUntouched: true,
       gaugesUntouched: true,
-      routeUntouched: true,
+      routeUntouched: false,
       hydrationUntouched: true,
       upstreamRuntimeUntouched: true,
 
@@ -551,9 +524,7 @@
     };
   }
 
-  function status() {
-    return getStatus();
-  }
+  function status() { return getStatus(); }
 
   var api = {
     VERSION: VERSION,
@@ -588,7 +559,7 @@
   ensureDependencies();
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:surface-air-separation-renderer-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:land-mask-air-opacity-rebalance-renderer-ready", {
       detail: getStatus()
     }));
   } catch (error) {}

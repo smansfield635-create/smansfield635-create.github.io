@@ -3,385 +3,742 @@
   lang="en"
   data-page="gauges"
   data-route="/gauges/"
-  data-contract="PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1"
+  data-contract="GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1"
+  data-earth-g1-complete="true"
+  data-next-sequence="sun,moon"
+  data-planet-one-status="reserved-for-nine-summits-universe"
+  data-visual-pass-claimed="earth-g1-accepted-by-sean"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Gauges · Active Chain Audit</title>
+  <title>Diamond Gate Bridge · Gauges · Earth G1 Complete</title>
   <meta
     name="description"
-    content="Working Planet 1 active loaded chain audit. Repairs frozen Gauges controls and binds diagnostic buttons directly."
+    content="Gauges contract renewal announcing Earth G1 complete, with Sun next and Moon queued after Sun."
   >
+
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
-    .audit-summary {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: .75rem;
-      margin: 1rem 0;
+    :root {
+      color-scheme: dark;
+      --gauge-bg: #02050b;
+      --gauge-panel: rgba(8, 14, 25, 0.90);
+      --gauge-panel-2: rgba(13, 22, 38, 0.84);
+      --gauge-line: rgba(176, 204, 255, 0.20);
+      --gauge-gold: #f2c76f;
+      --gauge-blue: #9ec6ff;
+      --gauge-green: #83e0b9;
+      --gauge-muted: rgba(228, 234, 246, 0.76);
+      --gauge-text: #f5f7fb;
+      --gauge-warn: #ffd38a;
+      --gauge-bad: #ff9b9b;
+      --gauge-radius: 28px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .audit-tile {
-      border: 1px solid var(--dgb-line, rgba(176,204,255,.18));
-      border-radius: 20px;
-      padding: .95rem;
-      background: rgba(0,0,0,.20);
+    * {
+      box-sizing: border-box;
     }
 
-    .audit-tile strong {
-      display: block;
-      color: #ffe8a8;
-      font-size: .82rem;
-      margin-bottom: .35rem;
+    html {
+      background: var(--gauge-bg);
+      scroll-behavior: smooth;
     }
 
-    .audit-tile span {
-      display: block;
-      color: var(--dgb-muted, rgba(228,234,246,.74));
-      font-weight: 860;
-      overflow-wrap: anywhere;
-    }
-
-    .audit-state {
-      display: inline-flex;
-      align-items: center;
-      min-height: 2rem;
-      border-radius: 999px;
-      padding: .32rem .68rem;
-      border: 1px solid rgba(176,204,255,.18);
-      font-size: .72rem;
-      font-weight: 940;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .audit-state.pass {
-      color: #83e0b9;
-      border-color: rgba(131,224,185,.44);
-      background: rgba(131,224,185,.10);
-    }
-
-    .audit-state.warn {
-      color: #ffe8a8;
-      border-color: rgba(242,199,111,.50);
-      background: rgba(242,199,111,.12);
-    }
-
-    .audit-state.fail {
-      color: #ffb2b2;
-      border-color: rgba(255,120,120,.44);
-      background: rgba(255,120,120,.10);
-    }
-
-    .audit-table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--dgb-line, rgba(176,204,255,.18));
-      border-radius: 18px;
-      background: rgba(0,0,0,.18);
-    }
-
-    table.audit-table {
-      width: 100%;
-      min-width: 1120px;
-      border-collapse: collapse;
-      font-size: .84rem;
-    }
-
-    .audit-table th,
-    .audit-table td {
-      padding: .72rem;
-      border-bottom: 1px solid rgba(176,204,255,.12);
-      text-align: left;
-      vertical-align: top;
-      color: var(--dgb-muted, rgba(228,234,246,.74));
-    }
-
-    .audit-table th {
-      color: #ffe8a8;
-      font-size: .72rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      background: rgba(255,255,255,.035);
-    }
-
-    .audit-table tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .audit-list {
-      display: grid;
-      gap: .45rem;
+    body {
       margin: 0;
-      padding-left: 1.1rem;
-      color: var(--dgb-muted, rgba(228,234,246,.74));
-      line-height: 1.5;
+      min-height: 100vh;
+      color: var(--gauge-text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242, 199, 111, 0.10), transparent 22rem),
+        radial-gradient(circle at 16% 26%, rgba(158, 198, 255, 0.10), transparent 24rem),
+        linear-gradient(180deg, #02050b 0%, #07111f 52%, #02050b 100%);
     }
 
-    .audit-list strong {
-      color: #ffe8a8;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: .78rem;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
+    button {
+      font: inherit;
     }
 
-    .button-row {
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 30;
+      transform: translateY(-150%);
+      border: 1px solid rgba(242, 199, 111, 0.62);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #07101c;
+      color: var(--gauge-text);
+      font-weight: 900;
+    }
+
+    .skip:focus {
+      transform: translateY(0);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 44px;
+    }
+
+    .site-header {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+      width: fit-content;
+    }
+
+    .brand strong {
+      color: var(--gauge-gold);
+      font-size: clamp(1.08rem, 4vw, 1.62rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: rgba(228, 234, 246, 0.82);
+      font-size: clamp(0.78rem, 2.8vw, 1rem);
+      font-weight: 820;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .nav {
       display: flex;
       flex-wrap: wrap;
-      gap: .75rem;
-      margin-top: 1rem;
+      gap: 10px;
     }
 
-    .button-row button,
-    .button-row a {
+    .nav a,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid var(--gauge-line);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+      color: var(--gauge-text);
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
       cursor: pointer;
     }
 
-    @media (max-width: 980px) {
-      .audit-summary {
-        grid-template-columns: 1fr 1fr;
+    .nav a[aria-current="page"],
+    .button.primary {
+      border-color: rgba(242, 199, 111, 0.62);
+      background: linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
+      color: #fff3c8;
+    }
+
+    .button.green {
+      border-color: rgba(131, 224, 185, 0.48);
+      background: linear-gradient(180deg, rgba(131,224,185,0.18), rgba(131,224,185,0.055));
+      color: #dfffee;
+    }
+
+    main {
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero,
+    .panel,
+    .tile {
+      border: 1px solid var(--gauge-line);
+      border-radius: var(--gauge-radius);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
+        var(--gauge-panel);
+      box-shadow: 0 28px 88px rgba(0, 0, 0, 0.44);
+    }
+
+    .hero {
+      padding: clamp(24px, 6vw, 54px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: clamp(18px, 4vw, 30px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      color: var(--gauge-gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1;
+      letter-spacing: -0.055em;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 11vw, 6.8rem);
+      max-width: 980px;
+    }
+
+    h2 {
+      font-size: clamp(1.72rem, 5.6vw, 3.4rem);
+    }
+
+    h3 {
+      font-size: clamp(1.18rem, 3.5vw, 1.6rem);
+    }
+
+    p {
+      margin: 0;
+      color: var(--gauge-muted);
+      font-size: clamp(1rem, 2.9vw, 1.22rem);
+      line-height: 1.56;
+    }
+
+    .lead {
+      max-width: 960px;
+      color: rgba(245, 247, 251, 0.88);
+      font-size: clamp(1.16rem, 4vw, 1.72rem);
+      line-height: 1.42;
+    }
+
+    .chip-row,
+    .actions,
+    .status-grid,
+    .sequence-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--gauge-line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(245,247,251,0.84);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chip.pass {
+      border-color: rgba(131, 224, 185, 0.44);
+      color: #a8f0cd;
+      background: rgba(131,224,185,0.10);
+    }
+
+    .chip.next {
+      border-color: rgba(242, 199, 111, 0.46);
+      color: #ffe6a5;
+      background: rgba(242,199,111,0.10);
+    }
+
+    .chip.queue {
+      border-color: rgba(158, 198, 255, 0.44);
+      color: #cfe2ff;
+      background: rgba(158,198,255,0.10);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tile {
+      padding: 18px;
+      min-height: 132px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(242,199,111,0.08), transparent 18rem),
+        var(--gauge-panel-2);
+    }
+
+    .tile .label {
+      display: block;
+      color: var(--gauge-muted);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .tile strong {
+      display: block;
+      color: var(--gauge-text);
+      font-size: clamp(1.25rem, 4.2vw, 2.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .tile.pass strong {
+      color: var(--gauge-green);
+    }
+
+    .tile.next strong {
+      color: var(--gauge-gold);
+    }
+
+    .tile.queue strong {
+      color: var(--gauge-blue);
+    }
+
+    .sequence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .sequence-card {
+      border: 1px solid var(--gauge-line);
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(0,0,0,0.20);
+      display: grid;
+      gap: 10px;
+    }
+
+    .sequence-card .step {
+      color: var(--gauge-gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--gauge-line);
+      border-radius: 20px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(176,204,255,0.12);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.92rem;
+      color: rgba(245,247,251,0.84);
+    }
+
+    th {
+      color: #dfeaff;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .state-pass {
+      color: var(--gauge-green);
+      font-weight: 950;
+    }
+
+    .state-warn {
+      color: var(--gauge-warn);
+      font-weight: 950;
+    }
+
+    .state-fail {
+      color: var(--gauge-bad);
+      font-weight: 950;
+    }
+
+    .receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border: 1px solid var(--gauge-line);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(0,0,0,0.26);
+      color: rgba(245,247,251,0.84);
+      font-size: 0.86rem;
+      line-height: 1.52;
+    }
+
+    footer {
+      color: rgba(228,234,246,0.58);
+      padding-top: 8px;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .status-grid,
+      .sequence-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 560px) {
-      .audit-summary {
-        grid-template-columns: 1fr;
+    @media (max-width: 680px) {
+      .nav a,
+      .button {
+        min-width: calc(50% - 6px);
+      }
+
+      .actions .button {
+        width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#main">Skip to Gauges</a>
+  <a class="skip" href="#main">Skip to Gauges</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Gauges · Active Chain Audit Button Repair</div>
-      </div>
+  <div class="shell">
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Gauges · Earth G1 Complete · Sun Next · Moon Queue</span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Planet 1</a>
+        <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="main" class="dgb-main">
-    <section class="dgb-hero">
-      <p class="dgb-eyebrow">H6 · Gauges · PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1</p>
-      <h1 class="dgb-title">The buttons now run the audit.</h1>
-      <p class="dgb-copy">
-        This page repairs the frozen Gauges controls. It checks Planet 1 route parity and the active loaded chain
-        without executing target files, rendering Planet 1 in an iframe, deleting files, or starting animation loops.
-      </p>
+    <main id="main">
+      <section class="hero" aria-labelledby="title">
+        <div class="eyebrow">H6 · Gauges · Final Earth G1 Contract Renewal</div>
+        <h1 id="title">Earth G1 is complete. Sun is next. Moon follows.</h1>
 
-      <div class="dgb-chip-row">
-        <span class="dgb-chip">Buttons repaired</span>
-        <span class="dgb-chip">Source fetch only</span>
-        <span class="dgb-chip">No delete</span>
-        <span class="dgb-chip">No iframe</span>
-        <span class="dgb-chip hold">Visual hold</span>
-      </div>
+        <p class="lead">
+          The Demo Universe now has its accepted Earth-class globe baseline. This Gauges renewal records Earth G1 as complete,
+          keeps Planet 1 reserved for the future Nine Summits Universe, and opens the next formation order: Sun, then Moon.
+        </p>
 
-      <div class="button-row">
-        <button class="dgb-button" type="button" data-audit-command="full">Run active chain audit</button>
-        <button class="dgb-button secondary" type="button" data-audit-command="route">Run route parity only</button>
-        <button class="dgb-button secondary" type="button" data-audit-command="chain">Run loaded chain only</button>
-        <a class="dgb-button secondary" href="/showroom/globe/">Open Planet 1 inspection</a>
-      </div>
-    </section>
+        <div class="chip-row" aria-label="Contract chips">
+          <span class="chip pass">Earth G1 complete</span>
+          <span class="chip next">Sun next</span>
+          <span class="chip queue">Moon queued</span>
+          <span class="chip">Source fetch only</span>
+          <span class="chip">No iframe</span>
+          <span class="chip">No runtime mutation</span>
+        </div>
 
-    <section class="audit-summary" aria-label="Active chain audit summary">
-      <div class="audit-tile">
-        <strong>Overall</strong>
-        <span id="overall-state"><span class="audit-state warn">Not tested</span></span>
-      </div>
-      <div class="audit-tile">
-        <strong>Route parity</strong>
-        <span id="route-parity-state">unknown</span>
-      </div>
-      <div class="audit-tile">
-        <strong>Expected markers</strong>
-        <span id="marker-state">unknown</span>
-      </div>
-      <div class="audit-tile">
-        <strong>Final authority file</strong>
-        <span id="final-authority">unknown</span>
-      </div>
-      <div class="audit-tile">
-        <strong>Override risk</strong>
-        <span id="override-risk">unknown</span>
-      </div>
-    </section>
+        <div class="actions" aria-label="Gauge actions">
+          <button class="button primary" type="button" data-audit="earth">Run Earth G1 confirmation</button>
+          <button class="button green" type="button" data-audit="sun">Run Sun readiness</button>
+          <button class="button" type="button" data-audit="moon">Run Moon queue</button>
+          <button class="button" type="button" data-audit="full">Run full sequence audit</button>
+          <a class="button" href="/showroom/globe/">Open Earth G1</a>
+        </div>
+      </section>
 
-    <section class="dgb-grid">
-      <article class="dgb-card full">
-        <h2>Verdict</h2>
-        <ul id="verdict-list" class="audit-list">
-          <li>Audit has not run yet.</li>
-        </ul>
-      </article>
+      <section class="panel" aria-labelledby="tiles">
+        <div class="eyebrow">Current sequence state</div>
+        <h2 id="tiles">The next build order is visible.</h2>
 
-      <article class="dgb-card full">
-        <h2>Route source parity</h2>
-        <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Route source parity table">
+        <div class="status-grid">
+          <article class="tile pass">
+            <span class="label">Earth G1</span>
+            <strong id="earth-state">Complete</strong>
+            <p>Accepted Demo Universe globe baseline.</p>
+          </article>
+
+          <article class="tile next">
+            <span class="label">Next target</span>
+            <strong id="sun-state">Sun</strong>
+            <p>Prepare the stellar body standard after Earth G1.</p>
+          </article>
+
+          <article class="tile queue">
+            <span class="label">Queued target</span>
+            <strong id="moon-state">Moon</strong>
+            <p>Moon follows only after Sun terms are renewed.</p>
+          </article>
+
+          <article class="tile">
+            <span class="label">Planet 1</span>
+            <strong>Reserved</strong>
+            <p>Future Nine Summits Universe planet, not the Earth G1 route.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="sequence">
+        <div class="eyebrow">Formation order</div>
+        <h2 id="sequence">Earth gives the globe standard. Sun gives the light source. Moon gives the companion body.</h2>
+
+        <div class="sequence-grid">
+          <article class="sequence-card">
+            <span class="step">Step 1 · Complete</span>
+            <h3>Earth G1</h3>
+            <p>
+              The accepted Demo Universe globe standard. The route is /showroom/globe/.
+              The label is Earth G1, not Planet 1.
+            </p>
+          </article>
+
+          <article class="sequence-card">
+            <span class="step">Step 2 · Next</span>
+            <h3>Sun</h3>
+            <p>
+              The Sun renewal should establish a dimensional stellar body: plasma surface,
+              controlled radiance, mobile-safe animation, and no Earth renderer inheritance.
+            </p>
+          </article>
+
+          <article class="sequence-card">
+            <span class="step">Step 3 · Queue</span>
+            <h3>Moon</h3>
+            <p>
+              The Moon remains queued. It should not be built until the Sun standard is renewed
+              and inspected.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="audit-results">
+        <div class="eyebrow">Live diagnostic surface</div>
+        <h2 id="audit-results">Source-only checks.</h2>
+        <p>
+          These buttons fetch route and asset source only. They do not execute target files, render iframes,
+          delete files, mutate runtime, or start independent animation loops.
+        </p>
+
+        <div class="table-wrap">
+          <table aria-label="Diagnostic result table">
             <thead>
               <tr>
-                <th>Route</th>
+                <th>Lane</th>
+                <th>Path</th>
                 <th>Status</th>
                 <th>Size</th>
-                <th>Route contract</th>
-                <th>Render contract</th>
-                <th>Script refs</th>
-                <th>Expected?</th>
+                <th>Signal</th>
                 <th>Verdict</th>
               </tr>
             </thead>
-            <tbody id="route-table">
-              <tr><td colspan="8">Not tested.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-
-      <article class="dgb-card full">
-        <h2>Active loaded chain</h2>
-        <div class="audit-table-wrap">
-          <table class="audit-table" aria-label="Active loaded chain table">
-            <thead>
+            <tbody id="result-body">
               <tr>
-                <th>Order</th>
-                <th>File</th>
-                <th>Status</th>
-                <th>Expected marker</th>
-                <th>Marker present</th>
-                <th>Source signature</th>
-                <th>Authority signals</th>
-                <th>Risk</th>
-                <th>Verdict</th>
+                <td>Earth G1</td>
+                <td>/showroom/globe/</td>
+                <td class="state-pass">ACCEPTED</td>
+                <td>pending audit</td>
+                <td>Sean accepted current visual baseline</td>
+                <td>Earth G1 complete; source confirmation pending.</td>
               </tr>
-            </thead>
-            <tbody id="chain-table">
-              <tr><td colspan="9">Not tested.</td></tr>
+              <tr>
+                <td>Sun</td>
+                <td>/assets/sun/sun_manifest.json</td>
+                <td class="state-warn">NEXT</td>
+                <td>pending audit</td>
+                <td>Sun terms next</td>
+                <td>Renew Sun after Earth G1 contract.</td>
+              </tr>
+              <tr>
+                <td>Moon</td>
+                <td>/assets/moon/moon_manifest.json</td>
+                <td class="state-warn">QUEUED</td>
+                <td>pending audit</td>
+                <td>Moon follows Sun</td>
+                <td>Do not start Moon before Sun.</td>
+              </tr>
             </tbody>
           </table>
         </div>
-      </article>
+      </section>
 
-      <article class="dgb-card full">
-        <h2>Raw live receipt</h2>
-        <details class="dgb-details" open>
-          <summary>Active chain receipt</summary>
-          <pre id="live-receipt" class="dgb-receipt">Run audit to generate receipt.</pre>
-        </details>
-      </article>
-    </section>
+      <section class="panel" aria-labelledby="receipt-title">
+        <div class="eyebrow">Contract receipt</div>
+        <h2 id="receipt-title">Earth G1 completion receipt.</h2>
 
-    <details class="dgb-details">
-      <summary>Gauge contract</summary>
-      <pre class="dgb-receipt">PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1
+        <pre id="receipt" class="receipt">GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1
 route=/gauges/
 page=gauges
-role=active-chain-audit-button-binding-repair
-fixes=frozen-buttons,diagnostic-binding,route-parity-check,loaded-chain-check
-fetches_source_only=true
+earth-g1-complete=true
+earth-g1-route=/showroom/globe/
+earth-g1-public-label=Earth G1
+demo-universe=earth
+planet-1=reserved-for-future-nine-summits-universe
+next=sun
+then=moon
+source-fetch-only=true
 executes_target_files=false
+renders_iframe=false
 deletes_files=false
-renders_planet_iframe=false
+mutates_runtime=false
 starts_extra_animation_loops=false
-visual_pass_claimed=false</pre>
-    </details>
-  </main>
+visual_pass_claimed=earth-g1-accepted-by-sean
+status=READY</pre>
+      </section>
+    </main>
 
-  <footer class="dgb-footer">
-    PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1 · Gauges · Diamond Gate Bridge.
-  </footer>
+    <footer>
+      GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1 · Gauges · Diamond Gate Bridge.
+    </footer>
+  </div>
 
   <script>
-    (function attachWorkingActiveChainAudit(global) {
+    (function bindEarthG1SunMoonGauges() {
       "use strict";
 
-      var VERSION = "PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1";
-      var EXPECTED_ROUTE_CONTRACT = "PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1";
-      var EXPECTED_RENDER_CONTRACT = "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1";
+      var CONTRACT = "GAUGES_EARTH_G1_COMPLETE_SUN_MOON_QUEUE_RENEWAL_TNT_v1";
 
-      var ROUTE = {
-        label: "Planet 1",
-        path: "/showroom/globe/"
+      var targets = {
+        earth: [
+          {
+            lane: "Earth G1",
+            path: "/showroom/globe/",
+            required: [
+              "Earth",
+              "G1",
+              "Demo Universe",
+              "EARTH_G1_DEMO_UNIVERSE_PAGE_RENEWAL_TNT_v1",
+              "visual-pass-claimed=false"
+            ],
+            accepted: true
+          },
+          {
+            lane: "Earth G1",
+            path: "/assets/earth/earth_canvas.js",
+            required: [
+              "DGBEarthAssetCanvas",
+              "DGBDemoUniverseEarthCanvas",
+              "earth_surface_2048.jpg",
+              "earth_clouds_2048.jpg"
+            ],
+            accepted: true
+          },
+          {
+            lane: "Earth G1",
+            path: "/assets/earth/earth_material.css",
+            required: [
+              "earth-g2-stage",
+              "data-earth-asset-stage",
+              "touch-action"
+            ],
+            accepted: true
+          },
+          {
+            lane: "Earth G1",
+            path: "/assets/earth/earth_manifest.json",
+            required: [
+              "EARTH",
+              "earth_surface_2048.jpg",
+              "earth_clouds_2048.jpg"
+            ],
+            accepted: true,
+            optional: true
+          }
+        ],
+        sun: [
+          {
+            lane: "Sun",
+            path: "/assets/sun/sun_manifest.json",
+            required: [
+              "Sun",
+              "plasma",
+              "controlled corona",
+              "no graphic generation dependency"
+            ],
+            next: true
+          },
+          {
+            lane: "Sun",
+            path: "/assets/sun/sun_canvas.js",
+            required: [
+              "DGBSun",
+              "canvas"
+            ],
+            next: true,
+            optional: true
+          },
+          {
+            lane: "Sun",
+            path: "/assets/sun/sun_material.css",
+            required: [
+              "sun"
+            ],
+            next: true,
+            optional: true
+          }
+        ],
+        moon: [
+          {
+            lane: "Moon",
+            path: "/assets/moon/moon_manifest.json",
+            required: [
+              "Moon"
+            ],
+            queued: true,
+            optional: true
+          },
+          {
+            lane: "Moon",
+            path: "/assets/moon/moon_canvas.js",
+            required: [
+              "Moon"
+            ],
+            queued: true,
+            optional: true
+          },
+          {
+            lane: "Moon",
+            path: "/assets/moon/moon_material.css",
+            required: [
+              "moon"
+            ],
+            queued: true,
+            optional: true
+          }
+        ]
       };
-
-      var ACTIVE_CHAIN = [
-        {
-          key: "hydration",
-          label: "Hydration",
-          path: "/world/render/planet-one.hydration.render.js",
-          expected: "G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1",
-          role: "read-only hydration basis"
-        },
-        {
-          key: "hexgrid",
-          label: "Hex bridge",
-          path: "/world/render/planet-one.hexgrid.render.js",
-          expected: "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1",
-          role: "surface sampling / land-water-air values"
-        },
-        {
-          key: "renderer",
-          label: "Renderer",
-          path: "/world/render/planet-one.render.js",
-          expected: "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1",
-          role: "canvas composition / renderer facade"
-        },
-        {
-          key: "world-runtime",
-          label: "World runtime",
-          path: "/world/runtime.js",
-          expected: "G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1",
-          role: "animation frame / runtime state"
-        },
-        {
-          key: "world-control",
-          label: "World control",
-          path: "/world/control.js",
-          expected: "G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1",
-          role: "controls / speed / axis"
-        },
-        {
-          key: "asset-bridge",
-          label: "Asset bridge",
-          path: "/assets/showroom.globe.instrument.js",
-          expected: "G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1",
-          role: "showroom instrument bridge"
-        },
-        {
-          key: "showroom-runtime",
-          label: "Showroom runtime",
-          path: "/showroom/runtime.js",
-          expected: "G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1",
-          role: "showroom route bridge"
-        }
-      ];
 
       function byId(id) {
         return document.getElementById(id);
       }
 
       function escapeHtml(value) {
-        return String(value == null ? "" : value)
+        return String(value)
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
@@ -389,652 +746,187 @@ visual_pass_claimed=false</pre>
           .replace(/'/g, "&#039;");
       }
 
-      function statePill(state) {
-        var normalized = state === "PASS" || state === "WARN" || state === "FAIL" ? state : "WARN";
-        var cls = normalized === "PASS" ? "pass" : normalized === "FAIL" ? "fail" : "warn";
-        return '<span class="audit-state ' + cls + '">' + escapeHtml(normalized) + "</span>";
-      }
-
-      function writeHtml(id, html) {
-        var node = byId(id);
-        if (node) node.innerHTML = html;
-      }
-
-      function writeText(id, text) {
-        var node = byId(id);
-        if (node) node.textContent = text;
-      }
-
-      function fnv1a(text) {
-        var hash = 0x811c9dc5;
-        var str = String(text || "");
-        var i;
-
-        for (i = 0; i < str.length; i += 1) {
-          hash ^= str.charCodeAt(i);
+      function hashFNV(text) {
+        var hash = 2166136261;
+        for (var i = 0; i < text.length; i += 1) {
+          hash ^= text.charCodeAt(i);
           hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
         }
-
-        return ("00000000" + (hash >>> 0).toString(16)).slice(-8);
+        return ("0000000" + (hash >>> 0).toString(16)).slice(-8);
       }
 
-      function count(pattern, text) {
-        var match = String(text || "").match(pattern);
-        return match ? match.length : 0;
-      }
-
-      function unique(list) {
-        var out = [];
-        (list || []).forEach(function (item) {
-          if (out.indexOf(item) === -1) out.push(item);
+      function readSignal(text, required) {
+        var missing = [];
+        required.forEach(function (token) {
+          if (!text || text.indexOf(token) === -1) missing.push(token);
         });
-        return out;
+
+        if (!missing.length) return {
+          ok: true,
+          signal: "required markers present"
+        };
+
+        return {
+          ok: false,
+          signal: "missing: " + missing.join(", ")
+        };
       }
 
-      function normalizePath(src) {
-        var raw = String(src || "").split("#")[0].split("?")[0];
+      function fetchSource(item) {
+        return fetch(item.path + (item.path.indexOf("?") === -1 ? "?_gauge=" : "&_gauge=") + encodeURIComponent(CONTRACT + "_" + Date.now()), {
+          cache: "no-store"
+        }).then(function (response) {
+          return response.text().then(function (text) {
+            var signal = readSignal(text, item.required || []);
+            var state;
+            var verdict;
 
-        try {
-          return new URL(raw, location.origin).pathname;
-        } catch (error) {
-          return raw;
-        }
-      }
+            if (response.ok && signal.ok && item.accepted) {
+              state = "PASS";
+              verdict = "Earth G1 accepted and source markers are present.";
+            } else if (response.ok && signal.ok && item.next) {
+              state = "NEXT";
+              verdict = "Sun source exists. Renew Sun terms next.";
+            } else if (response.ok && signal.ok && item.queued) {
+              state = "QUEUED";
+              verdict = "Moon source exists, but remains queued behind Sun.";
+            } else if (response.ok && !signal.ok) {
+              state = item.optional ? "WARN" : "FAIL";
+              verdict = "Source served but expected markers are incomplete.";
+            } else {
+              state = item.optional ? "QUEUED" : "FAIL";
+              verdict = item.optional ? "Source not required yet." : "Required source did not serve successfully.";
+            }
 
-      function getQueryToken(src, key) {
-        try {
-          return new URL(String(src || ""), location.origin).searchParams.get(key) || "";
-        } catch (error) {
-          return "";
-        }
-      }
-
-      function fetchSource(path) {
-        var separator = path.indexOf("?") === -1 ? "?" : "&";
-        var url = path + separator +
-          "_active_chain_button_repair=" + encodeURIComponent(VERSION) +
-          "&_t=" + Date.now();
-
-        return fetch(url, { cache: "no-store" })
-          .then(function (res) {
-            return res.text().then(function (text) {
-              return {
-                path: path,
-                ok: res.ok,
-                status: res.status,
-                size: text.length,
-                text: text,
-                hash: fnv1a(text),
-                etag: res.headers.get("etag") || "",
-                lastModified: res.headers.get("last-modified") || "",
-                contentType: res.headers.get("content-type") || "",
-                fetchedAt: new Date().toISOString(),
-                error: null
-              };
-            });
-          })
-          .catch(function (error) {
             return {
-              path: path,
-              ok: false,
-              status: 0,
-              size: 0,
-              text: "",
-              hash: "00000000",
-              etag: "",
-              lastModified: "",
-              contentType: "",
-              fetchedAt: new Date().toISOString(),
-              error: String(error && error.message ? error.message : error)
+              lane: item.lane,
+              path: item.path,
+              status: response.status,
+              ok: response.ok,
+              size: text.length,
+              hash: hashFNV(text),
+              state: state,
+              signal: signal.signal,
+              verdict: verdict
             };
           });
-      }
-
-      function extractScriptRefs(html) {
-        var refs = [];
-
-        String(html || "").replace(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi, function (_, src) {
-          refs.push(src);
-          return "";
-        });
-
-        return refs;
-      }
-
-      function extractDataValue(html, attr) {
-        var pattern = attr + "=[\"']([^\"']+)[\"']";
-        var re = new RegExp(pattern, "i");
-        var match = String(html || "").match(re);
-        return match ? match[1] : "";
-      }
-
-      function extractReceiptValue(html, key) {
-        var pattern = key + "=([^\\n\\r<]+)";
-        var re = new RegExp(pattern, "i");
-        var match = String(html || "").match(re);
-        return match ? String(match[1]).trim() : "";
-      }
-
-      function getVersionMarkers(text) {
-        var markers = [];
-
-        String(text || "").replace(/G1_PLANET_1_[A-Z0-9_]+_TNT_v\d+/g, function (marker) {
-          markers.push(marker);
-          return "";
-        });
-
-        String(text || "").replace(/PLANET_1_[A-Z0-9_]+_TNT_v\d+/g, function (marker) {
-          markers.push(marker);
-          return "";
-        });
-
-        return unique(markers).slice(0, 20);
-      }
-
-      function scanRoute(fetched) {
-        var text = fetched.text || "";
-        var scriptRefs = extractScriptRefs(text);
-        var dataContract = extractDataValue(text, "data-contract");
-        var dataRenderContract = extractDataValue(text, "data-render-contract");
-        var receiptContract = extractReceiptValue(text, "data-contract");
-        var receiptRenderContract = extractReceiptValue(text, "render-contract");
-
-        var routeContract = dataContract || receiptContract || "";
-        var renderContract = dataRenderContract || receiptRenderContract || "";
-
-        var chainRefs = ACTIVE_CHAIN.map(function (def) {
-          var foundSrc = "";
-
-          scriptRefs.forEach(function (src) {
-            if (normalizePath(src) === def.path) foundSrc = src;
-          });
-
+        }).catch(function (error) {
           return {
-            key: def.key,
-            path: def.path,
-            expected: def.expected,
-            src: foundSrc,
-            found: Boolean(foundSrc),
-            vToken: getQueryToken(foundSrc, "v"),
-            routeToken: getQueryToken(foundSrc, "route"),
-            tokenMatchesExpected: getQueryToken(foundSrc, "v") === def.expected
+            lane: item.lane,
+            path: item.path,
+            status: "ERR",
+            ok: false,
+            size: 0,
+            hash: "none",
+            state: item.optional ? "QUEUED" : "FAIL",
+            signal: String(error && error.message ? error.message : error),
+            verdict: item.optional ? "Not required yet." : "Fetch failed."
           };
         });
-
-        var allFound = chainRefs.every(function (item) {
-          return item.found;
-        });
-
-        var renderTokensAligned = chainRefs.filter(function (item) {
-          return item.key === "hexgrid" || item.key === "renderer";
-        }).every(function (item) {
-          return item.vToken === EXPECTED_RENDER_CONTRACT;
-        });
-
-        var routeTokenAligned = chainRefs.every(function (item) {
-          return !item.found || item.routeToken === EXPECTED_ROUTE_CONTRACT;
-        });
-
-        var staleWaterBoundary = text.indexOf("G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1") !== -1;
-
-        var state = "PASS";
-        var verdict = "Route source is aligned.";
-
-        if (!fetched.ok) {
-          state = "FAIL";
-          verdict = "Planet 1 route is not served.";
-        } else if (!allFound) {
-          state = "FAIL";
-          verdict = "Planet 1 route is missing one or more active chain scripts.";
-        } else if (renderContract !== EXPECTED_RENDER_CONTRACT || !renderTokensAligned) {
-          state = "FAIL";
-          verdict = "Route render contract or renderer tokens are not aligned.";
-        } else if (!routeTokenAligned) {
-          state = "WARN";
-          verdict = "Script route tokens are not fully aligned.";
-        } else if (staleWaterBoundary) {
-          state = "WARN";
-          verdict = "Route is aligned, but stale Water Phase-State Boundary text remains somewhere in source.";
-        }
-
-        return {
-          path: ROUTE.path,
-          ok: fetched.ok,
-          status: fetched.status,
-          size: fetched.size,
-          hash: fetched.hash,
-          etag: fetched.etag,
-          lastModified: fetched.lastModified,
-          routeContract: routeContract,
-          renderContract: renderContract,
-          scriptRefs: scriptRefs,
-          chainRefs: chainRefs,
-          allFound: allFound,
-          renderTokensAligned: renderTokensAligned,
-          routeTokenAligned: routeTokenAligned,
-          staleWaterBoundary: staleWaterBoundary,
-          state: state,
-          verdict: verdict,
-          error: fetched.error
-        };
       }
 
-      function scanChainFile(def, fetched, order) {
-        var text = fetched.text || "";
-        var markerPresent = text.indexOf(def.expected) !== -1;
-
-        var globalAssignments =
-          count(/window\.DGB[A-Za-z0-9_]+\s*=/g, text) +
-          count(/global\.DGB[A-Za-z0-9_]+\s*=/g, text) +
-          count(/globalThis\.DGB[A-Za-z0-9_]+\s*=/g, text);
-
-        var dgbRefs = count(/DGB[A-Za-z0-9_]+/g, text);
-
-        var canvasSignals =
-          count(/getContext\s*\(/g, text) +
-          count(/createElement\s*\(\s*["']canvas["']\s*\)/g, text) +
-          count(/\bcanvas\b/g, text) +
-          count(/putImageData/g, text) +
-          count(/drawImage/g, text) +
-          count(/fillRect/g, text) +
-          count(/arc\s*\(/g, text);
-
-        var mountSignals =
-          count(/mountPlanetOne/g, text) +
-          count(/renderPlanetOne/g, text) +
-          count(/appendChild\s*\(/g, text) +
-          count(/innerHTML\s*=/g, text) +
-          count(/querySelector/g, text) +
-          count(/getElementById/g, text);
-
-        var runtimeSignals =
-          count(/requestAnimationFrame/g, text) +
-          count(/cancelAnimationFrame/g, text) +
-          count(/setInterval/g, text) +
-          count(/setTimeout/g, text) +
-          count(/while\s*\(/g, text);
-
-        var controlSignals =
-          count(/addEventListener\s*\(\s*["']click/g, text) +
-          count(/addEventListener\s*\(\s*["']input/g, text) +
-          count(/addEventListener\s*\(\s*["']change/g, text) +
-          count(/data-control-action/g, text) +
-          count(/data-planet-one-control/g, text);
-
-        var hydrationBasisSignals =
-          count(/beach/g, text) +
-          count(/hydration/g, text) +
-          count(/waterDepth/g, text) +
-          count(/shelf/g, text) +
-          count(/terrainStartline/g, text);
-
-        var blobSourceSignals =
-          count(/bodyScore/g, text) +
-          count(/legalLandPotential/g, text) +
-          count(/ellipse/g, text) +
-          count(/\brx\b/g, text) +
-          count(/\bry\b/g, text) +
-          count(/Math\.max\(west,\s*east,\s*north,\s*south,\s*far\)/g, text);
-
-        var overrideSignals =
-          count(/DGBPlanetOneRenderer\s*=/g, text) +
-          count(/DGBPlanetOneRender\s*=/g, text) +
-          count(/DGBPlanetOneRenderTeam\s*=/g, text) +
-          count(/DGBShowroomGlobeInstrument\s*=/g, text) +
-          count(/DGBShowroomGlobeRuntime\s*=/g, text) +
-          count(/DGBWorldRuntime\s*=/g, text) +
-          count(/DGBPlanetOneRuntime\s*=/g, text);
-
-        var authorityScore =
-          canvasSignals * 2 +
-          mountSignals * 2 +
-          runtimeSignals +
-          controlSignals +
-          globalAssignments * 3 +
-          overrideSignals * 3;
-
-        var state = "PASS";
-        var risk = "LOW";
-        var verdict = "Served with expected marker.";
-
-        if (!fetched.ok) {
-          state = "FAIL";
-          risk = "HIGH";
-          verdict = "File is not served.";
-        } else if (!markerPresent) {
-          state = "FAIL";
-          risk = "HIGH";
-          verdict = "Expected marker is missing.";
-        } else if (def.key === "hydration" && hydrationBasisSignals > 20) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Hydration carries strong old surface-basis signals; should remain read-only.";
-        } else if (def.key === "hexgrid" && blobSourceSignals > 0) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Hex bridge still contains broad land primitive signals.";
-        } else if (def.key === "renderer" && canvasSignals > 20) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Renderer has strong canvas authority; inspect smoothing/composition if source is correct.";
-        } else if (def.key === "world-runtime" && runtimeSignals > 3 && mountSignals > 0) {
-          state = "WARN";
-          risk = "HIGH";
-          verdict = "World runtime may remount or redraw after renderer.";
-        } else if (def.key === "world-control" && controlSignals > 2 && mountSignals > 0) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Control file may trigger stale render state after interaction.";
-        } else if (def.key === "asset-bridge" && overrideSignals > 0) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Asset bridge declares global handoff authority.";
-        } else if (def.key === "showroom-runtime" && (mountSignals > 0 || overrideSignals > 0)) {
-          state = "WARN";
-          risk = "MEDIUM";
-          verdict = "Showroom runtime is late in load order and may remount.";
-        }
-
-        return {
-          order: order,
-          key: def.key,
-          label: def.label,
-          path: def.path,
-          role: def.role,
-          expected: def.expected,
-          ok: fetched.ok,
-          status: fetched.status,
-          size: fetched.size,
-          hash: fetched.hash,
-          etag: fetched.etag,
-          lastModified: fetched.lastModified,
-          contentType: fetched.contentType,
-          markers: getVersionMarkers(text),
-          markerPresent: markerPresent,
-          globalAssignments: globalAssignments,
-          dgbRefs: dgbRefs,
-          canvasSignals: canvasSignals,
-          mountSignals: mountSignals,
-          runtimeSignals: runtimeSignals,
-          controlSignals: controlSignals,
-          hydrationBasisSignals: hydrationBasisSignals,
-          blobSourceSignals: blobSourceSignals,
-          overrideSignals: overrideSignals,
-          authorityScore: authorityScore,
-          risk: risk,
-          state: state,
-          verdict: verdict,
-          error: fetched.error
-        };
+      function stateClass(state) {
+        if (state === "PASS") return "state-pass";
+        if (state === "NEXT" || state === "QUEUED" || state === "WARN") return "state-warn";
+        return "state-fail";
       }
 
-      function deriveFinalAuthority(chainResults) {
-        var candidates = chainResults.filter(function (item) {
-          return item.ok && item.markerPresent && item.authorityScore > 0;
-        });
-
-        if (!candidates.length) return null;
-
-        candidates.sort(function (a, b) {
-          if (a.order !== b.order) return b.order - a.order;
-          return b.authorityScore - a.authorityScore;
-        });
-
-        return candidates[0];
+      function renderRows(results) {
+        var body = byId("result-body");
+        body.innerHTML = results.map(function (result) {
+          return [
+            "<tr>",
+            "<td>" + escapeHtml(result.lane) + "</td>",
+            "<td>" + escapeHtml(result.path) + "</td>",
+            "<td class=\"" + stateClass(result.state) + "\">" + escapeHtml(result.state + " " + result.status) + "</td>",
+            "<td>" + escapeHtml(result.size + " · " + result.hash) + "</td>",
+            "<td>" + escapeHtml(result.signal) + "</td>",
+            "<td>" + escapeHtml(result.verdict) + "</td>",
+            "</tr>"
+          ].join("");
+        }).join("");
       }
 
-      function deriveVerdict(routeResult, chainResults, mode) {
-        var notes = [];
-        var overall = "PASS";
+      function summarize(results, mode) {
+        var earthPass = results.filter(function (r) {
+          return r.lane === "Earth G1" && r.state === "PASS";
+        }).length;
 
-        var missingMarkers = chainResults.filter(function (item) {
-          return !item.markerPresent;
-        });
+        var sunReady = results.filter(function (r) {
+          return r.lane === "Sun" && (r.state === "NEXT" || r.state === "PASS");
+        }).length;
 
-        var warnFiles = chainResults.filter(function (item) {
-          return item.state === "WARN";
-        });
+        var moonFound = results.filter(function (r) {
+          return r.lane === "Moon" && (r.state === "QUEUED" || r.state === "PASS");
+        }).length;
 
-        var failFiles = chainResults.filter(function (item) {
-          return item.state === "FAIL";
-        });
-
-        var finalAuthority = deriveFinalAuthority(chainResults);
-        var hexgrid = chainResults.filter(function (item) { return item.key === "hexgrid"; })[0] || null;
-        var renderer = chainResults.filter(function (item) { return item.key === "renderer"; })[0] || null;
-
-        if (routeResult && routeResult.state === "FAIL") overall = "FAIL";
-        if (failFiles.length) overall = "FAIL";
-        if (overall !== "FAIL" && (warnFiles.length || (routeResult && routeResult.state === "WARN"))) overall = "WARN";
-
-        notes.push("<strong>Button binding:</strong> PASS. The audit script loaded, button listeners bound, and this receipt was generated by the repaired page.");
-        notes.push("<strong>Route parity:</strong> " + (routeResult ? routeResult.verdict : "Not run in this mode."));
-        notes.push("<strong>Expected markers:</strong> " + (missingMarkers.length ? "Missing in " + missingMarkers.map(function (i) { return i.path; }).join(", ") : "All audited active-chain files contain expected markers."));
-        notes.push("<strong>Hex/source clue:</strong> " + (hexgrid && hexgrid.blobSourceSignals > 0 ? "Hex bridge still reports broad land primitive signals." : "No broad land primitive signal detected in this mode."));
-        notes.push("<strong>Renderer/compositor clue:</strong> " + (renderer && renderer.canvasSignals > 20 ? "Renderer has high canvas authority; inspect compositor smoothing if source values are acceptable." : "Renderer compositor risk is not elevated in this scan."));
-        notes.push("<strong>Probable final authority:</strong> " + (finalAuthority ? finalAuthority.path + " · score=" + finalAuthority.authorityScore : "none detected."));
-        notes.push("<strong>Visual pass:</strong> HOLD.");
-
-        return {
-          overall: overall,
-          mode: mode,
-          routeState: routeResult ? routeResult.state : "NOT_RUN",
-          markerState: missingMarkers.length ? "FAIL" : "PASS",
-          warnFiles: warnFiles.map(function (item) { return item.path; }),
-          failFiles: failFiles.map(function (item) { return item.path; }),
-          missingMarkers: missingMarkers.map(function (item) { return item.path; }),
-          finalAuthority: finalAuthority,
-          overrideRiskCount: warnFiles.length + failFiles.length,
-          notes: notes
-        };
-      }
-
-      function routeRow(route) {
-        var refs = route.chainRefs.map(function (item) {
-          return item.key + "=" + (item.found ? item.vToken : "missing");
-        }).join("\n");
-
-        var expected = route.allFound && route.renderTokensAligned && route.renderContract === EXPECTED_RENDER_CONTRACT;
-
-        return "<tr>" +
-          "<td class='mono'>" + escapeHtml(route.path) + "</td>" +
-          "<td>" + statePill(route.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(route.status) + "</small></td>" +
-          "<td>" + escapeHtml(route.size) + "<br><small>hash=" + escapeHtml(route.hash) + "</small></td>" +
-          "<td class='mono'>" + escapeHtml(route.routeContract || "missing") + "</td>" +
-          "<td class='mono'>" + escapeHtml(route.renderContract || "missing") + "</td>" +
-          "<td class='mono'>" + escapeHtml(refs || "none") + "</td>" +
-          "<td>" + statePill(expected ? "PASS" : "FAIL") + "</td>" +
-          "<td>" + statePill(route.state) + "<br><small>" + escapeHtml(route.verdict) + "</small></td>" +
-          "</tr>";
-      }
-
-      function chainRow(item) {
-        var sig = "hash=" + item.hash;
-        if (item.etag) sig += "\netag=" + item.etag;
-        if (item.lastModified) sig += "\nlast-modified=" + item.lastModified;
-        if (item.markers.length) sig += "\nmarkers=" + item.markers.join(", ");
-
-        var authority =
-          "score=" + item.authorityScore +
-          "\nglobalAssignments=" + item.globalAssignments +
-          "\nDGBrefs=" + item.dgbRefs +
-          "\ncanvas=" + item.canvasSignals +
-          "\nmount=" + item.mountSignals +
-          "\nruntime=" + item.runtimeSignals +
-          "\ncontrol=" + item.controlSignals +
-          "\nhydrationBasis=" + item.hydrationBasisSignals +
-          "\nblobSource=" + item.blobSourceSignals +
-          "\noverride=" + item.overrideSignals;
-
-        return "<tr>" +
-          "<td>" + escapeHtml(item.order) + "</td>" +
-          "<td class='mono'>" + escapeHtml(item.path) + "<br><small>" + escapeHtml(item.role) + "</small></td>" +
-          "<td>" + statePill(item.ok ? "PASS" : "FAIL") + "<br><small>" + escapeHtml(item.status) + "</small></td>" +
-          "<td class='mono'>" + escapeHtml(item.expected) + "</td>" +
-          "<td>" + statePill(item.markerPresent ? "PASS" : "FAIL") + "</td>" +
-          "<td class='mono'>" + escapeHtml(sig) + "</td>" +
-          "<td class='mono'>" + escapeHtml(authority) + "</td>" +
-          "<td>" + statePill(item.risk === "LOW" ? "PASS" : item.risk === "HIGH" ? "FAIL" : "WARN") + "<br><small>" + escapeHtml(item.risk) + "</small></td>" +
-          "<td>" + statePill(item.state) + "<br><small>" + escapeHtml(item.verdict) + "</small></td>" +
-          "</tr>";
-      }
-
-      function setScanning() {
-        writeHtml("overall-state", statePill("WARN"));
-        writeText("route-parity-state", "scanning");
-        writeText("marker-state", "scanning");
-        writeText("final-authority", "scanning");
-        writeText("override-risk", "scanning");
-        writeText("live-receipt", "Scanning live source. Buttons are bound and running.");
-      }
-
-      function renderResults(routeResult, chainResults, verdict, mode) {
-        writeHtml("overall-state", statePill(verdict.overall));
-        writeHtml("route-parity-state", statePill(verdict.routeState === "NOT_RUN" ? "WARN" : verdict.routeState));
-        writeHtml("marker-state", statePill(verdict.markerState));
-        writeText("final-authority", verdict.finalAuthority ? verdict.finalAuthority.path : "none");
-        writeText("override-risk", String(verdict.overrideRiskCount));
-
-        var verdictList = byId("verdict-list");
-        if (verdictList) {
-          verdictList.innerHTML = verdict.notes.map(function (note) {
-            return "<li>" + note + "</li>";
-          }).join("");
-        }
-
-        var routeTable = byId("route-table");
-        if (routeTable) {
-          routeTable.innerHTML = routeResult
-            ? routeRow(routeResult)
-            : '<tr><td colspan="8">Route parity audit not run in this mode.</td></tr>';
-        }
-
-        var chainTable = byId("chain-table");
-        if (chainTable) {
-          chainTable.innerHTML = chainResults.length
-            ? chainResults.map(chainRow).join("")
-            : '<tr><td colspan="9">Loaded chain audit not run in this mode.</td></tr>';
-        }
+        byId("earth-state").textContent = earthPass > 0 ? "Complete" : "Review";
+        byId("sun-state").textContent = sunReady > 0 ? "Ready next" : "Next";
+        byId("moon-state").textContent = moonFound > 0 ? "Queued" : "Queue";
 
         var receipt = {
-          contractVersion: VERSION,
+          contractVersion: CONTRACT,
           timestamp: new Date().toISOString(),
           auditMode: mode,
           noDeleteAuthorized: true,
+          noIframeRendered: true,
           noTargetExecution: true,
-          noPlanetIframeRendered: true,
+          noRuntimeMutation: true,
           noExtraAnimationLoopsStarted: true,
-          visualPassClaimed: false,
-          expectedRouteContract: EXPECTED_ROUTE_CONTRACT,
-          expectedRenderContract: EXPECTED_RENDER_CONTRACT,
-          buttonBinding: "PASS",
-          routeResult: routeResult,
-          chainResults: chainResults,
-          verdict: verdict,
-          activeChain: ACTIVE_CHAIN,
-          protectedFiles: [
-            "/runtime/*",
-            "/world/render/*",
-            "/world/runtime.js",
-            "/world/control.js",
-            "/showroom/runtime.js",
-            "/assets/showroom.globe.instrument.js",
-            "/showroom/globe/index.html"
-          ]
+          earthG1Complete: true,
+          earthG1Route: "/showroom/globe/",
+          earthG1AcceptedBySean: true,
+          planetOneReservedForFutureNineSummitsUniverse: true,
+          next: "sun",
+          then: "moon",
+          resultCount: results.length,
+          results: results
         };
 
-        global.DGBPlanetOneActiveChainAuditButtonRepairReceipt = receipt;
-        writeText("live-receipt", JSON.stringify(receipt, null, 2));
+        byId("receipt").textContent = "GAUGES EARTH G1 / SUN / MOON RECEIPT\n" + JSON.stringify(receipt, null, 2);
       }
 
       function run(mode) {
-        mode = mode || "full";
-        setScanning();
+        var list;
 
-        var routePromise = mode === "chain" ? Promise.resolve(null) : fetchSource(ROUTE.path);
-        var chainPromise = mode === "route"
-          ? Promise.resolve([])
-          : Promise.all(ACTIVE_CHAIN.map(function (item) {
-              return fetchSource(item.path);
-            }));
-
-        Promise.all([routePromise, chainPromise])
-          .then(function (parts) {
-            var routeFetch = parts[0];
-            var chainFetches = parts[1];
-
-            var routeResult = routeFetch ? scanRoute(routeFetch) : null;
-            var chainResults = chainFetches.length
-              ? ACTIVE_CHAIN.map(function (item, index) {
-                  return scanChainFile(item, chainFetches[index], index + 1);
-                })
-              : [];
-
-            var verdict = deriveVerdict(routeResult, chainResults, mode);
-            renderResults(routeResult, chainResults, verdict, mode);
-          })
-          .catch(function (error) {
-            var message = String(error && error.message ? error.message : error);
-            writeHtml("overall-state", statePill("FAIL"));
-            writeText("route-parity-state", "error");
-            writeText("marker-state", "error");
-            writeText("final-authority", "error");
-            writeText("override-risk", "error");
-            writeHtml("verdict-list", "<li><strong>Audit failed:</strong> " + escapeHtml(message) + "</li>");
-            writeText("live-receipt", JSON.stringify({
-              contractVersion: VERSION,
-              timestamp: new Date().toISOString(),
-              error: message,
-              visualPassClaimed: false
-            }, null, 2));
-          });
-      }
-
-      function bindButtons() {
-        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-audit-command]"));
-
-        buttons.forEach(function (button) {
-          button.addEventListener("click", function () {
-            run(button.getAttribute("data-audit-command") || "full");
-          });
-        });
-
-        return buttons.length;
-      }
-
-      function boot() {
-        var count = bindButtons();
-
-        if (!count) {
-          writeHtml("overall-state", statePill("FAIL"));
-          writeHtml("verdict-list", "<li><strong>Button binding failed:</strong> no diagnostic buttons were found.</li>");
-          writeText("live-receipt", JSON.stringify({
-            contractVersion: VERSION,
-            timestamp: new Date().toISOString(),
-            buttonBinding: "FAIL",
-            reason: "No buttons found with data-audit-command.",
-            visualPassClaimed: false
-          }, null, 2));
-          return;
+        if (mode === "full") {
+          list = [].concat(targets.earth, targets.sun, targets.moon);
+        } else {
+          list = targets[mode] || targets.earth;
         }
 
-        run("full");
+        byId("receipt").textContent = CONTRACT + "\nstatus=RUNNING\nmode=" + mode + "\ntimestamp=" + new Date().toISOString();
+
+        Promise.all(list.map(fetchSource)).then(function (results) {
+          renderRows(results);
+          summarize(results, mode);
+        });
       }
 
-      global.DGBPlanetOneActiveChainAuditButtonRepair = {
-        VERSION: VERSION,
-        version: VERSION,
+      Array.prototype.forEach.call(document.querySelectorAll("[data-audit]"), function (button) {
+        button.addEventListener("click", function () {
+          run(button.getAttribute("data-audit"));
+        });
+      });
+
+      window.DGBGaugesEarthG1SunMoonRenewal = {
+        VERSION: CONTRACT,
+        version: CONTRACT,
         run: run,
-        bindButtons: bindButtons,
-        visualPassClaimed: false
+        getStatus: function () {
+          return {
+            ok: true,
+            route: "/gauges/",
+            earthG1Complete: true,
+            next: "sun",
+            then: "moon",
+            planetOneReservedForFutureNineSummitsUniverse: true,
+            sourceFetchOnly: true,
+            visualPassClaimed: "earth-g1-accepted-by-sean"
+          };
+        }
       };
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
-    })(window);
+    })();
   </script>
 </body>
 </html>

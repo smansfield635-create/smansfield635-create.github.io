@@ -1,25 +1,24 @@
-/* G1 PLANET 1 TRI-DOMAIN VISUAL DELTA AMPLIFICATION HEX BRIDGE
+/* G1 PLANET 1 SURFACE / AIR LAYER SEPARATION HEX BRIDGE
    FILE: /world/render/planet-one.hexgrid.render.js
-   VERSION: G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1
-   LAYER_VERSION: G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1
-   VISUAL_DELTA_VERSION: G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1
+   VERSION: G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1
 
    LAW:
-   Amplify only already-authorized values.
-   Do not add mountains, rivers, full glaciers, fake terrain authority, or painted blobs.
-   Water remains sovereign.
+   Water, land, and air are not one material.
+   Water and land are surface layers.
+   Air/cloud is an overlay layer.
+   Clouds must not become water.
+   Water must not become cloud.
 */
 
-(function attachPlanetOneTriDomainVisualDeltaHexBridge(global) {
+(function attachPlanetOneSurfaceAirSeparationHexBridge(global) {
   "use strict";
 
-  var VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
+  var VERSION = "G1_PLANET_1_SURFACE_AIR_LAYER_SEPARATION_TNT_v1";
+  var PRIOR_VERSION = "G1_PLANET_1_TERRAIN_LIFE_WATER_DIVIDE_PHASE_STATE_REFINEMENT_TNT_v1";
   var LAYER_VERSION = "G1_PLANET_1_TRI_DOMAIN_256_WHOLE_WORLD_CONTAINER_TNT_v1";
-  var VISUAL_DELTA_VERSION = "G1_PLANET_1_TRI_DOMAIN_VISUAL_DELTA_AMPLIFICATION_TNT_v1";
   var BASELINE = "PLANET_1_GENERATION_1_CLEAN_SLATE_LOCK_IN_v1";
   var STATE_FORMULA = "4x4x4x4";
   var STATE_COUNT = 256;
-  var DOMAIN_SHARE = 33.3333;
   var SEED = 256451;
 
   var lastGrid = null;
@@ -33,14 +32,14 @@
     return a + (b - a) * clamp(t, 0, 1);
   }
 
+  function smoothstep(a, b, value) {
+    var t = clamp((value - a) / (b - a), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
   function round(value, places) {
     var m = Math.pow(10, places || 4);
     return Math.round((Number(value) || 0) * m) / m;
-  }
-
-  function smoothstep(edge0, edge1, value) {
-    var t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
   }
 
   function degToRad(value) {
@@ -84,7 +83,7 @@
     return (((a * 4 + b) * 4 + c) * 4 + d);
   }
 
-  function buildStateSpaceReceipt(label, axisA, axisB, axisC, axisD) {
+  function buildStateReceipt(label) {
     var states = [];
     var a;
     var b;
@@ -95,17 +94,7 @@
       for (b = 0; b < 4; b += 1) {
         for (c = 0; c < 4; c += 1) {
           for (d = 0; d < 4; d += 1) {
-            states.push({
-              state_id: stateId(a, b, c, d),
-              axisA: axisA[a],
-              axisB: axisB[b],
-              axisC: axisC[c],
-              axisD: axisD[d],
-              a: a,
-              b: b,
-              c: c,
-              d: d
-            });
+            states.push({ state_id: stateId(a, b, c, d), a: a, b: b, c: c, d: d });
           }
         }
       }
@@ -115,42 +104,9 @@
       label: label,
       ok: states.length === STATE_COUNT,
       stateFormula: STATE_FORMULA,
-      stateCount: STATE_COUNT,
+      stateCount: states.length,
       requiredStateCount: STATE_COUNT,
-      states: states
-    };
-  }
-
-  function buildTriDomainReceipts() {
-    return {
-      wholeWorld256: buildStateSpaceReceipt(
-        "WHOLE_WORLD_256",
-        ["CONTAINER_SOURCE", "DOMAIN_BALANCE", "CYCLE_EXCHANGE", "VISIBLE_COHERENCE"],
-        ["WATER_DOMINANT", "LAND_DOMINANT", "AIR_DOMINANT", "TRI_DOMAIN_BALANCED"],
-        ["BOUNDARY_HELD", "CONTACT_ACTIVE", "EXCHANGE_ACTIVE", "COHERENCE_ACTIVE"],
-        ["HIDDEN", "SUBTLE", "READABLE", "DOMINANT_RESTRAINED"]
-      ),
-      water256: buildStateSpaceReceipt(
-        "WATER_256",
-        ["OCEAN_BASIN", "REEF_SHELF", "BEACH_THRESHOLD", "ICE_STORAGE"],
-        ["LIQUID", "WET_EDGE", "MOISTURE", "FROZEN_PHASE"],
-        ["BASIN", "FLOW", "CIRCULATION", "DIVIDE_RESPONSE"],
-        ["HIDDEN", "SUBTLE", "READABLE", "DOMINANT_RESTRAINED"]
-      ),
-      land256: buildStateSpaceReceipt(
-        "LAND_256",
-        ["NO_LAND", "BEACH_STARTLINE", "LOWLAND", "ELEVATED_TERRAIN"],
-        ["SOIL_MOISTURE", "LIVING_TERRAIN", "RIDGE", "WATER_DIVIDE"],
-        ["SOFT_MATERIAL", "STONE_HINT", "SLOPE_HINT", "ICE_BEARING_HEIGHT"],
-        ["HIDDEN", "SUBTLE", "READABLE", "DOMINANT_RESTRAINED"]
-      ),
-      air256: buildStateSpaceReceipt(
-        "AIR_256",
-        ["ATMOSPHERE_HELD", "HUMIDITY", "WIND_EXCHANGE", "PRESSURE_SYSTEM"],
-        ["CLEAR_AIR", "MIST", "CLOUD_HINT", "STORM_PRESSURE_HELD"],
-        ["OCEAN_AIR", "LAND_AIR", "RIDGE_AIR", "ICE_AIR"],
-        ["HIDDEN", "SUBTLE", "READABLE", "DOMINANT_RESTRAINED"]
-      )
+      preview: states.slice(0, 16)
     };
   }
 
@@ -185,19 +141,15 @@
     return normalizeLon(lon) >= 0 ? "EAST" : "WEST";
   }
 
-  function amplify(value, amount, ceiling) {
-    return clamp(Math.pow(clamp(value, 0, 1), amount), 0, ceiling == null ? 1 : ceiling);
-  }
-
   function sampleBridge(lon, lat, options) {
     options = options || {};
-    var seed = Number(options.seed || SEED);
-
     lon = normalizeLon(lon);
     lat = clamp(lat, -88, 88);
 
+    var seed = Number(options.seed || SEED);
     var absLat = Math.abs(lat);
     var polar = absLat >= 73 ? 1 : 0;
+
     var potential = landPotential(lon, lat, seed);
     var ridge = ridgeSignal(lon, lat, seed);
     var texture = fbm(lon * 2.8, lat * 2.35, seed + 840);
@@ -207,104 +159,66 @@
     var outline = smoothstep(0.045, 0.30, potential);
     var shelf = clamp(1 - Math.abs(potential - 0.055) / 0.32, 0, 1);
     var coastContact = clamp(1 - Math.abs(potential - 0.13) / 0.17, 0, 1);
-
     var reefNoise = fbm(lon * 2.5, lat * 2.1, seed + 909);
     var reef = clamp(shelf * coastContact * smoothstep(0.39, 0.88, reefNoise) * (1 - polar), 0, 1);
     var shallow = clamp(shelf * (1 - smoothstep(0.36, 0.74, potential)), 0, 1);
     var wetEdge = clamp(coastContact * outline * 0.94, 0, 1);
 
     var beachCandidate = clamp(
-      wetEdge *
-      smoothstep(0.10, 0.42, potential) *
-      (1 - reef * 0.20),
+      wetEdge * smoothstep(0.10, 0.42, potential) * (1 - reef * 0.20),
       0,
       1
     );
 
     var beachLock = clamp(
-      beachCandidate *
-      smoothstep(0.32, 0.66, coastContact) *
-      smoothstep(0.18, 0.46, outline),
+      beachCandidate * smoothstep(0.32, 0.66, coastContact) * smoothstep(0.18, 0.46, outline),
       0,
       1
     );
 
-    var shorelineDistance = clamp(1 - coastContact, 0, 1);
-
     var terrainPermission = clamp(
-      beachLock * 0.46 +
-      outline * smoothstep(0.42, 0.78, potential) * 0.62,
+      beachLock * 0.46 + outline * smoothstep(0.42, 0.78, potential) * 0.62,
       0,
       1
     );
 
     var lowlandValue = clamp(
-      terrainPermission *
-      (wetEdge * 0.46 + shallow * 0.26 + (1 - smoothstep(0.54, 0.78, potential)) * 0.50),
+      terrainPermission * (wetEdge * 0.46 + shallow * 0.26 + (1 - smoothstep(0.54, 0.78, potential)) * 0.50),
       0,
       1
     );
 
     var livingTerrainValue = clamp(
-      terrainPermission *
-      smoothstep(0.46, 0.84, potential) *
-      (0.62 + texture * 0.34) *
-      (1 - reef * 0.44),
+      terrainPermission * smoothstep(0.46, 0.84, potential) * (0.62 + texture * 0.34) * (1 - reef * 0.44),
       0,
       1
     );
 
     var ridgeValue = clamp(
-      terrainPermission *
-      ridge *
-      smoothstep(0.62, 0.96, potential) *
-      (0.42 + fine * 0.32),
+      terrainPermission * ridge * smoothstep(0.62, 0.96, potential) * (0.42 + fine * 0.32),
       0,
       1
     );
 
     var waterDivideValue = clamp(
-      ridgeValue * 0.74 +
-      terrainPermission * ridge * smoothstep(0.70, 0.98, potential) * 0.30,
+      ridgeValue * 0.74 + terrainPermission * ridge * smoothstep(0.70, 0.98, potential) * 0.30,
       0,
       1
     );
 
     var highElevationIceState = clamp(
-      waterDivideValue *
-      (0.36 + absLat / 126) *
-      (1 - reef * 0.84),
+      waterDivideValue * (0.36 + absLat / 126) * (1 - reef * 0.84),
       0,
       1
     );
 
-    var futureMeltPermission = clamp(
-      highElevationIceState * 0.64 +
-      waterDivideValue * terrainPermission * 0.24,
-      0,
-      1
+    var waterDepth = clamp(
+      0.80 - potential * 0.48 - shelf * 0.20 - reef * 0.13 - beachLock * 0.05 + highElevationIceState * 0.05,
+      0.08,
+      0.96
     );
 
-    var moistureValue = clamp(
-      shallow * 0.25 +
-      wetEdge * 0.30 +
-      beachLock * 0.18 +
-      lowlandValue * 0.27 +
-      highElevationIceState * 0.18,
-      0,
-      1
-    );
-
-    var elevationValue = clamp(
-      terrainPermission * 0.37 +
-      livingTerrainValue * 0.22 +
-      ridgeValue * 0.26 +
-      highElevationIceState * 0.18,
-      0,
-      1
-    );
-
-    var reefShelfRelation = clamp(reef * 0.58 + shelf * 0.46, 0, 1);
+    if (polar) waterDepth = clamp(waterDepth * 0.70 + highElevationIceState * 0.10, 0.10, 0.66);
 
     var materialTone = clamp(
       beachLock * 0.28 +
@@ -317,49 +231,26 @@
     );
 
     var terrainIdentity = clamp(
-      lowlandValue * 0.24 +
-      livingTerrainValue * 0.36 +
-      ridgeValue * 0.27 +
-      highElevationIceState * 0.19,
-      0,
-      1
-    );
-
-    var visualWeightRaw = clamp(
-      beachLock * 0.34 +
+      beachLock * 0.18 +
       lowlandValue * 0.26 +
-      livingTerrainValue * 0.42 +
-      ridgeValue * 0.25 +
-      highElevationIceState * 0.25,
+      livingTerrainValue * 0.38 +
+      ridgeValue * 0.24 +
+      highElevationIceState * 0.18,
       0,
       1
     );
 
-    var visualDelta = clamp(
-      beachLock * 0.22 +
-      reefShelfRelation * 0.16 +
-      lowlandValue * 0.22 +
-      livingTerrainValue * 0.26 +
-      ridgeValue * 0.08 +
-      highElevationIceState * 0.06,
+    var landMask = clamp(
+      beachLock * 0.42 +
+      lowlandValue * 0.34 +
+      livingTerrainValue * 0.46 +
+      ridgeValue * 0.22 +
+      highElevationIceState * 0.20,
       0,
-      1
+      0.88
     );
 
-    var waterDepth = clamp(
-      0.80 -
-      potential * 0.48 -
-      shelf * 0.20 -
-      reef * 0.13 -
-      beachLock * 0.05 +
-      highElevationIceState * 0.05,
-      0.08,
-      0.96
-    );
-
-    if (polar) {
-      waterDepth = clamp(waterDepth * 0.70 + highElevationIceState * 0.10, 0.10, 0.66);
-    }
+    var featheredLandMask = smoothstep(0.08, 0.46, landMask) * clamp(0.62 + landMask * 0.40, 0, 0.92);
 
     var waterDomainValue = clamp(
       waterDepth * 0.46 +
@@ -383,9 +274,9 @@
 
     var humidityValue = clamp(
       waterDomainValue * 0.34 +
-      moistureValue * 0.30 +
-      wetEdge * 0.16 +
-      airNoise * 0.20,
+      wetEdge * 0.18 +
+      lowlandValue * 0.16 +
+      airNoise * 0.22,
       0,
       1
     );
@@ -418,6 +309,15 @@
       1
     );
 
+    var cloudMask = clamp(
+      smoothstep(0.48, 0.92, cloudPotential) * (0.08 + airNoise * 0.12),
+      0,
+      0.18
+    );
+
+    var atmosphereMask = clamp(0.025 + pressureValue * 0.05 + humidityValue * 0.035, 0, 0.11);
+    var airOverlayAlpha = clamp(cloudMask + atmosphereMask, 0, 0.22);
+
     var airDomainValue = clamp(
       humidityValue * 0.30 +
       windExchangeValue * 0.26 +
@@ -428,108 +328,49 @@
     );
 
     var waterLandExchange = clamp(beachLock * 0.44 + wetEdge * 0.32 + lowlandValue * 0.30, 0, 1);
-    var landAirExchange = clamp(elevationValue * 0.35 + ridgeValue * 0.28 + windExchangeValue * 0.38, 0, 1);
+    var landAirExchange = clamp(landDomainValue * 0.35 + ridgeValue * 0.28 + windExchangeValue * 0.38, 0, 1);
     var airWaterExchange = clamp(humidityValue * 0.36 + cloudPotential * 0.30 + waterDepth * 0.20 + highElevationIceState * 0.14, 0, 1);
-
-    var triDomainCycleValue = clamp(
-      waterLandExchange * 0.34 +
-      landAirExchange * 0.33 +
-      airWaterExchange * 0.33,
-      0,
-      1
-    );
-
-    var wholeWorldCoherence = clamp(
-      waterDomainValue * 0.25 +
-      landDomainValue * 0.25 +
-      airDomainValue * 0.25 +
-      triDomainCycleValue * 0.25,
-      0,
-      1
-    );
-
-    var sourceAuthorityState = 0;
-    if (reefShelfRelation > 0.24) sourceAuthorityState = 1;
-    if (beachLock > 0.30 || terrainPermission > 0.20) sourceAuthorityState = 2;
-    if (waterDivideValue > 0.30 || highElevationIceState > 0.24) sourceAuthorityState = 3;
-
-    var waterPhaseStateIndex = 0;
-    if (moistureValue > 0.28 || lowlandValue > 0.16) waterPhaseStateIndex = 1;
-    if (livingTerrainValue > 0.24 || ridgeValue > 0.20) waterPhaseStateIndex = 2;
-    if (highElevationIceState > 0.22) waterPhaseStateIndex = 3;
-
-    var landIdentityState = 0;
-    if (lowlandValue > 0.16) landIdentityState = 1;
-    if (livingTerrainValue > 0.24) landIdentityState = 2;
-    if (ridgeValue > 0.24 || waterDivideValue > 0.24) landIdentityState = 3;
-
-    var visualWeightState = 0;
-    if (visualWeightRaw > 0.15) visualWeightState = 1;
-    if (visualWeightRaw > 0.30) visualWeightState = 2;
-    if (visualWeightRaw > 0.52) visualWeightState = 3;
-
-    var waterState = stateId(
-      waterDepth > 0.64 ? 0 : shelf > 0.34 ? 1 : beachLock > 0.22 ? 2 : 3,
-      waterPhaseStateIndex,
-      wetEdge > 0.22 ? 1 : reef > 0.22 ? 2 : highElevationIceState > 0.22 ? 3 : 0,
-      visualWeightState
-    );
-
-    var landState = stateId(
-      terrainPermission > 0.44 ? 3 : terrainPermission > 0.22 ? 2 : beachLock > 0.16 ? 1 : 0,
-      lowlandValue > 0.22 ? 1 : livingTerrainValue > 0.28 ? 2 : ridgeValue > 0.24 ? 3 : 0,
-      materialTone > 0.42 ? 2 : highElevationIceState > 0.24 ? 3 : 1,
-      visualWeightState
-    );
-
-    var airState = stateId(
-      humidityValue > 0.42 ? 1 : windExchangeValue > 0.42 ? 2 : pressureValue > 0.52 ? 3 : 0,
-      cloudPotential > 0.50 ? 2 : humidityValue > 0.36 ? 1 : pressureValue > 0.58 ? 3 : 0,
-      landAirExchange > 0.44 ? 2 : airWaterExchange > 0.44 ? 1 : highElevationIceState > 0.24 ? 3 : 0,
-      cloudPotential > 0.58 ? 2 : airDomainValue > 0.42 ? 1 : pressureValue > 0.70 ? 3 : 0
-    );
-
-    var wholeState = stateId(
-      wholeWorldCoherence > 0.64 ? 3 : wholeWorldCoherence > 0.44 ? 2 : wholeWorldCoherence > 0.24 ? 1 : 0,
-      waterDomainValue >= landDomainValue && waterDomainValue >= airDomainValue ? 0 :
-        landDomainValue >= waterDomainValue && landDomainValue >= airDomainValue ? 1 :
-        airDomainValue >= waterDomainValue && airDomainValue >= landDomainValue ? 2 : 3,
-      triDomainCycleValue > 0.62 ? 3 : triDomainCycleValue > 0.42 ? 2 : triDomainCycleValue > 0.22 ? 1 : 0,
-      visualWeightState
-    );
+    var triDomainCycleValue = clamp(waterLandExchange * 0.34 + landAirExchange * 0.33 + airWaterExchange * 0.33, 0, 1);
+    var wholeWorldCoherence = clamp((waterDomainValue + landDomainValue + airDomainValue + triDomainCycleValue) / 4, 0, 1);
 
     var sourceTraceValid = (
       waterDomainValue >= 0 &&
       landDomainValue >= 0 &&
       airDomainValue >= 0 &&
       wholeWorldCoherence >= 0 &&
-      (
-        landIdentityState === 0 ||
-        beachLock > 0.12 ||
-        moistureValue > 0.14 ||
-        elevationValue > 0.16 ||
-        highElevationIceState > 0.10
-      )
+      (terrainIdentity === 0 || beachLock > 0.10 || lowlandValue > 0.12 || livingTerrainValue > 0.12 || highElevationIceState > 0.08)
     );
 
-    var unauthorizedPaint = !sourceTraceValid || (visualWeightState >= 2 && landIdentityState === 0);
-    var authorizedVisualWeight = unauthorizedPaint ? 0 : clamp(visualWeightRaw + visualDelta * 0.28, 0, 0.88);
+    if (!sourceTraceValid) {
+      featheredLandMask = 0;
+      airOverlayAlpha = clamp(airOverlayAlpha, 0, 0.12);
+    }
 
     return {
       VERSION: VERSION,
       version: VERSION,
+      PRIOR_VERSION: PRIOR_VERSION,
+      priorVersion: PRIOR_VERSION,
       LAYER_VERSION: LAYER_VERSION,
       layerVersion: LAYER_VERSION,
-      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
 
       lon: lon,
       lat: lat,
       nodalIndex256: nodalIndex256(lon, lat),
-      nodal_index_256: nodalIndex256(lon, lat),
       cardinalNode: cardinalNode(lon, lat),
-      cardinal_node: cardinalNode(lon, lat),
+
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialActive: true,
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
 
       wholeWorldContainerActive: true,
       triDomain256Active: true,
@@ -537,165 +378,49 @@
       land256Active: true,
       air256Active: true,
       wholeWorld256Active: true,
-      domainShare: DOMAIN_SHARE,
-      domain_share: DOMAIN_SHARE,
-
-      triDomainCycleActive: true,
-      domainContactZonesActive: true,
-      waterLandExchangeActive: true,
-      landAirExchangeActive: true,
-      airWaterExchangeActive: true,
-
-      visualDeltaAmplificationActive: true,
-      authorizedVisualDeltaOnly: true,
-      waterDepthVisualAmplified: true,
-      reefShelfVisualAmplified: true,
-      beachEdgeVisualAmplified: true,
-      lowlandVisualAmplified: true,
-      livingTerrainVisualAmplified: true,
-      atmosphereVisualAmplified: true,
-
-      landValueMapActive: true,
-      invertedBacktraceActive: true,
-      sourceTraceValidationActive: true,
-
-      terrainPermissionFieldActive: true,
-      elevationValueFieldActive: true,
-      moistureValueFieldActive: true,
-      shorelineDistanceFieldActive: true,
-      reefShelfRelationFieldActive: true,
-      lowlandValueFieldActive: true,
-      livingTerrainValueFieldActive: true,
-      ridgeValueFieldActive: true,
-      waterDivideValueFieldActive: true,
-      waterPhaseStateFieldActive: true,
-      highElevationIceStateFieldActive: true,
-      futureMeltPermissionFieldActive: true,
-      materialToneFieldActive: true,
-      visualWeightFieldActive: true,
-      terrainIdentityFieldActive: true,
-
-      visualWeightBacktraceFieldActive: true,
-      terrainIdentityBacktraceFieldActive: true,
-      waterPhaseBacktraceFieldActive: true,
-      sourceAuthorityBacktraceFieldActive: true,
-      forwardValueFieldActive: true,
-      reverseValidationFieldActive: true,
-      unauthorizedPaintBlocked: true,
-
-      terrainLifeLowReliefActive: true,
-      lowEmergentLandFieldActive: true,
-      wetLowlandFieldActive: true,
-      dryLowlandFieldActive: true,
-      softLandToneFieldActive: true,
-      earlyStoneToneFieldActive: true,
-      microReliefFieldActive: true,
-      waterResponseFieldActive: true,
-      highElevationFrozenWaterCandidateFieldActive: true,
-      watershedDivideCandidateFieldActive: true,
-      futureMeltPathPermissionFieldActive: true,
-
-      terrainAuthorityBlocked: true,
-      hydrationReadOnlyPreserved: true,
-      terrainFillBlocked: true,
-      waterSovereigntyPreserved: true,
-      elevationTransformsWaterState: true,
-      noGlacierDivideAuthority: true,
-      noSeparateGlacierSystem: true,
 
       waterDepth: round(waterDepth, 4),
-      water_depth: round(waterDepth, 4),
-      terrainOutline: round(outline, 4),
-      terrain_outline: round(outline, 4),
-      officialCoastline: round(coastContact, 4),
-      official_coastline: round(coastContact, 4),
-      shorelineDistance: round(shorelineDistance, 4),
-      shoreline_distance: round(shorelineDistance, 4),
-
       shelfField: round(shelf, 4),
-      shelf_field: round(shelf, 4),
       reefField: round(reef, 4),
-      reef_field: round(reef, 4),
-      reefShelfRelation: round(reefShelfRelation, 4),
-      reef_shelf_relation: round(reefShelfRelation, 4),
       shallowWaterField: round(shallow, 4),
-      shallow_water_field: round(shallow, 4),
       wetEdge: round(wetEdge, 4),
-      wet_edge: round(wetEdge, 4),
-
       beachCandidate: round(beachCandidate, 4),
-      beach_candidate: round(beachCandidate, 4),
       beachLock: round(beachLock, 4),
-      beach_lock: round(beachLock, 4),
-
       terrainPermission: round(terrainPermission, 4),
-      terrain_permission: round(terrainPermission, 4),
-      elevationValue: round(elevationValue, 4),
-      elevation_value: round(elevationValue, 4),
-      moistureValue: round(moistureValue, 4),
-      moisture_value: round(moistureValue, 4),
-
       lowlandValue: round(lowlandValue, 4),
-      lowland_value: round(lowlandValue, 4),
       livingTerrainValue: round(livingTerrainValue, 4),
-      living_terrain_value: round(livingTerrainValue, 4),
       ridgeValue: round(ridgeValue, 4),
-      ridge_value: round(ridgeValue, 4),
       waterDivideValue: round(waterDivideValue, 4),
-      water_divide_value: round(waterDivideValue, 4),
-
       highElevationIceState: round(highElevationIceState, 4),
-      high_elevation_ice_state: round(highElevationIceState, 4),
-      highElevationFrozenWaterCandidate: round(highElevationIceState, 4),
-      high_elevation_frozen_water_candidate: round(highElevationIceState, 4),
-      futureMeltPermission: round(futureMeltPermission, 4),
-      future_melt_permission: round(futureMeltPermission, 4),
-      futureMeltPathPermission: round(futureMeltPermission, 4),
-      future_melt_path_permission: round(futureMeltPermission, 4),
-
       materialTone: round(materialTone, 4),
-      material_tone: round(materialTone, 4),
-      visualDelta: round(visualDelta, 4),
-      visual_delta: round(visualDelta, 4),
-      visualWeight: round(authorizedVisualWeight, 4),
-      visual_weight: round(authorizedVisualWeight, 4),
       terrainIdentity: round(terrainIdentity, 4),
-      terrain_identity: round(terrainIdentity, 4),
+      landMask: round(landMask, 4),
+      featheredLandMask: round(featheredLandMask, 4),
+      cloudPotential: round(cloudPotential, 4),
+      cloudMask: round(cloudMask, 4),
+      atmosphereMask: round(atmosphereMask, 4),
+      airOverlayAlpha: round(airOverlayAlpha, 4),
 
       waterDomainValue: round(waterDomainValue, 4),
       landDomainValue: round(landDomainValue, 4),
       airDomainValue: round(airDomainValue, 4),
-      humidityValue: round(humidityValue, 4),
-      windExchangeValue: round(windExchangeValue, 4),
-      pressureValue: round(pressureValue, 4),
-      cloudPotential: round(cloudPotential, 4),
       waterLandExchange: round(waterLandExchange, 4),
       landAirExchange: round(landAirExchange, 4),
       airWaterExchange: round(airWaterExchange, 4),
       triDomainCycleValue: round(triDomainCycleValue, 4),
       wholeWorldCoherence: round(wholeWorldCoherence, 4),
 
-      sourceAuthorityState: sourceAuthorityState,
-      waterPhaseStateIndex: waterPhaseStateIndex,
-      landIdentityState: landIdentityState,
-      visualWeightState: visualWeightState,
+      terrainAuthorityBlocked: true,
+      hydrationReadOnlyPreserved: true,
+      terrainFillBlocked: true,
+      waterSovereigntyPreserved: true,
+      noGlacierDivideAuthority: true,
+      noSeparateGlacierSystem: true,
+      noBlobReintroduced: true,
+      noMountainRelief: true,
+      noRiverNetwork: true,
+      noFullGlacierSystem: true,
 
-      waterStateId: waterState,
-      landStateId: landState,
-      airStateId: airState,
-      wholeStateId: wholeState,
-
-      sourceTraceValid: sourceTraceValid,
-      reverseValidation: sourceTraceValid,
-      unauthorizedPaint: unauthorizedPaint,
-      unauthorizedDominantVisualBlocked: true,
-
-      terrainFill: 0,
-      mountainRelief: 0,
-      riverNetwork: 0,
-      fullGlacierSystem: 0,
-
-      state_id: wholeState,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
       requiredStateCount: STATE_COUNT,
@@ -703,8 +428,6 @@
       landStateCount: STATE_COUNT,
       airStateCount: STATE_COUNT,
       wholeWorldStateCount: STATE_COUNT,
-      domainStateTotal: STATE_COUNT * 4,
-
       visualPassClaimed: false
     };
   }
@@ -741,66 +464,79 @@
     };
   }
 
-  function getHydration() {
-    return global.DGBPlanetOneHydrationRender || null;
-  }
-
-  function blendPixel(base, over, alpha) {
-    return [
-      Math.round(mix(base[0], over[0], alpha)),
-      Math.round(mix(base[1], over[1], alpha)),
-      Math.round(mix(base[2], over[2], alpha)),
-      255
-    ];
-  }
-
-  function colorFromBridge(sample, hydration, limb) {
-    var water = hydration && hydration.waterColor ? hydration.waterColor : { r: 12, g: 70, b: 130 };
-    var out = [water.r, water.g, water.b, 255];
-
-    var deepTone = [8, 44, 104, 255];
-    var shelfTone = [42, 160, 190, 255];
-    var reefTone = [92, 212, 202, 255];
-    var beachTone = [242, 222, 150, 255];
-
-    var wetLowlandTone = [96, 156, 94, 255];
-    var livingTerrainTone = [68, 142, 74, 255];
-    var warmEarthTone = [144, 128, 78, 255];
-    var ridgeTone = [142, 144, 122, 255];
-    var iceTone = [194, 236, 242, 255];
-
-    var airBlueTone = [154, 196, 244, 255];
-    var cloudTone = [214, 232, 238, 255];
-
-    out = blendPixel(out, deepTone, clamp((1 - sample.waterDepth) * 0.05, 0, 0.05));
-    out = blendPixel(out, shelfTone, clamp(sample.reefShelfRelation * 0.20, 0, 0.20));
-    out = blendPixel(out, reefTone, clamp(sample.reefField * 0.24, 0, 0.24));
-    out = blendPixel(out, beachTone, clamp(sample.beachLock * 0.42 + sample.beachCandidate * 0.16, 0, 0.48));
-
-    out = blendPixel(out, wetLowlandTone, clamp(sample.lowlandValue * 0.38, 0, 0.38));
-    out = blendPixel(out, livingTerrainTone, clamp(sample.livingTerrainValue * 0.48, 0, 0.48));
-    out = blendPixel(out, warmEarthTone, clamp(sample.materialTone * sample.livingTerrainValue * 0.20, 0, 0.20));
-    out = blendPixel(out, ridgeTone, clamp(sample.ridgeValue * 0.30, 0, 0.30));
-    out = blendPixel(out, iceTone, clamp(sample.highElevationIceState * 0.40, 0, 0.40));
-
-    out = blendPixel(out, airBlueTone, clamp(sample.airDomainValue * 0.08, 0, 0.08));
-    out = blendPixel(out, cloudTone, clamp(sample.cloudPotential * sample.airDomainValue * 0.07, 0, 0.07));
-
-    var localContrast = clamp(1 + sample.visualDelta * 0.12, 1, 1.12);
-    var shade = clamp(0.55 + limb * 0.50, 0.40, 1.12);
-
-    out[0] = Math.round(clamp(out[0] * shade * localContrast, 0, 255));
-    out[1] = Math.round(clamp(out[1] * shade * localContrast, 0, 255));
-    out[2] = Math.round(clamp(out[2] * shade * localContrast, 0, 255));
-
-    return out;
-  }
-
   function resolveContext(target) {
     if (!target) return null;
     if (target.canvas && typeof target.fillRect === "function") return target;
     if (target.getContext && typeof target.getContext === "function") return target.getContext("2d");
     return null;
+  }
+
+  function getHydration() {
+    return global.DGBPlanetOneHydrationRender || null;
+  }
+
+  function rgba(r, g, b, a) {
+    return [Math.round(clamp(r, 0, 255)), Math.round(clamp(g, 0, 255)), Math.round(clamp(b, 0, 255)), Math.round(clamp(a, 0, 255))];
+  }
+
+  function mixColor(a, b, t) {
+    return [
+      mix(a[0], b[0], t),
+      mix(a[1], b[1], t),
+      mix(a[2], b[2], t),
+      mix(a[3], b[3], t)
+    ];
+  }
+
+  function getLayerColors(sample, hydration, limb) {
+    var hydrationColor = hydration && hydration.waterColor ? hydration.waterColor : null;
+
+    var deep = [6, 34, 94, 255];
+    var mid = hydrationColor ? [hydrationColor.r, hydrationColor.g, hydrationColor.b, 255] : [15, 84, 148, 255];
+    var shelf = [42, 162, 190, 255];
+    var reef = [84, 214, 202, 255];
+
+    var beach = [238, 219, 148, 255];
+    var wet = [86, 146, 96, 255];
+    var living = [64, 138, 72, 255];
+    var ridge = [140, 140, 116, 255];
+    var ice = [194, 236, 242, 255];
+
+    var cloud = [225, 238, 242, 255];
+    var haze = [158, 200, 245, 255];
+
+    var water = mixColor(deep, mid, 1 - sample.waterDepth);
+    water = mixColor(water, shelf, clamp(sample.shelfField * 0.42 + sample.shallowWaterField * 0.22, 0, 0.64));
+    water = mixColor(water, reef, clamp(sample.reefField * 0.32, 0, 0.32));
+
+    var land = beach;
+    land = mixColor(land, wet, clamp(sample.lowlandValue * 0.40, 0, 0.40));
+    land = mixColor(land, living, clamp(sample.livingTerrainValue * 0.62, 0, 0.62));
+    land = mixColor(land, ridge, clamp(sample.ridgeValue * 0.42, 0, 0.42));
+    land = mixColor(land, ice, clamp(sample.highElevationIceState * 0.48, 0, 0.48));
+
+    var air = mixColor(haze, cloud, clamp(sample.cloudMask * 4.0, 0, 0.70));
+
+    var shade = clamp(0.54 + limb * 0.50, 0.40, 1.12);
+    water = rgba(water[0] * shade, water[1] * shade, water[2] * shade, 255);
+    land = rgba(land[0] * shade, land[1] * shade, land[2] * shade, sample.featheredLandMask * 245);
+    air = rgba(air[0], air[1], air[2], sample.airOverlayAlpha * 255);
+
+    return { water: water, land: land, air: air };
+  }
+
+  function writePixel(data, index, color) {
+    data[index] = color[0];
+    data[index + 1] = color[1];
+    data[index + 2] = color[2];
+    data[index + 3] = color[3];
+  }
+
+  function makeCanvas(width, height) {
+    var canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
   }
 
   function drawPlanetOneHexGrid(target, gridOrOptions, maybeOptions) {
@@ -810,8 +546,6 @@
         ok: false,
         reason: "NO_CANVAS_CONTEXT",
         version: VERSION,
-        layerVersion: LAYER_VERSION,
-        visualDeltaVersion: VISUAL_DELTA_VERSION,
         visualPassClaimed: false
       };
     }
@@ -819,80 +553,104 @@
     var options = gridOrOptions && gridOrOptions.cells ? maybeOptions || {} : gridOrOptions || {};
     var canvas = ctx.canvas;
     var scale = clamp(Number(options.compositorScale || 0.82), 0.54, 1);
-    var offW = Math.max(260, Math.round(canvas.width * scale));
-    var offH = Math.max(260, Math.round(canvas.height * scale));
-    var off = document.createElement("canvas");
-    var offCtx;
-    var img;
-    var data;
-    var cx = offW / 2;
-    var cy = offH / 2;
+    var width = Math.max(260, Math.round(canvas.width * scale));
+    var height = Math.max(260, Math.round(canvas.height * scale));
+    var cx = width / 2;
+    var cy = height / 2;
     var radius = Number(options.radius || Math.min(canvas.width, canvas.height) * 0.43) * scale;
     var viewLon = Number(options.viewLon == null ? -28 : options.viewLon);
     var viewLat = Number(options.viewLat == null ? 0 : options.viewLat);
     var seed = Number(options.seed || SEED);
+
+    var waterCanvas = makeCanvas(width, height);
+    var landCanvas = makeCanvas(width, height);
+    var airCanvas = makeCanvas(width, height);
+    var waterCtx = waterCanvas.getContext("2d");
+    var landCtx = landCanvas.getContext("2d");
+    var airCtx = airCanvas.getContext("2d");
+
+    var waterImage = waterCtx.createImageData(width, height);
+    var landImage = landCtx.createImageData(width, height);
+    var airImage = airCtx.createImageData(width, height);
+
+    var waterData = waterImage.data;
+    var landData = landImage.data;
+    var airData = airImage.data;
     var hydrationEngine = getHydration();
 
     var x;
     var y;
     var dx;
     var dy;
+    var index;
     var geo;
     var sample;
     var hydration;
-    var color;
-    var i;
+    var colors;
 
-    off.width = offW;
-    off.height = offH;
-    offCtx = off.getContext("2d");
-    img = offCtx.createImageData(offW, offH);
-    data = img.data;
-
-    for (y = 0; y < offH; y += 1) {
-      for (x = 0; x < offW; x += 1) {
+    for (y = 0; y < height; y += 1) {
+      for (x = 0; x < width; x += 1) {
         dx = (x - cx) / radius;
         dy = (cy - y) / radius;
-        i = (y * offW + x) * 4;
+        index = (y * width + x) * 4;
 
         if (dx * dx + dy * dy > 1) {
-          data[i + 3] = 0;
+          waterData[index + 3] = 0;
+          landData[index + 3] = 0;
+          airData[index + 3] = 0;
           continue;
         }
 
         geo = inverseOrthographic(dx, dy, viewLon, viewLat);
-        if (!geo) {
-          data[i + 3] = 0;
-          continue;
-        }
+        if (!geo) continue;
 
         sample = sampleBridge(geo.lon, geo.lat, { seed: seed });
         hydration = hydrationEngine && hydrationEngine.sampleHydrationDepth
           ? hydrationEngine.sampleHydrationDepth(geo.lon, geo.lat, sample)
           : null;
 
-        color = colorFromBridge(sample, hydration, geo.limb);
+        colors = getLayerColors(sample, hydration, geo.limb);
 
-        data[i] = color[0];
-        data[i + 1] = color[1];
-        data[i + 2] = color[2];
-        data[i + 3] = color[3];
+        writePixel(waterData, index, colors.water);
+        writePixel(landData, index, colors.land);
+        writePixel(airData, index, colors.air);
       }
     }
 
-    offCtx.putImageData(img, 0, 0);
+    waterCtx.putImageData(waterImage, 0, 0);
+    landCtx.putImageData(landImage, 0, 0);
+    airCtx.putImageData(airImage, 0, 0);
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
-    ctx.globalAlpha = Number(options.surfaceAlpha == null ? 1 : options.surfaceAlpha);
-    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+    ctx.drawImage(waterCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(landCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(airCanvas, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
     lastDraw = {
       ok: true,
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       layerVersion: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
+
+      surfaceAirLayerSeparationRendered: true,
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialRendered: true,
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialRendered: true,
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialRendered: true,
+      airOverlayMaterialActive: true,
+      landMaskSeparationRendered: true,
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
 
       wholeWorldContainerRendered: true,
       triDomain256Rendered: true,
@@ -900,50 +658,12 @@
       land256Rendered: true,
       air256Rendered: true,
       wholeWorld256Rendered: true,
-      triDomainCycleRendered: true,
-      domainContactZonesRendered: true,
-      waterLandExchangeRendered: true,
-      landAirExchangeRendered: true,
-      airWaterExchangeRendered: true,
-
-      visualDeltaAmplificationRendered: true,
-      authorizedVisualDeltaOnly: true,
-      waterDepthVisualAmplified: true,
-      reefShelfVisualAmplified: true,
-      beachEdgeVisualAmplified: true,
-      lowlandVisualAmplified: true,
-      livingTerrainVisualAmplified: true,
-      atmosphereVisualAmplified: true,
-
-      landValueMapRendered: true,
-      invertedBacktraceRendered: true,
-      sourceTraceValidationRendered: true,
-      visibleTerrainBacktracedToSource: true,
-      unauthorizedPaintBlocked: true,
-      waterPhaseContinuityVisible: true,
-
-      terrainLifeRendered: true,
-      lowReliefRendered: true,
-      wetDryTerrainVariationRendered: true,
-      waterDivideRendered: true,
-      phaseStateDivideRendered: true,
-      highElevationIceStateRendered: true,
-      highElevationFrozenWaterCandidateRendered: true,
-      watershedDivideHintRendered: true,
-      futureMeltPathHeld: true,
-
-      waterRemainsSovereign: true,
-      elevationTransformsWaterState: true,
-      noGlacierDivideAuthority: true,
-      noSeparateGlacierSystem: true,
 
       waterDepthPreserved: true,
       reefShelfPreserved: true,
-      wetEdgePreserved: true,
       beachThresholdPreserved: true,
       hydrationReadOnlyPreserved: true,
       terrainAuthorityBlocked: true,
-      terrainFillBlocked: true,
       waterSovereigntyPreserved: true,
 
       noBlobReintroduced: true,
@@ -978,8 +698,8 @@
 
     lastGrid = {
       version: VERSION,
+      priorVersion: PRIOR_VERSION,
       layerVersion: LAYER_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
@@ -987,8 +707,6 @@
       landStateCount: STATE_COUNT,
       airStateCount: STATE_COUNT,
       wholeWorldStateCount: STATE_COUNT,
-      domainStateTotal: STATE_COUNT * 4,
-      domainShare: DOMAIN_SHARE,
       cellCount: cells.length,
       cells: cells,
       visualPassClaimed: false
@@ -998,18 +716,28 @@
   }
 
   function getHexgridStatus() {
-    var receipts = buildTriDomainReceipts();
-
     return {
       ok: true,
       active: true,
       VERSION: VERSION,
       version: VERSION,
+      PRIOR_VERSION: PRIOR_VERSION,
+      priorVersion: PRIOR_VERSION,
       LAYER_VERSION: LAYER_VERSION,
       layerVersion: LAYER_VERSION,
-      VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
-      visualDeltaVersion: VISUAL_DELTA_VERSION,
       baseline: BASELINE,
+
+      surfaceAirLayerSeparationActive: true,
+      waterSurfaceMaterialActive: true,
+      landSurfaceMaterialActive: true,
+      airOverlayMaterialActive: true,
+      landMaskSeparationActive: true,
+      surfaceFirstAirSecondCompositor: true,
+      cloudsDoNotBecomeWater: true,
+      waterDoesNotBecomeCloud: true,
+      cloudOpacityCapped: true,
+      featheredLandMaskActive: true,
+      noCartoonCutoutEdges: true,
 
       wholeWorldContainerActive: true,
       triDomain256Active: true,
@@ -1017,69 +745,16 @@
       land256Active: true,
       air256Active: true,
       wholeWorld256Active: true,
-      triDomainCycleActive: true,
-      domainContactZonesActive: true,
-      waterLandExchangeActive: true,
-      landAirExchangeActive: true,
-      airWaterExchangeActive: true,
-      domainShare: DOMAIN_SHARE,
-
-      visualDeltaAmplificationActive: true,
-      authorizedVisualDeltaOnly: true,
-      waterDepthVisualAmplified: true,
-      reefShelfVisualAmplified: true,
-      beachEdgeVisualAmplified: true,
-      lowlandVisualAmplified: true,
-      livingTerrainVisualAmplified: true,
-      atmosphereVisualAmplified: true,
-
-      landValueMapActive: true,
-      invertedBacktraceActive: true,
-      sourceTraceValidationActive: true,
-
-      terrainPermissionFieldActive: true,
-      elevationValueFieldActive: true,
-      moistureValueFieldActive: true,
-      shorelineDistanceFieldActive: true,
-      reefShelfRelationFieldActive: true,
-      lowlandValueFieldActive: true,
-      livingTerrainValueFieldActive: true,
-      ridgeValueFieldActive: true,
-      waterDivideValueFieldActive: true,
-      waterPhaseStateFieldActive: true,
-      highElevationIceStateFieldActive: true,
-      futureMeltPermissionFieldActive: true,
-      materialToneFieldActive: true,
-      visualWeightFieldActive: true,
-      terrainIdentityFieldActive: true,
-
-      visualWeightBacktraceFieldActive: true,
-      terrainIdentityBacktraceFieldActive: true,
-      waterPhaseBacktraceFieldActive: true,
-      sourceAuthorityBacktraceFieldActive: true,
-      forwardValueFieldActive: true,
-      reverseValidationFieldActive: true,
-      unauthorizedPaintBlocked: true,
-
-      terrainLifeLowReliefActive: true,
-      lowEmergentLandFieldActive: true,
-      wetLowlandFieldActive: true,
-      dryLowlandFieldActive: true,
-      softLandToneFieldActive: true,
-      earlyStoneToneFieldActive: true,
-      microReliefFieldActive: true,
-      waterResponseFieldActive: true,
-      highElevationFrozenWaterCandidateFieldActive: true,
-      watershedDivideCandidateFieldActive: true,
-      futureMeltPathPermissionFieldActive: true,
 
       terrainAuthorityBlocked: true,
       hydrationReadOnlyPreserved: true,
       terrainFillBlocked: true,
       waterSovereigntyPreserved: true,
-      elevationTransformsWaterState: true,
-      noGlacierDivideAuthority: true,
-      noSeparateGlacierSystem: true,
+
+      noBlobReintroduced: true,
+      noMountainRelief: true,
+      noRiverNetwork: true,
+      noFullGlacierSystem: true,
 
       stateFormula: STATE_FORMULA,
       stateCount: STATE_COUNT,
@@ -1088,15 +763,13 @@
       landStateCount: STATE_COUNT,
       airStateCount: STATE_COUNT,
       wholeWorldStateCount: STATE_COUNT,
-      domainStateTotal: STATE_COUNT * 4,
-      wholeWorld256Receipt: receipts.wholeWorld256,
-      water256Receipt: receipts.water256,
-      land256Receipt: receipts.land256,
-      air256Receipt: receipts.air256,
 
-      publicHoneycombBlocked: true,
-      publicSampleDotsSuppressed: true,
-      lastGrid: lastGrid ? { cellCount: lastGrid.cellCount, version: lastGrid.version, layerVersion: lastGrid.layerVersion, visualDeltaVersion: lastGrid.visualDeltaVersion } : null,
+      wholeWorld256Receipt: buildStateReceipt("WHOLE_WORLD_256"),
+      water256Receipt: buildStateReceipt("WATER_256"),
+      land256Receipt: buildStateReceipt("LAND_256"),
+      air256Receipt: buildStateReceipt("AIR_256"),
+
+      lastGrid: lastGrid ? { cellCount: lastGrid.cellCount, version: lastGrid.version } : null,
       lastDraw: lastDraw,
       visualPassClaimed: false
     };
@@ -1105,10 +778,10 @@
   var api = {
     VERSION: VERSION,
     version: VERSION,
+    PRIOR_VERSION: PRIOR_VERSION,
+    priorVersion: PRIOR_VERSION,
     LAYER_VERSION: LAYER_VERSION,
     layerVersion: LAYER_VERSION,
-    VISUAL_DELTA_VERSION: VISUAL_DELTA_VERSION,
-    visualDeltaVersion: VISUAL_DELTA_VERSION,
     BASELINE: BASELINE,
     baseline: BASELINE,
     stateFormula: STATE_FORMULA,
@@ -1121,15 +794,24 @@
     drawPlanetOneHexGrid: drawPlanetOneHexGrid,
     getHexgridStatus: getHexgridStatus,
     status: getHexgridStatus,
-    getLatticeReceipt: buildTriDomainReceipts,
-    getStateSpaceReceipt: buildTriDomainReceipts
+    getLatticeReceipt: function () {
+      return {
+        wholeWorld256: buildStateReceipt("WHOLE_WORLD_256"),
+        water256: buildStateReceipt("WATER_256"),
+        land256: buildStateReceipt("LAND_256"),
+        air256: buildStateReceipt("AIR_256")
+      };
+    },
+    getStateSpaceReceipt: function () {
+      return api.getLatticeReceipt();
+    }
   };
 
   global.DGBPlanetOneHexgridRender = api;
   createPlanetOneHexGrid({ seed: SEED });
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:planet-one:tri-domain-visual-delta-ready", {
+    global.dispatchEvent(new CustomEvent("dgb:planet-one:surface-air-separation-ready", {
       detail: getHexgridStatus()
     }));
   } catch (error) {}

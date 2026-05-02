@@ -3,102 +3,402 @@
   lang="en"
   data-page="planet-1"
   data-route="/showroom/globe/"
-  data-contract="PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
-  data-render-contract="G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
+  data-contract="PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"
   data-shell-contract="DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1"
+  data-render-contract="G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1"
   data-visual-pass-claimed="false"
 >
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Diamond Gate Bridge · Planet 1</title>
   <meta
     name="description"
-    content="Planet 1 active globe lane for Diamond Gate Bridge: hydration, hex bridge, renderer, runtime, control, asset bridge, and showroom bridge."
-  />
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1" />
+    content="Planet 1 active globe lane. Route-aligned renderer chain consuming the blob-breakup real planet surface pass while preserving visual hold."
+  >
 
   <style>
-    #planet-one-render {
-      position: relative;
-      z-index: 2;
-      min-height: 350px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      overflow: visible;
+    :root {
+      color-scheme: dark;
+
+      --bg: #02050b;
+      --panel: rgba(8, 14, 25, 0.88);
+      --panel-2: rgba(10, 17, 30, 0.82);
+      --line: rgba(157, 177, 214, 0.22);
+      --line-strong: rgba(242, 199, 111, 0.50);
+
+      --gold: #f2c76f;
+      --gold-soft: rgba(242, 199, 111, 0.16);
+      --blue: #9fc2ff;
+      --blue-soft: rgba(159, 194, 255, 0.16);
+      --green: #83e0b9;
+      --green-soft: rgba(131, 224, 185, 0.14);
+
+      --text: #f5f7fb;
+      --muted: rgba(228, 234, 246, 0.76);
+      --soft: rgba(228, 234, 246, 0.58);
+
+      --radius-xl: clamp(24px, 5vw, 42px);
+      --radius-lg: 26px;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
+
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    #planet-one-render canvas {
-      max-width: min(92vw, 760px);
-      height: auto;
-      filter: saturate(1.06) contrast(1.04);
+    * {
+      box-sizing: border-box;
     }
 
-    .planet-control {
-      margin-top: 0.75rem;
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
     }
 
-    .planet-control-grid {
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 48% 0%, rgba(242, 199, 111, 0.09), transparent 20rem),
+        radial-gradient(circle at 18% 30%, rgba(159, 194, 255, 0.12), transparent 26rem),
+        radial-gradient(circle at 78% 66%, rgba(131, 224, 185, 0.07), transparent 25rem),
+        linear-gradient(180deg, #02050b 0%, #06101d 48%, #02050b 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.15) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(242,199,111,0.12) 0 1px, transparent 1.8px);
+      background-size: 120px 120px, 190px 190px;
+      background-position: 10px 20px, 80px 70px;
+      opacity: 0.14;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(242, 199, 111, 0.72);
+      outline-offset: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 20;
+      transform: translateY(-160%);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #07101c;
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .skip:focus {
+      transform: translateY(0);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 46px;
+    }
+
+    header.site {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 5px;
+      width: fit-content;
+    }
+
+    .brand strong {
+      color: var(--gold);
+      font-size: clamp(1.08rem, 4vw, 1.62rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand span,
+    .brand em {
+      color: var(--muted);
+      font-style: normal;
+      font-size: clamp(0.76rem, 2.7vw, 0.98rem);
+      font-weight: 760;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .brand em {
+      color: var(--blue);
+    }
+
+    nav,
+    .badge-row,
+    .control-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.55rem;
-      margin: 1rem 0;
+      gap: 10px;
     }
 
-    .planet-range {
+    nav a,
+    .badge,
+    button,
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
+      color: var(--text);
+      font: inherit;
+      font-weight: 880;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    nav a[aria-current="page"],
+    .badge.active,
+    button[data-active="true"] {
+      border-color: rgba(242, 199, 111, 0.62);
+      background: linear-gradient(180deg, rgba(242,199,111,0.20), rgba(242,199,111,0.06));
+      color: #ffe9b0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    main {
       display: grid;
-      gap: 0.5rem;
-      color: #ffe8a8;
-      font-weight: 780;
+      gap: 24px;
+    }
+
+    .hero,
+    .planet-card,
+    .control-card,
+    .receipt-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: clamp(24px, 5vw, 40px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    h1 {
+      font-size: clamp(2.35rem, 8vw, 5.6rem);
+    }
+
+    h2 {
+      font-size: clamp(1.55rem, 5vw, 3rem);
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.9vw, 1.28rem);
+      line-height: 1.55;
+    }
+
+    .badge {
+      min-height: 36px;
+      padding: 7px 13px;
+      color: var(--green);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .badge.hold {
+      color: #d7e4ff;
+    }
+
+    .planet-card {
+      padding: clamp(16px, 4vw, 28px);
+      display: grid;
+      justify-items: center;
+      overflow: hidden;
+      min-height: min(92vw, 720px);
+    }
+
+    .planet-stage {
+      width: min(100%, 820px);
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(159,194,255,0.05), transparent 62%),
+        transparent;
+    }
+
+    .planet-stage canvas {
+      width: 100%;
+      max-width: 820px;
+      height: auto;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .control-card {
+      padding: clamp(18px, 4vw, 28px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .control-card h2 {
+      color: #ffe9b0;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      letter-spacing: -0.035em;
+    }
+
+    .slider-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    label {
+      color: #ffe9b0;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 760;
     }
 
     input[type="range"] {
       width: 100%;
-      accent-color: #8fc6ff;
+      accent-color: #9fc2ff;
     }
 
-    .axis-row {
+    .check-row {
       display: flex;
-      gap: 0.55rem;
+      flex-wrap: wrap;
+      gap: 14px;
       align-items: center;
-      margin-top: 0.75rem;
-      color: #ffe8a8;
-      font-weight: 780;
     }
 
-    input[type="checkbox"] {
-      width: 1.05rem;
-      height: 1.05rem;
-      accent-color: #8fc6ff;
+    .check-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffe9b0;
     }
 
-    @media (max-width: 760px) {
-      #planet-one-render {
-        min-height: 310px;
-        align-items: flex-start;
+    .check-row input {
+      width: 22px;
+      height: 22px;
+      accent-color: #9fc2ff;
+    }
+
+    .receipt-card {
+      padding: clamp(18px, 4vw, 28px);
+      display: grid;
+      gap: 14px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(2, 5, 11, 0.62);
+      color: rgba(245,247,251,0.82);
+      font-size: 0.86rem;
+      line-height: 1.48;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      padding-top: 20px;
+      color: var(--soft);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 22px;
       }
 
-      #planet-one-render canvas {
-        max-width: min(96vw, 560px);
+      nav a {
+        min-height: 58px;
+        padding-inline: 20px;
+        font-size: 1rem;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .planet-card {
+        padding: 10px;
+      }
+
+      .control-card {
+        margin-inline: 0;
+      }
+
+      .control-row button {
+        min-width: 104px;
+        min-height: 58px;
+        font-size: 1.05rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#main">Skip to Planet 1 inspection</a>
+  <a class="skip" href="#planet-one-main">Skip to Planet 1 inspection</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Planet 1 · Active Globe Lane</div>
-      </div>
+  <div class="shell">
+    <header class="site" aria-label="Site header">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Rich Manor and Estate</span>
+        <em>Planet 1 · Active Globe Lane</em>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav aria-label="Primary">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -107,201 +407,268 @@
         <a href="/showroom/globe/" aria-current="page">Planet 1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="main" class="dgb-main">
-    <section class="dgb-hero">
-      <p class="dgb-eyebrow">Active Globe Lane · Water Phase-State Boundary</p>
-      <h1 class="dgb-title">Planet 1 on axis</h1>
-      <p class="dgb-copy">
-        This route mounts the active Planet 1 renderer chain directly. The Showroom does not create terrain,
-        duplicate physics, or claim visual pass. It activates hydration, hex bridge, renderer, throttled runtime,
-        control bridge, asset bridge, and showroom bridge in order.
-      </p>
+    <main id="planet-one-main">
+      <section class="hero" aria-labelledby="planet-title">
+        <div class="eyebrow">Active Globe Lane · Blob Breakup Real Planet Surface</div>
+        <h1 id="planet-title">Planet 1 on axis</h1>
 
-      <div class="dgb-chip-row">
-        <span class="dgb-chip">Hydration first</span>
-        <span class="dgb-chip">Hex bridge second</span>
-        <span class="dgb-chip">Renderer third</span>
-        <span class="dgb-chip">Runtime throttled</span>
-        <span class="dgb-chip">Water phase boundary</span>
-        <span class="dgb-chip hold">Visual hold</span>
-      </div>
-    </section>
+        <p>
+          This route mounts the active Planet 1 renderer chain directly. The Showroom does not create terrain,
+          duplicate physics, or claim visual pass. It activates hydration, hex bridge, renderer, throttled runtime,
+          control bridge, asset bridge, and showroom bridge in order.
+        </p>
 
-    <section class="dgb-stage" aria-label="Planet 1 live render">
-      <div
-        id="planet-one-render"
-        class="planet-one-render"
-        data-planet-one-mount="true"
-        data-route-contract="PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"
-        data-render-contract="G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1"
-        data-visual-pass-claimed="false"
-      ></div>
+        <div class="badge-row" aria-label="Active renderer chain">
+          <span class="badge">Hydration first</span>
+          <span class="badge">Hex bridge second</span>
+          <span class="badge">Renderer third</span>
+          <span class="badge">Runtime throttled</span>
+          <span class="badge">Blob breakup real surface</span>
+          <span class="badge hold">Visual hold</span>
+        </div>
+      </section>
 
-      <section class="dgb-card full planet-control" aria-label="Planet 1 Motion Control">
-        <h2>Planet 1 Motion Control</h2>
+      <section class="planet-card" aria-label="Planet 1 active globe renderer">
+        <div
+          id="planet-one-render"
+          class="planet-stage"
+          data-planet-one-mount="true"
+          data-planet-one-render="true"
+          data-render-contract="G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1"
+          data-visual-pass-claimed="false"
+        ></div>
+      </section>
 
-        <div class="planet-control-grid">
-          <button class="dgb-button" type="button" data-planet-command="start">Start</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="pause">Pause</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="resume">Resume</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="reset">Reset</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="reverse">Reverse</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="slow">Slow</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="normal">Normal</button>
-          <button class="dgb-button secondary" type="button" data-planet-command="fast">Fast</button>
+      <section class="control-card" aria-labelledby="motion-control-title">
+        <h2 id="motion-control-title">Planet 1 Motion Control</h2>
+
+        <div class="control-row" role="group" aria-label="Planet 1 motion controls">
+          <button id="planet-one-start" type="button" data-planet-one-control="start" data-control-action="start">Start</button>
+          <button id="planet-one-pause" type="button" data-planet-one-control="pause" data-control-action="pause">Pause</button>
+          <button id="planet-one-resume" type="button" data-planet-one-control="resume" data-control-action="resume">Resume</button>
+          <button id="planet-one-reset" type="button" data-planet-one-control="reset" data-control-action="reset">Reset</button>
+          <button id="planet-one-reverse" type="button" data-planet-one-control="reverse" data-control-action="reverse">Reverse</button>
+          <button id="planet-one-slow" type="button" data-planet-one-control="slow" data-control-action="slow">Slow</button>
+          <button id="planet-one-normal" type="button" data-planet-one-control="normal" data-control-action="normal" data-active="true">Normal</button>
+          <button id="planet-one-fast" type="button" data-planet-one-control="fast" data-control-action="fast">Fast</button>
         </div>
 
-        <label class="planet-range" for="planet-one-speed">
-          Rotation speed
-          <input id="planet-one-speed" type="range" min="0" max="6" value="2.4" step="0.1" data-planet-control="speed" />
-        </label>
+        <div class="slider-wrap">
+          <label for="planet-one-speed">Rotation speed</label>
+          <input
+            id="planet-one-speed"
+            name="planet-one-speed"
+            type="range"
+            min="0"
+            max="100"
+            value="58"
+            data-planet-one-speed="true"
+            aria-label="Planet 1 rotation speed"
+          >
+        </div>
 
-        <label class="axis-row" for="planet-one-axis-toggle">
-          <input id="planet-one-axis-toggle" type="checkbox" data-planet-control="axis" />
-          Show soft axis
-        </label>
+        <div class="check-row">
+          <label for="planet-one-show-axis">
+            <input
+              id="planet-one-show-axis"
+              name="planet-one-show-axis"
+              type="checkbox"
+              checked
+              data-planet-one-axis="true"
+            >
+            Show soft axis
+          </label>
 
-        <details class="dgb-details">
-          <summary>Show route receipt</summary>
-          <pre id="planet-one-control-receipt" class="dgb-receipt">Route booting…</pre>
-        </details>
+          <label for="planet-one-show-receipt">
+            <input
+              id="planet-one-show-receipt"
+              name="planet-one-show-receipt"
+              type="checkbox"
+              checked
+              data-planet-one-route-receipt-toggle="true"
+            >
+            Show route receipt
+          </label>
+        </div>
       </section>
-    </section>
 
-    <details class="dgb-details">
-      <summary>Route contract</summary>
-      <pre class="dgb-receipt">PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1
+      <section class="receipt-card" id="planet-one-route-receipt-card" aria-labelledby="route-contract-title">
+        <h2 id="route-contract-title">Route contract</h2>
+        <pre id="planet-one-route-receipt" data-planet-one-route-receipt="true">PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1
 route=/showroom/globe/
 page=planet-1
-data-contract=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1
+data-contract=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1
 shell-contract=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1
-render-contract=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
+render-contract=G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1
 HYDRATION=/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1
-HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
-RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1
+HEXGRID=/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1
+RENDERER=/world/render/planet-one.render.js?v=G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1
 WORLD_RUNTIME=/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1
 WORLD_CONTROL=/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1
 ASSET_BRIDGE=/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1
 SHOWROOM_RUNTIME=/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1
 VISUAL_PASS_CLAIMED=false</pre>
-    </details>
-  </main>
+      </section>
+    </main>
 
-  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
-  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1"></script>
+    <footer>
+      PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1 · Planet 1 · Diamond Gate Bridge.
+    </footer>
+  </div>
+
+  <script src="/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.hexgrid.render.js?v=G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/render/planet-one.render.js?v=G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
+  <script src="/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1&route=PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1"></script>
 
   <script>
-    (function attachPlanetOneShellControls(global) {
+    (function bootPlanetOneRouteContractAlignment() {
       "use strict";
 
-      var ROUTE_VERSION = "PLANET_1_ROUTE_CONTRACT_METADATA_ALIGNMENT_TNT_v1";
+      var ROUTE_VERSION = "PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1";
+      var RENDER_VERSION = "G1_PLANET_1_BLOB_BREAKUP_REAL_PLANET_SURFACE_TNT_v1";
 
-      function getRuntime() {
-        return global.DGBWorldRuntime ||
-          global.DGBPlanetOneRuntime ||
-          global.DGBShowroomGlobeRuntime ||
-          global.DGBPlanetOneRuntimeBridge ||
-          null;
+      function byId(id) {
+        return document.getElementById(id);
       }
 
       function getRenderer() {
-        return global.DGBPlanetOneRenderTeam ||
-          global.DGBPlanetOneRenderer ||
-          global.DGBPlanetOneRender ||
+        return window.DGBPlanetOneRenderer ||
+          window.DGBPlanetOneRender ||
+          window.DGBPlanetOneRenderTeam ||
           null;
       }
 
-      function getStatus(object) {
+      function writeReceipt(status) {
+        var receipt = byId("planet-one-route-receipt");
+        if (!receipt) return;
+
+        var renderer = getRenderer();
+        var rendererStatus = null;
+
         try {
-          if (object && typeof object.status === "function") return object.status();
-          if (object && typeof object.getStatus === "function") return object.getStatus();
+          rendererStatus = renderer && typeof renderer.getStatus === "function" ? renderer.getStatus() : null;
         } catch (error) {
-          return { error: String(error && error.message ? error.message : error) };
+          rendererStatus = { ok: false, error: String(error && error.message ? error.message : error) };
         }
 
-        return null;
+        receipt.textContent =
+          "PLANET_1_ROUTE_RENDER_CONTRACT_AND_CACHE_TOKEN_ALIGNMENT_TNT_v1\n" +
+          "route=/showroom/globe/\n" +
+          "page=planet-1\n" +
+          "data-contract=" + ROUTE_VERSION + "\n" +
+          "shell-contract=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1\n" +
+          "render-contract=" + RENDER_VERSION + "\n" +
+          "HYDRATION=/world/render/planet-one.hydration.render.js?v=G1_PLANET_1_BEACH_THRESHOLD_TO_TERRAIN_STARTLINE_TNT_v1\n" +
+          "HEXGRID=/world/render/planet-one.hexgrid.render.js?v=" + RENDER_VERSION + "\n" +
+          "RENDERER=/world/render/planet-one.render.js?v=" + RENDER_VERSION + "\n" +
+          "WORLD_RUNTIME=/world/runtime.js?v=G1_PLANET_1_RUNTIME_FRAME_BUDGET_AND_RENDER_THROTTLE_TNT_v1\n" +
+          "WORLD_CONTROL=/world/control.js?v=G1_PLANET_1_AXIS_ROTATION_CONTROL_PANEL_TNT_v1\n" +
+          "ASSET_BRIDGE=/assets/showroom.globe.instrument.js?v=G1_PLANET_1_RUNTIME_ASSET_BRIDGE_CHAIN_REPAIR_TNT_v1\n" +
+          "SHOWROOM_RUNTIME=/showroom/runtime.js?v=G1_PLANET_1_SHOWROOM_RUNTIME_FRAME_BUDGET_BRIDGE_TNT_v1\n" +
+          "VISUAL_PASS_CLAIMED=false\n" +
+          "routeBootStatus=" + status + "\n" +
+          "rendererAvailable=" + String(Boolean(renderer)) + "\n" +
+          "rendererVersion=" + String(rendererStatus && (rendererStatus.VERSION || rendererStatus.version || rendererStatus.renderContract || "unknown")) + "\n" +
+          "timestamp=" + new Date().toISOString();
       }
 
-      function writeReceipt(extra) {
-        var runtime = getRuntime();
+      function mountRenderer() {
+        var mount = byId("planet-one-render");
+        var axis = byId("planet-one-show-axis");
         var renderer = getRenderer();
 
-        var receipt = {
-          routeVersion: ROUTE_VERSION,
-          globalUIShellAligned: true,
-          dataContractPresent: true,
-          hydrationFirst: Boolean(global.DGBPlanetOneHydrationRender),
-          hexBridgeSecond: Boolean(global.DGBPlanetOneHexgridRender),
-          rendererThird: Boolean(renderer),
-          runtimeDetected: Boolean(runtime),
-          expectedHexgrid: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1",
-          expectedRenderer: "G1_PLANET_1_WATER_PHASE_STATE_BOUNDARY_TNT_v1",
-          runtimeStatus: getStatus(runtime),
-          rendererStatus: getStatus(renderer),
-          visualPassClaimed: false,
-          timestamp: new Date().toISOString(),
-          extra: extra || null
+        if (!mount || !renderer) {
+          writeReceipt("WAITING_FOR_RENDERER");
+          return false;
+        }
+
+        var options = {
+          showAxis: Boolean(axis && axis.checked),
+          viewLon: -28,
+          viewLat: 0,
+          seed: 256451,
+          compositorScale: 0.88
         };
 
-        global.DGBPlanetOneGlobalUIShellReceipt = receipt;
+        try {
+          if (typeof renderer.renderPlanetOne === "function") {
+            renderer.renderPlanetOne(mount, options);
+          } else if (typeof renderer.render === "function") {
+            renderer.render(mount, options);
+          } else if (typeof renderer.mount === "function") {
+            renderer.mount(mount, options);
+          } else if (typeof renderer.start === "function") {
+            renderer.start(mount, options);
+          } else {
+            writeReceipt("RENDERER_PRESENT_NO_MOUNT_METHOD");
+            return false;
+          }
 
-        var node = document.getElementById("planet-one-control-receipt");
-        if (node) node.textContent = JSON.stringify(receipt, null, 2);
-
-        return receipt;
+          writeReceipt("ROUTE_ALIGNED_RENDERER_MOUNTED");
+          return true;
+        } catch (error) {
+          writeReceipt("ROUTE_MOUNT_ERROR:" + String(error && error.message ? error.message : error));
+          return false;
+        }
       }
 
-      function command(name, value) {
-        var target = getRuntime();
-        var receipt;
-
-        if (!target) return writeReceipt({ command: name, error: "NO_RUNTIME_AVAILABLE" });
+      function callRenderer(method) {
+        var renderer = getRenderer();
+        if (!renderer) return;
 
         try {
-          if (name === "start" && typeof target.start === "function") receipt = target.start("#planet-one-render");
-          else if (name === "pause" && typeof target.pause === "function") receipt = target.pause();
-          else if (name === "resume" && typeof target.resume === "function") receipt = target.resume();
-          else if (name === "reset" && typeof target.reset === "function") receipt = target.reset();
-          else if (name === "reverse" && typeof target.reverse === "function") receipt = target.reverse();
-          else if (name === "slow" && typeof target.setSpeed === "function") receipt = target.setSpeed(0.8);
-          else if (name === "normal" && typeof target.setSpeed === "function") receipt = target.setSpeed(2.4);
-          else if (name === "fast" && typeof target.setSpeed === "function") receipt = target.setSpeed(6);
-          else if (name === "speed" && typeof target.setSpeed === "function") receipt = target.setSpeed(value);
-          else if (name === "axis" && typeof target.setView === "function") receipt = target.setView({ axisVisible: Boolean(value) });
-          else receipt = { unsupportedCommand: name };
-
-          return writeReceipt({ command: name, value: value, result: receipt });
+          if (method === "pause" && typeof renderer.pause === "function") renderer.pause();
+          if (method === "resume" && typeof renderer.resume === "function") renderer.resume();
+          if (method === "start" && typeof renderer.start === "function") renderer.start(byId("planet-one-render"), { showAxis: Boolean(byId("planet-one-show-axis") && byId("planet-one-show-axis").checked) });
+          if (method === "reset") mountRenderer();
         } catch (error) {
-          return writeReceipt({ command: name, value: value, error: String(error && error.message ? error.message : error) });
+          writeReceipt("CONTROL_ERROR:" + method + ":" + String(error && error.message ? error.message : error));
         }
       }
 
       function bindControls() {
-        Array.prototype.slice.call(document.querySelectorAll("[data-planet-command]")).forEach(function (button) {
+        var receiptCard = byId("planet-one-route-receipt-card");
+        var receiptToggle = byId("planet-one-show-receipt");
+        var axis = byId("planet-one-show-axis");
+
+        [
+          ["planet-one-start", "start"],
+          ["planet-one-pause", "pause"],
+          ["planet-one-resume", "resume"],
+          ["planet-one-reset", "reset"],
+          ["planet-one-reverse", "reverse"],
+          ["planet-one-slow", "slow"],
+          ["planet-one-normal", "normal"],
+          ["planet-one-fast", "fast"]
+        ].forEach(function (pair) {
+          var button = byId(pair[0]);
+          if (!button) return;
+
           button.addEventListener("click", function () {
-            command(button.getAttribute("data-planet-command"));
+            Array.prototype.forEach.call(document.querySelectorAll("[data-control-action]"), function (item) {
+              item.removeAttribute("data-active");
+            });
+            button.setAttribute("data-active", "true");
+            callRenderer(pair[1]);
+            writeReceipt("CONTROL:" + pair[1]);
           });
         });
 
-        var speed = document.getElementById("planet-one-speed");
-        if (speed) {
-          speed.addEventListener("input", function () {
-            command("speed", Number(speed.value));
+        if (axis) {
+          axis.addEventListener("change", function () {
+            mountRenderer();
           });
         }
 
-        var axis = document.getElementById("planet-one-axis-toggle");
-        if (axis) {
-          axis.addEventListener("change", function () {
-            command("axis", axis.checked);
+        if (receiptToggle && receiptCard) {
+          receiptToggle.addEventListener("change", function () {
+            receiptCard.hidden = !receiptToggle.checked;
           });
         }
       }
@@ -309,27 +676,41 @@ VISUAL_PASS_CLAIMED=false</pre>
       function boot() {
         bindControls();
 
-        global.setTimeout(function () {
-          var runtime = getRuntime();
+        if (mountRenderer()) return;
 
-          if (runtime && typeof runtime.start === "function") {
-            runtime.start("#planet-one-render", {
-              source: "planet-route-contract-metadata-alignment",
-              viewLon: -28,
-              viewLat: 0,
-              speedDegreesPerSecond: 2.4,
-              showAxis: false,
-              seed: 256451
-            });
-          }
+        window.setTimeout(function () {
+          mountRenderer();
+        }, 120);
 
-          writeReceipt({ boot: true });
-        }, 100);
+        window.setTimeout(function () {
+          mountRenderer();
+        }, 420);
       }
 
-      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-      else boot();
-    })(window);
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+
+      window.DGBPlanetOneRouteContractAlignment = {
+        VERSION: ROUTE_VERSION,
+        version: ROUTE_VERSION,
+        renderContract: RENDER_VERSION,
+        visualPassClaimed: false,
+        mountRenderer: mountRenderer,
+        getStatus: function () {
+          return {
+            ok: true,
+            route: "/showroom/globe/",
+            contract: ROUTE_VERSION,
+            renderContract: RENDER_VERSION,
+            rendererAvailable: Boolean(getRenderer()),
+            visualPassClaimed: false
+          };
+        }
+      };
+    })();
   </script>
 </body>
 </html>

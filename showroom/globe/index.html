@@ -3,12 +3,12 @@
   lang="en"
   data-page="earth-g1-sun-g1-moon-g1"
   data-route="/showroom/globe/"
-  data-contract="MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1"
+  data-contract="MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1"
   data-demo-universe="earth-sun-moon-sequence"
   data-generation="G1"
   data-earth-g1="complete"
   data-sun-g1="locked"
-  data-moon-g1="final-4k-solar-earthshine-lock"
+  data-moon-g1="full-moon-physics-4k-lock"
   data-planet-one="reserved-for-nine-summits-universe"
   data-visual-pass-claimed="false"
 >
@@ -16,7 +16,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge · Earth G1 · Sun G1 · Moon G1</title>
-  <meta name="description" content="Earth G1 and Sun G1 preserved, Moon G1 finalized with 4K lunar detail, solar light, and Earth-reflected fill.">
+  <meta name="description" content="Earth G1 and Sun G1 preserved, Moon G1 finalized as a full moon with 4K procedural lunar detail and physically aligned lighting.">
 
   <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
   <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
@@ -186,12 +186,10 @@
     .moon-stage::before {
       content: "";
       position: absolute;
-      inset: 4%;
+      inset: 3%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 28% 28%, rgba(255, 232, 178, 0.24), rgba(255, 205, 125, 0.11) 34%, transparent 62%),
-        radial-gradient(circle at 32% 72%, rgba(96, 152, 235, 0.16), rgba(74, 118, 195, 0.08) 42%, transparent 74%),
-        radial-gradient(circle at 50% 50%, rgba(210, 224, 255, 0.08), transparent 72%);
+        radial-gradient(circle at 48% 44%, rgba(255, 244, 218, 0.24), rgba(235, 238, 246, 0.13) 38%, rgba(128, 160, 220, 0.055) 66%, transparent 100%);
       filter: blur(2px);
       z-index: 1;
     }
@@ -202,16 +200,14 @@
       inset: 3%;
       border-radius: 50%;
       box-shadow:
-        -24px -18px 58px rgba(255, 220, 150, 0.12),
-        -18px 28px 76px rgba(92, 150, 235, 0.12),
-        0 0 34px rgba(230, 236, 248, 0.14),
-        0 0 96px rgba(120, 145, 180, 0.08),
-        0 0 140px rgba(120, 145, 180, 0.048);
+        0 0 32px rgba(240, 244, 252, 0.18),
+        0 0 88px rgba(154, 176, 214, 0.11),
+        0 0 136px rgba(120, 145, 180, 0.058);
       z-index: 0;
     }
 
     .moon-canvas {
-      filter: saturate(0.98) contrast(1.22) brightness(1.12);
+      filter: saturate(1.02) contrast(1.20) brightness(1.26);
       will-change: transform;
       backface-visibility: hidden;
     }
@@ -276,17 +272,17 @@
       <h1 class="dgb-title">Demo Universe baseline.</h1>
 
       <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 is locked. Moon G1 is finalized to the 4K lunar standard
-        with solar key light, Earth-reflected fill, crater fields, maria basins, ray systems,
-        regolith grain, micro-impact texture, limb shading, and controlled motion.
+        Earth G1 is complete. Sun G1 is locked. Moon G1 is finalized as a full moon with 4K lunar detail,
+        viewer-facing solar illumination, subtle Earth-reflected fill, crater fields, maria basins,
+        ray systems, regolith grain, micro-impact texture, limb shading, and controlled motion.
       </p>
 
       <div class="dgb-chip-row">
         <span class="dgb-chip">Earth G1 complete</span>
         <span class="dgb-chip">Sun G1 locked</span>
-        <span class="dgb-chip">Moon G1 final 4K</span>
-        <span class="dgb-chip">Solar light</span>
-        <span class="dgb-chip">Earthshine fill</span>
+        <span class="dgb-chip">Moon G1 full moon</span>
+        <span class="dgb-chip">4K lunar detail</span>
+        <span class="dgb-chip">Physics lighting</span>
         <span class="dgb-chip">Planet 1 reserved</span>
         <span class="dgb-chip hold">Moon G1 lock-ready</span>
       </div>
@@ -299,7 +295,7 @@
     <section class="dgb-card">
       <h2>Choose Demo Universe body</h2>
       <p class="page-note">
-        Earth and Sun remain preserved. Moon is now lit as part of the same Earth–Sun–Moon universe.
+        Earth and Sun remain preserved. Moon is now rendered as a full moon inside the same Earth–Sun–Moon universe.
       </p>
 
       <div class="body-switch-row" aria-label="Demo Universe body switch">
@@ -320,7 +316,7 @@
           data-planet-one-render="true"
           data-demo-universe="earth-sun-moon-sequence"
           data-generation="G1"
-          data-render-contract="MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1"
+          data-render-contract="MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1"
           data-active-body="earth"
           data-visual-pass-claimed="false"
         ></div>
@@ -359,22 +355,27 @@
 
     <section class="dgb-card">
       <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1
+      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1
 route=/showroom/globe/
 page=earth-g1-sun-g1-moon-g1
 earth-g1-complete=true
 sun-g1=locked
-moon-g1=final-4k-solar-earthshine-lock
+moon-g1=full-moon-physics-4k-lock
+moon-phase=full-moon
 moon-shape=round
-moon-lighting=solar-key-earthshine-fill
+moon-source-resolution=4096
+moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill
 moon-surface=craters-maria-rays-regolith-microimpacts-limb-shading
+new-moon=false
+crescent=false
+terminator-shadow=false
 planet-1=reserved-for-nine-summits-universe
 visual-pass-claimed=false</pre>
     </section>
   </main>
 
   <footer class="dgb-footer">
-    MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 solar-earthshine lock-ready.
+    MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 full-moon 4K lock-ready.
   </footer>
 
   <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
@@ -385,7 +386,7 @@ visual-pass-claimed=false</pre>
     (function bootEarthSunMoonSequence(window) {
       "use strict";
 
-      var VERSION = "MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1";
+      var VERSION = "MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1";
       var currentBody = "earth";
       var sunRuntime = null;
       var moonRuntime = null;
@@ -481,17 +482,21 @@ visual-pass-claimed=false</pre>
         if (!node) return;
 
         node.textContent =
-          "MOON_G1_UNIFIED_SOLAR_EARTHSHINE_LOCK_TNT_v1\n" +
+          "MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_TNT_v1\n" +
           "route=/showroom/globe/\n" +
           "page=earth-g1-sun-g1-moon-g1\n" +
           "current-body=" + currentBody + "\n" +
           "earth-g1-complete=true\n" +
           "sun-g1=locked\n" +
-          "moon-g1=final-4k-solar-earthshine-lock\n" +
+          "moon-g1=full-moon-physics-4k-lock\n" +
+          "moon-phase=full-moon\n" +
           "moon-source-resolution=4096\n" +
           "moon-shape=round\n" +
-          "moon-lighting=solar-key-earthshine-fill\n" +
+          "moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill\n" +
           "moon-surface=craters-maria-rays-regolith-microimpacts-limb-shading\n" +
+          "new-moon=false\n" +
+          "crescent=false\n" +
+          "terminator-shadow=false\n" +
           "planet-1=reserved-for-nine-summits-universe\n" +
           "active-status=" + JSON.stringify(activeStatus(), null, 2) + "\n" +
           "visual-pass-claimed=false\n" +
@@ -734,15 +739,16 @@ visual-pass-claimed=false</pre>
         var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         shell.className = "celestial-stage moon-stage";
-        shell.setAttribute("data-universe-light", "earth-sun");
+        shell.setAttribute("data-universe-light", "full-moon-solar-face-earthshine-fill");
 
         canvas.className = "celestial-canvas moon-canvas";
         canvas.width = textureSize;
         canvas.height = textureSize;
-        canvas.setAttribute("aria-label", "Moon G1 final 4K lunar disc with sunlight and Earthshine");
+        canvas.setAttribute("aria-label", "Moon G1 full moon 4K lunar disc with physics lighting");
         canvas.setAttribute("data-moon-source-resolution", "4096");
         canvas.setAttribute("data-moon-g1-final-4k", "true");
-        canvas.setAttribute("data-lighting", "solar-key-earthshine-fill");
+        canvas.setAttribute("data-moon-phase", "full-moon");
+        canvas.setAttribute("data-lighting", "viewer-facing-solar-full-face-subtle-earthshine-fill");
 
         shell.appendChild(canvas);
         target.appendChild(shell);
@@ -769,43 +775,43 @@ visual-pass-claimed=false</pre>
 
         function drawCrater(cx, cy, radius, flatten, rotation, strength) {
           var rimWidth = clamp(radius * 0.075, 1.5, 12);
-          var shadowX = radius * 0.12;
-          var shadowY = radius * 0.10;
+          var shadowX = radius * 0.10;
+          var shadowY = radius * 0.09;
 
           ctx.save();
           ctx.translate(cx, cy);
           ctx.rotate(rotation);
           ctx.scale(1, flatten);
 
-          ctx.globalAlpha = 0.16 * strength;
-          ctx.fillStyle = "rgba(6, 8, 12, 0.82)";
+          ctx.globalAlpha = 0.13 * strength;
+          ctx.fillStyle = "rgba(6, 8, 12, 0.78)";
           ctx.beginPath();
           ctx.arc(shadowX, shadowY, radius * 0.92, 0, Math.PI * 2);
           ctx.fill();
 
-          ctx.globalAlpha = 0.22 * strength;
-          ctx.strokeStyle = "rgba(246, 249, 255, 0.62)";
+          ctx.globalAlpha = 0.24 * strength;
+          ctx.strokeStyle = "rgba(246, 249, 255, 0.66)";
           ctx.lineWidth = rimWidth;
           ctx.beginPath();
           ctx.arc(-shadowX * 0.35, -shadowY * 0.35, radius, 0, Math.PI * 2);
           ctx.stroke();
 
-          ctx.globalAlpha = 0.18 * strength;
-          ctx.strokeStyle = "rgba(18, 22, 30, 0.84)";
-          ctx.lineWidth = rimWidth * 0.68;
+          ctx.globalAlpha = 0.14 * strength;
+          ctx.strokeStyle = "rgba(18, 22, 30, 0.72)";
+          ctx.lineWidth = rimWidth * 0.62;
           ctx.beginPath();
           ctx.arc(shadowX * 0.50, shadowY * 0.50, radius * 0.82, 0, Math.PI * 2);
           ctx.stroke();
 
           if (radius > 42) {
-            ctx.globalAlpha = 0.09 * strength;
-            ctx.fillStyle = "rgba(246, 249, 255, 0.54)";
+            ctx.globalAlpha = 0.10 * strength;
+            ctx.fillStyle = "rgba(246, 249, 255, 0.58)";
             ctx.beginPath();
             ctx.arc(-radius * 0.25, -radius * 0.22, radius * 0.12, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.globalAlpha = 0.06 * strength;
-            ctx.strokeStyle = "rgba(255,255,255,0.46)";
+            ctx.globalAlpha = 0.065 * strength;
+            ctx.strokeStyle = "rgba(255,255,255,0.50)";
             ctx.lineWidth = Math.max(1, rimWidth * 0.36);
             ctx.beginPath();
             ctx.arc(0, 0, radius * 1.32, 0, Math.PI * 2);
@@ -862,7 +868,7 @@ visual-pass-claimed=false</pre>
             var y = center + Math.sin(a) * d;
             var dot = mix(0.55, 2.6, random()) * (size / 4096);
             var light = random() > 0.51;
-            ctx.globalAlpha = mix(0.018, 0.082, random());
+            ctx.globalAlpha = mix(0.018, 0.084, random());
             ctx.fillStyle = light ? "rgba(250,252,255,1)" : "rgba(18,22,30,1)";
             ctx.beginPath();
             ctx.arc(x, y, dot, 0, Math.PI * 2);
@@ -889,90 +895,84 @@ visual-pass-claimed=false</pre>
           ctx.restore();
         }
 
-        function applyUniverseLighting(center, radius, size) {
+        function applyFullMoonPhysicsLighting(center, radius, size) {
           ctx.save();
           ctx.beginPath();
           ctx.arc(center, center, radius, 0, Math.PI * 2);
           ctx.clip();
 
+          /*
+            FULL MOON PHYSICS:
+            The sunlit lunar hemisphere faces the viewer.
+            There is no visible crescent/new-moon terminator.
+            Earth-reflected light exists only as subtle cool fill.
+          */
+
           ctx.globalCompositeOperation = "screen";
 
-          var solarKey = ctx.createRadialGradient(
-            center - radius * 0.46,
-            center - radius * 0.40,
-            radius * 0.03,
-            center - radius * 0.02,
-            center - radius * 0.04,
+          var solarFullFace = ctx.createRadialGradient(
+            center - radius * 0.08,
+            center - radius * 0.10,
+            radius * 0.04,
+            center,
+            center,
             radius * 1.08
           );
-          solarKey.addColorStop(0.00, "rgba(255,248,225,0.34)");
-          solarKey.addColorStop(0.22, "rgba(255,232,184,0.18)");
-          solarKey.addColorStop(0.54, "rgba(255,215,155,0.075)");
-          solarKey.addColorStop(0.84, "rgba(255,220,170,0.018)");
-          solarKey.addColorStop(1.00, "rgba(255,220,170,0)");
-          ctx.fillStyle = solarKey;
+          solarFullFace.addColorStop(0.00, "rgba(255,250,232,0.48)");
+          solarFullFace.addColorStop(0.20, "rgba(255,244,220,0.34)");
+          solarFullFace.addColorStop(0.44, "rgba(255,234,198,0.22)");
+          solarFullFace.addColorStop(0.68, "rgba(246,240,224,0.13)");
+          solarFullFace.addColorStop(0.88, "rgba(238,242,250,0.07)");
+          solarFullFace.addColorStop(1.00, "rgba(238,242,250,0.03)");
+          ctx.fillStyle = solarFullFace;
           ctx.fillRect(0, 0, size, size);
 
-          var earthshine = ctx.createRadialGradient(
-            center - radius * 0.30,
-            center + radius * 0.42,
-            radius * 0.04,
-            center + radius * 0.05,
-            center + radius * 0.05,
-            radius * 1.16
+          var centerLift = ctx.createRadialGradient(
+            center,
+            center,
+            radius * 0.16,
+            center,
+            center,
+            radius * 0.98
           );
-          earthshine.addColorStop(0.00, "rgba(126,178,255,0.24)");
-          earthshine.addColorStop(0.30, "rgba(96,145,230,0.15)");
-          earthshine.addColorStop(0.62, "rgba(72,118,205,0.065)");
-          earthshine.addColorStop(0.90, "rgba(72,118,205,0.018)");
-          earthshine.addColorStop(1.00, "rgba(72,118,205,0)");
-          ctx.fillStyle = earthshine;
+          centerLift.addColorStop(0.00, "rgba(255,255,255,0.18)");
+          centerLift.addColorStop(0.32, "rgba(248,250,255,0.12)");
+          centerLift.addColorStop(0.68, "rgba(235,240,250,0.07)");
+          centerLift.addColorStop(1.00, "rgba(225,232,245,0.025)");
+          ctx.fillStyle = centerLift;
+          ctx.fillRect(0, 0, size, size);
+
+          var earthFill = ctx.createRadialGradient(
+            center + radius * 0.14,
+            center + radius * 0.28,
+            radius * 0.05,
+            center,
+            center,
+            radius * 1.12
+          );
+          earthFill.addColorStop(0.00, "rgba(112,166,255,0.12)");
+          earthFill.addColorStop(0.34, "rgba(88,138,230,0.07)");
+          earthFill.addColorStop(0.70, "rgba(74,118,205,0.028)");
+          earthFill.addColorStop(1.00, "rgba(74,118,205,0)");
+          ctx.fillStyle = earthFill;
           ctx.fillRect(0, 0, size, size);
 
           ctx.globalCompositeOperation = "multiply";
 
-          var terminator = ctx.createLinearGradient(
-            center - radius,
-            center - radius,
-            center + radius,
-            center + radius
-          );
-          terminator.addColorStop(0.00, "rgba(255,255,255,0.00)");
-          terminator.addColorStop(0.40, "rgba(240,244,255,0.03)");
-          terminator.addColorStop(0.70, "rgba(42,50,64,0.10)");
-          terminator.addColorStop(1.00, "rgba(8,12,22,0.24)");
-          ctx.fillStyle = terminator;
-          ctx.fillRect(0, 0, size, size);
-
-          var limb = ctx.createRadialGradient(
-            center - radius * 0.30,
-            center - radius * 0.32,
-            radius * 0.08,
+          var fullMoonLimbOnly = ctx.createRadialGradient(
+            center - radius * 0.04,
+            center - radius * 0.05,
+            radius * 0.14,
             center,
             center,
             radius
           );
-          limb.addColorStop(0.00, "rgba(255,255,255,0.00)");
-          limb.addColorStop(0.52, "rgba(220,224,230,0.025)");
-          limb.addColorStop(0.76, "rgba(60,68,80,0.13)");
-          limb.addColorStop(0.92, "rgba(8,12,20,0.32)");
-          limb.addColorStop(1.00, "rgba(0,0,0,0.50)");
-          ctx.fillStyle = limb;
-          ctx.fillRect(0, 0, size, size);
-
-          ctx.globalCompositeOperation = "screen";
-
-          var solarRim = ctx.createLinearGradient(
-            center - radius,
-            center - radius,
-            center + radius,
-            center + radius
-          );
-          solarRim.addColorStop(0.00, "rgba(255,238,190,0.18)");
-          solarRim.addColorStop(0.32, "rgba(255,238,190,0.07)");
-          solarRim.addColorStop(0.72, "rgba(112,170,255,0.035)");
-          solarRim.addColorStop(1.00, "rgba(112,170,255,0.05)");
-          ctx.fillStyle = solarRim;
+          fullMoonLimbOnly.addColorStop(0.00, "rgba(255,255,255,0)");
+          fullMoonLimbOnly.addColorStop(0.58, "rgba(255,255,255,0)");
+          fullMoonLimbOnly.addColorStop(0.78, "rgba(130,140,155,0.055)");
+          fullMoonLimbOnly.addColorStop(0.91, "rgba(50,58,72,0.135)");
+          fullMoonLimbOnly.addColorStop(1.00, "rgba(8,12,22,0.24)");
+          ctx.fillStyle = fullMoonLimbOnly;
           ctx.fillRect(0, 0, size, size);
 
           ctx.restore();
@@ -985,14 +985,14 @@ visual-pass-claimed=false</pre>
 
           ctx.clearRect(0, 0, size, size);
 
-          var universeHalo = ctx.createRadialGradient(center, center, radius * 0.72, center, center, radius * 1.85);
-          universeHalo.addColorStop(0, "rgba(230,238,255,0.15)");
-          universeHalo.addColorStop(0.32, "rgba(120,152,210,0.08)");
-          universeHalo.addColorStop(0.58, "rgba(255,210,140,0.035)");
+          var universeHalo = ctx.createRadialGradient(center, center, radius * 0.72, center, center, radius * 1.86);
+          universeHalo.addColorStop(0, "rgba(236,242,255,0.18)");
+          universeHalo.addColorStop(0.34, "rgba(140,164,205,0.09)");
+          universeHalo.addColorStop(0.62, "rgba(255,220,160,0.035)");
           universeHalo.addColorStop(1, "rgba(0,0,0,0)");
           ctx.fillStyle = universeHalo;
           ctx.beginPath();
-          ctx.arc(center, center, radius * 1.86, 0, Math.PI * 2);
+          ctx.arc(center, center, radius * 1.88, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.save();
@@ -1001,27 +1001,27 @@ visual-pass-claimed=false</pre>
           ctx.clip();
 
           var base = ctx.createRadialGradient(
-            center - radius * 0.30,
-            center - radius * 0.34,
-            radius * 0.05,
+            center - radius * 0.12,
+            center - radius * 0.16,
+            radius * 0.06,
             center,
             center,
             radius
           );
-          base.addColorStop(0.00, "#eceef2");
-          base.addColorStop(0.18, "#d5dae0");
-          base.addColorStop(0.42, "#aeb6bf");
-          base.addColorStop(0.64, "#87919d");
-          base.addColorStop(0.84, "#65707d");
-          base.addColorStop(1.00, "#3e4858");
+          base.addColorStop(0.00, "#f2f1ec");
+          base.addColorStop(0.18, "#dededb");
+          base.addColorStop(0.42, "#babdc0");
+          base.addColorStop(0.64, "#969da5");
+          base.addColorStop(0.84, "#74808c");
+          base.addColorStop(1.00, "#52606e");
           ctx.fillStyle = base;
           ctx.fillRect(0, 0, size, size);
 
-          softEllipse(center - radius * 0.24, center - radius * 0.20, radius * 0.40, radius * 0.24, -0.12, "rgba(38,42,50,0.78)", "rgba(82,88,100,0.42)", 0.48);
-          softEllipse(center + radius * 0.18, center - radius * 0.04, radius * 0.33, radius * 0.23, 0.20, "rgba(44,48,56,0.70)", "rgba(92,98,110,0.38)", 0.40);
-          softEllipse(center + radius * 0.05, center + radius * 0.36, radius * 0.28, radius * 0.18, -0.20, "rgba(48,52,60,0.66)", "rgba(98,104,116,0.35)", 0.32);
-          softEllipse(center - radius * 0.44, center + radius * 0.22, radius * 0.22, radius * 0.16, 0.18, "rgba(46,50,58,0.66)", "rgba(96,102,114,0.34)", 0.28);
-          softEllipse(center + radius * 0.42, center - radius * 0.38, radius * 0.19, radius * 0.13, -0.05, "rgba(50,54,62,0.52)", "rgba(100,106,118,0.28)", 0.22);
+          softEllipse(center - radius * 0.24, center - radius * 0.20, radius * 0.40, radius * 0.24, -0.12, "rgba(44,48,56,0.72)", "rgba(94,100,112,0.40)", 0.42);
+          softEllipse(center + radius * 0.18, center - radius * 0.04, radius * 0.33, radius * 0.23, 0.20, "rgba(50,54,62,0.64)", "rgba(102,108,120,0.35)", 0.36);
+          softEllipse(center + radius * 0.05, center + radius * 0.36, radius * 0.28, radius * 0.18, -0.20, "rgba(54,58,66,0.60)", "rgba(108,114,126,0.32)", 0.30);
+          softEllipse(center - radius * 0.44, center + radius * 0.22, radius * 0.22, radius * 0.16, 0.18, "rgba(52,56,64,0.58)", "rgba(106,112,124,0.30)", 0.25);
+          softEllipse(center + radius * 0.42, center - radius * 0.38, radius * 0.19, radius * 0.13, -0.05, "rgba(58,62,70,0.48)", "rgba(112,118,130,0.26)", 0.20);
 
           ctx.globalCompositeOperation = "overlay";
           for (var p = 0; p < 1600; p += 1) {
@@ -1036,6 +1036,7 @@ visual-pass-claimed=false</pre>
             ctx.arc(px, py, pr, 0, Math.PI * 2);
             ctx.fill();
           }
+
           ctx.globalCompositeOperation = "source-over";
           ctx.globalAlpha = 1;
 
@@ -1090,7 +1091,7 @@ visual-pass-claimed=false</pre>
 
           ctx.restore();
 
-          applyUniverseLighting(center, radius, size);
+          applyFullMoonPhysicsLighting(center, radius, size);
 
           ctx.save();
           ctx.globalCompositeOperation = "destination-in";
@@ -1100,7 +1101,7 @@ visual-pass-claimed=false</pre>
           ctx.restore();
 
           ctx.save();
-          ctx.strokeStyle = "rgba(235,242,255,0.30)";
+          ctx.strokeStyle = "rgba(245,248,255,0.34)";
           ctx.lineWidth = Math.max(2, size * 0.0015);
           ctx.beginPath();
           ctx.arc(center, center, radius - ctx.lineWidth, 0, Math.PI * 2);
@@ -1108,16 +1109,16 @@ visual-pass-claimed=false</pre>
 
           ctx.globalCompositeOperation = "screen";
           ctx.globalAlpha = 0.24;
-          ctx.strokeStyle = "rgba(255,238,190,0.62)";
+          ctx.strokeStyle = "rgba(255,246,220,0.58)";
           ctx.lineWidth = Math.max(1, size * 0.00085);
           ctx.beginPath();
-          ctx.arc(center, center, radius + ctx.lineWidth, -Math.PI * 0.92, Math.PI * 0.12);
+          ctx.arc(center, center, radius + ctx.lineWidth, -Math.PI * 0.98, Math.PI * 0.18);
           ctx.stroke();
 
-          ctx.globalAlpha = 0.18;
-          ctx.strokeStyle = "rgba(122,178,255,0.52)";
+          ctx.globalAlpha = 0.12;
+          ctx.strokeStyle = "rgba(122,178,255,0.34)";
           ctx.beginPath();
-          ctx.arc(center, center, radius + ctx.lineWidth * 1.7, Math.PI * 0.42, Math.PI * 1.16);
+          ctx.arc(center, center, radius + ctx.lineWidth * 1.7, Math.PI * 0.38, Math.PI * 1.18);
           ctx.stroke();
 
           ctx.restore();
@@ -1190,15 +1191,20 @@ visual-pass-claimed=false</pre>
         function getStatus() {
           return {
             ok: true,
-            role: "MOON_G1_FINAL_4K_SOLAR_EARTHSHINE_RUNTIME",
+            role: "MOON_G1_FULL_MOON_PHYSICS_4K_RUNTIME",
             version: VERSION,
             running: running,
             circular: true,
+            phase: "full-moon",
+            fullMoon: true,
+            newMoon: false,
+            crescent: false,
+            terminatorShadow: false,
             sourceResolution: textureSize,
             sourceResolutionTarget: 4096,
             fallbackUsed: fallbackUsed,
-            solarKeyLight: true,
-            earthshineFill: true,
+            viewerFacingSolarIllumination: true,
+            subtleEarthshineFill: true,
             sameUniverseLighting: true,
             craters: true,
             majorCraters: true,
@@ -1324,12 +1330,12 @@ visual-pass-claimed=false</pre>
 
         byId("control-title").textContent = "Moon G1 motion control";
         byId("control-note").textContent =
-          "Moon G1 uses final 4K procedural lunar runtime with solar key light, Earth-reflected fill, crater fields, maria basins, ray systems, regolith grain, micro-impact texture, limb shading, and controlled libration motion.";
+          "Moon G1 uses full-moon physics lighting: viewer-facing solar illumination, subtle Earth-reflected fill, 4K procedural lunar detail, crater fields, maria basins, ray systems, regolith grain, micro-impact texture, limb shading, and controlled libration motion.";
 
         moonRuntime = createMoonRuntime(target);
         moonRuntime.start();
 
-        writeReceipt("MOON_G1_SOLAR_EARTHSHINE_4K_LOCK_MOUNTED");
+        writeReceipt("MOON_G1_FULL_MOON_PHYSICS_4K_LOCK_MOUNTED");
         return true;
       }
 
@@ -1392,7 +1398,7 @@ visual-pass-claimed=false</pre>
         setTimeout(mountEarth, 900);
       }
 
-      window.DGBMoonG1UnifiedSolarEarthshineRuntime = {
+      window.DGBMoonG1FullMoonPhysics4KRuntime = {
         VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
@@ -1407,19 +1413,24 @@ visual-pass-claimed=false</pre>
             currentBody: currentBody,
             earthG1Complete: true,
             sunG1Locked: true,
-            moonG1Final4K: true,
-            moonSolarKeyLight: true,
-            moonEarthshineFill: true,
+            moonG1FullMoon4K: true,
+            moonPhase: "full-moon",
+            moonViewerFacingSolarIllumination: true,
+            moonSubtleEarthshineFill: true,
             moonSameUniverseLighting: true,
             moonG1LockReady: true,
+            newMoon: false,
+            crescent: false,
+            terminatorShadow: false,
             planetOneReservedFor: "nine-summits-universe",
             visualPassClaimed: false
           };
         }
       };
 
-      window.DGBMoonG1Final4KLunarRuntime = window.DGBMoonG1UnifiedSolarEarthshineRuntime;
-      window.DGBMoonG14KLunarDetailRuntime = window.DGBMoonG1UnifiedSolarEarthshineRuntime;
+      window.DGBMoonG1UnifiedSolarEarthshineRuntime = window.DGBMoonG1FullMoonPhysics4KRuntime;
+      window.DGBMoonG1Final4KLunarRuntime = window.DGBMoonG1FullMoonPhysics4KRuntime;
+      window.DGBMoonG14KLunarDetailRuntime = window.DGBMoonG1FullMoonPhysics4KRuntime;
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", boot, { once: true });

@@ -2,15 +2,17 @@
 ══════════════════════════════════════════════════════════════════════
 FULL_FILE_TNT
 FILE=/showroom/globe/index.html
-TNT_ID=SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2
+TNT_ID=SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1
 MODE=FULL_FILE_REPLACEMENT
-PRECINCT=DEMO_ACTUAL_UNIVERSE_GLOBE_BASELINE
-JURISDICTION=PROTECTED_GLOBE_MOUNT_NON_BLOCKING_CONTROLS_ZOOM_WRAPPER
+PRECINCT=DEMO_ACTUAL_UNIVERSE_ROUTE_BRIDGE
+JURISDICTION=ROUTE_LAYOUT_CANONICAL_INSTRUMENT_MOUNT_NON_BLOCKING_CONTROLS_ZOOM_WRAPPER
 NON_JURISDICTION=INLINE_GLOBE_REDRAW, CARTOON_CANVAS_REPLACEMENT, DEMO_UNIVERSE_DATA_MERGE, PLANET_1, GAUGES_SCORING, GLOBAL_NAV_AUTHORITY
 BASELINE_STATUS=OPTIMAL_BASELINE_CANDIDATE
-EARTH_RULE=PRIOR_GLOBE_BASELINE_PROTECTED
+EARTH_RULE=ACTUAL_EARTH_FROM_CANONICAL_INSTRUMENT
+SUN_RULE=ACTUAL_SUN_FROM_CANONICAL_INSTRUMENT
+MOON_RULE=ACTUAL_MOON_FROM_CANONICAL_INSTRUMENT
 CONTROL_RULE=CONTROLS_MUST_NEVER_OVERLAY_OR_BLOCK_THE_GLOBE
-MOUNT_RULE=CANONICAL_GLOBE_INSTRUMENT_REQUIRED
+MOUNT_RULE=/assets/showroom.globe.instrument.js_IS_THE_BODY_RENDER_AUTHORITY
 DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
 GRAPHICBOX=FORBIDDEN
 IMAGE_GENERATION=FORBIDDEN
@@ -23,10 +25,10 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Diamond Gate Bridge · Demo Actual Universe · Optimal Baseline</title>
+  <title>Diamond Gate Bridge · Demo Actual Universe</title>
   <meta
     name="description"
-    content="Demo Actual Universe optimal baseline candidate with protected globe mount, non-blocking controls, zoom wrapper, and separated data lanes."
+    content="Demo Actual Universe route bridge for actual Earth, Sun, and Moon bodies with non-blocking controls and separated data lanes."
   />
 
   <style>
@@ -255,7 +257,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     .stage-card {
       position: relative;
       overflow: hidden;
-      min-height: clamp(540px, 68vh, 820px);
+      min-height: clamp(560px, 70vh, 840px);
       border-radius: 34px;
       border: 1px solid var(--line);
       background:
@@ -585,21 +587,21 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     {
       "lane": "Demo Actual Universe",
       "dataFlight": "separate",
-      "baseline": "optimal-baseline-candidate-v2",
+      "baseline": "optimal-baseline-candidate-actual-bodies",
       "priorGlobeBaseline": "protected",
       "controlsBlockGlobe": false,
       "earth": {
-        "authority": "protected-prior-globe-baseline",
+        "authority": "actual-earth-from-canonical-instrument",
         "allowedChange": "zoom-wrapper-only"
       },
       "sun": {
-        "standardRequest": "physical-reality",
-        "replaceGlobeRenderer": false,
+        "authority": "actual-sun-from-canonical-instrument",
+        "standard": "physical-reality",
         "cartoonStandard": false
       },
       "moon": {
-        "standardRequest": "physical-reality",
-        "replaceGlobeRenderer": false,
+        "authority": "actual-moon-from-canonical-instrument",
+        "standard": "physical-reality",
         "cartoonStandard": false
       },
       "planet1": {
@@ -647,20 +649,20 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     <main id="demo-actual-universe">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="eyebrow">Demo Actual Universe · optimal baseline candidate v2</div>
-          <h1 id="page-title">The globe gets a protected viewport.</h1>
+          <div class="eyebrow">Demo Actual Universe · actual bodies bridge</div>
+          <h1 id="page-title">Actual Earth, Sun, and Moon.</h1>
           <p class="lead">
-            This run gives the globe a full protected viewport and moves every command option into a
-            separate panel below the visual chamber. The prior globe baseline remains protected. Demo
-            Universe data and Demo Actual Universe data remain separate.
+            This route mounts the canonical actual-bodies instrument. Earth, Sun, and Moon render from
+            the asset authority. The page controls the shell, zoom wrapper, and command panel only.
+            Demo Universe data and Demo Actual Universe data remain separate.
           </p>
 
           <div class="status-strip" aria-label="Route status">
-            <span class="pill">Optimal baseline candidate v2</span>
-            <span class="pill">Prior globe protected</span>
+            <span class="pill">Actual bodies bridge</span>
+            <span class="pill">Earth from instrument</span>
+            <span class="pill">Sun from instrument</span>
+            <span class="pill">Moon from instrument</span>
             <span class="pill">Controls below viewport</span>
-            <span class="pill">Zoom wrapper only</span>
-            <span class="pill">No replacement renderer</span>
             <span class="pill">Data lanes separate</span>
           </div>
         </div>
@@ -669,7 +671,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
           <section
             class="stage-card"
             id="stageCard"
-            aria-label="Demo Actual Universe globe viewer"
+            aria-label="Demo Actual Universe actual body viewer"
             data-demo-actual-universe-route="true"
             data-demo-universe-merge="false"
           >
@@ -688,7 +690,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
                   data-planet-mount
                   data-demo-actual-universe="true"
                   data-preserve-prior-globe="true"
-                  data-earth-rule="prior-baseline-protected"
+                  data-earth-rule="actual-earth"
                   data-sun-standard="physical-reality"
                   data-moon-standard="physical-reality"
                   data-planet-one="reserved"
@@ -700,8 +702,8 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
                 </div>
 
                 <div class="body-label">
-                  <strong id="bodyName">Demo Actual Universe</strong>
-                  <span id="bodyDescription">Prior globe baseline protected. Zoom wraps the globe without replacing it.</span>
+                  <strong id="bodyName">Earth</strong>
+                  <span id="bodyDescription">Actual Earth body mounted from the canonical instrument.</span>
                 </div>
               </div>
             </div>
@@ -750,54 +752,55 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
       <section class="grid" aria-label="Body status cards">
         <article class="info-card">
-          <h2>Earth baseline</h2>
+          <h2>Earth</h2>
           <p>
-            Earth remains the protected prior globe baseline. This file does not redraw the globe,
-            replace its texture, or create a new inline Earth renderer.
+            Earth is rendered by /assets/showroom.globe.instrument.js. The route does not redraw or
+            replace the Earth body.
           </p>
         </article>
 
         <article class="info-card">
-          <h2>Sun standard</h2>
+          <h2>Sun</h2>
           <p>
-            Sun G1 receives a physical-reality standard request through the canonical globe instrument:
-            stellar sphere, plasma behavior, corona, limb intensity, and no flat icon treatment.
+            Sun is rendered by /assets/showroom.globe.instrument.js using the physical-reality standard:
+            plasma sphere, corona, granulation, turbulence, and limb intensity.
           </p>
         </article>
 
         <article class="info-card">
-          <h2>Moon standard</h2>
+          <h2>Moon</h2>
           <p>
-            Moon G1 receives a physical-reality standard request through the canonical globe instrument:
-            lunar sphere, crater depth, maria, ray systems, regolith, and limb shading.
+            Moon is rendered by /assets/showroom.globe.instrument.js using the physical-reality standard:
+            maria, crater fields, ray systems, regolith texture, and limb shading.
           </p>
         </article>
       </section>
 
       <section class="info-card" aria-labelledby="route-contract-title">
         <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2
+        <div class="contract">SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1
 route=/showroom/globe/
 lane=demo-actual-universe
-baseline=optimal-baseline-candidate-v2
+baseline=optimal-baseline-candidate-actual-bodies
 demo-universe-data=separate
 demo-actual-universe-data=separate
 merge-demo-universe-into-demo-actual-universe=false
-prior-globe-baseline=protected
+body-render-authority=/assets/showroom.globe.instrument.js
+route-authority=layout-command-panel-zoom-wrapper
+earth=actual-earth-from-instrument
+sun=actual-sun-from-instrument
+moon=actual-moon-from-instrument
 earth-change=zoom-wrapper-only
 controls-block-globe=false
 controls-precinct=below-stage-command-panel
 visual-precinct=protected-full-viewport-globe-stage
 inline-globe-redraw=false
 cartoon-canvas-replacement=false
-canonical-globe-instrument=/assets/showroom.globe.instrument.js
 runtime-support=/showroom/runtime.js
 zoom-control=true
 zoom-min=70
 zoom-max=240
 zoom-reset=100
-sun-standard-request=physical-reality
-moon-standard-request=physical-reality
 planet-1=reserved-for-nine-summits-universe
 graphicbox=false
 image-generation=false
@@ -808,16 +811,16 @@ owner-visual-receipt-required=true</div>
       <section class="receipt-bar" aria-label="Hybrid Bond receipt">
         <strong>Hybrid Bond receipt</strong>
         <p>
-          Precinct held: Demo Actual Universe globe baseline. The globe now owns a protected viewport.
-          Controls occupy a separate command precinct below it. Demo Universe and Demo Actual Universe
-          data remain separate. No inline globe redraw, no GraphicBox, no generated replacement, no
-          Planet 1 reassignment, and no Gauges scoring change.
+          Precinct held: Demo Actual Universe route bridge. The route mounts the canonical instrument
+          and controls only shell, zoom, body selection, speed, and motion commands. Earth, Sun, and
+          Moon rendering belongs to /assets/showroom.globe.instrument.js. Demo Universe and Demo Actual
+          Universe data remain separate.
         </p>
       </section>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2 · protected viewport · prior globe protected · non-blocking controls · owner receipt required.
+      SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1 · actual bodies instrument bridge · owner receipt required.
     </footer>
   </div>
 
@@ -855,15 +858,15 @@ owner-visual-receipt-required=true</div>
       const bodyMeta = {
         earth: {
           label: "Earth",
-          description: "Prior globe baseline protected. Zoom wraps the existing globe without replacing it."
+          description: "Actual Earth body mounted from the canonical instrument."
         },
         sun: {
           label: "Sun",
-          description: "Physical-reality Sun standard requested through the canonical globe instrument."
+          description: "Actual Sun body mounted from the canonical instrument."
         },
         moon: {
           label: "Moon",
-          description: "Physical-reality Moon standard requested through the canonical globe instrument."
+          description: "Actual Moon body mounted from the canonical instrument."
         }
       };
 
@@ -899,10 +902,11 @@ owner-visual-receipt-required=true</div>
           detail: {
             route: "/showroom/globe/",
             lane: "demo-actual-universe",
-            baseline: "optimal-baseline-candidate-v2",
+            baseline: "optimal-baseline-candidate-actual-bodies",
             mergeDemoUniverse: false,
             preservePriorGlobe: true,
             controlsBlockGlobe: false,
+            actualBodiesRequired: true,
             mount,
             root: mount,
             target: mount,
@@ -937,11 +941,12 @@ owner-visual-receipt-required=true</div>
               target: mount,
               route: "/showroom/globe/",
               lane: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate-v2",
+              baseline: "optimal-baseline-candidate-actual-bodies",
               preservePriorGlobe: true,
               replaceGlobeRenderer: false,
               mergeDemoUniverse: false,
               controlsBlockGlobe: false,
+              actualBodiesRequired: true,
               ...payload
             });
             return true;
@@ -956,7 +961,8 @@ owner-visual-receipt-required=true</div>
 
       function markMountedIfInstrumentRendered() {
         const children = Array.from(mount.children).filter((child) => child.id !== "instrumentPending");
-        const hasRenderedChild = children.length > 0 || Boolean(mount.querySelector("canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe"));
+        const hasRenderedChild = children.length > 0 || Boolean(mount.querySelector("canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe,.dgb-actual-body-shell"));
+
         if (hasRenderedChild) {
           mount.dataset.instrumentMounted = "true";
         }
@@ -972,7 +978,9 @@ owner-visual-receipt-required=true</div>
         mount.dataset.moonStandard = "physical-reality";
         mount.dataset.demoUniverseMerge = "false";
         mount.dataset.controlsBlockGlobe = "false";
-        mount.dataset.baseline = "optimal-baseline-candidate-v2";
+        mount.dataset.baseline = "optimal-baseline-candidate-actual-bodies";
+        mount.dataset.actualBodiesRequired = "true";
+        mount.dataset.activeBody = state.body;
 
         if (api && typeof api.mount === "function") {
           try {
@@ -983,11 +991,13 @@ owner-visual-receipt-required=true</div>
               route: "/showroom/globe/",
               lane: "demo-actual-universe",
               mode: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate-v2",
+              baseline: "optimal-baseline-candidate-actual-bodies",
               preservePriorGlobe: true,
               replaceGlobeRenderer: false,
               mergeDemoUniverse: false,
               controlsBlockGlobe: false,
+              actualBodiesRequired: true,
+              body: state.body,
               sunStandard: "physical-reality",
               moonStandard: "physical-reality",
               planetOne: "reserved-for-nine-summits-universe",
@@ -1004,8 +1014,9 @@ owner-visual-receipt-required=true</div>
           root: mount,
           target: mount,
           mode: "demo-actual-universe",
-          baseline: "optimal-baseline-candidate-v2",
+          baseline: "optimal-baseline-candidate-actual-bodies",
           data: demoActualUniverseData,
+          body: state.body,
           sunStandard: "physical-reality",
           moonStandard: "physical-reality"
         });
@@ -1102,84 +1113,88 @@ owner-visual-receipt-required=true</div>
         return Math.sqrt(dx * dx + dy * dy);
       }
 
-      bodyButtons.forEach((button) => {
-        button.addEventListener("click", () => setBody(button.dataset.body));
-      });
-
-      actionButtons.forEach((button) => {
-        button.addEventListener("click", () => setMotion(button.dataset.action));
-      });
-
-      speedButtons.forEach((button) => {
-        button.addEventListener("click", () => setSpeed(button.dataset.speed));
-      });
-
-      zoomButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const action = button.dataset.zoom;
-
-          if (action === "in") setZoom(state.zoom + 0.12);
-          if (action === "out") setZoom(state.zoom - 0.12);
-          if (action === "reset") setZoom(1);
+      function attachEvents() {
+        bodyButtons.forEach((button) => {
+          button.addEventListener("click", () => setBody(button.dataset.body));
         });
-      });
 
-      zoomRange.addEventListener("input", () => {
-        setZoom(Number(zoomRange.value) / 100);
-      });
+        actionButtons.forEach((button) => {
+          button.addEventListener("click", () => setMotion(button.dataset.action));
+        });
 
-      stageCard.addEventListener("wheel", (event) => {
-        if (!event.ctrlKey && Math.abs(event.deltaY) < 4) return;
-        event.preventDefault();
-        const direction = event.deltaY > 0 ? -1 : 1;
-        setZoom(state.zoom + direction * 0.08);
-      }, { passive: false });
+        speedButtons.forEach((button) => {
+          button.addEventListener("click", () => setSpeed(button.dataset.speed));
+        });
 
-      stageCard.addEventListener("touchstart", (event) => {
-        const distance = getPointerDistance(event);
-        if (distance !== null) {
-          state.pointerDistance = distance;
+        zoomButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const action = button.dataset.zoom;
+
+            if (action === "in") setZoom(state.zoom + 0.12);
+            if (action === "out") setZoom(state.zoom - 0.12);
+            if (action === "reset") setZoom(1);
+          });
+        });
+
+        zoomRange.addEventListener("input", () => {
+          setZoom(Number(zoomRange.value) / 100);
+        });
+
+        stageCard.addEventListener("wheel", (event) => {
+          if (!event.ctrlKey && Math.abs(event.deltaY) < 4) return;
+          event.preventDefault();
+          const direction = event.deltaY > 0 ? -1 : 1;
+          setZoom(state.zoom + direction * 0.08);
+        }, { passive: false });
+
+        stageCard.addEventListener("touchstart", (event) => {
+          const distance = getPointerDistance(event);
+          if (distance !== null) {
+            state.pointerDistance = distance;
+            state.pointerZoom = state.zoom;
+          }
+        }, { passive: true });
+
+        stageCard.addEventListener("touchmove", (event) => {
+          const distance = getPointerDistance(event);
+          if (distance === null || state.pointerDistance === null) return;
+          event.preventDefault();
+          const ratio = distance / state.pointerDistance;
+          setZoom(state.pointerZoom * ratio);
+        }, { passive: false });
+
+        stageCard.addEventListener("touchend", () => {
+          state.pointerDistance = null;
           state.pointerZoom = state.zoom;
-        }
-      }, { passive: true });
+        }, { passive: true });
 
-      stageCard.addEventListener("touchmove", (event) => {
-        const distance = getPointerDistance(event);
-        if (distance === null || state.pointerDistance === null) return;
-        event.preventDefault();
-        const ratio = distance / state.pointerDistance;
-        setZoom(state.pointerZoom * ratio);
-      }, { passive: false });
+        window.addEventListener("showroom:globe:mounted", () => {
+          mount.dataset.instrumentMounted = "true";
+        });
+      }
 
-      stageCard.addEventListener("touchend", () => {
-        state.pointerDistance = null;
-        state.pointerZoom = state.zoom;
-      }, { passive: true });
+      function boot() {
+        attachEvents();
+        setZoom(1);
+        setSpeed("normal");
+        setBody("earth");
 
-      window.addEventListener("showroom:globe:mounted", () => {
-        mount.dataset.instrumentMounted = "true";
-      });
+        requestMount();
+
+        window.setTimeout(requestMount, 120);
+        window.setTimeout(requestMount, 480);
+        window.setTimeout(requestMount, 1200);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
 
       window.addEventListener("load", () => {
         requestMount();
-
-        window.setTimeout(() => {
-          setBody("earth");
-          setSpeed("normal");
-          setZoom(1);
-
-          dispatchInstrumentEvent("showroom:globe:standard-request", {
-            sunStandard: "physical-reality",
-            moonStandard: "physical-reality",
-            replaceGlobeRenderer: false,
-            controlsBlockGlobe: false
-          });
-        }, 80);
-      });
-
-      setZoom(1);
-      setSpeed("normal");
-      setBody("earth");
+      }, { once: true });
     })();
   </script>
 </body>

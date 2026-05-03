@@ -1,5 +1,5 @@
 /* /assets/audrelia.sun.render.js
-   AUDRELIA_SUN_RENDER_EXTENSION_TNT_v1
+   AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1
 
    ROLE=
    DOWNSTREAM_RENDER_EXTENSION
@@ -9,6 +9,10 @@
    AUDRELIA_SUN_PLASMA_LAW
    AUDRELIA_SUN_SURFACE_COLOR
    AUDRELIA_SUN_EXTENSION_RECEIPT
+
+   RENEWAL=
+   Promote the stronger solar-system-sun visual authority into Audrelia’s Sun.
+   Audrelia’s Sun is no longer visually secondary or softened.
 
    DOES_NOT_OWN=
    PLATFORM_PROJECTION
@@ -21,7 +25,7 @@
 (function bindAudreliaSunRenderExtension(global) {
   "use strict";
 
-  const VERSION = "AUDRELIA_SUN_RENDER_EXTENSION_TNT_v1";
+  const VERSION = "AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1";
   const ID = "audrelia-sun";
   const LABEL = "Audrelia’s Sun";
   const TYPE = "local_star";
@@ -107,11 +111,12 @@
       label: LABEL,
       type: TYPE,
       version: VERSION,
-      axialTiltDeg: -9.0,
+      axialTiltDeg: -7.25,
       lightModel: "star",
       corona: true,
-      rimColor: "rgba(255,214,132,0.76)",
-      glowColor: "rgba(255,156,62,0.38)",
+      solarAuthorityPromoted: true,
+      rimColor: "rgba(255,230,128,0.84)",
+      glowColor: "rgba(255,164,38,0.50)",
       sourceDefinition: 3072,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
@@ -128,68 +133,72 @@
     const random = makeSeededRandom(6350202);
 
     const base = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-    base.addColorStop(0.00, "#ffe7a3");
-    base.addColorStop(0.22, "#ffc66f");
-    base.addColorStop(0.48, "#f6963d");
-    base.addColorStop(0.74, "#d85b22");
-    base.addColorStop(1.00, "#80230e");
+    base.addColorStop(0.00, "#fff1a5");
+    base.addColorStop(0.18, "#ffd261");
+    base.addColorStop(0.42, "#ffa42f");
+    base.addColorStop(0.68, "#e65d17");
+    base.addColorStop(0.86, "#b83a10");
+    base.addColorStop(1.00, "#7c1e07");
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
     ctx.globalCompositeOperation = "screen";
 
-    for (let i = 0; i < 6200; i += 1) {
+    for (let i = 0; i < 8600; i += 1) {
       const x = random() * SOURCE_WIDTH;
       const y = random() * SOURCE_HEIGHT;
+      const rx = 1.8 + random() * 15;
+      const ry = 0.9 + random() * 6.5;
+      const alpha = 0.025 + random() * 0.12;
 
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(random() * TAU);
       ctx.beginPath();
-      ctx.ellipse(0, 0, 2 + random() * 12, 1 + random() * 5, 0, 0, TAU);
+      ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
       ctx.fillStyle = random() > 0.34
-        ? "rgba(255,248,190," + (0.022 + random() * 0.10).toFixed(4) + ")"
-        : "rgba(255,112,35," + (0.018 + random() * 0.075).toFixed(4) + ")";
+        ? "rgba(255,248,190," + alpha.toFixed(4) + ")"
+        : "rgba(255,112,35," + (alpha * 0.72).toFixed(4) + ")";
       ctx.fill();
       ctx.restore();
     }
 
+    for (let i = 0; i < 320; i += 1) {
+      drawEllipse(
+        ctx,
+        -180 + random() * 360,
+        -66 + random() * 132,
+        3 + random() * 20,
+        1.5 + random() * 8.5,
+        random() * 180,
+        "rgba(255,246,165," + (0.045 + random() * 0.18).toFixed(4) + ")"
+      );
+    }
+
     ctx.globalCompositeOperation = "source-over";
 
-    for (let row = -64; row <= 64; row += 12) {
+    for (let row = -66; row <= 66; row += 10) {
       const points = [];
 
       for (let lon = -180; lon <= 180; lon += 3) {
         const wave =
-          Math.sin((lon + row * 1.7) * 0.105) * 3.0 +
-          Math.sin((lon - row) * 0.045) * 1.7;
+          Math.sin((lon + row * 1.7) * 0.105) * 3.8 +
+          Math.sin((lon - row * 2.1) * 0.045) * 2.4;
         points.push([lon, row + wave]);
       }
 
-      drawStroke(ctx, points, "rgba(255,230,190,0.105)", 2.4);
+      drawStroke(ctx, points, "rgba(255,244,195,0.12)", 3);
     }
 
-    for (let i = 0; i < 160; i += 1) {
-      drawEllipse(
-        ctx,
-        -180 + random() * 360,
-        -62 + random() * 124,
-        3 + random() * 14,
-        1.4 + random() * 6,
-        random() * 180,
-        "rgba(255,244,170," + (0.04 + random() * 0.14).toFixed(4) + ")"
-      );
-    }
-
-    for (let i = 0; i < 90; i += 1) {
+    for (let i = 0; i < 150; i += 1) {
       drawEllipse(
         ctx,
         -180 + random() * 360,
         -58 + random() * 116,
-        4 + random() * 14,
-        1.6 + random() * 7,
+        4 + random() * 17,
+        1.6 + random() * 7.5,
         random() * 180,
-        "rgba(110,32,10," + (0.03 + random() * 0.06).toFixed(4) + ")"
+        "rgba(100,26,8," + (0.035 + random() * 0.075).toFixed(4) + ")"
       );
     }
 
@@ -239,6 +248,7 @@
       body: ID,
       label: LABEL,
       version: VERSION,
+      solarAuthorityPromoted: true,
       renderDelegatedToPlatformProjection: true,
       ownsBodyPixelsOnly: true,
       profileMerge: false
@@ -253,6 +263,7 @@
       type: TYPE,
       version: VERSION,
       file: "/assets/audrelia.sun.render.js",
+      solarAuthorityPromoted: true,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       generatedImage: false,

@@ -1,955 +1,481 @@
+<!-- /nine-summits/universe/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="demo-universe-earth-sun-moon-g1"
+  data-page="nine-summits-universe-current-baseline"
   data-route="/nine-summits/universe/"
-  data-contract="DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1"
-  data-generation="G1"
-  data-universe="demo-universe"
-  data-nine-summits-universe="false"
-  data-earth-g1="locked"
-  data-sun-g1="locked"
-  data-moon-g1="locked"
-  data-moon-orbit="active"
-  data-moon-phase-lighting="active"
-  data-earth-source="showroom-globe-earth-g1-runtime"
+  data-contract="NINE_SUMMITS_UNIVERSE_CURRENT_BASELINE_TNT_v1"
+  data-universe="nine-summits-universe"
+  data-home-world="Audralia"
+  data-earth-relationship="mirror-planet-reference"
+  data-role="world-setting"
+  data-message="one-universe-many-worlds"
+  data-heavy-runtime-loaded="false"
   data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Demo Universe · Earth G1 · Sun G1 · Moon G1</title>
-  <meta name="description" content="Demo Universe relationship view using Earth G1, Sun G1, and a Moon G1 orbit with physically aligned phase lighting.">
-
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Nine Summits Universe</title>
+  <meta
+    name="description"
+    content="The Nine Summits Universe is the world-setting layer for Audralia, the mirror planet to Earth."
+  >
 
   <style>
+    :root {
+      --panel: rgba(9, 14, 26, 0.90);
+      --line: rgba(255,255,255,0.15);
+      --text: #f8f1dd;
+      --muted: rgba(242,246,255,0.74);
+      --faint: rgba(242,246,255,0.48);
+      --gold: #f2c76f;
+      --stage: min(100%, 1120px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
     body {
-      overflow-x: hidden;
-      background: #050813;
-    }
-
-    .demo-note {
-      color: var(--dgb-muted, rgba(228, 234, 246, 0.76));
-      line-height: 1.58;
-    }
-
-    .demo-actions,
-    .demo-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .demo-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      border: 1px solid rgba(172, 191, 230, 0.24);
-      border-radius: 999px;
-      padding: 8px 12px;
-      color: rgba(242, 246, 255, 0.88);
-      background: rgba(255, 255, 255, 0.045);
-      font-size: 0.86rem;
-      font-weight: 850;
-    }
-
-    .demo-chip.lock {
-      border-color: rgba(242, 199, 111, 0.58);
-      color: #ffe7a7;
-      background: rgba(242, 199, 111, 0.11);
-    }
-
-    .demo-card {
-      overflow: hidden;
-    }
-
-    .demo-stage {
-      position: relative;
       width: 100%;
-      height: min(132vw, 900px);
-      min-height: 830px;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 34px;
-      overflow: hidden;
+      margin: 0;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 17%, rgba(255, 207, 112, 0.16), transparent 19%),
-        radial-gradient(circle at 50% 66%, rgba(68, 128, 230, 0.15), transparent 34%),
-        linear-gradient(180deg, rgba(8, 13, 26, 0.99), rgba(4, 8, 18, 1));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.04),
-        inset 0 0 88px rgba(0,0,0,0.64),
-        0 28px 90px rgba(0,0,0,0.42);
-      isolation: isolate;
+        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
+        radial-gradient(circle at 50% 72%, rgba(80,145,230,0.13), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .demo-stage::before {
+    body { min-height: 100svh; }
+
+    body::before {
       content: "";
-      position: absolute;
+      position: fixed;
       inset: 0;
+      z-index: 0;
+      pointer-events: none;
       background-image:
         radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
         radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
         radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
         radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
       background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.42;
-      pointer-events: none;
+      opacity: 0.38;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #080a0f;
+      font-weight: 900;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .shell {
+      position: relative;
       z-index: 1;
+      width: var(--stage);
+      margin: 0 auto;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.4rem, env(safe-area-inset-bottom));
     }
 
-    .solar-field {
-      position: absolute;
-      left: 50%;
-      top: 18%;
-      width: min(88vw, 620px);
-      height: min(88vw, 620px);
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(255, 244, 190, 0.32) 0%, rgba(255, 190, 76, 0.19) 24%, rgba(255, 116, 36, 0.09) 46%, rgba(255, 88, 24, 0.04) 68%, transparent 100%);
-      filter: blur(1px);
-      z-index: 2;
-      pointer-events: none;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
     }
 
-    .solar-beam {
-      position: absolute;
-      left: 50%;
-      top: 25%;
-      width: 4px;
-      height: 38%;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 238, 174, 0.42), rgba(255, 217, 138, 0.15), rgba(255, 217, 138, 0));
-      box-shadow:
-        0 0 24px rgba(255, 214, 130, 0.24),
-        0 0 62px rgba(255, 178, 80, 0.12);
-      z-index: 3;
-      pointer-events: none;
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
+      font-weight: 950;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
     }
 
-    .sun-shell,
-    .earth-shell,
-    .moon-shell {
-      position: absolute;
-      display: grid;
-      place-items: center;
-      z-index: 4;
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+      text-transform: uppercase;
     }
 
-    .sun-shell {
-      left: 50%;
-      top: 19%;
-      width: clamp(132px, 22vw, 220px);
-      height: clamp(132px, 22vw, 220px);
-      transform: translate(-50%, -50%);
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .earth-shell {
-      left: 50%;
-      top: 67%;
-      width: clamp(250px, 46vw, 390px);
-      height: clamp(250px, 46vw, 390px);
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      overflow: visible;
-      filter:
-        drop-shadow(0 0 34px rgba(44, 126, 255, 0.26))
-        drop-shadow(0 0 88px rgba(44, 126, 255, 0.14));
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
     }
 
-    .moon-shell {
-      left: 50%;
-      top: 67%;
-      width: clamp(84px, 16vw, 132px);
-      height: clamp(84px, 16vw, 132px);
-      transform: translate(-50%, -50%);
-      filter:
-        drop-shadow(0 0 18px rgba(235, 240, 250, 0.24))
-        drop-shadow(0 0 42px rgba(136, 168, 224, 0.16));
-      will-change: transform;
-    }
-
-    .sun-canvas,
-    .moon-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      border-radius: 50%;
-    }
-
-    .sun-canvas {
-      filter: brightness(1.55) saturate(1.34) contrast(1.12);
-    }
-
-    .moon-canvas {
-      filter: brightness(1.08) saturate(1.02) contrast(1.16);
-    }
-
-    #demo-earth-g1-mount {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      overflow: visible;
-    }
-
-    #demo-earth-g1-mount canvas,
-    #demo-earth-g1-mount img,
-    #demo-earth-g1-mount svg {
-      max-width: 100% !important;
-      max-height: 100% !important;
-    }
-
-    .orbit-ring {
-      position: absolute;
-      left: 50%;
-      top: 67%;
-      width: min(78vw, 590px);
-      height: min(30vw, 196px);
-      transform: translate(-50%, -50%);
-      border: 2px dashed rgba(170, 190, 230, 0.22);
-      border-radius: 50%;
-      z-index: 2;
-    }
-
-    .demo-label {
-      position: absolute;
-      z-index: 6;
+    .nav a {
+      min-height: 2.1rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 38px;
-      border: 1px solid rgba(242, 199, 111, 0.58);
+      padding: 0.45rem 0.72rem;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 18px;
-      background: rgba(9, 13, 24, 0.82);
-      color: rgba(255, 246, 220, 0.96);
-      font-weight: 950;
-      letter-spacing: 0.045em;
-      text-transform: uppercase;
-      box-shadow: 0 0 20px rgba(0,0,0,0.28);
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 850;
       white-space: nowrap;
+    }
+
+    .nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    }
+
+    .hero {
+      min-height: calc(100svh - 9rem);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 1.05rem;
+      padding: clamp(2rem, 7vw, 5rem) 0;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      width: min(100%, 920px);
+      margin: 0;
+      font-size: clamp(3rem, 11vw, 7rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
+      text-wrap: balance;
+    }
+
+    .lead {
+      width: min(100%, 720px);
+      margin: 0;
+      color: rgba(255,241,205,0.94);
+      font-size: clamp(1.02rem, 3.6vw, 1.22rem);
+      line-height: 1.5;
+      text-wrap: balance;
+    }
+
+    .quote {
+      width: min(100%, 720px);
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.94rem, 3.2vw, 1.05rem);
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
+    .primary-actions,
+    .room-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .button {
+      min-height: 2.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.62rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
+      border-radius: 999px;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button::after { content: " →"; }
+
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      outline: none;
+    }
+
+    .invariant-row {
+      width: min(100%, 800px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    .invariant {
+      min-height: 6.4rem;
+      display: grid;
+      align-content: center;
+      gap: 0.25rem;
+      padding: 0.85rem;
+      border: 1px dashed rgba(242,199,111,0.26);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.025);
       pointer-events: none;
+      user-select: none;
     }
 
-    .sun-label {
-      left: 50%;
-      top: 9%;
-      transform: translateX(-50%);
+    .invariant strong {
+      color: rgba(255,241,205,0.95);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
     }
 
-    .earth-label {
-      left: 50%;
-      top: 90%;
-      transform: translateX(-50%);
+    .invariant span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
     }
 
-    .moon-label {
-      left: 50%;
-      top: 67%;
-      transform: translate(-50%, -50%);
-      will-change: transform;
+    .room-panel {
+      width: min(100%, 940px);
+      margin-top: 1rem;
+      padding: clamp(0.8rem, 2.8vw, 1rem);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.25rem;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.012)),
+        var(--panel);
+      box-shadow:
+        0 1.2rem 4rem rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.07);
     }
 
-    .demo-receipt {
+    .room-panel-title {
+      margin: 0 0 0.7rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .room-link {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.72rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .room-link::after {
+      content: " →";
+      color: var(--gold);
+    }
+
+    .receipt {
+      width: min(100%, 900px);
+      margin-top: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
+      overflow: hidden;
+    }
+
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .receipt pre {
+      margin: 0;
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    @media (max-width: 720px) {
-      .demo-stage {
-        height: 830px;
-        min-height: 830px;
-        border-radius: 28px;
+    footer {
+      padding: 0.5rem 0;
+      color: var(--faint);
+      font-size: 0.72rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
-      .sun-shell {
-        top: 20%;
-        width: 150px;
-        height: 150px;
-      }
+      .nav { justify-content: flex-start; }
 
-      .earth-shell {
-        top: 66%;
-        width: 290px;
-        height: 290px;
-      }
+      .hero { min-height: auto; }
 
-      .moon-shell {
-        width: 100px;
-        height: 100px;
-      }
-
-      .earth-label {
-        top: 89%;
-      }
-
-      .solar-beam {
-        top: 27%;
-        height: 33%;
+      .invariant-row {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#demo-universe-main">Skip to Demo Universe</a>
+  <a class="skip-link" href="#main">Skip to Universe</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Demo Universe</div>
-        <div class="dgb-room-line">Earth G1 · Sun G1 · Moon G1</div>
-      </div>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span>Diamond Gate Bridge</span>
+        <span>Nine Summits Universe</span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/nine-summits/">Nine Summits Hub</a>
-        <a href="/nine-summits/universe/" aria-current="page">Universe</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
         <a href="/nine-summits-of-love/">Book</a>
-        <a href="/about-this-underdog/">This Underdog</a>
-        <a href="/showroom/globe/">Earth G1</a>
+        <a href="/nine-summits/universe/" aria-current="page">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="demo-universe-main" class="dgb-main">
-    <section class="dgb-hero">
-      <p class="dgb-eyebrow">Demo Universe · G1 relationship view</p>
-      <h1 class="dgb-title">Earth, Sun, and Moon share one Demo Universe.</h1>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Universe · World Setting</p>
+        <h1 id="page-title">The Nine Summits Universe lives here.</h1>
 
-      <p class="dgb-copy">
-        This route is not the Nine Summits planet. It is the Demo Universe relationship view:
-        the accepted Earth G1 globe, Sun G1 as the lighting authority, and Moon G1 orbiting Earth with phase lighting driven by its position relative to the Sun.
-      </p>
+        <p class="lead">
+          Audralia is the home world: the mirror planet to Earth and the central body of the universe we are now expressing.
+        </p>
 
-      <div class="demo-chip-row">
-        <span class="demo-chip lock">Demo Universe</span>
-        <span class="demo-chip lock">Earth G1 runtime reused</span>
-        <span class="demo-chip lock">Sun G1 brightened</span>
-        <span class="demo-chip lock">Moon G1 orbit active</span>
-        <span class="demo-chip lock">Phase lighting active</span>
-        <span class="demo-chip">4K source detail</span>
-      </div>
+        <p class="quote">
+          “Earth is the body of reference. Audralia is the world of expression.”
+        </p>
 
-      <div class="demo-actions">
-        <a class="dgb-button" href="/showroom/globe/">Inspect Showroom Globe</a>
-        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
-      </div>
-    </section>
-
-    <section class="dgb-card demo-card" aria-label="Demo Universe visualization">
-      <h2>Demo Universe relationship.</h2>
-      <p class="demo-note">
-        The Moon revolves around Earth on the displayed orbital plane. Its visible lighting updates from the Sun vector:
-        full-facing when the sunlit side faces the viewer, dimmer/crescent when the orbit moves into phase shadow.
-      </p>
-
-      <div class="demo-stage" id="demo-universe-stage">
-        <div class="solar-field" aria-hidden="true"></div>
-        <div class="solar-beam" aria-hidden="true"></div>
-        <div class="orbit-ring" aria-hidden="true"></div>
-
-        <div class="sun-shell" id="demo-sun-shell">
-          <canvas id="demo-sun-g1-canvas" class="sun-canvas" width="2048" height="2048" aria-label="Bright Sun G1"></canvas>
+        <div class="primary-actions" aria-label="Primary universe actions">
+          <a class="button" href="/showroom/globe/">Inspect Audralia</a>
+          <a class="button secondary" href="/nine-summits-of-love/">Open the Book</a>
+          <a class="button secondary" href="/explore/">Return to Manor</a>
         </div>
 
-        <div class="earth-shell" id="demo-earth-shell">
-          <div
-            id="demo-earth-g1-mount"
-            class="earth-g2-stage"
-            data-earth-asset-stage="true"
-            data-earth-asset-mount="true"
-            data-demo-earth-g1-mount="true"
-            data-source="showroom-globe-earth-g1-runtime"
-          ></div>
+        <div class="invariant-row" aria-label="Universe invariants; these notes are not controls">
+          <div class="invariant">
+            <strong>Universe</strong>
+            <span>This route holds the world setting.</span>
+          </div>
+
+          <div class="invariant">
+            <strong>Home world</strong>
+            <span>Audralia is the central planet.</span>
+          </div>
+
+          <div class="invariant">
+            <strong>Mirror body</strong>
+            <span>Earth remains the physical reference.</span>
+          </div>
         </div>
 
-        <div class="moon-shell" id="demo-moon-shell">
-          <canvas id="demo-moon-g1-canvas" class="moon-canvas" width="2048" height="2048" aria-label="Moon G1 orbiting Earth with phase lighting"></canvas>
-        </div>
+        <section class="room-panel" aria-labelledby="room-panel-title">
+          <p class="room-panel-title" id="room-panel-title">World routes</p>
 
-        <div class="demo-label sun-label">Sun G1</div>
-        <div class="demo-label moon-label" id="demo-moon-label">Moon G1</div>
-        <div class="demo-label earth-label">Earth G1</div>
-      </div>
-    </section>
+          <nav class="room-grid" aria-label="Universe room routes">
+            <a class="room-link" href="/showroom/globe/">Audralia Viewer</a>
+            <a class="room-link" href="/nine-summits-of-love/">Book</a>
+            <a class="room-link" href="/showroom/">Showroom</a>
+            <a class="room-link" href="/explore/">Manor</a>
+            <a class="room-link" href="/frontier/">Frontier</a>
+            <a class="room-link" href="/gauges/">Gauges</a>
+          </nav>
+        </section>
 
-    <section class="dgb-card">
-      <p class="dgb-eyebrow">Current sequence</p>
-      <h2>Earth complete. Sun locked. Moon orbit locked.</h2>
-
-      <div class="demo-chip-row">
-        <span class="demo-chip lock">Complete · Earth G1</span>
-        <span class="demo-chip lock">Complete · Sun G1</span>
-        <span class="demo-chip lock">Complete · Moon G1 orbit</span>
-        <span class="demo-chip lock">Complete · Phase lighting</span>
-      </div>
-
-      <p class="demo-note">
-        The Moon is no longer static. It now revolves around Earth and updates its illuminated face according to the Sun direction.
-      </p>
-    </section>
-
-    <section class="dgb-card">
-      <h2>Route contract</h2>
-      <pre id="demo-universe-receipt" class="dgb-receipt demo-receipt">DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1
+        <details class="receipt">
+          <summary>Route receipt</summary>
+          <pre>NINE_SUMMITS_UNIVERSE_CURRENT_BASELINE_TNT_v1
 route=/nine-summits/universe/
-universe=demo-universe
-nine-summits-universe=false
-earth-g1=locked
-earth-source=showroom-globe-earth-g1-runtime
-sun-g1=locked
-sun-lighting-authority=true
-moon-g1=locked
-moon-orbit=active
-moon-phase-lighting=active
-same-universe=true
-source-definition=4096
-generated-image=false
-visual-pass-claimed=false</pre>
-    </section>
-  </main>
-
-  <footer class="dgb-footer">
-    DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1 · Demo Universe · Earth G1 · Sun G1 · Moon G1 orbit.
-  </footer>
-
-  <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
-
-  <script>
-    (function bootDemoUniverse(window, document) {
-      "use strict";
-
-      var VERSION = "DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1";
-
-      var stage = document.getElementById("demo-universe-stage");
-      var sunCanvas = document.getElementById("demo-sun-g1-canvas");
-      var moonCanvas = document.getElementById("demo-moon-g1-canvas");
-      var moonShell = document.getElementById("demo-moon-shell");
-      var moonLabel = document.getElementById("demo-moon-label");
-      var earthMount = document.getElementById("demo-earth-g1-mount");
-      var earthShell = document.getElementById("demo-earth-shell");
-      var sunShell = document.getElementById("demo-sun-shell");
-      var receipt = document.getElementById("demo-universe-receipt");
-
-      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var moonBase = null;
-      var raf = 0;
-      var startTime = 0;
-      var lastReceiptPhase = "initial";
-
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, Number(value) || 0));
-      }
-
-      function mix(a, b, t) {
-        return a + (b - a) * clamp(t, 0, 1);
-      }
-
-      function makeSeededRandom(seed) {
-        var s = seed >>> 0;
-        return function random() {
-          s += 0x6D2B79F5;
-          var t = s;
-          t = Math.imul(t ^ (t >>> 15), t | 1);
-          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-        };
-      }
-
-      function renderer() {
-        return window.DGBPlanetOneRenderer || window.DGBPlanetOneRender || window.DGBPlanetOneRenderTeam || null;
-      }
-
-      function earthRuntime() {
-        return window.DGBEarthAssetCanvas || window.DGBDemoUniverseEarthCanvas || null;
-      }
-
-      function drawBrightSun(canvas) {
-        if (!canvas) return;
-
-        var ctx = canvas.getContext("2d", { alpha: true });
-        var size = canvas.width;
-        var center = size / 2;
-        var radius = size * 0.31;
-        var random = makeSeededRandom(7711);
-
-        ctx.clearRect(0, 0, size, size);
-
-        var corona = ctx.createRadialGradient(center, center, radius * 0.70, center, center, radius * 2.55);
-        corona.addColorStop(0.00, "rgba(255,248,205,0.52)");
-        corona.addColorStop(0.18, "rgba(255,214,116,0.36)");
-        corona.addColorStop(0.40, "rgba(255,146,52,0.20)");
-        corona.addColorStop(0.68, "rgba(255,92,28,0.085)");
-        corona.addColorStop(1.00, "rgba(255,92,28,0)");
-        ctx.fillStyle = corona;
-        ctx.beginPath();
-        ctx.arc(center, center, radius * 2.55, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.clip();
-
-        var base = ctx.createRadialGradient(center - radius * 0.26, center - radius * 0.32, radius * 0.035, center, center, radius);
-        base.addColorStop(0.00, "#fff8ca");
-        base.addColorStop(0.18, "#ffe071");
-        base.addColorStop(0.42, "#ffac39");
-        base.addColorStop(0.66, "#f36b1f");
-        base.addColorStop(0.86, "#c83a12");
-        base.addColorStop(1.00, "#7c1d0b");
-        ctx.fillStyle = base;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.globalCompositeOperation = "screen";
-
-        for (var i = 0; i < 5200; i += 1) {
-          var a = random() * Math.PI * 2;
-          var d = Math.sqrt(random()) * radius * 0.99;
-          var x = center + Math.cos(a) * d;
-          var y = center + Math.sin(a) * d;
-          var r = mix(size * 0.0018, size * 0.015, random());
-
-          ctx.globalAlpha = mix(0.025, 0.12, random());
-          ctx.fillStyle = random() > 0.38 ? "rgba(255,248,190,1)" : "rgba(255,112,35,1)";
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        var core = ctx.createRadialGradient(center - radius * 0.18, center - radius * 0.24, 0, center, center, radius);
-        core.addColorStop(0.00, "rgba(255,255,230,0.60)");
-        core.addColorStop(0.22, "rgba(255,244,175,0.32)");
-        core.addColorStop(0.54, "rgba(255,190,85,0.12)");
-        core.addColorStop(1.00, "rgba(255,190,85,0)");
-        ctx.fillStyle = core;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function makeMoonBase(size) {
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d", { alpha: true });
-        var center = size / 2;
-        var radius = size * 0.36;
-        var random = makeSeededRandom(8802);
-
-        canvas.width = size;
-        canvas.height = size;
-
-        ctx.clearRect(0, 0, size, size);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.clip();
-
-        var base = ctx.createRadialGradient(center - radius * 0.10, center - radius * 0.13, radius * 0.06, center, center, radius);
-        base.addColorStop(0.00, "#f0eee8");
-        base.addColorStop(0.20, "#dadbd9");
-        base.addColorStop(0.44, "#b7bbc0");
-        base.addColorStop(0.68, "#9098a2");
-        base.addColorStop(0.88, "#717b88");
-        base.addColorStop(1.00, "#4e5a68");
-        ctx.fillStyle = base;
-        ctx.fillRect(0, 0, size, size);
-
-        function crater(x, y, r, strength) {
-          ctx.save();
-
-          ctx.globalAlpha = 0.16 * strength;
-          ctx.fillStyle = "rgba(6,8,14,0.72)";
-          ctx.beginPath();
-          ctx.arc(x + r * 0.08, y + r * 0.08, r * 0.86, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.globalAlpha = 0.26 * strength;
-          ctx.strokeStyle = "rgba(250,252,255,0.66)";
-          ctx.lineWidth = Math.max(1, r * 0.08);
-          ctx.beginPath();
-          ctx.arc(x - r * 0.03, y - r * 0.03, r, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.globalAlpha = 0.13 * strength;
-          ctx.strokeStyle = "rgba(15,20,30,0.70)";
-          ctx.lineWidth = Math.max(1, r * 0.055);
-          ctx.beginPath();
-          ctx.arc(x + r * 0.08, y + r * 0.08, r * 0.78, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.restore();
-        }
-
-        var majors = [
-          [-0.43, -0.34, 0.115, 1.10],
-          [0.32, -0.31, 0.095, 0.98],
-          [-0.05, -0.06, 0.075, 0.84],
-          [0.34, 0.33, 0.125, 1.16],
-          [-0.30, 0.43, 0.072, 0.80],
-          [0.03, 0.43, 0.060, 0.72]
-        ];
-
-        majors.forEach(function (m) {
-          crater(center + m[0] * radius, center + m[1] * radius, m[2] * radius, m[3]);
-        });
-
-        for (var i = 0; i < 980; i += 1) {
-          var a = random() * Math.PI * 2;
-          var d = Math.sqrt(random()) * radius * 0.97;
-          var x = center + Math.cos(a) * d;
-          var y = center + Math.sin(a) * d;
-          crater(x, y, Math.pow(random(), 2.5) * size * 0.008 + size * 0.0012, mix(0.18, 0.52, random()));
-        }
-
-        ctx.globalCompositeOperation = "screen";
-
-        var earthFill = ctx.createRadialGradient(center + radius * 0.14, center + radius * 0.28, radius * 0.05, center, center, radius * 1.10);
-        earthFill.addColorStop(0.00, "rgba(112,166,255,0.10)");
-        earthFill.addColorStop(0.55, "rgba(88,138,230,0.04)");
-        earthFill.addColorStop(1.00, "rgba(74,118,205,0)");
-        ctx.fillStyle = earthFill;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        return canvas;
-      }
-
-      function drawMoonWithPhase(canvas, phaseAmount, lightSideX) {
-        if (!canvas || !moonBase) return;
-
-        var ctx = canvas.getContext("2d", { alpha: true });
-        var size = canvas.width;
-        var center = size / 2;
-        var radius = size * 0.36;
-
-        ctx.clearRect(0, 0, size, size);
-
-        ctx.drawImage(moonBase, 0, 0);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.clip();
-
-        /*
-          phaseAmount:
-          1.0 = full moon
-          0.5 = half moon
-          0.0 = new moon
-          lightSideX:
-          -1 means light comes from left on the visible disc
-          +1 means light comes from right on the visible disc
-        */
-
-        var darkness = clamp(1 - phaseAmount, 0, 1);
-        var lit = clamp(phaseAmount, 0, 1);
-
-        var shadowGradient = ctx.createLinearGradient(
-          center - lightSideX * radius,
-          center,
-          center + lightSideX * radius,
-          center
-        );
-
-        shadowGradient.addColorStop(0.00, "rgba(0,0,0,0.02)");
-        shadowGradient.addColorStop(Math.max(0.08, lit * 0.54), "rgba(0,0,0,0.03)");
-        shadowGradient.addColorStop(Math.min(0.96, lit * 0.82 + 0.10), "rgba(0,0,0," + (0.22 + darkness * 0.42).toFixed(3) + ")");
-        shadowGradient.addColorStop(1.00, "rgba(0,0,0," + (0.38 + darkness * 0.50).toFixed(3) + ")");
-
-        ctx.globalCompositeOperation = "multiply";
-        ctx.fillStyle = shadowGradient;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.globalCompositeOperation = "screen";
-
-        var sunlight = ctx.createRadialGradient(
-          center - lightSideX * radius * 0.22,
-          center - radius * 0.16,
-          radius * 0.04,
-          center,
-          center,
-          radius
-        );
-
-        sunlight.addColorStop(0.00, "rgba(255,250,232," + (0.20 + lit * 0.30).toFixed(3) + ")");
-        sunlight.addColorStop(0.36, "rgba(255,244,220," + (0.11 + lit * 0.18).toFixed(3) + ")");
-        sunlight.addColorStop(0.72, "rgba(240,244,252," + (0.04 + lit * 0.08).toFixed(3) + ")");
-        sunlight.addColorStop(1.00, "rgba(238,242,250,0.02)");
-        ctx.fillStyle = sunlight;
-        ctx.fillRect(0, 0, size, size);
-
-        var earthshine = ctx.createRadialGradient(
-          center + lightSideX * radius * 0.20,
-          center + radius * 0.26,
-          radius * 0.04,
-          center,
-          center,
-          radius * 1.08
-        );
-
-        earthshine.addColorStop(0.00, "rgba(112,166,255," + (0.045 + darkness * 0.075).toFixed(3) + ")");
-        earthshine.addColorStop(0.55, "rgba(88,138,230," + (0.020 + darkness * 0.045).toFixed(3) + ")");
-        earthshine.addColorStop(1.00, "rgba(74,118,205,0)");
-        ctx.fillStyle = earthshine;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.globalCompositeOperation = "multiply";
-
-        var limb = ctx.createRadialGradient(center, center, radius * 0.18, center, center, radius);
-        limb.addColorStop(0.00, "rgba(255,255,255,0)");
-        limb.addColorStop(0.62, "rgba(255,255,255,0)");
-        limb.addColorStop(0.84, "rgba(80,90,108,0.10)");
-        limb.addColorStop(1.00, "rgba(8,12,22,0.26)");
-        ctx.fillStyle = limb;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function mountAcceptedEarth() {
-        if (!earthMount) return false;
-
-        var r = renderer();
-        var e = earthRuntime();
-
-        earthMount.innerHTML = "";
-
-        var options = {
-          autoSpin: true,
-          showAxis: false,
-          touchEnabled: false,
-          brightness: 1.10,
-          contrast: 1.08,
-          cloudStrength: 0.30,
-          demoUniverse: true,
-          source: "showroom-globe-earth-g1-runtime"
-        };
-
-        if (r && typeof r.renderPlanetOne === "function") {
-          r.renderPlanetOne(earthMount, options);
-          earthMount.setAttribute("data-earth-mounted-by", "DGBPlanetOneRenderer");
-          return true;
-        }
-
-        if (e && typeof e.mount === "function") {
-          e.mount(earthMount, options);
-          earthMount.setAttribute("data-earth-mounted-by", "DGBEarthAssetCanvas");
-          return true;
-        }
-
-        earthMount.setAttribute("data-earth-mounted-by", "waiting-for-earth-runtime");
-        return false;
-      }
-
-      function getStageRect() {
-        if (!stage) return null;
-        return stage.getBoundingClientRect();
-      }
-
-      function orbitFrame(timestamp) {
-        if (!startTime) startTime = timestamp;
-
-        var rect = getStageRect();
-        if (!rect || !moonShell || !earthShell || !sunShell) {
-          raf = requestAnimationFrame(orbitFrame);
-          return;
-        }
-
-        var elapsed = reduceMotion ? 0 : (timestamp - startTime);
-        var orbitPeriod = 22000;
-        var angle = -0.22 + (elapsed / orbitPeriod) * Math.PI * 2;
-
-        var earthCenterX = rect.width * 0.50;
-        var earthCenterY = rect.height * 0.67;
-        var sunCenterX = rect.width * 0.50;
-        var sunCenterY = rect.height * 0.19;
-
-        var orbitRadiusX = Math.min(rect.width * 0.38, 295);
-        var orbitRadiusY = Math.min(rect.height * 0.115, 102);
-
-        var moonX = earthCenterX + Math.cos(angle) * orbitRadiusX;
-        var moonY = earthCenterY + Math.sin(angle) * orbitRadiusY;
-
-        var depth = Math.sin(angle);
-        var moonScale = 0.84 + (depth + 1) * 0.13;
-
-        moonShell.style.transform =
-          "translate(" +
-          (moonX - earthCenterX).toFixed(2) +
-          "px," +
-          (moonY - earthCenterY).toFixed(2) +
-          "px) translate(-50%, -50%) scale(" +
-          moonScale.toFixed(3) +
-          ")";
-
-        if (moonLabel) {
-          moonLabel.style.transform =
-            "translate(" +
-            (moonX - earthCenterX + 86).toFixed(2) +
-            "px," +
-            (moonY - earthCenterY - 28).toFixed(2) +
-            "px) translate(-50%, -50%)";
-        }
-
-        /*
-          Phase approximation:
-          The visible Moon face is brightest when the Moon is below/near viewer-facing side of Earth
-          and dimmest when it is above/near the Sun-side line. This produces orbital phase change
-          while keeping the page readable as a diagram.
-        */
-        var moonToSunX = sunCenterX - moonX;
-        var moonToSunY = sunCenterY - moonY;
-        var moonToSunLength = Math.sqrt(moonToSunX * moonToSunX + moonToSunY * moonToSunY) || 1;
-        var lightSideX = moonToSunX / moonToSunLength;
-
-        var phaseAmount = 0.5 + 0.5 * Math.sin(angle);
-        phaseAmount = clamp(phaseAmount, 0.08, 1);
-
-        drawMoonWithPhase(moonCanvas, phaseAmount, lightSideX >= 0 ? 1 : -1);
-
-        var phaseName = "waxing/waning";
-        if (phaseAmount > 0.82) phaseName = "full-facing";
-        else if (phaseAmount > 0.58) phaseName = "gibbous";
-        else if (phaseAmount > 0.38) phaseName = "quarter";
-        else phaseName = "crescent";
-
-        if (phaseName !== lastReceiptPhase) {
-          lastReceiptPhase = phaseName;
-          writeReceipt("MOON_ORBIT_ACTIVE_PHASE_" + phaseName.toUpperCase().replace("/", "_"));
-        }
-
-        if (depth > 0) {
-          moonShell.style.zIndex = "7";
-        } else {
-          moonShell.style.zIndex = "3";
-        }
-
-        raf = requestAnimationFrame(orbitFrame);
-      }
-
-      function writeReceipt(status) {
-        if (!receipt) return;
-
-        receipt.textContent =
-          "DEMO_UNIVERSE_MOON_ORBIT_PHASE_LIGHTING_TNT_v1\n" +
-          "route=/nine-summits/universe/\n" +
-          "universe=demo-universe\n" +
-          "nine-summits-universe=false\n" +
-          "earth-g1=locked\n" +
-          "earth-source=showroom-globe-earth-g1-runtime\n" +
-          "earth-mounted-by=" + (earthMount ? earthMount.getAttribute("data-earth-mounted-by") : "none") + "\n" +
-          "sun-g1=locked\n" +
-          "sun-lighting-authority=true\n" +
-          "sun-brightness=universe-lighting-authority\n" +
-          "moon-g1=locked\n" +
-          "moon-orbit=active\n" +
-          "moon-phase-lighting=active\n" +
-          "moon-current-phase=" + lastReceiptPhase + "\n" +
-          "same-universe=true\n" +
-          "source-definition=4096\n" +
-          "generated-image=false\n" +
-          "visual-pass-claimed=false\n" +
-          "status=" + status + "\n" +
-          "timestamp=" + new Date().toISOString();
-      }
-
-      function boot() {
-        drawBrightSun(sunCanvas);
-        moonBase = makeMoonBase(2048);
-        drawMoonWithPhase(moonCanvas, 1, -1);
-
-        if (mountAcceptedEarth()) {
-          writeReceipt("DEMO_UNIVERSE_EARTH_SUN_MOON_G1_MOUNTED");
-        } else {
-          writeReceipt("WAITING_FOR_SHOWROOM_EARTH_G1_RUNTIME");
-          setTimeout(function () {
-            mountAcceptedEarth();
-            writeReceipt("DEMO_UNIVERSE_EARTH_RETRY_1");
-          }, 160);
-          setTimeout(function () {
-            mountAcceptedEarth();
-            writeReceipt("DEMO_UNIVERSE_EARTH_RETRY_2");
-          }, 520);
-          setTimeout(function () {
-            mountAcceptedEarth();
-            writeReceipt("DEMO_UNIVERSE_EARTH_RETRY_3");
-          }, 1000);
-        }
-
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(orbitFrame);
-
-        window.DGBDemoUniverseEarthSunMoonG1Runtime = {
-          VERSION: VERSION,
-          version: VERSION,
-          route: "/nine-summits/universe/",
-          universe: "demo-universe",
-          getStatus: function () {
-            return {
-              ok: true,
-              version: VERSION,
-              route: "/nine-summits/universe/",
-              universe: "demo-universe",
-              nineSummitsUniverse: false,
-              earthG1Locked: true,
-              earthSource: "showroom-globe-earth-g1-runtime",
-              earthMountedBy: earthMount ? earthMount.getAttribute("data-earth-mounted-by") : null,
-              sunG1Locked: true,
-              sunLightingAuthority: true,
-              moonG1Locked: true,
-              moonOrbitActive: true,
-              moonPhaseLightingActive: true,
-              moonCurrentPhase: lastReceiptPhase,
-              sameUniverse: true,
-              sourceDefinition: 4096,
-              generatedImage: false,
-              visualPassClaimed: false
-            };
-          }
-        };
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
-    })(window, document);
-  </script>
+page=universe
+role=world_setting
+message=one_universe_many_worlds
+home_world=Audralia
+earth_relationship=mirror_planet_reference
+audralia_viewer=/showroom/globe/
+book=/nine-summits-of-love/
+manor=/explore/
+showroom=/showroom/
+frontier=/frontier/
+gauges=/gauges/
+removed=demo_universe_language,earth_g1_language,sun_g1_language,moon_g1_language,orbit_phase_explainer,visible_long_contract
+route_owns=world_context,universe_baseline,route_links
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false</pre>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      NINE_SUMMITS_UNIVERSE_CURRENT_BASELINE_TNT_v1 · Universe · Audralia home-world baseline.
+    </footer>
+  </div>
 </body>
 </html>

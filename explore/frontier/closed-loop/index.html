@@ -1,1212 +1,668 @@
+<!-- /explore/frontier/closed-loop/index.html -->
 <!doctype html>
-<html lang="en" data-page-generation="frontier-g1-closed-loop">
+<html
+  lang="en"
+  data-route="/explore/frontier/closed-loop/"
+  data-page="frontier-closed-loop"
+  data-version="G1-V10A"
+  data-contract="CLOSED_LOOP_G1_V10A_CONCRETE_INVENTORY_FLOW_TNT_v1"
+  data-status="active"
+  data-parent="/explore/frontier/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-expression="concrete-inventory-flow-with-russian-doll-underlay"
+  data-heavy-runtime-loaded="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Closed Loop · Frontier · Diamond Gate Bridge</title>
-  <meta name="description" content="Closed Loop under Frontier: no-away systems, coupled inventory, water, waste, energy, food, heat, and material recovery under Generation 1 Russian-doll baseline." />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Frontier · Closed Loop G1 V10A</title>
+  <meta name="description" content="Closed Loop G1 V10A tracks what enters, what gets used, what exits, what can be reused, and what must not disappear.">
 
   <style>
     :root {
-      --panel: rgba(7, 14, 28, .94);
-      --panel2: rgba(10, 20, 42, .97);
-      --line: rgba(170, 198, 255, .18);
-      --line2: rgba(239, 210, 154, .36);
-      --text: #eef4ff;
-      --muted: #aab8d8;
-      --gold: #efd29a;
-      --blue: #8ec5ff;
-      --green: #93efbd;
-      --red: #ff6262;
-      --shadow: 0 24px 80px rgba(0,0,0,.52);
-      --max: 1180px;
+      --bg:#02050d;
+      --panel:rgba(9,17,32,.91);
+      --line:rgba(139,200,255,.24);
+      --gold:#f2c76f;
+      --blue:#8bc8ff;
+      --green:#9df0c4;
+      --text:#f8f1dd;
+      --muted:rgba(226,235,255,.76);
+      --faint:rgba(226,235,255,.52);
+      --max:1120px;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
 
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    html, body {
+      margin:0;
+      min-height:100%;
+      color:var(--text);
       background:
-        radial-gradient(circle at 50% 4%, rgba(239,210,154,.15), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(142,197,255,.11), transparent 30%),
-        radial-gradient(circle at 82% 42%, rgba(147,239,189,.09), transparent 28%),
-        linear-gradient(180deg, #01040c 0%, #071225 55%, #01040c 100%);
-      overflow-x: hidden;
+        radial-gradient(circle at 50% 0%, rgba(157,240,196,.13), transparent 27rem),
+        radial-gradient(circle at 58% 40%, rgba(139,200,255,.12), transparent 35rem),
+        linear-gradient(180deg,#050914,#02050d 78%,#010207);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
     }
 
     body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .18;
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle, rgba(157,240,196,.14) 0 1px, transparent 1.4px),
+        linear-gradient(135deg, rgba(139,200,255,.06), transparent 42%),
+        linear-gradient(300deg, rgba(242,199,111,.05), transparent 48%);
+      background-size:210px 250px,520px 520px,640px 640px;
+      opacity:.32;
+    }
+
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; color:inherit; }
+
+    .skip {
+      position:absolute;
+      top:-4rem;
+      left:1rem;
+      z-index:10;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      background:var(--gold);
+      color:#05070d;
+      font-weight:900;
+    }
+
+    .skip:focus { top:1rem; }
+
+    .shell {
+      position:relative;
+      z-index:1;
+      width:min(100%,var(--max));
+      margin:0 auto;
+      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+    }
+
+    .card {
+      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
+      border:1px solid var(--line);
+      border-radius:clamp(1.25rem,5vw,2rem);
       background:
-        linear-gradient(90deg, rgba(164,188,255,.07) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
-      background-size: 52px 52px;
-      mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
-      -webkit-mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
+        radial-gradient(circle at 15% 0%, rgba(139,200,255,.13), transparent 26rem),
+        radial-gradient(circle at 85% 20%, rgba(157,240,196,.10), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        var(--panel);
+      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    a,
-    button {
-      color: inherit;
-      font: inherit;
-    }
-
-    a { text-decoration: none; }
-
-    button {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .page {
-      width: min(var(--max), calc(100vw - 20px));
-      margin: 0 auto;
-      padding: 14px 0 30px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .label-card,
-    .route-card,
-    .status-strip,
-    .control-card {
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(239,210,154,.10), transparent 42%),
-        linear-gradient(180deg, var(--panel2), var(--panel));
-      box-shadow: var(--shadow);
-    }
-
-    .topbar {
-      margin-bottom: 14px;
-      padding: 14px;
-      border-radius: 28px;
-      display: grid;
-      gap: 14px;
+    .top, .section {
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:1rem;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
     }
 
     .mark {
-      width: 50px;
-      height: 50px;
-      border-radius: 17px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line2);
-      background:
-        radial-gradient(circle at 50% 28%, rgba(239,210,154,.34), transparent 44%),
-        linear-gradient(180deg, rgba(42,34,20,.92), rgba(10,18,32,.98));
-      font-weight: 950;
-      letter-spacing: .08em;
-      flex: 0 0 auto;
+      width:4.25rem;
+      height:4.25rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(157,240,196,.42);
+      border-radius:1.2rem;
+      background:radial-gradient(circle, rgba(157,240,196,.22), transparent 55%), rgba(255,255,255,.035);
+      font-size:1.45rem;
+      font-weight:950;
+      letter-spacing:.04em;
     }
 
-    .kicker {
-      display: block;
-      color: #c8d7ff;
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      font-weight: 850;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .brand span span {
+      display:block;
+      color:rgba(226,235,255,.84);
+      font-size:clamp(.7rem,2vw,.88rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      text-transform:uppercase;
     }
 
-    .title {
-      display: block;
-      color: #fff;
-      font-weight: 900;
-      font-size: 1.08rem;
-      line-height: 1.05;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .brand strong {
+      display:block;
+      font-size:clamp(1.25rem,4.5vw,2.15rem);
+      line-height:1;
+      letter-spacing:-.055em;
     }
 
-    .nav,
-    .route-grid,
-    .label-grid,
-    .control-grid {
-      display: grid;
-      gap: 10px;
+    .nav, .control-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
     }
 
-    .nav,
-    .route-grid {
-      perspective: 1000px;
-      align-items: center;
-      justify-items: center;
+    .nav a, .button, .tab {
+      min-height:2.4rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      padding:.55rem .82rem;
+      color:rgba(242,246,255,.88);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      cursor:pointer;
     }
 
-    .nav a,
-    .route-card {
-      position: relative;
-      isolation: isolate;
-      width: min(100%, 94px);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      color: #e7eeff;
-      font-size: .70rem;
-      line-height: 1.02;
-      font-weight: 900;
-      transform-style: preserve-3d;
-      transition: transform 420ms ease, filter 420ms ease;
-    }
-
-    .route-card {
-      width: min(100%, 150px);
-      font-size: .74rem;
-    }
-
-    .nav a::before,
-    .route-card::before {
-      content: "";
-      position: absolute;
-      inset: 10%;
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-      border: 1px solid rgba(170,198,255,.24);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(239,210,154,.27), transparent 34%),
-        radial-gradient(circle at 50% 72%, rgba(147,239,189,.11), transparent 34%),
-        linear-gradient(180deg, rgba(10,20,42,.96), rgba(7,14,28,.92));
-      box-shadow:
-        0 0 30px rgba(239,210,154,.16),
-        inset 0 0 26px rgba(255,255,255,.035);
-      z-index: -1;
-      animation: diamondFloat 7s ease-in-out infinite, diamondPulse 5.8s ease-in-out infinite;
-    }
-
-    .nav a::after,
-    .route-card::after {
-      content: "";
-      position: absolute;
-      inset: 25%;
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-      border: 1px solid rgba(255,255,255,.08);
-      background: radial-gradient(circle at 38% 28%, rgba(255,255,255,.12), transparent 24%);
-      opacity: .72;
-      z-index: -1;
-      animation: innerSpin 18s linear infinite;
-    }
-
-    .featured { color: #fff8ea !important; }
-
-    .featured::before {
-      border-color: rgba(239,210,154,.46) !important;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(239,210,154,.34), transparent 34%),
-        linear-gradient(180deg, rgba(42,34,20,.96), rgba(10,18,32,.92)) !important;
-    }
-
-    .nav a:hover,
-    .route-card:hover,
-    .nav a:focus-visible,
-    .route-card:focus-visible {
-      transform: translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);
-      filter: brightness(1.16);
-      outline: none;
+    .nav a[aria-current="page"],
+    .button.primary,
+    .tab[aria-pressed="true"] {
+      border-color:rgba(242,199,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff0a3,#f2c76f);
     }
 
     .hero {
-      border-radius: 34px;
-      padding: clamp(24px, 5vw, 52px);
-      margin-bottom: 14px;
-      min-height: clamp(360px, 44vw, 520px);
-      display: grid;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-      isolation: isolate;
+      padding:clamp(1.5rem,5vw,3rem);
+      min-height:clamp(20rem,42vw,31rem);
+      display:grid;
+      gap:1rem;
+      align-content:center;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      width: min(820px, 92vw);
-      height: min(820px, 92vw);
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(239,210,154,.18), transparent 22%),
-        radial-gradient(circle at 50% 50%, rgba(147,239,189,.12), transparent 46%),
-        radial-gradient(circle at 50% 50%, rgba(142,197,255,.08), transparent 70%);
-      filter: blur(5px);
-      z-index: -3;
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(226,235,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .hero-symbol {
-      position: absolute;
-      right: clamp(20px, 6vw, 90px);
-      top: 50%;
-      width: min(290px, 34vw);
-      height: min(290px, 34vw);
-      transform: translateY(-50%) rotate(45deg);
-      border: 1px solid rgba(239,210,154,.34);
-      border-radius: 38px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(239,210,154,.18), transparent 38%),
-        radial-gradient(circle at 28% 72%, rgba(147,239,189,.12), transparent 34%),
-        linear-gradient(180deg, rgba(12,24,48,.62), rgba(2,6,14,.86));
-      box-shadow:
-        inset 0 0 44px rgba(239,210,154,.07),
-        0 0 74px rgba(147,239,189,.10);
-      opacity: .72;
-      z-index: -1;
-      animation: slowTurn 34s linear infinite;
-    }
-
-    .hero-symbol::before {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border: 1px solid rgba(170,198,255,.18);
-      border-radius: 26px;
-    }
-
-    .hero-symbol::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--gold);
-      box-shadow: 0 0 22px rgba(239,210,154,.68);
-    }
-
-    .hero-copy {
-      display: grid;
-      gap: 14px;
-      max-width: 820px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .pill {
-      display: inline-flex;
-      width: fit-content;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.035);
-      color: #d8e3ff;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      font-size: .70rem;
-      font-weight: 850;
-    }
-
-    .pill::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      border-radius: 2px;
-      transform: rotate(45deg);
-      background: var(--gold);
-      box-shadow: 0 0 18px rgba(239,210,154,.50);
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      background:var(--green);
+      transform:rotate(45deg);
+      box-shadow:0 0 1rem rgba(157,240,196,.35);
     }
 
     h1 {
-      margin: 0;
-      color: #fff;
-      font-size: clamp(3.1rem, 10vw, 7rem);
-      line-height: .84;
-      letter-spacing: -.085em;
+      width:min(100%,820px);
+      margin:0;
+      font-size:clamp(3.4rem,12vw,7rem);
+      line-height:.84;
+      letter-spacing:-.105em;
     }
 
     h2 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.55rem, 5vw, 3rem);
-      line-height: 1;
-      letter-spacing: -.045em;
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.65rem,5.8vw,3.3rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+    }
+
+    h3 {
+      margin:0;
+      font-size:clamp(1.15rem,3.6vw,1.75rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
 
     p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.58;
-      font-size: 1rem;
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.8vw,1.18rem);
+      line-height:1.55;
     }
 
-    .panel {
-      border-radius: 30px;
-      padding: clamp(16px, 2.6vw, 26px);
-      margin-bottom: 14px;
-      display: grid;
-      gap: 16px;
+    .loop-grid {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:.7rem;
     }
 
-    .panel-head {
-      display: grid;
-      gap: 8px;
+    .loop-card {
+      min-height:8.2rem;
+      display:grid;
+      align-content:start;
+      gap:.45rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.035);
     }
 
-    .control-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .loop-card strong {
+      color:rgba(255,241,205,.98);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .control-card {
-      border-radius: 20px;
-      padding: 14px;
-      display: grid;
-      gap: 10px;
+    .loop-card span {
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.38;
     }
 
-    .control-title {
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      font-size: .68rem;
-      font-weight: 950;
+    .loop-card.active {
+      border-color:rgba(157,240,196,.8);
+      background:rgba(157,240,196,.07);
+      box-shadow:0 0 1.6rem rgba(157,240,196,.08);
     }
 
-    .seg {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .dashboard {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:.85rem;
     }
 
-    .seg button {
-      appearance: none;
-      border: 1px solid rgba(170,198,255,.16);
-      border-radius: 999px;
-      padding: 9px 11px;
-      background: rgba(0,0,0,.18);
-      color: #cdd9f5;
-      font-weight: 900;
-      font-size: .78rem;
+    .metric {
+      padding:1rem;
+      border:1px solid rgba(139,200,255,.18);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:.45rem;
     }
 
-    .seg button[aria-pressed="true"] {
-      color: #fff8ea;
-      border-color: rgba(239,210,154,.42);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(239,210,154,.20), transparent 62%),
-        rgba(239,210,154,.08);
+    .metric small {
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .state-line {
-      color: #91a6cf;
-      font-size: .80rem;
-      line-height: 1.35;
+    .metric strong {
+      color:rgba(255,241,205,.98);
+      font-size:clamp(1.15rem,3vw,1.55rem);
+      line-height:1.05;
     }
 
-    .label-card {
-      border-radius: 18px;
-      overflow: hidden;
+    .metric p {
+      font-size:.95rem;
+    }
+
+    details {
+      border:1px solid rgba(139,200,255,.18);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
     }
 
     summary {
-      cursor: pointer;
-      list-style: none;
-      min-height: 74px;
-      display: grid;
-      align-content: center;
-      gap: 5px;
-      padding: 14px;
-      position: relative;
-      color: #fff;
-      font-weight: 900;
-      letter-spacing: -.02em;
+      cursor:pointer;
+      list-style:none;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:.75rem;
+      padding:1rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      color:rgba(255,241,205,.96);
     }
 
-    summary::-webkit-details-marker {
-      display: none;
+    summary::-webkit-details-marker { display:none; }
+
+    summary::before {
+      content:"";
+      width:.8rem;
+      height:.8rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:var(--green);
+      box-shadow:0 0 1rem rgba(157,240,196,.35);
     }
 
     summary::after {
-      content: "+";
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid rgba(239,210,154,.28);
-      display: grid;
-      place-items: center;
-      color: var(--gold);
-      font-weight: 900;
+      content:"+";
+      color:var(--gold);
+      font-size:1.25rem;
+      line-height:1;
     }
 
-    details[open] summary::after {
-      content: "–";
+    details[open] > summary::after { content:"−"; }
+
+    .detail-body {
+      display:grid;
+      gap:.85rem;
+      padding:0 1rem 1rem;
     }
 
-    summary small,
-    .route-card small {
-      display: block;
-      color: #91a6cf;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      font-size: .54rem;
-      font-weight: 850;
+    .nested {
+      margin-left:clamp(.35rem,2vw,1rem);
+      border-color:rgba(242,199,111,.18);
+      background:rgba(2,5,13,.34);
     }
 
-    .label-body {
-      padding: 0 14px 14px;
-      color: var(--muted);
-      font-size: .92rem;
-      line-height: 1.48;
-      display: grid;
-      gap: 10px;
+    .readout {
+      padding:1rem;
+      border:1px solid rgba(242,199,111,.22);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:.55rem;
     }
 
-    .sub-bubble {
-      border: 1px solid rgba(170,198,255,.14);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(255,255,255,.025);
-      display: grid;
-      gap: 6px;
+    .readout small {
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .sub-bubble strong {
-      color: #fff;
-      font-size: .88rem;
+    .receipt { color:var(--faint); }
+
+    .receipt summary { font-size:.72rem; }
+
+    .receipt pre {
+      margin:0;
+      padding:0 1rem 1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     }
 
-    .sub-bubble span {
-      color: #aab8d8;
-      line-height: 1.55;
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
     }
 
-    .route-card small,
-    .route-card strong {
-      position: relative;
-      z-index: 3;
-      max-width: 76%;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-      text-wrap: balance;
-    }
-
-    .route-card strong {
-      display: block;
-      color: #fff;
-      font-size: .72rem;
-      line-height: 1.06;
-      margin-top: 4px;
-    }
-
-    .status-strip {
-      display: grid;
-      gap: 8px;
-      padding: 16px;
-      border-radius: 20px;
-    }
-
-    .status-strip code {
-      display: block;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: #dfe8ff;
-      font-size: .84rem;
-      line-height: 1.55;
-    }
-
-    .footer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 14px 4px 0;
-      color: #9db0d4;
-      font-size: .86rem;
-    }
-
-    .footer a {
-      color: #d6e2ff;
-    }
-
-    @keyframes diamondFloat {
-      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-      50% { transform: translateY(-4px) rotate(0deg) scale(1.025); }
-    }
-
-    @keyframes diamondPulse {
-      0%, 100% { opacity: .82; filter: brightness(1); }
-      50% { opacity: 1; filter: brightness(1.18); }
-    }
-
-    @keyframes innerSpin {
-      0% { transform: rotate(0deg) scale(.96); }
-      100% { transform: rotate(360deg) scale(.96); }
-    }
-
-    @keyframes slowTurn {
-      0% { transform: translateY(-50%) rotate(45deg); }
-      100% { transform: translateY(-50%) rotate(405deg); }
-    }
-
-    @media (min-width: 820px) {
-      .topbar {
-        grid-template-columns: 1fr auto;
-        align-items: center;
-      }
-
-      .nav {
-        grid-template-columns: repeat(8, minmax(80px, 94px));
-        justify-content: end;
-      }
-
-      .label-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .route-grid {
-        grid-template-columns: repeat(4, minmax(132px, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .control-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .page {
-        width: min(100vw - 12px, var(--max));
-        padding-top: 10px;
-      }
-
-      .topbar,
-      .hero,
-      .panel {
-        border-radius: 24px;
-      }
-
-      .topbar {
-        padding: 12px;
-      }
-
-      .mark {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-      }
-
-      .nav {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 6px;
-      }
-
-      .nav a {
-        width: min(100%, 70px);
-        font-size: .55rem;
-      }
-
-      .hero {
-        min-height: 390px;
-        padding: 22px;
-      }
-
-      .hero-symbol {
-        right: 18px;
-        top: auto;
-        bottom: 18px;
-        width: 118px;
-        height: 118px;
-        transform: rotate(45deg);
-        opacity: .36;
-      }
-
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .route-card {
-        width: min(100%, 132px);
-      }
-
-      .route-card small {
-        font-size: .40rem;
-      }
-
-      .route-card strong {
-        font-size: .66rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
+    @media (max-width:980px) {
+      .loop-grid { grid-template-columns:repeat(2,1fr); }
+      .dashboard { grid-template-columns:1fr; }
     }
   </style>
-
-  <script defer src="/explore/frontier/runtime.js"></script>
 </head>
 
 <body>
-  <main class="page" data-page="closed-loop" data-route="/explore/frontier/closed-loop/" data-file="/explore/frontier/closed-loop/index.html">
-    <header class="topbar">
-      <a class="brand" data-route="/explore/frontier/closed-loop/" href="/explore/frontier/closed-loop/" aria-label="Closed Loop Frontier">
-        <span class="mark" aria-hidden="true">CL</span>
+  <a class="skip" href="#main">Skip to Closed Loop</a>
+
+  <div class="shell">
+    <header class="card top">
+      <a class="brand state-link" href="/explore/frontier/closed-loop/">
+        <span class="mark">CL</span>
         <span>
-          <span class="kicker">Diamond Gate Bridge · Frontier</span>
-          <strong class="title">Closed Loop · G1</strong>
+          <span>Diamond Gate Bridge · Frontier</span>
+          <strong>Closed Loop · G1 V10A</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a data-route="/door/" href="/door/">Door</a>
-        <a data-route="/home/" href="/home/">Home</a>
-        <a data-route="/explore/" href="/explore/">Explore</a>
-        <a class="featured" data-route="/explore/frontier/" href="/explore/frontier/">Frontier</a>
-        <a data-route="/products/" href="/products/">Products</a>
-        <a data-route="/gauges/" href="/gauges/">Gauges</a>
-        <a data-route="/laws/" href="/laws/">Laws</a>
-        <a data-route="/about/" href="/about/">About</a>
+        <a class="state-link" href="/door/">Door</a>
+        <a class="state-link" href="/home/">Home</a>
+        <a class="state-link" href="/explore/">Manor</a>
+        <a class="state-link" href="/frontier/" aria-current="page">Frontier</a>
+        <a class="state-link" href="/laws/">Laws</a>
+        <a class="state-link" href="/products/">Products</a>
+        <a class="state-link" href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="pageTitle">
-      <div class="hero-symbol" aria-hidden="true"></div>
+    <main id="main">
+      <section class="card hero">
+        <div class="kicker">Inventory Flow · Official Hierarchy</div>
+        <h1>Closed Loop</h1>
+        <h2>Nothing disappears. Everything becomes inventory.</h2>
+        <p>
+          Closed Loop tracks what enters, what gets used, what exits, what can return,
+          what becomes waste, and what must be maintained so the system does not leak value.
+        </p>
+        <div class="control-row">
+          <a class="button primary state-link" href="/gauges/">Read Gauges</a>
+          <a class="button state-link" href="/laws/">Check Laws</a>
+          <a class="button state-link" href="/explore/frontier/">Return to Frontier Hub</a>
+        </div>
+      </section>
 
-      <div class="hero-copy">
-        <span class="pill" id="heroPill">No-away category</span>
-        <h1 id="pageTitle">Closed Loop</h1>
-        <h2 id="pageSubhead">Nothing disappears. Everything becomes inventory.</h2>
-        <p id="pageLead">Choose a label. Closed-loop context opens only when requested.</p>
-      </div>
-    </section>
+      <section class="card section" aria-labelledby="loop-title">
+        <div class="kicker">Closed Loop</div>
+        <h2 id="loop-title">The useful question is not “where did it go?” It is “what did it become?”</h2>
 
-    <section class="panel" aria-labelledby="controlsTitle">
-      <div class="panel-head">
-        <span class="pill" id="controlsPill">Room controls</span>
-        <h2 id="controlsTitle">Switch lens without closing the open row.</h2>
-      </div>
+        <div class="loop-grid" aria-label="Closed Loop inventory cycle">
+          <article class="loop-card">
+            <strong>Input</strong>
+            <span>What enters the system?</span>
+          </article>
+          <article class="loop-card">
+            <strong>Use</strong>
+            <span>What work does it perform?</span>
+          </article>
+          <article class="loop-card active">
+            <strong>Output</strong>
+            <span>What leaves the first process?</span>
+          </article>
+          <article class="loop-card">
+            <strong>Capture</strong>
+            <span>What can be recovered?</span>
+          </article>
+          <article class="loop-card">
+            <strong>Reuse</strong>
+            <span>What can return as value?</span>
+          </article>
+          <article class="loop-card">
+            <strong>Waste</strong>
+            <span>What must be contained?</span>
+          </article>
+          <article class="loop-card">
+            <strong>Proof</strong>
+            <span>What can Gauges confirm?</span>
+          </article>
+        </div>
+      </section>
 
-      <div class="control-grid">
-        <div class="control-card">
-          <div class="control-title" id="langLabel">Language</div>
-          <div class="seg" role="group" aria-label="Language">
-            <button id="langEN" type="button" aria-pressed="true" data-dgb-lang-control data-value="en">EN</button>
-            <button id="langZH" type="button" aria-pressed="false" data-dgb-lang-control data-value="zh">中文</button>
-            <button id="langES" type="button" aria-pressed="false" data-dgb-lang-control data-value="es">ES</button>
-          </div>
-          <div class="state-line" id="langState">Lang: EN</div>
+      <section class="card section" aria-labelledby="dashboard-title">
+        <div class="kicker">Inventory Dashboard</div>
+        <h2 id="dashboard-title">Output active. Capture next.</h2>
+
+        <div class="dashboard">
+          <article class="metric">
+            <small>Current position</small>
+            <strong>Output is active.</strong>
+            <p>The page is asking what exits the first process and whether that output is useful, harmful, reusable, or unresolved.</p>
+          </article>
+          <article class="metric">
+            <small>Next move</small>
+            <strong>Capture comes next.</strong>
+            <p>Once output is visible, the system must decide what can be recovered before it becomes waste.</p>
+          </article>
+          <article class="metric">
+            <small>Practical read</small>
+            <strong>Loss usually starts as unnamed output.</strong>
+            <p>A closed loop does not pretend waste disappears. It names the exit and decides what to do with it.</p>
+          </article>
+          <article class="metric">
+            <small>Boundary</small>
+            <strong>Closed Loop does not replace proof.</strong>
+            <p>Closed Loop names inventory flow. Laws bound the claim. Gauges measure whether the route is actually aligned.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card section" aria-labelledby="controls-title">
+        <div class="kicker">Room Controls</div>
+        <h2 id="controls-title">Switch mode without losing the loop.</h2>
+
+        <div class="control-row" role="group" aria-label="Mode controls">
+          <button class="tab" type="button" data-mode="inventory" aria-pressed="true">Inventory</button>
+          <button class="tab" type="button" data-mode="reuse" aria-pressed="false">Reuse</button>
+          <button class="tab" type="button" data-mode="maintenance" aria-pressed="false">Maintenance</button>
+          <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
         </div>
 
-        <div class="control-card">
-          <div class="control-title" id="laneLabel">Visible lens</div>
-          <div class="seg" role="group" aria-label="Lane">
-            <button id="lanePlatform" type="button" aria-pressed="true" data-dgb-lane-control data-value="platform">PLATFORM</button>
-            <button id="laneEngineering" type="button" aria-pressed="false" data-dgb-lane-control data-value="engineering">ENGINEERING</button>
+        <article class="readout" aria-live="polite">
+          <small id="mode-kicker">Inventory mode</small>
+          <h3 id="mode-title">What does it become?</h3>
+          <p id="mode-copy">Closed Loop begins by naming every input, output, return path, and unresolved remainder.</p>
+        </article>
+      </section>
+
+      <section class="card section" aria-labelledby="under-title">
+        <div class="kicker">Under the Hood</div>
+        <h2 id="under-title">Russian doll stays as structure, not public fog.</h2>
+
+        <details>
+          <summary>Open hierarchy</summary>
+          <div class="detail-body">
+            <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Closed Loop inventories. Laws bound. Gauges measure.</p>
+
+            <details class="nested">
+              <summary>Open cycle position</summary>
+              <div class="detail-body">
+                <p>Input complete. Use complete. Output active. Capture next. Reuse pending. Waste pending. Maintain pending.</p>
+
+                <details class="nested">
+                  <summary>Open ownership boundary</summary>
+                  <div class="detail-body">
+                    <p>Closed Loop owns inventory flow, output capture, reuse logic, waste containment, maintenance visibility, and no-away accounting.</p>
+                    <p>Closed Loop does not own power generation, water flow, product identity, law authority, Gauges scoring, route mutation, or generation pass claims.</p>
+                  </div>
+                </details>
+              </div>
+            </details>
           </div>
-          <div class="state-line" id="laneState">Current lens: PLATFORM</div>
-        </div>
-      </div>
-    </section>
+        </details>
+      </section>
 
-    <section class="panel" aria-labelledby="domainsTitle">
-      <div class="panel-head">
-        <span class="pill" id="domainsPill">Russian-doll labels</span>
-        <h2 id="domainsTitle">Open only the domain needed.</h2>
-      </div>
+      <section class="card section" aria-labelledby="routes-title">
+        <div class="kicker">Frontier Routes</div>
+        <h2 id="routes-title">Move to a related Frontier lane.</h2>
 
-      <div class="label-grid" id="domainList"></div>
-    </section>
+        <nav class="nav" aria-label="Frontier lane routes">
+          <a class="state-link" href="/explore/frontier/">Frontier Hub</a>
+          <a class="state-link" href="/explore/frontier/water/">Water</a>
+          <a class="state-link" href="/explore/frontier/waste/">Waste</a>
+          <a class="state-link" href="/explore/frontier/energy/">Energy</a>
+          <a class="state-link" href="/explore/frontier/urban/">Urban</a>
+          <a class="state-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+          <a class="state-link" href="/explore/frontier/shimmer/">Shimmer</a>
+          <a class="state-link" href="/gauges/">Gauges</a>
+        </nav>
+      </section>
 
-    <section class="panel" aria-labelledby="routesTitle">
-      <div class="panel-head">
-        <span class="pill" id="routesPill">Coupled inventory routes</span>
-        <h2 id="routesTitle">Move to the related Frontier pages.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card featured" data-route="/explore/frontier/" href="/explore/frontier/"><small>Back</small><strong>Frontier Hub</strong></a>
-        <a class="route-card" data-route="/explore/frontier/water/" href="/explore/frontier/water/"><small>Flow</small><strong>Water</strong></a>
-        <a class="route-card" data-route="/explore/frontier/waste/" href="/explore/frontier/waste/"><small>Reuse</small><strong>Waste</strong></a>
-        <a class="route-card" data-route="/explore/frontier/energy/" href="/explore/frontier/energy/"><small>Power</small><strong>Energy</strong></a>
-        <a class="route-card" data-route="/explore/frontier/urban/" href="/explore/frontier/urban/"><small>City</small><strong>Urban</strong></a>
-        <a class="route-card" data-route="/explore/frontier/infrastructure/" href="/explore/frontier/infrastructure/"><small>Build</small><strong>Infrastructure</strong></a>
-        <a class="route-card" data-route="/explore/frontier/shimmer/" href="/explore/frontier/shimmer/"><small>Signal</small><strong>Shimmer</strong></a>
-        <a class="route-card" data-route="/gauges/" href="/gauges/"><small>Inspect</small><strong>Gauges</strong></a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="statusTitle">
-      <div class="panel-head">
-        <span class="pill">Status label</span>
-        <h2 id="statusTitle">Closed Loop contract renewed.</h2>
-      </div>
-
-      <div class="status-strip">
-        <code>CLOSED_LOOP_G1_STATUS=ACTIVE
+      <details class="card receipt" open>
+        <summary>Status label</summary>
+        <pre>CLOSED_LOOP_G1_V10A_CONCRETE_INVENTORY_FLOW_TNT_v1
+STATUS=ACTIVE
+VISIBLE_TITLE=Closed Loop · G1 V10A
+PUBLIC_PROOF_MARKER=Concrete Inventory Flow · V10A active
 PAGE=/explore/frontier/closed-loop/index.html
+ROUTE=/explore/frontier/closed-loop/
 PARENT=/explore/frontier/
-BASELINE=UNIVERSAL_NODE_V10A_GENERATION_1
-METHOD=UNIVERSAL_NODE_RUSSIAN_DOLL_EXPANSION
-LANGUAGES=EN,ZH,ES
-VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
-STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth,lane
+BASELINE=AUDRALIA_MANOR_CURRENT
+EXPRESSION=Concrete_Inventory_Flow_With_Russian_Doll_Underlay
+VISIBLE_FLOW=Input,Use,Output,Capture,Reuse,Waste,Proof
+CYCLE_POSITION=Input_complete,Use_complete,Output_active,Capture_next,Reuse_pending,Waste_pending,Maintain_pending
+HIERARCHY=Compass→Door→Home→Manor→Frontier→ClosedLoop→Laws→Gauges
+ROLE=frontier_inventory_flow_lane
+OWNS=inventory_flow,output_capture,reuse_logic,waste_containment,maintenance_visibility,no_away_accounting
+DOES_NOT_OWN=power_generation,water_flow,product_identity,law_authority,gauges_scoring,route_mutation,generation_pass_claim
+COUPLED_INVENTORY=water,air,food,materials,energy,heat,waste,maintenance
 NO_AWAY_MODEL=ACTIVE
-COUPLED_INVENTORY=WATER,AIR,FOOD,MATERIALS,ENERGY,HEAT,WASTE,MAINTENANCE
-FRONTIER_RUNTIME=/explore/frontier/runtime.js
-NO_MODAL=TRUE
-NO_INLINE_ONCLICK=TRUE</code>
-      </div>
-    </section>
+PRIOR_LANGUAGE_HANDLING=prior_generation_framing_archival_only
+HEAVY_RUNTIME_LOADED=false
+RENDER_FILES_TOUCHED=false
+GAUGES_LOGIC_TOUCHED=false
+VISUAL_PASS_CLAIMED=false</pre>
+      </details>
+    </main>
 
-    <footer class="footer">
-      <span>Diamond Gate Bridge · Frontier · Closed Loop · G1</span>
-      <span>
-        <a data-route="/explore/frontier/" href="/explore/frontier/">Frontier Hub</a> ·
-        <a data-route="/explore/" href="/explore/">Explore</a> ·
-        <a data-route="/gauges/" href="/gauges/">Gauges</a>
-      </span>
+    <footer>
+      Diamond Gate Bridge · Frontier · Closed Loop · G1 V10A · Concrete Inventory Flow.
     </footer>
-  </main>
+  </div>
 
   <script>
-    (function () {
+    (() => {
       "use strict";
 
-      var qs = new URLSearchParams(location.search);
-      var LS = window.localStorage;
-
-      var lang = qs.get("gd_lang") || qs.get("lang") || safeGet("gd_lang", "en");
-      var time = qs.get("gd_time") || qs.get("time") || safeGet("gd_time", "now");
-      var lane = qs.get("lane") || "platform";
-      var style = "informal";
-      var depth = "explore";
-      var openIndex = 0;
-
-      if (lang !== "en" && lang !== "zh" && lang !== "es") lang = "en";
-      if (time === "trajectory") time = "post";
-      if (time !== "origin" && time !== "now" && time !== "post") time = "now";
-      if (lane !== "platform" && lane !== "engineering") lane = "platform";
-
-      safeSet("gd_lang", lang);
-      safeSet("gd_style", style);
-      safeSet("gd_time", time);
-      safeSet("gd_depth", depth);
-
-      var COPY = {
-        en: {
-          heroPill: "No-away category",
-          subhead: "Nothing disappears. Everything becomes inventory.",
-          lead: "Choose a label. Closed-loop context opens only when requested.",
-          controlsPill: "Room controls",
-          controlsTitle: "Switch lens without closing the open row.",
-          langLabel: "Language",
-          laneLabel: "Visible lens",
-          platform: "PLATFORM",
-          engineering: "ENGINEERING",
-          domainsPill: "Russian-doll labels",
-          domainsTitle: "Open only the domain needed.",
-          routesPill: "Coupled inventory routes",
-          routesTitle: "Move to the related Frontier pages.",
-          statusTitle: "Closed Loop contract renewed.",
-          concept: "Concept",
-          build: "Build Now",
-          roadmap: "Roadmap",
-          langState: "Lang: EN",
-          currentLens: "Current lens"
-        },
-        zh: {
-          heroPill: "无外部类别",
-          subhead: "没有东西会消失。一切都会变成库存。",
-          lead: "选择一个标签。闭环上下文只在请求时打开。",
-          controlsPill: "房间控制",
-          controlsTitle: "切换透镜，不关闭已打开行。",
-          langLabel: "语言",
-          laneLabel: "可见透镜",
-          platform: "平台",
-          engineering: "工程",
-          domainsPill: "俄罗斯套娃标签",
-          domainsTitle: "只打开需要的域。",
-          routesPill: "耦合库存路线",
-          routesTitle: "移动到相关 Frontier 页面。",
-          statusTitle: "闭环合约已更新。",
-          concept: "概念",
-          build: "现在建",
-          roadmap: "路线图",
-          langState: "语言：中文",
-          currentLens: "当前透镜"
-        },
-        es: {
-          heroPill: "Categoría sin afuera",
-          subhead: "Nada desaparece. Todo se vuelve inventario.",
-          lead: "Elige una etiqueta. El contexto de ciclo cerrado solo se abre cuando se solicita.",
-          controlsPill: "Controles de sala",
-          controlsTitle: "Cambiar lente sin cerrar la fila abierta.",
-          langLabel: "Idioma",
-          laneLabel: "Lente visible",
-          platform: "PLATAFORMA",
-          engineering: "INGENIERÍA",
-          domainsPill: "Etiquetas muñeca rusa",
-          domainsTitle: "Abrir solo el dominio necesario.",
-          routesPill: "Rutas de inventario acoplado",
-          routesTitle: "Moverse a las páginas Frontier relacionadas.",
-          statusTitle: "Contrato Closed Loop renovado.",
-          concept: "Concepto",
-          build: "Construir ahora",
-          roadmap: "Hoja de ruta",
-          langState: "Idioma: ES",
-          currentLens: "Lente actual"
-        }
+      const modes = {
+        inventory: [
+          "Inventory mode",
+          "What does it become?",
+          "Closed Loop begins by naming every input, output, return path, and unresolved remainder."
+        ],
+        reuse: [
+          "Reuse mode",
+          "What can return as value?",
+          "Reuse identifies what can be captured and reintroduced before it becomes loss."
+        ],
+        maintenance: [
+          "Maintenance mode",
+          "What keeps the loop working?",
+          "Maintenance tracks the support work required to keep the loop from leaking, clogging, or drifting."
+        ],
+        engineering: [
+          "Engineering mode",
+          "Implementation stays bounded.",
+          "Engineering names route ownership, inventory boundary, receipt integrity, and no-mutation proof."
+        ]
       };
 
-      var DOMAINS = [
-        {
-          t: { en: "No Away", zh: "没有扔掉", es: "Sin Afuera" },
-          s: { en: "There is no outside sink.", zh: "不存在外部汇点。", es: "No existe sumidero externo." },
-          platform: {
-            intro: {
-              en: "Closed Loop begins with a public rule: there is no away. Water, air, food, materials, energy, heat, waste, and maintenance remain inside the accounting field until they are routed, recovered, stored, or counted as loss.",
-              zh: "闭环从一个公共规则开始：没有“扔掉”。水、空气、食物、材料、能源、热、废弃物和维护都留在核算场内，直到被路由、回收、储存或计为损耗。",
-              es: "Closed Loop comienza con una regla pública: no hay afuera. Agua, aire, comida, materiales, energía, calor, residuos y mantenimiento quedan dentro del campo contable hasta rutearse, recuperarse, almacenarse o contarse como pérdida."
-            },
-            concept: {
-              en: "Away is not a place. It is an unmeasured exit.",
-              zh: "“扔掉”不是地方，而是未测量出口。",
-              es: "Afuera no es un lugar. Es una salida no medida."
-            },
-            build: {
-              en: "Name every exit: drain, vent, landfill, heat loss, unused material, wasted motion, or unrecovered value.",
-              zh: "命名每个出口：排水、排气、填埋、热损失、未用材料、浪费动作或未回收价值。",
-              es: "Nombrar cada salida: drenaje, ventilación, vertedero, pérdida de calor, material sin usar, movimiento desperdiciado o valor no recuperado."
-            },
-            roadmap: {
-              en: "Turn each exit into a label, then a route, then a recovery check.",
-              zh: "把每个出口转成标签，再转成路线，再转成回收检查。",
-              es: "Convertir cada salida en etiqueta, luego ruta, luego verificación de recuperación."
-            }
-          },
-          engineering: {
-            intro: {
-              en: "No-away means the system has no free external sink. Every output must resolve to a bounded state: routed, buffered, recovered, isolated, vented with reason code, or counted as loss.",
-              zh: "无外部意味着系统没有免费外部汇点。每个输出必须解析为有边界状态：已路由、已缓冲、已回收、已隔离、带原因码排放或计为损耗。",
-              es: "Sin afuera significa que el sistema no tiene sumidero externo gratuito. Toda salida debe resolverse como estado acotado: ruteada, amortiguada, recuperada, aislada, ventilada con código o contada como pérdida."
-            },
-            concept: {
-              en: "Unmeasured exits are stability debt.",
-              zh: "未测量出口是稳定性债务。",
-              es: "Salidas no medidas son deuda de estabilidad."
-            },
-            build: {
-              en: "Create an output ledger with source, sink, rate, contamination class, loss band, and recovery option.",
-              zh: "建立输出账本：来源、去向、速率、污染类别、损耗带和回收选项。",
-              es: "Crear libro de salidas con fuente, sumidero, tasa, clase de contaminación, banda de pérdida y opción de recuperación."
-            },
-            roadmap: {
-              en: "Promote no-away tracking into Gauges only after exits have repeatable receipts.",
-              zh: "只有出口拥有可重复收据后，才把无外部追踪升级到 Gauges。",
-              es: "Promover rastreo sin afuera a Gauges solo cuando las salidas tengan recibos repetibles."
-            }
-          }
-        },
-        {
-          t: { en: "Coupled Inventory", zh: "耦合库存", es: "Inventario acoplado" },
-          s: { en: "Water, waste, energy, food, heat, and materials move together.", zh: "水、废弃物、能源、食物、热和材料一起移动。", es: "Agua, residuos, energía, comida, calor y materiales se mueven juntos." },
-          platform: {
-            intro: {
-              en: "Closed Loop treats the site like one inventory. A water failure becomes sanitation pressure. An energy failure becomes storage pressure. A waste failure becomes public trust pressure.",
-              zh: "闭环把站点当作一个库存。水故障会变成卫生压力；能源故障会变成储存压力；废弃物故障会变成公共信任压力。",
-              es: "Closed Loop trata el sitio como un inventario. Un fallo de agua se vuelve presión sanitaria. Un fallo de energía se vuelve presión de almacenamiento. Un fallo de residuos se vuelve presión de confianza pública."
-            },
-            concept: {
-              en: "Nothing important moves alone.",
-              zh: "重要的东西都不是单独移动。",
-              es: "Nada importante se mueve solo."
-            },
-            build: {
-              en: "Label the coupled lanes: water, air, food, material, energy, heat, waste, and maintenance.",
-              zh: "标注耦合车道：水、空气、食物、材料、能源、热、废弃物和维护。",
-              es: "Etiquetar carriles acoplados: agua, aire, comida, material, energía, calor, residuos y mantenimiento."
-            },
-            roadmap: {
-              en: "Show one map: what enters, what circulates, what leaks, and what returns.",
-              zh: "展示一张地图：什么进入、什么循环、什么泄漏、什么返回。",
-              es: "Mostrar un mapa: qué entra, qué circula, qué fuga y qué retorna."
-            }
-          },
-          engineering: {
-            intro: {
-              en: "Coupled inventory requires explicit interface states between lanes. Flow in one lane changes pressure, storage, contamination, or demand in another.",
-              zh: "耦合库存需要车道之间的显式接口状态。一个车道的流动会改变另一个车道的压力、储存、污染或需求。",
-              es: "Inventario acoplado requiere estados de interfaz explícitos entre carriles. Un flujo cambia presión, almacenamiento, contaminación o demanda en otro."
-            },
-            concept: {
-              en: "Interfaces must be declared before coupling is trusted.",
-              zh: "接口必须先声明，耦合才可信。",
-              es: "Las interfaces deben declararse antes de confiar en el acoplamiento."
-            },
-            build: {
-              en: "Define lane interfaces: water-to-waste, waste-to-energy, energy-to-water, food-to-waste, heat-to-storage.",
-              zh: "定义车道接口：水到废弃物、废弃物到能源、能源到水、食物到废弃物、热到储存。",
-              es: "Definir interfaces: agua-residuo, residuo-energía, energía-agua, comida-residuo, calor-almacenamiento."
-            },
-            roadmap: {
-              en: "Add correlation checks so one hidden failure cannot pass as seven separate healthy lanes.",
-              zh: "添加相关性检查，防止一个隐藏故障伪装成七条健康车道。",
-              es: "Añadir chequeos de correlación para que una falla oculta no pase como siete carriles sanos."
-            }
-          }
-        },
-        {
-          t: { en: "Measure · Route · Retain", zh: "测量 · 路由 · 保留", es: "Medir · Rutear · Retener" },
-          s: { en: "Every output needs a lawful next state.", zh: "每个输出都需要合法的下一个状态。", es: "Toda salida necesita un siguiente estado válido." },
-          platform: {
-            intro: {
-              en: "The public contract is measure, route, retain. Measure what exists. Route what moves. Retain what matters. Anything else becomes leakage.",
-              zh: "公共合约是测量、路由、保留。测量存在的东西；路由移动的东西；保留重要的东西。否则就变成泄漏。",
-              es: "El contrato público es medir, rutear, retener. Medir lo que existe. Rutear lo que se mueve. Retener lo que importa. Lo demás se vuelve fuga."
-            },
-            concept: {
-              en: "A loop is only real if it returns value.",
-              zh: "只有返回价值的循环才是真循环。",
-              es: "Un ciclo solo es real si retorna valor."
-            },
-            build: {
-              en: "Make three labels visible for each lane: current amount, next route, retained value.",
-              zh: "为每条车道显示三个标签：当前数量、下一路线、保留价值。",
-              es: "Hacer visibles tres etiquetas por carril: cantidad actual, ruta siguiente, valor retenido."
-            },
-            roadmap: {
-              en: "Start with readable labels. Add thresholds later. Avoid overbuilding before the public can understand the route.",
-              zh: "从可读标签开始。之后再加阈值。公众理解路线前避免过度建造。",
-              es: "Empezar con etiquetas legibles. Añadir umbrales después. Evitar sobreconstruir antes de que el público entienda la ruta."
-            }
-          },
-          engineering: {
-            intro: {
-              en: "Measure-route-retain is the minimum deterministic cycle. Measurement creates state, routing creates admissible motion, and retention proves useful return.",
-              zh: "测量-路由-保留是最小确定性循环。测量创建状态，路由创建可采信运动，保留证明有用返回。",
-              es: "Medir-rutear-retener es el ciclo determinista mínimo. Medición crea estado, ruteo crea movimiento admisible y retención prueba retorno útil."
-            },
-            concept: {
-              en: "No measured state means no valid route.",
-              zh: "没有测量状态就没有有效路线。",
-              es: "Sin estado medido no hay ruta válida."
-            },
-            build: {
-              en: "Define state class, route table, retention gate, and rejection code per lane.",
-              zh: "为每条车道定义状态类别、路由表、保留闸门和拒绝码。",
-              es: "Definir clase de estado, tabla de ruteo, compuerta de retención y código de rechazo por carril."
-            },
-            roadmap: {
-              en: "Require receipts for state change, route change, retained value, and rejected return.",
-              zh: "要求为状态变化、路线变化、保留价值和拒绝返回提供收据。",
-              es: "Exigir recibos de cambio de estado, cambio de ruta, valor retenido y retorno rechazado."
-            }
-          }
-        },
-        {
-          t: { en: "Recovery Proof", zh: "回收证明", es: "Prueba de recuperación" },
-          s: { en: "Recovered value must safely re-enter.", zh: "回收价值必须安全重入。", es: "El valor recuperado debe reentrar seguro." },
-          platform: {
-            intro: {
-              en: "Closed Loop is not closed when waste is merely collected. It closes when recovered value safely re-enters the system and does something useful.",
-              zh: "废弃物只是被收集时，闭环并没有闭合。只有回收价值安全重入系统并产生用途时，闭环才闭合。",
-              es: "El ciclo no cierra cuando el residuo solo se recoge. Cierra cuando el valor recuperado reentra seguro y hace algo útil."
-            },
-            concept: {
-              en: "Collection is not recovery. Return is recovery.",
-              zh: "收集不是回收；返回才是回收。",
-              es: "Recolección no es recuperación. Retorno sí."
-            },
-            build: {
-              en: "For every recovered object, label its next safe use.",
-              zh: "为每个回收对象标注下一个安全用途。",
-              es: "Para cada objeto recuperado, etiquetar su siguiente uso seguro."
-            },
-            roadmap: {
-              en: "Connect Waste, Water, Energy, and Infrastructure so recovery routes are visible.",
-              zh: "连接 Waste、Water、Energy 和 Infrastructure，让回收路线可见。",
-              es: "Conectar Waste, Water, Energy e Infrastructure para que las rutas de recuperación sean visibles."
-            }
-          },
-          engineering: {
-            intro: {
-              en: "Recovery proof requires input class, treatment state, quality gate, contamination check, destination, retained value, and rejection path.",
-              zh: "回收证明需要输入类别、处理状态、质量闸门、污染检查、目的地、保留价值和拒绝路径。",
-              es: "Prueba de recuperación requiere clase de entrada, tratamiento, compuerta de calidad, contaminación, destino, valor retenido y ruta de rechazo."
-            },
-            concept: {
-              en: "Unsafe return is not closure.",
-              zh: "不安全返回不是闭合。",
-              es: "Retorno inseguro no es cierre."
-            },
-            build: {
-              en: "Create recovery states: raw, sorted, treated, verified, reusable, constrained, rejected.",
-              zh: "创建回收状态：原始、已分类、已处理、已验证、可再用、受限、拒绝。",
-              es: "Crear estados: crudo, clasificado, tratado, verificado, reusable, limitado, rechazado."
-            },
-            roadmap: {
-              en: "Require proof receipts before claiming closed-loop status.",
-              zh: "声称闭环状态之前必须有证明收据。",
-              es: "Exigir recibos de prueba antes de afirmar estado de ciclo cerrado."
-            }
-          }
-        }
-      ];
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const kicker = document.getElementById("mode-kicker");
+      const title = document.getElementById("mode-title");
+      const copy = document.getElementById("mode-copy");
 
-      function safeGet(key, fallback) {
-        try {
-          return LS.getItem(key) || fallback;
-        } catch (error) {
-          return fallback;
-        }
+      function setMode(mode) {
+        const data = modes[mode] || modes.inventory;
+
+        tabs.forEach((tab) => {
+          tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
+        });
+
+        kicker.textContent = data[0];
+        title.textContent = data[1];
+        copy.textContent = data[2];
       }
 
-      function safeSet(key, value) {
-        try {
-          LS.setItem(key, value);
-        } catch (error) {}
-      }
+      function syncLinks() {
+        const params = new URLSearchParams(window.location.search);
+        params.set("gd_lang", params.get("gd_lang") || "en");
+        params.set("gd_style", params.get("gd_style") || "informal");
+        params.set("gd_time", params.get("gd_time") || "now");
+        params.set("gd_depth", params.get("gd_depth") || "explore");
+        params.set("lane", params.get("lane") || "platform");
 
-      function activeCopy() {
-        return COPY[lang] || COPY.en;
-      }
-
-      function text(obj) {
-        return lang === "zh" ? obj.zh : lang === "es" ? obj.es : obj.en;
-      }
-
-      function buildQuery(extra) {
-        var p = new URLSearchParams();
-        p.set("gd_lang", extra && extra.gd_lang ? extra.gd_lang : lang);
-        p.set("gd_style", "informal");
-        p.set("gd_time", extra && extra.gd_time ? extra.gd_time : time);
-        p.set("gd_depth", "explore");
-        p.set("lane", extra && extra.lane ? extra.lane : lane);
-        return "?" + p.toString();
-      }
-
-      function setPressed(ids, id) {
-        ids.forEach(function (item) {
-          var el = document.getElementById(item);
-          if (el) el.setAttribute("aria-pressed", item === id ? "true" : "false");
+        document.querySelectorAll(".state-link").forEach((link) => {
+          const url = new URL(link.getAttribute("href"), window.location.origin);
+          params.forEach((value, key) => url.searchParams.set(key, value));
+          link.href = url.pathname + "?" + url.searchParams.toString();
         });
       }
 
-      function wireRoutes() {
-        document.querySelectorAll("[data-route]").forEach(function (node) {
-          var route = node.getAttribute("data-route");
-          if (route) node.setAttribute("href", route + buildQuery());
-        });
-      }
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => setMode(tab.dataset.mode || "inventory"));
+      });
 
-      function render() {
-        var c = activeCopy();
-
-        document.documentElement.lang = lang === "zh" ? "zh" : lang === "es" ? "es" : "en";
-
-        document.getElementById("heroPill").textContent = c.heroPill;
-        document.getElementById("pageSubhead").textContent = c.subhead;
-        document.getElementById("pageLead").textContent = c.lead;
-        document.getElementById("controlsPill").textContent = c.controlsPill;
-        document.getElementById("controlsTitle").textContent = c.controlsTitle;
-        document.getElementById("langLabel").textContent = c.langLabel;
-        document.getElementById("laneLabel").textContent = c.laneLabel;
-        document.getElementById("lanePlatform").textContent = c.platform;
-        document.getElementById("laneEngineering").textContent = c.engineering;
-        document.getElementById("domainsPill").textContent = c.domainsPill;
-        document.getElementById("domainsTitle").textContent = c.domainsTitle;
-        document.getElementById("routesPill").textContent = c.routesPill;
-        document.getElementById("routesTitle").textContent = c.routesTitle;
-        document.getElementById("statusTitle").textContent = c.statusTitle;
-        document.getElementById("langState").textContent = c.langState;
-        document.getElementById("laneState").textContent = c.currentLens + ": " + (lane === "engineering" ? c.engineering : c.platform);
-
-        setPressed(["langEN", "langZH", "langES"], lang === "zh" ? "langZH" : lang === "es" ? "langES" : "langEN");
-        setPressed(["lanePlatform", "laneEngineering"], lane === "engineering" ? "laneEngineering" : "lanePlatform");
-
-        var list = document.getElementById("domainList");
-        list.innerHTML = "";
-
-        DOMAINS.forEach(function (item, index) {
-          var pack = item[lane] || item.platform;
-          var details = document.createElement("details");
-          details.className = "label-card";
-          if (index === openIndex) details.open = true;
-
-          details.innerHTML =
-            "<summary><small>" + text(item.t) + "</small><span>" + text(item.s) + "</span></summary>" +
-            "<div class='label-body'>" +
-              "<p>" + text(pack.intro) + "</p>" +
-              "<div class='sub-bubble'><strong>" + c.concept + "</strong><span>" + text(pack.concept) + "</span></div>" +
-              "<div class='sub-bubble'><strong>" + c.build + "</strong><span>" + text(pack.build) + "</span></div>" +
-              "<div class='sub-bubble'><strong>" + c.roadmap + "</strong><span>" + text(pack.roadmap) + "</span></div>" +
-            "</div>";
-
-          details.addEventListener("toggle", function () {
-            if (details.open) {
-              openIndex = index;
-              document.querySelectorAll("#domainList details").forEach(function (other) {
-                if (other !== details) other.open = false;
-              });
-            }
-          });
-
-          list.appendChild(details);
-        });
-
-        wireRoutes();
-        history.replaceState({}, "", location.pathname + buildQuery());
-      }
-
-      function setLang(next) {
-        if (next !== "en" && next !== "zh" && next !== "es") next = "en";
-        lang = next;
-        safeSet("gd_lang", lang);
-        render();
-      }
-
-      function setLane(next) {
-        if (next !== "platform" && next !== "engineering") next = "platform";
-        lane = next;
-        render();
-      }
-
-      document.getElementById("langEN").addEventListener("click", function () { setLang("en"); });
-      document.getElementById("langZH").addEventListener("click", function () { setLang("zh"); });
-      document.getElementById("langES").addEventListener("click", function () { setLang("es"); });
-      document.getElementById("lanePlatform").addEventListener("click", function () { setLane("platform"); });
-      document.getElementById("laneEngineering").addEventListener("click", function () { setLane("engineering"); });
-
-      render();
+      setMode("inventory");
+      syncLinks();
     })();
   </script>
 </body>
 </html>
-
-SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
-VISIBLE_TITLE=Shimmer · G1 V10A PUBLIC_PROOF_MARKER=Universal Node · V10A active

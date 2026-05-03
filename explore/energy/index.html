@@ -1,48 +1,662 @@
+<!-- /explore/frontier/energy/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-route="/explore/frontier/energy/"
+  data-page="frontier-energy"
+  data-version="G1-V10A"
+  data-contract="ENERGY_G1_V10A_RUSSIAN_DOLL_POWER_TNT_v1"
+  data-status="active"
+  data-parent="/explore/frontier/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-expression="russian-doll-power-context"
+  data-heavy-runtime-loaded="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Explore Energy | Diamond Gate Bridge</title>
-  <meta name="description" content="Energy exploration under governed scope and measurable system read." />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Frontier · Energy G1 V10A</title>
+  <meta name="description" content="Energy G1 V10A is the Frontier power lane expressed through Russian-doll context.">
+
   <style>
-    :root{--bg:#05070b;--bg2:#08101a;--bg3:#0d1623;--panel:#0b0f16;--panel2:#101722;--line:#1f2a36;--line2:rgba(127,255,212,.16);--text:#e8f6ff;--muted:rgba(232,246,255,.68);--accent:#7fffd4;--shadow:0 14px 40px rgba(0,0,0,.30);--shadow2:0 20px 70px rgba(0,0,0,.38);--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);--maxw:1360px}
-    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif} body{min-height:100vh;overflow-x:hidden}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left))}
-    .topbar,.hero,.panel,.footer{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);box-shadow:var(--shadow2)}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:12px;border-radius:14px;box-shadow:var(--shadow)}
-    .brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)} .stamp{font-size:11px;color:var(--muted);white-space:nowrap}
-    .hero{padding:22px 20px 20px;margin-bottom:12px} .eyebrow{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.03);color:var(--accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
-    h1{margin:0 0 14px;font-size:clamp(34px,4.8vw,64px);line-height:.96;letter-spacing:-.06em;max-width:10ch} .heroText{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.72}
-    .actionRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px} .action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px} .panel{padding:16px}
-    .panelTitle{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding-bottom:10px;border-bottom:1px solid var(--line)} .panelText{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-    .footer{padding:12px 14px;color:var(--muted);font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}h1{max-width:none}} @media (max-width:760px){.topbar{flex-direction:column;align-items:flex-start}}
+    :root {
+      --bg:#02050d;
+      --panel:rgba(9,17,32,.9);
+      --line:rgba(139,200,255,.24);
+      --gold:#f2c76f;
+      --blue:#8bc8ff;
+      --green:#9df0c4;
+      --text:#f8f1dd;
+      --muted:rgba(226,235,255,.76);
+      --faint:rgba(226,235,255,.52);
+      --max:1120px;
+    }
+
+    * { box-sizing:border-box; }
+
+    html, body {
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.16), transparent 27rem),
+        radial-gradient(circle at 58% 40%, rgba(139,200,255,.12), transparent 35rem),
+        linear-gradient(180deg,#050914,#02050d 78%,#010207);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle, rgba(242,199,111,.15) 0 1px, transparent 1.4px),
+        linear-gradient(135deg, rgba(242,199,111,.07), transparent 42%),
+        linear-gradient(300deg, rgba(139,200,255,.06), transparent 48%);
+      background-size:210px 250px, 520px 520px, 640px 640px;
+      opacity:.32;
+    }
+
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; color:inherit; }
+
+    .skip {
+      position:absolute;
+      top:-4rem;
+      left:1rem;
+      z-index:10;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      background:var(--gold);
+      color:#05070d;
+      font-weight:900;
+    }
+
+    .skip:focus { top:1rem; }
+
+    .shell {
+      position:relative;
+      z-index:1;
+      width:min(100%,var(--max));
+      margin:0 auto;
+      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+    }
+
+    .card {
+      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
+      border:1px solid var(--line);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(139,200,255,.13), transparent 26rem),
+        radial-gradient(circle at 85% 20%, rgba(242,199,111,.12), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        var(--panel);
+      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .top, .section {
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:1rem;
+    }
+
+    .brand {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+    }
+
+    .mark {
+      width:4.25rem;
+      height:4.25rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(242,199,111,.42);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle, rgba(242,199,111,.25), transparent 55%),
+        rgba(255,255,255,.035);
+      font-size:1.45rem;
+      font-weight:950;
+      letter-spacing:.04em;
+    }
+
+    .brand span span {
+      display:block;
+      color:rgba(226,235,255,.84);
+      font-size:clamp(.7rem,2vw,.88rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .brand strong {
+      display:block;
+      font-size:clamp(1.25rem,4.5vw,2.15rem);
+      line-height:1;
+      letter-spacing:-.055em;
+    }
+
+    .nav, .control-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+    }
+
+    .nav a, .button, .tab {
+      min-height:2.4rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      padding:.55rem .82rem;
+      color:rgba(242,246,255,.88);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .nav a[aria-current="page"],
+    .button.primary,
+    .tab[aria-pressed="true"] {
+      border-color:rgba(242,199,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff0a3,#f2c76f);
+    }
+
+    .hero {
+      padding:clamp(1.5rem,5vw,3rem);
+      min-height:clamp(20rem,42vw,31rem);
+      display:grid;
+      gap:1rem;
+      align-content:center;
+    }
+
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(226,235,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      background:var(--gold);
+      transform:rotate(45deg);
+      box-shadow:0 0 1rem rgba(242,199,111,.45);
+    }
+
+    h1 {
+      width:min(100%,820px);
+      margin:0;
+      font-size:clamp(3.8rem,13vw,7.8rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.65rem,5.8vw,3.3rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+    }
+
+    h3 {
+      margin:0;
+      font-size:clamp(1.15rem,3.6vw,1.75rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.8vw,1.18rem);
+      line-height:1.55;
+    }
+
+    .doll { display:grid; gap:.75rem; }
+
+    details {
+      border:1px solid rgba(139,200,255,.18);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+
+    summary {
+      cursor:pointer;
+      list-style:none;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:.75rem;
+      padding:1rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      color:rgba(255,241,205,.96);
+    }
+
+    summary::-webkit-details-marker { display:none; }
+
+    summary::before {
+      content:"";
+      width:.8rem;
+      height:.8rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 1rem rgba(242,199,111,.35);
+    }
+
+    summary::after {
+      content:"+";
+      color:var(--gold);
+      font-size:1.25rem;
+      line-height:1;
+    }
+
+    details[open] > summary::after { content:"−"; }
+
+    .detail-body {
+      display:grid;
+      gap:.85rem;
+      padding:0 1rem 1rem;
+    }
+
+    .nested {
+      margin-left:clamp(.35rem,2vw,1rem);
+      border-color:rgba(242,199,111,.18);
+      background:rgba(2,5,13,.34);
+    }
+
+    .cycle-grid {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:.6rem;
+    }
+
+    .cycle-step {
+      min-height:6.5rem;
+      display:grid;
+      place-items:center;
+      gap:.25rem;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.03);
+      text-align:center;
+    }
+
+    .cycle-step strong {
+      color:rgba(255,241,205,.98);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .cycle-step span {
+      color:var(--faint);
+      font-size:.72rem;
+      font-weight:800;
+      text-transform:uppercase;
+    }
+
+    .cycle-step.active {
+      border-color:rgba(242,199,111,.85);
+      background:rgba(242,199,111,.08);
+      box-shadow:0 0 1.6rem rgba(242,199,111,.08);
+    }
+
+    .cycle-step.complete span { color:var(--green); }
+
+    .readout {
+      padding:1rem;
+      border:1px solid rgba(242,199,111,.22);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:.55rem;
+    }
+
+    .readout small {
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .split {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.8rem;
+    }
+
+    .mini {
+      padding:1rem;
+      border:1px solid rgba(139,200,255,.18);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.025);
+      display:grid;
+      gap:.4rem;
+    }
+
+    .mini strong {
+      color:rgba(255,241,205,.96);
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .receipt { color:var(--faint); }
+
+    .receipt summary { font-size:.72rem; }
+
+    .receipt pre {
+      margin:0;
+      padding:0 1rem 1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:880px) {
+      .cycle-grid { grid-template-columns:repeat(2,1fr); }
+      .split { grid-template-columns:1fr; }
+    }
   </style>
 </head>
+
 <body>
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Explore Energy</div>
-      <div class="stamp">ENERGY UNDER CONSTRAINT</div>
-    </div>
-    <section class="hero">
-      <div class="eyebrow">Measured vitality</div>
-      <h1>Energy surface.</h1>
-      <p class="heroText">Energy belongs here when it can be discussed as measurable movement, burden, stability, and usable capacity rather than mystique or decorative language.</p>
-      <div class="actionRow">
-        <a class="action" href="/explore/">Explore</a>
-        <a class="action" href="/laws/">Laws</a>
-        <a class="action" href="/gauges/">Gauges</a>
-      </div>
-    </section>
-    <section class="grid">
-      <article class="panel"><h2 class="panelTitle">Read</h2><p class="panelText">Energy is treated as system behavior and usable movement.</p></article>
-      <article class="panel"><h2 class="panelTitle">Constraint</h2><p class="panelText">No vague force language. It must connect to stability, direction, and burden.</p></article>
-      <article class="panel"><h2 class="panelTitle">Outcome</h2><p class="panelText">Clearer translation from intuition to governed surface.</p></article>
-    </section>
-    <div class="footer">BUILD=EXPLORE_ENERGY_G1 | ROLE=ENERGY_SURFACE | STATUS=ACTIVE</div>
-  </main>
+  <a class="skip" href="#main">Skip to Energy</a>
+
+  <div class="shell">
+    <header class="card top">
+      <a class="brand state-link" href="/explore/frontier/energy/">
+        <span class="mark">EN</span>
+        <span>
+          <span>Diamond Gate Bridge · Frontier</span>
+          <strong>Energy · G1 V10A</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="state-link" href="/door/">Door</a>
+        <a class="state-link" href="/home/">Home</a>
+        <a class="state-link" href="/explore/">Manor</a>
+        <a class="state-link" href="/frontier/" aria-current="page">Frontier</a>
+        <a class="state-link" href="/laws/">Laws</a>
+        <a class="state-link" href="/products/">Products</a>
+        <a class="state-link" href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="card hero">
+        <div class="kicker">Russian-Doll Power Context · Official Hierarchy</div>
+        <h1>Energy</h1>
+        <h2>Power should be directed, conserved, and made usable.</h2>
+        <p>
+          Energy is the Frontier power lane. It does not praise raw force. It asks where
+          power enters, how it is conserved, what it can move, and whether the system can
+          convert available power into lawful motion.
+        </p>
+        <div class="control-row">
+          <a class="button primary state-link" href="/gauges/">Read Gauges</a>
+          <a class="button state-link" href="/laws/">Check Laws</a>
+          <a class="button state-link" href="/explore/frontier/">Return to Frontier Hub</a>
+        </div>
+      </section>
+
+      <section class="card section" aria-labelledby="doll-title">
+        <div class="kicker">Russian Doll</div>
+        <h2 id="doll-title">Open only the power layer needed.</h2>
+
+        <div class="doll">
+          <details open>
+            <summary>Outer shell — What Energy is</summary>
+            <div class="detail-body">
+              <p>Energy is the Frontier lane that turns available power into directed, conserved, usable motion.</p>
+
+              <details class="nested" open>
+                <summary>Layer 1 — Where it sits</summary>
+                <div class="detail-body">
+                  <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Energy powers. Laws bound. Gauges measure.</p>
+
+                  <details class="nested" open>
+                    <summary>Layer 2 — Where we are in the cycle</summary>
+                    <div class="detail-body">
+                      <div class="cycle-grid" aria-label="Current Energy cycle position">
+                        <div class="cycle-step complete"><strong>Charge</strong><span>complete</span></div>
+                        <div class="cycle-step complete"><strong>Direct</strong><span>complete</span></div>
+                        <div class="cycle-step complete"><strong>Conserve</strong><span>complete</span></div>
+                        <div class="cycle-step active"><strong>Convert</strong><span>active</span></div>
+                        <div class="cycle-step"><strong>Regulate</strong><span>next</span></div>
+                        <div class="cycle-step"><strong>Explain</strong><span>pending</span></div>
+                        <div class="cycle-step"><strong>Repeat</strong><span>pending</span></div>
+                      </div>
+
+                      <details class="nested">
+                        <summary>Layer 3 — Active conversion</summary>
+                        <div class="detail-body">
+                          <p>Gauges must confirm that Energy is live as V10A, readable as power structure, and aligned with the Audralia Manor baseline.</p>
+
+                          <details class="nested">
+                            <summary>Layer 4 — Regulation boundary</summary>
+                            <div class="detail-body">
+                              <p>Regulation prevents power from becoming waste, drift, or uncontrolled force. Energy feeds motion only where the path is lawful.</p>
+
+                              <details class="nested">
+                                <summary>Layer 5 — What Energy owns</summary>
+                                <div class="detail-body">
+                                  <p>Energy owns charge, directed power, conservation, conversion, operating capacity, force readiness, and usable motion potential.</p>
+
+                                  <details class="nested">
+                                    <summary>Layer 6 — What Energy does not own</summary>
+                                    <div class="detail-body">
+                                      <p>Energy does not own trajectory, infrastructure support, relation mapping, law authority, Gauges scoring, product identity, route mutation, or generation pass claims.</p>
+
+                                      <details class="nested">
+                                        <summary>Layer 7 — Proof return</summary>
+                                        <div class="detail-body">
+                                          <p>The proof path returns to Gauges. The legal boundary returns to Laws. The map returns to Manor. The expansion edge returns to Frontier.</p>
+                                        </div>
+                                      </details>
+                                    </div>
+                                  </details>
+                                </div>
+                              </details>
+                            </div>
+                          </details>
+                        </div>
+                      </details>
+                    </div>
+                  </details>
+                </div>
+              </details>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card section" aria-labelledby="controls-title">
+        <div class="kicker">Room Controls</div>
+        <h2 id="controls-title">Switch mode without losing the power layer.</h2>
+
+        <div class="control-row" role="group" aria-label="Mode controls">
+          <button class="tab" type="button" data-mode="meaning" aria-pressed="true">Meaning</button>
+          <button class="tab" type="button" data-mode="function" aria-pressed="false">Function</button>
+          <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
+        </div>
+
+        <article class="readout" aria-live="polite">
+          <small id="mode-kicker">Meaning mode</small>
+          <h3 id="mode-title">Direct the power.</h3>
+          <p id="mode-copy">Energy makes power useful by giving it direction, containment, and a lawful conversion path.</p>
+        </article>
+      </section>
+
+      <section class="card section" aria-labelledby="boundary-title">
+        <div class="kicker">Contract Boundaries</div>
+        <h2 id="boundary-title">Energy does not replace proof.</h2>
+
+        <div class="split">
+          <article class="mini">
+            <strong>Current language</strong>
+            <p>Manor, Frontier, Audralia, Audralia Universe, Laws, Gauges, and Universal Node are the current baseline terms.</p>
+          </article>
+          <article class="mini">
+            <strong>Prior framing</strong>
+            <p>Prior flat-world or early-generation framing is preserved only as history. It does not control this page’s current identity.</p>
+          </article>
+          <article class="mini">
+            <strong>Convert active</strong>
+            <p>The page is ready for Gauges to confirm current hierarchy, readable source, and baseline alignment.</p>
+          </article>
+          <article class="mini">
+            <strong>Regulate next</strong>
+            <p>If Gauges still holds the route, the next move is narrow regulation cleanup, not another source-target chase.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card section" aria-labelledby="routes-title">
+        <div class="kicker">Frontier Routes</div>
+        <h2 id="routes-title">Move to another Frontier lane.</h2>
+
+        <nav class="nav" aria-label="Frontier lane routes">
+          <a class="state-link" href="/explore/frontier/">Frontier Hub</a>
+          <a class="state-link" href="/explore/frontier/closed-loop/">Closed Loop</a>
+          <a class="state-link" href="/explore/frontier/infrastructure/">Infrastructure</a>
+          <a class="state-link" href="/explore/frontier/lattice/">Lattice</a>
+          <a class="state-link" href="/explore/frontier/manual/">Manual</a>
+          <a class="state-link" href="/explore/frontier/trajectory/">Trajectory</a>
+          <a class="state-link" href="/explore/frontier/water/">Water</a>
+          <a class="state-link" href="/explore/frontier/waste/">Waste</a>
+        </nav>
+      </section>
+
+      <details class="card receipt" open>
+        <summary>Status label</summary>
+        <pre>ENERGY_G1_V10A_RUSSIAN_DOLL_POWER_TNT_v1
+STATUS=ACTIVE
+VISIBLE_TITLE=Energy · G1 V10A
+PUBLIC_PROOF_MARKER=Russian Doll Power · V10A active
+PAGE=/explore/frontier/energy/index.html
+ROUTE=/explore/frontier/energy/
+PARENT=/explore/frontier/
+BASELINE=AUDRALIA_MANOR_CURRENT
+EXPRESSION=Russian_Doll_Power
+CYCLE_POSITION=Charge_complete,Direct_complete,Conserve_complete,Convert_active,Regulate_next,Explain_pending,Repeat_pending
+HIERARCHY=Compass→Door→Home→Manor→Frontier→Energy→Laws→Gauges
+ROLE=frontier_power_lane
+OWNS=charge,directed_power,conservation,conversion,operating_capacity,force_readiness,usable_motion_potential
+DOES_NOT_OWN=trajectory,infrastructure_support,relation_mapping,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
+PRIOR_LANGUAGE_HANDLING=prior_flat_world_or_generation_framing_archival_only
+HEAVY_RUNTIME_LOADED=false
+RENDER_FILES_TOUCHED=false
+GAUGES_LOGIC_TOUCHED=false
+VISUAL_PASS_CLAIMED=false</pre>
+      </details>
+    </main>
+
+    <footer>
+      Diamond Gate Bridge · Frontier · Energy · G1 V10A · Russian Doll Power.
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const modes = {
+        meaning: [
+          "Meaning mode",
+          "Direct the power.",
+          "Energy makes power useful by giving it direction, containment, and a lawful conversion path."
+        ],
+        function: [
+          "Function mode",
+          "Convert into motion.",
+          "Energy turns available capacity into usable movement without wasting the system’s charge."
+        ],
+        engineering: [
+          "Engineering mode",
+          "Implementation stays bounded.",
+          "Engineering names route ownership, power boundary, receipt integrity, and no-mutation proof."
+        ]
+      };
+
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const kicker = document.getElementById("mode-kicker");
+      const title = document.getElementById("mode-title");
+      const copy = document.getElementById("mode-copy");
+
+      function setMode(mode) {
+        const data = modes[mode] || modes.meaning;
+
+        tabs.forEach((tab) => {
+          tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
+        });
+
+        kicker.textContent = data[0];
+        title.textContent = data[1];
+        copy.textContent = data[2];
+      }
+
+      function syncLinks() {
+        const params = new URLSearchParams(window.location.search);
+        params.set("gd_lang", params.get("gd_lang") || "en");
+        params.set("gd_style", params.get("gd_style") || "informal");
+        params.set("gd_time", params.get("gd_time") || "now");
+        params.set("gd_depth", params.get("gd_depth") || "explore");
+        params.set("lane", params.get("lane") || "platform");
+
+        document.querySelectorAll(".state-link").forEach((link) => {
+          const url = new URL(link.getAttribute("href"), window.location.origin);
+          params.forEach((value, key) => url.searchParams.set(key, value));
+          link.href = url.pathname + "?" + url.searchParams.toString();
+        });
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => setMode(tab.dataset.mode || "meaning"));
+      });
+
+      setMode("meaning");
+      syncLinks();
+    })();
+  </script>
 </body>
 </html>

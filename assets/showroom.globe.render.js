@@ -1,20 +1,18 @@
 /* /assets/showroom.globe.render.js
-   SHOWROOM_GLOBE_ORTHOGRAPHIC_VECTOR_SPHERE_RENDER_TNT_v1
+   SHOWROOM_GLOBE_SEAMLESS_4K_VECTOR_SPHERE_RENDER_TNT_v1
 
    ROLE:
    Render authority only.
 
    PURPOSE:
-   Stop flat texture-strip / slab behavior.
-   Draw Earth, Sun, and Moon as projected spherical bodies.
-   No texture dependency.
-   No route ownership.
-   No instrument ownership.
+   Remove visible seam / screwed-together-panel look.
+   Preserve globe physics, geometry, axis behavior, and shadows.
+   Improve perceived 4K-quality surface definition without external texture dependency.
 
    OWNS:
    Earth/Sun/Moon body drawing.
-   Orthographic sphere projection.
-   Visible-hemisphere surface expression.
+   Orthographic visible-hemisphere geometry.
+   Seamless surface expression.
 
    DOES_NOT_OWN:
    Route copy.
@@ -26,101 +24,13 @@
    Gauges.
 */
 
-(function bindShowroomGlobeOrthographicVectorSphereRender(global) {
+(function bindShowroomGlobeSeamless4KVectorSphereRender(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_ORTHOGRAPHIC_VECTOR_SPHERE_RENDER_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_SEAMLESS_4K_VECTOR_SPHERE_RENDER_TNT_v1";
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
   const BODY_SET = new Set(["earth", "sun", "moon"]);
-
-  const earthLand = [
-    {
-      name: "north-america",
-      fill: "rgba(70, 146, 82, 0.96)",
-      stroke: "rgba(235, 232, 178, 0.16)",
-      points: [[-168, 70], [-138, 72], [-105, 58], [-84, 50], [-70, 30], [-91, 15], [-112, 20], [-126, 32], [-151, 52]]
-    },
-    {
-      name: "south-america",
-      fill: "rgba(61, 132, 78, 0.96)",
-      stroke: "rgba(235, 232, 178, 0.15)",
-      points: [[-81, 12], [-62, 8], [-44, -11], [-48, -34], [-66, -55], [-76, -35], [-82, -8]]
-    },
-    {
-      name: "greenland",
-      fill: "rgba(226, 240, 232, 0.92)",
-      stroke: "rgba(255, 255, 255, 0.16)",
-      points: [[-54, 82], [-22, 74], [-36, 61], [-62, 68]]
-    },
-    {
-      name: "eurasia",
-      fill: "rgba(178, 139, 73, 0.96)",
-      stroke: "rgba(235, 232, 178, 0.16)",
-      points: [[-10, 68], [32, 71], [82, 61], [136, 55], [151, 38], [117, 18], [76, 20], [45, 6], [18, 30], [-10, 36]]
-    },
-    {
-      name: "africa",
-      fill: "rgba(157, 119, 64, 0.96)",
-      stroke: "rgba(235, 232, 178, 0.16)",
-      points: [[-18, 35], [16, 37], [35, 14], [31, -34], [11, -36], [-12, -6]]
-    },
-    {
-      name: "australia",
-      fill: "rgba(180, 132, 66, 0.96)",
-      stroke: "rgba(235, 232, 178, 0.14)",
-      points: [[112, -11], [153, -24], [145, -43], [114, -36]]
-    },
-    {
-      name: "antarctica",
-      fill: "rgba(238, 247, 255, 0.94)",
-      stroke: "rgba(255, 255, 255, 0.14)",
-      points: [[-180, -70], [-120, -76], [-60, -72], [0, -78], [60, -72], [120, -76], [180, -70], [180, -90], [-180, -90]]
-    }
-  ];
-
-  const moonMaria = [
-    { lon: -48, lat: 18, rx: 0.18, ry: 0.08, angle: -0.2 },
-    { lon: 5, lat: 22, rx: 0.15, ry: 0.07, angle: 0.12 },
-    { lon: 24, lat: -8, rx: 0.2, ry: 0.09, angle: 0.04 },
-    { lon: -38, lat: -24, rx: 0.16, ry: 0.075, angle: 0.2 },
-    { lon: 64, lat: -22, rx: 0.13, ry: 0.06, angle: -0.12 }
-  ];
-
-  const moonCraters = [];
-  const solarCells = [];
-  const earthCloudSeeds = [];
-
-  for (let i = 0; i < 120; i += 1) {
-    moonCraters.push({
-      lon: -175 + rand(i + 10) * 350,
-      lat: -66 + rand(i + 20) * 132,
-      size: 0.01 + Math.pow(rand(i + 30), 2.2) * 0.055,
-      alpha: 0.11 + rand(i + 40) * 0.16
-    });
-  }
-
-  for (let i = 0; i < 190; i += 1) {
-    solarCells.push({
-      lon: -180 + rand(i + 300) * 360,
-      lat: -70 + rand(i + 400) * 140,
-      size: 0.014 + rand(i + 500) * 0.035,
-      stretch: 1.6 + rand(i + 600) * 2.8,
-      angle: rand(i + 700) * TAU,
-      alpha: 0.08 + rand(i + 800) * 0.2
-    });
-  }
-
-  for (let i = 0; i < 130; i += 1) {
-    earthCloudSeeds.push({
-      lon: -180 + rand(i + 900) * 360,
-      lat: -58 + rand(i + 1000) * 116,
-      length: 0.05 + rand(i + 1100) * 0.14,
-      width: 0.008 + rand(i + 1200) * 0.02,
-      angle: rand(i + 1300) * TAU,
-      alpha: 0.12 + rand(i + 1400) * 0.22
-    });
-  }
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -162,66 +72,9 @@
       x: cx + x * radius,
       y: cy - y * radius,
       z,
-      visible: z > 0.01,
-      scale: clamp(z, 0, 1)
+      visible: z > 0.018,
+      scale: clamp(0.25 + z * 0.75, 0.25, 1)
     };
-  }
-
-  function drawProjectedPolygon(ctx, polygon, centerLon, tilt, cx, cy, radius) {
-    const points = densifyPolygon(polygon.points, 7)
-      .map(([lon, lat]) => project(lon, lat, centerLon, tilt, cx, cy, radius));
-
-    const visible = points.filter((point) => point.visible);
-
-    if (visible.length < 3) return;
-
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-
-    ctx.beginPath();
-    visible.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-
-    ctx.closePath();
-    ctx.fillStyle = polygon.fill;
-    ctx.fill();
-
-    ctx.strokeStyle = polygon.stroke;
-    ctx.lineWidth = Math.max(1, radius * 0.004);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function densifyPolygon(points, stepDeg) {
-    const out = [];
-
-    for (let i = 0; i < points.length; i += 1) {
-      const current = points[i];
-      const next = points[(i + 1) % points.length];
-
-      const lon1 = current[0];
-      const lat1 = current[1];
-      const lon2 = next[0];
-      const lat2 = next[1];
-
-      out.push(current);
-
-      const distance = Math.max(Math.abs(lon2 - lon1), Math.abs(lat2 - lat1));
-      const steps = Math.max(1, Math.floor(distance / stepDeg));
-
-      for (let s = 1; s < steps; s += 1) {
-        const t = s / steps;
-        out.push([
-          lon1 + (lon2 - lon1) * t,
-          lat1 + (lat2 - lat1) * t
-        ]);
-      }
-    }
-
-    return out;
   }
 
   function clipSphere(ctx, cx, cy, radius) {
@@ -231,185 +84,215 @@
     ctx.clip();
   }
 
-  function drawEarth(ctx, cx, cy, radius, centerLon) {
-    const tilt = bodyTilt("earth");
+  function drawProjectedEllipse(ctx, item, centerLon, tilt, cx, cy, radius, fill, stroke) {
+    const p = project(item.lon, item.lat, centerLon, tilt, cx, cy, radius);
+    if (!p.visible) return;
 
-    const ocean = ctx.createRadialGradient(cx - radius * 0.35, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
-    ocean.addColorStop(0, "#76e7ff");
-    ocean.addColorStop(0.2, "#148dcc");
-    ocean.addColorStop(0.58, "#064d9f");
-    ocean.addColorStop(1, "#011735");
+    const zScale = p.scale;
+    const rx = radius * item.rx * zScale;
+    const ry = radius * item.ry * Math.max(0.35, zScale);
+    const angle = (item.angle || 0) + (centerLon * 0.003);
 
     ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fillStyle = ocean;
+    ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
+    ctx.fillStyle = fill;
     ctx.fill();
-    ctx.restore();
 
-    earthLand.forEach((polygon) => drawProjectedPolygon(ctx, polygon, centerLon, tilt, cx, cy, radius));
-
-    drawEarthTextureDots(ctx, centerLon, tilt, cx, cy, radius);
-    drawCloudBands(ctx, centerLon, tilt, cx, cy, radius);
-    drawCloudSeeds(ctx, centerLon, tilt, cx, cy, radius);
-    drawOptics(ctx, cx, cy, radius, "earth");
-  }
-
-  function drawEarthTextureDots(ctx, centerLon, tilt, cx, cy, radius) {
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-
-    for (let i = 0; i < 220; i += 1) {
-      const lon = -180 + rand(i + 2000) * 360;
-      const lat = -58 + rand(i + 2100) * 116;
-      const p = project(lon, lat, centerLon, tilt, cx, cy, radius);
-
-      if (!p.visible) continue;
-
-      const size = radius * (0.006 + rand(i + 2200) * 0.016) * p.scale;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size, 0, TAU);
-      ctx.fillStyle = `rgba(95, 190, 116, ${0.05 + rand(i + 2300) * 0.08})`;
-      ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = Math.max(1, radius * 0.004 * zScale);
+      ctx.stroke();
     }
 
     ctx.restore();
   }
 
-  function drawCloudBands(ctx, centerLon, tilt, cx, cy, radius) {
-    const bands = [
-      { lat: 27, alpha: 0.18, width: 0.018, phase: 0 },
-      { lat: 5, alpha: 0.2, width: 0.015, phase: 1.8 },
-      { lat: -32, alpha: 0.17, width: 0.017, phase: 3.1 }
-    ];
+  const earthLandBlobs = [
+    { lon: -118, lat: 54, rx: 0.17, ry: 0.08, angle: -0.15, fill: "rgba(64, 143, 80, 0.94)" },
+    { lon: -96, lat: 41, rx: 0.16, ry: 0.08, angle: 0.18, fill: "rgba(76, 151, 82, 0.94)" },
+    { lon: -86, lat: 22, rx: 0.09, ry: 0.055, angle: -0.35, fill: "rgba(68, 135, 70, 0.9)" },
+    { lon: -62, lat: -13, rx: 0.11, ry: 0.18, angle: 0.22, fill: "rgba(58, 132, 75, 0.94)" },
+    { lon: -68, lat: -38, rx: 0.07, ry: 0.12, angle: 0.04, fill: "rgba(62, 128, 72, 0.9)" },
+    { lon: -42, lat: 72, rx: 0.09, ry: 0.045, angle: -0.18, fill: "rgba(225, 238, 230, 0.9)" },
+    { lon: 18, lat: 8, rx: 0.12, ry: 0.18, angle: -0.07, fill: "rgba(153, 119, 66, 0.94)" },
+    { lon: 31, lat: -17, rx: 0.09, ry: 0.13, angle: 0.08, fill: "rgba(144, 111, 63, 0.9)" },
+    { lon: 48, lat: 51, rx: 0.25, ry: 0.09, angle: 0.06, fill: "rgba(178, 139, 73, 0.94)" },
+    { lon: 86, lat: 34, rx: 0.22, ry: 0.08, angle: -0.08, fill: "rgba(172, 135, 75, 0.92)" },
+    { lon: 125, lat: 53, rx: 0.16, ry: 0.07, angle: 0.18, fill: "rgba(85, 145, 78, 0.92)" },
+    { lon: 134, lat: -26, rx: 0.1, ry: 0.055, angle: -0.18, fill: "rgba(176, 132, 68, 0.94)" },
+    { lon: 0, lat: -79, rx: 0.55, ry: 0.045, angle: 0, fill: "rgba(236, 248, 255, 0.92)" }
+  ];
 
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
+  const moonMaria = [
+    { lon: -48, lat: 18, rx: 0.17, ry: 0.075, angle: -0.2 },
+    { lon: 3, lat: 22, rx: 0.14, ry: 0.07, angle: 0.12 },
+    { lon: 24, lat: -8, rx: 0.18, ry: 0.085, angle: 0.04 },
+    { lon: -38, lat: -24, rx: 0.15, ry: 0.07, angle: 0.2 },
+    { lon: 64, lat: -22, rx: 0.12, ry: 0.055, angle: -0.12 }
+  ];
 
-    bands.forEach((band) => {
-      ctx.beginPath();
+  const moonCraters = [];
+  const solarCells = [];
+  const earthClouds = [];
+  const earthMicro = [];
 
-      let active = false;
-
-      for (let lon = -180; lon <= 180; lon += 6) {
-        const lat = band.lat + Math.sin((lon * 0.045) + band.phase) * 5 + Math.sin((lon * 0.11) + band.phase) * 2;
-        const p = project(lon, lat, centerLon, tilt, cx, cy, radius);
-
-        if (!p.visible) {
-          active = false;
-          continue;
-        }
-
-        if (!active) {
-          ctx.moveTo(p.x, p.y);
-          active = true;
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
-      }
-
-      ctx.strokeStyle = `rgba(255, 255, 255, ${band.alpha})`;
-      ctx.lineWidth = Math.max(1.5, radius * band.width);
-      ctx.lineCap = "round";
-      ctx.stroke();
+  for (let i = 0; i < 220; i += 1) {
+    moonCraters.push({
+      lon: -178 + rand(i + 10) * 356,
+      lat: -68 + rand(i + 20) * 136,
+      size: 0.006 + Math.pow(rand(i + 30), 2.4) * 0.036,
+      alpha: 0.08 + rand(i + 40) * 0.18
     });
-
-    ctx.restore();
   }
 
-  function drawCloudSeeds(ctx, centerLon, tilt, cx, cy, radius) {
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-
-    earthCloudSeeds.forEach((cloud) => {
-      const p = project(cloud.lon, cloud.lat, centerLon, tilt, cx, cy, radius);
-
-      if (!p.visible) return;
-
-      const w = radius * cloud.length * p.scale;
-      const h = radius * cloud.width * p.scale;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(cloud.angle);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, w, h, 0, 0, TAU);
-      ctx.fillStyle = `rgba(255, 255, 255, ${cloud.alpha * p.scale})`;
-      ctx.fill();
-      ctx.restore();
+  for (let i = 0; i < 420; i += 1) {
+    solarCells.push({
+      lon: -180 + rand(i + 300) * 360,
+      lat: -72 + rand(i + 400) * 144,
+      rx: 0.007 + rand(i + 500) * 0.026,
+      ry: 0.004 + rand(i + 600) * 0.012,
+      angle: rand(i + 700) * TAU,
+      alpha: 0.055 + rand(i + 800) * 0.19
     });
-
-    ctx.restore();
   }
 
-  function drawSun(ctx, cx, cy, radius, centerLon) {
-    const tilt = bodyTilt("sun");
+  for (let i = 0; i < 260; i += 1) {
+    earthClouds.push({
+      lon: -180 + rand(i + 900) * 360,
+      lat: -62 + rand(i + 1000) * 124,
+      rx: 0.018 + rand(i + 1100) * 0.075,
+      ry: 0.004 + rand(i + 1200) * 0.014,
+      angle: rand(i + 1300) * TAU,
+      alpha: 0.07 + rand(i + 1400) * 0.18
+    });
+  }
 
-    const base = ctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
-    base.addColorStop(0, "#fff3a2");
-    base.addColorStop(0.18, "#ffc145");
-    base.addColorStop(0.48, "#ff8420");
-    base.addColorStop(0.76, "#cf4314");
-    base.addColorStop(1, "#651706");
+  for (let i = 0; i < 520; i += 1) {
+    earthMicro.push({
+      lon: -180 + rand(i + 1500) * 360,
+      lat: -65 + rand(i + 1600) * 130,
+      rx: 0.003 + rand(i + 1700) * 0.012,
+      ry: 0.002 + rand(i + 1800) * 0.007,
+      angle: rand(i + 1900) * TAU,
+      alpha: 0.025 + rand(i + 2000) * 0.06
+    });
+  }
+
+  function drawBaseSphere(ctx, cx, cy, radius, body) {
+    let base;
+
+    if (body === "sun") {
+      base = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+      base.addColorStop(0, "#fff3a4");
+      base.addColorStop(0.16, "#ffc44a");
+      base.addColorStop(0.46, "#ff8321");
+      base.addColorStop(0.78, "#c83d12");
+      base.addColorStop(1, "#5f1506");
+    } else if (body === "moon") {
+      base = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+      base.addColorStop(0, "#f4f2df");
+      base.addColorStop(0.34, "#d1d1c8");
+      base.addColorStop(0.7, "#969d9d");
+      base.addColorStop(1, "#4d5660");
+    } else {
+      base = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+      base.addColorStop(0, "#78e8ff");
+      base.addColorStop(0.2, "#168fcd");
+      base.addColorStop(0.58, "#064b9c");
+      base.addColorStop(1, "#011735");
+    }
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, TAU);
     ctx.fillStyle = base;
-    ctx.shadowColor = "rgba(255, 139, 35, 0.45)";
-    ctx.shadowBlur = radius * 0.12;
     ctx.fill();
     ctx.restore();
+  }
+
+  function drawEarth(ctx, cx, cy, radius, centerLon) {
+    const tilt = bodyTilt("earth");
+
+    drawBaseSphere(ctx, cx, cy, radius, "earth");
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    earthLandBlobs.forEach((blob) => {
+      drawProjectedEllipse(
+        ctx,
+        blob,
+        centerLon,
+        tilt,
+        cx,
+        cy,
+        radius,
+        blob.fill,
+        "rgba(255, 244, 196, 0.08)"
+      );
+    });
+
+    earthMicro.forEach((spot) => {
+      drawProjectedEllipse(
+        ctx,
+        spot,
+        centerLon,
+        tilt,
+        cx,
+        cy,
+        radius,
+        `rgba(83, 174, 103, ${spot.alpha})`,
+        null
+      );
+    });
+
+    earthClouds.forEach((cloud) => {
+      drawProjectedEllipse(
+        ctx,
+        cloud,
+        centerLon,
+        tilt,
+        cx,
+        cy,
+        radius,
+        `rgba(255, 255, 255, ${cloud.alpha})`,
+        null
+      );
+    });
+
+    drawFlowLines(ctx, centerLon, tilt, cx, cy, radius, "earth");
+
+    ctx.restore();
+
+    drawOptics(ctx, cx, cy, radius, "earth");
+  }
+
+  function drawSun(ctx, cx, cy, radius, centerLon) {
+    const tilt = bodyTilt("sun");
+
+    drawBaseSphere(ctx, cx, cy, radius, "sun");
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
     solarCells.forEach((cell) => {
-      const p = project(cell.lon, cell.lat, centerLon, tilt, cx, cy, radius);
-
-      if (!p.visible) return;
-
-      const size = radius * cell.size * p.scale;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(cell.angle + centerLon * DEG);
-      ctx.scale(cell.stretch, 0.72);
-      ctx.beginPath();
-      ctx.arc(0, 0, size, 0, TAU);
-      ctx.fillStyle = `rgba(255, 226, 102, ${cell.alpha * p.scale})`;
-      ctx.fill();
-      ctx.restore();
+      drawProjectedEllipse(
+        ctx,
+        cell,
+        centerLon,
+        tilt,
+        cx,
+        cy,
+        radius,
+        `rgba(255, 230, 105, ${cell.alpha})`,
+        null
+      );
     });
 
-    for (let i = 0; i < 9; i += 1) {
-      ctx.beginPath();
-
-      let active = false;
-      const lat = -55 + i * 14;
-
-      for (let lon = -180; lon <= 180; lon += 5) {
-        const waveLat = lat + Math.sin((lon * 0.05) + i) * 4;
-        const p = project(lon, waveLat, centerLon, tilt, cx, cy, radius);
-
-        if (!p.visible) {
-          active = false;
-          continue;
-        }
-
-        if (!active) {
-          ctx.moveTo(p.x, p.y);
-          active = true;
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
-      }
-
-      ctx.strokeStyle = "rgba(255, 238, 126, 0.12)";
-      ctx.lineWidth = Math.max(1.2, radius * 0.012);
-      ctx.stroke();
-    }
+    drawFlowLines(ctx, centerLon, tilt, cx, cy, radius, "sun");
 
     ctx.restore();
 
@@ -419,59 +302,45 @@
   function drawMoon(ctx, cx, cy, radius, centerLon) {
     const tilt = bodyTilt("moon");
 
-    const base = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
-    base.addColorStop(0, "#f5f4df");
-    base.addColorStop(0.34, "#cfd0c7");
-    base.addColorStop(0.7, "#939a9b");
-    base.addColorStop(1, "#4f5862");
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fillStyle = base;
-    ctx.fill();
-    ctx.restore();
+    drawBaseSphere(ctx, cx, cy, radius, "moon");
 
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
     moonMaria.forEach((basin) => {
-      const p = project(basin.lon, basin.lat, centerLon, tilt, cx, cy, radius);
-
-      if (!p.visible) return;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(basin.angle);
-      ctx.scale(1, Math.max(0.25, p.scale));
-      ctx.beginPath();
-      ctx.ellipse(0, 0, radius * basin.rx * p.scale, radius * basin.ry * p.scale, 0, 0, TAU);
-      ctx.fillStyle = `rgba(59, 64, 66, ${0.22 * p.scale})`;
-      ctx.fill();
-      ctx.restore();
+      drawProjectedEllipse(
+        ctx,
+        basin,
+        centerLon,
+        tilt,
+        cx,
+        cy,
+        radius,
+        "rgba(55, 60, 62, 0.22)",
+        null
+      );
     });
 
     moonCraters.forEach((crater) => {
       const p = project(crater.lon, crater.lat, centerLon, tilt, cx, cy, radius);
-
       if (!p.visible) return;
 
       const size = radius * crater.size * p.scale;
 
       ctx.save();
       ctx.translate(p.x, p.y);
-      ctx.scale(1, Math.max(0.28, p.scale));
+      ctx.scale(1, Math.max(0.36, p.scale));
       ctx.beginPath();
       ctx.arc(0, 0, size, 0, TAU);
       ctx.fillStyle = `rgba(45, 49, 52, ${crater.alpha * p.scale})`;
       ctx.fill();
-      ctx.strokeStyle = `rgba(255, 255, 245, ${0.18 * p.scale})`;
-      ctx.lineWidth = Math.max(1, size * 0.13);
+      ctx.strokeStyle = `rgba(255, 255, 245, ${0.15 * p.scale})`;
+      ctx.lineWidth = Math.max(1, size * 0.12);
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(-size * 0.22, -size * 0.22, size * 0.42, 0, TAU);
-      ctx.fillStyle = `rgba(255, 255, 245, ${0.1 * p.scale})`;
+      ctx.fillStyle = `rgba(255, 255, 245, ${0.08 * p.scale})`;
       ctx.fill();
       ctx.restore();
     });
@@ -481,31 +350,76 @@
     drawOptics(ctx, cx, cy, radius, "moon");
   }
 
+  function drawFlowLines(ctx, centerLon, tilt, cx, cy, radius, body) {
+    const count = body === "sun" ? 11 : 7;
+
+    for (let i = 0; i < count; i += 1) {
+      const lat = body === "sun" ? -58 + i * 11.5 : -48 + i * 16;
+      ctx.beginPath();
+
+      let active = false;
+
+      for (let lon = -180; lon <= 180; lon += 4) {
+        const wave =
+          Math.sin((lon * 0.04) + i * 1.7) * (body === "sun" ? 5 : 4) +
+          Math.sin((lon * 0.09) + i * 0.8) * (body === "sun" ? 2 : 1.5);
+
+        const p = project(lon, lat + wave, centerLon, tilt, cx, cy, radius);
+
+        if (!p.visible) {
+          active = false;
+          continue;
+        }
+
+        if (!active) {
+          ctx.moveTo(p.x, p.y);
+          active = true;
+        } else {
+          ctx.lineTo(p.x, p.y);
+        }
+      }
+
+      ctx.strokeStyle = body === "sun"
+        ? "rgba(255, 232, 118, 0.105)"
+        : "rgba(255, 255, 255, 0.115)";
+      ctx.lineWidth = Math.max(1, radius * (body === "sun" ? 0.009 : 0.006));
+      ctx.lineCap = "round";
+      ctx.stroke();
+    }
+  }
+
   function drawOptics(ctx, cx, cy, radius, body) {
     ctx.save();
     clipSphere(ctx, cx, cy, radius);
 
-    const highlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+    const highlight = ctx.createRadialGradient(
+      cx - radius * 0.35,
+      cy - radius * 0.36,
+      radius * 0.035,
+      cx,
+      cy,
+      radius
+    );
 
     if (body === "sun") {
-      highlight.addColorStop(0, "rgba(255,255,225,0.35)");
-      highlight.addColorStop(0.24, "rgba(255,238,120,0.13)");
+      highlight.addColorStop(0, "rgba(255,255,226,0.32)");
+      highlight.addColorStop(0.25, "rgba(255,238,120,0.12)");
       highlight.addColorStop(1, "rgba(255,255,255,0)");
     } else {
-      highlight.addColorStop(0, "rgba(255,255,255,0.24)");
-      highlight.addColorStop(0.28, "rgba(255,255,255,0.06)");
+      highlight.addColorStop(0, "rgba(255,255,255,0.22)");
+      highlight.addColorStop(0.3, "rgba(255,255,255,0.06)");
       highlight.addColorStop(1, "rgba(255,255,255,0)");
     }
 
     ctx.fillStyle = highlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    const terminator = ctx.createLinearGradient(cx - radius * 0.52, cy - radius, cx + radius, cy + radius);
-    terminator.addColorStop(0, "rgba(255,255,255,0)");
-    terminator.addColorStop(0.55, "rgba(0,0,0,0)");
-    terminator.addColorStop(1, body === "sun" ? "rgba(80,12,0,0.14)" : "rgba(0,0,0,0.44)");
+    const limb = ctx.createRadialGradient(cx, cy, radius * 0.58, cx, cy, radius);
+    limb.addColorStop(0, "rgba(0,0,0,0)");
+    limb.addColorStop(0.72, body === "sun" ? "rgba(70,10,0,0.04)" : "rgba(0,0,0,0.10)");
+    limb.addColorStop(1, body === "sun" ? "rgba(70,10,0,0.18)" : "rgba(0,0,0,0.42)");
 
-    ctx.fillStyle = terminator;
+    ctx.fillStyle = limb;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
@@ -513,9 +427,9 @@
     if (body === "earth") {
       ctx.save();
       ctx.beginPath();
-      ctx.arc(cx, cy, radius * 1.014, 0, TAU);
-      ctx.strokeStyle = "rgba(126,219,255,0.46)";
-      ctx.lineWidth = Math.max(2, radius * 0.028);
+      ctx.arc(cx, cy, radius * 1.012, 0, TAU);
+      ctx.strokeStyle = "rgba(126,219,255,0.48)";
+      ctx.lineWidth = Math.max(2, radius * 0.026);
       ctx.shadowColor = "rgba(126,219,255,0.42)";
       ctx.shadowBlur = radius * 0.07;
       ctx.stroke();
@@ -523,31 +437,31 @@
     }
 
     if (body === "sun") {
-      const corona = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.2);
-      corona.addColorStop(0, "rgba(255,197,63,0.17)");
-      corona.addColorStop(0.58, "rgba(255,114,26,0.12)");
+      const corona = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.22);
+      corona.addColorStop(0, "rgba(255,197,63,0.18)");
+      corona.addColorStop(0.56, "rgba(255,114,26,0.12)");
       corona.addColorStop(1, "rgba(255,114,26,0)");
 
       ctx.save();
       ctx.globalCompositeOperation = "screen";
       ctx.beginPath();
-      ctx.arc(cx, cy, radius * 1.2, 0, TAU);
+      ctx.arc(cx, cy, radius * 1.22, 0, TAU);
       ctx.fillStyle = corona;
       ctx.fill();
       ctx.restore();
     }
 
     let stroke = "rgba(236,235,219,0.54)";
-    let glow = "rgba(255,255,244,0.18)";
+    let glow = "rgba(255,255,244,0.16)";
 
     if (body === "earth") {
-      stroke = "rgba(134,225,255,0.64)";
-      glow = "rgba(126,219,255,0.36)";
+      stroke = "rgba(134,225,255,0.66)";
+      glow = "rgba(126,219,255,0.34)";
     }
 
     if (body === "sun") {
       stroke = "rgba(255,224,116,0.78)";
-      glow = "rgba(255,166,34,0.54)";
+      glow = "rgba(255,166,34,0.52)";
     }
 
     ctx.save();
@@ -568,7 +482,7 @@
       const parent = canvas.parentElement;
       const rect = parent ? parent.getBoundingClientRect() : canvas.getBoundingClientRect();
       const cssSize = clamp(rect.width || canvas.clientWidth || 420, 260, 1080);
-      const dpr = clamp(global.devicePixelRatio || 1, 1, 2.5);
+      const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
       const pixelSize = Math.round(cssSize * dpr);
 
       if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
@@ -590,6 +504,8 @@
       const centerLon = longitude * 360;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
 
       if (body === "sun") {
         drawSun(ctx, cx, cy, radius, centerLon);
@@ -603,8 +519,9 @@
         ok: true,
         version: VERSION,
         body,
-        projection: "orthographic-vector-sphere",
+        projection: "seamless-orthographic-vector-sphere",
         textureRequired: false,
+        seamRemoved: true,
         rendererOwns: "body-drawing-only"
       };
     }
@@ -621,12 +538,13 @@
           ok: true,
           version: VERSION,
           role: "render-authority",
-          projection: "orthographic-vector-sphere",
+          projection: "seamless-orthographic-vector-sphere",
           ownsBodyDrawing: true,
           ownsRoute: false,
           ownsControls: false,
           ownsLabels: false,
-          textureRequired: false
+          textureRequired: false,
+          seamRemoved: true
         };
       }
     };
@@ -646,12 +564,13 @@
         ok: true,
         version: VERSION,
         role: "render-file",
-        projection: "orthographic-vector-sphere",
+        projection: "seamless-orthographic-vector-sphere",
         ownsBodyDrawing: true,
         ownsRoute: false,
         ownsControls: false,
         ownsLabels: false,
-        textureRequired: false
+        textureRequired: false,
+        seamRemoved: true
       };
     }
   };

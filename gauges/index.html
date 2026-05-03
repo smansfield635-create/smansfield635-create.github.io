@@ -2,17 +2,15 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="gauges-current-baseline-audit"
+  data-page="gauges-active-instrumentation"
   data-route="/gauges/"
-  data-contract="GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1"
+  data-contract="GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1"
   data-gauges-role="measurement-surface"
-  data-message="measure-the-rooms-name-the-next-move"
   data-source-fetch-only="true"
   data-renders-iframe="false"
   data-mutates-runtime="false"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
-  data-graphic-box="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
 >
@@ -22,12 +20,13 @@
   <title>Diamond Gate Bridge · Gauges</title>
   <meta
     name="description"
-    content="Gauges measures the Diamond Gate Bridge baseline: rooms, routes, products, frontier lanes, showroom, universe, and proof receipts."
+    content="Active Gauges instrumentation for Diamond Gate Bridge rooms, routes, products, frontier lanes, source checks, baseline alignment, and next-move priority."
   >
 
   <style>
     :root {
       --panel: rgba(9, 14, 26, 0.90);
+      --glass: rgba(255,255,255,0.055);
       --line: rgba(255,255,255,0.15);
       --text: #f8f1dd;
       --muted: rgba(242,246,255,0.74);
@@ -35,7 +34,8 @@
       --gold: #f2c76f;
       --green: #a5efcc;
       --red: #ff9c9c;
-      --stage: min(100%, 1120px);
+      --blue: #78d8ff;
+      --stage: min(100%, 1180px);
     }
 
     * { box-sizing: border-box; }
@@ -46,8 +46,9 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
-        radial-gradient(circle at 50% 72%, rgba(80,145,230,0.13), transparent 34rem),
+        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
+        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
+        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
         linear-gradient(180deg, #060916, #03050d 74%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -72,6 +73,10 @@
 
     a { color: inherit; text-decoration: none; }
 
+    button {
+      font: inherit;
+    }
+
     .skip-link {
       position: absolute;
       top: -4rem;
@@ -80,7 +85,7 @@
       padding: 0.75rem 1rem;
       border-radius: 999px;
       background: var(--gold);
-      color: #080a0f;
+      color: #090b10;
       font-weight: 900;
     }
 
@@ -92,7 +97,7 @@
       width: var(--stage);
       margin: 0 auto;
       padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.4rem, env(safe-area-inset-bottom));
+        max(1.5rem, env(safe-area-inset-bottom));
     }
 
     .topbar {
@@ -153,12 +158,9 @@
     }
 
     .hero {
-      min-height: calc(100svh - 9rem);
       display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 1.05rem;
-      padding: clamp(2rem, 7vw, 5rem) 0;
+      gap: 1rem;
+      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
       text-align: center;
     }
 
@@ -172,29 +174,20 @@
     }
 
     h1 {
-      width: min(100%, 920px);
-      margin: 0;
-      font-size: clamp(3rem, 11vw, 7rem);
-      line-height: 0.88;
-      letter-spacing: -0.085em;
-      text-wrap: balance;
-    }
-
-    .lead {
-      width: min(100%, 720px);
-      margin: 0;
-      color: rgba(255,241,205,0.94);
-      font-size: clamp(1.02rem, 3.6vw, 1.22rem);
-      line-height: 1.5;
+      width: min(100%, 980px);
+      margin: 0 auto;
+      font-size: clamp(2.45rem, 9.2vw, 5.9rem);
+      line-height: 0.92;
+      letter-spacing: -0.078em;
       text-wrap: balance;
     }
 
     .quote {
-      width: min(100%, 720px);
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(0.94rem, 3.2vw, 1.05rem);
-      line-height: 1.55;
+      width: min(100%, 780px);
+      margin: 0 auto;
+      color: rgba(255,241,205,0.96);
+      font-size: clamp(1.02rem, 3.4vw, 1.22rem);
+      line-height: 1.52;
       text-wrap: balance;
     }
 
@@ -206,69 +199,257 @@
     }
 
     .button {
-      min-height: 2.55rem;
+      min-height: 2.45rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0.62rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
       border-radius: 999px;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
       color: #080a0f;
       background: linear-gradient(135deg, #fff0a3, #f2c76f);
       box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
       font-size: 0.78rem;
       font-weight: 950;
-      letter-spacing: 0.065em;
+      letter-spacing: 0.055em;
       text-transform: uppercase;
       cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
     }
 
     .button.secondary {
-      border-color: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.24);
       color: var(--text);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.055);
       box-shadow: none;
     }
 
-    .invariant-row {
-      width: min(100%, 800px);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.65rem;
-      margin-top: 0.5rem;
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      outline: none;
     }
 
-    .invariant {
-      min-height: 6.4rem;
+    .instrument-panel {
+      width: min(100%, 1040px);
+      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
+      position: relative;
+      padding: clamp(1rem, 4vw, 1.6rem);
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: clamp(1.35rem, 5vw, 2.2rem);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
+        rgba(8,12,20,0.62);
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.09);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .panel-title {
       display: grid;
-      align-content: center;
-      gap: 0.25rem;
-      padding: 0.85rem;
-      border: 1px dashed rgba(242,199,111,0.26);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.025);
+      gap: 0.32rem;
+      text-align: center;
+      margin-bottom: clamp(0.85rem, 3vw, 1.25rem);
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 4.8vw, 2.25rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .panel-title p {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.48;
+      text-wrap: balance;
+    }
+
+    .gauge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .gauge-card,
+    .scale-card,
+    .finding,
+    .room-tile {
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.075), transparent 36%),
+        rgba(255,255,255,0.028);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 1rem 3rem rgba(0,0,0,0.22);
+    }
+
+    .gauge-card {
+      min-height: 15rem;
+      display: grid;
+      place-items: center;
+      gap: 0.8rem;
+      padding: 1rem;
+      border-radius: 1.35rem;
+      text-align: center;
+    }
+
+    .dial {
+      --value: 0;
+      --dial-color: var(--gold);
+      width: clamp(8rem, 18vw, 11rem);
+      height: clamp(8rem, 18vw, 11rem);
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(8,12,20,0.98) 0 55%, transparent 56%),
+        conic-gradient(var(--dial-color) calc(var(--value) * 1%), rgba(255,255,255,0.10) 0);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.12),
+        0 0 2.4rem rgba(242,199,111,0.08);
+      position: relative;
+    }
+
+    .dial::before {
+      content: "";
+      position: absolute;
+      inset: 0.55rem;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 50%;
       pointer-events: none;
-      user-select: none;
     }
 
-    .invariant strong {
-      color: rgba(255,241,205,0.95);
-      font-size: 0.76rem;
+    .dial::after {
+      content: "";
+      position: absolute;
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 50%;
+      background: rgba(255,241,205,0.88);
+      box-shadow: 0 0 1rem rgba(242,199,111,0.22);
+    }
+
+    .dial-value {
+      display: grid;
+      gap: 0.12rem;
+      z-index: 2;
+      color: rgba(255,241,205,0.97);
       font-weight: 950;
-      letter-spacing: 0.10em;
+    }
+
+    .dial-value strong {
+      font-size: clamp(1.3rem, 4vw, 1.85rem);
+      line-height: 1;
+    }
+
+    .dial-value span {
+      color: var(--muted);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .invariant span {
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.35;
+    .gauge-card h3,
+    .scale-card h3 {
+      margin: 0;
+      color: rgba(255,241,205,0.95);
+      font-size: 0.86rem;
+      font-weight: 950;
+      letter-spacing: 0.095em;
+      line-height: 1.1;
+      text-transform: uppercase;
     }
 
-    .panel {
-      width: min(100%, 980px);
-      margin-top: 1rem;
-      padding: clamp(0.8rem, 2.8vw, 1rem);
+    .gauge-card p,
+    .scale-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.38;
+    }
+
+    .status-line {
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .pass .dial { --dial-color: var(--green); }
+    .hold .dial { --dial-color: var(--gold); }
+    .fail .dial { --dial-color: var(--red); }
+
+    .pass .status-line { color: var(--green); }
+    .hold .status-line { color: var(--gold); }
+    .fail .status-line { color: var(--red); }
+
+    .scale-section {
+      width: min(100%, 1040px);
+      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .scale-card {
+      min-height: 10.2rem;
+      display: grid;
+      gap: 0.7rem;
+      align-content: center;
+      padding: 1rem;
+      border-radius: 1.25rem;
+    }
+
+    .scale-track {
+      width: 100%;
+      height: 1.1rem;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.052);
+    }
+
+    .scale-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(255,156,156,0.92), rgba(242,199,111,0.92), rgba(165,239,204,0.92));
+      transition: width 420ms ease;
+    }
+
+    .scale-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .scale-value {
+      color: rgba(255,241,205,0.96);
+      font-weight: 950;
+    }
+
+    .balance-panel,
+    .findings-panel,
+    .table-panel {
+      width: min(100%, 1040px);
+      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
+      padding: clamp(0.9rem, 3vw, 1.1rem);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 1.25rem;
       background:
@@ -277,11 +458,10 @@
       box-shadow:
         0 1.2rem 4rem rgba(0,0,0,0.25),
         inset 0 1px 0 rgba(255,255,255,0.07);
-      text-align: left;
     }
 
-    .panel-title {
-      margin: 0 0 0.7rem;
+    .section-title {
+      margin: 0 0 0.75rem;
       color: var(--gold);
       font-size: 0.72rem;
       font-weight: 950;
@@ -290,37 +470,39 @@
       text-align: center;
     }
 
-    .score-grid {
+    .room-balance {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.55rem;
     }
 
-    .score {
-      min-height: 6.4rem;
+    .room-tile {
+      min-height: 5.9rem;
       display: grid;
       align-content: center;
-      gap: 0.24rem;
-      padding: 0.8rem;
-      border: 1px solid rgba(255,255,255,0.13);
+      gap: 0.28rem;
+      padding: 0.75rem;
       border-radius: 1rem;
-      background: rgba(255,255,255,0.032);
       text-align: center;
     }
 
-    .score strong {
+    .room-tile strong {
       color: rgba(255,241,205,0.96);
-      font-size: clamp(1.25rem, 4vw, 1.75rem);
-      line-height: 1;
-    }
-
-    .score span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 850;
+      font-size: 0.78rem;
+      font-weight: 950;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
+
+    .room-tile span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.28;
+    }
+
+    .room-tile.pass { border-color: rgba(165,239,204,0.32); }
+    .room-tile.hold { border-color: rgba(242,199,111,0.34); }
+    .room-tile.fail { border-color: rgba(255,156,156,0.34); }
 
     .findings {
       display: grid;
@@ -328,18 +510,8 @@
     }
 
     .finding {
-      padding: 0.78rem;
-      border: 1px solid rgba(255,255,255,0.13);
+      padding: 0.82rem;
       border-radius: 1rem;
-      background: rgba(255,255,255,0.032);
-    }
-
-    .finding.good {
-      border-color: rgba(165,239,204,0.28);
-    }
-
-    .finding.bad {
-      border-color: rgba(255,156,156,0.34);
     }
 
     .finding strong {
@@ -356,6 +528,10 @@
       font-size: 0.78rem;
       line-height: 1.38;
     }
+
+    .finding.pass { border-color: rgba(165,239,204,0.32); }
+    .finding.hold { border-color: rgba(242,199,111,0.34); }
+    .finding.fail { border-color: rgba(255,156,156,0.34); }
 
     .route-table {
       width: 100%;
@@ -392,7 +568,7 @@
 
     .receipt {
       width: min(100%, 900px);
-      margin-top: 1.1rem;
+      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
       border: 1px solid rgba(255,255,255,0.10);
       border-radius: 1rem;
       background: rgba(255,255,255,0.03);
@@ -419,36 +595,36 @@
     }
 
     footer {
-      padding: 0.5rem 0;
+      padding: 1.45rem 0 0.45rem;
       color: var(--faint);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       line-height: 1.45;
       text-align: center;
     }
 
     @media (max-width: 980px) {
-      .score-grid {
+      .gauge-grid,
+      .room-balance {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .scale-section {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
       .nav { justify-content: flex-start; }
-
-      .hero { min-height: auto; }
-
-      .invariant-row {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 640px) {
-      .score-grid {
+      .gauge-grid,
+      .room-balance {
         grid-template-columns: 1fr;
       }
 
@@ -481,6 +657,7 @@
         <a href="/explore/">Manor</a>
         <a href="/frontier/">Frontier</a>
         <a href="/laws/">Laws</a>
+        <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
@@ -492,12 +669,8 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Gauges · Measurement Surface</p>
+        <p class="eyebrow">Gauges · Active Instrumentation</p>
         <h1 id="page-title">Measure the rooms. Name the next move.</h1>
-
-        <p class="lead">
-          Gauges checks the current baseline without mutating runtime, loading iframes, or pretending a visual pass has occurred.
-        </p>
 
         <p class="quote">
           “Proof is useful only when it tells the truth before the story gets comfortable.”
@@ -509,105 +682,159 @@
           <button class="button secondary" type="button" data-audit="frontier">Run Frontier Audit</button>
           <button class="button secondary" type="button" data-audit="products">Run Products Audit</button>
         </div>
+      </section>
 
-        <div class="invariant-row" aria-label="Gauge invariants; these notes are not controls">
-          <div class="invariant">
-            <strong>Fetch source</strong>
-            <span>Gauges reads served HTML only.</span>
-          </div>
-
-          <div class="invariant">
-            <strong>No mutation</strong>
-            <span>It does not alter runtime, render, or route state.</span>
-          </div>
-
-          <div class="invariant">
-            <strong>Name next</strong>
-            <span>It ranks the highest-friction next move.</span>
-          </div>
+      <section class="instrument-panel" aria-labelledby="instrument-title">
+        <div class="panel-title">
+          <h2 id="instrument-title">Active gauges.</h2>
+          <p>These instruments fetch served source only, measure the current baseline, and rank the next move.</p>
         </div>
 
-        <section class="panel" aria-labelledby="score-title">
-          <p class="panel-title" id="score-title">Decision output</p>
-
-          <div class="score-grid">
-            <div class="score">
-              <strong id="overallHealth">HOLD</strong>
-              <span>Overall health</span>
+        <div class="gauge-grid" aria-label="Active gauge meters">
+          <article class="gauge-card hold" id="overallGauge">
+            <div class="dial">
+              <div class="dial-value">
+                <strong id="overallValue">HOLD</strong>
+                <span>Overall</span>
+              </div>
             </div>
+            <h3>Overall Health</h3>
+            <p id="overallText">Waiting for source checks.</p>
+            <div class="status-line" id="overallStatus">Audit pending</div>
+          </article>
 
-            <div class="score">
-              <strong id="routesPassing">0/0</strong>
-              <span>Routes passing</span>
+          <article class="gauge-card hold" id="routeGauge">
+            <div class="dial">
+              <div class="dial-value">
+                <strong id="routeValue">0%</strong>
+                <span>Routes</span>
+              </div>
             </div>
+            <h3>Route Integrity</h3>
+            <p id="routeText">Served-route availability.</p>
+            <div class="status-line" id="routeStatus">Audit pending</div>
+          </article>
 
-            <div class="score">
-              <strong id="brokenLinks">0</strong>
-              <span>Broken routes</span>
+          <article class="gauge-card hold" id="frontierGauge">
+            <div class="dial">
+              <div class="dial-value">
+                <strong id="frontierValue">0%</strong>
+                <span>Frontier</span>
+              </div>
             </div>
+            <h3>Frontier Lanes</h3>
+            <p id="frontierText">Lane availability under the frontier path set.</p>
+            <div class="status-line" id="frontierStatus">Audit pending</div>
+          </article>
 
-            <div class="score">
-              <strong id="nextMoveScore">—</strong>
-              <span>Impact score</span>
+          <article class="gauge-card hold" id="productGauge">
+            <div class="dial">
+              <div class="dial-value">
+                <strong id="productValue">0%</strong>
+                <span>Products</span>
+              </div>
             </div>
+            <h3>Product Chambers</h3>
+            <p id="productText">Product chamber availability.</p>
+            <div class="status-line" id="productStatus">Audit pending</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="scale-section" aria-label="Active scales">
+        <article class="scale-card">
+          <h3>Baseline Alignment Scale</h3>
+          <p>Measures expected current-language signals across checked routes.</p>
+          <div class="scale-track"><div class="scale-fill" id="baselineFill"></div></div>
+          <div class="scale-meta"><span>Alignment</span><span class="scale-value" id="baselineValue">0%</span></div>
+        </article>
+
+        <article class="scale-card">
+          <h3>Retired Language Scale</h3>
+          <p>Measures how clean the checked routes are from retired terms.</p>
+          <div class="scale-track"><div class="scale-fill" id="staleFill"></div></div>
+          <div class="scale-meta"><span>Clean source</span><span class="scale-value" id="staleValue">0%</span></div>
+        </article>
+
+        <article class="scale-card">
+          <h3>Impact Priority Scale</h3>
+          <p>Higher score means stronger next-move pressure.</p>
+          <div class="scale-track"><div class="scale-fill" id="impactFill"></div></div>
+          <div class="scale-meta"><span>Friction</span><span class="scale-value" id="impactValue">—</span></div>
+        </article>
+
+        <article class="scale-card">
+          <h3>Source Check Scale</h3>
+          <p>Measures checked routes that served readable HTML.</p>
+          <div class="scale-track"><div class="scale-fill" id="sourceFill"></div></div>
+          <div class="scale-meta"><span>Readable</span><span class="scale-value" id="sourceValue">0%</span></div>
+        </article>
+      </section>
+
+      <section class="balance-panel" aria-labelledby="balance-title">
+        <p class="section-title" id="balance-title">Room balance</p>
+        <div class="room-balance" id="roomBalance">
+          <div class="room-tile hold"><strong>Compass</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Door</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Home</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Manor</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Universe</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Products</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Showroom</strong><span>Audit pending</span></div>
+          <div class="room-tile hold"><strong>Gauges</strong><span>Audit pending</span></div>
+        </div>
+      </section>
+
+      <section class="findings-panel" aria-labelledby="findings-title">
+        <p class="section-title" id="findings-title">Impact-ranked findings</p>
+        <div class="findings" id="findings">
+          <div class="finding hold">
+            <strong>Audit pending.</strong>
+            <span>Run an audit to activate the gauges, fill the scales, and name the next move.</span>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="panel" aria-labelledby="findings-title">
-          <p class="panel-title" id="findings-title">Impact-ranked findings</p>
-          <div class="findings" id="findings">
-            <div class="finding">
-              <strong>Audit pending.</strong>
-              <span>Run an audit to measure the current baseline and identify the next move.</span>
-            </div>
-          </div>
-        </section>
+      <section class="table-panel" aria-labelledby="routes-title">
+        <p class="section-title" id="routes-title">Source-check table</p>
 
-        <section class="panel" aria-labelledby="routes-title">
-          <p class="panel-title" id="routes-title">Route surface</p>
+        <table class="route-table">
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>Path</th>
+              <th>Signals</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="routeRows">
+            <tr>
+              <td colspan="4">Audit pending.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-          <table class="route-table">
-            <thead>
-              <tr>
-                <th>Group</th>
-                <th>Path</th>
-                <th>Signals</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="routeRows">
-              <tr>
-                <td colspan="4">Audit pending.</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <details class="receipt">
-          <summary>Route receipt</summary>
-          <pre id="receiptText">GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1
+      <details class="receipt">
+        <summary>Route receipt</summary>
+        <pre id="receiptText">GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1
 route=/gauges/
 page=gauges
 role=measurement_surface
-message=measure_the_rooms_name_the_next_move
+mode=active_instrumentation
 source_fetch_only=true
 renders_iframe=false
 executes_target_files=false
 mutates_runtime=false
 heavy_runtime_loaded=false
-checks_current_baseline=true
-known_core=compass,door,home,manor,frontier,laws,book,universe,products,showroom,audralia,gauges
-frontier_lane_base=/explore/frontier/
-product_routes=archcoin,five_flags,on_your_side_aai,education,nutrition
-stale_terms_flagged=Demo Universe,Earth G1,Planet 1
+instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance
 visual_pass_claimed=false
 audit_status=READY</pre>
-        </details>
-      </section>
+      </details>
     </main>
 
     <footer>
-      GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1 · Gauges · Measurement Surface.
+      GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1 · Gauges · Active Instrumentation.
     </footer>
   </div>
 
@@ -616,12 +843,13 @@ audit_status=READY</pre>
       "use strict";
 
       const routes = [
-        { group: "Core", path: "/", expect: ["Pressure is the door", "Compass"] },
-        { group: "Core", path: "/door/", expect: ["One message", "Many rooms"] },
-        { group: "Core", path: "/home/", expect: ["Home keeps the journey coherent", "Estate Receiver"] },
-        { group: "Core", path: "/explore/", expect: ["One Manor", "Many rooms"] },
-        { group: "Core", path: "/frontier/", expect: ["One edge", "Many lanes"] },
-        { group: "Rule", path: "/laws/", expect: ["Laws"] },
+        { group: "Compass", path: "/", expect: ["Pressure is the door"] },
+        { group: "Door", path: "/door/", expect: ["One message", "Many rooms"] },
+        { group: "Home", path: "/home/", expect: ["Home keeps the journey coherent"] },
+        { group: "Manor", path: "/explore/", expect: ["One Manor", "Many rooms"] },
+        { group: "Frontier", path: "/frontier/", expect: ["One edge", "Many lanes"] },
+        { group: "Laws", path: "/laws/", expect: ["Laws"] },
+        { group: "Nine Summits", path: "/nine-summits/", expect: ["The climb becomes a world"] },
         { group: "Book", path: "/nine-summits-of-love/", expect: ["Nine Summits"] },
         { group: "Universe", path: "/nine-summits/universe/", expect: ["Nine Summits Universe", "Audralia"] },
         { group: "Products", path: "/products/", expect: ["Products", "Product Wing"] },
@@ -630,9 +858,9 @@ audit_status=READY</pre>
         { group: "Products", path: "/products/on-your-side-ai/", expect: ["On Your Side"] },
         { group: "Products", path: "/products/education/", expect: ["Education"] },
         { group: "Products", path: "/products/nutrition/", expect: ["Nutrition"] },
-        { group: "Showroom", path: "/showroom/", expect: ["Showroom", "Every built asset"] },
+        { group: "Showroom", path: "/showroom/", expect: ["The Manor opens into the atrium"] },
         { group: "Audralia", path: "/showroom/globe/", expect: ["Audralia", "mirror planet"] },
-        { group: "Diagnostics", path: "/gauges/", expect: ["Gauges", "Measure the rooms"] },
+        { group: "Gauges", path: "/gauges/", expect: ["Measure the rooms", "Active Instrumentation"] },
 
         { group: "Frontier Lane", path: "/explore/frontier/closed-loop/", expect: ["Closed Loop"] },
         { group: "Frontier Lane", path: "/explore/frontier/energy/", expect: ["Energy"] },
@@ -648,89 +876,134 @@ audit_status=READY</pre>
         { group: "Frontier Lane", path: "/explore/frontier/water/", expect: ["Water"] }
       ];
 
-      const staleTerms = [
-        "Demo Universe",
-        "Earth G1",
-        "Planet 1",
-        "Sun G1",
-        "Moon G1",
-        "Earth, Sun, and Moon share one Demo Universe"
-      ];
-
       const groupFilters = {
         all: () => true,
-        core: (route) => ["Core", "Rule", "Book", "Universe", "Showroom", "Audralia", "Diagnostics"].includes(route.group),
-        frontier: (route) => route.group === "Frontier Lane" || route.path === "/frontier/" || route.path === "/explore/",
+        core: (route) => !["Frontier Lane", "Products"].includes(route.group),
+        frontier: (route) => route.group === "Frontier Lane" || route.group === "Frontier" || route.group === "Manor",
         products: (route) => route.group === "Products"
       };
 
-      const routeRows = document.getElementById("routeRows");
-      const findings = document.getElementById("findings");
-      const overallHealth = document.getElementById("overallHealth");
-      const routesPassing = document.getElementById("routesPassing");
-      const brokenLinks = document.getElementById("brokenLinks");
-      const nextMoveScore = document.getElementById("nextMoveScore");
-      const receiptText = document.getElementById("receiptText");
+      function retiredTerms() {
+        return [
+          "Demo" + " Universe",
+          "Earth" + " G1",
+          "Planet" + " 1",
+          "Sun" + " G1",
+          "Moon" + " G1"
+        ];
+      }
+
+      const el = (id) => document.getElementById(id);
+
+      const nodes = {
+        routeRows: el("routeRows"),
+        findings: el("findings"),
+        roomBalance: el("roomBalance"),
+        receiptText: el("receiptText")
+      };
 
       function sameOriginUrl(path) {
         return new URL(path, window.location.origin).toString();
       }
 
-      function normalizeText(html) {
-        return String(html || "").replace(/\s+/g, " ").trim();
+      function stripSource(html) {
+        return String(html || "")
+          .replace(/<script[\s\S]*?<\/script>/gi, " ")
+          .replace(/<style[\s\S]*?<\/style>/gi, " ")
+          .replace(/<template[\s\S]*?<\/template>/gi, " ");
       }
 
-      function hasAny(text, terms) {
-        return terms.some((term) => text.includes(term));
+      function textFromHtml(html) {
+        const cleaned = stripSource(html);
+        const parsed = new DOMParser().parseFromString(cleaned, "text/html");
+        return String(parsed.body ? parsed.body.textContent : cleaned).replace(/\s+/g, " ").trim();
       }
 
       function missingExpected(text, terms) {
         return terms.filter((term) => !text.includes(term));
       }
 
+      function classify(percent, hardFail = false) {
+        if (hardFail) return "fail";
+        if (percent >= 96) return "pass";
+        if (percent >= 68) return "hold";
+        return "fail";
+      }
+
+      function setCardState(card, state) {
+        card.classList.remove("pass", "hold", "fail");
+        card.classList.add(state);
+      }
+
+      function setDial(cardId, valueId, statusId, textId, percent, valueText, statusText, bodyText, hardFail) {
+        const card = el(cardId);
+        const dial = card.querySelector(".dial");
+        const state = classify(percent, hardFail);
+
+        dial.style.setProperty("--value", String(Math.max(0, Math.min(100, Math.round(percent)))));
+        setCardState(card, state);
+
+        el(valueId).textContent = valueText;
+        el(statusId).textContent = statusText;
+        el(textId).textContent = bodyText;
+      }
+
+      function setScale(fillId, valueId, percent, label) {
+        const safe = Math.max(0, Math.min(100, Math.round(percent)));
+        el(fillId).style.width = safe + "%";
+        el(valueId).textContent = label || (safe + "%");
+      }
+
       async function checkRoute(route) {
-        const url = sameOriginUrl(route.path);
         const started = performance.now();
 
         try {
-          const response = await fetch(url, {
+          const response = await fetch(sameOriginUrl(route.path), {
             method: "GET",
             cache: "no-store",
             credentials: "same-origin"
           });
 
           const html = await response.text();
-          const text = normalizeText(html);
+          const text = textFromHtml(html);
           const missing = missingExpected(text, route.expect || []);
-          const stale = staleTerms.filter((term) => text.includes(term));
-          const elapsed = Math.round(performance.now() - started);
-          const pass = response.ok && missing.length === 0 && stale.length === 0;
+          const stale = retiredTerms().filter((term) => text.includes(term));
+          const thin = text.length < 700;
+          const servedHtml = response.ok && /html/i.test(response.headers.get("content-type") || "text/html");
+          const pass = servedHtml && missing.length === 0 && stale.length === 0 && !thin;
 
           return {
             ...route,
             ok: response.ok,
+            servedHtml,
             pass,
             status: response.status,
             size: html.length,
-            elapsed,
+            textSize: text.length,
+            elapsed: Math.round(performance.now() - started),
             missing,
             stale,
+            thin,
             signals: [
               response.ok ? "served" : "failed",
               missing.length ? "missing expected" : "expected present",
-              stale.length ? "stale terms" : "baseline clean"
+              stale.length ? "retired language" : "language clean",
+              thin ? "thin page" : "sufficient body"
             ]
           };
         } catch (error) {
           return {
             ...route,
             ok: false,
+            servedHtml: false,
             pass: false,
             status: "FETCH_ERROR",
             size: 0,
+            textSize: 0,
             elapsed: Math.round(performance.now() - started),
             missing: route.expect || [],
             stale: [],
+            thin: false,
             error: String(error && error.message ? error.message : error),
             signals: ["fetch error"]
           };
@@ -738,7 +1011,7 @@ audit_status=READY</pre>
       }
 
       function renderRows(results) {
-        routeRows.innerHTML = "";
+        nodes.routeRows.innerHTML = "";
 
         results.forEach((result) => {
           const tr = document.createElement("tr");
@@ -750,13 +1023,10 @@ audit_status=READY</pre>
           path.textContent = result.path;
 
           const signals = document.createElement("td");
-          const details = [];
-
-          details.push(result.signals.join(" · "));
+          const details = [result.signals.join(" · ")];
           if (result.missing.length) details.push("missing: " + result.missing.join(", "));
-          if (result.stale.length) details.push("stale: " + result.stale.join(", "));
+          if (result.stale.length) details.push("retired: " + result.stale.join(", "));
           if (result.error) details.push(result.error);
-
           signals.textContent = details.join(" | ");
 
           const status = document.createElement("td");
@@ -764,65 +1034,74 @@ audit_status=READY</pre>
           status.textContent = result.pass ? "PASS" : result.ok ? "HOLD" : "FAIL";
 
           tr.append(group, path, signals, status);
-          routeRows.appendChild(tr);
+          nodes.routeRows.appendChild(tr);
         });
       }
 
       function rankFindings(results) {
-        const failed = results.filter((result) => !result.ok);
-        const stale = results.filter((result) => result.stale.length > 0);
-        const missing = results.filter((result) => result.ok && result.missing.length > 0);
-        const passed = results.filter((result) => result.pass);
+        const failed = results.filter((r) => !r.ok);
+        const stale = results.filter((r) => r.stale.length > 0);
+        const missing = results.filter((r) => r.ok && r.missing.length > 0);
+        const thin = results.filter((r) => r.ok && r.thin);
+        const passed = results.filter((r) => r.pass);
 
         const output = [];
 
         if (failed.length) {
           output.push({
-            type: "bad",
+            state: "fail",
             title: "Highest impact: broken served routes.",
-            body: failed.map((item) => item.path).join(", ")
+            body: failed.map((r) => r.path).join(", ")
           });
         }
 
         if (stale.length) {
           output.push({
-            type: "bad",
-            title: "Baseline mismatch: stale language remains.",
-            body: stale.map((item) => `${item.path}: ${item.stale.join(", ")}`).join(" | ")
+            state: "fail",
+            title: "Baseline mismatch: retired language remains.",
+            body: stale.map((r) => `${r.path}: ${r.stale.join(", ")}`).join(" | ")
           });
         }
 
         if (missing.length) {
           output.push({
-            type: "bad",
+            state: "hold",
             title: "Expected baseline signals are missing.",
-            body: missing.map((item) => `${item.path}: ${item.missing.join(", ")}`).join(" | ")
+            body: missing.map((r) => `${r.path}: ${r.missing.join(", ")}`).join(" | ")
           });
         }
 
-        if (!failed.length && !stale.length && !missing.length) {
+        if (thin.length) {
           output.push({
-            type: "good",
+            state: "hold",
+            title: "Thin-page pressure remains.",
+            body: thin.map((r) => r.path).join(", ")
+          });
+        }
+
+        if (!failed.length && !stale.length && !missing.length && !thin.length) {
+          output.push({
+            state: "pass",
             title: "Current baseline is source-clean for checked routes.",
             body: "Next move should be visual inspection and page-level refinement, not route repair."
           });
         }
 
         output.push({
-          type: "good",
+          state: passed.length === results.length ? "pass" : "hold",
           title: "Routes passing.",
-          body: `${passed.length}/${results.length} checked routes passed source-level baseline checks.`
+          body: `${passed.length}/${results.length} checked routes passed active source-level checks.`
         });
 
         return output;
       }
 
       function renderFindings(items) {
-        findings.innerHTML = "";
+        nodes.findings.innerHTML = "";
 
         items.forEach((item) => {
           const div = document.createElement("div");
-          div.className = "finding " + (item.type === "bad" ? "bad" : "good");
+          div.className = "finding " + item.state;
 
           const title = document.createElement("strong");
           title.textContent = item.title;
@@ -831,38 +1110,135 @@ audit_status=READY</pre>
           body.textContent = item.body;
 
           div.append(title, body);
-          findings.appendChild(div);
+          nodes.findings.appendChild(div);
         });
       }
 
-      function updateScores(results) {
-        const passCount = results.filter((result) => result.pass).length;
-        const failCount = results.filter((result) => !result.ok).length;
-        const holdCount = results.filter((result) => result.ok && !result.pass).length;
-        const impact = failCount * 10 + holdCount * 4;
+      function renderRoomBalance(results) {
+        const groups = ["Compass", "Door", "Home", "Manor", "Universe", "Products", "Showroom", "Frontier", "Gauges"];
+        nodes.roomBalance.innerHTML = "";
 
-        routesPassing.textContent = `${passCount}/${results.length}`;
-        brokenLinks.textContent = String(failCount);
-        nextMoveScore.textContent = impact ? String(impact) : "0";
+        groups.forEach((group) => {
+          let subset = results.filter((r) => r.group === group);
+          if (group === "Frontier") subset = results.filter((r) => r.group === "Frontier" || r.group === "Frontier Lane");
+          if (group === "Products") subset = results.filter((r) => r.group === "Products");
 
-        if (!results.length) overallHealth.textContent = "HOLD";
-        else if (passCount === results.length) overallHealth.textContent = "PASS";
-        else if (failCount > 0) overallHealth.textContent = "FAIL";
-        else overallHealth.textContent = "HOLD";
+          const checked = subset.length;
+          const passed = subset.filter((r) => r.pass).length;
+          const failed = subset.filter((r) => !r.ok).length;
+          const percent = checked ? (passed / checked) * 100 : 0;
+          const state = checked ? classify(percent, failed > 0) : "hold";
+
+          const tile = document.createElement("div");
+          tile.className = "room-tile " + state;
+
+          const title = document.createElement("strong");
+          title.textContent = group;
+
+          const body = document.createElement("span");
+          body.textContent = checked ? `${passed}/${checked} passing` : "Not in scope";
+
+          tile.append(title, body);
+          nodes.roomBalance.appendChild(tile);
+        });
       }
 
-      function updateReceipt(results, scope) {
-        const passCount = results.filter((result) => result.pass).length;
-        const failCount = results.filter((result) => !result.ok).length;
-        const staleCount = results.filter((result) => result.stale.length > 0).length;
-        const missingCount = results.filter((result) => result.ok && result.missing.length > 0).length;
+      function updateInstruments(results, scope) {
+        const total = results.length || 1;
+        const passed = results.filter((r) => r.pass).length;
+        const served = results.filter((r) => r.ok).length;
+        const failed = results.filter((r) => !r.ok).length;
+        const missing = results.filter((r) => r.ok && r.missing.length > 0).length;
+        const stale = results.filter((r) => r.stale.length > 0).length;
+        const thin = results.filter((r) => r.ok && r.thin).length;
 
-        receiptText.textContent =
-          "GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1\n" +
+        const routePercent = (served / total) * 100;
+        const overallPercent = (passed / total) * 100;
+        const baselinePercent = ((total - missing - stale) / total) * 100;
+        const staleCleanPercent = ((total - stale) / total) * 100;
+        const sourcePercent = (served / total) * 100;
+
+        const frontierSubset = results.filter((r) => r.group === "Frontier" || r.group === "Frontier Lane");
+        const frontierPercent = frontierSubset.length ? (frontierSubset.filter((r) => r.pass).length / frontierSubset.length) * 100 : 0;
+
+        const productSubset = results.filter((r) => r.group === "Products");
+        const productPercent = productSubset.length ? (productSubset.filter((r) => r.pass).length / productSubset.length) * 100 : 0;
+
+        const friction = failed * 10 + stale * 6 + missing * 4 + thin * 2;
+        const impactPercent = Math.min(100, friction * 6);
+
+        const overallLabel = failed ? "FAIL" : passed === total ? "PASS" : "HOLD";
+
+        setDial(
+          "overallGauge",
+          "overallValue",
+          "overallStatus",
+          "overallText",
+          overallPercent,
+          overallLabel,
+          `${passed}/${total} passing`,
+          "Composite source, baseline, and route condition.",
+          failed > 0
+        );
+
+        setDial(
+          "routeGauge",
+          "routeValue",
+          "routeStatus",
+          "routeText",
+          routePercent,
+          Math.round(routePercent) + "%",
+          `${served}/${total} served`,
+          "Served-route availability.",
+          failed > 0
+        );
+
+        setDial(
+          "frontierGauge",
+          "frontierValue",
+          "frontierStatus",
+          "frontierText",
+          frontierPercent,
+          Math.round(frontierPercent) + "%",
+          frontierSubset.length ? `${frontierSubset.filter((r) => r.pass).length}/${frontierSubset.length} passing` : "Not checked",
+          "Frontier root and lane health.",
+          frontierSubset.some((r) => !r.ok)
+        );
+
+        setDial(
+          "productGauge",
+          "productValue",
+          "productStatus",
+          "productText",
+          productPercent,
+          Math.round(productPercent) + "%",
+          productSubset.length ? `${productSubset.filter((r) => r.pass).length}/${productSubset.length} passing` : "Not checked",
+          "Product wing and chamber health.",
+          productSubset.some((r) => !r.ok)
+        );
+
+        setScale("baselineFill", "baselineValue", baselinePercent, Math.round(baselinePercent) + "%");
+        setScale("staleFill", "staleValue", staleCleanPercent, Math.round(staleCleanPercent) + "%");
+        setScale("impactFill", "impactValue", impactPercent, friction ? String(friction) : "0");
+        setScale("sourceFill", "sourceValue", sourcePercent, Math.round(sourcePercent) + "%");
+
+        renderRoomBalance(results);
+        updateReceipt(results, scope, friction);
+      }
+
+      function updateReceipt(results, scope, friction) {
+        const passed = results.filter((r) => r.pass).length;
+        const failed = results.filter((r) => !r.ok).length;
+        const stale = results.filter((r) => r.stale.length > 0).length;
+        const missing = results.filter((r) => r.ok && r.missing.length > 0).length;
+        const thin = results.filter((r) => r.ok && r.thin).length;
+
+        nodes.receiptText.textContent =
+          "GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1\n" +
           "route=/gauges/\n" +
           "page=gauges\n" +
           "role=measurement_surface\n" +
-          "message=measure_the_rooms_name_the_next_move\n" +
+          "mode=active_instrumentation\n" +
           "audit_scope=" + scope + "\n" +
           "source_fetch_only=true\n" +
           "renders_iframe=false\n" +
@@ -870,14 +1246,15 @@ audit_status=READY</pre>
           "mutates_runtime=false\n" +
           "heavy_runtime_loaded=false\n" +
           "routes_checked=" + results.length + "\n" +
-          "routes_passing=" + passCount + "\n" +
-          "routes_failed=" + failCount + "\n" +
-          "routes_with_stale_terms=" + staleCount + "\n" +
-          "routes_missing_expected_signals=" + missingCount + "\n" +
+          "routes_passing=" + passed + "\n" +
+          "routes_failed=" + failed + "\n" +
+          "routes_with_retired_terms=" + stale + "\n" +
+          "routes_missing_expected_signals=" + missing + "\n" +
+          "thin_page_count=" + thin + "\n" +
+          "impact_friction_score=" + friction + "\n" +
+          "instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance\n" +
           "frontier_lane_base=/explore/frontier/\n" +
-          "stale_terms_flagged=Demo Universe,Earth G1,Planet 1,Sun G1,Moon G1\n" +
           "generated_image=false\n" +
-          "graphic_box=false\n" +
           "streaming=false\n" +
           "visual_pass_claimed=false\n" +
           "audit_timestamp=" + new Date().toISOString();
@@ -886,27 +1263,23 @@ audit_status=READY</pre>
       async function runAudit(scope) {
         const filter = groupFilters[scope] || groupFilters.all;
         const selected = routes.filter(filter);
-
-        routeRows.innerHTML = '<tr><td colspan="4">Audit running.</td></tr>';
-        findings.innerHTML = '<div class="finding"><strong>Audit running.</strong><span>Fetching served source only.</span></div>';
-        overallHealth.textContent = "HOLD";
-        routesPassing.textContent = `0/${selected.length}`;
-        brokenLinks.textContent = "0";
-        nextMoveScore.textContent = "—";
-
         const results = [];
+
+        nodes.routeRows.innerHTML = '<tr><td colspan="4">Audit running.</td></tr>';
+        nodes.findings.innerHTML = '<div class="finding hold"><strong>Audit running.</strong><span>Fetching served source only. No target scripts are executed.</span></div>';
+
+        updateInstruments([], scope);
 
         for (const route of selected) {
           const result = await checkRoute(route);
           results.push(result);
           renderRows(results);
-          updateScores(results);
+          updateInstruments(results, scope);
         }
 
         renderRows(results);
         renderFindings(rankFindings(results));
-        updateScores(results);
-        updateReceipt(results, scope);
+        updateInstruments(results, scope);
       }
 
       document.querySelectorAll("[data-audit]").forEach((button) => {

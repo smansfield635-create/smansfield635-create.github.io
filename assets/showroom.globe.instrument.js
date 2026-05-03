@@ -1,4 +1,4 @@
-/* /assets/showroom.globe.instrument.js
+Ll/* /assets/showroom.globe.instrument.js
    SHOWROOM_GLOBE_EARTH_SUN_MOON_VISUAL_FIDELITY_RENEWAL_TNT_v1
 
    Renewal law:

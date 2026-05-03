@@ -1,20 +1,36 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: FRONTIER BASELINE · COSMIC-PRIMARY RECALLIBRATED HOST SHELL
+     STATUS: FRONTIER VISION · G1 OPTIMAL · COSMIC HOST SHELL PRESERVED
      PURPOSE:
        - Preserve the validated foreground field and stable core baseline
-       - Subtract the explicit compass-face read
-       - Keep frontier universe as the dominant job
        - Preserve split structure/runtime architecture
+       - Keep /explore/frontier/vision/index.js as runtime owner
+       - Correct page identity to Vision, not Vision Remote
+       - Align source language with Manor / Frontier / Audralia current baseline
+       - Keep Russian-doll context under the hood
        - Preserve canonical carry: gd_lang/gd_style/gd_time/gd_depth only
        - Lane remains URL-only
 -->
 
-<html lang="en">
+<html
+  lang="en"
+  data-route="/explore/frontier/vision/"
+  data-page="frontier-vision"
+  data-version="G1-OPTIMAL"
+  data-contract="VISION_G1_OPTIMAL_COSMIC_HOST_CURRENT_BASELINE_TNT_v1"
+  data-status="active"
+  data-parent="/explore/frontier/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-expression="cosmic-vision-host-with-russian-doll-underlay"
+  data-runtime-owner="/explore/frontier/vision/index.js"
+  data-heavy-runtime-loaded="vision-host-only"
+  data-visual-pass-claimed="false"
+>
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>FRONTIER · VISION REMOTE</title>
+  <title>Diamond Gate Bridge · Frontier · Vision G1 Optimal</title>
+  <meta name="description" content="Vision G1 Optimal is the Frontier sightline lane. It keeps visual planning, future-facing design, and proof return aligned with the Manor hierarchy."/>
 
   <link rel="stylesheet" href="/assets/ui.css"/>
   <link rel="stylesheet" href="/assets/branch.css"/>
@@ -611,6 +627,16 @@
       text-shadow:0 0 12px rgba(0,0,0,.38);
     }
 
+    .sourceReceipt{
+      position:absolute;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      clip-path:inset(50%);
+      white-space:nowrap;
+    }
+
     @keyframes stagePulse{
       0%,100%{opacity:.68;filter:blur(52px)}
       50%{opacity:.80;filter:blur(58px)}
@@ -704,7 +730,7 @@
     </div>
   </header>
 
-  <main class="stage" id="stage" aria-label="Vision Remote">
+  <main class="stage" id="stage" aria-label="Vision">
     <div class="starfield" id="starfield" aria-hidden="true"></div>
     <div class="coreGlow" aria-hidden="true"></div>
   </main>
@@ -718,6 +744,31 @@
     <div class="control" id="btnHub" role="button" tabindex="0" aria-label="Hub Jump to Compass"><span class="control__label">◆</span></div>
     <div class="corner__text" id="lblHub">HUB</div>
   </div>
+
+  <section class="sourceReceipt" aria-label="Vision source receipt">
+    VISION_G1_OPTIMAL_COSMIC_HOST_CURRENT_BASELINE_TNT_v1
+    STATUS=ACTIVE
+    VISIBLE_TITLE=Vision · G1 Optimal
+    PUBLIC_PROOF_MARKER=Cosmic Vision Host · G1 Optimal active
+    PAGE=/explore/frontier/vision/index.html
+    ROUTE=/explore/frontier/vision/
+    PARENT=/explore/frontier/
+    BASELINE=AUDRALIA_MANOR_CURRENT
+    EXPRESSION=Cosmic_Vision_Host_With_Russian_Doll_Underlay
+    HIERARCHY=Compass→Door→Home→Manor→Frontier→Vision→Laws→Gauges
+    ROLE=frontier_sightline_lane
+    OWNS=visual_systems,sightline_planning,future_facing_design,inspection_field,foreground_host_shell
+    DOES_NOT_OWN=vision_remote_identity,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
+    RUNTIME_OWNER=/explore/frontier/vision/index.js
+    SPLIT_ARCHITECTURE=host_shell_preserved,runtime_external
+    CANONICAL_CARRY=gd_lang,gd_style,gd_time,gd_depth
+    LANE=URL_ONLY
+    PRIOR_LANGUAGE_HANDLING=prior_generation_framing_archival_only
+    HEAVY_RUNTIME_LOADED=false
+    RENDER_FILES_TOUCHED=false
+    GAUGES_LOGIC_TOUCHED=false
+    VISUAL_PASS_CLAIMED=false
+  </section>
 
   <script src="/explore/frontier/vision/index.js"></script>
 </body>

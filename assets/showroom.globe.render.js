@@ -1,8 +1,13 @@
 /* /assets/showroom.globe.render.js
-   AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1
+   ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1
 
    ROLE=
    SHARED_RENDER_PLATFORM
+
+   RENEWAL=
+   Hard-stop wrong-body fallback.
+   If activeBody=audrelia-moon, only the Adralia Moon extension may draw.
+   If the moon extension fails, clear/hold instead of drawing Audrelia.
 
    OWNS=
    CANVAS_PIPELINE
@@ -10,32 +15,26 @@
    LIGHTING_CONTEXT
    EXTENSION_REGISTRY
    ACTIVE_BODY_DISPATCH
+   BODY_SWITCH_CLEAR
    RECEIPT_AGGREGATION
 
    DOES_NOT_OWN=
-   AUDRELIA_SURFACE_IDENTITY
-   AUDRELIA_SUN_PLASMA_IDENTITY
-   AUDRELIA_CLIMATE_MOON_SURFACE_IDENTITY
+   BODY_IDENTITY
+   BODY_SPECIFIC_SURFACE_LAW
+   ROUTE_LABELS
    ROUTE_COPY
-   BUTTONS
-   LABELS
    INSTRUMENT_STATE
    GAUGES
-
-   BODY_EXTENSIONS=
-   /assets/audrelia.planet.render.js
-   /assets/audrelia.sun.render.js
-   /assets/audrelia.climate-moon.render.js
 */
 
-(function bindAudreliaRenderExtensionPlatform(global) {
+(function bindShowroomGlobeRenderPlatform(global) {
   "use strict";
 
-  const VERSION = "AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1";
+  const VERSION = "ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1";
   const TAU = Math.PI * 2;
   const PI = Math.PI;
   const DEG = Math.PI / 180;
-  const MAX_WORK_SIZE = 1024;
+  const MAX_WORK_SIZE = 1180;
 
   const extensionRegistry = Object.create(null);
   const aliasRegistry = Object.create(null);
@@ -43,14 +42,14 @@
 
   const EXTENSION_FILES = Object.freeze({
     audrelia: "/assets/audrelia.planet.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1",
-    "audrelia-sun": "/assets/audrelia.sun.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1",
-    "audrelia-moon": "/assets/audrelia.climate-moon.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"
+    "audrelia-sun": "/assets/audrelia.sun.render.js?v=AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1",
+    "audrelia-moon": "/assets/audrelia.climate-moon.render.js?v=ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1"
   });
 
   const GLOBAL_EXTENSION_NAMES = Object.freeze({
-    audrelia: "DGBAudreliaPlanetRenderExtension",
-    "audrelia-sun": "DGBAudreliaSunRenderExtension",
-    "audrelia-moon": "DGBAudreliaClimateMoonRenderExtension"
+    audrelia: ["DGBAudreliaPlanetRenderExtension"],
+    "audrelia-sun": ["DGBAudreliaSunRenderExtension"],
+    "audrelia-moon": ["DGBAdraliaMoonRenderExtension", "DGBAudreliaClimateMoonRenderExtension"]
   });
 
   function clamp(value, min, max) {
@@ -58,6 +57,7 @@
   }
 
   function wrap01(value) {
+    value = Number(value) || 0;
     value = value % 1;
     return value < 0 ? value + 1 : value;
   }
@@ -68,30 +68,56 @@
   }
 
   function makeCanvas(width, height) {
-    const canvas = document.createElement("canvas");
+    const canvas = global.document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
     return canvas;
   }
 
   function normalizeBody(value) {
+    if (value && typeof value === "object") {
+      value = value.activeBody || value.body || value.selectedBody || value.currentBody || value.name || value.value;
+    }
+
     value = String(value || "").trim().toLowerCase();
 
-    if (value === "audrelia" || value === "audrelia-planet") return "audrelia";
-    if (value === "audrelia-sun" || (value.includes("audrelia") && value.includes("sun"))) return "audrelia-sun";
     if (
       value === "audrelia-moon" ||
+      value === "adralia-moon" ||
+      value === "adralia’s moon" ||
+      value === "adralias-moon" ||
       value === "audrelia-climate-moon" ||
       value === "climate-moon" ||
       value === "manufactured-moon" ||
       value === "moon" ||
-      value === "adralia-moon"
+      value.includes("moon")
     ) {
       return "audrelia-moon";
     }
 
-    if (value === "earth" || value.includes("planet")) return "audrelia";
-    if (value === "sun" || value === "solar-system-sun" || value === "solar-sun" || value.includes("solar")) return "audrelia-sun";
+    if (
+      value === "audrelia-sun" ||
+      value === "audrelia’s sun" ||
+      value === "audrelias-sun" ||
+      value === "sun" ||
+      value === "solar-system-sun" ||
+      value === "solar-sun" ||
+      value.includes("sun")
+    ) {
+      return "audrelia-sun";
+    }
+
+    if (
+      value === "audrelia" ||
+      value === "audrelia-planet" ||
+      value === "earth" ||
+      value === "planet" ||
+      value.includes("audrelia") ||
+      value.includes("earth") ||
+      value.includes("planet")
+    ) {
+      return "audrelia";
+    }
 
     return "audrelia";
   }
@@ -106,6 +132,7 @@
     }
 
     const id = normalizeBody(extension.id);
+
     extensionRegistry[id] = extension;
     aliasRegistry[id] = id;
 
@@ -121,38 +148,45 @@
       status: "EXTENSION_REGISTERED",
       id,
       label: extension.label || id,
-      file: EXTENSION_FILES[id] || null,
       profileMerge: false,
       generatedImage: false,
       visualPassClaimed: false
     };
   }
 
-  function findRegisteredExtension(body) {
-    const normalized = normalizeBody(body);
-    const aliasTarget = aliasRegistry[normalized] || normalized;
-    return extensionRegistry[aliasTarget] || null;
-  }
-
   function getGlobalExtension(body) {
     const normalized = normalizeBody(body);
-    const globalName = GLOBAL_EXTENSION_NAMES[normalized];
-    const extension = globalName ? global[globalName] : null;
+    const names = GLOBAL_EXTENSION_NAMES[normalized] || [];
 
-    if (extension) {
-      registerExtension(extension);
-      return extension;
+    for (let i = 0; i < names.length; i += 1) {
+      const candidate = global[names[i]];
+
+      if (candidate && candidate.id && normalizeBody(candidate.id) === normalized) {
+        registerExtension(candidate);
+        return candidate;
+      }
     }
 
     return null;
   }
 
+  function findRegisteredExtension(body) {
+    const normalized = normalizeBody(body);
+    const aliasTarget = aliasRegistry[normalized] || normalized;
+    const extension = extensionRegistry[aliasTarget] || getGlobalExtension(aliasTarget);
+
+    if (!extension) return null;
+
+    if (normalizeBody(extension.id) !== normalized) return null;
+
+    return extension;
+  }
+
   function loadExtension(body) {
     const normalized = normalizeBody(body);
-    const existing = findRegisteredExtension(normalized) || getGlobalExtension(normalized);
+    const existing = findRegisteredExtension(normalized);
 
     if (existing) return Promise.resolve(existing);
-
     if (loadingRegistry[normalized]) return loadingRegistry[normalized];
 
     const src = EXTENSION_FILES[normalized];
@@ -166,17 +200,17 @@
       script.src = src;
 
       script.onload = function onLoad() {
-        const loaded = findRegisteredExtension(normalized) || getGlobalExtension(normalized);
+        const loaded = findRegisteredExtension(normalized);
 
-        if (loaded) {
+        if (loaded && normalizeBody(loaded.id) === normalized) {
           resolve(loaded);
         } else {
-          reject(new Error("EXTENSION_LOADED_BUT_NOT_REGISTERED_" + normalized));
+          reject(new Error("EXTENSION_LOADED_BUT_NOT_REGISTERED_FOR_" + normalized));
         }
       };
 
       script.onerror = function onError() {
-        reject(new Error("EXTENSION_LOAD_FAILED_" + normalized));
+        reject(new Error("EXTENSION_LOAD_FAILED_FOR_" + normalized));
       };
 
       global.document.head.appendChild(script);
@@ -189,20 +223,22 @@
     options = options || {};
 
     const candidates = [
-      options.body,
       options.activeBody,
+      options.body,
       options.selectedBody,
       options.currentBody,
       options.model,
       options.type,
-      canvas && canvas.dataset && canvas.dataset.body,
       canvas && canvas.dataset && canvas.dataset.activeBody,
+      canvas && canvas.dataset && canvas.dataset.body,
+      canvas && canvas.getAttribute && canvas.getAttribute("data-active-body"),
       canvas && canvas.getAttribute && canvas.getAttribute("data-body"),
       canvas && canvas.getAttribute && canvas.getAttribute("aria-label")
     ];
 
     for (let i = 0; i < candidates.length; i += 1) {
       const candidate = candidates[i];
+
       if (candidate !== undefined && candidate !== null && String(candidate).trim()) {
         return normalizeBody(candidate);
       }
@@ -214,12 +250,14 @@
   function resizeCanvas(canvas) {
     const host = canvas.parentElement || canvas;
     const rect = host.getBoundingClientRect();
-    const cssSize = clamp(Math.round(rect.width || canvas.clientWidth || 420), 260, 1500);
+    const cssSize = clamp(Math.round(rect.width || canvas.clientWidth || 420), 260, 1700);
     const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
     const pixelSize = Math.round(cssSize * dpr);
 
     canvas.style.width = cssSize + "px";
     canvas.style.height = cssSize + "px";
+    canvas.style.aspectRatio = "1 / 1";
+    canvas.style.borderRadius = "50%";
 
     if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
       canvas.width = pixelSize;
@@ -238,28 +276,68 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  function writeCanvasHold(canvas, body, status) {
+    const ctx = canvas.getContext("2d", { alpha: true });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvas.dataset.renderHold = status || "BODY_EXTENSION_HOLD";
+    canvas.dataset.activeBody = body;
+    canvas.dataset.body = body;
+    canvas.dataset.wrongBodyFallback = "blocked";
+
+    return {
+      ok: false,
+      version: VERSION,
+      role: "render-platform",
+      status: status || "BODY_EXTENSION_HOLD",
+      body,
+      wrongBodyFallbackBlocked: true,
+      ownsProjection: true,
+      ownsDispatch: true,
+      ownsBodyPixels: false,
+      profileMerge: false,
+      generatedImage: false,
+      visualPassClaimed: false
+    };
+  }
+
   function platformDrawSphere(ctx, canvas, extension, options) {
     const body = normalizeBody(extension.id);
+    const activeBody = normalizeBody(options.activeBody || options.body || body);
+
+    if (body !== activeBody) {
+      return writeCanvasHold(canvas, activeBody, "EXTENSION_BODY_MISMATCH_BLOCKED");
+    }
+
+    if (activeBody === "audrelia-moon" && body !== "audrelia-moon") {
+      return writeCanvasHold(canvas, activeBody, "MOON_WRONG_EXTENSION_BLOCKED");
+    }
+
     const profile = extension.createProfile();
     const texture = extension.buildTexture();
-    const workSize = Math.min(MAX_WORK_SIZE, Math.max(360, Math.min(canvas.width, canvas.height)));
+
+    if (!texture || !texture.data || !texture.width || !texture.height || typeof extension.sampleSurface !== "function") {
+      return writeCanvasHold(canvas, activeBody, "EXTENSION_TEXTURE_CONTRACT_FAILED");
+    }
+
+    const workSize = Math.min(MAX_WORK_SIZE, Math.max(420, Math.min(canvas.width, canvas.height)));
     const work = makeCanvas(workSize, workSize);
     const workCtx = work.getContext("2d", { alpha: true, willReadFrequently: true });
     const image = workCtx.createImageData(workSize, workSize);
     const pixels = image.data;
 
-    const radius = workSize * 0.46;
+    const radius = workSize * 0.455;
     const radius2 = radius * radius;
     const center = workSize / 2;
     const tilt = (Number(profile.axialTiltDeg) || 0) * DEG;
     const cosTilt = Math.cos(tilt);
     const sinTilt = Math.sin(tilt);
-    const centerLon = (Number(options.longitude) || 0) * TAU;
+    const centerLon = wrap01(Number(options.longitude) || 0) * TAU;
     const color = [0, 0, 0];
 
-    const lightX0 = -0.44;
-    const lightY0 = -0.30;
-    const lightZ0 = 0.84;
+    const lightX0 = -0.46;
+    const lightY0 = -0.32;
+    const lightZ0 = 0.83;
     const lightMagnitude = Math.sqrt(lightX0 * lightX0 + lightY0 * lightY0 + lightZ0 * lightZ0);
     const lx = lightX0 / lightMagnitude;
     const ly = lightY0 / lightMagnitude;
@@ -318,33 +396,43 @@
         const rim = smoothstep(0.68, 1, dist);
 
         let baseLight;
-        if (profile.lightModel === "star") baseLight = 0.82 + nDotL * 0.18;
-        else baseLight = 0.32 + nDotL * 0.75;
+        if (profile.lightModel === "star") {
+          baseLight = 0.82 + nDotL * 0.22;
+        } else if (profile.lightModel === "moon") {
+          baseLight = 0.24 + nDotL * 0.86;
+        } else {
+          baseLight = 0.31 + nDotL * 0.76;
+        }
 
         let r = color[0] * baseLight;
         let g = color[1] * baseLight;
         let b = color[2] * baseLight;
 
-        if (profile.lightModel === "planet") {
+        if (profile.lightModel === "star") {
+          const glow = 18 + rim * 28;
+          r += glow;
+          g += glow * 0.72;
+          b += glow * 0.24;
+        } else if (profile.lightModel === "moon") {
+          const spec = Math.pow(nDotH, 72) * 0.045;
+          const rimShade = rim * 18;
+
+          r += spec * 32 - rimShade * 0.08;
+          g += spec * 34 - rimShade * 0.06;
+          b += spec * 36 - rimShade * 0.03;
+
+          const grayAverage = (r + g + b) / 3;
+          r = grayAverage * 0.98 + r * 0.02;
+          g = grayAverage * 0.99 + g * 0.01;
+          b = grayAverage * 1.02 + b * 0.02;
+        } else {
           const water = color[2] > color[1] + 8 && color[2] > color[0] + 14;
-          const spec = water ? Math.pow(nDotH, 48) * 0.32 : Math.pow(nDotH, 80) * 0.04;
-          const atmosphere = rim * 30;
+          const spec = water ? Math.pow(nDotH, 48) * 0.28 : Math.pow(nDotH, 80) * 0.04;
+          const atmosphere = rim * 28;
 
           r += spec * 105 + atmosphere * 0.45;
           g += spec * 140 + atmosphere * 1.0;
           b += spec * 205 + atmosphere * 1.65;
-        } else if (profile.lightModel === "star") {
-          const glow = body === "audrelia-sun" ? 16 + rim * 24 : 22 + rim * 32;
-          r += glow;
-          g += glow * 0.72;
-          b += glow * 0.24;
-        } else {
-          const spec = Math.pow(nDotH, 70) * 0.08;
-          const climateGlow = rim * 9;
-
-          r += climateGlow + spec * 32;
-          g += climateGlow * 1.02 + spec * 34;
-          b += climateGlow * 1.05 + spec * 36;
         }
 
         const edgeAlpha = clamp((1 - dist) / 0.018, 0, 1);
@@ -388,13 +476,13 @@
 
     if (profile.lightModel === "moon") {
       ctx.save();
-      const halo = ctx.createRadialGradient(cx, cy, outerRadius * 0.72, cx, cy, outerRadius * 1.18);
-      halo.addColorStop(0, "rgba(160,190,190,0)");
-      halo.addColorStop(0.65, "rgba(160,210,195,0.055)");
-      halo.addColorStop(1, "rgba(160,210,195,0)");
+      const lunarHalo = ctx.createRadialGradient(cx, cy, outerRadius * 0.74, cx, cy, outerRadius * 1.12);
+      lunarHalo.addColorStop(0, "rgba(210,216,218,0)");
+      lunarHalo.addColorStop(0.72, "rgba(210,216,218,0.045)");
+      lunarHalo.addColorStop(1, "rgba(210,216,218,0)");
       ctx.beginPath();
-      ctx.arc(cx, cy, outerRadius * 1.18, 0, TAU);
-      ctx.fillStyle = halo;
+      ctx.arc(cx, cy, outerRadius * 1.12, 0, TAU);
+      ctx.fillStyle = lunarHalo;
       ctx.fill();
       ctx.restore();
     }
@@ -403,13 +491,20 @@
     ctx.beginPath();
     ctx.arc(cx, cy, outerRadius * 1.008, 0, TAU);
     ctx.strokeStyle = profile.rimColor || "rgba(255,255,255,0.62)";
-    ctx.lineWidth = Math.max(2, outerRadius * 0.012);
+    ctx.lineWidth = Math.max(2, outerRadius * 0.010);
     ctx.shadowColor = profile.glowColor || "rgba(255,255,255,0.22)";
-    ctx.shadowBlur = outerRadius * 0.09;
+    ctx.shadowBlur = outerRadius * 0.08;
     ctx.stroke();
     ctx.restore();
 
-    const extensionReceipt = extension.getStatus();
+    const extensionReceipt = typeof extension.getStatus === "function" ? extension.getStatus() : null;
+
+    canvas.dataset.renderHold = "false";
+    canvas.dataset.body = body;
+    canvas.dataset.activeBody = activeBody;
+    canvas.dataset.extensionId = extension.id;
+    canvas.dataset.extensionLabel = extension.label || profile.label || activeBody;
+    canvas.dataset.wrongBodyFallback = "blocked";
 
     return {
       ok: true,
@@ -417,9 +512,11 @@
       role: "render-platform",
       platformReceipt: "SHOWROOM_GLOBE_RENDER_PLATFORM_RECEIPT",
       body,
+      activeBody,
       label: profile.label,
       extensionVersion: extension.version,
       extensionReceipt,
+      wrongBodyFallbackBlocked: true,
       ownsProjection: true,
       ownsDispatch: true,
       ownsBodyPixels: false,
@@ -430,8 +527,8 @@
   }
 
   function createRenderer(canvas, initialOptions) {
-    if (!(canvas instanceof HTMLCanvasElement)) {
-      throw new Error("AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1 requires a canvas target.");
+    if (!canvas || canvas.nodeName !== "CANVAS") {
+      throw new Error("ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1 requires a canvas target.");
     }
 
     const ctx = canvas.getContext("2d", { alpha: true });
@@ -444,7 +541,7 @@
       resizeCanvas(canvas);
 
       const body = resolveBody(currentOptions, canvas);
-      const extension = findRegisteredExtension(body) || getGlobalExtension(body);
+      const extension = findRegisteredExtension(body);
 
       canvas.dataset.body = body;
       canvas.dataset.activeBody = body;
@@ -455,53 +552,36 @@
       canvas.dataset.profileMerge = "false";
       canvas.dataset.generatedImage = "false";
       canvas.dataset.visualPassClaimed = "false";
+      canvas.dataset.wrongBodyFallback = "blocked";
 
       if (!extension) {
-        clearCanvas(canvas);
+        lastReceipt = writeCanvasHold(canvas, body, "EXTENSION_LOADING_OR_MISSING");
 
         if (pendingBody !== body) {
           pendingBody = body;
+
           loadExtension(body)
             .then(function onLoaded() {
               if (resolveBody(currentOptions, canvas) === body) {
+                pendingBody = null;
                 render(currentOptions);
               }
             })
             .catch(function onError(error) {
-              lastReceipt = {
-                ok: false,
-                version: VERSION,
-                role: "render-platform",
-                status: "EXTENSION_LOAD_FAILED",
+              pendingBody = null;
+              lastReceipt = writeCanvasHold(
+                canvas,
                 body,
-                error: String(error && error.message ? error.message : error),
-                ownsBodyPixels: false,
-                profileMerge: false,
-                generatedImage: false,
-                visualPassClaimed: false
-              };
+                "EXTENSION_LOAD_FAILED_" + String(error && error.message ? error.message : error)
+              );
             });
         }
-
-        lastReceipt = {
-          ok: false,
-          version: VERSION,
-          role: "render-platform",
-          status: "EXTENSION_LOADING",
-          body,
-          ownsProjection: true,
-          ownsDispatch: true,
-          ownsBodyPixels: false,
-          profileMerge: false,
-          generatedImage: false,
-          visualPassClaimed: false
-        };
 
         return lastReceipt;
       }
 
       pendingBody = null;
-      lastReceipt = platformDrawSphere(ctx, canvas, extension, currentOptions);
+      lastReceipt = platformDrawSphere(ctx, canvas, extension, Object.assign({}, currentOptions, { activeBody: body, body }));
       return lastReceipt;
     }
 
@@ -527,7 +607,9 @@
           role: "render-platform",
           activeBody: body,
           extensionLoaded: Boolean(extension),
+          extensionId: extension ? extension.id : null,
           registeredBodies: Object.keys(extensionRegistry),
+          wrongBodyFallbackBlocked: true,
           ownsProjection: true,
           ownsDispatch: true,
           ownsBodyPixels: false,
@@ -562,12 +644,8 @@
         registeredBodies: Object.keys(extensionRegistry),
         extensionFiles: EXTENSION_FILES,
         activeBodies: ["audrelia", "audrelia-sun", "audrelia-moon"],
-        legacyAliases: {
-          earth: "audrelia",
-          sun: "audrelia-sun",
-          moon: "audrelia-moon",
-          "solar-system-sun": "audrelia-sun"
-        },
+        noWrongBodyFallback: true,
+        moonFallbackToPlanet: false,
         ownsProjection: true,
         ownsDispatch: true,
         ownsBodyPixels: false,
@@ -579,12 +657,14 @@
   };
 
   global.DGBShowroomGlobeRender = api;
+
   global.DiamondGateBridge = global.DiamondGateBridge || {};
   global.DiamondGateBridge.DGBShowroomGlobeRender = api;
 
   [
     global.DGBAudreliaPlanetRenderExtension,
     global.DGBAudreliaSunRenderExtension,
+    global.DGBAdraliaMoonRenderExtension,
     global.DGBAudreliaClimateMoonRenderExtension
   ].forEach(function registerExisting(extension) {
     if (extension) registerExtension(extension);

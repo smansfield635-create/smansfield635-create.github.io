@@ -2,16 +2,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-manor-atrium-museum"
+  data-page="showroom-diamond-compass-atrium"
   data-route="/showroom/"
-  data-contract="SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1"
+  data-contract="SHOWROOM_DIAMOND_COMPASS_ATRIUM_LAYOUT_TNT_v1"
   data-showroom-role="manor-atrium-museum"
   data-atrium-role="threshold-reception-gallery"
-  data-spine-system="canonical-multi-spine"
+  data-spine-system="canonical-four-diamond-compass"
   data-diagnostic-scope="256"
-  data-touch-affordance="interactive-cases-only"
   data-generated-image="false"
-  data-graphic-box="false"
   data-streaming="false"
   data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
@@ -22,21 +20,22 @@
   <title>Diamond Gate Bridge · Showroom Atrium</title>
   <meta
     name="description"
-    content="The Showroom is the Manor atrium: a museum-like launch hall where built assets sit in glass cases, routes branch through a canonical multi-spine, and Gauges preserve the 256 diagnostic scope."
+    content="The Showroom is the Manor atrium: a museum-like launch hall with a four-diamond compass display, glass cases, and a 256 diagnostic scope."
   >
 
   <style>
     :root {
       --panel: rgba(9, 14, 26, 0.90);
       --glass: rgba(255, 255, 255, 0.055);
-      --glass-2: rgba(255, 255, 255, 0.028);
+      --glass-2: rgba(255, 255, 255, 0.024);
       --line: rgba(255,255,255,0.15);
-      --line-gold: rgba(242,199,111,0.42);
+      --line-gold: rgba(242,199,111,0.46);
       --text: #f8f1dd;
       --muted: rgba(242,246,255,0.74);
       --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
       --blue: #78d8ff;
+      --violet: #bc80ff;
       --green: #a5efcc;
       --stage: min(100%, 1180px);
     }
@@ -49,9 +48,9 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.18), transparent 28rem),
-        radial-gradient(circle at 50% 46%, rgba(120,216,255,0.12), transparent 34rem),
-        radial-gradient(circle at 50% 88%, rgba(165,239,204,0.08), transparent 34rem),
+        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
+        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
+        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
         linear-gradient(180deg, #060916, #03050d 74%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -233,13 +232,14 @@
 
     .atrium {
       width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.4rem) auto 0;
+      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
       position: relative;
-      padding: clamp(1rem, 4vw, 1.4rem);
-      border: 1px solid rgba(242,199,111,0.22);
+      padding: clamp(1rem, 4vw, 1.6rem);
+      border: 1px solid rgba(242,199,111,0.24);
       border-radius: clamp(1.35rem, 5vw, 2.2rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.10), transparent 34%),
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
         rgba(8,12,20,0.62);
       box-shadow:
@@ -253,12 +253,24 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 1.2rem;
-      bottom: 1.2rem;
+      top: 5%;
+      bottom: 5%;
       width: 1px;
       transform: translateX(-50%);
       background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
-      opacity: 0.72;
+      opacity: 0.70;
+      z-index: -1;
+    }
+
+    .atrium::after {
+      content: "";
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
+      opacity: 0.68;
       z-index: -1;
     }
 
@@ -285,53 +297,235 @@
       text-wrap: balance;
     }
 
-    .spine-grid {
+    .diamond-compass {
+      --diamond-size: clamp(7.2rem, 18vw, 13rem);
+      --center-size: clamp(5.8rem, 14vw, 9.2rem);
+      position: relative;
+      width: min(100%, 820px);
+      min-height: clamp(28rem, 70vw, 43rem);
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: clamp(0.65rem, 2vw, 0.9rem);
+      place-items: center;
+      isolation: isolate;
     }
 
-    .spine {
-      min-height: 8.6rem;
-      position: relative;
+    .compass-orbit,
+    .compass-orbit::before,
+    .compass-orbit::after {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .compass-orbit {
+      width: min(90%, 44rem);
+      height: min(52vw, 21rem);
+      transform: rotate(-12deg);
+      opacity: 0.8;
+    }
+
+    .compass-orbit::before {
+      content: "";
+      inset: -22% -8%;
+      transform: rotate(32deg);
+      opacity: 0.62;
+    }
+
+    .compass-orbit::after {
+      content: "";
+      inset: 18% 13%;
+      transform: rotate(-34deg);
+      opacity: 0.52;
+    }
+
+    .axis-letter {
+      position: absolute;
+      color: rgba(255,241,205,0.90);
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      font-weight: 950;
+      line-height: 1;
+      text-shadow: 0 0 1rem rgba(242,199,111,0.18);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .axis-letter.n { top: 4%; left: 50%; transform: translateX(-50%); }
+    .axis-letter.e { right: 5%; top: 50%; transform: translateY(-50%); }
+    .axis-letter.s { bottom: 4%; left: 50%; transform: translateX(-50%); }
+    .axis-letter.w { left: 5%; top: 50%; transform: translateY(-50%); }
+
+    .center-diamond,
+    .spine-diamond {
+      position: absolute;
       display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 0.4rem;
-      padding: 0.95rem 0.7rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 1.25rem;
+      place-items: center;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .center-diamond {
+      width: var(--center-size);
+      height: var(--center-size);
+      z-index: 5;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .spine-diamond {
+      width: var(--diamond-size);
+      height: var(--diamond-size);
+      z-index: 7;
+      outline: none;
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .spine-diamond.north {
+      top: 7%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .spine-diamond.east {
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .spine-diamond.south {
+      bottom: 7%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .spine-diamond.west {
+      left: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .spine-diamond.north:hover,
+    .spine-diamond.north:focus-visible {
+      transform: translateX(-50%) translateY(-4px) scale(1.03);
+    }
+
+    .spine-diamond.east:hover,
+    .spine-diamond.east:focus-visible {
+      transform: translateY(-50%) translateX(4px) scale(1.03);
+    }
+
+    .spine-diamond.south:hover,
+    .spine-diamond.south:focus-visible {
+      transform: translateX(-50%) translateY(4px) scale(1.03);
+    }
+
+    .spine-diamond.west:hover,
+    .spine-diamond.west:focus-visible {
+      transform: translateY(-50%) translateX(-4px) scale(1.03);
+    }
+
+    .diamond-shell {
+      position: absolute;
+      inset: 0;
+      transform: rotate(45deg);
+      border: 2px solid rgba(242,199,111,0.78);
+      border-radius: 1.15rem;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
-        rgba(255,255,255,0.025);
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.28), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.26), transparent 38%),
+        linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
+      box-shadow:
+        0 1.4rem 3.5rem rgba(0,0,0,0.30),
+        inset 0 0 0 1px rgba(255,255,255,0.16),
+        inset 0 0 2rem rgba(255,255,255,0.07);
+      overflow: hidden;
+    }
+
+    .diamond-shell::before,
+    .diamond-shell::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border: 1px solid rgba(255,241,205,0.34);
+      border-radius: 0.65rem;
+      pointer-events: none;
+    }
+
+    .diamond-shell::after {
+      inset: 27%;
+      opacity: 0.55;
+    }
+
+    .diamond-lines {
+      position: absolute;
+      inset: 0;
+      transform: rotate(45deg);
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 1.15rem;
+    }
+
+    .diamond-lines::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.36) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.28) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%);
+      opacity: 0.8;
+    }
+
+    .diamond-content {
+      position: relative;
+      z-index: 2;
+      width: 78%;
+      display: grid;
+      gap: 0.22rem;
+      place-items: center;
       text-align: center;
       pointer-events: none;
       user-select: none;
     }
 
-    .spine::before {
-      content: "";
-      width: 2.2rem;
-      height: 2.2rem;
-      border: 1px solid rgba(242,199,111,0.48);
-      border-radius: 0.55rem;
-      transform: rotate(45deg);
-      background: rgba(242,199,111,0.055);
-      box-shadow: 0 0 2.2rem rgba(242,199,111,0.10);
+    .diamond-content strong {
+      color: rgba(255,241,205,0.98);
+      font-size: clamp(0.76rem, 2.1vw, 1.05rem);
+      line-height: 1.02;
+      font-weight: 950;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.18);
     }
 
-    .spine strong {
-      color: rgba(255,241,205,0.95);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.11em;
+    .diamond-content span {
+      color: rgba(242,246,255,0.78);
+      font-size: clamp(0.58rem, 1.7vw, 0.72rem);
+      line-height: 1.22;
+      font-weight: 850;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
     }
 
-    .spine span {
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.34;
+    .center-diamond .diamond-shell {
+      border-color: rgba(255,241,205,0.65);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
+        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
+        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
+      box-shadow:
+        0 1rem 2.5rem rgba(0,0,0,0.28),
+        inset 0 0 0 1px rgba(255,255,255,0.13);
+    }
+
+    .center-diamond .diamond-content strong {
+      font-size: clamp(0.64rem, 1.8vw, 0.84rem);
+    }
+
+    .center-diamond .diamond-content span {
+      font-size: clamp(0.52rem, 1.4vw, 0.64rem);
     }
 
     .section {
@@ -585,7 +779,15 @@
     }
 
     @media (max-width: 980px) {
-      .spine-grid,
+      .diamond-compass {
+        --diamond-size: clamp(6.8rem, 28vw, 10rem);
+        --center-size: clamp(5rem, 20vw, 7.2rem);
+        min-height: clamp(28rem, 95vw, 36rem);
+      }
+
+      .spine-diamond.east { right: 2%; }
+      .spine-diamond.west { left: 2%; }
+
       .diagnostic-strip {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -593,6 +795,30 @@
       .case-grid,
       .case-grid.two {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .diamond-compass {
+        --diamond-size: clamp(6.3rem, 35vw, 8.2rem);
+        --center-size: clamp(4.6rem, 23vw, 6rem);
+        min-height: 31rem;
+      }
+
+      .spine-diamond.north { top: 1.5%; }
+      .spine-diamond.south { bottom: 1.5%; }
+      .spine-diamond.east { right: 0; }
+      .spine-diamond.west { left: 0; }
+
+      .axis-letter.e { right: 0.4rem; }
+      .axis-letter.w { left: 0.4rem; }
+
+      .diamond-content strong {
+        font-size: 0.68rem;
+      }
+
+      .diamond-content span {
+        font-size: 0.52rem;
       }
     }
 
@@ -608,7 +834,6 @@
     }
 
     @media (max-width: 560px) {
-      .spine-grid,
       .diagnostic-strip {
         grid-template-columns: 1fr;
       }
@@ -645,7 +870,7 @@
         <h1 id="page-title">The Manor opens into the atrium.</h1>
 
         <p class="quote">
-          “After the Door, the visitor enters the hall of proof: glass cases, living routes, and every built asset held in its proper place.”
+          “Every built asset earns its own door.”
         </p>
 
         <div class="hero-actions" aria-label="Primary showroom actions">
@@ -657,37 +882,68 @@
 
       <section class="atrium" aria-labelledby="atrium-title">
         <div class="atrium-title">
-          <h2 id="atrium-title">A multi-spine launch hall.</h2>
-          <p>The Showroom is the atrium inside the Manor: a museum surface where built assets are displayed, routed, and measured without collapsing into one another.</p>
+          <h2 id="atrium-title">Four spines. One launch hall.</h2>
+          <p>After the Door, the visitor enters a museum-like atrium. The center holds the Showroom; the four diamonds open the main spines.</p>
         </div>
 
-        <div class="spine-grid" aria-label="Atrium spine structure">
-          <div class="spine">
-            <strong>Asset spine</strong>
-            <span>Built objects receive display cases.</span>
+        <div class="diamond-compass" aria-label="Showroom diamond compass">
+          <div class="compass-orbit" aria-hidden="true"></div>
+          <span class="axis-letter n" aria-hidden="true">N</span>
+          <span class="axis-letter e" aria-hidden="true">E</span>
+          <span class="axis-letter s" aria-hidden="true">S</span>
+          <span class="axis-letter w" aria-hidden="true">W</span>
+
+          <div class="center-diamond" aria-label="Showroom Atrium center marker">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong>Showroom</strong>
+              <span>Atrium</span>
+            </div>
           </div>
 
-          <div class="spine">
-            <strong>World spine</strong>
-            <span>Universe and Audralia keep their own setting.</span>
-          </div>
+          <a class="spine-diamond north" href="/showroom/globe/" aria-label="Open Asset Spine">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong>Asset Spine</strong>
+              <span>Globe Case</span>
+            </div>
+          </a>
 
-          <div class="spine">
-            <strong>Product spine</strong>
-            <span>Useful chambers stay under Products.</span>
-          </div>
+          <a class="spine-diamond east" href="/nine-summits/universe/" aria-label="Open World Spine">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong>World Spine</strong>
+              <span>Universe</span>
+            </div>
+          </a>
 
-          <div class="spine">
-            <strong>Proof spine</strong>
-            <span>Gauges measure without mutating.</span>
-          </div>
+          <a class="spine-diamond south" href="/products/" aria-label="Open Product Spine">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong>Product Spine</strong>
+              <span>Products</span>
+            </div>
+          </a>
+
+          <a class="spine-diamond west" href="/gauges/" aria-label="Open Proof Spine">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong>Proof Spine</strong>
+              <span>Gauges</span>
+            </div>
+          </a>
         </div>
       </section>
 
       <section class="section" aria-labelledby="built-assets-title">
         <div class="section-head">
           <h2 id="built-assets-title">Glass cases</h2>
-          <p>Each case is a launch surface. The case can be touched. The labels inside the case are informational.</p>
+          <p>Each case is a launch surface. Labels and tags are informational; case links are the touch targets.</p>
         </div>
 
         <div class="case-grid">
@@ -826,7 +1082,7 @@
 
         <div class="scope-tile">
           <strong>4</strong>
-          <span>Four main spines organize the hall.</span>
+          <span>Four spines organize the hall.</span>
         </div>
 
         <div class="scope-tile">
@@ -836,36 +1092,41 @@
 
         <div class="scope-tile">
           <strong>256</strong>
-          <span>Diagnostic scope remains measurable by Gauges.</span>
+          <span>Gauge scope remains measurable.</span>
         </div>
       </section>
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1
+        <pre>SHOWROOM_DIAMOND_COMPASS_ATRIUM_LAYOUT_TNT_v1
 route=/showroom/
 page=showroom
 showroom_role=manor_atrium_museum
 threshold_sequence=compass_orients,door_admits,showroom_receives_as_atrium
 visible_metaphor=museum_with_glass_cases
-spine_system=canonical_multi_spine
+spine_system=canonical_four_diamond_compass
+north=asset_spine:/showroom/globe/
+east=world_spine:/nine-summits/universe/
+south=product_spine:/products/
+west=proof_spine:/gauges/
+center=showroom_atrium_decorative
 diagnostic_scope=256
-interactive_surfaces=buttons,case_links
-informational_surfaces=case_marks,tags,spine_tiles,scope_tiles
-route_owns=atrium_context,glass_cases,launch_links,return_links,256_scope_expression
+scope_strip=1_atrium,4_spines,16_expansion_seats,256_gauge_scope
+interactive_surfaces=buttons,diamond_links,case_links
+informational_surfaces=center_diamond,case_marks,tags,scope_tiles
+route_owns=atrium_context,diamond_compass,glass_cases,launch_links,return_links,256_scope_expression
 route_does_not_own=globe_rendering,planet_identity,moon_surface,sun_surface,instrument_state,gauges_logic
 loads_heavy_runtime=false
 render_files_touched=false
 instrument_touched=false
 generated_image=false
-graphic_box=false
 streaming=false
 visual_pass_claimed=false</pre>
       </details>
     </main>
 
     <footer>
-      SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1 · Showroom · Manor Atrium · Glass Cases · 256 Scope.
+      SHOWROOM_DIAMOND_COMPASS_ATRIUM_LAYOUT_TNT_v1 · Showroom · Diamond Compass Atrium · 256 Scope.
     </footer>
   </div>
 </body>

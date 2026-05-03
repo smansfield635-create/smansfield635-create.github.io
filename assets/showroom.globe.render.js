@@ -1,539 +1,696 @@
-/* /assets/showroom.globe.render.js
-   SHOWROOM_GLOBE_REAL_MODEL_TEXTURE_RENDER_TNT_v1
-
-   ROLE:
-   Render authority only.
-
-   PURPOSE:
-   Use real Earth, Sun, and Moon source imagery as the model surface.
-   Stop fantasy/procedural body surfaces.
-   Preserve globe geometry, axis motion, shadows, and route/instrument split.
-
-   OWNS:
-   Real model body drawing.
-   Texture projection.
-   Globe/sphere visual render.
-
-   DOES_NOT_OWN:
-   Route copy.
-   Labels.
-   Buttons.
-   Controls.
-   Mount selection.
-   Instrument API.
-   Gauges.
-
-   LOCAL 4K MODEL PATHS FIRST:
-   /assets/textures/earth-blue-marble-4096x2048.jpg
-   /assets/textures/earth-blue-marble-4096x2048.png
-   /assets/textures/sun-sdo-4096.jpg
-   /assets/textures/sun-sdo-4096.png
-   /assets/textures/moon-lroc-4096x2048.jpg
-   /assets/textures/moon-lroc-4096x2048.png
-
-   OFFICIAL SOURCE FALLBACKS:
-   Earth: NASA SVS Blue Marble equirectangular map.
-   Sun: NASA/JPL SDO full-disk observation.
-   Moon: NASA SVS CGI Moon Kit LRO color map.
+/*!
+  SHOWROOM_GLOBE_RENDER_REAL_BODY_4K_RENEWAL_v1
+  Target: /assets/showroom.globe.render.js
+  Scope: render-owned celestial bodies only.
+  Route controls and instrument state remain external authority.
 */
+(function () {
+  'use strict';
 
-(function bindShowroomGlobeRealModelTextureRender(global) {
-  "use strict";
+  var VERSION = 'SHOWROOM_GLOBE_RENDER_REAL_BODY_4K_RENEWAL_v1';
 
-  const VERSION = "SHOWROOM_GLOBE_REAL_MODEL_TEXTURE_RENDER_TNT_v1";
-  const TAU = Math.PI * 2;
-  const BODY_SET = new Set(["earth", "sun", "moon"]);
-
-  const MODEL_SOURCES = {
-    earth: [
-      "/assets/textures/earth-blue-marble-4096x2048.jpg",
-      "/assets/textures/earth-blue-marble-4096x2048.png",
-      "/assets/textures/earth-blue-marble-2048x1024.jpg",
-      "/assets/textures/earth-blue-marble-2048x1024.png",
-      "https://svs.gsfc.nasa.gov/vis/a000000/a002900/a002915/bluemarble-2048.png"
-    ],
-    sun: [
-      "/assets/textures/sun-sdo-4096.jpg",
-      "/assets/textures/sun-sdo-4096.png",
-      "/assets/textures/sun-sdo-real.jpg",
-      "/assets/textures/sun-sdo-real.png",
-      "https://d2pn8kiwq2w21t.cloudfront.net/original_images/contentdamsciencepsdphotojournalpiapia26pia26681PIA26681.jpg"
-    ],
-    moon: [
-      "/assets/textures/moon-lroc-4096x2048.jpg",
-      "/assets/textures/moon-lroc-4096x2048.png",
-      "/assets/textures/moon-lroc-2048x1024.jpg",
-      "/assets/textures/moon-lroc-2048x1024.png",
-      "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg"
-    ]
+  var BODY = {
+    earth: {
+      name: 'earth',
+      title: 'EARTH',
+      kind: 'equirect',
+      texture: 'https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg',
+      rotationSeed: 0.59,
+      speed: 0.0000038,
+      radiusScale: 0.445,
+      rim: 'rgba(168, 224, 235, 0.55)',
+      rimSoft: 'rgba(168, 224, 235, 0.16)',
+      lift: 1.035,
+      contrast: 1.08,
+      saturation: 1.06,
+      shadow: 0.42,
+      shine: 0.22
+    },
+    sun: {
+      name: 'sun',
+      title: 'SUN',
+      kind: 'disk',
+      texture: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_2048_0171.jpg',
+      rotationSeed: 0,
+      speed: 0.0000012,
+      radiusScale: 0.448,
+      crop: { x: 0.075, y: 0.075, w: 0.85, h: 0.85 },
+      rim: 'rgba(255, 224, 109, 0.82)',
+      rimSoft: 'rgba(255, 182, 35, 0.24)',
+      lift: 1.02,
+      contrast: 1.16,
+      saturation: 1.08,
+      corona: 0.88
+    },
+    moon: {
+      name: 'moon',
+      title: 'MOON',
+      kind: 'equirect',
+      texture: 'https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/moon.8192.jpg',
+      rotationSeed: 0.21,
+      speed: 0.0000011,
+      radiusScale: 0.445,
+      rim: 'rgba(231, 227, 211, 0.44)',
+      rimSoft: 'rgba(231, 227, 211, 0.12)',
+      lift: 0.98,
+      contrast: 1.18,
+      saturation: 0.82,
+      shadow: 0.34,
+      shine: 0.16
+    }
   };
 
-  const modelCache = {
-    earth: null,
-    sun: null,
-    moon: null
+  var EXACT_MOUNT_SELECTOR = [
+    '[data-dgb-real-body-slot]',
+    '[data-dgb-globe-body]',
+    '[data-showroom-globe-body]',
+    '[data-render-body]',
+    '[data-body-render]',
+    '#dgb-globe-body',
+    '#showroom-globe-body',
+    '#showroom-body-render',
+    '.showroom-globe-body',
+    '.globe-body-render',
+    '.globe-body'
+  ].join(',');
+
+  var state = {
+    body: 'earth',
+    playing: true,
+    mount: null,
+    broadMount: false,
+    titleNode: null,
+    stage: null,
+    canvas: null,
+    ctx: null,
+    cssSize: 0,
+    dpr: 1,
+    raf: 0,
+    last: 0,
+    lastDraw: 0,
+    images: {},
+    rotation: {
+      earth: BODY.earth.rotationSeed,
+      sun: BODY.sun.rotationSeed,
+      moon: BODY.moon.rotationSeed
+    }
   };
 
-  const modelStatus = {
-    earth: { loaded: false, loading: false, source: "", error: "" },
-    sun: { loaded: false, loading: false, source: "", error: "" },
-    moon: { loaded: false, loading: false, source: "", error: "" }
-  };
-
-  const rendererRegistry = new Set();
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+  function normalizeBody(value) {
+    var v = String(value || '').toLowerCase().trim();
+    if (v.indexOf('earth') !== -1) return 'earth';
+    if (v.indexOf('sun') !== -1) return 'sun';
+    if (v.indexOf('moon') !== -1) return 'moon';
+    return '';
   }
 
-  function normalizeBody(body) {
-    body = String(body || "earth").toLowerCase();
-    return BODY_SET.has(body) ? body : "earth";
+  function bodyFromText(value) {
+    var text = String(value || '').replace(/\s+/g, ' ').trim();
+    return normalizeBody(text);
   }
 
-  function loadImageFromCandidates(body, done) {
-    body = normalizeBody(body);
+  function installCss() {
+    if (document.getElementById('dgb-real-body-render-css')) return;
 
-    if (modelCache[body]) {
-      done(modelCache[body]);
-      return;
+    var css = document.createElement('style');
+    css.id = 'dgb-real-body-render-css';
+    css.textContent = [
+      '.dgb-real-body-stage{',
+      '  position:relative;',
+      '  width:min(82vw,560px);',
+      '  max-width:100%;',
+      '  aspect-ratio:1/1;',
+      '  margin:0 auto clamp(1rem,3vw,1.45rem);',
+      '  display:grid;',
+      '  place-items:center;',
+      '  isolation:isolate;',
+      '  contain:layout paint;',
+      '}',
+      '.dgb-real-body-stage::before, .dgb-real-body-stage::after{',
+      '  content:"";',
+      '  position:absolute;',
+      '  inset:3.8%;',
+      '  border-radius:50%;',
+      '  pointer-events:none;',
+      '  z-index:0;',
+      '}',
+      '.dgb-real-body-stage::before{',
+      '  border:1px solid rgba(164,190,208,.10);',
+      '  box-shadow:0 0 80px rgba(92,151,190,.08), inset 0 0 52px rgba(0,0,0,.38);',
+      '}',
+      '.dgb-real-body-stage::after{',
+      '  inset:8%;',
+      '  border:1px solid rgba(164,190,208,.075);',
+      '  transform:rotate(-15deg) scaleX(1.18);',
+      '}',
+      '.dgb-real-body-canvas{',
+      '  position:relative;',
+      '  z-index:2;',
+      '  width:100%;',
+      '  height:100%;',
+      '  display:block;',
+      '  border-radius:50%;',
+      '  filter:drop-shadow(0 30px 48px rgba(0,0,0,.48));',
+      '}',
+      '.dgb-real-body-stage[data-body="sun"] .dgb-real-body-canvas{',
+      '  filter:drop-shadow(0 0 34px rgba(255,190,37,.36)) drop-shadow(0 24px 48px rgba(0,0,0,.42));',
+      '}',
+      '.dgb-real-body-stage[data-body="moon"] .dgb-real-body-canvas{',
+      '  filter:drop-shadow(0 24px 44px rgba(0,0,0,.48));',
+      '}',
+      '@media (max-width:520px){',
+      '  .dgb-real-body-stage{width:min(86vw,430px);}',
+      '}',
+      '@media (prefers-reduced-motion:reduce){',
+      '  .dgb-real-body-stage{animation:none!important;}',
+      '}'
+    ].join('\n');
+    document.head.appendChild(css);
+  }
+
+  function findTitleNode(root) {
+    var nodes = Array.prototype.slice.call((root || document).querySelectorAll('h1,h2,h3,h4,[data-body-title],.body-title,.globe-title,.celestial-title'));
+    for (var i = 0; i < nodes.length; i += 1) {
+      var b = bodyFromText(nodes[i].textContent);
+      if (b) return nodes[i];
+    }
+    return null;
+  }
+
+  function findMount() {
+    var exact = document.querySelector(EXACT_MOUNT_SELECTOR);
+    if (exact) {
+      return { node: exact, broad: false, title: findTitleNode(exact) };
     }
 
-    if (modelStatus[body].loading) {
-      const wait = global.setInterval(() => {
-        if (modelCache[body]) {
-          global.clearInterval(wait);
-          done(modelCache[body]);
-        }
-
-        if (modelStatus[body].error === "ALL_MODEL_SOURCES_FAILED") {
-          global.clearInterval(wait);
-          done(null);
-        }
-      }, 40);
-      return;
+    var title = findTitleNode(document);
+    if (title) {
+      var card = title.closest('article,section,figure,.card,.panel,.globe-card,.showroom-card,.celestial-card') || title.parentElement;
+      return { node: card || title.parentElement || document.body, broad: true, title: title };
     }
 
-    modelStatus[body].loading = true;
-    modelStatus[body].error = "";
+    var main = document.querySelector('main') || document.body;
+    return { node: main, broad: true, title: null };
+  }
 
-    const sources = MODEL_SOURCES[body].slice();
-    let index = 0;
+  function hideLegacyMedia() {
+    if (!state.broadMount || !state.mount || !state.stage || !state.titleNode) return;
 
-    function tryNext() {
-      const src = sources[index];
+    var children = Array.prototype.slice.call(state.mount.children || []);
+    var titleIndex = children.indexOf(state.titleNode);
+    if (titleIndex < 0) return;
 
-      if (!src) {
-        modelStatus[body].loading = false;
-        modelStatus[body].loaded = false;
-        modelStatus[body].error = "ALL_MODEL_SOURCES_FAILED";
-        done(null);
-        return;
+    for (var i = 0; i < titleIndex; i += 1) {
+      var child = children[i];
+      if (!child || child === state.stage || child.contains(state.stage)) continue;
+      if (child.classList && child.classList.contains('dgb-real-body-stage')) continue;
+
+      var hasBodyMedia = child.matches('canvas,img,svg,video,.body,.planet,.globe,.orb,.sphere,.visual,.globe-visual,.body-visual') ||
+        child.querySelector('canvas,img,svg,video,.body,.planet,.globe,.orb,.sphere,.visual,.globe-visual,.body-visual');
+
+      if (hasBodyMedia) {
+        child.setAttribute('data-dgb-hidden-by-real-body-render', 'true');
+        child.style.display = 'none';
       }
+    }
+  }
 
-      const image = new Image();
-      image.decoding = "async";
-      image.loading = "eager";
-      image.referrerPolicy = "no-referrer";
+  function ensureStage() {
+    installCss();
 
-      image.onload = function onModelLoaded() {
-        modelCache[body] = image;
-        modelStatus[body].loading = false;
-        modelStatus[body].loaded = true;
-        modelStatus[body].source = src;
-        modelStatus[body].error = "";
-        done(image);
-        redrawAll();
-      };
+    var found = findMount();
+    state.mount = found.node;
+    state.broadMount = found.broad;
+    state.titleNode = found.title;
 
-      image.onerror = function onModelError() {
-        index += 1;
-        tryNext();
-      };
+    if (!state.mount) return false;
 
-      image.src = src;
+    var existing = state.mount.querySelector('.dgb-real-body-stage');
+    if (existing) {
+      state.stage = existing;
+      state.canvas = existing.querySelector('canvas');
+      state.ctx = state.canvas && state.canvas.getContext ? state.canvas.getContext('2d', { alpha: true }) : null;
+      return !!state.ctx;
     }
 
-    tryNext();
-  }
+    var stage = document.createElement('div');
+    stage.className = 'dgb-real-body-stage';
+    stage.setAttribute('data-render-authority', 'render-owns-bodies');
+    stage.setAttribute('data-render-version', VERSION);
 
-  function redrawAll() {
-    rendererRegistry.forEach((renderer) => {
-      try {
-        renderer.render(renderer.lastOptions || {});
-      } catch (_) {}
-    });
-  }
+    var canvas = document.createElement('canvas');
+    canvas.className = 'dgb-real-body-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    stage.appendChild(canvas);
 
-  function drawLoadingHold(ctx, canvas, body, radius, cx, cy) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const gradient = ctx.createRadialGradient(
-      cx - radius * 0.32,
-      cy - radius * 0.36,
-      radius * 0.04,
-      cx,
-      cy,
-      radius
-    );
-
-    if (body === "sun") {
-      gradient.addColorStop(0, "#fff0a3");
-      gradient.addColorStop(0.4, "#f0a12f");
-      gradient.addColorStop(1, "#4b1306");
-    } else if (body === "moon") {
-      gradient.addColorStop(0, "#f4f2df");
-      gradient.addColorStop(0.5, "#b8bbb4");
-      gradient.addColorStop(1, "#4d5660");
+    if (state.broadMount && state.titleNode && state.titleNode.parentNode === state.mount) {
+      state.mount.insertBefore(stage, state.titleNode);
     } else {
-      gradient.addColorStop(0, "#72d8ff");
-      gradient.addColorStop(0.45, "#0b66ad");
-      gradient.addColorStop(1, "#011735");
+      state.mount.appendChild(stage);
     }
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    ctx.restore();
+    state.stage = stage;
+    state.canvas = canvas;
+    state.ctx = canvas.getContext('2d', { alpha: true });
+    hideLegacyMedia();
+    return !!state.ctx;
+  }
 
-    drawOptics(ctx, cx, cy, radius, body);
+  function imageRecord(name) {
+    var cfg = BODY[name] || BODY.earth;
+    if (state.images[name]) return state.images[name];
 
+    var record = { img: new Image(), ready: false, failed: false, promise: null };
+    record.img.decoding = 'async';
+    record.img.referrerPolicy = 'no-referrer';
+    record.promise = new Promise(function (resolve) {
+      record.img.onload = function () {
+        record.ready = true;
+        resolve(record);
+      };
+      record.img.onerror = function () {
+        record.failed = true;
+        resolve(record);
+      };
+    });
+    record.img.src = cfg.texture;
+    state.images[name] = record;
+    return record;
+  }
+
+  function resizeCanvas() {
+    if (!state.stage || !state.canvas || !state.ctx) return false;
+
+    var rect = state.stage.getBoundingClientRect();
+    var cssSize = Math.max(240, Math.round(Math.min(rect.width || 420, rect.height || rect.width || 420)));
+    var body = BODY[state.body] || BODY.earth;
+    var maxDpr = body.name === 'sun' ? 2.75 : 3.1;
+    var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, maxDpr));
+    var px = Math.max(512, Math.round(cssSize * dpr));
+
+    if (state.canvas.width !== px || state.canvas.height !== px) {
+      state.canvas.width = px;
+      state.canvas.height = px;
+      state.canvas.style.width = cssSize + 'px';
+      state.canvas.style.height = cssSize + 'px';
+      state.cssSize = cssSize;
+      state.dpr = dpr;
+      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    }
+
+    if (state.cssSize !== cssSize || state.dpr !== dpr) {
+      state.canvas.style.width = cssSize + 'px';
+      state.canvas.style.height = cssSize + 'px';
+      state.cssSize = cssSize;
+      state.dpr = dpr;
+      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    }
+
+    return false;
+  }
+
+  function clear(ctx, size) {
     ctx.save();
-    ctx.fillStyle = "rgba(248,241,221,0.72)";
-    ctx.font = `800 ${Math.max(12, radius * 0.045)}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("REAL MODEL LOADING", cx, cy);
+    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
     ctx.restore();
   }
 
-  function drawEquirectangularSphere(ctx, canvas, image, body, longitude, zoom) {
-    const size = Math.min(canvas.width, canvas.height);
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const radius = size * 0.395 * (zoom / 100);
-    const sliceCount = Math.max(720, Math.floor(radius * 2.8));
-    const naturalW = image.naturalWidth || image.width;
-    const naturalH = image.naturalHeight || image.height;
+  function drawWrappedStrip(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var texW = img.naturalWidth || img.width;
+    sx = ((sx % texW) + texW) % texW;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    for (let i = 0; i < sliceCount; i += 1) {
-      const nx1 = -1 + (2 * i) / sliceCount;
-      const nx2 = -1 + (2 * (i + 1)) / sliceCount;
-      const nx = (nx1 + nx2) / 2;
-
-      const z = Math.sqrt(Math.max(0, 1 - nx * nx));
-      if (z <= 0.001) continue;
-
-      let u = 0.5 + Math.atan2(nx, z) / TAU + longitude;
-      u = ((u % 1) + 1) % 1;
-
-      const sx = u * naturalW;
-      const sw = Math.max(2, Math.ceil(naturalW / sliceCount) + 2);
-
-      const destX = cx + nx1 * radius;
-      const destW = Math.ceil((nx2 - nx1) * radius) + 2;
-      const destH = 2 * radius * z;
-      const destY = cy - destH / 2;
-
-      drawWrappedStrip(ctx, image, sx, sw, naturalW, naturalH, destX, destY, destW, destH);
-    }
-
-    ctx.restore();
-
-    drawOptics(ctx, cx, cy, radius, body);
-  }
-
-  function drawWrappedStrip(ctx, image, sx, sw, naturalW, naturalH, dx, dy, dw, dh) {
-    const sourceX = Math.floor(sx);
-    const sourceW = Math.min(sw, naturalW);
-
-    if (sourceX + sourceW <= naturalW) {
-      ctx.drawImage(image, sourceX, 0, sourceW, naturalH, dx, dy, dw, dh);
+    if (sx + sw <= texW) {
+      ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
       return;
     }
 
-    const firstW = naturalW - sourceX;
-    const secondW = sourceW - firstW;
-    const firstDW = dw * (firstW / sourceW);
-    const secondDW = dw - firstDW;
-
-    ctx.drawImage(image, sourceX, 0, firstW, naturalH, dx, dy, firstDW, dh);
-    ctx.drawImage(image, 0, 0, secondW, naturalH, dx + firstDW, dy, secondDW, dh);
+    var first = texW - sx;
+    var frac = first / sw;
+    ctx.drawImage(img, sx, sy, first, sh, dx, dy, dw * frac, dh);
+    ctx.drawImage(img, 0, sy, sw - first, sh, dx + dw * frac, dy, dw * (1 - frac), dh);
   }
 
-  function drawFullDiskRealModel(ctx, canvas, image, body, longitude, zoom) {
-    const size = Math.min(canvas.width, canvas.height);
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const radius = size * 0.395 * (zoom / 100);
+  function applyColorGrade(ctx, cfg) {
+    var filter = [];
+    filter.push('brightness(' + (cfg.lift || 1) + ')');
+    filter.push('contrast(' + (cfg.contrast || 1) + ')');
+    filter.push('saturate(' + (cfg.saturation || 1) + ')');
+    ctx.filter = filter.join(' ');
+  }
 
-    const sourceSize = Math.min(image.naturalWidth || image.width, image.naturalHeight || image.height);
-    const sx = ((image.naturalWidth || image.width) - sourceSize) / 2;
-    const sy = ((image.naturalHeight || image.height) - sourceSize) / 2;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function drawSphere(ctx, img, cfg, cx, cy, r, phase) {
+    var texW = img.naturalWidth || img.width;
+    var texH = img.naturalHeight || img.height;
+    var diameter = r * 2;
+    var sourceW = texW * 0.5;
+    var centerX = (((phase % 1) + 1) % 1) * texW;
 
     ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-    ctx.translate(cx, cy);
-    ctx.rotate(longitude * TAU * 0.16);
-    ctx.translate(-cx, -cy);
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    ctx.drawImage(
-      image,
-      sx,
-      sy,
-      sourceSize,
-      sourceSize,
-      cx - radius,
-      cy - radius,
-      radius * 2,
-      radius * 2
-    );
-
-    ctx.restore();
-
-    drawOptics(ctx, cx, cy, radius, body);
-  }
-
-  function clipSphere(ctx, cx, cy, radius) {
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.closePath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    applyColorGrade(ctx, cfg);
+
+    var step = window.devicePixelRatio >= 2.5 ? 0.7 : 1;
+    for (var row = 0; row <= diameter; row += step) {
+      var v = (row - r) / r;
+      var rowRadius = Math.sqrt(Math.max(0, 1 - v * v)) * r;
+      if (rowRadius <= 0.01) continue;
+
+      var lat = Math.asin(-v);
+      var sy = Math.max(0, Math.min(texH - 1, (0.5 - lat / Math.PI) * texH));
+      var dx = cx - rowRadius;
+      var dy = cy - r + row;
+      var dw = rowRadius * 2;
+      var sx = centerX - sourceW / 2;
+
+      drawWrappedStrip(ctx, img, sx, sy, sourceW, 1, dx, dy, dw, step + 0.55);
+    }
+
+    ctx.filter = 'none';
+    ctx.restore();
   }
 
-  function drawOptics(ctx, cx, cy, radius, body) {
-    ctx.save();
-    clipSphere(ctx, cx, cy, radius);
-
-    const highlight = ctx.createRadialGradient(
-      cx - radius * 0.36,
-      cy - radius * 0.38,
-      radius * 0.035,
-      cx,
-      cy,
-      radius
-    );
-
-    if (body === "sun") {
-      highlight.addColorStop(0, "rgba(255,255,225,0.18)");
-      highlight.addColorStop(0.28, "rgba(255,238,120,0.06)");
-      highlight.addColorStop(1, "rgba(255,255,255,0)");
-    } else {
-      highlight.addColorStop(0, "rgba(255,255,255,0.18)");
-      highlight.addColorStop(0.3, "rgba(255,255,255,0.04)");
-      highlight.addColorStop(1, "rgba(255,255,255,0)");
-    }
-
-    ctx.fillStyle = highlight;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    const limb = ctx.createRadialGradient(cx, cy, radius * 0.55, cx, cy, radius);
-    limb.addColorStop(0, "rgba(0,0,0,0)");
-    limb.addColorStop(0.72, body === "sun" ? "rgba(70,10,0,0.02)" : "rgba(0,0,0,0.08)");
-    limb.addColorStop(1, body === "sun" ? "rgba(70,10,0,0.12)" : "rgba(0,0,0,0.4)");
-
-    ctx.fillStyle = limb;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    ctx.restore();
-
-    if (body === "earth") {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius * 1.012, 0, TAU);
-      ctx.strokeStyle = "rgba(126,219,255,0.48)";
-      ctx.lineWidth = Math.max(2, radius * 0.024);
-      ctx.shadowColor = "rgba(126,219,255,0.42)";
-      ctx.shadowBlur = radius * 0.07;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    if (body === "sun") {
-      const corona = ctx.createRadialGradient(cx, cy, radius * 0.84, cx, cy, radius * 1.25);
-      corona.addColorStop(0, "rgba(255,197,63,0.15)");
-      corona.addColorStop(0.58, "rgba(255,114,26,0.11)");
-      corona.addColorStop(1, "rgba(255,114,26,0)");
-
-      ctx.save();
-      ctx.globalCompositeOperation = "screen";
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius * 1.25, 0, TAU);
-      ctx.fillStyle = corona;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    let stroke = "rgba(236,235,219,0.54)";
-    let glow = "rgba(255,255,244,0.16)";
-
-    if (body === "earth") {
-      stroke = "rgba(134,225,255,0.66)";
-      glow = "rgba(126,219,255,0.34)";
-    }
-
-    if (body === "sun") {
-      stroke = "rgba(255,224,116,0.78)";
-      glow = "rgba(255,166,34,0.52)";
-    }
+  function drawDisk(ctx, img, cfg, cx, cy, r, phase) {
+    var texW = img.naturalWidth || img.width;
+    var texH = img.naturalHeight || img.height;
+    var crop = cfg.crop || { x: 0, y: 0, w: 1, h: 1 };
+    var sx = texW * crop.x;
+    var sy = texH * crop.y;
+    var sw = texW * crop.w;
+    var sh = texH * crop.h;
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = Math.max(2, radius * 0.009);
-    ctx.shadowColor = glow;
-    ctx.shadowBlur = radius * 0.07;
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.translate(cx, cy);
+    ctx.rotate(phase * Math.PI * 2 * 0.035);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    applyColorGrade(ctx, cfg);
+    ctx.drawImage(img, sx, sy, sw, sh, -r, -r, r * 2, r * 2);
+    ctx.filter = 'none';
+    ctx.restore();
+  }
+
+  function drawSunCorona(ctx, cx, cy, r, cfg, t) {
+    ctx.save();
+    var pulse = 1 + Math.sin(t * 0.0017) * 0.018;
+    var glow = ctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r * 1.48 * pulse);
+    glow.addColorStop(0, 'rgba(255, 214, 67, 0.30)');
+    glow.addColorStop(0.34, 'rgba(255, 180, 32, 0.22)');
+    glow.addColorStop(0.7, 'rgba(255, 120, 20, 0.08)');
+    glow.addColorStop(1, 'rgba(255, 120, 20, 0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.56 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = 'screen';
+    ctx.strokeStyle = 'rgba(255, 229, 111, 0.30)';
+    ctx.lineWidth = Math.max(1, r * 0.006);
+    for (var i = 0; i < 22; i += 1) {
+      var a = (Math.PI * 2 * i) / 22 + Math.sin(t * 0.0007 + i) * 0.018;
+      var inner = r * (0.96 + ((i % 3) * 0.012));
+      var outer = r * (1.07 + ((i % 5) * 0.018));
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
+      ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function applyBodyLighting(ctx, cfg, cx, cy, r) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    if (cfg.kind !== 'sun') {
+      var shade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.42, r * 0.12, cx + r * 0.45, cy + r * 0.35, r * 1.12);
+      shade.addColorStop(0, 'rgba(255,255,255,' + (cfg.shine || 0.16) + ')');
+      shade.addColorStop(0.42, 'rgba(255,255,255,0.02)');
+      shade.addColorStop(0.73, 'rgba(0,0,0,' + ((cfg.shadow || 0.35) * 0.52) + ')');
+      shade.addColorStop(1, 'rgba(0,0,0,' + (cfg.shadow || 0.35) + ')');
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = shade;
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    } else {
+      var limb = ctx.createRadialGradient(cx, cy, r * 0.58, cx, cy, r * 1.02);
+      limb.addColorStop(0, 'rgba(255,255,255,0.04)');
+      limb.addColorStop(0.72, 'rgba(255,221,91,0.02)');
+      limb.addColorStop(1, 'rgba(74,31,0,0.24)');
+      ctx.fillStyle = limb;
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    }
+
+    ctx.restore();
+  }
+
+  function drawRim(ctx, cfg, cx, cy, r) {
+    ctx.save();
+    var soft = ctx.createRadialGradient(cx, cy, r * 0.94, cx, cy, r * 1.1);
+    soft.addColorStop(0, 'rgba(255,255,255,0)');
+    soft.addColorStop(0.78, cfg.rimSoft || 'rgba(255,255,255,.10)');
+    soft.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = soft;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = cfg.rim || 'rgba(255,255,255,.45)';
+    ctx.lineWidth = Math.max(1, r * 0.006);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + ctx.lineWidth, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
   }
 
-  function createRenderer(canvas) {
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-    const renderer = {
-      VERSION,
-      version: VERSION,
-      lastOptions: {},
-      render,
-      resize,
-      getStatus
-    };
-
-    rendererRegistry.add(renderer);
-
-    function resize() {
-      const parent = canvas.parentElement;
-      const rect = parent ? parent.getBoundingClientRect() : canvas.getBoundingClientRect();
-      const cssSize = clamp(rect.width || canvas.clientWidth || 420, 260, 1080);
-      const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
-      const pixelSize = Math.round(cssSize * dpr);
-
-      if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
-        canvas.width = pixelSize;
-        canvas.height = pixelSize;
-      }
-    }
-
-    function render(options) {
-      resize();
-
-      const body = normalizeBody(options && options.body);
-      const longitude = Number(options && options.longitude) || 0;
-      const zoom = clamp(Number(options && options.zoom) || 100, 70, 240);
-      const size = Math.min(canvas.width, canvas.height);
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const radius = size * 0.395 * (zoom / 100);
-
-      renderer.lastOptions = { body, longitude, zoom };
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-
-      const image = modelCache[body];
-
-      if (!image) {
-        loadImageFromCandidates(body, function onLoaded() {});
-        drawLoadingHold(ctx, canvas, body, radius, cx, cy);
-
-        return {
-          ok: false,
-          version: VERSION,
-          body,
-          status: "REAL_MODEL_LOADING",
-          modelSource: modelStatus[body].source,
-          modelError: modelStatus[body].error,
-          projection: body === "sun" ? "real-full-disk" : "real-equirectangular-sphere",
-          rendererOwns: "body-drawing-only"
-        };
-      }
-
-      if (body === "sun") {
-        drawFullDiskRealModel(ctx, canvas, image, body, longitude, zoom);
-      } else {
-        drawEquirectangularSphere(ctx, canvas, image, body, longitude, zoom);
-      }
-
-      return {
-        ok: true,
-        version: VERSION,
-        body,
-        status: "REAL_MODEL_DRAWN",
-        modelSource: modelStatus[body].source,
-        projection: body === "sun" ? "real-full-disk" : "real-equirectangular-sphere",
-        textureRequired: true,
-        fantasySurface: false,
-        rendererOwns: "body-drawing-only"
-      };
-    }
-
-    function getStatus() {
-      return {
-        ok: true,
-        version: VERSION,
-        role: "render-authority",
-        projection: "real-model-texture-sphere",
-        ownsBodyDrawing: true,
-        ownsRoute: false,
-        ownsControls: false,
-        ownsLabels: false,
-        fantasySurface: false,
-        modelStatus: {
-          earth: { ...modelStatus.earth },
-          sun: { ...modelStatus.sun },
-          moon: { ...modelStatus.moon }
-        }
-      };
-    }
-
-    resize();
-    return renderer;
+  function drawSourceHold(ctx, ctxSize, cfg) {
+    var cx = ctxSize / 2;
+    var cy = ctxSize / 2;
+    var r = ctxSize * (cfg.radiusScale || 0.445);
+    ctx.save();
+    ctx.fillStyle = 'rgba(229,224,205,0.055)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(229,224,205,0.22)';
+    ctx.lineWidth = Math.max(1, r * 0.006);
+    ctx.stroke();
+    ctx.restore();
   }
 
-  function renderToCanvas(canvas, options) {
-    return createRenderer(canvas).render(options || {});
+  function drawFrame(now) {
+    if (!ensureStage()) return;
+    resizeCanvas();
+
+    var ctx = state.ctx;
+    var cssSize = state.cssSize || 420;
+    var cfg = BODY[state.body] || BODY.earth;
+    var rec = imageRecord(state.body);
+    var cx = cssSize / 2;
+    var cy = cssSize / 2;
+    var r = cssSize * (cfg.radiusScale || 0.445);
+
+    clear(ctx, cssSize);
+    if (state.stage) {
+      state.stage.setAttribute('data-body', state.body);
+      state.stage.setAttribute('data-source-family', 'real-nasa-celestial-source');
+    }
+
+    if (cfg.kind === 'sun') {
+      drawSunCorona(ctx, cx, cy, r, cfg, now || 0);
+    }
+
+    if (!rec.ready) {
+      drawSourceHold(ctx, cssSize, cfg);
+      return;
+    }
+
+    if (cfg.kind === 'disk') {
+      drawDisk(ctx, rec.img, cfg, cx, cy, r, state.rotation[state.body] || 0);
+    } else {
+      drawSphere(ctx, rec.img, cfg, cx, cy, r, state.rotation[state.body] || 0);
+    }
+
+    applyBodyLighting(ctx, cfg, cx, cy, r);
+    drawRim(ctx, cfg, cx, cy, r);
   }
 
-  const api = {
-    VERSION,
+  function readRouteBodyHint() {
+    var attrs = [
+      document.documentElement && document.documentElement.getAttribute('data-active-body'),
+      document.body && document.body.getAttribute('data-active-body'),
+      document.documentElement && document.documentElement.getAttribute('data-current-body'),
+      document.body && document.body.getAttribute('data-current-body'),
+      document.documentElement && document.documentElement.getAttribute('data-globe-body'),
+      document.body && document.body.getAttribute('data-globe-body')
+    ];
+
+    for (var i = 0; i < attrs.length; i += 1) {
+      var b = normalizeBody(attrs[i]);
+      if (b) return b;
+    }
+
+    var active = document.querySelector('[aria-pressed="true"], .active, .is-active, .selected, [data-active="true"]');
+    if (active) {
+      var fromActive = bodyFromText(active.textContent || active.getAttribute('aria-label') || active.getAttribute('title'));
+      if (fromActive) return fromActive;
+    }
+
+    var titleBody = state.titleNode ? bodyFromText(state.titleNode.textContent) : '';
+    if (titleBody) return titleBody;
+
+    return '';
+  }
+
+  function setBody(name, options) {
+    var b = normalizeBody(name);
+    if (!b || !BODY[b]) return false;
+    state.body = b;
+    imageRecord(b);
+    if (state.stage) state.stage.setAttribute('data-body', b);
+    drawFrame(performance.now());
+    if (!options || !options.silent) {
+      window.dispatchEvent(new CustomEvent('dgb:showroom:render-body', {
+        detail: { body: b, version: VERSION, authority: 'render-owns-bodies' }
+      }));
+    }
+    return true;
+  }
+
+  function start() {
+    state.playing = true;
+  }
+
+  function pause() {
+    state.playing = false;
+    drawFrame(performance.now());
+  }
+
+  function loop(now) {
+    if (!state.last) state.last = now;
+    var dt = Math.min(64, Math.max(0, now - state.last));
+    state.last = now;
+
+    var cfg = BODY[state.body] || BODY.earth;
+    if (state.playing) {
+      state.rotation[state.body] = ((state.rotation[state.body] || 0) + cfg.speed * dt) % 1;
+    }
+
+    var targetInterval = state.body === 'sun' ? 42 : 55;
+    if (state.playing || now - state.lastDraw > 240) {
+      if (now - state.lastDraw >= targetInterval) {
+        drawFrame(now);
+        state.lastDraw = now;
+      }
+    }
+
+    state.raf = window.requestAnimationFrame(loop);
+  }
+
+  function observeRouteControls() {
+    document.addEventListener('click', function (event) {
+      var control = event.target && event.target.closest ? event.target.closest('button,a,[role="button"],[data-body],[data-view-body],[data-globe-body]') : null;
+      if (!control) return;
+
+      var declared = normalizeBody(control.getAttribute('data-body') || control.getAttribute('data-view-body') || control.getAttribute('data-globe-body'));
+      var text = bodyFromText(control.textContent || control.getAttribute('aria-label') || control.getAttribute('title'));
+      var nextBody = declared || text;
+
+      if (nextBody) {
+        window.setTimeout(function () {
+          var routeBody = readRouteBodyHint() || nextBody;
+          setBody(routeBody, { silent: true });
+        }, 0);
+        return;
+      }
+
+      var raw = String(control.textContent || control.getAttribute('aria-label') || '').toLowerCase();
+      if (raw.indexOf('pause') !== -1) pause();
+      if (raw.indexOf('start') !== -1 || raw.indexOf('play') !== -1) start();
+    }, true);
+
+    window.addEventListener('resize', function () {
+      drawFrame(performance.now());
+    }, { passive: true });
+
+    var events = [
+      'dgb:body',
+      'dgb:showroom:body',
+      'dgb:showroom-globe:body',
+      'showroom:body',
+      'globe:body',
+      'bodychange'
+    ];
+
+    events.forEach(function (name) {
+      window.addEventListener(name, function (event) {
+        var detail = event && event.detail ? event.detail : {};
+        var b = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
+        if (b) setBody(b, { silent: true });
+      });
+      document.addEventListener(name, function (event) {
+        var detail = event && event.detail ? event.detail : {};
+        var b = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
+        if (b) setBody(b, { silent: true });
+      });
+    });
+
+    window.setInterval(function () {
+      var hinted = readRouteBodyHint();
+      if (hinted && hinted !== state.body) setBody(hinted, { silent: true });
+    }, 650);
+  }
+
+  function boot() {
+    ensureStage();
+    var initial = readRouteBodyHint() || normalizeBody(window.location.hash) || 'earth';
+    setBody(initial, { silent: true });
+    imageRecord('earth');
+    imageRecord('sun');
+    imageRecord('moon');
+    observeRouteControls();
+    if (state.raf) window.cancelAnimationFrame(state.raf);
+    state.raf = window.requestAnimationFrame(loop);
+  }
+
+  var api = {
     version: VERSION,
-    createRenderer,
-    renderToCanvas,
-    getStatus() {
+    setBody: setBody,
+    viewEarth: function () { return setBody('earth'); },
+    viewSun: function () { return setBody('sun'); },
+    viewMoon: function () { return setBody('moon'); },
+    start: start,
+    pause: pause,
+    refresh: function () { return drawFrame(performance.now()); },
+    getState: function () {
       return {
-        ok: true,
+        body: state.body,
+        playing: state.playing,
         version: VERSION,
-        role: "render-file",
-        projection: "real-model-texture-sphere",
-        ownsBodyDrawing: true,
-        ownsRoute: false,
-        ownsControls: false,
-        ownsLabels: false,
-        fantasySurface: false,
-        modelStatus: {
-          earth: { ...modelStatus.earth },
-          sun: { ...modelStatus.sun },
-          moon: { ...modelStatus.moon }
-        }
+        authority: 'render-owns-bodies',
+        routeControlsOwnedHere: false,
+        instrumentStateOwnedHere: false
       };
     }
   };
 
-  global.DGBShowroomGlobeRender = api;
-  global.DiamondGateBridge = global.DiamondGateBridge || {};
-  global.DiamondGateBridge.DGBShowroomGlobeRender = api;
-})(typeof window !== "undefined" ? window : globalThis);
+  window.DGBShowroomGlobeRender = api;
+  window.ShowroomGlobeRender = api;
+  window.showroomGlobeRender = api;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+}());

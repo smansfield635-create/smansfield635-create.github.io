@@ -1,25 +1,4 @@
-<!--
-══════════════════════════════════════════════════════════════════════
-FULL_FILE_TNT
-FILE=/showroom/globe/index.html
-TNT_ID=SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1
-MODE=FULL_FILE_REPLACEMENT
-PRECINCT=DEMO_ACTUAL_UNIVERSE_ROUTE_BRIDGE
-JURISDICTION=ROUTE_LAYOUT_CANONICAL_INSTRUMENT_MOUNT_NON_BLOCKING_CONTROLS_ZOOM_WRAPPER
-NON_JURISDICTION=INLINE_GLOBE_REDRAW, CARTOON_CANVAS_REPLACEMENT, DEMO_UNIVERSE_DATA_MERGE, PLANET_1, GAUGES_SCORING, GLOBAL_NAV_AUTHORITY
-BASELINE_STATUS=OPTIMAL_BASELINE_CANDIDATE
-EARTH_RULE=ACTUAL_EARTH_FROM_CANONICAL_INSTRUMENT
-SUN_RULE=ACTUAL_SUN_FROM_CANONICAL_INSTRUMENT
-MOON_RULE=ACTUAL_MOON_FROM_CANONICAL_INSTRUMENT
-CONTROL_RULE=CONTROLS_MUST_NEVER_OVERLAY_OR_BLOCK_THE_GLOBE
-MOUNT_RULE=/assets/showroom.globe.instrument.js_IS_THE_BODY_RENDER_AUTHORITY
-DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
-GRAPHICBOX=FORBIDDEN
-IMAGE_GENERATION=FORBIDDEN
-VISUAL_PASS_CLAIMED=false
-OWNER_VISUAL_RECEIPT_REQUIRED=true
-══════════════════════════════════════════════════════════════════════
--->
+<!-- /showroom/globe/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,76 +10,100 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     content="Demo Actual Universe route bridge for actual Earth, Sun, and Moon bodies with non-blocking controls and separated data lanes."
   />
 
+  <!--
+  ══════════════════════════════════════════════════════════════════════
+  SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1
+  TARGET=/showroom/globe/index.html
+  MODE=FULL_FILE_TNT
+  CLASS=ROUTE_CONSUMER_BRIDGE_ONLY
+  OWNER=SEAN
+  VOICE=DEXTER_EXECUTION_WITH_SHELDON_BOUNDARY
+  HYBRID_BOND=PASS
+
+  PRECINCT=
+  Demo Actual Universe route shell, mount node, zoom wrapper, command panel,
+  route data, instrument invocation, and route receipt.
+
+  JURISDICTION=
+  Provide the mount.
+  Load the canonical instrument.
+  Call the canonical instrument.
+  Relay body, motion, speed, direction, and zoom commands.
+  Keep Demo Universe data and Demo Actual Universe data separate.
+  Contain the mobile UI.
+
+  NON_JURISDICTION=
+  Does not draw Earth.
+  Does not draw Sun.
+  Does not draw Moon.
+  Does not create replacement body art.
+  Does not replace /assets/showroom.globe.instrument.js.
+  Does not score Gauges.
+  Does not touch Planet 1 terrain.
+  Does not merge Demo Universe into Demo Actual Universe.
+
+  RETURN_RECEIPT=
+  #showroomGlobeMount exists.
+  /assets/showroom.globe.instrument.js loads.
+  Route calls instrument mount/render methods.
+  Controls call instrument methods.
+  No inline body drawing exists in this route.
+  Placeholder remains only until instrument renders.
+  ══════════════════════════════════════════════════════════════════════
+  -->
+
   <style>
     :root {
-      --bg: #02030a;
-      --panel: rgba(7, 10, 24, 0.78);
-      --panel-strong: rgba(10, 14, 32, 0.94);
-      --line: rgba(235, 229, 204, 0.22);
-      --line-strong: rgba(247, 224, 139, 0.52);
-      --text: #f7f0dc;
-      --muted: rgba(247, 240, 220, 0.72);
-      --faint: rgba(247, 240, 220, 0.48);
-      --gold: #f1c965;
-      --blue: #78c7ff;
-      --shadow: rgba(0, 0, 0, 0.52);
-      --stage-size: min(92vw, 760px);
-      --zoom-scale: 1;
-      color-scheme: dark;
+      --bg: #03050a;
+      --panel: rgba(11, 15, 25, 0.86);
+      --panel-strong: rgba(13, 18, 30, 0.94);
+      --line: rgba(255, 255, 255, 0.16);
+      --line-strong: rgba(255, 255, 255, 0.28);
+      --text: #f8f1dd;
+      --muted: rgba(248, 241, 221, 0.72);
+      --faint: rgba(248, 241, 221, 0.46);
+      --gold: #f8d46a;
+      --blue: #7bd6ff;
+      --stage-zoom: 1;
+      --safe-width: min(100%, 1180px);
+      --card-width: min(100%, 820px);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
-      min-height: 100%;
-      scroll-behavior: smooth;
+    html,
+    body {
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 22% 12%, rgba(48, 91, 164, 0.18), transparent 34rem),
-        radial-gradient(circle at 78% 18%, rgba(225, 173, 79, 0.12), transparent 28rem),
-        radial-gradient(circle at 50% 118%, rgba(92, 126, 176, 0.12), transparent 34rem),
+        radial-gradient(circle at 50% 18%, rgba(83, 138, 200, 0.16), transparent 28rem),
+        radial-gradient(circle at 12% 78%, rgba(248, 212, 106, 0.08), transparent 24rem),
+        radial-gradient(circle at 90% 30%, rgba(123, 214, 255, 0.08), transparent 25rem),
         var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 14% 24%, rgba(255,255,255,0.08) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 12%, rgba(255,255,255,0.12) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 62% 48%, rgba(255,255,255,0.08) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 32% 76%, rgba(255,255,255,0.1) 0 1px, transparent 1.5px),
-        linear-gradient(180deg, rgba(2,3,10,0.7), rgba(2,3,10,1));
-      overflow-x: hidden;
+      min-height: 100svh;
     }
 
-    body::before,
-    body::after {
+    body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: -1;
-    }
-
-    body::before {
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.38) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255,255,255,0.22) 0 1px, transparent 1.4px);
-      background-size: 97px 97px, 149px 149px;
-      background-position: 12px 21px, 44px 11px;
-      opacity: 0.38;
-    }
-
-    body::after {
       background:
-        radial-gradient(circle at 50% 45%, transparent 0 18rem, rgba(0,0,0,0.38) 48rem),
-        linear-gradient(180deg, transparent, rgba(0,0,0,0.35));
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.16) 0 1px, transparent 2px),
+        radial-gradient(circle at 38% 34%, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px),
+        radial-gradient(circle at 72% 21%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
+        radial-gradient(circle at 82% 72%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px);
+      opacity: 0.72;
+      z-index: 0;
     }
 
     a {
@@ -108,542 +111,522 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       text-decoration: none;
     }
 
-    a:hover {
-      color: var(--gold);
+    button,
+    input {
+      font: inherit;
     }
 
     .skip-link {
       position: absolute;
       left: 1rem;
-      top: 1rem;
-      transform: translateY(-180%);
-      background: var(--gold);
-      color: #111;
-      padding: 0.7rem 1rem;
-      border-radius: 999px;
-      font-weight: 800;
+      top: -4rem;
       z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #090b10;
+      font-weight: 900;
     }
 
     .skip-link:focus {
-      transform: translateY(0);
+      top: 1rem;
     }
 
-    .site-shell {
-      width: min(1180px, calc(100% - 24px));
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: var(--safe-width);
+      min-width: 0;
       margin: 0 auto;
-      padding: 18px 0 48px;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem) max(1.5rem, env(safe-area-inset-bottom));
+      overflow-x: hidden;
     }
 
     header {
-      display: grid;
-      gap: 18px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)),
-        var(--panel);
-      box-shadow: 0 24px 80px var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .brand-row {
+      width: 100%;
+      min-width: 0;
       display: flex;
-      justify-content: space-between;
-      gap: 16px;
       align-items: center;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
     }
 
     .brand {
-      display: grid;
-      gap: 4px;
+      min-width: 0;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
     }
 
-    .brand strong {
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      letter-spacing: 0.08em;
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
       text-transform: uppercase;
     }
 
-    .brand span {
+    .brand span:last-child {
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     nav {
+      min-width: 0;
+      max-width: 100%;
       display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
       justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
     }
 
-    nav a,
-    .pill {
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.1rem;
+      padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 0.55rem 0.82rem;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.035);
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     nav a[aria-current="page"] {
-      color: #111;
-      background: linear-gradient(135deg, #fff0aa, var(--gold));
-      border-color: rgba(255,255,255,0.2);
-      font-weight: 800;
+      border-color: rgba(248, 212, 106, 0.9);
+      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      color: #080a0f;
     }
 
     main {
-      display: grid;
-      gap: 18px;
+      width: 100%;
+      min-width: 0;
     }
 
     .hero {
+      width: 100%;
+      min-width: 0;
       display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
-      gap: 24px;
-      align-items: start;
-      padding: 26px 0;
+      gap: 1rem;
+      padding: clamp(0.4rem, 2vw, 1rem) 0 1rem;
+      text-align: center;
     }
 
     .hero-copy {
-      padding: 18px 4px;
+      width: min(100%, 820px);
+      min-width: 0;
+      margin: 0 auto;
     }
 
     .eyebrow {
+      margin: 0 0 0.75rem;
       color: var(--gold);
-      font-size: 0.84rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
+      font-size: clamp(0.72rem, 2.6vw, 0.84rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
-      margin: 0.55rem 0 0.7rem;
-      font-size: clamp(2.35rem, 7vw, 5.6rem);
-      line-height: 0.9;
-      letter-spacing: -0.06em;
+      margin: 0;
+      font-size: clamp(2rem, 9.5vw, 5.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
     }
 
     .lead {
-      max-width: 66ch;
-      margin: 0;
+      width: min(100%, 760px);
+      margin: 0.95rem auto 0;
       color: var(--muted);
-      font-size: clamp(1rem, 1.65vw, 1.25rem);
-      line-height: 1.65;
+      font-size: clamp(0.98rem, 3.6vw, 1.14rem);
+      line-height: 1.55;
+      text-wrap: balance;
     }
 
     .status-strip {
+      width: min(100%, 900px);
+      min-width: 0;
+      margin: 0 auto;
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 0.45rem;
     }
 
-    .status-strip .pill {
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
+    .pill {
+      max-width: 100%;
+      padding: 0.44rem 0.7rem;
+      border: 1px solid rgba(248, 212, 106, 0.28);
+      border-radius: 999px;
+      background: rgba(248, 212, 106, 0.06);
+      color: rgba(255, 238, 174, 0.9);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     .viewer-stack {
+      width: var(--card-width);
+      min-width: 0;
+      margin: 0 auto;
       display: grid;
-      gap: 18px;
-      align-items: start;
+      gap: 1rem;
+    }
+
+    .stage-card,
+    .controls-panel,
+    .info-card,
+    .receipt-bar {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: clamp(1.25rem, 4.8vw, 2rem);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+        var(--panel);
+      box-shadow:
+        0 2rem 7rem rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      contain: layout paint;
     }
 
     .stage-card {
       position: relative;
-      overflow: hidden;
-      min-height: clamp(560px, 70vh, 840px);
-      border-radius: 34px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 38%, rgba(155, 198, 255, 0.14), transparent 19rem),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.04),
-        0 30px 100px rgba(0,0,0,0.58);
-      touch-action: none;
+      padding: clamp(0.78rem, 3.2vw, 1.2rem);
+      isolation: isolate;
     }
 
     .orbital-ring {
       position: absolute;
-      inset: 10%;
-      border: 1px solid rgba(255,255,255,0.09);
+      inset: 8%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 50%;
-      transform: rotateX(66deg) rotateZ(-11deg);
-      filter: blur(0.2px);
+      transform: rotate(-18deg) scaleX(1.16);
+      pointer-events: none;
+      z-index: -1;
     }
 
     .orbital-ring.two {
-      inset: 16% 9%;
-      border-color: rgba(241, 201, 101, 0.13);
-      transform: rotateX(68deg) rotateZ(23deg);
+      inset: 15%;
+      opacity: 0.58;
+      transform: rotate(18deg) scaleX(1.26);
     }
 
     .actual-globe-stage {
-      position: absolute;
-      inset: 0;
+      width: 100%;
+      min-width: 0;
       display: grid;
       place-items: center;
-      padding: clamp(18px, 4vw, 44px);
       overflow: hidden;
     }
 
     .actual-globe-zoom-layer {
-      position: relative;
-      width: var(--stage-size);
-      aspect-ratio: 1;
+      width: min(100%, 42rem);
+      min-width: 0;
       display: grid;
       place-items: center;
-      transform: scale(var(--zoom-scale));
-      transform-origin: center center;
+      transform: scale(var(--stage-zoom));
+      transform-origin: center;
       transition: transform 180ms ease;
-      will-change: transform;
-      touch-action: none;
+      overflow: visible;
     }
 
     .actual-globe-mount {
-      position: relative;
-      width: 100%;
+      width: min(86vw, 40rem);
+      max-width: 100%;
+      min-width: 0;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
-      filter: drop-shadow(0 28px 48px rgba(0,0,0,0.62));
+      overflow: hidden;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(123, 214, 255, 0.1), transparent 64%),
+        rgba(255, 255, 255, 0.025);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 0 2.5rem rgba(123, 214, 255, 0.12);
     }
 
-    .actual-globe-mount > canvas,
-    .actual-globe-mount > svg,
-    .actual-globe-mount > img,
-    .actual-globe-mount > video,
-    .actual-globe-mount > .globe,
-    .actual-globe-mount > .showroom-globe,
-    .actual-globe-mount > [data-globe-object] {
+    .actual-globe-mount > * {
       max-width: 100%;
-      max-height: 100%;
+      min-width: 0;
     }
 
     .instrument-pending {
-      position: absolute;
-      inset: 18%;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 24px;
-      border: 1px dashed rgba(241, 201, 101, 0.38);
-      border-radius: 999px;
+      width: min(100%, 22rem);
+      padding: 1rem;
+      border: 1px dashed rgba(248, 212, 106, 0.35);
+      border-radius: 1.2rem;
       color: var(--muted);
-      background: radial-gradient(circle, rgba(241,201,101,0.08), rgba(0,0,0,0.18) 58%, rgba(0,0,0,0));
-      font-size: clamp(0.9rem, 2vw, 1.05rem);
-    }
-
-    .actual-globe-mount[data-instrument-mounted="true"] .instrument-pending {
-      display: none;
+      background: rgba(248, 212, 106, 0.05);
+      font-size: clamp(0.82rem, 3vw, 0.95rem);
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: center;
+      overflow-wrap: break-word;
     }
 
     .body-label {
-      position: absolute;
-      left: 50%;
-      bottom: -76px;
-      transform: translateX(-50%);
-      z-index: 5;
+      width: min(100%, 38rem);
+      min-width: 0;
+      margin: 0.9rem auto 0;
       display: grid;
-      justify-items: center;
-      gap: 5px;
-      width: min(100%, 560px);
+      gap: 0.45rem;
       text-align: center;
-      pointer-events: none;
     }
 
     .body-label strong {
-      font-size: clamp(1.1rem, 2.4vw, 1.45rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(1.45rem, 6.5vw, 2.2rem);
+      line-height: 1;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     .body-label span {
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.45;
+      font-size: clamp(0.93rem, 3.6vw, 1.08rem);
+      line-height: 1.42;
+      overflow-wrap: break-word;
+      text-wrap: balance;
     }
 
     .controls-panel {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: 12px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: rgba(3, 5, 14, 0.82);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-      backdrop-filter: blur(14px);
-    }
-
-    .control-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    button {
-      appearance: none;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.68rem 0.92rem;
-      background: rgba(255,255,255,0.055);
-      color: var(--text);
-      font: inherit;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      border-color: rgba(241,201,101,0.52);
-    }
-
-    button[aria-pressed="true"],
-    button.active {
-      color: #111;
-      background: linear-gradient(135deg, #fff0aa, var(--gold));
-      border-color: transparent;
-      font-weight: 800;
-    }
-
-    .readout {
-      display: grid;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .track {
-      position: relative;
-      height: 7px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.09);
-    }
-
-    .track span {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 52%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, rgba(120,199,255,0.78), var(--gold));
-    }
-
-    .zoom-control {
-      display: grid;
-      grid-template-columns: auto minmax(120px, 1fr) auto;
-      gap: 10px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--gold);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .info-card {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 18px;
+      padding: clamp(0.82rem, 3.3vw, 1.25rem);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02)),
-        var(--panel);
-      box-shadow: 0 20px 70px rgba(0,0,0,0.36);
-    }
-
-    .info-card h2,
-    .info-card h3 {
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
-    }
-
-    .info-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .contract {
-      overflow: auto;
-      white-space: pre-wrap;
-      color: #fff4c7;
-      font-size: 0.85rem;
-      line-height: 1.45;
-      border-radius: 22px;
-      border: 1px solid rgba(241, 201, 101, 0.22);
-      background: rgba(0,0,0,0.34);
-      padding: 16px;
-    }
-
-    .receipt-bar {
-      display: grid;
-      gap: 10px;
-      border: 1px solid var(--line-strong);
-      border-radius: 28px;
-      padding: 18px;
-      background:
-        linear-gradient(135deg, rgba(241,201,101,0.12), rgba(120,199,255,0.06)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
         var(--panel-strong);
     }
 
-    .receipt-bar strong {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      font-size: 0.82rem;
+    .control-row {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
+      gap: clamp(0.5rem, 2vw, 0.8rem);
     }
 
+    .control-row + .control-row {
+      margin-top: 0.72rem;
+    }
+
+    .control-row button {
+      width: 100%;
+      min-width: 0;
+      min-height: clamp(3rem, 11vw, 3.6rem);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.72rem 0.82rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgba(9, 13, 22, 0.84);
+      color: var(--text);
+      font-size: clamp(0.84rem, 3.6vw, 1rem);
+      font-weight: 900;
+      line-height: 1.05;
+      text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .control-row button.active,
+    .control-row button[aria-pressed="true"] {
+      border-color: rgba(248, 212, 106, 0.9);
+      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      color: #080a0f;
+    }
+
+    .zoom-control {
+      width: 100%;
+      min-width: 0;
+      margin: 0.85rem 0 0;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.72rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .zoom-control input {
+      width: 100%;
+      min-width: 0;
+      accent-color: var(--gold);
+    }
+
+    .readout {
+      width: 100%;
+      min-width: 0;
+      margin: 0.85rem 0 0;
+      padding: 0.82rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: clamp(0.76rem, 3vw, 0.9rem);
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .track {
+      width: min(100%, 22rem);
+      height: 0.42rem;
+      margin: 0.68rem auto 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .track span {
+      display: block;
+      width: 52%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+    }
+
+    .grid {
+      width: var(--card-width);
+      min-width: 0;
+      margin: 1rem auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .info-card,
+    .receipt-bar {
+      padding: clamp(0.92rem, 3.4vw, 1.2rem);
+    }
+
+    .info-card h2 {
+      margin: 0 0 0.48rem;
+      font-size: clamp(1rem, 4vw, 1.22rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .info-card p,
     .receipt-bar p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.55;
+      font-size: clamp(0.86rem, 3.2vw, 0.98rem);
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
+
+    .contract {
+      margin: 0;
+      color: var(--faint);
+      font: 700 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .receipt-bar {
+      width: var(--card-width);
+      min-width: 0;
+      margin: 1rem auto 0;
+    }
+
+    .receipt-bar strong {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     footer {
-      padding: 26px 0 10px;
+      width: 100%;
+      min-width: 0;
+      padding: 1.45rem 0 0.45rem;
       color: var(--faint);
-      font-size: 0.86rem;
+      font-size: 0.74rem;
+      line-height: 1.45;
       text-align: center;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 820px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
       nav {
         justify-content: flex-start;
       }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
 
-    @media (max-width: 560px) {
-      :root {
-        --stage-size: min(94vw, 520px);
+    @media (max-width: 460px) {
+      .actual-globe-mount {
+        width: min(82vw, 23rem);
       }
 
-      .site-shell {
-        width: min(100% - 16px, 1180px);
-        padding-top: 10px;
-      }
-
-      header,
-      .stage-card,
-      .controls-panel,
-      .info-card,
-      .receipt-bar {
-        border-radius: 22px;
-      }
-
-      .stage-card {
-        min-height: 72vh;
-        max-height: none;
-      }
-
-      .actual-globe-stage {
-        padding: 18px 10px 42px;
-        place-items: center;
-      }
-
-      .control-row button {
-        flex: 1 1 calc(33.333% - 8px);
-        min-width: 88px;
-      }
-
-      button {
-        padding: 0.62rem 0.74rem;
-        font-size: 0.84rem;
+      .control-row {
+        grid-template-columns: 1fr;
       }
 
       .zoom-control {
         grid-template-columns: 1fr;
-        gap: 6px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .actual-globe-mount {
+        width: min(78vw, 20rem);
       }
     }
   </style>
-
-  <script type="application/json" id="demo-actual-universe-data">
-    {
-      "lane": "Demo Actual Universe",
-      "dataFlight": "separate",
-      "baseline": "optimal-baseline-candidate-actual-bodies",
-      "priorGlobeBaseline": "protected",
-      "controlsBlockGlobe": false,
-      "earth": {
-        "authority": "actual-earth-from-canonical-instrument",
-        "allowedChange": "zoom-wrapper-only"
-      },
-      "sun": {
-        "authority": "actual-sun-from-canonical-instrument",
-        "standard": "physical-reality",
-        "cartoonStandard": false
-      },
-      "moon": {
-        "authority": "actual-moon-from-canonical-instrument",
-        "standard": "physical-reality",
-        "cartoonStandard": false
-      },
-      "planet1": {
-        "status": "reserved-for-nine-summits-universe"
-      }
-    }
-  </script>
-
-  <script type="application/json" id="demo-universe-data">
-    {
-      "lane": "Demo Universe",
-      "dataFlight": "separate",
-      "mergeIntoDemoActualUniverse": false,
-      "status": "held-separate-by-route-contract"
-    }
-  </script>
 </head>
 
 <body>
   <a class="skip-link" href="#demo-actual-universe">Skip to Demo Actual Universe globe</a>
 
-  <div class="site-shell">
+  <div class="shell">
     <header>
-      <div class="brand-row">
-        <a class="brand" href="/">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Rich Manor and Estate</span>
-        </a>
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span>Diamond Gate Bridge</span>
+        <span>Rich Manor and Estate</span>
+      </a>
 
-        <nav aria-label="Primary navigation">
-          <a href="/">Compass</a>
-          <a href="/door/">Door</a>
-          <a href="/home/">Home</a>
-          <a href="/book/">Book</a>
-          <a href="/nine-summits/universe/">Universe</a>
-          <a href="/products/">Products</a>
-          <a href="/showroom/">Showroom</a>
-          <a href="/showroom/globe/" aria-current="page">Demo Actual Universe</a>
-          <a href="/gauges/">Gauges</a>
-          <a href="/book/">Read</a>
-        </nav>
-      </div>
+      <nav aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/book/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/" aria-current="page">Demo Actual Universe</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/book/">Read</a>
+      </nav>
     </header>
 
     <main id="demo-actual-universe">
@@ -656,98 +639,103 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
             the asset authority. The page controls the shell, zoom wrapper, and command panel only.
             Demo Universe data and Demo Actual Universe data remain separate.
           </p>
-
-          <div class="status-strip" aria-label="Route status">
-            <span class="pill">Actual bodies bridge</span>
-            <span class="pill">Earth from instrument</span>
-            <span class="pill">Sun from instrument</span>
-            <span class="pill">Moon from instrument</span>
-            <span class="pill">Controls below viewport</span>
-            <span class="pill">Data lanes separate</span>
-          </div>
         </div>
 
-        <div class="viewer-stack">
-          <section
-            class="stage-card"
-            id="stageCard"
-            aria-label="Demo Actual Universe actual body viewer"
-            data-demo-actual-universe-route="true"
-            data-demo-universe-merge="false"
-          >
-            <div class="orbital-ring" aria-hidden="true"></div>
-            <div class="orbital-ring two" aria-hidden="true"></div>
+        <div class="status-strip" aria-label="Route status">
+          <span class="pill">Actual bodies bridge</span>
+          <span class="pill">Earth from instrument</span>
+          <span class="pill">Sun from instrument</span>
+          <span class="pill">Moon from instrument</span>
+          <span class="pill">Controls below viewport</span>
+          <span class="pill">Data lanes separate</span>
+        </div>
+      </section>
 
-            <div class="actual-globe-stage" id="actualGlobeStage">
-              <div class="actual-globe-zoom-layer" id="actualGlobeZoomLayer">
-                <div
-                  class="actual-globe-mount"
-                  id="showroomGlobeMount"
-                  data-showroom-globe-root
-                  data-globe-root
-                  data-globe-mount
-                  data-showroom-globe-mount
-                  data-planet-mount
-                  data-demo-actual-universe="true"
-                  data-preserve-prior-globe="true"
-                  data-earth-rule="actual-earth"
-                  data-sun-standard="physical-reality"
-                  data-moon-standard="physical-reality"
-                  data-planet-one="reserved"
-                  data-instrument-mounted="false"
-                >
-                  <div class="instrument-pending" id="instrumentPending">
-                    Canonical globe instrument pending. The page is not drawing a replacement globe.
-                  </div>
-                </div>
+      <section class="viewer-stack" aria-label="Demo Actual Universe viewer and controls">
+        <section
+          class="stage-card"
+          id="stageCard"
+          aria-label="Demo Actual Universe actual body viewer"
+          data-demo-actual-universe-route="true"
+          data-demo-universe-merge="false"
+          data-route-authority="layout-command-panel-zoom-wrapper"
+          data-body-render-authority="/assets/showroom.globe.instrument.js"
+        >
+          <div class="orbital-ring" aria-hidden="true"></div>
+          <div class="orbital-ring two" aria-hidden="true"></div>
 
-                <div class="body-label">
-                  <strong id="bodyName">Earth</strong>
-                  <span id="bodyDescription">Actual Earth body mounted from the canonical instrument.</span>
+          <div class="actual-globe-stage" id="actualGlobeStage">
+            <div class="actual-globe-zoom-layer" id="actualGlobeZoomLayer">
+              <div
+                class="actual-globe-mount"
+                id="showroomGlobeMount"
+                data-showroom-globe-root
+                data-globe-root
+                data-globe-mount
+                data-showroom-globe-mount
+                data-actual-bodies-mount="true"
+                data-planet-mount
+                data-demo-actual-universe="true"
+                data-preserve-prior-globe="true"
+                data-earth-rule="actual-earth"
+                data-sun-standard="physical-reality"
+                data-moon-standard="physical-reality"
+                data-planet-one="reserved"
+                data-instrument-mounted="false"
+                data-inline-globe-redraw="false"
+                data-cartoon-canvas-replacement="false"
+              >
+                <div class="instrument-pending" id="instrumentPending">
+                  Canonical globe instrument pending. The page is not drawing a replacement globe.
                 </div>
               </div>
-            </div>
-          </section>
 
-          <section class="controls-panel" aria-label="Demo Actual Universe command controls">
-            <div class="control-row" aria-label="Choose Demo Actual Universe body">
-              <button type="button" data-body="earth" aria-pressed="true">View Earth</button>
-              <button type="button" data-body="sun" aria-pressed="false">View Sun</button>
-              <button type="button" data-body="moon" aria-pressed="false">View Moon</button>
+              <div class="body-label">
+                <strong id="bodyName">Earth</strong>
+                <span id="bodyDescription">Actual Earth body mounted from the canonical instrument.</span>
+              </div>
             </div>
+          </div>
+        </section>
 
-            <div class="control-row" aria-label="Motion controls">
-              <button type="button" data-action="start">Start</button>
-              <button type="button" data-action="pause">Pause</button>
-              <button type="button" data-action="resume">Resume</button>
-              <button type="button" data-action="reset">Reset</button>
-              <button type="button" data-action="reverse">Reverse</button>
-            </div>
+        <section class="controls-panel" aria-label="Demo Actual Universe command controls">
+          <div class="control-row" aria-label="Choose Demo Actual Universe body">
+            <button type="button" data-body="earth" aria-pressed="true">View Earth</button>
+            <button type="button" data-body="sun" aria-pressed="false">View Sun</button>
+            <button type="button" data-body="moon" aria-pressed="false">View Moon</button>
+          </div>
 
-            <div class="control-row" aria-label="Speed controls">
-              <button type="button" data-speed="slow">Slow</button>
-              <button type="button" data-speed="normal" class="active">Normal</button>
-              <button type="button" data-speed="fast">Fast</button>
-            </div>
+          <div class="control-row" aria-label="Motion controls">
+            <button type="button" data-action="start">Start</button>
+            <button type="button" data-action="pause">Pause</button>
+            <button type="button" data-action="resume">Resume</button>
+            <button type="button" data-action="reset">Reset</button>
+            <button type="button" data-action="reverse">Reverse</button>
+          </div>
 
-            <div class="control-row" aria-label="Zoom buttons">
-              <button type="button" data-zoom="out">Zoom −</button>
-              <button type="button" data-zoom="in">Zoom +</button>
-              <button type="button" data-zoom="reset">Reset zoom</button>
-            </div>
+          <div class="control-row" aria-label="Speed controls">
+            <button type="button" data-speed="slow">Slow</button>
+            <button type="button" data-speed="normal" class="active" aria-pressed="true">Normal</button>
+            <button type="button" data-speed="fast">Fast</button>
+          </div>
 
-            <label class="zoom-control" for="zoomRange">
-              <span>Zoom</span>
-              <input id="zoomRange" type="range" min="70" max="240" step="1" value="100" />
-              <span id="zoomLabel">100%</span>
-            </label>
+          <div class="control-row" aria-label="Zoom buttons">
+            <button type="button" data-zoom="out">Zoom −</button>
+            <button type="button" data-zoom="in">Zoom +</button>
+            <button type="button" data-zoom="reset">Reset zoom</button>
+          </div>
 
-            <div class="readout" aria-live="polite">
-              <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth · zoom: 100%</span>
-              <div class="track" aria-hidden="true"><span id="speedFill"></span></div>
-            </div>
-          </section>
-        </div>
+          <label class="zoom-control" for="zoomRange">
+            <span>Zoom</span>
+            <input id="zoomRange" type="range" min="70" max="240" step="1" value="100" />
+            <span id="zoomLabel">100%</span>
+          </label>
+
+          <div class="readout" aria-live="polite">
+            <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth · zoom: 100%</span>
+            <div class="track" aria-hidden="true"><span id="speedFill"></span></div>
+          </div>
+        </section>
       </section>
 
       <section class="grid" aria-label="Body status cards">
@@ -778,7 +766,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
       <section class="info-card" aria-labelledby="route-contract-title">
         <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1
+        <div class="contract">SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1
 route=/showroom/globe/
 lane=demo-actual-universe
 baseline=optimal-baseline-candidate-actual-bodies
@@ -820,12 +808,45 @@ owner-visual-receipt-required=true</div>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_BRIDGE_TNT_v1 · actual bodies instrument bridge · owner receipt required.
+      SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1 · actual bodies instrument bridge · owner receipt required.
     </footer>
   </div>
 
+  <script type="application/json" id="demo-actual-universe-data">
+    {
+      "route": "/showroom/globe/",
+      "lane": "demo-actual-universe",
+      "mergeDemoUniverse": false,
+      "bodyRenderAuthority": "/assets/showroom.globe.instrument.js",
+      "routeAuthority": "layout-command-panel-zoom-wrapper",
+      "bodies": {
+        "earth": {
+          "label": "Earth",
+          "description": "Actual Earth body mounted from the canonical instrument."
+        },
+        "sun": {
+          "label": "Sun",
+          "description": "Actual Sun body mounted from the canonical instrument."
+        },
+        "moon": {
+          "label": "Moon",
+          "description": "Actual Moon body mounted from the canonical instrument."
+        }
+      }
+    }
+  </script>
+
+  <script type="application/json" id="demo-universe-data">
+    {
+      "route": "/showroom/",
+      "lane": "demo-universe",
+      "mergeDemoActualUniverse": false,
+      "relationship": "separate-data-lane"
+    }
+  </script>
+
   <script src="/showroom/runtime.js" defer></script>
-  <script src="/assets/showroom.globe.instrument.js" defer></script>
+  <script src="/assets/showroom.globe.instrument.js?v=actual-bodies-instrument-restore-v1" defer></script>
 
   <script>
     (() => {
@@ -839,7 +860,7 @@ owner-visual-receipt-required=true</div>
       const speedFill = document.getElementById("speedFill");
       const zoomRange = document.getElementById("zoomRange");
       const zoomLabel = document.getElementById("zoomLabel");
-
+      const zoomLayer = document.getElementById("actualGlobeZoomLayer");
       const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
       const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
       const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
@@ -850,9 +871,10 @@ owner-visual-receipt-required=true</div>
         running: true,
         direction: "forward",
         speedName: "normal",
-        zoom: 1,
-        pointerDistance: null,
-        pointerZoom: 1
+        speedValue: 1,
+        zoom: 100,
+        mounted: false,
+        lastMountAttempt: 0
       };
 
       const bodyMeta = {
@@ -883,6 +905,7 @@ owner-visual-receipt-required=true</div>
       function readJSON(id) {
         const node = document.getElementById(id);
         if (!node) return {};
+
         try {
           return JSON.parse(node.textContent);
         } catch (_) {
@@ -905,11 +928,19 @@ owner-visual-receipt-required=true</div>
             baseline: "optimal-baseline-candidate-actual-bodies",
             mergeDemoUniverse: false,
             preservePriorGlobe: true,
+            replaceGlobeRenderer: false,
             controlsBlockGlobe: false,
             actualBodiesRequired: true,
             mount,
             root: mount,
             target: mount,
+            activeBody: state.body,
+            body: state.body,
+            running: state.running,
+            direction: state.direction,
+            speed: state.speedValue,
+            speedName: state.speedName,
+            zoom: state.zoom,
             ...detail
           }
         }));
@@ -917,11 +948,16 @@ owner-visual-receipt-required=true</div>
 
       function findInstrumentAPI() {
         const bridge = window.DiamondGateBridge || {};
+
         const candidates = [
+          window.DGBShowroomGlobeInstrument,
+          window.DGBActualBodiesInstrument,
           window.ShowroomGlobeInstrument,
           window.DiamondGateBridgeShowroomGlobe,
           window.showroomGlobeInstrument,
           window.ShowroomGlobe,
+          bridge.DGBShowroomGlobeInstrument,
+          bridge.DGBActualBodiesInstrument,
           bridge.ShowroomGlobe,
           bridge.showroomGlobeInstrument,
           bridge.ShowroomGlobeInstrument
@@ -930,25 +966,45 @@ owner-visual-receipt-required=true</div>
         return candidates.find((candidate) => candidate && typeof candidate === "object") || null;
       }
 
+      function instrumentPayload(extra = {}) {
+        return {
+          mount,
+          root: mount,
+          target: mount,
+          route: "/showroom/globe/",
+          lane: "demo-actual-universe",
+          mode: "demo-actual-universe",
+          baseline: "optimal-baseline-candidate-actual-bodies",
+          preservePriorGlobe: true,
+          replaceGlobeRenderer: false,
+          mergeDemoUniverse: false,
+          controlsBlockGlobe: false,
+          actualBodiesRequired: true,
+          activeBody: state.body,
+          body: state.body,
+          running: state.running,
+          direction: state.direction,
+          speed: state.speedValue,
+          speedName: state.speedName,
+          zoom: state.zoom,
+          ...extra
+        };
+      }
+
       function callInstrument(method, payload = {}) {
         const api = findInstrumentAPI();
 
         if (api && typeof api[method] === "function") {
           try {
-            api[method]({
-              mount,
-              root: mount,
-              target: mount,
-              route: "/showroom/globe/",
-              lane: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate-actual-bodies",
-              preservePriorGlobe: true,
-              replaceGlobeRenderer: false,
-              mergeDemoUniverse: false,
-              controlsBlockGlobe: false,
-              actualBodiesRequired: true,
-              ...payload
-            });
+            const firstArg = instrumentPayload(payload);
+            const secondArg = instrumentPayload(payload);
+
+            if (method === "mount" || method === "render" || method === "renderGlobe" || method === "renderActualBody") {
+              api[method](mount, secondArg);
+            } else {
+              api[method](firstArg);
+            }
+
             return true;
           } catch (error) {
             console.warn(`Showroom globe instrument method failed: ${method}`, error);
@@ -959,19 +1015,37 @@ owner-visual-receipt-required=true</div>
         return false;
       }
 
+      function callAnyInstrument(methods, payload = {}) {
+        return methods.some((method) => callInstrument(method, payload));
+      }
+
       function markMountedIfInstrumentRendered() {
+        if (!mount) return false;
+
         const children = Array.from(mount.children).filter((child) => child.id !== "instrumentPending");
-        const hasRenderedChild = children.length > 0 || Boolean(mount.querySelector("canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe,.dgb-actual-body-shell"));
+        const hasRenderedChild = children.length > 0 || Boolean(
+          mount.querySelector(
+            "canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe,.dgb-actual-body-shell,.dgb-actual-bodies-stage,.dgb-actual-bodies-canvas"
+          )
+        );
 
         if (hasRenderedChild) {
           mount.dataset.instrumentMounted = "true";
-        }
-      }
+          state.mounted = true;
 
-      function requestMount() {
-        const api = findInstrumentAPI();
+          const pending = document.getElementById("instrumentPending");
+          if (pending) pending.remove();
+
+          return true;
+        }
 
         mount.dataset.instrumentMounted = "false";
+        state.mounted = false;
+        return false;
+      }
+
+      function writeMountDataset() {
+        mount.dataset.instrumentMounted = state.mounted ? "true" : "false";
         mount.dataset.demoActualUniverse = "true";
         mount.dataset.preservePriorGlobe = "true";
         mount.dataset.sunStandard = "physical-reality";
@@ -981,220 +1055,198 @@ owner-visual-receipt-required=true</div>
         mount.dataset.baseline = "optimal-baseline-candidate-actual-bodies";
         mount.dataset.actualBodiesRequired = "true";
         mount.dataset.activeBody = state.body;
+        mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.instrument.js";
+        mount.dataset.routeAuthority = "layout-command-panel-zoom-wrapper";
+        mount.dataset.inlineGlobeRedraw = "false";
+        mount.dataset.cartoonCanvasReplacement = "false";
+      }
 
-        if (api && typeof api.mount === "function") {
-          try {
-            api.mount({
-              mount,
-              root: mount,
-              target: mount,
-              route: "/showroom/globe/",
-              lane: "demo-actual-universe",
-              mode: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate-actual-bodies",
-              preservePriorGlobe: true,
-              replaceGlobeRenderer: false,
-              mergeDemoUniverse: false,
-              controlsBlockGlobe: false,
-              actualBodiesRequired: true,
-              body: state.body,
-              sunStandard: "physical-reality",
-              moonStandard: "physical-reality",
-              planetOne: "reserved-for-nine-summits-universe",
-              data: demoActualUniverseData
-            });
-            markMountedIfInstrumentRendered();
-            return;
-          } catch (error) {
-            console.warn("Canonical globe instrument mount failed.", error);
+      function requestMount() {
+        state.lastMountAttempt += 1;
+        writeMountDataset();
+
+        const mounted = callAnyInstrument(
+          ["mount", "renderGlobe", "renderActualBody", "render", "setActiveBody"],
+          {
+            reason: "route-consumer-bridge-request-mount",
+            attempt: state.lastMountAttempt
           }
+        );
+
+        markMountedIfInstrumentRendered();
+
+        if (!mounted) {
+          dispatchInstrumentEvent("showroom:globe:mount-requested", {
+            reason: "instrument-api-not-ready",
+            attempt: state.lastMountAttempt
+          });
         }
 
-        dispatchInstrumentEvent("showroom:globe:mount", {
-          root: mount,
-          target: mount,
-          mode: "demo-actual-universe",
-          baseline: "optimal-baseline-candidate-actual-bodies",
-          data: demoActualUniverseData,
-          body: state.body,
-          sunStandard: "physical-reality",
-          moonStandard: "physical-reality"
+        return mounted;
+      }
+
+      function updateLabels() {
+        const meta = bodyMeta[state.body] || bodyMeta.earth;
+        const speed = speedMap[state.speedName] || speedMap.normal;
+
+        bodyName.textContent = meta.label;
+        bodyDescription.textContent = meta.description;
+        zoomLabel.textContent = `${state.zoom}%`;
+        zoomRange.value = String(state.zoom);
+        speedFill.style.width = speed.fill;
+
+        motionLabel.textContent =
+          `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${meta.label} · zoom: ${state.zoom}%`;
+
+        zoomLayer.style.setProperty("--stage-zoom", String(state.zoom / 100));
+
+        bodyButtons.forEach((button) => {
+          const active = button.dataset.body === state.body;
+          button.setAttribute("aria-pressed", String(active));
+          button.classList.toggle("active", active);
         });
 
-        window.setTimeout(markMountedIfInstrumentRendered, 120);
-        window.setTimeout(markMountedIfInstrumentRendered, 480);
-        window.setTimeout(markMountedIfInstrumentRendered, 1200);
+        speedButtons.forEach((button) => {
+          const active = button.dataset.speed === state.speedName;
+          button.setAttribute("aria-pressed", String(active));
+          button.classList.toggle("active", active);
+        });
+
+        stageCard.dataset.activeBody = state.body;
+        stageCard.dataset.motion = state.running ? "running" : "paused";
+        stageCard.dataset.direction = state.direction;
+        stageCard.dataset.speed = state.speedName;
+        stageCard.dataset.zoom = String(state.zoom);
+        writeMountDataset();
+      }
+
+      function syncInstrument(extra = {}) {
+        updateLabels();
+
+        const payload = {
+          ...extra,
+          activeBody: state.body,
+          body: state.body,
+          running: state.running,
+          direction: state.direction,
+          speed: state.speedValue,
+          speedName: state.speedName,
+          zoom: state.zoom
+        };
+
+        callAnyInstrument(["setMotion", "update", "setState"], payload);
+
+        if (extra.bodyChanged) {
+          callAnyInstrument(["setActiveBody", "selectBody"], payload);
+        }
+
+        if (extra.zoomChanged) {
+          callAnyInstrument(["setZoom", "zoom"], payload);
+        }
+
+        markMountedIfInstrumentRendered();
       }
 
       function setBody(body) {
         if (!bodyMeta[body]) return;
-
         state.body = body;
-
-        bodyButtons.forEach((button) => {
-          const active = button.dataset.body === body;
-          button.setAttribute("aria-pressed", active ? "true" : "false");
-        });
-
-        bodyName.textContent = bodyMeta[body].label;
-        bodyDescription.textContent = bodyMeta[body].description;
-
-        mount.dataset.activeBody = body;
-
-        callInstrument("setBody", {
-          body,
-          sunStandard: "physical-reality",
-          moonStandard: "physical-reality",
-          preservePriorGlobe: true,
-          replaceGlobeRenderer: false
-        });
-
-        updateReadout();
+        syncInstrument({ bodyChanged: true });
+        requestMount();
       }
 
       function setSpeed(speedName) {
         if (!speedMap[speedName]) return;
-
         state.speedName = speedName;
-
-        speedButtons.forEach((button) => {
-          button.classList.toggle("active", button.dataset.speed === speedName);
-        });
-
-        speedFill.style.width = speedMap[speedName].fill;
-
-        callInstrument("setSpeed", {
-          speedName,
-          speed: speedMap[speedName].value
-        });
-
-        updateReadout();
+        state.speedValue = speedMap[speedName].value;
+        syncInstrument({ speedChanged: true });
       }
 
       function setZoom(nextZoom) {
-        state.zoom = clamp(nextZoom, 0.7, 2.4);
-        document.documentElement.style.setProperty("--zoom-scale", String(state.zoom));
-        zoomRange.value = String(Math.round(state.zoom * 100));
-        zoomLabel.textContent = `${Math.round(state.zoom * 100)}%`;
-
-        callInstrument("setZoom", {
-          zoom: state.zoom,
-          zoomPercent: Math.round(state.zoom * 100),
-          wrapperOnly: true
-        });
-
-        updateReadout();
+        state.zoom = clamp(Number(nextZoom) || 100, 70, 240);
+        syncInstrument({ zoomChanged: true });
       }
 
-      function setMotion(action) {
-        if (action === "start" || action === "resume") state.running = true;
-        if (action === "pause") state.running = false;
-        if (action === "reset") state.direction = "forward";
-        if (action === "reverse") state.direction = state.direction === "forward" ? "reverse" : "forward";
+      function runAction(action) {
+        if (action === "start" || action === "resume") {
+          state.running = true;
+          callAnyInstrument(["resume", "start"], { action });
+        }
 
-        callInstrument(action, {
-          running: state.running,
-          direction: state.direction
-        });
+        if (action === "pause") {
+          state.running = false;
+          callAnyInstrument(["pause"], { action });
+        }
 
-        updateReadout();
+        if (action === "reset") {
+          state.running = true;
+          state.direction = "forward";
+          state.speedName = "normal";
+          state.speedValue = speedMap.normal.value;
+          state.zoom = 100;
+          callAnyInstrument(["reset"], { action });
+          requestMount();
+        }
+
+        if (action === "reverse") {
+          state.direction = state.direction === "forward" ? "reverse" : "forward";
+          callAnyInstrument(["reverse"], { action });
+        }
+
+        syncInstrument({ actionChanged: true, action });
       }
 
-      function updateReadout() {
-        motionLabel.textContent =
-          `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${bodyMeta[state.body].label} · zoom: ${Math.round(state.zoom * 100)}%`;
-      }
+      bodyButtons.forEach((button) => {
+        button.addEventListener("click", () => setBody(button.dataset.body));
+      });
 
-      function getPointerDistance(event) {
-        if (!event.touches || event.touches.length < 2) return null;
-        const [a, b] = event.touches;
-        const dx = a.clientX - b.clientX;
-        const dy = a.clientY - b.clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-      }
+      actionButtons.forEach((button) => {
+        button.addEventListener("click", () => runAction(button.dataset.action));
+      });
 
-      function attachEvents() {
-        bodyButtons.forEach((button) => {
-          button.addEventListener("click", () => setBody(button.dataset.body));
+      speedButtons.forEach((button) => {
+        button.addEventListener("click", () => setSpeed(button.dataset.speed));
+      });
+
+      zoomButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const mode = button.dataset.zoom;
+
+          if (mode === "in") setZoom(state.zoom + 10);
+          if (mode === "out") setZoom(state.zoom - 10);
+          if (mode === "reset") setZoom(100);
         });
+      });
 
-        actionButtons.forEach((button) => {
-          button.addEventListener("click", () => setMotion(button.dataset.action));
-        });
+      zoomRange.addEventListener("input", () => setZoom(zoomRange.value));
 
-        speedButtons.forEach((button) => {
-          button.addEventListener("click", () => setSpeed(button.dataset.speed));
-        });
-
-        zoomButtons.forEach((button) => {
-          button.addEventListener("click", () => {
-            const action = button.dataset.zoom;
-
-            if (action === "in") setZoom(state.zoom + 0.12);
-            if (action === "out") setZoom(state.zoom - 0.12);
-            if (action === "reset") setZoom(1);
-          });
-        });
-
-        zoomRange.addEventListener("input", () => {
-          setZoom(Number(zoomRange.value) / 100);
-        });
-
-        stageCard.addEventListener("wheel", (event) => {
-          if (!event.ctrlKey && Math.abs(event.deltaY) < 4) return;
-          event.preventDefault();
-          const direction = event.deltaY > 0 ? -1 : 1;
-          setZoom(state.zoom + direction * 0.08);
-        }, { passive: false });
-
-        stageCard.addEventListener("touchstart", (event) => {
-          const distance = getPointerDistance(event);
-          if (distance !== null) {
-            state.pointerDistance = distance;
-            state.pointerZoom = state.zoom;
-          }
-        }, { passive: true });
-
-        stageCard.addEventListener("touchmove", (event) => {
-          const distance = getPointerDistance(event);
-          if (distance === null || state.pointerDistance === null) return;
-          event.preventDefault();
-          const ratio = distance / state.pointerDistance;
-          setZoom(state.pointerZoom * ratio);
-        }, { passive: false });
-
-        stageCard.addEventListener("touchend", () => {
-          state.pointerDistance = null;
-          state.pointerZoom = state.zoom;
-        }, { passive: true });
-
-        window.addEventListener("showroom:globe:mounted", () => {
-          mount.dataset.instrumentMounted = "true";
-        });
-      }
-
-      function boot() {
-        attachEvents();
-        setZoom(1);
-        setSpeed("normal");
-        setBody("earth");
-
+      window.addEventListener("dgb:showroom:actual-bodies-instrument-restored", () => {
         requestMount();
+        syncInstrument({ reason: "instrument-restored-event" });
+      });
 
-        window.setTimeout(requestMount, 120);
-        window.setTimeout(requestMount, 480);
-        window.setTimeout(requestMount, 1200);
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
-      }
+      window.addEventListener("showroom:globe:instrument-ready", () => {
+        requestMount();
+        syncInstrument({ reason: "instrument-ready-event" });
+      });
 
       window.addEventListener("load", () => {
         requestMount();
-      }, { once: true });
+        syncInstrument({ reason: "window-load" });
+      });
+
+      updateLabels();
+      requestMount();
+
+      let attempts = 0;
+      const retry = window.setInterval(() => {
+        attempts += 1;
+        requestMount();
+        syncInstrument({ reason: "retry", attempt: attempts });
+
+        if (state.mounted || attempts >= 40) {
+          window.clearInterval(retry);
+        }
+      }, 125);
     })();
   </script>
 </body>

@@ -1,55 +1,39 @@
 <!-- /showroom/globe/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="showroom-globe-inspection"
+  data-route="/showroom/globe/"
+  data-contract="SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1"
+  data-lane="demo-actual-universe"
+  data-showroom-inspection="true"
+  data-demo-universe-relationship-page="false"
+  data-nine-summits-universe="false"
+  data-planet-one="reserved"
+  data-generated-image="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Demo Actual Universe · Earth Sun Moon</title>
-  <meta
-    name="description"
-    content="Demo Actual Universe route shell. The route owns labels, controls, mount, and zoom. The render file owns Earth, Sun, and Moon drawing."
-  />
-
-  <!--
-  SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1
-
-  TARGET=/showroom/globe/index.html
-
-  PRECINCT=
-  Demo Actual Universe route shell, mount node, labels, controls, zoom wrapper,
-  route contract, and render/instrument script load order.
-
-  JURISDICTION=
-  Load /assets/showroom.globe.render.js before /assets/showroom.globe.instrument.js.
-  Provide the mount node.
-  Own labels, descriptions, buttons, zoom, and route copy.
-  Call the thin instrument facade.
-  Expose route receipt data.
-
-  NON_JURISDICTION=
-  Does not draw Earth.
-  Does not draw Sun.
-  Does not draw Moon.
-  Does not build Planet 1.
-  Does not build the custom universe.
-  Does not mutate Gauges.
-  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Showroom Globe Inspection</title>
+  <meta name="description" content="Showroom Globe inspection page. Route owns shell and controls. Instrument owns state. Render file owns body pixels only.">
 
   <style>
     :root {
-      --bg: #03050a;
-      --panel: rgba(10, 15, 25, 0.92);
-      --panel-2: rgba(15, 20, 32, 0.95);
+      --bg: #03060d;
+      --panel: rgba(14, 19, 31, 0.94);
+      --panel-2: rgba(18, 23, 36, 0.96);
       --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(255, 255, 255, 0.3);
-      --text: #f8f1dd;
-      --muted: rgba(248, 241, 221, 0.72);
-      --faint: rgba(248, 241, 221, 0.46);
+      --line-strong: rgba(255, 255, 255, 0.30);
+      --text: #fff6df;
+      --muted: rgba(255, 246, 223, 0.72);
+      --faint: rgba(255, 246, 223, 0.48);
       --gold: #f7d25c;
-      --blue: #72d8ff;
-      --green: #8ff0c6;
-      --safe-width: min(100%, 1180px);
-      --card-width: min(100%, 820px);
+      --gold-2: #fff0a5;
+      --blue: #79dcff;
+      --max: min(100%, 1120px);
+      --card: min(100%, 820px);
     }
 
     * {
@@ -63,9 +47,9 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 12%, rgba(114, 216, 255, 0.15), transparent 28rem),
-        radial-gradient(circle at 10% 78%, rgba(247, 210, 92, 0.09), transparent 24rem),
-        #03050a;
+        radial-gradient(circle at 50% 8%, rgba(121, 220, 255, 0.12), transparent 28rem),
+        radial-gradient(circle at 16% 82%, rgba(247, 210, 92, 0.08), transparent 24rem),
+        #03060d;
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -79,12 +63,13 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background:
-        radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
-        radial-gradient(circle at 38% 33%, rgba(255, 255, 255, 0.09) 0 1px, transparent 2px),
-        radial-gradient(circle at 73% 18%, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px),
-        radial-gradient(circle at 84% 77%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px);
-      opacity: 0.7;
+      opacity: 0.54;
+      background-image:
+        radial-gradient(circle at 14% 22%, rgba(255,255,255,0.16) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,0.13) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 68%, rgba(255,255,255,0.10) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 28% 74%, rgba(255,255,255,0.13) 0 1px, transparent 1.5px);
+      background-size: 210px 260px, 260px 300px, 240px 280px, 290px 330px;
       z-index: 0;
     }
 
@@ -100,14 +85,14 @@
 
     .skip-link {
       position: absolute;
-      top: -4rem;
       left: 1rem;
+      top: -5rem;
       z-index: 20;
-      padding: 0.75rem 1rem;
       border-radius: 999px;
+      padding: 0.75rem 1rem;
       background: var(--gold);
-      color: #090b10;
-      font-weight: 900;
+      color: #07090f;
+      font-weight: 950;
     }
 
     .skip-link:focus {
@@ -117,249 +102,241 @@
     .shell {
       position: relative;
       z-index: 1;
-      width: var(--safe-width);
+      width: var(--max);
       margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
-      overflow-x: hidden;
+      padding: max(0.9rem, env(safe-area-inset-top)) clamp(0.9rem, 3vw, 2rem)
+        max(1.4rem, env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
+    .site-header {
+      display: grid;
+      gap: 0.95rem;
+      padding: 0.4rem 0 1.2rem;
     }
 
     .brand {
-      min-width: 0;
       display: inline-flex;
       flex-direction: column;
-      gap: 0.08rem;
-      font-weight: 950;
+      width: max-content;
+      max-width: 100%;
       line-height: 1.05;
-      letter-spacing: 0.04em;
-    }
-
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
       text-transform: uppercase;
+      font-weight: 950;
+      letter-spacing: 0.06em;
     }
 
-    .brand span:last-child {
+    .brand strong {
+      font-size: clamp(1rem, 4.4vw, 1.34rem);
+      overflow-wrap: anywhere;
+    }
+
+    .brand span {
       color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: clamp(0.68rem, 2.7vw, 0.78rem);
+      letter-spacing: 0.14em;
     }
 
     .nav {
       display: flex;
-      justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 0.42rem;
-      min-width: 0;
-      max-width: 100%;
+      gap: 0.55rem;
+      align-items: center;
     }
 
     .nav a {
-      min-height: 2.1rem;
+      min-height: 2.8rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
       border-radius: 999px;
+      padding: 0.58rem 0.9rem;
+      background: rgba(255,255,255,0.035);
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.035);
-      font-size: 0.74rem;
-      font-weight: 850;
+      font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+      font-weight: 900;
       white-space: nowrap;
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(247, 210, 92, 0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      border-color: rgba(247,210,92,0.85);
+      color: #07090f;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
     }
 
     .hero {
-      width: 100%;
       display: grid;
-      gap: 1rem;
-      padding: clamp(0.5rem, 2.2vw, 1.2rem) 0 1rem;
+      justify-items: center;
+      gap: 0.85rem;
       text-align: center;
+      padding: 0.2rem 0 1rem;
     }
 
     .eyebrow {
       margin: 0;
       color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-size: clamp(0.72rem, 2.8vw, 0.86rem);
       font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
+      width: min(100%, 820px);
       margin: 0;
-      font-size: clamp(2rem, 9.5vw, 5.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      font-size: clamp(2.1rem, 9vw, 4.85rem);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
       text-wrap: balance;
     }
 
     .lead {
       width: min(100%, 760px);
-      margin: 0 auto;
+      margin: 0;
       color: var(--muted);
-      font-size: clamp(0.98rem, 3.7vw, 1.14rem);
+      font-size: clamp(0.98rem, 3.8vw, 1.12rem);
       line-height: 1.55;
       text-wrap: balance;
     }
 
-    .receipt-pills {
-      width: min(100%, 900px);
-      margin: 0 auto;
+    .chip-row {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.45rem;
+      width: min(100%, 920px);
+      margin: 0.25rem auto 0;
     }
 
-    .pill {
-      padding: 0.44rem 0.7rem;
-      border: 1px solid rgba(247, 210, 92, 0.28);
+    .chip {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(247,210,92,0.30);
       border-radius: 999px;
-      color: rgba(255, 238, 174, 0.92);
-      background: rgba(247, 210, 92, 0.06);
-      font-size: 0.72rem;
+      padding: 0.45rem 0.72rem;
+      background: rgba(247,210,92,0.055);
+      color: rgba(255,235,170,0.95);
+      font-size: clamp(0.68rem, 2.6vw, 0.78rem);
       font-weight: 950;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      text-align: center;
       overflow-wrap: anywhere;
     }
 
     .viewer-stack {
-      width: var(--card-width);
-      min-width: 0;
+      width: var(--card);
       margin: 1rem auto 0;
       display: grid;
       gap: 1rem;
     }
 
     .stage-card,
-    .controls-panel,
-    .contract-panel {
+    .controls-card,
+    .contract-card {
       width: 100%;
       min-width: 0;
       border: 1px solid var(--line);
-      border-radius: clamp(1.25rem, 4.8vw, 2rem);
+      border-radius: clamp(1.35rem, 5vw, 2rem);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)),
         var(--panel);
       box-shadow:
-        0 2rem 7rem rgba(0, 0, 0, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        0 1.7rem 5.5rem rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.08);
       overflow: hidden;
       contain: layout paint;
     }
 
     .stage-card {
       position: relative;
-      padding: clamp(0.85rem, 3.2vw, 1.25rem);
+      display: grid;
+      justify-items: center;
+      padding: clamp(0.9rem, 3.4vw, 1.35rem);
       isolation: isolate;
     }
 
-    .orbital-ring,
-    .orbital-ring::after {
-      position: absolute;
-      pointer-events: none;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      z-index: -1;
-    }
-
-    .orbital-ring {
-      inset: 8%;
-      transform: rotate(-18deg) scaleX(1.18);
-    }
-
-    .orbital-ring::after {
+    .stage-card::before,
+    .stage-card::after {
       content: "";
-      inset: 12%;
-      opacity: 0.62;
-      transform: rotate(36deg) scaleX(1.18);
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      width: 82%;
+      max-width: 38rem;
+      aspect-ratio: 1 / 1;
+      border: 1px solid rgba(255,255,255,0.095);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotate(-16deg) scaleX(1.16);
+      z-index: -1;
+      pointer-events: none;
     }
 
-    .globe-stage {
-      width: 100%;
-      min-width: 0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
+    .stage-card::after {
+      width: 72%;
+      opacity: 0.72;
+      transform: translate(-50%, -50%) rotate(24deg) scaleX(1.22);
     }
 
     .globe-mount {
-      width: min(84vw, 40rem);
+      width: min(76vw, 33rem);
       max-width: 100%;
-      min-width: 0;
       aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
-      overflow: hidden;
       border-radius: 50%;
+      overflow: hidden;
       background:
-        radial-gradient(circle at 50% 50%, rgba(114, 216, 255, 0.08), transparent 64%),
-        rgba(255, 255, 255, 0.02);
+        radial-gradient(circle at 50% 50%, rgba(121,220,255,0.06), transparent 68%),
+        rgba(255,255,255,0.015);
       box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.11),
-        0 0 2.5rem rgba(114, 216, 255, 0.11);
+        inset 0 0 0 1px rgba(255,255,255,0.10),
+        0 0 2.8rem rgba(121,220,255,0.09);
     }
 
-    .globe-mount > * {
-      max-width: 100%;
-      min-width: 0;
+    .globe-mount canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
 
     .body-label {
-      width: min(100%, 38rem);
-      margin: 0.85rem auto 0;
+      width: min(100%, 40rem);
+      margin: 0.95rem auto 0;
       display: grid;
       gap: 0.45rem;
       text-align: center;
     }
 
     .body-label strong {
-      font-size: clamp(1.45rem, 6.5vw, 2.2rem);
+      font-size: clamp(1.65rem, 7.2vw, 2.3rem);
       line-height: 1;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      overflow-wrap: anywhere;
     }
 
     .body-label span {
       color: var(--muted);
-      font-size: clamp(0.93rem, 3.6vw, 1.08rem);
-      line-height: 1.42;
-      overflow-wrap: break-word;
+      font-size: clamp(0.94rem, 3.8vw, 1.08rem);
+      line-height: 1.45;
       text-wrap: balance;
     }
 
-    .controls-panel,
-    .contract-panel {
-      padding: clamp(0.85rem, 3.3vw, 1.25rem);
+    .controls-card,
+    .contract-card {
+      padding: clamp(0.9rem, 3.4vw, 1.25rem);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
+        linear-gradient(180deg, rgba(255,255,255,0.038), rgba(255,255,255,0.012)),
         var(--panel-2);
     }
 
     .control-row {
-      width: 100%;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
-      gap: clamp(0.5rem, 2vw, 0.8rem);
+      grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+      gap: 0.65rem;
     }
 
     .control-row + .control-row {
@@ -367,120 +344,91 @@
     }
 
     .control-row button {
-      width: 100%;
-      min-width: 0;
-      min-height: clamp(3rem, 11vw, 3.55rem);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.72rem 0.82rem;
+      min-height: 3.15rem;
       border: 1px solid var(--line-strong);
       border-radius: 999px;
-      background: rgba(8, 12, 21, 0.86);
+      padding: 0.74rem 0.9rem;
+      background: rgba(6,10,18,0.82);
       color: var(--text);
-      font-size: clamp(0.84rem, 3.6vw, 1rem);
+      font-size: clamp(0.9rem, 3.7vw, 1rem);
       font-weight: 950;
-      line-height: 1.05;
-      text-align: center;
-      white-space: normal;
-      overflow-wrap: anywhere;
       cursor: pointer;
       touch-action: manipulation;
     }
 
     .control-row button.active,
     .control-row button[aria-pressed="true"] {
-      border-color: rgba(247, 210, 92, 0.92);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      border-color: rgba(247,210,92,0.95);
+      color: #07090f;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
     }
 
-    .zoom-control {
-      width: 100%;
-      margin: 0.85rem 0 0;
+    .zoom-line {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
       gap: 0.72rem;
+      align-items: center;
+      margin-top: 0.9rem;
       color: var(--muted);
-      font-size: 0.84rem;
-      font-weight: 850;
+      font-weight: 900;
     }
 
-    .zoom-control input {
-      width: 100%;
+    .zoom-line input {
       min-width: 0;
+      width: 100%;
       accent-color: var(--gold);
     }
 
     .readout {
-      width: 100%;
-      margin-top: 0.85rem;
-      padding: 0.82rem 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.10);
       border-radius: 1rem;
-      background: rgba(255, 255, 255, 0.035);
+      padding: 0.78rem 0.9rem;
+      background: rgba(255,255,255,0.035);
       color: var(--muted);
       font-size: clamp(0.76rem, 3vw, 0.9rem);
-      font-weight: 800;
+      font-weight: 850;
       line-height: 1.35;
       text-align: center;
       overflow-wrap: anywhere;
     }
 
-    .contract-panel h2 {
-      margin: 0 0 0.6rem;
-      font-size: clamp(1rem, 4vw, 1.24rem);
-      letter-spacing: 0.08em;
+    .contract-card h2 {
+      margin: 0 0 0.65rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
       text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .contract {
       margin: 0;
       color: var(--faint);
-      font: 700 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font: 750 0.72rem/1.48 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    footer {
-      padding: 1.45rem 0 0.45rem;
+    .footer {
+      padding: 1.4rem 0 0.35rem;
       color: var(--faint);
+      text-align: center;
       font-size: 0.74rem;
       line-height: 1.45;
-      text-align: center;
       overflow-wrap: anywhere;
     }
 
-    @media (max-width: 820px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 460px) {
+    @media (max-width: 520px) {
       .globe-mount {
-        width: min(82vw, 23rem);
+        width: min(76vw, 25rem);
       }
 
       .control-row {
         grid-template-columns: 1fr;
       }
 
-      .zoom-control {
+      .zoom-line {
         grid-template-columns: 1fr;
         text-align: center;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .globe-mount {
-        width: min(78vw, 20rem);
       }
     }
   </style>
@@ -490,9 +438,9 @@
   <a class="skip-link" href="#showroom-globe-main">Skip to Showroom Globe</a>
 
   <div class="shell">
-    <header class="topbar">
+    <header class="site-header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
+        <strong>Diamond Gate Bridge</strong>
         <span>Rich Manor and Estate</span>
       </a>
 
@@ -512,63 +460,64 @@
 
     <main id="showroom-globe-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Demo Actual Universe · render-file authority</p>
-        <h1 id="page-title">Earth, Sun, and Moon from the render file.</h1>
+        <p class="eyebrow">Showroom Globe · inspection boundary</p>
+        <h1 id="page-title">One body at a time.</h1>
         <p class="lead">
-          This route provides the mount and controls only. The instrument controls state. The render file draws the bodies.
+          This page is a body-inspection lane. It does not own the Demo Universe relationship scene, Moon orbit logic, Planet 1, or Nine Summits Universe identity.
         </p>
 
-        <div class="receipt-pills" aria-label="Route receipts">
-          <span class="pill">Route owns controls</span>
-          <span class="pill">Instrument owns state</span>
-          <span class="pill">Render owns bodies</span>
-          <span class="pill">No Planet 1 drift</span>
-          <span class="pill">No route body drawing</span>
+        <div class="chip-row" aria-label="Boundary receipts">
+          <span class="chip">Route owns shell</span>
+          <span class="chip">Instrument owns state</span>
+          <span class="chip">Render owns pixels</span>
+          <span class="chip">One selected body</span>
+          <span class="chip">No universe merge</span>
         </div>
       </section>
 
-      <section class="viewer-stack" aria-label="Demo Actual Universe viewer">
+      <section class="viewer-stack" aria-label="Showroom Globe inspection viewer">
         <article
           class="stage-card"
-          id="stageCard"
-          data-demo-actual-universe-route="true"
-          data-route-authority="labels-controls-mount-zoom-wrapper"
+          id="showroomStageCard"
+          data-showroom-globe-inspection-card="true"
+          data-page-boundary="inspection-only"
+          data-route-authority="shell-labels-controls"
           data-instrument-authority="/assets/showroom.globe.instrument.js"
           data-render-authority="/assets/showroom.globe.render.js"
           data-body-render-authority="/assets/showroom.globe.render.js"
-          data-demo-universe-merge="false"
+          data-demo-universe-relationship="false"
+          data-moon-orbit="false"
+          data-planet-one="reserved"
         >
-          <div class="orbital-ring" aria-hidden="true"></div>
+          <div
+            class="globe-mount"
+            id="showroomGlobeMount"
+            data-showroom-globe-mount="true"
+            data-actual-bodies-mount="true"
+            data-globe-mount="true"
+            data-page-boundary="inspection-only"
+            data-render-authority="/assets/showroom.globe.render.js"
+            data-body-render-authority="/assets/showroom.globe.render.js"
+            data-instrument-authority="/assets/showroom.globe.instrument.js"
+            data-route-authority="shell-labels-controls"
+            data-active-body="earth"
+            data-single-body-mode="true"
+            data-demo-universe-relationship="false"
+            data-moon-orbit="false"
+            data-planet-one="reserved"
+            data-generated-image="false"
+            data-visual-pass-claimed="false"
+          ></div>
 
-          <div class="globe-stage">
-            <div
-              class="globe-mount"
-              id="showroomGlobeMount"
-              data-showroom-globe-mount
-              data-actual-bodies-mount="true"
-              data-globe-mount
-              data-demo-actual-universe="true"
-              data-instrument-authority="/assets/showroom.globe.instrument.js"
-              data-render-authority="/assets/showroom.globe.render.js"
-              data-body-render-authority="/assets/showroom.globe.render.js"
-              data-route-authority="labels-controls-mount-zoom-wrapper"
-              data-projection="true-inverse-spherical"
-              data-inline-globe-redraw="false"
-              data-cartoon-canvas-replacement="false"
-              data-planet-one="reserved"
-              data-visual-pass-claimed="false"
-            ></div>
-
-            <div class="body-label">
-              <strong id="bodyName">Earth</strong>
-              <span id="bodyDescription">Actual Earth body mounted through the thin instrument and drawn by the render file.</span>
-            </div>
+          <div class="body-label">
+            <strong id="bodyName">Earth</strong>
+            <span id="bodyDescription">Actual Earth inspection body mounted through the instrument and drawn by the render file.</span>
           </div>
         </article>
 
-        <section class="controls-panel" aria-label="Body and motion controls">
-          <div class="control-row" aria-label="Choose body">
-            <button type="button" data-body="earth" aria-pressed="true" class="active">View Earth</button>
+        <section class="controls-card" aria-label="Showroom Globe controls">
+          <div class="control-row" aria-label="Body selection">
+            <button type="button" data-body="earth" class="active" aria-pressed="true">View Earth</button>
             <button type="button" data-body="sun" aria-pressed="false">View Sun</button>
             <button type="button" data-body="moon" aria-pressed="false">View Moon</button>
           </div>
@@ -587,94 +536,96 @@
             <button type="button" data-speed="fast">Fast</button>
           </div>
 
-          <div class="control-row" aria-label="Zoom buttons">
+          <div class="control-row" aria-label="Zoom controls">
             <button type="button" data-zoom="out">Zoom −</button>
             <button type="button" data-zoom="in">Zoom +</button>
             <button type="button" data-zoom="reset">Reset zoom</button>
           </div>
 
-          <label class="zoom-control" for="zoomRange">
+          <label class="zoom-line" for="zoomRange">
             <span>Zoom</span>
-            <input id="zoomRange" type="range" min="70" max="240" step="1" value="100" />
+            <input id="zoomRange" type="range" min="70" max="180" step="1" value="100">
             <span id="zoomLabel">100%</span>
           </label>
 
-          <div class="readout" aria-live="polite" id="motionReadout">
-            Motion speed: normal · direction: forward · active body: Earth · zoom: 100%
+          <div class="readout" id="motionReadout" aria-live="polite">
+            Active body: Earth · speed: normal · direction: forward · zoom: 100%
           </div>
         </section>
 
-        <section class="contract-panel" aria-labelledby="route-contract-title">
-          <h2 id="route-contract-title">Route contract</h2>
-          <pre class="contract">SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1
+        <section class="contract-card" aria-labelledby="contract-title">
+          <h2 id="contract-title">Boundary contract</h2>
+          <pre class="contract" id="showroomReceipt">SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1
 route=/showroom/globe/
-lane=demo-actual-universe
-route-authority=labels-controls-mount-zoom-wrapper
+page=showroom-globe-inspection
+route-authority=shell-labels-controls
 instrument-authority=/assets/showroom.globe.instrument.js
 render-authority=/assets/showroom.globe.render.js
 body-render-authority=/assets/showroom.globe.render.js
-projection=true-inverse-spherical
+single-body-mode=true
+demo-universe-relationship=false
+moon-orbit=false
+planet-one=reserved
+nine-summits-universe=false
 route-draws-body=false
 instrument-draws-body=false
 render-draws-body=true
-planet-1=reserved
-custom-universe=false
-gauges-mutated=false
-visual-pass-claimed=false
-owner-receipt-required=true</pre>
+generated-image=false
+visual-pass-claimed=false</pre>
         </section>
       </section>
     </main>
 
-    <footer>
-      SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1 · route to instrument to render.
+    <footer class="footer">
+      SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1 · Showroom Globe inspection lane.
     </footer>
   </div>
 
-  <script src="/assets/showroom.globe.render.js?v=true-sphere-render-v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=true-sphere-render-v1"></script>
+  <script src="/assets/showroom.globe.render.js?v=SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1"></script>
 
   <script>
-    (() => {
+    (function bootShowroomGlobeRoute(window, document) {
       "use strict";
 
-      const VERSION = "SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1";
+      var VERSION = "SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1";
 
-      const mount = document.getElementById("showroomGlobeMount");
-      const stageCard = document.getElementById("stageCard");
-      const bodyName = document.getElementById("bodyName");
-      const bodyDescription = document.getElementById("bodyDescription");
-      const motionReadout = document.getElementById("motionReadout");
-      const zoomRange = document.getElementById("zoomRange");
-      const zoomLabel = document.getElementById("zoomLabel");
+      var mount = document.getElementById("showroomGlobeMount");
+      var stage = document.getElementById("showroomStageCard");
+      var bodyName = document.getElementById("bodyName");
+      var bodyDescription = document.getElementById("bodyDescription");
+      var readout = document.getElementById("motionReadout");
+      var receipt = document.getElementById("showroomReceipt");
+      var zoomRange = document.getElementById("zoomRange");
+      var zoomLabel = document.getElementById("zoomLabel");
 
-      const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
-      const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
-      const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
-      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
+      var bodyButtons = Array.prototype.slice.call(document.querySelectorAll("[data-body]"));
+      var actionButtons = Array.prototype.slice.call(document.querySelectorAll("[data-action]"));
+      var speedButtons = Array.prototype.slice.call(document.querySelectorAll("[data-speed]"));
+      var zoomButtons = Array.prototype.slice.call(document.querySelectorAll("[data-zoom]"));
 
-      const bodyMeta = {
+      var bodyCopy = {
         earth: {
           label: "Earth",
-          description: "Actual Earth body mounted through the thin instrument and drawn by the render file."
+          description: "Actual Earth inspection body mounted through the instrument and drawn by the render file."
         },
         sun: {
           label: "Sun",
-          description: "Actual Sun body mounted through the thin instrument and drawn by the render file."
+          description: "Actual Sun inspection body mounted through the instrument and drawn by the render file."
         },
         moon: {
           label: "Moon",
-          description: "Actual Moon body mounted through the thin instrument and drawn by the render file."
+          description: "Actual Moon inspection body mounted through the instrument and drawn by the render file."
         }
       };
 
-      const speedValues = {
-        slow: 0.45,
+      var speedMap = {
+        slow: 0.55,
         normal: 1,
-        fast: 1.75
+        fast: 1.65
       };
 
-      const state = {
+      var state = {
         body: "earth",
         running: true,
         direction: "forward",
@@ -684,29 +635,31 @@ owner-receipt-required=true</pre>
       };
 
       window.DiamondGateBridge = window.DiamondGateBridge || {};
-      window.DiamondGateBridge.showroomGlobeRoute = {
+      window.DiamondGateBridge.showroomGlobeBoundary = {
+        VERSION: VERSION,
         version: VERSION,
         route: "/showroom/globe/",
-        lane: "demo-actual-universe",
-        routeAuthority: "labels-controls-mount-zoom-wrapper",
+        page: "showroom-globe-inspection",
+        routeAuthority: "shell-labels-controls",
         instrumentAuthority: "/assets/showroom.globe.instrument.js",
         renderAuthority: "/assets/showroom.globe.render.js",
         bodyRenderAuthority: "/assets/showroom.globe.render.js",
-        projection: "true-inverse-spherical",
         routeDrawsBody: false,
         instrumentDrawsBody: false,
         renderDrawsBody: true,
+        demoUniverseRelationship: false,
+        moonOrbit: false,
         planetOne: "reserved",
-        customUniverse: false
+        generatedImage: false,
+        visualPassClaimed: false
       };
 
       function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
+        return Math.max(min, Math.min(max, Number(value) || 0));
       }
 
-      function findInstrument() {
-        const bridge = window.DiamondGateBridge || {};
-
+      function getInstrument() {
+        var bridge = window.DiamondGateBridge || {};
         return (
           window.DGBShowroomGlobeInstrument ||
           window.DGBActualBodiesInstrument ||
@@ -720,13 +673,11 @@ owner-receipt-required=true</pre>
         );
       }
 
-      function payload(extra = {}) {
-        return {
-          mount,
+      function payload(extra) {
+        return Object.assign({
+          mount: mount,
           root: mount,
           target: mount,
-          route: "/showroom/globe/",
-          lane: "demo-actual-universe",
           activeBody: state.body,
           body: state.body,
           running: state.running,
@@ -734,29 +685,35 @@ owner-receipt-required=true</pre>
           speedName: state.speedName,
           speed: state.speed,
           zoom: state.zoom,
-          projection: "true-inverse-spherical",
-          routeAuthority: "labels-controls-mount-zoom-wrapper",
+          route: "/showroom/globe/",
+          page: "showroom-globe-inspection",
+          routeAuthority: "shell-labels-controls",
           instrumentAuthority: "/assets/showroom.globe.instrument.js",
           renderAuthority: "/assets/showroom.globe.render.js",
           bodyRenderAuthority: "/assets/showroom.globe.render.js",
           routeDrawsBody: false,
           instrumentDrawsBody: false,
           renderDrawsBody: true,
-          replaceGlobeRenderer: false,
-          ...extra
-        };
+          singleBodyMode: true,
+          demoUniverseRelationship: false,
+          moonOrbit: false,
+          planetOne: "reserved",
+          generatedImage: false,
+          visualPassClaimed: false
+        }, extra || {});
       }
 
-      function callInstrument(methods, extra = {}) {
-        const api = findInstrument();
+      function callInstrument(methods, extra) {
+        var api = getInstrument();
         if (!api) {
-          mount.dataset.instrumentReady = "false";
+          if (mount) mount.dataset.instrumentReady = "false";
           return false;
         }
 
-        mount.dataset.instrumentReady = "true";
+        if (mount) mount.dataset.instrumentReady = "true";
 
-        for (const method of methods) {
+        for (var i = 0; i < methods.length; i += 1) {
+          var method = methods[i];
           if (typeof api[method] !== "function") continue;
 
           try {
@@ -765,169 +722,212 @@ owner-receipt-required=true</pre>
             } else {
               api[method](payload(extra));
             }
-
             return true;
           } catch (error) {
-            mount.dataset.instrumentError = String(error && error.message ? error.message : error);
+            if (mount) mount.dataset.instrumentError = String(error && error.message ? error.message : error);
           }
         }
 
         return false;
       }
 
-      function requestMount(reason = "route-request") {
-        mount.dataset.routeVersion = VERSION;
+      function writeReceipt(status) {
+        if (!receipt) return;
+
+        receipt.textContent =
+          VERSION + "\n" +
+          "route=/showroom/globe/\n" +
+          "page=showroom-globe-inspection\n" +
+          "route-authority=shell-labels-controls\n" +
+          "instrument-authority=/assets/showroom.globe.instrument.js\n" +
+          "render-authority=/assets/showroom.globe.render.js\n" +
+          "body-render-authority=/assets/showroom.globe.render.js\n" +
+          "active-body=" + state.body + "\n" +
+          "single-body-mode=true\n" +
+          "demo-universe-relationship=false\n" +
+          "moon-orbit=false\n" +
+          "planet-one=reserved\n" +
+          "nine-summits-universe=false\n" +
+          "route-draws-body=false\n" +
+          "instrument-draws-body=false\n" +
+          "render-draws-body=true\n" +
+          "generated-image=false\n" +
+          "visual-pass-claimed=false\n" +
+          "status=" + status + "\n" +
+          "timestamp=" + new Date().toISOString();
+      }
+
+      function syncDataset() {
+        if (!mount) return;
+
+        mount.dataset.activeBody = state.body;
+        mount.dataset.pageBoundary = "inspection-only";
+        mount.dataset.singleBodyMode = "true";
+        mount.dataset.routeAuthority = "shell-labels-controls";
         mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
         mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
         mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
-        mount.dataset.projection = "true-inverse-spherical";
         mount.dataset.routeDrawsBody = "false";
         mount.dataset.instrumentDrawsBody = "false";
         mount.dataset.renderDrawsBody = "true";
+        mount.dataset.demoUniverseRelationship = "false";
+        mount.dataset.moonOrbit = "false";
+        mount.dataset.planetOne = "reserved";
+        mount.dataset.generatedImage = "false";
+        mount.dataset.visualPassClaimed = "false";
 
-        const ok = callInstrument(["renderGlobe", "mount", "renderActualBody", "render"], { reason });
+        if (stage) {
+          stage.dataset.activeBody = state.body;
+          stage.dataset.pageBoundary = "inspection-only";
+          stage.dataset.singleBodyMode = "true";
+          stage.dataset.demoUniverseRelationship = "false";
+          stage.dataset.moonOrbit = "false";
+        }
+      }
 
-        if (!ok) {
+      function updateUI(status) {
+        var copy = bodyCopy[state.body] || bodyCopy.earth;
+
+        bodyName.textContent = copy.label;
+        bodyDescription.textContent = copy.description;
+        zoomRange.value = String(state.zoom);
+        zoomLabel.textContent = state.zoom + "%";
+
+        readout.textContent =
+          "Active body: " + copy.label +
+          " · speed: " + state.speedName +
+          " · direction: " + state.direction +
+          " · zoom: " + state.zoom + "%";
+
+        bodyButtons.forEach(function syncBodyButton(button) {
+          var active = button.dataset.body === state.body;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        speedButtons.forEach(function syncSpeedButton(button) {
+          var active = button.dataset.speed === state.speedName;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        syncDataset();
+        callInstrument(["setMotion", "update", "setState"], { reason: "route-ui-sync" });
+        writeReceipt(status || "ROUTE_SYNCED");
+      }
+
+      function mountBody(reason) {
+        syncDataset();
+
+        var mounted = callInstrument(["renderGlobe", "mount", "renderActualBody", "render"], { reason: reason || "route-mount" });
+
+        if (!mounted) {
           window.dispatchEvent(new CustomEvent("showroom:globe:mount-requested", {
-            detail: payload({ reason, apiReady: false })
+            detail: payload({ reason: reason || "route-mount", instrumentReady: false })
           }));
         }
 
-        return ok;
-      }
-
-      function updateUI() {
-        const meta = bodyMeta[state.body] || bodyMeta.earth;
-
-        bodyName.textContent = meta.label;
-        bodyDescription.textContent = meta.description;
-        zoomRange.value = String(state.zoom);
-        zoomLabel.textContent = `${state.zoom}%`;
-
-        motionReadout.textContent =
-          `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${meta.label} · zoom: ${state.zoom}%`;
-
-        bodyButtons.forEach((button) => {
-          const active = button.dataset.body === state.body;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-
-        speedButtons.forEach((button) => {
-          const active = button.dataset.speed === state.speedName;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-
-        stageCard.dataset.activeBody = state.body;
-        stageCard.dataset.motion = state.running ? "running" : "paused";
-        stageCard.dataset.direction = state.direction;
-        stageCard.dataset.speed = state.speedName;
-        stageCard.dataset.zoom = String(state.zoom);
-
-        callInstrument(["setMotion", "update", "setState"], { reason: "route-ui-sync" });
+        return mounted;
       }
 
       function setBody(body) {
-        if (!bodyMeta[body]) return;
-
+        if (!bodyCopy[body]) return;
         state.body = body;
-        updateUI();
-        callInstrument(["setActiveBody", "selectBody", "setMotion", "update"], { bodyChanged: true });
-        requestMount("body-change");
+        updateUI("BODY_SELECTED_" + body.toUpperCase());
+        callInstrument(["setActiveBody", "selectBody", "setMotion", "update"], { reason: "body-select" });
+        mountBody("body-select");
       }
 
       function setSpeed(speedName) {
-        if (!speedValues[speedName]) return;
-
+        if (!speedMap[speedName]) return;
         state.speedName = speedName;
-        state.speed = speedValues[speedName];
-        updateUI();
+        state.speed = speedMap[speedName];
+        updateUI("SPEED_SELECTED_" + speedName.toUpperCase());
       }
 
-      function setZoom(zoom) {
-        state.zoom = clamp(Number(zoom) || 100, 70, 240);
-        updateUI();
-        callInstrument(["setZoom", "setMotion", "update"], { zoomChanged: true });
+      function setZoom(value) {
+        state.zoom = clamp(value, 70, 180);
+        updateUI("ZOOM_UPDATED");
+        callInstrument(["setZoom", "setMotion", "update"], { reason: "zoom-update" });
       }
 
       function runAction(action) {
         if (action === "start" || action === "resume") {
           state.running = true;
-          callInstrument(["start", "resume", "setMotion", "update"], { action });
+          callInstrument(["start", "resume", "setMotion", "update"], { action: action });
         }
 
         if (action === "pause") {
           state.running = false;
-          callInstrument(["pause", "setMotion", "update"], { action });
+          callInstrument(["pause", "setMotion", "update"], { action: action });
+        }
+
+        if (action === "reverse") {
+          state.direction = state.direction === "forward" ? "reverse" : "forward";
+          callInstrument(["reverse", "setMotion", "update"], { action: action });
         }
 
         if (action === "reset") {
           state.running = true;
           state.direction = "forward";
           state.speedName = "normal";
-          state.speed = speedValues.normal;
+          state.speed = speedMap.normal;
           state.zoom = 100;
-          callInstrument(["reset", "setMotion", "update"], { action });
-          requestMount("reset");
+          callInstrument(["reset", "setMotion", "update"], { action: action });
+          mountBody("reset");
         }
 
-        if (action === "reverse") {
-          state.direction = state.direction === "forward" ? "reverse" : "forward";
-          callInstrument(["reverse", "setMotion", "update"], { action });
-        }
-
-        updateUI();
+        updateUI("ACTION_" + String(action || "unknown").toUpperCase());
       }
 
-      bodyButtons.forEach((button) => {
-        button.addEventListener("click", () => setBody(button.dataset.body));
+      bodyButtons.forEach(function bindBody(button) {
+        button.addEventListener("click", function handleBodyClick() {
+          setBody(button.dataset.body);
+        });
       });
 
-      actionButtons.forEach((button) => {
-        button.addEventListener("click", () => runAction(button.dataset.action));
+      actionButtons.forEach(function bindAction(button) {
+        button.addEventListener("click", function handleActionClick() {
+          runAction(button.dataset.action);
+        });
       });
 
-      speedButtons.forEach((button) => {
-        button.addEventListener("click", () => setSpeed(button.dataset.speed));
+      speedButtons.forEach(function bindSpeed(button) {
+        button.addEventListener("click", function handleSpeedClick() {
+          setSpeed(button.dataset.speed);
+        });
       });
 
-      zoomButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const mode = button.dataset.zoom;
-
+      zoomButtons.forEach(function bindZoom(button) {
+        button.addEventListener("click", function handleZoomClick() {
+          var mode = button.dataset.zoom;
           if (mode === "in") setZoom(state.zoom + 10);
           if (mode === "out") setZoom(state.zoom - 10);
           if (mode === "reset") setZoom(100);
         });
       });
 
-      zoomRange.addEventListener("input", () => setZoom(zoomRange.value));
-
-      window.addEventListener("showroom:globe:instrument-ready", () => {
-        requestMount("instrument-ready-event");
-        updateUI();
+      zoomRange.addEventListener("input", function handleRange() {
+        setZoom(zoomRange.value);
       });
 
-      window.addEventListener("dgb:showroom:render-file-extraction-renewed", () => {
-        requestMount("render-file-extraction-event");
-        updateUI();
+      window.addEventListener("showroom:globe:instrument-ready", function handleInstrumentReady() {
+        mountBody("instrument-ready-event");
+        updateUI("INSTRUMENT_READY_EVENT");
       });
 
-      updateUI();
-      requestMount("initial");
+      updateUI("BOOT");
+      mountBody("initial");
 
-      let attempts = 0;
-      const retry = window.setInterval(() => {
+      var attempts = 0;
+      var retry = window.setInterval(function retryMount() {
         attempts += 1;
-        requestMount(`retry-${attempts}`);
-        updateUI();
-
-        if (mount.querySelector("canvas") || attempts >= 40) {
+        mountBody("retry-" + attempts);
+        if ((mount && mount.querySelector("canvas")) || attempts >= 32) {
           window.clearInterval(retry);
         }
       }, 125);
-    })();
+    })(window, document);
   </script>
 </body>
 </html>

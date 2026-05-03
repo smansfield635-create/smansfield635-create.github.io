@@ -2,12 +2,13 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="frontier-shimmer-lattice-signal-chamber"
+  data-page="frontier-shimmer-universal-node-expression"
   data-route="/explore/frontier/shimmer/"
-  data-contract="SHIMMER_LATTICE_SIGNAL_CHAMBER_REEXPRESSION_TNT_v1"
+  data-contract="SHIMMER_UNIVERSAL_NODE_EXPRESSION_INTEGRATION_TNT_v1"
   data-role="frontier-lane"
   data-frontier-lane="shimmer"
   data-mode="shimmer-lattice"
+  data-expression="universal-node"
   data-state-carry="gd_lang,gd_style,gd_time,gd_depth,lane,mode"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
@@ -20,18 +21,23 @@
   <title>Diamond Gate Bridge · Frontier · Shimmer</title>
   <meta
     name="description"
-    content="Shimmer is the Frontier signal chamber: screen, highlight, inspect, measure, mitigate, explain, and repeat without letting noise impersonate truth."
+    content="Shimmer is the Frontier signal chamber. It reduces distortion through a universal node of expression: screen, highlight, inspect, measure, mitigate, explain, and repeat."
   >
 
   <style>
     :root {
-      --line: rgba(255,255,255,0.15);
+      --bg: #030611;
+      --panel: rgba(8, 15, 30, 0.86);
+      --panel-2: rgba(10, 20, 40, 0.76);
+      --line: rgba(255,255,255,0.14);
+      --line-strong: rgba(242,199,111,0.34);
       --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.48);
+      --muted: rgba(226,235,255,0.76);
+      --faint: rgba(226,235,255,0.48);
       --gold: #f2c76f;
-      --blue: #78d8ff;
-      --green: #a5efcc;
+      --blue: #8bc8ff;
+      --rose: rgba(255, 112, 154, 0.34);
+      --green: rgba(165,239,204,0.52);
       --stage: min(100%, 1180px);
     }
 
@@ -43,10 +49,10 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.16), transparent 28rem),
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
-        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+        radial-gradient(circle at 50% 6%, rgba(242,199,111,0.14), transparent 26rem),
+        radial-gradient(circle at 42% 40%, rgba(139,200,255,0.12), transparent 36rem),
+        radial-gradient(circle at 68% 76%, rgba(165,239,204,0.08), transparent 34rem),
+        linear-gradient(180deg, #050914, #02040a 78%, #010207);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -57,15 +63,15 @@
       content: "";
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
-      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.38;
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.16) 0, transparent 1.1px),
+        radial-gradient(circle at 76% 18%, rgba(255,255,255,0.12) 0, transparent 1.1px),
+        radial-gradient(circle at 82% 62%, rgba(255,255,255,0.10) 0, transparent 1px),
+        radial-gradient(circle at 28% 78%, rgba(255,255,255,0.12) 0, transparent 1.1px);
+      background-size: 180px 220px, 260px 280px, 220px 250px, 280px 320px;
+      opacity: 0.35;
+      z-index: 0;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -94,401 +100,454 @@
         max(1.5rem, env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
+    .top-card,
+    .hero,
+    .controls,
+    .node-stage,
+    .expanded-panel,
+    .russian-doll,
+    .frontier-panel,
+    .receipt {
+      width: min(100%, 1060px);
+      margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
+      border: 1px solid rgba(139,200,255,0.18);
+      border-radius: clamp(1.25rem, 5vw, 2rem);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(139,200,255,0.13), transparent 28rem),
+        radial-gradient(circle at 82% 18%, rgba(242,199,111,0.10), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015)),
+        var(--panel);
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
     }
 
-    .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.08rem;
+    .top-card {
+      padding: clamp(1rem, 3vw, 1.35rem);
+      display: grid;
+      gap: 1rem;
+    }
+
+    .brand-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .monogram {
+      width: 4.25rem;
+      height: 4.25rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(139,200,255,0.36);
+      border-radius: 1.2rem;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(139,200,255,0.23), transparent 55%),
+        rgba(255,255,255,0.035);
+      color: #fff;
+      font-size: 1.6rem;
       font-weight: 950;
-      line-height: 1.05;
       letter-spacing: 0.04em;
     }
 
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
-      text-transform: uppercase;
-    }
-
-    .brand span:last-child {
-      color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 0.42rem;
-    }
-
-    .nav a {
-      min-height: 2.1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-    }
-
-    .hero {
+    .brand-copy {
       display: grid;
-      gap: 1rem;
-      padding: clamp(1.35rem, 5vw, 2.8rem) 0 clamp(0.75rem, 2.5vw, 1.2rem);
-      text-align: center;
+      gap: 0.12rem;
     }
 
-    .eyebrow {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+    .brand-copy span:first-child {
+      color: rgba(226,235,255,0.84);
+      font-size: clamp(0.72rem, 2.2vw, 0.9rem);
       font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
+    .brand-copy strong {
+      color: var(--text);
+      font-size: clamp(1.25rem, 4.5vw, 2.1rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .nav-diamonds {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: clamp(0.35rem, 1.4vw, 0.8rem);
+      padding-top: 0.3rem;
+    }
+
+    .nav-diamond {
+      min-height: clamp(4.4rem, 8vw, 5.9rem);
+      position: relative;
+      display: grid;
+      place-items: center;
+      color: rgba(242,246,255,0.86);
+      font-size: clamp(0.62rem, 1.6vw, 0.82rem);
+      font-weight: 900;
+      text-align: center;
+      isolation: isolate;
+    }
+
+    .nav-diamond::before {
+      content: "";
+      position: absolute;
+      width: 68%;
+      aspect-ratio: 1;
+      transform: rotate(45deg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(139,200,255,0.18), transparent 42%),
+        linear-gradient(135deg, rgba(255,255,255,0.08), transparent 48%),
+        rgba(35, 50, 92, 0.38);
+      z-index: -1;
+    }
+
+    .nav-diamond[aria-current="page"]::before {
+      border-color: rgba(242,199,111,0.62);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,0.24), transparent 44%),
+        linear-gradient(135deg, rgba(255,255,255,0.13), transparent 48%),
+        rgba(72, 60, 36, 0.42);
+    }
+
+    .hero {
+      padding: clamp(1.5rem, 5vw, 3rem);
+      min-height: clamp(24rem, 55vw, 35rem);
+      display: grid;
+      align-content: center;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(2rem, 8vw, 5rem);
+      bottom: clamp(2rem, 7vw, 4rem);
+      width: clamp(8rem, 28vw, 18rem);
+      aspect-ratio: 1;
+      border: 1px solid rgba(139,200,255,0.15);
+      border-radius: 44% 56% 55% 45%;
+      transform: rotate(-18deg);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(139,200,255,0.18), transparent 10%),
+        radial-gradient(circle at 52% 50%, rgba(242,199,111,0.08), transparent 42%);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    .pill {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      color: rgba(226,235,255,0.86);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .pill::before {
+      content: "";
+      width: 0.72rem;
+      height: 0.72rem;
+      border-radius: 0.18rem;
+      background: var(--blue);
+      transform: rotate(45deg);
+      box-shadow: 0 0 1rem rgba(139,200,255,0.45);
+    }
+
     h1 {
-      width: min(100%, 980px);
-      margin: 0 auto;
-      font-size: clamp(2.55rem, 9vw, 5.7rem);
-      line-height: 0.92;
+      width: min(100%, 780px);
+      margin: 0;
+      font-size: clamp(4rem, 14vw, 8rem);
+      line-height: 0.82;
+      letter-spacing: -0.105em;
+      text-wrap: balance;
+    }
+
+    .hero h2 {
+      width: min(100%, 760px);
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 6.4vw, 4rem);
+      line-height: 0.95;
       letter-spacing: -0.08em;
       text-wrap: balance;
     }
 
-    .quote {
-      width: min(100%, 800px);
-      margin: 0 auto;
-      color: rgba(255,241,205,0.96);
-      font-size: clamp(1rem, 3.2vw, 1.18rem);
-      line-height: 1.52;
-      text-wrap: balance;
+    .hero p {
+      width: min(100%, 760px);
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 3.2vw, 1.38rem);
+      line-height: 1.55;
     }
 
-    .hero-actions,
+    .controls {
+      padding: clamp(1rem, 3vw, 1.35rem);
+      display: grid;
+      gap: 1rem;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 5.6vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .control-box {
+      display: grid;
+      gap: 0.7rem;
+      align-content: start;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.35rem;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .control-box strong {
+      color: rgba(255,241,205,0.96);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
     .control-row {
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
-      gap: 0.55rem;
+      gap: 0.5rem;
     }
 
-    .button,
-    .control-button {
-      min-height: 2.45rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .control-button,
+    .route-link,
+    .main-link {
+      min-height: 2.35rem;
+      border: 1px solid rgba(255,255,255,0.17);
       border-radius: 999px;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
-      font-size: 0.78rem;
+      background: rgba(255,255,255,0.035);
+      color: rgba(242,246,255,0.86);
+      padding: 0.52rem 0.78rem;
+      font-size: 0.74rem;
       font-weight: 950;
       letter-spacing: 0.055em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
     }
 
-    .button::after { content: " →"; }
-
-    .button.secondary,
-    .control-button {
-      border-color: rgba(255,255,255,0.24);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
-    }
-
-    .control-button[aria-pressed="true"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
+    .control-button[aria-pressed="true"],
+    .main-link.primary {
+      border-color: rgba(242,199,111,0.85);
+      color: #070910;
       background: linear-gradient(135deg, #fff0a3, #f2c76f);
     }
 
-    .button:hover,
-    .button:focus-visible,
-    .control-button:hover,
-    .control-button:focus-visible {
-      transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
-      outline: none;
-    }
-
-    .controls,
-    .signal-stage,
-    .expanded-signal,
-    .label-stack,
-    .route-panel {
-      width: min(100%, 1060px);
-      margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: clamp(1.25rem, 5vw, 2rem);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.62);
-      box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.34),
-        inset 0 1px 0 rgba(255,255,255,0.09);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .controls {
-      padding: clamp(0.9rem, 3vw, 1.15rem);
-      display: grid;
-      gap: 0.85rem;
-      text-align: center;
-    }
-
-    .control-title {
+    .control-status {
       margin: 0;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      color: var(--faint);
+      font-size: 0.82rem;
+      line-height: 1.35;
     }
 
-    .signal-stage {
+    .node-stage {
+      padding: clamp(1rem, 3vw, 1.25rem);
       position: relative;
-      padding: clamp(0.8rem, 3vw, 1.25rem);
     }
 
-    .signal-stage::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 4%;
-      bottom: 4%;
-      width: 1px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
-      opacity: 0.70;
-      z-index: -1;
-    }
-
-    .signal-stage::after {
-      content: "";
-      position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 50%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
-      opacity: 0.68;
-      z-index: -1;
-    }
-
-    .stage-title {
+    .node-head {
       display: grid;
-      gap: 0.3rem;
+      gap: 0.35rem;
       text-align: center;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.9rem;
     }
 
-    .stage-title h2 {
+    .node-head h2 {
       margin: 0;
-      font-size: clamp(1.35rem, 4.4vw, 2rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
     }
 
-    .stage-title p {
+    .node-head p {
       width: min(100%, 760px);
       margin: 0 auto;
       color: var(--muted);
       font-size: 0.92rem;
-      line-height: 1.45;
-      text-wrap: balance;
+      line-height: 1.48;
     }
 
-    .signal-field {
-      --node-size: clamp(4.25rem, 9.4vw, 6.7rem);
-      --center-size: clamp(4.85rem, 10.2vw, 7.45rem);
+    .universal-node {
       position: relative;
-      width: min(100%, 820px);
-      min-height: clamp(27rem, 56vw, 36rem);
+      width: min(100%, 850px);
+      min-height: clamp(33rem, 66vw, 42rem);
       margin: 0 auto;
       isolation: isolate;
     }
 
-    .field-orbit,
-    .field-orbit::before,
-    .field-orbit::after {
+    .node-ring,
+    .node-ring::before,
+    .node-ring::after {
       position: absolute;
       border: 1px solid rgba(255,255,255,0.11);
       border-radius: 50%;
       pointer-events: none;
     }
 
-    .field-orbit {
+    .node-ring {
       left: 8%;
       right: 8%;
-      top: 22%;
-      height: 56%;
-      transform: rotate(-14deg);
+      top: 18%;
+      height: 62%;
       opacity: 0.8;
     }
 
-    .field-orbit::before {
+    .node-ring::before {
       content: "";
-      inset: -20% -5%;
-      transform: rotate(38deg);
-      opacity: 0.62;
+      inset: -12% 6%;
+      transform: rotate(45deg);
+      opacity: 0.58;
     }
 
-    .field-orbit::after {
+    .node-ring::after {
       content: "";
-      inset: 20% 15%;
-      transform: rotate(-38deg);
-      opacity: 0.52;
+      inset: 18%;
+      transform: rotate(-45deg);
+      opacity: 0.5;
     }
 
-    .center-diamond,
-    .signal-diamond {
+    .axis {
+      position: absolute;
+      color: rgba(255,241,205,0.82);
+      font-size: clamp(0.82rem, 2.3vw, 1.05rem);
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .axis.n { top: 1.5%; left: 50%; transform: translateX(-50%); }
+    .axis.e { right: 1.5%; top: 50%; transform: translateY(-50%); }
+    .axis.s { bottom: 1.5%; left: 50%; transform: translateX(-50%); }
+    .axis.w { left: 1.5%; top: 50%; transform: translateY(-50%); }
+
+    .node-center,
+    .node-point {
       position: absolute;
       display: grid;
       place-items: center;
       text-align: center;
-      color: var(--text);
     }
 
-    .center-diamond {
+    .node-center {
       left: 50%;
       top: 50%;
-      width: var(--center-size);
-      height: var(--center-size);
+      width: clamp(7rem, 17vw, 10rem);
+      height: clamp(7rem, 17vw, 10rem);
       transform: translate(-50%, -50%);
       z-index: 12;
       pointer-events: none;
-      user-select: none;
     }
 
-    .signal-diamond {
+    .node-point {
       --dx: 0px;
       --dy: 0px;
       --lift: 1;
       left: calc(var(--x) * 1%);
       top: calc(var(--y) * 1%);
-      width: var(--node-size);
-      height: var(--node-size);
+      width: clamp(5rem, 12vw, 7.4rem);
+      height: clamp(5rem, 12vw, 7.4rem);
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
-      outline: none;
       border: 0;
-      padding: 0;
       background: transparent;
+      padding: 0;
       cursor: pointer;
-      z-index: 9;
-      transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
-      will-change: transform;
+      z-index: 8;
+      transition: transform 160ms ease, filter 160ms ease;
     }
 
-    .signal-diamond[aria-expanded="true"] {
+    .node-point.primary {
+      width: clamp(5.8rem, 14vw, 8.4rem);
+      height: clamp(5.8rem, 14vw, 8.4rem);
+      z-index: 14;
+    }
+
+    .node-point[aria-expanded="true"] {
       z-index: 18;
-      filter: brightness(1.18) saturate(1.16);
-    }
-
-    .signal-diamond:hover,
-    .signal-diamond:focus-visible {
-      --lift: 1.065;
       filter: brightness(1.16) saturate(1.12);
     }
 
-    .diamond-shell {
+    .node-point:hover,
+    .node-point:focus-visible {
+      --lift: 1.06;
+      outline: none;
+      filter: brightness(1.18) saturate(1.14);
+    }
+
+    .diamond {
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
-      border: 2px solid rgba(242,199,111,0.76);
-      border-radius: 0.95rem;
+      border: 2px solid rgba(242,199,111,0.62);
+      border-radius: 1rem;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.26), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.24), transparent 38%),
-        linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.20), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(139,200,255,0.22), transparent 38%),
+        linear-gradient(145deg, rgba(48,74,141,0.72), rgba(98,61,126,0.62));
       box-shadow:
-        0 1.1rem 2.8rem rgba(0,0,0,0.30),
-        inset 0 0 0 1px rgba(255,255,255,0.15),
-        inset 0 0 1.6rem rgba(255,255,255,0.06);
+        0 1rem 2.4rem rgba(0,0,0,0.28),
+        inset 0 0 0 1px rgba(255,255,255,0.12);
       overflow: hidden;
     }
 
-    .signal-diamond[aria-expanded="true"] .diamond-shell {
-      border-color: rgba(255,224,141,0.95);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.23), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.33), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.30), transparent 38%),
-        linear-gradient(145deg, rgba(58,83,150,0.83), rgba(128,72,142,0.74) 58%, rgba(242,199,111,0.25));
+    .node-point[aria-expanded="true"] .diamond,
+    .node-point.primary .diamond {
+      border-color: rgba(255,224,141,0.94);
       box-shadow:
-        0 1.45rem 3.4rem rgba(0,0,0,0.36),
-        0 0 2.35rem rgba(242,199,111,0.14),
-        inset 0 0 0 1px rgba(255,255,255,0.18),
-        inset 0 0 1.8rem rgba(255,255,255,0.07);
+        0 1.35rem 3.2rem rgba(0,0,0,0.34),
+        0 0 2rem rgba(242,199,111,0.14),
+        inset 0 0 0 1px rgba(255,255,255,0.16);
     }
 
-    .diamond-shell::before,
-    .diamond-shell::after {
+    .node-center .diamond {
+      border-color: rgba(255,241,205,0.68);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.24), transparent 44%),
+        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
+    }
+
+    .diamond::before,
+    .diamond::after {
       content: "";
       position: absolute;
       inset: 15%;
-      border: 1px solid rgba(255,241,205,0.30);
+      border: 1px solid rgba(255,241,205,0.26);
       border-radius: 0.55rem;
-      pointer-events: none;
     }
 
-    .diamond-shell::after {
+    .diamond::after {
       inset: 29%;
-      opacity: 0.50;
+      opacity: 0.5;
     }
 
-    .diamond-lines {
-      position: absolute;
-      inset: 0;
-      transform: rotate(45deg);
-      pointer-events: none;
-      overflow: hidden;
-      border-radius: 0.95rem;
-    }
-
-    .diamond-lines::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.30) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.24) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%);
-      opacity: 0.76;
-    }
-
-    .diamond-content {
+    .node-label {
       position: relative;
       z-index: 2;
       width: 76%;
@@ -500,37 +559,29 @@
       user-select: none;
     }
 
-    .diamond-content strong {
+    .node-label strong {
       color: rgba(255,241,205,0.98);
-      font-size: clamp(0.58rem, 1.45vw, 0.86rem);
+      font-size: clamp(0.54rem, 1.35vw, 0.82rem);
       line-height: 0.98;
       font-weight: 950;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      text-shadow: 0 2px 0 rgba(0,0,0,0.18);
     }
 
-    .diamond-content span {
-      color: rgba(242,246,255,0.76);
-      font-size: clamp(0.42rem, 1.05vw, 0.56rem);
+    .node-label span {
+      color: rgba(242,246,255,0.75);
+      font-size: clamp(0.38rem, 0.95vw, 0.52rem);
       line-height: 1.08;
       font-weight: 850;
       letter-spacing: 0.035em;
       text-transform: uppercase;
     }
 
-    .center-diamond .diamond-shell {
-      border-color: rgba(255,241,205,0.62);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
-        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
-        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
-      box-shadow:
-        0 1rem 2.5rem rgba(0,0,0,0.28),
-        inset 0 0 0 1px rgba(255,255,255,0.13);
+    .node-center .node-label strong {
+      font-size: clamp(0.76rem, 1.9vw, 1rem);
     }
 
-    .expanded-signal {
+    .expanded-panel {
       padding: clamp(1rem, 3vw, 1.35rem);
     }
 
@@ -543,14 +594,14 @@
       text-transform: uppercase;
     }
 
-    .expanded-signal h2 {
+    .expanded-panel h2 {
       margin: 0;
       font-size: clamp(1.45rem, 4.6vw, 2.2rem);
       line-height: 1;
       letter-spacing: -0.045em;
     }
 
-    .expanded-signal p {
+    .expanded-panel p {
       margin: 0.75rem 0 0;
       color: var(--muted);
       font-size: clamp(0.92rem, 2.4vw, 1rem);
@@ -568,101 +619,79 @@
       line-height: 1.45;
     }
 
-    .label-stack {
-      padding: clamp(0.9rem, 3vw, 1.25rem);
-    }
-
-    .label-stack-title {
-      margin: 0 0 0.85rem;
-      color: var(--gold);
-      font-size: 0.76rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-align: center;
+    .russian-doll {
+      padding: clamp(1rem, 3vw, 1.25rem);
     }
 
     .label-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
+      gap: 0.7rem;
     }
 
     .label-card {
       display: grid;
-      gap: 0.25rem;
-      padding: 0.88rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 1rem;
+      grid-template-columns: 1fr auto;
+      gap: 0.8rem;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid rgba(139,200,255,0.19);
+      border-radius: 1.25rem;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.06), transparent 34%),
+        radial-gradient(circle at 10% 0%, rgba(139,200,255,0.09), transparent 18rem),
         rgba(255,255,255,0.025);
     }
 
     .label-card strong {
       color: rgba(255,241,205,0.96);
-      font-size: 0.86rem;
-      font-weight: 950;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
+      font-size: clamp(1rem, 3vw, 1.35rem);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
     }
 
     .label-card span {
       color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.4;
+      font-size: 0.82rem;
+      line-height: 1.45;
     }
 
-    .route-panel {
-      padding: clamp(0.8rem, 2.8vw, 1rem);
-      text-align: center;
-    }
-
-    .route-panel-title {
-      margin: 0 0 0.7rem;
-      color: var(--gold);
-      font-size: 0.72rem;
+    .plus {
+      width: 3rem;
+      height: 3rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(139,200,255,0.25);
+      border-radius: 50%;
+      color: var(--blue);
+      font-size: 1.45rem;
       font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .frontier-panel {
+      padding: clamp(1rem, 3vw, 1.25rem);
     }
 
     .route-grid {
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
       gap: 0.55rem;
     }
 
-    .route-link {
-      min-height: 2.25rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .route-link::after {
+    .route-link::after,
+    .main-link::after {
       content: " →";
       color: var(--gold);
     }
 
+    .main-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
     .receipt {
-      width: min(100%, 900px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
       color: var(--faint);
-      overflow: hidden;
     }
 
     .receipt summary {
@@ -691,43 +720,59 @@
       text-align: center;
     }
 
+    @media (max-width: 900px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .nav { justify-content: flex-start; }
+      .nav-diamonds { grid-template-columns: repeat(4, 1fr); }
+      .control-grid { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 760px) {
-      .signal-field {
-        --node-size: clamp(3.55rem, 18vw, 4.95rem);
-        --center-size: clamp(4.2rem, 20vw, 5.55rem);
-        min-height: 31rem;
+      .universal-node {
+        min-height: 34rem;
       }
 
-      .diamond-content strong {
-        font-size: clamp(0.45rem, 2.05vw, 0.62rem);
+      .node-point {
+        width: clamp(4.2rem, 17vw, 5.55rem);
+        height: clamp(4.2rem, 17vw, 5.55rem);
       }
 
-      .diamond-content span {
-        font-size: clamp(0.34rem, 1.58vw, 0.48rem);
+      .node-point.primary {
+        width: clamp(4.8rem, 19vw, 6.25rem);
+        height: clamp(4.8rem, 19vw, 6.25rem);
       }
 
-      .label-grid {
+      .node-center {
+        width: clamp(5.5rem, 22vw, 7.1rem);
+        height: clamp(5.5rem, 22vw, 7.1rem);
+      }
+
+      .node-label strong {
+        font-size: clamp(0.38rem, 1.72vw, 0.54rem);
+      }
+
+      .node-label span {
+        font-size: clamp(0.31rem, 1.35vw, 0.42rem);
+      }
+
+      .label-card {
         grid-template-columns: 1fr;
       }
+
+      .plus {
+        display: none;
+      }
     }
 
-    @media (max-width: 900px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav { justify-content: flex-start; }
-    }
-
-    @media (max-width: 540px) {
-      .signal-field {
-        min-height: 30rem;
-      }
+    @media (max-width: 520px) {
+      .nav-diamonds { grid-template-columns: repeat(2, 1fr); }
+      .universal-node { min-height: 31rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .signal-diamond {
+      .node-point,
+      .control-button,
+      .main-link {
         transition: none;
       }
     }
@@ -738,131 +783,156 @@
   <a class="skip-link" href="#shimmer-main">Skip to Shimmer</a>
 
   <div class="shell">
-    <header class="topbar">
-      <a class="brand state-link" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
-        <span>Frontier · Shimmer</span>
-      </a>
+    <header class="top-card">
+      <div class="brand-row">
+        <a class="monogram state-link" href="/explore/frontier/shimmer/" aria-label="Shimmer home">SH</a>
+        <a class="brand-copy state-link" href="/explore/frontier/shimmer/">
+          <span>Diamond Gate Bridge · Frontier</span>
+          <strong>Shimmer · G1 V10</strong>
+        </a>
+      </div>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="state-link" href="/">Compass</a>
-        <a class="state-link" href="/door/">Door</a>
-        <a class="state-link" href="/home/">Home</a>
-        <a class="state-link" href="/explore/">Manor</a>
-        <a class="state-link" href="/frontier/">Frontier</a>
-        <a class="state-link" href="/laws/">Laws</a>
-        <a class="state-link" href="/products/">Products</a>
-        <a class="state-link" href="/gauges/">Gauges</a>
+      <nav class="nav-diamonds" aria-label="Primary navigation">
+        <a class="nav-diamond state-link" href="/door/">Door</a>
+        <a class="nav-diamond state-link" href="/home/">Home</a>
+        <a class="nav-diamond state-link" href="/explore/">Explore</a>
+        <a class="nav-diamond state-link" href="/frontier/" aria-current="page">Frontier</a>
+        <a class="nav-diamond state-link" href="/products/">Products</a>
+        <a class="nav-diamond state-link" href="/gauges/">Gauges</a>
+        <a class="nav-diamond state-link" href="/laws/">Laws</a>
+        <a class="nav-diamond state-link" href="/about/">About</a>
       </nav>
     </header>
 
     <main id="shimmer-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow" id="heroEyebrow">Frontier · Signal Chamber</p>
-        <h1 id="page-title">Subtle signal matters before it becomes obvious.</h1>
-
-        <p class="quote" id="heroQuote">
-          Shimmer reduces distortion so humans can decide without being dragged by noise.
+        <div class="pill">Signal Category</div>
+        <h1 id="page-title">Shimmer</h1>
+        <h2 id="heroSubtitle">Subtle signal matters before it becomes obvious.</h2>
+        <p id="heroBody">
+          Choose a label. The Shimmer and Lattice context opens only when requested.
         </p>
-
-        <div class="hero-actions" aria-label="Primary Shimmer actions">
-          <a class="button state-link" href="/explore/frontier/">Frontier Hub</a>
-          <a class="button secondary state-link" href="/explore/frontier/lattice/">Open Lattice</a>
-          <a class="button secondary state-link" href="/gauges/">Read Gauges</a>
-        </div>
       </section>
 
       <section class="controls" aria-label="Room controls">
-        <p class="control-title">Room controls</p>
+        <div class="pill">Room Controls</div>
+        <h2 class="section-title">Switch lens without losing the open row.</h2>
 
-        <div class="control-row" aria-label="Mode controls">
-          <button class="control-button" type="button" data-control="mode" data-value="shimmer" aria-pressed="true">Shimmer</button>
-          <button class="control-button" type="button" data-control="mode" data-value="lattice" aria-pressed="false">Lattice</button>
-        </div>
+        <div class="control-grid">
+          <div class="control-box">
+            <strong>Mode</strong>
+            <div class="control-row">
+              <button class="control-button" type="button" data-control="mode" data-value="shimmer" aria-pressed="true">Shimmer</button>
+              <button class="control-button" type="button" data-control="mode" data-value="lattice" aria-pressed="false">Lattice</button>
+            </div>
+            <p class="control-status" id="modeStatus">Mode: SHIMMER</p>
+          </div>
 
-        <div class="control-row" aria-label="Language controls">
-          <button class="control-button" type="button" data-control="lang" data-value="en" aria-pressed="true">EN</button>
-          <button class="control-button" type="button" data-control="lang" data-value="zh" aria-pressed="false">中文</button>
-          <button class="control-button" type="button" data-control="lang" data-value="es" aria-pressed="false">ES</button>
-        </div>
+          <div class="control-box">
+            <strong>Language</strong>
+            <div class="control-row">
+              <button class="control-button" type="button" data-control="lang" data-value="en" aria-pressed="true">EN</button>
+              <button class="control-button" type="button" data-control="lang" data-value="zh" aria-pressed="false">中文</button>
+              <button class="control-button" type="button" data-control="lang" data-value="es" aria-pressed="false">ES</button>
+            </div>
+            <p class="control-status" id="langStatus">Lang: EN</p>
+          </div>
 
-        <div class="control-row" aria-label="Lens controls">
-          <button class="control-button" type="button" data-control="lens" data-value="platform" aria-pressed="true">Platform</button>
-          <button class="control-button" type="button" data-control="lens" data-value="engineering" aria-pressed="false">Engineering</button>
+          <div class="control-box">
+            <strong>Visible Lens</strong>
+            <div class="control-row">
+              <button class="control-button" type="button" data-control="lens" data-value="platform" aria-pressed="true">Platform</button>
+              <button class="control-button" type="button" data-control="lens" data-value="engineering" aria-pressed="false">Engineering</button>
+            </div>
+            <p class="control-status" id="lensStatus">Current lens: PLATFORM</p>
+          </div>
         </div>
       </section>
 
-      <section class="signal-stage" aria-labelledby="signal-title">
-        <div class="stage-title">
-          <h2 id="signal-title">SHIMMER opens only when requested.</h2>
-          <p id="signalSubtitle">Screen, Highlight, Inspect, Measure, Mitigate, Explain, and Repeat without letting signal become noise.</p>
+      <section class="node-stage" aria-labelledby="node-title">
+        <div class="pill">Universal Node</div>
+        <div class="node-head">
+          <h2 id="node-title">Open only the domain needed.</h2>
+          <p id="nodeSubtitle">SHIMMER reduces distortion so humans can decide without being dragged by noise.</p>
         </div>
 
-        <div class="signal-field" aria-label="Expandable Shimmer / Lattice signal field">
-          <div class="field-orbit" aria-hidden="true"></div>
+        <div class="universal-node" aria-label="Universal node of expression">
+          <div class="node-ring" aria-hidden="true"></div>
+          <span class="axis n">Signal</span>
+          <span class="axis e">Evidence</span>
+          <span class="axis s">Return</span>
+          <span class="axis w">Boundary</span>
 
-          <div class="center-diamond" aria-label="Mode center marker">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content">
+          <div class="node-center" aria-label="Universal node center">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label">
               <strong id="centerTitle">Shimmer</strong>
               <span id="centerSubtitle">Signal</span>
             </div>
           </div>
 
-          <button class="signal-diamond" type="button" style="--x:18;--y:20;" data-loop="a" data-phase="0.00" data-step="0" aria-expanded="true" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d0">S</strong><span id="s0">Screen</span></div>
+          <button class="node-point primary" type="button" style="--x:50;--y:12;" data-loop="a" data-phase="0.00" data-step="0" aria-expanded="true" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n0">Screen</strong><span id="ns0">Enter</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:50;--y:13;" data-loop="b" data-phase="0.89" data-step="1" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d1">H</strong><span id="s1">Highlight</span></div>
+          <button class="node-point" type="button" style="--x:21;--y:28;" data-loop="b" data-phase="0.90" data-step="1" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n1">Highlight</strong><span id="ns1">Delta</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:82;--y:20;" data-loop="a" data-phase="1.79" data-step="2" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d2">I</strong><span id="s2">Inspect</span></div>
+          <button class="node-point primary" type="button" style="--x:79;--y:28;" data-loop="a" data-phase="1.80" data-step="2" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n2">Inspect</strong><span id="ns2">Evidence</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:28;--y:50;" data-loop="b" data-phase="2.68" data-step="3" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d3">M</strong><span id="s3">Measure</span></div>
+          <button class="node-point primary" type="button" style="--x:23;--y:64;" data-loop="b" data-phase="2.70" data-step="3" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n3">Measure</strong><span id="ns3">Number</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:72;--y:50;" data-loop="a" data-phase="3.57" data-step="4" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d4">M</strong><span id="s4">Mitigate</span></div>
+          <button class="node-point" type="button" style="--x:77;--y:64;" data-loop="a" data-phase="3.60" data-step="4" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n4">Mitigate</strong><span id="ns4">Risk</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:32;--y:82;" data-loop="b" data-phase="4.46" data-step="5" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d5">E</strong><span id="s5">Explain</span></div>
+          <button class="node-point" type="button" style="--x:35;--y:87;" data-loop="b" data-phase="4.50" data-step="5" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n5">Explain</strong><span id="ns5">Plain</span></div>
           </button>
 
-          <button class="signal-diamond" type="button" style="--x:68;--y:82;" data-loop="a" data-phase="5.36" data-step="6" aria-expanded="false" aria-controls="expandedSignal">
-            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content"><strong id="d6">R</strong><span id="s6">Repeat</span></div>
+          <button class="node-point primary" type="button" style="--x:65;--y:87;" data-loop="a" data-phase="5.40" data-step="6" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond" aria-hidden="true"></div>
+            <div class="node-label"><strong id="n6">Repeat</strong><span id="ns6">Stabilize</span></div>
           </button>
         </div>
       </section>
 
-      <section class="expanded-signal" id="expandedSignal" aria-live="polite" aria-labelledby="expandedTitle">
-        <p class="expanded-kicker" id="expandedKicker">SHIMMER · S</p>
-        <h2 id="expandedTitle">Screen</h2>
-        <p id="expandedSummary">Decide what enters at all.</p>
+      <section class="expanded-panel" id="expandedSignal" aria-live="polite" aria-labelledby="expandedTitle">
+        <p class="expanded-kicker" id="expandedKicker">SHIMMER · S — SCREEN</p>
+        <h2 id="expandedTitle">Decide what enters at all.</h2>
+        <p id="expandedSummary">
+          Attention is a resource; distortion is a leak.
+        </p>
         <div class="expanded-rule" id="expandedBody">
-          Platform lens: screen incoming signal before it drags the room. Engineering lens: define the intake gate, threshold, and receipt location before processing.
+          Platform lens: screen incoming signal before it drags the room.
+        </div>
+
+        <div class="main-actions">
+          <a class="main-link primary state-link" href="/gauges/">Attach to Gauges</a>
+          <a class="main-link state-link" href="/laws/">Check Bounds</a>
         </div>
       </section>
 
-      <section class="label-stack" aria-labelledby="label-stack-title">
-        <p class="label-stack-title" id="label-stack-title">Expanded labels</p>
+      <section class="russian-doll" aria-labelledby="labels-title">
+        <div class="pill">Russian-Doll Labels</div>
+        <h2 class="section-title" id="labels-title">The loop stays visible.</h2>
         <div class="label-grid" id="labelGrid"></div>
       </section>
 
-      <section class="route-panel" aria-labelledby="route-panel-title">
-        <p class="route-panel-title" id="route-panel-title">Frontier categories</p>
+      <section class="frontier-panel" aria-labelledby="frontier-title">
+        <div class="pill">Frontier Categories</div>
+        <h2 class="section-title" id="frontier-title">Move to another back page.</h2>
 
         <nav class="route-grid" aria-label="Frontier lane routes">
           <a class="route-link state-link" href="/explore/frontier/">Frontier Hub</a>
@@ -878,16 +948,18 @@
 
       <details class="receipt">
         <summary>Status label</summary>
-        <pre>SHIMMER_LATTICE_SIGNAL_CHAMBER_REEXPRESSION_TNT_v1
+        <pre>SHIMMER_UNIVERSAL_NODE_EXPRESSION_INTEGRATION_TNT_v1
 PAGE=/explore/frontier/shimmer/index.html
 ROUTE=/explore/frontier/shimmer/
 PARENT=/explore/frontier/
-ROLE=frontier_lane_signal_chamber
-MODE=SHIMMER_OR_LATTICE_IN_PAGE_ONLY
-VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
-STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth,lane,mode
+BASELINE=SHIMMER_LATTICE_G1_V10
+EXPRESSION=UNIVERSAL_NODE
+METHOD=SHIMMER_CONTENT_PRESERVED_NODE_EXPRESSION_UPGRADED
 LANGUAGES=EN,ZH,ES
-METHOD=EXPANDABLE_SIGNAL_DIAMONDS
+VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
+MODE=SHIMMER_OR_LATTICE_IN_PAGE_ONLY
+STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth,lane,mode
+NODE_STEPS=screen,highlight,inspect,measure,mitigate,explain,repeat
 NO_MODAL=TRUE
 NO_INLINE_ONCLICK=TRUE
 CONTEXT_PRESERVED=TRUE
@@ -899,7 +971,7 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Shimmer/Lattice · Signal Chamber.
+      Diamond Gate Bridge · Frontier · Shimmer/Lattice · Universal Node Expression.
     </footer>
   </div>
 
@@ -917,121 +989,139 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
       const text = {
         en: {
           shimmer: {
-            title: "Subtle signal matters before it becomes obvious.",
-            quote: "Shimmer reduces distortion so humans can decide without being dragged by noise.",
-            stage: "SHIMMER opens only when requested.",
-            subtitle: "Screen, Highlight, Inspect, Measure, Mitigate, Explain, and Repeat without letting signal become noise.",
+            title: "Shimmer",
+            subtitle: "Subtle signal matters before it becomes obvious.",
+            body: "Choose a label. The Shimmer and Lattice context opens only when requested.",
+            nodeSubtitle: "SHIMMER reduces distortion so humans can decide without being dragged by noise.",
             center: ["Shimmer", "Signal"],
+            concept: "Attention is a resource; distortion is a leak.",
+            build: "Define the loop and where receipts live.",
+            roadmap: "Attach outputs to Gauges for signals and Laws for bounds.",
             steps: [
-              ["S", "Screen", "Decide what enters at all.", "Screen incoming signal before it drags the room.", "Define the intake gate, threshold, and receipt location before processing."],
-              ["H", "Highlight", "Show deltas, not opinions.", "Highlight what changed without pretending the interpretation is already settled.", "Compare current state to baseline and emit the smallest visible delta."],
-              ["I", "Inspect", "Pick the evidence boundary before claiming.", "Inspect the signal where it actually lives before expanding the story.", "Name the source, selector, owner, and failure boundary."],
-              ["M", "Measure", "Turn observation into a repeatable number.", "Measure enough to prevent mood from masquerading as proof.", "Convert observation into a metric, status, or reproducible receipt."],
-              ["M", "Mitigate", "Reduce harm before you solve.", "Mitigate distortion while the full answer is still forming.", "Lower risk, contain spillover, and preserve rollback before deeper work."],
-              ["E", "Explain", "Translate flags into plain causes.", "Explain what is happening without drowning the visitor in machinery.", "Map signal, source, cause, and next action in plain language."],
-              ["R", "Repeat", "Confirm stabilization over time.", "Repeat the read until the signal stops drifting.", "Recheck after change, record the result, and keep the return path open."]
+              ["S", "Screen", "Enter", "Decide what enters at all.", "Screen incoming signal before it drags the room.", "Define the intake gate, threshold, and receipt location before processing."],
+              ["H", "Highlight", "Delta", "Show deltas, not opinions.", "Highlight what changed without pretending the interpretation is already settled.", "Compare current state to baseline and emit the smallest visible delta."],
+              ["I", "Inspect", "Evidence", "Pick the evidence boundary before claiming.", "Inspect the signal where it actually lives before expanding the story.", "Name the source, selector, owner, and failure boundary."],
+              ["M", "Measure", "Number", "Turn observation into a repeatable number.", "Measure enough to prevent mood from masquerading as proof.", "Convert observation into a metric, status, or reproducible receipt."],
+              ["M", "Mitigate", "Risk", "Reduce harm before you solve.", "Mitigate distortion while the full answer is still forming.", "Lower risk, contain spillover, and preserve rollback before deeper work."],
+              ["E", "Explain", "Plain", "Translate flags into plain causes.", "Explain what is happening without drowning the visitor in machinery.", "Map signal, source, cause, and next action in plain language."],
+              ["R", "Repeat", "Stabilize", "Confirm stabilization over time.", "Repeat the read until the signal stops drifting.", "Recheck after change, record the result, and keep the return path open."]
             ]
           },
           lattice: {
-            title: "Structure matters before scale becomes believable.",
-            quote: "Lattice keeps signal from becoming a pile. It gives the room positions, neighbors, edges, and return paths.",
-            stage: "LATTICE opens only when requested.",
-            subtitle: "Locate, Anchor, Traverse, Test, Integrate, Check, and Exit without turning structure into decoration.",
+            title: "Lattice",
+            subtitle: "Structure matters before scale becomes believable.",
+            body: "Choose a label. The Lattice context opens only when requested.",
+            nodeSubtitle: "LATTICE gives signal positions, neighbors, edges, and return paths.",
             center: ["Lattice", "Grid"],
+            concept: "Structure is the difference between signal and pile.",
+            build: "Define the node, edge, route, and receipt surface.",
+            roadmap: "Attach outputs to Laws for boundaries and Gauges for checks.",
             steps: [
-              ["L", "Locate", "Name where the signal lives.", "Locate the signal in the correct chamber before expanding it.", "Bind route, parent, file, selector, and ownership surface."],
-              ["A", "Anchor", "Hold the baseline before movement.", "Anchor the current accepted state so progress does not erase proof.", "Record baseline, active contract, and no-touch boundaries."],
-              ["T", "Traverse", "Move through the path in order.", "Traverse the lane without jumping across rooms.", "Walk source, route, surface, proof, and return in sequence."],
-              ["T", "Test", "Stress the read before claiming.", "Test the signal against obvious drift and false positives.", "Check selectors, links, receipts, stale language, and ownership."],
-              ["I", "Integrate", "Connect without collapsing roles.", "Integrate the result into the estate without making every room do the same job.", "Route links, labels, and contracts without mutating unrelated systems."],
-              ["C", "Check", "Verify the receipt after motion.", "Check that the result still says what changed and what stayed untouched.", "Confirm no render, runtime, instrument, or Gauges mutation occurred."],
-              ["E", "Exit", "Leave a return path.", "Exit with the route still attached to Manor, Laws, Frontier, and Gauges.", "Expose backlink, status label, and next safe movement."]
+              ["L", "Locate", "Place", "Name where the signal lives.", "Locate the signal in the correct chamber before expanding it.", "Bind route, parent, file, selector, and ownership surface."],
+              ["A", "Anchor", "Baseline", "Hold the baseline before movement.", "Anchor the current accepted state so progress does not erase proof.", "Record baseline, active contract, and no-touch boundaries."],
+              ["T", "Traverse", "Path", "Move through the path in order.", "Traverse the lane without jumping across rooms.", "Walk source, route, surface, proof, and return in sequence."],
+              ["T", "Test", "Pressure", "Stress the read before claiming.", "Test the signal against obvious drift and false positives.", "Check selectors, links, receipts, stale language, and ownership."],
+              ["I", "Integrate", "Fit", "Connect without collapsing roles.", "Integrate the result into the estate without making every room do the same job.", "Route links, labels, and contracts without mutating unrelated systems."],
+              ["C", "Check", "Receipt", "Verify the receipt after motion.", "Check that the result still says what changed and what stayed untouched.", "Confirm no render, runtime, instrument, or Gauges mutation occurred."],
+              ["E", "Exit", "Return", "Leave a return path.", "Exit with the route still attached to Manor, Laws, Frontier, and Gauges.", "Expose backlink, status label, and next safe movement."]
             ]
           }
         },
         zh: {
           shimmer: {
-            title: "细微信号在明显之前就很重要。",
-            quote: "Shimmer 减少失真，让人可以判断，而不是被噪音拖走。",
-            stage: "SHIMMER 只在需要时展开。",
-            subtitle: "筛选、突出、检查、测量、缓解、解释、重复，让信号不变成噪音。",
+            title: "Shimmer",
+            subtitle: "细微信号在明显之前就很重要。",
+            body: "选择一个标签。Shimmer 和 Lattice 只在需要时展开。",
+            nodeSubtitle: "SHIMMER 减少失真，让人可以判断，而不是被噪音拖走。",
             center: ["Shimmer", "信号"],
+            concept: "注意力是一种资源；失真是一种泄漏。",
+            build: "定义循环和回执位置。",
+            roadmap: "把输出连接到 Gauges 做信号检查，连接到 Laws 做边界检查。",
             steps: [
-              ["S", "筛选", "先决定什么可以进入。", "在信号拖动房间之前先筛选。", "定义入口、阈值和回执位置。"],
-              ["H", "突出", "显示变化，不显示意见。", "突出已经改变的内容，不急着解释。", "对比基线并输出最小可见差异。"],
-              ["I", "检查", "声明前先确定证据边界。", "在信号真实所在处检查它。", "命名来源、选择器、所有者和失败边界。"],
-              ["M", "测量", "把观察变成可重复数字。", "测量足够多，避免情绪冒充证明。", "把观察转成指标、状态或回执。"],
-              ["M", "缓解", "先降低伤害，再求完整答案。", "答案形成前先降低失真。", "降低风险，控制外溢，保留回滚。"],
-              ["E", "解释", "把标记翻译成清楚原因。", "解释发生什么，不淹没用户。", "映射信号、来源、原因和下一步。"],
-              ["R", "重复", "确认稳定是否持续。", "重复读取，直到信号停止漂移。", "变更后复查，记录结果，保留返回路径。"]
+              ["S", "筛选", "进入", "先决定什么可以进入。", "在信号拖动房间之前先筛选。", "定义入口、阈值和回执位置。"],
+              ["H", "突出", "变化", "显示变化，不显示意见。", "突出已经改变的内容，不急着解释。", "对比基线并输出最小可见差异。"],
+              ["I", "检查", "证据", "声明前先确定证据边界。", "在信号真实所在处检查它。", "命名来源、选择器、所有者和失败边界。"],
+              ["M", "测量", "数字", "把观察变成可重复数字。", "测量足够多，避免情绪冒充证明。", "把观察转成指标、状态或回执。"],
+              ["M", "缓解", "风险", "先降低伤害，再求完整答案。", "答案形成前先降低失真。", "降低风险，控制外溢，保留回滚。"],
+              ["E", "解释", "清楚", "把标记翻译成清楚原因。", "解释发生什么，不淹没用户。", "映射信号、来源、原因和下一步。"],
+              ["R", "重复", "稳定", "确认稳定是否持续。", "重复读取，直到信号停止漂移。", "变更后复查，记录结果，保留返回路径。"]
             ]
           },
           lattice: {
-            title: "结构先于规模的可信度。",
-            quote: "Lattice 防止信号变成一堆散点，它给房间位置、邻接、边界和返回路径。",
-            stage: "LATTICE 只在需要时展开。",
-            subtitle: "定位、锚定、遍历、测试、整合、检查、退出，不让结构变成装饰。",
+            title: "Lattice",
+            subtitle: "结构先于规模的可信度。",
+            body: "选择一个标签。Lattice 只在需要时展开。",
+            nodeSubtitle: "LATTICE 给信号位置、邻接、边界和返回路径。",
             center: ["Lattice", "网格"],
+            concept: "结构决定信号不是散点。",
+            build: "定义节点、边、路线和回执表面。",
+            roadmap: "把输出连接到 Laws 做边界，连接到 Gauges 做检查。",
             steps: [
-              ["L", "定位", "命名信号所在位置。", "扩展前先把信号放进正确房间。", "绑定路线、父级、文件、选择器和所有权。"],
-              ["A", "锚定", "移动前保留基线。", "锚定当前接受状态，避免进展擦掉证明。", "记录基线、合约和不可触碰边界。"],
-              ["T", "遍历", "按顺序走路径。", "不跨房间跳跃。", "按源、路由、表面、证明、返回行走。"],
-              ["T", "测试", "声明前先施压。", "测试漂移和假阳性。", "检查选择器、链接、回执、旧语言和所有权。"],
-              ["I", "整合", "连接但不合并角色。", "让结果进入庄园，但不让所有房间做同一件事。", "路由链接、标签和合约，不改无关系统。"],
-              ["C", "检查", "运动后核对回执。", "确认结果仍说明改变和未改变。", "确认未改渲染、运行时、仪表或 Gauges。"],
-              ["E", "退出", "留下返回路径。", "退出时仍连接 Manor、Laws、Frontier 和 Gauges。", "暴露返回链接、状态标签和下一安全动作。"]
+              ["L", "定位", "位置", "命名信号所在位置。", "扩展前先把信号放进正确房间。", "绑定路线、父级、文件、选择器和所有权。"],
+              ["A", "锚定", "基线", "移动前保留基线。", "锚定当前接受状态，避免进展擦掉证明。", "记录基线、合约和不可触碰边界。"],
+              ["T", "遍历", "路径", "按顺序走路径。", "不跨房间跳跃。", "按源、路由、表面、证明、返回行走。"],
+              ["T", "测试", "压力", "声明前先施压。", "测试漂移和假阳性。", "检查选择器、链接、回执、旧语言和所有权。"],
+              ["I", "整合", "匹配", "连接但不合并角色。", "让结果进入庄园，但不让所有房间做同一件事。", "路由链接、标签和合约，不改无关系统。"],
+              ["C", "检查", "回执", "运动后核对回执。", "确认结果仍说明改变和未改变。", "确认未改渲染、运行时、仪表或 Gauges。"],
+              ["E", "退出", "返回", "留下返回路径。", "退出时仍连接 Manor、Laws、Frontier 和 Gauges。", "暴露返回链接、状态标签和下一安全动作。"]
             ]
           }
         },
         es: {
           shimmer: {
-            title: "La señal sutil importa antes de volverse obvia.",
-            quote: "Shimmer reduce la distorsión para que las personas decidan sin ser arrastradas por ruido.",
-            stage: "SHIMMER se abre solo cuando se pide.",
-            subtitle: "Filtrar, resaltar, inspeccionar, medir, mitigar, explicar y repetir sin dejar que la señal se vuelva ruido.",
+            title: "Shimmer",
+            subtitle: "La señal sutil importa antes de volverse obvia.",
+            body: "Elige una etiqueta. Shimmer y Lattice se abren solo cuando se solicita.",
+            nodeSubtitle: "SHIMMER reduce la distorsión para que las personas decidan sin ser arrastradas por ruido.",
             center: ["Shimmer", "Señal"],
+            concept: "La atención es un recurso; la distorsión es una fuga.",
+            build: "Definir el ciclo y dónde viven los recibos.",
+            roadmap: "Conectar salidas a Gauges para señales y a Laws para límites.",
             steps: [
-              ["S", "Filtrar", "Decidir qué entra.", "Filtrar la señal antes de que arrastre la sala.", "Definir entrada, umbral y recibo antes de procesar."],
-              ["H", "Resaltar", "Mostrar cambios, no opiniones.", "Resaltar lo que cambió sin cerrar la interpretación.", "Comparar con la línea base y emitir la diferencia mínima."],
-              ["I", "Inspeccionar", "Elegir el límite de evidencia antes de afirmar.", "Inspeccionar la señal donde realmente vive.", "Nombrar fuente, selector, dueño y límite de falla."],
-              ["M", "Medir", "Convertir observación en número repetible.", "Medir para que el ánimo no se disfrace de prueba.", "Convertir observación en métrica, estado o recibo."],
-              ["M", "Mitigar", "Reducir daño antes de resolver.", "Mitigar distorsión mientras se forma la respuesta.", "Bajar riesgo, contener derrame y preservar reversión."],
-              ["E", "Explicar", "Traducir señales en causas claras.", "Explicar sin ahogar al visitante en maquinaria.", "Mapear señal, fuente, causa y siguiente acción."],
-              ["R", "Repetir", "Confirmar estabilización en el tiempo.", "Repetir lectura hasta que la señal deje de derivar.", "Revisar después del cambio, registrar y mantener retorno."]
+              ["S", "Filtrar", "Entrada", "Decidir qué entra.", "Filtrar la señal antes de que arrastre la sala.", "Definir entrada, umbral y recibo antes de procesar."],
+              ["H", "Resaltar", "Cambio", "Mostrar cambios, no opiniones.", "Resaltar lo que cambió sin cerrar la interpretación.", "Comparar con la línea base y emitir la diferencia mínima."],
+              ["I", "Inspeccionar", "Evidencia", "Elegir el límite de evidencia antes de afirmar.", "Inspeccionar la señal donde realmente vive.", "Nombrar fuente, selector, dueño y límite de falla."],
+              ["M", "Medir", "Número", "Convertir observación en número repetible.", "Medir para que el ánimo no se disfrace de prueba.", "Convertir observación en métrica, estado o recibo."],
+              ["M", "Mitigar", "Riesgo", "Reducir daño antes de resolver.", "Mitigar distorsión mientras se forma la respuesta.", "Bajar riesgo, contener derrame y preservar reversión."],
+              ["E", "Explicar", "Claro", "Traducir señales en causas claras.", "Explicar sin ahogar al visitante en maquinaria.", "Mapear señal, fuente, causa y siguiente acción."],
+              ["R", "Repetir", "Estabilizar", "Confirmar estabilización en el tiempo.", "Repetir lectura hasta que la señal deje de derivar.", "Revisar después del cambio, registrar y mantener retorno."]
             ]
           },
           lattice: {
-            title: "La estructura importa antes de que la escala sea creíble.",
-            quote: "Lattice evita que la señal se vuelva montón. Da posiciones, vecinos, bordes y retorno.",
-            stage: "LATTICE se abre solo cuando se pide.",
-            subtitle: "Localizar, anclar, atravesar, probar, integrar, revisar y salir sin convertir estructura en decoración.",
+            title: "Lattice",
+            subtitle: "La estructura importa antes de que la escala sea creíble.",
+            body: "Elige una etiqueta. Lattice se abre solo cuando se solicita.",
+            nodeSubtitle: "LATTICE da posiciones, vecinos, bordes y retorno.",
             center: ["Lattice", "Red"],
+            concept: "La estructura diferencia señal de montón.",
+            build: "Definir nodo, borde, ruta y superficie de recibo.",
+            roadmap: "Conectar salidas a Laws para límites y Gauges para revisión.",
             steps: [
-              ["L", "Localizar", "Nombrar dónde vive la señal.", "Localizar la señal en la cámara correcta antes de expandir.", "Vincular ruta, padre, archivo, selector y dueño."],
-              ["A", "Anclar", "Sostener la línea base antes del movimiento.", "Anclar el estado aceptado para que el progreso no borre prueba.", "Registrar baseline, contrato y límites no tocables."],
-              ["T", "Atravesar", "Moverse por el camino en orden.", "Atravesar sin saltar cámaras.", "Caminar fuente, ruta, superficie, prueba y retorno."],
-              ["T", "Probar", "Presionar la lectura antes de afirmar.", "Probar deriva y falsos positivos.", "Revisar selectores, enlaces, recibos, lenguaje viejo y dueño."],
-              ["I", "Integrar", "Conectar sin colapsar roles.", "Integrar sin hacer que toda sala tenga el mismo trabajo.", "Rutar enlaces, etiquetas y contratos sin tocar sistemas ajenos."],
-              ["C", "Comprobar", "Verificar recibo tras el movimiento.", "Comprobar qué cambió y qué no cambió.", "Confirmar no mutar render, runtime, instrumentos ni Gauges."],
-              ["E", "Salir", "Dejar una ruta de retorno.", "Salir conectado a Manor, Laws, Frontier y Gauges.", "Mostrar backlink, estado y siguiente movimiento seguro."]
+              ["L", "Localizar", "Lugar", "Nombrar dónde vive la señal.", "Localizar la señal en la cámara correcta antes de expandir.", "Vincular ruta, padre, archivo, selector y dueño."],
+              ["A", "Anclar", "Base", "Sostener la línea base antes del movimiento.", "Anclar el estado aceptado para que el progreso no borre prueba.", "Registrar baseline, contrato y límites no tocables."],
+              ["T", "Atravesar", "Ruta", "Moverse por el camino en orden.", "Atravesar sin saltar cámaras.", "Caminar fuente, ruta, superficie, prueba y retorno."],
+              ["T", "Probar", "Presión", "Presionar la lectura antes de afirmar.", "Probar deriva y falsos positivos.", "Revisar selectores, enlaces, recibos, lenguaje viejo y dueño."],
+              ["I", "Integrar", "Encajar", "Conectar sin colapsar roles.", "Integrar sin hacer que toda sala tenga el mismo trabajo.", "Rutar enlaces, etiquetas y contratos sin tocar sistemas ajenos."],
+              ["C", "Comprobar", "Recibo", "Verificar recibo tras el movimiento.", "Comprobar qué cambió y qué no cambió.", "Confirmar no mutar render, runtime, instrumentos ni Gauges."],
+              ["E", "Salir", "Retorno", "Dejar una ruta de retorno.", "Salir conectado a Manor, Laws, Frontier y Gauges.", "Mostrar backlink, estado y siguiente movimiento seguro."]
             ]
           }
         }
       };
 
-      const params = new URLSearchParams(window.location.search);
-      state.lang = normalizeLang(params.get("gd_lang") || "en");
-      state.lens = normalizeLens(params.get("lane") || "platform");
-      state.mode = normalizeMode(params.get("mode") || "shimmer");
+      const stateFromUrl = new URLSearchParams(window.location.search);
+      state.lang = normalizeLang(stateFromUrl.get("gd_lang") || "en");
+      state.lens = normalizeLens(stateFromUrl.get("lane") || "platform");
+      state.mode = normalizeMode(stateFromUrl.get("mode") || "shimmer");
 
-      const buttons = Array.from(document.querySelectorAll(".signal-diamond"));
       const controls = Array.from(document.querySelectorAll(".control-button"));
+      const nodeButtons = Array.from(document.querySelectorAll(".node-point"));
       const stateLinks = Array.from(document.querySelectorAll(".state-link"));
 
-      const heroTitle = document.getElementById("page-title");
-      const heroQuote = document.getElementById("heroQuote");
-      const stageTitle = document.getElementById("signal-title");
-      const signalSubtitle = document.getElementById("signalSubtitle");
+      const pageTitle = document.getElementById("page-title");
+      const heroSubtitle = document.getElementById("heroSubtitle");
+      const heroBody = document.getElementById("heroBody");
+      const nodeSubtitle = document.getElementById("nodeSubtitle");
       const centerTitle = document.getElementById("centerTitle");
       const centerSubtitle = document.getElementById("centerSubtitle");
       const expandedKicker = document.getElementById("expandedKicker");
@@ -1039,6 +1129,9 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
       const expandedSummary = document.getElementById("expandedSummary");
       const expandedBody = document.getElementById("expandedBody");
       const labelGrid = document.getElementById("labelGrid");
+      const modeStatus = document.getElementById("modeStatus");
+      const langStatus = document.getElementById("langStatus");
+      const lensStatus = document.getElementById("lensStatus");
 
       function normalizeLang(value) {
         if (value === "zh" || value === "中文") return "zh";
@@ -1054,6 +1147,10 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         return value === "lattice" ? "lattice" : "shimmer";
       }
 
+      function currentPack() {
+        return text[state.lang][state.mode] || text.en.shimmer;
+      }
+
       function setPressed() {
         controls.forEach((button) => {
           const control = button.dataset.control;
@@ -1062,60 +1159,76 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
             (control === "mode" && value === state.mode) ||
             (control === "lang" && value === state.lang) ||
             (control === "lens" && value === state.lens);
+
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
 
-        buttons.forEach((button, index) => {
+        nodeButtons.forEach((button, index) => {
           button.setAttribute("aria-expanded", index === state.step ? "true" : "false");
         });
       }
 
-      function getCurrentPack() {
-        return text[state.lang][state.mode] || text.en.shimmer;
-      }
-
       function render() {
-        const pack = getCurrentPack();
+        const pack = currentPack();
         const step = pack.steps[state.step] || pack.steps[0];
 
         document.documentElement.lang = state.lang === "zh" ? "zh-Hans" : state.lang;
         document.documentElement.dataset.mode = state.mode;
         document.documentElement.dataset.visibleLens = state.lens;
 
-        heroTitle.textContent = pack.title;
-        heroQuote.textContent = pack.quote;
-        stageTitle.textContent = pack.stage;
-        signalSubtitle.textContent = pack.subtitle;
+        pageTitle.textContent = pack.title;
+        heroSubtitle.textContent = pack.subtitle;
+        heroBody.textContent = pack.body;
+        nodeSubtitle.textContent = pack.nodeSubtitle;
         centerTitle.textContent = pack.center[0];
         centerSubtitle.textContent = pack.center[1];
 
         pack.steps.forEach((item, index) => {
-          document.getElementById("d" + index).textContent = item[0];
-          document.getElementById("s" + index).textContent = item[1];
+          document.getElementById("n" + index).textContent = item[1];
+          document.getElementById("ns" + index).textContent = item[2];
         });
 
-        expandedKicker.textContent = `${state.mode.toUpperCase()} · ${step[0]}`;
-        expandedTitle.textContent = step[1];
-        expandedSummary.textContent = step[2];
+        expandedKicker.textContent = `${state.mode.toUpperCase()} · ${step[0]} — ${step[1]}`;
+        expandedTitle.textContent = step[3];
+        expandedSummary.textContent = pack.concept;
         expandedBody.textContent =
           state.lens === "engineering"
-            ? `Engineering lens: ${step[4]}`
-            : `Platform lens: ${step[3]}`;
+            ? `Engineering lens: ${step[5]}`
+            : `Platform lens: ${step[4]}`;
 
         labelGrid.innerHTML = "";
+
+        const overview = document.createElement("article");
+        overview.className = "label-card";
+        overview.innerHTML = `<div><strong>${state.mode.toUpperCase()} Overview</strong><span>${pack.steps.map((item) => item[1]).join(" → ")}.</span></div><div class="plus">+</div>`;
+        labelGrid.append(overview);
+
+        const concept = document.createElement("article");
+        concept.className = "label-card";
+        concept.innerHTML = `<div><strong>Concept</strong><span>${pack.concept}</span></div><div class="plus">+</div>`;
+        labelGrid.append(concept);
+
+        const build = document.createElement("article");
+        build.className = "label-card";
+        build.innerHTML = `<div><strong>Build Now</strong><span>${pack.build}</span></div><div class="plus">+</div>`;
+        labelGrid.append(build);
+
+        const roadmap = document.createElement("article");
+        roadmap.className = "label-card";
+        roadmap.innerHTML = `<div><strong>Roadmap</strong><span>${pack.roadmap}</span></div><div class="plus">+</div>`;
+        labelGrid.append(roadmap);
+
         pack.steps.forEach((item) => {
           const card = document.createElement("article");
           card.className = "label-card";
-
-          const strong = document.createElement("strong");
-          strong.textContent = `${item[0]} — ${item[1]}`;
-
-          const span = document.createElement("span");
-          span.textContent = state.lens === "engineering" ? item[4] : item[3];
-
-          card.append(strong, span);
+          const lensText = state.lens === "engineering" ? item[5] : item[4];
+          card.innerHTML = `<div><strong>${item[0]} — ${item[1]}</strong><span>${item[3]} ${lensText}</span></div><div class="plus">+</div>`;
           labelGrid.append(card);
         });
+
+        modeStatus.textContent = `Mode: ${state.mode.toUpperCase()}`;
+        langStatus.textContent = `Lang: ${state.lang.toUpperCase()}`;
+        lensStatus.textContent = `Current lens: ${state.lens.toUpperCase()}`;
 
         setPressed();
         syncUrl();
@@ -1130,12 +1243,12 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         next.set("gd_depth", next.get("gd_depth") || "explore");
         next.set("lane", state.lens);
         next.set("mode", state.mode);
-        const newUrl = `${window.location.pathname}?${next.toString()}`;
-        window.history.replaceState(null, "", newUrl);
+        window.history.replaceState(null, "", `${window.location.pathname}?${next.toString()}`);
       }
 
       function syncLinks() {
         const current = new URLSearchParams(window.location.search);
+
         stateLinks.forEach((link) => {
           const url = new URL(link.getAttribute("href"), window.location.origin);
           current.forEach((value, key) => url.searchParams.set(key, value));
@@ -1160,7 +1273,7 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         });
       });
 
-      buttons.forEach((button) => {
+      nodeButtons.forEach((button) => {
         button.addEventListener("click", () => {
           state.step = Number(button.dataset.step || 0);
           render();
@@ -1173,9 +1286,9 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      const field = document.querySelector(".signal-field");
+      const field = document.querySelector(".universal-node");
 
-      if (!field || !buttons.length || reduceMotion) return;
+      if (!field || !nodeButtons.length || reduceMotion) return;
 
       let start = 0;
       let raf = 0;
@@ -1184,28 +1297,20 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         if (!start) start = now;
 
         const rect = field.getBoundingClientRect();
-        const t = ((now - start) / 1000) * 0.52;
-        const ampX = Math.min(18, Math.max(8, rect.width * 0.022));
-        const ampY = Math.min(13, Math.max(6, rect.height * 0.015));
+        const t = ((now - start) / 1000) * 0.42;
+        const ampX = Math.min(16, Math.max(7, rect.width * 0.02));
+        const ampY = Math.min(12, Math.max(5, rect.height * 0.014));
 
-        buttons.forEach((node, index) => {
+        nodeButtons.forEach((node, index) => {
           const phase = Number(node.dataset.phase || index * 0.897597);
           const loop = node.dataset.loop || "a";
           const isOpen = node.getAttribute("aria-expanded") === "true";
           const p = t + phase;
-          const localAmpX = isOpen ? ampX * 0.58 : ampX;
-          const localAmpY = isOpen ? ampY * 0.58 : ampY;
+          const localAmpX = isOpen ? ampX * 0.46 : ampX;
+          const localAmpY = isOpen ? ampY * 0.46 : ampY;
 
-          let dx;
-          let dy;
-
-          if (loop === "a") {
-            dx = Math.sin(p) * localAmpX;
-            dy = Math.sin(p * 2) * localAmpY;
-          } else {
-            dx = Math.sin(p * 2) * localAmpX;
-            dy = Math.sin(p) * localAmpY;
-          }
+          const dx = loop === "a" ? Math.sin(p) * localAmpX : Math.sin(p * 2) * localAmpX;
+          const dy = loop === "a" ? Math.sin(p * 2) * localAmpY : Math.sin(p) * localAmpY;
 
           node.style.setProperty("--dx", dx.toFixed(2) + "px");
           node.style.setProperty("--dy", dy.toFixed(2) + "px");

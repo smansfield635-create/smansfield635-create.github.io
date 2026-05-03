@@ -1,38 +1,922 @@
 <!doctype html>
-<html lang="en" data-page-generation="g1-optimal-russian-doll">
+<!-- TNT — /explore/frontier/vision/index.html
+     STATUS: FRONTIER VISION · G1 OPTIMAL · DUAL HORIZON HOST SHELL
+     PURPOSE:
+       - Keep Vision as the single room
+       - Merge former remote-read logic into Vision as Distant Future
+       - Add Not-So-Distant Future as the actionable/near horizon
+       - Preserve split structure/runtime architecture
+       - Keep /explore/frontier/vision/index.js as runtime owner
+       - Preserve cosmic host shell
+       - Correct white-screen host background failure
+       - Preserve canonical carry: gd_lang/gd_style/gd_time/gd_depth only
+       - Lane remains URL-only
+-->
+
+<html
+  lang="en"
+  data-route="/explore/frontier/vision/"
+  data-page="frontier-vision"
+  data-version="G1-OPTIMAL"
+  data-contract="VISION_G1_OPTIMAL_DUAL_HORIZON_HOST_TNT_v1"
+  data-status="active"
+  data-parent="/explore/frontier/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-expression="dual-horizon-vision-host-with-russian-doll-underlay"
+  data-runtime-owner="/explore/frontier/vision/index.js"
+  data-heavy-runtime-loaded="vision-host-only"
+  data-visual-pass-claimed="false"
+>
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Vision · Frontier · Diamond Gate Bridge</title>
-<meta name="description" content="Vision Frontier page restored to optimal G1 Russian Doll baseline with trilingual context, platform/engineering lens, and preserved state carry."/>
-<style>
-:root{--panel:rgba(7,14,28,.92);--panel2:rgba(10,20,42,.96);--line:rgba(170,198,255,.18);--line2:rgba(142,197,255,.34);--text:#eef4ff;--muted:#aab8d8;--gold:#efd29a;--accent:#8ec5ff;--shadow:0 24px 80px rgba(0,0,0,.50);--max:1180px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% 4%,rgba(142,197,255,.18),transparent 22%),radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.20;background:linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%)}a,button{color:inherit;font:inherit}a{text-decoration:none}button{cursor:pointer}.page{width:min(var(--max),calc(100vw - 20px));margin:0 auto;padding:14px 0 30px;position:relative;z-index:1}.topbar,.hero,.panel,.label-card,.route-card,.status-strip,.control-card{border:1px solid var(--line);background:radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:var(--shadow)}.topbar{margin-bottom:14px;padding:14px;border-radius:28px;display:grid;gap:14px}.brand{display:flex;align-items:center;gap:12px}.mark{width:50px;height:50px;border-radius:17px;display:grid;place-items:center;border:1px solid var(--line2);background:radial-gradient(circle at 50% 28%,rgba(142,197,255,.34),transparent 44%),linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));font-weight:950;letter-spacing:.08em}.kicker{display:block;color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;font-weight:850}.title{display:block;color:#fff;font-weight:900;font-size:1.08rem;line-height:1.05}.nav,.route-grid,.label-grid,.control-grid{display:grid;gap:10px}.nav,.route-grid{perspective:1000px;align-items:center;justify-items:center}.nav a,.route-card{position:relative;isolation:isolate;width:min(100%,94px);aspect-ratio:1/1;display:grid;place-items:center;text-align:center;color:#e7eeff;font-size:.70rem;line-height:1.02;font-weight:900;transform-style:preserve-3d;transition:transform 420ms ease,filter 420ms ease}.route-card{width:min(100%,150px);font-size:.74rem}.nav a:before,.route-card:before{content:"";position:absolute;inset:10%;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);border:1px solid rgba(170,198,255,.24);background:radial-gradient(circle at 50% 50%,rgba(142,197,255,.27),transparent 34%),linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));box-shadow:0 0 30px rgba(142,197,255,.18),inset 0 0 26px rgba(255,255,255,.035);z-index:-1;animation:diamondFloat 7s ease-in-out infinite,diamondPulse 5.8s ease-in-out infinite}.nav a:after,.route-card:after{content:"";position:absolute;inset:25%;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%);opacity:.72;z-index:-1;animation:innerSpin 18s linear infinite}.featured{color:#fff8ea!important}.featured:before{border-color:rgba(239,210,154,.46)!important;background:radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92))!important}.nav a:hover,.route-card:hover,.nav a:focus-visible,.route-card:focus-visible{transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);filter:brightness(1.16);outline:none}.hero{border-radius:34px;padding:clamp(24px,5vw,52px);margin-bottom:14px;min-height:clamp(360px,44vw,540px);display:grid;align-items:center;overflow:hidden;position:relative;isolation:isolate}.hero:before{content:"";position:absolute;width:min(780px,92vw);height:min(780px,92vw);left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%);filter:blur(5px);z-index:-3}.hero-symbol{position:absolute;right:clamp(20px,6vw,90px);top:50%;width:min(270px,32vw);height:min(270px,32vw);transform:translateY(-50%) rotate(45deg);border:1px solid rgba(142,197,255,.34);border-radius:38px;background:radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 38%),linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));opacity:.70;z-index:-1;animation:slowTurn 34s linear infinite}.hero-symbol:after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);background:var(--accent);box-shadow:0 0 22px rgba(142,197,255,.68)}.hero-copy{display:grid;gap:14px;max-width:820px;z-index:2}.pill{display:inline-flex;width:fit-content;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.70rem;font-weight:850}.pill:before{content:"";width:9px;height:9px;border-radius:2px;transform:rotate(45deg);background:var(--accent)}h1{margin:0;color:#fff;font-size:clamp(3.3rem,11vw,7.4rem);line-height:.84;letter-spacing:-.085em}h2{margin:0;color:var(--gold);font-size:clamp(1.55rem,5vw,3rem);line-height:1;letter-spacing:-.045em}p{margin:0;color:var(--muted);line-height:1.58}.panel{border-radius:30px;padding:clamp(16px,2.6vw,26px);margin-bottom:14px;display:grid;gap:16px}.panel-head{display:grid;gap:8px}.control-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.control-card{border-radius:20px;padding:14px;display:grid;gap:10px}.control-title{color:#fff;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem;font-weight:950}.seg{display:flex;flex-wrap:wrap;gap:8px}.seg button{appearance:none;border:1px solid rgba(170,198,255,.16);border-radius:999px;padding:9px 11px;background:rgba(0,0,0,.18);color:#cdd9f5;font-weight:900;font-size:.78rem}.seg button[aria-pressed=true]{color:#fff8ea;border-color:rgba(239,210,154,.42);background:radial-gradient(circle at 50% 120%,rgba(239,210,154,.20),transparent 62%),rgba(239,210,154,.08)}.state-line{color:#91a6cf;font-size:.80rem}.label-card{border-radius:18px;overflow:hidden}summary{cursor:pointer;list-style:none;min-height:74px;display:grid;align-content:center;gap:5px;padding:14px;position:relative;color:#fff;font-weight:900;letter-spacing:-.02em}summary::-webkit-details-marker{display:none}summary:after{content:"+";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:1px solid rgba(142,197,255,.28);display:grid;place-items:center;color:var(--accent);font-weight:900}details[open] summary:after{content:"–"}summary small,.route-card small{display:block;color:#91a6cf;text-transform:uppercase;letter-spacing:.12em;font-size:.54rem;font-weight:850}.route-card small,.route-card strong{position:relative;z-index:3;max-width:76%;margin:auto;text-align:center;text-wrap:balance}.route-card strong{display:block;color:#fff;font-size:.72rem;line-height:1.06;margin-top:4px}.label-body{padding:0 14px 14px;color:var(--muted);font-size:.92rem;line-height:1.48;display:grid;gap:10px}.sub-bubble{border:1px solid rgba(170,198,255,.14);border-radius:16px;padding:12px;background:rgba(255,255,255,.025);display:grid;gap:6px}.sub-bubble strong{color:#fff;font-size:.88rem}.sub-bubble span{color:#aab8d8;line-height:1.55}.status-strip{padding:16px;border-radius:20px}.status-strip code{white-space:pre-wrap;word-break:break-word;color:#dfe8ff;font-size:.84rem;line-height:1.55}.footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding:14px 4px 0;color:#9db0d4;font-size:.86rem}.footer a{color:#d6e2ff}@keyframes diamondFloat{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(-4px) rotate(0deg) scale(1.025)}}@keyframes diamondPulse{0%,100%{opacity:.82;filter:brightness(1)}50%{opacity:1;filter:brightness(1.18)}}@keyframes innerSpin{0%{transform:rotate(0deg) scale(.96)}100%{transform:rotate(360deg) scale(.96)}}@keyframes slowTurn{0%{transform:translateY(-50%) rotate(45deg)}100%{transform:translateY(-50%) rotate(405deg)}}@media(min-width:820px){.topbar{grid-template-columns:1fr auto;align-items:center}.nav{grid-template-columns:repeat(8,minmax(80px,94px));justify-content:end}.label-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-grid{grid-template-columns:repeat(4,minmax(132px,1fr))}}@media(max-width:760px){.control-grid{grid-template-columns:1fr}}@media(max-width:640px){.page{width:min(100vw - 12px,var(--max));padding-top:10px}.topbar,.hero,.panel{border-radius:24px}.topbar{padding:12px}.mark{width:44px;height:44px;border-radius:14px}.nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.nav a{width:min(100%,70px);font-size:.55rem}.hero{min-height:390px;padding:22px}.hero-symbol{right:18px;top:auto;bottom:18px;width:118px;height:118px;transform:rotate(45deg);opacity:.36}.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-card{width:min(100%,132px)}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Diamond Gate Bridge · Frontier · Vision G1 Optimal</title>
+  <meta name="description" content="Vision G1 Optimal shows the future in two distances: the not-so-distant future that can be planned now, and the distant future that requires confidence labels."/>
+
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+
+  <style>
+    :root{
+      --D0:148px;
+      --D1:108px;
+      --D2:92px;
+      --D3:82px;
+
+      --Z0:38px;
+      --Z1:34px;
+      --Z2:30px;
+      --Z3:28px;
+
+      --padTop:204px;
+
+      --ink:rgba(255,255,255,.96);
+      --mut:rgba(255,255,255,.78);
+
+      --onyx0:rgba(4,6,10,.98);
+      --onyx1:rgba(10,12,18,.94);
+      --onyx2:rgba(18,22,30,.84);
+
+      --crimson:rgba(120,0,22,.42);
+      --festival:rgba(255,43,43,.20);
+      --opalV:rgba(90,40,120,.15);
+
+      --gold:rgba(201,162,74,.58);
+      --goldGlow:rgba(201,162,74,.24);
+      --goldLine:rgba(201,162,74,.18);
+
+      --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+      --shadowC:0 18px 60px rgba(0,0,0,.55);
+    }
+
+    *{box-sizing:border-box}
+    a{color:inherit;text-decoration:none}
+
+    html,
+    body{
+      margin:0;
+      min-height:100%;
+      color:#fff;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(201,162,74,.12), transparent 28rem),
+        radial-gradient(circle at 50% 52%, rgba(40,70,150,.16), transparent 42rem),
+        linear-gradient(180deg,#02040a 0%,#040711 48%,#010208 100%);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow:hidden;
+    }
+
+    body::before,
+    body::after{
+      pointer-events:none !important;
+    }
+
+    .top{
+      position:fixed;
+      top:16px;
+      left:0;
+      right:0;
+      z-index:240;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 16px;
+      pointer-events:none;
+    }
+
+    .top__group{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      white-space:nowrap;
+      pointer-events:auto;
+    }
+
+    .horizonPanel{
+      position:fixed;
+      top:82px;
+      left:50%;
+      z-index:235;
+      width:min(680px,92vw);
+      transform:translateX(-50%);
+      padding:12px;
+      border:1px solid rgba(201,162,74,.20);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 30% 0%, rgba(201,162,74,.14), transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(90,120,255,.10), transparent 58%),
+        rgba(4,7,14,.76);
+      box-shadow:0 22px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(10px);
+    }
+
+    .horizonPanel__title{
+      margin:0 0 8px;
+      color:rgba(255,255,255,.82);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:2.2px;
+      text-transform:uppercase;
+    }
+
+    .horizonTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .horizonBtn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:9px 12px;
+      cursor:pointer;
+      color:rgba(255,255,255,.88);
+      background:rgba(255,255,255,.045);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    .horizonBtn[aria-pressed="true"]{
+      color:#080a10;
+      border-color:rgba(255,228,150,.86);
+      background:linear-gradient(135deg, rgba(255,240,170,.96), rgba(201,162,74,.92));
+    }
+
+    .horizonReadout{
+      display:grid;
+      gap:4px;
+    }
+
+    .horizonReadout strong{
+      color:rgba(255,244,210,.96);
+      font-size:16px;
+      line-height:1.05;
+      letter-spacing:-.02em;
+    }
+
+    .horizonReadout p{
+      margin:0;
+      color:rgba(235,240,255,.78);
+      font-size:13px;
+      line-height:1.42;
+    }
+
+    .stage{
+      position:relative;
+      width:min(980px,95vw);
+      height:min(980px,82vh);
+      margin:var(--padTop) auto 0;
+      pointer-events:none;
+      perspective:1200px;
+      perspective-origin:50% 44%;
+      transform-style:preserve-3d;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,225,150,.10), transparent 19rem),
+        radial-gradient(circle at 50% 50%, rgba(40,80,170,.14), transparent 34rem),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.22), transparent 52rem);
+      border-radius:999px;
+    }
+
+    .stage::before{
+      content:"";
+      position:absolute;
+      inset:8% 10% 14%;
+      z-index:0;
+      pointer-events:none;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 52%, rgba(255,43,43,.07), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.06), transparent 42%),
+        radial-gradient(circle at 50% 50%, rgba(30,60,140,.10), transparent 76%);
+      filter:blur(52px);
+      opacity:.58;
+      animation:stagePulse 10s ease-in-out infinite;
+    }
+
+    .starfield{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .star{
+      position:absolute;
+      border-radius:999px;
+      background:rgba(255,255,255,.82);
+      box-shadow:0 0 6px rgba(255,255,255,.22);
+      animation:starTwinkle linear infinite;
+      will-change:opacity;
+    }
+
+    .coreGlow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:3;
+      width:300px;
+      height:300px;
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,226,150,.48) 0%, rgba(255,198,90,.22) 20%, rgba(255,180,70,.07) 42%, rgba(255,180,70,0) 74%);
+      filter:blur(18px);
+      animation:coreGlowPulse 7.4s ease-in-out infinite;
+    }
+
+    .orbitBand{
+      display:none;
+    }
+
+    .planetNode{
+      --face:var(--D3);
+      --depth:var(--Z3);
+      --round:28px;
+      --shadowY:calc(var(--face) * .48);
+
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:8;
+      width:calc(var(--face) + (var(--depth) * 2));
+      height:calc(var(--face) + (var(--depth) * 2));
+      pointer-events:auto;
+      cursor:pointer;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+      transform:translate(-50%,-50%);
+      transform-style:preserve-3d;
+      filter:drop-shadow(0 16px 36px rgba(0,0,0,.34));
+    }
+
+    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); --round:30px; }
+    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); --round:28px; }
+    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); --round:26px; }
+    .planetNode--core{ --face:var(--D0); --depth:var(--Z0); --round:32px; }
+
+    .planetShadow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:calc(var(--face) * .98);
+      height:calc(var(--face) * .28);
+      pointer-events:none;
+      transform:translate(-50%, var(--shadowY)) rotate(-8deg);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.48) 0%, rgba(0,0,0,.24) 42%, rgba(0,0,0,.08) 72%, rgba(0,0,0,0) 100%);
+      filter:blur(10px);
+      opacity:.84;
+    }
+
+    .planetCube{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      transform-style:preserve-3d;
+      transform:translate(-50%,-50%) rotateZ(45deg) rotateX(58deg) rotateY(-30deg);
+      transition:filter .18s ease;
+      will-change:transform;
+    }
+
+    .planetNode:hover .planetCube,
+    .planetNode:focus .planetCube,
+    .planetNode:focus-within .planetCube{
+      filter:brightness(1.04) saturate(1.05);
+    }
+
+    .face{
+      position:absolute;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      backface-visibility:hidden;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -22px 42px rgba(0,0,0,.34);
+    }
+
+    .face::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 30%, transparent 72%, rgba(0,0,0,.10)),
+        repeating-linear-gradient(45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+      opacity:.72;
+    }
+
+    .face::after{
+      content:"";
+      position:absolute;
+      top:-16%;
+      left:-34%;
+      width:58%;
+      height:148%;
+      pointer-events:none;
+      opacity:.34;
+      transform:rotate(10deg);
+      background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.04) 24%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.04) 72%, rgba(255,255,255,0) 100%);
+      filter:blur(2px);
+      animation:faceSweep 9s linear infinite;
+      animation-delay:var(--phase,0s);
+    }
+
+    .face--front,
+    .face--back{
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      margin-left:calc(var(--face) / -2);
+      margin-top:calc(var(--face) / -2);
+      border-radius:var(--round);
+    }
+
+    .face--front{
+      transform:translateZ(calc(var(--depth) / 2));
+      background:
+        radial-gradient(circle at 24% 22%, rgba(255,255,255,.24), transparent 36%),
+        radial-gradient(circle at 76% 26%, var(--festival), transparent 56%),
+        radial-gradient(circle at 74% 82%, var(--opalV), transparent 64%),
+        radial-gradient(circle at 26% 82%, var(--crimson), transparent 68%),
+        linear-gradient(155deg, var(--onyx2), var(--onyx0));
+      box-shadow:
+        0 0 24px rgba(255,43,43,.10),
+        inset 0 2px 0 rgba(255,255,255,.16),
+        inset 0 -42px 82px rgba(0,0,0,.72);
+    }
+
+    .planetNode--core .face--front{
+      background:
+        radial-gradient(circle at 24% 22%, rgba(255,255,255,.18), transparent 34%),
+        radial-gradient(circle at 76% 26%, rgba(255,220,130,.12), transparent 58%),
+        radial-gradient(circle at 74% 82%, rgba(201,162,74,.12), transparent 64%),
+        radial-gradient(circle at 26% 82%, rgba(255,120,60,.10), transparent 66%),
+        linear-gradient(155deg, rgba(74,58,24,.42), rgba(18,12,8,.40));
+      box-shadow:
+        0 0 14px rgba(255,220,130,.08),
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -26px 58px rgba(0,0,0,.28);
+      border-color:rgba(255,240,200,.08);
+    }
+
+    .face--back{
+      transform:rotateY(180deg) translateZ(calc(var(--depth) / 2));
+      background:
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.04), transparent 56%),
+        linear-gradient(155deg, rgba(16,18,24,.88), rgba(4,6,10,.98));
+      opacity:.88;
+    }
+
+    .face--left,
+    .face--right{
+      top:50%;
+      left:50%;
+      width:var(--depth);
+      height:calc(var(--face) * .96);
+      margin-left:calc(var(--depth) / -2);
+      margin-top:calc((var(--face) * .96) / -2);
+      border-radius:18px;
+    }
+
+    .face--left{
+      transform:rotateY(-90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.14)),
+        linear-gradient(155deg, rgba(110,22,28,.46), rgba(14,18,26,.94));
+    }
+
+    .planetNode--core .face--left{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.10)),
+        linear-gradient(155deg, rgba(132,96,34,.34), rgba(28,16,10,.52));
+    }
+
+    .face--right{
+      transform:rotateY(90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.08)),
+        linear-gradient(155deg, rgba(184,146,92,.54), rgba(16,18,24,.90));
+    }
+
+    .planetNode--core .face--right{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.06)),
+        linear-gradient(155deg, rgba(218,180,108,.34), rgba(32,22,12,.52));
+    }
+
+    .face--top,
+    .face--bottom{
+      left:50%;
+      top:50%;
+      width:calc(var(--face) * .96);
+      height:var(--depth);
+      margin-left:calc((var(--face) * .96) / -2);
+      margin-top:calc(var(--depth) / -2);
+      border-radius:18px;
+    }
+
+    .face--top{
+      transform:rotateX(90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.20), rgba(0,0,0,.04)),
+        linear-gradient(155deg, rgba(116,86,52,.64), rgba(34,28,22,.88));
+    }
+
+    .planetNode--core .face--top{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.02)),
+        linear-gradient(155deg, rgba(230,196,126,.30), rgba(80,54,22,.48));
+    }
+
+    .face--bottom{
+      transform:rotateX(-90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.24)),
+        linear-gradient(155deg, rgba(12,14,18,.92), rgba(4,6,10,.98));
+      opacity:.96;
+    }
+
+    .skeleton{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      margin-left:calc(var(--face) / -2);
+      margin-top:calc(var(--face) / -2);
+      pointer-events:none;
+      transform-style:preserve-3d;
+    }
+
+    .skeleton__plane{
+      position:absolute;
+      inset:0;
+      border-radius:var(--round);
+      border:1px solid transparent;
+      box-shadow:inset 0 0 0 1px rgba(201,162,74,.18);
+      backface-visibility:hidden;
+    }
+
+    .planetNode--core .skeleton__plane{
+      box-shadow:inset 0 0 0 1px rgba(255,224,146,.10);
+    }
+
+    .skeleton__plane--front{
+      transform:translateZ(calc(var(--depth) / 2 + 1px));
+    }
+
+    .skeleton__plane--back{
+      transform:rotateY(180deg) translateZ(calc(var(--depth) / 2 + 1px));
+      opacity:.30;
+    }
+
+    .skeleton__edge{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:calc(var(--face) * 1.04);
+      margin-left:-1px;
+      margin-top:calc((var(--face) * 1.04) / -2);
+      background:linear-gradient(180deg, rgba(201,162,74,.04), rgba(201,162,74,.42), rgba(201,162,74,.04));
+      border-radius:999px;
+      transform-origin:center center;
+      opacity:.84;
+      filter:drop-shadow(0 0 6px rgba(201,162,74,.18));
+    }
+
+    .planetNode--core .skeleton__edge{
+      background:linear-gradient(180deg, rgba(255,224,146,.04), rgba(255,224,146,.18), rgba(255,224,146,.04));
+      filter:drop-shadow(0 0 4px rgba(255,224,146,.10));
+      opacity:.54;
+    }
+
+    .skeleton__edge--v{ transform:translateZ(calc(var(--depth) / 2 + 2px)); }
+    .skeleton__edge--d1{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(45deg); }
+    .skeleton__edge--d2{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(-45deg); }
+
+    .skeleton__spine{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:calc(var(--depth) + 10px);
+      margin-left:-1px;
+      margin-top:calc((var(--depth) + 10px) / -2);
+      background:linear-gradient(180deg, rgba(201,162,74,.16), rgba(255,255,255,.28), rgba(201,162,74,.16));
+      transform:translateZ(0) rotateX(90deg);
+      border-radius:999px;
+      opacity:.72;
+      filter:drop-shadow(0 0 4px rgba(201,162,74,.14));
+    }
+
+    .planetNode--core .skeleton__spine{
+      opacity:.44;
+      filter:drop-shadow(0 0 3px rgba(255,224,146,.08));
+    }
+
+    .planetLabel{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:20;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      width:var(--face);
+      height:var(--face);
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      text-shadow:0 0 18px rgba(0,0,0,.42), 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .planetLabel::before{
+      content:"";
+      position:absolute;
+      inset:12% 10% auto;
+      height:28%;
+      border-radius:999px;
+      opacity:.74;
+      background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+      transform:rotate(-12deg);
+      filter:blur(.3px);
+      pointer-events:none;
+    }
+
+    .planetLabel::after{
+      content:"";
+      position:absolute;
+      inset:16% 14%;
+      border-radius:20px;
+      opacity:.16;
+      background:
+        radial-gradient(circle at 50% 64%, rgba(255,43,43,.34), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(201,162,74,.16), transparent 58%);
+      filter:blur(10px);
+      animation:innerGlow 8s ease-in-out infinite;
+      animation-delay:var(--phase,0s);
+      pointer-events:none;
+    }
+
+    .planetNode--core .planetLabel::after{
+      opacity:.18;
+      background:
+        radial-gradient(circle at 50% 64%, rgba(255,170,80,.18), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(255,224,146,.14), transparent 58%);
+    }
+
+    .planetWord{
+      position:relative;
+      z-index:2;
+      font-size:11.5px;
+      font-weight:980;
+      line-height:1.05;
+      letter-spacing:.55px;
+      color:var(--ink);
+    }
+
+    .planetCode{
+      position:relative;
+      z-index:2;
+      margin-top:5px;
+      font-size:9px;
+      letter-spacing:1.1px;
+      color:rgba(255,255,255,.84);
+      opacity:.82;
+    }
+
+    .planetNode--core .planetWord{ font-size:15px; }
+    .planetNode--core .planetCode{ font-size:10px; }
+    .planetNode--l1 .planetWord{ font-size:13px; }
+    .planetNode--l2 .planetWord{ font-size:12px; }
+
+    .control{
+      position:relative;
+      display:grid;
+      place-items:center;
+      width:46px;
+      height:46px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      cursor:pointer;
+      pointer-events:auto;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+      box-shadow:var(--shadowC);
+      transition:box-shadow .16s ease,border-color .16s ease,filter .16s ease;
+      animation:controlAmbient 8.6s ease-in-out infinite;
+    }
+
+    .control::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      opacity:.34;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(201,162,74,.18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 42%),
+        radial-gradient(circle at 78% 24%, rgba(255,43,43,.10), transparent 46%);
+    }
+
+    .control::after{
+      content:"";
+      position:absolute;
+      left:10px;
+      right:10px;
+      bottom:-12px;
+      height:26px;
+      opacity:.55;
+      pointer-events:none;
+      background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
+    }
+
+    .control:hover{
+      border-color:rgba(201,162,74,.34);
+      box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.14), 0 0 26px rgba(201,162,74,.16);
+      filter:brightness(1.03);
+    }
+
+    .control.is-on{
+      border-color:rgba(255,43,43,.26);
+      box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12), 0 0 26px rgba(201,162,74,.08);
+    }
+
+    .control__label{
+      font-size:12px;
+      font-weight:980;
+      letter-spacing:.4px;
+      color:var(--ink);
+      user-select:none;
+      transform:rotate(-45deg);
+      text-shadow:0 0 12px rgba(0,0,0,.34);
+    }
+
+    .corner{
+      position:fixed;
+      bottom:max(18px, env(safe-area-inset-bottom));
+      z-index:240;
+      pointer-events:none;
+    }
+
+    .corner--left{left:18px}
+    .corner--right{right:18px}
+    .corner .control{ pointer-events:auto; }
+
+    .corner__text{
+      margin-top:10px;
+      font-size:11px;
+      letter-spacing:.4px;
+      text-align:center;
+      color:rgba(255,255,255,.72);
+      text-shadow:0 0 12px rgba(0,0,0,.38);
+    }
+
+    .sourceReceipt{
+      position:absolute;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      clip-path:inset(50%);
+      white-space:nowrap;
+    }
+
+    @keyframes stagePulse{
+      0%,100%{opacity:.68;filter:blur(52px)}
+      50%{opacity:.80;filter:blur(58px)}
+    }
+
+    @keyframes starTwinkle{
+      0%,100%{opacity:.24}
+      50%{opacity:.92}
+    }
+
+    @keyframes coreGlowPulse{
+      0%,100%{opacity:.86;transform:translate(-50%,-50%) scale(1)}
+      50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
+    }
+
+    @keyframes faceSweep{
+      0%{left:-34%;opacity:.10}
+      18%{opacity:.18}
+      52%{opacity:.34}
+      80%{opacity:.12}
+      100%{left:88%;opacity:.06}
+    }
+
+    @keyframes innerGlow{
+      0%,100%{opacity:.10}
+      50%{opacity:.18}
+    }
+
+    @keyframes controlAmbient{
+      0%,100%{filter:saturate(1) brightness(1)}
+      50%{filter:saturate(1.04) brightness(1.02)}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .stage::before,
+      .star,
+      .face::after,
+      .planetLabel::after,
+      .control,
+      .coreGlow{
+        animation:none !important;
+      }
+    }
+
+    @media (max-width:640px){
+      :root{
+        --D0:146px;
+        --D1:108px;
+        --D2:88px;
+        --D3:78px;
+        --Z0:36px;
+        --Z1:32px;
+        --Z2:28px;
+        --Z3:26px;
+        --padTop:226px;
+      }
+
+      .horizonPanel{
+        top:78px;
+      }
+
+      .planetWord{font-size:11.25px}
+      .coreGlow{width:260px;height:260px}
+    }
+
+    @media (max-width:420px){
+      :root{
+        --D0:138px;
+        --D1:104px;
+        --D2:86px;
+        --D3:76px;
+        --Z0:34px;
+        --Z1:30px;
+        --Z2:26px;
+        --Z3:24px;
+      }
+
+      .horizonReadout strong{font-size:15px}
+      .horizonReadout p{font-size:12px}
+      .planetWord{font-size:11px}
+      .coreGlow{width:240px;height:240px}
+    }
+  </style>
 </head>
+
 <body>
-<main class="page" data-page="vision" data-route="/explore/frontier/vision/" data-file="/explore/frontier/vision/index.html">
-<header class="topbar">
-<a class="brand" data-route="/explore/frontier/vision/" href="/explore/frontier/vision/"><span class="mark">VI</span><span><span class="kicker">Diamond Gate Bridge · Frontier</span><strong class="title">Vision · G1 Optimal</strong></span></a>
-<nav class="nav"><a data-route="/door/" href="/door/">Door</a><a data-route="/home/" href="/home/">Home</a><a data-route="/explore/" href="/explore/">Explore</a><a class="featured" data-route="/explore/frontier/" href="/explore/frontier/">Frontier</a><a data-route="/products/" href="/products/">Products</a><a data-route="/gauges/" href="/gauges/">Gauges</a><a data-route="/laws/" href="/laws/">Laws</a><a data-route="/about/" href="/about/">About</a></nav>
-</header>
-<section class="hero"><div class="hero-symbol"></div><div class="hero-copy"><span class="pill" id="heroPill">View category</span><h1 id="pageTitle">Vision</h1><h2 id="pageSubhead">Direction begins with what the system can clearly see.</h2><p id="pageLead">Choose a label. Vision context opens only when requested.</p></div></section>
-<section class="panel"><div class="panel-head"><span class="pill" id="controlsPill">Room controls</span><h2 id="controlsTitle">Switch lens without closing the open row.</h2></div><div class="control-grid"><div class="control-card"><div class="control-title" id="langLabel">Language</div><div class="seg"><button id="langEN" type="button" aria-pressed="true">EN</button><button id="langZH" type="button" aria-pressed="false">中文</button><button id="langES" type="button" aria-pressed="false">ES</button></div><div class="state-line" id="langState">Lang: EN</div></div><div class="control-card"><div class="control-title" id="laneLabel">Visible lens</div><div class="seg"><button id="lanePlatform" type="button" aria-pressed="true">PLATFORM</button><button id="laneEngineering" type="button" aria-pressed="false">ENGINEERING</button></div><div class="state-line" id="laneState">Current lens: PLATFORM</div></div></div></section>
-<section class="panel"><div class="panel-head"><span class="pill" id="domainsPill">Russian-doll labels</span><h2 id="domainsTitle">Open only the domain needed.</h2></div><div class="label-grid" id="domainList"></div></section>
-<section class="panel"><div class="panel-head"><span class="pill">Frontier categories</span><h2>Move to another back page.</h2></div><div class="route-grid"><a class="route-card featured" data-route="/explore/frontier/" href="/explore/frontier/"><small>Back</small><strong>Frontier Hub</strong></a><a class="route-card" data-route="/explore/frontier/vision-remote/" href="/explore/frontier/vision-remote/"><small>Remote</small><strong>Vision Remote</strong></a><a class="route-card" data-route="/explore/frontier/shimmer/" href="/explore/frontier/shimmer/"><small>Signal</small><strong>Shimmer</strong></a><a class="route-card" data-route="/explore/frontier/trajectory/" href="/explore/frontier/trajectory/"><small>Motion</small><strong>Trajectory</strong></a><a class="route-card" data-route="/explore/frontier/lattice/" href="/explore/frontier/lattice/"><small>Grid</small><strong>Lattice</strong></a><a class="route-card" data-route="/explore/frontier/manual/" href="/explore/frontier/manual/"><small>Guide</small><strong>Manual</strong></a><a class="route-card" data-route="/explore/frontier/urban/" href="/explore/frontier/urban/"><small>City</small><strong>Urban</strong></a><a class="route-card" data-route="/explore/frontier/infrastructure/" href="/explore/frontier/infrastructure/"><small>Build</small><strong>Infrastructure</strong></a></div></section>
-<section class="panel"><div class="panel-head"><span class="pill">Status label</span><h2>Vision contract upgraded.</h2></div><div class="status-strip"><code>VISION_G1_OPTIMAL=ACTIVE
-PAGE=/explore/frontier/vision/index.html
-PARENT=/explore/frontier/
-LANGUAGES=EN,ZH,ES
-VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
-STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth
-CONTEXT=RUSSIAN_DOLL_LABEL_EXPANSION</code></div></section>
-<footer class="footer"><span>Diamond Gate Bridge · Frontier · Vision · G1 Optimal</span><span><a data-route="/explore/frontier/" href="/explore/frontier/">Frontier Hub</a> · <a data-route="/explore/" href="/explore/">Explore</a></span></footer>
-</main>
-<script>
-(function(){"use strict";var qs=new URLSearchParams(location.search),LS=localStorage,lang=qs.get("gd_lang")||qs.get("lang")||LS.getItem("gd_lang")||"en",time=qs.get("gd_time")||qs.get("time")||LS.getItem("gd_time")||"now",lane=qs.get("lane")||"platform",style="informal",depth="explore",openIndex=0;if(!["en","zh","es"].includes(lang))lang="en";if(time==="trajectory")time="post";if(!["origin","now","post"].includes(time))time="now";if(!["platform","engineering"].includes(lane))lane="platform";try{LS.setItem("gd_lang",lang);LS.setItem("gd_style",style);LS.setItem("gd_time",time);LS.setItem("gd_depth",depth)}catch(e){}var C={en:{pill:"View category",head:"Direction begins with what the system can clearly see.",lead:"Choose a label. Vision context opens only when requested.",controls:"Room controls",switch:"Switch lens without closing the open row.",lang:"Language",lens:"Visible lens",current:"Current lens",platform:"PLATFORM",engineering:"ENGINEERING",labels:"Russian-doll labels",open:"Open only the domain needed.",concept:"Concept",build:"Build Now",roadmap:"Roadmap",langState:"Lang: EN"},zh:{pill:"视野类别",head:"方向始于系统能够清楚看见的东西。",lead:"选择一个标签。视觉内容只在请求时打开。",controls:"房间控制",switch:"切换透镜，不关闭已打开行。",lang:"语言",lens:"可见透镜",current:"当前透镜",platform:"平台",engineering:"工程",labels:"俄罗斯套娃标签",open:"只打开需要的域。",concept:"概念",build:"现在建",roadmap:"路线图",langState:"语言：中文"},es:{pill:"Categoría de visión",head:"La dirección comienza con lo que el sistema puede ver con claridad.",lead:"Elige una etiqueta. El contexto de visión solo se abre cuando se solicita.",controls:"Controles de sala",switch:"Cambiar lente sin cerrar la fila abierta.",lang:"Idioma",lens:"Lente visible",current:"Lente actual",platform:"PLATAFORMA",engineering:"INGENIERÍA",labels:"Etiquetas muñeca rusa",open:"Abrir solo el dominio necesario.",concept:"Concepto",build:"Construir ahora",roadmap:"Hoja de ruta",langState:"Idioma: ES"}};var D=[{t:{en:"Clarity",zh:"清晰",es:"Claridad"},s:{en:"See enough to orient.",zh:"看得足够清楚才能定位。",es:"Ver suficiente para orientarse."},platform:{intro:{en:"Vision is not imagination. It is the clean view that lets motion become directed.",zh:"视觉不是想象，而是让运动获得方向的清晰视图。",es:"Visión no es imaginación. Es la vista limpia que permite dirigir el movimiento."},concept:{en:"The first job is to know what is actually visible.",zh:"第一任务是知道实际可见的东西。",es:"El primer trabajo es saber qué es realmente visible."},build:{en:"Name the visible object, the blind spot, and the next needed view.",zh:"命名可见对象、盲点和下一个需要的视图。",es:"Nombrar objeto visible, punto ciego y siguiente vista necesaria."},roadmap:{en:"Turn visible evidence into orientation labels.",zh:"把可见证据转成定位标签。",es:"Convertir evidencia visible en etiquetas de orientación."}},engineering:{intro:{en:"Vision needs observable surface, resolution, freshness, and confidence band.",zh:"视觉需要可观察表面、分辨率、新鲜度和置信带。",es:"Visión requiere superficie observable, resolución, frescura y banda de confianza."},concept:{en:"No observable surface means no vision claim.",zh:"无可观察表面即无视觉主张。",es:"Sin superficie observable no hay afirmación de visión."},build:{en:"Define visible surface, read interval, and confidence threshold.",zh:"定义可见表面、读取间隔和置信阈值。",es:"Definir superficie visible, intervalo de lectura y umbral de confianza."},roadmap:{en:"Bind vision reads to gauges and replayable receipts.",zh:"视觉读数绑定量规和可回放收据。",es:"Ligar lecturas de visión a medidores y recibos replayables."}}},{t:{en:"Aim",zh:"瞄准",es:"Apuntar"},s:{en:"Sight becomes useful when it points action.",zh:"视觉指向行动时才有用。",es:"La visión sirve cuando orienta acción."},platform:{intro:{en:"A clear view should reduce choices, not multiply confusion.",zh:"清晰视图应减少选择，而不是增加混乱。",es:"Una vista clara debe reducir opciones, no multiplicar confusión."},concept:{en:"Aim converts vision into next motion.",zh:"瞄准把视觉转成下一步运动。",es:"Apuntar convierte visión en siguiente movimiento."},build:{en:"Write the one action the current view supports.",zh:"写出当前视图支持的一个动作。",es:"Escribir la acción que esta vista soporta."},roadmap:{en:"Create aim labels: observe, prepare, move, hold.",zh:"创建瞄准标签：观察、准备、移动、暂停。",es:"Crear etiquetas: observar, preparar, mover, hold."}},engineering:{intro:{en:"Aim is a decision constraint derived from visible evidence and admissible confidence.",zh:"瞄准是由可见证据和可采信置信度导出的决策约束。",es:"Apuntar es restricción de decisión derivada de evidencia visible y confianza admisible."},concept:{en:"A view without action constraint is only display.",zh:"没有行动约束的视图只是展示。",es:"Vista sin restricción de acción es solo display."},build:{en:"Map each visible state to allowed next actions.",zh:"把每个可见状态映射到允许的下一步动作。",es:"Mapear cada estado visible a acciones permitidas."},roadmap:{en:"Audit whether actions exceeded the visible support.",zh:"审计行动是否超过可见支持。",es:"Auditar si acciones excedieron soporte visible."}}},{t:{en:"Blind Spots",zh:"盲点",es:"Puntos ciegos"},s:{en:"What is not seen must remain labeled.",zh:"未看见的必须保持标注。",es:"Lo no visto debe quedar etiquetado."},platform:{intro:{en:"Vision gets stronger when it admits what it cannot see.",zh:"视觉承认无法看见的东西时才更强。",es:"La visión se fortalece cuando admite lo que no ve."},concept:{en:"Blind spots are not shame; they are navigation data.",zh:"盲点不是羞耻，而是导航数据。",es:"Los puntos ciegos no son vergüenza; son datos de navegación."},build:{en:"Add one blind-spot line to every vision claim.",zh:"给每个视觉主张添加一行盲点。",es:"Añadir una línea de punto ciego a cada afirmación."},roadmap:{en:"Convert repeated blind spots into inspection tasks.",zh:"把重复盲点转成检查任务。",es:"Convertir puntos ciegos repetidos en tareas de inspección."}},engineering:{intro:{en:"Blind spots require explicit unknown fields and blocked inference rules.",zh:"盲点需要显式未知字段和禁止推断规则。",es:"Puntos ciegos requieren campos desconocidos y reglas de inferencia bloqueada."},concept:{en:"Unknown must be represented, not erased.",zh:"未知必须被表示，而不是被抹除。",es:"Lo desconocido debe representarse, no borrarse."},build:{en:"Add UNKNOWN, LOW_CONFIDENCE, and NEEDS_DIRECT_READ states.",zh:"添加 UNKNOWN、LOW_CONFIDENCE 和 NEEDS_DIRECT_READ 状态。",es:"Añadir estados UNKNOWN, LOW_CONFIDENCE y NEEDS_DIRECT_READ."},roadmap:{en:"Require blind-spot receipts before promotion to pass.",zh:"升级为通过前需要盲点收据。",es:"Exigir recibos de puntos ciegos antes de promover a pass."}}}];function tr(o){return lang==="zh"?o.zh:lang==="es"?o.es:o.en}function cc(){return C[lang]||C.en}function q(){var p=new URLSearchParams();p.set("gd_lang",lang);p.set("gd_style",style);p.set("gd_time",time);p.set("gd_depth",depth);p.set("lane",lane);return"?"+p.toString()}function press(ids,id){ids.forEach(function(x){var e=document.getElementById(x);if(e)e.setAttribute("aria-pressed",x===id?"true":"false")})}function wire(){document.querySelectorAll("[data-route]").forEach(function(e){e.href=e.getAttribute("data-route")+q()})}function render(){var c=cc();document.documentElement.lang=lang;heroPill.textContent=c.pill;pageSubhead.textContent=c.head;pageLead.textContent=c.lead;controlsPill.textContent=c.controls;controlsTitle.textContent=c.switch;langLabel.textContent=c.lang;laneLabel.textContent=c.lens;domainsPill.textContent=c.labels;domainsTitle.textContent=c.open;lanePlatform.textContent=c.platform;laneEngineering.textContent=c.engineering;langState.textContent=c.langState;laneState.textContent=c.current+": "+(lane==="engineering"?c.engineering:c.platform);press(["langEN","langZH","langES"],lang==="zh"?"langZH":lang==="es"?"langES":"langEN");press(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");var list=document.getElementById("domainList");list.innerHTML="";D.forEach(function(item,i){var pack=item[lane]||item.platform,det=document.createElement("details");det.className="label-card";if(i===openIndex)det.open=true;det.innerHTML="<summary><small>"+tr(item.t)+"</small><span>"+tr(item.s)+"</span></summary><div class='label-body'><p>"+tr(pack.intro)+"</p><div class='sub-bubble'><strong>"+c.concept+"</strong><span>"+tr(pack.concept)+"</span></div><div class='sub-bubble'><strong>"+c.build+"</strong><span>"+tr(pack.build)+"</span></div><div class='sub-bubble'><strong>"+c.roadmap+"</strong><span>"+tr(pack.roadmap)+"</span></div></div>";det.addEventListener("toggle",function(){if(det.open){openIndex=i;document.querySelectorAll("#domainList details").forEach(function(o){if(o!==det)o.open=false})}});list.appendChild(det)});wire();history.replaceState({},"",location.pathname+q())}langEN.addEventListener("click",function(){lang="en";try{LS.setItem("gd_lang",lang)}catch(e){}render()});langZH.addEventListener("click",function(){lang="zh";try{LS.setItem("gd_lang",lang)}catch(e){}render()});langES.addEventListener("click",function(){lang="es";try{LS.setItem("gd_lang",lang)}catch(e){}render()});lanePlatform.addEventListener("click",function(){lane="platform";render()});laneEngineering.addEventListener("click",function(){lane="engineering";render()});render()})();
-</script>
+  <header class="top" aria-label="Top controls">
+    <div class="top__group" aria-label="Language">
+      <div class="control is-on" id="langEN" role="button" tabindex="0" aria-label="English"><span class="control__label">EN</span></div>
+      <div class="control" id="langZH" role="button" tabindex="0" aria-label="Chinese"><span class="control__label">中文</span></div>
+      <div class="control" id="langES" role="button" tabindex="0" aria-label="Spanish"><span class="control__label">ES</span></div>
+    </div>
+
+    <div class="top__group" aria-label="Lane">
+      <div class="control is-on" id="lanePlatform" role="button" tabindex="0" aria-label="Platform lane"><span class="control__label">P</span></div>
+      <div class="control" id="laneEngineering" role="button" tabindex="0" aria-label="Engineering lane"><span class="control__label">E</span></div>
+    </div>
+  </header>
+
+  <section class="horizonPanel" aria-label="Vision horizon controls">
+    <p class="horizonPanel__title">Vision · Dual Horizon</p>
+    <div class="horizonTabs" role="group" aria-label="Vision horizon selector">
+      <button class="horizonBtn" id="horizonNear" type="button" aria-pressed="true">Not-So-Distant Future</button>
+      <button class="horizonBtn" id="horizonFar" type="button" aria-pressed="false">Distant Future</button>
+    </div>
+    <div class="horizonReadout" aria-live="polite">
+      <strong id="horizonTitle">Close enough to plan, build, test, and verify.</strong>
+      <p id="horizonCopy">This horizon names the future that is near enough to act on now: visible next moves, current planning, practical inspection, and proof return.</p>
+    </div>
+  </section>
+
+  <main class="stage" id="stage" aria-label="Vision">
+    <div class="starfield" id="starfield" aria-hidden="true"></div>
+    <div class="coreGlow" aria-hidden="true"></div>
+  </main>
+
+  <div class="corner corner--left" aria-label="Exit">
+    <div class="control" id="btnExit" role="button" tabindex="0" aria-label="Exit to Door"><span class="control__label">⟲</span></div>
+    <div class="corner__text" id="lblExit">EXIT</div>
+  </div>
+
+  <div class="corner corner--right" aria-label="Hub Jump">
+    <div class="control" id="btnHub" role="button" tabindex="0" aria-label="Hub Jump to Compass"><span class="control__label">◆</span></div>
+    <div class="corner__text" id="lblHub">HUB</div>
+  </div>
+
+  <section class="sourceReceipt" aria-label="Vision source receipt">
+    VISION_G1_OPTIMAL_DUAL_HORIZON_HOST_TNT_v1
+    STATUS=ACTIVE
+    VISIBLE_TITLE=Vision · G1 Optimal
+    PUBLIC_PROOF_MARKER=Dual Horizon Vision Host · G1 Optimal active
+    PAGE=/explore/frontier/vision/index.html
+    ROUTE=/explore/frontier/vision/
+    PARENT=/explore/frontier/
+    BASELINE=AUDRALIA_MANOR_CURRENT
+    EXPRESSION=Dual_Horizon_Vision_Host_With_Russian_Doll_Underlay
+    HORIZON_1=Not-So-Distant_Future
+    HORIZON_1_ROLE=near_horizon,actionable_sightline,visible_planning,current_next_moves,plan_build_test_verify
+    HORIZON_2=Distant_Future
+    HORIZON_2_ROLE=remote_horizon,long_range_signal,inference_boundary,unknowns,confidence_labels,confirmation_steps
+    HIERARCHY=Compass→Door→Home→Manor→Frontier→Vision→Laws→Gauges
+    ROLE=frontier_sightline_lane
+    OWNS=visual_systems,sightline_planning,future_facing_design,inspection_field,foreground_host_shell,dual_horizon_reading
+    DOES_NOT_OWN=separate_remote_room_identity,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
+    RUNTIME_OWNER=/explore/frontier/vision/index.js
+    SPLIT_ARCHITECTURE=host_shell_preserved,runtime_external
+    CANONICAL_CARRY=gd_lang,gd_style,gd_time,gd_depth
+    LANE=URL_ONLY
+    PRIOR_LANGUAGE_HANDLING=prior_remote_route_framing_archival_only
+    HEAVY_RUNTIME_LOADED=false
+    RENDER_FILES_TOUCHED=false
+    GAUGES_LOGIC_TOUCHED=false
+    VISUAL_PASS_CLAIMED=false
+  </section>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const near = document.getElementById("horizonNear");
+      const far = document.getElementById("horizonFar");
+      const title = document.getElementById("horizonTitle");
+      const copy = document.getElementById("horizonCopy");
+
+      const states = {
+        near: {
+          title: "Close enough to plan, build, test, and verify.",
+          copy: "This horizon names the future that is near enough to act on now: visible next moves, current planning, practical inspection, and proof return."
+        },
+        far: {
+          title: "Far enough to require confidence labels.",
+          copy: "This horizon names the distant future: long-range signal, inference boundary, unknowns, confidence labels, confirmation steps, and repeat checks."
+        }
+      };
+
+      function setHorizon(mode) {
+        const isFar = mode === "far";
+        near.setAttribute("aria-pressed", isFar ? "false" : "true");
+        far.setAttribute("aria-pressed", isFar ? "true" : "false");
+        title.textContent = isFar ? states.far.title : states.near.title;
+        copy.textContent = isFar ? states.far.copy : states.near.copy;
+      }
+
+      near.addEventListener("click", () => setHorizon("near"));
+      far.addEventListener("click", () => setHorizon("far"));
+
+      if (window.location.hash === "#distant-future") {
+        setHorizon("far");
+      } else {
+        setHorizon("near");
+      }
+    })();
+  </script>
+
+  <script src="/explore/frontier/vision/index.js"></script>
 </body>
 </html>
-
-SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
-VISIBLE_TITLE=Shimmer · G1 V10A PUBLIC_PROOF_MARKER=Universal Node · V10A active

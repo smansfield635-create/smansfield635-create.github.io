@@ -1,492 +1,277 @@
 /* /assets/showroom.globe.render.js
-   AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1
+   AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1
 
    ROLE=
-   RENDER_AUTHORITY_ONLY
+   SHARED_RENDER_PLATFORM
 
-   PURPOSE=
-   Render Audrelia’s manufactured climate moon.
-   The moon is modeled after Earth’s Moon, but story-law says it was assembled from space rock
-   and engineered to stabilize climatology on Audrelia.
+   OWNS=
+   CANVAS_PIPELINE
+   ORTHOGRAPHIC_PROJECTION
+   LIGHTING_CONTEXT
+   EXTENSION_REGISTRY
+   ACTIVE_BODY_DISPATCH
+   RECEIPT_AGGREGATION
 
-   BOUNDARY=
-   Route owns labels/buttons/shell.
-   Instrument owns state/motion.
-   Render owns pixels only.
+   DOES_NOT_OWN=
+   AUDRELIA_SURFACE_IDENTITY
+   AUDRELIA_SUN_PLASMA_IDENTITY
+   AUDRELIA_CLIMATE_MOON_SURFACE_IDENTITY
+   ROUTE_COPY
+   BUTTONS
+   LABELS
+   INSTRUMENT_STATE
+   GAUGES
 
-   COMPATIBILITY=
-   body="moon" maps to body="audrelia-moon" so older route buttons still render the new moon.
+   BODY_EXTENSIONS=
+   /assets/audrelia.planet.render.js
+   /assets/audrelia.sun.render.js
+   /assets/audrelia.climate-moon.render.js
 */
 
-(function bindAudreliaClimateMoonRender(global) {
+(function bindAudreliaRenderExtensionPlatform(global) {
   "use strict";
 
-  const VERSION = "AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1";
+  const VERSION = "AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1";
   const TAU = Math.PI * 2;
   const PI = Math.PI;
   const DEG = Math.PI / 180;
+  const MAX_WORK_SIZE = 1024;
 
-  const SOURCE_W = 2048;
-  const SOURCE_H = 1024;
-  const MAX_WORK = 1120;
+  const extensionRegistry = Object.create(null);
+  const aliasRegistry = Object.create(null);
+  const loadingRegistry = Object.create(null);
 
-  const textureCache = Object.create(null);
-
-  const PROFILES = Object.freeze({
-    audrelia: {
-      body: "audrelia",
-      label: "Audrelia",
-      type: "planet",
-      seed: 60111,
-      tilt: -18.5,
-      rim: "rgba(150,225,255,0.72)",
-      glow: "rgba(86,190,255,0.34)"
-    },
-    "audrelia-sun": {
-      body: "audrelia-sun",
-      label: "Audrelia’s Sun",
-      type: "star",
-      seed: 60112,
-      tilt: -9,
-      rim: "rgba(255,216,130,0.75)",
-      glow: "rgba(255,145,45,0.42)"
-    },
-    "solar-system-sun": {
-      body: "solar-system-sun",
-      label: "Solar-System Sun",
-      type: "star",
-      seed: 60113,
-      tilt: -7.25,
-      rim: "rgba(255,230,135,0.84)",
-      glow: "rgba(255,166,38,0.50)"
-    },
-    "audrelia-moon": {
-      body: "audrelia-moon",
-      label: "Audrelia Climate Moon",
-      type: "manufactured-moon",
-      seed: 60114,
-      tilt: -6.8,
-      rim: "rgba(230,236,232,0.70)",
-      glow: "rgba(170,190,205,0.24)"
-    }
+  const EXTENSION_FILES = Object.freeze({
+    audrelia: "/assets/audrelia.planet.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1",
+    "audrelia-sun": "/assets/audrelia.sun.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1",
+    "audrelia-moon": "/assets/audrelia.climate-moon.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"
   });
 
-  function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, Number(n) || 0));
+  const GLOBAL_EXTENSION_NAMES = Object.freeze({
+    audrelia: "DGBAudreliaPlanetRenderExtension",
+    "audrelia-sun": "DGBAudreliaSunRenderExtension",
+    "audrelia-moon": "DGBAudreliaClimateMoonRenderExtension"
+  });
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, Number(value) || 0));
   }
 
-  function wrap01(n) {
-    n %= 1;
-    return n < 0 ? n + 1 : n;
+  function wrap01(value) {
+    value = value % 1;
+    return value < 0 ? value + 1 : value;
   }
 
-  function smoothstep(a, b, x) {
-    const t = clamp((x - a) / (b - a), 0, 1);
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
-  function randomFactory(seed) {
-    let s = seed >>> 0;
-    return function rand() {
-      s += 0x6D2B79F5;
-      let t = s;
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  function canvas(w, h) {
-    const c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    return c;
+  function makeCanvas(width, height) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
   }
 
   function normalizeBody(value) {
     value = String(value || "").trim().toLowerCase();
 
-    if (value === "audrelia") return "audrelia";
+    if (value === "audrelia" || value === "audrelia-planet") return "audrelia";
     if (value === "audrelia-sun" || (value.includes("audrelia") && value.includes("sun"))) return "audrelia-sun";
-    if (value === "solar-system-sun" || value === "solar-sun" || value.includes("solar")) return "solar-system-sun";
-
     if (
-      value === "moon" ||
       value === "audrelia-moon" ||
-      value === "adralia-moon" ||
-      value.includes("climate-moon") ||
-      value.includes("manufactured-moon")
+      value === "audrelia-climate-moon" ||
+      value === "climate-moon" ||
+      value === "manufactured-moon" ||
+      value === "moon" ||
+      value === "adralia-moon"
     ) {
       return "audrelia-moon";
     }
 
-    if (value === "sun") return "solar-system-sun";
     if (value === "earth" || value.includes("planet")) return "audrelia";
+    if (value === "sun" || value === "solar-system-sun" || value === "solar-sun" || value.includes("solar")) return "audrelia-sun";
 
     return "audrelia";
   }
 
-  function profileFor(body) {
-    return PROFILES[normalizeBody(body)] || PROFILES.audrelia;
-  }
+  function registerExtension(extension) {
+    if (!extension || !extension.id) {
+      return {
+        ok: false,
+        version: VERSION,
+        status: "INVALID_EXTENSION"
+      };
+    }
 
-  function xyFromLonLat(lon, lat, w, h) {
+    const id = normalizeBody(extension.id);
+    extensionRegistry[id] = extension;
+    aliasRegistry[id] = id;
+
+    if (Array.isArray(extension.aliases)) {
+      extension.aliases.forEach(function registerAlias(alias) {
+        aliasRegistry[String(alias).trim().toLowerCase()] = id;
+      });
+    }
+
     return {
-      x: ((lon + 180) / 360) * w,
-      y: ((90 - lat) / 180) * h
+      ok: true,
+      version: VERSION,
+      status: "EXTENSION_REGISTERED",
+      id,
+      label: extension.label || id,
+      file: EXTENSION_FILES[id] || null,
+      profileMerge: false,
+      generatedImage: false,
+      visualPassClaimed: false
     };
   }
 
-  function ellipseLL(ctx, lon, lat, lonR, latR, rot, fill, stroke, lineWidth) {
-    const p = xyFromLonLat(lon, lat, ctx.canvas.width, ctx.canvas.height);
-
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate((rot || 0) * DEG);
-    ctx.beginPath();
-    ctx.ellipse(
-      0,
-      0,
-      Math.max(0.5, (lonR / 360) * ctx.canvas.width),
-      Math.max(0.5, (latR / 180) * ctx.canvas.height),
-      0,
-      0,
-      TAU
-    );
-    ctx.fillStyle = fill;
-    ctx.fill();
-
-    if (stroke) {
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = lineWidth || 1;
-      ctx.stroke();
-    }
-
-    ctx.restore();
+  function findRegisteredExtension(body) {
+    const normalized = normalizeBody(body);
+    const aliasTarget = aliasRegistry[normalized] || normalized;
+    return extensionRegistry[aliasTarget] || null;
   }
 
-  function strokeLL(ctx, points, stroke, width) {
-    if (!points || points.length < 2) return;
+  function getGlobalExtension(body) {
+    const normalized = normalizeBody(body);
+    const globalName = GLOBAL_EXTENSION_NAMES[normalized];
+    const extension = globalName ? global[globalName] : null;
 
-    ctx.beginPath();
+    if (extension) {
+      registerExtension(extension);
+      return extension;
+    }
 
-    points.forEach((pt, i) => {
-      const p = xyFromLonLat(pt[0], pt[1], ctx.canvas.width, ctx.canvas.height);
-      if (i === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
+    return null;
+  }
+
+  function loadExtension(body) {
+    const normalized = normalizeBody(body);
+    const existing = findRegisteredExtension(normalized) || getGlobalExtension(normalized);
+
+    if (existing) return Promise.resolve(existing);
+
+    if (loadingRegistry[normalized]) return loadingRegistry[normalized];
+
+    const src = EXTENSION_FILES[normalized];
+
+    if (!src || !global.document) {
+      return Promise.reject(new Error("NO_EXTENSION_FILE_FOR_" + normalized));
+    }
+
+    loadingRegistry[normalized] = new Promise(function load(resolve, reject) {
+      const script = global.document.createElement("script");
+      script.src = src;
+
+      script.onload = function onLoad() {
+        const loaded = findRegisteredExtension(normalized) || getGlobalExtension(normalized);
+
+        if (loaded) {
+          resolve(loaded);
+        } else {
+          reject(new Error("EXTENSION_LOADED_BUT_NOT_REGISTERED_" + normalized));
+        }
+      };
+
+      script.onerror = function onError() {
+        reject(new Error("EXTENSION_LOAD_FAILED_" + normalized));
+      };
+
+      global.document.head.appendChild(script);
     });
 
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = width;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
+    return loadingRegistry[normalized];
   }
 
-  function buildAudreliaTexture(profile) {
-    const c = canvas(SOURCE_W, SOURCE_H);
-    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
-    const rand = randomFactory(profile.seed);
+  function resolveBody(options, canvas) {
+    options = options || {};
 
-    const ocean = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
-    ocean.addColorStop(0, "#132d5c");
-    ocean.addColorStop(0.25, "#0e668f");
-    ocean.addColorStop(0.45, "#137b95");
-    ocean.addColorStop(0.7, "#0b3f73");
-    ocean.addColorStop(1, "#051630");
-    ctx.fillStyle = ocean;
-    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
+    const candidates = [
+      options.body,
+      options.activeBody,
+      options.selectedBody,
+      options.currentBody,
+      options.model,
+      options.type,
+      canvas && canvas.dataset && canvas.dataset.body,
+      canvas && canvas.dataset && canvas.dataset.activeBody,
+      canvas && canvas.getAttribute && canvas.getAttribute("data-body"),
+      canvas && canvas.getAttribute && canvas.getAttribute("aria-label")
+    ];
 
-    for (let i = 0; i < 48; i += 1) {
-      ellipseLL(
-        ctx,
-        -180 + rand() * 360,
-        -62 + rand() * 124,
-        8 + rand() * 30,
-        3 + rand() * 14,
-        rand() * 180,
-        rand() > 0.45 ? "rgba(76,118,86,0.9)" : "rgba(155,140,105,0.82)",
-        "rgba(255,255,220,0.055)",
-        1
-      );
-    }
-
-    for (let band = -56; band <= 56; band += 13) {
-      const points = [];
-      for (let lon = -180; lon <= 180; lon += 3) {
-        const wobble = Math.sin((lon + band * 2.5) * 0.08) * 3.4 + Math.sin(lon * 0.15) * 1.2;
-        points.push([lon, band + wobble]);
+    for (let i = 0; i < candidates.length; i += 1) {
+      const candidate = candidates[i];
+      if (candidate !== undefined && candidate !== null && String(candidate).trim()) {
+        return normalizeBody(candidate);
       }
-      strokeLL(ctx, points, "rgba(255,255,255,0.10)", 3);
     }
 
-    for (let i = 0; i < 760; i += 1) {
-      ellipseLL(
-        ctx,
-        -180 + rand() * 360,
-        -65 + rand() * 130,
-        0.8 + rand() * 9,
-        0.25 + rand() * 2.1,
-        rand() * 180,
-        "rgba(255,255,255," + (0.025 + rand() * 0.10).toFixed(4) + ")"
-      );
-    }
-
-    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
+    return "audrelia";
   }
 
-  function buildStarTexture(profile) {
-    const c = canvas(SOURCE_W, SOURCE_H);
-    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
-    const rand = randomFactory(profile.seed);
-    const solar = profile.body === "solar-system-sun";
-
-    const base = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
-    base.addColorStop(0, solar ? "#fff1a5" : "#ffe3a0");
-    base.addColorStop(0.22, solar ? "#ffd261" : "#ffc06a");
-    base.addColorStop(0.5, solar ? "#ff9c2d" : "#f38a37");
-    base.addColorStop(0.78, solar ? "#db5414" : "#c94c1e");
-    base.addColorStop(1, "#7a1e08");
-    ctx.fillStyle = base;
-    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
-
-    ctx.globalCompositeOperation = "screen";
-
-    for (let i = 0; i < (solar ? 7600 : 5600); i += 1) {
-      const x = rand() * SOURCE_W;
-      const y = rand() * SOURCE_H;
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rand() * TAU);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 2 + rand() * 13, 1 + rand() * 5.5, 0, 0, TAU);
-      ctx.fillStyle = rand() > 0.35
-        ? "rgba(255,248,190," + (0.025 + rand() * 0.11).toFixed(4) + ")"
-        : "rgba(255,112,35," + (0.02 + rand() * 0.08).toFixed(4) + ")";
-      ctx.fill();
-      ctx.restore();
-    }
-
-    ctx.globalCompositeOperation = "source-over";
-
-    for (let row = -64; row <= 64; row += solar ? 10 : 12) {
-      const pts = [];
-      for (let lon = -180; lon <= 180; lon += 3) {
-        const wave = Math.sin((lon + row * 1.7) * 0.105) * 3.2 + Math.sin((lon - row) * 0.045) * 1.8;
-        pts.push([lon, row + wave]);
-      }
-      strokeLL(ctx, pts, solar ? "rgba(255,244,195,0.12)" : "rgba(255,230,190,0.105)", solar ? 3 : 2.4);
-    }
-
-    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
-  }
-
-  function buildClimateMoonTexture(profile) {
-    const c = canvas(SOURCE_W, SOURCE_H);
-    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
-    const rand = randomFactory(profile.seed);
-
-    const base = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
-    base.addColorStop(0, "#deded7");
-    base.addColorStop(0.28, "#c8c9c2");
-    base.addColorStop(0.58, "#9fa19c");
-    base.addColorStop(0.82, "#777d7f");
-    base.addColorStop(1, "#555f66");
-    ctx.fillStyle = base;
-    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
-
-    const maria = "rgba(58,62,64,0.34)";
-    ellipseLL(ctx, -30, 26, 22, 10, -8, maria);
-    ellipseLL(ctx, 12, 18, 20, 9, 6, maria);
-    ellipseLL(ctx, 42, -6, 25, 11, 10, maria);
-    ellipseLL(ctx, -52, -20, 19, 8, -12, maria);
-    ellipseLL(ctx, 82, 30, 18, 7, -8, "rgba(70,72,74,0.22)");
-
-    for (let i = 0; i < 2600; i += 1) {
-      const lon = -180 + rand() * 360;
-      const lat = -82 + rand() * 164;
-      const size = 0.22 + Math.pow(rand(), 2.55) * 7.2;
-      const strength = 0.12 + rand() * 0.55;
-
-      ellipseLL(
-        ctx,
-        lon,
-        lat,
-        size,
-        size * 0.66,
-        rand() * 180,
-        "rgba(34,36,38," + (0.045 + strength * 0.10).toFixed(4) + ")"
-      );
-
-      ellipseLL(
-        ctx,
-        lon - size * 0.05,
-        lat - size * 0.05,
-        size * 0.76,
-        size * 0.50,
-        rand() * 180,
-        "rgba(255,255,245," + (0.03 + strength * 0.07).toFixed(4) + ")"
-      );
-    }
-
-    /*
-      Manufactured assembly seams:
-      not a hard panel seam; these are subtle orbital construction arcs,
-      implying space-rock assembly without breaking spherical integrity.
-    */
-    for (let i = 0; i < 9; i += 1) {
-      const lat = -58 + i * 14;
-      const pts = [];
-
-      for (let lon = -180; lon <= 180; lon += 3) {
-        const wave = Math.sin((lon * 0.055) + i) * 2.2 + Math.sin((lon * 0.12) - i) * 0.9;
-        pts.push([lon, lat + wave]);
-      }
-
-      strokeLL(ctx, pts, "rgba(205,218,216,0.075)", 1.5);
-    }
-
-    /*
-      Climate-regulation lattice:
-      faint artificial meridian nodes embedded into the lunar surface.
-    */
-    for (let i = 0; i < 72; i += 1) {
-      const lon = -180 + rand() * 360;
-      const lat = -64 + rand() * 128;
-      const r = 0.35 + rand() * 1.25;
-
-      ellipseLL(ctx, lon, lat, r, r * 0.72, 0, "rgba(210,235,225,0.11)");
-      ellipseLL(ctx, lon, lat, r * 0.34, r * 0.25, 0, "rgba(245,255,245,0.10)");
-    }
-
-    for (let i = 0; i < 180; i += 1) {
-      const lon = -180 + rand() * 360;
-      const lat = -72 + rand() * 144;
-      ellipseLL(
-        ctx,
-        lon,
-        lat,
-        0.12 + rand() * 0.7,
-        0.08 + rand() * 0.4,
-        rand() * 180,
-        rand() > 0.55
-          ? "rgba(255,255,255," + (0.025 + rand() * 0.06).toFixed(4) + ")"
-          : "rgba(20,24,26," + (0.02 + rand() * 0.05).toFixed(4) + ")"
-      );
-    }
-
-    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
-  }
-
-  function getTexture(body) {
-    body = normalizeBody(body);
-
-    if (textureCache[body]) return textureCache[body];
-
-    const profile = profileFor(body);
-    const image =
-      profile.type === "planet"
-        ? buildAudreliaTexture(profile)
-        : profile.type === "star"
-          ? buildStarTexture(profile)
-          : buildClimateMoonTexture(profile);
-
-    textureCache[body] = {
-      width: image.width,
-      height: image.height,
-      data: image.data
-    };
-
-    return textureCache[body];
-  }
-
-  function sample(texture, u, v, out) {
-    const w = texture.width;
-    const h = texture.height;
-    const data = texture.data;
-
-    const x = wrap01(u) * w;
-    const y = clamp(v, 0, 0.999999) * (h - 1);
-
-    const x0 = Math.floor(x) % w;
-    const x1 = (x0 + 1) % w;
-    const y0 = Math.floor(y);
-    const y1 = Math.min(h - 1, y0 + 1);
-
-    const tx = x - Math.floor(x);
-    const ty = y - y0;
-
-    const i00 = (y0 * w + x0) * 4;
-    const i10 = (y0 * w + x1) * 4;
-    const i01 = (y1 * w + x0) * 4;
-    const i11 = (y1 * w + x1) * 4;
-
-    const r0 = data[i00] * (1 - tx) + data[i10] * tx;
-    const g0 = data[i00 + 1] * (1 - tx) + data[i10 + 1] * tx;
-    const b0 = data[i00 + 2] * (1 - tx) + data[i10 + 2] * tx;
-
-    const r1 = data[i01] * (1 - tx) + data[i11] * tx;
-    const g1 = data[i01 + 1] * (1 - tx) + data[i11 + 1] * tx;
-    const b1 = data[i01 + 2] * (1 - tx) + data[i11 + 2] * tx;
-
-    out[0] = r0 * (1 - ty) + r1 * ty;
-    out[1] = g0 * (1 - ty) + g1 * ty;
-    out[2] = b0 * (1 - ty) + b1 * ty;
-  }
-
-  function resizeCanvas(c) {
-    const host = c.parentElement || c;
+  function resizeCanvas(canvas) {
+    const host = canvas.parentElement || canvas;
     const rect = host.getBoundingClientRect();
-    const css = clamp(Math.round(rect.width || c.clientWidth || 420), 260, 1500);
+    const cssSize = clamp(Math.round(rect.width || canvas.clientWidth || 420), 260, 1500);
     const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
-    const px = Math.round(css * dpr);
+    const pixelSize = Math.round(cssSize * dpr);
 
-    c.style.width = css + "px";
-    c.style.height = css + "px";
+    canvas.style.width = cssSize + "px";
+    canvas.style.height = cssSize + "px";
 
-    if (c.width !== px || c.height !== px) {
-      c.width = px;
-      c.height = px;
+    if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
+      canvas.width = pixelSize;
+      canvas.height = pixelSize;
     }
+
+    return {
+      cssSize,
+      pixelSize,
+      dpr
+    };
   }
 
-  function drawSphere(ctx, w, h, body, longitude, zoom) {
-    body = normalizeBody(body);
+  function clearCanvas(canvas) {
+    const ctx = canvas.getContext("2d", { alpha: true });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 
-    const profile = profileFor(body);
-    const texture = getTexture(body);
-    const workSize = Math.min(MAX_WORK, Math.max(360, Math.min(w, h)));
-    const work = canvas(workSize, workSize);
-    const wctx = work.getContext("2d", { alpha: true, willReadFrequently: true });
-    const img = wctx.createImageData(workSize, workSize);
-    const pix = img.data;
+  function platformDrawSphere(ctx, canvas, extension, options) {
+    const body = normalizeBody(extension.id);
+    const profile = extension.createProfile();
+    const texture = extension.buildTexture();
+    const workSize = Math.min(MAX_WORK_SIZE, Math.max(360, Math.min(canvas.width, canvas.height)));
+    const work = makeCanvas(workSize, workSize);
+    const workCtx = work.getContext("2d", { alpha: true, willReadFrequently: true });
+    const image = workCtx.createImageData(workSize, workSize);
+    const pixels = image.data;
 
     const radius = workSize * 0.46;
     const radius2 = radius * radius;
     const center = workSize / 2;
-
-    const tilt = profile.tilt * DEG;
+    const tilt = (Number(profile.axialTiltDeg) || 0) * DEG;
     const cosTilt = Math.cos(tilt);
     const sinTilt = Math.sin(tilt);
-    const centerLon = Number(longitude || 0) * TAU;
+    const centerLon = (Number(options.longitude) || 0) * TAU;
     const color = [0, 0, 0];
 
-    const lx0 = -0.44;
-    const ly0 = -0.30;
-    const lz0 = 0.84;
-    const lm = Math.sqrt(lx0 * lx0 + ly0 * ly0 + lz0 * lz0);
-    const lx = lx0 / lm;
-    const ly = ly0 / lm;
-    const lz = lz0 / lm;
+    const lightX0 = -0.44;
+    const lightY0 = -0.30;
+    const lightZ0 = 0.84;
+    const lightMagnitude = Math.sqrt(lightX0 * lightX0 + lightY0 * lightY0 + lightZ0 * lightZ0);
+    const lx = lightX0 / lightMagnitude;
+    const ly = lightY0 / lightMagnitude;
+    const lz = lightZ0 / lightMagnitude;
 
-    const hx0 = lx;
-    const hy0 = ly;
-    const hz0 = lz + 1;
-    const hm = Math.sqrt(hx0 * hx0 + hy0 * hy0 + hz0 * hz0);
-    const hx = hx0 / hm;
-    const hy = hy0 / hm;
-    const hz = hz0 / hm;
+    const halfX0 = lx;
+    const halfY0 = ly;
+    const halfZ0 = lz + 1;
+    const halfMagnitude = Math.sqrt(halfX0 * halfX0 + halfY0 * halfY0 + halfZ0 * halfZ0);
+    const hx = halfX0 / halfMagnitude;
+    const hy = halfY0 / halfMagnitude;
+    const hz = halfZ0 / halfMagnitude;
 
     let ptr = 0;
 
@@ -498,10 +283,10 @@
         const d2 = x * x + y * y;
 
         if (d2 > radius2) {
-          pix[ptr] = 0;
-          pix[ptr + 1] = 0;
-          pix[ptr + 2] = 0;
-          pix[ptr + 3] = 0;
+          pixels[ptr] = 0;
+          pixels[ptr + 1] = 0;
+          pixels[ptr + 2] = 0;
+          pixels[ptr + 3] = 0;
           ptr += 4;
           continue;
         }
@@ -516,33 +301,40 @@
 
         const lon = Math.atan2(bx, bz) - centerLon;
         const lat = Math.asin(clamp(by, -1, 1));
-
         const u = wrap01(lon / TAU + 0.5);
         const v = 0.5 - lat / PI;
 
-        sample(texture, u, v, color);
+        extension.sampleSurface(texture, u, v, color, {
+          body,
+          profile,
+          normal: { x: sx, y: sy, z: sz },
+          lon,
+          lat
+        });
 
         const nDotL = clamp(sx * lx + sy * ly + sz * lz, 0, 1);
         const nDotH = clamp(sx * hx + sy * hy + sz * hz, 0, 1);
         const dist = Math.sqrt(d2) / radius;
         const rim = smoothstep(0.68, 1, dist);
 
-        let light = profile.type === "star" ? 0.82 + nDotL * 0.18 : 0.32 + nDotL * 0.75;
+        let baseLight;
+        if (profile.lightModel === "star") baseLight = 0.82 + nDotL * 0.18;
+        else baseLight = 0.32 + nDotL * 0.75;
 
-        let r = color[0] * light;
-        let g = color[1] * light;
-        let b = color[2] * light;
+        let r = color[0] * baseLight;
+        let g = color[1] * baseLight;
+        let b = color[2] * baseLight;
 
-        if (profile.type === "planet") {
+        if (profile.lightModel === "planet") {
           const water = color[2] > color[1] + 8 && color[2] > color[0] + 14;
           const spec = water ? Math.pow(nDotH, 48) * 0.32 : Math.pow(nDotH, 80) * 0.04;
-          const atm = rim * 30;
+          const atmosphere = rim * 30;
 
-          r += spec * 105 + atm * 0.45;
-          g += spec * 140 + atm * 1.0;
-          b += spec * 205 + atm * 1.65;
-        } else if (profile.type === "star") {
-          const glow = profile.body === "solar-system-sun" ? 22 + rim * 32 : 16 + rim * 24;
+          r += spec * 105 + atmosphere * 0.45;
+          g += spec * 140 + atmosphere * 1.0;
+          b += spec * 205 + atmosphere * 1.65;
+        } else if (profile.lightModel === "star") {
+          const glow = body === "audrelia-sun" ? 16 + rim * 24 : 22 + rim * 32;
           r += glow;
           g += glow * 0.72;
           b += glow * 0.24;
@@ -555,53 +347,53 @@
           b += climateGlow * 1.05 + spec * 36;
         }
 
-        const edge = clamp((1 - dist) / 0.018, 0, 1);
+        const edgeAlpha = clamp((1 - dist) / 0.018, 0, 1);
 
-        pix[ptr] = clamp(Math.round(r), 0, 255);
-        pix[ptr + 1] = clamp(Math.round(g), 0, 255);
-        pix[ptr + 2] = clamp(Math.round(b), 0, 255);
-        pix[ptr + 3] = Math.round(edge * 255);
+        pixels[ptr] = clamp(Math.round(r), 0, 255);
+        pixels[ptr + 1] = clamp(Math.round(g), 0, 255);
+        pixels[ptr + 2] = clamp(Math.round(b), 0, 255);
+        pixels[ptr + 3] = Math.round(edgeAlpha * 255);
         ptr += 4;
       }
     }
 
-    wctx.putImageData(img, 0, 0);
+    workCtx.putImageData(image, 0, 0);
 
-    ctx.clearRect(0, 0, w, h);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
-    const scale = clamp(Number(zoom || 100), 70, 240) / 100;
-    const drawSize = Math.min(w, h) * 0.92 * scale;
-    const dx = (w - drawSize) / 2;
-    const dy = (h - drawSize) / 2;
-    const cx = w / 2;
-    const cy = h / 2;
-    const ro = drawSize / 2;
+    const zoom = clamp(Number(options.zoom) || 100, 70, 240) / 100;
+    const drawSize = Math.min(canvas.width, canvas.height) * 0.92 * zoom;
+    const dx = (canvas.width - drawSize) / 2;
+    const dy = (canvas.height - drawSize) / 2;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const outerRadius = drawSize / 2;
 
     ctx.drawImage(work, dx, dy, drawSize, drawSize);
 
-    if (profile.type === "star") {
+    if (profile.lightModel === "star") {
       ctx.save();
-      const corona = ctx.createRadialGradient(cx, cy, ro * 0.82, cx, cy, ro * 1.24);
+      const corona = ctx.createRadialGradient(cx, cy, outerRadius * 0.82, cx, cy, outerRadius * 1.24);
       corona.addColorStop(0, "rgba(255,226,110,0.18)");
       corona.addColorStop(0.58, "rgba(255,128,26,0.12)");
       corona.addColorStop(1, "rgba(255,128,26,0)");
       ctx.beginPath();
-      ctx.arc(cx, cy, ro * 1.24, 0, TAU);
+      ctx.arc(cx, cy, outerRadius * 1.24, 0, TAU);
       ctx.fillStyle = corona;
       ctx.fill();
       ctx.restore();
     }
 
-    if (profile.type === "manufactured-moon") {
+    if (profile.lightModel === "moon") {
       ctx.save();
-      const halo = ctx.createRadialGradient(cx, cy, ro * 0.72, cx, cy, ro * 1.18);
+      const halo = ctx.createRadialGradient(cx, cy, outerRadius * 0.72, cx, cy, outerRadius * 1.18);
       halo.addColorStop(0, "rgba(160,190,190,0)");
       halo.addColorStop(0.65, "rgba(160,210,195,0.055)");
       halo.addColorStop(1, "rgba(160,210,195,0)");
       ctx.beginPath();
-      ctx.arc(cx, cy, ro * 1.18, 0, TAU);
+      ctx.arc(cx, cy, outerRadius * 1.18, 0, TAU);
       ctx.fillStyle = halo;
       ctx.fill();
       ctx.restore();
@@ -609,59 +401,116 @@
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, ro * 1.008, 0, TAU);
-    ctx.strokeStyle = profile.rim;
-    ctx.lineWidth = Math.max(2, ro * 0.012);
-    ctx.shadowColor = profile.glow;
-    ctx.shadowBlur = ro * 0.09;
+    ctx.arc(cx, cy, outerRadius * 1.008, 0, TAU);
+    ctx.strokeStyle = profile.rimColor || "rgba(255,255,255,0.62)";
+    ctx.lineWidth = Math.max(2, outerRadius * 0.012);
+    ctx.shadowColor = profile.glowColor || "rgba(255,255,255,0.22)";
+    ctx.shadowBlur = outerRadius * 0.09;
     ctx.stroke();
     ctx.restore();
+
+    const extensionReceipt = extension.getStatus();
 
     return {
       ok: true,
       version: VERSION,
+      role: "render-platform",
+      platformReceipt: "SHOWROOM_GLOBE_RENDER_PLATFORM_RECEIPT",
       body,
       label: profile.label,
-      planetName: "Audrelia",
-      moonType: body === "audrelia-moon" ? "manufactured-climate-moon" : null,
-      rendererOwnsBodiesOnly: true,
+      extensionVersion: extension.version,
+      extensionReceipt,
+      ownsProjection: true,
+      ownsDispatch: true,
+      ownsBodyPixels: false,
+      profileMerge: false,
       generatedImage: false,
       visualPassClaimed: false
     };
   }
 
-  function createRenderer(target, initialOptions) {
-    if (!(target instanceof HTMLCanvasElement)) {
-      throw new Error("AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1 requires a canvas target.");
+  function createRenderer(canvas, initialOptions) {
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      throw new Error("AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1 requires a canvas target.");
     }
 
-    const ctx = target.getContext("2d", { alpha: true });
-    let options = Object.assign({}, initialOptions || {});
+    const ctx = canvas.getContext("2d", { alpha: true });
+    let currentOptions = Object.assign({}, initialOptions || {});
+    let lastReceipt = null;
+    let pendingBody = null;
 
     function render(nextOptions) {
-      options = Object.assign({}, options, nextOptions || {});
-      resizeCanvas(target);
+      currentOptions = Object.assign({}, currentOptions, nextOptions || {});
+      resizeCanvas(canvas);
 
-      const body = normalizeBody(options.body || options.activeBody || target.dataset.body);
-      const longitude = Number(options.longitude) || 0;
-      const zoom = clamp(Number(options.zoom) || 100, 70, 240);
+      const body = resolveBody(currentOptions, canvas);
+      const extension = findRegisteredExtension(body) || getGlobalExtension(body);
 
-      target.dataset.body = body;
-      target.dataset.renderVersion = VERSION;
-      target.dataset.planetName = "Audrelia";
-      target.dataset.renderAuthority = "/assets/showroom.globe.render.js";
-      target.dataset.generatedImage = "false";
-      target.dataset.visualPassClaimed = "false";
+      canvas.dataset.body = body;
+      canvas.dataset.activeBody = body;
+      canvas.dataset.renderVersion = VERSION;
+      canvas.dataset.renderPlatform = "showroom.globe.render.js";
+      canvas.dataset.renderRole = "platform";
+      canvas.dataset.ownsBodyPixels = "false";
+      canvas.dataset.profileMerge = "false";
+      canvas.dataset.generatedImage = "false";
+      canvas.dataset.visualPassClaimed = "false";
 
-      return drawSphere(ctx, target.width, target.height, body, longitude, zoom);
+      if (!extension) {
+        clearCanvas(canvas);
+
+        if (pendingBody !== body) {
+          pendingBody = body;
+          loadExtension(body)
+            .then(function onLoaded() {
+              if (resolveBody(currentOptions, canvas) === body) {
+                render(currentOptions);
+              }
+            })
+            .catch(function onError(error) {
+              lastReceipt = {
+                ok: false,
+                version: VERSION,
+                role: "render-platform",
+                status: "EXTENSION_LOAD_FAILED",
+                body,
+                error: String(error && error.message ? error.message : error),
+                ownsBodyPixels: false,
+                profileMerge: false,
+                generatedImage: false,
+                visualPassClaimed: false
+              };
+            });
+        }
+
+        lastReceipt = {
+          ok: false,
+          version: VERSION,
+          role: "render-platform",
+          status: "EXTENSION_LOADING",
+          body,
+          ownsProjection: true,
+          ownsDispatch: true,
+          ownsBodyPixels: false,
+          profileMerge: false,
+          generatedImage: false,
+          visualPassClaimed: false
+        };
+
+        return lastReceipt;
+      }
+
+      pendingBody = null;
+      lastReceipt = platformDrawSphere(ctx, canvas, extension, currentOptions);
+      return lastReceipt;
     }
 
     function resize() {
-      resizeCanvas(target);
-      return render(options);
+      resizeCanvas(canvas);
+      return render(currentOptions);
     }
 
-    resizeCanvas(target);
+    resizeCanvas(canvas);
 
     return {
       VERSION,
@@ -669,47 +518,60 @@
       render,
       resize,
       getStatus() {
-        const body = normalizeBody(options.body || options.activeBody || target.dataset.body);
+        const body = resolveBody(currentOptions, canvas);
+        const extension = findRegisteredExtension(body);
+
         return {
           ok: true,
           version: VERSION,
+          role: "render-platform",
           activeBody: body,
-          planetName: "Audrelia",
-          audreliaClimateMoonSupported: true,
-          moonMapsToAudreliaClimateMoon: true,
-          rendererOwnsBodiesOnly: true,
+          extensionLoaded: Boolean(extension),
+          registeredBodies: Object.keys(extensionRegistry),
+          ownsProjection: true,
+          ownsDispatch: true,
+          ownsBodyPixels: false,
+          profileMerge: false,
           generatedImage: false,
-          visualPassClaimed: false
+          visualPassClaimed: false,
+          lastReceipt
         };
       }
     };
   }
 
-  function renderToCanvas(target, options) {
-    const renderer = createRenderer(target, options || {});
+  function renderToCanvas(canvas, options) {
+    const renderer = createRenderer(canvas, options || {});
     return renderer.render(options || {});
   }
 
   const api = {
     VERSION,
     version: VERSION,
-    PROFILES,
+    EXTENSION_FILES,
+    registerExtension,
+    loadExtension,
+    resolveBody,
     createRenderer,
     renderToCanvas,
     getStatus() {
       return {
         ok: true,
         version: VERSION,
-        role: "render-authority-only",
-        planetName: "Audrelia",
-        activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun", "audrelia-moon"],
-        compatibility: {
-          moon: "audrelia-moon",
+        role: "render-platform",
+        registeredBodies: Object.keys(extensionRegistry),
+        extensionFiles: EXTENSION_FILES,
+        activeBodies: ["audrelia", "audrelia-sun", "audrelia-moon"],
+        legacyAliases: {
           earth: "audrelia",
-          sun: "solar-system-sun"
+          sun: "audrelia-sun",
+          moon: "audrelia-moon",
+          "solar-system-sun": "audrelia-sun"
         },
-        audreliaClimateMoonSupported: true,
-        rendererOwnsBodiesOnly: true,
+        ownsProjection: true,
+        ownsDispatch: true,
+        ownsBodyPixels: false,
+        profileMerge: false,
         generatedImage: false,
         visualPassClaimed: false
       };
@@ -719,4 +581,18 @@
   global.DGBShowroomGlobeRender = api;
   global.DiamondGateBridge = global.DiamondGateBridge || {};
   global.DiamondGateBridge.DGBShowroomGlobeRender = api;
+
+  [
+    global.DGBAudreliaPlanetRenderExtension,
+    global.DGBAudreliaSunRenderExtension,
+    global.DGBAudreliaClimateMoonRenderExtension
+  ].forEach(function registerExisting(extension) {
+    if (extension) registerExtension(extension);
+  });
+
+  try {
+    global.dispatchEvent(new CustomEvent("dgb:showroom:audrelia-render-platform-ready", {
+      detail: api.getStatus()
+    }));
+  } catch (_) {}
 })(typeof window !== "undefined" ? window : globalThis);

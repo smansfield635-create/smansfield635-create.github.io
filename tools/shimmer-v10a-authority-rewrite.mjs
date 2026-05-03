@@ -1,325 +1,284 @@
-#!/usr/bin/env node
+name: Shimmer V10A Send Target Rewrite
 
-/**
- * SHIMMER_G1_V10A_AUTHORITY_REWRITE
- *
- * Purpose:
- * Find the real source file currently generating the public Shimmer page by
- * searching for the live old marker:
- *
- *   SHIMMER_LATTICE_G1_V10=ACTIVE
- *
- * Then rewrite that actual source to V10A proof markers.
- *
- * Usage from repo root:
- *
- *   node tools/shimmer-v10a-authority-rewrite.mjs --dry-run
- *   node tools/shimmer-v10a-authority-rewrite.mjs --apply
- *
- * If more than one file is found:
- *
- *   node tools/shimmer-v10a-authority-rewrite.mjs --apply --only path/to/file
- */
+on:
+  workflow_dispatch:
 
-import fs from "node:fs";
-import path from "node:path";
+permissions:
+  contents: write
 
-const ROOT = process.cwd();
+jobs:
+  rewrite:
+    runs-on: ubuntu-latest
 
-const args = new Set(process.argv.slice(2));
-const dryRun = args.has("--dry-run") || !args.has("--apply");
-const apply = args.has("--apply");
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-const onlyIndex = process.argv.indexOf("--only");
-const onlyPath =
-  onlyIndex >= 0 && process.argv[onlyIndex + 1]
-    ? path.resolve(ROOT, process.argv[onlyIndex + 1])
-    : null;
+      - name: Locate and rewrite active Shimmer source
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
 
-const EXCLUDED_DIRS = new Set([
-  ".git",
-  "node_modules",
-  ".next/cache",
-  ".cache",
-  ".turbo",
-  ".vercel",
-  ".netlify",
-]);
+          const ROOT = process.cwd();
+          const REPORT_DIR = path.join(ROOT, "authority-reports");
+          const REPORT_FILE = path.join(REPORT_DIR, "shimmer-v10a-rewrite-report.txt");
 
-const TEXT_EXTENSIONS = new Set([
-  ".html",
-  ".htm",
-  ".js",
-  ".mjs",
-  ".cjs",
-  ".jsx",
-  ".ts",
-  ".tsx",
-  ".json",
-  ".md",
-  ".txt",
-  ".php",
-  ".liquid",
-  ".astro",
-  ".vue",
-  ".svelte",
-]);
+          const EXCLUDE_DIRS = new Set([
+            ".git",
+            "node_modules",
+            ".github",
+            "tools",
+            "authority-reports",
+            ".next",
+            ".cache",
+            ".turbo",
+            ".vercel",
+            ".netlify"
+          ]);
 
-const REQUIRED_MARKERS = [
-  "SHIMMER_LATTICE_G1_V10=ACTIVE",
-  "Shimmer contract restored to baseline",
-];
+          const TEXT_EXTENSIONS = new Set([
+            ".html",
+            ".htm",
+            ".js",
+            ".mjs",
+            ".cjs",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".json",
+            ".md",
+            ".txt",
+            ".php",
+            ".liquid",
+            ".astro",
+            ".vue",
+            ".svelte",
+            ".yml",
+            ".yaml"
+          ]);
 
-const SUPPORT_MARKERS = [
-  "Shimmer · G1 V10",
-  "Diamond Gate Bridge · Frontier",
-  "/explore/frontier/shimmer/",
-  "BASELINE=THE_WORLD_IS_FLAT",
-  "METHOD=RUSSIAN_DOLL_LABEL_EXPANSION",
-  "Open only the domain needed",
-];
+          const OLD_ACTIVE = "SHIMMER_LATTICE_G1_V10=ACTIVE";
+          const OLD_FAMILY = "SHIMMER_LATTICE_G1_V10";
+          const NEW_ACTIVE = "SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE";
+          const NEW_PROOF = "PUBLIC_PROOF_MARKER=Universal Node · V10A active";
 
-const REPLACEMENTS = [
-  [
-    /Shimmer · G1 V10(?!A)/g,
-    "Shimmer · G1 V10A",
-  ],
-  [
-    /Diamond Gate Bridge · Frontier · Shimmer\/Lattice · G1 V10(?!A)/g,
-    "Diamond Gate Bridge · Frontier · Shimmer/Lattice · G1 V10A",
-  ],
-  [
-    /Shimmer contract restored to baseline\./g,
-    "Universal Node · V10A active.",
-  ],
-  [
-    /SHIMMER_LATTICE_G1_V10=ACTIVE/g,
-    "SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE",
-  ],
-  [
-    /BASELINE=THE_WORLD_IS_FLAT/g,
-    "BASELINE=THE_WORLD_IS_FLAT REVISION=V10A EXPRESSION=UNIVERSAL_NODE",
-  ],
-  [
-    /METHOD=RUSSIAN_DOLL_LABEL_EXPANSION/g,
-    "METHOD=RUSSIAN_DOLL_LABEL_EXPANSION UNIVERSAL_NODE=ACTIVE",
-  ],
-  [
-    /VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_ONLY/g,
-    "VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL",
-  ],
-  [
-    /CONTEXT_PRESERVED=TRUE/g,
-    "CONTEXT_PRESERVED=TRUE V10A_PROOF=TRUE",
-  ],
-];
+          const report = [];
 
-function isExcluded(fullPath) {
-  const relative = path.relative(ROOT, fullPath);
-  const parts = relative.split(path.sep);
+          function log(line = "") {
+            report.push(line);
+            console.log(line);
+          }
 
-  for (const part of parts) {
-    if (EXCLUDED_DIRS.has(part)) return true;
-  }
+          function ensureDir(dir) {
+            fs.mkdirSync(dir, { recursive: true });
+          }
 
-  return false;
-}
+          function isExcluded(fullPath) {
+            const rel = path.relative(ROOT, fullPath);
+            const parts = rel.split(path.sep);
+            return parts.some((part) => EXCLUDE_DIRS.has(part));
+          }
 
-function isTextCandidate(fullPath) {
-  const ext = path.extname(fullPath).toLowerCase();
-  if (TEXT_EXTENSIONS.has(ext)) return true;
+          function isTextCandidate(fullPath) {
+            const ext = path.extname(fullPath).toLowerCase();
+            const base = path.basename(fullPath).toLowerCase();
 
-  const base = path.basename(fullPath);
-  return base.includes("shimmer") || base.includes("frontier");
-}
+            if (TEXT_EXTENSIONS.has(ext)) return true;
+            if (base.includes("shimmer")) return true;
+            if (base.includes("frontier")) return true;
 
-function readText(fullPath) {
-  const stat = fs.statSync(fullPath);
-  if (!stat.isFile()) return null;
-  if (stat.size > 8_000_000) return null;
+            return false;
+          }
 
-  const buffer = fs.readFileSync(fullPath);
-  if (buffer.includes(0)) return null;
+          function walk(dir, output = []) {
+            if (isExcluded(dir)) return output;
 
-  return buffer.toString("utf8");
-}
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const fullPath = path.join(dir, entry.name);
 
-function walk(dir, files = []) {
-  if (isExcluded(dir)) return files;
+              if (entry.isDirectory()) {
+                walk(fullPath, output);
+                continue;
+              }
 
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const fullPath = path.join(dir, entry.name);
+              if (entry.isFile() && isTextCandidate(fullPath)) {
+                output.push(fullPath);
+              }
+            }
 
-    if (entry.isDirectory()) {
-      walk(fullPath, files);
-      continue;
-    }
+            return output;
+          }
 
-    if (entry.isFile() && isTextCandidate(fullPath)) {
-      files.push(fullPath);
-    }
-  }
+          function readUtf8(fullPath) {
+            const stat = fs.statSync(fullPath);
+            if (!stat.isFile()) return null;
+            if (stat.size > 8_000_000) return null;
 
-  return files;
-}
+            const buffer = fs.readFileSync(fullPath);
+            if (buffer.includes(0)) return null;
 
-function scoreContent(text) {
-  let score = 0;
-  const hits = [];
+            return buffer.toString("utf8");
+          }
 
-  for (const marker of REQUIRED_MARKERS) {
-    if (text.includes(marker)) {
-      score += 100;
-      hits.push(marker);
-    }
-  }
+          function score(text) {
+            let score = 0;
+            const hits = [];
 
-  for (const marker of SUPPORT_MARKERS) {
-    if (text.includes(marker)) {
-      score += 10;
-      hits.push(marker);
-    }
-  }
+            const markers = [
+              [OLD_ACTIVE, 1000],
+              ["Shimmer contract restored to baseline", 500],
+              ["BASELINE=THE_WORLD_IS_FLAT", 250],
+              ["METHOD=RUSSIAN_DOLL_LABEL_EXPANSION", 250],
+              ["Open only the domain needed", 100],
+              ["Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat", 100],
+              ["/explore/frontier/shimmer/", 75],
+              ["Shimmer · G1 V10", 75]
+            ];
 
-  return { score, hits };
-}
+            for (const [marker, weight] of markers) {
+              if (text.includes(marker)) {
+                score += weight;
+                hits.push(marker);
+              }
+            }
 
-function ensureProofMarker(text) {
-  const proofLine = "PUBLIC_PROOF_MARKER=Universal Node · V10A active";
+            return { score, hits };
+          }
 
-  if (text.includes(proofLine)) return text;
+          function rewrite(text) {
+            let next = text;
 
-  const contractLine = "SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE";
+            next = next.replace(/Shimmer · G1 V10(?!A)/g, "Shimmer · G1 V10A");
+            next = next.replace(/Diamond Gate Bridge · Frontier · Shimmer\/Lattice · G1 V10(?!A)/g, "Diamond Gate Bridge · Frontier · Shimmer/Lattice · G1 V10A");
+            next = next.replace(/Shimmer contract restored to baseline\.?/g, "Universal Node · V10A active.");
+            next = next.replace(/SHIMMER_LATTICE_G1_V10=ACTIVE/g, NEW_ACTIVE);
+            next = next.replace(/BASELINE=THE_WORLD_IS_FLAT/g, "BASELINE=THE_WORLD_IS_FLAT REVISION=V10A EXPRESSION=UNIVERSAL_NODE");
+            next = next.replace(/METHOD=RUSSIAN_DOLL_LABEL_EXPANSION/g, "METHOD=RUSSIAN_DOLL_LABEL_EXPANSION UNIVERSAL_NODE=ACTIVE");
+            next = next.replace(/VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_ONLY/g, "VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL");
 
-  if (text.includes(contractLine)) {
-    return text.replace(contractLine, `${contractLine}\n${proofLine}`);
-  }
+            if (!next.includes(NEW_PROOF)) {
+              if (next.includes(NEW_ACTIVE)) {
+                next = next.replace(NEW_ACTIVE, `${NEW_ACTIVE} ${NEW_PROOF}`);
+              } else {
+                next += `\n${NEW_ACTIVE}\n${NEW_PROOF}\n`;
+              }
+            }
 
-  return text;
-}
+            if (!next.includes("VISIBLE_TITLE=Shimmer · G1 V10A")) {
+              if (next.includes("PUBLIC_PROOF_MARKER=Universal Node · V10A active")) {
+                next = next.replace(
+                  "PUBLIC_PROOF_MARKER=Universal Node · V10A active",
+                  "VISIBLE_TITLE=Shimmer · G1 V10A PUBLIC_PROOF_MARKER=Universal Node · V10A active"
+                );
+              }
+            }
 
-function rewriteText(original) {
-  let next = original;
+            return next;
+          }
 
-  for (const [pattern, replacement] of REPLACEMENTS) {
-    next = next.replace(pattern, replacement);
-  }
+          ensureDir(REPORT_DIR);
 
-  next = ensureProofMarker(next);
+          log("SHIMMER V10A SEND TARGET REWRITE REPORT");
+          log(`Generated: ${new Date().toISOString()}`);
+          log(`Repo root: ${ROOT}`);
+          log("");
 
-  return next;
-}
+          const files = walk(ROOT);
+          const candidates = [];
 
-function main() {
-  const files = onlyPath ? [onlyPath] : walk(ROOT);
+          for (const file of files) {
+            const text = readUtf8(file);
+            if (!text) continue;
 
-  const candidates = [];
+            const scored = score(text);
+            if (scored.score > 0) {
+              candidates.push({
+                file,
+                text,
+                score: scored.score,
+                hits: scored.hits
+              });
+            }
+          }
 
-  for (const file of files) {
-    if (!fs.existsSync(file)) continue;
+          candidates.sort((a, b) => b.score - a.score);
 
-    const text = readText(file);
-    if (!text) continue;
+          log("CANDIDATES:");
+          if (!candidates.length) {
+            log("No Shimmer candidates found.");
+          } else {
+            for (const candidate of candidates) {
+              log("");
+              log(`FILE: ${path.relative(ROOT, candidate.file)}`);
+              log(`SCORE: ${candidate.score}`);
+              log("HITS:");
+              for (const hit of candidate.hits) log(`- ${hit}`);
+            }
+          }
 
-    const result = scoreContent(text);
+          const exactTargets = candidates.filter((candidate) => candidate.text.includes(OLD_ACTIVE));
+          const fallbackTargets = exactTargets.length
+            ? exactTargets
+            : candidates.filter((candidate) => candidate.text.includes(OLD_FAMILY));
 
-    if (result.score > 0) {
-      candidates.push({
-        file,
-        score: result.score,
-        hits: result.hits,
-        text,
-      });
-    }
-  }
+          log("");
+          log("SELECTED SEND TARGETS:");
 
-  candidates.sort((a, b) => b.score - a.score);
+          if (!fallbackTargets.length) {
+            log("NONE");
+            log("");
+            log("RESULT=FAILED_TO_LOCATE_SEND_TARGET");
+            log("REQUIRED_SEARCH_STRING=SHIMMER_LATTICE_G1_V10=ACTIVE");
+            fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+            process.exit(0);
+          }
 
-  console.log("");
-  console.log("SHIMMER V10A AUTHORITY SEARCH");
-  console.log("Root:", ROOT);
-  console.log("Mode:", dryRun ? "DRY RUN" : "APPLY");
-  console.log("");
+          for (const target of fallbackTargets) {
+            const rel = path.relative(ROOT, target.file);
+            const original = target.text;
+            const next = rewrite(original);
 
-  if (!candidates.length) {
-    console.log("No candidate files found.");
-    console.log("");
-    console.log("Search manually for:");
-    console.log("  SHIMMER_LATTICE_G1_V10=ACTIVE");
-    console.log("  Shimmer contract restored to baseline");
-    process.exit(1);
-  }
+            log(`- ${rel}`);
 
-  console.log("Candidate files:");
-  for (const candidate of candidates) {
-    console.log("");
-    console.log("-", path.relative(ROOT, candidate.file));
-    console.log("  score:", candidate.score);
-    console.log("  hits:");
-    for (const hit of candidate.hits) {
-      console.log("   •", hit);
-    }
-  }
+            if (next === original) {
+              log(`  RESULT=NO_CHANGE`);
+              continue;
+            }
 
-  const exact = candidates.filter((candidate) =>
-    candidate.text.includes("SHIMMER_LATTICE_G1_V10=ACTIVE")
-  );
+            const backupPath = `${target.file}.bak-v10a`;
+            fs.writeFileSync(backupPath, original, "utf8");
+            fs.writeFileSync(target.file, next, "utf8");
 
-  const targets = onlyPath ? candidates : exact;
+            log(`  RESULT=REWRITTEN`);
+            log(`  BACKUP=${path.relative(ROOT, backupPath)}`);
+            log(`  ACTIVE_CONTRACT=${NEW_ACTIVE}`);
+            log(`  PROOF=${NEW_PROOF}`);
+          }
 
-  if (!targets.length) {
-    console.log("");
-    console.log("No exact active-contract file found.");
-    console.log("Not applying broad changes.");
-    process.exit(1);
-  }
+          log("");
+          log("PUBLIC SUCCESS MARKERS:");
+          log("Shimmer · G1 V10A");
+          log("SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE");
+          log("Universal Node · V10A active");
+          log("");
+          log("RESULT=COMPLETE");
 
-  if (dryRun) {
-    console.log("");
-    console.log("Dry run complete. No files changed.");
-    console.log("");
-    console.log("To apply:");
-    console.log("  node tools/shimmer-v10a-authority-rewrite.mjs --apply");
-    console.log("");
-    console.log("To target one file:");
-    console.log("  node tools/shimmer-v10a-authority-rewrite.mjs --apply --only path/to/file");
-    return;
-  }
+          fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+          NODE
 
-  if (!apply) {
-    console.log("");
-    console.log("Apply flag missing. No files changed.");
-    return;
-  }
+      - name: Commit authority rewrite
+        shell: bash
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-  console.log("");
-  console.log("Applying V10A rewrite to active source file(s):");
+          git add -A
 
-  for (const target of targets) {
-    const original = target.text;
-    const next = rewriteText(original);
-
-    if (next === original) {
-      console.log("-", path.relative(ROOT, target.file), "unchanged");
-      continue;
-    }
-
-    const backup = `${target.file}.bak-v10a`;
-    fs.writeFileSync(backup, original, "utf8");
-    fs.writeFileSync(target.file, next, "utf8");
-
-    console.log("-", path.relative(ROOT, target.file));
-    console.log("  backup:", path.relative(ROOT, backup));
-    console.log("  wrote: SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE");
-  }
-
-  console.log("");
-  console.log("Done.");
-  console.log("");
-  console.log("Public page should now show:");
-  console.log("  Shimmer · G1 V10A");
-  console.log("  SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE");
-  console.log("  Universal Node · V10A active");
-}
-
-main();
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Rewrite Shimmer active source to G1 V10A"
+            git push
+          fi

@@ -2,16 +2,15 @@
 ══════════════════════════════════════════════════════════════════════
 FULL_FILE_TNT
 FILE=/showroom/globe/index.html
-TNT_ID=SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2
+TNT_ID=SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_BASELINE_RESTORE_TNT_v1
 MODE=FULL_FILE_REPLACEMENT
-PRECINCT=DEMO_UNIVERSE_BODY_LANE
-JURISDICTION=ZOOM_BEHAVIOR_PLUS_SUN_G1_AND_MOON_G1_REALITY_STANDARD
-NON_JURISDICTION=PLANET_1_NINE_SUMMITS_UNIVERSE, GAUGES_SCORING, PRODUCTS, DOOR, HOME, ROOT_COMPASS
-EARTH_RULE=PRESERVE_EARTH_G1_PRESENTATION; DO_NOT_REPLACE_EARTH_WITH_NEW_ART_STANDARD
-SUN_RULE=UPGRADE_FROM_CARTOON_TO_PHYSICAL_STELLAR_STANDARD
-MOON_RULE=UPGRADE_FROM_CARTOON_TO_PHYSICAL_LUNAR_STANDARD
-GRAPHICBOX=FORBIDDEN
-IMAGE_GENERATION=FORBIDDEN
+PRECINCT=DEMO_ACTUAL_UNIVERSE_GLOBE_BASELINE
+JURISDICTION=RESTORE_PRIOR_GLOBE_BASELINE_WRAPPER_PLUS_ZOOM_AND_STANDARD_REQUESTS
+NON_JURISDICTION=INLINE_GLOBE_REDRAW, CARTOON_CANVAS_REPLACEMENT, DEMO_UNIVERSE_DATA_MERGE, PLANET_1, GAUGES_SCORING, GLOBAL_NAV_AUTHORITY
+EARTH_RULE=PRIOR_GLOBE_BASELINE_PROTECTED
+SUN_RULE=REQUEST_PHYSICAL_REALITY_STANDARD_WITHOUT_REPLACING_GLOBE_RENDERER
+MOON_RULE=REQUEST_PHYSICAL_REALITY_STANDARD_WITHOUT_REPLACING_GLOBE_RENDERER
+DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
 VISUAL_PASS_CLAIMED=false
 OWNER_VISUAL_RECEIPT_REQUIRED=true
 ══════════════════════════════════════════════════════════════════════
@@ -21,10 +20,10 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Diamond Gate Bridge · Earth G1 · Sun G1 · Moon G1</title>
+  <title>Diamond Gate Bridge · Demo Actual Universe</title>
   <meta
     name="description"
-    content="Earth Generation 1, Sun Generation 1, and Moon Generation 1 Demo Universe route with zoom control and physical-reality Sun/Moon standards."
+    content="Demo Actual Universe globe baseline route. Restores the protected prior globe baseline, adds zoom controls, and keeps Demo Universe data separate."
   />
 
   <style>
@@ -41,7 +40,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       --gold-bright: #ffe99a;
       --blue: #78c7ff;
       --shadow: rgba(0, 0, 0, 0.52);
-      --body-size: min(78vw, 560px);
+      --stage-size: min(78vw, 680px);
       --zoom-scale: 1;
       color-scheme: dark;
     }
@@ -200,7 +199,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      grid-template-columns: minmax(0, 0.94fr) minmax(320px, 1.06fr);
       gap: 24px;
       align-items: center;
       padding: 26px 0;
@@ -248,7 +247,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     .stage-card {
       position: relative;
       overflow: hidden;
-      min-height: 720px;
+      min-height: 760px;
       border-radius: 34px;
       border: 1px solid var(--line);
       background:
@@ -275,7 +274,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       transform: rotateX(68deg) rotateZ(23deg);
     }
 
-    .body-stage {
+    .actual-globe-stage {
       position: absolute;
       inset: 0;
       display: grid;
@@ -284,9 +283,9 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       overflow: hidden;
     }
 
-    .zoom-viewport {
+    .actual-globe-zoom-layer {
       position: relative;
-      width: var(--body-size);
+      width: var(--stage-size);
       aspect-ratio: 1;
       display: grid;
       place-items: center;
@@ -297,43 +296,51 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       touch-action: none;
     }
 
-    .body-frame {
+    .actual-globe-mount {
       position: relative;
       width: 100%;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
-      filter: drop-shadow(0 28px 38px rgba(0,0,0,0.58));
+      filter: drop-shadow(0 28px 48px rgba(0,0,0,0.62));
     }
 
-    .body-glow {
+    .actual-globe-mount > canvas,
+    .actual-globe-mount > svg,
+    .actual-globe-mount > img,
+    .actual-globe-mount > .globe,
+    .actual-globe-mount > [data-globe-object] {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .instrument-pending {
       position: absolute;
-      width: 124%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 67%);
-      opacity: 0.8;
-      transform: scale(1);
+      inset: 16%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      border: 1px dashed rgba(241, 201, 101, 0.38);
+      border-radius: 999px;
+      color: var(--muted);
+      background: radial-gradient(circle, rgba(241,201,101,0.08), rgba(0,0,0,0.18) 58%, rgba(0,0,0,0));
     }
 
-    canvas.body-canvas {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      z-index: 2;
+    .actual-globe-mount[data-instrument-mounted="true"] .instrument-pending {
+      display: none;
     }
 
     .body-label {
       position: absolute;
       left: 50%;
-      bottom: -64px;
+      bottom: -68px;
       transform: translateX(-50%);
       z-index: 5;
       display: grid;
       justify-items: center;
       gap: 5px;
-      width: min(100%, 500px);
+      width: min(100%, 560px);
       text-align: center;
       pointer-events: none;
     }
@@ -361,7 +368,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: rgba(3, 5, 14, 0.72);
+      background: rgba(3, 5, 14, 0.74);
       backdrop-filter: blur(14px);
     }
 
@@ -513,7 +520,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
 
       .stage-card {
-        min-height: 660px;
+        min-height: 690px;
       }
 
       .grid {
@@ -527,7 +534,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     @media (max-width: 560px) {
       :root {
-        --body-size: min(86vw, 430px);
+        --stage-size: min(86vw, 460px);
       }
 
       .site-shell {
@@ -543,7 +550,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
 
       .stage-card {
-        min-height: 640px;
+        min-height: 650px;
       }
 
       .controls-panel {
@@ -563,10 +570,44 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
     }
   </style>
+
+  <script type="application/json" id="demo-actual-universe-data">
+    {
+      "lane": "Demo Actual Universe",
+      "dataFlight": "separate",
+      "baseline": "prior-globe-baseline-protected",
+      "earth": {
+        "authority": "protected-prior-globe-baseline",
+        "allowedChange": "zoom-wrapper-only"
+      },
+      "sun": {
+        "standardRequest": "physical-reality",
+        "replaceGlobeRenderer": false,
+        "cartoonStandard": false
+      },
+      "moon": {
+        "standardRequest": "physical-reality",
+        "replaceGlobeRenderer": false,
+        "cartoonStandard": false
+      },
+      "planet1": {
+        "status": "reserved-for-nine-summits-universe"
+      }
+    }
+  </script>
+
+  <script type="application/json" id="demo-universe-data">
+    {
+      "lane": "Demo Universe",
+      "dataFlight": "separate",
+      "mergeIntoDemoActualUniverse": false,
+      "status": "held-separate-by-route-contract"
+    }
+  </script>
 </head>
 
 <body>
-  <a class="skip-link" href="#earth-g1">Skip to Earth Generation 1</a>
+  <a class="skip-link" href="#demo-actual-universe">Skip to Demo Actual Universe globe</a>
 
   <div class="site-shell">
     <header>
@@ -584,58 +625,76 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
           <a href="/nine-summits/universe/">Universe</a>
           <a href="/products/">Products</a>
           <a href="/showroom/">Showroom</a>
-          <a href="/showroom/globe/" aria-current="page">Earth G1</a>
+          <a href="/showroom/globe/" aria-current="page">Demo Actual Universe</a>
           <a href="/gauges/">Gauges</a>
           <a href="/book/">Read</a>
         </nav>
       </div>
     </header>
 
-    <main id="earth-g1">
+    <main id="demo-actual-universe">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="eyebrow">Earth · Generation 1 · Demo Universe · Sun G1 · Moon G1</div>
-          <h1 id="page-title">Demo Universe baseline.</h1>
+          <div class="eyebrow">Demo Actual Universe · protected globe baseline</div>
+          <h1 id="page-title">The globe baseline is back.</h1>
           <p class="lead">
-            Earth G1 remains preserved. This pass adds zoom authority and upgrades the Sun and Moon
-            away from cartoon standards toward physical-reality standards: stellar plasma behavior,
-            solar limb intensity, lunar maria, crater depth, ray systems, regolith texture, and
-            realistic spherical lighting.
+            This route restores the prior globe baseline as the protected visual authority. The page
+            adds zoom around the existing globe, requests physical-reality Sun and Moon standards,
+            and keeps Demo Universe data separate from Demo Actual Universe data.
           </p>
 
           <div class="status-strip" aria-label="Route status">
-            <span class="pill">Earth G1 preserved</span>
-            <span class="pill">Zoom authority added</span>
-            <span class="pill">Sun G1 physical standard</span>
-            <span class="pill">Moon G1 physical standard</span>
-            <span class="pill">No GraphicBox</span>
-            <span class="pill">Owner visual receipt required</span>
+            <span class="pill">Demo Actual Universe</span>
+            <span class="pill">Prior globe protected</span>
+            <span class="pill">Zoom wrapper only</span>
+            <span class="pill">Sun reality standard requested</span>
+            <span class="pill">Moon reality standard requested</span>
+            <span class="pill">Data lanes separate</span>
           </div>
         </div>
 
-        <section class="stage-card" id="stageCard" aria-label="Demo Universe body viewer">
+        <section
+          class="stage-card"
+          id="stageCard"
+          aria-label="Demo Actual Universe globe viewer"
+          data-demo-actual-universe-route="true"
+          data-demo-universe-merge="false"
+        >
           <div class="orbital-ring" aria-hidden="true"></div>
           <div class="orbital-ring two" aria-hidden="true"></div>
 
-          <div class="body-stage" id="bodyStage">
-            <div class="zoom-viewport" id="zoomViewport">
-              <div class="body-frame" id="bodyFrame" data-body="earth">
-                <div class="body-glow" id="bodyGlow" aria-hidden="true"></div>
-                <canvas class="body-canvas" id="bodyCanvas" width="1400" height="1400" aria-label="Active Demo Universe body"></canvas>
-
-                <div class="body-label">
-                  <strong id="bodyName">Earth G1</strong>
-                  <span id="bodyDescription">Preserved Generation 1 Earth presentation with zoom ability.</span>
+          <div class="actual-globe-stage" id="actualGlobeStage">
+            <div class="actual-globe-zoom-layer" id="actualGlobeZoomLayer">
+              <div
+                class="actual-globe-mount"
+                id="showroomGlobeMount"
+                data-showroom-globe-root
+                data-globe-mount
+                data-demo-actual-universe="true"
+                data-preserve-prior-globe="true"
+                data-earth-rule="prior-baseline-protected"
+                data-sun-standard="physical-reality"
+                data-moon-standard="physical-reality"
+                data-planet-one="reserved"
+                data-instrument-mounted="false"
+              >
+                <div class="instrument-pending" id="instrumentPending">
+                  Canonical globe instrument pending. No replacement renderer is being drawn here.
                 </div>
+              </div>
+
+              <div class="body-label">
+                <strong id="bodyName">Demo Actual Universe</strong>
+                <span id="bodyDescription">Prior globe baseline protected. Zoom wraps the globe without replacing it.</span>
               </div>
             </div>
           </div>
 
-          <div class="controls-panel" aria-label="Earth G1 motion and zoom control">
-            <div class="body-tabs" aria-label="Choose Demo Universe body">
-              <button type="button" data-body="earth" aria-pressed="true">View Earth G1</button>
-              <button type="button" data-body="sun" aria-pressed="false">View Sun G1</button>
-              <button type="button" data-body="moon" aria-pressed="false">View Moon G1</button>
+          <div class="controls-panel" aria-label="Demo Actual Universe control panel">
+            <div class="body-tabs" aria-label="Choose Demo Actual Universe body">
+              <button type="button" data-body="earth" aria-pressed="true">View Earth</button>
+              <button type="button" data-body="sun" aria-pressed="false">View Sun</button>
+              <button type="button" data-body="moon" aria-pressed="false">View Moon</button>
             </div>
 
             <div class="motion-tabs" aria-label="Motion controls">
@@ -657,12 +716,12 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
             <label class="zoom-control" for="zoomRange">
               <span>Zoom</span>
-              <input id="zoomRange" type="range" min="70" max="230" step="1" value="100" />
+              <input id="zoomRange" type="range" min="70" max="240" step="1" value="100" />
               <span id="zoomLabel">100%</span>
             </label>
 
             <div class="readout" aria-live="polite">
-              <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth G1</span>
+              <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth · zoom: 100%</span>
               <div class="track" aria-hidden="true"><span id="speedFill"></span></div>
             </div>
           </div>
@@ -671,48 +730,50 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
       <section class="grid" aria-label="Body status cards">
         <article class="info-card">
-          <h2>Earth G1</h2>
+          <h2>Earth baseline</h2>
           <p>
-            Preserved as the completed Demo Universe Earth body. This pass does not reassign Planet 1
-            or claim a new Earth visual standard. Zoom is the only Earth-facing control upgrade.
+            Earth remains the protected prior globe baseline. This file does not redraw the globe,
+            replace its texture, or create a new inline Earth renderer.
           </p>
         </article>
 
         <article class="info-card">
-          <h2>Sun G1</h2>
+          <h2>Sun standard</h2>
           <p>
-            Upgraded toward a physical stellar standard: spherical plasma body, granular surface,
-            corona, limb intensity, prominence hints, turbulence, and no icon/lollipop treatment.
+            Sun G1 receives a physical-reality standard request through the canonical globe instrument:
+            stellar sphere, plasma behavior, corona, limb intensity, and no flat icon treatment.
           </p>
         </article>
 
         <article class="info-card">
-          <h2>Moon G1</h2>
+          <h2>Moon standard</h2>
           <p>
-            Upgraded toward a physical lunar standard: crater depth, maria basins, ray systems,
-            regolith grain, micro-impact texture, limb shading, and full-phase lighting.
+            Moon G1 receives a physical-reality standard request through the canonical globe instrument:
+            lunar sphere, crater depth, maria, ray systems, regolith, and limb shading.
           </p>
         </article>
       </section>
 
       <section class="info-card" aria-labelledby="route-contract-title">
         <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2
+        <div class="contract">SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_BASELINE_RESTORE_TNT_v1
 route=/showroom/globe/
-page=earth-g1-sun-g1-moon-g1
-earth-g1=preserved
-earth-authorized-change=zoom-only
+lane=demo-actual-universe
+demo-universe-data=separate
+demo-actual-universe-data=separate
+merge-demo-universe-into-demo-actual-universe=false
+prior-globe-baseline=protected
+earth-change=zoom-wrapper-only
+inline-globe-redraw=false
+cartoon-canvas-replacement=false
+canonical-globe-instrument=/assets/showroom.globe.instrument.js
+runtime-support=/showroom/runtime.js
 zoom-control=true
 zoom-min=70
-zoom-max=230
+zoom-max=240
 zoom-reset=100
-sun-g1=physical-reality-standard
-sun-standard=stellar-sphere-plasma-granulation-corona-limb-intensity-prominence-hints-turbulence
-moon-g1=physical-reality-standard
-moon-standard=spherical-lunar-body-crater-depth-maria-rays-regolith-microimpacts-limb-shading-full-phase-lighting
-cartoon-standard=false
-graphicbox=false
-image-generation=false
+sun-standard-request=physical-reality
+moon-standard-request=physical-reality
 planet-1=reserved-for-nine-summits-universe
 visual-pass-claimed=false
 owner-visual-receipt-required=true</div>
@@ -721,29 +782,29 @@ owner-visual-receipt-required=true</div>
       <section class="receipt-bar" aria-label="Hybrid Bond receipt">
         <strong>Hybrid Bond receipt</strong>
         <p>
-          Precinct held: Demo Universe body lane. Jurisdiction held: zoom behavior plus Sun G1 and
-          Moon G1 reality-standard upgrades. Non-jurisdiction held: Planet 1 remains reserved for
-          Nine Summits Universe; Gauges scoring, global navigation authority, Products, Door, Home,
-          and Compass route identities are not reassigned by this file.
+          Precinct held: Demo Actual Universe globe baseline. Jurisdiction held: restore the prior globe
+          by mounting the canonical globe instrument, add zoom as a wrapper, and request Sun/Moon
+          physical standards. Non-jurisdiction held: no inline globe redraw, no Demo Universe data merge,
+          no Planet 1 reassignment, no Gauges scoring change, and no global route authority change.
         </p>
       </section>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2 · Earth G1 preserved · Zoom added · Sun/Moon physical standard ready · Owner receipt required.
+      SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_BASELINE_RESTORE_TNT_v1 · prior globe protected · zoom wrapper · Sun/Moon physical standard requested · owner receipt required.
     </footer>
   </div>
+
+  <script src="/showroom/runtime.js" defer></script>
+  <script src="/assets/showroom.globe.instrument.js" defer></script>
 
   <script>
     (() => {
       "use strict";
 
-      const canvas = document.getElementById("bodyCanvas");
-      const ctx = canvas.getContext("2d", { alpha: true });
       const stageCard = document.getElementById("stageCard");
-      const zoomViewport = document.getElementById("zoomViewport");
-      const frame = document.getElementById("bodyFrame");
-      const glow = document.getElementById("bodyGlow");
+      const mount = document.getElementById("showroomGlobeMount");
+      const zoomLayer = document.getElementById("actualGlobeZoomLayer");
       const bodyName = document.getElementById("bodyName");
       const bodyDescription = document.getElementById("bodyDescription");
       const motionLabel = document.getElementById("motionLabel");
@@ -759,513 +820,236 @@ owner-visual-receipt-required=true</div>
       const state = {
         body: "earth",
         running: true,
-        direction: 1,
+        direction: "forward",
         speedName: "normal",
-        speed: 0.0021,
-        rotation: 0,
         zoom: 1,
-        lastTime: performance.now(),
         pointerDistance: null,
         pointerZoom: 1
       };
 
       const bodyMeta = {
         earth: {
-          name: "Earth G1",
-          description: "Preserved Generation 1 Earth presentation with zoom ability.",
-          glow: "radial-gradient(circle, rgba(120,199,255,0.28), rgba(55,112,186,0.13) 36%, transparent 70%)"
+          label: "Earth",
+          description: "Prior globe baseline protected. Zoom wraps the existing globe without replacing it."
         },
         sun: {
-          name: "Sun G1",
-          description: "Physical stellar standard: spherical plasma, corona, limb intensity, granulation, and prominence hints.",
-          glow: "radial-gradient(circle, rgba(255,226,124,0.58), rgba(255,111,39,0.26) 34%, rgba(255,80,12,0.08) 58%, transparent 76%)"
+          label: "Sun",
+          description: "Physical-reality Sun standard requested through the canonical globe instrument."
         },
         moon: {
-          name: "Moon G1",
-          description: "Physical lunar standard: crater depth, maria, ray systems, regolith grain, micro-impacts, and limb shading.",
-          glow: "radial-gradient(circle, rgba(238,238,225,0.28), rgba(132,146,170,0.13) 42%, transparent 72%)"
+          label: "Moon",
+          description: "Physical-reality Moon standard requested through the canonical globe instrument."
         }
       };
 
       const speedMap = {
-        slow: { value: 0.00085, fill: "28%" },
-        normal: { value: 0.0021, fill: "52%" },
-        fast: { value: 0.0052, fill: "84%" }
+        slow: { fill: "28%", value: 0.65 },
+        normal: { fill: "52%", value: 1 },
+        fast: { fill: "84%", value: 1.65 }
       };
 
       function clamp(value, min, max) {
         return Math.min(max, Math.max(min, value));
       }
 
-      function hashNoise(x, y, seed) {
-        const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
-        return n - Math.floor(n);
-      }
-
-      function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        const size = Math.max(900, Math.floor(Math.min(rect.width, rect.height) * ratio));
-        if (canvas.width !== size || canvas.height !== size) {
-          canvas.width = size;
-          canvas.height = size;
+      function readJSON(id) {
+        const node = document.getElementById(id);
+        if (!node) return {};
+        try {
+          return JSON.parse(node.textContent);
+        } catch (_) {
+          return {};
         }
       }
 
-      function clear() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
+      const demoActualUniverseData = readJSON("demo-actual-universe-data");
+      const demoUniverseData = readJSON("demo-universe-data");
 
-      function clipSphere(cx, cy, r) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.clip();
-      }
+      window.DiamondGateBridge = window.DiamondGateBridge || {};
+      window.DiamondGateBridge.demoActualUniverseData = demoActualUniverseData;
+      window.DiamondGateBridge.demoUniverseData = demoUniverseData;
 
-      function sphereRim(cx, cy, r, lightColor, darkAlpha) {
-        const rim = ctx.createRadialGradient(cx, cy, r * 0.76, cx, cy, r * 1.03);
-        rim.addColorStop(0, "rgba(255,255,255,0)");
-        rim.addColorStop(0.76, lightColor);
-        rim.addColorStop(0.94, "rgba(255,255,255,0.2)");
-        rim.addColorStop(1, `rgba(0,0,0,${darkAlpha})`);
-        ctx.fillStyle = rim;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = lightColor;
-        ctx.lineWidth = Math.max(1, r * 0.012);
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      function drawEarthPreserved(cx, cy, r, rotation) {
-        ctx.save();
-        clipSphere(cx, cy, r);
-
-        const ocean = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.32, r * 0.1, cx, cy, r);
-        ocean.addColorStop(0, "#6ed7ff");
-        ocean.addColorStop(0.38, "#1b7dc2");
-        ocean.addColorStop(0.78, "#0b2e74");
-        ocean.addColorStop(1, "#031336");
-        ctx.fillStyle = ocean;
-        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rotation * 0.36);
-
-        const land = [
-          [-0.46, -0.28, 0.33, 0.19, -0.2],
-          [0.12, -0.38, 0.28, 0.16, 0.48],
-          [0.34, 0.10, 0.36, 0.2, 0.15],
-          [-0.26, 0.28, 0.29, 0.18, 0.62],
-          [-0.58, 0.03, 0.22, 0.12, -0.76]
-        ];
-
-        land.forEach(([x, y, w, h, rot], index) => {
-          ctx.save();
-          ctx.translate(x * r, y * r);
-          ctx.rotate(rot);
-          const grd = ctx.createLinearGradient(-w * r, -h * r, w * r, h * r);
-          grd.addColorStop(0, "#d8c27c");
-          grd.addColorStop(0.42, "#5fb36e");
-          grd.addColorStop(1, "#1f704a");
-          ctx.fillStyle = grd;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.globalAlpha = 0.32;
-          ctx.strokeStyle = "#f4deb0";
-          ctx.lineWidth = Math.max(1, r * 0.006);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-          ctx.restore();
-
-          if (index % 2 === 0) {
-            ctx.save();
-            ctx.globalAlpha = 0.26;
-            ctx.fillStyle = "#fff";
-            ctx.beginPath();
-            ctx.ellipse((x + 0.03) * r, (y - 0.08) * r, w * r * 0.64, h * r * 0.28, rot + 0.4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
+      function dispatchInstrumentEvent(name, detail = {}) {
+        window.dispatchEvent(new CustomEvent(name, {
+          detail: {
+            route: "/showroom/globe/",
+            lane: "demo-actual-universe",
+            mergeDemoUniverse: false,
+            preservePriorGlobe: true,
+            mount,
+            ...detail
           }
-        });
-
-        ctx.restore();
-
-        const cloudBands = [
-          [-0.32, -0.24, 0.95, 0.075, -0.24],
-          [0.18, 0.05, 0.82, 0.06, 0.17],
-          [-0.12, 0.32, 0.7, 0.05, -0.38]
-        ];
-
-        cloudBands.forEach(([x, y, w, h, rot]) => {
-          ctx.save();
-          ctx.translate(cx + x * r, cy + y * r);
-          ctx.rotate(rot + rotation * 0.18);
-          ctx.globalAlpha = 0.34;
-          ctx.fillStyle = "#fff";
-          ctx.beginPath();
-          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        });
-
-        ctx.globalAlpha = 1;
-        ctx.restore();
-
-        const shade = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.34, r * 0.08, cx + r * 0.22, cy + r * 0.22, r * 1.12);
-        shade.addColorStop(0, "rgba(255,255,255,0.32)");
-        shade.addColorStop(0.42, "rgba(120,190,255,0.05)");
-        shade.addColorStop(0.78, "rgba(0,32,82,0.18)");
-        shade.addColorStop(1, "rgba(0,0,0,0.58)");
-        ctx.fillStyle = shade;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        sphereRim(cx, cy, r, "rgba(159,213,255,0.24)", 0.5);
+        }));
       }
 
-      function drawPhysicalSun(cx, cy, r, rotation) {
-        ctx.save();
-
-        const coronaLayers = [
-          { scale: 1.62, alpha: 0.08, color: "rgba(255,181,72,1)" },
-          { scale: 1.36, alpha: 0.13, color: "rgba(255,120,38,1)" },
-          { scale: 1.16, alpha: 0.22, color: "rgba(255,226,112,1)" }
+      function findInstrumentAPI() {
+        const candidates = [
+          window.ShowroomGlobeInstrument,
+          window.DiamondGateBridgeShowroomGlobe,
+          window.showroomGlobeInstrument,
+          window.ShowroomGlobe,
+          window.DiamondGateBridge && window.DiamondGateBridge.ShowroomGlobe,
+          window.DiamondGateBridge && window.DiamondGateBridge.showroomGlobeInstrument
         ];
 
-        coronaLayers.forEach((layer) => {
-          const g = ctx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r * layer.scale);
-          g.addColorStop(0, layer.color.replace("1)", `${layer.alpha})`));
-          g.addColorStop(1, "rgba(255,115,32,0)");
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(cx, cy, r * layer.scale, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        for (let i = 0; i < 90; i += 1) {
-          const angle = (Math.PI * 2 * i) / 90 + rotation * 0.2;
-          const length = r * (0.1 + hashNoise(i, 3, 14) * 0.34);
-          ctx.strokeStyle = `rgba(255, ${126 + Math.floor(hashNoise(i, 8, 2) * 108)}, 48, ${0.08 + hashNoise(i, 9, 4) * 0.16})`;
-          ctx.lineWidth = Math.max(1, r * (0.006 + hashNoise(i, 1, 7) * 0.012));
-          ctx.beginPath();
-          ctx.moveTo(cx + Math.cos(angle) * r * 0.92, cy + Math.sin(angle) * r * 0.92);
-          ctx.lineTo(cx + Math.cos(angle) * (r + length), cy + Math.sin(angle) * (r + length));
-          ctx.stroke();
-        }
-
-        clipSphere(cx, cy, r);
-
-        const plasma = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.32, r * 0.04, cx + r * 0.08, cy + r * 0.1, r);
-        plasma.addColorStop(0, "#fff7b2");
-        plasma.addColorStop(0.18, "#ffd65b");
-        plasma.addColorStop(0.43, "#ff9b28");
-        plasma.addColorStop(0.72, "#e34a18");
-        plasma.addColorStop(1, "#540a02");
-        ctx.fillStyle = plasma;
-        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-        for (let i = 0; i < 520; i += 1) {
-          const a = hashNoise(i, 19, 7) * Math.PI * 2;
-          const dist = Math.sqrt(hashNoise(i, 29, 2)) * r * 0.98;
-          const x = cx + Math.cos(a) * dist;
-          const y = cy + Math.sin(a) * dist;
-          const size = r * (0.006 + hashNoise(i, 11, 31) * 0.022);
-          const n = hashNoise(i, 5, 17);
-          ctx.globalAlpha = 0.12 + n * 0.34;
-          ctx.fillStyle = n > 0.56 ? "#fff0a8" : n > 0.25 ? "#ffba43" : "#d93114";
-          ctx.beginPath();
-          ctx.ellipse(x, y, size * (1.2 + n), size * (0.52 + n * 0.42), a + rotation, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.globalAlpha = 1;
-
-        for (let i = 0; i < 22; i += 1) {
-          const y = cy - r * 0.86 + (i / 21) * r * 1.72;
-          const wave = Math.sin(rotation * 1.5 + i * 0.6) * r * 0.025;
-          ctx.globalAlpha = 0.07;
-          ctx.strokeStyle = "#fff2a5";
-          ctx.lineWidth = Math.max(1, r * 0.006);
-          ctx.beginPath();
-          ctx.moveTo(cx - r * 0.92, y + wave);
-          ctx.bezierCurveTo(
-            cx - r * 0.4,
-            y - r * 0.06,
-            cx + r * 0.28,
-            y + r * 0.08,
-            cx + r * 0.92,
-            y - wave
-          );
-          ctx.stroke();
-        }
-
-        for (let i = 0; i < 10; i += 1) {
-          const a = i * 0.74 + rotation * 0.35;
-          const x = cx + Math.cos(a) * r * 0.63;
-          const y = cy + Math.sin(a * 1.13) * r * 0.53;
-          const w = r * (0.09 + hashNoise(i, 15, 2) * 0.13);
-          const h = r * (0.018 + hashNoise(i, 17, 5) * 0.028);
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate(a + Math.PI * 0.5);
-          ctx.globalAlpha = 0.18;
-          ctx.fillStyle = "#fff5b8";
-          ctx.beginPath();
-          ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-
-        ctx.globalAlpha = 1;
-        ctx.restore();
-
-        const limb = ctx.createRadialGradient(cx - r * 0.18, cy - r * 0.22, r * 0.2, cx, cy, r);
-        limb.addColorStop(0, "rgba(255,255,220,0.08)");
-        limb.addColorStop(0.68, "rgba(255,180,65,0.06)");
-        limb.addColorStop(0.88, "rgba(255,242,156,0.28)");
-        limb.addColorStop(1, "rgba(110,19,0,0.5)");
-        ctx.fillStyle = limb;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        sphereRim(cx, cy, r, "rgba(255,235,142,0.42)", 0.32);
+        return candidates.find((candidate) => candidate && typeof candidate === "object") || null;
       }
 
-      function drawPhysicalMoon(cx, cy, r, rotation) {
-        ctx.save();
-        clipSphere(cx, cy, r);
+      function callInstrument(method, payload = {}) {
+        const api = findInstrumentAPI();
 
-        const base = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.34, r * 0.06, cx + r * 0.12, cy + r * 0.16, r * 1.06);
-        base.addColorStop(0, "#f6f3df");
-        base.addColorStop(0.25, "#d8d6c8");
-        base.addColorStop(0.55, "#aaa99f");
-        base.addColorStop(0.82, "#747783");
-        base.addColorStop(1, "#252936");
-        ctx.fillStyle = base;
-        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rotation * 0.045);
-
-        const maria = [
-          [-0.28, -0.27, 0.28, 0.18, -0.42, 0.36],
-          [0.18, -0.24, 0.24, 0.15, 0.24, 0.29],
-          [0.08, 0.04, 0.34, 0.2, -0.06, 0.3],
-          [-0.36, 0.18, 0.2, 0.13, 0.42, 0.25],
-          [0.35, 0.27, 0.18, 0.11, -0.3, 0.21],
-          [-0.07, 0.39, 0.25, 0.11, 0.16, 0.19],
-          [-0.04, -0.12, 0.17, 0.09, 0.62, 0.16]
-        ];
-
-        maria.forEach(([x, y, w, h, rot, alpha]) => {
-          ctx.save();
-          ctx.translate(x * r, y * r);
-          ctx.rotate(rot);
-          ctx.globalAlpha = alpha;
-          const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w * r);
-          g.addColorStop(0, "#50545c");
-          g.addColorStop(0.72, "#686c72");
-          g.addColorStop(1, "rgba(120,123,126,0)");
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        });
-
-        const craters = [
-          [-0.43, -0.43, 0.067, 0.66],
-          [-0.18, -0.53, 0.042, 0.46],
-          [0.16, -0.46, 0.054, 0.54],
-          [0.43, -0.33, 0.078, 0.62],
-          [-0.57, -0.08, 0.052, 0.44],
-          [-0.18, -0.08, 0.092, 0.52],
-          [0.26, -0.04, 0.047, 0.44],
-          [0.5, 0.08, 0.046, 0.46],
-          [-0.43, 0.34, 0.072, 0.52],
-          [-0.06, 0.29, 0.057, 0.42],
-          [0.29, 0.35, 0.078, 0.58],
-          [0.05, 0.56, 0.036, 0.36],
-          [-0.02, -0.32, 0.03, 0.32],
-          [0.53, 0.34, 0.035, 0.34]
-        ];
-
-        craters.forEach(([x, y, size, alpha], index) => {
-          drawCrater(x * r, y * r, size * r, alpha, index);
-        });
-
-        for (let i = 0; i < 340; i += 1) {
-          const a = hashNoise(i, 4, 31) * Math.PI * 2;
-          const dist = Math.sqrt(hashNoise(i, 8, 22)) * r * 0.96;
-          const x = Math.cos(a) * dist;
-          const y = Math.sin(a) * dist;
-          const size = r * (0.0035 + hashNoise(i, 1, 12) * 0.011);
-          const alpha = 0.08 + hashNoise(i, 2, 18) * 0.16;
-          drawMicroCrater(x, y, size, alpha, i);
-        }
-
-        drawRaySystem(-0.43 * r, -0.43 * r, r * 0.44, 22, 0.18, rotation);
-        drawRaySystem(0.29 * r, 0.35 * r, r * 0.34, 18, 0.15, -rotation * 0.4);
-
-        ctx.restore();
-
-        for (let i = 0; i < 2300; i += 1) {
-          const a = hashNoise(i, 17, 97) * Math.PI * 2;
-          const dist = Math.sqrt(hashNoise(i, 29, 82)) * r;
-          const x = cx + Math.cos(a) * dist;
-          const y = cy + Math.sin(a) * dist;
-          const n = hashNoise(i, 41, 12);
-          const alpha = 0.03 + n * 0.05;
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = n > 0.52 ? "#fffef0" : "#666a72";
-          ctx.fillRect(x, y, Math.max(1, r * 0.0034), Math.max(1, r * 0.0034));
-        }
-
-        ctx.globalAlpha = 1;
-
-        const earthshine = ctx.createRadialGradient(cx - r * 0.48, cy - r * 0.14, 0, cx - r * 0.48, cy - r * 0.14, r * 1.02);
-        earthshine.addColorStop(0, "rgba(166,207,255,0.16)");
-        earthshine.addColorStop(0.32, "rgba(166,207,255,0.07)");
-        earthshine.addColorStop(1, "rgba(166,207,255,0)");
-        ctx.fillStyle = earthshine;
-        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-        ctx.restore();
-
-        const shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx + r * 0.26, cy + r * 0.24, r * 1.1);
-        shade.addColorStop(0, "rgba(255,255,244,0.28)");
-        shade.addColorStop(0.42, "rgba(235,235,220,0.08)");
-        shade.addColorStop(0.74, "rgba(70,76,88,0.12)");
-        shade.addColorStop(1, "rgba(0,0,0,0.58)");
-        ctx.fillStyle = shade;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        sphereRim(cx, cy, r, "rgba(245,243,226,0.28)", 0.5);
-
-        function drawCrater(x, y, radius, alpha, seed) {
-          ctx.save();
-          ctx.globalAlpha = alpha;
-
-          const dark = ctx.createRadialGradient(x - radius * 0.15, y - radius * 0.15, radius * 0.15, x, y, radius);
-          dark.addColorStop(0, "rgba(255,255,242,0.18)");
-          dark.addColorStop(0.45, "rgba(65,68,76,0.38)");
-          dark.addColorStop(0.82, "rgba(38,41,48,0.22)");
-          dark.addColorStop(1, "rgba(255,255,242,0.18)");
-          ctx.fillStyle = dark;
-          ctx.beginPath();
-          ctx.ellipse(x, y, radius * (1 + hashNoise(seed, 1, 4) * 0.2), radius * (0.74 + hashNoise(seed, 2, 4) * 0.22), hashNoise(seed, 3, 4) * Math.PI, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.globalAlpha = alpha * 0.9;
-          ctx.strokeStyle = "rgba(255,255,232,0.42)";
-          ctx.lineWidth = Math.max(1, radius * 0.08);
-          ctx.beginPath();
-          ctx.ellipse(x - radius * 0.08, y - radius * 0.09, radius, radius * 0.78, 0.2, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.globalAlpha = alpha * 0.5;
-          ctx.strokeStyle = "rgba(0,0,0,0.44)";
-          ctx.beginPath();
-          ctx.ellipse(x + radius * 0.1, y + radius * 0.12, radius * 0.88, radius * 0.67, 0.2, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.restore();
-        }
-
-        function drawMicroCrater(x, y, radius, alpha, seed) {
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = hashNoise(seed, 4, 9) > 0.48 ? "rgba(255,255,235,0.6)" : "rgba(42,44,49,0.58)";
-          ctx.beginPath();
-          ctx.ellipse(x, y, radius, radius * (0.72 + hashNoise(seed, 2, 8) * 0.3), hashNoise(seed, 3, 5) * Math.PI, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-
-        function drawRaySystem(x, y, length, count, alpha, phase) {
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.strokeStyle = "rgba(255,255,237,0.48)";
-          for (let i = 0; i < count; i += 1) {
-            const a = (Math.PI * 2 * i) / count + phase * 0.05;
-            const rayLength = length * (0.44 + hashNoise(i, 9, 17) * 0.58);
-            ctx.lineWidth = Math.max(1, r * (0.002 + hashNoise(i, 11, 3) * 0.004));
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x + Math.cos(a) * rayLength, y + Math.sin(a) * rayLength);
-            ctx.stroke();
+        if (api && typeof api[method] === "function") {
+          try {
+            api[method]({
+              mount,
+              route: "/showroom/globe/",
+              lane: "demo-actual-universe",
+              preservePriorGlobe: true,
+              mergeDemoUniverse: false,
+              ...payload
+            });
+            return true;
+          } catch (error) {
+            console.warn(`Showroom globe instrument method failed: ${method}`, error);
           }
-          ctx.restore();
+        }
+
+        dispatchInstrumentEvent(`showroom:globe:${method}`, payload);
+        return false;
+      }
+
+      function markMountedIfInstrumentRendered() {
+        const children = Array.from(mount.children).filter((child) => child.id !== "instrumentPending");
+        const hasRenderedChild = children.length > 0 || Boolean(mount.querySelector("canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe"));
+        if (hasRenderedChild) {
+          mount.dataset.instrumentMounted = "true";
         }
       }
 
-      function renderBody() {
-        resizeCanvas();
-        clear();
+      function requestMount() {
+        const api = findInstrumentAPI();
 
-        const w = canvas.width;
-        const h = canvas.height;
-        const cx = w / 2;
-        const cy = h / 2;
-        const r = Math.min(w, h) * 0.438;
+        mount.dataset.instrumentMounted = "false";
+        mount.dataset.demoActualUniverse = "true";
+        mount.dataset.preservePriorGlobe = "true";
+        mount.dataset.sunStandard = "physical-reality";
+        mount.dataset.moonStandard = "physical-reality";
+        mount.dataset.demoUniverseMerge = "false";
 
-        if (state.body === "earth") drawEarthPreserved(cx, cy, r, state.rotation);
-        if (state.body === "sun") drawPhysicalSun(cx, cy, r, state.rotation);
-        if (state.body === "moon") drawPhysicalMoon(cx, cy, r, state.rotation);
-      }
+        if (api && typeof api.mount === "function") {
+          try {
+            api.mount({
+              mount,
+              root: mount,
+              target: mount,
+              route: "/showroom/globe/",
+              lane: "demo-actual-universe",
+              mode: "demo-actual-universe",
+              preservePriorGlobe: true,
+              replaceGlobeRenderer: false,
+              mergeDemoUniverse: false,
+              sunStandard: "physical-reality",
+              moonStandard: "physical-reality",
+              planetOne: "reserved-for-nine-summits-universe",
+              data: demoActualUniverseData
+            });
+            markMountedIfInstrumentRendered();
+            return;
+          } catch (error) {
+            console.warn("Canonical globe instrument mount failed.", error);
+          }
+        }
 
-      function updateLabels() {
-        const meta = bodyMeta[state.body];
-        frame.dataset.body = state.body;
-        bodyName.textContent = meta.name;
-        bodyDescription.textContent = meta.description;
-        glow.style.background = meta.glow;
-
-        bodyButtons.forEach((button) => {
-          const active = button.dataset.body === state.body;
-          button.setAttribute("aria-pressed", active ? "true" : "false");
+        dispatchInstrumentEvent("showroom:globe:mount", {
+          root: mount,
+          target: mount,
+          mode: "demo-actual-universe",
+          data: demoActualUniverseData,
+          sunStandard: "physical-reality",
+          moonStandard: "physical-reality"
         });
 
-        speedButtons.forEach((button) => {
-          button.classList.toggle("active", button.dataset.speed === state.speedName);
-        });
-
-        const directionText = state.direction > 0 ? "forward" : "reverse";
-        motionLabel.textContent = `Motion speed: ${state.speedName} · direction: ${directionText} · active body: ${meta.name}`;
-        speedFill.style.width = speedMap[state.speedName].fill;
+        window.setTimeout(markMountedIfInstrumentRendered, 120);
+        window.setTimeout(markMountedIfInstrumentRendered, 480);
+        window.setTimeout(markMountedIfInstrumentRendered, 1200);
       }
 
       function setBody(body) {
         if (!bodyMeta[body]) return;
+
         state.body = body;
-        updateLabels();
-        renderBody();
+
+        bodyButtons.forEach((button) => {
+          const active = button.dataset.body === body;
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        bodyName.textContent = bodyMeta[body].label;
+        bodyDescription.textContent = bodyMeta[body].description;
+
+        mount.dataset.activeBody = body;
+
+        callInstrument("setBody", {
+          body,
+          sunStandard: "physical-reality",
+          moonStandard: "physical-reality",
+          preservePriorGlobe: true
+        });
+
+        updateReadout();
       }
 
       function setSpeed(speedName) {
         if (!speedMap[speedName]) return;
+
         state.speedName = speedName;
-        state.speed = speedMap[speedName].value;
-        updateLabels();
+
+        speedButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.speed === speedName);
+        });
+
+        speedFill.style.width = speedMap[speedName].fill;
+
+        callInstrument("setSpeed", {
+          speedName,
+          speed: speedMap[speedName].value
+        });
+
+        updateReadout();
       }
 
       function setZoom(nextZoom) {
-        state.zoom = clamp(nextZoom, 0.7, 2.3);
+        state.zoom = clamp(nextZoom, 0.7, 2.4);
         document.documentElement.style.setProperty("--zoom-scale", String(state.zoom));
         zoomRange.value = String(Math.round(state.zoom * 100));
         zoomLabel.textContent = `${Math.round(state.zoom * 100)}%`;
+
+        callInstrument("setZoom", {
+          zoom: state.zoom,
+          zoomPercent: Math.round(state.zoom * 100),
+          wrapperOnly: true
+        });
+
+        updateReadout();
+      }
+
+      function setMotion(action) {
+        if (action === "start" || action === "resume") state.running = true;
+        if (action === "pause") state.running = false;
+        if (action === "reset") state.direction = "forward";
+        if (action === "reverse") state.direction = state.direction === "forward" ? "reverse" : "forward";
+
+        callInstrument(action, {
+          running: state.running,
+          direction: state.direction
+        });
+
+        updateReadout();
+      }
+
+      function updateReadout() {
+        motionLabel.textContent =
+          `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${bodyMeta[state.body].label} · zoom: ${Math.round(state.zoom * 100)}%`;
       }
 
       function getPointerDistance(event) {
@@ -1276,35 +1060,12 @@ owner-visual-receipt-required=true</div>
         return Math.sqrt(dx * dx + dy * dy);
       }
 
-      function animate(time) {
-        const dt = Math.min(42, time - state.lastTime);
-        state.lastTime = time;
-
-        if (state.running) {
-          state.rotation += dt * state.speed * state.direction;
-          renderBody();
-        }
-
-        requestAnimationFrame(animate);
-      }
-
       bodyButtons.forEach((button) => {
         button.addEventListener("click", () => setBody(button.dataset.body));
       });
 
       actionButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const action = button.dataset.action;
-
-          if (action === "start") state.running = true;
-          if (action === "pause") state.running = false;
-          if (action === "resume") state.running = true;
-          if (action === "reset") state.rotation = 0;
-          if (action === "reverse") state.direction *= -1;
-
-          updateLabels();
-          renderBody();
-        });
+        button.addEventListener("click", () => setMotion(button.dataset.action));
       });
 
       speedButtons.forEach((button) => {
@@ -1314,6 +1075,7 @@ owner-visual-receipt-required=true</div>
       zoomButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const action = button.dataset.zoom;
+
           if (action === "in") setZoom(state.zoom + 0.12);
           if (action === "out") setZoom(state.zoom - 0.12);
           if (action === "reset") setZoom(1);
@@ -1352,14 +1114,28 @@ owner-visual-receipt-required=true</div>
         state.pointerZoom = state.zoom;
       }, { passive: true });
 
-      window.addEventListener("resize", () => {
-        renderBody();
+      window.addEventListener("showroom:globe:mounted", () => {
+        mount.dataset.instrumentMounted = "true";
+      });
+
+      window.addEventListener("load", () => {
+        requestMount();
+        window.setTimeout(() => {
+          setBody("earth");
+          setSpeed("normal");
+          setZoom(1);
+
+          dispatchInstrumentEvent("showroom:globe:standard-request", {
+            sunStandard: "physical-reality",
+            moonStandard: "physical-reality",
+            replaceGlobeRenderer: false
+          });
+        }, 80);
       });
 
       setZoom(1);
-      updateLabels();
-      renderBody();
-      requestAnimationFrame(animate);
+      setSpeed("normal");
+      setBody("earth");
     })();
   </script>
 </body>

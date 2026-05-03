@@ -1,30 +1,1225 @@
+<!-- /explore/frontier/shimmer/index.html -->
 <!doctype html>
-<html lang="en" data-page-id="frontier-shimmer" data-page="frontier-shimmer" data-route="/frontier/shimmer/" data-contract="FRONTIER_SHIMMER_COLLECTIVE_BACKLINK_TNT_v1" data-parent-route="/frontier/" data-structural-parent-route="/explore/" data-frontier-lane="shimmer" data-construct-class="frontier-lane" data-gauges-truth="live-authority" data-visual-pass-claimed="false">
+<html
+  lang="en"
+  data-page="frontier-shimmer-lattice-signal-chamber"
+  data-route="/explore/frontier/shimmer/"
+  data-contract="SHIMMER_LATTICE_SIGNAL_CHAMBER_REEXPRESSION_TNT_v1"
+  data-role="frontier-lane"
+  data-frontier-lane="shimmer"
+  data-mode="shimmer-lattice"
+  data-state-carry="gd_lang,gd_style,gd_time,gd_depth,lane,mode"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Frontier / Shimmer · Diamond Gate Bridge</title>
-  <meta name="description" content="Shimmer is a Frontier lane for signal, atmosphere, surface effect, perception layer, and future visual language.">
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-  <style>:root{--gold:#f2c76f;--text:#f5f7fb;--muted:rgba(226,234,248,.76);--line:rgba(180,205,255,.18)}body{overflow-x:hidden;background:radial-gradient(circle at 50% -8%,rgba(242,199,111,.14),transparent 34%),radial-gradient(circle at 86% 76%,rgba(215,165,255,.12),transparent 34%),linear-gradient(180deg,#050813,#070c18 58%,#040711)}.panel{position:relative;overflow:hidden;border:1px solid rgba(242,199,111,.24);border-radius:36px;background:linear-gradient(180deg,rgba(12,20,38,.84),rgba(6,10,22,.97));box-shadow:0 28px 90px rgba(0,0,0,.38);padding:clamp(28px,6vw,64px);margin-top:18px}.kicker{margin:0 0 14px;color:var(--gold);font-size:.82rem;font-weight:950;letter-spacing:.15em;text-transform:uppercase}h1{max-width:1050px;margin:0;color:var(--text);font-size:clamp(3rem,10vw,7rem);line-height:.88;letter-spacing:-.07em;text-wrap:balance}h1 span{color:#ffe5a3}.lead{max-width:880px;margin:24px 0 0;color:rgba(245,247,251,.86);font-size:clamp(1.25rem,3.3vw,1.9rem);line-height:1.18;letter-spacing:-.035em}p{color:var(--muted);line-height:1.55}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}.card{min-height:150px;border:1px solid var(--line);border-radius:24px;padding:18px;background:rgba(255,255,255,.045);text-decoration:none;color:var(--text)}.card strong{display:block;color:var(--gold);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}.card span{color:var(--muted);line-height:1.45}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.receipt{white-space:pre-wrap;overflow-wrap:anywhere}.audit-source{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;padding:0!important;margin:-1px!important}@media(max-width:900px){.grid{grid-template-columns:1fr}.panel{border-radius:28px}}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Frontier · Shimmer</title>
+  <meta
+    name="description"
+    content="Shimmer is the Frontier signal chamber: screen, highlight, inspect, measure, mitigate, explain, and repeat without letting noise impersonate truth."
+  >
+
+  <style>
+    :root {
+      --line: rgba(255,255,255,0.15);
+      --text: #f8f1dd;
+      --muted: rgba(242,246,255,0.74);
+      --faint: rgba(242,246,255,0.48);
+      --gold: #f2c76f;
+      --blue: #78d8ff;
+      --green: #a5efcc;
+      --stage: min(100%, 1180px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.16), transparent 28rem),
+        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
+        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body { min-height: 100svh; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+      opacity: 0.38;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #090b10;
+      font-weight: 900;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: var(--stage);
+      margin: 0 auto;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.5rem, env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
+      font-weight: 950;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+    }
+
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+      text-transform: uppercase;
+    }
+
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
+    }
+
+    .nav a {
+      min-height: 2.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem 0.72rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    }
+
+    .hero {
+      display: grid;
+      gap: 1rem;
+      padding: clamp(1.35rem, 5vw, 2.8rem) 0 clamp(0.75rem, 2.5vw, 1.2rem);
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      font-size: clamp(2.55rem, 9vw, 5.7rem);
+      line-height: 0.92;
+      letter-spacing: -0.08em;
+      text-wrap: balance;
+    }
+
+    .quote {
+      width: min(100%, 800px);
+      margin: 0 auto;
+      color: rgba(255,241,205,0.96);
+      font-size: clamp(1rem, 3.2vw, 1.18rem);
+      line-height: 1.52;
+      text-wrap: balance;
+    }
+
+    .hero-actions,
+    .control-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .button,
+    .control-button {
+      min-height: 2.45rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.58rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .button::after { content: " →"; }
+
+    .button.secondary,
+    .control-button {
+      border-color: rgba(255,255,255,0.24);
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+      box-shadow: none;
+    }
+
+    .control-button[aria-pressed="true"] {
+      border-color: rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    }
+
+    .button:hover,
+    .button:focus-visible,
+    .control-button:hover,
+    .control-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      outline: none;
+    }
+
+    .controls,
+    .signal-stage,
+    .expanded-signal,
+    .label-stack,
+    .route-panel {
+      width: min(100%, 1060px);
+      margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
+      border: 1px solid rgba(242,199,111,0.24);
+      border-radius: clamp(1.25rem, 5vw, 2rem);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
+        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
+        rgba(8,12,20,0.62);
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.09);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .controls {
+      padding: clamp(0.9rem, 3vw, 1.15rem);
+      display: grid;
+      gap: 0.85rem;
+      text-align: center;
+    }
+
+    .control-title {
+      margin: 0;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .signal-stage {
+      position: relative;
+      padding: clamp(0.8rem, 3vw, 1.25rem);
+    }
+
+    .signal-stage::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 4%;
+      bottom: 4%;
+      width: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
+      opacity: 0.70;
+      z-index: -1;
+    }
+
+    .signal-stage::after {
+      content: "";
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
+      opacity: 0.68;
+      z-index: -1;
+    }
+
+    .stage-title {
+      display: grid;
+      gap: 0.3rem;
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .stage-title h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 4.4vw, 2rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .stage-title p {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      text-wrap: balance;
+    }
+
+    .signal-field {
+      --node-size: clamp(4.25rem, 9.4vw, 6.7rem);
+      --center-size: clamp(4.85rem, 10.2vw, 7.45rem);
+      position: relative;
+      width: min(100%, 820px);
+      min-height: clamp(27rem, 56vw, 36rem);
+      margin: 0 auto;
+      isolation: isolate;
+    }
+
+    .field-orbit,
+    .field-orbit::before,
+    .field-orbit::after {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .field-orbit {
+      left: 8%;
+      right: 8%;
+      top: 22%;
+      height: 56%;
+      transform: rotate(-14deg);
+      opacity: 0.8;
+    }
+
+    .field-orbit::before {
+      content: "";
+      inset: -20% -5%;
+      transform: rotate(38deg);
+      opacity: 0.62;
+    }
+
+    .field-orbit::after {
+      content: "";
+      inset: 20% 15%;
+      transform: rotate(-38deg);
+      opacity: 0.52;
+    }
+
+    .center-diamond,
+    .signal-diamond {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .center-diamond {
+      left: 50%;
+      top: 50%;
+      width: var(--center-size);
+      height: var(--center-size);
+      transform: translate(-50%, -50%);
+      z-index: 12;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .signal-diamond {
+      --dx: 0px;
+      --dy: 0px;
+      --lift: 1;
+      left: calc(var(--x) * 1%);
+      top: calc(var(--y) * 1%);
+      width: var(--node-size);
+      height: var(--node-size);
+      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
+      outline: none;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      z-index: 9;
+      transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
+      will-change: transform;
+    }
+
+    .signal-diamond[aria-expanded="true"] {
+      z-index: 18;
+      filter: brightness(1.18) saturate(1.16);
+    }
+
+    .signal-diamond:hover,
+    .signal-diamond:focus-visible {
+      --lift: 1.065;
+      filter: brightness(1.16) saturate(1.12);
+    }
+
+    .diamond-shell {
+      position: absolute;
+      inset: 0;
+      transform: rotate(45deg);
+      border: 2px solid rgba(242,199,111,0.76);
+      border-radius: 0.95rem;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.26), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.24), transparent 38%),
+        linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
+      box-shadow:
+        0 1.1rem 2.8rem rgba(0,0,0,0.30),
+        inset 0 0 0 1px rgba(255,255,255,0.15),
+        inset 0 0 1.6rem rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .signal-diamond[aria-expanded="true"] .diamond-shell {
+      border-color: rgba(255,224,141,0.95);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.23), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.33), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.30), transparent 38%),
+        linear-gradient(145deg, rgba(58,83,150,0.83), rgba(128,72,142,0.74) 58%, rgba(242,199,111,0.25));
+      box-shadow:
+        0 1.45rem 3.4rem rgba(0,0,0,0.36),
+        0 0 2.35rem rgba(242,199,111,0.14),
+        inset 0 0 0 1px rgba(255,255,255,0.18),
+        inset 0 0 1.8rem rgba(255,255,255,0.07);
+    }
+
+    .diamond-shell::before,
+    .diamond-shell::after {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      border: 1px solid rgba(255,241,205,0.30);
+      border-radius: 0.55rem;
+      pointer-events: none;
+    }
+
+    .diamond-shell::after {
+      inset: 29%;
+      opacity: 0.50;
+    }
+
+    .diamond-lines {
+      position: absolute;
+      inset: 0;
+      transform: rotate(45deg);
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 0.95rem;
+    }
+
+    .diamond-lines::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.30) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.24) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%);
+      opacity: 0.76;
+    }
+
+    .diamond-content {
+      position: relative;
+      z-index: 2;
+      width: 76%;
+      display: grid;
+      gap: 0.16rem;
+      place-items: center;
+      text-align: center;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .diamond-content strong {
+      color: rgba(255,241,205,0.98);
+      font-size: clamp(0.58rem, 1.45vw, 0.86rem);
+      line-height: 0.98;
+      font-weight: 950;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.18);
+    }
+
+    .diamond-content span {
+      color: rgba(242,246,255,0.76);
+      font-size: clamp(0.42rem, 1.05vw, 0.56rem);
+      line-height: 1.08;
+      font-weight: 850;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .center-diamond .diamond-shell {
+      border-color: rgba(255,241,205,0.62);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
+        radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
+        linear-gradient(145deg, rgba(33,47,84,0.82), rgba(20,27,48,0.86));
+      box-shadow:
+        0 1rem 2.5rem rgba(0,0,0,0.28),
+        inset 0 0 0 1px rgba(255,255,255,0.13);
+    }
+
+    .expanded-signal {
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    .expanded-kicker {
+      margin: 0 0 0.5rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .expanded-signal h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 4.6vw, 2.2rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .expanded-signal p {
+      margin: 0.75rem 0 0;
+      color: var(--muted);
+      font-size: clamp(0.92rem, 2.4vw, 1rem);
+      line-height: 1.55;
+    }
+
+    .expanded-rule {
+      margin-top: 0.9rem;
+      padding: 0.85rem;
+      border: 1px solid rgba(242,199,111,0.22);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,241,205,0.92);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .label-stack {
+      padding: clamp(0.9rem, 3vw, 1.25rem);
+    }
+
+    .label-stack-title {
+      margin: 0 0 0.85rem;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .label-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .label-card {
+      display: grid;
+      gap: 0.25rem;
+      padding: 0.88rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1rem;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.06), transparent 34%),
+        rgba(255,255,255,0.025);
+    }
+
+    .label-card strong {
+      color: rgba(255,241,205,0.96);
+      font-size: 0.86rem;
+      font-weight: 950;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .label-card span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .route-panel {
+      padding: clamp(0.8rem, 2.8vw, 1rem);
+      text-align: center;
+    }
+
+    .route-panel-title {
+      margin: 0 0 0.7rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .route-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .route-link {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.72rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .route-link::after {
+      content: " →";
+      color: var(--gold);
+    }
+
+    .receipt {
+      width: min(100%, 900px);
+      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
+      overflow: hidden;
+    }
+
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .receipt pre {
+      margin: 0;
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding: 1.45rem 0 0.45rem;
+      color: var(--faint);
+      font-size: 0.74rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .signal-field {
+        --node-size: clamp(3.55rem, 18vw, 4.95rem);
+        --center-size: clamp(4.2rem, 20vw, 5.55rem);
+        min-height: 31rem;
+      }
+
+      .diamond-content strong {
+        font-size: clamp(0.45rem, 2.05vw, 0.62rem);
+      }
+
+      .diamond-content span {
+        font-size: clamp(0.34rem, 1.58vw, 0.48rem);
+      }
+
+      .label-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav { justify-content: flex-start; }
+    }
+
+    @media (max-width: 540px) {
+      .signal-field {
+        min-height: 30rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .signal-diamond {
+        transition: none;
+      }
+    }
+  </style>
 </head>
-<body data-page="frontier-shimmer" data-route="/frontier/shimmer/" data-parent-route="/frontier/" data-structural-parent-route="/explore/" data-frontier-lane="shimmer">
-  <a class="dgb-skip" href="#main">Skip to Shimmer</a>
-  <header class="dgb-site-header"><div class="dgb-header-inner"><div class="dgb-brand-row"><a class="dgb-brand" href="/">Diamond Gate Bridge</a><div class="dgb-subtitle">Explore · Frontier</div><div class="dgb-room-line">Shimmer · Frontier Lane</div></div><nav class="dgb-nav" aria-label="Primary navigation"><a href="/">Compass</a><a href="/explore/">Explore</a><a href="/frontier/">Frontier</a><a href="/frontier/shimmer/" aria-current="page">Shimmer</a><a href="/laws/">Laws</a><a href="/products/">Products</a><a href="/showroom/">Showroom</a><a href="/gauges/">Gauges</a></nav></div></header>
-  <main id="main" class="dgb-main">
-    <section class="panel"><p class="kicker">Frontier / Shimmer · Collective File Set</p><h1>The signal has to be felt <span>before it can be followed.</span></h1><p class="lead">Shimmer carries signal, atmosphere, surface effect, perception layer, and future visual language inside the Frontier collective.</p><p>This lane is physically served at /frontier/shimmer/ and structurally sits under Explore through Frontier.</p><div class="actions"><a class="dgb-button" href="/frontier/">Return to Frontier</a><a class="dgb-button secondary" href="/explore/">Return to Explore</a><a class="dgb-button secondary" href="/gauges/">Read Gauges</a></div></section>
-    <section class="panel"><p class="kicker">Sibling lanes</p><h2>Frontier collective backlinks</h2><div class="grid">
-      <a class="card" href="/frontier/closed-loop/"><strong>Sibling</strong><h3>Closed Loop</h3><span>Feedback and return paths.</span></a><a class="card" href="/frontier/energy/"><strong>Sibling</strong><h3>Energy</h3><span>Power and operating capacity.</span></a><a class="card" href="/frontier/infrastructure/"><strong>Sibling</strong><h3>Infrastructure</h3><span>Support systems and foundation.</span></a><a class="card" href="/frontier/lattice/"><strong>Sibling</strong><h3>Lattice</h3><span>Grid and state-space logic.</span></a><a class="card" href="/frontier/manual/"><strong>Sibling</strong><h3>Manual</h3><span>Operating instructions.</span></a><a class="card" href="/frontier/shimmer/" aria-current="page"><strong>Current</strong><h3>Shimmer</h3><span>Signal and atmosphere.</span></a><a class="card" href="/frontier/trajectory/"><strong>Sibling</strong><h3>Trajectory</h3><span>Direction and path projection.</span></a><a class="card" href="/frontier/urban/"><strong>Sibling</strong><h3>Urban</h3><span>City and civic systems.</span></a><a class="card" href="/frontier/vision-remote/"><strong>Sibling</strong><h3>Vision Remote</h3><span>Remote visual relay.</span></a><a class="card" href="/frontier/vision/"><strong>Sibling</strong><h3>Vision</h3><span>Visual systems and sightlines.</span></a><a class="card" href="/frontier/waste/"><strong>Sibling</strong><h3>Waste</h3><span>Loss and recovery logic.</span></a><a class="card" href="/frontier/water/"><strong>Sibling</strong><h3>Water</h3><span>Flow and support systems.</span></a>
-    </div></section>
-    <section class="panel"><p class="kicker">Placement backlinks</p><div class="grid"><a class="card" href="/frontier/"><strong>Parent</strong><h3>Frontier</h3><span>Expansion-edge root.</span></a><a class="card" href="/explore/"><strong>Structural parent</strong><h3>Explore</h3><span>Route-map surface.</span></a><a class="card" href="/laws/"><strong>Rule</strong><h3>Laws</h3><span>Boundary control.</span></a><a class="card" href="/products/"><strong>Product</strong><h3>Products</h3><span>Product surfaces.</span></a><a class="card" href="/showroom/"><strong>Proof</strong><h3>Showroom</h3><span>Public inspection.</span></a><a class="card" href="/gauges/"><strong>Diagnostics</strong><h3>Gauges</h3><span>Route verification.</span></a></div></section>
-    <section class="dgb-card"><h2>Route receipt</h2><pre class="dgb-receipt receipt">FRONTIER_SHIMMER_COLLECTIVE_BACKLINK_TNT_v1
-route=/frontier/shimmer/
-parent=/frontier/
-structural_parent=/explore/
-lane=shimmer
-sibling_base=/frontier/
-visual_pass_claimed=false</pre></section>
-    <section class="audit-source"><a href="/frontier/closed-loop/">Closed Loop</a><a href="/frontier/energy/">Energy</a><a href="/frontier/infrastructure/">Infrastructure</a><a href="/frontier/lattice/">Lattice</a><a href="/frontier/manual/">Manual</a><a href="/frontier/shimmer/">Shimmer</a><a href="/frontier/trajectory/">Trajectory</a><a href="/frontier/urban/">Urban</a><a href="/frontier/vision-remote/">Vision Remote</a><a href="/frontier/vision/">Vision</a><a href="/frontier/waste/">Waste</a><a href="/frontier/water/">Water</a></section>
-  </main>
-  <footer class="dgb-footer">FRONTIER_SHIMMER_COLLECTIVE_BACKLINK_TNT_v1 · Frontier / Shimmer.</footer>
+
+<body>
+  <a class="skip-link" href="#shimmer-main">Skip to Shimmer</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand state-link" href="/" aria-label="Diamond Gate Bridge home">
+        <span>Diamond Gate Bridge</span>
+        <span>Frontier · Shimmer</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="state-link" href="/">Compass</a>
+        <a class="state-link" href="/door/">Door</a>
+        <a class="state-link" href="/home/">Home</a>
+        <a class="state-link" href="/explore/">Manor</a>
+        <a class="state-link" href="/frontier/">Frontier</a>
+        <a class="state-link" href="/laws/">Laws</a>
+        <a class="state-link" href="/products/">Products</a>
+        <a class="state-link" href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <main id="shimmer-main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow" id="heroEyebrow">Frontier · Signal Chamber</p>
+        <h1 id="page-title">Subtle signal matters before it becomes obvious.</h1>
+
+        <p class="quote" id="heroQuote">
+          Shimmer reduces distortion so humans can decide without being dragged by noise.
+        </p>
+
+        <div class="hero-actions" aria-label="Primary Shimmer actions">
+          <a class="button state-link" href="/explore/frontier/">Frontier Hub</a>
+          <a class="button secondary state-link" href="/explore/frontier/lattice/">Open Lattice</a>
+          <a class="button secondary state-link" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Room controls">
+        <p class="control-title">Room controls</p>
+
+        <div class="control-row" aria-label="Mode controls">
+          <button class="control-button" type="button" data-control="mode" data-value="shimmer" aria-pressed="true">Shimmer</button>
+          <button class="control-button" type="button" data-control="mode" data-value="lattice" aria-pressed="false">Lattice</button>
+        </div>
+
+        <div class="control-row" aria-label="Language controls">
+          <button class="control-button" type="button" data-control="lang" data-value="en" aria-pressed="true">EN</button>
+          <button class="control-button" type="button" data-control="lang" data-value="zh" aria-pressed="false">中文</button>
+          <button class="control-button" type="button" data-control="lang" data-value="es" aria-pressed="false">ES</button>
+        </div>
+
+        <div class="control-row" aria-label="Lens controls">
+          <button class="control-button" type="button" data-control="lens" data-value="platform" aria-pressed="true">Platform</button>
+          <button class="control-button" type="button" data-control="lens" data-value="engineering" aria-pressed="false">Engineering</button>
+        </div>
+      </section>
+
+      <section class="signal-stage" aria-labelledby="signal-title">
+        <div class="stage-title">
+          <h2 id="signal-title">SHIMMER opens only when requested.</h2>
+          <p id="signalSubtitle">Screen, Highlight, Inspect, Measure, Mitigate, Explain, and Repeat without letting signal become noise.</p>
+        </div>
+
+        <div class="signal-field" aria-label="Expandable Shimmer / Lattice signal field">
+          <div class="field-orbit" aria-hidden="true"></div>
+
+          <div class="center-diamond" aria-label="Mode center marker">
+            <div class="diamond-shell" aria-hidden="true"></div>
+            <div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content">
+              <strong id="centerTitle">Shimmer</strong>
+              <span id="centerSubtitle">Signal</span>
+            </div>
+          </div>
+
+          <button class="signal-diamond" type="button" style="--x:18;--y:20;" data-loop="a" data-phase="0.00" data-step="0" aria-expanded="true" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d0">S</strong><span id="s0">Screen</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:50;--y:13;" data-loop="b" data-phase="0.89" data-step="1" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d1">H</strong><span id="s1">Highlight</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:82;--y:20;" data-loop="a" data-phase="1.79" data-step="2" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d2">I</strong><span id="s2">Inspect</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:28;--y:50;" data-loop="b" data-phase="2.68" data-step="3" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d3">M</strong><span id="s3">Measure</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:72;--y:50;" data-loop="a" data-phase="3.57" data-step="4" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d4">M</strong><span id="s4">Mitigate</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:32;--y:82;" data-loop="b" data-phase="4.46" data-step="5" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d5">E</strong><span id="s5">Explain</span></div>
+          </button>
+
+          <button class="signal-diamond" type="button" style="--x:68;--y:82;" data-loop="a" data-phase="5.36" data-step="6" aria-expanded="false" aria-controls="expandedSignal">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong id="d6">R</strong><span id="s6">Repeat</span></div>
+          </button>
+        </div>
+      </section>
+
+      <section class="expanded-signal" id="expandedSignal" aria-live="polite" aria-labelledby="expandedTitle">
+        <p class="expanded-kicker" id="expandedKicker">SHIMMER · S</p>
+        <h2 id="expandedTitle">Screen</h2>
+        <p id="expandedSummary">Decide what enters at all.</p>
+        <div class="expanded-rule" id="expandedBody">
+          Platform lens: screen incoming signal before it drags the room. Engineering lens: define the intake gate, threshold, and receipt location before processing.
+        </div>
+      </section>
+
+      <section class="label-stack" aria-labelledby="label-stack-title">
+        <p class="label-stack-title" id="label-stack-title">Expanded labels</p>
+        <div class="label-grid" id="labelGrid"></div>
+      </section>
+
+      <section class="route-panel" aria-labelledby="route-panel-title">
+        <p class="route-panel-title" id="route-panel-title">Frontier categories</p>
+
+        <nav class="route-grid" aria-label="Frontier lane routes">
+          <a class="route-link state-link" href="/explore/frontier/">Frontier Hub</a>
+          <a class="route-link state-link" href="/explore/frontier/lattice/">Lattice</a>
+          <a class="route-link state-link" href="/explore/frontier/trajectory/">Trajectory</a>
+          <a class="route-link state-link" href="/explore/frontier/vision/">Vision</a>
+          <a class="route-link state-link" href="/explore/frontier/vision-remote/">Vision Remote</a>
+          <a class="route-link state-link" href="/explore/frontier/manual/">Manual</a>
+          <a class="route-link state-link" href="/explore/frontier/energy/">Energy</a>
+          <a class="route-link state-link" href="/explore/frontier/water/">Water</a>
+        </nav>
+      </section>
+
+      <details class="receipt">
+        <summary>Status label</summary>
+        <pre>SHIMMER_LATTICE_SIGNAL_CHAMBER_REEXPRESSION_TNT_v1
+PAGE=/explore/frontier/shimmer/index.html
+ROUTE=/explore/frontier/shimmer/
+PARENT=/explore/frontier/
+ROLE=frontier_lane_signal_chamber
+MODE=SHIMMER_OR_LATTICE_IN_PAGE_ONLY
+VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
+STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth,lane,mode
+LANGUAGES=EN,ZH,ES
+METHOD=EXPANDABLE_SIGNAL_DIAMONDS
+NO_MODAL=TRUE
+NO_INLINE_ONCLICK=TRUE
+CONTEXT_PRESERVED=TRUE
+HEAVY_RUNTIME_LOADED=FALSE
+RENDER_FILES_TOUCHED=FALSE
+GAUGES_LOGIC_TOUCHED=FALSE
+VISUAL_PASS_CLAIMED=FALSE</pre>
+      </details>
+    </main>
+
+    <footer>
+      Diamond Gate Bridge · Frontier · Shimmer/Lattice · Signal Chamber.
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const state = {
+        mode: "shimmer",
+        lang: "en",
+        lens: "platform",
+        step: 0
+      };
+
+      const text = {
+        en: {
+          shimmer: {
+            title: "Subtle signal matters before it becomes obvious.",
+            quote: "Shimmer reduces distortion so humans can decide without being dragged by noise.",
+            stage: "SHIMMER opens only when requested.",
+            subtitle: "Screen, Highlight, Inspect, Measure, Mitigate, Explain, and Repeat without letting signal become noise.",
+            center: ["Shimmer", "Signal"],
+            steps: [
+              ["S", "Screen", "Decide what enters at all.", "Screen incoming signal before it drags the room.", "Define the intake gate, threshold, and receipt location before processing."],
+              ["H", "Highlight", "Show deltas, not opinions.", "Highlight what changed without pretending the interpretation is already settled.", "Compare current state to baseline and emit the smallest visible delta."],
+              ["I", "Inspect", "Pick the evidence boundary before claiming.", "Inspect the signal where it actually lives before expanding the story.", "Name the source, selector, owner, and failure boundary."],
+              ["M", "Measure", "Turn observation into a repeatable number.", "Measure enough to prevent mood from masquerading as proof.", "Convert observation into a metric, status, or reproducible receipt."],
+              ["M", "Mitigate", "Reduce harm before you solve.", "Mitigate distortion while the full answer is still forming.", "Lower risk, contain spillover, and preserve rollback before deeper work."],
+              ["E", "Explain", "Translate flags into plain causes.", "Explain what is happening without drowning the visitor in machinery.", "Map signal, source, cause, and next action in plain language."],
+              ["R", "Repeat", "Confirm stabilization over time.", "Repeat the read until the signal stops drifting.", "Recheck after change, record the result, and keep the return path open."]
+            ]
+          },
+          lattice: {
+            title: "Structure matters before scale becomes believable.",
+            quote: "Lattice keeps signal from becoming a pile. It gives the room positions, neighbors, edges, and return paths.",
+            stage: "LATTICE opens only when requested.",
+            subtitle: "Locate, Anchor, Traverse, Test, Integrate, Check, and Exit without turning structure into decoration.",
+            center: ["Lattice", "Grid"],
+            steps: [
+              ["L", "Locate", "Name where the signal lives.", "Locate the signal in the correct chamber before expanding it.", "Bind route, parent, file, selector, and ownership surface."],
+              ["A", "Anchor", "Hold the baseline before movement.", "Anchor the current accepted state so progress does not erase proof.", "Record baseline, active contract, and no-touch boundaries."],
+              ["T", "Traverse", "Move through the path in order.", "Traverse the lane without jumping across rooms.", "Walk source, route, surface, proof, and return in sequence."],
+              ["T", "Test", "Stress the read before claiming.", "Test the signal against obvious drift and false positives.", "Check selectors, links, receipts, stale language, and ownership."],
+              ["I", "Integrate", "Connect without collapsing roles.", "Integrate the result into the estate without making every room do the same job.", "Route links, labels, and contracts without mutating unrelated systems."],
+              ["C", "Check", "Verify the receipt after motion.", "Check that the result still says what changed and what stayed untouched.", "Confirm no render, runtime, instrument, or Gauges mutation occurred."],
+              ["E", "Exit", "Leave a return path.", "Exit with the route still attached to Manor, Laws, Frontier, and Gauges.", "Expose backlink, status label, and next safe movement."]
+            ]
+          }
+        },
+        zh: {
+          shimmer: {
+            title: "细微信号在明显之前就很重要。",
+            quote: "Shimmer 减少失真，让人可以判断，而不是被噪音拖走。",
+            stage: "SHIMMER 只在需要时展开。",
+            subtitle: "筛选、突出、检查、测量、缓解、解释、重复，让信号不变成噪音。",
+            center: ["Shimmer", "信号"],
+            steps: [
+              ["S", "筛选", "先决定什么可以进入。", "在信号拖动房间之前先筛选。", "定义入口、阈值和回执位置。"],
+              ["H", "突出", "显示变化，不显示意见。", "突出已经改变的内容，不急着解释。", "对比基线并输出最小可见差异。"],
+              ["I", "检查", "声明前先确定证据边界。", "在信号真实所在处检查它。", "命名来源、选择器、所有者和失败边界。"],
+              ["M", "测量", "把观察变成可重复数字。", "测量足够多，避免情绪冒充证明。", "把观察转成指标、状态或回执。"],
+              ["M", "缓解", "先降低伤害，再求完整答案。", "答案形成前先降低失真。", "降低风险，控制外溢，保留回滚。"],
+              ["E", "解释", "把标记翻译成清楚原因。", "解释发生什么，不淹没用户。", "映射信号、来源、原因和下一步。"],
+              ["R", "重复", "确认稳定是否持续。", "重复读取，直到信号停止漂移。", "变更后复查，记录结果，保留返回路径。"]
+            ]
+          },
+          lattice: {
+            title: "结构先于规模的可信度。",
+            quote: "Lattice 防止信号变成一堆散点，它给房间位置、邻接、边界和返回路径。",
+            stage: "LATTICE 只在需要时展开。",
+            subtitle: "定位、锚定、遍历、测试、整合、检查、退出，不让结构变成装饰。",
+            center: ["Lattice", "网格"],
+            steps: [
+              ["L", "定位", "命名信号所在位置。", "扩展前先把信号放进正确房间。", "绑定路线、父级、文件、选择器和所有权。"],
+              ["A", "锚定", "移动前保留基线。", "锚定当前接受状态，避免进展擦掉证明。", "记录基线、合约和不可触碰边界。"],
+              ["T", "遍历", "按顺序走路径。", "不跨房间跳跃。", "按源、路由、表面、证明、返回行走。"],
+              ["T", "测试", "声明前先施压。", "测试漂移和假阳性。", "检查选择器、链接、回执、旧语言和所有权。"],
+              ["I", "整合", "连接但不合并角色。", "让结果进入庄园，但不让所有房间做同一件事。", "路由链接、标签和合约，不改无关系统。"],
+              ["C", "检查", "运动后核对回执。", "确认结果仍说明改变和未改变。", "确认未改渲染、运行时、仪表或 Gauges。"],
+              ["E", "退出", "留下返回路径。", "退出时仍连接 Manor、Laws、Frontier 和 Gauges。", "暴露返回链接、状态标签和下一安全动作。"]
+            ]
+          }
+        },
+        es: {
+          shimmer: {
+            title: "La señal sutil importa antes de volverse obvia.",
+            quote: "Shimmer reduce la distorsión para que las personas decidan sin ser arrastradas por ruido.",
+            stage: "SHIMMER se abre solo cuando se pide.",
+            subtitle: "Filtrar, resaltar, inspeccionar, medir, mitigar, explicar y repetir sin dejar que la señal se vuelva ruido.",
+            center: ["Shimmer", "Señal"],
+            steps: [
+              ["S", "Filtrar", "Decidir qué entra.", "Filtrar la señal antes de que arrastre la sala.", "Definir entrada, umbral y recibo antes de procesar."],
+              ["H", "Resaltar", "Mostrar cambios, no opiniones.", "Resaltar lo que cambió sin cerrar la interpretación.", "Comparar con la línea base y emitir la diferencia mínima."],
+              ["I", "Inspeccionar", "Elegir el límite de evidencia antes de afirmar.", "Inspeccionar la señal donde realmente vive.", "Nombrar fuente, selector, dueño y límite de falla."],
+              ["M", "Medir", "Convertir observación en número repetible.", "Medir para que el ánimo no se disfrace de prueba.", "Convertir observación en métrica, estado o recibo."],
+              ["M", "Mitigar", "Reducir daño antes de resolver.", "Mitigar distorsión mientras se forma la respuesta.", "Bajar riesgo, contener derrame y preservar reversión."],
+              ["E", "Explicar", "Traducir señales en causas claras.", "Explicar sin ahogar al visitante en maquinaria.", "Mapear señal, fuente, causa y siguiente acción."],
+              ["R", "Repetir", "Confirmar estabilización en el tiempo.", "Repetir lectura hasta que la señal deje de derivar.", "Revisar después del cambio, registrar y mantener retorno."]
+            ]
+          },
+          lattice: {
+            title: "La estructura importa antes de que la escala sea creíble.",
+            quote: "Lattice evita que la señal se vuelva montón. Da posiciones, vecinos, bordes y retorno.",
+            stage: "LATTICE se abre solo cuando se pide.",
+            subtitle: "Localizar, anclar, atravesar, probar, integrar, revisar y salir sin convertir estructura en decoración.",
+            center: ["Lattice", "Red"],
+            steps: [
+              ["L", "Localizar", "Nombrar dónde vive la señal.", "Localizar la señal en la cámara correcta antes de expandir.", "Vincular ruta, padre, archivo, selector y dueño."],
+              ["A", "Anclar", "Sostener la línea base antes del movimiento.", "Anclar el estado aceptado para que el progreso no borre prueba.", "Registrar baseline, contrato y límites no tocables."],
+              ["T", "Atravesar", "Moverse por el camino en orden.", "Atravesar sin saltar cámaras.", "Caminar fuente, ruta, superficie, prueba y retorno."],
+              ["T", "Probar", "Presionar la lectura antes de afirmar.", "Probar deriva y falsos positivos.", "Revisar selectores, enlaces, recibos, lenguaje viejo y dueño."],
+              ["I", "Integrar", "Conectar sin colapsar roles.", "Integrar sin hacer que toda sala tenga el mismo trabajo.", "Rutar enlaces, etiquetas y contratos sin tocar sistemas ajenos."],
+              ["C", "Comprobar", "Verificar recibo tras el movimiento.", "Comprobar qué cambió y qué no cambió.", "Confirmar no mutar render, runtime, instrumentos ni Gauges."],
+              ["E", "Salir", "Dejar una ruta de retorno.", "Salir conectado a Manor, Laws, Frontier y Gauges.", "Mostrar backlink, estado y siguiente movimiento seguro."]
+            ]
+          }
+        }
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      state.lang = normalizeLang(params.get("gd_lang") || "en");
+      state.lens = normalizeLens(params.get("lane") || "platform");
+      state.mode = normalizeMode(params.get("mode") || "shimmer");
+
+      const buttons = Array.from(document.querySelectorAll(".signal-diamond"));
+      const controls = Array.from(document.querySelectorAll(".control-button"));
+      const stateLinks = Array.from(document.querySelectorAll(".state-link"));
+
+      const heroTitle = document.getElementById("page-title");
+      const heroQuote = document.getElementById("heroQuote");
+      const stageTitle = document.getElementById("signal-title");
+      const signalSubtitle = document.getElementById("signalSubtitle");
+      const centerTitle = document.getElementById("centerTitle");
+      const centerSubtitle = document.getElementById("centerSubtitle");
+      const expandedKicker = document.getElementById("expandedKicker");
+      const expandedTitle = document.getElementById("expandedTitle");
+      const expandedSummary = document.getElementById("expandedSummary");
+      const expandedBody = document.getElementById("expandedBody");
+      const labelGrid = document.getElementById("labelGrid");
+
+      function normalizeLang(value) {
+        if (value === "zh" || value === "中文") return "zh";
+        if (value === "es") return "es";
+        return "en";
+      }
+
+      function normalizeLens(value) {
+        return value === "engineering" ? "engineering" : "platform";
+      }
+
+      function normalizeMode(value) {
+        return value === "lattice" ? "lattice" : "shimmer";
+      }
+
+      function setPressed() {
+        controls.forEach((button) => {
+          const control = button.dataset.control;
+          const value = button.dataset.value;
+          const active =
+            (control === "mode" && value === state.mode) ||
+            (control === "lang" && value === state.lang) ||
+            (control === "lens" && value === state.lens);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        buttons.forEach((button, index) => {
+          button.setAttribute("aria-expanded", index === state.step ? "true" : "false");
+        });
+      }
+
+      function getCurrentPack() {
+        return text[state.lang][state.mode] || text.en.shimmer;
+      }
+
+      function render() {
+        const pack = getCurrentPack();
+        const step = pack.steps[state.step] || pack.steps[0];
+
+        document.documentElement.lang = state.lang === "zh" ? "zh-Hans" : state.lang;
+        document.documentElement.dataset.mode = state.mode;
+        document.documentElement.dataset.visibleLens = state.lens;
+
+        heroTitle.textContent = pack.title;
+        heroQuote.textContent = pack.quote;
+        stageTitle.textContent = pack.stage;
+        signalSubtitle.textContent = pack.subtitle;
+        centerTitle.textContent = pack.center[0];
+        centerSubtitle.textContent = pack.center[1];
+
+        pack.steps.forEach((item, index) => {
+          document.getElementById("d" + index).textContent = item[0];
+          document.getElementById("s" + index).textContent = item[1];
+        });
+
+        expandedKicker.textContent = `${state.mode.toUpperCase()} · ${step[0]}`;
+        expandedTitle.textContent = step[1];
+        expandedSummary.textContent = step[2];
+        expandedBody.textContent =
+          state.lens === "engineering"
+            ? `Engineering lens: ${step[4]}`
+            : `Platform lens: ${step[3]}`;
+
+        labelGrid.innerHTML = "";
+        pack.steps.forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "label-card";
+
+          const strong = document.createElement("strong");
+          strong.textContent = `${item[0]} — ${item[1]}`;
+
+          const span = document.createElement("span");
+          span.textContent = state.lens === "engineering" ? item[4] : item[3];
+
+          card.append(strong, span);
+          labelGrid.append(card);
+        });
+
+        setPressed();
+        syncUrl();
+        syncLinks();
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams(window.location.search);
+        next.set("gd_lang", state.lang);
+        next.set("gd_style", next.get("gd_style") || "informal");
+        next.set("gd_time", next.get("gd_time") || "now");
+        next.set("gd_depth", next.get("gd_depth") || "explore");
+        next.set("lane", state.lens);
+        next.set("mode", state.mode);
+        const newUrl = `${window.location.pathname}?${next.toString()}`;
+        window.history.replaceState(null, "", newUrl);
+      }
+
+      function syncLinks() {
+        const current = new URLSearchParams(window.location.search);
+        stateLinks.forEach((link) => {
+          const url = new URL(link.getAttribute("href"), window.location.origin);
+          current.forEach((value, key) => url.searchParams.set(key, value));
+          link.href = url.pathname + "?" + url.searchParams.toString();
+        });
+      }
+
+      controls.forEach((button) => {
+        button.addEventListener("click", () => {
+          const control = button.dataset.control;
+          const value = button.dataset.value;
+
+          if (control === "mode") {
+            state.mode = normalizeMode(value);
+            state.step = 0;
+          }
+
+          if (control === "lang") state.lang = normalizeLang(value);
+          if (control === "lens") state.lens = normalizeLens(value);
+
+          render();
+        });
+      });
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.step = Number(button.dataset.step || 0);
+          render();
+        });
+      });
+
+      render();
+
+      const reduceMotion =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const field = document.querySelector(".signal-field");
+
+      if (!field || !buttons.length || reduceMotion) return;
+
+      let start = 0;
+      let raf = 0;
+
+      function frame(now) {
+        if (!start) start = now;
+
+        const rect = field.getBoundingClientRect();
+        const t = ((now - start) / 1000) * 0.52;
+        const ampX = Math.min(18, Math.max(8, rect.width * 0.022));
+        const ampY = Math.min(13, Math.max(6, rect.height * 0.015));
+
+        buttons.forEach((node, index) => {
+          const phase = Number(node.dataset.phase || index * 0.897597);
+          const loop = node.dataset.loop || "a";
+          const isOpen = node.getAttribute("aria-expanded") === "true";
+          const p = t + phase;
+          const localAmpX = isOpen ? ampX * 0.58 : ampX;
+          const localAmpY = isOpen ? ampY * 0.58 : ampY;
+
+          let dx;
+          let dy;
+
+          if (loop === "a") {
+            dx = Math.sin(p) * localAmpX;
+            dy = Math.sin(p * 2) * localAmpY;
+          } else {
+            dx = Math.sin(p * 2) * localAmpX;
+            dy = Math.sin(p) * localAmpY;
+          }
+
+          node.style.setProperty("--dx", dx.toFixed(2) + "px");
+          node.style.setProperty("--dy", dy.toFixed(2) + "px");
+        });
+
+        raf = window.requestAnimationFrame(frame);
+      }
+
+      raf = window.requestAnimationFrame(frame);
+
+      window.addEventListener("pagehide", () => {
+        if (raf) window.cancelAnimationFrame(raf);
+      }, { once: true });
+    })();
+  </script>
 </body>
 </html>

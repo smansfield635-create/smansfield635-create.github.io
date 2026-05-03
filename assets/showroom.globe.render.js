@@ -1,83 +1,93 @@
 /* /assets/showroom.globe.render.js
-   AUDRELIA_SHOWROOM_GLOBE_RENDER_TNT_v1
+   AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1
 
    ROLE=
    RENDER_AUTHORITY_ONLY
 
-   OWNS=
-   AUDRELIA_BODY_PIXELS
-   AUDRELIA_SUN_BODY_PIXELS
-   SOLAR_SYSTEM_SUN_BODY_PIXELS
+   PURPOSE=
+   Render Audrelia’s manufactured climate moon.
+   The moon is modeled after Earth’s Moon, but story-law says it was assembled from space rock
+   and engineered to stabilize climatology on Audrelia.
 
-   DOES_NOT_OWN=
-   ROUTE_COPY
-   CONTROLS
-   BUTTONS
-   INSTRUMENT_STATE
-   GAUGES
-   EARTH_SUN_MOON_REFERENCE_DATA
+   BOUNDARY=
+   Route owns labels/buttons/shell.
+   Instrument owns state/motion.
+   Render owns pixels only.
+
+   COMPATIBILITY=
+   body="moon" maps to body="audrelia-moon" so older route buttons still render the new moon.
 */
 
-(function bindAudreliaShowroomGlobeRender(global) {
+(function bindAudreliaClimateMoonRender(global) {
   "use strict";
 
-  const VERSION = "AUDRELIA_SHOWROOM_GLOBE_RENDER_TNT_v1";
+  const VERSION = "AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1";
   const TAU = Math.PI * 2;
   const PI = Math.PI;
   const DEG = Math.PI / 180;
-  const SOURCE_WIDTH = 3072;
-  const SOURCE_HEIGHT = 1536;
-  const MAX_WORK_SIZE = 1120;
-  const BODY_SET = new Set(["audrelia", "audrelia-sun", "solar-system-sun"]);
+
+  const SOURCE_W = 2048;
+  const SOURCE_H = 1024;
+  const MAX_WORK = 1120;
+
   const textureCache = Object.create(null);
 
   const PROFILES = Object.freeze({
-    "audrelia": Object.freeze({
+    audrelia: {
       body: "audrelia",
       label: "Audrelia",
-      axialTiltDeg: -18.5,
-      seed: 63501,
-      rimColor: "rgba(154,224,255,0.78)",
-      glowColor: "rgba(90,190,255,0.38)",
-      type: "planet"
-    }),
-    "audrelia-sun": Object.freeze({
+      type: "planet",
+      seed: 60111,
+      tilt: -18.5,
+      rim: "rgba(150,225,255,0.72)",
+      glow: "rgba(86,190,255,0.34)"
+    },
+    "audrelia-sun": {
       body: "audrelia-sun",
       label: "Audrelia’s Sun",
-      axialTiltDeg: -9.0,
-      seed: 63502,
-      rimColor: "rgba(255,214,132,0.72)",
-      glowColor: "rgba(255,156,62,0.38)",
-      type: "local-star"
-    }),
-    "solar-system-sun": Object.freeze({
+      type: "star",
+      seed: 60112,
+      tilt: -9,
+      rim: "rgba(255,216,130,0.75)",
+      glow: "rgba(255,145,45,0.42)"
+    },
+    "solar-system-sun": {
       body: "solar-system-sun",
       label: "Solar-System Sun",
-      axialTiltDeg: -7.25,
-      seed: 63503,
-      rimColor: "rgba(255,230,128,0.82)",
-      glowColor: "rgba(255,164,38,0.46)",
-      type: "reference-star"
-    })
+      type: "star",
+      seed: 60113,
+      tilt: -7.25,
+      rim: "rgba(255,230,135,0.84)",
+      glow: "rgba(255,166,38,0.50)"
+    },
+    "audrelia-moon": {
+      body: "audrelia-moon",
+      label: "Audrelia Climate Moon",
+      type: "manufactured-moon",
+      seed: 60114,
+      tilt: -6.8,
+      rim: "rgba(230,236,232,0.70)",
+      glow: "rgba(170,190,205,0.24)"
+    }
   });
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, Number(value) || 0));
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, Number(n) || 0));
   }
 
-  function wrap01(value) {
-    value = value % 1;
-    return value < 0 ? value + 1 : value;
+  function wrap01(n) {
+    n %= 1;
+    return n < 0 ? n + 1 : n;
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+  function smoothstep(a, b, x) {
+    const t = clamp((x - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
-  function makeSeededRandom(seed) {
+  function randomFactory(seed) {
     let s = seed >>> 0;
-    return function random() {
+    return function rand() {
       s += 0x6D2B79F5;
       let t = s;
       t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -86,52 +96,59 @@
     };
   }
 
-  function makeCanvas(width, height) {
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
+  function canvas(w, h) {
+    const c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    return c;
   }
 
   function normalizeBody(value) {
     value = String(value || "").trim().toLowerCase();
 
     if (value === "audrelia") return "audrelia";
-    if (value === "audrelia-sun" || value.includes("audrelia") && value.includes("sun")) return "audrelia-sun";
+    if (value === "audrelia-sun" || (value.includes("audrelia") && value.includes("sun"))) return "audrelia-sun";
     if (value === "solar-system-sun" || value === "solar-sun" || value.includes("solar")) return "solar-system-sun";
 
-    if (value === "earth" || value.includes("planet")) return "audrelia";
+    if (
+      value === "moon" ||
+      value === "audrelia-moon" ||
+      value === "adralia-moon" ||
+      value.includes("climate-moon") ||
+      value.includes("manufactured-moon")
+    ) {
+      return "audrelia-moon";
+    }
+
     if (value === "sun") return "solar-system-sun";
+    if (value === "earth" || value.includes("planet")) return "audrelia";
 
     return "audrelia";
   }
 
-  function getProfile(body) {
-    const normalized = normalizeBody(body);
-    return PROFILES[normalized] || PROFILES.audrelia;
+  function profileFor(body) {
+    return PROFILES[normalizeBody(body)] || PROFILES.audrelia;
   }
 
-  function llToXY(lon, lat, width, height) {
+  function xyFromLonLat(lon, lat, w, h) {
     return {
-      x: ((lon + 180) / 360) * width,
-      y: ((90 - lat) / 180) * height
+      x: ((lon + 180) / 360) * w,
+      y: ((90 - lat) / 180) * h
     };
   }
 
-  function drawLonLatEllipse(ctx, lon, lat, lonRadius, latRadius, rotationDeg, fill, stroke, lineWidth) {
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    const p = llToXY(lon, lat, width, height);
+  function ellipseLL(ctx, lon, lat, lonR, latR, rot, fill, stroke, lineWidth) {
+    const p = xyFromLonLat(lon, lat, ctx.canvas.width, ctx.canvas.height);
 
     ctx.save();
     ctx.translate(p.x, p.y);
-    ctx.rotate((rotationDeg || 0) * DEG);
+    ctx.rotate((rot || 0) * DEG);
     ctx.beginPath();
     ctx.ellipse(
       0,
       0,
-      Math.max(0.5, (lonRadius / 360) * width),
-      Math.max(0.5, (latRadius / 180) * height),
+      Math.max(0.5, (lonR / 360) * ctx.canvas.width),
+      Math.max(0.5, (latR / 180) * ctx.canvas.height),
       0,
       0,
       TAU
@@ -148,215 +165,218 @@
     ctx.restore();
   }
 
-  function drawSoftStroke(ctx, points, stroke, lineWidth) {
+  function strokeLL(ctx, points, stroke, width) {
     if (!points || points.length < 2) return;
-
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
 
     ctx.beginPath();
 
-    points.forEach((point, index) => {
-      const p = llToXY(point[0], point[1], width, height);
-      if (index === 0) ctx.moveTo(p.x, p.y);
+    points.forEach((pt, i) => {
+      const p = xyFromLonLat(pt[0], pt[1], ctx.canvas.width, ctx.canvas.height);
+      if (i === 0) ctx.moveTo(p.x, p.y);
       else ctx.lineTo(p.x, p.y);
     });
 
     ctx.strokeStyle = stroke;
-    ctx.lineWidth = lineWidth;
+    ctx.lineWidth = width;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
   }
 
   function buildAudreliaTexture(profile) {
-    const canvas = makeCanvas(SOURCE_WIDTH, SOURCE_HEIGHT);
-    const ctx = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    const random = makeSeededRandom(profile.seed);
+    const c = canvas(SOURCE_W, SOURCE_H);
+    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
+    const rand = randomFactory(profile.seed);
 
-    const ocean = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-    ocean.addColorStop(0.00, "#152f5f");
-    ocean.addColorStop(0.22, "#0d5f92");
-    ocean.addColorStop(0.42, "#0f789b");
-    ocean.addColorStop(0.62, "#124c7d");
-    ocean.addColorStop(0.82, "#0b2e59");
-    ocean.addColorStop(1.00, "#061936");
+    const ocean = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
+    ocean.addColorStop(0, "#132d5c");
+    ocean.addColorStop(0.25, "#0e668f");
+    ocean.addColorStop(0.45, "#137b95");
+    ocean.addColorStop(0.7, "#0b3f73");
+    ocean.addColorStop(1, "#051630");
     ctx.fillStyle = ocean;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
 
-    for (let i = 0; i < 1700; i += 1) {
-      const lon = -180 + random() * 360;
-      const lat = -74 + random() * 148;
-      const rx = 0.7 + random() * 7;
-      const ry = 0.25 + random() * 2.8;
-      const alpha = 0.018 + random() * 0.075;
-
-      drawLonLatEllipse(
+    for (let i = 0; i < 48; i += 1) {
+      ellipseLL(
         ctx,
-        lon,
-        lat,
-        rx,
-        ry,
-        random() * 180,
-        "rgba(145,226,255," + alpha.toFixed(4) + ")"
+        -180 + rand() * 360,
+        -62 + rand() * 124,
+        8 + rand() * 30,
+        3 + rand() * 14,
+        rand() * 180,
+        rand() > 0.45 ? "rgba(76,118,86,0.9)" : "rgba(155,140,105,0.82)",
+        "rgba(255,255,220,0.055)",
+        1
       );
     }
 
-    const landColors = [
-      "rgba(72,112,85,0.92)",
-      "rgba(105,115,91,0.90)",
-      "rgba(132,118,102,0.88)",
-      "rgba(168,155,130,0.86)"
-    ];
-
-    for (let i = 0; i < 42; i += 1) {
-      const lon = -180 + random() * 360;
-      const lat = -58 + random() * 116;
-      const rx = 8 + random() * 32;
-      const ry = 3 + random() * 15;
-      const rot = random() * 180;
-      const color = landColors[Math.floor(random() * landColors.length)];
-
-      drawLonLatEllipse(ctx, lon, lat, rx, ry, rot, color, "rgba(255,255,220,0.055)", 1);
-    }
-
-    for (let i = 0; i < 52; i += 1) {
-      const lon = -180 + random() * 360;
-      const lat = -65 + random() * 130;
+    for (let band = -56; band <= 56; band += 13) {
       const points = [];
-      const len = 14 + random() * 38;
-      const base = random() * 360;
-
-      for (let p = 0; p < 12; p += 1) {
-        const t = p / 11;
-        points.push([
-          lon + Math.cos(base * DEG) * len * (t - 0.5) + Math.sin(t * TAU) * 2.2,
-          lat + Math.sin(base * DEG) * len * (t - 0.5) + Math.cos(t * TAU) * 1.3
-        ]);
-      }
-
-      drawSoftStroke(ctx, points, random() > 0.5 ? "rgba(232,236,242,0.18)" : "rgba(218,174,82,0.16)", 2.2);
-    }
-
-    for (let i = 0; i < 520; i += 1) {
-      drawLonLatEllipse(
-        ctx,
-        -180 + random() * 360,
-        -68 + random() * 136,
-        0.4 + random() * 2.6,
-        0.18 + random() * 1.2,
-        random() * 180,
-        random() > 0.5
-          ? "rgba(255,255,255," + (0.025 + random() * 0.07).toFixed(4) + ")"
-          : "rgba(16,22,30," + (0.02 + random() * 0.06).toFixed(4) + ")"
-      );
-    }
-
-    for (let band = -55; band <= 55; band += 14) {
-      const points = [];
-
       for (let lon = -180; lon <= 180; lon += 3) {
-        const wobble =
-          Math.sin((lon + band * 2.7) * 0.082) * 3.6 +
-          Math.sin((lon - band * 1.3) * 0.15) * 1.5;
+        const wobble = Math.sin((lon + band * 2.5) * 0.08) * 3.4 + Math.sin(lon * 0.15) * 1.2;
         points.push([lon, band + wobble]);
       }
-
-      drawSoftStroke(ctx, points, "rgba(255,255,255,0.095)", 3);
+      strokeLL(ctx, points, "rgba(255,255,255,0.10)", 3);
     }
 
     for (let i = 0; i < 760; i += 1) {
-      drawLonLatEllipse(
+      ellipseLL(
         ctx,
-        -180 + random() * 360,
-        -62 + random() * 124,
-        1 + random() * 10,
-        0.35 + random() * 2.2,
-        random() * 180,
-        "rgba(255,255,255," + (0.025 + random() * 0.11).toFixed(4) + ")"
+        -180 + rand() * 360,
+        -65 + rand() * 130,
+        0.8 + rand() * 9,
+        0.25 + rand() * 2.1,
+        rand() * 180,
+        "rgba(255,255,255," + (0.025 + rand() * 0.10).toFixed(4) + ")"
       );
     }
 
-    const polarNorth = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT * 0.22);
-    polarNorth.addColorStop(0, "rgba(245,250,255,0.30)");
-    polarNorth.addColorStop(1, "rgba(245,250,255,0)");
-    ctx.fillStyle = polarNorth;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT * 0.22);
-
-    const polarSouth = ctx.createLinearGradient(0, SOURCE_HEIGHT, 0, SOURCE_HEIGHT * 0.78);
-    polarSouth.addColorStop(0, "rgba(245,250,255,0.28)");
-    polarSouth.addColorStop(1, "rgba(245,250,255,0)");
-    ctx.fillStyle = polarSouth;
-    ctx.fillRect(0, SOURCE_HEIGHT * 0.78, SOURCE_WIDTH, SOURCE_HEIGHT * 0.22);
-
-    return ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
   }
 
   function buildStarTexture(profile) {
-    const canvas = makeCanvas(SOURCE_WIDTH, SOURCE_HEIGHT);
-    const ctx = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    const random = makeSeededRandom(profile.seed);
+    const c = canvas(SOURCE_W, SOURCE_H);
+    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
+    const rand = randomFactory(profile.seed);
+    const solar = profile.body === "solar-system-sun";
 
-    const local = profile.body === "audrelia-sun";
-
-    const base = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-
-    if (local) {
-      base.addColorStop(0.00, "#ffe6a0");
-      base.addColorStop(0.20, "#ffc46f");
-      base.addColorStop(0.45, "#f7953d");
-      base.addColorStop(0.70, "#d65a22");
-      base.addColorStop(1.00, "#7f230e");
-    } else {
-      base.addColorStop(0.00, "#fff0a8");
-      base.addColorStop(0.20, "#ffd867");
-      base.addColorStop(0.45, "#ffa52f");
-      base.addColorStop(0.72, "#e35d16");
-      base.addColorStop(1.00, "#8a2608");
-    }
-
+    const base = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
+    base.addColorStop(0, solar ? "#fff1a5" : "#ffe3a0");
+    base.addColorStop(0.22, solar ? "#ffd261" : "#ffc06a");
+    base.addColorStop(0.5, solar ? "#ff9c2d" : "#f38a37");
+    base.addColorStop(0.78, solar ? "#db5414" : "#c94c1e");
+    base.addColorStop(1, "#7a1e08");
     ctx.fillStyle = base;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
 
     ctx.globalCompositeOperation = "screen";
 
-    const grains = local ? 6200 : 8200;
-
-    for (let i = 0; i < grains; i += 1) {
-      const x = random() * SOURCE_WIDTH;
-      const y = random() * SOURCE_HEIGHT;
-      const rx = 2 + random() * (local ? 12 : 15);
-      const ry = 1 + random() * (local ? 5 : 6.5);
-      const alpha = 0.022 + random() * (local ? 0.095 : 0.12);
+    for (let i = 0; i < (solar ? 7600 : 5600); i += 1) {
+      const x = rand() * SOURCE_W;
+      const y = rand() * SOURCE_H;
 
       ctx.save();
       ctx.translate(x, y);
-      ctx.rotate(random() * TAU);
+      ctx.rotate(rand() * TAU);
       ctx.beginPath();
-      ctx.ellipse(0, 0, rx, ry, 0, 0, TAU);
-      ctx.fillStyle = random() > 0.34
-        ? "rgba(255,248,190," + alpha.toFixed(4) + ")"
-        : "rgba(255,112,35," + (alpha * 0.72).toFixed(4) + ")";
+      ctx.ellipse(0, 0, 2 + rand() * 13, 1 + rand() * 5.5, 0, 0, TAU);
+      ctx.fillStyle = rand() > 0.35
+        ? "rgba(255,248,190," + (0.025 + rand() * 0.11).toFixed(4) + ")"
+        : "rgba(255,112,35," + (0.02 + rand() * 0.08).toFixed(4) + ")";
       ctx.fill();
       ctx.restore();
     }
 
     ctx.globalCompositeOperation = "source-over";
 
-    for (let row = -66; row <= 66; row += local ? 12 : 10) {
-      const points = [];
-
+    for (let row = -64; row <= 64; row += solar ? 10 : 12) {
+      const pts = [];
       for (let lon = -180; lon <= 180; lon += 3) {
-        const wave =
-          Math.sin((lon + row * 1.7) * 0.105) * (local ? 3.0 : 3.8) +
-          Math.sin((lon - row * 2.1) * 0.045) * (local ? 1.7 : 2.4);
-        points.push([lon, row + wave]);
+        const wave = Math.sin((lon + row * 1.7) * 0.105) * 3.2 + Math.sin((lon - row) * 0.045) * 1.8;
+        pts.push([lon, row + wave]);
       }
-
-      drawSoftStroke(ctx, points, local ? "rgba(255,230,190,0.105)" : "rgba(255,244,195,0.12)", local ? 2.4 : 3);
+      strokeLL(ctx, pts, solar ? "rgba(255,244,195,0.12)" : "rgba(255,230,190,0.105)", solar ? 3 : 2.4);
     }
 
-    return ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
+  }
+
+  function buildClimateMoonTexture(profile) {
+    const c = canvas(SOURCE_W, SOURCE_H);
+    const ctx = c.getContext("2d", { alpha: false, willReadFrequently: true });
+    const rand = randomFactory(profile.seed);
+
+    const base = ctx.createLinearGradient(0, 0, 0, SOURCE_H);
+    base.addColorStop(0, "#deded7");
+    base.addColorStop(0.28, "#c8c9c2");
+    base.addColorStop(0.58, "#9fa19c");
+    base.addColorStop(0.82, "#777d7f");
+    base.addColorStop(1, "#555f66");
+    ctx.fillStyle = base;
+    ctx.fillRect(0, 0, SOURCE_W, SOURCE_H);
+
+    const maria = "rgba(58,62,64,0.34)";
+    ellipseLL(ctx, -30, 26, 22, 10, -8, maria);
+    ellipseLL(ctx, 12, 18, 20, 9, 6, maria);
+    ellipseLL(ctx, 42, -6, 25, 11, 10, maria);
+    ellipseLL(ctx, -52, -20, 19, 8, -12, maria);
+    ellipseLL(ctx, 82, 30, 18, 7, -8, "rgba(70,72,74,0.22)");
+
+    for (let i = 0; i < 2600; i += 1) {
+      const lon = -180 + rand() * 360;
+      const lat = -82 + rand() * 164;
+      const size = 0.22 + Math.pow(rand(), 2.55) * 7.2;
+      const strength = 0.12 + rand() * 0.55;
+
+      ellipseLL(
+        ctx,
+        lon,
+        lat,
+        size,
+        size * 0.66,
+        rand() * 180,
+        "rgba(34,36,38," + (0.045 + strength * 0.10).toFixed(4) + ")"
+      );
+
+      ellipseLL(
+        ctx,
+        lon - size * 0.05,
+        lat - size * 0.05,
+        size * 0.76,
+        size * 0.50,
+        rand() * 180,
+        "rgba(255,255,245," + (0.03 + strength * 0.07).toFixed(4) + ")"
+      );
+    }
+
+    /*
+      Manufactured assembly seams:
+      not a hard panel seam; these are subtle orbital construction arcs,
+      implying space-rock assembly without breaking spherical integrity.
+    */
+    for (let i = 0; i < 9; i += 1) {
+      const lat = -58 + i * 14;
+      const pts = [];
+
+      for (let lon = -180; lon <= 180; lon += 3) {
+        const wave = Math.sin((lon * 0.055) + i) * 2.2 + Math.sin((lon * 0.12) - i) * 0.9;
+        pts.push([lon, lat + wave]);
+      }
+
+      strokeLL(ctx, pts, "rgba(205,218,216,0.075)", 1.5);
+    }
+
+    /*
+      Climate-regulation lattice:
+      faint artificial meridian nodes embedded into the lunar surface.
+    */
+    for (let i = 0; i < 72; i += 1) {
+      const lon = -180 + rand() * 360;
+      const lat = -64 + rand() * 128;
+      const r = 0.35 + rand() * 1.25;
+
+      ellipseLL(ctx, lon, lat, r, r * 0.72, 0, "rgba(210,235,225,0.11)");
+      ellipseLL(ctx, lon, lat, r * 0.34, r * 0.25, 0, "rgba(245,255,245,0.10)");
+    }
+
+    for (let i = 0; i < 180; i += 1) {
+      const lon = -180 + rand() * 360;
+      const lat = -72 + rand() * 144;
+      ellipseLL(
+        ctx,
+        lon,
+        lat,
+        0.12 + rand() * 0.7,
+        0.08 + rand() * 0.4,
+        rand() * 180,
+        rand() > 0.55
+          ? "rgba(255,255,255," + (0.025 + rand() * 0.06).toFixed(4) + ")"
+          : "rgba(20,24,26," + (0.02 + rand() * 0.05).toFixed(4) + ")"
+      );
+    }
+
+    return ctx.getImageData(0, 0, SOURCE_W, SOURCE_H);
   }
 
   function getTexture(body) {
@@ -364,38 +384,43 @@
 
     if (textureCache[body]) return textureCache[body];
 
-    const profile = getProfile(body);
-    const imageData = profile.type === "planet" ? buildAudreliaTexture(profile) : buildStarTexture(profile);
+    const profile = profileFor(body);
+    const image =
+      profile.type === "planet"
+        ? buildAudreliaTexture(profile)
+        : profile.type === "star"
+          ? buildStarTexture(profile)
+          : buildClimateMoonTexture(profile);
 
     textureCache[body] = {
-      width: imageData.width,
-      height: imageData.height,
-      data: imageData.data
+      width: image.width,
+      height: image.height,
+      data: image.data
     };
 
     return textureCache[body];
   }
 
-  function sampleTexture(texture, u, v, out) {
-    const width = texture.width;
-    const height = texture.height;
+  function sample(texture, u, v, out) {
+    const w = texture.width;
+    const h = texture.height;
     const data = texture.data;
 
-    const x = ((u % 1 + 1) % 1) * width;
-    const y = clamp(v, 0, 0.999999) * (height - 1);
+    const x = wrap01(u) * w;
+    const y = clamp(v, 0, 0.999999) * (h - 1);
 
-    const x0 = Math.floor(x) % width;
-    const x1 = (x0 + 1) % width;
+    const x0 = Math.floor(x) % w;
+    const x1 = (x0 + 1) % w;
     const y0 = Math.floor(y);
-    const y1 = Math.min(height - 1, y0 + 1);
+    const y1 = Math.min(h - 1, y0 + 1);
 
     const tx = x - Math.floor(x);
     const ty = y - y0;
 
-    const i00 = (y0 * width + x0) * 4;
-    const i10 = (y0 * width + x1) * 4;
-    const i01 = (y1 * width + x0) * 4;
-    const i11 = (y1 * width + x1) * 4;
+    const i00 = (y0 * w + x0) * 4;
+    const i10 = (y0 * w + x1) * 4;
+    const i01 = (y1 * w + x0) * 4;
+    const i11 = (y1 * w + x1) * 4;
 
     const r0 = data[i00] * (1 - tx) + data[i10] * tx;
     const g0 = data[i00 + 1] * (1 - tx) + data[i10 + 1] * tx;
@@ -408,45 +433,60 @@
     out[0] = r0 * (1 - ty) + r1 * ty;
     out[1] = g0 * (1 - ty) + g1 * ty;
     out[2] = b0 * (1 - ty) + b1 * ty;
-
-    return out;
   }
 
-  function drawSphere(ctx, targetWidth, targetHeight, body, longitudeTurns, zoomPercent) {
+  function resizeCanvas(c) {
+    const host = c.parentElement || c;
+    const rect = host.getBoundingClientRect();
+    const css = clamp(Math.round(rect.width || c.clientWidth || 420), 260, 1500);
+    const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
+    const px = Math.round(css * dpr);
+
+    c.style.width = css + "px";
+    c.style.height = css + "px";
+
+    if (c.width !== px || c.height !== px) {
+      c.width = px;
+      c.height = px;
+    }
+  }
+
+  function drawSphere(ctx, w, h, body, longitude, zoom) {
     body = normalizeBody(body);
 
-    const profile = getProfile(body);
+    const profile = profileFor(body);
     const texture = getTexture(body);
-    const workSize = Math.min(MAX_WORK_SIZE, Math.max(360, Math.min(targetWidth, targetHeight)));
-    const work = makeCanvas(workSize, workSize);
-    const workCtx = work.getContext("2d", { alpha: true, willReadFrequently: true });
-    const image = workCtx.createImageData(workSize, workSize);
-    const pixels = image.data;
+    const workSize = Math.min(MAX_WORK, Math.max(360, Math.min(w, h)));
+    const work = canvas(workSize, workSize);
+    const wctx = work.getContext("2d", { alpha: true, willReadFrequently: true });
+    const img = wctx.createImageData(workSize, workSize);
+    const pix = img.data;
 
     const radius = workSize * 0.46;
-    const center = workSize / 2;
     const radius2 = radius * radius;
-    const tilt = profile.axialTiltDeg * DEG;
+    const center = workSize / 2;
+
+    const tilt = profile.tilt * DEG;
     const cosTilt = Math.cos(tilt);
     const sinTilt = Math.sin(tilt);
-    const centerLon = longitudeTurns * TAU;
+    const centerLon = Number(longitude || 0) * TAU;
     const color = [0, 0, 0];
 
-    const lightX = -0.44;
-    const lightY = -0.30;
-    const lightZ = 0.84;
-    const lightMag = Math.sqrt(lightX * lightX + lightY * lightY + lightZ * lightZ);
-    const lx = lightX / lightMag;
-    const ly = lightY / lightMag;
-    const lz = lightZ / lightMag;
+    const lx0 = -0.44;
+    const ly0 = -0.30;
+    const lz0 = 0.84;
+    const lm = Math.sqrt(lx0 * lx0 + ly0 * ly0 + lz0 * lz0);
+    const lx = lx0 / lm;
+    const ly = ly0 / lm;
+    const lz = lz0 / lm;
 
     const hx0 = lx;
     const hy0 = ly;
     const hz0 = lz + 1;
-    const hMag = Math.sqrt(hx0 * hx0 + hy0 * hy0 + hz0 * hz0);
-    const hx = hx0 / hMag;
-    const hy = hy0 / hMag;
-    const hz = hz0 / hMag;
+    const hm = Math.sqrt(hx0 * hx0 + hy0 * hy0 + hz0 * hz0);
+    const hx = hx0 / hm;
+    const hy = hy0 / hm;
+    const hz = hz0 / hm;
 
     let ptr = 0;
 
@@ -458,10 +498,10 @@
         const d2 = x * x + y * y;
 
         if (d2 > radius2) {
-          pixels[ptr] = 0;
-          pixels[ptr + 1] = 0;
-          pixels[ptr + 2] = 0;
-          pixels[ptr + 3] = 0;
+          pix[ptr] = 0;
+          pix[ptr + 1] = 0;
+          pix[ptr + 2] = 0;
+          pix[ptr + 3] = 0;
           ptr += 4;
           continue;
         }
@@ -477,83 +517,103 @@
         const lon = Math.atan2(bx, bz) - centerLon;
         const lat = Math.asin(clamp(by, -1, 1));
 
-        const u = ((lon / TAU + 0.5) % 1 + 1) % 1;
+        const u = wrap01(lon / TAU + 0.5);
         const v = 0.5 - lat / PI;
 
-        sampleTexture(texture, u, v, color);
+        sample(texture, u, v, color);
 
         const nDotL = clamp(sx * lx + sy * ly + sz * lz, 0, 1);
         const nDotH = clamp(sx * hx + sy * hy + sz * hz, 0, 1);
         const dist = Math.sqrt(d2) / radius;
-        const rim = smoothstep(0.68, 1.0, dist);
+        const rim = smoothstep(0.68, 1, dist);
 
-        let baseLight = profile.type === "planet" ? 0.31 + nDotL * 0.76 : 0.82 + nDotL * 0.18;
+        let light = profile.type === "star" ? 0.82 + nDotL * 0.18 : 0.32 + nDotL * 0.75;
 
-        let r = color[0] * baseLight;
-        let g = color[1] * baseLight;
-        let b = color[2] * baseLight;
+        let r = color[0] * light;
+        let g = color[1] * light;
+        let b = color[2] * light;
 
         if (profile.type === "planet") {
-          const waterish = color[2] > color[1] + 8 && color[2] > color[0] + 14;
-          const spec = waterish ? Math.pow(nDotH, 48) * 0.35 : Math.pow(nDotH, 80) * 0.05;
-          const atmosphere = rim * 30;
+          const water = color[2] > color[1] + 8 && color[2] > color[0] + 14;
+          const spec = water ? Math.pow(nDotH, 48) * 0.32 : Math.pow(nDotH, 80) * 0.04;
+          const atm = rim * 30;
 
-          r += spec * 110 + atmosphere * 0.45;
-          g += spec * 145 + atmosphere * 1.0;
-          b += spec * 210 + atmosphere * 1.65;
+          r += spec * 105 + atm * 0.45;
+          g += spec * 140 + atm * 1.0;
+          b += spec * 205 + atm * 1.65;
+        } else if (profile.type === "star") {
+          const glow = profile.body === "solar-system-sun" ? 22 + rim * 32 : 16 + rim * 24;
+          r += glow;
+          g += glow * 0.72;
+          b += glow * 0.24;
         } else {
-          const internalGlow = profile.body === "solar-system-sun" ? 22 + rim * 32 : 16 + rim * 24;
-          r += internalGlow;
-          g += internalGlow * 0.72;
-          b += internalGlow * 0.24;
+          const spec = Math.pow(nDotH, 70) * 0.08;
+          const climateGlow = rim * 9;
+
+          r += climateGlow + spec * 32;
+          g += climateGlow * 1.02 + spec * 34;
+          b += climateGlow * 1.05 + spec * 36;
         }
 
-        const edgeAlpha = clamp((1 - dist) / 0.018, 0, 1);
+        const edge = clamp((1 - dist) / 0.018, 0, 1);
 
-        pixels[ptr] = clamp(Math.round(r), 0, 255);
-        pixels[ptr + 1] = clamp(Math.round(g), 0, 255);
-        pixels[ptr + 2] = clamp(Math.round(b), 0, 255);
-        pixels[ptr + 3] = Math.round(255 * edgeAlpha);
+        pix[ptr] = clamp(Math.round(r), 0, 255);
+        pix[ptr + 1] = clamp(Math.round(g), 0, 255);
+        pix[ptr + 2] = clamp(Math.round(b), 0, 255);
+        pix[ptr + 3] = Math.round(edge * 255);
         ptr += 4;
       }
     }
 
-    workCtx.putImageData(image, 0, 0);
+    wctx.putImageData(img, 0, 0);
 
-    ctx.clearRect(0, 0, targetWidth, targetHeight);
+    ctx.clearRect(0, 0, w, h);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
-    const zoom = clamp(zoomPercent || 100, 70, 240) / 100;
-    const drawSize = Math.min(targetWidth, targetHeight) * 0.92 * zoom;
-    const dx = (targetWidth - drawSize) / 2;
-    const dy = (targetHeight - drawSize) / 2;
-    const cx = targetWidth / 2;
-    const cy = targetHeight / 2;
-    const rOuter = drawSize / 2;
+    const scale = clamp(Number(zoom || 100), 70, 240) / 100;
+    const drawSize = Math.min(w, h) * 0.92 * scale;
+    const dx = (w - drawSize) / 2;
+    const dy = (h - drawSize) / 2;
+    const cx = w / 2;
+    const cy = h / 2;
+    const ro = drawSize / 2;
 
     ctx.drawImage(work, dx, dy, drawSize, drawSize);
 
-    if (profile.type !== "planet") {
+    if (profile.type === "star") {
       ctx.save();
-      const corona = ctx.createRadialGradient(cx, cy, rOuter * 0.82, cx, cy, rOuter * 1.24);
-      corona.addColorStop(0.00, profile.body === "solar-system-sun" ? "rgba(255,226,110,0.20)" : "rgba(255,214,128,0.15)");
-      corona.addColorStop(0.58, profile.body === "solar-system-sun" ? "rgba(255,128,26,0.15)" : "rgba(255,118,42,0.10)");
-      corona.addColorStop(1.00, "rgba(255,128,26,0)");
+      const corona = ctx.createRadialGradient(cx, cy, ro * 0.82, cx, cy, ro * 1.24);
+      corona.addColorStop(0, "rgba(255,226,110,0.18)");
+      corona.addColorStop(0.58, "rgba(255,128,26,0.12)");
+      corona.addColorStop(1, "rgba(255,128,26,0)");
       ctx.beginPath();
-      ctx.arc(cx, cy, rOuter * 1.24, 0, TAU);
+      ctx.arc(cx, cy, ro * 1.24, 0, TAU);
       ctx.fillStyle = corona;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    if (profile.type === "manufactured-moon") {
+      ctx.save();
+      const halo = ctx.createRadialGradient(cx, cy, ro * 0.72, cx, cy, ro * 1.18);
+      halo.addColorStop(0, "rgba(160,190,190,0)");
+      halo.addColorStop(0.65, "rgba(160,210,195,0.055)");
+      halo.addColorStop(1, "rgba(160,210,195,0)");
+      ctx.beginPath();
+      ctx.arc(cx, cy, ro * 1.18, 0, TAU);
+      ctx.fillStyle = halo;
       ctx.fill();
       ctx.restore();
     }
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, rOuter * 1.008, 0, TAU);
-    ctx.strokeStyle = profile.rimColor;
-    ctx.lineWidth = Math.max(2, rOuter * 0.012);
-    ctx.shadowColor = profile.glowColor;
-    ctx.shadowBlur = rOuter * 0.09;
+    ctx.arc(cx, cy, ro * 1.008, 0, TAU);
+    ctx.strokeStyle = profile.rim;
+    ctx.lineWidth = Math.max(2, ro * 0.012);
+    ctx.shadowColor = profile.glow;
+    ctx.shadowBlur = ro * 0.09;
     ctx.stroke();
     ctx.restore();
 
@@ -563,66 +623,45 @@
       body,
       label: profile.label,
       planetName: "Audrelia",
-      universe: "nine-summits-universe",
-      activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
-      referenceBodies: ["earth", "earth-sun", "earth-moon"],
-      projection: "audrelia-orthographic-sphere",
+      moonType: body === "audrelia-moon" ? "manufactured-climate-moon" : null,
       rendererOwnsBodiesOnly: true,
       generatedImage: false,
-      fantasyMode: false,
       visualPassClaimed: false
     };
   }
 
-  function resizeCanvas(canvas) {
-    const parent = canvas.parentElement;
-    const rect = parent ? parent.getBoundingClientRect() : canvas.getBoundingClientRect();
-    const cssSize = clamp(Math.round(rect.width || canvas.clientWidth || 420), 260, 1500);
-    const dpr = clamp(global.devicePixelRatio || 1, 1, 3);
-    const pixelSize = Math.round(cssSize * dpr);
-
-    canvas.style.width = cssSize + "px";
-    canvas.style.height = cssSize + "px";
-
-    if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
-      canvas.width = pixelSize;
-      canvas.height = pixelSize;
-    }
-  }
-
-  function createRenderer(canvas, initialOptions) {
-    if (!(canvas instanceof HTMLCanvasElement)) {
-      throw new Error("AUDRELIA_SHOWROOM_GLOBE_RENDER_TNT_v1 requires a canvas.");
+  function createRenderer(target, initialOptions) {
+    if (!(target instanceof HTMLCanvasElement)) {
+      throw new Error("AUDRELIA_CLIMATE_MOON_RENDER_TNT_v1 requires a canvas target.");
     }
 
-    let currentOptions = Object.assign({}, initialOptions || {});
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = target.getContext("2d", { alpha: true });
+    let options = Object.assign({}, initialOptions || {});
 
     function render(nextOptions) {
-      currentOptions = Object.assign({}, currentOptions, nextOptions || {});
-      resizeCanvas(canvas);
+      options = Object.assign({}, options, nextOptions || {});
+      resizeCanvas(target);
 
-      const body = normalizeBody(currentOptions.body || currentOptions.activeBody);
-      const longitude = Number(currentOptions.longitude) || 0;
-      const zoom = clamp(Number(currentOptions.zoom) || 100, 70, 240);
+      const body = normalizeBody(options.body || options.activeBody || target.dataset.body);
+      const longitude = Number(options.longitude) || 0;
+      const zoom = clamp(Number(options.zoom) || 100, 70, 240);
 
-      canvas.dataset.body = body;
-      canvas.dataset.planetName = "Audrelia";
-      canvas.dataset.universe = "nine-summits-universe";
-      canvas.dataset.renderVersion = VERSION;
-      canvas.dataset.rendererOwnsBodiesOnly = "true";
-      canvas.dataset.generatedImage = "false";
-      canvas.dataset.visualPassClaimed = "false";
+      target.dataset.body = body;
+      target.dataset.renderVersion = VERSION;
+      target.dataset.planetName = "Audrelia";
+      target.dataset.renderAuthority = "/assets/showroom.globe.render.js";
+      target.dataset.generatedImage = "false";
+      target.dataset.visualPassClaimed = "false";
 
-      return drawSphere(ctx, canvas.width, canvas.height, body, longitude, zoom);
+      return drawSphere(ctx, target.width, target.height, body, longitude, zoom);
     }
 
     function resize() {
-      resizeCanvas(canvas);
-      return render(currentOptions);
+      resizeCanvas(target);
+      return render(options);
     }
 
-    resizeCanvas(canvas);
+    resizeCanvas(target);
 
     return {
       VERSION,
@@ -630,22 +669,15 @@
       render,
       resize,
       getStatus() {
-        const body = normalizeBody(currentOptions.body || currentOptions.activeBody);
-        const profile = getProfile(body);
-
+        const body = normalizeBody(options.body || options.activeBody || target.dataset.body);
         return {
           ok: true,
           version: VERSION,
-          role: "render-authority-only",
           activeBody: body,
-          label: profile.label,
           planetName: "Audrelia",
-          universe: "nine-summits-universe",
-          activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
-          referenceBodies: ["earth", "earth-sun", "earth-moon"],
+          audreliaClimateMoonSupported: true,
+          moonMapsToAudreliaClimateMoon: true,
           rendererOwnsBodiesOnly: true,
-          routeOwnsBodies: false,
-          instrumentOwnsState: true,
           generatedImage: false,
           visualPassClaimed: false
         };
@@ -653,8 +685,8 @@
     };
   }
 
-  function renderToCanvas(canvas, options) {
-    const renderer = createRenderer(canvas, options || {});
+  function renderToCanvas(target, options) {
+    const renderer = createRenderer(target, options || {});
     return renderer.render(options || {});
   }
 
@@ -670,12 +702,14 @@
         version: VERSION,
         role: "render-authority-only",
         planetName: "Audrelia",
-        universe: "nine-summits-universe",
-        activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
-        referenceBodies: ["earth", "earth-sun", "earth-moon"],
+        activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun", "audrelia-moon"],
+        compatibility: {
+          moon: "audrelia-moon",
+          earth: "audrelia",
+          sun: "solar-system-sun"
+        },
+        audreliaClimateMoonSupported: true,
         rendererOwnsBodiesOnly: true,
-        routeOwnsBodies: false,
-        instrumentOwnsState: true,
         generatedImage: false,
         visualPassClaimed: false
       };

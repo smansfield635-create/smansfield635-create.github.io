@@ -2,11 +2,12 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audrelia-showroom-globe-ted-talk"
+  data-page="audrelia-showroom-globe-touch"
   data-route="/showroom/globe/"
-  data-contract="AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1"
+  data-contract="AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1"
   data-universe="nine-summits-universe"
   data-active-planet="Audrelia"
+  data-moon-name="Adralia’s Moon"
   data-active-assets="audrelia,audrelia-sun,audrelia-moon"
   data-reference-bodies="earth,earth-sun,earth-moon"
   data-generated-image="false"
@@ -18,31 +19,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Audrelia Showroom Globe</title>
-  <meta
-    name="description"
-    content="A TED Talk style Showroom Globe page for Audrelia, Audrelia’s Sun, and Audrelia’s manufactured climate moon."
-  >
+  <meta name="description" content="Touch-first Showroom Globe page for Audrelia, Audrelia’s Sun, and Adralia’s Moon.">
 
   <style>
     :root {
       --bg: #050813;
       --panel: rgba(9, 14, 26, 0.92);
-      --panel-2: rgba(14, 20, 34, 0.95);
       --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(242, 199, 111, 0.54);
       --text: #f8f1dd;
       --muted: rgba(242, 246, 255, 0.74);
       --faint: rgba(242, 246, 255, 0.48);
       --gold: #f2c76f;
       --blue: #78d8ff;
-      --green: #9ee8c9;
       --stage: min(100%, 1180px);
       --card: min(100%, 900px);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -51,15 +44,13 @@
       overflow-x: hidden;
       background:
         radial-gradient(circle at 50% 14%, rgba(242, 199, 111, 0.14), transparent 30rem),
-        radial-gradient(circle at 50% 72%, rgba(80, 145, 230, 0.16), transparent 34rem),
+        radial-gradient(circle at 50% 70%, rgba(80, 145, 230, 0.16), transparent 34rem),
         linear-gradient(180deg, #060916, #03050d 72%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100svh;
-    }
+    body { min-height: 100svh; }
 
     body::before {
       content: "";
@@ -76,15 +67,8 @@
       opacity: 0.42;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
 
     .skip-link {
       position: absolute;
@@ -98,9 +82,7 @@
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
+    .skip-link:focus { top: 1rem; }
 
     .shell {
       position: relative;
@@ -164,15 +146,15 @@
 
     .nav a[aria-current="page"] {
       border-color: rgba(242,199,111,0.9);
-      color: #090b10;
+      color: #080a0f;
       background: linear-gradient(135deg, #fff0a3, #f2c76f);
     }
 
     .hero {
       width: 100%;
       display: grid;
-      gap: 1rem;
-      padding: clamp(0.75rem, 3vw, 2rem) 0 clamp(1rem, 3vw, 1.75rem);
+      gap: 0.92rem;
+      padding: clamp(0.75rem, 3vw, 1.65rem) 0 clamp(0.85rem, 3vw, 1.35rem);
       text-align: center;
     }
 
@@ -188,7 +170,7 @@
     h1 {
       width: min(100%, 960px);
       margin: 0 auto;
-      font-size: clamp(2.25rem, 9vw, 5.6rem);
+      font-size: clamp(2.1rem, 8.4vw, 5.2rem);
       line-height: 0.94;
       letter-spacing: -0.075em;
       text-wrap: balance;
@@ -198,50 +180,48 @@
       width: min(100%, 800px);
       margin: 0 auto;
       color: var(--muted);
-      font-size: clamp(1rem, 3.6vw, 1.2rem);
-      line-height: 1.58;
+      font-size: clamp(0.98rem, 3.4vw, 1.14rem);
+      line-height: 1.56;
       text-wrap: balance;
     }
 
-    .talk-frame {
-      width: min(100%, 960px);
-      margin: 0.25rem auto 0;
-      display: grid;
-      gap: 0.85rem;
-    }
-
-    .talk-line {
-      margin: 0;
-      padding: clamp(0.9rem, 3vw, 1.15rem);
-      border: 1px solid rgba(242,199,111,0.28);
-      border-radius: 1.25rem;
-      color: rgba(255, 244, 215, 0.92);
-      background:
-        linear-gradient(135deg, rgba(242,199,111,0.10), rgba(255,255,255,0.035)),
-        rgba(8, 13, 24, 0.72);
-      font-size: clamp(0.98rem, 3.4vw, 1.12rem);
-      line-height: 1.52;
-      text-wrap: balance;
-    }
-
-    .chips {
+    .chips,
+    .asset-strip {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.45rem;
-      margin-top: 0.2rem;
     }
 
-    .chip {
-      padding: 0.44rem 0.7rem;
+    .chip,
+    .asset-button {
+      min-height: 2.35rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.78rem;
       border: 1px solid rgba(242,199,111,0.32);
       border-radius: 999px;
       color: rgba(255,238,174,0.92);
       background: rgba(242,199,111,0.07);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 950;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+    }
+
+    .asset-button {
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(255,255,255,0.035);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .asset-button.active,
+    .asset-button[aria-pressed="true"] {
+      color: #080a0f;
+      border-color: rgba(242,199,111,0.92);
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
     }
 
     .viewer-stack {
@@ -252,7 +232,7 @@
     }
 
     .stage-card,
-    .controls-panel,
+    .gesture-panel,
     .asset-panel,
     .contract-panel {
       width: 100%;
@@ -312,7 +292,7 @@
     }
 
     .globe-mount {
-      width: min(84vw, 40rem);
+      width: min(86vw, 41rem);
       max-width: 100%;
       aspect-ratio: 1 / 1;
       display: grid;
@@ -325,11 +305,15 @@
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,0.11),
         0 0 2.5rem rgba(117,216,255,0.11);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    .globe-mount > * {
-      max-width: 100%;
-      min-width: 0;
+    .globe-mount canvas {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .body-label {
@@ -354,70 +338,35 @@
       text-wrap: balance;
     }
 
-    .controls-panel,
+    .gesture-panel,
     .asset-panel,
     .contract-panel {
       padding: clamp(0.85rem, 3.3vw, 1.25rem);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
-        var(--panel-2);
     }
 
-    .control-row {
-      width: 100%;
+    .gesture-panel {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
-      gap: clamp(0.5rem, 2vw, 0.8rem);
-    }
-
-    .control-row + .control-row {
-      margin-top: 0.72rem;
-    }
-
-    .control-row button {
-      width: 100%;
-      min-height: clamp(3rem, 11vw, 3.55rem);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.72rem 0.82rem;
-      border: 1px solid rgba(255,255,255,0.28);
-      border-radius: 999px;
-      background: rgba(8,12,21,0.86);
-      color: var(--text);
-      font-size: clamp(0.84rem, 3.6vw, 1rem);
-      font-weight: 950;
-      line-height: 1.05;
+      gap: 0.7rem;
       text-align: center;
-      cursor: pointer;
-      touch-action: manipulation;
     }
 
-    .control-row button.active,
-    .control-row button[aria-pressed="true"] {
-      border-color: rgba(242,199,111,0.92);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    .gesture-title {
+      margin: 0;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .zoom-control {
-      margin: 0.85rem 0 0;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 0.72rem;
+    .gesture-list {
+      margin: 0;
       color: var(--muted);
-      font-size: 0.84rem;
-      font-weight: 850;
-    }
-
-    .zoom-control input {
-      width: 100%;
-      accent-color: var(--gold);
+      font-size: clamp(0.84rem, 3vw, 0.94rem);
+      line-height: 1.46;
     }
 
     .readout {
-      margin-top: 0.85rem;
       padding: 0.82rem 0.9rem;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 1rem;
@@ -487,28 +436,13 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
 
-      .asset-grid {
-        grid-template-columns: 1fr;
-      }
+      .asset-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 460px) {
-      .globe-mount {
-        width: min(82vw, 23rem);
-      }
-
-      .control-row {
-        grid-template-columns: 1fr;
-      }
-
-      .zoom-control {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
+      .globe-mount { width: min(84vw, 24rem); }
     }
   </style>
 </head>
@@ -538,27 +472,23 @@
 
     <main id="showroom-globe-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Showroom Globe · TED Talk expression page</p>
-        <h1 id="page-title">Audrelia is not Earth. It is the planet we are now building.</h1>
+        <p class="eyebrow">Showroom Globe · touch-first asset viewer</p>
+        <h1 id="page-title">Audrelia, Audrelia’s Sun, and Adralia’s Moon.</h1>
 
         <p class="lead">
-          Earth, the Sun, and the Moon are bodies of reference. The active assets are Audrelia, Audrelia’s Sun, and Audrelia’s manufactured climate moon.
+          Earth, the Sun, and Earth’s Moon remain reference bodies. The active assets are now separated and labeled as Audrelia, Audrelia’s Sun, and Adralia’s Moon.
         </p>
 
-        <div class="talk-frame" aria-label="TED Talk framing">
-          <p class="talk-line">
-            The point is not to make another demo globe. The point is to give the universe a stage where its active bodies can be named, separated, inspected, and understood.
-          </p>
-          <p class="talk-line">
-            Audrelia is the planet. Audrelia’s Sun is the local stellar authority. The manufactured climate moon was assembled from space rock to help stabilize the planet’s climatology.
-          </p>
+        <div class="asset-strip" aria-label="Choose active asset">
+          <button type="button" class="asset-button active" data-body="audrelia" aria-pressed="true">Audrelia</button>
+          <button type="button" class="asset-button" data-body="audrelia-sun" aria-pressed="false">Audrelia’s Sun</button>
+          <button type="button" class="asset-button" data-body="audrelia-moon" aria-pressed="false">Adralia’s Moon</button>
         </div>
 
         <div class="chips" aria-label="Boundary receipts">
-          <span class="chip">Audrelia active</span>
-          <span class="chip">Sun promoted</span>
-          <span class="chip">Climate moon active</span>
-          <span class="chip">Earth is reference</span>
+          <span class="chip">Touch controls</span>
+          <span class="chip">No giant panel</span>
+          <span class="chip">Moon redesigned</span>
           <span class="chip">No graphic box</span>
         </div>
       </section>
@@ -567,16 +497,15 @@
         <article
           class="stage-card"
           id="stageCard"
-          data-route-authority="labels-controls-mount-zoom-wrapper"
+          data-route-authority="labels-mount-touch-wrapper"
           data-instrument-authority="/assets/showroom.globe.instrument.js"
           data-render-authority="/assets/showroom.globe.render.js"
-          data-body-render-authority="/assets/showroom.globe.render.js"
           data-active-body="audrelia"
           data-reference-bodies="earth,earth-sun,earth-moon"
           data-active-assets="audrelia,audrelia-sun,audrelia-moon"
           data-universe="nine-summits-universe"
-          data-demo-actual-universe="reference-only"
           data-planet-name="Audrelia"
+          data-moon-name="Adralia’s Moon"
           data-visual-pass-claimed="false"
         >
           <div class="field-glow" aria-hidden="true"></div>
@@ -590,16 +519,14 @@
               data-globe-mount
               data-instrument-authority="/assets/showroom.globe.instrument.js"
               data-render-authority="/assets/showroom.globe.render.js"
-              data-body-render-authority="/assets/showroom.globe.render.js"
-              data-route-authority="labels-controls-mount-zoom-wrapper"
               data-active-body="audrelia"
               data-active-assets="audrelia,audrelia-sun,audrelia-moon"
               data-reference-bodies="earth,earth-sun,earth-moon"
               data-planet-name="Audrelia"
+              data-moon-name="Adralia’s Moon"
               data-universe="nine-summits-universe"
-              data-projection="audrelia-extension-platform"
-              data-inline-globe-redraw="false"
-              data-cartoon-canvas-replacement="false"
+              data-touch-control="true"
+              data-route-controls-panel="removed"
               data-generated-image="false"
               data-graphic-box="false"
               data-streaming="false"
@@ -613,39 +540,11 @@
           </div>
         </article>
 
-        <section class="controls-panel" aria-label="Asset and motion controls">
-          <div class="control-row" aria-label="Choose active asset">
-            <button type="button" data-body="audrelia" aria-pressed="true" class="active">View Audrelia</button>
-            <button type="button" data-body="audrelia-sun" aria-pressed="false">Audrelia’s Sun</button>
-            <button type="button" data-body="audrelia-moon" aria-pressed="false">Climate Moon</button>
-          </div>
-
-          <div class="control-row" aria-label="Motion controls">
-            <button type="button" data-action="start">Start</button>
-            <button type="button" data-action="pause">Pause</button>
-            <button type="button" data-action="resume">Resume</button>
-            <button type="button" data-action="reset">Reset</button>
-            <button type="button" data-action="reverse">Reverse</button>
-          </div>
-
-          <div class="control-row" aria-label="Speed controls">
-            <button type="button" data-speed="slow">Slow</button>
-            <button type="button" data-speed="normal" class="active" aria-pressed="true">Normal</button>
-            <button type="button" data-speed="fast">Fast</button>
-          </div>
-
-          <div class="control-row" aria-label="Zoom buttons">
-            <button type="button" data-zoom="out">Zoom −</button>
-            <button type="button" data-zoom="in">Zoom +</button>
-            <button type="button" data-zoom="reset">Reset zoom</button>
-          </div>
-
-          <label class="zoom-control" for="zoomRange">
-            <span>Zoom</span>
-            <input id="zoomRange" type="range" min="70" max="240" step="1" value="100">
-            <span id="zoomLabel">100%</span>
-          </label>
-
+        <section class="gesture-panel" aria-label="Touchscreen controls">
+          <p class="gesture-title">Touchscreen controls</p>
+          <p class="gesture-list">
+            Drag the globe to rotate. Pinch to zoom. Double tap to pause or resume. Swipe left or right to switch assets.
+          </p>
           <div class="readout" aria-live="polite" id="motionReadout">
             Motion speed: normal · direction: forward · active asset: Audrelia · zoom: 100%
           </div>
@@ -664,22 +563,23 @@
             </article>
 
             <article class="asset-card">
-              <h2>Climate Moon</h2>
-              <p>A manufactured moon assembled from space rock to support Audrelia’s climatology.</p>
+              <h2>Adralia’s Moon</h2>
+              <p>A lunar body designed after Earth’s Moon, with subtle manufactured climate-regulation elements.</p>
             </article>
           </div>
         </section>
 
         <section class="contract-panel" aria-labelledby="route-contract-title">
           <h2 id="route-contract-title">Route contract</h2>
-          <pre class="contract" id="routeContract">AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1
+          <pre class="contract" id="routeContract">AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1
 route=/showroom/globe/
-style=ted-talk-expression-page
 universe=nine-summits-universe
-planet-name=Audrelia
 active-assets=audrelia,audrelia-sun,audrelia-moon
+labels=Audrelia,Audrelia’s Sun,Adralia’s Moon
 reference-bodies=earth,earth-sun,earth-moon
-route-authority=labels-controls-mount-zoom-wrapper
+route-authority=labels-mount-touch-wrapper
+touch-controls=active
+giant-control-panel=removed
 instrument-authority=/assets/showroom.globe.instrument.js
 render-platform=/assets/showroom.globe.render.js
 planet-extension=/assets/audrelia.planet.render.js
@@ -687,9 +587,7 @@ sun-extension=/assets/audrelia.sun.render.js
 moon-extension=/assets/audrelia.climate-moon.render.js
 route-draws-body=false
 instrument-draws-body=false
-render-platform-dispatches=true
 extensions-own-body-pixels=true
-demo-actual-universe=reference-only
 generated-image=false
 graphic-box=false
 streaming=false
@@ -699,34 +597,28 @@ visual-pass-claimed=false</pre>
     </main>
 
     <footer>
-      AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1 · Audrelia active · reference bodies preserved · owner visual receipt required.
+      AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1 · control panel removed · touchscreen authority active · owner visual receipt required.
     </footer>
   </div>
 
   <script src="/assets/showroom.globe.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
   <script src="/assets/audrelia.planet.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
   <script src="/assets/audrelia.sun.render.js?v=AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1"></script>
-  <script src="/assets/audrelia.climate-moon.render.js?v=AUDRELIA_CLIMATE_MOON_DESIGN_EXTENSION_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1"></script>
+  <script src="/assets/audrelia.climate-moon.render.js?v=ADRALIA_MOON_EARTH_MOON_MECHANIZED_RENEWAL_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_TOUCH_INSTRUMENT_RENEWAL_TNT_v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const VERSION = "AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1";
+      const VERSION = "AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1";
 
       const mount = document.getElementById("showroomGlobeMount");
       const stageCard = document.getElementById("stageCard");
       const bodyName = document.getElementById("bodyName");
       const bodyDescription = document.getElementById("bodyDescription");
       const motionReadout = document.getElementById("motionReadout");
-      const zoomRange = document.getElementById("zoomRange");
-      const zoomLabel = document.getElementById("zoomLabel");
-
       const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
-      const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
-      const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
-      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
 
       const bodyMeta = {
         "audrelia": {
@@ -738,15 +630,9 @@ visual-pass-claimed=false</pre>
           description: "Audrelia’s Sun is the active local stellar body for this universe expression."
         },
         "audrelia-moon": {
-          label: "Audrelia Climate Moon",
-          description: "The manufactured climate moon was assembled from space rock to help stabilize Audrelia’s climatology."
+          label: "Adralia’s Moon",
+          description: "Adralia’s Moon is designed after Earth’s Moon, with subtle manufactured climate-regulation elements."
         }
-      };
-
-      const speedValues = {
-        slow: 0.45,
-        normal: 1,
-        fast: 1.75
       };
 
       const state = {
@@ -754,51 +640,16 @@ visual-pass-claimed=false</pre>
         running: true,
         direction: "forward",
         speedName: "normal",
-        speed: 1,
         zoom: 100
       };
 
-      window.DiamondGateBridge = window.DiamondGateBridge || {};
-      window.DiamondGateBridge.showroomGlobeRoute = {
-        version: VERSION,
-        route: "/showroom/globe/",
-        style: "ted-talk-expression-page",
-        universe: "nine-summits-universe",
-        planetName: "Audrelia",
-        activeAssets: ["audrelia", "audrelia-sun", "audrelia-moon"],
-        referenceBodies: ["earth", "earth-sun", "earth-moon"],
-        routeAuthority: "labels-controls-mount-zoom-wrapper",
-        instrumentAuthority: "/assets/showroom.globe.instrument.js",
-        renderPlatform: "/assets/showroom.globe.render.js",
-        extensions: [
-          "/assets/audrelia.planet.render.js",
-          "/assets/audrelia.sun.render.js",
-          "/assets/audrelia.climate-moon.render.js"
-        ],
-        routeDrawsBody: false,
-        instrumentDrawsBody: false,
-        renderPlatformDispatches: true,
-        extensionsOwnBodyPixels: true,
-        generatedImage: false,
-        graphicBox: false,
-        streaming: false,
-        visualPassClaimed: false
-      };
-
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
-      }
-
       function findInstrument() {
         const bridge = window.DiamondGateBridge || {};
-
         return (
           window.DGBShowroomGlobeInstrument ||
-          window.DGBActualBodiesInstrument ||
           window.ShowroomGlobeInstrument ||
           window.showroomGlobeInstrument ||
           bridge.DGBShowroomGlobeInstrument ||
-          bridge.DGBActualBodiesInstrument ||
           bridge.ShowroomGlobeInstrument ||
           bridge.showroomGlobeInstrument ||
           null
@@ -808,37 +659,54 @@ visual-pass-claimed=false</pre>
       function payload(extra = {}) {
         return {
           mount,
-          root: mount,
           target: mount,
+          root: mount,
           route: "/showroom/globe/",
-          style: "ted-talk-expression-page",
           universe: "nine-summits-universe",
           planetName: "Audrelia",
+          moonName: "Adralia’s Moon",
           activeBody: state.body,
           body: state.body,
           running: state.running,
           direction: state.direction,
           speedName: state.speedName,
-          speed: state.speed,
           zoom: state.zoom,
-          projection: "audrelia-extension-platform",
-          activeBodies: ["audrelia", "audrelia-sun", "audrelia-moon"],
           activeAssets: ["audrelia", "audrelia-sun", "audrelia-moon"],
           referenceBodies: ["earth", "earth-sun", "earth-moon"],
-          routeAuthority: "labels-controls-mount-zoom-wrapper",
-          instrumentAuthority: "/assets/showroom.globe.instrument.js",
-          renderAuthority: "/assets/showroom.globe.render.js",
-          bodyRenderAuthority: "/assets/showroom.globe.render.js",
-          routeDrawsBody: false,
-          instrumentDrawsBody: false,
-          renderPlatformDispatches: true,
-          extensionsOwnBodyPixels: true,
+          touchControls: true,
+          routeControlsPanel: "removed",
           generatedImage: false,
           graphicBox: false,
           streaming: false,
           visualPassClaimed: false,
           ...extra
         };
+      }
+
+      function updateUI(extra = {}) {
+        const meta = bodyMeta[state.body] || bodyMeta.audrelia;
+
+        bodyName.textContent = meta.label;
+        bodyDescription.textContent = meta.description;
+
+        stageCard.dataset.activeBody = state.body;
+        mount.dataset.activeBody = state.body;
+
+        bodyButtons.forEach((button) => {
+          const active = button.dataset.body === state.body;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        if (extra.status) {
+          state.running = Boolean(extra.running);
+          state.direction = extra.direction || state.direction;
+          state.speedName = extra.speedName || state.speedName;
+          state.zoom = Number(extra.zoom) || state.zoom;
+        }
+
+        motionReadout.textContent =
+          `Motion speed: ${state.speedName} · direction: ${state.direction} · active asset: ${meta.label} · zoom: ${Math.round(state.zoom)}%`;
       }
 
       function callInstrument(methods, extra = {}) {
@@ -855,7 +723,7 @@ visual-pass-claimed=false</pre>
           if (typeof api[method] !== "function") continue;
 
           try {
-            if (method === "mount" || method === "render" || method === "renderGlobe" || method === "renderActualBody") {
+            if (method === "mount" || method === "render" || method === "renderGlobe") {
               api[method](mount, payload(extra));
             } else {
               api[method](payload(extra));
@@ -870,174 +738,42 @@ visual-pass-claimed=false</pre>
         return false;
       }
 
-      function requestMount(reason = "route-request") {
-        mount.dataset.routeVersion = VERSION;
-        mount.dataset.activeBody = state.body;
-        mount.dataset.planetName = "Audrelia";
-        mount.dataset.universe = "nine-summits-universe";
-        mount.dataset.activeAssets = "audrelia,audrelia-sun,audrelia-moon";
-        mount.dataset.referenceBodies = "earth,earth-sun,earth-moon";
-        mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
-        mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
-        mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
-        mount.dataset.routeDrawsBody = "false";
-        mount.dataset.instrumentDrawsBody = "false";
-        mount.dataset.renderPlatformDispatches = "true";
-        mount.dataset.extensionsOwnBodyPixels = "true";
-        mount.dataset.generatedImage = "false";
-        mount.dataset.graphicBox = "false";
-        mount.dataset.streaming = "false";
-        mount.dataset.visualPassClaimed = "false";
-
-        const ok = callInstrument(["renderGlobe", "mount", "renderActualBody", "render"], { reason });
-
-        if (!ok) {
-          window.dispatchEvent(new CustomEvent("showroom:globe:mount-requested", {
-            detail: payload({ reason, apiReady: false })
-          }));
-        }
-
-        return ok;
-      }
-
-      function updateUI() {
-        const meta = bodyMeta[state.body] || bodyMeta.audrelia;
-
-        bodyName.textContent = meta.label;
-        bodyDescription.textContent = meta.description;
-        zoomRange.value = String(state.zoom);
-        zoomLabel.textContent = `${state.zoom}%`;
-
-        motionReadout.textContent =
-          `Motion speed: ${state.speedName} · direction: ${state.direction} · active asset: ${meta.label} · zoom: ${state.zoom}%`;
-
-        bodyButtons.forEach((button) => {
-          const active = button.dataset.body === state.body;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-
-        speedButtons.forEach((button) => {
-          const active = button.dataset.speed === state.speedName;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-
-        stageCard.dataset.activeBody = state.body;
-        stageCard.dataset.motion = state.running ? "running" : "paused";
-        stageCard.dataset.direction = state.direction;
-        stageCard.dataset.speed = state.speedName;
-        stageCard.dataset.zoom = String(state.zoom);
-
-        callInstrument(["setMotion", "update", "setState"], { reason: "route-ui-sync" });
-      }
-
       function setBody(body) {
         if (!bodyMeta[body]) return;
 
         state.body = body;
         updateUI();
-        callInstrument(["setActiveBody", "selectBody", "setMotion", "update"], { bodyChanged: true });
-        requestMount("body-change");
-      }
-
-      function setSpeed(speedName) {
-        if (!speedValues[speedName]) return;
-
-        state.speedName = speedName;
-        state.speed = speedValues[speedName];
-        updateUI();
-      }
-
-      function setZoom(zoom) {
-        state.zoom = clamp(Number(zoom) || 100, 70, 240);
-        updateUI();
-        callInstrument(["setZoom", "setMotion", "update"], { zoomChanged: true });
-      }
-
-      function runAction(action) {
-        if (action === "start" || action === "resume") {
-          state.running = true;
-          callInstrument(["start", "resume", "setMotion", "update"], { action });
-        }
-
-        if (action === "pause") {
-          state.running = false;
-          callInstrument(["pause", "setMotion", "update"], { action });
-        }
-
-        if (action === "reset") {
-          state.running = true;
-          state.direction = "forward";
-          state.speedName = "normal";
-          state.speed = speedValues.normal;
-          state.zoom = 100;
-          callInstrument(["reset", "setMotion", "update"], { action });
-          requestMount("reset");
-        }
-
-        if (action === "reverse") {
-          state.direction = state.direction === "forward" ? "reverse" : "forward";
-          callInstrument(["reverse", "setMotion", "update"], { action });
-        }
-
-        updateUI();
+        callInstrument(["setActiveBody", "setMotion", "update"], { bodyChanged: true });
+        callInstrument(["renderGlobe", "mount", "render"], { reason: "body-button" });
       }
 
       bodyButtons.forEach((button) => {
         button.addEventListener("click", () => setBody(button.dataset.body));
       });
 
-      actionButtons.forEach((button) => {
-        button.addEventListener("click", () => runAction(button.dataset.action));
+      window.addEventListener("dgb:showroom:globe-state", (event) => {
+        const detail = event.detail || {};
+        if (detail.activeBody && bodyMeta[detail.activeBody]) {
+          state.body = detail.activeBody;
+        }
+        updateUI({ status: true, ...detail });
       });
-
-      speedButtons.forEach((button) => {
-        button.addEventListener("click", () => setSpeed(button.dataset.speed));
-      });
-
-      zoomButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const mode = button.dataset.zoom;
-
-          if (mode === "in") setZoom(state.zoom + 10);
-          if (mode === "out") setZoom(state.zoom - 10);
-          if (mode === "reset") setZoom(100);
-        });
-      });
-
-      zoomRange.addEventListener("input", () => setZoom(zoomRange.value));
 
       window.addEventListener("showroom:globe:instrument-ready", () => {
-        requestMount("instrument-ready-event");
-        updateUI();
+        callInstrument(["renderGlobe", "mount", "render"], { reason: "instrument-ready" });
       });
 
       window.addEventListener("dgb:showroom:audrelia-render-platform-ready", () => {
-        requestMount("render-platform-ready-event");
-        updateUI();
-      });
-
-      window.addEventListener("dgb:audrelia:planet-extension-ready", () => {
-        requestMount("planet-extension-ready-event");
-      });
-
-      window.addEventListener("dgb:audrelia:sun-extension-ready", () => {
-        requestMount("sun-extension-ready-event");
-      });
-
-      window.addEventListener("dgb:audrelia:climate-moon-extension-ready", () => {
-        requestMount("climate-moon-extension-ready-event");
+        callInstrument(["renderGlobe", "mount", "render"], { reason: "platform-ready" });
       });
 
       updateUI();
-      requestMount("initial");
+      callInstrument(["renderGlobe", "mount", "render"], { reason: "initial" });
 
       let attempts = 0;
       const retry = window.setInterval(() => {
         attempts += 1;
-        requestMount(`retry-${attempts}`);
-        updateUI();
+        callInstrument(["renderGlobe", "mount", "render"], { reason: `retry-${attempts}` });
 
         if (mount.querySelector("canvas") || attempts >= 40) {
           window.clearInterval(retry);

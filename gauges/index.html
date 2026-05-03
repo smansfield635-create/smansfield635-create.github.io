@@ -1,1004 +1,919 @@
+<!-- /gauges/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page-id="gauges"
-  data-page="gauges"
+  data-page="gauges-current-baseline-audit"
   data-route="/gauges/"
-  data-contract="GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1"
-  data-purpose="audit-entire-site-and-identify-most-impactful-next-move"
+  data-contract="GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1"
+  data-gauges-role="measurement-surface"
+  data-message="measure-the-rooms-name-the-next-move"
   data-source-fetch-only="true"
   data-renders-iframe="false"
-  data-executes-target-files="false"
   data-mutates-runtime="false"
-  data-starts-extra-animation-loops="false"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gauges · Full Site Impact Audit · Diamond Gate Bridge</title>
-  <meta name="description" content="Full-site source-only audit surface for Diamond Gate Bridge: route health, backlinks, Frontier lanes, product chambers, Demo Universe, and next-move impact ranking.">
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Gauges</title>
+  <meta
+    name="description"
+    content="Gauges measures the Diamond Gate Bridge baseline: rooms, routes, products, frontier lanes, showroom, universe, and proof receipts."
+  >
 
   <style>
     :root {
+      --panel: rgba(9, 14, 26, 0.90);
+      --line: rgba(255,255,255,0.15);
+      --text: #f8f1dd;
+      --muted: rgba(242,246,255,0.74);
+      --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
-      --green: #8ff0c6;
-      --blue: #9ec5ff;
-      --red: #ff8f8f;
-      --orange: #ffbf7f;
-      --text: #f5f7fb;
-      --muted: rgba(226,234,248,.74);
-      --line: rgba(180,205,255,.18);
-      --panel: rgba(255,255,255,.045);
-      --panel-strong: rgba(255,255,255,.07);
+      --green: #a5efcc;
+      --red: #ff9c9c;
+      --stage: min(100%, 1120px);
     }
 
+    * { box-sizing: border-box; }
+
+    html,
     body {
+      width: 100%;
+      margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% -8%, rgba(242,199,111,.14), transparent 34%),
-        radial-gradient(circle at 80% 20%, rgba(125,181,255,.12), transparent 34%),
-        radial-gradient(circle at 20% 80%, rgba(143,240,198,.08), transparent 34%),
-        linear-gradient(180deg, #050813, #070c18 58%, #040711);
+        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
+        radial-gradient(circle at 50% 72%, rgba(80,145,230,0.13), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .gauge-stage,
-    .gauge-panel {
+    body { min-height: 100svh; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+      opacity: 0.38;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #080a0f;
+      font-weight: 900;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .shell {
       position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(242,199,111,.24);
-      border-radius: 36px;
-      background:
-        radial-gradient(circle at 80% 16%, rgba(242,199,111,.10), transparent 24rem),
-        linear-gradient(180deg, rgba(12,20,38,.88), rgba(6,10,22,.98));
-      box-shadow: 0 28px 90px rgba(0,0,0,.38);
-      padding: clamp(26px, 5vw, 64px);
-      margin-top: 18px;
+      z-index: 1;
+      width: var(--stage);
+      margin: 0 auto;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.4rem, env(safe-area-inset-bottom));
     }
 
-    .kicker,
-    .metric span,
-    .route-card span,
-    .finding-card span {
-      color: var(--gold);
-      font-size: .78rem;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
       font-weight: 950;
-      letter-spacing: .14em;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+    }
+
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+      text-transform: uppercase;
+    }
+
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
+    }
+
+    .nav a {
+      min-height: 2.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem 0.72rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    }
+
+    .hero {
+      min-height: calc(100svh - 9rem);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 1.05rem;
+      padding: clamp(2rem, 7vw, 5rem) 0;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
-      max-width: 1120px;
+      width: min(100%, 920px);
       margin: 0;
-      color: var(--text);
-      font-size: clamp(3rem, 10vw, 7.1rem);
-      line-height: .88;
-      letter-spacing: -.07em;
+      font-size: clamp(3rem, 11vw, 7rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
       text-wrap: balance;
-    }
-
-    h1 span {
-      color: #ffe5a3;
-      text-shadow: 0 0 42px rgba(242,199,111,.15);
-    }
-
-    h2 {
-      margin: 0 0 12px;
-      color: var(--text);
-      font-size: clamp(2rem, 5vw, 4rem);
-      line-height: .94;
-      letter-spacing: -.055em;
-      text-wrap: balance;
-    }
-
-    h3 {
-      margin: 0;
-      color: var(--text);
-      font-size: 1.22rem;
-      line-height: 1.04;
-      letter-spacing: -.025em;
     }
 
     .lead {
-      max-width: 960px;
-      margin: 24px 0 0;
-      color: rgba(245,247,251,.88);
-      font-size: clamp(1.16rem, 3vw, 1.76rem);
-      line-height: 1.2;
-      letter-spacing: -.03em;
+      width: min(100%, 720px);
+      margin: 0;
+      color: rgba(255,241,205,0.94);
+      font-size: clamp(1.02rem, 3.6vw, 1.22rem);
+      line-height: 1.5;
+      text-wrap: balance;
     }
 
-    .copy {
-      max-width: 930px;
+    .quote {
+      width: min(100%, 720px);
+      margin: 0;
       color: var(--muted);
-      font-size: 1.06rem;
-      line-height: 1.58;
+      font-size: clamp(0.94rem, 3.2vw, 1.05rem);
+      line-height: 1.55;
+      text-wrap: balance;
     }
 
-    .chips,
     .actions {
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
+      gap: 0.55rem;
     }
 
-    .chip {
+    .button {
+      min-height: 2.55rem;
       display: inline-flex;
       align-items: center;
-      min-height: 38px;
-      border: 1px solid rgba(180,205,255,.22);
+      justify-content: center;
+      padding: 0.62rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
       border-radius: 999px;
-      padding: 8px 13px;
-      background: rgba(255,255,255,.045);
-      color: rgba(245,247,251,.88);
-      font-weight: 850;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      cursor: pointer;
     }
 
-    .chip.lock {
-      border-color: rgba(242,199,111,.58);
-      color: #ffe7a7;
-      background: rgba(242,199,111,.11);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .metric,
-    .route-card,
-    .finding-card {
-      min-height: 140px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(215,165,255,.10), transparent 34%),
-        var(--panel);
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
       color: var(--text);
-      text-decoration: none;
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+    }
+
+    .invariant-row {
+      width: min(100%, 800px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    .invariant {
+      min-height: 6.4rem;
+      display: grid;
+      align-content: center;
+      gap: 0.25rem;
+      padding: 0.85rem;
+      border: 1px dashed rgba(242,199,111,0.26);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .invariant strong {
+      color: rgba(255,241,205,0.95);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .invariant span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .panel {
+      width: min(100%, 980px);
+      margin-top: 1rem;
+      padding: clamp(0.8rem, 2.8vw, 1rem);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.25rem;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.012)),
+        var(--panel);
+      box-shadow:
+        0 1.2rem 4rem rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+      text-align: left;
+    }
+
+    .panel-title {
+      margin: 0 0 0.7rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.55rem;
+    }
+
+    .score {
+      min-height: 6.4rem;
+      display: grid;
+      align-content: center;
+      gap: 0.24rem;
+      padding: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.032);
+      text-align: center;
+    }
+
+    .score strong {
+      color: rgba(255,241,205,0.96);
+      font-size: clamp(1.25rem, 4vw, 1.75rem);
+      line-height: 1;
+    }
+
+    .score span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .findings {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .finding {
+      padding: 0.78rem;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.032);
+    }
+
+    .finding.good {
+      border-color: rgba(165,239,204,0.28);
+    }
+
+    .finding.bad {
+      border-color: rgba(255,156,156,0.34);
+    }
+
+    .finding strong {
+      display: block;
+      color: rgba(255,241,205,0.96);
+      font-size: 0.9rem;
+      line-height: 1.18;
+    }
+
+    .finding span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.38;
+    }
+
+    .route-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 1rem;
+      font-size: 0.74rem;
+    }
+
+    .route-table th,
+    .route-table td {
+      padding: 0.58rem 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .route-table th {
+      color: var(--gold);
+      font-size: 0.66rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .route-table td {
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .status-pass { color: var(--green); font-weight: 950; }
+    .status-fail { color: var(--red); font-weight: 950; }
+    .status-hold { color: var(--gold); font-weight: 950; }
+
+    .receipt {
+      width: min(100%, 900px);
+      margin-top: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
       overflow: hidden;
     }
 
-    .metric strong {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: .9;
-      letter-spacing: -.055em;
-    }
-
-    .metric p,
-    .route-card p,
-    .finding-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.48;
-      flex: 1;
-    }
-
-    .status-pass { color: var(--green); }
-    .status-warn { color: var(--orange); }
-    .status-fail { color: var(--red); }
-    .status-hold { color: var(--gold); }
-
-    .audit-table-wrap {
-      overflow-x: auto;
-      margin-top: 24px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(0,0,0,.18);
-    }
-
-    table {
-      width: 100%;
-      min-width: 980px;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(180,205,255,.12);
-      text-align: left;
-      vertical-align: top;
-      color: rgba(245,247,251,.88);
-      font-size: .92rem;
-    }
-
-    th {
-      color: #ffe7a7;
-      font-size: .74rem;
-      letter-spacing: .12em;
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      background: rgba(255,255,255,.035);
     }
 
-    tr:last-child td {
-      border-bottom: 0;
-    }
-
-    code {
-      color: #ffe7a7;
-      background: rgba(242,199,111,.08);
-      border: 1px solid rgba(242,199,111,.16);
-      border-radius: 8px;
-      padding: 1px 6px;
-    }
-
-    .receipt {
+    .receipt pre {
+      margin: 0;
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    .audit-source {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
+    footer {
+      padding: 0.5rem 0;
+      color: var(--faint);
+      font-size: 0.72rem;
+      line-height: 1.45;
+      text-align: center;
     }
 
-    @media (max-width: 1100px) {
-      .grid,
-      .grid.three,
-      .grid.two {
-        grid-template-columns: 1fr;
+    @media (max-width: 980px) {
+      .score-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
-      .gauge-stage,
-      .gauge-panel {
-        border-radius: 28px;
+      .nav { justify-content: flex-start; }
+
+      .hero { min-height: auto; }
+
+      .invariant-row {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 640px) {
-      .gauge-stage,
-      .gauge-panel {
-        padding: 28px 22px;
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-table {
+        font-size: 0.68rem;
+      }
+
+      .route-table th:nth-child(3),
+      .route-table td:nth-child(3) {
+        display: none;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#main">Skip to Gauges</a>
+  <a class="skip-link" href="#main">Skip to Gauges</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Gauges · Full Site Impact Audit</div>
-        <div class="dgb-room-line">Source-only · No iframe · No runtime mutation</div>
-      </div>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span>Diamond Gate Bridge</span>
+        <span>Rich Manor and Estate</span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Explore</a>
+        <a href="/explore/">Manor</a>
         <a href="/frontier/">Frontier</a>
         <a href="/laws/">Laws</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Earth G1</a>
+        <a href="/showroom/globe/">Audralia</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="main" class="dgb-main">
-    <section class="gauge-stage">
-      <p class="kicker">H6 · Gauges · Full Site Impact Audit</p>
-      <h1>Audit the whole site. <span>Name the next move.</span></h1>
-      <p class="lead">
-        This Gauges renewal fetches served source only. It checks routes, backlinks, thin-page risk,
-        Frontier lane integrity, product chamber availability, Demo Universe continuity, and then ranks the most impactful next move.
-      </p>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Gauges · Measurement Surface</p>
+        <h1 id="page-title">Measure the rooms. Name the next move.</h1>
 
-      <div class="chips">
-        <span class="chip lock">Source fetch only</span>
-        <span class="chip lock">No iframe</span>
-        <span class="chip lock">No runtime mutation</span>
-        <span class="chip">Whole known site map</span>
-        <span class="chip">Frontier lanes</span>
-        <span class="chip">Products</span>
-        <span class="chip">Demo Universe</span>
-      </div>
+        <p class="lead">
+          Gauges checks the current baseline without mutating runtime, loading iframes, or pretending a visual pass has occurred.
+        </p>
 
-      <div class="actions">
-        <button class="dgb-button" type="button" data-run="full">Run full site audit</button>
-        <button class="dgb-button secondary" type="button" data-run="routes">Run route audit</button>
-        <button class="dgb-button secondary" type="button" data-run="frontier">Run Frontier audit</button>
-        <button class="dgb-button secondary" type="button" data-run="products">Run Products audit</button>
-        <button class="dgb-button secondary" type="button" data-run="demo">Run Demo Universe audit</button>
-      </div>
-    </section>
+        <p class="quote">
+          “Proof is useful only when it tells the truth before the story gets comfortable.”
+        </p>
 
-    <section class="gauge-panel" aria-label="Most impactful next move">
-      <p class="kicker">Decision output</p>
-      <h2 id="next-move-title">Most impactful next move: audit pending.</h2>
-      <p id="next-move-copy" class="copy">
-        Run the full site audit. The result will prioritize the move that removes the most site-wide friction.
-      </p>
+        <div class="actions" aria-label="Gauge actions">
+          <button class="button" type="button" data-audit="all">Run Site Audit</button>
+          <button class="button secondary" type="button" data-audit="core">Run Core Audit</button>
+          <button class="button secondary" type="button" data-audit="frontier">Run Frontier Audit</button>
+          <button class="button secondary" type="button" data-audit="products">Run Products Audit</button>
+        </div>
 
-      <div class="grid four">
-        <article class="metric">
-          <span>Overall health</span>
-          <strong id="metric-health" class="status-hold">HOLD</strong>
-          <p id="metric-health-note">Waiting for source checks.</p>
-        </article>
+        <div class="invariant-row" aria-label="Gauge invariants; these notes are not controls">
+          <div class="invariant">
+            <strong>Fetch source</strong>
+            <span>Gauges reads served HTML only.</span>
+          </div>
 
-        <article class="metric">
-          <span>Routes passing</span>
-          <strong id="metric-routes" class="status-hold">0/0</strong>
-          <p>Known served route availability.</p>
-        </article>
+          <div class="invariant">
+            <strong>No mutation</strong>
+            <span>It does not alter runtime, render, or route state.</span>
+          </div>
 
-        <article class="metric">
-          <span>Broken links</span>
-          <strong id="metric-broken" class="status-hold">0</strong>
-          <p>Internal links that resolve as missing or failed.</p>
-        </article>
+          <div class="invariant">
+            <strong>Name next</strong>
+            <span>It ranks the highest-friction next move.</span>
+          </div>
+        </div>
 
-        <article class="metric">
-          <span>Impact score</span>
-          <strong id="metric-impact" class="status-hold">—</strong>
-          <p>Higher score means stronger next-move priority.</p>
-        </article>
-      </div>
-    </section>
+        <section class="panel" aria-labelledby="score-title">
+          <p class="panel-title" id="score-title">Decision output</p>
 
-    <section class="gauge-panel">
-      <p class="kicker">Findings</p>
-      <h2>Impact-ranked findings.</h2>
-      <p class="copy">Findings are sorted by site impact, not by preference.</p>
-      <div id="finding-grid" class="grid three">
-        <article class="finding-card">
-          <span>Pending</span>
-          <h3>No findings yet.</h3>
-          <p>Run the audit to generate ranked findings.</p>
-        </article>
-      </div>
-    </section>
+          <div class="score-grid">
+            <div class="score">
+              <strong id="overallHealth">HOLD</strong>
+              <span>Overall health</span>
+            </div>
 
-    <section class="gauge-panel">
-      <p class="kicker">Route surface</p>
-      <h2>Known route checks.</h2>
-      <p class="copy">
-        These checks fetch HTML/source only. A route can pass source while still needing visual inspection.
-      </p>
+            <div class="score">
+              <strong id="routesPassing">0/0</strong>
+              <span>Routes passing</span>
+            </div>
 
-      <div class="audit-table-wrap">
-        <table aria-label="Known route audit table">
-          <thead>
-            <tr>
-              <th>Lane</th>
-              <th>Path</th>
-              <th>Status</th>
-              <th>Size</th>
-              <th>Signals</th>
-              <th>Verdict</th>
-            </tr>
-          </thead>
-          <tbody id="route-table">
-            <tr><td colspan="6">Audit pending.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+            <div class="score">
+              <strong id="brokenLinks">0</strong>
+              <span>Broken routes</span>
+            </div>
 
-    <section class="gauge-panel">
-      <p class="kicker">Backlink surface</p>
-      <h2>Internal link health.</h2>
-      <p class="copy">
-        The audit gathers same-origin links from known pages and checks whether those routes resolve.
-      </p>
+            <div class="score">
+              <strong id="nextMoveScore">—</strong>
+              <span>Impact score</span>
+            </div>
+          </div>
+        </section>
 
-      <div class="audit-table-wrap">
-        <table aria-label="Internal link audit table">
-          <thead>
-            <tr>
-              <th>Source page</th>
-              <th>Link</th>
-              <th>Status</th>
-              <th>Verdict</th>
-            </tr>
-          </thead>
-          <tbody id="link-table">
-            <tr><td colspan="4">Audit pending.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <section class="panel" aria-labelledby="findings-title">
+          <p class="panel-title" id="findings-title">Impact-ranked findings</p>
+          <div class="findings" id="findings">
+            <div class="finding">
+              <strong>Audit pending.</strong>
+              <span>Run an audit to measure the current baseline and identify the next move.</span>
+            </div>
+          </div>
+        </section>
 
-    <section class="gauge-panel">
-      <p class="kicker">Audit scope</p>
-      <h2>Site map under inspection.</h2>
-      <div id="scope-grid" class="grid three"></div>
-    </section>
+        <section class="panel" aria-labelledby="routes-title">
+          <p class="panel-title" id="routes-title">Route surface</p>
 
-    <section class="dgb-card">
-      <h2>Contract receipt</h2>
-      <pre id="audit-receipt" class="dgb-receipt receipt">GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1
+          <table class="route-table">
+            <thead>
+              <tr>
+                <th>Group</th>
+                <th>Path</th>
+                <th>Signals</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="routeRows">
+              <tr>
+                <td colspan="4">Audit pending.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <details class="receipt">
+          <summary>Route receipt</summary>
+          <pre id="receiptText">GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1
 route=/gauges/
 page=gauges
-purpose=audit-entire-site-and-identify-most-impactful-next-move
+role=measurement_surface
+message=measure_the_rooms_name_the_next_move
 source_fetch_only=true
 renders_iframe=false
 executes_target_files=false
-deletes_files=false
 mutates_runtime=false
-starts_extra_animation_loops=false
-known_routes_loaded=false
+heavy_runtime_loaded=false
+checks_current_baseline=true
+known_core=compass,door,home,manor,frontier,laws,book,universe,products,showroom,audralia,gauges
+frontier_lane_base=/explore/frontier/
+product_routes=archcoin,five_flags,on_your_side_aai,education,nutrition
+stale_terms_flagged=Demo Universe,Earth G1,Planet 1
+visual_pass_claimed=false
 audit_status=READY</pre>
-    </section>
+        </details>
+      </section>
+    </main>
 
-    <section class="audit-source" aria-label="Gauges audit source">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/explore/">Explore</a>
-      <a href="/frontier/">Frontier</a>
-      <a href="/frontier/closed-loop/">Closed Loop</a>
-      <a href="/frontier/energy/">Energy</a>
-      <a href="/frontier/infrastructure/">Infrastructure</a>
-      <a href="/frontier/lattice/">Lattice</a>
-      <a href="/frontier/manual/">Manual</a>
-      <a href="/frontier/shimmer/">Shimmer</a>
-      <a href="/frontier/trajectory/">Trajectory</a>
-      <a href="/frontier/urban/">Urban</a>
-      <a href="/frontier/vision-remote/">Vision Remote</a>
-      <a href="/frontier/vision/">Vision</a>
-      <a href="/frontier/waste/">Waste</a>
-      <a href="/frontier/water/">Water</a>
-      <a href="/laws/">Laws</a>
-      <a href="/products/">Products</a>
-      <a href="/products/archcoin/">ARCHCOIN</a>
-      <a href="/products/five-flags/">Five Flags</a>
-      <a href="/products/on-your-side-ai/">On Your Side AAI</a>
-      <a href="/products/education/">Education</a>
-      <a href="/products/nutrition/">Nutrition</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Earth G1</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/nine-summits-of-love/">Book</a>
-      <a href="/gauges/">Gauges</a>
-      <span>GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1</span>
-    </section>
-  </main>
-
-  <footer class="dgb-footer">
-    GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1 · Full Site Impact Audit · Diamond Gate Bridge.
-  </footer>
+    <footer>
+      GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1 · Gauges · Measurement Surface.
+    </footer>
+  </div>
 
   <script>
-    (function () {
+    (() => {
       "use strict";
 
-      var CONTRACT = "GAUGES_FULL_SITE_IMPACT_AUDIT_RENEWAL_TNT_v1";
-      var CACHE_BUST = "_gauges_full_site_audit=" + Date.now();
+      const routes = [
+        { group: "Core", path: "/", expect: ["Pressure is the door", "Compass"] },
+        { group: "Core", path: "/door/", expect: ["One message", "Many rooms"] },
+        { group: "Core", path: "/home/", expect: ["Home keeps the journey coherent", "Estate Receiver"] },
+        { group: "Core", path: "/explore/", expect: ["One Manor", "Many rooms"] },
+        { group: "Core", path: "/frontier/", expect: ["One edge", "Many lanes"] },
+        { group: "Rule", path: "/laws/", expect: ["Laws"] },
+        { group: "Book", path: "/nine-summits-of-love/", expect: ["Nine Summits"] },
+        { group: "Universe", path: "/nine-summits/universe/", expect: ["Nine Summits Universe", "Audralia"] },
+        { group: "Products", path: "/products/", expect: ["Products", "Product Wing"] },
+        { group: "Products", path: "/products/archcoin/", expect: ["ARCHCOIN"] },
+        { group: "Products", path: "/products/five-flags/", expect: ["Five Flags"] },
+        { group: "Products", path: "/products/on-your-side-ai/", expect: ["On Your Side"] },
+        { group: "Products", path: "/products/education/", expect: ["Education"] },
+        { group: "Products", path: "/products/nutrition/", expect: ["Nutrition"] },
+        { group: "Showroom", path: "/showroom/", expect: ["Showroom", "Every built asset"] },
+        { group: "Audralia", path: "/showroom/globe/", expect: ["Audralia", "mirror planet"] },
+        { group: "Diagnostics", path: "/gauges/", expect: ["Gauges", "Measure the rooms"] },
 
-      var ROUTES = [
-        { group: "Core", label: "Compass", path: "/", required: ["Diamond Gate Bridge"], weight: 10 },
-        { group: "Core", label: "Door", path: "/door/", required: ["Door"], weight: 8 },
-        { group: "Core", label: "Home", path: "/home/", required: ["Home"], weight: 8 },
-        { group: "Core", label: "Explore", path: "/explore/", required: ["Explore"], weight: 10 },
-        { group: "Frontier", label: "Frontier", path: "/frontier/", required: ["Frontier"], weight: 12 },
-
-        { group: "Frontier Lane", label: "Closed Loop", path: "/frontier/closed-loop/", required: ["Closed Loop", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Energy", path: "/frontier/energy/", required: ["Energy", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Infrastructure", path: "/frontier/infrastructure/", required: ["Infrastructure", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Lattice", path: "/frontier/lattice/", required: ["Lattice", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Manual", path: "/frontier/manual/", required: ["Manual", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Shimmer", path: "/frontier/shimmer/", required: ["Shimmer", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Trajectory", path: "/frontier/trajectory/", required: ["Trajectory", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Urban", path: "/frontier/urban/", required: ["Urban", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Vision Remote", path: "/frontier/vision-remote/", required: ["Vision Remote", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Vision", path: "/frontier/vision/", required: ["Vision", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Waste", path: "/frontier/waste/", required: ["Waste", "256"], weight: 9 },
-        { group: "Frontier Lane", label: "Water", path: "/frontier/water/", required: ["Water", "256"], weight: 9 },
-
-        { group: "Rule", label: "Laws", path: "/laws/", required: ["Laws"], weight: 8 },
-        { group: "Products", label: "Products", path: "/products/", required: ["Products"], weight: 10 },
-        { group: "Products", label: "ARCHCOIN", path: "/products/archcoin/", required: ["ARCHCOIN"], weight: 8 },
-        { group: "Products", label: "Five Flags", path: "/products/five-flags/", required: ["Five Flags"], weight: 8 },
-        { group: "Products", label: "On Your Side AAI", path: "/products/on-your-side-ai/", required: ["On Your Side AAI"], weight: 8 },
-        { group: "Products", label: "Education", path: "/products/education/", required: ["Education"], weight: 8 },
-        { group: "Products", label: "Nutrition", path: "/products/nutrition/", required: ["Baseline Nutrition", "Nutrition"], weight: 8 },
-
-        { group: "Showroom", label: "Showroom", path: "/showroom/", required: ["Showroom"], weight: 9 },
-        { group: "Demo Universe", label: "Earth G1", path: "/showroom/globe/", required: ["Earth G1"], weight: 12 },
-        { group: "Universe", label: "Nine Summits Universe", path: "/nine-summits/universe/", required: ["Universe"], weight: 9 },
-        { group: "Book", label: "Book", path: "/nine-summits-of-love/", required: ["Nine Summits"], weight: 9 },
-        { group: "Diagnostics", label: "Gauges", path: "/gauges/", required: ["Gauges"], weight: 10 }
+        { group: "Frontier Lane", path: "/explore/frontier/closed-loop/", expect: ["Closed Loop"] },
+        { group: "Frontier Lane", path: "/explore/frontier/energy/", expect: ["Energy"] },
+        { group: "Frontier Lane", path: "/explore/frontier/infrastructure/", expect: ["Infrastructure"] },
+        { group: "Frontier Lane", path: "/explore/frontier/lattice/", expect: ["Lattice"] },
+        { group: "Frontier Lane", path: "/explore/frontier/manual/", expect: ["Manual"] },
+        { group: "Frontier Lane", path: "/explore/frontier/shimmer/", expect: ["Shimmer"] },
+        { group: "Frontier Lane", path: "/explore/frontier/trajectory/", expect: ["Trajectory"] },
+        { group: "Frontier Lane", path: "/explore/frontier/urban/", expect: ["Urban"] },
+        { group: "Frontier Lane", path: "/explore/frontier/vision-remote/", expect: ["Vision Remote"] },
+        { group: "Frontier Lane", path: "/explore/frontier/vision/", expect: ["Vision"] },
+        { group: "Frontier Lane", path: "/explore/frontier/waste/", expect: ["Waste"] },
+        { group: "Frontier Lane", path: "/explore/frontier/water/", expect: ["Water"] }
       ];
 
-      var FRONTIER_LANES = ROUTES.filter(function (route) {
-        return route.group === "Frontier Lane";
-      });
+      const staleTerms = [
+        "Demo Universe",
+        "Earth G1",
+        "Planet 1",
+        "Sun G1",
+        "Moon G1",
+        "Earth, Sun, and Moon share one Demo Universe"
+      ];
 
-      var PRODUCT_ROUTES = ROUTES.filter(function (route) {
-        return route.group === "Products";
-      });
+      const groupFilters = {
+        all: () => true,
+        core: (route) => ["Core", "Rule", "Book", "Universe", "Showroom", "Audralia", "Diagnostics"].includes(route.group),
+        frontier: (route) => route.group === "Frontier Lane" || route.path === "/frontier/" || route.path === "/explore/",
+        products: (route) => route.group === "Products"
+      };
 
-      function byId(id) {
-        return document.getElementById(id);
+      const routeRows = document.getElementById("routeRows");
+      const findings = document.getElementById("findings");
+      const overallHealth = document.getElementById("overallHealth");
+      const routesPassing = document.getElementById("routesPassing");
+      const brokenLinks = document.getElementById("brokenLinks");
+      const nextMoveScore = document.getElementById("nextMoveScore");
+      const receiptText = document.getElementById("receiptText");
+
+      function sameOriginUrl(path) {
+        return new URL(path, window.location.origin).toString();
       }
 
-      function withBust(path) {
-        return path + (path.indexOf("?") === -1 ? "?" : "&") + CACHE_BUST;
+      function normalizeText(html) {
+        return String(html || "").replace(/\s+/g, " ").trim();
       }
 
-      function unique(values) {
-        var seen = Object.create(null);
-        return values.filter(function (value) {
-          if (!value || seen[value]) return false;
-          seen[value] = true;
-          return true;
-        });
+      function hasAny(text, terms) {
+        return terms.some((term) => text.includes(term));
       }
 
-      function normalizePath(value) {
+      function missingExpected(text, terms) {
+        return terms.filter((term) => !text.includes(term));
+      }
+
+      async function checkRoute(route) {
+        const url = sameOriginUrl(route.path);
+        const started = performance.now();
+
         try {
-          var url = new URL(value, window.location.origin);
-          if (url.origin !== window.location.origin) return null;
-          var path = url.pathname || "/";
-          if (path.indexOf("/#") === 0) path = "/";
-          if (path.indexOf(".") === -1 && path.slice(-1) !== "/") path += "/";
-          return path;
-        } catch (error) {
-          return null;
-        }
-      }
-
-      function statusClass(verdict) {
-        if (verdict === "PASS") return "status-pass";
-        if (verdict === "FAIL") return "status-fail";
-        if (verdict === "WARN") return "status-warn";
-        return "status-hold";
-      }
-
-      function fetchSource(route) {
-        return fetch(withBust(route.path), {
-          method: "GET",
-          credentials: "same-origin",
-          cache: "no-store"
-        }).then(function (response) {
-          return response.text().then(function (text) {
-            return {
-              route: route,
-              ok: response.ok,
-              status: response.status,
-              size: text.length,
-              text: text
-            };
+          const response = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            credentials: "same-origin"
           });
-        }).catch(function (error) {
+
+          const html = await response.text();
+          const text = normalizeText(html);
+          const missing = missingExpected(text, route.expect || []);
+          const stale = staleTerms.filter((term) => text.includes(term));
+          const elapsed = Math.round(performance.now() - started);
+          const pass = response.ok && missing.length === 0 && stale.length === 0;
+
           return {
-            route: route,
-            ok: false,
-            status: "ERR",
-            size: 0,
-            text: "",
-            error: error && error.message ? error.message : String(error)
+            ...route,
+            ok: response.ok,
+            pass,
+            status: response.status,
+            size: html.length,
+            elapsed,
+            missing,
+            stale,
+            signals: [
+              response.ok ? "served" : "failed",
+              missing.length ? "missing expected" : "expected present",
+              stale.length ? "stale terms" : "baseline clean"
+            ]
           };
+        } catch (error) {
+          return {
+            ...route,
+            ok: false,
+            pass: false,
+            status: "FETCH_ERROR",
+            size: 0,
+            elapsed: Math.round(performance.now() - started),
+            missing: route.expect || [],
+            stale: [],
+            error: String(error && error.message ? error.message : error),
+            signals: ["fetch error"]
+          };
+        }
+      }
+
+      function renderRows(results) {
+        routeRows.innerHTML = "";
+
+        results.forEach((result) => {
+          const tr = document.createElement("tr");
+
+          const group = document.createElement("td");
+          group.textContent = result.group;
+
+          const path = document.createElement("td");
+          path.textContent = result.path;
+
+          const signals = document.createElement("td");
+          const details = [];
+
+          details.push(result.signals.join(" · "));
+          if (result.missing.length) details.push("missing: " + result.missing.join(", "));
+          if (result.stale.length) details.push("stale: " + result.stale.join(", "));
+          if (result.error) details.push(result.error);
+
+          signals.textContent = details.join(" | ");
+
+          const status = document.createElement("td");
+          status.className = result.pass ? "status-pass" : result.ok ? "status-hold" : "status-fail";
+          status.textContent = result.pass ? "PASS" : result.ok ? "HOLD" : "FAIL";
+
+          tr.append(group, path, signals, status);
+          routeRows.appendChild(tr);
         });
       }
 
-      function checkRequired(result) {
-        var text = result.text || "";
-        return (result.route.required || []).filter(function (signal) {
-          return text.indexOf(signal) !== -1;
+      function rankFindings(results) {
+        const failed = results.filter((result) => !result.ok);
+        const stale = results.filter((result) => result.stale.length > 0);
+        const missing = results.filter((result) => result.ok && result.missing.length > 0);
+        const passed = results.filter((result) => result.pass);
+
+        const output = [];
+
+        if (failed.length) {
+          output.push({
+            type: "bad",
+            title: "Highest impact: broken served routes.",
+            body: failed.map((item) => item.path).join(", ")
+          });
+        }
+
+        if (stale.length) {
+          output.push({
+            type: "bad",
+            title: "Baseline mismatch: stale language remains.",
+            body: stale.map((item) => `${item.path}: ${item.stale.join(", ")}`).join(" | ")
+          });
+        }
+
+        if (missing.length) {
+          output.push({
+            type: "bad",
+            title: "Expected baseline signals are missing.",
+            body: missing.map((item) => `${item.path}: ${item.missing.join(", ")}`).join(" | ")
+          });
+        }
+
+        if (!failed.length && !stale.length && !missing.length) {
+          output.push({
+            type: "good",
+            title: "Current baseline is source-clean for checked routes.",
+            body: "Next move should be visual inspection and page-level refinement, not route repair."
+          });
+        }
+
+        output.push({
+          type: "good",
+          title: "Routes passing.",
+          body: `${passed.length}/${results.length} checked routes passed source-level baseline checks.`
+        });
+
+        return output;
+      }
+
+      function renderFindings(items) {
+        findings.innerHTML = "";
+
+        items.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "finding " + (item.type === "bad" ? "bad" : "good");
+
+          const title = document.createElement("strong");
+          title.textContent = item.title;
+
+          const body = document.createElement("span");
+          body.textContent = item.body;
+
+          div.append(title, body);
+          findings.appendChild(div);
         });
       }
 
-      function extractLinks(result) {
-        var found = [];
-        var text = result.text || "";
-        var regex = /href=["']([^"']+)["']/gi;
-        var match;
+      function updateScores(results) {
+        const passCount = results.filter((result) => result.pass).length;
+        const failCount = results.filter((result) => !result.ok).length;
+        const holdCount = results.filter((result) => result.ok && !result.pass).length;
+        const impact = failCount * 10 + holdCount * 4;
 
-        while ((match = regex.exec(text))) {
-          var normalized = normalizePath(match[1]);
-          if (normalized) found.push({
-            source: result.route.path,
-            href: normalized
-          });
-        }
+        routesPassing.textContent = `${passCount}/${results.length}`;
+        brokenLinks.textContent = String(failCount);
+        nextMoveScore.textContent = impact ? String(impact) : "0";
 
-        return found;
+        if (!results.length) overallHealth.textContent = "HOLD";
+        else if (passCount === results.length) overallHealth.textContent = "PASS";
+        else if (failCount > 0) overallHealth.textContent = "FAIL";
+        else overallHealth.textContent = "HOLD";
       }
 
-      function routeVerdict(result) {
-        if (!result.ok) return "FAIL";
-        if (result.size < 1200) return "WARN";
+      function updateReceipt(results, scope) {
+        const passCount = results.filter((result) => result.pass).length;
+        const failCount = results.filter((result) => !result.ok).length;
+        const staleCount = results.filter((result) => result.stale.length > 0).length;
+        const missingCount = results.filter((result) => result.ok && result.missing.length > 0).length;
 
-        var signals = checkRequired(result);
-        if (result.route.required && result.route.required.length && !signals.length) return "WARN";
-
-        if (result.route.group === "Frontier Lane") {
-          var text = result.text || "";
-          var hasFrontierBacklinks =
-            text.indexOf("/frontier/closed-loop/") !== -1 &&
-            text.indexOf("/frontier/energy/") !== -1 &&
-            text.indexOf("/frontier/lattice/") !== -1 &&
-            text.indexOf("/frontier/water/") !== -1;
-          var has256 =
-            text.indexOf("256") !== -1 ||
-            text.indexOf("lattice-scale=\"256\"") !== -1 ||
-            text.indexOf("data-lattice-scale=\"256\"") !== -1;
-
-          if (!hasFrontierBacklinks || !has256) return "WARN";
-        }
-
-        return "PASS";
-      }
-
-      function renderScope() {
-        var grouped = {};
-        ROUTES.forEach(function (route) {
-          grouped[route.group] = (grouped[route.group] || 0) + 1;
-        });
-
-        var grid = byId("scope-grid");
-        if (!grid) return;
-
-        grid.innerHTML = Object.keys(grouped).map(function (group) {
-          return '<article class="route-card"><span>' + group + '</span><h3>' + grouped[group] +
-            ' routes</h3><p>Included in the known site audit surface.</p></article>';
-        }).join("");
-      }
-
-      function renderRouteTable(results) {
-        var table = byId("route-table");
-        if (!table) return;
-
-        table.innerHTML = results.map(function (result) {
-          var verdict = routeVerdict(result);
-          var signals = checkRequired(result);
-          var signalText = signals.length ? signals.join(", ") : "No required signal found";
-          if (!result.ok) signalText = result.error || ("HTTP " + result.status);
-
-          return "<tr>" +
-            "<td>" + result.route.group + " · " + result.route.label + "</td>" +
-            "<td><code>" + result.route.path + "</code></td>" +
-            "<td class=\"" + statusClass(verdict) + "\">" + (result.ok ? result.status : result.status) + "</td>" +
-            "<td>" + result.size + "</td>" +
-            "<td>" + signalText + "</td>" +
-            "<td class=\"" + statusClass(verdict) + "\">" + verdict + "</td>" +
-            "</tr>";
-        }).join("");
-      }
-
-      function renderLinkTable(linkChecks) {
-        var table = byId("link-table");
-        if (!table) return;
-
-        if (!linkChecks.length) {
-          table.innerHTML = "<tr><td colspan=\"4\">No internal links checked.</td></tr>";
-          return;
-        }
-
-        table.innerHTML = linkChecks.slice(0, 160).map(function (item) {
-          var verdict = item.ok ? "PASS" : "FAIL";
-          return "<tr>" +
-            "<td><code>" + item.source + "</code></td>" +
-            "<td><code>" + item.href + "</code></td>" +
-            "<td class=\"" + statusClass(verdict) + "\">" + item.status + "</td>" +
-            "<td class=\"" + statusClass(verdict) + "\">" + verdict + "</td>" +
-            "</tr>";
-        }).join("");
-      }
-
-      function buildFindings(results, linkChecks) {
-        var findings = [];
-        var routeFailures = results.filter(function (r) { return routeVerdict(r) === "FAIL"; });
-        var routeWarnings = results.filter(function (r) { return routeVerdict(r) === "WARN"; });
-        var brokenLinks = linkChecks.filter(function (l) { return !l.ok; });
-
-        var missingFrontier = FRONTIER_LANES.filter(function (lane) {
-          var result = results.find(function (r) { return r.route.path === lane.path; });
-          return !result || routeVerdict(result) !== "PASS";
-        });
-
-        var productIssues = PRODUCT_ROUTES.filter(function (route) {
-          var result = results.find(function (r) { return r.route.path === route.path; });
-          return !result || routeVerdict(result) !== "PASS";
-        });
-
-        var earth = results.find(function (r) { return r.route.path === "/showroom/globe/"; });
-        var earthOk = earth && routeVerdict(earth) === "PASS";
-        var universe = results.find(function (r) { return r.route.path === "/nine-summits/universe/"; });
-        var universeOk = universe && routeVerdict(universe) === "PASS";
-
-        if (routeFailures.length) {
-          findings.push({
-            title: "Repair missing served routes first.",
-            label: "Critical route failure",
-            impact: 100 + routeFailures.length * 7,
-            action: "Fix the missing physical route files before visual upgrades.",
-            detail: routeFailures.map(function (r) { return r.route.path; }).join(", ")
-          });
-        }
-
-        if (brokenLinks.length) {
-          findings.push({
-            title: "Fix broken internal backlinks.",
-            label: "Backlink integrity",
-            impact: 90 + brokenLinks.length * 3,
-            action: "Update links to the physical served routes that actually exist.",
-            detail: brokenLinks.slice(0, 12).map(function (l) { return l.href; }).join(", ")
-          });
-        }
-
-        if (missingFrontier.length) {
-          findings.push({
-            title: "Finish the Frontier lane 256-lattice renewal.",
-            label: "Frontier lane integrity",
-            impact: 85 + missingFrontier.length * 4,
-            action: "Renew every /frontier/[lane]/ page with 256 lattice logic, sibling backlinks, origin route, Explore parent, Frontier parent, and Gauges receipt.",
-            detail: missingFrontier.map(function (r) { return r.path; }).join(", ")
-          });
-        }
-
-        if (productIssues.length) {
-          findings.push({
-            title: "Compress and strengthen product pages with Russian-doll structure.",
-            label: "Product chamber clarity",
-            impact: 74 + productIssues.length * 3,
-            action: "Renew product chambers so long pages become nested, readable, public-facing surfaces without losing content.",
-            detail: productIssues.map(function (r) { return r.path; }).join(", ")
-          });
-        }
-
-        if (!earthOk) {
-          findings.push({
-            title: "Repair Earth G1 route before any Sun or Moon move.",
-            label: "Demo Universe route",
-            impact: 95,
-            action: "Stabilize /showroom/globe/ as the accepted Demo Universe Earth G1 route.",
-            detail: "/showroom/globe/ did not pass source audit."
-          });
-        }
-
-        if (earthOk && universeOk) {
-          findings.push({
-            title: "Renew Demo Universe lighting sequence after structural links pass.",
-            label: "Visual generation queue",
-            impact: 62,
-            action: "Proceed Sun renewal only after route and backlink audit is clean enough.",
-            detail: "Earth G1 source passes; Sun remains next only if route integrity is stable."
-          });
-        }
-
-        if (routeWarnings.length) {
-          findings.push({
-            title: "Resolve thin or weak source pages.",
-            label: "Expression depth",
-            impact: 58 + routeWarnings.length * 2,
-            action: "Expand pages that serve but lack required signals, backlinks, or enough source substance.",
-            detail: routeWarnings.slice(0, 14).map(function (r) { return r.route.path; }).join(", ")
-          });
-        }
-
-        if (!findings.length) {
-          findings.push({
-            title: "Proceed to Sun G1 renewal.",
-            label: "Next generation move",
-            impact: 50,
-            action: "Site route integrity is clean enough. Resume Demo Universe Sun renewal while preserving Earth G1 and leaving Moon queued.",
-            detail: "No major route, backlink, Frontier, or product blockers detected."
-          });
-        }
-
-        return findings.sort(function (a, b) {
-          return b.impact - a.impact;
-        });
-      }
-
-      function renderFindings(findings) {
-        var grid = byId("finding-grid");
-        if (!grid) return;
-
-        grid.innerHTML = findings.map(function (finding, index) {
-          return '<article class="finding-card">' +
-            '<span>' + (index === 0 ? "Top move" : "Finding " + (index + 1)) + ' · ' + finding.label + '</span>' +
-            '<h3>' + finding.title + '</h3>' +
-            '<p><strong>Action:</strong> ' + finding.action + '</p>' +
-            '<p><strong>Evidence:</strong> ' + (finding.detail || "No extra detail.") + '</p>' +
-            '<p><strong>Impact:</strong> ' + finding.impact + '</p>' +
-            '</article>';
-        }).join("");
-
-        var top = findings[0];
-        byId("next-move-title").textContent = "Most impactful next move: " + top.title;
-        byId("next-move-copy").textContent = top.action + " Evidence: " + top.detail;
-        byId("metric-impact").textContent = String(top.impact);
-        byId("metric-impact").className = top.impact >= 85 ? "status-fail" : top.impact >= 65 ? "status-warn" : "status-pass";
-      }
-
-      function updateMetrics(results, linkChecks, findings) {
-        var passCount = results.filter(function (r) { return routeVerdict(r) === "PASS"; }).length;
-        var failCount = results.filter(function (r) { return routeVerdict(r) === "FAIL"; }).length;
-        var warnCount = results.filter(function (r) { return routeVerdict(r) === "WARN"; }).length;
-        var broken = linkChecks.filter(function (l) { return !l.ok; }).length;
-        var total = results.length;
-
-        var health = "PASS";
-        var healthNote = "Known route surface is clean enough for next generation work.";
-
-        if (failCount || broken) {
-          health = "FAIL";
-          healthNote = "Route or backlink failures must be repaired before visual generation work.";
-        } else if (warnCount) {
-          health = "WARN";
-          healthNote = "Routes serve, but expression depth or required signals need renewal.";
-        }
-
-        byId("metric-health").textContent = health;
-        byId("metric-health").className = statusClass(health);
-        byId("metric-health-note").textContent = healthNote;
-        byId("metric-routes").textContent = passCount + "/" + total;
-        byId("metric-routes").className = failCount ? "status-fail" : warnCount ? "status-warn" : "status-pass";
-        byId("metric-broken").textContent = String(broken);
-        byId("metric-broken").className = broken ? "status-fail" : "status-pass";
-      }
-
-      function updateReceipt(mode, results, linkChecks, findings) {
-        var top = findings && findings[0] ? findings[0] : null;
-        var passCount = results.filter(function (r) { return routeVerdict(r) === "PASS"; }).length;
-        var warnCount = results.filter(function (r) { return routeVerdict(r) === "WARN"; }).length;
-        var failCount = results.filter(function (r) { return routeVerdict(r) === "FAIL"; }).length;
-        var broken = linkChecks.filter(function (l) { return !l.ok; }).length;
-
-        byId("audit-receipt").textContent =
-          CONTRACT + "\n" +
+        receiptText.textContent =
+          "GAUGES_CURRENT_BASELINE_AUDIT_TNT_v1\n" +
           "route=/gauges/\n" +
           "page=gauges\n" +
-          "mode=" + mode + "\n" +
-          "purpose=audit-entire-site-and-identify-most-impactful-next-move\n" +
+          "role=measurement_surface\n" +
+          "message=measure_the_rooms_name_the_next_move\n" +
+          "audit_scope=" + scope + "\n" +
           "source_fetch_only=true\n" +
           "renders_iframe=false\n" +
           "executes_target_files=false\n" +
-          "deletes_files=false\n" +
           "mutates_runtime=false\n" +
-          "starts_extra_animation_loops=false\n" +
-          "known_routes=" + results.length + "\n" +
-          "route_pass=" + passCount + "\n" +
-          "route_warn=" + warnCount + "\n" +
-          "route_fail=" + failCount + "\n" +
-          "internal_links_checked=" + linkChecks.length + "\n" +
-          "broken_internal_links=" + broken + "\n" +
-          "most_impactful_next_move=" + (top ? top.title : "pending") + "\n" +
-          "most_impactful_action=" + (top ? top.action : "pending") + "\n" +
-          "impact_score=" + (top ? top.impact : "pending") + "\n" +
+          "heavy_runtime_loaded=false\n" +
+          "routes_checked=" + results.length + "\n" +
+          "routes_passing=" + passCount + "\n" +
+          "routes_failed=" + failCount + "\n" +
+          "routes_with_stale_terms=" + staleCount + "\n" +
+          "routes_missing_expected_signals=" + missingCount + "\n" +
+          "frontier_lane_base=/explore/frontier/\n" +
+          "stale_terms_flagged=Demo Universe,Earth G1,Planet 1,Sun G1,Moon G1\n" +
+          "generated_image=false\n" +
+          "graphic_box=false\n" +
+          "streaming=false\n" +
           "visual_pass_claimed=false\n" +
-          "timestamp=" + new Date().toISOString();
+          "audit_timestamp=" + new Date().toISOString();
       }
 
-      function filterRoutes(mode) {
-        if (mode === "frontier") {
-          return ROUTES.filter(function (route) {
-            return route.group === "Frontier" || route.group === "Frontier Lane" || route.path === "/explore/" || route.path === "/gauges/";
-          });
+      async function runAudit(scope) {
+        const filter = groupFilters[scope] || groupFilters.all;
+        const selected = routes.filter(filter);
+
+        routeRows.innerHTML = '<tr><td colspan="4">Audit running.</td></tr>';
+        findings.innerHTML = '<div class="finding"><strong>Audit running.</strong><span>Fetching served source only.</span></div>';
+        overallHealth.textContent = "HOLD";
+        routesPassing.textContent = `0/${selected.length}`;
+        brokenLinks.textContent = "0";
+        nextMoveScore.textContent = "—";
+
+        const results = [];
+
+        for (const route of selected) {
+          const result = await checkRoute(route);
+          results.push(result);
+          renderRows(results);
+          updateScores(results);
         }
 
-        if (mode === "products") {
-          return ROUTES.filter(function (route) {
-            return route.group === "Products" || route.path === "/" || route.path === "/showroom/" || route.path === "/gauges/";
-          });
-        }
-
-        if (mode === "demo") {
-          return ROUTES.filter(function (route) {
-            return route.group === "Demo Universe" || route.group === "Showroom" || route.group === "Universe" || route.path === "/" || route.path === "/gauges/";
-          });
-        }
-
-        if (mode === "routes") {
-          return ROUTES;
-        }
-
-        return ROUTES;
+        renderRows(results);
+        renderFindings(rankFindings(results));
+        updateScores(results);
+        updateReceipt(results, scope);
       }
 
-      function checkLinksFromResults(results) {
-        var knownPaths = {};
-        ROUTES.forEach(function (route) {
-          knownPaths[route.path] = true;
-        });
-
-        var links = [];
-        results.forEach(function (result) {
-          links = links.concat(extractLinks(result));
-        });
-
-        var uniqueLinks = unique(links.map(function (link) {
-          return link.source + " → " + link.href;
-        })).map(function (pair) {
-          var parts = pair.split(" → ");
-          return { source: parts[0], href: parts[1] };
-        }).filter(function (link) {
-          if (link.href.indexOf("/assets/") === 0) return false;
-          if (link.href.indexOf("/cdn-cgi/") === 0) return false;
-          return true;
-        }).slice(0, 220);
-
-        return Promise.all(uniqueLinks.map(function (link) {
-          var route = { path: link.href, label: link.href, group: "Discovered", required: [], weight: 1 };
-          return fetchSource(route).then(function (result) {
-            return {
-              source: link.source,
-              href: link.href,
-              ok: result.ok,
-              status: result.status
-            };
-          });
-        }));
-      }
-
-      function runAudit(mode) {
-        var selected = filterRoutes(mode);
-
-        byId("next-move-title").textContent = "Most impactful next move: audit running.";
-        byId("next-move-copy").textContent = "Fetching served source. No iframe, no runtime mutation, no target execution.";
-        byId("route-table").innerHTML = "<tr><td colspan=\"6\">Fetching source...</td></tr>";
-        byId("link-table").innerHTML = "<tr><td colspan=\"4\">Waiting for route source...</td></tr>";
-
-        Promise.all(selected.map(fetchSource)).then(function (results) {
-          renderRouteTable(results);
-          return checkLinksFromResults(results).then(function (linkChecks) {
-            renderLinkTable(linkChecks);
-
-            var findings = buildFindings(results, linkChecks);
-            renderFindings(findings);
-            updateMetrics(results, linkChecks, findings);
-            updateReceipt(mode, results, linkChecks, findings);
-          });
-        }).catch(function (error) {
-          byId("next-move-title").textContent = "Most impactful next move: repair Gauges audit script.";
-          byId("next-move-copy").textContent = error && error.message ? error.message : String(error);
-          byId("metric-health").textContent = "FAIL";
-          byId("metric-health").className = "status-fail";
-          byId("audit-receipt").textContent =
-            CONTRACT + "\nroute=/gauges/\naudit_status=ERROR\nerror=" + (error && error.message ? error.message : String(error));
-        });
-      }
-
-      renderScope();
-
-      Array.prototype.forEach.call(document.querySelectorAll("[data-run]"), function (button) {
-        button.addEventListener("click", function () {
-          runAudit(button.getAttribute("data-run") || "full");
+      document.querySelectorAll("[data-audit]").forEach((button) => {
+        button.addEventListener("click", () => {
+          runAudit(button.dataset.audit || "all");
         });
       });
-
-      window.DGBFullSiteImpactAudit = {
-        contract: CONTRACT,
-        run: runAudit,
-        routes: ROUTES.slice()
-      };
     })();
   </script>
 </body>

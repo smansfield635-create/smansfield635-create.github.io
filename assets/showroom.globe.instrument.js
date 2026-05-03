@@ -1,47 +1,44 @@
 /* /assets/showroom.globe.instrument.js
-   SHOWROOM_GLOBE_AXIS_GLOBE_TEXTURE_RENEWAL_TNT_v1
-
-   RENEWAL LAW:
-   Demo Actual Universe uses real-source Earth, Sun, and Moon imagery.
-   Instrument draws body only.
-   Route owns labels, descriptions, buttons, mount, and zoom wrapper.
-   CSS contains presentation.
-   Runtime supports state.
-   Gauges audits only.
+   SHOWROOM_GLOBE_SATELLITE_DEFINITION_AXIS_RENEWAL_TNT_v1
 
    PURPOSE:
-   Stop 2D disk-spin behavior.
-   Render selected image as a globe/sphere on an axis using canvas projection.
+   Keep the correct colors and add satellite/observatory definition.
+   Render Earth, Sun, and Moon as axis bodies, not spinning 2D disks.
 
-   EXPECTED LOCAL ASSETS:
-   /assets/textures/earth-blue-marble.png
-   /assets/textures/sun-sdo.png
-   /assets/textures/moon-lro.png
+   REQUIRED LOCAL TEXTURES:
+   /assets/textures/earth-blue-marble-4096.jpg
+   /assets/textures/sun-sdo-4096.jpg
+   /assets/textures/moon-lro-4096.jpg
+
+   BOUNDARY:
+   Instrument draws body only.
+   Route owns labels, buttons, mount, and zoom wrapper.
 */
 
-(function renewAxisGlobeTextureInstrument(global) {
+(function satelliteDefinitionAxisInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_AXIS_GLOBE_TEXTURE_RENEWAL_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_SATELLITE_DEFINITION_AXIS_RENEWAL_TNT_v1";
   const ROUTE = "/showroom/globe/";
   const BODY_SET = new Set(["earth", "sun", "moon"]);
   const TAU = Math.PI * 2;
+  const CACHE = "?v=satellite-definition-axis-v1";
 
   const TEXTURES = {
     earth: [
-      "/assets/textures/earth-blue-marble.png",
-      "/assets/textures/earth-blue-marble.jpg",
-      "https://svs.gsfc.nasa.gov/vis/a030000/a030600/a030614/blue_marble_modis_north_america_searchweb.png"
+      "/assets/textures/earth-blue-marble-4096.jpg" + CACHE,
+      "/assets/textures/earth-blue-marble.png" + CACHE,
+      "/assets/textures/earth-blue-marble.jpg" + CACHE
     ],
     sun: [
-      "/assets/textures/sun-sdo.png",
-      "/assets/textures/sun-sdo.jpg",
-      "https://svs.gsfc.nasa.gov/vis/a030000/a031200/a031213/2022-agu-fox-slide5_print.jpg"
+      "/assets/textures/sun-sdo-4096.jpg" + CACHE,
+      "/assets/textures/sun-sdo.png" + CACHE,
+      "/assets/textures/sun-sdo.jpg" + CACHE
     ],
     moon: [
-      "/assets/textures/moon-lro.png",
-      "/assets/textures/moon-lro.jpg",
-      "https://svs.gsfc.nasa.gov/vis/a000000/a005000/a005001/moon_mosaic_print.jpg"
+      "/assets/textures/moon-lro-4096.jpg" + CACHE,
+      "/assets/textures/moon-lro.png" + CACHE,
+      "/assets/textures/moon-lro.jpg" + CACHE
     ]
   };
 
@@ -50,26 +47,24 @@
     running: true,
     direction: "forward",
     speedName: "normal",
-    speedValue: 0.004,
+    speedValue: 0.0035,
     zoom: 100,
     longitude: 0,
-    axialTilt: -23.5,
     mount: null,
     canvas: null,
     ctx: null,
-    image: null,
+    raf: 0,
     textureCache: {},
     textureIndex: { earth: 0, sun: 0, moon: 0 },
-    raf: 0,
     resizeObserver: null,
     lastReceipt: null,
     lastError: null
   };
 
   const speedValues = {
-    slow: 0.0022,
-    normal: 0.004,
-    fast: 0.008
+    slow: 0.0018,
+    normal: 0.0035,
+    fast: 0.007
   };
 
   function clamp(value, min, max) {
@@ -103,6 +98,12 @@
     return clamp(Number(value) || 100, 70, 240);
   }
 
+  function bodyTilt(body) {
+    if (body === "sun") return -7.25;
+    if (body === "moon") return -6.68;
+    return -23.5;
+  }
+
   function resolveMount(target) {
     if (isElement(target)) return target;
 
@@ -111,8 +112,8 @@
     }
 
     if (typeof target === "string" && global.document) {
-      const queried = global.document.querySelector(target);
-      if (queried) return queried;
+      const found = global.document.querySelector(target);
+      if (found) return found;
     }
 
     if (!global.document) return null;
@@ -167,9 +168,9 @@
     mount.replaceChildren();
 
     const canvas = global.document.createElement("canvas");
-    canvas.className = "dgb-showroom-axis-globe-canvas";
-    canvas.setAttribute("data-showroom-axis-globe-canvas", "true");
-    canvas.setAttribute("aria-label", "Demo Actual Universe spherical body render");
+    canvas.className = "dgb-showroom-satellite-axis-canvas";
+    canvas.setAttribute("data-showroom-satellite-axis-canvas", "true");
+    canvas.setAttribute("aria-label", "Demo Actual Universe satellite-definition axis body");
 
     canvas.style.display = "block";
     canvas.style.width = "100%";
@@ -184,8 +185,9 @@
     mount.dataset.instrumentMounted = "true";
     mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.instrument.js";
     mount.dataset.routeAuthority = "layout-command-panel-zoom-wrapper";
-    mount.dataset.instrumentBoundary = "axis-globe-render-only";
-    mount.dataset.textureAuthority = "real-source-imagery";
+    mount.dataset.instrumentBoundary = "satellite-definition-axis-render-only";
+    mount.dataset.textureAuthority = "local-real-source-imagery";
+    mount.dataset.projection = "spherical-axis";
     mount.dataset.inlineGlobeRedraw = "false";
     mount.dataset.cartoonCanvasReplacement = "false";
     mount.dataset.activeBody = state.body;
@@ -193,10 +195,13 @@
 
     state.mount = mount;
     state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true });
+    state.ctx = canvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: false
+    });
 
     if (global.ResizeObserver) {
-      state.resizeObserver = new ResizeObserver(function handleResize() {
+      state.resizeObserver = new ResizeObserver(function onResize() {
         resizeCanvas();
         drawOnce();
       });
@@ -212,8 +217,8 @@
     if (!state.mount || !state.canvas) return;
 
     const rect = state.mount.getBoundingClientRect();
-    const cssSize = clamp(rect.width || state.mount.clientWidth || 420, 220, 960);
-    const dpr = clamp(global.devicePixelRatio || 1, 1, 2);
+    const cssSize = clamp(rect.width || state.mount.clientWidth || 420, 260, 1080);
+    const dpr = clamp(global.devicePixelRatio || 1, 1, 2.5);
     const pixelSize = Math.round(cssSize * dpr);
 
     if (state.canvas.width !== pixelSize || state.canvas.height !== pixelSize) {
@@ -226,41 +231,37 @@
     body = normalizeBody(body);
 
     if (state.textureCache[body] && state.textureCache[body].complete) {
-      state.image = state.textureCache[body];
       drawOnce();
       return;
     }
 
     const sources = TEXTURES[body] || [];
     const index = state.textureIndex[body] || 0;
-    const source = sources[index];
+    const src = sources[index];
 
-    if (!source) {
-      state.lastError = "NO_TEXTURE_SOURCE:" + body;
-      drawFallbackSphere(body);
+    if (!src) {
+      state.lastError = "MISSING_LOCAL_TEXTURE:" + body;
+      drawMissingTextureFallback(body);
+      writeReceipt("MISSING_TEXTURE");
       return;
     }
 
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    image.decoding = "async";
-    image.loading = "eager";
+    const img = new Image();
+    img.decoding = "async";
+    img.loading = "eager";
 
-    image.onload = function handleTextureLoaded() {
-      state.textureCache[body] = image;
-      if (state.body === body) {
-        state.image = image;
-        drawOnce();
-      }
+    img.onload = function onLoad() {
+      state.textureCache[body] = img;
+      drawOnce();
       writeReceipt("TEXTURE_LOADED");
     };
 
-    image.onerror = function handleTextureError() {
+    img.onerror = function onError() {
       state.textureIndex[body] = index + 1;
       loadTexture(body);
     };
 
-    image.src = source;
+    img.src = src;
   }
 
   function clear(ctx) {
@@ -274,52 +275,47 @@
     ctx.clip();
   }
 
-  function bodyTilt(body) {
-    if (body === "sun") return -7.25;
-    if (body === "moon") return -6.68;
-    return state.axialTilt;
-  }
+  function drawProjectedTexture(ctx, img, cx, cy, r, longitude, body) {
+    const naturalW = img.naturalWidth || img.width;
+    const naturalH = img.naturalHeight || img.height;
 
-  function drawProjectedTexture(ctx, image, cx, cy, r, longitude, body) {
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    const sxWidth = image.naturalWidth || image.width;
-    const sxHeight = image.naturalHeight || image.height;
-
-    const sliceCount = Math.max(220, Math.floor(r * 2));
-    const left = cx - r;
-    const top = cy - r;
+    const qualitySlices = body === "earth" ? 520 : 440;
+    const sliceCount = Math.max(qualitySlices, Math.floor(r * 2.25));
+    const tilt = bodyTilt(body) * Math.PI / 180;
 
     ctx.save();
-
     clipSphere(ctx, cx, cy, r);
 
     ctx.translate(cx, cy);
-    ctx.rotate(bodyTilt(body) * Math.PI / 180);
+    ctx.rotate(tilt);
     ctx.translate(-cx, -cy);
 
     for (let i = 0; i < sliceCount; i += 1) {
-      const nx = -1 + (2 * i) / (sliceCount - 1);
-      const meridian = Math.asin(clamp(nx, -1, 1));
+      const nx1 = -1 + (2 * i) / sliceCount;
+      const nx2 = -1 + (2 * (i + 1)) / sliceCount;
+      const nx = (nx1 + nx2) / 2;
+
       const visibleScale = Math.sqrt(Math.max(0, 1 - nx * nx));
+      if (visibleScale <= 0.001) continue;
 
-      const destX = cx + nx * r;
-      const destH = Math.max(1, 2 * r * visibleScale);
-      const destY = cy - destH / 2;
-      const destW = Math.ceil((2 * r) / sliceCount) + 1;
-
-      let u = 0.5 + (meridian / Math.PI) + longitude;
+      const meridian = Math.asin(clamp(nx, -1, 1));
+      let u = 0.5 + meridian / Math.PI + longitude;
       u = ((u % 1) + 1) % 1;
 
-      const sx = Math.floor(u * sxWidth);
-      const sw = Math.max(1, Math.ceil(sxWidth / sliceCount));
+      const sx = Math.floor(u * naturalW);
+      const sw = Math.max(1, Math.ceil(naturalW / sliceCount) + 1);
+
+      const destX = cx + nx1 * r;
+      const destW = Math.ceil((nx2 - nx1) * r) + 2;
+      const destH = 2 * r * visibleScale;
+      const destY = cy - destH / 2;
 
       ctx.drawImage(
-        image,
+        img,
         sx,
         0,
-        Math.min(sw, sxWidth - sx),
-        sxHeight,
+        Math.min(sw, naturalW - sx),
+        naturalH,
         destX,
         destY,
         destW,
@@ -329,54 +325,47 @@
 
     ctx.restore();
 
-    drawSphereOverlays(ctx, cx, cy, r, body);
+    drawBodyOptics(ctx, cx, cy, r, body);
   }
 
-  function drawSphereOverlays(ctx, cx, cy, r, body) {
+  function drawBodyOptics(ctx, cx, cy, r, body) {
     ctx.save();
-
     clipSphere(ctx, cx, cy, r);
 
     const highlight = ctx.createRadialGradient(
-      cx - r * 0.36,
-      cy - r * 0.38,
+      cx - r * 0.34,
+      cy - r * 0.36,
       r * 0.04,
       cx,
       cy,
       r
     );
 
-    highlight.addColorStop(0, body === "sun" ? "rgba(255,255,210,0.45)" : "rgba(255,255,255,0.32)");
-    highlight.addColorStop(0.28, "rgba(255,255,255,0.08)");
-    highlight.addColorStop(1, "rgba(255,255,255,0)");
+    if (body === "sun") {
+      highlight.addColorStop(0, "rgba(255,255,225,0.32)");
+      highlight.addColorStop(0.22, "rgba(255,238,120,0.12)");
+      highlight.addColorStop(1, "rgba(255,255,255,0)");
+    } else {
+      highlight.addColorStop(0, "rgba(255,255,255,0.24)");
+      highlight.addColorStop(0.28, "rgba(255,255,255,0.06)");
+      highlight.addColorStop(1, "rgba(255,255,255,0)");
+    }
 
     ctx.fillStyle = highlight;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    const shade = ctx.createLinearGradient(cx - r * 0.52, cy - r, cx + r, cy + r);
+    const terminator = ctx.createLinearGradient(cx - r * 0.55, cy - r, cx + r, cy + r);
+    terminator.addColorStop(0, "rgba(255,255,255,0)");
+    terminator.addColorStop(0.54, "rgba(0,0,0,0)");
+    terminator.addColorStop(1, body === "sun" ? "rgba(80,12,0,0.16)" : "rgba(0,0,0,0.42)");
 
-    if (body === "sun") {
-      shade.addColorStop(0, "rgba(255,255,255,0.02)");
-      shade.addColorStop(0.56, "rgba(0,0,0,0)");
-      shade.addColorStop(1, "rgba(90,12,0,0.24)");
-    } else {
-      shade.addColorStop(0, "rgba(255,255,255,0)");
-      shade.addColorStop(0.54, "rgba(0,0,0,0)");
-      shade.addColorStop(1, "rgba(0,0,0,0.48)");
-    }
-
-    ctx.fillStyle = shade;
+    ctx.fillStyle = terminator;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
 
-    if (body === "earth") {
-      drawAtmosphere(ctx, cx, cy, r);
-    }
-
-    if (body === "sun") {
-      drawSolarCorona(ctx, cx, cy, r);
-    }
+    if (body === "earth") drawAtmosphere(ctx, cx, cy, r);
+    if (body === "sun") drawSolarGlow(ctx, cx, cy, r);
 
     drawRim(ctx, cx, cy, r, body);
   }
@@ -384,25 +373,25 @@
   function drawAtmosphere(ctx, cx, cy, r) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.018, 0, TAU);
-    ctx.strokeStyle = "rgba(126,219,255,0.42)";
-    ctx.lineWidth = Math.max(2, r * 0.032);
-    ctx.shadowColor = "rgba(126,219,255,0.45)";
-    ctx.shadowBlur = r * 0.08;
+    ctx.arc(cx, cy, r * 1.014, 0, TAU);
+    ctx.strokeStyle = "rgba(126,219,255,0.46)";
+    ctx.lineWidth = Math.max(2, r * 0.028);
+    ctx.shadowColor = "rgba(126,219,255,0.42)";
+    ctx.shadowBlur = r * 0.07;
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawSolarCorona(ctx, cx, cy, r) {
-    const corona = ctx.createRadialGradient(cx, cy, r * 0.88, cx, cy, r * 1.22);
-    corona.addColorStop(0, "rgba(255,191,54,0.16)");
-    corona.addColorStop(0.58, "rgba(255,114,26,0.13)");
+  function drawSolarGlow(ctx, cx, cy, r) {
+    const corona = ctx.createRadialGradient(cx, cy, r * 0.88, cx, cy, r * 1.2);
+    corona.addColorStop(0, "rgba(255,197,63,0.16)");
+    corona.addColorStop(0.58, "rgba(255,114,26,0.12)");
     corona.addColorStop(1, "rgba(255,114,26,0)");
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.22, 0, TAU);
+    ctx.arc(cx, cy, r * 1.2, 0, TAU);
     ctx.fillStyle = corona;
     ctx.fill();
     ctx.restore();
@@ -419,22 +408,22 @@
 
     if (body === "sun") {
       stroke = "rgba(255,224,116,0.76)";
-      glow = "rgba(255,166,34,0.58)";
+      glow = "rgba(255,166,34,0.5)";
     }
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TAU);
     ctx.strokeStyle = stroke;
-    ctx.lineWidth = Math.max(2, r * 0.012);
+    ctx.lineWidth = Math.max(2, r * 0.01);
     ctx.shadowColor = glow;
-    ctx.shadowBlur = r * 0.08;
+    ctx.shadowBlur = r * 0.07;
     ctx.stroke();
     ctx.restore();
   }
 
-  function drawFallbackSphere(body) {
-    if (!state.ctx || !state.canvas) return;
+  function drawMissingTextureFallback(body) {
+    if (!state.canvas || !state.ctx) return;
 
     const ctx = state.ctx;
     const size = Math.min(ctx.canvas.width, ctx.canvas.height);
@@ -444,23 +433,20 @@
 
     clear(ctx);
 
-    const gradient = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.05, cx, cy, r);
+    const gradient = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.36, r * 0.04, cx, cy, r);
 
     if (body === "sun") {
-      gradient.addColorStop(0, "#fff7b6");
-      gradient.addColorStop(0.25, "#ffc83c");
-      gradient.addColorStop(0.7, "#d94a15");
-      gradient.addColorStop(1, "#4c1005");
+      gradient.addColorStop(0, "#fff4a8");
+      gradient.addColorStop(0.28, "#f7a632");
+      gradient.addColorStop(1, "#7b210a");
     } else if (body === "moon") {
-      gradient.addColorStop(0, "#fffbe8");
-      gradient.addColorStop(0.35, "#cfcfc4");
-      gradient.addColorStop(0.75, "#858d8f");
-      gradient.addColorStop(1, "#3e4650");
+      gradient.addColorStop(0, "#fbfae8");
+      gradient.addColorStop(0.42, "#babdb6");
+      gradient.addColorStop(1, "#4c5662");
     } else {
-      gradient.addColorStop(0, "#7de7ff");
-      gradient.addColorStop(0.35, "#168acb");
-      gradient.addColorStop(0.75, "#063d86");
-      gradient.addColorStop(1, "#011537");
+      gradient.addColorStop(0, "#6fe8ff");
+      gradient.addColorStop(0.42, "#1476c4");
+      gradient.addColorStop(1, "#02183f");
     }
 
     ctx.beginPath();
@@ -468,7 +454,7 @@
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    drawSphereOverlays(ctx, cx, cy, r, body);
+    drawBodyOptics(ctx, cx, cy, r, body);
   }
 
   function drawOnce() {
@@ -480,19 +466,18 @@
     const size = Math.min(ctx.canvas.width, ctx.canvas.height);
     const cx = ctx.canvas.width / 2;
     const cy = ctx.canvas.height / 2;
-    const r = size * 0.39 * (state.zoom / 100);
+    const r = size * 0.395 * (state.zoom / 100);
+    const texture = state.textureCache[state.body];
 
     clear(ctx);
 
-    const texture = state.textureCache[state.body];
-
     if (texture && texture.complete && texture.naturalWidth > 0) {
       drawProjectedTexture(ctx, texture, cx, cy, r, state.longitude, state.body);
+      writeReceipt("SATELLITE_TEXTURE_DRAWN");
     } else {
-      drawFallbackSphere(state.body);
+      drawMissingTextureFallback(state.body);
+      writeReceipt("FALLBACK_DRAWN_TEXTURE_MISSING");
     }
-
-    writeReceipt("DRAWN_AS_AXIS_GLOBE");
   }
 
   function step() {
@@ -533,15 +518,17 @@
       status: status || "READY",
       version: VERSION,
       route: ROUTE,
-      instrumentBoundary: "axis-globe-render-only",
-      sourceClass: "REAL_IMAGE_TEXTURE_SPHERICAL_PROJECTION",
+      instrumentBoundary: "satellite-definition-axis-render-only",
       activeBody: state.body,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
+      longitude: state.longitude,
       axialTilt: bodyTilt(state.body),
+      textureLoaded: Boolean(state.textureCache[state.body]),
+      textureExpected: TEXTURES[state.body][0],
       ownsBodyRender: true,
       ownsRouteLabel: false,
       ownsRouteDescription: false,
@@ -556,9 +543,10 @@
     if (state.mount) {
       state.mount.dataset.instrumentReceipt = status || "READY";
       state.mount.dataset.activeBody = state.body;
-      state.mount.dataset.instrumentBoundary = "axis-globe-render-only";
-      state.mount.dataset.textureAuthority = "real-source-imagery";
+      state.mount.dataset.instrumentBoundary = "satellite-definition-axis-render-only";
       state.mount.dataset.projection = "spherical-axis";
+      state.mount.dataset.textureLoaded = String(Boolean(state.textureCache[state.body]));
+      state.mount.dataset.textureExpected = TEXTURES[state.body][0];
       state.mount.dataset.visualPassClaimed = "false";
     }
 
@@ -574,7 +562,7 @@
           ok: false,
           status: "HOLD_NO_MOUNT",
           version: VERSION,
-          instrumentBoundary: "axis-globe-render-only"
+          instrumentBoundary: "satellite-definition-axis-render-only"
         };
       }
 
@@ -590,7 +578,7 @@
         status: "HOLD_EXCEPTION",
         version: VERSION,
         error: state.lastError,
-        instrumentBoundary: "axis-globe-render-only"
+        instrumentBoundary: "satellite-definition-axis-render-only"
       };
     }
   }
@@ -707,17 +695,19 @@
       ok: true,
       version: VERSION,
       route: ROUTE,
-      instrumentBoundary: "axis-globe-render-only",
-      sourceClass: "REAL_IMAGE_TEXTURE_SPHERICAL_PROJECTION",
+      instrumentBoundary: "satellite-definition-axis-render-only",
       activeBody: state.body,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
+      longitude: state.longitude,
       axialTilt: bodyTilt(state.body),
       mountPresent: Boolean(state.mount),
       canvasPresent: Boolean(state.canvas),
+      textureLoaded: Boolean(state.textureCache[state.body]),
+      textureExpected: TEXTURES[state.body][0],
       lastReceipt: state.lastReceipt,
       lastError: state.lastError,
       ownsBodyRender: true,
@@ -752,7 +742,7 @@
         detail: getStatus()
       }));
 
-      global.dispatchEvent(new CustomEvent("dgb:showroom:actual-bodies-axis-globe-renewed", {
+      global.dispatchEvent(new CustomEvent("dgb:showroom:satellite-definition-axis-renewed", {
         detail: getStatus()
       }));
     } catch (_) {}
@@ -809,7 +799,7 @@
       boot();
     }
 
-    global.addEventListener("resize", function handleWindowResize() {
+    global.addEventListener("resize", function handleResize() {
       resizeCanvas();
       drawOnce();
     }, { passive: true });

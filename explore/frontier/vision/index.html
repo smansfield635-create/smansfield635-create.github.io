@@ -5,7 +5,7 @@
        - Preserve the validated foreground field and stable core baseline
        - Preserve split structure/runtime architecture
        - Keep /explore/frontier/vision/index.js as runtime owner
-       - Correct page identity to Vision, not Vision Remote
+       - Lock page identity to Vision only
        - Align source language with Manor / Frontier / Audralia current baseline
        - Keep Russian-doll context under the hood
        - Preserve canonical carry: gd_lang/gd_style/gd_time/gd_depth only
@@ -17,7 +17,7 @@
   data-route="/explore/frontier/vision/"
   data-page="frontier-vision"
   data-version="G1-OPTIMAL"
-  data-contract="VISION_G1_OPTIMAL_COSMIC_HOST_CURRENT_BASELINE_TNT_v1"
+  data-contract="VISION_G1_OPTIMAL_COSMIC_HOST_VISION_ONLY_TNT_v1"
   data-status="active"
   data-parent="/explore/frontier/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -30,7 +30,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Diamond Gate Bridge · Frontier · Vision G1 Optimal</title>
-  <meta name="description" content="Vision G1 Optimal is the Frontier sightline lane. It keeps visual planning, future-facing design, and proof return aligned with the Manor hierarchy."/>
+  <meta name="description" content="Vision G1 Optimal is the Frontier sightline lane. It keeps visual planning, future-facing design, inspection, and proof return aligned with the Manor hierarchy."/>
 
   <link rel="stylesheet" href="/assets/ui.css"/>
   <link rel="stylesheet" href="/assets/branch.css"/>
@@ -746,10 +746,10 @@
   </div>
 
   <section class="sourceReceipt" aria-label="Vision source receipt">
-    VISION_G1_OPTIMAL_COSMIC_HOST_CURRENT_BASELINE_TNT_v1
+    VISION_G1_OPTIMAL_COSMIC_HOST_VISION_ONLY_TNT_v1
     STATUS=ACTIVE
     VISIBLE_TITLE=Vision · G1 Optimal
-    PUBLIC_PROOF_MARKER=Cosmic Vision Host · G1 Optimal active
+    PUBLIC_PROOF_MARKER=Cosmic Vision Host · Vision Only · G1 Optimal active
     PAGE=/explore/frontier/vision/index.html
     ROUTE=/explore/frontier/vision/
     PARENT=/explore/frontier/
@@ -758,7 +758,7 @@
     HIERARCHY=Compass→Door→Home→Manor→Frontier→Vision→Laws→Gauges
     ROLE=frontier_sightline_lane
     OWNS=visual_systems,sightline_planning,future_facing_design,inspection_field,foreground_host_shell
-    DOES_NOT_OWN=vision_remote_identity,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
+    DOES_NOT_OWN=remote_read_identity,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
     RUNTIME_OWNER=/explore/frontier/vision/index.js
     SPLIT_ARCHITECTURE=host_shell_preserved,runtime_external
     CANONICAL_CARRY=gd_lang,gd_style,gd_time,gd_depth

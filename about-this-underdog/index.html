@@ -1,18 +1,21 @@
 <!doctype html>
-<html lang="en"
-  data-page="meet-sean-mansfield"
-  data-house-part="voice-profile"
-  data-construct-class="public-profile"
-  data-g5-site-uniformity="active"
-  data-page-standard="G5_MEET_SEAN_MANSFIELD_PROFILE_TED_TALK_TNT_v1"
-  data-architecture-claim="public-profile-surface"
-  data-visual-pass-claim="false"
+<html
+  lang="en"
+  data-route="/about-this-underdog/"
+  data-page="about-this-underdog"
+  data-version="G1-V1"
+  data-contract="ABOUT_THIS_UNDERDOG_CURRENT_STANDARD_TURNING_POINT_TNT_v1"
+  data-status="active"
+  data-parent="/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-heavy-runtime-loaded="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Meet Sean Mansfield · Diamond Gate Bridge</title>
-  <meta name="description" content="Meet Sean Mansfield: public voice, comedy, speaking, seminars, Nine Summits of Love, This Underdog, and Diamond Gate Bridge.">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>About This Underdog · Sean Mansfield · Diamond Gate Bridge</title>
+  <meta name="description" content="About This Underdog: Sean Mansfield, adversity, accountability, comedy, speaking, seminars, Consider the Energy, The Nine Summits of Love, and Diamond Gate Bridge.">
 
   <style>
     :root{
@@ -23,7 +26,7 @@
       --line:rgba(176,205,255,.18);
       --line2:rgba(242,199,111,.32);
       --text:rgba(246,248,255,.94);
-      --muted:rgba(218,227,255,.68);
+      --muted:rgba(218,227,255,.70);
       --soft:rgba(218,227,255,.54);
       --gold:#f2c76f;
       --blue:#93e8ff;
@@ -34,7 +37,12 @@
     }
 
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth;background:var(--bg)}
+
+    html{
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+
     body{
       margin:0;
       min-height:100vh;
@@ -45,13 +53,45 @@
         radial-gradient(circle at 18% 0%,rgba(65,118,179,.30),transparent 34%),
         radial-gradient(circle at 84% 18%,rgba(242,199,111,.13),transparent 32%),
         linear-gradient(180deg,#07101d 0%,#02040a 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(147,232,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(147,232,255,.045) 1px,transparent 1px),
+        radial-gradient(circle,rgba(255,255,255,.11) 0 1px,transparent 1.3px);
+      background-size:52px 52px,52px 52px,230px 270px;
+      opacity:.22;
     }
 
     a{color:inherit;text-decoration:none}
-    .skip{position:absolute;left:-999px;top:8px;background:#fff;color:#000;padding:8px 10px;border-radius:8px;z-index:20}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      background:#fff;
+      color:#000;
+      padding:8px 10px;
+      border-radius:8px;
+      z-index:20;
+      font-weight:900;
+    }
+
     .skip:focus{left:8px}
 
-    .shell{width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:24px 0 46px}
+    .shell{
+      position:relative;
+      z-index:1;
+      width:min(var(--max),calc(100% - 32px));
+      margin:0 auto;
+      padding:max(24px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
 
     .topbar{
       display:flex;
@@ -62,11 +102,32 @@
       border-bottom:1px solid var(--line);
     }
 
-    .brand{display:grid;gap:2px;color:rgba(248,251,255,.86)}
-    .brand strong{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;font-weight:950}
-    .brand span{color:var(--soft);font-size:.78rem;font-weight:750}
+    .brand{
+      display:grid;
+      gap:2px;
+      color:rgba(248,251,255,.86);
+    }
 
-    .nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .brand strong{
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:950;
+    }
+
+    .brand span{
+      color:var(--soft);
+      font-size:.78rem;
+      font-weight:750;
+    }
+
+    .nav{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
     .nav a{
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
@@ -74,12 +135,18 @@
       padding:8px 11px;
       font-size:.74rem;
       font-weight:850;
-      color:rgba(242,247,255,.74);
+      color:rgba(242,247,255,.76);
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(242,199,111,.44);
+      color:rgba(255,238,190,.95);
+      background:rgba(242,199,111,.08);
     }
 
     .hero{
       display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(280px,.56fr);
+      grid-template-columns:minmax(0,1.08fr) minmax(280px,.58fr);
       gap:22px;
       align-items:stretch;
       padding:42px 0 24px;
@@ -101,7 +168,7 @@
 
     h1{
       max-width:960px;
-      font-size:clamp(2.7rem,7.4vw,6.9rem);
+      font-size:clamp(2.65rem,7.4vw,6.8rem);
       line-height:.88;
       margin:0;
       letter-spacing:-.085em;
@@ -121,10 +188,23 @@
       letter-spacing:-.03em;
     }
 
-    p{margin:0;color:var(--muted);font-size:1rem}
-    .lede{max-width:850px;font-size:clamp(1.08rem,2.2vw,1.42rem);color:rgba(226,232,246,.80)}
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+    }
 
-    .actions,.link-row{display:flex;gap:10px;flex-wrap:wrap}
+    .lede{
+      max-width:850px;
+      font-size:clamp(1.08rem,2.2vw,1.42rem);
+      color:rgba(226,232,246,.82);
+    }
+
+    .actions,.link-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
     .button{
       display:inline-flex;
@@ -139,8 +219,16 @@
       letter-spacing:.02em;
     }
 
-    .button.gold{border-color:rgba(242,199,111,.38);background:linear-gradient(180deg,rgba(242,199,111,.17),rgba(255,255,255,.045))}
-    .button.secondary{border-color:var(--line);background:rgba(255,255,255,.052);color:rgba(242,247,255,.78)}
+    .button.gold{
+      border-color:rgba(242,199,111,.38);
+      background:linear-gradient(180deg,rgba(242,199,111,.17),rgba(255,255,255,.045));
+    }
+
+    .button.secondary{
+      border-color:var(--line);
+      background:rgba(255,255,255,.052);
+      color:rgba(242,247,255,.78);
+    }
 
     .profile-card{
       border:1px solid var(--line2);
@@ -156,7 +244,7 @@
 
     .photo-wrap{
       position:relative;
-      min-height:420px;
+      min-height:520px;
       border-radius:28px;
       overflow:hidden;
       border:1px solid rgba(242,199,111,.24);
@@ -168,16 +256,20 @@
     }
 
     .photo-wrap img{
+      position:relative;
+      z-index:2;
       width:100%;
       height:100%;
-      min-height:420px;
+      min-height:520px;
       object-fit:cover;
+      object-position:center top;
       display:block;
     }
 
     .photo-fallback{
       position:absolute;
       inset:0;
+      z-index:1;
       display:grid;
       place-items:center;
       text-align:center;
@@ -188,7 +280,10 @@
       font-size:clamp(1.8rem,4vw,3.4rem);
     }
 
-    .photo-wrap img:not([src]), .photo-wrap img[src=""]{display:none}
+    .photo-wrap img:not([src]),
+    .photo-wrap img[src=""]{
+      display:none;
+    }
 
     .profile-meta{
       display:grid;
@@ -203,9 +298,14 @@
       text-transform:uppercase;
     }
 
-    .profile-meta span{color:rgba(246,248,255,.86);font-weight:850}
+    .profile-meta span{
+      color:rgba(246,248,255,.86);
+      font-weight:850;
+    }
 
-    .profile-bubble{
+    .profile-bubble,
+    .section-band,
+    .final-band{
       border:1px solid var(--line2);
       background:
         radial-gradient(circle at 18% 0%,rgba(242,199,111,.12),transparent 38%),
@@ -214,6 +314,78 @@
       box-shadow:var(--shadow);
       padding:18px;
       margin:22px 0;
+    }
+
+    .standard-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .grid.four{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .grid.two{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
+      border-radius:22px;
+      padding:16px;
+      display:grid;
+      gap:9px;
+      align-content:start;
+      min-height:150px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      width:1.55rem;
+      height:1.55rem;
+      border:1px solid rgba(242,199,111,.24);
+      border-radius:.45rem;
+      transform:rotate(45deg);
+      margin:.15rem 0 .35rem .25rem;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.12),transparent 50%),
+        linear-gradient(145deg,rgba(242,199,111,.08),rgba(147,232,255,.04));
+      box-shadow:0 0 1rem rgba(242,199,111,.08);
+    }
+
+    .card .tag{
+      width:max-content;
+      border:1px solid rgba(147,232,255,.22);
+      border-radius:999px;
+      padding:4px 8px;
+      color:var(--blue);
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:rgba(147,232,255,.05);
+    }
+
+    .card b{
+      display:block;
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .card p{
+      font-size:.93rem;
     }
 
     details{
@@ -262,50 +434,57 @@
       background:rgba(242,199,111,.06);
     }
 
-    .summary-copy{display:grid;gap:8px}
-    .summary-copy b{color:var(--gold);font-size:.75rem;letter-spacing:.13em;text-transform:uppercase}
-    .summary-copy span{font-size:1.08rem;letter-spacing:-.025em}
+    .summary-copy{
+      display:grid;
+      gap:8px;
+    }
 
-    .bubble-body{display:grid;gap:14px;padding:0 18px 18px}
-    .bubble-note{border:1px solid rgba(242,199,111,.22);background:rgba(242,199,111,.055);border-radius:20px;padding:14px}
+    .summary-copy b{
+      color:var(--gold);
+      font-size:.75rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
 
-    .nested{display:grid;gap:12px}
-    .nested details{border-radius:22px;background:linear-gradient(180deg,rgba(147,232,255,.065),rgba(255,255,255,.035))}
+    .summary-copy span{
+      font-size:1.08rem;
+      letter-spacing:-.025em;
+    }
+
+    .bubble-body{
+      display:grid;
+      gap:14px;
+      padding:0 18px 18px;
+    }
+
+    .bubble-note{
+      border:1px solid rgba(242,199,111,.22);
+      background:rgba(242,199,111,.055);
+      border-radius:20px;
+      padding:14px;
+    }
+
+    .nested{
+      display:grid;
+      gap:12px;
+    }
+
+    .nested details{
+      border-radius:22px;
+      background:linear-gradient(180deg,rgba(147,232,255,.065),rgba(255,255,255,.035));
+    }
+
     .nested summary{padding:15px}
     .nested .bubble-body{padding:0 15px 15px}
 
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-    .card{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
-      border-radius:22px;
-      padding:16px;
+    .quote-list{
       display:grid;
-      gap:9px;
-      align-content:start;
-      min-height:150px;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
     }
 
-    .card .tag{
-      width:max-content;
-      border:1px solid rgba(147,232,255,.22);
-      border-radius:999px;
-      padding:4px 8px;
-      color:var(--blue);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(147,232,255,.05);
-    }
-
-    .card b{display:block;color:var(--gold);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
-    .card p{font-size:.93rem}
-
-    .quote-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
     .quote-list li{
       border:1px solid rgba(176,205,255,.13);
       background:rgba(255,255,255,.035);
@@ -318,15 +497,12 @@
     .final-band{
       display:grid;
       gap:12px;
-      border:1px solid var(--line2);
-      background:linear-gradient(180deg,rgba(242,199,111,.08),rgba(255,255,255,.045));
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-      margin:22px 0;
     }
 
-    .final-band strong{color:rgba(255,238,190,.94);font-size:1.08rem}
+    .final-band strong{
+      color:rgba(255,238,190,.94);
+      font-size:1.08rem;
+    }
 
     .footer{
       display:grid;
@@ -338,12 +514,14 @@
       font-size:.8rem;
     }
 
-    .public-receipt{color:rgba(242,247,255,.70)}
+    .public-receipt{
+      color:rgba(242,247,255,.70);
+    }
 
     @media(max-width:980px){
       .hero{grid-template-columns:1fr}
-      .photo-wrap,.photo-wrap img{min-height:360px}
-      .grid,.grid.four,.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .photo-wrap,.photo-wrap img{min-height:420px}
+      .grid,.grid.four,.grid.two,.standard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .topbar{align-items:flex-start;flex-direction:column}
       .nav{justify-content:flex-start}
     }
@@ -351,54 +529,69 @@
     @media(max-width:640px){
       .shell{width:min(100% - 22px,var(--max))}
       .hero{padding-top:32px}
-      .grid,.grid.four,.grid.two{grid-template-columns:1fr}
+      .grid,.grid.four,.grid.two,.standard-grid{grid-template-columns:1fr}
       h1{font-size:clamp(2.45rem,15vw,4.2rem)}
       summary{align-items:flex-start}
-      .photo-wrap,.photo-wrap img{min-height:320px}
+      .photo-wrap,.photo-wrap img{min-height:360px}
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#meet-sean-main">Skip to Meet Sean Mansfield</a>
+  <a class="skip" href="#about-underdog-main">Skip to About This Underdog</a>
 
   <div class="shell">
     <header class="topbar" aria-label="Site header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
         <strong>Diamond Gate Bridge</strong>
-        <span>Meet Sean Mansfield · profile lane</span>
+        <span>About This Underdog · Sean Mansfield profile lane</span>
       </a>
 
       <nav class="nav" aria-label="Primary house navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
+        <a href="/explore/">Manor</a>
+        <a href="/laws/">Laws</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits-of-love/">Book</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
+        <a href="/about-this-underdog/" aria-current="page">Underdog</a>
       </nav>
     </header>
 
-    <main id="meet-sean-main">
+    <main id="about-underdog-main">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="kicker">Meet Sean Mansfield</div>
+          <div class="kicker">About This Underdog</div>
           <h1 id="page-title">The voice behind This Underdog.</h1>
-          <p class="lede">Sean Mansfield turns pressure into language: comedy, story, seminars, public speaking, and the human message behind Diamond Gate Bridge and The Nine Summits of Love.</p>
+          <p class="lede">
+            Sean Mansfield turns pressure into language: comedy, story, seminars, public speaking, and the human message behind Diamond Gate Bridge and The Nine Summits of Love.
+          </p>
 
           <div class="actions">
-            <a class="button gold" href="/this-underdog/">Open This Underdog</a>
-            <a class="button" href="/nine-summits-of-love/">Open the Book Path</a>
+            <a class="button gold" href="/nine-summits-of-love/">Open the Book Path</a>
             <a class="button" href="/nine-summits/">Open Nine Summits</a>
-            <a class="button secondary" href="/showroom/">Inspect the Build</a>
+            <a class="button" href="/showroom/">Inspect the Build</a>
+            <a class="button secondary" href="/gauges/">Read Proof</a>
           </div>
         </div>
 
         <aside class="profile-card" aria-label="Sean Mansfield profile card">
-          <div class="photo-wrap">
-            <img src="/assets/sean-mansfield.jpg" alt="Sean Mansfield" onerror="this.style.display='none';">
-            <div class="photo-fallback">Sean Mansfield</div>
-          </div>
+          <figure class="photo-wrap">
+            <img
+              src="/assets/sean-mansfield.jpg"
+              alt="Sean Mansfield"
+              width="1152"
+              height="1536"
+              loading="eager"
+              decoding="async"
+              onerror="this.style.display='none';"
+            >
+            <figcaption class="photo-fallback">Sean Mansfield</figcaption>
+          </figure>
 
           <div class="profile-meta">
             <b>Public lane</b>
@@ -409,7 +602,31 @@
         </aside>
       </section>
 
-      <section class="profile-bubble" aria-label="Meet Sean Mansfield Russian doll profile system">
+      <section class="section-band" aria-labelledby="standard-title">
+        <div class="kicker">Current Standard</div>
+        <h2 id="standard-title">Compass, North Star, Legend, and Four Zones.</h2>
+
+        <div class="standard-grid">
+          <article class="card">
+            <strong>Compass</strong>
+            <span>This page gives the public a clean profile route into the work.</span>
+          </article>
+          <article class="card">
+            <strong>North Star</strong>
+            <span>Meet the person first. Then enter the system.</span>
+          </article>
+          <article class="card">
+            <strong>Legend</strong>
+            <span>Underdog means adversity, accountability, language, and redirection.</span>
+          </article>
+          <article class="card">
+            <strong>Four Zones</strong>
+            <span>Profile, Turning Point, Voice, and Work keep the page readable.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="profile-bubble" aria-label="About This Underdog profile system">
         <details open>
           <summary>
             <span class="summary-copy">
@@ -420,14 +637,14 @@
 
           <div class="bubble-body">
             <div class="bubble-note">
-              <p>This page is the clean profile lane. The goal is simple: let the person, the voice, and the work enter the room without forcing the whole system to explain itself at once.</p>
+              <p>This page is the public profile lane. The goal is simple: let the person, the voice, and the work enter the room without forcing the whole system to explain itself at once.</p>
             </div>
 
             <div class="nested">
               <details open>
                 <summary>
                   <span class="summary-copy">
-                    <b>Who Sean is</b>
+                    <b>Zone 1 · Profile</b>
                     <span>A public voice shaped by pressure, humor, and structure.</span>
                   </span>
                 </summary>
@@ -455,10 +672,47 @@
                 </div>
               </details>
 
+              <details open>
+                <summary>
+                  <span class="summary-copy">
+                    <b>Zone 2 · The Turning Point</b>
+                    <span>Adversity → accountability → redirection.</span>
+                  </span>
+                </summary>
+
+                <div class="bubble-body">
+                  <div class="bubble-note">
+                    <p><strong>Adversity revealed the pattern.</strong> Sean had known pressure for most of his life, but the real shift came when he stopped treating every obstacle as something outside of him. He began to see where his own choices, reactions, habits, and silence were helping the cycle continue.</p>
+                  </div>
+
+                  <div class="bubble-note">
+                    <p><strong>Accountability changed the direction.</strong> Once Sean could admit his part without collapsing into shame, he could finally switch gears. That shift became the foundation of the voice behind This Underdog: pressure can become language, language can become a map, and a map can become a way out before it is too late.</p>
+                  </div>
+
+                  <div class="grid three">
+                    <article class="card">
+                      <span class="tag">Adversity</span>
+                      <h3>The pressure was real.</h3>
+                      <p>The page names pressure without turning the profile into a hardship inventory.</p>
+                    </article>
+                    <article class="card">
+                      <span class="tag">Accountability</span>
+                      <h3>The pattern became visible.</h3>
+                      <p>The turning point begins when the person sees where the cycle is also moving through them.</p>
+                    </article>
+                    <article class="card">
+                      <span class="tag">Redirection</span>
+                      <h3>The voice changed direction.</h3>
+                      <p>The public message comes from switching gears before the pattern becomes permanent.</p>
+                    </article>
+                  </div>
+                </div>
+              </details>
+
               <details>
                 <summary>
                   <span class="summary-copy">
-                    <b>This Underdog</b>
+                    <b>Zone 3 · This Underdog</b>
                     <span>The underdog is not the weak part.</span>
                   </span>
                 </summary>
@@ -478,7 +732,7 @@
               <details>
                 <summary>
                   <span class="summary-copy">
-                    <b>Stage and seminar lane</b>
+                    <b>Zone 4 · Stage and seminar lane</b>
                     <span>Fresh, human, direct, and room-ready.</span>
                   </span>
                 </summary>
@@ -610,34 +864,45 @@
         <strong>Meet the person. Then enter the work.</strong>
         <p>Sean Mansfield is the voice lane into the larger system: the story that makes the structure human enough to enter.</p>
         <div class="actions">
-          <a class="button gold" href="/this-underdog/">Open This Underdog</a>
-          <a class="button" href="/nine-summits-of-love/">Open the Book</a>
+          <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
           <a class="button" href="/products/">View Products</a>
           <a class="button secondary" href="/showroom/">Open Showroom</a>
+          <a class="button secondary" href="/gauges/">Read Gauges</a>
           <a class="button secondary" href="/">Return to Compass</a>
         </div>
       </section>
+
+      <details class="final-band">
+        <summary>
+          <span class="summary-copy">
+            <b>Route receipt</b>
+            <span>About This Underdog current-standard binding.</span>
+          </span>
+        </summary>
+        <div class="bubble-body">
+          <pre class="public-receipt">ABOUT_THIS_UNDERDOG_CURRENT_STANDARD_TURNING_POINT_TNT_v1
+route=/about-this-underdog/
+page=about_this_underdog
+role=public_profile_surface
+standard=compass,north_star,legend,four_zones
+compass=public_profile_route_into_the_work
+north_star=meet_the_person_then_enter_the_system
+legend=adversity,accountability,language,redirection
+four_zones=profile,turning_point,voice,work
+uploaded_photo_path=/assets/sean-mansfield.jpg
+turning_point=adversity_to_accountability_to_redirection
+current_language=About This Underdog,Sean Mansfield,Diamond Gate Bridge,Nine Summits,Nine Summits of Love,Audralia Manor Current
+stale_route_language_removed=true
+demo_universe_language_removed=true
+visual_pass_claimed=false
+heavy_runtime_loaded=false
+generated_image=false</pre>
+        </div>
+      </details>
     </main>
 
     <footer class="footer">
-      <div class="public-receipt">Meet Sean Mansfield · G5 profile baseline active. Uses uploaded photo path /assets/sean-mansfield.jpg. Public profile surface only. House navigation, nested disclosure structure, and readiness separation are aligned to the current site baseline.</div>
-      <div hidden>
-        G5_MEET_SEAN_MANSFIELD_PROFILE_TED_TALK_TNT_v1
-        route-exists=true
-        house-nav-standard=true
-        primary-house-nav=Compass|Door|Home|Products|Showroom|Gauges
-        public-path=Meet_Sean_Mansfield
-        russian-doll-bubble-structure=true
-        no-graphic-box=true
-        no-generated-visual=true
-        uploaded-photo-path=/assets/sean-mansfield.jpg
-        no-false-pass-claim=true
-        visual-pass-claim=false
-        this-underdog-route=/this-underdog/
-        book-route=/nine-summits-of-love/
-        universe-route=/nine-summits/universe/
-        gauges-measurement-route=/gauges/
-      </div>
+      <div class="public-receipt">ABOUT_THIS_UNDERDOG_CURRENT_STANDARD_TURNING_POINT_TNT_v1 · Uses uploaded photo path /assets/sean-mansfield.jpg · Public profile surface only.</div>
     </footer>
   </div>
 </body>

@@ -1,0 +1,330 @@
+name: Shimmer V10A Upstream Legacy Rewrite
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rewrite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Locate and rewrite upstream Shimmer legacy source
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const ROOT = process.cwd();
+          const REPORT_DIR = path.join(ROOT, "authority-reports");
+          const REPORT_FILE = path.join(REPORT_DIR, "shimmer-v10a-upstream-report.txt");
+
+          const EXCLUDE_DIRS = new Set([
+            ".git",
+            "node_modules",
+            ".github",
+            "tools",
+            "authority-reports",
+            ".next",
+            ".cache",
+            ".turbo",
+            ".vercel",
+            ".netlify"
+          ]);
+
+          const TEXT_EXTENSIONS = new Set([
+            ".html",
+            ".htm",
+            ".js",
+            ".mjs",
+            ".cjs",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".json",
+            ".md",
+            ".txt",
+            ".php",
+            ".liquid",
+            ".astro",
+            ".vue",
+            ".svelte"
+          ]);
+
+          const OLD_ACTIVE = "SHIMMER_LATTICE_G1_V10=ACTIVE";
+          const OLD_FAMILY = "SHIMMER_LATTICE_G1_V10";
+          const NEW_ACTIVE = "SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE";
+          const NEW_FAMILY = "SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE";
+          const PROOF = "PUBLIC_PROOF_MARKER=Universal Node · V10A active";
+          const VISIBLE_TITLE = "Shimmer · G1 V10A";
+          const APPEND_MARKER = "SHIMMER_UPSTREAM_LEGACY_SOURCE_REWRITE_V10A";
+
+          const report = [];
+
+          function log(line = "") {
+            report.push(line);
+            console.log(line);
+          }
+
+          function ensureDir(dir) {
+            fs.mkdirSync(dir, { recursive: true });
+          }
+
+          function isExcluded(fullPath) {
+            const rel = path.relative(ROOT, fullPath);
+            const parts = rel.split(path.sep);
+            return parts.some((part) => EXCLUDE_DIRS.has(part));
+          }
+
+          function isTextCandidate(fullPath) {
+            const ext = path.extname(fullPath).toLowerCase();
+            const base = path.basename(fullPath).toLowerCase();
+
+            if (TEXT_EXTENSIONS.has(ext)) return true;
+            if (base.includes("frontier")) return true;
+            if (base.includes("shimmer")) return true;
+            if (base.includes("lane")) return true;
+            if (base.includes("registry")) return true;
+            if (base.includes("kernel")) return true;
+
+            return false;
+          }
+
+          function walk(dir, output = []) {
+            if (isExcluded(dir)) return output;
+
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const fullPath = path.join(dir, entry.name);
+
+              if (entry.isDirectory()) {
+                walk(fullPath, output);
+                continue;
+              }
+
+              if (entry.isFile() && isTextCandidate(fullPath)) {
+                output.push(fullPath);
+              }
+            }
+
+            return output;
+          }
+
+          function readUtf8(fullPath) {
+            const stat = fs.statSync(fullPath);
+            if (!stat.isFile()) return null;
+            if (stat.size > 8_000_000) return null;
+
+            const buffer = fs.readFileSync(fullPath);
+            if (buffer.includes(0)) return null;
+
+            return buffer.toString("utf8");
+          }
+
+          function scoreCandidate(text) {
+            let score = 0;
+            const hits = [];
+
+            const markerWeights = [
+              [OLD_ACTIVE, 2000],
+              [OLD_FAMILY, 1500],
+              ["Shimmer · G1 V10", 1200],
+              ["Shimmer &middot; G1 V10", 1200],
+              ["Shimmer/Lattice · G1 V10", 900],
+              ["Shimmer contract restored to baseline", 900],
+              ["BASELINE=THE_WORLD_IS_FLAT", 700],
+              ["METHOD=RUSSIAN_DOLL_LABEL_EXPANSION", 700],
+              ["Russian-doll labels", 500],
+              ["Open only the domain needed", 500],
+              ["Signal category", 350],
+              ["Room controls", 250],
+              ["Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat", 300],
+              ["/explore/frontier/shimmer/", 300],
+              ["gd_depth=explore", 150],
+              ["lane=platform", 150]
+            ];
+
+            for (const [marker, weight] of markerWeights) {
+              if (text.includes(marker)) {
+                score += weight;
+                hits.push(marker);
+              }
+            }
+
+            const lower = text.toLowerCase();
+            if (lower.includes("frontier") && lower.includes("shimmer")) {
+              score += 250;
+              hits.push("frontier+shimmer");
+            }
+
+            if (lower.includes("lattice") && lower.includes("shimmer")) {
+              score += 200;
+              hits.push("shimmer+lattice");
+            }
+
+            return { score, hits };
+          }
+
+          function rewriteText(original) {
+            let next = original;
+
+            next = next.replace(/Shimmer\s*·\s*G1 V10(?!A)/g, "Shimmer · G1 V10A");
+            next = next.replace(/Shimmer\s*&middot;\s*G1 V10(?!A)/g, "Shimmer &middot; G1 V10A");
+            next = next.replace(/Shimmer\/Lattice\s*·\s*G1 V10(?!A)/g, "Shimmer/Lattice · G1 V10A");
+            next = next.replace(/Shimmer\/Lattice\s*&middot;\s*G1 V10(?!A)/g, "Shimmer/Lattice &middot; G1 V10A");
+
+            next = next.replace(/SHIMMER_LATTICE_G1_V10=ACTIVE/g, NEW_ACTIVE);
+            next = next.replace(/SHIMMER_LATTICE_G1_V10/g, NEW_FAMILY);
+
+            next = next.replace(/Shimmer contract restored to baseline\.?/g, "Universal Node · V10A active.");
+            next = next.replace(/BASELINE=THE_WORLD_IS_FLAT/g, "BASELINE=THE_WORLD_IS_FLAT REVISION=V10A EXPRESSION=UNIVERSAL_NODE");
+            next = next.replace(/METHOD=RUSSIAN_DOLL_LABEL_EXPANSION/g, "METHOD=RUSSIAN_DOLL_LABEL_EXPANSION UNIVERSAL_NODE=ACTIVE");
+            next = next.replace(/VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_ONLY/g, "VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL");
+
+            if (!next.includes(PROOF)) {
+              if (next.includes(NEW_ACTIVE)) {
+                next = next.replace(NEW_ACTIVE, `${NEW_ACTIVE} ${PROOF}`);
+              } else if (next.includes(NEW_FAMILY)) {
+                next = next.replace(NEW_FAMILY, `${NEW_FAMILY} ${PROOF}`);
+              } else {
+                next += `\n${NEW_ACTIVE}\n${PROOF}\n`;
+              }
+            }
+
+            if (!next.includes("VISIBLE_TITLE=Shimmer · G1 V10A")) {
+              if (next.includes(PROOF)) {
+                next = next.replace(PROOF, `VISIBLE_TITLE=${VISIBLE_TITLE} ${PROOF}`);
+              } else {
+                next += `\nVISIBLE_TITLE=${VISIBLE_TITLE}\n`;
+              }
+            }
+
+            if (!next.includes(APPEND_MARKER)) {
+              const marker =
+                `\n<!-- ${APPEND_MARKER} route=/explore/frontier/shimmer/ version=G1_V10A contract=${NEW_FAMILY} -->\n`;
+              next += marker;
+            }
+
+            return next;
+          }
+
+          ensureDir(REPORT_DIR);
+
+          log("SHIMMER V10A UPSTREAM LEGACY REWRITE REPORT");
+          log(`Generated: ${new Date().toISOString()}`);
+          log(`Repo root: ${ROOT}`);
+          log("");
+
+          const files = walk(ROOT);
+          const candidates = [];
+
+          for (const file of files) {
+            const text = readUtf8(file);
+            if (!text) continue;
+
+            const scored = scoreCandidate(text);
+            if (scored.score > 0) {
+              candidates.push({
+                file,
+                text,
+                score: scored.score,
+                hits: scored.hits
+              });
+            }
+          }
+
+          candidates.sort((a, b) => b.score - a.score);
+
+          log("CANDIDATES:");
+          if (!candidates.length) {
+            log("NONE");
+          } else {
+            for (const candidate of candidates.slice(0, 30)) {
+              log("");
+              log(`FILE: ${path.relative(ROOT, candidate.file)}`);
+              log(`SCORE: ${candidate.score}`);
+              log("HITS:");
+              for (const hit of candidate.hits) {
+                log(`- ${hit}`);
+              }
+            }
+          }
+
+          const exactTargets = candidates.filter((candidate) =>
+            candidate.text.includes(OLD_ACTIVE) ||
+            candidate.text.includes(OLD_FAMILY) ||
+            candidate.text.includes("Shimmer · G1 V10") ||
+            candidate.text.includes("Shimmer &middot; G1 V10")
+          );
+
+          let selected = exactTargets;
+
+          if (!selected.length && candidates.length && candidates[0].score >= 1200) {
+            selected = [candidates[0]];
+          }
+
+          log("");
+          log("SELECTED SEND TARGETS:");
+
+          if (!selected.length) {
+            log("NONE");
+            log("");
+            log("RESULT=FAILED_TO_LOCATE_UPSTREAM_LEGACY_TARGET");
+            log("SEARCHED_FOR=Shimmer · G1 V10, SHIMMER_LATTICE_G1_V10, Shimmer contract restored to baseline");
+            fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+            process.exit(0);
+          }
+
+          for (const target of selected) {
+            const rel = path.relative(ROOT, target.file);
+            const original = target.text;
+            const next = rewriteText(original);
+
+            log(`- ${rel}`);
+
+            if (next === original) {
+              log("  RESULT=NO_CHANGE");
+              continue;
+            }
+
+            const backup = `${target.file}.bak-v10a-upstream`;
+            fs.writeFileSync(backup, original, "utf8");
+            fs.writeFileSync(target.file, next, "utf8");
+
+            log("  RESULT=REWRITTEN");
+            log(`  BACKUP=${path.relative(ROOT, backup)}`);
+            log(`  ACTIVE_CONTRACT=${NEW_ACTIVE}`);
+            log(`  VISIBLE_TITLE=${VISIBLE_TITLE}`);
+            log(`  PROOF=${PROOF}`);
+          }
+
+          log("");
+          log("PUBLIC SUCCESS MARKERS:");
+          log("Shimmer · G1 V10A");
+          log("SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE");
+          log("Universal Node · V10A active");
+          log("");
+          log("RESULT=COMPLETE");
+
+          fs.writeFileSync(REPORT_FILE, report.join("\n"), "utf8");
+          NODE
+
+      - name: Commit upstream Shimmer rewrite
+        shell: bash
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Rewrite upstream Shimmer legacy source to G1 V10A"
+            git push
+          fi

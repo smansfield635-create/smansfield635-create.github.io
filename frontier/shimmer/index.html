@@ -2,9 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="frontier-shimmer-universal-node-expression"
+  data-page="frontier-shimmer-g1-v10-universal-node"
   data-route="/explore/frontier/shimmer/"
-  data-contract="SHIMMER_UNIVERSAL_NODE_EXPRESSION_INTEGRATION_TNT_v1"
+  data-contract="SHIMMER_G1_V10_UNIVERSAL_NODE_SERVED_ROUTE_REWRITE_TNT_v1"
+  data-supersedes="SHIMMER_LATTICE_G1_V10"
   data-role="frontier-lane"
   data-frontier-lane="shimmer"
   data-mode="shimmer-lattice"
@@ -21,23 +22,21 @@
   <title>Diamond Gate Bridge · Frontier · Shimmer</title>
   <meta
     name="description"
-    content="Shimmer is the Frontier signal chamber. It reduces distortion through a universal node of expression: screen, highlight, inspect, measure, mitigate, explain, and repeat."
+    content="Shimmer · G1 V10 is now expressed through the Universal Node: Screen, Highlight, Inspect, Measure, Mitigate, Explain, Repeat."
   >
 
   <style>
     :root {
       --bg: #030611;
-      --panel: rgba(8, 15, 30, 0.86);
-      --panel-2: rgba(10, 20, 40, 0.76);
+      --panel: rgba(8, 15, 30, 0.88);
+      --panel2: rgba(11, 22, 44, 0.78);
       --line: rgba(255,255,255,0.14);
-      --line-strong: rgba(242,199,111,0.34);
+      --line2: rgba(139,200,255,0.22);
+      --gold: #f2c76f;
+      --blue: #8bc8ff;
       --text: #f8f1dd;
       --muted: rgba(226,235,255,0.76);
       --faint: rgba(226,235,255,0.48);
-      --gold: #f2c76f;
-      --blue: #8bc8ff;
-      --rose: rgba(255, 112, 154, 0.34);
-      --green: rgba(165,239,204,0.52);
       --stage: min(100%, 1180px);
     }
 
@@ -102,6 +101,7 @@
 
     .top-card,
     .hero,
+    .status-proof,
     .controls,
     .node-stage,
     .expanded-panel,
@@ -110,7 +110,7 @@
     .receipt {
       width: min(100%, 1060px);
       margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
-      border: 1px solid rgba(139,200,255,0.18);
+      border: 1px solid var(--line2);
       border-radius: clamp(1.25rem, 5vw, 2rem);
       background:
         radial-gradient(circle at 18% 0%, rgba(139,200,255,0.13), transparent 28rem),
@@ -215,7 +215,7 @@
 
     .hero {
       padding: clamp(1.5rem, 5vw, 3rem);
-      min-height: clamp(24rem, 55vw, 35rem);
+      min-height: clamp(21rem, 48vw, 33rem);
       display: grid;
       align-content: center;
       gap: 1rem;
@@ -274,12 +274,13 @@
       text-wrap: balance;
     }
 
-    .hero h2 {
-      width: min(100%, 760px);
+    .hero h2,
+    .section-title {
+      width: min(100%, 820px);
       margin: 0;
       color: var(--gold);
-      font-size: clamp(1.8rem, 6.4vw, 4rem);
-      line-height: 0.95;
+      font-size: clamp(1.75rem, 6.2vw, 3.8rem);
+      line-height: 0.96;
       letter-spacing: -0.08em;
       text-wrap: balance;
     }
@@ -292,18 +293,36 @@
       line-height: 1.55;
     }
 
+    .status-proof {
+      padding: clamp(1rem, 3vw, 1.35rem);
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .status-proof h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(1.5rem, 4.8vw, 2.35rem);
+      line-height: 1;
+      letter-spacing: -0.055em;
+    }
+
+    .status-proof code {
+      display: block;
+      padding: 0.85rem;
+      border: 1px solid rgba(139,200,255,0.18);
+      border-radius: 1rem;
+      background: rgba(2, 7, 16, 0.58);
+      color: rgba(226,235,255,0.88);
+      font: 760 0.75rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
     .controls {
       padding: clamp(1rem, 3vw, 1.35rem);
       display: grid;
       gap: 1rem;
-    }
-
-    .section-title {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 5.6vw, 3.2rem);
-      line-height: 0.95;
-      letter-spacing: -0.075em;
     }
 
     .control-grid {
@@ -619,13 +638,15 @@
       line-height: 1.45;
     }
 
-    .russian-doll {
+    .russian-doll,
+    .frontier-panel {
       padding: clamp(1rem, 3vw, 1.25rem);
     }
 
     .label-grid {
       display: grid;
       gap: 0.7rem;
+      margin-top: 1rem;
     }
 
     .label-card {
@@ -667,27 +688,18 @@
       background: rgba(255,255,255,0.025);
     }
 
-    .frontier-panel {
-      padding: clamp(1rem, 3vw, 1.25rem);
-    }
-
-    .route-grid {
+    .route-grid,
+    .main-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.55rem;
+      margin-top: 1rem;
     }
 
     .route-link::after,
     .main-link::after {
       content: " →";
       color: var(--gold);
-    }
-
-    .main-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      margin-top: 1rem;
     }
 
     .receipt {
@@ -721,16 +733,12 @@
     }
 
     @media (max-width: 900px) {
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .nav { justify-content: flex-start; }
       .nav-diamonds { grid-template-columns: repeat(4, 1fr); }
       .control-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
-      .universal-node {
-        min-height: 34rem;
-      }
+      .universal-node { min-height: 34rem; }
 
       .node-point {
         width: clamp(4.2rem, 17vw, 5.55rem);
@@ -747,21 +755,11 @@
         height: clamp(5.5rem, 22vw, 7.1rem);
       }
 
-      .node-label strong {
-        font-size: clamp(0.38rem, 1.72vw, 0.54rem);
-      }
+      .node-label strong { font-size: clamp(0.38rem, 1.72vw, 0.54rem); }
+      .node-label span { font-size: clamp(0.31rem, 1.35vw, 0.42rem); }
 
-      .node-label span {
-        font-size: clamp(0.31rem, 1.35vw, 0.42rem);
-      }
-
-      .label-card {
-        grid-template-columns: 1fr;
-      }
-
-      .plus {
-        display: none;
-      }
+      .label-card { grid-template-columns: 1fr; }
+      .plus { display: none; }
     }
 
     @media (max-width: 520px) {
@@ -805,13 +803,21 @@
     </header>
 
     <main id="shimmer-main">
+      <section class="status-proof" aria-label="Served-route proof marker">
+        <div class="pill">Served Route Proof</div>
+        <h2>Universal Node expression is now the active Shimmer surface.</h2>
+        <code>SHIMMER_G1_V10_UNIVERSAL_NODE_SERVED_ROUTE_REWRITE_TNT_v1=ACTIVE
+SUPERSEDES=SHIMMER_LATTICE_G1_V10
+ROUTE=/explore/frontier/shimmer/
+FILE=/explore/frontier/shimmer/index.html
+VISIBLE_MARKER=UNIVERSAL_NODE_ACTIVE</code>
+      </section>
+
       <section class="hero" aria-labelledby="page-title">
         <div class="pill">Signal Category</div>
         <h1 id="page-title">Shimmer</h1>
         <h2 id="heroSubtitle">Subtle signal matters before it becomes obvious.</h2>
-        <p id="heroBody">
-          Choose a label. The Shimmer and Lattice context opens only when requested.
-        </p>
+        <p id="heroBody">Choose a label. The Shimmer and Lattice context opens only when requested.</p>
       </section>
 
       <section class="controls" aria-label="Room controls">
@@ -911,9 +917,7 @@
       <section class="expanded-panel" id="expandedSignal" aria-live="polite" aria-labelledby="expandedTitle">
         <p class="expanded-kicker" id="expandedKicker">SHIMMER · S — SCREEN</p>
         <h2 id="expandedTitle">Decide what enters at all.</h2>
-        <p id="expandedSummary">
-          Attention is a resource; distortion is a leak.
-        </p>
+        <p id="expandedSummary">Attention is a resource; distortion is a leak.</p>
         <div class="expanded-rule" id="expandedBody">
           Platform lens: screen incoming signal before it drags the room.
         </div>
@@ -946,15 +950,17 @@
         </nav>
       </section>
 
-      <details class="receipt">
+      <details class="receipt" open>
         <summary>Status label</summary>
-        <pre>SHIMMER_UNIVERSAL_NODE_EXPRESSION_INTEGRATION_TNT_v1
+        <pre>SHIMMER_G1_V10_UNIVERSAL_NODE_SERVED_ROUTE_REWRITE_TNT_v1
+STATUS=ACTIVE
+SUPERSEDES=SHIMMER_LATTICE_G1_V10
 PAGE=/explore/frontier/shimmer/index.html
 ROUTE=/explore/frontier/shimmer/
 PARENT=/explore/frontier/
 BASELINE=SHIMMER_LATTICE_G1_V10
 EXPRESSION=UNIVERSAL_NODE
-METHOD=SHIMMER_CONTENT_PRESERVED_NODE_EXPRESSION_UPGRADED
+METHOD=G1_V10_SHELL_PRESERVED_INTERIOR_REEXPRESSED
 LANGUAGES=EN,ZH,ES
 VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
 MODE=SHIMMER_OR_LATTICE_IN_PAGE_ONLY
@@ -971,7 +977,7 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Shimmer/Lattice · Universal Node Expression.
+      Diamond Gate Bridge · Frontier · Shimmer/Lattice · G1 V10 · Universal Node Active.
     </footer>
   </div>
 
@@ -1109,10 +1115,10 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
         }
       };
 
-      const stateFromUrl = new URLSearchParams(window.location.search);
-      state.lang = normalizeLang(stateFromUrl.get("gd_lang") || "en");
-      state.lens = normalizeLens(stateFromUrl.get("lane") || "platform");
-      state.mode = normalizeMode(stateFromUrl.get("mode") || "shimmer");
+      const params = new URLSearchParams(window.location.search);
+      state.lang = normalizeLang(params.get("gd_lang") || "en");
+      state.lens = normalizeLens(params.get("lane") || "platform");
+      state.mode = normalizeMode(params.get("mode") || "shimmer");
 
       const controls = Array.from(document.querySelectorAll(".control-button"));
       const nodeButtons = Array.from(document.querySelectorAll(".node-point"));
@@ -1198,31 +1204,22 @@ VISUAL_PASS_CLAIMED=FALSE</pre>
 
         labelGrid.innerHTML = "";
 
-        const overview = document.createElement("article");
-        overview.className = "label-card";
-        overview.innerHTML = `<div><strong>${state.mode.toUpperCase()} Overview</strong><span>${pack.steps.map((item) => item[1]).join(" → ")}.</span></div><div class="plus">+</div>`;
-        labelGrid.append(overview);
-
-        const concept = document.createElement("article");
-        concept.className = "label-card";
-        concept.innerHTML = `<div><strong>Concept</strong><span>${pack.concept}</span></div><div class="plus">+</div>`;
-        labelGrid.append(concept);
-
-        const build = document.createElement("article");
-        build.className = "label-card";
-        build.innerHTML = `<div><strong>Build Now</strong><span>${pack.build}</span></div><div class="plus">+</div>`;
-        labelGrid.append(build);
-
-        const roadmap = document.createElement("article");
-        roadmap.className = "label-card";
-        roadmap.innerHTML = `<div><strong>Roadmap</strong><span>${pack.roadmap}</span></div><div class="plus">+</div>`;
-        labelGrid.append(roadmap);
+        const rows = [
+          ["Overview", pack.steps.map((item) => item[1]).join(" → ") + "."],
+          ["Concept", pack.concept],
+          ["Build Now", pack.build],
+          ["Roadmap", pack.roadmap]
+        ];
 
         pack.steps.forEach((item) => {
+          const lensText = state.lens === "engineering" ? item[5] : item[4];
+          rows.push([`${item[0]} — ${item[1]}`, `${item[3]} ${lensText}`]);
+        });
+
+        rows.forEach(([title, body]) => {
           const card = document.createElement("article");
           card.className = "label-card";
-          const lensText = state.lens === "engineering" ? item[5] : item[4];
-          card.innerHTML = `<div><strong>${item[0]} — ${item[1]}</strong><span>${item[3]} ${lensText}</span></div><div class="plus">+</div>`;
+          card.innerHTML = `<div><strong>${title}</strong><span>${body}</span></div><div class="plus">+</div>`;
           labelGrid.append(card);
         });
 

@@ -1,18 +1,20 @@
 /* /assets/showroom.globe.render.js
-   SHOWROOM_GLOBE_TRUE_SPHERE_RENDER_RENEWAL_TNT_v1
+   SHOWROOM_GLOBE_ORTHOGRAPHIC_VECTOR_SPHERE_RENDER_TNT_v1
 
    ROLE:
    Render authority only.
 
    PURPOSE:
-   Stop strip/slab/flat-disk behavior.
-   Render Earth, Sun, and Moon through inverse spherical projection.
-   Keep procedural satellite-style definition without external texture dependency.
+   Stop flat texture-strip / slab behavior.
+   Draw Earth, Sun, and Moon as projected spherical bodies.
+   No texture dependency.
+   No route ownership.
+   No instrument ownership.
 
    OWNS:
-   Earth/Sun/Moon drawing only.
-   Axis-globe projection.
-   Surface definition.
+   Earth/Sun/Moon body drawing.
+   Orthographic sphere projection.
+   Visible-hemisphere surface expression.
 
    DOES_NOT_OWN:
    Route copy.
@@ -24,30 +26,101 @@
    Gauges.
 */
 
-(function bindShowroomGlobeTrueSphereRender(global) {
+(function bindShowroomGlobeOrthographicVectorSphereRender(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_TRUE_SPHERE_RENDER_RENEWAL_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_ORTHOGRAPHIC_VECTOR_SPHERE_RENDER_TNT_v1";
   const TAU = Math.PI * 2;
-  const PI = Math.PI;
   const DEG = Math.PI / 180;
   const BODY_SET = new Set(["earth", "sun", "moon"]);
 
   const earthLand = [
-    [[-168, 70], [-138, 72], [-105, 58], [-84, 50], [-70, 30], [-91, 15], [-112, 20], [-126, 32], [-151, 52]],
-    [[-81, 12], [-62, 8], [-44, -11], [-48, -34], [-66, -55], [-76, -35], [-82, -8]],
-    [[-54, 82], [-22, 74], [-36, 61], [-62, 68]],
-    [[-10, 68], [32, 71], [82, 61], [136, 55], [151, 38], [117, 18], [76, 20], [45, 6], [18, 30], [-10, 36]],
-    [[-18, 35], [16, 37], [35, 14], [31, -34], [11, -36], [-12, -6]],
-    [[112, -11], [153, -24], [145, -43], [114, -36]],
-    [[-180, -70], [-120, -76], [-60, -72], [0, -78], [60, -72], [120, -76], [180, -70], [180, -90], [-180, -90]]
+    {
+      name: "north-america",
+      fill: "rgba(70, 146, 82, 0.96)",
+      stroke: "rgba(235, 232, 178, 0.16)",
+      points: [[-168, 70], [-138, 72], [-105, 58], [-84, 50], [-70, 30], [-91, 15], [-112, 20], [-126, 32], [-151, 52]]
+    },
+    {
+      name: "south-america",
+      fill: "rgba(61, 132, 78, 0.96)",
+      stroke: "rgba(235, 232, 178, 0.15)",
+      points: [[-81, 12], [-62, 8], [-44, -11], [-48, -34], [-66, -55], [-76, -35], [-82, -8]]
+    },
+    {
+      name: "greenland",
+      fill: "rgba(226, 240, 232, 0.92)",
+      stroke: "rgba(255, 255, 255, 0.16)",
+      points: [[-54, 82], [-22, 74], [-36, 61], [-62, 68]]
+    },
+    {
+      name: "eurasia",
+      fill: "rgba(178, 139, 73, 0.96)",
+      stroke: "rgba(235, 232, 178, 0.16)",
+      points: [[-10, 68], [32, 71], [82, 61], [136, 55], [151, 38], [117, 18], [76, 20], [45, 6], [18, 30], [-10, 36]]
+    },
+    {
+      name: "africa",
+      fill: "rgba(157, 119, 64, 0.96)",
+      stroke: "rgba(235, 232, 178, 0.16)",
+      points: [[-18, 35], [16, 37], [35, 14], [31, -34], [11, -36], [-12, -6]]
+    },
+    {
+      name: "australia",
+      fill: "rgba(180, 132, 66, 0.96)",
+      stroke: "rgba(235, 232, 178, 0.14)",
+      points: [[112, -11], [153, -24], [145, -43], [114, -36]]
+    },
+    {
+      name: "antarctica",
+      fill: "rgba(238, 247, 255, 0.94)",
+      stroke: "rgba(255, 255, 255, 0.14)",
+      points: [[-180, -70], [-120, -76], [-60, -72], [0, -78], [60, -72], [120, -76], [180, -70], [180, -90], [-180, -90]]
+    }
   ];
 
-  const textureCache = {
-    earth: null,
-    sun: null,
-    moon: null
-  };
+  const moonMaria = [
+    { lon: -48, lat: 18, rx: 0.18, ry: 0.08, angle: -0.2 },
+    { lon: 5, lat: 22, rx: 0.15, ry: 0.07, angle: 0.12 },
+    { lon: 24, lat: -8, rx: 0.2, ry: 0.09, angle: 0.04 },
+    { lon: -38, lat: -24, rx: 0.16, ry: 0.075, angle: 0.2 },
+    { lon: 64, lat: -22, rx: 0.13, ry: 0.06, angle: -0.12 }
+  ];
+
+  const moonCraters = [];
+  const solarCells = [];
+  const earthCloudSeeds = [];
+
+  for (let i = 0; i < 120; i += 1) {
+    moonCraters.push({
+      lon: -175 + rand(i + 10) * 350,
+      lat: -66 + rand(i + 20) * 132,
+      size: 0.01 + Math.pow(rand(i + 30), 2.2) * 0.055,
+      alpha: 0.11 + rand(i + 40) * 0.16
+    });
+  }
+
+  for (let i = 0; i < 190; i += 1) {
+    solarCells.push({
+      lon: -180 + rand(i + 300) * 360,
+      lat: -70 + rand(i + 400) * 140,
+      size: 0.014 + rand(i + 500) * 0.035,
+      stretch: 1.6 + rand(i + 600) * 2.8,
+      angle: rand(i + 700) * TAU,
+      alpha: 0.08 + rand(i + 800) * 0.2
+    });
+  }
+
+  for (let i = 0; i < 130; i += 1) {
+    earthCloudSeeds.push({
+      lon: -180 + rand(i + 900) * 360,
+      lat: -58 + rand(i + 1000) * 116,
+      length: 0.05 + rand(i + 1100) * 0.14,
+      width: 0.008 + rand(i + 1200) * 0.02,
+      angle: rand(i + 1300) * TAU,
+      alpha: 0.12 + rand(i + 1400) * 0.22
+    });
+  }
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -63,444 +136,360 @@
     return x - Math.floor(x);
   }
 
-  function noise2(x, y, seed) {
-    const n = Math.sin(x * 12.9898 + y * 78.233 + seed * 37.719) * 43758.5453123;
-    return n - Math.floor(n);
-  }
-
-  function smoothNoise(x, y, seed) {
-    const x0 = Math.floor(x);
-    const y0 = Math.floor(y);
-    const xf = x - x0;
-    const yf = y - y0;
-
-    const a = noise2(x0, y0, seed);
-    const b = noise2(x0 + 1, y0, seed);
-    const c = noise2(x0, y0 + 1, seed);
-    const d = noise2(x0 + 1, y0 + 1, seed);
-
-    const u = xf * xf * (3 - 2 * xf);
-    const v = yf * yf * (3 - 2 * yf);
-
-    return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
-  }
-
-  function octaveNoise(x, y, seed) {
-    let total = 0;
-    let amp = 1;
-    let freq = 1;
-    let norm = 0;
-
-    for (let i = 0; i < 5; i += 1) {
-      total += smoothNoise(x * freq, y * freq, seed + i * 17) * amp;
-      norm += amp;
-      amp *= 0.5;
-      freq *= 2;
-    }
-
-    return total / norm;
-  }
-
-  function makeCanvas(width, height) {
-    const canvas = global.document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
-  }
-
-  function lonToX(lon, width) {
-    return ((lon + 180) / 360) * width;
-  }
-
-  function latToY(lat, height) {
-    return ((90 - lat) / 180) * height;
-  }
-
-  function drawLonLatPolygon(ctx, points, width, height, fill, stroke) {
-    ctx.beginPath();
-
-    points.forEach(([lon, lat], index) => {
-      const x = lonToX(lon, width);
-      const y = latToY(lat, height);
-
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-
-    if (stroke) {
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = Math.max(1, width * 0.0012);
-      ctx.stroke();
-    }
-  }
-
-  function buildEarthTexture() {
-    const width = 2048;
-    const height = 1024;
-    const canvas = makeCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    const ocean = ctx.createLinearGradient(0, 0, width, height);
-    ocean.addColorStop(0, "#051c4d");
-    ocean.addColorStop(0.28, "#0b70ab");
-    ocean.addColorStop(0.58, "#073f91");
-    ocean.addColorStop(1, "#011331");
-    ctx.fillStyle = ocean;
-    ctx.fillRect(0, 0, width, height);
-
-    for (let i = 0; i < 1500; i += 1) {
-      const x = rand(i + 10) * width;
-      const y = rand(i + 20) * height;
-      const radius = 1 + rand(i + 30) * 10;
-      const alpha = 0.025 + rand(i + 40) * 0.06;
-
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, TAU);
-      ctx.fillStyle = `rgba(130, 220, 255, ${alpha})`;
-      ctx.fill();
-    }
-
-    earthLand.forEach((poly, index) => {
-      const fill =
-        index === 2 || index === 6
-          ? "rgba(235, 247, 248, 0.95)"
-          : index === 3 || index === 4 || index === 5
-            ? "rgba(176, 137, 70, 0.96)"
-            : "rgba(54, 132, 72, 0.96)";
-
-      drawLonLatPolygon(ctx, poly, width, height, fill, "rgba(255, 255, 220, 0.18)");
-    });
-
-    ctx.globalCompositeOperation = "source-atop";
-
-    for (let i = 0; i < 1800; i += 1) {
-      const x = rand(i + 300) * width;
-      const y = rand(i + 400) * height;
-      const n = octaveNoise(x / 90, y / 90, 12);
-
-      if (n < 0.48) continue;
-
-      ctx.beginPath();
-      ctx.ellipse(x, y, 8 + n * 22, 4 + n * 9, rand(i + 500) * TAU, 0, TAU);
-      ctx.fillStyle = `rgba(34, 82, 41, ${0.08 + n * 0.13})`;
-      ctx.fill();
-    }
-
-    ctx.globalCompositeOperation = "source-over";
-
-    for (let i = 0; i < 760; i += 1) {
-      const x = rand(i + 700) * width;
-      const y = rand(i + 800) * height;
-      const n = octaveNoise(x / 110, y / 70, 55);
-
-      if (n < 0.55) continue;
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate((rand(i + 900) - 0.5) * 0.8);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 24 + n * 72, 5 + n * 14, 0, 0, TAU);
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.08 + n * 0.16})`;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    return ctx.getImageData(0, 0, width, height);
-  }
-
-  function buildSunTexture() {
-    const width = 1536;
-    const height = 768;
-    const canvas = makeCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    const base = ctx.createLinearGradient(0, 0, width, height);
-    base.addColorStop(0, "#8f2408");
-    base.addColorStop(0.24, "#e45b18");
-    base.addColorStop(0.55, "#ff9e28");
-    base.addColorStop(0.82, "#d44612");
-    base.addColorStop(1, "#5f1406");
-    ctx.fillStyle = base;
-    ctx.fillRect(0, 0, width, height);
-
-    for (let i = 0; i < 2400; i += 1) {
-      const x = rand(i + 1200) * width;
-      const y = rand(i + 1300) * height;
-      const n = octaveNoise(x / 60, y / 60, 91);
-      const radius = 3 + n * 16;
-      const alpha = 0.07 + n * 0.2;
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rand(i + 1400) * TAU);
-      ctx.scale(2.3 + rand(i + 1500) * 2.1, 0.72);
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, TAU);
-      ctx.fillStyle = n > 0.6
-        ? `rgba(255, 235, 112, ${alpha})`
-        : `rgba(255, 123, 26, ${alpha * 0.72})`;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    for (let i = 0; i < 30; i += 1) {
-      const x = rand(i + 1700) * width;
-      const y = rand(i + 1800) * height;
-      const r = 35 + rand(i + 1900) * 120;
-      const glow = ctx.createRadialGradient(x, y, 0, x, y, r);
-
-      glow.addColorStop(0, "rgba(255, 248, 180, 0.25)");
-      glow.addColorStop(0.5, "rgba(255, 169, 45, 0.11)");
-      glow.addColorStop(1, "rgba(255, 80, 18, 0)");
-
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, TAU);
-      ctx.fill();
-    }
-
-    return ctx.getImageData(0, 0, width, height);
-  }
-
-  function buildMoonTexture() {
-    const width = 2048;
-    const height = 1024;
-    const canvas = makeCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    const base = ctx.createLinearGradient(0, 0, width, height);
-    base.addColorStop(0, "#8f938f");
-    base.addColorStop(0.45, "#d3d2c8");
-    base.addColorStop(1, "#60686f");
-    ctx.fillStyle = base;
-    ctx.fillRect(0, 0, width, height);
-
-    for (let y = 0; y < height; y += 3) {
-      for (let x = 0; x < width; x += 3) {
-        const n = octaveNoise(x / 75, y / 75, 203);
-        const v = Math.floor(65 + n * 95);
-        ctx.fillStyle = `rgba(${v}, ${v}, ${v}, 0.14)`;
-        ctx.fillRect(x, y, 3, 3);
-      }
-    }
-
-    const basins = [
-      [0.24, 0.28, 0.16, 0.09],
-      [0.52, 0.32, 0.13, 0.08],
-      [0.42, 0.52, 0.18, 0.1],
-      [0.68, 0.58, 0.12, 0.07],
-      [0.22, 0.68, 0.11, 0.07]
-    ];
-
-    basins.forEach(([bx, by, rx, ry]) => {
-      ctx.save();
-      ctx.translate(bx * width, by * height);
-      ctx.scale(rx * width, ry * height);
-      ctx.beginPath();
-      ctx.arc(0, 0, 1, 0, TAU);
-      ctx.fillStyle = "rgba(58, 63, 65, 0.26)";
-      ctx.fill();
-      ctx.restore();
-    });
-
-    for (let i = 0; i < 520; i += 1) {
-      const x = rand(i + 2200) * width;
-      const y = rand(i + 2300) * height;
-      const r = 1.6 + Math.pow(rand(i + 2400), 2.1) * 28;
-
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, TAU);
-      ctx.fillStyle = "rgba(38, 40, 42, 0.12)";
-      ctx.fill();
-
-      ctx.strokeStyle = "rgba(255, 255, 245, 0.2)";
-      ctx.lineWidth = Math.max(1, r * 0.1);
-      ctx.stroke();
-
-      if (r > 12) {
-        for (let ray = 0; ray < 8; ray += 1) {
-          const angle = (ray / 8) * TAU + rand(i + ray) * 0.28;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          ctx.lineTo(
-            x + Math.cos(angle) * r * (2 + rand(i + ray + 80) * 2.6),
-            y + Math.sin(angle) * r * (2 + rand(i + ray + 90) * 2.6)
-          );
-          ctx.strokeStyle = "rgba(255, 255, 245, 0.065)";
-          ctx.lineWidth = Math.max(1, r * 0.045);
-          ctx.stroke();
-        }
-      }
-    }
-
-    return ctx.getImageData(0, 0, width, height);
-  }
-
-  function getTexture(body) {
-    body = normalizeBody(body);
-
-    if (!textureCache.earth) textureCache.earth = buildEarthTexture();
-    if (!textureCache.sun) textureCache.sun = buildSunTexture();
-    if (!textureCache.moon) textureCache.moon = buildMoonTexture();
-
-    return textureCache[body];
-  }
-
-  function sampleTexture(texture, u, v) {
-    u = ((u % 1) + 1) % 1;
-    v = clamp(v, 0, 1);
-
-    const x = Math.floor(u * (texture.width - 1));
-    const y = Math.floor(v * (texture.height - 1));
-    const index = (y * texture.width + x) * 4;
-    const data = texture.data;
-
-    return [
-      data[index],
-      data[index + 1],
-      data[index + 2],
-      data[index + 3]
-    ];
-  }
-
   function bodyTilt(body) {
     if (body === "sun") return -7.25 * DEG;
     if (body === "moon") return -6.68 * DEG;
     return -23.5 * DEG;
   }
 
-  function lightFactor(body, sx, sy, sz) {
-    if (body === "sun") {
-      return 0.78 + 0.22 * sz;
-    }
+  function project(lonDeg, latDeg, centerLon, tilt, cx, cy, radius) {
+    const lon = (lonDeg - centerLon) * DEG;
+    const lat = latDeg * DEG;
 
-    const lx = -0.45;
-    const ly = 0.34;
-    const lz = 0.84;
-    const dot = sx * lx + sy * ly + sz * lz;
+    const cosLat = Math.cos(lat);
+    const x0 = cosLat * Math.sin(lon);
+    const y0 = Math.sin(lat);
+    const z0 = cosLat * Math.cos(lon);
 
-    return clamp(0.38 + Math.max(0, dot) * 0.76, 0.28, 1.08);
+    const cosT = Math.cos(tilt);
+    const sinT = Math.sin(tilt);
+
+    const x = x0;
+    const y = y0 * cosT - z0 * sinT;
+    const z = y0 * sinT + z0 * cosT;
+
+    return {
+      x: cx + x * radius,
+      y: cy - y * radius,
+      z,
+      visible: z > 0.01,
+      scale: clamp(z, 0, 1)
+    };
   }
 
-  function drawTrueSphere(ctx, canvas, options) {
-    const body = normalizeBody(options.body);
-    const longitude = Number(options.longitude) || 0;
-    const zoom = clamp(Number(options.zoom) || 100, 70, 240);
-    const texture = getTexture(body);
+  function drawProjectedPolygon(ctx, polygon, centerLon, tilt, cx, cy, radius) {
+    const points = densifyPolygon(polygon.points, 7)
+      .map(([lon, lat]) => project(lon, lat, centerLon, tilt, cx, cy, radius));
 
-    const size = Math.min(canvas.width, canvas.height);
-    const renderSize = Math.min(size, 760);
-    const work = makeCanvas(renderSize, renderSize);
-    const workCtx = work.getContext("2d");
-    const image = workCtx.createImageData(renderSize, renderSize);
-    const data = image.data;
+    const visible = points.filter((point) => point.visible);
 
-    const cx = renderSize / 2;
-    const cy = renderSize / 2;
-    const radius = renderSize * 0.395 * (zoom / 100);
-    const radius2 = radius * radius;
-    const tilt = bodyTilt(body);
-    const cosT = Math.cos(-tilt);
-    const sinT = Math.sin(-tilt);
+    if (visible.length < 3) return;
 
-    for (let y = 0; y < renderSize; y += 1) {
-      for (let x = 0; x < renderSize; x += 1) {
-        const dx = x - cx;
-        const dy = y - cy;
-        const d2 = dx * dx + dy * dy;
-        const offset = (y * renderSize + x) * 4;
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
 
-        if (d2 > radius2) {
-          data[offset] = 0;
-          data[offset + 1] = 0;
-          data[offset + 2] = 0;
-          data[offset + 3] = 0;
-          continue;
-        }
+    ctx.beginPath();
+    visible.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
 
-        const sx = dx / radius;
-        const sy = -dy / radius;
-        const sz = Math.sqrt(Math.max(0, 1 - sx * sx - sy * sy));
+    ctx.closePath();
+    ctx.fillStyle = polygon.fill;
+    ctx.fill();
 
-        const tx = sx * cosT - sy * sinT;
-        const ty = sx * sinT + sy * cosT;
-        const tz = sz;
+    ctx.strokeStyle = polygon.stroke;
+    ctx.lineWidth = Math.max(1, radius * 0.004);
+    ctx.stroke();
 
-        let lon = Math.atan2(tx, tz) / TAU + 0.5 + longitude;
-        lon = ((lon % 1) + 1) % 1;
+    ctx.restore();
+  }
 
-        const lat = Math.asin(clamp(ty, -1, 1));
-        const v = 0.5 - lat / PI;
+  function densifyPolygon(points, stepDeg) {
+    const out = [];
 
-        const color = sampleTexture(texture, lon, v);
-        const light = lightFactor(body, sx, sy, sz);
-        const limb = clamp(sz * 1.18, 0, 1);
-        const alphaEdge = clamp((radius - Math.sqrt(d2)) / 2.5, 0, 1);
+    for (let i = 0; i < points.length; i += 1) {
+      const current = points[i];
+      const next = points[(i + 1) % points.length];
 
-        let r = color[0] * light;
-        let g = color[1] * light;
-        let b = color[2] * light;
+      const lon1 = current[0];
+      const lat1 = current[1];
+      const lon2 = next[0];
+      const lat2 = next[1];
 
-        if (body === "earth") {
-          r *= 0.94 + limb * 0.08;
-          g *= 0.96 + limb * 0.08;
-          b *= 1.02 + limb * 0.1;
-        }
+      out.push(current);
 
-        if (body === "sun") {
-          r *= 1.08;
-          g *= 1.03;
-          b *= 0.86;
-        }
+      const distance = Math.max(Math.abs(lon2 - lon1), Math.abs(lat2 - lat1));
+      const steps = Math.max(1, Math.floor(distance / stepDeg));
 
-        if (body === "moon") {
-          const gray = (r + g + b) / 3;
-          r = gray * 1.03;
-          g = gray * 1.03;
-          b = gray;
-        }
-
-        data[offset] = clamp(Math.round(r), 0, 255);
-        data[offset + 1] = clamp(Math.round(g), 0, 255);
-        data[offset + 2] = clamp(Math.round(b), 0, 255);
-        data[offset + 3] = Math.round(255 * alphaEdge);
+      for (let s = 1; s < steps; s += 1) {
+        const t = s / steps;
+        out.push([
+          lon1 + (lon2 - lon1) * t,
+          lat1 + (lat2 - lat1) * t
+        ]);
       }
     }
 
-    workCtx.putImageData(image, 0, 0);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(
-      work,
-      (canvas.width - renderSize) / 2,
-      (canvas.height - renderSize) / 2,
-      renderSize,
-      renderSize
-    );
-    ctx.restore();
-
-    drawBodyOptics(ctx, canvas.width / 2, canvas.height / 2, radius * (canvas.width / renderSize), body);
+    return out;
   }
 
-  function drawBodyOptics(ctx, cx, cy, radius, body) {
-    ctx.save();
-
+  function clipSphere(ctx, cx, cy, radius) {
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.closePath();
     ctx.clip();
+  }
+
+  function drawEarth(ctx, cx, cy, radius, centerLon) {
+    const tilt = bodyTilt("earth");
+
+    const ocean = ctx.createRadialGradient(cx - radius * 0.35, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+    ocean.addColorStop(0, "#76e7ff");
+    ocean.addColorStop(0.2, "#148dcc");
+    ocean.addColorStop(0.58, "#064d9f");
+    ocean.addColorStop(1, "#011735");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.fillStyle = ocean;
+    ctx.fill();
+    ctx.restore();
+
+    earthLand.forEach((polygon) => drawProjectedPolygon(ctx, polygon, centerLon, tilt, cx, cy, radius));
+
+    drawEarthTextureDots(ctx, centerLon, tilt, cx, cy, radius);
+    drawCloudBands(ctx, centerLon, tilt, cx, cy, radius);
+    drawCloudSeeds(ctx, centerLon, tilt, cx, cy, radius);
+    drawOptics(ctx, cx, cy, radius, "earth");
+  }
+
+  function drawEarthTextureDots(ctx, centerLon, tilt, cx, cy, radius) {
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    for (let i = 0; i < 220; i += 1) {
+      const lon = -180 + rand(i + 2000) * 360;
+      const lat = -58 + rand(i + 2100) * 116;
+      const p = project(lon, lat, centerLon, tilt, cx, cy, radius);
+
+      if (!p.visible) continue;
+
+      const size = radius * (0.006 + rand(i + 2200) * 0.016) * p.scale;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, TAU);
+      ctx.fillStyle = `rgba(95, 190, 116, ${0.05 + rand(i + 2300) * 0.08})`;
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawCloudBands(ctx, centerLon, tilt, cx, cy, radius) {
+    const bands = [
+      { lat: 27, alpha: 0.18, width: 0.018, phase: 0 },
+      { lat: 5, alpha: 0.2, width: 0.015, phase: 1.8 },
+      { lat: -32, alpha: 0.17, width: 0.017, phase: 3.1 }
+    ];
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    bands.forEach((band) => {
+      ctx.beginPath();
+
+      let active = false;
+
+      for (let lon = -180; lon <= 180; lon += 6) {
+        const lat = band.lat + Math.sin((lon * 0.045) + band.phase) * 5 + Math.sin((lon * 0.11) + band.phase) * 2;
+        const p = project(lon, lat, centerLon, tilt, cx, cy, radius);
+
+        if (!p.visible) {
+          active = false;
+          continue;
+        }
+
+        if (!active) {
+          ctx.moveTo(p.x, p.y);
+          active = true;
+        } else {
+          ctx.lineTo(p.x, p.y);
+        }
+      }
+
+      ctx.strokeStyle = `rgba(255, 255, 255, ${band.alpha})`;
+      ctx.lineWidth = Math.max(1.5, radius * band.width);
+      ctx.lineCap = "round";
+      ctx.stroke();
+    });
+
+    ctx.restore();
+  }
+
+  function drawCloudSeeds(ctx, centerLon, tilt, cx, cy, radius) {
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    earthCloudSeeds.forEach((cloud) => {
+      const p = project(cloud.lon, cloud.lat, centerLon, tilt, cx, cy, radius);
+
+      if (!p.visible) return;
+
+      const w = radius * cloud.length * p.scale;
+      const h = radius * cloud.width * p.scale;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(cloud.angle);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, w, h, 0, 0, TAU);
+      ctx.fillStyle = `rgba(255, 255, 255, ${cloud.alpha * p.scale})`;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    ctx.restore();
+  }
+
+  function drawSun(ctx, cx, cy, radius, centerLon) {
+    const tilt = bodyTilt("sun");
+
+    const base = ctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+    base.addColorStop(0, "#fff3a2");
+    base.addColorStop(0.18, "#ffc145");
+    base.addColorStop(0.48, "#ff8420");
+    base.addColorStop(0.76, "#cf4314");
+    base.addColorStop(1, "#651706");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.fillStyle = base;
+    ctx.shadowColor = "rgba(255, 139, 35, 0.45)";
+    ctx.shadowBlur = radius * 0.12;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    solarCells.forEach((cell) => {
+      const p = project(cell.lon, cell.lat, centerLon, tilt, cx, cy, radius);
+
+      if (!p.visible) return;
+
+      const size = radius * cell.size * p.scale;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(cell.angle + centerLon * DEG);
+      ctx.scale(cell.stretch, 0.72);
+      ctx.beginPath();
+      ctx.arc(0, 0, size, 0, TAU);
+      ctx.fillStyle = `rgba(255, 226, 102, ${cell.alpha * p.scale})`;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    for (let i = 0; i < 9; i += 1) {
+      ctx.beginPath();
+
+      let active = false;
+      const lat = -55 + i * 14;
+
+      for (let lon = -180; lon <= 180; lon += 5) {
+        const waveLat = lat + Math.sin((lon * 0.05) + i) * 4;
+        const p = project(lon, waveLat, centerLon, tilt, cx, cy, radius);
+
+        if (!p.visible) {
+          active = false;
+          continue;
+        }
+
+        if (!active) {
+          ctx.moveTo(p.x, p.y);
+          active = true;
+        } else {
+          ctx.lineTo(p.x, p.y);
+        }
+      }
+
+      ctx.strokeStyle = "rgba(255, 238, 126, 0.12)";
+      ctx.lineWidth = Math.max(1.2, radius * 0.012);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    drawOptics(ctx, cx, cy, radius, "sun");
+  }
+
+  function drawMoon(ctx, cx, cy, radius, centerLon) {
+    const tilt = bodyTilt("moon");
+
+    const base = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
+    base.addColorStop(0, "#f5f4df");
+    base.addColorStop(0.34, "#cfd0c7");
+    base.addColorStop(0.7, "#939a9b");
+    base.addColorStop(1, "#4f5862");
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.fillStyle = base;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
+
+    moonMaria.forEach((basin) => {
+      const p = project(basin.lon, basin.lat, centerLon, tilt, cx, cy, radius);
+
+      if (!p.visible) return;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(basin.angle);
+      ctx.scale(1, Math.max(0.25, p.scale));
+      ctx.beginPath();
+      ctx.ellipse(0, 0, radius * basin.rx * p.scale, radius * basin.ry * p.scale, 0, 0, TAU);
+      ctx.fillStyle = `rgba(59, 64, 66, ${0.22 * p.scale})`;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    moonCraters.forEach((crater) => {
+      const p = project(crater.lon, crater.lat, centerLon, tilt, cx, cy, radius);
+
+      if (!p.visible) return;
+
+      const size = radius * crater.size * p.scale;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.scale(1, Math.max(0.28, p.scale));
+      ctx.beginPath();
+      ctx.arc(0, 0, size, 0, TAU);
+      ctx.fillStyle = `rgba(45, 49, 52, ${crater.alpha * p.scale})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(255, 255, 245, ${0.18 * p.scale})`;
+      ctx.lineWidth = Math.max(1, size * 0.13);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(-size * 0.22, -size * 0.22, size * 0.42, 0, TAU);
+      ctx.fillStyle = `rgba(255, 255, 245, ${0.1 * p.scale})`;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    ctx.restore();
+
+    drawOptics(ctx, cx, cy, radius, "moon");
+  }
+
+  function drawOptics(ctx, cx, cy, radius, body) {
+    ctx.save();
+    clipSphere(ctx, cx, cy, radius);
 
     const highlight = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.36, radius * 0.04, cx, cy, radius);
 
     if (body === "sun") {
-      highlight.addColorStop(0, "rgba(255,255,225,0.34)");
-      highlight.addColorStop(0.24, "rgba(255,238,120,0.12)");
+      highlight.addColorStop(0, "rgba(255,255,225,0.35)");
+      highlight.addColorStop(0.24, "rgba(255,238,120,0.13)");
       highlight.addColorStop(1, "rgba(255,255,255,0)");
     } else {
       highlight.addColorStop(0, "rgba(255,255,255,0.24)");
@@ -511,9 +500,9 @@
     ctx.fillStyle = highlight;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    const terminator = ctx.createLinearGradient(cx - radius * 0.55, cy - radius, cx + radius, cy + radius);
+    const terminator = ctx.createLinearGradient(cx - radius * 0.52, cy - radius, cx + radius, cy + radius);
     terminator.addColorStop(0, "rgba(255,255,255,0)");
-    terminator.addColorStop(0.56, "rgba(0,0,0,0)");
+    terminator.addColorStop(0.55, "rgba(0,0,0,0)");
     terminator.addColorStop(1, body === "sun" ? "rgba(80,12,0,0.14)" : "rgba(0,0,0,0.44)");
 
     ctx.fillStyle = terminator;
@@ -534,7 +523,7 @@
     }
 
     if (body === "sun") {
-      const corona = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.2);
+      const corona = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.2);
       corona.addColorStop(0, "rgba(255,197,63,0.17)");
       corona.addColorStop(0.58, "rgba(255,114,26,0.12)");
       corona.addColorStop(1, "rgba(255,114,26,0)");
@@ -594,18 +583,27 @@
       const body = normalizeBody(options && options.body);
       const longitude = Number(options && options.longitude) || 0;
       const zoom = clamp(Number(options && options.zoom) || 100, 70, 240);
+      const size = Math.min(canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = size * 0.395 * (zoom / 100);
+      const centerLon = longitude * 360;
 
-      drawTrueSphere(ctx, canvas, {
-        body,
-        longitude,
-        zoom
-      });
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (body === "sun") {
+        drawSun(ctx, cx, cy, radius, centerLon);
+      } else if (body === "moon") {
+        drawMoon(ctx, cx, cy, radius, centerLon);
+      } else {
+        drawEarth(ctx, cx, cy, radius, centerLon);
+      }
 
       return {
         ok: true,
         version: VERSION,
         body,
-        projection: "true-inverse-spherical",
+        projection: "orthographic-vector-sphere",
         textureRequired: false,
         rendererOwns: "body-drawing-only"
       };
@@ -623,7 +621,7 @@
           ok: true,
           version: VERSION,
           role: "render-authority",
-          projection: "true-inverse-spherical",
+          projection: "orthographic-vector-sphere",
           ownsBodyDrawing: true,
           ownsRoute: false,
           ownsControls: false,
@@ -648,7 +646,7 @@
         ok: true,
         version: VERSION,
         role: "render-file",
-        projection: "true-inverse-spherical",
+        projection: "orthographic-vector-sphere",
         ownsBodyDrawing: true,
         ownsRoute: false,
         ownsControls: false,

@@ -2,12 +2,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="door-public-parity-threshold-gate"
+  data-page="door-16-point-diamond-field"
   data-route="/door/"
-  data-contract="DOOR_PUBLIC_PARITY_THRESHOLD_GATE_TNT_v1"
+  data-contract="DOOR_16_POINT_DIAMOND_FIELD_TNT_v1"
   data-role="entry-threshold"
   data-message="one-message-many-rooms"
-  data-spine-system="threshold-four-diamond-gate"
+  data-field-system="16-point-diamond-threshold"
+  data-animation="two-interlocking-figure-eights"
+  data-traversal="bilateral-quadrupedic-16-diamond"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-streaming="false"
@@ -19,7 +21,7 @@
   <title>Diamond Gate Bridge · Door</title>
   <meta
     name="description"
-    content="The Door is the Diamond Gate Bridge entry threshold: one message, many rooms, clear admission into Home, Manor, Showroom, and Gauges."
+    content="The Door is the Diamond Gate Bridge threshold: one message, many rooms, expressed as a compact 16-point diamond field."
   >
 
   <style>
@@ -30,6 +32,8 @@
       --muted: rgba(242,246,255,0.74);
       --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
+      --blue: #78d8ff;
+      --green: #a5efcc;
       --stage: min(100%, 1180px);
     }
 
@@ -151,7 +155,7 @@
     .hero {
       display: grid;
       gap: 1rem;
-      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
+      padding: clamp(1.35rem, 5vw, 2.8rem) 0 clamp(0.75rem, 2.5vw, 1.2rem);
       text-align: center;
     }
 
@@ -224,12 +228,12 @@
     }
 
     .door-stage {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
+      width: min(100%, 1060px);
+      margin: clamp(0.85rem, 2.5vw, 1.25rem) auto 0;
       position: relative;
-      padding: clamp(1rem, 4vw, 1.6rem);
+      padding: clamp(0.8rem, 3vw, 1.25rem);
       border: 1px solid rgba(242,199,111,0.24);
-      border-radius: clamp(1.35rem, 5vw, 2.2rem);
+      border-radius: clamp(1.25rem, 5vw, 2rem);
       background:
         radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
         radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
@@ -246,8 +250,8 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 5%;
-      bottom: 5%;
+      top: 4%;
+      bottom: 4%;
       width: 1px;
       transform: translateX(-50%);
       background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
@@ -258,8 +262,8 @@
     .door-stage::after {
       content: "";
       position: absolute;
-      left: 7%;
-      right: 7%;
+      left: 6%;
+      right: 6%;
       top: 50%;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
@@ -269,87 +273,90 @@
 
     .stage-title {
       display: grid;
-      gap: 0.32rem;
+      gap: 0.3rem;
       text-align: center;
-      margin-bottom: clamp(0.85rem, 3vw, 1.25rem);
+      margin-bottom: 0.35rem;
     }
 
     .stage-title h2 {
       margin: 0;
-      font-size: clamp(1.45rem, 4.8vw, 2.25rem);
+      font-size: clamp(1.35rem, 4.4vw, 2rem);
       line-height: 1;
-      letter-spacing: -0.045em;
+      letter-spacing: -0.04em;
     }
 
     .stage-title p {
       width: min(100%, 720px);
       margin: 0 auto;
       color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.48;
+      font-size: 0.92rem;
+      line-height: 1.45;
       text-wrap: balance;
     }
 
-    .diamond-compass {
-      --diamond-size: clamp(7.2rem, 18vw, 13rem);
-      --center-size: clamp(5.8rem, 14vw, 9.2rem);
+    .threshold-field {
+      --node-support: clamp(3.65rem, 7.8vw, 5.4rem);
+      --node-secondary: clamp(4.15rem, 8.7vw, 6.15rem);
+      --node-primary: clamp(4.65rem, 9.6vw, 7.15rem);
+      --center-size: clamp(5rem, 10.8vw, 7.8rem);
       position: relative;
-      width: min(100%, 820px);
-      min-height: clamp(28rem, 70vw, 43rem);
+      width: min(100%, 900px);
+      min-height: clamp(34rem, 68vw, 44rem);
       margin: 0 auto;
-      display: grid;
-      place-items: center;
       isolation: isolate;
     }
 
-    .compass-orbit,
-    .compass-orbit::before,
-    .compass-orbit::after {
+    .field-orbit,
+    .field-orbit::before,
+    .field-orbit::after {
       position: absolute;
       border: 1px solid rgba(255,255,255,0.11);
       border-radius: 50%;
       pointer-events: none;
     }
 
-    .compass-orbit {
-      width: min(90%, 44rem);
-      height: min(52vw, 21rem);
-      transform: rotate(-12deg);
+    .field-orbit {
+      left: 8%;
+      right: 8%;
+      top: 21%;
+      height: 58%;
+      transform: rotate(-14deg);
       opacity: 0.8;
     }
 
-    .compass-orbit::before {
+    .field-orbit::before {
       content: "";
-      inset: -22% -8%;
-      transform: rotate(32deg);
+      inset: -20% -5%;
+      transform: rotate(38deg);
       opacity: 0.62;
     }
 
-    .compass-orbit::after {
+    .field-orbit::after {
       content: "";
-      inset: 18% 13%;
-      transform: rotate(-34deg);
+      inset: 20% 15%;
+      transform: rotate(-38deg);
       opacity: 0.52;
     }
 
     .axis-letter {
       position: absolute;
       color: rgba(255,241,205,0.90);
-      font-size: clamp(1rem, 3vw, 1.35rem);
+      font-size: clamp(0.92rem, 2.7vw, 1.25rem);
       font-weight: 950;
       line-height: 1;
       text-shadow: 0 0 1rem rgba(242,199,111,0.18);
       pointer-events: none;
       user-select: none;
+      z-index: 3;
     }
 
-    .axis-letter.n { top: 4%; left: 50%; transform: translateX(-50%); }
-    .axis-letter.e { right: 5%; top: 50%; transform: translateY(-50%); }
-    .axis-letter.s { bottom: 4%; left: 50%; transform: translateX(-50%); }
-    .axis-letter.w { left: 5%; top: 50%; transform: translateY(-50%); }
+    .axis-letter.n { top: 1.5%; left: 50%; transform: translateX(-50%); }
+    .axis-letter.e { right: 1.5%; top: 50%; transform: translateY(-50%); }
+    .axis-letter.s { bottom: 1.5%; left: 50%; transform: translateX(-50%); }
+    .axis-letter.w { left: 1.5%; top: 50%; transform: translateY(-50%); }
 
     .center-diamond,
-    .threshold-diamond {
+    .route-diamond {
       position: absolute;
       display: grid;
       place-items: center;
@@ -358,96 +365,93 @@
     }
 
     .center-diamond {
+      left: 50%;
+      top: 50%;
       width: var(--center-size);
       height: var(--center-size);
+      transform: translate(-50%, -50%);
       z-index: 5;
       pointer-events: none;
       user-select: none;
     }
 
-    .threshold-diamond {
-      width: var(--diamond-size);
-      height: var(--diamond-size);
-      z-index: 7;
+    .route-diamond {
+      --dx: 0px;
+      --dy: 0px;
+      --lift: 1;
+      --node-size: var(--node-support);
+      left: calc(var(--x) * 1%);
+      top: calc(var(--y) * 1%);
+      width: var(--node-size);
+      height: var(--node-size);
+      z-index: 8;
+      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
-      transition: transform 180ms ease, filter 180ms ease;
+      transition: filter 160ms ease, transform 160ms ease;
+      will-change: transform;
     }
 
-    .threshold-diamond.north {
-      top: 7%;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    .route-diamond.primary { --node-size: var(--node-primary); z-index: 10; }
+    .route-diamond.secondary { --node-size: var(--node-secondary); z-index: 9; }
+    .route-diamond.support { --node-size: var(--node-support); z-index: 8; }
 
-    .threshold-diamond.east {
-      right: 5%;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .threshold-diamond.south {
-      bottom: 7%;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .threshold-diamond.west {
-      left: 5%;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .threshold-diamond.north:hover,
-    .threshold-diamond.north:focus-visible {
-      transform: translateX(-50%) translateY(-4px) scale(1.03);
-    }
-
-    .threshold-diamond.east:hover,
-    .threshold-diamond.east:focus-visible {
-      transform: translateY(-50%) translateX(4px) scale(1.03);
-    }
-
-    .threshold-diamond.south:hover,
-    .threshold-diamond.south:focus-visible {
-      transform: translateX(-50%) translateY(4px) scale(1.03);
-    }
-
-    .threshold-diamond.west:hover,
-    .threshold-diamond.west:focus-visible {
-      transform: translateY(-50%) translateX(-4px) scale(1.03);
+    .route-diamond:hover,
+    .route-diamond:focus-visible {
+      --lift: 1.065;
+      filter: brightness(1.13) saturate(1.08);
     }
 
     .diamond-shell {
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
-      border: 2px solid rgba(242,199,111,0.78);
-      border-radius: 1.15rem;
+      border: 2px solid rgba(242,199,111,0.76);
+      border-radius: 0.95rem;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.18), transparent 24%),
-        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.28), transparent 32%),
-        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.26), transparent 38%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.26), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.24), transparent 38%),
         linear-gradient(145deg, rgba(48,74,141,0.76), rgba(128,72,142,0.64) 58%, rgba(242,199,111,0.18));
       box-shadow:
-        0 1.4rem 3.5rem rgba(0,0,0,0.30),
-        inset 0 0 0 1px rgba(255,255,255,0.16),
-        inset 0 0 2rem rgba(255,255,255,0.07);
+        0 1.1rem 2.8rem rgba(0,0,0,0.30),
+        inset 0 0 0 1px rgba(255,255,255,0.15),
+        inset 0 0 1.6rem rgba(255,255,255,0.06);
       overflow: hidden;
+    }
+
+    .route-diamond.primary .diamond-shell {
+      border-color: rgba(255,224,141,0.88);
+      box-shadow:
+        0 1.3rem 3.1rem rgba(0,0,0,0.33),
+        0 0 2.2rem rgba(242,199,111,0.10),
+        inset 0 0 0 1px rgba(255,255,255,0.17);
+    }
+
+    .route-diamond.secondary .diamond-shell {
+      border-color: rgba(120,216,255,0.58);
+    }
+
+    .route-diamond.support .diamond-shell {
+      border-color: rgba(255,255,255,0.26);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.11), transparent 28%),
+        radial-gradient(circle at 64% 36%, rgba(242,199,111,0.15), transparent 34%),
+        linear-gradient(145deg, rgba(37,52,90,0.74), rgba(56,43,91,0.58));
     }
 
     .diamond-shell::before,
     .diamond-shell::after {
       content: "";
       position: absolute;
-      inset: 14%;
-      border: 1px solid rgba(255,241,205,0.34);
-      border-radius: 0.65rem;
+      inset: 15%;
+      border: 1px solid rgba(255,241,205,0.30);
+      border-radius: 0.55rem;
       pointer-events: none;
     }
 
     .diamond-shell::after {
-      inset: 27%;
-      opacity: 0.55;
+      inset: 29%;
+      opacity: 0.50;
     }
 
     .diamond-lines {
@@ -456,7 +460,7 @@
       transform: rotate(45deg);
       pointer-events: none;
       overflow: hidden;
-      border-radius: 1.15rem;
+      border-radius: 0.95rem;
     }
 
     .diamond-lines::before {
@@ -464,19 +468,19 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.36) 50%, transparent 50.5%),
-        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.28) 50%, transparent 50.5%),
-        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%),
-        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.20) 50%, transparent 50.5%);
-      opacity: 0.8;
+        linear-gradient(90deg, transparent 49.5%, rgba(255,241,205,0.30) 50%, transparent 50.5%),
+        linear-gradient(0deg, transparent 49.5%, rgba(255,241,205,0.24) 50%, transparent 50.5%),
+        linear-gradient(45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%),
+        linear-gradient(-45deg, transparent 49.5%, rgba(255,241,205,0.16) 50%, transparent 50.5%);
+      opacity: 0.76;
     }
 
     .diamond-content {
       position: relative;
       z-index: 2;
-      width: 78%;
+      width: 76%;
       display: grid;
-      gap: 0.22rem;
+      gap: 0.16rem;
       place-items: center;
       text-align: center;
       pointer-events: none;
@@ -485,25 +489,33 @@
 
     .diamond-content strong {
       color: rgba(255,241,205,0.98);
-      font-size: clamp(0.76rem, 2.1vw, 1.05rem);
-      line-height: 1.02;
+      font-size: clamp(0.56rem, 1.45vw, 0.86rem);
+      line-height: 0.98;
       font-weight: 950;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.075em;
       text-transform: uppercase;
       text-shadow: 0 2px 0 rgba(0,0,0,0.18);
     }
 
     .diamond-content span {
-      color: rgba(242,246,255,0.78);
-      font-size: clamp(0.58rem, 1.7vw, 0.72rem);
-      line-height: 1.22;
+      color: rgba(242,246,255,0.76);
+      font-size: clamp(0.46rem, 1.18vw, 0.64rem);
+      line-height: 1.08;
       font-weight: 850;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.035em;
       text-transform: uppercase;
     }
 
+    .route-diamond.support .diamond-content strong {
+      font-size: clamp(0.49rem, 1.24vw, 0.68rem);
+    }
+
+    .route-diamond.support .diamond-content span {
+      font-size: clamp(0.40rem, 1.05vw, 0.54rem);
+    }
+
     .center-diamond .diamond-shell {
-      border-color: rgba(255,241,205,0.65);
+      border-color: rgba(255,241,205,0.62);
       background:
         radial-gradient(circle at 50% 50%, rgba(255,241,205,0.22), transparent 44%),
         radial-gradient(circle at 70% 28%, rgba(242,199,111,0.20), transparent 32%),
@@ -514,11 +526,11 @@
     }
 
     .center-diamond .diamond-content strong {
-      font-size: clamp(0.64rem, 1.8vw, 0.84rem);
+      font-size: clamp(0.62rem, 1.6vw, 0.82rem);
     }
 
     .center-diamond .diamond-content span {
-      font-size: clamp(0.52rem, 1.4vw, 0.64rem);
+      font-size: clamp(0.48rem, 1.2vw, 0.62rem);
     }
 
     .route-panel {
@@ -577,7 +589,7 @@
     }
 
     .scope-tile {
-      min-height: 6.6rem;
+      min-height: 6.1rem;
       display: grid;
       align-content: center;
       justify-items: center;
@@ -640,42 +652,33 @@
       text-align: center;
     }
 
-    @media (max-width: 980px) {
-      .diamond-compass {
-        --diamond-size: clamp(6.8rem, 28vw, 10rem);
-        --center-size: clamp(5rem, 20vw, 7.2rem);
-        min-height: clamp(28rem, 95vw, 36rem);
-      }
-
-      .threshold-diamond.east { right: 2%; }
-      .threshold-diamond.west { left: 2%; }
-
-      .scope-strip {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
     @media (max-width: 760px) {
-      .diamond-compass {
-        --diamond-size: clamp(6.3rem, 35vw, 8.2rem);
-        --center-size: clamp(4.6rem, 23vw, 6rem);
-        min-height: 31rem;
+      .threshold-field {
+        --node-support: clamp(3rem, 16vw, 4.2rem);
+        --node-secondary: clamp(3.35rem, 17vw, 4.55rem);
+        --node-primary: clamp(3.65rem, 18vw, 4.95rem);
+        --center-size: clamp(4.35rem, 21vw, 5.7rem);
+        min-height: 36rem;
       }
-
-      .threshold-diamond.north { top: 1.5%; }
-      .threshold-diamond.south { bottom: 1.5%; }
-      .threshold-diamond.east { right: 0; }
-      .threshold-diamond.west { left: 0; }
-
-      .axis-letter.e { right: 0.4rem; }
-      .axis-letter.w { left: 0.4rem; }
 
       .diamond-content strong {
-        font-size: 0.68rem;
+        font-size: clamp(0.43rem, 2vw, 0.58rem);
       }
 
       .diamond-content span {
-        font-size: 0.52rem;
+        font-size: clamp(0.35rem, 1.65vw, 0.48rem);
+      }
+
+      .route-diamond.support .diamond-content strong {
+        font-size: clamp(0.38rem, 1.85vw, 0.50rem);
+      }
+
+      .route-diamond.support .diamond-content span {
+        font-size: clamp(0.32rem, 1.48vw, 0.42rem);
+      }
+
+      .scope-strip {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -688,9 +691,19 @@
       .nav { justify-content: flex-start; }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 540px) {
+      .threshold-field {
+        min-height: 34.5rem;
+      }
+
       .scope-strip {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .route-diamond {
+        transition: none;
       }
     }
   </style>
@@ -739,18 +752,18 @@
 
       <section class="door-stage" aria-labelledby="door-title">
         <div class="stage-title">
-          <h2 id="door-title">The Door admits the visitor.</h2>
-          <p>The Door does not explain the whole estate. It opens the correct first rooms after the Compass.</p>
+          <h2 id="door-title">Sixteen points. One threshold.</h2>
+          <p>The Door admits the visitor into the estate without making every room do the same job.</p>
         </div>
 
-        <div class="diamond-compass" aria-label="Door threshold diamond gate">
-          <div class="compass-orbit" aria-hidden="true"></div>
+        <div class="threshold-field" aria-label="16-point diamond threshold field">
+          <div class="field-orbit" aria-hidden="true"></div>
           <span class="axis-letter n" aria-hidden="true">N</span>
           <span class="axis-letter e" aria-hidden="true">E</span>
           <span class="axis-letter s" aria-hidden="true">S</span>
           <span class="axis-letter w" aria-hidden="true">W</span>
 
-          <div class="center-diamond" aria-label="Door center marker">
+          <div class="center-diamond" aria-label="Door threshold center marker">
             <div class="diamond-shell" aria-hidden="true"></div>
             <div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content">
@@ -759,40 +772,84 @@
             </div>
           </div>
 
-          <a class="threshold-diamond north" href="/home/" aria-label="Enter Home">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content">
-              <strong>Home</strong>
-              <span>Receive</span>
-            </div>
+          <a class="route-diamond support" href="/nine-summits-of-love/" style="--x:14;--y:15;" data-loop="a" data-phase="0.00" aria-label="Open Book">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Book</strong><span>Climb</span></div>
           </a>
 
-          <a class="threshold-diamond east" href="/explore/" aria-label="Open Manor">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content">
-              <strong>Manor</strong>
-              <span>Rooms</span>
-            </div>
+          <a class="route-diamond primary" href="/home/" style="--x:38;--y:12;" data-loop="b" data-phase="0.39" aria-label="Enter Home">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Home</strong><span>Receive</span></div>
           </a>
 
-          <a class="threshold-diamond south" href="/showroom/" aria-label="Open Showroom">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content">
-              <strong>Showroom</strong>
-              <span>Atrium</span>
-            </div>
+          <a class="route-diamond secondary" href="/nine-summits/" style="--x:62;--y:12;" data-loop="a" data-phase="0.78" aria-label="Open Nine Summits">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Nine Summits</strong><span>Gate</span></div>
           </a>
 
-          <a class="threshold-diamond west" href="/gauges/" aria-label="Read Gauges">
-            <div class="diamond-shell" aria-hidden="true"></div>
-            <div class="diamond-lines" aria-hidden="true"></div>
-            <div class="diamond-content">
-              <strong>Gauges</strong>
-              <span>Proof</span>
-            </div>
+          <a class="route-diamond support" href="/nine-summits/universe/" style="--x:86;--y:15;" data-loop="b" data-phase="1.17" aria-label="Open Universe">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Universe</strong><span>World</span></div>
+          </a>
+
+          <a class="route-diamond secondary" href="/" style="--x:14;--y:38;" data-loop="b" data-phase="1.57" aria-label="Return to Compass">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Compass</strong><span>Root</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/laws/" style="--x:38;--y:38;" data-loop="a" data-phase="1.96" aria-label="Open Laws">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Laws</strong><span>Boundary</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/door/" style="--x:62;--y:38;" data-loop="b" data-phase="2.35" aria-label="Return to Entry">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Entry</strong><span>Cross</span></div>
+          </a>
+
+          <a class="route-diamond primary" href="/explore/" style="--x:86;--y:38;" data-loop="a" data-phase="2.74" aria-label="Open Manor">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Manor</strong><span>Rooms</span></div>
+          </a>
+
+          <a class="route-diamond primary" href="/gauges/" style="--x:14;--y:62;" data-loop="a" data-phase="3.14" aria-label="Read Gauges">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Gauges</strong><span>Proof</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/gauges/" style="--x:38;--y:62;" data-loop="b" data-phase="3.53" aria-label="Open Proof">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Proof</strong><span>Measure</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/" style="--x:62;--y:62;" data-loop="a" data-phase="3.92" aria-label="Return to Compass">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Return</strong><span>Root</span></div>
+          </a>
+
+          <a class="route-diamond secondary" href="/products/" style="--x:86;--y:62;" data-loop="b" data-phase="4.31" aria-label="Open Products">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Products</strong><span>Use</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/showroom/globe/" style="--x:14;--y:85;" data-loop="b" data-phase="4.71" aria-label="Open Audralia">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Audralia</strong><span>World</span></div>
+          </a>
+
+          <a class="route-diamond secondary" href="/frontier/" style="--x:38;--y:88;" data-loop="a" data-phase="5.10" aria-label="Open Frontier">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Frontier</strong><span>Edge</span></div>
+          </a>
+
+          <a class="route-diamond primary" href="/showroom/" style="--x:62;--y:88;" data-loop="b" data-phase="5.49" aria-label="Open Showroom">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Showroom</strong><span>Atrium</span></div>
+          </a>
+
+          <a class="route-diamond support" href="/showroom/" style="--x:86;--y:85;" data-loop="a" data-phase="5.88" aria-label="Open Built Assets">
+            <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
+            <div class="diamond-content"><strong>Built Assets</strong><span>Cases</span></div>
           </a>
         </div>
       </section>
@@ -802,11 +859,11 @@
 
         <nav class="route-grid" aria-label="Door room routes">
           <a class="route-link" href="/">Compass</a>
+          <a class="route-link" href="/home/">Home</a>
+          <a class="route-link" href="/explore/">Manor</a>
           <a class="route-link" href="/nine-summits/">Nine Summits</a>
-          <a class="route-link" href="/nine-summits-of-love/">Book</a>
-          <a class="route-link" href="/nine-summits/universe/">Universe</a>
-          <a class="route-link" href="/products/">Products</a>
-          <a class="route-link" href="/frontier/">Frontier</a>
+          <a class="route-link" href="/showroom/">Showroom</a>
+          <a class="route-link" href="/gauges/">Gauges</a>
         </nav>
       </section>
 
@@ -818,12 +875,12 @@
 
         <div class="scope-tile">
           <strong>4</strong>
-          <span>Four immediate post-door directions.</span>
+          <span>Primary cardinals organize the field.</span>
         </div>
 
         <div class="scope-tile">
           <strong>16</strong>
-          <span>Expansion seats remain open.</span>
+          <span>Sixteen route points fit the threshold.</span>
         </div>
 
         <div class="scope-tile">
@@ -834,19 +891,20 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>DOOR_PUBLIC_PARITY_THRESHOLD_GATE_TNT_v1
+        <pre>DOOR_16_POINT_DIAMOND_FIELD_TNT_v1
 route=/door/
 page=door
 role=entry_threshold
 message=one_message_many_rooms
 center=door_threshold_decorative
-north=home:/home/
-east=manor:/explore/
-south=showroom:/showroom/
-west=gauges:/gauges/
-secondary_routes=compass,nine_summits,book,universe,products,frontier
-removed=explore_label_as_primary_identity,demo_universe_language,earth_g1_language,long_visible_receipt
-route_owns=entry_threshold,four_post_door_directions,room_routes,256_scope_expression
+design_object=16_point_diamond_threshold_field
+animation=two_interlocking_figure_eights
+traversal=bilateral_quadrupedic_16_diamond
+primary_cardinals=home,manor,showroom,gauges
+secondary_diagonals=nine_summits,products,frontier,compass
+support_points=book,universe,audralia,built_assets,proof,laws,return,entry
+mobile_law=compact_field_no_four_massive_diamond_vertical_crop
+route_owns=entry_threshold,16_point_field,animated_diamond_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -859,8 +917,63 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      DOOR_PUBLIC_PARITY_THRESHOLD_GATE_TNT_v1 · Door · Entry Threshold.
+      DOOR_16_POINT_DIAMOND_FIELD_TNT_v1 · Door · Sixteen Points · One Threshold.
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const reduceMotion =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const field = document.querySelector(".threshold-field");
+      const nodes = Array.from(document.querySelectorAll(".route-diamond"));
+
+      if (!field || !nodes.length || reduceMotion) return;
+
+      let start = 0;
+      let raf = 0;
+
+      function frame(now) {
+        if (!start) start = now;
+
+        const rect = field.getBoundingClientRect();
+        const t = ((now - start) / 1000) * 0.52;
+        const ampX = Math.min(18, Math.max(8, rect.width * 0.022));
+        const ampY = Math.min(13, Math.max(6, rect.height * 0.015));
+
+        nodes.forEach((node, index) => {
+          const phase = Number(node.dataset.phase || index * 0.392699);
+          const loop = node.dataset.loop || "a";
+          const p = t + phase;
+
+          let dx;
+          let dy;
+
+          if (loop === "a") {
+            dx = Math.sin(p) * ampX;
+            dy = Math.sin(p * 2) * ampY;
+          } else {
+            dx = Math.sin(p * 2) * ampX;
+            dy = Math.sin(p) * ampY;
+          }
+
+          node.style.setProperty("--dx", dx.toFixed(2) + "px");
+          node.style.setProperty("--dy", dy.toFixed(2) + "px");
+        });
+
+        raf = window.requestAnimationFrame(frame);
+      }
+
+      raf = window.requestAnimationFrame(frame);
+
+      window.addEventListener("pagehide", () => {
+        if (raf) window.cancelAnimationFrame(raf);
+      }, { once: true });
+    })();
+  </script>
 </body>
 </html>

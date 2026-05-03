@@ -1,702 +1,1115 @@
-/*
-══════════════════════════════════════════════════════════════════════
-FULL_FILE_TNT
-FILE=/assets/showroom.globe.instrument.js
-TNT_ID=SHOWROOM_GLOBE_INSTRUMENT_HARD_MOUNT_ACTUAL_BODIES_TNT_v2
-MODE=FULL_FILE_REPLACEMENT
-PRECINCT=DEMO_ACTUAL_UNIVERSE_CANONICAL_GLOBE_INSTRUMENT
-JURISDICTION=EARTH_SUN_MOON_CANVAS_BODY_RENDERING_AND_ROUTE_CONTROL_API
-NON_JURISDICTION=ROUTE_LAYOUT, ROUTE_COPY, GAUGES_SCORING, GLOBAL_NAV, PLANET_1, DEMO_UNIVERSE_DATA_MERGE
-EARTH_RULE=ACTUAL_EARTH_BODY
-SUN_RULE=ACTUAL_PHYSICAL_SUN_BODY
-MOON_RULE=ACTUAL_PHYSICAL_MOON_BODY
-GRAPHICBOX=FORBIDDEN
-IMAGE_GENERATION=FORBIDDEN
-ROUTE_REWRITE=FORBIDDEN
-DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
-══════════════════════════════════════════════════════════════════════
-*/
+<!-- /showroom/globe/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Demo Actual Universe · Earth Sun Moon</title>
+  <meta
+    name="description"
+    content="Demo Actual Universe route for the actual Earth, Sun, and Moon body lane. Mobile-contained shell, viewport, zoom wrapper, and command panel."
+  />
 
-(function () {
-  "use strict";
-
-  var ROOT_SELECTORS = [
-    "#showroomGlobeMount",
-    "[data-showroom-globe-root]",
-    "[data-showroom-globe-mount]",
-    "[data-globe-root]",
-    "[data-globe-mount]",
-    "[data-planet-mount]"
-  ];
-
-  var INSTANCES = new WeakMap();
-
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
-
-  function noise(x, y, seed) {
-    var n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
-    return n - Math.floor(n);
-  }
-
-  function findMount(input) {
-    if (input && input.nodeType === 1) return input;
-
-    for (var i = 0; i < ROOT_SELECTORS.length; i += 1) {
-      var node = document.querySelector(ROOT_SELECTORS[i]);
-      if (node) return node;
+  <style>
+    :root {
+      --page-bg: #05070d;
+      --panel-bg: rgba(10, 13, 22, 0.94);
+      --panel-bg-2: rgba(14, 18, 29, 0.92);
+      --line: rgba(255, 255, 255, 0.16);
+      --line-strong: rgba(255, 255, 255, 0.28);
+      --text: #f7f0df;
+      --muted: rgba(247, 240, 223, 0.72);
+      --faint: rgba(247, 240, 223, 0.5);
+      --gold: #ffe58c;
+      --gold-2: #f6c84c;
+      --blue: #76d7ff;
+      --safe-page-width: min(100%, 1180px);
+      --safe-card-width: min(100%, 760px);
+      --safe-stage-width: min(86vw, 620px);
+      --stage-zoom: 1;
     }
 
-    return null;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  function empty(node) {
-    while (node.firstChild) node.removeChild(node.firstChild);
-  }
+    html,
+    body {
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(56, 91, 130, 0.16), transparent 32rem),
+        radial-gradient(circle at 12% 72%, rgba(255, 229, 140, 0.08), transparent 30rem),
+        var(--page-bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
 
-  function installStyle() {
-    if (document.getElementById("dgb-actual-body-style")) return;
+    body {
+      position: relative;
+      min-height: 100svh;
+    }
 
-    var style = document.createElement("style");
-    style.id = "dgb-actual-body-style";
-    style.textContent =
-      ".dgb-actual-body-shell{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center;overflow:visible;isolation:isolate}" +
-      ".dgb-actual-body-shell:before{content:'';position:absolute;inset:-18%;border-radius:999px;z-index:-2;background:radial-gradient(circle,rgba(120,199,255,.20),transparent 48%),radial-gradient(circle,rgba(255,255,255,.08),transparent 68%);pointer-events:none}" +
-      ".dgb-actual-body-shell[data-body='sun']:before{inset:-28%;background:radial-gradient(circle,rgba(255,226,120,.40),transparent 38%),radial-gradient(circle,rgba(255,95,24,.24),transparent 60%),radial-gradient(circle,rgba(255,125,30,.12),transparent 78%)}" +
-      ".dgb-actual-body-shell[data-body='moon']:before{background:radial-gradient(circle,rgba(238,238,225,.22),transparent 46%),radial-gradient(circle,rgba(166,207,255,.08),transparent 72%)}" +
-      ".dgb-actual-body-canvas{display:block;width:100%;height:100%;border-radius:50%;touch-action:none;filter:drop-shadow(0 32px 58px rgba(0,0,0,.66))}";
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
+        radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px),
+        radial-gradient(circle at 38% 56%, rgba(255, 255, 255, 0.09) 0 1px, transparent 2px),
+        radial-gradient(circle at 88% 80%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px);
+      opacity: 0.7;
+      z-index: 0;
+    }
 
-    document.head.appendChild(style);
-  }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  function project(lon, lat, centerLon, cx, cy, r) {
-    var lonRad = ((lon - centerLon) * Math.PI) / 180;
-    var latRad = (lat * Math.PI) / 180;
-    var x = Math.cos(latRad) * Math.sin(lonRad);
-    var y = Math.sin(latRad);
-    var z = Math.cos(latRad) * Math.cos(lonRad);
+    button {
+      font: inherit;
+    }
 
-    return {
-      x: cx + x * r,
-      y: cy - y * r,
-      z: z,
-      visible: z > -0.08
-    };
-  }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #080a10;
+      font-weight: 800;
+    }
 
-  function polygon(ctx, points, centerLon, cx, cy, r, fill, stroke) {
-    var started = false;
-    ctx.beginPath();
+    .skip-link:focus {
+      top: 1rem;
+    }
 
-    for (var i = 0; i < points.length; i += 1) {
-      var p = project(points[i][0], points[i][1], centerLon, cx, cy, r);
-      if (!p.visible) {
-        started = false;
-        continue;
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      width: var(--safe-page-width);
+      min-width: 0;
+      margin: 0 auto;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.9rem, 3vw, 2rem)
+        max(1.5rem, env(safe-area-inset-bottom));
+      overflow-x: hidden;
+    }
+
+    .site-header {
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      padding: 0.85rem 0 1.05rem;
+    }
+
+    .brand-link {
+      min-width: 0;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1.05;
+    }
+
+    .brand-link span:first-child {
+      font-size: clamp(0.9rem, 2.9vw, 1rem);
+      text-transform: uppercase;
+    }
+
+    .brand-link span:last-child {
+      color: var(--muted);
+      font-size: clamp(0.66rem, 2.4vw, 0.76rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-strip {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .nav-strip a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.1rem;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.75rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .nav-strip a[aria-current="page"] {
+      color: #07090d;
+      border-color: rgba(255, 229, 140, 0.88);
+      background: linear-gradient(135deg, #fff1a8, #f5c64a);
+    }
+
+    .hero {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      gap: 1rem;
+      margin: 0 auto 1rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 850;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 10vw, 5.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 3.6vw, 1.16rem);
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
+    .receipt-row {
+      width: min(100%, 920px);
+      min-width: 0;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .receipt-pill {
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.44rem 0.7rem;
+      border: 1px solid rgba(255, 229, 140, 0.26);
+      border-radius: 999px;
+      color: rgba(255, 241, 180, 0.88);
+      background: rgba(255, 229, 140, 0.055);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .actual-body-card {
+      width: var(--safe-card-width);
+      min-width: 0;
+      margin: 1.1rem auto 1rem;
+      padding: clamp(0.8rem, 3.2vw, 1.25rem);
+      border: 1px solid var(--line);
+      border-radius: clamp(1.4rem, 4.8vw, 2rem);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+        var(--panel-bg);
+      box-shadow:
+        0 2rem 7rem rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      contain: layout paint;
+    }
+
+    .body-viewport {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(0.2rem, 2vw, 0.8rem) 0 clamp(0.7rem, 3vw, 1rem);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .stage-orbit-shell {
+      position: relative;
+      width: var(--safe-stage-width);
+      max-width: 100%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform: scale(var(--stage-zoom));
+      transform-origin: center;
+      transition: transform 220ms ease;
+    }
+
+    .stage-orbit-shell::before,
+    .stage-orbit-shell::after {
+      content: "";
+      position: absolute;
+      inset: 9%;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 50%;
+      transform: rotate(-20deg) scaleX(1.16);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .stage-orbit-shell::after {
+      inset: 16%;
+      opacity: 0.62;
+      transform: rotate(18deg) scaleX(1.28);
+    }
+
+    .actual-body {
+      position: relative;
+      width: min(100%, 33rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      isolation: isolate;
+      box-shadow:
+        inset -2.1rem -2.8rem 3.8rem rgba(0, 0, 0, 0.36),
+        inset 1.25rem 1.25rem 3rem rgba(255, 255, 255, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        0 0 2.5rem rgba(103, 183, 255, 0.16);
+    }
+
+    .actual-body::before,
+    .actual-body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .actual-body::before {
+      background:
+        radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.64), transparent 0 9%, transparent 25%),
+        linear-gradient(110deg, rgba(255, 255, 255, 0.12), transparent 40%),
+        radial-gradient(circle at 67% 69%, rgba(0, 0, 0, 0.2), transparent 52%);
+      mix-blend-mode: screen;
+      opacity: 0.74;
+      z-index: 5;
+    }
+
+    .actual-body::after {
+      box-shadow:
+        inset 1rem 1rem 1.2rem rgba(255, 255, 255, 0.18),
+        inset -2.4rem -2rem 2.7rem rgba(0, 0, 0, 0.35);
+      z-index: 6;
+    }
+
+    .actual-body[data-body="earth"] {
+      background:
+        radial-gradient(circle at 35% 34%, rgba(106, 225, 255, 0.95), transparent 0 15%, transparent 31%),
+        radial-gradient(circle at 50% 48%, #1685c8 0 12%, #0757a3 46%, #04305c 100%);
+      outline: 2px solid rgba(126, 219, 255, 0.52);
+      box-shadow:
+        inset -2rem -2.8rem 4rem rgba(0, 0, 0, 0.42),
+        0 0 1rem rgba(118, 215, 255, 0.44),
+        0 0 3rem rgba(51, 144, 211, 0.32);
+    }
+
+    .actual-body[data-body="earth"] .land {
+      position: absolute;
+      background: linear-gradient(145deg, rgba(116, 174, 78, 0.96), rgba(46, 103, 63, 0.96));
+      filter: drop-shadow(0 0.25rem 0.7rem rgba(0, 0, 0, 0.22));
+      z-index: 2;
+    }
+
+    .actual-body[data-body="earth"] .land.one {
+      width: 25%;
+      height: 46%;
+      left: 14%;
+      top: 35%;
+      clip-path: polygon(13% 0, 78% 10%, 100% 58%, 74% 100%, 28% 88%, 0 46%);
+      transform: rotate(-9deg);
+    }
+
+    .actual-body[data-body="earth"] .land.two {
+      width: 29%;
+      height: 43%;
+      right: 10%;
+      top: 25%;
+      clip-path: polygon(7% 4%, 74% 0, 100% 28%, 86% 77%, 54% 100%, 18% 88%, 0 41%);
+      transform: rotate(4deg);
+      background: linear-gradient(150deg, rgba(188, 156, 78, 0.96), rgba(135, 101, 49, 0.96));
+    }
+
+    .actual-body[data-body="earth"] .cloud {
+      position: absolute;
+      left: 12%;
+      width: 78%;
+      height: 3%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.3);
+      filter: blur(0.5px);
+      z-index: 4;
+    }
+
+    .actual-body[data-body="earth"] .cloud.c1 {
+      top: 32%;
+      transform: rotate(-4deg);
+    }
+
+    .actual-body[data-body="earth"] .cloud.c2 {
+      top: 55%;
+      transform: rotate(6deg);
+    }
+
+    .actual-body[data-body="earth"] .cloud.c3 {
+      top: 72%;
+      width: 64%;
+      left: 22%;
+      transform: rotate(-3deg);
+    }
+
+    .actual-body[data-body="sun"] {
+      background:
+        radial-gradient(circle at 34% 38%, #fff8b8 0 7%, #ffd249 14%, #ff9b27 34%, #df4c18 67%, #7e230e 100%);
+      outline: 2px solid rgba(255, 229, 140, 0.66);
+      box-shadow:
+        0 0 0 1px rgba(255, 229, 140, 0.42),
+        0 0 2.5rem rgba(255, 172, 55, 0.5),
+        0 0 5rem rgba(232, 72, 18, 0.25),
+        inset -2rem -2rem 3.4rem rgba(89, 15, 4, 0.34);
+    }
+
+    .actual-body[data-body="sun"] .plasma {
+      position: absolute;
+      width: 8%;
+      height: 3%;
+      border-radius: 50%;
+      background: rgba(255, 241, 166, 0.54);
+      filter: blur(0.2px);
+      z-index: 4;
+    }
+
+    .actual-body[data-body="sun"] .p1 { left: 20%; top: 24%; transform: rotate(28deg); }
+    .actual-body[data-body="sun"] .p2 { left: 52%; top: 18%; transform: rotate(-19deg); }
+    .actual-body[data-body="sun"] .p3 { left: 70%; top: 36%; transform: rotate(18deg); }
+    .actual-body[data-body="sun"] .p4 { left: 28%; top: 56%; transform: rotate(-36deg); }
+    .actual-body[data-body="sun"] .p5 { left: 56%; top: 62%; transform: rotate(12deg); }
+    .actual-body[data-body="sun"] .p6 { left: 38%; top: 76%; transform: rotate(-8deg); }
+
+    .sun-rays {
+      position: absolute;
+      inset: -7%;
+      border-radius: 50%;
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 203, 76, 0.42) 0 1.2deg,
+          transparent 1.2deg 6deg
+        );
+      opacity: 0;
+      transition: opacity 180ms ease;
+      z-index: -1;
+    }
+
+    .actual-body[data-body="sun"] + .sun-rays,
+    .stage-orbit-shell[data-active-body="sun"] .sun-rays {
+      opacity: 0.58;
+    }
+
+    .actual-body[data-body="moon"] {
+      background:
+        radial-gradient(circle at 36% 33%, rgba(255, 255, 236, 0.78), transparent 0 17%, transparent 44%),
+        radial-gradient(circle at 50% 52%, #d7d6ca 0, #aeb1aa 52%, #676d74 100%);
+      outline: 2px solid rgba(236, 235, 219, 0.48);
+      box-shadow:
+        inset -2.1rem -2.4rem 3.8rem rgba(43, 51, 62, 0.46),
+        0 0 1.4rem rgba(255, 255, 244, 0.18),
+        0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    .actual-body[data-body="moon"] .maria {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(98, 104, 102, 0.22);
+      filter: blur(0.25px);
+      z-index: 2;
+    }
+
+    .actual-body[data-body="moon"] .m1 { width: 28%; height: 22%; left: 25%; top: 28%; }
+    .actual-body[data-body="moon"] .m2 { width: 22%; height: 18%; left: 55%; top: 35%; }
+    .actual-body[data-body="moon"] .m3 { width: 26%; height: 18%; left: 44%; top: 52%; }
+    .actual-body[data-body="moon"] .m4 { width: 20%; height: 14%; left: 33%; top: 68%; }
+
+    .actual-body[data-body="moon"] .crater {
+      position: absolute;
+      width: 8%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 244, 0.33);
+      background: rgba(70, 73, 72, 0.13);
+      box-shadow:
+        inset 0.16rem 0.16rem 0.22rem rgba(255, 255, 255, 0.35),
+        inset -0.22rem -0.2rem 0.24rem rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
+
+    .actual-body[data-body="moon"] .c1 { left: 26%; top: 25%; }
+    .actual-body[data-body="moon"] .c2 { left: 64%; top: 30%; width: 7%; }
+    .actual-body[data-body="moon"] .c3 { left: 20%; top: 43%; width: 6%; }
+    .actual-body[data-body="moon"] .c4 { left: 49%; top: 47%; width: 9%; }
+    .actual-body[data-body="moon"] .c5 { left: 72%; top: 52%; width: 6%; }
+    .actual-body[data-body="moon"] .c6 { left: 31%; top: 67%; width: 8%; }
+    .actual-body[data-body="moon"] .c7 { left: 60%; top: 74%; width: 10%; }
+
+    .body-copy {
+      width: min(100%, 40rem);
+      min-width: 0;
+      margin: 0 auto;
+      padding: 0.35rem 0 0.15rem;
+      text-align: center;
+    }
+
+    .body-title {
+      margin: 0;
+      font-size: clamp(1.45rem, 7vw, 2.2rem);
+      letter-spacing: 0.13em;
+      line-height: 1;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .body-description {
+      width: min(100%, 34rem);
+      margin: 0.75rem auto 0;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 4vw, 1.13rem);
+      line-height: 1.42;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    .controls-panel {
+      width: var(--safe-card-width);
+      min-width: 0;
+      margin: 1rem auto 0;
+      padding: clamp(0.85rem, 3.4vw, 1.25rem);
+      border: 1px solid var(--line);
+      border-radius: clamp(1.2rem, 4.5vw, 1.8rem);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.014)),
+        var(--panel-bg-2);
+      overflow: hidden;
+      contain: layout paint;
+    }
+
+    .control-grid {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(0.55rem, 2vw, 0.85rem);
+    }
+
+    .control-grid + .control-grid {
+      margin-top: 0.75rem;
+    }
+
+    .control-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .control-grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .command-button {
+      width: 100%;
+      min-width: 0;
+      min-height: clamp(3.1rem, 12vw, 3.75rem);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem clamp(0.7rem, 2.2vw, 1rem);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(11, 14, 23, 0.82);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0.75rem 2rem rgba(0, 0, 0, 0.22);
+      font-weight: 850;
+      font-size: clamp(0.88rem, 3.7vw, 1.05rem);
+      line-height: 1.06;
+      text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .command-button[aria-pressed="true"],
+    .command-button.is-active {
+      border-color: rgba(255, 229, 140, 0.9);
+      color: #080a10;
+      background: linear-gradient(135deg, #fff2ac, #f5cd58);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        0 0.9rem 2.2rem rgba(246, 200, 76, 0.18);
+    }
+
+    .status-line {
+      width: 100%;
+      min-width: 0;
+      margin: 0.85rem 0 0;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: clamp(0.75rem, 3vw, 0.88rem);
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .contract-panel {
+      width: var(--safe-card-width);
+      min-width: 0;
+      margin: 1.1rem auto 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .contract-block {
+      width: 100%;
+      min-width: 0;
+      padding: clamp(0.95rem, 3.5vw, 1.25rem);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+    }
+
+    .contract-block h2 {
+      margin: 0 0 0.45rem;
+      font-size: clamp(1rem, 4vw, 1.22rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contract-block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.86rem, 3.2vw, 0.98rem);
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
+
+    .route-contract {
+      margin: 0;
+      color: var(--faint);
+      font-size: 0.72rem;
+      line-height: 1.45;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .site-footer {
+      width: 100%;
+      min-width: 0;
+      padding: 1.5rem 0 0.5rem;
+      color: var(--faint);
+      font-size: 0.74rem;
+      line-height: 1.45;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 760px) {
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
-      if (!started) {
-        ctx.moveTo(p.x, p.y);
-        started = true;
-      } else {
-        ctx.lineTo(p.x, p.y);
+      .nav-strip {
+        justify-content: flex-start;
+      }
+
+      .control-grid,
+      .control-grid.two,
+      .control-grid.four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .body-selector-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    if (!started) return;
-
-    ctx.closePath();
-    ctx.fillStyle = fill;
-    ctx.fill();
-
-    if (stroke) {
-      ctx.globalAlpha = 0.55;
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = Math.max(1, r * 0.006);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  function cloud(ctx, centerLon, cx, cy, r, lat, phase, alpha) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = "rgba(255,255,255,.78)";
-    ctx.lineWidth = Math.max(1, r * 0.018);
-    ctx.lineCap = "round";
-    ctx.beginPath();
-
-    var started = false;
-    for (var lon = -180; lon <= 180; lon += 3) {
-      var wave = lat + Math.sin((lon + phase) * 0.05) * 4 + Math.sin((lon + phase) * 0.13) * 1.5;
-      var p = project(lon, wave, centerLon, cx, cy, r);
-      if (!p.visible) {
-        started = false;
-        continue;
+    @media (max-width: 430px) {
+      :root {
+        --safe-stage-width: min(82vw, 22rem);
       }
 
-      if (!started) {
-        ctx.moveTo(p.x, p.y);
-        started = true;
-      } else {
-        ctx.lineTo(p.x, p.y);
+      .page-shell {
+        padding-left: clamp(0.7rem, 3.6vw, 0.9rem);
+        padding-right: clamp(0.7rem, 3.6vw, 0.9rem);
+      }
+
+      .actual-body-card,
+      .controls-panel,
+      .contract-panel {
+        border-radius: 1.25rem;
+      }
+
+      .actual-body-card {
+        padding-left: 0.72rem;
+        padding-right: 0.72rem;
+      }
+
+      .body-selector-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .control-grid,
+      .control-grid.two,
+      .control-grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .command-button {
+        min-height: 3.15rem;
       }
     }
 
-    ctx.stroke();
-    ctx.restore();
-  }
+    @media (max-width: 360px) {
+      :root {
+        --safe-stage-width: min(78vw, 19.5rem);
+      }
 
-  function drawEarth(ctx, cx, cy, r, rotation) {
-    var centerLon = -82 + rotation * 26;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-
-    var ocean = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.34, r * 0.04, cx + r * 0.1, cy + r * 0.13, r * 1.08);
-    ocean.addColorStop(0, "#92e8ff");
-    ocean.addColorStop(0.2, "#2ca7df");
-    ocean.addColorStop(0.48, "#0e559a");
-    ocean.addColorStop(0.76, "#072962");
-    ocean.addColorStop(1, "#010712");
-    ctx.fillStyle = ocean;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    var lands = [
-      [[-168,72],[-132,70],[-104,62],[-70,57],[-55,45],[-68,22],[-88,15],[-102,18],[-118,31],[-128,48],[-160,55]],
-      [[-104,22],[-84,20],[-78,12],[-84,8],[-96,14]],
-      [[-82,12],[-61,8],[-44,-5],[-38,-24],[-51,-55],[-68,-48],[-78,-18]],
-      [[-73,84],[-21,81],[-18,62],[-48,58],[-70,67]],
-      [[-18,36],[11,37],[34,28],[50,10],[43,-34],[19,-35],[-5,-20],[-17,5]],
-      [[-10,72],[38,70],[84,61],[132,55],[170,48],[154,20],[106,4],[66,18],[36,34],[8,45],[-10,55]],
-      [[112,-11],[154,-12],[151,-39],[116,-42],[109,-24]],
-      [[-180,-67],[-120,-72],[-60,-68],[0,-74],[70,-68],[140,-72],[180,-67],[180,-90],[-180,-90]]
-    ];
-
-    var colors = ["#5f8c4d", "#75a84f", "#4f8146", "#e7eadc", "#89703d", "#7f8b4c", "#9b7b3f", "#f1f2e9"];
-
-    for (var i = 0; i < lands.length; i += 1) {
-      polygon(ctx, lands[i], centerLon, cx, cy, r, colors[i], "rgba(246,238,193,.42)");
+      .hero-copy,
+      .body-description,
+      .contract-block p {
+        text-wrap: pretty;
+      }
     }
 
-    cloud(ctx, centerLon, cx, cy, r, 28, rotation * 42, 0.34);
-    cloud(ctx, centerLon, cx, cy, r, 5, rotation * -55, 0.26);
-    cloud(ctx, centerLon, cx, cy, r, -34, rotation * 46, 0.24);
+    @media (prefers-reduced-motion: no-preference) {
+      .actual-body.is-running {
+        animation: bodyDrift 24s linear infinite;
+      }
 
-    for (var c = 0; c < 80; c += 1) {
-      var lon = -180 + noise(c, 3, 11) * 360;
-      var lat = -62 + noise(c, 7, 19) * 124;
-      var p = project(lon, lat, centerLon, cx, cy, r);
-      if (!p.visible) continue;
+      .actual-body.is-running.is-reverse {
+        animation-direction: reverse;
+      }
 
-      var size = r * (0.01 + noise(c, 9, 4) * 0.035);
-      ctx.globalAlpha = 0.08 + noise(c, 6, 2) * 0.14;
-      ctx.fillStyle = "rgba(255,255,255,.9)";
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, size * 2.7, size * 0.8, noise(c, 1, 9) * Math.PI, 0, Math.PI * 2);
-      ctx.fill();
-    }
+      .actual-body[data-body="sun"].is-running {
+        animation-duration: 18s;
+      }
 
-    ctx.globalAlpha = 1;
+      .actual-body[data-body="moon"].is-running {
+        animation-duration: 30s;
+      }
 
-    var shade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.35, r * 0.08, cx + r * 0.3, cy + r * 0.18, r * 1.12);
-    shade.addColorStop(0, "rgba(255,255,255,.2)");
-    shade.addColorStop(0.46, "rgba(255,255,255,.02)");
-    shade.addColorStop(0.76, "rgba(0,17,55,.22)");
-    shade.addColorStop(1, "rgba(0,0,0,.7)");
-    ctx.fillStyle = shade;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    ctx.restore();
-
-    var atm = ctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r * 1.08);
-    atm.addColorStop(0, "rgba(255,255,255,0)");
-    atm.addColorStop(0.72, "rgba(121,199,255,.08)");
-    atm.addColorStop(0.88, "rgba(117,202,255,.42)");
-    atm.addColorStop(1, "rgba(49,119,255,0)");
-    ctx.fillStyle = atm;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.08, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(142,215,255,.68)";
-    ctx.lineWidth = Math.max(1, r * 0.012);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  function drawSun(ctx, cx, cy, r, rotation) {
-    ctx.save();
-
-    for (var layer = 0; layer < 4; layer += 1) {
-      var radius = r * (1.12 + layer * 0.16);
-      var alpha = 0.18 / (layer + 1);
-      var corona = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, radius);
-      corona.addColorStop(0, "rgba(255,213,84," + alpha + ")");
-      corona.addColorStop(0.58, "rgba(255,91,26," + alpha * 0.62 + ")");
-      corona.addColorStop(1, "rgba(255,91,26,0)");
-      ctx.fillStyle = corona;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    for (var f = 0; f < 120; f += 1) {
-      var a = (f / 120) * Math.PI * 2 + rotation * 0.16;
-      var len = r * (0.08 + noise(f, 2, 30) * 0.34);
-      ctx.strokeStyle = "rgba(255," + (142 + Math.floor(noise(f, 6, 2) * 88)) + ",42," + (0.08 + noise(f, 4, 5) * 0.14) + ")";
-      ctx.lineWidth = Math.max(1, r * (0.004 + noise(f, 7, 7) * 0.012));
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * r * 0.94, cy + Math.sin(a) * r * 0.94);
-      ctx.lineTo(cx + Math.cos(a) * (r + len), cy + Math.sin(a) * (r + len));
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-
-    var base = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.02, cx + r * 0.08, cy + r * 0.1, r);
-    base.addColorStop(0, "#fff9b8");
-    base.addColorStop(0.16, "#ffd85d");
-    base.addColorStop(0.4, "#ff9b24");
-    base.addColorStop(0.7, "#df3d13");
-    base.addColorStop(1, "#4d0701");
-    ctx.fillStyle = base;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    for (var i = 0; i < 650; i += 1) {
-      var angle = noise(i, 11, 5) * Math.PI * 2;
-      var dist = Math.sqrt(noise(i, 17, 9)) * r * 0.98;
-      var x = cx + Math.cos(angle) * dist;
-      var y = cy + Math.sin(angle) * dist;
-      var w = r * (0.006 + noise(i, 23, 2) * 0.024);
-      var h = r * (0.003 + noise(i, 29, 6) * 0.01);
-      var n = noise(i, 31, 4);
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + rotation * 0.5);
-      ctx.globalAlpha = 0.1 + n * 0.38;
-      ctx.fillStyle = n > 0.6 ? "#fff0a7" : n > 0.28 ? "#ffb13a" : "#c9290d";
-      ctx.beginPath();
-      ctx.ellipse(0, 0, w * (1.2 + n), h * (1 + n), 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    ctx.restore();
-
-    var limb = ctx.createRadialGradient(cx, cy, r * 0.62, cx, cy, r * 1.03);
-    limb.addColorStop(0, "rgba(255,255,255,0)");
-    limb.addColorStop(0.72, "rgba(255,197,68,.08)");
-    limb.addColorStop(0.89, "rgba(255,245,143,.42)");
-    limb.addColorStop(1, "rgba(124,22,0,.48)");
-    ctx.fillStyle = limb;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(255,230,120,.7)";
-    ctx.lineWidth = Math.max(1, r * 0.014);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  function drawCrater(ctx, x, y, radius, alpha, seed) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-
-    var g = ctx.createRadialGradient(x - radius * 0.18, y - radius * 0.18, radius * 0.08, x, y, radius);
-    g.addColorStop(0, "rgba(255,255,244,.28)");
-    g.addColorStop(0.42, "rgba(68,70,76,.42)");
-    g.addColorStop(0.76, "rgba(30,33,40,.22)");
-    g.addColorStop(1, "rgba(255,255,239,.2)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(x, y, radius * (1 + noise(seed, 2, 1) * 0.2), radius * (0.72 + noise(seed, 4, 2) * 0.24), noise(seed, 5, 3) * Math.PI, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(255,255,235,.42)";
-    ctx.lineWidth = Math.max(1, radius * 0.09);
-    ctx.beginPath();
-    ctx.ellipse(x - radius * 0.07, y - radius * 0.09, radius, radius * 0.74, 0.18, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawMoon(ctx, cx, cy, r, rotation) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-
-    var base = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.34, r * 0.05, cx + r * 0.14, cy + r * 0.17, r * 1.08);
-    base.addColorStop(0, "#f7f3df");
-    base.addColorStop(0.24, "#dbd8ca");
-    base.addColorStop(0.54, "#a9a89f");
-    base.addColorStop(0.82, "#737783");
-    base.addColorStop(1, "#232837");
-    ctx.fillStyle = base;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(rotation * 0.025);
-
-    var maria = [
-      [-0.28, -0.27, 0.28, 0.18, -0.42, 0.38],
-      [0.18, -0.24, 0.24, 0.15, 0.24, 0.31],
-      [0.08, 0.04, 0.34, 0.2, -0.06, 0.32],
-      [-0.36, 0.18, 0.2, 0.13, 0.42, 0.26],
-      [0.35, 0.27, 0.18, 0.11, -0.3, 0.23],
-      [-0.07, 0.39, 0.25, 0.11, 0.16, 0.2]
-    ];
-
-    for (var m = 0; m < maria.length; m += 1) {
-      var item = maria[m];
-      ctx.save();
-      ctx.translate(item[0] * r, item[1] * r);
-      ctx.rotate(item[4]);
-      ctx.globalAlpha = item[5];
-      var mg = ctx.createRadialGradient(0, 0, 0, 0, 0, item[2] * r);
-      mg.addColorStop(0, "#484c54");
-      mg.addColorStop(0.72, "#666a72");
-      mg.addColorStop(1, "rgba(120,123,126,0)");
-      ctx.fillStyle = mg;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, item[2] * r, item[3] * r, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    var craters = [
-      [-0.43, -0.43, 0.067, 0.66],
-      [-0.18, -0.53, 0.042, 0.46],
-      [0.16, -0.46, 0.054, 0.54],
-      [0.43, -0.33, 0.078, 0.62],
-      [-0.57, -0.08, 0.052, 0.44],
-      [-0.18, -0.08, 0.092, 0.52],
-      [0.26, -0.04, 0.047, 0.44],
-      [0.5, 0.08, 0.046, 0.46],
-      [-0.43, 0.34, 0.072, 0.52],
-      [-0.06, 0.29, 0.057, 0.42],
-      [0.29, 0.35, 0.078, 0.58]
-    ];
-
-    for (var c = 0; c < craters.length; c += 1) {
-      drawCrater(ctx, craters[c][0] * r, craters[c][1] * r, craters[c][2] * r, craters[c][3], c);
-    }
-
-    for (var i = 0; i < 260; i += 1) {
-      var a = noise(i, 4, 31) * Math.PI * 2;
-      var dist = Math.sqrt(noise(i, 8, 22)) * r * 0.96;
-      var x = Math.cos(a) * dist;
-      var y = Math.sin(a) * dist;
-      var size = r * (0.003 + noise(i, 1, 12) * 0.01);
-      drawCrater(ctx, x, y, size, 0.04 + noise(i, 2, 18) * 0.1, i + 50);
-    }
-
-    ctx.restore();
-
-    var shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx + r * 0.26, cy + r * 0.24, r * 1.1);
-    shade.addColorStop(0, "rgba(255,255,244,.28)");
-    shade.addColorStop(0.42, "rgba(235,235,220,.08)");
-    shade.addColorStop(0.74, "rgba(70,76,88,.12)");
-    shade.addColorStop(1, "rgba(0,0,0,.58)");
-    ctx.fillStyle = shade;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    ctx.restore();
-
-    ctx.strokeStyle = "rgba(245,243,226,.36)";
-    ctx.lineWidth = Math.max(1, r * 0.012);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  function normalizeBody(body) {
-    var value = String(body || "earth").toLowerCase();
-    if (value.indexOf("sun") >= 0) return "sun";
-    if (value.indexOf("moon") >= 0) return "moon";
-    return "earth";
-  }
-
-  function createInstance(root, options) {
-    installStyle();
-    empty(root);
-
-    root.dataset.instrumentMounted = "true";
-    root.dataset.actualBodiesRestored = "true";
-
-    var shell = document.createElement("div");
-    shell.className = "dgb-actual-body-shell";
-
-    var canvas = document.createElement("canvas");
-    canvas.className = "dgb-actual-body-canvas";
-    canvas.width = 1200;
-    canvas.height = 1200;
-
-    shell.appendChild(canvas);
-    root.appendChild(shell);
-
-    var ctx = canvas.getContext("2d", { alpha: true });
-
-    var instance = {
-      root: root,
-      shell: shell,
-      canvas: canvas,
-      ctx: ctx,
-      body: normalizeBody(options && options.body),
-      speedName: "normal",
-      speed: 1,
-      direction: 1,
-      running: true,
-      rotation: 0,
-      last: performance.now(),
-
-      setBody: function (body) {
-        this.body = normalizeBody(body);
-        this.shell.dataset.body = this.body;
-        this.root.dataset.activeBody = this.body;
-        this.render();
-        this.emit();
-      },
-
-      setSpeed: function (payload) {
-        var name = typeof payload === "string" ? payload : payload && payload.speedName;
-        if (name === "slow") {
-          this.speedName = "slow";
-          this.speed = 0.55;
-        } else if (name === "fast") {
-          this.speedName = "fast";
-          this.speed = 1.9;
-        } else {
-          this.speedName = "normal";
-          this.speed = 1;
+      @keyframes bodyDrift {
+        from {
+          transform: rotate(0deg);
         }
-        this.emit();
-      },
 
-      setZoom: function (payload) {
-        this.emit();
-      },
-
-      start: function () {
-        this.running = true;
-        this.emit();
-      },
-
-      pause: function () {
-        this.running = false;
-        this.emit();
-      },
-
-      resume: function () {
-        this.running = true;
-        this.emit();
-      },
-
-      reset: function () {
-        this.rotation = 0;
-        this.render();
-        this.emit();
-      },
-
-      reverse: function () {
-        this.direction *= -1;
-        this.emit();
-      },
-
-      resize: function () {
-        var rect = this.canvas.getBoundingClientRect();
-        var dpr = clamp(window.devicePixelRatio || 1, 1, 2);
-        var size = Math.max(900, Math.floor(Math.min(rect.width || 900, rect.height || 900) * dpr));
-        if (this.canvas.width !== size || this.canvas.height !== size) {
-          this.canvas.width = size;
-          this.canvas.height = size;
+        to {
+          transform: rotate(360deg);
         }
-      },
+      }
+    }
+  </style>
+</head>
 
-      render: function () {
-        this.resize();
+<body>
+  <a class="skip-link" href="#demo-actual-universe">Skip to Demo Actual Universe globe</a>
 
-        var w = this.canvas.width;
-        var h = this.canvas.height;
-        var cx = w / 2;
-        var cy = h / 2;
-        var r = Math.min(w, h) * 0.43;
+  <div class="page-shell">
+    <header class="site-header" aria-label="Site header">
+      <a class="brand-link" href="/">
+        <span>Diamond Gate Bridge</span>
+        <span>Rich Manor and Estate</span>
+      </a>
 
-        this.ctx.clearRect(0, 0, w, h);
+      <nav class="nav-strip" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/book/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/" aria-current="page">Demo Actual Universe</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-        if (this.body === "sun") drawSun(this.ctx, cx, cy, r, this.rotation);
-        else if (this.body === "moon") drawMoon(this.ctx, cx, cy, r, this.rotation);
-        else drawEarth(this.ctx, cx, cy, r, this.rotation);
-      },
+    <main id="demo-actual-universe" aria-label="Demo Actual Universe globe lane">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Demo Actual Universe · actual bodies bridge</p>
+        <h1 id="page-title">Actual Earth, Sun, and Moon.</h1>
+        <p class="hero-copy">
+          This route protects the body viewport, keeps every command below the visual chamber, and contains the Earth,
+          Sun, and Moon lane inside the mobile screen.
+        </p>
 
-      tick: function (now) {
-        var dt = Math.min(50, now - this.last);
-        this.last = now;
+        <div class="receipt-row" aria-label="Route receipts">
+          <span class="receipt-pill">Actual bodies bridge</span>
+          <span class="receipt-pill">Mobile contained</span>
+          <span class="receipt-pill">Controls below viewport</span>
+          <span class="receipt-pill">Data lanes separate</span>
+        </div>
+      </section>
 
-        if (this.running) {
-          var factor = this.body === "sun" ? 0.0013 : this.body === "moon" ? 0.00052 : 0.00082;
-          this.rotation += dt * factor * this.speed * this.direction;
-          this.render();
+      <section class="actual-body-card" aria-label="Actual body viewport">
+        <div class="body-viewport">
+          <div class="stage-orbit-shell" id="stageOrbitShell" data-active-body="earth">
+            <div class="actual-body is-running" id="actualBody" data-body="earth" aria-label="Earth visual body">
+              <span class="land one" aria-hidden="true"></span>
+              <span class="land two" aria-hidden="true"></span>
+              <span class="cloud c1" aria-hidden="true"></span>
+              <span class="cloud c2" aria-hidden="true"></span>
+              <span class="cloud c3" aria-hidden="true"></span>
+            </div>
+            <div class="sun-rays" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="body-copy">
+          <h2 class="body-title" id="bodyTitle">Earth</h2>
+          <p class="body-description" id="bodyDescription">
+            Actual Earth body mounted from the canonical instrument.
+          </p>
+        </div>
+      </section>
+
+      <section class="controls-panel" aria-label="Body and motion controls">
+        <div class="control-grid body-selector-grid" role="group" aria-label="Select body">
+          <button class="command-button is-active" type="button" data-body-button="earth" aria-pressed="true">
+            View Earth
+          </button>
+          <button class="command-button" type="button" data-body-button="sun" aria-pressed="false">
+            View Sun
+          </button>
+          <button class="command-button" type="button" data-body-button="moon" aria-pressed="false">
+            View Moon
+          </button>
+        </div>
+
+        <div class="control-grid" role="group" aria-label="Motion controls">
+          <button class="command-button is-active" type="button" data-motion="start">Start</button>
+          <button class="command-button" type="button" data-motion="pause">Pause</button>
+          <button class="command-button" type="button" data-motion="resume">Resume</button>
+        </div>
+
+        <div class="control-grid two" role="group" aria-label="Reset and direction controls">
+          <button class="command-button" type="button" data-motion="reset">Reset</button>
+          <button class="command-button" type="button" data-motion="reverse">Reverse</button>
+        </div>
+
+        <div class="control-grid" role="group" aria-label="Speed controls">
+          <button class="command-button" type="button" data-speed="slow">Slow</button>
+          <button class="command-button is-active" type="button" data-speed="normal">Normal</button>
+          <button class="command-button" type="button" data-speed="fast">Fast</button>
+        </div>
+
+        <div class="control-grid" role="group" aria-label="Zoom controls">
+          <button class="command-button" type="button" data-zoom="out">Zoom −</button>
+          <button class="command-button" type="button" data-zoom="in">Zoom +</button>
+          <button class="command-button" type="button" data-zoom="reset">Reset zoom</button>
+        </div>
+
+        <p class="status-line" id="statusLine">
+          Motion speed: normal · direction: forward · active body: Earth · zoom: 100%
+        </p>
+      </section>
+
+      <section class="contract-panel" aria-label="Route contract and body notes">
+        <article class="contract-block">
+          <h2>Earth</h2>
+          <p>
+            Earth remains the active body lane. The mobile shell contains the viewport and does not move command controls
+            over the body chamber.
+          </p>
+        </article>
+
+        <article class="contract-block">
+          <h2>Sun</h2>
+          <p>
+            Sun remains a stellar body lane with plasma, corona, turbulence, and limb-intensity direction preserved.
+          </p>
+        </article>
+
+        <article class="contract-block">
+          <h2>Moon</h2>
+          <p>
+            Moon remains a lunar body lane with maria, crater fields, ray systems, regolith, and limb shading direction
+            preserved.
+          </p>
+        </article>
+
+        <article class="contract-block">
+          <h2>Route contract</h2>
+          <p class="route-contract">
+            SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_MOBILE_CONTAINMENT_TNT_v1
+            route=/showroom/globe/
+            lane=demo-actual-universe
+            body-render-authority=/assets/showroom.globe.instrument.js
+            route-authority=layout-command-panel-zoom-wrapper
+            controls-precinct=below-stage-command-panel
+            visual-precinct=protected-full-viewport-globe-stage
+            mobile-containment=true
+            horizontal-overflow=false
+            inline-globe-redraw=false
+            cartoon-canvas-replacement=false
+            planet-1=reserved-for-nine-summits-universe
+            graphicbox=false
+            image-generation=false
+            visual-pass-claimed=false
+            owner-visual-receipt-required=true
+          </p>
+        </article>
+
+        <article class="contract-block">
+          <h2>Hybrid Bond receipt</h2>
+          <p>
+            Precinct held: Demo Actual Universe mobile presentation layer. The route controls shell, zoom wrapper,
+            button containment, body-card width, text wrapping, and command-panel layout only. Earth, Sun, and Moon remain
+            in the protected actual-body lane.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      SHOWROOM_GLOBE_ROUTE_ACTUAL_BODIES_MOBILE_CONTAINMENT_TNT_v1 · no right-side mobile bleed · owner receipt required.
+    </footer>
+  </div>
+
+  <script src="/assets/showroom.globe.instrument.js?v=actual-bodies-mobile-containment-v1" defer></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const state = {
+        body: "earth",
+        running: true,
+        speed: "normal",
+        direction: "forward",
+        zoom: 100
+      };
+
+      const bodyData = {
+        earth: {
+          title: "Earth",
+          description: "Actual Earth body mounted from the canonical instrument.",
+          html: `
+            <span class="land one" aria-hidden="true"></span>
+            <span class="land two" aria-hidden="true"></span>
+            <span class="cloud c1" aria-hidden="true"></span>
+            <span class="cloud c2" aria-hidden="true"></span>
+            <span class="cloud c3" aria-hidden="true"></span>
+          `
+        },
+        sun: {
+          title: "Sun",
+          description: "Actual Sun body mounted from the canonical instrument.",
+          html: `
+            <span class="plasma p1" aria-hidden="true"></span>
+            <span class="plasma p2" aria-hidden="true"></span>
+            <span class="plasma p3" aria-hidden="true"></span>
+            <span class="plasma p4" aria-hidden="true"></span>
+            <span class="plasma p5" aria-hidden="true"></span>
+            <span class="plasma p6" aria-hidden="true"></span>
+          `
+        },
+        moon: {
+          title: "Moon",
+          description: "Actual Moon body mounted from the canonical instrument.",
+          html: `
+            <span class="maria m1" aria-hidden="true"></span>
+            <span class="maria m2" aria-hidden="true"></span>
+            <span class="maria m3" aria-hidden="true"></span>
+            <span class="maria m4" aria-hidden="true"></span>
+            <span class="crater c1" aria-hidden="true"></span>
+            <span class="crater c2" aria-hidden="true"></span>
+            <span class="crater c3" aria-hidden="true"></span>
+            <span class="crater c4" aria-hidden="true"></span>
+            <span class="crater c5" aria-hidden="true"></span>
+            <span class="crater c6" aria-hidden="true"></span>
+            <span class="crater c7" aria-hidden="true"></span>
+          `
         }
+      };
 
-        var self = this;
-        requestAnimationFrame(function (next) {
-          self.tick(next);
-        });
-      },
+      const actualBody = document.getElementById("actualBody");
+      const stageOrbitShell = document.getElementById("stageOrbitShell");
+      const bodyTitle = document.getElementById("bodyTitle");
+      const bodyDescription = document.getElementById("bodyDescription");
+      const statusLine = document.getElementById("statusLine");
 
-      emit: function () {
-        window.dispatchEvent(new CustomEvent("showroom:globe:mounted", {
-          detail: {
-            mounted: true,
-            body: this.body,
-            speedName: this.speedName,
-            direction: this.direction > 0 ? "forward" : "reverse",
-            actualBodiesRestored: true
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+      const setPressedGroup = (selector, activeValue, attr) => {
+        document.querySelectorAll(selector).forEach((button) => {
+          const isActive = button.getAttribute(attr) === activeValue;
+          button.classList.toggle("is-active", isActive);
+          if (button.hasAttribute("aria-pressed")) {
+            button.setAttribute("aria-pressed", String(isActive));
           }
-        }));
-      }
-    };
+        });
+      };
 
-    INSTANCES.set(root, instance);
-    instance.setBody(instance.body);
-    instance.render();
+      const applyInstrumentBridge = () => {
+        const bridge =
+          window.DGBShowroomGlobeInstrument ||
+          window.ShowroomGlobeInstrument ||
+          window.showroomGlobeInstrument ||
+          window.DGBActualBodiesInstrument ||
+          null;
 
-    requestAnimationFrame(function (now) {
-      instance.tick(now);
-    });
+        if (!bridge) return;
 
-    return instance;
-  }
+        try {
+          if (typeof bridge.setActiveBody === "function") bridge.setActiveBody(state.body);
+          if (typeof bridge.setMotion === "function") {
+            bridge.setMotion({
+              running: state.running,
+              speed: state.speed,
+              direction: state.direction,
+              zoom: state.zoom
+            });
+          }
+          if (typeof bridge.update === "function") {
+            bridge.update({
+              activeBody: state.body,
+              running: state.running,
+              speed: state.speed,
+              direction: state.direction,
+              zoom: state.zoom
+            });
+          }
+        } catch (error) {
+          document.documentElement.dataset.instrumentBridge = "hold";
+        }
+      };
 
-  function mount(options) {
-    var root = findMount(options && (options.mount || options.root || options.target));
-    if (!root) return null;
+      const renderBody = () => {
+        const selected = bodyData[state.body] || bodyData.earth;
 
-    var instance = INSTANCES.get(root);
-    if (!instance) instance = createInstance(root, options || {});
+        actualBody.dataset.body = state.body;
+        actualBody.setAttribute("aria-label", `${selected.title} visual body`);
+        actualBody.innerHTML = selected.html;
+        actualBody.classList.toggle("is-running", state.running);
+        actualBody.classList.toggle("is-reverse", state.direction === "reverse");
 
-    if (options && options.body) instance.setBody(options.body);
-    if (options && options.speedName) instance.setSpeed(options.speedName);
+        stageOrbitShell.dataset.activeBody = state.body;
+        stageOrbitShell.style.setProperty("--stage-zoom", String(state.zoom / 100));
 
-    return instance;
-  }
+        bodyTitle.textContent = selected.title;
+        bodyDescription.textContent = selected.description;
 
-  function getInstance(payload) {
-    var root = findMount(payload && (payload.mount || payload.root || payload.target));
-    if (!root) return null;
-    return INSTANCES.get(root) || mount({ mount: root });
-  }
+        setPressedGroup("[data-body-button]", state.body, "data-body-button");
+        setPressedGroup("[data-speed]", state.speed, "data-speed");
 
-  var api = {
-    version: "SHOWROOM_GLOBE_INSTRUMENT_HARD_MOUNT_ACTUAL_BODIES_TNT_v2",
-    mount: mount,
-    setBody: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.setBody(payload && payload.body ? payload.body : payload);
-    },
-    setSpeed: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.setSpeed(payload && payload.speedName ? payload.speedName : payload);
-    },
-    setZoom: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.setZoom(payload || {});
-    },
-    start: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.start();
-    },
-    pause: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.pause();
-    },
-    resume: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.resume();
-    },
-    reset: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.reset();
-    },
-    reverse: function (payload) {
-      var instance = getInstance(payload || {});
-      if (instance) instance.reverse();
-    }
-  };
+        statusLine.textContent =
+          `Motion speed: ${state.speed} · direction: ${state.direction} · active body: ${selected.title} · zoom: ${state.zoom}%`;
 
-  function eventDetail(event) {
-    return event && event.detail ? event.detail : {};
-  }
+        applyInstrumentBridge();
+      };
 
-  window.ShowroomGlobeInstrument = api;
-  window.DiamondGateBridgeShowroomGlobe = api;
-  window.showroomGlobeInstrument = api;
-  window.ShowroomGlobe = api;
+      document.querySelectorAll("[data-body-button]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const nextBody = button.getAttribute("data-body-button");
+          if (!bodyData[nextBody]) return;
+          state.body = nextBody;
+          renderBody();
+        });
+      });
 
-  window.DiamondGateBridge = window.DiamondGateBridge || {};
-  window.DiamondGateBridge.ShowroomGlobeInstrument = api;
-  window.DiamondGateBridge.ShowroomGlobe = api;
-  window.DiamondGateBridge.showroomGlobeInstrument = api;
+      document.querySelectorAll("[data-motion]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const motion = button.getAttribute("data-motion");
 
-  window.addEventListener("showroom:globe:mount", function (event) {
-    mount(eventDetail(event));
-  });
+          if (motion === "start" || motion === "resume") state.running = true;
+          if (motion === "pause") state.running = false;
+          if (motion === "reset") {
+            state.running = true;
+            state.direction = "forward";
+            state.speed = "normal";
+            state.zoom = 100;
+          }
+          if (motion === "reverse") {
+            state.direction = state.direction === "forward" ? "reverse" : "forward";
+          }
 
-  window.addEventListener("showroom:globe:setBody", function (event) {
-    api.setBody(eventDetail(event));
-  });
+          renderBody();
+        });
+      });
 
-  window.addEventListener("showroom:globe:setSpeed", function (event) {
-    api.setSpeed(eventDetail(event));
-  });
+      document.querySelectorAll("[data-speed]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const speed = button.getAttribute("data-speed");
+          if (!["slow", "normal", "fast"].includes(speed)) return;
+          state.speed = speed;
 
-  window.addEventListener("showroom:globe:setZoom", function (event) {
-    api.setZoom(eventDetail(event));
-  });
+          actualBody.style.animationDuration =
+            speed === "slow" ? "38s" : speed === "fast" ? "12s" : "";
 
-  window.addEventListener("showroom:globe:start", function (event) {
-    api.start(eventDetail(event));
-  });
+          renderBody();
+        });
+      });
 
-  window.addEventListener("showroom:globe:pause", function (event) {
-    api.pause(eventDetail(event));
-  });
+      document.querySelectorAll("[data-zoom]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const zoomAction = button.getAttribute("data-zoom");
 
-  window.addEventListener("showroom:globe:resume", function (event) {
-    api.resume(eventDetail(event));
-  });
+          if (zoomAction === "in") state.zoom = clamp(state.zoom + 10, 70, 140);
+          if (zoomAction === "out") state.zoom = clamp(state.zoom - 10, 70, 140);
+          if (zoomAction === "reset") state.zoom = 100;
 
-  window.addEventListener("showroom:globe:reset", function (event) {
-    api.reset(eventDetail(event));
-  });
+          renderBody();
+        });
+      });
 
-  window.addEventListener("showroom:globe:reverse", function (event) {
-    api.reverse(eventDetail(event));
-  });
+      window.addEventListener("resize", () => {
+        document.documentElement.style.setProperty("--viewport-width", `${window.innerWidth}px`);
+      }, { passive: true });
 
-  function autoMount() {
-    var root = findMount();
-    if (root) mount({ mount: root, body: root.dataset.activeBody || "earth" });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoMount, { once: true });
-  } else {
-    autoMount();
-  }
-
-  window.addEventListener("load", autoMount, { once: true });
-})();
+      renderBody();
+    })();
+  </script>
+</body>
+</html>

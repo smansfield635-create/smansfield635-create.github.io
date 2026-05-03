@@ -1,40 +1,39 @@
 /* /assets/showroom.globe.instrument.js
-   SHOWROOM_GLOBE_INSTRUMENT_BOUNDARY_RESTORE_TNT_v1
+   AUDRELIA_SHOWROOM_GLOBE_THIN_INSTRUMENT_TNT_v1
 
-   PRECINCT=
-   SHOWROOM_GLOBE_STATE_BRIDGE
+   ROLE=
+   THIN_INSTRUMENT_FACADE
 
-   JURISDICTION=
-   SELECT_ACTIVE_BODY
-   HOLD_MOTION_STATE
-   HOLD_SPEED_DIRECTION_ZOOM
-   CREATE_ONE_CANVAS_IN_THE_MOUNT
-   CALL_RENDER_FILE
+   OWNS=
+   PUBLIC_API
+   ACTIVE_BODY_STATE
+   MOTION_STATE
+   SPEED_DIRECTION_ZOOM
+   CANVAS_MOUNT
+   RENDER_FILE_HANDOFF
 
-   NON_JURISDICTION=
-   DRAW_BODY_PIXELS
-   OWN_ROUTE_COPY
-   OWN_LABEL_LAYOUT
-   OWN_BUTTON_MARKUP
-   OWN_DEMO_UNIVERSE_RELATIONSHIP
-   OWN_MOON_ORBIT
-   OWN_PLANET_1
-   OWN_GAUGES
+   DOES_NOT_OWN=
+   BODY_PIXELS
+   ROUTE_COPY
+   LABELS
+   BUTTONS
+   GAUGES
 */
 
-(function bindShowroomGlobeInstrumentBoundary(global) {
+(function bindAudreliaShowroomGlobeThinInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_BOUNDARY_RESTORE_TNT_v1";
-  const RENDER_FILE = "/assets/showroom.globe.render.js?v=SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1";
-  const BODY_SET = new Set(["earth", "sun", "moon"]);
+  const VERSION = "AUDRELIA_SHOWROOM_GLOBE_THIN_INSTRUMENT_TNT_v1";
+  const RENDER_FILE = "/assets/showroom.globe.render.js?v=AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1";
+  const ROUTE = "/showroom/globe/";
+  const BODY_SET = new Set(["audrelia", "audrelia-sun", "solar-system-sun"]);
 
   const state = {
-    body: "earth",
+    body: "audrelia",
     running: true,
     direction: "forward",
     speedName: "normal",
-    speedValue: 0.0028,
+    speedValue: 0.0032,
     zoom: 100,
     longitude: 0,
     mount: null,
@@ -48,9 +47,9 @@
   };
 
   const speedValues = {
-    slow: 0.0014,
-    normal: 0.0028,
-    fast: 0.0056
+    slow: 0.0016,
+    normal: 0.0032,
+    fast: 0.0068
   };
 
   function clamp(value, min, max) {
@@ -66,8 +65,16 @@
       value = value.activeBody || value.body || value.name || value.value;
     }
 
-    value = String(value || "earth").toLowerCase();
-    return BODY_SET.has(value) ? value : "earth";
+    value = String(value || "").trim().toLowerCase();
+
+    if (value === "audrelia") return "audrelia";
+    if (value === "audrelia-sun" || value.includes("audrelia") && value.includes("sun")) return "audrelia-sun";
+    if (value === "solar-system-sun" || value === "solar-sun" || value.includes("solar")) return "solar-system-sun";
+
+    if (value === "earth" || value.includes("planet")) return "audrelia";
+    if (value === "sun") return "solar-system-sun";
+
+    return "audrelia";
   }
 
   function normalizeSpeed(value) {
@@ -75,13 +82,13 @@
       value = value.speedName || value.speed || value.value;
     }
 
-    value = String(value || "normal").toLowerCase();
-    return Object.prototype.hasOwnProperty.call(speedValues, value) ? value : "normal";
+    const speed = String(value || "normal").toLowerCase();
+    return Object.prototype.hasOwnProperty.call(speedValues, speed) ? speed : "normal";
   }
 
   function normalizeZoom(value) {
     if (value && typeof value === "object") value = value.zoom;
-    return clamp(value || 100, 70, 180);
+    return clamp(Number(value) || 100, 70, 240);
   }
 
   function resolveMount(target) {
@@ -101,10 +108,9 @@
     return (
       global.document.getElementById("showroomGlobeMount") ||
       global.document.getElementById("showroom-globe-mount") ||
-      global.document.getElementById("actualBodyMount") ||
       global.document.querySelector("[data-showroom-globe-mount]") ||
-      global.document.querySelector("[data-actual-bodies-mount='true']") ||
-      global.document.querySelector("[data-globe-mount]")
+      global.document.querySelector("[data-globe-mount]") ||
+      global.document.querySelector(".showroom-globe-mount")
     );
   }
 
@@ -116,19 +122,14 @@
     }
 
     if (typeof options.running === "boolean") state.running = options.running;
-
-    if (options.direction) {
-      state.direction = options.direction === "reverse" ? "reverse" : "forward";
-    }
+    if (options.direction) state.direction = options.direction === "reverse" ? "reverse" : "forward";
 
     if (options.speedName || options.speed) {
       state.speedName = normalizeSpeed(options);
       state.speedValue = speedValues[state.speedName];
     }
 
-    if (options.zoom !== undefined) {
-      state.zoom = normalizeZoom(options);
-    }
+    if (options.zoom !== undefined) state.zoom = normalizeZoom(options);
   }
 
   function getRenderApi() {
@@ -148,7 +149,7 @@
     }
 
     if (state.renderLoading) {
-      const wait = global.setInterval(function waitForRender() {
+      const wait = global.setInterval(() => {
         const ready = getRenderApi();
         if (ready) {
           global.clearInterval(wait);
@@ -164,33 +165,25 @@
 
     const script = global.document.createElement("script");
     script.src = RENDER_FILE;
-    script.async = false;
 
-    script.onload = function onRenderLoad() {
+    script.onload = () => {
       state.renderLoading = false;
       const loaded = getRenderApi();
 
       if (loaded) callback(loaded);
       else {
-        state.lastError = "RENDER_FILE_LOADED_API_MISSING";
-        writeReceipt("RENDER_FILE_LOADED_API_MISSING");
+        state.lastError = "RENDER_FILE_LOADED_BUT_API_MISSING";
+        writeReceipt("RENDER_FILE_API_MISSING");
       }
     };
 
-    script.onerror = function onRenderError() {
+    script.onerror = () => {
       state.renderLoading = false;
       state.lastError = "RENDER_FILE_LOAD_FAILED";
       writeReceipt("RENDER_FILE_LOAD_FAILED");
     };
 
     global.document.head.appendChild(script);
-  }
-
-  function stopLoop() {
-    if (state.raf) {
-      global.cancelAnimationFrame(state.raf);
-      state.raf = 0;
-    }
   }
 
   function ensureCanvas(target) {
@@ -201,9 +194,7 @@
       return false;
     }
 
-    if (state.mount === mount && state.canvas && mount.contains(state.canvas)) {
-      return true;
-    }
+    if (state.mount === mount && state.canvas) return true;
 
     stopLoop();
 
@@ -215,15 +206,15 @@
     mount.replaceChildren();
 
     const canvas = global.document.createElement("canvas");
-    canvas.className = "dgb-showroom-globe-render-canvas";
+    canvas.className = "dgb-audrelia-showroom-globe-render-canvas";
     canvas.setAttribute("data-showroom-globe-render-canvas", "true");
-    canvas.setAttribute("aria-label", "Showroom Globe selected body");
+    canvas.setAttribute("data-body", state.body);
+    canvas.setAttribute("aria-label", "Audrelia Showroom Globe rendered body");
 
     canvas.style.display = "block";
     canvas.style.width = "100%";
-    canvas.style.height = "100%";
     canvas.style.maxWidth = "100%";
-    canvas.style.maxHeight = "100%";
+    canvas.style.height = "auto";
     canvas.style.aspectRatio = "1 / 1";
     canvas.style.borderRadius = "50%";
     canvas.style.background = "transparent";
@@ -234,13 +225,23 @@
     state.canvas = canvas;
     state.renderer = null;
 
-    writeMountBoundary("CANVAS_CREATED");
+    mount.dataset.instrumentMounted = "true";
+    mount.dataset.instrumentBoundary = "thin-facade";
+    mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
+    mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
+    mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
+    mount.dataset.routeAuthority = "labels-controls-mount-zoom-wrapper";
+    mount.dataset.activeBody = state.body;
+    mount.dataset.activeBodies = "audrelia,audrelia-sun,solar-system-sun";
+    mount.dataset.referenceBodies = "earth,earth-sun,earth-moon";
+    mount.dataset.planetName = "Audrelia";
+    mount.dataset.universe = "nine-summits-universe";
+    mount.dataset.textureRequired = "false";
+    mount.dataset.visualPassClaimed = "false";
 
     if (global.ResizeObserver) {
-      state.resizeObserver = new ResizeObserver(function handleResize() {
-        if (state.renderer && typeof state.renderer.resize === "function") {
-          state.renderer.resize();
-        }
+      state.resizeObserver = new ResizeObserver(() => {
+        if (state.renderer && typeof state.renderer.resize === "function") state.renderer.resize();
         drawOnce();
       });
       state.resizeObserver.observe(mount);
@@ -255,44 +256,30 @@
       return;
     }
 
-    loadRenderFile(function onRenderApi(api) {
+    loadRenderFile((api) => {
       if (!api || typeof api.createRenderer !== "function") {
         state.lastError = "CREATE_RENDERER_MISSING";
         writeReceipt("CREATE_RENDERER_MISSING");
         return;
       }
 
-      state.renderer = api.createRenderer(state.canvas);
+      state.renderer = api.createRenderer(state.canvas, {
+        body: state.body,
+        planetName: "Audrelia",
+        universe: "nine-summits-universe"
+      });
+
       callback(state.renderer);
     });
-  }
-
-  function writeMountBoundary(status) {
-    if (!state.mount) return;
-
-    state.mount.dataset.instrumentMounted = "true";
-    state.mount.dataset.instrumentBoundary = "state-bridge-only";
-    state.mount.dataset.instrumentReceipt = status || "READY";
-    state.mount.dataset.activeBody = state.body;
-    state.mount.dataset.singleBodyMode = "true";
-    state.mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
-    state.mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
-    state.mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
-    state.mount.dataset.routeAuthority = "shell-labels-controls";
-    state.mount.dataset.routeDrawsBody = "false";
-    state.mount.dataset.instrumentDrawsBody = "false";
-    state.mount.dataset.renderDrawsBody = "true";
-    state.mount.dataset.demoUniverseRelationship = "false";
-    state.mount.dataset.moonOrbit = "false";
-    state.mount.dataset.planetOne = "reserved";
-    state.mount.dataset.generatedImage = "false";
-    state.mount.dataset.visualPassClaimed = "false";
   }
 
   function drawOnce() {
     if (!state.canvas) return;
 
-    ensureRenderer(function renderWithRenderer(renderer) {
+    state.canvas.dataset.body = state.body;
+    state.canvas.setAttribute("data-body", state.body);
+
+    ensureRenderer((renderer) => {
       if (!renderer || typeof renderer.render !== "function") {
         state.lastError = "RENDER_METHOD_MISSING";
         writeReceipt("RENDER_METHOD_MISSING");
@@ -301,15 +288,16 @@
 
       renderer.render({
         body: state.body,
+        activeBody: state.body,
         longitude: state.longitude,
         zoom: state.zoom,
-        singleBodyMode: true,
-        demoUniverseRelationship: false,
-        moonOrbit: false,
-        planetOne: "reserved"
+        planetName: "Audrelia",
+        universe: "nine-summits-universe",
+        activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
+        referenceBodies: ["earth", "earth-sun", "earth-moon"]
       });
 
-      writeReceipt("DRAWN_BY_RENDER_FILE");
+      writeReceipt("DRAWN_BY_AUDRELIA_RENDER_FILE");
     });
   }
 
@@ -328,53 +316,67 @@
     }
   }
 
-  function startLoop() {
-    stopLoop();
-
-    if (state.running) {
-      state.raf = global.requestAnimationFrame(step);
-    } else {
-      drawOnce();
+  function stopLoop() {
+    if (state.raf) {
+      global.cancelAnimationFrame(state.raf);
+      state.raf = 0;
     }
   }
 
-  function writeReceipt(status) {
-    writeMountBoundary(status);
+  function startLoop() {
+    stopLoop();
 
+    if (state.running) state.raf = global.requestAnimationFrame(step);
+    else drawOnce();
+  }
+
+  function writeReceipt(status) {
     state.lastReceipt = {
       ok: true,
       status: status || "READY",
       version: VERSION,
-      route: "/showroom/globe/",
-      page: "showroom-globe-inspection",
-      instrumentBoundary: "state-bridge-only",
+      route: ROUTE,
+      universe: "nine-summits-universe",
+      planetName: "Audrelia",
+      instrumentBoundary: "thin-facade",
       renderAuthority: "/assets/showroom.globe.render.js",
       bodyRenderAuthority: "/assets/showroom.globe.render.js",
       activeBody: state.body,
-      singleBodyMode: true,
+      activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
+      referenceBodies: ["earth", "earth-sun", "earth-moon"],
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
       longitude: state.longitude,
-      routeDrawsBody: false,
-      instrumentDrawsBody: false,
-      renderDrawsBody: true,
+      textureRequired: false,
       ownsPublicApi: true,
       ownsMotionState: true,
-      ownsBodyPixels: false,
-      ownsRouteCopy: false,
+      ownsBodyDrawing: false,
+      ownsRouteLabel: false,
+      ownsRouteDescription: false,
       ownsControlsMarkup: false,
-      ownsDemoUniverseRelationship: false,
-      ownsMoonOrbit: false,
-      ownsPlanetOne: false,
+      ownsRouteCopy: false,
       ownsGauges: false,
-      generatedImage: false,
       visualPassClaimed: false,
       lastError: state.lastError,
       timestamp: new Date().toISOString()
     };
+
+    if (state.mount) {
+      state.mount.dataset.instrumentReceipt = status || "READY";
+      state.mount.dataset.instrumentBoundary = "thin-facade";
+      state.mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
+      state.mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
+      state.mount.dataset.activeBody = state.body;
+      state.mount.dataset.activeBodies = "audrelia,audrelia-sun,solar-system-sun";
+      state.mount.dataset.referenceBodies = "earth,earth-sun,earth-moon";
+      state.mount.dataset.planetName = "Audrelia";
+      state.mount.dataset.universe = "nine-summits-universe";
+      state.mount.dataset.textureRequired = "false";
+      state.mount.dataset.visualPassClaimed = "false";
+    }
 
     return state.lastReceipt;
   }
@@ -387,58 +389,46 @@
         return {
           ok: false,
           status: "HOLD_NO_MOUNT",
-          version: VERSION
+          version: VERSION,
+          instrumentBoundary: "thin-facade"
         };
       }
 
-      ensureRenderer(function onRendererReady() {
-        startLoop();
-      });
-
+      ensureRenderer(() => startLoop());
       return writeReceipt("MOUNTED");
     } catch (error) {
       state.lastError = error && error.message ? error.message : String(error);
+
       return {
         ok: false,
         status: "HOLD_EXCEPTION",
         version: VERSION,
-        error: state.lastError
+        error: state.lastError,
+        instrumentBoundary: "thin-facade"
       };
     }
   }
 
-  function mount(target, options) {
-    return renderGlobe(target, options);
-  }
-
-  function render(target, options) {
-    return renderGlobe(target, options);
-  }
-
-  function renderActualBody(target, options) {
-    return renderGlobe(target, options);
-  }
+  function mount(target, options) { return renderGlobe(target, options); }
+  function render(target, options) { return renderGlobe(target, options); }
+  function renderActualBody(target, options) { return renderGlobe(target, options); }
 
   function setActiveBody(value) {
     state.body = normalizeBody(value);
-    state.longitude = 0;
+
     if (state.mount) startLoop();
     return writeReceipt("BODY_SELECTED");
   }
 
   function setMotion(options) {
     applyOptions(options);
+
     if (state.mount) startLoop();
     return writeReceipt("MOTION_UPDATED");
   }
 
-  function update(options) {
-    return setMotion(options);
-  }
-
-  function setState(options) {
-    return setMotion(options);
-  }
+  function update(options) { return setMotion(options); }
+  function setState(options) { return setMotion(options); }
 
   function start() {
     state.running = true;
@@ -446,9 +436,7 @@
     return writeReceipt("STARTED");
   }
 
-  function resume() {
-    return start();
-  }
+  function resume() { return start(); }
 
   function pause() {
     state.running = false;
@@ -483,14 +471,14 @@
 
   function setZoom(value) {
     if (value && typeof value === "object") {
-      if (value.zoom === "in") state.zoom = clamp(state.zoom + 10, 70, 180);
-      else if (value.zoom === "out") state.zoom = clamp(state.zoom - 10, 70, 180);
+      if (value.zoom === "in") state.zoom = clamp(state.zoom + 10, 70, 240);
+      else if (value.zoom === "out") state.zoom = clamp(state.zoom - 10, 70, 240);
       else if (value.zoom === "reset") state.zoom = 100;
       else state.zoom = normalizeZoom(value);
     } else if (value === "in") {
-      state.zoom = clamp(state.zoom + 10, 70, 180);
+      state.zoom = clamp(state.zoom + 10, 70, 240);
     } else if (value === "out") {
-      state.zoom = clamp(state.zoom - 10, 70, 180);
+      state.zoom = clamp(state.zoom - 10, 70, 240);
     } else if (value === "reset") {
       state.zoom = 100;
     } else {
@@ -501,21 +489,21 @@
     return writeReceipt("ZOOM_UPDATED");
   }
 
-  function writeReceipts() {
-    return writeReceipt("RECEIPT_WRITTEN");
-  }
+  function writeReceipts() { return writeReceipt("RECEIPT_WRITTEN"); }
 
   function getStatus() {
     return {
       ok: true,
       version: VERSION,
-      route: "/showroom/globe/",
-      page: "showroom-globe-inspection",
-      instrumentBoundary: "state-bridge-only",
+      route: ROUTE,
+      universe: "nine-summits-universe",
+      planetName: "Audrelia",
+      instrumentBoundary: "thin-facade",
       renderAuthority: "/assets/showroom.globe.render.js",
       bodyRenderAuthority: "/assets/showroom.globe.render.js",
       activeBody: state.body,
-      singleBodyMode: true,
+      activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
+      referenceBodies: ["earth", "earth-sun", "earth-moon"],
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
@@ -525,28 +513,22 @@
       mountPresent: Boolean(state.mount),
       canvasPresent: Boolean(state.canvas),
       rendererPresent: Boolean(state.renderer),
-      routeDrawsBody: false,
-      instrumentDrawsBody: false,
-      renderDrawsBody: true,
+      textureRequired: false,
+      lastReceipt: state.lastReceipt,
+      lastError: state.lastError,
       ownsPublicApi: true,
       ownsMotionState: true,
-      ownsBodyPixels: false,
-      ownsRouteCopy: false,
+      ownsBodyDrawing: false,
+      ownsRouteLabel: false,
+      ownsRouteDescription: false,
       ownsControlsMarkup: false,
-      ownsDemoUniverseRelationship: false,
-      ownsMoonOrbit: false,
-      ownsPlanetOne: false,
+      ownsRouteCopy: false,
       ownsGauges: false,
-      generatedImage: false,
-      visualPassClaimed: false,
-      lastReceipt: state.lastReceipt,
-      lastError: state.lastError
+      visualPassClaimed: false
     };
   }
 
-  function status() {
-    return getStatus();
-  }
+  function status() { return getStatus(); }
 
   function boot() {
     const mountNode = resolveMount(null);
@@ -563,9 +545,8 @@
     }
 
     try {
-      global.dispatchEvent(new CustomEvent("showroom:globe:instrument-ready", {
-        detail: getStatus()
-      }));
+      global.dispatchEvent(new CustomEvent("showroom:globe:instrument-ready", { detail: getStatus() }));
+      global.dispatchEvent(new CustomEvent("dgb:showroom:audrelia-association-renewed", { detail: getStatus() }));
     } catch (_) {}
   }
 

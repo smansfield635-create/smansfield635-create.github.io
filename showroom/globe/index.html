@@ -4,10 +4,10 @@
   lang="en"
   data-page="audrelia-showroom-globe-touch"
   data-route="/showroom/globe/"
-  data-contract="AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1"
+  data-contract="ADRALIA_MOON_DOWNSTREAM_SURFACE_ROUTE_TNT_v1"
   data-universe="nine-summits-universe"
   data-active-planet="Audrelia"
-  data-moon-name="Adralia’s Moon"
+  data-moon-name="Adralia's Moon"
   data-active-assets="audrelia,audrelia-sun,audrelia-moon"
   data-reference-bodies="earth,earth-sun,earth-moon"
   data-generated-image="false"
@@ -19,18 +19,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Audrelia Showroom Globe</title>
-  <meta name="description" content="Touch-first Showroom Globe page for Audrelia, Audrelia’s Sun, and Adralia’s Moon.">
+  <meta name="description" content="Touch-first Showroom Globe page for Audrelia, Audrelia's Sun, and Adralia's Moon.">
 
   <style>
     :root {
-      --bg: #050813;
       --panel: rgba(9, 14, 26, 0.92);
       --line: rgba(255, 255, 255, 0.16);
       --text: #f8f1dd;
       --muted: rgba(242, 246, 255, 0.74);
       --faint: rgba(242, 246, 255, 0.48);
       --gold: #f2c76f;
-      --blue: #78d8ff;
       --stage: min(100%, 1180px);
       --card: min(100%, 900px);
     }
@@ -153,7 +151,7 @@
     .hero {
       width: 100%;
       display: grid;
-      gap: 0.92rem;
+      gap: 0.9rem;
       padding: clamp(0.75rem, 3vw, 1.65rem) 0 clamp(0.85rem, 3vw, 1.35rem);
       text-align: center;
     }
@@ -176,16 +174,15 @@
       text-wrap: balance;
     }
 
-    .lead {
-      width: min(100%, 800px);
+    .quote {
+      width: min(100%, 720px);
       margin: 0 auto;
-      color: var(--muted);
-      font-size: clamp(0.98rem, 3.4vw, 1.14rem);
-      line-height: 1.56;
+      color: rgba(255, 241, 205, 0.94);
+      font-size: clamp(1rem, 3.5vw, 1.18rem);
+      line-height: 1.5;
       text-wrap: balance;
     }
 
-    .chips,
     .asset-strip {
       display: flex;
       justify-content: center;
@@ -193,28 +190,21 @@
       gap: 0.45rem;
     }
 
-    .chip,
     .asset-button {
       min-height: 2.35rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 0.48rem 0.78rem;
-      border: 1px solid rgba(242,199,111,0.32);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: 999px;
-      color: rgba(255,238,174,0.92);
-      background: rgba(242,199,111,0.07);
+      color: var(--text);
+      background: rgba(255,255,255,0.035);
       font-size: 0.74rem;
       font-weight: 950;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-    }
-
-    .asset-button {
       cursor: pointer;
-      color: var(--text);
-      background: rgba(255,255,255,0.035);
-      border-color: rgba(255,255,255,0.16);
     }
 
     .asset-button.active,
@@ -232,9 +222,7 @@
     }
 
     .stage-card,
-    .gesture-panel,
-    .asset-panel,
-    .contract-panel {
+    .gesture-panel {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: clamp(1.25rem, 4.8vw, 2rem);
@@ -338,13 +326,8 @@
       text-wrap: balance;
     }
 
-    .gesture-panel,
-    .asset-panel,
-    .contract-panel {
-      padding: clamp(0.85rem, 3.3vw, 1.25rem);
-    }
-
     .gesture-panel {
+      padding: clamp(0.85rem, 3.3vw, 1.25rem);
       display: grid;
       gap: 0.7rem;
       text-align: center;
@@ -378,50 +361,6 @@
       text-align: center;
     }
 
-    .asset-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem;
-    }
-
-    .asset-card {
-      min-width: 0;
-      padding: 0.9rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 1.2rem;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .asset-card h2 {
-      margin: 0 0 0.4rem;
-      color: rgba(255, 244, 215, 0.96);
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .asset-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.46;
-    }
-
-    .contract-panel h2 {
-      margin: 0 0 0.6rem;
-      font-size: clamp(1rem, 4vw, 1.24rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .contract {
-      margin: 0;
-      color: var(--faint);
-      font: 700 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
     footer {
       padding: 1.45rem 0 0.45rem;
       color: var(--faint);
@@ -437,8 +376,6 @@
       }
 
       .nav { justify-content: flex-start; }
-
-      .asset-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 460px) {
@@ -473,23 +410,16 @@
     <main id="showroom-globe-main">
       <section class="hero" aria-labelledby="page-title">
         <p class="eyebrow">Showroom Globe · touch-first asset viewer</p>
-        <h1 id="page-title">Audrelia, Audrelia’s Sun, and Adralia’s Moon.</h1>
+        <h1 id="page-title">Audrelia, Audrelia's Sun, and Adralia's Moon.</h1>
 
-        <p class="lead">
-          Earth, the Sun, and Earth’s Moon remain reference bodies. The active assets are now separated and labeled as Audrelia, Audrelia’s Sun, and Adralia’s Moon.
+        <p class="quote">
+          “A world becomes real when its bodies stop explaining themselves and begin holding their place.”
         </p>
 
         <div class="asset-strip" aria-label="Choose active asset">
           <button type="button" class="asset-button active" data-body="audrelia" aria-pressed="true">Audrelia</button>
-          <button type="button" class="asset-button" data-body="audrelia-sun" aria-pressed="false">Audrelia’s Sun</button>
-          <button type="button" class="asset-button" data-body="audrelia-moon" aria-pressed="false">Adralia’s Moon</button>
-        </div>
-
-        <div class="chips" aria-label="Boundary receipts">
-          <span class="chip">Touch controls</span>
-          <span class="chip">No giant panel</span>
-          <span class="chip">Moon redesigned</span>
-          <span class="chip">No graphic box</span>
+          <button type="button" class="asset-button" data-body="audrelia-sun" aria-pressed="false">Audrelia's Sun</button>
+          <button type="button" class="asset-button" data-body="audrelia-moon" aria-pressed="false">Adralia's Moon</button>
         </div>
       </section>
 
@@ -497,7 +427,7 @@
         <article
           class="stage-card"
           id="stageCard"
-          data-route-authority="labels-mount-touch-wrapper"
+          data-route-authority="quote-labels-mount-touch-wrapper"
           data-instrument-authority="/assets/showroom.globe.instrument.js"
           data-render-authority="/assets/showroom.globe.render.js"
           data-active-body="audrelia"
@@ -505,7 +435,7 @@
           data-active-assets="audrelia,audrelia-sun,audrelia-moon"
           data-universe="nine-summits-universe"
           data-planet-name="Audrelia"
-          data-moon-name="Adralia’s Moon"
+          data-moon-name="Adralia's Moon"
           data-visual-pass-claimed="false"
         >
           <div class="field-glow" aria-hidden="true"></div>
@@ -523,7 +453,7 @@
               data-active-assets="audrelia,audrelia-sun,audrelia-moon"
               data-reference-bodies="earth,earth-sun,earth-moon"
               data-planet-name="Audrelia"
-              data-moon-name="Adralia’s Moon"
+              data-moon-name="Adralia's Moon"
               data-universe="nine-summits-universe"
               data-touch-control="true"
               data-route-controls-panel="removed"
@@ -535,83 +465,38 @@
 
             <div class="body-label">
               <strong id="bodyName">Audrelia</strong>
-              <span id="bodyDescription">Audrelia is the active Nine Summits planet expression delivered through the Showroom Globe shell.</span>
+              <span id="bodyDescription">The active Nine Summits planet expression.</span>
             </div>
           </div>
         </article>
 
         <section class="gesture-panel" aria-label="Touchscreen controls">
-          <p class="gesture-title">Touchscreen controls</p>
-          <p class="gesture-list">
-            Drag the globe to rotate. Pinch to zoom. Double tap to pause or resume. Swipe left or right to switch assets.
-          </p>
+          <p class="gesture-title">Touch controls</p>
+          <p class="gesture-list">Drag to rotate. Pinch to zoom. Double tap to pause or resume. Swipe left or right to switch assets.</p>
           <div class="readout" aria-live="polite" id="motionReadout">
-            Motion speed: normal · direction: forward · active asset: Audrelia · zoom: 100%
+            Active asset: Audrelia · zoom: 100%
           </div>
-        </section>
-
-        <section class="asset-panel" aria-label="Correct asset labels">
-          <div class="asset-grid">
-            <article class="asset-card">
-              <h2>Audrelia</h2>
-              <p>The active planet body. Earth remains a reference model for physical realism, not the final identity.</p>
-            </article>
-
-            <article class="asset-card">
-              <h2>Audrelia’s Sun</h2>
-              <p>The active local star. The stronger solar visual authority belongs here.</p>
-            </article>
-
-            <article class="asset-card">
-              <h2>Adralia’s Moon</h2>
-              <p>A lunar body designed after Earth’s Moon, with subtle manufactured climate-regulation elements.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="contract-panel" aria-labelledby="route-contract-title">
-          <h2 id="route-contract-title">Route contract</h2>
-          <pre class="contract" id="routeContract">AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1
-route=/showroom/globe/
-universe=nine-summits-universe
-active-assets=audrelia,audrelia-sun,audrelia-moon
-labels=Audrelia,Audrelia’s Sun,Adralia’s Moon
-reference-bodies=earth,earth-sun,earth-moon
-route-authority=labels-mount-touch-wrapper
-touch-controls=active
-giant-control-panel=removed
-instrument-authority=/assets/showroom.globe.instrument.js
-render-platform=/assets/showroom.globe.render.js
-planet-extension=/assets/audrelia.planet.render.js
-sun-extension=/assets/audrelia.sun.render.js
-moon-extension=/assets/audrelia.climate-moon.render.js
-route-draws-body=false
-instrument-draws-body=false
-extensions-own-body-pixels=true
-generated-image=false
-graphic-box=false
-streaming=false
-visual-pass-claimed=false</pre>
         </section>
       </section>
     </main>
 
     <footer>
-      AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1 · control panel removed · touchscreen authority active · owner visual receipt required.
+      ADRALIA_MOON_DOWNSTREAM_SURFACE_ROUTE_TNT_v1 · quote stage · downstream moon surface active · owner visual receipt required.
     </footer>
   </div>
 
-  <script src="/assets/showroom.globe.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
+  <script src="/assets/showroom.globe.render.js?v=ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1"></script>
   <script src="/assets/audrelia.planet.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
   <script src="/assets/audrelia.sun.render.js?v=AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1"></script>
-  <script src="/assets/audrelia.climate-moon.render.js?v=ADRALIA_MOON_EARTH_MOON_MECHANIZED_RENEWAL_TNT_v1"></script>
+  <script src="/assets/adralia.moon.surface.render.js?v=ADRALIA_MOON_SURFACE_DOWNSTREAM_TNT_v1"></script>
+  <script src="/assets/audrelia.climate-moon.render.js?v=ADRALIA_MOON_SURFACE_WRAPPER_RENEWAL_TNT_v1"></script>
   <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_TOUCH_INSTRUMENT_RENEWAL_TNT_v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const VERSION = "AUDRELIA_SHOWROOM_TOUCH_ASSET_LABEL_RENEWAL_TNT_v1";
+      const VERSION = "ADRALIA_MOON_DOWNSTREAM_SURFACE_ROUTE_TNT_v1";
 
       const mount = document.getElementById("showroomGlobeMount");
       const stageCard = document.getElementById("stageCard");
@@ -623,15 +508,15 @@ visual-pass-claimed=false</pre>
       const bodyMeta = {
         "audrelia": {
           label: "Audrelia",
-          description: "Audrelia is the active Nine Summits planet expression delivered through the Showroom Globe shell."
+          description: "The active Nine Summits planet expression."
         },
         "audrelia-sun": {
-          label: "Audrelia’s Sun",
-          description: "Audrelia’s Sun is the active local stellar body for this universe expression."
+          label: "Audrelia's Sun",
+          description: "The local stellar body for Audrelia."
         },
         "audrelia-moon": {
-          label: "Adralia’s Moon",
-          description: "Adralia’s Moon is designed after Earth’s Moon, with subtle manufactured climate-regulation elements."
+          label: "Adralia's Moon",
+          description: "A moon-first lunar body with a subtle climate-regulation layer."
         }
       };
 
@@ -664,7 +549,7 @@ visual-pass-claimed=false</pre>
           route: "/showroom/globe/",
           universe: "nine-summits-universe",
           planetName: "Audrelia",
-          moonName: "Adralia’s Moon",
+          moonName: "Adralia's Moon",
           activeBody: state.body,
           body: state.body,
           running: state.running,
@@ -705,8 +590,7 @@ visual-pass-claimed=false</pre>
           state.zoom = Number(extra.zoom) || state.zoom;
         }
 
-        motionReadout.textContent =
-          `Motion speed: ${state.speedName} · direction: ${state.direction} · active asset: ${meta.label} · zoom: ${Math.round(state.zoom)}%`;
+        motionReadout.textContent = `Active asset: ${meta.label} · zoom: ${Math.round(state.zoom)}%`;
       }
 
       function callInstrument(methods, extra = {}) {
@@ -765,6 +649,12 @@ visual-pass-claimed=false</pre>
 
       window.addEventListener("dgb:showroom:audrelia-render-platform-ready", () => {
         callInstrument(["renderGlobe", "mount", "render"], { reason: "platform-ready" });
+      });
+
+      window.addEventListener("dgb:adralia:moon-surface-ready", () => {
+        if (state.body === "audrelia-moon") {
+          callInstrument(["renderGlobe", "mount", "render"], { reason: "moon-surface-ready" });
+        }
       });
 
       updateUI();

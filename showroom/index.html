@@ -2,12 +2,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="showroom-asset-launchpad-shrine"
+  data-page="showroom-manor-atrium-museum"
   data-route="/showroom/"
-  data-contract="SHOWROOM_ROLE_MARKS_CLEANUP_TNT_v1"
-  data-showroom-role="asset-shrine-launchpad"
-  data-role-marks="etched-noninteractive"
-  data-touch-affordance="interactive-only"
+  data-contract="SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1"
+  data-showroom-role="manor-atrium-museum"
+  data-atrium-role="threshold-reception-gallery"
+  data-spine-system="canonical-multi-spine"
+  data-diagnostic-scope="256"
+  data-touch-affordance="interactive-cases-only"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
@@ -17,19 +19,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Showroom Asset Shrine</title>
+  <title>Diamond Gate Bridge · Showroom Atrium</title>
   <meta
     name="description"
-    content="The Diamond Gate Bridge Showroom is the launchpad, shrine, gallery, and proof-linked index for built assets, frontier assets, explorer routes, and planetary systems."
+    content="The Showroom is the Manor atrium: a museum-like launch hall where built assets sit in glass cases, routes branch through a canonical multi-spine, and Gauges preserve the 256 diagnostic scope."
   >
 
   <style>
     :root {
-      --panel: rgba(9, 14, 26, 0.92);
+      --panel: rgba(9, 14, 26, 0.90);
+      --glass: rgba(255, 255, 255, 0.055);
+      --glass-2: rgba(255, 255, 255, 0.028);
       --line: rgba(255,255,255,0.15);
+      --line-gold: rgba(242,199,111,0.42);
       --text: #f8f1dd;
       --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.50);
+      --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
       --blue: #78d8ff;
       --green: #a5efcc;
@@ -44,9 +49,10 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
-        radial-gradient(circle at 50% 70%, rgba(80,145,230,0.14), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 72%, #02040a);
+        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.18), transparent 28rem),
+        radial-gradient(circle at 50% 46%, rgba(120,216,255,0.12), transparent 34rem),
+        radial-gradient(circle at 50% 88%, rgba(165,239,204,0.08), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -65,7 +71,7 @@
         radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
         radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
       background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.42;
+      opacity: 0.38;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -153,7 +159,7 @@
     .hero {
       display: grid;
       gap: 1rem;
-      padding: clamp(1rem, 4vw, 2.2rem) 0 clamp(1rem, 3vw, 1.5rem);
+      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
       text-align: center;
     }
 
@@ -169,14 +175,14 @@
     h1 {
       width: min(100%, 980px);
       margin: 0 auto;
-      font-size: clamp(2.25rem, 8.8vw, 5.65rem);
-      line-height: 0.94;
-      letter-spacing: -0.075em;
+      font-size: clamp(2.45rem, 9.2vw, 5.9rem);
+      line-height: 0.92;
+      letter-spacing: -0.078em;
       text-wrap: balance;
     }
 
     .quote {
-      width: min(100%, 760px);
+      width: min(100%, 780px);
       margin: 0 auto;
       color: rgba(255,241,205,0.96);
       font-size: clamp(1.02rem, 3.4vw, 1.22rem);
@@ -188,7 +194,7 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.55rem;
     }
 
     .button {
@@ -225,47 +231,107 @@
       outline: none;
     }
 
-    .role-strip {
-      width: min(100%, 850px);
-      margin: 0.35rem auto 0;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.46rem;
+    .atrium {
+      width: min(100%, 1040px);
+      margin: clamp(1rem, 3vw, 1.4rem) auto 0;
+      position: relative;
+      padding: clamp(1rem, 4vw, 1.4rem);
+      border: 1px solid rgba(242,199,111,0.22);
+      border-radius: clamp(1.35rem, 5vw, 2.2rem);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.10), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
+        rgba(8,12,20,0.62);
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.09);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .atrium::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 1.2rem;
+      bottom: 1.2rem;
+      width: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
+      opacity: 0.72;
+      z-index: -1;
+    }
+
+    .atrium-title {
+      display: grid;
+      gap: 0.32rem;
+      text-align: center;
+      margin-bottom: clamp(0.85rem, 3vw, 1.25rem);
+    }
+
+    .atrium-title h2 {
+      margin: 0;
+      font-size: clamp(1.45rem, 4.8vw, 2.25rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .atrium-title p {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.48;
+      text-wrap: balance;
+    }
+
+    .spine-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(0.65rem, 2vw, 0.9rem);
+    }
+
+    .spine {
+      min-height: 8.6rem;
+      position: relative;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 0.4rem;
+      padding: 0.95rem 0.7rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.25rem;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+        rgba(255,255,255,0.025);
+      text-align: center;
       pointer-events: none;
       user-select: none;
     }
 
-    .role-mark {
-      position: relative;
-      min-height: 2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.38rem 0.68rem 0.38rem 1.18rem;
-      border: 1px solid rgba(242,199,111,0.22);
-      border-radius: 999px;
-      color: rgba(255,238,174,0.74);
-      background:
-        linear-gradient(180deg, rgba(242,199,111,0.055), rgba(255,255,255,0.012)),
-        rgba(8,12,20,0.30);
-      font-size: 0.68rem;
-      font-weight: 900;
-      letter-spacing: 0.075em;
-      text-transform: uppercase;
-      opacity: 0.82;
-      cursor: default;
+    .spine::before {
+      content: "";
+      width: 2.2rem;
+      height: 2.2rem;
+      border: 1px solid rgba(242,199,111,0.48);
+      border-radius: 0.55rem;
+      transform: rotate(45deg);
+      background: rgba(242,199,111,0.055);
+      box-shadow: 0 0 2.2rem rgba(242,199,111,0.10);
     }
 
-    .role-mark::before {
-      content: "";
-      position: absolute;
-      left: 0.58rem;
-      width: 0.32rem;
-      height: 0.32rem;
-      border: 1px solid rgba(242,199,111,0.65);
-      transform: rotate(45deg);
-      opacity: 0.78;
+    .spine strong {
+      color: rgba(255,241,205,0.95);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .spine span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.34;
     }
 
     .section {
@@ -296,37 +362,51 @@
       text-wrap: balance;
     }
 
-    .grid {
+    .case-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: clamp(0.75rem, 2vw, 1rem);
     }
 
-    .grid.two {
+    .case-grid.two {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    .card {
-      min-height: 13rem;
+    .case {
+      min-height: 14rem;
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 1.2rem;
+      gap: 1.15rem;
       padding: clamp(0.95rem, 3vw, 1.15rem);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: clamp(1.1rem, 3.6vw, 1.65rem);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)),
+        linear-gradient(135deg, rgba(255,255,255,0.09), transparent 34%),
+        linear-gradient(180deg, var(--glass), var(--glass-2)),
         var(--panel);
       box-shadow:
-        0 1.4rem 4.8rem rgba(0,0,0,0.28),
-        inset 0 1px 0 rgba(255,255,255,0.08);
+        0 1.4rem 4.8rem rgba(0,0,0,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.14);
       overflow: hidden;
       isolation: isolate;
     }
 
-    .card::before {
+    .case::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 55%;
+      height: 100%;
+      transform: skewX(-18deg) translateX(-42%);
+      background: linear-gradient(90deg, rgba(255,255,255,0.14), rgba(255,255,255,0.00));
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .case::after {
       content: "";
       position: absolute;
       inset: -25% -20% auto auto;
@@ -337,26 +417,43 @@
       z-index: -1;
     }
 
-    .card.primary::before {
+    .case.primary::after {
       background: radial-gradient(circle, rgba(120,216,255,0.18), transparent 68%);
     }
 
-    .card.green::before {
+    .case.green::after {
       background: radial-gradient(circle, rgba(165,239,204,0.15), transparent 68%);
     }
 
-    .card h3 {
+    .case h3 {
       margin: 0;
-      font-size: clamp(1.05rem, 3.8vw, 1.45rem);
+      font-size: clamp(1.08rem, 3.8vw, 1.48rem);
       line-height: 1.05;
       letter-spacing: -0.035em;
     }
 
-    .card p {
+    .case p {
       margin: 0.55rem 0 0;
       color: var(--muted);
       font-size: 0.92rem;
       line-height: 1.48;
+    }
+
+    .case-mark {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-bottom: 0.65rem;
+      padding: 0.3rem 0.52rem;
+      border: 1px solid rgba(242,199,111,0.30);
+      border-radius: 999px;
+      color: rgba(242,199,111,0.88);
+      background: rgba(242,199,111,0.06);
+      font-size: 0.62rem;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
     }
 
     .meta {
@@ -384,7 +481,7 @@
       cursor: default;
     }
 
-    .card-link {
+    .case-link {
       align-self: flex-start;
       display: inline-flex;
       align-items: center;
@@ -402,17 +499,53 @@
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
     }
 
-    .card-link::after {
+    .case-link::after {
       content: " →";
       letter-spacing: 0;
     }
 
-    .card-link:hover,
-    .card-link:focus-visible {
+    .case-link:hover,
+    .case-link:focus-visible {
       transform: translateY(-2px);
       border-color: rgba(242,199,111,0.95);
       background: rgba(242,199,111,0.14);
       outline: none;
+    }
+
+    .diagnostic-strip {
+      width: min(100%, 980px);
+      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+    }
+
+    .scope-tile {
+      min-height: 6.6rem;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 0.25rem;
+      padding: 0.85rem;
+      border: 1px dashed rgba(242,199,111,0.24);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.024);
+      text-align: center;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .scope-tile strong {
+      color: rgba(255,241,205,0.95);
+      font-size: clamp(1.15rem, 4vw, 1.55rem);
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .scope-tile span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.32;
     }
 
     .receipt {
@@ -451,6 +584,18 @@
       text-align: center;
     }
 
+    @media (max-width: 980px) {
+      .spine-grid,
+      .diagnostic-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .case-grid,
+      .case-grid.two {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 900px) {
       .topbar {
         align-items: flex-start;
@@ -459,12 +604,14 @@
 
       .nav { justify-content: flex-start; }
 
-      .grid,
-      .grid.two {
+      .case { min-height: 0; }
+    }
+
+    @media (max-width: 560px) {
+      .spine-grid,
+      .diagnostic-strip {
         grid-template-columns: 1fr;
       }
-
-      .card { min-height: 0; }
     }
   </style>
 </head>
@@ -494,37 +641,59 @@
 
     <main id="showroom-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Showroom · Asset Shrine · Launchpad</p>
-        <h1 id="page-title">Every built asset earns its own door.</h1>
+        <p class="eyebrow">Showroom · Manor Atrium · Museum</p>
+        <h1 id="page-title">The Manor opens into the atrium.</h1>
 
         <p class="quote">
-          “The Showroom does not trap the universe. It honors what has survived the build, then sends each asset to the room where it belongs.”
+          “After the Door, the visitor enters the hall of proof: glass cases, living routes, and every built asset held in its proper place.”
         </p>
 
         <div class="hero-actions" aria-label="Primary showroom actions">
-          <a class="button" href="/showroom/globe/">Launch Globe Assets</a>
-          <a class="button secondary" href="/explore/">Open Manor</a>
+          <a class="button" href="/showroom/globe/">Enter the Globe Case</a>
+          <a class="button secondary" href="/explore/">Walk the Manor</a>
           <a class="button secondary" href="/gauges/">Read Gauges</a>
         </div>
+      </section>
 
-        <div class="role-strip" aria-label="Showroom role marks; these labels are informational, not controls">
-          <span class="role-mark">Asset shrine</span>
-          <span class="role-mark">Launchpad</span>
-          <span class="role-mark">Explorer gateway</span>
-          <span class="role-mark">Frontier gateway</span>
-          <span class="role-mark">Proof-linked</span>
+      <section class="atrium" aria-labelledby="atrium-title">
+        <div class="atrium-title">
+          <h2 id="atrium-title">A multi-spine launch hall.</h2>
+          <p>The Showroom is the atrium inside the Manor: a museum surface where built assets are displayed, routed, and measured without collapsing into one another.</p>
+        </div>
+
+        <div class="spine-grid" aria-label="Atrium spine structure">
+          <div class="spine">
+            <strong>Asset spine</strong>
+            <span>Built objects receive display cases.</span>
+          </div>
+
+          <div class="spine">
+            <strong>World spine</strong>
+            <span>Universe and Audralia keep their own setting.</span>
+          </div>
+
+          <div class="spine">
+            <strong>Product spine</strong>
+            <span>Useful chambers stay under Products.</span>
+          </div>
+
+          <div class="spine">
+            <strong>Proof spine</strong>
+            <span>Gauges measure without mutating.</span>
+          </div>
         </div>
       </section>
 
       <section class="section" aria-labelledby="built-assets-title">
         <div class="section-head">
-          <h2 id="built-assets-title">Built assets</h2>
-          <p>These assets have dedicated routes, inspection rooms, or downstream settings.</p>
+          <h2 id="built-assets-title">Glass cases</h2>
+          <p>Each case is a launch surface. The case can be touched. The labels inside the case are informational.</p>
         </div>
 
-        <div class="grid">
-          <article class="card primary">
+        <div class="case-grid">
+          <article class="case primary">
             <div>
+              <span class="case-mark">Prime case</span>
               <h3>Audralia viewer</h3>
               <p>Inspect Audralia, Audralia’s Sun, and Adralia’s Moon from the active globe route.</p>
               <div class="meta" aria-label="Informational tags">
@@ -533,11 +702,12 @@
                 <span class="pill">Assets</span>
               </div>
             </div>
-            <a class="card-link" href="/showroom/globe/">Open viewer</a>
+            <a class="case-link" href="/showroom/globe/">Open viewer</a>
           </article>
 
-          <article class="card">
+          <article class="case">
             <div>
+              <span class="case-mark">World case</span>
               <h3>Nine Summits Universe</h3>
               <p>The universe has its own setting. The Showroom routes to it instead of containing it.</p>
               <div class="meta" aria-label="Informational tags">
@@ -545,32 +715,34 @@
                 <span class="pill">Setting</span>
               </div>
             </div>
-            <a class="card-link" href="/nine-summits/universe/">Open universe</a>
+            <a class="case-link" href="/nine-summits/universe/">Open universe</a>
           </article>
 
-          <article class="card">
+          <article class="case">
             <div>
+              <span class="case-mark">Product case</span>
               <h3>Products wing</h3>
-              <p>Product chambers remain reachable from the shrine without becoming detached roots.</p>
+              <p>Product chambers remain reachable from the atrium without becoming detached roots.</p>
               <div class="meta" aria-label="Informational tags">
                 <span class="pill">Products</span>
                 <span class="pill">Wing</span>
               </div>
             </div>
-            <a class="card-link" href="/products/">Open products</a>
+            <a class="case-link" href="/products/">Open products</a>
           </article>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="frontier-explorer-title">
+      <section class="section" aria-labelledby="manor-frontier-title">
         <div class="section-head">
-          <h2 id="frontier-explorer-title">Manor and Frontier</h2>
-          <p>The Manor maps the rooms. Frontier holds the expansion edge. Showroom launches both without becoming either one.</p>
+          <h2 id="manor-frontier-title">Manor and Frontier</h2>
+          <p>The Manor maps the rooms. Frontier holds the expansion edge. The atrium lets the visitor move without losing the house.</p>
         </div>
 
-        <div class="grid two">
-          <article class="card green">
+        <div class="case-grid two">
+          <article class="case green">
             <div>
+              <span class="case-mark">Map case</span>
               <h3>Manor</h3>
               <p>The route-map surface for the estate. Use it when the visitor needs orientation before choosing a deeper path.</p>
               <div class="meta" aria-label="Informational tags">
@@ -579,11 +751,12 @@
                 <span class="pill">Return</span>
               </div>
             </div>
-            <a class="card-link" href="/explore/">Open Manor</a>
+            <a class="case-link" href="/explore/">Open Manor</a>
           </article>
 
-          <article class="card green">
+          <article class="case green">
             <div>
+              <span class="case-mark">Edge case</span>
               <h3>Frontier</h3>
               <p>The downstream expansion edge for future-facing discovery, research pressure, and unsettled assets.</p>
               <div class="meta" aria-label="Informational tags">
@@ -592,44 +765,47 @@
                 <span class="pill">Edge</span>
               </div>
             </div>
-            <a class="card-link" href="/frontier/">Open Frontier</a>
+            <a class="case-link" href="/frontier/">Open Frontier</a>
           </article>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="proof-routes-title">
+      <section class="section" aria-labelledby="proof-title">
         <div class="section-head">
-          <h2 id="proof-routes-title">Proof and return routes</h2>
-          <p>The shrine stays useful when visitors can return to source, proof, and orientation without losing the thread.</p>
+          <h2 id="proof-title">Return and proof</h2>
+          <p>The atrium is useful because every exhibit has a return line and every claim can be measured.</p>
         </div>
 
-        <div class="grid">
-          <article class="card">
+        <div class="case-grid">
+          <article class="case">
             <div>
+              <span class="case-mark">Root case</span>
               <h3>Compass</h3>
-              <p>Return to the command surface and root directional entry.</p>
+              <p>Return to the public command surface and root directional entry.</p>
               <div class="meta" aria-label="Informational tags">
                 <span class="pill">Root</span>
                 <span class="pill">Command</span>
               </div>
             </div>
-            <a class="card-link" href="/">Open Compass</a>
+            <a class="case-link" href="/">Open Compass</a>
           </article>
 
-          <article class="card">
+          <article class="case">
             <div>
+              <span class="case-mark">Threshold case</span>
               <h3>Door</h3>
-              <p>Enter the estate through the threshold route.</p>
+              <p>Cross the threshold again when the visitor needs a clean entry point.</p>
               <div class="meta" aria-label="Informational tags">
                 <span class="pill">Entry</span>
                 <span class="pill">Threshold</span>
               </div>
             </div>
-            <a class="card-link" href="/door/">Cross Door</a>
+            <a class="case-link" href="/door/">Cross Door</a>
           </article>
 
-          <article class="card">
+          <article class="case">
             <div>
+              <span class="case-mark">Gauge case</span>
               <h3>Gauges</h3>
               <p>Read source checks, served-route receipts, and proof status.</p>
               <div class="meta" aria-label="Informational tags">
@@ -637,22 +813,46 @@
                 <span class="pill">Receipts</span>
               </div>
             </div>
-            <a class="card-link" href="/gauges/">Read Gauges</a>
+            <a class="case-link" href="/gauges/">Read Gauges</a>
           </article>
+        </div>
+      </section>
+
+      <section class="diagnostic-strip" aria-label="256 diagnostic scope">
+        <div class="scope-tile">
+          <strong>1</strong>
+          <span>One atrium receives the visitor.</span>
+        </div>
+
+        <div class="scope-tile">
+          <strong>4</strong>
+          <span>Four main spines organize the hall.</span>
+        </div>
+
+        <div class="scope-tile">
+          <strong>16</strong>
+          <span>Sixteen expansion seats can be extended.</span>
+        </div>
+
+        <div class="scope-tile">
+          <strong>256</strong>
+          <span>Diagnostic scope remains measurable by Gauges.</span>
         </div>
       </section>
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>SHOWROOM_ROLE_MARKS_CLEANUP_TNT_v1
+        <pre>SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1
 route=/showroom/
 page=showroom
-showroom_role=asset_shrine_launchpad
-visible_invariant_language=removed
-role_marks=etched_noninteractive
-role_marks_pointer_events=false
-interactive_affordance=raised_buttons_and_card_links
-route_owns=asset_cards,labels,launch_links,proof_index,interaction_semantics
+showroom_role=manor_atrium_museum
+threshold_sequence=compass_orients,door_admits,showroom_receives_as_atrium
+visible_metaphor=museum_with_glass_cases
+spine_system=canonical_multi_spine
+diagnostic_scope=256
+interactive_surfaces=buttons,case_links
+informational_surfaces=case_marks,tags,spine_tiles,scope_tiles
+route_owns=atrium_context,glass_cases,launch_links,return_links,256_scope_expression
 route_does_not_own=globe_rendering,planet_identity,moon_surface,sun_surface,instrument_state,gauges_logic
 loads_heavy_runtime=false
 render_files_touched=false
@@ -665,7 +865,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      SHOWROOM_ROLE_MARKS_CLEANUP_TNT_v1 · Showroom · role marks separated from launch controls.
+      SHOWROOM_MANOR_ATRIUM_MUSEUM_SPLINE_TNT_v1 · Showroom · Manor Atrium · Glass Cases · 256 Scope.
     </footer>
   </div>
 </body>

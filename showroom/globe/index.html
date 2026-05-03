@@ -2,11 +2,16 @@
 ══════════════════════════════════════════════════════════════════════
 FULL_FILE_TNT
 FILE=/showroom/globe/index.html
-TNT_ID=SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1
+TNT_ID=SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2
 MODE=FULL_FILE_REPLACEMENT
 PRECINCT=DEMO_UNIVERSE_BODY_LANE
-JURISDICTION=EARTH_G1_SUN_G1_MOON_G1_VISIBLE_ROUTE_PRESENTATION
-NON_JURISDICTION=PLANET_1_NINE_SUMMITS_UNIVERSE, GAUGES_SCORING, GLOBAL_SITE_AUTHORITY
+JURISDICTION=ZOOM_BEHAVIOR_PLUS_SUN_G1_AND_MOON_G1_REALITY_STANDARD
+NON_JURISDICTION=PLANET_1_NINE_SUMMITS_UNIVERSE, GAUGES_SCORING, PRODUCTS, DOOR, HOME, ROOT_COMPASS
+EARTH_RULE=PRESERVE_EARTH_G1_PRESENTATION; DO_NOT_REPLACE_EARTH_WITH_NEW_ART_STANDARD
+SUN_RULE=UPGRADE_FROM_CARTOON_TO_PHYSICAL_STELLAR_STANDARD
+MOON_RULE=UPGRADE_FROM_CARTOON_TO_PHYSICAL_LUNAR_STANDARD
+GRAPHICBOX=FORBIDDEN
+IMAGE_GENERATION=FORBIDDEN
 VISUAL_PASS_CLAIMED=false
 OWNER_VISUAL_RECEIPT_REQUIRED=true
 ══════════════════════════════════════════════════════════════════════
@@ -15,11 +20,11 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Diamond Gate Bridge · Earth G1 · Sun G1 · Moon G1</title>
   <meta
     name="description"
-    content="Earth Generation 1, Sun Generation 1, and Moon Generation 1 Demo Universe route."
+    content="Earth Generation 1, Sun Generation 1, and Moon Generation 1 Demo Universe route with zoom control and physical-reality Sun/Moon standards."
   />
 
   <style>
@@ -33,10 +38,11 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       --muted: rgba(247, 240, 220, 0.72);
       --faint: rgba(247, 240, 220, 0.48);
       --gold: #f1c965;
-      --gold-soft: rgba(241, 201, 101, 0.18);
+      --gold-bright: #ffe99a;
       --blue: #78c7ff;
       --shadow: rgba(0, 0, 0, 0.52);
-      --body-size: min(76vw, 520px);
+      --body-size: min(78vw, 560px);
+      --zoom-scale: 1;
       color-scheme: dark;
     }
 
@@ -187,6 +193,11 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       font-weight: 800;
     }
 
+    main {
+      display: grid;
+      gap: 18px;
+    }
+
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
@@ -237,7 +248,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     .stage-card {
       position: relative;
       overflow: hidden;
-      min-height: 650px;
+      min-height: 720px;
       border-radius: 34px;
       border: 1px solid var(--line);
       background:
@@ -246,6 +257,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,0.04),
         0 30px 100px rgba(0,0,0,0.58);
+      touch-action: none;
     }
 
     .orbital-ring {
@@ -269,11 +281,25 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       display: grid;
       place-items: center;
       padding: 34px;
+      overflow: hidden;
+    }
+
+    .zoom-viewport {
+      position: relative;
+      width: var(--body-size);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform: scale(var(--zoom-scale));
+      transform-origin: center center;
+      transition: transform 180ms ease;
+      will-change: transform;
+      touch-action: none;
     }
 
     .body-frame {
       position: relative;
-      width: var(--body-size);
+      width: 100%;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
@@ -298,35 +324,18 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       z-index: 2;
     }
 
-    .moon-visible-shadow {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 3;
-      background:
-        radial-gradient(circle at 28% 23%, rgba(255,255,255,0.24), transparent 15%),
-        radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,0.24) 78%, rgba(0,0,0,0.68) 100%),
-        linear-gradient(105deg, rgba(255,255,255,0.12), transparent 38%, rgba(0,0,0,0.17));
-      mix-blend-mode: screen;
-      opacity: 0;
-    }
-
-    .body-frame[data-body="moon"] .moon-visible-shadow {
-      opacity: 0.55;
-    }
-
     .body-label {
       position: absolute;
       left: 50%;
-      bottom: -62px;
+      bottom: -64px;
       transform: translateX(-50%);
       z-index: 5;
       display: grid;
       justify-items: center;
       gap: 5px;
-      width: min(100%, 460px);
+      width: min(100%, 500px);
       text-align: center;
+      pointer-events: none;
     }
 
     .body-label strong {
@@ -352,12 +361,13 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: rgba(3, 5, 14, 0.68);
+      background: rgba(3, 5, 14, 0.72);
       backdrop-filter: blur(14px);
     }
 
     .body-tabs,
-    .motion-tabs {
+    .motion-tabs,
+    .zoom-tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -389,14 +399,14 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       font-weight: 800;
     }
 
-    .speed-line {
+    .readout {
       display: grid;
       gap: 7px;
       color: var(--muted);
       font-size: 0.88rem;
     }
 
-    .speed-track {
+    .track {
       position: relative;
       height: 7px;
       overflow: hidden;
@@ -404,7 +414,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       background: rgba(255,255,255,0.09);
     }
 
-    .speed-track span {
+    .track span {
       position: absolute;
       inset: 0 auto 0 0;
       width: 52%;
@@ -412,9 +422,18 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       background: linear-gradient(90deg, rgba(120,199,255,0.78), var(--gold));
     }
 
-    main {
+    .zoom-control {
       display: grid;
-      gap: 18px;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
     }
 
     .grid {
@@ -494,7 +513,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
 
       .stage-card {
-        min-height: 590px;
+        min-height: 660px;
       }
 
       .grid {
@@ -508,7 +527,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     @media (max-width: 560px) {
       :root {
-        --body-size: min(82vw, 420px);
+        --body-size: min(86vw, 430px);
       }
 
       .site-shell {
@@ -524,7 +543,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
 
       .stage-card {
-        min-height: 560px;
+        min-height: 640px;
       }
 
       .controls-panel {
@@ -536,6 +555,11 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       button {
         padding: 0.6rem 0.76rem;
         font-size: 0.84rem;
+      }
+
+      .zoom-control {
+        grid-template-columns: 1fr;
+        gap: 6px;
       }
     }
   </style>
@@ -573,40 +597,41 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
           <div class="eyebrow">Earth · Generation 1 · Demo Universe · Sun G1 · Moon G1</div>
           <h1 id="page-title">Demo Universe baseline.</h1>
           <p class="lead">
-            Earth G1 remains complete. Sun G1 remains locked. Moon G1 now receives the same
-            bright full-moon treatment as the Demo Universe: 4K-style lunar detail, viewer-facing
-            solar illumination, subtle Earth-reflected fill, crater fields, maria basins, ray systems,
-            regolith grain, micro-impact texture, limb shading, and no new-moon shadow.
+            Earth G1 remains preserved. This pass adds zoom authority and upgrades the Sun and Moon
+            away from cartoon standards toward physical-reality standards: stellar plasma behavior,
+            solar limb intensity, lunar maria, crater depth, ray systems, regolith texture, and
+            realistic spherical lighting.
           </p>
 
           <div class="status-strip" aria-label="Route status">
-            <span class="pill">Earth G1 complete</span>
-            <span class="pill">Sun G1 locked</span>
-            <span class="pill">Moon G1 full moon</span>
-            <span class="pill">Shared Demo Universe lighting</span>
-            <span class="pill">4K lunar detail</span>
+            <span class="pill">Earth G1 preserved</span>
+            <span class="pill">Zoom authority added</span>
+            <span class="pill">Sun G1 physical standard</span>
+            <span class="pill">Moon G1 physical standard</span>
+            <span class="pill">No GraphicBox</span>
             <span class="pill">Owner visual receipt required</span>
           </div>
         </div>
 
-        <section class="stage-card" aria-label="Demo Universe body viewer">
+        <section class="stage-card" id="stageCard" aria-label="Demo Universe body viewer">
           <div class="orbital-ring" aria-hidden="true"></div>
           <div class="orbital-ring two" aria-hidden="true"></div>
 
-          <div class="body-stage">
-            <div class="body-frame" id="bodyFrame" data-body="earth">
-              <div class="body-glow" id="bodyGlow" aria-hidden="true"></div>
-              <canvas class="body-canvas" id="bodyCanvas" width="1024" height="1024" aria-label="Active Demo Universe body"></canvas>
-              <div class="moon-visible-shadow" aria-hidden="true"></div>
+          <div class="body-stage" id="bodyStage">
+            <div class="zoom-viewport" id="zoomViewport">
+              <div class="body-frame" id="bodyFrame" data-body="earth">
+                <div class="body-glow" id="bodyGlow" aria-hidden="true"></div>
+                <canvas class="body-canvas" id="bodyCanvas" width="1400" height="1400" aria-label="Active Demo Universe body"></canvas>
 
-              <div class="body-label">
-                <strong id="bodyName">Earth G1</strong>
-                <span id="bodyDescription">Preserved Generation 1 Earth baseline.</span>
+                <div class="body-label">
+                  <strong id="bodyName">Earth G1</strong>
+                  <span id="bodyDescription">Preserved Generation 1 Earth presentation with zoom ability.</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="controls-panel" aria-label="Earth G1 motion control">
+          <div class="controls-panel" aria-label="Earth G1 motion and zoom control">
             <div class="body-tabs" aria-label="Choose Demo Universe body">
               <button type="button" data-body="earth" aria-pressed="true">View Earth G1</button>
               <button type="button" data-body="sun" aria-pressed="false">View Sun G1</button>
@@ -624,9 +649,21 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
               <button type="button" data-speed="fast">Fast</button>
             </div>
 
-            <div class="speed-line" aria-live="polite">
+            <div class="zoom-tabs" aria-label="Zoom controls">
+              <button type="button" data-zoom="out">Zoom −</button>
+              <button type="button" data-zoom="in">Zoom +</button>
+              <button type="button" data-zoom="reset">Reset zoom</button>
+            </div>
+
+            <label class="zoom-control" for="zoomRange">
+              <span>Zoom</span>
+              <input id="zoomRange" type="range" min="70" max="230" step="1" value="100" />
+              <span id="zoomLabel">100%</span>
+            </label>
+
+            <div class="readout" aria-live="polite">
               <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth G1</span>
-              <div class="speed-track" aria-hidden="true"><span id="speedFill"></span></div>
+              <div class="track" aria-hidden="true"><span id="speedFill"></span></div>
             </div>
           </div>
         </section>
@@ -636,44 +673,46 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
         <article class="info-card">
           <h2>Earth G1</h2>
           <p>
-            Preserved as the completed Demo Universe Earth body. This TNT does not reopen Earth
-            geometry, route identity, or global route authority.
+            Preserved as the completed Demo Universe Earth body. This pass does not reassign Planet 1
+            or claim a new Earth visual standard. Zoom is the only Earth-facing control upgrade.
           </p>
         </article>
 
         <article class="info-card">
           <h2>Sun G1</h2>
           <p>
-            Locked as the current stellar baseline. This TNT does not replace the Sun with a symbolic
-            pen, lollipop, badge, or flat icon.
+            Upgraded toward a physical stellar standard: spherical plasma body, granular surface,
+            corona, limb intensity, prominence hints, turbulence, and no icon/lollipop treatment.
           </p>
         </article>
 
         <article class="info-card">
           <h2>Moon G1</h2>
           <p>
-            Upgraded into a viewer-facing full moon with crater depth, maria fields, ray systems,
-            regolith grain, micro-impact texture, soft Earthshine fill, and limb shading.
+            Upgraded toward a physical lunar standard: crater depth, maria basins, ray systems,
+            regolith grain, micro-impact texture, limb shading, and full-phase lighting.
           </p>
         </article>
       </section>
 
       <section class="info-card" aria-labelledby="route-contract-title">
         <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1
+        <div class="contract">SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2
 route=/showroom/globe/
 page=earth-g1-sun-g1-moon-g1
-earth-g1-complete=true
-sun-g1=locked
-moon-g1=shared-full-moon-4k-visible-pass-ready
-moon-phase=full-moon
-moon-source-resolution=procedural-4096-style
-moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill
-moon-surface=craters-maria-rays-regolith-microimpacts-limb-shading
-new-moon=false
-crescent=false
-terminator-shadow=false
-same-moon-as-demo-universe=true
+earth-g1=preserved
+earth-authorized-change=zoom-only
+zoom-control=true
+zoom-min=70
+zoom-max=230
+zoom-reset=100
+sun-g1=physical-reality-standard
+sun-standard=stellar-sphere-plasma-granulation-corona-limb-intensity-prominence-hints-turbulence
+moon-g1=physical-reality-standard
+moon-standard=spherical-lunar-body-crater-depth-maria-rays-regolith-microimpacts-limb-shading-full-phase-lighting
+cartoon-standard=false
+graphicbox=false
+image-generation=false
 planet-1=reserved-for-nine-summits-universe
 visual-pass-claimed=false
 owner-visual-receipt-required=true</div>
@@ -682,16 +721,16 @@ owner-visual-receipt-required=true</div>
       <section class="receipt-bar" aria-label="Hybrid Bond receipt">
         <strong>Hybrid Bond receipt</strong>
         <p>
-          Precinct held: Demo Universe body lane. Jurisdiction held: Earth G1, Sun G1, Moon G1 route
-          presentation. Non-jurisdiction held: Planet 1 remains reserved for Nine Summits Universe;
-          Gauges scoring, global navigation, global CSS authority, Products, Door, Home, and Compass
-          route identities are not reassigned by this file.
+          Precinct held: Demo Universe body lane. Jurisdiction held: zoom behavior plus Sun G1 and
+          Moon G1 reality-standard upgrades. Non-jurisdiction held: Planet 1 remains reserved for
+          Nine Summits Universe; Gauges scoring, global navigation authority, Products, Door, Home,
+          and Compass route identities are not reassigned by this file.
         </p>
       </section>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 full-moon visual pass ready · Owner receipt required.
+      SHOWROOM_GLOBE_ZOOM_SUN_MOON_REALITY_STANDARD_TNT_v2 · Earth G1 preserved · Zoom added · Sun/Moon physical standard ready · Owner receipt required.
     </footer>
   </div>
 
@@ -701,16 +740,21 @@ owner-visual-receipt-required=true</div>
 
       const canvas = document.getElementById("bodyCanvas");
       const ctx = canvas.getContext("2d", { alpha: true });
+      const stageCard = document.getElementById("stageCard");
+      const zoomViewport = document.getElementById("zoomViewport");
       const frame = document.getElementById("bodyFrame");
       const glow = document.getElementById("bodyGlow");
       const bodyName = document.getElementById("bodyName");
       const bodyDescription = document.getElementById("bodyDescription");
       const motionLabel = document.getElementById("motionLabel");
       const speedFill = document.getElementById("speedFill");
+      const zoomRange = document.getElementById("zoomRange");
+      const zoomLabel = document.getElementById("zoomLabel");
 
       const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
       const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
       const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
+      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
 
       const state = {
         body: "earth",
@@ -719,23 +763,26 @@ owner-visual-receipt-required=true</div>
         speedName: "normal",
         speed: 0.0021,
         rotation: 0,
-        lastTime: performance.now()
+        zoom: 1,
+        lastTime: performance.now(),
+        pointerDistance: null,
+        pointerZoom: 1
       };
 
       const bodyMeta = {
         earth: {
           name: "Earth G1",
-          description: "Preserved Generation 1 Earth baseline.",
+          description: "Preserved Generation 1 Earth presentation with zoom ability.",
           glow: "radial-gradient(circle, rgba(120,199,255,0.28), rgba(55,112,186,0.13) 36%, transparent 70%)"
         },
         sun: {
           name: "Sun G1",
-          description: "Locked stellar baseline with plasma limb, corona, and solar body depth.",
-          glow: "radial-gradient(circle, rgba(255,214,104,0.5), rgba(255,111,39,0.22) 32%, transparent 72%)"
+          description: "Physical stellar standard: spherical plasma, corona, limb intensity, granulation, and prominence hints.",
+          glow: "radial-gradient(circle, rgba(255,226,124,0.58), rgba(255,111,39,0.26) 34%, rgba(255,80,12,0.08) 58%, transparent 76%)"
         },
         moon: {
           name: "Moon G1",
-          description: "Shared bright full-moon 4K-style baseline with crater fields, maria, rays, regolith, and Earthshine fill.",
+          description: "Physical lunar standard: crater depth, maria, ray systems, regolith grain, micro-impacts, and limb shading.",
           glow: "radial-gradient(circle, rgba(238,238,225,0.28), rgba(132,146,170,0.13) 42%, transparent 72%)"
         }
       };
@@ -746,6 +793,10 @@ owner-visual-receipt-required=true</div>
         fast: { value: 0.0052, fill: "84%" }
       };
 
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
       function hashNoise(x, y, seed) {
         const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
         return n - Math.floor(n);
@@ -753,7 +804,8 @@ owner-visual-receipt-required=true</div>
 
       function resizeCanvas() {
         const rect = canvas.getBoundingClientRect();
-        const size = Math.max(620, Math.floor(Math.min(rect.width, rect.height) * Math.min(window.devicePixelRatio || 1, 2)));
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        const size = Math.max(900, Math.floor(Math.min(rect.width, rect.height) * ratio));
         if (canvas.width !== size || canvas.height !== size) {
           canvas.width = size;
           canvas.height = size;
@@ -770,33 +822,25 @@ owner-visual-receipt-required=true</div>
         ctx.clip();
       }
 
-      function drawSphereShade(cx, cy, r, type) {
-        const shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.04, cx + r * 0.22, cy + r * 0.22, r * 1.1);
-
-        if (type === "sun") {
-          shade.addColorStop(0, "rgba(255,255,210,0.52)");
-          shade.addColorStop(0.24, "rgba(255,195,69,0.18)");
-          shade.addColorStop(0.65, "rgba(255,72,23,0.12)");
-          shade.addColorStop(1, "rgba(0,0,0,0.22)");
-        } else if (type === "moon") {
-          shade.addColorStop(0, "rgba(255,255,244,0.42)");
-          shade.addColorStop(0.34, "rgba(235,235,220,0.12)");
-          shade.addColorStop(0.72, "rgba(115,121,132,0.13)");
-          shade.addColorStop(1, "rgba(0,0,0,0.45)");
-        } else {
-          shade.addColorStop(0, "rgba(255,255,255,0.32)");
-          shade.addColorStop(0.38, "rgba(120,190,255,0.06)");
-          shade.addColorStop(0.76, "rgba(0,32,82,0.12)");
-          shade.addColorStop(1, "rgba(0,0,0,0.52)");
-        }
-
-        ctx.fillStyle = shade;
+      function sphereRim(cx, cy, r, lightColor, darkAlpha) {
+        const rim = ctx.createRadialGradient(cx, cy, r * 0.76, cx, cy, r * 1.03);
+        rim.addColorStop(0, "rgba(255,255,255,0)");
+        rim.addColorStop(0.76, lightColor);
+        rim.addColorStop(0.94, "rgba(255,255,255,0.2)");
+        rim.addColorStop(1, `rgba(0,0,0,${darkAlpha})`);
+        ctx.fillStyle = rim;
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.strokeStyle = lightColor;
+        ctx.lineWidth = Math.max(1, r * 0.012);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
       }
 
-      function drawEarth(cx, cy, r, rotation) {
+      function drawEarthPreserved(cx, cy, r, rotation) {
         ctx.save();
         clipSphere(cx, cy, r);
 
@@ -851,16 +895,6 @@ owner-visual-receipt-required=true</div>
           }
         });
 
-        for (let i = 0; i < 17; i += 1) {
-          const y = (-0.82 + i * 0.102) * r;
-          ctx.globalAlpha = 0.09;
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = Math.max(1, r * 0.003);
-          ctx.beginPath();
-          ctx.ellipse(0, y, r * 0.94, r * 0.08, 0, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
         ctx.restore();
 
         const cloudBands = [
@@ -884,17 +918,43 @@ owner-visual-receipt-required=true</div>
         ctx.globalAlpha = 1;
         ctx.restore();
 
-        drawSphereShade(cx, cy, r, "earth");
+        const shade = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.34, r * 0.08, cx + r * 0.22, cy + r * 0.22, r * 1.12);
+        shade.addColorStop(0, "rgba(255,255,255,0.32)");
+        shade.addColorStop(0.42, "rgba(120,190,255,0.05)");
+        shade.addColorStop(0.78, "rgba(0,32,82,0.18)");
+        shade.addColorStop(1, "rgba(0,0,0,0.58)");
+        ctx.fillStyle = shade;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        sphereRim(cx, cy, r, "rgba(159,213,255,0.24)", 0.5);
       }
 
-      function drawSun(cx, cy, r, rotation) {
+      function drawPhysicalSun(cx, cy, r, rotation) {
         ctx.save();
 
-        for (let i = 0; i < 56; i += 1) {
-          const angle = (Math.PI * 2 * i) / 56 + rotation * 0.44;
-          const length = r * (0.18 + hashNoise(i, 3, 14) * 0.26);
-          ctx.strokeStyle = `rgba(255, ${150 + Math.floor(hashNoise(i, 8, 2) * 80)}, 52, ${0.14 + hashNoise(i, 9, 4) * 0.16})`;
-          ctx.lineWidth = Math.max(1, r * (0.008 + hashNoise(i, 1, 7) * 0.01));
+        const coronaLayers = [
+          { scale: 1.62, alpha: 0.08, color: "rgba(255,181,72,1)" },
+          { scale: 1.36, alpha: 0.13, color: "rgba(255,120,38,1)" },
+          { scale: 1.16, alpha: 0.22, color: "rgba(255,226,112,1)" }
+        ];
+
+        coronaLayers.forEach((layer) => {
+          const g = ctx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r * layer.scale);
+          g.addColorStop(0, layer.color.replace("1)", `${layer.alpha})`));
+          g.addColorStop(1, "rgba(255,115,32,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * layer.scale, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        for (let i = 0; i < 90; i += 1) {
+          const angle = (Math.PI * 2 * i) / 90 + rotation * 0.2;
+          const length = r * (0.1 + hashNoise(i, 3, 14) * 0.34);
+          ctx.strokeStyle = `rgba(255, ${126 + Math.floor(hashNoise(i, 8, 2) * 108)}, 48, ${0.08 + hashNoise(i, 9, 4) * 0.16})`;
+          ctx.lineWidth = Math.max(1, r * (0.006 + hashNoise(i, 1, 7) * 0.012));
           ctx.beginPath();
           ctx.moveTo(cx + Math.cos(angle) * r * 0.92, cy + Math.sin(angle) * r * 0.92);
           ctx.lineTo(cx + Math.cos(angle) * (r + length), cy + Math.sin(angle) * (r + length));
@@ -903,79 +963,108 @@ owner-visual-receipt-required=true</div>
 
         clipSphere(cx, cy, r);
 
-        const plasma = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.26, r * 0.05, cx, cy, r);
-        plasma.addColorStop(0, "#fff8bd");
-        plasma.addColorStop(0.22, "#ffd75f");
-        plasma.addColorStop(0.56, "#f78a2b");
-        plasma.addColorStop(0.86, "#b72d17");
-        plasma.addColorStop(1, "#3b0702");
+        const plasma = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.32, r * 0.04, cx + r * 0.08, cy + r * 0.1, r);
+        plasma.addColorStop(0, "#fff7b2");
+        plasma.addColorStop(0.18, "#ffd65b");
+        plasma.addColorStop(0.43, "#ff9b28");
+        plasma.addColorStop(0.72, "#e34a18");
+        plasma.addColorStop(1, "#540a02");
         ctx.fillStyle = plasma;
         ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-        for (let i = 0; i < 74; i += 1) {
-          const a = i * 0.73 + rotation * 1.7;
-          const rr = r * (0.05 + hashNoise(i, 4, 10) * 0.78);
-          const x = cx + Math.cos(a) * rr;
-          const y = cy + Math.sin(a * 1.21) * rr;
-          const size = r * (0.025 + hashNoise(i, 2, 12) * 0.072);
-          const alpha = 0.1 + hashNoise(i, 7, 2) * 0.22;
-
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = hashNoise(i, 5, 3) > 0.5 ? "#fff2a2" : "#ff6b24";
+        for (let i = 0; i < 520; i += 1) {
+          const a = hashNoise(i, 19, 7) * Math.PI * 2;
+          const dist = Math.sqrt(hashNoise(i, 29, 2)) * r * 0.98;
+          const x = cx + Math.cos(a) * dist;
+          const y = cy + Math.sin(a) * dist;
+          const size = r * (0.006 + hashNoise(i, 11, 31) * 0.022);
+          const n = hashNoise(i, 5, 17);
+          ctx.globalAlpha = 0.12 + n * 0.34;
+          ctx.fillStyle = n > 0.56 ? "#fff0a8" : n > 0.25 ? "#ffba43" : "#d93114";
           ctx.beginPath();
-          ctx.ellipse(x, y, size * 1.8, size * 0.72, a, 0, Math.PI * 2);
+          ctx.ellipse(x, y, size * (1.2 + n), size * (0.52 + n * 0.42), a + rotation, 0, Math.PI * 2);
           ctx.fill();
         }
 
         ctx.globalAlpha = 1;
 
-        for (let i = 0; i < 13; i += 1) {
-          const y = cy - r * 0.72 + (i / 12) * r * 1.44;
-          ctx.globalAlpha = 0.06;
-          ctx.strokeStyle = "#fff6b5";
-          ctx.lineWidth = r * 0.01;
+        for (let i = 0; i < 22; i += 1) {
+          const y = cy - r * 0.86 + (i / 21) * r * 1.72;
+          const wave = Math.sin(rotation * 1.5 + i * 0.6) * r * 0.025;
+          ctx.globalAlpha = 0.07;
+          ctx.strokeStyle = "#fff2a5";
+          ctx.lineWidth = Math.max(1, r * 0.006);
           ctx.beginPath();
-          ctx.moveTo(cx - r * 0.8, y + Math.sin(rotation + i) * r * 0.04);
+          ctx.moveTo(cx - r * 0.92, y + wave);
           ctx.bezierCurveTo(
-            cx - r * 0.22,
-            y - r * 0.08,
-            cx + r * 0.24,
+            cx - r * 0.4,
+            y - r * 0.06,
+            cx + r * 0.28,
             y + r * 0.08,
-            cx + r * 0.82,
-            y
+            cx + r * 0.92,
+            y - wave
           );
           ctx.stroke();
         }
 
+        for (let i = 0; i < 10; i += 1) {
+          const a = i * 0.74 + rotation * 0.35;
+          const x = cx + Math.cos(a) * r * 0.63;
+          const y = cy + Math.sin(a * 1.13) * r * 0.53;
+          const w = r * (0.09 + hashNoise(i, 15, 2) * 0.13);
+          const h = r * (0.018 + hashNoise(i, 17, 5) * 0.028);
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(a + Math.PI * 0.5);
+          ctx.globalAlpha = 0.18;
+          ctx.fillStyle = "#fff5b8";
+          ctx.beginPath();
+          ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        ctx.globalAlpha = 1;
         ctx.restore();
 
-        drawSphereShade(cx, cy, r, "sun");
+        const limb = ctx.createRadialGradient(cx - r * 0.18, cy - r * 0.22, r * 0.2, cx, cy, r);
+        limb.addColorStop(0, "rgba(255,255,220,0.08)");
+        limb.addColorStop(0.68, "rgba(255,180,65,0.06)");
+        limb.addColorStop(0.88, "rgba(255,242,156,0.28)");
+        limb.addColorStop(1, "rgba(110,19,0,0.5)");
+        ctx.fillStyle = limb;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        sphereRim(cx, cy, r, "rgba(255,235,142,0.42)", 0.32);
       }
 
-      function drawMoon(cx, cy, r, rotation) {
+      function drawPhysicalMoon(cx, cy, r, rotation) {
         ctx.save();
         clipSphere(cx, cy, r);
 
-        const base = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, r * 0.05, cx + r * 0.1, cy + r * 0.12, r * 1.06);
-        base.addColorStop(0, "#fffdf1");
-        base.addColorStop(0.24, "#e8e5d4");
-        base.addColorStop(0.55, "#bfbfaf");
-        base.addColorStop(0.84, "#747985");
-        base.addColorStop(1, "#242936");
+        const base = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.34, r * 0.06, cx + r * 0.12, cy + r * 0.16, r * 1.06);
+        base.addColorStop(0, "#f6f3df");
+        base.addColorStop(0.25, "#d8d6c8");
+        base.addColorStop(0.55, "#aaa99f");
+        base.addColorStop(0.82, "#747783");
+        base.addColorStop(1, "#252936");
         ctx.fillStyle = base;
         ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
         ctx.save();
         ctx.translate(cx, cy);
-        ctx.rotate(rotation * 0.08);
+        ctx.rotate(rotation * 0.045);
 
         const maria = [
-          [-0.26, -0.28, 0.27, 0.17, -0.42, 0.34],
-          [0.18, -0.24, 0.23, 0.14, 0.24, 0.28],
-          [0.08, 0.03, 0.32, 0.19, -0.06, 0.27],
-          [-0.34, 0.18, 0.19, 0.13, 0.42, 0.24],
-          [0.34, 0.27, 0.17, 0.11, -0.3, 0.2],
-          [-0.06, 0.39, 0.24, 0.11, 0.16, 0.18]
+          [-0.28, -0.27, 0.28, 0.18, -0.42, 0.36],
+          [0.18, -0.24, 0.24, 0.15, 0.24, 0.29],
+          [0.08, 0.04, 0.34, 0.2, -0.06, 0.3],
+          [-0.36, 0.18, 0.2, 0.13, 0.42, 0.25],
+          [0.35, 0.27, 0.18, 0.11, -0.3, 0.21],
+          [-0.07, 0.39, 0.25, 0.11, 0.16, 0.19],
+          [-0.04, -0.12, 0.17, 0.09, 0.62, 0.16]
         ];
 
         maria.forEach(([x, y, w, h, rot, alpha]) => {
@@ -984,8 +1073,8 @@ owner-visual-receipt-required=true</div>
           ctx.rotate(rot);
           ctx.globalAlpha = alpha;
           const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w * r);
-          g.addColorStop(0, "#5c6068");
-          g.addColorStop(0.78, "#70747b");
+          g.addColorStop(0, "#50545c");
+          g.addColorStop(0.72, "#686c72");
           g.addColorStop(1, "rgba(120,123,126,0)");
           ctx.fillStyle = g;
           ctx.beginPath();
@@ -994,65 +1083,76 @@ owner-visual-receipt-required=true</div>
           ctx.restore();
         });
 
-        const craterSeeds = [
-          [-0.42, -0.42, 0.065, 0.62],
-          [-0.18, -0.52, 0.042, 0.45],
-          [0.16, -0.46, 0.052, 0.52],
-          [0.42, -0.34, 0.075, 0.58],
-          [-0.56, -0.08, 0.05, 0.42],
-          [-0.18, -0.08, 0.09, 0.5],
-          [0.26, -0.04, 0.046, 0.42],
-          [0.5, 0.08, 0.044, 0.44],
-          [-0.42, 0.34, 0.07, 0.5],
-          [-0.06, 0.29, 0.055, 0.4],
-          [0.28, 0.35, 0.076, 0.56],
-          [0.05, 0.56, 0.035, 0.34]
+        const craters = [
+          [-0.43, -0.43, 0.067, 0.66],
+          [-0.18, -0.53, 0.042, 0.46],
+          [0.16, -0.46, 0.054, 0.54],
+          [0.43, -0.33, 0.078, 0.62],
+          [-0.57, -0.08, 0.052, 0.44],
+          [-0.18, -0.08, 0.092, 0.52],
+          [0.26, -0.04, 0.047, 0.44],
+          [0.5, 0.08, 0.046, 0.46],
+          [-0.43, 0.34, 0.072, 0.52],
+          [-0.06, 0.29, 0.057, 0.42],
+          [0.29, 0.35, 0.078, 0.58],
+          [0.05, 0.56, 0.036, 0.36],
+          [-0.02, -0.32, 0.03, 0.32],
+          [0.53, 0.34, 0.035, 0.34]
         ];
 
-        craterSeeds.forEach(([x, y, size, alpha], index) => {
+        craters.forEach(([x, y, size, alpha], index) => {
           drawCrater(x * r, y * r, size * r, alpha, index);
         });
 
-        for (let i = 0; i < 220; i += 1) {
+        for (let i = 0; i < 340; i += 1) {
           const a = hashNoise(i, 4, 31) * Math.PI * 2;
-          const dist = Math.sqrt(hashNoise(i, 8, 22)) * r * 0.94;
+          const dist = Math.sqrt(hashNoise(i, 8, 22)) * r * 0.96;
           const x = Math.cos(a) * dist;
           const y = Math.sin(a) * dist;
-          const size = r * (0.0035 + hashNoise(i, 1, 12) * 0.012);
-          const alpha = 0.09 + hashNoise(i, 2, 18) * 0.18;
+          const size = r * (0.0035 + hashNoise(i, 1, 12) * 0.011);
+          const alpha = 0.08 + hashNoise(i, 2, 18) * 0.16;
           drawMicroCrater(x, y, size, alpha, i);
         }
 
-        drawRaySystem(-0.42 * r, -0.42 * r, r * 0.42, 18, 0.18, rotation);
-        drawRaySystem(0.28 * r, 0.35 * r, r * 0.32, 14, 0.14, -rotation * 0.4);
+        drawRaySystem(-0.43 * r, -0.43 * r, r * 0.44, 22, 0.18, rotation);
+        drawRaySystem(0.29 * r, 0.35 * r, r * 0.34, 18, 0.15, -rotation * 0.4);
 
         ctx.restore();
 
-        for (let i = 0; i < 1600; i += 1) {
+        for (let i = 0; i < 2300; i += 1) {
           const a = hashNoise(i, 17, 97) * Math.PI * 2;
           const dist = Math.sqrt(hashNoise(i, 29, 82)) * r;
           const x = cx + Math.cos(a) * dist;
           const y = cy + Math.sin(a) * dist;
           const n = hashNoise(i, 41, 12);
-          const alpha = 0.035 + n * 0.055;
-
+          const alpha = 0.03 + n * 0.05;
           ctx.globalAlpha = alpha;
-          ctx.fillStyle = n > 0.52 ? "#fffef0" : "#6f727a";
-          ctx.fillRect(x, y, Math.max(1, r * 0.004), Math.max(1, r * 0.004));
+          ctx.fillStyle = n > 0.52 ? "#fffef0" : "#666a72";
+          ctx.fillRect(x, y, Math.max(1, r * 0.0034), Math.max(1, r * 0.0034));
         }
 
         ctx.globalAlpha = 1;
 
         const earthshine = ctx.createRadialGradient(cx - r * 0.48, cy - r * 0.14, 0, cx - r * 0.48, cy - r * 0.14, r * 1.02);
-        earthshine.addColorStop(0, "rgba(166,207,255,0.18)");
-        earthshine.addColorStop(0.32, "rgba(166,207,255,0.08)");
+        earthshine.addColorStop(0, "rgba(166,207,255,0.16)");
+        earthshine.addColorStop(0.32, "rgba(166,207,255,0.07)");
         earthshine.addColorStop(1, "rgba(166,207,255,0)");
         ctx.fillStyle = earthshine;
         ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
         ctx.restore();
 
-        drawSphereShade(cx, cy, r, "moon");
+        const shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx + r * 0.26, cy + r * 0.24, r * 1.1);
+        shade.addColorStop(0, "rgba(255,255,244,0.28)");
+        shade.addColorStop(0.42, "rgba(235,235,220,0.08)");
+        shade.addColorStop(0.74, "rgba(70,76,88,0.12)");
+        shade.addColorStop(1, "rgba(0,0,0,0.58)");
+        ctx.fillStyle = shade;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        sphereRim(cx, cy, r, "rgba(245,243,226,0.28)", 0.5);
 
         function drawCrater(x, y, radius, alpha, seed) {
           ctx.save();
@@ -1060,23 +1160,23 @@ owner-visual-receipt-required=true</div>
 
           const dark = ctx.createRadialGradient(x - radius * 0.15, y - radius * 0.15, radius * 0.15, x, y, radius);
           dark.addColorStop(0, "rgba(255,255,242,0.18)");
-          dark.addColorStop(0.45, "rgba(75,79,86,0.34)");
-          dark.addColorStop(0.82, "rgba(40,43,50,0.2)");
-          dark.addColorStop(1, "rgba(255,255,242,0.16)");
+          dark.addColorStop(0.45, "rgba(65,68,76,0.38)");
+          dark.addColorStop(0.82, "rgba(38,41,48,0.22)");
+          dark.addColorStop(1, "rgba(255,255,242,0.18)");
           ctx.fillStyle = dark;
           ctx.beginPath();
           ctx.ellipse(x, y, radius * (1 + hashNoise(seed, 1, 4) * 0.2), radius * (0.74 + hashNoise(seed, 2, 4) * 0.22), hashNoise(seed, 3, 4) * Math.PI, 0, Math.PI * 2);
           ctx.fill();
 
-          ctx.globalAlpha = alpha * 0.85;
+          ctx.globalAlpha = alpha * 0.9;
           ctx.strokeStyle = "rgba(255,255,232,0.42)";
           ctx.lineWidth = Math.max(1, radius * 0.08);
           ctx.beginPath();
           ctx.ellipse(x - radius * 0.08, y - radius * 0.09, radius, radius * 0.78, 0.2, 0, Math.PI * 2);
           ctx.stroke();
 
-          ctx.globalAlpha = alpha * 0.42;
-          ctx.strokeStyle = "rgba(0,0,0,0.42)";
+          ctx.globalAlpha = alpha * 0.5;
+          ctx.strokeStyle = "rgba(0,0,0,0.44)";
           ctx.beginPath();
           ctx.ellipse(x + radius * 0.1, y + radius * 0.12, radius * 0.88, radius * 0.67, 0.2, 0, Math.PI * 2);
           ctx.stroke();
@@ -1087,7 +1187,7 @@ owner-visual-receipt-required=true</div>
         function drawMicroCrater(x, y, radius, alpha, seed) {
           ctx.save();
           ctx.globalAlpha = alpha;
-          ctx.fillStyle = hashNoise(seed, 4, 9) > 0.48 ? "rgba(255,255,235,0.62)" : "rgba(42,44,49,0.58)";
+          ctx.fillStyle = hashNoise(seed, 4, 9) > 0.48 ? "rgba(255,255,235,0.6)" : "rgba(42,44,49,0.58)";
           ctx.beginPath();
           ctx.ellipse(x, y, radius, radius * (0.72 + hashNoise(seed, 2, 8) * 0.3), hashNoise(seed, 3, 5) * Math.PI, 0, Math.PI * 2);
           ctx.fill();
@@ -1119,27 +1219,11 @@ owner-visual-receipt-required=true</div>
         const h = canvas.height;
         const cx = w / 2;
         const cy = h / 2;
-        const r = Math.min(w, h) * 0.455;
+        const r = Math.min(w, h) * 0.438;
 
-        if (state.body === "earth") drawEarth(cx, cy, r, state.rotation);
-        if (state.body === "sun") drawSun(cx, cy, r, state.rotation);
-        if (state.body === "moon") drawMoon(cx, cy, r, state.rotation);
-
-        const rim = ctx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r * 1.01);
-        rim.addColorStop(0, "rgba(255,255,255,0)");
-        rim.addColorStop(0.72, "rgba(255,255,255,0.08)");
-        rim.addColorStop(0.92, "rgba(255,255,255,0.22)");
-        rim.addColorStop(1, "rgba(0,0,0,0.62)");
-        ctx.fillStyle = rim;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = state.body === "sun" ? "rgba(255,220,120,0.58)" : "rgba(255,255,255,0.22)";
-        ctx.lineWidth = Math.max(1, r * 0.01);
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.stroke();
+        if (state.body === "earth") drawEarthPreserved(cx, cy, r, state.rotation);
+        if (state.body === "sun") drawPhysicalSun(cx, cy, r, state.rotation);
+        if (state.body === "moon") drawPhysicalMoon(cx, cy, r, state.rotation);
       }
 
       function updateLabels() {
@@ -1177,6 +1261,21 @@ owner-visual-receipt-required=true</div>
         updateLabels();
       }
 
+      function setZoom(nextZoom) {
+        state.zoom = clamp(nextZoom, 0.7, 2.3);
+        document.documentElement.style.setProperty("--zoom-scale", String(state.zoom));
+        zoomRange.value = String(Math.round(state.zoom * 100));
+        zoomLabel.textContent = `${Math.round(state.zoom * 100)}%`;
+      }
+
+      function getPointerDistance(event) {
+        if (!event.touches || event.touches.length < 2) return null;
+        const [a, b] = event.touches;
+        const dx = a.clientX - b.clientX;
+        const dy = a.clientY - b.clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
       function animate(time) {
         const dt = Math.min(42, time - state.lastTime);
         state.lastTime = time;
@@ -1212,10 +1311,52 @@ owner-visual-receipt-required=true</div>
         button.addEventListener("click", () => setSpeed(button.dataset.speed));
       });
 
+      zoomButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.zoom;
+          if (action === "in") setZoom(state.zoom + 0.12);
+          if (action === "out") setZoom(state.zoom - 0.12);
+          if (action === "reset") setZoom(1);
+        });
+      });
+
+      zoomRange.addEventListener("input", () => {
+        setZoom(Number(zoomRange.value) / 100);
+      });
+
+      stageCard.addEventListener("wheel", (event) => {
+        if (!event.ctrlKey && Math.abs(event.deltaY) < 4) return;
+        event.preventDefault();
+        const direction = event.deltaY > 0 ? -1 : 1;
+        setZoom(state.zoom + direction * 0.08);
+      }, { passive: false });
+
+      stageCard.addEventListener("touchstart", (event) => {
+        const distance = getPointerDistance(event);
+        if (distance !== null) {
+          state.pointerDistance = distance;
+          state.pointerZoom = state.zoom;
+        }
+      }, { passive: true });
+
+      stageCard.addEventListener("touchmove", (event) => {
+        const distance = getPointerDistance(event);
+        if (distance === null || state.pointerDistance === null) return;
+        event.preventDefault();
+        const ratio = distance / state.pointerDistance;
+        setZoom(state.pointerZoom * ratio);
+      }, { passive: false });
+
+      stageCard.addEventListener("touchend", () => {
+        state.pointerDistance = null;
+        state.pointerZoom = state.zoom;
+      }, { passive: true });
+
       window.addEventListener("resize", () => {
         renderBody();
       });
 
+      setZoom(1);
       updateLabels();
       renderBody();
       requestAnimationFrame(animate);

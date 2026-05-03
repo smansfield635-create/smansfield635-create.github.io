@@ -5,11 +5,11 @@
   data-route="/explore/frontier/shimmer/"
   data-page="frontier-shimmer"
   data-version="G1-V10A"
-  data-contract="SHIMMER_G1_V10A_OFFICIAL_HIERARCHY_TNT_v1"
+  data-contract="SHIMMER_G1_V10A_RUSSIAN_DOLL_CONTEXT_TNT_v1"
   data-status="active"
   data-parent="/explore/frontier/"
-  data-hierarchy="compass-door-home-manor-frontier-shimmer-laws-gauges"
   data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-expression="russian-doll-signal-context"
   data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
 >
@@ -17,18 +17,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Frontier · Shimmer G1 V10A</title>
-  <meta name="description" content="Shimmer G1 V10A is the Frontier signal-quality lane under the Manor hierarchy.">
+  <meta name="description" content="Shimmer G1 V10A is the Frontier signal-quality lane expressed through Russian-doll context.">
 
   <style>
     :root {
       --bg: #02050d;
-      --panel: rgba(9, 17, 32, 0.88);
-      --panel2: rgba(255,255,255,0.045);
+      --panel: rgba(9, 17, 32, 0.9);
+      --soft: rgba(255,255,255,0.045);
       --line: rgba(255,255,255,0.14);
-      --blue: #8bc8ff;
+      --line-blue: rgba(139,200,255,0.24);
       --gold: #f2c76f;
+      --blue: #8bc8ff;
       --green: #9df0c4;
-      --red: #ff9a9a;
       --text: #f8f1dd;
       --muted: rgba(226,235,255,0.76);
       --faint: rgba(226,235,255,0.52);
@@ -37,14 +37,15 @@
 
     * { box-sizing: border-box; }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       min-height: 100%;
+      color: var(--text);
       background:
         radial-gradient(circle at 50% 0%, rgba(242,199,111,0.13), transparent 26rem),
         radial-gradient(circle at 55% 38%, rgba(139,200,255,0.13), transparent 35rem),
         linear-gradient(180deg, #050914, #02050d 78%, #010207);
-      color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
     }
@@ -68,7 +69,7 @@
       position: absolute;
       top: -4rem;
       left: 1rem;
-      z-index: 9;
+      z-index: 10;
       padding: .75rem 1rem;
       border-radius: 999px;
       background: var(--gold);
@@ -80,6 +81,7 @@
 
     .shell {
       position: relative;
+      z-index: 1;
       width: min(100%, var(--max));
       margin: 0 auto;
       padding: max(1rem, env(safe-area-inset-top)) clamp(.85rem, 3vw, 2rem)
@@ -88,7 +90,7 @@
 
     .card {
       margin: clamp(.85rem, 2.4vw, 1.25rem) auto 0;
-      border: 1px solid rgba(139,200,255,.23);
+      border: 1px solid var(--line-blue);
       border-radius: clamp(1.25rem, 5vw, 2rem);
       background:
         radial-gradient(circle at 15% 0%, rgba(139,200,255,.13), transparent 26rem),
@@ -99,7 +101,8 @@
       overflow: hidden;
     }
 
-    .top {
+    .top,
+    .section {
       padding: clamp(1rem, 3vw, 1.35rem);
       display: grid;
       gap: 1rem;
@@ -127,7 +130,7 @@
       letter-spacing: .04em;
     }
 
-    .brand span {
+    .brand span span {
       display: block;
       color: rgba(226,235,255,.84);
       font-size: clamp(.7rem, 2vw, .88rem);
@@ -143,7 +146,8 @@
       letter-spacing: -.055em;
     }
 
-    .nav {
+    .nav,
+    .control-row {
       display: flex;
       flex-wrap: wrap;
       gap: .55rem;
@@ -165,6 +169,7 @@
       font-weight: 950;
       letter-spacing: .055em;
       text-transform: uppercase;
+      cursor: pointer;
     }
 
     .nav a[aria-current="page"],
@@ -177,9 +182,9 @@
 
     .hero {
       padding: clamp(1.5rem, 5vw, 3rem);
+      min-height: clamp(20rem, 42vw, 31rem);
       display: grid;
       gap: 1rem;
-      min-height: clamp(20rem, 42vw, 31rem);
       align-content: center;
     }
 
@@ -219,6 +224,7 @@
 
     h2 {
       margin: 0;
+      color: var(--gold);
       font-size: clamp(1.65rem, 5.8vw, 3.3rem);
       line-height: .98;
       letter-spacing: -.07em;
@@ -238,108 +244,107 @@
       line-height: 1.55;
     }
 
-    .gold { color: var(--gold); }
-
-    .section {
-      padding: clamp(1rem, 3vw, 1.35rem);
+    .doll {
       display: grid;
-      gap: 1rem;
-    }
-
-    .hierarchy {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: .75rem;
     }
 
-    .node {
-      min-height: 7rem;
+    details {
+      border: 1px solid rgba(139,200,255,.18);
+      border-radius: 1.25rem;
+      background: rgba(255,255,255,.03);
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .75rem;
+      padding: 1rem;
+      font-weight: 950;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: rgba(255,241,205,.96);
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::before {
+      content: "";
+      width: .8rem;
+      height: .8rem;
+      border-radius: .18rem;
+      transform: rotate(45deg);
+      background: var(--blue);
+      box-shadow: 0 0 1rem rgba(139,200,255,.35);
+    }
+
+    summary::after {
+      content: "+";
+      color: var(--gold);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    details[open] > summary::after { content: "−"; }
+
+    .detail-body {
+      display: grid;
+      gap: .85rem;
+      padding: 0 1rem 1rem;
+      color: var(--muted);
+    }
+
+    .nested {
+      margin-left: clamp(.35rem, 2vw, 1rem);
+      border-color: rgba(242,199,111,.18);
+      background: rgba(2,5,13,.34);
+    }
+
+    .cycle-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: .6rem;
+    }
+
+    .cycle-step {
+      min-height: 6.5rem;
       display: grid;
       place-items: center;
       gap: .25rem;
-      padding: 1rem;
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 1.3rem;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(139,200,255,.12), transparent 10rem),
-        rgba(255,255,255,.03);
+      padding: .85rem;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1.1rem;
+      background: rgba(255,255,255,.03);
       text-align: center;
     }
 
-    .node strong {
-      color: rgba(255,241,205,.96);
-      font-size: .8rem;
+    .cycle-step strong {
+      color: rgba(255,241,205,.98);
+      font-size: .76rem;
       font-weight: 950;
-      letter-spacing: .12em;
+      letter-spacing: .08em;
       text-transform: uppercase;
     }
 
-    .node span {
-      color: var(--muted);
-      font-size: .84rem;
-      line-height: 1.35;
-    }
-
-    .node.active {
-      border-color: rgba(242,199,111,.75);
-      box-shadow: inset 0 0 0 1px rgba(242,199,111,.12), 0 0 2rem rgba(242,199,111,.08);
-    }
-
-    .control-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .55rem;
-    }
-
-    .tab {
-      cursor: pointer;
-    }
-
-    .signal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: .65rem;
-    }
-
-    .signal {
-      min-height: 6rem;
-      position: relative;
-      display: grid;
-      place-items: center;
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-    }
-
-    .signal::before {
-      content: "";
-      position: absolute;
-      width: 74%;
-      aspect-ratio: 1;
-      transform: rotate(45deg);
-      border: 2px solid rgba(242,199,111,.48);
-      border-radius: .9rem;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(139,200,255,.22), transparent 42%),
-        linear-gradient(145deg, rgba(48,74,141,.72), rgba(98,61,126,.62));
-      box-shadow: 0 1rem 2rem rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.12);
-    }
-
-    .signal[aria-expanded="true"]::before {
-      border-color: rgba(255,224,141,.95);
-      box-shadow: 0 1.35rem 3rem rgba(0,0,0,.35), 0 0 1.4rem rgba(242,199,111,.16);
-    }
-
-    .signal span {
-      position: relative;
-      z-index: 2;
-      color: rgba(255,241,205,.96);
-      font-size: clamp(.55rem, 1.4vw, .82rem);
-      font-weight: 950;
-      letter-spacing: .06em;
+    .cycle-step span {
+      color: var(--faint);
+      font-size: .72rem;
+      font-weight: 800;
       text-transform: uppercase;
-      text-align: center;
     }
+
+    .cycle-step.active {
+      border-color: rgba(242,199,111,.85);
+      background: rgba(242,199,111,.08);
+      box-shadow: 0 0 1.6rem rgba(242,199,111,.08);
+    }
+
+    .cycle-step.complete span { color: var(--green); }
+    .cycle-step.pending span { color: var(--faint); }
 
     .readout {
       padding: 1rem;
@@ -384,12 +389,7 @@
     }
 
     .receipt summary {
-      cursor: pointer;
-      padding: .8rem 1rem;
       font-size: .72rem;
-      font-weight: 950;
-      letter-spacing: .1em;
-      text-transform: uppercase;
     }
 
     .receipt pre {
@@ -408,13 +408,8 @@
     }
 
     @media (max-width: 880px) {
-      .hierarchy { grid-template-columns: repeat(2, 1fr); }
-      .signal-grid { grid-template-columns: repeat(4, 1fr); }
+      .cycle-grid { grid-template-columns: repeat(2, 1fr); }
       .split { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 520px) {
-      .signal-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -445,13 +440,13 @@
 
     <main id="main">
       <section class="card hero">
-        <div class="kicker">Frontier Signal Lane · Official Hierarchy</div>
+        <div class="kicker">Russian-Doll Signal Context · Official Hierarchy</div>
         <h1>Shimmer</h1>
-        <h2 class="gold">Subtle signal matters before it becomes obvious.</h2>
+        <h2>Signal opens one layer at a time.</h2>
         <p>
-          Shimmer is the Frontier lane that keeps weak signals from becoming noise.
-          It screens, highlights, inspects, measures, mitigates, explains, and repeats
-          before the system turns signal into direction.
+          Shimmer is the Frontier signal-quality lane. It does not shout, overexplain,
+          or replace proof. It opens weak signal through nested context until the system
+          knows what to measure next.
         </p>
         <div class="control-row">
           <a class="button primary state-link" href="/gauges/">Read Gauges</a>
@@ -460,49 +455,80 @@
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="hierarchy-title">
-        <div class="kicker">Hierarchy</div>
-        <h2 id="hierarchy-title">One signal lane inside the Manor system.</h2>
+      <section class="card section" aria-labelledby="doll-title">
+        <div class="kicker">Russian Doll</div>
+        <h2 id="doll-title">Open only the layer needed.</h2>
 
-        <div class="hierarchy">
-          <article class="node">
-            <strong>Compass</strong>
-            <span>orients the public surface</span>
-          </article>
-          <article class="node">
-            <strong>Door</strong>
-            <span>admits the visitor</span>
-          </article>
-          <article class="node">
-            <strong>Home</strong>
-            <span>receives and stabilizes</span>
-          </article>
-          <article class="node">
-            <strong>Manor</strong>
-            <span>maps the rooms</span>
-          </article>
-          <article class="node active">
-            <strong>Frontier</strong>
-            <span>holds the expansion edge</span>
-          </article>
-          <article class="node active">
-            <strong>Shimmer</strong>
-            <span>filters early signal</span>
-          </article>
-          <article class="node">
-            <strong>Laws</strong>
-            <span>bounds the claim</span>
-          </article>
-          <article class="node">
-            <strong>Gauges</strong>
-            <span>measures the proof</span>
-          </article>
+        <div class="doll">
+          <details open>
+            <summary>Outer shell — What Shimmer is</summary>
+            <div class="detail-body">
+              <p>Shimmer is the Frontier lane that protects signal quality before expansion becomes noise.</p>
+
+              <details class="nested" open>
+                <summary>Layer 1 — Where it sits</summary>
+                <div class="detail-body">
+                  <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Shimmer filters. Laws bound. Gauges measure.</p>
+
+                  <details class="nested" open>
+                    <summary>Layer 2 — Where we are in the cycle</summary>
+                    <div class="detail-body">
+                      <div class="cycle-grid" aria-label="Current Shimmer cycle position">
+                        <div class="cycle-step complete"><strong>Screen</strong><span>complete</span></div>
+                        <div class="cycle-step complete"><strong>Highlight</strong><span>complete</span></div>
+                        <div class="cycle-step complete"><strong>Inspect</strong><span>complete</span></div>
+                        <div class="cycle-step active"><strong>Measure</strong><span>active</span></div>
+                        <div class="cycle-step pending"><strong>Mitigate</strong><span>next</span></div>
+                        <div class="cycle-step pending"><strong>Explain</strong><span>pending</span></div>
+                        <div class="cycle-step pending"><strong>Repeat</strong><span>pending</span></div>
+                      </div>
+
+                      <details class="nested">
+                        <summary>Layer 3 — Active measurement</summary>
+                        <div class="detail-body">
+                          <p>Gauges must confirm that Shimmer is live as V10A, readable as current hierarchy, and aligned with the Audralia Manor baseline.</p>
+
+                          <details class="nested">
+                            <summary>Layer 4 — Mitigation boundary</summary>
+                            <div class="detail-body">
+                              <p>Mitigation removes trigger-language from active copy without erasing historical continuity. Prior globe-generation framing no longer controls current identity.</p>
+
+                              <details class="nested">
+                                <summary>Layer 5 — What Shimmer owns</summary>
+                                <div class="detail-body">
+                                  <p>Shimmer owns signal quality, distortion reduction, attention filtering, visible deltas, and repeatable observation language.</p>
+
+                                  <details class="nested">
+                                    <summary>Layer 6 — What Shimmer does not own</summary>
+                                    <div class="detail-body">
+                                      <p>Shimmer does not own law authority, product identity, Gauges scoring, world rendering, route mutation, or generation pass claims.</p>
+
+                                      <details class="nested">
+                                        <summary>Layer 7 — Proof return</summary>
+                                        <div class="detail-body">
+                                          <p>The proof path returns to Gauges. The legal boundary returns to Laws. The map returns to Manor. The expansion edge returns to Frontier.</p>
+                                        </div>
+                                      </details>
+                                    </div>
+                                  </details>
+                                </div>
+                              </details>
+                            </div>
+                          </details>
+                        </div>
+                      </details>
+                    </div>
+                  </details>
+                </div>
+              </details>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="mode-title">
+      <section class="card section" aria-labelledby="controls-title">
         <div class="kicker">Room Controls</div>
-        <h2 id="mode-title">Switch mode without losing the hierarchy.</h2>
+        <h2 id="controls-title">Switch mode without losing the hierarchy.</h2>
 
         <div class="control-row" role="group" aria-label="Mode controls">
           <button class="tab" type="button" data-mode="shimmer" aria-pressed="true">Shimmer</button>
@@ -510,59 +536,40 @@
           <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
         </div>
 
-        <p id="mode-copy">
-          Shimmer handles signal quality: what enters, what changes, what deserves attention, and what still needs proof.
-        </p>
-      </section>
-
-      <section class="card section" aria-labelledby="loop-title">
-        <div class="kicker">Universal Node Loop</div>
-        <h2 id="loop-title">Open only the signal step needed.</h2>
-
-        <div class="signal-grid" role="group" aria-label="Shimmer signal loop">
-          <button class="signal" type="button" data-step="0" aria-expanded="true"><span>Screen</span></button>
-          <button class="signal" type="button" data-step="1" aria-expanded="false"><span>Highlight</span></button>
-          <button class="signal" type="button" data-step="2" aria-expanded="false"><span>Inspect</span></button>
-          <button class="signal" type="button" data-step="3" aria-expanded="false"><span>Measure</span></button>
-          <button class="signal" type="button" data-step="4" aria-expanded="false"><span>Mitigate</span></button>
-          <button class="signal" type="button" data-step="5" aria-expanded="false"><span>Explain</span></button>
-          <button class="signal" type="button" data-step="6" aria-expanded="false"><span>Repeat</span></button>
-        </div>
-
         <article class="readout" aria-live="polite">
-          <small id="readout-kicker">S — Screen</small>
-          <h3 id="readout-title">Decide what enters at all.</h3>
-          <p id="readout-body">Attention is a resource. Shimmer begins by deciding what signal is allowed to enter the room before the system spends energy on it.</p>
+          <small id="mode-kicker">Shimmer mode</small>
+          <h3 id="mode-title">Signal quality comes first.</h3>
+          <p id="mode-copy">Shimmer handles what enters, what changes, what deserves attention, and what still needs proof.</p>
         </article>
       </section>
 
-      <section class="card section" aria-labelledby="bounds-title">
+      <section class="card section" aria-labelledby="boundary-title">
         <div class="kicker">Contract Boundaries</div>
-        <h2 id="bounds-title">Shimmer does not replace proof.</h2>
+        <h2 id="boundary-title">Shimmer does not replace proof.</h2>
 
         <div class="split">
-          <article class="mini">
-            <strong>What Shimmer owns</strong>
-            <p>Signal quality, distortion reduction, attention filtering, visible deltas, and repeatable observation language.</p>
-          </article>
-          <article class="mini">
-            <strong>What Shimmer does not own</strong>
-            <p>Law authority, product identity, Gauges scoring, world rendering, route mutation, or generation pass claims.</p>
-          </article>
           <article class="mini">
             <strong>Current language</strong>
             <p>Manor, Frontier, Audralia, Audralia Universe, Laws, Gauges, and Universal Node are the current baseline terms.</p>
           </article>
           <article class="mini">
-            <strong>Retired active language</strong>
-            <p>Old Earth G1 / Demo Universe / Planet 1 framing does not control this page’s current identity.</p>
+            <strong>Prior framing</strong>
+            <p>Prior globe-generation framing is preserved only as history. It does not control this page’s current identity.</p>
+          </article>
+          <article class="mini">
+            <strong>Measure active</strong>
+            <p>The page is ready for Gauges to confirm current hierarchy, readable source, and baseline alignment.</p>
+          </article>
+          <article class="mini">
+            <strong>Mitigate next</strong>
+            <p>If Gauges still holds the route, the next move is narrow cleanup, not another source-target chase.</p>
           </article>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="frontier-title">
+      <section class="card section" aria-labelledby="routes-title">
         <div class="kicker">Frontier Routes</div>
-        <h2 id="frontier-title">Move to another Frontier lane.</h2>
+        <h2 id="routes-title">Move to another Frontier lane.</h2>
 
         <nav class="nav" aria-label="Frontier lane routes">
           <a class="state-link" href="/explore/frontier/">Frontier Hub</a>
@@ -578,20 +585,21 @@
 
       <details class="card receipt" open>
         <summary>Status label</summary>
-        <pre>SHIMMER_G1_V10A_OFFICIAL_HIERARCHY_TNT_v1
+        <pre>SHIMMER_G1_V10A_RUSSIAN_DOLL_CONTEXT_TNT_v1
 STATUS=ACTIVE
 VISIBLE_TITLE=Shimmer · G1 V10A
-PUBLIC_PROOF_MARKER=Official Hierarchy · V10A active
+PUBLIC_PROOF_MARKER=Russian Doll Context · V10A active
 PAGE=/explore/frontier/shimmer/index.html
 ROUTE=/explore/frontier/shimmer/
 PARENT=/explore/frontier/
 BASELINE=AUDRALIA_MANOR_CURRENT
+EXPRESSION=Russian_Doll_Context
+CYCLE_POSITION=Screen_complete,Highlight_complete,Inspect_complete,Measure_active,Mitigate_next,Explain_pending,Repeat_pending
 HIERARCHY=Compass→Door→Home→Manor→Frontier→Shimmer→Laws→Gauges
 ROLE=frontier_signal_quality_lane
-OWNS=screen,highlight,inspect,measure,mitigate,explain,repeat
+OWNS=signal_quality,distortion_reduction,attention_filtering,visible_deltas,repeatable_observation
 DOES_NOT_OWN=law_authority,product_identity,gauges_scoring,world_rendering,route_mutation,generation_pass_claim
-LANGUAGE=English
-RETIRED_ACTIVE_LANGUAGE=Demo Universe,Earth G1,Sun G1,Moon G1,Planet 1
+PRIOR_LANGUAGE_HANDLING=prior_globe_generation_framing_archival_only
 HEAVY_RUNTIME_LOADED=false
 RENDER_FILES_TOUCHED=false
 GAUGES_LOGIC_TOUCHED=false
@@ -600,7 +608,7 @@ VISUAL_PASS_CLAIMED=false</pre>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Shimmer · G1 V10A · Official Hierarchy.
+      Diamond Gate Bridge · Frontier · Shimmer · G1 V10A · Russian Doll Context.
     </footer>
   </div>
 
@@ -608,51 +616,39 @@ VISUAL_PASS_CLAIMED=false</pre>
     (() => {
       "use strict";
 
-      const state = {
-        mode: "shimmer",
-        step: 0
+      const modes = {
+        shimmer: [
+          "Shimmer mode",
+          "Signal quality comes first.",
+          "Shimmer handles what enters, what changes, what deserves attention, and what still needs proof."
+        ],
+        lattice: [
+          "Lattice mode",
+          "Structure keeps signal from becoming a pile.",
+          "Lattice names where the signal lives, what it touches, and which neighboring routes hold context."
+        ],
+        engineering: [
+          "Engineering mode",
+          "Implementation stays bounded.",
+          "Engineering names route ownership, source boundary, receipt integrity, and no-mutation proof."
+        ]
       };
-
-      const modeCopy = {
-        shimmer: "Shimmer handles signal quality: what enters, what changes, what deserves attention, and what still needs proof.",
-        lattice: "Lattice handles structure: where the signal lives, how it connects, and which neighboring routes hold context.",
-        engineering: "Engineering handles implementation language: source boundary, route ownership, receipt integrity, and no-mutation proof."
-      };
-
-      const steps = [
-        ["S — Screen", "Decide what enters at all.", "Attention is a resource. Shimmer begins by deciding what signal is allowed to enter the room before the system spends energy on it."],
-        ["H — Highlight", "Show deltas, not opinions.", "The page should surface what changed before it explains what the change means."],
-        ["I — Inspect", "Pick the evidence boundary before claiming.", "Inspection names the source, route, owner, and failure boundary before a claim expands."],
-        ["M — Measure", "Turn observation into a repeatable number.", "Measurement prevents mood from masquerading as proof."],
-        ["M — Mitigate", "Reduce harm before you solve.", "Mitigation lowers distortion while the answer is still forming."],
-        ["E — Explain", "Translate flags into plain causes.", "Explanation keeps the visitor oriented without exposing unnecessary machinery."],
-        ["R — Repeat", "Confirm stabilization over time.", "Repeat checks make sure the signal is stable, not merely improved for one moment."]
-      ];
 
       const tabs = Array.from(document.querySelectorAll(".tab"));
-      const signals = Array.from(document.querySelectorAll(".signal"));
-      const modeText = document.getElementById("mode-copy");
-      const readoutKicker = document.getElementById("readout-kicker");
-      const readoutTitle = document.getElementById("readout-title");
-      const readoutBody = document.getElementById("readout-body");
+      const kicker = document.getElementById("mode-kicker");
+      const title = document.getElementById("mode-title");
+      const copy = document.getElementById("mode-copy");
 
-      function render() {
+      function setMode(mode) {
+        const data = modes[mode] || modes.shimmer;
+
         tabs.forEach((tab) => {
-          tab.setAttribute("aria-pressed", tab.dataset.mode === state.mode ? "true" : "false");
+          tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
         });
 
-        signals.forEach((signal, index) => {
-          signal.setAttribute("aria-expanded", index === state.step ? "true" : "false");
-        });
-
-        modeText.textContent = modeCopy[state.mode] || modeCopy.shimmer;
-
-        const current = steps[state.step] || steps[0];
-        readoutKicker.textContent = current[0];
-        readoutTitle.textContent = current[1];
-        readoutBody.textContent = current[2];
-
-        syncLinks();
+        kicker.textContent = data[0];
+        title.textContent = data[1];
+        copy.textContent = data[2];
       }
 
       function syncLinks() {
@@ -671,20 +667,11 @@ VISUAL_PASS_CLAIMED=false</pre>
       }
 
       tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-          state.mode = tab.dataset.mode || "shimmer";
-          render();
-        });
+        tab.addEventListener("click", () => setMode(tab.dataset.mode || "shimmer"));
       });
 
-      signals.forEach((signal) => {
-        signal.addEventListener("click", () => {
-          state.step = Number(signal.dataset.step || 0);
-          render();
-        });
-      });
-
-      render();
+      setMode("shimmer");
+      syncLinks();
     })();
   </script>
 </body>

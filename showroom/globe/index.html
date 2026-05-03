@@ -4,67 +4,50 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Diamond Gate Bridge · Demo Actual Universe</title>
+  <title>Demo Actual Universe · Earth Sun Moon</title>
   <meta
     name="description"
-    content="Demo Actual Universe route bridge for actual Earth, Sun, and Moon bodies with non-blocking controls and separated data lanes."
+    content="Demo Actual Universe route shell. The route owns labels, controls, mount, and zoom. The render file owns Earth, Sun, and Moon drawing."
   />
 
   <!--
-  ══════════════════════════════════════════════════════════════════════
-  SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1
+  SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1
+
   TARGET=/showroom/globe/index.html
-  MODE=FULL_FILE_TNT
-  CLASS=ROUTE_CONSUMER_BRIDGE_ONLY
-  OWNER=SEAN
-  VOICE=DEXTER_EXECUTION_WITH_SHELDON_BOUNDARY
-  HYBRID_BOND=PASS
 
   PRECINCT=
-  Demo Actual Universe route shell, mount node, zoom wrapper, command panel,
-  route data, instrument invocation, and route receipt.
+  Demo Actual Universe route shell, mount node, labels, controls, zoom wrapper,
+  route contract, and render/instrument script load order.
 
   JURISDICTION=
-  Provide the mount.
-  Load the canonical instrument.
-  Call the canonical instrument.
-  Relay body, motion, speed, direction, and zoom commands.
-  Keep Demo Universe data and Demo Actual Universe data separate.
-  Contain the mobile UI.
+  Load /assets/showroom.globe.render.js before /assets/showroom.globe.instrument.js.
+  Provide the mount node.
+  Own labels, descriptions, buttons, zoom, and route copy.
+  Call the thin instrument facade.
+  Expose route receipt data.
 
   NON_JURISDICTION=
   Does not draw Earth.
   Does not draw Sun.
   Does not draw Moon.
-  Does not create replacement body art.
-  Does not replace /assets/showroom.globe.instrument.js.
-  Does not score Gauges.
-  Does not touch Planet 1 terrain.
-  Does not merge Demo Universe into Demo Actual Universe.
-
-  RETURN_RECEIPT=
-  #showroomGlobeMount exists.
-  /assets/showroom.globe.instrument.js loads.
-  Route calls instrument mount/render methods.
-  Controls call instrument methods.
-  No inline body drawing exists in this route.
-  Placeholder remains only until instrument renders.
-  ══════════════════════════════════════════════════════════════════════
+  Does not build Planet 1.
+  Does not build the custom universe.
+  Does not mutate Gauges.
   -->
 
   <style>
     :root {
       --bg: #03050a;
-      --panel: rgba(11, 15, 25, 0.86);
-      --panel-strong: rgba(13, 18, 30, 0.94);
+      --panel: rgba(10, 15, 25, 0.92);
+      --panel-2: rgba(15, 20, 32, 0.95);
       --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(255, 255, 255, 0.28);
+      --line-strong: rgba(255, 255, 255, 0.3);
       --text: #f8f1dd;
       --muted: rgba(248, 241, 221, 0.72);
       --faint: rgba(248, 241, 221, 0.46);
-      --gold: #f8d46a;
-      --blue: #7bd6ff;
-      --stage-zoom: 1;
+      --gold: #f7d25c;
+      --blue: #72d8ff;
+      --green: #8ff0c6;
       --safe-width: min(100%, 1180px);
       --card-width: min(100%, 820px);
     }
@@ -80,10 +63,9 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 18%, rgba(83, 138, 200, 0.16), transparent 28rem),
-        radial-gradient(circle at 12% 78%, rgba(248, 212, 106, 0.08), transparent 24rem),
-        radial-gradient(circle at 90% 30%, rgba(123, 214, 255, 0.08), transparent 25rem),
-        var(--bg);
+        radial-gradient(circle at 50% 12%, rgba(114, 216, 255, 0.15), transparent 28rem),
+        radial-gradient(circle at 10% 78%, rgba(247, 210, 92, 0.09), transparent 24rem),
+        #03050a;
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -98,11 +80,11 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.16) 0 1px, transparent 2px),
-        radial-gradient(circle at 38% 34%, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px),
-        radial-gradient(circle at 72% 21%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
-        radial-gradient(circle at 82% 72%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px);
-      opacity: 0.72;
+        radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.12) 0 1px, transparent 2px),
+        radial-gradient(circle at 38% 33%, rgba(255, 255, 255, 0.09) 0 1px, transparent 2px),
+        radial-gradient(circle at 73% 18%, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px),
+        radial-gradient(circle at 84% 77%, rgba(255, 255, 255, 0.1) 0 1px, transparent 2px);
+      opacity: 0.7;
       z-index: 0;
     }
 
@@ -118,8 +100,8 @@
 
     .skip-link {
       position: absolute;
-      left: 1rem;
       top: -4rem;
+      left: 1rem;
       z-index: 20;
       padding: 0.75rem 1rem;
       border-radius: 999px;
@@ -136,15 +118,14 @@
       position: relative;
       z-index: 1;
       width: var(--safe-width);
-      min-width: 0;
       margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem) max(1.5rem, env(safe-area-inset-bottom));
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.5rem, env(safe-area-inset-bottom));
       overflow-x: hidden;
     }
 
-    header {
+    .topbar {
       width: 100%;
-      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -157,7 +138,7 @@
       display: inline-flex;
       flex-direction: column;
       gap: 0.08rem;
-      font-weight: 900;
+      font-weight: 950;
       line-height: 1.05;
       letter-spacing: 0.04em;
     }
@@ -174,68 +155,56 @@
       text-transform: uppercase;
     }
 
-    nav {
-      min-width: 0;
-      max-width: 100%;
+    .nav {
       display: flex;
       justify-content: flex-end;
       flex-wrap: wrap;
       gap: 0.42rem;
+      min-width: 0;
+      max-width: 100%;
     }
 
-    nav a {
+    .nav a {
+      min-height: 2.1rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 2.1rem;
       padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.035);
       color: var(--muted);
+      background: rgba(255, 255, 255, 0.035);
       font-size: 0.74rem;
-      font-weight: 800;
+      font-weight: 850;
       white-space: nowrap;
     }
 
-    nav a[aria-current="page"] {
-      border-color: rgba(248, 212, 106, 0.9);
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+    .nav a[aria-current="page"] {
+      border-color: rgba(247, 210, 92, 0.9);
       color: #080a0f;
-    }
-
-    main {
-      width: 100%;
-      min-width: 0;
+      background: linear-gradient(135deg, #fff0a3, #f4c44e);
     }
 
     .hero {
       width: 100%;
-      min-width: 0;
       display: grid;
       gap: 1rem;
-      padding: clamp(0.4rem, 2vw, 1rem) 0 1rem;
+      padding: clamp(0.5rem, 2.2vw, 1.2rem) 0 1rem;
       text-align: center;
     }
 
-    .hero-copy {
-      width: min(100%, 820px);
-      min-width: 0;
-      margin: 0 auto;
-    }
-
     .eyebrow {
-      margin: 0 0 0.75rem;
+      margin: 0;
       color: var(--gold);
-      font-size: clamp(0.72rem, 2.6vw, 0.84rem);
-      font-weight: 900;
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
       letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 9.5vw, 5.5rem);
+      font-size: clamp(2rem, 9.5vw, 5.4rem);
       line-height: 0.92;
       letter-spacing: -0.075em;
       text-wrap: balance;
@@ -243,16 +212,15 @@
 
     .lead {
       width: min(100%, 760px);
-      margin: 0.95rem auto 0;
+      margin: 0 auto;
       color: var(--muted);
-      font-size: clamp(0.98rem, 3.6vw, 1.14rem);
+      font-size: clamp(0.98rem, 3.7vw, 1.14rem);
       line-height: 1.55;
       text-wrap: balance;
     }
 
-    .status-strip {
+    .receipt-pills {
       width: min(100%, 900px);
-      min-width: 0;
       margin: 0 auto;
       display: flex;
       justify-content: center;
@@ -261,14 +229,13 @@
     }
 
     .pill {
-      max-width: 100%;
       padding: 0.44rem 0.7rem;
-      border: 1px solid rgba(248, 212, 106, 0.28);
+      border: 1px solid rgba(247, 210, 92, 0.28);
       border-radius: 999px;
-      background: rgba(248, 212, 106, 0.06);
-      color: rgba(255, 238, 174, 0.9);
+      color: rgba(255, 238, 174, 0.92);
+      background: rgba(247, 210, 92, 0.06);
       font-size: 0.72rem;
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       overflow-wrap: anywhere;
@@ -277,15 +244,14 @@
     .viewer-stack {
       width: var(--card-width);
       min-width: 0;
-      margin: 0 auto;
+      margin: 1rem auto 0;
       display: grid;
       gap: 1rem;
     }
 
     .stage-card,
     .controls-panel,
-    .info-card,
-    .receipt-bar {
+    .contract-panel {
       width: 100%;
       min-width: 0;
       border: 1px solid var(--line);
@@ -302,27 +268,32 @@
 
     .stage-card {
       position: relative;
-      padding: clamp(0.78rem, 3.2vw, 1.2rem);
+      padding: clamp(0.85rem, 3.2vw, 1.25rem);
       isolation: isolate;
     }
 
-    .orbital-ring {
+    .orbital-ring,
+    .orbital-ring::after {
       position: absolute;
-      inset: 8%;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 50%;
-      transform: rotate(-18deg) scaleX(1.16);
       pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
       z-index: -1;
     }
 
-    .orbital-ring.two {
-      inset: 15%;
-      opacity: 0.58;
-      transform: rotate(18deg) scaleX(1.26);
+    .orbital-ring {
+      inset: 8%;
+      transform: rotate(-18deg) scaleX(1.18);
     }
 
-    .actual-globe-stage {
+    .orbital-ring::after {
+      content: "";
+      inset: 12%;
+      opacity: 0.62;
+      transform: rotate(36deg) scaleX(1.18);
+    }
+
+    .globe-stage {
       width: 100%;
       min-width: 0;
       display: grid;
@@ -330,57 +301,31 @@
       overflow: hidden;
     }
 
-    .actual-globe-zoom-layer {
-      width: min(100%, 42rem);
-      min-width: 0;
-      display: grid;
-      place-items: center;
-      transform: scale(var(--stage-zoom));
-      transform-origin: center;
-      transition: transform 180ms ease;
-      overflow: visible;
-    }
-
-    .actual-globe-mount {
-      width: min(86vw, 40rem);
+    .globe-mount {
+      width: min(84vw, 40rem);
       max-width: 100%;
       min-width: 0;
-      aspect-ratio: 1;
+      aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
       overflow: hidden;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 50%, rgba(123, 214, 255, 0.1), transparent 64%),
-        rgba(255, 255, 255, 0.025);
+        radial-gradient(circle at 50% 50%, rgba(114, 216, 255, 0.08), transparent 64%),
+        rgba(255, 255, 255, 0.02);
       box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-        0 0 2.5rem rgba(123, 214, 255, 0.12);
+        inset 0 0 0 1px rgba(255, 255, 255, 0.11),
+        0 0 2.5rem rgba(114, 216, 255, 0.11);
     }
 
-    .actual-globe-mount > * {
+    .globe-mount > * {
       max-width: 100%;
       min-width: 0;
     }
 
-    .instrument-pending {
-      width: min(100%, 22rem);
-      padding: 1rem;
-      border: 1px dashed rgba(248, 212, 106, 0.35);
-      border-radius: 1.2rem;
-      color: var(--muted);
-      background: rgba(248, 212, 106, 0.05);
-      font-size: clamp(0.82rem, 3vw, 0.95rem);
-      font-weight: 800;
-      line-height: 1.35;
-      text-align: center;
-      overflow-wrap: break-word;
-    }
-
     .body-label {
       width: min(100%, 38rem);
-      min-width: 0;
-      margin: 0.9rem auto 0;
+      margin: 0.85rem auto 0;
       display: grid;
       gap: 0.45rem;
       text-align: center;
@@ -402,16 +347,16 @@
       text-wrap: balance;
     }
 
-    .controls-panel {
-      padding: clamp(0.82rem, 3.3vw, 1.25rem);
+    .controls-panel,
+    .contract-panel {
+      padding: clamp(0.85rem, 3.3vw, 1.25rem);
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
-        var(--panel-strong);
+        var(--panel-2);
     }
 
     .control-row {
       width: 100%;
-      min-width: 0;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
       gap: clamp(0.5rem, 2vw, 0.8rem);
@@ -424,17 +369,17 @@
     .control-row button {
       width: 100%;
       min-width: 0;
-      min-height: clamp(3rem, 11vw, 3.6rem);
+      min-height: clamp(3rem, 11vw, 3.55rem);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 0.72rem 0.82rem;
       border: 1px solid var(--line-strong);
       border-radius: 999px;
-      background: rgba(9, 13, 22, 0.84);
+      background: rgba(8, 12, 21, 0.86);
       color: var(--text);
       font-size: clamp(0.84rem, 3.6vw, 1rem);
-      font-weight: 900;
+      font-weight: 950;
       line-height: 1.05;
       text-align: center;
       white-space: normal;
@@ -445,14 +390,13 @@
 
     .control-row button.active,
     .control-row button[aria-pressed="true"] {
-      border-color: rgba(248, 212, 106, 0.9);
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      border-color: rgba(247, 210, 92, 0.92);
       color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f4c44e);
     }
 
     .zoom-control {
       width: 100%;
-      min-width: 0;
       margin: 0.85rem 0 0;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
@@ -471,8 +415,7 @@
 
     .readout {
       width: 100%;
-      min-width: 0;
-      margin: 0.85rem 0 0;
+      margin-top: 0.85rem;
       padding: 0.82rem 0.9rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 1rem;
@@ -485,51 +428,11 @@
       overflow-wrap: anywhere;
     }
 
-    .track {
-      width: min(100%, 22rem);
-      height: 0.42rem;
-      margin: 0.68rem auto 0;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      overflow: hidden;
-    }
-
-    .track span {
-      display: block;
-      width: 52%;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--blue), var(--gold));
-    }
-
-    .grid {
-      width: var(--card-width);
-      min-width: 0;
-      margin: 1rem auto 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
-    .info-card,
-    .receipt-bar {
-      padding: clamp(0.92rem, 3.4vw, 1.2rem);
-    }
-
-    .info-card h2 {
-      margin: 0 0 0.48rem;
-      font-size: clamp(1rem, 4vw, 1.22rem);
+    .contract-panel h2 {
+      margin: 0 0 0.6rem;
+      font-size: clamp(1rem, 4vw, 1.24rem);
       letter-spacing: 0.08em;
       text-transform: uppercase;
-    }
-
-    .info-card p,
-    .receipt-bar p {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(0.86rem, 3.2vw, 0.98rem);
-      line-height: 1.5;
-      overflow-wrap: break-word;
     }
 
     .contract {
@@ -540,25 +443,7 @@
       overflow-wrap: anywhere;
     }
 
-    .receipt-bar {
-      width: var(--card-width);
-      min-width: 0;
-      margin: 1rem auto 0;
-    }
-
-    .receipt-bar strong {
-      display: block;
-      margin-bottom: 0.45rem;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
     footer {
-      width: 100%;
-      min-width: 0;
       padding: 1.45rem 0 0.45rem;
       color: var(--faint);
       font-size: 0.74rem;
@@ -568,22 +453,18 @@
     }
 
     @media (max-width: 820px) {
-      header {
+      .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      nav {
+      .nav {
         justify-content: flex-start;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 460px) {
-      .actual-globe-mount {
+      .globe-mount {
         width: min(82vw, 23rem);
       }
 
@@ -598,7 +479,7 @@
     }
 
     @media (max-width: 360px) {
-      .actual-globe-mount {
+      .globe-mount {
         width: min(78vw, 20rem);
       }
     }
@@ -606,101 +487,88 @@
 </head>
 
 <body>
-  <a class="skip-link" href="#demo-actual-universe">Skip to Demo Actual Universe globe</a>
+  <a class="skip-link" href="#showroom-globe-main">Skip to Showroom Globe</a>
 
   <div class="shell">
-    <header>
+    <header class="topbar">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span>Diamond Gate Bridge</span>
         <span>Rich Manor and Estate</span>
       </a>
 
-      <nav aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/book/">Book</a>
+        <a href="/explore/">Explore</a>
+        <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/" aria-current="page">Demo Actual Universe</a>
         <a href="/gauges/">Gauges</a>
-        <a href="/book/">Read</a>
       </nav>
     </header>
 
-    <main id="demo-actual-universe">
+    <main id="showroom-globe-main">
       <section class="hero" aria-labelledby="page-title">
-        <div class="hero-copy">
-          <div class="eyebrow">Demo Actual Universe · actual bodies bridge</div>
-          <h1 id="page-title">Actual Earth, Sun, and Moon.</h1>
-          <p class="lead">
-            This route mounts the canonical actual-bodies instrument. Earth, Sun, and Moon render from
-            the asset authority. The page controls the shell, zoom wrapper, and command panel only.
-            Demo Universe data and Demo Actual Universe data remain separate.
-          </p>
-        </div>
+        <p class="eyebrow">Demo Actual Universe · render-file authority</p>
+        <h1 id="page-title">Earth, Sun, and Moon from the render file.</h1>
+        <p class="lead">
+          This route provides the mount and controls only. The instrument controls state. The render file draws the bodies.
+        </p>
 
-        <div class="status-strip" aria-label="Route status">
-          <span class="pill">Actual bodies bridge</span>
-          <span class="pill">Earth from instrument</span>
-          <span class="pill">Sun from instrument</span>
-          <span class="pill">Moon from instrument</span>
-          <span class="pill">Controls below viewport</span>
-          <span class="pill">Data lanes separate</span>
+        <div class="receipt-pills" aria-label="Route receipts">
+          <span class="pill">Route owns controls</span>
+          <span class="pill">Instrument owns state</span>
+          <span class="pill">Render owns bodies</span>
+          <span class="pill">No Planet 1 drift</span>
+          <span class="pill">No route body drawing</span>
         </div>
       </section>
 
-      <section class="viewer-stack" aria-label="Demo Actual Universe viewer and controls">
-        <section
+      <section class="viewer-stack" aria-label="Demo Actual Universe viewer">
+        <article
           class="stage-card"
           id="stageCard"
-          aria-label="Demo Actual Universe actual body viewer"
           data-demo-actual-universe-route="true"
+          data-route-authority="labels-controls-mount-zoom-wrapper"
+          data-instrument-authority="/assets/showroom.globe.instrument.js"
+          data-render-authority="/assets/showroom.globe.render.js"
+          data-body-render-authority="/assets/showroom.globe.render.js"
           data-demo-universe-merge="false"
-          data-route-authority="layout-command-panel-zoom-wrapper"
-          data-body-render-authority="/assets/showroom.globe.instrument.js"
         >
           <div class="orbital-ring" aria-hidden="true"></div>
-          <div class="orbital-ring two" aria-hidden="true"></div>
 
-          <div class="actual-globe-stage" id="actualGlobeStage">
-            <div class="actual-globe-zoom-layer" id="actualGlobeZoomLayer">
-              <div
-                class="actual-globe-mount"
-                id="showroomGlobeMount"
-                data-showroom-globe-root
-                data-globe-root
-                data-globe-mount
-                data-showroom-globe-mount
-                data-actual-bodies-mount="true"
-                data-planet-mount
-                data-demo-actual-universe="true"
-                data-preserve-prior-globe="true"
-                data-earth-rule="actual-earth"
-                data-sun-standard="physical-reality"
-                data-moon-standard="physical-reality"
-                data-planet-one="reserved"
-                data-instrument-mounted="false"
-                data-inline-globe-redraw="false"
-                data-cartoon-canvas-replacement="false"
-              >
-                <div class="instrument-pending" id="instrumentPending">
-                  Canonical globe instrument pending. The page is not drawing a replacement globe.
-                </div>
-              </div>
+          <div class="globe-stage">
+            <div
+              class="globe-mount"
+              id="showroomGlobeMount"
+              data-showroom-globe-mount
+              data-actual-bodies-mount="true"
+              data-globe-mount
+              data-demo-actual-universe="true"
+              data-instrument-authority="/assets/showroom.globe.instrument.js"
+              data-render-authority="/assets/showroom.globe.render.js"
+              data-body-render-authority="/assets/showroom.globe.render.js"
+              data-route-authority="labels-controls-mount-zoom-wrapper"
+              data-projection="true-inverse-spherical"
+              data-inline-globe-redraw="false"
+              data-cartoon-canvas-replacement="false"
+              data-planet-one="reserved"
+              data-visual-pass-claimed="false"
+            ></div>
 
-              <div class="body-label">
-                <strong id="bodyName">Earth</strong>
-                <span id="bodyDescription">Actual Earth body mounted from the canonical instrument.</span>
-              </div>
+            <div class="body-label">
+              <strong id="bodyName">Earth</strong>
+              <span id="bodyDescription">Actual Earth body mounted through the thin instrument and drawn by the render file.</span>
             </div>
           </div>
-        </section>
+        </article>
 
-        <section class="controls-panel" aria-label="Demo Actual Universe command controls">
-          <div class="control-row" aria-label="Choose Demo Actual Universe body">
-            <button type="button" data-body="earth" aria-pressed="true">View Earth</button>
+        <section class="controls-panel" aria-label="Body and motion controls">
+          <div class="control-row" aria-label="Choose body">
+            <button type="button" data-body="earth" aria-pressed="true" class="active">View Earth</button>
             <button type="button" data-body="sun" aria-pressed="false">View Sun</button>
             <button type="button" data-body="moon" aria-pressed="false">View Moon</button>
           </div>
@@ -731,385 +599,224 @@
             <span id="zoomLabel">100%</span>
           </label>
 
-          <div class="readout" aria-live="polite">
-            <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth · zoom: 100%</span>
-            <div class="track" aria-hidden="true"><span id="speedFill"></span></div>
+          <div class="readout" aria-live="polite" id="motionReadout">
+            Motion speed: normal · direction: forward · active body: Earth · zoom: 100%
           </div>
         </section>
-      </section>
 
-      <section class="grid" aria-label="Body status cards">
-        <article class="info-card">
-          <h2>Earth</h2>
-          <p>
-            Earth is rendered by /assets/showroom.globe.instrument.js. The route does not redraw or
-            replace the Earth body.
-          </p>
-        </article>
-
-        <article class="info-card">
-          <h2>Sun</h2>
-          <p>
-            Sun is rendered by /assets/showroom.globe.instrument.js using the physical-reality standard:
-            plasma sphere, corona, granulation, turbulence, and limb intensity.
-          </p>
-        </article>
-
-        <article class="info-card">
-          <h2>Moon</h2>
-          <p>
-            Moon is rendered by /assets/showroom.globe.instrument.js using the physical-reality standard:
-            maria, crater fields, ray systems, regolith texture, and limb shading.
-          </p>
-        </article>
-      </section>
-
-      <section class="info-card" aria-labelledby="route-contract-title">
-        <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1
+        <section class="contract-panel" aria-labelledby="route-contract-title">
+          <h2 id="route-contract-title">Route contract</h2>
+          <pre class="contract">SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1
 route=/showroom/globe/
 lane=demo-actual-universe
-baseline=optimal-baseline-candidate-actual-bodies
-demo-universe-data=separate
-demo-actual-universe-data=separate
-merge-demo-universe-into-demo-actual-universe=false
-body-render-authority=/assets/showroom.globe.instrument.js
-route-authority=layout-command-panel-zoom-wrapper
-earth=actual-earth-from-instrument
-sun=actual-sun-from-instrument
-moon=actual-moon-from-instrument
-earth-change=zoom-wrapper-only
-controls-block-globe=false
-controls-precinct=below-stage-command-panel
-visual-precinct=protected-full-viewport-globe-stage
-inline-globe-redraw=false
-cartoon-canvas-replacement=false
-runtime-support=/showroom/runtime.js
-zoom-control=true
-zoom-min=70
-zoom-max=240
-zoom-reset=100
-planet-1=reserved-for-nine-summits-universe
-graphicbox=false
-image-generation=false
+route-authority=labels-controls-mount-zoom-wrapper
+instrument-authority=/assets/showroom.globe.instrument.js
+render-authority=/assets/showroom.globe.render.js
+body-render-authority=/assets/showroom.globe.render.js
+projection=true-inverse-spherical
+route-draws-body=false
+instrument-draws-body=false
+render-draws-body=true
+planet-1=reserved
+custom-universe=false
+gauges-mutated=false
 visual-pass-claimed=false
-owner-visual-receipt-required=true</div>
-      </section>
-
-      <section class="receipt-bar" aria-label="Hybrid Bond receipt">
-        <strong>Hybrid Bond receipt</strong>
-        <p>
-          Precinct held: Demo Actual Universe route bridge. The route mounts the canonical instrument
-          and controls only shell, zoom, body selection, speed, and motion commands. Earth, Sun, and
-          Moon rendering belongs to /assets/showroom.globe.instrument.js. Demo Universe and Demo Actual
-          Universe data remain separate.
-        </p>
+owner-receipt-required=true</pre>
+        </section>
       </section>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_ROUTE_CONSUMER_BRIDGE_REPAIR_TNT_v1 · actual bodies instrument bridge · owner receipt required.
+      SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1 · route to instrument to render.
     </footer>
   </div>
 
-  <script type="application/json" id="demo-actual-universe-data">
-    {
-      "route": "/showroom/globe/",
-      "lane": "demo-actual-universe",
-      "mergeDemoUniverse": false,
-      "bodyRenderAuthority": "/assets/showroom.globe.instrument.js",
-      "routeAuthority": "layout-command-panel-zoom-wrapper",
-      "bodies": {
-        "earth": {
-          "label": "Earth",
-          "description": "Actual Earth body mounted from the canonical instrument."
-        },
-        "sun": {
-          "label": "Sun",
-          "description": "Actual Sun body mounted from the canonical instrument."
-        },
-        "moon": {
-          "label": "Moon",
-          "description": "Actual Moon body mounted from the canonical instrument."
-        }
-      }
-    }
-  </script>
-
-  <script type="application/json" id="demo-universe-data">
-    {
-      "route": "/showroom/",
-      "lane": "demo-universe",
-      "mergeDemoActualUniverse": false,
-      "relationship": "separate-data-lane"
-    }
-  </script>
-
-  <script src="/showroom/runtime.js" defer></script>
-  <script src="/assets/showroom.globe.instrument.js?v=actual-bodies-instrument-restore-v1" defer></script>
+  <script src="/assets/showroom.globe.render.js?v=true-sphere-render-v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=true-sphere-render-v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const stageCard = document.getElementById("stageCard");
+      const VERSION = "SHOWROOM_GLOBE_ROUTE_TO_RENDER_HANDOFF_RENEWAL_TNT_v1";
+
       const mount = document.getElementById("showroomGlobeMount");
+      const stageCard = document.getElementById("stageCard");
       const bodyName = document.getElementById("bodyName");
       const bodyDescription = document.getElementById("bodyDescription");
-      const motionLabel = document.getElementById("motionLabel");
-      const speedFill = document.getElementById("speedFill");
+      const motionReadout = document.getElementById("motionReadout");
       const zoomRange = document.getElementById("zoomRange");
       const zoomLabel = document.getElementById("zoomLabel");
-      const zoomLayer = document.getElementById("actualGlobeZoomLayer");
+
       const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
       const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
       const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
       const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
+
+      const bodyMeta = {
+        earth: {
+          label: "Earth",
+          description: "Actual Earth body mounted through the thin instrument and drawn by the render file."
+        },
+        sun: {
+          label: "Sun",
+          description: "Actual Sun body mounted through the thin instrument and drawn by the render file."
+        },
+        moon: {
+          label: "Moon",
+          description: "Actual Moon body mounted through the thin instrument and drawn by the render file."
+        }
+      };
+
+      const speedValues = {
+        slow: 0.45,
+        normal: 1,
+        fast: 1.75
+      };
 
       const state = {
         body: "earth",
         running: true,
         direction: "forward",
         speedName: "normal",
-        speedValue: 1,
-        zoom: 100,
-        mounted: false,
-        lastMountAttempt: 0
+        speed: 1,
+        zoom: 100
       };
 
-      const bodyMeta = {
-        earth: {
-          label: "Earth",
-          description: "Actual Earth body mounted from the canonical instrument."
-        },
-        sun: {
-          label: "Sun",
-          description: "Actual Sun body mounted from the canonical instrument."
-        },
-        moon: {
-          label: "Moon",
-          description: "Actual Moon body mounted from the canonical instrument."
-        }
-      };
-
-      const speedMap = {
-        slow: { fill: "28%", value: 0.65 },
-        normal: { fill: "52%", value: 1 },
-        fast: { fill: "84%", value: 1.65 }
+      window.DiamondGateBridge = window.DiamondGateBridge || {};
+      window.DiamondGateBridge.showroomGlobeRoute = {
+        version: VERSION,
+        route: "/showroom/globe/",
+        lane: "demo-actual-universe",
+        routeAuthority: "labels-controls-mount-zoom-wrapper",
+        instrumentAuthority: "/assets/showroom.globe.instrument.js",
+        renderAuthority: "/assets/showroom.globe.render.js",
+        bodyRenderAuthority: "/assets/showroom.globe.render.js",
+        projection: "true-inverse-spherical",
+        routeDrawsBody: false,
+        instrumentDrawsBody: false,
+        renderDrawsBody: true,
+        planetOne: "reserved",
+        customUniverse: false
       };
 
       function clamp(value, min, max) {
-        return Math.min(max, Math.max(min, value));
+        return Math.max(min, Math.min(max, value));
       }
 
-      function readJSON(id) {
-        const node = document.getElementById(id);
-        if (!node) return {};
-
-        try {
-          return JSON.parse(node.textContent);
-        } catch (_) {
-          return {};
-        }
-      }
-
-      const demoActualUniverseData = readJSON("demo-actual-universe-data");
-      const demoUniverseData = readJSON("demo-universe-data");
-
-      window.DiamondGateBridge = window.DiamondGateBridge || {};
-      window.DiamondGateBridge.demoActualUniverseData = demoActualUniverseData;
-      window.DiamondGateBridge.demoUniverseData = demoUniverseData;
-
-      function dispatchInstrumentEvent(name, detail = {}) {
-        window.dispatchEvent(new CustomEvent(name, {
-          detail: {
-            route: "/showroom/globe/",
-            lane: "demo-actual-universe",
-            baseline: "optimal-baseline-candidate-actual-bodies",
-            mergeDemoUniverse: false,
-            preservePriorGlobe: true,
-            replaceGlobeRenderer: false,
-            controlsBlockGlobe: false,
-            actualBodiesRequired: true,
-            mount,
-            root: mount,
-            target: mount,
-            activeBody: state.body,
-            body: state.body,
-            running: state.running,
-            direction: state.direction,
-            speed: state.speedValue,
-            speedName: state.speedName,
-            zoom: state.zoom,
-            ...detail
-          }
-        }));
-      }
-
-      function findInstrumentAPI() {
+      function findInstrument() {
         const bridge = window.DiamondGateBridge || {};
 
-        const candidates = [
-          window.DGBShowroomGlobeInstrument,
-          window.DGBActualBodiesInstrument,
-          window.ShowroomGlobeInstrument,
-          window.DiamondGateBridgeShowroomGlobe,
-          window.showroomGlobeInstrument,
-          window.ShowroomGlobe,
-          bridge.DGBShowroomGlobeInstrument,
-          bridge.DGBActualBodiesInstrument,
-          bridge.ShowroomGlobe,
-          bridge.showroomGlobeInstrument,
-          bridge.ShowroomGlobeInstrument
-        ];
-
-        return candidates.find((candidate) => candidate && typeof candidate === "object") || null;
+        return (
+          window.DGBShowroomGlobeInstrument ||
+          window.DGBActualBodiesInstrument ||
+          window.ShowroomGlobeInstrument ||
+          window.showroomGlobeInstrument ||
+          bridge.DGBShowroomGlobeInstrument ||
+          bridge.DGBActualBodiesInstrument ||
+          bridge.ShowroomGlobeInstrument ||
+          bridge.showroomGlobeInstrument ||
+          null
+        );
       }
 
-      function instrumentPayload(extra = {}) {
+      function payload(extra = {}) {
         return {
           mount,
           root: mount,
           target: mount,
           route: "/showroom/globe/",
           lane: "demo-actual-universe",
-          mode: "demo-actual-universe",
-          baseline: "optimal-baseline-candidate-actual-bodies",
-          preservePriorGlobe: true,
-          replaceGlobeRenderer: false,
-          mergeDemoUniverse: false,
-          controlsBlockGlobe: false,
-          actualBodiesRequired: true,
           activeBody: state.body,
           body: state.body,
           running: state.running,
           direction: state.direction,
-          speed: state.speedValue,
           speedName: state.speedName,
+          speed: state.speed,
           zoom: state.zoom,
+          projection: "true-inverse-spherical",
+          routeAuthority: "labels-controls-mount-zoom-wrapper",
+          instrumentAuthority: "/assets/showroom.globe.instrument.js",
+          renderAuthority: "/assets/showroom.globe.render.js",
+          bodyRenderAuthority: "/assets/showroom.globe.render.js",
+          routeDrawsBody: false,
+          instrumentDrawsBody: false,
+          renderDrawsBody: true,
+          replaceGlobeRenderer: false,
           ...extra
         };
       }
 
-      function callInstrument(method, payload = {}) {
-        const api = findInstrumentAPI();
+      function callInstrument(methods, extra = {}) {
+        const api = findInstrument();
+        if (!api) {
+          mount.dataset.instrumentReady = "false";
+          return false;
+        }
 
-        if (api && typeof api[method] === "function") {
+        mount.dataset.instrumentReady = "true";
+
+        for (const method of methods) {
+          if (typeof api[method] !== "function") continue;
+
           try {
-            const firstArg = instrumentPayload(payload);
-            const secondArg = instrumentPayload(payload);
-
             if (method === "mount" || method === "render" || method === "renderGlobe" || method === "renderActualBody") {
-              api[method](mount, secondArg);
+              api[method](mount, payload(extra));
             } else {
-              api[method](firstArg);
+              api[method](payload(extra));
             }
 
             return true;
           } catch (error) {
-            console.warn(`Showroom globe instrument method failed: ${method}`, error);
+            mount.dataset.instrumentError = String(error && error.message ? error.message : error);
           }
         }
 
-        dispatchInstrumentEvent(`showroom:globe:${method}`, payload);
         return false;
       }
 
-      function callAnyInstrument(methods, payload = {}) {
-        return methods.some((method) => callInstrument(method, payload));
-      }
+      function requestMount(reason = "route-request") {
+        mount.dataset.routeVersion = VERSION;
+        mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
+        mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
+        mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
+        mount.dataset.projection = "true-inverse-spherical";
+        mount.dataset.routeDrawsBody = "false";
+        mount.dataset.instrumentDrawsBody = "false";
+        mount.dataset.renderDrawsBody = "true";
 
-      function markMountedIfInstrumentRendered() {
-        if (!mount) return false;
+        const ok = callInstrument(["renderGlobe", "mount", "renderActualBody", "render"], { reason });
 
-        const children = Array.from(mount.children).filter((child) => child.id !== "instrumentPending");
-        const hasRenderedChild = children.length > 0 || Boolean(
-          mount.querySelector(
-            "canvas,svg,img,video,[data-globe-object],.globe,.showroom-globe,.dgb-actual-body-shell,.dgb-actual-bodies-stage,.dgb-actual-bodies-canvas"
-          )
-        );
-
-        if (hasRenderedChild) {
-          mount.dataset.instrumentMounted = "true";
-          state.mounted = true;
-
-          const pending = document.getElementById("instrumentPending");
-          if (pending) pending.remove();
-
-          return true;
+        if (!ok) {
+          window.dispatchEvent(new CustomEvent("showroom:globe:mount-requested", {
+            detail: payload({ reason, apiReady: false })
+          }));
         }
 
-        mount.dataset.instrumentMounted = "false";
-        state.mounted = false;
-        return false;
+        return ok;
       }
 
-      function writeMountDataset() {
-        mount.dataset.instrumentMounted = state.mounted ? "true" : "false";
-        mount.dataset.demoActualUniverse = "true";
-        mount.dataset.preservePriorGlobe = "true";
-        mount.dataset.sunStandard = "physical-reality";
-        mount.dataset.moonStandard = "physical-reality";
-        mount.dataset.demoUniverseMerge = "false";
-        mount.dataset.controlsBlockGlobe = "false";
-        mount.dataset.baseline = "optimal-baseline-candidate-actual-bodies";
-        mount.dataset.actualBodiesRequired = "true";
-        mount.dataset.activeBody = state.body;
-        mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.instrument.js";
-        mount.dataset.routeAuthority = "layout-command-panel-zoom-wrapper";
-        mount.dataset.inlineGlobeRedraw = "false";
-        mount.dataset.cartoonCanvasReplacement = "false";
-      }
-
-      function requestMount() {
-        state.lastMountAttempt += 1;
-        writeMountDataset();
-
-        const mounted = callAnyInstrument(
-          ["mount", "renderGlobe", "renderActualBody", "render", "setActiveBody"],
-          {
-            reason: "route-consumer-bridge-request-mount",
-            attempt: state.lastMountAttempt
-          }
-        );
-
-        markMountedIfInstrumentRendered();
-
-        if (!mounted) {
-          dispatchInstrumentEvent("showroom:globe:mount-requested", {
-            reason: "instrument-api-not-ready",
-            attempt: state.lastMountAttempt
-          });
-        }
-
-        return mounted;
-      }
-
-      function updateLabels() {
+      function updateUI() {
         const meta = bodyMeta[state.body] || bodyMeta.earth;
-        const speed = speedMap[state.speedName] || speedMap.normal;
 
         bodyName.textContent = meta.label;
         bodyDescription.textContent = meta.description;
-        zoomLabel.textContent = `${state.zoom}%`;
         zoomRange.value = String(state.zoom);
-        speedFill.style.width = speed.fill;
+        zoomLabel.textContent = `${state.zoom}%`;
 
-        motionLabel.textContent =
+        motionReadout.textContent =
           `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${meta.label} · zoom: ${state.zoom}%`;
-
-        zoomLayer.style.setProperty("--stage-zoom", String(state.zoom / 100));
 
         bodyButtons.forEach((button) => {
           const active = button.dataset.body === state.body;
-          button.setAttribute("aria-pressed", String(active));
           button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
         });
 
         speedButtons.forEach((button) => {
           const active = button.dataset.speed === state.speedName;
-          button.setAttribute("aria-pressed", String(active));
           button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
         });
 
         stageCard.dataset.activeBody = state.body;
@@ -1117,82 +824,60 @@ owner-visual-receipt-required=true</div>
         stageCard.dataset.direction = state.direction;
         stageCard.dataset.speed = state.speedName;
         stageCard.dataset.zoom = String(state.zoom);
-        writeMountDataset();
-      }
 
-      function syncInstrument(extra = {}) {
-        updateLabels();
-
-        const payload = {
-          ...extra,
-          activeBody: state.body,
-          body: state.body,
-          running: state.running,
-          direction: state.direction,
-          speed: state.speedValue,
-          speedName: state.speedName,
-          zoom: state.zoom
-        };
-
-        callAnyInstrument(["setMotion", "update", "setState"], payload);
-
-        if (extra.bodyChanged) {
-          callAnyInstrument(["setActiveBody", "selectBody"], payload);
-        }
-
-        if (extra.zoomChanged) {
-          callAnyInstrument(["setZoom", "zoom"], payload);
-        }
-
-        markMountedIfInstrumentRendered();
+        callInstrument(["setMotion", "update", "setState"], { reason: "route-ui-sync" });
       }
 
       function setBody(body) {
         if (!bodyMeta[body]) return;
+
         state.body = body;
-        syncInstrument({ bodyChanged: true });
-        requestMount();
+        updateUI();
+        callInstrument(["setActiveBody", "selectBody", "setMotion", "update"], { bodyChanged: true });
+        requestMount("body-change");
       }
 
       function setSpeed(speedName) {
-        if (!speedMap[speedName]) return;
+        if (!speedValues[speedName]) return;
+
         state.speedName = speedName;
-        state.speedValue = speedMap[speedName].value;
-        syncInstrument({ speedChanged: true });
+        state.speed = speedValues[speedName];
+        updateUI();
       }
 
-      function setZoom(nextZoom) {
-        state.zoom = clamp(Number(nextZoom) || 100, 70, 240);
-        syncInstrument({ zoomChanged: true });
+      function setZoom(zoom) {
+        state.zoom = clamp(Number(zoom) || 100, 70, 240);
+        updateUI();
+        callInstrument(["setZoom", "setMotion", "update"], { zoomChanged: true });
       }
 
       function runAction(action) {
         if (action === "start" || action === "resume") {
           state.running = true;
-          callAnyInstrument(["resume", "start"], { action });
+          callInstrument(["start", "resume", "setMotion", "update"], { action });
         }
 
         if (action === "pause") {
           state.running = false;
-          callAnyInstrument(["pause"], { action });
+          callInstrument(["pause", "setMotion", "update"], { action });
         }
 
         if (action === "reset") {
           state.running = true;
           state.direction = "forward";
           state.speedName = "normal";
-          state.speedValue = speedMap.normal.value;
+          state.speed = speedValues.normal;
           state.zoom = 100;
-          callAnyInstrument(["reset"], { action });
-          requestMount();
+          callInstrument(["reset", "setMotion", "update"], { action });
+          requestMount("reset");
         }
 
         if (action === "reverse") {
           state.direction = state.direction === "forward" ? "reverse" : "forward";
-          callAnyInstrument(["reverse"], { action });
+          callInstrument(["reverse", "setMotion", "update"], { action });
         }
 
-        syncInstrument({ actionChanged: true, action });
+        updateUI();
       }
 
       bodyButtons.forEach((button) => {
@@ -1219,31 +904,26 @@ owner-visual-receipt-required=true</div>
 
       zoomRange.addEventListener("input", () => setZoom(zoomRange.value));
 
-      window.addEventListener("dgb:showroom:actual-bodies-instrument-restored", () => {
-        requestMount();
-        syncInstrument({ reason: "instrument-restored-event" });
-      });
-
       window.addEventListener("showroom:globe:instrument-ready", () => {
-        requestMount();
-        syncInstrument({ reason: "instrument-ready-event" });
+        requestMount("instrument-ready-event");
+        updateUI();
       });
 
-      window.addEventListener("load", () => {
-        requestMount();
-        syncInstrument({ reason: "window-load" });
+      window.addEventListener("dgb:showroom:render-file-extraction-renewed", () => {
+        requestMount("render-file-extraction-event");
+        updateUI();
       });
 
-      updateLabels();
-      requestMount();
+      updateUI();
+      requestMount("initial");
 
       let attempts = 0;
       const retry = window.setInterval(() => {
         attempts += 1;
-        requestMount();
-        syncInstrument({ reason: "retry", attempt: attempts });
+        requestMount(`retry-${attempts}`);
+        updateUI();
 
-        if (state.mounted || attempts >= 40) {
+        if (mount.querySelector("canvas") || attempts >= 40) {
           window.clearInterval(retry);
         }
       }, 125);

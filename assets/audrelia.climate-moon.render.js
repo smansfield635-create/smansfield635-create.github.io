@@ -1,5 +1,5 @@
 /* /assets/audrelia.climate-moon.render.js
-   ADRALIA_MOON_EARTH_MOON_MECHANIZED_RENEWAL_TNT_v1
+   ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1
 
    ROLE=
    DOWNSTREAM_RENDER_EXTENSION
@@ -7,30 +7,34 @@
    OWNS=
    ADRALIA_MOON_PROFILE_LABEL
    EARTH_MOON_REFERENCE_SURFACE
-   LUNAR_MARIA_LANGUAGE
-   CRATERED_REGOLITH
-   SUBTLE_MECHANIZED_CLIMATE_ELEMENTS
+   GRAY_LUNAR_REGOLITH
+   LUNAR_MARIA
+   CRATER_DENSITY
+   SUBTLE_MECHANIZED_CLIMATE_TRACES
    MOON_EXTENSION_RECEIPT
 
    DESIGN=
-   Designed after Earth’s Moon first.
+   Earth’s Moon first.
    Mechanized/climate-regulation element second.
-   No clean Death-Star read.
-   No fantasy color body.
-   No generic gray ball.
+   No blue.
+   No green.
+   No ocean.
+   No landmass.
+   No atmosphere.
+   No planet fallback.
 */
 
 (function bindAdraliaMoonRenderExtension(global) {
   "use strict";
 
-  const VERSION = "ADRALIA_MOON_EARTH_MOON_MECHANIZED_RENEWAL_TNT_v1";
+  const VERSION = "ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1";
   const ID = "audrelia-moon";
   const LABEL = "Adralia’s Moon";
   const TYPE = "manufactured_climate_moon";
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
-  const SOURCE_WIDTH = 3072;
-  const SOURCE_HEIGHT = 1536;
+  const SOURCE_WIDTH = 4096;
+  const SOURCE_HEIGHT = 2048;
 
   let cachedTexture = null;
 
@@ -110,6 +114,44 @@
     ctx.stroke();
   }
 
+  function drawCrater(ctx, lon, lat, radius, strength, random) {
+    const dark = 0.055 + strength * 0.105;
+    const bright = 0.030 + strength * 0.068;
+    const inner = 0.018 + strength * 0.048;
+    const skew = 0.58 + random() * 0.20;
+    const rotation = random() * 180;
+
+    drawEllipse(
+      ctx,
+      lon,
+      lat,
+      radius,
+      radius * skew,
+      rotation,
+      "rgba(22,23,24," + dark.toFixed(4) + ")"
+    );
+
+    drawEllipse(
+      ctx,
+      lon - radius * 0.05,
+      lat - radius * 0.055,
+      radius * 0.78,
+      radius * skew * 0.72,
+      rotation,
+      "rgba(245,245,238," + bright.toFixed(4) + ")"
+    );
+
+    drawEllipse(
+      ctx,
+      lon + radius * 0.08,
+      lat + radius * 0.06,
+      radius * 0.42,
+      radius * skew * 0.36,
+      rotation,
+      "rgba(18,19,20," + inner.toFixed(4) + ")"
+    );
+  }
+
   function createProfile() {
     return {
       id: ID,
@@ -121,13 +163,15 @@
       earthMoonReference: true,
       manufactured: true,
       climateRegulation: true,
-      mechanizedElement: "subtle-surface-integrated",
-      rimColor: "rgba(230,236,232,0.76)",
-      glowColor: "rgba(165,185,205,0.24)",
-      sourceDefinition: 3072,
+      mechanizedElement: "subtle-lunar-integrated",
+      rimColor: "rgba(232,235,230,0.78)",
+      glowColor: "rgba(174,184,192,0.20)",
+      sourceDefinition: 4096,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       generatedImage: false,
+      graphicBox: false,
+      streaming: false,
       visualPassClaimed: false
     };
   }
@@ -137,140 +181,156 @@
 
     const canvas = makeCanvas(SOURCE_WIDTH, SOURCE_HEIGHT);
     const ctx = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    const random = makeSeededRandom(6350314);
+    const random = makeSeededRandom(7350314);
 
     const base = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-    base.addColorStop(0.00, "#d9d8d0");
-    base.addColorStop(0.24, "#c4c4bd");
-    base.addColorStop(0.50, "#a3a49f");
-    base.addColorStop(0.74, "#81878a");
-    base.addColorStop(1.00, "#5d6870");
+    base.addColorStop(0.00, "#d7d6cf");
+    base.addColorStop(0.20, "#c8c8c1");
+    base.addColorStop(0.43, "#aaa9a3");
+    base.addColorStop(0.64, "#8b8f90");
+    base.addColorStop(0.82, "#737b7f");
+    base.addColorStop(1.00, "#59646c");
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
     /*
-      Earth-Moon reference maria:
-      large dark basaltic basins first, not machinery first.
+      Lunar maria: dark basaltic plains after Earth’s Moon.
+      These must read as lunar basins, not continents.
     */
-    drawEllipse(ctx, -42, 24, 28, 12, -7, "rgba(48,51,53,0.34)");
-    drawEllipse(ctx, -7, 18, 24, 10, 8, "rgba(54,57,59,0.31)");
-    drawEllipse(ctx, 32, -2, 30, 13, 10, "rgba(52,55,57,0.33)");
-    drawEllipse(ctx, -58, -24, 22, 9, -12, "rgba(45,48,50,0.28)");
-    drawEllipse(ctx, 78, 28, 20, 8, -8, "rgba(60,62,64,0.21)");
-    drawEllipse(ctx, 106, -22, 16, 6, -10, "rgba(65,67,69,0.16)");
-    drawEllipse(ctx, -102, -8, 15, 6, 3, "rgba(46,50,52,0.18)");
+    drawEllipse(ctx, -48, 24, 31, 13, -7, "rgba(43,45,47,0.36)");
+    drawEllipse(ctx, -10, 18, 25, 10, 8, "rgba(49,51,53,0.31)");
+    drawEllipse(ctx, 31, -2, 32, 14, 10, "rgba(48,50,52,0.34)");
+    drawEllipse(ctx, -62, -25, 24, 10, -12, "rgba(42,44,46,0.28)");
+    drawEllipse(ctx, 78, 29, 20, 8, -8, "rgba(58,60,62,0.22)");
+    drawEllipse(ctx, 109, -23, 17, 7, -10, "rgba(60,62,64,0.17)");
+    drawEllipse(ctx, -110, -8, 16, 6, 3, "rgba(43,46,48,0.18)");
+    drawEllipse(ctx, 135, 9, 13, 5, 17, "rgba(50,52,54,0.14)");
 
     /*
-      Lunar crater field:
-      dense, varied, natural impact language.
+      Large named-feel crater language.
     */
-    for (let i = 0; i < 4300; i += 1) {
+    const majorCraters = [
+      [-80, 12, 8.5, 0.82],
+      [-32, -18, 6.9, 0.72],
+      [8, 34, 5.6, 0.68],
+      [42, 18, 7.8, 0.78],
+      [86, -14, 6.2, 0.72],
+      [118, 42, 5.1, 0.62],
+      [-132, -36, 6.6, 0.74],
+      [152, -48, 8.2, 0.80]
+    ];
+
+    majorCraters.forEach(function crater(item) {
+      drawCrater(ctx, item[0], item[1], item[2], item[3], random);
+    });
+
+    /*
+      Dense crater field.
+    */
+    for (let i = 0; i < 6200; i += 1) {
       const lon = -180 + random() * 360;
-      const lat = -82 + random() * 164;
-      const size = 0.16 + Math.pow(random(), 2.75) * 8.4;
-      const strength = 0.10 + random() * 0.60;
+      const lat = -84 + random() * 168;
+      const size = 0.10 + Math.pow(random(), 2.95) * 7.8;
+      const strength = 0.08 + random() * 0.62;
 
-      drawEllipse(
-        ctx,
-        lon,
-        lat,
-        size,
-        size * (0.56 + random() * 0.22),
-        random() * 180,
-        "rgba(24,26,28," + (0.038 + strength * 0.105).toFixed(4) + ")"
-      );
-
-      drawEllipse(
-        ctx,
-        lon - size * 0.06,
-        lat - size * 0.06,
-        size * 0.72,
-        size * 0.47,
-        random() * 180,
-        "rgba(255,255,246," + (0.026 + strength * 0.060).toFixed(4) + ")"
-      );
+      drawCrater(ctx, lon, lat, size, strength, random);
     }
 
     /*
-      Regolith grain and mineral variation.
+      Regolith noise and albedo variation.
     */
-    for (let i = 0; i < 1400; i += 1) {
+    for (let i = 0; i < 2600; i += 1) {
       drawEllipse(
         ctx,
         -180 + random() * 360,
-        -78 + random() * 156,
-        0.08 + random() * 0.72,
-        0.05 + random() * 0.38,
+        -82 + random() * 164,
+        0.06 + random() * 0.64,
+        0.04 + random() * 0.35,
         random() * 180,
         random() > 0.52
-          ? "rgba(255,255,255," + (0.018 + random() * 0.052).toFixed(4) + ")"
-          : "rgba(18,21,23," + (0.016 + random() * 0.044).toFixed(4) + ")"
+          ? "rgba(248,248,240," + (0.014 + random() * 0.044).toFixed(4) + ")"
+          : "rgba(16,18,20," + (0.014 + random() * 0.038).toFixed(4) + ")"
       );
     }
 
     /*
-      Mechanized climate element:
-      integrated into the lunar surface as faint alignment arcs and embedded nodes.
-      This must read as moon first, machine second.
+      Very subtle mechanized climate-regulation traces.
+      These are intentionally faint and gray-green-neutral.
+      They must not read as ocean/land/cloud.
     */
-    for (let i = 0; i < 10; i += 1) {
-      const lat = -58 + i * 12.5;
+    for (let i = 0; i < 8; i += 1) {
+      const lat = -52 + i * 14.5;
       const points = [];
 
-      for (let lon = -180; lon <= 180; lon += 3) {
+      for (let lon = -180; lon <= 180; lon += 4) {
         const wave =
-          Math.sin((lon * 0.051) + i) * 1.35 +
-          Math.sin((lon * 0.117) - i) * 0.48;
+          Math.sin((lon * 0.050) + i) * 1.05 +
+          Math.sin((lon * 0.111) - i) * 0.34;
         points.push([lon, lat + wave]);
       }
 
-      drawStroke(ctx, points, "rgba(206,226,218,0.040)", 0.95);
+      drawStroke(ctx, points, "rgba(202,215,210,0.026)", 0.78);
     }
 
-    for (let i = 0; i < 36; i += 1) {
+    for (let i = 0; i < 24; i += 1) {
       const lon = -180 + random() * 360;
       const points = [];
 
-      for (let lat = -68; lat <= 68; lat += 4) {
-        const wobble = Math.sin((lat * 0.08) + i) * 0.72;
+      for (let lat = -64; lat <= 64; lat += 5) {
+        const wobble = Math.sin((lat * 0.078) + i) * 0.55;
         points.push([lon + wobble, lat]);
       }
 
-      drawStroke(ctx, points, "rgba(182,215,205,0.026)", 0.72);
+      drawStroke(ctx, points, "rgba(198,214,208,0.020)", 0.62);
     }
 
-    for (let i = 0; i < 88; i += 1) {
-      const lon = -180 + random() * 360;
-      const lat = -62 + random() * 124;
-      const r = 0.22 + random() * 0.82;
-
-      drawEllipse(ctx, lon, lat, r, r * 0.70, 0, "rgba(208,236,224,0.072)");
-      drawEllipse(ctx, lon, lat, r * 0.32, r * 0.22, 0, "rgba(245,255,245,0.060)");
-    }
-
-    /*
-      Assembly evidence:
-      not panels; faint rubble-bond lines suggesting manufactured assembly from space rock.
-    */
     for (let i = 0; i < 54; i += 1) {
       const lon = -180 + random() * 360;
       const lat = -58 + random() * 116;
-      const length = 4 + random() * 15;
+      const r = 0.18 + random() * 0.62;
+
+      drawEllipse(ctx, lon, lat, r, r * 0.70, 0, "rgba(215,232,225,0.050)");
+      drawEllipse(ctx, lon, lat, r * 0.30, r * 0.21, 0, "rgba(245,255,245,0.038)");
+    }
+
+    /*
+      Faint assembly scars from space-rock manufacturing.
+      Not panels. Not sci-fi plating.
+    */
+    for (let i = 0; i < 42; i += 1) {
+      const lon = -180 + random() * 360;
+      const lat = -58 + random() * 116;
+      const length = 3.5 + random() * 12;
       const angle = random() * 360;
       const points = [];
 
-      for (let p = 0; p < 7; p += 1) {
-        const t = p / 6;
+      for (let p = 0; p < 6; p += 1) {
+        const t = p / 5;
         points.push([
           lon + Math.cos(angle * DEG) * length * (t - 0.5),
           lat + Math.sin(angle * DEG) * length * (t - 0.5)
         ]);
       }
 
-      drawStroke(ctx, points, "rgba(230,238,235,0.040)", 0.82);
+      drawStroke(ctx, points, "rgba(232,236,232,0.030)", 0.62);
     }
 
-    cachedTexture = ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    /*
+      Final desaturation pass: force lunar identity.
+    */
+    const image = ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+    const data = image.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const avg = data[i] * 0.31 + data[i + 1] * 0.34 + data[i + 2] * 0.35;
+      const cool = avg < 110 ? 2 : 0;
+      data[i] = clamp(avg * 0.990, 0, 255);
+      data[i + 1] = clamp(avg * 0.998, 0, 255);
+      data[i + 2] = clamp(avg * 1.012 + cool, 0, 255);
+      data[i + 3] = 255;
+    }
+
+    cachedTexture = image;
     return cachedTexture;
   }
 
@@ -303,9 +363,14 @@
     const g1 = data[i01 + 1] * (1 - tx) + data[i11 + 1] * tx;
     const b1 = data[i01 + 2] * (1 - tx) + data[i11 + 2] * tx;
 
-    out[0] = r0 * (1 - ty) + r1 * ty;
-    out[1] = g0 * (1 - ty) + g1 * ty;
-    out[2] = b0 * (1 - ty) + b1 * ty;
+    const r = r0 * (1 - ty) + r1 * ty;
+    const g = g0 * (1 - ty) + g1 * ty;
+    const b = b0 * (1 - ty) + b1 * ty;
+    const avg = r * 0.31 + g * 0.34 + b * 0.35;
+
+    out[0] = clamp(avg * 0.990, 0, 255);
+    out[1] = clamp(avg * 0.998, 0, 255);
+    out[2] = clamp(avg * 1.012, 0, 255);
 
     return out;
   }
@@ -320,10 +385,14 @@
       earthMoonReference: true,
       moonFirst: true,
       mechanizedSecond: true,
+      blueGreenPlanetSurface: false,
+      wrongBodyFallback: false,
       climateRegulationVisibleOnInspection: true,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       generatedImage: false,
+      graphicBox: false,
+      streaming: false,
       visualPassClaimed: false
     };
   }
@@ -337,11 +406,15 @@
       version: VERSION,
       file: "/assets/audrelia.climate-moon.render.js",
       earthMoonReference: true,
-      manufacturedClimateMoon: true,
-      assembledSpaceRockSurface: true,
+      lunarMaria: true,
+      crateredRegolith: true,
       subtleMechanizedElement: true,
-      climateRegulationLattice: true,
+      climateRegulationLattice: "subtle",
       moonFirstMachineSecond: true,
+      blueGreenPlanetSurface: false,
+      atmosphere: false,
+      ocean: false,
+      landmass: false,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       generatedImage: false,
@@ -374,19 +447,19 @@
     getStatus
   };
 
-  global.DGBAudreliaClimateMoonRenderExtension = api;
   global.DGBAdraliaMoonRenderExtension = api;
+  global.DGBAudreliaClimateMoonRenderExtension = api;
 
   global.DiamondGateBridge = global.DiamondGateBridge || {};
-  global.DiamondGateBridge.DGBAudreliaClimateMoonRenderExtension = api;
   global.DiamondGateBridge.DGBAdraliaMoonRenderExtension = api;
+  global.DiamondGateBridge.DGBAudreliaClimateMoonRenderExtension = api;
 
   if (global.DGBShowroomGlobeRender && typeof global.DGBShowroomGlobeRender.registerExtension === "function") {
     global.DGBShowroomGlobeRender.registerExtension(api);
   }
 
   try {
-    global.dispatchEvent(new CustomEvent("dgb:audrelia:climate-moon-extension-ready", { detail: getStatus() }));
     global.dispatchEvent(new CustomEvent("dgb:adralia:moon-extension-ready", { detail: getStatus() }));
+    global.dispatchEvent(new CustomEvent("dgb:audrelia:climate-moon-extension-ready", { detail: getStatus() }));
   } catch (_) {}
 })(typeof window !== "undefined" ? window : globalThis);

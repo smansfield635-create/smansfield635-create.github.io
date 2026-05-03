@@ -2,40 +2,47 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="audrelia-showroom-globe"
+  data-page="audrelia-showroom-globe-ted-talk"
   data-route="/showroom/globe/"
-  data-contract="AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1"
+  data-contract="AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1"
   data-universe="nine-summits-universe"
   data-active-planet="Audrelia"
-  data-active-bodies="audrelia,audrelia-sun,solar-system-sun"
+  data-active-assets="audrelia,audrelia-sun,audrelia-moon"
   data-reference-bodies="earth,earth-sun,earth-moon"
   data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Audrelia Showroom Globe</title>
-  <meta name="description" content="Showroom Globe expression shell for Audrelia, Audrelia’s Sun, and the Solar-System Sun.">
+  <meta
+    name="description"
+    content="A TED Talk style Showroom Globe page for Audrelia, Audrelia’s Sun, and Audrelia’s manufactured climate moon."
+  >
 
   <style>
     :root {
       --bg: #050813;
-      --panel: rgba(10, 15, 27, 0.92);
-      --panel-2: rgba(15, 21, 36, 0.94);
-      --line: rgba(255,255,255,0.16);
-      --line-strong: rgba(245,207,111,0.48);
+      --panel: rgba(9, 14, 26, 0.92);
+      --panel-2: rgba(14, 20, 34, 0.95);
+      --line: rgba(255, 255, 255, 0.16);
+      --line-strong: rgba(242, 199, 111, 0.54);
       --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.72);
-      --faint: rgba(242,246,255,0.48);
+      --muted: rgba(242, 246, 255, 0.74);
+      --faint: rgba(242, 246, 255, 0.48);
       --gold: #f2c76f;
-      --blue: #75d8ff;
-      --green: #8df0c7;
-      --safe: min(100%, 1180px);
-      --card: min(100%, 840px);
+      --blue: #78d8ff;
+      --green: #9ee8c9;
+      --stage: min(100%, 1180px);
+      --card: min(100%, 900px);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
@@ -43,19 +50,22 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 14%, rgba(242,199,111,0.12), transparent 28rem),
-        radial-gradient(circle at 50% 72%, rgba(74,132,230,0.14), transparent 32rem),
-        #050813;
+        radial-gradient(circle at 50% 14%, rgba(242, 199, 111, 0.14), transparent 30rem),
+        radial-gradient(circle at 50% 72%, rgba(80, 145, 230, 0.16), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 72%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body { min-height: 100svh; }
+    body {
+      min-height: 100svh;
+    }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
+      z-index: 0;
       pointer-events: none;
       background-image:
         radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
@@ -64,11 +74,17 @@
         radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
       background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
       opacity: 0.42;
-      z-index: 0;
     }
 
-    a { color: inherit; text-decoration: none; }
-    button, input { font: inherit; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
 
     .skip-link {
       position: absolute;
@@ -82,12 +98,14 @@
       font-weight: 900;
     }
 
-    .skip-link:focus { top: 1rem; }
+    .skip-link:focus {
+      top: 1rem;
+    }
 
     .shell {
       position: relative;
       z-index: 1;
-      width: var(--safe);
+      width: var(--stage);
       margin: 0 auto;
       padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
         max(1.5rem, env(safe-area-inset-bottom));
@@ -151,9 +169,10 @@
     }
 
     .hero {
+      width: 100%;
       display: grid;
       gap: 1rem;
-      padding: clamp(0.5rem, 2.2vw, 1.2rem) 0 1rem;
+      padding: clamp(0.75rem, 3vw, 2rem) 0 clamp(1rem, 3vw, 1.75rem);
       text-align: center;
     }
 
@@ -167,19 +186,41 @@
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(2rem, 9.2vw, 5rem);
+      width: min(100%, 960px);
+      margin: 0 auto;
+      font-size: clamp(2.25rem, 9vw, 5.6rem);
       line-height: 0.94;
-      letter-spacing: -0.07em;
+      letter-spacing: -0.075em;
       text-wrap: balance;
     }
 
     .lead {
-      width: min(100%, 780px);
+      width: min(100%, 800px);
       margin: 0 auto;
       color: var(--muted);
-      font-size: clamp(0.98rem, 3.5vw, 1.14rem);
-      line-height: 1.55;
+      font-size: clamp(1rem, 3.6vw, 1.2rem);
+      line-height: 1.58;
+      text-wrap: balance;
+    }
+
+    .talk-frame {
+      width: min(100%, 960px);
+      margin: 0.25rem auto 0;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .talk-line {
+      margin: 0;
+      padding: clamp(0.9rem, 3vw, 1.15rem);
+      border: 1px solid rgba(242,199,111,0.28);
+      border-radius: 1.25rem;
+      color: rgba(255, 244, 215, 0.92);
+      background:
+        linear-gradient(135deg, rgba(242,199,111,0.10), rgba(255,255,255,0.035)),
+        rgba(8, 13, 24, 0.72);
+      font-size: clamp(0.98rem, 3.4vw, 1.12rem);
+      line-height: 1.52;
       text-wrap: balance;
     }
 
@@ -188,6 +229,7 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.45rem;
+      margin-top: 0.2rem;
     }
 
     .chip {
@@ -211,6 +253,7 @@
 
     .stage-card,
     .controls-panel,
+    .asset-panel,
     .contract-panel {
       width: 100%;
       border: 1px solid var(--line);
@@ -237,8 +280,8 @@
       pointer-events: none;
       z-index: -1;
       background:
-        radial-gradient(circle at 50% 48%, rgba(117,216,255,0.12), transparent 44%),
-        radial-gradient(circle at 50% 50%, rgba(242,199,111,0.08), transparent 65%);
+        radial-gradient(circle at 50% 44%, rgba(117,216,255,0.12), transparent 44%),
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,0.08), transparent 66%);
     }
 
     .orbit-ring,
@@ -290,7 +333,7 @@
     }
 
     .body-label {
-      width: min(100%, 40rem);
+      width: min(100%, 42rem);
       margin: 0.85rem auto 0;
       display: grid;
       gap: 0.45rem;
@@ -312,6 +355,7 @@
     }
 
     .controls-panel,
+    .asset-panel,
     .contract-panel {
       padding: clamp(0.85rem, 3.3vw, 1.25rem);
       background:
@@ -326,7 +370,9 @@
       gap: clamp(0.5rem, 2vw, 0.8rem);
     }
 
-    .control-row + .control-row { margin-top: 0.72rem; }
+    .control-row + .control-row {
+      margin-top: 0.72rem;
+    }
 
     .control-row button {
       width: 100%;
@@ -383,6 +429,35 @@
       text-align: center;
     }
 
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+
+    .asset-card {
+      min-width: 0;
+      padding: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.2rem;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .asset-card h2 {
+      margin: 0 0 0.4rem;
+      color: rgba(255, 244, 215, 0.96);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .asset-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.46;
+    }
+
     .contract-panel h2 {
       margin: 0 0 0.6rem;
       font-size: clamp(1rem, 4vw, 1.24rem);
@@ -412,19 +487,34 @@
         flex-direction: column;
       }
 
-      .nav { justify-content: flex-start; }
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .asset-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 460px) {
-      .globe-mount { width: min(82vw, 23rem); }
-      .control-row { grid-template-columns: 1fr; }
-      .zoom-control { grid-template-columns: 1fr; text-align: center; }
+      .globe-mount {
+        width: min(82vw, 23rem);
+      }
+
+      .control-row {
+        grid-template-columns: 1fr;
+      }
+
+      .zoom-control {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#showroom-globe-main">Skip to Showroom Globe</a>
+  <a class="skip-link" href="#showroom-globe-main">Skip to Audrelia Showroom Globe</a>
 
   <div class="shell">
     <header class="topbar">
@@ -448,18 +538,28 @@
 
     <main id="showroom-globe-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Showroom Globe · Audrelia expression shell</p>
-        <h1 id="page-title">Audrelia, Audrelia’s Sun, and the Solar-System Sun.</h1>
+        <p class="eyebrow">Showroom Globe · TED Talk expression page</p>
+        <h1 id="page-title">Audrelia is not Earth. It is the planet we are now building.</h1>
+
         <p class="lead">
-          Earth, Earth’s Sun, and Earth’s Moon are bodies of reference. This page now expresses the active Nine Summits Universe bodies through the Showroom Globe shell.
+          Earth, the Sun, and the Moon are bodies of reference. The active assets are Audrelia, Audrelia’s Sun, and Audrelia’s manufactured climate moon.
         </p>
+
+        <div class="talk-frame" aria-label="TED Talk framing">
+          <p class="talk-line">
+            The point is not to make another demo globe. The point is to give the universe a stage where its active bodies can be named, separated, inspected, and understood.
+          </p>
+          <p class="talk-line">
+            Audrelia is the planet. Audrelia’s Sun is the local stellar authority. The manufactured climate moon was assembled from space rock to help stabilize the planet’s climatology.
+          </p>
+        </div>
 
         <div class="chips" aria-label="Boundary receipts">
           <span class="chip">Audrelia active</span>
+          <span class="chip">Sun promoted</span>
+          <span class="chip">Climate moon active</span>
           <span class="chip">Earth is reference</span>
-          <span class="chip">Render owns pixels</span>
-          <span class="chip">Instrument owns state</span>
-          <span class="chip">Route owns shell</span>
+          <span class="chip">No graphic box</span>
         </div>
       </section>
 
@@ -473,10 +573,11 @@
           data-body-render-authority="/assets/showroom.globe.render.js"
           data-active-body="audrelia"
           data-reference-bodies="earth,earth-sun,earth-moon"
-          data-active-bodies="audrelia,audrelia-sun,solar-system-sun"
+          data-active-assets="audrelia,audrelia-sun,audrelia-moon"
           data-universe="nine-summits-universe"
           data-demo-actual-universe="reference-only"
           data-planet-name="Audrelia"
+          data-visual-pass-claimed="false"
         >
           <div class="field-glow" aria-hidden="true"></div>
           <div class="orbit-ring" aria-hidden="true"></div>
@@ -492,13 +593,16 @@
               data-body-render-authority="/assets/showroom.globe.render.js"
               data-route-authority="labels-controls-mount-zoom-wrapper"
               data-active-body="audrelia"
-              data-active-bodies="audrelia,audrelia-sun,solar-system-sun"
+              data-active-assets="audrelia,audrelia-sun,audrelia-moon"
               data-reference-bodies="earth,earth-sun,earth-moon"
               data-planet-name="Audrelia"
               data-universe="nine-summits-universe"
-              data-projection="audrelia-orthographic-sphere"
+              data-projection="audrelia-extension-platform"
               data-inline-globe-redraw="false"
               data-cartoon-canvas-replacement="false"
+              data-generated-image="false"
+              data-graphic-box="false"
+              data-streaming="false"
               data-visual-pass-claimed="false"
             ></div>
 
@@ -509,11 +613,11 @@
           </div>
         </article>
 
-        <section class="controls-panel" aria-label="Body and motion controls">
-          <div class="control-row" aria-label="Choose body">
+        <section class="controls-panel" aria-label="Asset and motion controls">
+          <div class="control-row" aria-label="Choose active asset">
             <button type="button" data-body="audrelia" aria-pressed="true" class="active">View Audrelia</button>
             <button type="button" data-body="audrelia-sun" aria-pressed="false">Audrelia’s Sun</button>
-            <button type="button" data-body="solar-system-sun" aria-pressed="false">Solar-System Sun</button>
+            <button type="button" data-body="audrelia-moon" aria-pressed="false">Climate Moon</button>
           </div>
 
           <div class="control-row" aria-label="Motion controls">
@@ -543,45 +647,73 @@
           </label>
 
           <div class="readout" aria-live="polite" id="motionReadout">
-            Motion speed: normal · direction: forward · active body: Audrelia · zoom: 100%
+            Motion speed: normal · direction: forward · active asset: Audrelia · zoom: 100%
+          </div>
+        </section>
+
+        <section class="asset-panel" aria-label="Correct asset labels">
+          <div class="asset-grid">
+            <article class="asset-card">
+              <h2>Audrelia</h2>
+              <p>The active planet body. Earth remains a reference model for physical realism, not the final identity.</p>
+            </article>
+
+            <article class="asset-card">
+              <h2>Audrelia’s Sun</h2>
+              <p>The active local star. The stronger solar visual authority belongs here.</p>
+            </article>
+
+            <article class="asset-card">
+              <h2>Climate Moon</h2>
+              <p>A manufactured moon assembled from space rock to support Audrelia’s climatology.</p>
+            </article>
           </div>
         </section>
 
         <section class="contract-panel" aria-labelledby="route-contract-title">
           <h2 id="route-contract-title">Route contract</h2>
-          <pre class="contract" id="routeContract">AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1
+          <pre class="contract" id="routeContract">AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1
 route=/showroom/globe/
+style=ted-talk-expression-page
 universe=nine-summits-universe
 planet-name=Audrelia
-active-bodies=audrelia,audrelia-sun,solar-system-sun
+active-assets=audrelia,audrelia-sun,audrelia-moon
 reference-bodies=earth,earth-sun,earth-moon
 route-authority=labels-controls-mount-zoom-wrapper
 instrument-authority=/assets/showroom.globe.instrument.js
-render-authority=/assets/showroom.globe.render.js
-body-render-authority=/assets/showroom.globe.render.js
+render-platform=/assets/showroom.globe.render.js
+planet-extension=/assets/audrelia.planet.render.js
+sun-extension=/assets/audrelia.sun.render.js
+moon-extension=/assets/audrelia.climate-moon.render.js
 route-draws-body=false
 instrument-draws-body=false
-render-draws-body=true
+render-platform-dispatches=true
+extensions-own-body-pixels=true
 demo-actual-universe=reference-only
 generated-image=false
+graphic-box=false
+streaming=false
 visual-pass-claimed=false</pre>
         </section>
       </section>
     </main>
 
     <footer>
-      AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1 · Audrelia active · reference bodies preserved.
+      AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1 · Audrelia active · reference bodies preserved · owner visual receipt required.
     </footer>
   </div>
 
-  <script src="/assets/showroom.globe.render.js?v=AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1"></script>
+  <script src="/assets/showroom.globe.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
+  <script src="/assets/audrelia.planet.render.js?v=AUDRELIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
+  <script src="/assets/audrelia.sun.render.js?v=AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1"></script>
+  <script src="/assets/audrelia.climate-moon.render.js?v=AUDRELIA_CLIMATE_MOON_DESIGN_EXTENSION_TNT_v1"></script>
+  <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1"></script>
 
   <script>
     (() => {
       "use strict";
 
-      const VERSION = "AUDRELIA_SHOWROOM_GLOBE_ASSOCIATION_TNT_v1";
+      const VERSION = "AUDRELIA_SHOWROOM_GLOBE_TED_TALK_ROUTE_TNT_v1";
 
       const mount = document.getElementById("showroomGlobeMount");
       const stageCard = document.getElementById("stageCard");
@@ -603,11 +735,11 @@ visual-pass-claimed=false</pre>
         },
         "audrelia-sun": {
           label: "Audrelia’s Sun",
-          description: "Audrelia’s Sun is the local stellar body for the Audrelia expression lane."
+          description: "Audrelia’s Sun is the active local stellar body for this universe expression."
         },
-        "solar-system-sun": {
-          label: "Solar-System Sun",
-          description: "The Solar-System Sun remains the larger reference star body for universe calibration."
+        "audrelia-moon": {
+          label: "Audrelia Climate Moon",
+          description: "The manufactured climate moon was assembled from space rock to help stabilize Audrelia’s climatology."
         }
       };
 
@@ -630,18 +762,26 @@ visual-pass-claimed=false</pre>
       window.DiamondGateBridge.showroomGlobeRoute = {
         version: VERSION,
         route: "/showroom/globe/",
+        style: "ted-talk-expression-page",
         universe: "nine-summits-universe",
         planetName: "Audrelia",
-        activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
+        activeAssets: ["audrelia", "audrelia-sun", "audrelia-moon"],
         referenceBodies: ["earth", "earth-sun", "earth-moon"],
         routeAuthority: "labels-controls-mount-zoom-wrapper",
         instrumentAuthority: "/assets/showroom.globe.instrument.js",
-        renderAuthority: "/assets/showroom.globe.render.js",
-        bodyRenderAuthority: "/assets/showroom.globe.render.js",
+        renderPlatform: "/assets/showroom.globe.render.js",
+        extensions: [
+          "/assets/audrelia.planet.render.js",
+          "/assets/audrelia.sun.render.js",
+          "/assets/audrelia.climate-moon.render.js"
+        ],
         routeDrawsBody: false,
         instrumentDrawsBody: false,
-        renderDrawsBody: true,
+        renderPlatformDispatches: true,
+        extensionsOwnBodyPixels: true,
         generatedImage: false,
+        graphicBox: false,
+        streaming: false,
         visualPassClaimed: false
       };
 
@@ -651,6 +791,7 @@ visual-pass-claimed=false</pre>
 
       function findInstrument() {
         const bridge = window.DiamondGateBridge || {};
+
         return (
           window.DGBShowroomGlobeInstrument ||
           window.DGBActualBodiesInstrument ||
@@ -670,6 +811,7 @@ visual-pass-claimed=false</pre>
           root: mount,
           target: mount,
           route: "/showroom/globe/",
+          style: "ted-talk-expression-page",
           universe: "nine-summits-universe",
           planetName: "Audrelia",
           activeBody: state.body,
@@ -679,8 +821,9 @@ visual-pass-claimed=false</pre>
           speedName: state.speedName,
           speed: state.speed,
           zoom: state.zoom,
-          projection: "audrelia-orthographic-sphere",
-          activeBodies: ["audrelia", "audrelia-sun", "solar-system-sun"],
+          projection: "audrelia-extension-platform",
+          activeBodies: ["audrelia", "audrelia-sun", "audrelia-moon"],
+          activeAssets: ["audrelia", "audrelia-sun", "audrelia-moon"],
           referenceBodies: ["earth", "earth-sun", "earth-moon"],
           routeAuthority: "labels-controls-mount-zoom-wrapper",
           instrumentAuthority: "/assets/showroom.globe.instrument.js",
@@ -688,8 +831,11 @@ visual-pass-claimed=false</pre>
           bodyRenderAuthority: "/assets/showroom.globe.render.js",
           routeDrawsBody: false,
           instrumentDrawsBody: false,
-          renderDrawsBody: true,
+          renderPlatformDispatches: true,
+          extensionsOwnBodyPixels: true,
           generatedImage: false,
+          graphicBox: false,
+          streaming: false,
           visualPassClaimed: false,
           ...extra
         };
@@ -729,14 +875,19 @@ visual-pass-claimed=false</pre>
         mount.dataset.activeBody = state.body;
         mount.dataset.planetName = "Audrelia";
         mount.dataset.universe = "nine-summits-universe";
+        mount.dataset.activeAssets = "audrelia,audrelia-sun,audrelia-moon";
         mount.dataset.referenceBodies = "earth,earth-sun,earth-moon";
-        mount.dataset.activeBodies = "audrelia,audrelia-sun,solar-system-sun";
         mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
         mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
         mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
         mount.dataset.routeDrawsBody = "false";
         mount.dataset.instrumentDrawsBody = "false";
-        mount.dataset.renderDrawsBody = "true";
+        mount.dataset.renderPlatformDispatches = "true";
+        mount.dataset.extensionsOwnBodyPixels = "true";
+        mount.dataset.generatedImage = "false";
+        mount.dataset.graphicBox = "false";
+        mount.dataset.streaming = "false";
+        mount.dataset.visualPassClaimed = "false";
 
         const ok = callInstrument(["renderGlobe", "mount", "renderActualBody", "render"], { reason });
 
@@ -758,7 +909,7 @@ visual-pass-claimed=false</pre>
         zoomLabel.textContent = `${state.zoom}%`;
 
         motionReadout.textContent =
-          `Motion speed: ${state.speedName} · direction: ${state.direction} · active body: ${meta.label} · zoom: ${state.zoom}%`;
+          `Motion speed: ${state.speedName} · direction: ${state.direction} · active asset: ${meta.label} · zoom: ${state.zoom}%`;
 
         bodyButtons.forEach((button) => {
           const active = button.dataset.body === state.body;
@@ -848,6 +999,7 @@ visual-pass-claimed=false</pre>
       zoomButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const mode = button.dataset.zoom;
+
           if (mode === "in") setZoom(state.zoom + 10);
           if (mode === "out") setZoom(state.zoom - 10);
           if (mode === "reset") setZoom(100);
@@ -861,9 +1013,21 @@ visual-pass-claimed=false</pre>
         updateUI();
       });
 
-      window.addEventListener("dgb:showroom:audrelia-association-renewed", () => {
-        requestMount("audrelia-association-event");
+      window.addEventListener("dgb:showroom:audrelia-render-platform-ready", () => {
+        requestMount("render-platform-ready-event");
         updateUI();
+      });
+
+      window.addEventListener("dgb:audrelia:planet-extension-ready", () => {
+        requestMount("planet-extension-ready-event");
+      });
+
+      window.addEventListener("dgb:audrelia:sun-extension-ready", () => {
+        requestMount("sun-extension-ready-event");
+      });
+
+      window.addEventListener("dgb:audrelia:climate-moon-extension-ready", () => {
+        requestMount("climate-moon-extension-ready-event");
       });
 
       updateUI();

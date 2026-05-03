@@ -1,756 +1,648 @@
 <!doctype html>
 <html
   lang="en"
-  data-page-id="frontier"
-  data-page="frontier"
-  data-route="/frontier/"
-  data-contract="FRONTIER_ROOT_ROUTE_EXPLORE_CHILD_REPLACEMENT_TNT_v1"
-  data-generation="planetary-attachment-marker-v4"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="planetary"
-  data-manor-attached="true"
-  data-parent-route="/explore/"
-  data-current-route="/frontier/"
-  data-frontier-slot="P3_FRONTIER"
-  data-frontier-role="expansion-edge"
-  data-frontier-relationship="semantic-child-of-explore"
+  data-route="/explore/frontier/"
+  data-page="explore-frontier"
+  data-version="G1-V11"
+  data-contract="FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1"
+  data-status="active"
+  data-parent="/explore/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
   data-heavy-runtime-loaded="false"
-  data-planet-render-touched="false"
-  data-runtime-touched="false"
-  data-gauges-logic-touched="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Explore / Frontier · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Frontier is the downstream expansion edge of Explore: the physical route is /frontier/, while the page presents as Explore / Frontier."
-  >
-
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Explore · Frontier Hub</title>
+  <meta name="description" content="Frontier Hub carries eleven Frontier lanes under the Manor, with Vision unified as distant and not-so-distant future.">
 
   <style>
     :root {
-      --gold: #f2c76f;
-      --text: #f5f7fb;
-      --muted: rgba(226, 234, 248, 0.76);
-      --line: rgba(180, 205, 255, 0.18);
-      --blue: #a9c5ff;
-      --green: #8ff0c6;
-      --purple: #d7a5ff;
-      --orange: #ff9f7a;
+      --bg:#02050d;
+      --panel:rgba(9,17,32,.91);
+      --line:rgba(139,200,255,.22);
+      --gold:#f2c76f;
+      --blue:#8bc8ff;
+      --green:#9df0c4;
+      --text:#f8f1dd;
+      --muted:rgba(226,235,255,.76);
+      --faint:rgba(226,235,255,.52);
+      --max:1120px;
     }
 
+    * { box-sizing:border-box; }
+
+    html,
     body {
-      overflow-x: hidden;
+      margin:0;
+      min-height:100%;
+      color:var(--text);
       background:
-        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
-        radial-gradient(circle at 74% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
-        radial-gradient(circle at 88% 76%, rgba(215, 165, 255, 0.12), transparent 34%),
-        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.14), transparent 26rem),
+        radial-gradient(circle at 55% 38%, rgba(139,200,255,.13), transparent 35rem),
+        linear-gradient(180deg,#050914,#02050d 78%,#010207);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
     }
 
-    .frontier-stage,
-    .frontier-panel {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 36px;
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(139,200,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,200,255,.055) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1.3px);
+      background-size:46px 46px,46px 46px,220px 260px;
+      opacity:.24;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    .skip {
+      position:absolute;
+      top:-4rem;
+      left:1rem;
+      z-index:20;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      background:var(--gold);
+      color:#05070d;
+      font-weight:900;
+    }
+
+    .skip:focus { top:1rem; }
+
+    .shell {
+      position:relative;
+      z-index:1;
+      width:min(100%,var(--max));
+      margin:0 auto;
+      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+    }
+
+    .card {
+      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
+      border:1px solid var(--line);
+      border-radius:clamp(1.25rem,5vw,2rem);
       background:
-        linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.035),
-        0 28px 90px rgba(0,0,0,0.38);
-      isolation: isolate;
+        radial-gradient(circle at 15% 0%, rgba(139,200,255,.12), transparent 26rem),
+        radial-gradient(circle at 85% 20%, rgba(242,199,111,.10), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        var(--panel);
+      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .frontier-stage {
-      padding: clamp(30px, 7vw, 76px);
+    .top,
+    .section {
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:1rem;
     }
 
-    .frontier-panel {
-      padding: clamp(22px, 4vw, 34px);
-      margin-top: 18px;
+    .brand {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
     }
 
-    .frontier-stage::before,
-    .frontier-panel::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
+    .mark {
+      width:4.25rem;
+      height:4.25rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(139,200,255,.36);
+      border-radius:1.2rem;
       background:
-        radial-gradient(circle at 72% 50%, rgba(215, 165, 255, 0.22), transparent 22%),
-        radial-gradient(circle at 72% 50%, transparent 0 24%, rgba(242,199,111,0.10) 25%, transparent 26% 100%),
-        radial-gradient(circle at 72% 50%, transparent 0 44%, rgba(169,197,255,0.09) 45%, transparent 46% 100%);
-      filter: blur(10px);
-      opacity: 0.76;
-      pointer-events: none;
-      z-index: -3;
+        radial-gradient(circle, rgba(139,200,255,.25), transparent 55%),
+        rgba(255,255,255,.035);
+      font-size:1.45rem;
+      font-weight:950;
+      letter-spacing:.04em;
     }
 
-    .frontier-stage::after,
-    .frontier-panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .brand span span {
+      display:block;
+      color:rgba(226,235,255,.84);
+      font-size:clamp(.7rem,2vw,.88rem);
+      font-weight:950;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .brand strong {
+      display:block;
+      font-size:clamp(1.25rem,4.5vw,2.15rem);
+      line-height:1;
+      letter-spacing:-.055em;
+    }
+
+    .nav,
+    .cta-row,
+    .return-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+    }
+
+    .nav a,
+    .cta,
+    .return-row a {
+      min-height:2.4rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      padding:.55rem .82rem;
+      color:rgba(242,246,255,.88);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+    }
+
+    .nav a[aria-current="page"],
+    .cta.primary {
+      border-color:rgba(242,199,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff0a3,#f2c76f);
+    }
+
+    .hero {
+      padding:clamp(1.5rem,5vw,3rem);
+      min-height:clamp(20rem,42vw,31rem);
+      display:grid;
+      gap:1rem;
+      align-content:center;
+      position:relative;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,5vw,4rem);
+      top:50%;
+      width:clamp(8rem,22vw,14rem);
+      height:clamp(8rem,22vw,14rem);
+      border:1px solid rgba(242,199,111,.22);
+      border-radius:2rem;
+      transform:translateY(-50%) rotate(45deg);
       background:
-        linear-gradient(90deg, rgba(5,8,19,0.30), transparent 48%, rgba(5,8,19,0.18)),
-        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.08), transparent 26%);
-      pointer-events: none;
-      z-index: -2;
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,.10), transparent 55%),
+        linear-gradient(145deg, rgba(139,200,255,.06), rgba(255,255,255,.015));
+      opacity:.48;
+      animation:diamondBreathe 8s ease-in-out infinite;
+      pointer-events:none;
     }
 
-    .frontier-visual {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.46;
-      filter: blur(2px);
+    .kicker {
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(226,235,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
-    .edge-core,
-    .edge-ring,
-    .edge-line,
-    .edge-node {
-      position: absolute;
-      transform: translate(-50%, -50%);
+    .kicker::before {
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      background:var(--gold);
+      transform:rotate(45deg);
+      box-shadow:0 0 1rem rgba(242,199,111,.38);
     }
 
-    .edge-core {
-      left: 77%;
-      top: 56%;
-      width: clamp(190px, 31vw, 360px);
-      height: clamp(190px, 31vw, 360px);
-      border-radius: 34% 66% 42% 58%;
-      border: 2px solid rgba(215,165,255,0.23);
+    h1 {
+      width:min(100%,860px);
+      margin:0;
+      font-size:clamp(3.6rem,12vw,7.4rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      position:relative;
+      z-index:2;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5.4vw,3rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      position:relative;
+      z-index:2;
+    }
+
+    h3 {
+      margin:0;
+      font-size:clamp(1.05rem,3.4vw,1.45rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.8vw,1.18rem);
+      line-height:1.55;
+      position:relative;
+      z-index:2;
+    }
+
+    .lane-grid {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem;
+    }
+
+    .lane {
+      min-height:9.25rem;
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
       background:
-        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.14), transparent 18%),
-        linear-gradient(135deg, rgba(215,165,255,0.20), rgba(84,130,220,0.13), rgba(6,10,22,0.40));
-      box-shadow:
-        inset 0 0 60px rgba(215,165,255,0.05),
-        0 0 96px rgba(215,165,255,0.11);
+        radial-gradient(circle at 20% 0%, rgba(139,200,255,.08), transparent 60%),
+        rgba(255,255,255,.03);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      position:relative;
+      overflow:hidden;
     }
 
-    .edge-ring {
-      left: 77%;
-      top: 56%;
-      width: clamp(310px, 52vw, 620px);
-      height: clamp(150px, 25vw, 280px);
-      border: 2px dashed rgba(172, 191, 230, 0.16);
-      border-radius: 50%;
-    }
-
-    .edge-ring.two {
-      transform: translate(-50%, -50%) rotate(64deg);
-      border-color: rgba(242,199,111,0.15);
-    }
-
-    .edge-line {
-      left: 77%;
-      top: 56%;
-      width: clamp(280px, 50vw, 560px);
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(215,165,255,0.30), rgba(242,199,111,0.16), transparent);
-    }
-
-    .edge-line.two {
-      transform: translate(-50%, -50%) rotate(44deg);
-    }
-
-    .edge-line.three {
-      transform: translate(-50%, -50%) rotate(-44deg);
-    }
-
-    .edge-node {
-      display: grid;
-      place-items: center;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      color: #06101f;
-      font-size: 0.64rem;
-      font-weight: 950;
-      box-shadow: 0 0 24px rgba(242,199,111,0.18);
-      text-transform: uppercase;
-    }
-
-    .edge-node.root { left: 61%; top: 50%; background: var(--gold); }
-    .edge-node.map { left: 70%; top: 36%; background: var(--blue); }
-    .edge-node.edge { left: 90%; top: 42%; background: var(--purple); }
-    .edge-node.find { left: 90%; top: 64%; background: var(--orange); }
-    .edge-node.back { left: 70%; top: 80%; background: var(--green); }
-
-    .hero-mark {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: 0.82rem;
-      font-weight: 950;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      max-width: 1080px;
-      margin: 0;
-      color: var(--text);
-      font-size: clamp(3.2rem, 10vw, 7.9rem);
-      line-height: 0.88;
-      letter-spacing: -0.07em;
-      text-wrap: balance;
-    }
-
-    .hero-title .gold {
-      color: #ffe5a3;
-      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
-    }
-
-    .hero-subtitle {
-      max-width: 900px;
-      margin: clamp(24px, 4vw, 36px) 0 0;
-      color: rgba(245, 247, 251, 0.86);
-      font-size: clamp(1.28rem, 3.8vw, 2.12rem);
-      line-height: 1.18;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
-    }
-
-    .hero-copy {
-      max-width: 820px;
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.26rem);
-      line-height: 1.55;
-    }
-
-    .one-liner-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 28px;
-      max-width: 980px;
-    }
-
-    .one-liner {
-      min-height: 86px;
-      display: flex;
-      align-items: center;
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(255,255,255,0.045);
-      color: rgba(255, 246, 220, 0.96);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      font-weight: 900;
-      line-height: 1.18;
-      letter-spacing: -0.02em;
-    }
-
-    .frontier-actions,
-    .frontier-chip-row,
-    .planet-rail {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 26px;
-    }
-
-    .frontier-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      border: 1px solid rgba(172, 191, 230, 0.24);
-      border-radius: 999px;
-      padding: 8px 13px;
-      color: rgba(242, 246, 255, 0.88);
-      background: rgba(255, 255, 255, 0.045);
-      font-size: 0.86rem;
-      font-weight: 850;
-    }
-
-    .frontier-chip.lock {
-      border-color: rgba(242, 199, 111, 0.58);
-      color: #ffe7a7;
-      background: rgba(242, 199, 111, 0.11);
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      color: var(--text);
-      font-size: clamp(2.1rem, 6vw, 4.2rem);
-      line-height: 0.94;
-      letter-spacing: -0.055em;
-      text-wrap: balance;
-    }
-
-    .section-copy {
-      max-width: 900px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.58;
-    }
-
-    .frontier-grid,
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .frontier-card,
-    .route-card {
-      position: relative;
-      min-height: 214px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 22px;
+    .lane::before {
+      content:"";
+      width:2rem;
+      height:2rem;
+      border:1px solid rgba(242,199,111,.24);
+      border-radius:.56rem;
+      transform:rotate(45deg);
       background:
-        radial-gradient(circle at 18% 0%, rgba(215, 165, 255, 0.12), transparent 36%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.028),
-        0 18px 42px rgba(0,0,0,0.24);
-      text-decoration: none;
-      overflow: hidden;
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 50%),
+        linear-gradient(145deg, rgba(242,199,111,.08), rgba(139,200,255,.04));
+      margin:.25rem 0 .5rem .35rem;
+      box-shadow:0 0 1rem rgba(242,199,111,.08);
     }
 
-    .frontier-card::after,
-    .route-card::after {
-      content: "";
-      position: absolute;
-      right: -34px;
-      bottom: -34px;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      border: 1px solid rgba(242,199,111,0.12);
-      background: rgba(255,255,255,0.025);
-      pointer-events: none;
+    .lane::after {
+      content:"";
+      position:absolute;
+      inset:auto -4rem -5rem auto;
+      width:10rem;
+      height:10rem;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(242,199,111,.075), transparent 64%);
+      pointer-events:none;
     }
 
-    .frontier-kicker,
-    .route-kicker {
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .lane:hover,
+    .lane:focus {
+      transform:translateY(-3px);
+      border-color:rgba(242,199,111,.55);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(242,199,111,.10), transparent 60%),
+        rgba(255,255,255,.045);
+      outline:none;
     }
 
-    .frontier-card h3,
-    .route-card h3 {
-      margin: 0;
-      color: var(--text);
-      font-size: 1.48rem;
-      line-height: 1.04;
-      letter-spacing: -0.03em;
+    .lane strong {
+      color:rgba(255,241,205,.98);
+      font-size:.92rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .frontier-card p,
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      flex: 1;
+    .lane span {
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.45;
     }
 
-    .route-link {
-      color: #ffe7a7;
-      font-weight: 950;
+    .lane.vision {
+      border-color:rgba(242,199,111,.42);
+      background:
+        radial-gradient(circle at 30% 0%, rgba(242,199,111,.14), transparent 60%),
+        rgba(255,255,255,.04);
+      box-shadow:0 0 2rem rgba(242,199,111,.08);
     }
 
-    .planet-rail a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 38px;
-      padding: 0 14px;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 999px;
-      text-decoration: none;
-      color: rgba(245,247,251,0.86);
-      background: rgba(255, 255, 255, 0.045);
-      font-weight: 850;
+    .core-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
     }
 
-    .planet-rail a[aria-current="page"] {
-      color: #111827;
-      background: linear-gradient(180deg, #ffe3a3, #f2c76f);
-      border-color: #f2c76f;
+    .core {
+      padding:1rem;
+      border:1px solid rgba(139,200,255,.16);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:.35rem;
+      position:relative;
+      overflow:hidden;
     }
 
-    .frontier-receipt {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .core::before {
+      content:"";
+      width:1.55rem;
+      height:1.55rem;
+      border:1px solid rgba(139,200,255,.20);
+      border-radius:.45rem;
+      transform:rotate(45deg);
+      margin:.15rem 0 .4rem .25rem;
     }
 
-    .audit-source {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      clip-path: inset(50%) !important;
-      white-space: nowrap !important;
-      border: 0 !important;
-      padding: 0 !important;
-      margin: -1px !important;
+    .core strong {
+      color:rgba(255,241,205,.98);
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    @media (max-width: 1040px) {
-      .one-liner-strip,
-      .frontier-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
+    .core span {
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.4;
+    }
+
+    .receipt {
+      color:var(--faint);
+    }
+
+    .receipt summary {
+      cursor:pointer;
+      padding:1rem;
+      color:rgba(255,241,205,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .receipt pre {
+      margin:0;
+      padding:0 1rem 1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    footer {
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @keyframes diamondBreathe {
+      0%,100% { opacity:.38; transform:translateY(-50%) rotate(45deg) scale(1); }
+      50% { opacity:.62; transform:translateY(-50%) rotate(45deg) scale(1.035); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero::after {
+        animation:none !important;
       }
-
-      .frontier-visual {
-        opacity: 0.30;
-      }
     }
 
-    @media (max-width: 640px) {
-      .frontier-stage,
-      .frontier-panel {
-        border-radius: 28px;
-        padding: 30px 26px;
-      }
+    @media (max-width:900px) {
+      .lane-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .core-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
 
-      .hero-title {
-        font-size: clamp(3.35rem, 15vw, 5.2rem);
-      }
+    @media (max-width:560px) {
+      .lane-grid,
+      .core-grid { grid-template-columns:1fr; }
 
-      .hero-subtitle {
-        font-size: 1.34rem;
-      }
+      h1 { font-size:clamp(3.1rem,18vw,5rem); }
 
-      .frontier-card,
-      .route-card {
-        min-height: 0;
-      }
-
-      .frontier-visual {
-        opacity: 0.22;
-      }
+      .hero::after { opacity:.22; }
     }
   </style>
 </head>
 
-<body
-  class="manor-skin manor-planet"
-  data-page-id="frontier"
-  data-page="frontier"
-  data-route="/frontier/"
-  data-generation="planetary-attachment-marker-v4"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-manor-room="frontier"
-  data-manor-class="planet"
-  data-planet-id="frontier"
-  data-planet-slot="P3_FRONTIER"
-  data-planet-orbit="explore"
-  data-manor-batch="BATCH_3_PLANETS"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="planetary"
-  data-manor-attached="true"
-  data-parent-route="/explore/"
-  data-current-route="/frontier/"
-  data-frontier-role="expansion-edge"
-  data-frontier-relationship="semantic-child-of-explore"
->
-  <a class="dgb-skip" href="#frontier-main">Skip to Frontier</a>
+<body>
+  <a class="skip" href="#frontier-hub-main">Skip to Frontier Hub</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Explore · Frontier</div>
-        <div class="dgb-room-line">Frontier · Expansion Edge</div>
-      </div>
+  <div class="shell">
+    <header class="card top">
+      <a class="brand state-link" href="/explore/frontier/">
+        <span class="mark">FH</span>
+        <span>
+          <span>Diamond Gate Bridge · Manor</span>
+          <strong>Frontier Hub · Eleven Lanes</strong>
+        </span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Explore</a>
-        <a href="/frontier/" aria-current="page">Frontier</a>
-        <a href="/laws/">Laws</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Earth G1</a>
-        <a href="/gauges/">Gauges</a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="state-link" href="/">Compass</a>
+        <a class="state-link" href="/door/">Door</a>
+        <a class="state-link" href="/home/">Home</a>
+        <a class="state-link" href="/explore/">Manor</a>
+        <a class="state-link" href="/laws/">Laws</a>
+        <a class="state-link" href="/nine-summits/">Nine Summits</a>
+        <a class="state-link" href="/products/">Products</a>
+        <a class="state-link" href="/showroom/">Showroom</a>
+        <a class="state-link" href="/frontier/">Frontier</a>
+        <a class="state-link" href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main
-    id="frontier-main"
-    class="dgb-main"
-    data-page-id="frontier"
-    data-page="frontier"
-    data-route="/frontier/"
-    data-estate="rich-manor-and-estate"
-    data-manor-skin="active"
-    data-house-field="true"
-    data-gauges-truth="live-authority"
-    data-construct-class="planetary"
-    data-manor-attached="true"
-    data-parent-route="/explore/"
-    data-current-route="/frontier/"
-    data-frontier-slot="P3_FRONTIER"
-    data-frontier-role="expansion-edge"
-    data-frontier-relationship="semantic-child-of-explore"
-  >
-    <section class="frontier-stage" aria-label="Frontier expansion-edge planetary surface">
-      <div class="frontier-visual" aria-hidden="true">
-        <div class="edge-ring"></div>
-        <div class="edge-ring two"></div>
-        <div class="edge-line"></div>
-        <div class="edge-line two"></div>
-        <div class="edge-line three"></div>
-        <div class="edge-core"></div>
-        <div class="edge-node root">Root</div>
-        <div class="edge-node map">Map</div>
-        <div class="edge-node edge">Edge</div>
-        <div class="edge-node find">Find</div>
-        <div class="edge-node back">Back</div>
-      </div>
+    <main id="frontier-hub-main">
+      <section class="card hero">
+        <div class="kicker">Frontier Hub · Manor Route Field</div>
+        <h1>Eleven lanes. One parent map.</h1>
+        <h2>“The unknown still needs a parent map.”</h2>
+        <p>
+          This hub carries the active Frontier lanes under the Manor. Vision now holds both future distances, while the deleted distance-room category stays out of the public lane map.
+        </p>
 
-      <p class="hero-mark">Explore / Frontier · P3 · Expansion Edge</p>
+        <div class="cta-row">
+          <a class="cta primary state-link" href="/frontier/">Open Frontier Root</a>
+          <a class="cta state-link" href="/explore/">Return to Manor</a>
+          <a class="cta state-link" href="/gauges/">Read Proof</a>
+        </div>
+      </section>
 
-      <h1 class="hero-title">
-        The edge is not chaos. <span class="gold">It is the next room after the map.</span>
-      </h1>
+      <section class="card section" aria-labelledby="controls-title">
+        <div class="kicker">Four Controls</div>
+        <h2 id="controls-title">Map, Boundary, Proof, and Return keep the hub attached.</h2>
 
-      <p class="hero-subtitle">
-        Frontier is reached at <strong>/frontier/</strong>, but it belongs under Explore in the visitor’s mental map.
-      </p>
+        <div class="core-grid">
+          <article class="core">
+            <strong>Map</strong>
+            <span>The hub stays attached to the Manor route field.</span>
+          </article>
+          <article class="core">
+            <strong>Boundary</strong>
+            <span>Laws keep each lane from overclaiming.</span>
+          </article>
+          <article class="core">
+            <strong>Proof</strong>
+            <span>Gauges confirm what the routes actually serve.</span>
+          </article>
+          <article class="core">
+            <strong>Return</strong>
+            <span>Every lane keeps a visible route back to the hub.</span>
+          </article>
+        </div>
+      </section>
 
-      <p class="hero-copy">
-        Discovery moves through Compass, then Explore, then Frontier. Explore shows the routes.
-        Frontier carries edge-of-known research, future-facing systems, expansion pressure, and unknown territory
-        while staying anchored to the Manor.
-      </p>
+      <section class="card section" aria-labelledby="lanes-title">
+        <div class="kicker">Eleven Frontier Lanes</div>
+        <h2 id="lanes-title">Vision is the unified future-sightline lane.</h2>
 
-      <div class="one-liner-strip" aria-label="Frontier one-liners">
-        <div class="one-liner">Explore shows the path. Frontier tests what comes next.</div>
-        <div class="one-liner">The unknown still needs a parent map.</div>
-        <div class="one-liner">Expansion only works when it remembers its anchor.</div>
-      </div>
+        <div class="lane-grid">
+          <a class="lane state-link" href="/explore/frontier/closed-loop/">
+            <strong>Closed Loop</strong>
+            <span>Feedback, return logic, proof loops, and completion pathways.</span>
+          </a>
 
-      <div class="frontier-chip-row" aria-label="Frontier status">
-        <span class="frontier-chip lock">/frontier/</span>
-        <span class="frontier-chip lock">Explore / Frontier</span>
-        <span class="frontier-chip lock">Expansion edge</span>
-        <span class="frontier-chip">P3 Frontier</span>
-        <span class="frontier-chip">No heavy runtime</span>
-      </div>
+          <a class="lane state-link" href="/explore/frontier/energy/">
+            <strong>Energy</strong>
+            <span>Power, motion, charge, force, pressure, and operating capacity.</span>
+          </a>
 
-      <div class="frontier-actions" aria-label="Primary Frontier actions">
-        <a class="dgb-button" href="/explore/">Return to Explore</a>
-        <a class="dgb-button secondary" href="/laws/">Open Laws</a>
-        <a class="dgb-button secondary" href="/products/">Open Products</a>
-        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
-      </div>
-    </section>
+          <a class="lane state-link" href="/explore/frontier/infrastructure/">
+            <strong>Infrastructure</strong>
+            <span>Support layers, rails, utilities, and build foundation.</span>
+          </a>
 
-    <section class="frontier-panel" aria-label="Frontier sequence">
-      <p class="hero-mark">Sequence · Compass → Explore → Frontier</p>
-      <h2 class="section-title">Known. Mapped. Unknown.</h2>
-      <p class="section-copy">
-        Frontier is the downstream edge of Explore even though the live URL remains <strong>/frontier/</strong>.
-        The route is physical. The relationship is structural.
-      </p>
+          <a class="lane state-link" href="/explore/frontier/lattice/">
+            <strong>Lattice</strong>
+            <span>Grid logic, state-space organization, and 256-field thinking.</span>
+          </a>
 
-      <div class="frontier-grid">
-        <article class="frontier-card">
-          <span class="frontier-kicker">01 · Compass</span>
-          <h3>Orient the system.</h3>
-          <p>Compass gives the public command surface and tells the visitor where they are.</p>
-        </article>
+          <a class="lane state-link" href="/explore/frontier/manual/">
+            <strong>Manual</strong>
+            <span>Operating instructions, reference logic, and field notes.</span>
+          </a>
 
-        <article class="frontier-card">
-          <span class="frontier-kicker">02 · Explore</span>
-          <h3>Show the paths.</h3>
-          <p>Explore separates the routes so the visitor can choose without losing the thread.</p>
-        </article>
+          <a class="lane state-link" href="/explore/frontier/shimmer/">
+            <strong>Shimmer</strong>
+            <span>Signal, atmosphere, surface effect, and future visual language.</span>
+          </a>
 
-        <article class="frontier-card">
-          <span class="frontier-kicker">03 · Frontier</span>
-          <h3>Test what comes next.</h3>
-          <p>Frontier carries the expansion edge, future systems, research pressure, and unknown territory.</p>
-        </article>
-      </div>
-    </section>
+          <a class="lane state-link" href="/explore/frontier/trajectory/">
+            <strong>Trajectory</strong>
+            <span>Direction, motion, path projection, and system movement.</span>
+          </a>
 
-    <section class="dgb-card" aria-label="Frontier function">
-      <h2 class="section-title">Frontier receives the expansion path.</h2>
-      <p class="section-copy">
-        Explore is the map. Frontier is the edge after the map. It holds future-facing pressure,
-        research direction, unknown territory, and expansion that still has to return to the estate.
-      </p>
+          <a class="lane state-link" href="/explore/frontier/urban/">
+            <strong>Urban</strong>
+            <span>City systems, population layers, and built-environment logic.</span>
+          </a>
 
-      <div class="frontier-grid">
-        <article class="frontier-card">
-          <span class="frontier-kicker">Unknown</span>
-          <h3>Edge pressure.</h3>
-          <p>Frontier holds future-facing pressure without allowing chaos to become the design language.</p>
-        </article>
+          <a class="lane vision state-link" href="/explore/frontier/vision/">
+            <strong>Vision</strong>
+            <span>Distant and not-so-distant future, sightline planning, confidence labels, and visual direction.</span>
+          </a>
 
-        <article class="frontier-card">
-          <span class="frontier-kicker">Research</span>
-          <h3>Known to unknown.</h3>
-          <p>Discovery moves from the known map into the unknown edge without skipping the route layer.</p>
-        </article>
+          <a class="lane state-link" href="/explore/frontier/waste/">
+            <strong>Waste</strong>
+            <span>Loss, recovery, disposal, circularity, and cleanup logic.</span>
+          </a>
 
-        <article class="frontier-card">
-          <span class="frontier-kicker">Return</span>
-          <h3>Expansion with anchor.</h3>
-          <p>Nothing here is allowed to detach from Explore, the Manor, the house skeleton, or the proof surfaces.</p>
-        </article>
-      </div>
-    </section>
+          <a class="lane state-link" href="/explore/frontier/water/">
+            <strong>Water</strong>
+            <span>Flow, support, survival layer, maritime logic, and baseline systems.</span>
+          </a>
+        </div>
+      </section>
 
-    <section class="dgb-card" aria-label="Planetary rail">
-      <h2 class="section-title">Planetary rail.</h2>
-      <p class="section-copy">
-        Frontier remains physically served at <strong>/frontier/</strong> and structurally presented as <strong>Explore / Frontier</strong>.
-      </p>
+      <section class="card section" aria-labelledby="return-title">
+        <div class="kicker">Return Routes</div>
+        <h2 id="return-title">The hub remains attached to the Manor and proof surfaces.</h2>
 
-      <div class="planet-rail" aria-label="Planetary constructs">
-        <a href="/prelude/">Prelude</a>
-        <a href="/explore/">Explore</a>
-        <a href="/frontier/" aria-current="page">Frontier</a>
-        <a href="/laws/">Laws</a>
-        <a href="/governance/">Governance</a>
-        <a href="/upper-room/">Upper Room</a>
-        <a href="/about-this-underdog/">About</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Love</a>
-      </div>
-    </section>
+        <nav class="return-row" aria-label="Return routes">
+          <a class="state-link" href="/">Compass</a>
+          <a class="state-link" href="/door/">Door</a>
+          <a class="state-link" href="/home/">Home</a>
+          <a class="state-link" href="/explore/">Manor</a>
+          <a class="state-link" href="/laws/">Laws</a>
+          <a class="state-link" href="/frontier/">Frontier Root</a>
+          <a class="state-link" href="/gauges/">Gauges</a>
+        </nav>
+      </section>
 
-    <section class="dgb-card" aria-label="Frontier routes">
-      <h2 class="section-title">Move without detaching.</h2>
-      <p class="section-copy">
-        The edge stays useful only when return routes remain visible.
-      </p>
-
-      <div class="route-grid">
-        <a class="route-card" href="/explore/">
-          <span class="route-kicker">Parent</span>
-          <h3>Explore</h3>
-          <p>Return to the route-map surface before entering another path.</p>
-          <span class="route-link">Open Explore</span>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <span class="route-kicker">Rule Chamber</span>
-          <h3>Laws</h3>
-          <p>Move into the law chamber when expansion needs boundaries.</p>
-          <span class="route-link">Open Laws</span>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <span class="route-kicker">Product Wing</span>
-          <h3>Products</h3>
-          <p>Move into product chambers when an idea becomes usable.</p>
-          <span class="route-link">Open Products</span>
-        </a>
-
-        <a class="route-card" href="/showroom/">
-          <span class="route-kicker">Proof Surface</span>
-          <h3>Showroom</h3>
-          <p>Move to Showroom when a frontier claim needs public inspection.</p>
-          <span class="route-link">Open Showroom</span>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <span class="route-kicker">Diagnostics</span>
-          <h3>Gauges</h3>
-          <p>Move to Gauges when route, runtime, parser, or receipt truth must be measured.</p>
-          <span class="route-link">Open Gauges</span>
-        </a>
-
-        <a class="route-card" href="/">
-          <span class="route-kicker">Root</span>
-          <h3>Compass</h3>
-          <p>Return to the public command surface when the edge needs to re-anchor.</p>
-          <span class="route-link">Open Compass</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="dgb-card" aria-label="Route receipt">
-      <h2>Route receipt</h2>
-      <pre class="dgb-receipt frontier-receipt">FRONTIER_ROOT_ROUTE_EXPLORE_CHILD_REPLACEMENT_TNT_v1
-route=/frontier/
-page=frontier
-display_label=Explore / Frontier
-style_direction=ted-talk-expansion-edge-surface
-uses_shared_shell=/assets/dgb-ui-shell.css
-canonical_nav=Compass,Door,Home,Explore,Frontier,Laws,Book,Universe,Products,Showroom,Earth G1,Gauges
-construct_class=planetary
-manor_attached=true
-manor_skin=active
-house_field=true
-gauges_truth=live-authority
-heavy_runtime_loaded=false
-planet_render_touched=false
-runtime_touched=false
-gauges_logic_touched=false
+      <details class="card receipt" open>
+        <summary>Route receipt</summary>
+        <pre>FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1
+route=/explore/frontier/
+page=explore_frontier
+role=frontier_lane_parent_hub
+message=eleven_lanes_one_parent_map
 parent_route=/explore/
-current_route=/frontier/
-frontier_slot=P3_FRONTIER
-frontier_role=expansion-edge
-frontier_relationship=semantic-child-of-explore
-frontier_sequence=Compass -> Explore -> Frontier
-frontier_owns=edge-pressure,research-pressure,unknown-territory,expansion-with-anchor
-frontier_does_not_own=root-command,product-wing,showroom-proof,gauges-logic,earth-g1-renderer,heavy-runtime
-compass=/
-explore=/explore/
-frontier=/frontier/
-laws=/laws/
-products=/products/
-showroom=/showroom/
-earth-g1=/showroom/globe/
-gauges=/gauges/
-prelude=/prelude/
+frontier_root=/frontier/
+boundary_route=/laws/
+proof_route=/gauges/
+foreground_core=map,boundary,proof,return
+lanes=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
+vision_horizons=not_so_distant_future,distant_future
+vision_role=merged_future_sightline_lane
+retired_distance_category_removed=true
+deleted_route_not_advertised=true
+state_carry=gd_lang,gd_style,gd_time,gd_depth
+lane_base=/explore/frontier/
+route_owns=frontier_lane_parent_hub,11_lane_links,vision_merged_description,return_routes,receipt
+route_does_not_own=frontier_root_visual_field,lane_page_internals,gauges_logic,shared_assets,runtime_files
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+streaming=false
 visual_pass_claimed=false</pre>
-    </section>
+      </details>
+    </main>
 
-    <section class="audit-source" aria-label="Frontier audit source">
-      <a href="/">Compass</a>
-      <a href="/explore/">Explore</a>
-      <a href="/frontier/">Frontier</a>
-      <a href="/laws/">Laws</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Earth G1</a>
-      <a href="/gauges/">Gauges</a>
-      <span>data-route="/frontier/"</span>
-      <span>data-parent-route="/explore/"</span>
-      <span>data-current-route="/frontier/"</span>
-      <span>data-frontier-relationship="semantic-child-of-explore"</span>
-      <span>FRONTIER_ROOT_ROUTE_EXPLORE_CHILD_REPLACEMENT_TNT_v1</span>
-    </section>
-  </main>
+    <footer>
+      FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1 · Explore Frontier Hub · Eleven Lanes.
+    </footer>
+  </div>
 
-  <footer class="dgb-footer">
-    FRONTIER_ROOT_ROUTE_EXPLORE_CHILD_REPLACEMENT_TNT_v1 · Explore / Frontier · Diamond Gate Bridge.
-  </footer>
+  <script>
+    (() => {
+      "use strict";
+
+      const allowed = ["gd_lang", "gd_style", "gd_time", "gd_depth"];
+      const params = new URLSearchParams(window.location.search);
+      const carry = new URLSearchParams();
+
+      allowed.forEach((key) => {
+        if (params.has(key)) carry.set(key, params.get(key));
+      });
+
+      if (!carry.has("gd_lang")) carry.set("gd_lang", "en");
+      if (!carry.has("gd_style")) carry.set("gd_style", "informal");
+      if (!carry.has("gd_time")) carry.set("gd_time", "now");
+      if (!carry.has("gd_depth")) carry.set("gd_depth", "explore");
+
+      document.querySelectorAll(".state-link").forEach((link) => {
+        const url = new URL(link.getAttribute("href"), window.location.origin);
+        carry.forEach((value, key) => url.searchParams.set(key, value));
+        link.href = url.pathname + "?" + url.searchParams.toString();
+      });
+    })();
+  </script>
 </body>
 </html>

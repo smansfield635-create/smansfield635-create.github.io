@@ -1,665 +1,475 @@
+<!-- /home/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="home"
+  data-page="home-simplified-estate-receiver"
   data-route="/home/"
-  data-contract="HOME_TED_TALK_ESTATE_STABILIZATION_RENEWAL_TNT_v1"
-  data-generation="G1"
-  data-demo-universe="earth-sun-moon-g1"
-  data-earth-g1="locked"
-  data-sun-g1="locked"
-  data-moon-g1="satellite-renderer-integration"
-  data-planet-one="reserved-for-future-nine-summits-universe"
+  data-contract="HOME_ONE_MESSAGE_MANY_ROOMS_TNT_v1"
+  data-home-role="estate-receiver-stabilizer"
+  data-message="one-message-many-rooms"
   data-heavy-runtime-loaded="false"
-  data-home-loads-planet-scripts="false"
-  data-runtime-touched="false"
-  data-gauges-logic-touched="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Home</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Home: the estate stabilization route for the book, Demo Universe, products, showroom, Earth G1, and gauges."
+    content="Home receives the visitor, stabilizes the route, and sends each person to the correct room in the Diamond Gate Bridge estate."
   >
-
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
 
   <style>
     :root {
+      --panel: rgba(9, 14, 26, 0.90);
+      --line: rgba(255,255,255,0.15);
+      --text: #f8f1dd;
+      --muted: rgba(242,246,255,0.74);
+      --faint: rgba(242,246,255,0.48);
       --gold: #f2c76f;
-      --text: #f5f7fb;
-      --muted: rgba(226, 234, 248, 0.76);
-      --line: rgba(180, 205, 255, 0.18);
+      --stage: min(100%, 1120px);
     }
 
+    * { box-sizing: border-box; }
+
+    html,
     body {
+      width: 100%;
+      margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.13), transparent 34%),
-        radial-gradient(circle at 76% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
-        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
+        radial-gradient(circle at 50% 72%, rgba(80,145,230,0.13), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .home-stage {
+    body { min-height: 100svh; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+      opacity: 0.38;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 20;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #080a0f;
+      font-weight: 900;
+    }
+
+    .skip-link:focus { top: 1rem; }
+
+    .shell {
       position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 36px;
-      padding: clamp(30px, 7vw, 76px);
-      background:
-        linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.035),
-        0 28px 90px rgba(0,0,0,0.38);
-      isolation: isolate;
+      z-index: 1;
+      width: var(--stage);
+      margin: 0 auto;
+      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
+        max(1.4rem, env(safe-area-inset-bottom));
     }
 
-    .home-stage::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      background:
-        radial-gradient(circle at 74% 58%, rgba(62, 120, 220, 0.22), transparent 22%),
-        radial-gradient(circle at 74% 58%, transparent 0 22%, rgba(242,199,111,0.10) 23%, transparent 24% 100%),
-        radial-gradient(circle at 74% 58%, transparent 0 38%, rgba(130,165,230,0.09) 39%, transparent 40% 100%),
-        radial-gradient(circle at 74% 58%, transparent 0 56%, rgba(242,199,111,0.055) 57%, transparent 58% 100%);
-      filter: blur(10px);
-      opacity: 0.72;
-      pointer-events: none;
-      z-index: -3;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0 1rem;
     }
 
-    .home-stage::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(5,8,19,0.28), transparent 48%, rgba(5,8,19,0.18)),
-        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.08), transparent 26%);
-      pointer-events: none;
-      z-index: -2;
-    }
-
-    .blurred-home-system {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.44;
-      filter: blur(2px);
-    }
-
-    .blur-house,
-    .blur-earth,
-    .blur-moon,
-    .blur-orbit,
-    .blur-light {
-      position: absolute;
-      transform: translate(-50%, -50%);
-    }
-
-    .blur-house {
-      left: 78%;
-      top: 60%;
-      width: clamp(220px, 40vw, 440px);
-      height: clamp(250px, 46vw, 520px);
-      border: 2px solid rgba(242, 199, 111, 0.20);
-      border-radius: 38px;
-      box-shadow:
-        inset 0 0 70px rgba(242, 199, 111, 0.06),
-        0 0 90px rgba(242, 199, 111, 0.07);
-    }
-
-    .blur-house::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -25%;
-      width: 70%;
-      height: 70%;
-      transform: translateX(-50%) rotate(45deg);
-      border-left: 2px solid rgba(242, 199, 111, 0.18);
-      border-top: 2px solid rgba(242, 199, 111, 0.18);
-      border-radius: 14px;
-    }
-
-    .blur-light {
-      left: 78%;
-      top: 34%;
-      width: clamp(120px, 24vw, 280px);
-      height: clamp(120px, 24vw, 280px);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(255, 244, 190, 0.22), rgba(255, 190, 76, 0.10) 34%, rgba(255, 116, 36, 0.04) 64%, transparent 100%);
-    }
-
-    .blur-earth {
-      left: 78%;
-      top: 66%;
-      width: clamp(130px, 26vw, 280px);
-      height: clamp(130px, 26vw, 280px);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 40% 28%, rgba(255,255,255,0.86) 0 5%, transparent 18%),
-        radial-gradient(circle at 36% 52%, #2d9460 0 10%, transparent 23%),
-        radial-gradient(circle at 62% 43%, #c2ad64 0 10%, transparent 22%),
-        radial-gradient(circle at 54% 72%, #2a8a65 0 12%, transparent 24%),
-        radial-gradient(circle at 50% 50%, #1474db 0%, #073b97 54%, #031333 100%);
-      box-shadow:
-        0 0 46px rgba(44, 126, 255, 0.22),
-        0 0 110px rgba(44, 126, 255, 0.12);
-      opacity: 0.34;
-    }
-
-    .blur-moon {
-      left: 90%;
-      top: 58%;
-      width: clamp(48px, 9vw, 82px);
-      height: clamp(48px, 9vw, 82px);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 32% 34%, rgba(28,30,35,0.74) 0 13%, transparent 24%),
-        radial-gradient(circle at 56% 29%, rgba(34,35,40,0.68) 0 10%, transparent 22%),
-        radial-gradient(circle at 62% 62%, rgba(28,30,35,0.62) 0 9%, transparent 20%),
-        radial-gradient(circle at 50% 50%, #d0d2d3 0%, #a9b0b8 52%, #66717e 100%);
-      opacity: 0.44;
-    }
-
-    .blur-orbit {
-      left: 78%;
-      top: 66%;
-      width: clamp(220px, 42vw, 460px);
-      height: clamp(74px, 16vw, 150px);
-      border: 2px dashed rgba(172, 191, 230, 0.16);
-      border-radius: 50%;
-    }
-
-    .hero-mark {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: 0.82rem;
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.08rem;
       font-weight: 950;
-      letter-spacing: 0.15em;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+    }
+
+    .brand span:first-child {
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
       text-transform: uppercase;
     }
 
-    .hero-title {
-      max-width: 980px;
-      margin: 0;
-      color: var(--text);
-      font-size: clamp(3.2rem, 10vw, 7.8rem);
-      line-height: 0.88;
-      letter-spacing: -0.07em;
-      text-wrap: balance;
-    }
-
-    .hero-title .gold {
-      color: #ffe5a3;
-      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
-    }
-
-    .hero-subtitle {
-      max-width: 860px;
-      margin: clamp(24px, 4vw, 36px) 0 0;
-      color: rgba(245, 247, 251, 0.86);
-      font-size: clamp(1.28rem, 3.8vw, 2.12rem);
-      line-height: 1.18;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
-    }
-
-    .hero-copy {
-      max-width: 780px;
-      margin: 18px 0 0;
+    .brand span:last-child {
       color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.28rem);
-      line-height: 1.55;
+      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .one-liner-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 28px;
-      max-width: 980px;
-    }
-
-    .one-liner {
-      min-height: 86px;
+    .nav {
       display: flex;
-      align-items: center;
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(255,255,255,0.045);
-      color: rgba(255, 246, 220, 0.96);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      font-weight: 900;
-      line-height: 1.18;
-      letter-spacing: -0.02em;
-    }
-
-    .home-actions,
-    .home-chip-row {
-      display: flex;
+      justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 26px;
+      gap: 0.42rem;
     }
 
-    .home-chip {
+    .nav a {
+      min-height: 2.1rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 38px;
-      border: 1px solid rgba(172, 191, 230, 0.24);
+      padding: 0.45rem 0.72rem;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 13px;
-      color: rgba(242, 246, 255, 0.88);
-      background: rgba(255, 255, 255, 0.045);
-      font-size: 0.86rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
       font-weight: 850;
+      white-space: nowrap;
     }
 
-    .home-chip.lock {
-      border-color: rgba(242, 199, 111, 0.58);
-      color: #ffe7a7;
-      background: rgba(242, 199, 111, 0.11);
+    .nav a[aria-current="page"] {
+      border-color: rgba(242,199,111,0.9);
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
     }
 
-    .section-title {
-      margin: 0 0 12px;
-      color: var(--text);
-      font-size: clamp(2.1rem, 6vw, 4.2rem);
-      line-height: 0.94;
-      letter-spacing: -0.055em;
+    .hero {
+      min-height: calc(100svh - 9rem);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 1.05rem;
+      padding: clamp(2rem, 7vw, 5rem) 0;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      width: min(100%, 880px);
+      margin: 0;
+      font-size: clamp(3rem, 11vw, 7rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
       text-wrap: balance;
     }
 
-    .section-copy {
-      max-width: 900px;
+    .lead {
+      width: min(100%, 680px);
+      margin: 0;
+      color: rgba(255,241,205,0.94);
+      font-size: clamp(1.02rem, 3.6vw, 1.22rem);
+      line-height: 1.5;
+      text-wrap: balance;
+    }
+
+    .quote {
+      width: min(100%, 720px);
       margin: 0;
       color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.58;
+      font-size: clamp(0.94rem, 3.2vw, 1.05rem);
+      line-height: 1.55;
+      text-wrap: balance;
     }
 
-    .stability-grid {
+    .primary-actions,
+    .room-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .button {
+      min-height: 2.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.62rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
+      border-radius: 999px;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button::after { content: " →"; }
+
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      outline: none;
+    }
+
+    .invariant-row {
+      width: min(100%, 760px);
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.5rem;
     }
 
-    .stability-card {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 20px;
+    .invariant {
+      min-height: 6.25rem;
+      display: grid;
+      align-content: center;
+      gap: 0.25rem;
+      padding: 0.85rem;
+      border: 1px dashed rgba(242,199,111,0.26);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .invariant strong {
+      color: rgba(255,241,205,0.95);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .invariant span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .room-panel {
+      width: min(100%, 900px);
+      margin-top: 1rem;
+      padding: clamp(0.8rem, 2.8vw, 1rem);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.25rem;
       background:
-        radial-gradient(circle at 20% 0%, rgba(242, 199, 111, 0.12), transparent 38%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
+        linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.012)),
+        var(--panel);
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.028),
-        0 18px 42px rgba(0,0,0,0.22);
+        0 1.2rem 4rem rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.07);
     }
 
-    .stability-card span {
-      display: block;
+    .room-panel-title {
+      margin: 0 0 0.7rem;
       color: var(--gold);
       font-size: 0.72rem;
       font-weight: 950;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      margin-bottom: 12px;
     }
 
-    .stability-card strong {
-      display: block;
-      color: var(--text);
-      font-size: clamp(1.25rem, 3vw, 1.72rem);
-      line-height: 1.02;
-      letter-spacing: -0.035em;
-      margin-bottom: 12px;
-    }
-
-    .stability-card p {
-      margin: 0;
+    .room-link {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.72rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
       color: var(--muted);
-      line-height: 1.48;
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 24px;
+    .room-link::after {
+      content: " →";
+      color: var(--gold);
     }
 
-    .route-card {
-      position: relative;
-      min-height: 238px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 22px;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.10), transparent 36%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.028),
-        0 18px 42px rgba(0,0,0,0.24);
-      text-decoration: none;
+    .receipt {
+      width: min(100%, 900px);
+      margin-top: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
       overflow: hidden;
     }
 
-    .route-card::after {
-      content: "";
-      position: absolute;
-      right: -34px;
-      bottom: -34px;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      border: 1px solid rgba(242,199,111,0.12);
-      background: rgba(255,255,255,0.025);
-      pointer-events: none;
-    }
-
-    .route-kicker {
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.12em;
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .route-card h3 {
+    .receipt pre {
       margin: 0;
-      color: var(--text);
-      font-size: 1.48rem;
-      line-height: 1.04;
-      letter-spacing: -0.03em;
-    }
-
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      flex: 1;
-    }
-
-    .route-link {
-      color: #ffe7a7;
-      font-weight: 950;
-    }
-
-    .home-receipt {
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    @media (max-width: 1040px) {
-      .one-liner-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .stability-grid,
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .blurred-home-system {
-        opacity: 0.30;
-      }
+    footer {
+      padding: 0.5rem 0;
+      color: var(--faint);
+      font-size: 0.72rem;
+      line-height: 1.45;
+      text-align: center;
     }
 
-    @media (max-width: 640px) {
-      .home-stage {
-        border-radius: 28px;
-        padding: 30px 26px;
+    @media (max-width: 860px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
       }
 
-      .hero-title {
-        font-size: clamp(3.35rem, 15vw, 5.2rem);
-      }
+      .nav { justify-content: flex-start; }
 
-      .hero-subtitle {
-        font-size: 1.34rem;
-      }
+      .hero { min-height: auto; }
 
-      .stability-grid,
-      .route-grid {
+      .invariant-row {
         grid-template-columns: 1fr;
-      }
-
-      .route-card {
-        min-height: 0;
-      }
-
-      .blurred-home-system {
-        opacity: 0.24;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#main">Skip to Home</a>
+  <a class="skip-link" href="#main">Skip to Home</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Home · Estate Stabilization</div>
-      </div>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span>Diamond Gate Bridge</span>
+        <span>Rich Manor and Estate</span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/" aria-current="page">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="main" class="dgb-main">
-    <section class="home-stage" aria-label="Estate home stabilization">
-      <div class="blurred-home-system" aria-hidden="true">
-        <div class="blur-house"></div>
-        <div class="blur-light"></div>
-        <div class="blur-orbit"></div>
-        <div class="blur-earth"></div>
-        <div class="blur-moon"></div>
-      </div>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Home · Estate Receiver</p>
+        <h1 id="page-title">Home keeps the journey coherent.</h1>
 
-      <p class="hero-mark">H3 · Home · Estate Stabilization</p>
+        <p class="lead">
+          One message moves through many rooms. Home receives the visitor and keeps the estate from becoming a maze.
+        </p>
 
-      <h1 class="hero-title">
-        Home is where the system <span class="gold">stabilizes.</span>
-      </h1>
+        <p class="quote">
+          “The Door gets you in. Home helps you know where you are.”
+        </p>
 
-      <p class="hero-subtitle">
-        The Door gets you in. Home keeps you from getting lost.
-      </p>
-
-      <p class="hero-copy">
-        Home is the estate’s receiving room. It does not load heavy planet scripts. It does not pretend to be the showroom.
-        It receives the visitor, stabilizes the route, and sends each person to the correct chamber.
-      </p>
-
-      <div class="one-liner-strip" aria-label="Home one-liners">
-        <div class="one-liner">Home is not the end of the journey. It is the place that keeps the journey coherent.</div>
-        <div class="one-liner">A system without Home becomes a maze. A system with Home becomes an estate.</div>
-        <div class="one-liner">The proof can be powerful because the route is stable.</div>
-      </div>
-
-      <div class="home-chip-row" aria-label="Home status">
-        <span class="home-chip lock">Route clean</span>
-        <span class="home-chip lock">No planet scripts</span>
-        <span class="home-chip lock">Estate stable</span>
-        <span class="home-chip">Book lane</span>
-        <span class="home-chip">Proof routes</span>
-      </div>
-
-      <div class="home-actions" aria-label="Primary home actions">
-        <a class="dgb-button" href="/nine-summits-of-love/">Open the Book</a>
-        <a class="dgb-button secondary" href="/nine-summits/universe/">Enter Demo Universe</a>
-        <a class="dgb-button secondary" href="/products/">Open Products</a>
-        <a class="dgb-button secondary" href="/gauges/">Open Gauges</a>
-      </div>
-    </section>
-
-    <section class="dgb-card" aria-label="Home stabilizes the system">
-      <h2 class="section-title">A living system needs a center.</h2>
-      <p class="section-copy">
-        The latest public baseline is larger than a page. It now includes the book, the Demo Universe, Earth G1,
-        Sun G1, Moon G1, the product wing, the showroom, and gauges. Home exists so that expansion does not become confusion.
-      </p>
-
-      <div class="stability-grid">
-        <div class="stability-card">
-          <span>Home Role 01</span>
-          <strong>Receive.</strong>
-          <p>Home gives the visitor a stable place to land after the Door.</p>
+        <div class="primary-actions" aria-label="Primary home actions">
+          <a class="button" href="/explore/">Choose a Room</a>
+          <a class="button secondary" href="/nine-summits-of-love/">Open the Book</a>
+          <a class="button secondary" href="/showroom/">Inspect Built Assets</a>
         </div>
 
-        <div class="stability-card">
-          <span>Home Role 02</span>
-          <strong>Route.</strong>
-          <p>Home sends the visitor to the right chamber without duplicating every chamber.</p>
+        <div class="invariant-row" aria-label="Home invariants; these notes are not controls">
+          <div class="invariant">
+            <strong>Receive</strong>
+            <span>Home gives the visitor a stable place to land.</span>
+          </div>
+
+          <div class="invariant">
+            <strong>Stabilize</strong>
+            <span>Home keeps expansion from becoming confusion.</span>
+          </div>
+
+          <div class="invariant">
+            <strong>Route</strong>
+            <span>Home sends each person to the correct room.</span>
+          </div>
         </div>
 
-        <div class="stability-card">
-          <span>Home Role 03</span>
-          <strong>Protect.</strong>
-          <p>Home does not import planet render chains, runtime engines, control scripts, or diagnostics logic.</p>
-        </div>
+        <section class="room-panel" aria-labelledby="room-panel-title">
+          <p class="room-panel-title" id="room-panel-title">Rooms from Home</p>
 
-        <div class="stability-card">
-          <span>Home Role 04</span>
-          <strong>Clarify.</strong>
-          <p>Home separates the book, the universe, the proof surface, products, and gauges.</p>
-        </div>
-      </div>
-    </section>
+          <nav class="room-grid" aria-label="Home room routes">
+            <a class="room-link" href="/explore/">Explore</a>
+            <a class="room-link" href="/nine-summits-of-love/">Book</a>
+            <a class="room-link" href="/nine-summits/universe/">Universe</a>
+            <a class="room-link" href="/products/">Products</a>
+            <a class="room-link" href="/showroom/">Showroom</a>
+            <a class="room-link" href="/frontier/">Frontier</a>
+            <a class="room-link" href="/gauges/">Gauges</a>
+            <a class="room-link" href="/door/">Door</a>
+            <a class="room-link" href="/">Compass</a>
+          </nav>
+        </section>
 
-    <section class="dgb-card" aria-label="Home routes">
-      <h2 class="section-title">Choose the next chamber.</h2>
-      <p class="section-copy">
-        Home does not need to be loud. It needs to be reliable.
-      </p>
-
-      <div class="route-grid">
-        <a class="route-card" href="/nine-summits-of-love/">
-          <span class="route-kicker">Book</span>
-          <h3>The Nine Summits of Love</h3>
-          <p>The human climb: pressure, dignity, free will, discipline, responsibility, and love.</p>
-          <span class="route-link">Open Book</span>
-        </a>
-
-        <a class="route-card" href="/nine-summits/universe/">
-          <span class="route-kicker">Demo Universe</span>
-          <h3>Earth · Sun · Moon G1</h3>
-          <p>The current visual relationship chamber. This is not the future Planet 1 build.</p>
-          <span class="route-link">Enter Universe</span>
-        </a>
-
-        <a class="route-card" href="/showroom/">
-          <span class="route-kicker">Showroom</span>
-          <h3>Inspect the proof.</h3>
-          <p>Open the public presentation lane and inspect active proof surfaces from the proper chamber.</p>
-          <span class="route-link">Open Showroom</span>
-        </a>
-
-        <a class="route-card" href="/showroom/globe/">
-          <span class="route-kicker">Generation 1</span>
-          <h3>Earth G1</h3>
-          <p>Inspect the accepted Demo Universe globe baseline with Sun G1 and Moon G1 in sequence.</p>
-          <span class="route-link">Inspect Earth G1</span>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <span class="route-kicker">Products</span>
-          <h3>Use the system.</h3>
-          <p>Enter the product wing without importing visual-world dependencies into Home.</p>
-          <span class="route-link">Open Products</span>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <span class="route-kicker">Diagnostics</span>
-          <h3>Measure the proof.</h3>
-          <p>Run route, runtime, served-source, parser, and diagnostic checks from the Gauges chamber.</p>
-          <span class="route-link">Open Gauges</span>
-        </a>
-
-        <a class="route-card" href="/door/">
-          <span class="route-kicker">Threshold</span>
-          <h3>Return to Door.</h3>
-          <p>Go back to the entry threshold when the visitor needs a simpler crossing point.</p>
-          <span class="route-link">Open Door</span>
-        </a>
-
-        <a class="route-card" href="/">
-          <span class="route-kicker">Command</span>
-          <h3>Return to Compass.</h3>
-          <p>Use the public command surface when the visitor needs the whole map again.</p>
-          <span class="route-link">Open Compass</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="dgb-card" aria-label="Home boundary">
-      <h2 class="section-title">Home links to proof. It does not pretend to be proof.</h2>
-      <p class="section-copy">
-        Home remains light. It does not load Planet 1 renderer, runtime, control, asset, hexgrid, Moon renderer, or Gauges logic.
-        That boundary keeps the estate fast, stable, and honest.
-      </p>
-    </section>
-
-    <section class="dgb-card" aria-label="Route receipt">
-      <h2>Route receipt</h2>
-      <pre class="dgb-receipt home-receipt">HOME_TED_TALK_ESTATE_STABILIZATION_RENEWAL_TNT_v1
+        <details class="receipt">
+          <summary>Route receipt</summary>
+          <pre>HOME_ONE_MESSAGE_MANY_ROOMS_TNT_v1
 route=/home/
 page=home
-style_direction=ted-talk-estate-stabilization
-uses_shared_shell=/assets/dgb-ui-shell.css
-heavy_runtime_loaded=false
+role=estate_receiver_stabilizer
+message=one_message_many_rooms
+primary_job=receive_stabilize_route
+door=admits
+home=receives
+explore=routes
+showroom=launches_built_assets
+universe=holds_world_setting
+gauges=measures
+removed=ted_overexplaining,demo_universe_language,earth_g1_language,large_chamber_grid,long_visible_receipt
+primary_routes=explore,book,showroom
+room_routes=explore,book,universe,products,showroom,frontier,gauges,door,compass
 home_loads_planet_scripts=false
-planet_render_touched=false
-runtime_touched=false
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
 gauges_logic_touched=false
-canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
-home_owns=estate-stabilization-and-routing
-compass=/
-door=/door/
-book=/nine-summits-of-love/
-universe=/nine-summits/universe/
-universe_current_function=demo-universe-earth-sun-moon-g1-relationship
-showroom=/showroom/
-earth-g1=/showroom/globe/
-products=/products/
-gauges=/gauges/
-earth-g1=locked
-sun-g1=locked
-moon-g1=satellite-renderer-integration
-planet-1=reserved-for-future-nine-summits-universe
 visual_pass_claimed=false</pre>
-    </section>
-  </main>
+        </details>
+      </section>
+    </main>
 
-  <footer class="dgb-footer">
-    HOME_TED_TALK_ESTATE_STABILIZATION_RENEWAL_TNT_v1 · Home · Diamond Gate Bridge.
-  </footer>
+    <footer>
+      HOME_ONE_MESSAGE_MANY_ROOMS_TNT_v1 · Home · Estate Receiver.
+    </footer>
+  </div>
 </body>
 </html>

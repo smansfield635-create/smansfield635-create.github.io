@@ -1,5 +1,5 @@
 /* /assets/showroom.globe.instrument.js
-   SHOWROOM_GLOBE_REAL_IMAGE_TEXTURE_INSTRUMENT_RENEWAL_TNT_v1
+   SHOWROOM_GLOBE_AXIS_GLOBE_TEXTURE_RENEWAL_TNT_v1
 
    RENEWAL LAW:
    Demo Actual Universe uses real-source Earth, Sun, and Moon imagery.
@@ -9,21 +9,23 @@
    Runtime supports state.
    Gauges audits only.
 
-   EXPECTED LOCAL ASSET PATHS:
+   PURPOSE:
+   Stop 2D disk-spin behavior.
+   Render selected image as a globe/sphere on an axis using canvas projection.
+
+   EXPECTED LOCAL ASSETS:
    /assets/textures/earth-blue-marble.png
    /assets/textures/sun-sdo.png
    /assets/textures/moon-lro.png
-
-   FALLBACK SOURCE CLASS:
-   NASA Blue Marble, NASA/GSFC SDO, NASA SVS LRO/LROC Moon Mosaic.
 */
 
-(function renewRealImageTextureInstrument(global) {
+(function renewAxisGlobeTextureInstrument(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_REAL_IMAGE_TEXTURE_INSTRUMENT_RENEWAL_TNT_v1";
+  const VERSION = "SHOWROOM_GLOBE_AXIS_GLOBE_TEXTURE_RENEWAL_TNT_v1";
   const ROUTE = "/showroom/globe/";
   const BODY_SET = new Set(["earth", "sun", "moon"]);
+  const TAU = Math.PI * 2;
 
   const TEXTURES = {
     earth: [
@@ -48,23 +50,26 @@
     running: true,
     direction: "forward",
     speedName: "normal",
-    speedValue: 1,
+    speedValue: 0.004,
     zoom: 100,
-    rotation: 0,
+    longitude: 0,
+    axialTilt: -23.5,
     mount: null,
-    surface: null,
-    frame: null,
+    canvas: null,
+    ctx: null,
     image: null,
+    textureCache: {},
+    textureIndex: { earth: 0, sun: 0, moon: 0 },
     raf: 0,
+    resizeObserver: null,
     lastReceipt: null,
-    lastError: null,
-    loadedTexture: null
+    lastError: null
   };
 
   const speedValues = {
-    slow: 0.18,
-    normal: 0.35,
-    fast: 0.72
+    slow: 0.0022,
+    normal: 0.004,
+    fast: 0.008
   };
 
   function clamp(value, min, max) {
@@ -94,10 +99,7 @@
   }
 
   function normalizeZoom(value) {
-    if (value && typeof value === "object") {
-      value = value.zoom;
-    }
-
+    if (value && typeof value === "object") value = value.zoom;
     return clamp(Number(value) || 100, 70, 240);
   }
 
@@ -105,14 +107,7 @@
     if (isElement(target)) return target;
 
     if (target && typeof target === "object") {
-      return resolveMount(
-        target.mount ||
-        target.root ||
-        target.target ||
-        target.element ||
-        target.el ||
-        null
-      );
+      return resolveMount(target.mount || target.root || target.target || target.element || target.el || null);
     }
 
     if (typeof target === "string" && global.document) {
@@ -141,166 +136,18 @@
       state.body = normalizeBody(options);
     }
 
-    if (typeof options.running === "boolean") {
-      state.running = options.running;
-    }
-
-    if (options.direction) {
-      state.direction = options.direction === "reverse" ? "reverse" : "forward";
-    }
+    if (typeof options.running === "boolean") state.running = options.running;
+    if (options.direction) state.direction = options.direction === "reverse" ? "reverse" : "forward";
 
     if (options.speedName || options.speed) {
       state.speedName = normalizeSpeed(options);
       state.speedValue = speedValues[state.speedName];
     }
 
-    if (options.zoom !== undefined) {
-      state.zoom = normalizeZoom(options);
-    }
+    if (options.zoom !== undefined) state.zoom = normalizeZoom(options);
   }
 
-  function ensureStyles() {
-    if (!global.document) return;
-    if (global.document.getElementById("dgb-real-image-texture-instrument-style")) return;
-
-    const style = global.document.createElement("style");
-    style.id = "dgb-real-image-texture-instrument-style";
-    style.textContent = `
-      .dgb-real-body-surface {
-        width: 100%;
-        max-width: 100%;
-        aspect-ratio: 1 / 1;
-        display: grid;
-        place-items: center;
-        overflow: visible;
-        contain: layout paint;
-        isolation: isolate;
-      }
-
-      .dgb-real-body-frame {
-        position: relative;
-        width: min(100%, 36rem);
-        max-width: 100%;
-        aspect-ratio: 1 / 1;
-        border-radius: 50%;
-        overflow: hidden;
-        background: #000;
-        transform: scale(var(--dgb-body-zoom, 1));
-        transform-origin: center;
-        box-shadow:
-          inset -2rem -2.5rem 4rem rgba(0, 0, 0, 0.34),
-          inset 1.2rem 1.2rem 3rem rgba(255, 255, 255, 0.16),
-          0 0 0 1px rgba(255, 255, 255, 0.18),
-          0 0 2.25rem rgba(123, 214, 255, 0.12);
-      }
-
-      .dgb-real-body-frame::before,
-      .dgb-real-body-frame::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 3;
-      }
-
-      .dgb-real-body-frame::before {
-        background:
-          radial-gradient(circle at 34% 29%, rgba(255, 255, 255, 0.32), transparent 0 16%, transparent 38%),
-          linear-gradient(130deg, rgba(255, 255, 255, 0.1), transparent 38%),
-          radial-gradient(circle at 67% 70%, rgba(0, 0, 0, 0.26), transparent 56%);
-        mix-blend-mode: screen;
-        opacity: 0.75;
-      }
-
-      .dgb-real-body-frame::after {
-        box-shadow:
-          inset 1rem 1rem 1.25rem rgba(255, 255, 255, 0.16),
-          inset -2.35rem -2rem 2.8rem rgba(0, 0, 0, 0.42);
-      }
-
-      .dgb-real-body-image {
-        display: block;
-        width: 100%;
-        height: 100%;
-        max-width: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        transform: rotate(var(--dgb-body-rotation, 0deg)) scale(var(--dgb-image-scale, 1));
-        transform-origin: center;
-        filter: saturate(1.04) contrast(1.05);
-        user-select: none;
-        -webkit-user-drag: none;
-      }
-
-      .dgb-real-body-frame[data-body="earth"] {
-        box-shadow:
-          inset -2rem -2.5rem 4rem rgba(0, 0, 0, 0.36),
-          0 0 0 2px rgba(126, 219, 255, 0.44),
-          0 0 2.35rem rgba(78, 179, 255, 0.25);
-      }
-
-      .dgb-real-body-frame[data-body="earth"] .dgb-real-body-image {
-        object-fit: cover;
-        filter: saturate(1.12) contrast(1.06);
-      }
-
-      .dgb-real-body-frame[data-body="sun"] {
-        box-shadow:
-          0 0 0 2px rgba(255, 225, 122, 0.62),
-          0 0 2rem rgba(255, 190, 57, 0.5),
-          0 0 5rem rgba(255, 98, 25, 0.24),
-          inset -2rem -2rem 3rem rgba(82, 12, 4, 0.3);
-      }
-
-      .dgb-real-body-frame[data-body="sun"]::before {
-        background:
-          radial-gradient(circle at 30% 27%, rgba(255, 255, 220, 0.32), transparent 0 18%, transparent 38%),
-          radial-gradient(circle at 72% 72%, rgba(255, 111, 24, 0.16), transparent 48%);
-        opacity: 0.85;
-      }
-
-      .dgb-real-body-frame[data-body="sun"] .dgb-real-body-image {
-        object-fit: cover;
-        filter: saturate(1.18) contrast(1.08) brightness(1.05);
-      }
-
-      .dgb-real-body-frame[data-body="moon"] {
-        box-shadow:
-          inset -2.1rem -2.4rem 3.6rem rgba(43, 51, 62, 0.42),
-          0 0 0 2px rgba(236, 235, 219, 0.45),
-          0 0 1.4rem rgba(255, 255, 244, 0.18);
-      }
-
-      .dgb-real-body-frame[data-body="moon"]::before {
-        background:
-          radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.22), transparent 0 18%, transparent 42%),
-          radial-gradient(circle at 68% 70%, rgba(0, 0, 0, 0.22), transparent 56%);
-        opacity: 0.72;
-      }
-
-      .dgb-real-body-frame[data-body="moon"] .dgb-real-body-image {
-        object-fit: cover;
-        filter: grayscale(1) contrast(1.12) brightness(1.03);
-      }
-
-      @media (max-width: 430px) {
-        .dgb-real-body-frame {
-          width: min(100%, 22.5rem);
-        }
-      }
-
-      @media (max-width: 360px) {
-        .dgb-real-body-frame {
-          width: min(100%, 20rem);
-        }
-      }
-    `;
-
-    global.document.head.appendChild(style);
-  }
-
-  function ensureSurface(target) {
+  function ensureCanvas(target) {
     const mount = resolveMount(target);
 
     if (!mount || !global.document) {
@@ -308,103 +155,344 @@
       return false;
     }
 
-    if (state.mount === mount && state.surface && state.frame && state.image) {
-      return true;
-    }
+    if (state.mount === mount && state.canvas && state.ctx) return true;
 
     stopLoop();
-    ensureStyles();
+
+    if (state.resizeObserver) {
+      state.resizeObserver.disconnect();
+      state.resizeObserver = null;
+    }
+
     mount.replaceChildren();
 
-    const surface = global.document.createElement("div");
-    surface.className = "dgb-real-body-surface";
-    surface.setAttribute("data-showroom-globe-render-only-surface", "true");
+    const canvas = global.document.createElement("canvas");
+    canvas.className = "dgb-showroom-axis-globe-canvas";
+    canvas.setAttribute("data-showroom-axis-globe-canvas", "true");
+    canvas.setAttribute("aria-label", "Demo Actual Universe spherical body render");
 
-    const frame = global.document.createElement("div");
-    frame.className = "dgb-real-body-frame";
-    frame.setAttribute("data-real-body-frame", "true");
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.maxWidth = "100%";
+    canvas.style.height = "auto";
+    canvas.style.aspectRatio = "1 / 1";
+    canvas.style.borderRadius = "50%";
+    canvas.style.background = "transparent";
 
-    const image = global.document.createElement("img");
-    image.className = "dgb-real-body-image";
-    image.alt = "";
-    image.decoding = "async";
-    image.loading = "eager";
-    image.draggable = false;
-
-    image.addEventListener("load", function onLoad() {
-      state.loadedTexture = image.currentSrc || image.src;
-      writeReceipt("TEXTURE_LOADED");
-    });
-
-    image.addEventListener("error", function onError() {
-      advanceTextureFallback();
-    });
-
-    frame.appendChild(image);
-    surface.appendChild(frame);
-    mount.appendChild(surface);
-
-    state.mount = mount;
-    state.surface = surface;
-    state.frame = frame;
-    state.image = image;
+    mount.appendChild(canvas);
 
     mount.dataset.instrumentMounted = "true";
     mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.instrument.js";
     mount.dataset.routeAuthority = "layout-command-panel-zoom-wrapper";
-    mount.dataset.instrumentBoundary = "real-image-render-only";
-    mount.dataset.textureAuthority = "nasa-source-class";
+    mount.dataset.instrumentBoundary = "axis-globe-render-only";
+    mount.dataset.textureAuthority = "real-source-imagery";
     mount.dataset.inlineGlobeRedraw = "false";
     mount.dataset.cartoonCanvasReplacement = "false";
     mount.dataset.activeBody = state.body;
     mount.dataset.visualPassClaimed = "false";
 
-    setTextureForBody(state.body, true);
+    state.mount = mount;
+    state.canvas = canvas;
+    state.ctx = canvas.getContext("2d", { alpha: true });
+
+    if (global.ResizeObserver) {
+      state.resizeObserver = new ResizeObserver(function handleResize() {
+        resizeCanvas();
+        drawOnce();
+      });
+      state.resizeObserver.observe(mount);
+    }
+
+    resizeCanvas();
+    loadTexture(state.body);
     return true;
   }
 
-  function setTextureForBody(body, resetIndex) {
-    if (!state.frame || !state.image) return;
+  function resizeCanvas() {
+    if (!state.mount || !state.canvas) return;
 
-    state.body = normalizeBody(body);
+    const rect = state.mount.getBoundingClientRect();
+    const cssSize = clamp(rect.width || state.mount.clientWidth || 420, 220, 960);
+    const dpr = clamp(global.devicePixelRatio || 1, 1, 2);
+    const pixelSize = Math.round(cssSize * dpr);
 
-    if (resetIndex || state.image.dataset.body !== state.body) {
-      state.image.dataset.textureIndex = "0";
+    if (state.canvas.width !== pixelSize || state.canvas.height !== pixelSize) {
+      state.canvas.width = pixelSize;
+      state.canvas.height = pixelSize;
     }
-
-    state.frame.dataset.body = state.body;
-    state.image.dataset.body = state.body;
-    state.mount.dataset.activeBody = state.body;
-
-    state.frame.style.setProperty("--dgb-body-zoom", String(state.zoom / 100));
-    state.frame.style.setProperty("--dgb-body-rotation", `${state.rotation}deg`);
-    state.frame.style.setProperty("--dgb-image-scale", state.body === "sun" ? "1.16" : "1");
-
-    const textureIndex = Number(state.image.dataset.textureIndex || "0");
-    const source = TEXTURES[state.body][textureIndex] || TEXTURES[state.body][0];
-
-    if (state.image.src !== source) {
-      state.image.src = source;
-    }
-
-    writeReceipt("TEXTURE_SELECTED");
   }
 
-  function advanceTextureFallback() {
-    if (!state.image) return;
+  function loadTexture(body) {
+    body = normalizeBody(body);
 
-    const current = Number(state.image.dataset.textureIndex || "0");
-    const next = current + 1;
-    const sources = TEXTURES[state.body] || [];
-
-    if (next >= sources.length) {
-      state.lastError = `TEXTURE_LOAD_FAILED:${state.body}`;
-      writeReceipt("TEXTURE_LOAD_FAILED");
+    if (state.textureCache[body] && state.textureCache[body].complete) {
+      state.image = state.textureCache[body];
+      drawOnce();
       return;
     }
 
-    state.image.dataset.textureIndex = String(next);
-    state.image.src = sources[next];
+    const sources = TEXTURES[body] || [];
+    const index = state.textureIndex[body] || 0;
+    const source = sources[index];
+
+    if (!source) {
+      state.lastError = "NO_TEXTURE_SOURCE:" + body;
+      drawFallbackSphere(body);
+      return;
+    }
+
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.decoding = "async";
+    image.loading = "eager";
+
+    image.onload = function handleTextureLoaded() {
+      state.textureCache[body] = image;
+      if (state.body === body) {
+        state.image = image;
+        drawOnce();
+      }
+      writeReceipt("TEXTURE_LOADED");
+    };
+
+    image.onerror = function handleTextureError() {
+      state.textureIndex[body] = index + 1;
+      loadTexture(body);
+    };
+
+    image.src = source;
+  }
+
+  function clear(ctx) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  function clipSphere(ctx, cx, cy, r) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.closePath();
+    ctx.clip();
+  }
+
+  function bodyTilt(body) {
+    if (body === "sun") return -7.25;
+    if (body === "moon") return -6.68;
+    return state.axialTilt;
+  }
+
+  function drawProjectedTexture(ctx, image, cx, cy, r, longitude, body) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    const sxWidth = image.naturalWidth || image.width;
+    const sxHeight = image.naturalHeight || image.height;
+
+    const sliceCount = Math.max(220, Math.floor(r * 2));
+    const left = cx - r;
+    const top = cy - r;
+
+    ctx.save();
+
+    clipSphere(ctx, cx, cy, r);
+
+    ctx.translate(cx, cy);
+    ctx.rotate(bodyTilt(body) * Math.PI / 180);
+    ctx.translate(-cx, -cy);
+
+    for (let i = 0; i < sliceCount; i += 1) {
+      const nx = -1 + (2 * i) / (sliceCount - 1);
+      const meridian = Math.asin(clamp(nx, -1, 1));
+      const visibleScale = Math.sqrt(Math.max(0, 1 - nx * nx));
+
+      const destX = cx + nx * r;
+      const destH = Math.max(1, 2 * r * visibleScale);
+      const destY = cy - destH / 2;
+      const destW = Math.ceil((2 * r) / sliceCount) + 1;
+
+      let u = 0.5 + (meridian / Math.PI) + longitude;
+      u = ((u % 1) + 1) % 1;
+
+      const sx = Math.floor(u * sxWidth);
+      const sw = Math.max(1, Math.ceil(sxWidth / sliceCount));
+
+      ctx.drawImage(
+        image,
+        sx,
+        0,
+        Math.min(sw, sxWidth - sx),
+        sxHeight,
+        destX,
+        destY,
+        destW,
+        destH
+      );
+    }
+
+    ctx.restore();
+
+    drawSphereOverlays(ctx, cx, cy, r, body);
+  }
+
+  function drawSphereOverlays(ctx, cx, cy, r, body) {
+    ctx.save();
+
+    clipSphere(ctx, cx, cy, r);
+
+    const highlight = ctx.createRadialGradient(
+      cx - r * 0.36,
+      cy - r * 0.38,
+      r * 0.04,
+      cx,
+      cy,
+      r
+    );
+
+    highlight.addColorStop(0, body === "sun" ? "rgba(255,255,210,0.45)" : "rgba(255,255,255,0.32)");
+    highlight.addColorStop(0.28, "rgba(255,255,255,0.08)");
+    highlight.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = highlight;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    const shade = ctx.createLinearGradient(cx - r * 0.52, cy - r, cx + r, cy + r);
+
+    if (body === "sun") {
+      shade.addColorStop(0, "rgba(255,255,255,0.02)");
+      shade.addColorStop(0.56, "rgba(0,0,0,0)");
+      shade.addColorStop(1, "rgba(90,12,0,0.24)");
+    } else {
+      shade.addColorStop(0, "rgba(255,255,255,0)");
+      shade.addColorStop(0.54, "rgba(0,0,0,0)");
+      shade.addColorStop(1, "rgba(0,0,0,0.48)");
+    }
+
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.restore();
+
+    if (body === "earth") {
+      drawAtmosphere(ctx, cx, cy, r);
+    }
+
+    if (body === "sun") {
+      drawSolarCorona(ctx, cx, cy, r);
+    }
+
+    drawRim(ctx, cx, cy, r, body);
+  }
+
+  function drawAtmosphere(ctx, cx, cy, r) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.018, 0, TAU);
+    ctx.strokeStyle = "rgba(126,219,255,0.42)";
+    ctx.lineWidth = Math.max(2, r * 0.032);
+    ctx.shadowColor = "rgba(126,219,255,0.45)";
+    ctx.shadowBlur = r * 0.08;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSolarCorona(ctx, cx, cy, r) {
+    const corona = ctx.createRadialGradient(cx, cy, r * 0.88, cx, cy, r * 1.22);
+    corona.addColorStop(0, "rgba(255,191,54,0.16)");
+    corona.addColorStop(0.58, "rgba(255,114,26,0.13)");
+    corona.addColorStop(1, "rgba(255,114,26,0)");
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.22, 0, TAU);
+    ctx.fillStyle = corona;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawRim(ctx, cx, cy, r, body) {
+    let stroke = "rgba(236,235,219,0.52)";
+    let glow = "rgba(255,255,244,0.18)";
+
+    if (body === "earth") {
+      stroke = "rgba(134,225,255,0.62)";
+      glow = "rgba(126,219,255,0.36)";
+    }
+
+    if (body === "sun") {
+      stroke = "rgba(255,224,116,0.76)";
+      glow = "rgba(255,166,34,0.58)";
+    }
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = Math.max(2, r * 0.012);
+    ctx.shadowColor = glow;
+    ctx.shadowBlur = r * 0.08;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawFallbackSphere(body) {
+    if (!state.ctx || !state.canvas) return;
+
+    const ctx = state.ctx;
+    const size = Math.min(ctx.canvas.width, ctx.canvas.height);
+    const cx = ctx.canvas.width / 2;
+    const cy = ctx.canvas.height / 2;
+    const r = size * 0.39 * (state.zoom / 100);
+
+    clear(ctx);
+
+    const gradient = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.05, cx, cy, r);
+
+    if (body === "sun") {
+      gradient.addColorStop(0, "#fff7b6");
+      gradient.addColorStop(0.25, "#ffc83c");
+      gradient.addColorStop(0.7, "#d94a15");
+      gradient.addColorStop(1, "#4c1005");
+    } else if (body === "moon") {
+      gradient.addColorStop(0, "#fffbe8");
+      gradient.addColorStop(0.35, "#cfcfc4");
+      gradient.addColorStop(0.75, "#858d8f");
+      gradient.addColorStop(1, "#3e4650");
+    } else {
+      gradient.addColorStop(0, "#7de7ff");
+      gradient.addColorStop(0.35, "#168acb");
+      gradient.addColorStop(0.75, "#063d86");
+      gradient.addColorStop(1, "#011537");
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    drawSphereOverlays(ctx, cx, cy, r, body);
+  }
+
+  function drawOnce() {
+    if (!state.canvas || !state.ctx) return;
+
+    resizeCanvas();
+
+    const ctx = state.ctx;
+    const size = Math.min(ctx.canvas.width, ctx.canvas.height);
+    const cx = ctx.canvas.width / 2;
+    const cy = ctx.canvas.height / 2;
+    const r = size * 0.39 * (state.zoom / 100);
+
+    clear(ctx);
+
+    const texture = state.textureCache[state.body];
+
+    if (texture && texture.complete && texture.naturalWidth > 0) {
+      drawProjectedTexture(ctx, texture, cx, cy, r, state.longitude, state.body);
+    } else {
+      drawFallbackSphere(state.body);
+    }
+
+    writeReceipt("DRAWN_AS_AXIS_GLOBE");
   }
 
   function step() {
@@ -412,16 +500,14 @@
 
     if (state.running) {
       const direction = state.direction === "reverse" ? -1 : 1;
-      state.rotation = (state.rotation + direction * state.speedValue) % 360;
-
-      if (state.frame) {
-        state.frame.style.setProperty("--dgb-body-rotation", `${state.rotation}deg`);
-      }
-
-      state.raf = global.requestAnimationFrame(step);
+      state.longitude = (state.longitude + direction * state.speedValue) % 1;
     }
 
-    writeReceipt("DRAWN");
+    drawOnce();
+
+    if (state.running) {
+      state.raf = global.requestAnimationFrame(step);
+    }
   }
 
   function stopLoop() {
@@ -437,21 +523,7 @@
     if (state.running) {
       state.raf = global.requestAnimationFrame(step);
     } else {
-      writeReceipt("DRAWN_PAUSED");
-    }
-  }
-
-  function applyMotionToSurface() {
-    if (state.frame) {
-      state.frame.style.setProperty("--dgb-body-zoom", String(state.zoom / 100));
-      state.frame.style.setProperty("--dgb-body-rotation", `${state.rotation}deg`);
-      state.frame.style.setProperty("--dgb-image-scale", state.body === "sun" ? "1.16" : "1");
-    }
-
-    if (state.mount) {
-      state.mount.dataset.activeBody = state.body;
-      state.mount.dataset.instrumentBoundary = "real-image-render-only";
-      state.mount.dataset.visualPassClaimed = "false";
+      drawOnce();
     }
   }
 
@@ -461,15 +533,15 @@
       status: status || "READY",
       version: VERSION,
       route: ROUTE,
-      instrumentBoundary: "real-image-render-only",
-      sourceClass: "NASA_BLUE_MARBLE_SDO_LRO",
+      instrumentBoundary: "axis-globe-render-only",
+      sourceClass: "REAL_IMAGE_TEXTURE_SPHERICAL_PROJECTION",
       activeBody: state.body,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
-      loadedTexture: state.loadedTexture,
+      axialTilt: bodyTilt(state.body),
       ownsBodyRender: true,
       ownsRouteLabel: false,
       ownsRouteDescription: false,
@@ -484,8 +556,9 @@
     if (state.mount) {
       state.mount.dataset.instrumentReceipt = status || "READY";
       state.mount.dataset.activeBody = state.body;
-      state.mount.dataset.instrumentBoundary = "real-image-render-only";
+      state.mount.dataset.instrumentBoundary = "axis-globe-render-only";
       state.mount.dataset.textureAuthority = "real-source-imagery";
+      state.mount.dataset.projection = "spherical-axis";
       state.mount.dataset.visualPassClaimed = "false";
     }
 
@@ -496,17 +569,16 @@
     try {
       applyOptions(options);
 
-      if (!ensureSurface(target || options)) {
+      if (!ensureCanvas(target || options)) {
         return {
           ok: false,
           status: "HOLD_NO_MOUNT",
           version: VERSION,
-          instrumentBoundary: "real-image-render-only"
+          instrumentBoundary: "axis-globe-render-only"
         };
       }
 
-      setTextureForBody(state.body, false);
-      applyMotionToSurface();
+      loadTexture(state.body);
       startLoop();
 
       return writeReceipt("MOUNTED");
@@ -518,7 +590,7 @@
         status: "HOLD_EXCEPTION",
         version: VERSION,
         error: state.lastError,
-        instrumentBoundary: "real-image-render-only"
+        instrumentBoundary: "axis-globe-render-only"
       };
     }
   }
@@ -539,8 +611,7 @@
     state.body = normalizeBody(value);
 
     if (state.mount) {
-      setTextureForBody(state.body, true);
-      applyMotionToSurface();
+      loadTexture(state.body);
       startLoop();
     }
 
@@ -551,8 +622,7 @@
     applyOptions(options);
 
     if (state.mount) {
-      setTextureForBody(state.body, false);
-      applyMotionToSurface();
+      loadTexture(state.body);
       startLoop();
     }
 
@@ -580,8 +650,8 @@
   function pause() {
     state.running = false;
     stopLoop();
-    writeReceipt("PAUSED");
-    return state.lastReceipt;
+    drawOnce();
+    return writeReceipt("PAUSED");
   }
 
   function reset() {
@@ -590,13 +660,8 @@
     state.speedName = "normal";
     state.speedValue = speedValues.normal;
     state.zoom = 100;
-    state.rotation = 0;
-
-    if (state.mount) {
-      applyMotionToSurface();
-      startLoop();
-    }
-
+    state.longitude = 0;
+    startLoop();
     return writeReceipt("RESET");
   }
 
@@ -629,7 +694,7 @@
       state.zoom = normalizeZoom(value);
     }
 
-    applyMotionToSurface();
+    drawOnce();
     return writeReceipt("ZOOM_UPDATED");
   }
 
@@ -642,17 +707,17 @@
       ok: true,
       version: VERSION,
       route: ROUTE,
-      instrumentBoundary: "real-image-render-only",
-      sourceClass: "NASA_BLUE_MARBLE_SDO_LRO",
+      instrumentBoundary: "axis-globe-render-only",
+      sourceClass: "REAL_IMAGE_TEXTURE_SPHERICAL_PROJECTION",
       activeBody: state.body,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
+      axialTilt: bodyTilt(state.body),
       mountPresent: Boolean(state.mount),
-      imagePresent: Boolean(state.image),
-      loadedTexture: state.loadedTexture,
+      canvasPresent: Boolean(state.canvas),
       lastReceipt: state.lastReceipt,
       lastError: state.lastError,
       ownsBodyRender: true,
@@ -687,7 +752,7 @@
         detail: getStatus()
       }));
 
-      global.dispatchEvent(new CustomEvent("dgb:showroom:actual-bodies-real-image-renewed", {
+      global.dispatchEvent(new CustomEvent("dgb:showroom:actual-bodies-axis-globe-renewed", {
         detail: getStatus()
       }));
     } catch (_) {}
@@ -743,5 +808,10 @@
     } else {
       boot();
     }
+
+    global.addEventListener("resize", function handleWindowResize() {
+      resizeCanvas();
+      drawOnce();
+    }, { passive: true });
   }
 })(typeof window !== "undefined" ? window : globalThis);

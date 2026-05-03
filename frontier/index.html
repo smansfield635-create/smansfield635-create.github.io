@@ -3,8 +3,8 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-version="G1-V13"
-  data-contract="FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_TNT_v1"
+  data-version="G1-V14"
+  data-contract="FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_SIZE_REDUCTION_TNT_v1"
   data-status="active"
   data-parent="/explore/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -14,8 +14,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Frontier · Floating Diamond Field</title>
-  <meta name="description" content="Frontier carries the expansion edge through eleven floating diamond lanes, with Vision unified as distant and not-so-distant future.">
+  <title>Diamond Gate Bridge · Frontier · Reduced Floating Diamond Field</title>
+  <meta name="description" content="Frontier carries the expansion edge through eleven reduced floating diamond lanes, with Vision unified as distant and not-so-distant future.">
 
   <style>
     :root {
@@ -29,6 +29,11 @@
       --muted:rgba(226,235,255,.76);
       --faint:rgba(226,235,255,.52);
       --max:1180px;
+
+      /* 80% reduction = 20% of prior diamond geometry */
+      --laneDiamond:clamp(1.54rem,3.2vw,2.25rem);
+      --centerDiamond:clamp(2rem,4.4vw,3rem);
+      --controlDiamond:clamp(1.2rem,2.4vw,1.65rem);
     }
 
     * { box-sizing:border-box; }
@@ -267,13 +272,13 @@
 
     .field-card {
       position:relative;
-      min-height:clamp(54rem,96vw,72rem);
+      min-height:clamp(38rem,72vw,50rem);
       padding:clamp(1rem,3vw,2rem);
     }
 
     .field {
       position:relative;
-      min-height:clamp(50rem,90vw,68rem);
+      min-height:clamp(34rem,66vw,46rem);
       border:1px solid rgba(242,199,111,.18);
       border-radius:clamp(1.25rem,5vw,2rem);
       background:
@@ -288,14 +293,14 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(24rem,70vw,48rem);
-      height:clamp(24rem,70vw,48rem);
+      width:clamp(20rem,54vw,36rem);
+      height:clamp(20rem,54vw,36rem);
       border:1px solid rgba(139,200,255,.12);
       border-radius:50%;
       transform:translate(-50%,-50%);
       box-shadow:
-        0 0 0 clamp(5rem,12vw,8rem) rgba(139,200,255,.035),
-        0 0 0 clamp(10rem,22vw,16rem) rgba(242,199,111,.025);
+        0 0 0 clamp(4rem,10vw,7rem) rgba(139,200,255,.035),
+        0 0 0 clamp(8rem,18vw,13rem) rgba(242,199,111,.025);
       animation:fieldPulse 10s ease-in-out infinite;
     }
 
@@ -309,8 +314,8 @@
       background:linear-gradient(180deg, transparent, rgba(242,199,111,.22), transparent);
       transform:translate(-50%,-50%);
       box-shadow:
-        clamp(-22rem,-34vw,-10rem) 0 0 rgba(139,200,255,.14),
-        clamp(10rem,34vw,22rem) 0 0 rgba(139,200,255,.14);
+        clamp(-20rem,-30vw,-9rem) 0 0 rgba(139,200,255,.14),
+        clamp(9rem,30vw,20rem) 0 0 rgba(139,200,255,.14);
       opacity:.78;
     }
 
@@ -325,164 +330,182 @@
       pointer-events:none;
     }
 
-    .north { left:50%; top:2.25rem; transform:translateX(-50%); }
-    .south { left:50%; bottom:2.25rem; transform:translateX(-50%); }
-    .west { left:2.25rem; top:50%; transform:translateY(-50%); }
-    .east { right:2.25rem; top:50%; transform:translateY(-50%); }
+    .north { left:50%; top:1.65rem; transform:translateX(-50%); }
+    .south { left:50%; bottom:1.65rem; transform:translateX(-50%); }
+    .west { left:1.65rem; top:50%; transform:translateY(-50%); }
+    .east { right:1.65rem; top:50%; transform:translateY(-50%); }
 
-    .diamond-node {
+    .node {
       position:absolute;
       z-index:7;
-      width:clamp(7.7rem,16vw,11.25rem);
-      height:clamp(7.7rem,16vw,11.25rem);
+      width:6.2rem;
+      min-height:4.7rem;
       display:grid;
       place-items:center;
+      gap:.34rem;
+      text-align:center;
+      transform:translate(-50%,-50%);
+      animation:nodeFloat 7.8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .node a,
+    .node .node-static {
+      display:grid;
+      place-items:center;
+      gap:.34rem;
+      width:100%;
+      min-height:4.7rem;
+    }
+
+    .diamond {
+      width:var(--laneDiamond);
+      height:var(--laneDiamond);
       border:1px solid rgba(139,200,255,.24);
-      border-radius:1.55rem;
+      border-radius:.36rem;
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.12), transparent 42%),
         radial-gradient(circle at 50% 72%, rgba(242,199,111,.10), transparent 58%),
         linear-gradient(145deg, rgba(50,58,96,.78), rgba(9,14,28,.96));
       box-shadow:
-        0 1.2rem 3rem rgba(0,0,0,.40),
-        0 0 1.2rem rgba(139,200,255,.10),
+        0 .35rem .9rem rgba(0,0,0,.36),
+        0 0 .45rem rgba(139,200,255,.10),
         inset 0 1px 0 rgba(255,255,255,.10);
-      transform:translate(-50%,-50%) rotate(45deg);
-      transform-origin:center;
-      animation:nodeFloat 7.8s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
-      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      transform:rotate(45deg);
+      position:relative;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
     }
 
-    .diamond-node::before {
+    .diamond::before {
       content:"";
       position:absolute;
       inset:15%;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1rem;
+      border-radius:.24rem;
       background:
         linear-gradient(90deg, transparent 49%, rgba(255,255,255,.14) 50%, transparent 51%),
         linear-gradient(0deg, transparent 49%, rgba(255,255,255,.10) 50%, transparent 51%);
       pointer-events:none;
     }
 
-    .diamond-node::after {
+    .diamond::after {
       content:"";
       position:absolute;
       inset:27%;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:.85rem;
+      border-radius:.2rem;
       pointer-events:none;
     }
 
-    .diamond-node:hover,
-    .diamond-node:focus {
+    .node:hover .diamond,
+    .node:focus-within .diamond {
       border-color:rgba(242,199,111,.78);
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.16), transparent 42%),
         radial-gradient(circle at 50% 72%, rgba(242,199,111,.18), transparent 58%),
         linear-gradient(145deg, rgba(72,63,112,.82), rgba(10,15,29,.98));
       box-shadow:
-        0 1.4rem 3.4rem rgba(0,0,0,.42),
-        0 0 2rem rgba(242,199,111,.22),
+        0 .42rem 1rem rgba(0,0,0,.42),
+        0 0 .72rem rgba(242,199,111,.24),
         inset 0 1px 0 rgba(255,255,255,.12);
-      outline:none;
+      transform:rotate(45deg) scale(1.08);
     }
 
-    .diamond-node span {
-      position:relative;
-      z-index:2;
-      transform:rotate(-45deg);
-      display:grid;
-      gap:.18rem;
-      text-align:center;
-      padding:.5rem;
-    }
-
-    .diamond-node strong {
+    .node strong {
+      display:block;
       color:rgba(255,241,205,.98);
-      font-size:.76rem;
+      font-size:.72rem;
       font-weight:950;
       line-height:1.05;
       letter-spacing:.08em;
       text-transform:uppercase;
+      text-shadow:0 .1rem .4rem rgba(0,0,0,.7);
     }
 
-    .diamond-node small {
+    .node small {
+      display:block;
       color:rgba(226,235,255,.72);
-      font-size:.58rem;
+      font-size:.54rem;
       font-weight:850;
       line-height:1.05;
       letter-spacing:.08em;
       text-transform:uppercase;
+      text-shadow:0 .1rem .4rem rgba(0,0,0,.7);
     }
 
-    .diamond-node.center {
-      left:50%;
-      top:50%;
+    .node.center {
       z-index:8;
-      width:clamp(10rem,22vw,15rem);
-      height:clamp(10rem,22vw,15rem);
+      width:7.8rem;
+      min-height:5.5rem;
+      animation:centerFloat 7.2s ease-in-out infinite;
+    }
+
+    .node.center .diamond {
+      width:var(--centerDiamond);
+      height:var(--centerDiamond);
       border-color:rgba(242,199,111,.42);
+      border-radius:.44rem;
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.14), transparent 42%),
         radial-gradient(circle at 50% 72%, rgba(242,199,111,.18), transparent 58%),
         linear-gradient(145deg, rgba(38,42,70,.92), rgba(7,12,24,.98));
       box-shadow:
-        0 1.6rem 4.2rem rgba(0,0,0,.44),
-        0 0 2.2rem rgba(242,199,111,.14),
+        0 .5rem 1.2rem rgba(0,0,0,.42),
+        0 0 .8rem rgba(242,199,111,.18),
         inset 0 1px 0 rgba(255,255,255,.10);
-      animation:centerFloat 7.2s ease-in-out infinite;
     }
 
-    .diamond-node.center strong { font-size:1.05rem; }
-    .diamond-node.center small { font-size:.72rem; }
+    .node.center strong { font-size:.84rem; }
+    .node.center small { font-size:.62rem; }
 
-    .diamond-node.control {
+    .node.control {
       z-index:9;
-      width:clamp(6rem,12vw,8.25rem);
-      height:clamp(6rem,12vw,8.25rem);
+      width:5.7rem;
+      min-height:4.4rem;
+    }
+
+    .node.control .diamond {
+      width:var(--controlDiamond);
+      height:var(--controlDiamond);
       border-color:rgba(242,199,111,.50);
+      border-radius:.3rem;
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.14), transparent 42%),
         radial-gradient(circle at 50% 72%, rgba(242,199,111,.16), transparent 58%),
         linear-gradient(145deg, rgba(30,35,50,.94), rgba(7,11,22,.98));
-      box-shadow:
-        0 1.2rem 3rem rgba(0,0,0,.42),
-        0 0 1.7rem rgba(242,199,111,.16);
     }
 
-    .diamond-node.control strong { font-size:.72rem; }
-    .diamond-node.control small { font-size:.54rem; }
+    .node.control strong { font-size:.62rem; }
+    .node.control small { font-size:.48rem; }
 
-    .diamond-node.vision {
+    .node.vision .diamond {
       border-color:rgba(242,199,111,.82);
       background:
         radial-gradient(circle at 50% 24%, rgba(255,255,255,.15), transparent 42%),
         radial-gradient(circle at 50% 72%, rgba(242,199,111,.22), transparent 58%),
         linear-gradient(145deg, rgba(76,59,116,.86), rgba(12,16,31,.98));
       box-shadow:
-        0 1.3rem 3.4rem rgba(0,0,0,.42),
-        0 0 2.1rem rgba(242,199,111,.20);
+        0 .44rem 1rem rgba(0,0,0,.42),
+        0 0 .82rem rgba(242,199,111,.22);
     }
 
-    .hub    { left:50%; top:8%; }
-    .map    { left:17%; top:22%; }
-    .bound  { left:83%; top:22%; }
-    .proof  { left:17%; top:78%; }
-    .return { left:83%; top:78%; }
+    .hub    { left:50%; top:7%; }
+    .map    { left:18%; top:18%; }
+    .bound  { left:82%; top:18%; }
+    .proof  { left:18%; top:82%; }
+    .return { left:82%; top:82%; }
 
-    .closed { left:50%; top:22%; }
-    .energy { left:70%; top:32%; }
-    .infra  { left:77%; top:50%; }
-    .lattice{ left:70%; top:68%; }
-    .manual { left:50%; top:78%; }
-    .shimmer{ left:30%; top:68%; }
-    .traj   { left:23%; top:50%; }
-    .urban  { left:30%; top:32%; }
+    .closed { left:50%; top:18%; }
+    .energy { left:73%; top:31%; }
+    .infra  { left:82%; top:50%; }
+    .lattice{ left:73%; top:69%; }
+    .manual { left:50%; top:82%; }
+    .shimmer{ left:27%; top:69%; }
+    .traj   { left:18%; top:50%; }
+    .urban  { left:27%; top:31%; }
     .vision { left:50%; top:36%; }
-    .waste  { left:39%; top:60%; }
-    .water  { left:61%; top:60%; }
+    .waste  { left:39%; top:64%; }
+    .water  { left:61%; top:64%; }
 
     .return-row {
       margin-top:.5rem;
@@ -528,86 +551,99 @@
     }
 
     @keyframes nodeFloat {
-      0%,100% { transform:translate(-50%,-50%) rotate(45deg) translateY(0); }
-      50% { transform:translate(-50%,-50%) rotate(45deg) translateY(-.55rem); }
+      0%,100% { transform:translate(-50%,-50%) translateY(0); }
+      50% { transform:translate(-50%,-50%) translateY(-.42rem); }
     }
 
     @keyframes centerFloat {
-      0%,100% { transform:translate(-50%,-50%) rotate(45deg) scale(1); }
-      50% { transform:translate(-50%,-50%) rotate(45deg) scale(1.035); }
+      0%,100% { transform:translate(-50%,-50%) scale(1); }
+      50% { transform:translate(-50%,-50%) scale(1.035); }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .hero::after,
       .field::before,
-      .diamond-node {
+      .node {
         animation:none !important;
       }
     }
 
     @media (max-width:760px) {
+      :root {
+        --laneDiamond:1.42rem;
+        --centerDiamond:1.76rem;
+        --controlDiamond:1.12rem;
+      }
+
       .field-card {
-        min-height:72rem;
+        min-height:42rem;
       }
 
       .field {
-        min-height:68rem;
+        min-height:38rem;
       }
 
-      .diamond-node {
-        width:7.1rem;
-        height:7.1rem;
-        border-radius:1.25rem;
+      .node {
+        width:4.6rem;
+        min-height:3.7rem;
       }
 
-      .diamond-node strong {
-        font-size:.64rem;
+      .node strong {
+        font-size:.52rem;
       }
 
-      .diamond-node small {
-        font-size:.5rem;
+      .node small {
+        font-size:.4rem;
       }
 
-      .diamond-node.center {
-        width:8.8rem;
-        height:8.8rem;
+      .node.center {
+        width:5.8rem;
+        min-height:4.2rem;
       }
 
-      .diamond-node.center strong {
-        font-size:.82rem;
+      .node.center strong {
+        font-size:.62rem;
       }
 
-      .diamond-node.center small {
-        font-size:.58rem;
+      .node.center small {
+        font-size:.46rem;
       }
 
-      .diamond-node.control {
-        width:5.6rem;
-        height:5.6rem;
+      .node.control {
+        width:4.5rem;
+        min-height:3.5rem;
       }
 
-      .north { top:1.4rem; }
-      .south { bottom:1.4rem; }
-      .west { left:1.4rem; }
-      .east { right:1.4rem; }
+      .node.control strong {
+        font-size:.48rem;
+      }
+
+      .node.control small {
+        font-size:.38rem;
+      }
+
+      .north { top:1.1rem; }
+      .south { bottom:1.1rem; }
+      .west { left:1.1rem; }
+      .east { right:1.1rem; }
 
       .hub    { left:50%; top:7%; }
-      .map    { left:21%; top:17%; }
-      .bound  { left:79%; top:17%; }
-      .proof  { left:21%; top:83%; }
-      .return { left:79%; top:83%; }
+      .map    { left:22%; top:16%; }
+      .bound  { left:78%; top:16%; }
+      .proof  { left:22%; top:84%; }
+      .return { left:78%; top:84%; }
 
-      .closed { left:50%; top:21%; }
+      .closed { left:50%; top:20%; }
       .energy { left:76%; top:32%; }
-      .infra  { left:76%; top:47%; }
-      .lattice{ left:76%; top:62%; }
-      .manual { left:50%; top:75%; }
-      .shimmer{ left:24%; top:62%; }
-      .traj   { left:24%; top:47%; }
+      .infra  { left:78%; top:48%; }
+      .lattice{ left:76%; top:64%; }
+      .manual { left:50%; top:78%; }
+      .shimmer{ left:24%; top:64%; }
+      .traj   { left:22%; top:48%; }
       .urban  { left:24%; top:32%; }
-      .vision { left:50%; top:34%; }
-      .waste  { left:38%; top:61%; }
-      .water  { left:62%; top:61%; }
+      .vision { left:50%; top:35%; }
+      .waste  { left:39%; top:63%; }
+      .water  { left:61%; top:63%; }
     }
   </style>
 </head>
@@ -641,11 +677,11 @@
 
     <main id="frontier-main">
       <section class="card hero">
-        <div class="kicker">Frontier · Floating Diamond Field</div>
+        <div class="kicker">Frontier · Reduced Floating Diamond Field</div>
         <h1>One edge. Eleven lanes.</h1>
         <h2>“The unknown still needs a parent map.”</h2>
         <p>
-          Frontier carries expansion without detaching from the Manor. The lanes float at the edge, while Map, Boundary, Proof, and Return keep the field attached.
+          Frontier carries expansion without detaching from the Manor. The visible diamond geometry is reduced by 80%, while the labels remain readable and the route field stays active.
         </p>
 
         <div class="cta-row">
@@ -657,7 +693,7 @@
 
       <section class="card section" aria-labelledby="field-title">
         <div class="kicker">Eleven Frontier Lanes</div>
-        <h2 id="field-title">Floating route diamonds. Four control diamonds. One edge.</h2>
+        <h2 id="field-title">Reduced floating diamonds. Four controls. One edge.</h2>
 
         <div class="field-card">
           <div class="field" aria-label="Frontier floating diamond field">
@@ -666,73 +702,124 @@
             <div class="compass-letter east">E</div>
             <div class="compass-letter south">S</div>
 
-            <a class="diamond-node control hub" style="--delay:.1s" href="/" aria-label="Hub">
-              <span><strong>Hub</strong><small>Root</small></span>
-            </a>
-
-            <a class="diamond-node control map" style="--delay:.25s" href="/explore/" aria-label="Map">
-              <span><strong>Map</strong><small>Manor</small></span>
-            </a>
-
-            <a class="diamond-node control bound" style="--delay:.4s" href="/laws/" aria-label="Boundary">
-              <span><strong>Boundary</strong><small>Laws</small></span>
-            </a>
-
-            <a class="diamond-node control proof" style="--delay:.55s" href="/gauges/" aria-label="Proof">
-              <span><strong>Proof</strong><small>Gauges</small></span>
-            </a>
-
-            <a class="diamond-node control return" style="--delay:.7s" href="/explore/" aria-label="Return">
-              <span><strong>Return</strong><small>Manor</small></span>
-            </a>
-
-            <div class="diamond-node center" aria-hidden="true">
-              <span><strong>Frontier</strong><small>Edge</small></span>
+            <div class="node control hub" style="--delay:.1s">
+              <a href="/" aria-label="Hub">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Hub</strong><small>Root</small></span>
+              </a>
             </div>
 
-            <a class="diamond-node closed" style="--delay:.85s" href="/explore/frontier/closed-loop/">
-              <span><strong>Closed Loop</strong><small>Feedback</small></span>
-            </a>
+            <div class="node control map" style="--delay:.25s">
+              <a href="/explore/" aria-label="Map">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Map</strong><small>Manor</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node energy" style="--delay:1s" href="/explore/frontier/energy/">
-              <span><strong>Energy</strong><small>Power</small></span>
-            </a>
+            <div class="node control bound" style="--delay:.4s">
+              <a href="/laws/" aria-label="Boundary">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Boundary</strong><small>Laws</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node infra" style="--delay:1.15s" href="/explore/frontier/infrastructure/">
-              <span><strong>Infrastructure</strong><small>Support</small></span>
-            </a>
+            <div class="node control proof" style="--delay:.55s">
+              <a href="/gauges/" aria-label="Proof">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Proof</strong><small>Gauges</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node lattice" style="--delay:1.3s" href="/explore/frontier/lattice/">
-              <span><strong>Lattice</strong><small>Grid</small></span>
-            </a>
+            <div class="node control return" style="--delay:.7s">
+              <a href="/explore/" aria-label="Return">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Return</strong><small>Manor</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node manual" style="--delay:1.45s" href="/explore/frontier/manual/">
-              <span><strong>Manual</strong><small>Guide</small></span>
-            </a>
+            <div class="node center">
+              <div class="node-static" aria-hidden="true">
+                <span class="diamond"></span>
+                <span><strong>Frontier</strong><small>Edge</small></span>
+              </div>
+            </div>
 
-            <a class="diamond-node shimmer" style="--delay:1.6s" href="/explore/frontier/shimmer/">
-              <span><strong>Shimmer</strong><small>Signal</small></span>
-            </a>
+            <div class="node closed" style="--delay:.85s">
+              <a href="/explore/frontier/closed-loop/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Closed Loop</strong><small>Feedback</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node traj" style="--delay:1.75s" href="/explore/frontier/trajectory/">
-              <span><strong>Trajectory</strong><small>Motion</small></span>
-            </a>
+            <div class="node energy" style="--delay:1s">
+              <a href="/explore/frontier/energy/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Energy</strong><small>Power</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node urban" style="--delay:1.9s" href="/explore/frontier/urban/">
-              <span><strong>Urban</strong><small>City</small></span>
-            </a>
+            <div class="node infra" style="--delay:1.15s">
+              <a href="/explore/frontier/infrastructure/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Infrastructure</strong><small>Support</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node vision" style="--delay:2.05s" href="/explore/frontier/vision/">
-              <span><strong>Vision</strong><small>Future</small></span>
-            </a>
+            <div class="node lattice" style="--delay:1.3s">
+              <a href="/explore/frontier/lattice/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Lattice</strong><small>Grid</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node waste" style="--delay:2.2s" href="/explore/frontier/waste/">
-              <span><strong>Waste</strong><small>Reuse</small></span>
-            </a>
+            <div class="node manual" style="--delay:1.45s">
+              <a href="/explore/frontier/manual/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Manual</strong><small>Guide</small></span>
+              </a>
+            </div>
 
-            <a class="diamond-node water" style="--delay:2.35s" href="/explore/frontier/water/">
-              <span><strong>Water</strong><small>Flow</small></span>
-            </a>
+            <div class="node shimmer" style="--delay:1.6s">
+              <a href="/explore/frontier/shimmer/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Shimmer</strong><small>Signal</small></span>
+              </a>
+            </div>
+
+            <div class="node traj" style="--delay:1.75s">
+              <a href="/explore/frontier/trajectory/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Trajectory</strong><small>Motion</small></span>
+              </a>
+            </div>
+
+            <div class="node urban" style="--delay:1.9s">
+              <a href="/explore/frontier/urban/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Urban</strong><small>City</small></span>
+              </a>
+            </div>
+
+            <div class="node vision" style="--delay:2.05s">
+              <a href="/explore/frontier/vision/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Vision</strong><small>Future</small></span>
+              </a>
+            </div>
+
+            <div class="node waste" style="--delay:2.2s">
+              <a href="/explore/frontier/waste/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Waste</strong><small>Reuse</small></span>
+              </a>
+            </div>
+
+            <div class="node water" style="--delay:2.35s">
+              <a href="/explore/frontier/water/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span><strong>Water</strong><small>Flow</small></span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -754,13 +841,15 @@
 
       <details class="card receipt" open>
         <summary>Route receipt</summary>
-        <pre>FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_TNT_v1
+        <pre>FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_SIZE_REDUCTION_TNT_v1
 route=/frontier/
 page=frontier
 role=expansion_edge
 message=one_edge_eleven_lanes
 center=frontier_edge
-design_object=floating_11_lane_diamond_field
+design_object=reduced_floating_11_lane_diamond_field
+diamond_size_rule=visible_diamond_geometry_reduced_by_80_percent
+diamond_resulting_scale=20_percent_of_previous_width_and_height
 control_diamonds=hub,map,boundary,proof,return
 foreground_core=map,boundary,proof,return
 background_lanes=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
@@ -770,7 +859,7 @@ parent_route=/explore/
 boundary_route=/laws/
 proof_route=/gauges/
 return_route=/explore/
-route_owns=frontier_root,expansion_edge,11_lane_links,floating_diamond_field,control_diamonds,return_routes,receipt
+route_owns=frontier_root,expansion_edge,11_lane_links,reduced_floating_diamond_field,control_diamonds,return_routes,receipt
 route_does_not_own=frontier_lane_pages,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -783,7 +872,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_TNT_v1 · Frontier · Floating Diamond Edge · Eleven Lanes.
+      FRONTIER_11_LANE_FLOATING_DIAMOND_FIELD_SIZE_REDUCTION_TNT_v1 · Frontier · Reduced Floating Diamond Edge · Eleven Lanes.
     </footer>
   </div>
 </body>

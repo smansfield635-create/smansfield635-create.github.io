@@ -1,63 +1,94 @@
 /*!
-  SHOWROOM_GLOBE_RENDER_REAL_BODY_4K_RENEWAL_v1
+  SHOWROOM_GLOBE_RENDER_TRUE_WEBGL_SPHERE_RENEWAL_v2
   Target: /assets/showroom.globe.render.js
   Scope: render-owned celestial bodies only.
-  Route controls and instrument state remain external authority.
+  Purpose: remove side-collapse by rendering Earth/Moon/Sun as real sphere geometry.
 */
 (function () {
   'use strict';
 
-  var VERSION = 'SHOWROOM_GLOBE_RENDER_REAL_BODY_4K_RENEWAL_v1';
+  var VERSION = 'SHOWROOM_GLOBE_RENDER_TRUE_WEBGL_SPHERE_RENEWAL_v2';
 
   var BODY = {
     earth: {
-      name: 'earth',
+      key: 'earth',
       title: 'EARTH',
-      kind: 'equirect',
       texture: 'https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg',
-      rotationSeed: 0.59,
-      speed: 0.0000038,
-      radiusScale: 0.445,
-      rim: 'rgba(168, 224, 235, 0.55)',
-      rimSoft: 'rgba(168, 224, 235, 0.16)',
-      lift: 1.035,
-      contrast: 1.08,
+      radius: 1.0,
+      rotation: 0.0,
+      speed: 0.00018,
+      light: [0.42, 0.18, 0.88],
+      ambient: 0.36,
+      diffuse: 0.82,
+      rim: [0.45, 0.78, 0.9],
+      rimPower: 2.15,
+      rimStrength: 0.22,
+      exposure: 1.0,
       saturation: 1.06,
-      shadow: 0.42,
-      shine: 0.22
+      emissive: 0.0
     },
     sun: {
-      name: 'sun',
+      key: 'sun',
       title: 'SUN',
-      kind: 'disk',
       texture: 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_2048_0171.jpg',
-      rotationSeed: 0,
-      speed: 0.0000012,
-      radiusScale: 0.448,
-      crop: { x: 0.075, y: 0.075, w: 0.85, h: 0.85 },
-      rim: 'rgba(255, 224, 109, 0.82)',
-      rimSoft: 'rgba(255, 182, 35, 0.24)',
-      lift: 1.02,
-      contrast: 1.16,
-      saturation: 1.08,
-      corona: 0.88
+      radius: 1.0,
+      rotation: 0.0,
+      speed: 0.00008,
+      light: [0.0, 0.0, 1.0],
+      ambient: 1.0,
+      diffuse: 0.0,
+      rim: [1.0, 0.72, 0.16],
+      rimPower: 1.4,
+      rimStrength: 0.38,
+      exposure: 1.22,
+      saturation: 1.18,
+      emissive: 1.0
     },
     moon: {
-      name: 'moon',
+      key: 'moon',
       title: 'MOON',
-      kind: 'equirect',
       texture: 'https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/moon.8192.jpg',
-      rotationSeed: 0.21,
-      speed: 0.0000011,
-      radiusScale: 0.445,
-      rim: 'rgba(231, 227, 211, 0.44)',
-      rimSoft: 'rgba(231, 227, 211, 0.12)',
-      lift: 0.98,
-      contrast: 1.18,
-      saturation: 0.82,
-      shadow: 0.34,
-      shine: 0.16
+      radius: 1.0,
+      rotation: 0.0,
+      speed: 0.00007,
+      light: [0.34, 0.22, 0.91],
+      ambient: 0.42,
+      diffuse: 0.72,
+      rim: [0.82, 0.80, 0.72],
+      rimPower: 2.35,
+      rimStrength: 0.16,
+      exposure: 0.92,
+      saturation: 0.78,
+      emissive: 0.0
     }
+  };
+
+  var state = {
+    body: 'earth',
+    playing: true,
+    mount: null,
+    titleNode: null,
+    broadMount: false,
+    stage: null,
+    canvas: null,
+    gl: null,
+    program: null,
+    buffers: null,
+    textures: {},
+    textureReady: {},
+    textureFailed: {},
+    uniforms: {},
+    attribs: {},
+    dpr: 1,
+    width: 0,
+    height: 0,
+    angle: {
+      earth: 0,
+      sun: 0,
+      moon: 0
+    },
+    last: 0,
+    raf: 0
   };
 
   var EXACT_MOUNT_SELECTOR = [
@@ -74,27 +105,9 @@
     '.globe-body'
   ].join(',');
 
-  var state = {
-    body: 'earth',
-    playing: true,
-    mount: null,
-    broadMount: false,
-    titleNode: null,
-    stage: null,
-    canvas: null,
-    ctx: null,
-    cssSize: 0,
-    dpr: 1,
-    raf: 0,
-    last: 0,
-    lastDraw: 0,
-    images: {},
-    rotation: {
-      earth: BODY.earth.rotationSeed,
-      sun: BODY.sun.rotationSeed,
-      moon: BODY.moon.rotationSeed
-    }
-  };
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
+  }
 
   function normalizeBody(value) {
     var v = String(value || '').toLowerCase().trim();
@@ -105,17 +118,16 @@
   }
 
   function bodyFromText(value) {
-    var text = String(value || '').replace(/\s+/g, ' ').trim();
-    return normalizeBody(text);
+    return normalizeBody(String(value || '').replace(/\s+/g, ' ').trim());
   }
 
   function installCss() {
-    if (document.getElementById('dgb-real-body-render-css')) return;
+    if (document.getElementById('dgb-true-webgl-sphere-css')) return;
 
     var css = document.createElement('style');
-    css.id = 'dgb-real-body-render-css';
+    css.id = 'dgb-true-webgl-sphere-css';
     css.textContent = [
-      '.dgb-real-body-stage{',
+      '.dgb-true-sphere-stage{',
       '  position:relative;',
       '  width:min(82vw,560px);',
       '  max-width:100%;',
@@ -126,62 +138,59 @@
       '  isolation:isolate;',
       '  contain:layout paint;',
       '}',
-      '.dgb-real-body-stage::before, .dgb-real-body-stage::after{',
+      '.dgb-true-sphere-stage::before,',
+      '.dgb-true-sphere-stage::after{',
       '  content:"";',
       '  position:absolute;',
-      '  inset:3.8%;',
-      '  border-radius:50%;',
       '  pointer-events:none;',
+      '  border-radius:50%;',
       '  z-index:0;',
       '}',
-      '.dgb-real-body-stage::before{',
-      '  border:1px solid rgba(164,190,208,.10);',
-      '  box-shadow:0 0 80px rgba(92,151,190,.08), inset 0 0 52px rgba(0,0,0,.38);',
+      '.dgb-true-sphere-stage::before{',
+      '  inset:3.5%;',
+      '  border:1px solid rgba(166,190,208,.11);',
+      '  box-shadow:0 0 88px rgba(68,140,180,.08), inset 0 0 58px rgba(0,0,0,.42);',
       '}',
-      '.dgb-real-body-stage::after{',
-      '  inset:8%;',
-      '  border:1px solid rgba(164,190,208,.075);',
+      '.dgb-true-sphere-stage::after{',
+      '  inset:9%;',
+      '  border:1px solid rgba(166,190,208,.075);',
       '  transform:rotate(-15deg) scaleX(1.18);',
       '}',
-      '.dgb-real-body-canvas{',
+      '.dgb-true-sphere-canvas{',
       '  position:relative;',
       '  z-index:2;',
       '  width:100%;',
       '  height:100%;',
       '  display:block;',
       '  border-radius:50%;',
-      '  filter:drop-shadow(0 30px 48px rgba(0,0,0,.48));',
+      '  background:transparent;',
+      '  filter:drop-shadow(0 30px 52px rgba(0,0,0,.52));',
       '}',
-      '.dgb-real-body-stage[data-body="sun"] .dgb-real-body-canvas{',
-      '  filter:drop-shadow(0 0 34px rgba(255,190,37,.36)) drop-shadow(0 24px 48px rgba(0,0,0,.42));',
+      '.dgb-true-sphere-stage[data-body="sun"] .dgb-true-sphere-canvas{',
+      '  filter:drop-shadow(0 0 38px rgba(255,192,44,.42)) drop-shadow(0 24px 48px rgba(0,0,0,.44));',
       '}',
-      '.dgb-real-body-stage[data-body="moon"] .dgb-real-body-canvas{',
-      '  filter:drop-shadow(0 24px 44px rgba(0,0,0,.48));',
+      '.dgb-true-sphere-stage[data-body="moon"] .dgb-true-sphere-canvas{',
+      '  filter:drop-shadow(0 24px 46px rgba(0,0,0,.50));',
       '}',
       '@media (max-width:520px){',
-      '  .dgb-real-body-stage{width:min(86vw,430px);}',
-      '}',
-      '@media (prefers-reduced-motion:reduce){',
-      '  .dgb-real-body-stage{animation:none!important;}',
+      '  .dgb-true-sphere-stage{width:min(86vw,430px);}',
       '}'
     ].join('\n');
+
     document.head.appendChild(css);
   }
 
   function findTitleNode(root) {
     var nodes = Array.prototype.slice.call((root || document).querySelectorAll('h1,h2,h3,h4,[data-body-title],.body-title,.globe-title,.celestial-title'));
     for (var i = 0; i < nodes.length; i += 1) {
-      var b = bodyFromText(nodes[i].textContent);
-      if (b) return nodes[i];
+      if (bodyFromText(nodes[i].textContent)) return nodes[i];
     }
     return null;
   }
 
   function findMount() {
     var exact = document.querySelector(EXACT_MOUNT_SELECTOR);
-    if (exact) {
-      return { node: exact, broad: false, title: findTitleNode(exact) };
-    }
+    if (exact) return { node: exact, broad: false, title: findTitleNode(exact) };
 
     var title = findTitleNode(document);
     if (title) {
@@ -189,12 +198,11 @@
       return { node: card || title.parentElement || document.body, broad: true, title: title };
     }
 
-    var main = document.querySelector('main') || document.body;
-    return { node: main, broad: true, title: null };
+    return { node: document.querySelector('main') || document.body, broad: true, title: null };
   }
 
   function hideLegacyMedia() {
-    if (!state.broadMount || !state.mount || !state.stage || !state.titleNode) return;
+    if (!state.broadMount || !state.mount || !state.titleNode || !state.stage) return;
 
     var children = Array.prototype.slice.call(state.mount.children || []);
     var titleIndex = children.indexOf(state.titleNode);
@@ -203,13 +211,14 @@
     for (var i = 0; i < titleIndex; i += 1) {
       var child = children[i];
       if (!child || child === state.stage || child.contains(state.stage)) continue;
-      if (child.classList && child.classList.contains('dgb-real-body-stage')) continue;
+      if (child.classList && child.classList.contains('dgb-true-sphere-stage')) continue;
 
-      var hasBodyMedia = child.matches('canvas,img,svg,video,.body,.planet,.globe,.orb,.sphere,.visual,.globe-visual,.body-visual') ||
+      var hasBodyMedia =
+        child.matches('canvas,img,svg,video,.body,.planet,.globe,.orb,.sphere,.visual,.globe-visual,.body-visual') ||
         child.querySelector('canvas,img,svg,video,.body,.planet,.globe,.orb,.sphere,.visual,.globe-visual,.body-visual');
 
       if (hasBodyMedia) {
-        child.setAttribute('data-dgb-hidden-by-real-body-render', 'true');
+        child.setAttribute('data-dgb-hidden-by-true-webgl-sphere', 'true');
         child.style.display = 'none';
       }
     }
@@ -220,27 +229,28 @@
 
     var found = findMount();
     state.mount = found.node;
-    state.broadMount = found.broad;
     state.titleNode = found.title;
+    state.broadMount = found.broad;
 
     if (!state.mount) return false;
 
-    var existing = state.mount.querySelector('.dgb-real-body-stage');
+    var existing = state.mount.querySelector('.dgb-true-sphere-stage');
     if (existing) {
       state.stage = existing;
       state.canvas = existing.querySelector('canvas');
-      state.ctx = state.canvas && state.canvas.getContext ? state.canvas.getContext('2d', { alpha: true }) : null;
-      return !!state.ctx;
+      return !!state.canvas;
     }
 
     var stage = document.createElement('div');
-    stage.className = 'dgb-real-body-stage';
+    stage.className = 'dgb-true-sphere-stage';
     stage.setAttribute('data-render-authority', 'render-owns-bodies');
     stage.setAttribute('data-render-version', VERSION);
+    stage.setAttribute('data-body-geometry', 'true-webgl-sphere');
 
     var canvas = document.createElement('canvas');
-    canvas.className = 'dgb-real-body-canvas';
+    canvas.className = 'dgb-true-sphere-canvas';
     canvas.setAttribute('aria-hidden', 'true');
+
     stage.appendChild(canvas);
 
     if (state.broadMount && state.titleNode && state.titleNode.parentNode === state.mount) {
@@ -251,278 +261,409 @@
 
     state.stage = stage;
     state.canvas = canvas;
-    state.ctx = canvas.getContext('2d', { alpha: true });
     hideLegacyMedia();
-    return !!state.ctx;
+
+    return true;
   }
 
-  function imageRecord(name) {
-    var cfg = BODY[name] || BODY.earth;
-    if (state.images[name]) return state.images[name];
+  function createShader(gl, type, source) {
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
 
-    var record = { img: new Image(), ready: false, failed: false, promise: null };
-    record.img.decoding = 'async';
-    record.img.referrerPolicy = 'no-referrer';
-    record.promise = new Promise(function (resolve) {
-      record.img.onload = function () {
-        record.ready = true;
-        resolve(record);
-      };
-      record.img.onerror = function () {
-        record.failed = true;
-        resolve(record);
-      };
-    });
-    record.img.src = cfg.texture;
-    state.images[name] = record;
-    return record;
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(shader) || 'Shader compile failed');
+    }
+
+    return shader;
   }
 
-  function resizeCanvas() {
-    if (!state.stage || !state.canvas || !state.ctx) return false;
+  function createProgram(gl, vertexSource, fragmentSource) {
+    var vertex = createShader(gl, gl.VERTEX_SHADER, vertexSource);
+    var fragment = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+    var program = gl.createProgram();
+
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, fragment);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(program) || 'Program link failed');
+    }
+
+    gl.deleteShader(vertex);
+    gl.deleteShader(fragment);
+
+    return program;
+  }
+
+  function makeSphere(segments, rings) {
+    var positions = [];
+    var normals = [];
+    var uvs = [];
+    var indices = [];
+
+    for (var y = 0; y <= rings; y += 1) {
+      var v = y / rings;
+      var theta = v * Math.PI;
+      var sinTheta = Math.sin(theta);
+      var cosTheta = Math.cos(theta);
+
+      for (var x = 0; x <= segments; x += 1) {
+        var u = x / segments;
+        var phi = u * Math.PI * 2;
+
+        var px = Math.sin(phi) * sinTheta;
+        var py = Math.cos(theta);
+        var pz = Math.cos(phi) * sinTheta;
+
+        positions.push(px, py, pz);
+        normals.push(px, py, pz);
+        uvs.push(u, v);
+      }
+    }
+
+    for (var yy = 0; yy < rings; yy += 1) {
+      for (var xx = 0; xx < segments; xx += 1) {
+        var a = yy * (segments + 1) + xx;
+        var b = a + segments + 1;
+
+        indices.push(a, b, a + 1);
+        indices.push(b, b + 1, a + 1);
+      }
+    }
+
+    return {
+      positions: new Float32Array(positions),
+      normals: new Float32Array(normals),
+      uvs: new Float32Array(uvs),
+      indices: new Uint16Array(indices)
+    };
+  }
+
+  function identity() {
+    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  }
+
+  function perspective(fovy, aspect, near, far) {
+    var f = 1 / Math.tan(fovy / 2);
+    var nf = 1 / (near - far);
+
+    return [
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (far + near) * nf, -1,
+      0, 0, (2 * far * near) * nf, 0
+    ];
+  }
+
+  function translate(m, x, y, z) {
+    var out = m.slice();
+    out[12] = m[0] * x + m[4] * y + m[8] * z + m[12];
+    out[13] = m[1] * x + m[5] * y + m[9] * z + m[13];
+    out[14] = m[2] * x + m[6] * y + m[10] * z + m[14];
+    out[15] = m[3] * x + m[7] * y + m[11] * z + m[15];
+    return out;
+  }
+
+  function rotateY(m, angle) {
+    var c = Math.cos(angle);
+    var s = Math.sin(angle);
+
+    return [
+      m[0] * c + m[8] * s, m[1] * c + m[9] * s, m[2] * c + m[10] * s, m[3] * c + m[11] * s,
+      m[4], m[5], m[6], m[7],
+      m[8] * c - m[0] * s, m[9] * c - m[1] * s, m[10] * c - m[2] * s, m[11] * c - m[3] * s,
+      m[12], m[13], m[14], m[15]
+    ];
+  }
+
+  function rotateX(m, angle) {
+    var c = Math.cos(angle);
+    var s = Math.sin(angle);
+
+    return [
+      m[0], m[1], m[2], m[3],
+      m[4] * c + m[8] * s, m[5] * c + m[9] * s, m[6] * c + m[10] * s, m[7] * c + m[11] * s,
+      m[8] * c - m[4] * s, m[9] * c - m[5] * s, m[10] * c - m[6] * s, m[11] * c - m[7] * s,
+      m[12], m[13], m[14], m[15]
+    ];
+  }
+
+  function initWebGL() {
+    if (state.gl) return true;
+    if (!ensureStage()) return false;
+
+    var gl =
+      state.canvas.getContext('webgl', {
+        alpha: true,
+        antialias: true,
+        depth: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false
+      }) ||
+      state.canvas.getContext('experimental-webgl', {
+        alpha: true,
+        antialias: true,
+        depth: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false
+      });
+
+    if (!gl) return false;
+
+    var vertexSource = [
+      'attribute vec3 a_position;',
+      'attribute vec3 a_normal;',
+      'attribute vec2 a_uv;',
+      'uniform mat4 u_projection;',
+      'uniform mat4 u_model;',
+      'varying vec3 v_normal;',
+      'varying vec2 v_uv;',
+      'varying vec3 v_world;',
+      'void main(){',
+      '  vec4 world = u_model * vec4(a_position, 1.0);',
+      '  v_world = world.xyz;',
+      '  v_normal = normalize((u_model * vec4(a_normal, 0.0)).xyz);',
+      '  v_uv = a_uv;',
+      '  gl_Position = u_projection * world;',
+      '}'
+    ].join('\n');
+
+    var fragmentSource = [
+      'precision highp float;',
+      'uniform sampler2D u_texture;',
+      'uniform vec3 u_light;',
+      'uniform vec3 u_rimColor;',
+      'uniform float u_ambient;',
+      'uniform float u_diffuse;',
+      'uniform float u_rimPower;',
+      'uniform float u_rimStrength;',
+      'uniform float u_exposure;',
+      'uniform float u_saturation;',
+      'uniform float u_emissive;',
+      'varying vec3 v_normal;',
+      'varying vec2 v_uv;',
+      'varying vec3 v_world;',
+      'vec3 saturateColor(vec3 color, float sat){',
+      '  float gray = dot(color, vec3(0.299, 0.587, 0.114));',
+      '  return mix(vec3(gray), color, sat);',
+      '}',
+      'void main(){',
+      '  vec4 tex = texture2D(u_texture, v_uv);',
+      '  vec3 n = normalize(v_normal);',
+      '  vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));',
+      '  float ndl = max(dot(n, normalize(u_light)), 0.0);',
+      '  float light = u_ambient + ndl * u_diffuse;',
+      '  float rim = pow(1.0 - max(dot(n, viewDir), 0.0), u_rimPower) * u_rimStrength;',
+      '  vec3 color = tex.rgb;',
+      '  color = saturateColor(color, u_saturation);',
+      '  color = color * max(light, u_emissive) * u_exposure;',
+      '  color += u_rimColor * rim;',
+      '  float limb = smoothstep(1.0, 0.72, dot(n, viewDir));',
+      '  if(u_emissive > 0.5){',
+      '    color += u_rimColor * rim * 1.35;',
+      '  } else {',
+      '    color *= mix(0.82, 1.0, limb);',
+      '  }',
+      '  gl_FragColor = vec4(color, tex.a);',
+      '}'
+    ].join('\n');
+
+    var program = createProgram(gl, vertexSource, fragmentSource);
+    var sphere = makeSphere(128, 64);
+
+    var positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, sphere.positions, gl.STATIC_DRAW);
+
+    var normalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, sphere.normals, gl.STATIC_DRAW);
+
+    var uvBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, sphere.uvs, gl.STATIC_DRAW);
+
+    var indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.indices, gl.STATIC_DRAW);
+
+    state.gl = gl;
+    state.program = program;
+    state.buffers = {
+      position: positionBuffer,
+      normal: normalBuffer,
+      uv: uvBuffer,
+      index: indexBuffer,
+      count: sphere.indices.length
+    };
+
+    state.attribs = {
+      position: gl.getAttribLocation(program, 'a_position'),
+      normal: gl.getAttribLocation(program, 'a_normal'),
+      uv: gl.getAttribLocation(program, 'a_uv')
+    };
+
+    state.uniforms = {
+      projection: gl.getUniformLocation(program, 'u_projection'),
+      model: gl.getUniformLocation(program, 'u_model'),
+      texture: gl.getUniformLocation(program, 'u_texture'),
+      light: gl.getUniformLocation(program, 'u_light'),
+      rimColor: gl.getUniformLocation(program, 'u_rimColor'),
+      ambient: gl.getUniformLocation(program, 'u_ambient'),
+      diffuse: gl.getUniformLocation(program, 'u_diffuse'),
+      rimPower: gl.getUniformLocation(program, 'u_rimPower'),
+      rimStrength: gl.getUniformLocation(program, 'u_rimStrength'),
+      exposure: gl.getUniformLocation(program, 'u_exposure'),
+      saturation: gl.getUniformLocation(program, 'u_saturation'),
+      emissive: gl.getUniformLocation(program, 'u_emissive')
+    };
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
+    gl.clearColor(0, 0, 0, 0);
+
+    return true;
+  }
+
+  function makePlaceholderTexture(gl) {
+    var tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array([210, 206, 190, 255])
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return tex;
+  }
+
+  function ensureTexture(key) {
+    if (!state.gl) return null;
+    if (state.textures[key]) return state.textures[key];
+
+    var gl = state.gl;
+    var cfg = BODY[key] || BODY.earth;
+    var texture = makePlaceholderTexture(gl);
+
+    state.textures[key] = texture;
+    state.textureReady[key] = false;
+    state.textureFailed[key] = false;
+
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+
+    img.onload = function () {
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      state.textureReady[key] = true;
+      render(performance.now());
+    };
+
+    img.onerror = function () {
+      state.textureFailed[key] = true;
+    };
+
+    img.src = cfg.texture;
+
+    return texture;
+  }
+
+  function resize() {
+    if (!state.canvas || !state.gl || !state.stage) return;
 
     var rect = state.stage.getBoundingClientRect();
-    var cssSize = Math.max(240, Math.round(Math.min(rect.width || 420, rect.height || rect.width || 420)));
-    var body = BODY[state.body] || BODY.earth;
-    var maxDpr = body.name === 'sun' ? 2.75 : 3.1;
-    var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, maxDpr));
-    var px = Math.max(512, Math.round(cssSize * dpr));
+    var size = Math.max(260, Math.round(Math.min(rect.width || 420, rect.height || rect.width || 420)));
+    var dpr = clamp(window.devicePixelRatio || 1, 1, 3);
+    var width = Math.round(size * dpr);
+    var height = Math.round(size * dpr);
 
-    if (state.canvas.width !== px || state.canvas.height !== px) {
-      state.canvas.width = px;
-      state.canvas.height = px;
-      state.canvas.style.width = cssSize + 'px';
-      state.canvas.style.height = cssSize + 'px';
-      state.cssSize = cssSize;
+    if (state.canvas.width !== width || state.canvas.height !== height) {
+      state.canvas.width = width;
+      state.canvas.height = height;
+      state.canvas.style.width = size + 'px';
+      state.canvas.style.height = size + 'px';
+      state.width = width;
+      state.height = height;
       state.dpr = dpr;
-      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      return true;
+      state.gl.viewport(0, 0, width, height);
     }
-
-    if (state.cssSize !== cssSize || state.dpr !== dpr) {
-      state.canvas.style.width = cssSize + 'px';
-      state.canvas.style.height = cssSize + 'px';
-      state.cssSize = cssSize;
-      state.dpr = dpr;
-      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      return true;
-    }
-
-    return false;
   }
 
-  function clear(ctx, size) {
-    ctx.save();
-    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
-    ctx.clearRect(0, 0, size, size);
-    ctx.restore();
-  }
+  function render(now) {
+    if (!initWebGL()) return;
 
-  function drawWrappedStrip(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
-    var texW = img.naturalWidth || img.width;
-    sx = ((sx % texW) + texW) % texW;
+    resize();
 
-    if (sx + sw <= texW) {
-      ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-      return;
-    }
-
-    var first = texW - sx;
-    var frac = first / sw;
-    ctx.drawImage(img, sx, sy, first, sh, dx, dy, dw * frac, dh);
-    ctx.drawImage(img, 0, sy, sw - first, sh, dx + dw * frac, dy, dw * (1 - frac), dh);
-  }
-
-  function applyColorGrade(ctx, cfg) {
-    var filter = [];
-    filter.push('brightness(' + (cfg.lift || 1) + ')');
-    filter.push('contrast(' + (cfg.contrast || 1) + ')');
-    filter.push('saturate(' + (cfg.saturation || 1) + ')');
-    ctx.filter = filter.join(' ');
-  }
-
-  function drawSphere(ctx, img, cfg, cx, cy, r, phase) {
-    var texW = img.naturalWidth || img.width;
-    var texH = img.naturalHeight || img.height;
-    var diameter = r * 2;
-    var sourceW = texW * 0.5;
-    var centerX = (((phase % 1) + 1) % 1) * texW;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    applyColorGrade(ctx, cfg);
-
-    var step = window.devicePixelRatio >= 2.5 ? 0.7 : 1;
-    for (var row = 0; row <= diameter; row += step) {
-      var v = (row - r) / r;
-      var rowRadius = Math.sqrt(Math.max(0, 1 - v * v)) * r;
-      if (rowRadius <= 0.01) continue;
-
-      var lat = Math.asin(-v);
-      var sy = Math.max(0, Math.min(texH - 1, (0.5 - lat / Math.PI) * texH));
-      var dx = cx - rowRadius;
-      var dy = cy - r + row;
-      var dw = rowRadius * 2;
-      var sx = centerX - sourceW / 2;
-
-      drawWrappedStrip(ctx, img, sx, sy, sourceW, 1, dx, dy, dw, step + 0.55);
-    }
-
-    ctx.filter = 'none';
-    ctx.restore();
-  }
-
-  function drawDisk(ctx, img, cfg, cx, cy, r, phase) {
-    var texW = img.naturalWidth || img.width;
-    var texH = img.naturalHeight || img.height;
-    var crop = cfg.crop || { x: 0, y: 0, w: 1, h: 1 };
-    var sx = texW * crop.x;
-    var sy = texH * crop.y;
-    var sw = texW * crop.w;
-    var sh = texH * crop.h;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.translate(cx, cy);
-    ctx.rotate(phase * Math.PI * 2 * 0.035);
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    applyColorGrade(ctx, cfg);
-    ctx.drawImage(img, sx, sy, sw, sh, -r, -r, r * 2, r * 2);
-    ctx.filter = 'none';
-    ctx.restore();
-  }
-
-  function drawSunCorona(ctx, cx, cy, r, cfg, t) {
-    ctx.save();
-    var pulse = 1 + Math.sin(t * 0.0017) * 0.018;
-    var glow = ctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r * 1.48 * pulse);
-    glow.addColorStop(0, 'rgba(255, 214, 67, 0.30)');
-    glow.addColorStop(0.34, 'rgba(255, 180, 32, 0.22)');
-    glow.addColorStop(0.7, 'rgba(255, 120, 20, 0.08)');
-    glow.addColorStop(1, 'rgba(255, 120, 20, 0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.56 * pulse, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.globalCompositeOperation = 'screen';
-    ctx.strokeStyle = 'rgba(255, 229, 111, 0.30)';
-    ctx.lineWidth = Math.max(1, r * 0.006);
-    for (var i = 0; i < 22; i += 1) {
-      var a = (Math.PI * 2 * i) / 22 + Math.sin(t * 0.0007 + i) * 0.018;
-      var inner = r * (0.96 + ((i % 3) * 0.012));
-      var outer = r * (1.07 + ((i % 5) * 0.018));
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
-      ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-
-  function applyBodyLighting(ctx, cfg, cx, cy, r) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
-
-    if (cfg.kind !== 'sun') {
-      var shade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.42, r * 0.12, cx + r * 0.45, cy + r * 0.35, r * 1.12);
-      shade.addColorStop(0, 'rgba(255,255,255,' + (cfg.shine || 0.16) + ')');
-      shade.addColorStop(0.42, 'rgba(255,255,255,0.02)');
-      shade.addColorStop(0.73, 'rgba(0,0,0,' + ((cfg.shadow || 0.35) * 0.52) + ')');
-      shade.addColorStop(1, 'rgba(0,0,0,' + (cfg.shadow || 0.35) + ')');
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = shade;
-      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-    } else {
-      var limb = ctx.createRadialGradient(cx, cy, r * 0.58, cx, cy, r * 1.02);
-      limb.addColorStop(0, 'rgba(255,255,255,0.04)');
-      limb.addColorStop(0.72, 'rgba(255,221,91,0.02)');
-      limb.addColorStop(1, 'rgba(74,31,0,0.24)');
-      ctx.fillStyle = limb;
-      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-    }
-
-    ctx.restore();
-  }
-
-  function drawRim(ctx, cfg, cx, cy, r) {
-    ctx.save();
-    var soft = ctx.createRadialGradient(cx, cy, r * 0.94, cx, cy, r * 1.1);
-    soft.addColorStop(0, 'rgba(255,255,255,0)');
-    soft.addColorStop(0.78, cfg.rimSoft || 'rgba(255,255,255,.10)');
-    soft.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = soft;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = cfg.rim || 'rgba(255,255,255,.45)';
-    ctx.lineWidth = Math.max(1, r * 0.006);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r + ctx.lineWidth, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawSourceHold(ctx, ctxSize, cfg) {
-    var cx = ctxSize / 2;
-    var cy = ctxSize / 2;
-    var r = ctxSize * (cfg.radiusScale || 0.445);
-    ctx.save();
-    ctx.fillStyle = 'rgba(229,224,205,0.055)';
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(229,224,205,0.22)';
-    ctx.lineWidth = Math.max(1, r * 0.006);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawFrame(now) {
-    if (!ensureStage()) return;
-    resizeCanvas();
-
-    var ctx = state.ctx;
-    var cssSize = state.cssSize || 420;
+    var gl = state.gl;
     var cfg = BODY[state.body] || BODY.earth;
-    var rec = imageRecord(state.body);
-    var cx = cssSize / 2;
-    var cy = cssSize / 2;
-    var r = cssSize * (cfg.radiusScale || 0.445);
+    var texture = ensureTexture(state.body);
 
-    clear(ctx, cssSize);
     if (state.stage) {
       state.stage.setAttribute('data-body', state.body);
-      state.stage.setAttribute('data-source-family', 'real-nasa-celestial-source');
+      state.stage.setAttribute('data-source-family', 'real-celestial-source');
+      state.stage.setAttribute('data-body-geometry', 'true-webgl-sphere');
     }
 
-    if (cfg.kind === 'sun') {
-      drawSunCorona(ctx, cx, cy, r, cfg, now || 0);
-    }
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(state.program);
 
-    if (!rec.ready) {
-      drawSourceHold(ctx, cssSize, cfg);
-      return;
-    }
+    var projection = perspective(Math.PI / 5.8, 1, 0.1, 100);
+    var model = identity();
 
-    if (cfg.kind === 'disk') {
-      drawDisk(ctx, rec.img, cfg, cx, cy, r, state.rotation[state.body] || 0);
-    } else {
-      drawSphere(ctx, rec.img, cfg, cx, cy, r, state.rotation[state.body] || 0);
-    }
+    model = translate(model, 0, 0, -3.05);
+    model = rotateX(model, state.body === 'earth' ? -0.21 : state.body === 'moon' ? -0.08 : 0.0);
+    model = rotateY(model, state.angle[state.body] || 0);
 
-    applyBodyLighting(ctx, cfg, cx, cy, r);
-    drawRim(ctx, cfg, cx, cy, r);
+    gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(projection));
+    gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
+
+    gl.uniform3fv(state.uniforms.light, new Float32Array(cfg.light));
+    gl.uniform3fv(state.uniforms.rimColor, new Float32Array(cfg.rim));
+    gl.uniform1f(state.uniforms.ambient, cfg.ambient);
+    gl.uniform1f(state.uniforms.diffuse, cfg.diffuse);
+    gl.uniform1f(state.uniforms.rimPower, cfg.rimPower);
+    gl.uniform1f(state.uniforms.rimStrength, cfg.rimStrength);
+    gl.uniform1f(state.uniforms.exposure, cfg.exposure);
+    gl.uniform1f(state.uniforms.saturation, cfg.saturation);
+    gl.uniform1f(state.uniforms.emissive, cfg.emissive);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(state.uniforms.texture, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.position);
+    gl.enableVertexAttribArray(state.attribs.position);
+    gl.vertexAttribPointer(state.attribs.position, 3, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.normal);
+    gl.enableVertexAttribArray(state.attribs.normal);
+    gl.vertexAttribPointer(state.attribs.normal, 3, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.uv);
+    gl.enableVertexAttribArray(state.attribs.uv);
+    gl.vertexAttribPointer(state.attribs.uv, 2, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, state.buffers.index);
+    gl.drawElements(gl.TRIANGLES, state.buffers.count, gl.UNSIGNED_SHORT, 0);
   }
 
   function readRouteBodyHint() {
@@ -546,24 +687,33 @@
       if (fromActive) return fromActive;
     }
 
-    var titleBody = state.titleNode ? bodyFromText(state.titleNode.textContent) : '';
-    if (titleBody) return titleBody;
+    if (state.titleNode) {
+      var fromTitle = bodyFromText(state.titleNode.textContent);
+      if (fromTitle) return fromTitle;
+    }
 
     return '';
   }
 
-  function setBody(name, options) {
-    var b = normalizeBody(name);
-    if (!b || !BODY[b]) return false;
-    state.body = b;
-    imageRecord(b);
-    if (state.stage) state.stage.setAttribute('data-body', b);
-    drawFrame(performance.now());
-    if (!options || !options.silent) {
+  function setBody(body, silent) {
+    var next = normalizeBody(body);
+    if (!next || !BODY[next]) return false;
+
+    state.body = next;
+    ensureTexture(next);
+    render(performance.now());
+
+    if (!silent) {
       window.dispatchEvent(new CustomEvent('dgb:showroom:render-body', {
-        detail: { body: b, version: VERSION, authority: 'render-owns-bodies' }
+        detail: {
+          body: next,
+          version: VERSION,
+          authority: 'render-owns-bodies',
+          geometry: 'true-webgl-sphere'
+        }
       }));
     }
+
     return true;
   }
 
@@ -573,43 +723,45 @@
 
   function pause() {
     state.playing = false;
-    drawFrame(performance.now());
+    render(performance.now());
   }
 
   function loop(now) {
     if (!state.last) state.last = now;
-    var dt = Math.min(64, Math.max(0, now - state.last));
+    var dt = clamp(now - state.last, 0, 80);
     state.last = now;
 
     var cfg = BODY[state.body] || BODY.earth;
+
     if (state.playing) {
-      state.rotation[state.body] = ((state.rotation[state.body] || 0) + cfg.speed * dt) % 1;
+      state.angle[state.body] += cfg.speed * dt;
+      if (state.angle[state.body] > Math.PI * 2) state.angle[state.body] -= Math.PI * 2;
     }
 
-    var targetInterval = state.body === 'sun' ? 42 : 55;
-    if (state.playing || now - state.lastDraw > 240) {
-      if (now - state.lastDraw >= targetInterval) {
-        drawFrame(now);
-        state.lastDraw = now;
-      }
-    }
-
+    render(now);
     state.raf = window.requestAnimationFrame(loop);
   }
 
   function observeRouteControls() {
     document.addEventListener('click', function (event) {
-      var control = event.target && event.target.closest ? event.target.closest('button,a,[role="button"],[data-body],[data-view-body],[data-globe-body]') : null;
+      var control = event.target && event.target.closest
+        ? event.target.closest('button,a,[role="button"],[data-body],[data-view-body],[data-globe-body]')
+        : null;
+
       if (!control) return;
 
-      var declared = normalizeBody(control.getAttribute('data-body') || control.getAttribute('data-view-body') || control.getAttribute('data-globe-body'));
+      var declared = normalizeBody(
+        control.getAttribute('data-body') ||
+        control.getAttribute('data-view-body') ||
+        control.getAttribute('data-globe-body')
+      );
+
       var text = bodyFromText(control.textContent || control.getAttribute('aria-label') || control.getAttribute('title'));
       var nextBody = declared || text;
 
       if (nextBody) {
         window.setTimeout(function () {
-          var routeBody = readRouteBodyHint() || nextBody;
-          setBody(routeBody, { silent: true });
+          setBody(readRouteBodyHint() || nextBody, true);
         }, 0);
         return;
       }
@@ -620,64 +772,66 @@
     }, true);
 
     window.addEventListener('resize', function () {
-      drawFrame(performance.now());
+      render(performance.now());
     }, { passive: true });
 
-    var events = [
-      'dgb:body',
-      'dgb:showroom:body',
-      'dgb:showroom-globe:body',
-      'showroom:body',
-      'globe:body',
-      'bodychange'
-    ];
-
-    events.forEach(function (name) {
+    ['dgb:body', 'dgb:showroom:body', 'dgb:showroom-globe:body', 'showroom:body', 'globe:body', 'bodychange'].forEach(function (name) {
       window.addEventListener(name, function (event) {
         var detail = event && event.detail ? event.detail : {};
-        var b = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
-        if (b) setBody(b, { silent: true });
+        var next = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
+        if (next) setBody(next, true);
       });
+
       document.addEventListener(name, function (event) {
         var detail = event && event.detail ? event.detail : {};
-        var b = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
-        if (b) setBody(b, { silent: true });
+        var next = normalizeBody(detail.body || detail.name || detail.target || detail.value || detail);
+        if (next) setBody(next, true);
       });
     });
 
     window.setInterval(function () {
       var hinted = readRouteBodyHint();
-      if (hinted && hinted !== state.body) setBody(hinted, { silent: true });
+      if (hinted && hinted !== state.body) setBody(hinted, true);
     }, 650);
   }
 
   function boot() {
     ensureStage();
-    var initial = readRouteBodyHint() || normalizeBody(window.location.hash) || 'earth';
-    setBody(initial, { silent: true });
-    imageRecord('earth');
-    imageRecord('sun');
-    imageRecord('moon');
+
+    if (!initWebGL()) {
+      if (state.stage) {
+        state.stage.setAttribute('data-webgl-failed', 'true');
+      }
+      return;
+    }
+
+    ensureTexture('earth');
+    ensureTexture('sun');
+    ensureTexture('moon');
+
+    setBody(readRouteBodyHint() || normalizeBody(window.location.hash) || 'earth', true);
     observeRouteControls();
+
     if (state.raf) window.cancelAnimationFrame(state.raf);
     state.raf = window.requestAnimationFrame(loop);
   }
 
   var api = {
     version: VERSION,
-    setBody: setBody,
-    viewEarth: function () { return setBody('earth'); },
-    viewSun: function () { return setBody('sun'); },
-    viewMoon: function () { return setBody('moon'); },
+    setBody: function (body) { return setBody(body, false); },
+    viewEarth: function () { return setBody('earth', false); },
+    viewSun: function () { return setBody('sun', false); },
+    viewMoon: function () { return setBody('moon', false); },
     start: start,
     pause: pause,
-    refresh: function () { return drawFrame(performance.now()); },
+    refresh: function () { return render(performance.now()); },
     getState: function () {
       return {
         body: state.body,
         playing: state.playing,
         version: VERSION,
         authority: 'render-owns-bodies',
+        geometry: 'true-webgl-sphere',
         routeControlsOwnedHere: false,
         instrumentStateOwnedHere: false
       };

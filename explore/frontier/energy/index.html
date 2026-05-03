@@ -5,11 +5,11 @@
   data-route="/explore/frontier/energy/"
   data-page="frontier-energy"
   data-version="G1-V10A"
-  data-contract="ENERGY_G1_V10A_RUSSIAN_DOLL_POWER_TNT_v1"
+  data-contract="ENERGY_G1_V10A_CONCRETE_POWER_FLOW_TNT_v1"
   data-status="active"
   data-parent="/explore/frontier/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
-  data-expression="russian-doll-power-context"
+  data-expression="concrete-power-flow-with-russian-doll-underlay"
   data-heavy-runtime-loaded="false"
   data-visual-pass-claimed="false"
 >
@@ -17,12 +17,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge · Frontier · Energy G1 V10A</title>
-  <meta name="description" content="Energy G1 V10A is the Frontier power lane expressed through Russian-doll context.">
+  <meta name="description" content="Energy G1 V10A shows where power comes from, where it goes, what it moves, what gets wasted, and what must be regulated.">
 
   <style>
     :root {
       --bg:#02050d;
-      --panel:rgba(9,17,32,.9);
+      --panel:rgba(9,17,32,.91);
       --line:rgba(139,200,255,.24);
       --gold:#f2c76f;
       --blue:#8bc8ff;
@@ -40,7 +40,7 @@
       min-height:100%;
       color:var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.16), transparent 27rem),
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.17), transparent 27rem),
         radial-gradient(circle at 58% 40%, rgba(139,200,255,.12), transparent 35rem),
         linear-gradient(180deg,#050914,#02050d 78%,#010207);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -56,7 +56,7 @@
         radial-gradient(circle, rgba(242,199,111,.15) 0 1px, transparent 1.4px),
         linear-gradient(135deg, rgba(242,199,111,.07), transparent 42%),
         linear-gradient(300deg, rgba(139,200,255,.06), transparent 48%);
-      background-size:210px 250px, 520px 520px, 640px 640px;
+      background-size:210px 250px,520px 520px,640px 640px;
       opacity:.32;
     }
 
@@ -118,9 +118,7 @@
       place-items:center;
       border:1px solid rgba(242,199,111,.42);
       border-radius:1.2rem;
-      background:
-        radial-gradient(circle, rgba(242,199,111,.25), transparent 55%),
-        rgba(255,255,255,.035);
+      background:radial-gradient(circle, rgba(242,199,111,.25), transparent 55%), rgba(255,255,255,.035);
       font-size:1.45rem;
       font-weight:950;
       letter-spacing:.04em;
@@ -237,7 +235,74 @@
       line-height:1.55;
     }
 
-    .doll { display:grid; gap:.75rem; }
+    .flow-grid {
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:.7rem;
+    }
+
+    .flow-card {
+      min-height:8.2rem;
+      display:grid;
+      align-content:start;
+      gap:.45rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .flow-card strong {
+      color:rgba(255,241,205,.98);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .flow-card span {
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.38;
+    }
+
+    .flow-card.active {
+      border-color:rgba(242,199,111,.9);
+      background:rgba(242,199,111,.08);
+      box-shadow:0 0 1.6rem rgba(242,199,111,.08);
+    }
+
+    .dashboard {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:.85rem;
+    }
+
+    .metric {
+      padding:1rem;
+      border:1px solid rgba(139,200,255,.18);
+      border-radius:1.25rem;
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:.45rem;
+    }
+
+    .metric small {
+      color:var(--gold);
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .metric strong {
+      color:rgba(255,241,205,.98);
+      font-size:clamp(1.15rem,3vw,1.55rem);
+      line-height:1.05;
+    }
+
+    .metric p {
+      font-size:.95rem;
+    }
 
     details {
       border:1px solid rgba(139,200,255,.18);
@@ -293,47 +358,6 @@
       background:rgba(2,5,13,.34);
     }
 
-    .cycle-grid {
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:.6rem;
-    }
-
-    .cycle-step {
-      min-height:6.5rem;
-      display:grid;
-      place-items:center;
-      gap:.25rem;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.03);
-      text-align:center;
-    }
-
-    .cycle-step strong {
-      color:rgba(255,241,205,.98);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .cycle-step span {
-      color:var(--faint);
-      font-size:.72rem;
-      font-weight:800;
-      text-transform:uppercase;
-    }
-
-    .cycle-step.active {
-      border-color:rgba(242,199,111,.85);
-      background:rgba(242,199,111,.08);
-      box-shadow:0 0 1.6rem rgba(242,199,111,.08);
-    }
-
-    .cycle-step.complete span { color:var(--green); }
-
     .readout {
       padding:1rem;
       border:1px solid rgba(242,199,111,.22);
@@ -347,28 +371,6 @@
       color:var(--gold);
       font-weight:950;
       letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .split {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:.8rem;
-    }
-
-    .mini {
-      padding:1rem;
-      border:1px solid rgba(139,200,255,.18);
-      border-radius:1.25rem;
-      background:rgba(255,255,255,.025);
-      display:grid;
-      gap:.4rem;
-    }
-
-    .mini strong {
-      color:rgba(255,241,205,.96);
-      font-weight:950;
-      letter-spacing:.08em;
       text-transform:uppercase;
     }
 
@@ -391,9 +393,9 @@
       font-size:.76rem;
     }
 
-    @media (max-width:880px) {
-      .cycle-grid { grid-template-columns:repeat(2,1fr); }
-      .split { grid-template-columns:1fr; }
+    @media (max-width:980px) {
+      .flow-grid { grid-template-columns:repeat(2,1fr); }
+      .dashboard { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -424,13 +426,12 @@
 
     <main id="main">
       <section class="card hero">
-        <div class="kicker">Russian-Doll Power Context · Official Hierarchy</div>
+        <div class="kicker">Power Flow · Official Hierarchy</div>
         <h1>Energy</h1>
-        <h2>Power should be directed, conserved, and made usable.</h2>
+        <h2>Power has to go somewhere.</h2>
         <p>
-          Energy is the Frontier power lane. It does not praise raw force. It asks where
-          power enters, how it is conserved, what it can move, and whether the system can
-          convert available power into lawful motion.
+          Energy shows where power comes from, where it is being sent, what it can move,
+          what gets wasted, and what must be regulated before the system scales.
         </p>
         <div class="control-row">
           <a class="button primary state-link" href="/gauges/">Read Gauges</a>
@@ -439,116 +440,113 @@
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="doll-title">
-        <div class="kicker">Russian Doll</div>
-        <h2 id="doll-title">Open only the power layer needed.</h2>
+      <section class="card section" aria-labelledby="flow-title">
+        <div class="kicker">Power Flow</div>
+        <h2 id="flow-title">The useful question is not “how much power?” It is “what does the power do?”</h2>
 
-        <div class="doll">
-          <details open>
-            <summary>Outer shell — What Energy is</summary>
-            <div class="detail-body">
-              <p>Energy is the Frontier lane that turns available power into directed, conserved, usable motion.</p>
+        <div class="flow-grid" aria-label="Energy power flow cycle">
+          <article class="flow-card">
+            <strong>Source</strong>
+            <span>What power is available?</span>
+          </article>
+          <article class="flow-card">
+            <strong>Direction</strong>
+            <span>Where is the power being sent?</span>
+          </article>
+          <article class="flow-card">
+            <strong>Storage</strong>
+            <span>What must be conserved?</span>
+          </article>
+          <article class="flow-card active">
+            <strong>Conversion</strong>
+            <span>What does the power actually move?</span>
+          </article>
+          <article class="flow-card">
+            <strong>Waste</strong>
+            <span>Where is power leaking?</span>
+          </article>
+          <article class="flow-card">
+            <strong>Regulation</strong>
+            <span>What keeps force from becoming damage?</span>
+          </article>
+          <article class="flow-card">
+            <strong>Proof</strong>
+            <span>What can Gauges confirm?</span>
+          </article>
+        </div>
+      </section>
 
-              <details class="nested" open>
-                <summary>Layer 1 — Where it sits</summary>
-                <div class="detail-body">
-                  <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Energy powers. Laws bound. Gauges measure.</p>
+      <section class="card section" aria-labelledby="dashboard-title">
+        <div class="kicker">Energy Dashboard</div>
+        <h2 id="dashboard-title">Convert active. Regulate next.</h2>
 
-                  <details class="nested" open>
-                    <summary>Layer 2 — Where we are in the cycle</summary>
-                    <div class="detail-body">
-                      <div class="cycle-grid" aria-label="Current Energy cycle position">
-                        <div class="cycle-step complete"><strong>Charge</strong><span>complete</span></div>
-                        <div class="cycle-step complete"><strong>Direct</strong><span>complete</span></div>
-                        <div class="cycle-step complete"><strong>Conserve</strong><span>complete</span></div>
-                        <div class="cycle-step active"><strong>Convert</strong><span>active</span></div>
-                        <div class="cycle-step"><strong>Regulate</strong><span>next</span></div>
-                        <div class="cycle-step"><strong>Explain</strong><span>pending</span></div>
-                        <div class="cycle-step"><strong>Repeat</strong><span>pending</span></div>
-                      </div>
-
-                      <details class="nested">
-                        <summary>Layer 3 — Active conversion</summary>
-                        <div class="detail-body">
-                          <p>Gauges must confirm that Energy is live as V10A, readable as power structure, and aligned with the Audralia Manor baseline.</p>
-
-                          <details class="nested">
-                            <summary>Layer 4 — Regulation boundary</summary>
-                            <div class="detail-body">
-                              <p>Regulation prevents power from becoming waste, drift, or uncontrolled force. Energy feeds motion only where the path is lawful.</p>
-
-                              <details class="nested">
-                                <summary>Layer 5 — What Energy owns</summary>
-                                <div class="detail-body">
-                                  <p>Energy owns charge, directed power, conservation, conversion, operating capacity, force readiness, and usable motion potential.</p>
-
-                                  <details class="nested">
-                                    <summary>Layer 6 — What Energy does not own</summary>
-                                    <div class="detail-body">
-                                      <p>Energy does not own trajectory, infrastructure support, relation mapping, law authority, Gauges scoring, product identity, route mutation, or generation pass claims.</p>
-
-                                      <details class="nested">
-                                        <summary>Layer 7 — Proof return</summary>
-                                        <div class="detail-body">
-                                          <p>The proof path returns to Gauges. The legal boundary returns to Laws. The map returns to Manor. The expansion edge returns to Frontier.</p>
-                                        </div>
-                                      </details>
-                                    </div>
-                                  </details>
-                                </div>
-                              </details>
-                            </div>
-                          </details>
-                        </div>
-                      </details>
-                    </div>
-                  </details>
-                </div>
-              </details>
-            </div>
-          </details>
+        <div class="dashboard">
+          <article class="metric">
+            <small>Current position</small>
+            <strong>Conversion is active.</strong>
+            <p>The page is asking whether available power is turning into lawful motion, usable output, or wasted force.</p>
+          </article>
+          <article class="metric">
+            <small>Next move</small>
+            <strong>Regulation comes next.</strong>
+            <p>If power is moving, the system must decide what contains it, directs it, and prevents damage.</p>
+          </article>
+          <article class="metric">
+            <small>Practical read</small>
+            <strong>Power without direction becomes noise.</strong>
+            <p>Energy should not be treated as intensity alone. It needs path, conservation, conversion, and proof.</p>
+          </article>
+          <article class="metric">
+            <small>Boundary</small>
+            <strong>Energy does not replace proof.</strong>
+            <p>Energy names power flow. Laws bound the claim. Gauges measure whether the route is actually aligned.</p>
+          </article>
         </div>
       </section>
 
       <section class="card section" aria-labelledby="controls-title">
         <div class="kicker">Room Controls</div>
-        <h2 id="controls-title">Switch mode without losing the power layer.</h2>
+        <h2 id="controls-title">Switch mode without losing the power flow.</h2>
 
         <div class="control-row" role="group" aria-label="Mode controls">
-          <button class="tab" type="button" data-mode="meaning" aria-pressed="true">Meaning</button>
-          <button class="tab" type="button" data-mode="function" aria-pressed="false">Function</button>
+          <button class="tab" type="button" data-mode="source" aria-pressed="true">Source</button>
+          <button class="tab" type="button" data-mode="conversion" aria-pressed="false">Conversion</button>
+          <button class="tab" type="button" data-mode="regulation" aria-pressed="false">Regulation</button>
           <button class="tab" type="button" data-mode="engineering" aria-pressed="false">Engineering</button>
         </div>
 
         <article class="readout" aria-live="polite">
-          <small id="mode-kicker">Meaning mode</small>
-          <h3 id="mode-title">Direct the power.</h3>
-          <p id="mode-copy">Energy makes power useful by giving it direction, containment, and a lawful conversion path.</p>
+          <small id="mode-kicker">Source mode</small>
+          <h3 id="mode-title">What power is available?</h3>
+          <p id="mode-copy">Before power can be directed, the system has to name what power exists and whether it is usable.</p>
         </article>
       </section>
 
-      <section class="card section" aria-labelledby="boundary-title">
-        <div class="kicker">Contract Boundaries</div>
-        <h2 id="boundary-title">Energy does not replace proof.</h2>
+      <section class="card section" aria-labelledby="under-title">
+        <div class="kicker">Under the Hood</div>
+        <h2 id="under-title">Russian doll stays as structure, not public fog.</h2>
 
-        <div class="split">
-          <article class="mini">
-            <strong>Current language</strong>
-            <p>Manor, Frontier, Audralia, Audralia Universe, Laws, Gauges, and Universal Node are the current baseline terms.</p>
-          </article>
-          <article class="mini">
-            <strong>Prior framing</strong>
-            <p>Prior flat-world or early-generation framing is preserved only as history. It does not control this page’s current identity.</p>
-          </article>
-          <article class="mini">
-            <strong>Convert active</strong>
-            <p>The page is ready for Gauges to confirm current hierarchy, readable source, and baseline alignment.</p>
-          </article>
-          <article class="mini">
-            <strong>Regulate next</strong>
-            <p>If Gauges still holds the route, the next move is narrow regulation cleanup, not another source-target chase.</p>
-          </article>
-        </div>
+        <details>
+          <summary>Open hierarchy</summary>
+          <div class="detail-body">
+            <p>Compass orients. Door admits. Home stabilizes. Manor maps. Frontier expands. Energy powers. Laws bound. Gauges measure.</p>
+
+            <details class="nested">
+              <summary>Open cycle position</summary>
+              <div class="detail-body">
+                <p>Charge complete. Direct complete. Conserve complete. Convert active. Regulate next. Explain pending. Repeat pending.</p>
+
+                <details class="nested">
+                  <summary>Open ownership boundary</summary>
+                  <div class="detail-body">
+                    <p>Energy owns charge, directed power, conservation, conversion, operating capacity, force readiness, and usable motion potential.</p>
+                    <p>Energy does not own trajectory, infrastructure support, relation mapping, law authority, Gauges scoring, product identity, route mutation, or generation pass claims.</p>
+                  </div>
+                </details>
+              </div>
+            </details>
+          </div>
+        </details>
       </section>
 
       <section class="card section" aria-labelledby="routes-title">
@@ -569,18 +567,19 @@
 
       <details class="card receipt" open>
         <summary>Status label</summary>
-        <pre>ENERGY_G1_V10A_RUSSIAN_DOLL_POWER_TNT_v1
+        <pre>ENERGY_G1_V10A_CONCRETE_POWER_FLOW_TNT_v1
 STATUS=ACTIVE
 VISIBLE_TITLE=Energy · G1 V10A
-PUBLIC_PROOF_MARKER=Russian Doll Power · V10A active
+PUBLIC_PROOF_MARKER=Concrete Power Flow · V10A active
 PAGE=/explore/frontier/energy/index.html
 ROUTE=/explore/frontier/energy/
 PARENT=/explore/frontier/
 BASELINE=AUDRALIA_MANOR_CURRENT
-EXPRESSION=Russian_Doll_Power
+EXPRESSION=Concrete_Power_Flow_With_Russian_Doll_Underlay
+VISIBLE_FLOW=Source,Direction,Storage,Conversion,Waste,Regulation,Proof
 CYCLE_POSITION=Charge_complete,Direct_complete,Conserve_complete,Convert_active,Regulate_next,Explain_pending,Repeat_pending
 HIERARCHY=Compass→Door→Home→Manor→Frontier→Energy→Laws→Gauges
-ROLE=frontier_power_lane
+ROLE=frontier_power_flow_lane
 OWNS=charge,directed_power,conservation,conversion,operating_capacity,force_readiness,usable_motion_potential
 DOES_NOT_OWN=trajectory,infrastructure_support,relation_mapping,law_authority,gauges_scoring,product_identity,route_mutation,generation_pass_claim
 PRIOR_LANGUAGE_HANDLING=prior_flat_world_or_generation_framing_archival_only
@@ -592,7 +591,7 @@ VISUAL_PASS_CLAIMED=false</pre>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Frontier · Energy · G1 V10A · Russian Doll Power.
+      Diamond Gate Bridge · Frontier · Energy · G1 V10A · Concrete Power Flow.
     </footer>
   </div>
 
@@ -601,15 +600,20 @@ VISUAL_PASS_CLAIMED=false</pre>
       "use strict";
 
       const modes = {
-        meaning: [
-          "Meaning mode",
-          "Direct the power.",
-          "Energy makes power useful by giving it direction, containment, and a lawful conversion path."
+        source: [
+          "Source mode",
+          "What power is available?",
+          "Before power can be directed, the system has to name what power exists and whether it is usable."
         ],
-        function: [
-          "Function mode",
-          "Convert into motion.",
-          "Energy turns available capacity into usable movement without wasting the system’s charge."
+        conversion: [
+          "Conversion mode",
+          "What does the power actually move?",
+          "Conversion is the active state. Power is only useful when it becomes lawful motion, usable output, or measurable capacity."
+        ],
+        regulation: [
+          "Regulation mode",
+          "What keeps force from becoming damage?",
+          "Regulation protects the system from waste, drift, overheating, and uncontrolled force."
         ],
         engineering: [
           "Engineering mode",
@@ -624,7 +628,7 @@ VISUAL_PASS_CLAIMED=false</pre>
       const copy = document.getElementById("mode-copy");
 
       function setMode(mode) {
-        const data = modes[mode] || modes.meaning;
+        const data = modes[mode] || modes.source;
 
         tabs.forEach((tab) => {
           tab.setAttribute("aria-pressed", tab.dataset.mode === mode ? "true" : "false");
@@ -651,10 +655,10 @@ VISUAL_PASS_CLAIMED=false</pre>
       }
 
       tabs.forEach((tab) => {
-        tab.addEventListener("click", () => setMode(tab.dataset.mode || "meaning"));
+        tab.addEventListener("click", () => setMode(tab.dataset.mode || "source"));
       });
 
-      setMode("meaning");
+      setMode("source");
       syncLinks();
     })();
   </script>

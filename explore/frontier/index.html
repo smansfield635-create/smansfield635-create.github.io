@@ -3,8 +3,8 @@
   lang="en"
   data-route="/explore/frontier/"
   data-page="explore-frontier"
-  data-version="G1-V11"
-  data-contract="FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1"
+  data-version="G1-V12"
+  data-contract="FRONTIER_EXPLORE_HUB_CURRENT_STANDARD_TNT_v1"
   data-status="active"
   data-parent="/explore/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -14,21 +14,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Explore · Frontier Hub</title>
-  <meta name="description" content="Frontier Hub carries eleven Frontier lanes under the Manor, with Vision unified as distant and not-so-distant future.">
+  <title>Diamond Gate Bridge · Frontier Hub · Current Standard</title>
+  <meta name="description" content="Frontier Hub organizes eleven Frontier lanes under the Manor using Compass, North Star, Legend, and Four Zone structure.">
 
   <style>
     :root {
       --bg:#02050d;
       --panel:rgba(9,17,32,.91);
+      --panel2:rgba(17,27,45,.82);
       --line:rgba(139,200,255,.22);
       --gold:#f2c76f;
       --blue:#8bc8ff;
-      --green:#9df0c4;
       --text:#f8f1dd;
       --muted:rgba(226,235,255,.76);
       --faint:rgba(226,235,255,.52);
-      --max:1120px;
+      --max:1160px;
     }
 
     * { box-sizing:border-box; }
@@ -39,8 +39,8 @@
       min-height:100%;
       color:var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.14), transparent 26rem),
-        radial-gradient(circle at 55% 38%, rgba(139,200,255,.13), transparent 35rem),
+        radial-gradient(circle at 50% 0%, rgba(242,199,111,.15), transparent 26rem),
+        radial-gradient(circle at 54% 42%, rgba(139,200,255,.13), transparent 35rem),
         linear-gradient(180deg,#050914,#02050d 78%,#010207);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       overflow-x:hidden;
@@ -52,10 +52,10 @@
       inset:0;
       pointer-events:none;
       background-image:
-        linear-gradient(rgba(139,200,255,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139,200,255,.055) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1.3px);
-      background-size:46px 46px,46px 46px,220px 260px;
+        linear-gradient(rgba(139,200,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,200,255,.05) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1.4px);
+      background-size:52px 52px,52px 52px,230px 270px;
       opacity:.24;
     }
 
@@ -142,16 +142,14 @@
     }
 
     .nav,
-    .cta-row,
-    .return-row {
+    .pill-row {
       display:flex;
       flex-wrap:wrap;
       gap:.55rem;
     }
 
     .nav a,
-    .cta,
-    .return-row a {
+    .pill {
       min-height:2.4rem;
       display:inline-flex;
       align-items:center;
@@ -168,7 +166,7 @@
     }
 
     .nav a[aria-current="page"],
-    .cta.primary {
+    .pill.primary {
       border-color:rgba(242,199,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff0a3,#f2c76f);
@@ -176,7 +174,7 @@
 
     .hero {
       padding:clamp(1.5rem,5vw,3rem);
-      min-height:clamp(20rem,42vw,31rem);
+      min-height:clamp(22rem,44vw,34rem);
       display:grid;
       gap:1rem;
       align-content:center;
@@ -196,7 +194,7 @@
       background:
         radial-gradient(circle at 50% 50%, rgba(242,199,111,.10), transparent 55%),
         linear-gradient(145deg, rgba(139,200,255,.06), rgba(255,255,255,.015));
-      opacity:.48;
+      opacity:.44;
       animation:diamondBreathe 8s ease-in-out infinite;
       pointer-events:none;
     }
@@ -232,7 +230,7 @@
     h1 {
       width:min(100%,860px);
       margin:0;
-      font-size:clamp(3.6rem,12vw,7.4rem);
+      font-size:clamp(3.45rem,12vw,7.2rem);
       line-height:.84;
       letter-spacing:-.105em;
       position:relative;
@@ -251,6 +249,7 @@
 
     h3 {
       margin:0;
+      color:rgba(255,241,205,.98);
       font-size:clamp(1.05rem,3.4vw,1.45rem);
       line-height:1.08;
       letter-spacing:-.035em;
@@ -265,6 +264,61 @@
       z-index:2;
     }
 
+    .standard-grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .standard-card,
+    .lane,
+    .zone {
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(139,200,255,.08), transparent 60%),
+        rgba(255,255,255,.03);
+      padding:1rem;
+      display:grid;
+      gap:.55rem;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .standard-card::before,
+    .lane::before,
+    .zone::before {
+      content:"";
+      width:1.65rem;
+      height:1.65rem;
+      border:1px solid rgba(242,199,111,.24);
+      border-radius:.48rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 50%),
+        linear-gradient(145deg, rgba(242,199,111,.08), rgba(139,200,255,.04));
+      margin:.15rem 0 .3rem .25rem;
+      box-shadow:0 0 1rem rgba(242,199,111,.08);
+    }
+
+    .standard-card strong,
+    .lane strong,
+    .zone strong {
+      color:rgba(255,241,205,.98);
+      font-size:.88rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .standard-card span,
+    .lane span,
+    .zone span {
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
     .lane-grid {
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -273,43 +327,7 @@
 
     .lane {
       min-height:9.25rem;
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.25rem;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(139,200,255,.08), transparent 60%),
-        rgba(255,255,255,.03);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .lane::before {
-      content:"";
-      width:2rem;
-      height:2rem;
-      border:1px solid rgba(242,199,111,.24);
-      border-radius:.56rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 50%),
-        linear-gradient(145deg, rgba(242,199,111,.08), rgba(139,200,255,.04));
-      margin:.25rem 0 .5rem .35rem;
-      box-shadow:0 0 1rem rgba(242,199,111,.08);
-    }
-
-    .lane::after {
-      content:"";
-      position:absolute;
-      inset:auto -4rem -5rem auto;
-      width:10rem;
-      height:10rem;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(242,199,111,.075), transparent 64%);
-      pointer-events:none;
     }
 
     .lane:hover,
@@ -322,20 +340,6 @@
       outline:none;
     }
 
-    .lane strong {
-      color:rgba(255,241,205,.98);
-      font-size:.92rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .lane span {
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.45;
-    }
-
     .lane.vision {
       border-color:rgba(242,199,111,.42);
       background:
@@ -344,44 +348,10 @@
       box-shadow:0 0 2rem rgba(242,199,111,.08);
     }
 
-    .core-grid {
+    .zone-grid {
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .core {
-      padding:1rem;
-      border:1px solid rgba(139,200,255,.16);
-      border-radius:1.15rem;
-      background:rgba(255,255,255,.03);
-      display:grid;
-      gap:.35rem;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .core::before {
-      content:"";
-      width:1.55rem;
-      height:1.55rem;
-      border:1px solid rgba(139,200,255,.20);
-      border-radius:.45rem;
-      transform:rotate(45deg);
-      margin:.15rem 0 .4rem .25rem;
-    }
-
-    .core strong {
-      color:rgba(255,241,205,.98);
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .core span {
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.4;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
     }
 
     .receipt {
@@ -419,21 +389,21 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero::after {
-        animation:none !important;
-      }
+      .hero::after { animation:none !important; }
     }
 
-    @media (max-width:900px) {
-      .lane-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .core-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    @media (max-width:920px) {
+      .standard-grid,
+      .lane-grid,
+      .zone-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
 
     @media (max-width:560px) {
+      .standard-grid,
       .lane-grid,
-      .core-grid { grid-template-columns:1fr; }
+      .zone-grid { grid-template-columns:1fr; }
 
-      h1 { font-size:clamp(3.1rem,18vw,5rem); }
+      h1 { font-size:clamp(3.05rem,18vw,5rem); }
 
       .hero::after { opacity:.22; }
     }
@@ -449,7 +419,7 @@
         <span class="mark">FH</span>
         <span>
           <span>Diamond Gate Bridge · Manor</span>
-          <strong>Frontier Hub · Eleven Lanes</strong>
+          <strong>Frontier Hub · Current Standard</strong>
         </span>
       </a>
 
@@ -457,7 +427,7 @@
         <a class="state-link" href="/">Compass</a>
         <a class="state-link" href="/door/">Door</a>
         <a class="state-link" href="/home/">Home</a>
-        <a class="state-link" href="/explore/">Manor</a>
+        <a class="state-link" href="/explore/" aria-current="page">Manor</a>
         <a class="state-link" href="/laws/">Laws</a>
         <a class="state-link" href="/nine-summits/">Nine Summits</a>
         <a class="state-link" href="/products/">Products</a>
@@ -469,99 +439,90 @@
 
     <main id="frontier-hub-main">
       <section class="card hero">
-        <div class="kicker">Frontier Hub · Manor Route Field</div>
+        <div class="kicker">Compass · Frontier Hub</div>
         <h1>Eleven lanes. One parent map.</h1>
-        <h2>“The unknown still needs a parent map.”</h2>
+        <h2>North Star: keep the edge attached.</h2>
         <p>
-          This hub carries the active Frontier lanes under the Manor. Vision now holds both future distances, while the deleted distance-room category stays out of the public lane map.
+          Frontier Hub organizes the active lanes under the Manor. Vision carries both future distances. Every lane stays bounded by Laws, measured by Gauges, and returned to the parent map.
         </p>
 
-        <div class="cta-row">
-          <a class="cta primary state-link" href="/frontier/">Open Frontier Root</a>
-          <a class="cta state-link" href="/explore/">Return to Manor</a>
-          <a class="cta state-link" href="/gauges/">Read Proof</a>
+        <div class="pill-row">
+          <a class="pill primary state-link" href="/frontier/">Open Frontier Root</a>
+          <a class="pill state-link" href="/explore/">Return to Manor</a>
+          <a class="pill state-link" href="/laws/">Read Boundary</a>
+          <a class="pill state-link" href="/gauges/">Read Proof</a>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="controls-title">
-        <div class="kicker">Four Controls</div>
-        <h2 id="controls-title">Map, Boundary, Proof, and Return keep the hub attached.</h2>
+      <section class="card section" aria-labelledby="standard-title">
+        <div class="kicker">Navigation Standard</div>
+        <h2 id="standard-title">Compass, North Star, Legend, and Four Zones.</h2>
 
-        <div class="core-grid">
-          <article class="core">
-            <strong>Map</strong>
-            <span>The hub stays attached to the Manor route field.</span>
+        <div class="standard-grid">
+          <article class="standard-card">
+            <strong>Compass</strong>
+            <span>Frontier points outward but remains attached to the Manor route field.</span>
           </article>
-          <article class="core">
-            <strong>Boundary</strong>
-            <span>Laws keep each lane from overclaiming.</span>
+          <article class="standard-card">
+            <strong>North Star</strong>
+            <span>The expansion edge must stay measurable, bounded, and returned.</span>
           </article>
-          <article class="core">
-            <strong>Proof</strong>
-            <span>Gauges confirm what the routes actually serve.</span>
+          <article class="standard-card">
+            <strong>Legend</strong>
+            <span>Eleven lanes define the active symbols and route meanings.</span>
           </article>
-          <article class="core">
-            <strong>Return</strong>
-            <span>Every lane keeps a visible route back to the hub.</span>
+          <article class="standard-card">
+            <strong>Four Zones</strong>
+            <span>Map, Boundary, Proof, and Return keep the system readable.</span>
           </article>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="lanes-title">
-        <div class="kicker">Eleven Frontier Lanes</div>
-        <h2 id="lanes-title">Vision is the unified future-sightline lane.</h2>
+      <section class="card section" aria-labelledby="legend-title">
+        <div class="kicker">Legend · Eleven Frontier Lanes</div>
+        <h2 id="legend-title">Vision is the unified future-sightline lane.</h2>
 
         <div class="lane-grid">
           <a class="lane state-link" href="/explore/frontier/closed-loop/">
             <strong>Closed Loop</strong>
             <span>Feedback, return logic, proof loops, and completion pathways.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/energy/">
             <strong>Energy</strong>
             <span>Power, motion, charge, force, pressure, and operating capacity.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/infrastructure/">
             <strong>Infrastructure</strong>
             <span>Support layers, rails, utilities, and build foundation.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/lattice/">
             <strong>Lattice</strong>
             <span>Grid logic, state-space organization, and 256-field thinking.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/manual/">
             <strong>Manual</strong>
             <span>Operating instructions, reference logic, and field notes.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/shimmer/">
             <strong>Shimmer</strong>
             <span>Signal, atmosphere, surface effect, and future visual language.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/trajectory/">
             <strong>Trajectory</strong>
             <span>Direction, motion, path projection, and system movement.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/urban/">
             <strong>Urban</strong>
             <span>City systems, population layers, and built-environment logic.</span>
           </a>
-
           <a class="lane vision state-link" href="/explore/frontier/vision/">
             <strong>Vision</strong>
             <span>Distant and not-so-distant future, sightline planning, confidence labels, and visual direction.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/waste/">
             <strong>Waste</strong>
             <span>Loss, recovery, disposal, circularity, and cleanup logic.</span>
           </a>
-
           <a class="lane state-link" href="/explore/frontier/water/">
             <strong>Water</strong>
             <span>Flow, support, survival layer, maritime logic, and baseline systems.</span>
@@ -569,41 +530,60 @@
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="return-title">
-        <div class="kicker">Return Routes</div>
-        <h2 id="return-title">The hub remains attached to the Manor and proof surfaces.</h2>
+      <section class="card section" aria-labelledby="zones-title">
+        <div class="kicker">Four Zones</div>
+        <h2 id="zones-title">Each zone keeps the Frontier hub from drifting.</h2>
 
-        <nav class="return-row" aria-label="Return routes">
-          <a class="state-link" href="/">Compass</a>
-          <a class="state-link" href="/door/">Door</a>
-          <a class="state-link" href="/home/">Home</a>
-          <a class="state-link" href="/explore/">Manor</a>
-          <a class="state-link" href="/laws/">Laws</a>
-          <a class="state-link" href="/frontier/">Frontier Root</a>
-          <a class="state-link" href="/gauges/">Gauges</a>
-        </nav>
+        <div class="zone-grid">
+          <article class="zone">
+            <strong>Zone 1 · Map</strong>
+            <span>Routes remain attached to Manor and Frontier Root.</span>
+          </article>
+          <article class="zone">
+            <strong>Zone 2 · Boundary</strong>
+            <span>Laws contain claims before the lanes expand them.</span>
+          </article>
+          <article class="zone">
+            <strong>Zone 3 · Proof</strong>
+            <span>Gauges confirm the served source and active route truth.</span>
+          </article>
+          <article class="zone">
+            <strong>Zone 4 · Return</strong>
+            <span>Every lane keeps a visible way back to the parent hub.</span>
+          </article>
+        </div>
+
+        <div class="pill-row">
+          <a class="pill primary state-link" href="/frontier/">Frontier Root</a>
+          <a class="pill state-link" href="/explore/">Manor</a>
+          <a class="pill state-link" href="/laws/">Laws</a>
+          <a class="pill state-link" href="/gauges/">Gauges</a>
+        </div>
       </section>
 
       <details class="card receipt" open>
         <summary>Route receipt</summary>
-        <pre>FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1
+        <pre>FRONTIER_EXPLORE_HUB_CURRENT_STANDARD_TNT_v1
 route=/explore/frontier/
 page=explore_frontier
 role=frontier_lane_parent_hub
 message=eleven_lanes_one_parent_map
+standard=compass,north_star,legend,four_zones
+compass=frontier_attached_to_manor_route_field
+north_star=keep_the_edge_attached
+legend=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
+four_zones=map,boundary,proof,return
 parent_route=/explore/
 frontier_root=/frontier/
 boundary_route=/laws/
 proof_route=/gauges/
 foreground_core=map,boundary,proof,return
-lanes=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
 vision_horizons=not_so_distant_future,distant_future
 vision_role=merged_future_sightline_lane
-retired_distance_category_removed=true
-deleted_route_not_advertised=true
-state_carry=gd_lang,gd_style,gd_time,gd_depth
-lane_base=/explore/frontier/
-route_owns=frontier_lane_parent_hub,11_lane_links,vision_merged_description,return_routes,receipt
+deleted_distance_category_advertised=false
+state_carry=gd_lang,gd_style,gd_time,gd_depth,lane
+lane_mode=url_only
+route_owns=frontier_lane_parent_hub,11_lane_links,vision_merged_description,current_navigation_standard,return_routes,receipt
 route_does_not_own=frontier_root_visual_field,lane_page_internals,gauges_logic,shared_assets,runtime_files
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -616,7 +596,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      FRONTIER_EXPLORE_HUB_11_LANE_VISION_MERGE_TNT_v1 · Explore Frontier Hub · Eleven Lanes.
+      FRONTIER_EXPLORE_HUB_CURRENT_STANDARD_TNT_v1 · Explore Frontier Hub · Current Standard.
     </footer>
   </div>
 
@@ -624,18 +604,21 @@ visual_pass_claimed=false</pre>
     (() => {
       "use strict";
 
-      const allowed = ["gd_lang", "gd_style", "gd_time", "gd_depth"];
+      const allowed = ["gd_lang", "gd_style", "gd_time", "gd_depth", "lane"];
+      const defaults = {
+        gd_lang: "en",
+        gd_style: "informal",
+        gd_time: "now",
+        gd_depth: "explore",
+        lane: "platform"
+      };
+
       const params = new URLSearchParams(window.location.search);
       const carry = new URLSearchParams();
 
       allowed.forEach((key) => {
-        if (params.has(key)) carry.set(key, params.get(key));
+        carry.set(key, params.get(key) || defaults[key]);
       });
-
-      if (!carry.has("gd_lang")) carry.set("gd_lang", "en");
-      if (!carry.has("gd_style")) carry.set("gd_style", "informal");
-      if (!carry.has("gd_time")) carry.set("gd_time", "now");
-      if (!carry.has("gd_depth")) carry.set("gd_depth", "explore");
 
       document.querySelectorAll(".state-link").forEach((link) => {
         const url = new URL(link.getAttribute("href"), window.location.origin);

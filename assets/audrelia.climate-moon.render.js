@@ -1,14 +1,22 @@
 /* /assets/audrelia.climate-moon.render.js
-   AUDRELIA_CLIMATE_MOON_RENDER_EXTENSION_TNT_v1
+   AUDRELIA_CLIMATE_MOON_DESIGN_EXTENSION_TNT_v1
 
    ROLE=
    DOWNSTREAM_RENDER_EXTENSION
 
    OWNS=
    AUDRELIA_MANUFACTURED_CLIMATE_MOON_PROFILE
+   EARTH_MOON_REFERENCE_LANGUAGE
    ASSEMBLED_SPACE_ROCK_SURFACE
    CLIMATE_REGULATION_LATTICE
    AUDRELIA_CLIMATE_MOON_EXTENSION_RECEIPT
+
+   DESIGN=
+   Believable moon first.
+   Manufactured climate body second.
+   No clean Death-Star read.
+   No pasted sci-fi panels.
+   No generic crater ball.
 
    DOES_NOT_OWN=
    PLATFORM_PROJECTION
@@ -21,7 +29,7 @@
 (function bindAudreliaClimateMoonRenderExtension(global) {
   "use strict";
 
-  const VERSION = "AUDRELIA_CLIMATE_MOON_RENDER_EXTENSION_TNT_v1";
+  const VERSION = "AUDRELIA_CLIMATE_MOON_DESIGN_EXTENSION_TNT_v1";
   const ID = "audrelia-moon";
   const LABEL = "Audrelia Manufactured Climate Moon";
   const TYPE = "manufactured_climate_moon";
@@ -117,6 +125,8 @@
       axialTiltDeg: -6.8,
       lightModel: "moon",
       manufactured: true,
+      earthMoonReference: true,
+      assembledSpaceRockSurface: true,
       climateRegulation: true,
       rimColor: "rgba(230,236,232,0.70)",
       glowColor: "rgba(170,190,205,0.24)",
@@ -133,28 +143,30 @@
 
     const canvas = makeCanvas(SOURCE_WIDTH, SOURCE_HEIGHT);
     const ctx = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    const random = makeSeededRandom(6350303);
+    const random = makeSeededRandom(6350304);
 
     const base = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-    base.addColorStop(0.00, "#deded7");
-    base.addColorStop(0.28, "#c8c9c2");
-    base.addColorStop(0.58, "#9fa19c");
-    base.addColorStop(0.82, "#777d7f");
-    base.addColorStop(1.00, "#555f66");
+    base.addColorStop(0.00, "#dfdfd8");
+    base.addColorStop(0.26, "#c9cac4");
+    base.addColorStop(0.55, "#a6a8a4");
+    base.addColorStop(0.78, "#7d8487");
+    base.addColorStop(1.00, "#566168");
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
-    const maria = "rgba(58,62,64,0.34)";
+    const maria = "rgba(56,60,62,0.34)";
     drawEllipse(ctx, -30, 26, 22, 10, -8, maria);
     drawEllipse(ctx, 12, 18, 20, 9, 6, maria);
     drawEllipse(ctx, 42, -6, 25, 11, 10, maria);
     drawEllipse(ctx, -52, -20, 19, 8, -12, maria);
     drawEllipse(ctx, 82, 30, 18, 7, -8, "rgba(70,72,74,0.22)");
+    drawEllipse(ctx, -88, -8, 12, 5.8, 3, "rgba(50,54,56,0.19)");
+    drawEllipse(ctx, 102, -24, 15, 6.5, -10, "rgba(66,68,70,0.16)");
 
-    for (let i = 0; i < 2900; i += 1) {
+    for (let i = 0; i < 3200; i += 1) {
       const lon = -180 + random() * 360;
       const lat = -82 + random() * 164;
-      const size = 0.20 + Math.pow(random(), 2.55) * 7.2;
+      const size = 0.18 + Math.pow(random(), 2.55) * 7.4;
       const strength = 0.12 + random() * 0.55;
 
       drawEllipse(
@@ -174,54 +186,74 @@
         size * 0.76,
         size * 0.50,
         random() * 180,
-        "rgba(255,255,245," + (0.03 + strength * 0.07).toFixed(4) + ")"
+        "rgba(255,255,245," + (0.028 + strength * 0.065).toFixed(4) + ")"
       );
     }
 
-    for (let i = 0; i < 10; i += 1) {
-      const lat = -60 + i * 13.5;
+    for (let i = 0; i < 14; i += 1) {
+      const lat = -66 + i * 10.2;
       const points = [];
 
       for (let lon = -180; lon <= 180; lon += 3) {
-        const wave = Math.sin((lon * 0.055) + i) * 2.2 + Math.sin((lon * 0.12) - i) * 0.9;
+        const wave =
+          Math.sin((lon * 0.052) + i) * 1.8 +
+          Math.sin((lon * 0.119) - i) * 0.72;
         points.push([lon, lat + wave]);
       }
 
-      drawStroke(ctx, points, "rgba(205,218,216,0.075)", 1.5);
+      drawStroke(ctx, points, "rgba(205,218,216,0.052)", 1.15);
     }
 
-    for (let i = 0; i < 96; i += 1) {
-      const lon = -180 + random() * 360;
-      const lat = -64 + random() * 128;
-      const r = 0.35 + random() * 1.25;
-
-      drawEllipse(ctx, lon, lat, r, r * 0.72, 0, "rgba(210,235,225,0.11)");
-      drawEllipse(ctx, lon, lat, r * 0.34, r * 0.25, 0, "rgba(245,255,245,0.10)");
-    }
-
-    for (let i = 0; i < 42; i += 1) {
+    for (let i = 0; i < 52; i += 1) {
       const lon = -180 + random() * 360;
       const points = [];
 
       for (let lat = -70; lat <= 70; lat += 4) {
-        const wobble = Math.sin((lat * 0.08) + i) * 1.2;
+        const wobble = Math.sin((lat * 0.08) + i) * 0.95;
         points.push([lon + wobble, lat]);
       }
 
-      drawStroke(ctx, points, "rgba(180,215,205,0.045)", 1);
+      drawStroke(ctx, points, "rgba(180,215,205,0.035)", 0.9);
     }
 
-    for (let i = 0; i < 280; i += 1) {
+    for (let i = 0; i < 144; i += 1) {
+      const lon = -180 + random() * 360;
+      const lat = -64 + random() * 128;
+      const r = 0.28 + random() * 1.05;
+
+      drawEllipse(ctx, lon, lat, r, r * 0.72, 0, "rgba(210,235,225,0.085)");
+      drawEllipse(ctx, lon, lat, r * 0.32, r * 0.23, 0, "rgba(245,255,245,0.075)");
+    }
+
+    for (let i = 0; i < 48; i += 1) {
+      const lon = -180 + random() * 360;
+      const lat = -58 + random() * 116;
+      const length = 5 + random() * 18;
+      const angle = random() * 360;
+      const points = [];
+
+      for (let p = 0; p < 8; p += 1) {
+        const t = p / 7;
+        points.push([
+          lon + Math.cos(angle * DEG) * length * (t - 0.5),
+          lat + Math.sin(angle * DEG) * length * (t - 0.5)
+        ]);
+      }
+
+      drawStroke(ctx, points, "rgba(225,238,235,0.050)", 1.1);
+    }
+
+    for (let i = 0; i < 360; i += 1) {
       drawEllipse(
         ctx,
         -180 + random() * 360,
         -72 + random() * 144,
-        0.12 + random() * 0.75,
-        0.08 + random() * 0.42,
+        0.10 + random() * 0.75,
+        0.07 + random() * 0.42,
         random() * 180,
         random() > 0.55
-          ? "rgba(255,255,255," + (0.025 + random() * 0.06).toFixed(4) + ")"
-          : "rgba(20,24,26," + (0.02 + random() * 0.05).toFixed(4) + ")"
+          ? "rgba(255,255,255," + (0.022 + random() * 0.055).toFixed(4) + ")"
+          : "rgba(20,24,26," + (0.018 + random() * 0.046).toFixed(4) + ")"
       );
     }
 
@@ -273,6 +305,8 @@
       version: VERSION,
       renderDelegatedToPlatformProjection: true,
       manufacturedClimateMoon: true,
+      believableMoonFirst: true,
+      climateRegulationVisibleOnInspection: true,
       ownsBodyPixelsOnly: true,
       profileMerge: false
     };
@@ -286,9 +320,12 @@
       type: TYPE,
       version: VERSION,
       file: "/assets/audrelia.climate-moon.render.js",
+      earthMoonReference: true,
       manufacturedClimateMoon: true,
       assembledSpaceRockSurface: true,
+      subtleAssemblyTraces: true,
       climateRegulationLattice: true,
+      believableMoonFirst: true,
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       generatedImage: false,
@@ -302,7 +339,7 @@
     type: TYPE,
     version: VERSION,
     VERSION,
-    aliases: ["moon", "audrelia-climate-moon", "climate-moon", "manufactured-moon", "adralia-moon"],
+    aliases: ["moon", "audrelia-climate-moon", "climate-moon", "manufactured-moon", "adralia-moon", "audralia-moon"],
     createProfile,
     buildTexture,
     sampleSurface,

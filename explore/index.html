@@ -1,135 +1,93 @@
 <!-- /explore/index.html -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-page="manor-route-map"
+  data-route="/explore/"
+  data-contract="EXPLORE_BECOMES_MANOR_ROUTE_MAP_TNT_v1"
+  data-role="manor-route-map"
+  data-message="one-manor-many-rooms"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
+>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Explore · Diamond Gate Bridge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Manor</title>
   <meta
     name="description"
-    content="Explore is the public route-map surface for Diamond Gate Bridge. It hosts Frontier inside Explore and routes visitors without losing the Manor anchor."
-  />
-
-  <!--
-  ══════════════════════════════════════════════════════════════════════
-  EXPLORE_ROUTE_MAP_PUBLIC_SURFACE_RENEWAL_TNT_v1
-  TARGET=/explore/index.html
-  MODE=FULL_FILE_TNT
-  CLASS=ROUTE_MAP_SURFACE_RENEWAL
-  OWNER=SEAN
-  STATUS=READY_FOR_DEPLOYMENT
-
-  PRECINCT=
-  Explore route-map page, hosted Frontier section, outward traversal cards,
-  Manor return anchors, and public route explanation.
-
-  JURISDICTION=
-  Explain Explore as route-map surface.
-  Host Frontier inside Explore.
-  Route to Compass, Door, Home, Book, Universe, Earth G1, Products, Showroom, and Gauges.
-  Preserve Manor anchor and no-drift return.
-
-  NON_JURISDICTION=
-  Does not mount Planet 1.
-  Does not render Earth, Sun, or Moon.
-  Does not mutate runtime.
-  Does not score Gauges.
-  Does not create standalone /frontier/.
-  Does not rewrite global navigation logic.
-
-  RENEWAL LAW=
-  Explore maps.
-  Universe relates.
-  Showroom proves.
-  Gauges audits.
-  No layer takes another layer's job.
-  ══════════════════════════════════════════════════════════════════════
-  -->
+    content="The Manor is the Diamond Gate Bridge route-map surface: one message, many rooms, no drift."
+  >
 
   <style>
     :root {
-      --bg: #03050a;
-      --panel: rgba(9, 14, 24, 0.88);
-      --panel-strong: rgba(14, 21, 34, 0.94);
-      --line: rgba(255, 255, 255, 0.15);
-      --line-strong: rgba(255, 255, 255, 0.28);
+      --panel: rgba(9, 14, 26, 0.90);
+      --line: rgba(255,255,255,0.15);
       --text: #f8f1dd;
-      --muted: rgba(248, 241, 221, 0.72);
-      --faint: rgba(248, 241, 221, 0.48);
-      --gold: #f6d46b;
-      --blue: #7bd6ff;
-      --green: #8ff0c6;
-      --rose: #ff9cc8;
-      --safe-width: min(100%, 1180px);
-      --card-radius: 1.65rem;
+      --muted: rgba(242,246,255,0.74);
+      --faint: rgba(242,246,255,0.48);
+      --gold: #f2c76f;
+      --stage: min(100%, 1120px);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
       width: 100%;
-      min-width: 0;
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 10%, rgba(123, 214, 255, 0.14), transparent 26rem),
-        radial-gradient(circle at 15% 75%, rgba(246, 212, 107, 0.1), transparent 24rem),
-        radial-gradient(circle at 88% 78%, rgba(143, 240, 198, 0.08), transparent 24rem),
-        var(--bg);
+        radial-gradient(circle at 50% 12%, rgba(242,199,111,0.15), transparent 30rem),
+        radial-gradient(circle at 50% 72%, rgba(80,145,230,0.13), transparent 34rem),
+        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      min-height: 100svh;
-    }
+    body { min-height: 100svh; }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,.14) 0 1px, transparent 2px),
-        radial-gradient(circle at 39% 31%, rgba(255,255,255,.10) 0 1px, transparent 2px),
-        radial-gradient(circle at 72% 22%, rgba(255,255,255,.12) 0 1px, transparent 2px),
-        radial-gradient(circle at 86% 76%, rgba(255,255,255,.10) 0 1px, transparent 2px);
-      opacity: 0.66;
       z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
+        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
+        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
+        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
+      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
+      opacity: 0.38;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip-link {
       position: absolute;
-      left: 1rem;
       top: -4rem;
+      left: 1rem;
       z-index: 20;
       padding: 0.75rem 1rem;
       border-radius: 999px;
       background: var(--gold);
-      color: #090b10;
+      color: #080a0f;
       font-weight: 900;
     }
 
-    .skip-link:focus {
-      top: 1rem;
-    }
+    .skip-link:focus { top: 1rem; }
 
-    .page {
+    .shell {
       position: relative;
       z-index: 1;
-      width: var(--safe-width);
+      width: var(--stage);
       margin: 0 auto;
       padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
-      overflow-x: hidden;
+        max(1.4rem, env(safe-area-inset-bottom));
     }
 
     .topbar {
@@ -144,7 +102,6 @@
       display: inline-flex;
       flex-direction: column;
       gap: 0.08rem;
-      min-width: 0;
       font-weight: 950;
       line-height: 1.05;
       letter-spacing: 0.04em;
@@ -167,35 +124,36 @@
       justify-content: flex-end;
       flex-wrap: wrap;
       gap: 0.42rem;
-      min-width: 0;
-      max-width: 100%;
     }
 
     .nav a {
+      min-height: 2.1rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 2.1rem;
       padding: 0.45rem 0.72rem;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,.035);
       color: var(--muted);
+      background: rgba(255,255,255,0.035);
       font-size: 0.74rem;
       font-weight: 850;
       white-space: nowrap;
     }
 
     .nav a[aria-current="page"] {
-      border-color: rgba(246, 212, 107, 0.9);
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
+      border-color: rgba(242,199,111,0.9);
       color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
     }
 
     .hero {
+      min-height: calc(100svh - 9rem);
       display: grid;
-      gap: 1rem;
-      padding: clamp(0.7rem, 3vw, 1.4rem) 0 1rem;
+      align-content: center;
+      justify-items: center;
+      gap: 1.05rem;
+      padding: clamp(2rem, 7vw, 5rem) 0;
       text-align: center;
     }
 
@@ -209,270 +167,210 @@
     }
 
     h1 {
+      width: min(100%, 880px);
       margin: 0;
-      font-size: clamp(2.25rem, 10vw, 5.7rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      font-size: clamp(3rem, 11vw, 7rem);
+      line-height: 0.88;
+      letter-spacing: -0.085em;
       text-wrap: balance;
     }
 
     .lead {
-      width: min(100%, 800px);
-      margin: 0 auto;
+      width: min(100%, 680px);
+      margin: 0;
+      color: rgba(255,241,205,0.94);
+      font-size: clamp(1.02rem, 3.6vw, 1.22rem);
+      line-height: 1.5;
+      text-wrap: balance;
+    }
+
+    .quote {
+      width: min(100%, 720px);
+      margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 3.8vw, 1.18rem);
+      font-size: clamp(0.94rem, 3.2vw, 1.05rem);
       line-height: 1.55;
       text-wrap: balance;
     }
 
-    .pills {
+    .primary-actions,
+    .room-grid {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 0.45rem;
-      width: min(100%, 900px);
-      margin: 0 auto;
+      gap: 0.55rem;
     }
 
-    .pill {
-      padding: 0.44rem 0.72rem;
-      border: 1px solid rgba(246, 212, 107, 0.28);
+    .button {
+      min-height: 2.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.62rem 0.95rem;
+      border: 1px solid rgba(242,199,111,0.9);
       border-radius: 999px;
-      background: rgba(246, 212, 107, 0.06);
-      color: rgba(255, 238, 174, 0.9);
-      font-size: 0.72rem;
+      color: #080a0f;
+      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
+      font-size: 0.78rem;
       font-weight: 950;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.065em;
       text-transform: uppercase;
-      overflow-wrap: anywhere;
+      transition: transform 160ms ease, box-shadow 160ms ease;
     }
 
-    .route-map {
+    .button::after { content: " →"; }
+
+    .button.secondary {
+      border-color: rgba(255,255,255,0.22);
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      box-shadow: none;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
+      outline: none;
+    }
+
+    .invariant-row {
+      width: min(100%, 760px);
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 1rem;
-      margin-top: 1rem;
-      align-items: stretch;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.5rem;
     }
 
-    .map-panel,
-    .frontier-panel,
-    .route-card,
-    .receipt {
-      border: 1px solid var(--line);
-      border-radius: var(--card-radius);
+    .invariant {
+      min-height: 6.25rem;
+      display: grid;
+      align-content: center;
+      gap: 0.25rem;
+      padding: 0.85rem;
+      border: 1px dashed rgba(242,199,111,0.26);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .invariant strong {
+      color: rgba(255,241,205,0.95);
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .invariant span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .room-panel {
+      width: min(100%, 940px);
+      margin-top: 1rem;
+      padding: clamp(0.8rem, 2.8vw, 1rem);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 1.25rem;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)),
+        linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.012)),
         var(--panel);
       box-shadow:
-        0 2rem 7rem rgba(0,0,0,.34),
-        inset 0 1px 0 rgba(255,255,255,.08);
+        0 1.2rem 4rem rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+
+    .room-panel-title {
+      margin: 0 0 0.7rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .room-link {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.48rem 0.72rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .room-link::after {
+      content: " →";
+      color: var(--gold);
+    }
+
+    .receipt {
+      width: min(100%, 900px);
+      margin-top: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--faint);
       overflow: hidden;
     }
 
-    .map-panel {
-      min-height: 34rem;
-      position: relative;
-      padding: clamp(1rem, 3vw, 1.4rem);
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-    }
-
-    .map-panel::before,
-    .map-panel::after {
-      content: "";
-      position: absolute;
-      inset: 11%;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 50%;
-      transform: rotate(-18deg) scaleX(1.18);
-      z-index: -1;
-    }
-
-    .map-panel::after {
-      inset: 20%;
-      opacity: .62;
-      transform: rotate(18deg) scaleX(1.28);
-    }
-
-    .map-core {
-      width: min(82vw, 25rem);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 2rem;
-      background:
-        radial-gradient(circle at 36% 30%, rgba(255,255,255,.22), transparent 0 18%, transparent 42%),
-        radial-gradient(circle at 50% 50%, rgba(123,214,255,.18), rgba(4,10,18,.78) 66%, rgba(4,8,15,.96));
-      border: 1px solid rgba(123,214,255,.35);
-      box-shadow:
-        0 0 2.8rem rgba(123,214,255,.18),
-        inset -2rem -2rem 4rem rgba(0,0,0,.34);
-    }
-
-    .map-core strong {
-      display: block;
-      font-size: clamp(1.6rem, 7vw, 3rem);
-      line-height: 0.95;
-      letter-spacing: -0.055em;
-    }
-
-    .map-core span {
-      display: block;
-      margin-top: 0.75rem;
-      color: var(--muted);
-      font-size: clamp(0.88rem, 3vw, 1rem);
-      line-height: 1.45;
-    }
-
-    .side-stack {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .frontier-panel {
-      padding: clamp(1rem, 3.2vw, 1.35rem);
-      background:
-        radial-gradient(circle at 15% 0%, rgba(255,156,200,.1), transparent 18rem),
-        var(--panel-strong);
-    }
-
-    .frontier-panel h2,
-    .route-card h2,
-    .receipt h2 {
-      margin: 0 0 0.55rem;
-      font-size: clamp(1.05rem, 4vw, 1.35rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .frontier-panel p,
-    .route-card p,
-    .receipt p {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(0.9rem, 3.2vw, 1rem);
-      line-height: 1.5;
-      overflow-wrap: break-word;
-    }
-
-    .frontier-panel .frontier-lock {
-      display: inline-flex;
-      margin-top: 0.85rem;
-      padding: 0.4rem 0.7rem;
-      border: 1px solid rgba(255,156,200,.34);
-      border-radius: 999px;
-      color: #ffd6e8;
-      background: rgba(255,156,200,.055);
+    .receipt summary {
+      cursor: pointer;
+      padding: 0.75rem 0.9rem;
+      color: var(--faint);
       font-size: 0.72rem;
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .route-card {
-      min-height: 13rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: clamp(0.95rem, 3vw, 1.2rem);
-    }
-
-    .route-card small {
-      color: var(--gold);
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .route-card a {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 2.6rem;
-      padding: 0.65rem 0.9rem;
-      border-radius: 999px;
-      border: 1px solid rgba(246, 212, 107, 0.55);
-      background: rgba(246, 212, 107, 0.08);
-      color: var(--text);
-      font-weight: 950;
-      text-align: center;
-    }
-
-    .route-card.primary a {
-      background: linear-gradient(135deg, #fff0a3, #f4c44e);
-      color: #080a0f;
-    }
-
-    .receipt {
-      margin-top: 1rem;
-      padding: clamp(0.95rem, 3vw, 1.2rem);
-    }
-
-    .contract {
+    .receipt pre {
       margin: 0;
-      color: var(--faint);
-      font: 700 0.72rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      padding: 0 0.9rem 0.9rem;
+      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
     footer {
-      padding: 1.45rem 0 0.45rem;
+      padding: 0.5rem 0;
       color: var(--faint);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       line-height: 1.45;
       text-align: center;
-      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 860px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
 
-      .route-map,
-      .cards {
+      .hero { min-height: auto; }
+
+      .invariant-row {
         grid-template-columns: 1fr;
-      }
-
-      .map-panel {
-        min-height: 28rem;
-      }
-    }
-
-    @media (max-width: 460px) {
-      .map-core {
-        width: min(78vw, 20rem);
-      }
-
-      .map-panel {
-        min-height: 24rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#explore-main">Skip to Explore</a>
+  <a class="skip-link" href="#main">Skip to Manor</a>
 
-  <div class="page">
+  <div class="shell">
     <header class="topbar">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span>Diamond Gate Bridge</span>
@@ -483,170 +381,99 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/" aria-current="page">Explore</a>
+        <a href="/explore/" aria-current="page">Manor</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Earth G1</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <main id="explore-main">
+    <main id="main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Explore · Public route-map surface</p>
-        <h1 id="page-title">Move outward without losing the Manor.</h1>
+        <p class="eyebrow">Manor · Route Map Surface</p>
+        <h1 id="page-title">One Manor. Many rooms.</h1>
+
         <p class="lead">
-          Explore is the route-map surface. It helps visitors choose the next chamber while keeping the Manor anchor,
-          the Compass return, and the Gauges proof line intact.
+          The Manor keeps the rooms connected without making every room do the same job.
         </p>
 
-        <div class="pills" aria-label="Explore receipts">
-          <span class="pill">Route map</span>
-          <span class="pill">Frontier hosted here</span>
-          <span class="pill">No detached /frontier/</span>
-          <span class="pill">No render engine</span>
-          <span class="pill">No gauges mutation</span>
+        <p class="quote">
+          “Expansion does not become drift when every path remembers the house.”
+        </p>
+
+        <div class="primary-actions" aria-label="Primary manor actions">
+          <a class="button" href="/home/">Return Home</a>
+          <a class="button secondary" href="/showroom/">Open Showroom</a>
+          <a class="button secondary" href="/frontier/">Open Frontier</a>
         </div>
-      </section>
 
-      <section class="route-map" aria-label="Explore route map">
-        <article class="map-panel">
-          <div class="map-core">
-            <div>
-              <strong>Explore maps.</strong>
-              <span>Universe relates. Showroom proves. Gauges audits. Explore keeps the route clean.</span>
-            </div>
+        <div class="invariant-row" aria-label="Manor invariants; these notes are not controls">
+          <div class="invariant">
+            <strong>Map</strong>
+            <span>The Manor shows where each room belongs.</span>
           </div>
-        </article>
 
-        <div class="side-stack">
-          <article class="frontier-panel">
-            <h2>Frontier stays hosted.</h2>
-            <p>
-              Frontier is the unknown-facing expansion edge inside Explore. It is not a standalone route and does not
-              split away from the Manor.
-            </p>
-            <span class="frontier-lock">Hosted inside /explore/</span>
-          </article>
+          <div class="invariant">
+            <strong>Separate</strong>
+            <span>Each room keeps its own work and authority.</span>
+          </div>
 
-          <article class="frontier-panel">
-            <h2>Return clearly.</h2>
-            <p>
-              Discovery does not mean drift. Every outward path keeps a return line back to Compass, Home, and Gauges.
-            </p>
-            <span class="frontier-lock">No drift traversal</span>
-          </article>
+          <div class="invariant">
+            <strong>Return</strong>
+            <span>Every outward path keeps a way back.</span>
+          </div>
         </div>
-      </section>
 
-      <section class="cards" aria-label="Explore route cards">
-        <article class="route-card primary">
-          <small>Orientation</small>
-          <div>
-            <h2>Compass</h2>
-            <p>Return to the public command surface when the route needs orientation.</p>
-          </div>
-          <a href="/">Open Compass</a>
-        </article>
+        <section class="room-panel" aria-labelledby="room-panel-title">
+          <p class="room-panel-title" id="room-panel-title">Rooms in the Manor</p>
 
-        <article class="route-card">
-          <small>Threshold</small>
-          <div>
-            <h2>Door</h2>
-            <p>Use the Door when the visitor needs entry before depth.</p>
-          </div>
-          <a href="/door/">Cross Door</a>
-        </article>
+          <nav class="room-grid" aria-label="Manor room routes">
+            <a class="room-link" href="/">Compass</a>
+            <a class="room-link" href="/door/">Door</a>
+            <a class="room-link" href="/home/">Home</a>
+            <a class="room-link" href="/nine-summits-of-love/">Book</a>
+            <a class="room-link" href="/nine-summits/universe/">Universe</a>
+            <a class="room-link" href="/products/">Products</a>
+            <a class="room-link" href="/showroom/">Showroom</a>
+            <a class="room-link" href="/frontier/">Frontier</a>
+            <a class="room-link" href="/gauges/">Gauges</a>
+          </nav>
+        </section>
 
-        <article class="route-card">
-          <small>Stability</small>
-          <div>
-            <h2>Home</h2>
-            <p>Return to the estate center before moving deeper.</p>
-          </div>
-          <a href="/home/">Return Home</a>
-        </article>
-
-        <article class="route-card">
-          <small>Human climb</small>
-          <div>
-            <h2>Book</h2>
-            <p>The Nine Summits of Love carries the human path through pressure.</p>
-          </div>
-          <a href="/nine-summits-of-love/">Open Book</a>
-        </article>
-
-        <article class="route-card">
-          <small>Visible relation</small>
-          <div>
-            <h2>Universe</h2>
-            <p>The current universe lane relates Earth, Sun, and Moon while Planet 1 remains reserved.</p>
-          </div>
-          <a href="/nine-summits/universe/">Enter Universe</a>
-        </article>
-
-        <article class="route-card">
-          <small>Accepted G1</small>
-          <div>
-            <h2>Earth G1</h2>
-            <p>Inspect the renewed Demo Actual Universe baseline for Earth, Sun, and Moon.</p>
-          </div>
-          <a href="/showroom/globe/">Inspect Earth G1</a>
-        </article>
-
-        <article class="route-card">
-          <small>Usefulness</small>
-          <div>
-            <h2>Products</h2>
-            <p>Products turn the system into usable chambers and practical public doors.</p>
-          </div>
-          <a href="/products/">Open Products</a>
-        </article>
-
-        <article class="route-card">
-          <small>Proof</small>
-          <div>
-            <h2>Showroom</h2>
-            <p>The Showroom sends visitors to active inspection routes without loading engines in the lobby.</p>
-          </div>
-          <a href="/showroom/">Open Showroom</a>
-        </article>
-
-        <article class="route-card">
-          <small>Audit</small>
-          <div>
-            <h2>Gauges</h2>
-            <p>Gauges remains the diagnostic surface. It measures; it does not mutate.</p>
-          </div>
-          <a href="/gauges/">Read Gauges</a>
-        </article>
-      </section>
-
-      <section class="receipt" aria-labelledby="receipt-title">
-        <h2 id="receipt-title">Route receipt</h2>
-        <pre class="contract">EXPLORE_ROUTE_MAP_PUBLIC_SURFACE_RENEWAL_TNT_v1
+        <details class="receipt">
+          <summary>Route receipt</summary>
+          <pre>EXPLORE_BECOMES_MANOR_ROUTE_MAP_TNT_v1
 route=/explore/
-page=explore
-role=public-route-map-surface
-frontier=hosted-inside-explore
-standalone-frontier-route=false
-uses_heavy_runtime=false
-renders_earth_sun_moon=false
-mounts_planet_1=false
-planet_render_touched=false
-runtime_touched=false
+page=manor
+former_label=explore
+role=manor_route_map_surface
+message=one_manor_many_rooms
+primary_job=connect_rooms_without_collapsing_roles
+compass=orients
+door=admits
+home=receives
+manor=maps
+book=carries_human_message
+universe=holds_world_setting
+products=make_system_usable
+showroom=launches_built_assets
+frontier=expansion_edge
+gauges=measures
+removed=earth_g1_language,demo_universe_language,frontier_hosted_conflict,long_visible_receipt
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
 gauges_logic_touched=false
-route_links=Compass,Door,Home,Book,Universe,Earth G1,Products,Showroom,Gauges
-authority_split=Explore maps; Universe relates; Showroom proves; Gauges audits
-visual_pass_claimed=false
-owner_visual_receipt_required=true</pre>
+visual_pass_claimed=false</pre>
+        </details>
       </section>
     </main>
 
     <footer>
-      EXPLORE_ROUTE_MAP_PUBLIC_SURFACE_RENEWAL_TNT_v1 · Explore maps · Frontier remains hosted · no drift.
+      EXPLORE_BECOMES_MANOR_ROUTE_MAP_TNT_v1 · Manor · Route Map Surface.
     </footer>
   </div>
 </body>

@@ -3,8 +3,8 @@
   lang="en"
   data-route="/frontier/"
   data-page="frontier"
-  data-version="G1-V11"
-  data-contract="FRONTIER_11_LANE_EDGE_FIELD_VISION_MERGE_TNT_v1"
+  data-version="G1-V12"
+  data-contract="FRONTIER_11_LANE_DIAMOND_EDGE_FIELD_TNT_v1"
   data-status="active"
   data-parent="/explore/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -14,8 +14,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Frontier · Eleven Lanes</title>
-  <meta name="description" content="Frontier carries the expansion edge through eleven lanes, with Vision unified as distant and not-so-distant future.">
+  <title>Diamond Gate Bridge · Frontier · Eleven Lane Diamond Field</title>
+  <meta name="description" content="Frontier carries the expansion edge through eleven animated diamond lanes, with Vision unified as distant and not-so-distant future.">
 
   <style>
     :root {
@@ -29,7 +29,7 @@
       --text:#f8f1dd;
       --muted:rgba(226,235,255,.76);
       --faint:rgba(226,235,255,.52);
-      --max:1120px;
+      --max:1180px;
     }
 
     * { box-sizing:border-box; }
@@ -40,8 +40,8 @@
       min-height:100%;
       color:var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,.14), transparent 26rem),
-        radial-gradient(circle at 55% 38%, rgba(139,200,255,.13), transparent 35rem),
+        radial-gradient(circle at 50% 10%, rgba(242,199,111,.16), transparent 25rem),
+        radial-gradient(circle at 50% 48%, rgba(139,200,255,.14), transparent 42rem),
         linear-gradient(180deg,#050914,#02050d 78%,#010207);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       overflow-x:hidden;
@@ -53,11 +53,11 @@
       inset:0;
       pointer-events:none;
       background-image:
-        linear-gradient(rgba(139,200,255,.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139,200,255,.06) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1.3px);
-      background-size:46px 46px,46px 46px,220px 260px;
-      opacity:.24;
+        linear-gradient(rgba(139,200,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,200,255,.055) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,.13) 0 1px, transparent 1.4px);
+      background-size:52px 52px,52px 52px,220px 260px;
+      opacity:.28;
     }
 
     a { color:inherit; text-decoration:none; }
@@ -66,7 +66,7 @@
       position:absolute;
       top:-4rem;
       left:1rem;
-      z-index:20;
+      z-index:30;
       padding:.75rem 1rem;
       border-radius:999px;
       background:var(--gold);
@@ -76,12 +76,59 @@
 
     .skip:focus { top:1rem; }
 
+    .rim {
+      position:fixed;
+      inset:0;
+      z-index:40;
+      pointer-events:none;
+    }
+
+    .rim-btn {
+      position:fixed;
+      width:4rem;
+      height:4rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(242,199,111,.38);
+      border-radius:1rem;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.10), transparent 50%),
+        linear-gradient(145deg, rgba(22,28,42,.96), rgba(5,8,16,.96));
+      box-shadow:0 1rem 3rem rgba(0,0,0,.42), 0 0 1.4rem rgba(242,199,111,.10);
+      transform:rotate(45deg);
+      pointer-events:auto;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .rim-btn span {
+      display:block;
+      transform:rotate(-45deg);
+      color:rgba(255,241,205,.96);
+      font-size:.7rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    .rim-btn:hover,
+    .rim-btn:focus {
+      border-color:rgba(242,199,111,.86);
+      box-shadow:0 1rem 3rem rgba(0,0,0,.42), 0 0 2rem rgba(242,199,111,.22);
+      outline:none;
+    }
+
+    .rim-hub { top:1rem; left:50%; margin-left:-2rem; }
+    .rim-manor { left:1rem; top:50%; margin-top:-2rem; }
+    .rim-laws { right:1rem; top:50%; margin-top:-2rem; }
+    .rim-gauges { bottom:1rem; left:50%; margin-left:-2rem; }
+
     .shell {
       position:relative;
       z-index:1;
       width:min(100%,var(--max));
       margin:0 auto;
-      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(6rem,env(safe-area-inset-bottom));
     }
 
     .card {
@@ -177,10 +224,29 @@
 
     .hero {
       padding:clamp(1.5rem,5vw,3rem);
-      min-height:clamp(20rem,42vw,31rem);
+      min-height:clamp(22rem,44vw,34rem);
       display:grid;
       gap:1rem;
       align-content:center;
+      position:relative;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,5vw,4rem);
+      top:50%;
+      width:clamp(9rem,26vw,17rem);
+      height:clamp(9rem,26vw,17rem);
+      border:1px solid rgba(242,199,111,.22);
+      border-radius:2rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,.10), transparent 55%),
+        linear-gradient(145deg, rgba(139,200,255,.06), rgba(255,255,255,.015));
+      opacity:.55;
+      animation:diamondBreathe 8s ease-in-out infinite;
+      pointer-events:none;
     }
 
     .kicker {
@@ -212,17 +278,21 @@
     h1 {
       width:min(100%,860px);
       margin:0;
-      font-size:clamp(3.8rem,13vw,7.8rem);
+      font-size:clamp(3.6rem,12vw,7.4rem);
       line-height:.84;
       letter-spacing:-.105em;
+      position:relative;
+      z-index:1;
     }
 
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.65rem,5.8vw,3.3rem);
+      font-size:clamp(1.55rem,5.4vw,3rem);
       line-height:.98;
       letter-spacing:-.07em;
+      position:relative;
+      z-index:1;
     }
 
     h3 {
@@ -237,16 +307,96 @@
       color:var(--muted);
       font-size:clamp(.98rem,2.8vw,1.18rem);
       line-height:1.55;
+      position:relative;
+      z-index:1;
+    }
+
+    .diamond-stage {
+      position:relative;
+      min-height:clamp(40rem,76vw,55rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    .diamond-stage::before {
+      content:"";
+      position:absolute;
+      width:clamp(22rem,62vw,42rem);
+      height:clamp(22rem,62vw,42rem);
+      border:1px solid rgba(139,200,255,.12);
+      border-radius:4rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(242,199,111,.055), transparent 56%),
+        radial-gradient(circle at 50% 50%, rgba(139,200,255,.06), transparent 76%);
+      animation:slowRotate 38s linear infinite;
+    }
+
+    .diamond-stage::after {
+      content:"";
+      position:absolute;
+      width:clamp(15rem,42vw,28rem);
+      height:clamp(15rem,42vw,28rem);
+      border:1px solid rgba(242,199,111,.12);
+      border-radius:3rem;
+      transform:rotate(45deg);
+      animation:counterRotate 44s linear infinite;
+      pointer-events:none;
+    }
+
+    .center-diamond {
+      position:absolute;
+      z-index:3;
+      width:clamp(11rem,26vw,16rem);
+      height:clamp(11rem,26vw,16rem);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(242,199,111,.36);
+      border-radius:2.25rem;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.10), transparent 46%),
+        linear-gradient(145deg, rgba(30,35,50,.94), rgba(8,12,22,.98));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.38), 0 0 2rem rgba(242,199,111,.12);
+      transform:rotate(45deg);
+      animation:centerPulse 7s ease-in-out infinite;
+    }
+
+    .center-diamond div {
+      transform:rotate(-45deg);
+      text-align:center;
+      display:grid;
+      gap:.3rem;
+      padding:1rem;
+    }
+
+    .center-diamond strong {
+      color:rgba(255,241,205,.98);
+      font-size:1.1rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .center-diamond span {
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
     }
 
     .lane-grid {
+      position:relative;
+      z-index:4;
+      width:100%;
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.85rem;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:1rem;
+      align-items:stretch;
+      padding:clamp(1rem,3vw,2rem);
     }
 
     .lane {
-      min-height:9.25rem;
+      min-height:10.25rem;
       display:grid;
       gap:.55rem;
       align-content:start;
@@ -255,13 +405,42 @@
       border-radius:1.25rem;
       background:
         radial-gradient(circle at 20% 0%, rgba(139,200,255,.08), transparent 60%),
-        rgba(255,255,255,.03);
+        rgba(255,255,255,.035);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      position:relative;
+      overflow:hidden;
+      animation:laneFloat 7.5s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
+    }
+
+    .lane::before {
+      content:"";
+      width:2.5rem;
+      height:2.5rem;
+      border:1px solid rgba(242,199,111,.20);
+      border-radius:.7rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 50%),
+        linear-gradient(145deg, rgba(242,199,111,.08), rgba(139,200,255,.04));
+      margin:.25rem 0 .65rem .45rem;
+      box-shadow:0 0 1.2rem rgba(242,199,111,.08);
+    }
+
+    .lane::after {
+      content:"";
+      position:absolute;
+      inset:auto -4rem -5rem auto;
+      width:10rem;
+      height:10rem;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(242,199,111,.075), transparent 64%);
+      pointer-events:none;
     }
 
     .lane:hover,
     .lane:focus {
-      transform:translateY(-2px);
+      transform:translateY(-4px);
       border-color:rgba(242,199,111,.55);
       background:
         radial-gradient(circle at 20% 0%, rgba(242,199,111,.10), transparent 60%),
@@ -284,10 +463,18 @@
     }
 
     .lane.vision {
-      border-color:rgba(242,199,111,.36);
+      border-color:rgba(242,199,111,.42);
       background:
-        radial-gradient(circle at 30% 0%, rgba(242,199,111,.13), transparent 60%),
-        rgba(255,255,255,.035);
+        radial-gradient(circle at 30% 0%, rgba(242,199,111,.14), transparent 60%),
+        rgba(255,255,255,.04);
+      box-shadow:0 0 2rem rgba(242,199,111,.09);
+    }
+
+    .lane.vision::before {
+      border-color:rgba(242,199,111,.44);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.15), transparent 50%),
+        linear-gradient(145deg, rgba(242,199,111,.20), rgba(139,200,255,.06));
     }
 
     .core-grid {
@@ -303,6 +490,18 @@
       background:rgba(255,255,255,.03);
       display:grid;
       gap:.35rem;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .core::before {
+      content:"";
+      width:1.55rem;
+      height:1.55rem;
+      border:1px solid rgba(139,200,255,.20);
+      border-radius:.45rem;
+      transform:rotate(45deg);
+      margin:.15rem 0 .4rem .25rem;
     }
 
     .core strong {
@@ -347,21 +546,87 @@
       font-size:.76rem;
     }
 
-    @media (max-width:900px) {
-      .lane-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .core-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    @keyframes diamondBreathe {
+      0%,100% { opacity:.40; transform:translateY(-50%) rotate(45deg) scale(1); }
+      50% { opacity:.68; transform:translateY(-50%) rotate(45deg) scale(1.035); }
     }
 
-    @media (max-width:560px) {
+    @keyframes slowRotate {
+      from { transform:rotate(45deg); }
+      to { transform:rotate(405deg); }
+    }
+
+    @keyframes counterRotate {
+      from { transform:rotate(45deg); }
+      to { transform:rotate(-315deg); }
+    }
+
+    @keyframes centerPulse {
+      0%,100% { box-shadow:0 1.5rem 4rem rgba(0,0,0,.38), 0 0 2rem rgba(242,199,111,.12); }
+      50% { box-shadow:0 1.5rem 4rem rgba(0,0,0,.38), 0 0 3rem rgba(242,199,111,.24); }
+    }
+
+    @keyframes laneFloat {
+      0%,100% { transform:translateY(0); }
+      50% { transform:translateY(-.35rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero::after,
+      .diamond-stage::before,
+      .diamond-stage::after,
+      .center-diamond,
+      .lane {
+        animation:none !important;
+      }
+    }
+
+    @media (max-width:980px) {
+      .lane-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .core-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .diamond-stage { min-height:auto; display:block; }
+      .center-diamond { position:relative; margin:1rem auto 0; }
+    }
+
+    @media (max-width:640px) {
+      .rim-btn {
+        width:3.25rem;
+        height:3.25rem;
+        border-radius:.8rem;
+      }
+
+      .rim-hub { top:.7rem; margin-left:-1.625rem; }
+      .rim-manor { left:.7rem; margin-top:-1.625rem; }
+      .rim-laws { right:.7rem; margin-top:-1.625rem; }
+      .rim-gauges { bottom:.7rem; margin-left:-1.625rem; }
+
       .lane-grid,
       .core-grid { grid-template-columns:1fr; }
-      h1 { font-size:clamp(3.1rem,18vw,5rem); }
+
+      h1 { font-size:clamp(3rem,18vw,5rem); }
+
+      .hero::after { opacity:.22; }
     }
   </style>
 </head>
 
 <body>
   <a class="skip" href="#frontier-main">Skip to Frontier</a>
+
+  <nav class="rim" aria-label="Outer rim controls">
+    <a class="rim-btn rim-hub" href="/" aria-label="Hub">
+      <span>Hub</span>
+    </a>
+    <a class="rim-btn rim-manor" href="/explore/" aria-label="Manor">
+      <span>Manor</span>
+    </a>
+    <a class="rim-btn rim-laws" href="/laws/" aria-label="Laws">
+      <span>Laws</span>
+    </a>
+    <a class="rim-btn rim-gauges" href="/gauges/" aria-label="Gauges">
+      <span>Proof</span>
+    </a>
+  </nav>
 
   <div class="shell">
     <header class="card top">
@@ -389,11 +654,11 @@
 
     <main id="frontier-main">
       <section class="card hero">
-        <div class="kicker">Frontier · Expansion Edge</div>
+        <div class="kicker">Frontier · Animated Diamond Edge</div>
         <h1>One edge. Eleven lanes.</h1>
         <h2>“The unknown still needs a parent map.”</h2>
         <p>
-          Frontier carries expansion without detaching from the Manor. Map, Boundary, Proof, and Return stay forward while each lane keeps its own job.
+          Frontier carries expansion without detaching from the Manor. The lanes move at the edge, but Map, Boundary, Proof, and Return stay on the rim.
         </p>
 
         <div class="cta-row">
@@ -429,63 +694,72 @@
 
       <section class="card section" aria-labelledby="lanes-title">
         <div class="kicker">Eleven Frontier Lanes</div>
-        <h2 id="lanes-title">The deleted Vision Remote category is now folded into Vision.</h2>
+        <h2 id="lanes-title">The lane field now uses diamonds, motion, and outer-rim controls.</h2>
 
-        <div class="lane-grid">
-          <a class="lane" href="/explore/frontier/closed-loop/">
-            <strong>Closed Loop</strong>
-            <span>Feedback, return logic, proof loops, and completion pathways.</span>
-          </a>
+        <div class="diamond-stage">
+          <div class="center-diamond" aria-hidden="true">
+            <div>
+              <strong>Frontier</strong>
+              <span>One edge. Eleven lanes. Four controls.</span>
+            </div>
+          </div>
 
-          <a class="lane" href="/explore/frontier/energy/">
-            <strong>Energy</strong>
-            <span>Power, motion, charge, force, pressure, and operating capacity.</span>
-          </a>
+          <div class="lane-grid">
+            <a class="lane" style="--delay:.1s" href="/explore/frontier/closed-loop/">
+              <strong>Closed Loop</strong>
+              <span>Feedback, return logic, proof loops, and completion pathways.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/infrastructure/">
-            <strong>Infrastructure</strong>
-            <span>Support layers, rails, utilities, and build foundation.</span>
-          </a>
+            <a class="lane" style="--delay:.25s" href="/explore/frontier/energy/">
+              <strong>Energy</strong>
+              <span>Power, motion, charge, force, pressure, and operating capacity.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/lattice/">
-            <strong>Lattice</strong>
-            <span>Grid logic, state-space organization, and 256-field thinking.</span>
-          </a>
+            <a class="lane" style="--delay:.4s" href="/explore/frontier/infrastructure/">
+              <strong>Infrastructure</strong>
+              <span>Support layers, rails, utilities, and build foundation.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/manual/">
-            <strong>Manual</strong>
-            <span>Operating instructions, reference logic, and field notes.</span>
-          </a>
+            <a class="lane" style="--delay:.55s" href="/explore/frontier/lattice/">
+              <strong>Lattice</strong>
+              <span>Grid logic, state-space organization, and 256-field thinking.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/shimmer/">
-            <strong>Shimmer</strong>
-            <span>Signal, atmosphere, surface effect, and future visual language.</span>
-          </a>
+            <a class="lane" style="--delay:.7s" href="/explore/frontier/manual/">
+              <strong>Manual</strong>
+              <span>Operating instructions, reference logic, and field notes.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/trajectory/">
-            <strong>Trajectory</strong>
-            <span>Direction, motion, path projection, and system movement.</span>
-          </a>
+            <a class="lane" style="--delay:.85s" href="/explore/frontier/shimmer/">
+              <strong>Shimmer</strong>
+              <span>Signal, atmosphere, surface effect, and future visual language.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/urban/">
-            <strong>Urban</strong>
-            <span>City systems, population layers, and built-environment logic.</span>
-          </a>
+            <a class="lane" style="--delay:1s" href="/explore/frontier/trajectory/">
+              <strong>Trajectory</strong>
+              <span>Direction, motion, path projection, and system movement.</span>
+            </a>
 
-          <a class="lane vision" href="/explore/frontier/vision/">
-            <strong>Vision</strong>
-            <span>Distant and not-so-distant future, sightline planning, confidence labels, and visual direction.</span>
-          </a>
+            <a class="lane" style="--delay:1.15s" href="/explore/frontier/urban/">
+              <strong>Urban</strong>
+              <span>City systems, population layers, and built-environment logic.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/waste/">
-            <strong>Waste</strong>
-            <span>Loss, recovery, disposal, circularity, and cleanup logic.</span>
-          </a>
+            <a class="lane vision" style="--delay:1.3s" href="/explore/frontier/vision/">
+              <strong>Vision</strong>
+              <span>Distant and not-so-distant future, sightline planning, confidence labels, and visual direction.</span>
+            </a>
 
-          <a class="lane" href="/explore/frontier/water/">
-            <strong>Water</strong>
-            <span>Flow, support, survival layer, maritime logic, and baseline systems.</span>
-          </a>
+            <a class="lane" style="--delay:1.45s" href="/explore/frontier/waste/">
+              <strong>Waste</strong>
+              <span>Loss, recovery, disposal, circularity, and cleanup logic.</span>
+            </a>
+
+            <a class="lane" style="--delay:1.6s" href="/explore/frontier/water/">
+              <strong>Water</strong>
+              <span>Flow, support, survival layer, maritime logic, and baseline systems.</span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -506,13 +780,14 @@
 
       <details class="card receipt" open>
         <summary>Route receipt</summary>
-        <pre>FRONTIER_11_LANE_EDGE_FIELD_VISION_MERGE_TNT_v1
+        <pre>FRONTIER_11_LANE_DIAMOND_EDGE_FIELD_TNT_v1
 route=/frontier/
 page=frontier
 role=expansion_edge
 message=one_edge_eleven_lanes
 center=frontier_edge_decorative
-design_object=11_lane_frontier_edge_field
+design_object=animated_11_lane_diamond_frontier_edge_field
+outer_rim_controls=hub,manor,laws,gauges
 foreground_core=map,boundary,proof,return
 background_lanes=closed_loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision,waste,water
 retired_lane=vision_remote
@@ -523,7 +798,7 @@ parent_route=/explore/
 boundary_route=/laws/
 proof_route=/gauges/
 return_route=/
-route_owns=frontier_root,expansion_edge,11_lane_links,foreground_core,return_routes,receipt
+route_owns=frontier_root,expansion_edge,11_lane_links,animated_diamond_field,outer_rim_controls,foreground_core,return_routes,receipt
 route_does_not_own=frontier_lane_pages,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -536,7 +811,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      FRONTIER_11_LANE_EDGE_FIELD_VISION_MERGE_TNT_v1 · Frontier · One Edge · Eleven Lanes.
+      FRONTIER_11_LANE_DIAMOND_EDGE_FIELD_TNT_v1 · Frontier · Animated Diamond Edge · Eleven Lanes.
     </footer>
   </div>
 </body>

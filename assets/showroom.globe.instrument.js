@@ -1,31 +1,32 @@
 /* /assets/showroom.globe.instrument.js
-   SHOWROOM_GLOBE_THIN_INSTRUMENT_TO_RENDER_HANDOFF_TNT_v1
+   SHOWROOM_GLOBE_INSTRUMENT_BOUNDARY_RESTORE_TNT_v1
 
-   ROLE:
-   Thin instrument facade / controller only.
+   PRECINCT=
+   SHOWROOM_GLOBE_STATE_BRIDGE
 
-   OWNS:
-   Public API.
-   Mount canvas creation.
-   Active body state.
-   Motion state.
-   Speed, direction, zoom.
-   Calling /assets/showroom.globe.render.js.
+   JURISDICTION=
+   SELECT_ACTIVE_BODY
+   HOLD_MOTION_STATE
+   HOLD_SPEED_DIRECTION_ZOOM
+   CREATE_ONE_CANVAS_IN_THE_MOUNT
+   CALL_RENDER_FILE
 
-   DOES_NOT_OWN:
-   Earth/Sun/Moon drawing.
-   Labels.
-   Route copy.
-   Buttons.
-   Gauges.
+   NON_JURISDICTION=
+   DRAW_BODY_PIXELS
+   OWN_ROUTE_COPY
+   OWN_LABEL_LAYOUT
+   OWN_BUTTON_MARKUP
+   OWN_DEMO_UNIVERSE_RELATIONSHIP
+   OWN_MOON_ORBIT
+   OWN_PLANET_1
+   OWN_GAUGES
 */
 
-(function bindShowroomGlobeThinInstrument(global) {
+(function bindShowroomGlobeInstrumentBoundary(global) {
   "use strict";
 
-  const VERSION = "SHOWROOM_GLOBE_THIN_INSTRUMENT_TO_RENDER_HANDOFF_TNT_v1";
-  const RENDER_FILE = "/assets/showroom.globe.render.js?v=true-sphere-render-v1";
-  const ROUTE = "/showroom/globe/";
+  const VERSION = "SHOWROOM_GLOBE_INSTRUMENT_BOUNDARY_RESTORE_TNT_v1";
+  const RENDER_FILE = "/assets/showroom.globe.render.js?v=SHOWROOM_GLOBE_MODEL_BOUNDARY_RESTORE_TNT_v1";
   const BODY_SET = new Set(["earth", "sun", "moon"]);
 
   const state = {
@@ -33,7 +34,7 @@
     running: true,
     direction: "forward",
     speedName: "normal",
-    speedValue: 0.0032,
+    speedValue: 0.0028,
     zoom: 100,
     longitude: 0,
     mount: null,
@@ -47,13 +48,13 @@
   };
 
   const speedValues = {
-    slow: 0.0016,
-    normal: 0.0032,
-    fast: 0.0068
+    slow: 0.0014,
+    normal: 0.0028,
+    fast: 0.0056
   };
 
   function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+    return Math.max(min, Math.min(max, Number(value) || 0));
   }
 
   function isElement(value) {
@@ -65,8 +66,8 @@
       value = value.activeBody || value.body || value.name || value.value;
     }
 
-    const body = String(value || "").toLowerCase();
-    return BODY_SET.has(body) ? body : "earth";
+    value = String(value || "earth").toLowerCase();
+    return BODY_SET.has(value) ? value : "earth";
   }
 
   function normalizeSpeed(value) {
@@ -74,13 +75,13 @@
       value = value.speedName || value.speed || value.value;
     }
 
-    const speed = String(value || "normal").toLowerCase();
-    return Object.prototype.hasOwnProperty.call(speedValues, speed) ? speed : "normal";
+    value = String(value || "normal").toLowerCase();
+    return Object.prototype.hasOwnProperty.call(speedValues, value) ? value : "normal";
   }
 
   function normalizeZoom(value) {
     if (value && typeof value === "object") value = value.zoom;
-    return clamp(Number(value) || 100, 70, 240);
+    return clamp(value || 100, 70, 180);
   }
 
   function resolveMount(target) {
@@ -103,9 +104,7 @@
       global.document.getElementById("actualBodyMount") ||
       global.document.querySelector("[data-showroom-globe-mount]") ||
       global.document.querySelector("[data-actual-bodies-mount='true']") ||
-      global.document.querySelector("[data-globe-mount]") ||
-      global.document.querySelector(".actual-globe-mount") ||
-      global.document.querySelector(".showroom-globe-mount")
+      global.document.querySelector("[data-globe-mount]")
     );
   }
 
@@ -117,7 +116,10 @@
     }
 
     if (typeof options.running === "boolean") state.running = options.running;
-    if (options.direction) state.direction = options.direction === "reverse" ? "reverse" : "forward";
+
+    if (options.direction) {
+      state.direction = options.direction === "reverse" ? "reverse" : "forward";
+    }
 
     if (options.speedName || options.speed) {
       state.speedName = normalizeSpeed(options);
@@ -139,13 +141,14 @@
 
   function loadRenderFile(callback) {
     const api = getRenderApi();
+
     if (api) {
       callback(api);
       return;
     }
 
     if (state.renderLoading) {
-      const wait = global.setInterval(() => {
+      const wait = global.setInterval(function waitForRender() {
         const ready = getRenderApi();
         if (ready) {
           global.clearInterval(wait);
@@ -161,25 +164,33 @@
 
     const script = global.document.createElement("script");
     script.src = RENDER_FILE;
+    script.async = false;
 
-    script.onload = () => {
+    script.onload = function onRenderLoad() {
       state.renderLoading = false;
       const loaded = getRenderApi();
 
       if (loaded) callback(loaded);
       else {
-        state.lastError = "RENDER_FILE_LOADED_BUT_API_MISSING";
-        writeReceipt("RENDER_FILE_API_MISSING");
+        state.lastError = "RENDER_FILE_LOADED_API_MISSING";
+        writeReceipt("RENDER_FILE_LOADED_API_MISSING");
       }
     };
 
-    script.onerror = () => {
+    script.onerror = function onRenderError() {
       state.renderLoading = false;
       state.lastError = "RENDER_FILE_LOAD_FAILED";
       writeReceipt("RENDER_FILE_LOAD_FAILED");
     };
 
     global.document.head.appendChild(script);
+  }
+
+  function stopLoop() {
+    if (state.raf) {
+      global.cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    }
   }
 
   function ensureCanvas(target) {
@@ -190,7 +201,9 @@
       return false;
     }
 
-    if (state.mount === mount && state.canvas) return true;
+    if (state.mount === mount && state.canvas && mount.contains(state.canvas)) {
+      return true;
+    }
 
     stopLoop();
 
@@ -204,12 +217,13 @@
     const canvas = global.document.createElement("canvas");
     canvas.className = "dgb-showroom-globe-render-canvas";
     canvas.setAttribute("data-showroom-globe-render-canvas", "true");
-    canvas.setAttribute("aria-label", "Demo Actual Universe rendered body");
+    canvas.setAttribute("aria-label", "Showroom Globe selected body");
 
     canvas.style.display = "block";
     canvas.style.width = "100%";
+    canvas.style.height = "100%";
     canvas.style.maxWidth = "100%";
-    canvas.style.height = "auto";
+    canvas.style.maxHeight = "100%";
     canvas.style.aspectRatio = "1 / 1";
     canvas.style.borderRadius = "50%";
     canvas.style.background = "transparent";
@@ -220,20 +234,13 @@
     state.canvas = canvas;
     state.renderer = null;
 
-    mount.dataset.instrumentMounted = "true";
-    mount.dataset.instrumentBoundary = "thin-facade";
-    mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
-    mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
-    mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
-    mount.dataset.routeAuthority = "labels-controls-mount-zoom-wrapper";
-    mount.dataset.projection = "true-inverse-spherical";
-    mount.dataset.activeBody = state.body;
-    mount.dataset.textureRequired = "false";
-    mount.dataset.visualPassClaimed = "false";
+    writeMountBoundary("CANVAS_CREATED");
 
     if (global.ResizeObserver) {
-      state.resizeObserver = new ResizeObserver(() => {
-        if (state.renderer && typeof state.renderer.resize === "function") state.renderer.resize();
+      state.resizeObserver = new ResizeObserver(function handleResize() {
+        if (state.renderer && typeof state.renderer.resize === "function") {
+          state.renderer.resize();
+        }
         drawOnce();
       });
       state.resizeObserver.observe(mount);
@@ -248,7 +255,7 @@
       return;
     }
 
-    loadRenderFile((api) => {
+    loadRenderFile(function onRenderApi(api) {
       if (!api || typeof api.createRenderer !== "function") {
         state.lastError = "CREATE_RENDERER_MISSING";
         writeReceipt("CREATE_RENDERER_MISSING");
@@ -260,10 +267,32 @@
     });
   }
 
+  function writeMountBoundary(status) {
+    if (!state.mount) return;
+
+    state.mount.dataset.instrumentMounted = "true";
+    state.mount.dataset.instrumentBoundary = "state-bridge-only";
+    state.mount.dataset.instrumentReceipt = status || "READY";
+    state.mount.dataset.activeBody = state.body;
+    state.mount.dataset.singleBodyMode = "true";
+    state.mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
+    state.mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
+    state.mount.dataset.instrumentAuthority = "/assets/showroom.globe.instrument.js";
+    state.mount.dataset.routeAuthority = "shell-labels-controls";
+    state.mount.dataset.routeDrawsBody = "false";
+    state.mount.dataset.instrumentDrawsBody = "false";
+    state.mount.dataset.renderDrawsBody = "true";
+    state.mount.dataset.demoUniverseRelationship = "false";
+    state.mount.dataset.moonOrbit = "false";
+    state.mount.dataset.planetOne = "reserved";
+    state.mount.dataset.generatedImage = "false";
+    state.mount.dataset.visualPassClaimed = "false";
+  }
+
   function drawOnce() {
     if (!state.canvas) return;
 
-    ensureRenderer((renderer) => {
+    ensureRenderer(function renderWithRenderer(renderer) {
       if (!renderer || typeof renderer.render !== "function") {
         state.lastError = "RENDER_METHOD_MISSING";
         writeReceipt("RENDER_METHOD_MISSING");
@@ -273,7 +302,11 @@
       renderer.render({
         body: state.body,
         longitude: state.longitude,
-        zoom: state.zoom
+        zoom: state.zoom,
+        singleBodyMode: true,
+        demoUniverseRelationship: false,
+        moonOrbit: false,
+        planetOne: "reserved"
       });
 
       writeReceipt("DRAWN_BY_RENDER_FILE");
@@ -295,13 +328,6 @@
     }
   }
 
-  function stopLoop() {
-    if (state.raf) {
-      global.cancelAnimationFrame(state.raf);
-      state.raf = 0;
-    }
-  }
-
   function startLoop() {
     stopLoop();
 
@@ -313,46 +339,42 @@
   }
 
   function writeReceipt(status) {
+    writeMountBoundary(status);
+
     state.lastReceipt = {
       ok: true,
       status: status || "READY",
       version: VERSION,
-      route: ROUTE,
-      instrumentBoundary: "thin-facade",
+      route: "/showroom/globe/",
+      page: "showroom-globe-inspection",
+      instrumentBoundary: "state-bridge-only",
       renderAuthority: "/assets/showroom.globe.render.js",
       bodyRenderAuthority: "/assets/showroom.globe.render.js",
-      projection: "true-inverse-spherical",
       activeBody: state.body,
+      singleBodyMode: true,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
       speedValue: state.speedValue,
       zoom: state.zoom,
       longitude: state.longitude,
-      textureRequired: false,
+      routeDrawsBody: false,
+      instrumentDrawsBody: false,
+      renderDrawsBody: true,
       ownsPublicApi: true,
       ownsMotionState: true,
-      ownsBodyDrawing: false,
-      ownsRouteLabel: false,
-      ownsRouteDescription: false,
-      ownsControlsMarkup: false,
+      ownsBodyPixels: false,
       ownsRouteCopy: false,
+      ownsControlsMarkup: false,
+      ownsDemoUniverseRelationship: false,
+      ownsMoonOrbit: false,
+      ownsPlanetOne: false,
       ownsGauges: false,
+      generatedImage: false,
       visualPassClaimed: false,
       lastError: state.lastError,
       timestamp: new Date().toISOString()
     };
-
-    if (state.mount) {
-      state.mount.dataset.instrumentReceipt = status || "READY";
-      state.mount.dataset.instrumentBoundary = "thin-facade";
-      state.mount.dataset.renderAuthority = "/assets/showroom.globe.render.js";
-      state.mount.dataset.bodyRenderAuthority = "/assets/showroom.globe.render.js";
-      state.mount.dataset.projection = "true-inverse-spherical";
-      state.mount.dataset.activeBody = state.body;
-      state.mount.dataset.textureRequired = "false";
-      state.mount.dataset.visualPassClaimed = "false";
-    }
 
     return state.lastReceipt;
   }
@@ -365,25 +387,22 @@
         return {
           ok: false,
           status: "HOLD_NO_MOUNT",
-          version: VERSION,
-          instrumentBoundary: "thin-facade"
+          version: VERSION
         };
       }
 
-      ensureRenderer(() => {
+      ensureRenderer(function onRendererReady() {
         startLoop();
       });
 
       return writeReceipt("MOUNTED");
     } catch (error) {
       state.lastError = error && error.message ? error.message : String(error);
-
       return {
         ok: false,
         status: "HOLD_EXCEPTION",
         version: VERSION,
-        error: state.lastError,
-        instrumentBoundary: "thin-facade"
+        error: state.lastError
       };
     }
   }
@@ -402,6 +421,7 @@
 
   function setActiveBody(value) {
     state.body = normalizeBody(value);
+    state.longitude = 0;
     if (state.mount) startLoop();
     return writeReceipt("BODY_SELECTED");
   }
@@ -463,14 +483,14 @@
 
   function setZoom(value) {
     if (value && typeof value === "object") {
-      if (value.zoom === "in") state.zoom = clamp(state.zoom + 10, 70, 240);
-      else if (value.zoom === "out") state.zoom = clamp(state.zoom - 10, 70, 240);
+      if (value.zoom === "in") state.zoom = clamp(state.zoom + 10, 70, 180);
+      else if (value.zoom === "out") state.zoom = clamp(state.zoom - 10, 70, 180);
       else if (value.zoom === "reset") state.zoom = 100;
       else state.zoom = normalizeZoom(value);
     } else if (value === "in") {
-      state.zoom = clamp(state.zoom + 10, 70, 240);
+      state.zoom = clamp(state.zoom + 10, 70, 180);
     } else if (value === "out") {
-      state.zoom = clamp(state.zoom - 10, 70, 240);
+      state.zoom = clamp(state.zoom - 10, 70, 180);
     } else if (value === "reset") {
       state.zoom = 100;
     } else {
@@ -489,12 +509,13 @@
     return {
       ok: true,
       version: VERSION,
-      route: ROUTE,
-      instrumentBoundary: "thin-facade",
+      route: "/showroom/globe/",
+      page: "showroom-globe-inspection",
+      instrumentBoundary: "state-bridge-only",
       renderAuthority: "/assets/showroom.globe.render.js",
       bodyRenderAuthority: "/assets/showroom.globe.render.js",
-      projection: "true-inverse-spherical",
       activeBody: state.body,
+      singleBodyMode: true,
       running: state.running,
       direction: state.direction,
       speedName: state.speedName,
@@ -504,18 +525,22 @@
       mountPresent: Boolean(state.mount),
       canvasPresent: Boolean(state.canvas),
       rendererPresent: Boolean(state.renderer),
-      textureRequired: false,
-      lastReceipt: state.lastReceipt,
-      lastError: state.lastError,
+      routeDrawsBody: false,
+      instrumentDrawsBody: false,
+      renderDrawsBody: true,
       ownsPublicApi: true,
       ownsMotionState: true,
-      ownsBodyDrawing: false,
-      ownsRouteLabel: false,
-      ownsRouteDescription: false,
-      ownsControlsMarkup: false,
+      ownsBodyPixels: false,
       ownsRouteCopy: false,
+      ownsControlsMarkup: false,
+      ownsDemoUniverseRelationship: false,
+      ownsMoonOrbit: false,
+      ownsPlanetOne: false,
       ownsGauges: false,
-      visualPassClaimed: false
+      generatedImage: false,
+      visualPassClaimed: false,
+      lastReceipt: state.lastReceipt,
+      lastError: state.lastError
     };
   }
 
@@ -529,6 +554,7 @@
     if (mountNode) {
       renderGlobe(mountNode, {
         activeBody: state.body,
+        body: state.body,
         running: state.running,
         direction: state.direction,
         speedName: state.speedName,
@@ -538,10 +564,6 @@
 
     try {
       global.dispatchEvent(new CustomEvent("showroom:globe:instrument-ready", {
-        detail: getStatus()
-      }));
-
-      global.dispatchEvent(new CustomEvent("dgb:showroom:route-to-render-handoff-renewed", {
         detail: getStatus()
       }));
     } catch (_) {}

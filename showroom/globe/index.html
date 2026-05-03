@@ -1,364 +1,673 @@
+<!--
+══════════════════════════════════════════════════════════════════════
+FULL_FILE_TNT
+FILE=/showroom/globe/index.html
+TNT_ID=SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1
+MODE=FULL_FILE_REPLACEMENT
+PRECINCT=DEMO_UNIVERSE_BODY_LANE
+JURISDICTION=EARTH_G1_SUN_G1_MOON_G1_VISIBLE_ROUTE_PRESENTATION
+NON_JURISDICTION=PLANET_1_NINE_SUMMITS_UNIVERSE, GAUGES_SCORING, GLOBAL_SITE_AUTHORITY
+VISUAL_PASS_CLAIMED=false
+OWNER_VISUAL_RECEIPT_REQUIRED=true
+══════════════════════════════════════════════════════════════════════
+-->
 <!doctype html>
-<html
-  lang="en"
-  data-page="earth-g1-sun-g1-moon-g1"
-  data-route="/showroom/globe/"
-  data-contract="SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1"
-  data-demo-universe="earth-sun-moon-sequence"
-  data-generation="G1"
-  data-earth-g1="complete"
-  data-sun-g1="locked"
-  data-moon-g1="shared-full-moon-4k-lock"
-  data-moon-phase="full-moon"
-  data-planet-one="reserved-for-nine-summits-universe"
-  data-visual-pass-claimed="false"
->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Earth G1 · Sun G1 · Moon G1</title>
-  <meta name="description" content="Earth G1 and Sun G1 preserved, Moon G1 aligned to the Demo Universe full-moon 4K baseline.">
-
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1">
+  <meta
+    name="description"
+    content="Earth Generation 1, Sun Generation 1, and Moon Generation 1 Demo Universe route."
+  />
 
   <style>
+    :root {
+      --bg: #02030a;
+      --panel: rgba(7, 10, 24, 0.78);
+      --panel-strong: rgba(10, 14, 32, 0.94);
+      --line: rgba(235, 229, 204, 0.22);
+      --line-strong: rgba(247, 224, 139, 0.52);
+      --text: #f7f0dc;
+      --muted: rgba(247, 240, 220, 0.72);
+      --faint: rgba(247, 240, 220, 0.48);
+      --gold: #f1c965;
+      --gold-soft: rgba(241, 201, 101, 0.18);
+      --blue: #78c7ff;
+      --shadow: rgba(0, 0, 0, 0.52);
+      --body-size: min(76vw, 520px);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(48, 91, 164, 0.18), transparent 34rem),
+        radial-gradient(circle at 78% 18%, rgba(225, 173, 79, 0.12), transparent 28rem),
+        radial-gradient(circle at 50% 118%, rgba(92, 126, 176, 0.12), transparent 34rem),
+        var(--bg);
+    }
+
     body {
+      min-height: 100%;
+      margin: 0;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 24%, rgba(255,255,255,0.08) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 12%, rgba(255,255,255,0.12) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 62% 48%, rgba(255,255,255,0.08) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 32% 76%, rgba(255,255,255,0.1) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(2,3,10,0.7), rgba(2,3,10,1));
       overflow-x: hidden;
     }
 
-    .page-note {
-      color: var(--dgb-muted, rgba(228, 234, 246, 0.76));
-      line-height: 1.55;
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
     }
 
-    .body-switch-row,
-    .control-grid,
-    .top-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
+    body::before {
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.38) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,0.22) 0 1px, transparent 1.4px);
+      background-size: 97px 97px, 149px 149px;
+      background-position: 12px 21px, 44px 11px;
+      opacity: 0.38;
     }
 
-    .book-bubble {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      border: 1px solid rgba(242, 199, 111, 0.58);
-      border-radius: 999px;
-      padding: 10px 16px;
+    body::after {
       background:
-        linear-gradient(180deg, rgba(242, 199, 111, 0.18), rgba(242, 199, 111, 0.055)),
-        rgba(255, 255, 255, 0.035);
-      color: var(--dgb-text, #f5f7fb);
-      font-weight: 900;
-      text-decoration: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+        radial-gradient(circle at 50% 45%, transparent 0 18rem, rgba(0,0,0,0.38) 48rem),
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.35));
     }
 
-    .book-bubble::before {
-      content: "Book";
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 34px;
-      min-height: 24px;
-      margin-right: 8px;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--gold);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      transform: translateY(-180%);
+      background: var(--gold);
+      color: #111;
+      padding: 0.7rem 1rem;
       border-radius: 999px;
-      background: rgba(242, 199, 111, 0.14);
-      color: #f2c76f;
-      font-size: 0.68rem;
-      font-weight: 950;
+      font-weight: 800;
+      z-index: 20;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    header {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)),
+        var(--panel);
+      box-shadow: 0 24px 80px var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+    }
+
+    .brand strong {
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .body-switch-row .active-view {
-      border-color: rgba(242, 199, 111, 0.72);
-      background: linear-gradient(180deg, rgba(242,199,111,0.22), rgba(242,199,111,0.07));
-      color: #fff2c7;
+    .brand span {
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
-    .planet-card {
-      overflow: visible !important;
-      padding-top: clamp(16px, 4vw, 32px);
-      padding-bottom: clamp(16px, 4vw, 32px);
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      justify-content: flex-end;
     }
 
-    .planet-stage-shell {
-      width: 100%;
+    nav a,
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.55rem 0.82rem;
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    nav a[aria-current="page"] {
+      color: #111;
+      background: linear-gradient(135deg, #fff0aa, var(--gold));
+      border-color: rgba(255,255,255,0.2);
+      font-weight: 800;
+    }
+
+    .hero {
       display: grid;
-      place-items: center;
-      overflow: visible;
+      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      gap: 24px;
+      align-items: center;
+      padding: 26px 0;
     }
 
-    .planet-stage {
-      width: min(84vw, 720px);
-      max-width: 100%;
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      margin-inline: auto;
+    .hero-copy {
+      padding: 18px 4px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0.55rem 0 0.7rem;
+      font-size: clamp(2.35rem, 7vw, 5.6rem);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+
+    .lead {
+      max-width: 66ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.65vw, 1.25rem);
+      line-height: 1.65;
+    }
+
+    .status-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .status-strip .pill {
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+    }
+
+    .stage-card {
+      position: relative;
       overflow: hidden;
-      border-radius: 36px;
+      min-height: 650px;
+      border-radius: 34px;
+      border: 1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 50%, rgba(19, 48, 105, 0.24), transparent 52%),
-        linear-gradient(180deg, rgba(4, 9, 21, 0.98), rgba(4, 12, 28, 0.98));
-      position: relative;
+        radial-gradient(circle at 50% 38%, rgba(155, 198, 255, 0.14), transparent 19rem),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.04),
+        0 30px 100px rgba(0,0,0,0.58);
     }
 
-    .planet-stage::before {
-      content: "";
+    .orbital-ring {
+      position: absolute;
+      inset: 44px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 50%;
+      transform: rotateX(66deg) rotateZ(-11deg);
+      filter: blur(0.2px);
+    }
+
+    .orbital-ring.two {
+      inset: 82px 58px;
+      border-color: rgba(241, 201, 101, 0.13);
+      transform: rotateX(68deg) rotateZ(23deg);
+    }
+
+    .body-stage {
       position: absolute;
       inset: 0;
-      background-image:
-        radial-gradient(circle at 16% 28%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.4px),
-        radial-gradient(circle at 78% 20%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 68% 78%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 28% 74%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0) 1px);
-      background-size: 180px 180px, 220px 220px, 260px 260px, 200px 200px;
-      opacity: 0.32;
-      pointer-events: none;
-    }
-
-    .planet-stage[data-active-body="sun"],
-    .planet-stage[data-active-body="moon"] {
-      overflow: visible !important;
-    }
-
-    .celestial-stage {
-      position: relative;
-      width: min(82vw, 560px);
-      height: min(82vw, 560px);
-      max-width: 100%;
-      max-height: 100%;
       display: grid;
       place-items: center;
-      isolation: isolate;
+      padding: 34px;
     }
 
-    .celestial-canvas {
+    .body-frame {
       position: relative;
-      z-index: 2;
-      display: block;
-      width: min(76vw, 500px);
-      height: min(76vw, 500px);
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 50%;
-      background: transparent;
-      object-fit: contain;
-      transform: none;
+      width: var(--body-size);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 28px 38px rgba(0,0,0,0.58));
     }
 
-    .sun-stage::before {
-      content: "";
+    .body-glow {
       position: absolute;
-      inset: 5%;
+      width: 124%;
+      aspect-ratio: 1;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255, 242, 188, 0.32), rgba(255, 190, 80, 0.17) 42%, rgba(255, 100, 30, 0.07) 72%, transparent 100%);
-      filter: blur(3px);
-      z-index: 1;
+      background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 67%);
+      opacity: 0.8;
+      transform: scale(1);
     }
 
-    .sun-stage::after {
-      content: "";
+    canvas.body-canvas {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .moon-visible-shadow {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      box-shadow:
-        0 0 44px rgba(255, 236, 170, 0.28),
-        0 0 112px rgba(255, 155, 55, 0.20),
-        0 0 188px rgba(255, 96, 30, 0.11);
-      z-index: 0;
-    }
-
-    .sun-canvas {
-      filter: brightness(1.42) saturate(1.22) contrast(1.10);
-    }
-
-    .moon-stage::before {
-      content: "";
-      position: absolute;
-      inset: 4%;
-      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
       background:
-        radial-gradient(circle at 48% 44%, rgba(255, 250, 234, 0.25), rgba(235, 240, 250, 0.13) 44%, rgba(120, 155, 220, 0.055) 70%, transparent 100%);
-      filter: blur(2px);
-      z-index: 1;
+        radial-gradient(circle at 28% 23%, rgba(255,255,255,0.24), transparent 15%),
+        radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,0.24) 78%, rgba(0,0,0,0.68) 100%),
+        linear-gradient(105deg, rgba(255,255,255,0.12), transparent 38%, rgba(0,0,0,0.17));
+      mix-blend-mode: screen;
+      opacity: 0;
     }
 
-    .moon-stage::after {
-      content: "";
+    .body-frame[data-body="moon"] .moon-visible-shadow {
+      opacity: 0.55;
+    }
+
+    .body-label {
       position: absolute;
-      inset: 4%;
-      border-radius: 50%;
-      box-shadow:
-        0 0 34px rgba(240, 244, 252, 0.20),
-        0 0 86px rgba(154, 176, 214, 0.13),
-        0 0 132px rgba(120, 145, 180, 0.07);
-      z-index: 0;
+      left: 50%;
+      bottom: -62px;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: grid;
+      justify-items: center;
+      gap: 5px;
+      width: min(100%, 460px);
+      text-align: center;
     }
 
-    .moon-canvas {
-      filter: brightness(1.24) saturate(1.04) contrast(1.18);
-      will-change: transform;
-      backface-visibility: hidden;
+    .body-label strong {
+      font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .control-grid button,
-    .body-switch-row button {
-      min-width: 132px;
+    .body-label span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
-    .receipt {
+    .controls-panel {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 6;
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(3, 5, 14, 0.68);
+      backdrop-filter: blur(14px);
+    }
+
+    .body-tabs,
+    .motion-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.68rem 0.92rem;
+      background: rgba(255,255,255,0.055);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(241,201,101,0.52);
+    }
+
+    button[aria-pressed="true"],
+    button.active {
+      color: #111;
+      background: linear-gradient(135deg, #fff0aa, var(--gold));
+      border-color: transparent;
+      font-weight: 800;
+    }
+
+    .speed-line {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .speed-track {
+      position: relative;
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.09);
+    }
+
+    .speed-track span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 52%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(120,199,255,0.78), var(--gold));
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02)),
+        var(--panel);
+      box-shadow: 0 20px 70px rgba(0,0,0,0.36);
+    }
+
+    .info-card h2,
+    .info-card h3 {
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .contract {
+      overflow: auto;
       white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      color: #fff4c7;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      border-radius: 22px;
+      border: 1px solid rgba(241, 201, 101, 0.22);
+      background: rgba(0,0,0,0.34);
+      padding: 16px;
     }
 
-    @media (max-width: 720px) {
-      .planet-stage {
-        width: min(84vw, 430px);
+    .receipt-bar {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(241,201,101,0.12), rgba(120,199,255,0.06)),
+        var(--panel-strong);
+    }
+
+    .receipt-bar strong {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      font-size: 0.82rem;
+    }
+
+    .receipt-bar p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    footer {
+      padding: 26px 0 10px;
+      color: var(--faint);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
       }
 
-      .celestial-stage {
-        width: min(82vw, 430px);
-        height: min(82vw, 430px);
+      .stage-card {
+        min-height: 590px;
       }
 
-      .celestial-canvas {
-        width: min(76vw, 390px);
-        height: min(76vw, 390px);
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      :root {
+        --body-size: min(82vw, 420px);
+      }
+
+      .site-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 10px;
+      }
+
+      header,
+      .stage-card,
+      .info-card,
+      .receipt-bar {
+        border-radius: 22px;
+      }
+
+      .stage-card {
+        min-height: 560px;
+      }
+
+      .controls-panel {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      button {
+        padding: 0.6rem 0.76rem;
+        font-size: 0.84rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#earth-g1-main">Skip to Earth Generation 1</a>
+  <a class="skip-link" href="#earth-g1">Skip to Earth Generation 1</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Rich Manor and Estate</div>
-        <div class="dgb-room-line">Earth · Generation 1 · Demo Universe · Sun G1 · Moon G1</div>
+  <div class="site-shell">
+    <header>
+      <div class="brand-row">
+        <a class="brand" href="/">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Rich Manor and Estate</span>
+        </a>
+
+        <nav aria-label="Primary navigation">
+          <a href="/">Compass</a>
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/book/">Book</a>
+          <a href="/nine-summits/universe/">Universe</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/showroom/globe/" aria-current="page">Earth G1</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/book/">Read</a>
+        </nav>
       </div>
+    </header>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Earth G1</a>
-        <a href="/gauges/">Gauges</a>
-        <a class="book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read</a>
-      </nav>
-    </div>
-  </header>
+    <main id="earth-g1">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <div class="eyebrow">Earth · Generation 1 · Demo Universe · Sun G1 · Moon G1</div>
+          <h1 id="page-title">Demo Universe baseline.</h1>
+          <p class="lead">
+            Earth G1 remains complete. Sun G1 remains locked. Moon G1 now receives the same
+            bright full-moon treatment as the Demo Universe: 4K-style lunar detail, viewer-facing
+            solar illumination, subtle Earth-reflected fill, crater fields, maria basins, ray systems,
+            regolith grain, micro-impact texture, limb shading, and no new-moon shadow.
+          </p>
 
-  <main id="earth-g1-main" class="dgb-main">
-    <section class="dgb-hero">
-      <p class="dgb-eyebrow">Earth · Generation 1</p>
-      <h1 class="dgb-title">Demo Universe baseline.</h1>
+          <div class="status-strip" aria-label="Route status">
+            <span class="pill">Earth G1 complete</span>
+            <span class="pill">Sun G1 locked</span>
+            <span class="pill">Moon G1 full moon</span>
+            <span class="pill">Shared Demo Universe lighting</span>
+            <span class="pill">4K lunar detail</span>
+            <span class="pill">Owner visual receipt required</span>
+          </div>
+        </div>
 
-      <p class="dgb-copy">
-        Earth G1 is complete. Sun G1 is locked. Moon G1 now uses the same bright full-moon baseline as the Demo Universe:
-        4K lunar detail, viewer-facing solar illumination, subtle Earth-reflected fill, crater fields, maria basins,
-        ray systems, regolith grain, micro-impact texture, and no new-moon shadow.
-      </p>
+        <section class="stage-card" aria-label="Demo Universe body viewer">
+          <div class="orbital-ring" aria-hidden="true"></div>
+          <div class="orbital-ring two" aria-hidden="true"></div>
 
-      <div class="dgb-chip-row">
-        <span class="dgb-chip">Earth G1 complete</span>
-        <span class="dgb-chip">Sun G1 locked</span>
-        <span class="dgb-chip">Moon G1 full moon</span>
-        <span class="dgb-chip">Shared Demo Universe lighting</span>
-        <span class="dgb-chip">4K lunar detail</span>
-        <span class="dgb-chip hold">Moon G1 lock-ready</span>
-      </div>
+          <div class="body-stage">
+            <div class="body-frame" id="bodyFrame" data-body="earth">
+              <div class="body-glow" id="bodyGlow" aria-hidden="true"></div>
+              <canvas class="body-canvas" id="bodyCanvas" width="1024" height="1024" aria-label="Active Demo Universe body"></canvas>
+              <div class="moon-visible-shadow" aria-hidden="true"></div>
 
-      <div class="top-actions" aria-label="Book action">
-        <a class="book-bubble" href="/nine-summits-of-love/" data-book-link="true">Read about the book</a>
-      </div>
-    </section>
+              <div class="body-label">
+                <strong id="bodyName">Earth G1</strong>
+                <span id="bodyDescription">Preserved Generation 1 Earth baseline.</span>
+              </div>
+            </div>
+          </div>
 
-    <section class="dgb-card">
-      <h2>Choose Demo Universe body</h2>
-      <p class="page-note">
-        Earth and Sun remain preserved. Moon now matches the bright full-moon Demo Universe baseline.
-      </p>
+          <div class="controls-panel" aria-label="Earth G1 motion control">
+            <div class="body-tabs" aria-label="Choose Demo Universe body">
+              <button type="button" data-body="earth" aria-pressed="true">View Earth G1</button>
+              <button type="button" data-body="sun" aria-pressed="false">View Sun G1</button>
+              <button type="button" data-body="moon" aria-pressed="false">View Moon G1</button>
+            </div>
 
-      <div class="body-switch-row" aria-label="Demo Universe body switch">
-        <button class="dgb-button active-view" type="button" data-body-view="earth">View Earth G1</button>
-        <button class="dgb-button secondary" type="button" data-body-view="sun">View Sun G1</button>
-        <button class="dgb-button secondary" type="button" data-body-view="moon">View Moon G1</button>
-      </div>
-    </section>
+            <div class="motion-tabs" aria-label="Motion controls">
+              <button type="button" data-action="start">Start</button>
+              <button type="button" data-action="pause">Pause</button>
+              <button type="button" data-action="resume">Resume</button>
+              <button type="button" data-action="reset">Reset</button>
+              <button type="button" data-action="reverse">Reverse</button>
+              <button type="button" data-speed="slow">Slow</button>
+              <button type="button" data-speed="normal" class="active">Normal</button>
+              <button type="button" data-speed="fast">Fast</button>
+            </div>
 
-    <section class="dgb-card planet-card" aria-label="Demo Universe body renderer">
-      <div class="planet-stage-shell">
-        <div
-          id="planet-one-render"
-          class="planet-stage earth-g2-stage"
-          data-earth-asset-stage="true"
-          data-earth-asset-mount="true"
-          data-planet-one-mount="true"
-          data-planet-one-render="true"
-          data-demo-universe="earth-sun-moon-sequence"
-          data-generation="G1"
-          data-render-contract="SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1"
-          data-active-body="earth"
-          data-visual-pass-claimed="false"
-        ></div>
-      </div>
-    </section>
+            <div class="speed-line" aria-live="polite">
+              <span id="motionLabel">Motion speed: normal · direction: forward · active body: Earth G1</span>
+              <div class="speed-track" aria-hidden="true"><span id="speedFill"></span></div>
+            </div>
+          </div>
+        </section>
+      </section>
 
-    <section class="dgb-card">
-      <h2 id="control-title">Earth G1 motion control</h2>
-      <p id="control-note" class="page-note">
-        Controls target the active body.
-      </p>
+      <section class="grid" aria-label="Body status cards">
+        <article class="info-card">
+          <h2>Earth G1</h2>
+          <p>
+            Preserved as the completed Demo Universe Earth body. This TNT does not reopen Earth
+            geometry, route identity, or global route authority.
+          </p>
+        </article>
 
-      <div class="control-grid">
-        <button class="dgb-button" type="button" data-action="start">Start</button>
-        <button class="dgb-button secondary" type="button" data-action="pause">Pause</button>
-        <button class="dgb-button secondary" type="button" data-action="resume">Resume</button>
-        <button class="dgb-button secondary" type="button" data-action="reset">Reset</button>
-        <button class="dgb-button secondary" type="button" data-action="reverse">Reverse</button>
-        <button class="dgb-button secondary" type="button" data-action="slow">Slow</button>
-        <button class="dgb-button secondary" type="button" data-action="normal">Normal</button>
-        <button class="dgb-button secondary" type="button" data-action="fast">Fast</button>
-      </div>
+        <article class="info-card">
+          <h2>Sun G1</h2>
+          <p>
+            Locked as the current stellar baseline. This TNT does not replace the Sun with a symbolic
+            pen, lollipop, badge, or flat icon.
+          </p>
+        </article>
 
-      <label for="body-speed" class="page-note">Motion speed</label>
-      <input
-        id="body-speed"
-        name="body-speed"
-        type="range"
-        min="0"
-        max="100"
-        value="18"
-        data-body-speed="true"
-        aria-label="Demo Universe body motion speed"
-      >
-    </section>
+        <article class="info-card">
+          <h2>Moon G1</h2>
+          <p>
+            Upgraded into a viewer-facing full moon with crater depth, maria fields, ray systems,
+            regolith grain, micro-impact texture, soft Earthshine fill, and limb shading.
+          </p>
+        </article>
+      </section>
 
-    <section class="dgb-card">
-      <h2>Route contract</h2>
-      <pre id="planet-one-route-receipt" class="dgb-receipt receipt">SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1
+      <section class="info-card" aria-labelledby="route-contract-title">
+        <h2 id="route-contract-title">Route contract</h2>
+        <div class="contract">SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1
 route=/showroom/globe/
 page=earth-g1-sun-g1-moon-g1
 earth-g1-complete=true
 sun-g1=locked
-moon-g1=shared-full-moon-4k-lock
+moon-g1=shared-full-moon-4k-visible-pass-ready
 moon-phase=full-moon
-moon-source-resolution=4096
+moon-source-resolution=procedural-4096-style
 moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill
 moon-surface=craters-maria-rays-regolith-microimpacts-limb-shading
 new-moon=false
@@ -366,776 +675,551 @@ crescent=false
 terminator-shadow=false
 same-moon-as-demo-universe=true
 planet-1=reserved-for-nine-summits-universe
-visual-pass-claimed=false</pre>
-    </section>
-  </main>
+visual-pass-claimed=false
+owner-visual-receipt-required=true</div>
+      </section>
 
-  <footer class="dgb-footer">
-    SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 shared full-moon lock-ready.
-  </footer>
+      <section class="receipt-bar" aria-label="Hybrid Bond receipt">
+        <strong>Hybrid Bond receipt</strong>
+        <p>
+          Precinct held: Demo Universe body lane. Jurisdiction held: Earth G1, Sun G1, Moon G1 route
+          presentation. Non-jurisdiction held: Planet 1 remains reserved for Nine Summits Universe;
+          Gauges scoring, global navigation, global CSS authority, Products, Door, Home, and Compass
+          route identities are not reassigned by this file.
+        </p>
+      </section>
+    </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
-  <script src="/world/render/planet-one.render.js?v=ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=ASSET_GENERATION_2_TERMS_RENEWAL_TNT_v1"></script>
+    <footer>
+      SHOWROOM_GLOBE_MOON_G1_VISIBLE_PASS_TNT_v1 · Earth G1 complete · Sun G1 locked · Moon G1 full-moon visual pass ready · Owner receipt required.
+    </footer>
+  </div>
 
   <script>
-    (function bootEarthSunMoonSequence(window) {
+    (() => {
       "use strict";
 
-      var VERSION = "SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1";
-      var currentBody = "earth";
-      var sunRuntime = null;
-      var moonRuntime = null;
-
-      function byId(id) {
-        return document.getElementById(id);
-      }
-
-      function earth() {
-        return window.DGBEarthAssetCanvas || window.DGBDemoUniverseEarthCanvas || null;
-      }
-
-      function renderer() {
-        return window.DGBPlanetOneRenderer || window.DGBPlanetOneRender || window.DGBPlanetOneRenderTeam || null;
-      }
-
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, Number(value) || 0));
-      }
-
-      function mix(a, b, t) {
-        return a + (b - a) * clamp(t, 0, 1);
-      }
-
-      function makeSeededRandom(seed) {
-        var s = seed >>> 0;
-        return function random() {
-          s += 0x6D2B79F5;
-          var t = s;
-          t = Math.imul(t ^ (t >>> 15), t | 1);
-          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-        };
-      }
-
-      function setActiveButtons() {
-        Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
-          var active = button.getAttribute("data-body-view") === currentBody;
-          button.classList.toggle("active-view", active);
-          button.classList.toggle("secondary", !active);
-        });
-      }
-
-      function activeStatus() {
-        if (currentBody === "sun" && sunRuntime) return sunRuntime.getStatus();
-        if (currentBody === "moon" && moonRuntime) return moonRuntime.getStatus();
-        var e = earth();
-        return e && e.getStatus ? e.getStatus() : null;
-      }
-
-      function writeReceipt(status) {
-        var node = byId("planet-one-route-receipt");
-        if (!node) return;
-
-        node.textContent =
-          "SHOWROOM_GLOBE_MOON_G1_SHARED_FULL_MOON_4K_TNT_v1\n" +
-          "route=/showroom/globe/\n" +
-          "page=earth-g1-sun-g1-moon-g1\n" +
-          "current-body=" + currentBody + "\n" +
-          "earth-g1-complete=true\n" +
-          "sun-g1=locked\n" +
-          "moon-g1=shared-full-moon-4k-lock\n" +
-          "moon-phase=full-moon\n" +
-          "moon-source-resolution=4096\n" +
-          "moon-lighting=viewer-facing-solar-full-face-subtle-earthshine-fill\n" +
-          "moon-surface=craters-maria-rays-regolith-microimpacts-limb-shading\n" +
-          "new-moon=false\n" +
-          "crescent=false\n" +
-          "terminator-shadow=false\n" +
-          "same-moon-as-demo-universe=true\n" +
-          "planet-1=reserved-for-nine-summits-universe\n" +
-          "active-status=" + JSON.stringify(activeStatus(), null, 2) + "\n" +
-          "visual-pass-claimed=false\n" +
-          "status=" + status + "\n" +
-          "timestamp=" + new Date().toISOString();
-      }
-
-      function stopSun() {
-        if (sunRuntime && sunRuntime.destroy) sunRuntime.destroy();
-        sunRuntime = null;
-      }
-
-      function stopMoon() {
-        if (moonRuntime && moonRuntime.destroy) moonRuntime.destroy();
-        moonRuntime = null;
-      }
-
-      function pauseEarth() {
-        var e = earth();
-        if (e && typeof e.pause === "function") e.pause();
-      }
-
-      function clearTarget(target, body) {
-        if (!target) return;
-        target.innerHTML = "";
-        target.setAttribute("data-active-body", body);
-        target.setAttribute("data-visual-pass-claimed", "false");
-
-        if (body === "earth") target.classList.add("earth-g2-stage");
-        else target.classList.remove("earth-g2-stage");
-      }
-
-      function drawBrightSun(canvas) {
-        var ctx = canvas.getContext("2d", { alpha: true });
-        var size = canvas.width;
-        var center = size / 2;
-        var radius = size * 0.31;
-        var random = makeSeededRandom(7711);
-
-        ctx.clearRect(0, 0, size, size);
-
-        var corona = ctx.createRadialGradient(center, center, radius * 0.70, center, center, radius * 2.55);
-        corona.addColorStop(0.00, "rgba(255,248,205,0.52)");
-        corona.addColorStop(0.18, "rgba(255,214,116,0.36)");
-        corona.addColorStop(0.40, "rgba(255,146,52,0.20)");
-        corona.addColorStop(0.68, "rgba(255,92,28,0.085)");
-        corona.addColorStop(1.00, "rgba(255,92,28,0)");
-        ctx.fillStyle = corona;
-        ctx.beginPath();
-        ctx.arc(center, center, radius * 2.55, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.clip();
-
-        var base = ctx.createRadialGradient(center - radius * 0.26, center - radius * 0.32, radius * 0.035, center, center, radius);
-        base.addColorStop(0.00, "#fff8ca");
-        base.addColorStop(0.18, "#ffe071");
-        base.addColorStop(0.42, "#ffac39");
-        base.addColorStop(0.66, "#f36b1f");
-        base.addColorStop(0.86, "#c83a12");
-        base.addColorStop(1.00, "#7c1d0b");
-        ctx.fillStyle = base;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.globalCompositeOperation = "screen";
-
-        for (var i = 0; i < 5200; i += 1) {
-          var a = random() * Math.PI * 2;
-          var d = Math.sqrt(random()) * radius * 0.99;
-          var x = center + Math.cos(a) * d;
-          var y = center + Math.sin(a) * d;
-          var r = mix(size * 0.0018, size * 0.015, random());
-
-          ctx.globalAlpha = mix(0.025, 0.12, random());
-          ctx.fillStyle = random() > 0.38 ? "rgba(255,248,190,1)" : "rgba(255,112,35,1)";
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.globalAlpha = 1;
-
-        var core = ctx.createRadialGradient(center - radius * 0.18, center - radius * 0.24, 0, center, center, radius);
-        core.addColorStop(0.00, "rgba(255,255,230,0.60)");
-        core.addColorStop(0.22, "rgba(255,244,175,0.32)");
-        core.addColorStop(0.54, "rgba(255,190,85,0.12)");
-        core.addColorStop(1.00, "rgba(255,190,85,0)");
-        ctx.fillStyle = core;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function drawSharedFullMoon(canvas) {
-        var ctx = canvas.getContext("2d", { alpha: true });
-        var size = canvas.width;
-        var center = size / 2;
-        var radius = size * 0.36;
-        var random = makeSeededRandom(8802);
-
-        ctx.clearRect(0, 0, size, size);
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.clip();
-
-        var base = ctx.createRadialGradient(center - radius * 0.10, center - radius * 0.13, radius * 0.06, center, center, radius);
-        base.addColorStop(0.00, "#f4f1e8");
-        base.addColorStop(0.20, "#dededb");
-        base.addColorStop(0.44, "#b9bdc2");
-        base.addColorStop(0.68, "#929ba6");
-        base.addColorStop(0.88, "#747f8c");
-        base.addColorStop(1.00, "#566371");
-        ctx.fillStyle = base;
-        ctx.fillRect(0, 0, size, size);
-
-        function softEllipse(x, y, rx, ry, rotation, inner, outer, alpha) {
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate(rotation);
-          ctx.scale(rx, ry);
-
-          var gradient = ctx.createRadialGradient(0, 0, 0.06, 0, 0, 1);
-          gradient.addColorStop(0, inner);
-          gradient.addColorStop(0.58, outer);
-          gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-          ctx.globalAlpha = alpha;
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(0, 0, 1, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.restore();
-        }
-
-        softEllipse(center - radius * 0.24, center - radius * 0.20, radius * 0.42, radius * 0.24, -0.12, "rgba(42,46,54,0.66)", "rgba(92,98,110,0.36)", 0.40);
-        softEllipse(center + radius * 0.20, center - radius * 0.04, radius * 0.34, radius * 0.23, 0.20, "rgba(48,52,60,0.60)", "rgba(104,110,122,0.32)", 0.34);
-        softEllipse(center + radius * 0.06, center + radius * 0.36, radius * 0.28, radius * 0.18, -0.20, "rgba(52,56,64,0.56)", "rgba(112,118,130,0.28)", 0.30);
-
-        function crater(x, y, r, strength) {
-          ctx.save();
-
-          ctx.globalAlpha = 0.15 * strength;
-          ctx.fillStyle = "rgba(6,8,14,0.70)";
-          ctx.beginPath();
-          ctx.arc(x + r * 0.08, y + r * 0.08, r * 0.86, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.globalAlpha = 0.27 * strength;
-          ctx.strokeStyle = "rgba(250,252,255,0.68)";
-          ctx.lineWidth = Math.max(1, r * 0.08);
-          ctx.beginPath();
-          ctx.arc(x - r * 0.03, y - r * 0.03, r, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.globalAlpha = 0.12 * strength;
-          ctx.strokeStyle = "rgba(15,20,30,0.66)";
-          ctx.lineWidth = Math.max(1, r * 0.055);
-          ctx.beginPath();
-          ctx.arc(x + r * 0.08, y + r * 0.08, r * 0.78, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.restore();
-        }
-
-        var majors = [
-          [-0.43, -0.34, 0.115, 1.10],
-          [0.32, -0.31, 0.095, 0.98],
-          [-0.05, -0.06, 0.075, 0.84],
-          [0.34, 0.33, 0.125, 1.16],
-          [-0.30, 0.43, 0.072, 0.80],
-          [0.03, 0.43, 0.060, 0.72],
-          [0.58, 0.10, 0.054, 0.58],
-          [-0.55, 0.12, 0.050, 0.55]
-        ];
-
-        majors.forEach(function (m) {
-          crater(center + m[0] * radius, center + m[1] * radius, m[2] * radius, m[3]);
-        });
-
-        for (var i = 0; i < 1450; i += 1) {
-          var a = random() * Math.PI * 2;
-          var d = Math.sqrt(random()) * radius * 0.97;
-          var x = center + Math.cos(a) * d;
-          var y = center + Math.sin(a) * d;
-          crater(x, y, Math.pow(random(), 2.5) * size * 0.008 + size * 0.0012, mix(0.16, 0.50, random()));
-        }
-
-        ctx.globalCompositeOperation = "screen";
-
-        for (var j = 0; j < 72; j += 1) {
-          var angle = (Math.PI * 2 * j) / 72 + (random() - 0.5) * 0.10;
-          var sx = center + radius * 0.34;
-          var sy = center + radius * 0.33;
-          var length = radius * mix(0.45, 1.15, random());
-          var ex = sx + Math.cos(angle) * length;
-          var ey = sy + Math.sin(angle) * length;
-          var ray = ctx.createLinearGradient(sx, sy, ex, ey);
-          ray.addColorStop(0, "rgba(255,255,255,0.14)");
-          ray.addColorStop(1, "rgba(255,255,255,0)");
-          ctx.globalAlpha = mix(0.18, 0.62, random());
-          ctx.strokeStyle = ray;
-          ctx.lineWidth = mix(1, 6, random()) * (size / 4096);
-          ctx.beginPath();
-          ctx.moveTo(sx, sy);
-          ctx.lineTo(ex, ey);
-          ctx.stroke();
-        }
-
-        ctx.globalAlpha = 1;
-
-        var solarFace = ctx.createRadialGradient(center - radius * 0.08, center - radius * 0.10, radius * 0.04, center, center, radius);
-        solarFace.addColorStop(0.00, "rgba(255,250,232,0.48)");
-        solarFace.addColorStop(0.35, "rgba(255,244,220,0.28)");
-        solarFace.addColorStop(0.72, "rgba(240,244,252,0.12)");
-        solarFace.addColorStop(1.00, "rgba(238,242,250,0.04)");
-        ctx.fillStyle = solarFace;
-        ctx.fillRect(0, 0, size, size);
-
-        var faceLift = ctx.createRadialGradient(center, center, radius * 0.12, center, center, radius * 0.94);
-        faceLift.addColorStop(0.00, "rgba(255,255,255,0.16)");
-        faceLift.addColorStop(0.42, "rgba(245,248,255,0.10)");
-        faceLift.addColorStop(0.78, "rgba(230,236,248,0.045)");
-        faceLift.addColorStop(1.00, "rgba(230,236,248,0.015)");
-        ctx.fillStyle = faceLift;
-        ctx.fillRect(0, 0, size, size);
-
-        var earthFill = ctx.createRadialGradient(center + radius * 0.14, center + radius * 0.28, radius * 0.05, center, center, radius * 1.10);
-        earthFill.addColorStop(0.00, "rgba(112,166,255,0.12)");
-        earthFill.addColorStop(0.55, "rgba(88,138,230,0.05)");
-        earthFill.addColorStop(1.00, "rgba(74,118,205,0)");
-        ctx.fillStyle = earthFill;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.globalCompositeOperation = "multiply";
-
-        var limb = ctx.createRadialGradient(center - radius * 0.04, center - radius * 0.05, radius * 0.14, center, center, radius);
-        limb.addColorStop(0.00, "rgba(255,255,255,0)");
-        limb.addColorStop(0.62, "rgba(255,255,255,0)");
-        limb.addColorStop(0.84, "rgba(80,90,108,0.08)");
-        limb.addColorStop(1.00, "rgba(8,12,22,0.18)");
-        ctx.fillStyle = limb;
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.beginPath();
-        ctx.arc(center, center, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        ctx.save();
-        ctx.strokeStyle = "rgba(245,248,255,0.38)";
-        ctx.lineWidth = Math.max(2, size * 0.0013);
-        ctx.beginPath();
-        ctx.arc(center, center, radius - ctx.lineWidth, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      function createSunRuntime(target) {
-        var shell = document.createElement("div");
-        var canvas = document.createElement("canvas");
-        var raf = 0;
-        var running = false;
-        var renderCount = 0;
-
-        shell.className = "celestial-stage sun-stage";
-        canvas.className = "celestial-canvas sun-canvas";
-        canvas.width = 2048;
-        canvas.height = 2048;
-        canvas.setAttribute("aria-label", "Sun G1 bright solar disc");
-
-        shell.appendChild(canvas);
-        target.appendChild(shell);
-
-        drawBrightSun(canvas);
-        renderCount += 1;
-
-        function start() {
-          running = true;
-          return getStatus();
-        }
-
-        function pause() {
-          running = false;
-          if (raf) cancelAnimationFrame(raf);
-          raf = 0;
-          return getStatus();
-        }
-
-        function destroy() {
-          pause();
-          if (shell.parentNode) shell.parentNode.removeChild(shell);
-          return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
-        }
-
-        function getStatus() {
-          return {
-            ok: true,
-            role: "SUN_G1_LOCKED_BRIGHT_SOLAR_RUNTIME",
-            version: VERSION,
-            locked: true,
-            circular: true,
-            solarDisc: true,
-            lightingAuthority: true,
-            renderCount: renderCount,
-            visualPassClaimed: false
-          };
-        }
-
-        return {
-          start: start,
-          pause: pause,
-          resume: start,
-          reset: function () { drawBrightSun(canvas); renderCount += 1; return getStatus(); },
-          reverse: function () { return getStatus(); },
-          slow: function () { return getStatus(); },
-          normal: function () { return getStatus(); },
-          fast: function () { return getStatus(); },
-          setSpeed: function () { return getStatus(); },
-          destroy: destroy,
-          getStatus: getStatus
-        };
-      }
-
-      function createMoonRuntime(target) {
-        var shell = document.createElement("div");
-        var canvas = document.createElement("canvas");
-        var raf = 0;
-        var running = false;
-        var phase = 0;
-        var speed = 0.10;
-        var direction = 1;
-        var renderCount = 0;
-        var textureSize = 4096;
-        var fallbackUsed = false;
-        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        shell.className = "celestial-stage moon-stage";
-        shell.setAttribute("data-universe-light", "shared-full-moon-demo-universe");
-
-        canvas.className = "celestial-canvas moon-canvas";
-        canvas.width = textureSize;
-        canvas.height = textureSize;
-        canvas.setAttribute("aria-label", "Moon G1 shared full moon 4K lunar disc");
-        canvas.setAttribute("data-moon-source-resolution", "4096");
-        canvas.setAttribute("data-moon-g1-final-4k", "true");
-        canvas.setAttribute("data-moon-phase", "full-moon");
-        canvas.setAttribute("data-lighting", "viewer-facing-solar-full-face-subtle-earthshine-fill");
-
-        shell.appendChild(canvas);
-        target.appendChild(shell);
-
-        function buildTexture() {
-          try {
-            textureSize = 4096;
-            canvas.width = textureSize;
-            canvas.height = textureSize;
-            canvas.setAttribute("data-moon-source-resolution", "4096");
-            drawSharedFullMoon(canvas);
-          } catch (error) {
-            fallbackUsed = true;
-            textureSize = 3072;
-            canvas.width = textureSize;
-            canvas.height = textureSize;
-            canvas.setAttribute("data-moon-source-resolution", "3072-fallback");
-            drawSharedFullMoon(canvas);
-            console.warn("[DGB Moon G1] 4096 texture fallback used.", error);
-          }
-
-          renderCount += 1;
-        }
-
-        function applyMotion() {
-          if (reduceMotion) {
-            canvas.style.transform = "translateZ(0)";
-            return;
-          }
-
-          var degree = phase * 1.2;
-          var librationX = Math.sin(phase * 0.35) * 1.0;
-          var librationY = Math.cos(phase * 0.28) * 0.7;
-
-          canvas.style.transform =
-            "translate3d(" + librationX.toFixed(3) + "px," + librationY.toFixed(3) + "px,0) rotate(" +
-            degree.toFixed(4) + "deg)";
-        }
-
-        function tick() {
-          if (!running) return;
-          phase += speed * direction * 0.018;
-          applyMotion();
-          raf = requestAnimationFrame(tick);
-        }
-
-        function start() {
-          if (running) return getStatus();
-          running = true;
-          raf = requestAnimationFrame(tick);
-          return getStatus();
-        }
-
-        function pause() {
-          running = false;
-          if (raf) cancelAnimationFrame(raf);
-          raf = 0;
-          return getStatus();
-        }
-
-        function destroy() {
-          pause();
-          if (shell.parentNode) shell.parentNode.removeChild(shell);
-          return { ok: true, destroyed: true, version: VERSION, visualPassClaimed: false };
-        }
-
-        function getStatus() {
-          return {
-            ok: true,
-            role: "MOON_G1_SHARED_FULL_MOON_4K_RUNTIME",
-            version: VERSION,
-            running: running,
-            circular: true,
-            phase: "full-moon",
-            fullMoon: true,
-            newMoon: false,
-            crescent: false,
-            terminatorShadow: false,
-            sourceResolution: textureSize,
-            sourceResolutionTarget: 4096,
-            fallbackUsed: fallbackUsed,
-            viewerFacingSolarIllumination: true,
-            subtleEarthshineFill: true,
-            sameUniverseLighting: true,
-            sameMoonAsDemoUniverse: true,
-            craters: true,
-            majorCraters: true,
-            microImpacts: true,
-            maria: true,
-            raySystems: true,
-            regolithTexture: true,
-            limbShading: true,
-            librationMotion: true,
-            renderCount: renderCount,
-            earthG1Complete: true,
-            sunG1Locked: true,
-            lockReady: true,
-            visualPassClaimed: false
-          };
-        }
-
-        buildTexture();
-        applyMotion();
-
-        return {
-          start: start,
-          pause: pause,
-          resume: start,
-          reset: function () {
-            phase = 0;
-            applyMotion();
-            return getStatus();
-          },
-          reverse: function () {
-            direction *= -1;
-            return getStatus();
-          },
-          slow: function () {
-            speed = 0.045;
-            return getStatus();
-          },
-          normal: function () {
-            speed = 0.10;
-            return getStatus();
-          },
-          fast: function () {
-            speed = 0.18;
-            return getStatus();
-          },
-          setSpeed: function (value) {
-            var n = Number(value);
-            if (n > 1) n = n / 100;
-            speed = clamp(n, 0, 1) * 0.25;
-            return getStatus();
-          },
-          destroy: destroy,
-          getStatus: getStatus
-        };
-      }
-
-      function mountEarth() {
-        var target = byId("planet-one-render");
-        var r = renderer();
-        var e = earth();
-
-        currentBody = "earth";
-        setActiveButtons();
-        stopSun();
-        stopMoon();
-        clearTarget(target, "earth");
-
-        byId("control-title").textContent = "Earth G1 motion control";
-        byId("control-note").textContent = "Earth G1 remains the accepted globe baseline.";
-
-        var options = {
-          autoSpin: true,
-          showAxis: true,
-          touchEnabled: true,
-          brightness: 1.10,
-          contrast: 1.08,
-          cloudStrength: 0.30
-        };
-
-        if (r && typeof r.renderPlanetOne === "function") {
-          r.renderPlanetOne(target, options);
-          writeReceipt("EARTH_MOUNTED_BY_RENDERER");
-          return true;
-        }
-
-        if (e && typeof e.mount === "function") {
-          e.mount(target, options);
-          writeReceipt("EARTH_MOUNTED_BY_EARTH_ASSET");
-          return true;
-        }
-
-        writeReceipt("WAITING_FOR_EARTH_ASSET");
-        return false;
-      }
-
-      function mountSun() {
-        var target = byId("planet-one-render");
-
-        currentBody = "sun";
-        setActiveButtons();
-        pauseEarth();
-        stopMoon();
-        clearTarget(target, "sun");
-
-        byId("control-title").textContent = "Sun G1 motion control";
-        byId("control-note").textContent = "Sun G1 remains locked as the accepted bright star standard.";
-
-        sunRuntime = createSunRuntime(target);
-        sunRuntime.start();
-
-        writeReceipt("SUN_G1_LOCKED_STANDARD_MOUNTED");
-        return true;
-      }
-
-      function mountMoon() {
-        var target = byId("planet-one-render");
-
-        currentBody = "moon";
-        setActiveButtons();
-        pauseEarth();
-        stopSun();
-        clearTarget(target, "moon");
-
-        byId("control-title").textContent = "Moon G1 motion control";
-        byId("control-note").textContent =
-          "Moon G1 now uses the shared Demo Universe full-moon renderer: bright viewer-facing solar illumination, subtle Earth-reflected fill, 4K procedural lunar detail, crater fields, maria basins, ray systems, regolith grain, micro-impact texture, and no new-moon shadow.";
-
-        moonRuntime = createMoonRuntime(target);
-        moonRuntime.start();
-
-        writeReceipt("MOON_G1_SHARED_FULL_MOON_4K_MOUNTED");
-        return true;
-      }
-
-      function call(action) {
-        var api;
-
-        if (currentBody === "sun") api = sunRuntime;
-        else if (currentBody === "moon") api = moonRuntime;
-        else api = earth();
-
-        if (!api || typeof api[action] !== "function") {
-          writeReceipt("NO_ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
-          return;
-        }
-
-        api[action]();
-        writeReceipt("ACTION_" + currentBody.toUpperCase() + "_" + action.toUpperCase());
-      }
-
-      function bindControls() {
-        Array.prototype.forEach.call(document.querySelectorAll("[data-body-view]"), function (button) {
-          button.addEventListener("click", function () {
-            var body = button.getAttribute("data-body-view");
-            if (body === "sun") mountSun();
-            else if (body === "moon") mountMoon();
-            else mountEarth();
-          });
-        });
-
-        Array.prototype.forEach.call(document.querySelectorAll("[data-action]"), function (button) {
-          button.addEventListener("click", function () {
-            call(button.getAttribute("data-action"));
-          });
-        });
-
-        var speed = byId("body-speed");
-        if (speed) {
-          speed.addEventListener("input", function () {
-            var api;
-
-            if (currentBody === "sun") api = sunRuntime;
-            else if (currentBody === "moon") api = moonRuntime;
-            else api = earth();
-
-            if (api && typeof api.setSpeed === "function") {
-              api.setSpeed(Number(speed.value || 0));
-              writeReceipt("SPEED_UPDATED_" + currentBody.toUpperCase());
-            }
-          });
-        }
-      }
-
-      function boot() {
-        bindControls();
-
-        if (mountEarth()) return;
-
-        setTimeout(mountEarth, 120);
-        setTimeout(mountEarth, 420);
-        setTimeout(mountEarth, 900);
-      }
-
-      window.DGBShowroomMoonG1SharedFullMoon4KRuntime = {
-        VERSION: VERSION,
-        version: VERSION,
-        route: "/showroom/globe/",
-        mountEarth: mountEarth,
-        mountSun: mountSun,
-        mountMoon: mountMoon,
-        getStatus: function () {
-          return {
-            ok: true,
-            version: VERSION,
-            route: "/showroom/globe/",
-            currentBody: currentBody,
-            earthG1Complete: true,
-            sunG1Locked: true,
-            moonG1SharedFullMoon4K: true,
-            moonPhase: "full-moon",
-            moonViewerFacingSolarIllumination: true,
-            moonSubtleEarthshineFill: true,
-            moonSameUniverseLighting: true,
-            moonSameAsDemoUniverse: true,
-            moonG1LockReady: true,
-            newMoon: false,
-            crescent: false,
-            terminatorShadow: false,
-            planetOneReservedFor: "nine-summits-universe",
-            visualPassClaimed: false
-          };
+      const canvas = document.getElementById("bodyCanvas");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const frame = document.getElementById("bodyFrame");
+      const glow = document.getElementById("bodyGlow");
+      const bodyName = document.getElementById("bodyName");
+      const bodyDescription = document.getElementById("bodyDescription");
+      const motionLabel = document.getElementById("motionLabel");
+      const speedFill = document.getElementById("speedFill");
+
+      const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
+      const actionButtons = Array.from(document.querySelectorAll("[data-action]"));
+      const speedButtons = Array.from(document.querySelectorAll("[data-speed]"));
+
+      const state = {
+        body: "earth",
+        running: true,
+        direction: 1,
+        speedName: "normal",
+        speed: 0.0021,
+        rotation: 0,
+        lastTime: performance.now()
+      };
+
+      const bodyMeta = {
+        earth: {
+          name: "Earth G1",
+          description: "Preserved Generation 1 Earth baseline.",
+          glow: "radial-gradient(circle, rgba(120,199,255,0.28), rgba(55,112,186,0.13) 36%, transparent 70%)"
+        },
+        sun: {
+          name: "Sun G1",
+          description: "Locked stellar baseline with plasma limb, corona, and solar body depth.",
+          glow: "radial-gradient(circle, rgba(255,214,104,0.5), rgba(255,111,39,0.22) 32%, transparent 72%)"
+        },
+        moon: {
+          name: "Moon G1",
+          description: "Shared bright full-moon 4K-style baseline with crater fields, maria, rays, regolith, and Earthshine fill.",
+          glow: "radial-gradient(circle, rgba(238,238,225,0.28), rgba(132,146,170,0.13) 42%, transparent 72%)"
         }
       };
 
-      window.DGBMoonG1FullMoonPhysics4KRuntime = window.DGBShowroomMoonG1SharedFullMoon4KRuntime;
-      window.DGBMoonG1UnifiedSolarEarthshineRuntime = window.DGBShowroomMoonG1SharedFullMoon4KRuntime;
-      window.DGBMoonG1Final4KLunarRuntime = window.DGBShowroomMoonG1SharedFullMoon4KRuntime;
-      window.DGBMoonG14KLunarDetailRuntime = window.DGBShowroomMoonG1SharedFullMoon4KRuntime;
+      const speedMap = {
+        slow: { value: 0.00085, fill: "28%" },
+        normal: { value: 0.0021, fill: "52%" },
+        fast: { value: 0.0052, fill: "84%" }
+      };
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
+      function hashNoise(x, y, seed) {
+        const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+        return n - Math.floor(n);
       }
-    })(window);
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const size = Math.max(620, Math.floor(Math.min(rect.width, rect.height) * Math.min(window.devicePixelRatio || 1, 2)));
+        if (canvas.width !== size || canvas.height !== size) {
+          canvas.width = size;
+          canvas.height = size;
+        }
+      }
+
+      function clear() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function clipSphere(cx, cy, r) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+      }
+
+      function drawSphereShade(cx, cy, r, type) {
+        const shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.04, cx + r * 0.22, cy + r * 0.22, r * 1.1);
+
+        if (type === "sun") {
+          shade.addColorStop(0, "rgba(255,255,210,0.52)");
+          shade.addColorStop(0.24, "rgba(255,195,69,0.18)");
+          shade.addColorStop(0.65, "rgba(255,72,23,0.12)");
+          shade.addColorStop(1, "rgba(0,0,0,0.22)");
+        } else if (type === "moon") {
+          shade.addColorStop(0, "rgba(255,255,244,0.42)");
+          shade.addColorStop(0.34, "rgba(235,235,220,0.12)");
+          shade.addColorStop(0.72, "rgba(115,121,132,0.13)");
+          shade.addColorStop(1, "rgba(0,0,0,0.45)");
+        } else {
+          shade.addColorStop(0, "rgba(255,255,255,0.32)");
+          shade.addColorStop(0.38, "rgba(120,190,255,0.06)");
+          shade.addColorStop(0.76, "rgba(0,32,82,0.12)");
+          shade.addColorStop(1, "rgba(0,0,0,0.52)");
+        }
+
+        ctx.fillStyle = shade;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function drawEarth(cx, cy, r, rotation) {
+        ctx.save();
+        clipSphere(cx, cy, r);
+
+        const ocean = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.32, r * 0.1, cx, cy, r);
+        ocean.addColorStop(0, "#6ed7ff");
+        ocean.addColorStop(0.38, "#1b7dc2");
+        ocean.addColorStop(0.78, "#0b2e74");
+        ocean.addColorStop(1, "#031336");
+        ctx.fillStyle = ocean;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rotation * 0.36);
+
+        const land = [
+          [-0.46, -0.28, 0.33, 0.19, -0.2],
+          [0.12, -0.38, 0.28, 0.16, 0.48],
+          [0.34, 0.10, 0.36, 0.2, 0.15],
+          [-0.26, 0.28, 0.29, 0.18, 0.62],
+          [-0.58, 0.03, 0.22, 0.12, -0.76]
+        ];
+
+        land.forEach(([x, y, w, h, rot], index) => {
+          ctx.save();
+          ctx.translate(x * r, y * r);
+          ctx.rotate(rot);
+          const grd = ctx.createLinearGradient(-w * r, -h * r, w * r, h * r);
+          grd.addColorStop(0, "#d8c27c");
+          grd.addColorStop(0.42, "#5fb36e");
+          grd.addColorStop(1, "#1f704a");
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalAlpha = 0.32;
+          ctx.strokeStyle = "#f4deb0";
+          ctx.lineWidth = Math.max(1, r * 0.006);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+          ctx.restore();
+
+          if (index % 2 === 0) {
+            ctx.save();
+            ctx.globalAlpha = 0.26;
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.ellipse((x + 0.03) * r, (y - 0.08) * r, w * r * 0.64, h * r * 0.28, rot + 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        });
+
+        for (let i = 0; i < 17; i += 1) {
+          const y = (-0.82 + i * 0.102) * r;
+          ctx.globalAlpha = 0.09;
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = Math.max(1, r * 0.003);
+          ctx.beginPath();
+          ctx.ellipse(0, y, r * 0.94, r * 0.08, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+
+        const cloudBands = [
+          [-0.32, -0.24, 0.95, 0.075, -0.24],
+          [0.18, 0.05, 0.82, 0.06, 0.17],
+          [-0.12, 0.32, 0.7, 0.05, -0.38]
+        ];
+
+        cloudBands.forEach(([x, y, w, h, rot]) => {
+          ctx.save();
+          ctx.translate(cx + x * r, cy + y * r);
+          ctx.rotate(rot + rotation * 0.18);
+          ctx.globalAlpha = 0.34;
+          ctx.fillStyle = "#fff";
+          ctx.beginPath();
+          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        ctx.globalAlpha = 1;
+        ctx.restore();
+
+        drawSphereShade(cx, cy, r, "earth");
+      }
+
+      function drawSun(cx, cy, r, rotation) {
+        ctx.save();
+
+        for (let i = 0; i < 56; i += 1) {
+          const angle = (Math.PI * 2 * i) / 56 + rotation * 0.44;
+          const length = r * (0.18 + hashNoise(i, 3, 14) * 0.26);
+          ctx.strokeStyle = `rgba(255, ${150 + Math.floor(hashNoise(i, 8, 2) * 80)}, 52, ${0.14 + hashNoise(i, 9, 4) * 0.16})`;
+          ctx.lineWidth = Math.max(1, r * (0.008 + hashNoise(i, 1, 7) * 0.01));
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(angle) * r * 0.92, cy + Math.sin(angle) * r * 0.92);
+          ctx.lineTo(cx + Math.cos(angle) * (r + length), cy + Math.sin(angle) * (r + length));
+          ctx.stroke();
+        }
+
+        clipSphere(cx, cy, r);
+
+        const plasma = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.26, r * 0.05, cx, cy, r);
+        plasma.addColorStop(0, "#fff8bd");
+        plasma.addColorStop(0.22, "#ffd75f");
+        plasma.addColorStop(0.56, "#f78a2b");
+        plasma.addColorStop(0.86, "#b72d17");
+        plasma.addColorStop(1, "#3b0702");
+        ctx.fillStyle = plasma;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+        for (let i = 0; i < 74; i += 1) {
+          const a = i * 0.73 + rotation * 1.7;
+          const rr = r * (0.05 + hashNoise(i, 4, 10) * 0.78);
+          const x = cx + Math.cos(a) * rr;
+          const y = cy + Math.sin(a * 1.21) * rr;
+          const size = r * (0.025 + hashNoise(i, 2, 12) * 0.072);
+          const alpha = 0.1 + hashNoise(i, 7, 2) * 0.22;
+
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = hashNoise(i, 5, 3) > 0.5 ? "#fff2a2" : "#ff6b24";
+          ctx.beginPath();
+          ctx.ellipse(x, y, size * 1.8, size * 0.72, a, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+
+        for (let i = 0; i < 13; i += 1) {
+          const y = cy - r * 0.72 + (i / 12) * r * 1.44;
+          ctx.globalAlpha = 0.06;
+          ctx.strokeStyle = "#fff6b5";
+          ctx.lineWidth = r * 0.01;
+          ctx.beginPath();
+          ctx.moveTo(cx - r * 0.8, y + Math.sin(rotation + i) * r * 0.04);
+          ctx.bezierCurveTo(
+            cx - r * 0.22,
+            y - r * 0.08,
+            cx + r * 0.24,
+            y + r * 0.08,
+            cx + r * 0.82,
+            y
+          );
+          ctx.stroke();
+        }
+
+        ctx.restore();
+
+        drawSphereShade(cx, cy, r, "sun");
+      }
+
+      function drawMoon(cx, cy, r, rotation) {
+        ctx.save();
+        clipSphere(cx, cy, r);
+
+        const base = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.32, r * 0.05, cx + r * 0.1, cy + r * 0.12, r * 1.06);
+        base.addColorStop(0, "#fffdf1");
+        base.addColorStop(0.24, "#e8e5d4");
+        base.addColorStop(0.55, "#bfbfaf");
+        base.addColorStop(0.84, "#747985");
+        base.addColorStop(1, "#242936");
+        ctx.fillStyle = base;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rotation * 0.08);
+
+        const maria = [
+          [-0.26, -0.28, 0.27, 0.17, -0.42, 0.34],
+          [0.18, -0.24, 0.23, 0.14, 0.24, 0.28],
+          [0.08, 0.03, 0.32, 0.19, -0.06, 0.27],
+          [-0.34, 0.18, 0.19, 0.13, 0.42, 0.24],
+          [0.34, 0.27, 0.17, 0.11, -0.3, 0.2],
+          [-0.06, 0.39, 0.24, 0.11, 0.16, 0.18]
+        ];
+
+        maria.forEach(([x, y, w, h, rot, alpha]) => {
+          ctx.save();
+          ctx.translate(x * r, y * r);
+          ctx.rotate(rot);
+          ctx.globalAlpha = alpha;
+          const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w * r);
+          g.addColorStop(0, "#5c6068");
+          g.addColorStop(0.78, "#70747b");
+          g.addColorStop(1, "rgba(120,123,126,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        const craterSeeds = [
+          [-0.42, -0.42, 0.065, 0.62],
+          [-0.18, -0.52, 0.042, 0.45],
+          [0.16, -0.46, 0.052, 0.52],
+          [0.42, -0.34, 0.075, 0.58],
+          [-0.56, -0.08, 0.05, 0.42],
+          [-0.18, -0.08, 0.09, 0.5],
+          [0.26, -0.04, 0.046, 0.42],
+          [0.5, 0.08, 0.044, 0.44],
+          [-0.42, 0.34, 0.07, 0.5],
+          [-0.06, 0.29, 0.055, 0.4],
+          [0.28, 0.35, 0.076, 0.56],
+          [0.05, 0.56, 0.035, 0.34]
+        ];
+
+        craterSeeds.forEach(([x, y, size, alpha], index) => {
+          drawCrater(x * r, y * r, size * r, alpha, index);
+        });
+
+        for (let i = 0; i < 220; i += 1) {
+          const a = hashNoise(i, 4, 31) * Math.PI * 2;
+          const dist = Math.sqrt(hashNoise(i, 8, 22)) * r * 0.94;
+          const x = Math.cos(a) * dist;
+          const y = Math.sin(a) * dist;
+          const size = r * (0.0035 + hashNoise(i, 1, 12) * 0.012);
+          const alpha = 0.09 + hashNoise(i, 2, 18) * 0.18;
+          drawMicroCrater(x, y, size, alpha, i);
+        }
+
+        drawRaySystem(-0.42 * r, -0.42 * r, r * 0.42, 18, 0.18, rotation);
+        drawRaySystem(0.28 * r, 0.35 * r, r * 0.32, 14, 0.14, -rotation * 0.4);
+
+        ctx.restore();
+
+        for (let i = 0; i < 1600; i += 1) {
+          const a = hashNoise(i, 17, 97) * Math.PI * 2;
+          const dist = Math.sqrt(hashNoise(i, 29, 82)) * r;
+          const x = cx + Math.cos(a) * dist;
+          const y = cy + Math.sin(a) * dist;
+          const n = hashNoise(i, 41, 12);
+          const alpha = 0.035 + n * 0.055;
+
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = n > 0.52 ? "#fffef0" : "#6f727a";
+          ctx.fillRect(x, y, Math.max(1, r * 0.004), Math.max(1, r * 0.004));
+        }
+
+        ctx.globalAlpha = 1;
+
+        const earthshine = ctx.createRadialGradient(cx - r * 0.48, cy - r * 0.14, 0, cx - r * 0.48, cy - r * 0.14, r * 1.02);
+        earthshine.addColorStop(0, "rgba(166,207,255,0.18)");
+        earthshine.addColorStop(0.32, "rgba(166,207,255,0.08)");
+        earthshine.addColorStop(1, "rgba(166,207,255,0)");
+        ctx.fillStyle = earthshine;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+        ctx.restore();
+
+        drawSphereShade(cx, cy, r, "moon");
+
+        function drawCrater(x, y, radius, alpha, seed) {
+          ctx.save();
+          ctx.globalAlpha = alpha;
+
+          const dark = ctx.createRadialGradient(x - radius * 0.15, y - radius * 0.15, radius * 0.15, x, y, radius);
+          dark.addColorStop(0, "rgba(255,255,242,0.18)");
+          dark.addColorStop(0.45, "rgba(75,79,86,0.34)");
+          dark.addColorStop(0.82, "rgba(40,43,50,0.2)");
+          dark.addColorStop(1, "rgba(255,255,242,0.16)");
+          ctx.fillStyle = dark;
+          ctx.beginPath();
+          ctx.ellipse(x, y, radius * (1 + hashNoise(seed, 1, 4) * 0.2), radius * (0.74 + hashNoise(seed, 2, 4) * 0.22), hashNoise(seed, 3, 4) * Math.PI, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalAlpha = alpha * 0.85;
+          ctx.strokeStyle = "rgba(255,255,232,0.42)";
+          ctx.lineWidth = Math.max(1, radius * 0.08);
+          ctx.beginPath();
+          ctx.ellipse(x - radius * 0.08, y - radius * 0.09, radius, radius * 0.78, 0.2, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.globalAlpha = alpha * 0.42;
+          ctx.strokeStyle = "rgba(0,0,0,0.42)";
+          ctx.beginPath();
+          ctx.ellipse(x + radius * 0.1, y + radius * 0.12, radius * 0.88, radius * 0.67, 0.2, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        function drawMicroCrater(x, y, radius, alpha, seed) {
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = hashNoise(seed, 4, 9) > 0.48 ? "rgba(255,255,235,0.62)" : "rgba(42,44,49,0.58)";
+          ctx.beginPath();
+          ctx.ellipse(x, y, radius, radius * (0.72 + hashNoise(seed, 2, 8) * 0.3), hashNoise(seed, 3, 5) * Math.PI, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function drawRaySystem(x, y, length, count, alpha, phase) {
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = "rgba(255,255,237,0.48)";
+          for (let i = 0; i < count; i += 1) {
+            const a = (Math.PI * 2 * i) / count + phase * 0.05;
+            const rayLength = length * (0.44 + hashNoise(i, 9, 17) * 0.58);
+            ctx.lineWidth = Math.max(1, r * (0.002 + hashNoise(i, 11, 3) * 0.004));
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + Math.cos(a) * rayLength, y + Math.sin(a) * rayLength);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+      }
+
+      function renderBody() {
+        resizeCanvas();
+        clear();
+
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const r = Math.min(w, h) * 0.455;
+
+        if (state.body === "earth") drawEarth(cx, cy, r, state.rotation);
+        if (state.body === "sun") drawSun(cx, cy, r, state.rotation);
+        if (state.body === "moon") drawMoon(cx, cy, r, state.rotation);
+
+        const rim = ctx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r * 1.01);
+        rim.addColorStop(0, "rgba(255,255,255,0)");
+        rim.addColorStop(0.72, "rgba(255,255,255,0.08)");
+        rim.addColorStop(0.92, "rgba(255,255,255,0.22)");
+        rim.addColorStop(1, "rgba(0,0,0,0.62)");
+        ctx.fillStyle = rim;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = state.body === "sun" ? "rgba(255,220,120,0.58)" : "rgba(255,255,255,0.22)";
+        ctx.lineWidth = Math.max(1, r * 0.01);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      function updateLabels() {
+        const meta = bodyMeta[state.body];
+        frame.dataset.body = state.body;
+        bodyName.textContent = meta.name;
+        bodyDescription.textContent = meta.description;
+        glow.style.background = meta.glow;
+
+        bodyButtons.forEach((button) => {
+          const active = button.dataset.body === state.body;
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        speedButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.speed === state.speedName);
+        });
+
+        const directionText = state.direction > 0 ? "forward" : "reverse";
+        motionLabel.textContent = `Motion speed: ${state.speedName} · direction: ${directionText} · active body: ${meta.name}`;
+        speedFill.style.width = speedMap[state.speedName].fill;
+      }
+
+      function setBody(body) {
+        if (!bodyMeta[body]) return;
+        state.body = body;
+        updateLabels();
+        renderBody();
+      }
+
+      function setSpeed(speedName) {
+        if (!speedMap[speedName]) return;
+        state.speedName = speedName;
+        state.speed = speedMap[speedName].value;
+        updateLabels();
+      }
+
+      function animate(time) {
+        const dt = Math.min(42, time - state.lastTime);
+        state.lastTime = time;
+
+        if (state.running) {
+          state.rotation += dt * state.speed * state.direction;
+          renderBody();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      bodyButtons.forEach((button) => {
+        button.addEventListener("click", () => setBody(button.dataset.body));
+      });
+
+      actionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+
+          if (action === "start") state.running = true;
+          if (action === "pause") state.running = false;
+          if (action === "resume") state.running = true;
+          if (action === "reset") state.rotation = 0;
+          if (action === "reverse") state.direction *= -1;
+
+          updateLabels();
+          renderBody();
+        });
+      });
+
+      speedButtons.forEach((button) => {
+        button.addEventListener("click", () => setSpeed(button.dataset.speed));
+      });
+
+      window.addEventListener("resize", () => {
+        renderBody();
+      });
+
+      updateLabels();
+      renderBody();
+      requestAnimationFrame(animate);
+    })();
   </script>
 </body>
 </html>

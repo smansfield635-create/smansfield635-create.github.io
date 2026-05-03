@@ -2,14 +2,15 @@
 ══════════════════════════════════════════════════════════════════════
 FULL_FILE_TNT
 FILE=/showroom/globe/index.html
-TNT_ID=SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v1
+TNT_ID=SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2
 MODE=FULL_FILE_REPLACEMENT
 PRECINCT=DEMO_ACTUAL_UNIVERSE_GLOBE_BASELINE
-JURISDICTION=RESTORE_PROTECTED_GLOBE_MOUNT_PLUS_NON_BLOCKING_CONTROLS_PLUS_ZOOM_WRAPPER
+JURISDICTION=PROTECTED_GLOBE_MOUNT_NON_BLOCKING_CONTROLS_ZOOM_WRAPPER
 NON_JURISDICTION=INLINE_GLOBE_REDRAW, CARTOON_CANVAS_REPLACEMENT, DEMO_UNIVERSE_DATA_MERGE, PLANET_1, GAUGES_SCORING, GLOBAL_NAV_AUTHORITY
 BASELINE_STATUS=OPTIMAL_BASELINE_CANDIDATE
 EARTH_RULE=PRIOR_GLOBE_BASELINE_PROTECTED
-CONTROL_RULE=CONTROLS_MUST_NOT_BLOCK_THE_GLOBE
+CONTROL_RULE=CONTROLS_MUST_NEVER_OVERLAY_OR_BLOCK_THE_GLOBE
+MOUNT_RULE=CANONICAL_GLOBE_INSTRUMENT_REQUIRED
 DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
 GRAPHICBOX=FORBIDDEN
 IMAGE_GENERATION=FORBIDDEN
@@ -25,7 +26,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
   <title>Diamond Gate Bridge · Demo Actual Universe · Optimal Baseline</title>
   <meta
     name="description"
-    content="Demo Actual Universe optimal baseline candidate. Protected globe mount, non-blocking controls, zoom wrapper, and separated Demo Universe data."
+    content="Demo Actual Universe optimal baseline candidate with protected globe mount, non-blocking controls, zoom wrapper, and separated data lanes."
   />
 
   <style>
@@ -41,7 +42,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       --gold: #f1c965;
       --blue: #78c7ff;
       --shadow: rgba(0, 0, 0, 0.52);
-      --stage-size: min(86vw, 720px);
+      --stage-size: min(92vw, 760px);
       --zoom-scale: 1;
       color-scheme: dark;
     }
@@ -200,7 +201,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
       gap: 24px;
       align-items: start;
       padding: 26px 0;
@@ -247,13 +248,14 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .viewer-stack {
       display: grid;
-      gap: 14px;
+      gap: 18px;
+      align-items: start;
     }
 
     .stage-card {
       position: relative;
       overflow: hidden;
-      min-height: clamp(500px, 66vh, 780px);
+      min-height: clamp(540px, 68vh, 820px);
       border-radius: 34px;
       border: 1px solid var(--line);
       background:
@@ -267,7 +269,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .orbital-ring {
       position: absolute;
-      inset: 44px;
+      inset: 10%;
       border: 1px solid rgba(255,255,255,0.09);
       border-radius: 50%;
       transform: rotateX(66deg) rotateZ(-11deg);
@@ -275,7 +277,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     }
 
     .orbital-ring.two {
-      inset: 82px 58px;
+      inset: 16% 9%;
       border-color: rgba(241, 201, 101, 0.13);
       transform: rotateX(68deg) rotateZ(23deg);
     }
@@ -285,7 +287,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       inset: 0;
       display: grid;
       place-items: center;
-      padding: clamp(16px, 4vw, 42px);
+      padding: clamp(18px, 4vw, 44px);
       overflow: hidden;
     }
 
@@ -324,7 +326,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .instrument-pending {
       position: absolute;
-      inset: 16%;
+      inset: 18%;
       display: grid;
       place-items: center;
       text-align: center;
@@ -333,6 +335,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       border-radius: 999px;
       color: var(--muted);
       background: radial-gradient(circle, rgba(241,201,101,0.08), rgba(0,0,0,0.18) 58%, rgba(0,0,0,0));
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
     }
 
     .actual-globe-mount[data-instrument-mounted="true"] .instrument-pending {
@@ -342,7 +345,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     .body-label {
       position: absolute;
       left: 50%;
-      bottom: -72px;
+      bottom: -76px;
       transform: translateX(-50%);
       z-index: 5;
       display: grid;
@@ -367,7 +370,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     .controls-panel {
       position: relative;
-      z-index: 6;
+      z-index: 1;
       display: grid;
       gap: 12px;
       padding: 16px;
@@ -383,10 +386,6 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-    }
-
-    .control-row button {
-      flex: 0 1 auto;
     }
 
     button {
@@ -539,7 +538,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
     @media (max-width: 560px) {
       :root {
-        --stage-size: min(92vw, 500px);
+        --stage-size: min(94vw, 520px);
       }
 
       .site-shell {
@@ -556,7 +555,13 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
       }
 
       .stage-card {
-        min-height: min(62vh, 560px);
+        min-height: 72vh;
+        max-height: none;
+      }
+
+      .actual-globe-stage {
+        padding: 18px 10px 42px;
+        place-items: center;
       }
 
       .control-row button {
@@ -580,7 +585,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     {
       "lane": "Demo Actual Universe",
       "dataFlight": "separate",
-      "baseline": "optimal-baseline-candidate",
+      "baseline": "optimal-baseline-candidate-v2",
       "priorGlobeBaseline": "protected",
       "controlsBlockGlobe": false,
       "earth": {
@@ -642,20 +647,20 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
     <main id="demo-actual-universe">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="eyebrow">Demo Actual Universe · optimal baseline candidate</div>
-          <h1 id="page-title">The globe gets the room first.</h1>
+          <div class="eyebrow">Demo Actual Universe · optimal baseline candidate v2</div>
+          <h1 id="page-title">The globe gets a protected viewport.</h1>
           <p class="lead">
-            This run separates the visible globe precinct from the command precinct. The protected globe
-            baseline sits in its own visual chamber. Controls sit below it, never over it. Demo Universe
-            data and Demo Actual Universe data remain separate.
+            This run gives the globe a full protected viewport and moves every command option into a
+            separate panel below the visual chamber. The prior globe baseline remains protected. Demo
+            Universe data and Demo Actual Universe data remain separate.
           </p>
 
           <div class="status-strip" aria-label="Route status">
-            <span class="pill">Optimal baseline candidate</span>
+            <span class="pill">Optimal baseline candidate v2</span>
             <span class="pill">Prior globe protected</span>
-            <span class="pill">Controls below globe</span>
+            <span class="pill">Controls below viewport</span>
             <span class="pill">Zoom wrapper only</span>
-            <span class="pill">No canvas redraw</span>
+            <span class="pill">No replacement renderer</span>
             <span class="pill">Data lanes separate</span>
           </div>
         </div>
@@ -677,7 +682,10 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
                   class="actual-globe-mount"
                   id="showroomGlobeMount"
                   data-showroom-globe-root
+                  data-globe-root
                   data-globe-mount
+                  data-showroom-globe-mount
+                  data-planet-mount
                   data-demo-actual-universe="true"
                   data-preserve-prior-globe="true"
                   data-earth-rule="prior-baseline-protected"
@@ -687,7 +695,7 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
                   data-instrument-mounted="false"
                 >
                   <div class="instrument-pending" id="instrumentPending">
-                    Canonical globe instrument pending. No replacement renderer is being drawn here.
+                    Canonical globe instrument pending. The page is not drawing a replacement globe.
                   </div>
                 </div>
 
@@ -768,10 +776,10 @@ OWNER_VISUAL_RECEIPT_REQUIRED=true
 
       <section class="info-card" aria-labelledby="route-contract-title">
         <h2 id="route-contract-title">Route contract</h2>
-        <div class="contract">SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v1
+        <div class="contract">SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2
 route=/showroom/globe/
 lane=demo-actual-universe
-baseline=optimal-baseline-candidate
+baseline=optimal-baseline-candidate-v2
 demo-universe-data=separate
 demo-actual-universe-data=separate
 merge-demo-universe-into-demo-actual-universe=false
@@ -779,7 +787,7 @@ prior-globe-baseline=protected
 earth-change=zoom-wrapper-only
 controls-block-globe=false
 controls-precinct=below-stage-command-panel
-visual-precinct=globe-stage-only
+visual-precinct=protected-full-viewport-globe-stage
 inline-globe-redraw=false
 cartoon-canvas-replacement=false
 canonical-globe-instrument=/assets/showroom.globe.instrument.js
@@ -800,16 +808,16 @@ owner-visual-receipt-required=true</div>
       <section class="receipt-bar" aria-label="Hybrid Bond receipt">
         <strong>Hybrid Bond receipt</strong>
         <p>
-          Precinct held: Demo Actual Universe globe baseline. Controls now occupy a separate command
-          precinct below the globe, so they cannot block the visual object. Demo Universe and Demo
-          Actual Universe data remain separate. No inline globe redraw, no GraphicBox, no generated
-          replacement, no Planet 1 reassignment, and no Gauges scoring change.
+          Precinct held: Demo Actual Universe globe baseline. The globe now owns a protected viewport.
+          Controls occupy a separate command precinct below it. Demo Universe and Demo Actual Universe
+          data remain separate. No inline globe redraw, no GraphicBox, no generated replacement, no
+          Planet 1 reassignment, and no Gauges scoring change.
         </p>
       </section>
     </main>
 
     <footer>
-      SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v1 · optimal baseline candidate · prior globe protected · non-blocking controls · owner receipt required.
+      SHOWROOM_GLOBE_DEMO_ACTUAL_UNIVERSE_OPTIMAL_BASELINE_TNT_v2 · protected viewport · prior globe protected · non-blocking controls · owner receipt required.
     </footer>
   </div>
 
@@ -891,10 +899,13 @@ owner-visual-receipt-required=true</div>
           detail: {
             route: "/showroom/globe/",
             lane: "demo-actual-universe",
+            baseline: "optimal-baseline-candidate-v2",
             mergeDemoUniverse: false,
             preservePriorGlobe: true,
             controlsBlockGlobe: false,
             mount,
+            root: mount,
+            target: mount,
             ...detail
           }
         }));
@@ -926,7 +937,7 @@ owner-visual-receipt-required=true</div>
               target: mount,
               route: "/showroom/globe/",
               lane: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate",
+              baseline: "optimal-baseline-candidate-v2",
               preservePriorGlobe: true,
               replaceGlobeRenderer: false,
               mergeDemoUniverse: false,
@@ -961,7 +972,7 @@ owner-visual-receipt-required=true</div>
         mount.dataset.moonStandard = "physical-reality";
         mount.dataset.demoUniverseMerge = "false";
         mount.dataset.controlsBlockGlobe = "false";
-        mount.dataset.baseline = "optimal-baseline-candidate";
+        mount.dataset.baseline = "optimal-baseline-candidate-v2";
 
         if (api && typeof api.mount === "function") {
           try {
@@ -972,7 +983,7 @@ owner-visual-receipt-required=true</div>
               route: "/showroom/globe/",
               lane: "demo-actual-universe",
               mode: "demo-actual-universe",
-              baseline: "optimal-baseline-candidate",
+              baseline: "optimal-baseline-candidate-v2",
               preservePriorGlobe: true,
               replaceGlobeRenderer: false,
               mergeDemoUniverse: false,
@@ -993,7 +1004,7 @@ owner-visual-receipt-required=true</div>
           root: mount,
           target: mount,
           mode: "demo-actual-universe",
-          baseline: "optimal-baseline-candidate",
+          baseline: "optimal-baseline-candidate-v2",
           data: demoActualUniverseData,
           sunStandard: "physical-reality",
           moonStandard: "physical-reality"

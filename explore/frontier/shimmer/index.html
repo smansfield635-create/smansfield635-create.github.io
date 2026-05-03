@@ -685,7 +685,7 @@
         <span class="mark" aria-hidden="true">SH</span>
         <span class="brand-text">
           <span class="kicker" id="brandKicker">Diamond Gate Bridge · Frontier</span>
-          <strong class="title" id="brandTitle">Shimmer · G1 V10</strong>
+          <strong class="title" id="brandTitle">Shimmer · G1 V10A</strong>
         </span>
       </a>
 
@@ -779,18 +779,18 @@
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
         <span class="pill">Status label</span>
-        <h2 id="statusTitle">Shimmer contract restored to baseline.</h2>
+        <h2 id="statusTitle">Universal Node · V10A active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>SHIMMER_LATTICE_G1_V10=ACTIVE
+        <code>SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE VISIBLE_TITLE=Shimmer · G1 V10A PUBLIC_PROOF_MARKER=Universal Node · V10A active
 PAGE=/explore/frontier/shimmer/index.html
-ROUTE=/explore/frontier/shimmer/
+ROUTE=/explore/frontier/shimmer/ REVISION=V10A
 PARENT=/explore/frontier/
-BASELINE=THE_WORLD_IS_FLAT
-METHOD=RUSSIAN_DOLL_LABEL_EXPANSION
+BASELINE=UNIVERSAL_NODE_V10A
+METHOD=UNIVERSAL_NODE_RUSSIAN_DOLL_EXPANSION
 LANGUAGES=EN,ZH,ES
-VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_ONLY
+VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
 MODE=SHIMMER_OR_LATTICE_IN_PAGE_ONLY
 STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth
 NO_MODAL=TRUE
@@ -800,7 +800,7 @@ CONTEXT_PRESERVED=TRUE</code>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Frontier · Shimmer/Lattice · G1 V10</span>
+      <span>Diamond Gate Bridge · Frontier · Shimmer/Lattice · G1 V10A</span>
       <span>
         <a data-route="/explore/frontier/" href="/explore/frontier/">Frontier Hub</a> ·
         <a data-route="/explore/" href="/explore/">Explore</a> ·
@@ -854,7 +854,7 @@ CONTEXT_PRESERVED=TRUE</code>
           openDomain: "Open only the domain needed.",
           frontierCategories: "Frontier categories",
           moveBackPage: "Move to another back page.",
-          statusTitle: "Shimmer contract restored to baseline.",
+          statusTitle: "Universal Node · V10A active.",
           shimmerTitle: "Shimmer",
           shimmerHead: "Subtle signal matters before it becomes obvious.",
           shimmerLead: "Choose a label. The Shimmer and Lattice context opens only when requested.",
@@ -1201,7 +1201,7 @@ CONTEXT_PRESERVED=TRUE</code>
         document.documentElement.lang = lang === "zh" ? "zh" : lang === "es" ? "es" : "en";
 
         document.getElementById("brandKicker").textContent = lang === "zh" ? "钻石门桥 · 前沿" : lang === "es" ? "Diamond Gate Bridge · Frontera" : "Diamond Gate Bridge · Frontier";
-        document.getElementById("brandTitle").textContent = mode === "lattice" ? "Lattice · G1 V10" : "Shimmer · G1 V10";
+        document.getElementById("brandTitle").textContent = mode === "lattice" ? "Lattice · G1 V10" : "Shimmer · G1 V10A";
 
         document.getElementById("heroPill").textContent = mode === "lattice" ? (lang === "zh" ? "晶格类别" : lang === "es" ? "Categoría Lattice" : "Grid category") : c.signalCategory;
         document.getElementById("pageTitle").textContent = mode === "lattice" ? c.latticeTitle : c.shimmerTitle;

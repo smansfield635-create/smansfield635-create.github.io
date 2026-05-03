@@ -23,7 +23,7 @@
 PAGE=/explore/frontier/vision/index.html
 PARENT=/explore/frontier/
 LANGUAGES=EN,ZH,ES
-VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_ONLY
+VISIBLE_LENS=PLATFORM_OR_ENGINEERING_URL_AND_CONTROL
 STATE_CARRY=gd_lang,gd_style,gd_time,gd_depth
 CONTEXT=RUSSIAN_DOLL_LABEL_EXPANSION</code></div></section>
 <footer class="footer"><span>Diamond Gate Bridge · Frontier · Vision · G1 Optimal</span><span><a data-route="/explore/frontier/" href="/explore/frontier/">Frontier Hub</a> · <a data-route="/explore/" href="/explore/">Explore</a></span></footer>
@@ -33,3 +33,6 @@ CONTEXT=RUSSIAN_DOLL_LABEL_EXPANSION</code></div></section>
 </script>
 </body>
 </html>
+
+SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+VISIBLE_TITLE=Shimmer · G1 V10A PUBLIC_PROOF_MARKER=Universal Node · V10A active

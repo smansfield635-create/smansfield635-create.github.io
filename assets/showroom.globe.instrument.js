@@ -2,170 +2,100 @@
 ══════════════════════════════════════════════════════════════════════
 FULL_FILE_TNT
 FILE=/assets/showroom.globe.instrument.js
-TNT_ID=SHOWROOM_GLOBE_INSTRUMENT_ACTUAL_BODIES_RESTORE_TNT_v1
+TNT_ID=SHOWROOM_GLOBE_INSTRUMENT_HARD_MOUNT_ACTUAL_BODIES_TNT_v2
 MODE=FULL_FILE_REPLACEMENT
 PRECINCT=DEMO_ACTUAL_UNIVERSE_CANONICAL_GLOBE_INSTRUMENT
-JURISDICTION=ACTUAL_EARTH_SUN_MOON_RENDERING_AND_CONTROL_API
+JURISDICTION=EARTH_SUN_MOON_CANVAS_BODY_RENDERING_AND_ROUTE_CONTROL_API
 NON_JURISDICTION=ROUTE_LAYOUT, ROUTE_COPY, GAUGES_SCORING, GLOBAL_NAV, PLANET_1, DEMO_UNIVERSE_DATA_MERGE
-EARTH_RULE=RESTORE_ACTUAL_EARTH_BODY
-SUN_RULE=RESTORE_ACTUAL_PHYSICAL_SUN_STANDARD
-MOON_RULE=RESTORE_ACTUAL_PHYSICAL_MOON_STANDARD
+EARTH_RULE=ACTUAL_EARTH_BODY
+SUN_RULE=ACTUAL_PHYSICAL_SUN_BODY
+MOON_RULE=ACTUAL_PHYSICAL_MOON_BODY
 GRAPHICBOX=FORBIDDEN
 IMAGE_GENERATION=FORBIDDEN
-INLINE_ROUTE_REDRAW=FORBIDDEN
+ROUTE_REWRITE=FORBIDDEN
 DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
 ══════════════════════════════════════════════════════════════════════
 */
 
-(() => {
+(function () {
   "use strict";
 
-  const ROOT_SELECTORS = [
+  var ROOT_SELECTORS = [
+    "#showroomGlobeMount",
     "[data-showroom-globe-root]",
     "[data-showroom-globe-mount]",
     "[data-globe-root]",
     "[data-globe-mount]",
-    "[data-planet-mount]",
-    "#showroomGlobeMount",
-    "#globeMount",
-    "#earthGlobeMount"
+    "[data-planet-mount]"
   ];
 
-  const instances = new WeakMap();
-
-  const BODY_META = {
-    earth: {
-      label: "Earth",
-      description: "Actual Earth body restored: ocean depth, land geometry, clouds, atmosphere, and spherical light."
-    },
-    sun: {
-      label: "Sun",
-      description: "Actual Sun standard restored: plasma sphere, corona, granulation, turbulence, and limb intensity."
-    },
-    moon: {
-      label: "Moon",
-      description: "Actual Moon standard restored: maria, crater fields, ray systems, regolith texture, and limb shading."
-    }
-  };
-
-  const SPEEDS = {
-    slow: 0.35,
-    normal: 1,
-    fast: 2.1
-  };
+  var INSTANCES = new WeakMap();
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
   }
 
-  function noise(x, y, seed = 1) {
-    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+  function noise(x, y, seed) {
+    var n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
     return n - Math.floor(n);
   }
 
-  function clearNode(node) {
-    while (node.firstChild) node.removeChild(node.firstChild);
-  }
+  function findMount(input) {
+    if (input && input.nodeType === 1) return input;
 
-  function findMount(explicitMount) {
-    if (explicitMount instanceof Element) return explicitMount;
-
-    for (const selector of ROOT_SELECTORS) {
-      const node = document.querySelector(selector);
+    for (var i = 0; i < ROOT_SELECTORS.length; i += 1) {
+      var node = document.querySelector(ROOT_SELECTORS[i]);
       if (node) return node;
     }
 
     return null;
   }
 
-  function createEl(tag, className) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    return node;
+  function empty(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
   }
 
-  function installStyleOnce() {
-    if (document.getElementById("dgb-showroom-globe-instrument-style")) return;
+  function installStyle() {
+    if (document.getElementById("dgb-actual-body-style")) return;
 
-    const style = document.createElement("style");
-    style.id = "dgb-showroom-globe-instrument-style";
-    style.textContent = `
-      .dgb-actual-body-shell {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        overflow: visible;
-        isolation: isolate;
-      }
+    var style = document.createElement("style");
+    style.id = "dgb-actual-body-style";
+    style.textContent =
+      ".dgb-actual-body-shell{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center;overflow:visible;isolation:isolate}" +
+      ".dgb-actual-body-shell:before{content:'';position:absolute;inset:-18%;border-radius:999px;z-index:-2;background:radial-gradient(circle,rgba(120,199,255,.20),transparent 48%),radial-gradient(circle,rgba(255,255,255,.08),transparent 68%);pointer-events:none}" +
+      ".dgb-actual-body-shell[data-body='sun']:before{inset:-28%;background:radial-gradient(circle,rgba(255,226,120,.40),transparent 38%),radial-gradient(circle,rgba(255,95,24,.24),transparent 60%),radial-gradient(circle,rgba(255,125,30,.12),transparent 78%)}" +
+      ".dgb-actual-body-shell[data-body='moon']:before{background:radial-gradient(circle,rgba(238,238,225,.22),transparent 46%),radial-gradient(circle,rgba(166,207,255,.08),transparent 72%)}" +
+      ".dgb-actual-body-canvas{display:block;width:100%;height:100%;border-radius:50%;touch-action:none;filter:drop-shadow(0 32px 58px rgba(0,0,0,.66))}";
 
-      .dgb-actual-body-canvas {
-        width: 100%;
-        height: 100%;
-        display: block;
-        border-radius: 50%;
-        touch-action: none;
-        filter: drop-shadow(0 32px 56px rgba(0,0,0,0.62));
-      }
-
-      .dgb-actual-body-shell::before {
-        content: "";
-        position: absolute;
-        inset: -16%;
-        z-index: -2;
-        border-radius: 999px;
-        background:
-          radial-gradient(circle at 50% 50%, rgba(120,199,255,0.18), transparent 44%),
-          radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), transparent 62%);
-        opacity: 0.9;
-        pointer-events: none;
-      }
-
-      .dgb-actual-body-shell[data-active-body="sun"]::before {
-        inset: -26%;
-        background:
-          radial-gradient(circle at 50% 50%, rgba(255,220,108,0.34), transparent 38%),
-          radial-gradient(circle at 50% 50%, rgba(255,92,24,0.22), transparent 58%),
-          radial-gradient(circle at 50% 50%, rgba(255,145,40,0.12), transparent 74%);
-      }
-
-      .dgb-actual-body-shell[data-active-body="moon"]::before {
-        background:
-          radial-gradient(circle at 50% 50%, rgba(238,238,225,0.18), transparent 42%),
-          radial-gradient(circle at 50% 50%, rgba(166,207,255,0.08), transparent 66%);
-      }
-    `;
     document.head.appendChild(style);
   }
 
   function project(lon, lat, centerLon, cx, cy, r) {
-    const lonRad = ((lon - centerLon) * Math.PI) / 180;
-    const latRad = (lat * Math.PI) / 180;
-
-    const x = Math.cos(latRad) * Math.sin(lonRad);
-    const y = Math.sin(latRad);
-    const z = Math.cos(latRad) * Math.cos(lonRad);
+    var lonRad = ((lon - centerLon) * Math.PI) / 180;
+    var latRad = (lat * Math.PI) / 180;
+    var x = Math.cos(latRad) * Math.sin(lonRad);
+    var y = Math.sin(latRad);
+    var z = Math.cos(latRad) * Math.cos(lonRad);
 
     return {
       x: cx + x * r,
       y: cy - y * r,
-      z,
-      visible: z > -0.05
+      z: z,
+      visible: z > -0.08
     };
   }
 
-  function drawProjectedPolygon(ctx, points, centerLon, cx, cy, r, fill, stroke) {
-    const projected = points.map(([lon, lat]) => project(lon, lat, centerLon, cx, cy, r));
-    const visible = projected.filter((p) => p.visible);
-
-    if (visible.length < 3) return;
-
+  function polygon(ctx, points, centerLon, cx, cy, r, fill, stroke) {
+    var started = false;
     ctx.beginPath();
-    let started = false;
 
-    for (const p of projected) {
-      if (!p.visible) continue;
+    for (var i = 0; i < points.length; i += 1) {
+      var p = project(points[i][0], points[i][1], centerLon, cx, cy, r);
+      if (!p.visible) {
+        started = false;
+        continue;
+      }
+
       if (!started) {
         ctx.moveTo(p.x, p.y);
         started = true;
@@ -173,62 +103,39 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
         ctx.lineTo(p.x, p.y);
       }
     }
+
+    if (!started) return;
 
     ctx.closePath();
     ctx.fillStyle = fill;
     ctx.fill();
 
     if (stroke) {
+      ctx.globalAlpha = 0.55;
       ctx.strokeStyle = stroke;
       ctx.lineWidth = Math.max(1, r * 0.006);
-      ctx.globalAlpha = 0.55;
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
   }
 
-  function drawLatBand(ctx, centerLon, cx, cy, r, lat, color, alpha) {
+  function cloud(ctx, centerLon, cx, cy, r, lat, phase, alpha) {
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = Math.max(1, r * 0.004);
-    ctx.beginPath();
-
-    let started = false;
-    for (let lon = -180; lon <= 180; lon += 4) {
-      const p = project(lon, lat, centerLon, cx, cy, r);
-      if (!p.visible) {
-        started = false;
-        continue;
-      }
-      if (!started) {
-        ctx.moveTo(p.x, p.y);
-        started = true;
-      } else {
-        ctx.lineTo(p.x, p.y);
-      }
-    }
-
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawCloudBand(ctx, centerLon, cx, cy, r, lat, offset, alpha) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = "rgba(255,255,255,0.74)";
+    ctx.strokeStyle = "rgba(255,255,255,.78)";
     ctx.lineWidth = Math.max(1, r * 0.018);
     ctx.lineCap = "round";
     ctx.beginPath();
 
-    let started = false;
-    for (let lon = -180; lon <= 180; lon += 3) {
-      const waveLat = lat + Math.sin((lon + offset) * 0.05) * 4 + Math.sin((lon + offset) * 0.13) * 1.6;
-      const p = project(lon, waveLat, centerLon, cx, cy, r);
+    var started = false;
+    for (var lon = -180; lon <= 180; lon += 3) {
+      var wave = lat + Math.sin((lon + phase) * 0.05) * 4 + Math.sin((lon + phase) * 0.13) * 1.5;
+      var p = project(lon, wave, centerLon, cx, cy, r);
       if (!p.visible) {
         started = false;
         continue;
       }
+
       if (!started) {
         ctx.moveTo(p.x, p.y);
         started = true;
@@ -241,134 +148,96 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.restore();
   }
 
-  function drawAtmosphere(ctx, cx, cy, r) {
-    const atm = ctx.createRadialGradient(cx, cy, r * 0.74, cx, cy, r * 1.08);
-    atm.addColorStop(0, "rgba(255,255,255,0)");
-    atm.addColorStop(0.72, "rgba(121,199,255,0.08)");
-    atm.addColorStop(0.88, "rgba(117,202,255,0.42)");
-    atm.addColorStop(1, "rgba(49,119,255,0)");
-    ctx.fillStyle = atm;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.08, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(142,215,255,0.68)";
-    ctx.lineWidth = Math.max(1, r * 0.012);
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
   function drawEarth(ctx, cx, cy, r, rotation) {
-    const centerLon = -82 + rotation * 22;
+    var centerLon = -82 + rotation * 26;
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const ocean = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.33, r * 0.05, cx + r * 0.08, cy + r * 0.12, r * 1.08);
-    ocean.addColorStop(0, "#8fe7ff");
-    ocean.addColorStop(0.22, "#2da5df");
-    ocean.addColorStop(0.52, "#0e4d94");
-    ocean.addColorStop(0.78, "#09285e");
-    ocean.addColorStop(1, "#010817");
+    var ocean = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.34, r * 0.04, cx + r * 0.1, cy + r * 0.13, r * 1.08);
+    ocean.addColorStop(0, "#92e8ff");
+    ocean.addColorStop(0.2, "#2ca7df");
+    ocean.addColorStop(0.48, "#0e559a");
+    ocean.addColorStop(0.76, "#072962");
+    ocean.addColorStop(1, "#010712");
     ctx.fillStyle = ocean;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    const continents = [
-      {
-        name: "North America",
-        fill: "#5f8c4d",
-        points: [[-168,72],[-132,70],[-104,62],[-70,57],[-55,45],[-68,22],[-88,15],[-102,18],[-118,31],[-128,48],[-160,55]]
-      },
-      {
-        name: "Central America",
-        fill: "#71a34c",
-        points: [[-104,22],[-84,20],[-78,12],[-84,8],[-96,14]]
-      },
-      {
-        name: "South America",
-        fill: "#4d7f44",
-        points: [[-82,12],[-61,8],[-44,-5],[-38,-24],[-51,-55],[-68,-48],[-78,-18]]
-      },
-      {
-        name: "Greenland",
-        fill: "#e7eadc",
-        points: [[-73,84],[-21,81],[-18,62],[-48,58],[-70,67]]
-      },
-      {
-        name: "Africa",
-        fill: "#876f3d",
-        points: [[-18,36],[11,37],[34,28],[50,10],[43,-34],[19,-35],[-5,-20],[-17,5]]
-      },
-      {
-        name: "Europe Asia",
-        fill: "#7f8b4c",
-        points: [[-10,72],[38,70],[84,61],[132,55],[170,48],[154,20],[106,4],[66,18],[36,34],[8,45],[-10,55]]
-      },
-      {
-        name: "Australia",
-        fill: "#9b7b3f",
-        points: [[112,-11],[154,-12],[151,-39],[116,-42],[109,-24]]
-      },
-      {
-        name: "Antarctica",
-        fill: "#f1f2e9",
-        points: [[-180,-67],[-120,-72],[-60,-68],[0,-74],[70,-68],[140,-72],[180,-67],[180,-90],[-180,-90]]
-      }
+    var lands = [
+      [[-168,72],[-132,70],[-104,62],[-70,57],[-55,45],[-68,22],[-88,15],[-102,18],[-118,31],[-128,48],[-160,55]],
+      [[-104,22],[-84,20],[-78,12],[-84,8],[-96,14]],
+      [[-82,12],[-61,8],[-44,-5],[-38,-24],[-51,-55],[-68,-48],[-78,-18]],
+      [[-73,84],[-21,81],[-18,62],[-48,58],[-70,67]],
+      [[-18,36],[11,37],[34,28],[50,10],[43,-34],[19,-35],[-5,-20],[-17,5]],
+      [[-10,72],[38,70],[84,61],[132,55],[170,48],[154,20],[106,4],[66,18],[36,34],[8,45],[-10,55]],
+      [[112,-11],[154,-12],[151,-39],[116,-42],[109,-24]],
+      [[-180,-67],[-120,-72],[-60,-68],[0,-74],[70,-68],[140,-72],[180,-67],[180,-90],[-180,-90]]
     ];
 
-    for (const land of continents) {
-      drawProjectedPolygon(ctx, land.points, centerLon, cx, cy, r, land.fill, "rgba(246,238,193,0.42)");
+    var colors = ["#5f8c4d", "#75a84f", "#4f8146", "#e7eadc", "#89703d", "#7f8b4c", "#9b7b3f", "#f1f2e9"];
+
+    for (var i = 0; i < lands.length; i += 1) {
+      polygon(ctx, lands[i], centerLon, cx, cy, r, colors[i], "rgba(246,238,193,.42)");
     }
 
-    for (let lat = -60; lat <= 60; lat += 15) {
-      drawLatBand(ctx, centerLon, cx, cy, r, lat, "rgba(255,255,255,0.08)", 0.8);
-    }
+    cloud(ctx, centerLon, cx, cy, r, 28, rotation * 42, 0.34);
+    cloud(ctx, centerLon, cx, cy, r, 5, rotation * -55, 0.26);
+    cloud(ctx, centerLon, cx, cy, r, -34, rotation * 46, 0.24);
 
-    drawCloudBand(ctx, centerLon, cx, cy, r, 28, rotation * 40, 0.34);
-    drawCloudBand(ctx, centerLon, cx, cy, r, 5, rotation * -52, 0.28);
-    drawCloudBand(ctx, centerLon, cx, cy, r, -32, rotation * 46, 0.26);
-
-    for (let i = 0; i < 95; i += 1) {
-      const lon = -180 + noise(i, 3, 11) * 360;
-      const lat = -62 + noise(i, 7, 19) * 124;
-      const p = project(lon, lat, centerLon, cx, cy, r);
+    for (var c = 0; c < 80; c += 1) {
+      var lon = -180 + noise(c, 3, 11) * 360;
+      var lat = -62 + noise(c, 7, 19) * 124;
+      var p = project(lon, lat, centerLon, cx, cy, r);
       if (!p.visible) continue;
 
-      const size = r * (0.01 + noise(i, 9, 4) * 0.035);
-      ctx.globalAlpha = 0.08 + noise(i, 6, 2) * 0.14;
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      var size = r * (0.01 + noise(c, 9, 4) * 0.035);
+      ctx.globalAlpha = 0.08 + noise(c, 6, 2) * 0.14;
+      ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.beginPath();
-      ctx.ellipse(p.x, p.y, size * 2.7, size * 0.8, noise(i, 1, 9) * Math.PI, 0, Math.PI * 2);
+      ctx.ellipse(p.x, p.y, size * 2.7, size * 0.8, noise(c, 1, 9) * Math.PI, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.globalAlpha = 1;
 
-    const nightShade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.35, r * 0.08, cx + r * 0.3, cy + r * 0.18, r * 1.12);
-    nightShade.addColorStop(0, "rgba(255,255,255,0.18)");
-    nightShade.addColorStop(0.46, "rgba(255,255,255,0.02)");
-    nightShade.addColorStop(0.76, "rgba(0,17,55,0.2)");
-    nightShade.addColorStop(1, "rgba(0,0,0,0.7)");
-    ctx.fillStyle = nightShade;
+    var shade = ctx.createRadialGradient(cx - r * 0.38, cy - r * 0.35, r * 0.08, cx + r * 0.3, cy + r * 0.18, r * 1.12);
+    shade.addColorStop(0, "rgba(255,255,255,.2)");
+    shade.addColorStop(0.46, "rgba(255,255,255,.02)");
+    shade.addColorStop(0.76, "rgba(0,17,55,.22)");
+    shade.addColorStop(1, "rgba(0,0,0,.7)");
+    ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
 
-    drawAtmosphere(ctx, cx, cy, r);
+    var atm = ctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r * 1.08);
+    atm.addColorStop(0, "rgba(255,255,255,0)");
+    atm.addColorStop(0.72, "rgba(121,199,255,.08)");
+    atm.addColorStop(0.88, "rgba(117,202,255,.42)");
+    atm.addColorStop(1, "rgba(49,119,255,0)");
+    ctx.fillStyle = atm;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.08, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(142,215,255,.68)";
+    ctx.lineWidth = Math.max(1, r * 0.012);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
   }
 
   function drawSun(ctx, cx, cy, r, rotation) {
     ctx.save();
 
-    for (let layer = 0; layer < 4; layer += 1) {
-      const radius = r * (1.12 + layer * 0.16);
-      const alpha = 0.18 / (layer + 1);
-      const corona = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, radius);
-      corona.addColorStop(0, `rgba(255,213,84,${alpha})`);
-      corona.addColorStop(0.58, `rgba(255,91,26,${alpha * 0.62})`);
+    for (var layer = 0; layer < 4; layer += 1) {
+      var radius = r * (1.12 + layer * 0.16);
+      var alpha = 0.18 / (layer + 1);
+      var corona = ctx.createRadialGradient(cx, cy, r * 0.82, cx, cy, radius);
+      corona.addColorStop(0, "rgba(255,213,84," + alpha + ")");
+      corona.addColorStop(0.58, "rgba(255,91,26," + alpha * 0.62 + ")");
       corona.addColorStop(1, "rgba(255,91,26,0)");
       ctx.fillStyle = corona;
       ctx.beginPath();
@@ -376,11 +245,11 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
       ctx.fill();
     }
 
-    for (let i = 0; i < 120; i += 1) {
-      const a = (i / 120) * Math.PI * 2 + rotation * 0.16;
-      const len = r * (0.08 + noise(i, 2, 30) * 0.34);
-      ctx.strokeStyle = `rgba(255,${142 + Math.floor(noise(i, 6, 2) * 88)},42,${0.08 + noise(i, 4, 5) * 0.14})`;
-      ctx.lineWidth = Math.max(1, r * (0.004 + noise(i, 7, 7) * 0.012));
+    for (var f = 0; f < 120; f += 1) {
+      var a = (f / 120) * Math.PI * 2 + rotation * 0.16;
+      var len = r * (0.08 + noise(f, 2, 30) * 0.34);
+      ctx.strokeStyle = "rgba(255," + (142 + Math.floor(noise(f, 6, 2) * 88)) + ",42," + (0.08 + noise(f, 4, 5) * 0.14) + ")";
+      ctx.lineWidth = Math.max(1, r * (0.004 + noise(f, 7, 7) * 0.012));
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(a) * r * 0.94, cy + Math.sin(a) * r * 0.94);
       ctx.lineTo(cx + Math.cos(a) * (r + len), cy + Math.sin(a) * (r + len));
@@ -391,7 +260,7 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const base = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.02, cx + r * 0.08, cy + r * 0.1, r);
+    var base = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.02, cx + r * 0.08, cy + r * 0.1, r);
     base.addColorStop(0, "#fff9b8");
     base.addColorStop(0.16, "#ffd85d");
     base.addColorStop(0.4, "#ff9b24");
@@ -400,18 +269,18 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.fillStyle = base;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    for (let i = 0; i < 720; i += 1) {
-      const a = noise(i, 11, 5) * Math.PI * 2;
-      const dist = Math.sqrt(noise(i, 17, 9)) * r * 0.98;
-      const x = cx + Math.cos(a) * dist;
-      const y = cy + Math.sin(a) * dist;
-      const w = r * (0.006 + noise(i, 23, 2) * 0.024);
-      const h = r * (0.003 + noise(i, 29, 6) * 0.01);
-      const n = noise(i, 31, 4);
+    for (var i = 0; i < 650; i += 1) {
+      var angle = noise(i, 11, 5) * Math.PI * 2;
+      var dist = Math.sqrt(noise(i, 17, 9)) * r * 0.98;
+      var x = cx + Math.cos(angle) * dist;
+      var y = cy + Math.sin(angle) * dist;
+      var w = r * (0.006 + noise(i, 23, 2) * 0.024);
+      var h = r * (0.003 + noise(i, 29, 6) * 0.01);
+      var n = noise(i, 31, 4);
 
       ctx.save();
       ctx.translate(x, y);
-      ctx.rotate(a + rotation * 0.5);
+      ctx.rotate(angle + rotation * 0.5);
       ctx.globalAlpha = 0.1 + n * 0.38;
       ctx.fillStyle = n > 0.6 ? "#fff0a7" : n > 0.28 ? "#ffb13a" : "#c9290d";
       ctx.beginPath();
@@ -420,32 +289,19 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
       ctx.restore();
     }
 
-    for (let i = 0; i < 26; i += 1) {
-      const y = cy - r * 0.9 + (i / 25) * r * 1.8;
-      const wave = Math.sin(rotation * 1.4 + i * 0.7) * r * 0.028;
-      ctx.globalAlpha = 0.055;
-      ctx.strokeStyle = "#fff0a6";
-      ctx.lineWidth = Math.max(1, r * 0.006);
-      ctx.beginPath();
-      ctx.moveTo(cx - r * 0.95, y + wave);
-      ctx.bezierCurveTo(cx - r * 0.36, y - r * 0.06, cx + r * 0.24, y + r * 0.08, cx + r * 0.95, y - wave);
-      ctx.stroke();
-    }
-
-    ctx.globalAlpha = 1;
     ctx.restore();
 
-    const limb = ctx.createRadialGradient(cx, cy, r * 0.62, cx, cy, r * 1.03);
+    var limb = ctx.createRadialGradient(cx, cy, r * 0.62, cx, cy, r * 1.03);
     limb.addColorStop(0, "rgba(255,255,255,0)");
-    limb.addColorStop(0.72, "rgba(255,197,68,0.08)");
-    limb.addColorStop(0.89, "rgba(255,245,143,0.42)");
-    limb.addColorStop(1, "rgba(124,22,0,0.48)");
+    limb.addColorStop(0.72, "rgba(255,197,68,.08)");
+    limb.addColorStop(0.89, "rgba(255,245,143,.42)");
+    limb.addColorStop(1, "rgba(124,22,0,.48)");
     ctx.fillStyle = limb;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(255,230,120,0.7)";
+    ctx.strokeStyle = "rgba(255,230,120,.7)";
     ctx.lineWidth = Math.max(1, r * 0.014);
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -456,26 +312,20 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    const g = ctx.createRadialGradient(x - radius * 0.18, y - radius * 0.18, radius * 0.08, x, y, radius);
-    g.addColorStop(0, "rgba(255,255,244,0.28)");
-    g.addColorStop(0.42, "rgba(68,70,76,0.42)");
-    g.addColorStop(0.76, "rgba(30,33,40,0.22)");
-    g.addColorStop(1, "rgba(255,255,239,0.2)");
+    var g = ctx.createRadialGradient(x - radius * 0.18, y - radius * 0.18, radius * 0.08, x, y, radius);
+    g.addColorStop(0, "rgba(255,255,244,.28)");
+    g.addColorStop(0.42, "rgba(68,70,76,.42)");
+    g.addColorStop(0.76, "rgba(30,33,40,.22)");
+    g.addColorStop(1, "rgba(255,255,239,.2)");
     ctx.fillStyle = g;
     ctx.beginPath();
     ctx.ellipse(x, y, radius * (1 + noise(seed, 2, 1) * 0.2), radius * (0.72 + noise(seed, 4, 2) * 0.24), noise(seed, 5, 3) * Math.PI, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(255,255,235,0.42)";
+    ctx.strokeStyle = "rgba(255,255,235,.42)";
     ctx.lineWidth = Math.max(1, radius * 0.09);
     ctx.beginPath();
     ctx.ellipse(x - radius * 0.07, y - radius * 0.09, radius, radius * 0.74, 0.18, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.globalAlpha = alpha * 0.5;
-    ctx.strokeStyle = "rgba(0,0,0,0.48)";
-    ctx.beginPath();
-    ctx.ellipse(x + radius * 0.1, y + radius * 0.12, radius * 0.86, radius * 0.62, 0.18, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.restore();
@@ -487,7 +337,7 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const base = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.34, r * 0.05, cx + r * 0.14, cy + r * 0.17, r * 1.08);
+    var base = ctx.createRadialGradient(cx - r * 0.34, cy - r * 0.34, r * 0.05, cx + r * 0.14, cy + r * 0.17, r * 1.08);
     base.addColorStop(0, "#f7f3df");
     base.addColorStop(0.24, "#dbd8ca");
     base.addColorStop(0.54, "#a9a89f");
@@ -500,33 +350,33 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
     ctx.translate(cx, cy);
     ctx.rotate(rotation * 0.025);
 
-    const maria = [
+    var maria = [
       [-0.28, -0.27, 0.28, 0.18, -0.42, 0.38],
       [0.18, -0.24, 0.24, 0.15, 0.24, 0.31],
       [0.08, 0.04, 0.34, 0.2, -0.06, 0.32],
       [-0.36, 0.18, 0.2, 0.13, 0.42, 0.26],
       [0.35, 0.27, 0.18, 0.11, -0.3, 0.23],
-      [-0.07, 0.39, 0.25, 0.11, 0.16, 0.2],
-      [-0.04, -0.12, 0.17, 0.09, 0.62, 0.18]
+      [-0.07, 0.39, 0.25, 0.11, 0.16, 0.2]
     ];
 
-    for (const [x, y, w, h, rot, alpha] of maria) {
+    for (var m = 0; m < maria.length; m += 1) {
+      var item = maria[m];
       ctx.save();
-      ctx.translate(x * r, y * r);
-      ctx.rotate(rot);
-      ctx.globalAlpha = alpha;
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w * r);
-      g.addColorStop(0, "#484c54");
-      g.addColorStop(0.72, "#666a72");
-      g.addColorStop(1, "rgba(120,123,126,0)");
-      ctx.fillStyle = g;
+      ctx.translate(item[0] * r, item[1] * r);
+      ctx.rotate(item[4]);
+      ctx.globalAlpha = item[5];
+      var mg = ctx.createRadialGradient(0, 0, 0, 0, 0, item[2] * r);
+      mg.addColorStop(0, "#484c54");
+      mg.addColorStop(0.72, "#666a72");
+      mg.addColorStop(1, "rgba(120,123,126,0)");
+      ctx.fillStyle = mg;
       ctx.beginPath();
-      ctx.ellipse(0, 0, w * r, h * r, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, item[2] * r, item[3] * r, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    const craters = [
+    var craters = [
       [-0.43, -0.43, 0.067, 0.66],
       [-0.18, -0.53, 0.042, 0.46],
       [0.16, -0.46, 0.054, 0.54],
@@ -537,344 +387,258 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
       [0.5, 0.08, 0.046, 0.46],
       [-0.43, 0.34, 0.072, 0.52],
       [-0.06, 0.29, 0.057, 0.42],
-      [0.29, 0.35, 0.078, 0.58],
-      [0.05, 0.56, 0.036, 0.36],
-      [-0.02, -0.32, 0.03, 0.32],
-      [0.53, 0.34, 0.035, 0.34]
+      [0.29, 0.35, 0.078, 0.58]
     ];
 
-    craters.forEach(([x, y, size, alpha], index) => drawCrater(ctx, x * r, y * r, size * r, alpha, index));
-
-    for (let i = 0; i < 420; i += 1) {
-      const a = noise(i, 4, 31) * Math.PI * 2;
-      const dist = Math.sqrt(noise(i, 8, 22)) * r * 0.96;
-      const x = Math.cos(a) * dist;
-      const y = Math.sin(a) * dist;
-      const size = r * (0.003 + noise(i, 1, 12) * 0.01);
-      const alpha = 0.06 + noise(i, 2, 18) * 0.14;
-      drawCrater(ctx, x, y, size, alpha, i + 50);
+    for (var c = 0; c < craters.length; c += 1) {
+      drawCrater(ctx, craters[c][0] * r, craters[c][1] * r, craters[c][2] * r, craters[c][3], c);
     }
 
-    drawRaySystem(-0.43 * r, -0.43 * r, r * 0.44, 22, 0.16, rotation);
-    drawRaySystem(0.29 * r, 0.35 * r, r * 0.34, 18, 0.14, -rotation * 0.4);
+    for (var i = 0; i < 260; i += 1) {
+      var a = noise(i, 4, 31) * Math.PI * 2;
+      var dist = Math.sqrt(noise(i, 8, 22)) * r * 0.96;
+      var x = Math.cos(a) * dist;
+      var y = Math.sin(a) * dist;
+      var size = r * (0.003 + noise(i, 1, 12) * 0.01);
+      drawCrater(ctx, x, y, size, 0.04 + noise(i, 2, 18) * 0.1, i + 50);
+    }
 
     ctx.restore();
 
-    for (let i = 0; i < 1800; i += 1) {
-      const a = noise(i, 17, 97) * Math.PI * 2;
-      const dist = Math.sqrt(noise(i, 29, 82)) * r;
-      const x = cx + Math.cos(a) * dist;
-      const y = cy + Math.sin(a) * dist;
-      const n = noise(i, 41, 12);
-      ctx.globalAlpha = 0.025 + n * 0.045;
-      ctx.fillStyle = n > 0.52 ? "#fffef0" : "#62666e";
-      ctx.fillRect(x, y, Math.max(1, r * 0.003), Math.max(1, r * 0.003));
-    }
-
-    ctx.globalAlpha = 1;
-
-    const earthshine = ctx.createRadialGradient(cx - r * 0.48, cy - r * 0.14, 0, cx - r * 0.48, cy - r * 0.14, r * 1.02);
-    earthshine.addColorStop(0, "rgba(166,207,255,0.16)");
-    earthshine.addColorStop(0.32, "rgba(166,207,255,0.07)");
-    earthshine.addColorStop(1, "rgba(166,207,255,0)");
-    ctx.fillStyle = earthshine;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    const shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx + r * 0.26, cy + r * 0.24, r * 1.1);
-    shade.addColorStop(0, "rgba(255,255,244,0.28)");
-    shade.addColorStop(0.42, "rgba(235,235,220,0.08)");
-    shade.addColorStop(0.74, "rgba(70,76,88,0.12)");
-    shade.addColorStop(1, "rgba(0,0,0,0.58)");
+    var shade = ctx.createRadialGradient(cx - r * 0.32, cy - r * 0.34, r * 0.08, cx + r * 0.26, cy + r * 0.24, r * 1.1);
+    shade.addColorStop(0, "rgba(255,255,244,.28)");
+    shade.addColorStop(0.42, "rgba(235,235,220,.08)");
+    shade.addColorStop(0.74, "rgba(70,76,88,.12)");
+    shade.addColorStop(1, "rgba(0,0,0,.58)");
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
     ctx.restore();
 
-    ctx.strokeStyle = "rgba(245,243,226,0.36)";
+    ctx.strokeStyle = "rgba(245,243,226,.36)";
     ctx.lineWidth = Math.max(1, r * 0.012);
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.stroke();
-
-    function drawRaySystem(x, y, length, count, alpha, phase) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.strokeStyle = "rgba(255,255,237,0.48)";
-      for (let i = 0; i < count; i += 1) {
-        const a = (Math.PI * 2 * i) / count + phase * 0.05;
-        const rayLength = length * (0.44 + noise(i, 9, 17) * 0.58);
-        ctx.lineWidth = Math.max(1, r * (0.002 + noise(i, 11, 3) * 0.004));
-        ctx.beginPath();
-        ctx.moveTo(x + cx, y + cy);
-        ctx.lineTo(x + cx + Math.cos(a) * rayLength, y + cy + Math.sin(a) * rayLength);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
   }
 
-  function createInstance(root, options = {}) {
-    installStyleOnce();
+  function normalizeBody(body) {
+    var value = String(body || "earth").toLowerCase();
+    if (value.indexOf("sun") >= 0) return "sun";
+    if (value.indexOf("moon") >= 0) return "moon";
+    return "earth";
+  }
 
-    clearNode(root);
+  function createInstance(root, options) {
+    installStyle();
+    empty(root);
 
     root.dataset.instrumentMounted = "true";
     root.dataset.actualBodiesRestored = "true";
-    root.dataset.graphicbox = "false";
-    root.dataset.imageGeneration = "false";
 
-    const shell = createEl("div", "dgb-actual-body-shell");
-    const canvas = createEl("canvas", "dgb-actual-body-canvas");
-    canvas.width = 1400;
-    canvas.height = 1400;
+    var shell = document.createElement("div");
+    shell.className = "dgb-actual-body-shell";
+
+    var canvas = document.createElement("canvas");
+    canvas.className = "dgb-actual-body-canvas";
+    canvas.width = 1200;
+    canvas.height = 1200;
 
     shell.appendChild(canvas);
     root.appendChild(shell);
 
-    const ctx = canvas.getContext("2d", { alpha: true });
+    var ctx = canvas.getContext("2d", { alpha: true });
 
-    const instance = {
-      root,
-      shell,
-      canvas,
-      ctx,
-      state: {
-        body: normalizeBody(options.body || root.dataset.activeBody || "earth"),
-        running: true,
-        direction: 1,
-        speedName: "normal",
-        speed: SPEEDS.normal,
-        zoom: 1,
-        rotation: 0,
-        last: performance.now(),
-        destroyed: false
-      },
-      setBody(body) {
-        this.state.body = normalizeBody(body);
-        this.root.dataset.activeBody = this.state.body;
-        this.shell.dataset.activeBody = this.state.body;
-        this.render();
-        this.emitStatus();
-      },
-      setSpeed(payload) {
-        const speedName = typeof payload === "string" ? payload : payload && payload.speedName;
-        if (!SPEEDS[speedName]) return;
-        this.state.speedName = speedName;
-        this.state.speed = SPEEDS[speedName];
-        this.emitStatus();
-      },
-      setZoom(payload) {
-        const zoom = typeof payload === "number" ? payload : payload && (payload.zoom || payload.scale);
-        if (!Number.isFinite(Number(zoom))) return;
-        this.state.zoom = clamp(Number(zoom), 0.7, 2.4);
-        this.emitStatus();
-      },
-      start() {
-        this.state.running = true;
-        this.emitStatus();
-      },
-      pause() {
-        this.state.running = false;
-        this.emitStatus();
-      },
-      resume() {
-        this.state.running = true;
-        this.emitStatus();
-      },
-      reset() {
-        this.state.rotation = 0;
-        this.render();
-        this.emitStatus();
-      },
-      reverse() {
-        this.state.direction *= -1;
-        this.emitStatus();
-      },
-      render() {
-        const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
-        const rect = this.canvas.getBoundingClientRect();
-        const size = Math.max(900, Math.floor(Math.min(rect.width || 900, rect.height || 900) * dpr));
+    var instance = {
+      root: root,
+      shell: shell,
+      canvas: canvas,
+      ctx: ctx,
+      body: normalizeBody(options && options.body),
+      speedName: "normal",
+      speed: 1,
+      direction: 1,
+      running: true,
+      rotation: 0,
+      last: performance.now(),
 
+      setBody: function (body) {
+        this.body = normalizeBody(body);
+        this.shell.dataset.body = this.body;
+        this.root.dataset.activeBody = this.body;
+        this.render();
+        this.emit();
+      },
+
+      setSpeed: function (payload) {
+        var name = typeof payload === "string" ? payload : payload && payload.speedName;
+        if (name === "slow") {
+          this.speedName = "slow";
+          this.speed = 0.55;
+        } else if (name === "fast") {
+          this.speedName = "fast";
+          this.speed = 1.9;
+        } else {
+          this.speedName = "normal";
+          this.speed = 1;
+        }
+        this.emit();
+      },
+
+      setZoom: function (payload) {
+        this.emit();
+      },
+
+      start: function () {
+        this.running = true;
+        this.emit();
+      },
+
+      pause: function () {
+        this.running = false;
+        this.emit();
+      },
+
+      resume: function () {
+        this.running = true;
+        this.emit();
+      },
+
+      reset: function () {
+        this.rotation = 0;
+        this.render();
+        this.emit();
+      },
+
+      reverse: function () {
+        this.direction *= -1;
+        this.emit();
+      },
+
+      resize: function () {
+        var rect = this.canvas.getBoundingClientRect();
+        var dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+        var size = Math.max(900, Math.floor(Math.min(rect.width || 900, rect.height || 900) * dpr));
         if (this.canvas.width !== size || this.canvas.height !== size) {
           this.canvas.width = size;
           this.canvas.height = size;
         }
+      },
 
-        const w = this.canvas.width;
-        const h = this.canvas.height;
-        const cx = w / 2;
-        const cy = h / 2;
-        const r = Math.min(w, h) * 0.43;
+      render: function () {
+        this.resize();
+
+        var w = this.canvas.width;
+        var h = this.canvas.height;
+        var cx = w / 2;
+        var cy = h / 2;
+        var r = Math.min(w, h) * 0.43;
 
         this.ctx.clearRect(0, 0, w, h);
 
-        if (this.state.body === "earth") drawEarth(this.ctx, cx, cy, r, this.state.rotation);
-        if (this.state.body === "sun") drawSun(this.ctx, cx, cy, r, this.state.rotation);
-        if (this.state.body === "moon") drawMoon(this.ctx, cx, cy, r, this.state.rotation);
+        if (this.body === "sun") drawSun(this.ctx, cx, cy, r, this.rotation);
+        else if (this.body === "moon") drawMoon(this.ctx, cx, cy, r, this.rotation);
+        else drawEarth(this.ctx, cx, cy, r, this.rotation);
       },
-      tick(now) {
-        if (this.state.destroyed) return;
 
-        const dt = Math.min(50, now - this.state.last);
-        this.state.last = now;
+      tick: function (now) {
+        var dt = Math.min(50, now - this.last);
+        this.last = now;
 
-        if (this.state.running) {
-          const bodyFactor = this.state.body === "sun" ? 0.0014 : this.state.body === "moon" ? 0.00055 : 0.00085;
-          this.state.rotation += dt * bodyFactor * this.state.speed * this.state.direction;
+        if (this.running) {
+          var factor = this.body === "sun" ? 0.0013 : this.body === "moon" ? 0.00052 : 0.00082;
+          this.rotation += dt * factor * this.speed * this.direction;
           this.render();
         }
 
-        requestAnimationFrame((next) => this.tick(next));
+        var self = this;
+        requestAnimationFrame(function (next) {
+          self.tick(next);
+        });
       },
-      emitStatus() {
+
+      emit: function () {
         window.dispatchEvent(new CustomEvent("showroom:globe:mounted", {
           detail: {
             mounted: true,
-            body: this.state.body,
-            speedName: this.state.speedName,
-            direction: this.state.direction > 0 ? "forward" : "reverse",
-            zoom: this.state.zoom,
-            actualBodiesRestored: true,
-            graphicbox: false,
-            imageGeneration: false
+            body: this.body,
+            speedName: this.speedName,
+            direction: this.direction > 0 ? "forward" : "reverse",
+            actualBodiesRestored: true
           }
         }));
       }
     };
 
-    instances.set(root, instance);
+    INSTANCES.set(root, instance);
+    instance.setBody(instance.body);
+    instance.render();
 
-    instance.setBody(instance.state.body);
-    instance.emitStatus();
-    requestAnimationFrame((now) => instance.tick(now));
-
-    return instance;
-  }
-
-  function normalizeBody(body) {
-    const value = String(body || "earth").toLowerCase();
-    if (value.includes("sun")) return "sun";
-    if (value.includes("moon")) return "moon";
-    return "earth";
-  }
-
-  function mount(options = {}) {
-    const root = findMount(options.mount || options.root || options.target);
-    if (!root) return null;
-
-    let instance = instances.get(root);
-    if (!instance) {
-      instance = createInstance(root, options);
-    }
-
-    if (options.body) instance.setBody(options.body);
-    if (options.speedName) instance.setSpeed(options.speedName);
-    if (options.zoom) instance.setZoom(options.zoom);
+    requestAnimationFrame(function (now) {
+      instance.tick(now);
+    });
 
     return instance;
   }
 
-  function activeInstance(payload = {}) {
-    const root = findMount(payload.mount || payload.root || payload.target);
+  function mount(options) {
+    var root = findMount(options && (options.mount || options.root || options.target));
     if (!root) return null;
-    return instances.get(root) || mount({ mount: root });
+
+    var instance = INSTANCES.get(root);
+    if (!instance) instance = createInstance(root, options || {});
+
+    if (options && options.body) instance.setBody(options.body);
+    if (options && options.speedName) instance.setSpeed(options.speedName);
+
+    return instance;
   }
 
-  const api = {
-    version: "SHOWROOM_GLOBE_INSTRUMENT_ACTUAL_BODIES_RESTORE_TNT_v1",
-    mount,
-    setBody(payload = {}) {
-      const instance = activeInstance(payload);
-      if (instance) instance.setBody(payload.body || payload);
+  function getInstance(payload) {
+    var root = findMount(payload && (payload.mount || payload.root || payload.target));
+    if (!root) return null;
+    return INSTANCES.get(root) || mount({ mount: root });
+  }
+
+  var api = {
+    version: "SHOWROOM_GLOBE_INSTRUMENT_HARD_MOUNT_ACTUAL_BODIES_TNT_v2",
+    mount: mount,
+    setBody: function (payload) {
+      var instance = getInstance(payload || {});
+      if (instance) instance.setBody(payload && payload.body ? payload.body : payload);
     },
-    setSpeed(payload = {}) {
-      const instance = activeInstance(payload);
-      if (instance) instance.setSpeed(payload.speedName || payload);
+    setSpeed: function (payload) {
+      var instance = getInstance(payload || {});
+      if (instance) instance.setSpeed(payload && payload.speedName ? payload.speedName : payload);
     },
-    setZoom(payload = {}) {
-      const instance = activeInstance(payload);
-      if (instance) instance.setZoom(payload.zoom || payload);
+    setZoom: function (payload) {
+      var instance = getInstance(payload || {});
+      if (instance) instance.setZoom(payload || {});
     },
-    start(payload = {}) {
-      const instance = activeInstance(payload);
+    start: function (payload) {
+      var instance = getInstance(payload || {});
       if (instance) instance.start();
     },
-    pause(payload = {}) {
-      const instance = activeInstance(payload);
+    pause: function (payload) {
+      var instance = getInstance(payload || {});
       if (instance) instance.pause();
     },
-    resume(payload = {}) {
-      const instance = activeInstance(payload);
+    resume: function (payload) {
+      var instance = getInstance(payload || {});
       if (instance) instance.resume();
     },
-    reset(payload = {}) {
-      const instance = activeInstance(payload);
+    reset: function (payload) {
+      var instance = getInstance(payload || {});
       if (instance) instance.reset();
     },
-    reverse(payload = {}) {
-      const instance = activeInstance(payload);
+    reverse: function (payload) {
+      var instance = getInstance(payload || {});
       if (instance) instance.reverse();
-    },
-    status(payload = {}) {
-      const instance = activeInstance(payload);
-      if (!instance) return { mounted: false };
-      return {
-        mounted: true,
-        body: instance.state.body,
-        speedName: instance.state.speedName,
-        direction: instance.state.direction > 0 ? "forward" : "reverse",
-        actualBodiesRestored: true
-      };
     }
   };
 
-  function wireEvents() {
-    window.addEventListener("showroom:globe:mount", (event) => {
-      mount(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:setBody", (event) => {
-      api.setBody(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:setSpeed", (event) => {
-      api.setSpeed(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:setZoom", (event) => {
-      api.setZoom(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:start", (event) => {
-      api.start(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:pause", (event) => {
-      api.pause(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:resume", (event) => {
-      api.resume(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:reset", (event) => {
-      api.reset(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:reverse", (event) => {
-      api.reverse(event.detail || {});
-    });
-
-    window.addEventListener("showroom:globe:standard-request", (event) => {
-      const detail = event.detail || {};
-      const instance = activeInstance(detail);
-      if (instance) instance.emitStatus();
-    });
-  }
-
-  function autoMount() {
-    const root = findMount();
-    if (root) mount({ mount: root, body: root.dataset.activeBody || "earth" });
+  function eventDetail(event) {
+    return event && event.detail ? event.detail : {};
   }
 
   window.ShowroomGlobeInstrument = api;
@@ -887,7 +651,46 @@ DATA_RULE=DEMO_UNIVERSE_AND_DEMO_ACTUAL_UNIVERSE_DATA_FLY_SEPARATELY
   window.DiamondGateBridge.ShowroomGlobe = api;
   window.DiamondGateBridge.showroomGlobeInstrument = api;
 
-  wireEvents();
+  window.addEventListener("showroom:globe:mount", function (event) {
+    mount(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:setBody", function (event) {
+    api.setBody(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:setSpeed", function (event) {
+    api.setSpeed(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:setZoom", function (event) {
+    api.setZoom(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:start", function (event) {
+    api.start(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:pause", function (event) {
+    api.pause(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:resume", function (event) {
+    api.resume(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:reset", function (event) {
+    api.reset(eventDetail(event));
+  });
+
+  window.addEventListener("showroom:globe:reverse", function (event) {
+    api.reverse(eventDetail(event));
+  });
+
+  function autoMount() {
+    var root = findMount();
+    if (root) mount({ mount: root, body: root.dataset.activeBody || "earth" });
+  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", autoMount, { once: true });

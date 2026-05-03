@@ -2,12 +2,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="door-16-point-diamond-field"
+  data-page="door-16-point-foreground-core-field"
   data-route="/door/"
-  data-contract="DOOR_16_POINT_DIAMOND_FIELD_TNT_v1"
+  data-contract="DOOR_16_POINT_FOREGROUND_CORE_FIELD_TNT_v1"
   data-role="entry-threshold"
   data-message="one-message-many-rooms"
   data-field-system="16-point-diamond-threshold"
+  data-foreground-core="laws-entry-proof-return"
+  data-background-ring="remaining-12-route-points"
   data-animation="two-interlocking-figure-eights"
   data-traversal="bilateral-quadrupedic-16-diamond"
   data-heavy-runtime-loaded="false"
@@ -21,7 +23,7 @@
   <title>Diamond Gate Bridge · Door</title>
   <meta
     name="description"
-    content="The Door is the Diamond Gate Bridge threshold: one message, many rooms, expressed as a compact 16-point diamond field."
+    content="The Door is the Diamond Gate Bridge threshold: one message, many rooms, expressed as a compact 16-point diamond field with Laws, Entry, Proof, and Return in the foreground."
   >
 
   <style>
@@ -295,10 +297,9 @@
     }
 
     .threshold-field {
-      --node-support: clamp(3.65rem, 7.8vw, 5.4rem);
-      --node-secondary: clamp(4.15rem, 8.7vw, 6.15rem);
-      --node-primary: clamp(4.65rem, 9.6vw, 7.15rem);
-      --center-size: clamp(5rem, 10.8vw, 7.8rem);
+      --node-background: clamp(3.25rem, 7.1vw, 5rem);
+      --node-foreground: clamp(4.45rem, 9.4vw, 6.85rem);
+      --center-size: clamp(4.85rem, 10.2vw, 7.45rem);
       position: relative;
       width: min(100%, 900px);
       min-height: clamp(34rem, 68vw, 44rem);
@@ -370,7 +371,7 @@
       width: var(--center-size);
       height: var(--center-size);
       transform: translate(-50%, -50%);
-      z-index: 5;
+      z-index: 12;
       pointer-events: none;
       user-select: none;
     }
@@ -379,26 +380,35 @@
       --dx: 0px;
       --dy: 0px;
       --lift: 1;
-      --node-size: var(--node-support);
+      --node-size: var(--node-background);
       left: calc(var(--x) * 1%);
       top: calc(var(--y) * 1%);
       width: var(--node-size);
       height: var(--node-size);
-      z-index: 8;
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
-      transition: filter 160ms ease, transform 160ms ease;
+      transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
       will-change: transform;
     }
 
-    .route-diamond.primary { --node-size: var(--node-primary); z-index: 10; }
-    .route-diamond.secondary { --node-size: var(--node-secondary); z-index: 9; }
-    .route-diamond.support { --node-size: var(--node-support); z-index: 8; }
+    .route-diamond.behind {
+      z-index: 7;
+      opacity: 0.66;
+      filter: saturate(0.82) brightness(0.92);
+    }
+
+    .route-diamond.forefront {
+      --node-size: var(--node-foreground);
+      z-index: 18;
+      opacity: 1;
+      filter: saturate(1.15) brightness(1.06);
+    }
 
     .route-diamond:hover,
     .route-diamond:focus-visible {
       --lift: 1.065;
-      filter: brightness(1.13) saturate(1.08);
+      opacity: 1;
+      filter: brightness(1.16) saturate(1.12);
     }
 
     .diamond-shell {
@@ -419,24 +429,29 @@
       overflow: hidden;
     }
 
-    .route-diamond.primary .diamond-shell {
-      border-color: rgba(255,224,141,0.88);
-      box-shadow:
-        0 1.3rem 3.1rem rgba(0,0,0,0.33),
-        0 0 2.2rem rgba(242,199,111,0.10),
-        inset 0 0 0 1px rgba(255,255,255,0.17);
-    }
-
-    .route-diamond.secondary .diamond-shell {
-      border-color: rgba(120,216,255,0.58);
-    }
-
-    .route-diamond.support .diamond-shell {
-      border-color: rgba(255,255,255,0.26);
+    .route-diamond.behind .diamond-shell {
+      border-color: rgba(255,255,255,0.25);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.11), transparent 28%),
-        radial-gradient(circle at 64% 36%, rgba(242,199,111,0.15), transparent 34%),
-        linear-gradient(145deg, rgba(37,52,90,0.74), rgba(56,43,91,0.58));
+        linear-gradient(135deg, rgba(255,255,255,0.105), transparent 28%),
+        radial-gradient(circle at 64% 36%, rgba(242,199,111,0.14), transparent 34%),
+        linear-gradient(145deg, rgba(37,52,90,0.74), rgba(56,43,91,0.56));
+      box-shadow:
+        0 0.85rem 2.1rem rgba(0,0,0,0.24),
+        inset 0 0 0 1px rgba(255,255,255,0.10);
+    }
+
+    .route-diamond.forefront .diamond-shell {
+      border-color: rgba(255,224,141,0.95);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.23), transparent 24%),
+        radial-gradient(circle at 68% 32%, rgba(242,199,111,0.33), transparent 32%),
+        radial-gradient(circle at 30% 72%, rgba(120,216,255,0.30), transparent 38%),
+        linear-gradient(145deg, rgba(58,83,150,0.83), rgba(128,72,142,0.74) 58%, rgba(242,199,111,0.25));
+      box-shadow:
+        0 1.45rem 3.4rem rgba(0,0,0,0.36),
+        0 0 2.35rem rgba(242,199,111,0.14),
+        inset 0 0 0 1px rgba(255,255,255,0.18),
+        inset 0 0 1.8rem rgba(255,255,255,0.07);
     }
 
     .diamond-shell::before,
@@ -489,7 +504,7 @@
 
     .diamond-content strong {
       color: rgba(255,241,205,0.98);
-      font-size: clamp(0.56rem, 1.45vw, 0.86rem);
+      font-size: clamp(0.49rem, 1.24vw, 0.70rem);
       line-height: 0.98;
       font-weight: 950;
       letter-spacing: 0.075em;
@@ -499,19 +514,19 @@
 
     .diamond-content span {
       color: rgba(242,246,255,0.76);
-      font-size: clamp(0.46rem, 1.18vw, 0.64rem);
+      font-size: clamp(0.40rem, 1.05vw, 0.54rem);
       line-height: 1.08;
       font-weight: 850;
       letter-spacing: 0.035em;
       text-transform: uppercase;
     }
 
-    .route-diamond.support .diamond-content strong {
-      font-size: clamp(0.49rem, 1.24vw, 0.68rem);
+    .route-diamond.forefront .diamond-content strong {
+      font-size: clamp(0.62rem, 1.55vw, 0.88rem);
     }
 
-    .route-diamond.support .diamond-content span {
-      font-size: clamp(0.40rem, 1.05vw, 0.54rem);
+    .route-diamond.forefront .diamond-content span {
+      font-size: clamp(0.48rem, 1.18vw, 0.64rem);
     }
 
     .center-diamond .diamond-shell {
@@ -654,27 +669,26 @@
 
     @media (max-width: 760px) {
       .threshold-field {
-        --node-support: clamp(3rem, 16vw, 4.2rem);
-        --node-secondary: clamp(3.35rem, 17vw, 4.55rem);
-        --node-primary: clamp(3.65rem, 18vw, 4.95rem);
-        --center-size: clamp(4.35rem, 21vw, 5.7rem);
+        --node-background: clamp(2.85rem, 15vw, 4rem);
+        --node-foreground: clamp(3.65rem, 18vw, 5.05rem);
+        --center-size: clamp(4.2rem, 20vw, 5.55rem);
         min-height: 36rem;
       }
 
       .diamond-content strong {
-        font-size: clamp(0.43rem, 2vw, 0.58rem);
+        font-size: clamp(0.36rem, 1.75vw, 0.50rem);
       }
 
       .diamond-content span {
-        font-size: clamp(0.35rem, 1.65vw, 0.48rem);
+        font-size: clamp(0.30rem, 1.42vw, 0.42rem);
       }
 
-      .route-diamond.support .diamond-content strong {
-        font-size: clamp(0.38rem, 1.85vw, 0.50rem);
+      .route-diamond.forefront .diamond-content strong {
+        font-size: clamp(0.46rem, 2.05vw, 0.62rem);
       }
 
-      .route-diamond.support .diamond-content span {
-        font-size: clamp(0.32rem, 1.48vw, 0.42rem);
+      .route-diamond.forefront .diamond-content span {
+        font-size: clamp(0.36rem, 1.58vw, 0.48rem);
       }
 
       .scope-strip {
@@ -772,82 +786,82 @@
             </div>
           </div>
 
-          <a class="route-diamond support" href="/nine-summits-of-love/" style="--x:14;--y:15;" data-loop="a" data-phase="0.00" aria-label="Open Book">
+          <a class="route-diamond behind" href="/nine-summits-of-love/" style="--x:14;--y:15;" data-loop="a" data-phase="0.00" aria-label="Open Book">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Book</strong><span>Climb</span></div>
           </a>
 
-          <a class="route-diamond primary" href="/home/" style="--x:38;--y:12;" data-loop="b" data-phase="0.39" aria-label="Enter Home">
+          <a class="route-diamond behind" href="/home/" style="--x:38;--y:12;" data-loop="b" data-phase="0.39" aria-label="Enter Home">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Home</strong><span>Receive</span></div>
           </a>
 
-          <a class="route-diamond secondary" href="/nine-summits/" style="--x:62;--y:12;" data-loop="a" data-phase="0.78" aria-label="Open Nine Summits">
+          <a class="route-diamond behind" href="/nine-summits/" style="--x:62;--y:12;" data-loop="a" data-phase="0.78" aria-label="Open Nine Summits">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Nine Summits</strong><span>Gate</span></div>
           </a>
 
-          <a class="route-diamond support" href="/nine-summits/universe/" style="--x:86;--y:15;" data-loop="b" data-phase="1.17" aria-label="Open Universe">
+          <a class="route-diamond behind" href="/nine-summits/universe/" style="--x:86;--y:15;" data-loop="b" data-phase="1.17" aria-label="Open Universe">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Universe</strong><span>World</span></div>
           </a>
 
-          <a class="route-diamond secondary" href="/" style="--x:14;--y:38;" data-loop="b" data-phase="1.57" aria-label="Return to Compass">
+          <a class="route-diamond behind" href="/" style="--x:14;--y:38;" data-loop="b" data-phase="1.57" aria-label="Return to Compass">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Compass</strong><span>Root</span></div>
           </a>
 
-          <a class="route-diamond support" href="/laws/" style="--x:38;--y:38;" data-loop="a" data-phase="1.96" aria-label="Open Laws">
+          <a class="route-diamond forefront" href="/laws/" style="--x:38;--y:38;" data-loop="a" data-phase="1.96" aria-label="Open Laws">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Laws</strong><span>Boundary</span></div>
           </a>
 
-          <a class="route-diamond support" href="/door/" style="--x:62;--y:38;" data-loop="b" data-phase="2.35" aria-label="Return to Entry">
+          <a class="route-diamond forefront" href="/door/" style="--x:62;--y:38;" data-loop="b" data-phase="2.35" aria-label="Return to Entry">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Entry</strong><span>Cross</span></div>
           </a>
 
-          <a class="route-diamond primary" href="/explore/" style="--x:86;--y:38;" data-loop="a" data-phase="2.74" aria-label="Open Manor">
+          <a class="route-diamond behind" href="/explore/" style="--x:86;--y:38;" data-loop="a" data-phase="2.74" aria-label="Open Manor">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Manor</strong><span>Rooms</span></div>
           </a>
 
-          <a class="route-diamond primary" href="/gauges/" style="--x:14;--y:62;" data-loop="a" data-phase="3.14" aria-label="Read Gauges">
+          <a class="route-diamond behind" href="/gauges/" style="--x:14;--y:62;" data-loop="a" data-phase="3.14" aria-label="Read Gauges">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Gauges</strong><span>Proof</span></div>
           </a>
 
-          <a class="route-diamond support" href="/gauges/" style="--x:38;--y:62;" data-loop="b" data-phase="3.53" aria-label="Open Proof">
+          <a class="route-diamond forefront" href="/gauges/" style="--x:38;--y:62;" data-loop="b" data-phase="3.53" aria-label="Open Proof">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Proof</strong><span>Measure</span></div>
           </a>
 
-          <a class="route-diamond support" href="/" style="--x:62;--y:62;" data-loop="a" data-phase="3.92" aria-label="Return to Compass">
+          <a class="route-diamond forefront" href="/" style="--x:62;--y:62;" data-loop="a" data-phase="3.92" aria-label="Return to Compass">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Return</strong><span>Root</span></div>
           </a>
 
-          <a class="route-diamond secondary" href="/products/" style="--x:86;--y:62;" data-loop="b" data-phase="4.31" aria-label="Open Products">
+          <a class="route-diamond behind" href="/products/" style="--x:86;--y:62;" data-loop="b" data-phase="4.31" aria-label="Open Products">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Products</strong><span>Use</span></div>
           </a>
 
-          <a class="route-diamond support" href="/showroom/globe/" style="--x:14;--y:85;" data-loop="b" data-phase="4.71" aria-label="Open Audralia">
+          <a class="route-diamond behind" href="/showroom/globe/" style="--x:14;--y:85;" data-loop="b" data-phase="4.71" aria-label="Open Audralia">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Audralia</strong><span>World</span></div>
           </a>
 
-          <a class="route-diamond secondary" href="/frontier/" style="--x:38;--y:88;" data-loop="a" data-phase="5.10" aria-label="Open Frontier">
+          <a class="route-diamond behind" href="/frontier/" style="--x:38;--y:88;" data-loop="a" data-phase="5.10" aria-label="Open Frontier">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Frontier</strong><span>Edge</span></div>
           </a>
 
-          <a class="route-diamond primary" href="/showroom/" style="--x:62;--y:88;" data-loop="b" data-phase="5.49" aria-label="Open Showroom">
+          <a class="route-diamond behind" href="/showroom/" style="--x:62;--y:88;" data-loop="b" data-phase="5.49" aria-label="Open Showroom">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Showroom</strong><span>Atrium</span></div>
           </a>
 
-          <a class="route-diamond support" href="/showroom/" style="--x:86;--y:85;" data-loop="a" data-phase="5.88" aria-label="Open Built Assets">
+          <a class="route-diamond behind" href="/showroom/" style="--x:86;--y:85;" data-loop="a" data-phase="5.88" aria-label="Open Built Assets">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Built Assets</strong><span>Cases</span></div>
           </a>
@@ -875,7 +889,7 @@
 
         <div class="scope-tile">
           <strong>4</strong>
-          <span>Primary cardinals organize the field.</span>
+          <span>Laws, Entry, Proof, and Return sit forward.</span>
         </div>
 
         <div class="scope-tile">
@@ -891,20 +905,19 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>DOOR_16_POINT_DIAMOND_FIELD_TNT_v1
+        <pre>DOOR_16_POINT_FOREGROUND_CORE_FIELD_TNT_v1
 route=/door/
 page=door
 role=entry_threshold
 message=one_message_many_rooms
 center=door_threshold_decorative
 design_object=16_point_diamond_threshold_field
+foreground_core=laws,entry,proof,return
+background_ring=book,home,nine_summits,universe,compass,manor,gauges,products,audralia,frontier,showroom,built_assets
 animation=two_interlocking_figure_eights
 traversal=bilateral_quadrupedic_16_diamond
-primary_cardinals=home,manor,showroom,gauges
-secondary_diagonals=nine_summits,products,frontier,compass
-support_points=book,universe,audralia,built_assets,proof,laws,return,entry
 mobile_law=compact_field_no_four_massive_diamond_vertical_crop
-route_owns=entry_threshold,16_point_field,animated_diamond_routes,256_scope_expression
+route_owns=entry_threshold,16_point_field,foreground_core,animated_diamond_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -917,7 +930,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      DOOR_16_POINT_DIAMOND_FIELD_TNT_v1 · Door · Sixteen Points · One Threshold.
+      DOOR_16_POINT_FOREGROUND_CORE_FIELD_TNT_v1 · Door · Laws · Entry · Proof · Return.
     </footer>
   </div>
 
@@ -948,17 +961,20 @@ visual_pass_claimed=false</pre>
         nodes.forEach((node, index) => {
           const phase = Number(node.dataset.phase || index * 0.392699);
           const loop = node.dataset.loop || "a";
+          const isForeground = node.classList.contains("forefront");
           const p = t + phase;
+          const localAmpX = isForeground ? ampX * 0.58 : ampX;
+          const localAmpY = isForeground ? ampY * 0.58 : ampY;
 
           let dx;
           let dy;
 
           if (loop === "a") {
-            dx = Math.sin(p) * ampX;
-            dy = Math.sin(p * 2) * ampY;
+            dx = Math.sin(p) * localAmpX;
+            dy = Math.sin(p * 2) * localAmpY;
           } else {
-            dx = Math.sin(p * 2) * ampX;
-            dy = Math.sin(p) * ampY;
+            dx = Math.sin(p * 2) * localAmpX;
+            dy = Math.sin(p) * localAmpY;
           }
 
           node.style.setProperty("--dx", dx.toFixed(2) + "px");

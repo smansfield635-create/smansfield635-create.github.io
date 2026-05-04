@@ -3,8 +3,8 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V2"
-  data-contract="PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RECEIPT_CONTAINMENT_TNT_v2"
+  data-version="G1-V1.1"
+  data-contract="PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1"
   data-status="active"
   data-role="product-wing"
   data-heavy-runtime-loaded="false"
@@ -23,6 +23,8 @@
     content="Products is the product wing of Diamond Gate Bridge: one message, many useful chambers."
   >
 
+  <link rel="stylesheet" href="/assets/diamond-orbit.css">
+
   <style>
     :root{
       color-scheme:dark;
@@ -38,7 +40,6 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-duration:48s;
     }
 
     *{box-sizing:border-box}
@@ -73,7 +74,6 @@
       content:"";
       position:fixed;
       inset:0;
-      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
@@ -236,12 +236,12 @@
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
         radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:anchorPulse 8s ease-in-out infinite;
+      animation:backgroundAnchorPulse 8s ease-in-out infinite;
       pointer-events:none;
       opacity:.52;
     }
 
-    @keyframes anchorPulse{
+    @keyframes backgroundAnchorPulse{
       0%,100%{opacity:.42;filter:brightness(.95)}
       50%{opacity:.58;filter:brightness(1.1)}
     }
@@ -370,219 +370,33 @@
     }
 
     .products-stage{
+      --diamond-orbit-speed:48s;
+      --diamond-orbit-radius:clamp(8.6rem,24vw,15.2rem);
+      min-height:clamp(36rem,70vw,52rem);
       position:relative;
-      min-height:clamp(30rem,66vw,46rem);
-      display:grid;
-      place-items:center;
       overflow:hidden;
-      isolation:isolate;
-      border:1px solid rgba(184,205,255,.13);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 50% 44%,rgba(143,101,255,.16),transparent 20rem),
-        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .products-stage::before,
-    .products-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-    }
-
-    .products-stage::before{
-      width:min(82%,33rem);
-      height:min(82%,33rem);
-      border:1px solid rgba(243,200,111,.08);
-      box-shadow:0 0 3rem rgba(143,101,255,.12);
-    }
-
-    .products-stage::after{
-      width:min(52%,21rem);
-      height:min(52%,21rem);
-      border:1px solid rgba(143,101,255,.15);
-    }
-
-    .products-center-anchor{
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:0;
-      display:grid;
-      place-items:center;
-      width:clamp(8.5rem,22vw,13rem);
-      height:clamp(8.5rem,22vw,13rem);
-      transform:translate(-50%,-50%) rotate(45deg);
-      border:1px solid rgba(243,200,111,.12);
-      border-radius:1.9rem;
-      background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
-        linear-gradient(135deg,rgba(143,101,255,.38),rgba(27,17,75,.42));
-      box-shadow:
-        0 0 70px rgba(143,101,255,.18),
-        inset 0 0 26px rgba(255,255,255,.04);
-      opacity:.48;
-      pointer-events:none;
-      animation:productAnchorPulse 7s ease-in-out infinite;
-    }
-
-    .products-center-anchor::after{
-      content:"";
-      position:absolute;
-      inset:14%;
-      border-radius:1.25rem;
-      border:1px solid rgba(255,255,255,.05);
-    }
-
-    .products-center-anchor span{
-      display:block;
-      transform:rotate(-45deg);
-      color:rgba(255,244,216,.86);
-      text-align:center;
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      line-height:1.2;
-    }
-
-    @keyframes productAnchorPulse{
-      0%,100%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
-        opacity:.42;
-      }
-      50%{
-        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-        opacity:.56;
-      }
-    }
-
-    .orbit-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:26rem;
-      height:26rem;
-      border-radius:999px;
-      pointer-events:none;
-      transform:translate(-50%,-50%);
-      z-index:3;
-      animation:orbitClockwise var(--orbit-duration) linear infinite;
-    }
-
-    @keyframes orbitClockwise{
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
-    .diamond-node{
-      --radius:-12.6rem;
-      position:absolute;
-      left:50%;
-      top:50%;
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      width:6.2rem;
-      height:6.2rem;
-      margin:-3.1rem 0 0 -3.1rem;
-      border:1px solid rgba(243,200,111,.18);
-      border-radius:1.55rem;
-      background:
-        radial-gradient(circle at 30% 25%,rgba(255,255,255,.34),rgba(255,255,255,.08) 24%,transparent 42%),
-        radial-gradient(circle at 72% 78%,rgba(33,15,91,.38),transparent 48%),
-        linear-gradient(145deg,rgba(168,132,255,.98),rgba(103,69,225,.94) 52%,rgba(58,34,164,.96) 100%);
-      box-shadow:
-        0 16px 34px rgba(39,18,116,.34),
-        0 0 26px rgba(143,101,255,.22),
-        inset 0 1px 0 rgba(255,255,255,.2),
-        inset 0 -12px 22px rgba(22,10,65,.18);
-      transform:
-        rotate(var(--angle))
-        translateY(var(--radius))
-        rotate(calc(-1 * var(--angle)))
-        rotate(45deg);
-      pointer-events:auto;
-      backface-visibility:hidden;
+    .products-stage .diamond-orbit-ring,
+    .products-stage .diamond-orbit-rotor,
+    .products-stage .diamond-orbit-node,
+    .products-stage .diamond-orbit-counter{
       transform-style:preserve-3d;
     }
 
-    .diamond-node::before{
-      content:"";
-      position:absolute;
-      inset:8%;
-      border-radius:1.15rem;
-      background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);
-      opacity:.72;
-      pointer-events:none;
-      transform:translateZ(1px);
+    .products-stage .diamond-orbit-node{
+      z-index:3;
     }
 
-    .diamond-node::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:1.55rem;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.05),
-        inset 0 -18px 24px rgba(21,9,62,.16);
+    .products-stage .diamond-orbit-anchor,
+    .products-stage .diamond-orbit-anchor-label{
+      z-index:1;
       pointer-events:none;
     }
 
-    .diamond-node:hover,
-    .diamond-node:focus{
-      outline:none;
-      border-color:rgba(243,200,111,.72);
-      box-shadow:
-        0 22px 42px rgba(39,18,116,.42),
-        0 0 34px rgba(143,101,255,.30),
-        inset 0 1px 0 rgba(255,255,255,.22),
-        inset 0 -12px 22px rgba(22,10,65,.18);
-      filter:brightness(1.06);
-    }
-
-    .diamond-label-shell{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-      padding:.35rem;
-      transform:rotate(-45deg);
-      text-align:center;
-    }
-
-    .diamond-label-text{
-      display:block;
-      max-width:4.9rem;
-      color:rgba(255,244,216,.98);
-      text-align:center;
-      font-size:.58rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1.1;
-      text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.8);
-      animation:keepTextUpright var(--orbit-duration) linear infinite;
-    }
-
-    .diamond-label-sub{
-      display:block;
-      margin-top:.14rem;
-      color:rgba(230,238,255,.72);
-      font-size:.43rem;
-      font-weight:850;
-      letter-spacing:.06em;
-      line-height:1;
-      text-transform:uppercase;
-    }
-
-    @keyframes keepTextUpright{
-      to{transform:rotate(-360deg)}
+    .products-stage .diamond-orbit-anchor-label strong,
+    .products-stage .diamond-orbit-anchor-label span{
+      opacity:.82;
     }
 
     .product-grid{
@@ -649,19 +463,13 @@
       line-height:1.4;
     }
 
-    .status-card{
-      margin-top:1.15rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      background:rgba(255,255,255,.035);
-      padding:1rem;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.55;
-    }
-
-    .status-card strong{
-      color:var(--gold);
+    .open-chamber{
+      margin-top:auto;
+      color:rgba(230,238,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .route-receipt,
@@ -717,29 +525,8 @@
       }
 
       .products-stage{
-        min-height:32rem;
-      }
-
-      .orbit-ring{
-        width:20.6rem;
-        height:20.6rem;
-      }
-
-      .diamond-node{
-        --radius:-9.7rem;
-        width:5rem;
-        height:5rem;
-        margin:-2.5rem 0 0 -2.5rem;
-      }
-
-      .diamond-label-text{
-        max-width:3.8rem;
-        font-size:.46rem;
-        letter-spacing:.05em;
-      }
-
-      .diamond-label-sub{
-        display:none;
+        --diamond-orbit-radius:8.6rem;
+        min-height:35rem;
       }
 
       .product-grid,
@@ -758,33 +545,8 @@
 
     @media (max-width:460px){
       .products-stage{
-        min-height:29rem;
-      }
-
-      .products-center-anchor{
-        width:7.9rem;
-        height:7.9rem;
-      }
-
-      .products-center-anchor span{
-        font-size:.62rem;
-      }
-
-      .orbit-ring{
-        width:18.4rem;
-        height:18.4rem;
-      }
-
-      .diamond-node{
-        --radius:-8.6rem;
-        width:4.45rem;
-        height:4.45rem;
-        margin:-2.225rem 0 0 -2.225rem;
-      }
-
-      .diamond-label-text{
-        max-width:3.2rem;
-        font-size:.40rem;
+        --diamond-orbit-radius:8.25rem;
+        min-height:33rem;
       }
     }
 
@@ -810,7 +572,7 @@
         <span class="brand-mark"><span>PR</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Products · Product Wing</strong>
+          <strong>Rich Manor and Estate</strong>
         </span>
       </a>
 
@@ -818,10 +580,10 @@
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Explore</a>
+        <a href="/explore/">Manor</a>
         <a href="/laws/">Laws</a>
         <a href="/nine-summits/">Nine Summits</a>
-        <a href="/book/">Book</a>
+        <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/" aria-current="page">Products</a>
         <a href="/showroom/">Showroom</a>
@@ -857,48 +619,69 @@
         <div class="kicker">Product chamber orbit</div>
         <h2 id="field-title">Five product chambers rotate around one usable message.</h2>
 
-        <div class="products-stage" aria-label="Animated Products five-chamber route field">
-          <div class="products-center-anchor" aria-hidden="true">
-            <span>Products<br>One Message<br>Many Chambers</span>
+        <div class="diamond-orbit-stage products-stage" aria-label="Animated Products product chamber orbit">
+          <div class="diamond-orbit-axis" aria-hidden="true"></div>
+
+          <div class="diamond-orbit-anchor" aria-hidden="true"></div>
+          <div class="diamond-orbit-anchor-label" aria-hidden="true">
+            <strong>Products</strong>
+            <span>One Message · Many Chambers</span>
           </div>
 
-          <div class="orbit-ring">
-            <a class="diamond-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN Value">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">ARCHCOIN<span class="diamond-label-sub">Value</span></b>
-              </span>
-            </a>
+          <div class="diamond-orbit-ring">
+            <div class="diamond-orbit-rotor">
+              <div class="diamond-orbit-node" style="--orbit-angle:0deg">
+                <div class="diamond-orbit-counter">
+                  <a href="/products/archcoin/" aria-label="ARCHCOIN Value">
+                    <span class="diamond-route-diamond" aria-hidden="true"></span>
+                    <span class="diamond-orbit-label">ARCHCOIN</span>
+                    <span class="diamond-orbit-sub">Value</span>
+                  </a>
+                </div>
+              </div>
 
-            <a class="diamond-node" style="--angle:72deg" href="/products/five-flags/" aria-label="Five Flags Game">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Five<br>Flags<span class="diamond-label-sub">Game</span></b>
-              </span>
-            </a>
+              <div class="diamond-orbit-node" style="--orbit-angle:72deg">
+                <div class="diamond-orbit-counter">
+                  <a href="/products/five-flags/" aria-label="Five Flags Game">
+                    <span class="diamond-route-diamond" aria-hidden="true"></span>
+                    <span class="diamond-orbit-label">Five Flags</span>
+                    <span class="diamond-orbit-sub">Game</span>
+                  </a>
+                </div>
+              </div>
 
-            <a class="diamond-node" style="--angle:144deg" href="/products/on-your-side-ai/" aria-label="On Your Side AAI Support">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">AAI<span class="diamond-label-sub">Support</span></b>
-              </span>
-            </a>
+              <div class="diamond-orbit-node" style="--orbit-angle:144deg">
+                <div class="diamond-orbit-counter">
+                  <a href="/products/on-your-side-ai/" aria-label="On Your Side AAI Support">
+                    <span class="diamond-route-diamond" aria-hidden="true"></span>
+                    <span class="diamond-orbit-label">AAI</span>
+                    <span class="diamond-orbit-sub">Support</span>
+                  </a>
+                </div>
+              </div>
 
-            <a class="diamond-node" style="--angle:216deg" href="/products/education/" aria-label="Education Learning">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Education<span class="diamond-label-sub">Learning</span></b>
-              </span>
-            </a>
+              <div class="diamond-orbit-node" style="--orbit-angle:216deg">
+                <div class="diamond-orbit-counter">
+                  <a href="/products/education/" aria-label="Education Learning">
+                    <span class="diamond-route-diamond" aria-hidden="true"></span>
+                    <span class="diamond-orbit-label">Education</span>
+                    <span class="diamond-orbit-sub">Learning</span>
+                  </a>
+                </div>
+              </div>
 
-            <a class="diamond-node" style="--angle:288deg" href="/products/nutrition/" aria-label="Nutrition Routine">
-              <span class="diamond-label-shell">
-                <b class="diamond-label-text">Nutrition<span class="diamond-label-sub">Routine</span></b>
-              </span>
-            </a>
+              <div class="diamond-orbit-node" style="--orbit-angle:288deg">
+                <div class="diamond-orbit-counter">
+                  <a href="/products/nutrition/" aria-label="Nutrition Routine">
+                    <span class="diamond-route-diamond" aria-hidden="true"></span>
+                    <span class="diamond-orbit-label">Nutrition</span>
+                    <span class="diamond-orbit-sub">Routine</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <aside class="status-card" aria-label="Products status">
-          <strong>Products status:</strong>
-          Five chambers remain connected. Route receipt is preserved as non-rendering metadata, not public page content.
-        </aside>
       </section>
 
       <section class="panel section" aria-labelledby="chambers-title">
@@ -910,30 +693,35 @@
             <b>ARCHCOIN</b>
             <strong>Structured value and traceability.</strong>
             <span>Contribution, traceability, accountability, allocation, and future exchange architecture.</span>
+            <span class="open-chamber">Open chamber</span>
           </a>
 
           <a class="product-card" href="/products/five-flags/">
             <b>Five Flags</b>
             <strong>A scene-guessing signal game.</strong>
             <span>A family-friendly game built around five clear signals and room-readable feedback.</span>
+            <span class="open-chamber">Open chamber</span>
           </a>
 
           <a class="product-card" href="/products/on-your-side-ai/">
             <b>On Your Side AAI</b>
             <strong>Assistance-first support.</strong>
             <span>Forms, letters, choices, plain-language support, and practical next steps.</span>
+            <span class="open-chamber">Open chamber</span>
           </a>
 
           <a class="product-card" href="/products/education/">
             <b>Education</b>
             <strong>Words into working understanding.</strong>
             <span>1001-word traversal learning for usable fluency, meaning, sentence, context, and use.</span>
+            <span class="open-chamber">Open chamber</span>
           </a>
 
           <a class="product-card" href="/products/nutrition/">
             <b>Nutrition</b>
             <strong>Shame-free food routine support.</strong>
             <span>Food, water, energy, rhythm, and return without diet-culture framing.</span>
+            <span class="open-chamber">Open chamber</span>
           </a>
         </div>
       </section>
@@ -946,19 +734,20 @@
           <a class="route-card" href="/"><strong>Compass</strong></a>
           <a class="route-card" href="/door/"><strong>Door</strong></a>
           <a class="route-card" href="/home/"><strong>Home</strong></a>
-          <a class="route-card" href="/explore/"><strong>Explore</strong></a>
+          <a class="route-card" href="/explore/"><strong>Manor</strong></a>
           <a class="route-card" href="/showroom/"><strong>Showroom</strong></a>
           <a class="route-card" href="/gauges/"><strong>Gauges</strong></a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RECEIPT_CONTAINMENT_TNT_v2
+PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1
 route=/products/
 page=products
 role=product_wing
 message=one_message_many_product_chambers
-alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
+alignment_sequence=CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1
+shared_css=/assets/diamond-orbit.css
 animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
 center=products_wing_background_anchor_only
 visual_system=products_centered_clockwise_chamber_orbit
@@ -969,13 +758,13 @@ five_flags=/products/five-flags/
 on_your_side_aai=/products/on-your-side-ai/
 education=/products/education/
 nutrition=/products/nutrition/
-animation=orbitClockwise,keepTextUpright,productAnchorPulse
+animation=diamondOrbitClockwise,diamondCounterRead,diamondHoverLift,backgroundAnchorPulse,auroraDrift
 z_index_law=ambient_background,products_anchor_background,orbit_field,route_diamonds,route_labels
 non_overlap_law=no_clickable_diamond_hidden_by_center
 mobile_law=compact_chamber_orbit_no_hidden_nodes
-fix=visible_route_receipt_removed_from_public_flow
-upgraded=receipt_containment,route_stability,mobile_stability,archcoin_spelling
-preserved=product_wing,one_message_many_chambers,product_routes
+fix=old_product_design_restored_and_route_receipt_hidden_from_public_flow
+upgraded=receipt_containment_only
+preserved=old_product_chamber_design,shared_css_link,universal_diamond_orbit_standard,archcoin_spelling,product_wing,one_message_many_chambers,product_routes
 removed=visible_route_receipt,public_metadata_column,debug_text_page_flow
 product_rule=plain_first,useful_first,one_wing
 route_owns=product_wing,product_chamber_routes,chamber_orbit,plain_first_product_entry
@@ -992,7 +781,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RECEIPT_CONTAINMENT_TNT_v2 · Products · Receipt contained · Product wing restored.
+      PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1 · Products · Old design restored · Receipt contained.
     </footer>
   </div>
 </body>

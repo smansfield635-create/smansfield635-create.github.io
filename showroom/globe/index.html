@@ -37,12 +37,21 @@
       left: 0.75rem;
       top: 0.75rem;
       z-index: 10;
+      transform: translateY(-140%);
+      background: #07111f;
+      color: #ffffff;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.6rem;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
     }
 
     .site-header {
       width: min(1120px, 92vw);
       margin: 0 auto;
-      padding: 1rem 0;
+      padding: 1rem 0 0.25rem;
     }
 
     .brand {
@@ -238,8 +247,8 @@
 
       <p>
         This chamber separates the two bodies. Earth is held as a G4 candidate until it
-        visibly matches the Orbital Earth reference standard. Audralia is the constructed
-        home-world body.
+        visibly matches the Orbital Earth reference standard. Audralia is rebuilt from
+        ground zero as a clean Generation 1 world body.
       </p>
 
       <div class="globe-status-grid" aria-label="Dual body authority summary">
@@ -250,7 +259,7 @@
 
         <article class="status-card" data-body="audralia">
           <strong>Audralia</strong>
-          <span>Generation 1 active world body.</span>
+          <span>Generation 1 ground-zero parent renderer.</span>
         </article>
 
         <article class="status-card" data-contract="split">
@@ -323,8 +332,8 @@ VISUAL_PASS=HELD</pre>
           <p class="eyebrow">Body 2 · Active World</p>
           <h2>Audralia</h2>
           <p>
-            Audralia is the constructed home-world body and uses its parent planet
-            render authority with direct downstream science children.
+            Audralia is the constructed home-world body. This pass uses one clean parent
+            renderer before any downstream science children are restored.
           </p>
           <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1</p>
         </div>
@@ -335,14 +344,8 @@ VISUAL_PASS=HELD</pre>
           data-body="audralia"
           data-renderer="audralia"
           data-generation="G1"
-          data-authority="/assets/AdreliaPlanetRendered.js"
-          data-parent-render="/assets/AdreliaPlanetRendered.js"
-          data-topography="/assets/audralia.planet.render-topography.js"
-          data-hydration="/assets/audralia.planet.render-hydration.js"
-          data-climate="/assets/audralia.planet.render-climate.js"
-          data-ecology="/assets/audralia.planet.render-ecology.js"
-          data-fauna="/assets/audralia.planet.render-fauna.js"
-          data-runtime="/assets/audralia.planet.render-living-world.js"
+          data-authority="/assets/audralia/audralia.planet.render.js"
+          data-parent-render="/assets/audralia/audralia.planet.render.js"
           aria-label="Audralia Generation 1 globe render mount"
         ></div>
 
@@ -353,8 +356,8 @@ VISUAL_PASS=HELD</pre>
         >AUDRALIA_RENDER_MOUNT=READY
 BODY=Audralia
 GENERATION=G1
-PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js
-DOWNSTREAM_CHAIN=TOPOGRAPHY,HYDRATION,CLIMATE,ECOLOGY,FAUNA,LIVING_WORLD
+PARENT_AUTHORITY=/assets/audralia/audralia.planet.render.js
+GROUND_ZERO_PARENT_ONLY=true
 VISUAL_PASS=HELD</pre>
       </article>
     </section>
@@ -368,10 +371,11 @@ VISUAL_PASS=HELD</pre>
         <li>EARTH_G4_CLAIM=HELD</li>
         <li>EARTH_TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE</li>
         <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1</li>
+        <li>AUDRALIA_GROUND_ZERO_PARENT_ONLY=TRUE</li>
         <li>EARTH_MOUNT=#earthRenderMount</li>
         <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
         <li>EARTH_AUTHORITY=EARTH_FILE_CHAIN</li>
-        <li>AUDRALIA_PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js</li>
+        <li>AUDRALIA_PARENT_AUTHORITY=/assets/audralia/audralia.planet.render.js</li>
         <li>STATIC_IMAGE_REPLACEMENT=FALSE</li>
         <li>IMAGE_GENERATION=FORBIDDEN</li>
         <li>VISUAL_PASS=HELD_UNTIL_USER_CONFIRMATION</li>
@@ -381,7 +385,7 @@ VISUAL_PASS=HELD</pre>
 
   <script
     type="module"
-    src="/showroom/globe/index.js?v=earth-g4-candidate-audralia-g1-served-html-restore-v5"
+    src="/showroom/globe/index.js?v=earth-candidate-audralia-ground-zero-g1-v1"
   ></script>
 </body>
 </html>

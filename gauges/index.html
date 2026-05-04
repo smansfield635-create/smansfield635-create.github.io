@@ -1,653 +1,725 @@
-<!-- /gauges/index.html -->
 <!doctype html>
 <html
   lang="en"
-  data-page="gauges-active-instrumentation"
   data-route="/gauges/"
-  data-contract="GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1"
-  data-gauges-role="measurement-surface"
-  data-source-fetch-only="true"
-  data-renders-iframe="false"
-  data-mutates-runtime="false"
+  data-page="gauges"
+  data-version="G1-V2"
+  data-contract="GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2"
+  data-status="active"
+  data-parent="/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
   data-heavy-runtime-loaded="false"
-  data-generated-image="false"
-  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Gauges</title>
-  <meta
-    name="description"
-    content="Active Gauges instrumentation for Diamond Gate Bridge rooms, routes, products, frontier lanes, source checks, baseline alignment, and next-move priority."
-  >
+  <title>Gauges · Diamond Gate Bridge</title>
+  <meta name="description" content="Active Gauges page for source-only route auditing, baseline alignment, retired-language detection, product chamber checks, Frontier lane checks, and next-move ranking.">
 
   <style>
-    :root {
-      --panel: rgba(9, 14, 26, 0.90);
-      --glass: rgba(255,255,255,0.055);
-      --line: rgba(255,255,255,0.15);
-      --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.48);
-      --gold: #f2c76f;
-      --green: #a5efcc;
-      --red: #ff9c9c;
-      --blue: #78d8ff;
-      --stage: min(100%, 1180px);
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.58);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --cyan:#8ff6ff;
+      --purple:#8f65ff;
+      --green:#8ff5d2;
+      --red:#ff7b7b;
+      --amber:#ffcf7a;
+      --panel:rgba(9,15,31,.82);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1220px;
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
-    html,
-    body {
-      width: 100%;
-      margin: 0;
-      overflow-x: hidden;
+    html{
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
       background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
-        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.19),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.19),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.13),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.10),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      overflow-x:hidden;
     }
 
-    body { min-height: 100svh; }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
-      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.38;
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    button {
-      font: inherit;
-    }
-
-    .skip-link {
-      position: absolute;
-      top: -4rem;
-      left: 1rem;
-      z-index: 20;
-      padding: 0.75rem 1rem;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #090b10;
-      font-weight: 900;
-    }
-
-    .skip-link:focus { top: 1rem; }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: var(--stage);
-      margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
-    }
-
-    .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.08rem;
-      font-weight: 950;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
-    }
-
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
-      text-transform: uppercase;
-    }
-
-    .brand span:last-child {
-      color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 0.42rem;
-    }
-
-    .nav a {
-      min-height: 2.1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-    }
-
-    .hero {
-      display: grid;
-      gap: 1rem;
-      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
-      text-align: center;
-    }
-
-    .eyebrow {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      width: min(100%, 980px);
-      margin: 0 auto;
-      font-size: clamp(2.45rem, 9.2vw, 5.9rem);
-      line-height: 0.92;
-      letter-spacing: -0.078em;
-      text-wrap: balance;
-    }
-
-    .quote {
-      width: min(100%, 780px);
-      margin: 0 auto;
-      color: rgba(255,241,205,0.96);
-      font-size: clamp(1.02rem, 3.4vw, 1.22rem);
-      line-height: 1.52;
-      text-wrap: balance;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-    }
-
-    .button {
-      min-height: 2.45rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform 160ms ease, box-shadow 160ms ease;
-    }
-
-    .button.secondary {
-      border-color: rgba(255,255,255,0.24);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
-      outline: none;
-    }
-
-    .instrument-panel {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
-      position: relative;
-      padding: clamp(1rem, 4vw, 1.6rem);
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: clamp(1.35rem, 5vw, 2.2rem);
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.62);
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.58;
+      animation:auroraDrift 26s linear infinite;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
       box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.34),
-        inset 0 1px 0 rgba(255,255,255,0.09);
-      overflow: hidden;
-      isolation: isolate;
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .panel-title {
-      display: grid;
-      gap: 0.32rem;
-      text-align: center;
-      margin-bottom: clamp(0.85rem, 3vw, 1.25rem);
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
     }
 
-    .panel-title h2 {
-      margin: 0;
-      font-size: clamp(1.45rem, 4.8vw, 2.25rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
     }
 
-    .panel-title p {
-      width: min(100%, 720px);
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.48;
-      text-wrap: balance;
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .gauge-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: clamp(0.75rem, 2vw, 1rem);
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .gauge-card,
-    .scale-card,
-    .finding,
-    .room-tile {
-      border: 1px solid rgba(255,255,255,0.14);
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.075), transparent 36%),
-        rgba(255,255,255,0.028);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        0 1rem 3rem rgba(0,0,0,0.22);
-    }
-
-    .gauge-card {
-      min-height: 15rem;
-      display: grid;
-      place-items: center;
-      gap: 0.8rem;
-      padding: 1rem;
-      border-radius: 1.35rem;
-      text-align: center;
-    }
-
-    .dial {
-      --value: 0;
-      --dial-color: var(--gold);
-      width: clamp(8rem, 18vw, 11rem);
-      height: clamp(8rem, 18vw, 11rem);
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(8,12,20,0.98) 0 55%, transparent 56%),
-        conic-gradient(var(--dial-color) calc(var(--value) * 1%), rgba(255,255,255,0.10) 0);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.12),
-        0 0 2.4rem rgba(242,199,111,0.08);
-      position: relative;
-    }
-
-    .dial::before {
-      content: "";
-      position: absolute;
-      inset: 0.55rem;
-      border: 1px solid rgba(255,255,255,0.11);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .dial::after {
-      content: "";
-      position: absolute;
-      width: 0.42rem;
-      height: 0.42rem;
-      border-radius: 50%;
-      background: rgba(255,241,205,0.88);
-      box-shadow: 0 0 1rem rgba(242,199,111,0.22);
-    }
-
-    .dial-value {
-      display: grid;
-      gap: 0.12rem;
-      z-index: 2;
-      color: rgba(255,241,205,0.97);
-      font-weight: 950;
-    }
-
-    .dial-value strong {
-      font-size: clamp(1.3rem, 4vw, 1.85rem);
-      line-height: 1;
-    }
-
-    .dial-value span {
-      color: var(--muted);
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .gauge-card h3,
-    .scale-card h3 {
-      margin: 0;
-      color: rgba(255,241,205,0.95);
-      font-size: 0.86rem;
-      font-weight: 950;
-      letter-spacing: 0.095em;
-      line-height: 1.1;
-      text-transform: uppercase;
-    }
-
-    .gauge-card p,
-    .scale-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.38;
-    }
-
-    .status-line {
-      color: var(--gold);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .pass .dial { --dial-color: var(--green); }
-    .hold .dial { --dial-color: var(--gold); }
-    .fail .dial { --dial-color: var(--red); }
-
-    .pass .status-line { color: var(--green); }
-    .hold .status-line { color: var(--gold); }
-    .fail .status-line { color: var(--red); }
-
-    .scale-section {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(0.75rem, 2vw, 1rem);
-    }
-
-    .scale-card {
-      min-height: 10.2rem;
-      display: grid;
-      gap: 0.7rem;
-      align-content: center;
-      padding: 1rem;
-      border-radius: 1.25rem;
-    }
-
-    .scale-track {
-      width: 100%;
-      height: 1.1rem;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.052);
-    }
-
-    .scale-fill {
-      width: 0%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, rgba(255,156,156,0.92), rgba(242,199,111,0.92), rgba(165,239,204,0.92));
-      transition: width 420ms ease;
-    }
-
-    .scale-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 850;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .scale-value {
-      color: rgba(255,241,205,0.96);
-      font-weight: 950;
-    }
-
-    .balance-panel,
-    .findings-panel,
-    .table-panel {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
-      padding: clamp(0.9rem, 3vw, 1.1rem);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 1.25rem;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.012)),
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
         var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      min-height:clamp(24rem,46vw,34rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.6rem,5vw,3.5rem);
+      margin-top:.6rem;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      width:clamp(10rem,25vw,18rem);
+      height:clamp(10rem,25vw,18rem);
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.19),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroDiamond 8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1{
+      margin:0;
+      max-width:900px;
+      font-size:clamp(3.2rem,10vw,6.6rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      position:relative;
+      z-index:2;
+      text-wrap:balance;
+    }
+
+    h2{
+      margin:0;
+      max-width:860px;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.8vw,2.7rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      position:relative;
+      z-index:2;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.32rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    p{
+      margin:0;
+      max-width:820px;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.3rem;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      cursor:pointer;
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .button:disabled{
+      cursor:not-allowed;
+      opacity:.55;
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .gauge-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.9rem;
+    }
+
+    .gauge-card{
+      min-height:17rem;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.45rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      display:grid;
+      gap:.8rem;
+      align-content:start;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .gauge-card::before{
+      content:"";
+      position:absolute;
+      right:-2.8rem;
+      top:-2.8rem;
+      width:7rem;
+      height:7rem;
+      border:1px solid rgba(243,200,111,.14);
+      border-radius:1.8rem;
+      transform:rotate(45deg);
+      background:rgba(143,101,255,.05);
+    }
+
+    .dial{
+      --score:0;
+      --dialColor:var(--amber);
+      width:8.2rem;
+      height:8.2rem;
+      margin:.1rem auto .2rem;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(7,11,22,.96) 0 52%,transparent 53%),
+        conic-gradient(var(--dialColor) calc(var(--score) * 1%),rgba(255,255,255,.11) 0);
+      border:1px solid rgba(255,255,255,.13);
       box-shadow:
-        0 1.2rem 4rem rgba(0,0,0,0.25),
-        inset 0 1px 0 rgba(255,255,255,0.07);
+        0 1rem 2rem rgba(0,0,0,.32),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      position:relative;
+      z-index:2;
     }
 
-    .section-title {
-      margin: 0 0 0.75rem;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-align: center;
+    .dial span{
+      display:grid;
+      text-align:center;
+      gap:.1rem;
+      font-weight:950;
     }
 
-    .room-balance {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.55rem;
+    .dial strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.45rem;
+      letter-spacing:-.04em;
     }
 
-    .room-tile {
-      min-height: 5.9rem;
-      display: grid;
-      align-content: center;
-      gap: 0.28rem;
-      padding: 0.75rem;
-      border-radius: 1rem;
-      text-align: center;
+    .dial small{
+      color:var(--muted);
+      font-size:.62rem;
+      letter-spacing:.11em;
+      text-transform:uppercase;
     }
 
-    .room-tile strong {
-      color: rgba(255,241,205,0.96);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .state-pill{
+      width:fit-content;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:.35rem .55rem;
+      font-size:.66rem;
+      font-weight:950;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--muted);
+      background:rgba(255,255,255,.035);
     }
 
-    .room-tile span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      line-height: 1.28;
+    .state-pill.pass{
+      color:#06120d;
+      background:linear-gradient(135deg,#baffdf,var(--green));
+      border-color:rgba(143,245,210,.8);
     }
 
-    .room-tile.pass { border-color: rgba(165,239,204,0.32); }
-    .room-tile.hold { border-color: rgba(242,199,111,0.34); }
-    .room-tile.fail { border-color: rgba(255,156,156,0.34); }
-
-    .findings {
-      display: grid;
-      gap: 0.55rem;
+    .state-pill.hold{
+      color:#130d02;
+      background:linear-gradient(135deg,#ffe3a5,var(--amber));
+      border-color:rgba(255,207,122,.8);
     }
 
-    .finding {
-      padding: 0.82rem;
-      border-radius: 1rem;
+    .state-pill.fail{
+      color:#170506;
+      background:linear-gradient(135deg,#ffc1c1,var(--red));
+      border-color:rgba(255,123,123,.8);
     }
 
-    .finding strong {
-      display: block;
-      color: rgba(255,241,205,0.96);
-      font-size: 0.9rem;
-      line-height: 1.18;
+    .meter-list{
+      display:grid;
+      gap:.75rem;
     }
 
-    .finding span {
-      display: block;
-      margin-top: 0.35rem;
-      color: var(--muted);
-      font-size: 0.78rem;
-      line-height: 1.38;
+    .meter{
+      display:grid;
+      gap:.38rem;
     }
 
-    .finding.pass { border-color: rgba(165,239,204,0.32); }
-    .finding.hold { border-color: rgba(242,199,111,0.34); }
-    .finding.fail { border-color: rgba(255,156,156,0.34); }
-
-    .route-table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 1rem;
-      font-size: 0.74rem;
+    .meter-top{
+      display:flex;
+      justify-content:space-between;
+      gap:.75rem;
+      color:rgba(255,244,216,.92);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .route-table th,
-    .route-table td {
-      padding: 0.58rem 0.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      vertical-align: top;
-      text-align: left;
+    .bar{
+      height:.72rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
     }
 
-    .route-table th {
-      color: var(--gold);
-      font-size: 0.66rem;
-      font-weight: 950;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .bar span{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--purple),var(--gold));
+      border-radius:inherit;
+      transition:width .35s ease;
     }
 
-    .route-table td {
-      color: var(--muted);
-      overflow-wrap: anywhere;
+    .balance-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
     }
 
-    .status-pass { color: var(--green); font-weight: 950; }
-    .status-fail { color: var(--red); font-weight: 950; }
-    .status-hold { color: var(--gold); font-weight: 950; }
-
-    .receipt {
-      width: min(100%, 900px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
-      color: var(--faint);
-      overflow: hidden;
+    .room-chip{
+      min-height:7rem;
+      display:grid;
+      gap:.45rem;
+      align-content:start;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.035);
     }
 
-    .receipt summary {
-      cursor: pointer;
-      padding: 0.75rem 0.9rem;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .room-chip strong{
+      color:rgba(255,244,216,.96);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .receipt pre {
-      margin: 0;
-      padding: 0 0.9rem 0.9rem;
-      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .room-chip span{
+      color:var(--muted);
+      font-size:.8rem;
+      line-height:1.35;
     }
 
-    footer {
-      padding: 1.45rem 0 0.45rem;
-      color: var(--faint);
-      font-size: 0.74rem;
-      line-height: 1.45;
-      text-align: center;
+    .room-chip.pass{border-color:rgba(143,245,210,.42)}
+    .room-chip.hold{border-color:rgba(255,207,122,.42)}
+    .room-chip.fail{border-color:rgba(255,123,123,.42)}
+
+    .finding-list{
+      display:grid;
+      gap:.75rem;
     }
 
-    @media (max-width: 980px) {
+    .finding{
+      display:grid;
+      gap:.4rem;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .finding strong{
+      color:rgba(255,244,216,.96);
+      font-size:.86rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .finding span{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .finding.fail{border-color:rgba(255,123,123,.46)}
+    .finding.hold{border-color:rgba(255,207,122,.46)}
+    .finding.pass{border-color:rgba(143,245,210,.35)}
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.03);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:820px;
+    }
+
+    th,td{
+      padding:.75rem;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      text-align:left;
+      vertical-align:top;
+      font-size:.8rem;
+    }
+
+    th{
+      color:rgba(255,244,216,.92);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    td{
+      color:var(--muted);
+    }
+
+    code{
+      color:rgba(255,244,216,.92);
+      font:700 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      overflow-wrap:anywhere;
+    }
+
+    .receipt{
+      margin-top:1.15rem;
+      color:var(--faint);
+    }
+
+    .receipt summary{
+      cursor:pointer;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    .receipt pre{
+      margin:0;
+      padding:1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
+    }
+
+    @keyframes heroDiamond{
+      0%,100%{opacity:.38;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.70;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body::after,
+      .hero::before{
+        animation:none!important;
+      }
+
+      .bar span{
+        transition:none!important;
+      }
+    }
+
+    @media (max-width:1100px){
+      .gauge-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .balance-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .nav{
+        justify-content:flex-start;
+      }
+    }
+
+    @media (max-width:680px){
+      .shell{
+        width:min(100% - 22px,var(--max));
+      }
+
+      h1{
+        font-size:clamp(3rem,16vw,5rem);
+      }
+
       .gauge-grid,
-      .room-balance {
-        grid-template-columns: repeat(2, 1fr);
+      .balance-grid{
+        grid-template-columns:1fr;
       }
 
-      .scale-section {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav { justify-content: flex-start; }
-    }
-
-    @media (max-width: 640px) {
-      .gauge-grid,
-      .room-balance {
-        grid-template-columns: 1fr;
-      }
-
-      .route-table {
-        font-size: 0.68rem;
-      }
-
-      .route-table th:nth-child(3),
-      .route-table td:nth-child(3) {
-        display: none;
+      .dial{
+        width:7.4rem;
+        height:7.4rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to Gauges</a>
+  <a class="skip" href="#gauges-main">Skip to Gauges</a>
 
   <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
-        <span>Rich Manor and Estate</span>
+    <header class="topbar" aria-label="Gauges header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><span>GA</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Gauges · Source Truth</strong>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -663,131 +735,118 @@
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Audralia</a>
+        <a href="/about-this-underdog/">Underdog</a>
+        <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <main id="main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Gauges · Active Instrumentation</p>
+    <main id="gauges-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Gauges · Active Source Auditor</div>
         <h1 id="page-title">Measure the rooms. Name the next move.</h1>
-
-        <p class="quote">
-          “Proof is useful only when it tells the truth before the story gets comfortable.”
+        <h2>Served source only. No iframe. No mutation.</h2>
+        <p>
+          These gauges fetch live HTML from the public routes, read expected signals, flag retired language, measure chamber availability, and rank the next highest-friction move.
         </p>
 
-        <div class="actions" aria-label="Gauge actions">
-          <button class="button" type="button" data-audit="all">Run Site Audit</button>
-          <button class="button secondary" type="button" data-audit="core">Run Core Audit</button>
-          <button class="button secondary" type="button" data-audit="frontier">Run Frontier Audit</button>
-          <button class="button secondary" type="button" data-audit="products">Run Products Audit</button>
+        <div class="actions" aria-label="Audit controls">
+          <button class="button gold" type="button" data-run="site">Run Site Audit</button>
+          <button class="button" type="button" data-run="core">Run Core Audit</button>
+          <button class="button" type="button" data-run="frontier">Run Frontier Audit</button>
+          <button class="button" type="button" data-run="products">Run Products Audit</button>
         </div>
       </section>
 
-      <section class="instrument-panel" aria-labelledby="instrument-title">
-        <div class="panel-title">
-          <h2 id="instrument-title">Active gauges.</h2>
-          <p>These instruments fetch served source only, measure the current baseline, and rank the next move.</p>
-        </div>
+      <section class="panel section" aria-labelledby="active-title">
+        <div class="kicker">Active gauges</div>
+        <h2 id="active-title">Current source read.</h2>
 
-        <div class="gauge-grid" aria-label="Active gauge meters">
-          <article class="gauge-card hold" id="overallGauge">
-            <div class="dial">
-              <div class="dial-value">
-                <strong id="overallValue">HOLD</strong>
-                <span>Overall</span>
-              </div>
+        <div class="gauge-grid">
+          <article class="gauge-card">
+            <span class="state-pill hold" id="overallState">HOLD</span>
+            <div class="dial" id="overallDial">
+              <span><strong id="overallPct">0%</strong><small>Overall</small></span>
             </div>
             <h3>Overall Health</h3>
-            <p id="overallText">Waiting for source checks.</p>
-            <div class="status-line" id="overallStatus">Audit pending</div>
+            <p id="overallNote">Waiting for source checks.</p>
           </article>
 
-          <article class="gauge-card hold" id="routeGauge">
-            <div class="dial">
-              <div class="dial-value">
-                <strong id="routeValue">0%</strong>
-                <span>Routes</span>
-              </div>
+          <article class="gauge-card">
+            <span class="state-pill hold" id="routeState">HOLD</span>
+            <div class="dial" id="routeDial">
+              <span><strong id="routePct">0%</strong><small>Routes</small></span>
             </div>
             <h3>Route Integrity</h3>
-            <p id="routeText">Served-route availability.</p>
-            <div class="status-line" id="routeStatus">Audit pending</div>
+            <p id="routeNote">Served-route availability.</p>
           </article>
 
-          <article class="gauge-card hold" id="frontierGauge">
-            <div class="dial">
-              <div class="dial-value">
-                <strong id="frontierValue">0%</strong>
-                <span>Frontier</span>
-              </div>
+          <article class="gauge-card">
+            <span class="state-pill hold" id="frontierState">HOLD</span>
+            <div class="dial" id="frontierDial">
+              <span><strong id="frontierPct">0%</strong><small>Frontier</small></span>
             </div>
             <h3>Frontier Lanes</h3>
-            <p id="frontierText">Lane availability under the frontier path set.</p>
-            <div class="status-line" id="frontierStatus">Audit pending</div>
+            <p id="frontierNote">Eleven-lane Frontier availability.</p>
           </article>
 
-          <article class="gauge-card hold" id="productGauge">
-            <div class="dial">
-              <div class="dial-value">
-                <strong id="productValue">0%</strong>
-                <span>Products</span>
-              </div>
+          <article class="gauge-card">
+            <span class="state-pill hold" id="productState">HOLD</span>
+            <div class="dial" id="productDial">
+              <span><strong id="productPct">0%</strong><small>Products</small></span>
             </div>
             <h3>Product Chambers</h3>
-            <p id="productText">Product chamber availability.</p>
-            <div class="status-line" id="productStatus">Audit pending</div>
+            <p id="productNote">Five product chamber availability.</p>
           </article>
         </div>
       </section>
 
-      <section class="scale-section" aria-label="Active scales">
-        <article class="scale-card">
-          <h3>Baseline Alignment Scale</h3>
-          <p>Measures expected current-language signals across checked routes.</p>
-          <div class="scale-track"><div class="scale-fill" id="baselineFill"></div></div>
-          <div class="scale-meta"><span>Alignment</span><span class="scale-value" id="baselineValue">0%</span></div>
-        </article>
+      <section class="panel section" aria-labelledby="scales-title">
+        <div class="kicker">Scales</div>
+        <h2 id="scales-title">Baseline, source, friction, and retired-language reads.</h2>
 
-        <article class="scale-card">
-          <h3>Retired Language Scale</h3>
-          <p>Measures how clean the checked routes are from retired terms.</p>
-          <div class="scale-track"><div class="scale-fill" id="staleFill"></div></div>
-          <div class="scale-meta"><span>Clean source</span><span class="scale-value" id="staleValue">0%</span></div>
-        </article>
+        <div class="meter-list">
+          <div class="meter">
+            <div class="meter-top"><span>Baseline Alignment</span><span id="alignmentText">0%</span></div>
+            <div class="bar"><span id="alignmentBar"></span></div>
+          </div>
 
-        <article class="scale-card">
-          <h3>Impact Priority Scale</h3>
-          <p>Higher score means stronger next-move pressure.</p>
-          <div class="scale-track"><div class="scale-fill" id="impactFill"></div></div>
-          <div class="scale-meta"><span>Friction</span><span class="scale-value" id="impactValue">—</span></div>
-        </article>
+          <div class="meter">
+            <div class="meter-top"><span>Retired Language Cleanliness</span><span id="cleanText">0%</span></div>
+            <div class="bar"><span id="cleanBar"></span></div>
+          </div>
 
-        <article class="scale-card">
-          <h3>Source Check Scale</h3>
-          <p>Measures checked routes that served readable HTML.</p>
-          <div class="scale-track"><div class="scale-fill" id="sourceFill"></div></div>
-          <div class="scale-meta"><span>Readable</span><span class="scale-value" id="sourceValue">0%</span></div>
-        </article>
-      </section>
+          <div class="meter">
+            <div class="meter-top"><span>Source Readability</span><span id="sourceText">0%</span></div>
+            <div class="bar"><span id="sourceBar"></span></div>
+          </div>
 
-      <section class="balance-panel" aria-labelledby="balance-title">
-        <p class="section-title" id="balance-title">Room balance</p>
-        <div class="room-balance" id="roomBalance">
-          <div class="room-tile hold"><strong>Compass</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Door</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Home</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Manor</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Universe</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Products</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Showroom</strong><span>Audit pending</span></div>
-          <div class="room-tile hold"><strong>Gauges</strong><span>Audit pending</span></div>
+          <div class="meter">
+            <div class="meter-top"><span>Impact Priority Pressure</span><span id="frictionText">—</span></div>
+            <div class="bar"><span id="frictionBar"></span></div>
+          </div>
         </div>
       </section>
 
-      <section class="findings-panel" aria-labelledby="findings-title">
-        <p class="section-title" id="findings-title">Impact-ranked findings</p>
-        <div class="findings" id="findings">
+      <section class="panel section" aria-labelledby="balance-title">
+        <div class="kicker">Room balance</div>
+        <h2 id="balance-title">Major rooms and lanes.</h2>
+        <div class="balance-grid" id="roomBalance">
+          <div class="room-chip hold"><strong>Compass</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Nine Summits</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Products</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Frontier</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Underdog</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Meet Sean</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Showroom</strong><span>Audit pending.</span></div>
+          <div class="room-chip hold"><strong>Gauges</strong><span>Audit pending.</span></div>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="findings-title">
+        <div class="kicker">Impact-ranked findings</div>
+        <h2 id="findings-title">Next move named from served evidence.</h2>
+        <div class="finding-list" id="findings">
           <div class="finding hold">
             <strong>Audit pending.</strong>
             <span>Run an audit to activate the gauges, fill the scales, and name the next move.</span>
@@ -795,497 +854,593 @@
         </div>
       </section>
 
-      <section class="table-panel" aria-labelledby="routes-title">
-        <p class="section-title" id="routes-title">Source-check table</p>
-
-        <table class="route-table">
-          <thead>
-            <tr>
-              <th>Group</th>
-              <th>Path</th>
-              <th>Signals</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="routeRows">
-            <tr>
-              <td colspan="4">Audit pending.</td>
-            </tr>
-          </tbody>
-        </table>
+      <section class="panel section" aria-labelledby="table-title">
+        <div class="kicker">Source-check table</div>
+        <h2 id="table-title">Served HTML route evidence.</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Group</th>
+                <th>Path</th>
+                <th>Status</th>
+                <th>Signals</th>
+                <th>Retired Terms</th>
+                <th>Contract</th>
+              </tr>
+            </thead>
+            <tbody id="sourceRows">
+              <tr>
+                <td colspan="6">Audit pending.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <details class="receipt">
+      <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre id="receiptText">GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1
+        <pre>GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2
 route=/gauges/
 page=gauges
 role=measurement_surface
-mode=active_instrumentation
+mode=active_source_truth_auditor
 source_fetch_only=true
 renders_iframe=false
 executes_target_files=false
 mutates_runtime=false
 heavy_runtime_loaded=false
-instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance
+audit_reads=served_html,text_content,route_receipts,expected_signals,retired_language,availability
+current_split=about_this_underdog_universal,meet_sean_mansfield_personal
+frontier_lane_count=11
+product_chamber_count=5
+instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance,source_table
+retired_language_watch=Demo Universe,Earth G1,Planet 1,Sun G1,Moon G1,Vision Remote
 visual_pass_claimed=false
 audit_status=READY</pre>
       </details>
     </main>
 
     <footer>
-      GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1 · Gauges · Active Instrumentation.
+      GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2 · Gauges · Active Source Truth Auditor.
     </footer>
   </div>
 
   <script>
     (() => {
-      "use strict";
+      const cacheBust = () => `_gauge=${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-      const routes = [
-        { group: "Compass", path: "/", expect: ["Pressure is the door"] },
-        { group: "Door", path: "/door/", expect: ["One message", "Many rooms"] },
-        { group: "Home", path: "/home/", expect: ["Home keeps the journey coherent"] },
-        { group: "Manor", path: "/explore/", expect: ["One Manor", "Many rooms"] },
-        { group: "Frontier", path: "/frontier/", expect: ["One edge", "Many lanes"] },
-        { group: "Laws", path: "/laws/", expect: ["Laws"] },
-        { group: "Nine Summits", path: "/nine-summits/", expect: ["The climb becomes a world"] },
-        { group: "Book", path: "/nine-summits-of-love/", expect: ["Nine Summits"] },
-        { group: "Universe", path: "/nine-summits/universe/", expect: ["Nine Summits Universe", "Audralia"] },
-        { group: "Products", path: "/products/", expect: ["Products", "Product Wing"] },
-        { group: "Products", path: "/products/archcoin/", expect: ["ARCHCOIN"] },
-        { group: "Products", path: "/products/five-flags/", expect: ["Five Flags"] },
-        { group: "Products", path: "/products/on-your-side-ai/", expect: ["On Your Side"] },
-        { group: "Products", path: "/products/education/", expect: ["Education"] },
-        { group: "Products", path: "/products/nutrition/", expect: ["Nutrition"] },
-        { group: "Showroom", path: "/showroom/", expect: ["The Manor opens into the atrium"] },
-        { group: "Audralia", path: "/showroom/globe/", expect: ["Audralia", "mirror planet"] },
-        { group: "Gauges", path: "/gauges/", expect: ["Measure the rooms", "Active Instrumentation"] },
-
-        { group: "Frontier Lane", path: "/explore/frontier/closed-loop/", expect: ["Closed Loop"] },
-        { group: "Frontier Lane", path: "/explore/frontier/energy/", expect: ["Energy"] },
-        { group: "Frontier Lane", path: "/explore/frontier/infrastructure/", expect: ["Infrastructure"] },
-        { group: "Frontier Lane", path: "/explore/frontier/lattice/", expect: ["Lattice"] },
-        { group: "Frontier Lane", path: "/explore/frontier/manual/", expect: ["Manual"] },
-        { group: "Frontier Lane", path: "/explore/frontier/shimmer/", expect: ["Shimmer"] },
-        { group: "Frontier Lane", path: "/explore/frontier/trajectory/", expect: ["Trajectory"] },
-        { group: "Frontier Lane", path: "/explore/frontier/urban/", expect: ["Urban"] },
-        { group: "Frontier Lane", path: "/explore/frontier/vision-remote/", expect: ["Vision Remote"] },
-        { group: "Frontier Lane", path: "/explore/frontier/vision/", expect: ["Vision"] },
-        { group: "Frontier Lane", path: "/explore/frontier/waste/", expect: ["Waste"] },
-        { group: "Frontier Lane", path: "/explore/frontier/water/", expect: ["Water"] }
+      const retiredTerms = [
+        "Demo Universe",
+        "Earth G1",
+        "Planet 1",
+        "Sun G1",
+        "Moon G1",
+        "Vision Remote"
       ];
 
-      const groupFilters = {
-        all: () => true,
-        core: (route) => !["Frontier Lane", "Products"].includes(route.group),
-        frontier: (route) => route.group === "Frontier Lane" || route.group === "Frontier" || route.group === "Manor",
-        products: (route) => route.group === "Products"
+      const routes = [
+        {
+          group:"Core",
+          label:"Compass",
+          path:"/",
+          signals:["Diamond Gate Bridge","Compass","Underdog","Nine Summits","Products"]
+        },
+        {
+          group:"Core",
+          label:"Door",
+          path:"/door/",
+          signals:["Door","Threshold","Diamond Gate Bridge"]
+        },
+        {
+          group:"Core",
+          label:"Home",
+          path:"/home/",
+          signals:["Home","Diamond Gate Bridge"]
+        },
+        {
+          group:"Core",
+          label:"Manor",
+          path:"/explore/",
+          signals:["Manor","Diamond Gate Bridge"]
+        },
+        {
+          group:"Core",
+          label:"Laws",
+          path:"/laws/",
+          signals:["Laws","Diamond Gate Bridge"]
+        },
+        {
+          group:"Core",
+          label:"Nine Summits",
+          path:"/nine-summits/",
+          signals:["Nine Summits","Book","Universe","Audralia","Meet Sean"]
+        },
+        {
+          group:"Core",
+          label:"Book",
+          path:"/nine-summits-of-love/",
+          signals:["Nine Summits","Love"]
+        },
+        {
+          group:"Core",
+          label:"Universe",
+          path:"/nine-summits/universe/",
+          signals:["Universe","Nine Summits"]
+        },
+        {
+          group:"Core",
+          label:"Showroom",
+          path:"/showroom/",
+          signals:["Showroom","Diamond Gate Bridge"]
+        },
+        {
+          group:"Core",
+          label:"Audralia",
+          path:"/showroom/globe/",
+          signals:["Audralia"]
+        },
+        {
+          group:"Core",
+          label:"About This Underdog",
+          path:"/about-this-underdog/",
+          signals:["About This Underdog","underdog","pressure","accountability","redirection"]
+        },
+        {
+          group:"Core",
+          label:"Meet Sean Mansfield",
+          path:"/meet-sean-mansfield/",
+          signals:["Meet Sean Mansfield","Sean Mansfield","sean-mansfield.jpg","personal profile"]
+        },
+        {
+          group:"Core",
+          label:"Gauges",
+          path:"/gauges/",
+          signals:["Gauges","GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2","Source Truth"]
+        },
+
+        {
+          group:"Products",
+          label:"Products",
+          path:"/products/",
+          signals:["Products","ARCHCOIN","Five Flags","On Your Side AAI","Education","Nutrition"]
+        },
+        {
+          group:"Products",
+          label:"ARCHCOIN",
+          path:"/products/archcoin/",
+          signals:["ARCHCOIN","Products"]
+        },
+        {
+          group:"Products",
+          label:"Five Flags",
+          path:"/products/five-flags/",
+          signals:["Five Flags","Products"]
+        },
+        {
+          group:"Products",
+          label:"On Your Side AAI",
+          path:"/products/on-your-side-ai/",
+          signals:["On Your Side AAI","AAI","Products"]
+        },
+        {
+          group:"Products",
+          label:"Education",
+          path:"/products/education/",
+          signals:["Education","Products"]
+        },
+        {
+          group:"Products",
+          label:"Nutrition",
+          path:"/products/nutrition/",
+          signals:["Nutrition","Products"]
+        },
+
+        {
+          group:"Frontier",
+          label:"Frontier Root",
+          path:"/frontier/",
+          signals:["Frontier","Eleven","Vision","Water","Waste"]
+        },
+        {
+          group:"Frontier",
+          label:"Closed Loop",
+          path:"/explore/frontier/closed-loop/",
+          signals:["Closed Loop","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Energy",
+          path:"/explore/frontier/energy/",
+          signals:["Energy","Power","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Infrastructure",
+          path:"/explore/frontier/infrastructure/",
+          signals:["Infrastructure","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Lattice",
+          path:"/explore/frontier/lattice/",
+          signals:["Lattice","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Manual",
+          path:"/explore/frontier/manual/",
+          signals:["Manual","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Shimmer",
+          path:"/explore/frontier/shimmer/",
+          signals:["Shimmer","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Trajectory",
+          path:"/explore/frontier/trajectory/",
+          signals:["Trajectory","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Urban",
+          path:"/explore/frontier/urban/",
+          signals:["Urban","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Vision",
+          path:"/explore/frontier/vision/",
+          signals:["Vision","Future","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Waste",
+          path:"/explore/frontier/waste/",
+          signals:["Waste","Frontier"]
+        },
+        {
+          group:"Frontier",
+          label:"Water",
+          path:"/explore/frontier/water/",
+          signals:["Water","Frontier"]
+        }
+      ];
+
+      const selectors = {
+        overallDial: document.getElementById("overallDial"),
+        overallPct: document.getElementById("overallPct"),
+        overallState: document.getElementById("overallState"),
+        overallNote: document.getElementById("overallNote"),
+        routeDial: document.getElementById("routeDial"),
+        routePct: document.getElementById("routePct"),
+        routeState: document.getElementById("routeState"),
+        routeNote: document.getElementById("routeNote"),
+        frontierDial: document.getElementById("frontierDial"),
+        frontierPct: document.getElementById("frontierPct"),
+        frontierState: document.getElementById("frontierState"),
+        frontierNote: document.getElementById("frontierNote"),
+        productDial: document.getElementById("productDial"),
+        productPct: document.getElementById("productPct"),
+        productState: document.getElementById("productState"),
+        productNote: document.getElementById("productNote"),
+        alignmentText: document.getElementById("alignmentText"),
+        alignmentBar: document.getElementById("alignmentBar"),
+        cleanText: document.getElementById("cleanText"),
+        cleanBar: document.getElementById("cleanBar"),
+        sourceText: document.getElementById("sourceText"),
+        sourceBar: document.getElementById("sourceBar"),
+        frictionText: document.getElementById("frictionText"),
+        frictionBar: document.getElementById("frictionBar"),
+        roomBalance: document.getElementById("roomBalance"),
+        findings: document.getElementById("findings"),
+        sourceRows: document.getElementById("sourceRows")
       };
 
-      function retiredTerms() {
-        return [
-          "Demo" + " Universe",
-          "Earth" + " G1",
-          "Planet" + " 1",
-          "Sun" + " G1",
-          "Moon" + " G1"
-        ];
+      function pct(n){
+        if(!Number.isFinite(n)) return 0;
+        return Math.max(0, Math.min(100, Math.round(n)));
       }
 
-      const el = (id) => document.getElementById(id);
-
-      const nodes = {
-        routeRows: el("routeRows"),
-        findings: el("findings"),
-        roomBalance: el("roomBalance"),
-        receiptText: el("receiptText")
-      };
-
-      function sameOriginUrl(path) {
-        return new URL(path, window.location.origin).toString();
-      }
-
-      function stripSource(html) {
-        return String(html || "")
-          .replace(/<script[\s\S]*?<\/script>/gi, " ")
-          .replace(/<style[\s\S]*?<\/style>/gi, " ")
-          .replace(/<template[\s\S]*?<\/template>/gi, " ");
-      }
-
-      function textFromHtml(html) {
-        const cleaned = stripSource(html);
-        const parsed = new DOMParser().parseFromString(cleaned, "text/html");
-        return String(parsed.body ? parsed.body.textContent : cleaned).replace(/\s+/g, " ").trim();
-      }
-
-      function missingExpected(text, terms) {
-        return terms.filter((term) => !text.includes(term));
-      }
-
-      function classify(percent, hardFail = false) {
-        if (hardFail) return "fail";
-        if (percent >= 96) return "pass";
-        if (percent >= 68) return "hold";
+      function stateFor(score){
+        if(score >= 88) return "pass";
+        if(score >= 66) return "hold";
         return "fail";
       }
 
-      function setCardState(card, state) {
-        card.classList.remove("pass", "hold", "fail");
-        card.classList.add(state);
+      function colorFor(state){
+        if(state === "pass") return "var(--green)";
+        if(state === "hold") return "var(--amber)";
+        return "var(--red)";
       }
 
-      function setDial(cardId, valueId, statusId, textId, percent, valueText, statusText, bodyText, hardFail) {
-        const card = el(cardId);
-        const dial = card.querySelector(".dial");
-        const state = classify(percent, hardFail);
-
-        dial.style.setProperty("--value", String(Math.max(0, Math.min(100, Math.round(percent)))));
-        setCardState(card, state);
-
-        el(valueId).textContent = valueText;
-        el(statusId).textContent = statusText;
-        el(textId).textContent = bodyText;
+      function setStatePill(el, state){
+        el.className = `state-pill ${state}`;
+        el.textContent = state.toUpperCase();
       }
 
-      function setScale(fillId, valueId, percent, label) {
-        const safe = Math.max(0, Math.min(100, Math.round(percent)));
-        el(fillId).style.width = safe + "%";
-        el(valueId).textContent = label || (safe + "%");
+      function setDial(dial, pctEl, stateEl, score){
+        const s = pct(score);
+        const state = stateFor(s);
+        dial.style.setProperty("--score", s);
+        dial.style.setProperty("--dialColor", colorFor(state));
+        pctEl.textContent = `${s}%`;
+        setStatePill(stateEl, state);
       }
 
-      async function checkRoute(route) {
+      function setBar(bar, text, score, suffix="%"){
+        const s = pct(score);
+        bar.style.width = `${s}%`;
+        text.textContent = suffix === "%" ? `${s}%` : String(score);
+      }
+
+      function normalize(text){
+        return String(text || "").replace(/\s+/g," ").trim();
+      }
+
+      function getVisibleText(html){
+        try{
+          const doc = new DOMParser().parseFromString(html, "text/html");
+          doc.querySelectorAll("script,style,noscript").forEach(el => el.remove());
+          return normalize(doc.body ? doc.body.textContent : html);
+        }catch{
+          return normalize(html);
+        }
+      }
+
+      function extractContract(html){
+        const matches = String(html || "").match(/[A-Z0-9]+(?:_[A-Z0-9]+){3,}_TNT_v[0-9A-Z]+/g);
+        if(matches && matches.length) return matches[matches.length - 1];
+        const fallback = String(html || "").match(/[A-Z0-9_]{12,}/g);
+        return fallback ? fallback.slice(-1)[0] : "—";
+      }
+
+      async function readRoute(route){
         const started = performance.now();
+        const url = `${route.path}${route.path.includes("?") ? "&" : "?"}${cacheBust()}`;
 
-        try {
-          const response = await fetch(sameOriginUrl(route.path), {
-            method: "GET",
-            cache: "no-store",
-            credentials: "same-origin"
+        try{
+          const response = await fetch(url, {
+            method:"GET",
+            cache:"no-store",
+            credentials:"same-origin",
+            headers:{"Accept":"text/html,application/xhtml+xml"}
           });
 
           const html = await response.text();
-          const text = textFromHtml(html);
-          const missing = missingExpected(text, route.expect || []);
-          const stale = retiredTerms().filter((term) => text.includes(term));
-          const thin = text.length < 700;
-          const servedHtml = response.ok && /html/i.test(response.headers.get("content-type") || "text/html");
-          const pass = servedHtml && missing.length === 0 && stale.length === 0 && !thin;
+          const text = getVisibleText(html);
+          const readable = response.ok && text.length > 120;
+          const foundSignals = route.signals.filter(signal => text.includes(signal) || html.includes(signal));
+          const missingSignals = route.signals.filter(signal => !foundSignals.includes(signal));
+          const retiredFound = retiredTerms.filter(term => text.includes(term) || html.includes(term));
+          const signalScore = route.signals.length ? (foundSignals.length / route.signals.length) * 100 : 100;
+          const clean = retiredFound.length === 0;
+          const status = !readable ? "fail" : retiredFound.length ? "hold" : signalScore >= 67 ? "pass" : "hold";
 
           return {
             ...route,
             ok: response.ok,
-            servedHtml,
-            pass,
-            status: response.status,
-            size: html.length,
-            textSize: text.length,
-            elapsed: Math.round(performance.now() - started),
-            missing,
-            stale,
-            thin,
-            signals: [
-              response.ok ? "served" : "failed",
-              missing.length ? "missing expected" : "expected present",
-              stale.length ? "retired language" : "language clean",
-              thin ? "thin page" : "sufficient body"
-            ]
+            statusCode: response.status,
+            readable,
+            textLength: text.length,
+            foundSignals,
+            missingSignals,
+            retiredFound,
+            signalScore,
+            clean,
+            status,
+            contract: extractContract(html),
+            elapsed: Math.round(performance.now() - started)
           };
-        } catch (error) {
+        }catch(error){
           return {
             ...route,
-            ok: false,
-            servedHtml: false,
-            pass: false,
-            status: "FETCH_ERROR",
-            size: 0,
-            textSize: 0,
-            elapsed: Math.round(performance.now() - started),
-            missing: route.expect || [],
-            stale: [],
-            thin: false,
-            error: String(error && error.message ? error.message : error),
-            signals: ["fetch error"]
+            ok:false,
+            statusCode:"ERR",
+            readable:false,
+            textLength:0,
+            foundSignals:[],
+            missingSignals:route.signals.slice(),
+            retiredFound:[],
+            signalScore:0,
+            clean:true,
+            status:"fail",
+            contract:"—",
+            elapsed:Math.round(performance.now() - started),
+            error:String(error && error.message ? error.message : error)
           };
         }
       }
 
-      function renderRows(results) {
-        nodes.routeRows.innerHTML = "";
-
-        results.forEach((result) => {
-          const tr = document.createElement("tr");
-
-          const group = document.createElement("td");
-          group.textContent = result.group;
-
-          const path = document.createElement("td");
-          path.textContent = result.path;
-
-          const signals = document.createElement("td");
-          const details = [result.signals.join(" · ")];
-          if (result.missing.length) details.push("missing: " + result.missing.join(", "));
-          if (result.stale.length) details.push("retired: " + result.stale.join(", "));
-          if (result.error) details.push(result.error);
-          signals.textContent = details.join(" | ");
-
-          const status = document.createElement("td");
-          status.className = result.pass ? "status-pass" : result.ok ? "status-hold" : "status-fail";
-          status.textContent = result.pass ? "PASS" : result.ok ? "HOLD" : "FAIL";
-
-          tr.append(group, path, signals, status);
-          nodes.routeRows.appendChild(tr);
-        });
+      function filterRoutes(mode){
+        if(mode === "core") return routes.filter(r => r.group === "Core");
+        if(mode === "frontier") return routes.filter(r => r.group === "Frontier");
+        if(mode === "products") return routes.filter(r => r.group === "Products");
+        return routes.slice();
       }
 
-      function rankFindings(results) {
-        const failed = results.filter((r) => !r.ok);
-        const stale = results.filter((r) => r.stale.length > 0);
-        const missing = results.filter((r) => r.ok && r.missing.length > 0);
-        const thin = results.filter((r) => r.ok && r.thin);
-        const passed = results.filter((r) => r.pass);
-
-        const output = [];
-
-        if (failed.length) {
-          output.push({
-            state: "fail",
-            title: "Highest impact: broken served routes.",
-            body: failed.map((r) => r.path).join(", ")
-          });
-        }
-
-        if (stale.length) {
-          output.push({
-            state: "fail",
-            title: "Baseline mismatch: retired language remains.",
-            body: stale.map((r) => `${r.path}: ${r.stale.join(", ")}`).join(" | ")
-          });
-        }
-
-        if (missing.length) {
-          output.push({
-            state: "hold",
-            title: "Expected baseline signals are missing.",
-            body: missing.map((r) => `${r.path}: ${r.missing.join(", ")}`).join(" | ")
-          });
-        }
-
-        if (thin.length) {
-          output.push({
-            state: "hold",
-            title: "Thin-page pressure remains.",
-            body: thin.map((r) => r.path).join(", ")
-          });
-        }
-
-        if (!failed.length && !stale.length && !missing.length && !thin.length) {
-          output.push({
-            state: "pass",
-            title: "Current baseline is source-clean for checked routes.",
-            body: "Next move should be visual inspection and page-level refinement, not route repair."
-          });
-        }
-
-        output.push({
-          state: passed.length === results.length ? "pass" : "hold",
-          title: "Routes passing.",
-          body: `${passed.length}/${results.length} checked routes passed active source-level checks.`
-        });
-
-        return output;
+      function average(items, fn){
+        if(!items.length) return 0;
+        return items.reduce((sum, item) => sum + fn(item), 0) / items.length;
       }
 
-      function renderFindings(items) {
-        nodes.findings.innerHTML = "";
+      function summarize(results){
+        const sourceScore = average(results, r => r.readable ? 100 : 0);
+        const alignmentScore = average(results, r => r.signalScore);
+        const cleanScore = average(results, r => r.clean ? 100 : 0);
+        const routeScore = average(results.filter(r => r.group === "Core"), r => r.readable ? 100 : 0);
+        const frontierRoutes = results.filter(r => r.group === "Frontier");
+        const productRoutes = results.filter(r => r.group === "Products");
+        const frontierScore = frontierRoutes.length ? average(frontierRoutes, r => r.readable && r.status !== "fail" ? 100 : 0) : 0;
+        const productScore = productRoutes.length ? average(productRoutes, r => r.readable && r.status !== "fail" ? 100 : 0) : 0;
+        const retiredPressure = results.reduce((sum, r) => sum + r.retiredFound.length, 0);
+        const friction = Math.min(100, results.filter(r => r.status === "fail").length * 22 + results.filter(r => r.status === "hold").length * 9 + retiredPressure * 12);
 
-        items.forEach((item) => {
-          const div = document.createElement("div");
-          div.className = "finding " + item.state;
-
-          const title = document.createElement("strong");
-          title.textContent = item.title;
-
-          const body = document.createElement("span");
-          body.textContent = item.body;
-
-          div.append(title, body);
-          nodes.findings.appendChild(div);
-        });
-      }
-
-      function renderRoomBalance(results) {
-        const groups = ["Compass", "Door", "Home", "Manor", "Universe", "Products", "Showroom", "Frontier", "Gauges"];
-        nodes.roomBalance.innerHTML = "";
-
-        groups.forEach((group) => {
-          let subset = results.filter((r) => r.group === group);
-          if (group === "Frontier") subset = results.filter((r) => r.group === "Frontier" || r.group === "Frontier Lane");
-          if (group === "Products") subset = results.filter((r) => r.group === "Products");
-
-          const checked = subset.length;
-          const passed = subset.filter((r) => r.pass).length;
-          const failed = subset.filter((r) => !r.ok).length;
-          const percent = checked ? (passed / checked) * 100 : 0;
-          const state = checked ? classify(percent, failed > 0) : "hold";
-
-          const tile = document.createElement("div");
-          tile.className = "room-tile " + state;
-
-          const title = document.createElement("strong");
-          title.textContent = group;
-
-          const body = document.createElement("span");
-          body.textContent = checked ? `${passed}/${checked} passing` : "Not in scope";
-
-          tile.append(title, body);
-          nodes.roomBalance.appendChild(tile);
-        });
-      }
-
-      function updateInstruments(results, scope) {
-        const total = results.length || 1;
-        const passed = results.filter((r) => r.pass).length;
-        const served = results.filter((r) => r.ok).length;
-        const failed = results.filter((r) => !r.ok).length;
-        const missing = results.filter((r) => r.ok && r.missing.length > 0).length;
-        const stale = results.filter((r) => r.stale.length > 0).length;
-        const thin = results.filter((r) => r.ok && r.thin).length;
-
-        const routePercent = (served / total) * 100;
-        const overallPercent = (passed / total) * 100;
-        const baselinePercent = ((total - missing - stale) / total) * 100;
-        const staleCleanPercent = ((total - stale) / total) * 100;
-        const sourcePercent = (served / total) * 100;
-
-        const frontierSubset = results.filter((r) => r.group === "Frontier" || r.group === "Frontier Lane");
-        const frontierPercent = frontierSubset.length ? (frontierSubset.filter((r) => r.pass).length / frontierSubset.length) * 100 : 0;
-
-        const productSubset = results.filter((r) => r.group === "Products");
-        const productPercent = productSubset.length ? (productSubset.filter((r) => r.pass).length / productSubset.length) * 100 : 0;
-
-        const friction = failed * 10 + stale * 6 + missing * 4 + thin * 2;
-        const impactPercent = Math.min(100, friction * 6);
-
-        const overallLabel = failed ? "FAIL" : passed === total ? "PASS" : "HOLD";
-
-        setDial(
-          "overallGauge",
-          "overallValue",
-          "overallStatus",
-          "overallText",
-          overallPercent,
-          overallLabel,
-          `${passed}/${total} passing`,
-          "Composite source, baseline, and route condition.",
-          failed > 0
+        const overall = pct(
+          sourceScore * .26 +
+          alignmentScore * .24 +
+          cleanScore * .18 +
+          (routeScore || sourceScore) * .12 +
+          (frontierScore || sourceScore) * .10 +
+          (productScore || sourceScore) * .10
         );
 
-        setDial(
-          "routeGauge",
-          "routeValue",
-          "routeStatus",
-          "routeText",
-          routePercent,
-          Math.round(routePercent) + "%",
-          `${served}/${total} served`,
-          "Served-route availability.",
-          failed > 0
-        );
-
-        setDial(
-          "frontierGauge",
-          "frontierValue",
-          "frontierStatus",
-          "frontierText",
-          frontierPercent,
-          Math.round(frontierPercent) + "%",
-          frontierSubset.length ? `${frontierSubset.filter((r) => r.pass).length}/${frontierSubset.length} passing` : "Not checked",
-          "Frontier root and lane health.",
-          frontierSubset.some((r) => !r.ok)
-        );
-
-        setDial(
-          "productGauge",
-          "productValue",
-          "productStatus",
-          "productText",
-          productPercent,
-          Math.round(productPercent) + "%",
-          productSubset.length ? `${productSubset.filter((r) => r.pass).length}/${productSubset.length} passing` : "Not checked",
-          "Product wing and chamber health.",
-          productSubset.some((r) => !r.ok)
-        );
-
-        setScale("baselineFill", "baselineValue", baselinePercent, Math.round(baselinePercent) + "%");
-        setScale("staleFill", "staleValue", staleCleanPercent, Math.round(staleCleanPercent) + "%");
-        setScale("impactFill", "impactValue", impactPercent, friction ? String(friction) : "0");
-        setScale("sourceFill", "sourceValue", sourcePercent, Math.round(sourcePercent) + "%");
-
-        renderRoomBalance(results);
-        updateReceipt(results, scope, friction);
+        return {
+          sourceScore:pct(sourceScore),
+          alignmentScore:pct(alignmentScore),
+          cleanScore:pct(cleanScore),
+          routeScore:pct(routeScore || sourceScore),
+          frontierScore:pct(frontierScore || (frontierRoutes.length ? 0 : sourceScore)),
+          productScore:pct(productScore || (productRoutes.length ? 0 : sourceScore)),
+          friction:pct(friction),
+          overall
+        };
       }
 
-      function updateReceipt(results, scope, friction) {
-        const passed = results.filter((r) => r.pass).length;
-        const failed = results.filter((r) => !r.ok).length;
-        const stale = results.filter((r) => r.stale.length > 0).length;
-        const missing = results.filter((r) => r.ok && r.missing.length > 0).length;
-        const thin = results.filter((r) => r.ok && r.thin).length;
+      function buildFindings(results){
+        const findings = [];
 
-        nodes.receiptText.textContent =
-          "GAUGES_ACTIVE_GAUGES_AND_SCALES_TNT_v1\n" +
-          "route=/gauges/\n" +
-          "page=gauges\n" +
-          "role=measurement_surface\n" +
-          "mode=active_instrumentation\n" +
-          "audit_scope=" + scope + "\n" +
-          "source_fetch_only=true\n" +
-          "renders_iframe=false\n" +
-          "executes_target_files=false\n" +
-          "mutates_runtime=false\n" +
-          "heavy_runtime_loaded=false\n" +
-          "routes_checked=" + results.length + "\n" +
-          "routes_passing=" + passed + "\n" +
-          "routes_failed=" + failed + "\n" +
-          "routes_with_retired_terms=" + stale + "\n" +
-          "routes_missing_expected_signals=" + missing + "\n" +
-          "thin_page_count=" + thin + "\n" +
-          "impact_friction_score=" + friction + "\n" +
-          "instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance\n" +
-          "frontier_lane_base=/explore/frontier/\n" +
-          "generated_image=false\n" +
-          "streaming=false\n" +
-          "visual_pass_claimed=false\n" +
-          "audit_timestamp=" + new Date().toISOString();
-      }
+        results.forEach(r => {
+          if(!r.readable){
+            findings.push({
+              severity:100,
+              state:"fail",
+              title:`${r.label} did not serve readable HTML.`,
+              detail:`${r.path} returned ${r.statusCode}. This is the highest-priority route fault.`
+            });
+          }
 
-      async function runAudit(scope) {
-        const filter = groupFilters[scope] || groupFilters.all;
-        const selected = routes.filter(filter);
-        const results = [];
+          if(r.retiredFound.length){
+            findings.push({
+              severity:84,
+              state:"hold",
+              title:`${r.label} contains retired language.`,
+              detail:`${r.path} contains: ${r.retiredFound.join(", ")}.`
+            });
+          }
 
-        nodes.routeRows.innerHTML = '<tr><td colspan="4">Audit running.</td></tr>';
-        nodes.findings.innerHTML = '<div class="finding hold"><strong>Audit running.</strong><span>Fetching served source only. No target scripts are executed.</span></div>';
+          if(r.readable && r.missingSignals.length){
+            findings.push({
+              severity:42 + r.missingSignals.length * 4,
+              state:"hold",
+              title:`${r.label} is missing expected current signals.`,
+              detail:`${r.path} missing: ${r.missingSignals.join(", ")}.`
+            });
+          }
+        });
 
-        updateInstruments([], scope);
-
-        for (const route of selected) {
-          const result = await checkRoute(route);
-          results.push(result);
-          renderRows(results);
-          updateInstruments(results, scope);
+        if(!findings.length){
+          findings.push({
+            severity:0,
+            state:"pass",
+            title:"No blocking source friction found.",
+            detail:"Checked routes served readable HTML, expected signals were present, and retired-language watch terms were clean."
+          });
         }
 
+        return findings.sort((a,b) => b.severity - a.severity).slice(0,8);
+      }
+
+      function renderBalance(results){
+        const rooms = [
+          ["Compass","/"],
+          ["Nine Summits","/nine-summits/"],
+          ["Products","/products/"],
+          ["Frontier","/frontier/"],
+          ["Underdog","/about-this-underdog/"],
+          ["Meet Sean","/meet-sean-mansfield/"],
+          ["Showroom","/showroom/"],
+          ["Gauges","/gauges/"]
+        ];
+
+        selectors.roomBalance.innerHTML = rooms.map(([label,path]) => {
+          const r = results.find(item => item.path === path);
+          if(!r){
+            return `<div class="room-chip hold"><strong>${label}</strong><span>Not included in this audit mode.</span></div>`;
+          }
+          const state = r.status;
+          const found = r.foundSignals.length;
+          const total = r.signals.length;
+          return `<div class="room-chip ${state}"><strong>${label}</strong><span>${state.toUpperCase()} · ${found}/${total} signals · ${r.statusCode}</span></div>`;
+        }).join("");
+      }
+
+      function renderFindings(findings){
+        selectors.findings.innerHTML = findings.map(f => {
+          return `<div class="finding ${f.state}"><strong>${f.title}</strong><span>${f.detail}</span></div>`;
+        }).join("");
+      }
+
+      function renderRows(results){
+        selectors.sourceRows.innerHTML = results.map(r => {
+          const signalText = `${r.foundSignals.length}/${r.signals.length} found${r.missingSignals.length ? " · missing " + r.missingSignals.join(", ") : ""}`;
+          const retiredText = r.retiredFound.length ? r.retiredFound.join(", ") : "Clean";
+          return `<tr>
+            <td>${r.group}</td>
+            <td><code>${r.path}</code><br>${r.label}</td>
+            <td>${r.status.toUpperCase()} · ${r.statusCode}<br>${r.elapsed}ms</td>
+            <td>${signalText}</td>
+            <td>${retiredText}</td>
+            <td><code>${r.contract}</code></td>
+          </tr>`;
+        }).join("");
+      }
+
+      function renderSummary(results, summary){
+        setDial(selectors.overallDial, selectors.overallPct, selectors.overallState, summary.overall);
+        setDial(selectors.routeDial, selectors.routePct, selectors.routeState, summary.routeScore);
+        setDial(selectors.frontierDial, selectors.frontierPct, selectors.frontierState, summary.frontierScore);
+        setDial(selectors.productDial, selectors.productPct, selectors.productState, summary.productScore);
+
+        selectors.overallNote.textContent = `${results.length} routes checked. ${results.filter(r => r.status === "fail").length} fail, ${results.filter(r => r.status === "hold").length} hold, ${results.filter(r => r.status === "pass").length} pass.`;
+        selectors.routeNote.textContent = "Core route availability and source readability.";
+        selectors.frontierNote.textContent = "Eleven-lane Frontier set plus Frontier root.";
+        selectors.productNote.textContent = "Product wing plus five product chambers.";
+
+        setBar(selectors.alignmentBar, selectors.alignmentText, summary.alignmentScore);
+        setBar(selectors.cleanBar, selectors.cleanText, summary.cleanScore);
+        setBar(selectors.sourceBar, selectors.sourceText, summary.sourceScore);
+        setBar(selectors.frictionBar, selectors.frictionText, summary.friction);
+      }
+
+      async function runAudit(mode="site"){
+        document.querySelectorAll("[data-run]").forEach(button => {
+          button.disabled = true;
+          button.textContent = button.dataset.run === mode ? "Running..." : button.textContent;
+        });
+
+        selectors.findings.innerHTML = `<div class="finding hold"><strong>Audit running.</strong><span>Fetching served source only. No iframe, no eval, no mutation.</span></div>`;
+        selectors.sourceRows.innerHTML = `<tr><td colspan="6">Audit running.</td></tr>`;
+
+        const selected = filterRoutes(mode);
+        const results = await Promise.all(selected.map(readRoute));
+        const summary = summarize(results);
+        const findings = buildFindings(results);
+
+        renderSummary(results, summary);
+        renderBalance(results);
+        renderFindings(findings);
         renderRows(results);
-        renderFindings(rankFindings(results));
-        updateInstruments(results, scope);
+
+        document.querySelectorAll("[data-run]").forEach(button => {
+          button.disabled = false;
+        });
+
+        document.querySelector('[data-run="site"]').textContent = "Run Site Audit";
+        document.querySelector('[data-run="core"]').textContent = "Run Core Audit";
+        document.querySelector('[data-run="frontier"]').textContent = "Run Frontier Audit";
+        document.querySelector('[data-run="products"]').textContent = "Run Products Audit";
       }
 
-      document.querySelectorAll("[data-audit]").forEach((button) => {
-        button.addEventListener("click", () => {
-          runAudit(button.dataset.audit || "all");
-        });
+      document.querySelectorAll("[data-run]").forEach(button => {
+        button.addEventListener("click", () => runAudit(button.dataset.run));
+      });
+
+      window.addEventListener("load", () => {
+        window.setTimeout(() => runAudit("site"), 400);
       });
     })();
   </script>

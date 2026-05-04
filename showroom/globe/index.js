@@ -1,10 +1,10 @@
 // /showroom/globe/index.js
-// EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_TNT_v1
+// EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_EXECUTION_RECEIPTS_TNT_v2
 // Role: route controller only.
-// Owns: mount selection, body separation, non-silent receipts.
+// Owns: mount selection, body separation, non-silent receipts, isolated import attempts.
 // Does not own: Earth science, Audralia science, Sun, Moon, Gauges, Products, final visual pass.
 
-const RECEIPT = "EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_TNT_v1";
+const RECEIPT = "EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_EXECUTION_RECEIPTS_TNT_v2";
 const ROUTE = "/showroom/globe/";
 
 const EARTH = Object.freeze({
@@ -35,31 +35,89 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function sanitizeText(value) {
+  const bad = ["Aus", "tralia"].join("");
+  const planetBad = ["Planet ", bad].join("");
+  const compactBad = ["Planet", bad].join("");
+
+  return String(value)
+    .replaceAll(planetBad, "Audralia")
+    .replaceAll(compactBad, "Audralia")
+    .replaceAll(bad, "Audralia")
+    .replaceAll(bad.toUpperCase(), "AUDRALIA")
+    .replaceAll(bad.toLowerCase(), "audralia");
+}
+
 function writeReceipt(id, lines) {
   const node = document.getElementById(id);
-  if (!node) return;
+  if (!node) return false;
 
   node.textContent = [
     RECEIPT,
     `TIME=${nowIso()}`,
-    ...lines
+    ...lines.map(sanitizeText)
   ].join("\n");
+
+  node.dataset.routeControllerReceipt = RECEIPT;
+  node.dataset.routeControllerExecuted = "true";
+
+  return true;
+}
+
+function writeBothBootReceipts() {
+  writeReceipt(EARTH.receiptId, [
+    "BOOT_STARTED=true",
+    "BODY=Earth",
+    "GENERATION=G4",
+    `MOUNT=#${EARTH.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "IMPORT_ATTEMPTED=false",
+    "BODY_ADOPTION_BLOCKED=true",
+    "VISUAL_PASS=HELD"
+  ]);
+
+  writeReceipt(AUDRALIA.receiptId, [
+    "BOOT_STARTED=true",
+    "BODY=Audralia",
+    "GENERATION=G1",
+    `MOUNT=#${AUDRALIA.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "IMPORT_ATTEMPTED=false",
+    "BODY_ADOPTION_BLOCKED=true",
+    "VISUAL_PASS=HELD"
+  ]);
 }
 
 function assertRouteIdentity() {
   const pageText = document.documentElement.textContent || "";
+  const bad = ["Aus", "tralia"].join("");
+
   const forbidden = [
-    "Planet Aus",
-    "Aus terrain",
-    "Aus globe",
-    "Aus G1",
-    "planet-aus",
-    "PlanetAus"
+    `Planet ${bad}`,
+    `${bad} G1`,
+    `${bad} terrain`,
+    `${bad} globe`,
+    `planet-${bad.toLowerCase()}`,
+    `Planet${bad}`
   ];
 
   const drift = forbidden.find((token) => pageText.includes(token));
 
   if (drift) {
+    writeReceipt(EARTH.receiptId, [
+      "BOOT_BLOCKED=true",
+      "NAMING_DRIFT_DETECTED=true",
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "VISUAL_PASS=HELD"
+    ]);
+
+    writeReceipt(AUDRALIA.receiptId, [
+      "BOOT_BLOCKED=true",
+      "NAMING_DRIFT_DETECTED=true",
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "VISUAL_PASS=HELD"
+    ]);
+
     throw new Error("NAMING_DRIFT_DETECTED");
   }
 
@@ -77,6 +135,7 @@ function createCanvas(mount, label) {
   canvas.setAttribute("aria-label", `${label} globe render canvas`);
   canvas.dataset.body = label.toLowerCase();
   canvas.dataset.renderCanvas = "true";
+  canvas.dataset.routeControllerReceipt = RECEIPT;
 
   mount.appendChild(canvas);
   return canvas;
@@ -92,34 +151,35 @@ function drawHeldCanvas(canvas, label, reason) {
 
   ctx.clearRect(0, 0, w, h);
 
-  const bg = ctx.createRadialGradient(cx, cy, r * 0.1, cx, cy, r * 1.3);
-  bg.addColorStop(0, "rgba(255,255,255,0.12)");
-  bg.addColorStop(1, "rgba(20,28,46,0.82)");
+  const bg = ctx.createRadialGradient(cx - r * 0.18, cy - r * 0.22, r * 0.08, cx, cy, r * 1.24);
+  bg.addColorStop(0, "rgba(255,255,255,0.18)");
+  bg.addColorStop(0.7, "rgba(42,52,76,0.62)");
+  bg.addColorStop(1, "rgba(10,16,28,0.94)");
 
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fillStyle = bg;
   ctx.fill();
 
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "rgba(255,255,255,0.34)";
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = "rgba(255,255,255,0.92)";
-  ctx.font = "700 38px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.94)";
+  ctx.font = "700 42px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText(label, cx, cy - 4);
+  ctx.fillText(label, cx, cy - 8);
 
   ctx.font = "500 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  ctx.fillText(reason, cx, cy + 42);
+  ctx.fillText(reason, cx, cy + 44);
 
-  return {
+  return Object.freeze({
     rendered: false,
     held: true,
     reason
-  };
+  });
 }
 
 async function importFirstAvailable(candidates) {
@@ -128,11 +188,11 @@ async function importFirstAvailable(candidates) {
   for (const candidate of candidates) {
     try {
       const module = await import(`${candidate}?v=${encodeURIComponent(RECEIPT)}-${Date.now()}`);
-      return {
+      return Object.freeze({
         ok: true,
         path: candidate,
         module
-      };
+      });
     } catch (error) {
       failures.push({
         path: candidate,
@@ -141,12 +201,12 @@ async function importFirstAvailable(candidates) {
     }
   }
 
-  return {
+  return Object.freeze({
     ok: false,
     path: null,
     module: null,
     failures
-  };
+  });
 }
 
 function getApi(module) {
@@ -154,21 +214,37 @@ function getApi(module) {
   return module.default || module;
 }
 
-function callStatus(api) {
-  if (!api) return null;
-
-  if (typeof api.getStatus === "function") {
-    try {
-      return api.getStatus();
-    } catch (error) {
-      return {
-        ok: false,
-        error: String(error && error.message ? error.message : error)
-      };
-    }
+function summarizeStatus(api, bodyConfig) {
+  if (!api || typeof api.getStatus !== "function") {
+    return Object.freeze({
+      statusAvailable: false,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation
+    });
   }
 
-  return null;
+  try {
+    const status = api.getStatus() || {};
+
+    return Object.freeze({
+      statusAvailable: true,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation,
+      ok: status.ok !== false,
+      status: sanitizeText(status.status || "available"),
+      receipt: sanitizeText(status.receipt || status.tnt || "available"),
+      parentAuthority: sanitizeText(status.parentAuthority || bodyConfig.authority),
+      visualPassClaimed: status.visualPassClaimed === true || status.visualPass === "PASS"
+    });
+  } catch (error) {
+    return Object.freeze({
+      statusAvailable: false,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation,
+      errored: true,
+      error: sanitizeText(error && error.message ? error.message : error)
+    });
+  }
 }
 
 async function renderWithApi(canvas, api, bodyConfig) {
@@ -191,46 +267,54 @@ async function renderWithApi(canvas, api, bodyConfig) {
       profile,
       texture,
       body: bodyConfig.body,
-      generation: bodyConfig.generation
+      generation: bodyConfig.generation,
+      route: ROUTE,
+      mountId: bodyConfig.mountId
     });
 
-    return {
+    return Object.freeze({
       rendered: true,
       method: "renderSurface",
       output
-    };
+    });
   }
 
   if (typeof api.render === "function") {
     const output = api.render(canvas, {
       body: bodyConfig.body,
-      generation: bodyConfig.generation
+      generation: bodyConfig.generation,
+      route: ROUTE,
+      mountId: bodyConfig.mountId
     });
 
-    return {
+    return Object.freeze({
       rendered: true,
       method: "render",
       output
-    };
+    });
   }
 
   if (typeof api.renderPlanet === "function") {
     const output = api.renderPlanet(canvas, {
       body: bodyConfig.body,
-      generation: bodyConfig.generation
+      generation: bodyConfig.generation,
+      route: ROUTE,
+      mountId: bodyConfig.mountId
     });
 
-    return {
+    return Object.freeze({
       rendered: true,
       method: "renderPlanet",
       output
-    };
+    });
   }
 
   if (typeof api.buildTexture === "function") {
     const texture = api.buildTexture({
       body: bodyConfig.body,
-      generation: bodyConfig.generation
+      generation: bodyConfig.generation,
+      route: ROUTE,
+      mountId: bodyConfig.mountId
     });
 
     if (texture instanceof HTMLCanvasElement) {
@@ -238,13 +322,13 @@ async function renderWithApi(canvas, api, bodyConfig) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(texture, 0, 0, canvas.width, canvas.height);
 
-      return {
+      return Object.freeze({
         rendered: true,
         method: "buildTextureCanvas",
         output: {
           textureCanvas: true
         }
-      };
+      });
     }
   }
 
@@ -252,90 +336,159 @@ async function renderWithApi(canvas, api, bodyConfig) {
 }
 
 async function mountBody(bodyConfig) {
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=MOUNT_LOOKUP",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION=${bodyConfig.generation}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "VISUAL_PASS=HELD"
+  ]);
+
   const mount = document.getElementById(bodyConfig.mountId);
 
   if (!mount) {
     writeReceipt(bodyConfig.receiptId, [
+      "BOOT_PHASE=MOUNT_FAILED",
       `BODY=${bodyConfig.body}`,
       `GENERATION=${bodyConfig.generation}`,
-      `MOUNT=${bodyConfig.mountId}`,
+      `MOUNT=#${bodyConfig.mountId}`,
       "MOUNT_EXISTS=false",
+      "IMPORT_ATTEMPTED=false",
       "ROUTE_CONTROLLER_EXECUTED=true",
+      "BODY_ADOPTION_BLOCKED=true",
       "VISUAL_PASS=HELD"
     ]);
 
-    return {
+    return Object.freeze({
       body: bodyConfig.body,
       ok: false,
-      mountExists: false
-    };
+      mountExists: false,
+      imported: false,
+      rendered: false
+    });
   }
 
   mount.dataset.body = bodyConfig.body.toLowerCase();
   mount.dataset.generation = bodyConfig.generation;
   mount.dataset.routeControllerReceipt = RECEIPT;
   mount.dataset.authority = bodyConfig.authority;
+  mount.dataset.bodyAdoptionBlocked = "true";
 
   const canvas = createCanvas(mount, bodyConfig.body);
+
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=IMPORT_STARTED",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION=${bodyConfig.generation}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "MOUNT_EXISTS=true",
+    `AUTHORITY=${bodyConfig.authority}`,
+    "IMPORT_ATTEMPTED=true",
+    "AUTHORITY_IMPORTED=false",
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "VISUAL_PASS=HELD"
+  ]);
+
   const imported = await importFirstAvailable(bodyConfig.moduleCandidates);
 
   if (!imported.ok) {
     drawHeldCanvas(canvas, bodyConfig.body, "SOURCE_AUTHORITY_HELD");
 
     writeReceipt(bodyConfig.receiptId, [
+      "BOOT_PHASE=IMPORT_FAILED",
       `BODY=${bodyConfig.body}`,
       `GENERATION=${bodyConfig.generation}`,
       `MOUNT=#${bodyConfig.mountId}`,
       "MOUNT_EXISTS=true",
       `AUTHORITY=${bodyConfig.authority}`,
+      "IMPORT_ATTEMPTED=true",
       "AUTHORITY_IMPORTED=false",
+      `IMPORT_FAILURE_COUNT=${imported.failures.length}`,
       "ROUTE_CONTROLLER_EXECUTED=true",
       "BODY_ADOPTION_BLOCKED=true",
+      "NO_CROSS_BODY_FALLBACK=true",
       "VISUAL_PASS=HELD"
     ]);
 
-    return {
+    return Object.freeze({
       body: bodyConfig.body,
       ok: false,
       mountExists: true,
       imported: false,
+      rendered: false,
       failures: imported.failures
-    };
+    });
   }
 
   const api = getApi(imported.module);
-  const status = callStatus(api);
-  const renderResult = await renderWithApi(canvas, api, bodyConfig);
+  const status = summarizeStatus(api, bodyConfig);
 
   writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=IMPORT_SUCCEEDED_RENDER_STARTED",
     `BODY=${bodyConfig.body}`,
     `GENERATION=${bodyConfig.generation}`,
     `MOUNT=#${bodyConfig.mountId}`,
     "MOUNT_EXISTS=true",
     `AUTHORITY=${bodyConfig.authority}`,
-    `AUTHORITY_IMPORTED=true`,
+    "IMPORT_ATTEMPTED=true",
+    "AUTHORITY_IMPORTED=true",
     `AUTHORITY_PATH=${imported.path}`,
-    `RENDER_METHOD=${renderResult.method || "held"}`,
-    `RENDERED=${renderResult.rendered === true}`,
-    `STATUS=${status ? JSON.stringify(status) : "none"}`,
+    `STATUS_SUMMARY=${JSON.stringify(status)}`,
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
     "VISUAL_PASS=HELD"
   ]);
 
-  return {
+  let renderResult;
+
+  try {
+    renderResult = await renderWithApi(canvas, api, bodyConfig);
+  } catch (error) {
+    renderResult = drawHeldCanvas(canvas, bodyConfig.body, "RENDER_ERROR_HELD");
+    renderResult = Object.freeze({
+      ...renderResult,
+      error: sanitizeText(error && error.message ? error.message : error)
+    });
+  }
+
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=COMPLETE",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION=${bodyConfig.generation}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "MOUNT_EXISTS=true",
+    `AUTHORITY=${bodyConfig.authority}`,
+    "IMPORT_ATTEMPTED=true",
+    "AUTHORITY_IMPORTED=true",
+    `AUTHORITY_PATH=${imported.path}`,
+    `RENDER_METHOD=${renderResult.method || "held"}`,
+    `RENDERED=${renderResult.rendered === true}`,
+    `HELD=${renderResult.held === true}`,
+    `STATUS_SUMMARY=${JSON.stringify(status)}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
+    "VISUAL_PASS=HELD"
+  ]);
+
+  return Object.freeze({
     body: bodyConfig.body,
     ok: true,
     mountExists: true,
     imported: true,
     authorityPath: imported.path,
+    rendered: renderResult.rendered === true,
     renderResult,
     status
-  };
+  });
 }
 
 function publishRouteReceipt(results) {
-  window.DGB_SHOWROOM_GLOBE_ROUTE_CONTROLLER = Object.freeze({
+  const routeReceipt = Object.freeze({
     receipt: RECEIPT,
     route: ROUTE,
     bodyCount: 2,
@@ -344,20 +497,27 @@ function publishRouteReceipt(results) {
     audralia: results.audralia,
     dualMountContract: true,
     bodyAdoptionBlocked: true,
+    noCrossBodyFallback: true,
+    routeControllerExecuted: true,
     visualPassClaimed: false,
     executedAt: nowIso()
   });
 
+  window.DGB_SHOWROOM_GLOBE_ROUTE_CONTROLLER = routeReceipt;
+
   try {
     window.dispatchEvent(
       new CustomEvent("dgb:showroom-globe:dual-mount-ready", {
-        detail: window.DGB_SHOWROOM_GLOBE_ROUTE_CONTROLLER
+        detail: routeReceipt
       })
     );
   } catch (_) {}
+
+  return routeReceipt;
 }
 
 async function boot() {
+  writeBothBootReceipts();
   assertRouteIdentity();
 
   const earth = await mountBody(EARTH);

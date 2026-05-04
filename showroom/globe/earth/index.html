@@ -5,16 +5,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Earth · Showroom Globe</title>
-  <meta
-    name="description"
-    content="Earth inspection route for the Showroom Globe reference body."
-  />
+  <meta name="description" content="Earth inspection route for the Showroom Globe reference body." />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #030712;
-      --panel: rgba(13, 20, 34, 0.82);
+      --panel: rgba(13, 20, 34, 0.84);
       --line: rgba(152, 194, 255, 0.34);
       --text: #f4f8ff;
       --muted: rgba(244, 248, 255, 0.72);
@@ -310,7 +307,7 @@
 
         <div class="earth-stage">
           <div id="earthRenderMount" aria-label="Earth render mount">
-            <div class="mount-fallback">Earth renderer is loading.</div>
+            <div class="mount-fallback">Earth child HTML booted. Waiting for Earth route script.</div>
           </div>
         </div>
 
@@ -322,6 +319,6 @@
     </main>
   </div>
 
-  <script type="module" src="/showroom/globe/earth/index.js"></script>
+  <script type="module" src="./index.js?v=earth-child-pair-bind-20260504"></script>
 </body>
 </html>

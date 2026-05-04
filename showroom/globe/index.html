@@ -5,11 +5,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Earth G4 Candidate and Audralia G1 · Showroom Globe · Diamond Gate Bridge</title>
+  <title>Earth G4 Candidate and Audralia G1 Terrain Active · Showroom Globe · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Dual globe chamber for Earth G4 candidate restoration and Audralia Generation 1 constructed world-body authority."
+    content="Dual globe chamber for Earth G4 candidate restoration and Audralia Generation 1 terrain-active world-body authority."
   />
 
   <link rel="stylesheet" href="/assets/manor.css" />
@@ -48,9 +48,13 @@
       transform: translateY(0);
     }
 
-    .site-header {
+    .site-header,
+    .showroom-globe-shell {
       width: min(1120px, 92vw);
       margin: 0 auto;
+    }
+
+    .site-header {
       padding: 1rem 0 0.25rem;
     }
 
@@ -69,13 +73,11 @@
     }
 
     .showroom-globe-shell {
-      width: min(1120px, 92vw);
-      margin: 0 auto;
       padding: 2rem 0 4rem;
     }
 
     .globe-hero {
-      max-width: 860px;
+      max-width: 900px;
       margin-bottom: 1.5rem;
     }
 
@@ -222,6 +224,10 @@
   data-earth-generation-status="G4_CANDIDATE"
   data-earth-generation-claimed="false"
   data-audralia-generation="G1"
+  data-audralia-terrain-child-active="true"
+  data-audralia-hydration-child-built="true"
+  data-audralia-climate-child-built="true"
+  data-audralia-g2-parent-consumption="held"
 >
   <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
 
@@ -246,9 +252,10 @@
       <h1 id="globe-title">Earth and Audralia</h1>
 
       <p>
-        This chamber separates the two bodies. Earth is held as a G4 candidate until it
-        visibly matches the Orbital Earth reference standard. Audralia is rebuilt from
-        ground zero as a clean Generation 1 world body.
+        This chamber separates the two bodies. Earth remains a G4 candidate until it visibly
+        matches the Orbital Earth reference standard. Audralia is Generation 1 terrain-active:
+        the parent renderer consumes its terrain child, while hydration and climate are built
+        as G2 children awaiting parent consumption.
       </p>
 
       <div class="globe-status-grid" aria-label="Dual body authority summary">
@@ -259,17 +266,17 @@
 
         <article class="status-card" data-body="audralia">
           <strong>Audralia</strong>
-          <span>Generation 1 ground-zero parent renderer.</span>
+          <span>Generation 1 terrain-active parent compositor.</span>
+        </article>
+
+        <article class="status-card" data-contract="g2">
+          <strong>G2 Children</strong>
+          <span>Hydration and climate exist. Parent consumption remains held.</span>
         </article>
 
         <article class="status-card" data-contract="split">
           <strong>Split</strong>
           <span>No shared renderer adoption.</span>
-        </article>
-
-        <article class="status-card" data-route="/showroom/globe/">
-          <strong>Route</strong>
-          <span>/showroom/globe/ owns the dual mount shell.</span>
         </article>
       </div>
     </section>
@@ -291,7 +298,7 @@
           <h2>Earth</h2>
           <p>
             Earth is the known reference body and uses its own Earth file authority.
-            Its G4 claim is held until the visible globe matches the prior Orbital Earth standard.
+            Its Generation 4 claim is held until the visible globe matches the prior Orbital Earth standard.
           </p>
           <p class="receipt-line">EARTH · REFERENCE_GLOBE · G4_CANDIDATE</p>
         </div>
@@ -327,15 +334,18 @@ VISUAL_PASS=HELD</pre>
         data-body="audralia"
         data-generation="G1"
         data-role="active-world-body"
+        data-terrain-child-active="true"
+        data-hydration-child-built="true"
+        data-climate-child-built="true"
       >
         <div class="globe-card-copy">
           <p class="eyebrow">Body 2 · Active World</p>
           <h2>Audralia</h2>
           <p>
-            Audralia is the constructed home-world body. This pass uses one clean parent
-            renderer before any downstream science children are restored.
+            Audralia is the constructed home-world body. The visible parent is terrain-active.
+            Hydration and climate are present as G2 children; the next parent update must consume them.
           </p>
-          <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1</p>
+          <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1_TERRAIN_ACTIVE</p>
         </div>
 
         <div
@@ -346,7 +356,14 @@ VISUAL_PASS=HELD</pre>
           data-generation="G1"
           data-authority="/assets/audralia/audralia.planet.render.js"
           data-parent-render="/assets/audralia/audralia.planet.render.js"
-          aria-label="Audralia Generation 1 globe render mount"
+          data-terrain-child="/assets/audralia/audralia.terrain.render.js"
+          data-terrain-child-active="true"
+          data-hydration-child="/assets/audralia/audralia.hydration.render.js"
+          data-hydration-child-built="true"
+          data-climate-child="/assets/audralia/audralia.climate.render.js"
+          data-climate-child-built="true"
+          data-g2-parent-consumption="held"
+          aria-label="Audralia Generation 1 terrain-active globe render mount"
         ></div>
 
         <pre
@@ -357,7 +374,15 @@ VISUAL_PASS=HELD</pre>
 BODY=Audralia
 GENERATION=G1
 PARENT_AUTHORITY=/assets/audralia/audralia.planet.render.js
-GROUND_ZERO_PARENT_ONLY=true
+AUDRALIA_TERRAIN_CHILD_ACTIVE=TRUE
+TERRAIN_CHILD_PATH=/assets/audralia/audralia.terrain.render.js
+HYDRATION_CHILD_BUILT=TRUE
+HYDRATION_CHILD_PATH=/assets/audralia/audralia.hydration.render.js
+CLIMATE_CHILD_BUILT=TRUE
+CLIMATE_CHILD_PATH=/assets/audralia/audralia.climate.render.js
+G2_PARENT_CONSUMPTION=HELD
+DOWNSTREAM_CHILDREN_ACTIVE=terrain
+ACTIVE_DOWNSTREAM_CHILDREN=terrain
 VISUAL_PASS=HELD</pre>
       </article>
     </section>
@@ -370,8 +395,14 @@ VISUAL_PASS=HELD</pre>
         <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4_CANDIDATE</li>
         <li>EARTH_G4_CLAIM=HELD</li>
         <li>EARTH_TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE</li>
-        <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1</li>
-        <li>AUDRALIA_GROUND_ZERO_PARENT_ONLY=TRUE</li>
+        <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1_TERRAIN_ACTIVE</li>
+        <li>AUDRALIA_TERRAIN_CHILD_ACTIVE=TRUE</li>
+        <li>AUDRALIA_TERRAIN_CHILD_PATH=/assets/audralia/audralia.terrain.render.js</li>
+        <li>AUDRALIA_HYDRATION_CHILD_BUILT=TRUE</li>
+        <li>AUDRALIA_HYDRATION_CHILD_PATH=/assets/audralia/audralia.hydration.render.js</li>
+        <li>AUDRALIA_CLIMATE_CHILD_BUILT=TRUE</li>
+        <li>AUDRALIA_CLIMATE_CHILD_PATH=/assets/audralia/audralia.climate.render.js</li>
+        <li>G2_PARENT_CONSUMPTION=HELD</li>
         <li>EARTH_MOUNT=#earthRenderMount</li>
         <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
         <li>EARTH_AUTHORITY=EARTH_FILE_CHAIN</li>
@@ -385,7 +416,7 @@ VISUAL_PASS=HELD</pre>
 
   <script
     type="module"
-    src="/showroom/globe/index.js?v=earth-candidate-audralia-ground-zero-g1-v1"
+    src="/showroom/globe/index.js?v=showroom-globe-g1-terrain-active-copy-controller-alignment-v1"
   ></script>
 </body>
 </html>

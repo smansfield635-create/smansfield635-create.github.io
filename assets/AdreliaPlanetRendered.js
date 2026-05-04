@@ -1,7 +1,7 @@
 // /assets/AdreliaPlanetRendered.js
-// AUDRALIA_G1_PARENT_PLANET_RENDER_COMPOSITOR_TNT_v1
+// AUDRALIA_G1_PARENT_COMPOSITOR_VISUAL_BALANCE_TNT_v2
 // Role: Audralia parent planet render authority.
-// Owns: body identity, downstream imports, composition order, final render API, status receipts.
+// Owns: body identity, downstream imports, composition order, final render API, visual compositor balance.
 // Does not own: route shell, HTML, Earth, Sun, Moon, Gauges, Products, image generation, GraphicBox.
 
 import {
@@ -12,7 +12,7 @@ import {
   getLivingWorldStatus
 } from "/assets/audralia.planet.render-living-world.js";
 
-const RECEIPT = "AUDRALIA_G1_PARENT_PLANET_RENDER_COMPOSITOR_TNT_v1";
+const RECEIPT = "AUDRALIA_G1_PARENT_COMPOSITOR_VISUAL_BALANCE_TNT_v2";
 const PLANETARY_OBJECT = "Audralia";
 const GENERATION = "G1";
 const FILE = "/assets/AdreliaPlanetRendered.js";
@@ -37,16 +37,21 @@ function mix(a, b, t) {
   return a + (b - a) * clamp(t, 0, 1);
 }
 
-function toRgb(rgb) {
-  return `rgb(${Math.round(clamp(rgb[0], 0, 255))}, ${Math.round(clamp(rgb[1], 0, 255))}, ${Math.round(clamp(rgb[2], 0, 255))})`;
-}
-
 function blend(a, b, t) {
   return [
     mix(a[0], b[0], t),
     mix(a[1], b[1], t),
     mix(a[2], b[2], t)
   ];
+}
+
+function toRgb(rgb) {
+  return `rgb(${Math.round(clamp(rgb[0], 0, 255))}, ${Math.round(clamp(rgb[1], 0, 255))}, ${Math.round(clamp(rgb[2], 0, 255))})`;
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
 }
 
 function normalizeInput(value, fallback) {
@@ -61,7 +66,7 @@ function createDefaultState(profile, options = {}) {
 }
 
 function getSafeFields(profile, options = {}) {
-  const fieldSize = Math.max(48, Math.min(160, Math.floor(options.fieldSize || 96)));
+  const fieldSize = Math.max(64, Math.min(144, Math.floor(options.fieldSize || 112)));
 
   return buildLivingWorldFields({
     width: fieldSize,
@@ -70,96 +75,153 @@ function getSafeFields(profile, options = {}) {
   });
 }
 
-function classifySurfaceColor(surface) {
+function getIceSignal(surface) {
   const topography = surface.topography || {};
   const hydration = surface.hydration || {};
   const climate = surface.climate || {};
+  const lat = Math.abs(Number(topography.lat) || 0);
+  const elevation = Number(topography.elevationMeters) || 0;
+  const temperature = Number(climate.temperatureC) || 18;
+
+  const polarGate = smoothstep(0.76, 0.96, lat);
+  const highMountainGate = smoothstep(5000, 8200, elevation);
+  const coldGate = 1 - smoothstep(-10, 8, temperature);
+  const glacierGate = clamp(hydration.glacierPermission || 0, 0, 1);
+
+  return clamp(
+    polarGate * 0.78 +
+      highMountainGate * coldGate * 0.72 +
+      glacierGate * polarGate * 0.32,
+    0,
+    1
+  );
+}
+
+function getLandColor(surface) {
+  const topography = surface.topography || {};
+  const climate = surface.climate || {};
   const ecology = surface.ecology || {};
+  const hydration = surface.hydration || {};
+
+  const vegetation = clamp(ecology.vegetationDensity || 0, 0, 1);
+  const canopy = clamp(ecology.canopyPotential || 0, 0, 1);
+  const grass = clamp(ecology.grasslandPotential || 0, 0, 1);
+  const wetland = clamp(ecology.wetlandPotential || 0, 0, 1);
+  const aridity = clamp(climate.aridity || 0, 0, 1);
+  const mountain = clamp(topography.mountainPermission || 0, 0, 1);
+  const slope = clamp(topography.slope || 0, 0, 1);
+  const coastal = clamp(hydration.coastalPermission || 0, 0, 1);
+
+  let color = [112, 102, 76];
+
+  if (aridity > 0.45) {
+    color = blend(color, [174, 130, 70], (aridity - 0.45) * 1.05);
+  }
+
+  if (grass > 0.22) {
+    color = blend(color, [86, 139, 73], grass * 0.82);
+  }
+
+  if (vegetation > 0.28) {
+    color = blend(color, [54, 124, 74], vegetation * 0.88);
+  }
+
+  if (canopy > 0.38) {
+    color = blend(color, [32, 88, 58], canopy * 0.82);
+  }
+
+  if (wetland > 0.36) {
+    color = blend(color, [46, 118, 94], wetland * 0.72);
+  }
+
+  if (coastal > 0.44) {
+    color = blend(color, [92, 126, 94], coastal * 0.34);
+  }
+
+  if (mountain > 0.42) {
+    color = blend(color, [126, 118, 103], mountain * 0.62);
+  }
+
+  if (slope > 0.64) {
+    color = blend(color, [104, 96, 88], (slope - 0.64) * 0.7);
+  }
+
+  return color;
+}
+
+function getWaterColor(surface) {
+  const hydration = surface.hydration || {};
   const fauna = surface.fauna || {};
-  const activity = surface.activity || {};
+  const climate = surface.climate || {};
+
+  const depth = clamp(hydration.normalizedDepth || 0, 0, 1);
+  const shelf = clamp(hydration.shelfWaterPermission || 0, 0, 1);
+  const coast = clamp(hydration.coastalPermission || 0, 0, 1);
+  const humidity = clamp(climate.humidity || 0, 0, 1);
+  const marine = clamp(fauna.guildScores && fauna.guildScores.marine_guild ? fauna.guildScores.marine_guild : 0, 0, 1);
+
+  let color = blend([18, 92, 152], [7, 28, 74], depth);
+
+  if (shelf > 0.24) {
+    color = blend(color, [43, 152, 178], shelf * 0.8);
+  }
+
+  if (coast > 0.5) {
+    color = blend(color, [74, 174, 182], coast * 0.42);
+  }
+
+  if (marine > 0.42) {
+    color = blend(color, [64, 180, 174], marine * 0.28);
+  }
+
+  if (humidity > 0.74) {
+    color = blend(color, [52, 126, 166], (humidity - 0.74) * 0.24);
+  }
+
+  return color;
+}
+
+function classifySurfaceColor(surface) {
+  const hydration = surface.hydration || {};
+  const ice = getIceSignal(surface);
 
   if (hydration.isOcean) {
-    const deep = [8, 28, 70];
-    const open = [15, 76, 132];
-    const shelf = [38, 148, 176];
-    const reef = [66, 188, 184];
+    let color = getWaterColor(surface);
 
-    let color = blend(open, deep, hydration.normalizedDepth || 0);
-
-    if ((hydration.shelfWaterPermission || 0) > 0.28) {
-      color = blend(color, shelf, hydration.shelfWaterPermission);
-    }
-
-    if ((fauna.guildScores && fauna.guildScores.marine_guild > 0.45) || (hydration.coastalPermission || 0) > 0.62) {
-      color = blend(color, reef, Math.max(hydration.coastalPermission || 0, 0.18));
+    if (ice > 0.42) {
+      color = blend(color, [205, 224, 232], (ice - 0.42) * 0.72);
     }
 
     return color;
   }
 
-  if ((hydration.glacierPermission || 0) > 0.58 || (activity.snowIceActivity || 0) > 0.66) {
-    return blend([190, 210, 218], [246, 250, 252], Math.max(hydration.glacierPermission || 0, activity.snowIceActivity || 0));
-  }
+  let color = getLandColor(surface);
 
-  const vegetation = ecology.vegetationDensity || 0;
-  const canopy = ecology.canopyPotential || 0;
-  const grass = ecology.grasslandPotential || 0;
-  const wetland = ecology.wetlandPotential || 0;
-  const aridity = climate.aridity || 0;
-  const mountain = topography.mountainPermission || 0;
-  const basin = topography.basinPermission || 0;
-
-  let color = [112, 104, 76];
-
-  if (aridity > 0.62) {
-    color = blend([137, 106, 64], [185, 139, 76], aridity);
-  }
-
-  if (grass > 0.28) {
-    color = blend(color, [78, 132, 72], grass);
-  }
-
-  if (vegetation > 0.35) {
-    color = blend(color, [48, 116, 72], vegetation);
-  }
-
-  if (canopy > 0.42) {
-    color = blend(color, [30, 86, 57], canopy);
-  }
-
-  if (wetland > 0.38) {
-    color = blend(color, [42, 114, 91], wetland);
-  }
-
-  if (basin > 0.52 && vegetation < 0.3) {
-    color = blend(color, [132, 112, 82], basin * 0.42);
-  }
-
-  if (mountain > 0.48) {
-    color = blend(color, [128, 119, 104], mountain * 0.72);
+  if (ice > 0.34) {
+    color = blend(color, [224, 236, 240], (ice - 0.34) * 0.78);
   }
 
   return color;
 }
 
 function applyLighting(rgb, normalX, normalY, normalZ, surface) {
-  const hydration = surface.hydration || {};
   const climate = surface.climate || {};
   const activity = surface.activity || {};
   const topography = surface.topography || {};
+  const hydration = surface.hydration || {};
 
-  const lightX = -0.42;
-  const lightY = -0.28;
-  const lightZ = 0.86;
+  const lightX = -0.38;
+  const lightY = -0.24;
+  const lightZ = 0.9;
 
   const dot = clamp(normalX * lightX + normalY * lightY + normalZ * lightZ, 0, 1);
   const limb = clamp(normalZ, 0, 1);
   const atmosphere = clamp(1 - limb, 0, 1);
 
-  let shade = 0.36 + dot * 0.74;
-  shade -= (topography.slope || 0) * 0.08;
-  shade += (hydration.isOcean ? 0.06 : 0);
-  shade += (activity.daylight || 0) * 0.04;
+  let shade = 0.42 + dot * 0.66;
+  shade -= clamp(topography.slope || 0, 0, 1) * 0.05;
+  shade += hydration.isOcean ? 0.04 : 0;
+  shade += clamp(activity.daylight || 0, 0, 1) * 0.03;
 
   let color = [
     rgb[0] * shade,
@@ -167,12 +229,12 @@ function applyLighting(rgb, normalX, normalY, normalZ, surface) {
     rgb[2] * shade
   ];
 
-  if ((climate.stormPermission || 0) > 0.6) {
-    color = blend(color, [168, 178, 186], (climate.stormPermission - 0.6) * 0.28);
+  if ((climate.stormPermission || 0) > 0.62) {
+    color = blend(color, [156, 166, 176], (climate.stormPermission - 0.62) * 0.22);
   }
 
   if (atmosphere > 0.62) {
-    color = blend(color, [104, 178, 224], (atmosphere - 0.62) * 0.26);
+    color = blend(color, [88, 162, 210], (atmosphere - 0.62) * 0.24);
   }
 
   return color;
@@ -180,7 +242,7 @@ function applyLighting(rgb, normalX, normalY, normalZ, surface) {
 
 export function createProfile(options = {}) {
   const livingWorldProfile = createLivingWorldProfile({
-    lattice: options.lattice || 96
+    lattice: options.lattice || 112
   });
 
   return Object.freeze({
@@ -194,8 +256,9 @@ export function createProfile(options = {}) {
     parentAuthority: FILE,
     downstreamChildren: CHILD_PATHS,
     livingWorldProfile,
-    radius: options.radius || 0.38,
-    fieldSize: options.fieldSize || 96,
+    radius: options.radius || 0.33,
+    fieldSize: options.fieldSize || 112,
+    pixelStep: options.pixelStep || 2,
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
@@ -206,11 +269,11 @@ export function createProfile(options = {}) {
 export function buildTexture(profile = createProfile(), options = {}) {
   const textureProfile = profile && profile.livingWorldProfile
     ? profile.livingWorldProfile
-    : createLivingWorldProfile({ lattice: options.fieldSize || 96 });
+    : createLivingWorldProfile({ lattice: options.fieldSize || 112 });
 
   const state = options.state || createDefaultState(textureProfile, options);
   const fields = options.fields || getSafeFields(textureProfile, {
-    fieldSize: options.fieldSize || profile.fieldSize || 96
+    fieldSize: options.fieldSize || profile.fieldSize || 112
   });
 
   const texture = Object.freeze({
@@ -263,6 +326,7 @@ export function sampleSurface(uInput, vInput, context = {}) {
     parentAuthority: FILE,
     downstreamChildren: CHILD_PATHS,
     renderColor: classifySurfaceColor(sample),
+    iceSignal: getIceSignal(sample),
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
@@ -277,18 +341,18 @@ export function renderSurface(canvas, options = {}) {
 
   const profile = options.profile || createProfile(options);
   const texture = options.texture || cachedTexture || buildTexture(profile, options);
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { alpha: true });
 
   const width = canvas.width || 1024;
   const height = canvas.height || 1024;
   const cx = width / 2;
   const cy = height / 2;
-  const radius = Math.min(width, height) * (profile.radius || 0.38);
-  const pixelStep = Math.max(2, Math.min(5, Math.floor(options.pixelStep || 3)));
+  const radius = Math.min(width, height) * (profile.radius || 0.33);
+  const pixelStep = Math.max(1, Math.min(3, Math.floor(options.pixelStep || profile.pixelStep || 2)));
 
   ctx.clearRect(0, 0, width, height);
-
-  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   for (let py = Math.floor(cy - radius); py <= Math.ceil(cy + radius); py += pixelStep) {
     for (let px = Math.floor(cx - radius); px <= Math.ceil(cx + radius); px += pixelStep) {
@@ -299,7 +363,7 @@ export function renderSurface(canvas, options = {}) {
       if (d2 > 1) continue;
 
       const nz = Math.sqrt(1 - d2);
-      const longitudeShift = Number.isFinite(options.longitudeShift) ? options.longitudeShift : 0.08;
+      const longitudeShift = Number.isFinite(options.longitudeShift) ? options.longitudeShift : 0.1;
       const u = ((0.5 + Math.atan2(nx, nz) / (Math.PI * 2) + longitudeShift) % 1 + 1) % 1;
       const v = clamp(0.5 + Math.asin(ny) / Math.PI, 0, 1);
 
@@ -314,7 +378,7 @@ export function renderSurface(canvas, options = {}) {
       const litColor = applyLighting(baseColor, nx, ny, nz, surface);
 
       ctx.fillStyle = toRgb(litColor);
-      ctx.fillRect(px, py, pixelStep + 0.5, pixelStep + 0.5);
+      ctx.fillRect(px, py, pixelStep + 0.35, pixelStep + 0.35);
     }
   }
 
@@ -327,17 +391,17 @@ export function renderSurface(canvas, options = {}) {
     radius * 1.08
   );
 
-  atmosphere.addColorStop(0, "rgba(255,255,255,0.10)");
-  atmosphere.addColorStop(0.68, "rgba(100,180,230,0.06)");
-  atmosphere.addColorStop(1, "rgba(116,192,244,0.38)");
+  atmosphere.addColorStop(0, "rgba(255,255,255,0.08)");
+  atmosphere.addColorStop(0.68, "rgba(82,162,220,0.06)");
+  atmosphere.addColorStop(1, "rgba(102,184,238,0.34)");
 
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 1.018, 0, Math.PI * 2);
   ctx.fillStyle = atmosphere;
   ctx.fill();
 
-  ctx.lineWidth = Math.max(2, Math.round(radius * 0.012));
-  ctx.strokeStyle = "rgba(190,220,245,0.42)";
+  ctx.lineWidth = Math.max(2, Math.round(radius * 0.011));
+  ctx.strokeStyle = "rgba(185,220,244,0.42)";
   ctx.beginPath();
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
   ctx.stroke();
@@ -346,8 +410,6 @@ export function renderSurface(canvas, options = {}) {
   ctx.font = "700 34px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("Audralia", cx, height - Math.max(42, radius * 0.12));
-
-  ctx.restore();
 
   return Object.freeze({
     receipt: RECEIPT,

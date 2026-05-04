@@ -3,8 +3,8 @@
   lang="en"
   data-route="/nine-summits/"
   data-page="nine-summits"
-  data-version="G1-V3"
-  data-contract="NINE_SUMMITS_CHRONOLOGICAL_FOUR_DOOR_PUBLIC_GATE_TNT_v3"
+  data-version="G1-V4"
+  data-contract="NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -42,6 +42,7 @@
       --line2:rgba(243,200,111,.34);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
+      --orbit-time:28s;
     }
 
     *{box-sizing:border-box}
@@ -391,7 +392,7 @@
 
     .gate-field{
       position:relative;
-      min-height:clamp(39rem,68vw,55rem);
+      min-height:clamp(38rem,70vw,56rem);
       overflow:hidden;
       border:1px solid rgba(243,200,111,.18);
       border-radius:clamp(1.25rem,5vw,2.2rem);
@@ -486,7 +487,7 @@
         0 0 3.6rem rgba(143,101,255,.18),
         inset 0 1px 0 rgba(255,255,255,.08);
       transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.40;
+      opacity:.34;
       pointer-events:none;
       animation:anchorPulse 8s ease-in-out infinite;
     }
@@ -515,11 +516,11 @@
       gap:.2rem;
       text-align:center;
       pointer-events:none;
-      opacity:.78;
+      opacity:.48;
     }
 
     .gate-anchor-label strong{
-      color:rgba(255,244,216,.92);
+      color:rgba(255,244,216,.84);
       font-size:clamp(1rem,3vw,1.65rem);
       line-height:1;
       font-weight:950;
@@ -529,36 +530,72 @@
     }
 
     .gate-anchor-label span{
-      color:var(--muted);
+      color:rgba(230,238,255,.66);
       font-size:.78rem;
       letter-spacing:.04em;
     }
 
-    .door-grid{
+    .orbit-stage{
       position:relative;
-      z-index:5;
-      width:min(100%,880px);
-      min-height:clamp(32rem,55vw,45rem);
+      z-index:6;
+      width:min(100%,760px);
+      aspect-ratio:1/1;
+      min-height:clamp(28rem,62vw,46rem);
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      grid-template-rows:repeat(2,minmax(0,1fr));
-      gap:clamp(1rem,3vw,1.6rem);
-      align-items:center;
-      justify-items:center;
-      padding:clamp(.8rem,2.2vw,1.2rem);
+      place-items:center;
+      pointer-events:none;
     }
 
-    .door-node{
-      width:100%;
-      min-height:clamp(13rem,22vw,18rem);
+    .orbit-ring{
+      position:absolute;
+      inset:8%;
+      border:1px solid rgba(243,200,111,.16);
+      border-radius:50%;
+      animation:clockwiseOrbit var(--orbit-time) linear infinite;
+      pointer-events:none;
+      transform-origin:50% 50%;
+    }
+
+    .orbit-ring::before,
+    .orbit-ring::after{
+      content:"";
+      position:absolute;
+      inset:9%;
+      border:1px solid rgba(141,216,255,.10);
+      border-radius:50%;
+      transform:rotate(28deg) scaleX(1.08);
+    }
+
+    .orbit-ring::after{
+      inset:19%;
+      border-color:rgba(255,255,255,.08);
+      transform:rotate(-38deg) scaleY(.82);
+    }
+
+    .orbit-node{
+      position:absolute;
+      width:clamp(8.5rem,18vw,13rem);
+      min-height:clamp(8.5rem,18vw,13rem);
       display:grid;
       place-items:center;
       text-align:center;
-      animation:nodeFloat 8s ease-in-out infinite;
-      animation-delay:var(--delay,0s);
+      pointer-events:auto;
     }
 
-    .door-node a{
+    .orbit-node.book{left:50%;top:0%;transform:translate(-50%,-14%)}
+    .orbit-node.universe{left:100%;top:50%;transform:translate(-86%,-50%)}
+    .orbit-node.audralia{left:50%;top:100%;transform:translate(-50%,-86%)}
+    .orbit-node.voice{left:0%;top:50%;transform:translate(-14%,-50%)}
+
+    .node-counter{
+      display:grid;
+      place-items:center;
+      gap:.62rem;
+      width:100%;
+      animation:counterOrbit var(--orbit-time) linear infinite;
+    }
+
+    .orbit-node a{
       display:grid;
       place-items:center;
       gap:.62rem;
@@ -599,8 +636,8 @@
       border-color:rgba(243,200,111,.16);
     }
 
-    .door-node:hover .diamond,
-    .door-node:focus-within .diamond{
+    .orbit-node:hover .diamond,
+    .orbit-node:focus-within .diamond{
       transform:rotate(45deg) scale(1.1);
       border-color:rgba(243,200,111,.95);
       background:
@@ -790,13 +827,18 @@
     }
 
     @keyframes anchorPulse{
-      0%,100%{opacity:.34;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{opacity:.48;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+      0%,100%{opacity:.30;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{opacity:.42;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
     }
 
-    @keyframes nodeFloat{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-.55rem)}
+    @keyframes clockwiseOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes counterOrbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(-360deg)}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -804,7 +846,8 @@
       .hero::before,
       .gate-field::before,
       .gate-anchor,
-      .door-node{
+      .orbit-ring,
+      .node-counter{
         animation:none!important;
       }
     }
@@ -824,6 +867,8 @@
     }
 
     @media (max-width:720px){
+      :root{--orbit-time:32s}
+
       .shell{width:min(100% - 22px,var(--max))}
 
       h1{font-size:clamp(3rem,17vw,5rem)}
@@ -834,38 +879,45 @@
       }
 
       .gate-field{
-        min-height:auto;
+        min-height:34rem;
         padding:1rem .65rem;
       }
 
-      .door-grid{
-        grid-template-columns:1fr;
-        min-height:auto;
-        gap:.7rem;
+      .orbit-stage{
+        width:min(100%,31rem);
+        min-height:30rem;
       }
 
-      .door-node{
-        min-height:9.25rem;
+      .orbit-ring{
+        inset:13%;
+      }
+
+      .orbit-node{
+        width:7.8rem;
+        min-height:7.8rem;
       }
 
       .diamond{
-        width:4rem;
-        height:4rem;
+        width:3.85rem;
+        height:3.85rem;
         border-radius:1rem;
       }
 
-      .node-title{font-size:.78rem}
-      .node-sub{font-size:.64rem}
+      .node-title{font-size:.68rem}
+      .node-sub{font-size:.56rem}
 
       .gate-anchor{
-        width:14rem;
-        height:14rem;
-        opacity:.26;
+        width:13rem;
+        height:13rem;
+        opacity:.22;
       }
 
       .gate-anchor-label{
-        opacity:.44;
+        opacity:.34;
       }
+
+      .cardinal.e{right:.55rem}
+      .cardinal.w{left:.55rem}
 
       .legend-grid,
       .route-grid,
@@ -938,9 +990,9 @@
 
       <section class="panel section" aria-labelledby="field-title">
         <div class="kicker">Four primary doors</div>
-        <h2 id="field-title">The gate is dimensional, readable, and alive.</h2>
+        <h2 id="field-title">The four doors form a rotating diamond gate.</h2>
 
-        <div class="gate-field" aria-label="Nine Summits four-door public gate">
+        <div class="gate-field" aria-label="Nine Summits rotating four-door public gate">
           <div class="axis-line" aria-hidden="true"></div>
           <div class="cardinal n" aria-hidden="true">N</div>
           <div class="cardinal e" aria-hidden="true">E</div>
@@ -953,37 +1005,47 @@
             <span>Public Gate</span>
           </div>
 
-          <div class="door-grid">
-            <div class="door-node" style="--delay:.05s">
-              <a href="/nine-summits-of-love/" aria-label="Open the Book Lane">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Book Lane</span>
-                <span class="node-sub">Human Climb</span>
-              </a>
-            </div>
+          <div class="orbit-stage" aria-label="Clockwise rotating diamond of primary route doors">
+            <div class="orbit-ring">
+              <div class="orbit-node book">
+                <div class="node-counter">
+                  <a href="/nine-summits-of-love/" aria-label="Open the Book Lane">
+                    <span class="diamond" aria-hidden="true"></span>
+                    <span class="node-title">Book Lane</span>
+                    <span class="node-sub">Human Climb</span>
+                  </a>
+                </div>
+              </div>
 
-            <div class="door-node" style="--delay:.18s">
-              <a href="/nine-summits/universe/" aria-label="Open the Universe Lane">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Universe Lane</span>
-                <span class="node-sub">World Setting</span>
-              </a>
-            </div>
+              <div class="orbit-node universe">
+                <div class="node-counter">
+                  <a href="/nine-summits/universe/" aria-label="Open the Universe Lane">
+                    <span class="diamond" aria-hidden="true"></span>
+                    <span class="node-title">Universe Lane</span>
+                    <span class="node-sub">World Setting</span>
+                  </a>
+                </div>
+              </div>
 
-            <div class="door-node" style="--delay:.31s">
-              <a href="/showroom/globe/" aria-label="Inspect Audralia">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Audralia</span>
-                <span class="node-sub">Home World</span>
-              </a>
-            </div>
+              <div class="orbit-node audralia">
+                <div class="node-counter">
+                  <a href="/showroom/globe/" aria-label="Inspect Audralia">
+                    <span class="diamond" aria-hidden="true"></span>
+                    <span class="node-title">Audralia</span>
+                    <span class="node-sub">Home World</span>
+                  </a>
+                </div>
+              </div>
 
-            <div class="door-node" style="--delay:.44s">
-              <a href="#voice-lane" aria-label="Open Voice Lane">
-                <span class="diamond" aria-hidden="true"></span>
-                <span class="node-title">Voice Lane</span>
-                <span class="node-sub">Underdog · Sean</span>
-              </a>
+              <div class="orbit-node voice">
+                <div class="node-counter">
+                  <a href="#voice-lane" aria-label="Open Voice Lane">
+                    <span class="diamond" aria-hidden="true"></span>
+                    <span class="node-title">Voice Lane</span>
+                    <span class="node-sub">Underdog · Sean</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1112,13 +1174,14 @@
 
       <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_CHRONOLOGICAL_FOUR_DOOR_PUBLIC_GATE_TNT_v3
+        <pre>NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4
 route=/nine-summits/
 page=nine_summits
 role=public_system_gate
 message=the_climb_becomes_a_world
-visual_system=chronological_four_door_dimensional_public_gate
+visual_system=rotating_four_door_diamond_gate
 center=nine_summits_background_anchor_only
+background_anchor=true
 primary_doors=book,universe,audralia,voice
 book_lane=/nine-summits-of-love/
 book_role=human_climb
@@ -1131,14 +1194,17 @@ about_this_underdog=/about-this-underdog/
 about_this_underdog_role=universal_underdog_message
 meet_sean_mansfield=/meet-sean-mansfield/
 meet_sean_mansfield_role=personal_profile_behind_the_voice
+formation=book_north,universe_east,audralia_south,voice_west
+motion=clockwise_orbit
+label_motion=counter_rotation_for_readability
 system_routes=compass,door,home,manor,products,showroom,frontier,gauges
-z_index_law=background_orbit,nine_summits_anchor_background,primary_door_diamonds,route_labels
+z_index_law=background_orbit,nine_summits_anchor_background,rotating_route_diamonds,route_labels
 non_overlap_law=no_clickable_diamond_hidden_by_center
-animation=floating_primary_diamonds,background_anchor_pulse,slow_orbit_field,aurora_background
-mobile_law=compact_four_door_grid_no_hidden_nodes
-upgraded=visual_quality,contrast,motion,dimensional_diamonds,voice_split,current_routes,mobile_spacing
-removed=drab_gate,flat_read,old_voice_lane_target,old_this_underdog_personal_merge,stale_this_underdog_route
-route_owns=public_gate,four_primary_doors,route_links,voice_lane_split,celestial_gate_visual_expression
+animation=clockwise_rotating_diamond_gate,background_anchor_pulse,slow_orbit_field,aurora_background
+mobile_law=compact_rotating_diamond_no_hidden_nodes
+upgraded=diamond_formation,clockwise_motion,background_center_anchor,current_routes,mobile_spacing
+removed=vertical_stack,frozen_linear_doors,drab_gate,flat_read,old_voice_lane_target,old_this_underdog_personal_merge,stale_this_underdog_route
+route_owns=public_gate,four_primary_doors,rotating_diamond_gate,route_links,voice_lane_split
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -1152,7 +1218,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_CHRONOLOGICAL_FOUR_DOOR_PUBLIC_GATE_TNT_v3 · Nine Summits · Book · Universe · Audralia · Voice.
+      NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4 · Nine Summits · Rotating Diamond Gate · Book · Universe · Audralia · Voice.
     </footer>
   </div>
 </body>

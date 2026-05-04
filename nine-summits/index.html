@@ -3,8 +3,8 @@
   lang="en"
   data-route="/nine-summits/"
   data-page="nine-summits"
-  data-version="G1-V4"
-  data-contract="NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4"
+  data-version="G1-V5"
+  data-contract="NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -42,7 +42,7 @@
       --line2:rgba(243,200,111,.34);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --orbit-time:28s;
+      --orbit-time:30s;
     }
 
     *{box-sizing:border-box}
@@ -405,6 +405,7 @@
       padding:clamp(1.15rem,3vw,2rem);
       display:grid;
       place-items:center;
+      isolation:isolate;
     }
 
     .gate-field::before{
@@ -487,7 +488,7 @@
         0 0 3.6rem rgba(143,101,255,.18),
         inset 0 1px 0 rgba(255,255,255,.08);
       transform:translate(-50%,-50%) rotate(45deg);
-      opacity:.34;
+      opacity:.30;
       pointer-events:none;
       animation:anchorPulse 8s ease-in-out infinite;
     }
@@ -516,7 +517,7 @@
       gap:.2rem;
       text-align:center;
       pointer-events:none;
-      opacity:.48;
+      opacity:.44;
     }
 
     .gate-anchor-label strong{
@@ -536,11 +537,15 @@
     }
 
     .orbit-stage{
-      position:relative;
+      --orbit-radius:clamp(8.8rem,24vw,15rem);
+      position:absolute;
+      left:50%;
+      top:50%;
       z-index:6;
-      width:min(100%,760px);
+      width:min(78vw,42rem);
+      max-width:calc(100% - 5.5rem);
       aspect-ratio:1/1;
-      min-height:clamp(28rem,62vw,46rem);
+      transform:translate(-50%,-50%);
       display:grid;
       place-items:center;
       pointer-events:none;
@@ -548,8 +553,8 @@
 
     .orbit-ring{
       position:absolute;
-      inset:8%;
-      border:1px solid rgba(243,200,111,.16);
+      inset:0;
+      border:1px solid rgba(243,200,111,.18);
       border-radius:50%;
       animation:clockwiseOrbit var(--orbit-time) linear infinite;
       pointer-events:none;
@@ -560,32 +565,40 @@
     .orbit-ring::after{
       content:"";
       position:absolute;
-      inset:9%;
+      inset:10%;
       border:1px solid rgba(141,216,255,.10);
       border-radius:50%;
       transform:rotate(28deg) scaleX(1.08);
     }
 
     .orbit-ring::after{
-      inset:19%;
+      inset:22%;
       border-color:rgba(255,255,255,.08);
       transform:rotate(-38deg) scaleY(.82);
     }
 
     .orbit-node{
+      --angle:0deg;
       position:absolute;
-      width:clamp(8.5rem,18vw,13rem);
-      min-height:clamp(8.5rem,18vw,13rem);
+      left:50%;
+      top:50%;
+      width:clamp(7.2rem,15vw,10.5rem);
+      min-height:clamp(7.2rem,15vw,10.5rem);
       display:grid;
       place-items:center;
       text-align:center;
       pointer-events:auto;
+      transform:
+        translate(-50%,-50%)
+        rotate(var(--angle))
+        translateY(calc(-1 * var(--orbit-radius)));
+      transform-origin:50% 50%;
     }
 
-    .orbit-node.book{left:50%;top:0%;transform:translate(-50%,-14%)}
-    .orbit-node.universe{left:100%;top:50%;transform:translate(-86%,-50%)}
-    .orbit-node.audralia{left:50%;top:100%;transform:translate(-50%,-86%)}
-    .orbit-node.voice{left:0%;top:50%;transform:translate(-14%,-50%)}
+    .orbit-node.book{--angle:0deg}
+    .orbit-node.universe{--angle:90deg}
+    .orbit-node.audralia{--angle:180deg}
+    .orbit-node.voice{--angle:270deg}
 
     .node-counter{
       display:grid;
@@ -604,10 +617,10 @@
     }
 
     .diamond{
-      width:clamp(5rem,10vw,8rem);
-      height:clamp(5rem,10vw,8rem);
+      width:clamp(4.4rem,8.5vw,6.6rem);
+      height:clamp(4.4rem,8.5vw,6.6rem);
       border:1px solid rgba(243,200,111,.64);
-      border-radius:1.45rem;
+      border-radius:1.25rem;
       transform:rotate(45deg);
       background:
         radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
@@ -628,7 +641,7 @@
       position:absolute;
       inset:18%;
       border:1px solid rgba(255,255,255,.13);
-      border-radius:.9rem;
+      border-radius:.82rem;
     }
 
     .diamond::after{
@@ -652,7 +665,7 @@
 
     .node-title{
       color:rgba(255,244,216,.98);
-      font-size:clamp(.86rem,2vw,1.18rem);
+      font-size:clamp(.78rem,1.8vw,1.05rem);
       font-weight:950;
       line-height:1.05;
       letter-spacing:.1em;
@@ -662,7 +675,7 @@
 
     .node-sub{
       color:rgba(230,238,255,.80);
-      font-size:clamp(.68rem,1.6vw,.84rem);
+      font-size:clamp(.62rem,1.45vw,.76rem);
       line-height:1.25;
       text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
@@ -827,8 +840,8 @@
     }
 
     @keyframes anchorPulse{
-      0%,100%{opacity:.30;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{opacity:.42;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+      0%,100%{opacity:.26;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{opacity:.38;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
     }
 
     @keyframes clockwiseOrbit{
@@ -837,8 +850,8 @@
     }
 
     @keyframes counterOrbit{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(-360deg)}
+      from{transform:rotate(calc(-1 * var(--angle)))}
+      to{transform:rotate(calc(-360deg - var(--angle)))}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -867,7 +880,7 @@
     }
 
     @media (max-width:720px){
-      :root{--orbit-time:32s}
+      :root{--orbit-time:34s}
 
       .shell{width:min(100% - 22px,var(--max))}
 
@@ -879,41 +892,38 @@
       }
 
       .gate-field{
-        min-height:34rem;
+        min-height:35rem;
         padding:1rem .65rem;
       }
 
       .orbit-stage{
-        width:min(100%,31rem);
-        min-height:30rem;
-      }
-
-      .orbit-ring{
-        inset:13%;
+        --orbit-radius:9.2rem;
+        width:min(calc(100vw - 5rem),28rem);
+        max-width:calc(100% - 3.5rem);
       }
 
       .orbit-node{
-        width:7.8rem;
-        min-height:7.8rem;
+        width:7.2rem;
+        min-height:7.2rem;
       }
 
       .diamond{
-        width:3.85rem;
-        height:3.85rem;
-        border-radius:1rem;
+        width:3.65rem;
+        height:3.65rem;
+        border-radius:.92rem;
       }
 
-      .node-title{font-size:.68rem}
-      .node-sub{font-size:.56rem}
+      .node-title{font-size:.64rem}
+      .node-sub{font-size:.54rem}
 
       .gate-anchor{
         width:13rem;
         height:13rem;
-        opacity:.22;
+        opacity:.20;
       }
 
       .gate-anchor-label{
-        opacity:.34;
+        opacity:.30;
       }
 
       .cardinal.e{right:.55rem}
@@ -990,9 +1000,9 @@
 
       <section class="panel section" aria-labelledby="field-title">
         <div class="kicker">Four primary doors</div>
-        <h2 id="field-title">The four doors form a rotating diamond gate.</h2>
+        <h2 id="field-title">The four doors rotate from the compass center.</h2>
 
-        <div class="gate-field" aria-label="Nine Summits rotating four-door public gate">
+        <div class="gate-field" aria-label="Nine Summits compass-centered rotating four-door public gate">
           <div class="axis-line" aria-hidden="true"></div>
           <div class="cardinal n" aria-hidden="true">N</div>
           <div class="cardinal e" aria-hidden="true">E</div>
@@ -1174,13 +1184,14 @@
 
       <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4
+        <pre>NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5
 route=/nine-summits/
 page=nine_summits
 role=public_system_gate
 message=the_climb_becomes_a_world
-visual_system=rotating_four_door_diamond_gate
+visual_system=compass_centered_rotating_four_door_diamond_gate
 center=nine_summits_background_anchor_only
+compass_center=true
 background_anchor=true
 primary_doors=book,universe,audralia,voice
 book_lane=/nine-summits-of-love/
@@ -1195,16 +1206,18 @@ about_this_underdog_role=universal_underdog_message
 meet_sean_mansfield=/meet-sean-mansfield/
 meet_sean_mansfield_role=personal_profile_behind_the_voice
 formation=book_north,universe_east,audralia_south,voice_west
-motion=clockwise_orbit
+motion=clockwise_orbit_centered_on_compass
 label_motion=counter_rotation_for_readability
+orbit_center=gate_field_center
+orbit_radius=contained_inside_panel
 system_routes=compass,door,home,manor,products,showroom,frontier,gauges
-z_index_law=background_orbit,nine_summits_anchor_background,rotating_route_diamonds,route_labels
+z_index_law=background_field,axis_lines,nine_summits_anchor_background,rotating_route_diamonds,route_labels,hover_focus
 non_overlap_law=no_clickable_diamond_hidden_by_center
-animation=clockwise_rotating_diamond_gate,background_anchor_pulse,slow_orbit_field,aurora_background
-mobile_law=compact_rotating_diamond_no_hidden_nodes
-upgraded=diamond_formation,clockwise_motion,background_center_anchor,current_routes,mobile_spacing
-removed=vertical_stack,frozen_linear_doors,drab_gate,flat_read,old_voice_lane_target,old_this_underdog_personal_merge,stale_this_underdog_route
-route_owns=public_gate,four_primary_doors,rotating_diamond_gate,route_links,voice_lane_split
+animation=compass_centered_clockwise_rotating_diamond_gate,background_anchor_pulse,slow_orbit_field,aurora_background
+mobile_law=compact_centered_rotating_diamond_no_hidden_nodes_no_right_crop
+upgraded=compass_centering,contained_orbit_radius,diamond_formation,clockwise_motion,background_center_anchor,current_routes,mobile_spacing
+removed=off_center_orbit,right_side_cropping,vertical_stack,frozen_linear_doors,drab_gate,flat_read,old_voice_lane_target,old_this_underdog_personal_merge,stale_this_underdog_route
+route_owns=public_gate,four_primary_doors,compass_centered_rotating_diamond_gate,route_links,voice_lane_split
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -1218,7 +1231,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_ROTATING_DIAMOND_GATE_TNT_v4 · Nine Summits · Rotating Diamond Gate · Book · Universe · Audralia · Voice.
+      NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5 · Nine Summits · Compass-Centered Rotating Diamond Gate.
     </footer>
   </div>
 </body>

@@ -4,18 +4,31 @@
   data-route="/gauges/"
   data-page="gauges"
   data-version="G1-V2"
-  data-contract="GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2"
+  data-contract="GAUGES_CURRENT_ROUTE_CONTRACT_READER_TNT_v2"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-role="measurement-surface"
+  data-mode="served-source-contract-reader"
+  data-source-fetch-only="true"
+  data-renders-iframe="false"
+  data-executes-target-files="false"
+  data-mutates-runtime="false"
+  data-mutates-target-routes="false"
   data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Active Gauges page for source-only route auditing, baseline alignment, retired-language detection, product chamber checks, Frontier lane checks, and next-move ranking.">
+  <meta
+    name="description"
+    content="Gauges reads served source only, checks current route contracts, detects stale language, and names the next highest-friction move."
+  >
 
   <style>
     :root{
@@ -27,17 +40,15 @@
       --faint:rgba(230,238,255,.42);
       --gold:#f3c86f;
       --gold2:#ffe8a3;
+      --green:#8ff0c6;
       --blue:#8dd8ff;
-      --cyan:#8ff6ff;
+      --red:#ff8b8b;
       --purple:#8f65ff;
-      --green:#8ff5d2;
-      --red:#ff7b7b;
-      --amber:#ffcf7a;
-      --panel:rgba(9,15,31,.82);
+      --panel:rgba(9,15,31,.84);
       --line:rgba(184,205,255,.18);
       --line2:rgba(243,200,111,.34);
       --shadow:0 32px 110px rgba(0,0,0,.46);
-      --max:1220px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -55,12 +66,14 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.5;
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.19),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.19),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.13),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.10),transparent 34rem),
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
         linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
     body::before{
@@ -75,25 +88,6 @@
       background-size:220px 260px,54px 54px,54px 54px;
       opacity:.24;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      pointer-events:none;
-      background:
-        conic-gradient(from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(143,101,255,.08) 52deg,
-          transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
-          transparent 224deg,
-          rgba(141,216,255,.07) 292deg,
-          transparent 360deg);
-      filter:blur(42px);
-      opacity:.58;
-      animation:auroraDrift 26s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
@@ -224,30 +218,12 @@
 
     .hero{
       position:relative;
-      min-height:clamp(24rem,46vw,34rem);
+      min-height:clamp(24rem,44vw,34rem);
       display:grid;
       align-content:center;
       gap:1rem;
-      padding:clamp(1.6rem,5vw,3.5rem);
+      padding:clamp(1.45rem,5vw,3.4rem);
       margin-top:.6rem;
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      width:clamp(10rem,25vw,18rem);
-      height:clamp(10rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:2.9rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.19),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
-      pointer-events:none;
     }
 
     .kicker{
@@ -280,54 +256,49 @@
 
     h1{
       margin:0;
-      max-width:900px;
-      font-size:clamp(3.2rem,10vw,6.6rem);
+      max-width:940px;
+      font-size:clamp(3rem,9vw,6.8rem);
       line-height:.84;
       letter-spacing:-.105em;
-      position:relative;
-      z-index:2;
       text-wrap:balance;
     }
 
     h2{
       margin:0;
-      max-width:860px;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.8vw,2.7rem);
+      font-size:clamp(1.45rem,4.6vw,2.75rem);
       line-height:.98;
       letter-spacing:-.07em;
-      position:relative;
-      z-index:2;
       text-wrap:balance;
     }
 
     h3{
       margin:0;
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.32rem);
+      font-size:clamp(1.05rem,3vw,1.34rem);
       line-height:1.08;
       letter-spacing:-.035em;
     }
 
     p{
       margin:0;
-      max-width:820px;
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
-      position:relative;
-      z-index:2;
+    }
+
+    .lead{
+      max-width:900px;
     }
 
     .actions{
-      position:relative;
-      z-index:2;
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
-      margin-top:.3rem;
+      margin-top:.2rem;
     }
 
+    button,
     .button{
       min-height:2.65rem;
       display:inline-flex;
@@ -338,14 +309,26 @@
       padding:.65rem 1rem;
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
+      font:inherit;
       font-size:.76rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
       cursor:pointer;
     }
 
+    button:hover,
+    button:focus-visible,
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    button.gold,
     .button.gold{
       border-color:rgba(243,200,111,.9);
       color:#060811;
@@ -353,9 +336,10 @@
       box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .button:disabled{
-      cursor:not-allowed;
-      opacity:.55;
+    button:disabled{
+      cursor:wait;
+      opacity:.62;
+      transform:none;
     }
 
     .section{
@@ -368,234 +352,159 @@
     .gauge-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.9rem;
+      gap:.8rem;
     }
 
-    .gauge-card{
-      min-height:17rem;
+    .meter-card{
+      min-height:15rem;
+      display:grid;
+      gap:.7rem;
+      align-content:start;
       padding:1rem;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:1.45rem;
+      border-radius:1.25rem;
       background:
         radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
         rgba(255,255,255,.035);
-      display:grid;
-      gap:.8rem;
-      align-content:start;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .gauge-card::before{
-      content:"";
-      position:absolute;
-      right:-2.8rem;
-      top:-2.8rem;
-      width:7rem;
-      height:7rem;
-      border:1px solid rgba(243,200,111,.14);
-      border-radius:1.8rem;
-      transform:rotate(45deg);
-      background:rgba(143,101,255,.05);
     }
 
     .dial{
-      --score:0;
-      --dialColor:var(--amber);
-      width:8.2rem;
-      height:8.2rem;
-      margin:.1rem auto .2rem;
-      border-radius:50%;
+      --value:0;
+      width:7.5rem;
+      height:7.5rem;
       display:grid;
       place-items:center;
+      border-radius:50%;
+      margin:.2rem auto .35rem;
       background:
-        radial-gradient(circle at 50% 50%,rgba(7,11,22,.96) 0 52%,transparent 53%),
-        conic-gradient(var(--dialColor) calc(var(--score) * 1%),rgba(255,255,255,.11) 0);
-      border:1px solid rgba(255,255,255,.13);
+        radial-gradient(circle at 50% 50%,rgba(8,12,25,.95) 0 51%,transparent 52%),
+        conic-gradient(var(--dial-color,var(--gold)) calc(var(--value) * 1%),rgba(255,255,255,.09) 0);
+      border:1px solid rgba(255,255,255,.12);
       box-shadow:
-        0 1rem 2rem rgba(0,0,0,.32),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      position:relative;
-      z-index:2;
-    }
-
-    .dial span{
-      display:grid;
-      text-align:center;
-      gap:.1rem;
-      font-weight:950;
+        0 1rem 2rem rgba(0,0,0,.28),
+        inset 0 0 0 1px rgba(255,255,255,.05);
     }
 
     .dial strong{
       color:rgba(255,244,216,.98);
-      font-size:1.45rem;
-      letter-spacing:-.04em;
+      font-size:1.3rem;
+      font-weight:950;
     }
 
-    .dial small{
-      color:var(--muted);
-      font-size:.62rem;
-      letter-spacing:.11em;
+    .meter-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .state-pill{
+    .meter-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .status{
       width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:1.8rem;
+      padding:.35rem .62rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      padding:.35rem .55rem;
-      font-size:.66rem;
+      color:rgba(255,244,216,.94);
+      background:rgba(255,255,255,.045);
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.1em;
       text-transform:uppercase;
-      color:var(--muted);
-      background:rgba(255,255,255,.035);
     }
 
-    .state-pill.pass{
-      color:#06120d;
-      background:linear-gradient(135deg,#baffdf,var(--green));
-      border-color:rgba(143,245,210,.8);
-    }
+    .status.pass{border-color:rgba(143,240,198,.42);color:var(--green);background:rgba(143,240,198,.07)}
+    .status.hold{border-color:rgba(243,200,111,.42);color:var(--gold);background:rgba(243,200,111,.07)}
+    .status.fail{border-color:rgba(255,139,139,.42);color:var(--red);background:rgba(255,139,139,.07)}
 
-    .state-pill.hold{
-      color:#130d02;
-      background:linear-gradient(135deg,#ffe3a5,var(--amber));
-      border-color:rgba(255,207,122,.8);
-    }
-
-    .state-pill.fail{
-      color:#170506;
-      background:linear-gradient(135deg,#ffc1c1,var(--red));
-      border-color:rgba(255,123,123,.8);
-    }
-
-    .meter-list{
+    .bar-wrap{
       display:grid;
-      gap:.75rem;
+      gap:.45rem;
+      margin-top:.2rem;
     }
 
-    .meter{
-      display:grid;
-      gap:.38rem;
-    }
-
-    .meter-top{
+    .bar-label{
       display:flex;
       justify-content:space-between;
-      gap:.75rem;
-      color:rgba(255,244,216,.92);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      gap:1rem;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:850;
     }
 
     .bar{
       height:.72rem;
+      overflow:hidden;
       border:1px solid rgba(255,255,255,.12);
       border-radius:999px;
-      background:rgba(255,255,255,.06);
-      overflow:hidden;
+      background:rgba(255,255,255,.04);
     }
 
     .bar span{
       display:block;
+      width:calc(var(--value,0) * 1%);
       height:100%;
-      width:0%;
-      background:linear-gradient(90deg,var(--purple),var(--gold));
-      border-radius:inherit;
-      transition:width .35s ease;
+      border-radius:999px;
+      background:linear-gradient(90deg,rgba(143,101,255,.82),rgba(243,200,111,.92));
+      transition:width .28s ease;
     }
 
-    .balance-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .room-chip{
-      min-height:7rem;
-      display:grid;
-      gap:.45rem;
-      align-content:start;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.15rem;
-      background:rgba(255,255,255,.035);
-    }
-
-    .room-chip strong{
-      color:rgba(255,244,216,.96);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .room-chip span{
-      color:var(--muted);
-      font-size:.8rem;
-      line-height:1.35;
-    }
-
-    .room-chip.pass{border-color:rgba(143,245,210,.42)}
-    .room-chip.hold{border-color:rgba(255,207,122,.42)}
-    .room-chip.fail{border-color:rgba(255,123,123,.42)}
-
-    .finding-list{
+    .findings{
       display:grid;
       gap:.75rem;
     }
 
     .finding{
-      display:grid;
-      gap:.4rem;
-      padding:.9rem;
+      padding:1rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.1rem;
-      background:rgba(255,255,255,.035);
+      background:rgba(255,255,255,.032);
     }
 
     .finding strong{
-      color:rgba(255,244,216,.96);
-      font-size:.86rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
+      display:block;
+      color:rgba(255,244,216,.98);
+      margin-bottom:.2rem;
     }
 
     .finding span{
       color:var(--muted);
-      font-size:.9rem;
+      font-size:.94rem;
+      line-height:1.45;
     }
-
-    .finding.fail{border-color:rgba(255,123,123,.46)}
-    .finding.hold{border-color:rgba(255,207,122,.46)}
-    .finding.pass{border-color:rgba(143,245,210,.35)}
 
     .table-wrap{
       overflow:auto;
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.15rem;
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.026);
     }
 
     table{
       width:100%;
+      min-width:920px;
       border-collapse:collapse;
-      min-width:820px;
     }
 
-    th,td{
-      padding:.75rem;
+    th,
+    td{
+      padding:.8rem .75rem;
       border-bottom:1px solid rgba(255,255,255,.08);
       text-align:left;
       vertical-align:top;
-      font-size:.8rem;
+      font-size:.86rem;
     }
 
     th{
-      color:rgba(255,244,216,.92);
+      color:var(--gold);
       font-size:.68rem;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -606,9 +515,13 @@
       color:var(--muted);
     }
 
-    code{
-      color:rgba(255,244,216,.92);
-      font:700 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    td strong{
+      color:rgba(255,244,216,.96);
+    }
+
+    .mono{
+      font:700 .76rem/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      color:rgba(230,238,255,.72);
       overflow-wrap:anywhere;
     }
 
@@ -645,66 +558,26 @@
       font-size:.76rem;
     }
 
-    @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.38;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.70;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      body::after,
-      .hero::before{
-        animation:none!important;
-      }
-
-      .bar span{
-        transition:none!important;
-      }
-    }
-
-    @media (max-width:1100px){
-      .gauge-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .balance-grid{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-    }
-
     @media (max-width:980px){
       .topbar{
         grid-template-columns:1fr;
         align-items:start;
       }
 
-      .nav{
-        justify-content:flex-start;
+      .nav{justify-content:flex-start}
+
+      .gauge-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width:680px){
-      .shell{
-        width:min(100% - 22px,var(--max));
-      }
-
-      h1{
-        font-size:clamp(3rem,16vw,5rem);
-      }
-
-      .gauge-grid,
-      .balance-grid{
-        grid-template-columns:1fr;
-      }
-
-      .dial{
-        width:7.4rem;
-        height:7.4rem;
-      }
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
+      .hero{padding:1rem}
+      .gauge-grid{grid-template-columns:1fr}
+      .actions{display:grid}
+      button,.button{width:100%}
     }
   </style>
 </head>
@@ -715,10 +588,10 @@
   <div class="shell">
     <header class="topbar" aria-label="Gauges header">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>GA</span></span>
+        <span class="brand-mark"><span>G</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Gauges · Source Truth</strong>
+          <strong>Gauges</strong>
         </span>
       </a>
 
@@ -727,14 +600,12 @@
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/explore/">Manor</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/laws/">Laws</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
         <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Audralia</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/about-this-underdog/">Underdog</a>
         <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
@@ -743,111 +614,77 @@
 
     <main id="gauges-main">
       <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Gauges · Active Source Auditor</div>
+        <div class="kicker">Gauges · Served Source Authority</div>
         <h1 id="page-title">Measure the rooms. Name the next move.</h1>
-        <h2>Served source only. No iframe. No mutation.</h2>
-        <p>
-          These gauges fetch live HTML from the public routes, read expected signals, flag retired language, measure chamber availability, and rank the next highest-friction move.
+        <h2>Source-only. No iframe. No runtime mutation.</h2>
+
+        <p class="lead">
+          Gauges reads served HTML, checks current contracts, detects stale language, and ranks the next highest-friction target.
         </p>
 
         <div class="actions" aria-label="Audit controls">
-          <button class="button gold" type="button" data-run="site">Run Site Audit</button>
-          <button class="button" type="button" data-run="core">Run Core Audit</button>
-          <button class="button" type="button" data-run="frontier">Run Frontier Audit</button>
-          <button class="button" type="button" data-run="products">Run Products Audit</button>
+          <button class="gold" type="button" data-audit="site">Run Site Audit</button>
+          <button type="button" data-audit="core">Run Core Audit</button>
+          <button type="button" data-audit="summits">Run Nine Summits Audit</button>
+          <button type="button" data-audit="products">Run Products / Frontier Audit</button>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="active-title">
         <div class="kicker">Active gauges</div>
-        <h2 id="active-title">Current source read.</h2>
+        <h2 id="active-title">Current route contract reader.</h2>
 
         <div class="gauge-grid">
-          <article class="gauge-card">
-            <span class="state-pill hold" id="overallState">HOLD</span>
-            <div class="dial" id="overallDial">
-              <span><strong id="overallPct">0%</strong><small>Overall</small></span>
-            </div>
-            <h3>Overall Health</h3>
-            <p id="overallNote">Waiting for source checks.</p>
+          <article class="meter-card">
+            <div class="dial" data-dial="overall" style="--value:0"><strong>0%</strong></div>
+            <b>Overall Health</b>
+            <span data-copy="overall">Audit pending.</span>
+            <span class="status hold" data-status="overall">HOLD</span>
           </article>
 
-          <article class="gauge-card">
-            <span class="state-pill hold" id="routeState">HOLD</span>
-            <div class="dial" id="routeDial">
-              <span><strong id="routePct">0%</strong><small>Routes</small></span>
-            </div>
-            <h3>Route Integrity</h3>
-            <p id="routeNote">Served-route availability.</p>
+          <article class="meter-card">
+            <div class="dial" data-dial="routes" style="--value:0"><strong>0%</strong></div>
+            <b>Route Integrity</b>
+            <span data-copy="routes">Served-route availability.</span>
+            <span class="status hold" data-status="routes">HOLD</span>
           </article>
 
-          <article class="gauge-card">
-            <span class="state-pill hold" id="frontierState">HOLD</span>
-            <div class="dial" id="frontierDial">
-              <span><strong id="frontierPct">0%</strong><small>Frontier</small></span>
-            </div>
-            <h3>Frontier Lanes</h3>
-            <p id="frontierNote">Eleven-lane Frontier availability.</p>
+          <article class="meter-card">
+            <div class="dial" data-dial="alignment" style="--value:0"><strong>0%</strong></div>
+            <b>Baseline Alignment</b>
+            <span data-copy="alignment">Current-contract signal match.</span>
+            <span class="status hold" data-status="alignment">HOLD</span>
           </article>
 
-          <article class="gauge-card">
-            <span class="state-pill hold" id="productState">HOLD</span>
-            <div class="dial" id="productDial">
-              <span><strong id="productPct">0%</strong><small>Products</small></span>
-            </div>
-            <h3>Product Chambers</h3>
-            <p id="productNote">Five product chamber availability.</p>
+          <article class="meter-card">
+            <div class="dial" data-dial="retired" style="--value:0"><strong>0%</strong></div>
+            <b>Retired Language Cleanliness</b>
+            <span data-copy="retired">Stale-route and stale-term removal.</span>
+            <span class="status hold" data-status="retired">HOLD</span>
           </article>
         </div>
-      </section>
 
-      <section class="panel section" aria-labelledby="scales-title">
-        <div class="kicker">Scales</div>
-        <h2 id="scales-title">Baseline, source, friction, and retired-language reads.</h2>
-
-        <div class="meter-list">
-          <div class="meter">
-            <div class="meter-top"><span>Baseline Alignment</span><span id="alignmentText">0%</span></div>
-            <div class="bar"><span id="alignmentBar"></span></div>
-          </div>
-
-          <div class="meter">
-            <div class="meter-top"><span>Retired Language Cleanliness</span><span id="cleanText">0%</span></div>
-            <div class="bar"><span id="cleanBar"></span></div>
-          </div>
-
-          <div class="meter">
-            <div class="meter-top"><span>Source Readability</span><span id="sourceText">0%</span></div>
-            <div class="bar"><span id="sourceBar"></span></div>
-          </div>
-
-          <div class="meter">
-            <div class="meter-top"><span>Impact Priority Pressure</span><span id="frictionText">—</span></div>
-            <div class="bar"><span id="frictionBar"></span></div>
-          </div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>Source readability</span><strong data-scale="source">0%</strong></div>
+          <div class="bar" style="--value:0" data-bar="source"><span></span></div>
         </div>
-      </section>
 
-      <section class="panel section" aria-labelledby="balance-title">
-        <div class="kicker">Room balance</div>
-        <h2 id="balance-title">Major rooms and lanes.</h2>
-        <div class="balance-grid" id="roomBalance">
-          <div class="room-chip hold"><strong>Compass</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Nine Summits</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Products</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Frontier</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Underdog</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Meet Sean</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Showroom</strong><span>Audit pending.</span></div>
-          <div class="room-chip hold"><strong>Gauges</strong><span>Audit pending.</span></div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>Voice split integrity</span><strong data-scale="voice">0%</strong></div>
+          <div class="bar" style="--value:0" data-bar="voice"><span></span></div>
+        </div>
+
+        <div class="bar-wrap">
+          <div class="bar-label"><span>Impact pressure</span><strong data-scale="impact">—</strong></div>
+          <div class="bar" style="--value:0" data-bar="impact"><span></span></div>
         </div>
       </section>
 
       <section class="panel section" aria-labelledby="findings-title">
         <div class="kicker">Impact-ranked findings</div>
-        <h2 id="findings-title">Next move named from served evidence.</h2>
-        <div class="finding-list" id="findings">
-          <div class="finding hold">
+        <h2 id="findings-title">Next move pressure.</h2>
+        <div class="findings" id="findings">
+          <div class="finding">
             <strong>Audit pending.</strong>
             <span>Run an audit to activate the gauges, fill the scales, and name the next move.</span>
           </div>
@@ -856,22 +693,24 @@
 
       <section class="panel section" aria-labelledby="table-title">
         <div class="kicker">Source-check table</div>
-        <h2 id="table-title">Served HTML route evidence.</h2>
+        <h2 id="table-title">Served route truth.</h2>
+
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Group</th>
-                <th>Path</th>
-                <th>Status</th>
-                <th>Signals</th>
-                <th>Retired Terms</th>
+                <th>Route</th>
                 <th>Contract</th>
+                <th>Signals</th>
+                <th>Retired terms</th>
+                <th>Score</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody id="sourceRows">
               <tr>
-                <td colspan="6">Audit pending.</td>
+                <td colspan="7">Audit pending.</td>
               </tr>
             </tbody>
           </table>
@@ -880,567 +719,415 @@
 
       <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre>GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2
+        <pre id="receiptText">GAUGES_CURRENT_ROUTE_CONTRACT_READER_TNT_v2
 route=/gauges/
 page=gauges
 role=measurement_surface
-mode=active_source_truth_auditor
+mode=served_source_contract_reader
 source_fetch_only=true
 renders_iframe=false
 executes_target_files=false
 mutates_runtime=false
-heavy_runtime_loaded=false
-audit_reads=served_html,text_content,route_receipts,expected_signals,retired_language,availability
-current_split=about_this_underdog_universal,meet_sean_mansfield_personal
-frontier_lane_count=11
-product_chamber_count=5
-instruments=overall_health,baseline_alignment,route_integrity,retired_language,frontier_lanes,product_chambers,impact_priority,room_balance,source_table
-retired_language_watch=Demo Universe,Earth G1,Planet 1,Sun G1,Moon G1,Vision Remote
+mutates_target_routes=false
+checks=current_contracts,current_routes,stale_language,voice_split,source_readability,next_move_pressure
+current_contracts_checked=nine_summits_v5,nine_summits_of_love_v2,about_this_underdog_v2,meet_sean_v3
+stale_route_removed=/this-underdog/
 visual_pass_claimed=false
 audit_status=READY</pre>
       </details>
     </main>
 
     <footer>
-      GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2 · Gauges · Active Source Truth Auditor.
+      GAUGES_CURRENT_ROUTE_CONTRACT_READER_TNT_v2 · Gauges · Served Source Contract Reader.
     </footer>
   </div>
 
   <script>
     (() => {
-      const cacheBust = () => `_gauge=${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      "use strict";
 
-      const retiredTerms = [
-        "Demo Universe",
-        "Earth G1",
-        "Planet 1",
-        "Sun G1",
-        "Moon G1",
-        "Vision Remote"
-      ];
+      const CURRENT_CONTRACT = "GAUGES_CURRENT_ROUTE_CONTRACT_READER_TNT_v2";
 
-      const routes = [
+      const ROUTES = [
         {
-          group:"Core",
-          label:"Compass",
-          path:"/",
-          signals:["Diamond Gate Bridge","Compass","Underdog","Nine Summits","Products"]
+          group: "Core",
+          label: "Compass",
+          path: "/",
+          contracts: ["COMPASS_ANIMATED_PURPLE_DIAMOND_COMMAND_RESTORE_TNT_v1"],
+          required: ["Diamond Gate Bridge", "Compass"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Door",
-          path:"/door/",
-          signals:["Door","Threshold","Diamond Gate Bridge"]
+          group: "Core",
+          label: "Door",
+          path: "/door/",
+          contracts: ["DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_TNT_v2", "DOOR_16_POINT_FOREGROUND_CORE_FIELD_TNT_v1"],
+          required: ["Door", "Entry Threshold"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Home",
-          path:"/home/",
-          signals:["Home","Diamond Gate Bridge"]
+          group: "Core",
+          label: "Home",
+          path: "/home/",
+          contracts: ["HOME_PUBLIC_PARITY_RECEIVER_GATE_TNT_v1"],
+          required: ["Home", "Estate Receiver"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Manor",
-          path:"/explore/",
-          signals:["Manor","Diamond Gate Bridge"]
+          group: "Core",
+          label: "Manor",
+          path: "/explore/",
+          contracts: ["MANOR_16_POINT_DIAMOND_ROUTE_FIELD_TNT_v1"],
+          required: ["Manor", "Sixteen rooms"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Laws",
-          path:"/laws/",
-          signals:["Laws","Diamond Gate Bridge"]
+          group: "Nine Summits",
+          label: "Nine Summits",
+          path: "/nine-summits/",
+          contracts: ["NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5"],
+          required: ["Book Lane", "Universe Lane", "Audralia", "Voice Lane", "/about-this-underdog/", "/meet-sean-mansfield/"],
+          retired: ["/this-underdog/", "old_this_underdog_personal_merge", "vertical_stack"]
         },
         {
-          group:"Core",
-          label:"Nine Summits",
-          path:"/nine-summits/",
-          signals:["Nine Summits","Book","Universe","Audralia","Meet Sean"]
+          group: "Nine Summits",
+          label: "Book",
+          path: "/nine-summits-of-love/",
+          contracts: ["NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2"],
+          required: ["The locked heart is not the ending", "/assets/nine-summits-love-preface-cover.png", "/assets/nine-summits-love-hero.png", "/about-this-underdog/", "/meet-sean-mansfield/"],
+          retired: ["/this-underdog/", "legacy-universe-lane", "metaverse"]
         },
         {
-          group:"Core",
-          label:"Book",
-          path:"/nine-summits-of-love/",
-          signals:["Nine Summits","Love"]
+          group: "Nine Summits",
+          label: "Universe",
+          path: "/nine-summits/universe/",
+          contracts: ["NINE_SUMMITS", "UNIVERSE"],
+          required: ["Universe", "Nine Summits"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Universe",
-          path:"/nine-summits/universe/",
-          signals:["Universe","Nine Summits"]
+          group: "Voice",
+          label: "About This Underdog",
+          path: "/about-this-underdog/",
+          contracts: ["ABOUT_THIS_UNDERDOG_TED_STYLE_RUSSIAN_DOLL_UNIVERSAL_LANE_TNT_v2"],
+          required: ["The underdog is not the weak part", "Universal underdog lane", "/meet-sean-mansfield/"],
+          retired: ["/this-underdog/", "Sean Mansfield profile lane", "photo_expected=true"]
         },
         {
-          group:"Core",
-          label:"Showroom",
-          path:"/showroom/",
-          signals:["Showroom","Diamond Gate Bridge"]
+          group: "Voice",
+          label: "Meet Sean",
+          path: "/meet-sean-mansfield/",
+          contracts: ["MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"],
+          required: ["Meet Sean Mansfield", "/about-this-underdog/sean-mansfield.jpg", "/about-this-underdog/"],
+          retired: ["/this-underdog/", "universal underdog lane only"]
         },
         {
-          group:"Core",
-          label:"Audralia",
-          path:"/showroom/globe/",
-          signals:["Audralia"]
+          group: "Products",
+          label: "Products",
+          path: "/products/",
+          contracts: ["PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_TNT_v1"],
+          required: ["Products", "Product Wing"],
+          retired: ["/this-underdog/", "Planet 1", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"About This Underdog",
-          path:"/about-this-underdog/",
-          signals:["About This Underdog","underdog","pressure","accountability","redirection"]
+          group: "Frontier",
+          label: "Frontier",
+          path: "/frontier/",
+          contracts: ["FRONTIER_11_LANE_EDGE_FIELD_VISION_MERGE_TNT_v1", "FRONTIER"],
+          required: ["Frontier", "Eleven", "Vision"],
+          retired: ["Vision Remote", "/this-underdog/", "Twelve lanes"]
         },
         {
-          group:"Core",
-          label:"Meet Sean Mansfield",
-          path:"/meet-sean-mansfield/",
-          signals:["Meet Sean Mansfield","Sean Mansfield","sean-mansfield.jpg","personal profile"]
+          group: "Showroom",
+          label: "Showroom",
+          path: "/showroom/",
+          contracts: ["SHOWROOM", "AUDRALIA"],
+          required: ["Showroom"],
+          retired: ["/this-underdog/", "Demo Universe", "Earth G1"]
         },
         {
-          group:"Core",
-          label:"Gauges",
-          path:"/gauges/",
-          signals:["Gauges","GAUGES_SOURCE_TRUTH_ACTIVE_SITE_AUDITOR_TNT_v2","Source Truth"]
-        },
-
-        {
-          group:"Products",
-          label:"Products",
-          path:"/products/",
-          signals:["Products","ARCHCOIN","Five Flags","On Your Side AAI","Education","Nutrition"]
-        },
-        {
-          group:"Products",
-          label:"ARCHCOIN",
-          path:"/products/archcoin/",
-          signals:["ARCHCOIN","Products"]
-        },
-        {
-          group:"Products",
-          label:"Five Flags",
-          path:"/products/five-flags/",
-          signals:["Five Flags","Products"]
-        },
-        {
-          group:"Products",
-          label:"On Your Side AAI",
-          path:"/products/on-your-side-ai/",
-          signals:["On Your Side AAI","AAI","Products"]
-        },
-        {
-          group:"Products",
-          label:"Education",
-          path:"/products/education/",
-          signals:["Education","Products"]
-        },
-        {
-          group:"Products",
-          label:"Nutrition",
-          path:"/products/nutrition/",
-          signals:["Nutrition","Products"]
-        },
-
-        {
-          group:"Frontier",
-          label:"Frontier Root",
-          path:"/frontier/",
-          signals:["Frontier","Eleven","Vision","Water","Waste"]
-        },
-        {
-          group:"Frontier",
-          label:"Closed Loop",
-          path:"/explore/frontier/closed-loop/",
-          signals:["Closed Loop","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Energy",
-          path:"/explore/frontier/energy/",
-          signals:["Energy","Power","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Infrastructure",
-          path:"/explore/frontier/infrastructure/",
-          signals:["Infrastructure","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Lattice",
-          path:"/explore/frontier/lattice/",
-          signals:["Lattice","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Manual",
-          path:"/explore/frontier/manual/",
-          signals:["Manual","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Shimmer",
-          path:"/explore/frontier/shimmer/",
-          signals:["Shimmer","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Trajectory",
-          path:"/explore/frontier/trajectory/",
-          signals:["Trajectory","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Urban",
-          path:"/explore/frontier/urban/",
-          signals:["Urban","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Vision",
-          path:"/explore/frontier/vision/",
-          signals:["Vision","Future","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Waste",
-          path:"/explore/frontier/waste/",
-          signals:["Waste","Frontier"]
-        },
-        {
-          group:"Frontier",
-          label:"Water",
-          path:"/explore/frontier/water/",
-          signals:["Water","Frontier"]
+          group: "Core",
+          label: "Gauges",
+          path: "/gauges/",
+          contracts: [CURRENT_CONTRACT],
+          required: ["Gauges", "Served Source Authority", CURRENT_CONTRACT],
+          retired: ["PLANET_1_ACTIVE_CHAIN_AUDIT_BUTTON_BINDING_REPAIR_TNT_v1", "/this-underdog/"]
         }
       ];
 
-      const selectors = {
-        overallDial: document.getElementById("overallDial"),
-        overallPct: document.getElementById("overallPct"),
-        overallState: document.getElementById("overallState"),
-        overallNote: document.getElementById("overallNote"),
-        routeDial: document.getElementById("routeDial"),
-        routePct: document.getElementById("routePct"),
-        routeState: document.getElementById("routeState"),
-        routeNote: document.getElementById("routeNote"),
-        frontierDial: document.getElementById("frontierDial"),
-        frontierPct: document.getElementById("frontierPct"),
-        frontierState: document.getElementById("frontierState"),
-        frontierNote: document.getElementById("frontierNote"),
-        productDial: document.getElementById("productDial"),
-        productPct: document.getElementById("productPct"),
-        productState: document.getElementById("productState"),
-        productNote: document.getElementById("productNote"),
-        alignmentText: document.getElementById("alignmentText"),
-        alignmentBar: document.getElementById("alignmentBar"),
-        cleanText: document.getElementById("cleanText"),
-        cleanBar: document.getElementById("cleanBar"),
-        sourceText: document.getElementById("sourceText"),
-        sourceBar: document.getElementById("sourceBar"),
-        frictionText: document.getElementById("frictionText"),
-        frictionBar: document.getElementById("frictionBar"),
-        roomBalance: document.getElementById("roomBalance"),
-        findings: document.getElementById("findings"),
-        sourceRows: document.getElementById("sourceRows")
+      const AUDIT_SETS = {
+        site: ROUTES,
+        core: ROUTES.filter(route => route.group === "Core"),
+        summits: ROUTES.filter(route => ["Nine Summits", "Voice"].includes(route.group)),
+        products: ROUTES.filter(route => ["Products", "Frontier", "Showroom"].includes(route.group))
       };
 
+      const $ = selector => document.querySelector(selector);
+      const $$ = selector => Array.from(document.querySelectorAll(selector));
+
       function pct(n){
-        if(!Number.isFinite(n)) return 0;
         return Math.max(0, Math.min(100, Math.round(n)));
       }
 
-      function stateFor(score){
-        if(score >= 88) return "pass";
-        if(score >= 66) return "hold";
+      function state(score){
+        if(score >= 85) return "pass";
+        if(score >= 60) return "hold";
         return "fail";
       }
 
-      function colorFor(state){
-        if(state === "pass") return "var(--green)";
-        if(state === "hold") return "var(--amber)";
-        return "var(--red)";
+      function setDial(name, value){
+        const dial = document.querySelector(`[data-dial="${name}"]`);
+        if(!dial) return;
+        const clean = pct(value);
+        dial.style.setProperty("--value", String(clean));
+        dial.style.setProperty("--dial-color", clean >= 85 ? "var(--green)" : clean >= 60 ? "var(--gold)" : "var(--red)");
+        const label = dial.querySelector("strong");
+        if(label) label.textContent = `${clean}%`;
       }
 
-      function setStatePill(el, state){
-        el.className = `state-pill ${state}`;
-        el.textContent = state.toUpperCase();
+      function setStatus(name, score){
+        const el = document.querySelector(`[data-status="${name}"]`);
+        if(!el) return;
+        const s = state(score);
+        el.className = `status ${s}`;
+        el.textContent = s.toUpperCase();
       }
 
-      function setDial(dial, pctEl, stateEl, score){
-        const s = pct(score);
-        const state = stateFor(s);
-        dial.style.setProperty("--score", s);
-        dial.style.setProperty("--dialColor", colorFor(state));
-        pctEl.textContent = `${s}%`;
-        setStatePill(stateEl, state);
+      function setCopy(name, text){
+        const el = document.querySelector(`[data-copy="${name}"]`);
+        if(el) el.textContent = text;
       }
 
-      function setBar(bar, text, score, suffix="%"){
-        const s = pct(score);
-        bar.style.width = `${s}%`;
-        text.textContent = suffix === "%" ? `${s}%` : String(score);
+      function setBar(name, value, label){
+        const clean = pct(value);
+        const bar = document.querySelector(`[data-bar="${name}"]`);
+        const scale = document.querySelector(`[data-scale="${name}"]`);
+        if(bar) bar.style.setProperty("--value", String(clean));
+        if(scale) scale.textContent = label || `${clean}%`;
       }
 
-      function normalize(text){
-        return String(text || "").replace(/\s+/g," ").trim();
+      function includesAny(text, terms){
+        return terms.filter(term => text.includes(term));
       }
 
-      function getVisibleText(html){
-        try{
-          const doc = new DOMParser().parseFromString(html, "text/html");
-          doc.querySelectorAll("script,style,noscript").forEach(el => el.remove());
-          return normalize(doc.body ? doc.body.textContent : html);
-        }catch{
-          return normalize(html);
-        }
-      }
-
-      function extractContract(html){
-        const matches = String(html || "").match(/[A-Z0-9]+(?:_[A-Z0-9]+){3,}_TNT_v[0-9A-Z]+/g);
-        if(matches && matches.length) return matches[matches.length - 1];
-        const fallback = String(html || "").match(/[A-Z0-9_]{12,}/g);
-        return fallback ? fallback.slice(-1)[0] : "—";
+      function countSignals(text, terms){
+        const found = terms.filter(term => text.includes(term));
+        return { found, missing: terms.filter(term => !text.includes(term)) };
       }
 
       async function readRoute(route){
-        const started = performance.now();
-        const url = `${route.path}${route.path.includes("?") ? "&" : "?"}${cacheBust()}`;
-
+        const url = `${route.path}${route.path.includes("?") ? "&" : "?"}_gauges_contract_reader_v2=${Date.now()}`;
         try{
-          const response = await fetch(url, {
-            method:"GET",
-            cache:"no-store",
-            credentials:"same-origin",
-            headers:{"Accept":"text/html,application/xhtml+xml"}
-          });
-
+          const response = await fetch(url, { cache: "no-store", credentials: "same-origin" });
           const html = await response.text();
-          const text = getVisibleText(html);
-          const readable = response.ok && text.length > 120;
-          const foundSignals = route.signals.filter(signal => text.includes(signal) || html.includes(signal));
-          const missingSignals = route.signals.filter(signal => !foundSignals.includes(signal));
-          const retiredFound = retiredTerms.filter(term => text.includes(term) || html.includes(term));
-          const signalScore = route.signals.length ? (foundSignals.length / route.signals.length) * 100 : 100;
-          const clean = retiredFound.length === 0;
-          const status = !readable ? "fail" : retiredFound.length ? "hold" : signalScore >= 67 ? "pass" : "hold";
+          const contracts = includesAny(html, route.contracts);
+          const required = countSignals(html, route.required);
+          const retiredHits = includesAny(html, route.retired);
+          const servedScore = response.ok ? 30 : 0;
+          const signalScore = route.required.length ? (required.found.length / route.required.length) * 40 : 40;
+          const contractScore = contracts.length ? 20 : 0;
+          const cleanScore = retiredHits.length ? Math.max(0, 10 - retiredHits.length * 5) : 10;
+          const score = pct(servedScore + signalScore + contractScore + cleanScore);
 
           return {
             ...route,
             ok: response.ok,
             statusCode: response.status,
-            readable,
-            textLength: text.length,
-            foundSignals,
-            missingSignals,
-            retiredFound,
-            signalScore,
-            clean,
-            status,
-            contract: extractContract(html),
-            elapsed: Math.round(performance.now() - started)
+            size: html.length,
+            contracts,
+            found: required.found,
+            missing: required.missing,
+            retiredHits,
+            score,
+            state: state(score)
           };
         }catch(error){
           return {
             ...route,
-            ok:false,
-            statusCode:"ERR",
-            readable:false,
-            textLength:0,
-            foundSignals:[],
-            missingSignals:route.signals.slice(),
-            retiredFound:[],
-            signalScore:0,
-            clean:true,
-            status:"fail",
-            contract:"—",
-            elapsed:Math.round(performance.now() - started),
-            error:String(error && error.message ? error.message : error)
+            ok: false,
+            statusCode: "ERR",
+            size: 0,
+            contracts: [],
+            found: [],
+            missing: route.required,
+            retiredHits: [],
+            score: 0,
+            state: "fail",
+            error: String(error && error.message ? error.message : error)
           };
         }
       }
 
-      function filterRoutes(mode){
-        if(mode === "core") return routes.filter(r => r.group === "Core");
-        if(mode === "frontier") return routes.filter(r => r.group === "Frontier");
-        if(mode === "products") return routes.filter(r => r.group === "Products");
-        return routes.slice();
+      function renderRows(results){
+        const body = $("#sourceRows");
+        if(!body) return;
+
+        body.innerHTML = results.map(result => {
+          const contractText = result.contracts.length ? result.contracts.join(", ") : "Missing current contract";
+          const signalText = result.missing.length
+            ? `Found ${result.found.length}/${result.required.length}; missing: ${result.missing.join(", ")}`
+            : `Found ${result.found.length}/${result.required.length}`;
+          const retiredText = result.retiredHits.length ? result.retiredHits.join(", ") : "Clean";
+          return `
+            <tr>
+              <td><strong>${escapeHtml(result.group)}</strong></td>
+              <td><a href="${escapeAttr(result.path)}">${escapeHtml(result.label)}</a><br><span class="mono">${escapeHtml(result.path)}</span></td>
+              <td class="mono">${escapeHtml(contractText)}</td>
+              <td>${escapeHtml(signalText)}</td>
+              <td>${escapeHtml(retiredText)}</td>
+              <td><strong>${result.score}%</strong></td>
+              <td><span class="status ${result.state}">${result.state.toUpperCase()}</span></td>
+            </tr>
+          `;
+        }).join("");
       }
 
-      function average(items, fn){
-        if(!items.length) return 0;
-        return items.reduce((sum, item) => sum + fn(item), 0) / items.length;
-      }
+      function renderFindings(results){
+        const findings = $("#findings");
+        if(!findings) return;
 
-      function summarize(results){
-        const sourceScore = average(results, r => r.readable ? 100 : 0);
-        const alignmentScore = average(results, r => r.signalScore);
-        const cleanScore = average(results, r => r.clean ? 100 : 0);
-        const routeScore = average(results.filter(r => r.group === "Core"), r => r.readable ? 100 : 0);
-        const frontierRoutes = results.filter(r => r.group === "Frontier");
-        const productRoutes = results.filter(r => r.group === "Products");
-        const frontierScore = frontierRoutes.length ? average(frontierRoutes, r => r.readable && r.status !== "fail" ? 100 : 0) : 0;
-        const productScore = productRoutes.length ? average(productRoutes, r => r.readable && r.status !== "fail" ? 100 : 0) : 0;
-        const retiredPressure = results.reduce((sum, r) => sum + r.retiredFound.length, 0);
-        const friction = Math.min(100, results.filter(r => r.status === "fail").length * 22 + results.filter(r => r.status === "hold").length * 9 + retiredPressure * 12);
+        const ranked = [...results].sort((a,b) => a.score - b.score);
+        const worst = ranked.slice(0, 5);
 
-        const overall = pct(
-          sourceScore * .26 +
-          alignmentScore * .24 +
-          cleanScore * .18 +
-          (routeScore || sourceScore) * .12 +
-          (frontierScore || sourceScore) * .10 +
-          (productScore || sourceScore) * .10
-        );
-
-        return {
-          sourceScore:pct(sourceScore),
-          alignmentScore:pct(alignmentScore),
-          cleanScore:pct(cleanScore),
-          routeScore:pct(routeScore || sourceScore),
-          frontierScore:pct(frontierScore || (frontierRoutes.length ? 0 : sourceScore)),
-          productScore:pct(productScore || (productRoutes.length ? 0 : sourceScore)),
-          friction:pct(friction),
-          overall
-        };
-      }
-
-      function buildFindings(results){
-        const findings = [];
-
-        results.forEach(r => {
-          if(!r.readable){
-            findings.push({
-              severity:100,
-              state:"fail",
-              title:`${r.label} did not serve readable HTML.`,
-              detail:`${r.path} returned ${r.statusCode}. This is the highest-priority route fault.`
-            });
-          }
-
-          if(r.retiredFound.length){
-            findings.push({
-              severity:84,
-              state:"hold",
-              title:`${r.label} contains retired language.`,
-              detail:`${r.path} contains: ${r.retiredFound.join(", ")}.`
-            });
-          }
-
-          if(r.readable && r.missingSignals.length){
-            findings.push({
-              severity:42 + r.missingSignals.length * 4,
-              state:"hold",
-              title:`${r.label} is missing expected current signals.`,
-              detail:`${r.path} missing: ${r.missingSignals.join(", ")}.`
-            });
-          }
-        });
-
-        if(!findings.length){
-          findings.push({
-            severity:0,
-            state:"pass",
-            title:"No blocking source friction found.",
-            detail:"Checked routes served readable HTML, expected signals were present, and retired-language watch terms were clean."
-          });
+        if(!worst.length){
+          findings.innerHTML = `
+            <div class="finding">
+              <strong>No routes checked.</strong>
+              <span>Run an audit to generate findings.</span>
+            </div>
+          `;
+          return;
         }
 
-        return findings.sort((a,b) => b.severity - a.severity).slice(0,8);
-      }
+        findings.innerHTML = worst.map((result, index) => {
+          const reason = result.retiredHits.length
+            ? `Retired language detected: ${result.retiredHits.join(", ")}.`
+            : result.missing.length
+              ? `Missing expected signal(s): ${result.missing.join(", ")}.`
+              : result.contracts.length
+                ? "Readable with current signals present."
+                : "Current contract not found in served source.";
 
-      function renderBalance(results){
-        const rooms = [
-          ["Compass","/"],
-          ["Nine Summits","/nine-summits/"],
-          ["Products","/products/"],
-          ["Frontier","/frontier/"],
-          ["Underdog","/about-this-underdog/"],
-          ["Meet Sean","/meet-sean-mansfield/"],
-          ["Showroom","/showroom/"],
-          ["Gauges","/gauges/"]
-        ];
-
-        selectors.roomBalance.innerHTML = rooms.map(([label,path]) => {
-          const r = results.find(item => item.path === path);
-          if(!r){
-            return `<div class="room-chip hold"><strong>${label}</strong><span>Not included in this audit mode.</span></div>`;
-          }
-          const state = r.status;
-          const found = r.foundSignals.length;
-          const total = r.signals.length;
-          return `<div class="room-chip ${state}"><strong>${label}</strong><span>${state.toUpperCase()} · ${found}/${total} signals · ${r.statusCode}</span></div>`;
+          return `
+            <div class="finding">
+              <strong>${index + 1}. ${escapeHtml(result.label)} · ${result.score}% · ${result.state.toUpperCase()}</strong>
+              <span>${escapeHtml(reason)}</span>
+            </div>
+          `;
         }).join("");
       }
 
-      function renderFindings(findings){
-        selectors.findings.innerHTML = findings.map(f => {
-          return `<div class="finding ${f.state}"><strong>${f.title}</strong><span>${f.detail}</span></div>`;
-        }).join("");
+      function renderReceipt(results, mode){
+        const receipt = $("#receiptText");
+        if(!receipt) return;
+
+        const checked = results.map(result => `${result.path}:${result.score}:${result.state}`).join(" | ");
+        const failures = results
+          .filter(result => result.state !== "pass")
+          .map(result => `${result.path}[missing=${result.missing.join(";") || "none"} retired=${result.retiredHits.join(";") || "none"}]`)
+          .join(" | ");
+
+        receipt.textContent = `${CURRENT_CONTRACT}
+route=/gauges/
+page=gauges
+role=measurement_surface
+mode=served_source_contract_reader
+audit_mode=${mode}
+source_fetch_only=true
+renders_iframe=false
+executes_target_files=false
+mutates_runtime=false
+mutates_target_routes=false
+checked_at=${new Date().toISOString()}
+routes_checked=${results.length}
+route_scores=${checked || "none"}
+non_pass_findings=${failures || "none"}
+current_contracts_checked=nine_summits_v5,nine_summits_of_love_v2,about_this_underdog_v2,meet_sean_v3
+stale_route_removed=/this-underdog/
+visual_pass_claimed=false
+audit_status=COMPLETE`;
       }
 
-      function renderRows(results){
-        selectors.sourceRows.innerHTML = results.map(r => {
-          const signalText = `${r.foundSignals.length}/${r.signals.length} found${r.missingSignals.length ? " · missing " + r.missingSignals.join(", ") : ""}`;
-          const retiredText = r.retiredFound.length ? r.retiredFound.join(", ") : "Clean";
-          return `<tr>
-            <td>${r.group}</td>
-            <td><code>${r.path}</code><br>${r.label}</td>
-            <td>${r.status.toUpperCase()} · ${r.statusCode}<br>${r.elapsed}ms</td>
-            <td>${signalText}</td>
-            <td>${retiredText}</td>
-            <td><code>${r.contract}</code></td>
-          </tr>`;
-        }).join("");
+      function renderSummary(results, mode){
+        const total = results.length || 1;
+        const overall = results.reduce((sum, result) => sum + result.score, 0) / total;
+        const routes = results.reduce((sum, result) => sum + (result.ok ? 100 : 0), 0) / total;
+        const alignment = results.reduce((sum, result) => sum + (result.contracts.length ? 100 : 0), 0) / total;
+        const retired = results.reduce((sum, result) => sum + (result.retiredHits.length ? 0 : 100), 0) / total;
+        const source = results.reduce((sum, result) => sum + (result.size > 200 ? 100 : 0), 0) / total;
+
+        const voiceRoutes = results.filter(result => ["/about-this-underdog/", "/meet-sean-mansfield/", "/nine-summits/"].includes(result.path));
+        const voice = voiceRoutes.length
+          ? voiceRoutes.reduce((sum, result) => sum + result.score, 0) / voiceRoutes.length
+          : 0;
+
+        const worst = Math.min(...results.map(result => result.score));
+        const impact = results.length ? pct(100 - worst) : 0;
+
+        setDial("overall", overall);
+        setDial("routes", routes);
+        setDial("alignment", alignment);
+        setDial("retired", retired);
+
+        setStatus("overall", overall);
+        setStatus("routes", routes);
+        setStatus("alignment", alignment);
+        setStatus("retired", retired);
+
+        setCopy("overall", `Audit mode: ${mode}. Average score across ${results.length} route(s).`);
+        setCopy("routes", `${results.filter(result => result.ok).length}/${results.length} served readable responses.`);
+        setCopy("alignment", `${results.filter(result => result.contracts.length).length}/${results.length} current contract matches.`);
+        setCopy("retired", `${results.filter(result => !result.retiredHits.length).length}/${results.length} clean from retired language.`);
+
+        setBar("source", source);
+        setBar("voice", voice);
+        setBar("impact", impact, impact ? `${impact}% friction` : "—");
       }
 
-      function renderSummary(results, summary){
-        setDial(selectors.overallDial, selectors.overallPct, selectors.overallState, summary.overall);
-        setDial(selectors.routeDial, selectors.routePct, selectors.routeState, summary.routeScore);
-        setDial(selectors.frontierDial, selectors.frontierPct, selectors.frontierState, summary.frontierScore);
-        setDial(selectors.productDial, selectors.productPct, selectors.productState, summary.productScore);
-
-        selectors.overallNote.textContent = `${results.length} routes checked. ${results.filter(r => r.status === "fail").length} fail, ${results.filter(r => r.status === "hold").length} hold, ${results.filter(r => r.status === "pass").length} pass.`;
-        selectors.routeNote.textContent = "Core route availability and source readability.";
-        selectors.frontierNote.textContent = "Eleven-lane Frontier set plus Frontier root.";
-        selectors.productNote.textContent = "Product wing plus five product chambers.";
-
-        setBar(selectors.alignmentBar, selectors.alignmentText, summary.alignmentScore);
-        setBar(selectors.cleanBar, selectors.cleanText, summary.cleanScore);
-        setBar(selectors.sourceBar, selectors.sourceText, summary.sourceScore);
-        setBar(selectors.frictionBar, selectors.frictionText, summary.friction);
-      }
-
-      async function runAudit(mode="site"){
-        document.querySelectorAll("[data-run]").forEach(button => {
-          button.disabled = true;
-          button.textContent = button.dataset.run === mode ? "Running..." : button.textContent;
+      function setBusy(isBusy){
+        $$("button[data-audit]").forEach(button => {
+          button.disabled = isBusy;
         });
-
-        selectors.findings.innerHTML = `<div class="finding hold"><strong>Audit running.</strong><span>Fetching served source only. No iframe, no eval, no mutation.</span></div>`;
-        selectors.sourceRows.innerHTML = `<tr><td colspan="6">Audit running.</td></tr>`;
-
-        const selected = filterRoutes(mode);
-        const results = await Promise.all(selected.map(readRoute));
-        const summary = summarize(results);
-        const findings = buildFindings(results);
-
-        renderSummary(results, summary);
-        renderBalance(results);
-        renderFindings(findings);
-        renderRows(results);
-
-        document.querySelectorAll("[data-run]").forEach(button => {
-          button.disabled = false;
-        });
-
-        document.querySelector('[data-run="site"]').textContent = "Run Site Audit";
-        document.querySelector('[data-run="core"]').textContent = "Run Core Audit";
-        document.querySelector('[data-run="frontier"]').textContent = "Run Frontier Audit";
-        document.querySelector('[data-run="products"]').textContent = "Run Products Audit";
       }
 
-      document.querySelectorAll("[data-run]").forEach(button => {
-        button.addEventListener("click", () => runAudit(button.dataset.run));
-      });
+      async function runAudit(mode){
+        const routes = AUDIT_SETS[mode] || AUDIT_SETS.site;
+        setBusy(true);
 
-      window.addEventListener("load", () => {
-        window.setTimeout(() => runAudit("site"), 400);
+        $("#findings").innerHTML = `
+          <div class="finding">
+            <strong>Audit running.</strong>
+            <span>Fetching served HTML only. No iframe. No target script execution. No runtime mutation.</span>
+          </div>
+        `;
+
+        const results = [];
+        for(const route of routes){
+          results.push(await readRoute(route));
+          renderRows(results);
+          renderFindings(results);
+          renderSummary(results, mode);
+          renderReceipt(results, mode);
+        }
+
+        setBusy(false);
+      }
+
+      function escapeHtml(value){
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function escapeAttr(value){
+        return escapeHtml(value);
+      }
+
+      $$("button[data-audit]").forEach(button => {
+        button.addEventListener("click", () => runAudit(button.dataset.audit || "site"));
       });
     })();
   </script>

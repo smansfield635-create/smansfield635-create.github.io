@@ -3,8 +3,8 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G1-V2"
-  data-contract="DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_TNT_v2"
+  data-version="G1-V2.1"
+  data-contract="DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1"
   data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
   data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
   data-status="active"
@@ -240,6 +240,11 @@
       opacity:.52;
     }
 
+    @keyframes backgroundAnchorPulse{
+      0%,100%{opacity:.42;filter:brightness(.95)}
+      50%{opacity:.58;filter:brightness(1.1)}
+    }
+
     .kicker{
       width:fit-content;
       display:inline-flex;
@@ -443,30 +448,27 @@
       line-height:1.4;
     }
 
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
     .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.035);
-    }
-
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
     }
 
     footer{
@@ -803,9 +805,8 @@
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_TNT_v2
+      <template id="route-receipt" data-route-receipt>
+DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1
 route=/door/
 page=door
 role=entry_threshold
@@ -825,8 +826,10 @@ animation=diamondOrbitClockwise,diamondCounterRead,diamondHoverLift,backgroundAn
 z_index_law=ambient_background,door_anchor_background,orbit_field,route_diamonds,route_labels
 non_overlap_law=no_clickable_diamond_hidden_by_center
 mobile_law=compact_field_no_four_massive_diamond_vertical_crop_no_hidden_nodes
-upgraded=shared_css_link,current_contract_stamp,universal_diamond_orbit_standard,current_routes,underdog_meet_sean_split
-preserved=animated_threshold_field,dimensional_diamonds,one_message_many_rooms,foreground_core
+fix=visible_route_receipt_hidden_from_public_flow
+upgraded=receipt_containment_only
+preserved=animated_threshold_field,dimensional_diamonds,one_message_many_rooms,foreground_core,shared_css_link,current_contract_stamp,universal_diamond_orbit_standard,current_routes,underdog_meet_sean_split
+removed=visible_route_receipt,public_metadata_column,debug_text_page_flow
 route_owns=entry_threshold,16_point_field,foreground_core,animated_diamond_routes,route_selection_surface
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
@@ -836,12 +839,12 @@ gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_TNT_v2 · Door · Shared Diamond Orbit · Contract Stamp Aligned.
+      DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1 · Door · Shared Diamond Orbit · Receipt contained.
     </footer>
   </div>
 </body>

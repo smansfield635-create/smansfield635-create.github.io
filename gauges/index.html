@@ -1,1290 +1,1209 @@
 <!doctype html>
-<html
-  lang="en"
-  data-route="/gauges/"
-  data-page="gauges"
-  data-version="G3-V4"
-  data-contract="GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4"
-  data-previous-contract="GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3"
-  data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
-  data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
-  data-status="active"
-  data-role="measurement-surface"
-  data-mode="served-source-contract-reader"
-  data-source-fetch-only="true"
-  data-renders-iframe="false"
-  data-executes-target-files="false"
-  data-mutates-runtime="false"
-  data-mutates-target-routes="false"
-  data-heavy-runtime-loaded="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Gauges · Diamond Gate Bridge</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050814" />
+
+  <title>Gauges · Audralia Render Expression Audit</title>
   <meta
     name="description"
-    content="Gauges is the served-source contract reader for Diamond Gate Bridge. It fetches route HTML, checks contract alignment, detects retired language, and names the next move without mutating target routes."
-  >
-
-  <link rel="stylesheet" href="/assets/diamond-orbit.css">
+    content="Dedicated Audralia render-expression diagnostic for the Diamond Gate Bridge Showroom Globe route."
+  />
 
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --faint:rgba(230,238,255,.48);
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --green:#8ff0c6;
-      --red:#ff8b8b;
-      --purple:#8f65ff;
-      --blue:#8dd8ff;
-      --panel:rgba(9,15,31,.86);
-      --line:rgba(184,205,255,.18);
-      --shadow:0 32px 110px rgba(0,0,0,.46);
-      --max:1180px;
+    :root {
+      color-scheme: dark;
+      --bg: #030711;
+      --panel: rgba(16, 22, 40, 0.84);
+      --panel2: rgba(25, 34, 58, 0.78);
+      --line: rgba(255, 255, 255, 0.13);
+      --line2: rgba(255, 255, 255, 0.23);
+      --text: rgba(245, 248, 255, 0.94);
+      --muted: rgba(218, 226, 242, 0.68);
+      --soft: rgba(187, 200, 224, 0.52);
+      --gold: #f0dca8;
+      --blue: #8fc7ff;
+      --green: #9ae6b4;
+      --red: #ffb3a5;
+      --yellow: #ffe29a;
+      --max: 1180px;
     }
 
-    *{box-sizing:border-box}
-
-    html{
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
+    * {
+      box-sizing: border-box;
     }
 
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
+        radial-gradient(circle at 50% 0%, rgba(100, 142, 190, 0.20), transparent 34rem),
+        radial-gradient(circle at 15% 20%, rgba(143, 199, 255, 0.10), transparent 28rem),
+        radial-gradient(circle at 88% 18%, rgba(240, 220, 168, 0.10), transparent 26rem),
+        linear-gradient(180deg, #030711 0%, #070b17 46%, #030711 100%);
+      overflow-x: hidden;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.24;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.75rem 1rem;
-      border-radius:999px;
-      color:#05070d;
-      background:var(--gold);
-      font-weight:950;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:2;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:18px;
-      padding:12px 0 18px;
-    }
-
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
-
-    .brand-mark{
-      width:4.2rem;
-      height:4.2rem;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
-      transform:rotate(45deg);
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+        linear-gradient(90deg, transparent 0, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(180deg, transparent 0, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at 50% 22%, black, transparent 72%);
+      opacity: 0.52;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.1rem 0 4rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.9rem 0 1.2rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .brand strong {
+      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      letter-spacing: 0.04em;
+    }
+
+    .brand span {
+      color: var(--soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.45rem;
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.2rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--gold);
+      border-color: rgba(240,220,168,0.38);
+      background: rgba(240,220,168,0.08);
+    }
+
+    .hero {
+      position: relative;
+      padding: clamp(1.2rem, 4vw, 2.6rem);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.08), transparent 44%),
+        rgba(8, 12, 25, 0.82);
       box-shadow:
-        0 0 2rem rgba(143,101,255,.28),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        0 24px 90px rgba(0,0,0,0.44),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+      overflow: hidden;
     }
 
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
+    .eyebrow {
+      margin: 0 0 0.8rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
     }
 
-    .brand-copy{
-      display:grid;
-      gap:.18rem;
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(2.35rem, 9vw, 5.85rem);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
     }
 
-    .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
-      line-height:1;
-      letter-spacing:-.045em;
+    .hero p.copy {
+      max-width: 860px;
+      margin: 1.1rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 3.2vw, 1.38rem);
+      line-height: 1.55;
     }
 
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.74rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.2rem;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:.48rem;
+    .summary-card {
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.045);
+      min-height: 6rem;
     }
 
-    .nav a{
-      min-height:2.25rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    .summary-card b {
+      display: block;
+      font-size: clamp(1.25rem, 5vw, 2rem);
+      line-height: 1;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    .summary-card span {
+      display: block;
+      margin-top: 0.45rem;
+      color: var(--soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.1rem 0;
+      padding: 0.95rem;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(8, 12, 25, 0.70);
+    }
+
+    .toolbar small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    button {
+      border: 1px solid rgba(143,199,255,0.36);
+      border-radius: 999px;
+      background: rgba(143,199,255,0.10);
+      color: var(--text);
+      min-height: 2.45rem;
+      padding: 0.55rem 0.95rem;
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: rgba(143,199,255,0.16);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .gauge {
+      border: 1px solid var(--line);
+      border-radius: 26px;
       background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        linear-gradient(145deg, rgba(255,255,255,0.055), transparent 48%),
         var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .hero{
-      position:relative;
-      min-height:clamp(21rem,40vw,31rem);
-      display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
-      margin-top:.6rem;
-      isolation:isolate;
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(9rem,25vw,18rem);
-      height:clamp(9rem,25vw,18rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:2.9rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:backgroundAnchorPulse 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.52;
-    }
-
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.58rem;
-      padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      position:relative;
-      z-index:2;
-    }
-
-    .kicker::before{
-      content:"";
-      width:.72rem;
-      height:.72rem;
-      border-radius:.18rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
-    }
-
-    h1{
-      margin:0;
-      max-width:950px;
-      font-size:clamp(3rem,9vw,6.6rem);
-      line-height:.86;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
-
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.65rem);
-      line-height:.98;
-      letter-spacing:-.07em;
-      text-wrap:balance;
-      position:relative;
-      z-index:2;
-    }
-
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
-    }
-
-    .lead{
-      max-width:900px;
-      position:relative;
-      z-index:2;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.62rem;
-      margin-top:.2rem;
-      position:relative;
-      z-index:2;
-    }
-
-    .button{
-      min-height:2.65rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.055em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      cursor:pointer;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
-      outline:none;
-    }
-
-    .button.gold,
-    .button.primary{
-      border-color:rgba(243,200,111,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
-    }
-
-    .section{
-      margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
-      display:grid;
-      gap:1.05rem;
-    }
-
-    .gauge-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.85rem;
-    }
-
-    .gauge-card{
-      min-height:20rem;
-      display:grid;
-      align-content:start;
-      gap:1rem;
-      padding:1.15rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .dial{
-      --pct:0;
-      --tone:var(--gold);
-      width:min(12rem,70vw);
-      aspect-ratio:1;
-      margin:0 auto;
-      display:grid;
-      place-items:center;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 50% 50%,#07101b 0 45%,transparent 46%),
-        conic-gradient(var(--tone) calc(var(--pct) * 1%),rgba(255,255,255,.13) 0);
+      overflow: hidden;
       box-shadow:
-        inset 0 0 0 .9rem rgba(255,255,255,.05),
-        0 1rem 2.5rem rgba(0,0,0,.32);
+        0 16px 60px rgba(0,0,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
-    .dial strong{
-      font-size:clamp(2rem,6vw,2.65rem);
-      color:rgba(255,244,216,.98);
-      letter-spacing:-.05em;
+    .gauge-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1rem 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
     }
 
-    .gauge-card b{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
+    .gauge-title {
+      display: grid;
+      gap: 0.28rem;
     }
 
-    .gauge-card p{
-      font-size:1rem;
+    .gauge-title b {
+      color: var(--text);
+      font-size: 1rem;
+      letter-spacing: 0.02em;
     }
 
-    .status{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:2.3rem;
-      padding:.45rem .8rem;
-      border:1px solid rgba(243,200,111,.38);
-      border-radius:999px;
-      color:var(--gold);
-      background:rgba(243,200,111,.06);
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .gauge-title span {
+      color: var(--soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .status.pass{
-      border-color:rgba(143,240,198,.42);
-      color:var(--green);
-      background:rgba(143,240,198,.07);
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 5.5rem;
+      padding: 0.42rem 0.62rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
-    .status.fail{
-      border-color:rgba(255,139,139,.42);
-      color:var(--red);
-      background:rgba(255,139,139,.07);
+    .status.pending {
+      color: var(--yellow);
+      background: rgba(255,226,154,0.08);
+      border-color: rgba(255,226,154,0.22);
     }
 
-    .meter-stack{
-      display:grid;
-      gap:.95rem;
+    .status.pass {
+      color: var(--green);
+      background: rgba(154,230,180,0.08);
+      border-color: rgba(154,230,180,0.25);
     }
 
-    .meter-row{
-      display:grid;
-      gap:.35rem;
+    .status.fail {
+      color: var(--red);
+      background: rgba(255,179,165,0.08);
+      border-color: rgba(255,179,165,0.25);
     }
 
-    .meter-label{
-      display:flex;
-      justify-content:space-between;
-      gap:1rem;
-      color:rgba(230,238,255,.82);
-      font-weight:900;
+    .status.warn {
+      color: var(--yellow);
+      background: rgba(255,226,154,0.08);
+      border-color: rgba(255,226,154,0.25);
     }
 
-    .bar{
-      height:.72rem;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      overflow:hidden;
+    .gauge-body {
+      padding: 1rem;
     }
 
-    .bar span{
-      display:block;
-      height:100%;
-      width:calc(var(--pct,0) * 1%);
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--purple),var(--gold));
+    .metric {
+      display: grid;
+      grid-template-columns: 10rem minmax(0, 1fr);
+      gap: 0.7rem;
+      padding: 0.62rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
     }
 
-    .finding-list{
-      display:grid;
-      gap:.75rem;
+    .metric:last-child {
+      border-bottom: 0;
     }
 
-    .finding{
-      display:grid;
-      gap:.35rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:rgba(255,255,255,.035);
+    .metric b {
+      color: var(--text);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .finding strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.02rem;
+    .panel {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--panel2);
     }
 
-    .finding span{
-      color:var(--muted);
+    .panel h2 {
+      margin: 0 0 0.75rem;
+      color: var(--gold);
+      font-size: clamp(1.2rem, 4vw, 1.7rem);
     }
 
-    .table-wrap{
-      width:100%;
-      overflow:auto;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:rgba(255,255,255,.028);
+    .panel pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0;
+      padding: 0.95rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.24);
+      color: rgba(235,241,255,0.78);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+      font-size: 0.76rem;
+      line-height: 1.55;
     }
 
-    table{
-      width:100%;
-      min-width:780px;
-      border-collapse:collapse;
+    .texture-proof {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 16rem;
+      gap: 1rem;
+      align-items: start;
     }
 
-    th,
-    td{
-      padding:.9rem;
-      border-bottom:1px solid rgba(255,255,255,.09);
-      text-align:left;
-      vertical-align:top;
+    canvas {
+      width: 100%;
+      max-width: 16rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.24);
     }
 
-    th{
-      color:var(--gold);
-      font-size:.72rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.035);
+    .footer {
+      padding-top: 2rem;
+      color: rgba(218,226,242,0.52);
+      text-align: center;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
     }
 
-    td{
-      color:var(--muted);
-    }
-
-    td strong{
-      color:rgba(255,244,216,.96);
-    }
-
-    code{
-      color:rgba(255,244,216,.92);
-      font:750 .86em/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      overflow-wrap:anywhere;
-    }
-
-    .route-link{
-      color:rgba(255,244,216,.96);
-      font-weight:900;
-    }
-
-    .route-link:hover{
-      color:var(--gold);
-    }
-
-    .receipt{
-      margin-top:1.15rem;
-      color:var(--faint);
-    }
-
-    .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.035);
-    }
-
-    .receipt pre{
-      margin:0;
-      padding:1rem;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    }
-
-    footer{
-      padding:1.35rem 0 .5rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.76rem;
-    }
-
-    @media (max-width:1080px){
-      .gauge-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media (max-width:980px){
-      .topbar{
-        grid-template-columns:1fr;
-        align-items:start;
+    @media (max-width: 820px) {
+      .shell {
+        width: min(100% - 1rem, var(--max));
       }
 
-      .nav{justify-content:flex-start}
-    }
-
-    @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
-
-      h1{font-size:clamp(3rem,17vw,5rem)}
-
-      .hero{
-        min-height:26rem;
-        padding:1rem;
+      .topbar {
+        flex-direction: column;
       }
 
-      .gauge-grid{
-        grid-template-columns:1fr;
+      .nav {
+        justify-content: flex-start;
       }
 
-      .actions{
-        display:grid;
+      .summary,
+      .grid,
+      .texture-proof {
+        grid-template-columns: 1fr;
       }
 
-      .button{
-        width:100%;
+      .metric {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+      }
+
+      canvas {
+        max-width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#gauges-main">Skip to Gauges</a>
-
   <div class="shell">
-    <header class="topbar" aria-label="Gauges header">
+    <header class="topbar">
       <a class="brand" href="/">
-        <span class="brand-mark"><span>G</span></span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
-          <strong>Gauges</strong>
-        </span>
+        <strong>Diamond Gate Bridge</strong>
+        <span>Audralia Gauges</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/products/">Products</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
-    <main id="gauges-main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Gauges · Served Source Authority</div>
-        <h1 id="page-title">Measure the rooms. Name the next move.</h1>
-        <h2>Source-only. No iframe. No runtime mutation.</h2>
-
-        <p class="lead">
-          Gauges reads served HTML, checks the correct contract family for each audit mode, detects retired language, and ranks the next highest-friction target.
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Gauges · Audralia Render Expression</p>
+        <h1>Render Chain Audit</h1>
+        <p class="copy">
+          Dedicated diagnostic for the Audralia visible render chain:
+          Showroom Globe HTML shell, mount node, index module execution, Audralia renderer import,
+          texture build, canvas proof, and land-water expression.
         </p>
 
-        <div class="actions" aria-label="Audit controls">
-          <button class="button gold" type="button" data-audit-mode="site">Run Site Audit</button>
-          <button class="button" type="button" data-audit-mode="core">Run Core Audit</button>
-          <button class="button" type="button" data-audit-mode="summits">Run Nine Summits Audit</button>
-          <button class="button" type="button" data-audit-mode="products">Run Products / Frontier Audit</button>
-        </div>
-      </section>
-
-      <section class="panel section" aria-labelledby="active-title">
-        <div class="kicker">Active gauges</div>
-        <h2 id="active-title">Current route contract reader.</h2>
-
-        <div class="gauge-grid" aria-label="Active gauge cards">
-          <article class="gauge-card">
-            <div class="dial" id="overallDial" style="--pct:0;--tone:var(--gold)">
-              <strong id="overallValue">0%</strong>
-            </div>
-            <b>Overall Health</b>
-            <p id="overallText">Audit not run yet.</p>
-            <span class="status" id="overallStatus">READY</span>
-          </article>
-
-          <article class="gauge-card">
-            <div class="dial" id="routeDial" style="--pct:0;--tone:var(--gold)">
-              <strong id="routeValue">0%</strong>
-            </div>
-            <b>Route Integrity</b>
-            <p id="routeText">Waiting for served route responses.</p>
-            <span class="status" id="routeStatus">READY</span>
-          </article>
-
-          <article class="gauge-card">
-            <div class="dial" id="baselineDial" style="--pct:0;--tone:var(--gold)">
-              <strong id="baselineValue">0%</strong>
-            </div>
-            <b>Baseline Alignment</b>
-            <p id="baselineText">Waiting for contract checks.</p>
-            <span class="status" id="baselineStatus">READY</span>
-          </article>
-
-          <article class="gauge-card">
-            <div class="dial" id="retiredDial" style="--pct:0;--tone:var(--gold)">
-              <strong id="retiredValue">0%</strong>
-            </div>
-            <b>Retired Language Cleanliness</b>
-            <p id="retiredText">Waiting for retired-language checks.</p>
-            <span class="status" id="retiredStatus">READY</span>
-          </article>
-        </div>
-
-        <div class="meter-stack" aria-label="Scale gauges">
-          <div class="meter-row">
-            <div class="meter-label">
-              <span>Source readability</span>
-              <span id="sourceScaleValue">0%</span>
-            </div>
-            <div class="bar"><span id="sourceScale" style="--pct:0"></span></div>
+        <div class="summary">
+          <div class="summary-card">
+            <b id="summaryPass">0</b>
+            <span>Pass</span>
           </div>
-
-          <div class="meter-row">
-            <div class="meter-label">
-              <span>Voice split integrity</span>
-              <span id="voiceScaleValue">0%</span>
-            </div>
-            <div class="bar"><span id="voiceScale" style="--pct:0"></span></div>
+          <div class="summary-card">
+            <b id="summaryFail">0</b>
+            <span>Fail</span>
           </div>
-
-          <div class="meter-row">
-            <div class="meter-label">
-              <span>Impact pressure</span>
-              <span id="impactScaleValue">0% friction</span>
-            </div>
-            <div class="bar"><span id="impactScale" style="--pct:0"></span></div>
+          <div class="summary-card">
+            <b id="summaryWarn">0</b>
+            <span>Warn</span>
+          </div>
+          <div class="summary-card">
+            <b id="summaryNext">Index JS</b>
+            <span>Next Target</span>
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="findings-title">
-        <div class="kicker">Impact-ranked findings</div>
-        <h2 id="findings-title">Next move pressure.</h2>
-        <div class="finding-list" id="findingsList">
-          <div class="finding">
-            <strong>No audit run yet.</strong>
-            <span>Select an audit mode above.</span>
-          </div>
+      <section class="toolbar" aria-label="Audit controls">
+        <small id="runMeta">
+          AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1 · waiting for audit run
+        </small>
+        <button type="button" id="rerunButton">Run Audit</button>
+      </section>
+
+      <section class="grid" id="gaugeGrid" aria-label="Audralia render gauges"></section>
+
+      <section class="panel">
+        <h2>Texture Proof</h2>
+        <div class="texture-proof">
+          <pre id="textureReport">Texture proof has not run yet.</pre>
+          <canvas id="textureCanvas" width="256" height="128" aria-label="Audralia texture proof canvas"></canvas>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="table-title">
-        <div class="kicker">Source-check table</div>
-        <h2 id="table-title">Served route truth.</h2>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Group</th>
-                <th>Route</th>
-                <th>Contract</th>
-                <th>Signals</th>
-                <th>Retired terms</th>
-                <th>Score</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="resultRows">
-              <tr>
-                <td colspan="7">No audit run yet.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <section class="panel">
+        <h2>Missing Chain Report</h2>
+        <pre id="missingReport">Audit has not run yet.</pre>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre id="receiptText">GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4
-route=/gauges/
-page=gauges
-role=measurement_surface
-mode=served_source_contract_reader
-audit_mode=not_run
-source_fetch_only=true
-renders_iframe=false
-executes_target_files=false
-mutates_runtime=false
-mutates_target_routes=false
-core_contract_map=compass,door,home,manor,gauges
-current_contract_family=core_alignment
-self_poison_cleanup=true
-visual_pass_claimed=false
-audit_status=READY</pre>
-      </details>
+      <section class="panel">
+        <h2>Raw Diagnostic Log</h2>
+        <pre id="rawLog">No log yet.</pre>
+      </section>
     </main>
 
-    <footer>
-      GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4 · Gauges · Served Source Contract Reader · Self-Poison Cleanup.
+    <footer class="footer">
+      AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1 · SOURCE-BASED · NO ROUTE MUTATION · NO IMAGE GENERATION
     </footer>
   </div>
 
-  <script>
-    (() => {
-      "use strict";
+  <script type="module">
+    const CONTRACT = "AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1";
+    const CACHE_KEY = `${CONTRACT}_${Date.now()}`;
 
-      const CONTRACT = "GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4";
-      const PREVIOUS_CONTRACT = "GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3";
+    const TARGETS = {
+      route: `/showroom/globe/?v=${CACHE_KEY}`,
+      index: `/showroom/globe/index.js?v=${CACHE_KEY}`,
+      renderer: `/assets/audrelia.planet.render.js?v=${CACHE_KEY}`
+    };
 
-      const byId = (id) => document.getElementById(id);
+    const GAUGES = [
+      {
+        id: "G1",
+        title: "Route HTML Shell",
+        scope: "/showroom/globe/",
+        test: "HTML loads and raw JavaScript is not visible as page body."
+      },
+      {
+        id: "G2",
+        title: "Audralia Mount Node",
+        scope: "#audraliaRenderMount",
+        test: "Mount node exists with Audralia render attributes."
+      },
+      {
+        id: "G3",
+        title: "Index Module Presence",
+        scope: "/showroom/globe/index.js",
+        test: "Index module exists and contains visible mount logic."
+      },
+      {
+        id: "G4",
+        title: "Index Execution Receipt",
+        scope: "Visible chamber diagnostic",
+        test: "Index JS contains receipts that cannot fail silently."
+      },
+      {
+        id: "G5",
+        title: "Renderer Module Import",
+        scope: "/assets/audrelia.planet.render.js",
+        test: "Renderer imports as a JavaScript module."
+      },
+      {
+        id: "G6",
+        title: "Renderer API",
+        scope: "Audralia API",
+        test: "Renderer exposes buildTexture or renderSurface."
+      },
+      {
+        id: "G7",
+        title: "Texture Build",
+        scope: "buildTexture()",
+        test: "Renderer generates an actual canvas texture."
+      },
+      {
+        id: "G8",
+        title: "Canvas Pixel Proof",
+        scope: "texture sample",
+        test: "Texture contains non-empty pixel data."
+      },
+      {
+        id: "G9",
+        title: "Land Water Data",
+        scope: "sampleSurface()",
+        test: "Surface samples expose land and water differentiation."
+      },
+      {
+        id: "G10",
+        title: "Visual Readiness",
+        scope: "screenshot-confirmed",
+        test: "Held until Sean confirms visible planet screenshot."
+      }
+    ];
 
-      const legacyVoiceRoute = "/" + ["this", "under", "dog"].join("-") + "/";
-      const oldPlanetReceipt = [
-        "PLAN", "ET", "_", "1", "_ACTIVE", "_CHAIN", "_AUDIT", "_BUTTON", "_BINDING", "_REPAIR", "_TNT", "_v1"
-      ].join("");
+    const state = {
+      gauges: new Map(),
+      log: [],
+      missing: [],
+      files: {},
+      rendererApi: null
+    };
 
-      const retiredVoiceMerge = ["old", "_this", "_under", "dog", "_personal", "_merge"].join("");
-      const retiredVertical = ["vertical", "_", "stack"].join("");
-      const retiredDemo = ["Demo", " ", "Universe"].join("");
-      const retiredEarth = ["Earth", " ", "G1"].join("");
-      const retiredPlanet = ["Planet", " ", "1"].join("");
+    const grid = document.getElementById("gaugeGrid");
+    const rawLog = document.getElementById("rawLog");
+    const missingReport = document.getElementById("missingReport");
+    const textureReport = document.getElementById("textureReport");
+    const textureCanvas = document.getElementById("textureCanvas");
+    const runMeta = document.getElementById("runMeta");
 
-      const retiredTerms = [
-        legacyVoiceRoute,
-        oldPlanetReceipt,
-        retiredVoiceMerge,
-        retiredVertical,
-        retiredDemo,
-        retiredEarth,
-        retiredPlanet
-      ];
+    function log(line) {
+      const stamp = new Date().toISOString();
+      state.log.push(`[${stamp}] ${line}`);
+      rawLog.textContent = state.log.join("\n");
+    }
 
-      const auditModes = {
-        core: {
-          label: "core",
-          routes: [
-            {
-              group: "Core",
-              name: "Compass",
-              route: "/",
-              contracts: ["COMPASS_ANIMATED_PURPLE_DIAMOND_COMMAND_RESTORE_TNT_v1"],
-              signals: ["Compass", "Diamond Gate Bridge"]
-            },
-            {
-              group: "Core",
-              name: "Door",
-              route: "/door/",
-              contracts: ["DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_TNT_v2"],
-              signals: ["Door", "Entry Threshold"]
-            },
-            {
-              group: "Core",
-              name: "Home",
-              route: "/home/",
-              contracts: ["HOME_PUBLIC_PARITY_RECEIVER_GATE_TNT_v1"],
-              signals: ["Home", "Estate Receiver"]
-            },
-            {
-              group: "Core",
-              name: "Manor",
-              route: "/explore/",
-              contracts: ["MANOR_16_POINT_DIAMOND_ROUTE_FIELD_TNT_v1"],
-              signals: ["Manor", "Route Map"]
-            },
-            {
-              group: "Core",
-              name: "Gauges",
-              route: "/gauges/",
-              contracts: [CONTRACT, PREVIOUS_CONTRACT],
-              preferredContract: CONTRACT,
-              signals: ["Gauges", "Served Source"]
-            }
-          ]
-        },
+    function statusClass(status) {
+      if (status === "PASS") return "pass";
+      if (status === "FAIL") return "fail";
+      if (status === "WARN") return "warn";
+      return "pending";
+    }
 
-        summits: {
-          label: "summits",
-          routes: [
-            {
-              group: "Nine Summits",
-              name: "Nine Summits",
-              route: "/nine-summits/",
-              contracts: ["NINE_SUMMITS_COMPASS_CENTERED_ROTATING_DIAMOND_GATE_TNT_v5"],
-              signals: ["Nine Summits", "Book", "Universe", "Audralia", "Voice"]
-            },
-            {
-              group: "Nine Summits",
-              name: "Book",
-              route: "/nine-summits-of-love/",
-              contracts: ["NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2"],
-              signals: ["Nine Summits of Love", "locked heart", "book"]
-            },
-            {
-              group: "Nine Summits",
-              name: "Universe",
-              route: "/nine-summits/universe/",
-              contracts: ["NINE_SUMMITS", "UNIVERSE"],
-              signals: ["Nine Summits", "Universe"]
-            },
-            {
-              group: "Voice",
-              name: "About This Underdog",
-              route: "/about-this-underdog/",
-              contracts: ["ABOUT_THIS_UNDERDOG_TED_STYLE_RUSSIAN_DOLL_UNIVERSAL_LANE_TNT_v2"],
-              signals: ["About This Underdog", "universal", "underdog"]
-            },
-            {
-              group: "Voice",
-              name: "Meet Sean",
-              route: "/meet-sean-mansfield/",
-              contracts: ["MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"],
-              signals: ["Meet Sean Mansfield", "personal profile"]
-            }
-          ]
-        },
+    function setGauge(id, status, metrics = {}) {
+      const previous = state.gauges.get(id) || {};
+      state.gauges.set(id, {
+        ...previous,
+        status,
+        metrics
+      });
+      renderGauges();
+      updateSummary();
+    }
 
-        products: {
-          label: "products",
-          routes: [
-            {
-              group: "Products",
-              name: "Products",
-              route: "/products/",
-              contracts: ["PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_TNT_v1"],
-              signals: ["Products", "ARCHCOIN", "Five Flags"]
-            },
-            {
-              group: "Products",
-              name: "ARCHCOIN",
-              route: "/products/archcoin/",
-              contracts: ["ARCHCOIN_PRODUCT_CHAMBER_PUBLIC_VALUE_TRACEABILITY_TNT_v1"],
-              signals: ["ARCHCOIN", "Contribution", "Trace"]
-            },
-            {
-              group: "Products",
-              name: "Five Flags",
-              route: "/products/five-flags/",
-              contracts: ["FIVE_FLAGS_PRODUCT_CHAMBER_PUBLIC_GAME_TNT_v1"],
-              signals: ["Five Flags", "Flag Master", "Warmer"]
-            },
-            {
-              group: "Products",
-              name: "On Your Side AI",
-              route: "/products/on-your-side-ai/",
-              contracts: ["ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1"],
-              signals: ["On Your Side", "Read", "Explain"]
-            },
-            {
-              group: "Products",
-              name: "Education",
-              route: "/products/education/",
-              contracts: ["EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1"],
-              signals: ["Education", "1001", "Word"]
-            },
-            {
-              group: "Products",
-              name: "Nutrition",
-              route: "/products/nutrition/",
-              contracts: ["NUTRITION_PRODUCT_CHAMBER_PUBLIC_ROUTINE_TNT_v1"],
-              signals: ["Nutrition", "Food", "Water"]
-            },
-            {
-              group: "Expansion",
-              name: "Frontier",
-              route: "/frontier/",
-              contracts: ["FRONTIER"],
-              signals: ["Frontier"]
-            },
-            {
-              group: "Expression",
-              name: "Showroom",
-              route: "/showroom/",
-              contracts: ["SHOWROOM"],
-              signals: ["Showroom"]
-            }
-          ]
-        }
-      };
+    function renderGauges() {
+      grid.innerHTML = "";
 
-      auditModes.site = {
-        label: "site",
-        routes: [
-          ...auditModes.core.routes,
-          ...auditModes.summits.routes,
-          ...auditModes.products.routes
-        ]
-      };
-
-      const statusFromScore = (score) => {
-        if (score >= 90) return "PASS";
-        if (score >= 70) return "HOLD";
-        return "FAIL";
-      };
-
-      const statusClass = (status) => {
-        if (status === "PASS") return "pass";
-        if (status === "FAIL") return "fail";
-        return "";
-      };
-
-      const pct = (value, total) => {
-        if (!total) return 0;
-        return Math.round((value / total) * 100);
-      };
-
-      const toneFor = (value) => {
-        if (value >= 90) return "var(--green)";
-        if (value >= 70) return "var(--gold)";
-        return "var(--red)";
-      };
-
-      const setDial = (id, value) => {
-        const dial = byId(id + "Dial");
-        const label = byId(id + "Value");
-        dial.style.setProperty("--pct", String(value));
-        dial.style.setProperty("--tone", toneFor(value));
-        label.textContent = value + "%";
-      };
-
-      const setStatus = (id, status) => {
-        const el = byId(id + "Status");
-        el.textContent = status;
-        el.className = "status " + statusClass(status);
-      };
-
-      const setBar = (id, value, suffix = "%") => {
-        byId(id).style.setProperty("--pct", String(value));
-        byId(id + "Value").textContent = value + suffix;
-      };
-
-      const includesAll = (source, terms) => terms.filter((term) => source.includes(term));
-
-      async function fetchRoute(route) {
-        const url = new URL(route, window.location.origin);
-        url.searchParams.set("_gauges_contract_audit", String(Date.now()));
-
-        const response = await fetch(url.toString(), {
-          method: "GET",
-          cache: "no-store",
-          credentials: "same-origin"
-        });
-
-        const text = await response.text();
-
-        return {
-          ok: response.ok,
-          status: response.status,
-          text
+      for (const gauge of GAUGES) {
+        const result = state.gauges.get(gauge.id) || {
+          status: "PENDING",
+          metrics: {}
         };
-      }
 
-      async function auditRoute(config) {
-        try {
-          const result = await fetchRoute(config.route);
-          const source = result.text || "";
-          const readable = result.ok && source.length > 0;
+        const card = document.createElement("article");
+        card.className = "gauge";
 
-          const contractHits = includesAll(source, config.contracts || []);
-          const preferredHit = config.preferredContract
-            ? source.includes(config.preferredContract)
-            : contractHits.length > 0;
+        const head = document.createElement("div");
+        head.className = "gauge-head";
 
-          const signalHits = includesAll(source, config.signals || []);
-          const retiredHits = includesAll(source, retiredTerms);
+        const title = document.createElement("div");
+        title.className = "gauge-title";
+        title.innerHTML = `<b>${gauge.id} · ${gauge.title}</b><span>${gauge.scope}</span>`;
 
-          let score = 100;
+        const status = document.createElement("span");
+        status.className = `status ${statusClass(result.status)}`;
+        status.textContent = result.status;
 
-          if (!readable) score -= 40;
-          if (!preferredHit) score -= 20;
-          if ((config.signals || []).length && signalHits.length < config.signals.length) score -= 10;
-          if (retiredHits.length) score -= 10;
+        head.append(title, status);
 
-          score = Math.max(0, Math.min(100, score));
+        const body = document.createElement("div");
+        body.className = "gauge-body";
 
-          return {
-            ...config,
-            readable,
-            httpStatus: result.status,
-            contractHits,
-            preferredHit,
-            signalHits,
-            retiredHits,
-            score,
-            status: statusFromScore(score)
-          };
-        } catch (error) {
-          return {
-            ...config,
-            readable: false,
-            httpStatus: "FETCH_ERROR",
-            contractHits: [],
-            preferredHit: false,
-            signalHits: [],
-            retiredHits: [],
-            score: 0,
-            status: "FAIL",
-            error: String(error && error.message ? error.message : error)
-          };
+        const baseMetrics = {
+          "Test": gauge.test,
+          ...result.metrics
+        };
+
+        for (const [key, value] of Object.entries(baseMetrics)) {
+          const row = document.createElement("div");
+          row.className = "metric";
+
+          const k = document.createElement("b");
+          k.textContent = key;
+
+          const v = document.createElement("span");
+          v.textContent =
+            typeof value === "string"
+              ? value
+              : JSON.stringify(value);
+
+          row.append(k, v);
+          body.append(row);
         }
+
+        card.append(head, body);
+        grid.append(card);
+      }
+    }
+
+    function updateSummary() {
+      let pass = 0;
+      let fail = 0;
+      let warn = 0;
+
+      for (const gauge of GAUGES) {
+        const result = state.gauges.get(gauge.id);
+        if (!result) continue;
+        if (result.status === "PASS") pass += 1;
+        if (result.status === "FAIL") fail += 1;
+        if (result.status === "WARN") warn += 1;
       }
 
-      function renderRows(results) {
-        const rows = results.map((item) => {
-          const contractText = item.preferredHit
-            ? item.contractHits.join(", ")
-            : "Missing current contract";
+      document.getElementById("summaryPass").textContent = String(pass);
+      document.getElementById("summaryFail").textContent = String(fail);
+      document.getElementById("summaryWarn").textContent = String(warn);
 
-          const signalText = `${item.signalHits.length}/${(item.signals || []).length} found`;
-          const retiredText = item.retiredHits.length ? item.retiredHits.join(", ") : "Clean";
+      const next = chooseNextTarget();
+      document.getElementById("summaryNext").textContent = next;
+    }
 
-          return `
-            <tr>
-              <td><strong>${item.group}</strong></td>
-              <td><a class="route-link" href="${item.route}">${item.name}</a><br><code>${item.route}</code></td>
-              <td><code>${contractText}</code></td>
-              <td>${signalText}</td>
-              <td>${retiredText}</td>
-              <td><strong>${item.score}%</strong></td>
-              <td><span class="status ${statusClass(item.status)}">${item.status}</span></td>
-            </tr>
-          `;
-        }).join("");
+    function chooseNextTarget() {
+      const g3 = state.gauges.get("G3")?.status;
+      const g4 = state.gauges.get("G4")?.status;
+      const g5 = state.gauges.get("G5")?.status;
+      const g6 = state.gauges.get("G6")?.status;
+      const g7 = state.gauges.get("G7")?.status;
 
-        byId("resultRows").innerHTML = rows || `<tr><td colspan="7">No routes checked.</td></tr>`;
-      }
+      if (g3 === "FAIL" || g4 === "FAIL") return "Index JS";
+      if (g5 === "FAIL" || g6 === "FAIL" || g7 === "FAIL") return "Renderer";
+      return "Screenshot";
+    }
 
-      function renderFindings(results) {
-        const sorted = [...results].sort((a, b) => {
-          const aBad = a.status === "PASS" ? 1 : 0;
-          const bBad = b.status === "PASS" ? 1 : 0;
-          if (aBad !== bBad) return aBad - bBad;
-          return a.score - b.score;
-        });
-
-        byId("findingsList").innerHTML = sorted.map((item, index) => {
-          let message = "Readable with current signals present.";
-
-          if (!item.readable) {
-            message = "Route could not be read from served source.";
-          } else if (!item.preferredHit) {
-            message = "Current contract not found in served source.";
-          } else if (item.retiredHits.length) {
-            message = "Retired language detected: " + item.retiredHits.join(", ") + ".";
-          } else if (item.signalHits.length < (item.signals || []).length) {
-            message = "Expected visible signals are incomplete.";
-          }
-
-          return `
-            <div class="finding">
-              <strong>${index + 1}. ${item.name} · ${item.score}% · ${item.status}</strong>
-              <span>${message}</span>
-            </div>
-          `;
-        }).join("");
-      }
-
-      function renderReceipt(mode, results, metrics) {
-        const checkedContracts = results
-          .map((item) => `${item.name}:${(item.contracts || []).join("|")}`)
-          .join(" ; ");
-
-        const routeScores = results
-          .map((item) => `${item.route}:${item.score}:${item.status.toLowerCase()}`)
-          .join(" | ");
-
-        const nonPass = results
-          .filter((item) => item.status !== "PASS")
-          .map((item) => `${item.route}[contract=${item.preferredHit ? "found" : "missing"} retired=${item.retiredHits.length ? "detected" : "none"}]`)
-          .join(" | ") || "none";
-
-        byId("receiptText").textContent =
-`${CONTRACT}
-previous_contract=${PREVIOUS_CONTRACT}
-route=/gauges/
-page=gauges
-role=measurement_surface
-mode=served_source_contract_reader
-audit_mode=${mode}
-source_fetch_only=true
-renders_iframe=false
-executes_target_files=false
-mutates_runtime=false
-mutates_target_routes=false
-checked_at=${new Date().toISOString()}
-routes_checked=${results.length}
-overall_health=${metrics.overall}
-route_integrity=${metrics.routeIntegrity}
-baseline_alignment=${metrics.baselineAlignment}
-retired_language_cleanliness=${metrics.retiredClean}
-route_scores=${routeScores}
-non_pass_findings=${nonPass}
-current_contracts_checked=${checkedContracts}
-core_contract_family_aligned=${mode === "core" ? "true" : "not_applicable"}
-voice_split_routes=/about-this-underdog/,/meet-sean-mansfield/
-self_poison_cleanup=true
-visual_pass_claimed=false
-audit_status=COMPLETE`;
-      }
-
-      function updateMetrics(mode, results) {
-        const readableCount = results.filter((item) => item.readable).length;
-        const contractCount = results.filter((item) => item.preferredHit).length;
-        const retiredCleanCount = results.filter((item) => !item.retiredHits.length).length;
-
-        const routeIntegrity = pct(readableCount, results.length);
-        const baselineAlignment = pct(contractCount, results.length);
-        const retiredClean = pct(retiredCleanCount, results.length);
-        const overall = Math.round(results.reduce((sum, item) => sum + item.score, 0) / Math.max(1, results.length));
-
-        const voiceAbout = results.some((item) => item.route === "/about-this-underdog/" && item.preferredHit);
-        const voiceMeet = results.some((item) => item.route === "/meet-sean-mansfield/" && item.preferredHit);
-        const anyLegacyVoice = results.some((item) => item.retiredHits.includes(legacyVoiceRoute));
-        const voiceSplit = (voiceAbout && voiceMeet && !anyLegacyVoice) ? 100 : (mode === "summits" || mode === "site" ? 50 : 0);
-
-        const impactPressure = pct(results.filter((item) => item.status !== "PASS").length, results.length);
-
-        setDial("overall", overall);
-        byId("overallText").textContent = `Audit mode: ${mode}. Average score across ${results.length} route(s).`;
-        setStatus("overall", statusFromScore(overall));
-
-        setDial("route", routeIntegrity);
-        byId("routeText").textContent = `${readableCount}/${results.length} served readable responses.`;
-        setStatus("route", statusFromScore(routeIntegrity));
-
-        setDial("baseline", baselineAlignment);
-        byId("baselineText").textContent = `${contractCount}/${results.length} current contract matches.`;
-        setStatus("baseline", statusFromScore(baselineAlignment));
-
-        setDial("retired", retiredClean);
-        byId("retiredText").textContent = `${retiredCleanCount}/${results.length} clean from retired language.`;
-        setStatus("retired", statusFromScore(retiredClean));
-
-        setBar("sourceScale", routeIntegrity);
-        setBar("voiceScale", voiceSplit);
-        setBar("impactScale", impactPressure, "% friction");
-
-        renderRows(results);
-        renderFindings(results);
-        renderReceipt(mode, results, {
-          overall,
-          routeIntegrity,
-          baselineAlignment,
-          retiredClean
-        });
-      }
-
-      async function runAudit(mode) {
-        const audit = auditModes[mode] || auditModes.core;
-
-        byId("findingsList").innerHTML = `
-          <div class="finding">
-            <strong>Audit running.</strong>
-            <span>Fetching served HTML for ${audit.routes.length} route(s). No target route is being mutated.</span>
-          </div>
-        `;
-
-        byId("resultRows").innerHTML = `
-          <tr>
-            <td colspan="7">Audit running. Fetching served source only.</td>
-          </tr>
-        `;
-
-        const results = await Promise.all(audit.routes.map(auditRoute));
-        updateMetrics(audit.label, results);
-      }
-
-      document.querySelectorAll("[data-audit-mode]").forEach((button) => {
-        button.addEventListener("click", () => {
-          runAudit(button.getAttribute("data-audit-mode"));
-        });
+    async function fetchText(url) {
+      const response = await fetch(url, {
+        cache: "no-store",
+        credentials: "same-origin"
       });
 
-      runAudit("core");
-    })();
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+
+      return response.text();
+    }
+
+    function includesAny(text, list) {
+      return list.some((item) => text.includes(item));
+    }
+
+    function countMatches(text, pattern) {
+      const match = text.match(pattern);
+      return match ? match.length : 0;
+    }
+
+    function extractScriptSources(html) {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      return Array.from(doc.querySelectorAll("script[src]")).map((script) => ({
+        src: script.getAttribute("src"),
+        type: script.getAttribute("type") || ""
+      }));
+    }
+
+    function inspectRouteHtml(html) {
+      const rawJsMarkers = [
+        "const AUDRALIA_MOUNT_TNT",
+        "function bootAudraliaVisibleMount",
+        "AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT_v1 FULL-FILE REPLACEMENT",
+        "const MOUNT_SELECTORS"
+      ];
+
+      const hasHtml = /<!doctype html/i.test(html) || /<html/i.test(html);
+      const rawJsVisible = includesAny(html, rawJsMarkers);
+      const scripts = extractScriptSources(html);
+      const hasModuleScript = scripts.some((s) =>
+        /index\.js/.test(s.src || "") && /module/i.test(s.type || "")
+      );
+
+      setGauge("G1", hasHtml && !rawJsVisible ? "PASS" : "FAIL", {
+        "HTML Detected": String(hasHtml),
+        "Raw JS Visible": String(rawJsVisible),
+        "Module Script": String(hasModuleScript),
+        "Script Sources": scripts.map((s) => `${s.type || "plain"} ${s.src}`).join(" | ") || "none"
+      });
+
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const mount = doc.querySelector("#audraliaRenderMount");
+      const hasMount = Boolean(mount);
+      const hasAudraliaAttr = Boolean(
+        mount?.hasAttribute("data-audralia-render") ||
+        mount?.hasAttribute("data-audrelia-render")
+      );
+      const hasRenderAttr = Boolean(mount?.hasAttribute("data-render-mount"));
+
+      setGauge("G2", hasMount && hasAudraliaAttr && hasRenderAttr ? "PASS" : "FAIL", {
+        "Mount Exists": String(hasMount),
+        "Audralia Attr": String(hasAudraliaAttr),
+        "Render Attr": String(hasRenderAttr),
+        "Mount Class": mount?.getAttribute("class") || "none"
+      });
+    }
+
+    function inspectIndexJs(js) {
+      const hasBoot = includesAny(js, [
+        "bootAudraliaVisibleMount",
+        "bootWhenReady",
+        "AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT",
+        "SHOWROOM_GLOBE_INDEX_DIAGNOSTIC"
+      ]);
+
+      const hasMountSelection = includesAny(js, [
+        "#audraliaRenderMount",
+        "data-audralia-render",
+        "querySelector"
+      ]);
+
+      const hasCanvas = includesAny(js, [
+        "createElement(\"canvas\")",
+        "createElement('canvas')",
+        "document.createElement(\"canvas\")",
+        "document.createElement('canvas')"
+      ]);
+
+      const hasRendererImport = includesAny(js, [
+        "/assets/audrelia.planet.render.js",
+        "AUDRALIA_RENDERER_URL",
+        "import("
+      ]);
+
+      const hasDiagnosticReceipts = includesAny(js, [
+        "INDEX_JS_EXECUTED",
+        "RENDERER_IMPORT",
+        "TEXTURE_BUILD",
+        "VISIBLE_RENDER",
+        "AUDRALIA MOUNT",
+        "IMPORT_OR_RENDER_FAIL"
+      ]);
+
+      setGauge("G3", hasBoot && hasMountSelection && hasCanvas ? "PASS" : "FAIL", {
+        "Boot Logic": String(hasBoot),
+        "Mount Selection": String(hasMountSelection),
+        "Canvas Logic": String(hasCanvas),
+        "Renderer Import Text": String(hasRendererImport),
+        "File Size": `${js.length} chars`
+      });
+
+      setGauge("G4", hasDiagnosticReceipts ? "PASS" : "FAIL", {
+        "No Silent Failure Receipts": String(hasDiagnosticReceipts),
+        "Receipt Markers": [
+          "INDEX_JS_EXECUTED",
+          "RENDERER_IMPORT",
+          "TEXTURE_BUILD",
+          "VISIBLE_RENDER",
+          "IMPORT_OR_RENDER_FAIL"
+        ].filter((marker) => js.includes(marker)).join(" | ") || "none"
+      });
+    }
+
+    async function importRenderer() {
+      const mod = await import(TARGETS.renderer);
+
+      const api =
+        mod.default ||
+        mod.AUDRALIA_PLANET_RENDERER ||
+        mod.AudraliaPlanetRenderer ||
+        mod.AudreliaPlanetRenderer ||
+        globalThis.AUDRALIA_PLANET_RENDERER ||
+        globalThis.AudraliaPlanetRenderer ||
+        globalThis.AudreliaPlanetRenderer ||
+        globalThis.DiamondGateBridge?.planets?.audralia ||
+        globalThis.DiamondGateBridge?.planets?.audrelia;
+
+      return { mod, api };
+    }
+
+    function inspectRendererSource(source) {
+      const hasExports = includesAny(source, [
+        "export default",
+        "export {",
+        "AUDRALIA_PLANET_RENDERER"
+      ]);
+
+      const hasBuildTexture = /function\s+buildTexture|buildTexture\s*[:=]/.test(source);
+      const hasRenderSurface = /function\s+renderSurface|renderSurface\s*[:=]/.test(source);
+      const hasSampleSurface = /function\s+sampleSurface|sampleSurface\s*[:=]/.test(source);
+      const hasHardLand = includesAny(source, [
+        "hard-thresholded",
+        "landWaterSeparation",
+        "continentMask",
+        "landField",
+        "isLand"
+      ]);
+
+      return {
+        hasExports,
+        hasBuildTexture,
+        hasRenderSurface,
+        hasSampleSurface,
+        hasHardLand
+      };
+    }
+
+    function provePixels(canvas) {
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = image.data;
+
+      let nonEmpty = 0;
+      let varied = 0;
+      let first = null;
+      const seen = new Set();
+
+      for (let i = 0; i < data.length; i += 16) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
+
+        if (a > 0 && (r > 0 || g > 0 || b > 0)) nonEmpty += 1;
+
+        const key = `${r},${g},${b},${a}`;
+        if (!first) first = key;
+        seen.add(key);
+        if (seen.size > 8) varied += 1;
+      }
+
+      return {
+        nonEmpty,
+        varied,
+        uniqueSampleCount: seen.size
+      };
+    }
+
+    async function runRendererProof(source) {
+      const sourceInspection = inspectRendererSource(source);
+
+      try {
+        const imported = await importRenderer();
+        state.rendererApi = imported.api;
+
+        setGauge("G5", imported.api ? "PASS" : "FAIL", {
+          "Module Imported": "true",
+          "API Found": String(Boolean(imported.api)),
+          "Source Exports": String(sourceInspection.hasExports)
+        });
+
+        if (!imported.api) {
+          setGauge("G6", "FAIL", {
+            "API": "missing"
+          });
+          return;
+        }
+
+        const api = imported.api;
+        const hasBuildTexture = typeof api.buildTexture === "function";
+        const hasRenderSurface = typeof api.renderSurface === "function";
+        const hasSampleSurface = typeof api.sampleSurface === "function";
+        const hasStatus = typeof api.getStatus === "function";
+
+        setGauge("G6", hasBuildTexture || hasRenderSurface ? "PASS" : "FAIL", {
+          "buildTexture": String(hasBuildTexture),
+          "renderSurface": String(hasRenderSurface),
+          "sampleSurface": String(hasSampleSurface),
+          "getStatus": String(hasStatus),
+          "Status": hasStatus ? JSON.stringify(api.getStatus()) : "none"
+        });
+
+        let texture = null;
+
+        if (hasBuildTexture) {
+          texture = api.buildTexture({
+            width: 256,
+            height: 128,
+            noCache: true
+          });
+        } else if (hasRenderSurface) {
+          texture = document.createElement("canvas");
+          texture.width = 256;
+          texture.height = 128;
+          api.renderSurface(texture, {
+            width: 256,
+            height: 128,
+            noCache: true
+          });
+        }
+
+        const textureIsCanvas = Boolean(texture && typeof texture.getContext === "function");
+
+        setGauge("G7", textureIsCanvas ? "PASS" : "FAIL", {
+          "Texture Canvas": String(textureIsCanvas),
+          "Width": String(texture?.width || 0),
+          "Height": String(texture?.height || 0)
+        });
+
+        if (textureIsCanvas) {
+          const proofCtx = textureCanvas.getContext("2d");
+          proofCtx.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
+          proofCtx.drawImage(texture, 0, 0, textureCanvas.width, textureCanvas.height);
+
+          const proof = provePixels(texture);
+
+          setGauge("G8", proof.nonEmpty > 10 && proof.uniqueSampleCount > 3 ? "PASS" : "FAIL", {
+            "Non Empty Samples": String(proof.nonEmpty),
+            "Unique Samples": String(proof.uniqueSampleCount),
+            "Varied": String(proof.varied)
+          });
+
+          textureReport.textContent =
+            `TEXTURE_BUILD=PASS\n` +
+            `WIDTH=${texture.width}\n` +
+            `HEIGHT=${texture.height}\n` +
+            `NON_EMPTY_SAMPLES=${proof.nonEmpty}\n` +
+            `UNIQUE_SAMPLE_COUNT=${proof.uniqueSampleCount}\n` +
+            `VERSION=${api.version || api.tnt || "unknown"}`;
+        } else {
+          textureReport.textContent = "TEXTURE_BUILD=FAIL\nNo canvas returned.";
+          setGauge("G8", "FAIL", {
+            "Pixel Proof": "not available"
+          });
+        }
+
+        if (hasSampleSurface) {
+          const samples = [
+            api.sampleSurface(0.18, 0.45),
+            api.sampleSurface(0.34, 0.52),
+            api.sampleSurface(0.52, 0.48),
+            api.sampleSurface(0.74, 0.42),
+            api.sampleSurface(0.90, 0.58)
+          ];
+
+          const landCount = samples.filter((s) => s?.isLand || s?.land).length;
+          const waterCount = samples.filter((s) => s?.isWater || s?.water || s?.isLand === false).length;
+          const hasElevation = samples.some((s) => typeof s?.elevation === "number" || typeof s?.height === "number");
+
+          setGauge("G9", landCount > 0 && waterCount > 0 ? "PASS" : "WARN", {
+            "Land Samples": String(landCount),
+            "Water Samples": String(waterCount),
+            "Elevation Data": String(hasElevation),
+            "Sample Keys": Object.keys(samples[0] || {}).slice(0, 16).join(", ") || "none"
+          });
+        } else {
+          setGauge("G9", "WARN", {
+            "sampleSurface": "missing",
+            "Reason": "Cannot source-test land/water data directly."
+          });
+        }
+      } catch (error) {
+        setGauge("G5", "FAIL", {
+          "Import Error": error?.message || String(error),
+          "Source Exports": String(sourceInspection.hasExports),
+          "Source buildTexture": String(sourceInspection.hasBuildTexture),
+          "Source renderSurface": String(sourceInspection.hasRenderSurface)
+        });
+
+        setGauge("G6", "FAIL", {
+          "Renderer API": "not reachable"
+        });
+
+        setGauge("G7", "FAIL", {
+          "Texture Build": "not reachable"
+        });
+
+        setGauge("G8", "FAIL", {
+          "Pixel Proof": "not reachable"
+        });
+
+        setGauge("G9", "WARN", {
+          "Land Water Data": "not reachable"
+        });
+
+        textureReport.textContent = `RENDERER_IMPORT_FAIL\n${error?.message || String(error)}`;
+      }
+    }
+
+    function finalizeMissingReport() {
+      const lines = [];
+      const g = (id) => state.gauges.get(id)?.status || "PENDING";
+
+      lines.push(`CONTRACT=${CONTRACT}`);
+      lines.push(`ROUTE=/showroom/globe/`);
+      lines.push(`PLANET=AUDRALIA`);
+      lines.push("");
+
+      if (g("G1") !== "PASS") {
+        lines.push("MISSING: Showroom Globe HTML shell pass.");
+        lines.push("NEXT_TARGET: /showroom/globe/index.html");
+      } else if (g("G2") !== "PASS") {
+        lines.push("MISSING: #audraliaRenderMount contract.");
+        lines.push("NEXT_TARGET: /showroom/globe/index.html");
+      } else if (g("G3") !== "PASS" || g("G4") !== "PASS") {
+        lines.push("MISSING: /showroom/globe/index.js execution and visible diagnostic receipts.");
+        lines.push("NEXT_TARGET: /showroom/globe/index.js");
+      } else if (g("G5") !== "PASS" || g("G6") !== "PASS" || g("G7") !== "PASS") {
+        lines.push("MISSING: Audralia renderer import/API/texture proof.");
+        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js");
+      } else if (g("G8") !== "PASS") {
+        lines.push("MISSING: Non-empty canvas pixel proof.");
+        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js or /showroom/globe/index.js draw bridge.");
+      } else if (g("G9") !== "PASS") {
+        lines.push("MISSING: Source-level land/water differentiation proof.");
+        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js");
+      } else {
+        lines.push("SOURCE_CHAIN: PASS");
+        lines.push("MISSING: Screenshot-confirmed visible planet on /showroom/globe/.");
+        lines.push("NEXT_TARGET: /showroom/globe/index.js if page remains blank, otherwise visual refinement.");
+      }
+
+      lines.push("");
+      lines.push(`G1_ROUTE_HTML=${g("G1")}`);
+      lines.push(`G2_MOUNT_NODE=${g("G2")}`);
+      lines.push(`G3_INDEX_MODULE=${g("G3")}`);
+      lines.push(`G4_INDEX_RECEIPTS=${g("G4")}`);
+      lines.push(`G5_RENDERER_IMPORT=${g("G5")}`);
+      lines.push(`G6_RENDERER_API=${g("G6")}`);
+      lines.push(`G7_TEXTURE_BUILD=${g("G7")}`);
+      lines.push(`G8_PIXEL_PROOF=${g("G8")}`);
+      lines.push(`G9_LAND_WATER_DATA=${g("G9")}`);
+      lines.push(`G10_VISUAL_READINESS=HELD_FOR_SEAN_SCREENSHOT`);
+
+      missingReport.textContent = lines.join("\n");
+
+      setGauge("G10", "WARN", {
+        "Visual Readiness": "Held for screenshot confirmation.",
+        "Current Rule": "Source chain may pass while live chamber still fails; screenshot decides final visible expression."
+      });
+    }
+
+    async function runAudit() {
+      state.log = [];
+      state.files = {};
+      state.rendererApi = null;
+
+      for (const gauge of GAUGES) {
+        setGauge(gauge.id, "PENDING", {});
+      }
+
+      textureReport.textContent = "Running texture proof...";
+      missingReport.textContent = "Running audit...";
+      runMeta.textContent = `${CONTRACT} · running · ${new Date().toLocaleString()}`;
+
+      log("Audit start.");
+      log(`Route target: ${TARGETS.route}`);
+      log(`Index target: ${TARGETS.index}`);
+      log(`Renderer target: ${TARGETS.renderer}`);
+
+      try {
+        const routeHtml = await fetchText(TARGETS.route);
+        state.files.routeHtml = routeHtml;
+        log(`Fetched route HTML: ${routeHtml.length} chars.`);
+        inspectRouteHtml(routeHtml);
+      } catch (error) {
+        log(`Route fetch fail: ${error?.message || String(error)}`);
+        setGauge("G1", "FAIL", {
+          "Fetch Error": error?.message || String(error)
+        });
+        setGauge("G2", "FAIL", {
+          "Reason": "Route HTML unavailable."
+        });
+      }
+
+      try {
+        const indexJs = await fetchText(TARGETS.index);
+        state.files.indexJs = indexJs;
+        log(`Fetched index JS: ${indexJs.length} chars.`);
+        inspectIndexJs(indexJs);
+      } catch (error) {
+        log(`Index JS fetch fail: ${error?.message || String(error)}`);
+        setGauge("G3", "FAIL", {
+          "Fetch Error": error?.message || String(error)
+        });
+        setGauge("G4", "FAIL", {
+          "Reason": "Index JS unavailable."
+        });
+      }
+
+      try {
+        const rendererJs = await fetchText(TARGETS.renderer);
+        state.files.rendererJs = rendererJs;
+        log(`Fetched renderer JS: ${rendererJs.length} chars.`);
+        await runRendererProof(rendererJs);
+      } catch (error) {
+        log(`Renderer source fetch/import fail: ${error?.message || String(error)}`);
+        setGauge("G5", "FAIL", {
+          "Fetch/Import Error": error?.message || String(error)
+        });
+        setGauge("G6", "FAIL", {
+          "Reason": "Renderer unavailable."
+        });
+        setGauge("G7", "FAIL", {
+          "Reason": "Renderer unavailable."
+        });
+        setGauge("G8", "FAIL", {
+          "Reason": "Renderer unavailable."
+        });
+        setGauge("G9", "WARN", {
+          "Reason": "Renderer unavailable."
+        });
+      }
+
+      finalizeMissingReport();
+
+      runMeta.textContent = `${CONTRACT} · completed · ${new Date().toLocaleString()}`;
+      log("Audit complete.");
+    }
+
+    document.getElementById("rerunButton").addEventListener("click", runAudit);
+
+    renderGauges();
+    updateSummary();
+    runAudit();
   </script>
 </body>
 </html>

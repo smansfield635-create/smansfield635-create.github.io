@@ -1,47 +1,45 @@
 /* /assets/audrelia.planet.render.js
-   AUDRALIA_G2_ORGANIC_CLIMATE_SEAM_AND_COASTLINE_CORRECTION_TNT_v4
+   AUDRALIA_G2_LIVING_WORLD_PLANET_COMPOSITOR_TNT_v1
 
    ROLE=
-   DOWNSTREAM_RENDER_EXTENSION
+   PLANET_COMPOSITOR / PUBLIC_COMPATIBILITY_FACADE
 
    OWNS=
-   AUDRALIA_PLANET_PROFILE
-   AUDRALIA_PLANET_TEXTURE_LAW
-   AUDRALIA_PLANET_SURFACE_COLOR
-   AUDRALIA_PLANET_EXTENSION_RECEIPT
-   SEAM_SAFE_ORGANIC_CLIMATE_PLANET_TERRAIN
-   DEFINITIVE_LAND_WATER_SEPARATION
-   NINE_SUMMIT_TERRAIN_REGION_LOGIC
+   CREATE_PROFILE_API
+   BUILD_TEXTURE_API
+   SAMPLE_SURFACE_API
+   RENDER_SURFACE_API
+   GET_STATUS_API
+   REGISTER_EXTENSION_COMPATIBILITY
+   AUDRELIA_ID_COMPATIBILITY
+   AUDRALIA_PUBLIC_LABEL
+   FINAL_TEXTURE_COMPOSITION
+
+   CONSUMES=
+   /assets/audralia.land.render.js
+   /assets/audralia.water.render.js
+   /assets/audralia.foliage.render.js
+   /assets/audralia.animals.render.js
 
    DOES_NOT_OWN=
-   PLATFORM_PROJECTION
+   DETAILED_LAND_LOGIC
+   DETAILED_WATER_LOGIC
+   DETAILED_FOLIAGE_LOGIC
+   DETAILED_ANIMAL_ECOLOGY_LOGIC
+   ROUTE_SHELL
    INSTRUMENT_STATE
-   ROUTE_COPY
-   SUN_PIXELS
-   MOON_PIXELS
    GAUGES_LOGIC
    PRODUCT_LOGIC
-   SHOWROOM_LAYOUT
+   SUN_PIXELS
+   MOON_PIXELS
    IMAGE_GENERATION
    GRAPHIC_BOX_BEHAVIOR
-
-   PRESERVES=
-   existing audrelia file path
-   existing audrelia id compatibility
-   existing texture build API
-   existing sampleSurface API
-   existing render-platform registration
-
-   V4_REPAIR=
-   Removes diagonal seam/chord artifacts by replacing closed polygon masks with
-   seam-safe continuous field terrain. No land, shelf, reef, or climate mask is
-   allowed to draw a wrong-edge chord across the equirectangular texture.
 */
 
-(function bindAudraliaPlanetRenderExtension(global) {
+(function bindAudraliaPlanetCompositor(global) {
   "use strict";
 
-  const VERSION = "AUDRALIA_G2_ORGANIC_CLIMATE_SEAM_AND_COASTLINE_CORRECTION_TNT_v4";
+  const VERSION = "AUDRALIA_G2_LIVING_WORLD_PLANET_COMPOSITOR_TNT_v1";
 
   /*
     Compatibility law:
@@ -53,206 +51,11 @@
   const LABEL = "Audralia";
   const TYPE = "planet";
 
-  const TAU = Math.PI * 2;
-  const DEG = Math.PI / 180;
-  const SOURCE_WIDTH = 3072;
-  const SOURCE_HEIGHT = 1536;
+  const SOURCE_WIDTH = 2048;
+  const SOURCE_HEIGHT = 1024;
 
   let cachedTexture = null;
-
-  const REGIONS = [
-    {
-      key: "love_convergence_heartland",
-      summit: "Love",
-      lon: 84,
-      lat: -14,
-      rx: 68,
-      ry: 39,
-      rot: -12,
-      weight: 1.18,
-      humidity: 0.64,
-      dry: 0.34,
-      ridge: 0.36,
-      age: 0.82
-    },
-    {
-      key: "structure_foundation_plateau",
-      summit: "Structure",
-      lon: -26,
-      lat: 4,
-      rx: 43,
-      ry: 25,
-      rot: -7,
-      weight: 0.94,
-      humidity: 0.42,
-      dry: 0.55,
-      ridge: 0.48,
-      age: 0.88
-    },
-    {
-      key: "character_origin_ridge",
-      summit: "Character",
-      lon: -122,
-      lat: 23,
-      rx: 36,
-      ry: 25,
-      rot: 17,
-      weight: 0.92,
-      humidity: 0.55,
-      dry: 0.32,
-      ridge: 0.74,
-      age: 0.96
-    },
-    {
-      key: "balance_transition_basin",
-      summit: "Balance",
-      lon: 20,
-      lat: -47,
-      rx: 31,
-      ry: 20,
-      rot: 22,
-      weight: 0.84,
-      humidity: 0.58,
-      dry: 0.34,
-      ridge: 0.28,
-      age: 0.78
-    },
-    {
-      key: "stability_habitable_shelf",
-      summit: "Stability",
-      lon: 154,
-      lat: -11,
-      rx: 38,
-      ry: 23,
-      rot: -24,
-      weight: 0.90,
-      humidity: 0.66,
-      dry: 0.22,
-      ridge: 0.32,
-      age: 0.76
-    },
-    {
-      key: "peace_protected_basin",
-      summit: "Peace",
-      lon: -54,
-      lat: -47,
-      rx: 31,
-      ry: 21,
-      rot: 13,
-      weight: 0.82,
-      humidity: 0.72,
-      dry: 0.18,
-      ridge: 0.20,
-      age: 0.74
-    },
-    {
-      key: "joy_bright_archipelago",
-      summit: "Joy",
-      lon: -148,
-      lat: 31,
-      rx: 33,
-      ry: 20,
-      rot: -15,
-      weight: 0.78,
-      humidity: 0.72,
-      dry: 0.12,
-      ridge: 0.22,
-      age: 0.60
-    },
-    {
-      key: "dignity_mineral_crownland",
-      summit: "Dignity",
-      lon: 139,
-      lat: 36,
-      rx: 34,
-      ry: 21,
-      rot: 9,
-      weight: 0.84,
-      humidity: 0.36,
-      dry: 0.54,
-      ridge: 0.82,
-      age: 0.98
-    },
-    {
-      key: "free_will_frontier_edge",
-      summit: "Free Will",
-      lon: 18,
-      lat: 43,
-      rx: 37,
-      ry: 22,
-      rot: 27,
-      weight: 0.84,
-      humidity: 0.44,
-      dry: 0.48,
-      ridge: 0.52,
-      age: 0.84
-    },
-    {
-      key: "southern_old_basin",
-      summit: "Balance",
-      lon: 96,
-      lat: -58,
-      rx: 45,
-      ry: 13,
-      rot: -4,
-      weight: 0.58,
-      humidity: 0.40,
-      dry: 0.24,
-      ridge: 0.20,
-      age: 0.94
-    },
-    {
-      key: "equatorial_island_chain",
-      summit: "Joy",
-      lon: -10,
-      lat: -4,
-      rx: 23,
-      ry: 9,
-      rot: 8,
-      weight: 0.46,
-      humidity: 0.76,
-      dry: 0.10,
-      ridge: 0.18,
-      age: 0.58
-    },
-    {
-      key: "western_littoral_chain",
-      summit: "Stability",
-      lon: -174,
-      lat: -15,
-      rx: 17,
-      ry: 32,
-      rot: 4,
-      weight: 0.55,
-      humidity: 0.66,
-      dry: 0.20,
-      ridge: 0.26,
-      age: 0.70
-    },
-    {
-      key: "eastern_littoral_chain",
-      summit: "Stability",
-      lon: 174,
-      lat: -15,
-      rx: 17,
-      ry: 32,
-      rot: -4,
-      weight: 0.55,
-      humidity: 0.66,
-      dry: 0.20,
-      ridge: 0.26,
-      age: 0.70
-    }
-  ];
-
-  const RIDGES = [
-    { lon: 82, lat: -7, rx: 9, ry: 62, rot: 72, power: 0.82 },
-    { lon: 119, lat: -32, rx: 8, ry: 36, rot: 82, power: 0.56 },
-    { lon: -108, lat: 20, rx: 7, ry: 32, rot: 108, power: 0.72 },
-    { lon: 149, lat: 31, rx: 7, ry: 29, rot: 72, power: 0.76 },
-    { lon: -10, lat: 4, rx: 7, ry: 28, rot: 104, power: 0.54 },
-    { lon: 20, lat: 42, rx: 6, ry: 34, rot: 82, power: 0.50 }
-  ];
+  let cachedDependencyReceipt = null;
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, Number(value) || 0));
@@ -260,6 +63,18 @@
 
   function mix(a, b, t) {
     return a * (1 - t) + b * t;
+  }
+
+  function smoothstep(edge0, edge1, x) {
+    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function normalizeLon(lon) {
+    let out = Number(lon) || 0;
+    while (out > 180) out -= 360;
+    while (out < -180) out += 360;
+    return out;
   }
 
   function lerpColor(a, b, t) {
@@ -278,30 +93,6 @@
     ];
   }
 
-  function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
-  function wrapDeltaLon(lon, centerLon) {
-    let d = lon - centerLon;
-    while (d > 180) d -= 360;
-    while (d < -180) d += 360;
-    return d;
-  }
-
-  function makeSeededRandom(seed) {
-    let s = seed >>> 0;
-
-    return function random() {
-      s += 0x6D2B79F5;
-      let t = s;
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
   function hashNoise(x, y, seed) {
     const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
     return n - Math.floor(n);
@@ -313,9 +104,9 @@
     let freq = 1;
 
     for (let i = 0; i < 4; i += 1) {
-      value += amp * hashNoise(x * freq, y * freq, seed + i * 11.13);
+      value += amp * hashNoise(x * freq, y * freq, seed + i * 15.37);
       amp *= 0.5;
-      freq *= 2.03;
+      freq *= 2.02;
     }
 
     return value;
@@ -328,233 +119,408 @@
     return canvas;
   }
 
-  function lonLatToXY(lon, lat, width, height) {
+  function findBridge() {
+    global.DiamondGateBridge = global.DiamondGateBridge || {};
+    return global.DiamondGateBridge;
+  }
+
+  function findLandEngine() {
+    const bridge = findBridge();
+
+    return (
+      global.DGBAudraliaLandRenderEngine ||
+      global.DGBAudreliaLandRenderEngine ||
+      bridge.DGBAudraliaLandRenderEngine ||
+      bridge.DGBAudreliaLandRenderEngine ||
+      null
+    );
+  }
+
+  function findWaterEngine() {
+    const bridge = findBridge();
+
+    return (
+      global.DGBAudraliaWaterRenderEngine ||
+      global.DGBAudreliaWaterRenderEngine ||
+      bridge.DGBAudraliaWaterRenderEngine ||
+      bridge.DGBAudreliaWaterRenderEngine ||
+      null
+    );
+  }
+
+  function findFoliageEngine() {
+    const bridge = findBridge();
+
+    return (
+      global.DGBAudraliaFoliageRenderEngine ||
+      global.DGBAudreliaFoliageRenderEngine ||
+      bridge.DGBAudraliaFoliageRenderEngine ||
+      bridge.DGBAudreliaFoliageRenderEngine ||
+      null
+    );
+  }
+
+  function findAnimalsEngine() {
+    const bridge = findBridge();
+
+    return (
+      global.DGBAudraliaAnimalsRenderEngine ||
+      global.DGBAudreliaAnimalsRenderEngine ||
+      bridge.DGBAudraliaAnimalsRenderEngine ||
+      bridge.DGBAudreliaAnimalsRenderEngine ||
+      null
+    );
+  }
+
+  function dependencyReceipt() {
+    const land = findLandEngine();
+    const water = findWaterEngine();
+    const foliage = findFoliageEngine();
+    const animals = findAnimalsEngine();
+
     return {
-      x: ((lon + 180) / 360) * width,
-      y: ((90 - lat) / 180) * height
+      landLoaded: !!land,
+      waterLoaded: !!water,
+      foliageLoaded: !!foliage,
+      animalsLoaded: !!animals,
+      allLoaded: !!(land && water && foliage && animals)
     };
   }
 
-  function drawEllipse(ctx, lon, lat, lonRadius, latRadius, rotationDeg, fill, stroke, lineWidth, alpha) {
-    const p = lonLatToXY(lon, lat, ctx.canvas.width, ctx.canvas.height);
+  function fallbackLandSample(lon, lat) {
+    const absLat = Math.abs(lat);
+    const continentA = Math.exp(-(
+      Math.pow((normalizeLon(lon - 82)) / 72, 2) +
+      Math.pow((lat + 14) / 42, 2)
+    ));
+    const continentB = Math.exp(-(
+      Math.pow((normalizeLon(lon + 122)) / 36, 2) +
+      Math.pow((lat - 23) / 26, 2)
+    ));
+    const continentC = Math.exp(-(
+      Math.pow((normalizeLon(lon + 18)) / 44, 2) +
+      Math.pow((lat - 4) / 26, 2)
+    ));
+    const continentD = Math.exp(-(
+      Math.pow((normalizeLon(lon - 154)) / 39, 2) +
+      Math.pow((lat + 11) / 24, 2)
+    ));
 
-    ctx.save();
+    const field = Math.max(continentA, continentB, continentC, continentD);
+    const coastNoise = (fbm(lon * 0.022, lat * 0.034, 91.4) - 0.5) * 0.16;
+    const terrain = field - (0.40 + coastNoise);
+    const landMask = smoothstep(-0.035, 0.040, terrain);
+    const coast = 1 - smoothstep(0.018, 0.135, Math.abs(terrain));
 
-    if (alpha !== undefined) ctx.globalAlpha = alpha;
+    return {
+      ok: true,
+      fallback: true,
+      landMask,
+      hardLandMask: terrain > 0 ? 1 : 0,
+      terrain,
+      continentField: field,
+      coastlinePressure: clamp(coast, 0, 1),
+      elevation: clamp(landMask * (0.36 + field * 0.38 + fbm(lon * 0.08, lat * 0.08, 814.2) * 0.18), 0, 1),
+      ridge: clamp(landMask * (field * 0.40 + fbm(lon * 0.06, lat * 0.09, 512.9) * 0.25), 0, 1),
+      basin: clamp(landMask * ((1 - field) * 0.36 + fbm(lon * 0.03, lat * 0.03, 417.5) * 0.32), 0, 1),
+      mineral: clamp(landMask * (0.28 + field * 0.30 + fbm(lon * 0.07, lat * 0.05, 612.1) * 0.22), 0, 1),
+      dryInterior: clamp(landMask * (Math.exp(-Math.pow((absLat - 27) / 17, 2)) * 0.55 - coast * 0.18), 0, 1),
+      ancientGeology: clamp(landMask * (0.65 + fbm(lon * 0.014, lat * 0.018, 608.4) * 0.24), 0, 1),
+      polarLimit: smoothstep(56, 82, absLat),
+      summitRegion: "fallback_living_world_land",
+      summitName: "Audralia",
+      seamSafe: true
+    };
+  }
 
-    ctx.translate(p.x, p.y);
-    ctx.rotate((rotationDeg || 0) * DEG);
-    ctx.beginPath();
-    ctx.ellipse(
-      0,
-      0,
-      Math.max(0.5, (lonRadius / 360) * ctx.canvas.width),
-      Math.max(0.5, (latRadius / 180) * ctx.canvas.height),
-      0,
-      0,
-      TAU
+  function fallbackWaterSample(lon, lat, context) {
+    const land = context.land || fallbackLandSample(lon, lat);
+    const isWater = 1 - clamp(land.landMask, 0, 1);
+    const coast = clamp(land.coastlinePressure || 0, 0, 1);
+    const absLat = Math.abs(lat);
+    const current = Math.max(
+      Math.exp(-Math.pow((lat + 8 + Math.sin(lon * 0.052) * 5.8) / 10, 2)),
+      Math.exp(-Math.pow((lat + 54 + Math.sin(lon * 0.043) * 4.2) / 10, 2)) * 0.7
     );
 
-    if (fill) {
-      ctx.fillStyle = fill;
-      ctx.fill();
-    }
-
-    if (stroke) {
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = lineWidth || 1;
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawStroke(ctx, points, stroke, lineWidth, alpha) {
-    if (!points || points.length < 2) return;
-
-    ctx.save();
-
-    if (alpha !== undefined) ctx.globalAlpha = alpha;
-
-    ctx.beginPath();
-
-    points.forEach(function drawPoint(point, index) {
-      const p = lonLatToXY(point[0], point[1], ctx.canvas.width, ctx.canvas.height);
-      if (index === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
-    });
-
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = lineWidth;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawRibbon(ctx, lonStart, lonEnd, latBase, amplitude, frequency, stroke, width, phase) {
-    const points = [];
-    const step = lonStart <= lonEnd ? 2.5 : -2.5;
-
-    for (let lon = lonStart; step > 0 ? lon <= lonEnd : lon >= lonEnd; lon += step) {
-      const wobble =
-        Math.sin((lon + phase) * frequency) * amplitude +
-        Math.sin((lon - phase * 0.45) * frequency * 1.9) * amplitude * 0.32 +
-        Math.sin((lon + phase * 1.7) * frequency * 3.1) * amplitude * 0.10;
-
-      points.push([lon, latBase + wobble]);
-    }
-
-    drawStroke(ctx, points, stroke, width);
-  }
-
-  function rotatedEllipseField(lon, lat, cfg) {
-    const dx = wrapDeltaLon(lon, cfg.lon);
-    const dy = lat - cfg.lat;
-    const rot = -(cfg.rot || 0) * DEG;
-
-    const x = dx * Math.cos(rot) - dy * Math.sin(rot);
-    const y = dx * Math.sin(rot) + dy * Math.cos(rot);
-
-    const nx = x / cfg.rx;
-    const ny = y / cfg.ry;
-    const d2 = nx * nx + ny * ny;
-
-    return Math.exp(-d2 * 1.52) * cfg.weight;
-  }
-
-  function ridgeField(lon, lat) {
-    let ridge = 0;
-
-    RIDGES.forEach(function ridgePart(cfg) {
-      const dx = wrapDeltaLon(lon, cfg.lon);
-      const dy = lat - cfg.lat;
-      const rot = -(cfg.rot || 0) * DEG;
-
-      const x = dx * Math.cos(rot) - dy * Math.sin(rot);
-      const y = dx * Math.sin(rot) + dy * Math.cos(rot);
-
-      const nx = x / cfg.rx;
-      const ny = y / cfg.ry;
-      const d2 = nx * nx + ny * ny;
-
-      ridge = Math.max(ridge, Math.exp(-d2 * 1.7) * cfg.power);
-    });
-
-    return ridge;
-  }
-
-  function computeTerrain(lon, lat) {
-    let maxScore = 0;
-    let sumScore = 0;
-    let activeRegion = REGIONS[0];
-
-    REGIONS.forEach(function regionScore(region) {
-      const score = rotatedEllipseField(lon, lat, region);
-
-      sumScore += score * 0.16;
-
-      if (score > maxScore) {
-        maxScore = score;
-        activeRegion = region;
-      }
-    });
-
-    const localNoise =
-      (fbm(lon * 0.021, lat * 0.030, 91.4) - 0.5) * 0.16 +
-      (fbm(lon * 0.052, lat * 0.061, 148.2) - 0.5) * 0.055;
-
-    const ancientErosion =
-      (fbm(lon * 0.012, lat * 0.018, 301.7) - 0.5) * 0.075;
-
-    const combined = Math.max(maxScore, sumScore);
-    const threshold = 0.405 + localNoise + ancientErosion;
-
-    const terrain = combined - threshold;
-    const landBlend = smoothstep(-0.035, 0.040, terrain);
-    const coast = 1 - smoothstep(0.018, 0.135, Math.abs(terrain));
-    const shelf = (1 - landBlend) * smoothstep(0.18, 0.44, combined);
-    const nearLand = smoothstep(0.10, 0.50, combined);
+    const oceanDepth = clamp(isWater * (0.46 + (1 - coast) * 0.42 + (fbm(lon * 0.02, lat * 0.03, 801.2) - 0.5) * 0.12), 0, 1);
+    const shelf = clamp(isWater * (coast * 0.88 + smoothstep(0.18, 0.48, land.continentField || 0) * 0.30), 0, 1);
+    const reef = clamp(shelf * smoothstep(0.35, 0.78, fbm(lon * 0.08, lat * 0.09, 418.7)) * (1 - smoothstep(42, 72, absLat)), 0, 1);
 
     return {
-      combined,
-      threshold,
-      terrain,
-      landBlend,
-      coast: clamp(coast, 0, 1),
-      shelf: clamp(shelf, 0, 1),
-      nearLand: clamp(nearLand, 0, 1),
-      region: activeRegion,
-      noise: localNoise,
-      erosion: ancientErosion,
-      ridge: ridgeField(lon, lat)
+      ok: true,
+      fallback: true,
+      isWater,
+      oceanDepth,
+      shelf,
+      reef,
+      current,
+      currentWarmth: clamp((1 - absLat / 70) * current, 0, 1),
+      coastalMoisture: clamp(coast * 0.72 + shelf * 0.36, 0, 1),
+      inlandWater: clamp(land.landMask * land.basin * 0.40 * (1 - land.dryInterior), 0, 1),
+      wetDryBoundary: clamp(coast * 0.55 + land.dryInterior * 0.36, 0, 1),
+      shorelineFoam: clamp(coast * fbm(lon * 0.13, lat * 0.12, 121.5), 0, 1),
+      turquoiseShelf: clamp(shelf * 0.76 + reef * 0.50, 0, 1),
+      seamSafe: true
     };
   }
 
-  function oceanColor(lon, lat, field) {
+  function fallbackFoliageSample(lon, lat, context) {
+    const land = context.land || fallbackLandSample(lon, lat);
+    const water = context.water || fallbackWaterSample(lon, lat, { land });
+    const absLat = Math.abs(lat);
+    const tropical = 1 - clamp(absLat / 34, 0, 1);
+    const temperate = Math.exp(-Math.pow((absLat - 38) / 20, 2));
+    const polarLimit = smoothstep(56, 82, absLat) + smoothstep(0.64, 0.95, land.elevation) * 0.34;
+
+    const green = clamp(
+      land.landMask * (
+        water.coastalMoisture * 0.42 +
+        water.inlandWater * 0.36 +
+        tropical * 0.18 +
+        temperate * 0.16 -
+        land.dryInterior * 0.36 -
+        polarLimit * 0.46 +
+        fbm(lon * 0.03, lat * 0.04, 1601.2) * 0.22
+      ),
+      0,
+      1
+    );
+
+    const forest = clamp(green * 0.74 + land.basin * 0.14 - land.dryInterior * 0.18, 0, 1);
+    const grassland = clamp(land.landMask * (temperate * 0.35 + green * 0.22 + water.wetDryBoundary * 0.20), 0, 1);
+    const scrub = clamp(land.landMask * (land.dryInterior * 0.48 + land.ancientGeology * 0.12 - forest * 0.20), 0, 1);
+    const fertileBasin = clamp(land.landMask * (land.basin * 0.34 + water.inlandWater * 0.30 + water.coastalMoisture * 0.18), 0, 1);
+
+    return {
+      ok: true,
+      fallback: true,
+      foliageDensity: clamp(forest * 0.42 + grassland * 0.26 + scrub * 0.12 + fertileBasin * 0.28, 0, 1),
+      forest,
+      grassland,
+      scrub,
+      fertileBasin,
+      coastalVegetation: clamp(land.coastlinePressure * 0.44 + water.coastalMoisture * 0.38, 0, 1),
+      mountainVegetationLimit: clamp(land.ridge * 0.44 + land.elevation * 0.32 + polarLimit * 0.28, 0, 1),
+      polarLimit: clamp(polarLimit, 0, 1),
+      climateGreen: clamp(green + fertileBasin * 0.18, 0, 1),
+      matureEcology: clamp(land.ancientGeology * 0.26 + forest * 0.28 + fertileBasin * 0.22, 0, 1),
+      seamSafe: true
+    };
+  }
+
+  function fallbackAnimalsSample(lon, lat, context) {
+    const land = context.land || fallbackLandSample(lon, lat);
+    const water = context.water || fallbackWaterSample(lon, lat, { land });
+    const foliage = context.foliage || fallbackFoliageSample(lon, lat, { land, water });
+
+    const migration =
+      Math.exp(-Math.pow((lat + 18 + Math.sin(lon * 0.045) * 10) / 6, 2)) * 0.45 +
+      Math.exp(-Math.pow((lat - 28 + Math.sin(lon * 0.075) * 8) / 6, 2)) * 0.32;
+
+    const herd = clamp(land.landMask * (foliage.grassland * 0.36 + water.inlandWater * 0.14 + migration * 0.28), 0, 1);
+    const bird = clamp((migration * 0.52 + land.coastlinePressure * 0.16 + foliage.forest * 0.14) * Math.max(land.landMask, water.shelf), 0, 1);
+    const reefLife = clamp(water.isWater * (water.reef * 0.72 + water.shelf * 0.18 + water.current * 0.16), 0, 1);
+    const marineLife = clamp(water.isWater * (water.current * 0.24 + water.shelf * 0.18 + water.reef * 0.38), 0, 1);
+    const coastalLife = clamp(Math.max(land.landMask, water.shelf) * (land.coastlinePressure * 0.42 + foliage.coastalVegetation * 0.22 + water.shelf * 0.20), 0, 1);
+
+    const animalDensity = clamp(
+      herd * 0.26 +
+      bird * 0.18 +
+      reefLife * 0.20 +
+      marineLife * 0.18 +
+      coastalLife * 0.22 +
+      foliage.matureEcology * 0.26,
+      0,
+      1
+    );
+
+    return {
+      ok: true,
+      fallback: true,
+      animalDensity,
+      migrationTrace: clamp(migration, 0, 1),
+      herdSignal: herd,
+      birdPath: bird,
+      marineLife,
+      reefLife,
+      coastalLife,
+      shelteredEcology: clamp(foliage.fertileBasin * 0.28 + water.inlandWater * 0.18, 0, 1),
+      ecosystemDensity: clamp(foliage.matureEcology * 0.28 + foliage.foliageDensity * 0.24 + animalDensity * 0.34, 0, 1),
+      ecologyPulse: clamp(animalDensity * 0.42 + migration * 0.22, 0, 1),
+      globeScaleSignalsOnly: true,
+      noOversizedAnimalIcons: true,
+      seamSafe: true
+    };
+  }
+
+  function sampleLivingWorld(lon, lat) {
+    const landEngine = findLandEngine();
+    const waterEngine = findWaterEngine();
+    const foliageEngine = findFoliageEngine();
+    const animalsEngine = findAnimalsEngine();
+
+    const land =
+      landEngine && typeof landEngine.sampleLand === "function"
+        ? landEngine.sampleLand(lon, lat)
+        : landEngine && typeof landEngine.sample === "function"
+          ? landEngine.sample(lon, lat)
+          : fallbackLandSample(lon, lat);
+
+    const waterContext = { land };
+    const water =
+      waterEngine && typeof waterEngine.sampleWater === "function"
+        ? waterEngine.sampleWater(lon, lat, waterContext)
+        : waterEngine && typeof waterEngine.sample === "function"
+          ? waterEngine.sample(lon, lat, waterContext)
+          : fallbackWaterSample(lon, lat, waterContext);
+
+    const foliageContext = { land, water };
+    const foliage =
+      foliageEngine && typeof foliageEngine.sampleFoliage === "function"
+        ? foliageEngine.sampleFoliage(lon, lat, foliageContext)
+        : foliageEngine && typeof foliageEngine.sample === "function"
+          ? foliageEngine.sample(lon, lat, foliageContext)
+          : fallbackFoliageSample(lon, lat, foliageContext);
+
+    const animalsContext = { land, water, foliage };
+    const animals =
+      animalsEngine && typeof animalsEngine.sampleAnimals === "function"
+        ? animalsEngine.sampleAnimals(lon, lat, animalsContext)
+        : animalsEngine && typeof animalsEngine.sample === "function"
+          ? animalsEngine.sample(lon, lat, animalsContext)
+          : fallbackAnimalsSample(lon, lat, animalsContext);
+
+    return {
+      land,
+      water,
+      foliage,
+      animals
+    };
+  }
+
+  function composeWaterColor(lon, lat, water) {
     const deep = [4, 18, 48];
     const mid = [7, 82, 124];
     const tropic = [9, 112, 145];
     const shelf = [62, 208, 206];
-    const polar = [48, 72, 103];
+    const reef = [168, 229, 188];
+    const polar = [52, 75, 106];
 
-    const depth = clamp((0.43 - field.combined) / 0.43, 0, 1);
-    const latitudeCold = smoothstep(48, 82, Math.abs(lat));
-    const equator = 1 - clamp(Math.abs(lat) / 54, 0, 1);
+    const absLat = Math.abs(lat);
+    const depth = clamp(water.oceanDepth || 0, 0, 1);
+    const shelfValue = clamp(water.turquoiseShelf || water.shelf || 0, 0, 1);
+    const reefValue = clamp(water.reef || 0, 0, 1);
+    const equator = 1 - clamp(absLat / 54, 0, 1);
+    const polarValue = smoothstep(52, 82, absLat);
 
     let color = lerpColor(mid, deep, depth);
-    color = lerpColor(color, tropic, equator * 0.20);
-    color = lerpColor(color, shelf, field.shelf * 0.82);
-    color = lerpColor(color, polar, latitudeCold * 0.36);
+    color = lerpColor(color, tropic, equator * 0.18);
+    color = lerpColor(color, shelf, shelfValue * 0.82);
+    color = lerpColor(color, reef, reefValue * 0.38);
+    color = lerpColor(color, polar, polarValue * 0.32);
 
-    const oceanNoise = (fbm(lon * 0.044, lat * 0.052, 12.1) - 0.5) * 18;
+    const oceanNoise = (fbm(lon * 0.044, lat * 0.052, 12.1) - 0.5) * 15;
     color = addColor(color, oceanNoise);
 
     return color;
   }
 
-  function landColor(lon, lat, field) {
-    const region = field.region;
-
+  function composeLandColor(lon, lat, land, foliage, animals) {
     const humidGreen = [34, 109, 65];
     const darkForest = [24, 78, 57];
     const olive = [91, 126, 73];
-    const temperate = [108, 139, 76];
+    const grass = [106, 140, 75];
+    const scrub = [147, 129, 78];
     const dry = [184, 143, 86];
     const desert = [203, 164, 101];
     const mountain = [122, 112, 94];
     const stone = [92, 88, 78];
     const snow = [219, 232, 225];
+    const lifeGold = [224, 194, 112];
 
     const absLat = Math.abs(lat);
-    const temp = clamp(1 - absLat / 82, 0, 1);
-    const dryBelt = Math.exp(-Math.pow((absLat - 27) / 17, 2));
-    const wetBelt = Math.exp(-Math.pow(absLat / 24, 2));
-    const climateNoise = fbm(lon * 0.025, lat * 0.036, 512.4);
-    const detailNoise = fbm(lon * 0.080, lat * 0.092, 814.2);
+    const forest = clamp(foliage.forest || 0, 0, 1);
+    const grassland = clamp(foliage.grassland || 0, 0, 1);
+    const scrubland = clamp(foliage.scrub || 0, 0, 1);
+    const fertile = clamp(foliage.fertileBasin || 0, 0, 1);
+    const dryInterior = clamp(land.dryInterior || 0, 0, 1);
+    const elevation = clamp(land.elevation || 0, 0, 1);
+    const ridge = clamp(land.ridge || 0, 0, 1);
+    const mineral = clamp(land.mineral || 0, 0, 1);
+    const ancient = clamp(land.ancientGeology || 0, 0, 1);
+    const animalPulse = clamp(animals.ecologyPulse || 0, 0, 1);
+    const polar = smoothstep(52, 82, absLat) + smoothstep(0.64, 0.95, elevation) * 0.34;
 
-    const humidity = clamp(region.humidity * 0.58 + wetBelt * 0.26 + climateNoise * 0.28 - dryBelt * 0.18, 0, 1);
-    const aridity = clamp(region.dry * 0.50 + dryBelt * 0.42 + (1 - humidity) * 0.24, 0, 1);
-    const elevation = clamp(field.ridge * 0.70 + region.ridge * 0.22 + detailNoise * 0.14, 0, 1);
-    const ancient = clamp(region.age * 0.58 + field.erosion * 1.8 + climateNoise * 0.20, 0, 1);
-    const cold = smoothstep(46, 76, absLat) + smoothstep(0.52, 0.88, elevation) * 0.35;
+    let color = olive;
+    color = lerpColor(color, humidGreen, clamp(foliage.climateGreen || 0, 0, 1) * 0.56);
+    color = lerpColor(color, darkForest, forest * 0.34);
+    color = lerpColor(color, grass, grassland * 0.26);
+    color = lerpColor(color, scrub, scrubland * 0.26);
+    color = lerpColor(color, dry, dryInterior * 0.50);
+    color = lerpColor(color, desert, dryInterior * (1 - forest) * 0.24);
+    color = lerpColor(color, mountain, ridge * 0.42 + elevation * 0.18);
+    color = lerpColor(color, stone, ancient * mineral * 0.26);
+    color = lerpColor(color, snow, clamp(polar, 0, 1) * 0.34);
+    color = lerpColor(color, lifeGold, animalPulse * 0.08 + fertile * 0.08);
 
-    let color = lerpColor(olive, humidGreen, humidity);
-    color = lerpColor(color, darkForest, humidity * temp * 0.18);
-    color = lerpColor(color, temperate, (1 - Math.abs(absLat - 36) / 36) * 0.18);
-    color = lerpColor(color, dry, aridity * 0.62);
-    color = lerpColor(color, desert, aridity * dryBelt * 0.32);
-    color = lerpColor(color, mountain, elevation * 0.52);
-    color = lerpColor(color, stone, ancient * elevation * 0.24);
-    color = lerpColor(color, snow, clamp(cold, 0, 1) * 0.38);
+    const texture =
+      (fbm(lon * 0.080, lat * 0.092, 814.2) - 0.5) * 22 +
+      (fbm(lon * 0.15, lat * 0.12, 108.8) - 0.5) * 9;
 
-    const coastGold = [216, 203, 137];
-    color = lerpColor(color, coastGold, field.coast * 0.16);
-
-    const texture = (detailNoise - 0.5) * 28 + (fbm(lon * 0.15, lat * 0.12, 108.8) - 0.5) * 12;
     color = addColor(color, texture);
 
     return color;
+  }
+
+  function composeSampleColor(lon, lat) {
+    const living = sampleLivingWorld(lon, lat);
+    const land = living.land;
+    const water = living.water;
+    const foliage = living.foliage;
+    const animals = living.animals;
+
+    const landMask = clamp(land.landMask || 0, 0, 1);
+    const coast = clamp(land.coastlinePressure || 0, 0, 1);
+    const shelf = clamp(water.shelf || 0, 0, 1);
+    const reef = clamp(water.reef || 0, 0, 1);
+    const foam = clamp(water.shorelineFoam || 0, 0, 1);
+    const bird = clamp(animals.birdPath || 0, 0, 1);
+    const marine = clamp(animals.marineLife || 0, 0, 1);
+    const herd = clamp(animals.herdSignal || 0, 0, 1);
+
+    let waterColor = composeWaterColor(lon, lat, water);
+    let landColor = composeLandColor(lon, lat, land, foliage, animals);
+
+    let color = lerpColor(waterColor, landColor, landMask);
+
+    const shelfGlow = shelf * (1 - landMask) * 20;
+    const coastGlow = coast * 16;
+    const reefGlow = reef * 18;
+    const lifeSignal = (bird * 8 + marine * 8 + herd * 5) * 0.42;
+
+    if (landMask < 0.5) {
+      color[0] += shelfGlow * 0.18 + reefGlow * 0.48 + marine * 2.5;
+      color[1] += shelfGlow * 0.78 + reefGlow * 0.72 + marine * 5.5;
+      color[2] += shelfGlow * 0.90 + reefGlow * 0.32 + marine * 4.5;
+    } else {
+      color[0] += coastGlow * 0.46 + lifeSignal;
+      color[1] += coastGlow * 0.36 + lifeSignal * 0.72;
+      color[2] += coastGlow * 0.16 + lifeSignal * 0.20;
+    }
+
+    color[0] += foam * 8;
+    color[1] += foam * 8;
+    color[2] += foam * 7;
+
+    const polarHaze = smoothstep(60, 84, Math.abs(lat));
+    color = lerpColor(color, [230, 240, 238], polarHaze * 0.14);
+
+    return [
+      clamp(Math.round(color[0]), 0, 255),
+      clamp(Math.round(color[1]), 0, 255),
+      clamp(Math.round(color[2]), 0, 255)
+    ];
   }
 
   function writeTexturePixels(ctx) {
@@ -570,32 +536,11 @@
       for (let x = 0; x < SOURCE_WIDTH; x += 1) {
         const u = x / SOURCE_WIDTH;
         const lon = u * 360 - 180;
-        const field = computeTerrain(lon, lat);
+        const color = composeSampleColor(lon, lat);
 
-        const water = oceanColor(lon, lat, field);
-        const land = landColor(lon, lat, field);
-
-        let color = lerpColor(water, land, field.landBlend);
-
-        const coastBrightness = field.coast * 20;
-        const shelfGlow = field.shelf * 18;
-
-        if (field.landBlend < 0.5) {
-          color[0] += shelfGlow * 0.20;
-          color[1] += shelfGlow * 0.78;
-          color[2] += shelfGlow * 0.88;
-        } else {
-          color[0] += coastBrightness * 0.55;
-          color[1] += coastBrightness * 0.45;
-          color[2] += coastBrightness * 0.20;
-        }
-
-        const polarHaze = smoothstep(58, 84, Math.abs(lat));
-        color = lerpColor(color, [230, 240, 238], polarHaze * 0.16);
-
-        data[i] = clamp(Math.round(color[0]), 0, 255);
-        data[i + 1] = clamp(Math.round(color[1]), 0, 255);
-        data[i + 2] = clamp(Math.round(color[2]), 0, 255);
+        data[i] = color[0];
+        data[i + 1] = color[1];
+        data[i + 2] = color[2];
         data[i + 3] = 255;
 
         i += 4;
@@ -605,182 +550,9 @@
     ctx.putImageData(image, 0, 0);
   }
 
-  function drawLocalReefChain(ctx, centerLon, centerLat, radiusLon, radiusLat, startDeg, endDeg, count, seedOffset) {
-    const random = makeSeededRandom(6351301 + seedOffset);
-
-    for (let i = 0; i < count; i += 1) {
-      const t = count === 1 ? 0.5 : i / (count - 1);
-      const angle = mix(startDeg, endDeg, t) * DEG;
-      const lon = centerLon + Math.cos(angle) * radiusLon + (random() - 0.5) * 2.0;
-      const lat = centerLat + Math.sin(angle) * radiusLat + (random() - 0.5) * 1.0;
-
-      if (lon < -178 || lon > 178) continue;
-
-      drawEllipse(
-        ctx,
-        lon,
-        lat,
-        0.28 + random() * 1.1,
-        0.08 + random() * 0.28,
-        random() * 180,
-        "rgba(226, 244, 188, " + (0.12 + random() * 0.16).toFixed(4) + ")",
-        null,
-        0
-      );
-    }
-  }
-
-  function drawRidgesAndBasins(ctx) {
-    const ridgeLines = [
-      [[48, -7], [72, 4], [102, 7], [132, -5], [156, -22]],
-      [[70, -38], [98, -28], [126, -31], [151, -43]],
-      [[-136, 24], [-113, 31], [-91, 18], [-75, 2]],
-      [[135, 37], [153, 32], [173, 22]],
-      [[-27, 5], [-8, 15], [17, 8], [31, -9]],
-      [[13, 44], [28, 40], [45, 31]]
-    ];
-
-    ridgeLines.forEach(function drawMainRidge(points, index) {
-      drawStroke(
-        ctx,
-        points,
-        index === 0 ? "rgba(238, 234, 214, 0.22)" : "rgba(228, 216, 184, 0.16)",
-        index === 0 ? 2.0 : 1.45
-      );
-
-      drawStroke(
-        ctx,
-        points.map(function offset(point) {
-          return [point[0] + 1.0, point[1] - 0.8];
-        }),
-        "rgba(43, 35, 28, 0.17)",
-        index === 0 ? 1.35 : 1.0
-      );
-    });
-
-    const basinRandom = makeSeededRandom(6351407);
-
-    for (let i = 0; i < 48; i += 1) {
-      const lon = -170 + basinRandom() * 340;
-      const lat = -62 + basinRandom() * 124;
-
-      drawEllipse(
-        ctx,
-        lon,
-        lat,
-        2.5 + basinRandom() * 8.0,
-        0.8 + basinRandom() * 2.8,
-        basinRandom() * 180,
-        basinRandom() > 0.5
-          ? "rgba(109, 83, 62, 0.035)"
-          : "rgba(218, 181, 110, 0.030)",
-        null,
-        0
-      );
-    }
-  }
-
-  function drawReefAndShelfAccents(ctx) {
-    drawLocalReefChain(ctx, 82, -12, 84, 50, 112, 255, 116, 11);
-    drawLocalReefChain(ctx, 144, 33, 42, 23, 186, 352, 52, 12);
-    drawLocalReefChain(ctx, -148, 29, 40, 27, 8, 224, 66, 13);
-    drawLocalReefChain(ctx, -150, -16, 36, 25, 36, 254, 54, 14);
-    drawLocalReefChain(ctx, -44, -50, 36, 21, 150, 345, 42, 15);
-    drawLocalReefChain(ctx, 18, 43, 40, 24, 190, 357, 50, 16);
-  }
-
-  function drawClimateCurrents(ctx) {
-    const random = makeSeededRandom(6351503);
-
-    for (let band = -56; band <= 58; band += 12) {
-      const points = [];
-
-      for (let lon = -180; lon <= 180; lon += 3) {
-        const wobble =
-          Math.sin((lon + band * 2.5) * 0.08) * 2.1 +
-          Math.sin((lon - band * 1.2) * 0.15) * 0.74 +
-          Math.sin((lon + band) * 0.032) * 0.9;
-
-        points.push([lon, band + wobble]);
-      }
-
-      drawStroke(
-        ctx,
-        points,
-        band < -28 ? "rgba(255,255,255,0.052)" : "rgba(255,255,255,0.040)",
-        band < -28 ? 1.8 : 1.25
-      );
-    }
-
-    for (let i = 0; i < 340; i += 1) {
-      const lat = random() > 0.58
-        ? -72 + random() * 64
-        : -62 + random() * 124;
-
-      drawEllipse(
-        ctx,
-        -180 + random() * 360,
-        lat,
-        0.8 + random() * 6.4,
-        0.20 + random() * 1.35,
-        random() * 180,
-        "rgba(255,255,255," + (0.010 + random() * 0.040).toFixed(4) + ")",
-        null,
-        0
-      );
-    }
-
-    for (let i = 0; i < 9; i += 1) {
-      drawRibbon(
-        ctx,
-        -180,
-        180,
-        -20 + i * 5,
-        0.55 + random() * 0.70,
-        0.050 + random() * 0.016,
-        "rgba(255,255,255,0.020)",
-        0.65,
-        random() * 220
-      );
-    }
-  }
-
-  function drawPolarAndAtmosphere(ctx) {
-    const north = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT * 0.25);
-    north.addColorStop(0, "rgba(245,250,255,0.22)");
-    north.addColorStop(0.42, "rgba(245,250,255,0.070)");
-    north.addColorStop(1, "rgba(245,250,255,0)");
-
-    ctx.fillStyle = north;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT * 0.25);
-
-    const south = ctx.createLinearGradient(0, SOURCE_HEIGHT, 0, SOURCE_HEIGHT * 0.56);
-    south.addColorStop(0.00, "rgba(216, 236, 255, 0.26)");
-    south.addColorStop(0.20, "rgba(143, 240, 198, 0.10)");
-    south.addColorStop(0.48, "rgba(143, 101, 255, 0.050)");
-    south.addColorStop(1.00, "rgba(143, 101, 255, 0)");
-
-    ctx.fillStyle = south;
-    ctx.fillRect(0, SOURCE_HEIGHT * 0.56, SOURCE_WIDTH, SOURCE_HEIGHT * 0.44);
-
-    const haze = ctx.createRadialGradient(
-      SOURCE_WIDTH * 0.50,
-      SOURCE_HEIGHT * 0.50,
-      SOURCE_HEIGHT * 0.20,
-      SOURCE_WIDTH * 0.50,
-      SOURCE_HEIGHT * 0.50,
-      SOURCE_HEIGHT * 0.90
-    );
-
-    haze.addColorStop(0.00, "rgba(255,255,255,0.014)");
-    haze.addColorStop(0.55, "rgba(255,255,255,0.012)");
-    haze.addColorStop(1.00, "rgba(130,204,255,0.064)");
-
-    ctx.fillStyle = haze;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
-  }
-
   function createProfile() {
+    const deps = dependencyReceipt();
+
     return {
       id: ID,
       canonicalId: CANONICAL_ID,
@@ -794,23 +566,40 @@
       glowColor: "rgba(90,190,255,0.38)",
       sourceDefinition: SOURCE_WIDTH,
       ownsBodyPixelsOnly: true,
+      ownsDetailedLandLogic: false,
+      ownsDetailedWaterLogic: false,
+      ownsDetailedFoliageLogic: false,
+      ownsDetailedAnimalLogic: false,
+      publicCompatibilityFacade: true,
+      livingWorldCompositor: true,
+      landEngineLoaded: deps.landLoaded,
+      waterEngineLoaded: deps.waterLoaded,
+      foliageEngineLoaded: deps.foliageLoaded,
+      animalsEngineLoaded: deps.animalsLoaded,
+      allLivingWorldEnginesLoaded: deps.allLoaded,
+      fallbackSafe: true,
       profileMerge: false,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
       renderBodyTerrainG2: true,
-      organicClimatePlanetV4: true,
+      organicClimatePlanet: true,
       seamSafeTerrain: true,
-      seamSafeMaskGeneration: true,
-      noWrongEdgePolygonChords: true,
       coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
       homeWorldExpression: true,
       fourTimesEarthAgeExpression: true,
       australiaRelationship: "inspiration_signal_only",
       audraliaRelationship: "fictional_metaverse_home_world_construct",
+      chain: [
+        "/assets/audralia.land.render.js",
+        "/assets/audralia.water.render.js",
+        "/assets/audralia.foliage.render.js",
+        "/assets/audralia.animals.render.js",
+        "/assets/audrelia.planet.render.js"
+      ],
       terrainLanguage: [
-        "seam_safe_field_terrain",
+        "land_water_foliage_animals_compositor",
         "organic_irregular_coastlines",
         "definitive_land_water_separation",
         "coherent_home_world_planet",
@@ -818,31 +607,19 @@
         "turquoise_shallow_shelves",
         "reef_edge_systems",
         "visible_climate_belts",
-        "humid_green_zones",
-        "temperate_olive_zones",
-        "tan_dry_interiors",
-        "gray_brown_mountain_ridges",
-        "white_polar_or_highland_cues",
+        "biome_ecology",
+        "animal_life_signals",
         "weathered_ancient_basins",
         "long_eroded_mountain_chains",
-        "nine_summit_terrain_regions"
-      ],
-      nineSummitTerrainRegions: [
-        "character_origin_ridge",
-        "structure_foundation_plateau",
-        "balance_transition_basin",
-        "stability_habitable_shelf",
-        "peace_protected_basin",
-        "joy_bright_archipelago",
-        "dignity_mineral_crownland",
-        "free_will_frontier_edge",
-        "love_convergence_heartland"
+        "nine_summit_living_world_regions"
       ]
     };
   }
 
   function buildTexture() {
     if (cachedTexture) return cachedTexture;
+
+    cachedDependencyReceipt = dependencyReceipt();
 
     const canvas = makeCanvas(SOURCE_WIDTH, SOURCE_HEIGHT);
     const ctx = canvas.getContext("2d", {
@@ -851,10 +628,6 @@
     });
 
     writeTexturePixels(ctx);
-    drawRidgesAndBasins(ctx);
-    drawReefAndShelfAccents(ctx);
-    drawClimateCurrents(ctx);
-    drawPolarAndAtmosphere(ctx);
 
     cachedTexture = ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
     return cachedTexture;
@@ -897,6 +670,8 @@
   }
 
   function renderSurface() {
+    const deps = cachedDependencyReceipt || dependencyReceipt();
+
     return {
       ok: true,
       body: ID,
@@ -905,15 +680,20 @@
       version: VERSION,
       renderDelegatedToPlatformProjection: true,
       ownsBodyPixelsOnly: true,
+      publicCompatibilityFacade: true,
+      livingWorldCompositor: true,
+      landEngineLoaded: deps.landLoaded,
+      waterEngineLoaded: deps.waterLoaded,
+      foliageEngineLoaded: deps.foliageLoaded,
+      animalsEngineLoaded: deps.animalsLoaded,
+      allLivingWorldEnginesLoaded: deps.allLoaded,
+      fallbackSafe: true,
       profileMerge: false,
       renderBodyTerrainG2: true,
-      organicClimatePlanetV4: true,
+      organicClimatePlanet: true,
       seamSafeTerrain: true,
-      seamSafeMaskGeneration: true,
-      noWrongEdgePolygonChords: true,
       coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
-      nineSummitTerrainRegions: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -921,6 +701,8 @@
   }
 
   function getStatus() {
+    const deps = cachedDependencyReceipt || dependencyReceipt();
+
     return {
       ok: true,
       id: ID,
@@ -929,13 +711,25 @@
       type: TYPE,
       version: VERSION,
       file: "/assets/audrelia.planet.render.js",
-      ownsBodyPixelsOnly: true,
-      profileMerge: false,
+      publicCompatibilityFacade: true,
+      livingWorldCompositor: true,
+      compositorFacadeOnly: true,
+      ownsDetailedLandLogic: false,
+      ownsDetailedWaterLogic: false,
+      ownsDetailedFoliageLogic: false,
+      ownsDetailedAnimalLogic: false,
+      landEngine: "/assets/audralia.land.render.js",
+      waterEngine: "/assets/audralia.water.render.js",
+      foliageEngine: "/assets/audralia.foliage.render.js",
+      animalsEngine: "/assets/audralia.animals.render.js",
+      landEngineLoaded: deps.landLoaded,
+      waterEngineLoaded: deps.waterLoaded,
+      foliageEngineLoaded: deps.foliageLoaded,
+      animalsEngineLoaded: deps.animalsLoaded,
+      allLivingWorldEnginesLoaded: deps.allLoaded,
+      fallbackSafe: true,
       renderBodyTerrainG2: true,
-      organicClimatePlanetV4: true,
-      seamSafeTerrain: true,
-      seamSafeMaskGeneration: true,
-      noWrongEdgePolygonChords: true,
+      organicClimatePlanet: true,
       coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
       oceanForwardWorldRead: true,
@@ -944,14 +738,13 @@
       turquoiseShallowShelves: true,
       reefBoundarySignal: true,
       visibleClimateBelts: true,
-      humidGreenZones: true,
-      temperateOliveZones: true,
-      tanDryInteriors: true,
-      ancientBasins: true,
-      longErodedMountainChains: true,
+      foliageBiomeEcology: true,
+      animalLifeSignals: true,
+      globeScaleAnimalsOnly: true,
+      noOversizedAnimalIcons: true,
       polarSubpolarInfluence: true,
       fourTimesEarthAgeExpression: true,
-      nineSummitTerrainRegions: true,
+      nineSummitLivingWorldRegions: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false
@@ -972,7 +765,8 @@
       "audrelia-planet",
       "audralia",
       "audralia-planet",
-      "home-world"
+      "home-world",
+      "living-world"
     ],
     createProfile,
     buildTexture,

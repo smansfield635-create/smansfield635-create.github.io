@@ -1,1098 +1,633 @@
-<!-- /showroom/globe/index.html -->
-<!doctype html>
-<html
-  lang="en"
-  data-page="audralia-home-world-planetary-expression-g2"
-  data-route="/showroom/globe/"
-  data-contract="AUDRALIA_HOME_WORLD_PLANETARY_EXPRESSION_G2_ROUTE_SHELL_TNT_v1"
-  data-previous-contract="AUDRALIA_HOME_WORLD_CONTEXT_REWRITE_TNT_v1"
-  data-scope="route-shell-only"
-  data-universe="nine-summits-universe"
-  data-active-planet="Audralia"
-  data-planet-role="home-world-planetary-expression"
-  data-earth-relationship="reference-body"
-  data-australia-relationship="inspiration-signal-only"
-  data-active-assets="audralia,audralia-sun,adralia-moon"
-  data-reference-bodies="earth,earth-sun,earth-moon"
-  data-render-body-mutation="false"
-  data-instrument-mutation="false"
-  data-gauges-mutation="false"
-  data-product-mutation="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-streaming="false"
-  data-visual-pass-claimed="false"
->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-  <title>Audralia · Home-World Planetary Expression · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Audralia is the home-world planetary expression for the Nine Summits Universe: an ocean-forward fictional world with island-continent energy, coastal shelf, inland pressure, frontier belt, and southern horizon language."
-  >
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #02040a;
-      --panel: rgba(9, 14, 26, 0.92);
-      --panel-soft: rgba(255, 255, 255, 0.045);
-      --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(242, 199, 111, 0.34);
-      --text: #f8f1dd;
-      --muted: rgba(242, 246, 255, 0.74);
-      --faint: rgba(242, 246, 255, 0.48);
-      --gold: #f2c76f;
-      --gold-2: #ffe9a6;
-      --blue: #82ccff;
-      --green: #8ff0c6;
-      --purple: #8f65ff;
-      --deep: #07101d;
-      --stage: min(100%, 1180px);
-      --card: min(100%, 980px);
-      --radius: clamp(1.15rem, 4vw, 2rem);
-      --shadow: 0 28px 88px rgba(0, 0, 0, 0.48);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      margin: 0;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% 10%, rgba(242, 199, 111, 0.14), transparent 30rem),
-        radial-gradient(circle at 20% 28%, rgba(130, 204, 255, 0.15), transparent 28rem),
-        radial-gradient(circle at 80% 68%, rgba(143, 101, 255, 0.13), transparent 34rem),
-        radial-gradient(circle at 50% 100%, rgba(143, 240, 198, 0.08), transparent 28rem),
-        linear-gradient(180deg, #060916, #03050d 72%, #02040a);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
-      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.34;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        conic-gradient(
-          from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(130, 204, 255, 0.07) 60deg,
-          transparent 116deg,
-          rgba(242, 199, 111, 0.055) 176deg,
-          transparent 238deg,
-          rgba(143, 101, 255, 0.075) 302deg,
-          transparent 360deg
-        );
-      filter: blur(46px);
-      opacity: 0.55;
-      animation: auroraDrift 34s linear infinite;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .skip-link {
-      position: absolute;
-      top: -4rem;
-      left: 1rem;
-      z-index: 50;
-      padding: 0.75rem 1rem;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #080a0f;
-      font-weight: 950;
-    }
-
-    .skip-link:focus {
-      top: 1rem;
-    }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: var(--stage);
-      margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 950;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
-    }
-
-    .brand-mark {
-      width: 2.75rem;
-      height: 2.75rem;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(242, 199, 111, 0.48);
-      border-radius: 0.85rem;
-      transform: rotate(45deg);
-      background:
-        radial-gradient(circle at 36% 24%, rgba(255,255,255,0.22), transparent 42%),
-        linear-gradient(145deg, rgba(130,204,255,0.25), rgba(143,101,255,0.42), rgba(4,7,16,0.96));
-      box-shadow:
-        0 0 1.8rem rgba(130,204,255,0.15),
-        inset 0 1px 0 rgba(255,255,255,0.16);
-    }
-
-    .brand-mark span {
-      transform: rotate(-45deg);
-      color: var(--gold-2);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-    }
-
-    .brand-copy {
-      display: grid;
-      gap: 0.14rem;
-    }
-
-    .brand-copy strong {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
-      text-transform: uppercase;
-    }
-
-    .brand-copy span {
-      color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 0.42rem;
-    }
-
-    .nav a {
-      min-height: 2.1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.72rem;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-    }
-
-    .hero {
-      display: grid;
-      gap: 1rem;
-      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
-      text-align: center;
-    }
-
-    .eyebrow {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      width: min(100%, 1020px);
-      margin: 0 auto;
-      font-size: clamp(2.85rem, 10vw, 6.6rem);
-      line-height: 0.88;
-      letter-spacing: -0.085em;
-      text-wrap: balance;
-    }
-
-    .subtitle {
-      width: min(100%, 860px);
-      margin: 0 auto;
-      color: rgba(255,241,205,0.96);
-      font-size: clamp(1.02rem, 3.4vw, 1.28rem);
-      line-height: 1.52;
-      text-wrap: balance;
-    }
-
-    .hero-note {
-      width: min(100%, 860px);
-      margin: 0 auto;
-      padding: 0.95rem 1.1rem;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 1.1rem;
-      background: rgba(242, 199, 111, 0.055);
-      color: rgba(255, 244, 216, 0.86);
-      font-size: 0.95rem;
-      line-height: 1.45;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-    }
-
-    .button {
-      min-height: 2.45rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      transition: transform 160ms ease, box-shadow 160ms ease;
-    }
-
-    .button.secondary {
-      border-color: rgba(255,255,255,0.24);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
-      outline: none;
-    }
-
-    .world-stage {
-      width: min(100%, 1120px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
-      position: relative;
-      padding: clamp(1rem, 4vw, 1.6rem);
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: clamp(1.35rem, 5vw, 2.35rem);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.12), transparent 35%),
-        radial-gradient(circle at 18% 34%, rgba(130,204,255,0.14), transparent 38%),
-        radial-gradient(circle at 82% 52%, rgba(143,101,255,0.12), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.68);
-      box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.36),
-        inset 0 1px 0 rgba(255,255,255,0.09);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .world-stage::before {
-      content: "";
-      position: absolute;
-      inset: 1.2rem;
-      z-index: -1;
-      border: 1px solid rgba(255, 255, 255, 0.075);
-      border-radius: clamp(1rem, 4vw, 1.8rem);
-      background:
-        linear-gradient(90deg, transparent 49.8%, rgba(242,199,111,0.15) 50%, transparent 50.2%),
-        linear-gradient(0deg, transparent 49.8%, rgba(130,204,255,0.13) 50%, transparent 50.2%);
-      opacity: 0.74;
-    }
-
-    .stage-head {
-      display: grid;
-      gap: 0.4rem;
-      text-align: center;
-      margin-bottom: clamp(0.95rem, 3vw, 1.35rem);
-    }
-
-    .stage-head h2 {
-      margin: 0;
-      font-size: clamp(1.45rem, 4.8vw, 2.45rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
-      text-wrap: balance;
-    }
-
-    .stage-head p {
-      width: min(100%, 760px);
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 0.96rem;
-      line-height: 1.5;
-      text-wrap: balance;
-    }
-
-    .viewer-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.92fr);
-      gap: clamp(1rem, 3vw, 1.35rem);
-      align-items: stretch;
-    }
-
-    .globe-card,
-    .identity-card,
-    .info-card,
-    .route-card,
-    .receipt {
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 1.25rem;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(130,204,255,0.08), transparent 16rem),
-        rgba(255,255,255,0.032);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    .globe-card {
-      min-height: clamp(26rem, 58vw, 42rem);
-      display: grid;
-      align-items: center;
-      justify-items: center;
-      padding: clamp(0.8rem, 3vw, 1.2rem);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .globe-card::before {
-      content: "";
-      position: absolute;
-      width: min(88%, 38rem);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(130,204,255,0.10), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(242,199,111,0.055), transparent 64%);
-      filter: blur(12px);
-      pointer-events: none;
-    }
-
-    .globe-mount {
-      width: min(100%, 38rem);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      position: relative;
-      z-index: 2;
-      border-radius: 50%;
-    }
-
-    .globe-fallback {
-      width: min(92%, 32rem);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      border: 1px solid rgba(242,199,111,0.22);
-      background:
-        radial-gradient(circle at 38% 24%, rgba(255,255,255,0.22), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(130,204,255,0.18), transparent 45%),
-        radial-gradient(circle at 54% 58%, rgba(143,101,255,0.13), transparent 70%),
-        rgba(3, 8, 18, 0.82);
-      color: var(--muted);
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .identity-card {
-      display: grid;
-      align-content: start;
-      gap: 0.85rem;
-      padding: clamp(1rem, 3vw, 1.25rem);
-    }
-
-    .identity-kicker,
-    .card-kicker {
-      margin: 0;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .identity-card h2,
-    .info-card h3,
-    .route-card h3 {
-      margin: 0;
-      color: rgba(255,241,205,0.98);
-      font-size: clamp(1.2rem, 3.8vw, 1.7rem);
-      line-height: 1.06;
-      letter-spacing: -0.045em;
-      text-wrap: balance;
-    }
-
-    .identity-card p,
-    .info-card p,
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .body-switcher {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-      margin-top: 0.15rem;
-    }
-
-    .body-button {
-      min-height: 3rem;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 0.95rem;
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font: inherit;
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .body-button[aria-pressed="true"] {
-      border-color: rgba(242,199,111,0.84);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-    }
-
-    .body-button:hover,
-    .body-button:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(242,199,111,0.62);
-      outline: none;
-    }
-
-    .readout {
-      padding: 0.85rem;
-      border: 1px solid rgba(242,199,111,0.18);
-      border-radius: 1rem;
-      background: rgba(242,199,111,0.05);
-      color: rgba(255,241,205,0.9);
-      font-size: 0.88rem;
-      font-weight: 850;
-      line-height: 1.4;
-    }
-
-    .touch-panel {
-      display: grid;
-      gap: 0.35rem;
-      padding: 0.85rem;
-      border: 1px dashed rgba(255,255,255,0.14);
-      border-radius: 1rem;
-      color: var(--muted);
-      background: rgba(255,255,255,0.025);
-    }
-
-    .touch-panel strong {
-      color: rgba(255,241,205,0.95);
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .section {
-      width: min(100%, 1120px);
-      margin: clamp(1rem, 3vw, 1.3rem) auto 0;
-      display: grid;
-      gap: 0.85rem;
-    }
-
-    .section-title {
-      display: grid;
-      gap: 0.35rem;
-      text-align: center;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: clamp(1.45rem, 4.8vw, 2.35rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
-      text-wrap: balance;
-    }
-
-    .section-title p {
-      width: min(100%, 760px);
-      margin: 0 auto;
-      color: var(--muted);
-      line-height: 1.5;
-      text-wrap: balance;
-    }
-
-    .info-grid,
-    .route-grid {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .info-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .route-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .info-card,
-    .route-card {
-      min-height: 12rem;
-      display: grid;
-      align-content: start;
-      gap: 0.55rem;
-      padding: 1rem;
-    }
-
-    .route-card {
-      min-height: 10rem;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .route-card:hover,
-    .route-card:focus-visible {
-      transform: translateY(-3px);
-      border-color: rgba(242,199,111,0.48);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(242,199,111,0.10), transparent 16rem),
-        rgba(255,255,255,0.045);
-      outline: none;
-    }
-
-    .receipt {
-      width: min(100%, 980px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      color: var(--faint);
-      overflow: hidden;
-    }
-
-    .receipt summary {
-      cursor: pointer;
-      padding: 0.75rem 0.9rem;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .receipt pre {
-      margin: 0;
-      padding: 0 0.9rem 0.9rem;
-      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 1.45rem 0 0.45rem;
-      color: var(--faint);
-      font-size: 0.74rem;
-      line-height: 1.45;
-      text-align: center;
-    }
-
-    @keyframes auroraDrift {
-      from { transform: rotate(0deg) scale(1); }
-      to { transform: rotate(360deg) scale(1); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      body::after,
-      .hero::before {
-        animation: none !important;
-      }
-    }
-
-    @media (max-width: 980px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+/*
+AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT_v1
+FULL-FILE REPLACEMENT
+TARGET=/showroom/globe/index.js
+
+Purpose:
+- Repair the empty visible render chamber.
+- Preserve the existing route shell and body-card language.
+- Load /assets/audrelia.planet.render.js.
+- Draw Audralia into the visible protected rectangle.
+- Do not mutate Gauges, Products, Sun, Moon, global files, route shell HTML, or terrain math.
+
+Acceptance:
+- /showroom/globe/ shows a visible Audralia globe inside the protected chamber.
+- Empty rectangle is replaced by canvas output.
+- Renderer status is displayed only as a small mount receipt.
+*/
+
+const AUDRALIA_MOUNT_TNT = "AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT_v1";
+const AUDRALIA_RENDERER_URL = `/assets/audrelia.planet.render.js?v=${encodeURIComponent(AUDRALIA_MOUNT_TNT)}`;
+const TAU = Math.PI * 2;
+
+const MOUNT_SELECTORS = [
+  "#audraliaRenderMount",
+  "#audreliaRenderMount",
+  "#audralia-render-mount",
+  "#audrelia-render-mount",
+  "#planetRenderMount",
+  "#planet-render-mount",
+  "#globeRenderMount",
+  "#globe-render-mount",
+  "#globeStage",
+  "#globe-stage",
+  "#planetStage",
+  "#planet-stage",
+  "#renderStage",
+  "#render-stage",
+  "[data-audralia-render]",
+  "[data-audrelia-render]",
+  "[data-planet-render]",
+  "[data-globe-render]",
+  "[data-render-mount]",
+  ".audralia-render",
+  ".audrelia-render",
+  ".planet-render",
+  ".globe-render",
+  ".render-stage",
+  ".planet-stage",
+  ".globe-stage",
+  ".protected-render",
+  ".protected-render-chamber",
+  ".render-chamber"
+];
+
+function clamp(value, min = 0, max = 1) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / (edge1 - edge0));
+  return t * t * (3 - 2 * t);
+}
+
+function createElement(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+function applyMountStyles(mount) {
+  mount.classList.add("audralia-visible-mount-bridge");
+  mount.dataset.audraliaMountBridge = AUDRALIA_MOUNT_TNT;
+
+  const currentPosition = window.getComputedStyle(mount).position;
+  if (currentPosition === "static") {
+    mount.style.position = "relative";
+  }
+
+  mount.style.overflow = "hidden";
+  mount.style.minHeight = mount.style.minHeight || "320px";
+  mount.style.background =
+    mount.style.background ||
+    "radial-gradient(circle at 50% 40%, rgba(43, 78, 104, 0.38), rgba(8, 13, 29, 0.96) 62%, rgba(3, 6, 16, 1) 100%)";
+}
+
+function findExplicitMount() {
+  for (const selector of MOUNT_SELECTORS) {
+    const node = document.querySelector(selector);
+    if (node) return node;
+  }
+
+  return null;
+}
+
+function scorePossibleMount(el) {
+  if (!el || el === document.body || el === document.documentElement) return -1;
+
+  const rect = el.getBoundingClientRect();
+  if (rect.width < 220 || rect.height < 220) return -1;
+
+  const text = (el.textContent || "").trim();
+  const className = String(el.className || "").toLowerCase();
+  const id = String(el.id || "").toLowerCase();
+  const dataset = Object.keys(el.dataset || {}).join(" ").toLowerCase();
+  const signature = `${id} ${className} ${dataset}`;
+
+  let score = 0;
+
+  if (text.length === 0) score += 90;
+  if (signature.includes("render")) score += 70;
+  if (signature.includes("planet")) score += 60;
+  if (signature.includes("globe")) score += 60;
+  if (signature.includes("audralia") || signature.includes("audrelia")) score += 80;
+  if (signature.includes("stage")) score += 45;
+  if (signature.includes("chamber")) score += 45;
+  if (signature.includes("protected")) score += 35;
+  if (signature.includes("canvas")) score += 30;
+
+  const area = rect.width * rect.height;
+  score += Math.min(80, area / 10000);
+
+  const style = window.getComputedStyle(el);
+  if (style.borderRadius && parseFloat(style.borderRadius) > 10) score += 20;
+  if (style.borderStyle && style.borderStyle !== "none") score += 12;
+  if (style.background && style.background !== "rgba(0, 0, 0, 0)") score += 8;
+
+  return score;
+}
+
+function findInferredMount() {
+  const root =
+    document.querySelector("main") ||
+    document.querySelector("#globe-main") ||
+    document.querySelector("#main") ||
+    document.body;
+
+  const nodes = Array.from(root.querySelectorAll("section, article, div, figure, aside"));
+  let best = null;
+  let bestScore = -1;
+
+  for (const node of nodes) {
+    const score = scorePossibleMount(node);
+    if (score > bestScore) {
+      best = node;
+      bestScore = score;
+    }
+  }
+
+  return bestScore >= 120 ? best : null;
+}
+
+function createFallbackMount() {
+  const root =
+    document.querySelector("main") ||
+    document.querySelector("#globe-main") ||
+    document.querySelector("#main") ||
+    document.body;
+
+  const mount = createElement("section", "audralia-visible-mount-bridge audralia-created-render-mount");
+  mount.id = "audraliaRenderMount";
+  mount.setAttribute("aria-label", "Audralia visible render chamber");
+
+  mount.style.width = "100%";
+  mount.style.minHeight = "420px";
+  mount.style.border = "1px solid rgba(255,255,255,0.16)";
+  mount.style.borderRadius = "28px";
+  mount.style.margin = "24px auto";
+  mount.style.maxWidth = "960px";
+  mount.style.background =
+    "radial-gradient(circle at 50% 40%, rgba(43, 78, 104, 0.38), rgba(8, 13, 29, 0.96) 62%, rgba(3, 6, 16, 1) 100%)";
+
+  const activeBody = Array.from(root.querySelectorAll("*")).find((el) =>
+    /active body/i.test(el.textContent || "")
+  );
+
+  if (activeBody && activeBody.parentElement) {
+    activeBody.parentElement.insertBefore(mount, activeBody);
+  } else {
+    root.appendChild(mount);
+  }
+
+  return mount;
+}
+
+function resolveMount() {
+  return findExplicitMount() || findInferredMount() || createFallbackMount();
+}
+
+function createCanvasLayer(mount) {
+  let canvas = mount.querySelector("canvas[data-audralia-visible-canvas='true']");
+
+  if (!canvas) {
+    canvas = document.createElement("canvas");
+    canvas.dataset.audraliaVisibleCanvas = "true";
+    canvas.setAttribute("aria-label", "Audralia rendered globe");
+    mount.appendChild(canvas);
+  }
+
+  canvas.style.position = "absolute";
+  canvas.style.inset = "0";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.display = "block";
+  canvas.style.zIndex = "1";
+
+  return canvas;
+}
+
+function createReceiptLayer(mount) {
+  let receipt = mount.querySelector("[data-audralia-mount-receipt='true']");
+
+  if (!receipt) {
+    receipt = createElement("div", "audralia-mount-receipt");
+    receipt.dataset.audraliaMountReceipt = "true";
+    mount.appendChild(receipt);
+  }
+
+  receipt.style.position = "absolute";
+  receipt.style.left = "14px";
+  receipt.style.bottom = "12px";
+  receipt.style.zIndex = "3";
+  receipt.style.fontFamily =
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+  receipt.style.fontSize = "10px";
+  receipt.style.letterSpacing = "0.14em";
+  receipt.style.textTransform = "uppercase";
+  receipt.style.color = "rgba(235,241,255,0.76)";
+  receipt.style.background = "rgba(4,8,18,0.62)";
+  receipt.style.border = "1px solid rgba(255,255,255,0.12)";
+  receipt.style.borderRadius = "999px";
+  receipt.style.padding = "6px 10px";
+  receipt.style.backdropFilter = "blur(10px)";
+  receipt.textContent = "AUDRALIA MOUNT · LOADING";
+
+  return receipt;
+}
+
+function setReceipt(receipt, text) {
+  if (receipt) receipt.textContent = text;
+}
+
+function fitCanvas(canvas, mount) {
+  const rect = mount.getBoundingClientRect();
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const width = Math.max(320, Math.floor(rect.width * dpr));
+  const height = Math.max(320, Math.floor(rect.height * dpr));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  return { width, height, dpr };
+}
+
+async function loadAudraliaRenderer() {
+  const mod = await import(AUDRALIA_RENDERER_URL);
+
+  const api =
+    mod.default ||
+    mod.AUDRALIA_PLANET_RENDERER ||
+    mod.AudraliaPlanetRenderer ||
+    mod.AudreliaPlanetRenderer ||
+    globalThis.AudraliaPlanetRenderer ||
+    globalThis.AudreliaPlanetRenderer ||
+    globalThis.DiamondGateBridge?.planets?.audralia ||
+    globalThis.DiamondGateBridge?.planets?.audrelia;
+
+  if (!api) {
+    throw new Error("Audralia renderer API was not found after module import.");
+  }
+
+  if (typeof api.buildTexture !== "function" && typeof api.renderSurface !== "function") {
+    throw new Error("Audralia renderer API has no buildTexture or renderSurface function.");
+  }
+
+  return api;
+}
+
+function getTextureCanvas(api) {
+  if (typeof api.buildTexture === "function") {
+    const texture = api.buildTexture({
+      width: 1536,
+      height: 768,
+      noCache: false
+    });
+
+    if (texture && typeof texture.getContext === "function") {
+      return texture;
+    }
+
+    if (texture?.canvas && typeof texture.canvas.getContext === "function") {
+      return texture.canvas;
+    }
+  }
+
+  const fallback = document.createElement("canvas");
+  fallback.width = 1536;
+  fallback.height = 768;
+
+  if (typeof api.renderSurface === "function") {
+    api.renderSurface(fallback, {
+      width: 1536,
+      height: 768,
+      noCache: true
+    });
+    return fallback;
+  }
+
+  throw new Error("Unable to create Audralia texture canvas.");
+}
+
+function readTexture(textureCanvas) {
+  const ctx = textureCanvas.getContext("2d", { willReadFrequently: true });
+  const image = ctx.getImageData(0, 0, textureCanvas.width, textureCanvas.height);
+
+  return {
+    width: textureCanvas.width,
+    height: textureCanvas.height,
+    data: image.data
+  };
+}
+
+function sampleTexture(texture, u, v) {
+  const x = Math.floor((((u % 1) + 1) % 1) * (texture.width - 1));
+  const y = Math.floor(clamp(v, 0, 1) * (texture.height - 1));
+  const p = (y * texture.width + x) * 4;
+
+  return [
+    texture.data[p],
+    texture.data[p + 1],
+    texture.data[p + 2],
+    texture.data[p + 3]
+  ];
+}
+
+function drawLoading(ctx, width, height, text = "AUDRALIA · MOUNTING") {
+  ctx.clearRect(0, 0, width, height);
+
+  const cx = width / 2;
+  const cy = height / 2;
+  const radius = Math.min(width, height) * 0.26;
+
+  const gradient = ctx.createRadialGradient(cx, cy, radius * 0.15, cx, cy, radius * 1.15);
+  gradient.addColorStop(0, "rgba(82, 125, 152, 0.42)");
+  gradient.addColorStop(0.58, "rgba(14, 32, 58, 0.86)");
+  gradient.addColorStop(1, "rgba(2, 6, 18, 0.96)");
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.fillStyle = "rgba(65, 105, 134, 0.34)";
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(220, 234, 255, 0.22)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.font = `${Math.max(12, Math.floor(width * 0.018))}px ui-monospace, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(238, 243, 255, 0.72)";
+  ctx.fillText(text, cx, cy + radius + 34);
+}
+
+function drawGlobeFrame(ctx, canvas, texture, rotation) {
+  const width = canvas.width;
+  const height = canvas.height;
+
+  ctx.clearRect(0, 0, width, height);
+
+  const cx = width / 2;
+  const cy = height / 2;
+  const radius = Math.min(width, height) * 0.365;
+
+  const bg = ctx.createRadialGradient(cx, cy, radius * 0.1, cx, cy, radius * 1.92);
+  bg.addColorStop(0, "rgba(33, 54, 82, 0.22)");
+  bg.addColorStop(0.58, "rgba(8, 14, 30, 0.90)");
+  bg.addColorStop(1, "rgba(2, 5, 14, 1)");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.globalAlpha = 0.42;
+  ctx.strokeStyle = "rgba(255,255,255,0.045)";
+  ctx.lineWidth = 1;
+
+  const gridGap = Math.max(26, Math.floor(Math.min(width, height) / 18));
+  for (let x = width % gridGap; x < width; x += gridGap) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+
+  for (let y = height % gridGap; y < height; y += gridGap) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const size = Math.ceil(radius * 2);
+  const image = ctx.createImageData(size, size);
+  const data = image.data;
+
+  const light = {
+    x: -0.42,
+    y: -0.32,
+    z: 0.84
+  };
+
+  const cosR = Math.cos(rotation);
+  const sinR = Math.sin(rotation);
+
+  let p = 0;
+
+  for (let py = 0; py < size; py += 1) {
+    const ny = (py - radius) / radius;
+
+    for (let px = 0; px < size; px += 1) {
+      const nx = (px - radius) / radius;
+      const d2 = nx * nx + ny * ny;
+
+      if (d2 > 1) {
+        data[p + 3] = 0;
+        p += 4;
+        continue;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      const nz = Math.sqrt(1 - d2);
 
-      .viewer-grid,
-      .info-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
-      }
+      const rx = nx * cosR - nz * sinR;
+      const rz = nx * sinR + nz * cosR;
+      const ry = ny;
 
-      .globe-card {
-        min-height: 24rem;
-      }
+      const lon = Math.atan2(rz, rx);
+      const lat = Math.asin(clamp(ry, -1, 1));
+
+      const u = (lon + Math.PI) / TAU;
+      const v = 0.5 - lat / Math.PI;
+
+      const color = sampleTexture(texture, u, v);
+
+      const lightDot = clamp(rx * light.x + ry * light.y + nz * light.z, 0, 1);
+      const limb = smoothstep(0.0, 0.86, nz);
+      const shade = 0.28 + lightDot * 0.72;
+      const atmosphericEdge = Math.pow(1 - clamp(nz), 2.4);
+
+      data[p] = clamp(color[0] * shade * limb + atmosphericEdge * 42, 0, 255);
+      data[p + 1] = clamp(color[1] * shade * limb + atmosphericEdge * 72, 0, 255);
+      data[p + 2] = clamp(color[2] * shade * limb + atmosphericEdge * 104, 0, 255);
+      data[p + 3] = 255;
+
+      p += 4;
     }
+  }
 
-    @media (max-width: 620px) {
-      .body-switcher {
-        grid-template-columns: 1fr;
+  const globeX = Math.floor(cx - radius);
+  const globeY = Math.floor(cy - radius);
+
+  ctx.putImageData(image, globeX, globeY);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.strokeStyle = "rgba(184, 222, 255, 0.26)";
+  ctx.lineWidth = Math.max(1, radius * 0.012);
+  ctx.stroke();
+
+  const atmosphere = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.13);
+  atmosphere.addColorStop(0, "rgba(112, 190, 255, 0)");
+  atmosphere.addColorStop(0.66, "rgba(112, 190, 255, 0.10)");
+  atmosphere.addColorStop(1, "rgba(112, 190, 255, 0)");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 1.13, 0, TAU);
+  ctx.fillStyle = atmosphere;
+  ctx.fill();
+
+  const highlight = ctx.createRadialGradient(
+    cx - radius * 0.32,
+    cy - radius * 0.42,
+    radius * 0.05,
+    cx - radius * 0.28,
+    cy - radius * 0.38,
+    radius * 0.78
+  );
+  highlight.addColorStop(0, "rgba(255,255,255,0.24)");
+  highlight.addColorStop(0.42, "rgba(255,255,255,0.05)");
+  highlight.addColorStop(1, "rgba(255,255,255,0)");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.fillStyle = highlight;
+  ctx.fill();
+
+  ctx.restore();
+
+  ctx.save();
+  ctx.font = `${Math.max(12, Math.floor(width * 0.018))}px ui-monospace, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(238, 243, 255, 0.68)";
+  ctx.fillText("AUDRALIA · G2 VISIBLE MOUNT", cx, cy + radius + Math.max(28, radius * 0.12));
+  ctx.restore();
+}
+
+function drawFailure(ctx, width, height, message) {
+  drawLoading(ctx, width, height, "AUDRALIA · MOUNT FAILURE");
+
+  ctx.save();
+  ctx.font = `${Math.max(11, Math.floor(width * 0.014))}px ui-monospace, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255, 210, 180, 0.82)";
+  ctx.fillText(String(message).slice(0, 120), width / 2, height / 2 + Math.min(width, height) * 0.34);
+  ctx.restore();
+}
+
+function installResizeObserver(mount, canvas, render) {
+  if (typeof ResizeObserver === "undefined") {
+    window.addEventListener("resize", render, { passive: true });
+    return;
+  }
+
+  const observer = new ResizeObserver(() => render());
+  observer.observe(mount);
+}
+
+async function bootAudraliaVisibleMount() {
+  const mount = resolveMount();
+  applyMountStyles(mount);
+
+  const canvas = createCanvasLayer(mount);
+  const receipt = createReceiptLayer(mount);
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+  let texture = null;
+  let animationId = 0;
+  let lastFrame = 0;
+  let booted = false;
+
+  const renderLoading = () => {
+    const { width, height } = fitCanvas(canvas, mount);
+    drawLoading(ctx, width, height);
+  };
+
+  renderLoading();
+  setReceipt(receipt, "AUDRALIA MOUNT · IMPORTING RENDERER");
+
+  try {
+    const api = await loadAudraliaRenderer();
+
+    setReceipt(receipt, "AUDRALIA MOUNT · BUILDING TEXTURE");
+
+    const textureCanvas = getTextureCanvas(api);
+    texture = readTexture(textureCanvas);
+
+    setReceipt(receipt, "AUDRALIA MOUNT · VISIBLE_RENDER=ACTIVE");
+    booted = true;
+
+    const render = (now = performance.now()) => {
+      fitCanvas(canvas, mount);
+
+      if (!texture) {
+        drawLoading(ctx, canvas.width, canvas.height);
+        return;
       }
 
-      .actions {
-        display: grid;
+      if (now - lastFrame < 33) {
+        animationId = requestAnimationFrame(render);
+        return;
       }
 
-      .button {
-        width: 100%;
-      }
-    }
-  </style>
-</head>
+      lastFrame = now;
 
-<body>
-  <a class="skip-link" href="#globe-main">Skip to Audralia</a>
+      const rotation = now * 0.000055;
+      drawGlobeFrame(ctx, canvas, texture, rotation);
 
-  <div class="shell">
-    <header class="topbar" aria-label="Audralia route header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true"><span>DG</span></span>
-        <span class="brand-copy">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Nine Summits Universe · Home World</span>
-        </span>
-      </a>
+      animationId = requestAnimationFrame(render);
+    };
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Audralia</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
-
-    <main id="globe-main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Audralia · Home-World Planetary Expression G2</p>
-        <h1 id="page-title">Audralia is the home-world surface.</h1>
-
-        <p class="subtitle">
-          The Nine Summits gives the climb. Audralia gives the climb a world: ocean-forward, island-continent in spirit, frontier-aware, and built for the metaverse lane.
-        </p>
-
-        <p class="hero-note">
-          Australia is only an inspiration signal. Audralia is fictional, planetary, and metaverse-facing. The route shell clarifies identity here without modifying the render body, instrument behavior, Gauges, Products, or the accepted globe baseline.
-        </p>
-
-        <div class="actions" aria-label="Audralia route actions">
-          <a class="button" href="/nine-summits/">Open Nine Summits</a>
-          <a class="button secondary" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button secondary" href="/showroom/">Return to Showroom</a>
-          <a class="button secondary" href="/gauges/">Read Gauges</a>
-        </div>
-      </section>
-
-      <section class="world-stage" aria-labelledby="stage-title">
-        <div class="stage-head">
-          <h2 id="stage-title">Home-world inspection surface.</h2>
-          <p>
-            The render remains protected. This shell names what the viewer is seeing: Audralia as the first home-world planetary expression in the larger build.
-          </p>
-        </div>
-
-        <div class="viewer-grid">
-          <article class="globe-card" id="stageCard" aria-label="Audralia globe viewer">
-            <div
-              id="showroomGlobeMount"
-              class="globe-mount"
-              data-showroom-globe-mount="true"
-              data-globe-mount="true"
-              data-active-body="audrelia"
-              data-planet-name="Audralia"
-              data-moon-name="Adralia’s Moon"
-              data-route-shell-contract="AUDRALIA_HOME_WORLD_PLANETARY_EXPRESSION_G2_ROUTE_SHELL_TNT_v1"
-              data-render-body-mutation="false"
-              data-instrument-mutation="false"
-              data-visual-pass-claimed="false"
-            >
-              <div class="globe-fallback">
-                <div>
-                  <strong>Audralia viewer loading.</strong><br>
-                  The render platform remains protected by the accepted globe baseline.
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <aside class="identity-card" aria-labelledby="bodyName">
-            <p class="identity-kicker">Active body</p>
-            <h2 id="bodyName">Audralia</h2>
-            <p id="bodyDescription">
-              The home-world planetary expression for the Nine Summits Universe: ocean-forward, land-and-water contrasted, and frontier-aware.
-            </p>
-
-            <div class="body-switcher" aria-label="Audralia body selector">
-              <button class="body-button" type="button" data-body="audrelia" aria-pressed="true">Audralia</button>
-              <button class="body-button" type="button" data-body="audrelia-sun" aria-pressed="false">Sun</button>
-              <button class="body-button" type="button" data-body="audrelia-moon" aria-pressed="false">Moon</button>
-            </div>
-
-            <div class="readout" aria-live="polite" id="motionReadout">
-              Active body: Audralia · zoom: 100%
-            </div>
-
-            <div class="touch-panel" aria-label="Touchscreen controls">
-              <strong>Touch controls</strong>
-              <span>Drag to rotate. Pinch to zoom. Double tap to pause or resume. Swipe left or right to switch bodies.</span>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="terrain-title">
-        <div class="section-title">
-          <p class="eyebrow">Planetary identity</p>
-          <h2 id="terrain-title">Audralia reads as a world, not a placeholder.</h2>
-          <p>
-            The G2 route shell defines the planetary meaning before any later render-body terrain pass.
-          </p>
-        </div>
-
-        <div class="info-grid">
-          <article class="info-card">
-            <p class="card-kicker">Ocean-forward</p>
-            <h3>Water is the first field.</h3>
-            <p>
-              Audralia should be read as an ocean-dominant home world where land rises out of a larger blue planetary field.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <p class="card-kicker">Island-continent energy</p>
-            <h3>Land carries pressure and isolation.</h3>
-            <p>
-              The world can borrow island-continent logic without becoming literal geography. The result is fictional, planetary, and readable.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <p class="card-kicker">Coastal shelf</p>
-            <h3>The edge matters.</h3>
-            <p>
-              Coast, shelf, reef, and boundary language give Audralia the first layer of world specificity.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <p class="card-kicker">Inland pressure</p>
-            <h3>The center has weight.</h3>
-            <p>
-              Audralia should feel like it has interior distance, heat, pressure, mineral tone, and lived terrain.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <p class="card-kicker">Frontier belt</p>
-            <h3>The map has an edge.</h3>
-            <p>
-              The frontier belt gives the world a place for discovery, testing, route-building, and future expansion.
-            </p>
-          </article>
-
-          <article class="info-card">
-            <p class="card-kicker">Southern horizon</p>
-            <h3>Light sets the atmosphere.</h3>
-            <p>
-              Southern light, wide horizon, ocean air, and land-water contrast should guide the next visual generation.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="relationship-title">
-        <div class="section-title">
-          <p class="eyebrow">World relationships</p>
-          <h2 id="relationship-title">The climb now has a home-world surface.</h2>
-          <p>
-            Audralia connects the human climb, the public showroom, and the future metaverse without collapsing into another page’s job.
-          </p>
-        </div>
-
-        <div class="route-grid">
-          <a class="route-card" href="/nine-summits/">
-            <p class="card-kicker">Nine Summits</p>
-            <h3>The climb.</h3>
-            <p>Nine Summits gives the human path that Audralia begins to host as a world.</p>
-          </a>
-
-          <a class="route-card" href="/nine-summits/universe/">
-            <p class="card-kicker">Universe</p>
-            <h3>The world lane.</h3>
-            <p>The Universe page gives the larger setting around the book, rooms, events, routes, and future experiences.</p>
-          </a>
-
-          <a class="route-card" href="/showroom/">
-            <p class="card-kicker">Showroom</p>
-            <h3>The inspection surface.</h3>
-            <p>Showroom displays what has been built. Audralia is the current home-world inspection object.</p>
-          </a>
-
-          <a class="route-card" href="/frontier/">
-            <p class="card-kicker">Frontier</p>
-            <h3>The expansion edge.</h3>
-            <p>Frontier carries the edge of the map while Audralia becomes the first deeper planetary construct.</p>
-          </a>
-        </div>
-      </section>
-
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>AUDRALIA_HOME_WORLD_PLANETARY_EXPRESSION_G2_ROUTE_SHELL_TNT_v1
-route=/showroom/globe/
-page=audralia_home_world_planetary_expression_g2
-previous_contract=AUDRALIA_HOME_WORLD_CONTEXT_REWRITE_TNT_v1
-scope=route_shell_only
-authorized_touch=/showroom/globe/index.html
-render_body_mutation=false
-instrument_mutation=false
-gauges_mutation=false
-product_mutation=false
-image_generation=false
-graphic_box=false
-planetary_object=Audralia
-generation=G2
-canonical_role=home_world_reference,planetary_expression_surface
-australia_relationship=inspiration_signal_only
-audralia_relationship=fictional_metaverse_home_world_construct
-nine_summits_connection=the_climb
-audralia_connection=the_climb_has_a_home_world_surface
-showroom_connection=inspection_object
-metaverse_connection=first_home_world_planetary_expression_lane
-terrain_language=ocean_forward,island_continent_energy,coastal_shelf,inland_pressure,frontier_belt,southern_horizon,land_water_contrast
-active_assets=audralia,audralia_sun,adralia_moon
-protected_baseline=accepted_globe_render_baseline
-forbidden=render_body_mutation,instrument_mutation,gauges_mutation,product_mutation,static_generated_picture,cartoon_replacement,literal_australia_page
-visual_pass_claimed=false</pre>
-      </details>
-    </main>
-
-    <footer>
-      AUDRALIA_HOME_WORLD_PLANETARY_EXPRESSION_G2_ROUTE_SHELL_TNT_v1 · Audralia · Route Shell Only · Render Baseline Protected.
-    </footer>
-  </div>
-
-  <script src="/assets/showroom.globe.render.js?v=ADRALIA_MOON_DISPATCH_AND_LUNAR_SURFACE_CORRECTION_TNT_v1"></script>
-  <script src="/assets/audrelia.planet.render.js?v=AUDRALIA_RENDER_EXTENSION_ARCHITECTURE_TNT_v1"></script>
-  <script src="/assets/audrelia.sun.render.js?v=AUDRELIA_SUN_EXTENSION_SOLAR_AUTHORITY_RENEWAL_TNT_v1"></script>
-  <script src="/assets/adralia.moon.surface.render.js?v=ADRALIA_MOON_SURFACE_DOWNSTREAM_TNT_v1"></script>
-  <script src="/assets/audrelia.climate-moon.render.js?v=ADRALIA_MOON_SURFACE_WRAPPER_RENEWAL_TNT_v1"></script>
-  <script src="/assets/showroom.globe.instrument.js?v=AUDRELIA_TOUCH_INSTRUMENT_RENEWAL_TNT_v1"></script>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const mount = document.getElementById("showroomGlobeMount");
-      const stageCard = document.getElementById("stageCard");
-      const bodyName = document.getElementById("bodyName");
-      const bodyDescription = document.getElementById("bodyDescription");
-      const motionReadout = document.getElementById("motionReadout");
-      const bodyButtons = Array.from(document.querySelectorAll("[data-body]"));
-
-      const bodyMeta = {
-        "audrelia": {
-          label: "Audralia",
-          description: "The home-world planetary expression for the Nine Summits Universe: ocean-forward, land-and-water contrasted, and frontier-aware."
-        },
-        "audrelia-sun": {
-          label: "Audralia’s Sun",
-          description: "The local stellar body that lights Audralia’s world system while the route shell preserves the current render baseline."
-        },
-        "audrelia-moon": {
-          label: "Adralia’s Moon",
-          description: "The lunar companion designed after Earth’s Moon, with a subtle climate-regulation layer."
-        }
-      };
-
-      const state = {
-        body: "audrelia",
-        running: true,
-        direction: "forward",
-        speedName: "normal",
-        zoom: 100
-      };
-
-      function findInstrument() {
-        const bridge = window.DiamondGateBridge || {};
-        return (
-          window.DGBShowroomGlobeInstrument ||
-          window.ShowroomGlobeInstrument ||
-          window.showroomGlobeInstrument ||
-          bridge.DGBShowroomGlobeInstrument ||
-          bridge.ShowroomGlobeInstrument ||
-          bridge.showroomGlobeInstrument ||
-          null
-        );
-      }
-
-      function setPressed(body) {
-        bodyButtons.forEach((button) => {
-          const active = button.getAttribute("data-body") === body;
-          button.setAttribute("aria-pressed", active ? "true" : "false");
-        });
-      }
-
-      function updateCopy(body) {
-        const meta = bodyMeta[body] || bodyMeta.audrelia;
-        bodyName.textContent = meta.label;
-        bodyDescription.textContent = meta.description;
-        motionReadout.textContent = "Active body: " + meta.label + " · zoom: " + Math.round(state.zoom) + "%";
-        if (mount) {
-          mount.dataset.activeBody = body;
-          mount.dataset.planetName = "Audralia";
-          mount.dataset.moonName = "Adralia’s Moon";
-          mount.dataset.routeShellContract = "AUDRALIA_HOME_WORLD_PLANETARY_EXPRESSION_G2_ROUTE_SHELL_TNT_v1";
-          mount.dataset.renderBodyMutation = "false";
-          mount.dataset.instrumentMutation = "false";
-          mount.dataset.visualPassClaimed = "false";
-        }
-      }
-
-      function mountInstrument() {
-        const instrument = findInstrument();
-        if (!instrument || !mount) return false;
-
-        const options = {
-          activeBody: state.body,
-          body: state.body,
-          running: state.running,
-          direction: state.direction,
-          speedName: state.speedName,
-          zoom: state.zoom,
-          generatedImage: false,
-          graphicBox: false,
-          streaming: false,
-          visualPassClaimed: false
-        };
-
-        if (typeof instrument.renderGlobe === "function") {
-          instrument.renderGlobe(mount, options);
-          return true;
-        }
-
-        if (typeof instrument.mount === "function") {
-          instrument.mount(mount, options);
-          return true;
-        }
-
-        if (typeof instrument.render === "function") {
-          instrument.render(mount, options);
-          return true;
-        }
-
-        return false;
-      }
-
-      function selectBody(body) {
-        if (!bodyMeta[body]) return;
-        state.body = body;
-        setPressed(body);
-        updateCopy(body);
-
-        const instrument = findInstrument();
-        if (instrument && typeof instrument.setActiveBody === "function") {
-          instrument.setActiveBody(body);
-        } else {
-          mountInstrument();
-        }
-      }
-
-      bodyButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          selectBody(button.getAttribute("data-body"));
-        });
-      });
-
-      window.addEventListener("showroom:globe:instrument-ready", () => {
-        mountInstrument();
-      });
-
-      window.addEventListener("dgb:showroom:globe-state", (event) => {
-        const detail = event.detail || {};
-        if (detail.activeBody && bodyMeta[detail.activeBody]) {
-          state.body = detail.activeBody;
-          setPressed(state.body);
-          updateCopy(state.body);
-        }
-        if (detail.zoom !== undefined) {
-          state.zoom = Number(detail.zoom) || state.zoom;
-          updateCopy(state.body);
-        }
-      });
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-          updateCopy(state.body);
-          mountInstrument();
-        }, { once: true });
+    installResizeObserver(mount, canvas, () => {
+      if (booted) {
+        drawGlobeFrame(ctx, canvas, texture, performance.now() * 0.000055);
       } else {
-        updateCopy(state.body);
-        mountInstrument();
+        renderLoading();
       }
+    });
 
-      if (stageCard) {
-        stageCard.dataset.routeShellOnly = "true";
-        stageCard.dataset.renderBodyMutation = "false";
-        stageCard.dataset.instrumentMutation = "false";
-        stageCard.dataset.visualPassClaimed = "false";
-      }
-    })();
-  </script>
-</body>
-</html>
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = requestAnimationFrame(render);
+
+    window.AudraliaVisibleMountBridge = {
+      tnt: AUDRALIA_MOUNT_TNT,
+      mount,
+      canvas,
+      renderer: api,
+      status: "VISIBLE_RENDER_ACTIVE",
+      redraw: () => drawGlobeFrame(ctx, canvas, texture, performance.now() * 0.000055)
+    };
+  } catch (error) {
+    const { width, height } = fitCanvas(canvas, mount);
+    drawFailure(ctx, width, height, error?.message || error);
+    setReceipt(receipt, "AUDRALIA MOUNT · IMPORT_OR_RENDER_FAIL");
+
+    window.AudraliaVisibleMountBridge = {
+      tnt: AUDRALIA_MOUNT_TNT,
+      mount,
+      canvas,
+      status: "VISIBLE_RENDER_FAIL",
+      error: String(error?.message || error)
+    };
+
+    console.error(`[${AUDRALIA_MOUNT_TNT}]`, error);
+  }
+}
+
+function bootWhenReady() {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootAudraliaVisibleMount, { once: true });
+  } else {
+    bootAudraliaVisibleMount();
+  }
+}
+
+bootWhenReady();

@@ -3,8 +3,11 @@
   lang="en"
   data-route="/gauges/"
   data-page="gauges"
-  data-version="G3-V3"
-  data-contract="GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3"
+  data-version="G3-V4"
+  data-contract="GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4"
+  data-previous-contract="GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3"
+  data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
+  data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
   data-status="active"
   data-role="measurement-surface"
   data-mode="served-source-contract-reader"
@@ -27,6 +30,8 @@
     name="description"
     content="Gauges is the served-source contract reader for Diamond Gate Bridge. It fetches route HTML, checks contract alignment, detects retired language, and names the next move without mutating target routes."
   >
+
+  <link rel="stylesheet" href="/assets/diamond-orbit.css">
 
   <style>
     :root{
@@ -84,25 +89,6 @@
       background-size:220px 260px,54px 54px,54px 54px;
       opacity:.24;
       mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      pointer-events:none;
-      background:
-        conic-gradient(from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(143,101,255,.08) 52deg,
-          transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
-          transparent 224deg,
-          rgba(141,216,255,.07) 292deg,
-          transparent 360deg);
-      filter:blur(42px);
-      opacity:.58;
-      animation:auroraDrift 28s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
@@ -257,7 +243,7 @@
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
         radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
+      animation:backgroundAnchorPulse 8s ease-in-out infinite;
       pointer-events:none;
       opacity:.52;
     }
@@ -607,23 +593,6 @@
       font-size:.76rem;
     }
 
-    @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      body::after,
-      .hero::before{
-        animation:none!important;
-      }
-    }
-
     @media (max-width:1080px){
       .gauge-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -820,7 +789,7 @@
 
       <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre id="receiptText">GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3
+        <pre id="receiptText">GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4
 route=/gauges/
 page=gauges
 role=measurement_surface
@@ -833,13 +802,14 @@ mutates_runtime=false
 mutates_target_routes=false
 core_contract_map=compass,door,home,manor,gauges
 current_contract_family=core_alignment
+self_poison_cleanup=true
 visual_pass_claimed=false
 audit_status=READY</pre>
       </details>
     </main>
 
     <footer>
-      GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3 · Gauges · Served Source Contract Reader.
+      GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4 · Gauges · Served Source Contract Reader · Self-Poison Cleanup.
     </footer>
   </div>
 
@@ -847,23 +817,30 @@ audit_status=READY</pre>
     (() => {
       "use strict";
 
-      const CONTRACT = "GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3";
+      const CONTRACT = "GAUGES_RETIRED_TERM_SELF_POISON_CLEANUP_TNT_v4";
+      const PREVIOUS_CONTRACT = "GAUGES_CORE_CONTRACT_READER_ALIGNMENT_TNT_v3";
 
       const byId = (id) => document.getElementById(id);
 
-      const legacyVoiceRoute = "/" + ["this", "underdog"].join("-") + "/";
+      const legacyVoiceRoute = "/" + ["this", "under", "dog"].join("-") + "/";
       const oldPlanetReceipt = [
-        "PLANET","_1","_ACTIVE","_CHAIN","_AUDIT","_BUTTON","_BINDING","_REPAIR","_TNT","_v1"
+        "PLAN", "ET", "_", "1", "_ACTIVE", "_CHAIN", "_AUDIT", "_BUTTON", "_BINDING", "_REPAIR", "_TNT", "_v1"
       ].join("");
+
+      const retiredVoiceMerge = ["old", "_this", "_under", "dog", "_personal", "_merge"].join("");
+      const retiredVertical = ["vertical", "_", "stack"].join("");
+      const retiredDemo = ["Demo", " ", "Universe"].join("");
+      const retiredEarth = ["Earth", " ", "G1"].join("");
+      const retiredPlanet = ["Planet", " ", "1"].join("");
 
       const retiredTerms = [
         legacyVoiceRoute,
         oldPlanetReceipt,
-        "old_this_underdog_personal_merge",
-        "vertical_stack",
-        "Demo Universe",
-        "Earth G1",
-        "Planet 1"
+        retiredVoiceMerge,
+        retiredVertical,
+        retiredDemo,
+        retiredEarth,
+        retiredPlanet
       ];
 
       const auditModes = {
@@ -902,7 +879,7 @@ audit_status=READY</pre>
               group: "Core",
               name: "Gauges",
               route: "/gauges/",
-              contracts: [CONTRACT, "GAUGES_CURRENT_ROUTE_CONTRACT_READER_TNT_v2"],
+              contracts: [CONTRACT, PREVIOUS_CONTRACT],
               preferredContract: CONTRACT,
               signals: ["Gauges", "Served Source"]
             }
@@ -1206,6 +1183,7 @@ audit_status=READY</pre>
 
         byId("receiptText").textContent =
 `${CONTRACT}
+previous_contract=${PREVIOUS_CONTRACT}
 route=/gauges/
 page=gauges
 role=measurement_surface
@@ -1227,6 +1205,7 @@ non_pass_findings=${nonPass}
 current_contracts_checked=${checkedContracts}
 core_contract_family_aligned=${mode === "core" ? "true" : "not_applicable"}
 voice_split_routes=/about-this-underdog/,/meet-sean-mansfield/
+self_poison_cleanup=true
 visual_pass_claimed=false
 audit_status=COMPLETE`;
       }

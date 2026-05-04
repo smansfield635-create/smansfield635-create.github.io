@@ -1,10 +1,10 @@
 // /showroom/globe/index.js
-// EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v5
+// EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1
 // Role: route controller only.
-// Owns: mount selection, body separation, non-silent receipts, isolated import attempts, display-size clamp.
-// Does not own: Earth science, Audralia science, Sun, Moon, Gauges, Products, final visual pass.
+// Owns: mount selection, body separation, receipts, isolated import attempts, display-size clamp.
+// Does not own: Earth science, Audralia science expansion, Sun, Moon, Gauges, Products, final visual pass.
 
-const RECEIPT = "EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v5";
+const RECEIPT = "EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1";
 const ROUTE = "/showroom/globe/";
 
 const EARTH = Object.freeze({
@@ -27,12 +27,12 @@ const AUDRALIA = Object.freeze({
   generation: "G1",
   generationStatus: "G1",
   generationClaimed: true,
-  targetStandard: "AUDRALIA_G1_PARENT_COMPOSITOR",
+  targetStandard: "AUDRALIA_GROUND_ZERO_G1_PARENT_RENDER",
   mountId: "audraliaRenderMount",
   receiptId: "audraliaRenderReceipt",
-  authority: "/assets/AdreliaPlanetRendered.js",
+  authority: "/assets/audralia/audralia.planet.render.js",
   moduleCandidates: Object.freeze([
-    "/assets/AdreliaPlanetRendered.js"
+    "/assets/audralia/audralia.planet.render.js"
   ])
 });
 
@@ -65,9 +65,10 @@ function generationReceiptLines(bodyConfig) {
   }
 
   return [
-    `GENERATION=${bodyConfig.generation}`,
-    `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
-    `TARGET_STANDARD=${bodyConfig.targetStandard}`
+    "GENERATION=G1",
+    "GENERATION_CLAIMED=true",
+    "TARGET_STANDARD=AUDRALIA_GROUND_ZERO_G1_PARENT_RENDER",
+    "GROUND_ZERO_PARENT_ONLY=true"
   ];
 }
 
@@ -290,7 +291,7 @@ function summarizeStatus(api, bodyConfig) {
       ok: status.ok !== false,
       status: sanitizeText(status.status || "available"),
       receipt: sanitizeText(status.receipt || status.tnt || "available"),
-      parentAuthority: sanitizeText(status.parentAuthority || bodyConfig.authority),
+      file: sanitizeText(status.file || bodyConfig.authority),
       visualPassClaimed: status.visualPassClaimed === true || status.visualPass === "PASS"
     });
   } catch (error) {
@@ -314,16 +315,12 @@ async function renderWithApi(canvas, api, bodyConfig) {
   const renderOptions = {
     body: bodyConfig.body,
     generationStatus: bodyConfig.generationStatus,
-    generation: bodyConfig.generationStatus,
+    generation: bodyConfig.body === "Audralia" ? "G1" : bodyConfig.generationStatus,
     generationClaimed: bodyConfig.generationClaimed,
     targetStandard: bodyConfig.targetStandard,
     route: ROUTE,
     mountId: bodyConfig.mountId
   };
-
-  if (bodyConfig.body === "Audralia") {
-    renderOptions.generation = "G1";
-  }
 
   if (typeof api.renderSurface === "function") {
     const profile =
@@ -550,6 +547,8 @@ function publishRouteReceipt(results) {
     earthG4Claim: "HELD",
     earthTargetStandard: "ORBITAL_EARTH_G4_REFERENCE",
     audraliaGeneration: "G1",
+    audraliaAuthority: "/assets/audralia/audralia.planet.render.js",
+    audraliaGroundZeroParentOnly: true,
     dualMountContract: true,
     bodyAdoptionBlocked: true,
     noCrossBodyFallback: true,

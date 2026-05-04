@@ -1,1873 +1,988 @@
-<!-- /gauges/index.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gauges · Generation Gap and Boundary Integrity · Diamond Gate Bridge</title>
-
-  <meta
-    name="description"
-    content="Single Gauges page measuring Showroom Globe generation reach, file-boundary integrity, cross-adoption, visual phenotype, and next lawful target."
-  />
-
-  <link rel="stylesheet" href="/assets/manor.css" />
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #030711;
-      --panel: rgba(8, 18, 33, 0.92);
-      --panel2: rgba(12, 32, 56, 0.86);
-      --line: rgba(165, 194, 235, 0.24);
-      --text: #f6f8fc;
-      --muted: #b8c4d8;
-      --pass: #58d68d;
-      --fail: #ff6b6b;
-      --held: #ffd166;
-      --warn: #f7a35c;
-      --info: #8ab4ff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(35, 88, 150, 0.18), transparent 30%),
-        radial-gradient(circle at 90% 14%, rgba(104, 65, 145, 0.14), transparent 28%),
-        var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.45;
-    }
-
-    a {
-      color: #b8d4ff;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: 0.75rem;
-      top: 0.75rem;
-      z-index: 10;
-      transform: translateY(-160%);
-      background: #07111f;
-      color: #fff;
-      padding: 0.55rem 0.8rem;
-      border-radius: 0.7rem;
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .site-header,
-    main {
-      width: min(1180px, 92vw);
-      margin: 0 auto;
-    }
-
-    .site-header {
-      padding: 1rem 0 0.4rem;
-    }
-
-    .brand {
-      display: inline-block;
-      font-weight: 850;
-      font-size: clamp(1.1rem, 4vw, 1.45rem);
-      margin-right: 1rem;
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 0.9rem;
-      margin-top: 0.45rem;
-    }
-
-    main {
-      padding: 2rem 0 5rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.6rem;
-      color: #a9b7ce;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-size: 0.74rem;
-    }
-
-    h1 {
-      margin: 0 0 0.9rem;
-      font-size: clamp(2.2rem, 9vw, 5rem);
-      line-height: 0.94;
-    }
-
-    h2 {
-      margin: 0 0 0.75rem;
-      font-size: clamp(1.55rem, 5vw, 2.4rem);
-      line-height: 1.05;
-    }
-
-    h3 {
-      margin: 0 0 0.55rem;
-      font-size: 1.12rem;
-    }
-
-    p {
-      color: var(--muted);
-      font-size: clamp(1rem, 3.5vw, 1.18rem);
-    }
-
-    .hero {
-      max-width: 980px;
-      margin-bottom: 1.5rem;
-    }
-
-    .summary-grid,
-    .generation-grid,
-    .boundary-grid,
-    .matrix-grid {
-      display: grid;
-      gap: 0.9rem;
-    }
-
-    .summary-grid {
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      margin: 1.35rem 0 1.4rem;
-    }
-
-    .generation-grid {
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    }
-
-    .boundary-grid {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .card,
-    .section,
-    .check,
-    .target,
-    .matrix-card {
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 12% 0%, rgba(78, 130, 200, 0.16), transparent 34%),
-        linear-gradient(180deg, var(--panel2), var(--panel));
-      border-radius: 1.2rem;
-      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.34);
-    }
-
-    .card {
-      padding: 1rem;
-    }
-
-    .card .value {
-      display: block;
-      font-size: clamp(1.8rem, 6vw, 2.8rem);
-      font-weight: 850;
-      line-height: 1;
-    }
-
-    .card .label {
-      display: block;
-      margin-top: 0.35rem;
-      color: var(--muted);
-    }
-
-    .section {
-      margin-top: 1.35rem;
-      padding: clamp(1rem, 3vw, 1.35rem);
-    }
-
-    .checks {
-      display: grid;
-      gap: 0.65rem;
-      margin-top: 1rem;
-    }
-
-    .check {
-      padding: 0.85rem;
-      display: grid;
-      gap: 0.35rem;
-      background: rgba(3, 7, 17, 0.42);
-    }
-
-    .check-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: space-between;
-    }
-
-    .check-name {
-      font-weight: 780;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 4.6rem;
-      padding: 0.22rem 0.55rem;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 850;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 1px solid currentColor;
-    }
-
-    .PASS {
-      color: var(--pass);
-    }
-
-    .FAIL {
-      color: var(--fail);
-    }
-
-    .HELD {
-      color: var(--held);
-    }
-
-    .WARN {
-      color: var(--warn);
-    }
-
-    .INFO {
-      color: var(--info);
-    }
-
-    .details,
-    .mono {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.78rem;
-      color: #dce8ff;
-    }
-
-    .reason {
-      color: #d9e2f0;
-    }
-
-    .target {
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-
-    .target strong {
-      color: #fff;
-    }
-
-    .matrix-grid {
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      margin-top: 1rem;
-    }
-
-    .matrix-card {
-      padding: 0.95rem;
-    }
-
-    .matrix-card dl {
-      margin: 0;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.3rem 0.7rem;
-      font-size: 0.88rem;
-    }
-
-    .matrix-card dt {
-      color: var(--muted);
-    }
-
-    .matrix-card dd {
-      margin: 0;
-      overflow-wrap: anywhere;
-    }
-
-    .run-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      margin: 1.2rem 0 0;
-    }
-
-    button {
-      border: 1px solid rgba(180, 210, 255, 0.28);
-      background: rgba(16, 38, 68, 0.82);
-      color: #fff;
-      border-radius: 999px;
-      padding: 0.75rem 1.1rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: rgba(36, 70, 116, 0.9);
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .hidden-canvas-stage {
-      position: fixed;
-      left: -99999px;
-      top: -99999px;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      pointer-events: none;
-    }
-  </style>
-</head>
-
-<body>
-  <a class="skip-link" href="#main">Skip to Gauges</a>
-
-  <header class="site-header">
-    <a class="brand" href="/">Diamond Gate Bridge</a>
-    <nav aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/">Globe</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/" aria-current="page">Gauges</a>
-    </nav>
-  </header>
-
-  <main id="main" tabindex="-1">
-    <section class="hero">
-      <p class="eyebrow">Gauges · One Page · Gap + Boundary Map</p>
-      <h1>Generation Reach Audit</h1>
-      <p>
-        This single Gauges page measures the live Showroom Globe route, Audralia Generation 1–4 reach,
-        Earth NASA-reference discipline, file-boundary clarity, cross-body adoption, visual phenotype,
-        and the next lawful target. A generation cannot pass from imports alone.
-      </p>
-
-      <div class="run-row">
-        <button id="runAuditButton" type="button">Run Audit</button>
-        <span id="runReceipt" class="small">GAUGES_FULL_G1_TO_G4_BOUNDARY_AND_GAP_MAP_TNT_v1 · pending</span>
-      </div>
-    </section>
-
-    <section class="summary-grid" aria-label="Audit summary">
-      <article class="card"><span id="totalChecks" class="value">—</span><span class="label">Total checks mapped</span></article>
-      <article class="card"><span id="passedChecks" class="value PASS">—</span><span class="label">Passed</span></article>
-      <article class="card"><span id="notPassedChecks" class="value FAIL">—</span><span class="label">Not passed</span></article>
-      <article class="card"><span id="failingChecks" class="value FAIL">—</span><span class="label">Failing</span></article>
-      <article class="card"><span id="heldChecks" class="value HELD">—</span><span class="label">Held / not built</span></article>
-      <article class="card"><span id="warningChecks" class="value WARN">—</span><span class="label">Warnings</span></article>
-    </section>
-
-    <section class="section">
-      <h2>Generation Reach Map</h2>
-      <p>
-        This layer answers what generation pieces exist and whether each generation has passed
-        its required source, parent-consumption, and visual-boundary checks.
-      </p>
-      <div id="generationGrid" class="generation-grid"></div>
-    </section>
-
-    <section class="section">
-      <h2>Boundary Integrity Map</h2>
-      <p>
-        This layer answers whether Earth and Audralia are staying inside their own file,
-        visual, and generation lanes.
-      </p>
-      <div id="boundaryGrid" class="boundary-grid"></div>
-    </section>
-
-    <section class="section">
-      <h2>Live Checks</h2>
-      <div id="checks" class="checks"></div>
-    </section>
-
-    <section class="section">
-      <h2>File Ownership Matrix</h2>
-      <div id="fileMatrix" class="matrix-grid"></div>
-    </section>
-
-    <section class="section">
-      <h2>Next Lawful Target</h2>
-      <div id="nextTarget" class="target mono">Audit pending.</div>
-    </section>
-
-    <section class="section">
-      <h2>Gap Report</h2>
-      <pre id="gapReport" class="mono">Audit pending.</pre>
-    </section>
-
-    <section class="section">
-      <h2>Raw Diagnostic Log</h2>
-      <pre id="rawLog" class="mono">Audit pending.</pre>
-    </section>
-  </main>
-
-  <div id="hiddenCanvasStage" class="hidden-canvas-stage" aria-hidden="true"></div>
-
-  <script type="module">
-    const RECEIPT = "GAUGES_FULL_G1_TO_G4_BOUNDARY_AND_GAP_MAP_TNT_v1";
-
-    const PATHS = Object.freeze({
-      route: "/showroom/globe/",
-      controller: "/showroom/globe/index.js",
-      earth: "/assets/earth/earth_canvas.js",
-      audraliaParent: "/assets/audralia/audralia.planet.render.js",
-      terrain: "/assets/audralia/audralia.terrain.render.js",
-      hydration: "/assets/audralia/audralia.hydration.render.js",
-      climate: "/assets/audralia/audralia.climate.render.js",
-      ecology: "/assets/audralia/audralia.ecology.render.js",
-      fauna: "/assets/audralia/audralia.fauna.render.js",
-      runtime: "/assets/audralia/audralia.living-world.runtime.js"
-    });
-
-    const EARTH_ASSETS = Object.freeze([
-      "/assets/earth/earth-blue-marble-day.jpg",
-      "/assets/earth/earth-blue-marble-day.png",
-      "/assets/earth/earth-reference.jpg",
-      "/assets/earth/earth-reference.png",
-      "/assets/earth/blue-marble.jpg",
-      "/assets/earth/blue-marble.png"
-    ]);
-
-    const state = {
-      checks: [],
-      log: [],
-      modules: {},
-      sources: {},
-      statuses: {},
-      renders: {},
-      generation: {}
-    };
-
-    const $ = (id) => document.getElementById(id);
-
-    function now() {
-      return new Date().toISOString();
-    }
-
-    function log(message) {
-      state.log.push(`[${now()}] ${message}`);
-    }
-
-    function cacheBust(path) {
-      const joiner = path.includes("?") ? "&" : "?";
-      return `${path}${joiner}v=${encodeURIComponent(RECEIPT)}_${Date.now()}`;
-    }
-
-    function includesAny(text, tokens) {
-      const hay = String(text || "");
-      return tokens.some((token) => hay.includes(token));
-    }
-
-    function addCheck(group, name, status, reason, details = {}) {
-      const check = {
-        id: `${group}:${name}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        group,
-        name,
-        status,
-        reason,
-        details
-      };
-
-      state.checks.push(check);
-      return check;
-    }
-
-    async function fetchText(path) {
-      try {
-        const response = await fetch(cacheBust(path), { cache: "no-store" });
-        const text = await response.text();
-
-        log(`Fetched ${path}: status=${response.status}, chars=${text.length}.`);
-
-        return {
-          ok: response.ok,
-          status: response.status,
-          text,
-          error: null
-        };
-      } catch (error) {
-        log(`Fetch failed ${path}: ${String(error && error.message ? error.message : error)}.`);
-
-        return {
-          ok: false,
-          status: 0,
-          text: "",
-          error: String(error && error.message ? error.message : error)
-        };
-      }
-    }
-
-    async function importModule(path) {
-      try {
-        const module = await import(cacheBust(path));
-        log(`Import ${path}: ok=true.`);
-        return {
-          ok: true,
-          path,
-          module,
-          error: null
-        };
-      } catch (error) {
-        const msg = String(error && error.message ? error.message : error);
-        log(`Import ${path}: ok=false :: ${msg}.`);
-        return {
-          ok: false,
-          path,
-          module: null,
-          error: msg
-        };
-      }
-    }
-
-    function getApi(imported) {
-      if (!imported || !imported.ok || !imported.module) return null;
-      return imported.module.default || imported.module;
-    }
-
-    function callStatus(api, path) {
-      if (!api || typeof api.getStatus !== "function") {
-        return {
-          statusAvailable: false,
-          ok: false,
-          error: "getStatus missing",
-          file: path
-        };
-      }
-
-      try {
-        return Object.assign({ statusAvailable: true }, api.getStatus());
-      } catch (error) {
-        return {
-          statusAvailable: false,
-          ok: false,
-          error: String(error && error.message ? error.message : error),
-          file: path
-        };
-      }
-    }
-
-    function makeCanvas() {
-      const canvas = document.createElement("canvas");
-      canvas.width = 512;
-      canvas.height = 512;
-      $("hiddenCanvasStage").appendChild(canvas);
-      return canvas;
-    }
-
-    async function renderModule(api, label) {
-      const canvas = makeCanvas();
-
-      if (!api) {
-        return {
-          rendered: false,
-          method: "none",
-          error: "api missing",
-          analysis: analyzeCanvas(canvas),
-          canvas
-        };
-      }
-
-      try {
-        let output;
-        let method = "none";
-
-        if (typeof api.renderSurface === "function") {
-          method = "renderSurface";
-          output = api.renderSurface(canvas, {
-            route: PATHS.route,
-            audit: RECEIPT,
-            label
-          });
-        } else if (typeof api.render === "function") {
-          method = "render";
-          output = api.render(canvas, {
-            route: PATHS.route,
-            audit: RECEIPT,
-            label
-          });
-        } else if (typeof api.renderPlanet === "function") {
-          method = "renderPlanet";
-          output = api.renderPlanet(canvas, {
-            route: PATHS.route,
-            audit: RECEIPT,
-            label
-          });
-        } else {
-          return {
-            rendered: false,
-            method: "none",
-            error: "no render method",
-            analysis: analyzeCanvas(canvas),
-            canvas
-          };
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 350));
-
-        return {
-          rendered: true,
-          method,
-          output,
-          error: null,
-          analysis: analyzeCanvas(canvas),
-          canvas
-        };
-      } catch (error) {
-        return {
-          rendered: false,
-          method: "error",
-          error: String(error && error.message ? error.message : error),
-          analysis: analyzeCanvas(canvas),
-          canvas
-        };
-      }
-    }
-
-    function analyzeCanvas(canvas) {
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      const { width, height } = canvas;
-      const image = ctx.getImageData(0, 0, width, height);
-      const data = image.data;
-
-      let visible = 0;
-      let blueDominant = 0;
-      let greenDominant = 0;
-      let brownDominant = 0;
-      let whiteCloud = 0;
-      let alphaPixels = 0;
-      let minLum = 255;
-      let maxLum = 0;
-      const buckets = new Set();
-
-      for (let i = 0; i < data.length; i += 16) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
-
-        if (a <= 20) continue;
-
-        alphaPixels += 1;
-
-        const lum = Math.round((r + g + b) / 3);
-        minLum = Math.min(minLum, lum);
-        maxLum = Math.max(maxLum, lum);
-
-        const bucket = `${Math.round(r / 24)}-${Math.round(g / 24)}-${Math.round(b / 24)}`;
-        buckets.add(bucket);
-
-        const isBackgroundDark = lum < 18 && a < 230;
-        if (isBackgroundDark) continue;
-
-        visible += 1;
-
-        if (b > r * 1.18 && b > g * 1.08 && b > 70) blueDominant += 1;
-        if (g > r * 1.08 && g > b * 0.88 && g > 60) greenDominant += 1;
-        if (r > b * 1.14 && g > b * 1.08 && r > 70 && g > 58) brownDominant += 1;
-        if (r > 168 && g > 168 && b > 168 && Math.abs(r - g) < 44 && Math.abs(g - b) < 54) whiteCloud += 1;
-      }
-
-      const safe = Math.max(1, visible);
-
-      return {
-        visiblePixels: visible,
-        alphaPixels,
-        pixelProof: visible > 200,
-        colorDiversity: buckets.size,
-        contrast: maxLum - minLum,
-        blueRatio: blueDominant / safe,
-        greenRatio: greenDominant / safe,
-        brownRatio: brownDominant / safe,
-        whiteCloudRatio: whiteCloud / safe,
-        visibleWaterPhenotype: blueDominant / safe > 0.22,
-        earthLikePhenotype: blueDominant / safe > 0.18 && whiteCloud / safe > 0.04,
-        dryTerrainPhenotype: blueDominant / safe < 0.18 && (brownDominant + greenDominant) / safe > 0.16
-      };
-    }
-
-    async function checkAssetExists(path) {
-      try {
-        const response = await fetch(cacheBust(path), {
-          method: "HEAD",
-          cache: "no-store"
-        });
-
-        if (response.ok) {
-          return { ok: true, path, status: response.status };
-        }
-      } catch (_) {}
-
-      try {
-        const response = await fetch(cacheBust(path), {
-          method: "GET",
-          cache: "no-store"
-        });
-
-        return { ok: response.ok, path, status: response.status };
-      } catch (error) {
-        return {
-          ok: false,
-          path,
-          status: 0,
-          error: String(error && error.message ? error.message : error)
-        };
-      }
-    }
-
-    async function findEarthAsset() {
-      for (const path of EARTH_ASSETS) {
-        const result = await checkAssetExists(path);
-        log(`Earth asset probe ${path}: ok=${result.ok}, status=${result.status}.`);
-        if (result.ok) return result;
-      }
-
-      return {
-        ok: false,
-        path: null,
-        status: 0,
-        tried: EARTH_ASSETS.slice()
-      };
-    }
-
-    function sourceHas(path, token) {
-      return String(state.sources[path]?.text || "").includes(token);
-    }
-
-    function statusBool(status, key) {
-      return status && status[key] === true;
-    }
-
-    async function runAudit() {
-      state.checks = [];
-      state.log = [];
-      state.modules = {};
-      state.sources = {};
-      state.statuses = {};
-      state.renders = {};
-      state.generation = {};
-
-      $("hiddenCanvasStage").replaceChildren();
-      $("runReceipt").textContent = `${RECEIPT} · running · ${new Date().toLocaleString()}`;
-      log("Audit start.");
-
-      state.sources[PATHS.route] = await fetchText(PATHS.route);
-      state.sources[PATHS.controller] = await fetchText(PATHS.controller);
-      state.sources[PATHS.earth] = await fetchText(PATHS.earth);
-      state.sources[PATHS.audraliaParent] = await fetchText(PATHS.audraliaParent);
-
-      const routeText = state.sources[PATHS.route].text;
-      const controllerText = state.sources[PATHS.controller].text;
-      const earthSource = state.sources[PATHS.earth].text;
-      const audraliaSource = state.sources[PATHS.audraliaParent].text;
-
-      state.modules.earth = await importModule(PATHS.earth);
-      state.modules.audraliaParent = await importModule(PATHS.audraliaParent);
-      state.modules.terrain = await importModule(PATHS.terrain);
-      state.modules.hydration = await importModule(PATHS.hydration);
-      state.modules.climate = await importModule(PATHS.climate);
-      state.modules.ecology = await importModule(PATHS.ecology);
-      state.modules.fauna = await importModule(PATHS.fauna);
-      state.modules.runtime = await importModule(PATHS.runtime);
-
-      const earthApi = getApi(state.modules.earth);
-      const audraliaApi = getApi(state.modules.audraliaParent);
-      const terrainApi = getApi(state.modules.terrain);
-      const hydrationApi = getApi(state.modules.hydration);
-      const climateApi = getApi(state.modules.climate);
-      const ecologyApi = getApi(state.modules.ecology);
-      const faunaApi = getApi(state.modules.fauna);
-      const runtimeApi = getApi(state.modules.runtime);
-
-      state.statuses.earth = callStatus(earthApi, PATHS.earth);
-      state.statuses.audraliaParent = callStatus(audraliaApi, PATHS.audraliaParent);
-      state.statuses.terrain = callStatus(terrainApi, PATHS.terrain);
-      state.statuses.hydration = callStatus(hydrationApi, PATHS.hydration);
-      state.statuses.climate = callStatus(climateApi, PATHS.climate);
-      state.statuses.ecology = callStatus(ecologyApi, PATHS.ecology);
-      state.statuses.fauna = callStatus(faunaApi, PATHS.fauna);
-      state.statuses.runtime = callStatus(runtimeApi, PATHS.runtime);
-
-      state.renders.earth = await renderModule(earthApi, "Earth");
-      state.statuses.earthAfterRender = callStatus(earthApi, PATHS.earth);
-      state.renders.audralia = await renderModule(audraliaApi, "Audralia");
-
-      const earthAsset = await findEarthAsset();
-
-      const routeOk = state.sources[PATHS.route].ok && routeText.includes("<html") && !routeText.trim().startsWith("//");
-      const controllerOk = state.sources[PATHS.controller].ok && controllerText.length > 200;
-      const routeParentPath = routeText.includes(PATHS.audraliaParent);
-      const controllerParentPath = controllerText.includes(PATHS.audraliaParent);
-      const oldBridgePresent = routeText.includes("/assets/AdreliaPlanetRendered.js") || controllerText.includes("/assets/AdreliaPlanetRendered.js");
-      const noCrossFallback = controllerText.includes("NO_CROSS_BODY_FALLBACK") || routeText.includes("NO_CROSS_BODY_FALLBACK");
-
-      const earthStatus = state.statuses.earthAfterRender || state.statuses.earth;
-      const audraliaStatus = state.statuses.audraliaParent;
-      const terrainStatus = state.statuses.terrain;
-      const hydrationStatus = state.statuses.hydration;
-      const climateStatus = state.statuses.climate;
-
-      const earthBoundaryMode = earthStatus.rendererMode === "NASA_TEXTURE_REFERENCE";
-      const earthAssetLoaded =
-        earthAsset.ok === true ||
-        earthStatus.assetStatus === "loaded" ||
-        Boolean(earthStatus.activeAssetPath);
-
-      const earthHasForbiddenProceduralTerms = includesAny(earthSource, [
-        "dry terraform",
-        "AUDRALIA_G1",
-        "sampleTerrain",
-        "landBodyCount",
-        "summitRegion",
-        "Nine Summits"
-      ]);
-
-      const audraliaDryStatus =
-        audraliaStatus.g1DryTerraformLandOnly === true ||
-        audraliaStatus.generationStatus === "AUDRALIA_G1_DRY_TERRAFORM_LAND_ONLY";
-
-      const audraliaConsumesTerrain = audraliaStatus.parentConsumesTerrain === true;
-      const audraliaConsumesHydration = audraliaStatus.parentConsumesHydration === true;
-      const audraliaConsumesClimate = audraliaStatus.parentConsumesClimate === true;
-
-      const audraliaVisualWater =
-        audraliaStatus.visualWaterActive === true ||
-        audraliaStatus.oceansActive === true ||
-        state.renders.audralia.analysis.visibleWaterPhenotype === true;
-
-      const audraliaSourceDryReceipt = audraliaSource.includes("AUDRALIA_G1_DRY_TERRAFORM_PARENT_RENDER_TNT_v1");
-      const audraliaRenderChanged = audraliaStatus.receipt === "AUDRALIA_G1_DRY_TERRAFORM_PARENT_RENDER_TNT_v1";
-
-      const terrainOk = state.modules.terrain.ok && terrainStatus.ok !== false;
-      const terrainSeven = Number(terrainStatus.landBodyCount) === 7;
-      const terrainNine = Number(terrainStatus.summitRegionCount) === 9;
-      const terrainExports = Array.isArray(terrainStatus.exports) && terrainStatus.exports.includes("sampleTerrain");
-
-      const hydrationOk = state.modules.hydration.ok && hydrationStatus.ok !== false;
-      const climateOk = state.modules.climate.ok && climateStatus.ok !== false;
-
-      const hydrationProof =
-        hydrationOk &&
-        (
-          Number(hydrationStatus.waterClasses) >= 1 ||
-          hydrationSourceProof(state.modules.hydration.module) ||
-          String(JSON.stringify(hydrationStatus)).includes("hydration")
-        );
-
-      const climateProof =
-        climateOk &&
-        (
-          Number(climateStatus.climateRegions) >= 1 ||
-          climateSourceProof(state.modules.climate.module) ||
-          String(JSON.stringify(climateStatus)).includes("climate")
-        );
-
-      const parentConsumesHydrationClimate =
-        audraliaConsumesHydration === true &&
-        audraliaConsumesClimate === true &&
-        Array.isArray(audraliaStatus.activeDownstreamChildren) &&
-        audraliaStatus.activeDownstreamChildren.includes("hydration") &&
-        audraliaStatus.activeDownstreamChildren.includes("climate");
-
-      const g2VisualReady =
-        audraliaStatus.g2Ready === true ||
-        audraliaStatus.generationStatus === "AUDRALIA_G2_HYDRATION_CLIMATE_ACTIVE";
-
-      const ecologyOk = state.modules.ecology.ok && state.statuses.ecology.ok !== false;
-      const faunaOk = state.modules.fauna.ok && state.statuses.fauna.ok !== false;
-      const runtimeOk = state.modules.runtime.ok && state.statuses.runtime.ok !== false;
-      const parentConsumesG3 =
-        Array.isArray(audraliaStatus.activeDownstreamChildren) &&
-        audraliaStatus.activeDownstreamChildren.includes("ecology") &&
-        audraliaStatus.activeDownstreamChildren.includes("fauna") &&
-        audraliaStatus.activeDownstreamChildren.includes("runtime");
-
-      const g3Ready = audraliaStatus.g3Ready === true;
-      const g4Ready = audraliaStatus.g4Ready === true || audraliaStatus.orbitalReady === true;
-      const screenshotConfirmed = audraliaStatus.screenshotConfirmed === true || routeText.includes("SCREENSHOT_CONFIRMED=true");
-      const renderPixelProof = state.renders.audralia.analysis.pixelProof === true;
-      const colorDiversityPass = state.renders.audralia.analysis.colorDiversity >= 24;
-      const landWaterContrastPass = state.renders.audralia.analysis.contrast >= 60;
-      const generationClaimLockSafe = audraliaStatus.generationPassClaimed !== true || g4Ready === true;
-
-      addCheck(
-        "G1",
-        "Route HTML",
-        routeOk ? "PASS" : "FAIL",
-        "Showroom Globe route must load as HTML, not raw JavaScript.",
-        {
-          routeOk,
-          status: state.sources[PATHS.route].status,
-          rawJsVisible: routeText.trim().startsWith("//")
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Route Parent Path",
-        routeParentPath && !oldBridgePresent ? "PASS" : "FAIL",
-        "Showroom route must reference canonical Audralia parent path and not the old bridge.",
-        {
-          parentPath: routeParentPath,
-          oldBridgePresent,
-          expected: PATHS.audraliaParent
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Controller Known",
-        controllerOk ? "PASS" : "FAIL",
-        "Showroom controller must be fetchable and non-empty.",
-        {
-          controllerOk,
-          chars: controllerText.length,
-          status: state.sources[PATHS.controller].status
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Controller Parent Authority",
-        controllerParentPath && !oldBridgePresent ? "PASS" : "FAIL",
-        "Controller must import Audralia only from the canonical parent path.",
-        {
-          controllerParentPath,
-          oldBridgePresent,
-          expected: PATHS.audraliaParent
-        }
-      );
-
-      addCheck(
-        "G1",
-        "No Cross-Body Fallback",
-        noCrossFallback && !oldBridgePresent ? "PASS" : "FAIL",
-        "Controller must explicitly block Earth/Audralia renderer adoption.",
-        {
-          noCrossFallback,
-          oldBridgePresent
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Earth Claim Discipline",
-        earthStatus.generationStatus === "G4_CANDIDATE" && earthStatus.generationClaimed === false ? "PASS" : "FAIL",
-        "Earth must remain G4_CANDIDATE and must not claim Generation 4 completion.",
-        {
-          generationStatus: earthStatus.generationStatus,
-          generationClaimed: earthStatus.generationClaimed,
-          targetStandard: earthStatus.targetStandard
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Earth Render Proof",
-        state.renders.earth.rendered && state.renders.earth.analysis.pixelProof ? "PASS" : "FAIL",
-        "Earth module must render non-empty canvas output.",
-        {
-          rendered: state.renders.earth.rendered,
-          method: state.renders.earth.method,
-          pixelProof: state.renders.earth.analysis.pixelProof,
-          error: state.renders.earth.error
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Audralia Parent Import",
-        state.modules.audraliaParent.ok && audraliaStatus.statusAvailable === true ? "PASS" : "FAIL",
-        "Audralia parent renderer must import and expose status.",
-        {
-          path: PATHS.audraliaParent,
-          receipt: audraliaStatus.receipt,
-          statusAvailable: audraliaStatus.statusAvailable,
-          error: state.modules.audraliaParent.error
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Audralia Parent Render Proof",
-        state.renders.audralia.rendered && state.renders.audralia.analysis.pixelProof ? "PASS" : "FAIL",
-        "Audralia parent must render non-empty canvas output.",
-        {
-          rendered: state.renders.audralia.rendered,
-          method: state.renders.audralia.method,
-          pixelProof: state.renders.audralia.analysis.pixelProof,
-          colorDiversity: state.renders.audralia.analysis.colorDiversity,
-          contrast: state.renders.audralia.analysis.contrast,
-          error: state.renders.audralia.error
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Terrain Import",
-        terrainOk ? "PASS" : "FAIL",
-        "Terrain child must import and expose terrain status.",
-        {
-          path: PATHS.terrain,
-          receipt: terrainStatus.receipt,
-          file: terrainStatus.file,
-          error: state.modules.terrain.error
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Seven Land Bodies",
-        terrainSeven ? "PASS" : "FAIL",
-        "Terrain must prove seven active land bodies.",
-        {
-          expected: 7,
-          active: terrainStatus.landBodyCount,
-          bodies: Array.isArray(terrainStatus.landBodies) ? terrainStatus.landBodies.map((b) => b.id || b.key).join(",") : "missing"
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Nine Summit Regions",
-        terrainNine ? "PASS" : "FAIL",
-        "Terrain must prove nine active summit terrain regions.",
-        {
-          expected: 9,
-          active: terrainStatus.summitRegionCount,
-          regions: Array.isArray(terrainStatus.summitRegions) ? terrainStatus.summitRegions.map((r) => r.id || r.key).join(",") : "missing"
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Terrain Sampling API",
-        terrainExports ? "PASS" : "FAIL",
-        "Terrain child must expose sampleTerrain through its exports/status contract.",
-        {
-          exports: terrainStatus.exports || []
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Parent Consumes Terrain",
-        audraliaConsumesTerrain ? "PASS" : "FAIL",
-        "Audralia G1 parent must prove it consumes the terrain child.",
-        {
-          parentConsumesTerrain: audraliaStatus.parentConsumesTerrain,
-          activeDownstreamChildren: audraliaStatus.activeDownstreamChildren,
-          activeDownstreamPaths: audraliaStatus.activeDownstreamPaths
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Showroom Copy Alignment",
-        routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE"),
-        (routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE")) ? "PASS" : "FAIL",
-        "Showroom visible copy must match terrain-active reality.",
-        {
-          terrainCopyPresent: routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE"),
-          groundZeroCopyPresent: routeText.includes("ground-zero parent renderer")
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Controller Receipt Alignment",
-        controllerText.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE") &&
-        controllerText.includes("GROUND_ZERO_PARENT_ONLY") &&
-        controllerText.includes("false")
-          ? "PASS"
-          : "FAIL",
-        "Controller receipt logic must no longer emit ground-zero-only language after terrain activation.",
-        {
-          terrainReceiptPresent: controllerText.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE"),
-          groundZeroFalsePresent: controllerText.includes("GROUND_ZERO_PARENT_ONLY") && controllerText.includes("false")
-        }
-      );
-
-      addCheck(
-        "G1",
-        "Audralia G1 Dry Visual Boundary",
-        audraliaDryStatus && !audraliaVisualWater ? "PASS" : "FAIL",
-        "Audralia G1 must be dry terraform land-only. If visible blue water/ocean phenotype appears, G1 does not pass.",
-        {
-          generationStatus: audraliaStatus.generationStatus,
-          g1DryTerraformLandOnly: audraliaStatus.g1DryTerraformLandOnly,
-          visualWaterActive: audraliaStatus.visualWaterActive,
-          oceansActive: audraliaStatus.oceansActive,
-          renderedBlueRatio: state.renders.audralia.analysis.blueRatio,
-          visibleWaterPhenotype: state.renders.audralia.analysis.visibleWaterPhenotype
-        }
-      );
-
-      addCheck(
-        "G2",
-        "G1 Prerequisite",
-        groupPassed("G1") ? "PASS" : "HELD",
-        "G2 remains held until G1 fully passes, including visual boundary integrity.",
-        {
-          G1: groupPassed("G1") ? "PASS" : "NOT_PASSED"
-        }
-      );
-
-      addCheck(
-        "G2",
-        "Hydration Import",
-        hydrationOk ? "PASS" : "HELD",
-        "Hydration child must import and expose status.",
-        {
-          path: PATHS.hydration,
-          receipt: hydrationStatus.receipt,
-          file: hydrationStatus.file,
-          error: state.modules.hydration.error
-        }
-      );
-
-      addCheck(
-        "G2",
-        "Hydration Field Proof",
-        hydrationProof ? "PASS" : "HELD",
-        "Hydration must prove water classes, ocean presence, or river/drainage permission.",
-        {
-          statusAvailable: hydrationStatus.statusAvailable,
-          summary: compactStatus(hydrationStatus)
-        }
-      );
-
-      addCheck(
-        "G2",
-        "Climate Import",
-        climateOk ? "PASS" : "HELD",
-        "Climate child must import and expose status.",
-        {
-          path: PATHS.climate,
-          receipt: climateStatus.receipt,
-          file: climateStatus.file,
-          error: state.modules.climate.error
-        }
-      );
-
-      addCheck(
-        "G2",
-        "Climate Field Proof",
-        climateProof ? "PASS" : "HELD",
-        "Climate must prove climate regions, thermal bands, or moisture bands.",
-        {
-          statusAvailable: climateStatus.statusAvailable,
-          summary: compactStatus(climateStatus)
-        }
-      );
-
-      addCheck(
-        "G2",
-        "Parent Consumes Hydration + Climate",
-        parentConsumesHydrationClimate ? "PASS" : "FAIL",
-        "G2 does not pass until parent intentionally consumes hydration and climate.",
-        {
-          parentConsumesHydration: audraliaStatus.parentConsumesHydration,
-          parentConsumesClimate: audraliaStatus.parentConsumesClimate,
-          activeDownstreamChildren: audraliaStatus.activeDownstreamChildren,
-          activeDownstreamPaths: audraliaStatus.activeDownstreamPaths
-        }
-      );
-
-      addCheck(
-        "G2",
-        "G2 Visual Readiness Receipt",
-        g2VisualReady ? "PASS" : "HELD",
-        "G2 remains held until parent exposes a G2 visual-readiness receipt.",
-        {
-          g2Ready: audraliaStatus.g2Ready,
-          generationStatus: audraliaStatus.generationStatus
-        }
-      );
-
-      addCheck(
-        "G3",
-        "G2 Prerequisite",
-        groupPassed("G2") ? "PASS" : "HELD",
-        "G3 remains held until G2 fully passes.",
-        {
-          G2: groupPassed("G2") ? "PASS" : "NOT_PASSED"
-        }
-      );
-
-      addCheck(
-        "G3",
-        "Ecology Import",
-        ecologyOk ? "PASS" : "HELD",
-        "Ecology child is required for G3.",
-        {
-          path: PATHS.ecology,
-          error: state.modules.ecology.error
-        }
-      );
-
-      addCheck(
-        "G3",
-        "Fauna Import",
-        faunaOk ? "PASS" : "HELD",
-        "Fauna child is required for G3.",
-        {
-          path: PATHS.fauna,
-          error: state.modules.fauna.error
-        }
-      );
-
-      addCheck(
-        "G3",
-        "Living-World Runtime Import",
-        runtimeOk ? "PASS" : "HELD",
-        "Living-world runtime is required for G3.",
-        {
-          path: PATHS.runtime,
-          error: state.modules.runtime.error
-        }
-      );
-
-      addCheck(
-        "G3",
-        "Runtime Sample Proof",
-        runtimeOk && typeof runtimeApi?.sampleRuntime === "function" ? "PASS" : "HELD",
-        "Runtime sample proof remains held until runtime exists and exposes sampling.",
-        {
-          runtimeReady: runtimeOk,
-          sampleRuntime: typeof runtimeApi?.sampleRuntime === "function"
-        }
-      );
-
-      addCheck(
-        "G3",
-        "Parent Consumes Ecology + Fauna + Runtime",
-        parentConsumesG3 ? "PASS" : "HELD",
-        "Parent G3 consumption remains held until all G3 children exist and are consumed.",
-        {
-          ecology: ecologyOk,
-          fauna: faunaOk,
-          runtime: runtimeOk,
-          parentConsumesG3
-        }
-      );
-
-      addCheck(
-        "G3",
-        "G3 Runtime Receipt",
-        g3Ready ? "PASS" : "HELD",
-        "G3 remains held until parent exposes runtime readiness.",
-        {
-          g3Ready: audraliaStatus.g3Ready
-        }
-      );
-
-      addCheck(
-        "G4",
-        "G3 Prerequisite",
-        groupPassed("G3") ? "PASS" : "HELD",
-        "G4 remains held until G3 fully passes.",
-        {
-          G3: groupPassed("G3") ? "PASS" : "NOT_PASSED"
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Orbital Visual Readiness",
-        g4Ready ? "PASS" : "HELD",
-        "G4 remains held until parent exposes orbital visual standard readiness.",
-        {
-          g4Ready,
-          orbitalReady: audraliaStatus.orbitalReady,
-          visualStandard: audraliaStatus.visualStandard || "missing"
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Screenshot Confirmation",
-        screenshotConfirmed ? "PASS" : "HELD",
-        "G4 remains held until screenshot/owner visual confirmation receipt exists.",
-        {
-          screenshotConfirmed
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Render Pixel Proof",
-        renderPixelProof ? "PASS" : "FAIL",
-        "G4 requires non-empty render output.",
-        {
-          rendered: state.renders.audralia.rendered,
-          pixelProof: renderPixelProof,
-          method: state.renders.audralia.method
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Color Diversity",
-        colorDiversityPass ? "PASS" : "FAIL",
-        "G4 requires sufficient render color diversity.",
-        {
-          colorDiversity: state.renders.audralia.analysis.colorDiversity,
-          threshold: 24
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Land/Water Contrast",
-        landWaterContrastPass ? "PASS" : "FAIL",
-        "G4 requires sufficient visible contrast.",
-        {
-          contrast: state.renders.audralia.analysis.contrast,
-          threshold: 60
-        }
-      );
-
-      addCheck(
-        "G4",
-        "Generation Claim Lock",
-        generationClaimLockSafe ? "PASS" : "FAIL",
-        "Generation claim is accepted only if all G4 checks pass.",
-        {
-          generationPassClaimed: audraliaStatus.generationPassClaimed,
-          claimLockSafe: generationClaimLockSafe
-        }
-      );
-
-      addCheck(
-        "Earth Boundary",
-        "Earth Authority Path",
-        state.modules.earth.ok && earthStatus.file === PATHS.earth ? "PASS" : "FAIL",
-        "Earth must import from /assets/earth/earth_canvas.js only.",
-        {
-          expected: PATHS.earth,
-          file: earthStatus.file,
-          imported: state.modules.earth.ok
-        }
-      );
-
-      addCheck(
-        "Earth Boundary",
-        "NASA Renderer Mode",
-        earthBoundaryMode ? "PASS" : "FAIL",
-        "Earth renderer mode must be NASA_TEXTURE_REFERENCE.",
-        {
-          rendererMode: earthStatus.rendererMode,
-          targetStandard: earthStatus.targetStandard
-        }
-      );
-
-      addCheck(
-        "Earth Boundary",
-        "NASA Asset Loaded",
-        earthAssetLoaded ? "PASS" : "FAIL",
-        "Earth reference readiness fails until a real local NASA-style Earth texture asset is loaded.",
-        {
-          assetLoaded: earthAssetLoaded,
-          activeAssetPath: earthStatus.activeAssetPath || earthAsset.path,
-          assetStatus: earthStatus.assetStatus,
-          tried: EARTH_ASSETS
-        }
-      );
-
-      addCheck(
-        "Earth Boundary",
-        "No Audralia Procedural Logic",
-        earthHasForbiddenProceduralTerms ? "FAIL" : "PASS",
-        "Earth file must not use Audralia terrain, summit, dry-terraform, or world-generation logic.",
-        {
-          forbiddenProceduralTerms: earthHasForbiddenProceduralTerms
-        }
-      );
-
-      addCheck(
-        "Earth Boundary",
-        "Placeholder Cannot Pass",
-        earthAssetLoaded ? "PASS" : "FAIL",
-        "Earth fallback or NASA_ASSET_PENDING placeholder cannot count as Earth visual readiness.",
-        {
-          assetStatus: earthStatus.assetStatus,
-          rendered: state.renders.earth.rendered,
-          earthLikePhenotype: state.renders.earth.analysis.earthLikePhenotype
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "Audralia Authority Path",
-        state.modules.audraliaParent.ok && audraliaStatus.file === PATHS.audraliaParent ? "PASS" : "FAIL",
-        "Audralia must import from /assets/audralia/audralia.planet.render.js only.",
-        {
-          expected: PATHS.audraliaParent,
-          file: audraliaStatus.file,
-          imported: state.modules.audraliaParent.ok
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "G1 Dry Status",
-        audraliaDryStatus ? "PASS" : "FAIL",
-        "Audralia G1 status must explicitly declare dry terraform land-only.",
-        {
-          generationStatus: audraliaStatus.generationStatus,
-          g1DryTerraformLandOnly: audraliaStatus.g1DryTerraformLandOnly
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "G1 Does Not Consume Hydration",
-        audraliaConsumesHydration ? "FAIL" : "PASS",
-        "Audralia G1 must not consume hydration. Hydration belongs to G2.",
-        {
-          parentConsumesHydration: audraliaStatus.parentConsumesHydration,
-          hydrationChildBuilt: audraliaStatus.hydrationChildBuilt
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "G1 Does Not Consume Climate",
-        audraliaConsumesClimate ? "FAIL" : "PASS",
-        "Audralia G1 must not consume climate. Climate belongs to G2.",
-        {
-          parentConsumesClimate: audraliaStatus.parentConsumesClimate,
-          climateChildBuilt: audraliaStatus.climateChildBuilt
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "G1 No Water Phenotype",
-        audraliaVisualWater ? "FAIL" : "PASS",
-        "Audralia G1 cannot show ocean/water phenotype.",
-        {
-          visualWaterActive: audraliaStatus.visualWaterActive,
-          oceansActive: audraliaStatus.oceansActive,
-          blueRatio: state.renders.audralia.analysis.blueRatio,
-          visibleWaterPhenotype: state.renders.audralia.analysis.visibleWaterPhenotype
-        }
-      );
-
-      addCheck(
-        "Audralia Boundary",
-        "Parent Deployment Receipt",
-        audraliaSourceDryReceipt && audraliaRenderChanged ? "PASS" : "FAIL",
-        "Audralia source and runtime status must both show the dry-terraform parent receipt.",
-        {
-          sourceDryReceipt: audraliaSourceDryReceipt,
-          runtimeReceipt: audraliaStatus.receipt,
-          runtimeDryReceipt: audraliaRenderChanged
-        }
-      );
-
-      addCheck(
-        "Cross-Adoption",
-        "Old Bridge Removed",
-        oldBridgePresent ? "FAIL" : "PASS",
-        "Old root bridge /assets/AdreliaPlanetRendered.js must not be referenced by route or controller.",
-        {
-          oldBridgePresent
-        }
-      );
-
-      addCheck(
-        "Cross-Adoption",
-        "Distinct Renderer Modes",
-        earthStatus.rendererMode !== audraliaStatus.rendererMode ? "PASS" : "FAIL",
-        "Earth and Audralia must expose different renderer modes/status profiles.",
-        {
-          earthRendererMode: earthStatus.rendererMode || "missing",
-          audraliaRendererMode: audraliaStatus.rendererMode || audraliaStatus.generationStatus || "missing"
-        }
-      );
-
-      addCheck(
-        "Cross-Adoption",
-        "Earth Does Not Imitate Audralia",
-        earthHasForbiddenProceduralTerms ? "FAIL" : "PASS",
-        "Earth must not be generated through Audralia terrain or summit systems.",
-        {
-          earthHasForbiddenProceduralTerms
-        }
-      );
-
-      addCheck(
-        "Cross-Adoption",
-        "Audralia Does Not Imitate Earth NASA Renderer",
-        audraliaSource.includes("NASA_TEXTURE_REFERENCE") || audraliaSource.includes("Blue Marble") ? "FAIL" : "PASS",
-        "Audralia must not use Earth/NASA reference renderer logic.",
-        {
-          audraliaContainsNasaTerms: audraliaSource.includes("NASA_TEXTURE_REFERENCE") || audraliaSource.includes("Blue Marble")
-        }
-      );
-
-      addCheck(
-        "Cross-Adoption",
-        "Controller Split Receipts",
-        controllerText.includes("Earth") &&
-        controllerText.includes("Audralia") &&
-        controllerText.includes("NO_CROSS_BODY_FALLBACK")
-          ? "PASS"
-          : "FAIL",
-        "Controller must maintain separate body receipts and block cross adoption.",
-        {
-          earthToken: controllerText.includes("Earth"),
-          audraliaToken: controllerText.includes("Audralia"),
-          noCrossBodyFallback: controllerText.includes("NO_CROSS_BODY_FALLBACK")
-        }
-      );
-
-      renderAll();
-      log("Audit complete.");
-      $("runReceipt").textContent = `${RECEIPT} · completed · ${new Date().toLocaleString()}`;
-    }
-
-    function hydrationSourceProof(module) {
-      try {
-        const api = module?.default || module;
-        return Boolean(api && (api.sampleHydration || api.buildHydrationField || api.getHydrationStatus));
-      } catch (_) {
-        return false;
-      }
-    }
-
-    function climateSourceProof(module) {
-      try {
-        const api = module?.default || module;
-        return Boolean(api && (api.sampleClimate || api.buildClimateField || api.getClimateStatus));
-      } catch (_) {
-        return false;
-      }
-    }
-
-    function compactStatus(status) {
-      const out = {};
-      for (const key of Object.keys(status || {})) {
-        if (["terrainStatus", "hydrationStatus", "climateStatus", "landBodies", "summitRegions"].includes(key)) continue;
-        const value = status[key];
-        if (typeof value !== "object") out[key] = value;
-      }
-      return out;
-    }
-
-    function groupChecks(group) {
-      return state.checks.filter((check) => check.group === group);
-    }
-
-    function groupPassed(group) {
-      const checks = groupChecks(group);
-      return checks.length > 0 && checks.every((check) => check.status === "PASS");
-    }
-
-    function groupCounts(group) {
-      const checks = groupChecks(group);
-      const passed = checks.filter((c) => c.status === "PASS").length;
-      const fail = checks.filter((c) => c.status === "FAIL").length;
-      const held = checks.filter((c) => c.status === "HELD").length;
-      const warn = checks.filter((c) => c.status === "WARN").length;
-      return {
-        total: checks.length,
-        passed,
-        fail,
-        held,
-        warn,
-        notPassed: fail + held + warn,
-        status: fail > 0 ? "FAIL" : held > 0 ? "HELD" : warn > 0 ? "WARN" : "PASS"
-      };
-    }
-
-    function renderAll() {
-      renderSummary();
-      renderGeneration();
-      renderBoundaries();
-      renderChecks();
-      renderMatrix();
-      renderNextTarget();
-      renderGapReport();
-      $("rawLog").textContent = state.log.join("\n");
-    }
-
-    function renderSummary() {
-      const total = state.checks.length;
-      const passed = state.checks.filter((c) => c.status === "PASS").length;
-      const fail = state.checks.filter((c) => c.status === "FAIL").length;
-      const held = state.checks.filter((c) => c.status === "HELD").length;
-      const warn = state.checks.filter((c) => c.status === "WARN").length;
-
-      $("totalChecks").textContent = total;
-      $("passedChecks").textContent = passed;
-      $("notPassedChecks").textContent = fail + held + warn;
-      $("failingChecks").textContent = fail;
-      $("heldChecks").textContent = held;
-      $("warningChecks").textContent = warn;
-    }
-
-    function renderGeneration() {
-      const groups = ["G1", "G2", "G3", "G4"];
-      $("generationGrid").innerHTML = "";
-
-      for (const group of groups) {
-        const counts = groupCounts(group);
-        const card = document.createElement("article");
-        card.className = "card";
-        card.innerHTML = `
-          <span class="badge ${counts.status}">${counts.status}</span>
-          <h3>Generation ${group.replace("G", "")}</h3>
-          <p class="mono">${counts.passed}/${counts.total} passed · ${counts.notPassed} not passed</p>
-        `;
-        $("generationGrid").appendChild(card);
-      }
-    }
-
-    function renderBoundaries() {
-      const groups = ["Earth Boundary", "Audralia Boundary", "Cross-Adoption"];
-      $("boundaryGrid").innerHTML = "";
-
-      for (const group of groups) {
-        const counts = groupCounts(group);
-        const card = document.createElement("article");
-        card.className = "card";
-        card.innerHTML = `
-          <span class="badge ${counts.status}">${counts.status}</span>
-          <h3>${escapeHtml(group)}</h3>
-          <p class="mono">${counts.passed}/${counts.total} passed · ${counts.notPassed} not passed</p>
-        `;
-        $("boundaryGrid").appendChild(card);
-      }
-    }
-
-    function renderChecks() {
-      $("checks").innerHTML = "";
-
-      for (const check of state.checks) {
-        const node = document.createElement("article");
-        node.className = "check";
-        node.innerHTML = `
-          <div class="check-head">
-            <span class="check-name">${escapeHtml(check.group)} · ${escapeHtml(check.name)}</span>
-            <span class="badge ${check.status}">${check.status}</span>
-          </div>
-          <div class="reason">${escapeHtml(check.reason)}</div>
-          <pre class="details">${escapeHtml(JSON.stringify(check.details, null, 2))}</pre>
-        `;
-        $("checks").appendChild(node);
-      }
-    }
-
-    function renderMatrix() {
-      const files = [
-        {
-          file: PATHS.earth,
-          owner: "Earth",
-          role: "NASA reference renderer",
-          boundary: "No Audralia procedural logic",
-          status: groupChecks("Earth Boundary").some((c) => c.status === "FAIL") ? "FAIL" : "PASS"
-        },
-        {
-          file: PATHS.audraliaParent,
-          owner: "Audralia",
-          role: "Parent renderer",
-          boundary: "G1 dry terrain only until G2 parent consumption",
-          status: groupChecks("Audralia Boundary").some((c) => c.status === "FAIL") ? "FAIL" : "PASS"
-        },
-        {
-          file: PATHS.terrain,
-          owner: "Audralia",
-          role: "G1 terrain child",
-          boundary: "Owns terrain only",
-          status: groupChecks("G1").find((c) => c.name === "Terrain Import")?.status || "HELD"
-        },
-        {
-          file: PATHS.hydration,
-          owner: "Audralia",
-          role: "G2 hydration child",
-          boundary: "Does not become visible until parent consumes G2",
-          status: groupChecks("G2").find((c) => c.name === "Hydration Import")?.status || "HELD"
-        },
-        {
-          file: PATHS.climate,
-          owner: "Audralia",
-          role: "G2 climate child",
-          boundary: "Does not become visible until parent consumes G2",
-          status: groupChecks("G2").find((c) => c.name === "Climate Import")?.status || "HELD"
-        },
-        {
-          file: PATHS.ecology,
-          owner: "Audralia",
-          role: "G3 ecology child",
-          boundary: "Foliage layer",
-          status: groupChecks("G3").find((c) => c.name === "Ecology Import")?.status || "HELD"
-        },
-        {
-          file: PATHS.fauna,
-          owner: "Audralia",
-          role: "G3/G4 fauna child",
-          boundary: "Animals/living-world extension",
-          status: groupChecks("G3").find((c) => c.name === "Fauna Import")?.status || "HELD"
-        },
-        {
-          file: PATHS.runtime,
-          owner: "Audralia",
-          role: "Living-world runtime",
-          boundary: "Runtime behavior, not terrain ownership",
-          status: groupChecks("G3").find((c) => c.name === "Living-World Runtime Import")?.status || "HELD"
-        }
-      ];
-
-      $("fileMatrix").innerHTML = "";
-
-      for (const item of files) {
-        const node = document.createElement("article");
-        node.className = "matrix-card";
-        node.innerHTML = `
-          <span class="badge ${item.status}">${item.status}</span>
-          <h3>${escapeHtml(item.owner)}</h3>
-          <dl>
-            <dt>File</dt><dd class="mono">${escapeHtml(item.file)}</dd>
-            <dt>Role</dt><dd>${escapeHtml(item.role)}</dd>
-            <dt>Boundary</dt><dd>${escapeHtml(item.boundary)}</dd>
-          </dl>
-        `;
-        $("fileMatrix").appendChild(node);
-      }
-    }
-
-    function renderNextTarget() {
-      const failed = state.checks.filter((c) => c.status === "FAIL");
-      const held = state.checks.filter((c) => c.status === "HELD");
-      const next = failed[0] || held[0];
-
-      if (!next) {
-        $("nextTarget").textContent = [
-          `RECEIPT=${RECEIPT}`,
-          "NEXT_TARGET=NONE",
-          "STATUS=ALL_MAPPED_CHECKS_PASS"
-        ].join("\n");
-        return;
-      }
-
-      const target = mapTarget(next);
-
-      $("nextTarget").textContent = [
-        `RECEIPT=${RECEIPT}`,
-        `NEXT_TARGET=${next.group}:${next.name}`,
-        `STATUS=${next.status}`,
-        `REASON=${next.reason}`,
-        `WRITE_ONLY=${JSON.stringify(target.writeOnly)}`,
-        `DO_NOT_TOUCH=${JSON.stringify(target.doNotTouch)}`,
-        `DETAILS=${JSON.stringify(next.details)}`
-      ].join("\n");
-    }
-
-    function mapTarget(check) {
-      const safeDoNotTouch = [
-        "/products/",
-        "/door/",
-        "/home/",
-        "/showroom/",
-        "/showroom/globe/index.html",
-        "/showroom/globe/index.js"
-      ];
-
-      if (check.group === "Earth Boundary") {
-        return {
-          writeOnly: [PATHS.earth, "/assets/earth/[NASA_TEXTURE_ASSET]"],
-          doNotTouch: [PATHS.audraliaParent, PATHS.terrain, PATHS.hydration, PATHS.climate, PATHS.controller, ...safeDoNotTouch]
-        };
-      }
-
-      if (check.group === "Audralia Boundary" || check.name.includes("Audralia G1 Dry")) {
-        return {
-          writeOnly: [PATHS.audraliaParent],
-          doNotTouch: [PATHS.earth, PATHS.controller, PATHS.route, "/gauges/index.html", PATHS.terrain, PATHS.hydration, PATHS.climate]
-        };
-      }
-
-      if (check.group === "G2" && check.name.includes("Parent Consumes")) {
-        return {
-          writeOnly: [PATHS.audraliaParent],
-          doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html", PATHS.ecology, PATHS.fauna, PATHS.runtime]
-        };
-      }
-
-      if (check.group === "G3") {
-        return {
-          writeOnly: [PATHS.ecology, PATHS.fauna, PATHS.runtime],
-          doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html"]
-        };
-      }
-
-      return {
-        writeOnly: [PATHS.audraliaParent],
-        doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html"]
-      };
-    }
-
-    function renderGapReport() {
-      const total = state.checks.length;
-      const passed = state.checks.filter((c) => c.status === "PASS").length;
-      const fail = state.checks.filter((c) => c.status === "FAIL").length;
-      const held = state.checks.filter((c) => c.status === "HELD").length;
-      const warn = state.checks.filter((c) => c.status === "WARN").length;
-
-      const lines = [
-        `RECEIPT=${RECEIPT}`,
-        `TOTAL_CHECKS=${total}`,
-        `PASSED=${passed}`,
-        `NOT_PASSED=${fail + held + warn}`,
-        `FAILING=${fail}`,
-        `HELD=${held}`,
-        `WARN=${warn}`,
-        "",
-        ...["G1", "G2", "G3", "G4", "Earth Boundary", "Audralia Boundary", "Cross-Adoption"].map((group) => {
-          const c = groupCounts(group);
-          return `${group.toUpperCase().replaceAll(" ", "_")}=${c.status} :: ${c.passed}/${c.total} passed :: ${c.notPassed} not passed`;
-        }),
-        "",
-        "RULE=GENERATION_STATUS_IS_GAUGE_DETERMINED_ONLY",
-        "RULE=PASS_COUNT_ALONE_IS_NOT_GENERATION_PASS",
-        "RULE=BOUNDARY_FAILURE_BLOCKS_GENERATION_PASS",
-        "RULE=EARTH_NASA_ASSET_PENDING_IS_FAIL_NOT_PASS",
-        "RULE=AUDRALIA_G1_BLUE_WATER_PHENOTYPE_IS_FAIL_NOT_PASS",
-        "",
-        "FAILS=" + state.checks.filter((c) => c.status === "FAIL").map((c) => `${c.group}:${c.name}`).join(" :: "),
-        "HELDS=" + state.checks.filter((c) => c.status === "HELD").map((c) => `${c.group}:${c.name}`).join(" :: ")
-      ];
-
-      $("gapReport").textContent = lines.join("\n");
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    $("runAuditButton").addEventListener("click", runAudit);
-
-    runAudit();
-  </script>
-</body>
-</html>
+/* /assets/diamond-orbit.css */
+/* COMPASS_4_PLUS_12_DIAMOND_ORBIT_REBALANCE_TNT_v1 */
+
+:root {
+  --diamond-orbit-bg: rgba(14, 18, 48, 0.72);
+  --diamond-orbit-panel: rgba(18, 24, 58, 0.74);
+  --diamond-orbit-panel-strong: rgba(9, 13, 34, 0.88);
+  --diamond-orbit-purple: rgba(117, 78, 214, 0.78);
+  --diamond-orbit-purple-strong: rgba(130, 92, 239, 0.92);
+  --diamond-orbit-purple-soft: rgba(155, 124, 255, 0.22);
+  --diamond-orbit-gold: #f5c76b;
+  --diamond-orbit-text: #f8edd2;
+  --diamond-orbit-muted: rgba(235, 238, 255, 0.72);
+  --diamond-orbit-line: rgba(245, 199, 107, 0.26);
+  --diamond-orbit-blue-line: rgba(126, 181, 255, 0.18);
+  --diamond-orbit-radius: 28px;
+
+  --diamond-orbit-inner-radius: clamp(92px, 21vw, 146px);
+  --diamond-orbit-outer-radius: clamp(172px, 35vw, 278px);
+
+  --diamond-orbit-inner-duration: 34s;
+  --diamond-orbit-outer-duration: 58s;
+
+  --diamond-orbit-inner-width: clamp(82px, 14vw, 128px);
+  --diamond-orbit-inner-height: clamp(70px, 11vw, 104px);
+  --diamond-orbit-outer-width: clamp(76px, 12vw, 114px);
+  --diamond-orbit-outer-height: clamp(66px, 10vw, 96px);
+}
+
+@property --orbit-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --orbit-counter-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes diamondOrbitClockwise {
+  from {
+    --orbit-spin: 0deg;
+    --orbit-counter-spin: 0deg;
+  }
+
+  to {
+    --orbit-spin: 360deg;
+    --orbit-counter-spin: -360deg;
+  }
+}
+
+@keyframes diamondOrbitCounterClockwise {
+  from {
+    --orbit-spin: 0deg;
+    --orbit-counter-spin: 0deg;
+  }
+
+  to {
+    --orbit-spin: -360deg;
+    --orbit-counter-spin: 360deg;
+  }
+}
+
+@keyframes diamondAnchorPulse {
+  0%,
+  100% {
+    opacity: 0.44;
+    transform: translate(-50%, -50%) scale(0.96) rotate(45deg);
+  }
+
+  50% {
+    opacity: 0.68;
+    transform: translate(-50%, -50%) scale(1.04) rotate(45deg);
+  }
+}
+
+@keyframes diamondAuroraDrift {
+  0%,
+  100% {
+    background-position: 0% 50%, 50% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%, 48% 54%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Compass command field precinct.
+   This file owns orbit geometry, ring spacing, route diamond motion, z-index,
+   label readability, and mobile compression only.
+   -------------------------------------------------------------------------- */
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"],
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+[data-compass-command-field],
+[data-command-field="chronological"],
+.compass-command-field,
+.compass-orbit-field,
+.diamond-orbit-field,
+.chronological-command-field,
+.command-field,
+.orbit-field,
+.compass-diamond-command-surface {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(620px, 92vw, 860px);
+  width: min(100%, 980px);
+  margin: 0 auto;
+  border: 1px solid var(--diamond-orbit-line);
+  border-radius: var(--diamond-orbit-radius);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(155, 124, 255, 0.18), transparent 17rem),
+    radial-gradient(circle at 50% 50%, rgba(245, 199, 107, 0.08), transparent 24rem),
+    linear-gradient(135deg, var(--diamond-orbit-panel), var(--diamond-orbit-panel-strong));
+  box-shadow:
+    inset 0 0 0 1px rgba(126, 181, 255, 0.08),
+    0 32px 90px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+  isolation: isolate;
+
+  --orbit-system: compass-4-plus-12;
+  --inner-ring-count: 4;
+  --outer-ring-count: 12;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"]::before,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"]::before,
+[data-compass-command-field]::before,
+[data-command-field="chronological"]::before,
+.compass-command-field::before,
+.compass-orbit-field::before,
+.diamond-orbit-field::before,
+.chronological-command-field::before,
+.command-field::before,
+.orbit-field::before,
+.compass-diamond-command-surface::before {
+  content: "";
+  position: absolute;
+  inset: clamp(18px, 3vw, 34px);
+  border: 1px solid rgba(245, 199, 107, 0.14);
+  border-radius: calc(var(--diamond-orbit-radius) - 8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"]::after,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"]::after,
+[data-compass-command-field]::after,
+[data-command-field="chronological"]::after,
+.compass-command-field::after,
+.compass-orbit-field::after,
+.diamond-orbit-field::after,
+.chronological-command-field::after,
+.command-field::after,
+.orbit-field::after,
+.compass-diamond-command-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 12.5rem, rgba(245, 199, 107, 0.10) 12.6rem 12.72rem, transparent 12.82rem),
+    radial-gradient(circle at 50% 50%, transparent 0 18.8rem, rgba(126, 181, 255, 0.08) 18.9rem 19.02rem, transparent 19.12rem),
+    linear-gradient(90deg, transparent 49.8%, rgba(255, 255, 255, 0.08) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, rgba(255, 255, 255, 0.06) 50%, transparent 50.2%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Compass center: background command anchor only. It must stay behind routes. */
+
+[data-center="compass_background_anchor_only"],
+[data-compass-center],
+.compass-center,
+.command-center,
+.orbit-center,
+.compass-background-anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(170px, 34vw, 330px);
+  aspect-ratio: 1 / 1;
+  padding: 1rem;
+  border: 1px solid rgba(245, 199, 107, 0.12);
+  border-radius: 50%;
+  color: rgba(248, 237, 210, 0.46);
+  background:
+    radial-gradient(circle, rgba(155, 124, 255, 0.16), transparent 58%),
+    linear-gradient(135deg, rgba(28, 24, 74, 0.50), rgba(7, 10, 32, 0.30));
+  box-shadow:
+    inset 0 0 38px rgba(155, 124, 255, 0.18),
+    0 0 46px rgba(155, 124, 255, 0.08);
+  text-align: center;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+[data-center="compass_background_anchor_only"]::before,
+[data-compass-center]::before,
+.compass-center::before,
+.command-center::before,
+.orbit-center::before,
+.compass-background-anchor::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.13);
+  border-radius: 24px;
+  animation: diamondAnchorPulse 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+[data-center="compass_background_anchor_only"] strong,
+[data-compass-center] strong,
+.compass-center strong,
+.command-center strong,
+.orbit-center strong,
+.compass-background-anchor strong {
+  display: block;
+  color: rgba(248, 237, 210, 0.52);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+[data-center="compass_background_anchor_only"] span,
+[data-compass-center] span,
+.compass-center span,
+.command-center span,
+.orbit-center span,
+.compass-background-anchor span {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgba(235, 238, 255, 0.34);
+}
+
+/* Route diamonds: existing class hooks plus source-order fallback. */
+
+[data-route-diamond],
+[data-diamond-route],
+.route-diamond,
+.diamond-route,
+.diamond-orbit-node,
+.compass-route-diamond,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+[data-compass-command-field] a,
+[data-command-field="chronological"] a,
+.compass-command-field a,
+.compass-orbit-field a,
+.diamond-orbit-field a,
+.chronological-command-field a,
+.command-field a,
+.orbit-field a,
+.compass-diamond-command-surface a {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: var(--diamond-orbit-outer-width);
+  min-height: var(--diamond-orbit-outer-height);
+  padding: 0.48rem 0.5rem;
+  color: var(--diamond-orbit-text);
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.12;
+  font-size: clamp(0.58rem, 1.75vw, 0.84rem);
+  font-weight: 900;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--start-angle, 0deg) + var(--orbit-spin, 0deg)))
+    translateX(var(--ring-radius, var(--diamond-orbit-outer-radius)))
+    rotate(calc(var(--inverse-angle, 0deg) + var(--orbit-counter-spin, 0deg)));
+  transform-origin: 50% 50%;
+  animation: diamondOrbitCounterClockwise var(--diamond-orbit-outer-duration) linear infinite;
+  isolation: isolate;
+  cursor: pointer;
+  touch-action: manipulation;
+  outline: none;
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
+}
+
+[data-route-diamond]::before,
+[data-diamond-route]::before,
+.route-diamond::before,
+.diamond-route::before,
+.diamond-orbit-node::before,
+.compass-route-diamond::before,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a::before,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a::before,
+[data-compass-command-field] a::before,
+[data-command-field="chronological"] a::before,
+.compass-command-field a::before,
+.compass-orbit-field a::before,
+.diamond-orbit-field a::before,
+.chronological-command-field a::before,
+.command-field a::before,
+.orbit-field a::before,
+.compass-diamond-command-surface a::before {
+  content: "";
+  position: absolute;
+  inset: -0.18rem;
+  z-index: -1;
+  border: 1px solid rgba(245, 199, 107, 0.44);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(245, 199, 107, 0.12), transparent 40%),
+    linear-gradient(135deg, rgba(155, 124, 255, 0.82), rgba(40, 35, 98, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 14px 30px rgba(0, 0, 0, 0.32),
+    0 0 24px rgba(155, 124, 255, 0.20);
+  transform: rotate(45deg);
+  transform-origin: 50% 50%;
+}
+
+[data-route-diamond]::after,
+[data-diamond-route]::after,
+.route-diamond::after,
+.diamond-route::after,
+.diamond-orbit-node::after,
+.compass-route-diamond::after,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a::after,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a::after,
+[data-compass-command-field] a::after,
+[data-command-field="chronological"] a::after,
+.compass-command-field a::after,
+.compass-orbit-field a::after,
+.diamond-orbit-field a::after,
+.chronological-command-field a::after,
+.command-field a::after,
+.orbit-field a::after,
+.compass-diamond-command-surface a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 42%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.035);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+[data-route-diamond]:hover,
+[data-route-diamond]:focus-visible,
+[data-diamond-route]:hover,
+[data-diamond-route]:focus-visible,
+.route-diamond:hover,
+.route-diamond:focus-visible,
+.diamond-route:hover,
+.diamond-route:focus-visible,
+.diamond-orbit-node:hover,
+.diamond-orbit-node:focus-visible,
+.compass-route-diamond:hover,
+.compass-route-diamond:focus-visible,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible,
+[data-compass-command-field] a:hover,
+[data-compass-command-field] a:focus-visible,
+[data-command-field="chronological"] a:hover,
+[data-command-field="chronological"] a:focus-visible,
+.compass-command-field a:hover,
+.compass-command-field a:focus-visible,
+.compass-orbit-field a:hover,
+.compass-orbit-field a:focus-visible,
+.diamond-orbit-field a:hover,
+.diamond-orbit-field a:focus-visible,
+.chronological-command-field a:hover,
+.chronological-command-field a:focus-visible,
+.command-field a:hover,
+.command-field a:focus-visible,
+.orbit-field a:hover,
+.orbit-field a:focus-visible,
+.compass-diamond-command-surface a:hover,
+.compass-diamond-command-surface a:focus-visible {
+  z-index: 9;
+  color: #fff8e5;
+  animation-play-state: paused;
+}
+
+[data-route-diamond]:hover::before,
+[data-route-diamond]:focus-visible::before,
+[data-diamond-route]:hover::before,
+[data-diamond-route]:focus-visible::before,
+.route-diamond:hover::before,
+.route-diamond:focus-visible::before,
+.diamond-route:hover::before,
+.diamond-route:focus-visible::before,
+.diamond-orbit-node:hover::before,
+.diamond-orbit-node:focus-visible::before,
+.compass-route-diamond:hover::before,
+.compass-route-diamond:focus-visible::before,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover::before,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible::before,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover::before,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible::before,
+[data-compass-command-field] a:hover::before,
+[data-compass-command-field] a:focus-visible::before,
+[data-command-field="chronological"] a:hover::before,
+[data-command-field="chronological"] a:focus-visible::before,
+.compass-command-field a:hover::before,
+.compass-command-field a:focus-visible::before,
+.compass-orbit-field a:hover::before,
+.compass-orbit-field a:focus-visible::before,
+.diamond-orbit-field a:hover::before,
+.diamond-orbit-field a:focus-visible::before,
+.chronological-command-field a:hover::before,
+.chronological-command-field a:focus-visible::before,
+.command-field a:hover::before,
+.command-field a:focus-visible::before,
+.orbit-field a:hover::before,
+.orbit-field a:focus-visible::before,
+.compass-diamond-command-surface a:hover::before,
+.compass-diamond-command-surface a:focus-visible::before {
+  border-color: rgba(245, 199, 107, 0.82);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(245, 199, 107, 0.22), transparent 40%),
+    linear-gradient(135deg, rgba(171, 146, 255, 0.94), rgba(75, 58, 156, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 18px 38px rgba(0, 0, 0, 0.40),
+    0 0 34px rgba(245, 199, 107, 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   Inner ring: 4 primary routes.
+   Source order: Compass, Door, Home, Manor.
+   Motion: clockwise.
+   -------------------------------------------------------------------------- */
+
+[data-ring="inner"],
+[data-route-ring="inner"],
+.inner-ring,
+.route-inner,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(-n + 4),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(-n + 4),
+[data-compass-command-field] a:nth-of-type(-n + 4),
+[data-command-field="chronological"] a:nth-of-type(-n + 4),
+.compass-command-field a:nth-of-type(-n + 4),
+.compass-orbit-field a:nth-of-type(-n + 4),
+.diamond-orbit-field a:nth-of-type(-n + 4),
+.chronological-command-field a:nth-of-type(-n + 4),
+.command-field a:nth-of-type(-n + 4),
+.orbit-field a:nth-of-type(-n + 4),
+.compass-diamond-command-surface a:nth-of-type(-n + 4) {
+  width: var(--diamond-orbit-inner-width);
+  min-height: var(--diamond-orbit-inner-height);
+  font-size: clamp(0.62rem, 1.9vw, 0.9rem);
+  z-index: 6;
+  animation-name: diamondOrbitClockwise;
+  animation-duration: var(--diamond-orbit-inner-duration);
+
+  --ring-radius: var(--diamond-orbit-inner-radius);
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(1),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(1),
+[data-compass-command-field] a:nth-of-type(1),
+[data-command-field="chronological"] a:nth-of-type(1),
+.compass-command-field a:nth-of-type(1),
+.compass-orbit-field a:nth-of-type(1),
+.diamond-orbit-field a:nth-of-type(1),
+.chronological-command-field a:nth-of-type(1),
+.command-field a:nth-of-type(1),
+.orbit-field a:nth-of-type(1),
+.compass-diamond-command-surface a:nth-of-type(1) {
+  --start-angle: -90deg;
+  --inverse-angle: 90deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(2),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(2),
+[data-compass-command-field] a:nth-of-type(2),
+[data-command-field="chronological"] a:nth-of-type(2),
+.compass-command-field a:nth-of-type(2),
+.compass-orbit-field a:nth-of-type(2),
+.diamond-orbit-field a:nth-of-type(2),
+.chronological-command-field a:nth-of-type(2),
+.command-field a:nth-of-type(2),
+.orbit-field a:nth-of-type(2),
+.compass-diamond-command-surface a:nth-of-type(2) {
+  --start-angle: 0deg;
+  --inverse-angle: 0deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(3),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(3),
+[data-compass-command-field] a:nth-of-type(3),
+[data-command-field="chronological"] a:nth-of-type(3),
+.compass-command-field a:nth-of-type(3),
+.compass-orbit-field a:nth-of-type(3),
+.diamond-orbit-field a:nth-of-type(3),
+.chronological-command-field a:nth-of-type(3),
+.command-field a:nth-of-type(3),
+.orbit-field a:nth-of-type(3),
+.compass-diamond-command-surface a:nth-of-type(3) {
+  --start-angle: 90deg;
+  --inverse-angle: -90deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(4),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(4),
+[data-compass-command-field] a:nth-of-type(4),
+[data-command-field="chronological"] a:nth-of-type(4),
+.compass-command-field a:nth-of-type(4),
+.compass-orbit-field a:nth-of-type(4),
+.diamond-orbit-field a:nth-of-type(4),
+.chronological-command-field a:nth-of-type(4),
+.command-field a:nth-of-type(4),
+.orbit-field a:nth-of-type(4),
+.compass-diamond-command-surface a:nth-of-type(4) {
+  --start-angle: 180deg;
+  --inverse-angle: -180deg;
+}
+
+/* --------------------------------------------------------------------------
+   Outer ring: 12 expanded routes.
+   Source order: Laws, Nine Summits, Book, Universe, Products, Showroom,
+   Frontier, Gauges, Underdog, Meet Sean, Audralia, Five Flags.
+   Motion: counterclockwise.
+   -------------------------------------------------------------------------- */
+
+[data-ring="outer"],
+[data-route-ring="outer"],
+.outer-ring,
+.route-outer,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(n + 5),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(n + 5),
+[data-compass-command-field] a:nth-of-type(n + 5),
+[data-command-field="chronological"] a:nth-of-type(n + 5),
+.compass-command-field a:nth-of-type(n + 5),
+.compass-orbit-field a:nth-of-type(n + 5),
+.diamond-orbit-field a:nth-of-type(n + 5),
+.chronological-command-field a:nth-of-type(n + 5),
+.command-field a:nth-of-type(n + 5),
+.orbit-field a:nth-of-type(n + 5),
+.compass-diamond-command-surface a:nth-of-type(n + 5) {
+  animation-name: diamondOrbitCounterClockwise;
+  animation-duration: var(--diamond-orbit-outer-duration);
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(5),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(5),
+[data-compass-command-field] a:nth-of-type(5),
+[data-command-field="chronological"] a:nth-of-type(5),
+.compass-command-field a:nth-of-type(5),
+.compass-orbit-field a:nth-of-type(5),
+.diamond-orbit-field a:nth-of-type(5),
+.chronological-command-field a:nth-of-type(5),
+.command-field a:nth-of-type(5),
+.orbit-field a:nth-of-type(5),
+.compass-diamond-command-surface a:nth-of-type(5) {
+  --start-angle: -90deg;
+  --inverse-angle: 90deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(6),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(6),
+[data-compass-command-field] a:nth-of-type(6),
+[data-command-field="chronological"] a:nth-of-type(6),
+.compass-command-field a:nth-of-type(6),
+.compass-orbit-field a:nth-of-type(6),
+.diamond-orbit-field a:nth-of-type(6),
+.chronological-command-field a:nth-of-type(6),
+.command-field a:nth-of-type(6),
+.orbit-field a:nth-of-type(6),
+.compass-diamond-command-surface a:nth-of-type(6) {
+  --start-angle: -60deg;
+  --inverse-angle: 60deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(7),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(7),
+[data-compass-command-field] a:nth-of-type(7),
+[data-command-field="chronological"] a:nth-of-type(7),
+.compass-command-field a:nth-of-type(7),
+.compass-orbit-field a:nth-of-type(7),
+.diamond-orbit-field a:nth-of-type(7),
+.chronological-command-field a:nth-of-type(7),
+.command-field a:nth-of-type(7),
+.orbit-field a:nth-of-type(7),
+.compass-diamond-command-surface a:nth-of-type(7) {
+  --start-angle: -30deg;
+  --inverse-angle: 30deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(8),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(8),
+[data-compass-command-field] a:nth-of-type(8),
+[data-command-field="chronological"] a:nth-of-type(8),
+.compass-command-field a:nth-of-type(8),
+.compass-orbit-field a:nth-of-type(8),
+.diamond-orbit-field a:nth-of-type(8),
+.chronological-command-field a:nth-of-type(8),
+.command-field a:nth-of-type(8),
+.orbit-field a:nth-of-type(8),
+.compass-diamond-command-surface a:nth-of-type(8) {
+  --start-angle: 0deg;
+  --inverse-angle: 0deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(9),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(9),
+[data-compass-command-field] a:nth-of-type(9),
+[data-command-field="chronological"] a:nth-of-type(9),
+.compass-command-field a:nth-of-type(9),
+.compass-orbit-field a:nth-of-type(9),
+.diamond-orbit-field a:nth-of-type(9),
+.chronological-command-field a:nth-of-type(9),
+.command-field a:nth-of-type(9),
+.orbit-field a:nth-of-type(9),
+.compass-diamond-command-surface a:nth-of-type(9) {
+  --start-angle: 30deg;
+  --inverse-angle: -30deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(10),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(10),
+[data-compass-command-field] a:nth-of-type(10),
+[data-command-field="chronological"] a:nth-of-type(10),
+.compass-command-field a:nth-of-type(10),
+.compass-orbit-field a:nth-of-type(10),
+.diamond-orbit-field a:nth-of-type(10),
+.chronological-command-field a:nth-of-type(10),
+.command-field a:nth-of-type(10),
+.orbit-field a:nth-of-type(10),
+.compass-diamond-command-surface a:nth-of-type(10) {
+  --start-angle: 60deg;
+  --inverse-angle: -60deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(11),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(11),
+[data-compass-command-field] a:nth-of-type(11),
+[data-command-field="chronological"] a:nth-of-type(11),
+.compass-command-field a:nth-of-type(11),
+.compass-orbit-field a:nth-of-type(11),
+.diamond-orbit-field a:nth-of-type(11),
+.chronological-command-field a:nth-of-type(11),
+.command-field a:nth-of-type(11),
+.orbit-field a:nth-of-type(11),
+.compass-diamond-command-surface a:nth-of-type(11) {
+  --start-angle: 90deg;
+  --inverse-angle: -90deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(12),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(12),
+[data-compass-command-field] a:nth-of-type(12),
+[data-command-field="chronological"] a:nth-of-type(12),
+.compass-command-field a:nth-of-type(12),
+.compass-orbit-field a:nth-of-type(12),
+.diamond-orbit-field a:nth-of-type(12),
+.chronological-command-field a:nth-of-type(12),
+.command-field a:nth-of-type(12),
+.orbit-field a:nth-of-type(12),
+.compass-diamond-command-surface a:nth-of-type(12) {
+  --start-angle: 120deg;
+  --inverse-angle: -120deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(13),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(13),
+[data-compass-command-field] a:nth-of-type(13),
+[data-command-field="chronological"] a:nth-of-type(13),
+.compass-command-field a:nth-of-type(13),
+.compass-orbit-field a:nth-of-type(13),
+.diamond-orbit-field a:nth-of-type(13),
+.chronological-command-field a:nth-of-type(13),
+.command-field a:nth-of-type(13),
+.orbit-field a:nth-of-type(13),
+.compass-diamond-command-surface a:nth-of-type(13) {
+  --start-angle: 150deg;
+  --inverse-angle: -150deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(14),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(14),
+[data-compass-command-field] a:nth-of-type(14),
+[data-command-field="chronological"] a:nth-of-type(14),
+.compass-command-field a:nth-of-type(14),
+.compass-orbit-field a:nth-of-type(14),
+.diamond-orbit-field a:nth-of-type(14),
+.chronological-command-field a:nth-of-type(14),
+.command-field a:nth-of-type(14),
+.orbit-field a:nth-of-type(14),
+.compass-diamond-command-surface a:nth-of-type(14) {
+  --start-angle: 180deg;
+  --inverse-angle: -180deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(15),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(15),
+[data-compass-command-field] a:nth-of-type(15),
+[data-command-field="chronological"] a:nth-of-type(15),
+.compass-command-field a:nth-of-type(15),
+.compass-orbit-field a:nth-of-type(15),
+.diamond-orbit-field a:nth-of-type(15),
+.chronological-command-field a:nth-of-type(15),
+.command-field a:nth-of-type(15),
+.orbit-field a:nth-of-type(15),
+.compass-diamond-command-surface a:nth-of-type(15) {
+  --start-angle: 210deg;
+  --inverse-angle: -210deg;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(16),
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(16),
+[data-compass-command-field] a:nth-of-type(16),
+[data-command-field="chronological"] a:nth-of-type(16),
+.compass-command-field a:nth-of-type(16),
+.compass-orbit-field a:nth-of-type(16),
+.diamond-orbit-field a:nth-of-type(16),
+.chronological-command-field a:nth-of-type(16),
+.command-field a:nth-of-type(16),
+.orbit-field a:nth-of-type(16),
+.compass-diamond-command-surface a:nth-of-type(16) {
+  --start-angle: 240deg;
+  --inverse-angle: -240deg;
+}
+
+/* Labels inside route diamonds. */
+
+[data-route-diamond] strong,
+[data-diamond-route] strong,
+.route-diamond strong,
+.diamond-route strong,
+.diamond-orbit-node strong,
+.compass-route-diamond strong,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a strong,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a strong,
+[data-compass-command-field] a strong,
+[data-command-field="chronological"] a strong,
+.compass-command-field a strong,
+.compass-orbit-field a strong,
+.diamond-orbit-field a strong,
+.chronological-command-field a strong,
+.command-field a strong,
+.orbit-field a strong,
+.compass-diamond-command-surface a strong {
+  display: block;
+  color: var(--diamond-orbit-text);
+  font-size: 1em;
+}
+
+[data-route-diamond] span,
+[data-diamond-route] span,
+.route-diamond span,
+.diamond-route span,
+.diamond-orbit-node span,
+.compass-route-diamond span,
+[data-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
+[data-compass-command-field] a span,
+[data-command-field="chronological"] a span,
+.compass-command-field a span,
+.compass-orbit-field a span,
+.diamond-orbit-field a span,
+.chronological-command-field a span,
+.command-field a span,
+.orbit-field a span,
+.compass-diamond-command-surface a span {
+  display: block;
+  margin-top: 0.28rem;
+  color: var(--diamond-orbit-muted);
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  text-transform: none;
+}
+
+/* Existing receipt animation names preserved as aliases. */
+
+.diamondOrbitClockwise {
+  animation-name: diamondOrbitClockwise;
+}
+
+.diamondCounterRead {
+  transform-origin: 50% 50%;
+}
+
+.diamondHoverLift:hover,
+.diamondHoverLift:focus-visible {
+  translate: 0 -3px;
+}
+
+.backgroundAnchorPulse {
+  animation: diamondAnchorPulse 7s ease-in-out infinite;
+}
+
+.auroraDrift {
+  animation: diamondAuroraDrift 18s ease-in-out infinite;
+}
+
+/* Receipt hooks. */
+
+[data-diamond-orbit-standard],
+.diamond-orbit-standard-receipt {
+  --animation-standard: UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1;
+  --rebalance-contract: COMPASS_4_PLUS_12_DIAMOND_ORBIT_REBALANCE_TNT_v1;
+  --inner-ring: 4;
+  --outer-ring: 12;
+  --inner-direction: clockwise;
+  --outer-direction: counterclockwise;
+  --center-law: background-anchor-only;
+  --non-overlap-law: no-clickable-diamond-hidden-by-center;
+}
+
+/* Mobile: preserve 4 + 12, compress radii and diamond size without removing nodes. */
+
+@media (max-width: 760px) {
+  :root {
+    --diamond-orbit-inner-radius: clamp(82px, 25vw, 116px);
+    --diamond-orbit-outer-radius: clamp(142px, 42vw, 206px);
+    --diamond-orbit-inner-width: clamp(68px, 19vw, 96px);
+    --diamond-orbit-inner-height: clamp(58px, 15vw, 82px);
+    --diamond-orbit-outer-width: clamp(62px, 17vw, 88px);
+    --diamond-orbit-outer-height: clamp(54px, 14vw, 78px);
+    --diamond-orbit-inner-duration: 38s;
+    --diamond-orbit-outer-duration: 64s;
+  }
+
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-command-field],
+  [data-command-field="chronological"],
+  .compass-command-field,
+  .compass-orbit-field,
+  .diamond-orbit-field,
+  .chronological-command-field,
+  .command-field,
+  .orbit-field,
+  .compass-diamond-command-surface {
+    min-height: clamp(540px, 146vw, 720px);
+  }
+
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond,
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-command-field] a,
+  [data-command-field="chronological"] a,
+  .compass-command-field a,
+  .compass-orbit-field a,
+  .diamond-orbit-field a,
+  .chronological-command-field a,
+  .command-field a,
+  .orbit-field a,
+  .compass-diamond-command-surface a {
+    padding: 0.38rem 0.34rem;
+    font-size: clamp(0.48rem, 2.1vw, 0.68rem);
+    letter-spacing: 0.055em;
+  }
+
+  [data-center="compass_background_anchor_only"],
+  [data-compass-center],
+  .compass-center,
+  .command-center,
+  .orbit-center,
+  .compass-background-anchor {
+    width: clamp(128px, 35vw, 190px);
+  }
+}
+
+@media (max-width: 440px) {
+  :root {
+    --diamond-orbit-inner-radius: clamp(72px, 24vw, 96px);
+    --diamond-orbit-outer-radius: clamp(120px, 39vw, 172px);
+    --diamond-orbit-inner-width: clamp(58px, 18vw, 78px);
+    --diamond-orbit-inner-height: clamp(50px, 15vw, 68px);
+    --diamond-orbit-outer-width: clamp(54px, 16vw, 72px);
+    --diamond-orbit-outer-height: clamp(48px, 14vw, 64px);
+  }
+
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-command-field],
+  [data-command-field="chronological"],
+  .compass-command-field,
+  .compass-orbit-field,
+  .diamond-orbit-field,
+  .chronological-command-field,
+  .command-field,
+  .orbit-field,
+  .compass-diamond-command-surface {
+    min-height: clamp(480px, 150vw, 650px);
+  }
+
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond,
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-command-field] a,
+  [data-command-field="chronological"] a,
+  .compass-command-field a,
+  .compass-orbit-field a,
+  .diamond-orbit-field a,
+  .chronological-command-field a,
+  .command-field a,
+  .orbit-field a,
+  .compass-diamond-command-surface a {
+    font-size: 0.48rem;
+    line-height: 1.02;
+  }
+
+  [data-route-diamond] span,
+  [data-diamond-route] span,
+  .route-diamond span,
+  .diamond-route span,
+  .diamond-orbit-node span,
+  .compass-route-diamond span,
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
+  [data-compass-command-field] a span,
+  [data-command-field="chronological"] a span,
+  .compass-command-field a span,
+  .compass-orbit-field a span,
+  .diamond-orbit-field a span,
+  .chronological-command-field a span,
+  .command-field a span,
+  .orbit-field a span,
+  .compass-diamond-command-surface a span {
+    font-size: 0.74em;
+  }
+}
+
+/* Reduced motion: preserve the 4 + 12 geometry, stop orbiting. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond,
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
+  [data-compass-command-field] a,
+  [data-command-field="chronological"] a,
+  .compass-command-field a,
+  .compass-orbit-field a,
+  .diamond-orbit-field a,
+  .chronological-command-field a,
+  .command-field a,
+  .orbit-field a,
+  .compass-diamond-command-surface a {
+    animation: none !important;
+  }
+
+  [data-center="compass_background_anchor_only"]::before,
+  [data-compass-center]::before,
+  .compass-center::before,
+  .command-center::before,
+  .orbit-center::before,
+  .compass-background-anchor::before {
+    animation: none !important;
+  }
+}

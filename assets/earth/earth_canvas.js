@@ -1,12 +1,14 @@
 /*
   /assets/earth/earth_canvas.js
-  EARTH_G4_SURFACE_PHASE_ROTATION_CONTROL_TNT_v1
+  EARTH_G4_TOUCH_ROTATION_NO_STRETCH_CONTROL_TNT_v2
 
   Purpose:
   - Preserve Earth as its own independent canvas authority.
-  - Fix disk rotation by forbidding whole-object / whole-canvas rotation.
-  - Rotate Earth by internal surface longitude phase only.
-  - Keep the Earth canvas, sphere mask, frame, and placement fixed.
+  - Fix touch control so finger drag rotates the surface instead of stretching the texture.
+  - Keep canvas fixed, sphere mask fixed, object boundary fixed, and projection sampling fixed.
+  - Use horizontal drag as longitude-phase rotation only.
+  - Ignore vertical drag for now so vertical movement cannot deform the texture.
+  - Preserve release inertia.
   - Preserve Earth route independence and block Audralia adoption.
 
   Scope:
@@ -35,19 +37,23 @@
 (function () {
   "use strict";
 
-  const VERSION = "EARTH_G4_SURFACE_PHASE_ROTATION_CONTROL_TNT_v1";
+  const VERSION = "EARTH_G4_TOUCH_ROTATION_NO_STRETCH_CONTROL_TNT_v2";
 
   const EARTH = Object.freeze({
     id: "earth",
     label: "Earth",
     route: "/showroom/globe/earth/",
     authority: "/assets/earth/earth_canvas.js",
-    generation: "G4_SURFACE_PHASE_ROTATION",
+    generation: "G4_TOUCH_ROTATION_NO_STRETCH",
     referenceStandard: "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
     canvasBoundary: "fixed",
+    sphereMask: "fixed",
     objectBoundary: "natural-sphere-mask",
+    projectionSampling: "locked",
     rotationModel: "surface-longitude-phase",
-    diskRotation: "forbidden"
+    touchModel: "horizontal-drag-only",
+    diskRotation: "forbidden",
+    textureStretch: "forbidden"
   });
 
   const ASSETS = Object.freeze({
@@ -57,22 +63,21 @@
 
   const DEFAULTS = Object.freeze({
     maxDevicePixelRatio: 2,
-    surfaceAutoStep: 0.0009,
-    cloudAutoStep: 0.00042,
-    dragLongitudeFactor: 0.0017,
-    dragLatitudeFactor: 0.0011,
-    releaseFriction: 0.945,
-    minVelocity: 0.00002,
-    axisTiltDegrees: 23.5,
-    minZoom: 0.82,
-    maxZoom: 1.42,
+    surfaceAutoStep: 0.00065,
+    cloudAutoStep: 0.00028,
+    dragLongitudeFactor: 0.00185,
+    releaseFriction: 0.948,
+    minVelocity: 0.000018,
+    minZoom: 0.86,
+    maxZoom: 1.28,
     initialZoom: 1,
-    latitudeLimit: 0.18,
-    renderReceipt: false
+    initialPhase: 0.18,
+    initialCloudPhase: 0.08,
+    renderReceipt: true
   });
 
-  const instanceStore = new WeakMap();
   const imageCache = Object.create(null);
+  const instanceStore = new WeakMap();
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -83,29 +88,29 @@
   }
 
   function normalizeNumber(value, fallback) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function loadImage(src) {
     if (imageCache[src]) return imageCache[src];
 
     imageCache[src] = new Promise(function (resolve) {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.decoding = "async";
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.decoding = "async";
 
-      img.onload = function () {
+      image.onload = function () {
         resolve({
           ok: true,
           src,
-          image: img,
-          width: img.naturalWidth || img.width,
-          height: img.naturalHeight || img.height
+          image,
+          width: image.naturalWidth || image.width,
+          height: image.naturalHeight || image.height
         });
       };
 
-      img.onerror = function () {
+      image.onerror = function () {
         resolve({
           ok: false,
           src,
@@ -115,7 +120,7 @@
         });
       };
 
-      img.src = src;
+      image.src = src;
     });
 
     return imageCache[src];
@@ -127,25 +132,17 @@
     canvas.height = height;
 
     const ctx = canvas.getContext("2d");
-    const ocean = variant === "clouds" ? "#ffffff" : "#0e4f92";
-    const land = variant === "clouds" ? "rgba(255,255,255,0.62)" : "#3f8c58";
-    const dry = variant === "clouds" ? "rgba(255,255,255,0.38)" : "#b58d57";
-
-    ctx.fillStyle = ocean;
+    ctx.fillStyle = variant === "clouds" ? "rgba(255,255,255,0)" : "#0d4f8f";
     ctx.fillRect(0, 0, width, height);
 
     function blob(cx, cy, rx, ry, color) {
       ctx.beginPath();
 
-      for (let i = 0; i <= 80; i += 1) {
-        const a = (Math.PI * 2 * i) / 80;
-        const noise =
-          1 +
-          Math.sin(a * 3 + cx * 0.01) * 0.08 +
-          Math.sin(a * 7 + cy * 0.01) * 0.045;
-
-        const x = cx + Math.cos(a) * rx * noise;
-        const y = cy + Math.sin(a) * ry * noise;
+      for (let i = 0; i <= 72; i += 1) {
+        const angle = (Math.PI * 2 * i) / 72;
+        const noise = 1 + Math.sin(angle * 3 + cx * 0.01) * 0.08 + Math.sin(angle * 7) * 0.04;
+        const x = cx + Math.cos(angle) * rx * noise;
+        const y = cy + Math.sin(angle) * ry * noise;
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -157,17 +154,21 @@
     }
 
     if (variant === "clouds") {
-      for (let i = 0; i < 26; i += 1) {
-        const x = ((i * 193) % width) + 24;
-        const y = ((i * 89) % height) + 18;
-        blob(x, y, 70 + (i % 5) * 14, 16 + (i % 3) * 6, i % 2 ? land : dry);
+      for (let i = 0; i < 34; i += 1) {
+        blob(
+          (i * 173) % width,
+          (i * 91) % height,
+          58 + (i % 5) * 18,
+          14 + (i % 3) * 7,
+          i % 2 ? "rgba(255,255,255,0.52)" : "rgba(255,255,255,0.34)"
+        );
       }
     } else {
-      blob(width * 0.22, height * 0.48, width * 0.14, height * 0.25, land);
-      blob(width * 0.38, height * 0.42, width * 0.13, height * 0.18, dry);
-      blob(width * 0.55, height * 0.48, width * 0.16, height * 0.21, land);
-      blob(width * 0.72, height * 0.46, width * 0.12, height * 0.16, dry);
-      blob(width * 0.84, height * 0.60, width * 0.08, height * 0.08, land);
+      blob(width * 0.24, height * 0.48, width * 0.13, height * 0.24, "#3f8c58");
+      blob(width * 0.43, height * 0.43, width * 0.14, height * 0.17, "#b58d57");
+      blob(width * 0.58, height * 0.49, width * 0.17, height * 0.20, "#3f8c58");
+      blob(width * 0.75, height * 0.46, width * 0.12, height * 0.16, "#b58d57");
+      blob(width * 0.86, height * 0.62, width * 0.07, height * 0.08, "#3f8c58");
 
       ctx.fillStyle = "rgba(238,245,248,0.88)";
       ctx.fillRect(0, 0, width, height * 0.07);
@@ -188,9 +189,14 @@
         generation: EARTH.generation,
         referenceStandard: EARTH.referenceStandard,
         canvasBoundary: EARTH.canvasBoundary,
+        sphereMask: EARTH.sphereMask,
         objectBoundary: EARTH.objectBoundary,
+        projectionSampling: EARTH.projectionSampling,
         rotationModel: EARTH.rotationModel,
+        touchModel: EARTH.touchModel,
         diskRotation: EARTH.diskRotation,
+        textureStretch: EARTH.textureStretch,
+        verticalDragTextureEffect: "disabled",
         wholeCanvasTransform: "forbidden",
         wholeObjectRotation: "forbidden",
         surfacePhaseRotation: "active",
@@ -216,22 +222,29 @@
 
   function createCanvas() {
     const canvas = document.createElement("canvas");
-    canvas.className = "earth-g4-canvas earth-surface-phase-canvas";
+    canvas.className = "earth-g4-canvas earth-touch-rotation-no-stretch";
     canvas.dataset.body = EARTH.id;
     canvas.dataset.authority = EARTH.authority;
     canvas.dataset.version = VERSION;
     canvas.dataset.generation = EARTH.generation;
     canvas.dataset.rotationModel = EARTH.rotationModel;
+    canvas.dataset.touchModel = EARTH.touchModel;
     canvas.dataset.diskRotation = "forbidden";
+    canvas.dataset.textureStretch = "forbidden";
+    canvas.dataset.verticalDragTextureEffect = "disabled";
     canvas.dataset.canvasBoundary = "fixed";
+    canvas.dataset.sphereMask = "fixed";
     canvas.dataset.objectBoundary = "natural-sphere-mask";
+    canvas.dataset.projectionSampling = "locked";
     canvas.dataset.publicReceipts = "hidden";
     canvas.dataset.visualPass = "held";
+
     canvas.setAttribute("role", "img");
     canvas.setAttribute(
       "aria-label",
-      "Earth G4 canvas using fixed sphere placement and surface longitude phase rotation"
+      "Earth G4 canvas using fixed sphere projection and horizontal touch rotation without texture stretch"
     );
+
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.maxWidth = "760px";
@@ -245,25 +258,41 @@
     canvas.style.boxShadow = "none";
     canvas.style.transform = "none";
     canvas.style.translate = "none";
+    canvas.style.scale = "none";
+    canvas.style.rotate = "none";
+
     return canvas;
+  }
+
+  function normalizeOptions(options) {
+    const input = options || {};
+
+    return {
+      size: input.size,
+      surfaceAutoStep: normalizeNumber(input.surfaceAutoStep, DEFAULTS.surfaceAutoStep),
+      cloudAutoStep: normalizeNumber(input.cloudAutoStep, DEFAULTS.cloudAutoStep),
+      dragLongitudeFactor: normalizeNumber(input.dragLongitudeFactor, DEFAULTS.dragLongitudeFactor),
+      releaseFriction: normalizeNumber(input.releaseFriction, DEFAULTS.releaseFriction),
+      minVelocity: normalizeNumber(input.minVelocity, DEFAULTS.minVelocity),
+      minZoom: normalizeNumber(input.minZoom, DEFAULTS.minZoom),
+      maxZoom: normalizeNumber(input.maxZoom, DEFAULTS.maxZoom),
+      initialZoom: normalizeNumber(input.initialZoom, DEFAULTS.initialZoom),
+      initialPhase: normalizeNumber(input.initialPhase, DEFAULTS.initialPhase),
+      initialCloudPhase: normalizeNumber(input.initialCloudPhase, DEFAULTS.initialCloudPhase),
+      renderReceipt: input.renderReceipt !== false
+    };
   }
 
   function sizeCanvas(canvas, mount, state) {
     const rect = mount && mount.getBoundingClientRect ? mount.getBoundingClientRect() : null;
+    const availableWidth = rect && rect.width ? rect.width : window.innerWidth - 32;
+
     const cssSize = Math.max(
       280,
-      Math.min(
-        760,
-        normalizeNumber(state.options.size, 0) ||
-          Math.floor(Math.min(rect && rect.width ? rect.width : 640, window.innerWidth - 32))
-      )
+      Math.min(760, normalizeNumber(state.options.size, 0) || Math.floor(availableWidth))
     );
 
-    const dpr = Math.min(
-      DEFAULTS.maxDevicePixelRatio,
-      Math.max(1, window.devicePixelRatio || 1)
-    );
-
+    const dpr = Math.min(DEFAULTS.maxDevicePixelRatio, Math.max(1, window.devicePixelRatio || 1));
     const pixelSize = Math.max(320, Math.floor(cssSize * dpr));
 
     if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
@@ -279,21 +308,21 @@
     state.dpr = dpr;
   }
 
-  function drawWrappedStrip(ctx, img, phase, sy, sh, dx, dy, dw, dh) {
-    if (!img || !img.width || !img.height || dw <= 0 || dh <= 0) return;
+  function drawWrappedStrip(ctx, image, phase, sy, sh, dx, dy, dw, dh) {
+    if (!image || !image.width || !image.height || dw <= 0 || dh <= 0) return;
 
-    const sourceWidth = img.width;
-    const sourceHeight = img.height;
-    const start = wrap01(phase) * sourceWidth;
-    const safeSy = clamp(sy, 0, sourceHeight - 1);
-    const safeSh = clamp(sh, 1, sourceHeight - safeSy);
+    const imageWidth = image.width;
+    const imageHeight = image.height;
+    const start = wrap01(phase) * imageWidth;
+    const safeSy = clamp(sy, 0, imageHeight - 1);
+    const safeSh = clamp(sh, 1, imageHeight - safeSy);
 
-    const firstSourceWidth = sourceWidth - start;
-    const firstDestWidth = dw * (firstSourceWidth / sourceWidth);
+    const firstSourceWidth = imageWidth - start;
+    const firstDestWidth = dw * (firstSourceWidth / imageWidth);
     const secondDestWidth = dw - firstDestWidth;
 
     ctx.drawImage(
-      img,
+      image,
       start,
       safeSy,
       firstSourceWidth,
@@ -306,7 +335,7 @@
 
     if (secondDestWidth > 0.5) {
       ctx.drawImage(
-        img,
+        image,
         0,
         safeSy,
         start,
@@ -319,39 +348,39 @@
     }
   }
 
-  function drawTextureSphere(ctx, state, img, phase, alpha, yPhaseOffset) {
+  function drawTextureSphere(ctx, state, image, phase, alpha) {
     const size = state.size;
-    const cx = size / 2;
-    const cy = size / 2;
-    const zoom = clamp(state.zoom, DEFAULTS.minZoom, DEFAULTS.maxZoom);
-    const r = size * 0.405 * zoom;
-    const strip = Math.max(1, Math.floor(size / 360));
-    const sourceHeight = img && img.height ? img.height : 512;
+    const center = size / 2;
+    const zoom = clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
+    const radius = size * 0.405 * zoom;
+    const stripHeight = Math.max(1, Math.floor(size / 360));
+    const imageHeight = image && image.height ? image.height : 512;
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
     ctx.clip();
     ctx.globalAlpha = alpha;
 
-    for (let y = -r; y <= r; y += strip) {
-      const yMid = y + strip / 2;
-      const normalizedY = yMid / r;
+    for (let y = -radius; y <= radius; y += stripHeight) {
+      const yMid = y + stripHeight / 2;
+      const normalizedY = yMid / radius;
       const chord = Math.sqrt(Math.max(0, 1 - normalizedY * normalizedY));
-      const width = r * 2 * chord;
-      const destX = cx - width / 2;
-      const destY = cy + y;
+      const destWidth = radius * 2 * chord;
+      const destX = center - destWidth / 2;
+      const destY = center + y;
 
-      const v = clamp(
-        0.5 + normalizedY * 0.5 + state.latitudeOffset + (yPhaseOffset || 0),
-        0,
-        1
-      );
+      /*
+        Projection lock:
+        v is derived only from the stable sphere row.
+        No pointer dy, latitudeOffset, scale, pull, or gesture movement may change v.
+      */
+      const v = clamp(0.5 + normalizedY * 0.5, 0, 1);
+      const sy = Math.floor(v * (imageHeight - 1));
+      const sh = Math.max(1, Math.ceil((stripHeight / (radius * 2)) * imageHeight * 1.8));
 
-      const sy = Math.floor(v * (sourceHeight - 1));
-      const sh = Math.max(1, Math.ceil((strip / (r * 2)) * sourceHeight * 1.8));
-
-      drawWrappedStrip(ctx, img, phase, sy, sh, destX, destY, width, strip + 1);
+      drawWrappedStrip(ctx, image, phase, sy, sh, destX, destY, destWidth, stripHeight + 1);
     }
 
     ctx.restore();
@@ -359,50 +388,49 @@
 
   function drawFallbackLoading(ctx, state) {
     const size = state.size;
-    const cx = size / 2;
-    const cy = size / 2;
-    const r = size * 0.405;
+    const center = size / 2;
+    const radius = size * 0.405;
 
-    ctx.save();
     ctx.clearRect(0, 0, size, size);
 
-    const ocean = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.25, r * 0.08, cx, cy, r);
-    ocean.addColorStop(0, "#2b86c5");
-    ocean.addColorStop(0.58, "#105b96");
-    ocean.addColorStop(1, "#071f58");
+    const gradient = ctx.createRadialGradient(
+      center - radius * 0.28,
+      center - radius * 0.24,
+      radius * 0.05,
+      center,
+      center,
+      radius
+    );
+
+    gradient.addColorStop(0, "#2b86c5");
+    gradient.addColorStop(0.58, "#105b96");
+    gradient.addColorStop(1, "#071f58");
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = ocean;
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
     ctx.fill();
-
-    ctx.fillStyle = "rgba(246,239,224,0.78)";
-    ctx.font = `${Math.max(14, Math.floor(size * 0.035))}px system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.fillText("Earth", cx, cy + r + Math.max(26, size * 0.055));
-
-    ctx.restore();
   }
 
   function drawShading(ctx, state) {
     const size = state.size;
-    const cx = size / 2;
-    const cy = size / 2;
-    const zoom = clamp(state.zoom, DEFAULTS.minZoom, DEFAULTS.maxZoom);
-    const r = size * 0.405 * zoom;
+    const center = size / 2;
+    const zoom = clamp(state.zoom, state.options.minZoom, state.options.maxZoom);
+    const radius = size * 0.405 * zoom;
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
     ctx.clip();
 
     const daylight = ctx.createRadialGradient(
-      cx - r * 0.38,
-      cy - r * 0.34,
-      r * 0.02,
-      cx,
-      cy,
-      r * 1.18
+      center - radius * 0.38,
+      center - radius * 0.34,
+      radius * 0.02,
+      center,
+      center,
+      radius * 1.18
     );
 
     daylight.addColorStop(0, "rgba(255,255,255,0.28)");
@@ -411,43 +439,25 @@
     daylight.addColorStop(1, "rgba(0,0,0,0.48)");
 
     ctx.fillStyle = daylight;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
-    const terminator = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
+    const terminator = ctx.createLinearGradient(center - radius, center, center + radius, center);
     terminator.addColorStop(0, "rgba(255,255,255,0.05)");
     terminator.addColorStop(0.44, "rgba(255,255,255,0.00)");
     terminator.addColorStop(0.72, "rgba(0,0,0,0.14)");
     terminator.addColorStop(1, "rgba(0,0,0,0.34)");
 
     ctx.fillStyle = terminator;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
-    const edge = ctx.createRadialGradient(cx, cy, r * 0.68, cx, cy, r);
+    const edge = ctx.createRadialGradient(center, center, radius * 0.68, center, center, radius);
     edge.addColorStop(0, "rgba(0,0,0,0)");
     edge.addColorStop(0.78, "rgba(0,0,0,0.08)");
     edge.addColorStop(1, "rgba(0,0,0,0.36)");
 
     ctx.fillStyle = edge;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.fillRect(center - radius, center - radius, radius * 2, radius * 2);
 
-    ctx.restore();
-  }
-
-  function drawAxisReceipt(ctx, state) {
-    const size = state.size;
-    const cx = size / 2;
-    const cy = size / 2;
-    const r = size * 0.405 * clamp(state.zoom, DEFAULTS.minZoom, DEFAULTS.maxZoom);
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate((DEFAULTS.axisTiltDegrees * Math.PI) / 180);
-    ctx.strokeStyle = "rgba(245,199,107,0.28)";
-    ctx.lineWidth = Math.max(1, size * 0.0018);
-    ctx.beginPath();
-    ctx.moveTo(0, -r * 1.08);
-    ctx.lineTo(0, r * 1.08);
-    ctx.stroke();
     ctx.restore();
   }
 
@@ -476,38 +486,18 @@
       return;
     }
 
-    drawTextureSphere(ctx, state, surfaceImage, state.surfacePhase, 1, 0);
-    drawTextureSphere(ctx, state, cloudImage, state.cloudPhase, 0.38, -state.latitudeOffset * 0.35);
+    drawTextureSphere(ctx, state, surfaceImage, state.surfacePhase, 1);
+    drawTextureSphere(ctx, state, cloudImage, state.cloudPhase, 0.36);
     drawShading(ctx, state);
 
-    if (state.options.axisReceipt === true) {
-      drawAxisReceipt(ctx, state);
-    }
-
-    state.canvas.dataset.surfacePhase = state.surfacePhase.toFixed(5);
-    state.canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
-    state.canvas.dataset.latitudeOffset = state.latitudeOffset.toFixed(5);
-    state.canvas.dataset.zoom = state.zoom.toFixed(3);
-    state.canvas.dataset.rotationModel = "surface-longitude-phase";
-    state.canvas.dataset.diskRotation = "forbidden";
-  }
-
-  function tick(state) {
-    if (!state.running) return;
-
-    state.surfacePhase = wrap01(state.surfacePhase + state.options.surfaceAutoStep + state.velocityX);
-    state.cloudPhase = wrap01(state.cloudPhase + state.options.cloudAutoStep + state.velocityX * 0.42);
-
-    state.velocityX *= state.options.releaseFriction;
-
-    if (Math.abs(state.velocityX) < state.options.minVelocity) {
-      state.velocityX = 0;
-    }
-
-    renderFrame(state);
-    state.raf = window.requestAnimationFrame(function () {
-      tick(state);
-    });
+    canvas.dataset.surfacePhase = state.surfacePhase.toFixed(5);
+    canvas.dataset.cloudPhase = state.cloudPhase.toFixed(5);
+    canvas.dataset.zoom = state.zoom.toFixed(3);
+    canvas.dataset.rotationModel = "surface-longitude-phase";
+    canvas.dataset.touchModel = "horizontal-drag-only";
+    canvas.dataset.textureStretch = "forbidden";
+    canvas.dataset.verticalDragTextureEffect = "disabled";
+    canvas.dataset.projectionSampling = "locked";
   }
 
   function setStatusDataset(mount, state) {
@@ -518,9 +508,14 @@
     mount.dataset.version = VERSION;
     mount.dataset.generation = EARTH.generation;
     mount.dataset.canvasBoundary = "fixed";
+    mount.dataset.sphereMask = "fixed";
     mount.dataset.objectBoundary = "natural-sphere-mask";
+    mount.dataset.projectionSampling = "locked";
     mount.dataset.rotationModel = "surface-longitude-phase";
+    mount.dataset.touchModel = "horizontal-drag-only";
     mount.dataset.diskRotation = "forbidden";
+    mount.dataset.textureStretch = "forbidden";
+    mount.dataset.verticalDragTextureEffect = "disabled";
     mount.dataset.wholeCanvasTransform = "forbidden";
     mount.dataset.wholeObjectRotation = "forbidden";
     mount.dataset.surfacePhaseRotation = "active";
@@ -532,7 +527,6 @@
     if (state) {
       mount.dataset.surfacePhase = state.surfacePhase.toFixed(5);
       mount.dataset.cloudPhase = state.cloudPhase.toFixed(5);
-      mount.dataset.latitudeOffset = state.latitudeOffset.toFixed(5);
       mount.dataset.zoom = state.zoom.toFixed(3);
     }
   }
@@ -554,7 +548,6 @@
       state.lastX = point.x;
       state.lastY = point.y;
       state.velocityX = 0;
-
       canvas.dataset.dragging = "true";
 
       if (canvas.setPointerCapture && event.pointerId !== undefined) {
@@ -564,6 +557,8 @@
           // Pointer capture is optional.
         }
       }
+
+      if (event.cancelable) event.preventDefault();
     }
 
     function onPointerMove(event) {
@@ -571,21 +566,21 @@
 
       const point = pointerPoint(event);
       const dx = point.x - state.lastX;
-      const dy = point.y - state.lastY;
 
+      /*
+        Critical v2 law:
+        dy is intentionally ignored.
+        No vertical pointer movement may alter texture sampling, canvas scale,
+        sphere row selection, latitude offset, radius, strip height, or object transform.
+      */
       state.lastX = point.x;
       state.lastY = point.y;
 
       const longitudeDelta = -dx * state.options.dragLongitudeFactor;
-      state.surfacePhase = wrap01(state.surfacePhase + longitudeDelta);
-      state.cloudPhase = wrap01(state.cloudPhase + longitudeDelta * 0.52);
-      state.velocityX = longitudeDelta * 0.55;
 
-      state.latitudeOffset = clamp(
-        state.latitudeOffset + dy * state.options.dragLatitudeFactor,
-        -state.options.latitudeLimit,
-        state.options.latitudeLimit
-      );
+      state.surfacePhase = wrap01(state.surfacePhase + longitudeDelta);
+      state.cloudPhase = wrap01(state.cloudPhase + longitudeDelta * 0.44);
+      state.velocityX = longitudeDelta * 0.58;
 
       renderFrame(state);
       setStatusDataset(state.mount, state);
@@ -599,9 +594,7 @@
     }
 
     function onWheel(event) {
-      if (!event) return;
-
-      const delta = event.deltaY > 0 ? -0.045 : 0.045;
+      const delta = event.deltaY > 0 ? -0.035 : 0.035;
       state.zoom = clamp(state.zoom + delta, state.options.minZoom, state.options.maxZoom);
       renderFrame(state);
       setStatusDataset(state.mount, state);
@@ -609,15 +602,17 @@
       if (event.cancelable) event.preventDefault();
     }
 
-    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
     window.addEventListener("pointermove", onPointerMove, { passive: false });
     window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
     canvas.addEventListener("wheel", onWheel, { passive: false });
 
     state.cleanup.push(function () {
       canvas.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
       canvas.removeEventListener("wheel", onWheel);
     });
   }
@@ -631,58 +626,54 @@
     receipt.dataset.authority = EARTH.authority;
     receipt.dataset.version = VERSION;
     receipt.dataset.rotationModel = "surface-longitude-phase";
+    receipt.dataset.touchModel = "horizontal-drag-only";
     receipt.dataset.diskRotation = "forbidden";
+    receipt.dataset.textureStretch = "forbidden";
+    receipt.dataset.verticalDragTextureEffect = "disabled";
+    receipt.dataset.projectionSampling = "locked";
     receipt.dataset.publicReceipts = "hidden";
     receipt.textContent =
-      "EARTH_G4_SURFACE_PHASE_ROTATION_CONTROL_TNT_v1 surface_phase_rotation=active disk_rotation=forbidden visual_pass=held";
+      "EARTH_G4_TOUCH_ROTATION_NO_STRETCH_CONTROL_TNT_v2 surface_phase_rotation=active horizontal_drag_only=true texture_stretch=forbidden visual_pass=held";
 
     if (mount) mount.appendChild(receipt);
   }
 
-  function normalizeOptions(options) {
-    const incoming = options || {};
+  function tick(state) {
+    if (!state.running) return;
 
-    return {
-      size: incoming.size,
-      axisReceipt: incoming.axisReceipt === true,
-      surfaceAutoStep: normalizeNumber(incoming.surfaceAutoStep, DEFAULTS.surfaceAutoStep),
-      cloudAutoStep: normalizeNumber(incoming.cloudAutoStep, DEFAULTS.cloudAutoStep),
-      dragLongitudeFactor: normalizeNumber(
-        incoming.dragLongitudeFactor,
-        DEFAULTS.dragLongitudeFactor
-      ),
-      dragLatitudeFactor: normalizeNumber(incoming.dragLatitudeFactor, DEFAULTS.dragLatitudeFactor),
-      releaseFriction: normalizeNumber(incoming.releaseFriction, DEFAULTS.releaseFriction),
-      minVelocity: normalizeNumber(incoming.minVelocity, DEFAULTS.minVelocity),
-      minZoom: normalizeNumber(incoming.minZoom, DEFAULTS.minZoom),
-      maxZoom: normalizeNumber(incoming.maxZoom, DEFAULTS.maxZoom),
-      initialZoom: normalizeNumber(incoming.initialZoom, DEFAULTS.initialZoom),
-      latitudeLimit: normalizeNumber(incoming.latitudeLimit, DEFAULTS.latitudeLimit),
-      renderReceipt:
-        incoming.renderReceipt === true || incoming.hiddenReceipt === true
-          ? true
-          : DEFAULTS.renderReceipt
-    };
+    state.surfacePhase = wrap01(state.surfacePhase + state.options.surfaceAutoStep + state.velocityX);
+    state.cloudPhase = wrap01(state.cloudPhase + state.options.cloudAutoStep + state.velocityX * 0.42);
+
+    state.velocityX *= state.options.releaseFriction;
+
+    if (Math.abs(state.velocityX) < state.options.minVelocity) {
+      state.velocityX = 0;
+    }
+
+    renderFrame(state);
+    state.raf = window.requestAnimationFrame(function () {
+      tick(state);
+    });
   }
 
-  function createInstance(mount, options) {
+  function createInstance(mountTarget, options) {
     const target =
-      typeof mount === "string"
-        ? document.querySelector(mount)
-        : mount && mount.nodeType === 1
-          ? mount
+      typeof mountTarget === "string"
+        ? document.querySelector(mountTarget)
+        : mountTarget && mountTarget.nodeType === 1
+          ? mountTarget
           : document.getElementById("earthRenderMount");
 
     if (!target) return null;
 
-    const existing = instanceStore.get(target);
-    if (existing && typeof existing.destroy === "function") {
-      existing.destroy();
+    const previous = instanceStore.get(target);
+    if (previous && typeof previous.destroy === "function") {
+      previous.destroy();
     }
 
+    const normalizedOptions = normalizeOptions(options);
     const canvas = createCanvas();
     const ctx = canvas.getContext("2d", { alpha: true });
-    const normalizedOptions = normalizeOptions(options);
 
     const state = {
       mount: target,
@@ -695,13 +686,8 @@
       size: 0,
       cssSize: 0,
       dpr: 1,
-      surfacePhase: wrap01(normalizeNumber(options && options.initialPhase, 0.18)),
-      cloudPhase: wrap01(normalizeNumber(options && options.initialCloudPhase, 0.08)),
-      latitudeOffset: clamp(
-        normalizeNumber(options && options.initialLatitudeOffset, 0),
-        -normalizedOptions.latitudeLimit,
-        normalizedOptions.latitudeLimit
-      ),
+      surfacePhase: wrap01(normalizedOptions.initialPhase),
+      cloudPhase: wrap01(normalizedOptions.initialCloudPhase),
       velocityX: 0,
       zoom: clamp(
         normalizedOptions.initialZoom,
@@ -721,7 +707,7 @@
     target.appendChild(canvas);
     setStatusDataset(target, state);
 
-    if (normalizedOptions.renderReceipt === true) {
+    if (normalizedOptions.renderReceipt) {
       createHiddenReceipt(target);
     }
 
@@ -757,9 +743,8 @@
     }
 
     function reset() {
-      state.surfacePhase = 0.18;
-      state.cloudPhase = 0.08;
-      state.latitudeOffset = 0;
+      state.surfacePhase = normalizedOptions.initialPhase;
+      state.cloudPhase = normalizedOptions.initialCloudPhase;
       state.velocityX = 0;
       state.zoom = normalizedOptions.initialZoom;
       renderFrame(state);
@@ -781,9 +766,9 @@
       return getStatus({
         surfacePhase: state.surfacePhase,
         cloudPhase: state.cloudPhase,
-        latitudeOffset: state.latitudeOffset,
         zoom: state.zoom,
         running: state.running,
+        dragging: state.dragging,
         surfaceAssetLoaded: Boolean(state.assets.surface && state.assets.surface.ok),
         cloudAssetLoaded: Boolean(state.assets.clouds && state.assets.clouds.ok)
       });
@@ -805,12 +790,12 @@
     return api;
   }
 
-  function renderEarth(mount, options) {
-    return createInstance(mount, options);
+  function renderEarth(mountTarget, options) {
+    return createInstance(mountTarget, options);
   }
 
-  function renderSurface(mount, options) {
-    return renderEarth(mount, options);
+  function renderSurface(mountTarget, options) {
+    return renderEarth(mountTarget, options);
   }
 
   function mount(mountTarget, options) {
@@ -840,13 +825,9 @@
       size,
       cssSize: size,
       dpr: 1,
-      surfacePhase: wrap01(normalizeNumber(config.phase, 0.18)),
-      cloudPhase: wrap01(normalizeNumber(config.cloudPhase, 0.08)),
-      latitudeOffset: clamp(
-        normalizeNumber(config.latitudeOffset, 0),
-        -DEFAULTS.latitudeLimit,
-        DEFAULTS.latitudeLimit
-      ),
+      surfacePhase: wrap01(normalizeNumber(config.phase, DEFAULTS.initialPhase)),
+      cloudPhase: wrap01(normalizeNumber(config.cloudPhase, DEFAULTS.initialCloudPhase)),
+      velocityX: 0,
       zoom: clamp(normalizeNumber(config.zoom, 1), DEFAULTS.minZoom, DEFAULTS.maxZoom),
       assets: {
         surface: { ok: false, image: null },
@@ -903,11 +884,16 @@
         generation: EARTH.generation,
         referenceStandard: EARTH.referenceStandard,
         canvasBoundary: EARTH.canvasBoundary,
+        sphereMask: EARTH.sphereMask,
         objectBoundary: EARTH.objectBoundary,
+        projectionSampling: EARTH.projectionSampling,
         rotationModel: EARTH.rotationModel,
+        touchModel: EARTH.touchModel,
         surfacePhaseRotation: "active",
         cloudPhaseRotation: "active",
         diskRotation: "forbidden",
+        textureStretch: "forbidden",
+        verticalDragTextureEffect: "disabled",
         wholeCanvasTransform: "forbidden",
         wholeObjectRotation: "forbidden",
         placementFixed: true,
@@ -925,7 +911,7 @@
           "global files"
         ],
         returnReceipt:
-          "EARTH_CANVAS_FIXED_SURFACE_LONGITUDE_PHASE_ACTIVE_DISK_ROTATION_FORBIDDEN"
+          "EARTH_TOUCH_ROTATION_HORIZONTAL_ONLY_TEXTURE_STRETCH_FORBIDDEN_PROJECTION_LOCKED"
       },
       extra || {}
     );
@@ -975,6 +961,7 @@
           version: VERSION,
           generation: EARTH.generation,
           rotationModel: EARTH.rotationModel,
+          touchModel: EARTH.touchModel,
           api: window.DGBEarthCanvas
         }
       })
@@ -990,7 +977,6 @@
     if (!target) return;
 
     renderEarth(target, {
-      hiddenReceipt: true,
       renderReceipt: true
     });
   }

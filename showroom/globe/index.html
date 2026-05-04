@@ -16,7 +16,6 @@
       color-scheme: dark;
       --bg: #030711;
       --panel: rgba(14, 20, 36, 0.78);
-      --panel-strong: rgba(22, 30, 52, 0.92);
       --line: rgba(255, 255, 255, 0.14);
       --line-strong: rgba(255, 255, 255, 0.24);
       --text: rgba(244, 247, 255, 0.94);
@@ -74,12 +73,6 @@
       text-decoration: none;
     }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 4px;
-    }
-
     .skip-link {
       position: absolute;
       left: 1rem;
@@ -104,7 +97,7 @@
 
     .topbar {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
       padding: 0.85rem 0 1.2rem;
@@ -169,19 +162,6 @@
         0 24px 90px rgba(0,0,0,0.48),
         inset 0 1px 0 rgba(255,255,255,0.10);
       overflow: hidden;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      border-radius: inherit;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(241,223,180,0.16), transparent 28rem),
-        linear-gradient(90deg, transparent, rgba(143,199,255,0.18), transparent);
-      opacity: 0.72;
-      mix-blend-mode: screen;
     }
 
     .eyebrow {
@@ -251,7 +231,6 @@
     .render-section {
       margin-top: 1.25rem;
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
       gap: 1rem;
     }
 
@@ -316,9 +295,25 @@
       backdrop-filter: blur(10px);
     }
 
-    .audralia-render-frame > * {
-      position: relative;
+    .visual-field-hold {
+      position: absolute;
+      inset: 0;
       z-index: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 2rem;
+      color: rgba(238, 243, 255, 0.62);
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      line-height: 1.65;
     }
 
     .body-card {
@@ -407,7 +402,6 @@
       }
 
       .topbar {
-        align-items: flex-start;
         flex-direction: column;
       }
 
@@ -507,7 +501,14 @@
           data-audralia-render
           data-render-mount
           aria-label="Audralia protected visible render chamber"
-        ></section>
+        >
+          <div class="visual-field-hold" data-visual-field-hold>
+            <div>
+              <strong>Visual field hold</strong><br />
+              Render layer unavailable until inline boot proof executes.
+            </div>
+          </div>
+        </section>
 
         <section class="body-card" aria-label="Active planetary body">
           <p class="label">Active Body</p>
@@ -523,12 +524,12 @@
               HTML shell restored. Raw JavaScript must not appear in page body.
             </div>
             <div class="receipt">
-              <b>Mount Bridge</b>
-              Module target: ./index.js
+              <b>Inline Boot</b>
+              This shell now proves module execution before importing index.js.
             </div>
             <div class="receipt">
               <b>Planet Renderer</b>
-              Held at /assets/audrelia.planet.render.js until import proof.
+              Renderer already passed Gauges; live mount bridge remains the test.
             </div>
           </div>
         </section>
@@ -536,10 +537,157 @@
     </main>
 
     <footer class="footer">
-      SHOWROOM_GLOBE_HTML_BOOT_SHELL_REPAIR_TNT_v1 · RAW_JS_VISIBLE=FALSE · MODULE_SCRIPT_PRESENT=TRUE
+      SHOWROOM_GLOBE_INLINE_BOOT_PROOF_v1 · RAW_JS_VISIBLE=FALSE · INLINE_MODULE_PROOF=ACTIVE
     </footer>
   </div>
 
-  <script type="module" src="./index.js?v=AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT_v1"></script>
+  <script type="module">
+    const BOOT_PROOF = "SHOWROOM_GLOBE_INLINE_BOOT_PROOF_v1";
+    const mount = document.querySelector("#audraliaRenderMount");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function writeFixed(message) {
+      document.body.insertAdjacentHTML(
+        "afterbegin",
+        `<div style="
+          position:fixed;
+          z-index:999999;
+          left:12px;
+          top:12px;
+          max-width:calc(100vw - 24px);
+          padding:12px 14px;
+          border:1px solid rgba(255,255,255,.7);
+          border-radius:12px;
+          background:#120000;
+          color:white;
+          font:12px ui-monospace,monospace;
+          line-height:1.55;
+        ">${message}</div>`
+      );
+    }
+
+    function writeMount(message, mode = "badge") {
+      const safe = escapeHtml(message).replaceAll("\n", "<br>");
+
+      if (!mount) {
+        writeFixed(safe);
+        return null;
+      }
+
+      let layer = mount.querySelector("[data-inline-boot-proof='true']");
+
+      if (!layer) {
+        layer = document.createElement("div");
+        layer.dataset.inlineBootProof = "true";
+        mount.appendChild(layer);
+      }
+
+      if (mode === "block") {
+        layer.style.position = "absolute";
+        layer.style.inset = "0";
+        layer.style.zIndex = "9999";
+        layer.style.display = "grid";
+        layer.style.placeItems = "center";
+        layer.style.padding = "24px";
+        layer.style.background = "rgba(3,7,18,.88)";
+        layer.style.color = "white";
+        layer.style.font = "800 13px ui-monospace,monospace";
+        layer.style.letterSpacing = ".12em";
+        layer.style.textAlign = "center";
+        layer.style.lineHeight = "1.65";
+        layer.innerHTML = `<div>${safe}</div>`;
+      } else {
+        layer.style.position = "absolute";
+        layer.style.left = "14px";
+        layer.style.right = "14px";
+        layer.style.bottom = "14px";
+        layer.style.zIndex = "80";
+        layer.style.display = "block";
+        layer.style.padding = "8px 11px";
+        layer.style.border = "1px solid rgba(255,255,255,.18)";
+        layer.style.borderRadius = "999px";
+        layer.style.background = "rgba(2,6,18,.78)";
+        layer.style.color = "rgba(238,243,255,.86)";
+        layer.style.font = "800 10px ui-monospace,monospace";
+        layer.style.letterSpacing = ".12em";
+        layer.style.textTransform = "uppercase";
+        layer.style.whiteSpace = "nowrap";
+        layer.style.overflow = "hidden";
+        layer.style.textOverflow = "ellipsis";
+        layer.innerHTML = safe;
+      }
+
+      return layer;
+    }
+
+    window.ShowroomGlobeInlineBootProof = {
+      status: "INLINE_MODULE_EXECUTED",
+      proof: BOOT_PROOF,
+      time: new Date().toISOString()
+    };
+
+    if (mount) {
+      mount.dataset.inlineModuleExecuted = "true";
+      mount.dataset.inlineBootProof = BOOT_PROOF;
+    }
+
+    writeMount("INLINE_MODULE_EXECUTED · IMPORTING ./index.js", "badge");
+
+    try {
+      await import(`./index.js?v=${encodeURIComponent(BOOT_PROOF)}_${Date.now()}`);
+
+      writeMount("INLINE_MODULE_EXECUTED · INDEX_JS_IMPORT_PASS · WAITING_FOR_MOUNT_OUTPUT", "badge");
+
+      window.setTimeout(() => {
+        if (!mount) return;
+
+        const outputDetected =
+          mount.querySelector("canvas[data-audralia-visible-canvas='true']") ||
+          mount.querySelector("[data-audralia-mount-receipt='true']") ||
+          mount.dataset.indexJsExecuted === "true" ||
+          window.AudraliaVisibleMountBridge;
+
+        const proofLayer = mount.querySelector("[data-inline-boot-proof='true']");
+
+        if (outputDetected) {
+          if (proofLayer) proofLayer.remove();
+
+          const fallback = mount.querySelector("[data-visual-field-hold]");
+          if (fallback) fallback.remove();
+
+          return;
+        }
+
+        writeMount(
+          "INLINE_MODULE_EXECUTED\nINDEX_JS_IMPORT_PASS\nNO_MOUNT_OUTPUT_FROM_INDEX_JS\nNEXT_TARGET=/showroom/globe/index.js",
+          "block"
+        );
+      }, 1500);
+    } catch (error) {
+      const message = error?.message || String(error);
+
+      writeMount(
+        `INLINE_MODULE_EXECUTED\nINDEX_JS_IMPORT_FAIL\n${message}`,
+        "block"
+      );
+
+      window.ShowroomGlobeInlineBootProof = {
+        status: "INDEX_JS_IMPORT_FAIL",
+        proof: BOOT_PROOF,
+        error: message,
+        time: new Date().toISOString()
+      };
+
+      console.error(`[${BOOT_PROOF}] index.js import failed`, error);
+    }
+  </script>
 </body>
 </html>

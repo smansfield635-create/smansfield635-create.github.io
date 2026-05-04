@@ -3,10 +3,10 @@
   lang="en"
   data-route="/door/"
   data-page="door"
-  data-version="G1-V2.1"
-  data-contract="DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1"
-  data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
-  data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
+  data-version="G1-V3"
+  data-contract="DOOR_LOCAL_16_POINT_THRESHOLD_FIELD_REPAIR_TNT_v3"
+  data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
+  data-animation-standard="LOCAL_DOOR_DIAMOND_ORBIT_STANDARD_v1"
   data-status="active"
   data-role="entry-threshold"
   data-heavy-runtime-loaded="false"
@@ -22,10 +22,8 @@
   <title>Door · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Door is the animated sixteen-point threshold field for entering Diamond Gate Bridge without making every room do the same job."
+    content="The Door is the sixteen-point threshold field for entering Diamond Gate Bridge without making every room do the same job."
   >
-
-  <link rel="stylesheet" href="/assets/diamond-orbit.css">
 
   <style>
     :root{
@@ -42,18 +40,22 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
+      --door-orbit-duration:46s;
     }
 
     *{box-sizing:border-box}
 
     html{
+      min-width:320px;
       min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
     body{
       margin:0;
+      min-width:320px;
       min-height:100vh;
       color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -73,6 +75,7 @@
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
@@ -295,14 +298,6 @@
       z-index:2;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
     p{
       margin:0;
       color:var(--muted);
@@ -376,10 +371,220 @@
       gap:1.05rem;
     }
 
-    .threshold-stage{
-      --diamond-orbit-speed:44s;
-      --diamond-orbit-radius:clamp(9.2rem,25vw,16.25rem);
-      min-height:clamp(41rem,76vw,58rem);
+    .door-stage{
+      position:relative;
+      min-height:clamp(39rem,76vw,56rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 44%,rgba(143,101,255,.16),transparent 20rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .door-stage::before,
+    .door-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .door-stage::before{
+      width:min(84%,38rem);
+      height:min(84%,38rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
+    }
+
+    .door-stage::after{
+      width:min(58%,25rem);
+      height:min(58%,25rem);
+      border:1px solid rgba(143,101,255,.15);
+    }
+
+    .door-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      display:grid;
+      place-items:center;
+      width:clamp(8.5rem,22vw,13rem);
+      height:clamp(8.5rem,22vw,13rem);
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(243,200,111,.12);
+      border-radius:1.9rem;
+      background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
+        linear-gradient(135deg,rgba(143,101,255,.38),rgba(27,17,75,.42));
+      box-shadow:
+        0 0 70px rgba(143,101,255,.18),
+        inset 0 0 26px rgba(255,255,255,.04);
+      opacity:.48;
+      pointer-events:none;
+      animation:doorAnchorPulse 7s ease-in-out infinite;
+    }
+
+    .door-anchor::after{
+      content:"";
+      position:absolute;
+      inset:14%;
+      border-radius:1.25rem;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .door-anchor span{
+      display:block;
+      transform:rotate(-45deg);
+      color:rgba(255,244,216,.86);
+      text-align:center;
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      line-height:1.2;
+    }
+
+    @keyframes doorAnchorPulse{
+      0%,100%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
+        opacity:.42;
+      }
+      50%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+        opacity:.56;
+      }
+    }
+
+    .door-orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:31.5rem;
+      height:31.5rem;
+      z-index:3;
+      border-radius:999px;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      animation:doorOrbitSpin var(--door-orbit-duration) linear infinite;
+    }
+
+    @keyframes doorOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .door-node{
+      --radius:-15.35rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      width:5.1rem;
+      height:5.1rem;
+      margin:-2.55rem 0 0 -2.55rem;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:1.55rem;
+      background:
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.34),rgba(255,255,255,.08) 24%,transparent 42%),
+        radial-gradient(circle at 72% 78%,rgba(33,15,91,.38),transparent 48%),
+        linear-gradient(145deg,rgba(168,132,255,.98),rgba(103,69,225,.94) 52%,rgba(58,34,164,.96) 100%);
+      box-shadow:
+        0 16px 34px rgba(39,18,116,.34),
+        0 0 26px rgba(143,101,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)))
+        rotate(45deg);
+      pointer-events:auto;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+    }
+
+    .door-node::before{
+      content:"";
+      position:absolute;
+      inset:8%;
+      border-radius:1.15rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);
+      opacity:.72;
+      pointer-events:none;
+      transform:translateZ(1px);
+    }
+
+    .door-node::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:1.55rem;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        inset 0 -18px 24px rgba(21,9,62,.16);
+      pointer-events:none;
+    }
+
+    .door-node:hover,
+    .door-node:focus{
+      outline:none;
+      border-color:rgba(243,200,111,.72);
+      box-shadow:
+        0 22px 42px rgba(39,18,116,.42),
+        0 0 34px rgba(143,101,255,.30),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      filter:brightness(1.06);
+    }
+
+    .door-label-shell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:.35rem;
+      transform:rotate(-45deg);
+      text-align:center;
+    }
+
+    .door-label-text{
+      display:block;
+      max-width:4.2rem;
+      color:rgba(255,244,216,.98);
+      text-align:center;
+      font-size:.54rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      line-height:1.1;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.8);
+      animation:doorTextUpright var(--door-orbit-duration) linear infinite;
+    }
+
+    .door-label-sub{
+      display:block;
+      margin-top:.12rem;
+      color:rgba(230,238,255,.72);
+      font-size:.40rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    @keyframes doorTextUpright{
+      to{transform:rotate(-360deg)}
     }
 
     .core-grid,
@@ -501,9 +706,30 @@
         padding:1rem;
       }
 
-      .threshold-stage{
-        --diamond-orbit-radius:8.8rem;
+      .door-stage{
         min-height:35rem;
+      }
+
+      .door-orbit{
+        width:22.8rem;
+        height:22.8rem;
+      }
+
+      .door-node{
+        --radius:-10.8rem;
+        width:3.95rem;
+        height:3.95rem;
+        margin:-1.975rem 0 0 -1.975rem;
+      }
+
+      .door-label-text{
+        max-width:3.05rem;
+        font-size:.43rem;
+        letter-spacing:.045em;
+      }
+
+      .door-label-sub{
+        display:none;
       }
 
       .core-grid,
@@ -517,6 +743,49 @@
 
       .button{
         width:100%;
+      }
+    }
+
+    @media (max-width:460px){
+      .door-stage{
+        min-height:31rem;
+      }
+
+      .door-anchor{
+        width:7.8rem;
+        height:7.8rem;
+      }
+
+      .door-anchor span{
+        font-size:.60rem;
+      }
+
+      .door-orbit{
+        width:19.2rem;
+        height:19.2rem;
+      }
+
+      .door-node{
+        --radius:-9.05rem;
+        width:3.42rem;
+        height:3.42rem;
+        margin:-1.71rem 0 0 -1.71rem;
+      }
+
+      .door-label-text{
+        max-width:2.75rem;
+        font-size:.37rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
@@ -579,177 +848,107 @@
         <div class="kicker">Sixteen-point threshold field</div>
         <h2 id="field-title">The threshold rotates around a background Door anchor.</h2>
 
-        <div class="diamond-orbit-stage threshold-stage" aria-label="Animated sixteen-point threshold field">
-          <div class="diamond-orbit-axis" aria-hidden="true"></div>
-
-          <div class="diamond-orbit-anchor" aria-hidden="true"></div>
-          <div class="diamond-orbit-anchor-label" aria-hidden="true">
-            <strong>Door</strong>
-            <span>Threshold · Entry · Crossing</span>
+        <div class="door-stage" aria-label="Animated sixteen-point threshold field">
+          <div class="door-anchor" aria-hidden="true">
+            <span>Door<br>Threshold<br>Crossing</span>
           </div>
 
-          <div class="diamond-orbit-ring">
-            <div class="diamond-orbit-rotor">
-              <div class="diamond-orbit-node" style="--orbit-angle:0deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/home/" aria-label="Home Stability">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Home</span>
-                    <span class="diamond-orbit-sub">Stability</span>
-                  </a>
-                </div>
-              </div>
+          <div class="door-orbit">
+            <a class="door-node" style="--angle:0deg" href="/home/" aria-label="Home Stability">
+              <span class="door-label-shell">
+                <b class="door-label-text">Home<span class="door-label-sub">Stability</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:22.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/nine-summits/" aria-label="Nine Summits Public Gate">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Nine Summits</span>
-                    <span class="diamond-orbit-sub">Public Gate</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:22.5deg" href="/nine-summits/" aria-label="Nine Summits Public Gate">
+              <span class="door-label-shell">
+                <b class="door-label-text">Nine<br>Summits<span class="door-label-sub">Public Gate</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:45deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/explore/" aria-label="Manor Map">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Manor</span>
-                    <span class="diamond-orbit-sub">Map</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:45deg" href="/explore/" aria-label="Manor Map">
+              <span class="door-label-shell">
+                <b class="door-label-text">Manor<span class="door-label-sub">Map</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:67.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/" aria-label="Products Use">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Products</span>
-                    <span class="diamond-orbit-sub">Use</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:67.5deg" href="/products/" aria-label="Products Use">
+              <span class="door-label-shell">
+                <b class="door-label-text">Products<span class="door-label-sub">Use</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:90deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/showroom/" aria-label="Showroom Inspect">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Showroom</span>
-                    <span class="diamond-orbit-sub">Inspect</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:90deg" href="/showroom/" aria-label="Showroom Inspect">
+              <span class="door-label-shell">
+                <b class="door-label-text">Showroom<span class="door-label-sub">Inspect</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:112.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/gauges/" aria-label="Gauges Proof">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Gauges</span>
-                    <span class="diamond-orbit-sub">Proof</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:112.5deg" href="/gauges/" aria-label="Gauges Proof">
+              <span class="door-label-shell">
+                <b class="door-label-text">Gauges<span class="door-label-sub">Proof</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:135deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/laws/" aria-label="Laws Boundary">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Laws</span>
-                    <span class="diamond-orbit-sub">Boundary</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:135deg" href="/laws/" aria-label="Laws Boundary">
+              <span class="door-label-shell">
+                <b class="door-label-text">Laws<span class="door-label-sub">Boundary</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:157.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/" aria-label="Compass Root">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Compass</span>
-                    <span class="diamond-orbit-sub">Root</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:157.5deg" href="/" aria-label="Compass Root">
+              <span class="door-label-shell">
+                <b class="door-label-text">Compass<span class="door-label-sub">Root</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:180deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/nine-summits-of-love/" aria-label="Book Climb">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Book</span>
-                    <span class="diamond-orbit-sub">Climb</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:180deg" href="/nine-summits-of-love/" aria-label="Book Climb">
+              <span class="door-label-shell">
+                <b class="door-label-text">Book<span class="door-label-sub">Climb</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:202.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/nine-summits/universe/" aria-label="Universe World">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Universe</span>
-                    <span class="diamond-orbit-sub">World</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:202.5deg" href="/nine-summits/universe/" aria-label="Universe World">
+              <span class="door-label-shell">
+                <b class="door-label-text">Universe<span class="door-label-sub">World</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:225deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/showroom/globe/" aria-label="Audralia Home World">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Audralia</span>
-                    <span class="diamond-orbit-sub">Home World</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:225deg" href="/showroom/globe/" aria-label="Audralia Home World">
+              <span class="door-label-shell">
+                <b class="door-label-text">Audralia<span class="door-label-sub">Home World</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:247.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/frontier/" aria-label="Frontier Edge">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Frontier</span>
-                    <span class="diamond-orbit-sub">Edge</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:247.5deg" href="/frontier/" aria-label="Frontier Edge">
+              <span class="door-label-shell">
+                <b class="door-label-text">Frontier<span class="door-label-sub">Edge</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:270deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/about-this-underdog/" aria-label="About This Underdog Universal">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Underdog</span>
-                    <span class="diamond-orbit-sub">Universal</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:270deg" href="/about-this-underdog/" aria-label="About This Underdog Universal">
+              <span class="door-label-shell">
+                <b class="door-label-text">Underdog<span class="door-label-sub">Universal</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:292.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/meet-sean-mansfield/" aria-label="Meet Sean Voice">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Meet Sean</span>
-                    <span class="diamond-orbit-sub">Voice</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:292.5deg" href="/meet-sean-mansfield/" aria-label="Meet Sean Voice">
+              <span class="door-label-shell">
+                <b class="door-label-text">Meet<br>Sean<span class="door-label-sub">Voice</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:315deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/five-flags/" aria-label="Five Flags Game">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Five Flags</span>
-                    <span class="diamond-orbit-sub">Game</span>
-                  </a>
-                </div>
-              </div>
+            <a class="door-node" style="--angle:315deg" href="/products/five-flags/" aria-label="Five Flags Game">
+              <span class="door-label-shell">
+                <b class="door-label-text">Five<br>Flags<span class="door-label-sub">Game</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:337.5deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/on-your-side-ai/" aria-label="On Your Side AI Support">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">AAI</span>
-                    <span class="diamond-orbit-sub">Support</span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <a class="door-node" style="--angle:337.5deg" href="/products/on-your-side-ai/" aria-label="On Your Side AI Support">
+              <span class="door-label-shell">
+                <b class="door-label-text">AAI<span class="door-label-sub">Support</span></b>
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -806,30 +1005,28 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1
+DOOR_LOCAL_16_POINT_THRESHOLD_FIELD_REPAIR_TNT_v3
 route=/door/
 page=door
 role=entry_threshold
 message=one_message_many_rooms
-alignment_sequence=CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1
-shared_css=/assets/diamond-orbit.css
-animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
+shared_css_dependency=removed_for_door_orbit_geometry
+local_geometry=true
+animation_standard=LOCAL_DOOR_DIAMOND_ORBIT_STANDARD_v1
 center=door_threshold_background_anchor_only
-visual_system=animated_16_point_dimensional_threshold_field
+visual_system=local_animated_16_point_dimensional_threshold_field
 design_object=16_point_diamond_threshold_field
 foreground_core=laws,entry,proof,return
-primary_ring=home,nine_summits,manor,products,showroom,gauges,laws,compass
-inner_ring=book,universe,audralia,frontier,underdog,meet_sean,five_flags,on_your_side_aai
+ring=home,nine_summits,manor,products,showroom,gauges,laws,compass,book,universe,audralia,frontier,underdog,meet_sean,five_flags,on_your_side_aai
 underdog_route=/about-this-underdog/
 meet_sean_route=/meet-sean-mansfield/
-animation=diamondOrbitClockwise,diamondCounterRead,diamondHoverLift,backgroundAnchorPulse,auroraDrift
-z_index_law=ambient_background,door_anchor_background,orbit_field,route_diamonds,route_labels
-non_overlap_law=no_clickable_diamond_hidden_by_center
-mobile_law=compact_field_no_four_massive_diamond_vertical_crop_no_hidden_nodes
-fix=visible_route_receipt_hidden_from_public_flow
-upgraded=receipt_containment_only
-preserved=animated_threshold_field,dimensional_diamonds,one_message_many_rooms,foreground_core,shared_css_link,current_contract_stamp,universal_diamond_orbit_standard,current_routes,underdog_meet_sean_split
-removed=visible_route_receipt,public_metadata_column,debug_text_page_flow
+animation=doorOrbitSpin,doorTextUpright,doorAnchorPulse,backgroundAnchorPulse
+z_index_law=ambient_background,door_anchor_background,local_orbit_field,local_route_diamonds,route_labels
+non_overlap_law=no_clickable_diamond_hidden_by_center_no_diamond_escape_to_cards
+mobile_law=compact_field_no_massive_vertical_crop_no_hidden_nodes
+fix=removed_broken_shared_orbit_dependency_contained_receipt_prevented_escape_into_cards
+preserved=door_copy,door_routes,animated_threshold_field,dimensional_diamonds,one_message_many_rooms,foreground_core
 route_owns=entry_threshold,16_point_field,foreground_core,animated_diamond_routes,route_selection_surface
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
@@ -844,7 +1041,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      DOOR_ANIMATED_16_POINT_THRESHOLD_FIELD_RECEIPT_CONTAINMENT_TNT_v2_1 · Door · Shared Diamond Orbit · Receipt contained.
+      DOOR_LOCAL_16_POINT_THRESHOLD_FIELD_REPAIR_TNT_v3 · Door · Local orbit geometry · Receipt contained.
     </footer>
   </div>
 </body>

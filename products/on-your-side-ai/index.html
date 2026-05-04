@@ -1,1255 +1,1244 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="on-your-side-aai"
-  data-room="PC3_ON_YOUR_SIDE_AAI"
-  data-public-presentation="ted-clean"
-  data-contract="ON_YOUR_SIDE_AAI_RUSSIAN_DOLL_CREATIVE_SCENE_TNT_v1"
-  data-scroll-mode="compressed-russian-doll"
-  data-terminology-lock="AAI"
-  data-interactive-comic-books="future-potential"
-  data-scene-insertion="permissioned-original-public-domain-or-parody-safe"
+  data-route="/products/on-your-side-ai/"
+  data-page="on-your-side-ai"
+  data-version="G1-V1"
+  data-contract="ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1"
+  data-status="active"
+  data-parent="/products/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-role="product-chamber"
+  data-product="on-your-side-aai"
+  data-product-type="assistance-first-support"
+  data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
+  data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>On Your Side AAI · Diamond Gate Bridge</title>
-  <meta name="description" content="On Your Side AAI is practical applied intelligence for human life infrastructure, preparation, creative scenes, interactive comic books, and bounded support inside the Diamond Gate Bridge Product Wing.">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>On Your Side AI · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="On Your Side AI is an assistance-first support chamber for forms, letters, choices, next steps, plain-language explanations, and practical preparation."
+  >
 
   <style>
-    :root {
-      --bg: #05070b;
-      --panel: rgba(9, 15, 25, 0.9);
-      --panel-soft: rgba(14, 24, 38, 0.74);
-      --line: rgba(168, 199, 255, 0.22);
-      --line-strong: rgba(143, 240, 198, 0.34);
-      --text: #eef5ff;
-      --muted: #aab8cf;
-      --green: #8ff0c6;
-      --blue: #7db5ff;
-      --gold: #ffd36f;
-      --purple: #d7a5ff;
-      --orange: #ff9f7a;
-      --shadow: rgba(0, 0, 0, 0.48);
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.58);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --green:#8ff0c6;
+      --blue:#8dd8ff;
+      --red:#ff8b8b;
+      --purple:#8f65ff;
+      --panel:rgba(9,15,31,.84);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
     }
 
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+
+    html{
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
     }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
       background:
-        radial-gradient(circle at 80% 8%, rgba(255, 211, 111, 0.12), transparent 24rem),
-        radial-gradient(circle at 20% 18%, rgba(125, 181, 255, 0.15), transparent 32rem),
-        radial-gradient(circle at 52% 86%, rgba(143, 240, 198, 0.08), transparent 24rem),
-        linear-gradient(180deg, #03050a 0%, #07101d 50%, #03050a 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a:focus,
-    summary:focus {
-      outline: 2px solid var(--green);
-      outline-offset: 3px;
-    }
-
-    .skip {
-      position: absolute;
-      left: -999px;
-      top: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-    }
-
-    .skip:focus {
-      left: 10px;
-    }
-
-    .page {
-      width: min(1120px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 22px 0 44px;
-    }
-
-    .topbar {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .brand {
-      color: var(--muted);
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .brand strong {
-      display: block;
-      color: var(--text);
-      font-size: 1rem;
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .nav,
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .nav a,
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 9px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font-weight: 650;
-    }
-
-    .nav a:hover,
-    .button:hover {
-      border-color: rgba(168, 199, 255, 0.42);
-      background: rgba(255, 255, 255, 0.075);
-    }
-
-    .button.primary {
-      border-color: rgba(143, 240, 198, 0.45);
-      background: rgba(143, 240, 198, 0.12);
-      font-weight: 850;
-    }
-
-    .hero,
-    .doll-shell,
-    .panel,
-    .card,
-    .route-card {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: var(--panel);
-      box-shadow: 0 24px 80px var(--shadow);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: clamp(24px, 5vw, 56px);
-      min-height: 540px;
-      display: grid;
-      align-content: center;
-      gap: 22px;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 82% 18%, rgba(255, 211, 111, 0.18), transparent 16rem),
-        radial-gradient(circle at 24% 68%, rgba(143, 240, 198, 0.09), transparent 20rem),
-        linear-gradient(135deg, rgba(14, 23, 38, 0.92), rgba(5, 9, 16, 0.72));
-      pointer-events: none;
-      z-index: -3;
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.58;
+      animation:auroraDrift 28s linear infinite;
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: clamp(20px, 7vw, 90px);
-      top: 50%;
-      width: clamp(190px, 34vw, 380px);
-      aspect-ratio: 1;
-      transform: translateY(-50%) rotate(-8deg);
-      border-radius: 34px;
-      border: 1px solid rgba(143, 240, 198, 0.22);
+    a{color:inherit;text-decoration:none}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
       background:
-        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.16), transparent 18%),
-        linear-gradient(135deg, rgba(143, 240, 198, 0.16), rgba(125, 181, 255, 0.06)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 32px);
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
       box-shadow:
-        inset 0 0 38px rgba(143, 240, 198, 0.06),
-        0 0 84px rgba(125, 181, 255, 0.08);
-      opacity: 0.42;
-      pointer-events: none;
-      z-index: -2;
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .comic-ghost {
-      position: absolute;
-      right: clamp(28px, 9vw, 118px);
-      bottom: clamp(24px, 8vw, 82px);
-      width: clamp(170px, 28vw, 330px);
-      aspect-ratio: 1.55 / 1;
-      border: 1px solid rgba(215, 165, 255, 0.24);
-      border-radius: 24px;
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(215,165,255,0.08)),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 54px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px);
-      box-shadow: 0 0 72px rgba(215,165,255,0.10);
-      opacity: 0.40;
-      filter: blur(1px);
-      pointer-events: none;
-      z-index: -1;
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .comic-ghost::before,
-    .comic-ghost::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(255, 211, 111, 0.18);
-      border-radius: 16px;
+    .hero{
+      position:relative;
+      min-height:clamp(25rem,48vw,36rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .comic-ghost::before {
-      inset: 16px;
-    }
-
-    .comic-ghost::after {
-      right: 18px;
-      bottom: 18px;
-      width: 42%;
-      height: 18%;
-      background: rgba(255, 211, 111, 0.10);
-    }
-
-    .hero-content,
-    .actions {
-      position: relative;
-      z-index: 2;
-    }
-
-    .kicker {
-      margin: 0 0 12px;
-      color: var(--green);
-      font-size: 0.82rem;
-      font-weight: 850;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 960px;
-      font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 0.88;
-      letter-spacing: -0.075em;
-    }
-
-    h1 .gold {
-      color: var(--gold);
-      text-shadow: 0 0 42px rgba(255, 211, 111, 0.12);
-    }
-
-    .lead {
-      max-width: 900px;
-      margin: 20px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.08rem, 2.6vw, 1.55rem);
-      line-height: 1.42;
-    }
-
-    .one-liners {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 22px;
-      max-width: 980px;
-    }
-
-    .one-liner {
-      min-height: 86px;
-      display: flex;
-      align-items: center;
-      border: 1px solid rgba(143, 240, 198, 0.22);
-      border-radius: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.045);
-      color: rgba(238, 245, 255, 0.94);
-      font-size: clamp(1rem, 2.3vw, 1.14rem);
-      font-weight: 850;
-      line-height: 1.16;
-      letter-spacing: -0.02em;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 7px 12px;
-      border: 1px solid rgba(168, 199, 255, 0.20);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.045);
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    .chip.lock {
-      border-color: rgba(143, 240, 198, 0.36);
-      color: var(--green);
-      background: rgba(143, 240, 198, 0.08);
-    }
-
-    .section {
-      margin-top: 18px;
-    }
-
-    .doll-shell {
-      margin-top: 18px;
-      padding: clamp(18px, 3vw, 28px);
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 20% 0%, rgba(143, 240, 198, 0.07), transparent 18rem),
-        var(--panel-soft);
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroDiamond 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
     }
 
-    .doll-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 16px;
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
     }
 
-    .doll-title {
-      margin: 0;
-      font-size: clamp(1.7rem, 4.5vw, 3.1rem);
-      line-height: 0.96;
-      letter-spacing: -0.055em;
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
-    .doll-note {
-      max-width: 900px;
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.52;
+    h1{
+      margin:0;
+      max-width:960px;
+      font-size:clamp(3.1rem,10vw,7.1rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    .doll-badge {
-      border: 1px solid rgba(143, 240, 198, 0.34);
-      border-radius: 999px;
-      padding: 10px 14px;
-      color: var(--green);
-      background: rgba(143, 240, 198, 0.08);
-      font-weight: 850;
-      white-space: nowrap;
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.85rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
     }
 
-    .doll-stack {
-      display: grid;
-      gap: 12px;
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.34rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
 
-    details {
-      border: 1px solid rgba(168, 199, 255, 0.16);
-      border-radius: 22px;
-      overflow: hidden;
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead{
+      max-width:900px;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote{
+      max-width:880px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold,
+    .button.primary{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .support-field{
+      position:relative;
+      min-height:clamp(36rem,64vw,52rem);
+      overflow:hidden;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:clamp(1.25rem,5vw,2.2rem);
       background:
-        radial-gradient(circle at 20% 0%, rgba(125, 181, 255, 0.08), transparent 14rem),
-        rgba(9, 15, 25, 0.82);
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
+        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
+        rgba(255,255,255,.018);
+      padding:clamp(1.15rem,3vw,2rem);
+      display:grid;
+      place-items:center;
+      isolation:isolate;
     }
 
-    details[open] {
-      border-color: var(--line-strong);
-      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    .support-field::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:clamp(21rem,56vw,42rem);
+      height:clamp(21rem,56vw,42rem);
+      border:1px solid rgba(215,194,255,.16);
+      border-radius:4rem;
+      transform:translate(-50%,-50%) rotate(45deg);
+      box-shadow:
+        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
+        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
+        inset 0 0 3rem rgba(143,101,255,.06);
+      animation:fieldTurn 46s linear infinite;
+      pointer-events:none;
     }
 
-    summary {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      cursor: pointer;
-      list-style: none;
-      padding: 18px 20px;
+    .support-field::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:7%;
+      bottom:7%;
+      z-index:0;
+      width:1px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
+      opacity:.72;
+      pointer-events:none;
     }
 
-    summary::-webkit-details-marker {
-      display: none;
+    .axis-line{
+      position:absolute;
+      left:7%;
+      right:7%;
+      top:50%;
+      z-index:0;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
+      opacity:.58;
+      pointer-events:none;
     }
 
-    .layer-number {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border: 1px solid rgba(143, 240, 198, 0.42);
-      border-radius: 50%;
-      color: var(--green);
-      background: rgba(143, 240, 198, 0.08);
-      font-weight: 900;
-    }
-
-    .layer-title {
-      display: block;
-      font-size: clamp(1.12rem, 2.7vw, 1.48rem);
-      font-weight: 900;
-      letter-spacing: -0.025em;
-    }
-
-    .layer-line {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      line-height: 1.42;
-      font-size: 0.95rem;
-    }
-
-    .layer-action {
-      color: var(--gold);
-      font-weight: 850;
-    }
-
-    .layer-body {
-      padding: 0 20px 20px 72px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .grid.six {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-
-    .card {
-      min-height: 170px;
-      display: grid;
-      align-content: start;
-      gap: 10px;
-      padding: 18px;
+    .support-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:clamp(13rem,30vw,22rem);
+      height:clamp(13rem,30vw,22rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:4rem;
       background:
-        radial-gradient(circle at 22% 0%, rgba(125, 181, 255, 0.09), transparent 14rem),
-        rgba(9, 15, 25, 0.72);
-      box-shadow: none;
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
+        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
+        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
+      box-shadow:
+        0 1.7rem 4.2rem rgba(0,0,0,.20),
+        0 0 3.6rem rgba(143,101,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      transform:translate(-50%,-50%) rotate(45deg);
+      opacity:.30;
+      pointer-events:none;
+      animation:anchorPulse 8s ease-in-out infinite;
     }
 
-    .card span {
-      color: var(--gold);
-      font-size: 0.74rem;
-      font-weight: 850;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .support-anchor-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      transform:translate(-50%,-50%);
+      display:grid;
+      gap:.2rem;
+      text-align:center;
+      pointer-events:none;
+      opacity:.78;
     }
 
-    .card h3 {
-      margin: 0;
-      font-size: clamp(1.18rem, 2.6vw, 1.55rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
+    .support-anchor-label strong{
+      color:rgba(255,244,216,.94);
+      font-size:clamp(1rem,3vw,1.65rem);
+      line-height:1;
+      font-weight:950;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
     }
 
-    .card p,
-    .card li {
-      color: var(--muted);
-      line-height: 1.48;
+    .support-anchor-label span{
+      color:rgba(230,238,255,.72);
+      font-size:.78rem;
+      letter-spacing:.04em;
     }
 
-    .card p {
-      margin: 0;
+    .support-grid{
+      position:relative;
+      z-index:5;
+      width:min(100%,880px);
+      min-height:clamp(30rem,52vw,42rem);
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-rows:repeat(3,minmax(0,1fr));
+      gap:clamp(.8rem,2vw,1.1rem);
+      align-items:center;
+      justify-items:center;
+      padding:clamp(.5rem,2vw,1rem);
     }
 
-    .card ul {
-      margin: 0;
-      padding-left: 1.1rem;
+    .support-node{
+      width:100%;
+      min-height:clamp(8rem,14vw,11.6rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      animation:nodeFloat 7s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
-    .card::before {
-      content: "";
-      display: block;
-      width: 100%;
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(168, 199, 255, 0.22);
+    .support-node.read{grid-column:2;grid-row:1}
+    .support-node.explain{grid-column:1;grid-row:2}
+    .support-node.sort{grid-column:2;grid-row:2}
+    .support-node.draft{grid-column:3;grid-row:2}
+    .support-node.next{grid-column:2;grid-row:3}
+
+    .support-card{
+      display:grid;
+      place-items:center;
+      gap:.55rem;
+      width:100%;
+      outline:none;
     }
 
-    .card.clarify::before { background: var(--blue); }
-    .card.prepare::before { background: var(--gold); }
-    .card.verify::before { background: var(--green); }
-    .card.creative::before { background: var(--purple); }
-    .card.support::before { background: var(--orange); }
-
-    .notice {
-      border: 1px solid rgba(255, 211, 111, 0.22);
-      border-radius: 20px;
-      padding: 16px;
-      background: rgba(255, 211, 111, 0.07);
-      color: rgba(238, 245, 255, 0.88);
-      line-height: 1.52;
-      margin-top: 14px;
+    .diamond{
+      width:clamp(4.35rem,8vw,6.55rem);
+      height:clamp(4.35rem,8vw,6.55rem);
+      border:1px solid rgba(243,200,111,.64);
+      border-radius:1.25rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.14),transparent 58%),
+        linear-gradient(145deg,rgba(143,101,255,.62),rgba(6,10,22,.98));
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,.38),
+        0 0 2rem rgba(143,101,255,.34),
+        0 0 1.2rem rgba(243,200,111,.16),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      position:relative;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
     }
 
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+    .diamond::before,
+    .diamond::after{
+      content:"";
+      position:absolute;
+      inset:18%;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:.82rem;
     }
 
-    .route-card {
-      min-height: 104px;
-      display: grid;
-      align-content: center;
-      gap: 7px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow: none;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    .diamond::after{
+      inset:34%;
+      border-color:rgba(243,200,111,.16);
     }
 
-    .route-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      background: rgba(255, 255, 255, 0.065);
+    .support-card:hover .diamond,
+    .support-card:focus-visible .diamond{
+      transform:rotate(45deg) scale(1.1);
+      border-color:rgba(243,200,111,.95);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
+        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
+      box-shadow:
+        0 1.15rem 2.4rem rgba(0,0,0,.45),
+        0 0 2.6rem rgba(143,101,255,.46),
+        0 0 1.4rem rgba(243,200,111,.22);
     }
 
-    .route-card span {
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .node-title{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.76rem,1.75vw,1.02rem);
+      font-weight:950;
+      line-height:1.05;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .route-card strong {
-      color: var(--green);
-      font-size: 1rem;
+    .node-sub{
+      max-width:13rem;
+      color:rgba(230,238,255,.80);
+      font-size:clamp(.62rem,1.45vw,.76rem);
+      line-height:1.25;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .receipt {
-      display: none !important;
+    .help-grid,
+    .guard-grid,
+    .use-grid,
+    .route-grid{
+      display:grid;
+      gap:.75rem;
     }
 
-    @media (max-width: 1080px) {
-      .grid,
-      .grid.two,
-      .grid.four,
-      .grid.six {
-        grid-template-columns: 1fr;
+    .help-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .guard-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .use-grid,
+    .route-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .info-card,
+    .guard-card,
+    .use-card,
+    .route-card{
+      min-height:11.5rem;
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
+
+    .guard-card{
+      border-color:rgba(255,139,139,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,139,139,.06),transparent 60%),
+        rgba(255,255,255,.032);
+    }
+
+    .info-card b,
+    .guard-card b,
+    .use-card b,
+    .route-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .guard-card b{
+      color:var(--red);
+    }
+
+    .info-card strong,
+    .guard-card strong,
+    .use-card strong,
+    .route-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.05rem;
+      line-height:1.1;
+    }
+
+    .info-card span,
+    .guard-card span,
+    .use-card span,
+    .route-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .support-loop{
+      display:grid;
+      gap:.65rem;
+      counter-reset:step;
+    }
+
+    .support-step{
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.8rem;
+      align-items:start;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .support-step::before{
+      content:counter(step);
+      width:2.35rem;
+      height:2.35rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.32);
+      border-radius:.72rem;
+      color:var(--gold);
+      font-weight:950;
+      transform:rotate(45deg);
+      background:rgba(243,200,111,.055);
+    }
+
+    .support-step div{
+      display:grid;
+      gap:.2rem;
+    }
+
+    .support-step strong{
+      color:rgba(255,244,216,.98);
+    }
+
+    .support-step span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.4;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:.9rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.6rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .receipt{
+      margin-top:1.15rem;
+      color:var(--faint);
+    }
+
+    .receipt summary{
+      cursor:pointer;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    .receipt pre{
+      margin:0;
+      padding:1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
+    }
+
+    @keyframes heroDiamond{
+      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @keyframes fieldTurn{
+      from{transform:translate(-50%,-50%) rotate(45deg)}
+      to{transform:translate(-50%,-50%) rotate(405deg)}
+    }
+
+    @keyframes anchorPulse{
+      0%,100%{opacity:.28;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{opacity:.40;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+    }
+
+    @keyframes nodeFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-.55rem)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body::after,
+      .hero::before,
+      .support-field::before,
+      .support-anchor,
+      .support-node{
+        animation:none!important;
+      }
+    }
+
+    @media (max-width:1080px){
+      .help-grid,
+      .guard-grid{
+        grid-template-columns:1fr;
       }
 
-      .one-liners {
-        grid-template-columns: 1fr;
-      }
-
-      .route-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .hero {
-        min-height: 430px;
-      }
-
-      .hero::after,
-      .comic-ghost {
-        opacity: 0.22;
-        right: -40px;
-      }
-
-      .doll-head {
-        grid-template-columns: 1fr;
-      }
-
-      .layer-body {
-        padding-left: 20px;
+      .use-grid,
+      .route-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 620px) {
-      .page {
-        width: min(100% - 22px, 620px);
-        padding-top: 16px;
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
-      .nav,
-      .actions {
-        gap: 8px;
+      .nav{justify-content:flex-start}
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+
+      h1{font-size:clamp(3rem,17vw,5rem)}
+
+      .hero{
+        min-height:31rem;
+        padding:1rem;
       }
 
-      .nav a,
-      .button {
-        min-height: 38px;
-        padding: 8px 12px;
+      .support-field{
+        min-height:auto;
+        padding:1rem .65rem;
       }
 
-      .route-grid {
-        grid-template-columns: 1fr;
+      .support-grid{
+        min-height:auto;
+        grid-template-columns:1fr;
+        grid-template-rows:none;
+        gap:.9rem;
       }
 
-      summary {
-        grid-template-columns: auto minmax(0, 1fr);
+      .support-node,
+      .support-node.read,
+      .support-node.explain,
+      .support-node.sort,
+      .support-node.draft,
+      .support-node.next{
+        grid-column:auto;
+        grid-row:auto;
+        min-height:8.6rem;
       }
 
-      .layer-action {
-        grid-column: 2;
+      .support-anchor{
+        width:13rem;
+        height:13rem;
+        opacity:.18;
+      }
+
+      .support-anchor-label{
+        opacity:.26;
+      }
+
+      .diamond{
+        width:3.75rem;
+        height:3.75rem;
+        border-radius:.95rem;
+      }
+
+      .node-title{font-size:.68rem}
+      .node-sub{font-size:.56rem}
+
+      .use-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#aai-main">Skip to On Your Side AAI</a>
+  <a class="skip" href="#on-your-side-main">Skip to On Your Side AI</a>
 
-  <main
-    id="aai-main"
-    class="page"
-    data-route="/products/on-your-side-ai/"
-    data-product-chamber="PC3_ON_YOUR_SIDE_AAI"
-    data-product-class="product_chamber"
-    data-construct-class="product"
-    data-product-wing="true"
-    data-parent-route="/products/"
-    data-canonical-destination="true"
-    data-estate="rich-manor-and-estate"
-    data-gauges-truth="live-authority"
-    data-terminology-lock="AAI">
-
-    <header class="topbar" aria-label="On Your Side AAI header">
+  <div class="shell">
+    <header class="topbar" aria-label="On Your Side AI header">
       <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        Products · On Your Side AAI
+        <span class="brand-mark"><span>AI</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>On Your Side AI</strong>
+        </span>
       </a>
 
-      <nav class="nav" aria-label="On Your Side AAI navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits/">Nine Summits</a>
         <a href="/products/">Products</a>
+        <a href="/products/five-flags/">Five Flags</a>
+        <a href="/products/on-your-side-ai/" aria-current="page">On Your Side AI</a>
         <a href="/showroom/">Showroom</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="aai-title">
-      <div class="comic-ghost" aria-hidden="true"></div>
-
-      <div class="hero-content">
-        <p class="kicker">PC3 · On Your Side AAI · Frontier Product Chamber</p>
-
-        <h1 id="aai-title">
-          On Your Side <span class="gold">AAI</span>
-        </h1>
+    <main id="on-your-side-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">On Your Side AAI · Product Chamber</div>
+        <h1 id="page-title">Support before the problem gets too heavy.</h1>
+        <h2>Read it. Explain it. Sort it. Draft it. Choose the next step.</h2>
 
         <p class="lead">
-          Practical applied intelligence for human life infrastructure: documents, decisions, appointments, conversations,
-          creative scenes, interactive comic books, fictional training rooms, and the messy middle between confusion and prepared action.
+          On Your Side AI is assistance-first AI for forms, letters, choices, next steps, and plain-language support. It helps people organize the problem before the problem organizes them.
         </p>
 
-        <div class="one-liners" aria-label="AAI one-liners">
-          <div class="one-liner">Information is not support until someone can use it.</div>
-          <div class="one-liner">AAI does not just answer. It helps you get ready.</div>
-          <div class="one-liner">The future is not a smarter answer. It is a better support layer.</div>
+        <div class="quote">
+          It does not replace licensed authority. It helps the user prepare, understand, ask better questions, and move with less panic.
         </div>
 
-        <div class="chip-row" aria-label="AAI status">
-          <span class="chip lock">AAI stays AAI</span>
-          <span class="chip lock">Applied support</span>
-          <span class="chip lock">Bounded intelligence</span>
-          <span class="chip">Interactive comics</span>
-          <span class="chip">Put yourself in the scene</span>
+        <div class="actions">
+          <a class="button gold" href="#support-loop">How Support Works</a>
+          <a class="button" href="#guardrails">Guardrails</a>
+          <a class="button" href="/products/">Back to Products</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
         </div>
-      </div>
+      </section>
 
-      <div class="actions" aria-label="Primary On Your Side AAI actions">
-        <a class="button primary" href="/products/">Return to Products</a>
-        <a class="button" href="/products/education/">Education</a>
-        <a class="button" href="/products/nutrition/">Nutrition</a>
-        <a class="button" href="/gauges/">Read Gauges</a>
-      </div>
-    </section>
+      <section class="panel section" aria-labelledby="support-title">
+        <div class="kicker">Five support points</div>
+        <h2 id="support-title">The chamber turns confusion into a next step.</h2>
 
-    <section class="doll-shell" aria-label="On Your Side AAI compressed Russian doll content">
-      <div class="doll-head">
-        <div>
-          <h2 class="doll-title">Open only the layer you need.</h2>
-          <p class="doll-note">
-            On Your Side AAI is compressed into nested layers: terminology, science, support flow, product family,
-            interactive creative potential, future platform, human boundaries, market gap, binding, routes, and receipt.
-          </p>
+        <div class="support-field" aria-label="Animated On Your Side AI support field">
+          <div class="axis-line" aria-hidden="true"></div>
+
+          <div class="support-anchor" aria-hidden="true"></div>
+          <div class="support-anchor-label" aria-hidden="true">
+            <strong>On Your Side</strong>
+            <span>Support Field</span>
+          </div>
+
+          <div class="support-grid">
+            <div class="support-node read" style="--delay:.05s">
+              <div class="support-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Read</span>
+                <span class="node-sub">Bring the problem in</span>
+              </div>
+            </div>
+
+            <div class="support-node explain" style="--delay:.18s">
+              <div class="support-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Explain</span>
+                <span class="node-sub">Plain meaning</span>
+              </div>
+            </div>
+
+            <div class="support-node sort" style="--delay:.31s">
+              <div class="support-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Sort</span>
+                <span class="node-sub">Options and risks</span>
+              </div>
+            </div>
+
+            <div class="support-node draft" style="--delay:.44s">
+              <div class="support-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Draft</span>
+                <span class="node-sub">Letters and plans</span>
+              </div>
+            </div>
+
+            <div class="support-node next" style="--delay:.57s">
+              <div class="support-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Next Step</span>
+                <span class="node-sub">What to do next</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div class="doll-badge">Russian doll mode</div>
-      </div>
+      <section class="panel section" aria-labelledby="helps-title">
+        <div class="kicker">What it helps with</div>
+        <h2 id="helps-title">Practical support for real-life pressure.</h2>
 
-      <div class="doll-stack">
-        <details open>
-          <summary>
-            <span class="layer-number">1</span>
-            <span>
-              <span class="layer-title">AAI stays AAI</span>
-              <span class="layer-line">Applied assistant intelligence, organized around the person and the pressure.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+        <div class="help-grid">
+          <article class="info-card">
+            <b>Forms</b>
+            <strong>Understand what the document is asking.</strong>
+            <span>Break confusing forms into plain language, missing items, deadlines, and questions to ask.</span>
+          </article>
 
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card clarify">
-                <span>Terminology</span>
-                <h3>Not generic AI language</h3>
-                <p>AAI means applied assistant intelligence: intelligence organized around the person, the situation, the pressure, the missing information, and the next usable move.</p>
-              </article>
+          <article class="info-card">
+            <b>Letters</b>
+            <strong>Turn stress into a clean response.</strong>
+            <span>Read letters, explain what they likely mean, and help draft a calm response or follow-up.</span>
+          </article>
 
-              <article class="card prepare">
-                <span>Position</span>
-                <h3>Practical over futuristic</h3>
-                <p>The product is not trying to sound futuristic for its own sake. It is trying to make life more navigable.</p>
-              </article>
+          <article class="info-card">
+            <b>Choices</b>
+            <strong>Sort the options before acting.</strong>
+            <span>Compare choices, risks, tradeoffs, next steps, and what information is still missing.</span>
+          </article>
+        </div>
+      </section>
 
-              <article class="card verify">
-                <span>Trust</span>
-                <h3>Support with boundaries</h3>
-                <p>AAI prepares, organizes, clarifies, compares, summarizes, questions, rehearses, and marks what still needs verification.</p>
-              </article>
+      <section id="support-loop" class="panel section" aria-labelledby="loop-title">
+        <div class="kicker">Support loop</div>
+        <h2 id="loop-title">Read → Explain → Sort → Draft → Next Step.</h2>
+
+        <div class="support-loop">
+          <div class="support-step">
+            <div>
+              <strong>Bring the issue in.</strong>
+              <span>The user brings a form, letter, decision, deadline, question, or situation.</span>
             </div>
           </div>
-        </details>
 
-        <details>
-          <summary>
-            <span class="layer-number">2</span>
-            <span>
-              <span class="layer-title">The science of support</span>
-              <span class="layer-line">People do not fail only because they lack information.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card clarify">
-                <span>Science</span>
-                <h3>Cognitive load</h3>
-                <p>AAI reduces the amount a person has to hold in their head at once.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>Science</span>
-                <h3>Decision fatigue</h3>
-                <p>AAI helps separate urgent, important, optional, missing, and already solved.</p>
-              </article>
-
-              <article class="card verify">
-                <span>Science</span>
-                <h3>Sequencing</h3>
-                <p>AAI turns chaos into order: first, next, later, verify, then act.</p>
-              </article>
-
-              <article class="card support">
-                <span>Science</span>
-                <h3>Translation</h3>
-                <p>AAI converts system language into plain-language understanding.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Science</span>
-                <h3>Preparation</h3>
-                <p>AAI prepares the visitor for the call, meeting, form, deadline, conversation, scene, rehearsal, or decision.</p>
-              </article>
-
-              <article class="card verify">
-                <span>Science</span>
-                <h3>Verification</h3>
-                <p>AAI marks what needs a professional, institution, official source, document, policy, or person.</p>
-              </article>
+          <div class="support-step">
+            <div>
+              <strong>Explain the plain meaning.</strong>
+              <span>The system translates the pressure into understandable language without pretending to be the final authority.</span>
             </div>
           </div>
-        </details>
 
-        <details>
-          <summary>
-            <span class="layer-number">3</span>
-            <span>
-              <span class="layer-title">Support flow</span>
-              <span class="layer-line">From pressure to prepared action.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="grid six">
-              <article class="card support">
-                <span>1</span>
-                <h3>Bring it</h3>
-                <p>Bring the document, message, form, decision, conversation, deadline, conflict, scene, or problem.</p>
-              </article>
-
-              <article class="card clarify">
-                <span>2</span>
-                <h3>Translate</h3>
-                <p>Convert the material into plain language: what is happening, what matters, and what is unclear.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>3</span>
-                <h3>Sort</h3>
-                <p>Separate facts, assumptions, deadlines, people, missing information, risks, and next moves.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>4</span>
-                <h3>Prepare</h3>
-                <p>Create questions, scripts, checklists, summaries, timelines, comparisons, or decision frames.</p>
-              </article>
-
-              <article class="card verify">
-                <span>5</span>
-                <h3>Verify</h3>
-                <p>Mark what needs a professional, official source, policy, person, or institution.</p>
-              </article>
-
-              <article class="card creative">
-                <span>6</span>
-                <h3>Act</h3>
-                <p>Leave with a cleaner next step instead of a larger pile of confusion.</p>
-              </article>
+          <div class="support-step">
+            <div>
+              <strong>Sort options and risks.</strong>
+              <span>The user sees possible paths, missing information, questions to ask, and likely tradeoffs.</span>
             </div>
           </div>
-        </details>
 
-        <details>
-          <summary>
-            <span class="layer-number">4</span>
-            <span>
-              <span class="layer-title">Product family</span>
-              <span class="layer-line">AAI is a platform, not a single-use assistant.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card support">
-                <span>Product line</span>
-                <h3>Personal AAI</h3>
-                <p>Daily planning, message preparation, decision framing, task sequencing, appointments, documents, goals, routines, and follow-through.</p>
-              </article>
-
-              <article class="card support">
-                <span>Product line</span>
-                <h3>Family AAI</h3>
-                <p>Household coordination, family conversation prep, elder needs, school items, shared documents, and responsibility maps.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>Product line</span>
-                <h3>Work AAI</h3>
-                <p>Meeting prep, project notes, role clarity, follow-up structure, sales prep, workflows, and execution checklists.</p>
-              </article>
-
-              <article class="card clarify">
-                <span>Product line</span>
-                <h3>Education AAI</h3>
-                <p>Study support, reading translation, practice prompts, learning plans, assignment support, and confidence building.</p>
-              </article>
-
-              <article class="card verify">
-                <span>Product line</span>
-                <h3>Health-Prep AAI</h3>
-                <p>Appointment prep, question lists, symptom organization, history summaries, and professional verification markers.</p>
-              </article>
-
-              <article class="card verify">
-                <span>Product line</span>
-                <h3>Legal-Prep AAI</h3>
-                <p>Document summaries, timeline building, fact sorting, question prep, uncertainty markers, and professional handoff preparation.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>Product line</span>
-                <h3>Finance-Prep AAI</h3>
-                <p>Bills, budgets, account notes, deadlines, financial questions, document review support, and decision framing.</p>
-              </article>
-
-              <article class="card prepare">
-                <span>Product line</span>
-                <h3>Small Business AAI</h3>
-                <p>Offer clarity, customer notes, sales scripts, workflow maps, follow-ups, documentation, and execution plans.</p>
-              </article>
-
-              <article class="card support">
-                <span>Product line</span>
-                <h3>Crisis / Recovery AAI</h3>
-                <p>Immediate triage, support-contact prep, resource organization, facts-versus-panic sorting, and next-step stabilization.</p>
-              </article>
+          <div class="support-step">
+            <div>
+              <strong>Draft the response or plan.</strong>
+              <span>The chamber can help prepare letters, checklists, scripts, questions, or next-step plans.</span>
             </div>
           </div>
-        </details>
 
-        <details>
-          <summary>
-            <span class="layer-number">5</span>
-            <span>
-              <span class="layer-title">Interactive creative potential</span>
-              <span class="layer-line">AAI can become a scene engine, comic book engine, and personal story layer.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Interactive comic books</h3>
-                <p>AAI can turn a reader into a participant: branching panels, choices, dialogue, consequences, character memory, and replayable story paths.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Put yourself in the scene</h3>
-                <p>The visitor can appear inside a story, adventure, training simulation, comic episode, confidence rehearsal, or learning scene.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Favorite-world energy</h3>
-                <p>With licensed, permissioned, public-domain, original, or parody-safe material, AAI can create scenes inspired by the feel of beloved TV, movie, comic, game, or fictional worlds.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Character interaction</h3>
-                <p>AAI can build conversations with original fictional characters, approved characters, public-domain characters, or user-created archetypes that respond to the visitor’s choices.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Learning through story</h3>
-                <p>Education, nutrition, conflict resolution, sales practice, confidence, and decision-making can be taught through scenes instead of flat lessons.</p>
-              </article>
-
-              <article class="card creative">
-                <span>Creative future</span>
-                <h3>Scene-to-system bridge</h3>
-                <p>A scene can produce scripts, checklists, summaries, reflection prompts, next steps, or a usable plan after the story ends.</p>
-              </article>
-            </div>
-
-            <div class="notice">
-              Creative scene support should use original, licensed, permissioned, public-domain, or parody-safe material.
-              The product should not claim official affiliation with protected franchises unless permission exists.
+          <div class="support-step">
+            <div>
+              <strong>Choose the next step.</strong>
+              <span>The user stays in control. The tool supports preparation, clarity, and movement.</span>
             </div>
           </div>
-        </details>
+        </div>
+      </section>
 
-        <details>
-          <summary>
-            <span class="layer-number">6</span>
-            <span>
-              <span class="layer-title">Future platform</span>
-              <span class="layer-line">The future is persistent, bounded, user-side support.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+      <section id="guardrails" class="panel section" aria-labelledby="guard-title">
+        <div class="kicker">Guardrails</div>
+        <h2 id="guard-title">Support is not replacement.</h2>
 
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card support">
-                <span>Future</span>
-                <h3>Life dashboard</h3>
-                <p>Organize open loops, deadlines, documents, people, and next actions.</p>
-              </article>
+        <div class="guard-grid">
+          <article class="guard-card">
+            <b>Not legal authority</b>
+            <strong>It does not replace a lawyer.</strong>
+            <span>It can help organize facts, read language, draft questions, and prepare for professional help.</span>
+          </article>
 
-              <article class="card prepare">
-                <span>Future</span>
-                <h3>Prep room</h3>
-                <p>Prepare before calls, appointments, meetings, interviews, and difficult conversations.</p>
-              </article>
+          <article class="guard-card">
+            <b>Not medical authority</b>
+            <strong>It does not replace a doctor or emergency care.</strong>
+            <span>For medical emergencies or urgent safety issues, contact emergency services or a qualified professional.</span>
+          </article>
 
-              <article class="card clarify">
-                <span>Future</span>
-                <h3>Document layer</h3>
-                <p>Translate forms, letters, notices, policies, instructions, and confusing system language.</p>
-              </article>
+          <article class="guard-card">
+            <b>Not financial authority</b>
+            <strong>It does not replace an accountant or financial advisor.</strong>
+            <span>It can help clarify documents, prepare questions, and organize options before expert review.</span>
+          </article>
+        </div>
+      </section>
 
-              <article class="card creative">
-                <span>Future</span>
-                <h3>Creative scene room</h3>
-                <p>Build interactive comic books, personal episodes, branching scenes, practice rooms, and fictional learning worlds.</p>
-              </article>
+      <section class="panel section" aria-labelledby="use-title">
+        <div class="kicker">Use cases</div>
+        <h2 id="use-title">Where the chamber belongs.</h2>
 
-              <article class="card verify">
-                <span>Future</span>
-                <h3>Human handoff</h3>
-                <p>Mark what needs a professional, institution, source, or official answer.</p>
-              </article>
+        <div class="use-grid">
+          <article class="use-card">
+            <b>Household</b>
+            <strong>Letters, forms, bills, and choices.</strong>
+            <span>Plain-language support for everyday problems that become heavier when ignored.</span>
+          </article>
 
-              <article class="card support">
-                <span>Future</span>
-                <h3>Support memory</h3>
-                <p>Preserve useful context so the visitor does not have to restart from zero every time.</p>
-              </article>
-            </div>
-          </div>
-        </details>
+          <article class="use-card">
+            <b>Work</b>
+            <strong>Messages, requests, and next steps.</strong>
+            <span>Prepare cleaner communication before replying under pressure.</span>
+          </article>
 
-        <details>
-          <summary>
-            <span class="layer-number">7</span>
-            <span>
-              <span class="layer-title">Human boundaries</span>
-              <span class="layer-line">The boundary is part of the product.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+          <article class="use-card">
+            <b>Agency</b>
+            <strong>Questions before the call.</strong>
+            <span>Organize what to ask, what to bring, and what still needs proof.</span>
+          </article>
 
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card verify">
-                <span>Boundary 1</span>
-                <h3>Prepare, do not impersonate</h3>
-                <p>AAI can help draft, rehearse, and organize. It should not pretend to be the visitor or act as an unauthorized representative.</p>
-              </article>
+          <article class="use-card">
+            <b>Life pressure</b>
+            <strong>Stop spinning. Start sorting.</strong>
+            <span>When the issue feels too big, the first useful move is making it readable.</span>
+          </article>
+        </div>
+      </section>
 
-              <article class="card verify">
-                <span>Boundary 2</span>
-                <h3>Clarify, do not overclaim</h3>
-                <p>AAI can explain possibilities and next steps. It should mark uncertainty and avoid presenting guesses as verified truth.</p>
-              </article>
+      <section class="panel section" aria-labelledby="routes-title">
+        <div class="kicker">Product chamber routes</div>
+        <h2 id="routes-title">On Your Side AI stays attached to the product wing.</h2>
 
-              <article class="card verify">
-                <span>Boundary 3</span>
-                <h3>Support, do not replace</h3>
-                <p>AAI can prepare visitors for experts and institutions. It does not replace qualified professional judgment.</p>
-              </article>
-            </div>
+        <div class="route-grid">
+          <a class="route-card" href="/products/">
+            <b>Products</b>
+            <strong>Return to the wing.</strong>
+            <span>On Your Side AI sits inside the larger product chamber system.</span>
+          </a>
 
-            <div class="notice">
-              On Your Side AAI should not pretend to be a doctor, lawyer, therapist, financial adviser, court, employer,
-              parent, or final authority. It is a preparation and support layer.
-            </div>
-          </div>
-        </details>
+          <a class="route-card" href="/products/five-flags/">
+            <b>Five Flags</b>
+            <strong>Open the game chamber.</strong>
+            <span>Five Flags is the product wing’s signal-game chamber.</span>
+          </a>
 
-        <details>
-          <summary>
-            <span class="layer-number">8</span>
-            <span>
-              <span class="layer-title">Market gap</span>
-              <span class="layer-line">The market is full of tools. People still need someone on their side.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+          <a class="route-card" href="/showroom/">
+            <b>Showroom</b>
+            <strong>Inspect the build.</strong>
+            <span>Public expression and demonstration surfaces stay separate from support rules.</span>
+          </a>
 
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card support">
-                <span>Gap 1</span>
-                <h3>Tools without guidance</h3>
-                <p>Many tools wait for perfect prompts. On Your Side AAI is framed around the visitor’s situation and helps shape the request with them.</p>
-              </article>
+          <a class="route-card" href="/gauges/">
+            <b>Gauges</b>
+            <strong>Measure the route.</strong>
+            <span>Gauges checks served source truth and contract alignment.</span>
+          </a>
+        </div>
+      </section>
 
-              <article class="card prepare">
-                <span>Gap 2</span>
-                <h3>Answers without preparation</h3>
-                <p>A quick answer is not always enough. AAI prepares the visitor for the call, meeting, form, decision, or conversation that comes after.</p>
-              </article>
+      <section class="final-band" aria-labelledby="final-title">
+        <div class="kicker">Final direction</div>
+        <strong id="final-title">On Your Side AI helps the user get organized before acting.</strong>
+        <p>
+          The user brings the pressure in. The chamber helps read it, explain it, sort it, draft around it, and choose the next step. Support first. Authority boundaries preserved.
+        </p>
 
-              <article class="card verify">
-                <span>Gap 3</span>
-                <h3>Automation without trust</h3>
-                <p>Visitors need to know where support stops. AAI stays useful by staying bounded, readable, and honest about verification.</p>
-              </article>
-            </div>
-          </div>
-        </details>
+        <div class="actions">
+          <a class="button gold" href="/products/">Back to Products</a>
+          <a class="button" href="/products/five-flags/">Open Five Flags</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
 
-        <details>
-          <summary>
-            <span class="layer-number">9</span>
-            <span>
-              <span class="layer-title">Product binding</span>
-              <span class="layer-line">On Your Side AAI remains one product chamber under Products.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+      <details class="receipt" open>
+        <summary>Route receipt</summary>
+        <pre>ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1
+route=/products/on-your-side-ai/
+page=on_your_side_ai
+role=product_chamber
+parent=/products/
+product_type=assistance_first_support
+public_label=On_Your_Side_AI
+structural_label=On_Your_Side_AAI
+aai_meaning=assistance_first_ai
+canonical_one_line=On Your Side AAI helps people read the problem, understand the options, draft the response, and choose the next step.
+core_mechanic=read_explain_sort_draft_next_step
+support_points=read,explain,sort,draft,next_step
+helps_with=forms,letters,choices,next_steps,plain_language_support
+support_loop=bring_issue,explain_plain_meaning,sort_options_and_risks,draft_response_or_plan,choose_next_step
+guardrail=AAI_supports_the_user_it_does_not_replace_licensed_authority
+not_legal_authority=true
+not_medical_authority=true
+not_financial_authority=true
+not_emergency_service=true
+parent_products=/products/
+five_flags=/products/five-flags/
+showroom=/showroom/
+gauges=/gauges/
+compass=/
+visual_system=animated_five_point_support_field
+animation=floating_support_diamonds,background_anchor_pulse,slow_field_turn,hover_lift
+mobile_law=stacked_support_points_no_clipping_no_hidden_nodes
+route_owns=on_your_side_aai_public_support_chamber,support_loop,guardrails,use_cases,product_chamber_receipt
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false</pre>
+      </details>
+    </main>
 
-          <div class="layer-body">
-            <div class="grid">
-              <article class="card">
-                <span>Canonical Route</span>
-                <h3>/products/on-your-side-ai/</h3>
-                <p>One route under Products. AAI support remains a product chamber, not a separate system root.</p>
-              </article>
-
-              <article class="card">
-                <span>Product Class</span>
-                <h3>product_chamber</h3>
-                <p>On Your Side AAI is a product chamber, not a planetary construct and not a house part.</p>
-              </article>
-
-              <article class="card">
-                <span>Public Frame</span>
-                <h3>Practical applied intelligence</h3>
-                <p>Clear assistance without jargon-heavy exposure. Bounded, useful, and on the visitor’s side.</p>
-              </article>
-
-              <article class="card">
-                <span>Creative Extension</span>
-                <h3>Interactive scenes</h3>
-                <p>Interactive comics, fictional training rooms, and scene insertion are future product extensions inside the AAI platform.</p>
-              </article>
-
-              <article class="card">
-                <span>Parent</span>
-                <h3>Products</h3>
-                <p>This chamber preserves the On Your Side AAI identity while remaining one canonical product destination under Products.</p>
-              </article>
-
-              <article class="card">
-                <span>Verification</span>
-                <h3>Gauges</h3>
-                <p>Route, runtime, parser, and diagnostic receipts remain available from Gauges.</p>
-              </article>
-            </div>
-          </div>
-        </details>
-
-        <details>
-          <summary>
-            <span class="layer-number">10</span>
-            <span>
-              <span class="layer-title">Move through the product wing</span>
-              <span class="layer-line">Parent, learning, nutrition, proof, control, house, and verification routes.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="route-grid" aria-label="On Your Side AAI backlinks">
-              <a class="route-card" href="/products/">
-                <span>Parent</span>
-                <strong>Products</strong>
-              </a>
-
-              <a class="route-card" href="/products/education/">
-                <span>Learning</span>
-                <strong>Education</strong>
-              </a>
-
-              <a class="route-card" href="/products/nutrition/">
-                <span>Support</span>
-                <strong>Nutrition</strong>
-              </a>
-
-              <a class="route-card" href="/showroom/">
-                <span>Proof</span>
-                <strong>Showroom</strong>
-              </a>
-
-              <a class="route-card" href="/gauges/">
-                <span>Verification</span>
-                <strong>Gauges</strong>
-              </a>
-
-              <a class="route-card" href="/">
-                <span>Control</span>
-                <strong>Compass</strong>
-              </a>
-
-              <a class="route-card" href="/home/">
-                <span>House</span>
-                <strong>Home</strong>
-              </a>
-            </div>
-          </div>
-        </details>
-
-        <details>
-          <summary>
-            <span class="layer-number">R</span>
-            <span>
-              <span class="layer-title">Route receipt</span>
-              <span class="layer-line">Compressed contract and audit status.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <section class="receipt" aria-hidden="true">
-              ON_YOUR_SIDE_AAI_RUSSIAN_DOLL_CREATIVE_SCENE_TNT_v1
-              route=/products/on-your-side-ai/
-              page=on-your-side-aai
-              product-chamber=PC3_ON_YOUR_SIDE_AAI
-              parent-products=true
-              canonical-destination=true
-              terminology-lock=AAI
-              AAI-stays-AAI=true
-              public-frame=practical-applied-intelligence
-              support-surface=understand-prepare-organize-decide-create-verify
-              support-flow=bring-translate-sort-prepare-verify-act
-              science=cognitive-load-decision-fatigue-sequencing-translation-preparation-verification
-              messy-middle=confusion-to-prepared-action
-              product-family=personal-family-work-education-health-prep-legal-prep-finance-prep-small-business-crisis-recovery
-              creative-potential=interactive-comic-books-personal-scenes-character-interaction-fictional-training-rooms
-              scene-insertion=permissioned-original-public-domain-or-parody-safe
-              favorite-tv-movie-scene-energy=allowed-when-licensed-permissioned-original-public-domain-or-parody-safe
-              future=life-dashboard-prep-room-document-layer-creative-scene-room-human-handoff-support-memory
-              boundaries=prepare-not-impersonate
-              boundaries=clarify-not-overclaim
-              boundaries=support-not-replace
-              closes-gap=tools-without-guidance
-              closes-gap=answers-without-preparation
-              closes-gap=automation-without-trust
-              product-potential=human-life-infrastructure-support-layer
-              not-generic-ai-language=true
-              not-separate-system-root=true
-              not-planetary-construct=true
-              not-house-part=true
-              Products=/products/
-              Education=/products/education/
-              Nutrition=/products/nutrition/
-              Showroom=/showroom/
-              Compass=/
-              Home=/home/
-              Gauges=/gauges/
-            </section>
-          </div>
-        </details>
-      </div>
-    </section>
-  </main>
+    <footer>
+      ON_YOUR_SIDE_AAI_PRODUCT_CHAMBER_PUBLIC_SUPPORT_TNT_v1 · On Your Side AI · Product Chamber · Assistance-First Support.
+    </footer>
+  </div>
 </body>
 </html>

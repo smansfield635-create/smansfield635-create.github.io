@@ -4,9 +4,9 @@
   data-route="/explore/"
   data-page="explore-manor"
   data-former-label="manor"
-  data-version="G1-V2.1"
-  data-contract="EXPLORE_MANOR_4_PLUS_12_DIAMOND_ROUTE_FIELD_PLACEMENT_ONLY_TNT_v2_1"
-  data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
+  data-version="G1-V4"
+  data-contract="EXPLORE_MANOR_4_PLUS_12_TARGET_DESIGN_PLACEMENT_TNT_v4"
+  data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
   data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
   data-status="active"
   data-role="explore-manor-route-map-surface"
@@ -50,8 +50,8 @@
     *{box-sizing:border-box}
 
     html{
-      min-height:100%;
       min-width:320px;
+      min-height:100%;
       background:var(--bg);
       scroll-behavior:smooth;
       overflow-x:hidden;
@@ -383,7 +383,7 @@
       gap:1.05rem;
     }
 
-    .manor-stage{
+    .explore-stage{
       position:relative;
       min-height:clamp(37rem,76vw,56rem);
       display:grid;
@@ -398,8 +398,8 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .manor-stage::before,
-    .manor-stage::after{
+    .explore-stage::before,
+    .explore-stage::after{
       content:"";
       position:absolute;
       left:50%;
@@ -409,20 +409,20 @@
       pointer-events:none;
     }
 
-    .manor-stage::before{
+    .explore-stage::before{
       width:min(84%,38rem);
       height:min(84%,38rem);
       border:1px solid rgba(243,200,111,.08);
       box-shadow:0 0 3rem rgba(143,101,255,.12);
     }
 
-    .manor-stage::after{
+    .explore-stage::after{
       width:min(58%,25rem);
       height:min(58%,25rem);
       border:1px solid rgba(143,101,255,.15);
     }
 
-    .manor-center-anchor{
+    .explore-center-anchor{
       position:absolute;
       left:50%;
       top:50%;
@@ -442,10 +442,10 @@
         inset 0 0 26px rgba(255,255,255,.04);
       opacity:.48;
       pointer-events:none;
-      animation:manorAnchorPulse 7s ease-in-out infinite;
+      animation:exploreAnchorPulse 7s ease-in-out infinite;
     }
 
-    .manor-center-anchor::after{
+    .explore-center-anchor::after{
       content:"";
       position:absolute;
       inset:14%;
@@ -453,7 +453,7 @@
       border:1px solid rgba(255,255,255,.05);
     }
 
-    .manor-center-anchor span{
+    .explore-center-anchor span{
       display:block;
       transform:rotate(-45deg);
       color:rgba(255,244,216,.86);
@@ -465,7 +465,7 @@
       line-height:1.2;
     }
 
-    @keyframes manorAnchorPulse{
+    @keyframes exploreAnchorPulse{
       0%,100%{
         transform:translate(-50%,-50%) rotate(45deg) scale(.98);
         opacity:.42;
@@ -775,7 +775,7 @@
         padding:1rem;
       }
 
-      .manor-stage{
+      .explore-stage{
         min-height:35rem;
       }
 
@@ -828,16 +828,16 @@
     }
 
     @media (max-width:460px){
-      .manor-stage{
+      .explore-stage{
         min-height:30rem;
       }
 
-      .manor-center-anchor{
+      .explore-center-anchor{
         width:7.9rem;
         height:7.9rem;
       }
 
-      .manor-center-anchor span{
+      .explore-center-anchor span{
         font-size:.62rem;
       }
 
@@ -940,8 +940,8 @@
         <div class="kicker">Four primary rooms. Twelve support routes.</div>
         <h2 id="field-title">Explore keeps the inner rooms close to the map anchor and the outer routes readable.</h2>
 
-        <div class="manor-stage" aria-label="Animated Explore Manor four-plus-twelve route field">
-          <div class="manor-center-anchor" aria-hidden="true">
+        <div class="explore-stage" aria-label="Animated Explore Manor four-plus-twelve route field">
+          <div class="explore-center-anchor" aria-hidden="true">
             <span>Explore<br>Manor<br>Map</span>
           </div>
 
@@ -1024,7 +1024,7 @@
 
         <aside class="status-card" aria-label="Explore status">
           <strong>Explore status:</strong>
-          Four primary rooms moved closer to the center map anchor. Twelve support routes remain outside and readable. Route receipt is preserved outside public flow.
+          Four primary diamonds are moved closer to the center map anchor. Twelve support routes remain outside and readable. Route receipt is preserved outside public flow.
         </aside>
       </section>
 
@@ -1080,27 +1080,28 @@
       </section>
 
       <template id="route-receipt" data-route-receipt>
-EXPLORE_MANOR_4_PLUS_12_DIAMOND_ROUTE_FIELD_PLACEMENT_ONLY_TNT_v2_1
+EXPLORE_MANOR_4_PLUS_12_TARGET_DESIGN_PLACEMENT_TNT_v4
 route=/explore/
 page=explore_manor
 former_label=manor
 role=explore_manor_route_map_surface
+tic_tac_toe_protocol=1_to_4_to_1,1_to_16_to_1,1_to_256_to_1
 message=one_manor_many_rooms
-alignment_sequence=CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1
+alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
 shared_css=/assets/diamond-orbit.css
 animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
 center=explore_manor_map_background_anchor_only
 design_object=4_plus_12_diamond_route_field
-visual_system=explore_centered_inner_four_outer_twelve_diamond_route_orbit
+visual_system=target_design_inner_four_center_outer_twelve_route_orbit
 ring_system=4_plus_12
 inner_ring=home,nine_summits,showroom,frontier
 outer_ring=compass,door,products,gauges,book,universe,audralia,laws,underdog,meet_sean,five_flags,return
 z_index_law=ambient_background,explore_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
-overlap_law=inner_four_moved_closer_to_center_anchor_but_remain_below_outer_ring
+overlap_law=inner_four_moved_close_to_center_anchor_but_remain_below_outer_ring
 animation=inner_clockwise_outer_counterclockwise
 label_law=diamond_labels_counter_rotate_to_remain_readable
 mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-upgraded=placement_only_inner_four_moved_closer_to_center
+upgraded=target_design_adopted,inner_four_placement_corrected,receipt_removed_from_public_flow
 preserved=diamond_style,diamond_shape,outer_twelve_support_routes,explore_manor_route_map_surface,one_manor_many_rooms,animated_diamond_routes
 route_owns=explore_map,4_plus_12_route_field,animated_diamond_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
@@ -1116,7 +1117,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      EXPLORE_MANOR_4_PLUS_12_DIAMOND_ROUTE_FIELD_PLACEMENT_ONLY_TNT_v2_1 · Explore the Manor · Inner four moved closer to center.
+      EXPLORE_MANOR_4_PLUS_12_TARGET_DESIGN_PLACEMENT_TNT_v4 · Explore the Manor · Target design placement restored.
     </footer>
   </div>
 </body>

@@ -1,426 +1,92 @@
 // /assets/earth/earth_canvas.js
-// EARTH_G4_CANDIDATE_RENDER_API_ADAPTER_TNT_v2
-// Role: Earth render API adapter for /showroom/globe/index.js.
-// Status: G4 candidate only. This file must not claim Earth Generation 4 completion.
-// Target standard: prior Orbital Earth G4 reference.
-// Does not own: route shell, Audralia, Sun, Moon, Gauges, Products, visual pass claim.
+// EARTH_NASA_REFERENCE_RENDERER_TNT_v1
+// Role: Earth reference renderer.
+// Standard: NASA-style Earth image asset, not Audralia procedural world logic.
+// Earth is not designed by Audralia generation logic.
 
-const RECEIPT = "EARTH_G4_CANDIDATE_RENDER_API_ADAPTER_TNT_v2";
-const PLANETARY_OBJECT = "Earth";
-const GENERATION_STATUS = "G4_CANDIDATE";
-const TARGET_STANDARD = "ORBITAL_EARTH_G4_REFERENCE";
+const RECEIPT = "EARTH_NASA_REFERENCE_RENDERER_TNT_v1";
 const FILE = "/assets/earth/earth_canvas.js";
 
+const EARTH_ASSET_CANDIDATES = Object.freeze([
+  "/assets/earth/earth-blue-marble-day.jpg",
+  "/assets/earth/earth-blue-marble-day.png",
+  "/assets/earth/earth-reference.jpg",
+  "/assets/earth/earth-reference.png",
+  "/assets/earth/blue-marble.jpg",
+  "/assets/earth/blue-marble.png"
+]);
+
+const STATE = {
+  assetStatus: "not-requested",
+  activeAssetPath: null,
+  activeImage: null,
+  lastError: null,
+  loadingPromise: null
+};
+
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, Number.isFinite(Number(value)) ? Number(value) : 0));
+  return Math.max(min, Math.min(max, value));
 }
 
-function mix(a, b, t) {
-  return a + (b - a) * clamp(t, 0, 1);
-}
-
-function blend(a, b, t) {
-  return [
-    mix(a[0], b[0], t),
-    mix(a[1], b[1], t),
-    mix(a[2], b[2], t)
-  ];
-}
-
-function toRgb(rgb) {
-  return `rgb(${Math.round(clamp(rgb[0], 0, 255))}, ${Math.round(clamp(rgb[1], 0, 255))}, ${Math.round(clamp(rgb[2], 0, 255))})`;
-}
-
-function fract(value) {
-  return value - Math.floor(value);
-}
-
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
-function hash2(x, y, seed = 0) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
-}
-
-function valueNoise(x, y, seed = 0) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
-
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
-}
-
-function fbm(x, y, seed = 0, octaves = 5) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 17.17) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
-  }
-
-  return total / normalizer;
-}
-
-function continentField(lon, lat) {
-  const northMass =
-    smoothstep(0.08, 0.42, lat) *
-    smoothstep(0.92, 0.42, Math.abs(lon + 0.18)) *
-    0.82;
-
-  const eastMass =
-    smoothstep(-0.36, 0.08, lat) *
-    smoothstep(0.82, 0.26, Math.abs(lon - 0.42)) *
-    0.78;
-
-  const westMass =
-    smoothstep(-0.48, 0.18, lat) *
-    smoothstep(0.76, 0.28, Math.abs(lon + 0.56)) *
-    0.7;
-
-  const southMass =
-    smoothstep(-0.9, -0.56, lat) *
-    smoothstep(1.0, 0.18, Math.abs(lon + 0.02)) *
-    0.9;
-
-  const islandArc =
-    smoothstep(0.72, 0.9, Math.sin((lon + 0.2) * Math.PI * 4.2)) *
-    smoothstep(0.38, 0.02, Math.abs(lat + 0.12)) *
-    0.42;
-
-  const detail = (fbm(lon * 4.8 + 9.4, lat * 4.8 - 3.1, 101, 6) - 0.5) * 0.36;
-  const coastalBreakup = (fbm(lon * 13.5 - 4.2, lat * 13.5 + 7.7, 209, 4) - 0.5) * 0.18;
-
-  return northMass + eastMass + westMass + southMass + islandArc + detail + coastalBreakup;
-}
-
-function polarIce(lat) {
-  const northIce = smoothstep(0.66, 0.92, lat);
-  const southIce = smoothstep(0.58, 0.9, -lat);
-  return clamp(Math.max(northIce, southIce), 0, 1);
-}
-
-function cloudField(lon, lat) {
-  const band =
-    smoothstep(0.04, 0.22, Math.abs(lat)) *
-    (1 - smoothstep(0.52, 0.9, Math.abs(lat)));
-
-  const swirl =
-    fbm(lon * 7.2 + lat * 1.8 + 1.4, lat * 7.2 - lon * 1.4, 401, 5);
-
-  const highCloud =
-    fbm(lon * 13.0 - 8.1, lat * 13.0 + 3.7, 503, 4);
-
-  return clamp((swirl - 0.48) * 1.4 + band * 0.18 + (highCloud - 0.62) * 0.7, 0, 1);
-}
-
-function sampleBaseSurface(uInput, vInput) {
-  const u = ((Number(uInput) || 0) % 1 + 1) % 1;
-  const v = clamp(Number(vInput) || 0, 0, 1);
-
-  const lon = u * 2 - 1;
-  const lat = 1 - v * 2;
-
-  const landScore = continentField(lon, lat);
-  const ice = polarIce(lat);
-  const cloud = cloudField(lon, lat);
-  const isLand = landScore > 0.36 && ice < 0.72;
-  const coastal = clamp(1 - Math.abs(landScore - 0.36) / 0.16, 0, 1);
-
-  const vegetation = isLand
-    ? clamp(
-        0.62 -
-          Math.abs(lat) * 0.45 +
-          fbm(lon * 6.0, lat * 6.0, 607, 4) * 0.42 -
-          coastal * 0.08,
-        0,
-        1
-      )
-    : 0;
-
-  const arid = isLand
-    ? clamp(
-        smoothstep(0.05, 0.4, Math.abs(lat)) *
-          (1 - vegetation) *
-          (0.7 + fbm(lon * 5.0 + 2, lat * 5.0 - 8, 701, 4) * 0.3),
-        0,
-        1
-      )
-    : 0;
-
-  const depth = isLand ? 0 : clamp(0.35 + (0.36 - landScore) * 0.9, 0, 1);
-
+function createProfile(options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generationStatus: GENERATION_STATUS,
-    generationClaimed: false,
-    targetStandard: TARGET_STANDARD,
-    u,
-    v,
-    lon,
-    lat,
-    isLand,
-    isWater: !isLand && ice < 0.76,
-    landScore,
-    coastal,
-    depth,
-    vegetation,
-    arid,
-    ice,
-    cloud,
-    renderColor: null,
-    staticImageReplacement: false,
-    imageGeneration: false,
-    graphicBox: false,
-    visualPassClaimed: false
-  });
-}
-
-function colorForSurface(surface) {
-  let color;
-
-  if (surface.ice > 0.72) {
-    color = blend([210, 226, 232], [248, 252, 255], surface.ice);
-  } else if (surface.isLand) {
-    const green = [58, 120, 70];
-    const dry = [154, 132, 88];
-    const mountain = [126, 118, 98];
-
-    color = blend(dry, green, surface.vegetation);
-
-    if (surface.arid > 0.46) {
-      color = blend(color, [174, 140, 82], surface.arid * 0.64);
-    }
-
-    if (surface.landScore > 0.72) {
-      color = blend(color, mountain, (surface.landScore - 0.72) * 1.8);
-    }
-  } else {
-    const deep = [7, 30, 76];
-    const open = [20, 88, 150];
-    const shelf = [42, 150, 188];
-
-    color = blend(open, deep, surface.depth);
-
-    if (surface.coastal > 0.42) {
-      color = blend(color, shelf, surface.coastal * 0.62);
-    }
-  }
-
-  if (surface.cloud > 0.12) {
-    color = blend(color, [230, 236, 240], surface.cloud * 0.58);
-  }
-
-  return color;
-}
-
-function applyLighting(rgb, nx, ny, nz, surface) {
-  const lightX = -0.36;
-  const lightY = -0.24;
-  const lightZ = 0.9;
-
-  const dot = clamp(nx * lightX + ny * lightY + nz * lightZ, 0, 1);
-  const limb = clamp(nz, 0, 1);
-  const atmosphere = clamp(1 - limb, 0, 1);
-
-  let shade = 0.34 + dot * 0.76;
-  shade += surface.isWater ? 0.05 : 0;
-  shade += surface.cloud * 0.08;
-
-  let color = [
-    rgb[0] * shade,
-    rgb[1] * shade,
-    rgb[2] * shade
-  ];
-
-  if (atmosphere > 0.55) {
-    color = blend(color, [92, 176, 238], (atmosphere - 0.55) * 0.34);
-  }
-
-  return color;
-}
-
-export function createProfile(options = {}) {
-  return Object.freeze({
-    receipt: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    publicName: PLANETARY_OBJECT,
+    planetaryObject: "Earth",
+    publicName: "Earth",
     generation: "G4_CANDIDATE",
-    generationStatus: GENERATION_STATUS,
+    generationStatus: "G4_CANDIDATE",
     generationClaimed: false,
-    targetStandard: TARGET_STANDARD,
-    body: options.body || PLANETARY_OBJECT,
+    targetStandard: "NASA_EARTH_REFERENCE_G4",
+    rendererMode: "NASA_TEXTURE_REFERENCE",
     file: FILE,
-    role: "earth-g4-candidate-render-api-adapter",
     authority: "EARTH_FILE_CHAIN",
-    sourceMode: "local-render-adapter",
-    targetMode: "orbital-earth-g4-reference-required",
-    radius: options.radius || 0.36,
+    noAudraliaLogic: true,
+    noProceduralWorldDesign: true,
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    generationPassClaimed: false,
+    route: options.route || "/showroom/globe/"
   });
 }
 
-export function buildTexture(profile = createProfile(), options = {}) {
+function buildTexture(profile = createProfile()) {
+  beginAssetLoad();
+
   return Object.freeze({
     receipt: RECEIPT,
-    planetaryObject: PLANETARY_OBJECT,
-    generation: "G4_CANDIDATE",
-    generationStatus: GENERATION_STATUS,
-    generationClaimed: false,
-    targetStandard: TARGET_STANDARD,
+    type: "nasa-earth-reference-texture",
     profile,
-    width: options.width || 512,
-    height: options.height || 256,
-    sourceMode: "local-render-adapter",
-    staticImageReplacement: false,
-    imageGeneration: false,
-    graphicBox: false,
-    visualPassClaimed: false
+    assetStatus: STATE.assetStatus,
+    activeAssetPath: STATE.activeAssetPath,
+    candidates: EARTH_ASSET_CANDIDATES.slice()
   });
 }
 
-export function sampleSurface(u, v, context = {}) {
-  const surface = sampleBaseSurface(u, v);
-
+function getStatus() {
   return Object.freeze({
-    ...surface,
-    renderColor: colorForSurface(surface),
-    profile: context.profile || null,
-    texture: context.texture || null
-  });
-}
-
-export function renderSurface(canvas, options = {}) {
-  if (!canvas || typeof canvas.getContext !== "function") {
-    throw new Error("EARTH_RENDER_CANVAS_REQUIRED");
-  }
-
-  const profile = options.profile || createProfile(options);
-  const texture = options.texture || buildTexture(profile, options);
-  const ctx = canvas.getContext("2d");
-
-  const width = canvas.width || 1024;
-  const height = canvas.height || 1024;
-  const cx = width / 2;
-  const cy = height / 2;
-  const radius = Math.min(width, height) * (profile.radius || 0.36);
-  const pixelStep = Math.max(2, Math.min(4, Math.floor(options.pixelStep || 2)));
-
-  ctx.clearRect(0, 0, width, height);
-
-  for (let py = Math.floor(cy - radius); py <= Math.ceil(cy + radius); py += pixelStep) {
-    for (let px = Math.floor(cx - radius); px <= Math.ceil(cx + radius); px += pixelStep) {
-      const nx = (px - cx) / radius;
-      const ny = (py - cy) / radius;
-      const d2 = nx * nx + ny * ny;
-
-      if (d2 > 1) continue;
-
-      const nz = Math.sqrt(1 - d2);
-      const longitudeShift = Number.isFinite(options.longitudeShift) ? options.longitudeShift : 0.12;
-      const u = ((0.5 + Math.atan2(nx, nz) / (Math.PI * 2) + longitudeShift) % 1 + 1) % 1;
-      const v = clamp(0.5 + Math.asin(ny) / Math.PI, 0, 1);
-
-      const surface = sampleSurface(u, v, { profile, texture });
-      const baseColor = surface.renderColor || [80, 110, 140];
-      const litColor = applyLighting(baseColor, nx, ny, nz, surface);
-
-      ctx.fillStyle = toRgb(litColor);
-      ctx.fillRect(px, py, pixelStep + 0.5, pixelStep + 0.5);
-    }
-  }
-
-  const atmosphere = ctx.createRadialGradient(
-    cx - radius * 0.22,
-    cy - radius * 0.28,
-    radius * 0.1,
-    cx,
-    cy,
-    radius * 1.08
-  );
-
-  atmosphere.addColorStop(0, "rgba(255,255,255,0.12)");
-  atmosphere.addColorStop(0.68, "rgba(92,172,235,0.07)");
-  atmosphere.addColorStop(1, "rgba(110,190,248,0.36)");
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.018, 0, Math.PI * 2);
-  ctx.fillStyle = atmosphere;
-  ctx.fill();
-
-  ctx.lineWidth = Math.max(2, Math.round(radius * 0.012));
-  ctx.strokeStyle = "rgba(190,220,245,0.42)";
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillStyle = "rgba(245,248,255,0.96)";
-  ctx.font = "700 34px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("Earth", cx, height - Math.max(42, radius * 0.12));
-
-  return Object.freeze({
-    receipt: RECEIPT,
-    rendered: true,
-    method: "renderSurface",
-    planetaryObject: PLANETARY_OBJECT,
-    generation: "G4_CANDIDATE",
-    generationStatus: GENERATION_STATUS,
-    generationClaimed: false,
-    targetStandard: TARGET_STANDARD,
-    file: FILE,
-    sourceMode: "local-render-adapter",
-    staticImageReplacement: false,
-    imageGeneration: false,
-    graphicBox: false,
-    visualPassClaimed: false
-  });
-}
-
-export function render(canvas, options = {}) {
-  return renderSurface(canvas, options);
-}
-
-export function renderPlanet(canvas, options = {}) {
-  return renderSurface(canvas, options);
-}
-
-export function getStatus() {
-  return Object.freeze({
+    statusAvailable: true,
     ok: true,
     receipt: RECEIPT,
     status: "active",
-    statusAvailable: true,
-    id: "earth-g4-candidate-render-api-adapter",
-    planetaryObject: PLANETARY_OBJECT,
-    publicName: PLANETARY_OBJECT,
+    id: "earth-nasa-reference-renderer",
+    planetaryObject: "Earth",
+    publicName: "Earth",
     generation: "G4_CANDIDATE",
-    generationStatus: GENERATION_STATUS,
+    generationStatus: "G4_CANDIDATE",
     generationClaimed: false,
-    targetStandard: TARGET_STANDARD,
+    targetStandard: "NASA_EARTH_REFERENCE_G4",
     file: FILE,
-    role: "earth-g4-candidate-render-api-adapter",
+    role: "earth-nasa-reference-renderer",
     authority: "EARTH_FILE_CHAIN",
-    exports: Object.freeze([
+    rendererMode: "NASA_TEXTURE_REFERENCE",
+    assetDriven: true,
+    activeAssetPath: STATE.activeAssetPath,
+    assetStatus: STATE.assetStatus,
+    noAudraliaLogic: true,
+    noProceduralWorldDesign: true,
+    exports: [
       "createProfile",
       "buildTexture",
       "sampleSurface",
@@ -428,7 +94,7 @@ export function getStatus() {
       "render",
       "renderPlanet",
       "getStatus"
-    ]),
+    ],
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
@@ -437,7 +103,228 @@ export function getStatus() {
   });
 }
 
-export default Object.freeze({
+function beginAssetLoad() {
+  if (STATE.activeImage || STATE.loadingPromise) return STATE.loadingPromise;
+
+  STATE.assetStatus = "loading";
+
+  STATE.loadingPromise = loadFirstAvailableImage(EARTH_ASSET_CANDIDATES)
+    .then(({ image, path }) => {
+      STATE.activeImage = image;
+      STATE.activeAssetPath = path;
+      STATE.assetStatus = "loaded";
+      STATE.lastError = null;
+      return image;
+    })
+    .catch((error) => {
+      STATE.assetStatus = "pending-local-nasa-asset";
+      STATE.lastError = String(error && error.message ? error.message : error);
+      return null;
+    });
+
+  return STATE.loadingPromise;
+}
+
+function loadFirstAvailableImage(paths) {
+  return new Promise((resolve, reject) => {
+    let index = 0;
+    const errors = [];
+
+    const tryNext = () => {
+      if (index >= paths.length) {
+        reject(new Error(`No local Earth reference asset found. Tried: ${paths.join(", ")}`));
+        return;
+      }
+
+      const path = paths[index++];
+      const image = new Image();
+      image.decoding = "async";
+
+      image.onload = () => resolve({ image, path });
+      image.onerror = () => {
+        errors.push(path);
+        tryNext();
+      };
+
+      image.src = `${path}?v=${encodeURIComponent(RECEIPT)}_${Date.now()}`;
+    };
+
+    tryNext();
+  });
+}
+
+function drawOrbitalClip(ctx, cx, cy, r) {
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.clip();
+}
+
+function drawEarthImage(ctx, image, cx, cy, r) {
+  ctx.save();
+  drawOrbitalClip(ctx, cx, cy, r);
+
+  const diameter = r * 2;
+  const scale = Math.max(diameter / image.width, diameter / image.height);
+  const sw = image.width * scale;
+  const sh = image.height * scale;
+  const sx = cx - sw / 2;
+  const sy = cy - sh / 2;
+
+  ctx.drawImage(image, sx, sy, sw, sh);
+
+  const shade = ctx.createRadialGradient(
+    cx - r * 0.42,
+    cy - r * 0.32,
+    r * 0.05,
+    cx + r * 0.22,
+    cy + r * 0.08,
+    r * 1.2
+  );
+  shade.addColorStop(0, "rgba(255,255,255,0.18)");
+  shade.addColorStop(0.45, "rgba(255,255,255,0.03)");
+  shade.addColorStop(0.78, "rgba(0,0,0,0.12)");
+  shade.addColorStop(1, "rgba(0,0,0,0.62)");
+  ctx.fillStyle = shade;
+  ctx.fillRect(cx - r, cy - r, diameter, diameter);
+
+  ctx.restore();
+}
+
+function drawAssetPendingEarth(ctx, cx, cy, r) {
+  ctx.save();
+  drawOrbitalClip(ctx, cx, cy, r);
+
+  const ocean = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+  ocean.addColorStop(0, "rgb(12, 45, 92)");
+  ocean.addColorStop(0.42, "rgb(17, 74, 132)");
+  ocean.addColorStop(1, "rgb(3, 17, 42)");
+  ctx.fillStyle = ocean;
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+  for (let i = 0; i < 260; i += 1) {
+    const x = cx - r + ((i * 97) % Math.floor(r * 2.05));
+    const y = cy - r + ((i * 53) % Math.floor(r * 1.85));
+    const band = Math.sin(i * 12.9898) * 0.5 + 0.5;
+    const w = r * (0.03 + band * 0.13);
+    const h = r * (0.006 + band * 0.025);
+
+    ctx.fillStyle = i % 3 === 0
+      ? "rgba(245,248,255,0.38)"
+      : "rgba(235,241,255,0.20)";
+
+    ctx.beginPath();
+    ctx.ellipse(x, y, w, h, 0.2 * Math.sin(i), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.fillStyle = "rgba(72, 125, 74, 0.78)";
+  drawSoftLand(ctx, cx - r * 0.28, cy - r * 0.22, r * 0.42, r * 0.28, -0.35);
+  drawSoftLand(ctx, cx + r * 0.08, cy + r * 0.28, r * 0.36, r * 0.22, 0.25);
+  drawSoftLand(ctx, cx + r * 0.46, cy - r * 0.08, r * 0.22, r * 0.42, 0.52);
+
+  ctx.restore();
+
+  ctx.fillStyle = "rgba(255,255,255,0.86)";
+  ctx.textAlign = "center";
+  ctx.font = `${Math.round(r * 0.07)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+  ctx.fillText("NASA ASSET PENDING", cx, cy + r * 0.72);
+}
+
+function drawSoftLand(ctx, x, y, w, h, rot) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.beginPath();
+  ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawRimAndAtmosphere(ctx, cx, cy, r) {
+  const atmosphere = ctx.createRadialGradient(cx, cy, r * 0.86, cx, cy, r * 1.08);
+  atmosphere.addColorStop(0, "rgba(30, 95, 150, 0)");
+  atmosphere.addColorStop(0.76, "rgba(80, 172, 240, 0.20)");
+  atmosphere.addColorStop(1, "rgba(154, 218, 255, 0.48)");
+
+  ctx.fillStyle = atmosphere;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 1.045, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.lineWidth = Math.max(2, r * 0.012);
+  ctx.strokeStyle = "rgba(154, 218, 255, 0.56)";
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function renderSurface(canvas, options = {}) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width || 1024;
+  const h = canvas.height || 1024;
+  const cx = w / 2;
+  const cy = h / 2;
+  const r = Math.min(w, h) * 0.38;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const background = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.65);
+  background.addColorStop(0, "rgba(10,20,40,0.20)");
+  background.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = background;
+  ctx.fillRect(0, 0, w, h);
+
+  beginAssetLoad();
+
+  if (STATE.activeImage) {
+    drawEarthImage(ctx, STATE.activeImage, cx, cy, r);
+  } else {
+    drawAssetPendingEarth(ctx, cx, cy, r);
+    STATE.loadingPromise?.then(() => {
+      if (STATE.activeImage) renderSurface(canvas, options);
+    });
+  }
+
+  drawRimAndAtmosphere(ctx, cx, cy, r);
+
+  return Object.freeze({
+    rendered: true,
+    method: "renderSurface",
+    receipt: RECEIPT,
+    body: "Earth",
+    generationStatus: "G4_CANDIDATE",
+    generationClaimed: false,
+    targetStandard: "NASA_EARTH_REFERENCE_G4",
+    rendererMode: "NASA_TEXTURE_REFERENCE",
+    assetStatus: STATE.assetStatus,
+    activeAssetPath: STATE.activeAssetPath,
+    noAudraliaLogic: true,
+    visualPassClaimed: false
+  });
+}
+
+function sampleSurface(x = 0, y = 0, options = {}) {
+  return Object.freeze({
+    body: "Earth",
+    source: "NASA_TEXTURE_REFERENCE",
+    designedWorld: false,
+    noAudraliaLogic: true,
+    x: clamp(Number(x) || 0, -1, 1),
+    y: clamp(Number(y) || 0, -1, 1),
+    assetStatus: STATE.assetStatus,
+    activeAssetPath: STATE.activeAssetPath
+  });
+}
+
+function render(canvas, options = {}) {
+  return renderSurface(canvas, options);
+}
+
+function renderPlanet(canvas, options = {}) {
+  return renderSurface(canvas, options);
+}
+
+const api = Object.freeze({
   createProfile,
   buildTexture,
   sampleSurface,
@@ -446,3 +333,15 @@ export default Object.freeze({
   renderPlanet,
   getStatus
 });
+
+export {
+  createProfile,
+  buildTexture,
+  sampleSurface,
+  renderSurface,
+  render,
+  renderPlanet,
+  getStatus
+};
+
+export default api;

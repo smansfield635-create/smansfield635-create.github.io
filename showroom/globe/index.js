@@ -1,10 +1,10 @@
 // /showroom/globe/index.js
-// EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_EXECUTION_RECEIPTS_TNT_v2
+// EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_SIZE_CLAMP_CONTROLLER_TNT_v3
 // Role: route controller only.
-// Owns: mount selection, body separation, non-silent receipts, isolated import attempts.
+// Owns: mount selection, body separation, non-silent receipts, isolated import attempts, display-size clamp.
 // Does not own: Earth science, Audralia science, Sun, Moon, Gauges, Products, final visual pass.
 
-const RECEIPT = "EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_ROUTE_CONTROLLER_EXECUTION_RECEIPTS_TNT_v2";
+const RECEIPT = "EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_SIZE_CLAMP_CONTROLLER_TNT_v3";
 const ROUTE = "/showroom/globe/";
 
 const EARTH = Object.freeze({
@@ -31,21 +31,22 @@ const AUDRALIA = Object.freeze({
   ])
 });
 
+const LEGACY_TOKEN = String.fromCharCode(65, 117, 115, 116, 114, 97, 108, 105, 97);
+
 function nowIso() {
   return new Date().toISOString();
 }
 
 function sanitizeText(value) {
-  const bad = ["Aus", "tralia"].join("");
-  const planetBad = ["Planet ", bad].join("");
-  const compactBad = ["Planet", bad].join("");
+  const compactLegacy = `Planet${LEGACY_TOKEN}`;
+  const spacedLegacy = `Planet ${LEGACY_TOKEN}`;
 
   return String(value)
-    .replaceAll(planetBad, "Audralia")
-    .replaceAll(compactBad, "Audralia")
-    .replaceAll(bad, "Audralia")
-    .replaceAll(bad.toUpperCase(), "AUDRALIA")
-    .replaceAll(bad.toLowerCase(), "audralia");
+    .replaceAll(spacedLegacy, "Audralia")
+    .replaceAll(compactLegacy, "Audralia")
+    .replaceAll(LEGACY_TOKEN, "Audralia")
+    .replaceAll(LEGACY_TOKEN.toUpperCase(), "AUDRALIA")
+    .replaceAll(LEGACY_TOKEN.toLowerCase(), "audralia");
 }
 
 function writeReceipt(id, lines) {
@@ -73,6 +74,7 @@ function writeBothBootReceipts() {
     "ROUTE_CONTROLLER_EXECUTED=true",
     "IMPORT_ATTEMPTED=false",
     "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 
@@ -84,21 +86,21 @@ function writeBothBootReceipts() {
     "ROUTE_CONTROLLER_EXECUTED=true",
     "IMPORT_ATTEMPTED=false",
     "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 }
 
 function assertRouteIdentity() {
   const pageText = document.documentElement.textContent || "";
-  const bad = ["Aus", "tralia"].join("");
 
   const forbidden = [
-    `Planet ${bad}`,
-    `${bad} G1`,
-    `${bad} terrain`,
-    `${bad} globe`,
-    `planet-${bad.toLowerCase()}`,
-    `Planet${bad}`
+    `Planet ${LEGACY_TOKEN}`,
+    `${LEGACY_TOKEN} G1`,
+    `${LEGACY_TOKEN} terrain`,
+    `${LEGACY_TOKEN} globe`,
+    `planet-${LEGACY_TOKEN.toLowerCase()}`,
+    `Planet${LEGACY_TOKEN}`
   ];
 
   const drift = forbidden.find((token) => pageText.includes(token));
@@ -124,8 +126,32 @@ function assertRouteIdentity() {
   return true;
 }
 
+function applyMountSizeClamp(mount) {
+  mount.style.width = "100%";
+  mount.style.maxWidth = "560px";
+  mount.style.margin = "1rem auto";
+  mount.style.display = "flex";
+  mount.style.justifyContent = "center";
+  mount.style.alignItems = "center";
+  mount.style.overflow = "hidden";
+}
+
+function applyCanvasSizeClamp(canvas) {
+  canvas.style.display = "block";
+  canvas.style.width = "min(82vw, 360px)";
+  canvas.style.height = "auto";
+  canvas.style.maxWidth = "100%";
+  canvas.style.aspectRatio = "1 / 1";
+  canvas.style.margin = "0 auto";
+
+  if (window.matchMedia && window.matchMedia("(min-width: 900px)").matches) {
+    canvas.style.width = "min(42vw, 520px)";
+  }
+}
+
 function createCanvas(mount, label) {
   mount.replaceChildren();
+  applyMountSizeClamp(mount);
 
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
@@ -136,6 +162,9 @@ function createCanvas(mount, label) {
   canvas.dataset.body = label.toLowerCase();
   canvas.dataset.renderCanvas = "true";
   canvas.dataset.routeControllerReceipt = RECEIPT;
+  canvas.dataset.sizeClampActive = "true";
+
+  applyCanvasSizeClamp(canvas);
 
   mount.appendChild(canvas);
   return canvas;
@@ -196,7 +225,7 @@ async function importFirstAvailable(candidates) {
     } catch (error) {
       failures.push({
         path: candidate,
-        error: String(error && error.message ? error.message : error)
+        error: sanitizeText(error && error.message ? error.message : error)
       });
     }
   }
@@ -343,6 +372,7 @@ async function mountBody(bodyConfig) {
     `MOUNT=#${bodyConfig.mountId}`,
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 
@@ -358,6 +388,7 @@ async function mountBody(bodyConfig) {
       "IMPORT_ATTEMPTED=false",
       "ROUTE_CONTROLLER_EXECUTED=true",
       "BODY_ADOPTION_BLOCKED=true",
+      "SIZE_CLAMP_ACTIVE=false",
       "VISUAL_PASS=HELD"
     ]);
 
@@ -375,6 +406,7 @@ async function mountBody(bodyConfig) {
   mount.dataset.routeControllerReceipt = RECEIPT;
   mount.dataset.authority = bodyConfig.authority;
   mount.dataset.bodyAdoptionBlocked = "true";
+  mount.dataset.sizeClampActive = "true";
 
   const canvas = createCanvas(mount, bodyConfig.body);
 
@@ -389,6 +421,7 @@ async function mountBody(bodyConfig) {
     "AUTHORITY_IMPORTED=false",
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 
@@ -410,6 +443,7 @@ async function mountBody(bodyConfig) {
       "ROUTE_CONTROLLER_EXECUTED=true",
       "BODY_ADOPTION_BLOCKED=true",
       "NO_CROSS_BODY_FALLBACK=true",
+      "SIZE_CLAMP_ACTIVE=true",
       "VISUAL_PASS=HELD"
     ]);
 
@@ -440,6 +474,7 @@ async function mountBody(bodyConfig) {
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
     "NO_CROSS_BODY_FALLBACK=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 
@@ -448,9 +483,9 @@ async function mountBody(bodyConfig) {
   try {
     renderResult = await renderWithApi(canvas, api, bodyConfig);
   } catch (error) {
-    renderResult = drawHeldCanvas(canvas, bodyConfig.body, "RENDER_ERROR_HELD");
+    const held = drawHeldCanvas(canvas, bodyConfig.body, "RENDER_ERROR_HELD");
     renderResult = Object.freeze({
-      ...renderResult,
+      ...held,
       error: sanitizeText(error && error.message ? error.message : error)
     });
   }
@@ -472,6 +507,7 @@ async function mountBody(bodyConfig) {
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
     "NO_CROSS_BODY_FALLBACK=true",
+    "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
 
@@ -499,6 +535,7 @@ function publishRouteReceipt(results) {
     bodyAdoptionBlocked: true,
     noCrossBodyFallback: true,
     routeControllerExecuted: true,
+    sizeClampActive: true,
     visualPassClaimed: false,
     executedAt: nowIso()
   });

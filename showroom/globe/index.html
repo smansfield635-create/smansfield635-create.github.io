@@ -4,419 +4,438 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Earth G4 Candidate and Audralia G1 Terrain Active · Showroom Globe · Diamond Gate Bridge</title>
-
+  <title>Showroom Globe · Earth and Audralia</title>
   <meta
     name="description"
-    content="Dual globe chamber for Earth G4 candidate restoration and Audralia Generation 1 terrain-active world-body authority."
+    content="Showroom Globe selector for Earth reference inspection and Audralia constructed-world inspection."
   />
-
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <link rel="stylesheet" href="/showroom/showroom.css" />
 
   <style>
     :root {
       color-scheme: dark;
+      --bg: #050510;
+      --panel: rgba(18, 18, 34, 0.82);
+      --panel-strong: rgba(26, 24, 48, 0.92);
+      --line: rgba(190, 170, 255, 0.34);
+      --text: #f5f1ff;
+      --muted: rgba(245, 241, 255, 0.72);
+      --accent: #b99cff;
+      --accent-2: #8e63ff;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
     body {
       margin: 0;
-      background: #030711;
-      color: #f5f7fb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(126, 86, 255, 0.22), transparent 34rem),
+        radial-gradient(circle at 12% 82%, rgba(82, 156, 255, 0.12), transparent 26rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
     }
 
+    body {
+      min-height: 100vh;
+    }
+
     a {
-      color: #b8d4ff;
+      color: inherit;
     }
 
     .skip-link {
       position: absolute;
-      left: 0.75rem;
-      top: 0.75rem;
-      z-index: 10;
-      transform: translateY(-140%);
-      background: #07111f;
-      color: #ffffff;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.6rem;
+      left: 1rem;
+      top: 1rem;
+      transform: translateY(-180%);
+      background: #ffffff;
+      color: #050510;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      z-index: 50;
+      text-decoration: none;
+      font-weight: 800;
     }
 
     .skip-link:focus {
       transform: translateY(0);
     }
 
-    .site-header,
-    .showroom-globe-shell {
-      width: min(1120px, 92vw);
+    .page-shell {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 2rem));
       margin: 0 auto;
+      padding: 1rem 0 4rem;
     }
 
     .site-header {
-      padding: 1rem 0 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0 1.2rem;
     }
 
     .brand {
-      display: inline-block;
-      font-weight: 800;
-      font-size: clamp(1.1rem, 4vw, 1.5rem);
-      margin-right: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: 0.02em;
     }
 
-    .site-header nav {
+    .brand-mark {
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 1px solid var(--line);
+      border-radius: 0.8rem;
+      background:
+        linear-gradient(135deg, rgba(185, 156, 255, 0.9), rgba(72, 49, 145, 0.35)),
+        rgba(255, 255, 255, 0.05);
+      transform: rotate(45deg);
+      box-shadow: 0 0 2rem rgba(142, 99, 255, 0.26);
+    }
+
+    .nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem 0.9rem;
-      margin-top: 0.45rem;
+      justify-content: flex-end;
+      gap: 0.45rem;
     }
 
-    .showroom-globe-shell {
-      padding: 2rem 0 4rem;
-    }
-
-    .globe-hero {
-      max-width: 900px;
-      margin-bottom: 1.5rem;
-    }
-
-    .eyebrow {
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #aab6cc;
-      font-size: 0.76rem;
-      margin: 0 0 0.6rem;
-    }
-
-    h1 {
-      margin: 0 0 0.9rem;
-      font-size: clamp(2rem, 9vw, 4.7rem);
-      line-height: 0.95;
-    }
-
-    h2 {
-      margin: 0.2rem 0 0.7rem;
-      font-size: clamp(1.65rem, 7vw, 3.1rem);
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.045);
+      border-radius: 999px;
+      padding: 0.52rem 0.75rem;
+      font-size: 0.9rem;
       line-height: 1;
     }
 
-    p {
-      color: #d7deea;
-      line-height: 1.42;
-      font-size: clamp(1rem, 4.2vw, 1.28rem);
+    .nav a[aria-current="page"],
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(185, 156, 255, 0.12);
     }
 
-    .globe-status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 0.85rem;
-      margin-top: 1.35rem;
-    }
-
-    .status-card,
-    .globe-body-card,
-    .receipt-panel {
-      border: 1px solid rgba(150, 178, 220, 0.22);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(74, 126, 196, 0.18), transparent 32%),
-        linear-gradient(180deg, rgba(16, 32, 54, 0.84), rgba(5, 10, 20, 0.94));
-      border-radius: 1.4rem;
-      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.36);
-    }
-
-    .status-card {
-      padding: 1rem;
-    }
-
-    .status-card strong {
-      display: block;
-      margin-bottom: 0.25rem;
-      color: #ffffff;
-    }
-
-    .status-card span {
-      color: #b8c4d8;
-    }
-
-    .dual-globe-grid {
-      display: grid;
-      gap: 1.5rem;
-      align-items: start;
-      margin-top: 1.5rem;
-    }
-
-    .globe-body-card {
-      width: 100%;
-      max-width: 780px;
-      margin-inline: auto;
-      padding: clamp(1rem, 4vw, 1.5rem);
+    .orbit-field {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
       overflow: hidden;
+      pointer-events: none;
+      opacity: 0.72;
     }
 
-    .receipt-line {
+    .orbit-field::before,
+    .orbit-field::after {
+      content: "";
+      position: absolute;
+      width: 26rem;
+      height: 26rem;
+      left: 50%;
+      top: 43%;
+      border: 1px solid rgba(185, 156, 255, 0.25);
+      border-radius: 34% 66% 38% 62%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      animation: orbitSpin 34s linear infinite;
+      box-shadow: 0 0 3rem rgba(142, 99, 255, 0.16);
+    }
+
+    .orbit-field::after {
+      width: 38rem;
+      height: 38rem;
+      animation-duration: 52s;
+      animation-direction: reverse;
+      opacity: 0.52;
+    }
+
+    @keyframes orbitSpin {
+      to {
+        transform: translate(-50%, -50%) rotate(405deg);
+      }
+    }
+
+    .hero {
+      min-height: calc(100vh - 7rem);
+      display: grid;
+      align-content: center;
+      gap: 2rem;
+      padding: 4rem 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.8rem;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 14ch;
+      font-size: clamp(2.45rem, 8vw, 5.8rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 66ch;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.7;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .body-card {
+      min-height: 22rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: clamp(1.15rem, 3vw, 1.75rem);
+      border: 1px solid var(--line);
+      border-radius: 2rem;
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)),
+        var(--panel);
+      box-shadow: 0 1.2rem 5rem rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .body-card:hover,
+    .body-card:focus-visible {
+      border-color: rgba(245, 241, 255, 0.7);
+      background:
+        linear-gradient(160deg, rgba(185, 156, 255, 0.16), rgba(255, 255, 255, 0.04)),
+        var(--panel-strong);
+      outline: none;
+    }
+
+    .body-card h2 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.9rem);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+    }
+
+    .body-card p {
+      max-width: 34rem;
+      margin: 0.9rem 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 999px;
+      color: rgba(245, 241, 255, 0.82);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.42rem 0.62rem;
+      font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #ffffff;
     }
 
-    .globe-render-mount {
-      width: 100%;
-      max-width: 560px;
-      margin: 1rem auto;
-      display: flex;
-      justify-content: center;
+    .cta {
+      display: inline-flex;
+      width: fit-content;
       align-items: center;
-      overflow: hidden;
+      justify-content: center;
+      gap: 0.5rem;
+      border-radius: 999px;
+      background: rgba(185, 156, 255, 0.16);
+      border: 1px solid rgba(185, 156, 255, 0.42);
+      color: var(--text);
+      padding: 0.78rem 1rem;
+      font-weight: 900;
     }
 
-    .globe-render-canvas {
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .status-item {
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 1.2rem;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .status-item strong {
       display: block;
-      width: min(82vw, 360px);
-      height: auto;
-      max-width: 100%;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
+      margin-bottom: 0.35rem;
     }
 
-    .globe-render-receipt {
-      max-width: min(92vw, 620px);
-      margin: 0.75rem auto 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-size: 0.72rem;
-      line-height: 1.25;
-      color: #d9e6ff;
-      background: rgba(0, 0, 0, 0.32);
-      border: 1px solid rgba(150, 178, 220, 0.18);
-      border-radius: 0.9rem;
-      padding: 0.8rem;
+    .status-item span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
-    .receipt-panel {
-      margin-top: 1.5rem;
-      padding: clamp(1rem, 4vw, 1.5rem);
-    }
-
-    .receipt-panel ul {
-      margin: 0.75rem 0 0;
-      padding-left: 1.2rem;
-      color: #d7deea;
-    }
-
-    @media (min-width: 900px) {
-      .dual-globe-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media (max-width: 760px) {
+      .page-shell {
+        width: min(100% - 1rem, 48rem);
+        padding-bottom: 2rem;
       }
 
-      .globe-render-canvas {
-        width: min(42vw, 520px);
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .nav a {
+        font-size: 0.82rem;
+        padding: 0.48rem 0.62rem;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 2.5rem 0;
+      }
+
+      .split-grid,
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .body-card {
+        min-height: 18rem;
+      }
+
+      .orbit-field::before {
+        width: 18rem;
+        height: 18rem;
+      }
+
+      .orbit-field::after {
+        width: 28rem;
+        height: 28rem;
       }
     }
   </style>
 </head>
 
-<body
-  data-route="showroom-globe"
-  data-room="earth-audralia-dual-globe"
-  data-body-count="2"
-  data-earth-generation-status="G4_CANDIDATE"
-  data-earth-generation-claimed="false"
-  data-audralia-generation="G1"
-  data-audralia-terrain-child-active="true"
-  data-audralia-hydration-child-built="true"
-  data-audralia-climate-child-built="true"
-  data-audralia-g2-parent-consumption="held"
->
+<body>
   <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
+  <div class="orbit-field" aria-hidden="true"></div>
 
-  <header class="site-header" aria-label="Diamond Gate Bridge navigation">
-    <a class="brand" href="/">Diamond Gate Bridge</a>
+  <div class="page-shell">
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
+      </a>
 
-    <nav aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/" aria-current="page">Globe</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/showroom/" aria-current="page">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/nine-summits/universe/">Universe</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-  <main id="globe-main" class="showroom-globe-shell" tabindex="-1">
-    <section class="globe-hero" aria-labelledby="globe-title">
-      <p class="eyebrow">Standalone · Dual Globe Authority Split</p>
-      <h1 id="globe-title">Earth and Audralia</h1>
+    <main id="globe-main" class="hero">
+      <section aria-labelledby="page-title">
+        <p class="eyebrow">Standalone · Globe Authority Split</p>
+        <h1 id="page-title">Earth and Audralia</h1>
+        <p class="lead">
+          This chamber is now a selector. Earth and Audralia no longer compete for the same public page flow.
+          Choose one inspection route to view the body under its own authority.
+        </p>
+      </section>
 
-      <p>
-        This chamber separates the two bodies. Earth remains a G4 candidate until it visibly
-        matches the Orbital Earth reference standard. Audralia is Generation 1 terrain-active:
-        the parent renderer consumes its terrain child, while hydration and climate are built
-        as G2 children awaiting parent consumption.
-      </p>
+      <section class="split-grid" aria-label="Globe inspection routes">
+        <a class="body-card" href="/showroom/globe/earth/">
+          <span>
+            <span class="tag-row" aria-hidden="true">
+              <span class="tag">Reference body</span>
+              <span class="tag">G4 candidate</span>
+            </span>
+            <h2>Earth</h2>
+            <p>
+              Inspect Earth through its own Earth file chain and reference-body standard.
+            </p>
+          </span>
+          <span class="cta">Inspect Earth</span>
+        </a>
 
-      <div class="globe-status-grid" aria-label="Dual body authority summary">
-        <article class="status-card" data-body="earth">
-          <strong>Earth</strong>
-          <span>G4 candidate. Orbital Earth standard not yet claimed.</span>
-        </article>
+        <a class="body-card" href="/showroom/globe/audralia/">
+          <span>
+            <span class="tag-row" aria-hidden="true">
+              <span class="tag">Constructed world</span>
+              <span class="tag">Generation ladder</span>
+            </span>
+            <h2>Audralia</h2>
+            <p>
+              Inspect Audralia through its parent render route and downstream terrain, hydration, and climate children.
+            </p>
+          </span>
+          <span class="cta">Inspect Audralia</span>
+        </a>
+      </section>
 
-        <article class="status-card" data-body="audralia">
-          <strong>Audralia</strong>
-          <span>Generation 1 terrain-active parent compositor.</span>
-        </article>
-
-        <article class="status-card" data-contract="g2">
-          <strong>G2 Children</strong>
-          <span>Hydration and climate exist. Parent consumption remains held.</span>
-        </article>
-
-        <article class="status-card" data-contract="split">
-          <strong>Split</strong>
-          <span>No shared renderer adoption.</span>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="dual-globe-grid"
-      aria-label="Earth and Audralia globe mounts"
-      data-dual-mount-contract="active"
-    >
-      <article
-        class="globe-body-card"
-        data-body="earth"
-        data-generation-status="G4_CANDIDATE"
-        data-generation-claimed="false"
-        data-role="reference-globe"
-      >
-        <div class="globe-card-copy">
-          <p class="eyebrow">Body 1 · Reference</p>
-          <h2>Earth</h2>
-          <p>
-            Earth is the known reference body and uses its own Earth file authority.
-            Its Generation 4 claim is held until the visible globe matches the prior Orbital Earth standard.
-          </p>
-          <p class="receipt-line">EARTH · REFERENCE_GLOBE · G4_CANDIDATE</p>
+      <section class="status-strip" aria-label="Boundary summary">
+        <div class="status-item">
+          <strong>Parent route</strong>
+          <span>Selector only.</span>
         </div>
-
-        <div
-          id="earthRenderMount"
-          class="globe-render-mount earth-render-mount"
-          data-body="earth"
-          data-renderer="earth"
-          data-generation-status="G4_CANDIDATE"
-          data-generation-claimed="false"
-          data-target-standard="ORBITAL_EARTH_G4_REFERENCE"
-          data-authority="earth-file-chain"
-          aria-label="Earth G4 candidate globe render mount"
-        ></div>
-
-        <pre
-          id="earthRenderReceipt"
-          class="globe-render-receipt"
-          aria-label="Earth render receipt"
-        >EARTH_RENDER_MOUNT=READY
-BODY=Earth
-GENERATION_STATUS=G4_CANDIDATE
-GENERATION_CLAIMED=false
-TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE
-G4_CLAIM=HELD
-AUTHORITY=EARTH_FILE_CHAIN
-VISUAL_PASS=HELD</pre>
-      </article>
-
-      <article
-        class="globe-body-card"
-        data-body="audralia"
-        data-generation="G1"
-        data-role="active-world-body"
-        data-terrain-child-active="true"
-        data-hydration-child-built="true"
-        data-climate-child-built="true"
-      >
-        <div class="globe-card-copy">
-          <p class="eyebrow">Body 2 · Active World</p>
-          <h2>Audralia</h2>
-          <p>
-            Audralia is the constructed home-world body. The visible parent is terrain-active.
-            Hydration and climate are present as G2 children; the next parent update must consume them.
-          </p>
-          <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1_TERRAIN_ACTIVE</p>
+        <div class="status-item">
+          <strong>Earth route</strong>
+          <span>Separate inspection.</span>
         </div>
+        <div class="status-item">
+          <strong>Audralia route</strong>
+          <span>Separate inspection.</span>
+        </div>
+        <div class="status-item">
+          <strong>Public receipts</strong>
+          <span>Not rendered.</span>
+        </div>
+      </section>
+    </main>
+  </div>
 
-        <div
-          id="audraliaRenderMount"
-          class="globe-render-mount audralia-render-mount"
-          data-body="audralia"
-          data-renderer="audralia"
-          data-generation="G1"
-          data-authority="/assets/audralia/audralia.planet.render.js"
-          data-parent-render="/assets/audralia/audralia.planet.render.js"
-          data-terrain-child="/assets/audralia/audralia.terrain.render.js"
-          data-terrain-child-active="true"
-          data-hydration-child="/assets/audralia/audralia.hydration.render.js"
-          data-hydration-child-built="true"
-          data-climate-child="/assets/audralia/audralia.climate.render.js"
-          data-climate-child-built="true"
-          data-g2-parent-consumption="held"
-          aria-label="Audralia Generation 1 terrain-active globe render mount"
-        ></div>
-
-        <pre
-          id="audraliaRenderReceipt"
-          class="globe-render-receipt"
-          aria-label="Audralia render receipt"
-        >AUDRALIA_RENDER_MOUNT=READY
-BODY=Audralia
-GENERATION=G1
-PARENT_AUTHORITY=/assets/audralia/audralia.planet.render.js
-AUDRALIA_TERRAIN_CHILD_ACTIVE=TRUE
-TERRAIN_CHILD_PATH=/assets/audralia/audralia.terrain.render.js
-HYDRATION_CHILD_BUILT=TRUE
-HYDRATION_CHILD_PATH=/assets/audralia/audralia.hydration.render.js
-CLIMATE_CHILD_BUILT=TRUE
-CLIMATE_CHILD_PATH=/assets/audralia/audralia.climate.render.js
-G2_PARENT_CONSUMPTION=HELD
-DOWNSTREAM_CHILDREN_ACTIVE=terrain
-ACTIVE_DOWNSTREAM_CHILDREN=terrain
-VISUAL_PASS=HELD</pre>
-      </article>
-    </section>
-
-    <section class="receipt-panel" aria-labelledby="split-receipts-title">
-      <h2 id="split-receipts-title">Split Receipts</h2>
-      <ul>
-        <li>ROUTE=/showroom/globe/</li>
-        <li>CONSUMER=/showroom/globe/index.js</li>
-        <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4_CANDIDATE</li>
-        <li>EARTH_G4_CLAIM=HELD</li>
-        <li>EARTH_TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE</li>
-        <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1_TERRAIN_ACTIVE</li>
-        <li>AUDRALIA_TERRAIN_CHILD_ACTIVE=TRUE</li>
-        <li>AUDRALIA_TERRAIN_CHILD_PATH=/assets/audralia/audralia.terrain.render.js</li>
-        <li>AUDRALIA_HYDRATION_CHILD_BUILT=TRUE</li>
-        <li>AUDRALIA_HYDRATION_CHILD_PATH=/assets/audralia/audralia.hydration.render.js</li>
-        <li>AUDRALIA_CLIMATE_CHILD_BUILT=TRUE</li>
-        <li>AUDRALIA_CLIMATE_CHILD_PATH=/assets/audralia/audralia.climate.render.js</li>
-        <li>G2_PARENT_CONSUMPTION=HELD</li>
-        <li>EARTH_MOUNT=#earthRenderMount</li>
-        <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
-        <li>EARTH_AUTHORITY=EARTH_FILE_CHAIN</li>
-        <li>AUDRALIA_PARENT_AUTHORITY=/assets/audralia/audralia.planet.render.js</li>
-        <li>STATIC_IMAGE_REPLACEMENT=FALSE</li>
-        <li>IMAGE_GENERATION=FORBIDDEN</li>
-        <li>VISUAL_PASS=HELD_UNTIL_USER_CONFIRMATION</li>
-      </ul>
-    </section>
-  </main>
-
-  <script
-    type="module"
-    src="/showroom/globe/index.js?v=showroom-globe-g1-terrain-active-copy-controller-alignment-v1"
-  ></script>
+  <script type="module" src="/showroom/globe/index.js"></script>
 </body>
 </html>

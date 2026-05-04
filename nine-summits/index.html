@@ -3,8 +3,8 @@
   lang="en"
   data-route="/nine-summits/"
   data-page="nine-summits"
-  data-version="G1-UNDERDOG-LINK"
-  data-contract="NINE_SUMMITS_FOUR_DIAMOND_PUBLIC_GATE_UNDERDOG_LINK_TNT_v1"
+  data-version="G1-V2"
+  data-contract="NINE_SUMMITS_CELESTIAL_FOUR_DIAMOND_GATE_MEET_SEAN_TNT_v2"
   data-status="active"
   data-baseline="AUDRALIA_MANOR_CURRENT"
   data-heavy-runtime-loaded="false"
@@ -14,33 +14,51 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Nine Summits · Diamond Gate Bridge</title>
-  <meta name="description" content="Nine Summits public gate: the book gives the climb, the universe gives the climb a world, and About This Underdog gives the public voice lane.">
+  <meta name="description" content="Nine Summits public gate: the book gives the climb, the universe gives the climb a world, Audralia gives the home-world reference, and Meet Sean Mansfield carries the public voice lane.">
 
   <style>
     :root{
       color-scheme:dark;
-      --bg:#02050d;
-      --panel:rgba(9,17,32,.91);
-      --line:rgba(139,200,255,.22);
-      --gold:#f2c76f;
-      --blue:#8bc8ff;
-      --text:#f8f1dd;
-      --muted:rgba(226,235,255,.76);
-      --faint:rgba(226,235,255,.52);
-      --max:1120px;
+      --bg:#02030a;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.58);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --cyan:#8ff6ff;
+      --purple:#8f65ff;
+      --violet:#d7c2ff;
+      --rose:#d892ff;
+      --panel:rgba(9,15,31,.78);
+      --panel2:rgba(18,26,48,.68);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
 
-    html,body{
-      margin:0;
+    html{
       min-height:100%;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(242,199,111,.16),transparent 26rem),
-        radial-gradient(circle at 54% 42%,rgba(139,200,255,.13),transparent 36rem),
-        linear-gradient(180deg,#050914,#02050d 78%,#010207);
+      background:var(--bg);
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(243,200,111,.23), transparent 28rem),
+        radial-gradient(circle at 12% 18%, rgba(143,101,255,.22), transparent 28rem),
+        radial-gradient(circle at 92% 30%, rgba(141,216,255,.15), transparent 28rem),
+        radial-gradient(circle at 50% 72%, rgba(216,146,255,.10), transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
     }
 
@@ -50,54 +68,63 @@
       inset:0;
       pointer-events:none;
       background-image:
-        linear-gradient(rgba(139,200,255,.05) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(139,200,255,.05) 1px,transparent 1px),
-        radial-gradient(circle,rgba(255,255,255,.12) 0 1px,transparent 1.4px);
-      background-size:52px 52px,52px 52px,230px 270px;
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
       opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      background:
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.62;
+      animation:auroraDrift 26s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
 
     .skip{
       position:absolute;
-      top:-4rem;
-      left:1rem;
-      z-index:20;
+      left:-999px;
+      top:8px;
+      z-index:50;
       padding:.75rem 1rem;
       border-radius:999px;
-      background:var(--gold);
       color:#05070d;
-      font-weight:900;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip:focus{top:1rem}
+    .skip:focus{left:8px}
 
     .shell{
       position:relative;
-      z-index:1;
-      width:min(100%,var(--max));
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(1.5rem,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .card{
-      margin:clamp(.85rem,2.4vw,1.25rem) auto 0;
-      border:1px solid var(--line);
-      border-radius:clamp(1.25rem,5vw,2rem);
-      background:
-        radial-gradient(circle at 15% 0%,rgba(139,200,255,.12),transparent 26rem),
-        radial-gradient(circle at 85% 20%,rgba(242,199,111,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
-        var(--panel);
-      box-shadow:0 2rem 7rem rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .top,.section{
-      padding:clamp(1rem,3vw,1.35rem);
+    .topbar{
       display:grid;
-      gap:1rem;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
     .brand{
@@ -105,102 +132,147 @@
       grid-template-columns:auto 1fr;
       align-items:center;
       gap:.9rem;
+      min-width:260px;
     }
 
-    .mark{
-      width:4.25rem;
-      height:4.25rem;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(139,200,255,.36);
-      border-radius:1.2rem;
-      background:radial-gradient(circle,rgba(139,200,255,.25),transparent 55%),rgba(255,255,255,.035);
-      font-size:1.45rem;
-      font-weight:950;
-      letter-spacing:.04em;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand span span{
-      display:block;
-      color:rgba(226,235,255,.84);
-      font-size:clamp(.7rem,2vw,.88rem);
+    .brand-mark span{
+      transform:rotate(-45deg);
       font-weight:950;
-      letter-spacing:.18em;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .brand strong{
-      display:block;
-      font-size:clamp(1.25rem,4.5vw,2.15rem);
-      line-height:1;
-      letter-spacing:-.055em;
-    }
-
-    .nav,.cta-row,.return-row{
+    .nav{
       display:flex;
       flex-wrap:wrap;
-      gap:.55rem;
+      justify-content:flex-end;
+      gap:.48rem;
     }
 
-    .nav a,.cta,.return-row a{
-      min-height:2.4rem;
+    .nav a{
+      min-height:2.25rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
       background:rgba(255,255,255,.035);
-      padding:.55rem .82rem;
-      color:rgba(242,246,255,.88);
-      font-size:.74rem;
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .nav a[aria-current="page"],.cta.primary{
-      border-color:rgba(242,199,111,.9);
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
       color:#060811;
-      background:linear-gradient(135deg,#fff0a3,#f2c76f);
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .hero{
-      padding:clamp(1.5rem,5vw,3rem);
-      min-height:clamp(22rem,44vw,34rem);
-      display:grid;
-      gap:1rem;
-      align-content:center;
       position:relative;
+      min-height:clamp(26rem,52vw,40rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.6rem,5vw,3.5rem);
+      margin-top:.6rem;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.19),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroDiamond 8s ease-in-out infinite;
+      pointer-events:none;
     }
 
     .hero::after{
       content:"";
       position:absolute;
-      right:clamp(1rem,5vw,4rem);
-      top:50%;
-      width:clamp(8rem,22vw,14rem);
-      height:clamp(8rem,22vw,14rem);
-      border:1px solid rgba(242,199,111,.22);
-      border-radius:2rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(242,199,111,.10),transparent 55%),
-        linear-gradient(145deg,rgba(139,200,255,.06),rgba(255,255,255,.015));
-      opacity:.44;
-      animation:diamondBreathe 8s ease-in-out infinite;
+      inset:clamp(1rem,3vw,2rem);
+      border-radius:inherit;
       pointer-events:none;
+      border:1px solid rgba(243,200,111,.08);
+      background:
+        linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+      opacity:.32;
+      transform:translateX(-80%);
+      animation:softSweep 9s ease-in-out infinite;
     }
 
     .kicker{
       width:fit-content;
       display:inline-flex;
       align-items:center;
-      gap:.55rem;
+      gap:.58rem;
       padding:.58rem .95rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      color:rgba(226,235,255,.86);
-      background:rgba(255,255,255,.035);
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.14em;
@@ -214,83 +286,211 @@
       width:.72rem;
       height:.72rem;
       border-radius:.18rem;
-      background:var(--gold);
       transform:rotate(45deg);
-      box-shadow:0 0 1rem rgba(242,199,111,.38);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
     h1{
-      width:min(100%,860px);
       margin:0;
-      font-size:clamp(3.45rem,12vw,7.2rem);
+      max-width:900px;
+      font-size:clamp(3.2rem,11vw,7.5rem);
       line-height:.84;
       letter-spacing:-.105em;
       position:relative;
       z-index:2;
+      text-wrap:balance;
     }
 
     h2{
       margin:0;
+      max-width:860px;
       color:var(--gold);
-      font-size:clamp(1.55rem,5.4vw,3rem);
+      font-size:clamp(1.55rem,5.2vw,3rem);
       line-height:.98;
       letter-spacing:-.07em;
       position:relative;
       z-index:2;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.36rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
 
     p{
       margin:0;
+      max-width:820px;
       color:var(--muted);
-      font-size:clamp(.98rem,2.8vw,1.18rem);
+      font-size:clamp(.98rem,2.7vw,1.18rem);
       line-height:1.55;
       position:relative;
       z-index:2;
     }
 
-    .gate{
+    .actions{
       position:relative;
-      min-height:clamp(30rem,58vw,42rem);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
+      z-index:2;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.3rem;
     }
 
-    .gate::before{
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .gate-wrap{
+      position:relative;
+      padding:clamp(.75rem,2.5vw,1.25rem);
+    }
+
+    .summit-gate{
+      position:relative;
+      min-height:clamp(40rem,74vw,58rem);
+      overflow:hidden;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:clamp(1.25rem,5vw,2.2rem);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(243,200,111,.075),transparent 24%),
+        radial-gradient(circle at 50% 50%,rgba(143,101,255,.16),transparent 54%),
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.08),transparent 72%),
+        rgba(255,255,255,.018);
+      perspective:1100px;
+    }
+
+    .summit-gate::before{
       content:"";
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(18rem,46vw,32rem);
-      height:clamp(18rem,46vw,32rem);
-      border:1px solid rgba(139,200,255,.13);
-      border-radius:3.5rem;
+      width:clamp(20rem,54vw,39rem);
+      height:clamp(20rem,54vw,39rem);
+      border:1px solid rgba(215,194,255,.16);
+      border-radius:4rem;
       transform:translate(-50%,-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(242,199,111,.06),transparent 45%),
-        radial-gradient(circle at 50% 50%,rgba(139,200,255,.06),transparent 72%);
-      animation:slowTurn 34s linear infinite;
+      box-shadow:
+        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
+        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
+        inset 0 0 3rem rgba(143,101,255,.06);
+      animation:gateTurn 42s linear infinite;
     }
 
-    .center{
+    .summit-gate::after{
+      content:"";
       position:absolute;
       left:50%;
       top:50%;
-      z-index:5;
-      width:clamp(9rem,20vw,14rem);
-      height:clamp(9rem,20vw,14rem);
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(242,199,111,.38);
-      border-radius:2rem;
-      background:
-        radial-gradient(circle at 50% 20%,rgba(255,255,255,.12),transparent 44%),
-        linear-gradient(145deg,rgba(30,35,50,.94),rgba(7,11,22,.98));
-      transform:translate(-50%,-50%) rotate(45deg);
-      box-shadow:0 1.4rem 4rem rgba(0,0,0,.42),0 0 2rem rgba(242,199,111,.14);
+      width:1px;
+      height:82%;
+      transform:translate(-50%,-50%);
+      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),transparent);
+      box-shadow:
+        -19rem 0 0 rgba(141,216,255,.05),
+        19rem 0 0 rgba(141,216,255,.05);
+      opacity:.62;
     }
 
-    .center span{
+    .axis{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .axis::before,
+    .axis::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),transparent);
+      transform:translate(-50%,-50%);
+      opacity:.48;
+    }
+
+    .axis::before{
+      width:82%;
+      height:1px;
+    }
+
+    .axis::after{
+      width:1px;
+      height:82%;
+      background:linear-gradient(180deg,transparent,rgba(243,200,111,.24),transparent);
+    }
+
+    .cardinal{
+      position:absolute;
+      z-index:2;
+      color:rgba(255,244,216,.72);
+      font-size:clamp(1.25rem,4vw,2.15rem);
+      font-weight:950;
+      letter-spacing:.06em;
+      text-shadow:0 .25rem 1rem rgba(0,0,0,.55);
+    }
+
+    .cardinal.n{left:50%;top:5%;transform:translateX(-50%)}
+    .cardinal.e{right:6%;top:50%;transform:translateY(-50%)}
+    .cardinal.s{left:50%;bottom:5%;transform:translateX(-50%)}
+    .cardinal.w{left:6%;top:50%;transform:translateY(-50%)}
+
+    .center-diamond{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:7;
+      width:clamp(11rem,24vw,17rem);
+      height:clamp(11rem,24vw,17rem);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.46);
+      border-radius:2.45rem;
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.16),transparent 42%),
+        radial-gradient(circle at 54% 68%,rgba(143,101,255,.28),transparent 58%),
+        linear-gradient(145deg,rgba(33,29,58,.94),rgba(5,9,20,.98));
+      box-shadow:
+        0 1.7rem 4.2rem rgba(0,0,0,.48),
+        0 0 2.6rem rgba(143,101,255,.30),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      transform:translate(-50%,-50%) rotate(45deg);
+      animation:centerPulse 7s ease-in-out infinite;
+    }
+
+    .center-diamond span{
       transform:rotate(-45deg);
       display:grid;
       gap:.3rem;
@@ -298,82 +498,180 @@
       padding:1rem;
     }
 
-    .center strong{
-      color:rgba(255,241,205,.98);
-      font-size:1rem;
+    .center-diamond strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,3vw,1.55rem);
+      line-height:1;
       font-weight:950;
-      letter-spacing:.1em;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .center small{
+    .center-diamond small{
       color:var(--muted);
-      font-size:.72rem;
+      font-size:.78rem;
       line-height:1.25;
     }
 
-    .door{
+    .gate-node{
       position:absolute;
-      z-index:7;
-      width:clamp(8rem,17vw,12rem);
-      min-height:6.2rem;
+      z-index:8;
+      width:clamp(9rem,19vw,13rem);
+      min-height:8rem;
       display:grid;
       place-items:center;
       text-align:center;
       transform:translate(-50%,-50%);
+      animation:nodeFloat 8s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
-    .door a{
+    .gate-node a{
       display:grid;
       place-items:center;
-      gap:.5rem;
+      gap:.58rem;
       width:100%;
+      outline:none;
     }
 
     .diamond{
-      width:2.15rem;
-      height:2.15rem;
-      border:1px solid rgba(242,199,111,.36);
-      border-radius:.6rem;
+      width:clamp(3.1rem,7vw,5rem);
+      height:clamp(3.1rem,7vw,5rem);
+      border:1px solid rgba(215,194,255,.42);
+      border-radius:1.05rem;
       transform:rotate(45deg);
       background:
-        radial-gradient(circle at 50% 20%,rgba(255,255,255,.14),transparent 50%),
-        linear-gradient(145deg,rgba(242,199,111,.12),rgba(139,200,255,.04));
-      box-shadow:0 .75rem 1.6rem rgba(0,0,0,.35),0 0 1rem rgba(242,199,111,.12);
-      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.11),transparent 58%),
+        linear-gradient(145deg,rgba(143,101,255,.58),rgba(6,10,22,.98));
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,.38),
+        0 0 1.7rem rgba(143,101,255,.26),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      position:relative;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
     }
 
-    .door:hover .diamond,
-    .door:focus-within .diamond{
+    .diamond::before,
+    .diamond::after{
+      content:"";
+      position:absolute;
+      inset:18%;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:.68rem;
+    }
+
+    .diamond::after{
+      inset:34%;
+      border-color:rgba(243,200,111,.16);
+    }
+
+    .gate-node:hover .diamond,
+    .gate-node:focus-within .diamond{
       transform:rotate(45deg) scale(1.12);
-      border-color:rgba(242,199,111,.82);
-      box-shadow:0 .9rem 1.9rem rgba(0,0,0,.42),0 0 1.4rem rgba(242,199,111,.25);
+      border-color:rgba(243,200,111,.92);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
+        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
+      box-shadow:
+        0 1.15rem 2.4rem rgba(0,0,0,.45),
+        0 0 2.3rem rgba(143,101,255,.42),
+        0 0 1.4rem rgba(243,200,111,.22);
     }
 
-    .door strong{
-      color:rgba(255,241,205,.98);
-      font-size:.84rem;
+    .node-title{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.8rem,2.2vw,1.05rem);
+      font-weight:950;
+      line-height:1.05;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
+    }
+
+    .node-sub{
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.68rem,1.8vw,.85rem);
+      line-height:1.25;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
+    }
+
+    .node-book{left:50%;top:14%;--delay:.1s}
+    .node-universe{left:82%;top:50%;--delay:.3s}
+    .node-audralia{left:50%;top:86%;--delay:.5s}
+    .node-voice{left:18%;top:50%;--delay:.7s}
+
+    .node-voice .diamond{
+      border-color:rgba(243,200,111,.82);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.23),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.21),transparent 58%),
+        linear-gradient(145deg,rgba(143,101,255,.70),rgba(6,10,22,.98));
+      box-shadow:
+        0 1rem 2.1rem rgba(0,0,0,.42),
+        0 0 2rem rgba(143,101,255,.36),
+        0 0 1rem rgba(243,200,111,.20);
+    }
+
+    .lane-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.9rem;
+    }
+
+    .lane-card{
+      min-height:12rem;
+      display:grid;
+      gap:.65rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .lane-card::before{
+      content:"";
+      width:1.85rem;
+      height:1.85rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:.56rem;
+      transform:rotate(45deg);
+      margin:.2rem 0 .38rem .28rem;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.14),transparent 50%),
+        linear-gradient(145deg,rgba(143,101,255,.18),rgba(243,200,111,.05));
+      box-shadow:0 0 1rem rgba(143,101,255,.12);
+    }
+
+    .lane-card:hover,
+    .lane-card:focus{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.55);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(255,255,255,.045);
+      outline:none;
+    }
+
+    .lane-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:.9rem;
       font-weight:950;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .door small{
+    .lane-card span{
       color:var(--muted);
-      font-size:.7rem;
-      line-height:1.3;
-    }
-
-    .north{left:50%;top:17%}
-    .east{left:82%;top:50%}
-    .south{left:50%;top:83%}
-    .west{left:18%;top:50%}
-
-    .west .diamond{
-      border-color:rgba(242,199,111,.74);
-      background:
-        radial-gradient(circle at 50% 20%,rgba(255,255,255,.16),transparent 50%),
-        linear-gradient(145deg,rgba(242,199,111,.20),rgba(139,200,255,.05));
+      font-size:.94rem;
+      line-height:1.45;
     }
 
     .route-grid{
@@ -391,7 +689,7 @@
       border:1px solid rgba(255,255,255,.12);
       border-radius:1.25rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(139,200,255,.08),transparent 60%),
+        radial-gradient(circle at 20% 0%,rgba(141,216,255,.08),transparent 60%),
         rgba(255,255,255,.03);
       position:relative;
       overflow:hidden;
@@ -401,14 +699,15 @@
       content:"";
       width:1.55rem;
       height:1.55rem;
-      border:1px solid rgba(242,199,111,.24);
+      border:1px solid rgba(243,200,111,.24);
       border-radius:.45rem;
       transform:rotate(45deg);
       margin:.15rem 0 .35rem .25rem;
+      background:linear-gradient(145deg,rgba(143,101,255,.12),rgba(255,255,255,.02));
     }
 
     .route strong{
-      color:rgba(255,241,205,.98);
+      color:rgba(255,244,216,.98);
       font-size:.88rem;
       font-weight:950;
       letter-spacing:.08em;
@@ -422,22 +721,26 @@
     }
 
     .receipt{
+      margin-top:1.15rem;
       color:var(--faint);
     }
 
     .receipt summary{
       cursor:pointer;
       padding:1rem;
-      color:rgba(255,241,205,.96);
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.09em;
       text-transform:uppercase;
+      background:rgba(255,255,255,.035);
     }
 
     .receipt pre{
       margin:0;
-      padding:0 1rem 1rem;
+      padding:1rem;
       white-space:pre-wrap;
       overflow-wrap:anywhere;
       font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -450,36 +753,141 @@
       font-size:.76rem;
     }
 
-    @keyframes diamondBreathe{
-      0%,100%{opacity:.38;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.035)}
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes slowTurn{
+    @keyframes heroDiamond{
+      0%,100%{opacity:.38;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.70;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @keyframes softSweep{
+      0%,100%{transform:translateX(-90%);opacity:.04}
+      48%{opacity:.18}
+      70%{transform:translateX(90%);opacity:.05}
+    }
+
+    @keyframes gateTurn{
       from{transform:translate(-50%,-50%) rotate(45deg)}
       to{transform:translate(-50%,-50%) rotate(405deg)}
     }
 
+    @keyframes centerPulse{
+      0%,100%{transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+    }
+
+    @keyframes nodeFloat{
+      0%,100%{transform:translate(-50%,-50%) translateY(0)}
+      50%{transform:translate(-50%,-50%) translateY(-.65rem)}
+    }
+
     @media (prefers-reduced-motion:reduce){
-      .hero::after,.gate::before{animation:none!important}
+      body::after,
+      .hero::before,
+      .hero::after,
+      .summit-gate::before,
+      .center-diamond,
+      .gate-node{
+        animation:none!important;
+      }
     }
 
-    @media (max-width:820px){
-      .gate{min-height:40rem}
-      .north{left:50%;top:12%}
-      .east{left:72%;top:50%}
-      .south{left:50%;top:88%}
-      .west{left:28%;top:50%}
-      .route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .nav{
+        justify-content:flex-start;
+      }
+
+      .lane-grid,
+      .route-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
 
-    @media (max-width:560px){
-      .route-grid{grid-template-columns:1fr}
-      h1{font-size:clamp(3.05rem,18vw,5rem)}
-      .hero::after{opacity:.22}
-      .door{width:7.4rem}
-      .door strong{font-size:.72rem}
-      .door small{font-size:.6rem}
+    @media (max-width:720px){
+      .shell{
+        width:min(100% - 22px,var(--max));
+      }
+
+      h1{
+        font-size:clamp(3rem,17vw,5rem);
+      }
+
+      .hero{
+        min-height:30rem;
+      }
+
+      .summit-gate{
+        min-height:52rem;
+      }
+
+      .center-diamond{
+        width:10rem;
+        height:10rem;
+      }
+
+      .gate-node{
+        width:7.8rem;
+        min-height:6.8rem;
+      }
+
+      .diamond{
+        width:3.25rem;
+        height:3.25rem;
+        border-radius:.86rem;
+      }
+
+      .node-title{
+        font-size:.72rem;
+      }
+
+      .node-sub{
+        font-size:.62rem;
+      }
+
+      .node-book{left:50%;top:11%}
+      .node-universe{left:73%;top:50%}
+      .node-audralia{left:50%;top:89%}
+      .node-voice{left:27%;top:50%}
+
+      .cardinal.e{right:4%}
+      .cardinal.w{left:4%}
+    }
+
+    @media (max-width:520px){
+      .lane-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .summit-gate{
+        min-height:54rem;
+      }
+
+      .center-diamond{
+        width:9.2rem;
+        height:9.2rem;
+      }
+
+      .center-diamond strong{
+        font-size:.92rem;
+      }
+
+      .center-diamond small{
+        font-size:.66rem;
+      }
+
+      .node-book{top:10%}
+      .node-universe{left:75%;top:50%}
+      .node-voice{left:25%;top:50%}
+      .node-audralia{top:90%}
     }
   </style>
 </head>
@@ -488,10 +896,10 @@
   <a class="skip" href="#nine-summits-main">Skip to Nine Summits</a>
 
   <div class="shell">
-    <header class="card top">
+    <header class="topbar" aria-label="Nine Summits header">
       <a class="brand" href="/">
-        <span class="mark">NS</span>
-        <span>
+        <span class="brand-mark"><span>NS</span></span>
+        <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>Nine Summits</strong>
         </span>
@@ -509,74 +917,110 @@
         <a href="/showroom/">Showroom</a>
         <a href="/frontier/">Frontier</a>
         <a href="/about-this-underdog/">Underdog</a>
+        <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="nine-summits-main">
-      <section class="card hero">
+      <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Nine Summits · Public System Gate</div>
-        <h1>The climb becomes a world.</h1>
-        <h2>“The book gives the climb. The universe gives the climb a world.”</h2>
+        <h1 id="page-title">The climb becomes a world.</h1>
+        <h2>Book. Universe. Audralia. Voice.</h2>
         <p>
-          Nine Summits is the public gate between the human climb, the world setting, the Audralia viewer, and the public voice.
+          The book gives the climb. The universe gives the climb a world. Audralia gives the home-world reference. The voice lane brings the person into the room.
         </p>
 
-        <div class="cta-row">
-          <a class="cta primary" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="cta" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="cta" href="/showroom/globe/">Inspect Audralia</a>
-          <a class="cta" href="/about-this-underdog/">Meet the Underdog</a>
+        <div class="actions">
+          <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
+          <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
+          <a class="button" href="/showroom/globe/">Inspect Audralia</a>
+          <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="gate-title">
-        <div class="kicker">One system · Four primary doors</div>
-        <h2 id="gate-title">Book, Universe, Audralia, and Voice.</h2>
+      <section class="panel section" aria-labelledby="gate-title">
+        <div class="kicker">Four primary doors</div>
+        <h2 id="gate-title">The gate is now dimensional, readable, and alive.</h2>
 
-        <div class="gate" aria-label="Nine Summits four-diamond gate">
-          <div class="center">
-            <span>
-              <strong>Nine Summits</strong>
-              <small>Public Gate</small>
-            </span>
-          </div>
+        <div class="gate-wrap">
+          <div class="summit-gate" aria-label="Nine Summits celestial four-diamond gate">
+            <div class="axis" aria-hidden="true"></div>
+            <div class="cardinal n" aria-hidden="true">N</div>
+            <div class="cardinal e" aria-hidden="true">E</div>
+            <div class="cardinal s" aria-hidden="true">S</div>
+            <div class="cardinal w" aria-hidden="true">W</div>
 
-          <div class="door north">
-            <a href="/nine-summits-of-love/">
-              <span class="diamond" aria-hidden="true"></span>
-              <strong>Book Lane</strong>
-              <small>Human Climb</small>
-            </a>
-          </div>
+            <div class="center-diamond" aria-hidden="true">
+              <span>
+                <strong>Nine Summits</strong>
+                <small>Public Gate</small>
+              </span>
+            </div>
 
-          <div class="door east">
-            <a href="/nine-summits/universe/">
-              <span class="diamond" aria-hidden="true"></span>
-              <strong>Universe Lane</strong>
-              <small>World Setting</small>
-            </a>
-          </div>
+            <div class="gate-node node-book">
+              <a href="/nine-summits-of-love/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Book Lane</span>
+                <span class="node-sub">Human Climb</span>
+              </a>
+            </div>
 
-          <div class="door south">
-            <a href="/showroom/globe/">
-              <span class="diamond" aria-hidden="true"></span>
-              <strong>Audralia</strong>
-              <small>Home World</small>
-            </a>
-          </div>
+            <div class="gate-node node-universe">
+              <a href="/nine-summits/universe/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Universe Lane</span>
+                <span class="node-sub">World Setting</span>
+              </a>
+            </div>
 
-          <div class="door west">
-            <a href="/about-this-underdog/">
-              <span class="diamond" aria-hidden="true"></span>
-              <strong>Voice Lane</strong>
-              <small>About This Underdog</small>
-            </a>
+            <div class="gate-node node-audralia">
+              <a href="/showroom/globe/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Audralia</span>
+                <span class="node-sub">Home World</span>
+              </a>
+            </div>
+
+            <div class="gate-node node-voice">
+              <a href="/meet-sean-mansfield/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Voice Lane</span>
+                <span class="node-sub">Meet Sean Mansfield</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="card section" aria-labelledby="routes-title">
+      <section class="panel section" aria-labelledby="lanes-title">
+        <div class="kicker">Legend</div>
+        <h2 id="lanes-title">Each primary door has a distinct job.</h2>
+
+        <div class="lane-grid">
+          <a class="lane-card" href="/nine-summits-of-love/">
+            <strong>Book Lane</strong>
+            <span>The human climb: character, dignity, discipline, forgiveness, courage, free will, and love.</span>
+          </a>
+
+          <a class="lane-card" href="/nine-summits/universe/">
+            <strong>Universe Lane</strong>
+            <span>The world around the climb: terrain, gates, coherence, events, stories, and public experiences.</span>
+          </a>
+
+          <a class="lane-card" href="/showroom/globe/">
+            <strong>Audralia</strong>
+            <span>The home-world reference and inspection surface for the current public universe baseline.</span>
+          </a>
+
+          <a class="lane-card" href="/meet-sean-mansfield/">
+            <strong>Voice Lane</strong>
+            <span>Meet Sean Mansfield: the personal profile lane behind This Underdog and the public voice.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="routes-title">
         <div class="kicker">System routes</div>
         <h2 id="routes-title">The climb remains attached to the estate.</h2>
 
@@ -608,26 +1052,26 @@
         </div>
       </section>
 
-      <details class="card receipt" open>
+      <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_FOUR_DIAMOND_PUBLIC_GATE_UNDERDOG_LINK_TNT_v1
+        <pre>NINE_SUMMITS_CELESTIAL_FOUR_DIAMOND_GATE_MEET_SEAN_TNT_v2
 route=/nine-summits/
 page=nine_summits
 role=public_system_gate
 message=the_climb_becomes_a_world
+visual_system=celestial_four_diamond_gate
 center=nine_summits_gate_decorative
 north=book_lane:/nine-summits-of-love/
 east=universe_lane:/nine-summits/universe/
 south=audralia_home_world:/showroom/globe/
-west=about_this_underdog_voice_lane:/about-this-underdog/
+west=meet_sean_mansfield_voice_lane:/meet-sean-mansfield/
+universal_underdog=/about-this-underdog/
 home_world=Audralia
-earth_relationship=mirror_planet_reference
 system_routes=compass,manor,showroom,products,frontier,gauges
-underdog_link=/about-this-underdog/
-underdog_role=public_voice_profile_lane
-removed=demo_universe_language,earth_g1_language,planet_1_reserved_language,long_public_explainer,visible_long_contract,old_this_underdog_label
-route_owns=public_gate,four_primary_doors,route_links,256_scope_expression,underdog_voice_lane_label
-route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
+upgraded=visual_quality,contrast,motion,dimensional_diamonds,cardinality_readability,mobile_spacing,voice_lane_route
+removed=drab_gate,flat_read,old_voice_lane_target,long_visible_contract,old_this_underdog_personal_merge
+route_owns=public_gate,four_primary_doors,route_links,voice_lane_label,celestial_gate_visual_expression
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,personal_profile_page,universal_underdog_page
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -640,7 +1084,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_FOUR_DIAMOND_PUBLIC_GATE_UNDERDOG_LINK_TNT_v1 · Nine Summits · Four Primary Doors · Audralia Baseline.
+      NINE_SUMMITS_CELESTIAL_FOUR_DIAMOND_GATE_MEET_SEAN_TNT_v2 · Nine Summits · Book · Universe · Audralia · Voice.
     </footer>
   </div>
 </body>

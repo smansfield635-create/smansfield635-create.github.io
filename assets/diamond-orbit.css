@@ -1,10 +1,12 @@
 /* /assets/diamond-orbit.css */
-/* COMPASS_4_PLUS_12_DIAMOND_ORBIT_REBALANCE_TNT_v1 */
+/* COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1 */
 
 :root {
+  color-scheme: dark;
+
   --diamond-orbit-bg: rgba(14, 18, 48, 0.72);
-  --diamond-orbit-panel: rgba(18, 24, 58, 0.74);
-  --diamond-orbit-panel-strong: rgba(9, 13, 34, 0.88);
+  --diamond-orbit-panel: rgba(18, 24, 58, 0.76);
+  --diamond-orbit-panel-strong: rgba(9, 13, 34, 0.92);
   --diamond-orbit-purple: rgba(117, 78, 214, 0.78);
   --diamond-orbit-purple-strong: rgba(130, 92, 239, 0.92);
   --diamond-orbit-purple-soft: rgba(155, 124, 255, 0.22);
@@ -16,7 +18,7 @@
   --diamond-orbit-radius: 28px;
 
   --diamond-orbit-inner-radius: clamp(92px, 21vw, 146px);
-  --diamond-orbit-outer-radius: clamp(172px, 35vw, 278px);
+  --diamond-orbit-outer-radius: clamp(176px, 36vw, 286px);
 
   --diamond-orbit-inner-duration: 34s;
   --diamond-orbit-outer-duration: 58s;
@@ -87,10 +89,236 @@
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #02050c;
+}
+
+body {
+  margin: 0;
+  color: var(--diamond-orbit-text);
+  background:
+    radial-gradient(circle at 50% 8%, rgba(155, 124, 255, 0.12), transparent 34rem),
+    radial-gradient(circle at 80% 24%, rgba(245, 199, 107, 0.06), transparent 24rem),
+    linear-gradient(180deg, #02050c 0%, #050914 48%, #080d18 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 1000;
+  transform: translateY(-150%);
+  border: 1px solid var(--diamond-orbit-gold);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  color: #080d18;
+  background: var(--diamond-orbit-gold);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.compass-page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.compass-topbar,
+.compass-hero,
+.compass-logic,
+.command-routes,
+.route-receipt {
+  border: 1px solid var(--diamond-orbit-line);
+  border-radius: var(--diamond-orbit-radius);
+  background:
+    linear-gradient(135deg, rgba(12, 24, 42, 0.78), rgba(7, 15, 29, 0.90)),
+    radial-gradient(circle at 82% 18%, rgba(245, 199, 107, 0.08), transparent 18rem);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.compass-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 1rem;
+}
+
+.compass-brand {
+  display: inline-flex;
+  gap: 0.8rem;
+  align-items: center;
+  color: var(--diamond-orbit-text);
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.38);
+  border-radius: 16px;
+  color: var(--diamond-orbit-gold);
+  background: rgba(155, 124, 255, 0.18);
+  font-weight: 1000;
+  transform: rotate(45deg);
+}
+
+.brand-mark::first-line {
+  transform: rotate(-45deg);
+}
+
+.compass-brand strong,
+.compass-brand em {
+  display: block;
+}
+
+.compass-brand strong {
+  color: var(--diamond-orbit-gold);
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.compass-brand em {
+  color: var(--diamond-orbit-muted);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.compass-nav,
+.compass-cta-row,
+.route-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.compass-nav a,
+.compass-cta-row a,
+.route-chip-grid a {
+  border: 1px solid rgba(245, 199, 107, 0.34);
+  border-radius: 999px;
+  padding: 0.58rem 0.78rem;
+  color: var(--diamond-orbit-text);
+  background: rgba(4, 12, 24, 0.54);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.compass-nav a:hover,
+.compass-nav a:focus-visible,
+.compass-nav a[aria-current="page"],
+.compass-cta-row a:hover,
+.compass-cta-row a:focus-visible,
+.route-chip-grid a:hover,
+.route-chip-grid a:focus-visible {
+  color: #07111f;
+  background: var(--diamond-orbit-gold);
+  outline: none;
+}
+
+.compass-main {
+  display: grid;
+  gap: 24px;
+}
+
+.compass-hero,
+.compass-logic,
+.command-routes,
+.route-receipt {
+  padding: clamp(22px, 3.5vw, 42px);
+}
+
+.eyebrow {
+  margin: 0 0 0.8rem;
+  color: var(--diamond-orbit-gold);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 7vw, 6.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.5vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.compass-lede,
+.compass-line,
+.compass-card,
+.route-receipt p,
+.command-field-copy h2 {
+  color: var(--diamond-orbit-muted);
+  line-height: 1.65;
+}
+
+.compass-lede {
+  max-width: 960px;
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.22rem);
+}
+
+.compass-line {
+  margin: 0.85rem 0 0;
+}
+
+.compass-cta-row {
+  margin-top: 1.35rem;
+}
+
+.command-field-copy {
+  position: absolute;
+  left: clamp(18px, 4vw, 44px);
+  top: clamp(18px, 4vw, 44px);
+  z-index: 4;
+  max-width: min(420px, calc(100% - 36px));
+  pointer-events: none;
+}
+
+.command-field-copy h2 {
+  font-size: clamp(1.15rem, 2.6vw, 2.1rem);
+}
+
 /* --------------------------------------------------------------------------
-   Compass command field precinct.
-   This file owns orbit geometry, ring spacing, route diamond motion, z-index,
-   label readability, and mobile compression only.
+   Compass command field.
+   Index provides explicit 4 + 12 hooks.
+   CSS provides geometry and motion.
    -------------------------------------------------------------------------- */
 
 [data-visual-system="compass_centered_clockwise_diamond_orbit"],
@@ -170,7 +398,14 @@
   z-index: 1;
 }
 
-/* Compass center: background command anchor only. It must stay behind routes. */
+.diamond-route-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Compass center: background command anchor only. It stays behind routes. */
 
 [data-center="compass_background_anchor_only"],
 [data-compass-center],
@@ -243,25 +478,14 @@
   color: rgba(235, 238, 255, 0.34);
 }
 
-/* Route diamonds: existing class hooks plus source-order fallback. */
+/* Route diamonds. */
 
 [data-route-diamond],
 [data-diamond-route],
 .route-diamond,
 .diamond-route,
 .diamond-orbit-node,
-.compass-route-diamond,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-[data-compass-command-field] a,
-[data-command-field="chronological"] a,
-.compass-command-field a,
-.compass-orbit-field a,
-.diamond-orbit-field a,
-.chronological-command-field a,
-.command-field a,
-.orbit-field a,
-.compass-diamond-command-surface a {
+.compass-route-diamond {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -290,6 +514,7 @@
   cursor: pointer;
   touch-action: manipulation;
   outline: none;
+  pointer-events: auto;
 
   --ring-radius: var(--diamond-orbit-outer-radius);
 }
@@ -299,18 +524,7 @@
 .route-diamond::before,
 .diamond-route::before,
 .diamond-orbit-node::before,
-.compass-route-diamond::before,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a::before,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a::before,
-[data-compass-command-field] a::before,
-[data-command-field="chronological"] a::before,
-.compass-command-field a::before,
-.compass-orbit-field a::before,
-.diamond-orbit-field a::before,
-.chronological-command-field a::before,
-.command-field a::before,
-.orbit-field a::before,
-.compass-diamond-command-surface a::before {
+.compass-route-diamond::before {
   content: "";
   position: absolute;
   inset: -0.18rem;
@@ -333,18 +547,7 @@
 .route-diamond::after,
 .diamond-route::after,
 .diamond-orbit-node::after,
-.compass-route-diamond::after,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a::after,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a::after,
-[data-compass-command-field] a::after,
-[data-command-field="chronological"] a::after,
-.compass-command-field a::after,
-.compass-orbit-field a::after,
-.diamond-orbit-field a::after,
-.chronological-command-field a::after,
-.command-field a::after,
-.orbit-field a::after,
-.compass-diamond-command-surface a::after {
+.compass-route-diamond::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -370,29 +573,7 @@
 .diamond-orbit-node:hover,
 .diamond-orbit-node:focus-visible,
 .compass-route-diamond:hover,
-.compass-route-diamond:focus-visible,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible,
-[data-compass-command-field] a:hover,
-[data-compass-command-field] a:focus-visible,
-[data-command-field="chronological"] a:hover,
-[data-command-field="chronological"] a:focus-visible,
-.compass-command-field a:hover,
-.compass-command-field a:focus-visible,
-.compass-orbit-field a:hover,
-.compass-orbit-field a:focus-visible,
-.diamond-orbit-field a:hover,
-.diamond-orbit-field a:focus-visible,
-.chronological-command-field a:hover,
-.chronological-command-field a:focus-visible,
-.command-field a:hover,
-.command-field a:focus-visible,
-.orbit-field a:hover,
-.orbit-field a:focus-visible,
-.compass-diamond-command-surface a:hover,
-.compass-diamond-command-surface a:focus-visible {
+.compass-route-diamond:focus-visible {
   z-index: 9;
   color: #fff8e5;
   animation-play-state: paused;
@@ -409,29 +590,7 @@
 .diamond-orbit-node:hover::before,
 .diamond-orbit-node:focus-visible::before,
 .compass-route-diamond:hover::before,
-.compass-route-diamond:focus-visible::before,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover::before,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible::before,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:hover::before,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:focus-visible::before,
-[data-compass-command-field] a:hover::before,
-[data-compass-command-field] a:focus-visible::before,
-[data-command-field="chronological"] a:hover::before,
-[data-command-field="chronological"] a:focus-visible::before,
-.compass-command-field a:hover::before,
-.compass-command-field a:focus-visible::before,
-.compass-orbit-field a:hover::before,
-.compass-orbit-field a:focus-visible::before,
-.diamond-orbit-field a:hover::before,
-.diamond-orbit-field a:focus-visible::before,
-.chronological-command-field a:hover::before,
-.chronological-command-field a:focus-visible::before,
-.command-field a:hover::before,
-.command-field a:focus-visible::before,
-.orbit-field a:hover::before,
-.orbit-field a:focus-visible::before,
-.compass-diamond-command-surface a:hover::before,
-.compass-diamond-command-surface a:focus-visible::before {
+.compass-route-diamond:focus-visible::before {
   border-color: rgba(245, 199, 107, 0.82);
   background:
     radial-gradient(circle at 50% 45%, rgba(245, 199, 107, 0.22), transparent 40%),
@@ -442,27 +601,12 @@
     0 0 34px rgba(245, 199, 107, 0.22);
 }
 
-/* --------------------------------------------------------------------------
-   Inner ring: 4 primary routes.
-   Source order: Compass, Door, Home, Manor.
-   Motion: clockwise.
-   -------------------------------------------------------------------------- */
+/* Inner ring: 4 primary routes. Motion: clockwise. */
 
 [data-ring="inner"],
 [data-route-ring="inner"],
 .inner-ring,
-.route-inner,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(-n + 4),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(-n + 4),
-[data-compass-command-field] a:nth-of-type(-n + 4),
-[data-command-field="chronological"] a:nth-of-type(-n + 4),
-.compass-command-field a:nth-of-type(-n + 4),
-.compass-orbit-field a:nth-of-type(-n + 4),
-.diamond-orbit-field a:nth-of-type(-n + 4),
-.chronological-command-field a:nth-of-type(-n + 4),
-.command-field a:nth-of-type(-n + 4),
-.orbit-field a:nth-of-type(-n + 4),
-.compass-diamond-command-surface a:nth-of-type(-n + 4) {
+.route-inner {
   width: var(--diamond-orbit-inner-width);
   min-height: var(--diamond-orbit-inner-height);
   font-size: clamp(0.62rem, 1.9vw, 0.9rem);
@@ -473,270 +617,94 @@
   --ring-radius: var(--diamond-orbit-inner-radius);
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(1),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(1),
-[data-compass-command-field] a:nth-of-type(1),
-[data-command-field="chronological"] a:nth-of-type(1),
-.compass-command-field a:nth-of-type(1),
-.compass-orbit-field a:nth-of-type(1),
-.diamond-orbit-field a:nth-of-type(1),
-.chronological-command-field a:nth-of-type(1),
-.command-field a:nth-of-type(1),
-.orbit-field a:nth-of-type(1),
-.compass-diamond-command-surface a:nth-of-type(1) {
+[data-route-index="1"] {
   --start-angle: -90deg;
   --inverse-angle: 90deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(2),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(2),
-[data-compass-command-field] a:nth-of-type(2),
-[data-command-field="chronological"] a:nth-of-type(2),
-.compass-command-field a:nth-of-type(2),
-.compass-orbit-field a:nth-of-type(2),
-.diamond-orbit-field a:nth-of-type(2),
-.chronological-command-field a:nth-of-type(2),
-.command-field a:nth-of-type(2),
-.orbit-field a:nth-of-type(2),
-.compass-diamond-command-surface a:nth-of-type(2) {
+[data-route-index="2"] {
   --start-angle: 0deg;
   --inverse-angle: 0deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(3),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(3),
-[data-compass-command-field] a:nth-of-type(3),
-[data-command-field="chronological"] a:nth-of-type(3),
-.compass-command-field a:nth-of-type(3),
-.compass-orbit-field a:nth-of-type(3),
-.diamond-orbit-field a:nth-of-type(3),
-.chronological-command-field a:nth-of-type(3),
-.command-field a:nth-of-type(3),
-.orbit-field a:nth-of-type(3),
-.compass-diamond-command-surface a:nth-of-type(3) {
+[data-route-index="3"] {
   --start-angle: 90deg;
   --inverse-angle: -90deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(4),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(4),
-[data-compass-command-field] a:nth-of-type(4),
-[data-command-field="chronological"] a:nth-of-type(4),
-.compass-command-field a:nth-of-type(4),
-.compass-orbit-field a:nth-of-type(4),
-.diamond-orbit-field a:nth-of-type(4),
-.chronological-command-field a:nth-of-type(4),
-.command-field a:nth-of-type(4),
-.orbit-field a:nth-of-type(4),
-.compass-diamond-command-surface a:nth-of-type(4) {
+[data-route-index="4"] {
   --start-angle: 180deg;
   --inverse-angle: -180deg;
 }
 
-/* --------------------------------------------------------------------------
-   Outer ring: 12 expanded routes.
-   Source order: Laws, Nine Summits, Book, Universe, Products, Showroom,
-   Frontier, Gauges, Underdog, Meet Sean, Audralia, Five Flags.
-   Motion: counterclockwise.
-   -------------------------------------------------------------------------- */
+/* Outer ring: 12 expanded routes. Motion: counterclockwise. */
 
 [data-ring="outer"],
 [data-route-ring="outer"],
 .outer-ring,
-.route-outer,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(n + 5),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(n + 5),
-[data-compass-command-field] a:nth-of-type(n + 5),
-[data-command-field="chronological"] a:nth-of-type(n + 5),
-.compass-command-field a:nth-of-type(n + 5),
-.compass-orbit-field a:nth-of-type(n + 5),
-.diamond-orbit-field a:nth-of-type(n + 5),
-.chronological-command-field a:nth-of-type(n + 5),
-.command-field a:nth-of-type(n + 5),
-.orbit-field a:nth-of-type(n + 5),
-.compass-diamond-command-surface a:nth-of-type(n + 5) {
+.route-outer {
   animation-name: diamondOrbitCounterClockwise;
   animation-duration: var(--diamond-orbit-outer-duration);
 
   --ring-radius: var(--diamond-orbit-outer-radius);
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(5),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(5),
-[data-compass-command-field] a:nth-of-type(5),
-[data-command-field="chronological"] a:nth-of-type(5),
-.compass-command-field a:nth-of-type(5),
-.compass-orbit-field a:nth-of-type(5),
-.diamond-orbit-field a:nth-of-type(5),
-.chronological-command-field a:nth-of-type(5),
-.command-field a:nth-of-type(5),
-.orbit-field a:nth-of-type(5),
-.compass-diamond-command-surface a:nth-of-type(5) {
+[data-route-index="5"] {
   --start-angle: -90deg;
   --inverse-angle: 90deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(6),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(6),
-[data-compass-command-field] a:nth-of-type(6),
-[data-command-field="chronological"] a:nth-of-type(6),
-.compass-command-field a:nth-of-type(6),
-.compass-orbit-field a:nth-of-type(6),
-.diamond-orbit-field a:nth-of-type(6),
-.chronological-command-field a:nth-of-type(6),
-.command-field a:nth-of-type(6),
-.orbit-field a:nth-of-type(6),
-.compass-diamond-command-surface a:nth-of-type(6) {
+[data-route-index="6"] {
   --start-angle: -60deg;
   --inverse-angle: 60deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(7),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(7),
-[data-compass-command-field] a:nth-of-type(7),
-[data-command-field="chronological"] a:nth-of-type(7),
-.compass-command-field a:nth-of-type(7),
-.compass-orbit-field a:nth-of-type(7),
-.diamond-orbit-field a:nth-of-type(7),
-.chronological-command-field a:nth-of-type(7),
-.command-field a:nth-of-type(7),
-.orbit-field a:nth-of-type(7),
-.compass-diamond-command-surface a:nth-of-type(7) {
+[data-route-index="7"] {
   --start-angle: -30deg;
   --inverse-angle: 30deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(8),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(8),
-[data-compass-command-field] a:nth-of-type(8),
-[data-command-field="chronological"] a:nth-of-type(8),
-.compass-command-field a:nth-of-type(8),
-.compass-orbit-field a:nth-of-type(8),
-.diamond-orbit-field a:nth-of-type(8),
-.chronological-command-field a:nth-of-type(8),
-.command-field a:nth-of-type(8),
-.orbit-field a:nth-of-type(8),
-.compass-diamond-command-surface a:nth-of-type(8) {
+[data-route-index="8"] {
   --start-angle: 0deg;
   --inverse-angle: 0deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(9),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(9),
-[data-compass-command-field] a:nth-of-type(9),
-[data-command-field="chronological"] a:nth-of-type(9),
-.compass-command-field a:nth-of-type(9),
-.compass-orbit-field a:nth-of-type(9),
-.diamond-orbit-field a:nth-of-type(9),
-.chronological-command-field a:nth-of-type(9),
-.command-field a:nth-of-type(9),
-.orbit-field a:nth-of-type(9),
-.compass-diamond-command-surface a:nth-of-type(9) {
+[data-route-index="9"] {
   --start-angle: 30deg;
   --inverse-angle: -30deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(10),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(10),
-[data-compass-command-field] a:nth-of-type(10),
-[data-command-field="chronological"] a:nth-of-type(10),
-.compass-command-field a:nth-of-type(10),
-.compass-orbit-field a:nth-of-type(10),
-.diamond-orbit-field a:nth-of-type(10),
-.chronological-command-field a:nth-of-type(10),
-.command-field a:nth-of-type(10),
-.orbit-field a:nth-of-type(10),
-.compass-diamond-command-surface a:nth-of-type(10) {
+[data-route-index="10"] {
   --start-angle: 60deg;
   --inverse-angle: -60deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(11),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(11),
-[data-compass-command-field] a:nth-of-type(11),
-[data-command-field="chronological"] a:nth-of-type(11),
-.compass-command-field a:nth-of-type(11),
-.compass-orbit-field a:nth-of-type(11),
-.diamond-orbit-field a:nth-of-type(11),
-.chronological-command-field a:nth-of-type(11),
-.command-field a:nth-of-type(11),
-.orbit-field a:nth-of-type(11),
-.compass-diamond-command-surface a:nth-of-type(11) {
+[data-route-index="11"] {
   --start-angle: 90deg;
   --inverse-angle: -90deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(12),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(12),
-[data-compass-command-field] a:nth-of-type(12),
-[data-command-field="chronological"] a:nth-of-type(12),
-.compass-command-field a:nth-of-type(12),
-.compass-orbit-field a:nth-of-type(12),
-.diamond-orbit-field a:nth-of-type(12),
-.chronological-command-field a:nth-of-type(12),
-.command-field a:nth-of-type(12),
-.orbit-field a:nth-of-type(12),
-.compass-diamond-command-surface a:nth-of-type(12) {
+[data-route-index="12"] {
   --start-angle: 120deg;
   --inverse-angle: -120deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(13),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(13),
-[data-compass-command-field] a:nth-of-type(13),
-[data-command-field="chronological"] a:nth-of-type(13),
-.compass-command-field a:nth-of-type(13),
-.compass-orbit-field a:nth-of-type(13),
-.diamond-orbit-field a:nth-of-type(13),
-.chronological-command-field a:nth-of-type(13),
-.command-field a:nth-of-type(13),
-.orbit-field a:nth-of-type(13),
-.compass-diamond-command-surface a:nth-of-type(13) {
+[data-route-index="13"] {
   --start-angle: 150deg;
   --inverse-angle: -150deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(14),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(14),
-[data-compass-command-field] a:nth-of-type(14),
-[data-command-field="chronological"] a:nth-of-type(14),
-.compass-command-field a:nth-of-type(14),
-.compass-orbit-field a:nth-of-type(14),
-.diamond-orbit-field a:nth-of-type(14),
-.chronological-command-field a:nth-of-type(14),
-.command-field a:nth-of-type(14),
-.orbit-field a:nth-of-type(14),
-.compass-diamond-command-surface a:nth-of-type(14) {
+[data-route-index="14"] {
   --start-angle: 180deg;
   --inverse-angle: -180deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(15),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(15),
-[data-compass-command-field] a:nth-of-type(15),
-[data-command-field="chronological"] a:nth-of-type(15),
-.compass-command-field a:nth-of-type(15),
-.compass-orbit-field a:nth-of-type(15),
-.diamond-orbit-field a:nth-of-type(15),
-.chronological-command-field a:nth-of-type(15),
-.command-field a:nth-of-type(15),
-.orbit-field a:nth-of-type(15),
-.compass-diamond-command-surface a:nth-of-type(15) {
+[data-route-index="15"] {
   --start-angle: 210deg;
   --inverse-angle: -210deg;
 }
 
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(16),
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a:nth-of-type(16),
-[data-compass-command-field] a:nth-of-type(16),
-[data-command-field="chronological"] a:nth-of-type(16),
-.compass-command-field a:nth-of-type(16),
-.compass-orbit-field a:nth-of-type(16),
-.diamond-orbit-field a:nth-of-type(16),
-.chronological-command-field a:nth-of-type(16),
-.command-field a:nth-of-type(16),
-.orbit-field a:nth-of-type(16),
-.compass-diamond-command-surface a:nth-of-type(16) {
+[data-route-index="16"] {
   --start-angle: 240deg;
   --inverse-angle: -240deg;
 }
@@ -748,18 +716,7 @@
 .route-diamond strong,
 .diamond-route strong,
 .diamond-orbit-node strong,
-.compass-route-diamond strong,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a strong,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a strong,
-[data-compass-command-field] a strong,
-[data-command-field="chronological"] a strong,
-.compass-command-field a strong,
-.compass-orbit-field a strong,
-.diamond-orbit-field a strong,
-.chronological-command-field a strong,
-.command-field a strong,
-.orbit-field a strong,
-.compass-diamond-command-surface a strong {
+.compass-route-diamond strong {
   display: block;
   color: var(--diamond-orbit-text);
   font-size: 1em;
@@ -770,18 +727,7 @@
 .route-diamond span,
 .diamond-route span,
 .diamond-orbit-node span,
-.compass-route-diamond span,
-[data-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
-[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
-[data-compass-command-field] a span,
-[data-command-field="chronological"] a span,
-.compass-command-field a span,
-.compass-orbit-field a span,
-.diamond-orbit-field a span,
-.chronological-command-field a span,
-.command-field a span,
-.orbit-field a span,
-.compass-diamond-command-surface a span {
+.compass-route-diamond span {
   display: block;
   margin-top: 0.28rem;
   color: var(--diamond-orbit-muted);
@@ -789,6 +735,26 @@
   font-weight: 700;
   letter-spacing: 0.015em;
   text-transform: none;
+}
+
+/* Fallback if the index hooks fail but source order remains correct. */
+
+.diamond-route-layer a:nth-of-type(-n + 4) {
+  width: var(--diamond-orbit-inner-width);
+  min-height: var(--diamond-orbit-inner-height);
+  font-size: clamp(0.62rem, 1.9vw, 0.9rem);
+  z-index: 6;
+  animation-name: diamondOrbitClockwise;
+  animation-duration: var(--diamond-orbit-inner-duration);
+
+  --ring-radius: var(--diamond-orbit-inner-radius);
+}
+
+.diamond-route-layer a:nth-of-type(n + 5) {
+  animation-name: diamondOrbitCounterClockwise;
+  animation-duration: var(--diamond-orbit-outer-duration);
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
 }
 
 /* Existing receipt animation names preserved as aliases. */
@@ -814,12 +780,66 @@
   animation: diamondAuroraDrift 18s ease-in-out infinite;
 }
 
+/* Logic and route panels. */
+
+.compass-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 1.25rem;
+}
+
+.compass-card {
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid var(--diamond-orbit-blue-line);
+  border-radius: 22px;
+  padding: 1rem;
+  color: var(--diamond-orbit-muted);
+  background: rgba(255, 255, 255, 0.045);
+  text-decoration: none;
+}
+
+.compass-card strong {
+  color: var(--diamond-orbit-gold);
+  font-weight: 1000;
+}
+
+.compass-card span {
+  color: var(--diamond-orbit-text);
+  font-weight: 900;
+}
+
+.compass-card em {
+  color: var(--diamond-orbit-muted);
+  font-style: normal;
+}
+
+.compass-card:hover,
+.compass-card:focus-visible {
+  border-color: rgba(245, 199, 107, 0.58);
+  outline: none;
+}
+
+.route-chip-grid {
+  margin-top: 1.2rem;
+}
+
+.route-receipt p {
+  border: 1px solid rgba(245, 199, 107, 0.16);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.84rem;
+}
+
 /* Receipt hooks. */
 
 [data-diamond-orbit-standard],
 .diamond-orbit-standard-receipt {
   --animation-standard: UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1;
-  --rebalance-contract: COMPASS_4_PLUS_12_DIAMOND_ORBIT_REBALANCE_TNT_v1;
+  --rebalance-contract: COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1;
   --inner-ring: 4;
   --outer-ring: 12;
   --inner-direction: clockwise;
@@ -829,6 +849,27 @@
 }
 
 /* Mobile: preserve 4 + 12, compress radii and diamond size without removing nodes. */
+
+@media (max-width: 920px) {
+  .compass-page-shell {
+    width: min(100%, calc(100% - 24px));
+    padding-top: 20px;
+  }
+
+  .compass-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-topbar {
+    align-items: flex-start;
+  }
+
+  .compass-nav a,
+  .compass-cta-row a,
+  .route-chip-grid a {
+    flex: 1 1 auto;
+  }
+}
 
 @media (max-width: 760px) {
   :root {
@@ -856,23 +897,16 @@
     min-height: clamp(540px, 146vw, 720px);
   }
 
+  .command-field-copy {
+    max-width: min(330px, calc(100% - 28px));
+  }
+
   [data-route-diamond],
   [data-diamond-route],
   .route-diamond,
   .diamond-route,
   .diamond-orbit-node,
-  .compass-route-diamond,
-  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-command-field] a,
-  [data-command-field="chronological"] a,
-  .compass-command-field a,
-  .compass-orbit-field a,
-  .diamond-orbit-field a,
-  .chronological-command-field a,
-  .command-field a,
-  .orbit-field a,
-  .compass-diamond-command-surface a {
+  .compass-route-diamond {
     padding: 0.38rem 0.34rem;
     font-size: clamp(0.48rem, 2.1vw, 0.68rem);
     letter-spacing: 0.055em;
@@ -917,18 +951,7 @@
   .route-diamond,
   .diamond-route,
   .diamond-orbit-node,
-  .compass-route-diamond,
-  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-command-field] a,
-  [data-command-field="chronological"] a,
-  .compass-command-field a,
-  .compass-orbit-field a,
-  .diamond-orbit-field a,
-  .chronological-command-field a,
-  .command-field a,
-  .orbit-field a,
-  .compass-diamond-command-surface a {
+  .compass-route-diamond {
     font-size: 0.48rem;
     line-height: 1.02;
   }
@@ -938,23 +961,12 @@
   .route-diamond span,
   .diamond-route span,
   .diamond-orbit-node span,
-  .compass-route-diamond span,
-  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
-  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a span,
-  [data-compass-command-field] a span,
-  [data-command-field="chronological"] a span,
-  .compass-command-field a span,
-  .compass-orbit-field a span,
-  .diamond-orbit-field a span,
-  .chronological-command-field a span,
-  .command-field a span,
-  .orbit-field a span,
-  .compass-diamond-command-surface a span {
+  .compass-route-diamond span {
     font-size: 0.74em;
   }
 }
 
-/* Reduced motion: preserve the 4 + 12 geometry, stop orbiting. */
+/* Reduced motion: preserve 4 + 12 geometry, stop orbiting. */
 
 @media (prefers-reduced-motion: reduce) {
   [data-route-diamond],
@@ -962,18 +974,7 @@
   .route-diamond,
   .diamond-route,
   .diamond-orbit-node,
-  .compass-route-diamond,
-  [data-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"] a,
-  [data-compass-command-field] a,
-  [data-command-field="chronological"] a,
-  .compass-command-field a,
-  .compass-orbit-field a,
-  .diamond-orbit-field a,
-  .chronological-command-field a,
-  .command-field a,
-  .orbit-field a,
-  .compass-diamond-command-surface a {
+  .compass-route-diamond {
     animation: none !important;
   }
 

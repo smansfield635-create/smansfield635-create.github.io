@@ -1,500 +1,179 @@
+<!-- /showroom/globe/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Earth + Audrelia Globe Chamber · Diamond Gate Bridge</title>
-  <meta name="description" content="Dedicated Earth and Audrelia globe inspection chamber." />
-
+  <title>Earth and Audralia · Showroom Globe · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Dual globe chamber for Earth Generation 4 reference authority and Audralia Generation 1 constructed world-body authority."
+  />
   <link rel="stylesheet" href="/assets/manor.css" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css" />
-  <link rel="modulepreload" href="/assets/audrelia.planet.render.js" />
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #030713;
-      --panel: rgba(8, 16, 34, 0.86);
-      --panel-strong: rgba(10, 22, 46, 0.94);
-      --line: rgba(159, 204, 255, 0.22);
-      --line-strong: rgba(165, 212, 255, 0.42);
-      --text: rgba(238, 245, 255, 0.96);
-      --muted: rgba(188, 202, 222, 0.72);
-      --dim: rgba(145, 164, 190, 0.58);
-      --gold: rgba(244, 225, 169, 0.96);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      min-height: 100%;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      background:
-        radial-gradient(circle at 50% 0%, rgba(55, 130, 205, 0.22), transparent 34rem),
-        radial-gradient(circle at 12% 42%, rgba(32, 95, 160, 0.16), transparent 28rem),
-        linear-gradient(180deg, #040816 0%, #02050f 100%);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.17;
-      background-image:
-        linear-gradient(rgba(140, 190, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(140, 190, 255, 0.08) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(180deg, black, transparent 78%);
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: 12px;
-      top: -44px;
-      z-index: 30;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #e8f2ff;
-      color: #071120;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .skip-link:focus {
-      top: 12px;
-    }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 18px 0 54px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 12px 0 22px;
-    }
-
-    .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 2px;
-      text-decoration: none;
-    }
-
-    .brand strong {
-      font-size: clamp(1rem, 4vw, 1.28rem);
-      letter-spacing: 0.02em;
-    }
-
-    .brand span {
-      color: var(--dim);
-      font-size: 0.76rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .nav a {
-      padding: 9px 11px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .nav a[aria-current="page"] {
-      color: var(--text);
-      border-color: var(--line-strong);
-      background: rgba(80, 155, 230, 0.12);
-    }
-
-    .hero {
-      padding: clamp(22px, 6vw, 52px);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 52% 0%, rgba(82, 153, 234, 0.18), transparent 32rem),
-        linear-gradient(180deg, rgba(9, 19, 39, 0.88), rgba(5, 9, 21, 0.88));
-      box-shadow:
-        0 24px 90px rgba(0, 0, 0, 0.42),
-        inset 0 0 80px rgba(116, 176, 255, 0.05);
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: rgba(175, 207, 244, 0.78);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: clamp(0.72rem, 2vw, 0.84rem);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 940px;
-      font-size: clamp(2rem, 8vw, 5rem);
-      line-height: 0.96;
-      letter-spacing: -0.055em;
-    }
-
-    .lede {
-      max-width: 860px;
-      margin: 22px 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 3.2vw, 1.26rem);
-      line-height: 1.64;
-    }
-
-    .rule-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 26px;
-    }
-
-    .rule-card {
-      min-height: 82px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .rule-card b {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      letter-spacing: 0.12em;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-    }
-
-    .rule-card span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.35;
-    }
-
-    .dual-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(14px, 3vw, 24px);
-      margin-top: 28px;
-    }
-
-    .body-card {
-      padding: clamp(16px, 3vw, 24px);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(46, 125, 205, 0.18), transparent 21rem),
-        linear-gradient(180deg, rgba(7, 18, 38, 0.78), rgba(3, 8, 18, 0.92));
-      box-shadow:
-        0 18px 60px rgba(0, 0, 0, 0.34),
-        inset 0 0 70px rgba(92, 152, 230, 0.06);
-    }
-
-    .body-head {
-      min-height: 132px;
-      margin-bottom: 16px;
-    }
-
-    .body-head h2 {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(1.7rem, 5vw, 3rem);
-      line-height: 1;
-      letter-spacing: -0.035em;
-    }
-
-    .body-head p {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: clamp(0.96rem, 2.4vw, 1.08rem);
-      line-height: 1.55;
-    }
-
-    .globe-mount {
-      min-height: 330px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(140, 190, 255, 0.18);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(25, 90, 150, 0.18), transparent 58%),
-        linear-gradient(180deg, rgba(1, 8, 22, 0.72), rgba(1, 4, 13, 0.93));
-      overflow: hidden;
-    }
-
-    .globe-stage {
-      width: 100%;
-      display: grid;
-      place-items: center;
-      gap: 10px;
-      padding: 12px;
-    }
-
-    .globe-canvas {
-      width: min(100%, 440px);
-      height: auto;
-      display: block;
-      border-radius: 999px;
-      filter: saturate(1.08) contrast(1.05);
-    }
-
-    .globe-label,
-    .globe-receipt {
-      text-align: center;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      text-transform: uppercase;
-    }
-
-    .globe-label {
-      color: rgba(231, 241, 255, 0.9);
-      font-size: clamp(0.72rem, 2vw, 0.88rem);
-      letter-spacing: 0.13em;
-      font-weight: 900;
-    }
-
-    .globe-receipt {
-      max-width: 100%;
-      color: rgba(173, 199, 225, 0.70);
-      font-size: clamp(0.58rem, 1.8vw, 0.7rem);
-      letter-spacing: 0.1em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .fallback {
-      padding: 24px;
-      color: var(--muted);
-      text-align: center;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .receipt-panel {
-      margin-top: 28px;
-      padding: clamp(18px, 4vw, 26px);
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      background: var(--panel);
-    }
-
-    .receipt-panel h2 {
-      margin: 0 0 14px;
-      font-size: clamp(1.1rem, 3.6vw, 1.6rem);
-    }
-
-    .receipt-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .receipt-list li {
-      padding: 12px;
-      border: 1px solid rgba(145, 190, 240, 0.18);
-      border-radius: 16px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.025);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.76rem;
-      line-height: 1.45;
-    }
-
-    noscript {
-      display: block;
-      margin-top: 18px;
-      padding: 14px;
-      border: 1px solid rgba(255, 180, 80, 0.35);
-      border-radius: 16px;
-      color: #ffe0a8;
-      background: rgba(90, 50, 10, 0.24);
-    }
-
-    @media (max-width: 850px) {
-      .shell {
-        width: min(100% - 18px, 1180px);
-        padding-top: 10px;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .rule-grid,
-      .dual-grid,
-      .receipt-list {
-        grid-template-columns: 1fr;
-      }
-
-      .hero,
-      .body-card {
-        border-radius: 26px;
-      }
-
-      .body-head {
-        min-height: auto;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/showroom/showroom.css" />
 </head>
 
-<body>
+<body
+  data-route="showroom-globe"
+  data-room="earth-audralia-dual-globe"
+  data-body-count="2"
+  data-earth-generation="G4"
+  data-audralia-generation="G1"
+>
   <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
 
-  <div class="shell">
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Showroom Globe</span>
-      </a>
+  <header class="site-header" aria-label="Diamond Gate Bridge navigation">
+    <a class="brand" href="/">Diamond Gate Bridge</a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/" aria-current="page">Globe</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+    <nav aria-label="Primary navigation">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/" aria-current="page">Globe</a>
+      <a href="/nine-summits/universe/">Universe</a>
+      <a href="/products/">Products</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </header>
 
-    <main id="globe-main" tabindex="-1">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Standalone · Dual Globe Authority Split</p>
-        <h1 id="page-title">Earth and Audrelia</h1>
-        <p class="lede">
-          This chamber now separates the two bodies. Earth is the real-world reference globe.
-          Audrelia is the constructed home-world body. Australia belongs to Earth; Audrelia is not Australia.
-        </p>
+  <main id="globe-main" class="showroom-globe-shell" tabindex="-1">
+    <section class="globe-hero" aria-labelledby="globe-title">
+      <p class="eyebrow">Standalone · Dual Globe Authority Split</p>
+      <h1 id="globe-title">Earth and Audralia</h1>
+      <p>
+        This chamber separates the two bodies. Earth is the real-world reference globe.
+        Audralia is the constructed home-world body.
+      </p>
 
-        <div class="rule-grid" aria-label="Identity rules">
-          <div class="rule-card">
-            <b>Earth</b>
-            <span>Reference globe. Real-world baseline.</span>
-          </div>
-          <div class="rule-card">
-            <b>Audrelia</b>
-            <span>Constructed world-body. Separate identity.</span>
-          </div>
-          <div class="rule-card">
-            <b>Blocked</b>
-            <span>No Planet Australia bridge label.</span>
-          </div>
-          <div class="rule-card">
-            <b>Route</b>
-            <span>/showroom/globe/ owns the split view.</span>
-          </div>
+      <div class="globe-status-grid" aria-label="Dual body authority summary">
+        <article class="status-card" data-body="earth">
+          <strong>Earth</strong>
+          <span>Generation 4 reference globe.</span>
+        </article>
+
+        <article class="status-card" data-body="audralia">
+          <strong>Audralia</strong>
+          <span>Generation 1 active world body.</span>
+        </article>
+
+        <article class="status-card" data-contract="split">
+          <strong>Split</strong>
+          <span>No shared renderer adoption.</span>
+        </article>
+
+        <article class="status-card" data-route="/showroom/globe/">
+          <strong>Route</strong>
+          <span>/showroom/globe/ owns the dual mount shell.</span>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="dual-globe-grid"
+      aria-label="Earth and Audralia globe mounts"
+      data-dual-mount-contract="active"
+    >
+      <article
+        class="globe-body-card"
+        data-body="earth"
+        data-generation="G4"
+        data-role="reference-globe"
+      >
+        <div class="globe-card-copy">
+          <p class="eyebrow">Body 1 · Reference</p>
+          <h2>Earth</h2>
+          <p>
+            Earth is the known reference body and uses its own Earth file authority.
+          </p>
+          <p class="receipt-line">EARTH · REFERENCE_GLOBE · GENERATION_4</p>
         </div>
-      </section>
 
-      <section class="dual-grid" aria-label="Dedicated globe mounts">
-        <article class="body-card" aria-labelledby="earth-title">
-          <div class="body-head">
-            <p class="eyebrow">Body 1 · Reference</p>
-            <h2 id="earth-title">Earth</h2>
-            <p>
-              Earth is the known baseline and may contain Australia. It is not Audrelia.
-            </p>
-          </div>
+        <div
+          id="earthRenderMount"
+          class="globe-render-mount earth-render-mount"
+          data-body="earth"
+          data-renderer="earth"
+          data-generation="G4"
+          data-authority="earth-file-chain"
+          aria-label="Earth Generation 4 globe render mount"
+        ></div>
 
-          <section
-            id="earth-globe-mount"
-            class="globe-mount"
-            data-earth-globe-mount
-            aria-label="Earth reference globe mount"
-          >
-            <div class="fallback">Loading Earth reference globe.</div>
-          </section>
-        </article>
+        <pre
+          id="earthRenderReceipt"
+          class="globe-render-receipt"
+          aria-label="Earth render receipt"
+        >EARTH_RENDER_MOUNT=READY
+BODY=Earth
+GENERATION=G4
+AUTHORITY=EARTH_FILE_CHAIN
+VISUAL_PASS=HELD</pre>
+      </article>
 
-        <article class="body-card" aria-labelledby="audrelia-title">
-          <div class="body-head">
-            <p class="eyebrow">Body 2 · Active World</p>
-            <h2 id="audrelia-title">Audrelia</h2>
-            <p>
-              Audrelia is the constructed home-world planetary expression. It has its own renderer, identity, and receipt.
-            </p>
-          </div>
+      <article
+        class="globe-body-card"
+        data-body="audralia"
+        data-generation="G1"
+        data-role="active-world-body"
+      >
+        <div class="globe-card-copy">
+          <p class="eyebrow">Body 2 · Active World</p>
+          <h2>Audralia</h2>
+          <p>
+            Audralia is the constructed home-world body and uses its parent planet
+            render authority with direct downstream science children.
+          </p>
+          <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1</p>
+        </div>
 
-          <section
-            id="audrelia-globe-mount"
-            class="globe-mount"
-            data-audrelia-globe-mount
-            data-audrelia-mount
-            aria-label="Audrelia active world globe mount"
-          >
-            <div class="fallback">Loading Audrelia world-body renderer.</div>
-          </section>
-        </article>
-      </section>
+        <div
+          id="audraliaRenderMount"
+          class="globe-render-mount audralia-render-mount"
+          data-body="audralia"
+          data-renderer="audralia"
+          data-generation="G1"
+          data-authority="/assets/AdreliaPlanetRendered.js"
+          data-parent-render="/assets/AdreliaPlanetRendered.js"
+          data-topography="/assets/audralia.planet.render-topography.js"
+          data-hydration="/assets/audralia.planet.render-hydration.js"
+          data-climate="/assets/audralia.planet.render-climate.js"
+          data-ecology="/assets/audralia.planet.render-ecology.js"
+          data-fauna="/assets/audralia.planet.render-fauna.js"
+          data-runtime="/assets/audralia.planet.render-living-world.js"
+          aria-label="Audralia Generation 1 globe render mount"
+        ></div>
 
-      <section class="receipt-panel" aria-labelledby="receipts-title">
-        <h2 id="receipts-title">Split Receipts</h2>
-        <ul class="receipt-list">
-          <li>ROUTE=/showroom/globe/</li>
-          <li>CONSUMER=/showroom/globe/index.js</li>
-          <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE</li>
-          <li>AUDRELIA_LABEL=AUDRELIA_ACTIVE_WORLD_BODY</li>
-          <li>PLANET_AUSTRALIA_LABEL=REMOVED_FROM_ROUTE</li>
-          <li>STATIC_IMAGE_REPLACEMENT=FALSE</li>
-          <li>IMAGE_GENERATION=FORBIDDEN</li>
-          <li>VISUAL_PASS=HELD_UNTIL_USER_CONFIRMATION</li>
-        </ul>
+        <pre
+          id="audraliaRenderReceipt"
+          class="globe-render-receipt"
+          aria-label="Audralia render receipt"
+        >AUDRALIA_RENDER_MOUNT=READY
+BODY=Audralia
+GENERATION=G1
+PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js
+DOWNSTREAM_CHAIN=TOPOGRAPHY,HDRATION,CLIMATE,ECOLOGY,FAUNA,LIVING_WORLD
+VISUAL_PASS=HELD</pre>
+      </article>
+    </section>
 
-        <noscript>
-          JavaScript is required for the live globe renderers.
-        </noscript>
-      </section>
-    </main>
-  </div>
+    <section class="receipt-panel" aria-labelledby="split-receipts-title">
+      <h2 id="split-receipts-title">Split Receipts</h2>
+      <ul>
+        <li>ROUTE=/showroom/globe/</li>
+        <li>CONSUMER=/showroom/globe/index.js</li>
+        <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4</li>
+        <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1</li>
+        <li>EARTH_MOUNT=#earthRenderMount</li>
+        <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
+        <li>EARTH_AUTHORITY=EARTH_FILE_CHAIN</li>
+        <li>AUDRALIA_PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js</li>
+        <li>STATIC_IMAGE_REPLACEMENT=FALSE</li>
+        <li>IMAGE_GENERATION=FORBIDDEN</li>
+        <li>VISUAL_PASS=HELD_UNTIL_USER_CONFIRMATION</li>
+      </ul>
+    </section>
+  </main>
 
-  <script type="module" src="/showroom/globe/index.js?v=dual-earth-audrelia-split-v1"></script>
+  <script type="module" src="/showroom/globe/index.js?v=earth-g4-audralia-g1-dual-mount-v1"></script>
 </body>
 </html>

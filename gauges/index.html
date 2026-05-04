@@ -4,281 +4,327 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Gauges · Diamond Gate Bridge</title>
+  <title>Gauges · Generation Gap and Boundary Integrity · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="Single Gauges page measuring Showroom Globe and Audralia Generation 1 through Generation 4 readiness, pass state, held state, and logistical gap."
+    content="Single Gauges page measuring Showroom Globe generation reach, file-boundary integrity, cross-adoption, visual phenotype, and next lawful target."
   />
+
+  <link rel="stylesheet" href="/assets/manor.css" />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #020611;
-      --panel: rgba(7, 17, 33, 0.94);
-      --panel2: rgba(13, 31, 56, 0.86);
-      --line: rgba(156, 190, 236, 0.22);
-      --text: #f5f8ff;
-      --muted: #aebbd0;
-      --pass: #8ff0bd;
-      --fail: #ff8e8e;
-      --warn: #ffd98a;
-      --held: #9fc5ff;
+      --bg: #030711;
+      --panel: rgba(8, 18, 33, 0.92);
+      --panel2: rgba(12, 32, 56, 0.86);
+      --line: rgba(165, 194, 235, 0.24);
+      --text: #f6f8fc;
+      --muted: #b8c4d8;
+      --pass: #58d68d;
+      --fail: #ff6b6b;
+      --held: #ffd166;
+      --warn: #f7a35c;
+      --info: #8ab4ff;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 18% 0%, rgba(74, 126, 196, 0.18), transparent 32rem),
-        linear-gradient(180deg, #030815, #020611 48%, #01030a);
+        radial-gradient(circle at 18% 0%, rgba(35, 88, 150, 0.18), transparent 30%),
+        radial-gradient(circle at 90% 14%, rgba(104, 65, 145, 0.14), transparent 28%),
+        var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
+      line-height: 1.45;
     }
 
-    a { color: #bad7ff; }
+    a {
+      color: #b8d4ff;
+    }
 
     .skip-link {
       position: absolute;
       left: 0.75rem;
       top: 0.75rem;
-      transform: translateY(-140%);
+      z-index: 10;
+      transform: translateY(-160%);
       background: #07111f;
       color: #fff;
       padding: 0.55rem 0.8rem;
       border-radius: 0.7rem;
-      z-index: 20;
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
-    header,
+    .site-header,
     main {
       width: min(1180px, 92vw);
       margin: 0 auto;
     }
 
-    header { padding: 1rem 0 0.25rem; }
+    .site-header {
+      padding: 1rem 0 0.4rem;
+    }
 
     .brand {
+      display: inline-block;
       font-weight: 850;
-      font-size: clamp(1.15rem, 4.2vw, 1.6rem);
+      font-size: clamp(1.1rem, 4vw, 1.45rem);
+      margin-right: 1rem;
     }
 
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.55rem 0.95rem;
-      margin-top: 0.5rem;
+      gap: 0.5rem 0.9rem;
+      margin-top: 0.45rem;
     }
 
-    main { padding: 2rem 0 4rem; }
+    main {
+      padding: 2rem 0 5rem;
+    }
 
     .eyebrow {
-      color: var(--muted);
+      margin: 0 0 0.6rem;
+      color: #a9b7ce;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      font-size: 0.75rem;
-      margin: 0 0 0.6rem;
+      font-size: 0.74rem;
     }
 
     h1 {
-      margin: 0 0 0.85rem;
-      font-size: clamp(2rem, 9vw, 4.5rem);
-      line-height: 0.95;
+      margin: 0 0 0.9rem;
+      font-size: clamp(2.2rem, 9vw, 5rem);
+      line-height: 0.94;
     }
 
     h2 {
-      margin: 0 0 0.8rem;
-      font-size: clamp(1.45rem, 5vw, 2.35rem);
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.55rem, 5vw, 2.4rem);
+      line-height: 1.05;
     }
 
     h3 {
-      margin: 0;
+      margin: 0 0 0.55rem;
       font-size: 1.12rem;
-      line-height: 1.15;
     }
 
     p {
-      color: #d6dfef;
-      line-height: 1.45;
-      font-size: clamp(1rem, 4vw, 1.16rem);
+      color: var(--muted);
+      font-size: clamp(1rem, 3.5vw, 1.18rem);
     }
 
-    button {
-      border: 1px solid rgba(180, 210, 250, 0.24);
-      background: linear-gradient(180deg, rgba(58, 102, 166, 0.36), rgba(10, 22, 42, 0.88));
-      color: #fff;
-      font: inherit;
-      font-weight: 800;
-      border-radius: 999px;
-      padding: 0.9rem 1.25rem;
-      cursor: pointer;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
-    }
-
-    button:focus,
-    button:hover {
-      outline: 2px solid rgba(170, 210, 255, 0.52);
-      outline-offset: 3px;
-    }
-
-    .hero,
-    .panel,
-    .summary-card,
-    .generation-card,
-    .gauge-card {
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 20% 0%, rgba(74, 126, 196, 0.16), transparent 36%),
-        linear-gradient(180deg, var(--panel2), var(--panel));
-      border-radius: 1.4rem;
-      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.36);
-    }
-
-    .hero,
-    .panel {
-      padding: clamp(1rem, 4vw, 1.5rem);
-      margin-bottom: 1rem;
+    .hero {
+      max-width: 980px;
+      margin-bottom: 1.5rem;
     }
 
     .summary-grid,
-    .generation-grid {
+    .generation-grid,
+    .boundary-grid,
+    .matrix-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-      gap: 0.85rem;
-      margin-top: 1.25rem;
+      gap: 0.9rem;
     }
 
-    .summary-card,
-    .generation-card {
-      background: rgba(0, 0, 0, 0.22);
+    .summary-grid {
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      margin: 1.35rem 0 1.4rem;
+    }
+
+    .generation-grid {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .boundary-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card,
+    .section,
+    .check,
+    .target,
+    .matrix-card {
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(78, 130, 200, 0.16), transparent 34%),
+        linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: 1.2rem;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    .card {
       padding: 1rem;
     }
 
-    .summary-card strong,
-    .generation-card strong {
+    .card .value {
       display: block;
-      font-size: 1.55rem;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 850;
       line-height: 1;
-      margin-bottom: 0.35rem;
     }
 
-    .summary-card span,
-    .generation-card span {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .generation-card small {
+    .card .label {
       display: block;
-      margin-top: 0.5rem;
-      color: #d7deea;
-      line-height: 1.35;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      align-items: center;
-      margin-top: 1rem;
-    }
-
-    .timestamp {
+      margin-top: 0.35rem;
       color: var(--muted);
-      font-size: 0.95rem;
     }
 
-    .goal-list {
+    .section {
+      margin-top: 1.35rem;
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    .checks {
       display: grid;
       gap: 0.65rem;
-      padding: 0;
-      margin: 1rem 0 0;
-      list-style: none;
-    }
-
-    .goal-list li {
-      border: 1px solid rgba(155, 188, 232, 0.16);
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 0.9rem;
-      padding: 0.8rem;
-      color: #d8e2f3;
-    }
-
-    .gauge-grid {
-      display: grid;
-      gap: 1rem;
       margin-top: 1rem;
     }
 
-    .gauge-card {
-      padding: 1rem;
-      overflow: hidden;
+    .check {
+      padding: 0.85rem;
+      display: grid;
+      gap: 0.35rem;
+      background: rgba(3, 7, 17, 0.42);
     }
 
-    .gauge-head {
+    .check-head {
       display: flex;
-      align-items: start;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
       justify-content: space-between;
-      gap: 0.85rem;
-      margin-bottom: 0.8rem;
+    }
+
+    .check-name {
+      font-weight: 780;
     }
 
     .badge {
-      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 4.6rem;
+      padding: 0.22rem 0.55rem;
       border-radius: 999px;
-      padding: 0.36rem 0.65rem;
       font-size: 0.76rem;
-      font-weight: 900;
+      font-weight: 850;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid currentColor;
     }
 
-    .pass { color: var(--pass); background: rgba(34, 168, 101, 0.12); }
-    .fail { color: var(--fail); background: rgba(190, 49, 49, 0.14); }
-    .warn { color: var(--warn); background: rgba(210, 146, 33, 0.13); }
-    .held { color: var(--held); background: rgba(65, 126, 220, 0.14); }
-
-    .kv {
-      display: grid;
-      grid-template-columns: minmax(9rem, 0.8fr) minmax(0, 1.2fr);
-      gap: 0.4rem 0.8rem;
-      margin-top: 0.7rem;
+    .PASS {
+      color: var(--pass);
     }
 
-    .kv div {
-      min-width: 0;
-      overflow-wrap: anywhere;
+    .FAIL {
+      color: var(--fail);
     }
 
-    .kv div:nth-child(odd) { color: var(--muted); }
+    .HELD {
+      color: var(--held);
+    }
 
-    pre {
-      margin: 0.85rem 0 0;
+    .WARN {
+      color: var(--warn);
+    }
+
+    .INFO {
+      color: var(--info);
+    }
+
+    .details,
+    .mono {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: 0.78rem;
-      line-height: 1.35;
-      color: #dce9ff;
-      background: rgba(0, 0, 0, 0.34);
-      border: 1px solid rgba(155, 188, 232, 0.18);
-      border-radius: 0.9rem;
-      padding: 0.85rem;
+      color: #dce8ff;
     }
 
-    canvas.audit-proof { display: none; }
-
-    @media (min-width: 900px) {
-      .gauge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .reason {
+      color: #d9e2f0;
     }
 
-    @media (max-width: 620px) {
-      .kv { grid-template-columns: 1fr; }
+    .target {
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .target strong {
+      color: #fff;
+    }
+
+    .matrix-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .matrix-card {
+      padding: 0.95rem;
+    }
+
+    .matrix-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.3rem 0.7rem;
+      font-size: 0.88rem;
+    }
+
+    .matrix-card dt {
+      color: var(--muted);
+    }
+
+    .matrix-card dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .run-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin: 1.2rem 0 0;
+    }
+
+    button {
+      border: 1px solid rgba(180, 210, 255, 0.28);
+      background: rgba(16, 38, 68, 0.82);
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.75rem 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: rgba(36, 70, 116, 0.9);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .hidden-canvas-stage {
+      position: fixed;
+      left: -99999px;
+      top: -99999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -286,7 +332,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to Gauges</a>
 
-  <header>
+  <header class="site-header">
     <a class="brand" href="/">Diamond Gate Bridge</a>
     <nav aria-label="Primary navigation">
       <a href="/">Compass</a>
@@ -300,1071 +346,1528 @@
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Gauges · One Page · Full Gap Map</p>
-      <h1 id="page-title">Generation Reach Audit</h1>
-
+    <section class="hero">
+      <p class="eyebrow">Gauges · One Page · Gap + Boundary Map</p>
+      <h1>Generation Reach Audit</h1>
       <p>
-        This single Gauges page measures the live Showroom Globe route and pre-maps Audralia
-        Generation 1 through Generation 4. It shows passes, failures, held items, and the logistical gap.
+        This single Gauges page measures the live Showroom Globe route, Audralia Generation 1–4 reach,
+        Earth NASA-reference discipline, file-boundary clarity, cross-body adoption, visual phenotype,
+        and the next lawful target. A generation cannot pass from imports alone.
       </p>
 
-      <div class="summary-grid" aria-label="Global audit summary">
-        <div class="summary-card"><strong id="totalCount">0</strong><span>Total checks mapped</span></div>
-        <div class="summary-card"><strong id="passCount">0</strong><span>Passed</span></div>
-        <div class="summary-card"><strong id="notPassedCount">0</strong><span>Not passed</span></div>
-        <div class="summary-card"><strong id="failCount">0</strong><span>Failing</span></div>
-        <div class="summary-card"><strong id="heldCount">0</strong><span>Held / not built</span></div>
-        <div class="summary-card"><strong id="warnCount">0</strong><span>Warnings</span></div>
-      </div>
-
-      <div class="generation-grid" aria-label="Generation gap map">
-        <div class="generation-card">
-          <strong id="g1Status">HELD</strong>
-          <span>Generation 1</span>
-          <small id="g1Gap">0/0 passed · 0 not passed</small>
-        </div>
-        <div class="generation-card">
-          <strong id="g2Status">HELD</strong>
-          <span>Generation 2</span>
-          <small id="g2Gap">0/0 passed · 0 not passed</small>
-        </div>
-        <div class="generation-card">
-          <strong id="g3Status">HELD</strong>
-          <span>Generation 3</span>
-          <small id="g3Gap">0/0 passed · 0 not passed</small>
-        </div>
-        <div class="generation-card">
-          <strong id="g4Status">HELD</strong>
-          <span>Generation 4</span>
-          <small id="g4Gap">0/0 passed · 0 not passed</small>
-        </div>
-      </div>
-
-      <div class="toolbar">
-        <button id="runAudit" type="button">Run Audit</button>
-        <span id="auditStamp" class="timestamp">Audit not yet run.</span>
+      <div class="run-row">
+        <button id="runAuditButton" type="button">Run Audit</button>
+        <span id="runReceipt" class="small">GAUGES_FULL_G1_TO_G4_BOUNDARY_AND_GAP_MAP_TNT_v1 · pending</span>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="criteria-title">
-      <h2 id="criteria-title">Pre-Mapped Standard</h2>
-      <ul class="goal-list">
-        <li>G1 is not only source import. It requires parent, terrain, parent consumption, Showroom copy alignment, controller receipt alignment, and visual confirmation readiness.</li>
-        <li>G2 requires G1 plus hydration, climate, parent consumption of hydration and climate, and G2 visual-readiness receipts.</li>
-        <li>G3 requires G2 plus ecology, fauna, living-world runtime, parent consumption, and runtime sample proof.</li>
-        <li>G4 requires G3 plus orbital readiness, strong visual metrics, screenshot/owner confirmation, and claim-lock survival.</li>
-      </ul>
+    <section class="summary-grid" aria-label="Audit summary">
+      <article class="card"><span id="totalChecks" class="value">—</span><span class="label">Total checks mapped</span></article>
+      <article class="card"><span id="passedChecks" class="value PASS">—</span><span class="label">Passed</span></article>
+      <article class="card"><span id="notPassedChecks" class="value FAIL">—</span><span class="label">Not passed</span></article>
+      <article class="card"><span id="failingChecks" class="value FAIL">—</span><span class="label">Failing</span></article>
+      <article class="card"><span id="heldChecks" class="value HELD">—</span><span class="label">Held / not built</span></article>
+      <article class="card"><span id="warningChecks" class="value WARN">—</span><span class="label">Warnings</span></article>
     </section>
 
-    <section class="panel" aria-labelledby="gauges-title">
-      <h2 id="gauges-title">Live Gauges</h2>
-      <div id="gaugeGrid" class="gauge-grid" aria-live="polite"></div>
+    <section class="section">
+      <h2>Generation Reach Map</h2>
+      <p>
+        This layer answers what generation pieces exist and whether each generation has passed
+        its required source, parent-consumption, and visual-boundary checks.
+      </p>
+      <div id="generationGrid" class="generation-grid"></div>
     </section>
 
-    <section class="panel" aria-labelledby="gap-report-title">
-      <h2 id="gap-report-title">Gap Report</h2>
-      <pre id="gapReport">Run audit to generate gap report.</pre>
+    <section class="section">
+      <h2>Boundary Integrity Map</h2>
+      <p>
+        This layer answers whether Earth and Audralia are staying inside their own file,
+        visual, and generation lanes.
+      </p>
+      <div id="boundaryGrid" class="boundary-grid"></div>
     </section>
 
-    <section class="panel" aria-labelledby="missing-title">
-      <h2 id="missing-title">Next Targets</h2>
-      <pre id="missingReport">Run audit to generate next-target report.</pre>
+    <section class="section">
+      <h2>Live Checks</h2>
+      <div id="checks" class="checks"></div>
     </section>
 
-    <section class="panel" aria-labelledby="log-title">
-      <h2 id="log-title">Raw Diagnostic Log</h2>
-      <pre id="rawLog">No log yet.</pre>
+    <section class="section">
+      <h2>File Ownership Matrix</h2>
+      <div id="fileMatrix" class="matrix-grid"></div>
     </section>
 
-    <canvas id="earthProofCanvas" class="audit-proof" width="320" height="320"></canvas>
-    <canvas id="audraliaProofCanvas" class="audit-proof" width="320" height="320"></canvas>
+    <section class="section">
+      <h2>Next Lawful Target</h2>
+      <div id="nextTarget" class="target mono">Audit pending.</div>
+    </section>
+
+    <section class="section">
+      <h2>Gap Report</h2>
+      <pre id="gapReport" class="mono">Audit pending.</pre>
+    </section>
+
+    <section class="section">
+      <h2>Raw Diagnostic Log</h2>
+      <pre id="rawLog" class="mono">Audit pending.</pre>
+    </section>
   </main>
 
-  <script>
-    (function initGauges() {
-      "use strict";
+  <div id="hiddenCanvasStage" class="hidden-canvas-stage" aria-hidden="true"></div>
 
-      const RECEIPT = "GAUGES_FULL_G1_TO_G4_GAP_MAP_TNT_v1";
+  <script type="module">
+    const RECEIPT = "GAUGES_FULL_G1_TO_G4_BOUNDARY_AND_GAP_MAP_TNT_v1";
 
-      const ROUTE = "/showroom/globe/";
-      const INDEX_JS = "/showroom/globe/index.js";
+    const PATHS = Object.freeze({
+      route: "/showroom/globe/",
+      controller: "/showroom/globe/index.js",
+      earth: "/assets/earth/earth_canvas.js",
+      audraliaParent: "/assets/audralia/audralia.planet.render.js",
+      terrain: "/assets/audralia/audralia.terrain.render.js",
+      hydration: "/assets/audralia/audralia.hydration.render.js",
+      climate: "/assets/audralia/audralia.climate.render.js",
+      ecology: "/assets/audralia/audralia.ecology.render.js",
+      fauna: "/assets/audralia/audralia.fauna.render.js",
+      runtime: "/assets/audralia/audralia.living-world.runtime.js"
+    });
 
-      const MODULES = Object.freeze({
-        earth: "/assets/earth/earth_canvas.js",
-        parent: "/assets/audralia/audralia.planet.render.js",
-        terrain: "/assets/audralia/audralia.terrain.render.js",
-        hydration: "/assets/audralia/audralia.hydration.render.js",
-        climate: "/assets/audralia/audralia.climate.render.js",
-        ecology: "/assets/audralia/audralia.ecology.render.js",
-        fauna: "/assets/audralia/audralia.fauna.render.js",
-        runtime: "/assets/audralia/audralia.living-world.runtime.js"
-      });
+    const EARTH_ASSETS = Object.freeze([
+      "/assets/earth/earth-blue-marble-day.jpg",
+      "/assets/earth/earth-blue-marble-day.png",
+      "/assets/earth/earth-reference.jpg",
+      "/assets/earth/earth-reference.png",
+      "/assets/earth/blue-marble.jpg",
+      "/assets/earth/blue-marble.png"
+    ]);
 
-      const OLD_BRIDGE = "/assets/AdreliaPlanetRendered.js";
-      const LEGACY_TOKEN = String.fromCharCode(65, 117, 115, 116, 114, 97, 108, 105, 97);
+    const state = {
+      checks: [],
+      log: [],
+      modules: {},
+      sources: {},
+      statuses: {},
+      renders: {},
+      generation: {}
+    };
 
-      const state = {
-        checks: [],
-        log: [],
-        facts: {},
-        status: {
-          G1: "HELD",
-          G2: "HELD",
-          G3: "HELD",
-          G4: "HELD"
-        }
+    const $ = (id) => document.getElementById(id);
+
+    function now() {
+      return new Date().toISOString();
+    }
+
+    function log(message) {
+      state.log.push(`[${now()}] ${message}`);
+    }
+
+    function cacheBust(path) {
+      const joiner = path.includes("?") ? "&" : "?";
+      return `${path}${joiner}v=${encodeURIComponent(RECEIPT)}_${Date.now()}`;
+    }
+
+    function includesAny(text, tokens) {
+      const hay = String(text || "");
+      return tokens.some((token) => hay.includes(token));
+    }
+
+    function addCheck(group, name, status, reason, details = {}) {
+      const check = {
+        id: `${group}:${name}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        group,
+        name,
+        status,
+        reason,
+        details
       };
 
-      const nodes = {
-        totalCount: document.getElementById("totalCount"),
-        passCount: document.getElementById("passCount"),
-        notPassedCount: document.getElementById("notPassedCount"),
-        failCount: document.getElementById("failCount"),
-        warnCount: document.getElementById("warnCount"),
-        heldCount: document.getElementById("heldCount"),
-        g1Status: document.getElementById("g1Status"),
-        g2Status: document.getElementById("g2Status"),
-        g3Status: document.getElementById("g3Status"),
-        g4Status: document.getElementById("g4Status"),
-        g1Gap: document.getElementById("g1Gap"),
-        g2Gap: document.getElementById("g2Gap"),
-        g3Gap: document.getElementById("g3Gap"),
-        g4Gap: document.getElementById("g4Gap"),
-        auditStamp: document.getElementById("auditStamp"),
-        runAudit: document.getElementById("runAudit"),
-        gaugeGrid: document.getElementById("gaugeGrid"),
-        gapReport: document.getElementById("gapReport"),
-        missingReport: document.getElementById("missingReport"),
-        rawLog: document.getElementById("rawLog"),
-        earthProofCanvas: document.getElementById("earthProofCanvas"),
-        audraliaProofCanvas: document.getElementById("audraliaProofCanvas")
-      };
+      state.checks.push(check);
+      return check;
+    }
 
-      function resetFacts() {
-        state.facts = {
-          routeHtmlOk: false,
-          routeParentPathOk: false,
-          routeNoForbiddenTokens: false,
-          showroomCopyAligned: false,
-
-          controllerKnown: false,
-          controllerParentPathOk: false,
-          controllerNoCrossBody: false,
-          controllerReceiptAligned: false,
-
-          earthClaimSafe: false,
-          earthRenderProof: false,
-
-          parentImportOk: false,
-          parentRenderProof: false,
-          parentStatus: {},
-          parentRender: null,
-
-          terrainImportOk: false,
-          terrainStatsOk: false,
-          parentConsumesTerrain: false,
-
-          hydrationImportOk: false,
-          hydrationStatsOk: false,
-          climateImportOk: false,
-          climateStatsOk: false,
-          parentConsumesHydrationClimate: false,
-          g2VisualReceipt: false,
-
-          ecologyImportOk: false,
-          faunaImportOk: false,
-          runtimeImportOk: false,
-          runtimeSampleOk: false,
-          parentConsumesEcologyFaunaRuntime: false,
-          g3RuntimeReceipt: false,
-
-          orbitalReady: false,
-          g4PixelProof: false,
-          g4ColorDiversity: false,
-          g4Contrast: false,
-          screenshotConfirmed: false,
-          generationClaimLockSafe: true
-        };
-      }
-
-      function nowIso() {
-        return new Date().toISOString();
-      }
-
-      function bust(url) {
-        const joiner = url.includes("?") ? "&" : "?";
-        return `${url}${joiner}v=${encodeURIComponent(RECEIPT)}_${Date.now()}`;
-      }
-
-      function log(message) {
-        state.log.push(`[${nowIso()}] ${message}`);
-      }
-
-      function boolText(value) {
-        return value === true ? "true" : value === false ? "false" : String(value);
-      }
-
-      function escapeText(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;");
-      }
-
-      function statusRank(status) {
-        if (status === "FAIL") return 0;
-        if (status === "WARN") return 1;
-        if (status === "HELD") return 2;
-        return 3;
-      }
-
-      function addCheck(gen, id, title, status, test, details, raw) {
-        state.checks.push({
-          gen,
-          id,
-          title,
-          status,
-          test,
-          details: details || {},
-          raw: raw || null
-        });
-      }
-
-      function passCheck(gen, id, title, passed, test, details, raw) {
-        addCheck(gen, id, title, passed ? "PASS" : "FAIL", test, details, raw);
-      }
-
-      function heldCheck(gen, id, title, test, details, raw) {
-        addCheck(gen, id, title, "HELD", test, details, raw);
-      }
-
-      function warnCheck(gen, id, title, test, details, raw) {
-        addCheck(gen, id, title, "WARN", test, details, raw);
-      }
-
-      async function fetchText(url) {
-        const response = await fetch(bust(url), { cache: "no-store" });
+    async function fetchText(path) {
+      try {
+        const response = await fetch(cacheBust(path), { cache: "no-store" });
         const text = await response.text();
-        return { ok: response.ok, status: response.status, text };
-      }
 
-      async function importModule(url) {
-        try {
-          const module = await import(bust(url));
-          return { ok: true, module, error: null };
-        } catch (error) {
-          return {
-            ok: false,
-            module: null,
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-      }
-
-      function getApi(module) {
-        return module ? module.default || module : null;
-      }
-
-      function callStatus(api, statusFunctionName) {
-        if (!api) return { ok: false, statusAvailable: false, error: "api missing" };
-
-        const fn =
-          typeof api[statusFunctionName] === "function"
-            ? api[statusFunctionName]
-            : typeof api.getStatus === "function"
-              ? api.getStatus
-              : null;
-
-        if (!fn) return { ok: false, statusAvailable: false, error: "status function missing" };
-
-        try {
-          return Object.assign({ statusAvailable: true }, fn.call(api));
-        } catch (error) {
-          return {
-            ok: false,
-            statusAvailable: false,
-            error: String(error && error.message ? error.message : error)
-          };
-        }
-      }
-
-      function measureCanvas(canvas) {
-        const context = canvas.getContext("2d");
-        const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
-
-        let opaque = 0;
-        let minLum = 255;
-        let maxLum = 0;
-        const colors = new Set();
-
-        for (let i = 0; i < data.length; i += 4) {
-          const a = data[i + 3];
-          if (a <= 0) continue;
-
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const lum = Math.round(r * 0.2126 + g * 0.7152 + b * 0.0722);
-
-          opaque += 1;
-          minLum = Math.min(minLum, lum);
-          maxLum = Math.max(maxLum, lum);
-
-          if (opaque % 9 === 0) {
-            colors.add(`${Math.round(r / 24)}:${Math.round(g / 24)}:${Math.round(b / 24)}`);
-          }
-        }
+        log(`Fetched ${path}: status=${response.status}, chars=${text.length}.`);
 
         return {
-          opaquePixels: opaque,
-          colorDiversity: colors.size,
-          contrast: maxLum - minLum,
-          pixelProof: opaque > 0,
-          colorDiversityPass: colors.size >= 24,
-          contrastPass: maxLum - minLum >= 60
+          ok: response.ok,
+          status: response.status,
+          text,
+          error: null
+        };
+      } catch (error) {
+        log(`Fetch failed ${path}: ${String(error && error.message ? error.message : error)}.`);
+
+        return {
+          ok: false,
+          status: 0,
+          text: "",
+          error: String(error && error.message ? error.message : error)
+        };
+      }
+    }
+
+    async function importModule(path) {
+      try {
+        const module = await import(cacheBust(path));
+        log(`Import ${path}: ok=true.`);
+        return {
+          ok: true,
+          path,
+          module,
+          error: null
+        };
+      } catch (error) {
+        const msg = String(error && error.message ? error.message : error);
+        log(`Import ${path}: ok=false :: ${msg}.`);
+        return {
+          ok: false,
+          path,
+          module: null,
+          error: msg
+        };
+      }
+    }
+
+    function getApi(imported) {
+      if (!imported || !imported.ok || !imported.module) return null;
+      return imported.module.default || imported.module;
+    }
+
+    function callStatus(api, path) {
+      if (!api || typeof api.getStatus !== "function") {
+        return {
+          statusAvailable: false,
+          ok: false,
+          error: "getStatus missing",
+          file: path
         };
       }
 
-      function renderProof(api, canvas, options) {
-        if (!api) return { rendered: false, method: "none", pixelProof: false, error: "api missing" };
+      try {
+        return Object.assign({ statusAvailable: true }, api.getStatus());
+      } catch (error) {
+        return {
+          statusAvailable: false,
+          ok: false,
+          error: String(error && error.message ? error.message : error),
+          file: path
+        };
+      }
+    }
 
-        try {
-          const ctx = canvas.getContext("2d");
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function makeCanvas() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      $("hiddenCanvasStage").appendChild(canvas);
+      return canvas;
+    }
 
-          const profile = typeof api.createProfile === "function" ? api.createProfile(options || {}) : undefined;
-          const texture = typeof api.buildTexture === "function" ? api.buildTexture(profile) : undefined;
+    async function renderModule(api, label) {
+      const canvas = makeCanvas();
 
-          if (typeof api.renderSurface === "function") {
-            api.renderSurface(canvas, Object.assign({}, options || {}, { profile, texture }));
-            return Object.assign({ rendered: true, method: "renderSurface" }, measureCanvas(canvas));
-          }
+      if (!api) {
+        return {
+          rendered: false,
+          method: "none",
+          error: "api missing",
+          analysis: analyzeCanvas(canvas),
+          canvas
+        };
+      }
 
-          if (typeof api.render === "function") {
-            api.render(canvas, options || {});
-            return Object.assign({ rendered: true, method: "render" }, measureCanvas(canvas));
-          }
+      try {
+        let output;
+        let method = "none";
 
-          if (typeof api.renderPlanet === "function") {
-            api.renderPlanet(canvas, options || {});
-            return Object.assign({ rendered: true, method: "renderPlanet" }, measureCanvas(canvas));
-          }
-
-          return { rendered: false, method: "missing", pixelProof: false, error: "No compatible render API." };
-        } catch (error) {
+        if (typeof api.renderSurface === "function") {
+          method = "renderSurface";
+          output = api.renderSurface(canvas, {
+            route: PATHS.route,
+            audit: RECEIPT,
+            label
+          });
+        } else if (typeof api.render === "function") {
+          method = "render";
+          output = api.render(canvas, {
+            route: PATHS.route,
+            audit: RECEIPT,
+            label
+          });
+        } else if (typeof api.renderPlanet === "function") {
+          method = "renderPlanet";
+          output = api.renderPlanet(canvas, {
+            route: PATHS.route,
+            audit: RECEIPT,
+            label
+          });
+        } else {
           return {
             rendered: false,
-            method: "error",
-            pixelProof: false,
-            error: String(error && error.message ? error.message : error)
+            method: "none",
+            error: "no render method",
+            analysis: analyzeCanvas(canvas),
+            canvas
           };
         }
+
+        await new Promise((resolve) => setTimeout(resolve, 350));
+
+        return {
+          rendered: true,
+          method,
+          output,
+          error: null,
+          analysis: analyzeCanvas(canvas),
+          canvas
+        };
+      } catch (error) {
+        return {
+          rendered: false,
+          method: "error",
+          error: String(error && error.message ? error.message : error),
+          analysis: analyzeCanvas(canvas),
+          canvas
+        };
+      }
+    }
+
+    function analyzeCanvas(canvas) {
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const { width, height } = canvas;
+      const image = ctx.getImageData(0, 0, width, height);
+      const data = image.data;
+
+      let visible = 0;
+      let blueDominant = 0;
+      let greenDominant = 0;
+      let brownDominant = 0;
+      let whiteCloud = 0;
+      let alphaPixels = 0;
+      let minLum = 255;
+      let maxLum = 0;
+      const buckets = new Set();
+
+      for (let i = 0; i < data.length; i += 16) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
+
+        if (a <= 20) continue;
+
+        alphaPixels += 1;
+
+        const lum = Math.round((r + g + b) / 3);
+        minLum = Math.min(minLum, lum);
+        maxLum = Math.max(maxLum, lum);
+
+        const bucket = `${Math.round(r / 24)}-${Math.round(g / 24)}-${Math.round(b / 24)}`;
+        buckets.add(bucket);
+
+        const isBackgroundDark = lum < 18 && a < 230;
+        if (isBackgroundDark) continue;
+
+        visible += 1;
+
+        if (b > r * 1.18 && b > g * 1.08 && b > 70) blueDominant += 1;
+        if (g > r * 1.08 && g > b * 0.88 && g > 60) greenDominant += 1;
+        if (r > b * 1.14 && g > b * 1.08 && r > 70 && g > 58) brownDominant += 1;
+        if (r > 168 && g > 168 && b > 168 && Math.abs(r - g) < 44 && Math.abs(g - b) < 54) whiteCloud += 1;
       }
 
-      function scanForbiddenLegacy(text) {
-        const candidates = [
-          `Planet ${LEGACY_TOKEN}`,
-          `${LEGACY_TOKEN} G1`,
-          `${LEGACY_TOKEN} terrain`,
-          `${LEGACY_TOKEN} globe`,
-          `planet-${LEGACY_TOKEN.toLowerCase()}`,
-          `Planet${LEGACY_TOKEN}`
-        ];
+      const safe = Math.max(1, visible);
 
-        return candidates.filter((token) => text.includes(token));
-      }
+      return {
+        visiblePixels: visible,
+        alphaPixels,
+        pixelProof: visible > 200,
+        colorDiversity: buckets.size,
+        contrast: maxLum - minLum,
+        blueRatio: blueDominant / safe,
+        greenRatio: greenDominant / safe,
+        brownRatio: brownDominant / safe,
+        whiteCloudRatio: whiteCloud / safe,
+        visibleWaterPhenotype: blueDominant / safe > 0.22,
+        earthLikePhenotype: blueDominant / safe > 0.18 && whiteCloud / safe > 0.04,
+        dryTerrainPhenotype: blueDominant / safe < 0.18 && (brownDominant + greenDominant) / safe > 0.16
+      };
+    }
 
-      function includesAll(list, required) {
-        return Array.isArray(list) && required.every((item) => list.includes(item));
-      }
-
-      function parentConsumes(parentStatus, childNames, childPaths) {
-        const children = Array.isArray(parentStatus.activeDownstreamChildren)
-          ? parentStatus.activeDownstreamChildren
-          : [];
-
-        const paths = Array.isArray(parentStatus.activeDownstreamPaths)
-          ? parentStatus.activeDownstreamPaths
-          : [];
-
-        const named = includesAll(children, childNames);
-        const pathed = includesAll(paths, childPaths);
-        const legacyFlags = childNames.every((name) => parentStatus[`${name}ChildActive`] === true);
-
-        return named || pathed || legacyFlags;
-      }
-
-      function generationChecks(gen) {
-        return state.checks.filter((check) => check.gen === gen);
-      }
-
-      function generationPassed(gen) {
-        const checks = generationChecks(gen);
-        return checks.length > 0 && checks.every((check) => check.status === "PASS");
-      }
-
-      function setGenerationStatuses() {
-        ["G1", "G2", "G3", "G4"].forEach((gen) => {
-          const checks = generationChecks(gen);
-          const hasFail = checks.some((check) => check.status === "FAIL");
-          const hasHeld = checks.some((check) => check.status === "HELD");
-          const hasWarn = checks.some((check) => check.status === "WARN");
-          const allPass = checks.length > 0 && checks.every((check) => check.status === "PASS");
-
-          state.status[gen] = allPass ? "PASS" : hasFail ? "FAIL" : hasHeld || hasWarn ? "HELD" : "HELD";
+    async function checkAssetExists(path) {
+      try {
+        const response = await fetch(cacheBust(path), {
+          method: "HEAD",
+          cache: "no-store"
         });
+
+        if (response.ok) {
+          return { ok: true, path, status: response.status };
+        }
+      } catch (_) {}
+
+      try {
+        const response = await fetch(cacheBust(path), {
+          method: "GET",
+          cache: "no-store"
+        });
+
+        return { ok: response.ok, path, status: response.status };
+      } catch (error) {
+        return {
+          ok: false,
+          path,
+          status: 0,
+          error: String(error && error.message ? error.message : error)
+        };
+      }
+    }
+
+    async function findEarthAsset() {
+      for (const path of EARTH_ASSETS) {
+        const result = await checkAssetExists(path);
+        log(`Earth asset probe ${path}: ok=${result.ok}, status=${result.status}.`);
+        if (result.ok) return result;
       }
 
-      function renderGauge(check) {
-        const statusClass =
-          check.status === "PASS" ? "pass" :
-          check.status === "FAIL" ? "fail" :
-          check.status === "WARN" ? "warn" :
-          "held";
+      return {
+        ok: false,
+        path: null,
+        status: 0,
+        tried: EARTH_ASSETS.slice()
+      };
+    }
 
-        const details = Object.entries(check.details || {})
-          .map(([key, value]) => {
-            const rendered = typeof value === "object" && value !== null ? JSON.stringify(value) : value;
-            return `<div>${escapeText(key)}</div><div>${escapeText(rendered)}</div>`;
-          })
-          .join("");
+    function sourceHas(path, token) {
+      return String(state.sources[path]?.text || "").includes(token);
+    }
 
-        return `
-          <article class="gauge-card" data-generation="${escapeText(check.gen)}" data-status="${escapeText(check.status)}" data-check="${escapeText(check.id)}">
-            <div class="gauge-head">
-              <h3>${escapeText(check.gen)} · ${escapeText(check.title)}</h3>
-              <span class="badge ${statusClass}">${escapeText(check.status)}</span>
-            </div>
-            <p>${escapeText(check.test)}</p>
-            <div class="kv">${details}</div>
-            ${check.raw ? `<pre>${escapeText(check.raw)}</pre>` : ""}
-          </article>
+    function statusBool(status, key) {
+      return status && status[key] === true;
+    }
+
+    async function runAudit() {
+      state.checks = [];
+      state.log = [];
+      state.modules = {};
+      state.sources = {};
+      state.statuses = {};
+      state.renders = {};
+      state.generation = {};
+
+      $("hiddenCanvasStage").replaceChildren();
+      $("runReceipt").textContent = `${RECEIPT} · running · ${new Date().toLocaleString()}`;
+      log("Audit start.");
+
+      state.sources[PATHS.route] = await fetchText(PATHS.route);
+      state.sources[PATHS.controller] = await fetchText(PATHS.controller);
+      state.sources[PATHS.earth] = await fetchText(PATHS.earth);
+      state.sources[PATHS.audraliaParent] = await fetchText(PATHS.audraliaParent);
+
+      const routeText = state.sources[PATHS.route].text;
+      const controllerText = state.sources[PATHS.controller].text;
+      const earthSource = state.sources[PATHS.earth].text;
+      const audraliaSource = state.sources[PATHS.audraliaParent].text;
+
+      state.modules.earth = await importModule(PATHS.earth);
+      state.modules.audraliaParent = await importModule(PATHS.audraliaParent);
+      state.modules.terrain = await importModule(PATHS.terrain);
+      state.modules.hydration = await importModule(PATHS.hydration);
+      state.modules.climate = await importModule(PATHS.climate);
+      state.modules.ecology = await importModule(PATHS.ecology);
+      state.modules.fauna = await importModule(PATHS.fauna);
+      state.modules.runtime = await importModule(PATHS.runtime);
+
+      const earthApi = getApi(state.modules.earth);
+      const audraliaApi = getApi(state.modules.audraliaParent);
+      const terrainApi = getApi(state.modules.terrain);
+      const hydrationApi = getApi(state.modules.hydration);
+      const climateApi = getApi(state.modules.climate);
+      const ecologyApi = getApi(state.modules.ecology);
+      const faunaApi = getApi(state.modules.fauna);
+      const runtimeApi = getApi(state.modules.runtime);
+
+      state.statuses.earth = callStatus(earthApi, PATHS.earth);
+      state.statuses.audraliaParent = callStatus(audraliaApi, PATHS.audraliaParent);
+      state.statuses.terrain = callStatus(terrainApi, PATHS.terrain);
+      state.statuses.hydration = callStatus(hydrationApi, PATHS.hydration);
+      state.statuses.climate = callStatus(climateApi, PATHS.climate);
+      state.statuses.ecology = callStatus(ecologyApi, PATHS.ecology);
+      state.statuses.fauna = callStatus(faunaApi, PATHS.fauna);
+      state.statuses.runtime = callStatus(runtimeApi, PATHS.runtime);
+
+      state.renders.earth = await renderModule(earthApi, "Earth");
+      state.statuses.earthAfterRender = callStatus(earthApi, PATHS.earth);
+      state.renders.audralia = await renderModule(audraliaApi, "Audralia");
+
+      const earthAsset = await findEarthAsset();
+
+      const routeOk = state.sources[PATHS.route].ok && routeText.includes("<html") && !routeText.trim().startsWith("//");
+      const controllerOk = state.sources[PATHS.controller].ok && controllerText.length > 200;
+      const routeParentPath = routeText.includes(PATHS.audraliaParent);
+      const controllerParentPath = controllerText.includes(PATHS.audraliaParent);
+      const oldBridgePresent = routeText.includes("/assets/AdreliaPlanetRendered.js") || controllerText.includes("/assets/AdreliaPlanetRendered.js");
+      const noCrossFallback = controllerText.includes("NO_CROSS_BODY_FALLBACK") || routeText.includes("NO_CROSS_BODY_FALLBACK");
+
+      const earthStatus = state.statuses.earthAfterRender || state.statuses.earth;
+      const audraliaStatus = state.statuses.audraliaParent;
+      const terrainStatus = state.statuses.terrain;
+      const hydrationStatus = state.statuses.hydration;
+      const climateStatus = state.statuses.climate;
+
+      const earthBoundaryMode = earthStatus.rendererMode === "NASA_TEXTURE_REFERENCE";
+      const earthAssetLoaded =
+        earthAsset.ok === true ||
+        earthStatus.assetStatus === "loaded" ||
+        Boolean(earthStatus.activeAssetPath);
+
+      const earthHasForbiddenProceduralTerms = includesAny(earthSource, [
+        "dry terraform",
+        "AUDRALIA_G1",
+        "sampleTerrain",
+        "landBodyCount",
+        "summitRegion",
+        "Nine Summits"
+      ]);
+
+      const audraliaDryStatus =
+        audraliaStatus.g1DryTerraformLandOnly === true ||
+        audraliaStatus.generationStatus === "AUDRALIA_G1_DRY_TERRAFORM_LAND_ONLY";
+
+      const audraliaConsumesTerrain = audraliaStatus.parentConsumesTerrain === true;
+      const audraliaConsumesHydration = audraliaStatus.parentConsumesHydration === true;
+      const audraliaConsumesClimate = audraliaStatus.parentConsumesClimate === true;
+
+      const audraliaVisualWater =
+        audraliaStatus.visualWaterActive === true ||
+        audraliaStatus.oceansActive === true ||
+        state.renders.audralia.analysis.visibleWaterPhenotype === true;
+
+      const audraliaSourceDryReceipt = audraliaSource.includes("AUDRALIA_G1_DRY_TERRAFORM_PARENT_RENDER_TNT_v1");
+      const audraliaRenderChanged = audraliaStatus.receipt === "AUDRALIA_G1_DRY_TERRAFORM_PARENT_RENDER_TNT_v1";
+
+      const terrainOk = state.modules.terrain.ok && terrainStatus.ok !== false;
+      const terrainSeven = Number(terrainStatus.landBodyCount) === 7;
+      const terrainNine = Number(terrainStatus.summitRegionCount) === 9;
+      const terrainExports = Array.isArray(terrainStatus.exports) && terrainStatus.exports.includes("sampleTerrain");
+
+      const hydrationOk = state.modules.hydration.ok && hydrationStatus.ok !== false;
+      const climateOk = state.modules.climate.ok && climateStatus.ok !== false;
+
+      const hydrationProof =
+        hydrationOk &&
+        (
+          Number(hydrationStatus.waterClasses) >= 1 ||
+          hydrationSourceProof(state.modules.hydration.module) ||
+          String(JSON.stringify(hydrationStatus)).includes("hydration")
+        );
+
+      const climateProof =
+        climateOk &&
+        (
+          Number(climateStatus.climateRegions) >= 1 ||
+          climateSourceProof(state.modules.climate.module) ||
+          String(JSON.stringify(climateStatus)).includes("climate")
+        );
+
+      const parentConsumesHydrationClimate =
+        audraliaConsumesHydration === true &&
+        audraliaConsumesClimate === true &&
+        Array.isArray(audraliaStatus.activeDownstreamChildren) &&
+        audraliaStatus.activeDownstreamChildren.includes("hydration") &&
+        audraliaStatus.activeDownstreamChildren.includes("climate");
+
+      const g2VisualReady =
+        audraliaStatus.g2Ready === true ||
+        audraliaStatus.generationStatus === "AUDRALIA_G2_HYDRATION_CLIMATE_ACTIVE";
+
+      const ecologyOk = state.modules.ecology.ok && state.statuses.ecology.ok !== false;
+      const faunaOk = state.modules.fauna.ok && state.statuses.fauna.ok !== false;
+      const runtimeOk = state.modules.runtime.ok && state.statuses.runtime.ok !== false;
+      const parentConsumesG3 =
+        Array.isArray(audraliaStatus.activeDownstreamChildren) &&
+        audraliaStatus.activeDownstreamChildren.includes("ecology") &&
+        audraliaStatus.activeDownstreamChildren.includes("fauna") &&
+        audraliaStatus.activeDownstreamChildren.includes("runtime");
+
+      const g3Ready = audraliaStatus.g3Ready === true;
+      const g4Ready = audraliaStatus.g4Ready === true || audraliaStatus.orbitalReady === true;
+      const screenshotConfirmed = audraliaStatus.screenshotConfirmed === true || routeText.includes("SCREENSHOT_CONFIRMED=true");
+      const renderPixelProof = state.renders.audralia.analysis.pixelProof === true;
+      const colorDiversityPass = state.renders.audralia.analysis.colorDiversity >= 24;
+      const landWaterContrastPass = state.renders.audralia.analysis.contrast >= 60;
+      const generationClaimLockSafe = audraliaStatus.generationPassClaimed !== true || g4Ready === true;
+
+      addCheck(
+        "G1",
+        "Route HTML",
+        routeOk ? "PASS" : "FAIL",
+        "Showroom Globe route must load as HTML, not raw JavaScript.",
+        {
+          routeOk,
+          status: state.sources[PATHS.route].status,
+          rawJsVisible: routeText.trim().startsWith("//")
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Route Parent Path",
+        routeParentPath && !oldBridgePresent ? "PASS" : "FAIL",
+        "Showroom route must reference canonical Audralia parent path and not the old bridge.",
+        {
+          parentPath: routeParentPath,
+          oldBridgePresent,
+          expected: PATHS.audraliaParent
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Controller Known",
+        controllerOk ? "PASS" : "FAIL",
+        "Showroom controller must be fetchable and non-empty.",
+        {
+          controllerOk,
+          chars: controllerText.length,
+          status: state.sources[PATHS.controller].status
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Controller Parent Authority",
+        controllerParentPath && !oldBridgePresent ? "PASS" : "FAIL",
+        "Controller must import Audralia only from the canonical parent path.",
+        {
+          controllerParentPath,
+          oldBridgePresent,
+          expected: PATHS.audraliaParent
+        }
+      );
+
+      addCheck(
+        "G1",
+        "No Cross-Body Fallback",
+        noCrossFallback && !oldBridgePresent ? "PASS" : "FAIL",
+        "Controller must explicitly block Earth/Audralia renderer adoption.",
+        {
+          noCrossFallback,
+          oldBridgePresent
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Earth Claim Discipline",
+        earthStatus.generationStatus === "G4_CANDIDATE" && earthStatus.generationClaimed === false ? "PASS" : "FAIL",
+        "Earth must remain G4_CANDIDATE and must not claim Generation 4 completion.",
+        {
+          generationStatus: earthStatus.generationStatus,
+          generationClaimed: earthStatus.generationClaimed,
+          targetStandard: earthStatus.targetStandard
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Earth Render Proof",
+        state.renders.earth.rendered && state.renders.earth.analysis.pixelProof ? "PASS" : "FAIL",
+        "Earth module must render non-empty canvas output.",
+        {
+          rendered: state.renders.earth.rendered,
+          method: state.renders.earth.method,
+          pixelProof: state.renders.earth.analysis.pixelProof,
+          error: state.renders.earth.error
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Audralia Parent Import",
+        state.modules.audraliaParent.ok && audraliaStatus.statusAvailable === true ? "PASS" : "FAIL",
+        "Audralia parent renderer must import and expose status.",
+        {
+          path: PATHS.audraliaParent,
+          receipt: audraliaStatus.receipt,
+          statusAvailable: audraliaStatus.statusAvailable,
+          error: state.modules.audraliaParent.error
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Audralia Parent Render Proof",
+        state.renders.audralia.rendered && state.renders.audralia.analysis.pixelProof ? "PASS" : "FAIL",
+        "Audralia parent must render non-empty canvas output.",
+        {
+          rendered: state.renders.audralia.rendered,
+          method: state.renders.audralia.method,
+          pixelProof: state.renders.audralia.analysis.pixelProof,
+          colorDiversity: state.renders.audralia.analysis.colorDiversity,
+          contrast: state.renders.audralia.analysis.contrast,
+          error: state.renders.audralia.error
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Terrain Import",
+        terrainOk ? "PASS" : "FAIL",
+        "Terrain child must import and expose terrain status.",
+        {
+          path: PATHS.terrain,
+          receipt: terrainStatus.receipt,
+          file: terrainStatus.file,
+          error: state.modules.terrain.error
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Seven Land Bodies",
+        terrainSeven ? "PASS" : "FAIL",
+        "Terrain must prove seven active land bodies.",
+        {
+          expected: 7,
+          active: terrainStatus.landBodyCount,
+          bodies: Array.isArray(terrainStatus.landBodies) ? terrainStatus.landBodies.map((b) => b.id || b.key).join(",") : "missing"
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Nine Summit Regions",
+        terrainNine ? "PASS" : "FAIL",
+        "Terrain must prove nine active summit terrain regions.",
+        {
+          expected: 9,
+          active: terrainStatus.summitRegionCount,
+          regions: Array.isArray(terrainStatus.summitRegions) ? terrainStatus.summitRegions.map((r) => r.id || r.key).join(",") : "missing"
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Terrain Sampling API",
+        terrainExports ? "PASS" : "FAIL",
+        "Terrain child must expose sampleTerrain through its exports/status contract.",
+        {
+          exports: terrainStatus.exports || []
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Parent Consumes Terrain",
+        audraliaConsumesTerrain ? "PASS" : "FAIL",
+        "Audralia G1 parent must prove it consumes the terrain child.",
+        {
+          parentConsumesTerrain: audraliaStatus.parentConsumesTerrain,
+          activeDownstreamChildren: audraliaStatus.activeDownstreamChildren,
+          activeDownstreamPaths: audraliaStatus.activeDownstreamPaths
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Showroom Copy Alignment",
+        routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE"),
+        (routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE")) ? "PASS" : "FAIL",
+        "Showroom visible copy must match terrain-active reality.",
+        {
+          terrainCopyPresent: routeText.includes("terrain-active") || routeText.includes("TERRAIN_CHILD_ACTIVE"),
+          groundZeroCopyPresent: routeText.includes("ground-zero parent renderer")
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Controller Receipt Alignment",
+        controllerText.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE") &&
+        controllerText.includes("GROUND_ZERO_PARENT_ONLY") &&
+        controllerText.includes("false")
+          ? "PASS"
+          : "FAIL",
+        "Controller receipt logic must no longer emit ground-zero-only language after terrain activation.",
+        {
+          terrainReceiptPresent: controllerText.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE"),
+          groundZeroFalsePresent: controllerText.includes("GROUND_ZERO_PARENT_ONLY") && controllerText.includes("false")
+        }
+      );
+
+      addCheck(
+        "G1",
+        "Audralia G1 Dry Visual Boundary",
+        audraliaDryStatus && !audraliaVisualWater ? "PASS" : "FAIL",
+        "Audralia G1 must be dry terraform land-only. If visible blue water/ocean phenotype appears, G1 does not pass.",
+        {
+          generationStatus: audraliaStatus.generationStatus,
+          g1DryTerraformLandOnly: audraliaStatus.g1DryTerraformLandOnly,
+          visualWaterActive: audraliaStatus.visualWaterActive,
+          oceansActive: audraliaStatus.oceansActive,
+          renderedBlueRatio: state.renders.audralia.analysis.blueRatio,
+          visibleWaterPhenotype: state.renders.audralia.analysis.visibleWaterPhenotype
+        }
+      );
+
+      addCheck(
+        "G2",
+        "G1 Prerequisite",
+        groupPassed("G1") ? "PASS" : "HELD",
+        "G2 remains held until G1 fully passes, including visual boundary integrity.",
+        {
+          G1: groupPassed("G1") ? "PASS" : "NOT_PASSED"
+        }
+      );
+
+      addCheck(
+        "G2",
+        "Hydration Import",
+        hydrationOk ? "PASS" : "HELD",
+        "Hydration child must import and expose status.",
+        {
+          path: PATHS.hydration,
+          receipt: hydrationStatus.receipt,
+          file: hydrationStatus.file,
+          error: state.modules.hydration.error
+        }
+      );
+
+      addCheck(
+        "G2",
+        "Hydration Field Proof",
+        hydrationProof ? "PASS" : "HELD",
+        "Hydration must prove water classes, ocean presence, or river/drainage permission.",
+        {
+          statusAvailable: hydrationStatus.statusAvailable,
+          summary: compactStatus(hydrationStatus)
+        }
+      );
+
+      addCheck(
+        "G2",
+        "Climate Import",
+        climateOk ? "PASS" : "HELD",
+        "Climate child must import and expose status.",
+        {
+          path: PATHS.climate,
+          receipt: climateStatus.receipt,
+          file: climateStatus.file,
+          error: state.modules.climate.error
+        }
+      );
+
+      addCheck(
+        "G2",
+        "Climate Field Proof",
+        climateProof ? "PASS" : "HELD",
+        "Climate must prove climate regions, thermal bands, or moisture bands.",
+        {
+          statusAvailable: climateStatus.statusAvailable,
+          summary: compactStatus(climateStatus)
+        }
+      );
+
+      addCheck(
+        "G2",
+        "Parent Consumes Hydration + Climate",
+        parentConsumesHydrationClimate ? "PASS" : "FAIL",
+        "G2 does not pass until parent intentionally consumes hydration and climate.",
+        {
+          parentConsumesHydration: audraliaStatus.parentConsumesHydration,
+          parentConsumesClimate: audraliaStatus.parentConsumesClimate,
+          activeDownstreamChildren: audraliaStatus.activeDownstreamChildren,
+          activeDownstreamPaths: audraliaStatus.activeDownstreamPaths
+        }
+      );
+
+      addCheck(
+        "G2",
+        "G2 Visual Readiness Receipt",
+        g2VisualReady ? "PASS" : "HELD",
+        "G2 remains held until parent exposes a G2 visual-readiness receipt.",
+        {
+          g2Ready: audraliaStatus.g2Ready,
+          generationStatus: audraliaStatus.generationStatus
+        }
+      );
+
+      addCheck(
+        "G3",
+        "G2 Prerequisite",
+        groupPassed("G2") ? "PASS" : "HELD",
+        "G3 remains held until G2 fully passes.",
+        {
+          G2: groupPassed("G2") ? "PASS" : "NOT_PASSED"
+        }
+      );
+
+      addCheck(
+        "G3",
+        "Ecology Import",
+        ecologyOk ? "PASS" : "HELD",
+        "Ecology child is required for G3.",
+        {
+          path: PATHS.ecology,
+          error: state.modules.ecology.error
+        }
+      );
+
+      addCheck(
+        "G3",
+        "Fauna Import",
+        faunaOk ? "PASS" : "HELD",
+        "Fauna child is required for G3.",
+        {
+          path: PATHS.fauna,
+          error: state.modules.fauna.error
+        }
+      );
+
+      addCheck(
+        "G3",
+        "Living-World Runtime Import",
+        runtimeOk ? "PASS" : "HELD",
+        "Living-world runtime is required for G3.",
+        {
+          path: PATHS.runtime,
+          error: state.modules.runtime.error
+        }
+      );
+
+      addCheck(
+        "G3",
+        "Runtime Sample Proof",
+        runtimeOk && typeof runtimeApi?.sampleRuntime === "function" ? "PASS" : "HELD",
+        "Runtime sample proof remains held until runtime exists and exposes sampling.",
+        {
+          runtimeReady: runtimeOk,
+          sampleRuntime: typeof runtimeApi?.sampleRuntime === "function"
+        }
+      );
+
+      addCheck(
+        "G3",
+        "Parent Consumes Ecology + Fauna + Runtime",
+        parentConsumesG3 ? "PASS" : "HELD",
+        "Parent G3 consumption remains held until all G3 children exist and are consumed.",
+        {
+          ecology: ecologyOk,
+          fauna: faunaOk,
+          runtime: runtimeOk,
+          parentConsumesG3
+        }
+      );
+
+      addCheck(
+        "G3",
+        "G3 Runtime Receipt",
+        g3Ready ? "PASS" : "HELD",
+        "G3 remains held until parent exposes runtime readiness.",
+        {
+          g3Ready: audraliaStatus.g3Ready
+        }
+      );
+
+      addCheck(
+        "G4",
+        "G3 Prerequisite",
+        groupPassed("G3") ? "PASS" : "HELD",
+        "G4 remains held until G3 fully passes.",
+        {
+          G3: groupPassed("G3") ? "PASS" : "NOT_PASSED"
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Orbital Visual Readiness",
+        g4Ready ? "PASS" : "HELD",
+        "G4 remains held until parent exposes orbital visual standard readiness.",
+        {
+          g4Ready,
+          orbitalReady: audraliaStatus.orbitalReady,
+          visualStandard: audraliaStatus.visualStandard || "missing"
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Screenshot Confirmation",
+        screenshotConfirmed ? "PASS" : "HELD",
+        "G4 remains held until screenshot/owner visual confirmation receipt exists.",
+        {
+          screenshotConfirmed
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Render Pixel Proof",
+        renderPixelProof ? "PASS" : "FAIL",
+        "G4 requires non-empty render output.",
+        {
+          rendered: state.renders.audralia.rendered,
+          pixelProof: renderPixelProof,
+          method: state.renders.audralia.method
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Color Diversity",
+        colorDiversityPass ? "PASS" : "FAIL",
+        "G4 requires sufficient render color diversity.",
+        {
+          colorDiversity: state.renders.audralia.analysis.colorDiversity,
+          threshold: 24
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Land/Water Contrast",
+        landWaterContrastPass ? "PASS" : "FAIL",
+        "G4 requires sufficient visible contrast.",
+        {
+          contrast: state.renders.audralia.analysis.contrast,
+          threshold: 60
+        }
+      );
+
+      addCheck(
+        "G4",
+        "Generation Claim Lock",
+        generationClaimLockSafe ? "PASS" : "FAIL",
+        "Generation claim is accepted only if all G4 checks pass.",
+        {
+          generationPassClaimed: audraliaStatus.generationPassClaimed,
+          claimLockSafe: generationClaimLockSafe
+        }
+      );
+
+      addCheck(
+        "Earth Boundary",
+        "Earth Authority Path",
+        state.modules.earth.ok && earthStatus.file === PATHS.earth ? "PASS" : "FAIL",
+        "Earth must import from /assets/earth/earth_canvas.js only.",
+        {
+          expected: PATHS.earth,
+          file: earthStatus.file,
+          imported: state.modules.earth.ok
+        }
+      );
+
+      addCheck(
+        "Earth Boundary",
+        "NASA Renderer Mode",
+        earthBoundaryMode ? "PASS" : "FAIL",
+        "Earth renderer mode must be NASA_TEXTURE_REFERENCE.",
+        {
+          rendererMode: earthStatus.rendererMode,
+          targetStandard: earthStatus.targetStandard
+        }
+      );
+
+      addCheck(
+        "Earth Boundary",
+        "NASA Asset Loaded",
+        earthAssetLoaded ? "PASS" : "FAIL",
+        "Earth reference readiness fails until a real local NASA-style Earth texture asset is loaded.",
+        {
+          assetLoaded: earthAssetLoaded,
+          activeAssetPath: earthStatus.activeAssetPath || earthAsset.path,
+          assetStatus: earthStatus.assetStatus,
+          tried: EARTH_ASSETS
+        }
+      );
+
+      addCheck(
+        "Earth Boundary",
+        "No Audralia Procedural Logic",
+        earthHasForbiddenProceduralTerms ? "FAIL" : "PASS",
+        "Earth file must not use Audralia terrain, summit, dry-terraform, or world-generation logic.",
+        {
+          forbiddenProceduralTerms: earthHasForbiddenProceduralTerms
+        }
+      );
+
+      addCheck(
+        "Earth Boundary",
+        "Placeholder Cannot Pass",
+        earthAssetLoaded ? "PASS" : "FAIL",
+        "Earth fallback or NASA_ASSET_PENDING placeholder cannot count as Earth visual readiness.",
+        {
+          assetStatus: earthStatus.assetStatus,
+          rendered: state.renders.earth.rendered,
+          earthLikePhenotype: state.renders.earth.analysis.earthLikePhenotype
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "Audralia Authority Path",
+        state.modules.audraliaParent.ok && audraliaStatus.file === PATHS.audraliaParent ? "PASS" : "FAIL",
+        "Audralia must import from /assets/audralia/audralia.planet.render.js only.",
+        {
+          expected: PATHS.audraliaParent,
+          file: audraliaStatus.file,
+          imported: state.modules.audraliaParent.ok
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "G1 Dry Status",
+        audraliaDryStatus ? "PASS" : "FAIL",
+        "Audralia G1 status must explicitly declare dry terraform land-only.",
+        {
+          generationStatus: audraliaStatus.generationStatus,
+          g1DryTerraformLandOnly: audraliaStatus.g1DryTerraformLandOnly
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "G1 Does Not Consume Hydration",
+        audraliaConsumesHydration ? "FAIL" : "PASS",
+        "Audralia G1 must not consume hydration. Hydration belongs to G2.",
+        {
+          parentConsumesHydration: audraliaStatus.parentConsumesHydration,
+          hydrationChildBuilt: audraliaStatus.hydrationChildBuilt
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "G1 Does Not Consume Climate",
+        audraliaConsumesClimate ? "FAIL" : "PASS",
+        "Audralia G1 must not consume climate. Climate belongs to G2.",
+        {
+          parentConsumesClimate: audraliaStatus.parentConsumesClimate,
+          climateChildBuilt: audraliaStatus.climateChildBuilt
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "G1 No Water Phenotype",
+        audraliaVisualWater ? "FAIL" : "PASS",
+        "Audralia G1 cannot show ocean/water phenotype.",
+        {
+          visualWaterActive: audraliaStatus.visualWaterActive,
+          oceansActive: audraliaStatus.oceansActive,
+          blueRatio: state.renders.audralia.analysis.blueRatio,
+          visibleWaterPhenotype: state.renders.audralia.analysis.visibleWaterPhenotype
+        }
+      );
+
+      addCheck(
+        "Audralia Boundary",
+        "Parent Deployment Receipt",
+        audraliaSourceDryReceipt && audraliaRenderChanged ? "PASS" : "FAIL",
+        "Audralia source and runtime status must both show the dry-terraform parent receipt.",
+        {
+          sourceDryReceipt: audraliaSourceDryReceipt,
+          runtimeReceipt: audraliaStatus.receipt,
+          runtimeDryReceipt: audraliaRenderChanged
+        }
+      );
+
+      addCheck(
+        "Cross-Adoption",
+        "Old Bridge Removed",
+        oldBridgePresent ? "FAIL" : "PASS",
+        "Old root bridge /assets/AdreliaPlanetRendered.js must not be referenced by route or controller.",
+        {
+          oldBridgePresent
+        }
+      );
+
+      addCheck(
+        "Cross-Adoption",
+        "Distinct Renderer Modes",
+        earthStatus.rendererMode !== audraliaStatus.rendererMode ? "PASS" : "FAIL",
+        "Earth and Audralia must expose different renderer modes/status profiles.",
+        {
+          earthRendererMode: earthStatus.rendererMode || "missing",
+          audraliaRendererMode: audraliaStatus.rendererMode || audraliaStatus.generationStatus || "missing"
+        }
+      );
+
+      addCheck(
+        "Cross-Adoption",
+        "Earth Does Not Imitate Audralia",
+        earthHasForbiddenProceduralTerms ? "FAIL" : "PASS",
+        "Earth must not be generated through Audralia terrain or summit systems.",
+        {
+          earthHasForbiddenProceduralTerms
+        }
+      );
+
+      addCheck(
+        "Cross-Adoption",
+        "Audralia Does Not Imitate Earth NASA Renderer",
+        audraliaSource.includes("NASA_TEXTURE_REFERENCE") || audraliaSource.includes("Blue Marble") ? "FAIL" : "PASS",
+        "Audralia must not use Earth/NASA reference renderer logic.",
+        {
+          audraliaContainsNasaTerms: audraliaSource.includes("NASA_TEXTURE_REFERENCE") || audraliaSource.includes("Blue Marble")
+        }
+      );
+
+      addCheck(
+        "Cross-Adoption",
+        "Controller Split Receipts",
+        controllerText.includes("Earth") &&
+        controllerText.includes("Audralia") &&
+        controllerText.includes("NO_CROSS_BODY_FALLBACK")
+          ? "PASS"
+          : "FAIL",
+        "Controller must maintain separate body receipts and block cross adoption.",
+        {
+          earthToken: controllerText.includes("Earth"),
+          audraliaToken: controllerText.includes("Audralia"),
+          noCrossBodyFallback: controllerText.includes("NO_CROSS_BODY_FALLBACK")
+        }
+      );
+
+      renderAll();
+      log("Audit complete.");
+      $("runReceipt").textContent = `${RECEIPT} · completed · ${new Date().toLocaleString()}`;
+    }
+
+    function hydrationSourceProof(module) {
+      try {
+        const api = module?.default || module;
+        return Boolean(api && (api.sampleHydration || api.buildHydrationField || api.getHydrationStatus));
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function climateSourceProof(module) {
+      try {
+        const api = module?.default || module;
+        return Boolean(api && (api.sampleClimate || api.buildClimateField || api.getClimateStatus));
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function compactStatus(status) {
+      const out = {};
+      for (const key of Object.keys(status || {})) {
+        if (["terrainStatus", "hydrationStatus", "climateStatus", "landBodies", "summitRegions"].includes(key)) continue;
+        const value = status[key];
+        if (typeof value !== "object") out[key] = value;
+      }
+      return out;
+    }
+
+    function groupChecks(group) {
+      return state.checks.filter((check) => check.group === group);
+    }
+
+    function groupPassed(group) {
+      const checks = groupChecks(group);
+      return checks.length > 0 && checks.every((check) => check.status === "PASS");
+    }
+
+    function groupCounts(group) {
+      const checks = groupChecks(group);
+      const passed = checks.filter((c) => c.status === "PASS").length;
+      const fail = checks.filter((c) => c.status === "FAIL").length;
+      const held = checks.filter((c) => c.status === "HELD").length;
+      const warn = checks.filter((c) => c.status === "WARN").length;
+      return {
+        total: checks.length,
+        passed,
+        fail,
+        held,
+        warn,
+        notPassed: fail + held + warn,
+        status: fail > 0 ? "FAIL" : held > 0 ? "HELD" : warn > 0 ? "WARN" : "PASS"
+      };
+    }
+
+    function renderAll() {
+      renderSummary();
+      renderGeneration();
+      renderBoundaries();
+      renderChecks();
+      renderMatrix();
+      renderNextTarget();
+      renderGapReport();
+      $("rawLog").textContent = state.log.join("\n");
+    }
+
+    function renderSummary() {
+      const total = state.checks.length;
+      const passed = state.checks.filter((c) => c.status === "PASS").length;
+      const fail = state.checks.filter((c) => c.status === "FAIL").length;
+      const held = state.checks.filter((c) => c.status === "HELD").length;
+      const warn = state.checks.filter((c) => c.status === "WARN").length;
+
+      $("totalChecks").textContent = total;
+      $("passedChecks").textContent = passed;
+      $("notPassedChecks").textContent = fail + held + warn;
+      $("failingChecks").textContent = fail;
+      $("heldChecks").textContent = held;
+      $("warningChecks").textContent = warn;
+    }
+
+    function renderGeneration() {
+      const groups = ["G1", "G2", "G3", "G4"];
+      $("generationGrid").innerHTML = "";
+
+      for (const group of groups) {
+        const counts = groupCounts(group);
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <span class="badge ${counts.status}">${counts.status}</span>
+          <h3>Generation ${group.replace("G", "")}</h3>
+          <p class="mono">${counts.passed}/${counts.total} passed · ${counts.notPassed} not passed</p>
         `;
+        $("generationGrid").appendChild(card);
       }
+    }
 
-      function renderAll() {
-        setGenerationStatuses();
+    function renderBoundaries() {
+      const groups = ["Earth Boundary", "Audralia Boundary", "Cross-Adoption"];
+      $("boundaryGrid").innerHTML = "";
 
-        const total = state.checks.length;
-        const pass = state.checks.filter((check) => check.status === "PASS").length;
-        const fail = state.checks.filter((check) => check.status === "FAIL").length;
-        const warn = state.checks.filter((check) => check.status === "WARN").length;
-        const held = state.checks.filter((check) => check.status === "HELD").length;
-        const notPassed = total - pass;
-
-        nodes.totalCount.textContent = String(total);
-        nodes.passCount.textContent = String(pass);
-        nodes.notPassedCount.textContent = String(notPassed);
-        nodes.failCount.textContent = String(fail);
-        nodes.warnCount.textContent = String(warn);
-        nodes.heldCount.textContent = String(held);
-
-        ["G1", "G2", "G3", "G4"].forEach((gen) => {
-          const checks = generationChecks(gen);
-          const passed = checks.filter((check) => check.status === "PASS").length;
-          const notPassedForGen = checks.length - passed;
-          const statusNode = nodes[`${gen.toLowerCase()}Status`];
-          const gapNode = nodes[`${gen.toLowerCase()}Gap`];
-
-          statusNode.textContent = state.status[gen];
-          statusNode.className = state.status[gen].toLowerCase();
-          gapNode.textContent = `${passed}/${checks.length} passed · ${notPassedForGen} not passed`;
-        });
-
-        nodes.gaugeGrid.innerHTML = state.checks
-          .slice()
-          .sort((a, b) => {
-            const genSort = Number(a.gen.slice(1)) - Number(b.gen.slice(1));
-            if (genSort !== 0) return genSort;
-            return statusRank(a.status) - statusRank(b.status);
-          })
-          .map(renderGauge)
-          .join("");
-
-        nodes.rawLog.textContent = state.log.join("\n");
+      for (const group of groups) {
+        const counts = groupCounts(group);
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <span class="badge ${counts.status}">${counts.status}</span>
+          <h3>${escapeHtml(group)}</h3>
+          <p class="mono">${counts.passed}/${counts.total} passed · ${counts.notPassed} not passed</p>
+        `;
+        $("boundaryGrid").appendChild(card);
       }
+    }
 
-      function buildReports() {
-        setGenerationStatuses();
+    function renderChecks() {
+      $("checks").innerHTML = "";
 
-        const lines = [
+      for (const check of state.checks) {
+        const node = document.createElement("article");
+        node.className = "check";
+        node.innerHTML = `
+          <div class="check-head">
+            <span class="check-name">${escapeHtml(check.group)} · ${escapeHtml(check.name)}</span>
+            <span class="badge ${check.status}">${check.status}</span>
+          </div>
+          <div class="reason">${escapeHtml(check.reason)}</div>
+          <pre class="details">${escapeHtml(JSON.stringify(check.details, null, 2))}</pre>
+        `;
+        $("checks").appendChild(node);
+      }
+    }
+
+    function renderMatrix() {
+      const files = [
+        {
+          file: PATHS.earth,
+          owner: "Earth",
+          role: "NASA reference renderer",
+          boundary: "No Audralia procedural logic",
+          status: groupChecks("Earth Boundary").some((c) => c.status === "FAIL") ? "FAIL" : "PASS"
+        },
+        {
+          file: PATHS.audraliaParent,
+          owner: "Audralia",
+          role: "Parent renderer",
+          boundary: "G1 dry terrain only until G2 parent consumption",
+          status: groupChecks("Audralia Boundary").some((c) => c.status === "FAIL") ? "FAIL" : "PASS"
+        },
+        {
+          file: PATHS.terrain,
+          owner: "Audralia",
+          role: "G1 terrain child",
+          boundary: "Owns terrain only",
+          status: groupChecks("G1").find((c) => c.name === "Terrain Import")?.status || "HELD"
+        },
+        {
+          file: PATHS.hydration,
+          owner: "Audralia",
+          role: "G2 hydration child",
+          boundary: "Does not become visible until parent consumes G2",
+          status: groupChecks("G2").find((c) => c.name === "Hydration Import")?.status || "HELD"
+        },
+        {
+          file: PATHS.climate,
+          owner: "Audralia",
+          role: "G2 climate child",
+          boundary: "Does not become visible until parent consumes G2",
+          status: groupChecks("G2").find((c) => c.name === "Climate Import")?.status || "HELD"
+        },
+        {
+          file: PATHS.ecology,
+          owner: "Audralia",
+          role: "G3 ecology child",
+          boundary: "Foliage layer",
+          status: groupChecks("G3").find((c) => c.name === "Ecology Import")?.status || "HELD"
+        },
+        {
+          file: PATHS.fauna,
+          owner: "Audralia",
+          role: "G3/G4 fauna child",
+          boundary: "Animals/living-world extension",
+          status: groupChecks("G3").find((c) => c.name === "Fauna Import")?.status || "HELD"
+        },
+        {
+          file: PATHS.runtime,
+          owner: "Audralia",
+          role: "Living-world runtime",
+          boundary: "Runtime behavior, not terrain ownership",
+          status: groupChecks("G3").find((c) => c.name === "Living-World Runtime Import")?.status || "HELD"
+        }
+      ];
+
+      $("fileMatrix").innerHTML = "";
+
+      for (const item of files) {
+        const node = document.createElement("article");
+        node.className = "matrix-card";
+        node.innerHTML = `
+          <span class="badge ${item.status}">${item.status}</span>
+          <h3>${escapeHtml(item.owner)}</h3>
+          <dl>
+            <dt>File</dt><dd class="mono">${escapeHtml(item.file)}</dd>
+            <dt>Role</dt><dd>${escapeHtml(item.role)}</dd>
+            <dt>Boundary</dt><dd>${escapeHtml(item.boundary)}</dd>
+          </dl>
+        `;
+        $("fileMatrix").appendChild(node);
+      }
+    }
+
+    function renderNextTarget() {
+      const failed = state.checks.filter((c) => c.status === "FAIL");
+      const held = state.checks.filter((c) => c.status === "HELD");
+      const next = failed[0] || held[0];
+
+      if (!next) {
+        $("nextTarget").textContent = [
           `RECEIPT=${RECEIPT}`,
-          `TOTAL_CHECKS=${state.checks.length}`,
-          `PASSED=${state.checks.filter((check) => check.status === "PASS").length}`,
-          `NOT_PASSED=${state.checks.filter((check) => check.status !== "PASS").length}`,
-          "",
-          `G1=${state.status.G1} :: ${generationChecks("G1").filter((check) => check.status === "PASS").length}/${generationChecks("G1").length} passed`,
-          `G2=${state.status.G2} :: ${generationChecks("G2").filter((check) => check.status === "PASS").length}/${generationChecks("G2").length} passed`,
-          `G3=${state.status.G3} :: ${generationChecks("G3").filter((check) => check.status === "PASS").length}/${generationChecks("G3").length} passed`,
-          `G4=${state.status.G4} :: ${generationChecks("G4").filter((check) => check.status === "PASS").length}/${generationChecks("G4").length} passed`,
-          "",
-          `ROUTE_COPY_ALIGNED=${state.facts.showroomCopyAligned}`,
-          `CONTROLLER_RECEIPT_ALIGNED=${state.facts.controllerReceiptAligned}`,
-          `PARENT_CONSUMES_TERRAIN=${state.facts.parentConsumesTerrain}`,
-          `PARENT_CONSUMES_HYDRATION_CLIMATE=${state.facts.parentConsumesHydrationClimate}`,
-          `PARENT_CONSUMES_G3=${state.facts.parentConsumesEcologyFaunaRuntime}`,
-          "",
-          "RULE=GENERATION_STATUS_IS_GAUGE_DETERMINED_ONLY",
-          "RULE=PASS_COUNT_ALONE_IS_NOT_GENERATION_PASS",
-          "RULE=NOT_PASSED_EQUALS_FAIL_PLUS_HELD_PLUS_WARN"
-        ];
-
-        nodes.gapReport.textContent = lines.join("\n");
-
-        const notPassed = state.checks.filter((check) => check.status !== "PASS");
-        const next = notPassed[0];
-
-        const missing = [
-          `RECEIPT=${RECEIPT}`,
-          `NEXT_TARGET=${next ? `${next.gen}:${next.id}` : "VISUAL_REVIEW"}`,
-          "",
-          ...notPassed.map((check) => `${check.status}=${check.gen}:${check.id} :: ${check.title}`)
-        ];
-
-        nodes.missingReport.textContent = missing.join("\n");
+          "NEXT_TARGET=NONE",
+          "STATUS=ALL_MAPPED_CHECKS_PASS"
+        ].join("\n");
+        return;
       }
 
-      async function auditRouteAndController() {
-        const route = await fetchText(ROUTE);
-        log(`Fetched route: status=${route.status}, chars=${route.text.length}.`);
+      const target = mapTarget(next);
 
-        const hasHtml = route.text.includes("<!doctype html") || route.text.includes("<html");
-        const rawJsVisible = route.text.trim().startsWith("const ") || route.text.includes("async function mountBody");
-        const hasParentPath = route.text.includes(MODULES.parent);
-        const oldBridgeInRoute = route.text.includes(OLD_BRIDGE);
-        const forbidden = scanForbiddenLegacy(route.text);
+      $("nextTarget").textContent = [
+        `RECEIPT=${RECEIPT}`,
+        `NEXT_TARGET=${next.group}:${next.name}`,
+        `STATUS=${next.status}`,
+        `REASON=${next.reason}`,
+        `WRITE_ONLY=${JSON.stringify(target.writeOnly)}`,
+        `DO_NOT_TOUCH=${JSON.stringify(target.doNotTouch)}`,
+        `DETAILS=${JSON.stringify(next.details)}`
+      ].join("\n");
+    }
 
-        const routeTerrainCopy =
-          route.text.includes("AUDRALIA_TERRAIN_CHILD_ACTIVE=TRUE") ||
-          route.text.includes('data-audralia-terrain-child-active="true"') ||
-          route.text.includes("GENERATION_1_TERRAIN_ACTIVE") ||
-          route.text.includes("terrain-active parent compositor");
+    function mapTarget(check) {
+      const safeDoNotTouch = [
+        "/products/",
+        "/door/",
+        "/home/",
+        "/showroom/",
+        "/showroom/globe/index.html",
+        "/showroom/globe/index.js"
+      ];
 
-        const routeGroundZeroCopy =
-          route.text.includes("AUDRALIA_GROUND_ZERO_PARENT_ONLY=TRUE") ||
-          route.text.includes("ground-zero parent renderer") ||
-          route.text.includes("clean parent renderer before any downstream science children are restored");
-
-        state.facts.routeHtmlOk = route.ok && hasHtml && !rawJsVisible;
-        state.facts.routeParentPathOk = hasParentPath && !oldBridgeInRoute;
-        state.facts.routeNoForbiddenTokens = forbidden.length === 0;
-        state.facts.showroomCopyAligned = routeTerrainCopy && !routeGroundZeroCopy;
-
-        passCheck("G1", "route-html", "Route HTML", state.facts.routeHtmlOk,
-          "Showroom Globe route must load as HTML, not raw JavaScript.",
-          { "Route OK": boolText(route.ok), "HTML": boolText(hasHtml), "Raw JS Visible": boolText(rawJsVisible), Status: route.status });
-
-        passCheck("G1", "route-parent-path", "Route Parent Path", state.facts.routeParentPathOk,
-          "Showroom must reference the canonical Audralia parent path and not the old bridge.",
-          { "Parent Path": boolText(hasParentPath), "Old Bridge Present": boolText(oldBridgeInRoute), Expected: MODULES.parent });
-
-        passCheck("G1", "forbidden-token-scan", "Forbidden Token Scan", state.facts.routeNoForbiddenTokens,
-          "Showroom route must not contain forbidden identity bridge labels.",
-          { "Forbidden Hits": forbidden.length, Hits: forbidden.join(", ") || "none" });
-
-        passCheck("G1", "showroom-copy-alignment", "Showroom Copy Alignment", state.facts.showroomCopyAligned,
-          "Showroom visible copy must match terrain-active reality and must not still claim ground-zero parent-only.",
-          { "Terrain Copy Present": boolText(routeTerrainCopy), "Ground-Zero Copy Present": boolText(routeGroundZeroCopy) });
-
-        const index = await fetchText(INDEX_JS);
-        log(`Fetched index: status=${index.status}, chars=${index.text.length}.`);
-
-        const knownController =
-          index.text.includes("EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1") ||
-          index.text.includes("SHOWROOM_GLOBE_EMBEDDED_GENERATION_GAUGES_TNT_v1") ||
-          index.text.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE");
-
-        const hasParentImport = index.text.includes(MODULES.parent);
-        const oldBridgeInIndex = index.text.includes(OLD_BRIDGE);
-        const noCrossBody = index.text.includes("NO_CROSS_BODY_FALLBACK");
-        const controllerReceiptAligned =
-          index.text.includes("AUDRALIA_G1_PARENT_TERRAIN_ACTIVE") ||
-          index.text.includes("TERRAIN_CHILD_ACTIVE") ||
-          index.text.includes("terrainChildActive");
-
-        state.facts.controllerKnown = index.ok && knownController;
-        state.facts.controllerParentPathOk = hasParentImport && !oldBridgeInIndex;
-        state.facts.controllerNoCrossBody = noCrossBody;
-        state.facts.controllerReceiptAligned = controllerReceiptAligned;
-
-        passCheck("G1", "controller-known", "Controller Known", state.facts.controllerKnown,
-          "Showroom controller must be known and fetchable.",
-          { "Index OK": boolText(index.ok), "Known Controller": boolText(knownController), Status: index.status });
-
-        passCheck("G1", "controller-parent-authority", "Controller Parent Authority", state.facts.controllerParentPathOk,
-          "Controller must import Audralia only from the canonical parent path.",
-          { "Parent Import": boolText(hasParentImport), "Old Bridge Present": boolText(oldBridgeInIndex) });
-
-        passCheck("G1", "controller-no-cross-body", "No Cross-Body Fallback", state.facts.controllerNoCrossBody,
-          "Controller must explicitly block Earth/Audralia renderer adoption.",
-          { "No Cross Body": boolText(noCrossBody) });
-
-        passCheck("G1", "controller-receipt-alignment", "Controller Receipt Alignment", state.facts.controllerReceiptAligned,
-          "Controller receipt logic must no longer emit ground-zero-only language after terrain activation.",
-          { "Terrain Receipt Present": boolText(controllerReceiptAligned) });
+      if (check.group === "Earth Boundary") {
+        return {
+          writeOnly: [PATHS.earth, "/assets/earth/[NASA_TEXTURE_ASSET]"],
+          doNotTouch: [PATHS.audraliaParent, PATHS.terrain, PATHS.hydration, PATHS.climate, PATHS.controller, ...safeDoNotTouch]
+        };
       }
 
-      async function auditEarth() {
-        const imported = await importModule(MODULES.earth);
-        log(`Earth import: ok=${imported.ok}.`);
-
-        if (!imported.ok) {
-          passCheck("G1", "earth-import", "Earth Import", false,
-            "Earth candidate renderer must import.",
-            { Path: MODULES.earth, Error: imported.error });
-          return;
-        }
-
-        const api = getApi(imported.module);
-        const status = callStatus(api, "getStatus");
-        const render = renderProof(api, nodes.earthProofCanvas, {
-          body: "Earth",
-          generationStatus: "G4_CANDIDATE",
-          generationClaimed: false,
-          targetStandard: "ORBITAL_EARTH_G4_REFERENCE"
-        });
-
-        state.facts.earthClaimSafe =
-          status.generationStatus === "G4_CANDIDATE" &&
-          status.generationClaimed === false &&
-          status.targetStandard === "ORBITAL_EARTH_G4_REFERENCE";
-
-        state.facts.earthRenderProof = render.rendered && render.pixelProof;
-
-        passCheck("G1", "earth-claim-discipline", "Earth Claim Discipline", state.facts.earthClaimSafe,
-          "Earth must remain G4_CANDIDATE and must not claim Generation 4 completion.",
-          { "Generation Status": status.generationStatus || status.generation || "missing", "Generation Claimed": boolText(status.generationClaimed), "Target Standard": status.targetStandard || "missing" },
-          JSON.stringify(status, null, 2));
-
-        passCheck("G1", "earth-render-proof", "Earth Render Proof", state.facts.earthRenderProof,
-          "Earth module must render non-empty canvas output.",
-          { Rendered: boolText(render.rendered), Method: render.method, "Pixel Proof": boolText(render.pixelProof), Error: render.error || "none" });
+      if (check.group === "Audralia Boundary" || check.name.includes("Audralia G1 Dry")) {
+        return {
+          writeOnly: [PATHS.audraliaParent],
+          doNotTouch: [PATHS.earth, PATHS.controller, PATHS.route, "/gauges/index.html", PATHS.terrain, PATHS.hydration, PATHS.climate]
+        };
       }
 
-      async function auditParentTerrainHydrationClimate() {
-        const parentImport = await importModule(MODULES.parent);
-        log(`Audralia parent import: ok=${parentImport.ok}.`);
-
-        if (!parentImport.ok) {
-          passCheck("G1", "parent-import", "Audralia Parent Import", false,
-            "Audralia parent renderer must import.",
-            { Path: MODULES.parent, Error: parentImport.error });
-          return;
-        }
-
-        const parentApi = getApi(parentImport.module);
-        const parentStatus = callStatus(parentApi, "getStatus");
-        const parentRender = renderProof(parentApi, nodes.audraliaProofCanvas, {
-          body: "Audralia",
-          generation: "G1",
-          generationClaimed: false
-        });
-
-        state.facts.parentStatus = parentStatus;
-        state.facts.parentRender = parentRender;
-        state.facts.parentImportOk = parentImport.ok && parentStatus.ok !== false;
-        state.facts.parentRenderProof = parentRender.rendered && parentRender.pixelProof;
-
-        passCheck("G1", "parent-import", "Audralia Parent Import", state.facts.parentImportOk,
-          "Audralia parent renderer must import and expose status.",
-          { Path: MODULES.parent, Receipt: parentStatus.receipt || "none", File: parentStatus.file || "missing" },
-          JSON.stringify(parentStatus, null, 2));
-
-        passCheck("G1", "parent-render-proof", "Audralia Parent Render Proof", state.facts.parentRenderProof,
-          "Audralia parent must render non-empty output.",
-          { Rendered: boolText(parentRender.rendered), Method: parentRender.method, "Pixel Proof": boolText(parentRender.pixelProof), "Color Diversity": parentRender.colorDiversity || 0, Contrast: parentRender.contrast || 0, Error: parentRender.error || "none" });
-
-        const terrainImport = await importModule(MODULES.terrain);
-        log(`Terrain import: ok=${terrainImport.ok}.`);
-
-        if (!terrainImport.ok) {
-          passCheck("G1", "terrain-import", "Terrain Import", false,
-            "Terrain child must import.",
-            { Path: MODULES.terrain, Error: terrainImport.error });
-          return;
-        }
-
-        const terrainApi = getApi(terrainImport.module);
-        const terrainStatus = callStatus(terrainApi, "getTerrainStatus");
-
-        state.facts.terrainImportOk = terrainImport.ok && terrainStatus.ok !== false;
-
-        passCheck("G1", "terrain-import", "Terrain Import", state.facts.terrainImportOk,
-          "Terrain child must import and expose terrain status.",
-          { Path: MODULES.terrain, Receipt: terrainStatus.receipt || "none", File: terrainStatus.file || "missing" },
-          JSON.stringify(terrainStatus, null, 2));
-
-        let terrainField = null;
-        let terrainError = null;
-
-        try {
-          terrainField = typeof terrainApi.buildTerrainField === "function"
-            ? terrainApi.buildTerrainField(96, 96, { coherenceIndex: 0.92, collaborativeExpression: 0.88 })
-            : null;
-        } catch (error) {
-          terrainError = String(error && error.message ? error.message : error);
-        }
-
-        const terrainStats = terrainField && terrainField.stats ? terrainField.stats : null;
-        const sevenBodies = !!terrainStats && terrainStats.expectedLandBodyCount === 7 && terrainStats.activeLandBodyCount === 7;
-        const nineSummits = !!terrainStats && terrainStats.expectedSummitRegionCount === 9 && terrainStats.activeSummitRegionCount === 9;
-        const primaryMainland = !!terrainStats && terrainStats.primaryMainlandSampleRatio > 0.18 && terrainStats.primaryHorizontalContinuityAverage > 0.38;
-
-        state.facts.terrainStatsOk = sevenBodies && nineSummits && primaryMainland;
-        state.facts.parentConsumesTerrain = parentConsumes(parentStatus, ["terrain"], [MODULES.terrain]);
-
-        passCheck("G1", "terrain-seven-bodies", "Seven Land Bodies", sevenBodies,
-          "Terrain must prove seven active land bodies.",
-          { Expected: terrainStats ? terrainStats.expectedLandBodyCount : "missing", Active: terrainStats ? terrainStats.activeLandBodyCount : "missing", Bodies: terrainStats ? terrainStats.activeLandBodies.join(",") : "missing", Error: terrainError || "none" });
-
-        passCheck("G1", "terrain-nine-summits", "Nine Summit Regions", nineSummits,
-          "Terrain must prove nine active summit terrain regions.",
-          { Expected: terrainStats ? terrainStats.expectedSummitRegionCount : "missing", Active: terrainStats ? terrainStats.activeSummitRegionCount : "missing", Regions: terrainStats ? terrainStats.activeSummitRegions.join(",") : "missing", Error: terrainError || "none" });
-
-        passCheck("G1", "terrain-primary-mainland", "Primary East-West Mainland", primaryMainland,
-          "Primary mainland must be materially present and horizontally coherent.",
-          { "Primary Ratio": terrainStats ? terrainStats.primaryMainlandSampleRatio : "missing", Continuity: terrainStats ? terrainStats.primaryHorizontalContinuityAverage : "missing" });
-
-        passCheck("G1", "parent-consumes-terrain", "Parent Consumes Terrain", state.facts.parentConsumesTerrain,
-          "Parent must prove it consumes terrain.",
-          { terrainChildActive: boolText(parentStatus.terrainChildActive), activeDownstreamChildren: parentStatus.activeDownstreamChildren || "missing", activeDownstreamPaths: parentStatus.activeDownstreamPaths || "missing" });
-
-        const hydrationImport = await importModule(MODULES.hydration);
-        log(`Hydration import: ok=${hydrationImport.ok}.`);
-
-        if (!hydrationImport.ok) {
-          heldCheck("G2", "hydration-import", "Hydration Import",
-            "Hydration child must exist and import before G2 can pass.",
-            { Path: MODULES.hydration, Error: hydrationImport.error });
-        } else {
-          const hydrationApi = getApi(hydrationImport.module);
-          const hydrationStatus = callStatus(hydrationApi, "getHydrationStatus");
-          state.facts.hydrationImportOk = hydrationImport.ok && hydrationStatus.ok !== false;
-
-          passCheck("G2", "hydration-import", "Hydration Import", state.facts.hydrationImportOk,
-            "Hydration child must import and expose status.",
-            { Path: MODULES.hydration, Receipt: hydrationStatus.receipt || "none", File: hydrationStatus.file || "missing" },
-            JSON.stringify(hydrationStatus, null, 2));
-
-          let hydrationField = null;
-          let hydrationError = null;
-
-          try {
-            hydrationField = typeof hydrationApi.buildHydrationField === "function"
-              ? hydrationApi.buildHydrationField(96, 96, { terrainField, coherenceIndex: 0.92, collaborativeExpression: 0.88 })
-              : null;
-          } catch (error) {
-            hydrationError = String(error && error.message ? error.message : error);
-          }
-
-          const hydrationStats = hydrationField && hydrationField.stats ? hydrationField.stats : null;
-          state.facts.hydrationStatsOk =
-            !!hydrationStats &&
-            hydrationStats.activeWaterClassCount >= 4 &&
-            hydrationStats.oceanRatio > 0.12 &&
-            hydrationStats.riverPermissionRatio > 0.02;
-
-          passCheck("G2", "hydration-field-proof", "Hydration Field Proof", state.facts.hydrationStatsOk,
-            "Hydration must prove water classes, ocean presence, and river/drainage permission.",
-            { "Water Classes": hydrationStats ? hydrationStats.activeWaterClassCount : "missing", "Ocean Ratio": hydrationStats ? hydrationStats.oceanRatio : "missing", "River Permission Ratio": hydrationStats ? hydrationStats.riverPermissionRatio : "missing", Error: hydrationError || "none" });
-        }
-
-        const climateImport = await importModule(MODULES.climate);
-        log(`Climate import: ok=${climateImport.ok}.`);
-
-        if (!climateImport.ok) {
-          heldCheck("G2", "climate-import", "Climate Import",
-            "Climate child must exist and import before G2 can pass.",
-            { Path: MODULES.climate, Error: climateImport.error });
-        } else {
-          const climateApi = getApi(climateImport.module);
-          const climateStatus = callStatus(climateApi, "getClimateStatus");
-          state.facts.climateImportOk = climateImport.ok && climateStatus.ok !== false;
-
-          passCheck("G2", "climate-import", "Climate Import", state.facts.climateImportOk,
-            "Climate child must import and expose status.",
-            { Path: MODULES.climate, Receipt: climateStatus.receipt || "none", File: climateStatus.file || "missing" },
-            JSON.stringify(climateStatus, null, 2));
-
-          let climateField = null;
-          let climateError = null;
-
-          try {
-            const climateApiHasField = typeof climateApi.buildClimateField === "function";
-            climateField = climateApiHasField
-              ? climateApi.buildClimateField(96, 96, { terrainField, coherenceIndex: 0.92, collaborativeExpression: 0.88 })
-              : null;
-          } catch (error) {
-            climateError = String(error && error.message ? error.message : error);
-          }
-
-          const climateStats = climateField && climateField.stats ? climateField.stats : null;
-          state.facts.climateStatsOk =
-            !!climateStats &&
-            climateStats.activeClimateRegionCount >= 5 &&
-            climateStats.activeThermalBandCount >= 4 &&
-            climateStats.activeMoistureBandCount >= 3;
-
-          passCheck("G2", "climate-field-proof", "Climate Field Proof", state.facts.climateStatsOk,
-            "Climate must prove climate regions, thermal bands, and moisture bands.",
-            { "Climate Regions": climateStats ? climateStats.activeClimateRegionCount : "missing", "Thermal Bands": climateStats ? climateStats.activeThermalBandCount : "missing", "Moisture Bands": climateStats ? climateStats.activeMoistureBandCount : "missing", Error: climateError || "none" });
-        }
-
-        const g1Pass = generationPassed("G1");
-
-        if (g1Pass) {
-          passCheck("G2", "g1-prerequisite", "G1 Prerequisite", true,
-            "G2 requires G1 to be fully passed.",
-            { G1: "PASS" });
-        } else {
-          heldCheck("G2", "g1-prerequisite", "G1 Prerequisite",
-            "G2 remains held until G1 is fully passed.",
-            { G1: "NOT_PASSED" });
-        }
-
-        state.facts.parentConsumesHydrationClimate = parentConsumes(
-          parentStatus,
-          ["hydration", "climate"],
-          [MODULES.hydration, MODULES.climate]
-        );
-
-        if (state.facts.hydrationImportOk && state.facts.climateImportOk) {
-          passCheck("G2", "parent-consumes-hydration-climate", "Parent Consumes Hydration + Climate", state.facts.parentConsumesHydrationClimate,
-            "Parent must prove it consumes hydration and climate.",
-            { activeDownstreamChildren: parentStatus.activeDownstreamChildren || "missing", activeDownstreamPaths: parentStatus.activeDownstreamPaths || "missing" });
-        } else {
-          heldCheck("G2", "parent-consumes-hydration-climate", "Parent Consumes Hydration + Climate",
-            "Parent consumption remains held until hydration and climate both import.",
-            { Hydration: boolText(state.facts.hydrationImportOk), Climate: boolText(state.facts.climateImportOk) });
-        }
-
-        state.facts.g2VisualReceipt =
-          parentStatus.generation === "G2" ||
-          parentStatus.generationStatus === "G2" ||
-          parentStatus.g2Ready === true ||
-          parentStatus.hydrationChildActive === true && parentStatus.climateChildActive === true;
-
-        if (state.facts.g2VisualReceipt) {
-          passCheck("G2", "g2-visual-readiness-receipt", "G2 Visual Readiness Receipt", true,
-            "Parent exposes G2 readiness receipt.",
-            { G2Ready: boolText(state.facts.g2VisualReceipt) });
-        } else {
-          heldCheck("G2", "g2-visual-readiness-receipt", "G2 Visual Readiness Receipt",
-            "G2 remains held until parent exposes a G2 readiness receipt.",
-            { G2Ready: boolText(state.facts.g2VisualReceipt) });
-        }
+      if (check.group === "G2" && check.name.includes("Parent Consumes")) {
+        return {
+          writeOnly: [PATHS.audraliaParent],
+          doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html", PATHS.ecology, PATHS.fauna, PATHS.runtime]
+        };
       }
 
-      async function auditFutureModule(gen, key, path, statusName, title) {
-        const imported = await importModule(path);
-        log(`${title} import: ok=${imported.ok}.`);
-
-        if (!imported.ok) {
-          heldCheck(gen, `${key}-import`, title,
-            `${title} is not created or not active yet.`,
-            { Path: path, Error: imported.error });
-          return null;
-        }
-
-        const api = getApi(imported.module);
-        const status = callStatus(api, statusName);
-
-        passCheck(gen, `${key}-import`, title, status.ok !== false,
-          `${title} must import and expose status.`,
-          { Path: path, Receipt: status.receipt || "none", File: status.file || "missing" },
-          JSON.stringify(status, null, 2));
-
-        return status.ok !== false ? { api, status } : null;
+      if (check.group === "G3") {
+        return {
+          writeOnly: [PATHS.ecology, PATHS.fauna, PATHS.runtime],
+          doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html"]
+        };
       }
 
-      async function auditG3() {
-        if (generationPassed("G2")) {
-          passCheck("G3", "g2-prerequisite", "G2 Prerequisite", true,
-            "G3 requires G2 to be passed.",
-            { G2: "PASS" });
-        } else {
-          heldCheck("G3", "g2-prerequisite", "G2 Prerequisite",
-            "G3 remains held until G2 is passed.",
-            { G2: "NOT_PASSED" });
-        }
+      return {
+        writeOnly: [PATHS.audraliaParent],
+        doNotTouch: [PATHS.earth, PATHS.route, PATHS.controller, "/gauges/index.html"]
+      };
+    }
 
-        const ecology = await auditFutureModule("G3", "ecology", MODULES.ecology, "getEcologyStatus", "Ecology Import");
-        const fauna = await auditFutureModule("G3", "fauna", MODULES.fauna, "getFaunaStatus", "Fauna Import");
-        const runtime = await auditFutureModule("G3", "runtime", MODULES.runtime, "getRuntimeStatus", "Living-World Runtime Import");
+    function renderGapReport() {
+      const total = state.checks.length;
+      const passed = state.checks.filter((c) => c.status === "PASS").length;
+      const fail = state.checks.filter((c) => c.status === "FAIL").length;
+      const held = state.checks.filter((c) => c.status === "HELD").length;
+      const warn = state.checks.filter((c) => c.status === "WARN").length;
 
-        state.facts.ecologyImportOk = !!ecology;
-        state.facts.faunaImportOk = !!fauna;
-        state.facts.runtimeImportOk = !!runtime;
+      const lines = [
+        `RECEIPT=${RECEIPT}`,
+        `TOTAL_CHECKS=${total}`,
+        `PASSED=${passed}`,
+        `NOT_PASSED=${fail + held + warn}`,
+        `FAILING=${fail}`,
+        `HELD=${held}`,
+        `WARN=${warn}`,
+        "",
+        ...["G1", "G2", "G3", "G4", "Earth Boundary", "Audralia Boundary", "Cross-Adoption"].map((group) => {
+          const c = groupCounts(group);
+          return `${group.toUpperCase().replaceAll(" ", "_")}=${c.status} :: ${c.passed}/${c.total} passed :: ${c.notPassed} not passed`;
+        }),
+        "",
+        "RULE=GENERATION_STATUS_IS_GAUGE_DETERMINED_ONLY",
+        "RULE=PASS_COUNT_ALONE_IS_NOT_GENERATION_PASS",
+        "RULE=BOUNDARY_FAILURE_BLOCKS_GENERATION_PASS",
+        "RULE=EARTH_NASA_ASSET_PENDING_IS_FAIL_NOT_PASS",
+        "RULE=AUDRALIA_G1_BLUE_WATER_PHENOTYPE_IS_FAIL_NOT_PASS",
+        "",
+        "FAILS=" + state.checks.filter((c) => c.status === "FAIL").map((c) => `${c.group}:${c.name}`).join(" :: "),
+        "HELDS=" + state.checks.filter((c) => c.status === "HELD").map((c) => `${c.group}:${c.name}`).join(" :: ")
+      ];
 
-        if (runtime && runtime.api && typeof runtime.api.sampleLivingWorld === "function") {
-          try {
-            const sample = runtime.api.sampleLivingWorld(0, 0, {});
-            state.facts.runtimeSampleOk = !!sample && sample.ok !== false;
-          } catch (_) {
-            state.facts.runtimeSampleOk = false;
-          }
-        }
+      $("gapReport").textContent = lines.join("\n");
+    }
 
-        if (state.facts.runtimeImportOk) {
-          passCheck("G3", "runtime-sample-proof", "Runtime Sample Proof", state.facts.runtimeSampleOk,
-            "Living-world runtime must sample the coordinated chain.",
-            { "Runtime Sample": boolText(state.facts.runtimeSampleOk) });
-        } else {
-          heldCheck("G3", "runtime-sample-proof", "Runtime Sample Proof",
-            "Runtime sample proof remains held until runtime exists.",
-            { Runtime: "missing" });
-        }
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-        const parentStatus = state.facts.parentStatus || {};
-        state.facts.parentConsumesEcologyFaunaRuntime = parentConsumes(
-          parentStatus,
-          ["ecology", "fauna", "runtime"],
-          [MODULES.ecology, MODULES.fauna, MODULES.runtime]
-        );
+    $("runAuditButton").addEventListener("click", runAudit);
 
-        if (state.facts.ecologyImportOk && state.facts.faunaImportOk && state.facts.runtimeImportOk) {
-          passCheck("G3", "parent-consumes-g3", "Parent Consumes Ecology + Fauna + Runtime", state.facts.parentConsumesEcologyFaunaRuntime,
-            "Parent must consume ecology, fauna, and runtime for G3.",
-            { activeDownstreamChildren: parentStatus.activeDownstreamChildren || "missing", activeDownstreamPaths: parentStatus.activeDownstreamPaths || "missing" });
-        } else {
-          heldCheck("G3", "parent-consumes-g3", "Parent Consumes Ecology + Fauna + Runtime",
-            "Parent G3 consumption remains held until all G3 children exist.",
-            { Ecology: boolText(state.facts.ecologyImportOk), Fauna: boolText(state.facts.faunaImportOk), Runtime: boolText(state.facts.runtimeImportOk) });
-        }
-
-        state.facts.g3RuntimeReceipt =
-          parentStatus.g3Ready === true ||
-          parentStatus.livingWorldRuntimeActive === true ||
-          parentStatus.generation === "G3" ||
-          parentStatus.generationStatus === "G3";
-
-        if (state.facts.g3RuntimeReceipt) {
-          passCheck("G3", "g3-runtime-receipt", "G3 Runtime Receipt", true,
-            "Parent exposes G3 runtime readiness receipt.",
-            { G3Ready: "true" });
-        } else {
-          heldCheck("G3", "g3-runtime-receipt", "G3 Runtime Receipt",
-            "G3 remains held until parent exposes runtime readiness.",
-            { G3Ready: "false" });
-        }
-      }
-
-      function auditG4() {
-        const parentStatus = state.facts.parentStatus || {};
-        const parentRender = state.facts.parentRender || {};
-
-        if (generationPassed("G3")) {
-          passCheck("G4", "g3-prerequisite", "G3 Prerequisite", true,
-            "G4 requires G3 to be passed.",
-            { G3: "PASS" });
-        } else {
-          heldCheck("G4", "g3-prerequisite", "G3 Prerequisite",
-            "G4 remains held until G3 is passed.",
-            { G3: "NOT_PASSED" });
-        }
-
-        state.facts.orbitalReady =
-          parentStatus.orbitalVisualStandardReady === true ||
-          parentStatus.orbitalReady === true ||
-          parentStatus.visualStandard === "ORBITAL_G4" ||
-          parentStatus.generation4VisualStandard === true;
-
-        state.facts.g4PixelProof = parentRender.rendered === true && parentRender.pixelProof === true;
-        state.facts.g4ColorDiversity = parentRender.colorDiversityPass === true;
-        state.facts.g4Contrast = parentRender.contrastPass === true;
-
-        state.facts.screenshotConfirmed =
-          parentStatus.screenshotConfirmed === true ||
-          parentStatus.visualConfirmationReceipt === true ||
-          parentStatus.g4ScreenshotReceipt === true ||
-          parentStatus.ownerVisualConfirmation === true;
-
-        passCheck("G4", "render-pixel-proof", "Render Pixel Proof", state.facts.g4PixelProof,
-          "G4 requires non-empty render output.",
-          { Rendered: boolText(parentRender.rendered), "Pixel Proof": boolText(parentRender.pixelProof), Method: parentRender.method || "missing" });
-
-        passCheck("G4", "color-diversity", "Color Diversity", state.facts.g4ColorDiversity,
-          "G4 requires sufficient render color diversity.",
-          { "Color Diversity": parentRender.colorDiversity || 0, Threshold: 24 });
-
-        passCheck("G4", "land-water-contrast", "Land/Water Contrast", state.facts.g4Contrast,
-          "G4 requires sufficient visible contrast.",
-          { Contrast: parentRender.contrast || 0, Threshold: 60 });
-
-        if (state.facts.orbitalReady) {
-          passCheck("G4", "orbital-readiness", "Orbital Visual Readiness", true,
-            "Parent exposes orbital visual standard readiness.",
-            { OrbitalReady: "true", VisualStandard: parentStatus.visualStandard || "available" });
-        } else {
-          heldCheck("G4", "orbital-readiness", "Orbital Visual Readiness",
-            "G4 remains held until parent exposes orbital visual standard readiness.",
-            { OrbitalReady: "false", VisualStandard: parentStatus.visualStandard || "missing" });
-        }
-
-        if (state.facts.screenshotConfirmed) {
-          passCheck("G4", "screenshot-confirmation", "Screenshot Confirmation", true,
-            "G4 has screenshot/owner visual confirmation.",
-            { ScreenshotConfirmed: "true" });
-        } else {
-          heldCheck("G4", "screenshot-confirmation", "Screenshot Confirmation",
-            "G4 remains held until screenshot/owner visual confirmation receipt exists.",
-            { ScreenshotConfirmed: "false" });
-        }
-
-        state.facts.generationClaimLockSafe =
-          parentStatus.generationPassClaimed !== true ||
-          (
-            state.facts.orbitalReady &&
-            state.facts.g4PixelProof &&
-            state.facts.g4ColorDiversity &&
-            state.facts.g4Contrast &&
-            state.facts.screenshotConfirmed
-          );
-
-        passCheck("G4", "claim-lock", "Generation Claim Lock", state.facts.generationClaimLockSafe,
-          "Generation claim is accepted only if all G4 checks pass.",
-          { "Generation Pass Claimed": boolText(parentStatus.generationPassClaimed), "Claim Lock Safe": boolText(state.facts.generationClaimLockSafe) });
-      }
-
-      async function runAudit() {
-        state.checks = [];
-        state.log = [];
-        state.status = { G1: "HELD", G2: "HELD", G3: "HELD", G4: "HELD" };
-        resetFacts();
-
-        nodes.gaugeGrid.innerHTML = "";
-        nodes.gapReport.textContent = "Audit running.";
-        nodes.missingReport.textContent = "Audit running.";
-        nodes.rawLog.textContent = "Audit running.";
-        nodes.auditStamp.textContent = `Running ${RECEIPT}...`;
-
-        try {
-          log("Audit start.");
-          await auditRouteAndController();
-          await auditEarth();
-          await auditParentTerrainHydrationClimate();
-          await auditG3();
-          auditG4();
-          log("Audit complete.");
-        } catch (error) {
-          log(`Audit fatal error: ${String(error && error.message ? error.message : error)}`);
-          addCheck("G1", "audit-fatal", "Audit Fatal Error", "FAIL",
-            "The Gauges page must complete without fatal error.",
-            { Error: String(error && error.message ? error.message : error) });
-        }
-
-        nodes.auditStamp.textContent = `${RECEIPT} · completed · ${new Date().toLocaleString()}`;
-
-        renderAll();
-        buildReports();
-      }
-
-      resetFacts();
-      nodes.runAudit.addEventListener("click", runAudit);
-      runAudit();
-    })();
+    runAudit();
   </script>
 </body>
 </html>

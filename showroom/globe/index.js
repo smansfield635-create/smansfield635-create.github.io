@@ -1,26 +1,17 @@
 /*
-SHOWROOM_GLOBE_INDEX_DIAGNOSTIC_HARD_MOUNT_TNT_v2
+AUDRALIA_G2_HYBRID_VISIBLE_PRESENTATION_AND_BODY_CONTRAST_TNT_v1
 FULL-FILE REPLACEMENT
 TARGET=/showroom/globe/index.js
 
 Purpose:
-- Prove /showroom/globe/index.js executes.
-- Insert visible diagnostic receipt immediately.
+- Preserve visible render success.
+- Improve Audralia lighting, exposure, scale, visible hemisphere, and atmosphere.
+- Keep live receipt: AUDRALIA MOUNT · VISIBLE_RENDER_ACTIVE.
 - Import /assets/audrelia.planet.render.js.
-- Build Audralia texture.
-- Draw visible planet into #audraliaRenderMount.
 - Never fail silently.
-
-Gauges requirements satisfied:
-- bootAudraliaVisibleMount present.
-- #audraliaRenderMount present.
-- document.createElement("canvas") present.
-- /assets/audrelia.planet.render.js present.
-- import( present.
-- INDEX_JS_EXECUTED / RENDERER_IMPORT / TEXTURE_BUILD / VISIBLE_RENDER / AUDRALIA MOUNT / IMPORT_OR_RENDER_FAIL present.
 */
 
-const SHOWROOM_GLOBE_INDEX_TNT = "SHOWROOM_GLOBE_INDEX_DIAGNOSTIC_HARD_MOUNT_TNT_v2";
+const SHOWROOM_GLOBE_INDEX_TNT = "AUDRALIA_G2_HYBRID_VISIBLE_PRESENTATION_AND_BODY_CONTRAST_TNT_v1";
 const AUDRALIA_RENDERER_URL = `/assets/audrelia.planet.render.js?v=${encodeURIComponent(SHOWROOM_GLOBE_INDEX_TNT)}`;
 const TAU = Math.PI * 2;
 
@@ -30,69 +21,6 @@ function clamp(value, min = 0, max = 1) {
 
 function setText(node, text) {
   if (node) node.textContent = text;
-}
-
-function makeBadge(mount) {
-  let badge = mount.querySelector("[data-audralia-mount-receipt='true']");
-
-  if (!badge) {
-    badge = document.createElement("div");
-    badge.dataset.audraliaMountReceipt = "true";
-    mount.appendChild(badge);
-  }
-
-  badge.style.position = "absolute";
-  badge.style.left = "14px";
-  badge.style.bottom = "14px";
-  badge.style.zIndex = "30";
-  badge.style.maxWidth = "calc(100% - 28px)";
-  badge.style.padding = "8px 11px";
-  badge.style.border = "1px solid rgba(255,255,255,0.18)";
-  badge.style.borderRadius = "999px";
-  badge.style.background = "rgba(2,6,18,0.78)";
-  badge.style.color = "rgba(238,243,255,0.86)";
-  badge.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-  badge.style.fontSize = "10px";
-  badge.style.fontWeight = "800";
-  badge.style.letterSpacing = "0.12em";
-  badge.style.textTransform = "uppercase";
-  badge.style.backdropFilter = "blur(10px)";
-  badge.style.whiteSpace = "nowrap";
-  badge.style.overflow = "hidden";
-  badge.style.textOverflow = "ellipsis";
-
-  return badge;
-}
-
-function makeCenterMessage(mount) {
-  let message = mount.querySelector("[data-audralia-center-message='true']");
-
-  if (!message) {
-    message = document.createElement("div");
-    message.dataset.audraliaCenterMessage = "true";
-    mount.appendChild(message);
-  }
-
-  message.style.position = "absolute";
-  message.style.left = "50%";
-  message.style.top = "50%";
-  message.style.transform = "translate(-50%, -50%)";
-  message.style.zIndex = "20";
-  message.style.width = "min(88%, 520px)";
-  message.style.padding = "18px";
-  message.style.border = "1px solid rgba(255,255,255,0.16)";
-  message.style.borderRadius = "22px";
-  message.style.background = "rgba(2,6,18,0.66)";
-  message.style.color = "rgba(238,243,255,0.84)";
-  message.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-  message.style.fontSize = "12px";
-  message.style.lineHeight = "1.55";
-  message.style.textAlign = "center";
-  message.style.letterSpacing = "0.08em";
-  message.style.textTransform = "uppercase";
-  message.style.backdropFilter = "blur(12px)";
-
-  return message;
 }
 
 function prepareMount() {
@@ -111,7 +39,74 @@ function prepareMount() {
   mount.style.overflow = "hidden";
   mount.style.isolation = "isolate";
 
+  const fallback = mount.querySelector("[data-visual-field-hold]");
+  if (fallback) fallback.remove();
+
   return mount;
+}
+
+function makeBadge(mount) {
+  let badge = mount.querySelector("[data-audralia-mount-receipt='true']");
+
+  if (!badge) {
+    badge = document.createElement("div");
+    badge.dataset.audraliaMountReceipt = "true";
+    mount.appendChild(badge);
+  }
+
+  badge.style.position = "absolute";
+  badge.style.left = "14px";
+  badge.style.right = "14px";
+  badge.style.bottom = "14px";
+  badge.style.zIndex = "40";
+  badge.style.padding = "9px 12px";
+  badge.style.border = "1px solid rgba(255,255,255,0.22)";
+  badge.style.borderRadius = "999px";
+  badge.style.background = "rgba(2,6,18,0.78)";
+  badge.style.color = "rgba(245,248,255,0.92)";
+  badge.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+  badge.style.fontSize = "11px";
+  badge.style.fontWeight = "900";
+  badge.style.letterSpacing = "0.13em";
+  badge.style.textTransform = "uppercase";
+  badge.style.backdropFilter = "blur(12px)";
+  badge.style.whiteSpace = "nowrap";
+  badge.style.overflow = "hidden";
+  badge.style.textOverflow = "ellipsis";
+  badge.style.textAlign = "center";
+
+  return badge;
+}
+
+function makeCenterMessage(mount) {
+  let message = mount.querySelector("[data-audralia-center-message='true']");
+
+  if (!message) {
+    message = document.createElement("div");
+    message.dataset.audraliaCenterMessage = "true";
+    mount.appendChild(message);
+  }
+
+  message.style.position = "absolute";
+  message.style.left = "50%";
+  message.style.top = "50%";
+  message.style.transform = "translate(-50%, -50%)";
+  message.style.zIndex = "35";
+  message.style.width = "min(88%, 540px)";
+  message.style.padding = "18px";
+  message.style.border = "1px solid rgba(255,255,255,0.18)";
+  message.style.borderRadius = "22px";
+  message.style.background = "rgba(2,6,18,0.70)";
+  message.style.color = "rgba(245,248,255,0.88)";
+  message.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+  message.style.fontSize = "12px";
+  message.style.lineHeight = "1.55";
+  message.style.textAlign = "center";
+  message.style.letterSpacing = "0.08em";
+  message.style.textTransform = "uppercase";
+  message.style.backdropFilter = "blur(12px)";
+
+  return message;
 }
 
 function prepareCanvas(mount) {
@@ -179,17 +174,17 @@ function buildTexture(api) {
 
   if (typeof api.buildTexture === "function") {
     texture = api.buildTexture({
-      width: 768,
-      height: 384,
+      width: 1024,
+      height: 512,
       noCache: true
     });
   } else {
     texture = document.createElement("canvas");
-    texture.width = 768;
-    texture.height = 384;
+    texture.width = 1024;
+    texture.height = 512;
     api.renderSurface(texture, {
-      width: 768,
-      height: 384,
+      width: 1024,
+      height: 512,
       noCache: true
     });
   }
@@ -229,20 +224,20 @@ function drawBackdrop(ctx, width, height) {
   const cx = width / 2;
   const cy = height / 2;
 
-  const bg = ctx.createRadialGradient(cx, cy * 0.72, 20, cx, cy, Math.max(width, height) * 0.72);
-  bg.addColorStop(0, "rgba(34,65,96,0.58)");
-  bg.addColorStop(0.48, "rgba(8,18,38,0.96)");
+  const bg = ctx.createRadialGradient(cx, cy * 0.66, 20, cx, cy, Math.max(width, height) * 0.76);
+  bg.addColorStop(0, "rgba(49,91,128,0.70)");
+  bg.addColorStop(0.42, "rgba(11,30,58,0.98)");
   bg.addColorStop(1, "rgba(2,5,14,1)");
 
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
   ctx.save();
-  ctx.globalAlpha = 0.24;
-  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.globalAlpha = 0.22;
+  ctx.strokeStyle = "rgba(255,255,255,0.09)";
   ctx.lineWidth = 1;
 
-  const gap = Math.max(44, Math.floor(Math.min(width, height) / 9));
+  const gap = Math.max(42, Math.floor(Math.min(width, height) / 9));
 
   for (let x = width % gap; x < width; x += gap) {
     ctx.beginPath();
@@ -268,18 +263,20 @@ function drawPlanet(ctx, canvas, texture, rotation) {
   drawBackdrop(ctx, width, height);
 
   const cx = width / 2;
-  const cy = height / 2;
-  const radius = Math.min(width, height) * 0.34;
-  const sphereSize = Math.max(280, Math.min(520, Math.floor(radius * 2)));
+  const cy = height * 0.49;
+  const radius = Math.min(width, height) * 0.405;
+  const sphereSize = Math.max(300, Math.min(720, Math.floor(radius * 2)));
   const sphereRadius = sphereSize / 2;
 
   const sphereImage = ctx.createImageData(sphereSize, sphereSize);
   const data = sphereImage.data;
 
-  const light = { x: -0.38, y: -0.28, z: 0.88 };
+  const light = { x: -0.22, y: -0.24, z: 0.94 };
+  const baseRotation = -1.86;
+  const finalRotation = baseRotation + rotation;
 
-  const cosR = Math.cos(rotation);
-  const sinR = Math.sin(rotation);
+  const cosR = Math.cos(finalRotation);
+  const sinR = Math.sin(finalRotation);
 
   let p = 0;
 
@@ -311,13 +308,13 @@ function drawPlanet(ctx, canvas, texture, rotation) {
       const color = sampleTexture(texture, u, v);
 
       const lightDot = clamp(rx * light.x + ry * light.y + nz * light.z, 0, 1);
-      const limb = clamp(nz * 1.15, 0, 1);
-      const shade = 0.34 + lightDot * 0.72;
-      const edge = Math.pow(1 - clamp(nz), 2.25);
+      const limb = clamp(0.18 + nz * 0.96, 0, 1);
+      const shade = 0.62 + lightDot * 0.58;
+      const edge = Math.pow(1 - clamp(nz), 2.15);
 
-      data[p] = clamp(color[0] * shade * limb + edge * 38, 0, 255);
-      data[p + 1] = clamp(color[1] * shade * limb + edge * 68, 0, 255);
-      data[p + 2] = clamp(color[2] * shade * limb + edge * 108, 0, 255);
+      data[p] = clamp(color[0] * shade * limb + edge * 52, 0, 255);
+      data[p + 1] = clamp(color[1] * shade * limb + edge * 88, 0, 255);
+      data[p + 2] = clamp(color[2] * shade * limb + edge * 130, 0, 255);
       data[p + 3] = 255;
 
       p += 4;
@@ -333,31 +330,32 @@ function drawPlanet(ctx, canvas, texture, rotation) {
 
   ctx.beginPath();
   ctx.arc(cx, cy, sphereRadius, 0, TAU);
-  ctx.strokeStyle = "rgba(158,212,255,0.38)";
-  ctx.lineWidth = Math.max(2, sphereRadius * 0.012);
+  ctx.strokeStyle = "rgba(166,222,255,0.52)";
+  ctx.lineWidth = Math.max(2, sphereRadius * 0.014);
   ctx.stroke();
 
-  const atmosphere = ctx.createRadialGradient(cx, cy, sphereRadius * 0.88, cx, cy, sphereRadius * 1.18);
+  const atmosphere = ctx.createRadialGradient(cx, cy, sphereRadius * 0.82, cx, cy, sphereRadius * 1.25);
   atmosphere.addColorStop(0, "rgba(118,196,255,0)");
-  atmosphere.addColorStop(0.62, "rgba(118,196,255,0.13)");
+  atmosphere.addColorStop(0.56, "rgba(118,196,255,0.16)");
+  atmosphere.addColorStop(0.82, "rgba(118,196,255,0.10)");
   atmosphere.addColorStop(1, "rgba(118,196,255,0)");
 
   ctx.beginPath();
-  ctx.arc(cx, cy, sphereRadius * 1.18, 0, TAU);
+  ctx.arc(cx, cy, sphereRadius * 1.25, 0, TAU);
   ctx.fillStyle = atmosphere;
   ctx.fill();
 
   const shine = ctx.createRadialGradient(
     cx - sphereRadius * 0.34,
-    cy - sphereRadius * 0.42,
+    cy - sphereRadius * 0.40,
     sphereRadius * 0.03,
-    cx - sphereRadius * 0.26,
-    cy - sphereRadius * 0.35,
-    sphereRadius * 0.72
+    cx - sphereRadius * 0.28,
+    cy - sphereRadius * 0.34,
+    sphereRadius * 0.74
   );
 
-  shine.addColorStop(0, "rgba(255,255,255,0.25)");
-  shine.addColorStop(0.38, "rgba(255,255,255,0.055)");
+  shine.addColorStop(0, "rgba(255,255,255,0.24)");
+  shine.addColorStop(0.38, "rgba(255,255,255,0.07)");
   shine.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.beginPath();
@@ -365,10 +363,10 @@ function drawPlanet(ctx, canvas, texture, rotation) {
   ctx.fillStyle = shine;
   ctx.fill();
 
-  ctx.font = `${Math.max(13, Math.floor(width * 0.018))}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+  ctx.font = `${Math.max(12, Math.floor(width * 0.016))}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
   ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(239,244,255,0.76)";
-  ctx.fillText("AUDRALIA · VISIBLE_RENDER_ACTIVE", cx, cy + sphereRadius + Math.max(30, sphereRadius * 0.16));
+  ctx.fillStyle = "rgba(244,248,255,0.82)";
+  ctx.fillText("AUDRALIA · VISIBLE_RENDER_ACTIVE", cx, cy + sphereRadius + Math.max(30, sphereRadius * 0.13));
 
   ctx.restore();
 }
@@ -381,7 +379,7 @@ function drawFailure(canvas, message) {
   drawBackdrop(ctx, width, height);
 
   ctx.save();
-  ctx.fillStyle = "rgba(255,190,170,0.90)";
+  ctx.fillStyle = "rgba(255,190,170,0.92)";
   ctx.font = `${Math.max(13, Math.floor(width * 0.02))}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -451,7 +449,7 @@ async function bootAudraliaVisibleMount() {
 
       if (now - last >= 45) {
         last = now;
-        drawPlanet(ctx, canvas, texture, now * 0.00006);
+        drawPlanet(ctx, canvas, texture, now * 0.000045);
       }
 
       frame = requestAnimationFrame(render);
@@ -460,7 +458,7 @@ async function bootAudraliaVisibleMount() {
 
     installResize(canvas, mount, () => {
       fitCanvas(canvas, mount);
-      drawPlanet(ctx, canvas, texture, performance.now() * 0.00006);
+      drawPlanet(ctx, canvas, texture, performance.now() * 0.000045);
     });
 
     setText(badge, "AUDRALIA MOUNT · VISIBLE_RENDER_ACTIVE");
@@ -473,14 +471,14 @@ async function bootAudraliaVisibleMount() {
       canvas,
       textureWidth: texture.width,
       textureHeight: texture.height,
-      redraw: () => drawPlanet(ctx, canvas, texture, performance.now() * 0.00006)
+      redraw: () => drawPlanet(ctx, canvas, texture, performance.now() * 0.000045)
     };
 
     render();
   } catch (error) {
     const message = error?.message || String(error);
 
-    if (badge) setText(badge, `AUDRALIA MOUNT · IMPORT_OR_RENDER_FAIL`);
+    if (badge) setText(badge, "AUDRALIA MOUNT · IMPORT_OR_RENDER_FAIL");
     if (center) {
       center.style.display = "block";
       setText(center, `IMPORT_OR_RENDER_FAIL · ${message}`);

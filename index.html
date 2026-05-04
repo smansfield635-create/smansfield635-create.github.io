@@ -1,485 +1,1009 @@
-<!-- /index.html -->
-<!DOCTYPE html>
-<html
-  lang="en"
-  data-page-id="compass"
-  data-page="compass"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="compass"
-  data-compass-generation="generation-2"
-  data-compass-control-surface="active"
-  data-flat-world-baseline="preserved"
-  data-tree-mode="available"
-  data-globe-mode="available"
-  data-globe-handoff="showroom-demo-universe"
-  data-visual-control-surface="active"
-  data-mobile-layout-hardened="true"
-  data-compass-ring-system="4-plus-12"
-  data-generation="compass-4-plus-12-diamond-orbit-pair-run-v1"
->
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>Compass · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Compass orients the visitor through Rich Manor and Estate with a 4 plus 12 animated diamond command field."
+    content="Diamond Gate Bridge Compass: public command surface for the estate, product wing, showroom, Audralia, and gauges."
   />
 
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <link rel="stylesheet" href="/assets/diamond-orbit.css?v=compass-4-plus-12-diamond-orbit-pair-run-v1" />
+  <link rel="stylesheet" href="/assets/diamond-orbit.css" />
+
+  <style>
+    :root {
+      --dg-bg: #030712;
+      --dg-panel: rgba(10, 18, 34, 0.78);
+      --dg-panel-strong: rgba(12, 21, 40, 0.92);
+      --dg-gold: #f6d98b;
+      --dg-gold-soft: rgba(246, 217, 139, 0.45);
+      --dg-text: #f7f2df;
+      --dg-muted: rgba(247, 242, 223, 0.72);
+      --dg-line: rgba(246, 217, 139, 0.26);
+      --dg-purple: rgba(134, 92, 246, 0.88);
+      --dg-purple-soft: rgba(134, 92, 246, 0.28);
+      --dg-blue: rgba(59, 130, 246, 0.22);
+      --dg-max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--dg-bg);
+      color: var(--dg-text);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(134, 92, 246, 0.24), transparent 34rem),
+        radial-gradient(circle at 15% 25%, rgba(246, 217, 139, 0.08), transparent 24rem),
+        linear-gradient(180deg, #020611 0%, #050814 48%, #02040c 100%);
+      color: var(--dg-text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 50;
+      transform: translateY(-180%);
+      border: 1px solid var(--dg-line);
+      border-radius: 999px;
+      background: #050814;
+      padding: 0.65rem 0.9rem;
+      color: var(--dg-text);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-shell {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: clip;
+    }
+
+    .site-shell::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(246, 217, 139, 0.32) 0 1px, transparent 1.6px);
+      background-size: 84px 84px, 136px 136px;
+      background-position: 7px 13px, 31px 47px;
+      opacity: 0.16;
+    }
+
+    .ambient-orbit {
+      position: fixed;
+      inset: -16vmax;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.72;
+      background:
+        conic-gradient(
+          from 0deg,
+          transparent,
+          rgba(134, 92, 246, 0.17),
+          transparent,
+          rgba(246, 217, 139, 0.08),
+          transparent
+        );
+      animation: dgAmbientSpin 52s linear infinite;
+      filter: blur(2px);
+    }
+
+    @keyframes dgAmbientSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      width: 100%;
+      border-bottom: 1px solid rgba(246, 217, 139, 0.16);
+      background: rgba(3, 7, 18, 0.86);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(var(--dg-max), calc(100% - 2rem));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.78rem 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: max-content;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.35rem;
+      height: 2.35rem;
+      border: 1px solid var(--dg-line);
+      border-radius: 0.82rem;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.35), transparent 32%),
+        linear-gradient(135deg, rgba(134, 92, 246, 0.38), rgba(246, 217, 139, 0.16));
+      color: var(--dg-gold);
+      font-size: 0.82rem;
+    }
+
+    .nav {
+      margin-left: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.45rem;
+    }
+
+    .nav a {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.5rem 0.7rem;
+      color: var(--dg-muted);
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .nav a:hover,
+    .nav a:focus {
+      border-color: var(--dg-line);
+      color: var(--dg-text);
+      background: rgba(255, 255, 255, 0.05);
+      outline: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(var(--dg-max), calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 4.25rem) 0 4rem;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(20rem, 0.98fr);
+      align-items: center;
+      gap: clamp(1.25rem, 4vw, 3.5rem);
+      min-height: clamp(620px, 78vh, 840px);
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 5;
+      max-width: 42rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.85rem;
+      color: var(--dg-gold);
+      font-size: 0.79rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-size: clamp(3rem, 9.2vw, 7.2rem);
+      line-height: 0.86;
+      letter-spacing: -0.08em;
+    }
+
+    .subtitle {
+      margin: 1.15rem 0 0;
+      max-width: 34rem;
+      color: var(--dg-muted);
+      font-size: clamp(1.08rem, 2.15vw, 1.55rem);
+      line-height: 1.35;
+      font-weight: 650;
+    }
+
+    .lead {
+      margin: 1rem 0 0;
+      max-width: 34rem;
+      color: rgba(247, 242, 223, 0.76);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.55rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.85rem;
+      border: 1px solid var(--dg-line);
+      border-radius: 999px;
+      padding: 0.78rem 1.05rem;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--dg-text);
+      font-weight: 780;
+      line-height: 1;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, rgba(246, 217, 139, 0.95), rgba(198, 153, 74, 0.82));
+      color: #171007;
+      border-color: rgba(246, 217, 139, 0.8);
+    }
+
+    .button:hover,
+    .button:focus {
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .compass-stage {
+      position: relative;
+      z-index: 3;
+      width: min(100%, 33rem);
+      min-height: 34rem;
+      margin-inline: auto;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      contain: layout paint;
+    }
+
+    .compass-card {
+      position: relative;
+      width: min(100%, 31rem);
+      aspect-ratio: 0.72;
+      min-height: 32rem;
+      max-height: 42rem;
+      border: 1px solid var(--dg-line);
+      border-radius: 2.2rem;
+      background:
+        linear-gradient(180deg, rgba(13, 24, 45, 0.9), rgba(4, 10, 23, 0.86)),
+        radial-gradient(circle at 50% 15%, rgba(134, 92, 246, 0.28), transparent 42%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 26px 80px rgba(0, 0, 0, 0.42);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .compass-card::before,
+    .compass-card::after {
+      content: "";
+      position: absolute;
+      inset: 9%;
+      border: 1px solid rgba(246, 217, 139, 0.12);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .compass-card::after {
+      inset: 20%;
+      border-color: rgba(134, 92, 246, 0.18);
+      transform: rotate(45deg);
+    }
+
+    .center-anchor {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 13.5rem;
+      height: 13.5rem;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 1px solid rgba(246, 217, 139, 0.18);
+      border-radius: 2.1rem;
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.34), transparent 31%),
+        linear-gradient(135deg, rgba(134, 92, 246, 0.62), rgba(27, 17, 75, 0.76));
+      box-shadow:
+        0 0 54px rgba(134, 92, 246, 0.3),
+        inset 0 0 30px rgba(255, 255, 255, 0.08);
+      animation: anchorPulse 5.8s ease-in-out infinite;
+    }
+
+    .center-anchor span {
+      display: block;
+      transform: rotate(-45deg);
+      color: var(--dg-text);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    @keyframes anchorPulse {
+      0%,
+      100% {
+        filter: brightness(0.92);
+        transform: translate(-50%, -50%) rotate(45deg) scale(0.98);
+      }
+
+      50% {
+        filter: brightness(1.12);
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.03);
+      }
+    }
+
+    .orbit-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      width: 24rem;
+      height: 24rem;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .orbit-ring.outer {
+      width: 31rem;
+      height: 31rem;
+      animation: orbitCounter 58s linear infinite;
+    }
+
+    .orbit-ring.inner {
+      animation: orbitClockwise 38s linear infinite;
+    }
+
+    @keyframes orbitClockwise {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @keyframes orbitCounter {
+      to {
+        transform: translate(-50%, -50%) rotate(-360deg);
+      }
+    }
+
+    .diamond-node {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      display: grid;
+      place-items: center;
+      width: 5.8rem;
+      height: 5.8rem;
+      margin: -2.9rem 0 0 -2.9rem;
+      border: 1px solid rgba(246, 217, 139, 0.18);
+      border-radius: 1.4rem;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.28), transparent 31%),
+        linear-gradient(135deg, rgba(134, 92, 246, 0.8), rgba(55, 35, 132, 0.68));
+      box-shadow: 0 0 26px rgba(134, 92, 246, 0.24);
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)))
+        rotate(45deg);
+      pointer-events: auto;
+    }
+
+    .orbit-ring.outer .diamond-node {
+      --radius: -15.2rem;
+      width: 5.1rem;
+      height: 5.1rem;
+      margin: -2.55rem 0 0 -2.55rem;
+      opacity: 0.92;
+    }
+
+    .orbit-ring.inner .diamond-node {
+      --radius: -11.7rem;
+    }
+
+    .diamond-node span {
+      display: block;
+      max-width: 4.7rem;
+      transform: rotate(-45deg);
+      color: var(--dg-text);
+      text-align: center;
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      line-height: 1.1;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+    }
+
+    .diamond-node:hover,
+    .diamond-node:focus {
+      outline: none;
+      border-color: rgba(246, 217, 139, 0.72);
+      filter: brightness(1.14);
+    }
+
+    .route-panel {
+      position: relative;
+      z-index: 4;
+      margin: clamp(1.5rem, 4vw, 3rem) auto 0;
+      max-width: 52rem;
+      border: 1px solid var(--dg-line);
+      border-radius: 2rem;
+      background: var(--dg-panel);
+      padding: clamp(1.25rem, 3vw, 2rem);
+      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.28);
+    }
+
+    .route-panel h2 {
+      margin: 0;
+      color: var(--dg-text);
+      font-size: clamp(1.55rem, 3vw, 2.3rem);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+    }
+
+    .route-panel p {
+      margin: 0.75rem 0 0;
+      color: var(--dg-muted);
+      line-height: 1.65;
+    }
+
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-top: 1.3rem;
+    }
+
+    .logic-card {
+      min-width: 0;
+      border: 1px solid rgba(246, 217, 139, 0.18);
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 1rem;
+    }
+
+    .logic-card strong {
+      display: block;
+      color: var(--dg-gold);
+      font-size: 0.74rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .logic-card span {
+      display: block;
+      margin-top: 0.42rem;
+      color: var(--dg-muted);
+      font-size: 0.91rem;
+      line-height: 1.45;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-top: 1.35rem;
+    }
+
+    .route-grid a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3.1rem;
+      border: 1px solid var(--dg-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--dg-text);
+      font-weight: 800;
+      text-align: center;
+      padding: 0.65rem;
+    }
+
+    .route-grid a:hover,
+    .route-grid a:focus {
+      outline: none;
+      background: rgba(246, 217, 139, 0.1);
+      border-color: rgba(246, 217, 139, 0.55);
+    }
+
+    .status-card {
+      margin: 1rem auto 0;
+      max-width: 52rem;
+      border: 1px solid rgba(246, 217, 139, 0.18);
+      border-radius: 1.5rem;
+      background: rgba(3, 7, 18, 0.64);
+      padding: 1rem 1.15rem;
+      color: var(--dg-muted);
+      line-height: 1.55;
+    }
+
+    .status-card strong {
+      color: var(--dg-gold);
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt] {
+      display: none !important;
+      visibility: hidden !important;
+      overflow: hidden !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      inset: auto !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+    }
+
+    footer {
+      width: min(var(--dg-max), calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2rem 0 3rem;
+      color: rgba(247, 242, 223, 0.52);
+      font-size: 0.88rem;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.15rem;
+      }
+
+      .nav a {
+        flex: 0 0 auto;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+
+      .hero-copy {
+        max-width: none;
+      }
+
+      h1 {
+        max-width: 10ch;
+      }
+
+      .compass-stage {
+        width: min(100%, 23rem);
+        min-height: 30rem;
+      }
+
+      .compass-card {
+        width: min(100%, 22.5rem);
+        min-height: 29.5rem;
+        max-height: none;
+        aspect-ratio: auto;
+      }
+
+      .center-anchor {
+        width: 9.8rem;
+        height: 9.8rem;
+        border-radius: 1.65rem;
+      }
+
+      .center-anchor span {
+        font-size: 0.66rem;
+      }
+
+      .orbit-ring.inner {
+        width: 17.6rem;
+        height: 17.6rem;
+      }
+
+      .orbit-ring.outer {
+        width: 22rem;
+        height: 22rem;
+      }
+
+      .orbit-ring.inner .diamond-node {
+        --radius: -8.35rem;
+        width: 4.35rem;
+        height: 4.35rem;
+        margin: -2.175rem 0 0 -2.175rem;
+      }
+
+      .orbit-ring.outer .diamond-node {
+        --radius: -10.4rem;
+        width: 3.85rem;
+        height: 3.85rem;
+        margin: -1.925rem 0 0 -1.925rem;
+      }
+
+      .diamond-node span {
+        max-width: 3.1rem;
+        font-size: 0.5rem;
+        letter-spacing: 0.065em;
+      }
+
+      .logic-grid,
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 460px) {
+      main {
+        width: min(100% - 1rem, var(--dg-max));
+        padding-top: 1.35rem;
+      }
+
+      .topbar-inner {
+        width: min(100% - 1rem, var(--dg-max));
+      }
+
+      .brand {
+        font-size: 0.94rem;
+      }
+
+      .hero {
+        gap: 1.2rem;
+      }
+
+      .eyebrow {
+        font-size: 0.68rem;
+      }
+
+      h1 {
+        font-size: clamp(2.55rem, 16vw, 4.25rem);
+        letter-spacing: -0.075em;
+      }
+
+      .subtitle {
+        font-size: 1.02rem;
+      }
+
+      .lead {
+        font-size: 0.94rem;
+      }
+
+      .cta-row {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .compass-stage {
+        width: 100%;
+        min-height: 27rem;
+      }
+
+      .compass-card {
+        width: min(100%, 20.5rem);
+        min-height: 27rem;
+        border-radius: 1.65rem;
+      }
+
+      .center-anchor {
+        width: 8.7rem;
+        height: 8.7rem;
+      }
+
+      .orbit-ring.inner {
+        width: 15.2rem;
+        height: 15.2rem;
+      }
+
+      .orbit-ring.outer {
+        width: 19.1rem;
+        height: 19.1rem;
+      }
+
+      .orbit-ring.inner .diamond-node {
+        --radius: -7.25rem;
+        width: 3.9rem;
+        height: 3.9rem;
+        margin: -1.95rem 0 0 -1.95rem;
+      }
+
+      .orbit-ring.outer .diamond-node {
+        --radius: -9.05rem;
+        width: 3.45rem;
+        height: 3.45rem;
+        margin: -1.725rem 0 0 -1.725rem;
+      }
+
+      .diamond-node span {
+        max-width: 2.8rem;
+        font-size: 0.46rem;
+      }
+
+      .logic-grid,
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route-panel {
+        border-radius: 1.35rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 
-<body
-  data-page-id="compass"
-  data-page="compass"
-  data-estate="rich-manor-and-estate"
-  data-manor-skin="active"
-  data-house-field="true"
-  data-gauges-truth="live-authority"
-  data-construct-class="house"
-  data-house-part="compass"
->
+<body>
   <a class="skip-link" href="#compass-main">Skip to Compass</a>
 
-  <div
-    id="compass-root"
-    class="compass-page-shell"
-    data-proof-marker="COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1"
-    data-compass-ring-system="4-plus-12"
-    data-compass-inner-count="4"
-    data-compass-outer-count="12"
-    data-center="compass_background_anchor_only"
-    data-shared-css="/assets/diamond-orbit.css"
-    data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
-  >
-    <header class="compass-topbar" aria-label="Diamond Gate Bridge primary header">
-      <a class="compass-brand" href="/" aria-label="Diamond Gate Bridge Compass">
-        <span class="brand-mark">DG</span>
-        <span>
-          <strong>Diamond Gate Bridge</strong>
-          <em>Rich Manor and Estate</em>
-        </span>
-      </a>
+  <div class="site-shell">
+    <div class="ambient-orbit" aria-hidden="true"></div>
 
-      <nav class="compass-nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/laws/">Laws</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/frontier/">Frontier</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
-    </header>
+    <header class="topbar" aria-label="Primary site navigation">
+      <div class="topbar-inner">
+        <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
+          <span class="brand-mark" aria-hidden="true">DG</span>
+          <span>Diamond Gate Bridge</span>
+        </a>
 
-    <main id="compass-main" class="compass-main">
-      <section class="compass-hero" aria-labelledby="compass-title">
-        <p class="eyebrow">Compass · Animated Purple Diamond Command Surface</p>
-        <h1 id="compass-title">Pressure is the door.</h1>
-        <h2>One message. Many rooms. One bridge.</h2>
-        <p class="compass-lede">
-          The Compass orients the visitor before movement. The command field keeps the center
-          behind the route diamonds so the estate can move without losing readability.
-        </p>
-        <p class="compass-line">A bridge is useful only when the way across stays readable.</p>
-
-        <div class="compass-cta-row" aria-label="Compass quick actions">
-          <a href="/door/">Cross the Door</a>
-          <a href="/home/">Enter Home</a>
-          <a href="/explore/">Walk the Manor</a>
-          <a href="/nine-summits/">Open Nine Summits</a>
-        </div>
-      </section>
-
-      <section
-        id="chronological-command-field"
-        class="chronological-command-field compass-command-field diamond-orbit-field"
-        aria-labelledby="command-field-title"
-        data-visual-system="compass_centered_clockwise_diamond_orbit"
-        data-command-field="chronological"
-        data-compass-command-field="true"
-        data-compass-ring-system="4-plus-12"
-        data-inner-ring-count="4"
-        data-outer-ring-count="12"
-        data-center="compass_background_anchor_only"
-        data-z-index-law="ambient_background,compass_anchor_background,orbit_field,route_diamonds,route_labels"
-        data-non-overlap-law="no_clickable_diamond_hidden_by_center"
-      >
-        <div
-          class="compass-background-anchor orbit-center"
-          data-compass-center="true"
-          data-center="compass_background_anchor_only"
-          aria-hidden="true"
-        >
-          <strong>Compass</strong>
-          <span>Background Command Anchor</span>
-        </div>
-
-        <header class="command-field-copy">
-          <p class="eyebrow">Chronological command field</p>
-          <h2 id="command-field-title">The room diamonds sit in front. Compass stays behind them.</h2>
-        </header>
-
-        <nav class="diamond-route-layer" aria-label="Chronological command routes">
-          <a
-            href="/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="inner"
-            data-route-index="1"
-            data-orbit-role="inner-primary"
-            data-route-key="compass"
-            data-route-name="Compass"
-            data-orbit-direction="clockwise"
-            aria-label="Compass Root"
-          >
-            <strong>Compass</strong>
-            <span>Root</span>
-          </a>
-
-          <a
-            href="/door/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="inner"
-            data-route-index="2"
-            data-orbit-role="inner-primary"
-            data-route-key="door"
-            data-route-name="Door"
-            data-orbit-direction="clockwise"
-            aria-label="Door Entry"
-          >
-            <strong>Door</strong>
-            <span>Entry</span>
-          </a>
-
-          <a
-            href="/home/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="inner"
-            data-route-index="3"
-            data-orbit-role="inner-primary"
-            data-route-key="home"
-            data-route-name="Home"
-            data-orbit-direction="clockwise"
-            aria-label="Home Receiver"
-          >
-            <strong>Home</strong>
-            <span>Receiver</span>
-          </a>
-
-          <a
-            href="/explore/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="inner"
-            data-route-index="4"
-            data-orbit-role="inner-primary"
-            data-route-key="manor"
-            data-route-name="Manor"
-            data-orbit-direction="clockwise"
-            aria-label="Manor Map"
-          >
-            <strong>Manor</strong>
-            <span>Map</span>
-          </a>
-
-          <a
-            href="/laws/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="5"
-            data-orbit-role="outer-expanded"
-            data-route-key="laws"
-            data-route-name="Laws"
-            data-orbit-direction="counterclockwise"
-            aria-label="Laws Boundary"
-          >
-            <strong>Laws</strong>
-            <span>Boundary</span>
-          </a>
-
-          <a
-            href="/nine-summits/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="6"
-            data-orbit-role="outer-expanded"
-            data-route-key="nine-summits"
-            data-route-name="Nine Summits"
-            data-orbit-direction="counterclockwise"
-            aria-label="Nine Summits Gate"
-          >
-            <strong>Nine Summits</strong>
-            <span>Gate</span>
-          </a>
-
-          <a
-            href="/nine-summits-of-love/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="7"
-            data-orbit-role="outer-expanded"
-            data-route-key="book"
-            data-route-name="Book"
-            data-orbit-direction="counterclockwise"
-            aria-label="Book Climb"
-          >
-            <strong>Book</strong>
-            <span>Climb</span>
-          </a>
-
-          <a
-            href="/nine-summits/universe/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="8"
-            data-orbit-role="outer-expanded"
-            data-route-key="universe"
-            data-route-name="Universe"
-            data-orbit-direction="counterclockwise"
-            aria-label="Universe World"
-          >
-            <strong>Universe</strong>
-            <span>World</span>
-          </a>
-
-          <a
-            href="/products/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="9"
-            data-orbit-role="outer-expanded"
-            data-route-key="products"
-            data-route-name="Products"
-            data-orbit-direction="counterclockwise"
-            aria-label="Products Use"
-          >
-            <strong>Products</strong>
-            <span>Use</span>
-          </a>
-
-          <a
-            href="/showroom/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="10"
-            data-orbit-role="outer-expanded"
-            data-route-key="showroom"
-            data-route-name="Showroom"
-            data-orbit-direction="counterclockwise"
-            aria-label="Showroom Atrium"
-          >
-            <strong>Showroom</strong>
-            <span>Atrium</span>
-          </a>
-
-          <a
-            href="/frontier/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="11"
-            data-orbit-role="outer-expanded"
-            data-route-key="frontier"
-            data-route-name="Frontier"
-            data-orbit-direction="counterclockwise"
-            aria-label="Frontier Edge"
-          >
-            <strong>Frontier</strong>
-            <span>Edge</span>
-          </a>
-
-          <a
-            href="/gauges/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="12"
-            data-orbit-role="outer-expanded"
-            data-route-key="gauges"
-            data-route-name="Gauges"
-            data-orbit-direction="counterclockwise"
-            aria-label="Gauges Proof"
-          >
-            <strong>Gauges</strong>
-            <span>Proof</span>
-          </a>
-
-          <a
-            href="/about-this-underdog/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="13"
-            data-orbit-role="outer-expanded"
-            data-route-key="underdog"
-            data-route-name="Underdog"
-            data-orbit-direction="counterclockwise"
-            aria-label="Underdog Universal"
-          >
-            <strong>Underdog</strong>
-            <span>Universal</span>
-          </a>
-
-          <a
-            href="/meet-sean-mansfield/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="14"
-            data-orbit-role="outer-expanded"
-            data-route-key="meet-sean"
-            data-route-name="Meet Sean"
-            data-orbit-direction="counterclockwise"
-            aria-label="Meet Sean Voice"
-          >
-            <strong>Meet Sean</strong>
-            <span>Voice</span>
-          </a>
-
-          <a
-            href="/showroom/globe/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="15"
-            data-orbit-role="outer-expanded"
-            data-route-key="audralia"
-            data-route-name="Audralia"
-            data-orbit-direction="counterclockwise"
-            aria-label="Audralia World"
-          >
-            <strong>Audralia</strong>
-            <span>World</span>
-          </a>
-
-          <a
-            href="/products/five-flags/"
-            class="route-diamond compass-route-diamond"
-            data-route-diamond="true"
-            data-ring="outer"
-            data-route-index="16"
-            data-orbit-role="outer-expanded"
-            data-route-key="five-flags"
-            data-route-name="Five Flags"
-            data-orbit-direction="counterclockwise"
-            aria-label="Five Flags Game"
-          >
-            <strong>Five Flags</strong>
-            <span>Game</span>
-          </a>
-        </nav>
-      </section>
-
-      <section class="compass-logic" aria-labelledby="logic-title">
-        <p class="eyebrow">Compass logic</p>
-        <h2 id="logic-title">Compass orients. Door admits. Home stabilizes. Manor maps.</h2>
-
-        <div class="compass-card-grid">
-          <a class="compass-card" href="/door/">
-            <strong>Entry</strong>
-            <span>Door is the first crossing point.</span>
-            <em>It admits the visitor into the estate.</em>
-          </a>
-
-          <a class="compass-card" href="/home/">
-            <strong>Stability</strong>
-            <span>Home receives the visitor.</span>
-            <em>It keeps the next movement coherent.</em>
-          </a>
-
-          <a class="compass-card" href="/explore/">
-            <strong>Map</strong>
-            <span>Manor gives the route field structure.</span>
-            <em>It prevents every room from doing one job.</em>
-          </a>
-
-          <a class="compass-card" href="/gauges/">
-            <strong>Proof</strong>
-            <span>Gauges measure served route truth.</span>
-            <em>The page is measured by source, not intention.</em>
-          </a>
-        </div>
-      </section>
-
-      <section class="command-routes" aria-labelledby="command-routes-title">
-        <p class="eyebrow">Command routes</p>
-        <h2 id="command-routes-title">Move from Compass without losing the bridge.</h2>
-
-        <nav class="route-chip-grid" aria-label="Compass route chips">
+        <nav class="nav" aria-label="Main navigation">
+          <a href="/">Compass</a>
           <a href="/door/">Door</a>
           <a href="/home/">Home</a>
-          <a href="/explore/">Manor</a>
+          <a href="/manor/">Manor</a>
           <a href="/laws/">Laws</a>
           <a href="/nine-summits/">Nine Summits</a>
-          <a href="/nine-summits-of-love/">Book</a>
+          <a href="/book/">Book</a>
           <a href="/nine-summits/universe/">Universe</a>
           <a href="/products/">Products</a>
           <a href="/showroom/">Showroom</a>
           <a href="/frontier/">Frontier</a>
           <a href="/about-this-underdog/">Underdog</a>
           <a href="/meet-sean-mansfield/">Meet Sean</a>
+          <a href="/gauges/">Gauges</a>
         </nav>
+      </div>
+    </header>
+
+    <main id="compass-main">
+      <section class="hero" aria-labelledby="compass-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Compass · Animated Purple Diamond Command Surface</p>
+          <h1 id="compass-title">Pressure is the door.</h1>
+          <p class="subtitle">One message. Many rooms. One bridge.</p>
+          <p class="lead">
+            The Compass orients the visitor before movement. The command field keeps the center behind the route
+            diamonds so the estate can move without losing readability.
+          </p>
+          <p class="lead">
+            A bridge is useful only when the way across stays readable.
+          </p>
+
+          <div class="cta-row" aria-label="Primary actions">
+            <a class="button primary" href="/door/">Cross the Door</a>
+            <a class="button" href="/home/">Enter Home</a>
+            <a class="button" href="/manor/">Walk the Manor</a>
+            <a class="button" href="/nine-summits/">Open Nine Summits</a>
+          </div>
+        </div>
+
+        <div class="compass-stage" aria-label="Compass route diamond field">
+          <div class="compass-card">
+            <div class="center-anchor" aria-hidden="true">
+              <span>Compass<br />Command<br />Anchor</span>
+            </div>
+
+            <div class="orbit-ring inner" aria-hidden="true">
+              <a class="diamond-node" style="--angle: 0deg" href="/"><span>Compass</span></a>
+              <a class="diamond-node" style="--angle: 90deg" href="/door/"><span>Door</span></a>
+              <a class="diamond-node" style="--angle: 180deg" href="/home/"><span>Home</span></a>
+              <a class="diamond-node" style="--angle: 270deg" href="/manor/"><span>Manor</span></a>
+            </div>
+
+            <div class="orbit-ring outer" aria-hidden="true">
+              <a class="diamond-node" style="--angle: 0deg" href="/laws/"><span>Laws</span></a>
+              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/"><span>Nine<br />Summits</span></a>
+              <a class="diamond-node" style="--angle: 45deg" href="/book/"><span>Book</span></a>
+              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/"><span>Universe</span></a>
+              <a class="diamond-node" style="--angle: 90deg" href="/products/"><span>Products</span></a>
+              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/"><span>Showroom</span></a>
+              <a class="diamond-node" style="--angle: 135deg" href="/frontier/"><span>Frontier</span></a>
+              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/"><span>Gauges</span></a>
+              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/"><span>Under<br />dog</span></a>
+              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/"><span>Meet<br />Sean</span></a>
+              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/"><span>Audralia</span></a>
+              <a class="diamond-node" style="--angle: 247.5deg" href="/five-flags/"><span>Five<br />Flags</span></a>
+              <a class="diamond-node" style="--angle: 270deg" href="/door/"><span>Entry</span></a>
+              <a class="diamond-node" style="--angle: 292.5deg" href="/home/"><span>Receiver</span></a>
+              <a class="diamond-node" style="--angle: 315deg" href="/manor/"><span>Map</span></a>
+              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/"><span>Proof</span></a>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="route-receipt" aria-label="Route receipt">
-        <h2>Route receipt</h2>
+      <section class="route-panel" aria-labelledby="command-field-title">
+        <p class="eyebrow">Compass Background Command Anchor</p>
+        <h2 id="command-field-title">Chronological command field</h2>
         <p>
-          COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1
-          route=/
-          page=compass
-          role=animated_public_command_surface
-          message=one_message_many_rooms_one_bridge
-          shared_css=/assets/diamond-orbit.css
-          animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
-          center=compass_background_anchor_only
-          visual_system=compass_4_plus_12_diamond_orbit
-          ring_system=4_plus_12
-          inner_ring=compass,door,home,manor
-          outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
-          z_index_law=ambient_background,compass_anchor_background,orbit_field,route_diamonds,route_labels
-          non_overlap_law=no_clickable_diamond_hidden_by_center
-          animation=inner_clockwise_outer_counterclockwise
-          mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-          upgraded=explicit_ring_hooks,index_css_pair_run,current_contract_stamp
-          preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
-          route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
-          route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
-          heavy_runtime_loaded=false
-          render_files_touched=false
-          instrument_touched=false
-          gauges_logic_touched=false
-          generated_image=false
-          graphic_box=false
-          streaming=false
-          visual_pass_claimed=false
+          The room diamonds sit in front. Compass stays behind them. The public route field remains readable on
+          mobile, tablet, and desktop.
         </p>
-        <p>
-          COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1 · Compass · Shared Diamond Orbit · Pair Contract Aligned.
-        </p>
+
+        <div class="route-grid" aria-label="Chronological route field">
+          <a href="/">Compass Root</a>
+          <a href="/door/">Door Entry</a>
+          <a href="/home/">Home Receiver</a>
+          <a href="/manor/">Manor Map</a>
+          <a href="/laws/">Laws Boundary</a>
+          <a href="/nine-summits/">Nine Summits Gate</a>
+          <a href="/book/">Book Climb</a>
+          <a href="/nine-summits/universe/">Universe World</a>
+          <a href="/products/">Products Use</a>
+          <a href="/showroom/">Showroom Atrium</a>
+          <a href="/frontier/">Frontier Edge</a>
+          <a href="/gauges/">Gauges Proof</a>
+          <a href="/about-this-underdog/">Underdog Universal</a>
+          <a href="/meet-sean-mansfield/">Meet Sean Voice</a>
+          <a href="/showroom/globe/">Audralia World</a>
+          <a href="/five-flags/">Five Flags Game</a>
+        </div>
       </section>
+
+      <section class="route-panel" aria-labelledby="compass-logic-title">
+        <p class="eyebrow">Compass logic</p>
+        <h2 id="compass-logic-title">Compass orients. Door admits. Home stabilizes. Manor maps.</h2>
+
+        <div class="logic-grid">
+          <article class="logic-card">
+            <strong>Entry</strong>
+            <span>Door is the first crossing point. It admits the visitor into the estate.</span>
+          </article>
+
+          <article class="logic-card">
+            <strong>Stability</strong>
+            <span>Home receives the visitor. It keeps the next movement coherent.</span>
+          </article>
+
+          <article class="logic-card">
+            <strong>Map</strong>
+            <span>Manor gives the route field structure. It prevents every room from doing one job.</span>
+          </article>
+
+          <article class="logic-card">
+            <strong>Proof</strong>
+            <span>Gauges measure served route truth. The page is measured by source, not intention.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="route-panel" aria-labelledby="command-routes-title">
+        <p class="eyebrow">Command routes</p>
+        <h2 id="command-routes-title">Move from Compass without losing the bridge.</h2>
+
+        <div class="route-grid" aria-label="Command route links">
+          <a href="/door/">Door</a>
+          <a href="/home/">Home</a>
+          <a href="/manor/">Manor</a>
+          <a href="/laws/">Laws</a>
+          <a href="/nine-summits/">Nine Summits</a>
+          <a href="/book/">Book</a>
+          <a href="/nine-summits/universe/">Universe</a>
+          <a href="/products/">Products</a>
+          <a href="/showroom/">Showroom</a>
+          <a href="/frontier/">Frontier</a>
+          <a href="/about-this-underdog/">Underdog</a>
+          <a href="/meet-sean-mansfield/">Meet Sean</a>
+        </div>
+      </section>
+
+      <aside class="status-card" aria-label="Compass status">
+        <strong>Compass status:</strong>
+        Shared Diamond Orbit · Public command surface · Mobile containment restored · Receipt held out of public flow.
+      </aside>
+
+      <template id="route-receipt" data-route-receipt>
+COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1
+route=/
+page=compass
+role=animated_public_command_surface
+message=one_message_many_rooms_one_bridge
+shared_css=/assets/diamond-orbit.css
+animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+center=compass_background_anchor_only
+visual_system=compass_4_plus_12_diamond_orbit
+ring_system=4_plus_12
+inner_ring=compass,door,home,manor
+outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
+z_index_law=ambient_background,compass_anchor_background,orbit_field,route_diamonds,route_labels
+non_overlap_law=no_clickable_diamond_hidden_by_center
+animation=inner_clockwise_outer_counterclockwise
+mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
+upgraded=receipt_removed_from_public_flow,mobile_containment_restored,index_only_tnt
+preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
+route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
+visual_pass_claimed=false
+      </template>
     </main>
+
+    <footer>
+      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1 · Compass · Shared Diamond Orbit · Public layout restored.
+    </footer>
   </div>
 </body>
 </html>

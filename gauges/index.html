@@ -1,1209 +1,1084 @@
+<!-- /gauges/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#050814" />
-
-  <title>Gauges · Audralia Render Expression Audit</title>
+  <title>Showroom Globe Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Dedicated Audralia render-expression diagnostic for the Diamond Gate Bridge Showroom Globe route."
+    content="Live source and render-chain gauges for the Showroom Globe route, Earth G4 candidate discipline, and Audralia G1 ground-zero parent authority."
   />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #030711;
-      --panel: rgba(16, 22, 40, 0.84);
-      --panel2: rgba(25, 34, 58, 0.78);
-      --line: rgba(255, 255, 255, 0.13);
-      --line2: rgba(255, 255, 255, 0.23);
-      --text: rgba(245, 248, 255, 0.94);
-      --muted: rgba(218, 226, 242, 0.68);
-      --soft: rgba(187, 200, 224, 0.52);
-      --gold: #f0dca8;
-      --blue: #8fc7ff;
-      --green: #9ae6b4;
-      --red: #ffb3a5;
-      --yellow: #ffe29a;
-      --max: 1180px;
+      --bg: #020611;
+      --panel: rgba(8, 18, 34, 0.92);
+      --panel2: rgba(14, 32, 56, 0.86);
+      --line: rgba(155, 188, 232, 0.22);
+      --text: #f4f8ff;
+      --muted: #aebbd0;
+      --pass: #8ff0bd;
+      --fail: #ff8e8e;
+      --warn: #ffd98a;
+      --held: #9fc5ff;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
-
     body {
-      min-height: 100%;
       margin: 0;
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      color: var(--text);
       background:
-        radial-gradient(circle at 50% 0%, rgba(100, 142, 190, 0.20), transparent 34rem),
-        radial-gradient(circle at 15% 20%, rgba(143, 199, 255, 0.10), transparent 28rem),
-        radial-gradient(circle at 88% 18%, rgba(240, 220, 168, 0.10), transparent 26rem),
-        linear-gradient(180deg, #030711 0%, #070b17 46%, #030711 100%);
+        radial-gradient(circle at 20% 0%, rgba(62, 119, 186, 0.18), transparent 34rem),
+        linear-gradient(180deg, #030815, #020611 45%, #01030a);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(90deg, transparent 0, rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(180deg, transparent 0, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: radial-gradient(circle at 50% 22%, black, transparent 72%);
-      opacity: 0.52;
-    }
-
     a {
-      color: inherit;
-      text-decoration: none;
+      color: #b9d6ff;
     }
 
-    .shell {
-      width: min(var(--max), calc(100% - 2rem));
+    .skip-link {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.75rem;
+      transform: translateY(-140%);
+      background: #07111f;
+      color: #ffffff;
+      padding: 0.55rem 0.8rem;
+      border-radius: 0.7rem;
+      z-index: 20;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    header,
+    main {
+      width: min(1120px, 92vw);
       margin: 0 auto;
-      padding: 1.1rem 0 4rem;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 0.9rem 0 1.2rem;
+    header {
+      padding: 1rem 0 0.25rem;
     }
 
     .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.2rem;
+      font-weight: 850;
+      font-size: clamp(1.15rem, 4.2vw, 1.6rem);
     }
 
-    .brand strong {
-      font-size: clamp(1rem, 2.4vw, 1.25rem);
-      letter-spacing: 0.04em;
-    }
-
-    .brand span {
-      color: var(--soft);
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .nav {
+    nav {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.45rem;
+      gap: 0.55rem 0.95rem;
+      margin-top: 0.5rem;
     }
 
-    .nav a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 2.2rem;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.8rem;
-      letter-spacing: 0.03em;
-    }
-
-    .nav a[aria-current="page"] {
-      color: var(--gold);
-      border-color: rgba(240,220,168,0.38);
-      background: rgba(240,220,168,0.08);
-    }
-
-    .hero {
-      position: relative;
-      padding: clamp(1.2rem, 4vw, 2.6rem);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.08), transparent 44%),
-        rgba(8, 12, 25, 0.82);
-      box-shadow:
-        0 24px 90px rgba(0,0,0,0.44),
-        inset 0 1px 0 rgba(255,255,255,0.10);
-      overflow: hidden;
+    main {
+      padding: 2rem 0 4rem;
     }
 
     .eyebrow {
-      margin: 0 0 0.8rem;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.22em;
+      color: var(--muted);
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      font-size: 0.75rem;
+      margin: 0 0 0.6rem;
     }
 
     h1 {
-      max-width: 12ch;
-      margin: 0;
-      font-size: clamp(2.35rem, 9vw, 5.85rem);
-      line-height: 0.92;
-      letter-spacing: -0.075em;
+      margin: 0 0 0.85rem;
+      font-size: clamp(2rem, 9vw, 4.6rem);
+      line-height: 0.95;
     }
 
-    .hero p.copy {
-      max-width: 860px;
-      margin: 1.1rem 0 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 3.2vw, 1.38rem);
-      line-height: 1.55;
+    h2 {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
     }
 
-    .summary {
+    p {
+      color: #d6dfef;
+      line-height: 1.45;
+      font-size: clamp(1rem, 4vw, 1.18rem);
+    }
+
+    button {
+      border: 1px solid rgba(180, 210, 250, 0.24);
+      background: linear-gradient(180deg, rgba(58, 102, 166, 0.36), rgba(10, 22, 42, 0.88));
+      color: #ffffff;
+      font: inherit;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 0.9rem 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    button:focus,
+    button:hover {
+      outline: 2px solid rgba(170, 210, 255, 0.52);
+      outline-offset: 3px;
+    }
+
+    .hero,
+    .panel,
+    .gauge-card {
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(74, 126, 196, 0.16), transparent 36%),
+        linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: 1.4rem;
+      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.36);
+    }
+
+    .hero {
+      padding: clamp(1rem, 4vw, 1.5rem);
+      margin-bottom: 1.1rem;
+    }
+
+    .summary-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.85rem;
+      margin: 1.25rem 0;
     }
 
     .summary-card {
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 1rem;
       padding: 1rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.045);
-      min-height: 6rem;
     }
 
-    .summary-card b {
+    .summary-card strong {
       display: block;
-      font-size: clamp(1.25rem, 5vw, 2rem);
+      font-size: 1.65rem;
       line-height: 1;
+      margin-bottom: 0.35rem;
     }
 
     .summary-card span {
-      display: block;
-      margin-top: 0.45rem;
-      color: var(--soft);
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .panel {
+      padding: clamp(1rem, 4vw, 1.5rem);
+      margin-top: 1rem;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 0.65rem;
+      padding: 0;
+      margin: 1rem 0 0;
+      list-style: none;
+    }
+
+    .goal-list li {
+      border: 1px solid rgba(155, 188, 232, 0.16);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.9rem;
+      padding: 0.8rem;
+      color: #d8e2f3;
     }
 
     .toolbar {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
       align-items: center;
-      gap: 0.75rem;
-      margin: 1.1rem 0;
-      padding: 0.95rem;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(8, 12, 25, 0.70);
+      margin-top: 1rem;
     }
 
-    .toolbar small {
+    .timestamp {
       color: var(--muted);
-      line-height: 1.45;
+      font-size: 0.95rem;
     }
 
-    button {
-      border: 1px solid rgba(143,199,255,0.36);
-      border-radius: 999px;
-      background: rgba(143,199,255,0.10);
-      color: var(--text);
-      min-height: 2.45rem;
-      padding: 0.55rem 0.95rem;
-      font: inherit;
-      font-size: 0.86rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: rgba(143,199,255,0.16);
-    }
-
-    .grid {
+    .gauge-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
       margin-top: 1rem;
     }
 
-    .gauge {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.055), transparent 48%),
-        var(--panel);
+    .gauge-card {
+      padding: 1rem;
       overflow: hidden;
-      box-shadow:
-        0 16px 60px rgba(0,0,0,0.28),
-        inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
     .gauge-head {
       display: flex;
+      align-items: start;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.75rem;
-      padding: 1rem 1rem 0.8rem;
-      border-bottom: 1px solid rgba(255,255,255,0.09);
+      gap: 0.85rem;
+      margin-bottom: 0.8rem;
     }
 
     .gauge-title {
-      display: grid;
-      gap: 0.28rem;
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.15;
     }
 
-    .gauge-title b {
-      color: var(--text);
-      font-size: 1rem;
-      letter-spacing: 0.02em;
-    }
-
-    .gauge-title span {
-      color: var(--soft);
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 5.5rem;
-      padding: 0.42rem 0.62rem;
-      border: 1px solid rgba(255,255,255,0.14);
+    .badge {
+      flex: none;
       border-radius: 999px;
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-      font-size: 0.68rem;
+      padding: 0.36rem 0.65rem;
+      font-size: 0.76rem;
       font-weight: 900;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.16);
     }
 
-    .status.pending {
-      color: var(--yellow);
-      background: rgba(255,226,154,0.08);
-      border-color: rgba(255,226,154,0.22);
+    .pass {
+      color: var(--pass);
+      background: rgba(34, 168, 101, 0.12);
     }
 
-    .status.pass {
-      color: var(--green);
-      background: rgba(154,230,180,0.08);
-      border-color: rgba(154,230,180,0.25);
+    .fail {
+      color: var(--fail);
+      background: rgba(190, 49, 49, 0.14);
     }
 
-    .status.fail {
-      color: var(--red);
-      background: rgba(255,179,165,0.08);
-      border-color: rgba(255,179,165,0.25);
+    .warn {
+      color: var(--warn);
+      background: rgba(210, 146, 33, 0.13);
     }
 
-    .status.warn {
-      color: var(--yellow);
-      background: rgba(255,226,154,0.08);
-      border-color: rgba(255,226,154,0.25);
+    .held {
+      color: var(--held);
+      background: rgba(65, 126, 220, 0.14);
     }
 
-    .gauge-body {
-      padding: 1rem;
-    }
-
-    .metric {
+    .kv {
       display: grid;
-      grid-template-columns: 10rem minmax(0, 1fr);
-      gap: 0.7rem;
-      padding: 0.62rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      grid-template-columns: minmax(9rem, 0.8fr) minmax(0, 1.2fr);
+      gap: 0.4rem 0.8rem;
+      margin-top: 0.7rem;
+    }
+
+    .kv div {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .kv div:nth-child(odd) {
       color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.45;
     }
 
-    .metric:last-child {
-      border-bottom: 0;
-    }
-
-    .metric b {
-      color: var(--text);
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .panel {
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      background: var(--panel2);
-    }
-
-    .panel h2 {
-      margin: 0 0 0.75rem;
-      color: var(--gold);
-      font-size: clamp(1.2rem, 4vw, 1.7rem);
-    }
-
-    .panel pre {
+    pre {
+      margin: 0.85rem 0 0;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      margin: 0;
-      padding: 0.95rem;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px;
-      background: rgba(0,0,0,0.24);
-      color: rgba(235,241,255,0.78);
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-      font-size: 0.76rem;
-      line-height: 1.55;
-    }
-
-    .texture-proof {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 16rem;
-      gap: 1rem;
-      align-items: start;
-    }
-
-    canvas {
-      width: 100%;
-      max-width: 16rem;
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 18px;
-      background: rgba(0,0,0,0.24);
-    }
-
-    .footer {
-      padding-top: 2rem;
-      color: rgba(218,226,242,0.52);
-      text-align: center;
       font-size: 0.78rem;
-      letter-spacing: 0.06em;
+      line-height: 1.35;
+      color: #dce9ff;
+      background: rgba(0, 0, 0, 0.34);
+      border: 1px solid rgba(155, 188, 232, 0.18);
+      border-radius: 0.9rem;
+      padding: 0.85rem;
     }
 
-    @media (max-width: 820px) {
-      .shell {
-        width: min(100% - 1rem, var(--max));
-      }
+    canvas.audit-proof {
+      display: none;
+    }
 
-      .topbar {
-        flex-direction: column;
+    @media (min-width: 860px) {
+      .gauge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+    }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .summary,
-      .grid,
-      .texture-proof {
+    @media (max-width: 620px) {
+      .kv {
         grid-template-columns: 1fr;
-      }
-
-      .metric {
-        grid-template-columns: 1fr;
-        gap: 0.25rem;
-      }
-
-      canvas {
-        max-width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Audralia Gauges</span>
-      </a>
+  <a class="skip-link" href="#main">Skip to gauges</a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/" aria-current="page">Gauges</a>
-      </nav>
-    </header>
+  <header>
+    <a class="brand" href="/">Diamond Gate Bridge</a>
+    <nav aria-label="Primary navigation">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/home/">Home</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/showroom/globe/">Globe</a>
+      <a href="/products/">Products</a>
+      <a href="/gauges/" aria-current="page">Gauges</a>
+    </nav>
+  </header>
 
-    <main>
-      <section class="hero">
-        <p class="eyebrow">Gauges · Audralia Render Expression</p>
-        <h1>Render Chain Audit</h1>
-        <p class="copy">
-          Dedicated diagnostic for the Audralia visible render chain:
-          Showroom Globe HTML shell, mount node, index module execution, Audralia renderer import,
-          texture build, canvas proof, and land-water expression.
-        </p>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Gauges · Showroom Globe Live Readings</p>
+      <h1 id="page-title">Render Chain Audit</h1>
+      <p>
+        Dedicated diagnostic for the Showroom Globe route. This page reads the live route,
+        controller, Earth candidate renderer, and Audralia ground-zero parent renderer against
+        the current goal.
+      </p>
 
-        <div class="summary">
-          <div class="summary-card">
-            <b id="summaryPass">0</b>
-            <span>Pass</span>
-          </div>
-          <div class="summary-card">
-            <b id="summaryFail">0</b>
-            <span>Fail</span>
-          </div>
-          <div class="summary-card">
-            <b id="summaryWarn">0</b>
-            <span>Warn</span>
-          </div>
-          <div class="summary-card">
-            <b id="summaryNext">Index JS</b>
-            <span>Next Target</span>
-          </div>
+      <div class="summary-grid" aria-label="Audit summary">
+        <div class="summary-card">
+          <strong id="passCount">0</strong>
+          <span>Pass</span>
         </div>
-      </section>
-
-      <section class="toolbar" aria-label="Audit controls">
-        <small id="runMeta">
-          AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1 · waiting for audit run
-        </small>
-        <button type="button" id="rerunButton">Run Audit</button>
-      </section>
-
-      <section class="grid" id="gaugeGrid" aria-label="Audralia render gauges"></section>
-
-      <section class="panel">
-        <h2>Texture Proof</h2>
-        <div class="texture-proof">
-          <pre id="textureReport">Texture proof has not run yet.</pre>
-          <canvas id="textureCanvas" width="256" height="128" aria-label="Audralia texture proof canvas"></canvas>
+        <div class="summary-card">
+          <strong id="failCount">0</strong>
+          <span>Fail</span>
         </div>
-      </section>
+        <div class="summary-card">
+          <strong id="warnCount">0</strong>
+          <span>Warn</span>
+        </div>
+        <div class="summary-card">
+          <strong id="nextTarget">Held</strong>
+          <span>Next target</span>
+        </div>
+      </div>
 
-      <section class="panel">
-        <h2>Missing Chain Report</h2>
-        <pre id="missingReport">Audit has not run yet.</pre>
-      </section>
+      <div class="toolbar">
+        <button id="runAudit" type="button">Run Audit</button>
+        <span id="auditStamp" class="timestamp">Audit not yet run.</span>
+      </div>
+    </section>
 
-      <section class="panel">
-        <h2>Raw Diagnostic Log</h2>
-        <pre id="rawLog">No log yet.</pre>
-      </section>
-    </main>
+    <section class="panel" aria-labelledby="goal-title">
+      <h2 id="goal-title">Current Goal</h2>
+      <ul class="goal-list">
+        <li>Showroom Globe route loads as HTML, not raw JavaScript.</li>
+        <li>Earth renders, but remains G4_CANDIDATE. No Generation 4 completion claim.</li>
+        <li>Audralia imports only from /assets/audralia/audralia.planet.render.js.</li>
+        <li>Audralia renders as clean Generation 1 ground-zero parent only.</li>
+        <li>No shared renderer adoption. No static image replacement. No image generation.</li>
+      </ul>
+    </section>
 
-    <footer class="footer">
-      AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1 · SOURCE-BASED · NO ROUTE MUTATION · NO IMAGE GENERATION
-    </footer>
-  </div>
+    <section class="panel" aria-labelledby="gauges-title">
+      <h2 id="gauges-title">Live Gauges</h2>
+      <div id="gaugeGrid" class="gauge-grid" aria-live="polite"></div>
+    </section>
 
-  <script type="module">
-    const CONTRACT = "AUDRALIA_RENDER_EXPRESSION_GAUGES_TNT_v1";
-    const CACHE_KEY = `${CONTRACT}_${Date.now()}`;
+    <section class="panel" aria-labelledby="missing-title">
+      <h2 id="missing-title">Missing Chain Report</h2>
+      <pre id="missingReport">Run audit to generate missing-chain report.</pre>
+    </section>
 
-    const TARGETS = {
-      route: `/showroom/globe/?v=${CACHE_KEY}`,
-      index: `/showroom/globe/index.js?v=${CACHE_KEY}`,
-      renderer: `/assets/audrelia.planet.render.js?v=${CACHE_KEY}`
-    };
+    <section class="panel" aria-labelledby="log-title">
+      <h2 id="log-title">Raw Diagnostic Log</h2>
+      <pre id="rawLog">No log yet.</pre>
+    </section>
 
-    const GAUGES = [
-      {
-        id: "G1",
-        title: "Route HTML Shell",
-        scope: "/showroom/globe/",
-        test: "HTML loads and raw JavaScript is not visible as page body."
-      },
-      {
-        id: "G2",
-        title: "Audralia Mount Node",
-        scope: "#audraliaRenderMount",
-        test: "Mount node exists with Audralia render attributes."
-      },
-      {
-        id: "G3",
-        title: "Index Module Presence",
-        scope: "/showroom/globe/index.js",
-        test: "Index module exists and contains visible mount logic."
-      },
-      {
-        id: "G4",
-        title: "Index Execution Receipt",
-        scope: "Visible chamber diagnostic",
-        test: "Index JS contains receipts that cannot fail silently."
-      },
-      {
-        id: "G5",
-        title: "Renderer Module Import",
-        scope: "/assets/audrelia.planet.render.js",
-        test: "Renderer imports as a JavaScript module."
-      },
-      {
-        id: "G6",
-        title: "Renderer API",
-        scope: "Audralia API",
-        test: "Renderer exposes buildTexture or renderSurface."
-      },
-      {
-        id: "G7",
-        title: "Texture Build",
-        scope: "buildTexture()",
-        test: "Renderer generates an actual canvas texture."
-      },
-      {
-        id: "G8",
-        title: "Canvas Pixel Proof",
-        scope: "texture sample",
-        test: "Texture contains non-empty pixel data."
-      },
-      {
-        id: "G9",
-        title: "Land Water Data",
-        scope: "sampleSurface()",
-        test: "Surface samples expose land and water differentiation."
-      },
-      {
-        id: "G10",
-        title: "Visual Readiness",
-        scope: "screenshot-confirmed",
-        test: "Held until Sean confirms visible planet screenshot."
+    <canvas id="earthProofCanvas" class="audit-proof" width="256" height="256"></canvas>
+    <canvas id="audraliaProofCanvas" class="audit-proof" width="256" height="256"></canvas>
+  </main>
+
+  <script>
+    (function initShowroomGlobeGauges() {
+      "use strict";
+
+      const RECEIPT = "SHOWROOM_GLOBE_LIVE_CHAIN_GAUGES_TNT_v1";
+      const ROUTE = "/showroom/globe/";
+      const INDEX_JS = "/showroom/globe/index.js";
+      const EARTH_MODULE = "/assets/earth/earth_canvas.js";
+      const AUDRALIA_MODULE = "/assets/audralia/audralia.planet.render.js";
+      const OLD_AUDRALIA_BRIDGE = "/assets/AdreliaPlanetRendered.js";
+      const LEGACY_TOKEN = String.fromCharCode(65, 117, 115, 116, 114, 97, 108, 105, 97);
+
+      const state = {
+        gauges: [],
+        log: []
+      };
+
+      const nodes = {
+        passCount: document.getElementById("passCount"),
+        failCount: document.getElementById("failCount"),
+        warnCount: document.getElementById("warnCount"),
+        nextTarget: document.getElementById("nextTarget"),
+        auditStamp: document.getElementById("auditStamp"),
+        runAudit: document.getElementById("runAudit"),
+        gaugeGrid: document.getElementById("gaugeGrid"),
+        missingReport: document.getElementById("missingReport"),
+        rawLog: document.getElementById("rawLog"),
+        earthProofCanvas: document.getElementById("earthProofCanvas"),
+        audraliaProofCanvas: document.getElementById("audraliaProofCanvas")
+      };
+
+      function nowIso() {
+        return new Date().toISOString();
       }
-    ];
 
-    const state = {
-      gauges: new Map(),
-      log: [],
-      missing: [],
-      files: {},
-      rendererApi: null
-    };
+      function bust(url) {
+        const joiner = url.includes("?") ? "&" : "?";
+        return `${url}${joiner}v=${encodeURIComponent(RECEIPT)}_${Date.now()}`;
+      }
 
-    const grid = document.getElementById("gaugeGrid");
-    const rawLog = document.getElementById("rawLog");
-    const missingReport = document.getElementById("missingReport");
-    const textureReport = document.getElementById("textureReport");
-    const textureCanvas = document.getElementById("textureCanvas");
-    const runMeta = document.getElementById("runMeta");
+      function log(message) {
+        state.log.push(`[${nowIso()}] ${message}`);
+      }
 
-    function log(line) {
-      const stamp = new Date().toISOString();
-      state.log.push(`[${stamp}] ${line}`);
-      rawLog.textContent = state.log.join("\n");
-    }
+      function statusRank(status) {
+        if (status === "FAIL") return 0;
+        if (status === "WARN") return 1;
+        if (status === "HELD") return 2;
+        return 3;
+      }
 
-    function statusClass(status) {
-      if (status === "PASS") return "pass";
-      if (status === "FAIL") return "fail";
-      if (status === "WARN") return "warn";
-      return "pending";
-    }
-
-    function setGauge(id, status, metrics = {}) {
-      const previous = state.gauges.get(id) || {};
-      state.gauges.set(id, {
-        ...previous,
-        status,
-        metrics
-      });
-      renderGauges();
-      updateSummary();
-    }
-
-    function renderGauges() {
-      grid.innerHTML = "";
-
-      for (const gauge of GAUGES) {
-        const result = state.gauges.get(gauge.id) || {
-          status: "PENDING",
-          metrics: {}
+      function makeGauge(id, title, status, test, details, raw) {
+        const gauge = {
+          id,
+          title,
+          status,
+          test,
+          details: details || {},
+          raw: raw || null
         };
 
-        const card = document.createElement("article");
-        card.className = "gauge";
+        state.gauges.push(gauge);
+        return gauge;
+      }
 
-        const head = document.createElement("div");
-        head.className = "gauge-head";
+      function boolText(value) {
+        return value === true ? "true" : value === false ? "false" : String(value);
+      }
 
-        const title = document.createElement("div");
-        title.className = "gauge-title";
-        title.innerHTML = `<b>${gauge.id} · ${gauge.title}</b><span>${gauge.scope}</span>`;
+      function escapeText(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
 
-        const status = document.createElement("span");
-        status.className = `status ${statusClass(result.status)}`;
-        status.textContent = result.status;
+      async function fetchText(url) {
+        const response = await fetch(bust(url), {
+          cache: "no-store"
+        });
 
-        head.append(title, status);
+        const text = await response.text();
 
-        const body = document.createElement("div");
-        body.className = "gauge-body";
+        return {
+          ok: response.ok,
+          status: response.status,
+          url,
+          text
+        };
+      }
 
-        const baseMetrics = {
-          "Test": gauge.test,
-          ...result.metrics
+      async function importModule(url) {
+        try {
+          const module = await import(bust(url));
+          return {
+            ok: true,
+            url,
+            module,
+            error: null
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            url,
+            module: null,
+            error: String(error && error.message ? error.message : error)
+          };
+        }
+      }
+
+      function getApi(module) {
+        if (!module) return null;
+        return module.default || module;
+      }
+
+      function getStatus(api) {
+        if (!api || typeof api.getStatus !== "function") {
+          return {
+            ok: false,
+            statusAvailable: false
+          };
+        }
+
+        try {
+          return Object.assign({ statusAvailable: true }, api.getStatus());
+        } catch (error) {
+          return {
+            ok: false,
+            statusAvailable: false,
+            error: String(error && error.message ? error.message : error)
+          };
+        }
+      }
+
+      function hasNonTransparentPixel(canvas) {
+        const context = canvas.getContext("2d");
+        const image = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        for (let i = 3; i < image.length; i += 4) {
+          if (image[i] > 0) return true;
+        }
+
+        return false;
+      }
+
+      function renderProof(api, canvas, options) {
+        if (!api) {
+          return {
+            rendered: false,
+            method: "none",
+            pixelProof: false,
+            error: "api missing"
+          };
+        }
+
+        try {
+          const profile =
+            typeof api.createProfile === "function"
+              ? api.createProfile(options || {})
+              : undefined;
+
+          const texture =
+            typeof api.buildTexture === "function"
+              ? api.buildTexture(profile)
+              : undefined;
+
+          if (typeof api.renderSurface === "function") {
+            api.renderSurface(canvas, Object.assign({}, options || {}, { profile, texture }));
+            return {
+              rendered: true,
+              method: "renderSurface",
+              pixelProof: hasNonTransparentPixel(canvas)
+            };
+          }
+
+          if (typeof api.render === "function") {
+            api.render(canvas, options || {});
+            return {
+              rendered: true,
+              method: "render",
+              pixelProof: hasNonTransparentPixel(canvas)
+            };
+          }
+
+          if (typeof api.renderPlanet === "function") {
+            api.renderPlanet(canvas, options || {});
+            return {
+              rendered: true,
+              method: "renderPlanet",
+              pixelProof: hasNonTransparentPixel(canvas)
+            };
+          }
+
+          return {
+            rendered: false,
+            method: "missing",
+            pixelProof: false,
+            error: "No compatible render API."
+          };
+        } catch (error) {
+          return {
+            rendered: false,
+            method: "error",
+            pixelProof: false,
+            error: String(error && error.message ? error.message : error)
+          };
+        }
+      }
+
+      function scanForbiddenLegacy(text) {
+        const candidates = [
+          `Planet ${LEGACY_TOKEN}`,
+          `${LEGACY_TOKEN} G1`,
+          `${LEGACY_TOKEN} terrain`,
+          `${LEGACY_TOKEN} globe`,
+          `planet-${LEGACY_TOKEN.toLowerCase()}`,
+          `Planet${LEGACY_TOKEN}`
+        ];
+
+        return candidates.filter((token) => text.includes(token));
+      }
+
+      function renderGauge(gauge) {
+        const statusClass =
+          gauge.status === "PASS"
+            ? "pass"
+            : gauge.status === "FAIL"
+              ? "fail"
+              : gauge.status === "WARN"
+                ? "warn"
+                : "held";
+
+        const detailHtml = Object.entries(gauge.details || {})
+          .map(([key, value]) => {
+            let renderedValue = value;
+
+            if (typeof value === "object" && value !== null) {
+              renderedValue = JSON.stringify(value);
+            }
+
+            return `<div>${escapeText(key)}</div><div>${escapeText(renderedValue)}</div>`;
+          })
+          .join("");
+
+        return `
+          <article class="gauge-card" data-gauge="${escapeText(gauge.id)}" data-status="${escapeText(gauge.status)}">
+            <div class="gauge-head">
+              <h3 class="gauge-title">${escapeText(gauge.title)}</h3>
+              <span class="badge ${statusClass}">${escapeText(gauge.status)}</span>
+            </div>
+            <p>${escapeText(gauge.test)}</p>
+            <div class="kv">${detailHtml}</div>
+            ${gauge.raw ? `<pre>${escapeText(gauge.raw)}</pre>` : ""}
+          </article>
+        `;
+      }
+
+      function renderAll() {
+        const counts = {
+          PASS: 0,
+          FAIL: 0,
+          WARN: 0,
+          HELD: 0
         };
 
-        for (const [key, value] of Object.entries(baseMetrics)) {
-          const row = document.createElement("div");
-          row.className = "metric";
-
-          const k = document.createElement("b");
-          k.textContent = key;
-
-          const v = document.createElement("span");
-          v.textContent =
-            typeof value === "string"
-              ? value
-              : JSON.stringify(value);
-
-          row.append(k, v);
-          body.append(row);
-        }
-
-        card.append(head, body);
-        grid.append(card);
-      }
-    }
-
-    function updateSummary() {
-      let pass = 0;
-      let fail = 0;
-      let warn = 0;
-
-      for (const gauge of GAUGES) {
-        const result = state.gauges.get(gauge.id);
-        if (!result) continue;
-        if (result.status === "PASS") pass += 1;
-        if (result.status === "FAIL") fail += 1;
-        if (result.status === "WARN") warn += 1;
-      }
-
-      document.getElementById("summaryPass").textContent = String(pass);
-      document.getElementById("summaryFail").textContent = String(fail);
-      document.getElementById("summaryWarn").textContent = String(warn);
-
-      const next = chooseNextTarget();
-      document.getElementById("summaryNext").textContent = next;
-    }
-
-    function chooseNextTarget() {
-      const g3 = state.gauges.get("G3")?.status;
-      const g4 = state.gauges.get("G4")?.status;
-      const g5 = state.gauges.get("G5")?.status;
-      const g6 = state.gauges.get("G6")?.status;
-      const g7 = state.gauges.get("G7")?.status;
-
-      if (g3 === "FAIL" || g4 === "FAIL") return "Index JS";
-      if (g5 === "FAIL" || g6 === "FAIL" || g7 === "FAIL") return "Renderer";
-      return "Screenshot";
-    }
-
-    async function fetchText(url) {
-      const response = await fetch(url, {
-        cache: "no-store",
-        credentials: "same-origin"
-      });
-
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      return response.text();
-    }
-
-    function includesAny(text, list) {
-      return list.some((item) => text.includes(item));
-    }
-
-    function countMatches(text, pattern) {
-      const match = text.match(pattern);
-      return match ? match.length : 0;
-    }
-
-    function extractScriptSources(html) {
-      const doc = new DOMParser().parseFromString(html, "text/html");
-      return Array.from(doc.querySelectorAll("script[src]")).map((script) => ({
-        src: script.getAttribute("src"),
-        type: script.getAttribute("type") || ""
-      }));
-    }
-
-    function inspectRouteHtml(html) {
-      const rawJsMarkers = [
-        "const AUDRALIA_MOUNT_TNT",
-        "function bootAudraliaVisibleMount",
-        "AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT_v1 FULL-FILE REPLACEMENT",
-        "const MOUNT_SELECTORS"
-      ];
-
-      const hasHtml = /<!doctype html/i.test(html) || /<html/i.test(html);
-      const rawJsVisible = includesAny(html, rawJsMarkers);
-      const scripts = extractScriptSources(html);
-      const hasModuleScript = scripts.some((s) =>
-        /index\.js/.test(s.src || "") && /module/i.test(s.type || "")
-      );
-
-      setGauge("G1", hasHtml && !rawJsVisible ? "PASS" : "FAIL", {
-        "HTML Detected": String(hasHtml),
-        "Raw JS Visible": String(rawJsVisible),
-        "Module Script": String(hasModuleScript),
-        "Script Sources": scripts.map((s) => `${s.type || "plain"} ${s.src}`).join(" | ") || "none"
-      });
-
-      const doc = new DOMParser().parseFromString(html, "text/html");
-      const mount = doc.querySelector("#audraliaRenderMount");
-      const hasMount = Boolean(mount);
-      const hasAudraliaAttr = Boolean(
-        mount?.hasAttribute("data-audralia-render") ||
-        mount?.hasAttribute("data-audrelia-render")
-      );
-      const hasRenderAttr = Boolean(mount?.hasAttribute("data-render-mount"));
-
-      setGauge("G2", hasMount && hasAudraliaAttr && hasRenderAttr ? "PASS" : "FAIL", {
-        "Mount Exists": String(hasMount),
-        "Audralia Attr": String(hasAudraliaAttr),
-        "Render Attr": String(hasRenderAttr),
-        "Mount Class": mount?.getAttribute("class") || "none"
-      });
-    }
-
-    function inspectIndexJs(js) {
-      const hasBoot = includesAny(js, [
-        "bootAudraliaVisibleMount",
-        "bootWhenReady",
-        "AUDRALIA_G2_VISIBLE_MOUNT_BRIDGE_TNT",
-        "SHOWROOM_GLOBE_INDEX_DIAGNOSTIC"
-      ]);
-
-      const hasMountSelection = includesAny(js, [
-        "#audraliaRenderMount",
-        "data-audralia-render",
-        "querySelector"
-      ]);
-
-      const hasCanvas = includesAny(js, [
-        "createElement(\"canvas\")",
-        "createElement('canvas')",
-        "document.createElement(\"canvas\")",
-        "document.createElement('canvas')"
-      ]);
-
-      const hasRendererImport = includesAny(js, [
-        "/assets/audrelia.planet.render.js",
-        "AUDRALIA_RENDERER_URL",
-        "import("
-      ]);
-
-      const hasDiagnosticReceipts = includesAny(js, [
-        "INDEX_JS_EXECUTED",
-        "RENDERER_IMPORT",
-        "TEXTURE_BUILD",
-        "VISIBLE_RENDER",
-        "AUDRALIA MOUNT",
-        "IMPORT_OR_RENDER_FAIL"
-      ]);
-
-      setGauge("G3", hasBoot && hasMountSelection && hasCanvas ? "PASS" : "FAIL", {
-        "Boot Logic": String(hasBoot),
-        "Mount Selection": String(hasMountSelection),
-        "Canvas Logic": String(hasCanvas),
-        "Renderer Import Text": String(hasRendererImport),
-        "File Size": `${js.length} chars`
-      });
-
-      setGauge("G4", hasDiagnosticReceipts ? "PASS" : "FAIL", {
-        "No Silent Failure Receipts": String(hasDiagnosticReceipts),
-        "Receipt Markers": [
-          "INDEX_JS_EXECUTED",
-          "RENDERER_IMPORT",
-          "TEXTURE_BUILD",
-          "VISIBLE_RENDER",
-          "IMPORT_OR_RENDER_FAIL"
-        ].filter((marker) => js.includes(marker)).join(" | ") || "none"
-      });
-    }
-
-    async function importRenderer() {
-      const mod = await import(TARGETS.renderer);
-
-      const api =
-        mod.default ||
-        mod.AUDRALIA_PLANET_RENDERER ||
-        mod.AudraliaPlanetRenderer ||
-        mod.AudreliaPlanetRenderer ||
-        globalThis.AUDRALIA_PLANET_RENDERER ||
-        globalThis.AudraliaPlanetRenderer ||
-        globalThis.AudreliaPlanetRenderer ||
-        globalThis.DiamondGateBridge?.planets?.audralia ||
-        globalThis.DiamondGateBridge?.planets?.audrelia;
-
-      return { mod, api };
-    }
-
-    function inspectRendererSource(source) {
-      const hasExports = includesAny(source, [
-        "export default",
-        "export {",
-        "AUDRALIA_PLANET_RENDERER"
-      ]);
-
-      const hasBuildTexture = /function\s+buildTexture|buildTexture\s*[:=]/.test(source);
-      const hasRenderSurface = /function\s+renderSurface|renderSurface\s*[:=]/.test(source);
-      const hasSampleSurface = /function\s+sampleSurface|sampleSurface\s*[:=]/.test(source);
-      const hasHardLand = includesAny(source, [
-        "hard-thresholded",
-        "landWaterSeparation",
-        "continentMask",
-        "landField",
-        "isLand"
-      ]);
-
-      return {
-        hasExports,
-        hasBuildTexture,
-        hasRenderSurface,
-        hasSampleSurface,
-        hasHardLand
-      };
-    }
-
-    function provePixels(canvas) {
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = image.data;
-
-      let nonEmpty = 0;
-      let varied = 0;
-      let first = null;
-      const seen = new Set();
-
-      for (let i = 0; i < data.length; i += 16) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
-
-        if (a > 0 && (r > 0 || g > 0 || b > 0)) nonEmpty += 1;
-
-        const key = `${r},${g},${b},${a}`;
-        if (!first) first = key;
-        seen.add(key);
-        if (seen.size > 8) varied += 1;
-      }
-
-      return {
-        nonEmpty,
-        varied,
-        uniqueSampleCount: seen.size
-      };
-    }
-
-    async function runRendererProof(source) {
-      const sourceInspection = inspectRendererSource(source);
-
-      try {
-        const imported = await importRenderer();
-        state.rendererApi = imported.api;
-
-        setGauge("G5", imported.api ? "PASS" : "FAIL", {
-          "Module Imported": "true",
-          "API Found": String(Boolean(imported.api)),
-          "Source Exports": String(sourceInspection.hasExports)
+        state.gauges.forEach((gauge) => {
+          counts[gauge.status] = (counts[gauge.status] || 0) + 1;
         });
 
-        if (!imported.api) {
-          setGauge("G6", "FAIL", {
-            "API": "missing"
-          });
-          return;
-        }
+        nodes.passCount.textContent = String(counts.PASS || 0);
+        nodes.failCount.textContent = String(counts.FAIL || 0);
+        nodes.warnCount.textContent = String(counts.WARN || 0);
 
-        const api = imported.api;
-        const hasBuildTexture = typeof api.buildTexture === "function";
-        const hasRenderSurface = typeof api.renderSurface === "function";
-        const hasSampleSurface = typeof api.sampleSurface === "function";
-        const hasStatus = typeof api.getStatus === "function";
+        const failing = state.gauges.filter((gauge) => gauge.status === "FAIL");
+        const warning = state.gauges.filter((gauge) => gauge.status === "WARN");
 
-        setGauge("G6", hasBuildTexture || hasRenderSurface ? "PASS" : "FAIL", {
-          "buildTexture": String(hasBuildTexture),
-          "renderSurface": String(hasRenderSurface),
-          "sampleSurface": String(hasSampleSurface),
-          "getStatus": String(hasStatus),
-          "Status": hasStatus ? JSON.stringify(api.getStatus()) : "none"
-        });
+        let nextTarget = "Held";
 
-        let texture = null;
-
-        if (hasBuildTexture) {
-          texture = api.buildTexture({
-            width: 256,
-            height: 128,
-            noCache: true
-          });
-        } else if (hasRenderSurface) {
-          texture = document.createElement("canvas");
-          texture.width = 256;
-          texture.height = 128;
-          api.renderSurface(texture, {
-            width: 256,
-            height: 128,
-            noCache: true
-          });
-        }
-
-        const textureIsCanvas = Boolean(texture && typeof texture.getContext === "function");
-
-        setGauge("G7", textureIsCanvas ? "PASS" : "FAIL", {
-          "Texture Canvas": String(textureIsCanvas),
-          "Width": String(texture?.width || 0),
-          "Height": String(texture?.height || 0)
-        });
-
-        if (textureIsCanvas) {
-          const proofCtx = textureCanvas.getContext("2d");
-          proofCtx.clearRect(0, 0, textureCanvas.width, textureCanvas.height);
-          proofCtx.drawImage(texture, 0, 0, textureCanvas.width, textureCanvas.height);
-
-          const proof = provePixels(texture);
-
-          setGauge("G8", proof.nonEmpty > 10 && proof.uniqueSampleCount > 3 ? "PASS" : "FAIL", {
-            "Non Empty Samples": String(proof.nonEmpty),
-            "Unique Samples": String(proof.uniqueSampleCount),
-            "Varied": String(proof.varied)
-          });
-
-          textureReport.textContent =
-            `TEXTURE_BUILD=PASS\n` +
-            `WIDTH=${texture.width}\n` +
-            `HEIGHT=${texture.height}\n` +
-            `NON_EMPTY_SAMPLES=${proof.nonEmpty}\n` +
-            `UNIQUE_SAMPLE_COUNT=${proof.uniqueSampleCount}\n` +
-            `VERSION=${api.version || api.tnt || "unknown"}`;
+        if (failing.some((gauge) => gauge.id.includes("audralia"))) {
+          nextTarget = "Audralia";
+        } else if (failing.some((gauge) => gauge.id.includes("earth"))) {
+          nextTarget = "Earth";
+        } else if (failing.some((gauge) => gauge.id.includes("route") || gauge.id.includes("index"))) {
+          nextTarget = "Route";
+        } else if (warning.length > 0) {
+          nextTarget = "Review";
         } else {
-          textureReport.textContent = "TEXTURE_BUILD=FAIL\nNo canvas returned.";
-          setGauge("G8", "FAIL", {
-            "Pixel Proof": "not available"
-          });
+          nextTarget = "Visual";
         }
 
-        if (hasSampleSurface) {
-          const samples = [
-            api.sampleSurface(0.18, 0.45),
-            api.sampleSurface(0.34, 0.52),
-            api.sampleSurface(0.52, 0.48),
-            api.sampleSurface(0.74, 0.42),
-            api.sampleSurface(0.90, 0.58)
-          ];
+        nodes.nextTarget.textContent = nextTarget;
+        nodes.gaugeGrid.innerHTML = state.gauges
+          .slice()
+          .sort((a, b) => statusRank(a.status) - statusRank(b.status))
+          .map(renderGauge)
+          .join("");
 
-          const landCount = samples.filter((s) => s?.isLand || s?.land).length;
-          const waterCount = samples.filter((s) => s?.isWater || s?.water || s?.isLand === false).length;
-          const hasElevation = samples.some((s) => typeof s?.elevation === "number" || typeof s?.height === "number");
+        nodes.rawLog.textContent = state.log.join("\n");
+      }
 
-          setGauge("G9", landCount > 0 && waterCount > 0 ? "PASS" : "WARN", {
-            "Land Samples": String(landCount),
-            "Water Samples": String(waterCount),
-            "Elevation Data": String(hasElevation),
-            "Sample Keys": Object.keys(samples[0] || {}).slice(0, 16).join(", ") || "none"
-          });
+      function buildMissingReport() {
+        const lines = [
+          `RECEIPT=${RECEIPT}`,
+          `ROUTE=${ROUTE}`,
+          `INDEX_JS=${INDEX_JS}`,
+          `EARTH_MODULE=${EARTH_MODULE}`,
+          `AUDRALIA_MODULE=${AUDRALIA_MODULE}`,
+          ""
+        ];
+
+        const failures = state.gauges.filter((gauge) => gauge.status === "FAIL");
+        const warnings = state.gauges.filter((gauge) => gauge.status === "WARN");
+
+        if (failures.length === 0 && warnings.length === 0) {
+          lines.push("STATUS=SOURCE_CHAIN_PASS");
+          lines.push("NEXT=Screenshot review for visible expression.");
         } else {
-          setGauge("G9", "WARN", {
-            "sampleSurface": "missing",
-            "Reason": "Cannot source-test land/water data directly."
+          lines.push("STATUS=ACTION_REQUIRED");
+
+          failures.forEach((gauge) => {
+            lines.push(`FAIL=${gauge.id} :: ${gauge.title}`);
           });
+
+          warnings.forEach((gauge) => {
+            lines.push(`WARN=${gauge.id} :: ${gauge.title}`);
+          });
+
+          if (failures.some((gauge) => gauge.id.includes("audralia"))) {
+            lines.push("NEXT_TARGET=/assets/audralia/audralia.planet.render.js");
+          } else if (failures.some((gauge) => gauge.id.includes("earth"))) {
+            lines.push("NEXT_TARGET=/assets/earth/earth_canvas.js");
+          } else if (failures.some((gauge) => gauge.id.includes("index"))) {
+            lines.push("NEXT_TARGET=/showroom/globe/index.js");
+          } else if (failures.some((gauge) => gauge.id.includes("route"))) {
+            lines.push("NEXT_TARGET=/showroom/globe/index.html");
+          } else {
+            lines.push("NEXT_TARGET=Review warnings.");
+          }
         }
-      } catch (error) {
-        setGauge("G5", "FAIL", {
-          "Import Error": error?.message || String(error),
-          "Source Exports": String(sourceInspection.hasExports),
-          "Source buildTexture": String(sourceInspection.hasBuildTexture),
-          "Source renderSurface": String(sourceInspection.hasRenderSurface)
-        });
 
-        setGauge("G6", "FAIL", {
-          "Renderer API": "not reachable"
-        });
-
-        setGauge("G7", "FAIL", {
-          "Texture Build": "not reachable"
-        });
-
-        setGauge("G8", "FAIL", {
-          "Pixel Proof": "not reachable"
-        });
-
-        setGauge("G9", "WARN", {
-          "Land Water Data": "not reachable"
-        });
-
-        textureReport.textContent = `RENDERER_IMPORT_FAIL\n${error?.message || String(error)}`;
-      }
-    }
-
-    function finalizeMissingReport() {
-      const lines = [];
-      const g = (id) => state.gauges.get(id)?.status || "PENDING";
-
-      lines.push(`CONTRACT=${CONTRACT}`);
-      lines.push(`ROUTE=/showroom/globe/`);
-      lines.push(`PLANET=AUDRALIA`);
-      lines.push("");
-
-      if (g("G1") !== "PASS") {
-        lines.push("MISSING: Showroom Globe HTML shell pass.");
-        lines.push("NEXT_TARGET: /showroom/globe/index.html");
-      } else if (g("G2") !== "PASS") {
-        lines.push("MISSING: #audraliaRenderMount contract.");
-        lines.push("NEXT_TARGET: /showroom/globe/index.html");
-      } else if (g("G3") !== "PASS" || g("G4") !== "PASS") {
-        lines.push("MISSING: /showroom/globe/index.js execution and visible diagnostic receipts.");
-        lines.push("NEXT_TARGET: /showroom/globe/index.js");
-      } else if (g("G5") !== "PASS" || g("G6") !== "PASS" || g("G7") !== "PASS") {
-        lines.push("MISSING: Audralia renderer import/API/texture proof.");
-        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js");
-      } else if (g("G8") !== "PASS") {
-        lines.push("MISSING: Non-empty canvas pixel proof.");
-        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js or /showroom/globe/index.js draw bridge.");
-      } else if (g("G9") !== "PASS") {
-        lines.push("MISSING: Source-level land/water differentiation proof.");
-        lines.push("NEXT_TARGET: /assets/audrelia.planet.render.js");
-      } else {
-        lines.push("SOURCE_CHAIN: PASS");
-        lines.push("MISSING: Screenshot-confirmed visible planet on /showroom/globe/.");
-        lines.push("NEXT_TARGET: /showroom/globe/index.js if page remains blank, otherwise visual refinement.");
+        nodes.missingReport.textContent = lines.join("\n");
       }
 
-      lines.push("");
-      lines.push(`G1_ROUTE_HTML=${g("G1")}`);
-      lines.push(`G2_MOUNT_NODE=${g("G2")}`);
-      lines.push(`G3_INDEX_MODULE=${g("G3")}`);
-      lines.push(`G4_INDEX_RECEIPTS=${g("G4")}`);
-      lines.push(`G5_RENDERER_IMPORT=${g("G5")}`);
-      lines.push(`G6_RENDERER_API=${g("G6")}`);
-      lines.push(`G7_TEXTURE_BUILD=${g("G7")}`);
-      lines.push(`G8_PIXEL_PROOF=${g("G8")}`);
-      lines.push(`G9_LAND_WATER_DATA=${g("G9")}`);
-      lines.push(`G10_VISUAL_READINESS=HELD_FOR_SEAN_SCREENSHOT`);
+      async function runAudit() {
+        state.gauges = [];
+        state.log = [];
+        nodes.gaugeGrid.innerHTML = "";
+        nodes.missingReport.textContent = "Audit running.";
+        nodes.rawLog.textContent = "Audit running.";
+        nodes.auditStamp.textContent = `Running ${RECEIPT}...`;
 
-      missingReport.textContent = lines.join("\n");
+        log("Audit start.");
+        log(`Route target: ${ROUTE}`);
+        log(`Index target: ${INDEX_JS}`);
+        log(`Earth module: ${EARTH_MODULE}`);
+        log(`Audralia module: ${AUDRALIA_MODULE}`);
 
-      setGauge("G10", "WARN", {
-        "Visual Readiness": "Held for screenshot confirmation.",
-        "Current Rule": "Source chain may pass while live chamber still fails; screenshot decides final visible expression."
-      });
-    }
+        let route = null;
+        let index = null;
 
-    async function runAudit() {
-      state.log = [];
-      state.files = {};
-      state.rendererApi = null;
+        try {
+          route = await fetchText(ROUTE);
+          log(`Fetched route HTML: status=${route.status}, chars=${route.text.length}.`);
 
-      for (const gauge of GAUGES) {
-        setGauge(gauge.id, "PENDING", {});
+          const rawJsVisible =
+            route.text.trim().startsWith("const ") ||
+            route.text.includes("function applyCanvasSizeClamp") ||
+            route.text.includes("async function mountBody");
+
+          const hasHtml = route.text.includes("<!doctype html") || route.text.includes("<html");
+          const hasModuleScript = route.text.includes(INDEX_JS);
+          const hasEarthMount = route.text.includes("earthRenderMount");
+          const hasAudraliaMount = route.text.includes("audraliaRenderMount");
+
+          makeGauge(
+            "route-html-shell",
+            "G1 · Route HTML Shell",
+            route.ok && hasHtml && !rawJsVisible && hasModuleScript ? "PASS" : "FAIL",
+            "HTML loads, raw JavaScript is not visible as page body, and controller module is referenced.",
+            {
+              "Route OK": boolText(route.ok),
+              "HTML Detected": boolText(hasHtml),
+              "Raw JS Visible": boolText(rawJsVisible),
+              "Module Script": boolText(hasModuleScript),
+              "Earth Mount Text": boolText(hasEarthMount),
+              "Audralia Mount Text": boolText(hasAudraliaMount),
+              "Status": route.status
+            }
+          );
+
+          makeGauge(
+            "route-mount-contract",
+            "G2 · Dual Mount Contract",
+            hasEarthMount && hasAudraliaMount ? "PASS" : "FAIL",
+            "Route shell contains both isolated render mounts.",
+            {
+              "#earthRenderMount": boolText(hasEarthMount),
+              "#audraliaRenderMount": boolText(hasAudraliaMount)
+            }
+          );
+
+          const earthCandidateCopy =
+            route.text.includes("G4_CANDIDATE") &&
+            route.text.includes("EARTH_G4_CLAIM=HELD") &&
+            !route.text.includes("EARTH · REFERENCE_GLOBE · GENERATION_4");
+
+          makeGauge(
+            "earth-claim-discipline-static",
+            "G3 · Earth Claim Discipline",
+            earthCandidateCopy ? "PASS" : "FAIL",
+            "Earth must be G4_CANDIDATE and must not claim Generation 4 completion.",
+            {
+              "G4 Candidate Copy": boolText(route.text.includes("G4_CANDIDATE")),
+              "G4 Claim Held": boolText(route.text.includes("EARTH_G4_CLAIM=HELD")),
+              "Old Generation 4 Copy": boolText(route.text.includes("EARTH · REFERENCE_GLOBE · GENERATION_4"))
+            }
+          );
+
+          const routeForbidden = scanForbiddenLegacy(route.text);
+
+          makeGauge(
+            "route-forbidden-legacy-token",
+            "G4 · Forbidden Legacy Token Scan",
+            routeForbidden.length === 0 ? "PASS" : "FAIL",
+            "Route HTML must not contain forbidden legacy identity bridge labels.",
+            {
+              "Forbidden Hits": routeForbidden.length,
+              "Hits": routeForbidden.join(", ") || "none"
+            }
+          );
+
+        } catch (error) {
+          log(`Route fetch error: ${String(error && error.message ? error.message : error)}`);
+
+          makeGauge(
+            "route-html-shell",
+            "G1 · Route HTML Shell",
+            "FAIL",
+            "Route HTML must be fetchable.",
+            {
+              Error: String(error && error.message ? error.message : error)
+            }
+          );
+        }
+
+        try {
+          index = await fetchText(INDEX_JS);
+          log(`Fetched index JS: status=${index.status}, chars=${index.text.length}.`);
+
+          const hasGroundZeroReceipt = index.text.includes("EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1");
+          const importsNewAudralia = index.text.includes(AUDRALIA_MODULE);
+          const importsOldAudralia = index.text.includes(OLD_AUDRALIA_BRIDGE);
+          const hasEarthCandidate = index.text.includes("G4_CANDIDATE") && index.text.includes("GENERATION_CLAIMED=false");
+          const hasNoCrossFallback = index.text.includes("NO_CROSS_BODY_FALLBACK");
+
+          makeGauge(
+            "index-controller-version",
+            "G5 · Index Controller Version",
+            index.ok && hasGroundZeroReceipt ? "PASS" : "FAIL",
+            "Index controller must be the ground-zero controller.",
+            {
+              "Index OK": boolText(index.ok),
+              "Ground Zero Receipt": boolText(hasGroundZeroReceipt),
+              "Status": index.status
+            }
+          );
+
+          makeGauge(
+            "index-audralia-authority-path",
+            "G6 · Audralia Authority Path",
+            importsNewAudralia && !importsOldAudralia ? "PASS" : "FAIL",
+            "Index controller must import Audralia only from /assets/audralia/audralia.planet.render.js.",
+            {
+              "New Authority Path": boolText(importsNewAudralia),
+              "Old Bridge Path Present": boolText(importsOldAudralia),
+              "Expected": AUDRALIA_MODULE
+            }
+          );
+
+          makeGauge(
+            "index-earth-candidate-dynamic",
+            "G7 · Earth Dynamic Claim Discipline",
+            hasEarthCandidate ? "PASS" : "FAIL",
+            "Controller receipts must carry Earth as G4_CANDIDATE with generation claim false.",
+            {
+              "G4 Candidate": boolText(index.text.includes("G4_CANDIDATE")),
+              "Generation Claimed False": boolText(index.text.includes("GENERATION_CLAIMED=false"))
+            }
+          );
+
+          makeGauge(
+            "index-no-cross-body-fallback",
+            "G8 · No Cross Body Fallback",
+            hasNoCrossFallback ? "PASS" : "WARN",
+            "Controller should explicitly block Earth/Audralia renderer adoption.",
+            {
+              "No Cross Body Fallback Receipt": boolText(hasNoCrossFallback)
+            }
+          );
+
+        } catch (error) {
+          log(`Index fetch error: ${String(error && error.message ? error.message : error)}`);
+
+          makeGauge(
+            "index-controller-version",
+            "G5 · Index Controller Version",
+            "FAIL",
+            "Index JS must be fetchable.",
+            {
+              Error: String(error && error.message ? error.message : error)
+            }
+          );
+        }
+
+        const earthImport = await importModule(EARTH_MODULE);
+        log(`Earth import: ok=${earthImport.ok}.`);
+
+        if (!earthImport.ok) {
+          makeGauge(
+            "earth-module-import",
+            "G9 · Earth Module Import",
+            "FAIL",
+            "Earth candidate module must import.",
+            {
+              Path: EARTH_MODULE,
+              Error: earthImport.error
+            }
+          );
+        } else {
+          const earthApi = getApi(earthImport.module);
+          const earthStatus = getStatus(earthApi);
+          const earthRender = renderProof(earthApi, nodes.earthProofCanvas, {
+            body: "Earth",
+            generationStatus: "G4_CANDIDATE",
+            generationClaimed: false,
+            targetStandard: "ORBITAL_EARTH_G4_REFERENCE"
+          });
+
+          makeGauge(
+            "earth-module-import",
+            "G9 · Earth Module Import",
+            earthStatus.ok !== false ? "PASS" : "FAIL",
+            "Earth module imports and exposes status.",
+            {
+              Path: EARTH_MODULE,
+              "Status Available": boolText(earthStatus.statusAvailable),
+              Receipt: earthStatus.receipt || "none"
+            },
+            JSON.stringify(earthStatus, null, 2)
+          );
+
+          const claimSafe =
+            earthStatus.generationStatus === "G4_CANDIDATE" &&
+            earthStatus.generationClaimed === false &&
+            earthStatus.targetStandard === "ORBITAL_EARTH_G4_REFERENCE";
+
+          makeGauge(
+            "earth-module-claim-discipline",
+            "G10 · Earth Module Claim Discipline",
+            claimSafe ? "PASS" : "FAIL",
+            "Earth module must render only as G4_CANDIDATE.",
+            {
+              "Generation Status": earthStatus.generationStatus || earthStatus.generation || "missing",
+              "Generation Claimed": boolText(earthStatus.generationClaimed),
+              "Target Standard": earthStatus.targetStandard || "missing"
+            }
+          );
+
+          makeGauge(
+            "earth-render-proof",
+            "G11 · Earth Render Proof",
+            earthRender.rendered && earthRender.pixelProof ? "PASS" : "FAIL",
+            "Earth module must render non-empty canvas output.",
+            {
+              Rendered: boolText(earthRender.rendered),
+              Method: earthRender.method,
+              "Pixel Proof": boolText(earthRender.pixelProof),
+              Error: earthRender.error || "none"
+            }
+          );
+        }
+
+        const audraliaImport = await importModule(AUDRALIA_MODULE);
+        log(`Audralia import: ok=${audraliaImport.ok}.`);
+
+        if (!audraliaImport.ok) {
+          makeGauge(
+            "audralia-module-import",
+            "G12 · Audralia Parent Import",
+            "FAIL",
+            "Audralia ground-zero parent must import from the canonical folder path.",
+            {
+              Path: AUDRALIA_MODULE,
+              Error: audraliaImport.error
+            }
+          );
+        } else {
+          const audraliaApi = getApi(audraliaImport.module);
+          const audraliaStatus = getStatus(audraliaApi);
+          const audraliaRender = renderProof(audraliaApi, nodes.audraliaProofCanvas, {
+            body: "Audralia",
+            generation: "G1",
+            generationClaimed: true,
+            targetStandard: "AUDRALIA_GROUND_ZERO_G1_PARENT_RENDER"
+          });
+
+          makeGauge(
+            "audralia-module-import",
+            "G12 · Audralia Parent Import",
+            audraliaStatus.ok !== false ? "PASS" : "FAIL",
+            "Audralia ground-zero parent imports and exposes status.",
+            {
+              Path: AUDRALIA_MODULE,
+              "Status Available": boolText(audraliaStatus.statusAvailable),
+              Receipt: audraliaStatus.receipt || "none",
+              File: audraliaStatus.file || "missing"
+            },
+            JSON.stringify(audraliaStatus, null, 2)
+          );
+
+          const authoritySafe =
+            audraliaStatus.file === AUDRALIA_MODULE &&
+            audraliaStatus.generation === "G1" &&
+            audraliaStatus.groundZeroParentOnly === true &&
+            audraliaStatus.downstreamChildrenActive === false;
+
+          makeGauge(
+            "audralia-ground-zero-authority",
+            "G13 · Audralia Ground-Zero Authority",
+            authoritySafe ? "PASS" : "WARN",
+            "Audralia must be one clean parent renderer before downstream children return.",
+            {
+              File: audraliaStatus.file || "missing",
+              Generation: audraliaStatus.generation || "missing",
+              "Ground Zero Parent Only": boolText(audraliaStatus.groundZeroParentOnly),
+              "Downstream Children Active": boolText(audraliaStatus.downstreamChildrenActive)
+            }
+          );
+
+          makeGauge(
+            "audralia-render-proof",
+            "G14 · Audralia Render Proof",
+            audraliaRender.rendered && audraliaRender.pixelProof ? "PASS" : "FAIL",
+            "Audralia module must render non-empty canvas output.",
+            {
+              Rendered: boolText(audraliaRender.rendered),
+              Method: audraliaRender.method,
+              "Pixel Proof": boolText(audraliaRender.pixelProof),
+              Error: audraliaRender.error || "none"
+            }
+          );
+        }
+
+        const oldBridgeStillReferenced =
+          (route && route.text.includes(OLD_AUDRALIA_BRIDGE)) ||
+          (index && index.text.includes(OLD_AUDRALIA_BRIDGE));
+
+        makeGauge(
+          "old-bridge-reference",
+          "G15 · Old Bridge Reference",
+          oldBridgeStillReferenced ? "FAIL" : "PASS",
+          "Route and controller should not reference the deleted/legacy root bridge.",
+          {
+            "Old Bridge": OLD_AUDRALIA_BRIDGE,
+            "Referenced": boolText(oldBridgeStillReferenced)
+          }
+        );
+
+        makeGauge(
+          "visual-readiness",
+          "G16 · Visual Readiness",
+          "HELD",
+          "Source chain can pass while visual readiness remains held for screenshot review.",
+          {
+            "Visual Pass": "HELD",
+            "Screenshot Decides": "true",
+            "False Pass Claim": "forbidden"
+          }
+        );
+
+        log("Audit complete.");
+        nodes.auditStamp.textContent = `${RECEIPT} · completed · ${new Date().toLocaleString()}`;
+
+        renderAll();
+        buildMissingReport();
       }
 
-      textureReport.textContent = "Running texture proof...";
-      missingReport.textContent = "Running audit...";
-      runMeta.textContent = `${CONTRACT} · running · ${new Date().toLocaleString()}`;
-
-      log("Audit start.");
-      log(`Route target: ${TARGETS.route}`);
-      log(`Index target: ${TARGETS.index}`);
-      log(`Renderer target: ${TARGETS.renderer}`);
-
-      try {
-        const routeHtml = await fetchText(TARGETS.route);
-        state.files.routeHtml = routeHtml;
-        log(`Fetched route HTML: ${routeHtml.length} chars.`);
-        inspectRouteHtml(routeHtml);
-      } catch (error) {
-        log(`Route fetch fail: ${error?.message || String(error)}`);
-        setGauge("G1", "FAIL", {
-          "Fetch Error": error?.message || String(error)
-        });
-        setGauge("G2", "FAIL", {
-          "Reason": "Route HTML unavailable."
-        });
-      }
-
-      try {
-        const indexJs = await fetchText(TARGETS.index);
-        state.files.indexJs = indexJs;
-        log(`Fetched index JS: ${indexJs.length} chars.`);
-        inspectIndexJs(indexJs);
-      } catch (error) {
-        log(`Index JS fetch fail: ${error?.message || String(error)}`);
-        setGauge("G3", "FAIL", {
-          "Fetch Error": error?.message || String(error)
-        });
-        setGauge("G4", "FAIL", {
-          "Reason": "Index JS unavailable."
-        });
-      }
-
-      try {
-        const rendererJs = await fetchText(TARGETS.renderer);
-        state.files.rendererJs = rendererJs;
-        log(`Fetched renderer JS: ${rendererJs.length} chars.`);
-        await runRendererProof(rendererJs);
-      } catch (error) {
-        log(`Renderer source fetch/import fail: ${error?.message || String(error)}`);
-        setGauge("G5", "FAIL", {
-          "Fetch/Import Error": error?.message || String(error)
-        });
-        setGauge("G6", "FAIL", {
-          "Reason": "Renderer unavailable."
-        });
-        setGauge("G7", "FAIL", {
-          "Reason": "Renderer unavailable."
-        });
-        setGauge("G8", "FAIL", {
-          "Reason": "Renderer unavailable."
-        });
-        setGauge("G9", "WARN", {
-          "Reason": "Renderer unavailable."
-        });
-      }
-
-      finalizeMissingReport();
-
-      runMeta.textContent = `${CONTRACT} · completed · ${new Date().toLocaleString()}`;
-      log("Audit complete.");
-    }
-
-    document.getElementById("rerunButton").addEventListener("click", runAudit);
-
-    renderGauges();
-    updateSummary();
-    runAudit();
+      nodes.runAudit.addEventListener("click", runAudit);
+      runAudit();
+    })();
   </script>
 </body>
 </html>

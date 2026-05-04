@@ -1,5 +1,6 @@
 // /showroom/globe/earth/index.js
 const EARTH_ROUTE_STATE = Object.freeze({
+  protocol: "TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2",
   route: "/showroom/globe/earth/",
   body: "Earth",
   authorityPath: "/assets/earth/earth_canvas.js",
@@ -18,40 +19,50 @@ function writeMountMessage(mount, message) {
   mount.appendChild(fallback);
 }
 
-function getRendererCandidates(renderer) {
-  return [
-    renderer.renderSurface,
-    renderer.renderEarth,
-    renderer.mountEarth,
-    renderer.renderPlanet,
-    renderer.render,
-    renderer.default
-  ].filter(candidate => typeof candidate === "function");
+function createEarthCanvas() {
+  const canvas = document.createElement("canvas");
+
+  canvas.className = "earth-reference-canvas earth-route-owned-canvas";
+  canvas.width = 1024;
+  canvas.height = 1024;
+
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute("aria-label", "Earth reference globe render");
+
+  canvas.dataset.body = "Earth";
+  canvas.dataset.route = EARTH_ROUTE_STATE.route;
+  canvas.dataset.protocol = "TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2";
+  canvas.dataset.publicReceiptRendering = "false";
+  canvas.dataset.visualPassClaimed = "false";
+
+  canvas.style.display = "block";
+  canvas.style.width = "min(100%, 720px)";
+  canvas.style.maxWidth = "720px";
+  canvas.style.aspectRatio = "1 / 1";
+  canvas.style.borderRadius = "999px";
+
+  return canvas;
 }
 
-async function tryRenderWithCandidate(renderFn, mount, context) {
-  const attempts = [
-    () => renderFn(mount, context),
-    () => renderFn(context),
-    () => renderFn(mount)
+function getEarthRenderFunction(moduleNamespace) {
+  const candidates = [
+    moduleNamespace.renderSurface,
+    moduleNamespace.render,
+    moduleNamespace.renderPlanet,
+    moduleNamespace.default && moduleNamespace.default.renderSurface,
+    moduleNamespace.default && moduleNamespace.default.render,
+    moduleNamespace.default && moduleNamespace.default.renderPlanet
   ];
 
-  for (const attempt of attempts) {
-    try {
-      const result = await attempt();
-      if (result !== false) return true;
-    } catch (error) {
-      console.warn("Earth render attempt held.", error);
-    }
-  }
-
-  return false;
+  return candidates.find(candidate => typeof candidate === "function") || null;
 }
 
 async function bootEarthRoute() {
+  document.documentElement.dataset.ticTacToeDynamicProtocol = "v2";
   document.documentElement.dataset.globeRoute = "earth";
   document.documentElement.dataset.publicReceipts = "hidden";
   document.documentElement.dataset.earthRouteScript = "executed";
+  document.documentElement.dataset.earthPairProof = "html-js-paired";
 
   const mount = document.getElementById(EARTH_ROUTE_STATE.mountId);
 
@@ -63,16 +74,16 @@ async function bootEarthRoute() {
   writeMountMessage(mount, "Earth route script active. Importing Earth authority.");
 
   try {
-    const renderer = await import(
-      `${EARTH_ROUTE_STATE.authorityPath}?earth_route_loader=${Date.now()}`
+    const moduleNamespace = await import(
+      `${EARTH_ROUTE_STATE.authorityPath}?earth_surface_adapter=${Date.now()}`
     );
 
-    const candidates = getRendererCandidates(renderer);
+    const renderSurface = getEarthRenderFunction(moduleNamespace);
 
-    if (!candidates.length) {
+    if (!renderSurface) {
       writeMountMessage(
         mount,
-        "Earth authority loaded, but no compatible Earth render function was exposed."
+        "Earth authority loaded, but no compatible Earth surface renderer was exposed."
       );
 
       window.ShowroomEarthRoute = {
@@ -80,47 +91,58 @@ async function bootEarthRoute() {
         imported: true,
         rendered: false,
         held: true,
-        reason: "NO_COMPATIBLE_RENDER_FUNCTION"
+        reason: "EARTH_RENDER_SURFACE_EXPORT_MISSING"
       };
 
       return;
     }
 
-    const context = {
-      body: "Earth",
+    mount.innerHTML = "";
+    mount.dataset.body = "Earth";
+    mount.dataset.route = EARTH_ROUTE_STATE.route;
+    mount.dataset.protocol = "TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2";
+    mount.dataset.publicReceiptRendering = "false";
+    mount.dataset.visualPassClaimed = "false";
+    mount.dataset.pairProof = "js-asset-mounted";
+
+    const canvas = createEarthCanvas();
+    mount.appendChild(canvas);
+
+    const result = renderSurface(canvas, {
       route: EARTH_ROUTE_STATE.route,
+      body: "Earth",
       mount,
       mountId: EARTH_ROUTE_STATE.mountId,
       publicReceiptRendering: false,
       visualPassClaimed: false
-    };
+    });
 
-    for (const candidate of candidates) {
-      const rendered = await tryRenderWithCandidate(candidate, mount, context);
+    const rendered = Boolean(result && result.rendered !== false);
 
-      if (rendered) {
-        window.ShowroomEarthRoute = {
-          ...EARTH_ROUTE_STATE,
-          imported: true,
-          rendered: true,
-          held: false
-        };
+    if (!rendered) {
+      writeMountMessage(
+        mount,
+        "Earth authority loaded, but Earth surface render returned held."
+      );
 
-        return;
-      }
+      window.ShowroomEarthRoute = {
+        ...EARTH_ROUTE_STATE,
+        imported: true,
+        rendered: false,
+        held: true,
+        reason: "EARTH_RENDER_RETURNED_HELD"
+      };
+
+      return;
     }
-
-    writeMountMessage(
-      mount,
-      "Earth authority loaded, but all Earth render attempts were held."
-    );
 
     window.ShowroomEarthRoute = {
       ...EARTH_ROUTE_STATE,
       imported: true,
-      rendered: false,
-      held: true,
-      reason: "ALL_RENDER_ATTEMPTS_HELD"
+      rendered: true,
+      held: false,
+      api: "module.renderSurface(canvas, options)",
+      result
     };
   } catch (error) {
     console.error("Earth authority import failed.", error);

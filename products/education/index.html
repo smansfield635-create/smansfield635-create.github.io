@@ -1,915 +1,1241 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="products-education"
   data-route="/products/education/"
-  data-contract="EDUCATION_RUSSIAN_DOLL_1001_WORD_SYSTEM_RENEWAL_TNT_v1"
-  data-product-class="product_chamber"
-  data-parent="products"
-  data-scroll-mode="compressed-russian-doll"
-  data-product-title="1001 Word System"
-  data-learning-frame="guided-cube-progression"
-  data-free-pdf="/products/education/1001-word-system.pdf"
+  data-page="education"
+  data-version="G1-V1"
+  data-contract="EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1"
+  data-status="active"
+  data-parent="/products/"
+  data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-role="product-chamber"
+  data-product="education"
+  data-product-type="practical-learning"
   data-heavy-runtime-loaded="false"
-  data-runtime-touched="false"
-  data-gauges-logic-touched="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Diamond Gate Bridge · Products · Education</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Education · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The 1001 Word System is a guided learning cube that helps learners move words through meaning, use, relation, expression, memory, and action."
+    content="Education is a practical learning chamber for 1001-word traversal, usable fluency, plain meaning, sentence-building, context, and use."
   >
 
-  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
-
   <style>
-    :root {
-      --gold: #f2c76f;
-      --text: #f5f7fb;
-      --muted: rgba(226, 234, 248, 0.76);
-      --line: rgba(180, 205, 255, 0.18);
-      --meaning: #f2c76f;
-      --use: #80b8ff;
-      --relation: #65e6a3;
-      --expression: #d7a5ff;
-      --memory: #ff9f7a;
-      --action: #ffffff;
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --green:#8ff0c6;
+      --blue:#8dd8ff;
+      --red:#ff8b8b;
+      --purple:#8f65ff;
+      --panel:rgba(9,15,31,.84);
+      --line:rgba(184,205,255,.18);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
     }
 
-    body {
-      overflow-x: hidden;
+    *{box-sizing:border-box}
+
+    html{
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
       background:
-        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
-        radial-gradient(circle at 78% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
-        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    .education-stage,
-    .doll-shell {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(242, 199, 111, 0.24);
-      border-radius: 36px;
-      background: linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      background:
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.58;
+      animation:auroraDrift 28s linear infinite;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
+    }
+
+    .skip:focus{left:8px}
+
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
+    }
+
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
+    }
+
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.035),
-        0 28px 90px rgba(0,0,0,0.38);
-      isolation: isolate;
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .education-stage {
-      padding: clamp(30px, 7vw, 76px);
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
     }
 
-    .education-stage::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
+    }
+
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 74% 52%, rgba(242, 199, 111, 0.16), transparent 21%),
-        radial-gradient(circle at 74% 52%, transparent 0 22%, rgba(242,199,111,0.10) 23%, transparent 24% 100%),
-        radial-gradient(circle at 74% 52%, transparent 0 38%, rgba(130,165,230,0.09) 39%, transparent 40% 100%),
-        radial-gradient(circle at 74% 52%, transparent 0 56%, rgba(242,199,111,0.055) 57%, transparent 58% 100%);
-      filter: blur(10px);
-      opacity: 0.76;
-      pointer-events: none;
-      z-index: -3;
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .blurred-word-system {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.44;
-      filter: blur(2px);
+    .hero{
+      position:relative;
+      min-height:clamp(25rem,48vw,36rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .word-cube,
-    .word-ring,
-    .word-node,
-    .word-axis {
-      position: absolute;
-      transform: translate(-50%, -50%);
-    }
-
-    .word-cube {
-      left: 78%;
-      top: 54%;
-      width: clamp(190px, 32vw, 360px);
-      height: clamp(190px, 32vw, 360px);
-      border: 2px solid rgba(242,199,111,0.22);
-      border-radius: 28px;
-      transform: translate(-50%, -50%) rotate(12deg) skew(-8deg, 4deg);
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.12), transparent 18%),
-        linear-gradient(135deg, rgba(242,199,111,0.18), rgba(84,130,220,0.12), rgba(6,10,22,0.42));
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroDiamond 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
+    }
+
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1{
+      margin:0;
+      max-width:950px;
+      font-size:clamp(3.1rem,10vw,7.1rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.85rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.34rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .lead{
+      max-width:900px;
+      position:relative;
+      z-index:2;
+    }
+
+    .quote{
+      max-width:880px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold,
+    .button.primary{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .learning-field{
+      position:relative;
+      min-height:clamp(36rem,64vw,52rem);
+      overflow:hidden;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:clamp(1.25rem,5vw,2.2rem);
+      background:
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
+        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
+        rgba(255,255,255,.018);
+      padding:clamp(1.15rem,3vw,2rem);
+      display:grid;
+      place-items:center;
+      isolation:isolate;
+    }
+
+    .learning-field::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      width:clamp(21rem,56vw,42rem);
+      height:clamp(21rem,56vw,42rem);
+      border:1px solid rgba(215,194,255,.16);
+      border-radius:4rem;
+      transform:translate(-50%,-50%) rotate(45deg);
       box-shadow:
-        inset 0 0 60px rgba(242,199,111,0.05),
-        0 0 90px rgba(84,130,220,0.10);
+        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
+        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
+        inset 0 0 3rem rgba(143,101,255,.06);
+      animation:fieldTurn 46s linear infinite;
+      pointer-events:none;
     }
 
-    .word-ring {
-      left: 78%;
-      top: 54%;
-      width: clamp(260px, 46vw, 520px);
-      height: clamp(120px, 22vw, 240px);
-      border: 2px dashed rgba(172, 191, 230, 0.16);
-      border-radius: 50%;
+    .learning-field::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:7%;
+      bottom:7%;
+      z-index:0;
+      width:1px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
+      opacity:.72;
+      pointer-events:none;
     }
 
-    .word-ring.two {
-      transform: translate(-50%, -50%) rotate(68deg);
-      border-color: rgba(242,199,111,0.15);
+    .axis-line{
+      position:absolute;
+      left:7%;
+      right:7%;
+      top:50%;
+      z-index:0;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
+      opacity:.58;
+      pointer-events:none;
     }
 
-    .word-axis {
-      left: 78%;
-      top: 54%;
-      width: 2px;
-      height: clamp(250px, 42vw, 500px);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.20), transparent);
-    }
-
-    .word-node {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      color: #06101f;
-      font-size: 0.72rem;
-      font-weight: 950;
-      box-shadow: 0 0 24px rgba(242,199,111,0.18);
-    }
-
-    .word-node.meaning { left: 66%; top: 40%; background: var(--meaning); }
-    .word-node.use { left: 88%; top: 42%; background: var(--use); }
-    .word-node.relation { left: 91%; top: 62%; background: var(--relation); }
-    .word-node.expression { left: 78%; top: 76%; background: var(--expression); }
-    .word-node.memory { left: 63%; top: 66%; background: var(--memory); }
-    .word-node.action { left: 75%; top: 28%; background: var(--action); }
-
-    .hero-mark {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: 0.82rem;
-      font-weight: 950;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      max-width: 1040px;
-      margin: 0;
-      color: var(--text);
-      font-size: clamp(3.1rem, 10vw, 7.6rem);
-      line-height: 0.88;
-      letter-spacing: -0.07em;
-      text-wrap: balance;
-    }
-
-    .hero-title .gold {
-      color: #ffe5a3;
-      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
-    }
-
-    .hero-subtitle {
-      max-width: 880px;
-      margin: clamp(24px, 4vw, 36px) 0 0;
-      color: rgba(245, 247, 251, 0.86);
-      font-size: clamp(1.26rem, 3.8vw, 2.08rem);
-      line-height: 1.18;
-      letter-spacing: -0.035em;
-      text-wrap: balance;
-    }
-
-    .hero-copy {
-      max-width: 800px;
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 2.6vw, 1.24rem);
-      line-height: 1.55;
-    }
-
-    .one-liner-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 28px;
-      max-width: 980px;
-    }
-
-    .one-liner {
-      min-height: 86px;
-      display: flex;
-      align-items: center;
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: 22px;
-      padding: 16px;
-      background: rgba(255,255,255,0.045);
-      color: rgba(255, 246, 220, 0.96);
-      font-size: clamp(1rem, 2.4vw, 1.18rem);
-      font-weight: 900;
-      line-height: 1.18;
-      letter-spacing: -0.02em;
-    }
-
-    .education-actions,
-    .education-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 26px;
-    }
-
-    .education-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      border: 1px solid rgba(172, 191, 230, 0.24);
-      border-radius: 999px;
-      padding: 8px 13px;
-      color: rgba(242, 246, 255, 0.88);
-      background: rgba(255, 255, 255, 0.045);
-      font-size: 0.86rem;
-      font-weight: 850;
-    }
-
-    .education-chip.lock {
-      border-color: rgba(242, 199, 111, 0.58);
-      color: #ffe7a7;
-      background: rgba(242, 199, 111, 0.11);
-    }
-
-    .doll-shell {
-      padding: clamp(18px, 4vw, 28px);
-    }
-
-    .doll-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 18px;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .doll-title {
-      margin: 0;
-      color: var(--text);
-      font-size: clamp(2rem, 5vw, 3.7rem);
-      line-height: 0.95;
-      letter-spacing: -0.055em;
-    }
-
-    .doll-note {
-      max-width: 900px;
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 1.04rem;
-      line-height: 1.56;
-    }
-
-    .doll-badge {
-      border: 1px solid rgba(242,199,111,0.38);
-      border-radius: 999px;
-      padding: 10px 14px;
-      color: #ffe7a7;
-      background: rgba(242,199,111,0.08);
-      font-weight: 950;
-      white-space: nowrap;
-    }
-
-    .doll-stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .doll-layer {
-      border: 1px solid rgba(180, 205, 255, 0.17);
-      border-radius: 24px;
-      overflow: hidden;
+    .learning-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:1;
+      width:clamp(13rem,30vw,22rem);
+      height:clamp(13rem,30vw,22rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:4rem;
       background:
-        radial-gradient(circle at 18% 0%, rgba(242, 199, 111, 0.09), transparent 34%),
-        linear-gradient(180deg, rgba(14, 23, 42, 0.80), rgba(7, 12, 25, 0.92));
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
+        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
+        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
+      box-shadow:
+        0 1.7rem 4.2rem rgba(0,0,0,.20),
+        0 0 3.6rem rgba(143,101,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      transform:translate(-50%,-50%) rotate(45deg);
+      opacity:.30;
+      pointer-events:none;
+      animation:anchorPulse 8s ease-in-out infinite;
     }
 
-    .doll-layer[open] {
-      border-color: rgba(242,199,111,0.34);
-      box-shadow: 0 18px 42px rgba(0,0,0,0.20);
+    .learning-anchor-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      transform:translate(-50%,-50%);
+      display:grid;
+      gap:.2rem;
+      text-align:center;
+      pointer-events:none;
+      opacity:.78;
     }
 
-    .doll-layer summary {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      cursor: pointer;
-      list-style: none;
-      padding: 18px 20px;
-      color: var(--text);
+    .learning-anchor-label strong{
+      color:rgba(255,244,216,.94);
+      font-size:clamp(1rem,3vw,1.65rem);
+      line-height:1;
+      font-weight:950;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
     }
 
-    .doll-layer summary::-webkit-details-marker {
-      display: none;
+    .learning-anchor-label span{
+      color:rgba(230,238,255,.72);
+      font-size:.78rem;
+      letter-spacing:.04em;
     }
 
-    .layer-number {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border: 1px solid rgba(242,199,111,0.46);
-      border-radius: 50%;
-      color: #ffe7a7;
-      background: rgba(242,199,111,0.08);
-      font-weight: 950;
+    .learning-grid{
+      position:relative;
+      z-index:5;
+      width:min(100%,880px);
+      min-height:clamp(30rem,52vw,42rem);
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-rows:repeat(3,minmax(0,1fr));
+      gap:clamp(.8rem,2vw,1.1rem);
+      align-items:center;
+      justify-items:center;
+      padding:clamp(.5rem,2vw,1rem);
     }
 
-    .layer-title {
-      display: block;
-      font-size: clamp(1.18rem, 3vw, 1.55rem);
-      font-weight: 950;
-      letter-spacing: -0.025em;
+    .learning-node{
+      width:100%;
+      min-height:clamp(8rem,14vw,11.6rem);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      animation:nodeFloat 7s ease-in-out infinite;
+      animation-delay:var(--delay,0s);
     }
 
-    .layer-line {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      line-height: 1.42;
-      font-size: 0.96rem;
+    .learning-node.word{grid-column:2;grid-row:1}
+    .learning-node.meaning{grid-column:1;grid-row:2}
+    .learning-node.sentence{grid-column:2;grid-row:2}
+    .learning-node.context{grid-column:3;grid-row:2}
+    .learning-node.use{grid-column:2;grid-row:3}
+
+    .learning-card{
+      display:grid;
+      place-items:center;
+      gap:.55rem;
+      width:100%;
+      outline:none;
     }
 
-    .layer-action {
-      color: var(--gold);
-      font-weight: 950;
+    .diamond{
+      width:clamp(4.35rem,8vw,6.55rem);
+      height:clamp(4.35rem,8vw,6.55rem);
+      border:1px solid rgba(243,200,111,.64);
+      border-radius:1.25rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.14),transparent 58%),
+        linear-gradient(145deg,rgba(143,101,255,.62),rgba(6,10,22,.98));
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,.38),
+        0 0 2rem rgba(143,101,255,.34),
+        0 0 1.2rem rgba(243,200,111,.16),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      position:relative;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
     }
 
-    .layer-body {
-      padding: 0 20px 20px 72px;
+    .diamond::before,
+    .diamond::after{
+      content:"";
+      position:absolute;
+      inset:18%;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:.82rem;
     }
 
-    .mini-grid,
-    .face-grid,
-    .phase-grid,
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+    .diamond::after{
+      inset:34%;
+      border-color:rgba(243,200,111,.16);
     }
 
-    .face-grid {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+    .learning-card:hover .diamond,
+    .learning-card:focus-visible .diamond{
+      transform:rotate(45deg) scale(1.1);
+      border-color:rgba(243,200,111,.95);
+      background:
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
+        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
+      box-shadow:
+        0 1.15rem 2.4rem rgba(0,0,0,.45),
+        0 0 2.6rem rgba(143,101,255,.46),
+        0 0 1.4rem rgba(243,200,111,.22);
     }
 
-    .phase-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .node-title{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.76rem,1.75vw,1.02rem);
+      font-weight:950;
+      line-height:1.05;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .mini-card,
-    .face-card,
-    .phase-card,
-    .route-card {
-      border: 1px solid rgba(180, 205, 255, 0.14);
-      border-radius: 20px;
-      padding: 16px;
-      background: rgba(255,255,255,0.04);
+    .node-sub{
+      max-width:13rem;
+      color:rgba(230,238,255,.80);
+      font-size:clamp(.62rem,1.45vw,.76rem);
+      line-height:1.25;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .mini-card strong,
-    .face-card strong,
-    .phase-card strong {
-      display: block;
-      color: var(--text);
-      font-size: 1.02rem;
-      margin-bottom: 8px;
+    .concept-grid,
+    .guard-grid,
+    .use-grid,
+    .route-grid{
+      display:grid;
+      gap:.75rem;
     }
 
-    .mini-card span,
-    .face-card span,
-    .phase-card span {
-      color: var(--muted);
-      line-height: 1.45;
+    .concept-grid,
+    .guard-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
     }
 
-    .face-card::before,
-    .phase-card::before {
-      content: "";
-      display: block;
-      width: 100%;
-      height: 8px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-      background: var(--gold);
+    .use-grid,
+    .route-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
-    .face-card.meaning::before { background: var(--meaning); }
-    .face-card.use::before { background: var(--use); }
-    .face-card.relation::before { background: var(--relation); }
-    .face-card.expression::before { background: var(--expression); }
-    .face-card.memory::before { background: var(--memory); }
-    .face-card.action::before { background: var(--action); }
-
-    .phase-card.receive::before { background: var(--meaning); }
-    .phase-card.place::before { background: var(--relation); }
-    .phase-card.use-phase::before { background: var(--use); }
-    .phase-card.own::before { background: var(--gold); }
-
-    .route-card {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 950;
+    .info-card,
+    .guard-card,
+    .use-card,
+    .route-card{
+      min-height:11.5rem;
+      display:grid;
+      gap:.55rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .route-card span {
-      display: block;
-      margin-top: 6px;
-      color: var(--muted);
-      font-weight: 500;
-      line-height: 1.4;
+    .route-card:hover,
+    .route-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
     }
 
-    .download-panel {
-      border: 1px solid rgba(242,199,111,0.22);
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(242,199,111,0.07);
-      color: rgba(255, 246, 220, 0.88);
-      line-height: 1.52;
-      margin-top: 14px;
+    .guard-card{
+      border-color:rgba(255,139,139,.22);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,139,139,.06),transparent 60%),
+        rgba(255,255,255,.032);
     }
 
-    .download-panel strong {
-      display: block;
-      color: var(--text);
-      font-size: 1.08rem;
-      margin-bottom: 8px;
+    .info-card b,
+    .guard-card b,
+    .use-card b,
+    .route-card b{
+      color:var(--gold);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .education-receipt {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .guard-card b{
+      color:var(--red);
     }
 
-    @media (max-width: 1180px) {
-      .face-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .info-card strong,
+    .guard-card strong,
+    .use-card strong,
+    .route-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.05rem;
+      line-height:1.1;
+    }
+
+    .info-card span,
+    .guard-card span,
+    .use-card span,
+    .route-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.4;
+    }
+
+    .learning-loop{
+      display:grid;
+      gap:.65rem;
+      counter-reset:step;
+    }
+
+    .learning-step{
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.8rem;
+      align-items:start;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1rem;
+      background:rgba(255,255,255,.032);
+    }
+
+    .learning-step::before{
+      content:counter(step);
+      width:2.35rem;
+      height:2.35rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.32);
+      border-radius:.72rem;
+      color:var(--gold);
+      font-weight:950;
+      transform:rotate(45deg);
+      background:rgba(243,200,111,.055);
+    }
+
+    .learning-step div{
+      display:grid;
+      gap:.2rem;
+    }
+
+    .learning-step strong{
+      color:rgba(255,244,216,.98);
+    }
+
+    .learning-step span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.4;
+    }
+
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
+      display:grid;
+      gap:.9rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.6rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .receipt{
+      margin-top:1.15rem;
+      color:var(--faint);
+    }
+
+    .receipt summary{
+      cursor:pointer;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    .receipt pre{
+      margin:0;
+      padding:1rem;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
+    }
+
+    @keyframes heroDiamond{
+      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @keyframes fieldTurn{
+      from{transform:translate(-50%,-50%) rotate(45deg)}
+      to{transform:translate(-50%,-50%) rotate(405deg)}
+    }
+
+    @keyframes anchorPulse{
+      0%,100%{opacity:.28;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{opacity:.40;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+    }
+
+    @keyframes nodeFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-.55rem)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body::after,
+      .hero::before,
+      .learning-field::before,
+      .learning-anchor,
+      .learning-node{
+        animation:none!important;
+      }
+    }
+
+    @media (max-width:1080px){
+      .concept-grid,
+      .guard-grid{
+        grid-template-columns:1fr;
       }
 
-      .phase-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .use-grid,
+      .route-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 1040px) {
-      .one-liner-strip,
-      .mini-grid,
-      .route-grid {
-        grid-template-columns: 1fr;
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
-      .doll-head {
-        grid-template-columns: 1fr;
-      }
-
-      .layer-body {
-        padding-left: 20px;
-      }
-
-      .blurred-word-system {
-        opacity: 0.28;
-      }
+      .nav{justify-content:flex-start}
     }
 
-    @media (max-width: 640px) {
-      .education-stage,
-      .doll-shell {
-        border-radius: 28px;
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+
+      h1{font-size:clamp(3rem,17vw,5rem)}
+
+      .hero{
+        min-height:31rem;
+        padding:1rem;
       }
 
-      .education-stage {
-        padding: 30px 26px;
+      .learning-field{
+        min-height:auto;
+        padding:1rem .65rem;
       }
 
-      .hero-title {
-        font-size: clamp(3.2rem, 14vw, 5.1rem);
+      .learning-grid{
+        min-height:auto;
+        grid-template-columns:1fr;
+        grid-template-rows:none;
+        gap:.9rem;
       }
 
-      .hero-subtitle {
-        font-size: 1.32rem;
+      .learning-node,
+      .learning-node.word,
+      .learning-node.meaning,
+      .learning-node.sentence,
+      .learning-node.context,
+      .learning-node.use{
+        grid-column:auto;
+        grid-row:auto;
+        min-height:8.6rem;
       }
 
-      .face-grid,
-      .phase-grid {
-        grid-template-columns: 1fr;
+      .learning-anchor{
+        width:13rem;
+        height:13rem;
+        opacity:.18;
       }
 
-      .doll-layer summary {
-        grid-template-columns: auto minmax(0, 1fr);
+      .learning-anchor-label{
+        opacity:.26;
       }
 
-      .layer-action {
-        grid-column: 2;
+      .diamond{
+        width:3.75rem;
+        height:3.75rem;
+        border-radius:.95rem;
       }
 
-      .blurred-word-system {
-        opacity: 0.22;
+      .node-title{font-size:.68rem}
+      .node-sub{font-size:.56rem}
+
+      .use-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="dgb-skip" href="#education-main">Skip to Education</a>
+  <a class="skip" href="#education-main">Skip to Education</a>
 
-  <header class="dgb-site-header">
-    <div class="dgb-header-inner">
-      <div class="dgb-brand-row">
-        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
-        <div class="dgb-subtitle">Products · Education</div>
-        <div class="dgb-room-line">PC4 · 1001 Word System</div>
-      </div>
+  <div class="shell">
+    <header class="topbar" aria-label="Education header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><span>ED</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Education</strong>
+        </span>
+      </a>
 
-      <nav class="dgb-nav" aria-label="Primary navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/nine-summits-of-love/">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/products/" aria-current="page">Products</a>
+        <a href="/explore/">Manor</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/products/">Products</a>
+        <a href="/products/five-flags/">Five Flags</a>
+        <a href="/products/on-your-side-ai/">On Your Side AI</a>
+        <a href="/products/education/" aria-current="page">Education</a>
         <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Earth G1</a>
         <a href="/gauges/">Gauges</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main id="education-main" class="dgb-main">
-    <section class="education-stage" aria-label="Education product chamber">
-      <div class="blurred-word-system" aria-hidden="true">
-        <div class="word-axis"></div>
-        <div class="word-ring"></div>
-        <div class="word-ring two"></div>
-        <div class="word-cube"></div>
-        <div class="word-node meaning">M</div>
-        <div class="word-node use">U</div>
-        <div class="word-node relation">R</div>
-        <div class="word-node expression">E</div>
-        <div class="word-node memory">Mem</div>
-        <div class="word-node action">A</div>
-      </div>
+    <main id="education-main">
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Education · Product Chamber</div>
+        <h1 id="page-title">Words become usable when they can move.</h1>
+        <h2>Word. Meaning. Sentence. Context. Use.</h2>
 
-      <p class="hero-mark">PC4 · Education · 1001 Word System</p>
+        <p class="lead">
+          Education is the practical learning chamber for turning words into working understanding. It uses 1001-word traversal to help learners build usable fluency one clear step at a time.
+        </p>
 
-      <h1 class="hero-title">
-        Not a word list. <span class="gold">A word operating system.</span>
-      </h1>
-
-      <p class="hero-subtitle">
-        1001 essential words organized so learners do not just recognize vocabulary. They learn how words move.
-      </p>
-
-      <p class="hero-copy">
-        The 1001 Word System turns vocabulary into a guided learning cube. A learner can enter through meaning,
-        use, relation, expression, memory, or action, then rotate the word until it becomes usable under pressure.
-      </p>
-
-      <div class="one-liner-strip" aria-label="Education one-liners">
-        <div class="one-liner">A word is not owned because it was memorized once.</div>
-        <div class="one-liner">A list teaches recognition. A cube teaches command.</div>
-        <div class="one-liner">The goal is not to know the word. The goal is to use it when it matters.</div>
-      </div>
-
-      <div class="education-chip-row" aria-label="Education status">
-        <span class="education-chip lock">1001 words</span>
-        <span class="education-chip lock">Cube model</span>
-        <span class="education-chip lock">Four phases</span>
-        <span class="education-chip">Meaning to action</span>
-        <span class="education-chip">Free PDF entry</span>
-      </div>
-
-      <div class="education-actions" aria-label="Education actions">
-        <a class="dgb-button" href="/products/education/1001-word-system.pdf">Download Free PDF</a>
-        <a class="dgb-button secondary" href="/products/">Return to Products</a>
-        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
-        <a class="dgb-button secondary" href="/">Open Compass</a>
-      </div>
-    </section>
-
-    <section class="doll-shell" aria-label="Education compressed Russian doll content">
-      <div class="doll-head">
-        <div>
-          <h2 class="doll-title">Open only the layer you need.</h2>
-          <p class="doll-note">
-            Education is compressed into nested layers: system, cube faces, four phases, old model versus cube model,
-            free PDF, product binding, routes, and receipt. Less scroll. More learning control.
-          </p>
+        <div class="quote">
+          A learner does not need every word at once. A learner needs a path where the next word becomes usable.
         </div>
-        <div class="doll-badge">Russian doll mode</div>
-      </div>
 
-      <div class="doll-stack">
-        <details class="doll-layer" open>
-          <summary>
-            <span class="layer-number">1</span>
-            <span>
-              <span class="layer-title">What the system is</span>
-              <span class="layer-line">A bounded vocabulary universe built around 1001 essential words.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+        <div class="actions">
+          <a class="button gold" href="#learning-loop">Learning Loop</a>
+          <a class="button" href="#guardrails">Guardrails</a>
+          <a class="button" href="/products/">Back to Products</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
 
-          <div class="layer-body">
-            <div class="mini-grid">
-              <div class="mini-card">
-                <strong>Controlled learning universe</strong>
-                <span>1001 words create a field large enough to matter, but small enough to organize.</span>
+      <section class="panel section" aria-labelledby="field-title">
+        <div class="kicker">Five learning points</div>
+        <h2 id="field-title">The chamber turns vocabulary into action.</h2>
+
+        <div class="learning-field" aria-label="Animated Education learning field">
+          <div class="axis-line" aria-hidden="true"></div>
+
+          <div class="learning-anchor" aria-hidden="true"></div>
+          <div class="learning-anchor-label" aria-hidden="true">
+            <strong>Education</strong>
+            <span>Learning Field</span>
+          </div>
+
+          <div class="learning-grid">
+            <div class="learning-node word" style="--delay:.05s">
+              <div class="learning-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Word</span>
+                <span class="node-sub">Learn the word</span>
               </div>
+            </div>
 
-              <div class="mini-card">
-                <strong>Knowing versus using</strong>
-                <span>The system closes the gap between recognizing a word and using it under pressure.</span>
+            <div class="learning-node meaning" style="--delay:.18s">
+              <div class="learning-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Meaning</span>
+                <span class="node-sub">Plain understanding</span>
               </div>
+            </div>
 
-              <div class="mini-card">
-                <strong>Cube replaces the line</strong>
-                <span>Words can be revisited, rotated, grouped, compared, challenged, and applied.</span>
+            <div class="learning-node sentence" style="--delay:.31s">
+              <div class="learning-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Sentence</span>
+                <span class="node-sub">Build the phrase</span>
+              </div>
+            </div>
+
+            <div class="learning-node context" style="--delay:.44s">
+              <div class="learning-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Context</span>
+                <span class="node-sub">Place it in life</span>
+              </div>
+            </div>
+
+            <div class="learning-node use" style="--delay:.57s">
+              <div class="learning-card">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Use</span>
+                <span class="node-sub">Speak, write, act</span>
               </div>
             </div>
           </div>
-        </details>
+        </div>
+      </section>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">2</span>
-            <span>
-              <span class="layer-title">The six cube faces</span>
-              <span class="layer-line">Every word can be viewed through meaning, use, relation, expression, memory, and action.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+      <section class="panel section" aria-labelledby="concept-title">
+        <div class="kicker">1001-word traversal</div>
+        <h2 id="concept-title">A word is not learned until it can be used.</h2>
 
-          <div class="layer-body">
-            <div class="face-grid">
-              <div class="face-card meaning">
-                <strong>Meaning</strong>
-                <span>Definition, plain-language explanation, and the core idea.</span>
-              </div>
+        <div class="concept-grid">
+          <article class="info-card">
+            <b>Traversal</b>
+            <strong>Move through words in order.</strong>
+            <span>1001-word traversal gives the learner a manageable path instead of a wall of vocabulary.</span>
+          </article>
 
-              <div class="face-card use">
-                <strong>Use</strong>
-                <span>Sentences, questions, stories, and real situations.</span>
-              </div>
+          <article class="info-card">
+            <b>Fluency</b>
+            <strong>Use matters more than memorization.</strong>
+            <span>The goal is not collecting definitions. The goal is using words in speech, writing, choices, and action.</span>
+          </article>
 
-              <div class="face-card relation">
-                <strong>Relation</strong>
-                <span>Synonyms, opposites, categories, emotional neighbors, and nearby concepts.</span>
-              </div>
+          <article class="info-card">
+            <b>Return</b>
+            <strong>Repetition makes the word stable.</strong>
+            <span>The learner returns to words through sentence, context, and use until they stop feeling foreign.</span>
+          </article>
+        </div>
+      </section>
 
-              <div class="face-card expression">
-                <strong>Expression</strong>
-                <span>Speaking, writing, presenting, explaining, and choosing the word intentionally.</span>
-              </div>
+      <section id="learning-loop" class="panel section" aria-labelledby="loop-title">
+        <div class="kicker">Learning loop</div>
+        <h2 id="loop-title">Word → Meaning → Sentence → Context → Use.</h2>
 
-              <div class="face-card memory">
-                <strong>Memory</strong>
-                <span>Images, stories, anchors, repetition, and retrieval.</span>
-              </div>
-
-              <div class="face-card action">
-                <strong>Action</strong>
-                <span>How the word changes behavior, choices, conflict, learning, or communication.</span>
-              </div>
+        <div class="learning-loop">
+          <div class="learning-step">
+            <div>
+              <strong>Receive the word.</strong>
+              <span>The learner meets one word clearly instead of being buried under too many inputs.</span>
             </div>
           </div>
-        </details>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">3</span>
-            <span>
-              <span class="layer-title">The four phases</span>
-              <span class="layer-line">Receive, place, use, and own each word.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="phase-grid">
-              <div class="phase-card receive">
-                <strong>Receive</strong>
-                <span>The learner hears, sees, pronounces, defines, and attaches the word to a simple image or situation.</span>
-              </div>
-
-              <div class="phase-card place">
-                <strong>Place</strong>
-                <span>The learner connects the word to categories, opposites, related words, emotional tone, and context.</span>
-              </div>
-
-              <div class="phase-card use-phase">
-                <strong>Use</strong>
-                <span>The learner uses the word in sentences, answers, stories, choices, and conversations.</span>
-              </div>
-
-              <div class="phase-card own">
-                <strong>Own</strong>
-                <span>The learner retrieves the word, explains it, chooses it intentionally, and knows when another word is better.</span>
-              </div>
+          <div class="learning-step">
+            <div>
+              <strong>Understand the plain meaning.</strong>
+              <span>The word is explained in simple language first, then strengthened with nuance later.</span>
             </div>
           </div>
-        </details>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">4</span>
-            <span>
-              <span class="layer-title">Linear path versus cube path</span>
-              <span class="layer-line">The old model asks what comes next. The cube asks what the word touches.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="mini-grid">
-              <div class="mini-card">
-                <strong>The old model</strong>
-                <span>Word, definition, quiz, next word. Good for sequence. Weak for depth and real-world transfer.</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>The cube model</strong>
-                <span>Forward, backward, sideways, inward, and outward. Built for understanding, conversation, writing, and transfer.</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>The operating question</strong>
-                <span>Where does this word sit, what does it touch, what does it oppose, and what does it unlock?</span>
-              </div>
+          <div class="learning-step">
+            <div>
+              <strong>Build a sentence.</strong>
+              <span>The learner sees how the word behaves when it is placed inside a real sentence.</span>
             </div>
           </div>
-        </details>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">5</span>
-            <span>
-              <span class="layer-title">Free PDF entry point</span>
-              <span class="layer-line">Start with the 1001 Word System PDF.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="download-panel">
-              <strong>Download path</strong>
-              Place the file at <b>/products/education/1001-word-system.pdf</b> so the download button works from this page.
-            </div>
-
-            <div class="education-actions">
-              <a class="dgb-button" href="/products/education/1001-word-system.pdf">Download Free PDF</a>
-              <a class="dgb-button secondary" href="/products/">Return to Products</a>
+          <div class="learning-step">
+            <div>
+              <strong>Place it in context.</strong>
+              <span>The word is tied to a situation, choice, conversation, work moment, or life setting.</span>
             </div>
           </div>
-        </details>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">6</span>
-            <span>
-              <span class="layer-title">Product binding</span>
-              <span class="layer-line">Education is a product chamber under Products.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
-
-          <div class="layer-body">
-            <div class="mini-grid">
-              <div class="mini-card">
-                <strong>Canonical route</strong>
-                <span>/products/education/</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>Product class</strong>
-                <span>product_chamber</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>Learning frame</strong>
-                <span>Guided cube progression through receive, place, use, and own.</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>Not a planet</strong>
-                <span>Education is not a planetary construct and not part of the Demo Universe render chain.</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>Not a house part</strong>
-                <span>Education belongs to Products, not the six-part house structure.</span>
-              </div>
-
-              <div class="mini-card">
-                <strong>Concrete product</strong>
-                <span>This page presents the 1001 Word System, not a generic education category.</span>
-              </div>
+          <div class="learning-step">
+            <div>
+              <strong>Use it and return.</strong>
+              <span>The learner speaks it, writes it, chooses with it, or acts on it, then returns until it becomes usable.</span>
             </div>
           </div>
-        </details>
+        </div>
+      </section>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">7</span>
-            <span>
-              <span class="layer-title">Move through the wing</span>
-              <span class="layer-line">Parent, proof, control, house, book, and verification routes.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+      <section class="panel section" aria-labelledby="who-title">
+        <div class="kicker">Who it helps</div>
+        <h2 id="who-title">Learning becomes useful when it has somewhere to land.</h2>
 
-          <div class="layer-body">
-            <div class="route-grid">
-              <a class="route-card" href="/products/">
-                Products
-                <span>Return to the product wing and the broader waterfall chamber.</span>
-              </a>
+        <div class="use-grid">
+          <article class="use-card">
+            <b>English learners</b>
+            <strong>Build usable fluency.</strong>
+            <span>Move from isolated words into sentences, meaning, context, and real use.</span>
+          </article>
 
-              <a class="route-card" href="/showroom/">
-                Showroom
-                <span>Inspect public proof surfaces and presentation lanes.</span>
-              </a>
+          <article class="use-card">
+            <b>Students</b>
+            <strong>Make study less abstract.</strong>
+            <span>Turn vocabulary and concepts into working understanding instead of temporary memorization.</span>
+          </article>
 
-              <a class="route-card" href="/gauges/">
-                Gauges
-                <span>Read route, runtime, parser, and diagnostic receipts.</span>
-              </a>
+          <article class="use-card">
+            <b>Workers</b>
+            <strong>Use words in real situations.</strong>
+            <span>Practice language for forms, instructions, customer moments, meetings, and written communication.</span>
+          </article>
 
-              <a class="route-card" href="/">
-                Compass
-                <span>Return to the public command surface.</span>
-              </a>
+          <article class="use-card">
+            <b>Families</b>
+            <strong>Learn together without shame.</strong>
+            <span>Words can become shared tools instead of a private pressure point.</span>
+          </article>
+        </div>
+      </section>
 
-              <a class="route-card" href="/home/">
-                Home
-                <span>Return to estate stabilization and routing.</span>
-              </a>
+      <section id="guardrails" class="panel section" aria-labelledby="guard-title">
+        <div class="kicker">Guardrails</div>
+        <h2 id="guard-title">Learning support is not replacement.</h2>
 
-              <a class="route-card" href="/nine-summits-of-love/">
-                Book
-                <span>Return to the human climb that anchors the broader system.</span>
-              </a>
-            </div>
-          </div>
-        </details>
+        <div class="guard-grid">
+          <article class="guard-card">
+            <b>Not school replacement</b>
+            <strong>It does not replace formal education.</strong>
+            <span>It supports practice and understanding, but does not replace schools, programs, grades, or credentials.</span>
+          </article>
 
-        <details class="doll-layer">
-          <summary>
-            <span class="layer-number">R</span>
-            <span>
-              <span class="layer-title">Route receipt</span>
-              <span class="layer-line">Compressed contract and audit status.</span>
-            </span>
-            <span class="layer-action">Open / close</span>
-          </summary>
+          <article class="guard-card">
+            <b>Not teacher replacement</b>
+            <strong>It does not replace teachers or tutors.</strong>
+            <span>It helps learners prepare, repeat, and practice, while human instruction remains valuable.</span>
+          </article>
 
-          <div class="layer-body">
-            <pre class="dgb-receipt education-receipt">EDUCATION_RUSSIAN_DOLL_1001_WORD_SYSTEM_RENEWAL_TNT_v1
+          <article class="guard-card">
+            <b>Not certification</b>
+            <strong>It does not grant formal proof.</strong>
+            <span>It can support readiness, but certification and official assessment remain separate.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="routes-title">
+        <div class="kicker">Product chamber routes</div>
+        <h2 id="routes-title">Education stays attached to the product wing.</h2>
+
+        <div class="route-grid">
+          <a class="route-card" href="/products/">
+            <b>Products</b>
+            <strong>Return to the wing.</strong>
+            <span>Education sits inside the larger product chamber system.</span>
+          </a>
+
+          <a class="route-card" href="/products/on-your-side-ai/">
+            <b>On Your Side AI</b>
+            <strong>Open support.</strong>
+            <span>The support chamber helps people sort forms, letters, choices, and next steps.</span>
+          </a>
+
+          <a class="route-card" href="/products/five-flags/">
+            <b>Five Flags</b>
+            <strong>Open the game chamber.</strong>
+            <span>The signal-game chamber helps the room practice inference and feedback.</span>
+          </a>
+
+          <a class="route-card" href="/gauges/">
+            <b>Gauges</b>
+            <strong>Measure the route.</strong>
+            <span>Gauges checks served source truth and contract alignment.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="final-band" aria-labelledby="final-title">
+        <div class="kicker">Final direction</div>
+        <strong id="final-title">Education turns words into working understanding.</strong>
+        <p>
+          A word becomes useful when the learner can understand it, place it, use it, and return to it without fear. That is the chamber: word, meaning, sentence, context, use.
+        </p>
+
+        <div class="actions">
+          <a class="button gold" href="/products/">Back to Products</a>
+          <a class="button" href="/products/on-your-side-ai/">Open On Your Side AI</a>
+          <a class="button" href="/products/five-flags/">Open Five Flags</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <details class="receipt" open>
+        <summary>Route receipt</summary>
+        <pre>EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1
 route=/products/education/
-page=products-education
-title=1001 Word System
-style_direction=ted-talk-product-chamber
-scroll_mode=compressed-russian-doll
-uses_shared_shell=/assets/dgb-ui-shell.css
-canonical_nav=Compass,Door,Home,Book,Universe,Products,Showroom,Earth G1,Gauges
-product_class=product_chamber
+page=education
+role=product_chamber
 parent=/products/
-canonical_route=/products/education/
-learning_frame=guided-cube-progression
-word_count=1001
-cube_faces=meaning,use,relation,expression,memory,action
-phases=receive,place,use,own
-free_pdf=/products/education/1001-word-system.pdf
-heavy_runtime_loaded=false
-planet_render_touched=false
-runtime_touched=false
-gauges_logic_touched=false
+product_type=practical_learning
+canonical_one_line=Education helps users turn words into working understanding.
+core_mechanic=word_meaning_sentence_context_use
+learning_frame=1001_word_traversal_learning
+learning_points=word,meaning,sentence,context,use
+learning_loop=receive_word,understand_plain_meaning,build_sentence,place_in_context,use_and_return
+public_goal=usable_fluency
+helps_with=english_learning,students,workers,families,plain_language,practice,repetition,application
+guardrail=Education_supports_learning_it_does_not_replace_formal_instruction_or_certification
+not_school_replacement=true
+not_teacher_replacement=true
+not_tutor_replacement=true
+not_certification=true
+parent_products=/products/
+five_flags=/products/five-flags/
+on_your_side_ai=/products/on-your-side-ai/
 showroom=/showroom/
 gauges=/gauges/
+compass=/
+visual_system=animated_five_point_learning_field
+animation=floating_learning_diamonds,background_anchor_pulse,slow_field_turn,hover_lift
+mobile_law=stacked_learning_points_no_clipping_no_hidden_nodes
+route_owns=education_public_learning_chamber,learning_loop,1001_word_traversal_explanation,guardrails,use_cases,product_chamber_receipt
+route_does_not_own=products_root,other_product_chambers,showroom,gauges_logic,runtime,render_files,instrument_state
+heavy_runtime_loaded=false
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false
 visual_pass_claimed=false</pre>
-          </div>
-        </details>
-      </div>
-    </section>
-  </main>
+      </details>
+    </main>
 
-  <footer class="dgb-footer">
-    EDUCATION_RUSSIAN_DOLL_1001_WORD_SYSTEM_RENEWAL_TNT_v1 · Education · 1001 Word System · Product Chamber.
-  </footer>
+    <footer>
+      EDUCATION_PRODUCT_CHAMBER_PUBLIC_LEARNING_TNT_v1 · Education · Product Chamber · Practical Learning.
+    </footer>
+  </div>
 </body>
 </html>

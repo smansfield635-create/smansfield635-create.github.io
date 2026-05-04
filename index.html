@@ -3,46 +3,62 @@
   lang="en"
   data-route="/"
   data-page="compass"
-  data-version="G1-PURPLE-DIAMOND-RESTORE"
-  data-contract="COMPASS_ANIMATED_PURPLE_DIAMOND_COMMAND_RESTORE_TNT_v1"
+  data-version="G1-V2"
+  data-contract="COMPASS_CHRONOLOGICAL_DIAMOND_COMMAND_FIELD_TNT_v2"
   data-status="active"
+  data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
   data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Compass</title>
-  <meta name="description" content="Diamond Gate Bridge animated Compass command surface with purple diamond routing, public rooms, Underdog profile, Nine Summits, Products, Showroom, Frontier, and Gauges.">
+  <title>Diamond Gate Bridge · Rich Manor and Estate</title>
+  <meta name="description" content="Diamond Gate Bridge Compass: organized chronological command surface for Door, Home, Manor, Laws, Nine Summits, Book, Universe, Products, Showroom, Frontier, Gauges, Underdog, and Meet Sean Mansfield.">
 
   <style>
     :root{
       color-scheme:dark;
-      --bg:#02030a;
-      --ink:#f8f1dd;
-      --muted:rgba(226,235,255,.76);
-      --faint:rgba(226,235,255,.52);
-      --gold:#f2c76f;
-      --blue:#8bc8ff;
-      --purple:#8b5cff;
-      --violet:#d9c4ff;
-      --line:rgba(185,160,255,.24);
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.58);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --purple:#8f65ff;
+      --panel:rgba(9,15,31,.82);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
     }
 
     *{box-sizing:border-box}
 
-    html,body{
-      margin:0;
+    html{
       min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
       color:var(--ink);
-      background:
-        radial-gradient(circle at 50% 10%,rgba(139,92,255,.28),transparent 20rem),
-        radial-gradient(circle at 52% 44%,rgba(242,199,111,.14),transparent 32rem),
-        radial-gradient(circle at 50% 72%,rgba(139,200,255,.10),transparent 38rem),
-        linear-gradient(180deg,#050712 0%,#02030a 72%,#000106 100%);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      background:
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.22),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
     }
 
@@ -52,89 +68,114 @@
       inset:0;
       pointer-events:none;
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.16) 0 1px,transparent 1.4px),
-        linear-gradient(rgba(139,92,255,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(139,92,255,.055) 1px,transparent 1px);
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
       background-size:220px 260px,54px 54px,54px 54px;
-      opacity:.28;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      background:
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.60;
+      animation:auroraDrift 26s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
 
     .skip{
       position:absolute;
-      top:-4rem;
-      left:1rem;
-      z-index:40;
+      left:-999px;
+      top:8px;
+      z-index:50;
       padding:.75rem 1rem;
       border-radius:999px;
-      background:var(--gold);
       color:#05070d;
-      font-weight:900;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip:focus{top:1rem}
+    .skip:focus{left:8px}
 
     .shell{
       position:relative;
-      z-index:1;
-      width:min(100%,var(--max));
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(1rem,env(safe-area-inset-top)) clamp(.85rem,3vw,2rem) max(2rem,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .top{
-      display:flex;
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      justify-content:space-between;
-      gap:1rem;
-      padding:1rem 0;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
     .brand{
       display:grid;
       grid-template-columns:auto 1fr;
-      gap:.8rem;
       align-items:center;
+      gap:.9rem;
+      min-width:260px;
     }
 
-    .mark{
-      width:4rem;
-      height:4rem;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(217,196,255,.34);
-      border-radius:1.05rem;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
       transform:rotate(45deg);
       background:
-        radial-gradient(circle at 50% 24%,rgba(255,255,255,.16),transparent 44%),
-        linear-gradient(145deg,rgba(139,92,255,.42),rgba(9,13,30,.96));
-      box-shadow:0 0 1.6rem rgba(139,92,255,.28),0 1rem 2.6rem rgba(0,0,0,.42);
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .mark span{
+    .brand-mark span{
       transform:rotate(-45deg);
       font-weight:950;
       letter-spacing:.04em;
-      color:rgba(255,241,205,.98);
+      color:rgba(255,244,216,.98);
     }
 
-    .brand-text{
+    .brand-copy{
       display:grid;
-      gap:.15rem;
+      gap:.18rem;
     }
 
-    .brand-text strong{
-      font-size:clamp(1.1rem,3vw,1.75rem);
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
       line-height:1;
       letter-spacing:-.045em;
     }
 
-    .brand-text span{
+    .brand-copy span{
       color:var(--muted);
-      font-size:.78rem;
-      font-weight:850;
-      letter-spacing:.12em;
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
       text-transform:uppercase;
     }
 
@@ -150,53 +191,60 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:.5rem .72rem;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
       background:rgba(255,255,255,.035);
-      color:rgba(242,246,255,.86);
       font-size:.68rem;
       font-weight:950;
-      letter-spacing:.05em;
+      letter-spacing:.055em;
       text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .nav a[aria-current="page"]{
-      border-color:rgba(242,199,111,.88);
-      color:#080a12;
-      background:linear-gradient(135deg,#fff0a3,#f2c76f);
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .hero{
-      min-height:clamp(26rem,54vw,42rem);
+      position:relative;
+      min-height:clamp(25rem,48vw,37rem);
       display:grid;
       align-content:center;
       gap:1rem;
-      position:relative;
-      overflow:hidden;
-      border:1px solid rgba(185,160,255,.22);
-      border-radius:clamp(1.35rem,5vw,2.25rem);
-      padding:clamp(1.5rem,5vw,3rem);
-      background:
-        radial-gradient(circle at 72% 24%,rgba(139,92,255,.18),transparent 24rem),
-        radial-gradient(circle at 22% 82%,rgba(242,199,111,.10),transparent 24rem),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.02));
-      box-shadow:0 2rem 7rem rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.08);
+      padding:clamp(1.6rem,5vw,3.5rem);
+      margin-top:.6rem;
     }
 
     .hero::before{
       content:"";
       position:absolute;
-      right:clamp(1rem,6vw,5rem);
+      right:clamp(1rem,6vw,5.5rem);
       top:50%;
-      width:clamp(11rem,28vw,20rem);
-      height:clamp(11rem,28vw,20rem);
-      border:1px solid rgba(217,196,255,.24);
-      border-radius:2.6rem;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:2.9rem;
       transform:translateY(-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 50% 50%,rgba(139,92,255,.18),transparent 54%),
-        linear-gradient(145deg,rgba(242,199,111,.06),rgba(255,255,255,.015));
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.19),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
       animation:heroDiamond 8s ease-in-out infinite;
       pointer-events:none;
     }
@@ -204,13 +252,13 @@
     .kicker{
       width:fit-content;
       display:inline-flex;
-      gap:.55rem;
       align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
       border:1px solid rgba(255,255,255,.14);
       border-radius:999px;
-      padding:.58rem .95rem;
+      color:rgba(230,238,255,.86);
       background:rgba(255,255,255,.04);
-      color:rgba(226,235,255,.86);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.14em;
@@ -225,251 +273,447 @@
       height:.72rem;
       border-radius:.18rem;
       transform:rotate(45deg);
-      background:var(--purple);
-      box-shadow:0 0 1.1rem rgba(139,92,255,.54);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
     }
 
     h1{
-      width:min(100%,860px);
       margin:0;
-      font-size:clamp(3.5rem,12vw,7.4rem);
+      max-width:900px;
+      font-size:clamp(3.2rem,11vw,7.2rem);
       line-height:.84;
       letter-spacing:-.105em;
       position:relative;
       z-index:2;
+      text-wrap:balance;
     }
 
     h2{
       margin:0;
-      max-width:900px;
+      max-width:860px;
       color:var(--gold);
-      font-size:clamp(1.55rem,5.4vw,3rem);
+      font-size:clamp(1.55rem,5.2vw,3rem);
       line-height:.98;
       letter-spacing:-.07em;
       position:relative;
       z-index:2;
+      text-wrap:balance;
+    }
+
+    h3{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.36rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
 
     p{
       margin:0;
-      max-width:780px;
+      max-width:820px;
       color:var(--muted);
-      font-size:clamp(.98rem,2.8vw,1.18rem);
+      font-size:clamp(.98rem,2.7vw,1.18rem);
       line-height:1.55;
       position:relative;
       z-index:2;
     }
 
-    .cta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
+    .quote{
+      max-width:780px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
       position:relative;
       z-index:2;
     }
 
-    .cta{
-      min-height:2.55rem;
+    .actions{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.3rem;
+    }
+
+    .button{
+      min-height:2.65rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.15);
       border-radius:999px;
-      background:rgba(255,255,255,.04);
-      padding:.62rem .95rem;
-      color:rgba(242,246,255,.88);
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
       font-size:.76rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .cta.primary{
-      border-color:rgba(242,199,111,.9);
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
+    }
+
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
       color:#060811;
-      background:linear-gradient(135deg,#fff0a3,#f2c76f);
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
-    .field-card{
+    .section{
       margin-top:1.15rem;
-      border:1px solid rgba(185,160,255,.22);
-      border-radius:clamp(1.35rem,5vw,2.25rem);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(139,92,255,.12),transparent 30%),
-        radial-gradient(circle at 50% 50%,rgba(139,200,255,.07),transparent 60%),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-      box-shadow:0 2rem 7rem rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-      padding:clamp(1rem,3vw,1.6rem);
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
     }
 
-    .field{
-      min-height:clamp(42rem,76vw,58rem);
+    .compass-field{
       position:relative;
-      border:1px solid rgba(242,199,111,.16);
-      border-radius:clamp(1.2rem,4vw,2rem);
+      min-height:clamp(58rem,92vw,74rem);
       overflow:hidden;
-      perspective:1000px;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:clamp(1.25rem,5vw,2.2rem);
       background:
-        radial-gradient(circle at 50% 50%,rgba(242,199,111,.06),transparent 26%),
-        radial-gradient(circle at 50% 50%,rgba(139,92,255,.12),transparent 56%),
+        radial-gradient(circle at 50% 48%,rgba(243,200,111,.075),transparent 22%),
+        radial-gradient(circle at 50% 48%,rgba(143,101,255,.16),transparent 54%),
+        radial-gradient(circle at 50% 48%,rgba(141,216,255,.08),transparent 72%),
         rgba(255,255,255,.018);
+      perspective:1100px;
+      padding:clamp(1.15rem,3vw,2rem);
     }
 
-    .field::before{
+    .compass-field::before{
       content:"";
       position:absolute;
       left:50%;
       top:50%;
-      width:clamp(22rem,60vw,42rem);
-      height:clamp(22rem,60vw,42rem);
-      border:1px solid rgba(217,196,255,.16);
+      z-index:0;
+      width:clamp(24rem,62vw,46rem);
+      height:clamp(24rem,62vw,46rem);
+      border:1px solid rgba(215,194,255,.16);
       border-radius:4rem;
       transform:translate(-50%,-50%) rotate(45deg);
       box-shadow:
-        0 0 0 clamp(4rem,10vw,7rem) rgba(139,92,255,.035),
-        0 0 0 clamp(8rem,18vw,13rem) rgba(242,199,111,.024);
-      animation:slowTurn 38s linear infinite;
+        0 0 0 clamp(4rem,9vw,7rem) rgba(143,101,255,.035),
+        0 0 0 clamp(8rem,18vw,13rem) rgba(243,200,111,.024),
+        inset 0 0 3rem rgba(143,101,255,.06);
+      animation:gateTurn 42s linear infinite;
+      pointer-events:none;
     }
 
-    .center{
+    .compass-field::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:7%;
+      bottom:7%;
+      z-index:0;
+      width:1px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,rgba(243,200,111,.32),rgba(141,216,255,.18),transparent);
+      opacity:.72;
+      pointer-events:none;
+    }
+
+    .axis-line{
+      position:absolute;
+      left:7%;
+      right:7%;
+      top:50%;
+      z-index:0;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(141,216,255,.22),rgba(243,200,111,.22),transparent);
+      opacity:.58;
+      pointer-events:none;
+    }
+
+    .cardinal{
+      position:absolute;
+      z-index:4;
+      color:rgba(255,244,216,.72);
+      font-size:clamp(1.15rem,3.8vw,2rem);
+      font-weight:950;
+      letter-spacing:.06em;
+      text-shadow:0 .25rem 1rem rgba(0,0,0,.55);
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .cardinal.n{left:50%;top:2.8%;transform:translateX(-50%)}
+    .cardinal.e{right:3.8%;top:50%;transform:translateY(-50%)}
+    .cardinal.s{left:50%;bottom:2.8%;transform:translateX(-50%)}
+    .cardinal.w{left:3.8%;top:50%;transform:translateY(-50%)}
+
+    .compass-anchor{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:9;
-      width:clamp(9.5rem,21vw,14.5rem);
-      height:clamp(9.5rem,21vw,14.5rem);
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(242,199,111,.42);
-      border-radius:2.1rem;
+      z-index:1;
+      width:clamp(16rem,39vw,28rem);
+      height:clamp(16rem,39vw,28rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:4rem;
       background:
-        radial-gradient(circle at 50% 22%,rgba(255,255,255,.14),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(139,92,255,.22),transparent 58%),
-        linear-gradient(145deg,rgba(52,34,92,.92),rgba(7,11,23,.98));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.44),0 0 2.4rem rgba(139,92,255,.28);
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.08),transparent 42%),
+        radial-gradient(circle at 54% 68%,rgba(143,101,255,.22),transparent 58%),
+        linear-gradient(145deg,rgba(33,29,58,.50),rgba(5,9,20,.55));
+      box-shadow:
+        0 1.7rem 4.2rem rgba(0,0,0,.20),
+        0 0 3.6rem rgba(143,101,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.08);
       transform:translate(-50%,-50%) rotate(45deg);
-      animation:centerFloat 7s ease-in-out infinite;
+      opacity:.42;
+      pointer-events:none;
+      animation:anchorPulse 8s ease-in-out infinite;
     }
 
-    .center span{
-      transform:rotate(-45deg);
+    .compass-anchor::before,
+    .compass-anchor::after{
+      content:"";
+      position:absolute;
+      inset:14%;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:2.5rem;
+    }
+
+    .compass-anchor::after{
+      inset:31%;
+      border-color:rgba(243,200,111,.12);
+    }
+
+    .compass-anchor-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:2;
+      transform:translate(-50%,-50%);
       display:grid;
-      gap:.28rem;
+      gap:.2rem;
       text-align:center;
-      padding:1rem;
+      pointer-events:none;
+      opacity:.78;
     }
 
-    .center strong{
-      color:rgba(255,241,205,.98);
-      font-size:1.02rem;
+    .compass-anchor-label strong{
+      color:rgba(255,244,216,.92);
+      font-size:clamp(1rem,3vw,1.65rem);
+      line-height:1;
       font-weight:950;
-      letter-spacing:.1em;
+      letter-spacing:.16em;
       text-transform:uppercase;
+      text-shadow:0 .25rem 1.4rem rgba(0,0,0,.6);
     }
 
-    .center small{
+    .compass-anchor-label span{
       color:var(--muted);
-      font-size:.72rem;
-      line-height:1.25;
+      font-size:.78rem;
+      letter-spacing:.04em;
+    }
+
+    .chrono-grid{
+      position:relative;
+      z-index:5;
+      width:min(100%,920px);
+      min-height:clamp(51rem,74vw,65rem);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-rows:repeat(4,1fr);
+      gap:clamp(.65rem,2vw,1.1rem);
+      align-items:center;
+      justify-items:center;
+      padding:clamp(.8rem,2.2vw,1.2rem);
     }
 
     .node{
-      position:absolute;
-      z-index:8;
-      width:clamp(7.2rem,15vw,10.5rem);
-      min-height:5.8rem;
-      transform:translate(-50%,-50%);
+      width:100%;
+      min-height:clamp(9rem,16vw,12rem);
       display:grid;
       place-items:center;
       text-align:center;
-      animation:nodeFloat 7.8s ease-in-out infinite;
+      animation:nodeFloat 8s ease-in-out infinite;
       animation-delay:var(--delay,0s);
     }
 
     .node a{
-      width:100%;
       display:grid;
       place-items:center;
-      gap:.42rem;
+      gap:.52rem;
+      width:100%;
+      outline:none;
     }
 
     .diamond{
-      width:clamp(2.05rem,4.6vw,3.1rem);
-      height:clamp(2.05rem,4.6vw,3.1rem);
-      border:1px solid rgba(217,196,255,.38);
-      border-radius:.78rem;
+      width:clamp(4.2rem,7.8vw,6.3rem);
+      height:clamp(4.2rem,7.8vw,6.3rem);
+      border:1px solid rgba(215,194,255,.42);
+      border-radius:1.2rem;
       transform:rotate(45deg);
       background:
-        radial-gradient(circle at 50% 22%,rgba(255,255,255,.18),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(242,199,111,.10),transparent 58%),
-        linear-gradient(145deg,rgba(139,92,255,.56),rgba(10,14,29,.98));
-      box-shadow:0 .8rem 1.8rem rgba(0,0,0,.36),0 0 1.4rem rgba(139,92,255,.26),inset 0 1px 0 rgba(255,255,255,.12);
-      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.20),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.11),transparent 58%),
+        linear-gradient(145deg,rgba(143,101,255,.58),rgba(6,10,22,.98));
+      box-shadow:
+        0 1rem 2rem rgba(0,0,0,.38),
+        0 0 1.7rem rgba(143,101,255,.26),
+        inset 0 1px 0 rgba(255,255,255,.16);
       position:relative;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
     }
 
-    .diamond::before{
+    .diamond::before,
+    .diamond::after{
       content:"";
       position:absolute;
       inset:18%;
       border:1px solid rgba(255,255,255,.13);
-      border-radius:.48rem;
+      border-radius:.78rem;
+    }
+
+    .diamond::after{
+      inset:34%;
+      border-color:rgba(243,200,111,.16);
     }
 
     .node:hover .diamond,
     .node:focus-within .diamond{
       transform:rotate(45deg) scale(1.12);
-      border-color:rgba(242,199,111,.86);
+      border-color:rgba(243,200,111,.92);
       background:
-        radial-gradient(circle at 50% 22%,rgba(255,255,255,.22),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(242,199,111,.18),transparent 58%),
-        linear-gradient(145deg,rgba(169,118,255,.72),rgba(10,14,29,.98));
-      box-shadow:0 1rem 2.2rem rgba(0,0,0,.42),0 0 2rem rgba(139,92,255,.42),0 0 1.2rem rgba(242,199,111,.18);
+        radial-gradient(circle at 48% 20%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 52% 70%,rgba(243,200,111,.22),transparent 58%),
+        linear-gradient(145deg,rgba(166,117,255,.72),rgba(6,10,22,.98));
+      box-shadow:
+        0 1.15rem 2.4rem rgba(0,0,0,.45),
+        0 0 2.3rem rgba(143,101,255,.42),
+        0 0 1.4rem rgba(243,200,111,.22);
     }
 
-    .node strong{
-      color:rgba(255,241,205,.98);
-      font-size:.78rem;
+    .node-title{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.74rem,1.8vw,.98rem);
       font-weight:950;
       line-height:1.05;
-      letter-spacing:.08em;
+      letter-spacing:.1em;
       text-transform:uppercase;
-      text-shadow:0 .12rem .42rem rgba(0,0,0,.82);
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
-    .node small{
-      color:rgba(226,235,255,.78);
-      font-size:.61rem;
-      font-weight:850;
-      line-height:1.2;
-      text-shadow:0 .12rem .42rem rgba(0,0,0,.82);
+    .node-sub{
+      color:rgba(230,238,255,.78);
+      font-size:clamp(.62rem,1.5vw,.76rem);
+      line-height:1.25;
+      text-shadow:0 .2rem .9rem rgba(0,0,0,.72);
     }
 
     .primary .diamond{
-      border-color:rgba(242,199,111,.68);
+      border-color:rgba(243,200,111,.78);
+      box-shadow:
+        0 1rem 2.1rem rgba(0,0,0,.42),
+        0 0 2rem rgba(143,101,255,.36),
+        0 0 1rem rgba(243,200,111,.20);
+    }
+
+    .role-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.9rem;
+    }
+
+    .role-card{
+      min-height:12rem;
+      display:grid;
+      gap:.65rem;
+      align-content:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
       background:
-        radial-gradient(circle at 50% 22%,rgba(255,255,255,.20),transparent 42%),
-        radial-gradient(circle at 50% 72%,rgba(242,199,111,.22),transparent 58%),
-        linear-gradient(145deg,rgba(128,74,214,.72),rgba(10,14,29,.98));
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .underdog .diamond{
-      border-color:rgba(242,199,111,.86);
-      box-shadow:0 .9rem 2rem rgba(0,0,0,.42),0 0 2rem rgba(139,92,255,.36),0 0 1rem rgba(242,199,111,.20);
+    .role-card::before{
+      content:"";
+      width:1.85rem;
+      height:1.85rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:.56rem;
+      transform:rotate(45deg);
+      margin:.2rem 0 .38rem .28rem;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.14),transparent 50%),
+        linear-gradient(145deg,rgba(143,101,255,.18),rgba(243,200,111,.05));
+      box-shadow:0 0 1rem rgba(143,101,255,.12);
     }
 
-    .door{left:50%;top:13%}
-    .summits{left:79%;top:28%}
-    .manor{left:86%;top:50%}
-    .gauges{left:79%;top:72%}
-    .home{left:50%;top:87%}
-    .showroom{left:21%;top:72%}
-    .products{left:14%;top:50%}
-    .frontier{left:21%;top:28%}
-    .underdog{left:50%;top:32%}
-    .book{left:38%;top:63%}
-    .universe{left:62%;top:63%}
+    .role-card:hover,
+    .role-card:focus{
+      transform:translateY(-4px);
+      border-color:rgba(243,200,111,.55);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(243,200,111,.10),transparent 60%),
+        rgba(255,255,255,.045);
+      outline:none;
+    }
+
+    .role-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:.9rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .role-card span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.45;
+    }
+
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .route{
+      min-height:5.4rem;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.15rem;
+      background:rgba(255,255,255,.03);
+      color:rgba(241,246,255,.86);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      transition:transform .18s ease,border-color .18s ease;
+    }
+
+    .route:hover,
+    .route:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
 
     .receipt{
       margin-top:1.15rem;
@@ -479,9 +723,9 @@
     .receipt summary{
       cursor:pointer;
       padding:1rem;
-      border:1px solid rgba(185,160,255,.18);
+      border:1px solid rgba(184,205,255,.14);
       border-radius:1.2rem;
-      color:rgba(255,241,205,.96);
+      color:rgba(255,244,216,.96);
       font-size:.72rem;
       font-weight:950;
       letter-spacing:.09em;
@@ -504,55 +748,109 @@
       font-size:.76rem;
     }
 
-    @keyframes heroDiamond{
-      0%,100%{opacity:.42;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.72;transform:translateY(-50%) rotate(45deg) scale(1.04)}
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
     }
 
-    @keyframes slowTurn{
+    @keyframes heroDiamond{
+      0%,100%{opacity:.38;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.70;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @keyframes gateTurn{
       from{transform:translate(-50%,-50%) rotate(45deg)}
       to{transform:translate(-50%,-50%) rotate(405deg)}
     }
 
-    @keyframes centerFloat{
-      0%,100%{transform:translate(-50%,-50%) rotate(45deg) scale(1)}
-      50%{transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
+    @keyframes anchorPulse{
+      0%,100%{opacity:.34;transform:translate(-50%,-50%) rotate(45deg) scale(1)}
+      50%{opacity:.48;transform:translate(-50%,-50%) rotate(45deg) scale(1.035)}
     }
 
     @keyframes nodeFloat{
-      0%,100%{transform:translate(-50%,-50%) translateY(0)}
-      50%{transform:translate(-50%,-50%) translateY(-.55rem)}
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-.55rem)}
     }
 
     @media (prefers-reduced-motion:reduce){
-      .hero::before,.field::before,.center,.node{animation:none!important}
+      body::after,
+      .hero::before,
+      .compass-field::before,
+      .compass-anchor,
+      .node{
+        animation:none!important;
+      }
     }
 
-    @media (max-width:760px){
-      .top{align-items:flex-start;flex-direction:column}
-      .nav{justify-content:flex-start}
-
-      .field{min-height:54rem}
-
-      .node{
-        width:6.4rem;
-        min-height:5.2rem;
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
       }
 
-      .node strong{font-size:.66rem}
-      .node small{font-size:.52rem}
+      .nav{justify-content:flex-start}
 
-      .door{left:50%;top:10%}
-      .summits{left:76%;top:24%}
-      .manor{left:80%;top:43%}
-      .gauges{left:76%;top:64%}
-      .home{left:50%;top:87%}
-      .showroom{left:24%;top:64%}
-      .products{left:20%;top:43%}
-      .frontier{left:24%;top:24%}
-      .underdog{left:50%;top:29%}
-      .book{left:38%;top:69%}
-      .universe{left:62%;top:69%}
+      .chrono-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-template-rows:auto;
+        min-height:auto;
+      }
+
+      .role-grid,
+      .route-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .compass-field{
+        min-height:auto;
+      }
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+
+      h1{font-size:clamp(3rem,17vw,5rem)}
+
+      .hero{min-height:30rem}
+
+      .compass-field{
+        padding:1rem .65rem;
+      }
+
+      .chrono-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.65rem;
+        padding:.5rem;
+      }
+
+      .compass-anchor{
+        width:15rem;
+        height:15rem;
+        opacity:.28;
+      }
+
+      .compass-anchor-label{
+        opacity:.45;
+      }
+
+      .node{
+        min-height:8.2rem;
+      }
+
+      .diamond{
+        width:3.75rem;
+        height:3.75rem;
+        border-radius:.95rem;
+      }
+
+      .node-title{font-size:.68rem}
+      .node-sub{font-size:.58rem}
+
+      .role-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
@@ -561,10 +859,10 @@
   <a class="skip" href="#compass-main">Skip to Compass</a>
 
   <div class="shell">
-    <header class="top">
+    <header class="topbar" aria-label="Compass header">
       <a class="brand" href="/">
-        <span class="mark"><span>DG</span></span>
-        <span class="brand-text">
+        <span class="brand-mark"><span>DG</span></span>
+        <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>Rich Manor and Estate</strong>
         </span>
@@ -575,105 +873,254 @@
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/explore/">Manor</a>
+        <a href="/laws/">Laws</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Book</a>
+        <a href="/nine-summits/universe/">Universe</a>
         <a href="/products/">Products</a>
         <a href="/showroom/">Showroom</a>
         <a href="/frontier/">Frontier</a>
         <a href="/about-this-underdog/">Underdog</a>
+        <a href="/meet-sean-mansfield/">Meet Sean</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <main id="compass-main">
-      <section class="hero">
-        <div class="kicker">Compass · Animated Purple Diamond Command Surface</div>
-        <h1>Pressure is the door.</h1>
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Compass · Command Surface</div>
+        <h1 id="page-title">Pressure is the door.</h1>
         <h2>One message. Many rooms. One bridge.</h2>
         <p>
-          The Compass restores the animated diamond field: a public command surface where the visitor can move through the estate without losing the center.
+          The Compass orients the visitor before movement. The animated diamond field now follows a clear route order, with the Compass held behind the room diamonds as a background command anchor.
         </p>
+        <div class="quote">“A bridge is useful only when the way across stays readable.”</div>
 
-        <div class="cta-row">
-          <a class="cta primary" href="/door/">Cross the Door</a>
-          <a class="cta" href="/explore/">Walk the Manor</a>
-          <a class="cta" href="/nine-summits/">Open Nine Summits</a>
-          <a class="cta" href="/about-this-underdog/">Meet the Underdog</a>
+        <div class="actions">
+          <a class="button gold" href="/door/">Cross the Door</a>
+          <a class="button" href="/home/">Enter Home</a>
+          <a class="button" href="/explore/">Walk the Manor</a>
+          <a class="button" href="/nine-summits/">Open Nine Summits</a>
         </div>
       </section>
 
-      <section class="field-card" aria-label="Animated Compass diamond field">
-        <div class="field">
-          <div class="center" aria-hidden="true">
-            <span>
-              <strong>Compass</strong>
-              <small>One message. Many rooms.</small>
-            </span>
+      <section class="panel section" aria-labelledby="field-title">
+        <div class="kicker">Chronological command field</div>
+        <h2 id="field-title">The room diamonds now sit in front. Compass stays behind them.</h2>
+
+        <div class="compass-field" aria-label="Organized chronological Compass command diamond field">
+          <div class="axis-line" aria-hidden="true"></div>
+          <div class="cardinal n" aria-hidden="true">N</div>
+          <div class="cardinal e" aria-hidden="true">E</div>
+          <div class="cardinal s" aria-hidden="true">S</div>
+          <div class="cardinal w" aria-hidden="true">W</div>
+
+          <div class="compass-anchor" aria-hidden="true"></div>
+          <div class="compass-anchor-label" aria-hidden="true">
+            <strong>Compass</strong>
+            <span>Background Command Anchor</span>
           </div>
 
-          <div class="node primary door" style="--delay:.1s">
-            <a href="/door/"><span class="diamond"></span><strong>Door</strong><small>Threshold</small></a>
-          </div>
+          <div class="chrono-grid">
+            <div class="node primary" style="--delay:.05s">
+              <a href="/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Compass</span>
+                <span class="node-sub">Root</span>
+              </a>
+            </div>
 
-          <div class="node primary summits" style="--delay:.25s">
-            <a href="/nine-summits/"><span class="diamond"></span><strong>Nine Summits</strong><small>Climb</small></a>
-          </div>
+            <div class="node primary" style="--delay:.15s">
+              <a href="/door/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Door</span>
+                <span class="node-sub">Entry</span>
+              </a>
+            </div>
 
-          <div class="node primary manor" style="--delay:.4s">
-            <a href="/explore/"><span class="diamond"></span><strong>Manor</strong><small>Map</small></a>
-          </div>
+            <div class="node primary" style="--delay:.25s">
+              <a href="/home/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Home</span>
+                <span class="node-sub">Receiver</span>
+              </a>
+            </div>
 
-          <div class="node primary gauges" style="--delay:.55s">
-            <a href="/gauges/"><span class="diamond"></span><strong>Gauges</strong><small>Proof</small></a>
-          </div>
+            <div class="node primary" style="--delay:.35s">
+              <a href="/explore/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Manor</span>
+                <span class="node-sub">Map</span>
+              </a>
+            </div>
 
-          <div class="node home" style="--delay:.7s">
-            <a href="/home/"><span class="diamond"></span><strong>Home</strong><small>Stability</small></a>
-          </div>
+            <div class="node" style="--delay:.45s">
+              <a href="/laws/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Laws</span>
+                <span class="node-sub">Boundary</span>
+              </a>
+            </div>
 
-          <div class="node showroom" style="--delay:.85s">
-            <a href="/showroom/"><span class="diamond"></span><strong>Showroom</strong><small>Inspect</small></a>
-          </div>
+            <div class="node" style="--delay:.55s">
+              <a href="/nine-summits/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Nine Summits</span>
+                <span class="node-sub">Gate</span>
+              </a>
+            </div>
 
-          <div class="node products" style="--delay:1s">
-            <a href="/products/"><span class="diamond"></span><strong>Products</strong><small>Use</small></a>
-          </div>
+            <div class="node" style="--delay:.65s">
+              <a href="/nine-summits-of-love/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Book</span>
+                <span class="node-sub">Climb</span>
+              </a>
+            </div>
 
-          <div class="node frontier" style="--delay:1.15s">
-            <a href="/frontier/"><span class="diamond"></span><strong>Frontier</strong><small>Edge</small></a>
-          </div>
+            <div class="node" style="--delay:.75s">
+              <a href="/nine-summits/universe/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Universe</span>
+                <span class="node-sub">World</span>
+              </a>
+            </div>
 
-          <div class="node underdog" style="--delay:1.3s">
-            <a href="/about-this-underdog/"><span class="diamond"></span><strong>Underdog</strong><small>Voice</small></a>
-          </div>
+            <div class="node" style="--delay:.85s">
+              <a href="/products/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Products</span>
+                <span class="node-sub">Use</span>
+              </a>
+            </div>
 
-          <div class="node book" style="--delay:1.45s">
-            <a href="/nine-summits-of-love/"><span class="diamond"></span><strong>Book</strong><small>Love</small></a>
-          </div>
+            <div class="node" style="--delay:.95s">
+              <a href="/showroom/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Showroom</span>
+                <span class="node-sub">Atrium</span>
+              </a>
+            </div>
 
-          <div class="node universe" style="--delay:1.6s">
-            <a href="/nine-summits/universe/"><span class="diamond"></span><strong>Universe</strong><small>Audralia</small></a>
+            <div class="node" style="--delay:1.05s">
+              <a href="/frontier/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Frontier</span>
+                <span class="node-sub">Edge</span>
+              </a>
+            </div>
+
+            <div class="node" style="--delay:1.15s">
+              <a href="/gauges/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Gauges</span>
+                <span class="node-sub">Proof</span>
+              </a>
+            </div>
+
+            <div class="node" style="--delay:1.25s">
+              <a href="/about-this-underdog/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Underdog</span>
+                <span class="node-sub">Universal</span>
+              </a>
+            </div>
+
+            <div class="node" style="--delay:1.35s">
+              <a href="/meet-sean-mansfield/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Meet Sean</span>
+                <span class="node-sub">Voice</span>
+              </a>
+            </div>
+
+            <div class="node" style="--delay:1.45s">
+              <a href="/showroom/globe/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Audralia</span>
+                <span class="node-sub">World</span>
+              </a>
+            </div>
+
+            <div class="node" style="--delay:1.55s">
+              <a href="/products/five-flags/">
+                <span class="diamond" aria-hidden="true"></span>
+                <span class="node-title">Five Flags</span>
+                <span class="node-sub">Game</span>
+              </a>
+            </div>
           </div>
         </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="role-title">
+        <div class="kicker">Compass logic</div>
+        <h2 id="role-title">Compass orients. Door admits. Home stabilizes. Manor maps.</h2>
+
+        <div class="role-grid">
+          <a class="role-card" href="/door/">
+            <strong>Entry</strong>
+            <span>Door is the first crossing point. It admits the visitor into the estate.</span>
+          </a>
+
+          <a class="role-card" href="/home/">
+            <strong>Stability</strong>
+            <span>Home receives the visitor and keeps the next movement coherent.</span>
+          </a>
+
+          <a class="role-card" href="/explore/">
+            <strong>Map</strong>
+            <span>Manor gives the route field structure without forcing every room into one job.</span>
+          </a>
+
+          <a class="role-card" href="/gauges/">
+            <strong>Proof</strong>
+            <span>Gauges measure the served route truth instead of the intended claim.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="routes-title">
+        <div class="kicker">Command routes</div>
+        <h2 id="routes-title">Move from Compass without losing the bridge.</h2>
+
+        <nav class="route-grid" aria-label="Compass room routes">
+          <a class="route" href="/door/">Door</a>
+          <a class="route" href="/home/">Home</a>
+          <a class="route" href="/explore/">Manor</a>
+          <a class="route" href="/laws/">Laws</a>
+          <a class="route" href="/nine-summits/">Nine Summits</a>
+          <a class="route" href="/nine-summits-of-love/">Book</a>
+          <a class="route" href="/nine-summits/universe/">Universe</a>
+          <a class="route" href="/products/">Products</a>
+          <a class="route" href="/showroom/">Showroom</a>
+          <a class="route" href="/frontier/">Frontier</a>
+          <a class="route" href="/about-this-underdog/">Underdog</a>
+          <a class="route" href="/meet-sean-mansfield/">Meet Sean</a>
+        </nav>
       </section>
 
       <details class="receipt" open>
         <summary>Route receipt</summary>
-        <pre>COMPASS_ANIMATED_PURPLE_DIAMOND_COMMAND_RESTORE_TNT_v1
+        <pre>COMPASS_CHRONOLOGICAL_DIAMOND_COMMAND_FIELD_TNT_v2
 route=/
 page=compass
 role=animated_public_command_surface
-message=one_message_many_rooms
-center=compass_root_decorative
-visual_system=animated_purple_dimensional_diamond_field
-primary_directions=door,nine_summits,manor,gauges
-secondary_routes=home,showroom,products,frontier,underdog,book,universe
-underdog=/about-this-underdog/
-underdog_role=sean_mansfield_public_profile_lane
-restored=animation,purple_diamonds,dimensional_field,center_compass_node
-upgraded=glow,hover_lift,staggered_motion,underdog_route
-removed=flat_2d_route_grid_as_primary_visual
-route_owns=public_orientation,animated_diamond_routes,room_routes,underdog_link
+message=one_message_many_rooms_one_bridge
+center=compass_background_anchor_only
+visual_system=chronological_diamond_command_field
+chronology=compass,door,home,manor,laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
+primary_routes=compass,door,home,manor
+secondary_routes=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
+underdog_route=/about-this-underdog/
+meet_sean_route=/meet-sean-mansfield/
+z_index_law=background_orbit,compass_anchor_background,route_diamonds,route_labels
+non_overlap_law=no_clickable_diamond_hidden_by_center
+animation=floating_route_diamonds,background_anchor_pulse,slow_orbit_field,aurora_background
+mobile_law=compact_chronological_grid_no_hidden_nodes
+upgraded=chronological_order,non_overlap,center_background_only,current_routes,underdog_meet_sean_split
+removed=scattered_field,foreground_center_blocker,covered_small_diamonds,flat_2d_route_grid_as_primary_visual,old_underdog_personal_merge
+route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 heavy_runtime_loaded=false
 render_files_touched=false
@@ -687,7 +1134,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      COMPASS_ANIMATED_PURPLE_DIAMOND_COMMAND_RESTORE_TNT_v1 · Compass · Animated Purple Diamond Command Surface.
+      COMPASS_CHRONOLOGICAL_DIAMOND_COMMAND_FIELD_TNT_v2 · Compass · Chronological Command Field · Background Anchor · Foreground Routes.
     </footer>
   </div>
 </body>

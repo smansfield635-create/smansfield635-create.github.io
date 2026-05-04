@@ -1,13 +1,23 @@
 // /assets/audralia/audralia.planet.render.js
-// AUDRALIA_GROUND_ZERO_G1_PARENT_RENDER_TNT_v1
-// Role: single-file Audralia Generation 1 parent renderer.
-// Scope: ground-zero world-body render only.
-// No downstream children, no route shell ownership, no Earth ownership, no Sun/Moon ownership, no visual pass claim.
+// AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_COMPOSITOR_TNT_v1
+// Role: Audralia Generation 1 parent renderer.
+// Scope: parent compositor consuming first downstream child terrain.
+// Owns: visible Audralia globe composition.
+// Consumes: ./audralia.terrain.render.js
+// Does not own: route shell, Earth, hydration, climate, ecology, fauna, runtime, visual pass claim.
 
-const RECEIPT = "AUDRALIA_GROUND_ZERO_G1_PARENT_RENDER_TNT_v1";
+import {
+  createTerrainProfile,
+  sampleTerrain,
+  buildTerrainField,
+  getTerrainStatus
+} from "./audralia.terrain.render.js";
+
+const RECEIPT = "AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_COMPOSITOR_TNT_v1";
 const PLANETARY_OBJECT = "Audralia";
 const GENERATION = "G1";
 const FILE = "/assets/audralia/audralia.planet.render.js";
+const TERRAIN_CHILD_PATH = "/assets/audralia/audralia.terrain.render.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, Number.isFinite(Number(value)) ? Number(value) : 0));
@@ -29,218 +39,92 @@ function toRgb(rgb) {
   return `rgb(${Math.round(clamp(rgb[0], 0, 255))}, ${Math.round(clamp(rgb[1], 0, 255))}, ${Math.round(clamp(rgb[2], 0, 255))})`;
 }
 
-function fract(value) {
-  return value - Math.floor(value);
-}
-
-function smoothstep(edge0, edge1, value) {
-  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
-function hash2(x, y, seed = 0) {
-  return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
-}
-
-function valueNoise(x, y, seed = 0) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const fx = fract(x);
-  const fy = fract(y);
-
-  const a = hash2(ix, iy, seed);
-  const b = hash2(ix + 1, iy, seed);
-  const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1, seed);
-
-  const ux = fx * fx * (3 - 2 * fx);
-  const uy = fy * fy * (3 - 2 * fy);
-
-  return mix(mix(a, b, ux), mix(c, d, ux), uy);
-}
-
-function fbm(x, y, seed = 0, octaves = 5) {
-  let total = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  let normalizer = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += valueNoise(x * frequency, y * frequency, seed + i * 31.19) * amplitude;
-    normalizer += amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
-  }
-
-  return total / normalizer;
-}
-
-function lobe(lon, lat, cx, cy, sx, sy, power = 1) {
-  const dx = (lon - cx) / sx;
-  const dy = (lat - cy) / sy;
-  return Math.exp(-(dx * dx + dy * dy) * power);
-}
-
-function landField(lon, lat) {
-  const mainland =
-    lobe(lon, lat, -0.18, -0.02, 0.66, 0.42, 0.92) * 0.94;
-
-  const westernShelf =
-    lobe(lon, lat, -0.78, -0.08, 0.22, 0.34, 1.1) * 0.46;
-
-  const easternRise =
-    lobe(lon, lat, 0.48, 0.04, 0.34, 0.46, 1.0) * 0.52;
-
-  const northernIsles =
-    lobe(lon, lat, -0.08, 0.56, 0.48, 0.18, 1.1) * 0.34;
-
-  const southernBelt =
-    lobe(lon, lat, 0.12, -0.62, 0.58, 0.18, 1.2) * 0.34;
-
-  const coastlineNoise =
-    (fbm(lon * 4.7 + 2.2, lat * 4.7 - 1.3, 11, 6) - 0.5) * 0.28;
-
-  const fineBreak =
-    (fbm(lon * 14.0 - 3.5, lat * 14.0 + 6.2, 19, 4) - 0.5) * 0.12;
-
-  return mainland + westernShelf + easternRise + northernIsles + southernBelt + coastlineNoise + fineBreak;
-}
-
-function mountainField(lon, lat) {
-  const axialRidge =
-    Math.exp(-Math.pow((lat - (-0.08 + Math.sin(lon * 3.8) * 0.08)) / 0.08, 2)) *
-    smoothstep(0.86, 0.12, Math.abs(lon - 0.1));
-
-  const easternCrown =
-    lobe(lon, lat, 0.44, 0.12, 0.22, 0.36, 1.1);
-
-  const southernHighlands =
-    lobe(lon, lat, -0.04, -0.46, 0.52, 0.14, 1.2);
-
-  return clamp(axialRidge * 0.58 + easternCrown * 0.42 + southernHighlands * 0.34, 0, 1);
-}
-
-function waterDepthFromLand(landScore) {
-  return clamp(0.34 + (0.46 - landScore) * 1.18, 0, 1);
-}
-
-function climateBand(lat) {
-  const absLat = Math.abs(lat);
-  const equatorialWet = 1 - smoothstep(0.12, 0.42, absLat);
-  const dryBelt = smoothstep(0.18, 0.42, absLat) * (1 - smoothstep(0.48, 0.72, absLat));
-  const coldBelt = smoothstep(0.72, 0.96, absLat);
-
-  return { equatorialWet, dryBelt, coldBelt };
-}
-
-function sampleCore(uInput, vInput) {
+function normalizeUV(uInput, vInput) {
   const u = ((Number(uInput) || 0) % 1 + 1) % 1;
   const v = clamp(Number(vInput) || 0, 0, 1);
-  const lon = u * 2 - 1;
-  const lat = 1 - v * 2;
-
-  const landScore = landField(lon, lat);
-  const isLand = landScore > 0.46;
-  const coast = clamp(1 - Math.abs(landScore - 0.46) / 0.18, 0, 1);
-  const depth = isLand ? 0 : waterDepthFromLand(landScore);
-  const mountain = isLand ? mountainField(lon, lat) : 0;
-
-  const climate = climateBand(lat);
-  const moistureNoise = fbm(lon * 5.5 + 1.8, lat * 5.5 - 9.2, 41, 5);
-  const terrainNoise = fbm(lon * 7.0 - 5.0, lat * 7.0 + 4.0, 43, 5);
-
-  const moisture = clamp(
-    climate.equatorialWet * 0.62 +
-      coast * 0.28 +
-      moistureNoise * 0.28 -
-      climate.dryBelt * 0.34 -
-      mountain * 0.08,
-    0,
-    1
-  );
-
-  const aridity = clamp(climate.dryBelt * 0.78 + (1 - moisture) * 0.24 + terrainNoise * 0.12, 0, 1);
-  const vegetation = isLand
-    ? clamp(moisture * 0.72 + (1 - aridity) * 0.22 - mountain * 0.12, 0, 1)
-    : 0;
-
-  const ice = clamp(
-    climate.coldBelt * 0.44 +
-      mountain * climate.coldBelt * 0.28 +
-      mountain * smoothstep(0.72, 0.94, Math.abs(lat)) * 0.22,
-    0,
-    0.72
-  );
-
-  const reef = !isLand ? clamp(coast * (1 - depth) * (1 - climate.coldBelt) * 0.9, 0, 1) : 0;
 
   return Object.freeze({
     u,
     v,
-    lon,
-    lat,
-    landScore,
-    isLand,
-    isWater: !isLand,
-    coast,
-    depth,
-    mountain,
-    moisture,
-    aridity,
-    vegetation,
-    ice,
-    reef,
-    equatorialWet: climate.equatorialWet,
-    dryBelt: climate.dryBelt,
-    coldBelt: climate.coldBelt
+    lon: u * 2 - 1,
+    lat: 1 - v * 2
   });
 }
 
-function colorForSample(sample) {
-  if (sample.isWater) {
-    let color = blend([18, 94, 154], [5, 28, 72], sample.depth);
+function getTerrainContext(context = {}) {
+  return Object.freeze({
+    coherenceIndex: Number.isFinite(Number(context.coherenceIndex))
+      ? clamp(Number(context.coherenceIndex), 0, 1)
+      : 0.92,
+    collaborativeExpression: Number.isFinite(Number(context.collaborativeExpression))
+      ? clamp(Number(context.collaborativeExpression), 0, 1)
+      : 0.88
+  });
+}
 
-    if (sample.coast > 0.35) {
-      color = blend(color, [55, 158, 185], sample.coast * 0.48);
+function colorFromTerrain(terrain) {
+  const influence = terrain.terrainColorInfluence || {};
+
+  if (!terrain.isLand) {
+    const oceanDepth = clamp(Math.abs(terrain.normalizedElevation || 0), 0, 1);
+    const shelf = clamp(terrain.shelfPermission || influence.shelf || 0, 0, 1);
+    const coast = clamp(terrain.coastPressure || influence.coast || 0, 0, 1);
+
+    let color = blend([7, 24, 70], [18, 92, 142], 1 - oceanDepth);
+
+    if (shelf > 0.22) {
+      color = blend(color, [47, 150, 176], shelf * 0.56);
     }
 
-    if (sample.reef > 0.35) {
-      color = blend(color, [78, 185, 174], sample.reef * 0.38);
+    if (coast > 0.42) {
+      color = blend(color, [73, 180, 184], coast * 0.38);
     }
 
     return color;
   }
 
-  let color = [118, 105, 77];
+  const elevation = clamp(terrain.normalizedElevation || 0, 0, 1);
+  const ridge = clamp(terrain.ridge || 0, 0, 1);
+  const basin = clamp(terrain.basin || 0, 0, 1);
+  const dry = clamp(terrain.dryInteriorPressure || 0, 0, 1);
+  const polar = clamp(terrain.polarSeat || 0, 0, 1);
+  const summit = clamp(terrain.summitExpressionWeight || 0, 0, 1);
+  const coast = clamp(terrain.coastPressure || 0, 0, 1);
 
-  if (sample.aridity > 0.42) {
-    color = blend(color, [172, 126, 69], sample.aridity * 0.78);
+  let color = [92, 126, 78];
+
+  if (dry > 0.18) {
+    color = blend(color, [168, 123, 72], dry * 0.72);
   }
 
-  if (sample.vegetation > 0.22) {
-    color = blend(color, [76, 132, 74], sample.vegetation * 0.78);
+  if (basin > 0.28) {
+    color = blend(color, [52, 112, 72], basin * 0.44);
   }
 
-  if (sample.vegetation > 0.58) {
-    color = blend(color, [35, 92, 58], (sample.vegetation - 0.58) * 0.84);
+  if (ridge > 0.2) {
+    color = blend(color, [132, 126, 112], ridge * 0.64);
   }
 
-  if (sample.coast > 0.52) {
-    color = blend(color, [116, 132, 98], sample.coast * 0.24);
+  if (elevation > 0.52) {
+    color = blend(color, [150, 145, 132], (elevation - 0.52) * 0.72);
   }
 
-  if (sample.mountain > 0.34) {
-    color = blend(color, [126, 118, 104], sample.mountain * 0.62);
+  if (summit > 0.68) {
+    color = blend(color, [142, 156, 104], (summit - 0.68) * 0.26);
   }
 
-  if (sample.ice > 0.2) {
-    color = blend(color, [220, 234, 238], sample.ice * 0.72);
+  if (coast > 0.55) {
+    color = blend(color, [118, 138, 98], coast * 0.16);
+  }
+
+  if (polar > 0.26) {
+    color = blend(color, [218, 232, 238], polar * 0.82);
   }
 
   return color;
 }
 
-function applyLighting(rgb, nx, ny, nz, sample) {
+function applyLighting(rgb, nx, ny, nz, terrain) {
   const lightX = -0.38;
   const lightY = -0.24;
   const lightZ = 0.9;
@@ -248,21 +132,31 @@ function applyLighting(rgb, nx, ny, nz, sample) {
   const dot = clamp(nx * lightX + ny * lightY + nz * lightZ, 0, 1);
   const limb = clamp(nz, 0, 1);
   const atmosphere = clamp(1 - limb, 0, 1);
+  const ridge = terrain && terrain.isLand ? clamp(terrain.ridge || 0, 0, 1) : 0;
+  const waterBoost = terrain && terrain.isWater ? 0.04 : 0;
 
-  let shade = 0.38 + dot * 0.72;
-  shade += sample.isWater ? 0.04 : 0;
-  shade -= sample.mountain * 0.04;
-
-  let color = [rgb[0] * shade, rgb[1] * shade, rgb[2] * shade];
+  let shade = 0.36 + dot * 0.74 + waterBoost - ridge * 0.035;
+  let color = [
+    rgb[0] * shade,
+    rgb[1] * shade,
+    rgb[2] * shade
+  ];
 
   if (atmosphere > 0.58) {
-    color = blend(color, [90, 168, 224], (atmosphere - 0.58) * 0.32);
+    color = blend(color, [92, 172, 232], (atmosphere - 0.58) * 0.34);
   }
 
   return color;
 }
 
 export function createProfile(options = {}) {
+  const terrainStatus = getTerrainStatus();
+  const terrainProfile = createTerrainProfile({
+    parentAuthority: FILE,
+    coherenceIndex: Number.isFinite(Number(options.coherenceIndex)) ? options.coherenceIndex : 0.92,
+    collaborativeExpression: Number.isFinite(Number(options.collaborativeExpression)) ? options.collaborativeExpression : 0.88
+  });
+
   return Object.freeze({
     receipt: RECEIPT,
     status: "active",
@@ -271,39 +165,72 @@ export function createProfile(options = {}) {
     generation: GENERATION,
     generationClaimed: true,
     file: FILE,
-    role: "ground-zero-g1-parent-renderer",
+    role: "audralia-g1-parent-terrain-active-compositor",
     authority: FILE,
-    downstreamChildrenActive: false,
-    groundZeroParentOnly: true,
+
+    groundZeroParentOnly: false,
+    downstreamChildrenActive: true,
+    activeDownstreamChildren: Object.freeze(["terrain"]),
+    activeDownstreamPaths: Object.freeze([TERRAIN_CHILD_PATH]),
+
+    terrainChildActive: true,
+    terrainChildPath: TERRAIN_CHILD_PATH,
+    terrainStatus,
+    terrainProfile,
+
     radius: options.radius || 0.34,
     pixelStep: options.pixelStep || 2,
+
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    generationPassClaimed: false
   });
 }
 
 export function buildTexture(profile = createProfile(), options = {}) {
+  const terrainField = buildTerrainField(
+    options.terrainWidth || 128,
+    options.terrainHeight || 128,
+    {
+      coherenceIndex: Number.isFinite(Number(options.coherenceIndex)) ? options.coherenceIndex : 0.92,
+      collaborativeExpression: Number.isFinite(Number(options.collaborativeExpression)) ? options.collaborativeExpression : 0.88
+    }
+  );
+
   return Object.freeze({
     receipt: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
     profile,
+    terrainField,
+
+    groundZeroParentOnly: false,
+    downstreamChildrenActive: true,
+    activeDownstreamChildren: Object.freeze(["terrain"]),
+    activeDownstreamPaths: Object.freeze([TERRAIN_CHILD_PATH]),
+    terrainChildActive: true,
+    terrainChildPath: TERRAIN_CHILD_PATH,
+
     width: options.width || 512,
     height: options.height || 256,
-    groundZeroParentOnly: true,
-    downstreamChildrenActive: false,
+
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    generationPassClaimed: false
   });
 }
 
-export function sampleSurface(u, v, context = {}) {
-  const sample = sampleCore(u, v);
+export function sampleSurface(uInput, vInput, context = {}) {
+  const point = normalizeUV(uInput, vInput);
+  const terrainContext = getTerrainContext(context);
+  const terrain = sampleTerrain(point.u, point.v, terrainContext);
+
+  const color = colorFromTerrain(terrain);
 
   return Object.freeze({
     receipt: RECEIPT,
@@ -311,24 +238,61 @@ export function sampleSurface(u, v, context = {}) {
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
-    ...sample,
-    elevation: sample.isLand ? clamp((sample.landScore - 0.46) * 1.4 + sample.mountain * 0.32, 0, 1) : -sample.depth,
-    oceanDepth: sample.isWater ? sample.depth : 0,
-    renderColor: colorForSample(sample),
-    profile: context.profile || null,
-    texture: context.texture || null,
-    groundZeroParentOnly: true,
-    downstreamChildrenActive: false,
+
+    u: point.u,
+    v: point.v,
+    lon: point.lon,
+    lat: point.lat,
+
+    terrain,
+
+    isLand: terrain.isLand === true,
+    isWater: terrain.isWater === true,
+
+    landBodyCount: terrain.landBodyCount,
+    landBodyId: terrain.landBodyId,
+    landBodyKey: terrain.landBodyKey,
+    landBodyName: terrain.landBodyName,
+
+    summitRegionId: terrain.summitRegionId,
+    summitRegionKey: terrain.summitRegionKey,
+    summitRegionName: terrain.summitRegionName,
+    coherenceThreshold: terrain.coherenceThreshold,
+    summitAccessStrength: terrain.summitAccessStrength,
+    summitExpressionWeight: terrain.summitExpressionWeight,
+
+    elevation: terrain.normalizedElevation,
+    elevationMeters: terrain.elevationMeters,
+    oceanDepth: terrain.isWater ? Math.abs(terrain.normalizedElevation || 0) : 0,
+    ridge: terrain.ridge,
+    basin: terrain.basin,
+    slope: terrain.slope,
+    coastPressure: terrain.coastPressure,
+    shelfPermission: terrain.shelfPermission,
+    dryInteriorPressure: terrain.dryInteriorPressure,
+    polarSeat: terrain.polarSeat,
+    horizontalMainlandContinuity: terrain.horizontalMainlandContinuity,
+
+    renderColor: color,
+
+    terrainChildActive: true,
+    terrainChildPath: TERRAIN_CHILD_PATH,
+    parentConsumesTerrain: true,
+    groundZeroParentOnly: false,
+    downstreamChildrenActive: true,
+    activeDownstreamChildren: Object.freeze(["terrain"]),
+
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    generationPassClaimed: false
   });
 }
 
 export function renderSurface(canvas, options = {}) {
   if (!canvas || typeof canvas.getContext !== "function") {
-    throw new Error("AUDRALIA_GROUND_ZERO_CANVAS_REQUIRED");
+    throw new Error("AUDRALIA_G1_TERRAIN_ACTIVE_CANVAS_REQUIRED");
   }
 
   const profile = options.profile || createProfile(options);
@@ -359,8 +323,14 @@ export function renderSurface(canvas, options = {}) {
       const u = ((0.5 + Math.atan2(nx, nz) / (Math.PI * 2) + longitudeShift) % 1 + 1) % 1;
       const v = clamp(0.5 + Math.asin(ny) / Math.PI, 0, 1);
 
-      const surface = sampleSurface(u, v, { profile, texture });
-      const litColor = applyLighting(surface.renderColor, nx, ny, nz, surface);
+      const surface = sampleSurface(u, v, {
+        coherenceIndex: Number.isFinite(Number(options.coherenceIndex)) ? options.coherenceIndex : 0.92,
+        collaborativeExpression: Number.isFinite(Number(options.collaborativeExpression)) ? options.collaborativeExpression : 0.88,
+        profile,
+        texture
+      });
+
+      const litColor = applyLighting(surface.renderColor, nx, ny, nz, surface.terrain);
 
       ctx.fillStyle = toRgb(litColor);
       ctx.fillRect(px, py, pixelStep + 0.35, pixelStep + 0.35);
@@ -403,12 +373,22 @@ export function renderSurface(canvas, options = {}) {
     planetaryObject: PLANETARY_OBJECT,
     generation: GENERATION,
     file: FILE,
-    groundZeroParentOnly: true,
-    downstreamChildrenActive: false,
+
+    terrainChildActive: true,
+    terrainChildPath: TERRAIN_CHILD_PATH,
+    parentConsumesTerrain: true,
+    groundZeroParentOnly: false,
+    downstreamChildrenActive: true,
+    activeDownstreamChildren: Object.freeze(["terrain"]),
+    activeDownstreamPaths: Object.freeze([TERRAIN_CHILD_PATH]),
+
+    terrainStats: texture && texture.terrainField ? texture.terrainField.stats : null,
+
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+    generationPassClaimed: false
   });
 }
 
@@ -421,20 +401,31 @@ export function renderPlanet(canvas, options = {}) {
 }
 
 export function getStatus() {
+  const terrainStatus = getTerrainStatus();
+
   return Object.freeze({
     ok: true,
     receipt: RECEIPT,
     status: "active",
-    id: "audralia-ground-zero-g1-parent-render",
+    id: "audralia-g1-parent-terrain-active-compositor",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
     generation: GENERATION,
     generationClaimed: true,
     file: FILE,
-    role: "ground-zero-g1-parent-renderer",
+    role: "parent-terrain-active-compositor",
     authority: FILE,
-    groundZeroParentOnly: true,
-    downstreamChildrenActive: false,
+
+    groundZeroParentOnly: false,
+    downstreamChildrenActive: true,
+    activeDownstreamChildren: Object.freeze(["terrain"]),
+    activeDownstreamPaths: Object.freeze([TERRAIN_CHILD_PATH]),
+
+    terrainChildActive: true,
+    terrainChildPath: TERRAIN_CHILD_PATH,
+    parentConsumesTerrain: true,
+    terrainStatus,
+
     exports: Object.freeze([
       "createProfile",
       "buildTexture",
@@ -444,6 +435,7 @@ export function getStatus() {
       "renderPlanet",
       "getStatus"
     ]),
+
     staticImageReplacement: false,
     imageGeneration: false,
     graphicBox: false,

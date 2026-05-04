@@ -4,10 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Gauges · Diamond Gate Bridge</title>
+
   <meta
     name="description"
-    content="Live gauges for the Showroom Globe route, Earth G4 candidate discipline, and Audralia G1 through G4 generation readiness."
+    content="Single live Gauges page for the Showroom Globe route, Earth G4 candidate discipline, and Audralia Generation 1 through Generation 4 measurement."
   />
 
   <style>
@@ -25,7 +27,9 @@
       --held: #9fc5ff;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -37,7 +41,9 @@
       overflow-x: hidden;
     }
 
-    a { color: #bad7ff; }
+    a {
+      color: #bad7ff;
+    }
 
     .skip-link {
       position: absolute;
@@ -45,20 +51,25 @@
       top: 0.75rem;
       transform: translateY(-140%);
       background: #07111f;
-      color: #fff;
+      color: #ffffff;
       padding: 0.55rem 0.8rem;
       border-radius: 0.7rem;
       z-index: 20;
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
-    header, main {
+    header,
+    main {
       width: min(1160px, 92vw);
       margin: 0 auto;
     }
 
-    header { padding: 1rem 0 0.25rem; }
+    header {
+      padding: 1rem 0 0.25rem;
+    }
 
     .brand {
       font-weight: 850;
@@ -72,7 +83,9 @@
       margin-top: 0.5rem;
     }
 
-    main { padding: 2rem 0 4rem; }
+    main {
+      padding: 2rem 0 4rem;
+    }
 
     .eyebrow {
       color: var(--muted);
@@ -108,7 +121,7 @@
     button {
       border: 1px solid rgba(180, 210, 250, 0.24);
       background: linear-gradient(180deg, rgba(58, 102, 166, 0.36), rgba(10, 22, 42, 0.88));
-      color: #fff;
+      color: #ffffff;
       font: inherit;
       font-weight: 800;
       border-radius: 999px;
@@ -126,7 +139,8 @@
     .hero,
     .panel,
     .generation-card,
-    .gauge-card {
+    .gauge-card,
+    .summary-card {
       border: 1px solid var(--line);
       background:
         radial-gradient(circle at 20% 0%, rgba(74, 126, 196, 0.16), transparent 36%),
@@ -151,9 +165,7 @@
 
     .summary-card,
     .generation-card {
-      border: 1px solid var(--line);
       background: rgba(0, 0, 0, 0.22);
-      border-radius: 1rem;
       padding: 1rem;
     }
 
@@ -230,10 +242,25 @@
       border: 1px solid rgba(255, 255, 255, 0.16);
     }
 
-    .pass { color: var(--pass); background: rgba(34, 168, 101, 0.12); }
-    .fail { color: var(--fail); background: rgba(190, 49, 49, 0.14); }
-    .warn { color: var(--warn); background: rgba(210, 146, 33, 0.13); }
-    .held { color: var(--held); background: rgba(65, 126, 220, 0.14); }
+    .pass {
+      color: var(--pass);
+      background: rgba(34, 168, 101, 0.12);
+    }
+
+    .fail {
+      color: var(--fail);
+      background: rgba(190, 49, 49, 0.14);
+    }
+
+    .warn {
+      color: var(--warn);
+      background: rgba(210, 146, 33, 0.13);
+    }
+
+    .held {
+      color: var(--held);
+      background: rgba(65, 126, 220, 0.14);
+    }
 
     .kv {
       display: grid;
@@ -247,7 +274,9 @@
       overflow-wrap: anywhere;
     }
 
-    .kv div:nth-child(odd) { color: var(--muted); }
+    .kv div:nth-child(odd) {
+      color: var(--muted);
+    }
 
     pre {
       margin: 0.85rem 0 0;
@@ -262,14 +291,20 @@
       padding: 0.85rem;
     }
 
-    canvas.audit-proof { display: none; }
+    canvas.audit-proof {
+      display: none;
+    }
 
     @media (min-width: 900px) {
-      .gauge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gauge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 620px) {
-      .kv { grid-template-columns: 1fr; }
+      .kv {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -292,13 +327,12 @@
 
   <main id="main" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Gauges · Showroom Globe Live Audit</p>
-      <h1 id="page-title">Render Chain and Generation Audit</h1>
+      <p class="eyebrow">Gauges · Single Route · Generation 1–4 Measurement</p>
+      <h1 id="page-title">Showroom Globe Audit</h1>
 
       <p>
-        This is the only Gauges page. It audits the live Showroom Globe route, Earth G4 candidate
-        discipline, and Audralia generation readiness. Generation achievement comes from these gauges,
-        not from labels.
+        This is the only Gauges page. It audits the live Showroom Globe route, Earth G4 candidate discipline,
+        and Audralia generation readiness. Generation achievement comes from these tests, not from labels.
       </p>
 
       <div class="summary-grid" aria-label="Audit summary">
@@ -322,14 +356,12 @@
     </section>
 
     <section class="panel" aria-labelledby="criteria-title">
-      <h2 id="criteria-title">Current Criteria</h2>
+      <h2 id="criteria-title">Measurement Standard</h2>
       <ul class="goal-list">
-        <li>Showroom Globe must load as HTML, not raw JavaScript.</li>
-        <li>Earth must render but remain G4_CANDIDATE. Earth Generation 4 remains held.</li>
-        <li>Audralia must import from /assets/audralia/audralia.planet.render.js only.</li>
-        <li>Audralia G1 requires parent render proof plus terrain child proof.</li>
-        <li>Terrain must prove seven land bodies and nine summit terrain regions.</li>
-        <li>G2, G3, and G4 remain held until their source and visual conditions are actually met.</li>
+        <li>G1 measures route, controller, parent render, terrain child, seven land bodies, Nine Summits terrain regions, and parent terrain consumption.</li>
+        <li>G2 measures G1 pass, hydration child, climate child, and parent consumption of hydration plus climate.</li>
+        <li>G3 measures G2 pass, ecology child, fauna child, living-world runtime, and parent consumption of all three.</li>
+        <li>G4 measures G3 pass, orbital visual readiness, non-empty render, color diversity, land/water contrast, and screenshot confirmation receipt.</li>
       </ul>
     </section>
 
@@ -353,15 +385,15 @@
       <pre id="rawLog">No log yet.</pre>
     </section>
 
-    <canvas id="earthProofCanvas" class="audit-proof" width="256" height="256"></canvas>
-    <canvas id="audraliaProofCanvas" class="audit-proof" width="256" height="256"></canvas>
+    <canvas id="earthProofCanvas" class="audit-proof" width="320" height="320"></canvas>
+    <canvas id="audraliaProofCanvas" class="audit-proof" width="320" height="320"></canvas>
   </main>
 
   <script>
     (function initGauges() {
       "use strict";
 
-      const RECEIPT = "GAUGES_SHOWROOM_GLOBE_GENERATION_AUDIT_TNT_v1";
+      const RECEIPT = "GAUGES_SHOWROOM_GLOBE_G1_TO_G4_MEASUREMENT_TNT_v2";
 
       const ROUTE = "/showroom/globe/";
       const INDEX_JS = "/showroom/globe/index.js";
@@ -383,7 +415,29 @@
       const state = {
         gauges: [],
         log: [],
-        generation: { G1: "HELD", G2: "HELD", G3: "HELD", G4: "HELD" }
+        generation: { G1: "HELD", G2: "HELD", G3: "HELD", G4: "HELD" },
+        facts: {
+          routeOk: false,
+          controllerOk: false,
+          earthOk: false,
+          parentOk: false,
+          parentRenderOk: false,
+          terrainOk: false,
+          terrainStatsOk: false,
+          terrainConsumed: false,
+          hydrationOk: false,
+          climateOk: false,
+          hydrationClimateConsumed: false,
+          ecologyOk: false,
+          faunaOk: false,
+          runtimeOk: false,
+          ecologyFaunaRuntimeConsumed: false,
+          orbitalReady: false,
+          g4PixelProof: false,
+          g4ColorDiversity: false,
+          g4LandWaterContrast: false,
+          screenshotConfirmed: false
+        }
       };
 
       const nodes = {
@@ -443,6 +497,14 @@
         return gauge;
       }
 
+      function passGauge(id, generation, title, passed, test, details, raw) {
+        return makeGauge(id, generation, title, passed ? "PASS" : "FAIL", test, details, raw);
+      }
+
+      function heldGauge(id, generation, title, test, details, raw) {
+        return makeGauge(id, generation, title, "HELD", test, details, raw);
+      }
+
       async function fetchText(url) {
         const response = await fetch(bust(url), { cache: "no-store" });
         const text = await response.text();
@@ -494,32 +556,77 @@
       function hasNonTransparentPixel(canvas) {
         const context = canvas.getContext("2d");
         const image = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
         for (let i = 3; i < image.length; i += 4) {
           if (image[i] > 0) return true;
         }
+
         return false;
+      }
+
+      function measureCanvas(canvas) {
+        const ctx = canvas.getContext("2d");
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        let opaque = 0;
+        let minLum = 255;
+        let maxLum = 0;
+        const bucket = new Set();
+
+        for (let i = 0; i < data.length; i += 4) {
+          const a = data[i + 3];
+          if (a <= 0) continue;
+
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const lum = Math.round((r * 0.2126) + (g * 0.7152) + (b * 0.0722));
+
+          opaque += 1;
+          minLum = Math.min(minLum, lum);
+          maxLum = Math.max(maxLum, lum);
+
+          if (opaque % 9 === 0) {
+            bucket.add(`${Math.round(r / 24)}:${Math.round(g / 24)}:${Math.round(b / 24)}`);
+          }
+        }
+
+        const colorDiversity = bucket.size;
+        const contrast = maxLum - minLum;
+
+        return {
+          opaquePixels: opaque,
+          colorDiversity,
+          contrast,
+          pixelProof: opaque > 0,
+          colorDiversityPass: colorDiversity >= 24,
+          contrastPass: contrast >= 60
+        };
       }
 
       function renderProof(api, canvas, options) {
         if (!api) return { rendered: false, method: "none", pixelProof: false, error: "api missing" };
 
         try {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
           const profile = typeof api.createProfile === "function" ? api.createProfile(options || {}) : undefined;
           const texture = typeof api.buildTexture === "function" ? api.buildTexture(profile) : undefined;
 
           if (typeof api.renderSurface === "function") {
             api.renderSurface(canvas, Object.assign({}, options || {}, { profile, texture }));
-            return { rendered: true, method: "renderSurface", pixelProof: hasNonTransparentPixel(canvas) };
+            return Object.assign({ rendered: true, method: "renderSurface" }, measureCanvas(canvas));
           }
 
           if (typeof api.render === "function") {
             api.render(canvas, options || {});
-            return { rendered: true, method: "render", pixelProof: hasNonTransparentPixel(canvas) };
+            return Object.assign({ rendered: true, method: "render" }, measureCanvas(canvas));
           }
 
           if (typeof api.renderPlanet === "function") {
             api.renderPlanet(canvas, options || {});
-            return { rendered: true, method: "renderPlanet", pixelProof: hasNonTransparentPixel(canvas) };
+            return Object.assign({ rendered: true, method: "renderPlanet" }, measureCanvas(canvas));
           }
 
           return { rendered: false, method: "missing", pixelProof: false, error: "No compatible render API." };
@@ -543,6 +650,27 @@
           `Planet${LEGACY_TOKEN}`
         ];
         return candidates.filter((token) => text.includes(token));
+      }
+
+      function includesAny(list, targets) {
+        if (!Array.isArray(list)) return false;
+        return targets.every((target) => list.includes(target));
+      }
+
+      function parentConsumes(parentStatus, names, paths) {
+        const children = Array.isArray(parentStatus.activeDownstreamChildren)
+          ? parentStatus.activeDownstreamChildren
+          : [];
+
+        const pathsList = Array.isArray(parentStatus.activeDownstreamPaths)
+          ? parentStatus.activeDownstreamPaths
+          : [];
+
+        const named = includesAny(children, names);
+        const pathed = paths.every((path) => pathsList.includes(path));
+        const legacyFlags = names.every((name) => parentStatus[`${name}ChildActive`] === true);
+
+        return named || pathed || legacyFlags;
       }
 
       function renderGauge(gauge) {
@@ -572,19 +700,56 @@
         `;
       }
 
-      function updateGenerationStatus() {
-        function pass(gen) {
-          const gauges = state.gauges.filter((g) => g.generation === gen);
-          return gauges.length > 0 && gauges.every((g) => g.status === "PASS");
-        }
+      function computeGenerationStatus() {
+        const f = state.facts;
 
-        function fail(gen) {
-          return state.gauges.some((g) => g.generation === gen && g.status === "FAIL");
-        }
+        const g1 =
+          f.routeOk &&
+          f.controllerOk &&
+          f.earthOk &&
+          f.parentOk &&
+          f.parentRenderOk &&
+          f.terrainOk &&
+          f.terrainStatsOk &&
+          f.terrainConsumed;
 
-        ["G1", "G2", "G3", "G4"].forEach((gen) => {
-          state.generation[gen] = pass(gen) ? "PASS" : fail(gen) ? "FAIL" : "HELD";
-        });
+        const g2 =
+          g1 &&
+          f.hydrationOk &&
+          f.climateOk &&
+          f.hydrationClimateConsumed;
+
+        const g3 =
+          g2 &&
+          f.ecologyOk &&
+          f.faunaOk &&
+          f.runtimeOk &&
+          f.ecologyFaunaRuntimeConsumed;
+
+        const g4 =
+          g3 &&
+          f.orbitalReady &&
+          f.g4PixelProof &&
+          f.g4ColorDiversity &&
+          f.g4LandWaterContrast &&
+          f.screenshotConfirmed;
+
+        state.generation.G1 = g1 ? "PASS" : state.gauges.some((g) => g.generation === "G1" && g.status === "FAIL") ? "FAIL" : "HELD";
+        state.generation.G2 = g2 ? "PASS" : "HELD";
+        state.generation.G3 = g3 ? "PASS" : "HELD";
+        state.generation.G4 = g4 ? "PASS" : "HELD";
+      }
+
+      function renderAll() {
+        const counts = { PASS: 0, FAIL: 0, WARN: 0, HELD: 0 };
+        state.gauges.forEach((g) => { counts[g.status] = (counts[g.status] || 0) + 1; });
+
+        computeGenerationStatus();
+
+        nodes.passCount.textContent = String(counts.PASS || 0);
+        nodes.failCount.textContent = String(counts.FAIL || 0);
+        nodes.warnCount.textContent = String(counts.WARN || 0);
+        nodes.heldCount.textContent = String(counts.HELD || 0);
 
         nodes.g1Status.textContent = state.generation.G1;
         nodes.g2Status.textContent = state.generation.G2;
@@ -595,18 +760,6 @@
         nodes.g2Status.className = state.generation.G2.toLowerCase();
         nodes.g3Status.className = state.generation.G3.toLowerCase();
         nodes.g4Status.className = state.generation.G4.toLowerCase();
-      }
-
-      function renderAll() {
-        const counts = { PASS: 0, FAIL: 0, WARN: 0, HELD: 0 };
-        state.gauges.forEach((g) => { counts[g.status] = (counts[g.status] || 0) + 1; });
-
-        nodes.passCount.textContent = String(counts.PASS || 0);
-        nodes.failCount.textContent = String(counts.FAIL || 0);
-        nodes.warnCount.textContent = String(counts.WARN || 0);
-        nodes.heldCount.textContent = String(counts.HELD || 0);
-
-        updateGenerationStatus();
 
         nodes.gaugeGrid.innerHTML = state.gauges
           .slice()
@@ -633,23 +786,42 @@
           `G3=${state.generation.G3}`,
           `G4=${state.generation.G4}`,
           "",
-          state.generation.G1 === "PASS"
-            ? "G1_RESULT=Audralia parent + terrain proof passed."
-            : "G1_RESULT=Held or failed until parent + terrain proof passes.",
-          state.generation.G2 === "PASS"
-            ? "G2_RESULT=Hydration + climate proof passed."
-            : "G2_RESULT=Held until hydration + climate exist, import, and are consumed.",
-          state.generation.G3 === "PASS"
-            ? "G3_RESULT=Ecology + fauna + runtime proof passed."
-            : "G3_RESULT=Held until ecology + fauna + runtime exist, import, and are consumed.",
-          state.generation.G4 === "PASS"
-            ? "G4_RESULT=Orbital visual standard passed."
-            : "G4_RESULT=Held until orbital visual standard is proven."
+          `G1_FACTS=${JSON.stringify({
+            routeOk: state.facts.routeOk,
+            controllerOk: state.facts.controllerOk,
+            earthOk: state.facts.earthOk,
+            parentOk: state.facts.parentOk,
+            parentRenderOk: state.facts.parentRenderOk,
+            terrainOk: state.facts.terrainOk,
+            terrainStatsOk: state.facts.terrainStatsOk,
+            terrainConsumed: state.facts.terrainConsumed
+          })}`,
+          `G2_FACTS=${JSON.stringify({
+            hydrationOk: state.facts.hydrationOk,
+            climateOk: state.facts.climateOk,
+            hydrationClimateConsumed: state.facts.hydrationClimateConsumed
+          })}`,
+          `G3_FACTS=${JSON.stringify({
+            ecologyOk: state.facts.ecologyOk,
+            faunaOk: state.facts.faunaOk,
+            runtimeOk: state.facts.runtimeOk,
+            ecologyFaunaRuntimeConsumed: state.facts.ecologyFaunaRuntimeConsumed
+          })}`,
+          `G4_FACTS=${JSON.stringify({
+            orbitalReady: state.facts.orbitalReady,
+            g4PixelProof: state.facts.g4PixelProof,
+            g4ColorDiversity: state.facts.g4ColorDiversity,
+            g4LandWaterContrast: state.facts.g4LandWaterContrast,
+            screenshotConfirmed: state.facts.screenshotConfirmed
+          })}`,
+          "",
+          "RULE=GENERATION_STATUS_IS_GAUGE_DETERMINED_ONLY",
+          "VISUAL_PASS=HELD_UNTIL_GAUGE_AND_SCREENSHOT_PROOF"
         ].join("\n");
 
         const lines = [
           `RECEIPT=${RECEIPT}`,
-          `STATUS=GAUGES_PAGE_AUDITS_SHOWROOM_GLOBE`,
+          `STATUS=GAUGES_PAGE_AUDITS_SHOWROOM_GLOBE_ONLY`,
           ""
         ];
 
@@ -678,37 +850,74 @@
         const oldBridgeInRoute = route.text.includes(OLD_BRIDGE);
         const forbidden = scanForbiddenLegacy(route.text);
 
-        makeGauge("route-shell", "G1", "Route Shell", route.ok && hasHtml && !rawJsVisible ? "PASS" : "FAIL",
+        state.facts.routeOk = route.ok && hasHtml && !rawJsVisible && hasAudraliaParent && !oldBridgeInRoute && forbidden.length === 0;
+
+        passGauge(
+          "route-shell",
+          "G1",
+          "Route Shell",
+          route.ok && hasHtml && !rawJsVisible,
           "Showroom Globe route must load as HTML, not raw JavaScript.",
-          { "Route OK": boolText(route.ok), "HTML Detected": boolText(hasHtml), "Raw JS Visible": boolText(rawJsVisible), Status: route.status });
+          { "Route OK": boolText(route.ok), "HTML Detected": boolText(hasHtml), "Raw JS Visible": boolText(rawJsVisible), Status: route.status }
+        );
 
-        makeGauge("route-audralia-parent-path", "G1", "Route Audralia Parent Path", hasAudraliaParent && !oldBridgeInRoute ? "PASS" : "FAIL",
+        passGauge(
+          "route-audralia-parent-path",
+          "G1",
+          "Route Audralia Parent Path",
+          hasAudraliaParent && !oldBridgeInRoute,
           "Showroom must reference the canonical Audralia parent path and not the old bridge.",
-          { "Parent Path": boolText(hasAudraliaParent), "Old Bridge Present": boolText(oldBridgeInRoute), Expected: MODULES.audraliaParent });
+          { "Parent Path": boolText(hasAudraliaParent), "Old Bridge Present": boolText(oldBridgeInRoute), Expected: MODULES.audraliaParent }
+        );
 
-        makeGauge("route-forbidden-token-scan", "G1", "Forbidden Token Scan", forbidden.length === 0 ? "PASS" : "FAIL",
+        passGauge(
+          "route-forbidden-token-scan",
+          "G1",
+          "Forbidden Token Scan",
+          forbidden.length === 0,
           "Route must not contain forbidden identity bridge labels.",
-          { "Forbidden Hits": forbidden.length, Hits: forbidden.join(", ") || "none" });
+          { "Forbidden Hits": forbidden.length, Hits: forbidden.join(", ") || "none" }
+        );
 
         const index = await fetchText(INDEX_JS);
         log(`Fetched index: status=${index.status}, chars=${index.text.length}.`);
 
-        const hasControllerReceipt = index.text.includes("EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1");
+        const knownController =
+          index.text.includes("EARTH_CANDIDATE_AUDRALIA_GROUND_ZERO_G1_CONTROLLER_TNT_v1") ||
+          index.text.includes("SHOWROOM_GLOBE_EMBEDDED_GENERATION_GAUGES_TNT_v1");
+
         const hasParentImport = index.text.includes(MODULES.audraliaParent);
         const oldBridgeInIndex = index.text.includes(OLD_BRIDGE);
         const noCrossBody = index.text.includes("NO_CROSS_BODY_FALLBACK");
 
-        makeGauge("controller-version", "G1", "Controller Version", index.ok && hasControllerReceipt ? "PASS" : "FAIL",
-          "Controller must be the ground-zero Showroom Globe controller.",
-          { "Index OK": boolText(index.ok), "Ground Zero Controller": boolText(hasControllerReceipt), Status: index.status });
+        state.facts.controllerOk = index.ok && knownController && hasParentImport && !oldBridgeInIndex;
 
-        makeGauge("controller-parent-authority", "G1", "Controller Audralia Authority", hasParentImport && !oldBridgeInIndex ? "PASS" : "FAIL",
+        passGauge(
+          "controller-version",
+          "G1",
+          "Controller Version",
+          index.ok && knownController,
+          "Controller must be a known Showroom Globe controller.",
+          { "Index OK": boolText(index.ok), "Known Controller": boolText(knownController), Status: index.status }
+        );
+
+        passGauge(
+          "controller-parent-authority",
+          "G1",
+          "Controller Audralia Authority",
+          hasParentImport && !oldBridgeInIndex,
           "Controller must import Audralia only from the canonical parent path.",
-          { "Parent Import": boolText(hasParentImport), "Old Bridge Present": boolText(oldBridgeInIndex) });
+          { "Parent Import": boolText(hasParentImport), "Old Bridge Present": boolText(oldBridgeInIndex) }
+        );
 
-        makeGauge("controller-no-cross-body", "G1", "No Cross-Body Fallback", noCrossBody ? "PASS" : "WARN",
+        makeGauge(
+          "controller-no-cross-body",
+          "G1",
+          "No Cross-Body Fallback",
+          noCrossBody ? "PASS" : "WARN",
           "Controller should explicitly block Earth/Audralia renderer adoption.",
-          { "No Cross Body Fallback": boolText(noCrossBody) });
+          { "No Cross Body Fallback": boolText(noCrossBody) }
+        );
       }
 
       async function auditEarth() {
@@ -716,9 +925,15 @@
         log(`Earth import: ok=${imported.ok}.`);
 
         if (!imported.ok) {
-          makeGauge("earth-import", "G1", "Earth Candidate Import", "FAIL",
+          state.facts.earthOk = false;
+          passGauge(
+            "earth-import",
+            "G1",
+            "Earth Candidate Import",
+            false,
             "Earth candidate renderer must import.",
-            { Path: MODULES.earth, Error: imported.error });
+            { Path: MODULES.earth, Error: imported.error }
+          );
           return;
         }
 
@@ -736,14 +951,35 @@
           status.generationClaimed === false &&
           status.targetStandard === "ORBITAL_EARTH_G4_REFERENCE";
 
-        makeGauge("earth-claim-discipline", "G1", "Earth G4 Claim Discipline", claimSafe ? "PASS" : "FAIL",
-          "Earth must render only as G4_CANDIDATE. No Generation 4 completion claim.",
-          { "Generation Status": status.generationStatus || status.generation || "missing", "Generation Claimed": boolText(status.generationClaimed), "Target Standard": status.targetStandard || "missing" },
-          JSON.stringify(status, null, 2));
+        state.facts.earthOk = imported.ok && claimSafe && render.rendered && render.pixelProof;
 
-        makeGauge("earth-render-proof", "G1", "Earth Render Proof", render.rendered && render.pixelProof ? "PASS" : "FAIL",
+        passGauge(
+          "earth-claim-discipline",
+          "G1",
+          "Earth G4 Claim Discipline",
+          claimSafe,
+          "Earth must render only as G4_CANDIDATE. No Generation 4 completion claim.",
+          {
+            "Generation Status": status.generationStatus || status.generation || "missing",
+            "Generation Claimed": boolText(status.generationClaimed),
+            "Target Standard": status.targetStandard || "missing"
+          },
+          JSON.stringify(status, null, 2)
+        );
+
+        passGauge(
+          "earth-render-proof",
+          "G1",
+          "Earth Render Proof",
+          render.rendered && render.pixelProof,
           "Earth module must render non-empty canvas output.",
-          { Rendered: boolText(render.rendered), Method: render.method, "Pixel Proof": boolText(render.pixelProof), Error: render.error || "none" });
+          {
+            Rendered: boolText(render.rendered),
+            Method: render.method,
+            "Pixel Proof": boolText(render.pixelProof),
+            Error: render.error || "none"
+          }
+        );
       }
 
       async function auditAudraliaParentAndTerrain() {
@@ -751,10 +987,16 @@
         log(`Audralia parent import: ok=${parentImport.ok}.`);
 
         if (!parentImport.ok) {
-          makeGauge("audralia-parent-import", "G1", "Audralia Parent Import", "FAIL",
+          state.facts.parentOk = false;
+          passGauge(
+            "audralia-parent-import",
+            "G1",
+            "Audralia Parent Import",
+            false,
             "Audralia parent renderer must import from canonical path.",
-            { Path: MODULES.audraliaParent, Error: parentImport.error });
-          return;
+            { Path: MODULES.audraliaParent, Error: parentImport.error }
+          );
+          return { parentStatus: {}, parentApi: null };
         }
 
         const parentApi = getApi(parentImport.module);
@@ -765,32 +1007,70 @@
           generationClaimed: true
         });
 
-        makeGauge("audralia-parent-import", "G1", "Audralia Parent Import", parentStatus.ok !== false ? "PASS" : "FAIL",
+        state.facts.parentOk = parentImport.ok && parentStatus.ok !== false;
+        state.facts.parentRenderOk = parentRender.rendered && parentRender.pixelProof;
+
+        passGauge(
+          "audralia-parent-import",
+          "G1",
+          "Audralia Parent Import",
+          state.facts.parentOk,
           "Audralia parent renderer must import and expose status.",
           { Path: MODULES.audraliaParent, Receipt: parentStatus.receipt || "none", File: parentStatus.file || "missing" },
-          JSON.stringify(parentStatus, null, 2));
+          JSON.stringify(parentStatus, null, 2)
+        );
 
-        makeGauge("audralia-parent-render", "G1", "Audralia Parent Render Proof", parentRender.rendered && parentRender.pixelProof ? "PASS" : "FAIL",
+        passGauge(
+          "audralia-parent-render",
+          "G1",
+          "Audralia Parent Render Proof",
+          state.facts.parentRenderOk,
           "Audralia parent must render non-empty canvas output.",
-          { Rendered: boolText(parentRender.rendered), Method: parentRender.method, "Pixel Proof": boolText(parentRender.pixelProof), Error: parentRender.error || "none" });
+          {
+            Rendered: boolText(parentRender.rendered),
+            Method: parentRender.method,
+            "Pixel Proof": boolText(parentRender.pixelProof),
+            "Color Diversity": parentRender.colorDiversity || 0,
+            Contrast: parentRender.contrast || 0,
+            Error: parentRender.error || "none"
+          }
+        );
 
         const terrainImport = await importModule(MODULES.terrain);
         log(`Terrain import: ok=${terrainImport.ok}.`);
 
         if (!terrainImport.ok) {
-          makeGauge("terrain-import", "G1", "Terrain Child Import", "FAIL",
+          state.facts.terrainOk = false;
+          passGauge(
+            "terrain-import",
+            "G1",
+            "Terrain Child Import",
+            false,
             "Terrain child must import from canonical path.",
-            { Path: MODULES.terrain, Error: terrainImport.error });
-          return;
+            { Path: MODULES.terrain, Error: terrainImport.error }
+          );
+          return { parentStatus, parentApi };
         }
 
         const terrainApi = getApi(terrainImport.module);
         const terrainStatus = callStatus(terrainApi, "getTerrainStatus");
 
-        makeGauge("terrain-import", "G1", "Terrain Child Import", terrainStatus.ok !== false ? "PASS" : "FAIL",
+        state.facts.terrainOk = terrainImport.ok && terrainStatus.ok !== false;
+
+        passGauge(
+          "terrain-import",
+          "G1",
+          "Terrain Child Import",
+          state.facts.terrainOk,
           "Terrain child must import and expose terrain status.",
-          { Path: MODULES.terrain, Receipt: terrainStatus.receipt || "none", File: terrainStatus.file || "missing", "Terrain Child": boolText(terrainStatus.terrainChild) },
-          JSON.stringify(terrainStatus, null, 2));
+          {
+            Path: MODULES.terrain,
+            Receipt: terrainStatus.receipt || "none",
+            File: terrainStatus.file || "missing",
+            "Terrain Child": boolText(terrainStatus.terrainChild)
+          },
+          JSON.stringify(terrainStatus, null, 2)
+        );
 
         let field = null;
         let fieldError = null;
@@ -804,30 +1084,69 @@
         }
 
         const stats = field && field.stats ? field.stats : null;
-        const sevenBodies = stats && stats.expectedLandBodyCount === 7 && stats.activeLandBodyCount === 7;
-        const nineSummits = stats && stats.expectedSummitRegionCount === 9 && stats.activeSummitRegionCount === 9;
-        const primaryMainland = stats && stats.primaryMainlandSampleRatio > 0.18 && stats.primaryHorizontalContinuityAverage > 0.38;
+        const sevenBodies = !!stats && stats.expectedLandBodyCount === 7 && stats.activeLandBodyCount === 7;
+        const nineSummits = !!stats && stats.expectedSummitRegionCount === 9 && stats.activeSummitRegionCount === 9;
+        const primaryMainland = !!stats && stats.primaryMainlandSampleRatio > 0.18 && stats.primaryHorizontalContinuityAverage > 0.38;
 
-        makeGauge("terrain-seven-bodies", "G1", "Seven Land Bodies", sevenBodies ? "PASS" : "FAIL",
+        state.facts.terrainStatsOk = sevenBodies && nineSummits && primaryMainland;
+        state.facts.terrainConsumed = parentConsumes(parentStatus, ["terrain"], [MODULES.terrain]);
+
+        passGauge(
+          "terrain-seven-bodies",
+          "G1",
+          "Seven Land Bodies",
+          sevenBodies,
           "Terrain must prove exactly seven active land bodies.",
-          { Expected: stats ? stats.expectedLandBodyCount : "missing", Active: stats ? stats.activeLandBodyCount : "missing", Bodies: stats ? stats.activeLandBodies.join(",") : "missing", Error: fieldError || "none" });
+          {
+            Expected: stats ? stats.expectedLandBodyCount : "missing",
+            Active: stats ? stats.activeLandBodyCount : "missing",
+            Bodies: stats ? stats.activeLandBodies.join(",") : "missing",
+            Error: fieldError || "none"
+          }
+        );
 
-        makeGauge("terrain-nine-summits", "G1", "Nine Summit Regions", nineSummits ? "PASS" : "FAIL",
+        passGauge(
+          "terrain-nine-summits",
+          "G1",
+          "Nine Summit Regions",
+          nineSummits,
           "Terrain must prove nine active summit terrain regions.",
-          { Expected: stats ? stats.expectedSummitRegionCount : "missing", Active: stats ? stats.activeSummitRegionCount : "missing", Regions: stats ? stats.activeSummitRegions.join(",") : "missing", Error: fieldError || "none" });
+          {
+            Expected: stats ? stats.expectedSummitRegionCount : "missing",
+            Active: stats ? stats.activeSummitRegionCount : "missing",
+            Regions: stats ? stats.activeSummitRegions.join(",") : "missing",
+            Error: fieldError || "none"
+          }
+        );
 
-        makeGauge("terrain-primary-mainland", "G1", "Primary East-West Mainland", primaryMainland ? "PASS" : "FAIL",
+        passGauge(
+          "terrain-primary-mainland",
+          "G1",
+          "Primary East-West Mainland",
+          primaryMainland,
           "Primary land body must be materially present and horizontally continuous.",
-          { "Primary Sample Ratio": stats ? stats.primaryMainlandSampleRatio : "missing", "Continuity Average": stats ? stats.primaryHorizontalContinuityAverage : "missing", Error: fieldError || "none" });
+          {
+            "Primary Sample Ratio": stats ? stats.primaryMainlandSampleRatio : "missing",
+            "Continuity Average": stats ? stats.primaryHorizontalContinuityAverage : "missing",
+            Error: fieldError || "none"
+          }
+        );
 
-        const parentConsumesTerrain =
-          parentStatus.terrainChildActive === true ||
-          (Array.isArray(parentStatus.activeDownstreamChildren) && parentStatus.activeDownstreamChildren.includes("terrain")) ||
-          (parentStatus.downstreamChildrenActive === true && parentStatus.terrainChildPath === MODULES.terrain);
-
-        makeGauge("parent-consumes-terrain", "G1", "Parent Consumes Terrain", parentConsumesTerrain ? "PASS" : "FAIL",
+        passGauge(
+          "parent-consumes-terrain",
+          "G1",
+          "Parent Consumes Terrain",
+          state.facts.terrainConsumed,
           "Parent status must prove it imports and consumes the terrain child.",
-          { terrainChildActive: boolText(parentStatus.terrainChildActive), terrainChildPath: parentStatus.terrainChildPath || "missing", activeDownstreamChildren: parentStatus.activeDownstreamChildren || "missing" });
+          {
+            terrainChildActive: boolText(parentStatus.terrainChildActive),
+            terrainChildPath: parentStatus.terrainChildPath || "missing",
+            activeDownstreamChildren: parentStatus.activeDownstreamChildren || "missing",
+            activeDownstreamPaths: parentStatus.activeDownstreamPaths || "missing"
+          }
+        );
+
+        return { parentStatus, parentApi, parentRender };
       }
 
       async function auditFutureModule(gen, key, path, statusName, title) {
@@ -835,52 +1154,273 @@
         log(`${title} import: ok=${imported.ok}.`);
 
         if (!imported.ok) {
-          makeGauge(`${key}-held`, gen, title, "HELD",
-            `${title} is not created or not active yet.`,
-            { Path: path, "Module Exists": "false", "Held Reason": "future generation layer" });
+          heldGauge(
+            `${key}-held`,
+            gen,
+            title,
+            `${title} is not created or not active yet, so ${gen} remains measurable but held.`,
+            { Path: path, "Module Exists": "false", "Held Reason": "future generation layer", Error: imported.error || "not imported" }
+          );
           return null;
         }
 
         const api = getApi(imported.module);
         const status = callStatus(api, statusName);
 
-        makeGauge(`${key}-import`, gen, title, status.ok !== false ? "PASS" : "FAIL",
+        passGauge(
+          `${key}-import`,
+          gen,
+          title,
+          status.ok !== false,
           `${title} must import and expose status before ${gen} can pass.`,
           { Path: path, Receipt: status.receipt || "none", File: status.file || "missing", "Status Available": boolText(status.statusAvailable) },
-          JSON.stringify(status, null, 2));
+          JSON.stringify(status, null, 2)
+        );
 
-        return status;
+        return status.ok !== false ? status : null;
       }
 
-      async function auditFutureGenerations() {
+      async function auditG2(parentStatus) {
         const hydration = await auditFutureModule("G2", "hydration", MODULES.hydration, "getHydrationStatus", "Hydration Child");
         const climate = await auditFutureModule("G2", "climate", MODULES.climate, "getClimateStatus", "Climate Child");
 
-        makeGauge("g2-parent-consumption", "G2", "Parent Consumes Hydration and Climate", "HELD",
-          "G2 cannot pass until parent proves hydration and climate consumption.",
-          { "Hydration Ready": boolText(!!hydration && hydration.ok !== false), "Climate Ready": boolText(!!climate && climate.ok !== false), "Parent Consumption Proof": "pending" });
+        state.facts.hydrationOk = !!hydration;
+        state.facts.climateOk = !!climate;
+        state.facts.hydrationClimateConsumed = parentConsumes(
+          parentStatus,
+          ["hydration", "climate"],
+          [MODULES.hydration, MODULES.climate]
+        );
 
+        if (state.facts.hydrationOk && state.facts.climateOk) {
+          passGauge(
+            "g2-parent-consumption",
+            "G2",
+            "Parent Consumes Hydration and Climate",
+            state.facts.hydrationClimateConsumed,
+            "G2 requires parent consumption of hydration and climate.",
+            {
+              "Hydration Ready": boolText(state.facts.hydrationOk),
+              "Climate Ready": boolText(state.facts.climateOk),
+              "Parent Consumption": boolText(state.facts.hydrationClimateConsumed)
+            }
+          );
+        } else {
+          heldGauge(
+            "g2-parent-consumption",
+            "G2",
+            "Parent Consumes Hydration and Climate",
+            "G2 remains held until hydration and climate both exist, import, and are consumed.",
+            {
+              "Hydration Ready": boolText(state.facts.hydrationOk),
+              "Climate Ready": boolText(state.facts.climateOk),
+              "Parent Consumption": boolText(state.facts.hydrationClimateConsumed)
+            }
+          );
+        }
+      }
+
+      async function auditG3(parentStatus) {
         const ecology = await auditFutureModule("G3", "ecology", MODULES.ecology, "getEcologyStatus", "Ecology Child");
         const fauna = await auditFutureModule("G3", "fauna", MODULES.fauna, "getFaunaStatus", "Fauna Child");
         const runtime = await auditFutureModule("G3", "runtime", MODULES.runtime, "getRuntimeStatus", "Living-World Runtime");
 
-        makeGauge("g3-parent-consumption", "G3", "Parent Consumes Ecology, Fauna, Runtime", "HELD",
-          "G3 cannot pass until parent proves ecology, fauna, and runtime consumption.",
-          { "Ecology Ready": boolText(!!ecology && ecology.ok !== false), "Fauna Ready": boolText(!!fauna && fauna.ok !== false), "Runtime Ready": boolText(!!runtime && runtime.ok !== false), "Parent Consumption Proof": "pending" });
+        state.facts.ecologyOk = !!ecology;
+        state.facts.faunaOk = !!fauna;
+        state.facts.runtimeOk = !!runtime;
+        state.facts.ecologyFaunaRuntimeConsumed = parentConsumes(
+          parentStatus,
+          ["ecology", "fauna", "runtime"],
+          [MODULES.ecology, MODULES.fauna, MODULES.runtime]
+        );
 
-        makeGauge("g4-orbital-standard", "G4", "Orbital Visual Standard", "HELD",
-          "G4 requires explicit visual-standard proof. Source labels alone cannot pass G4.",
-          { "Screenshot Required": "true", "False Pass Claim": "forbidden", "Current Status": "held" });
+        if (state.facts.ecologyOk && state.facts.faunaOk && state.facts.runtimeOk) {
+          passGauge(
+            "g3-parent-consumption",
+            "G3",
+            "Parent Consumes Ecology, Fauna, Runtime",
+            state.facts.ecologyFaunaRuntimeConsumed,
+            "G3 requires parent consumption of ecology, fauna, and runtime.",
+            {
+              "Ecology Ready": boolText(state.facts.ecologyOk),
+              "Fauna Ready": boolText(state.facts.faunaOk),
+              "Runtime Ready": boolText(state.facts.runtimeOk),
+              "Parent Consumption": boolText(state.facts.ecologyFaunaRuntimeConsumed)
+            }
+          );
+        } else {
+          heldGauge(
+            "g3-parent-consumption",
+            "G3",
+            "Parent Consumes Ecology, Fauna, Runtime",
+            "G3 remains held until ecology, fauna, and runtime all exist, import, and are consumed.",
+            {
+              "Ecology Ready": boolText(state.facts.ecologyOk),
+              "Fauna Ready": boolText(state.facts.faunaOk),
+              "Runtime Ready": boolText(state.facts.runtimeOk),
+              "Parent Consumption": boolText(state.facts.ecologyFaunaRuntimeConsumed)
+            }
+          );
+        }
+      }
 
-        makeGauge("g4-generation-claim-lock", "G4", "Generation 4 Claim Lock", "HELD",
-          "G4 remains held until source-chain and visual-standard gauges both pass.",
-          { "Generation 4 Claimed": "false", "Claim Source": "gauges only", "Manual Label Authority": "none" });
+      function auditG4(parentStatus, parentRender) {
+        const orbitalReady =
+          parentStatus.orbitalVisualStandardReady === true ||
+          parentStatus.orbitalReady === true ||
+          parentStatus.visualStandard === "ORBITAL_G4" ||
+          parentStatus.generation4VisualStandard === true;
+
+        const screenshotConfirmed =
+          parentStatus.screenshotConfirmed === true ||
+          parentStatus.visualConfirmationReceipt === true ||
+          parentStatus.g4ScreenshotReceipt === true ||
+          parentStatus.ownerVisualConfirmation === true;
+
+        state.facts.orbitalReady = orbitalReady;
+        state.facts.g4PixelProof = !!parentRender && parentRender.rendered === true && parentRender.pixelProof === true;
+        state.facts.g4ColorDiversity = !!parentRender && parentRender.colorDiversityPass === true;
+        state.facts.g4LandWaterContrast = !!parentRender && parentRender.contrastPass === true;
+        state.facts.screenshotConfirmed = screenshotConfirmed;
+
+        if (orbitalReady) {
+          passGauge(
+            "g4-orbital-readiness",
+            "G4",
+            "Orbital Visual Readiness",
+            true,
+            "G4 requires parent status to expose orbital visual standard readiness.",
+            { "Orbital Ready": boolText(orbitalReady), "Visual Standard": parentStatus.visualStandard || "missing" }
+          );
+        } else {
+          heldGauge(
+            "g4-orbital-readiness",
+            "G4",
+            "Orbital Visual Readiness",
+            "G4 remains held until parent status exposes orbital visual standard readiness.",
+            { "Orbital Ready": boolText(orbitalReady), "Visual Standard": parentStatus.visualStandard || "missing" }
+          );
+        }
+
+        passGauge(
+          "g4-render-pixel-proof",
+          "G4",
+          "Render Pixel Proof",
+          state.facts.g4PixelProof,
+          "G4 requires non-empty render output.",
+          {
+            Rendered: boolText(parentRender && parentRender.rendered),
+            "Pixel Proof": boolText(parentRender && parentRender.pixelProof),
+            Method: parentRender && parentRender.method ? parentRender.method : "missing"
+          }
+        );
+
+        if (state.facts.g4ColorDiversity) {
+          passGauge(
+            "g4-color-diversity",
+            "G4",
+            "Color Diversity",
+            true,
+            "G4 requires sufficient color diversity.",
+            { "Color Diversity": parentRender.colorDiversity, Threshold: 24 }
+          );
+        } else {
+          heldGauge(
+            "g4-color-diversity",
+            "G4",
+            "Color Diversity",
+            "G4 remains held until render output has sufficient color diversity.",
+            { "Color Diversity": parentRender && parentRender.colorDiversity ? parentRender.colorDiversity : 0, Threshold: 24 }
+          );
+        }
+
+        if (state.facts.g4LandWaterContrast) {
+          passGauge(
+            "g4-land-water-contrast",
+            "G4",
+            "Land/Water Contrast",
+            true,
+            "G4 requires sufficient visible contrast.",
+            { Contrast: parentRender.contrast, Threshold: 60 }
+          );
+        } else {
+          heldGauge(
+            "g4-land-water-contrast",
+            "G4",
+            "Land/Water Contrast",
+            "G4 remains held until render output has sufficient land/water contrast.",
+            { Contrast: parentRender && parentRender.contrast ? parentRender.contrast : 0, Threshold: 60 }
+          );
+        }
+
+        if (screenshotConfirmed) {
+          passGauge(
+            "g4-screenshot-confirmation",
+            "G4",
+            "Screenshot Confirmation Receipt",
+            true,
+            "G4 requires screenshot or owner visual confirmation receipt.",
+            { "Screenshot Confirmed": boolText(screenshotConfirmed) }
+          );
+        } else {
+          heldGauge(
+            "g4-screenshot-confirmation",
+            "G4",
+            "Screenshot Confirmation Receipt",
+            "G4 remains held until screenshot or owner visual confirmation receipt is present.",
+            { "Screenshot Confirmed": boolText(screenshotConfirmed) }
+          );
+        }
+
+        const generationClaimSafe =
+          parentStatus.generationPassClaimed !== true ||
+          (
+            state.facts.orbitalReady &&
+            state.facts.g4PixelProof &&
+            state.facts.g4ColorDiversity &&
+            state.facts.g4LandWaterContrast &&
+            state.facts.screenshotConfirmed
+          );
+
+        passGauge(
+          "g4-claim-lock",
+          "G4",
+          "Generation 4 Claim Lock",
+          generationClaimSafe,
+          "Generation 4 claim is accepted only if every G4 gauge passes.",
+          {
+            "Generation Pass Claimed": boolText(parentStatus.generationPassClaimed),
+            "Claim Accepted": boolText(generationClaimSafe)
+          }
+        );
       }
 
       async function runAudit() {
         state.gauges = [];
         state.log = [];
         state.generation = { G1: "HELD", G2: "HELD", G3: "HELD", G4: "HELD" };
+        state.facts = {
+          routeOk: false,
+          controllerOk: false,
+          earthOk: false,
+          parentOk: false,
+          parentRenderOk: false,
+          terrainOk: false,
+          terrainStatsOk: false,
+          terrainConsumed: false,
+          hydrationOk: false,
+          climateOk: false,
+          hydrationClimateConsumed: false,
+          ecologyOk: false,
+          faunaOk: false,
+          runtimeOk: false,
+          ecologyFaunaRuntimeConsumed: false,
+          orbitalReady: false,
+          g4PixelProof: false,
+          g4ColorDiversity: false,
+          g4LandWaterContrast: false,
+          screenshotConfirmed: false
+        };
 
         nodes.gaugeGrid.innerHTML = "";
         nodes.generationReport.textContent = "Audit running.";
@@ -892,14 +1432,23 @@
           log("Audit start.");
           await auditRouteAndController();
           await auditEarth();
-          await auditAudraliaParentAndTerrain();
-          await auditFutureGenerations();
+          const result = await auditAudraliaParentAndTerrain();
+          const parentStatus = result && result.parentStatus ? result.parentStatus : {};
+          const parentRender = result && result.parentRender ? result.parentRender : null;
+          await auditG2(parentStatus);
+          await auditG3(parentStatus);
+          auditG4(parentStatus, parentRender);
           log("Audit complete.");
         } catch (error) {
           log(`Audit fatal error: ${String(error && error.message ? error.message : error)}`);
-          makeGauge("audit-fatal", "G1", "Audit Fatal Error", "FAIL",
+          makeGauge(
+            "audit-fatal",
+            "G1",
+            "Audit Fatal Error",
+            "FAIL",
             "The gauges page must complete without fatal error.",
-            { Error: String(error && error.message ? error.message : error) });
+            { Error: String(error && error.message ? error.message : error) }
+          );
         }
 
         nodes.auditStamp.textContent = `${RECEIPT} · completed · ${new Date().toLocaleString()}`;

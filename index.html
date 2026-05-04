@@ -413,14 +413,14 @@
     .orbit-ring.inner {
       width: 20.5rem;
       height: 20.5rem;
-      z-index: 4;
+      z-index: 2;
       animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
     }
 
     .orbit-ring.outer {
       width: 31.5rem;
       height: 31.5rem;
-      z-index: 2;
+      z-index: 4;
       animation: orbitCounter var(--outer-orbit-duration) linear infinite;
     }
 
@@ -913,7 +913,7 @@
           <a href="/">Compass</a>
           <a href="/door/">Door</a>
           <a href="/home/">Home</a>
-          <a href="/manor/">Manor</a>
+          <a href="/explore/">Explore</a>
           <a href="/laws/">Laws</a>
           <a href="/nine-summits/">Nine Summits</a>
           <a href="/book/">Book</a>
@@ -945,7 +945,7 @@
           <div class="cta-row" aria-label="Primary actions">
             <a class="button primary" href="/door/">Cross the Door</a>
             <a class="button" href="/home/">Enter Home</a>
-            <a class="button" href="/manor/">Walk the Manor</a>
+            <a class="button" href="/explore/">Explore the Manor</a>
             <a class="button" href="/nine-summits/">Open Nine Summits</a>
           </div>
         </div>
@@ -956,7 +956,7 @@
               <span>Compass<br />Command<br />Anchor</span>
             </div>
 
-            <div class="orbit-ring inner" aria-hidden="true">
+            <div class="orbit-ring inner">
               <a class="diamond-node" style="--angle: 0deg" href="/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
               </a>
@@ -966,12 +966,12 @@
               <a class="diamond-node" style="--angle: 180deg" href="/home/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
               </a>
-              <a class="diamond-node" style="--angle: 270deg" href="/manor/">
-                <span class="diamond-label-shell"><b class="diamond-label-text">Manor</b></span>
+              <a class="diamond-node" style="--angle: 270deg" href="/explore/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Explore</b></span>
               </a>
             </div>
 
-            <div class="orbit-ring outer" aria-hidden="true">
+            <div class="orbit-ring outer">
               <a class="diamond-node" style="--angle: 0deg" href="/laws/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
               </a>
@@ -1014,7 +1014,7 @@
               <a class="diamond-node" style="--angle: 292.5deg" href="/home/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Receiver</b></span>
               </a>
-              <a class="diamond-node" style="--angle: 315deg" href="/manor/">
+              <a class="diamond-node" style="--angle: 315deg" href="/explore/">
                 <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
               </a>
               <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/">
@@ -1037,7 +1037,7 @@
           <a href="/">Compass Root</a>
           <a href="/door/">Door Entry</a>
           <a href="/home/">Home Receiver</a>
-          <a href="/manor/">Manor Map</a>
+          <a href="/explore/">Explore Map</a>
           <a href="/laws/">Laws Boundary</a>
           <a href="/nine-summits/">Nine Summits Gate</a>
           <a href="/book/">Book Climb</a>
@@ -1055,7 +1055,7 @@
 
       <section class="route-panel" aria-labelledby="compass-logic-title">
         <p class="eyebrow">Compass logic</p>
-        <h2 id="compass-logic-title">Compass orients. Door admits. Home stabilizes. Manor maps.</h2>
+        <h2 id="compass-logic-title">Compass orients. Door admits. Home stabilizes. Explore maps.</h2>
 
         <div class="logic-grid">
           <article class="logic-card">
@@ -1069,8 +1069,8 @@
           </article>
 
           <article class="logic-card">
-            <strong>Map</strong>
-            <span>Manor gives the route field structure. It prevents every room from doing one job.</span>
+            <strong>Explore</strong>
+            <span>Explore gives the route field structure. It prevents every room from doing one job.</span>
           </article>
 
           <article class="logic-card">
@@ -1087,7 +1087,7 @@
         <div class="route-grid" aria-label="Command route links">
           <a href="/door/">Door</a>
           <a href="/home/">Home</a>
-          <a href="/manor/">Manor</a>
+          <a href="/explore/">Explore</a>
           <a href="/laws/">Laws</a>
           <a href="/nine-summits/">Nine Summits</a>
           <a href="/book/">Book</a>
@@ -1102,11 +1102,11 @@
 
       <aside class="status-card" aria-label="Compass status">
         <strong>Compass status:</strong>
-        Shared Diamond Orbit · Inner four brought inward · Center anchor remains background · Readable label rotation preserved.
+        Shared Diamond Orbit · Explore route restored · Inner four remain over center anchor · Outer ring remains visually above inner four.
       </aside>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v3
+COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v4
 route=/
 page=compass
 role=animated_public_command_surface
@@ -1116,14 +1116,15 @@ animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
 center=compass_background_anchor_only
 visual_system=compass_4_plus_12_diamond_orbit
 ring_system=4_plus_12
-inner_ring=compass,door,home,manor
+inner_ring=compass,door,home,explore
 outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
-z_index_law=ambient_background,compass_anchor_background,outer_orbit_field,inner_orbit_field,route_labels
-non_overlap_law=inner_four_authorized_to_cover_outer_diamonds
+z_index_law=ambient_background,compass_anchor_background,inner_orbit_field,outer_orbit_field,route_labels
+overlap_law=inner_four_above_center_anchor_but_below_outer_ring
+route_fix=/manor/_rerouted_to_/explore/
 animation=inner_clockwise_outer_counterclockwise
 label_law=diamond_labels_counter_rotate_to_remain_readable
 mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-upgraded=inner_four_moved_inward,inner_four_layered_above_outer_ring,center_anchor_background_only,readable_rotating_labels,three_dimensional_diamonds
+upgraded=explore_route_replaces_missing_manor_route,inner_four_layered_below_outer_ring,center_anchor_background_only,readable_rotating_labels,three_dimensional_diamonds
 preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
 route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
@@ -1139,7 +1140,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v3 · Compass · Inner four diamonds moved inward.
+      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v4 · Compass · Explore route restored · Ring order corrected.
     </footer>
   </div>
 </body>

@@ -1,90 +1,185 @@
 {
-  "asset_id": "earth-asset-b5-quad-no-rings",
-  "asset_name": "Diamond Gate Bridge Earth Asset Spine",
-  "generation": "Generation 2",
-  "contract": "centered-satellite-earth-no-external-rings",
-  "status": "active",
-  "visual_target": {
-    "profile": "centered-satellite-earth",
-    "description": "Earth is rendered as the only dominant circular object in the showroom Earth field. Showroom, material, runtime, and manifest do not authorize external rings, visible axes, orbit arcs, instrument frames, or atmosphere shells.",
-    "required": [
-      "local Earth surface JPG",
-      "local Earth cloud JPG",
-      "single canvas spherical wrap",
-      "centered Earth object",
-      "real satellite-view texture",
-      "auto spin",
-      "manual drag spin",
-      "runtime zoom controls",
-      "frame budget enforcement"
-    ],
-    "forbidden": [
-      "visible axis guide",
-      "axis endpoint circles",
-      "atmosphere shell ring",
-      "external instrument circle",
-      "orbit trajectory arc",
-      "showroom panel ring around Earth",
-      "radial Earth-panel glow field",
-      "circle-fit framing language",
-      "active Sun runtime ownership on showroom",
-      "procedural placeholder Earth as final visual"
-    ]
-  },
-  "paths": {
-    "surface": "/assets/earth/earth_surface_2048.jpg",
-    "clouds": "/assets/earth/earth_clouds_2048.jpg",
-    "fallback_svg": "/assets/earth/earth.svg",
-    "material_css": "/assets/earth/earth_material.css",
-    "canvas_js": "/assets/earth/earth_canvas.js",
-    "runtime_js": "/runtime/earth_asset_runtime.js",
-    "preview": "/assets/earth/"
-  },
-  "renderer": {
-    "type": "single-canvas-spherical-wrap",
-    "axis": "internal-render-orientation-only",
-    "visible_axis": false,
-    "external_rings": false,
-    "atmosphere_shell": false,
-    "default_orientation": "orbital-earth",
-    "render_budget": {
-      "target_frame_ms": 42,
-      "mobile_dpr_cap": 1.5,
-      "desktop_dpr_cap": 2,
-      "slice_count": 280
+  "contract": "EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v1",
+  "body": "earth",
+  "label": "Earth",
+  "route": "/showroom/globe/earth/",
+  "authority": "/assets/earth/earth_canvas.js",
+  "reference_standard": "NASA_BLUE_MARBLE_REFERENCE_DISCIPLINE",
+  "generation": "G4_REFERENCE_BODY_SURFACE_PHASE_ROTATION",
+  "visual_pass": "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
+  "responsibility_split": {
+    "earth_manifest_json": {
+      "path": "/assets/earth/earth_manifest.json",
+      "interest": "source truth map / file-interest registry / asset responsibility contract",
+      "jurisdiction": [
+        "asset registry",
+        "file roles",
+        "Earth G4 source truth",
+        "dependency direction",
+        "public receipts hidden standard"
+      ],
+      "non_jurisdiction": [
+        "rendering",
+        "touch control",
+        "route shell",
+        "visual styling",
+        "Audralia adoption"
+      ]
     },
-    "zoom": {
-      "default_zoom": 1,
-      "min_zoom": 0.72,
-      "max_zoom": 1.38,
-      "zoom_step": 0.08
+    "earth_canvas_js": {
+      "path": "/assets/earth/earth_canvas.js",
+      "interest": "canvas control engine / fixed projection / surface-phase rotation / cloud-phase rotation / touch control / inertia",
+      "jurisdiction": [
+        "mount",
+        "canvas composition",
+        "fixed sphere projection",
+        "surface longitude phase",
+        "cloud longitude phase",
+        "horizontal drag rotation",
+        "release inertia",
+        "asset loading"
+      ],
+      "non_jurisdiction": [
+        "route shell ownership",
+        "permanent material styling",
+        "global CSS",
+        "Audralia",
+        "Gauges",
+        "Products",
+        "Sun",
+        "Moon"
+      ]
     },
-    "controls": {
-      "auto_spin": true,
-      "manual_drag": true,
-      "runtime_zoom_panel": true,
-      "touch_action": "none"
+    "earth_material_css": {
+      "path": "/assets/earth/earth_material.css",
+      "interest": "glow / atmosphere / rim clarity / material polish / containment / visual presentation",
+      "jurisdiction": [
+        "atmospheric glow",
+        "rim clarity",
+        "stage containment",
+        "canvas presentation",
+        "label overlay safety",
+        "mobile sizing"
+      ],
+      "non_jurisdiction": [
+        "touch logic",
+        "image sampling",
+        "route ownership",
+        "Earth authority receipts",
+        "Audralia adoption"
+      ]
+    },
+    "earth_surface_2048_jpg": {
+      "path": "/assets/earth/earth_surface_2048.jpg",
+      "interest": "primary Earth surface reference body",
+      "jurisdiction": [
+        "land",
+        "ocean",
+        "surface color",
+        "NASA-style reference texture"
+      ],
+      "non_jurisdiction": [
+        "motion",
+        "clouds",
+        "glow",
+        "route",
+        "control"
+      ]
+    },
+    "earth_clouds_2048_png": {
+      "path": "/assets/earth/earth_clouds_2048.png",
+      "interest": "primary transparent cloud overlay candidate",
+      "jurisdiction": [
+        "transparent cloud layer",
+        "independent cloud phase material"
+      ],
+      "non_jurisdiction": [
+        "surface authority",
+        "route authority",
+        "control authority"
+      ]
+    },
+    "earth_clouds_2048_jpg": {
+      "path": "/assets/earth/earth_clouds_2048.jpg",
+      "interest": "fallback cloud texture",
+      "jurisdiction": [
+        "fallback cloud layer"
+      ],
+      "non_jurisdiction": [
+        "primary cloud authority when PNG alpha works",
+        "surface authority",
+        "route authority"
+      ]
+    },
+    "earth_svg": {
+      "path": "/assets/earth/earth.svg",
+      "interest": "static fallback / emblem / non-runtime reference only",
+      "jurisdiction": [
+        "fallback icon",
+        "static emblem"
+      ],
+      "non_jurisdiction": [
+        "runtime Earth",
+        "G4 planet claim",
+        "surface-phase rotation"
+      ]
+    },
+    "assets_earth_index_html": {
+      "path": "/assets/earth/index.html",
+      "interest": "asset directory landing / fallback explanation only",
+      "jurisdiction": [
+        "asset directory explanation",
+        "safe navigation"
+      ],
+      "non_jurisdiction": [
+        "showroom route",
+        "rotation",
+        "canvas control"
+      ]
     }
   },
-  "diagnostics": {
-    "required_mount": "[data-dgb-earth-mount]",
-    "runtime_global": "window.DGBEarthAsset",
-    "canvas_global": "window.DGBEarthCanvas",
-    "canvas_selector": "[data-dgb-earth-canvas]",
-    "control_selector": "[data-dgb-earth-controls]",
-    "status_attribute": "data-earth-runtime-status",
-    "version_attribute": "data-earth-asset-id",
-    "forbidden_selectors": [
-      ".dgb-earth-axis",
-      ".dgb-earth-atmosphere",
-      "[data-dgb-earth-ring]",
-      "[data-dgb-earth-orbit]"
-    ],
-    "forbidden_showroom_terms": [
-      "Circle Fit",
-      "visible circular instrument field",
-      "fit-to-circle frame"
-    ]
+  "active_assets": {
+    "surface": "/assets/earth/earth_surface_2048.jpg",
+    "clouds_primary": "/assets/earth/earth_clouds_2048.png",
+    "clouds_fallback": "/assets/earth/earth_clouds_2048.jpg",
+    "material": "/assets/earth/earth_material.css",
+    "canvas": "/assets/earth/earth_canvas.js",
+    "fallback_svg": "/assets/earth/earth.svg"
   },
-  "cache_version": "earth-quad-no-rings-b17"
+  "control_law": {
+    "canvas": "fixed",
+    "sphere_mask": "fixed",
+    "object_boundary": "natural_sphere_mask",
+    "surface_rotation": "longitude_phase",
+    "cloud_rotation": "independent_longitude_phase",
+    "touch_model": "horizontal_drag_only",
+    "vertical_drag_texture_effect": "disabled",
+    "disk_rotation": "forbidden",
+    "texture_stretch": "forbidden",
+    "whole_canvas_transform": "forbidden",
+    "whole_object_rotation": "forbidden"
+  },
+  "material_law": {
+    "glow": "earth_material_css",
+    "atmosphere": "earth_material_css",
+    "rim": "earth_material_css",
+    "clarity": "earth_material_css",
+    "stage_fit": "earth_material_css"
+  },
+  "route_law": {
+    "earth_route": "/showroom/globe/earth/",
+    "route_mount": "#earthRenderMount",
+    "public_receipts": "hidden",
+    "audralia_adoption": "blocked"
+  },
+  "protected_non_jurisdiction": [
+    "Audralia",
+    "Showroom selector",
+    "Showroom CSS",
+    "Gauges",
+    "Products",
+    "Sun",
+    "Moon",
+    "global files"
+  ]
 }

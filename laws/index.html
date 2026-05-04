@@ -4,7 +4,7 @@
   lang="en"
   data-page="laws-16-point-rule-chamber"
   data-route="/laws/"
-  data-contract="LAWS_16_POINT_RULE_CHAMBER_REEXPRESSION_TNT_v1"
+  data-contract="LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2"
   data-role="rule-chamber"
   data-message="proof-outranks-confidence"
   data-field-system="16-point-law-chamber"
@@ -391,7 +391,9 @@
       transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--lift));
       outline: none;
       transition: filter 160ms ease, transform 160ms ease, opacity 160ms ease;
-      will-change: transform;
+      will-change: transform, margin;
+      animation: lawDiamondDrift 9.5s ease-in-out infinite;
+      animation-delay: calc(var(--law-delay, 0s) * -1);
     }
 
     .law-diamond.behind {
@@ -405,6 +407,7 @@
       z-index: 18;
       opacity: 1;
       filter: saturate(1.15) brightness(1.06);
+      animation-duration: 8.5s;
     }
 
     .law-diamond:hover,
@@ -414,10 +417,30 @@
       filter: brightness(1.16) saturate(1.12);
     }
 
+    @keyframes lawDiamondDrift {
+      0%, 100% {
+        margin-left: 0;
+        margin-top: 0;
+      }
+      25% {
+        margin-left: 10px;
+        margin-top: -6px;
+      }
+      50% {
+        margin-left: 0;
+        margin-top: 8px;
+      }
+      75% {
+        margin-left: -10px;
+        margin-top: -4px;
+      }
+    }
+
     .diamond-shell {
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
+      transform-origin: 50% 50%;
       border: 2px solid rgba(242,199,111,0.76);
       border-radius: 0.95rem;
       background:
@@ -430,6 +453,8 @@
         inset 0 0 0 1px rgba(255,255,255,0.15),
         inset 0 0 1.6rem rgba(255,255,255,0.06);
       overflow: hidden;
+      animation: lawDiamondFacetTurn 14s linear infinite;
+      animation-delay: calc(var(--law-delay, 0s) * -1);
     }
 
     .law-diamond.behind .diamond-shell {
@@ -476,9 +501,21 @@
       position: absolute;
       inset: 0;
       transform: rotate(45deg);
+      transform-origin: 50% 50%;
       pointer-events: none;
       overflow: hidden;
       border-radius: 0.95rem;
+      animation: lawDiamondFacetTurn 14s linear infinite;
+      animation-delay: calc(var(--law-delay, 0s) * -1);
+    }
+
+    @keyframes lawDiamondFacetTurn {
+      from {
+        transform: rotate(45deg);
+      }
+      to {
+        transform: rotate(405deg);
+      }
     }
 
     .diamond-lines::before {
@@ -541,6 +578,20 @@
       box-shadow:
         0 1rem 2.5rem rgba(0,0,0,0.28),
         inset 0 0 0 1px rgba(255,255,255,0.13);
+      animation: none;
+    }
+
+    .center-diamond .diamond-lines {
+      animation: lawCenterFacetTurn 18s linear infinite;
+    }
+
+    @keyframes lawCenterFacetTurn {
+      from {
+        transform: rotate(45deg);
+      }
+      to {
+        transform: rotate(-315deg);
+      }
     }
 
     .center-diamond .diamond-content strong {
@@ -735,8 +786,12 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .law-diamond {
-        transition: none;
+      .law-diamond,
+      .law-diamond .diamond-shell,
+      .law-diamond .diamond-lines,
+      .center-diamond .diamond-lines {
+        animation: none !important;
+        transition: none !important;
       }
     }
   </style>
@@ -806,82 +861,82 @@
             </div>
           </div>
 
-          <a class="law-diamond behind" href="#authority-law" style="--x:14;--y:15;" data-loop="a" data-phase="0.00" aria-label="Authority law">
+          <a class="law-diamond behind" href="#authority-law" style="--x:14;--y:15;--law-delay:0;" data-loop="a" data-phase="0.00" aria-label="Authority law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Authority</strong><span>Owner</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#route-law" style="--x:38;--y:12;" data-loop="b" data-phase="0.39" aria-label="Route law">
+          <a class="law-diamond behind" href="#route-law" style="--x:38;--y:12;--law-delay:.35;" data-loop="b" data-phase="0.39" aria-label="Route law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Route</strong><span>Where</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#runtime-law" style="--x:62;--y:12;" data-loop="a" data-phase="0.78" aria-label="Runtime law">
+          <a class="law-diamond behind" href="#runtime-law" style="--x:62;--y:12;--law-delay:.70;" data-loop="a" data-phase="0.78" aria-label="Runtime law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Runtime</strong><span>Motion</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#generation-law" style="--x:86;--y:15;" data-loop="b" data-phase="1.17" aria-label="Generation law">
+          <a class="law-diamond behind" href="#generation-law" style="--x:86;--y:15;--law-delay:1.05;" data-loop="b" data-phase="1.17" aria-label="Generation law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Generation</strong><span>Baseline</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#product-planet-law" style="--x:14;--y:38;" data-loop="b" data-phase="1.57" aria-label="Product and planet separation law">
+          <a class="law-diamond behind" href="#product-planet-law" style="--x:14;--y:38;--law-delay:1.40;" data-loop="b" data-phase="1.57" aria-label="Product and planet separation law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Product</strong><span>Separate</span></div>
           </a>
 
-          <a class="law-diamond forefront" href="#laws-main" style="--x:38;--y:38;" data-loop="a" data-phase="1.96" aria-label="Laws foreground">
+          <a class="law-diamond forefront" href="#laws-main" style="--x:38;--y:38;--law-delay:1.75;" data-loop="a" data-phase="1.96" aria-label="Laws foreground">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Laws</strong><span>Govern</span></div>
           </a>
 
-          <a class="law-diamond forefront" href="/door/" style="--x:62;--y:38;" data-loop="b" data-phase="2.35" aria-label="Entry foreground">
+          <a class="law-diamond forefront" href="/door/" style="--x:62;--y:38;--law-delay:2.10;" data-loop="b" data-phase="2.35" aria-label="Entry foreground">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Entry</strong><span>Door</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#human-boundary-law" style="--x:86;--y:38;" data-loop="a" data-phase="2.74" aria-label="Human boundary law">
+          <a class="law-diamond behind" href="#human-boundary-law" style="--x:86;--y:38;--law-delay:2.45;" data-loop="a" data-phase="2.74" aria-label="Human boundary law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Human</strong><span>Boundary</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#interaction-law" style="--x:14;--y:62;" data-loop="a" data-phase="3.14" aria-label="Interaction law">
+          <a class="law-diamond behind" href="#interaction-law" style="--x:14;--y:62;--law-delay:2.80;" data-loop="a" data-phase="3.14" aria-label="Interaction law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Touch</strong><span>Clear</span></div>
           </a>
 
-          <a class="law-diamond forefront" href="/gauges/" style="--x:38;--y:62;" data-loop="b" data-phase="3.53" aria-label="Proof foreground">
+          <a class="law-diamond forefront" href="/gauges/" style="--x:38;--y:62;--law-delay:3.15;" data-loop="b" data-phase="3.53" aria-label="Proof foreground">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Proof</strong><span>Gauges</span></div>
           </a>
 
-          <a class="law-diamond forefront" href="/" style="--x:62;--y:62;" data-loop="a" data-phase="3.92" aria-label="Return foreground">
+          <a class="law-diamond forefront" href="/" style="--x:62;--y:62;--law-delay:3.50;" data-loop="a" data-phase="3.92" aria-label="Return foreground">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Return</strong><span>Root</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#receipt-law" style="--x:86;--y:62;" data-loop="b" data-phase="4.31" aria-label="Receipt law">
+          <a class="law-diamond behind" href="#receipt-law" style="--x:86;--y:62;--law-delay:3.85;" data-loop="b" data-phase="4.31" aria-label="Receipt law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Receipt</strong><span>Record</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#visual-claim-law" style="--x:14;--y:85;" data-loop="b" data-phase="4.71" aria-label="Visual claim law">
+          <a class="law-diamond behind" href="#visual-claim-law" style="--x:14;--y:85;--law-delay:4.20;" data-loop="b" data-phase="4.71" aria-label="Visual claim law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Visual</strong><span>No False</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#foreground-law" style="--x:38;--y:88;" data-loop="a" data-phase="5.10" aria-label="Foreground law">
+          <a class="law-diamond behind" href="#foreground-law" style="--x:38;--y:88;--law-delay:4.55;" data-loop="a" data-phase="5.10" aria-label="Foreground law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Foreground</strong><span>Core</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#access-law" style="--x:62;--y:88;" data-loop="b" data-phase="5.49" aria-label="Access law">
+          <a class="law-diamond behind" href="#access-law" style="--x:62;--y:88;--law-delay:4.90;" data-loop="b" data-phase="5.49" aria-label="Access law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Access</strong><span>Reachable</span></div>
           </a>
 
-          <a class="law-diamond behind" href="#stale-language-law" style="--x:86;--y:85;" data-loop="a" data-phase="5.88" aria-label="Stale language law">
+          <a class="law-diamond behind" href="#stale-language-law" style="--x:86;--y:85;--law-delay:5.25;" data-loop="a" data-phase="5.88" aria-label="Stale language law">
             <div class="diamond-shell" aria-hidden="true"></div><div class="diamond-lines" aria-hidden="true"></div>
             <div class="diamond-content"><strong>Stale</strong><span>Remove</span></div>
           </a>
@@ -991,7 +1046,7 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>LAWS_16_POINT_RULE_CHAMBER_REEXPRESSION_TNT_v1
+        <pre>LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2
 route=/laws/
 page=laws
 role=rule_chamber
@@ -1000,6 +1055,9 @@ center=laws_chamber_decorative
 design_object=16_point_law_chamber
 foreground_core=laws,entry,proof,return
 available_laws=authority,route,proof,runtime,generation,product_planet_separation,human_boundary,interaction,receipt,visual_claim,foreground,access,stale_language,animation,scope,return
+change=animated_existing_diamonds_without_route_or_layout_rebuild
+animation=lawDiamondDrift,lawDiamondFacetTurn,lawCenterFacetTurn,existing_runtime_dx_dy_loop
+preserved=law_copy,law_cards,route_links,16_point_chamber,foreground_core,receipt_structure
 route_owns=rule_chamber,law_access,16_point_law_field,law_cards,route_links,receipt
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 removed=earth_g1_active_language,explore_as_primary_identity,demo_universe_active_language,long_visible_receipt_dominance
@@ -1014,7 +1072,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      LAWS_16_POINT_RULE_CHAMBER_REEXPRESSION_TNT_v1 · Laws · Rule Chamber · Proof outranks confidence.
+      LAWS_16_POINT_RULE_CHAMBER_ANIMATED_DIAMONDS_TNT_v2 · Laws · Rule Chamber · Animated diamonds · Proof outranks confidence.
     </footer>
   </div>
 

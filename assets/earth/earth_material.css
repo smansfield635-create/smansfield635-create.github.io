@@ -1,110 +1,213 @@
-/* ASSET GENERATION 2 EARTH VISIBILITY / AXIS / SPIN / TOUCH
-   FILE: /assets/earth/earth_material.css
-   VERSION: ASSET_GENERATION_2_EARTH_VISIBILITY_AXIS_SPIN_TOUCH_TNT_v1
-*/
+/* /assets/earth/earth_material.css */
+/* EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v1 */
 
 :root {
-  --earth-g2-card: rgba(8, 14, 25, 0.88);
-  --earth-g2-line: rgba(150, 188, 255, 0.24);
-  --earth-g2-glow: rgba(120, 185, 255, 0.24);
-  --earth-g2-gold: #f2c76f;
-  --earth-g2-text: #f5f7fb;
-  --earth-g2-muted: rgba(228, 234, 246, 0.76);
+  --earth-stage-void: #07111f;
+  --earth-stage-panel: rgba(16, 31, 52, 0.88);
+  --earth-stage-line: rgba(156, 190, 236, 0.24);
+  --earth-glow-blue: rgba(95, 160, 255, 0.34);
+  --earth-glow-soft: rgba(119, 184, 255, 0.20);
+  --earth-rim: rgba(183, 216, 255, 0.56);
+  --earth-label-bg: rgba(7, 13, 24, 0.78);
+  --earth-label-text: #f7f1de;
+  --earth-radius: 34px;
 }
 
-[data-earth-asset-stage="true"],
-[data-demo-universe="earth"].earth-g2-stage,
-.earth-g2-stage {
+#earthRenderMount,
+[data-earth-render-mount],
+[data-body="earth"][data-render-mount] {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(82vw, 720px);
-  max-width: 100%;
-  aspect-ratio: 1 / 1;
-  margin: clamp(12px, 4vw, 28px) auto;
+  width: min(100%, 780px);
+  min-height: clamp(360px, 72vw, 720px);
+  margin: 0 auto;
+  padding: clamp(18px, 4vw, 42px);
   overflow: visible;
-  border-radius: 50%;
+  isolation: isolate;
   background:
-    radial-gradient(circle at 50% 50%, rgba(120, 185, 255, 0.07), transparent 63%),
-    transparent;
+    radial-gradient(circle at 50% 44%, rgba(111, 165, 230, 0.30), transparent 24rem),
+    radial-gradient(circle at 50% 50%, rgba(12, 32, 64, 0.56), transparent 28rem),
+    linear-gradient(180deg, rgba(24, 42, 69, 0.72), rgba(11, 22, 38, 0.92));
 }
 
-[data-earth-asset-stage="true"]::before,
-.earth-g2-stage::before {
+#earthRenderMount::before,
+[data-earth-render-mount]::before,
+[data-body="earth"][data-render-mount]::before {
   content: "";
   position: absolute;
-  inset: 5%;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 680px);
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, transparent 0 58%, rgba(102, 174, 255, 0.18) 62%, rgba(102, 174, 255, 0.08) 70%, transparent 78%),
+    radial-gradient(circle, rgba(102, 174, 255, 0.16), transparent 65%);
+  filter: blur(2px);
+  opacity: 0.92;
   pointer-events: none;
-  box-shadow:
-    0 0 36px rgba(120, 185, 255, 0.16),
-    0 0 92px rgba(120, 185, 255, 0.08);
+  z-index: 0;
 }
 
-canvas[data-earth-asset-canvas="true"],
-canvas[data-planet-one-render-canvas="true"] {
+#earthRenderMount::after,
+[data-earth-render-mount]::after,
+[data-body="earth"][data-render-mount]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(73vw, 632px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 0 1px rgba(189, 219, 255, 0.16),
+    0 0 34px rgba(94, 156, 255, 0.24),
+    0 0 92px rgba(94, 156, 255, 0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.earth-g4-canvas,
+.earth-reference-canvas,
+.earth-material-canvas,
+#earthRenderMount canvas {
   position: relative;
   z-index: 2;
   display: block;
-  width: min(82vw, 720px);
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
+  width: min(100%, 660px);
+  max-width: min(100%, 660px);
+  aspect-ratio: 1 / 1;
+  border: 0;
+  outline: 0;
   border-radius: 50%;
   background: transparent;
+  box-shadow:
+    inset -28px -18px 48px rgba(0, 0, 0, 0.32),
+    inset 12px 10px 26px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(184, 217, 255, 0.24),
+    0 0 38px rgba(105, 177, 255, 0.32),
+    0 0 92px rgba(105, 177, 255, 0.18);
+  image-rendering: auto;
+  transform: none !important;
+  rotate: none !important;
+  scale: none !important;
+  translate: none !important;
   touch-action: none;
   user-select: none;
-  cursor: grab;
-  filter: saturate(1.08) contrast(1.04);
+  -webkit-user-select: none;
 }
 
-canvas[data-earth-asset-canvas="true"]:active,
-canvas[data-planet-one-render-canvas="true"]:active {
-  cursor: grabbing;
+.earth-material-frame {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: min(100%, 690px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 34%, rgba(255, 255, 255, 0.10), transparent 18%),
+    radial-gradient(circle at 50% 50%, transparent 63%, rgba(91, 157, 240, 0.20) 69%, transparent 78%);
+  filter: saturate(1.05) contrast(1.04);
 }
 
-.planet-card,
-[data-earth-card="true"] {
-  overflow: visible !important;
+.earth-material-frame::before {
+  content: "";
+  position: absolute;
+  inset: 2.4%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    radial-gradient(circle at 34% 27%, rgba(255, 255, 255, 0.22), transparent 16%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.05), transparent 42%, rgba(0, 0, 0, 0.24) 100%);
+  mix-blend-mode: screen;
+  opacity: 0.62;
 }
 
-.earth-g2-control-note {
-  color: var(--earth-g2-muted);
-  line-height: 1.55;
+.earth-material-frame::after {
+  content: "";
+  position: absolute;
+  inset: 1.1%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow:
+    inset 0 0 0 1px rgba(207, 232, 255, 0.32),
+    inset -24px -20px 46px rgba(0, 0, 0, 0.28),
+    inset 18px 14px 28px rgba(255, 255, 255, 0.08);
 }
 
-[data-earth-asset-status="true"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  border: 1px solid var(--earth-g2-line);
+.earth-reference-label,
+#earthRenderMount .earth-reference-label {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 6vw, 54px);
+  z-index: 6;
+  transform: translateX(-50%);
+  max-width: min(88%, 560px);
+  border: 1px solid rgba(214, 232, 255, 0.22);
   border-radius: 999px;
-  padding: 7px 12px;
-  background: rgba(120, 185, 255, 0.08);
-  color: var(--earth-g2-text);
-  font-size: 0.74rem;
-  font-weight: 900;
+  padding: 0.72rem 1.1rem;
+  color: var(--earth-label-text);
+  background: var(--earth-label-bg);
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.38),
+    0 0 28px rgba(100, 169, 255, 0.16);
+  font-weight: 1000;
   letter-spacing: 0.08em;
+  text-align: center;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
-[data-earth-asset-contract="true"] {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+.earth-g4-hidden-receipt,
+.earth-public-debug,
+[data-public-receipts="hidden"] .earth-public-debug,
+[data-public-receipts="hidden"] .raw-receipts {
+  display: none !important;
 }
 
-@media (max-width: 720px) {
-  [data-earth-asset-stage="true"],
-  [data-demo-universe="earth"].earth-g2-stage,
-  .earth-g2-stage {
-    width: min(82vw, 430px);
-    margin-top: 18px;
-    margin-bottom: 18px;
+@media (max-width: 760px) {
+  #earthRenderMount,
+  [data-earth-render-mount],
+  [data-body="earth"][data-render-mount] {
+    min-height: clamp(360px, 106vw, 620px);
+    padding: clamp(12px, 3vw, 26px);
   }
 
-  canvas[data-earth-asset-canvas="true"],
-  canvas[data-planet-one-render-canvas="true"] {
-    width: min(82vw, 430px);
+  #earthRenderMount::before,
+  [data-earth-render-mount]::before,
+  [data-body="earth"][data-render-mount]::before {
+    width: min(94vw, 620px);
+  }
+
+  #earthRenderMount::after,
+  [data-earth-render-mount]::after,
+  [data-body="earth"][data-render-mount]::after {
+    width: min(89vw, 580px);
+  }
+
+  .earth-material-frame {
+    width: min(100%, 570px);
+  }
+
+  .earth-reference-label,
+  #earthRenderMount .earth-reference-label {
+    bottom: clamp(18px, 4.5vw, 38px);
+    font-size: clamp(0.72rem, 3vw, 1rem);
+    letter-spacing: 0.055em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .earth-g4-canvas,
+  .earth-reference-canvas,
+  .earth-material-canvas,
+  #earthRenderMount canvas {
+    transition: none !important;
   }
 }

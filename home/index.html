@@ -1,14 +1,14 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="home-public-parity-receiver-gate"
   data-route="/home/"
-  data-contract="HOME_PUBLIC_PARITY_RECEIVER_GATE_TNT_v1"
-  data-alignment-contract="CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1"
-  data-animation-standard="UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1"
+  data-page="home"
+  data-version="G1-V2"
+  data-contract="HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2"
+  data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
+  data-animation-standard="LOCAL_4_DIAMOND_RECEIVER_ORBIT_STANDARD_v1"
+  data-status="active"
   data-role="estate-receiver"
-  data-message="home-keeps-the-journey-coherent"
-  data-spine-system="home-four-diamond-receiver-gate"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
@@ -18,449 +18,745 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge · Home</title>
+
+  <title>Home · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Home is the Diamond Gate Bridge estate receiver: it stabilizes the visitor and routes them cleanly to Manor, Book, Showroom, and Gauges."
+    content="Home is the estate receiver for Diamond Gate Bridge. It stabilizes the visitor after the Door and routes them to the correct room."
   >
 
-  <link rel="stylesheet" href="/assets/diamond-orbit.css">
-
   <style>
-    :root {
-      --panel: rgba(9, 14, 26, 0.90);
-      --line: rgba(255,255,255,0.15);
-      --text: #f8f1dd;
-      --muted: rgba(242,246,255,0.74);
-      --faint: rgba(242,246,255,0.48);
-      --gold: #f2c76f;
-      --stage: min(100%, 1180px);
+    :root{
+      color-scheme:dark;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --faint:rgba(230,238,255,.48);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --panel:rgba(9,15,31,.86);
+      --line:rgba(184,205,255,.18);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
+      --max:1180px;
+      --orbit-duration:42s;
     }
 
-    * { box-sizing: border-box; }
+    *{box-sizing:border-box}
 
-    html,
-    body {
-      width: 100%;
-      margin: 0;
-      overflow-x: hidden;
+    html{
+      min-width:320px;
+      min-height:100%;
+      background:var(--bg);
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+    }
+
+    body{
+      margin:0;
+      min-width:320px;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+      overflow-x:hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(242,199,111,0.17), transparent 28rem),
-        radial-gradient(circle at 50% 42%, rgba(120,216,255,0.13), transparent 34rem),
-        radial-gradient(circle at 50% 86%, rgba(165,239,204,0.08), transparent 34rem),
-        linear-gradient(180deg, #060916, #03050d 74%, #02040a);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:geometricPrecision;
     }
 
-    body { min-height: 100svh; }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
       background-image:
-        radial-gradient(circle at 12% 20%, rgba(255,255,255,0.18) 0, rgba(255,255,255,0) 1.2px),
-        radial-gradient(circle at 72% 16%, rgba(255,255,255,0.13) 0, rgba(255,255,255,0) 1.1px),
-        radial-gradient(circle at 84% 58%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0) 1px),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0) 1.2px);
-      background-size: 180px 220px, 240px 260px, 210px 250px, 260px 300px;
-      opacity: 0.38;
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
     }
 
-    a { color: inherit; text-decoration: none; }
+    a{color:inherit;text-decoration:none}
 
-    .skip-link {
-      position: absolute;
-      top: -4rem;
-      left: 1rem;
-      z-index: 20;
-      padding: 0.75rem 1rem;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #090b10;
-      font-weight: 900;
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:8px;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
-    .skip-link:focus { top: 1rem; }
+    .skip:focus{left:8px}
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: var(--stage);
-      margin: 0 auto;
-      padding: max(1rem, env(safe-area-inset-top)) clamp(0.85rem, 3vw, 2rem)
-        max(1.5rem, env(safe-area-inset-bottom));
+    .shell{
+      position:relative;
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 0 1rem;
+    .topbar{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      padding:12px 0 18px;
     }
 
-    .brand {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.08rem;
-      font-weight: 950;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
+    .brand{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
     }
 
-    .brand span:first-child {
-      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
-      text-transform: uppercase;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
     }
 
-    .brand span:last-child {
-      color: var(--muted);
-      font-size: clamp(0.66rem, 2.2vw, 0.76rem);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .brand-mark span{
+      transform:rotate(-45deg);
+      font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
     }
 
-    .nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 0.42rem;
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
     }
 
-    .nav a {
-      min-height: 2.1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.45rem 0.72rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 850;
-      white-space: nowrap;
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .nav a[aria-current="page"] {
-      border-color: rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .hero {
-      display: grid;
-      gap: 1rem;
-      padding: clamp(1.4rem, 5vw, 3rem) 0 clamp(1rem, 3vw, 1.5rem);
-      text-align: center;
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.48rem;
     }
 
-    .eyebrow {
-      margin: 0;
-      color: var(--gold);
-      font-size: clamp(0.72rem, 2.5vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+    .nav a{
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    h1 {
-      width: min(100%, 980px);
-      margin: 0 auto;
-      font-size: clamp(2.75rem, 10vw, 6.25rem);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
-      text-wrap: balance;
+    .nav a[aria-current="page"]{
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .quote {
-      width: min(100%, 780px);
-      margin: 0 auto;
-      color: rgba(255,241,205,0.96);
-      font-size: clamp(1.02rem, 3.4vw, 1.22rem);
-      line-height: 1.52;
-      text-wrap: balance;
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.55rem;
+    .hero{
+      position:relative;
+      min-height:clamp(22rem,40vw,32rem);
+      display:grid;
+      align-content:center;
+      gap:1rem;
+      padding:clamp(1.45rem,5vw,3.4rem);
+      margin-top:.6rem;
+      isolation:isolate;
     }
 
-    .button {
-      min-height: 2.45rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 0.58rem 0.95rem;
-      border: 1px solid rgba(242,199,111,0.9);
-      color: #080a0f;
-      background: linear-gradient(135deg, #fff0a3, #f2c76f);
-      box-shadow: 0 0.8rem 2rem rgba(242,199,111,0.16);
-      font-size: 0.78rem;
-      font-weight: 950;
-      letter-spacing: 0.055em;
-      text-transform: uppercase;
-      transition: transform 160ms ease, box-shadow 160ms ease;
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(9rem,25vw,18rem);
+      height:clamp(9rem,25vw,18rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:anchorPulse 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
     }
 
-    .button::after { content: " →"; }
+    @keyframes anchorPulse{
+      0%,100%{opacity:.42;filter:brightness(.95)}
+      50%{opacity:.58;filter:brightness(1.1)}
+    }
 
-    .button.secondary {
-      border-color: rgba(255,255,255,0.24);
-      color: var(--text);
-      background: rgba(255,255,255,0.055);
-      box-shadow: none;
+    .kicker{
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
+    h1{
+      margin:0;
+      max-width:950px;
+      font-size:clamp(3.1rem,10vw,7rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
+      position:relative;
+      z-index:2;
+    }
+
+    h2{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.7vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
+    }
+
+    .quote{
+      max-width:880px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
+      position:relative;
+      z-index:2;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .button{
+      min-height:2.65rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
     .button:hover,
-    .button:focus-visible {
-      transform: translateY(-2px);
-      box-shadow: 0 1rem 2.5rem rgba(242,199,111,0.22);
-      outline: none;
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
     }
 
-    .home-stage {
-      width: min(100%, 1040px);
-      margin: clamp(1rem, 3vw, 1.45rem) auto 0;
-      position: relative;
-      padding: clamp(1rem, 4vw, 1.6rem);
-      border: 1px solid rgba(242,199,111,0.24);
-      border-radius: clamp(1.35rem, 5vw, 2.2rem);
+    .button.gold{
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+    }
+
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
+      display:grid;
+      gap:1.05rem;
+    }
+
+    .home-stage{
+      position:relative;
+      min-height:clamp(31rem,62vw,46rem);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
       background:
-        radial-gradient(circle at 50% 0%, rgba(242,199,111,0.11), transparent 35%),
-        radial-gradient(circle at 50% 52%, rgba(120,216,255,0.13), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.016)),
-        rgba(8,12,20,0.62);
+        radial-gradient(circle at 50% 44%,rgba(143,101,255,.16),transparent 20rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .home-stage::before,
+    .home-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+
+    .home-stage::before{
+      width:min(80%,30rem);
+      height:min(80%,30rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
+    }
+
+    .home-stage::after{
+      width:min(52%,19rem);
+      height:min(52%,19rem);
+      border:1px solid rgba(143,101,255,.15);
+    }
+
+    .home-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
+      display:grid;
+      place-items:center;
+      width:clamp(8rem,21vw,12rem);
+      height:clamp(8rem,21vw,12rem);
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(243,200,111,.12);
+      border-radius:1.9rem;
+      background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
+        linear-gradient(135deg,rgba(143,101,255,.38),rgba(27,17,75,.42));
       box-shadow:
-        0 2rem 7rem rgba(0,0,0,0.34),
-        inset 0 1px 0 rgba(255,255,255,0.09);
-      overflow: hidden;
-      isolation: isolate;
+        0 0 70px rgba(143,101,255,.18),
+        inset 0 0 26px rgba(255,255,255,.04);
+      opacity:.48;
+      pointer-events:none;
+      animation:homeAnchorPulse 7s ease-in-out infinite;
     }
 
-    .home-stage::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 5%;
-      bottom: 5%;
-      width: 1px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(242,199,111,0.35), rgba(120,216,255,0.20), transparent);
-      opacity: 0.70;
-      z-index: -1;
+    .home-anchor::after{
+      content:"";
+      position:absolute;
+      inset:14%;
+      border-radius:1.25rem;
+      border:1px solid rgba(255,255,255,.05);
     }
 
-    .home-stage::after {
-      content: "";
-      position: absolute;
-      left: 7%;
-      right: 7%;
-      top: 50%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(242,199,111,0.28), rgba(120,216,255,0.18), transparent);
-      opacity: 0.68;
-      z-index: -1;
+    .home-anchor span{
+      display:block;
+      transform:rotate(-45deg);
+      color:rgba(255,244,216,.86);
+      text-align:center;
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      line-height:1.2;
     }
 
-    .stage-title {
-      display: grid;
-      gap: 0.32rem;
-      text-align: center;
-      margin-bottom: clamp(0.85rem, 3vw, 1.25rem);
-    }
-
-    .stage-title h2 {
-      margin: 0;
-      font-size: clamp(1.45rem, 4.8vw, 2.25rem);
-      line-height: 1;
-      letter-spacing: -0.045em;
-    }
-
-    .stage-title p {
-      width: min(100%, 720px);
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.48;
-      text-wrap: balance;
-    }
-
-    .home-orbit {
-      --diamond-orbit-speed: 34s;
-      --diamond-orbit-radius: clamp(8.4rem, 22vw, 14.6rem);
-      --diamond-orbit-node-size: clamp(7rem, 16vw, 10rem);
-      width: min(100%, 900px);
-      margin: 0 auto;
-      min-height: clamp(34rem, 68vw, 49rem);
-    }
-
-    .route-panel {
-      width: min(100%, 940px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      padding: clamp(0.8rem, 2.8vw, 1rem);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1.25rem;
-      background: rgba(255,255,255,0.025);
-      text-align: center;
-    }
-
-    .route-panel-title {
-      margin: 0 0 0.7rem;
-      color: var(--gold);
-      font-size: 0.72rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .route-grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-    }
-
-    .route-link {
-      min-height: 2.25rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.48rem 0.72rem;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      font-size: 0.74rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .route-link::after {
-      content: " →";
-      color: var(--gold);
-    }
-
-    .scope-strip {
-      width: min(100%, 980px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.65rem;
-    }
-
-    .scope-tile {
-      min-height: 6.6rem;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 0.25rem;
-      padding: 0.85rem;
-      border: 1px dashed rgba(242,199,111,0.24);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.024);
-      text-align: center;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .scope-tile strong {
-      color: rgba(255,241,205,0.95);
-      font-size: clamp(1.15rem, 4vw, 1.55rem);
-      line-height: 1;
-      font-weight: 950;
-    }
-
-    .scope-tile span {
-      color: var(--muted);
-      font-size: 0.76rem;
-      line-height: 1.32;
-    }
-
-    .receipt {
-      width: min(100%, 900px);
-      margin: clamp(1rem, 3vw, 1.5rem) auto 0;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
-      color: var(--faint);
-      overflow: hidden;
-    }
-
-    .receipt summary {
-      cursor: pointer;
-      padding: 0.75rem 0.9rem;
-      color: var(--faint);
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .receipt pre {
-      margin: 0;
-      padding: 0 0.9rem 0.9rem;
-      font: 700 0.68rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 1.45rem 0 0.45rem;
-      color: var(--faint);
-      font-size: 0.74rem;
-      line-height: 1.45;
-      text-align: center;
-    }
-
-    @media (max-width: 980px) {
-      .scope-strip {
-        grid-template-columns: repeat(2, 1fr);
+    @keyframes homeAnchorPulse{
+      0%,100%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
+        opacity:.42;
+      }
+      50%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+        opacity:.56;
       }
     }
 
-    @media (max-width: 900px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav { justify-content: flex-start; }
+    .home-orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:22.5rem;
+      height:22.5rem;
+      z-index:3;
+      border-radius:999px;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      animation:homeOrbitSpin var(--orbit-duration) linear infinite;
     }
 
-    @media (max-width: 720px) {
-      .home-orbit {
-        --diamond-orbit-radius: 8.6rem;
-        --diamond-orbit-node-size: 6.8rem;
-        min-height: 34rem;
+    @keyframes homeOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .home-node{
+      --radius:-10.85rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      width:5.5rem;
+      height:5.5rem;
+      margin:-2.75rem 0 0 -2.75rem;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:1.55rem;
+      background:
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.34),rgba(255,255,255,.08) 24%,transparent 42%),
+        radial-gradient(circle at 72% 78%,rgba(33,15,91,.38),transparent 48%),
+        linear-gradient(145deg,rgba(168,132,255,.98),rgba(103,69,225,.94) 52%,rgba(58,34,164,.96) 100%);
+      box-shadow:
+        0 16px 34px rgba(39,18,116,.34),
+        0 0 26px rgba(143,101,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)))
+        rotate(45deg);
+      pointer-events:auto;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+    }
+
+    .home-node::before{
+      content:"";
+      position:absolute;
+      inset:8%;
+      border-radius:1.15rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);
+      opacity:.72;
+      pointer-events:none;
+      transform:translateZ(1px);
+    }
+
+    .home-node::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:1.55rem;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        inset 0 -18px 24px rgba(21,9,62,.16);
+      pointer-events:none;
+    }
+
+    .home-node:hover,
+    .home-node:focus{
+      outline:none;
+      border-color:rgba(243,200,111,.72);
+      box-shadow:
+        0 22px 42px rgba(39,18,116,.42),
+        0 0 34px rgba(143,101,255,.30),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      filter:brightness(1.06);
+    }
+
+    .home-label-shell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:.35rem;
+      transform:rotate(-45deg);
+      text-align:center;
+    }
+
+    .home-label-text{
+      display:block;
+      max-width:4.3rem;
+      color:rgba(255,244,216,.98);
+      text-align:center;
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      line-height:1.1;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.8);
+      animation:homeTextUpright var(--orbit-duration) linear infinite;
+    }
+
+    .home-label-sub{
+      display:block;
+      margin-top:.12rem;
+      color:rgba(230,238,255,.72);
+      font-size:.40rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    @keyframes homeTextUpright{
+      to{transform:rotate(-360deg)}
+    }
+
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .route-card{
+      min-height:6.6rem;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
+
+    .route-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:1.05rem;
+      line-height:1.1;
+    }
+
+    .route-receipt,
+    [data-route-receipt],
+    [data-contract-receipt],
+    [data-debug-receipt],
+    .receipt{
+      display:none!important;
+      visibility:hidden!important;
+      overflow:hidden!important;
+      width:0!important;
+      height:0!important;
+      max-width:0!important;
+      max-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      opacity:0!important;
+      pointer-events:none!important;
+      position:absolute!important;
+      inset:auto!important;
+      clip-path:inset(50%)!important;
+      white-space:nowrap!important;
+    }
+
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
+    }
+
+    @media (max-width:1080px){
+      .route-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .nav{justify-content:flex-start}
+    }
+
+    @media (max-width:720px){
+      .shell{width:min(100% - 22px,var(--max))}
+      h1{font-size:clamp(3rem,17vw,5rem)}
+
+      .hero{
+        min-height:26rem;
+        padding:1rem;
+      }
+
+      .home-stage{
+        min-height:31rem;
+      }
+
+      .home-orbit{
+        width:18.5rem;
+        height:18.5rem;
+      }
+
+      .home-node{
+        --radius:-8.65rem;
+        width:4.45rem;
+        height:4.45rem;
+        margin:-2.225rem 0 0 -2.225rem;
+      }
+
+      .home-label-text{
+        max-width:3.25rem;
+        font-size:.42rem;
+        letter-spacing:.045em;
+      }
+
+      .home-label-sub{
+        display:none;
+      }
+
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .actions{
+        display:grid;
+      }
+
+      .button{
+        width:100%;
       }
     }
 
-    @media (max-width: 560px) {
-      .scope-strip {
-        grid-template-columns: 1fr;
+    @media (max-width:460px){
+      .home-stage{
+        min-height:29rem;
+      }
+
+      .home-anchor{
+        width:7.8rem;
+        height:7.8rem;
+      }
+
+      .home-anchor span{
+        font-size:.60rem;
+      }
+
+      .home-orbit{
+        width:16.6rem;
+        height:16.6rem;
+      }
+
+      .home-node{
+        --radius:-7.75rem;
+        width:3.9rem;
+        height:3.9rem;
+        margin:-1.95rem 0 0 -1.95rem;
+      }
+
+      .home-label-text{
+        max-width:2.9rem;
+        font-size:.36rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to Home</a>
+  <a class="skip" href="#main">Skip to Home</a>
 
   <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span>Diamond Gate Bridge</span>
-        <span>Rich Manor and Estate</span>
+    <header class="topbar" aria-label="Home header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><span>HM</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Rich Manor and Estate</strong>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -482,140 +778,100 @@
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Home · Estate Receiver</p>
+      <section class="panel hero" aria-labelledby="page-title">
+        <div class="kicker">Home · Estate Receiver</div>
         <h1 id="page-title">Home keeps the journey coherent.</h1>
 
-        <p class="quote">
+        <div class="quote">
           “The Door gets you in. Home helps you know where you are.”
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="/explore/">Choose a Room</a>
+          <a class="button" href="/nine-summits-of-love/">Open the Book</a>
+          <a class="button" href="/showroom/">Inspect Built Assets</a>
+          <a class="button" href="/gauges/">Read Gauges</a>
+        </div>
+      </section>
+
+      <section class="panel section" aria-labelledby="receiver-title">
+        <div class="kicker">Four-point receiver orbit</div>
+        <h2 id="receiver-title">Home stabilizes the estate.</h2>
+
+        <p>
+          Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.
         </p>
 
-        <div class="hero-actions" aria-label="Primary Home actions">
-          <a class="button" href="/explore/">Choose a Room</a>
-          <a class="button secondary" href="/nine-summits-of-love/">Open the Book</a>
-          <a class="button secondary" href="/showroom/">Inspect Built Assets</a>
-        </div>
-      </section>
-
-      <section class="home-stage" aria-labelledby="home-title">
-        <div class="stage-title">
-          <h2 id="home-title">Home stabilizes the estate.</h2>
-          <p>Home receives the visitor after the Door, keeps the route clean, and sends each person to the correct room.</p>
-        </div>
-
-        <div class="diamond-orbit-stage home-orbit" aria-label="Home receiver diamond orbit">
-          <div class="diamond-orbit-axis" aria-hidden="true"></div>
-
-          <div class="diamond-orbit-anchor" aria-hidden="true"></div>
-          <div class="diamond-orbit-anchor-label" aria-hidden="true">
-            <strong>Home</strong>
-            <span>Receiver</span>
+        <div class="home-stage" aria-label="Animated Home four-point receiver orbit">
+          <div class="home-anchor" aria-hidden="true">
+            <span>Home<br>Receiver</span>
           </div>
 
-          <div class="diamond-orbit-ring">
-            <div class="diamond-orbit-rotor">
-              <div class="diamond-orbit-node" style="--orbit-angle:0deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/explore/" aria-label="Open Manor">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Manor</span>
-                    <span class="diamond-orbit-sub">Rooms</span>
-                  </a>
-                </div>
-              </div>
+          <div class="home-orbit">
+            <a class="home-node" style="--angle:0deg" href="/explore/" aria-label="Manor Rooms">
+              <span class="home-label-shell">
+                <b class="home-label-text">Manor<span class="home-label-sub">Rooms</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:90deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/nine-summits-of-love/" aria-label="Open the Book">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Book</span>
-                    <span class="diamond-orbit-sub">Climb</span>
-                  </a>
-                </div>
-              </div>
+            <a class="home-node" style="--angle:90deg" href="/nine-summits-of-love/" aria-label="Book Climb">
+              <span class="home-label-shell">
+                <b class="home-label-text">Book<span class="home-label-sub">Climb</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:180deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/showroom/" aria-label="Open Showroom">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Showroom</span>
-                    <span class="diamond-orbit-sub">Atrium</span>
-                  </a>
-                </div>
-              </div>
+            <a class="home-node" style="--angle:180deg" href="/showroom/" aria-label="Showroom Atrium">
+              <span class="home-label-shell">
+                <b class="home-label-text">Showroom<span class="home-label-sub">Atrium</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:270deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/gauges/" aria-label="Read Gauges">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Gauges</span>
-                    <span class="diamond-orbit-sub">Proof</span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <a class="home-node" style="--angle:270deg" href="/gauges/" aria-label="Gauges Proof">
+              <span class="home-label-shell">
+                <b class="home-label-text">Gauges<span class="home-label-sub">Proof</span></b>
+              </span>
+            </a>
           </div>
         </div>
       </section>
 
-      <section class="route-panel" aria-labelledby="route-panel-title">
-        <p class="route-panel-title" id="route-panel-title">Rooms from Home</p>
+      <section class="panel section" aria-labelledby="routes-title">
+        <div class="kicker">Rooms from Home</div>
+        <h2 id="routes-title">The receiver keeps the estate connected.</h2>
 
-        <nav class="route-grid" aria-label="Home room routes">
-          <a class="route-link" href="/">Compass</a>
-          <a class="route-link" href="/door/">Door</a>
-          <a class="route-link" href="/nine-summits/">Nine Summits</a>
-          <a class="route-link" href="/nine-summits/universe/">Universe</a>
-          <a class="route-link" href="/products/">Products</a>
-          <a class="route-link" href="/frontier/">Frontier</a>
-        </nav>
-      </section>
-
-      <section class="scope-strip" aria-label="Home diagnostic scope">
-        <div class="scope-tile">
-          <strong>1</strong>
-          <span>One receiving room stabilizes the visitor.</span>
-        </div>
-
-        <div class="scope-tile">
-          <strong>4</strong>
-          <span>Four primary receiving directions.</span>
-        </div>
-
-        <div class="scope-tile">
-          <strong>16</strong>
-          <span>Expansion seats remain open.</span>
-        </div>
-
-        <div class="scope-tile">
-          <strong>256</strong>
-          <span>Gauge scope remains measurable.</span>
+        <div class="route-grid">
+          <a class="route-card" href="/"><strong>Compass</strong></a>
+          <a class="route-card" href="/door/"><strong>Door</strong></a>
+          <a class="route-card" href="/nine-summits/"><strong>Nine Summits</strong></a>
+          <a class="route-card" href="/nine-summits/universe/"><strong>Universe</strong></a>
+          <a class="route-card" href="/products/"><strong>Products</strong></a>
+          <a class="route-card" href="/frontier/"><strong>Frontier</strong></a>
         </div>
       </section>
 
-      <details class="receipt" open>
-        <summary>Route receipt</summary>
-        <pre>HOME_PUBLIC_PARITY_RECEIVER_GATE_TNT_v1
+      <template id="route-receipt" data-route-receipt>
+HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2
 route=/home/
 page=home
 role=estate_receiver
 message=home_keeps_the_journey_coherent
-alignment_sequence=CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1
-shared_css=/assets/diamond-orbit.css
-animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
+shared_css_dependency=removed_for_home_orbit_geometry
+local_geometry=true
+animation_standard=LOCAL_4_DIAMOND_RECEIVER_ORBIT_STANDARD_v1
 center=home_receiver_background_anchor_only
-visual_system=home_receiver_clockwise_diamond_orbit
+visual_system=local_home_receiver_4_point_axial_orbit
 north=manor:/explore/
 east=book:/nine-summits-of-love/
 south=showroom:/showroom/
 west=gauges:/gauges/
 secondary_routes=compass,door,nine_summits,universe,products,frontier
-animation=diamondOrbitClockwise,diamondCounterRead,diamondHoverLift,backgroundAnchorPulse,auroraDrift
-z_index_law=ambient_background,home_anchor_background,orbit_field,route_diamonds,route_labels
-non_overlap_law=no_clickable_diamond_hidden_by_center
-upgraded=shared_css_link,current_contract_stamp,universal_diamond_orbit_standard
+animation=homeOrbitSpin,homeTextUpright,homeAnchorPulse,anchorPulse
+z_index_law=ambient_background,home_anchor_background,local_orbit_field,local_route_diamonds,route_labels
+non_overlap_law=no_clickable_diamond_hidden_by_center_no_diamond_escape_to_cards
+mobile_law=compact_4_point_field_no_hidden_nodes
+fix=visible_receipt_contained_and_home_orbit_localized
 preserved=home_receiver_gate,manor_book_showroom_gauges_routes,estate_receiver_role
-removed=explore_label_as_primary_identity,demo_universe_language,earth_g1_language,long_visible_receipt,flat_room_list_only
 route_owns=estate_receiving,stabilization,four_primary_receiving_directions,room_routes,256_scope_expression
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 home_loads_planet_scripts=false
@@ -626,12 +882,12 @@ gauges_logic_touched=false
 generated_image=false
 graphic_box=false
 streaming=false
-visual_pass_claimed=false</pre>
-      </details>
+visual_pass_claimed=false
+      </template>
     </main>
 
     <footer>
-      HOME_PUBLIC_PARITY_RECEIVER_GATE_TNT_v1 · Home · Estate Receiver · Shared Diamond Orbit · Contract Stamp Aligned.
+      HOME_LOCAL_4_POINT_RECEIVER_ORBIT_TNT_v2 · Home · Estate Receiver · Four-point local orbit · Receipt contained.
     </footer>
   </div>
 </body>

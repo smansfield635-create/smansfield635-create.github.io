@@ -1,20 +1,22 @@
 // /showroom/globe/index.js
-// SHOWROOM_GLOBE_AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_CONTROLLER_TNT_v2
+// SHOWROOM_GLOBE_AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_RUNTIME_RECEIPT_TNT_v3
 // AUDRALIA_G1_PARENT_TERRAIN_ACTIVE
 // TERRAIN_CHILD_ACTIVE
 // terrainChildActive
 // NO_CROSS_BODY_FALLBACK
+// GROUND_ZERO_PARENT_ONLY=false
 // Role: dual mount controller for Earth G4 candidate and Audralia G1 parent terrain-active route.
-// Scope: mount control, authority import, canvas render, receipt alignment.
+// Scope: mount control, source import, canvas render, runtime receipt overwrite.
 // Does not own: Earth renderer, Audralia renderer internals, Gauges, parent G2 composition, ecology, fauna, runtime.
 
-const RECEIPT = "SHOWROOM_GLOBE_AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_CONTROLLER_TNT_v2";
+const RECEIPT = "SHOWROOM_GLOBE_AUDRALIA_G1_PARENT_TERRAIN_ACTIVE_RUNTIME_RECEIPT_TNT_v3";
 const ROUTE = "/showroom/globe/";
 
 const AUDRALIA_G1_PARENT_TERRAIN_ACTIVE = true;
 const TERRAIN_CHILD_ACTIVE = true;
 const terrainChildActive = true;
 const NO_CROSS_BODY_FALLBACK = true;
+const GROUND_ZERO_PARENT_ONLY = false;
 
 const PATHS = Object.freeze({
   earth: "/assets/earth/earth_canvas.js",
@@ -78,10 +80,12 @@ function writeReceipt(id, lines) {
   node.textContent = [
     RECEIPT,
     `TIME=${nowIso()}`,
+    "ROUTE=/showroom/globe/",
     "ROUTE_CONTROLLER_EXECUTED=true",
     "AUDRALIA_G1_PARENT_TERRAIN_ACTIVE=true",
     "TERRAIN_CHILD_ACTIVE=true",
     "terrainChildActive=true",
+    "GROUND_ZERO_PARENT_ONLY=false",
     "NO_CROSS_BODY_FALLBACK=true",
     "BODY_ADOPTION_BLOCKED=true",
     "SIZE_CLAMP_ACTIVE=true",
@@ -91,8 +95,10 @@ function writeReceipt(id, lines) {
   node.dataset.routeControllerReceipt = RECEIPT;
   node.dataset.audraliaG1ParentTerrainActive = "true";
   node.dataset.terrainChildActive = "true";
+  node.dataset.groundZeroParentOnly = "false";
   node.dataset.noCrossBodyFallback = "true";
   node.dataset.bodyAdoptionBlocked = "true";
+  node.dataset.sizeClampActive = "true";
 
   return true;
 }
@@ -248,6 +254,7 @@ function makeRenderOptions(config) {
     AUDRALIA_G1_PARENT_TERRAIN_ACTIVE,
     TERRAIN_CHILD_ACTIVE,
     terrainChildActive,
+    GROUND_ZERO_PARENT_ONLY,
     terrainChildPath: PATHS.terrain,
     hydrationChildBuilt: true,
     hydrationChildPath: PATHS.hydration,
@@ -330,8 +337,8 @@ function audraliaStatusSummary(status) {
     AUDRALIA_G1_PARENT_TERRAIN_ACTIVE,
     TERRAIN_CHILD_ACTIVE,
     terrainChildActive,
+    GROUND_ZERO_PARENT_ONLY,
 
-    terrainChildActive: status.terrainChildActive === true,
     terrainChildPath: status.terrainChildPath || PATHS.terrain,
     parentConsumesTerrain: status.parentConsumesTerrain === true,
     hydrationChildBuilt: true,
@@ -388,6 +395,7 @@ function makeReceiptLines(config, imported, statusSummary, renderResult) {
     "AUDRALIA_G1_PARENT_TERRAIN_ACTIVE=true",
     "TERRAIN_CHILD_ACTIVE=true",
     "terrainChildActive=true",
+    "GROUND_ZERO_PARENT_ONLY=false",
     `TERRAIN_CHILD_PATH=${PATHS.terrain}`,
     "HYDRATION_CHILD_BUILT=true",
     `HYDRATION_CHILD_PATH=${PATHS.hydration}`,
@@ -449,6 +457,7 @@ async function mountBody(config) {
       authority: PATHS.audraliaParent,
       audraliaG1ParentTerrainActive: "true",
       terrainChildActive: "true",
+      groundZeroParentOnly: "false",
       terrainChildPath: PATHS.terrain,
       hydrationChildBuilt: "true",
       hydrationChildPath: PATHS.hydration,
@@ -536,6 +545,7 @@ function publishRouteReceipt(results) {
     AUDRALIA_G1_PARENT_TERRAIN_ACTIVE,
     TERRAIN_CHILD_ACTIVE,
     terrainChildActive,
+    GROUND_ZERO_PARENT_ONLY,
     audraliaParentAuthority: PATHS.audraliaParent,
     audraliaTerrainChildActive: true,
     audraliaTerrainChildPath: PATHS.terrain,
@@ -557,7 +567,7 @@ function publishRouteReceipt(results) {
 
   try {
     window.dispatchEvent(
-      new CustomEvent("dgb:showroom-globe:audralia-g1-parent-terrain-active", {
+      new CustomEvent("dgb:showroom-globe:audralia-g1-parent-terrain-active-v3", {
         detail: routeReceipt
       })
     );

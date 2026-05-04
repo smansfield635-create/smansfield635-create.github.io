@@ -1,12 +1,14 @@
 // /assets/earth/earth_canvas.js
-// EARTH_G4_RENDER_API_COMPATIBILITY_ADAPTER_TNT_v1
-// Role: Earth Generation 4 render API adapter for /showroom/globe/index.js.
-// Owns: Earth render API compatibility only.
+// EARTH_G4_CANDIDATE_RENDER_API_ADAPTER_TNT_v2
+// Role: Earth render API adapter for /showroom/globe/index.js.
+// Status: G4 candidate only. This file must not claim Earth Generation 4 completion.
+// Target standard: prior Orbital Earth G4 reference.
 // Does not own: route shell, Audralia, Sun, Moon, Gauges, Products, visual pass claim.
 
-const RECEIPT = "EARTH_G4_RENDER_API_COMPATIBILITY_ADAPTER_TNT_v1";
+const RECEIPT = "EARTH_G4_CANDIDATE_RENDER_API_ADAPTER_TNT_v2";
 const PLANETARY_OBJECT = "Earth";
-const GENERATION = "G4";
+const GENERATION_STATUS = "G4_CANDIDATE";
+const TARGET_STANDARD = "ORBITAL_EARTH_G4_REFERENCE";
 const FILE = "/assets/earth/earth_canvas.js";
 
 function clamp(value, min, max) {
@@ -51,7 +53,7 @@ function valueNoise(x, y, seed = 0) {
   const a = hash2(ix, iy, seed);
   const b = hash2(ix + 1, iy, seed);
   const c = hash2(ix, iy + 1, seed);
-  const d = hash2(ix + 1, iy + 1);
+  const d = hash2(ix + 1, iy + 1, seed);
 
   const ux = fx * fx * (3 - 2 * fx);
   const uy = fy * fy * (3 - 2 * fy);
@@ -166,7 +168,9 @@ function sampleBaseSurface(uInput, vInput) {
   return Object.freeze({
     receipt: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
-    generation: GENERATION,
+    generationStatus: GENERATION_STATUS,
+    generationClaimed: false,
+    targetStandard: TARGET_STANDARD,
     u,
     v,
     lon,
@@ -257,13 +261,16 @@ export function createProfile(options = {}) {
     receipt: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
-    generation: options.generation || GENERATION,
+    generation: "G4_CANDIDATE",
+    generationStatus: GENERATION_STATUS,
+    generationClaimed: false,
+    targetStandard: TARGET_STANDARD,
     body: options.body || PLANETARY_OBJECT,
     file: FILE,
-    role: "earth-g4-render-api-adapter",
+    role: "earth-g4-candidate-render-api-adapter",
     authority: "EARTH_FILE_CHAIN",
     sourceMode: "local-render-adapter",
-    targetMode: "satellite-reference-compatible",
+    targetMode: "orbital-earth-g4-reference-required",
     radius: options.radius || 0.36,
     staticImageReplacement: false,
     imageGeneration: false,
@@ -276,7 +283,10 @@ export function buildTexture(profile = createProfile(), options = {}) {
   return Object.freeze({
     receipt: RECEIPT,
     planetaryObject: PLANETARY_OBJECT,
-    generation: profile.generation || GENERATION,
+    generation: "G4_CANDIDATE",
+    generationStatus: GENERATION_STATUS,
+    generationClaimed: false,
+    targetStandard: TARGET_STANDARD,
     profile,
     width: options.width || 512,
     height: options.height || 256,
@@ -373,7 +383,10 @@ export function renderSurface(canvas, options = {}) {
     rendered: true,
     method: "renderSurface",
     planetaryObject: PLANETARY_OBJECT,
-    generation: profile.generation || GENERATION,
+    generation: "G4_CANDIDATE",
+    generationStatus: GENERATION_STATUS,
+    generationClaimed: false,
+    targetStandard: TARGET_STANDARD,
     file: FILE,
     sourceMode: "local-render-adapter",
     staticImageReplacement: false,
@@ -397,12 +410,15 @@ export function getStatus() {
     receipt: RECEIPT,
     status: "active",
     statusAvailable: true,
-    id: "earth-g4-render-api-adapter",
+    id: "earth-g4-candidate-render-api-adapter",
     planetaryObject: PLANETARY_OBJECT,
     publicName: PLANETARY_OBJECT,
-    generation: GENERATION,
+    generation: "G4_CANDIDATE",
+    generationStatus: GENERATION_STATUS,
+    generationClaimed: false,
+    targetStandard: TARGET_STANDARD,
     file: FILE,
-    role: "earth-g4-render-api-adapter",
+    role: "earth-g4-candidate-render-api-adapter",
     authority: "EARTH_FILE_CHAIN",
     exports: Object.freeze([
       "createProfile",

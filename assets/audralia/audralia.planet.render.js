@@ -1,19 +1,14 @@
 /*
-  /assets/audralia/audralia.planet.render.js
+  /assets/audrelia.planet.render.js
   AUDRALIA_G2_PARENT_CONSUMES_HYDRATION_CLIMATE_AND_PREPARES_G3_ECOLOGY_TNT_v1
 
-  Purpose:
-  - Keep Audralia as the active constructed world-body.
-  - Preserve the G1 terraform terrain foundation.
-  - Consume hydration and climate into the Audralia parent body.
-  - Prepare G3 ecology / foliage hooks without falsely claiming G3 completion.
-  - Preserve route shell, Showroom globe split, Earth hold, Sun baseline, Moon baseline, controls, and current mount compatibility.
-
   Scope:
-  - This file owns Audralia parent render-body authority only.
-  - This file does not own Earth, Showroom route shell, CSS, Gauges, Products, Sun, Moon, or global site files.
+  - Audralia parent render-body authority only.
+  - Consumes G1 terrain, G2 hydration, and G2 climate into one parent world-body.
+  - Prepares G3 ecology hooks without claiming G3 completion.
+  - Does not touch Earth, Showroom, CSS, Gauges, Products, Sun, Moon, route shell, or global files.
 
-  Public API preserved:
+  Preserved API:
   - createProfile
   - buildTexture
   - sampleSurface
@@ -33,36 +28,33 @@
     label: "Audralia",
     publicLabel: "Audralia",
     classification: "constructed-home-world-body",
-    parentAuthority: "/assets/audralia/audralia.planet.render.js",
+    parentAuthority: "/assets/audrelia.planet.render.js",
     generation: "G2_PARENT_CONSUMED",
     generationClaim: "G2",
-    nextGenerationPrep: "G3_ECOLOGY_PREPARED_NOT_CLAIMED"
+    generation3Prepared: true,
+    generation3Claimed: false,
+    generation4Claimed: false
   });
 
   const CHILDREN = Object.freeze({
     terrain: {
       status: "CONSUMED_BY_PARENT",
-      path: "/assets/audralia/audralia.terrain.render.js",
       generationRole: "G1_TERRAFORM_FOUNDATION"
     },
     hydration: {
       status: "CONSUMED_BY_PARENT",
-      path: "/assets/audralia/audralia.hydration.render.js",
       generationRole: "G2_HYDRATION_CHILD"
     },
     climate: {
       status: "CONSUMED_BY_PARENT",
-      path: "/assets/audralia/audralia.climate.render.js",
       generationRole: "G2_CLIMATE_CHILD"
     },
     ecology: {
       status: "PREPARED_NOT_CLAIMED",
-      path: null,
       generationRole: "G3_ECOLOGY_PREP"
     },
     fauna: {
       status: "NOT_BUILT",
-      path: null,
       generationRole: "G4_FAUNA_FUTURE"
     }
   });
@@ -71,10 +63,11 @@
     terrainFoundationPreserved: true,
     hydrationConsumed: true,
     climateConsumed: true,
+    parentWorldBodyActive: true,
     ecologyPrepared: true,
     ecologyClaimed: false,
     generation3Claimed: false,
-    visualPass: "HELD_UNTIL_SEAN_SCREENSHOT_OR_OWNER_CONFIRMATION",
+    visualPass: "HELD_UNTIL_SCREENSHOT_OR_OWNER_CONFIRMATION",
     imageGeneration: false,
     staticPictureReplacement: false,
     seamSafeTerrainGrammar: true,
@@ -85,120 +78,30 @@
   });
 
   const NINE_SUMMITS = Object.freeze([
-    {
-      key: "character",
-      index: 1,
-      lon: 0.28,
-      lat: 0.34,
-      radius: 0.105,
-      terrain: "origin-ridge-highland-spine",
-      climate: "cool exposed stone",
-      elevation: 0.36,
-      moisture: -0.04
-    },
-    {
-      key: "structure",
-      index: 2,
-      lon: 0.41,
-      lat: 0.42,
-      radius: 0.135,
-      terrain: "stable-plateau-mature-foundation",
-      climate: "temperate plateau",
-      elevation: 0.22,
-      moisture: -0.02
-    },
-    {
-      key: "balance",
-      index: 3,
-      lon: 0.55,
-      lat: 0.48,
-      radius: 0.128,
-      terrain: "transition-basin-wet-dry-elevation-meet",
-      climate: "mixed transition",
-      elevation: 0.06,
-      moisture: 0.12
-    },
-    {
-      key: "stability",
-      index: 4,
-      lon: 0.66,
-      lat: 0.39,
-      radius: 0.12,
-      terrain: "broad-habitable-shelf-temperate-coast",
-      climate: "temperate coastal",
-      elevation: 0.08,
-      moisture: 0.18
-    },
-    {
-      key: "peace",
-      index: 5,
-      lon: 0.36,
-      lat: 0.58,
-      radius: 0.118,
-      terrain: "protected-green-blue-basin",
-      climate: "sheltered basin",
-      elevation: -0.02,
-      moisture: 0.28
-    },
-    {
-      key: "joy",
-      index: 6,
-      lon: 0.74,
-      lat: 0.57,
-      radius: 0.112,
-      terrain: "warm-archipelago-reef-life",
-      climate: "warm reef islands",
-      elevation: -0.06,
-      moisture: 0.24
-    },
-    {
-      key: "dignity",
-      index: 7,
-      lon: 0.62,
-      lat: 0.25,
-      radius: 0.102,
-      terrain: "elevated-mineral-crownland-weathered-ridge",
-      climate: "dry highland mineral belt",
-      elevation: 0.34,
-      moisture: -0.12
-    },
-    {
-      key: "free-will",
-      index: 8,
-      lon: 0.21,
-      lat: 0.52,
-      radius: 0.13,
-      terrain: "frontier-belt-open-edge",
-      climate: "wild transitional",
-      elevation: 0.1,
-      moisture: 0.02
-    },
-    {
-      key: "love",
-      index: 9,
-      lon: 0.50,
-      lat: 0.50,
-      radius: 0.15,
-      terrain: "convergence-heartland",
-      climate: "waters-ridges-routes-converge",
-      elevation: 0.08,
-      moisture: 0.18
-    }
+    { key: "character", index: 1, lon: 0.28, lat: 0.34, radius: 0.105, elevation: 0.36, moisture: -0.04 },
+    { key: "structure", index: 2, lon: 0.41, lat: 0.42, radius: 0.135, elevation: 0.22, moisture: -0.02 },
+    { key: "balance", index: 3, lon: 0.55, lat: 0.48, radius: 0.128, elevation: 0.06, moisture: 0.12 },
+    { key: "stability", index: 4, lon: 0.66, lat: 0.39, radius: 0.12, elevation: 0.08, moisture: 0.18 },
+    { key: "peace", index: 5, lon: 0.36, lat: 0.58, radius: 0.118, elevation: -0.02, moisture: 0.28 },
+    { key: "joy", index: 6, lon: 0.74, lat: 0.57, radius: 0.112, elevation: -0.06, moisture: 0.24 },
+    { key: "dignity", index: 7, lon: 0.62, lat: 0.25, radius: 0.102, elevation: 0.34, moisture: -0.12 },
+    { key: "free-will", index: 8, lon: 0.21, lat: 0.52, radius: 0.13, elevation: 0.1, moisture: 0.02 },
+    { key: "love", index: 9, lon: 0.5, lat: 0.5, radius: 0.15, elevation: 0.08, moisture: 0.18 }
   ]);
 
-  const LOCAL_LAND_SEEDS = Object.freeze([
+  const LAND_SEEDS = Object.freeze([
     { lon: 0.18, lat: 0.47, radiusX: 0.16, radiusY: 0.23, height: 0.56, moisture: 0.05 },
     { lon: 0.31, lat: 0.36, radiusX: 0.18, radiusY: 0.15, height: 0.48, moisture: -0.06 },
     { lon: 0.44, lat: 0.52, radiusX: 0.21, radiusY: 0.16, height: 0.5, moisture: 0.06 },
-    { lon: 0.58, lat: 0.38, radiusX: 0.16, radiusY: 0.20, height: 0.5, moisture: -0.04 },
+    { lon: 0.58, lat: 0.38, radiusX: 0.16, radiusY: 0.2, height: 0.5, moisture: -0.04 },
     { lon: 0.72, lat: 0.55, radiusX: 0.18, radiusY: 0.15, height: 0.38, moisture: 0.18 },
-    { lon: 0.80, lat: 0.31, radiusX: 0.09, radiusY: 0.12, height: 0.32, moisture: -0.08 }
+    { lon: 0.8, lat: 0.31, radiusX: 0.09, radiusY: 0.12, height: 0.32, moisture: -0.08 }
   ]);
 
   const ISLAND_CHAINS = Object.freeze([
     { lon: 0.12, lat: 0.61, count: 7, stepLon: 0.026, stepLat: -0.012, radius: 0.022, height: 0.32 },
-    { lon: 0.70, lat: 0.66, count: 9, stepLon: 0.019, stepLat: -0.018, radius: 0.02, height: 0.29 },
-    { lon: 0.82, lat: 0.50, count: 6, stepLon: -0.022, stepLat: 0.016, radius: 0.018, height: 0.24 }
+    { lon: 0.7, lat: 0.66, count: 9, stepLon: 0.019, stepLat: -0.018, radius: 0.02, height: 0.29 },
+    { lon: 0.82, lat: 0.5, count: 6, stepLon: -0.022, stepLat: 0.016, radius: 0.018, height: 0.24 }
   ]);
 
   function clamp(value, min, max) {
@@ -286,20 +189,15 @@
       }
     }
 
-    return {
-      elevation,
-      moisture,
-      regionKey,
-      regionStrength
-    };
+    return { elevation, moisture, regionKey, regionStrength };
   }
 
   function landSeedInfluence(x, y) {
     let height = -0.34;
     let moisture = 0;
 
-    for (let i = 0; i < LOCAL_LAND_SEEDS.length; i += 1) {
-      const seed = LOCAL_LAND_SEEDS[i];
+    for (let i = 0; i < LAND_SEEDS.length; i += 1) {
+      const seed = LAND_SEEDS[i];
       const dx = wrapDistance(x, seed.lon) / seed.radiusX;
       const dy = Math.abs(y - seed.lat) / seed.radiusY;
       const d = Math.sqrt(dx * dx + dy * dy);
@@ -335,7 +233,7 @@
   }
 
   function ridgeField(x, y) {
-    const diagonalRidge =
+    const diagonal =
       1 -
       Math.abs(
         Math.sin((x * 1.65 + y * 0.9 + fbm(x * 8, y * 8, 4) * 0.08) * Math.PI)
@@ -347,7 +245,7 @@
         Math.sin((x * 2.25 - y * 1.15 + fbm(x * 11 + 4, y * 11 + 9, 4) * 0.12) * Math.PI)
       );
 
-    return Math.pow(Math.max(diagonalRidge, oldFold * 0.86), 4);
+    return Math.pow(Math.max(diagonal, oldFold * 0.86), 4);
   }
 
   function calculateSurface(xInput, yInput) {
@@ -366,17 +264,19 @@
     const summit = summitInfluence(x, y);
     const ridges = ridgeField(x, y);
 
-    const ancientErosion = (erosion - 0.5) * 0.12 + (micro - 0.5) * 0.035;
     let elevation =
       local.height +
       summit.elevation +
       (macro - 0.5) * 0.28 +
       ridges * 0.18 +
-      ancientErosion -
+      (erosion - 0.5) * 0.12 +
+      (micro - 0.5) * 0.035 -
       polar * 0.08;
 
     elevation = clamp(elevation, -0.92, 0.92);
 
+    const isWater = elevation < 0;
+    const depth = isWater ? clamp(Math.abs(elevation), 0, 1) : 0;
     const coast = 1 - clamp(Math.abs(elevation) / 0.17, 0, 1);
     const shelf = elevation < 0 && elevation > -0.22 ? 1 - Math.abs(elevation + 0.09) / 0.13 : 0;
     const reef =
@@ -389,25 +289,24 @@
       (1 - smoothstep(0.58, 0.9, latFromEquator));
 
     const mountainCold = smoothstep(0.24, 0.56, elevation);
-    const moisture =
-      clamp(
-        0.48 +
-          local.moisture +
-          summit.moisture +
-          equatorial * 0.18 -
-          aridityBand * 0.22 +
-          coast * 0.12 -
-          mountainCold * 0.08 +
-          (fbm(x * 7 + 6, y * 9 + 3, 4) - 0.5) * 0.18,
-        0,
-        1
-      );
 
-    const isWater = elevation < 0;
-    const depth = isWater ? clamp(Math.abs(elevation), 0, 1) : 0;
+    const moisture = clamp(
+      0.48 +
+        local.moisture +
+        summit.moisture +
+        equatorial * 0.18 -
+        aridityBand * 0.22 +
+        coast * 0.12 -
+        mountainCold * 0.08 +
+        (fbm(x * 7 + 6, y * 9 + 3, 4) - 0.5) * 0.18,
+      0,
+      1
+    );
+
     const ice = clamp(polar * 0.92 + mountainCold * 0.42 - moisture * 0.18, 0, 1);
 
     let biome = "deep-ocean";
+
     if (isWater && shelf > 0.25) biome = reef > 0.35 ? "reef-shelf" : "shallow-shelf";
     if (!isWater && ice > 0.62) biome = "ice-highland";
     else if (!isWater && elevation > 0.42) biome = "weathered-mountain-ridge";
@@ -468,14 +367,8 @@
       const reef = colorToBytes("#72d6c3");
 
       let color = mixColor(mid, deep, clamp(surface.depth * 1.15, 0, 1));
-
-      if (surface.shelf > 0) {
-        color = mixColor(color, shelf, surface.shelf * 0.72);
-      }
-
-      if (surface.reef > 0) {
-        color = mixColor(color, reef, surface.reef * 0.66);
-      }
+      color = mixColor(color, shelf, surface.shelf * 0.72);
+      color = mixColor(color, reef, surface.reef * 0.66);
 
       return color;
     }
@@ -515,11 +408,14 @@
     canvas.width = width;
     canvas.height = height;
     canvas.dataset.body = BODY.id;
+    canvas.dataset.legacyBody = BODY.legacyId;
     canvas.dataset.label = BODY.label;
     canvas.dataset.version = VERSION;
     canvas.dataset.generation = BODY.generation;
+    canvas.dataset.generationClaim = BODY.generationClaim;
     canvas.dataset.parentConsumption = "terrain-hydration-climate";
     canvas.dataset.ecologyPrep = "true";
+    canvas.dataset.g3Claimed = "false";
     canvas.dataset.visualPass = CONTRACT.visualPass;
     return canvas;
   }
@@ -557,11 +453,11 @@
           surface.depth * 0.04 +
           (fbm(x * 96 + 41, y * 96 + 83, 2) - 0.5) * 0.055;
 
-        const idx = (py * width + px) * 4;
-        data[idx] = clamp(Math.round(color.r * light), 0, 255);
-        data[idx + 1] = clamp(Math.round(color.g * light), 0, 255);
-        data[idx + 2] = clamp(Math.round(color.b * light), 0, 255);
-        data[idx + 3] = 255;
+        const index = (py * width + px) * 4;
+        data[index] = clamp(Math.round(color.r * light), 0, 255);
+        data[index + 1] = clamp(Math.round(color.g * light), 0, 255);
+        data[index + 2] = clamp(Math.round(color.b * light), 0, 255);
+        data[index + 3] = 255;
       }
     }
 
@@ -578,6 +474,7 @@
         width,
         height,
         body: BODY.id,
+        legacyId: BODY.legacyId,
         label: BODY.label,
         version: VERSION,
         generation: BODY.generation,
@@ -618,6 +515,7 @@
     const receipt = document.createElement("div");
     receipt.className = "audralia-parent-consumption-receipt";
     receipt.dataset.body = BODY.id;
+    receipt.dataset.legacyBody = BODY.legacyId;
     receipt.dataset.label = BODY.label;
     receipt.dataset.version = VERSION;
     receipt.dataset.generation = BODY.generation;
@@ -627,6 +525,7 @@
     receipt.dataset.climateChild = CHILDREN.climate.status;
     receipt.dataset.ecologyPrep = CHILDREN.ecology.status;
     receipt.dataset.visualPass = CONTRACT.visualPass;
+
     receipt.textContent = [
       "AUDRALIA_PARENT_CONSUMPTION=G2",
       "TERRAIN=CONSUMED",
@@ -680,12 +579,14 @@
 
     if (target) {
       target.replaceChildren();
+
       target.dataset.body = BODY.id;
+      target.dataset.legacyBody = BODY.legacyId;
       target.dataset.label = BODY.label;
       target.dataset.version = VERSION;
       target.dataset.generation = BODY.generation;
       target.dataset.parentConsumption = "terrain-hydration-climate";
-      target.dataset.terrainChildActive = "true";
+      target.dataset.terrainChildConsumed = "true";
       target.dataset.hydrationChildConsumed = "true";
       target.dataset.climateChildConsumed = "true";
       target.dataset.g3EcologyPrep = "true";
@@ -703,7 +604,7 @@
   }
 
   function createProfile(overrides) {
-    const profile = Object.assign(
+    return Object.assign(
       {
         id: BODY.id,
         legacyId: BODY.legacyId,
@@ -716,20 +617,13 @@
         generationClaim: BODY.generationClaim,
         generation3Prepared: true,
         generation3Claimed: false,
+        generation4Claimed: false,
         activeDownstreamChildren: ["terrain", "hydration", "climate"],
         consumedChildren: ["terrain", "hydration", "climate"],
         preparedChildren: ["ecology"],
         futureChildren: ["fauna"],
         children: CHILDREN,
         contract: CONTRACT,
-        nineSummits: NINE_SUMMITS.map(function (region) {
-          return {
-            index: region.index,
-            key: region.key,
-            terrain: region.terrain,
-            climate: region.climate
-          };
-        }),
         api: {
           createProfile: true,
           buildTexture: true,
@@ -741,8 +635,6 @@
       },
       overrides || {}
     );
-
-    return profile;
   }
 
   function getStatus() {
@@ -790,7 +682,6 @@
     const profile = createProfile();
 
     if (!target) return api;
-
     if (target === api) return api;
 
     if (typeof target.registerPlanet === "function") {
@@ -830,7 +721,8 @@
       window.DGBPlanetRegistry,
       window.DGBShowroomPlanetRegistry,
       window.DGBShowroomGlobeInstrument,
-      window.DGBAudraliaRegistry
+      window.DGBAudraliaRegistry,
+      window.DGBAudreliaRegistry
     ].forEach(function (registry) {
       if (registry) registerExtension(registry);
     });
@@ -839,6 +731,7 @@
       new CustomEvent("dgb:audralia-parent-consumption-ready", {
         detail: {
           body: BODY.id,
+          legacyId: BODY.legacyId,
           label: BODY.label,
           version: VERSION,
           generation: BODY.generation,
@@ -851,8 +744,11 @@
   function autoMount() {
     const mount =
       document.getElementById("audraliaRenderMount") ||
+      document.getElementById("audreliaRenderMount") ||
       document.querySelector("[data-audralia-render-mount]") ||
-      document.querySelector("[data-body='audralia'][data-render-mount]");
+      document.querySelector("[data-audrelia-render-mount]") ||
+      document.querySelector("[data-body='audralia'][data-render-mount]") ||
+      document.querySelector("[data-body='audrelia'][data-render-mount]");
 
     if (!mount) return;
 

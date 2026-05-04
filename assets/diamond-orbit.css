@@ -1,0 +1,562 @@
+/*
+  /assets/diamond-orbit.css
+  UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+  UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_CSS_FILE_TNT_v1
+
+  Purpose:
+  Shared diamond-orbit animation primitives for Diamond Gate Bridge route surfaces.
+
+  Scope:
+  This file defines motion grammar only.
+  It does not own page copy, page routing, Gauges logic, Showroom rendering, runtime state, or product meaning.
+*/
+
+:root {
+  --diamond-orbit-ink: #fff4d8;
+  --diamond-orbit-muted: rgba(230, 238, 255, 0.78);
+  --diamond-orbit-faint: rgba(230, 238, 255, 0.42);
+  --diamond-orbit-gold: #f3c86f;
+  --diamond-orbit-gold-2: #ffe8a3;
+  --diamond-orbit-blue: #8dd8ff;
+  --diamond-orbit-purple: #8f65ff;
+  --diamond-orbit-panel: rgba(9, 15, 31, 0.84);
+  --diamond-orbit-line: rgba(184, 205, 255, 0.18);
+  --diamond-orbit-line-gold: rgba(243, 200, 111, 0.34);
+  --diamond-orbit-shadow: 0 32px 110px rgba(0, 0, 0, 0.46);
+
+  --diamond-orbit-speed: 32s;
+  --diamond-orbit-anchor-speed: 8s;
+  --diamond-orbit-aurora-speed: 28s;
+  --diamond-orbit-radius: clamp(8.8rem, 24vw, 15rem);
+  --diamond-orbit-node-size: clamp(7.2rem, 15vw, 10.5rem);
+  --diamond-orbit-diamond-size: clamp(4.4rem, 8.5vw, 6.6rem);
+}
+
+/* Universal ambient field */
+
+.diamond-orbit-ambient {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.diamond-orbit-ambient::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    conic-gradient(
+      from 90deg at 50% 50%,
+      transparent 0deg,
+      rgba(143, 101, 255, 0.08) 52deg,
+      transparent 108deg,
+      rgba(243, 200, 111, 0.06) 172deg,
+      transparent 224deg,
+      rgba(141, 216, 255, 0.07) 292deg,
+      transparent 360deg
+    );
+  filter: blur(42px);
+  opacity: 0.58;
+  animation: auroraDrift var(--diamond-orbit-aurora-speed) linear infinite;
+}
+
+/* Orbit stage */
+
+.diamond-orbit-stage {
+  position: relative;
+  min-height: clamp(36rem, 64vw, 54rem);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  border-radius: clamp(1.25rem, 5vw, 2.2rem);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(243, 200, 111, 0.075), transparent 22%),
+    radial-gradient(circle at 50% 48%, rgba(143, 101, 255, 0.16), transparent 54%),
+    radial-gradient(circle at 50% 48%, rgba(141, 216, 255, 0.08), transparent 72%),
+    rgba(255, 255, 255, 0.018);
+  padding: clamp(1.15rem, 3vw, 2rem);
+}
+
+.diamond-orbit-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: clamp(21rem, 56vw, 42rem);
+  height: clamp(21rem, 56vw, 42rem);
+  border: 1px solid rgba(215, 194, 255, 0.16);
+  border-radius: 4rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow:
+    0 0 0 clamp(4rem, 9vw, 7rem) rgba(143, 101, 255, 0.035),
+    0 0 0 clamp(8rem, 18vw, 13rem) rgba(243, 200, 111, 0.024),
+    inset 0 0 3rem rgba(143, 101, 255, 0.06);
+  animation: backgroundAnchorPulse var(--diamond-orbit-anchor-speed) ease-in-out infinite;
+  pointer-events: none;
+}
+
+.diamond-orbit-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 7%;
+  bottom: 7%;
+  z-index: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(243, 200, 111, 0.32),
+    rgba(141, 216, 255, 0.18),
+    transparent
+  );
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.diamond-orbit-axis {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 50%;
+  z-index: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(141, 216, 255, 0.22),
+    rgba(243, 200, 111, 0.22),
+    transparent
+  );
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+/* Center anchor must remain behind route diamonds */
+
+.diamond-orbit-anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: clamp(13rem, 30vw, 22rem);
+  height: clamp(13rem, 30vw, 22rem);
+  border: 1px solid rgba(243, 200, 111, 0.20);
+  border-radius: 4rem;
+  background:
+    radial-gradient(circle at 48% 20%, rgba(255, 255, 255, 0.08), transparent 42%),
+    radial-gradient(circle at 54% 68%, rgba(143, 101, 255, 0.22), transparent 58%),
+    linear-gradient(145deg, rgba(33, 29, 58, 0.50), rgba(5, 9, 20, 0.55));
+  box-shadow:
+    0 1.7rem 4.2rem rgba(0, 0, 0, 0.20),
+    0 0 3.6rem rgba(143, 101, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translate(-50%, -50%) rotate(45deg);
+  opacity: 0.30;
+  pointer-events: none;
+  animation: backgroundAnchorPulse var(--diamond-orbit-anchor-speed) ease-in-out infinite;
+}
+
+.diamond-orbit-anchor::before,
+.diamond-orbit-anchor::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 2.5rem;
+}
+
+.diamond-orbit-anchor::after {
+  inset: 31%;
+  border-color: rgba(243, 200, 111, 0.12);
+}
+
+.diamond-orbit-anchor-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  gap: 0.2rem;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.58;
+}
+
+.diamond-orbit-anchor-label strong {
+  color: rgba(255, 244, 216, 0.88);
+  font-size: clamp(1rem, 3vw, 1.65rem);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 0.25rem 1.4rem rgba(0, 0, 0, 0.60);
+}
+
+.diamond-orbit-anchor-label span {
+  color: rgba(230, 238, 255, 0.70);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+/* Clockwise route orbit */
+
+.diamond-orbit-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: min(78vw, 42rem);
+  max-width: calc(100% - 5.5rem);
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.diamond-orbit-ring::before,
+.diamond-orbit-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(243, 200, 111, 0.16);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.diamond-orbit-ring::after {
+  inset: 12%;
+  border-color: rgba(141, 216, 255, 0.10);
+  transform: rotate(28deg) scaleX(1.08);
+}
+
+.diamond-orbit-rotor {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  animation: diamondOrbitClockwise var(--diamond-orbit-speed) linear infinite;
+  pointer-events: none;
+}
+
+/* Route nodes */
+
+.diamond-orbit-node {
+  --orbit-angle: 0deg;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: var(--diamond-orbit-node-size);
+  min-height: var(--diamond-orbit-node-size);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  pointer-events: auto;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--orbit-angle))
+    translateY(calc(-1 * var(--diamond-orbit-radius)));
+  transform-origin: 50% 50%;
+}
+
+.diamond-orbit-node.is-north,
+.diamond-orbit-node.node-1 {
+  --orbit-angle: 0deg;
+}
+
+.diamond-orbit-node.is-east,
+.diamond-orbit-node.node-2 {
+  --orbit-angle: 90deg;
+}
+
+.diamond-orbit-node.is-south,
+.diamond-orbit-node.node-3 {
+  --orbit-angle: 180deg;
+}
+
+.diamond-orbit-node.is-west,
+.diamond-orbit-node.node-4 {
+  --orbit-angle: 270deg;
+}
+
+/* Optional 5-point chamber layouts */
+
+.diamond-orbit-node.node-center {
+  z-index: 5;
+  transform: translate(-50%, -50%);
+}
+
+.diamond-orbit-node.node-top {
+  --orbit-angle: 0deg;
+}
+
+.diamond-orbit-node.node-left {
+  --orbit-angle: 270deg;
+}
+
+.diamond-orbit-node.node-right {
+  --orbit-angle: 90deg;
+}
+
+.diamond-orbit-node.node-bottom {
+  --orbit-angle: 180deg;
+}
+
+.diamond-orbit-counter {
+  display: grid;
+  place-items: center;
+  gap: 0.62rem;
+  width: 100%;
+  animation: diamondCounterRead var(--diamond-orbit-speed) linear infinite;
+}
+
+.diamond-orbit-node a,
+.diamond-orbit-node button,
+.diamond-orbit-node .diamond-orbit-click {
+  display: grid;
+  place-items: center;
+  gap: 0.62rem;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Diamond shape */
+
+.diamond-route-diamond {
+  width: var(--diamond-orbit-diamond-size);
+  height: var(--diamond-orbit-diamond-size);
+  border: 1px solid rgba(243, 200, 111, 0.64);
+  border-radius: 1.25rem;
+  transform: rotate(45deg);
+  background:
+    radial-gradient(circle at 48% 20%, rgba(255, 255, 255, 0.20), transparent 42%),
+    radial-gradient(circle at 52% 70%, rgba(243, 200, 111, 0.14), transparent 58%),
+    linear-gradient(145deg, rgba(143, 101, 255, 0.62), rgba(6, 10, 22, 0.98));
+  box-shadow:
+    0 1rem 2rem rgba(0, 0, 0, 0.38),
+    0 0 2rem rgba(143, 101, 255, 0.34),
+    0 0 1.2rem rgba(243, 200, 111, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  position: relative;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.diamond-route-diamond::before,
+.diamond-route-diamond::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 0.82rem;
+}
+
+.diamond-route-diamond::after {
+  inset: 34%;
+  border-color: rgba(243, 200, 111, 0.16);
+}
+
+/* Labels */
+
+.diamond-orbit-label {
+  color: rgba(255, 244, 216, 0.98);
+  font-size: clamp(0.76rem, 1.75vw, 1.02rem);
+  font-weight: 950;
+  line-height: 1.05;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  text-shadow: 0 0.2rem 0.9rem rgba(0, 0, 0, 0.72);
+}
+
+.diamond-orbit-sub {
+  max-width: 13rem;
+  color: rgba(230, 238, 255, 0.80);
+  font-size: clamp(0.62rem, 1.45vw, 0.76rem);
+  line-height: 1.25;
+  text-shadow: 0 0.2rem 0.9rem rgba(0, 0, 0, 0.72);
+}
+
+/* Hover / focus */
+
+.diamond-orbit-node:hover .diamond-route-diamond,
+.diamond-orbit-node:focus-within .diamond-route-diamond,
+.diamondHoverLift .diamond-route-diamond:hover,
+.diamondHoverLift:focus-within .diamond-route-diamond {
+  transform: rotate(45deg) scale(1.10);
+  border-color: rgba(243, 200, 111, 0.95);
+  background:
+    radial-gradient(circle at 48% 20%, rgba(255, 255, 255, 0.24), transparent 42%),
+    radial-gradient(circle at 52% 70%, rgba(243, 200, 111, 0.22), transparent 58%),
+    linear-gradient(145deg, rgba(166, 117, 255, 0.72), rgba(6, 10, 22, 0.98));
+  box-shadow:
+    0 1.15rem 2.4rem rgba(0, 0, 0, 0.45),
+    0 0 2.6rem rgba(143, 101, 255, 0.46),
+    0 0 1.4rem rgba(243, 200, 111, 0.22);
+}
+
+/* Utility rows for pages that cannot use circular orbit yet */
+
+.diamond-orbit-inline-field {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1rem);
+  align-items: stretch;
+}
+
+.diamond-orbit-inline-card {
+  min-height: 10rem;
+  display: grid;
+  place-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(143, 101, 255, 0.10), transparent 60%),
+    rgba(255, 255, 255, 0.035);
+}
+
+/* Keyframes required by the canonical standard */
+
+@keyframes diamondOrbitClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes diamondCounterRead {
+  from {
+    transform: rotate(calc(-1 * var(--orbit-angle, 0deg)));
+  }
+
+  to {
+    transform: rotate(calc(-360deg - var(--orbit-angle, 0deg)));
+  }
+}
+
+@keyframes diamondHoverLift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.55rem);
+  }
+}
+
+@keyframes backgroundAnchorPulse {
+  0%,
+  100% {
+    opacity: 0.26;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1);
+  }
+
+  50% {
+    opacity: 0.40;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.035);
+  }
+}
+
+@keyframes auroraDrift {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .diamond-orbit-ambient::before,
+  .diamond-orbit-stage::before,
+  .diamond-orbit-anchor,
+  .diamond-orbit-rotor,
+  .diamond-orbit-counter {
+    animation: none !important;
+  }
+}
+
+/* Mobile no-clipping law */
+
+@media (max-width: 720px) {
+  :root {
+    --diamond-orbit-speed: 36s;
+    --diamond-orbit-radius: 8.8rem;
+    --diamond-orbit-node-size: 7.1rem;
+    --diamond-orbit-diamond-size: 3.75rem;
+  }
+
+  .diamond-orbit-stage {
+    min-height: 34rem;
+    padding: 1rem 0.65rem;
+  }
+
+  .diamond-orbit-ring {
+    width: min(calc(100vw - 5rem), 28rem);
+    max-width: calc(100% - 3.5rem);
+  }
+
+  .diamond-orbit-anchor {
+    width: 13rem;
+    height: 13rem;
+    opacity: 0.18;
+  }
+
+  .diamond-orbit-anchor-label {
+    opacity: 0.28;
+  }
+
+  .diamond-orbit-label {
+    font-size: 0.66rem;
+  }
+
+  .diamond-orbit-sub {
+    font-size: 0.54rem;
+  }
+
+  .diamond-route-diamond {
+    border-radius: 0.95rem;
+  }
+
+  .diamond-orbit-inline-field {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+  Receipt:
+  UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_CSS_FILE_TNT_v1
+  file=/assets/diamond-orbit.css
+  standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+  motion=compass_centered_clockwise_diamond_orbit
+  owns=shared_animation_primitives_only
+  does_not_own=page_copy,routes,gauges_logic,showroom_rendering,runtime_state,product_meaning
+  center_diamond_layer=background_only
+  route_diamonds_layer=above_center
+  labels=counter_rotated_for_readability
+  mobile_law=no_clipping_no_hidden_nodes
+  reduced_motion=true
+*/

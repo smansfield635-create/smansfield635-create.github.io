@@ -3,8 +3,10 @@
   lang="en"
   data-route="/products/"
   data-page="products"
-  data-version="G1-V1.1"
-  data-contract="PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1"
+  data-version="G1-V4"
+  data-contract="PRODUCTS_LOCAL_8_POINT_AXIAL_DIAMOND_ORBIT_TNT_v4"
+  data-alignment-contract="TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2"
+  data-animation-standard="LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1"
   data-status="active"
   data-role="product-wing"
   data-heavy-runtime-loaded="false"
@@ -20,10 +22,8 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products is the product wing of Diamond Gate Bridge: one message, many useful chambers."
+    content="Products is the product wing of Diamond Gate Bridge: one message, eight clear doors, one axial circular path."
   >
-
-  <link rel="stylesheet" href="/assets/diamond-orbit.css">
 
   <style>
     :root{
@@ -40,6 +40,7 @@
       --line:rgba(184,205,255,.18);
       --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
+      --orbit-duration:48s;
     }
 
     *{box-sizing:border-box}
@@ -74,6 +75,7 @@
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
       background-image:
         radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
@@ -236,12 +238,12 @@
         radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
         radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
         linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:backgroundAnchorPulse 8s ease-in-out infinite;
+      animation:anchorPulse 8s ease-in-out infinite;
       pointer-events:none;
       opacity:.52;
     }
 
-    @keyframes backgroundAnchorPulse{
+    @keyframes anchorPulse{
       0%,100%{opacity:.42;filter:brightness(.95)}
       50%{opacity:.58;filter:brightness(1.1)}
     }
@@ -370,50 +372,238 @@
     }
 
     .products-stage{
-      --diamond-orbit-speed:48s;
-      --diamond-orbit-radius:clamp(8.6rem,24vw,15.2rem);
-      min-height:clamp(36rem,70vw,52rem);
       position:relative;
+      min-height:clamp(35rem,70vw,52rem);
+      display:grid;
+      place-items:center;
       overflow:hidden;
+      isolation:isolate;
+      border:1px solid rgba(184,205,255,.13);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 50% 44%,rgba(143,101,255,.16),transparent 20rem),
+        linear-gradient(180deg,rgba(1,5,16,.68),rgba(2,6,16,.92));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
-    .products-stage .diamond-orbit-ring,
-    .products-stage .diamond-orbit-rotor,
-    .products-stage .diamond-orbit-node,
-    .products-stage .diamond-orbit-counter{
-      transform-style:preserve-3d;
-    }
-
-    .products-stage .diamond-orbit-node{
-      z-index:3;
-    }
-
-    .products-stage .diamond-orbit-anchor,
-    .products-stage .diamond-orbit-anchor-label{
-      z-index:1;
+    .products-stage::before,
+    .products-stage::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
       pointer-events:none;
     }
 
-    .products-stage .diamond-orbit-anchor-label strong,
-    .products-stage .diamond-orbit-anchor-label span{
-      opacity:.82;
+    .products-stage::before{
+      width:min(82%,34rem);
+      height:min(82%,34rem);
+      border:1px solid rgba(243,200,111,.08);
+      box-shadow:0 0 3rem rgba(143,101,255,.12);
     }
 
-    .product-grid{
+    .products-stage::after{
+      width:min(52%,22rem);
+      height:min(52%,22rem);
+      border:1px solid rgba(143,101,255,.15);
+    }
+
+    .products-anchor{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:0;
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      place-items:center;
+      width:clamp(8.5rem,22vw,13rem);
+      height:clamp(8.5rem,22vw,13rem);
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(243,200,111,.12);
+      border-radius:1.9rem;
+      background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.16),transparent 31%),
+        linear-gradient(135deg,rgba(143,101,255,.38),rgba(27,17,75,.42));
+      box-shadow:
+        0 0 70px rgba(143,101,255,.18),
+        inset 0 0 26px rgba(255,255,255,.04);
+      opacity:.48;
+      pointer-events:none;
+      animation:productsAnchorPulse 7s ease-in-out infinite;
+    }
+
+    .products-anchor::after{
+      content:"";
+      position:absolute;
+      inset:14%;
+      border-radius:1.25rem;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .products-anchor span{
+      display:block;
+      transform:rotate(-45deg);
+      color:rgba(255,244,216,.86);
+      text-align:center;
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      line-height:1.2;
+    }
+
+    @keyframes productsAnchorPulse{
+      0%,100%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(.98);
+        opacity:.42;
+      }
+      50%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+        opacity:.56;
+      }
+    }
+
+    .products-orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:26.5rem;
+      height:26.5rem;
+      z-index:3;
+      border-radius:999px;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      animation:productsOrbitSpin var(--orbit-duration) linear infinite;
+    }
+
+    @keyframes productsOrbitSpin{
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .product-node{
+      --radius:-12.75rem;
+      position:absolute;
+      left:50%;
+      top:50%;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      width:5.45rem;
+      height:5.45rem;
+      margin:-2.725rem 0 0 -2.725rem;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:1.55rem;
+      background:
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.34),rgba(255,255,255,.08) 24%,transparent 42%),
+        radial-gradient(circle at 72% 78%,rgba(33,15,91,.38),transparent 48%),
+        linear-gradient(145deg,rgba(168,132,255,.98),rgba(103,69,225,.94) 52%,rgba(58,34,164,.96) 100%);
+      box-shadow:
+        0 16px 34px rgba(39,18,116,.34),
+        0 0 26px rgba(143,101,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      transform:
+        rotate(var(--angle))
+        translateY(var(--radius))
+        rotate(calc(-1 * var(--angle)))
+        rotate(45deg);
+      pointer-events:auto;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+    }
+
+    .product-node::before{
+      content:"";
+      position:absolute;
+      inset:8%;
+      border-radius:1.15rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);
+      opacity:.72;
+      pointer-events:none;
+      transform:translateZ(1px);
+    }
+
+    .product-node::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:1.55rem;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        inset 0 -18px 24px rgba(21,9,62,.16);
+      pointer-events:none;
+    }
+
+    .product-node:hover,
+    .product-node:focus{
+      outline:none;
+      border-color:rgba(243,200,111,.72);
+      box-shadow:
+        0 22px 42px rgba(39,18,116,.42),
+        0 0 34px rgba(143,101,255,.30),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -12px 22px rgba(22,10,65,.18);
+      filter:brightness(1.06);
+    }
+
+    .product-label-shell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:.35rem;
+      transform:rotate(-45deg);
+      text-align:center;
+    }
+
+    .product-label-text{
+      display:block;
+      max-width:4.4rem;
+      color:rgba(255,244,216,.98);
+      text-align:center;
+      font-size:.54rem;
+      font-weight:950;
+      letter-spacing:.07em;
+      line-height:1.1;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.8);
+      animation:productsTextUpright var(--orbit-duration) linear infinite;
+    }
+
+    .product-label-sub{
+      display:block;
+      margin-top:.12rem;
+      color:rgba(230,238,255,.72);
+      font-size:.40rem;
+      font-weight:850;
+      letter-spacing:.05em;
+      line-height:1;
+      text-transform:uppercase;
+    }
+
+    @keyframes productsTextUpright{
+      to{transform:rotate(-360deg)}
+    }
+
+    .product-grid,
+    .route-grid{
+      display:grid;
       gap:.8rem;
     }
 
+    .product-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
     .route-grid{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:.75rem;
+      grid-template-columns:repeat(4,minmax(0,1fr));
     }
 
     .product-card,
     .route-card{
-      min-height:12rem;
+      min-height:10rem;
       display:grid;
       gap:.55rem;
       align-content:start;
@@ -427,7 +617,7 @@
     }
 
     .route-card{
-      min-height:5.8rem;
+      min-height:6.6rem;
       place-items:center;
       text-align:center;
     }
@@ -475,7 +665,8 @@
     .route-receipt,
     [data-route-receipt],
     [data-contract-receipt],
-    [data-debug-receipt]{
+    [data-debug-receipt],
+    .receipt{
       display:none!important;
       visibility:hidden!important;
       overflow:hidden!important;
@@ -503,7 +694,7 @@
 
     @media (max-width:1080px){
       .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .route-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:980px){
@@ -525,8 +716,29 @@
       }
 
       .products-stage{
-        --diamond-orbit-radius:8.6rem;
-        min-height:35rem;
+        min-height:33rem;
+      }
+
+      .products-orbit{
+        width:21rem;
+        height:21rem;
+      }
+
+      .product-node{
+        --radius:-9.95rem;
+        width:4.35rem;
+        height:4.35rem;
+        margin:-2.175rem 0 0 -2.175rem;
+      }
+
+      .product-label-text{
+        max-width:3.2rem;
+        font-size:.40rem;
+        letter-spacing:.045em;
+      }
+
+      .product-label-sub{
+        display:none;
       }
 
       .product-grid,
@@ -545,8 +757,33 @@
 
     @media (max-width:460px){
       .products-stage{
-        --diamond-orbit-radius:8.25rem;
-        min-height:33rem;
+        min-height:31rem;
+      }
+
+      .products-anchor{
+        width:7.8rem;
+        height:7.8rem;
+      }
+
+      .products-anchor span{
+        font-size:.60rem;
+      }
+
+      .products-orbit{
+        width:18.8rem;
+        height:18.8rem;
+      }
+
+      .product-node{
+        --radius:-8.75rem;
+        width:3.75rem;
+        height:3.75rem;
+        margin:-1.875rem 0 0 -1.875rem;
+      }
+
+      .product-label-text{
+        max-width:2.85rem;
+        font-size:.35rem;
       }
     }
 
@@ -572,7 +809,7 @@
         <span class="brand-mark"><span>PR</span></span>
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>Rich Manor and Estate</strong>
+          <strong>Products · Product Wing</strong>
         </span>
       </a>
 
@@ -600,7 +837,7 @@
         <h1 id="page-title">The message becomes usable here.</h1>
 
         <p class="lead">
-          One message moves through many product chambers. Each product must be plain enough to understand before the click.
+          One message moves through eight clear doors. Five are product chambers. Three connect the visitor to the human voice, the public climb, and the book path.
         </p>
 
         <div class="quote">
@@ -616,70 +853,62 @@
       </section>
 
       <section class="panel section" aria-labelledby="field-title">
-        <div class="kicker">Product chamber orbit</div>
-        <h2 id="field-title">Five product chambers rotate around one usable message.</h2>
+        <div class="kicker">Eight-diamond axial orbit</div>
+        <h2 id="field-title">Eight diamonds sit on one circular path around one usable message.</h2>
 
-        <div class="diamond-orbit-stage products-stage" aria-label="Animated Products product chamber orbit">
-          <div class="diamond-orbit-axis" aria-hidden="true"></div>
-
-          <div class="diamond-orbit-anchor" aria-hidden="true"></div>
-          <div class="diamond-orbit-anchor-label" aria-hidden="true">
-            <strong>Products</strong>
-            <span>One Message · Many Chambers</span>
+        <div class="products-stage" aria-label="Animated Products eight-diamond axial orbit">
+          <div class="products-anchor" aria-hidden="true">
+            <span>Products<br>One Message<br>Eight Doors</span>
           </div>
 
-          <div class="diamond-orbit-ring">
-            <div class="diamond-orbit-rotor">
-              <div class="diamond-orbit-node" style="--orbit-angle:0deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/archcoin/" aria-label="ARCHCOIN Value">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">ARCHCOIN</span>
-                    <span class="diamond-orbit-sub">Value</span>
-                  </a>
-                </div>
-              </div>
+          <div class="products-orbit">
+            <a class="product-node" style="--angle:0deg" href="/products/archcoin/" aria-label="ARCHCOIN">
+              <span class="product-label-shell">
+                <b class="product-label-text">ARCHCOIN<span class="product-label-sub">Value</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:72deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/five-flags/" aria-label="Five Flags Game">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Five Flags</span>
-                    <span class="diamond-orbit-sub">Game</span>
-                  </a>
-                </div>
-              </div>
+            <a class="product-node" style="--angle:45deg" href="/products/five-flags/" aria-label="Five Flags">
+              <span class="product-label-shell">
+                <b class="product-label-text">Five<br>Flags<span class="product-label-sub">Game</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:144deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/on-your-side-ai/" aria-label="On Your Side AAI Support">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">AAI</span>
-                    <span class="diamond-orbit-sub">Support</span>
-                  </a>
-                </div>
-              </div>
+            <a class="product-node" style="--angle:90deg" href="/products/on-your-side-ai/" aria-label="On Your Side AAI">
+              <span class="product-label-shell">
+                <b class="product-label-text">AAI<span class="product-label-sub">Support</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:216deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/education/" aria-label="Education Learning">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Education</span>
-                    <span class="diamond-orbit-sub">Learning</span>
-                  </a>
-                </div>
-              </div>
+            <a class="product-node" style="--angle:135deg" href="/products/education/" aria-label="Education">
+              <span class="product-label-shell">
+                <b class="product-label-text">Education<span class="product-label-sub">Learning</span></b>
+              </span>
+            </a>
 
-              <div class="diamond-orbit-node" style="--orbit-angle:288deg">
-                <div class="diamond-orbit-counter">
-                  <a href="/products/nutrition/" aria-label="Nutrition Routine">
-                    <span class="diamond-route-diamond" aria-hidden="true"></span>
-                    <span class="diamond-orbit-label">Nutrition</span>
-                    <span class="diamond-orbit-sub">Routine</span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <a class="product-node" style="--angle:180deg" href="/products/nutrition/" aria-label="Nutrition">
+              <span class="product-label-shell">
+                <b class="product-label-text">Nutrition<span class="product-label-sub">Routine</span></b>
+              </span>
+            </a>
+
+            <a class="product-node" style="--angle:225deg" href="/meet-sean-mansfield/" aria-label="Meet Sean">
+              <span class="product-label-shell">
+                <b class="product-label-text">Meet<br>Sean<span class="product-label-sub">Voice</span></b>
+              </span>
+            </a>
+
+            <a class="product-node" style="--angle:270deg" href="/nine-summits/" aria-label="Nine Summits">
+              <span class="product-label-shell">
+                <b class="product-label-text">Nine<br>Summits<span class="product-label-sub">Climb</span></b>
+              </span>
+            </a>
+
+            <a class="product-node" style="--angle:315deg" href="/nine-summits-of-love/" aria-label="The Book">
+              <span class="product-label-shell">
+                <b class="product-label-text">Book<span class="product-label-sub">Love</span></b>
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -723,6 +952,27 @@
             <span>Food, water, energy, rhythm, and return without diet-culture framing.</span>
             <span class="open-chamber">Open chamber</span>
           </a>
+
+          <a class="product-card" href="/meet-sean-mansfield/">
+            <b>Meet Sean</b>
+            <strong>The human voice behind the system.</strong>
+            <span>A public-facing path for understanding the person, purpose, and message.</span>
+            <span class="open-chamber">Open chamber</span>
+          </a>
+
+          <a class="product-card" href="/nine-summits/">
+            <b>Nine Summits</b>
+            <strong>The public climb remains visible.</strong>
+            <span>A route into the human-facing structure of the project.</span>
+            <span class="open-chamber">Open chamber</span>
+          </a>
+
+          <a class="product-card" href="/nine-summits-of-love/">
+            <b>Book</b>
+            <strong>The long-form path stays attached.</strong>
+            <span>The written structure carries the deeper explanation and climb.</span>
+            <span class="open-chamber">Open chamber</span>
+          </a>
         </div>
       </section>
 
@@ -737,38 +987,37 @@
           <a class="route-card" href="/explore/"><strong>Manor</strong></a>
           <a class="route-card" href="/showroom/"><strong>Showroom</strong></a>
           <a class="route-card" href="/gauges/"><strong>Gauges</strong></a>
+          <a class="route-card" href="/nine-summits/"><strong>Nine Summits</strong></a>
+          <a class="route-card" href="/nine-summits-of-love/"><strong>Book</strong></a>
         </div>
       </section>
 
       <template id="route-receipt" data-route-receipt>
-PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1
+PRODUCTS_LOCAL_8_POINT_AXIAL_DIAMOND_ORBIT_TNT_v4
 route=/products/
 page=products
 role=product_wing
-message=one_message_many_product_chambers
-alignment_sequence=CORE_SHARED_DIAMOND_ORBIT_CSS_LINK_AND_CONTRACT_STAMP_TNT_SEQUENCE_v1
-shared_css=/assets/diamond-orbit.css
-animation_standard=UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1
+message=one_message_eight_doors
+alignment_sequence=TIC_TAC_TOE_DYNAMIC_PROTOCOL_v2
+shared_css_dependency=removed_for_products_orbit_geometry
+local_geometry=true
+animation_standard=LOCAL_8_DIAMOND_AXIAL_ORBIT_STANDARD_v1
 center=products_wing_background_anchor_only
-visual_system=products_centered_clockwise_chamber_orbit
-primary_job=turn_message_into_usable_chambers
-products=archcoin,five_flags,on_your_side_aai,education,nutrition
-archcoin=/products/archcoin/
-five_flags=/products/five-flags/
-on_your_side_aai=/products/on-your-side-ai/
-education=/products/education/
-nutrition=/products/nutrition/
-animation=diamondOrbitClockwise,diamondCounterRead,diamondHoverLift,backgroundAnchorPulse,auroraDrift
-z_index_law=ambient_background,products_anchor_background,orbit_field,route_diamonds,route_labels
-non_overlap_law=no_clickable_diamond_hidden_by_center
-mobile_law=compact_chamber_orbit_no_hidden_nodes
-fix=old_product_design_restored_and_route_receipt_hidden_from_public_flow
-upgraded=receipt_containment_only
-preserved=old_product_chamber_design,shared_css_link,universal_diamond_orbit_standard,archcoin_spelling,product_wing,one_message_many_chambers,product_routes
-removed=visible_route_receipt,public_metadata_column,debug_text_page_flow
-product_rule=plain_first,useful_first,one_wing
-route_owns=product_wing,product_chamber_routes,chamber_orbit,plain_first_product_entry
-route_does_not_own=product_chamber_internal_logic,showroom,gauges_logic,runtime,render_files,instrument_state
+visual_system=local_animated_8_point_axial_diamond_orbit
+design_object=8_point_diamond_product_field
+diamonds=archcoin,five_flags,on_your_side_aai,education,nutrition,meet_sean,nine_summits,book
+five_products=archcoin,five_flags,on_your_side_aai,education,nutrition
+human_voice=meet_sean
+public_climb=nine_summits
+book_path=nine_summits_of_love
+animation=productsOrbitSpin,productsTextUpright,productsAnchorPulse,anchorPulse
+z_index_law=ambient_background,products_anchor_background,local_orbit_field,local_route_diamonds,route_labels
+non_overlap_law=no_clickable_diamond_hidden_by_center_no_diamond_escape_to_cards
+mobile_law=compact_8_point_field_no_hidden_nodes
+fix=eight_diamonds_on_one_axial_circular_path
+preserved=product_copy,product_routes,local_geometry,dimensional_diamonds,product_wing,receipt_containment
+route_owns=product_wing,8_point_field,animated_diamond_routes,route_selection_surface
+route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic,full_site_nav_rebuild
 heavy_runtime_loaded=false
 render_files_touched=false
 instrument_touched=false
@@ -781,7 +1030,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      PRODUCTS_ONE_MESSAGE_MANY_CHAMBERS_RESTORE_OLD_DESIGN_RECEIPT_CONTAINMENT_TNT_v1_1 · Products · Old design restored · Receipt contained.
+      PRODUCTS_LOCAL_8_POINT_AXIAL_DIAMOND_ORBIT_TNT_v4 · Products · Eight-diamond axial orbit · Receipt contained.
     </footer>
   </div>
 </body>

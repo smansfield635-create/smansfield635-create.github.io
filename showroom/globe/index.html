@@ -1,238 +1,572 @@
-<!-- /showroom/globe/index.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Earth G4 Candidate and Audralia G1 · Showroom Globe · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Dual globe chamber for Earth G4 candidate restoration and Audralia Generation 1 constructed world-body authority."
-  />
+// /showroom/globe/index.js
+// EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v4
+// Role: route controller only.
+// Owns: mount selection, body separation, non-silent receipts, isolated import attempts, display-size clamp.
+// Does not own: Earth science, Audralia science, Sun, Moon, Gauges, Products, final visual pass.
 
-  <link rel="stylesheet" href="/assets/manor.css" />
-  <link rel="stylesheet" href="/showroom/showroom.css" />
+const RECEIPT = "EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v4";
+const ROUTE = "/showroom/globe/";
 
-  <style>
-    .dual-globe-grid {
-      display: grid;
-      gap: 1.5rem;
-      align-items: start;
+const EARTH = Object.freeze({
+  body: "Earth",
+  generation: "G4_CANDIDATE",
+  generationClaimed: false,
+  targetStandard: "ORBITAL_EARTH_G4_REFERENCE",
+  mountId: "earthRenderMount",
+  receiptId: "earthRenderReceipt",
+  authority: "EARTH_FILE_CHAIN",
+  moduleCandidates: Object.freeze([
+    "/assets/earth/earth.g4.render.js",
+    "/assets/earth/earth.render.js",
+    "/assets/earth/earth_canvas.js"
+  ])
+});
+
+const AUDRALIA = Object.freeze({
+  body: "Audralia",
+  generation: "G1",
+  generationClaimed: true,
+  targetStandard: "AUDRALIA_G1_PARENT_COMPOSITOR",
+  mountId: "audraliaRenderMount",
+  receiptId: "audraliaRenderReceipt",
+  authority: "/assets/AdreliaPlanetRendered.js",
+  moduleCandidates: Object.freeze([
+    "/assets/AdreliaPlanetRendered.js"
+  ])
+});
+
+const LEGACY_TOKEN = String.fromCharCode(65, 117, 115, 116, 114, 97, 108, 105, 97);
+
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function sanitizeText(value) {
+  const compactLegacy = `Planet${LEGACY_TOKEN}`;
+  const spacedLegacy = `Planet ${LEGACY_TOKEN}`;
+
+  return String(value)
+    .replaceAll(spacedLegacy, "Audralia")
+    .replaceAll(compactLegacy, "Audralia")
+    .replaceAll(LEGACY_TOKEN, "Audralia")
+    .replaceAll(LEGACY_TOKEN.toUpperCase(), "AUDRALIA")
+    .replaceAll(LEGACY_TOKEN.toLowerCase(), "audralia");
+}
+
+function writeReceipt(id, lines) {
+  const node = document.getElementById(id);
+  if (!node) return false;
+
+  node.textContent = [
+    RECEIPT,
+    `TIME=${nowIso()}`,
+    ...lines.map(sanitizeText)
+  ].join("\n");
+
+  node.dataset.routeControllerReceipt = RECEIPT;
+  node.dataset.routeControllerExecuted = "true";
+
+  return true;
+}
+
+function writeBothBootReceipts() {
+  writeReceipt(EARTH.receiptId, [
+    "BOOT_STARTED=true",
+    "BODY=Earth",
+    "GENERATION_STATUS=G4_CANDIDATE",
+    "GENERATION_CLAIMED=false",
+    "TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE",
+    `MOUNT=#${EARTH.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "IMPORT_ATTEMPTED=false",
+    "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
+    "VISUAL_PASS=HELD"
+  ]);
+
+  writeReceipt(AUDRALIA.receiptId, [
+    "BOOT_STARTED=true",
+    "BODY=Audralia",
+    "GENERATION=G1",
+    "GENERATION_CLAIMED=true",
+    `MOUNT=#${AUDRALIA.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "IMPORT_ATTEMPTED=false",
+    "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
+    "VISUAL_PASS=HELD"
+  ]);
+}
+
+function assertRouteIdentity() {
+  const pageText = document.documentElement.textContent || "";
+
+  const forbidden = [
+    `Planet ${LEGACY_TOKEN}`,
+    `${LEGACY_TOKEN} G1`,
+    `${LEGACY_TOKEN} terrain`,
+    `${LEGACY_TOKEN} globe`,
+    `planet-${LEGACY_TOKEN.toLowerCase()}`,
+    `Planet${LEGACY_TOKEN}`
+  ];
+
+  const drift = forbidden.find((token) => pageText.includes(token));
+
+  if (drift) {
+    writeReceipt(EARTH.receiptId, [
+      "BOOT_BLOCKED=true",
+      "NAMING_DRIFT_DETECTED=true",
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "VISUAL_PASS=HELD"
+    ]);
+
+    writeReceipt(AUDRALIA.receiptId, [
+      "BOOT_BLOCKED=true",
+      "NAMING_DRIFT_DETECTED=true",
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "VISUAL_PASS=HELD"
+    ]);
+
+    throw new Error("NAMING_DRIFT_DETECTED");
+  }
+
+  return true;
+}
+
+function applyMountSizeClamp(mount) {
+  mount.style.width = "100%";
+  mount.style.maxWidth = "560px";
+  mount.style.margin = "1rem auto";
+  mount.style.display = "flex";
+  mount.style.justifyContent = "center";
+  mount.style.alignItems = "center";
+  mount.style.overflow = "hidden";
+}
+
+function applyCanvasSizeClamp(canvas) {
+  canvas.style.display = "block";
+  canvas.style.width = "min(82vw, 360px)";
+  canvas.style.height = "auto";
+  canvas.style.maxWidth = "100%";
+  canvas.style.aspectRatio = "1 / 1";
+  canvas.style.margin = "0 auto";
+
+  if (window.matchMedia && window.matchMedia("(min-width: 900px)").matches) {
+    canvas.style.width = "min(42vw, 520px)";
+  }
+}
+
+function createCanvas(mount, label) {
+  mount.replaceChildren();
+  applyMountSizeClamp(mount);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 1024;
+  canvas.className = "globe-render-canvas";
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute("aria-label", `${label} globe render canvas`);
+  canvas.dataset.body = label.toLowerCase();
+  canvas.dataset.renderCanvas = "true";
+  canvas.dataset.routeControllerReceipt = RECEIPT;
+  canvas.dataset.sizeClampActive = "true";
+
+  applyCanvasSizeClamp(canvas);
+
+  mount.appendChild(canvas);
+  return canvas;
+}
+
+function drawHeldCanvas(canvas, label, reason) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const r = Math.min(w, h) * 0.36;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const bg = ctx.createRadialGradient(cx - r * 0.18, cy - r * 0.22, r * 0.08, cx, cy, r * 1.24);
+  bg.addColorStop(0, "rgba(255,255,255,0.18)");
+  bg.addColorStop(0.7, "rgba(42,52,76,0.62)");
+  bg.addColorStop(1, "rgba(10,16,28,0.94)");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = bg;
+  ctx.fill();
+
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "rgba(255,255,255,0.34)";
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.94)";
+  ctx.font = "700 42px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(label, cx, cy - 8);
+
+  ctx.font = "500 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  ctx.fillText(reason, cx, cy + 44);
+
+  return Object.freeze({
+    rendered: false,
+    held: true,
+    reason
+  });
+}
+
+async function importFirstAvailable(candidates) {
+  const failures = [];
+
+  for (const candidate of candidates) {
+    try {
+      const module = await import(`${candidate}?v=${encodeURIComponent(RECEIPT)}-${Date.now()}`);
+      return Object.freeze({
+        ok: true,
+        path: candidate,
+        module
+      });
+    } catch (error) {
+      failures.push({
+        path: candidate,
+        error: sanitizeText(error && error.message ? error.message : error)
+      });
     }
+  }
 
-    .globe-body-card {
-      max-width: 780px;
-      margin-inline: auto;
-      width: 100%;
+  return Object.freeze({
+    ok: false,
+    path: null,
+    module: null,
+    failures
+  });
+}
+
+function getApi(module) {
+  if (!module) return null;
+  return module.default || module;
+}
+
+function summarizeStatus(api, bodyConfig) {
+  if (!api || typeof api.getStatus !== "function") {
+    return Object.freeze({
+      statusAvailable: false,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard
+    });
+  }
+
+  try {
+    const status = api.getStatus() || {};
+
+    return Object.freeze({
+      statusAvailable: true,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard,
+      ok: status.ok !== false,
+      status: sanitizeText(status.status || "available"),
+      receipt: sanitizeText(status.receipt || status.tnt || "available"),
+      parentAuthority: sanitizeText(status.parentAuthority || bodyConfig.authority),
+      visualPassClaimed: status.visualPassClaimed === true || status.visualPass === "PASS"
+    });
+  } catch (error) {
+    return Object.freeze({
+      statusAvailable: false,
+      body: bodyConfig.body,
+      generation: bodyConfig.generation,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard,
+      errored: true,
+      error: sanitizeText(error && error.message ? error.message : error)
+    });
+  }
+}
+
+async function renderWithApi(canvas, api, bodyConfig) {
+  if (!api) {
+    return drawHeldCanvas(canvas, bodyConfig.body, "AUTHORITY_NOT_AVAILABLE");
+  }
+
+  const renderOptions = {
+    body: bodyConfig.body,
+    generation: bodyConfig.generation,
+    generationClaimed: bodyConfig.generationClaimed,
+    targetStandard: bodyConfig.targetStandard,
+    route: ROUTE,
+    mountId: bodyConfig.mountId
+  };
+
+  if (typeof api.renderSurface === "function") {
+    const profile =
+      typeof api.createProfile === "function"
+        ? api.createProfile(renderOptions)
+        : undefined;
+
+    const texture =
+      typeof api.buildTexture === "function"
+        ? api.buildTexture(profile)
+        : undefined;
+
+    const output = api.renderSurface(canvas, {
+      ...renderOptions,
+      profile,
+      texture
+    });
+
+    return Object.freeze({
+      rendered: true,
+      method: "renderSurface",
+      output
+    });
+  }
+
+  if (typeof api.render === "function") {
+    const output = api.render(canvas, renderOptions);
+
+    return Object.freeze({
+      rendered: true,
+      method: "render",
+      output
+    });
+  }
+
+  if (typeof api.renderPlanet === "function") {
+    const output = api.renderPlanet(canvas, renderOptions);
+
+    return Object.freeze({
+      rendered: true,
+      method: "renderPlanet",
+      output
+    });
+  }
+
+  if (typeof api.buildTexture === "function") {
+    const texture = api.buildTexture(renderOptions);
+
+    if (texture instanceof HTMLCanvasElement) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(texture, 0, 0, canvas.width, canvas.height);
+
+      return Object.freeze({
+        rendered: true,
+        method: "buildTextureCanvas",
+        output: {
+          textureCanvas: true
+        }
+      });
     }
+  }
 
-    .globe-render-mount {
-      width: 100%;
-      max-width: 560px;
-      margin: 1rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+  return drawHeldCanvas(canvas, bodyConfig.body, "RENDER_API_NOT_READY");
+}
 
-    .globe-render-canvas {
-      display: block;
-      width: min(82vw, 360px);
-      height: auto;
-      max-width: 100%;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-    }
+async function mountBody(bodyConfig) {
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=MOUNT_LOOKUP",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION_STATUS=${bodyConfig.generation}`,
+    `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+    `TARGET_STANDARD=${bodyConfig.targetStandard}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
+    "VISUAL_PASS=HELD"
+  ]);
 
-    .globe-render-receipt {
-      max-width: min(92vw, 620px);
-      margin: 0.75rem auto 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-size: 0.72rem;
-      line-height: 1.25;
-    }
+  const mount = document.getElementById(bodyConfig.mountId);
 
-    @media (min-width: 900px) {
-      .dual-globe-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+  if (!mount) {
+    writeReceipt(bodyConfig.receiptId, [
+      "BOOT_PHASE=MOUNT_FAILED",
+      `BODY=${bodyConfig.body}`,
+      `GENERATION_STATUS=${bodyConfig.generation}`,
+      `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+      `TARGET_STANDARD=${bodyConfig.targetStandard}`,
+      `MOUNT=#${bodyConfig.mountId}`,
+      "MOUNT_EXISTS=false",
+      "IMPORT_ATTEMPTED=false",
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "BODY_ADOPTION_BLOCKED=true",
+      "SIZE_CLAMP_ACTIVE=false",
+      "VISUAL_PASS=HELD"
+    ]);
 
-      .globe-render-canvas {
-        width: min(42vw, 520px);
-      }
-    }
-  </style>
-</head>
+    return Object.freeze({
+      body: bodyConfig.body,
+      ok: false,
+      mountExists: false,
+      imported: false,
+      rendered: false
+    });
+  }
 
-<body
-  data-route="showroom-globe"
-  data-room="earth-audralia-dual-globe"
-  data-body-count="2"
-  data-earth-generation-status="G4_CANDIDATE"
-  data-audralia-generation="G1"
->
-  <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
+  mount.dataset.body = bodyConfig.body.toLowerCase();
+  mount.dataset.generationStatus = bodyConfig.generation;
+  mount.dataset.generationClaimed = String(bodyConfig.generationClaimed);
+  mount.dataset.targetStandard = bodyConfig.targetStandard;
+  mount.dataset.routeControllerReceipt = RECEIPT;
+  mount.dataset.authority = bodyConfig.authority;
+  mount.dataset.bodyAdoptionBlocked = "true";
+  mount.dataset.sizeClampActive = "true";
 
-  <header class="site-header" aria-label="Diamond Gate Bridge navigation">
-    <a class="brand" href="/">Diamond Gate Bridge</a>
+  const canvas = createCanvas(mount, bodyConfig.body);
 
-    <nav aria-label="Primary navigation">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/home/">Home</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/showroom/globe/" aria-current="page">Globe</a>
-      <a href="/nine-summits/universe/">Universe</a>
-      <a href="/products/">Products</a>
-      <a href="/gauges/">Gauges</a>
-    </nav>
-  </header>
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=IMPORT_STARTED",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION_STATUS=${bodyConfig.generation}`,
+    `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+    `TARGET_STANDARD=${bodyConfig.targetStandard}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "MOUNT_EXISTS=true",
+    `AUTHORITY=${bodyConfig.authority}`,
+    "IMPORT_ATTEMPTED=true",
+    "AUTHORITY_IMPORTED=false",
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "SIZE_CLAMP_ACTIVE=true",
+    "VISUAL_PASS=HELD"
+  ]);
 
-  <main id="globe-main" class="showroom-globe-shell" tabindex="-1">
-    <section class="globe-hero" aria-labelledby="globe-title">
-      <p class="eyebrow">Standalone · Dual Globe Authority Split</p>
-      <h1 id="globe-title">Earth and Audralia</h1>
-      <p>
-        This chamber separates the two bodies. Earth is held as a G4 candidate until it
-        visibly matches the Orbital Earth reference standard. Audralia is the constructed
-        home-world body.
-      </p>
+  const imported = await importFirstAvailable(bodyConfig.moduleCandidates);
 
-      <div class="globe-status-grid" aria-label="Dual body authority summary">
-        <article class="status-card" data-body="earth">
-          <strong>Earth</strong>
-          <span>G4 candidate. Orbital Earth standard not yet claimed.</span>
-        </article>
+  if (!imported.ok) {
+    drawHeldCanvas(canvas, bodyConfig.body, "SOURCE_AUTHORITY_HELD");
 
-        <article class="status-card" data-body="audralia">
-          <strong>Audralia</strong>
-          <span>Generation 1 active world body.</span>
-        </article>
+    writeReceipt(bodyConfig.receiptId, [
+      "BOOT_PHASE=IMPORT_FAILED",
+      `BODY=${bodyConfig.body}`,
+      `GENERATION_STATUS=${bodyConfig.generation}`,
+      `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+      `TARGET_STANDARD=${bodyConfig.targetStandard}`,
+      `MOUNT=#${bodyConfig.mountId}`,
+      "MOUNT_EXISTS=true",
+      `AUTHORITY=${bodyConfig.authority}`,
+      "IMPORT_ATTEMPTED=true",
+      "AUTHORITY_IMPORTED=false",
+      `IMPORT_FAILURE_COUNT=${imported.failures.length}`,
+      "ROUTE_CONTROLLER_EXECUTED=true",
+      "BODY_ADOPTION_BLOCKED=true",
+      "NO_CROSS_BODY_FALLBACK=true",
+      "SIZE_CLAMP_ACTIVE=true",
+      "VISUAL_PASS=HELD"
+    ]);
 
-        <article class="status-card" data-contract="split">
-          <strong>Split</strong>
-          <span>No shared renderer adoption.</span>
-        </article>
+    return Object.freeze({
+      body: bodyConfig.body,
+      ok: false,
+      mountExists: true,
+      imported: false,
+      rendered: false,
+      failures: imported.failures
+    });
+  }
 
-        <article class="status-card" data-route="/showroom/globe/">
-          <strong>Route</strong>
-          <span>/showroom/globe/ owns the dual mount shell.</span>
-        </article>
-      </div>
-    </section>
+  const api = getApi(imported.module);
+  const status = summarizeStatus(api, bodyConfig);
 
-    <section
-      class="dual-globe-grid"
-      aria-label="Earth and Audralia globe mounts"
-      data-dual-mount-contract="active"
-    >
-      <article
-        class="globe-body-card"
-        data-body="earth"
-        data-generation-status="G4_CANDIDATE"
-        data-role="reference-globe"
-      >
-        <div class="globe-card-copy">
-          <p class="eyebrow">Body 1 · Reference</p>
-          <h2>Earth</h2>
-          <p>
-            Earth is the known reference body and uses its own Earth file authority.
-            Its G4 claim is held until the visible globe matches the prior Orbital Earth standard.
-          </p>
-          <p class="receipt-line">EARTH · REFERENCE_GLOBE · G4_CANDIDATE</p>
-        </div>
+  let renderResult;
 
-        <div
-          id="earthRenderMount"
-          class="globe-render-mount earth-render-mount"
-          data-body="earth"
-          data-renderer="earth"
-          data-generation-status="G4_CANDIDATE"
-          data-authority="earth-file-chain"
-          aria-label="Earth G4 candidate globe render mount"
-        ></div>
+  try {
+    renderResult = await renderWithApi(canvas, api, bodyConfig);
+  } catch (error) {
+    const held = drawHeldCanvas(canvas, bodyConfig.body, "RENDER_ERROR_HELD");
+    renderResult = Object.freeze({
+      ...held,
+      error: sanitizeText(error && error.message ? error.message : error)
+    });
+  }
 
-        <pre
-          id="earthRenderReceipt"
-          class="globe-render-receipt"
-          aria-label="Earth render receipt"
-        >EARTH_RENDER_MOUNT=READY
-BODY=Earth
-GENERATION_STATUS=G4_CANDIDATE
-TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE
-G4_CLAIM=HELD
-AUTHORITY=EARTH_FILE_CHAIN
-VISUAL_PASS=HELD</pre>
-      </article>
+  writeReceipt(bodyConfig.receiptId, [
+    "BOOT_PHASE=COMPLETE",
+    `BODY=${bodyConfig.body}`,
+    `GENERATION_STATUS=${bodyConfig.generation}`,
+    `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+    `TARGET_STANDARD=${bodyConfig.targetStandard}`,
+    `MOUNT=#${bodyConfig.mountId}`,
+    "MOUNT_EXISTS=true",
+    `AUTHORITY=${bodyConfig.authority}`,
+    "IMPORT_ATTEMPTED=true",
+    "AUTHORITY_IMPORTED=true",
+    `AUTHORITY_PATH=${imported.path}`,
+    `RENDER_METHOD=${renderResult.method || "held"}`,
+    `RENDERED=${renderResult.rendered === true}`,
+    `HELD=${renderResult.held === true}`,
+    `STATUS_SUMMARY=${JSON.stringify(status)}`,
+    "ROUTE_CONTROLLER_EXECUTED=true",
+    "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
+    "SIZE_CLAMP_ACTIVE=true",
+    "VISUAL_PASS=HELD"
+  ]);
 
-      <article
-        class="globe-body-card"
-        data-body="audralia"
-        data-generation="G1"
-        data-role="active-world-body"
-      >
-        <div class="globe-card-copy">
-          <p class="eyebrow">Body 2 · Active World</p>
-          <h2>Audralia</h2>
-          <p>
-            Audralia is the constructed home-world body and uses its parent planet
-            render authority with direct downstream science children.
-          </p>
-          <p class="receipt-line">AUDRALIA · ACTIVE_WORLD_BODY · GENERATION_1</p>
-        </div>
+  return Object.freeze({
+    body: bodyConfig.body,
+    ok: true,
+    mountExists: true,
+    imported: true,
+    authorityPath: imported.path,
+    rendered: renderResult.rendered === true,
+    renderResult,
+    status
+  });
+}
 
-        <div
-          id="audraliaRenderMount"
-          class="globe-render-mount audralia-render-mount"
-          data-body="audralia"
-          data-renderer="audralia"
-          data-generation="G1"
-          data-authority="/assets/AdreliaPlanetRendered.js"
-          data-parent-render="/assets/AdreliaPlanetRendered.js"
-          data-topography="/assets/audralia.planet.render-topography.js"
-          data-hydration="/assets/audralia.planet.render-hydration.js"
-          data-climate="/assets/audralia.planet.render-climate.js"
-          data-ecology="/assets/audralia.planet.render-ecology.js"
-          data-fauna="/assets/audralia.planet.render-fauna.js"
-          data-runtime="/assets/audralia.planet.render-living-world.js"
-          aria-label="Audralia Generation 1 globe render mount"
-        ></div>
+function publishRouteReceipt(results) {
+  const routeReceipt = Object.freeze({
+    receipt: RECEIPT,
+    route: ROUTE,
+    bodyCount: 2,
+    bodies: Object.freeze(["Earth", "Audralia"]),
+    earth: results.earth,
+    audralia: results.audralia,
+    earthGenerationStatus: "G4_CANDIDATE",
+    earthGenerationClaimed: false,
+    earthTargetStandard: "ORBITAL_EARTH_G4_REFERENCE",
+    audraliaGeneration: "G1",
+    dualMountContract: true,
+    bodyAdoptionBlocked: true,
+    noCrossBodyFallback: true,
+    routeControllerExecuted: true,
+    sizeClampActive: true,
+    visualPassClaimed: false,
+    executedAt: nowIso()
+  });
 
-        <pre
-          id="audraliaRenderReceipt"
-          class="globe-render-receipt"
-          aria-label="Audralia render receipt"
-        >AUDRALIA_RENDER_MOUNT=READY
-BODY=Audralia
-GENERATION=G1
-PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js
-DOWNSTREAM_CHAIN=TOPOGRAPHY,HYDRATION,CLIMATE,ECOLOGY,FAUNA,LIVING_WORLD
-VISUAL_PASS=HELD</pre>
-      </article>
-    </section>
+  window.DGB_SHOWROOM_GLOBE_ROUTE_CONTROLLER = routeReceipt;
 
-    <section class="receipt-panel" aria-labelledby="split-receipts-title">
-      <h2 id="split-receipts-title">Split Receipts</h2>
-      <ul>
-        <li>ROUTE=/showroom/globe/</li>
-        <li>CONSUMER=/showroom/globe/index.js</li>
-        <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4_CANDIDATE</li>
-        <li>EARTH_G4_CLAIM=HELD</li>
-        <li>EARTH_TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE</li>
-        <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1</li>
-        <li>EARTH_MOUNT=#earthRenderMount</li>
-        <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
-        <li>EARTH_AUTHORITY=EARTH_FILE_CHAIN</li>
-        <li>AUDRALIA_PARENT_AUTHORITY=/assets/AdreliaPlanetRendered.js</li>
-        <li>STATIC_IMAGE_REPLACEMENT=FALSE</li>
-        <li>IMAGE_GENERATION=FORBIDDEN</li>
-        <li>VISUAL_PASS=HELD_UNTIL_USER_CONFIRMATION</li>
-      </ul>
-    </section>
-  </main>
+  try {
+    window.dispatchEvent(
+      new CustomEvent("dgb:showroom-globe:dual-mount-ready", {
+        detail: routeReceipt
+      })
+    );
+  } catch (_) {}
 
-  <script type="module" src="/showroom/globe/index.js?v=earth-g4-candidate-audralia-g1-dual-mount-v4"></script>
-</body>
-</html>
+  return routeReceipt;
+}
+
+async function boot() {
+  writeBothBootReceipts();
+  assertRouteIdentity();
+
+  const earth = await mountBody(EARTH);
+  const audralia = await mountBody(AUDRALIA);
+
+  publishRouteReceipt({ earth, audralia });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}

@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Earth and Audralia · Showroom Globe · Diamond Gate Bridge</title>
+  <title>Earth G4 Candidate and Audralia G1 · Showroom Globe · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Dual globe chamber for Earth Generation 4 reference authority and Audralia Generation 1 constructed world-body authority."
+    content="Dual globe chamber for Earth G4 candidate restoration and Audralia Generation 1 constructed world-body authority."
   />
 
   <link rel="stylesheet" href="/assets/manor.css" />
@@ -70,7 +70,7 @@
   data-route="showroom-globe"
   data-room="earth-audralia-dual-globe"
   data-body-count="2"
-  data-earth-generation="G4"
+  data-earth-generation-status="G4_CANDIDATE"
   data-audralia-generation="G1"
 >
   <a class="skip-link" href="#globe-main">Skip to globe chamber</a>
@@ -95,14 +95,15 @@
       <p class="eyebrow">Standalone · Dual Globe Authority Split</p>
       <h1 id="globe-title">Earth and Audralia</h1>
       <p>
-        This chamber separates the two bodies. Earth is the real-world reference globe.
-        Audralia is the constructed home-world body.
+        This chamber separates the two bodies. Earth is held as a G4 candidate until it
+        visibly matches the Orbital Earth reference standard. Audralia is the constructed
+        home-world body.
       </p>
 
       <div class="globe-status-grid" aria-label="Dual body authority summary">
         <article class="status-card" data-body="earth">
           <strong>Earth</strong>
-          <span>Generation 4 reference globe.</span>
+          <span>G4 candidate. Orbital Earth standard not yet claimed.</span>
         </article>
 
         <article class="status-card" data-body="audralia">
@@ -130,14 +131,17 @@
       <article
         class="globe-body-card"
         data-body="earth"
-        data-generation="G4"
+        data-generation-status="G4_CANDIDATE"
         data-role="reference-globe"
       >
         <div class="globe-card-copy">
           <p class="eyebrow">Body 1 · Reference</p>
           <h2>Earth</h2>
-          <p>Earth is the known reference body and uses its own Earth file authority.</p>
-          <p class="receipt-line">EARTH · REFERENCE_GLOBE · GENERATION_4</p>
+          <p>
+            Earth is the known reference body and uses its own Earth file authority.
+            Its G4 claim is held until the visible globe matches the prior Orbital Earth standard.
+          </p>
+          <p class="receipt-line">EARTH · REFERENCE_GLOBE · G4_CANDIDATE</p>
         </div>
 
         <div
@@ -145,9 +149,9 @@
           class="globe-render-mount earth-render-mount"
           data-body="earth"
           data-renderer="earth"
-          data-generation="G4"
+          data-generation-status="G4_CANDIDATE"
           data-authority="earth-file-chain"
-          aria-label="Earth Generation 4 globe render mount"
+          aria-label="Earth G4 candidate globe render mount"
         ></div>
 
         <pre
@@ -156,7 +160,9 @@
           aria-label="Earth render receipt"
         >EARTH_RENDER_MOUNT=READY
 BODY=Earth
-GENERATION=G4
+GENERATION_STATUS=G4_CANDIDATE
+TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE
+G4_CLAIM=HELD
 AUTHORITY=EARTH_FILE_CHAIN
 VISUAL_PASS=HELD</pre>
       </article>
@@ -212,7 +218,9 @@ VISUAL_PASS=HELD</pre>
       <ul>
         <li>ROUTE=/showroom/globe/</li>
         <li>CONSUMER=/showroom/globe/index.js</li>
-        <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4</li>
+        <li>EARTH_LABEL=EARTH_REFERENCE_GLOBE_G4_CANDIDATE</li>
+        <li>EARTH_G4_CLAIM=HELD</li>
+        <li>EARTH_TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE</li>
         <li>AUDRALIA_LABEL=AUDRALIA_ACTIVE_WORLD_BODY_G1</li>
         <li>EARTH_MOUNT=#earthRenderMount</li>
         <li>AUDRALIA_MOUNT=#audraliaRenderMount</li>
@@ -225,6 +233,6 @@ VISUAL_PASS=HELD</pre>
     </section>
   </main>
 
-  <script type="module" src="/showroom/globe/index.js?v=earth-g4-audralia-g1-dual-mount-size-clamp-v3"></script>
+  <script type="module" src="/showroom/globe/index.js?v=earth-g4-candidate-audralia-g1-dual-mount-v4"></script>
 </body>
 </html>

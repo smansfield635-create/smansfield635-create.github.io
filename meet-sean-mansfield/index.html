@@ -3,55 +3,68 @@
   lang="en"
   data-route="/meet-sean-mansfield/"
   data-page="meet-sean-mansfield"
-  data-version="G1-V2"
-  data-contract="MEET_SEAN_MANSFIELD_PERSONAL_PROFILE_PHOTO_PATH_TNT_v2"
+  data-version="G1-V3"
+  data-contract="MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
+  data-role="personal-profile-surface"
+  data-universal-underdog-route="/about-this-underdog/"
+  data-photo-path="/about-this-underdog/sean-mansfield.jpg"
   data-heavy-runtime-loaded="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-streaming="false"
   data-visual-pass-claimed="false"
 >
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Meet Sean Mansfield · Diamond Gate Bridge</title>
-  <meta name="description" content="Meet Sean Mansfield: personal profile lane for the voice behind This Underdog, Diamond Gate Bridge, Nine Summits of Love, comedy, speaking, seminars, adversity, accountability, and redirection.">
+  <meta
+    name="description"
+    content="Meet Sean Mansfield: the personal profile lane behind the Diamond Gate Bridge voice, This Underdog, The Nine Summits of Love, comedy, speaking, and seminars."
+  >
 
   <style>
     :root{
       color-scheme:dark;
-      --bg:#05070d;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.085);
-      --line:rgba(176,205,255,.18);
-      --line2:rgba(242,199,111,.32);
-      --text:rgba(246,248,255,.94);
-      --muted:rgba(218,227,255,.70);
-      --soft:rgba(218,227,255,.54);
-      --gold:#f2c76f;
-      --blue:#93e8ff;
+      --bg:#02040b;
+      --ink:#fff4d8;
+      --muted:rgba(230,238,255,.78);
+      --soft:rgba(230,238,255,.58);
+      --faint:rgba(230,238,255,.42);
+      --gold:#f3c86f;
+      --gold2:#ffe8a3;
+      --blue:#8dd8ff;
+      --purple:#8f65ff;
+      --panel:rgba(9,15,31,.82);
+      --line:rgba(184,205,255,.18);
+      --line2:rgba(243,200,111,.34);
+      --shadow:0 32px 110px rgba(0,0,0,.46);
       --max:1180px;
-      --radius:28px;
-      --shadow:0 28px 90px rgba(0,0,0,.36);
     }
 
     *{box-sizing:border-box}
 
     html{
-      scroll-behavior:smooth;
+      min-height:100%;
       background:var(--bg);
+      scroll-behavior:smooth;
     }
 
     body{
       margin:0;
       min-height:100vh;
-      color:var(--text);
+      color:var(--ink);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.55;
+      line-height:1.5;
       background:
-        radial-gradient(circle at 18% 0%,rgba(65,118,179,.30),transparent 34%),
-        radial-gradient(circle at 84% 18%,rgba(242,199,111,.13),transparent 32%),
-        linear-gradient(180deg,#07101d 0%,#02040a 100%);
+        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
+        radial-gradient(circle at 10% 18%,rgba(143,101,255,.22),transparent 28rem),
+        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
+        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
+        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
       overflow-x:hidden;
     }
 
@@ -61,11 +74,31 @@
       inset:0;
       pointer-events:none;
       background-image:
-        linear-gradient(rgba(147,232,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(147,232,255,.045) 1px,transparent 1px),
-        radial-gradient(circle,rgba(255,255,255,.11) 0 1px,transparent 1.3px);
-      background-size:52px 52px,52px 52px,230px 270px;
-      opacity:.22;
+        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
+        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
+      background-size:220px 260px,54px 54px,54px 54px;
+      opacity:.24;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      background:
+        conic-gradient(from 90deg at 50% 50%,
+          transparent 0deg,
+          rgba(143,101,255,.08) 52deg,
+          transparent 108deg,
+          rgba(243,200,111,.06) 172deg,
+          transparent 224deg,
+          rgba(141,216,255,.07) 292deg,
+          transparent 360deg);
+      filter:blur(42px);
+      opacity:.60;
+      animation:auroraDrift 26s linear infinite;
     }
 
     a{color:inherit;text-decoration:none}
@@ -74,436 +107,658 @@
       position:absolute;
       left:-999px;
       top:8px;
-      background:#fff;
-      color:#000;
-      padding:8px 10px;
-      border-radius:8px;
-      z-index:20;
-      font-weight:900;
+      z-index:50;
+      padding:.75rem 1rem;
+      border-radius:999px;
+      color:#05070d;
+      background:var(--gold);
+      font-weight:950;
     }
 
     .skip:focus{left:8px}
 
     .shell{
       position:relative;
-      z-index:1;
-      width:min(var(--max),calc(100% - 32px));
+      z-index:2;
+      width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(24px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
     }
 
     .topbar{
-      display:flex;
+      display:grid;
+      grid-template-columns:auto 1fr;
       align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 0 20px;
-      border-bottom:1px solid var(--line);
+      gap:18px;
+      padding:12px 0 18px;
     }
 
     .brand{
       display:grid;
-      gap:2px;
-      color:rgba(248,251,255,.86);
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:.9rem;
+      min-width:260px;
     }
 
-    .brand strong{
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .brand-mark{
+      width:4.2rem;
+      height:4.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(243,200,111,.44);
+      border-radius:1.15rem;
+      transform:rotate(45deg);
+      background:
+        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
+        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
+        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
+      box-shadow:
+        0 0 2rem rgba(143,101,255,.28),
+        0 1.2rem 2.8rem rgba(0,0,0,.46),
+        inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .brand-mark span{
+      transform:rotate(-45deg);
       font-weight:950;
+      letter-spacing:.04em;
+      color:rgba(255,244,216,.98);
     }
 
-    .brand span{
-      color:var(--soft);
-      font-size:.78rem;
-      font-weight:750;
+    .brand-copy{
+      display:grid;
+      gap:.18rem;
+    }
+
+    .brand-copy strong{
+      font-size:clamp(1.08rem,3vw,1.7rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .brand-copy span{
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
     .nav{
       display:flex;
-      gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
+      gap:.48rem;
     }
 
     .nav a{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
+      min-height:2.25rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:8px 11px;
-      font-size:.74rem;
-      font-weight:850;
-      color:rgba(242,247,255,.76);
+      padding:.5rem .74rem;
+      color:rgba(241,246,255,.84);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .nav a[aria-current="page"]{
-      border-color:rgba(242,199,111,.44);
-      color:rgba(255,238,190,.95);
-      background:rgba(242,199,111,.08);
+      border-color:rgba(243,200,111,.88);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:clamp(1.35rem,5vw,2.35rem);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
+        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+      overflow:hidden;
     }
 
     .hero{
+      position:relative;
       display:grid;
-      grid-template-columns:minmax(0,1.05fr) minmax(290px,.6fr);
-      gap:22px;
+      grid-template-columns:minmax(0,1.15fr) minmax(280px,.62fr);
+      gap:clamp(1rem,3vw,1.6rem);
       align-items:stretch;
-      padding:42px 0 24px;
+      padding:clamp(1.25rem,4vw,2rem);
+      margin-top:.6rem;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:clamp(1rem,6vw,5.5rem);
+      top:50%;
+      width:clamp(10rem,27vw,20rem);
+      height:clamp(10rem,27vw,20rem);
+      border:1px solid rgba(243,200,111,.20);
+      border-radius:2.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      animation:heroDiamond 8s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.52;
     }
 
     .hero-copy{
+      position:relative;
+      z-index:2;
       display:grid;
-      gap:18px;
+      gap:1rem;
       align-content:center;
+      min-height:clamp(24rem,44vw,34rem);
+      padding:clamp(.35rem,2vw,1.2rem);
     }
 
     .kicker{
-      color:var(--blue);
-      font-size:.76rem;
+      width:fit-content;
+      display:inline-flex;
+      align-items:center;
+      gap:.58rem;
+      padding:.58rem .95rem;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      color:rgba(230,238,255,.86);
+      background:rgba(255,255,255,.04);
+      font-size:.72rem;
       font-weight:950;
-      letter-spacing:.18em;
+      letter-spacing:.14em;
       text-transform:uppercase;
     }
 
+    .kicker::before{
+      content:"";
+      width:.72rem;
+      height:.72rem;
+      border-radius:.18rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+    }
+
     h1{
-      max-width:960px;
-      font-size:clamp(2.65rem,7.4vw,6.8rem);
-      line-height:.88;
       margin:0;
-      letter-spacing:-.085em;
+      max-width:850px;
+      font-size:clamp(3rem,9vw,6.6rem);
+      line-height:.84;
+      letter-spacing:-.105em;
+      text-wrap:balance;
     }
 
     h2{
-      font-size:clamp(1.55rem,3.3vw,2.8rem);
-      line-height:1;
       margin:0;
-      letter-spacing:-.055em;
       color:var(--gold);
+      font-size:clamp(1.45rem,4.6vw,2.65rem);
+      line-height:.98;
+      letter-spacing:-.07em;
+      text-wrap:balance;
     }
 
     h3{
-      font-size:1.12rem;
-      line-height:1.12;
       margin:0;
-      letter-spacing:-.03em;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.34rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
 
     p{
       margin:0;
       color:var(--muted);
-      font-size:1rem;
+      font-size:clamp(.98rem,2.7vw,1.16rem);
+      line-height:1.55;
     }
 
-    .lede{
-      max-width:850px;
-      font-size:clamp(1.08rem,2.2vw,1.42rem);
-      color:rgba(226,232,246,.82);
+    .quote{
+      max-width:760px;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.065);
+      font-weight:850;
     }
 
-    .actions,.link-row{
+    .actions{
       display:flex;
-      gap:10px;
       flex-wrap:wrap;
+      gap:.62rem;
+      margin-top:.2rem;
     }
 
     .button{
+      min-height:2.65rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(147,232,255,.26);
-      background:linear-gradient(180deg,rgba(147,232,255,.16),rgba(255,255,255,.045));
-      color:var(--text);
-      border-radius:16px;
-      padding:11px 14px;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      padding:.65rem 1rem;
+      background:rgba(255,255,255,.045);
+      color:rgba(241,246,255,.88);
+      font-size:.76rem;
       font-weight:950;
-      letter-spacing:.02em;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.62);
+      outline:none;
     }
 
     .button.gold{
-      border-color:rgba(242,199,111,.38);
-      background:linear-gradient(180deg,rgba(242,199,111,.17),rgba(255,255,255,.045));
-    }
-
-    .button.secondary{
-      border-color:var(--line);
-      background:rgba(255,255,255,.052);
-      color:rgba(242,247,255,.78);
+      border-color:rgba(243,200,111,.9);
+      color:#060811;
+      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
     }
 
     .profile-card{
-      border:1px solid var(--line2);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(242,199,111,.12),transparent 38%),
-        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
-      border-radius:34px;
-      box-shadow:var(--shadow);
-      padding:16px;
+      position:relative;
+      z-index:2;
       display:grid;
-      gap:14px;
+      gap:1rem;
+      padding:1rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(243,200,111,.14),transparent 38%),
+        radial-gradient(circle at 20% 80%,rgba(143,101,255,.12),transparent 44%),
+        rgba(255,255,255,.035);
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+      align-content:start;
     }
 
-    .photo-wrap{
+    .portrait{
       position:relative;
-      min-height:560px;
-      border-radius:28px;
+      min-height:clamp(20rem,42vw,31rem);
       overflow:hidden;
-      border:1px solid rgba(242,199,111,.24);
-      background:
-        radial-gradient(circle at 48% 24%,rgba(147,232,255,.22),transparent 30%),
-        linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
       display:grid;
       place-items:center;
-      margin:0;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.5rem;
+      background:
+        radial-gradient(circle at 50% 24%,rgba(141,216,255,.22),transparent 32%),
+        radial-gradient(circle at 50% 76%,rgba(143,101,255,.16),transparent 44%),
+        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
     }
 
-    .photo-wrap img{
-      position:relative;
+    .portrait::before{
+      content:"";
+      position:absolute;
+      inset:11%;
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:2rem;
+      transform:rotate(45deg);
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .portrait img{
+      position:absolute;
+      inset:0;
       z-index:2;
       width:100%;
       height:100%;
-      min-height:560px;
       object-fit:cover;
-      object-position:center top;
       display:block;
     }
 
-    .photo-fallback{
-      position:absolute;
-      inset:0;
+    .portrait .fallback{
+      position:relative;
       z-index:1;
       display:grid;
       place-items:center;
       text-align:center;
-      padding:24px;
-      color:rgba(246,248,255,.82);
+      padding:1.5rem;
+      color:rgba(255,244,216,.92);
+      font-size:clamp(2rem,5vw,3.5rem);
       font-weight:950;
-      letter-spacing:-.03em;
-      font-size:clamp(1.8rem,4vw,3.4rem);
+      line-height:.9;
+      letter-spacing:-.08em;
     }
 
-    .photo-wrap img:not([src]),
-    .photo-wrap img[src=""]{
-      display:none;
-    }
+    .portrait.has-image .fallback{display:none}
 
-    .profile-meta{
+    .meta{
       display:grid;
-      gap:8px;
-      padding:4px 2px;
+      gap:.65rem;
+      padding:.1rem .2rem;
     }
 
-    .profile-meta b{
+    .meta-row{
+      display:grid;
+      gap:.12rem;
+    }
+
+    .meta-row b{
       color:var(--gold);
-      font-size:.72rem;
+      font-size:.7rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .profile-meta span{
-      color:rgba(246,248,255,.86);
+    .meta-row span{
+      color:rgba(241,246,255,.86);
+      font-size:.95rem;
       font-weight:850;
+      line-height:1.35;
     }
 
-    .section-band,.final-band{
-      border:1px solid var(--line2);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(242,199,111,.12),transparent 38%),
-        linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.045));
-      border-radius:34px;
-      box-shadow:var(--shadow);
-      padding:18px;
-      margin:22px 0;
+    .section{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.45rem);
       display:grid;
-      gap:16px;
+      gap:1.05rem;
     }
 
-    .grid{
+    .split-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.9rem;
     }
 
-    .grid.four{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .card{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
-      border-radius:22px;
-      padding:16px;
+    .split-card{
+      min-height:11rem;
       display:grid;
-      gap:9px;
+      gap:.7rem;
       align-content:start;
-      min-height:150px;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:1.35rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
+        rgba(255,255,255,.035);
       position:relative;
       overflow:hidden;
     }
 
-    .card::before{
+    .split-card::before{
       content:"";
-      width:1.55rem;
-      height:1.55rem;
-      border:1px solid rgba(242,199,111,.24);
-      border-radius:.45rem;
+      width:1.85rem;
+      height:1.85rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:.56rem;
       transform:rotate(45deg);
-      margin:.15rem 0 .35rem .25rem;
+      margin:.2rem 0 .25rem .28rem;
       background:
-        radial-gradient(circle at 50% 20%,rgba(255,255,255,.12),transparent 50%),
-        linear-gradient(145deg,rgba(242,199,111,.08),rgba(147,232,255,.04));
-      box-shadow:0 0 1rem rgba(242,199,111,.08);
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.14),transparent 50%),
+        linear-gradient(145deg,rgba(143,101,255,.18),rgba(243,200,111,.05));
+      box-shadow:0 0 1rem rgba(143,101,255,.12);
     }
 
-    .card .tag{
-      width:max-content;
-      border:1px solid rgba(147,232,255,.22);
-      border-radius:999px;
-      padding:4px 8px;
-      color:var(--blue);
-      font-size:.66rem;
+    .split-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:.9rem;
       font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(147,232,255,.05);
-    }
-
-    .card b{
-      display:block;
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.13em;
+      letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .card p{
-      font-size:.93rem;
+    .split-card span{
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.45;
+    }
+
+    .doll{
+      display:grid;
+      gap:.75rem;
     }
 
     details{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,var(--panel2),var(--panel));
-      border-radius:var(--radius);
-      padding:0;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:1.35rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.026));
       overflow:hidden;
     }
 
-    details + details{margin-top:12px}
+    details[open]{
+      border-color:rgba(243,200,111,.30);
+      background:
+        radial-gradient(circle at 18% 0%,rgba(243,200,111,.08),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.028));
+    }
 
     summary{
-      list-style:none;
-      cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
-      padding:18px;
+      gap:1rem;
+      list-style:none;
+      cursor:pointer;
+      padding:1rem;
+      color:rgba(255,244,216,.96);
       font-weight:950;
-      color:rgba(248,251,255,.92);
     }
 
     summary::-webkit-details-marker{display:none}
 
     summary::after{
       content:"+";
+      flex:0 0 auto;
+      width:2rem;
+      height:2rem;
       display:grid;
       place-items:center;
-      min-width:30px;
-      width:30px;
-      height:30px;
-      border-radius:999px;
-      border:1px solid rgba(147,232,255,.28);
-      color:var(--blue);
-      background:rgba(147,232,255,.06);
-      font-size:1.1rem;
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:.62rem;
+      transform:rotate(45deg);
+      color:var(--gold);
+      background:rgba(243,200,111,.055);
+      font-size:1.05rem;
       line-height:1;
     }
 
-    details[open] > summary::after{
+    details[open] summary::after{
       content:"–";
-      border-color:rgba(242,199,111,.34);
-      color:var(--gold);
-      background:rgba(242,199,111,.06);
+      border-color:rgba(141,216,255,.28);
+      color:var(--blue);
     }
 
-    .summary-copy{
+    .summary-text{
       display:grid;
-      gap:8px;
+      gap:.16rem;
     }
 
-    .summary-copy b{
+    .summary-text b{
       color:var(--gold);
-      font-size:.75rem;
+      font-size:.7rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
-    .summary-copy span{
-      font-size:1.08rem;
-      letter-spacing:-.025em;
+    .summary-text span{
+      color:rgba(255,244,216,.96);
+      font-size:clamp(1rem,2.6vw,1.16rem);
+      line-height:1.15;
+      letter-spacing:-.035em;
     }
 
-    .bubble-body{
+    .doll-body{
       display:grid;
-      gap:14px;
-      padding:0 18px 18px;
+      gap:.9rem;
+      padding:0 1rem 1rem;
     }
 
-    .bubble-note{
-      border:1px solid rgba(242,199,111,.22);
-      background:rgba(242,199,111,.055);
-      border-radius:20px;
-      padding:14px;
+    .short-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .short-card{
+      min-height:9rem;
+      display:grid;
+      gap:.45rem;
+      align-content:start;
+      padding:.9rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.026);
+    }
+
+    .short-card b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .short-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.4;
     }
 
     .quote-list{
       display:grid;
-      gap:10px;
+      gap:.55rem;
       margin:0;
       padding:0;
       list-style:none;
     }
 
     .quote-list li{
-      border:1px solid rgba(176,205,255,.13);
-      background:rgba(255,255,255,.035);
-      border-radius:18px;
-      padding:13px;
-      color:rgba(246,248,255,.84);
+      padding:.85rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1rem;
+      background:rgba(255,255,255,.026);
+      color:rgba(241,246,255,.86);
       font-weight:850;
+      line-height:1.35;
     }
 
-    .footer{
+    .final-band{
+      margin-top:1.15rem;
+      padding:clamp(1rem,3vw,1.35rem);
       display:grid;
-      gap:10px;
-      margin-top:30px;
-      padding-top:20px;
-      border-top:1px solid var(--line);
-      color:rgba(218,227,255,.58);
-      font-size:.8rem;
+      gap:.9rem;
+      border:1px solid rgba(243,200,111,.28);
+      border-radius:clamp(1.25rem,5vw,2rem);
+      background:
+        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
     }
 
-    .public-receipt{
-      color:rgba(242,247,255,.70);
+    .final-band strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.2rem,3vw,1.55rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .receipt{
+      margin-top:1.15rem;
+      color:var(--faint);
+    }
+
+    .receipt summary{
+      cursor:pointer;
+      padding:1rem;
+      border:1px solid rgba(184,205,255,.14);
+      border-radius:1.2rem;
+      color:rgba(255,244,216,.96);
+      font-size:.72rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.035);
+    }
+
+    .receipt pre{
+      margin:0;
+      padding:1rem;
       white-space:pre-wrap;
       overflow-wrap:anywhere;
       font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     }
 
-    @media(max-width:980px){
-      .hero{grid-template-columns:1fr}
-      .photo-wrap,.photo-wrap img{min-height:460px}
-      .grid,.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .topbar{align-items:flex-start;flex-direction:column}
-      .nav{justify-content:flex-start}
+    footer{
+      padding:1.35rem 0 .5rem;
+      color:var(--faint);
+      text-align:center;
+      font-size:.76rem;
     }
 
-    @media(max-width:640px){
+    @keyframes auroraDrift{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1)}
+    }
+
+    @keyframes heroDiamond{
+      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
+      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body::after,
+      .hero::before{
+        animation:none!important;
+      }
+    }
+
+    @media (max-width:980px){
+      .topbar{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .nav{justify-content:flex-start}
+
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .hero-copy{
+        min-height:auto;
+      }
+
+      .split-grid,
+      .short-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
-      .hero{padding-top:32px}
-      .grid,.grid.four{grid-template-columns:1fr}
-      h1{font-size:clamp(2.45rem,15vw,4.2rem)}
-      summary{align-items:flex-start}
-      .photo-wrap,.photo-wrap img{min-height:420px}
+
+      h1{font-size:clamp(3rem,17vw,5rem)}
+
+      .hero{
+        padding:1rem;
+      }
+
+      .portrait{
+        min-height:21rem;
+      }
+
+      summary{
+        align-items:flex-start;
+      }
     }
   </style>
 </head>
@@ -512,13 +767,16 @@
   <a class="skip" href="#meet-sean-main">Skip to Meet Sean Mansfield</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass">
-        <strong>Diamond Gate Bridge</strong>
-        <span>Meet Sean Mansfield · personal profile lane</span>
+    <header class="topbar" aria-label="Meet Sean Mansfield header">
+      <a class="brand" href="/">
+        <span class="brand-mark"><span>SM</span></span>
+        <span class="brand-copy">
+          <span>Diamond Gate Bridge</span>
+          <strong>Meet Sean Mansfield</strong>
+        </span>
       </a>
 
-      <nav class="nav" aria-label="Primary house navigation">
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
@@ -534,160 +792,239 @@
     </header>
 
     <main id="meet-sean-main">
-      <section class="hero" aria-labelledby="page-title">
+      <section class="panel hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="kicker">Meet Sean Mansfield</div>
+          <div class="kicker">Personal profile lane</div>
           <h1 id="page-title">The person behind the voice.</h1>
-          <p class="lede">
-            Sean Mansfield turns pressure into language: comedy, story, seminars, public speaking, and the human message behind Diamond Gate Bridge and The Nine Summits of Love.
+          <h2>Pressure. Accountability. Redirection.</h2>
+          <p>
+            Sean Mansfield turns lived pressure into language people can use: comedy, story, seminars, public speaking, and the human voice behind Diamond Gate Bridge.
           </p>
+          <div class="quote">
+            The shift was not pretending adversity disappeared. The shift was seeing the pattern, owning his part, and changing direction before it was too late.
+          </div>
 
           <div class="actions">
             <a class="button gold" href="/about-this-underdog/">About This Underdog</a>
-            <a class="button" href="/nine-summits-of-love/">Open the Book Path</a>
+            <a class="button" href="/nine-summits-of-love/">Open the Book</a>
             <a class="button" href="/nine-summits/">Open Nine Summits</a>
-            <a class="button secondary" href="/gauges/">Read Proof</a>
+            <a class="button" href="/gauges/">Read Proof</a>
           </div>
         </div>
 
         <aside class="profile-card" aria-label="Sean Mansfield profile card">
-          <figure class="photo-wrap">
+          <div class="portrait">
             <img
               src="/about-this-underdog/sean-mansfield.jpg"
               alt="Sean Mansfield"
-              width="1152"
-              height="1536"
-              loading="eager"
-              decoding="async"
-              onerror="this.style.display='none';"
+              onload="this.closest('.portrait').classList.add('has-image')"
+              onerror="this.remove();"
             >
-            <figcaption class="photo-fallback">Sean Mansfield</figcaption>
-          </figure>
+            <div class="fallback">Sean Mansfield</div>
+          </div>
 
-          <div class="profile-meta">
-            <b>Public lane</b>
-            <span>Comedy · Story · Speaking · Seminars</span>
-            <b>Core message</b>
-            <span>Pressure is not the end of the story. Sometimes it is the beginning of the map.</span>
+          <div class="meta">
+            <div class="meta-row">
+              <b>Public lane</b>
+              <span>Comedy · Story · Speaking · Seminars</span>
+            </div>
+
+            <div class="meta-row">
+              <b>Core message</b>
+              <span>Pressure can become language. Language can become a map.</span>
+            </div>
           </div>
         </aside>
       </section>
 
-      <section class="section-band" aria-labelledby="turning-point-title">
-        <div class="kicker">The Turning Point</div>
-        <h2 id="turning-point-title">Adversity → accountability → redirection.</h2>
+      <section class="panel section" aria-labelledby="split-title">
+        <div class="kicker">Page split</div>
+        <h2 id="split-title">Two pages. Two jobs.</h2>
 
-        <div class="bubble-note">
-          <p><strong>Adversity revealed the pattern.</strong> Sean had known pressure for most of his life, but the real shift came when he stopped treating every obstacle as something outside of him. He began to see where his own choices, reactions, habits, and silence were helping the cycle continue.</p>
-        </div>
+        <div class="split-grid">
+          <a class="split-card" href="/about-this-underdog/">
+            <strong>About This Underdog</strong>
+            <span>The universal underdog page. It applies to everybody: pressure, survival, voice, accountability, and return.</span>
+          </a>
 
-        <div class="bubble-note">
-          <p><strong>Accountability changed the direction.</strong> Once Sean could admit his part without collapsing into shame, he could finally switch gears. That shift became the foundation of the voice behind This Underdog: pressure can become language, language can become a map, and a map can become a way out before it is too late.</p>
-        </div>
-
-        <div class="grid">
-          <article class="card">
-            <span class="tag">Adversity</span>
-            <h3>The pressure was real.</h3>
-            <p>The page names pressure without turning the profile into a hardship inventory.</p>
-          </article>
-          <article class="card">
-            <span class="tag">Accountability</span>
-            <h3>The pattern became visible.</h3>
-            <p>The turning point begins when the person sees where the cycle is also moving through them.</p>
-          </article>
-          <article class="card">
-            <span class="tag">Redirection</span>
-            <h3>The voice changed direction.</h3>
-            <p>The public message comes from switching gears before the pattern becomes permanent.</p>
-          </article>
+          <a class="split-card" href="/meet-sean-mansfield/">
+            <strong>Meet Sean Mansfield</strong>
+            <span>The personal profile page. It introduces the person behind the voice without forcing the whole system to explain itself at once.</span>
+          </a>
         </div>
       </section>
 
-      <section class="section-band" aria-labelledby="work-title">
-        <div class="kicker">Stage and seminar lane</div>
-        <h2 id="work-title">Fresh, human, direct, and room-ready.</h2>
+      <section class="panel section" aria-labelledby="doll-title">
+        <div class="kicker">Russian-doll profile</div>
+        <h2 id="doll-title">Open only the layer needed.</h2>
 
-        <div class="grid four">
-          <article class="card">
-            <span class="tag">Comedy</span>
-            <h3>Laugh first. Land truth second.</h3>
-            <p>Humor opens the door without forcing the room to pretend pressure is not uncomfortable.</p>
-          </article>
+        <div class="doll">
+          <details open>
+            <summary>
+              <span class="summary-text">
+                <b>Layer 1</b>
+                <span>The Turning Point</span>
+              </span>
+            </summary>
 
-          <article class="card">
-            <span class="tag">Story</span>
-            <h3>The lived part matters.</h3>
-            <p>Story gives the message a face and gives the room a reason to care.</p>
-          </article>
+            <div class="doll-body">
+              <p>
+                Sean had known adversity for most of his life. The real turn came when he stopped seeing every obstacle as only outside of him and started recognizing where choices, reactions, habits, and silence were keeping the cycle alive.
+              </p>
 
-          <article class="card">
-            <span class="tag">Seminar</span>
-            <h3>The room needs structure.</h3>
-            <p>Seminars turn the message into steps: pressure, language, choice, action, and return.</p>
-          </article>
+              <div class="short-grid">
+                <div class="short-card">
+                  <b>Adversity</b>
+                  <span>The pressure was real. The page names it without turning the profile into a hardship inventory.</span>
+                </div>
 
-          <article class="card">
-            <span class="tag">Keynote</span>
-            <h3>The big room needs one clean idea.</h3>
-            <p>The message has to survive the parking lot. It has to be simple enough to remember and strong enough to move.</p>
-          </article>
+                <div class="short-card">
+                  <b>Accountability</b>
+                  <span>The pattern became visible without collapsing into shame.</span>
+                </div>
+
+                <div class="short-card">
+                  <b>Redirection</b>
+                  <span>The voice changed direction before the pattern became permanent.</span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Layer 2</b>
+                <span>The Voice</span>
+              </span>
+            </summary>
+
+            <div class="doll-body">
+              <p>
+                The voice is direct because the pressure was direct. Comedy lowers the wall. Story gives the pressure a face. Structure gives the room something to carry out.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Layer 3</b>
+                <span>Stage and Seminar</span>
+              </span>
+            </summary>
+
+            <div class="doll-body">
+              <div class="short-grid">
+                <div class="short-card">
+                  <b>Comedy</b>
+                  <span>Laugh first. Land truth second.</span>
+                </div>
+
+                <div class="short-card">
+                  <b>Story</b>
+                  <span>Make pressure human enough for the room to recognize.</span>
+                </div>
+
+                <div class="short-card">
+                  <b>Seminar</b>
+                  <span>Turn the message into pressure, language, choice, action, and return.</span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Layer 4</b>
+                <span>Lines That Carry</span>
+              </span>
+            </summary>
+
+            <div class="doll-body">
+              <ul class="quote-list">
+                <li>Finding your inner underdog is finding your voice.</li>
+                <li>Pressure is not the end of the story. Sometimes it is the beginning of the map.</li>
+                <li>The underdog is not the weak part. It is the part that refused to disappear.</li>
+                <li>The key you are looking for is usually on the other side of the imperfect storm.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-text">
+                <b>Layer 5</b>
+                <span>Enter the Work</span>
+              </span>
+            </summary>
+
+            <div class="doll-body">
+              <p>
+                This profile is the personal doorway. The larger work continues through The Nine Summits of Love, Nine Summits, Products, Showroom, and Gauges.
+              </p>
+
+              <div class="actions">
+                <a class="button gold" href="/nine-summits-of-love/">Open the Book</a>
+                <a class="button" href="/nine-summits/">Open Nine Summits</a>
+                <a class="button" href="/products/">View Products</a>
+                <a class="button" href="/showroom/">Open Showroom</a>
+              </div>
+            </div>
+          </details>
         </div>
-      </section>
-
-      <section class="section-band" aria-labelledby="lines-title">
-        <div class="kicker">Lines that carry the room</div>
-        <h2 id="lines-title">Simple enough to remember. Strong enough to move.</h2>
-
-        <ul class="quote-list">
-          <li>Finding your inner underdog is finding your voice.</li>
-          <li>Pressure is not the end of the story. Sometimes it is the beginning of the map.</li>
-          <li>The underdog is not the weak part. It is the part that refused to disappear.</li>
-          <li>A person does not need to become someone else. They need to stop burying the part that already knows.</li>
-          <li>The key you are looking for is usually on the other side of the imperfect storm.</li>
-        </ul>
       </section>
 
       <section class="final-band" aria-label="Final direction">
         <strong>Meet the person. Then enter the work.</strong>
-        <p>Sean Mansfield is the personal profile lane into the larger system: the story that makes the structure human enough to enter.</p>
+        <p>
+          Sean Mansfield is the personal profile lane into the larger system: the human story that makes the structure easier to enter.
+        </p>
+
         <div class="actions">
           <a class="button gold" href="/about-this-underdog/">About This Underdog</a>
           <a class="button" href="/nine-summits-of-love/">Open the Book</a>
           <a class="button" href="/products/">View Products</a>
-          <a class="button secondary" href="/showroom/">Open Showroom</a>
-          <a class="button secondary" href="/">Return to Compass</a>
+          <a class="button" href="/showroom/">Open Showroom</a>
+          <a class="button" href="/">Return to Compass</a>
         </div>
       </section>
 
-      <details class="final-band" open>
-        <summary>
-          <span class="summary-copy">
-            <b>Route receipt</b>
-            <span>Meet Sean Mansfield personal profile binding.</span>
-          </span>
-        </summary>
-        <div class="bubble-body">
-          <pre class="public-receipt">MEET_SEAN_MANSFIELD_PERSONAL_PROFILE_PHOTO_PATH_TNT_v2
+      <details class="receipt" open>
+        <summary>Route receipt</summary>
+        <pre>MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3
 route=/meet-sean-mansfield/
 page=meet_sean_mansfield
 role=personal_profile_surface
-standard=compass,north_star,legend,four_zones
+standard=condensed_russian_doll_profile
 photo_path=/about-this-underdog/sean-mansfield.jpg
 photo_expected=true
 personal_profile=true
 universal_underdog_page=/about-this-underdog/
+split_law=about_this_underdog_universal,meet_sean_mansfield_personal
+visible_first_layer=hero,photo_card,turning_point_statement,page_split
+russian_doll_layers=turning_point,voice,stage_and_seminar,lines_that_carry,enter_the_work
 turning_point=adversity_to_accountability_to_redirection
+content_law=shorter,cleaner,personal,less_abstract,no_hardship_inventory
+preserved=photo_path,personal_profile,underdog_split,nine_summits_links,book_path,showroom,gauges
+removed=long_visible_essay,abstract_repetition,overextended_stage_copy,profile_bloat
 current_language=Meet Sean Mansfield,About This Underdog,Diamond Gate Bridge,Nine Summits,Nine Summits of Love,Audralia Manor Current
+route_owns=personal_profile_surface,condensed_profile_copy,russian_doll_disclosures,photo_card
+route_does_not_own=universal_underdog_concept,body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
 visual_pass_claimed=false
 heavy_runtime_loaded=false
-generated_image=false</pre>
-        </div>
+render_files_touched=false
+instrument_touched=false
+gauges_logic_touched=false
+generated_image=false
+graphic_box=false
+streaming=false</pre>
       </details>
     </main>
 
-    <footer class="footer">
-      <div>MEET_SEAN_MANSFIELD_PERSONAL_PROFILE_PHOTO_PATH_TNT_v2 · Uses photo path /about-this-underdog/sean-mansfield.jpg · Personal profile surface only.</div>
+    <footer>
+      MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3 · Personal Profile · Condensed Russian-Doll Surface.
     </footer>
   </div>
 </body>

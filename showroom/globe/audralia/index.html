@@ -5,16 +5,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Audralia · Showroom Globe</title>
-  <meta
-    name="description"
-    content="Audralia inspection route for the Showroom Globe constructed world."
-  />
+  <meta name="description" content="Audralia inspection route for the Showroom Globe constructed world." />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #07030f;
-      --panel: rgba(24, 15, 34, 0.82);
+      --panel: rgba(24, 15, 34, 0.84);
       --line: rgba(210, 168, 255, 0.36);
       --text: #fff7ff;
       --muted: rgba(255, 247, 255, 0.72);
@@ -312,7 +309,7 @@
 
         <div class="audralia-stage">
           <div id="audraliaRenderMount" aria-label="Audralia render mount">
-            <div class="mount-fallback">Audralia renderer is loading.</div>
+            <div class="mount-fallback">Audralia child HTML booted. Waiting for Audralia route script.</div>
           </div>
         </div>
 
@@ -324,6 +321,6 @@
     </main>
   </div>
 
-  <script type="module" src="/showroom/globe/audralia/index.js"></script>
+  <script type="module" src="./index.js?v=audralia-child-pair-bind-20260504"></script>
 </body>
 </html>

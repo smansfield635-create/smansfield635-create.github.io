@@ -1,5 +1,5 @@
 /* /assets/audrelia.planet.render.js
-   AUDRALIA_G2_NINE_SUMMIT_COHERENT_PLANET_TERRAIN_TNT_v2
+   AUDRALIA_G2_ORGANIC_CLIMATE_PLANET_TERRAIN_TNT_v3
 
    ROLE=
    DOWNSTREAM_RENDER_EXTENSION
@@ -9,7 +9,7 @@
    AUDRALIA_PLANET_TEXTURE_LAW
    AUDRALIA_PLANET_SURFACE_COLOR
    AUDRALIA_PLANET_EXTENSION_RECEIPT
-   AUDRALIA_G2_RENDER_BODY_TERRAIN_EXPRESSION
+   ORGANIC_CLIMATE_PLANET_TERRAIN
    DEFINITIVE_LAND_WATER_SEPARATION
    NINE_SUMMIT_TERRAIN_REGION_LOGIC
 
@@ -36,7 +36,7 @@
 (function bindAudraliaPlanetRenderExtension(global) {
   "use strict";
 
-  const VERSION = "AUDRALIA_G2_NINE_SUMMIT_COHERENT_PLANET_TERRAIN_TNT_v2";
+  const VERSION = "AUDRALIA_G2_ORGANIC_CLIMATE_PLANET_TERRAIN_TNT_v3";
 
   /*
     Compatibility law:
@@ -73,6 +73,25 @@
       t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
+  }
+
+  function hashNoise(x, y, seed) {
+    let n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function fbm(x, y, seed) {
+    let value = 0;
+    let amp = 0.5;
+    let freq = 1;
+
+    for (let i = 0; i < 5; i += 1) {
+      value += amp * hashNoise(x * freq, y * freq, seed + i * 11.13);
+      amp *= 0.5;
+      freq *= 2.02;
+    }
+
+    return value;
   }
 
   function makeCanvas(width, height) {
@@ -115,18 +134,41 @@
     });
   }
 
-  function makePath(ctx, points) {
-    points.forEach(function pointToPath(point, index) {
-      const p = lonLatToXY(point[0], point[1], ctx.canvas.width, ctx.canvas.height);
-      if (index === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
+  function smoothClosedPath(ctx, points) {
+    if (!points || points.length < 3) return;
+
+    const last = points[points.length - 1];
+    const first = points[0];
+    const firstMid = [
+      (last[0] + first[0]) * 0.5,
+      (last[1] + first[1]) * 0.5
+    ];
+
+    const firstXY = lonLatToXY(firstMid[0], firstMid[1], ctx.canvas.width, ctx.canvas.height);
+
+    ctx.moveTo(firstXY.x, firstXY.y);
+
+    points.forEach(function curve(point, index) {
+      const next = points[(index + 1) % points.length];
+      const mid = [
+        (point[0] + next[0]) * 0.5,
+        (point[1] + next[1]) * 0.5
+      ];
+
+      const pointXY = lonLatToXY(point[0], point[1], ctx.canvas.width, ctx.canvas.height);
+      const midXY = lonLatToXY(mid[0], mid[1], ctx.canvas.width, ctx.canvas.height);
+
+      ctx.quadraticCurveTo(pointXY.x, pointXY.y, midXY.x, midXY.y);
     });
   }
 
-  function drawPolygon(ctx, points, fill, stroke, lineWidth) {
+  function drawPolygon(ctx, points, fill, stroke, lineWidth, alpha) {
     ctx.save();
+
+    if (alpha !== undefined) ctx.globalAlpha = alpha;
+
     ctx.beginPath();
-    makePath(ctx, points);
+    smoothClosedPath(ctx, points);
     ctx.closePath();
 
     if (fill) {
@@ -147,15 +189,18 @@
 
   function clipToPolygon(ctx, points) {
     ctx.beginPath();
-    makePath(ctx, points);
+    smoothClosedPath(ctx, points);
     ctx.closePath();
     ctx.clip();
   }
 
-  function drawEllipse(ctx, lon, lat, lonRadius, latRadius, rotationDeg, fill, stroke, lineWidth) {
+  function drawEllipse(ctx, lon, lat, lonRadius, latRadius, rotationDeg, fill, stroke, lineWidth, alpha) {
     const p = lonLatToXY(lon, lat, ctx.canvas.width, ctx.canvas.height);
 
     ctx.save();
+
+    if (alpha !== undefined) ctx.globalAlpha = alpha;
+
     ctx.translate(p.x, p.y);
     ctx.rotate((rotationDeg || 0) * DEG);
     ctx.beginPath();
@@ -188,11 +233,10 @@
 
     ctx.save();
 
-    if (alpha !== undefined) {
-      ctx.globalAlpha = alpha;
-    }
+    if (alpha !== undefined) ctx.globalAlpha = alpha;
 
     ctx.beginPath();
+
     points.forEach(function drawPoint(point, index) {
       const p = lonLatToXY(point[0], point[1], ctx.canvas.width, ctx.canvas.height);
       if (index === 0) ctx.moveTo(p.x, p.y);
@@ -209,12 +253,13 @@
 
   function drawRibbon(ctx, lonStart, lonEnd, latBase, amplitude, frequency, stroke, width, phase) {
     const points = [];
-    const step = lonStart <= lonEnd ? 3 : -3;
+    const step = lonStart <= lonEnd ? 2.5 : -2.5;
 
     for (let lon = lonStart; step > 0 ? lon <= lonEnd : lon >= lonEnd; lon += step) {
       const wobble =
         Math.sin((lon + phase) * frequency) * amplitude +
-        Math.sin((lon - phase * 0.45) * frequency * 1.9) * amplitude * 0.34;
+        Math.sin((lon - phase * 0.45) * frequency * 1.9) * amplitude * 0.34 +
+        Math.sin((lon + phase * 1.7) * frequency * 3.1) * amplitude * 0.12;
 
       points.push([lon, latBase + wobble]);
     }
@@ -222,40 +267,72 @@
     drawStroke(ctx, points, stroke, width);
   }
 
+  function makeOrganicRegion(config) {
+    const points = [];
+    const count = config.count || 128;
+    const rotation = (config.rotation || 0) * DEG;
+    const seed = config.seed || 1;
+    const roughness = config.roughness || 0.18;
+
+    for (let i = 0; i < count; i += 1) {
+      const a = (i / count) * TAU;
+
+      const n1 = Math.sin(a * 2 + seed * 0.37) * 0.13;
+      const n2 = Math.sin(a * 3.4 + seed * 1.91) * 0.09;
+      const n3 = Math.sin(a * 6.7 + seed * 2.41) * 0.045;
+      const n4 = (hashNoise(Math.cos(a) * 3.1, Math.sin(a) * 3.1, seed) - 0.5) * roughness;
+
+      const r = 1 + n1 + n2 + n3 + n4;
+
+      const lx = Math.cos(a) * config.lonRadius * r;
+      const ly = Math.sin(a) * config.latRadius * r;
+
+      const lon = config.lon + lx * Math.cos(rotation) - ly * Math.sin(rotation);
+      const lat = config.lat + lx * Math.sin(rotation) * 0.55 + ly * Math.cos(rotation);
+
+      points.push([
+        clamp(lon, -178, 178),
+        clamp(lat, -78, 78)
+      ]);
+    }
+
+    return points;
+  }
+
   function drawOceanBase(ctx, random) {
     const ocean = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT);
-    ocean.addColorStop(0.00, "#06133a");
-    ocean.addColorStop(0.15, "#0b2d61");
-    ocean.addColorStop(0.31, "#0b5a82");
-    ocean.addColorStop(0.49, "#0b7894");
-    ocean.addColorStop(0.64, "#0b5b82");
-    ocean.addColorStop(0.82, "#07284f");
-    ocean.addColorStop(1.00, "#031126");
+    ocean.addColorStop(0.00, "#051236");
+    ocean.addColorStop(0.14, "#082c5f");
+    ocean.addColorStop(0.30, "#0a5c84");
+    ocean.addColorStop(0.47, "#0a7891");
+    ocean.addColorStop(0.61, "#0a547b");
+    ocean.addColorStop(0.80, "#06264c");
+    ocean.addColorStop(1.00, "#020e24");
 
     ctx.fillStyle = ocean;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
     const equatorialLight = ctx.createRadialGradient(
       SOURCE_WIDTH * 0.50,
-      SOURCE_HEIGHT * 0.46,
+      SOURCE_HEIGHT * 0.47,
       SOURCE_HEIGHT * 0.04,
       SOURCE_WIDTH * 0.50,
-      SOURCE_HEIGHT * 0.46,
-      SOURCE_HEIGHT * 0.76
+      SOURCE_HEIGHT * 0.47,
+      SOURCE_HEIGHT * 0.78
     );
-    equatorialLight.addColorStop(0.00, "rgba(74, 222, 216, 0.18)");
-    equatorialLight.addColorStop(0.34, "rgba(74, 222, 216, 0.075)");
-    equatorialLight.addColorStop(0.72, "rgba(17, 78, 118, 0.045)");
+    equatorialLight.addColorStop(0.00, "rgba(78, 226, 218, 0.18)");
+    equatorialLight.addColorStop(0.34, "rgba(78, 226, 218, 0.070)");
+    equatorialLight.addColorStop(0.72, "rgba(17, 78, 118, 0.042)");
     equatorialLight.addColorStop(1.00, "rgba(4, 11, 28, 0)");
 
     ctx.fillStyle = equatorialLight;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
-    for (let i = 0; i < 34; i += 1) {
+    for (let i = 0; i < 48; i += 1) {
       const lon = -180 + random() * 360;
-      const lat = -74 + random() * 148;
-      const rLon = 12 + random() * 42;
-      const rLat = 5 + random() * 22;
+      const lat = -76 + random() * 152;
+      const rLon = 10 + random() * 54;
+      const rLat = 4 + random() * 25;
 
       drawEllipse(
         ctx,
@@ -264,38 +341,38 @@
         rLon,
         rLat,
         random() * 180,
-        random() > 0.45
-          ? "rgba(0, 22, 54, " + (0.10 + random() * 0.16).toFixed(4) + ")"
-          : "rgba(0, 98, 132, " + (0.035 + random() * 0.08).toFixed(4) + ")",
+        random() > 0.44
+          ? "rgba(0, 20, 52, " + (0.09 + random() * 0.17).toFixed(4) + ")"
+          : "rgba(0, 100, 132, " + (0.030 + random() * 0.075).toFixed(4) + ")",
         null,
         0
       );
     }
 
-    for (let i = 0; i < 160; i += 1) {
+    for (let i = 0; i < 180; i += 1) {
       drawRibbon(
         ctx,
         -180,
         180,
-        -70 + random() * 140,
-        0.7 + random() * 2.0,
-        0.038 + random() * 0.058,
-        random() > 0.5 ? "rgba(125, 225, 255, 0.032)" : "rgba(255, 255, 255, 0.024)",
-        0.6 + random() * 1.15,
-        random() * 220
+        -72 + random() * 144,
+        0.55 + random() * 1.9,
+        0.034 + random() * 0.058,
+        random() > 0.5 ? "rgba(125, 225, 255, 0.030)" : "rgba(255, 255, 255, 0.022)",
+        0.55 + random() * 1.05,
+        random() * 240
       );
     }
 
-    for (let i = 0; i < 1900; i += 1) {
-      const lat = -76 + random() * 152;
-      const alpha = lat < -35 ? 0.018 + random() * 0.062 : 0.012 + random() * 0.046;
+    for (let i = 0; i < 2100; i += 1) {
+      const lat = -78 + random() * 156;
+      const alpha = lat < -36 ? 0.018 + random() * 0.055 : 0.011 + random() * 0.040;
 
       drawEllipse(
         ctx,
         -180 + random() * 360,
         lat,
-        0.6 + random() * 7.2,
-        0.18 + random() * 2.1,
+        0.5 + random() * 7.0,
+        0.16 + random() * 2.0,
         random() * 180,
         "rgba(145,226,255," + alpha.toFixed(4) + ")",
         null,
@@ -304,93 +381,380 @@
     }
   }
 
-  function drawShelfSystems(ctx, landmasses) {
-    landmasses.forEach(function drawShelf(land) {
-      const shelf2 = scalePolygon(land.points, 1.15, 1.20);
-      const shelf1 = scalePolygon(land.points, 1.075, 1.105);
+  function getOrganicLandmasses() {
+    const regions = [
+      {
+        name: "love-convergence-heartland",
+        summit: "Love",
+        lon: 79,
+        lat: -8,
+        lonRadius: 76,
+        latRadius: 43,
+        rotation: -13,
+        seed: 1701,
+        roughness: 0.20,
+        baseFill: "#5c7e4f",
+        humidFill: "rgba(38, 107, 69, 0.34)",
+        dryFill: "rgba(190, 151, 91, 0.28)",
+        coldFill: "rgba(205, 219, 212, 0.12)",
+        center: "rgba(218, 190, 116, 0.26)",
+        textureLonSpan: 126,
+        textureLatSpan: 70,
+        textureCount: 620,
+        ridgeCount: 112,
+        ridgeLength: 35,
+        coastWidth: 2.2
+      },
+      {
+        name: "character-origin-ridge",
+        summit: "Character",
+        lon: -122,
+        lat: 22,
+        lonRadius: 34,
+        latRadius: 24,
+        rotation: 18,
+        seed: 2011,
+        roughness: 0.24,
+        baseFill: "#486c4c",
+        humidFill: "rgba(52, 126, 76, 0.35)",
+        dryFill: "rgba(168, 132, 82, 0.16)",
+        coldFill: "rgba(218, 232, 222, 0.18)",
+        center: "rgba(207, 225, 172, 0.22)",
+        textureLonSpan: 58,
+        textureLatSpan: 42,
+        textureCount: 210,
+        ridgeCount: 62,
+        ridgeLength: 24,
+        coastWidth: 1.9
+      },
+      {
+        name: "structure-foundation-plateau",
+        summit: "Structure",
+        lon: -18,
+        lat: 4,
+        lonRadius: 38,
+        latRadius: 24,
+        rotation: -8,
+        seed: 3017,
+        roughness: 0.19,
+        baseFill: "#6c7552",
+        humidFill: "rgba(62, 111, 69, 0.20)",
+        dryFill: "rgba(202, 159, 94, 0.28)",
+        coldFill: "rgba(218, 225, 208, 0.08)",
+        center: "rgba(209, 176, 108, 0.24)",
+        textureLonSpan: 66,
+        textureLatSpan: 42,
+        textureCount: 250,
+        ridgeCount: 52,
+        ridgeLength: 24,
+        coastWidth: 2.0
+      },
+      {
+        name: "balance-transition-basin",
+        summit: "Balance",
+        lon: 18,
+        lat: -47,
+        lonRadius: 29,
+        latRadius: 19,
+        rotation: 24,
+        seed: 4049,
+        roughness: 0.22,
+        baseFill: "#5a8168",
+        humidFill: "rgba(62, 126, 94, 0.32)",
+        dryFill: "rgba(180, 139, 89, 0.18)",
+        coldFill: "rgba(200, 226, 224, 0.12)",
+        center: "rgba(120, 176, 138, 0.24)",
+        textureLonSpan: 52,
+        textureLatSpan: 34,
+        textureCount: 150,
+        ridgeCount: 30,
+        ridgeLength: 16,
+        coastWidth: 1.7
+      },
+      {
+        name: "stability-habitable-shelf",
+        summit: "Stability",
+        lon: 160,
+        lat: -10,
+        lonRadius: 34,
+        latRadius: 21,
+        rotation: -25,
+        seed: 5021,
+        roughness: 0.25,
+        baseFill: "#557b50",
+        humidFill: "rgba(55, 124, 72, 0.34)",
+        dryFill: "rgba(188, 145, 91, 0.13)",
+        coldFill: "rgba(214, 226, 210, 0.08)",
+        center: "rgba(170, 210, 140, 0.22)",
+        textureLonSpan: 55,
+        textureLatSpan: 35,
+        textureCount: 180,
+        ridgeCount: 36,
+        ridgeLength: 18,
+        coastWidth: 1.8
+      },
+      {
+        name: "peace-protected-green-blue-basin",
+        summit: "Peace",
+        lon: -53,
+        lat: -47,
+        lonRadius: 29,
+        latRadius: 20,
+        rotation: 13,
+        seed: 6067,
+        roughness: 0.20,
+        baseFill: "#4b7b62",
+        humidFill: "rgba(54, 136, 98, 0.36)",
+        dryFill: "rgba(170, 138, 86, 0.10)",
+        coldFill: "rgba(204, 232, 225, 0.15)",
+        center: "rgba(108, 198, 170, 0.24)",
+        textureLonSpan: 50,
+        textureLatSpan: 34,
+        textureCount: 145,
+        ridgeCount: 24,
+        ridgeLength: 14,
+        coastWidth: 1.7
+      },
+      {
+        name: "joy-bright-archipelago",
+        summit: "Joy",
+        lon: -148,
+        lat: 31,
+        lonRadius: 31,
+        latRadius: 20,
+        rotation: -15,
+        seed: 7079,
+        roughness: 0.30,
+        baseFill: "#629353",
+        humidFill: "rgba(72, 142, 82, 0.38)",
+        dryFill: "rgba(202, 171, 102, 0.10)",
+        coldFill: "rgba(224, 234, 208, 0.08)",
+        center: "rgba(226, 230, 136, 0.20)",
+        textureLonSpan: 54,
+        textureLatSpan: 32,
+        textureCount: 105,
+        ridgeCount: 16,
+        ridgeLength: 12,
+        coastWidth: 1.6
+      },
+      {
+        name: "dignity-mineral-crownland",
+        summit: "Dignity",
+        lon: 139,
+        lat: 36,
+        lonRadius: 33,
+        latRadius: 21,
+        rotation: 9,
+        seed: 8081,
+        roughness: 0.23,
+        baseFill: "#6e684e",
+        humidFill: "rgba(66, 111, 72, 0.16)",
+        dryFill: "rgba(210, 165, 96, 0.25)",
+        coldFill: "rgba(228, 235, 224, 0.20)",
+        center: "rgba(225, 202, 142, 0.25)",
+        textureLonSpan: 52,
+        textureLatSpan: 36,
+        textureCount: 155,
+        ridgeCount: 58,
+        ridgeLength: 21,
+        coastWidth: 1.9
+      },
+      {
+        name: "free-will-frontier-edge",
+        summit: "Free Will",
+        lon: 16,
+        lat: 43,
+        lonRadius: 36,
+        latRadius: 21,
+        rotation: 27,
+        seed: 9091,
+        roughness: 0.27,
+        baseFill: "#5d724d",
+        humidFill: "rgba(60, 117, 72, 0.22)",
+        dryFill: "rgba(198, 146, 88, 0.23)",
+        coldFill: "rgba(220, 229, 216, 0.12)",
+        center: "rgba(190, 150, 94, 0.22)",
+        textureLonSpan: 56,
+        textureLatSpan: 34,
+        textureCount: 150,
+        ridgeCount: 42,
+        ridgeLength: 21,
+        coastWidth: 1.7
+      }
+    ];
 
-      drawPolygon(ctx, shelf2, "rgba(85, 212, 224, 0.24)", "rgba(191, 248, 235, 0.10)", 1.35);
-      drawPolygon(ctx, shelf1, "rgba(144, 236, 218, 0.21)", "rgba(242, 238, 176, 0.16)", 1.15);
+    return regions.map(function withPoints(region) {
+      return Object.assign({}, region, {
+        points: makeOrganicRegion(region)
+      });
+    });
+  }
+
+  function drawShelfSystems(ctx, landmasses, random) {
+    landmasses.forEach(function drawShelf(land) {
+      const shelfOuter = scalePolygon(land.points, 1.18, 1.23);
+      const shelfMiddle = scalePolygon(land.points, 1.105, 1.145);
+      const shelfInner = scalePolygon(land.points, 1.045, 1.065);
+
+      drawPolygon(ctx, shelfOuter, "rgba(44, 174, 190, 0.23)", "rgba(155, 232, 230, 0.09)", 1.2);
+      drawPolygon(ctx, shelfMiddle, "rgba(99, 221, 219, 0.24)", "rgba(204, 248, 235, 0.13)", 1.1);
+      drawPolygon(ctx, shelfInner, "rgba(166, 239, 216, 0.23)", "rgba(242, 238, 176, 0.17)", 0.9);
+
+      const c = polygonCentroid(land.points);
+      for (let i = 0; i < 28; i += 1) {
+        const a = random() * TAU;
+        const pLon = c.lon + Math.cos(a) * land.lonRadius * (1.02 + random() * 0.32);
+        const pLat = c.lat + Math.sin(a) * land.latRadius * (1.06 + random() * 0.38);
+
+        drawEllipse(
+          ctx,
+          pLon,
+          pLat,
+          0.35 + random() * 1.25,
+          0.10 + random() * 0.30,
+          random() * 180,
+          "rgba(223, 242, 184, " + (0.08 + random() * 0.16).toFixed(4) + ")",
+          null,
+          0
+        );
+      }
     });
   }
 
   function drawLandBase(ctx, land) {
-    drawPolygon(ctx, land.points, land.fill, "rgba(255, 238, 178, 0.36)", land.coastWidth || 2.0);
-
-    drawPolygon(ctx, scalePolygon(land.points, 0.985, 0.985), land.fill, null, 0);
+    drawPolygon(ctx, land.points, land.baseFill, "rgba(255, 238, 178, 0.30)", land.coastWidth || 1.8);
+    drawPolygon(ctx, scalePolygon(land.points, 0.992, 0.992), land.baseFill, null, 0);
 
     ctx.save();
     clipToPolygon(ctx, land.points);
 
     const c = polygonCentroid(land.points);
+    const center = lonLatToXY(c.lon, c.lat, SOURCE_WIDTH, SOURCE_HEIGHT);
+
     const terrainGlow = ctx.createRadialGradient(
-      lonLatToXY(c.lon, c.lat, SOURCE_WIDTH, SOURCE_HEIGHT).x,
-      lonLatToXY(c.lon, c.lat, SOURCE_WIDTH, SOURCE_HEIGHT).y,
-      SOURCE_HEIGHT * 0.02,
-      lonLatToXY(c.lon, c.lat, SOURCE_WIDTH, SOURCE_HEIGHT).x,
-      lonLatToXY(c.lon, c.lat, SOURCE_WIDTH, SOURCE_HEIGHT).y,
-      SOURCE_HEIGHT * 0.28
+      center.x,
+      center.y,
+      SOURCE_HEIGHT * 0.015,
+      center.x,
+      center.y,
+      SOURCE_HEIGHT * 0.25
     );
 
-    terrainGlow.addColorStop(0.00, land.center || "rgba(200, 178, 112, 0.30)");
-    terrainGlow.addColorStop(0.50, "rgba(58, 111, 72, 0.22)");
-    terrainGlow.addColorStop(1.00, "rgba(19, 52, 42, 0.10)");
+    terrainGlow.addColorStop(0.00, land.center);
+    terrainGlow.addColorStop(0.46, "rgba(61, 118, 75, 0.25)");
+    terrainGlow.addColorStop(1.00, "rgba(20, 54, 42, 0.12)");
 
     ctx.fillStyle = terrainGlow;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
 
     ctx.restore();
 
-    drawPolygon(ctx, land.points, null, "rgba(18, 35, 30, 0.54)", 1.1);
-    drawPolygon(ctx, scalePolygon(land.points, 1.012, 1.016), null, "rgba(242, 232, 169, 0.20)", 1.0);
+    drawPolygon(ctx, land.points, null, "rgba(13, 30, 27, 0.48)", 0.9);
+    drawPolygon(ctx, scalePolygon(land.points, 1.010, 1.012), null, "rgba(242, 232, 169, 0.16)", 0.9);
   }
 
-  function drawClippedTerrain(ctx, land, random) {
+  function drawClimateBeltsOnLand(ctx, land, random) {
     const c = polygonCentroid(land.points);
 
     ctx.save();
     clipToPolygon(ctx, land.points);
 
+    const top = lonLatToXY(0, c.lat + land.latRadius, SOURCE_WIDTH, SOURCE_HEIGHT).y;
+    const bottom = lonLatToXY(0, c.lat - land.latRadius, SOURCE_WIDTH, SOURCE_HEIGHT).y;
+
+    const climate = ctx.createLinearGradient(0, top, 0, bottom);
+    climate.addColorStop(0.00, land.coldFill);
+    climate.addColorStop(0.18, "rgba(82, 125, 82, 0.22)");
+    climate.addColorStop(0.38, land.humidFill);
+    climate.addColorStop(0.58, land.dryFill);
+    climate.addColorStop(0.78, "rgba(66, 116, 72, 0.20)");
+    climate.addColorStop(1.00, land.coldFill);
+
+    ctx.fillStyle = climate;
+    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+
     for (let i = 0; i < land.textureCount; i += 1) {
       const lon = c.lon + (random() - 0.5) * land.textureLonSpan;
       const lat = c.lat + (random() - 0.5) * land.textureLatSpan;
-      const isDry = random() > 0.54;
+
+      const humidBias = Math.max(0, 1 - Math.abs(lat) / 55);
+      const dryBias = Math.max(0, 1 - Math.abs(Math.abs(lat) - 26) / 28);
+      const coldBias = Math.max(0, (Math.abs(lat) - 45) / 32);
+      const n = fbm(lon * 0.021, lat * 0.036, land.seed);
+
+      let fill;
+
+      if (coldBias > 0.42 && random() < coldBias * 0.72) {
+        fill = "rgba(220, 232, 224, " + (0.055 + random() * 0.12).toFixed(4) + ")";
+      } else if (dryBias + n * 0.35 > 0.82) {
+        fill = "rgba(207, 161, 91, " + (0.080 + random() * 0.17).toFixed(4) + ")";
+      } else if (humidBias + n * 0.38 > 0.76) {
+        fill = "rgba(35, 116, 67, " + (0.080 + random() * 0.17).toFixed(4) + ")";
+      } else {
+        fill = "rgba(86, 124, 73, " + (0.055 + random() * 0.13).toFixed(4) + ")";
+      }
 
       drawEllipse(
         ctx,
         lon,
         lat,
-        0.35 + random() * 3.3,
-        0.12 + random() * 1.0,
-        land.rotation + random() * 100 - 50,
-        isDry
-          ? "rgba(199, 162, 94, " + (0.075 + random() * 0.14).toFixed(4) + ")"
-          : "rgba(43, 108, 68, " + (0.075 + random() * 0.15).toFixed(4) + ")",
+        0.30 + random() * 2.7,
+        0.10 + random() * 0.82,
+        land.rotation + random() * 120 - 60,
+        fill,
         null,
         0
       );
     }
 
+    ctx.restore();
+  }
+
+  function drawAncientTerrain(ctx, land, random) {
+    const c = polygonCentroid(land.points);
+
+    ctx.save();
+    clipToPolygon(ctx, land.points);
+
     for (let i = 0; i < land.ridgeCount; i += 1) {
-      const baseLon = c.lon + (random() - 0.5) * land.textureLonSpan * 0.76;
-      const baseLat = c.lat + (random() - 0.5) * land.textureLatSpan * 0.68;
-      const angle = land.rotation + (random() - 0.5) * 70;
+      const baseLon = c.lon + (random() - 0.5) * land.textureLonSpan * 0.78;
+      const baseLat = c.lat + (random() - 0.5) * land.textureLatSpan * 0.70;
+      const angle = land.rotation + (random() - 0.5) * 80;
       const length = 6 + random() * land.ridgeLength;
       const points = [];
 
-      for (let p = 0; p < 11; p += 1) {
-        const t = p / 10;
+      for (let p = 0; p < 13; p += 1) {
+        const t = p / 12;
         points.push([
-          baseLon + Math.cos(angle * DEG) * length * (t - 0.5) + Math.sin(t * TAU) * 1.35,
-          baseLat + Math.sin(angle * DEG) * length * (t - 0.5) + Math.cos(t * TAU) * 0.88
+          baseLon + Math.cos(angle * DEG) * length * (t - 0.5) + Math.sin(t * TAU) * 1.15,
+          baseLat + Math.sin(angle * DEG) * length * (t - 0.5) + Math.cos(t * TAU) * 0.72
         ]);
       }
 
       drawStroke(
         ctx,
         points,
-        random() > 0.52 ? "rgba(235, 230, 204, 0.25)" : "rgba(70, 48, 38, 0.22)",
-        1.1 + random() * 1.7
+        random() > 0.55 ? "rgba(225, 221, 196, 0.22)" : "rgba(70, 48, 38, 0.19)",
+        0.85 + random() * 1.35
+      );
+    }
+
+    for (let i = 0; i < 34; i += 1) {
+      const lon = c.lon + (random() - 0.5) * land.textureLonSpan * 0.65;
+      const lat = c.lat + (random() - 0.5) * land.textureLatSpan * 0.58;
+
+      drawEllipse(
+        ctx,
+        lon,
+        lat,
+        2.6 + random() * 8.8,
+        0.8 + random() * 3.2,
+        land.rotation + random() * 60 - 30,
+        random() > 0.48
+          ? "rgba(112, 84, 62, " + (0.035 + random() * 0.080).toFixed(4) + ")"
+          : "rgba(218, 181, 110, " + (0.030 + random() * 0.065).toFixed(4) + ")",
+        null,
+        0
       );
     }
 
@@ -401,61 +765,35 @@
     for (let i = 0; i < count; i += 1) {
       const t = count === 1 ? 0.5 : i / (count - 1);
       const angle = mix(startDeg, endDeg, t) * DEG;
-      const reefLon = lon + Math.cos(angle) * radiusLon + (random() - 0.5) * 2.2;
-      const reefLat = lat + Math.sin(angle) * radiusLat + (random() - 0.5) * 1.15;
+      const reefLon = lon + Math.cos(angle) * radiusLon + (random() - 0.5) * 2.4;
+      const reefLat = lat + Math.sin(angle) * radiusLat + (random() - 0.5) * 1.25;
 
       drawEllipse(
         ctx,
         reefLon,
         reefLat,
-        0.42 + random() * 1.55,
-        0.12 + random() * 0.42,
+        0.32 + random() * 1.45,
+        0.10 + random() * 0.36,
         random() * 180,
-        "rgba(226, 244, 188, " + (0.18 + random() * 0.22).toFixed(4) + ")",
-        "rgba(20, 88, 94, 0.10)",
-        0.45
+        "rgba(226, 244, 188, " + (0.16 + random() * 0.20).toFixed(4) + ")",
+        "rgba(20, 88, 94, 0.08)",
+        0.35
       );
     }
   }
 
-  function drawPressureField(ctx, lon, lat, lonRadius, latRadius, rotation, random) {
-    drawEllipse(
-      ctx,
-      lon,
-      lat,
-      lonRadius,
-      latRadius,
-      rotation,
-      "rgba(168, 120, 68, 0.32)",
-      "rgba(238, 190, 106, 0.18)",
-      1.25
-    );
-
-    for (let i = 0; i < 58; i += 1) {
-      const a = random() * TAU;
-      const r = Math.sqrt(random());
-      const pLon = lon + Math.cos(a) * lonRadius * r * 0.82;
-      const pLat = lat + Math.sin(a) * latRadius * r * 0.62;
-
-      drawEllipse(
-        ctx,
-        pLon,
-        pLat,
-        0.38 + random() * 2.8,
-        0.12 + random() * 0.86,
-        rotation + random() * 80 - 40,
-        random() > 0.45
-          ? "rgba(224, 180, 110, " + (0.08 + random() * 0.16).toFixed(4) + ")"
-          : "rgba(78, 55, 42, " + (0.06 + random() * 0.12).toFixed(4) + ")",
-        null,
-        0
-      );
-    }
+  function drawGlobalReefs(ctx, random) {
+    drawReefArc(ctx, 87, -9, 88, 54, 112, 264, 142, random);
+    drawReefArc(ctx, 144, 33, 43, 24, 186, 356, 62, random);
+    drawReefArc(ctx, -148, 29, 42, 28, 5, 225, 78, random);
+    drawReefArc(ctx, -150, -16, 38, 26, 35, 254, 64, random);
+    drawReefArc(ctx, -44, -50, 38, 22, 150, 346, 48, random);
+    drawReefArc(ctx, 18, 43, 42, 25, 190, 358, 58, random);
   }
 
-  function drawFrontierBelt(ctx, random) {
+  function drawFrontierAndClimateCurrents(ctx, random) {
     for (let i = 0; i < 11; i += 1) {
-      const lat = -48 + i * 4.3 + (random() - 0.5) * 2.0;
+      const lat = -49 + i * 4.4 + (random() - 0.5) * 2.2;
       const lonStart = -172 + random() * 18;
       const lonEnd = 172 - random() * 18;
 
@@ -464,35 +802,91 @@
         lonStart,
         lonEnd,
         lat,
-        1.3 + random() * 1.0,
-        0.050 + random() * 0.022,
-        i % 2 === 0 ? "rgba(242, 199, 111, 0.13)" : "rgba(143, 240, 198, 0.10)",
-        1.25 + random() * 1.2,
+        1.1 + random() * 1.1,
+        0.046 + random() * 0.023,
+        i % 2 === 0 ? "rgba(242, 199, 111, 0.105)" : "rgba(143, 240, 198, 0.082)",
+        1.05 + random() * 1.0,
         random() * 100
+      );
+    }
+
+    for (let i = 0; i < 9; i += 1) {
+      drawRibbon(
+        ctx,
+        -180,
+        180,
+        -18 + i * 6,
+        0.6 + random() * 0.8,
+        0.052 + random() * 0.018,
+        "rgba(255, 255, 255, 0.028)",
+        0.85,
+        random() * 220
       );
     }
   }
 
+  function drawNineSummitTerrain(ctx, random) {
+    const landmasses = getOrganicLandmasses();
+
+    drawShelfSystems(ctx, landmasses, random);
+    drawGlobalReefs(ctx, random);
+
+    landmasses.forEach(function drawLand(land) {
+      drawLandBase(ctx, land);
+      drawClimateBeltsOnLand(ctx, land, random);
+      drawAncientTerrain(ctx, land, random);
+    });
+
+    const ridgeSystems = [
+      [[51, -8], [77, 5], [105, 9], [132, -4], [158, -22]],
+      [[72, -38], [99, -27], [126, -31], [151, -43]],
+      [[-136, 24], [-113, 31], [-91, 18], [-75, 2]],
+      [[135, 37], [153, 32], [173, 22]],
+      [[-25, 5], [-7, 15], [17, 8], [30, -8]]
+    ];
+
+    ridgeSystems.forEach(function drawMainRidge(points, index) {
+      drawStroke(
+        ctx,
+        points,
+        index === 0 ? "rgba(238, 234, 214, 0.40)" : "rgba(228, 216, 184, 0.26)",
+        index === 0 ? 3.1 : 2.1
+      );
+
+      drawStroke(
+        ctx,
+        points.map(function offset(point) {
+          return [point[0] + 1.2, point[1] - 0.9];
+        }),
+        "rgba(43, 35, 28, 0.28)",
+        index === 0 ? 1.9 : 1.4
+      );
+    });
+
+    drawFrontierAndClimateCurrents(ctx, random);
+  }
+
   function drawCloudBands(ctx, random) {
-    for (let band = -58; band <= 62; band += 12) {
+    for (let band = -60; band <= 62; band += 12) {
       const points = [];
 
       for (let lon = -180; lon <= 180; lon += 3) {
         const wobble =
-          Math.sin((lon + band * 2.5) * 0.08) * 3.0 +
-          Math.sin((lon - band * 1.2) * 0.15) * 0.95;
+          Math.sin((lon + band * 2.5) * 0.08) * 2.8 +
+          Math.sin((lon - band * 1.2) * 0.15) * 0.90 +
+          Math.sin((lon + band) * 0.032) * 1.3;
         points.push([lon, band + wobble]);
       }
 
       drawStroke(
         ctx,
         points,
-        band < -28 ? "rgba(255,255,255,0.080)" : "rgba(255,255,255,0.058)",
-        band < -28 ? 2.6 : 1.9
+        band < -30 ? "rgba(255,255,255,0.070)" : "rgba(255,255,255,0.052)",
+        band < -30 ? 2.4 : 1.6
       );
     }
 
-    for (let i = 0; i < 420; i += 1) {
+    for (let i = 0; i < 460; i += 1) {
       const southernBias = random() > 0.58 ? 1 : 0;
       const lat = southernBias
         ? -72 + random() * 64
@@ -502,267 +896,50 @@
         ctx,
         -180 + random() * 360,
         lat,
-        1 + random() * 8,
-        0.28 + random() * 1.8,
+        0.9 + random() * 7.4,
+        0.24 + random() * 1.6,
         random() * 180,
-        "rgba(255,255,255," + (0.014 + random() * 0.060).toFixed(4) + ")",
+        "rgba(255,255,255," + (0.012 + random() * 0.052).toFixed(4) + ")",
         null,
         0
       );
     }
   }
 
-  function drawSouthernLight(ctx) {
-    const south = ctx.createLinearGradient(0, SOURCE_HEIGHT, 0, SOURCE_HEIGHT * 0.58);
-    south.addColorStop(0.00, "rgba(216, 236, 255, 0.25)");
-    south.addColorStop(0.20, "rgba(143, 240, 198, 0.105)");
-    south.addColorStop(0.44, "rgba(143, 101, 255, 0.055)");
+  function drawAtmosphereAndPolarSystems(ctx, random) {
+    drawCloudBands(ctx, random);
+
+    const north = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT * 0.25);
+    north.addColorStop(0, "rgba(245,250,255,0.24)");
+    north.addColorStop(0.42, "rgba(245,250,255,0.075)");
+    north.addColorStop(1, "rgba(245,250,255,0)");
+
+    ctx.fillStyle = north;
+    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT * 0.25);
+
+    const south = ctx.createLinearGradient(0, SOURCE_HEIGHT, 0, SOURCE_HEIGHT * 0.56);
+    south.addColorStop(0.00, "rgba(216, 236, 255, 0.28)");
+    south.addColorStop(0.20, "rgba(143, 240, 198, 0.115)");
+    south.addColorStop(0.48, "rgba(143, 101, 255, 0.055)");
     south.addColorStop(1.00, "rgba(143, 101, 255, 0)");
 
     ctx.fillStyle = south;
-    ctx.fillRect(0, SOURCE_HEIGHT * 0.58, SOURCE_WIDTH, SOURCE_HEIGHT * 0.42);
+    ctx.fillRect(0, SOURCE_HEIGHT * 0.56, SOURCE_WIDTH, SOURCE_HEIGHT * 0.44);
 
-    const polarSouth = ctx.createLinearGradient(0, SOURCE_HEIGHT, 0, SOURCE_HEIGHT * 0.72);
-    polarSouth.addColorStop(0, "rgba(245,250,255,0.32)");
-    polarSouth.addColorStop(0.35, "rgba(143,240,198,0.10)");
-    polarSouth.addColorStop(1, "rgba(245,250,255,0)");
-
-    ctx.fillStyle = polarSouth;
-    ctx.fillRect(0, SOURCE_HEIGHT * 0.72, SOURCE_WIDTH, SOURCE_HEIGHT * 0.28);
-  }
-
-  function getLandmasses() {
-    return [
-      {
-        name: "love-convergence-heartland",
-        summit: "Love",
-        fill: "#5f7f52",
-        center: "rgba(216, 190, 116, 0.30)",
-        rotation: -10,
-        textureCount: 460,
-        ridgeCount: 80,
-        ridgeLength: 31,
-        textureLonSpan: 90,
-        textureLatSpan: 54,
-        coastWidth: 2.6,
-        points: [
-          [56, -6], [71, 10], [103, 17], [136, 9], [164, -6],
-          [172, -28], [154, -45], [123, -55], [91, -50], [63, -38],
-          [42, -21]
-        ]
-      },
-      {
-        name: "character-origin-ridge",
-        summit: "Character",
-        fill: "#476b4d",
-        center: "rgba(206, 226, 172, 0.24)",
-        rotation: 18,
-        textureCount: 150,
-        ridgeCount: 52,
-        ridgeLength: 24,
-        textureLonSpan: 45,
-        textureLatSpan: 31,
-        coastWidth: 2.1,
-        points: [
-          [-136, 18], [-122, 33], [-95, 36], [-73, 22],
-          [-68, 3], [-88, -8], [-117, -2]
-        ]
-      },
-      {
-        name: "structure-foundation-plateau",
-        summit: "Structure",
-        fill: "#6e7652",
-        center: "rgba(208, 176, 108, 0.28)",
-        rotation: -7,
-        textureCount: 190,
-        ridgeCount: 38,
-        ridgeLength: 22,
-        textureLonSpan: 50,
-        textureLatSpan: 29,
-        coastWidth: 2.2,
-        points: [
-          [-36, 8], [-15, 19], [11, 12], [28, -5],
-          [20, -23], [-4, -29], [-30, -16]
-        ]
-      },
-      {
-        name: "balance-transition-basin",
-        summit: "Balance",
-        fill: "#597f66",
-        center: "rgba(120, 176, 138, 0.26)",
-        rotation: 22,
-        textureCount: 120,
-        ridgeCount: 24,
-        ridgeLength: 15,
-        textureLonSpan: 36,
-        textureLatSpan: 24,
-        coastWidth: 1.9,
-        points: [
-          [10, -39], [30, -30], [48, -36], [54, -52],
-          [40, -64], [18, -59]
-        ]
-      },
-      {
-        name: "stability-habitable-shelf",
-        summit: "Stability",
-        fill: "#54794f",
-        center: "rgba(170, 210, 140, 0.24)",
-        rotation: -26,
-        textureCount: 150,
-        ridgeCount: 30,
-        ridgeLength: 18,
-        textureLonSpan: 42,
-        textureLatSpan: 26,
-        coastWidth: 2.0,
-        points: [
-          [172, -2], [-172, 8], [-148, 2], [-135, -14],
-          [-144, -31], [-169, -32], [174, -20]
-        ]
-      },
-      {
-        name: "peace-protected-green-blue-basin",
-        summit: "Peace",
-        fill: "#497c63",
-        center: "rgba(108, 198, 170, 0.24)",
-        rotation: 14,
-        textureCount: 115,
-        ridgeCount: 18,
-        ridgeLength: 14,
-        textureLonSpan: 36,
-        textureLatSpan: 23,
-        coastWidth: 1.8,
-        points: [
-          [-65, -42], [-45, -34], [-24, -42], [-19, -58],
-          [-38, -69], [-62, -61]
-        ]
-      },
-      {
-        name: "joy-bright-archipelago",
-        summit: "Joy",
-        fill: "#629154",
-        center: "rgba(226, 230, 136, 0.24)",
-        rotation: -14,
-        textureCount: 90,
-        ridgeCount: 16,
-        ridgeLength: 12,
-        textureLonSpan: 34,
-        textureLatSpan: 19,
-        coastWidth: 1.7,
-        points: [
-          [-170, 32], [-153, 42], [-132, 39], [-119, 26],
-          [-130, 14], [-154, 12]
-        ]
-      },
-      {
-        name: "dignity-mineral-crownland",
-        summit: "Dignity",
-        fill: "#6c694e",
-        center: "rgba(225, 202, 142, 0.30)",
-        rotation: 8,
-        textureCount: 130,
-        ridgeCount: 46,
-        ridgeLength: 20,
-        textureLonSpan: 38,
-        textureLatSpan: 26,
-        coastWidth: 2.0,
-        points: [
-          [138, 35], [160, 43], [179, 34], [174, 15],
-          [152, 7], [132, 18]
-        ]
-      },
-      {
-        name: "free-will-frontier-edge",
-        summit: "Free Will",
-        fill: "#5b704b",
-        center: "rgba(190, 150, 94, 0.26)",
-        rotation: 29,
-        textureCount: 120,
-        ridgeCount: 36,
-        ridgeLength: 20,
-        textureLonSpan: 42,
-        textureLatSpan: 24,
-        coastWidth: 1.9,
-        points: [
-          [-10, 42], [12, 51], [39, 44], [51, 28],
-          [32, 17], [4, 23]
-        ]
-      }
-    ];
-  }
-
-  function drawNineSummitTerrain(ctx, random) {
-    const landmasses = getLandmasses();
-
-    drawShelfSystems(ctx, landmasses);
-
-    drawReefArc(ctx, 108, -24, 75, 44, 115, 250, 128, random);
-    drawReefArc(ctx, 146, 28, 42, 22, 190, 346, 56, random);
-    drawReefArc(ctx, -146, 26, 42, 28, 8, 220, 72, random);
-    drawReefArc(ctx, -148, -15, 35, 25, 40, 250, 58, random);
-    drawReefArc(ctx, -42, -52, 37, 21, 160, 342, 42, random);
-
-    landmasses.forEach(function drawLand(land) {
-      drawLandBase(ctx, land);
-      drawClippedTerrain(ctx, land, random);
-    });
-
-    drawPressureField(ctx, 112, -24, 28, 15, -9, random);
-    drawPressureField(ctx, -10, -10, 20, 10, 12, random);
-    drawPressureField(ctx, 152, 27, 17, 9, 8, random);
-
-    drawFrontierBelt(ctx, random);
-
-    const ridgeSystems = [
-      [[64, -8], [84, 5], [112, 8], [140, -4], [162, -20]],
-      [[73, -38], [98, -27], [122, -30], [150, -42]],
-      [[-134, 21], [-112, 28], [-91, 18], [-76, 4]],
-      [[137, 35], [153, 31], [171, 22]]
-    ];
-
-    ridgeSystems.forEach(function drawMainRidge(points, index) {
-      drawStroke(
-        ctx,
-        points,
-        index === 0 ? "rgba(240, 236, 216, 0.42)" : "rgba(228, 216, 184, 0.30)",
-        index === 0 ? 3.8 : 2.6
-      );
-
-      drawStroke(
-        ctx,
-        points.map(function offset(point) {
-          return [point[0] + 1.4, point[1] - 1.0];
-        }),
-        "rgba(43, 35, 28, 0.32)",
-        index === 0 ? 2.4 : 1.8
-      );
-    });
-  }
-
-  function drawAtmosphereAndClouds(ctx, random) {
-    drawCloudBands(ctx, random);
-    drawSouthernLight(ctx);
-
-    const polarNorth = ctx.createLinearGradient(0, 0, 0, SOURCE_HEIGHT * 0.22);
-    polarNorth.addColorStop(0, "rgba(245,250,255,0.21)");
-    polarNorth.addColorStop(1, "rgba(245,250,255,0)");
-
-    ctx.fillStyle = polarNorth;
-    ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT * 0.22);
-
-    const fineHaze = ctx.createRadialGradient(
+    const haze = ctx.createRadialGradient(
       SOURCE_WIDTH * 0.50,
       SOURCE_HEIGHT * 0.50,
       SOURCE_HEIGHT * 0.20,
       SOURCE_WIDTH * 0.50,
       SOURCE_HEIGHT * 0.50,
-      SOURCE_HEIGHT * 0.88
+      SOURCE_HEIGHT * 0.90
     );
 
-    fineHaze.addColorStop(0.00, "rgba(255,255,255,0.02)");
-    fineHaze.addColorStop(0.55, "rgba(255,255,255,0.016)");
-    fineHaze.addColorStop(1.00, "rgba(130,204,255,0.07)");
+    haze.addColorStop(0.00, "rgba(255,255,255,0.018)");
+    haze.addColorStop(0.55, "rgba(255,255,255,0.014)");
+    haze.addColorStop(1.00, "rgba(130,204,255,0.070)");
 
-    ctx.fillStyle = fineHaze;
+    ctx.fillStyle = haze;
     ctx.fillRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
   }
 
@@ -785,23 +962,29 @@
       graphicBox: false,
       visualPassClaimed: false,
       renderBodyTerrainG2: true,
-      coherentPlanetTerrainV2: true,
+      organicClimatePlanetV3: true,
+      coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
       homeWorldExpression: true,
+      fourTimesEarthAgeExpression: true,
       australiaRelationship: "inspiration_signal_only",
       audraliaRelationship: "fictional_metaverse_home_world_construct",
       terrainLanguage: [
+        "organic_irregular_coastlines",
         "definitive_land_water_separation",
         "coherent_home_world_planet",
-        "ocean_forward_world_read",
-        "clear_coastlines",
-        "shallow_water_shelves",
-        "reef_edge_chains",
-        "nine_summit_terrain_regions",
-        "inland_pressure_field",
-        "frontier_belt",
-        "southern_horizon_light",
-        "land_water_contrast"
+        "deep_ocean_systems",
+        "turquoise_shallow_shelves",
+        "reef_edge_systems",
+        "visible_climate_belts",
+        "humid_green_zones",
+        "temperate_olive_zones",
+        "tan_dry_interiors",
+        "gray_brown_mountain_ridges",
+        "white_polar_or_highland_cues",
+        "weathered_ancient_basins",
+        "long_eroded_mountain_chains",
+        "nine_summit_terrain_regions"
       ],
       nineSummitTerrainRegions: [
         "character_origin_ridge",
@@ -826,11 +1009,11 @@
       willReadFrequently: true
     });
 
-    const random = makeSeededRandom(6350902);
+    const random = makeSeededRandom(6351103);
 
     drawOceanBase(ctx, random);
     drawNineSummitTerrain(ctx, random);
-    drawAtmosphereAndClouds(ctx, random);
+    drawAtmosphereAndPolarSystems(ctx, random);
 
     cachedTexture = ctx.getImageData(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
     return cachedTexture;
@@ -883,7 +1066,8 @@
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       renderBodyTerrainG2: true,
-      coherentPlanetTerrainV2: true,
+      organicClimatePlanetV3: true,
+      coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
       nineSummitTerrainRegions: true,
       generatedImage: false,
@@ -904,17 +1088,22 @@
       ownsBodyPixelsOnly: true,
       profileMerge: false,
       renderBodyTerrainG2: true,
-      coherentPlanetTerrainV2: true,
+      organicClimatePlanetV3: true,
+      coherentPlanetTerrain: true,
       definitiveLandWaterSeparation: true,
       oceanForwardWorldRead: true,
-      islandContinentEnergy: true,
-      clearCoastlines: true,
-      shallowWaterShelves: true,
+      organicIrregularCoastlines: true,
+      deepOceanSystems: true,
+      turquoiseShallowShelves: true,
       reefBoundarySignal: true,
-      inlandPressureField: true,
-      frontierBelt: true,
-      southernHorizonAtmosphere: true,
-      landWaterContrast: true,
+      visibleClimateBelts: true,
+      humidGreenZones: true,
+      temperateOliveZones: true,
+      tanDryInteriors: true,
+      ancientBasins: true,
+      longErodedMountainChains: true,
+      polarSubpolarInfluence: true,
+      fourTimesEarthAgeExpression: true,
       nineSummitTerrainRegions: true,
       generatedImage: false,
       graphicBox: false,

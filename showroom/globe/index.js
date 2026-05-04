@@ -1,510 +1,567 @@
-/*
-AUDRALIA_G2_HYBRID_VISIBLE_PRESENTATION_AND_BODY_CONTRAST_TNT_v1
-FULL-FILE REPLACEMENT
-TARGET=/showroom/globe/index.js
+/* ==========================================================================
+   PLANET_AUSTRALIA_G1_GLOBE_MOUNT_CONSUMER_TNT_v1
+   Path: /showroom/globe/index.js
+   Purpose:
+   Make the live /showroom/globe/ module consume the Planet Australia /
+   Audralia terrain renderer directly and render it as a rotating globe.
+   This file is the route consumer. It does not replace the planet renderer.
+   ========================================================================== */
 
-Purpose:
-- Preserve visible render success.
-- Improve Audralia lighting, exposure, scale, visible hemisphere, and atmosphere.
-- Keep live receipt: AUDRALIA MOUNT · VISIBLE_RENDER_ACTIVE.
-- Import /assets/audrelia.planet.render.js.
-- Never fail silently.
-*/
+const GLOBE_CONSUMER_STATUS = Object.freeze({
+  id: "showroom-globe-consumer",
+  route: "/showroom/globe/",
+  generation: "G1_CONSUMER_ALIGNMENT",
+  contract: "PLANET_AUSTRALIA_G1_TERRAIN_MAPPING_BINDING_v1",
+  tnt: "PLANET_AUSTRALIA_G1_GLOBE_MOUNT_CONSUMER_TNT_v1",
+  consumes: "/assets/audrelia.planet.render.js",
+  imageGeneration: false,
+  graphicBox: false,
+  staticImageReplacement: false,
+  visualPass: "HELD_UNTIL_USER_CONFIRMATION"
+});
 
-const SHOWROOM_GLOBE_INDEX_TNT = "AUDRALIA_G2_HYBRID_VISIBLE_PRESENTATION_AND_BODY_CONTRAST_TNT_v1";
-const AUDRALIA_RENDERER_URL = `/assets/audrelia.planet.render.js?v=${encodeURIComponent(SHOWROOM_GLOBE_INDEX_TNT)}`;
+const PLANET_RENDERER_PATH = "/assets/audrelia.planet.render.js";
 const TAU = Math.PI * 2;
+const DEG = Math.PI / 180;
 
 function clamp(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, value));
 }
 
-function setText(node, text) {
-  if (node) node.textContent = text;
+function qs(selector, root = document) {
+  return root.querySelector(selector);
 }
 
-function prepareMount() {
-  const mount = document.querySelector("#audraliaRenderMount");
+function qsa(selector, root = document) {
+  return Array.from(root.querySelectorAll(selector));
+}
 
-  if (!mount) {
-    throw new Error("MOUNT_NODE_FAIL: #audraliaRenderMount not found.");
+function createElement(tag, className = "", text = "") {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text) el.textContent = text;
+  return el;
+}
+
+function findMount() {
+  const candidates = [
+    "#globe-main",
+    "#audralia-globe",
+    "#audrelia-globe",
+    "#planet-globe",
+    "[data-globe-mount]",
+    "[data-audralia-mount]",
+    "[data-audrelia-mount]",
+    ".globe-mount",
+    ".audralia-mount",
+    ".audrelia-mount",
+    ".showroom-globe",
+    ".visible-mount"
+  ];
+
+  for (const selector of candidates) {
+    const found = qs(selector);
+    if (found) return found;
   }
 
-  mount.dataset.indexJsExecuted = "true";
-  mount.dataset.audraliaIndexTnt = SHOWROOM_GLOBE_INDEX_TNT;
+  const main = qs("main") || document.body;
+  return main;
+}
 
-  const position = window.getComputedStyle(mount).position;
-  if (position === "static") mount.style.position = "relative";
+function findExistingVisualFrame(mount) {
+  const canvas = qs("canvas", mount);
+  if (canvas) return canvas.parentElement || mount;
 
-  mount.style.overflow = "hidden";
-  mount.style.isolation = "isolate";
+  const likelyFrames = [
+    ".audralia-frame",
+    ".audrelia-frame",
+    ".globe-frame",
+    ".planet-frame",
+    ".visible-render",
+    ".render-frame",
+    ".chamber",
+    ".mount"
+  ];
 
-  const fallback = mount.querySelector("[data-visual-field-hold]");
-  if (fallback) fallback.remove();
+  for (const selector of likelyFrames) {
+    const found = qs(selector, mount);
+    if (found) return found;
+  }
 
   return mount;
 }
 
-function makeBadge(mount) {
-  let badge = mount.querySelector("[data-audralia-mount-receipt='true']");
+function ensureStage(mount) {
+  let stage = qs("[data-planet-australia-stage]", mount);
+  if (stage) return stage;
 
-  if (!badge) {
-    badge = document.createElement("div");
-    badge.dataset.audraliaMountReceipt = "true";
-    mount.appendChild(badge);
-  }
+  const frame = findExistingVisualFrame(mount);
 
-  badge.style.position = "absolute";
-  badge.style.left = "14px";
-  badge.style.right = "14px";
-  badge.style.bottom = "14px";
-  badge.style.zIndex = "40";
-  badge.style.padding = "9px 12px";
-  badge.style.border = "1px solid rgba(255,255,255,0.22)";
-  badge.style.borderRadius = "999px";
-  badge.style.background = "rgba(2,6,18,0.78)";
-  badge.style.color = "rgba(245,248,255,0.92)";
-  badge.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-  badge.style.fontSize = "11px";
-  badge.style.fontWeight = "900";
-  badge.style.letterSpacing = "0.13em";
-  badge.style.textTransform = "uppercase";
-  badge.style.backdropFilter = "blur(12px)";
-  badge.style.whiteSpace = "nowrap";
-  badge.style.overflow = "hidden";
-  badge.style.textOverflow = "ellipsis";
-  badge.style.textAlign = "center";
+  stage = createElement("section", "planet-australia-stage");
+  stage.setAttribute("data-planet-australia-stage", "true");
+  stage.setAttribute("aria-label", "Planet Australia G1 globe render");
 
-  return badge;
-}
+  const shell = createElement("div", "planet-australia-canvas-shell");
+  shell.setAttribute("data-planet-australia-shell", "true");
 
-function makeCenterMessage(mount) {
-  let message = mount.querySelector("[data-audralia-center-message='true']");
+  const canvas = document.createElement("canvas");
+  canvas.className = "planet-australia-canvas";
+  canvas.setAttribute("data-planet-australia-canvas", "true");
+  canvas.setAttribute("aria-label", "Planet Australia rendered globe");
 
-  if (!message) {
-    message = document.createElement("div");
-    message.dataset.audraliaCenterMessage = "true";
-    mount.appendChild(message);
-  }
+  const label = createElement(
+    "div",
+    "planet-australia-label",
+    "PLANET AUSTRALIA · G1_TERRAIN_RENDER_ACTIVE"
+  );
+  label.setAttribute("data-planet-australia-label", "true");
 
-  message.style.position = "absolute";
-  message.style.left = "50%";
-  message.style.top = "50%";
-  message.style.transform = "translate(-50%, -50%)";
-  message.style.zIndex = "35";
-  message.style.width = "min(88%, 540px)";
-  message.style.padding = "18px";
-  message.style.border = "1px solid rgba(255,255,255,0.18)";
-  message.style.borderRadius = "22px";
-  message.style.background = "rgba(2,6,18,0.70)";
-  message.style.color = "rgba(245,248,255,0.88)";
-  message.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-  message.style.fontSize = "12px";
-  message.style.lineHeight = "1.55";
-  message.style.textAlign = "center";
-  message.style.letterSpacing = "0.08em";
-  message.style.textTransform = "uppercase";
-  message.style.backdropFilter = "blur(12px)";
+  const receipt = createElement("div", "planet-australia-receipt");
+  receipt.setAttribute("data-planet-australia-receipt", "true");
+  receipt.textContent = "CONSUMER · /showroom/globe/index.js · ACTIVE";
 
-  return message;
-}
+  shell.appendChild(canvas);
+  stage.appendChild(shell);
+  stage.appendChild(label);
+  stage.appendChild(receipt);
 
-function prepareCanvas(mount) {
-  let canvas = mount.querySelector("canvas[data-audralia-visible-canvas='true']");
-
-  if (!canvas) {
-    canvas = document.createElement("canvas");
-    canvas.dataset.audraliaVisibleCanvas = "true";
-    canvas.setAttribute("aria-label", "Audralia rendered planet canvas");
-    mount.appendChild(canvas);
-  }
-
-  canvas.style.position = "absolute";
-  canvas.style.inset = "0";
-  canvas.style.zIndex = "10";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.display = "block";
-  canvas.style.opacity = "1";
-
-  return canvas;
-}
-
-function fitCanvas(canvas, mount) {
-  const rect = mount.getBoundingClientRect();
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-  const width = Math.max(320, Math.floor(rect.width * dpr));
-  const height = Math.max(320, Math.floor(rect.height * dpr));
-
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-
-  return { width, height, dpr };
-}
-
-async function loadRenderer() {
-  const mod = await import(AUDRALIA_RENDERER_URL);
-
-  const api =
-    mod.default ||
-    mod.AUDRALIA_PLANET_RENDERER ||
-    mod.AudraliaPlanetRenderer ||
-    mod.AudreliaPlanetRenderer ||
-    globalThis.AUDRALIA_PLANET_RENDERER ||
-    globalThis.AudraliaPlanetRenderer ||
-    globalThis.AudreliaPlanetRenderer ||
-    globalThis.DiamondGateBridge?.planets?.audralia ||
-    globalThis.DiamondGateBridge?.planets?.audrelia;
-
-  if (!api) {
-    throw new Error("RENDERER_API_FAIL: imported module exposed no Audralia API.");
-  }
-
-  if (typeof api.buildTexture !== "function" && typeof api.renderSurface !== "function") {
-    throw new Error("RENDERER_API_FAIL: buildTexture/renderSurface missing.");
-  }
-
-  return api;
-}
-
-function buildTexture(api) {
-  let texture = null;
-
-  if (typeof api.buildTexture === "function") {
-    texture = api.buildTexture({
-      width: 1024,
-      height: 512,
-      noCache: true
-    });
+  const existingCanvas = qs("canvas", frame);
+  if (existingCanvas && existingCanvas.parentElement) {
+    existingCanvas.parentElement.replaceWith(stage);
   } else {
-    texture = document.createElement("canvas");
-    texture.width = 1024;
-    texture.height = 512;
-    api.renderSurface(texture, {
-      width: 1024,
-      height: 512,
-      noCache: true
-    });
+    frame.appendChild(stage);
   }
 
-  if (!texture || typeof texture.getContext !== "function") {
-    throw new Error("TEXTURE_BUILD_FAIL: renderer did not return a canvas.");
-  }
-
-  return texture;
+  return stage;
 }
 
-function readTexture(textureCanvas) {
-  const ctx = textureCanvas.getContext("2d", { willReadFrequently: true });
-  const image = ctx.getImageData(0, 0, textureCanvas.width, textureCanvas.height);
+function injectLocalStyle() {
+  if (qs("#planet-australia-g1-consumer-style")) return;
+
+  const style = document.createElement("style");
+  style.id = "planet-australia-g1-consumer-style";
+  style.textContent = `
+    [data-planet-australia-stage] {
+      width: min(92vw, 720px);
+      margin: 0 auto;
+      padding: 18px;
+      border: 1px solid rgba(150, 190, 230, 0.26);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(40, 120, 180, 0.22), transparent 38%),
+        linear-gradient(180deg, rgba(7, 18, 38, 0.92), rgba(2, 7, 18, 0.96));
+      box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.45),
+        inset 0 0 80px rgba(66, 140, 220, 0.10);
+    }
+
+    [data-planet-australia-shell] {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: min(72vh, 720px);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(26, 74, 122, 0.28), transparent 60%),
+        linear-gradient(180deg, rgba(1, 8, 22, 0.72), rgba(1, 4, 13, 0.92));
+    }
+
+    [data-planet-australia-shell]::before {
+      content: "";
+      position: absolute;
+      inset: 7%;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.18), transparent 10%),
+        radial-gradient(circle at 62% 70%, rgba(65, 140, 210, 0.14), transparent 24%);
+      filter: blur(7px);
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    [data-planet-australia-canvas] {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 680px);
+      height: auto;
+      display: block;
+      border-radius: 999px;
+      filter: saturate(1.08) contrast(1.05);
+    }
+
+    [data-planet-australia-label],
+    [data-planet-australia-receipt] {
+      margin-top: 10px;
+      text-align: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 0.11em;
+      color: rgba(225, 238, 255, 0.86);
+      text-transform: uppercase;
+    }
+
+    [data-planet-australia-label] {
+      font-size: clamp(0.72rem, 2.4vw, 0.95rem);
+      font-weight: 800;
+    }
+
+    [data-planet-australia-receipt] {
+      font-size: clamp(0.58rem, 1.9vw, 0.72rem);
+      color: rgba(173, 199, 225, 0.70);
+    }
+  `;
+
+  document.head.appendChild(style);
+}
+
+async function loadPlanetRenderer() {
+  const cached =
+    window.PlanetAustraliaG1TerrainRenderer ||
+    window.PlanetAustraliaG1Renderer ||
+    window.AudreliaPlanetRenderer ||
+    window.AudraliaPlanetRenderer ||
+    window.AdraliaPlanetRenderer;
+
+  if (cached) return cached;
+
+  const module = await import(`${PLANET_RENDERER_PATH}?consumer=${Date.now()}`);
+
+  return (
+    module.default ||
+    module.PlanetAustraliaG1TerrainRenderer ||
+    module.PlanetAustraliaG1Renderer ||
+    module.AudreliaPlanetRenderer ||
+    module.registerExtension?.() ||
+    module
+  );
+}
+
+function getRendererApi(rendererModule) {
+  const renderer = rendererModule?.default || rendererModule;
 
   return {
-    width: textureCanvas.width,
-    height: textureCanvas.height,
-    data: image.data
+    createProfile:
+      renderer?.createProfile ||
+      rendererModule?.createProfile ||
+      (() => ({ id: "audrelia", name: "Planet Australia" })),
+
+    buildTexture:
+      renderer?.buildTexture ||
+      rendererModule?.buildTexture ||
+      null,
+
+    sampleSurface:
+      renderer?.sampleSurface ||
+      rendererModule?.sampleSurface ||
+      null,
+
+    getStatus:
+      renderer?.getStatus ||
+      rendererModule?.getStatus ||
+      (() => ({}))
   };
 }
 
-function sampleTexture(texture, u, v) {
-  const x = Math.floor((((u % 1) + 1) % 1) * (texture.width - 1));
-  const y = Math.floor(clamp(v, 0, 1) * (texture.height - 1));
-  const p = (y * texture.width + x) * 4;
+function resizeCanvas(canvas) {
+  const shell = canvas.parentElement;
+  const rect = shell?.getBoundingClientRect?.();
+  const cssSize = Math.max(280, Math.floor(Math.min(rect?.width || 640, 720)));
+  const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
 
-  return [
-    texture.data[p],
-    texture.data[p + 1],
-    texture.data[p + 2],
-    texture.data[p + 3]
-  ];
+  const px = Math.floor(cssSize * dpr);
+  if (canvas.width !== px || canvas.height !== px) {
+    canvas.width = px;
+    canvas.height = px;
+  }
+
+  canvas.style.width = `${cssSize}px`;
+  canvas.style.height = `${cssSize}px`;
+
+  return { size: px, cssSize, dpr };
 }
 
-function drawBackdrop(ctx, width, height) {
-  const cx = width / 2;
-  const cy = height / 2;
+function readTexturePixel(textureCtx, textureWidth, textureHeight, lon, lat) {
+  const u = ((lon + 180) / 360) % 1;
+  const v = clamp((90 - lat) / 180, 0, 1);
 
-  const bg = ctx.createRadialGradient(cx, cy * 0.66, 20, cx, cy, Math.max(width, height) * 0.76);
-  bg.addColorStop(0, "rgba(49,91,128,0.70)");
-  bg.addColorStop(0.42, "rgba(11,30,58,0.98)");
-  bg.addColorStop(1, "rgba(2,5,14,1)");
+  const x = Math.floor(clamp(u, 0, 0.999999) * textureWidth);
+  const y = Math.floor(clamp(v, 0, 0.999999) * textureHeight);
 
+  return textureCtx.getImageData(x, y, 1, 1).data;
+}
+
+function shadeColor(pixel, shade, atmosphere = 0) {
+  const r = clamp(pixel[0] * shade + 70 * atmosphere, 0, 255);
+  const g = clamp(pixel[1] * shade + 125 * atmosphere, 0, 255);
+  const b = clamp(pixel[2] * shade + 190 * atmosphere, 0, 255);
+
+  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 1)`;
+}
+
+function drawGlobe(ctx, canvas, textureCtx, textureWidth, textureHeight, state) {
+  const { size } = resizeCanvas(canvas);
+  const radius = size * 0.43;
+  const cx = size * 0.5;
+  const cy = size * 0.5;
+
+  ctx.clearRect(0, 0, size, size);
+
+  const bg = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 1.35);
+  bg.addColorStop(0, "rgba(21, 69, 112, 0.10)");
+  bg.addColorStop(0.58, "rgba(9, 35, 70, 0.16)");
+  bg.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillRect(0, 0, size, size);
 
-  ctx.save();
-  ctx.globalAlpha = 0.22;
-  ctx.strokeStyle = "rgba(255,255,255,0.09)";
-  ctx.lineWidth = 1;
+  const spin = state.rotation;
+  const tilt = -18 * DEG;
+  const light = {
+    x: -0.42,
+    y: -0.58,
+    z: 0.70
+  };
 
-  const gap = Math.max(42, Math.floor(Math.min(width, height) / 9));
+  const step = Math.max(1, Math.floor(size / 320));
+  const image = ctx.createImageData(size, size);
+  const data = image.data;
 
-  for (let x = width % gap; x < width; x += gap) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
+  for (let y = 0; y < size; y += step) {
+    const ny = (y - cy) / radius;
 
-  for (let y = height % gap; y < height; y += gap) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
+    for (let x = 0; x < size; x += step) {
+      const nx = (x - cx) / radius;
+      const rr = nx * nx + ny * ny;
 
-  ctx.restore();
-}
+      if (rr > 1) continue;
 
-function drawPlanet(ctx, canvas, texture, rotation) {
-  const width = canvas.width;
-  const height = canvas.height;
+      const z = Math.sqrt(1 - rr);
 
-  drawBackdrop(ctx, width, height);
+      const yt = ny * Math.cos(tilt) - z * Math.sin(tilt);
+      const zt = ny * Math.sin(tilt) + z * Math.cos(tilt);
 
-  const cx = width / 2;
-  const cy = height * 0.49;
-  const radius = Math.min(width, height) * 0.405;
-  const sphereSize = Math.max(300, Math.min(720, Math.floor(radius * 2)));
-  const sphereRadius = sphereSize / 2;
+      const lon = Math.atan2(nx, zt) / DEG + spin;
+      const lat = Math.asin(clamp(-yt, -1, 1)) / DEG;
 
-  const sphereImage = ctx.createImageData(sphereSize, sphereSize);
-  const data = sphereImage.data;
+      const pixel = readTexturePixel(textureCtx, textureWidth, textureHeight, lon, lat);
 
-  const light = { x: -0.22, y: -0.24, z: 0.94 };
-  const baseRotation = -1.86;
-  const finalRotation = baseRotation + rotation;
+      const normalDot =
+        nx * light.x +
+        ny * light.y +
+        z * light.z;
 
-  const cosR = Math.cos(finalRotation);
-  const sinR = Math.sin(finalRotation);
+      const limb = Math.pow(clamp(z), 0.62);
+      const shade = clamp(0.36 + normalDot * 0.45 + limb * 0.34, 0.16, 1.18);
+      const atmosphere = Math.pow(clamp(1 - z), 2.2) * 0.72;
 
-  let p = 0;
+      const color = shadeColor(pixel, shade, atmosphere);
+      const match = color.match(/\d+/g).map(Number);
 
-  for (let py = 0; py < sphereSize; py += 1) {
-    const ny = (py - sphereRadius) / sphereRadius;
+      for (let py = 0; py < step; py += 1) {
+        for (let px = 0; px < step; px += 1) {
+          const xx = x + px;
+          const yy = y + py;
+          if (xx >= size || yy >= size) continue;
 
-    for (let px = 0; px < sphereSize; px += 1) {
-      const nx = (px - sphereRadius) / sphereRadius;
-      const d2 = nx * nx + ny * ny;
-
-      if (d2 > 1) {
-        data[p + 3] = 0;
-        p += 4;
-        continue;
+          const idx = (yy * size + xx) * 4;
+          data[idx] = match[0];
+          data[idx + 1] = match[1];
+          data[idx + 2] = match[2];
+          data[idx + 3] = 255;
+        }
       }
-
-      const nz = Math.sqrt(1 - d2);
-
-      const rx = nx * cosR - nz * sinR;
-      const rz = nx * sinR + nz * cosR;
-      const ry = ny;
-
-      const lon = Math.atan2(rz, rx);
-      const lat = Math.asin(clamp(ry, -1, 1));
-
-      const u = (lon + Math.PI) / TAU;
-      const v = 0.5 - lat / Math.PI;
-
-      const color = sampleTexture(texture, u, v);
-
-      const lightDot = clamp(rx * light.x + ry * light.y + nz * light.z, 0, 1);
-      const limb = clamp(0.18 + nz * 0.96, 0, 1);
-      const shade = 0.62 + lightDot * 0.58;
-      const edge = Math.pow(1 - clamp(nz), 2.15);
-
-      data[p] = clamp(color[0] * shade * limb + edge * 52, 0, 255);
-      data[p + 1] = clamp(color[1] * shade * limb + edge * 88, 0, 255);
-      data[p + 2] = clamp(color[2] * shade * limb + edge * 130, 0, 255);
-      data[p + 3] = 255;
-
-      p += 4;
     }
   }
 
-  const x = Math.floor(cx - sphereRadius);
-  const y = Math.floor(cy - sphereRadius);
+  ctx.putImageData(image, 0, 0);
 
-  ctx.putImageData(sphereImage, x, y);
-
-  ctx.save();
-
+  const halo = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.06);
+  halo.addColorStop(0, "rgba(120, 190, 250, 0)");
+  halo.addColorStop(0.64, "rgba(115, 186, 248, 0.10)");
+  halo.addColorStop(1, "rgba(155, 216, 255, 0.62)");
+  ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.arc(cx, cy, sphereRadius, 0, TAU);
-  ctx.strokeStyle = "rgba(166,222,255,0.52)";
-  ctx.lineWidth = Math.max(2, sphereRadius * 0.014);
+  ctx.arc(cx, cy, radius * 1.025, 0, TAU);
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(165, 215, 255, 0.72)";
+  ctx.lineWidth = Math.max(1.5, size * 0.004);
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 1.012, 0, TAU);
   ctx.stroke();
 
-  const atmosphere = ctx.createRadialGradient(cx, cy, sphereRadius * 0.82, cx, cy, sphereRadius * 1.25);
-  atmosphere.addColorStop(0, "rgba(118,196,255,0)");
-  atmosphere.addColorStop(0.56, "rgba(118,196,255,0.16)");
-  atmosphere.addColorStop(0.82, "rgba(118,196,255,0.10)");
-  atmosphere.addColorStop(1, "rgba(118,196,255,0)");
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, sphereRadius * 1.25, 0, TAU);
-  ctx.fillStyle = atmosphere;
-  ctx.fill();
-
-  const shine = ctx.createRadialGradient(
-    cx - sphereRadius * 0.34,
-    cy - sphereRadius * 0.40,
-    sphereRadius * 0.03,
-    cx - sphereRadius * 0.28,
-    cy - sphereRadius * 0.34,
-    sphereRadius * 0.74
+  const gloss = ctx.createRadialGradient(
+    cx - radius * 0.34,
+    cy - radius * 0.42,
+    radius * 0.05,
+    cx - radius * 0.28,
+    cy - radius * 0.35,
+    radius * 0.56
   );
-
-  shine.addColorStop(0, "rgba(255,255,255,0.24)");
-  shine.addColorStop(0.38, "rgba(255,255,255,0.07)");
-  shine.addColorStop(1, "rgba(255,255,255,0)");
-
+  gloss.addColorStop(0, "rgba(255, 255, 255, 0.20)");
+  gloss.addColorStop(0.35, "rgba(255, 255, 255, 0.07)");
+  gloss.addColorStop(1, "rgba(255, 255, 255, 0)");
+  ctx.fillStyle = gloss;
   ctx.beginPath();
-  ctx.arc(cx, cy, sphereRadius, 0, TAU);
-  ctx.fillStyle = shine;
+  ctx.arc(cx, cy, radius, 0, TAU);
   ctx.fill();
 
-  ctx.font = `${Math.max(12, Math.floor(width * 0.016))}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-  ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(244,248,255,0.82)";
-  ctx.fillText("AUDRALIA · VISIBLE_RENDER_ACTIVE", cx, cy + sphereRadius + Math.max(30, sphereRadius * 0.13));
-
-  ctx.restore();
+  const shadow = ctx.createRadialGradient(
+    cx + radius * 0.42,
+    cy + radius * 0.30,
+    radius * 0.08,
+    cx,
+    cy,
+    radius * 1.02
+  );
+  shadow.addColorStop(0, "rgba(0, 0, 0, 0.10)");
+  shadow.addColorStop(0.66, "rgba(0, 0, 0, 0.02)");
+  shadow.addColorStop(1, "rgba(0, 0, 0, 0.36)");
+  ctx.fillStyle = shadow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, TAU);
+  ctx.fill();
 }
 
-function drawFailure(canvas, message) {
-  const ctx = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-
-  drawBackdrop(ctx, width, height);
-
-  ctx.save();
-  ctx.fillStyle = "rgba(255,190,170,0.92)";
-  ctx.font = `${Math.max(13, Math.floor(width * 0.02))}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  const text = String(message || "UNKNOWN_FAIL").slice(0, 180);
-  const lines = text.match(/.{1,42}/g) || [text];
-
-  lines.forEach((line, index) => {
-    ctx.fillText(line, width / 2, height / 2 + (index - lines.length / 2) * 22);
+async function buildTextureFromRenderer(api) {
+  const profile = api.createProfile({
+    width: 2048,
+    height: 1024,
+    centerLon: 132,
+    centerLat: -25
   });
 
-  ctx.restore();
-}
-
-function installResize(canvas, mount, redraw) {
-  if (typeof ResizeObserver === "function") {
-    const observer = new ResizeObserver(() => redraw());
-    observer.observe(mount);
-    return observer;
+  if (!api.buildTexture) {
+    throw new Error("Planet renderer does not expose buildTexture().");
   }
 
-  window.addEventListener("resize", redraw, { passive: true });
-  return null;
+  const texture = api.buildTexture(profile, {
+    width: 2048,
+    height: 1024,
+    centerLon: 132,
+    centerLat: -25
+  });
+
+  const textureCanvas = texture?.canvas || texture?.texture || texture?.image;
+  if (!textureCanvas) {
+    throw new Error("Planet renderer did not return a canvas texture.");
+  }
+
+  const textureCtx = textureCanvas.getContext("2d", {
+    alpha: true,
+    willReadFrequently: true
+  });
+
+  return {
+    texture,
+    textureCanvas,
+    textureCtx,
+    textureWidth: textureCanvas.width,
+    textureHeight: textureCanvas.height
+  };
 }
 
-async function bootAudraliaVisibleMount() {
-  let mount;
-  let canvas;
-  let badge;
-  let center;
+function writeReceipt(stage, text) {
+  const receipt = qs("[data-planet-australia-receipt]", stage);
+  if (receipt) receipt.textContent = text;
+}
 
-  try {
-    mount = prepareMount();
-    badge = makeBadge(mount);
-    center = makeCenterMessage(mount);
-    canvas = prepareCanvas(mount);
+function exposeRuntime(api, texture) {
+  window.__PLANET_AUSTRALIA_G1_CONSUMER__ = {
+    status: GLOBE_CONSUMER_STATUS,
+    rendererStatus: api.getStatus(),
+    textureStatus: texture?.status || null,
+    routeConsumer: true,
+    active: true,
+    timestamp: new Date().toISOString()
+  };
+}
 
-    setText(badge, "AUDRALIA MOUNT · INDEX_JS_EXECUTED");
-    setText(center, "INDEX_JS_EXECUTED · RENDERER_IMPORT_START");
+async function boot() {
+  injectLocalStyle();
 
-    fitCanvas(canvas, mount);
+  const mount = findMount();
+  const stage = ensureStage(mount);
+  const canvas = qs("[data-planet-australia-canvas]", stage);
+  const ctx = canvas.getContext("2d", {
+    alpha: true,
+    willReadFrequently: false
+  });
 
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    drawBackdrop(ctx, canvas.width, canvas.height);
+  writeReceipt(stage, "CONSUMER · LOADING_PLANET_RENDERER");
 
-    setText(badge, "AUDRALIA MOUNT · RENDERER_IMPORTING");
-    setText(center, "RENDERER_IMPORT · /assets/audrelia.planet.render.js");
+  const rendererModule = await loadPlanetRenderer();
+  const api = getRendererApi(rendererModule);
 
-    const api = await loadRenderer();
+  writeReceipt(stage, "CONSUMER · BUILDING_TERRAIN_TEXTURE");
 
-    setText(badge, "AUDRALIA MOUNT · RENDERER_IMPORT_PASS");
-    setText(center, "RENDERER_IMPORT_PASS · TEXTURE_BUILD_START");
+  const textureBundle = await buildTextureFromRenderer(api);
+  exposeRuntime(api, textureBundle.texture);
 
-    const textureCanvas = buildTexture(api);
-    const texture = readTexture(textureCanvas);
+  const state = {
+    rotation: 128,
+    speed: 0.028,
+    last: performance.now(),
+    paused: false
+  };
 
-    setText(badge, "AUDRALIA MOUNT · TEXTURE_BUILD_PASS");
-    setText(center, "TEXTURE_BUILD_PASS · DRAW_START");
+  function frame(now) {
+    const dt = Math.min(48, now - state.last);
+    state.last = now;
 
-    center.style.display = "none";
-
-    let last = 0;
-    let frame = 0;
-
-    function render(now = performance.now()) {
-      fitCanvas(canvas, mount);
-
-      if (now - last >= 45) {
-        last = now;
-        drawPlanet(ctx, canvas, texture, now * 0.000045);
-      }
-
-      frame = requestAnimationFrame(render);
-      window.AudraliaVisibleMountBridge.animationFrame = frame;
+    if (!state.paused) {
+      state.rotation = (state.rotation + dt * state.speed) % 360;
     }
 
-    installResize(canvas, mount, () => {
-      fitCanvas(canvas, mount);
-      drawPlanet(ctx, canvas, texture, performance.now() * 0.000045);
-    });
-
-    setText(badge, "AUDRALIA MOUNT · VISIBLE_RENDER_ACTIVE");
-
-    window.AudraliaVisibleMountBridge = {
-      status: "VISIBLE_RENDER_ACTIVE",
-      tnt: SHOWROOM_GLOBE_INDEX_TNT,
-      rendererVersion: api.version || api.tnt || "unknown",
-      mount,
+    drawGlobe(
+      ctx,
       canvas,
-      textureWidth: texture.width,
-      textureHeight: texture.height,
-      redraw: () => drawPlanet(ctx, canvas, texture, performance.now() * 0.000045)
-    };
+      textureBundle.textureCtx,
+      textureBundle.textureWidth,
+      textureBundle.textureHeight,
+      state
+    );
 
-    render();
-  } catch (error) {
-    const message = error?.message || String(error);
-
-    if (badge) setText(badge, "AUDRALIA MOUNT · IMPORT_OR_RENDER_FAIL");
-    if (center) {
-      center.style.display = "block";
-      setText(center, `IMPORT_OR_RENDER_FAIL · ${message}`);
-    }
-
-    if (canvas && mount) {
-      fitCanvas(canvas, mount);
-      drawFailure(canvas, message);
-    }
-
-    window.AudraliaVisibleMountBridge = {
-      status: "IMPORT_OR_RENDER_FAIL",
-      tnt: SHOWROOM_GLOBE_INDEX_TNT,
-      error: message
-    };
-
-    console.error(`[${SHOWROOM_GLOBE_INDEX_TNT}]`, error);
+    requestAnimationFrame(frame);
   }
+
+  canvas.addEventListener("pointerdown", () => {
+    state.paused = !state.paused;
+    writeReceipt(
+      stage,
+      state.paused
+        ? "CONSUMER · ROTATION_PAUSED_BY_USER"
+        : "CONSUMER · VISIBLE_RENDER_ACTIVE"
+    );
+  });
+
+  window.addEventListener("resize", () => {
+    drawGlobe(
+      ctx,
+      canvas,
+      textureBundle.textureCtx,
+      textureBundle.textureWidth,
+      textureBundle.textureHeight,
+      state
+    );
+  });
+
+  writeReceipt(stage, "CONSUMER · VISIBLE_RENDER_ACTIVE");
+  requestAnimationFrame(frame);
 }
 
 function bootWhenReady() {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootAudraliaVisibleMount, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    bootAudraliaVisibleMount();
+    boot();
   }
 }
 
 bootWhenReady();
+
+export default {
+  ...GLOBE_CONSUMER_STATUS,
+  boot: bootWhenReady
+};

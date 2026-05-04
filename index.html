@@ -405,21 +405,22 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      z-index: 2;
       border-radius: 999px;
       pointer-events: none;
       transform: translate(-50%, -50%);
     }
 
     .orbit-ring.inner {
-      width: 25rem;
-      height: 25rem;
+      width: 20.5rem;
+      height: 20.5rem;
+      z-index: 4;
       animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
     }
 
     .orbit-ring.outer {
       width: 31.5rem;
       height: 31.5rem;
+      z-index: 2;
       animation: orbitCounter var(--outer-orbit-duration) linear infinite;
     }
 
@@ -489,15 +490,23 @@
       pointer-events: none;
     }
 
+    .orbit-ring.inner .diamond-node {
+      --radius: -9.65rem;
+      width: 5.35rem;
+      height: 5.35rem;
+      margin: -2.675rem 0 0 -2.675rem;
+      box-shadow:
+        0 22px 42px rgba(39, 18, 116, 0.42),
+        0 0 34px rgba(134, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -12px 22px rgba(22, 10, 65, 0.22);
+    }
+
     .orbit-ring.outer .diamond-node {
       --radius: -15.45rem;
       width: 5.1rem;
       height: 5.1rem;
       margin: -2.55rem 0 0 -2.55rem;
-    }
-
-    .orbit-ring.inner .diamond-node {
-      --radius: -11.95rem;
     }
 
     .diamond-node:hover,
@@ -741,8 +750,8 @@
       }
 
       .orbit-ring.inner {
-        width: 18.2rem;
-        height: 18.2rem;
+        width: 15.8rem;
+        height: 15.8rem;
       }
 
       .orbit-ring.outer {
@@ -751,10 +760,10 @@
       }
 
       .orbit-ring.inner .diamond-node {
-        --radius: -8.65rem;
-        width: 4.35rem;
-        height: 4.35rem;
-        margin: -2.175rem 0 0 -2.175rem;
+        --radius: -7.35rem;
+        width: 4.6rem;
+        height: 4.6rem;
+        margin: -2.3rem 0 0 -2.3rem;
       }
 
       .orbit-ring.outer .diamond-node {
@@ -836,8 +845,8 @@
       }
 
       .orbit-ring.inner {
-        width: 15.5rem;
-        height: 15.5rem;
+        width: 13.6rem;
+        height: 13.6rem;
       }
 
       .orbit-ring.outer {
@@ -846,10 +855,10 @@
       }
 
       .orbit-ring.inner .diamond-node {
-        --radius: -7.35rem;
-        width: 3.95rem;
-        height: 3.95rem;
-        margin: -1.975rem 0 0 -1.975rem;
+        --radius: -6.35rem;
+        width: 4.2rem;
+        height: 4.2rem;
+        margin: -2.1rem 0 0 -2.1rem;
       }
 
       .orbit-ring.outer .diamond-node {
@@ -1093,11 +1102,11 @@
 
       <aside class="status-card" aria-label="Compass status">
         <strong>Compass status:</strong>
-        Shared Diamond Orbit · Public command surface · Mobile containment restored · Center anchor reduced to background role.
+        Shared Diamond Orbit · Inner four brought inward · Center anchor remains background · Readable label rotation preserved.
       </aside>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v2
+COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v3
 route=/
 page=compass
 role=animated_public_command_surface
@@ -1109,12 +1118,12 @@ visual_system=compass_4_plus_12_diamond_orbit
 ring_system=4_plus_12
 inner_ring=compass,door,home,manor
 outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,underdog,meet_sean,audralia,five_flags
-z_index_law=ambient_background,compass_anchor_background,orbit_field,route_diamonds,route_labels
-non_overlap_law=no_clickable_diamond_hidden_by_center
+z_index_law=ambient_background,compass_anchor_background,outer_orbit_field,inner_orbit_field,route_labels
+non_overlap_law=inner_four_authorized_to_cover_outer_diamonds
 animation=inner_clockwise_outer_counterclockwise
 label_law=diamond_labels_counter_rotate_to_remain_readable
 mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-upgraded=center_anchor_background_only,readable_rotating_labels,three_dimensional_diamonds
+upgraded=inner_four_moved_inward,inner_four_layered_above_outer_ring,center_anchor_background_only,readable_rotating_labels,three_dimensional_diamonds
 preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
 route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
@@ -1130,7 +1139,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v2 · Compass · Shared Diamond Orbit · Center anchor moved into background.
+      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v3 · Compass · Inner four diamonds moved inward.
     </footer>
   </div>
 </body>

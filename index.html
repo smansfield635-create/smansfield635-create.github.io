@@ -26,6 +26,8 @@
       --dg-purple-soft: rgba(134, 92, 246, 0.28);
       --dg-blue: rgba(59, 130, 246, 0.22);
       --dg-max: 1180px;
+      --inner-orbit-duration: 38s;
+      --outer-orbit-duration: 58s;
     }
 
     * {
@@ -291,8 +293,8 @@
     .compass-stage {
       position: relative;
       z-index: 3;
-      width: min(100%, 33rem);
-      min-height: 34rem;
+      width: min(100%, 35rem);
+      min-height: 35rem;
       margin-inline: auto;
       display: grid;
       place-items: center;
@@ -302,15 +304,15 @@
 
     .compass-card {
       position: relative;
-      width: min(100%, 31rem);
-      aspect-ratio: 0.72;
-      min-height: 32rem;
-      max-height: 42rem;
+      width: min(100%, 33rem);
+      aspect-ratio: 0.76;
+      min-height: 33rem;
+      max-height: 44rem;
       border: 1px solid var(--dg-line);
       border-radius: 2.2rem;
       background:
         linear-gradient(180deg, rgba(13, 24, 45, 0.9), rgba(4, 10, 23, 0.86)),
-        radial-gradient(circle at 50% 15%, rgba(134, 92, 246, 0.28), transparent 42%);
+        radial-gradient(circle at 50% 15%, rgba(134, 92, 246, 0.24), transparent 44%);
       box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.03),
         0 26px 80px rgba(0, 0, 0, 0.42);
@@ -322,60 +324,80 @@
     .compass-card::after {
       content: "";
       position: absolute;
-      inset: 9%;
-      border: 1px solid rgba(246, 217, 139, 0.12);
+      left: 50%;
+      top: 50%;
       border-radius: 50%;
       pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .compass-card::before {
+      width: 84%;
+      height: 84%;
+      border: 1px solid rgba(246, 217, 139, 0.08);
+      box-shadow: 0 0 34px rgba(134, 92, 246, 0.08);
     }
 
     .compass-card::after {
-      inset: 20%;
-      border-color: rgba(134, 92, 246, 0.18);
-      transform: rotate(45deg);
+      width: 62%;
+      height: 62%;
+      border: 1px solid rgba(134, 92, 246, 0.14);
     }
 
     .center-anchor {
       position: absolute;
       left: 50%;
       top: 50%;
-      z-index: 1;
+      z-index: 0;
       display: grid;
       place-items: center;
-      width: 13.5rem;
-      height: 13.5rem;
+      width: 10.8rem;
+      height: 10.8rem;
       transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(246, 217, 139, 0.18);
-      border-radius: 2.1rem;
+      border: 1px solid rgba(246, 217, 139, 0.12);
+      border-radius: 1.8rem;
       background:
-        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.34), transparent 31%),
-        linear-gradient(135deg, rgba(134, 92, 246, 0.62), rgba(27, 17, 75, 0.76));
+        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.16), transparent 31%),
+        linear-gradient(135deg, rgba(134, 92, 246, 0.4), rgba(27, 17, 75, 0.42));
       box-shadow:
-        0 0 54px rgba(134, 92, 246, 0.3),
-        inset 0 0 30px rgba(255, 255, 255, 0.08);
-      animation: anchorPulse 5.8s ease-in-out infinite;
+        0 0 70px rgba(134, 92, 246, 0.18),
+        inset 0 0 26px rgba(255, 255, 255, 0.04);
+      opacity: 0.48;
+      pointer-events: none;
+      filter: saturate(0.92);
+      animation: anchorPulse 7s ease-in-out infinite;
+    }
+
+    .center-anchor::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .center-anchor span {
       display: block;
       transform: rotate(-45deg);
-      color: var(--dg-text);
+      color: rgba(247, 242, 223, 0.86);
       text-align: center;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 900;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
+      line-height: 1.2;
     }
 
     @keyframes anchorPulse {
       0%,
       100% {
-        filter: brightness(0.92);
         transform: translate(-50%, -50%) rotate(45deg) scale(0.98);
+        opacity: 0.44;
       }
 
       50% {
-        filter: brightness(1.12);
-        transform: translate(-50%, -50%) rotate(45deg) scale(1.03);
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.02);
+        opacity: 0.54;
       }
     }
 
@@ -384,21 +406,21 @@
       left: 50%;
       top: 50%;
       z-index: 2;
-      width: 24rem;
-      height: 24rem;
-      transform: translate(-50%, -50%);
       border-radius: 999px;
       pointer-events: none;
-    }
-
-    .orbit-ring.outer {
-      width: 31rem;
-      height: 31rem;
-      animation: orbitCounter 58s linear infinite;
+      transform: translate(-50%, -50%);
     }
 
     .orbit-ring.inner {
-      animation: orbitClockwise 38s linear infinite;
+      width: 25rem;
+      height: 25rem;
+      animation: orbitClockwise var(--inner-orbit-duration) linear infinite;
+    }
+
+    .orbit-ring.outer {
+      width: 31.5rem;
+      height: 31.5rem;
+      animation: orbitCounter var(--outer-orbit-duration) linear infinite;
     }
 
     @keyframes orbitClockwise {
@@ -419,39 +441,91 @@
       top: 50%;
       display: grid;
       place-items: center;
-      width: 5.8rem;
-      height: 5.8rem;
-      margin: -2.9rem 0 0 -2.9rem;
+      overflow: hidden;
+      margin: -2.95rem 0 0 -2.95rem;
+      width: 5.9rem;
+      height: 5.9rem;
       border: 1px solid rgba(246, 217, 139, 0.18);
-      border-radius: 1.4rem;
+      border-radius: 1.55rem;
       background:
-        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.28), transparent 31%),
-        linear-gradient(135deg, rgba(134, 92, 246, 0.8), rgba(55, 35, 132, 0.68));
-      box-shadow: 0 0 26px rgba(134, 92, 246, 0.24);
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08) 24%, transparent 42%),
+        radial-gradient(circle at 72% 78%, rgba(33, 15, 91, 0.38), transparent 48%),
+        linear-gradient(145deg, rgba(168, 132, 255, 0.98), rgba(103, 69, 225, 0.94) 52%, rgba(58, 34, 164, 0.96) 100%);
+      box-shadow:
+        0 16px 34px rgba(39, 18, 116, 0.34),
+        0 0 26px rgba(134, 92, 246, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -12px 22px rgba(22, 10, 65, 0.18);
       transform:
         rotate(var(--angle))
         translateY(var(--radius))
         rotate(calc(-1 * var(--angle)))
         rotate(45deg);
       pointer-events: auto;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .diamond-node::before {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      border-radius: 1.15rem;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 55%);
+      opacity: 0.72;
+      pointer-events: none;
+      transform: translateZ(1px);
+    }
+
+    .diamond-node::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 1.55rem;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 -18px 24px rgba(21, 9, 62, 0.16);
+      pointer-events: none;
     }
 
     .orbit-ring.outer .diamond-node {
-      --radius: -15.2rem;
+      --radius: -15.45rem;
       width: 5.1rem;
       height: 5.1rem;
       margin: -2.55rem 0 0 -2.55rem;
-      opacity: 0.92;
     }
 
     .orbit-ring.inner .diamond-node {
-      --radius: -11.7rem;
+      --radius: -11.95rem;
     }
 
-    .diamond-node span {
-      display: block;
-      max-width: 4.7rem;
+    .diamond-node:hover,
+    .diamond-node:focus {
+      outline: none;
+      border-color: rgba(246, 217, 139, 0.72);
+      box-shadow:
+        0 22px 42px rgba(39, 18, 116, 0.42),
+        0 0 34px rgba(134, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -12px 22px rgba(22, 10, 65, 0.18);
+      filter: brightness(1.06);
+    }
+
+    .diamond-label-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 0.35rem;
       transform: rotate(-45deg);
+      text-align: center;
+    }
+
+    .diamond-label-text {
+      display: block;
+      max-width: 4.65rem;
       color: var(--dg-text);
       text-align: center;
       font-size: 0.66rem;
@@ -462,11 +536,24 @@
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
     }
 
-    .diamond-node:hover,
-    .diamond-node:focus {
-      outline: none;
-      border-color: rgba(246, 217, 139, 0.72);
-      filter: brightness(1.14);
+    .orbit-ring.inner .diamond-label-text {
+      animation: keepTextUprightInner var(--inner-orbit-duration) linear infinite;
+    }
+
+    .orbit-ring.outer .diamond-label-text {
+      animation: keepTextUprightOuter var(--outer-orbit-duration) linear infinite;
+    }
+
+    @keyframes keepTextUprightInner {
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+
+    @keyframes keepTextUprightOuter {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .route-panel {
@@ -632,52 +719,52 @@
       }
 
       .compass-stage {
-        width: min(100%, 23rem);
-        min-height: 30rem;
+        width: min(100%, 24rem);
+        min-height: 31rem;
       }
 
       .compass-card {
-        width: min(100%, 22.5rem);
-        min-height: 29.5rem;
+        width: min(100%, 23.25rem);
+        min-height: 30rem;
         max-height: none;
         aspect-ratio: auto;
       }
 
       .center-anchor {
-        width: 9.8rem;
-        height: 9.8rem;
-        border-radius: 1.65rem;
+        width: 8.9rem;
+        height: 8.9rem;
+        border-radius: 1.45rem;
       }
 
       .center-anchor span {
-        font-size: 0.66rem;
+        font-size: 0.62rem;
       }
 
       .orbit-ring.inner {
-        width: 17.6rem;
-        height: 17.6rem;
+        width: 18.2rem;
+        height: 18.2rem;
       }
 
       .orbit-ring.outer {
-        width: 22rem;
-        height: 22rem;
+        width: 22.8rem;
+        height: 22.8rem;
       }
 
       .orbit-ring.inner .diamond-node {
-        --radius: -8.35rem;
+        --radius: -8.65rem;
         width: 4.35rem;
         height: 4.35rem;
         margin: -2.175rem 0 0 -2.175rem;
       }
 
       .orbit-ring.outer .diamond-node {
-        --radius: -10.4rem;
-        width: 3.85rem;
-        height: 3.85rem;
-        margin: -1.925rem 0 0 -1.925rem;
+        --radius: -10.8rem;
+        width: 3.95rem;
+        height: 3.95rem;
+        margin: -1.975rem 0 0 -1.975rem;
       }
 
-      .diamond-node span {
+      .diamond-label-text {
         max-width: 3.1rem;
         font-size: 0.5rem;
         letter-spacing: 0.065em;
@@ -734,47 +821,47 @@
 
       .compass-stage {
         width: 100%;
-        min-height: 27rem;
+        min-height: 27.5rem;
       }
 
       .compass-card {
-        width: min(100%, 20.5rem);
-        min-height: 27rem;
+        width: min(100%, 20.9rem);
+        min-height: 27.5rem;
         border-radius: 1.65rem;
       }
 
       .center-anchor {
-        width: 8.7rem;
-        height: 8.7rem;
+        width: 7.9rem;
+        height: 7.9rem;
       }
 
       .orbit-ring.inner {
-        width: 15.2rem;
-        height: 15.2rem;
+        width: 15.5rem;
+        height: 15.5rem;
       }
 
       .orbit-ring.outer {
-        width: 19.1rem;
-        height: 19.1rem;
+        width: 19.4rem;
+        height: 19.4rem;
       }
 
       .orbit-ring.inner .diamond-node {
-        --radius: -7.25rem;
-        width: 3.9rem;
-        height: 3.9rem;
-        margin: -1.95rem 0 0 -1.95rem;
+        --radius: -7.35rem;
+        width: 3.95rem;
+        height: 3.95rem;
+        margin: -1.975rem 0 0 -1.975rem;
       }
 
       .orbit-ring.outer .diamond-node {
-        --radius: -9.05rem;
+        --radius: -9.15rem;
         width: 3.45rem;
         height: 3.45rem;
         margin: -1.725rem 0 0 -1.725rem;
       }
 
-      .diamond-node span {
-        max-width: 2.8rem;
-        font-size: 0.46rem;
+      .diamond-label-text {
+        max-width: 2.75rem;
+        font-size: 0.44rem;
       }
 
       .logic-grid,
@@ -861,29 +948,69 @@
             </div>
 
             <div class="orbit-ring inner" aria-hidden="true">
-              <a class="diamond-node" style="--angle: 0deg" href="/"><span>Compass</span></a>
-              <a class="diamond-node" style="--angle: 90deg" href="/door/"><span>Door</span></a>
-              <a class="diamond-node" style="--angle: 180deg" href="/home/"><span>Home</span></a>
-              <a class="diamond-node" style="--angle: 270deg" href="/manor/"><span>Manor</span></a>
+              <a class="diamond-node" style="--angle: 0deg" href="/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Compass</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 90deg" href="/door/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Door</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 180deg" href="/home/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Home</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 270deg" href="/manor/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Manor</b></span>
+              </a>
             </div>
 
             <div class="orbit-ring outer" aria-hidden="true">
-              <a class="diamond-node" style="--angle: 0deg" href="/laws/"><span>Laws</span></a>
-              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/"><span>Nine<br />Summits</span></a>
-              <a class="diamond-node" style="--angle: 45deg" href="/book/"><span>Book</span></a>
-              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/"><span>Universe</span></a>
-              <a class="diamond-node" style="--angle: 90deg" href="/products/"><span>Products</span></a>
-              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/"><span>Showroom</span></a>
-              <a class="diamond-node" style="--angle: 135deg" href="/frontier/"><span>Frontier</span></a>
-              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/"><span>Gauges</span></a>
-              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/"><span>Under<br />dog</span></a>
-              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/"><span>Meet<br />Sean</span></a>
-              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/"><span>Audralia</span></a>
-              <a class="diamond-node" style="--angle: 247.5deg" href="/five-flags/"><span>Five<br />Flags</span></a>
-              <a class="diamond-node" style="--angle: 270deg" href="/door/"><span>Entry</span></a>
-              <a class="diamond-node" style="--angle: 292.5deg" href="/home/"><span>Receiver</span></a>
-              <a class="diamond-node" style="--angle: 315deg" href="/manor/"><span>Map</span></a>
-              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/"><span>Proof</span></a>
+              <a class="diamond-node" style="--angle: 0deg" href="/laws/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Laws</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 22.5deg" href="/nine-summits/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Nine<br />Summits</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 45deg" href="/book/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Book</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 67.5deg" href="/nine-summits/universe/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Universe</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 90deg" href="/products/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Products</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 112.5deg" href="/showroom/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Showroom</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 135deg" href="/frontier/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Frontier</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 157.5deg" href="/gauges/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Gauges</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 180deg" href="/about-this-underdog/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Under<br />dog</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 202.5deg" href="/meet-sean-mansfield/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Meet<br />Sean</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 225deg" href="/showroom/globe/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Audralia</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 247.5deg" href="/five-flags/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Five<br />Flags</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 270deg" href="/door/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Entry</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 292.5deg" href="/home/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Receiver</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 315deg" href="/manor/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Map</b></span>
+              </a>
+              <a class="diamond-node" style="--angle: 337.5deg" href="/gauges/">
+                <span class="diamond-label-shell"><b class="diamond-label-text">Proof</b></span>
+              </a>
             </div>
           </div>
         </div>
@@ -966,11 +1093,11 @@
 
       <aside class="status-card" aria-label="Compass status">
         <strong>Compass status:</strong>
-        Shared Diamond Orbit · Public command surface · Mobile containment restored · Receipt held out of public flow.
+        Shared Diamond Orbit · Public command surface · Mobile containment restored · Center anchor reduced to background role.
       </aside>
 
       <template id="route-receipt" data-route-receipt>
-COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1
+COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v2
 route=/
 page=compass
 role=animated_public_command_surface
@@ -985,8 +1112,9 @@ outer_ring=laws,nine_summits,book,universe,products,showroom,frontier,gauges,und
 z_index_law=ambient_background,compass_anchor_background,orbit_field,route_diamonds,route_labels
 non_overlap_law=no_clickable_diamond_hidden_by_center
 animation=inner_clockwise_outer_counterclockwise
+label_law=diamond_labels_counter_rotate_to_remain_readable
 mobile_law=compact_4_plus_12_orbit_no_hidden_nodes
-upgraded=receipt_removed_from_public_flow,mobile_containment_restored,index_only_tnt
+upgraded=center_anchor_background_only,readable_rotating_labels,three_dimensional_diamonds
 preserved=animated_purple_diamonds,center_background_only,chronological_route_field,route_readability
 route_owns=public_orientation,chronological_route_field,animated_diamond_routes,room_routes,bridge_orientation
 route_does_not_own=body_rendering,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
@@ -1002,7 +1130,7 @@ visual_pass_claimed=false
     </main>
 
     <footer>
-      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1 · Compass · Shared Diamond Orbit · Public layout restored.
+      COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v2 · Compass · Shared Diamond Orbit · Center anchor moved into background.
     </footer>
   </div>
 </body>

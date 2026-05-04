@@ -1,15 +1,17 @@
 // /showroom/globe/index.js
-// EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_SIZE_CLAMP_CONTROLLER_TNT_v3
+// EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v5
 // Role: route controller only.
 // Owns: mount selection, body separation, non-silent receipts, isolated import attempts, display-size clamp.
 // Does not own: Earth science, Audralia science, Sun, Moon, Gauges, Products, final visual pass.
 
-const RECEIPT = "EARTH_G4_AUDRALIA_G1_DUAL_MOUNT_SIZE_CLAMP_CONTROLLER_TNT_v3";
+const RECEIPT = "EARTH_G4_CANDIDATE_AUDRALIA_G1_DUAL_MOUNT_CONTROLLER_TNT_v5";
 const ROUTE = "/showroom/globe/";
 
 const EARTH = Object.freeze({
   body: "Earth",
-  generation: "G4",
+  generationStatus: "G4_CANDIDATE",
+  generationClaimed: false,
+  targetStandard: "ORBITAL_EARTH_G4_REFERENCE",
   mountId: "earthRenderMount",
   receiptId: "earthRenderReceipt",
   authority: "EARTH_FILE_CHAIN",
@@ -23,6 +25,9 @@ const EARTH = Object.freeze({
 const AUDRALIA = Object.freeze({
   body: "Audralia",
   generation: "G1",
+  generationStatus: "G1",
+  generationClaimed: true,
+  targetStandard: "AUDRALIA_G1_PARENT_COMPOSITOR",
   mountId: "audraliaRenderMount",
   receiptId: "audraliaRenderReceipt",
   authority: "/assets/AdreliaPlanetRendered.js",
@@ -49,6 +54,23 @@ function sanitizeText(value) {
     .replaceAll(LEGACY_TOKEN.toLowerCase(), "audralia");
 }
 
+function generationReceiptLines(bodyConfig) {
+  if (bodyConfig.body === "Earth") {
+    return [
+      "GENERATION_STATUS=G4_CANDIDATE",
+      "GENERATION_CLAIMED=false",
+      "G4_CLAIM=HELD",
+      "TARGET_STANDARD=ORBITAL_EARTH_G4_REFERENCE"
+    ];
+  }
+
+  return [
+    `GENERATION=${bodyConfig.generation}`,
+    `GENERATION_CLAIMED=${bodyConfig.generationClaimed}`,
+    `TARGET_STANDARD=${bodyConfig.targetStandard}`
+  ];
+}
+
 function writeReceipt(id, lines) {
   const node = document.getElementById(id);
   if (!node) return false;
@@ -69,11 +91,12 @@ function writeBothBootReceipts() {
   writeReceipt(EARTH.receiptId, [
     "BOOT_STARTED=true",
     "BODY=Earth",
-    "GENERATION=G4",
+    ...generationReceiptLines(EARTH),
     `MOUNT=#${EARTH.mountId}`,
     "ROUTE_CONTROLLER_EXECUTED=true",
     "IMPORT_ATTEMPTED=false",
     "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
     "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
@@ -81,11 +104,12 @@ function writeBothBootReceipts() {
   writeReceipt(AUDRALIA.receiptId, [
     "BOOT_STARTED=true",
     "BODY=Audralia",
-    "GENERATION=G1",
+    ...generationReceiptLines(AUDRALIA),
     `MOUNT=#${AUDRALIA.mountId}`,
     "ROUTE_CONTROLLER_EXECUTED=true",
     "IMPORT_ATTEMPTED=false",
     "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
     "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
@@ -248,7 +272,9 @@ function summarizeStatus(api, bodyConfig) {
     return Object.freeze({
       statusAvailable: false,
       body: bodyConfig.body,
-      generation: bodyConfig.generation
+      generationStatus: bodyConfig.generationStatus,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard
     });
   }
 
@@ -258,7 +284,9 @@ function summarizeStatus(api, bodyConfig) {
     return Object.freeze({
       statusAvailable: true,
       body: bodyConfig.body,
-      generation: bodyConfig.generation,
+      generationStatus: bodyConfig.generationStatus,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard,
       ok: status.ok !== false,
       status: sanitizeText(status.status || "available"),
       receipt: sanitizeText(status.receipt || status.tnt || "available"),
@@ -269,7 +297,9 @@ function summarizeStatus(api, bodyConfig) {
     return Object.freeze({
       statusAvailable: false,
       body: bodyConfig.body,
-      generation: bodyConfig.generation,
+      generationStatus: bodyConfig.generationStatus,
+      generationClaimed: bodyConfig.generationClaimed,
+      targetStandard: bodyConfig.targetStandard,
       errored: true,
       error: sanitizeText(error && error.message ? error.message : error)
     });
@@ -281,10 +311,24 @@ async function renderWithApi(canvas, api, bodyConfig) {
     return drawHeldCanvas(canvas, bodyConfig.body, "AUTHORITY_NOT_AVAILABLE");
   }
 
+  const renderOptions = {
+    body: bodyConfig.body,
+    generationStatus: bodyConfig.generationStatus,
+    generation: bodyConfig.generationStatus,
+    generationClaimed: bodyConfig.generationClaimed,
+    targetStandard: bodyConfig.targetStandard,
+    route: ROUTE,
+    mountId: bodyConfig.mountId
+  };
+
+  if (bodyConfig.body === "Audralia") {
+    renderOptions.generation = "G1";
+  }
+
   if (typeof api.renderSurface === "function") {
     const profile =
       typeof api.createProfile === "function"
-        ? api.createProfile({ body: bodyConfig.body, generation: bodyConfig.generation })
+        ? api.createProfile(renderOptions)
         : undefined;
 
     const texture =
@@ -293,12 +337,9 @@ async function renderWithApi(canvas, api, bodyConfig) {
         : undefined;
 
     const output = api.renderSurface(canvas, {
+      ...renderOptions,
       profile,
-      texture,
-      body: bodyConfig.body,
-      generation: bodyConfig.generation,
-      route: ROUTE,
-      mountId: bodyConfig.mountId
+      texture
     });
 
     return Object.freeze({
@@ -309,12 +350,7 @@ async function renderWithApi(canvas, api, bodyConfig) {
   }
 
   if (typeof api.render === "function") {
-    const output = api.render(canvas, {
-      body: bodyConfig.body,
-      generation: bodyConfig.generation,
-      route: ROUTE,
-      mountId: bodyConfig.mountId
-    });
+    const output = api.render(canvas, renderOptions);
 
     return Object.freeze({
       rendered: true,
@@ -324,12 +360,7 @@ async function renderWithApi(canvas, api, bodyConfig) {
   }
 
   if (typeof api.renderPlanet === "function") {
-    const output = api.renderPlanet(canvas, {
-      body: bodyConfig.body,
-      generation: bodyConfig.generation,
-      route: ROUTE,
-      mountId: bodyConfig.mountId
-    });
+    const output = api.renderPlanet(canvas, renderOptions);
 
     return Object.freeze({
       rendered: true,
@@ -339,12 +370,7 @@ async function renderWithApi(canvas, api, bodyConfig) {
   }
 
   if (typeof api.buildTexture === "function") {
-    const texture = api.buildTexture({
-      body: bodyConfig.body,
-      generation: bodyConfig.generation,
-      route: ROUTE,
-      mountId: bodyConfig.mountId
-    });
+    const texture = api.buildTexture(renderOptions);
 
     if (texture instanceof HTMLCanvasElement) {
       const ctx = canvas.getContext("2d");
@@ -368,10 +394,11 @@ async function mountBody(bodyConfig) {
   writeReceipt(bodyConfig.receiptId, [
     "BOOT_PHASE=MOUNT_LOOKUP",
     `BODY=${bodyConfig.body}`,
-    `GENERATION=${bodyConfig.generation}`,
+    ...generationReceiptLines(bodyConfig),
     `MOUNT=#${bodyConfig.mountId}`,
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
     "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
@@ -382,12 +409,13 @@ async function mountBody(bodyConfig) {
     writeReceipt(bodyConfig.receiptId, [
       "BOOT_PHASE=MOUNT_FAILED",
       `BODY=${bodyConfig.body}`,
-      `GENERATION=${bodyConfig.generation}`,
+      ...generationReceiptLines(bodyConfig),
       `MOUNT=#${bodyConfig.mountId}`,
       "MOUNT_EXISTS=false",
       "IMPORT_ATTEMPTED=false",
       "ROUTE_CONTROLLER_EXECUTED=true",
       "BODY_ADOPTION_BLOCKED=true",
+      "NO_CROSS_BODY_FALLBACK=true",
       "SIZE_CLAMP_ACTIVE=false",
       "VISUAL_PASS=HELD"
     ]);
@@ -402,10 +430,13 @@ async function mountBody(bodyConfig) {
   }
 
   mount.dataset.body = bodyConfig.body.toLowerCase();
-  mount.dataset.generation = bodyConfig.generation;
+  mount.dataset.generationStatus = bodyConfig.generationStatus;
+  mount.dataset.generationClaimed = String(bodyConfig.generationClaimed);
+  mount.dataset.targetStandard = bodyConfig.targetStandard;
   mount.dataset.routeControllerReceipt = RECEIPT;
   mount.dataset.authority = bodyConfig.authority;
   mount.dataset.bodyAdoptionBlocked = "true";
+  mount.dataset.noCrossBodyFallback = "true";
   mount.dataset.sizeClampActive = "true";
 
   const canvas = createCanvas(mount, bodyConfig.body);
@@ -413,7 +444,7 @@ async function mountBody(bodyConfig) {
   writeReceipt(bodyConfig.receiptId, [
     "BOOT_PHASE=IMPORT_STARTED",
     `BODY=${bodyConfig.body}`,
-    `GENERATION=${bodyConfig.generation}`,
+    ...generationReceiptLines(bodyConfig),
     `MOUNT=#${bodyConfig.mountId}`,
     "MOUNT_EXISTS=true",
     `AUTHORITY=${bodyConfig.authority}`,
@@ -421,6 +452,7 @@ async function mountBody(bodyConfig) {
     "AUTHORITY_IMPORTED=false",
     "ROUTE_CONTROLLER_EXECUTED=true",
     "BODY_ADOPTION_BLOCKED=true",
+    "NO_CROSS_BODY_FALLBACK=true",
     "SIZE_CLAMP_ACTIVE=true",
     "VISUAL_PASS=HELD"
   ]);
@@ -433,7 +465,7 @@ async function mountBody(bodyConfig) {
     writeReceipt(bodyConfig.receiptId, [
       "BOOT_PHASE=IMPORT_FAILED",
       `BODY=${bodyConfig.body}`,
-      `GENERATION=${bodyConfig.generation}`,
+      ...generationReceiptLines(bodyConfig),
       `MOUNT=#${bodyConfig.mountId}`,
       "MOUNT_EXISTS=true",
       `AUTHORITY=${bodyConfig.authority}`,
@@ -460,24 +492,6 @@ async function mountBody(bodyConfig) {
   const api = getApi(imported.module);
   const status = summarizeStatus(api, bodyConfig);
 
-  writeReceipt(bodyConfig.receiptId, [
-    "BOOT_PHASE=IMPORT_SUCCEEDED_RENDER_STARTED",
-    `BODY=${bodyConfig.body}`,
-    `GENERATION=${bodyConfig.generation}`,
-    `MOUNT=#${bodyConfig.mountId}`,
-    "MOUNT_EXISTS=true",
-    `AUTHORITY=${bodyConfig.authority}`,
-    "IMPORT_ATTEMPTED=true",
-    "AUTHORITY_IMPORTED=true",
-    `AUTHORITY_PATH=${imported.path}`,
-    `STATUS_SUMMARY=${JSON.stringify(status)}`,
-    "ROUTE_CONTROLLER_EXECUTED=true",
-    "BODY_ADOPTION_BLOCKED=true",
-    "NO_CROSS_BODY_FALLBACK=true",
-    "SIZE_CLAMP_ACTIVE=true",
-    "VISUAL_PASS=HELD"
-  ]);
-
   let renderResult;
 
   try {
@@ -493,7 +507,7 @@ async function mountBody(bodyConfig) {
   writeReceipt(bodyConfig.receiptId, [
     "BOOT_PHASE=COMPLETE",
     `BODY=${bodyConfig.body}`,
-    `GENERATION=${bodyConfig.generation}`,
+    ...generationReceiptLines(bodyConfig),
     `MOUNT=#${bodyConfig.mountId}`,
     "MOUNT_EXISTS=true",
     `AUTHORITY=${bodyConfig.authority}`,
@@ -531,6 +545,11 @@ function publishRouteReceipt(results) {
     bodies: Object.freeze(["Earth", "Audralia"]),
     earth: results.earth,
     audralia: results.audralia,
+    earthGenerationStatus: "G4_CANDIDATE",
+    earthGenerationClaimed: false,
+    earthG4Claim: "HELD",
+    earthTargetStandard: "ORBITAL_EARTH_G4_REFERENCE",
+    audraliaGeneration: "G1",
     dualMountContract: true,
     bodyAdoptionBlocked: true,
     noCrossBodyFallback: true,

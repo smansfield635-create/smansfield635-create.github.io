@@ -1,9 +1,13 @@
 // /showroom/globe/audralia/audralia.deep-ocean.surface.js
 // AUDRALIA_DEEP_OCEAN_SURFACE_CHILD_TNT_v1
 //
+// Active renewal:
+// - AUDRALIA_DEEP_OCEAN_FEATHERED_DEPTH_BLEND_TNT_v1
+//
 // Role:
 // - Child helper for Audralia route hex surface renderer.
-// - Separates ocean, shelf/coastal water, deep ocean, and abyssal deep ocean visually.
+// - Separates normal ocean, shelf/coastal water, deep ocean, and abyssal depth visually.
+// - Represents DeepOcean as feathered water-depth variation, not a separate hard object.
 // - Receives parent-provided texture color only.
 // - Does not import runtime.
 // - Does not create water.
@@ -24,8 +28,19 @@
 // - No visual pass claim.
 
 const RECEIPT = "AUDRALIA_DEEP_OCEAN_SURFACE_CHILD_TNT_v1";
+const ACTIVE_RENEWAL = "AUDRALIA_DEEP_OCEAN_FEATHERED_DEPTH_BLEND_TNT_v1";
 const PARENT_RECEIPT = "AUDRALIA_G7_HEX_SURFACE_CHILD_RENDERER_TNT_v1";
-const ALIGNMENT_RECEIPT = "AUDRALIA_G8_HEX_CHILD_SPHERICAL_BANDING_REDUCTION_TNT_v1";
+const ALIGNMENT_RECEIPT = "AUDRALIA_G8_HEX_CHILD_DEEP_OCEAN_SEPARATION_TNT_v1";
+
+const LIMITS = Object.freeze({
+  maxDeepDarkening: 0.32,
+  maxAbyssalDarkening: 0.38,
+  maxShelfBrightening: 0.28,
+  maxOpenOceanShift: 0.18,
+  hardBandSuppression: true,
+  thresholdCliffSuppression: true,
+  featheredBlend: true
+});
 
 function clamp(value, min, max) {
   const number = Number(value);
@@ -43,6 +58,11 @@ function fract(value) {
 
 function wrap01(value) {
   return ((Number(value) % 1) + 1) % 1;
+}
+
+function smoothstep(edge0, edge1, value) {
+  const t = clamp((value - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
 }
 
 function hash2(x, y, seed) {
@@ -109,12 +129,20 @@ function isLandColor(color) {
   return r >= 92 && r >= g * 0.88 && r > b * 1.12;
 }
 
+function isIceOrHighlightColor(color) {
+  const r = Number(color[0]) || 0;
+  const g = Number(color[1]) || 0;
+  const b = Number(color[2]) || 0;
+
+  return r > 185 && g > 185 && b > 185;
+}
+
 function isWaterColor(color) {
   const r = Number(color[0]) || 0;
   const g = Number(color[1]) || 0;
   const b = Number(color[2]) || 0;
 
-  return b > r * 1.04 && g > r * 0.70 && !isLandColor(color);
+  return b > r * 1.03 && g > r * 0.68 && !isLandColor(color) && !isIceOrHighlightColor(color);
 }
 
 function isShelfColor(color) {
@@ -122,7 +150,7 @@ function isShelfColor(color) {
   const g = Number(color[1]) || 0;
   const b = Number(color[2]) || 0;
 
-  return isWaterColor(color) && g > 88 && b > 104 && Math.abs(g - b) < 82;
+  return isWaterColor(color) && g > 82 && b > 98 && Math.abs(g - b) < 90;
 }
 
 function sampleTexture(texture, u, v) {
@@ -150,6 +178,7 @@ function waterNeighborSignal(texture, u, v) {
       landContact: 0,
       shelfContact: 0,
       waterContact: 0,
+      deepContact: 0,
       gradient: 0
     };
   }
@@ -157,35 +186,60 @@ function waterNeighborSignal(texture, u, v) {
   const dx = 2 / Math.max(8, texture.width || 1024);
   const dy = 2 / Math.max(8, texture.height || 512);
 
+  const center = sampleTexture(texture, u, v);
+  const centerLuma = colorLuma(center);
+
   const samples = [
     sampleTexture(texture, u - dx, v),
     sampleTexture(texture, u + dx, v),
     sampleTexture(texture, u, v - dy),
     sampleTexture(texture, u, v + dy),
     sampleTexture(texture, u - dx, v - dy),
+    sampleTexture(texture, u + dx, v - dy),
+    sampleTexture(texture, u - dx, v + dy),
     sampleTexture(texture, u + dx, v + dy)
   ];
 
   let landContact = 0;
   let shelfContact = 0;
   let waterContact = 0;
+  let deepContact = 0;
   let gradient = 0;
-  const center = sampleTexture(texture, u, v);
-  const centerLuma = colorLuma(center);
 
   samples.forEach(function (sample) {
+    const sampleLuma = colorLuma(sample);
+
     if (isLandColor(sample)) landContact += 1;
     if (isShelfColor(sample)) shelfContact += 1;
     if (isWaterColor(sample)) waterContact += 1;
-    gradient += Math.abs(colorLuma(sample) - centerLuma);
+    if (isWaterColor(sample) && sampleLuma < 0.22) deepContact += 1;
+
+    gradient += Math.abs(sampleLuma - centerLuma);
   });
 
   return {
     landContact: landContact / samples.length,
     shelfContact: shelfContact / samples.length,
     waterContact: waterContact / samples.length,
+    deepContact: deepContact / samples.length,
     gradient: clamp(gradient / samples.length * 4.2, 0, 1)
   };
+}
+
+function sphericalBreakField(u, v, context) {
+  const phase = Number(context && context.phase) || 0;
+  const lon = wrap01(u + phase * 0.03) * 2 - 1;
+  const lat = 1 - clamp(v, 0, 1) * 2;
+
+  const broad =
+    fbm(lon * 5.2 + 1.7, lat * 5.2 - 3.2, 7101, 4) * 0.50 +
+    fbm(lon * 11.0 - 4.6, lat * 7.0 + 2.4, 7139, 4) * 0.25;
+
+  const fine =
+    fbm(lon * 24.0 + 5.1, lat * 16.0 - 8.0, 7177, 3) * 0.16 +
+    fbm(lon * 47.0 - 2.3, lat * 31.0 + 6.9, 7193, 2) * 0.09;
+
+  return clamp(broad + fine, 0, 1);
 }
 
 function classifyOceanDepth(color, texture, u, v, context) {
@@ -193,7 +247,7 @@ function classifyOceanDepth(color, texture, u, v, context) {
   const shelf = isShelfColor(color);
   const luma = colorLuma(color);
   const neighbor = waterNeighborSignal(texture, u, v);
-  const latitude = Number(context && context.v) >= 0 ? Number(context.v) : v;
+  const breakField = sphericalBreakField(u, v, context);
 
   if (!water) {
     return {
@@ -205,55 +259,64 @@ function classifyOceanDepth(color, texture, u, v, context) {
       abyssalDeepOcean: false,
       shelfIndex: 0,
       depthIndex: 0,
+      featherIndex: 0,
+      darkeningIndex: 0,
       neighbor
     };
   }
 
-  const depthNoise =
-    fbm(u * 9.0 + 1.7, v * 9.0 - 3.2, 7101, 4) * 0.46 +
-    fbm(u * 27.0 - 5.4, v * 27.0 + 2.1, 7127, 3) * 0.20;
-
-  const bandBreak =
-    fbm(u * 18.0 + latitude * 3.1, v * 7.0 - 2.4, 7151, 3) * 0.16;
-
   const shelfIndex = clamp(
-    (shelf ? 0.62 : 0) +
-      neighbor.landContact * 0.36 +
-      neighbor.shelfContact * 0.22 +
-      (1 - luma) * 0.06,
+    (shelf ? 0.52 : 0) +
+      neighbor.landContact * 0.42 +
+      neighbor.shelfContact * 0.28 +
+      (1 - luma) * 0.04,
     0,
     1
   );
 
-  const depthIndex = clamp(
-    (1 - luma) * 0.72 +
-      depthNoise * 0.22 +
-      bandBreak -
-      shelfIndex * 0.34 -
-      neighbor.landContact * 0.18,
+  const rawDepthIndex = clamp(
+    (1 - luma) * 0.64 +
+      breakField * 0.24 +
+      neighbor.deepContact * 0.14 -
+      shelfIndex * 0.42 -
+      neighbor.landContact * 0.22,
     0,
     1
   );
 
-  const abyssalDeepOcean = depthIndex > 0.72 && shelfIndex < 0.24;
-  const deepOcean = !abyssalDeepOcean && depthIndex > 0.48 && shelfIndex < 0.42;
-  const coastalOcean = shelfIndex >= 0.42;
+  const featherIndex = smoothstep(0.30, 0.92, rawDepthIndex);
+  const darkeningIndex = clamp(
+    featherIndex *
+      (1 - shelfIndex * 0.78) *
+      (1 - neighbor.landContact * 0.70) *
+      (0.76 + breakField * 0.24),
+    0,
+    1
+  );
+
+  const shelfFeather = smoothstep(0.18, 0.86, shelfIndex);
+  const abyssalDeepOcean = darkeningIndex > 0.76 && shelfIndex < 0.20;
+  const deepOcean = darkeningIndex > 0.38 && shelfIndex < 0.44;
+  const coastalOcean = shelfFeather > 0.36;
 
   return {
     className: abyssalDeepOcean
-      ? "abyssal_deep_ocean_surface"
+      ? "feathered_abyssal_depth_water"
       : deepOcean
-        ? "deep_ocean_surface"
+        ? "feathered_deep_ocean_water"
         : coastalOcean
-          ? "shelf_coastal_ocean_surface"
-          : "open_ocean_surface",
+          ? "feathered_shelf_coastal_water"
+          : "open_ocean_water",
     water: true,
     shelf: coastalOcean,
     ocean: !coastalOcean,
     deepOcean,
     abyssalDeepOcean,
     shelfIndex,
-    depthIndex,
+    depthIndex: rawDepthIndex,
+    featherIndex,
+    darkeningIndex,
+    breakField,
     neighbor
   };
 }
@@ -271,39 +334,74 @@ function applyAudraliaOceanDepthSeparation(color, texture, u, v, context = {}) {
 
   let result = color.slice(0, 4);
 
-  const openOcean = [8, 76, 142, result[3]];
-  const deepOcean = [2, 34, 96, result[3]];
-  const abyssal = [1, 18, 62, result[3]];
-  const shelf = [40, 188, 202, result[3]];
-  const shallowShelf = [72, 208, 210, result[3]];
+  const openOcean = [8, 78, 148, result[3]];
+  const softDeepOcean = [7, 52, 118, result[3]];
+  const featheredAbyssal = [5, 38, 94, result[3]];
+  const shelfWater = [42, 180, 196, result[3]];
+  const brightShelfWater = [66, 204, 207, result[3]];
 
-  if (classification.abyssalDeepOcean) {
-    result = mixColor(result, abyssal, 0.54 + classification.depthIndex * 0.22);
-  } else if (classification.deepOcean) {
-    result = mixColor(result, deepOcean, 0.42 + classification.depthIndex * 0.18);
-  } else if (classification.shelf) {
-    result = mixColor(result, shelf, 0.36 + classification.shelfIndex * 0.28);
-    result = mixColor(result, shallowShelf, classification.neighbor.landContact * 0.16);
-  } else {
-    result = mixColor(result, openOcean, 0.30);
-  }
-
-  const breakNoise =
-    fbm(u * 44.0 + 2.1, v * 23.0 - 1.4, 7193, 3) * 0.035 -
-    fbm(u * 11.0 - 8.0, v * 29.0 + 4.1, 7211, 3) * 0.028;
-
-  const depthShade = clamp(
-    1 +
-      breakNoise -
-      classification.depthIndex * 0.08 +
-      classification.shelfIndex * 0.06,
-    0.78,
-    1.12
+  const shelfBlend = clamp(
+    classification.shelfIndex * LIMITS.maxShelfBrightening,
+    0,
+    LIMITS.maxShelfBrightening
   );
 
-  result[0] = clamp(Math.round(result[0] * depthShade), 0, 255);
-  result[1] = clamp(Math.round(result[1] * depthShade), 0, 255);
-  result[2] = clamp(Math.round(result[2] * depthShade), 0, 255);
+  const deepBlend = clamp(
+    classification.darkeningIndex * LIMITS.maxDeepDarkening,
+    0,
+    LIMITS.maxDeepDarkening
+  );
+
+  const abyssalBlend = clamp(
+    smoothstep(0.70, 1.0, classification.darkeningIndex) * LIMITS.maxAbyssalDarkening,
+    0,
+    LIMITS.maxAbyssalDarkening
+  );
+
+  const openBlend = clamp(
+    (1 - classification.shelfIndex) *
+      (1 - classification.darkeningIndex) *
+      LIMITS.maxOpenOceanShift,
+    0,
+    LIMITS.maxOpenOceanShift
+  );
+
+  result = mixColor(result, openOcean, openBlend);
+
+  if (classification.shelfIndex > 0.16) {
+    result = mixColor(result, shelfWater, shelfBlend);
+    result = mixColor(
+      result,
+      brightShelfWater,
+      clamp(classification.neighbor.landContact * 0.10 + classification.shelfIndex * 0.08, 0, 0.16)
+    );
+  }
+
+  if (classification.darkeningIndex > 0.12) {
+    result = mixColor(result, softDeepOcean, deepBlend);
+  }
+
+  if (classification.darkeningIndex > 0.70 && classification.shelfIndex < 0.24) {
+    result = mixColor(result, featheredAbyssal, abyssalBlend);
+  }
+
+  const antiBandNoise =
+    (classification.breakField - 0.5) * 0.030 +
+    (fbm(u * 31.0 + 8.0, v * 19.0 - 6.0, 7291, 3) - 0.5) * 0.026;
+
+  const seamFeather = clamp(
+    1 -
+      classification.neighbor.gradient * 0.035 -
+      classification.darkeningIndex * 0.035 +
+      classification.shelfIndex * 0.030 +
+      antiBandNoise,
+    0.86,
+    1.08
+  );
+
+  result[0] = clamp(Math.round(result[0] * seamFeather), 0, 255);
+  result[1] = clamp(Math.round(result[1] * seamFeather), 0, 255);
+  result[2] = clamp(Math.round(result[2] * seamFeather), 0, 255);
 
   return Object.freeze({
     color: result,
@@ -316,14 +414,17 @@ function getAudraliaDeepOceanStatus() {
   return Object.freeze({
     ok: true,
     receipt: RECEIPT,
+    activeRenewal: ACTIVE_RENEWAL,
     parentReceipt: PARENT_RECEIPT,
     alignmentReceipt: ALIGNMENT_RECEIPT,
-    role: "deep-ocean-visual-separation-child",
+    role: "deep-ocean-feathered-depth-blend-child",
     owns: Object.freeze([
       "ocean_visual_classification",
-      "deep_ocean_visual_classification",
+      "deep_ocean_feathered_visual_classification",
       "shelf_coastal_visual_classification",
-      "water_depth_color_separation"
+      "water_depth_color_blending",
+      "deep_ocean_hard_band_suppression",
+      "threshold_cliff_suppression"
     ]),
     doesNotOwn: Object.freeze([
       "runtime_import",
@@ -336,6 +437,7 @@ function getAudraliaDeepOceanStatus() {
       "route_boot",
       "gauges"
     ]),
+    limits: LIMITS,
     runtimeImport: false,
     landGeneration: false,
     waterGeneration: false,
@@ -347,6 +449,7 @@ function getAudraliaDeepOceanStatus() {
 
 const api = Object.freeze({
   receipt: RECEIPT,
+  activeRenewal: ACTIVE_RENEWAL,
   parentReceipt: PARENT_RECEIPT,
   alignmentReceipt: ALIGNMENT_RECEIPT,
   applyAudraliaOceanDepthSeparation,
@@ -359,6 +462,7 @@ if (typeof window !== "undefined") {
 
 export {
   RECEIPT,
+  ACTIVE_RENEWAL,
   PARENT_RECEIPT,
   ALIGNMENT_RECEIPT,
   applyAudraliaOceanDepthSeparation,
